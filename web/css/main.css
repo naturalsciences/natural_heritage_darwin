@@ -2604,7 +2604,10 @@ background: transparent ;
   /* Set this to any below 15000 (default starting z-index for qTips) */
   z-index: 14999;
 }
-
+body .ui-tooltip, body .qtip 
+{
+  font-size:10pt;
+}
 
 #ui-tooltip-modal {
   min-width: 876px !important;
