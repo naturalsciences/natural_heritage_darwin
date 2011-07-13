@@ -104,9 +104,9 @@ class synonymActions extends DarwinActions
   {
     return $this->renderText(
       Doctrine::getTable('ClassificationSynonymies')->findGroupIdFor(
-	$request->getParameter('table'),
-	$request->getParameter('id'),
-	$request->getParameter('type'))
-      );
+      $request->getParameter('table'),
+      $request->getParameter('id'),
+      $request->getParameter('type'))
+    );
   }
 }

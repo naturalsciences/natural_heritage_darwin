@@ -10,18 +10,20 @@
     <?php foreach($synonyms as $group_name => $group):?>
     <tr>
       <td>
-	<?php echo __(ucfirst($group_name));?>
+        <?php $groups=Doctrine::getTable('ClassificationSynonymies')->findGroupnames() ; echo $groups[$group_name];?>
       </td>
       <td>
 	  <table class="grp_id_<?php echo $group[0]['group_id'];?> widget_sub_table" alt="<?php echo $group_name;?>">
 	    <thead>
 	      <tr>
 		<th><?php echo __('Name');?></th>
-		<th>
-		  <?php if($group_name != "homonym" ):?>
-		    <?php echo __('Basionym');?>
-		  <?php endif;?>
-		</th>
+    <th>
+      <?php if($group_name == 'rename'):?>
+        <?php echo __('Current');?>
+      <?php elseif($group_name != "homonym"):?>
+        <?php echo __('Basionym');?>
+      <?php endif;?>
+    </th>
 		<th></th>
 	      </tr>
 	    </thead>

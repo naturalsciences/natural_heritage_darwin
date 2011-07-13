@@ -25,14 +25,6 @@ $catalogue_people->setPeopleRef($personId);
 $catalogue_people->save();
 
 $browser->
-    info('1 - Rename')->
-     get('/widgets/reloadContent?widget=relationRename&category=catalogue_taxonomy&eid=4')->
-     with('response')->begin()->
-        isStatusCode(200)->
-        checkElement('table tbody tr',1)->
-        checkElement('table tbody tr td:first a.link_catalogue','/Falco Peregrinus Tunstall/')->
-	checkElement('img', 3)->
-    end()->
 
     info('2 - Recombined')->
      get('/widgets/reloadContent?widget=relationRecombination&category=catalogue_taxonomy&eid=4')->
@@ -40,7 +32,7 @@ $browser->
         isStatusCode(200)->
         checkElement('table tbody tr',1)->
         checkElement('table tbody tr td:first a.link_catalogue','/recombinus/')->
-	checkElement('img',3)->
+        checkElement('img',3)->
     end();
 
  $items = Doctrine::getTable('CatalogueRelationships')->getRelationsForTable('taxonomy', 4, 'current_name');
@@ -49,13 +41,6 @@ $browser->
     get('/catalogue/deleteRelated?table=catalogue_relationships&id='.$items[0]['id'])->
     with('response')->begin()->
       isStatusCode(200)->
-    end()->
-
-     get('/widgets/reloadContent?widget=relationRename&category=catalogue_taxonomy&eid=4')->
-     with('response')->begin()->
-        isStatusCode(200)->
-        checkElement('table tbody tr',0)->
-	checkElement('img',1)->
     end();
 
 $browser->

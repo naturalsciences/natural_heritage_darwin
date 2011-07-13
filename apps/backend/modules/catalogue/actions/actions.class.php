@@ -247,11 +247,18 @@ class catalogueActions extends DarwinActions
   {
     $this->forward404Unless( $request->hasParameter('id') && $request->hasParameter('table'));
 
-    $relations = Doctrine::getTable('CatalogueRelationships')->getRelationsForTable($request->getParameter('table'), $request->getParameter('id'),'current_name');
-    if(! count($relations))
-      return $this->renderText('{}');
-    else {
-      return $this->renderText(json_encode(array('name'=>$relations[0]['ref_item']->getName(), 'id'=>$relations[0]['record_id_2'])));
-    }
+    $relation  = Doctrine::getTable('ClassificationSynonymies')->findGroupIdFor(
+      $request->getParameter('table'),
+      $request->getParameter('id'),
+      'rename'
+    );
+    if($relation == 0)
+      return $this->renderText('{}'); // The record has no current name
+
+    $current  = Doctrine::getTable('ClassificationSynonymies')->findBasionymIdForGroupId($relation);
+    if($current == $request->getParameter('id') || $current == 0)
+      return $this->renderText('{}'); // The record is a current name
+    $item = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->find($current);
+    return $this->renderText(json_encode(array('name'=>$item->getName(), 'id'=>$item->getId() )));
   }
 }
