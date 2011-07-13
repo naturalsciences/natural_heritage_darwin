@@ -78,7 +78,7 @@ help-param:
 	@echo "PORT (Default: 5432)"
 	@echo "   Port for the connection to the database"
 	@echo ""
-	@echo "CLUSTER_PATH (Default: first line  returned by pg_lsclusters. [/var/lib/postgresql/8.3/main] on debian)"
+	@echo "CLUSTER_PATH (Default: first line  returned by pg_lsclusters. [/var/lib/postgresql/8.4/main] on debian)"
 	@echo "   The path where to create the tablespace"
 	@echo ""
 	@echo "Other advanced parameters are available in the makefile"
@@ -133,16 +133,25 @@ install-lib:
 	#Make this more dynamical
 	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pg_trgm.sql
 	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pgcrypto.sql
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/hstore-new.sql
-	if test -f /usr/share/postgresql/$(PG_VER)/contrib/postgis.sql; \
-		then $(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis.sql; \
-	else $(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/postgis.sql; \
+	#Test version and launch hstore scripts from adapted place
+	if [ "$(PG_VER)" = "9.0" ] ; then \
+		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/hstore.sql ; \
+	else \
+		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/hstore-new.sql ; \
 	fi
 
-	if test -f /usr/share/postgresql/$(PG_VER)/contrib/spatial_ref_sys.sql; \
-		then $(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/spatial_ref_sys.sql; \
-	else $(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/spatial_ref_sys.sql; \
+	if [ -f /usr/share/postgresql/$(PG_VER)/contrib/postgis.sql ] ; then \
+		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis.sql; \
+	else \
+		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/postgis.sql; \
 	fi
+
+	if [ -f /usr/share/postgresql/$(PG_VER)/contrib/spatial_ref_sys.sql ] ; then \
+		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/spatial_ref_sys.sql; \
+	else \
+		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/spatial_ref_sys.sql; \
+	fi
+
 	$(PRIV_PSQL_DB) -f postgisgrant.sql -v dbuser=$(DB_USER)
 
 create-user-web:
