@@ -12,11 +12,7 @@
   <tbody class="spec_ident_data">
     <tr class="spec_ident_data">
       <td colspan="2">        
-        <?php if (FuzzyDateTime::getDateTimeStringFromArray($identification->getNotionDate()->getRawValue()) != '0001/01/01') : ?>              
-          <?php echo FuzzyDateTime::getDateTimeStringFromArray($identification->getNotionDate()->getRawValue()) ?>   
-        <?php else : ?>
-        -
-        <?php endif ; ?>  
+        <?php echo $identification->getNotionDateMasked() ; ?>
       </td>
       <td>
         <?php echo $identification->getNotionConcerned();?>
