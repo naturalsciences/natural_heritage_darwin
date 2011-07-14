@@ -34,7 +34,7 @@ $browser->
     checkElement('#syn_screen form.edition')->
     checkElement('.merge_question')->
     checkElement('.search_box')->
-    checkElement('#classification_synonymies_group_name option',3)->
+    checkElement('#classification_synonymies_group_name option',4)->
   end()->
 
   click('Save', array('classification_synonymies' => array(
