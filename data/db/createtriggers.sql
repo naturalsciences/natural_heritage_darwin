@@ -100,20 +100,9 @@ CREATE TRIGGER trg_cpy_gtuTags_TagGroups AFTER INSERT OR UPDATE OR DELETE
 **
 *****************************************/
 
-CREATE TRIGGER trg_clr_referenceRecord_cataloguerelationships AFTER DELETE
-	ON catalogue_relationships FOR EACH ROW
-	EXECUTE PROCEDURE fct_clear_referencedRecord();
-
-CREATE TRIGGER trg_clr_referenceRecord_cataloguepeople AFTER DELETE
-	ON catalogue_people FOR EACH ROW
-	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
 CREATE TRIGGER trg_clr_referenceRecord_gtu AFTER DELETE
 	ON gtu FOR EACH ROW
-	EXECUTE PROCEDURE fct_clear_referencedRecord();
-
-CREATE TRIGGER trg_clr_referenceRecord_catalogueproperties AFTER DELETE
-	ON catalogue_properties FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
 CREATE TRIGGER trg_clr_identifiers_in_flat BEFORE DELETE
