@@ -2,6 +2,7 @@ TESTS = $(wildcard tests/*.sql)
 HOST = 127.0.0.1
 DB_USER = darwin2
 DB_WEB_USER = cebmpad
+DB_READ_USER = d2viewer
 DB_NAME = darwin2
 TEST_CMD = pg_prove
 PSQL = /usr/bin/psql
@@ -72,6 +73,9 @@ help-param:
 	@echo "DB_USER (Default: darwin2)"
 	@echo "   username for the connection to the database"
 	@echo ""
+	@echo "DB_READ_USER (Default: d2viewer)"
+	@echo "   username for a read only connection to the database"
+	@echo ""
 	@echo "DB_NAME (Default: darwin2)"
 	@echo "   database name to be created or to be used (depends of the target)"
 	@echo ""
@@ -103,6 +107,7 @@ install-db:
 	$(PARAM_PSQL) -f createtriggers.sql
 	$(PARAM_PSQL) -f addchecks.sql
 	$(PARAM_PSQL) -f createindexes.sql
+	$(PARAM_PSQL) -f grant_d2_to_read_user.sql
 #	$(PRIV_PSQL_DB) -f grant_d2_to_web_user.sql
 
 install-all: create-db create-user create-schema install-lib install-db
@@ -123,6 +128,9 @@ create-test-schema:
 
 grant-d2-to-web:
 	$(PRIV_PSQL_DB) -f grant_d2_to_web_user.sql
+
+grant-d2-to-read-user:
+	$(PRIV_PSQL_DB) -f grant_d2_to_read_user.sql
 
 create-db:
 	-createlang -d template1 plpgsql
@@ -161,9 +169,11 @@ create-user:
 ifeq ($(PASSWD),'')
 	-createuser -l -i -S -R -D -P -E $(DB_USER)
 	-createuser -l -i -S -R -D -P -E $(DB_WEB_USER)
+	-createuser -l -i -S -R -D -P -E $(DB_READ_USER)
 else
 	$(PRIV_PSQL_DB) -c "CREATE ROLE $(DB_USER) ENCRYPTED PASSWORD '$(PASSWD)' NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
 	$(PRIV_PSQL_DB) -c "CREATE ROLE $(DB_WEB_USER) ENCRYPTED PASSWORD '$(PASSWD)' NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+	$(PRIV_PSQL_DB) -c "CREATE ROLE $(DB_READ_USER) ENCRYPTED PASSWORD '$(PASSWD)' NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
 endif
 
 drop-db:
