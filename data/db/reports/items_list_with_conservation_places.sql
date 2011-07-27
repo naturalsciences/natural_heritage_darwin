@@ -6,7 +6,7 @@
        (select array_to_string(array_agg(people_list), ' - ') FROM (select trim(formated_name) as people_list from (catalogue_people as cp inner join people as peo on cp.people_ref = peo.id) inner join identifications as ident on cp.record_id = ident.id and cp.referenced_relation = 'identifications' and cp.people_type = 'identifier' where ident.referenced_relation = 'specimens' and ident.record_id = df.spec_ref order by cp.order_by) as x) as Determinatoren,
        df.individual_sex as Geslacht,
        case when df.individual_stage = 'not applicable' then null else df.individual_stage end as Stadium,
-       case when df.individual_social_status = 'not_applicable' then null else df.individual_social_status end as Social_status,
+       case when df.individual_social_status = 'not applicable' then null else df.individual_social_status end as Social_status,
        df.part as Item,
        df.room || '-' || df.row || '-' || df.shelf || '-' || df.container as Bewaarplaats
 from darwin_flat as df
