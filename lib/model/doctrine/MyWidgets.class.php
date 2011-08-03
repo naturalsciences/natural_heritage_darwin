@@ -6,14 +6,13 @@
 class MyWidgets extends BaseMyWidgets
 {
   public static $help_widget = array(
-"cataloguewidget"=> array(
+    "cataloguewidget"=> array(
         "cataloguePeople" => "This widget allows you to add people that can have different roles. e.g. an author, a reviewer, an expert in a certain domain, etc.",    
         "comment" => "This widget is used to add commentary.If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however",    
         "extLinks" => "This widget allows you to add a URL address to the record (ex : http://www.naturalsciences.be)",    
         "properties" => "This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= measurement, sub type= lenght, qualifier= wing, method= manual, tool= ruler, value units= cm, Accuracy units= mm , value= 3, accuracy=0.2",
         "keywords" => "This widget allows you to split the entire record name into smaller fields. Most of the keyword will follow the ABCDEFG standard",
         "vernacularNames" => "This widget can be used to add the equivalent vernacular name of the record in different languages. You can even add more than one vernacular name in the same language ",
-        "relationRename" => "In this widget you can add the current name of the catalogue item",
         "synonym" => "This widget allows you to add synonyms, isonyms or homonyms of the catalogue item",
         "relationRecombination" => "In this widget you can add the original combination(s) that constitutes the present catalogue item",        
         "collectionsCodes" => "This widget allows you to preset the default prefix and/or separator and/or code and/or separator and/or suffix of the main code that will be used when choosing this collection in the specimen screen",

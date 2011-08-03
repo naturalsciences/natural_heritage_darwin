@@ -31,7 +31,12 @@
               <?php echo $form['gender']->renderError() ?>
               <?php echo $form['gender'] ?>
             </td>
-          </tr>           
+          </tr>
+          <tr id="is_physical">
+            <th><?php echo $form['title']->renderLabel();?>:</th>
+            <td><?php echo $form['title']->render();?></td>
+            <td><?php echo $form['title']->renderError();?></td>
+          </tr>
           <tr>
             <th><?php echo $form['family_name']->renderLabel();?>:</th>
             <td><?php echo $form['family_name']->render();?></td>
@@ -65,14 +70,9 @@
             <td><?php echo $form['RegisterCommForm'][0]['entry']->renderError();?></td>
           </tr>
           <tr>
-            <th><?php echo $form['RegisterLanguagesForm'][0]['language_country']->renderLabel();?>:</th>
-            <td><?php echo $form['RegisterLanguagesForm'][0]['language_country']->render();?></td>
-            <td><?php echo $form['RegisterLanguagesForm'][0]['language_country']->renderError();?></td>
-          </tr>
-          <tr id="is_physical">
-            <th><?php echo $form['title']->renderLabel();?>:</th>
-            <td><?php echo $form['title']->render();?></td>
-            <td><?php echo $form['title']->renderError();?></td>
+            <th><?php echo $form['selected_lang']->renderLabel();?>:</th>
+            <td><?php echo $form['selected_lang']->render();?></td>
+            <td><?php echo $form['selected_lang']->renderError();?></td>
           </tr>
           <tr>
             <th><?php echo $form['captcha']->renderLabel();?>:</th>

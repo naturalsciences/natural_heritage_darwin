@@ -18,6 +18,7 @@ class TagGroupsTable extends DarwinTable
   public function getPropositions($value, $group="", $sub_group="")
   {
     $conn = Doctrine_Manager::connection();
+    $limit = "Limit 10 ";
     $tags = $conn->quote($value, 'string');
     $q_group = $conn->quote($group, 'string');
     $grouping_clause = " group_type = $q_group";

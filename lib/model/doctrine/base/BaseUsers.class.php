@@ -21,6 +21,7 @@
  * @property integer $db_user_type
  * @property integer $people_id
  * @property string $last_seen
+ * @property string $selected_lang
  * @property People $People
  * @property Doctrine_Collection $UsersLanguages
  * @property Doctrine_Collection $UsersComm
@@ -49,6 +50,7 @@
  * @method integer             getDbUserType()            Returns the current record's "db_user_type" value
  * @method integer             getPeopleId()              Returns the current record's "people_id" value
  * @method string              getLastSeen()              Returns the current record's "last_seen" value
+ * @method string              getSelectedLang()          Returns the current record's "selected_lang" value
  * @method People              getPeople()                Returns the current record's "People" value
  * @method Doctrine_Collection getUsersLanguages()        Returns the current record's "UsersLanguages" collection
  * @method Doctrine_Collection getUsersComm()             Returns the current record's "UsersComm" collection
@@ -76,6 +78,7 @@
  * @method Users               setDbUserType()            Sets the current record's "db_user_type" value
  * @method Users               setPeopleId()              Sets the current record's "people_id" value
  * @method Users               setLastSeen()              Sets the current record's "last_seen" value
+ * @method Users               setSelectedLang()          Sets the current record's "selected_lang" value
  * @method Users               setPeople()                Sets the current record's "People" value
  * @method Users               setUsersLanguages()        Sets the current record's "UsersLanguages" collection
  * @method Users               setUsersComm()             Sets the current record's "UsersComm" collection
@@ -160,6 +163,11 @@ abstract class BaseUsers extends sfDoctrineRecord
              ));
         $this->hasColumn('last_seen', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('selected_lang', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'en',
              ));
     }
 

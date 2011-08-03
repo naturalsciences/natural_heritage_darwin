@@ -243,4 +243,22 @@ class catalogueActions extends DarwinActions
     return $this->renderPartial('nameValue',array('form' => $form['newKeywords'][$number]));
   }
 
+  public function executeGetCurrent(sfWebRequest $request)
+  {
+    $this->forward404Unless( $request->hasParameter('id') && $request->hasParameter('table'));
+
+    $relation  = Doctrine::getTable('ClassificationSynonymies')->findGroupIdFor(
+      $request->getParameter('table'),
+      $request->getParameter('id'),
+      'rename'
+    );
+    if($relation == 0)
+      return $this->renderText('{}'); // The record has no current name
+
+    $current  = Doctrine::getTable('ClassificationSynonymies')->findBasionymIdForGroupId($relation);
+    if($current == $request->getParameter('id') || $current == 0)
+      return $this->renderText('{}'); // The record is a current name
+    $item = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->find($current);
+    return $this->renderText(json_encode(array('name'=>$item->getName(), 'id'=>$item->getId() )));
+  }
 }

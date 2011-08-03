@@ -123,7 +123,8 @@ class ClassificationSynonymiesTable extends DarwinTable
     return array(
       'synonym' => $this->getI18N()->__('Synonyms'),
       'isonym' => $this->getI18N()->__('Isonyms'),
-      'homonym' => $this->getI18N()->__('Homonyms')
+      'homonym' => $this->getI18N()->__('Homonyms'),
+      'rename' => $this->getI18N()->__('Renaming'),
     );
   }
 
@@ -209,6 +210,7 @@ class ClassificationSynonymiesTable extends DarwinTable
   /**
    * mergeSynonyms
    * Merge two groups of synonyms for 2 items (or create groups if they doesn't exists)
+   * I the group name is rename, and the group does not exists, set the record id 2 as basionym (current name)
    * @param string $table the name of the referenced relation
    * @param int $record_id_1 id of the first referenced record
    * @param int $record_id_2 id of the second referenced record
@@ -235,6 +237,10 @@ class ClassificationSynonymiesTable extends DarwinTable
 
         $c2 = clone $c1;
         $c2->setRecordId($record_id_1);
+        if($group_name =='rename')
+        {
+          $c2->setIsBasionym(true);
+        }
         $c2->save();
       }
       elseif($ref_group_id_1 == 0)
@@ -286,8 +292,20 @@ class ClassificationSynonymiesTable extends DarwinTable
   public function countRecordInGroup($group_id)
   {
     $q = Doctrine_Query::create()
-	->from('ClassificationSynonymies s')
-	->andWhere('s.group_id = ?', $group_id);
+      ->from('ClassificationSynonymies s')
+      ->andWhere('s.group_id = ?', $group_id);
     return $q->count();
+  }
+
+  public function findBasionymIdForGroupId($id)
+  {
+    $q = Doctrine_Query::create()
+      ->from('ClassificationSynonymies s')
+      ->andWhere('s.group_id = ?', $id)
+      ->andWhere('s.is_basionym = ?',true);
+    $classif = $q->fetchOne();
+    if($classif)
+      return $classif->getRecordId();
+    else return 0;
   }
 }

@@ -18,7 +18,7 @@ class InstitutionsFormFilter extends BaseInstitutionsFormFilter
     $this->widgetSchema['is_physical'] = new sfWidgetFormInputHidden();
     $this->setDefault('is_physical', 0); 
 
-    $this->widgetSchema['family_name'] = new sfWidgetFormFilterInput(array('template' => '%input%'));
+    $this->widgetSchema['family_name'] = new sfWidgetFormInput();
     $this->widgetSchema['family_name']->setAttributes(array('class'=>'medium_size'));
 
     $this->widgetSchema['only_role'] = new sfWidgetFormInputHidden();
@@ -29,7 +29,7 @@ class InstitutionsFormFilter extends BaseInstitutionsFormFilter
 
   public function addFamilyNameColumnQuery($query, $field, $val)
   {
-    return $this->addNamingColumnQuery($query, 'people', 'formated_name_ts', $val['text']);
+    return $this->addNamingColumnQuery($query, 'people', 'formated_name_ts', $val);
   }
 
   public function addOnlyRoleColumnQuery($query, $field, $val)

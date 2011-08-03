@@ -15,6 +15,18 @@ fieldset
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
+fieldset > legend
+{
+  padding: 3px ;
+  border: 1px solid #C1CF56 ;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;  
+}
+
+.search_form fieldset > legend
+{
+  border-color: #5BAABD;
+}
 
 #qtip-blanket
 {
@@ -727,7 +739,7 @@ p.tree
 
 /** Add New button after results **/
 
-.new_link, #gtu_filter .right_button
+.new_link, #gtu_filter .right_button, .blue_link
 {
   float:right;
   background-color:#5BAABD;
@@ -745,7 +757,7 @@ p.tree
   padding-right: 0.5em;
 }
 
-.new_link a
+.new_link a, .blue_link a
 {
 /*  vertical-align:text-bottom;*/
   padding: 6px;
@@ -1251,7 +1263,8 @@ table.edit_synon td
   text-align:right;
 }
 
-.edition input[type="submit"], .edition button, .edition input[type="reset"], .edition tfoot a, .renamed input[type="submit"], .renamed button, .renamed tfoot a, .bt_close_green a, .form_buttons a
+.edition input[type="submit"], .edition button, .edition input[type="reset"], .edition tfoot a, .renamed input[type="submit"], .renamed button, .renamed tfoot a, .bt_close_green a, .form_buttons a,
+.edition a.but
 {
   border:1px solid #C1CC33;
   background-color:#C1CF56;
@@ -1649,6 +1662,14 @@ fieldset.opened
 {
   border: 1px solid #5BAABD ;
   cursor : pointer ;
+}
+
+fieldset.opened > legend
+{
+  padding: 3px ;
+  border: 1px solid #5BAABD ;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;  
 }
 
 /* catalogue_keyword_view */
@@ -2608,4 +2629,86 @@ body .ui-tooltip, body .qtip
   background-color:#C1CF56 !important;
   color:white;
 }
+/* custom appearence for input type file */
+#divFile
+{
+  position : relative;
+  width : 250px;
+  text-align : left;
+}
 
+input[type='file']
+{
+  opacity : 0; /* for !IE */
+  filter : alpha(opacity=0); /* for IE */
+  position : absolute;
+  right : 0;
+  top : 0;
+}
+#input_text_file
+{
+  border : none;
+  padding : 0px 0px;
+  background : #def;
+  width : 200px;
+  height: 20px;
+  border : 1px solid black ;
+}
+
+
+/** Import ***/
+
+.staging_table th
+{
+  padding: 0.2em;
+}
+.staging_table td
+{
+  border: 1px solid black;
+}
+.staging_table .fld_empty
+{
+  background-color: #E0DFDE;
+}
+
+.staging_table .fld_tocomplete
+{
+  background-color: #E0BF52; 
+}
+
+.staging_table .fld_ok
+{
+  background-color: #83E051;
+}
+
+.edition a.but
+{
+  margin-top: 1em;
+}
+
+.no_record_msg
+{
+  margin-top: 2em;
+  min-width: 300px;
+  text-align:center
+}
+.no_record_msg em
+{
+  text-decoration:underline;
+}
+.no_record_msg em:hover
+{
+    cursor:pointer;
+}
+
+.encod_tooltip
+{
+  width:163px;
+}
+
+.encod_tooltip .ui-tooltip-content 
+{
+    background-color:white;
+    border: 1px solid #C8C8C8;
+    border-top:none;
+}

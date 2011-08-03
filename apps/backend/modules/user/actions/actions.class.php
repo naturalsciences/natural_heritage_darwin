@@ -42,6 +42,10 @@ class userActions extends DarwinActions
       if($this->form->isValid())
       {
         $this->form->save();
+        if( $this->getUser()->getId() == $this->user->getId())
+        {
+          $this->getUser()->setCulture($this->form->getValue('selected_lang'));
+        }
         return $this->redirect('user/edit?id='.$this->user->getId());
       }
     }
@@ -351,11 +355,6 @@ class userActions extends DarwinActions
           }
 
           $this->form->save();
-          if($this->form->getValue('preferred_language')&&($this->getUser()->getAttribute('db_user_id') == $this->lang->getUsersRef()))
-          {
-            $this->getUser()->setCulture($this->form->getValue('language_country'));
-          }
-
           return $this->renderText('ok');
         }
         catch(Doctrine_Exception $e)

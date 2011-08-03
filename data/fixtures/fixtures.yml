@@ -364,14 +364,6 @@ MyWidgets:
         order_by: 2
         opened: false
         visible: true
-    u1ws10:
-        User: u1
-        col_num: 1
-        category: catalogue_taxonomy_widget
-        group_name: relationRename
-        order_by: 0
-        opened: false
-        visible: false
     u1ws11:
         User: u1
         col_num: 1

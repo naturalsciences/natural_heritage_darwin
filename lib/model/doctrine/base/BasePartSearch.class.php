@@ -123,6 +123,7 @@
  * @property integer $part_ref
  * @property string $part
  * @property string $part_status
+ * @property integer $institution_ref
  * @property string $building
  * @property string $floor
  * @property string $room
@@ -290,6 +291,7 @@
  * @method integer             getPartRef()                  Returns the current record's "part_ref" value
  * @method string              getPart()                     Returns the current record's "part" value
  * @method string              getPartStatus()               Returns the current record's "part_status" value
+ * @method integer             getInstitutionRef()           Returns the current record's "institution_ref" value
  * @method string              getBuilding()                 Returns the current record's "building" value
  * @method string              getFloor()                    Returns the current record's "floor" value
  * @method string              getRoom()                     Returns the current record's "room" value
@@ -456,6 +458,7 @@
  * @method PartSearch          setPartRef()                  Sets the current record's "part_ref" value
  * @method PartSearch          setPart()                     Sets the current record's "part" value
  * @method PartSearch          setPartStatus()               Sets the current record's "part_status" value
+ * @method PartSearch          setInstitutionRef()           Sets the current record's "institution_ref" value
  * @method PartSearch          setBuilding()                 Sets the current record's "building" value
  * @method PartSearch          setFloor()                    Sets the current record's "floor" value
  * @method PartSearch          setRoom()                     Sets the current record's "room" value
@@ -926,6 +929,9 @@ abstract class BasePartSearch extends sfDoctrineRecord
              ));
         $this->hasColumn('part_status', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('institution_ref', 'integer', null, array(
+             'type' => 'integer',
              ));
         $this->hasColumn('building', 'string', null, array(
              'type' => 'string',

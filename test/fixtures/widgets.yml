@@ -294,16 +294,6 @@ MyWidgets:
         visible: true
         is_available: true
         title_perso: People
-    u1wtax1:
-        User: u1
-        col_num: 1
-        category: catalogue_taxonomy_widget
-        group_name: relationRename
-        order_by: 0
-        opened: false
-        visible: false
-        is_available: true
-        title_perso: Current name
     u1wtax2:
         User: u1
         col_num: 1
@@ -384,16 +374,6 @@ MyWidgets:
         visible: true
         is_available: true
         title_perso: People
-    u1wchs1:
-        User: u1
-        col_num: 1
-        category: catalogue_chronostratigraphy_widget
-        group_name: relationRename
-        order_by: 1
-        opened: false
-        visible: false
-        is_available: true
-        title_perso: Current name
     u1wchs2:
         User: u1
         col_num: 1
@@ -454,16 +434,7 @@ MyWidgets:
         visible: true
         is_available: true
         title_perso: People
-    u1wlhs1:
-        User: u1
-        col_num: 1
-        category: catalogue_lithostratigraphy_widget
-        group_name: relationRename
-        order_by: 1
-        opened: false
-        visible: false
-        is_available: true
-        title_perso: Current name
+
     u1wlhs2:
         User: u1
         col_num: 1
@@ -524,16 +495,6 @@ MyWidgets:
         visible: true
         is_available: true
         title_perso: People
-    u1wlil1:
-        User: u1
-        col_num: 1
-        category: catalogue_lithology_widget
-        group_name: relationRename
-        order_by: 1
-        opened: false
-        visible: false
-        is_available: true
-        title_perso: Current name
     u1wlil2:
         User: u1
         col_num: 1
@@ -594,16 +555,6 @@ MyWidgets:
         visible: true
         is_available: true
         title_perso: People
-    u1wmin1:
-        User: u1
-        col_num: 1
-        category: catalogue_mineralogy_widget
-        group_name: relationRename
-        order_by: 1
-        opened: false
-        visible: false
-        is_available: true
-        title_perso: Current name
     u1wmin2:
         User: u1
         col_num: 1

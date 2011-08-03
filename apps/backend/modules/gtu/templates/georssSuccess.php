@@ -5,7 +5,7 @@
 
 <?php foreach($items as $item):?>
                 <Placemark>  
-                      <name><?php echo count( $items);?>-<?php echo $item->getCode();?></name>
+                      <name><?php echo $item->getCode();?></name>
 <description><![CDATA[
       <div class="map_result_id_<?php echo $item->getId();?>">
         <div class="item_name hidden"><?php echo $item->getTagsWithCode(ESC_RAW);?></div>

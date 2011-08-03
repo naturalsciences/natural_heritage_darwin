@@ -446,6 +446,16 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
 
 
 
+    $this->widgetSchema['institution_ref'] = new widgetFormButtonRef(array(
+       'model' => 'Institutions',
+       'link_url' => 'institution/choose?with_js=1',
+       'method' => 'getFamilyName',
+       'box_title' => $this->getI18N()->__('Choose Institution'),
+       'nullable' => true,
+     ));
+    $this->widgetSchema['institution_ref']->setLabel('Institution');
+
+    $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required' => false));
 
     $this->widgetSchema['building'] = new sfWidgetFormDoctrineChoice(array(
       'model' => 'SpecimenParts',
@@ -454,6 +464,7 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
       'key_method' => 'getBuildings',
       'add_empty' => true,
     ));
+
     $this->validatorSchema['building'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['floor'] = new sfWidgetFormDoctrineChoice(array(
@@ -668,6 +679,15 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
         $query->andWhereIn('individual_rock_form',$val);
       else
         $query->andWhere('individual_rock_form = ?',$val);
+    }
+    return $query ;
+  }
+
+  public function addInstitutionRefColumnQuery($query, $field, $val)
+  {
+    if($val != '')
+    {
+      $query->andWhere('institution_ref = ?',$val);
     }
     return $query ;
   }

@@ -109,5 +109,21 @@ class CollectionsTable extends DarwinTable
             ->innerJoin('p.Collections col')
             ->where('col.id = ?', $collection_ref);
       return $q->fetchOne();
-    }    
+    }
+
+    public function getAllAvailableCollectionsFor($user_id)
+    {
+      $q = Doctrine_Query::create()
+        ->select('c.*')
+        ->from('Collections c')
+        ->leftJoin('c.CollectionsRights r ON c.id=r.collection_ref AND r.user_ref = '.$user_id)
+        ->orderBy('name ASC');
+      $res = $q->execute();
+      $results = array(0 =>'All');
+      foreach($res as $row)
+      {
+        $results[$row->getId()] = $row->getName();
+      }
+      return $results;        
+    }        
 }

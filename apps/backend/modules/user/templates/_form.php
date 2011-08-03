@@ -84,6 +84,13 @@
           <?php echo $form['additional_names'] ?>
         </td>
       </tr>
+      <tr>
+        <th><?php echo $form['selected_lang']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['selected_lang']->renderError() ?>
+          <?php echo $form['selected_lang'] ?>
+        </td>
+      </tr>
       <?php if(!$form->getObject()->isNew()) : ?>
         <tr>
           <td colspan="2"><hr /></td>

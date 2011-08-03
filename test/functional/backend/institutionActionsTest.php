@@ -22,7 +22,7 @@ $browser->
 
 
   click('.search_submit', array('institutions_filters' => array(
-    'family_name' => array('text' => 'royal'),
+    'family_name' => 'royal',
     'is_physical' => 0,)
     )
   )->
@@ -35,7 +35,7 @@ $browser->
 
   get('/institution/index')->
   click('.search_submit', array('institutions_filters' => array(
-    'family_name' => array('text' => 'ntol'),
+    'family_name' => 'ntol',
     'is_physical' => 0,)
     )
   )->

@@ -248,6 +248,7 @@ Users:
         db_user_type: { type: integer, notnull: true, default: 1}
         people_id: { type: integer}
         last_seen: { type: string}
+        selected_lang: { type: string,notnull:true, default:en}
     relations:
         People:
             local: people_id
@@ -383,7 +384,7 @@ Collections:
         collection_type: { type: enum, notnull: true, default: mix, values: [mix, observation, physical] }
         code: { type: string, notnull: true}
         name: { type: string, notnull: true}
-        name_indexed: { type: string} 
+        name_indexed: { type: string}
         institution_ref: { type: integer, notnull: true}
         main_manager_ref: { type: integer, notnull: true}
         parent_ref: { type: integer}
@@ -521,7 +522,7 @@ Taxonomy:
             class: CatalogueLevels
             local: level_ref
             foreign: id
-            
+
 
 ClassificationKeywords:
     columns:
@@ -783,6 +784,7 @@ SpecimenParts:
         specimen_individual_ref: { type: integer, notnull: true }
         specimen_part: { type: string, notnull: true, default: specimen}
         complete: { type: boolean, notnull: true, default: true}
+        institution_ref: {type: integer}
         building: { type: string}
         floor: { type: string}
         room: { type: string}
@@ -935,7 +937,7 @@ SpecimenSearch:
         gtu_location: { type: string}
         taxon_ref: { type: integer, notnull: true, default:0}
         taxon_name:  { type: string}
-        taxon_name_indexed: { type: string}    
+        taxon_name_indexed: { type: string}
         taxon_name_order_by: { type: string}
         taxon_level_ref: { type: integer, notnull: true }
         taxon_level_name: { type: string}
@@ -943,16 +945,16 @@ SpecimenSearch:
         taxon_path: { type: string}
         taxon_parent_ref: { type: integer, default:0}
         taxon_extinct: { type: boolean}
-        litho_ref: { type: integer, notnull: true, default:0} 
+        litho_ref: { type: integer, notnull: true, default:0}
         litho_name: { type: string}
         litho_name_indexed: { type: string}
         litho_name_order_by: { type: string}
-        litho_level_ref: { type: integer, notnull: true, default:0}    
+        litho_level_ref: { type: integer, notnull: true, default:0}
         litho_level_name: { type: string}
         litho_status: { type: string}
         litho_local: { type: boolean}
         litho_color: { type: string}
-        litho_path: { type: string}                
+        litho_path: { type: string}
         litho_parent_ref: { type: integer, default:0}
         chrono_ref: { type: integer, notnull: true, default:0}
         chrono_name: { type: string}
@@ -965,7 +967,7 @@ SpecimenSearch:
         chrono_color: {type: string}
         chrono_path: { type: string}
         chrono_parent_ref: { type: integer, default:0}
-        lithology_ref: { type: integer, notnull: true, default:0}    
+        lithology_ref: { type: integer, notnull: true, default:0}
         lithology_name: { type: string}
         lithology_name_indexed: { type: string}
         lithology_name_order_by: { type: string}
@@ -987,7 +989,7 @@ SpecimenSearch:
         mineral_color: { type: string}
         mineral_path: { type: string}
         mineral_parent_ref: { type: integer, default:0}
-        host_taxon_ref: { type: integer, notnull: true, default:0}   
+        host_taxon_ref: { type: integer, notnull: true, default:0}
         host_relationship: { type: string}
         host_taxon_name: { type: string}
         host_taxon_name_indexed: { type: string}
@@ -997,16 +999,16 @@ SpecimenSearch:
         host_taxon_status: { type: string}
         host_taxon_path: { type: string}
         host_taxon_parent_ref: { type: integer, default:0}
-        host_taxon_extinct: { type: boolean}      
+        host_taxon_extinct: { type: boolean}
         host_specimen_ref: { type: integer}
-        ig_ref: { type: integer}                  
-        ig_num: { type: string}           
+        ig_ref: { type: integer}
+        ig_num: { type: string}
         ig_num_indexed: { type: string}
-        ig_date_mask: { type: integer }                 
-        ig_date: { type: string}                      
-        acquisition_category: { type: string}     
-        acquisition_date_mask: { type: integer }        
-        acquisition_date: { type: string}             
+        ig_date_mask: { type: integer }
+        ig_date: { type: string}
+        acquisition_category: { type: string}
+        acquisition_date_mask: { type: integer }
+        acquisition_date: { type: string}
         with_types: {type: boolean }
         with_individuals: {type: boolean}
         individual_ref: {type: integer}
@@ -1024,6 +1026,7 @@ SpecimenSearch:
         part_ref: {type: integer }
         part: {type: string }
         part_status: {type: string }
+        institution_ref: {type: integer}
         building: {type: string }
         floor: {type: string }
         room: {type: string }
@@ -1075,7 +1078,7 @@ SpecimenSearch:
         GtuParent:
             local: gtu_parent_ref
             foreign: id
-            class: Gtu 
+            class: Gtu
         Taxonomy:
             local: taxon_ref
             foreign: id
@@ -1131,7 +1134,7 @@ SpecimenSearch:
             local: mineral_parent_ref
             foreign: id
             class: Mineralogy
-        HostTaxon:            
+        HostTaxon:
             local: host_taxon_ref
             foreign: id
             class: Taxonomy
@@ -1143,14 +1146,14 @@ SpecimenSearch:
             local: host_taxon_parent_ref
             foreign: id
             class: Taxonomy
-        HostSpecimen:            
+        HostSpecimen:
             local: host_specimen_ref
             foreign: id
             class: Specimens
         Ig:
             local: ig_ref
             foreign: id
-            class: Igs          
+            class: Igs
 
 IndividualSearch:
     tableName: darwin_flat
@@ -1184,7 +1187,7 @@ IndividualSearch:
         gtu_location: { type: string}
         taxon_ref: { type: integer, notnull: true, default:0}
         taxon_name:  { type: string}
-        taxon_name_indexed: { type: string}    
+        taxon_name_indexed: { type: string}
         taxon_name_order_by: { type: string}
         taxon_level_ref: { type: integer, notnull: true }
         taxon_level_name: { type: string}
@@ -1192,16 +1195,16 @@ IndividualSearch:
         taxon_path: { type: string}
         taxon_parent_ref: { type: integer, default:0}
         taxon_extinct: { type: boolean}
-        litho_ref: { type: integer, notnull: true, default:0} 
+        litho_ref: { type: integer, notnull: true, default:0}
         litho_name: { type: string}
         litho_name_indexed: { type: string}
         litho_name_order_by: { type: string}
-        litho_level_ref: { type: integer, notnull: true, default:0}    
+        litho_level_ref: { type: integer, notnull: true, default:0}
         litho_level_name: { type: string}
         litho_status: { type: string}
         litho_local: { type: boolean}
         litho_color: { type: string}
-        litho_path: { type: string}                
+        litho_path: { type: string}
         litho_parent_ref: { type: integer, default:0}
         chrono_ref: { type: integer, notnull: true, default:0}
         chrono_name: { type: string}
@@ -1214,7 +1217,7 @@ IndividualSearch:
         chrono_color: {type: string}
         chrono_path: { type: string}
         chrono_parent_ref: { type: integer, default:0}
-        lithology_ref: { type: integer, notnull: true, default:0}    
+        lithology_ref: { type: integer, notnull: true, default:0}
         lithology_name: { type: string}
         lithology_name_indexed: { type: string}
         lithology_name_order_by: { type: string}
@@ -1236,7 +1239,7 @@ IndividualSearch:
         mineral_color: { type: string}
         mineral_path: { type: string}
         mineral_parent_ref: { type: integer, default:0}
-        host_taxon_ref: { type: integer, notnull: true, default:0}   
+        host_taxon_ref: { type: integer, notnull: true, default:0}
         host_relationship: { type: string}
         host_taxon_name: { type: string}
         host_taxon_name_indexed: { type: string}
@@ -1246,16 +1249,16 @@ IndividualSearch:
         host_taxon_status: { type: string}
         host_taxon_path: { type: string}
         host_taxon_parent_ref: { type: integer, default:0}
-        host_taxon_extinct: { type: boolean}      
+        host_taxon_extinct: { type: boolean}
         host_specimen_ref: { type: integer}
-        ig_ref: { type: integer}                  
-        ig_num: { type: string}           
+        ig_ref: { type: integer}
+        ig_num: { type: string}
         ig_num_indexed: { type: string}
-        ig_date_mask: { type: integer }                 
-        ig_date: { type: string}                      
-        acquisition_category: { type: string}     
-        acquisition_date_mask: { type: integer }        
-        acquisition_date: { type: string}             
+        ig_date_mask: { type: integer }
+        ig_date: { type: string}
+        acquisition_category: { type: string}
+        acquisition_date_mask: { type: integer }
+        acquisition_date: { type: string}
         with_types: {type: boolean }
         with_individuals: {type:boolean}
         individual_ref: {type: integer, primary: true}
@@ -1273,6 +1276,7 @@ IndividualSearch:
         part_ref: {type: integer }
         part: {type: string }
         part_status: {type: string }
+        institution_ref: {type: integer}
         building: {type: string }
         floor: {type: string }
         room: {type: string }
@@ -1324,7 +1328,7 @@ IndividualSearch:
         GtuParent:
             local: gtu_parent_ref
             foreign: id
-            class: Gtu 
+            class: Gtu
         Taxonomy:
             local: taxon_ref
             foreign: id
@@ -1380,7 +1384,7 @@ IndividualSearch:
             local: mineral_parent_ref
             foreign: id
             class: Mineralogy
-        HostTaxon:            
+        HostTaxon:
             local: host_taxon_ref
             foreign: id
             class: Taxonomy
@@ -1392,7 +1396,7 @@ IndividualSearch:
             local: host_taxon_parent_ref
             foreign: id
             class: Taxonomy
-        HostSpecimen:            
+        HostSpecimen:
             local: host_specimen_ref
             foreign: id
             class: Specimens
@@ -1434,7 +1438,7 @@ PartSearch:
         gtu_location: { type: string}
         taxon_ref: { type: integer, notnull: true, default:0}
         taxon_name:  { type: string}
-        taxon_name_indexed: { type: string}    
+        taxon_name_indexed: { type: string}
         taxon_name_order_by: { type: string}
         taxon_level_ref: { type: integer, notnull: true }
         taxon_level_name: { type: string}
@@ -1442,16 +1446,16 @@ PartSearch:
         taxon_path: { type: string}
         taxon_parent_ref: { type: integer, default:0}
         taxon_extinct: { type: boolean}
-        litho_ref: { type: integer, notnull: true, default:0} 
+        litho_ref: { type: integer, notnull: true, default:0}
         litho_name: { type: string}
         litho_name_indexed: { type: string}
         litho_name_order_by: { type: string}
-        litho_level_ref: { type: integer, notnull: true, default:0}    
+        litho_level_ref: { type: integer, notnull: true, default:0}
         litho_level_name: { type: string}
         litho_status: { type: string}
         litho_local: { type: boolean}
         litho_color: { type: string}
-        litho_path: { type: string}                
+        litho_path: { type: string}
         litho_parent_ref: { type: integer, default:0}
         chrono_ref: { type: integer, notnull: true, default:0}
         chrono_name: { type: string}
@@ -1464,7 +1468,7 @@ PartSearch:
         chrono_color: {type: string}
         chrono_path: { type: string}
         chrono_parent_ref: { type: integer, default:0}
-        lithology_ref: { type: integer, notnull: true, default:0}    
+        lithology_ref: { type: integer, notnull: true, default:0}
         lithology_name: { type: string}
         lithology_name_indexed: { type: string}
         lithology_name_order_by: { type: string}
@@ -1486,7 +1490,7 @@ PartSearch:
         mineral_color: { type: string}
         mineral_path: { type: string}
         mineral_parent_ref: { type: integer, default:0}
-        host_taxon_ref: { type: integer, notnull: true, default:0}   
+        host_taxon_ref: { type: integer, notnull: true, default:0}
         host_relationship: { type: string}
         host_taxon_name: { type: string}
         host_taxon_name_indexed: { type: string}
@@ -1523,6 +1527,7 @@ PartSearch:
         part_ref: {type: integer}
         part: {type: string }
         part_status: {type: string }
+        institution_ref: {type: integer}
         building: {type: string }
         floor: {type: string }
         room: {type: string }
@@ -1574,7 +1579,7 @@ PartSearch:
         GtuParent:
             local: gtu_parent_ref
             foreign: id
-            class: Gtu 
+            class: Gtu
         Taxonomy:
             local: taxon_ref
             foreign: id
@@ -1630,7 +1635,7 @@ PartSearch:
             local: mineral_parent_ref
             foreign: id
             class: Mineralogy
-        HostTaxon:            
+        HostTaxon:
             local: host_taxon_ref
             foreign: id
             class: Taxonomy
@@ -1642,7 +1647,7 @@ PartSearch:
             local: host_taxon_parent_ref
             foreign: id
             class: Taxonomy
-        HostSpecimen:            
+        HostSpecimen:
             local: host_specimen_ref
             foreign: id
             class: Specimens
@@ -1684,7 +1689,7 @@ IgsSearch:
         gtu_location: { type: string}
         taxon_ref: { type: integer, notnull: true, default:0}
         taxon_name:  { type: string}
-        taxon_name_indexed: { type: string}    
+        taxon_name_indexed: { type: string}
         taxon_name_order_by: { type: string}
         taxon_level_ref: { type: integer, notnull: true }
         taxon_level_name: { type: string}
@@ -1692,16 +1697,16 @@ IgsSearch:
         taxon_path: { type: string}
         taxon_parent_ref: { type: integer, default:0}
         taxon_extinct: { type: boolean}
-        litho_ref: { type: integer, notnull: true, default:0} 
+        litho_ref: { type: integer, notnull: true, default:0}
         litho_name: { type: string}
         litho_name_indexed: { type: string}
         litho_name_order_by: { type: string}
-        litho_level_ref: { type: integer, notnull: true, default:0}    
+        litho_level_ref: { type: integer, notnull: true, default:0}
         litho_level_name: { type: string}
         litho_status: { type: string}
         litho_local: { type: boolean}
         litho_color: { type: string}
-        litho_path: { type: string}                
+        litho_path: { type: string}
         litho_parent_ref: { type: integer, default:0}
         chrono_ref: { type: integer, notnull: true, default:0}
         chrono_name: { type: string}
@@ -1714,7 +1719,7 @@ IgsSearch:
         chrono_color: {type: string}
         chrono_path: { type: string}
         chrono_parent_ref: { type: integer, default:0}
-        lithology_ref: { type: integer, notnull: true, default:0}    
+        lithology_ref: { type: integer, notnull: true, default:0}
         lithology_name: { type: string}
         lithology_name_indexed: { type: string}
         lithology_name_order_by: { type: string}
@@ -1736,7 +1741,7 @@ IgsSearch:
         mineral_color: { type: string}
         mineral_path: { type: string}
         mineral_parent_ref: { type: integer, default:0}
-        host_taxon_ref: { type: integer, notnull: true, default:0}   
+        host_taxon_ref: { type: integer, notnull: true, default:0}
         host_relationship: { type: string}
         host_taxon_name: { type: string}
         host_taxon_name_indexed: { type: string}
@@ -1746,16 +1751,16 @@ IgsSearch:
         host_taxon_status: { type: string}
         host_taxon_path: { type: string}
         host_taxon_parent_ref: { type: integer, default:0}
-        host_taxon_extinct: { type: boolean}      
+        host_taxon_extinct: { type: boolean}
         host_specimen_ref: { type: integer}
-        ig_ref: { type: integer, primary: true}                  
-        ig_num: { type: string}           
+        ig_ref: { type: integer, primary: true}
+        ig_num: { type: string}
         ig_num_indexed: { type: string}
-        ig_date_mask: { type: integer }                 
-        ig_date: { type: string}                      
-        acquisition_category: { type: string}     
-        acquisition_date_mask: { type: integer }        
-        acquisition_date: { type: string}             
+        ig_date_mask: { type: integer }
+        ig_date: { type: string}
+        acquisition_category: { type: string}
+        acquisition_date_mask: { type: integer }
+        acquisition_date: { type: string}
         with_types: {type: boolean }
         with_individuals: {type: boolean}
         individual_ref: {type: integer}
@@ -1773,6 +1778,7 @@ IgsSearch:
         part_ref: {type: integer }
         part: {type: string }
         part_status: {type: string }
+        institution_ref: {type: integer}
         building: {type: string }
         floor: {type: string }
         room: {type: string }
@@ -1820,7 +1826,7 @@ IgsSearch:
         GtuParent:
             local: gtu_parent_ref
             foreign: id
-            class: Gtu 
+            class: Gtu
         Taxonomy:
             local: taxon_ref
             foreign: id
@@ -1876,7 +1882,7 @@ IgsSearch:
             local: mineral_parent_ref
             foreign: id
             class: Mineralogy
-        HostTaxon:            
+        HostTaxon:
             local: host_taxon_ref
             foreign: id
             class: Taxonomy
@@ -1888,14 +1894,14 @@ IgsSearch:
             local: host_taxon_parent_ref
             foreign: id
             class: Taxonomy
-        HostSpecimen:            
+        HostSpecimen:
             local: host_specimen_ref
             foreign: id
             class: Specimens
         Ig:
             local: ig_ref
             foreign: id
-            class: Igs    
+            class: Igs
 FlatDict:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -1903,176 +1909,155 @@ FlatDict:
         dict_field: { type: string, notnull: true}
         dict_value: { type: string, notnull: true}
 
-# CollectionsFieldsVisibilities:
-#     columns:
-#         collection_ref: { type: integer, notnull: true, default:0 }
-#         user_ref: { type: integer, notnull: true, default:0 }
-#         field_group_name: { type: string, notnull: true }
-#         db_user_type: { type: integer, notnull: true, default:1 }
-#         searchable: { type: boolean, notnull: true, default: true}
-#         visible: { type: boolean, notnull: true, default: true}
-#     relations:
-#         Collections:
-#             local: collection_ref
-#             foreign: id
-#         Users:
-#             local: user_ref
-#             foreign: id
+Imports:
+    tableName: imports
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        filename: { type: string, notnull: true}
+        user_ref: {type:integer, notnull: true}
+        format : {type:string,notnull: true}
+        collection_ref: { type: integer, notnull: true}
+        state: {type:string,notnull:true, default:'to_be_loaded'}
+        created_at: { type: string, notnull: true}
+        updated_at: { type: string, notnull: true}
+        initial_count: {type:integer, notnull: true}
+        is_finished: {type:boolean, notnull: true,default:false}
+    relations:
+        Collections:
+            local: collection_ref
+            foreign: id
 
-# 
-# UsersCollRightsAsked:
-#     columns:
-#         collection_ref: { type: integer, notnull: true, default:0 }
-#         user_ref: { type: integer, notnull: true, default:0 }
-#         field_group_name: { type: string, notnull: true }
-#         db_user_type: { type: integer, notnull: true }
-#         searchable: { type: boolean, notnull: true, default: true}
-#         visible: { type: boolean, notnull: true, default: true}
-#         motivation: { type: string, notnull: true }
-#         asking_date_time: { type: string, notnull: true }
-#         with_sub_collections: { type: boolean, notnull: true, default: true}
-#     relations:
-#         Collections:
-#             local: collection_ref
-#             foreign: id
-#         Users:
-#             local: user_ref
-#             foreign: id
-# 
-# RecordVisibilities:
-#     columns:
-#         id: { type: integer, primary: true, autoincrement: true }
-#         referenced_relation: { type: string, notnull: true}
-#         record_id: { type: integer, notnull: true}
-#         db_user_type: { type: integer, notnull: true, default:0 }
-#         user_ref: { type: integer, notnull: true, default:0 }
-#         visible: { type: boolean, notnull: true, default: true}
-#     relations:
-#         Users:
-#             local: user_ref
-#             foreign: id
-# 
-# UsersWorkflow:
-#     columns:
-#         id: { type: integer, primary: true, autoincrement: true }
-#         referenced_relation: { type: string, notnull: true}
-#         record_id: { type: integer, notnull: true}
-#         user_ref: { type: integer, notnull: true}
-#         status: { type: string, notnull: true, default: to check}
-#         modification_date_time: { type: string, notnull: true }
-#         comment: { type: string }
-#     relations:
-#         Users:
-#             local: user_ref
-#             foreign: id
+Staging:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        import_ref: { type: integer, notnull: true}
+        parent_ref: { type: integer}
+        spec_ref: { type: integer} 
+        path: { type: string}
+        level: { type: string, notnull: true}
+        category: { type: string}
+        expedition_ref: { type: integer}
+        expedition_name: { type: string}
+        expedition_from_date: {type: string}
+        expedition_from_date_mask: { type: integer}
+        expedition_to_date: {type: string}
+        expedition_to_date_mask: { type: integer}
+        station_visible: { type: boolean}
+        gtu_ref: { type: integer, notnull: true}
+        gtu_code: { type: string}
+        gtu_from_date_mask: { type: integer }
+        gtu_from_date: { type: string}
+        gtu_to_date_mask: { type: integer }
+        gtu_to_date: { type: string }
+        gtu_latitude: { type: float }
+        gtu_longitude: { type: float }
+        gtu_lat_long_accuracy: { type: float }
+        gtu_elevation: { type: float }
+        gtu_elevation_accuracy: { type: float }
+        taxon_ref: { type: integer}
+        taxon_name:  { type: string}
+        taxon_level_ref: { type: integer}
+        taxon_level_name: { type: string}
+        taxon_status: { type: string}
+        taxon_extinct: { type: boolean}
+        taxon_parents: { type: string}
+        litho_ref: { type: integer}
+        litho_name: { type: string}
+        litho_level_ref: { type: integer}
+        litho_level_name: { type: string}
+        litho_status: { type: string}
+        litho_local: { type: boolean}
+        litho_color: { type: string}
+        litho_parents: { type: string}
+        chrono_ref: { type: integer}
+        chrono_name: { type: string}
+        chrono_level_ref: { type: integer}
+        chrono_level_name: { type: string}
+        chrono_status: { type: string}
+        chrono_local: {type: boolean}
+        chrono_color: {type: string}
+        chrono_lower_bound: { type: decimal, length: 10, scale: 3}
+        chrono_upper_bound: { type: decimal, length: 10, scale: 3}
+        chrono_parents: { type: string}
+        lithology_ref: { type: integer}
+        lithology_name: { type: string}
+        lithology_level_ref: { type: integer}
+        lithology_level_name: { type: string}
+        lithology_status: { type: string}
+        lithology_local: { type: boolean}
+        lithology_color: { type: string}
+        lithology_parents: { type: string}
+        mineral_ref: { type: integer}
+        mineral_name: { type: string}
+        mineral_level_ref: { type: integer}
+        mineral_level_name: { type: string}
+        mineral_status: { type: string}
+        mineral_local: { type: boolean}
+        mineral_color: { type: string}
+        mineral_parents: { type: string}
+        host_taxon_ref: { type: integer}
+        host_relationship: { type: string}
+        host_taxon_name: { type: string}
+        host_taxon_level_ref: { type: integer}
+        host_taxon_level_name: { type: string}
+        host_taxon_status: { type: string}
+        host_specimen_ref: { type: integer}
+        collectors: { type: string}
+        donators: { type: string}
+        ig_ref: { type: integer}
+        ig_num: { type: string}
+        ig_date_mask: { type: integer }
+        ig_date: { type: string}
+        acquisition_category: { type: string}
+        acquisition_date_mask: { type: integer }
+        acquisition_date: { type: string}
+        individual_type: {type: string}
+        individual_sex:  {type: string}
+        individual_state: {type: string}
+        individual_stage: {type: string}
+        individual_social_status: {type: string}
+        individual_rock_form: {type: string}
+        individual_count_min: {type: integer }
+        individual_count_max: {type: integer }
+        part: {type: string }
+        institution_ref: {type: integer}
+        institution_name: {type: string}
+        building: {type: string }
+        floor: {type: string }
+        room: {type: string }
+        row: {type: string }
+        shelf: {type: string }
+        container_type: {type: string }
+        container_storage: {type: string }
+        container: {type: string }
+        sub_container_type: {type: string }
+        sub_container_storage: {type: string}
+        sub_container: {type: string }
+        part_count_min: {type: integer }
+        part_count_max: {type:integer}
+        specimen_status: {type: string}
+        status: {type: string}
+        complete: {type: boolean}
+        surnumerary: {type: boolean}
+    relations:
+        Import:
+            local: import_ref
+            foreign: id
+            class: Imports
+        Parent:
+            class: Staging
+            local: parent_ref
+            foreign: id      
 
-
-# Multimedia:
-#     columns:
-#         id: { type: integer, primary: true, autoincrement: true }
-#         is_digital: { type: boolean, notnull: true }
-#         type: { type: string, notnull: true, default: image }
-#         sub_type: { type: string }
-#         title: { type: string, notnull: true }
-#         title_indexed: { type: string }
-#         subject: { type: string, notnull: true, default: '/' }
-#         coverage:   { type: string, notnull: true, default: temporal }
-#         apercu_path: { type: string }
-#         copyright: { type: string }
-#         license: { type: string }
-#         uri: { type: string }
-#         descriptive_ts: { type: string }
-#         descriptive_language_full_text: { type: string }
-#         creation_date: { type: string, notnull: true, default: '0001-01-01'}
-#         creation_date_mask: { type: integer, notnull: true, default:0}
-#         publication_date_from: { type: string, notnull: true, default: '0001-01-01'}
-#         publication_date_from_mask: { type: integer, notnull: true, default:0}
-#         publication_date_to: { type: string, notnull: true, default: '0001-01-01'}
-#         publication_date_to_mask: { type: integer, notnull: true, default:0}
-#         parent_ref: { type: integer }
-#         path: { type: string, notnull: true, default: '/' }
-#         mime_type: { type: string }
-#     relations:
-#         Parent:
-#             class: Multimedia
-#             local: parent_ref
-#             foreign: id
-
-
-# AssociatedMultimedia:
-#     columns:
-#         id: { type: integer, primary: true, autoincrement: true }
-#         referenced_relation: { type: string, notnull: true}
-#         record_id: { type: integer, notnull: true}
-#         multimedia_ref: { type: integer, notnull: true }
-#     relations:
-#         Multimedia:
-#             local: multimedia_ref
-#             foreign: id
-       
-
-# PeopleMultimedia:
-#     columns:
-#         person_user_ref: { type: integer, notnull: true}
-#         object_ref: { type: integer, notnull: true}
-#         category: { type: string, notnull: true, default: avatar}
-#     relations:
-#         People:
-#             local: person_user_ref
-#             foreign: id
-#         Multimedia:
-#             local: object_ref
-#             foreign: id
-# 
-# UsersMultimedia:
-#     columns:
-#         person_user_ref: { type: integer, notnull: true}
-#         object_ref: { type: integer, notnull: true}
-#         category: { type: string, notnull: true, default: avatar}
-#     relations:
-#         Users:
-#             local: person_user_ref
-#             foreign: id
-#         Multimedia:
-#             local: object_ref
-#             foreign: id
-
-# Habitats:
-#     columns:
-#         id: { type: integer, primary: true, autoincrement: true }
-#         name: { type: string, notnull: true}
-#         path: { type: string, notnull: true, default: '/'}
-#         code: { type: string, notnull: true}
-#         code_indexed: { type: string, default: '/'}
-#         description: { type: string, notnull: true}
-#         description_ts: { type: string}
-#         description_language_full_text: { type: string}
-#         habitat_system: { type: string, notnull: true, default: eunis}
-
-# MultimediaKeywords:
-#     columns:
-#         object_ref: { type: integer, notnull: true }
-#         keyword: { type: string, notnull: true}
-#         keyword_indexed: { type: string }
-#     relations:
-#         Multimedia:
-#             local: object_ref
-#             foreign: id
-
-# Soortenregister:
-#     columns:
-#         taxa_ref: { type: integer, notnull: true, default: 0}
-#         gtu_ref: { type: integer, notnull: true, default: 0}
-#         habitat_ref: { type: integer, notnull: true, default: 0}
-#         date_from: { type: string }
-#         date_to: { type: string }
-#     relations:
-#         Taxonomy:
-#             local: taxa_ref
-#             foreign: id
-#         Gtu:
-#             local: gtu_ref
-#             foreign: id
-#         Habitats:
-#             local: habitat_ref
-#             foreign: id
+StagingTagGroups:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        staging_ref: { type: integer, notnull: true}
+        group_name: {type: string, notnull: true}
+        sub_group_name:  { type: string, notnull: true }
+        tag_value: { type: string, notnull: true}
+    relations:
+        Staging:
+            local: staging_ref
+            foreign: id
+            class: Staging            

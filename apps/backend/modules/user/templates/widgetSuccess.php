@@ -2,7 +2,8 @@
 <?php use_stylesheets_for_form($form) ?>
 <?php use_javascripts_for_form($form) ?>                                                                                              
 <div class="page">
-  <h1 class="edit_mode"><?php echo __("List of widgets available for ") ; echo (sprintf("<a href='%s'>%s</a>", url_for($sf_user->getAttribute('db_user_id')==$user->getId()?'user/profile':'user/edit?id='.$user->getId()),$user->getFormatedName())); ?></h1>
+  <h1 class="edit_mode"><?php echo __("List of widgets available for ");
+  printf("<a href='%s'>%s</a>", url_for($sf_user->getAttribute('db_user_id')==$user->getId() ? 'user/profile' : 'user/edit?id='.$user->getId()), $user->getFormatedName()); ?></h1>
   <form action="" method="post">
   <table class="edition" width='100%'>
     <tfoot>

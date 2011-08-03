@@ -15,8 +15,9 @@ class taxonomyActions extends DarwinActions
 
   public function executeChoose(sfWebRequest $request)
   {
+    $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;
     $this->setLevelAndCaller($request);
-    $this->searchForm = new TaxonomyFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id));
+    $this->searchForm = new TaxonomyFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id, 'name' => $name));
     $this->setLayout(false);
   }
 
@@ -59,9 +60,10 @@ class taxonomyActions extends DarwinActions
 
   public function executeNew(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
     $taxa = new Taxonomy() ;
     $taxa = $this->getRecordIfDuplicate($request->getParameter('duplicate_id','0'), $taxa);
+    if($request->hasParameter('taxonomy')) $taxa->fromArray($request->getParameter('taxonomy'));
     // if there is no duplicate $taxa is an empty array
     $this->form = new TaxonomyForm($taxa);
   }

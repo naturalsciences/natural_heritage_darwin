@@ -14,6 +14,7 @@ class widgetFormButtonRef extends sfWidgetFormInputHidden
         $class = ' '.$class['class'];
         $values = array_merge(array('text' => '', 'is_empty' => false), is_array($value) ? $value : array());
         $obj_name = $this->getName($value);
+        if($this->getOption('default_name')) $obj_name = $this->getOption('default_name') ;        
         $input = parent::render($name, $value, $attributes, $errors);
         $input .= $this->renderContentTag('div',$obj_name, array(
           'id' => $this->generateId($name)."_name",
@@ -73,6 +74,7 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
         $this->addRequiredOption('link_url');
         $this->addRequiredOption('box_title');
         $this->addOption('button_class', 'button');
+        $this->addOption('default_name', null);
     }
 
     public function getJavaScripts()

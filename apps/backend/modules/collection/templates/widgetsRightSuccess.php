@@ -5,7 +5,7 @@ $(document).ready(function () {
     $('form.qtiped_form').modal_screen();
  });
 </script>    
-<h1 class="edit_mode"><?php echo __(sprintf("Set rights on widgets for %s", $user->getFormatedName())); ?></h1>
+<h1 class="edit_mode"><?php echo __("Set rights on widgets for %name%",array('%name%' => $user->getFormatedName())); ?></h1>
 <?php echo form_tag('collection/WidgetsRight?user_ref='.$sf_params->get('user_ref').'&collection_ref='.$sf_params->get('collection_ref'), array('class'=>'qtiped_form') );?>
   <table class="widget_right edition">
     <thead>

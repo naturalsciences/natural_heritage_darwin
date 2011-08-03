@@ -29,4 +29,16 @@ class CollectionsRightsTable extends DarwinTable
       $collections[] = $rights->getCollectionRef() ;
     return $collections ;
   }
+  
+  public function hasEditRightsFor($user,$collection_ref)
+  {
+    if($user->isA(Users::ADMIN))
+       return true;
+    $q = Doctrine_Query::create()
+      ->from('CollectionsRights')
+      ->andWhere('collection_ref = ?', $collection_ref)
+      ->andWhere('user_ref = ?',$user->getId())
+      ->andWhere('db_user_type >= 2');
+      return $q->count() != 0;
+  }
 }

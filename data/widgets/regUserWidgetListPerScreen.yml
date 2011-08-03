@@ -582,17 +582,6 @@ tw1:
    title_perso: People
    all_public: true
 
-tw2:
-   col_num: 1
-   category: catalogue_taxonomy_widget
-   group_name: relationRename
-   mandatory: false
-   order_by: 2
-   opened: true
-   visible: true
-   title_perso: Current name
-   all_public: true
-
 tw3:
    col_num: 1
    category: catalogue_taxonomy_widget
@@ -648,16 +637,6 @@ chw1:
    title_perso: People
    all_public: true
 
-chw2:
-   col_num: 1
-   category: catalogue_chronostratigraphy_widget
-   group_name: relationRename
-   mandatory: false
-   order_by: 2
-   opened: false
-   visible: false
-   title_perso: Current name
-   all_public: true
 
 chw3:
    col_num: 1
@@ -690,17 +669,6 @@ lhw1:
    opened: true
    visible: true
    title_perso: People
-   all_public: true
-
-lhw2:
-   col_num: 1
-   category: catalogue_lithostratigraphy_widget
-   group_name: relationRename
-   mandatory: false
-   order_by: 2
-   opened: false
-   visible: false
-   title_perso: Current name
    all_public: true
 
 lhw3:
@@ -736,17 +704,6 @@ liw1:
    title_perso: People
    all_public: true
 
-liw2:
-   col_num: 1
-   category: catalogue_lithology_widget
-   group_name: relationRename
-   mandatory: false
-   order_by: 2
-   opened: false
-   visible: false
-   title_perso: Current name
-   all_public: true
-
 liw3:
    col_num: 1
    category: catalogue_lithology_widget
@@ -778,17 +735,6 @@ miw1:
    opened: true
    visible: true
    title_perso: People
-   all_public: true
-
-miw2:
-   col_num: 1
-   category: catalogue_mineralogy_widget
-   group_name: relationRename
-   mandatory: false
-   order_by: 2
-   opened: false
-   visible: false
-   title_perso: Current name
    all_public: true
 
 miw3:

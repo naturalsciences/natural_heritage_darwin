@@ -1,5 +1,9 @@
 <table>
   <tr>
+  <th class=""><?php echo $form['institution_ref']->renderLabel();?></th>
+  <td><?php echo $form['institution_ref']->render() ?></td>
+  </tr>
+  <tr>
 	<th class="top_aligned"><?php echo $form['building']->renderLabel();?></th>
 	<td><?php echo $form['building']->render() ?></td>
   </tr>

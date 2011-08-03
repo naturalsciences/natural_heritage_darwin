@@ -85,6 +85,12 @@ class UsersForm extends BaseUsersForm
       $this->validatorSchema['people_id'] = new sfValidatorInteger(array('required' => false)) ;     
     }
     $this->widgetSchema->setHelp('people_id','With this field, you can associate this user to a people recorded in the database (because user and people are not the same in DaRWIN2), the real interest is it will improve the synchronisation between the two record associated');                                             
+    
+    $langs = array('en'=>'English','nl'=>'Nederlands','fr'=>'Français');
+    $this->widgetSchema['selected_lang'] = new sfWidgetFormChoice(array('choices'=>$langs,'expanded'=>true));
+    $this->validatorSchema['selected_lang'] = new sfValidatorChoice(array('choices'=>array_keys($langs) ));
+    $this->widgetSchema['selected_lang']->setLabel('Application Language');
+
     $this->widgetSchema['given_name'] = new sfWidgetFormInput();
     $this->widgetSchema['given_name']->setAttributes(array('class'=>'medium_size'));
     $this->widgetSchema['family_name'] = new sfWidgetFormInput();

@@ -11,7 +11,8 @@ class People extends BasePeople
       8 => 'Expert',
       16 => 'Collector',
       32 => 'Preparator',
-      64 => 'Photographer'
+      64 => 'Photographer',
+      128 => 'Donator'
     );
   
   public static function getTypes()

@@ -10,12 +10,6 @@
  */
 class cataloguewidgetComponents extends sfComponents
 {
-  
-  public function executeRelationRename()
-  {
-    $this->relations = Doctrine::getTable('CatalogueRelationships')->getRelationsForTable($this->table, $this->eid, 'current_name');
-  }
-
   public function executeRelationRecombination()
   {
     $this->relations = Doctrine::getTable('CatalogueRelationships')->getRelationsForTable($this->table, $this->eid, 'recombined from');

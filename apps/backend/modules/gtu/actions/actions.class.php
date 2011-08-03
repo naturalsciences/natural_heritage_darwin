@@ -119,7 +119,7 @@ class gtuActions extends DarwinActions
   {  
     $gtu = new Gtu() ;
     $duplic = $request->getParameter('duplicate_id','0');
-    $gtu = $this->getRecordIfDuplicate($duplic, $gtu);
+    $gtu = $this->getRecordIfDuplicate($duplic, $gtu);        
     // if there is no duplicate $gtu is an empty array
     $this->form = new GtuForm($gtu);
     if ($duplic)

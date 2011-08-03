@@ -26,8 +26,9 @@ class chronostratigraphyActions extends DarwinActions
   
   public function executeChoose(sfWebRequest $request)
   {
+    $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;  
     $this->setLevelAndCaller($request);
-    $this->searchForm = new ChronostratigraphyFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id));
+    $this->searchForm = new ChronostratigraphyFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id, 'name' => $name));
     $this->setLayout(false);
   }
 
@@ -73,6 +74,7 @@ class chronostratigraphyActions extends DarwinActions
     $chrono = new Chronostratigraphy();
     $duplic = $request->getParameter('duplicate_id','0');    
     $chrono = $this->getRecordIfDuplicate($duplic, $chrono);
+    if($request->hasParameter('chronostratigraphy')) $chrono->fromArray($request->getParameter('chronostratigraphy'));    
     // if there is no duplicate $chrono is an empty array
     $this->form = new ChronostratigraphyForm($chrono);
   }

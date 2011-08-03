@@ -201,9 +201,9 @@ $browser->
   with('response')->begin()->
     isStatusCode(200)->
     checkElement('#lang tbody tr',3)->
-    checkElement('#lang tbody tr:first td:first', '/français/')->
-    checkElement('#lang tbody tr:first td:first', '/Préféré/')->
-    checkElement('#lang tbody tr:last td:first', '!/Préféré/')->
+    checkElement('#lang tbody tr:first td:first', '/French/')->
+    checkElement('#lang tbody tr:first td:first', '/Preferred/')->
+    checkElement('#lang tbody tr:last td:first', '!/Preferred/')->
   end()->
 
   click('#lang tbody tr:first a.widget_row_delete')->

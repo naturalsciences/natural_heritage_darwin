@@ -71,3 +71,15 @@ $(document).ready(function ()
     <?php endif ; ?>
   </div>
 </form>
+<script>
+$(document).ready(function () {
+  $(".new_link").click( function()
+  {
+   url = $(this).find('a').attr('href'),
+   data= $('.search_form').serialize(),
+   reg=new RegExp("(<?php echo $searchForm->getName() ; ?>)", "g");   
+   open(url+'?'+data.replace(reg,'<?php echo $searchForm['table']->getValue() ; ?>'));
+    return false;  
+  });
+});
+</script>

@@ -40,6 +40,11 @@ class RegisterForm extends BaseUsersForm
     $this->widgetSchema['terms_of_use']->setAttributes(array('class'=>'required_field'));
     $this->setDefault('terms_of_use',false);
 
+    $langs = array('en'=>'English','nl'=>'Nederlands','fr'=>'Français');
+    $this->widgetSchema['selected_lang'] = new sfWidgetFormChoice(array('choices'=>$langs,'expanded'=>false));
+    $this->validatorSchema['selected_lang'] = new sfValidatorChoice(array('choices'=>array_keys($langs) ));
+    $this->widgetSchema['selected_lang']->setLabel('Application Language');
+
     /* Captcha */
     
     $this->widgetSchema['captcha'] = new sfWidgetFormReCaptcha(array('public_key' => sfConfig::get('app_recaptcha_public_key')));
@@ -64,8 +69,8 @@ class RegisterForm extends BaseUsersForm
                                                                         )
                                                                  );
     $this->validatorSchema['captcha'] = new sfValidatorReCaptcha(array('private_key' => sfConfig::get('app_recaptcha_private_key'),
-                                                                       'proxy_host' => '193.190.234.40',
-                                                                       'proxy_port' => 3128
+                                                                       'proxy_host' => sfConfig::get('app_recaptcha_proxy_host'),
+                                                                       'proxy_port' => sfConfig::get('app_recaptcha_proxy_port'),
                                                                       ));
 
     /* Labels */
@@ -85,10 +90,6 @@ class RegisterForm extends BaseUsersForm
     /* Comm means as embedded form */
     $regCommSubForm = new sfForm();
     $this->embedForm('RegisterCommForm',$regCommSubForm);
-
-    /* Languages as embedded form */
-    $regLangSubForm = new sfForm();
-    $this->embedForm('RegisterLanguagesForm',$regLangSubForm);
 
   }
 
@@ -110,16 +111,6 @@ class RegisterForm extends BaseUsersForm
     $this->embeddedForms['RegisterCommForm']->embedForm($num, $form);
     //Re-embedding the container
     $this->embedForm('RegisterCommForm', $this->embeddedForms['RegisterCommForm']);
-  }
-
-  public function addLanguages($num)
-  {
-    $val = new UsersLanguages();
-    $val->User = $this->getObject();
-    $form = new RegisterLanguagesForm($val);
-    $this->embeddedForms['RegisterLanguagesForm']->embedForm($num, $form);
-    //Re-embedding the container
-    $this->embedForm('RegisterLanguagesForm', $this->embeddedForms['RegisterLanguagesForm']);
   }
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
@@ -144,16 +135,6 @@ class RegisterForm extends BaseUsersForm
         }
       }
     }
-    if(isset($taintedValues['RegisterLanguagesForm']))
-    {
-      foreach($taintedValues['RegisterLanguagesForm'] as $key=>$newVal)
-      {
-        if (!isset($this['RegisterLanguagesForm'][$key]))
-        {
-          $this->addLanguages($key);
-        }
-      }
-    }
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -171,12 +152,6 @@ class RegisterForm extends BaseUsersForm
       foreach($this->embeddedForms['RegisterCommForm']->getEmbeddedForms() as $name => $form)
       {
         $form->getObject()->setPersonUserRef($this->getObject()->getId());
-        $form->getObject()->save();
-      }
-      $value = $this->getValue('RegisterLanguagesForm');
-      foreach($this->embeddedForms['RegisterLanguagesForm']->getEmbeddedForms() as $name => $form)
-      {
-        $form->getObject()->setUsersRef($this->getObject()->getId());
         $form->getObject()->save();
       }
     }

@@ -35,9 +35,7 @@ class registerActions extends DarwinActions
     $this->form = new RegisterForm();
     $this->form->addLoginInfos(0);
     $this->form->addComm(0);
-    $this->form->addLanguages(0);
     
-    // If the search has been triggered by clicking on the search button or with pinned specimens
     if(($request->isMethod('post') && $request->getParameter('users','') !== '' ))
     {
       $captcha = array(
@@ -66,8 +64,7 @@ class registerActions extends DarwinActions
                                 'username' => $username
                                );
           // send an email to the registered user
-          if(isset($userInfos['RegisterLanguagesForm'][0]['language_country']) && $userInfos['RegisterLanguagesForm'][0]['language_country'] != '')
-            $this->getUser()->setCulture($userInfos['RegisterLanguagesForm'][0]['language_country']);
+            $this->getUser()->setCulture($this->form->getValue('selected_lang'));
           $this->sendConfirmationMail(array_merge($base_params,$suppl_params));
           $this->redirect('register/succeeded?'.http_build_query($base_params));
         }

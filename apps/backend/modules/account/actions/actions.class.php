@@ -55,13 +55,12 @@ class accountActions extends DarwinActions
         sfContext::getInstance()->getLogger()->debug('LOGIN: '.$this->form->getValue('username').' '.$this->form->user->getId() );
         $this->getUser()->setAttribute('db_user_id',$this->form->user->getId());
         $this->getUser()->setAttribute('db_user_type',$this->form->user->getDbUserType());
-        $lang = Doctrine::getTable("UsersLanguages")->getPreferredLanguage($this->form->user->getId());
-        if($lang) //prevent from crashing if lang is not set
+
+        if(in_array($this->form->user->getSelectedLang(),array('en','fr','nl'))) //Prevent errors
         {
-            $this->getUser()->setCulture($lang->getLanguageCountry());
+          $this->getUser()->setCulture($this->form->user->getSelectedLang());
         }
-        else
-          $this->getUser()->setCulture('en') ;
+
         $this->getUser()->setHelpIcon(Doctrine::getTable("Preferences")->getPreference($this->form->user->getId(),'help_message_activated',true));        
         $this->redirect('@homepage');
       }
@@ -93,6 +92,8 @@ class accountActions extends DarwinActions
           $user = Doctrine::getTable('Users')->getUserByLoginAndEMail($this->form->getValue('user_name'), 
                                                                       $this->form->getValue('user_email')
                                                                     );
+          $this->getUser()->setCulture($user->getSelectedLang());
+
           if(! $user)
           {
             $user = Doctrine::getTable('Users')->getUserByLoginOnly($this->form->getValue('user_name'));

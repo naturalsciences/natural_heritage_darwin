@@ -1,6 +1,6 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
-$t = new lime_test(16, new lime_output_color());
+$t = new lime_test(15, new lime_output_color());
 
 $t->info('distinct SubGroup()');
 $sgroups= Doctrine::getTable('TagGroups')->getDistinctSubGroups('administrative area');
@@ -16,7 +16,6 @@ $t->info('getPropositions');
 
 $props = Doctrine::getTable('TagGroups')->getPropositions('brussels');
 $t->is(count($props),4, 'We got 4 props');
-$t->is($props[1]['tag'],'Big White Mountain', 'Purpose from all groups is showed');
 
 $props = Doctrine::getTable('TagGroups')->getPropositions('Bruselo');
 $t->is(count($props),2, 'Got 2 prop');

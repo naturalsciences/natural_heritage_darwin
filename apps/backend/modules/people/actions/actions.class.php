@@ -14,8 +14,9 @@ class peopleActions extends DarwinActions
 
   public function executeChoose(sfWebRequest $request)
   {
+    $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;   
     $this->setPeopleRole($request);
-    $this->form = new PeopleFormFilter(array('only_role'=>$this->only_role));
+    $this->form = new PeopleFormFilter(array('only_role'=>$this->only_role, 'family_name' => $name));
   }
 
   public function executeIndex(sfWebRequest $request)
@@ -73,6 +74,7 @@ class peopleActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
     $people = new People() ;
     $people = $this->getRecordIfDuplicate($request->getParameter('duplicate_id','0'), $people);
+    if($request->hasParameter('people')) $people->fromArray($request->getParameter('people'));        
     $this->form = new PeopleForm($people);
   }
 

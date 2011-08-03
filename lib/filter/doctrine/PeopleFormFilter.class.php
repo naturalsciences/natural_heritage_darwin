@@ -16,8 +16,7 @@ class PeopleFormFilter extends BasePeopleFormFilter
 
     $this->addPagerItems();
 
-    $this->widgetSchema['family_name'] = new sfWidgetFormFilterInput(array('template' => '%input%'));
-
+    $this->widgetSchema['family_name'] = new sfWidgetFormInput();
     $this->widgetSchema['only_role'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['only_role']->setDefault(0);
     
@@ -116,7 +115,7 @@ class PeopleFormFilter extends BasePeopleFormFilter
 
   public function addFamilyNameColumnQuery($query, $field, $val)
   {
-    return $this->addNamingColumnQuery($query, 'people', 'formated_name_ts', $val['text']);
+    return $this->addNamingColumnQuery($query, 'people', 'formated_name_ts', $val);
   }
 
 }

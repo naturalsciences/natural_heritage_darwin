@@ -11,6 +11,7 @@
  * @property integer $specimen_individual_ref
  * @property string $specimen_part
  * @property boolean $complete
+ * @property integer $institution_ref
  * @property string $building
  * @property string $floor
  * @property string $room
@@ -40,6 +41,7 @@
  * @method integer             getSpecimenIndividualRef()   Returns the current record's "specimen_individual_ref" value
  * @method string              getSpecimenPart()            Returns the current record's "specimen_part" value
  * @method boolean             getComplete()                Returns the current record's "complete" value
+ * @method integer             getInstitutionRef()          Returns the current record's "institution_ref" value
  * @method string              getBuilding()                Returns the current record's "building" value
  * @method string              getFloor()                   Returns the current record's "floor" value
  * @method string              getRoom()                    Returns the current record's "room" value
@@ -68,6 +70,7 @@
  * @method SpecimenParts       setSpecimenIndividualRef()   Sets the current record's "specimen_individual_ref" value
  * @method SpecimenParts       setSpecimenPart()            Sets the current record's "specimen_part" value
  * @method SpecimenParts       setComplete()                Sets the current record's "complete" value
+ * @method SpecimenParts       setInstitutionRef()          Sets the current record's "institution_ref" value
  * @method SpecimenParts       setBuilding()                Sets the current record's "building" value
  * @method SpecimenParts       setFloor()                   Sets the current record's "floor" value
  * @method SpecimenParts       setRoom()                    Sets the current record's "room" value
@@ -127,6 +130,9 @@ abstract class BaseSpecimenParts extends sfDoctrineRecord
              'type' => 'boolean',
              'notnull' => true,
              'default' => true,
+             ));
+        $this->hasColumn('institution_ref', 'integer', null, array(
+             'type' => 'integer',
              ));
         $this->hasColumn('building', 'string', null, array(
              'type' => 'string',

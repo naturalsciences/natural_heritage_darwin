@@ -24,8 +24,9 @@ class mineralogyActions extends DarwinActions
   }
   public function executeChoose(sfWebRequest $request)
   {
+    $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;  
     $this->setLevelAndCaller($request);
-    $this->searchForm = new MineralogyFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id));
+    $this->searchForm = new MineralogyFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id, 'name' => $name));
     $this->setLayout(false);
   }
 
@@ -69,6 +70,7 @@ class mineralogyActions extends DarwinActions
   {
     $mineral = new Mineralogy() ;
     $mineral = $this->getRecordIfDuplicate($request->getParameter('duplicate_id','0'), $mineral);
+    if($request->hasParameter('mineralogy')) $mineral->fromArray($request->getParameter('mineralogy'));        
     $this->form = new MineralogyForm($mineral);
   }
 

@@ -4,7 +4,7 @@
 	<td><?php if($part->getSpecimenPartCountMin() == $part->getSpecimenPartCountMax()):?>
 		  <?php echo $part->getSpecimenPartCountMin();?>
 	  <?php else:?>
-		<?php echo __(sprintf('Between %d and %d',$part->getSpecimenPartCountMin(),$part->getSpecimenPartCountMax()));?>
+		<?php echo __('Between %min% and %max%',array('%min%'=>$part->getSpecimenPartCountMin(),'%max%'=>$part->getSpecimenPartCountMax()));?>
 	  <?php endif;?>
 	</td>
   </tr>

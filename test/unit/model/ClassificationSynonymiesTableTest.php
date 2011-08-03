@@ -30,7 +30,7 @@ $t->is($records['homonym'][1]['id'],4,'They are the same');
 $t->info('findGroupnames');
 $groups = Doctrine::getTable('ClassificationSynonymies')->findGroupnames();
 
-$t->is_deeply($groups, array('synonym' => 'Synonyms', 'isonym' => 'Isonyms', 'homonym' => 'Homonyms'),'Get all groups');
+$t->is_deeply($groups, array('synonym' => 'Synonyms', 'isonym' => 'Isonyms', 'homonym' => 'Homonyms',  'rename' => 'Renaming'),'Get all groups');
 
 $t->info('findNextGroupId');
 $id = Doctrine::getTable('ClassificationSynonymies')->findNextGroupId();

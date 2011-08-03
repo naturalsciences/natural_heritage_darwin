@@ -22,5 +22,14 @@ class IdentificationsTable extends DarwinTable
          orderBy('order_by ASC, notion_date DESC, notion_concerned ASC');
     return $q->execute();
   }
+  
+  public function getStagingId($id)
+  {
+     $q = Doctrine_Query::create()->
+         from('Identifications')->
+         where('referenced_relation = \'staging\'')->
+         andWhere('record_id = ?', $id);
+    return $q->fetchOne(); 
+  }
 
 }

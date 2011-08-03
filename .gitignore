@@ -6,6 +6,6 @@ log/*
 !log/.gitignore
 config/databases.yml
 web/favicon.ico
-web/updload/*
+uploads/*
 *~
 *.*~ 

@@ -16,6 +16,6 @@ class UsersLoginInfos extends BaseUsersLoginInfos
   
   public function setNewPassword($values)
   {
-  	if($values) $this->setPassword(sha1(sfConfig::get('app_salt').$values))  ;
+    if($values) $this->setPassword(sha1(sfConfig::get('app_salt').$values))  ;
   }
 }

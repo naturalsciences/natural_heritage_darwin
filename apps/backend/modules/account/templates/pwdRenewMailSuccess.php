@@ -4,9 +4,9 @@
       <?php if($params['physical'] && !empty($params['name'])):?>
         <p>
           <?php if(empty($params['title'])):?>
-            <?php echo __(sprintf('Dear %s,', $params['title']));?>
+            <?php echo __('Dear %title%,', array('%title%'=>$params['title']));?>
           <?php else:?>
-            <?php echo __(sprintf('Dear %s %s,', $params['title'], $params['name']));?>
+            <?php echo __('Dear %title% %name%,', array('%title%'=>$params['title'], '%name%' => $params['name']));?>
           <?php endif;?>
         </p>
       <?php endif;?>

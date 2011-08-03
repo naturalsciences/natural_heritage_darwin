@@ -22,7 +22,7 @@ $browser->
 
 
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'poil'),
+    'family_name' => 'poil',
     'is_physical' => 1,)
     )
   )->
@@ -36,7 +36,7 @@ $browser->
 
   get('/people/index')->
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'ntol'),
+    'family_name' => 'ntol',
     'is_physical' => 1,)
     )
   )->
@@ -137,7 +137,7 @@ $browser->
   info('Address')->
   
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'poil'),
+    'family_name' => 'poil',
     'is_physical' => 1,)
     )
   )->
@@ -180,7 +180,7 @@ $browser->
   get('/people/index')->
 
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'poil'),
+    'family_name' => 'poil',
     'is_physical' => 1,)
     )
   )->
@@ -211,7 +211,7 @@ $browser->
   info('Comm')->
   get('/people/index')->
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'poil'),
+    'family_name' => 'poil',
     'is_physical' => 1,)
     )
   )->
@@ -253,7 +253,7 @@ $browser->
   get('/people/index')->
 
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'poil'),
+    'family_name' => 'poil',
     'is_physical' => 1,)
     )
   )->
@@ -284,7 +284,7 @@ $browser->
 
   get('/people/index')->
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'poil'),
+    'family_name' => 'poil',
     'is_physical' => 1,)
     )
   )->
@@ -329,7 +329,7 @@ $browser->
   get('/people/index')->
 
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'poil'),
+    'family_name' => 'poil',
     'is_physical' => 1,)
     )
   )->
@@ -360,7 +360,7 @@ $browser->
 
   get('/people/index')->
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'poil'),
+    'family_name' => 'poil',
     'is_physical' => 1,)
     )
   )->
@@ -407,7 +407,7 @@ $browser->
   get('/people/index')->
 
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'poil'),
+    'family_name' => 'poil',
     'is_physical' => 1,)
     )
   )->
@@ -437,7 +437,7 @@ $browser->
   get('/people/index')->
 
   click('.search_submit', array('people_filters' => array(
-    'family_name' => array('text' => 'poil'),
+    'family_name' => 'poil',
     'is_physical' => 1,)
     )
   )->

@@ -49,7 +49,8 @@ class UsersTracking extends BaseUsersTracking
   protected function getLinkforRefTable($table, $id)
   {
     $hstore = $this->_get('new_value');
-    eval("\$hvals = array({$hstore});");
+    $hvals = new Hstore();
+    $hvals->import($hstore);
     if(isset($hvals['referenced_relation']) && isset($hvals['record_id']))
       return $this->getLinkforKnownTable($hvals['referenced_relation'],$hvals['record_id']);
 
@@ -75,7 +76,8 @@ class UsersTracking extends BaseUsersTracking
       $hstore = $this->_get('old_value');
     else
       $hstore = $this->_get('new_value');
-    eval("\$diff = array({$hstore});");
+    $diff = new Hstore();
+    $diff->import($hstore);
     foreach($diff as $key=>$value)
     {
       if(preg_match("/_indexed$/", $key) || preg_match("/_name_ts$/", $key) || preg_match("/_order_by$/", $key))
