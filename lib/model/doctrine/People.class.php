@@ -168,6 +168,7 @@ class People extends BasePeople
      }
      else
      {
+      if(empty($fd['day']) && empty($fd['month']) && empty($fd['year'])) return ;
       $dateTime = new FuzzyDateTime($fd, 56, false); 
       $this->_set('activity_date_from', $dateTime->format('Y/m/d'));
       $this->_set('activity_date_from_mask', $dateTime->getMask());
@@ -188,6 +189,7 @@ class People extends BasePeople
      }
      else
      {
+      if(empty($fd['day']) && empty($fd['month']) && empty($fd['year'])) return ;     
       $dateTime = new FuzzyDateTime($fd, 56, false); 
       $this->_set('activity_date_to', $dateTime->format('Y/m/d'));
       $this->_set('activity_date_to_mask', $dateTime->getMask());
