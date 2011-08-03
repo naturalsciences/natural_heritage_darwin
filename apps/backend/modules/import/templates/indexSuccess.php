@@ -1,6 +1,9 @@
 <?php slot('title', __('Import files summary'));  ?>        
 
 <div class="page">
+  <div class="warn_message">
+    <?php echo __('<strong>Warning!</strong><br />Actualy Import module is reserved for DNA department.');?>
+  </div> 
 <h1><?php echo __('Imports');?> : <?php echo image_tag('info.png',array('title'=>'info','class'=>'extd_info')); ?></h1>
 
     <?php include_partial('searchForm', array('form' => $form)) ?>
