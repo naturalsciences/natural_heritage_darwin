@@ -8,7 +8,7 @@
 	padding-left: 25px;
 }
 
-.tabs a{
+.tabs > a{
 	width: 164px;
 	padding-top: 10px;
 	text-align:center;
@@ -19,20 +19,20 @@
   font-size : 9pt;	
 }
 
-.tabs a.enabled
+.tabs > a.enabled
 {
 	background-image:url(/images/encod_tab_enable.png);
 	background-repeat:no-repeat;
 	height:20px;
 }
 
-.tabs a.selected
+.tabs > a.selected
 {
 	border-bottom:1px solid white;
 	height: 21px;
 }
 
-.tabs a.disabled
+.tabs > a.disabled
 {
 	background-image:url(/images/encod_tab_disable.png);
 	background-repeat:no-repeat;

@@ -2697,3 +2697,15 @@ input[type='file']
 {
     cursor:pointer;
 }
+
+.encod_tooltip
+{
+  width:163px;
+}
+
+.encod_tooltip .ui-tooltip-content 
+{
+    background-color:white;
+    border: 1px solid #C8C8C8;
+    border-top:none;
+}
