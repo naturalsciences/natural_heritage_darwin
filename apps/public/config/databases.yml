@@ -1,0 +1,15 @@
+dev:
+  doctrine:
+    class: sfDoctrineDatabase
+    param:
+      dsn: 'pgsql:host=tyro;dbname=darwin2'
+      username: d2viewer
+      password: viewer2d2 
+           
+all:
+  doctrine:
+    class: sfDoctrineDatabase
+    param:
+      dsn: 'pgsql:host=tyro;dbname=darwin2'
+      username: d2viewer
+      password: viewer2d2           
