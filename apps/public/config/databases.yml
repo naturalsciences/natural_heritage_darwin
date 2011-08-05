@@ -6,7 +6,7 @@ dev:
       username: d2viewer
       password: viewer2d2 
            
-all:
+prod:
   doctrine:
     class: sfDoctrineDatabase
     param:
