@@ -33,7 +33,7 @@ class boardwidgetComponents extends sfComponents
   public function executeNews()
   {
     $doc =  new FeedParse(sfConfig::get('sf_data_dir').'/feed/feed.xml');
-    //$this->arrFeeds = $doc->parse();
+    $this->arrFeeds = $doc->parse();
   }
 
   public function executeAddTaxon()

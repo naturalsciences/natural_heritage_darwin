@@ -36,7 +36,7 @@ class FeedParse {
        'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
        'desc' => $node->getElementsByTagName('description')->item(0)->nodeValue,
        'link' => $node->getElementsByTagName('link')->item(0)->nodeValue,
-       'date' => strtotime($node->getElementsByTagName('pubDate')->item(0)->nodeValue),
+       'date' => now(), //strtotime($node->getElementsByTagName('pubDate')->item(0)->nodeValue),
        );
       array_push($this->feedItems, $itemRSS);
     }
