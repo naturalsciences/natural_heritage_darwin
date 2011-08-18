@@ -36,7 +36,7 @@ class FeedParse {
        'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
        'desc' => $node->getElementsByTagName('description')->item(0)->nodeValue,
        'link' => $node->getElementsByTagName('link')->item(0)->nodeValue,
-       'date' => ($node->getElementsByTagName('pubDate')?strtotime($node->getElementsByTagName('pubDate')->item(0)->nodeValue):time()),
+       'date' => ($node->getElementsByTagName('pubDate')->length?strtotime($node->getElementsByTagName('pubDate')->item(0)->nodeValue):time()),
        );
       array_push($this->feedItems, $itemRSS);
     }
@@ -55,7 +55,7 @@ class FeedParse {
        'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
        'desc' => $node->getElementsByTagName('summary')->item(0)->nodeValue,
        'link' => $node->getElementsByTagName('link')->item(0)->getAttribute('href'),
-       'date' => $node->getElementsByTagName('updated')->item(0)->nodeValue,
+       'date' => ($node->getElementsByTagName('updated')->length?strtotime($node->getElementsByTagName('updated')->item(0)->nodeValue):time()),
        );
       array_push($this->feedItems, $itemRSS);
     }
