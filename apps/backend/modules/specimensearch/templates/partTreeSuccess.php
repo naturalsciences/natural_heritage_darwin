@@ -20,10 +20,25 @@
 	<tr>
     <td>
   	  <?php if ($sf_user->IsAtLEast(Users::ENCODER)) : ?>
-  	    <?php echo image_tag('info.png',"class=extd_info");?>
+  	    <?php echo image_tag('info.png',"class=extd_info_".$part->getId());?>
     		<div class="extended_info" style="display:none;">
-    	  <?php include_partial('parts/extendedInfo', array('part' => $part, 'codes' => $codes) );?>
 		    </div>
+        <script  type="text/javascript">
+          $(".extd_info_<?php echo $part->getId();?>").qtip({
+            show: { solo: true, event:'mouseover' },
+            hide: { event:'mouseout' },
+            style: 'ui-tooltip-light ui-tooltip-rounded ui-tooltip-dialogue',
+            content: {
+              text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
+              title: { text: '<?php echo __("Linked Info") ; ?>' },
+              ajax: {
+                url: '<?php echo url_for("parts/extendedInfo");?>',
+                type: 'GET',
+                data: { id: '<?php echo $part->getId() ; ?>' }
+              }
+            }
+          });        
+        </script>		    
 		  <?php endif ; ?>
 	  </td>
 	  <td><?php if(isset($codes[$part->getId()])):?>
@@ -52,20 +67,3 @@
   <?php endforeach;?>
   </tbody>
 </table>
-<script  type="text/javascript">
-$(document).ready(function () {
-
-  $('img.extd_info').each(function(){
-	   
-	tip_content = $(this).next().html();
-	$(this).qtip(
-	{
-         content: tip_content,
-         style: {
-            tip: true, // Give it a speech bubble tip with automatic corner detection
-            name: 'cream'
-         }
-      });
-    });
-});
-</script>
