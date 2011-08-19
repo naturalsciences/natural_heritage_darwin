@@ -126,6 +126,20 @@ class partsActions extends DarwinActions
     }
   }
 
+  public function executeExtendedInfo(sfWebRequest $request)
+  {
+    $this->part = Doctrine::getTable('SpecimenParts')->findExcept($request->getParameter('id'));
+    $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('part', $request->getParameter('id'));
+    $this->codes = array();
+    foreach($codes_collection as $code)
+    {
+      if(! isset($this->codes[$code->getRecordId()]))
+        $this->codes[$code->getRecordId()] = array();
+      $this->codes[$code->getRecordId()][] = $code;
+    }   
+  
+  }
+  
   public function executeOverview(sfWebRequest $request)
   {
     $this->individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id'));

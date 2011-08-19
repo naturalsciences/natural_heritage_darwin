@@ -23,10 +23,25 @@
   <tr class="rid_<?php echo $part->getId();?>">
  	  <?php if ($sf_user->isAtLeast(Users::ENCODER)): ?>
       <td style="padding-left: <?php echo 20*($part->getLevel()-1);?>px; ">
-        <?php echo image_tag('info-green.png',"title=info class=extd_info");?>
-        <div class="extended_info" style="display:none;">
-          <?php include_partial('extendedInfo', array('part' => $part, 'codes' => $codes) );?>
+        <?php echo image_tag('info-green.png',"title=info class=extd_info_".$part->getId());?>
+        <div class="extended_info" style="display:none;">          
         </div>
+        <script  type="text/javascript">
+          $(".extd_info_<?php echo $part->getId();?>").qtip({
+            show: { solo: true, event:'mouseover' },
+            hide: { event:'mouseout' },
+            style: 'ui-tooltip-light ui-tooltip-rounded ui-tooltip-dialogue',
+            content: {
+              text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
+              title: { text: '<?php echo __("Linked Info") ; ?>' },
+              ajax: {
+                url: '<?php echo url_for("parts/extendedInfo");?>',
+                type: 'GET',
+                data: { id: '<?php echo $part->getId() ; ?>' }
+              }
+            }
+          });        
+        </script>
       </td>
     <?php else : ?>
       <td>&nbsp;</td>
@@ -84,14 +99,4 @@
     </tfoot>
     <?php endif;?>
 </table>
-<script  type="text/javascript">
-$(document).ready(function () {
-  $('img.extd_info').each(function(){
-    $('img.extd_info').qtip(
-    {
-      content: $(this).next().html(),
-    });
-  });
-});
-</script>
 <?php endif;?>
