@@ -647,6 +647,10 @@ a.bt_close
   text-align: right;
 }
 
+#refIdent .datesNum
+{
+  text-align: left;
+}
 #refGtu .datesNum
 {
   text-align: left;

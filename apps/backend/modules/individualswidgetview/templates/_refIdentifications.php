@@ -9,10 +9,10 @@
     </tr>
   </thead>   
   <?php foreach($identifications as $identification):?>
-  <tbody class="spec_ident_data">
+  <tbody id="refIdent" class="spec_ident_data">
     <tr class="spec_ident_data">
-      <td colspan="2">        
-        <?php echo $identification->getNotionDateMasked() ; ?> 
+      <td colspan="2" class="datesNum">        
+        <?php echo sfOutputEscaper::unescape($identification->getNotionDateMasked()) ; ?> 
       </td>
       <td>
         <?php echo $identification->getNotionConcerned();?>
