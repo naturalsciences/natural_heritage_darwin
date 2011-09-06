@@ -130,6 +130,7 @@ BEGIN
     temp_string := REPLACE(temp_string, E'\'', '');
     temp_string := REPLACE(temp_string, '"', '');
     temp_string := REPLACE(temp_string, 'ñ', 'n');
+    temp_string := REPLACE(temp_string,chr(946),'b');
     temp_string := TRANSLATE(temp_string,'Ð','d');
     temp_string := TRANSLATE(temp_string,'ó','o');
     temp_string := TRANSLATE(temp_string,'ę','e');
@@ -142,6 +143,7 @@ BEGIN
     temp_string := TRANSLATE(temp_string,'Ş','s');
     temp_string := TRANSLATE(temp_string,'†','');
     temp_string := TRANSLATE(temp_string,chr(52914),'');
+
     IF forUniqueness THEN
       temp_string := LOWER(to_ascii(temp_string, 'LATIN9'));
     ELSE
