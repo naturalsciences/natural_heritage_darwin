@@ -141,6 +141,7 @@ BEGIN
     temp_string := TRANSLATE(temp_string,'ş','s');
     temp_string := TRANSLATE(temp_string,'Ş','s');
     temp_string := TRANSLATE(temp_string,'†','');
+    temp_string := TRANSLATE(temp_string,chr(52914),'');
     IF forUniqueness THEN
       temp_string := LOWER(to_ascii(temp_string, 'LATIN9'));
     ELSE
