@@ -9,3 +9,5 @@ web/favicon.ico
 uploads/*
 *~
 *.*~ 
+*.kate-swp
+./.gitignore
