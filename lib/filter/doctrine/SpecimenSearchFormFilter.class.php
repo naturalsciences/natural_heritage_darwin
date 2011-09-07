@@ -833,10 +833,10 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     if($val != '')
     {
       $query->andWhere("
-        (station_visible = true AND  LOWER(gtu_code) like ? )
+        (station_visible = true AND  gtu_code like ? )
         OR
         (station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
-          AND LOWER(gtu_code) like ?)", array(strtolower('%'.$val.'%'),strtolower('%'.$val.'%')));
+          AND gtu_code like ? )", array(strtolower('%'.$val.'%'),strtolower('%'.$val.'%')));
       $query->whereParenWrap();
     }
     return $query ;  
