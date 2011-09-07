@@ -4552,6 +4552,18 @@
         <source>Aborted</source>
         <target>Annulé</target>
       </trans-unit>
+          <trans-unit id="1459">
+        <source>The taxon you choose was marked as &quot;renamed&quot;.</source>
+        <target>Le taxon que vous avez choisit est marqué en &quot;renomé&quot;</target>
+      </trans-unit>
+          <trans-unit id="1460">
+        <source>Click on the name below to replace the unit by his current name.</source>
+        <target>Cliquez sur le nom ci-dessous pour remplacer l&#039;unité par son nom courant</target>
+      </trans-unit>
+          <trans-unit id="1461">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;Actually this import module is reserved for the DNA department</source>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;Actuellement ce module d&#039;import est réservé au departement ADN</target>
+      </trans-unit>
           <trans-unit id="1387">
         <source>This file is ready to be loaded, an automatic task will be activated to load lines.</source>
         <target>Ce fichier est prêt à être chargé, une tâche automatique sera activée pour charger les lignes</target>

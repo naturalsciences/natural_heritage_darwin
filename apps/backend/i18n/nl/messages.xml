@@ -87,6 +87,14 @@
         <source>Your file has been loaded and checked, you can edit line in errors or import corrects lines</source>
         <target>Uw bestand werd ingeladen en nagekeken en u kunt nu foute lijnen corrigeren of correcte lijnen importeren.</target>
       </trans-unit>
+          <trans-unit id="1459">
+        <source>The taxon you choose was marked as &quot;renamed&quot;.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1460">
+        <source>Click on the name below to replace the unit by his current name.</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1396">
         <source>To be loaded</source>
         <target>Moet worden ingeladen</target>
