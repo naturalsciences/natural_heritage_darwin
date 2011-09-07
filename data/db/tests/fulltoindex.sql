@@ -78,7 +78,10 @@ SELECT ok( 'revers' = (SELECT group_name_indexed FROM tag_groups WHERE id=1),'Fu
 INSERT INTO taxonomy (id, name, level_ref) VALUES (1, 'Méàleis Gùbularis&', 1);
 SELECT ok( to_tsvector('simple', 'Méàleis Gùbularis&') = (SELECT name_indexed FROM taxonomy WHERE id=1),'FulltoIndex on taxonomy name');
 
-insert into users (id, is_physical, formated_name, formated_name_indexed, formated_name_ts, family_name, given_name, birth_date, gender) VALUES (3, true, 'Bill Maréchal', 'marechalbill', to_tsvector('simple', 'Maréchal Bill'), 'Maréchal', 'Bill', NOW(), 'M');
+insert into users (id, is_physical, family_name, given_name, birth_date, gender) VALUES (3, true, 'Maréchal', 'Bill', NOW(), 'M');
+insert into people (id, is_physical, family_name, given_name, birth_date, gender) VALUES (4, true, 'Maréchal', 'Bill', NOW(), 'M');
+insert into people (id, is_physical, family_name, given_name, birth_date, gender) VALUES (5, true, 'Marechal', 'Bill', NOW(), 'M');
+
 
 INSERT INTO class_vernacular_names (referenced_relation, record_id, id, community) VALUES ('taxonomy',0,1,'testlang');
 INSERT INTO vernacular_names (vernacular_class_ref, name) VALUES (1,'Éléphant!');

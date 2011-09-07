@@ -113,12 +113,18 @@ language plpgsql;
 * Function fullToIndex
 * Remove all the accents special chars from a string
 */
-CREATE OR REPLACE FUNCTION fullToIndex(to_indexed varchar, forUniqueness boolean default false) RETURNS varchar STRICT
+CREATE OR REPLACE FUNCTION fullToIndex(to_indexed varchar) RETURNS varchar STRICT
 AS $$
 DECLARE
 	temp_string varchar;
 BEGIN
     -- Investigate https://launchpad.net/postgresql-unaccent
+    temp_string := to_indexed;
+    temp_string := translate(temp_string, 'âãäåāăąÁÂÃÄÅĀĂĄ', 'aaaaaaaaaaaaaaa');
+    temp_string := translate(temp_string, 'èééêëēĕėęěĒĔĖĘĚ', 'eeeeeeeeeeeeeee');
+    temp_string := translate(temp_string, 'ìíîïìĩīĭÌÍÎÏÌĨĪĬ', 'iiiiiiiiiiiiiiii');
+    temp_string := translate(temp_string, 'óôõöōŏőÒÓÔÕÖŌŎŐ', 'ooooooooooooooo');
+    temp_string := translate(temp_string, 'ùúûüũūŭůÙÚÛÜŨŪŬŮ', 'uuuuuuuuuuuuuuuu');
     temp_string := REPLACE(to_indexed, 'Œ', 'oe');
     temp_string := REPLACE(temp_string, 'Ӕ', 'ae');
     temp_string := REPLACE(temp_string, 'œ', 'oe');
@@ -127,8 +133,8 @@ BEGIN
     temp_string := REPLACE(temp_string, 'ï', 'i');
     temp_string := REPLACE(temp_string, 'ö', 'o');
     temp_string := REPLACE(temp_string, 'ü', 'u');
-    temp_string := REPLACE(temp_string, E'\'', '');
-    temp_string := REPLACE(temp_string, '"', '');
+--     temp_string := REPLACE(temp_string, E'\'', '');
+--     temp_string := REPLACE(temp_string, '"', '');
     temp_string := REPLACE(temp_string, 'ñ', 'n');
     temp_string := REPLACE(temp_string,chr(946),'b');
     temp_string := TRANSLATE(temp_string,'Ð','d');
@@ -141,24 +147,34 @@ BEGIN
     temp_string := TRANSLATE(temp_string,'ū','u');
     temp_string := TRANSLATE(temp_string,'ş','s');
     temp_string := TRANSLATE(temp_string,'Ş','s');
-    temp_string := TRANSLATE(temp_string,'†','');
-    temp_string := TRANSLATE(temp_string,chr(52914),'');
+--     temp_string := TRANSLATE(temp_string,'†','');
+--     temp_string := TRANSLATE(temp_string,chr(52914),'');
 
-    IF forUniqueness THEN
-      temp_string := LOWER(to_ascii(temp_string, 'LATIN9'));
-    ELSE
-      temp_string := LOWER(
-          public.to_ascii(
-            CONVERT_TO(temp_string, 'iso-8859-15'),
-            'iso-8859-15')
-          );
-    END IF;
+    -- FROM 160 to 255 ASCII
+    temp_string := TRANSLATE(temp_string, ' ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ',
+      '  cL YS sCa  -R     Zu .z   EeY?AAAAAAACEEEEIIII NOOOOOxOUUUUYTBaaaaaaaceeeeiiii nooooo/ouuuuyty');
 	--Remove ALL none alphanumerical char
-    temp_string := regexp_replace(temp_string,'[^[:alnum:]]','', 'g');
+    temp_string := lower(regexp_replace(temp_string,'[^[:alnum:]]','', 'g'));
     return substring(temp_string from 0 for 40);
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
+
+CREATE OR REPLACE FUNCTION toUniqueStr(to_indexed varchar) RETURNS varchar STRICT
+AS $$
+DECLARE
+    temp_string varchar;
+BEGIN
+    -- Investigate https://launchpad.net/postgresql-unaccent
+    temp_string := to_indexed;
+    temp_string := TRANSLATE(temp_string, E'  ¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿×&|@"\'#(§^!{})°$*][£µ`%+=~/.,?;:\\<>ł€¶ŧ←↓→«»¢“”_-',
+      '');
+      
+        --Remove ALL none alphanumerical char
+    temp_string := lower(temp_string);
+    return substring(temp_string from 0 for 40);
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
 /***
 * Trigger function fct_cpy_fullToIndex
 * Call the fulltoIndex function for different tables
@@ -198,8 +214,8 @@ BEGIN
 		NEW.keyword_indexed := fullToIndex(NEW.keyword);
 	ELSIF TG_TABLE_NAME = 'people' THEN
 		NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
-    NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
-    NEW.formated_name_unique := COALESCE(fullToIndex(NEW.formated_name, true),'');
+                NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
+                NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
 	ELSIF TG_TABLE_NAME = 'codes' THEN
 		IF NEW.code ~ '^[0-9]+$' THEN
 		   NEW.code_num := NEW.code;
@@ -218,17 +234,17 @@ BEGIN
 		NEW.keyword_indexed := fullToIndex(NEW.keyword);
 	ELSIF TG_TABLE_NAME = 'users' THEN
 		NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
-    NEW.formated_name_unique := COALESCE(fullToIndex(NEW.formated_name, true),'');
+                NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
 	ELSIF TG_TABLE_NAME = 'class_vernacular_names' THEN
 		NEW.community_indexed := fullToIndex(NEW.community);
 	ELSIF TG_TABLE_NAME = 'vernacular_names' THEN
 		NEW.name_indexed := fullToIndex(NEW.name);
 	ELSIF TG_TABLE_NAME = 'igs' THEN
 		NEW.ig_num_indexed := fullToIndex(NEW.ig_num);
-  ELSIF TG_TABLE_NAME = 'collecting_methods' THEN
-    NEW.method_indexed := fullToIndex(NEW.method);
-  ELSIF TG_TABLE_NAME = 'collecting_tools' THEN
-    NEW.tool_indexed := fullToIndex(NEW.tool);
+       ELSIF TG_TABLE_NAME = 'collecting_methods' THEN
+                NEW.method_indexed := fullToIndex(NEW.method);
+       ELSIF TG_TABLE_NAME = 'collecting_tools' THEN
+                NEW.tool_indexed := fullToIndex(NEW.tool);
 	END IF;
 	RETURN NEW;
 END;
@@ -637,7 +653,7 @@ BEGIN
 		NEW.formated_name := NEW.family_name;
 	END IF;
 	NEW.formated_name_indexed := fullToIndex(NEW.formated_name);
-  NEW.formated_name_unique := fullToIndex(NEW.formated_name, true);
+        NEW.formated_name_unique := toUniqueStr(NEW.formated_name);
 	NEW.formated_name_ts := to_tsvector('simple', NEW.formated_name);
 	RETURN NEW;
 END;
