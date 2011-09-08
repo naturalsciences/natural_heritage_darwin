@@ -1,5 +1,6 @@
  \prompt 'Please enter the password for the readonly user: ' readonlypwd
- CREATE ROLE d2viewer ENCRYPTED PASSWORD quote_ident(:readonlypwd) NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN; 
+ \set newreadonlypwd '\'' :readonlypwd '\''
+ CREATE ROLE d2viewer ENCRYPTED PASSWORD quote_literal(:newreadonlypwd) NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN; 
  GRANT USAGE ON SCHEMA darwin2 TO d2viewer;
  GRANT SELECT ON darwin2.template_people TO d2viewer;
  GRANT SELECT ON darwin2.template_people_languages TO d2viewer;
