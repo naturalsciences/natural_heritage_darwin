@@ -156,9 +156,11 @@ CREATE TABLE public.gtu_properties as
     property_method as method ,
     property_unit as unit,
     date_from as date_from,
+    date_to as date_to,
     property_type  || ' / ' || property_sub_type as parameter,
-    gtu.id    
-
+    gtu.id,
+    property_qualifier as qualifier,
+    min(v.property_accuracy) as accuracy
   FROM 
     darwin_flat as flat
     INNER JOIN gtu ON flat.gtu_ref = gtu.id
@@ -174,7 +176,8 @@ CREATE TABLE public.gtu_properties as
     date_to - date_from, 
     property_method, 
     property_unit,
-    date_from, 
+    date_from,
+    date_to,
     property_type,
     property_sub_type
 );
@@ -515,6 +518,7 @@ CREATE TABLE public.flat_properties as
     property_method as method ,
     property_unit as unit,
     date_from as date_from,
+    date_to as date_to,
     property_type  || ' / ' || property_sub_type as parameter
 
   FROM 
@@ -530,6 +534,7 @@ CREATE TABLE public.flat_properties as
     property_method, 
     property_unit,
     date_from, 
+    date_to,
     property_type  || ' / ' || property_sub_type
 
 UNION
@@ -543,6 +548,7 @@ UNION
     property_method as method ,
     property_unit as unit,
     date_from as date_from,
+    date_to as date_to,
     property_type  || ' / ' || property_sub_type as parameter
 
   FROM 
@@ -556,6 +562,7 @@ UNION
     property_method, 
     property_unit,
     date_from, 
+    date_to,
     property_type  || ' / ' || property_sub_type
 
 UNION
@@ -569,6 +576,7 @@ UNION
     property_method as method ,
     property_unit as unit,
     date_from as date_from,
+    date_to as date_to,
     property_type  || ' / ' || property_sub_type as parameter
 
   FROM 
@@ -582,6 +590,7 @@ UNION
     property_method, 
     property_unit,
     date_from, 
+    date_to,
     property_type  || ' / ' || property_sub_type
 );
 
@@ -657,5 +666,8 @@ CREATE TABLE public.accomp_mineral AS
 );
 
 
+ALTER TABLE taxonomy SET SCHEMA public; 
+ALTER TABLE catalogue_levels SET SCHEMA public; 
+ALTER TABLE darwin_flat SET SCHEMA public; 
 
 --\i ../createindexes_darwinflat.sql
