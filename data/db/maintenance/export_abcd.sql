@@ -669,5 +669,6 @@ CREATE TABLE public.accomp_mineral AS
 ALTER TABLE taxonomy SET SCHEMA public; 
 ALTER TABLE catalogue_levels SET SCHEMA public; 
 ALTER TABLE darwin_flat SET SCHEMA public; 
+ALTER TABLE mineralogy SET SCHEMA public; 
 
 --\i ../createindexes_darwinflat.sql
