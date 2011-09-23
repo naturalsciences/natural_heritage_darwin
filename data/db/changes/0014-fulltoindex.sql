@@ -2,6 +2,7 @@ SET SESSION session_replication_role = replica;
 
 DROP FUNCTION IF EXISTS fullToIndex(to_indexed varchar, forUniqueness boolean) CASCADE;
 
+SET SEARCH_PATH = search_path TO darwin2, public;
 \i ../createfunctions.sql
 
 UPDATE catalogue_properties SET 
