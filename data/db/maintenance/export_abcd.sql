@@ -671,4 +671,34 @@ ALTER TABLE catalogue_levels SET SCHEMA public;
 ALTER TABLE darwin_flat SET SCHEMA public; 
 ALTER TABLE mineralogy SET SCHEMA public; 
 
+
+
+
+ANALYZE public.flat_abcd;
+ANALYZE public.gtu_properties;
+ANALYZE public.gtu_place;
+ANALYZE public.collectors;
+ANALYZE public.collectors_institution;
+ANALYZE public.donators;
+ANALYZE public.donators_institution;
+ANALYZE public.identifications_abdc;
+ANALYZE public.taxon_identified;
+ANALYZE public.bota_taxa_keywords;
+ANALYZE public.zoo_taxa_keywords;
+ANALYZE public.taxa_vernacular_name;
+ANALYZE public.mineral_identified;
+ANALYZE public.mineral_vernacular_name;
+ANALYZE public.identifier;
+ANALYZE public.identifier_instituion;
+ANALYZE public.flat_properties;
+ANALYZE public.users_abc;
+ANALYZE public.people_abc;
+ANALYZE public.institutions_abc;
+ANALYZE public.lithostratigraphy_abc;
+ANALYZE public.accomp_mineral;
+ANALYZE public.taxonomy;
+ANALYZE public.catalogue_levels;
+ANALYZE dpublic.darwin_flat;
+ANALYZE public.mineralogy;
+
 --\i ../createindexes_darwinflat.sql
