@@ -90,21 +90,15 @@ UPDATE gtu g1
 
 UPDATE darwin_flat f SET
      expedition_name_indexed = COALESCE(fullToIndex(expedition_name),''),
-     taxon_name_indexed = COALESCE(fullToIndex(taxon_name),''),
      taxon_name_order_by = COALESCE(fullToIndex(taxon_name),''),
-     chrono_name_indexed = COALESCE(fullToIndex(chrono_name),''),
      chrono_name_order_by = COALESCE(fullToIndex(chrono_name),''),
-     litho_name_indexed = COALESCE(fullToIndex(litho_name),''),
      litho_name_order_by = COALESCE(fullToIndex(litho_name),''),
-     lithology_name_indexed = COALESCE(fullToIndex(lithology_name),''),
      lithology_name_order_by = COALESCE(fullToIndex(lithology_name),''),
-     mineral_name_indexed = COALESCE(fullToIndex(mineral_name),''),
      mineral_name_order_by = COALESCE(fullToIndex(mineral_name),''),
-     host_taxon_name_indexed = COALESCE(fullToIndex(host_taxon_name),''),
      host_taxon_name_order_by = COALESCE(fullToIndex(host_taxon_name),''),
      ig_num_indexed = COALESCE(fullToIndex(ig_num),''),
 
      gtu_tag_values_indexed = (select tag_values_indexed from gtu where gtu.id = f.gtu_ref),
-     gtu_country_tag_indexed = ( select lineToTagArray(taggr.tag_value) from tag_groups taggr ON taggr.gtu_ref=f.gtu_ref
+     gtu_country_tag_indexed = ( select lineToTagArray(taggr.tag_value) from tag_groups taggr WHERE taggr.gtu_ref=f.gtu_ref
         AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country')
 ;
