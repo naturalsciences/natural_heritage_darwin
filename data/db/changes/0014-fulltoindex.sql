@@ -2,7 +2,7 @@ SET SESSION session_replication_role = replica;
 
 DROP FUNCTION IF EXISTS fullToIndex(to_indexed varchar, forUniqueness boolean) CASCADE;
 
-\i ../createfunction.sql
+\i ../createfunctions.sql
 
 UPDATE catalogue_properties SET 
                 property_tool_indexed = COALESCE(fullToIndex(property_tool),''),
