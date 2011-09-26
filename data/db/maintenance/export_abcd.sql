@@ -599,8 +599,8 @@ CREATE TABLE public.users_abc as
 (
   SELECT * ,
 
-  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM users_addresses where tag like '%pref%' and person_user_ref = u.id  LIMIT 1) as address,
-  ( SELECT entry FROM users_comm where tag like '%pref%' and person_user_ref = u.id and comm_type='e-mail' LIMIT 1) as email
+  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM users_addresses where  person_user_ref = u.id ORDER BY tag like '%pref%'  LIMIT 1) as address,
+  ( SELECT entry FROM users_comm where  person_user_ref = u.id and comm_type='e-mail' ORDER BY tag like '%pref%' LIMIT 1) as email
 
   from users u
   
@@ -611,8 +611,8 @@ CREATE TABLE public.people_abc as
 (
   SELECT * ,
 
-  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM people_addresses where tag like '%pref%' and person_user_ref = p.id LIMIT 1) as address,
-  ( SELECT entry FROM people_comm where tag like '%pref%' and person_user_ref = p.id    and comm_type='e-mail'  LIMIT 1) as email
+  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM people_addresses where  person_user_ref = p.id ORDER BY tag like '%pref%'LIMIT 1) as address,
+  ( SELECT entry FROM people_comm where person_user_ref = p.id    and comm_type='e-mail' ORDER BY tag like '%pref%' LIMIT 1) as email
 
   from people p
   
@@ -624,8 +624,8 @@ CREATE TABLE public.institutions_abc as
 (
   SELECT * ,
 
-  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM people_addresses where tag like '%pref%' and  person_user_ref = p.id LIMIT 1) as address,
-  ( SELECT entry FROM people_comm where tag like '%pref%' and person_user_ref = p.id   and comm_type='e-mail'  LIMIT 1) as email
+  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM people_addresses where  person_user_ref = p.id ORDER BY tag like '%pref%' LIMIT 1) as address,
+  ( SELECT entry FROM people_comm where person_user_ref = p.id   and comm_type='e-mail' ORDER BY tag like '%pref%' LIMIT 1) as email
 
   from people p
   
