@@ -51,7 +51,7 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_chrono_name_order_by on darwin_flat(ch
 CREATE INDEX CONCURRENTLY idx_darwin_flat_litho_name_order_by on darwin_flat(litho_name_order_by);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_lithology_name_order_by on darwin_flat(lithology_name_order_by);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_mineral_name_order_by on darwin_flat(mineral_name_order_by);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_taxon_path on darwin_flat(taxon_path text_pattern_ops);
+-- CREATE INDEX CONCURRENTLY idx_darwin_flat_taxon_path on darwin_flat(taxon_path text_pattern_ops);
 /*
 CREATE INDEX CONCURRENTLY idx_darwin_flat_host_taxon_path on darwin_flat(host_taxon_path);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_chrono_path on darwin_flat(chrono_path);
@@ -93,7 +93,7 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_collection_name on darwin_flat(collect
 /**** For specimen search ****/
 CREATE INDEX CONCURRENTLY idx_darwin_flat_spec_ref_category on darwin_flat(spec_ref, category);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_spec_ref_coll_name on darwin_flat(spec_ref, collection_name);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_spec_ref_taxon_name on darwin_flat(spec_ref, taxon_name_order_by);
+-- CREATE INDEX CONCURRENTLY idx_darwin_flat_spec_ref_taxon_name on darwin_flat(spec_ref, taxon_name_order_by);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_spec_ref_chrono_name on darwin_flat(spec_ref, chrono_name_order_by);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_spec_ref_litho_name on darwin_flat(spec_ref, litho_name_order_by);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_spec_ref_lithology_name on darwin_flat(spec_ref, lithology_name_order_by);
