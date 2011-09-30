@@ -14,33 +14,33 @@ DROP TABLE IF EXISTS preferences;
 -- create table staging
 -- create table  staging_tag_groups
 
-DROP TABLE IF EXISTS public.flat_abcd 
-DROP TABLE IF EXISTS public.gtu_properties
-DROP TABLE IF EXISTS public.gtu_place
-DROP TABLE IF EXISTS public.collectors
-DROP TABLE IF EXISTS public.collectors_institution
-DROP TABLE IF EXISTS public.donators
-DROP TABLE IF EXISTS public.donators_institution
-DROP TABLE IF EXISTS public.identifications_abdc
-DROP TABLE IF EXISTS public.taxon_identified
-DROP TABLE IF EXISTS public.bota_taxa_keywords
-DROP TABLE IF EXISTS public.zoo_taxa_keywords
-DROP TABLE IF EXISTS public.taxa_vernacular_name
-DROP TABLE IF EXISTS public.mineral_identified
-DROP TABLE IF EXISTS public.mineral_vernacular_name
-DROP TABLE IF EXISTS public.identifier
-DROP TABLE IF EXISTS public.identifier_instituion
-DROP TABLE IF EXISTS public.flat_properties
-DROP TABLE IF EXISTS public.users_abc
-DROP TABLE IF EXISTS public.people_abc
-DROP TABLE IF EXISTS public.institutions_abc
-DROP TABLE IF EXISTS public.lithostratigraphy_abc
-DROP TABLE IF EXISTS public.accomp_mineral
+DROP TABLE IF EXISTS public.flat_abcd ;
+DROP TABLE IF EXISTS public.gtu_properties;
+DROP TABLE IF EXISTS public.gtu_place;
+DROP TABLE IF EXISTS public.collectors;
+DROP TABLE IF EXISTS public.collectors_institution;
+DROP TABLE IF EXISTS public.donators;
+DROP TABLE IF EXISTS public.donators_institution;
+DROP TABLE IF EXISTS public.identifications_abdc;
+DROP TABLE IF EXISTS public.taxon_identified;
+DROP TABLE IF EXISTS public.bota_taxa_keywords;
+DROP TABLE IF EXISTS public.zoo_taxa_keywords;
+DROP TABLE IF EXISTS public.taxa_vernacular_name;
+DROP TABLE IF EXISTS public.mineral_identified;
+DROP TABLE IF EXISTS public.mineral_vernacular_name;
+DROP TABLE IF EXISTS public.identifier;
+DROP TABLE IF EXISTS public.identifier_instituion;
+DROP TABLE IF EXISTS public.flat_properties;
+DROP TABLE IF EXISTS public.users_abc;
+DROP TABLE IF EXISTS public.people_abc;
+DROP TABLE IF EXISTS public.institutions_abc;
+DROP TABLE IF EXISTS public.lithostratigraphy_abc;
+DROP TABLE IF EXISTS public.accomp_mineral;
 
 DROP sequence IF EXISTS flat_abcd_id_seq;
 DROP sequence IF EXISTS identifications_abdc_id_seq;
 DROP sequence IF EXISTS taxon_identified_id_seq;
-DROP sequence IF EXISTS mineral_identified_id_se
+DROP sequence IF EXISTS mineral_identified_id_seq;
 
 alter table catalogue_levels DROP constraint unq_catalogue_levels;
 
@@ -78,7 +78,7 @@ CREATE TABLE public.flat_abcd as
   
   CASE WHEN f.category='observation' THEN null::text ELSE f.acquisition_category END  as acquisition_category,
   CASE WHEN f.category='observation' THEN null::integer ELSE f.acquisition_date_mask END  as acquisition_date_mask,
-  CASE WHEN f.category='observation' THEN null::date ELSE f.acquisition_date END as acquisition_date ,
+  CASE WHEN f.category='observation' THEN null::date ELSE CASE WHEN f.acquisition_date_mask = 0 THEN null::date ELSE f.acquisition_date END END as acquisition_date ,
 
   'http://darwin.naturalsciences.be/search/view/id/' || f.individual_ref as unit_url,
 
@@ -96,7 +96,7 @@ CREATE TABLE public.flat_abcd as
   gtu.elevation as gtu_altitude,
   gtu.elevation_accuracy as gtu_altitude_accuracy,
   gtu.latitude as gtu_latitude,
-  gtu.latitude as gtu_longitude,
+  gtu.longitude as gtu_longitude,
   gtu.lat_long_accuracy as gtu_lat_long_accuracy,
 
   (select lineToTagRows(tag_value) FROM tag_groups taggr WHERE gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country' limit 1) AS gtu_country,
@@ -190,6 +190,8 @@ CREATE TABLE public.gtu_place as
   FROM  darwin_flat  f
   
   inner join tags ON f.gtu_ref = tags.gtu_ref
+
+  WHERE sub_group_type != 'country'
 );
 
 
@@ -666,13 +668,51 @@ CREATE TABLE public.accomp_mineral AS
 );
 
 
+CREATE TABLE public.darwin_metadata AS
+(
+  SELECT
+    'Rue Vautier straat, 29 - 1000 Bruxelles/Brussels - Belgique/Belgïe'::text as content_contact_address,
+    'collections@naturalsciences.be'::text as content_contact_email,
+    'RBINS contact'::text as content_contact_name,
+    'EN'::text as metadata_representation_language,
+    'RBINS collections'::text as metadata_representation_title,
+    current_timestamp as metadata_revision_date,
+    'Rue Vautier straat, 29 - 1000 Bruxelles/Brussels - Belgique/Belgïe'::text as content_technical_contact_address,
+    'collections@naturalsciences.be'::text as content_technical_contact_email,
+    'RBINS contact'::text as content_technical_contact_name
+);
+
+
 ALTER TABLE taxonomy SET SCHEMA public; 
 ALTER TABLE catalogue_levels SET SCHEMA public; 
 ALTER TABLE darwin_flat SET SCHEMA public; 
 ALTER TABLE mineralogy SET SCHEMA public; 
 
+ALTER TABLE public.darwin_flat 
+  DROP COLUMN building,
+  DROP COLUMN "floor",
+  DROP COLUMN room,
+  DROP COLUMN "row",
+  DROP COLUMN shelf,
+  DROP COLUMN "container",
+  DROP COLUMN container_type,
+  DROP COLUMN container_storage,
+  DROP COLUMN sub_container,
+  DROP COLUMN sub_container_type,
+  DROP COLUMN sub_container_storage,
+  DROP COLUMN gtu_location,
+  DROP COLUMN gtu_tag_values_indexed,
+  DROP COLUMN with_types,
+  DROP COLUMN with_individuals,
+  DROP COLUMN with_parts;
 
+UPDATE public.darwin_flat
+SET gtu_from_date = null::timestamp
+WHERE gtu_from_date_mask = 0;
 
+UPDATE public.darwin_flat
+SET gtu_to_date = null::timestamp
+WHERE gtu_to_date_mask = 0;
 
 ANALYZE public.flat_abcd;
 ANALYZE public.gtu_properties;
@@ -698,7 +738,11 @@ ANALYZE public.lithostratigraphy_abc;
 ANALYZE public.accomp_mineral;
 ANALYZE public.taxonomy;
 ANALYZE public.catalogue_levels;
-ANALYZE dpublic.darwin_flat;
+ANALYZE public.darwin_flat;
 ANALYZE public.mineralogy;
+
+
+DROP SCHEMA IF EXISTS darwin1;
+DROP ROLE IF EXISTS darwin1;
 
 --\i ../createindexes_darwinflat.sql
