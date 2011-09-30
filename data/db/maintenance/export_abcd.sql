@@ -292,7 +292,7 @@ CREATE TABLE public.taxon_identified as
     identifications_abdc i
     INNER JOIN identifications as c ON i.old_identification_id = c.id
     WHERE 
-    notion_concerned = 'taxonomy'
+    c.notion_concerned = 'taxonomy'
 );
 
 
