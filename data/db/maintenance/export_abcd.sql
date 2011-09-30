@@ -286,13 +286,14 @@ CREATE TABLE public.taxon_identified as
     nextval('taxon_identified_id_seq') as id,
     i.id as identification_ref,
     c.value_defined as taxon_name,
-    null::integer as taxon_ref,
-    null::integer as taxon_parent_ref
+    CASE WHEN c.value_defined == f.taxon_name THEN f.taxon_ref ELSE null::integer END as taxon_ref,
+    CASE WHEN c.value_defined == f.taxon_name THEN f.taxon_parent_ref ELSE null::integer END as taxon_parent_ref
   FROM 
     identifications_abdc i
     INNER JOIN identifications as c ON i.old_identification_id = c.id
+    INNER JOIN darwin_flat f ON  f.id = i.flat_abcd
     WHERE 
-    c.notion_concerned = 'taxonomy'
+      c.notion_concerned = 'taxonomy'
 );
 
 
@@ -309,10 +310,11 @@ insert into identifications_abdc
   select
    nextval('identifications_abdc_id_seq') as id,
     f.id as flat_id,
-    now() as notion_date,
+    null::date as notion_date,
     '' as determination_status,
     true as is_current
     FROM  darwin_flat  f
+    WHERE NOT EXISTS( SELECT 1 FROM identifications_abdc i WHERE taxon_ref is not null and i.flat_id = f.id)
 );
 
 
