@@ -75,17 +75,19 @@ class MineralogyFormFilter extends BaseMineralogyFormFilter
 
   public function addCodeColumnQuery(Doctrine_Query $query, $field, $values)
   {
-     if ($values != ""):
+     if ($values != "")
+     {
        $query->andWhere("upper(code) like concat(upper(?), '%') ", $values);
-     endif;
+     }
      return $query;
   }
 
   public function addClassificationColumnQuery(Doctrine_Query $query, $field, $values)
   {
-     if ($values != ""):
+     if ($values != "")
+     {
        $query->andWhere(" classification = ? ", $values);
-     endif;
+     }
      return $query;
   }
 

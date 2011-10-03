@@ -56,17 +56,19 @@ class SpecimensFormFilter extends BaseSpecimenSearchFormFilter
   }
   public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
   {
-     if ($values != ""):
+     if ($values != "")
+     {
        $query->andWhere("ig_num_indexed like concat(fullToIndex(?), '%') ", $values);
-     endif;
+     }
      return $query;
   } 
   
   public function addCollectionNameColumnQuery(Doctrine_Query $query, $field, $values)
   {
-     if ($values != ""):
+     if ($values != "")
+     {
        $query->andWhere("collection_ref in (SELECT c.id FROM Collections c WHERE c.name_indexed like concat(fullToIndex(?), '%')) ", $values);
-     endif;
+     }
      return $query;
   }  
    
