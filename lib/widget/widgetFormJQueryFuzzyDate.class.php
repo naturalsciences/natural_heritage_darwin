@@ -148,14 +148,14 @@ class widgetFormJQueryFuzzyDate extends sfWidgetFormDate
                          
                            function wfd_%1$s_check_linked_days()
                            {
-                             var daysInMonth = 32 - new Date(jQuery("#%3$s").val(), jQuery("#%5$s").val() - 1, 32).getDate();
+                             /*var daysInMonth = 32 - new Date(jQuery("#%3$s").val(), jQuery("#%5$s").val() - 1, 32).getDate();
                              jQuery("#%6$s option").attr("disabled", "");
                              jQuery("#%6$s option:gt(" + (%8$s) +")").attr("disabled", "disabled");
                          
                              if (jQuery("#%6$s").val() > daysInMonth)
                              {
                                jQuery("#%6$s").val(daysInMonth);
-                             }
+                             }*/
                            }
                          
                            jQuery(document).ready(function() {
