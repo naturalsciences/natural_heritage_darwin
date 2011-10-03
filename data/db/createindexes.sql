@@ -16,7 +16,7 @@ CREATE INDEX CONCURRENTLY idx_people_comm_person_user_ref on people_comm(person_
 CREATE INDEX CONCURRENTLY idx_people_addresses_person_user_ref on people_addresses(person_user_ref);
 CREATE INDEX CONCURRENTLY idx_users_comm_person_user_ref on users_comm(person_user_ref);
 CREATE INDEX CONCURRENTLY idx_users_addresses_person_user_ref on users_addresses(person_user_ref);
-CREATE INDEX CONCURRENTLY idx_users_login_infos_user_ref on users_login_infos(user_ref);
+-- CREATE INDEX CONCURRENTLY idx_users_login_infos_user_ref on users_login_infos(user_ref);
 CREATE INDEX CONCURRENTLY idx_people_multimedia_person_user_ref on people_multimedia(person_user_ref);
 CREATE INDEX CONCURRENTLY idx_people_multimedia_object_ref on people_multimedia(object_ref);
 CREATE INDEX CONCURRENTLY idx_users_multimedia_person_user_ref on users_multimedia(person_user_ref);
@@ -90,7 +90,7 @@ CREATE INDEX CONCURRENTLY idx_catalogue_people_people_order_by on catalogue_peop
 CREATE INDEX CONCURRENTLY idx_catalogue_people_people_ref on catalogue_people(people_ref);
 CREATE INDEX CONCURRENTLY idx_catalogue_people_referenced_record on catalogue_people(referenced_relation, record_id, people_type);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_type on catalogue_properties(property_type);
-CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_sub_type on catalogue_properties(property_sub_type);
+-- CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_sub_type on catalogue_properties(property_sub_type);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_sub_type_indexed on catalogue_properties(property_sub_type_indexed);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_referenced_record on catalogue_properties(referenced_relation, record_id, property_type);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_qualifier on catalogue_properties(property_qualifier);
@@ -193,17 +193,17 @@ CREATE INDEX CONCURRENTLY idx_users_addresses_country on users_addresses(country
 CREATE INDEX CONCURRENTLY idx_users_comm_comm_type on users_comm(comm_type);
 CREATE INDEX CONCURRENTLY idx_users_languages_language_country on users_languages(language_country);
 CREATE INDEX CONCURRENTLY idx_users_languages_preferred_language on users_languages(preferred_language);
-CREATE INDEX CONCURRENTLY idx_users_login_infos_login_system on users_login_infos(login_system);
-CREATE INDEX CONCURRENTLY idx_users_login_infos_login_type on users_login_infos(login_type);
-CREATE INDEX CONCURRENTLY idx_users_login_infos_user_name on users_login_infos(user_name);
+-- CREATE INDEX CONCURRENTLY idx_users_login_infos_login_system on users_login_infos(login_system);
+-- CREATE INDEX CONCURRENTLY idx_users_login_infos_login_type on users_login_infos(login_type);
+-- CREATE INDEX CONCURRENTLY idx_users_login_infos_user_name on users_login_infos(user_name);
 CREATE INDEX CONCURRENTLY idx_users_workflow_user_status on users_workflow(user_ref, status);
 CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
 
 /*** GiST and eventual GIN Indexes for ts_vector fields ***/
 
 CREATE INDEX CONCURRENTLY idx_gist_comments_comment_ts on comments using gist(comment_ts);
-CREATE INDEX CONCURRENTLY idx_gist_codes_full_code_indexed on codes using gist(full_code_indexed);
-CREATE INDEX CONCURRENTLY idx_gin_identifications_value_defined_ts on identifications using gin(value_defined_ts);
+-- CREATE INDEX CONCURRENTLY idx_gist_codes_full_code_indexed on codes using gist(full_code_indexed);
+-- CREATE INDEX CONCURRENTLY idx_gin_identifications_value_defined_ts on identifications using gin(value_defined_ts);
 CREATE INDEX CONCURRENTLY idx_gist_vernacular_names_name_ts on vernacular_names using gist(name_ts);
 CREATE INDEX CONCURRENTLY idx_gist_expeditions_name_ts on expeditions using gist(name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_people_formated_name_ts on people using gin(formated_name_ts);

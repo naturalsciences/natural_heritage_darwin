@@ -3529,13 +3529,13 @@ DECLARE
   rec_exists boolean ;
 BEGIN
   IF TG_OP = 'DELETE' THEN
-	  IF OLD.people_type = 'collector' THEN
-			field_to_update := 'spec_coll_ids';
-			ref_field_id := OLD.record_id ;
-		ELSIF OLD.people_type = 'donator' THEN
-			field_to_update := 'spec_don_sel_ids';
-			ref_field_id := OLD.record_id ;				  
-		ELSIF OLD.people_type = 'identifier' THEN
+    IF OLD.people_type = 'collector' THEN
+      field_to_update := 'spec_coll_ids';
+      ref_field_id := OLD.record_id ;
+    ELSIF OLD.people_type = 'donator' THEN
+      field_to_update := 'spec_don_sel_ids';
+      ref_field_id := OLD.record_id ; 
+    ELSIF OLD.people_type = 'identifier' THEN
       SELECT record_id,referenced_relation INTO ref_field_id, ref_relation FROM identifications where id=OLD.record_id ;
       /* 'IF ref_field_id is Null, so the identification associated must have been deleted, we have nothing to do because an other trigger have done the job' */
       IF ref_field_id is NULL THEN
@@ -3549,25 +3549,27 @@ BEGIN
       ELSE
         RETURN NEW;
       END IF ;
-      EXECUTE 'SELECT true from catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id 
-      AND cp.referenced_relation = ' || quote_literal('identifications') || ' WHERE i.record_id = ' || quote_literal(ref_field_id) || ' AND people_ref = ' ||
-      quote_literal(OLD.people_ref) || ' AND i.referenced_relation = ' || quote_literal(ref_relation) INTO rec_exists ;
+      EXECUTE 'SELECT true ' ||
+              'FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = ' || quote_literal('identifications') || ' ' ||
+              'WHERE i.record_id = ' || quote_literal(ref_field_id) || 
+              '  AND people_ref = ' || quote_literal(OLD.people_ref) || 
+              '  AND i.referenced_relation = ' || quote_literal(ref_relation) INTO rec_exists ;
       /* 'IF rec_exists then that people exist in an other identification of the same record, so we must not remove it from flat' */
       IF rec_exists IS NOT NULL THEN
         RETURN OLD;
       END IF ;
     ELSE
       RETURN OLD ;
-	  END IF ;
+    END IF ;
   ELSE
     IF NEW.people_type = 'collector' THEN
-		  field_to_update := 'spec_coll_ids';
-		  ref_field_id := NEW.record_id;
-	  ELSIF NEW.people_type = 'donator' THEN
-		  field_to_update := 'spec_don_sel_ids';
-		  ref_field_id := NEW.record_id	;			  
-	  ELSIF NEW.people_type = 'identifier' THEN 
-      SELECT record_id,referenced_relation INTO ref_field_id, ref_relation FROM identifications where id=NEW.record_id ;    
+      field_to_update := 'spec_coll_ids';
+      ref_field_id := NEW.record_id;
+    ELSIF NEW.people_type = 'donator' THEN
+      field_to_update := 'spec_don_sel_ids';
+      ref_field_id := NEW.record_id;  
+    ELSIF NEW.people_type = 'identifier' THEN 
+      SELECT record_id, referenced_relation INTO ref_field_id, ref_relation FROM identifications where id=NEW.record_id ;    
       IF (ref_relation = 'specimens') THEN
         field_to_update := 'spec_ident_ids';
       ELSIF ref_relation = 'specimen_individuals' THEN
@@ -3578,28 +3580,32 @@ BEGIN
       END IF ;
     ELSE
       RETURN NEW ;      
-  	END IF;  
+    END IF;  
   END IF ;
   
   IF TG_OP = 'DELETE' THEN
-    EXECUTE 'UPDATE darwin_flat
-      SET ' || quote_ident(field_to_update) || '= fct_remove_array_elem(' || quote_ident(field_to_update) || ',ARRAY[' || OLD.people_ref ||
-      ']) WHERE ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ;
+    EXECUTE 'UPDATE darwin_flat ' ||
+            'SET ' || quote_ident(field_to_update) || '= fct_remove_array_elem(' || quote_ident(field_to_update) || ',ARRAY[' || OLD.people_ref || ']) ' || 
+            'WHERE ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ;
   ELSIF TG_OP = 'INSERT' THEN
-    EXECUTE 'SELECT TRUE FROM darwin_flat WHERE ' || quote_ident(field_to_update) || ' && ARRAY[' || NEW.people_ref::integer || '] ' INTO rec_exists ;
+    EXECUTE 'SELECT TRUE ' || 
+            'WHERE EXISTS (SELECT id ' ||
+            '              FROM darwin_flat ' ||
+            '              WHERE ' || quote_ident(field_to_update) || ' && ARRAY[' || NEW.people_ref::integer || '] ' || 
+            '                AND ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ||
+            '             )' INTO rec_exists ;
     /* 'If true then this id is allready in this field, so we do not want to add it again' */
     IF rec_exists = TRUE THEN
       RETURN NEW ;
     END IF;
-    EXECUTE 'UPDATE darwin_flat
-      SET ' || quote_ident(field_to_update) || ' = array_append(' || quote_ident(field_to_update) || ',' || quote_literal(NEW.people_ref::integer) ||
-      ') WHERE ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ;
+    EXECUTE 'UPDATE darwin_flat ' ||
+            'SET ' || quote_ident(field_to_update) || ' = array_append(' || quote_ident(field_to_update) || ',' || quote_literal(NEW.people_ref::integer) || ') ' || 
+            'WHERE ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ;
   ELSE
     IF OLD.people_ref != NEW.people_ref THEN
-      EXECUTE 'UPDATE darwin_flat
-        SET ' || quote_ident(field_to_update) || ' = array_append(fct_remove_array_elem(' || quote_ident(field_to_update) || ',ARRAY[' || OLD.people_ref
-        || ']),' || quote_literal(NEW.people_ref::integer) || 
-        ') WHERE ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ;
+      EXECUTE 'UPDATE darwin_flat ' ||
+              'SET ' || quote_ident(field_to_update) || ' = array_append(fct_remove_array_elem(' || quote_ident(field_to_update) || ',ARRAY[' || OLD.people_ref || ']),' || quote_literal(NEW.people_ref::integer) || ') ' || 
+              'WHERE ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ;
     END IF;
   END IF;  
   RETURN NEW;
@@ -4364,3 +4370,63 @@ BEGIN
   RETURN NEW;        
 END;
 $$ LANGUAGE plpgsql;
+
+create or replace function upsert (tableName in varchar, keyValues in hstore) returns text language plpgsql as
+$$
+declare
+  insert_stmt varchar := 'insert into ' || quote_ident(tableName) || ' (';
+  update_stmt varchar := 'update ' || quote_ident(tableName) || ' SET (';
+  where_stmt varchar := ' WHERE ';
+  iloop integer := 0;
+  recUnqFields RECORD;
+  newhst RECORD;
+  lowerKeyValues hstore;
+begin
+  for newhst in (select * from each(keyValues)) loop
+    if iloop = 0 then
+      lowerKeyValues := hstore(lower(newhst.key), newhst.value);
+    else
+      lowerKeyValues := lowerKeyValues || hstore(lower(newhst.key), newhst.value);
+    end if;
+    iloop := iloop +1;
+  end loop;
+  iloop := 0;
+  insert_stmt := insert_stmt || array_to_string(akeys(lowerKeyValues), ',') || ') VALUES (' || chr(39) || array_to_string(avals(lowerKeyValues), (chr(39) || ',' || chr(39))::text) || chr(39) ||')';
+  begin
+    execute insert_stmt;
+  exception
+    when unique_violation then
+      begin
+        for recUnqFields IN (select x.vals as field, column_default as defaultVal 
+                             from (select regexp_split_to_table(trim(substr(indexdef,strpos(indexdef, '(')+1),')'),', ') as vals 
+                                   from pg_indexes 
+                                   where tablename = tableName 
+                                     and strpos(indexdef, 'UNIQUE') > 0 
+                                     and indexname = (select conname 
+                                                      from pg_class inner join pg_constraint on pg_class.oid = pg_constraint.conrelid and relname = tableName and contype = 'p'
+                                                     )
+                                  ) as x 
+                             inner join 
+                             information_schema.columns on x.vals = column_name and table_name = tableName) loop
+          if iloop > 0 then
+            where_stmt := where_stmt || ' AND ';
+          end if;
+          iloop := iloop + 1;
+          if lowerKeyValues ? recUnqFields.field then
+            where_stmt := where_stmt || quote_ident(recUnqFields.field) || ' = ' || quote_literal(lowerKeyValues -> recUnqFields.field);
+          else
+            where_stmt := where_stmt || quote_ident(recUnqFields.field) || ' = ' || quote_literal(coalesce(recUnqFields.defaultVal,''));
+          end if;
+        end loop;
+        update_stmt := update_stmt || array_to_string(akeys(lowerKeyValues), ',') || ') = (' || chr(39) || array_to_string(avals(lowerKeyValues), (chr(39) || ',' || chr(39))::text) || chr(39) ||')' || where_stmt;
+        execute update_stmt;
+        return 'updated';
+      exception
+        when others then
+          return 'SQL error is: '::text || SQLERRM;
+      end;
+      return 'SQL error is: '::text || SQLERRM;
+  end;
+  return 'inserted';
+end;
+$$;
