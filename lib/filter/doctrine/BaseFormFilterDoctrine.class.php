@@ -282,9 +282,11 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
        {
          $levels[]=$val['level_upper_ref'];
        }
-       if (count($levels)>0):     
+
+       if (count($levels)>0)
+       {
          $query->andWhereIn('level_ref', $levels);
-       endif;
+       }
      }
      return $query;
   }
