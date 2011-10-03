@@ -140,10 +140,10 @@ class widgetFormJQueryFuzzyDate extends sfWidgetFormDate
                          
                            function wfd_%1$s_update_linked(date)
                            {
-                             a_date = date.split("/");
-                             jQuery("#%3$s").val(parseInt(a_date[0]));
-                             jQuery("#%5$s").val(parseInt(a_date[1]));
-                             jQuery("#%6$s").val(parseInt(a_date[2]));
+                             a_date = date.split("-");
+                             jQuery("#%3$s").val(parseInt(a_date[0],10));
+                             jQuery("#%5$s").val(parseInt(a_date[1],10));
+                             jQuery("#%6$s").val(parseInt(a_date[2],10));
                            }
                          
                            function wfd_%1$s_check_linked_days()
