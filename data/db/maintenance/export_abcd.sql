@@ -1,19 +1,8 @@
---create table catalogue_levels
 
-DROP TABLE IF EXISTS users_login_infos;
-DROP TABLE IF EXISTS people_multimedia;
-
-DROP TABLE IF EXISTS users_multimedia;
-DROP TABLE IF EXISTS collections_rights; -- SURE???
-DROP TABLE IF EXISTS my_saved_searches;
-DROP TABLE IF EXISTS my_widgets;
-DROP TABLE IF EXISTS preferences;
--- create table darwin_flat
--- create table flat_dict
--- create table imports
--- create table staging
--- create table  staging_tag_groups
-
+DROP TABLE IF EXISTS public.darwin_flat;
+DROP TABLE IF EXISTS public.mineralogy;
+DROP TABLE IF EXISTS public.taxonomy;
+DROP TABLE IF EXISTS public.catalogue_levels;
 DROP TABLE IF EXISTS public.flat_abcd ;
 DROP TABLE IF EXISTS public.gtu_properties;
 DROP TABLE IF EXISTS public.gtu_place;
@@ -36,14 +25,27 @@ DROP TABLE IF EXISTS public.people_abc;
 DROP TABLE IF EXISTS public.institutions_abc;
 DROP TABLE IF EXISTS public.lithostratigraphy_abc;
 DROP TABLE IF EXISTS public.accomp_mineral;
+DROP TABLE IF EXISTS public.darwin_metadata;
 
-DROP sequence IF EXISTS flat_abcd_id_seq;
-DROP sequence IF EXISTS identifications_abdc_id_seq;
-DROP sequence IF EXISTS taxon_identified_id_seq;
-DROP sequence IF EXISTS mineral_identified_id_seq;
+DROP SEQUENCE IF EXISTS public.flat_abcd_id_seq;
+DROP SEQUENCE IF EXISTS public.gtu_properties_id_seq;
+DROP SEQUENCE IF EXISTS public.gtu_place_id_seq;
+DROP SEQUENCE IF EXISTS public.collectors_abcd_id_seq;
+DROP SEQUENCE IF EXISTS public.collectors_institution_abcd_id_seq;
+DROP SEQUENCE IF EXISTS public.donators_abcd_id_seq;
+DROP SEQUENCE IF EXISTS public.donators_institution_abcd_id_seq;
+DROP SEQUENCE IF EXISTS public.identifications_abdc_id_seq;
+DROP SEQUENCE IF EXISTS public.taxon_identified_id_seq;
+DROP SEQUENCE IF EXISTS public.mineral_identified_id_seq;
+DROP SEQUENCE IF EXISTS public.bota_taxa_keywords_id_seq;
+DROP SEQUENCE IF EXISTS public.zoo_taxa_keywords_id_seq;
+DROP SEQUENCE IF EXISTS public.taxa_vernacular_name_id_seq;
+DROP SEQUENCE IF EXISTS public.mineral_vernacular_name_id_seq;
+DROP SEQUENCE IF EXISTS public.identifier_abcd_id_seq;
+DROP SEQUENCE IF EXISTS public.identifier_institution_id_seq;
+DROP SEQUENCE IF EXISTS public.flat_properties_id_seq;
 
 alter table catalogue_levels DROP constraint unq_catalogue_levels;
-
 
 UPDATE catalogue_levels
 SET level_name = (
@@ -69,11 +71,11 @@ END)
 
 DELETE FROM darwin_flat where collection_is_public = false;
 
-create sequence flat_abcd_id_seq;
+create sequence public.flat_abcd_id_seq;
 
 CREATE TABLE public.flat_abcd as 
 (
-  nextval('flat_abcd_id_seq') as id,
+  nextval('public.flat_abcd_id_seq') as id,
   f.id as flat_ref,
   
   CASE WHEN f.category='observation' THEN null::text ELSE f.acquisition_category END  as acquisition_category,
@@ -89,8 +91,6 @@ CREATE TABLE public.flat_abcd as
   coll.main_manager_ref as collection_main_manager_ref,
   p_col.formated_name as collection_main_manager_name,
 
-
-
 -- GTU
   
   gtu.elevation as gtu_altitude,
@@ -98,6 +98,8 @@ CREATE TABLE public.flat_abcd as
   gtu.latitude as gtu_latitude,
   gtu.longitude as gtu_longitude,
   gtu.lat_long_accuracy as gtu_lat_long_accuracy,
+  CASE WHEN gtu.gtu_from_date_mask = 0 THEN null::timestamp ELSE gtu.gtu_from_date END as gtu_from_date,
+  CASE WHEN gtu.gtu_to_date_mask = 0 THEN null::timestamp ELSE gtu.gtu_to_date END as gtu_to_date,
 
   (select lineToTagRows(tag_value) FROM tag_groups taggr WHERE gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country' limit 1) AS gtu_country,
   --(select  * FROM tag_groups taggr WHERE gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country' limit 1) AS gtu_country,
@@ -106,19 +108,19 @@ CREATE TABLE public.flat_abcd as
         WHERE sm.specimen_ref = f.spec_ref limit 1) AS gtu_method,
 
 
-  cp1.date_to - cp1.date_from as depth_duration,
+  ( CASE WHEN cp1.date_to_mask = 0 THEN null::timestamp ELSE cp1.date_to END - CASE WHEN cp1.date_from_mask = 0 THEN NULL::timestamp ELSE cp1.date_from END ) as depth_duration,
   ( select min(property_value) from properties_values where property_ref = cp1.id) as depth_lowervalue,
   ( select max(property_value) from properties_values where property_ref = cp1.id) as depth_uppervalue, /*** only if 1? **/
   cp1.property_method as depth_method,
   cp1.property_unit as depth_unit,
-  cp1.date_from as depth_date_time,
+  CASE WHEN cp1.date_from_mask = 0 THEN null::timestamp ELSE cp1.date_from END as depth_date_time,
 
-  cp2.date_to - cp2.date_from as height_duration,
+  ( CASE WHEN cp2.date_to_mask = 0 THEN null::timestamp ELSE cp2.date_to END - CASE WHEN cp2.date_from_mask = 0 THEN NULL::timestamp ELSE cp2.date_from END ) as height_duration,
   ( select min(property_value) from properties_values where property_ref = cp2.id) as height_lowervalue,
   ( select max(property_value) from properties_values where property_ref = cp2.id) as height_uppervalue, /*** only if 1? **/
   cp2.property_method as height_method,
   cp2.property_unit as height_unit,
-  cp2.date_from as height_date_time,
+  CASE WHEN cp2.date_from_mask = 0 THEN null::timestamp ELSE cp2.date_from END as height_date_time,
 
 
   (select array_to_string(array(select comment from comments c_flat where ( c_flat.referenced_relation = 'gtu' AND c_flat.record_id=f.gtu_ref)
@@ -134,31 +136,32 @@ or ( c_flat.referenced_relation = 'specimens' AND c_flat.record_id = f.spec_ref)
   INNER JOIN people p_col on p_col.id = coll.main_manager_ref
   INNER JOIN gtu ON f.gtu_ref = gtu.id
 
-  LEFT JOIN ( gtu as g_depth LEFT JOIN catalogue_properties cp1 ON cp1.referenced_relation = 'gtu' AND cp1.record_id = g_depth.id AND cp1.property_type = 'physical measurement' and cp1.property_qualifier = 'depth' )
+  LEFT JOIN catalogue_properties cp1 ON cp1.referenced_relation = 'gtu' AND cp1.record_id = gtu.id AND cp1.property_type = 'physical measurement' and cp1.property_qualifier = 'depth'
 
-        ON f.gtu_ref = g_depth.id
+  LEFT JOIN catalogue_properties cp2 ON cp2.referenced_relation = 'gtu' AND cp2.record_id = gtu.id and cp2.property_type = 'physical measurement' AND cp2.property_qualifier = 'height'
 
-     LEFT JOIN ( gtu as g_height LEFT JOIN catalogue_properties cp2 ON cp2.referenced_relation = 'gtu' AND cp2.record_id = g_height.id and cp2.property_type = 'physical measurement' AND cp2.property_qualifier = 'height' )
-        ON f.gtu_ref = g_height.id
+  LEFT JOIN catalogue_properties cp3 ON cp3.referenced_relation = 'gtu' AND cp3.record_id = gtu.id and cp3.property_type = 'geo position' AND cp3.property_qualifier = 'utm'
 
-     LEFT JOIN ( gtu as g_utm LEFT JOIN catalogue_properties cp3 ON cp3.referenced_relation = 'gtu' AND cp3.record_id = g_utm.id and cp3.property_type = 'geo position' AND cp3.property_qualifier = 'utm' )
-        ON f.gtu_ref = g_utm.id
 );
 
+ALTER TABLE public.flat_abcd ADD CONSTRAINT pk_flat_abcd PRIMARY KEY (id);
+
+CREATE SEQUENCE public.gtu_properties_id_seq;
 
 CREATE TABLE public.gtu_properties as
 (
   select
+    nextval('public.gtu_properties_id_seq') as id,
     flat.id as flat_id,
-    date_to - date_from as duration,
+    (CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END) as duration,
     min(v.property_value) as lowervalue,
     max(v.property_value) as uppervalue,
     property_method as method ,
     property_unit as unit,
-    date_from as date_from,
-    date_to as date_to,
+    CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END as date_from,
+    CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END as date_to,
     property_type  || ' / ' || property_sub_type as parameter,
-    gtu.id,
+    gtu.id as gtu_ref,
     property_qualifier as qualifier,
     min(v.property_accuracy) as accuracy
   FROM 
@@ -173,18 +176,24 @@ CREATE TABLE public.gtu_properties as
     flat.id,
     gtu.id ,
     c.id,
-    date_to - date_from, 
+    (CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END),
     property_method, 
     property_unit,
-    date_from,
-    date_to,
+    CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END ,
+    CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END,
     property_type,
     property_sub_type
 );
 
+ALTER TABLE public.gtu_properties ADD CONSTRAINT pk_gtu_properties PRIMARY KEY (id);
+
+CREATE SEQUENCE public.gtu_place_id_seq;
+
 CREATE TABLE public.gtu_place as
 (
-  select f.id as flat_id,
+  select 
+  nextval('public.gtu_place_id_seq') as id,
+  f.id as flat_id,
   tag as place
   
   FROM  darwin_flat  f
@@ -196,10 +205,13 @@ CREATE TABLE public.gtu_place as
 
 
 
+CREATE SEQUENCE public.collectors_abcd_id_seq;
 
 CREATE TABLE public.collectors as
 (
-  select f.id as flat_id,
+  select 
+  nextval('public.collectors_abcd_id_seq') as id,
+  f.id as flat_id,
   c.people_ref,
   c.order_by
   FROM  darwin_flat  f
@@ -210,14 +222,16 @@ CREATE TABLE public.collectors as
 );
 
 
+CREATE SEQUENCE public.collectors_institution_abcd_id_seq;
 
 CREATE TABLE public.collectors_institution as
 (
-  select f.id as flat_id,
+  select 
+  nextval('public.collectors_institution_abcd_id_seq') as id,
+  f.id as flat_id,
   c.people_ref,
   c.order_by,
   p.formated_name
-
   FROM  darwin_flat  f
   inner join catalogue_people as c ON f.spec_ref = c.record_id  AND c.referenced_relation = 'specimens'
   INNER JOIN  people p ON p.id = c.people_ref and is_physical = true
@@ -226,10 +240,13 @@ CREATE TABLE public.collectors_institution as
   
 );
 
+CREATE SEQUENCE public.donators_abcd_id_seq;
 
 CREATE TABLE public.donators as
 (
-  select f.id as flat_id,
+  select 
+  nextval('public.donators_abcd_id_seq') as id,
+  f.id as flat_id,
   c.people_ref,
   c.order_by
   FROM  darwin_flat  f
@@ -240,14 +257,16 @@ CREATE TABLE public.donators as
 );
 
 
+CREATE SEQUENCE public.donators_institution_abcd_id_seq;
 
 CREATE TABLE public.donators_institution as
 (
-  select f.id as flat_id,
+  select 
+  nextval('public.donators_institution_abcd_id_seq') as id,
+  f.id as flat_id,
   c.people_ref,
   c.order_by,
   p.formated_name
-
   FROM  darwin_flat  f
   inner join catalogue_people as c ON f.spec_ref = c.record_id  AND c.referenced_relation = 'specimens'
   INNER JOIN  people p ON p.id = c.people_ref and is_physical = true
@@ -256,34 +275,29 @@ CREATE TABLE public.donators_institution as
   
 );
 
-
-
-create sequence identifications_abdc_id_seq;
+create sequence public.identifications_abdc_id_seq;
 
 CREATE TABLE public.identifications_abdc as
 (
   select
-  nextval('identifications_abdc_id_seq') as id,
+  nextval('public.identifications_abdc_id_seq') as id,
   f.id as flat_id,
-  notion_date,
+  CASE WHEN notion_date_mask = 0 THEN NULL::timestamp ELSE notion_date END as notion_date,
   determination_status,
   false as is_current,
   notion_concerned,
   c.id as old_identification_id
-
   FROM  darwin_flat  f
   INNER JOIN identifications as c ON f.spec_ref = c.record_id  AND c.referenced_relation = 'specimens'
 
 );
 
-
-
-create sequence taxon_identified_id_seq;
+create sequence public.taxon_identified_id_seq;
 
 CREATE TABLE public.taxon_identified as
 (
   SELECT 
-    nextval('taxon_identified_id_seq') as id,
+    nextval('public.taxon_identified_id_seq') as id,
     i.id as identification_ref,
     c.value_defined as taxon_name,
     CASE WHEN c.value_defined == f.taxon_name THEN f.taxon_ref ELSE null::integer END as taxon_ref,
@@ -296,8 +310,6 @@ CREATE TABLE public.taxon_identified as
       c.notion_concerned = 'taxonomy'
 );
 
-
-
 insert into identifications_abdc 
 (
     id,
@@ -308,9 +320,9 @@ insert into identifications_abdc
 )
 (
   select
-   nextval('identifications_abdc_id_seq') as id,
+   nextval('public.identifications_abdc_id_seq') as id,
     f.id as flat_id,
-    null::date as notion_date,
+    null::timestamp as notion_date,
     '' as determination_status,
     true as is_current
     FROM  darwin_flat  f
@@ -328,7 +340,7 @@ insert into taxon_identified
 )
 (
   select
-    nextval('taxon_identified_id_seq') as id,
+    nextval('public.taxon_identified_id_seq') as id,
     i.id as identification_ref,
     f.taxon_name as taxon_name,
     f.taxon_ref as taxon_ref,
@@ -345,11 +357,12 @@ ALTER COLUMN taxonomy.parent_ref DROP NOT NULL;
 
 UPDATE taxonomy SET parent_ref = NULL WHERE parent_ref = 0;
 
+CREATE SEQUENCE public.bota_taxa_keywords_id_seq;
 
 CREATE TABLE public.bota_taxa_keywords AS
 (
   SELECT
-  
+  nextval('public.bota_taxa_keywords_id_seq') as id,  
   ti.id as taxon_identified_ref,
   (SELECT keyword FROM classification_keywords where 
         referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='AuthorTeam' LIMIT 1) as AuthorTeam,
@@ -373,11 +386,12 @@ CREATE TABLE public.bota_taxa_keywords AS
     t.path like '/-1/141538/%' --PLANTEA
 );
 
+CREATE SEQUENCE public.zoo_taxa_keywords_id_seq;
 
 CREATE TABLE public.zoo_taxa_keywords AS
 (
   SELECT
-  
+  nextval('public.zoo_taxa_keywords_id_seq') as id,
   ti.id as taxon_identified_ref,
   (SELECT keyword FROM classification_keywords where 
         referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='AuthorTeamOriginalAndYear' LIMIT 1) as AuthorTeamOriginalAndYear,
@@ -403,32 +417,27 @@ CREATE TABLE public.zoo_taxa_keywords AS
     t.path like '/-1/1/%' --ANIMAL
 );
 
-
+CREATE SEQUENCE public.taxa_vernacular_name_id_seq;
 
 CREATE TABLE public.taxa_vernacular_name as
 (
   SELECT
+  nextval('public.taxa_vernacular_name_id_seq') as id,
   ti.id as taxon_identified_ref,
   community,
   v.name
-
   FROM taxon_identified ti
   INNER JOIN taxonomy t on t.id = ti.taxon_ref
   INNER JOIN class_vernacular_names c ON t.id = c.record_id AND c.referenced_relation = 'taxonomy' 
   INNER JOIN vernacular_names v ON c.id = v.vernacular_class_ref
 );
 
-
-
-
-
-
-create sequence mineral_identified_id_seq;
+create sequence public.mineral_identified_id_seq;
 
 CREATE TABLE public.mineral_identified as
 (
   SELECT 
-    nextval('mineral_identified_id_seq') as id,
+    nextval('public.mineral_identified_id_seq') as id,
     i.id as identification_ref,
     c.value_defined as mineral_name,
     null::integer as mineral_ref, 
@@ -441,7 +450,6 @@ CREATE TABLE public.mineral_identified as
     AND i.is_current = FALSE
 );
 
-
 insert into mineral_identified
 (
     id,
@@ -452,7 +460,7 @@ insert into mineral_identified
 )
 (
   select
-    nextval('mineral_identified_id_seq') as id,
+    nextval('public.mineral_identified_id_seq') as id,
     i.id as identification_ref,
     m.name as mineral_name,
     f.mineral_ref as mineral_ref,
@@ -465,27 +473,29 @@ insert into mineral_identified
       
 );
 
+CREATE SEQUENCE public.mineral_vernacular_name_id_seq;
 
 CREATE TABLE public.mineral_vernacular_name as
 (
   SELECT
+  nextval('public.mineral_vernacular_name_id_seq') as id,
   ti.id as mineral_identified_ref,
   community,
   v.name
-
   FROM mineral_identified ti
   INNER JOIN mineralogy t on t.id = ti.mineral_ref
   INNER JOIN class_vernacular_names c ON t.id = c.record_id AND c.referenced_relation = 'mineralogy' 
   INNER JOIN vernacular_names v ON c.id = v.vernacular_class_ref
 );
 
+CREATE SEQUENCE public.identifier_abcd_id_seq;
 
 CREATE TABLE public.identifier as
 (
-  select 
+  select
+    nextval('public.identifier_abcd_id_seq') as id, 
     i.id as identification_ref,
     c.people_ref
-  
   FROM
     identifications_abdc i
     INNER JOIN catalogue_people c on i.old_identification_id = c.record_id AND c.referenced_relation='identifications'
@@ -495,12 +505,14 @@ CREATE TABLE public.identifier as
     
 );
 
+CREATE SEQUENCE public.identifier_institution_id_seq;
+
 CREATE TABLE public.identifier_instituion as
 (
   select 
+    nextval('public.identifier_institution_id_seq') as id,
     i.id as identification_ref,
     c.people_ref
-  
   FROM
     identifications_abdc i
     INNER JOIN catalogue_people c on i.old_identification_id = c.record_id AND c.referenced_relation='identifications'
@@ -511,18 +523,20 @@ CREATE TABLE public.identifier_instituion as
 );
 
 
+CREATE SEQUENCE public.flat_properties_id_seq;
 
 CREATE TABLE public.flat_properties as
 (
   select
+    nextval('public.flat_properties_id_seq') as id,
     flat.id as flat_id,
-    date_to - date_from as duration,
+    ( CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END) as duration,
     min(property_value) as lowervalue,
     max(property_value) as uppervalue,
     property_method as method ,
     property_unit as unit,
-    date_from as date_from,
-    date_to as date_to,
+    CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END as date_from,
+    CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END as date_to,
     property_type  || ' / ' || property_sub_type as parameter
 
   FROM 
@@ -534,25 +548,26 @@ CREATE TABLE public.flat_properties as
   GROUP BY 
     flat.id,
     c.id,
-    date_to - date_from, 
+    ( CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END), 
     property_method, 
     property_unit,
-    date_from, 
-    date_to,
+    CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END ,
+    CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END ,
     property_type  || ' / ' || property_sub_type
 
 UNION
 
 
   select
+    nextval('public.flat_properties_id_seq') as id,
     flat.id as flat_id,
-    date_to - date_from as duration,
+    ( CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END) as duration,
     min(property_value) as lowervalue,
     max(property_value) as uppervalue,
     property_method as method ,
     property_unit as unit,
-    date_from as date_from,
-    date_to as date_to,
+    CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END as date_from,
+    CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END as date_to,
     property_type  || ' / ' || property_sub_type as parameter
 
   FROM 
@@ -562,25 +577,26 @@ UNION
   GROUP BY 
     flat.id,
     c.id,
-    date_to - date_from, 
+    ( CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END), 
     property_method, 
     property_unit,
-    date_from, 
-    date_to,
+    CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END,
+    CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END ,
     property_type  || ' / ' || property_sub_type
 
 UNION
 
 
   select
+    nextval('public.flat_properties_id_seq') as id,
     flat.id as flat_id,
-    date_to - date_from as duration,
+    ( CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END) as duration,
     min(property_value) as lowervalue,
     max(property_value) as uppervalue,
     property_method as method ,
     property_unit as unit,
-    date_from as date_from,
-    date_to as date_to,
+    CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END as date_from,
+    CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END as date_to,
     property_type  || ' / ' || property_sub_type as parameter
 
   FROM 
@@ -590,11 +606,11 @@ UNION
   GROUP BY 
     flat.id,
     c.id,
-    date_to - date_from, 
+    ( CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END), 
     property_method, 
     property_unit,
-    date_from, 
-    date_to,
+    CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END ,
+    CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END ,
     property_type  || ' / ' || property_sub_type
 );
 
@@ -685,10 +701,10 @@ CREATE TABLE public.darwin_metadata AS
 );
 
 
-ALTER TABLE taxonomy SET SCHEMA public; 
-ALTER TABLE catalogue_levels SET SCHEMA public; 
-ALTER TABLE darwin_flat SET SCHEMA public; 
-ALTER TABLE mineralogy SET SCHEMA public; 
+ALTER TABLE darwin2.taxonomy SET SCHEMA public; 
+ALTER TABLE darwin2.catalogue_levels SET SCHEMA public; 
+ALTER TABLE darwin2.darwin_flat SET SCHEMA public; 
+ALTER TABLE darwin2.mineralogy SET SCHEMA public; 
 
 ALTER TABLE public.darwin_flat 
   DROP COLUMN building,
@@ -707,14 +723,6 @@ ALTER TABLE public.darwin_flat
   DROP COLUMN with_types,
   DROP COLUMN with_individuals,
   DROP COLUMN with_parts;
-
-UPDATE public.darwin_flat
-SET gtu_from_date = null::timestamp
-WHERE gtu_from_date_mask = 0;
-
-UPDATE public.darwin_flat
-SET gtu_to_date = null::timestamp
-WHERE gtu_to_date_mask = 0;
 
 ANALYZE public.flat_abcd;
 ANALYZE public.gtu_properties;
@@ -746,5 +754,7 @@ ANALYZE public.mineralogy;
 
 DROP SCHEMA IF EXISTS darwin1;
 DROP ROLE IF EXISTS darwin1;
+
+DROP SCHEMA IF EXISTS darwin2;
 
 --\i ../createindexes_darwinflat.sql
