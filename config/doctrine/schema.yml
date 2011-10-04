@@ -2002,8 +2002,6 @@ Staging:
         host_taxon_level_name: { type: string}
         host_taxon_status: { type: string}
         host_specimen_ref: { type: integer}
-        collectors: { type: string}
-        donators: { type: string}
         ig_ref: { type: integer}
         ig_num: { type: string}
         ig_date_mask: { type: integer }
@@ -2060,4 +2058,19 @@ StagingTagGroups:
         Staging:
             local: staging_ref
             foreign: id
-            class: Staging            
+            class: Staging          
+
+StagingPeople:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        referenced_relation: { type: string, notnull: true}
+        record_id: { type: integer}
+        people_type: {  type: string, notnull: true , default: author }
+        people_sub_type: {  type: string, notnull: true }
+        order_by: { type: integer, notnull: true, default: 1}
+        people_ref: { type: integer, notnull: true}
+        formated_name: { type: string}
+    relations:
+        People:
+            local: people_ref
+            foreign: id              

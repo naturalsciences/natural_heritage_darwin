@@ -78,8 +78,6 @@
  * @property string $host_taxon_level_name
  * @property string $host_taxon_status
  * @property integer $host_specimen_ref
- * @property string $collectors
- * @property string $donators
  * @property integer $ig_ref
  * @property string $ig_num
  * @property integer $ig_date_mask
@@ -193,8 +191,6 @@
  * @method string              getHostTaxonLevelName()        Returns the current record's "host_taxon_level_name" value
  * @method string              getHostTaxonStatus()           Returns the current record's "host_taxon_status" value
  * @method integer             getHostSpecimenRef()           Returns the current record's "host_specimen_ref" value
- * @method string              getCollectors()                Returns the current record's "collectors" value
- * @method string              getDonators()                  Returns the current record's "donators" value
  * @method integer             getIgRef()                     Returns the current record's "ig_ref" value
  * @method string              getIgNum()                     Returns the current record's "ig_num" value
  * @method integer             getIgDateMask()                Returns the current record's "ig_date_mask" value
@@ -307,8 +303,6 @@
  * @method Staging             setHostTaxonLevelName()        Sets the current record's "host_taxon_level_name" value
  * @method Staging             setHostTaxonStatus()           Sets the current record's "host_taxon_status" value
  * @method Staging             setHostSpecimenRef()           Sets the current record's "host_specimen_ref" value
- * @method Staging             setCollectors()                Sets the current record's "collectors" value
- * @method Staging             setDonators()                  Sets the current record's "donators" value
  * @method Staging             setIgRef()                     Sets the current record's "ig_ref" value
  * @method Staging             setIgNum()                     Sets the current record's "ig_num" value
  * @method Staging             setIgDateMask()                Sets the current record's "ig_date_mask" value
@@ -586,12 +580,6 @@ abstract class BaseStaging extends sfDoctrineRecord
              ));
         $this->hasColumn('host_specimen_ref', 'integer', null, array(
              'type' => 'integer',
-             ));
-        $this->hasColumn('collectors', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('donators', 'string', null, array(
-             'type' => 'string',
              ));
         $this->hasColumn('ig_ref', 'integer', null, array(
              'type' => 'integer',

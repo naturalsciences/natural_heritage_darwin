@@ -380,7 +380,7 @@ DROP TRIGGER trg_nbr_in_synonym
 DROP TRIGGER trg_unpromotion_remove_cols
         ON users;
 
-
+DROP TRIGGER trg_upd_people_ref_staging_people ON staging_people;
 
 
 

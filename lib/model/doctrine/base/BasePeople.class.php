@@ -34,6 +34,7 @@
  * @property Doctrine_Collection $Collections
  * @property Doctrine_Collection $CollectionMaintenance
  * @property Doctrine_Collection $Insurances
+ * @property Doctrine_Collection $StagingPeople
  * 
  * @method integer             getId()                      Returns the current record's "id" value
  * @method boolean             getIsPhysical()              Returns the current record's "is_physical" value
@@ -64,6 +65,7 @@
  * @method Doctrine_Collection getCollections()             Returns the current record's "Collections" collection
  * @method Doctrine_Collection getCollectionMaintenance()   Returns the current record's "CollectionMaintenance" collection
  * @method Doctrine_Collection getInsurances()              Returns the current record's "Insurances" collection
+ * @method Doctrine_Collection getStagingPeople()           Returns the current record's "StagingPeople" collection
  * @method People              setId()                      Sets the current record's "id" value
  * @method People              setIsPhysical()              Sets the current record's "is_physical" value
  * @method People              setSubType()                 Sets the current record's "sub_type" value
@@ -93,6 +95,7 @@
  * @method People              setCollections()             Sets the current record's "Collections" collection
  * @method People              setCollectionMaintenance()   Sets the current record's "CollectionMaintenance" collection
  * @method People              setInsurances()              Sets the current record's "Insurances" collection
+ * @method People              setStagingPeople()           Sets the current record's "StagingPeople" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -231,5 +234,9 @@ abstract class BasePeople extends sfDoctrineRecord
         $this->hasMany('Insurances', array(
              'local' => 'id',
              'foreign' => 'insurer_ref'));
+
+        $this->hasMany('StagingPeople', array(
+             'local' => 'id',
+             'foreign' => 'people_ref'));
     }
 }

@@ -325,7 +325,11 @@ CREATE TRIGGER trg_cpy_path_staging BEFORE INSERT OR UPDATE
         
 CREATE TRIGGER trg_upd_fields_staging BEFORE UPDATE
         ON staging FOR EACH ROW
-        EXECUTE PROCEDURE fct_upd_staging_fields();        
+        EXECUTE PROCEDURE fct_upd_staging_fields();   
+        
+CREATE TRIGGER trg_upd_people_ref_staging_people AFTER UPDATE
+        ON staging_people FOR EACH ROW
+        EXECUTE PROCEDURE fct_upd_people_staging_fields();               
 
 CREATE TRIGGER trg_cpy_path_chronostratigraphy BEFORE INSERT OR UPDATE
         ON chronostratigraphy FOR EACH ROW
