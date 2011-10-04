@@ -1934,7 +1934,7 @@ create table imports
     id integer not null default nextval('imports_id_seq'),
     user_ref integer not null,
     format varchar not null,
-    collection_ref integer not null default 0,
+    collection_ref integer not null,
     filename varchar not null,
     state varchar not null default '',
     created_at timestamp not null default now(),
