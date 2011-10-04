@@ -2108,7 +2108,7 @@ create table staging_people
         people_ref integer,
         formated_name varchar,
         constraint pk_staging_people primary key (id),
-        constraint fk_staging_people_list_person foreign key (people_ref) references people(id)
+        constraint fk_staging_people_list_person foreign key (people_ref) references people(id) on delete cascade
        )
 inherits (template_table_record_ref);
 comment on table staging_people is 'List of people of staging units';

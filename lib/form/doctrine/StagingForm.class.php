@@ -182,48 +182,7 @@ class StagingForm extends BaseStagingForm
       );
       $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required'=>false));
     }      
-    /* Host Reference *//*
-    if(in_array('host_ref',$this->options['fields']) )  
-    {    
-      $this->widgetSchema['host_specimen_ref'] = new widgetFormButtonRef(array(
-         'model' => 'Specimens',
-         'link_url' => 'specimen/choose',
-         'method' => 'getName',
-         'box_title' => $this->getI18N()->__('Choose Host specimen'),
-         'nullable' => true,
-         'button_class'=>'',
-       ),
-        array('class'=>'inline',
-             )
-      );
-    }
-      
-      $this->widgetSchema['host_taxon_ref'] = new widgetFormButtonRef(array(
-         'model' => 'Taxonomy',
-         'link_url' => 'taxonomy/choose',
-         'method' => 'getNameWithFormat',
-         'box_title' => $this->getI18N()->__('Choose Host taxon'),
-         'nullable' => true,
-         'button_class'=>'',
-       ),
-        array('class'=>'inline',
-             )
-      );
 
-      $this->widgetSchema['host_relationship'] = new widgetFormSelectComplete(array(
-          'model' => 'Specimens',
-          'table_method' => 'getDistinctHostRelationships',
-          'method' => 'getHostRelationship',
-          'key_method' => 'getHostRelationship',
-          'add_empty' => true,
-          'change_label' => 'Pick a relationship in the list',
-          'add_label' => 'Add another relationship',
-      ));    
-      
-      $this->widgetSchema['accuracy'] = new sfWidgetFormChoice(array(
-          'choices'  => array($this->getI18N()->__('exact'), $this->getI18N()->__('imprecise')),
-          'expanded' => true,
-      ));*/
     if(in_array('people',$this->options['fields']) )        
     {    
       $subForm = new sfForm();
@@ -235,21 +194,7 @@ class StagingForm extends BaseStagingForm
       } 
       $this->embedForm('WrongPeople', $this->embeddedForms['WrongPeople']); 
     }  
-           
-/*    if(in_array('donators',$this->options['fields']) )        
-    {    
-      $subForm = new sfForm();
-      $this->embedForm('WrongDonators',$subForm);      
-      foreach($this->getObject()->getPeopleInError('donator',$this->getObject()->getDonators()) as $key=>$vals)
-      {       
-        $val = new CataloguePeople();
-        $val->fromArray(array('people_type' => 'donator','referenced_relation' => 'staging', 'order_by' => $key, 'record_id' => $this->getObject()->getId()));
-        $form = new PeopleInErrorForm($val, array('default_name'=> $vals, 'only_role' => 0, 'donator'=> true));
-        $this->embeddedForms['WrongDonators']->embedForm($key, $form);      
-      } 
-      $this->embedForm('WrongDonators', $this->embeddedForms['WrongDonators']); 
-    } */
-      
+                
     if(in_array('identifiers',$this->options['fields']) )        
     {    
       // $identifications containts all indentification id of this staging id
@@ -280,22 +225,6 @@ class StagingForm extends BaseStagingForm
     //Re-embedding the container
     $this->embedForm('WrongPeople', $this->embeddedForms['WrongPeople']);
   } 
-  
- /* public function loadEmbedDonators($donator)
-  {
-    if($this->isBound()) return;
-    $subForm = new sfForm();
-    $this->embedForm('WrongDonators',$subForm);
-    foreach($donator as $key=>$vals)
-    {       
-      $val = new CataloguePeople();
-      $val->fromArray($vals);
-      $form = new PeopleInErrorForm($val,array('only_role' => 0, 'donator'=> true));
-      $this->embeddedForms['WrongDonators']->embedForm($key, $form);
-    }
-    //Re-embedding the container
-    $this->embedForm('WrongDonators', $this->embeddedForms['WrongDonators']);
-  }*/
    
   public function loadEmbedIdentifiers($identifier)
   {
@@ -316,7 +245,6 @@ class StagingForm extends BaseStagingForm
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     if(isset($taintedValues['WrongPeople'])) $this->loadEmbedPeople($taintedValues['WrongPeople']); 
- //   if(isset($taintedValues['WrongDonators'])) $this->loadEmbedDonators($taintedValues['WrongDonators']); 
     if(isset($taintedValues['WrongIdentifiers'])) $this->loadEmbedIdentifiers($taintedValues['WrongIdentifiers']);         
     parent::bind($taintedValues, $taintedFiles);    
   }

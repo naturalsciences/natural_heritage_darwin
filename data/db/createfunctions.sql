@@ -563,42 +563,6 @@ $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION fct_chk_AreRole() RETURNS TRIGGER
-AS $$
-DECLARE
-BEGIN
-  IF NEW.people_type = 'author' THEN
-
-    IF NOT EXISTS( SELECT id FROM people WHERE (db_people_type & 2)!=0 AND id=NEW.people_ref) THEN
-      RAISE EXCEPTION 'Author must be defined as author.';
-    END IF;
-
-  ELSIF NEW.people_type = 'identifier' THEN
-
-    IF NOT EXISTS( SELECT id FROM people WHERE (db_people_type & 4)!=0 AND id=NEW.people_ref) THEN
-      RAISE EXCEPTION 'Experts must be defined as identifier.';
-    END IF;
-
-  ELSIF NEW.people_type = 'expert' THEN
-
-    IF NOT EXISTS( SELECT id FROM people WHERE (db_people_type & 8)!=0 AND id=NEW.people_ref) THEN
-      RAISE EXCEPTION 'Experts must be defined as expert.';
-    END IF;
-
-  ELSIF NEW.people_type = 'collector' THEN
-
-    IF NOT EXISTS( SELECT id FROM people WHERE (db_people_type & 16)!=0 AND id=NEW.people_ref) THEN
-      RAISE EXCEPTION 'Collectors must be defined as collector.';
-    END IF;
-
-  END IF;
-
-  RETURN NEW;
-END;
-$$
-LANGUAGE plpgsql;
-
-
 CREATE OR REPLACE FUNCTION fct_chk_ReferencedRecord() RETURNS TRIGGER
 AS $$
 DECLARE

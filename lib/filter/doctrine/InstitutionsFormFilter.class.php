@@ -21,10 +21,6 @@ class InstitutionsFormFilter extends BaseInstitutionsFormFilter
     $this->widgetSchema['family_name'] = new sfWidgetFormInput();
     $this->widgetSchema['family_name']->setAttributes(array('class'=>'medium_size'));
 
-    $this->widgetSchema['only_role'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['only_role']->setDefault(0);
-
-    $this->validatorSchema['only_role'] = new sfValidatorNumber(array('required' => false));
   }
 
   public function addFamilyNameColumnQuery($query, $field, $val)

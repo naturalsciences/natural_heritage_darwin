@@ -1,4 +1,3 @@
-<input type="hidden" name="only_role" id="only_role" value="0" />
 <ul class="tab_choice">
   <li class="both_search_people"><?php echo __('People');?></li>
   <li class="both_search_institutions"><?php echo __('Institution');?></li>

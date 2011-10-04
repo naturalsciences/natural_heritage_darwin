@@ -44,30 +44,26 @@
 </table>
 </form>
 
-<input type="hidden" name="only_role" id="only_role" value="0" />
-
 <script language="text/javascript">
 
 function toggleChangingChoice()
 {
-      if($('#catalogue_people_people_type').val() =='author')
-      {
-	$('#only_role').val(2);
-	$('#catalogue_people_people_sub_type_parent .change_item_button:visible').click();
-	$('#catalogue_people_people_sub_type_parent .add_item_button').hide();
+  if($('#catalogue_people_people_type').val() =='author')
+  {
+		$('#catalogue_people_people_sub_type_parent .change_item_button:visible').click();
+  	$('#catalogue_people_people_sub_type_parent .add_item_button').hide();
 	
-	$('.both_search_institutions').addClass('disabled');
+  	$('.both_search_institutions').addClass('disabled');
 	
-	$('.both_search_people').click();
+  	$('.both_search_people').click();
 
-      }
-      else
-      {
-	$('#only_role').val(8);
-	$('.both_search_people').click();
-	$('#catalogue_people_people_sub_type_parent .add_item_button').show();
-	$('.both_search_institutions').removeClass('disabled');
-      }
+  }
+  else
+  {
+	  $('.both_search_people').click();
+	  $('#catalogue_people_people_sub_type_parent .add_item_button').show();
+	  $('.both_search_institutions').removeClass('disabled');
+  }
 }
 
   $(document).ready(function () {
@@ -100,7 +96,7 @@ function toggleChangingChoice()
       $('.both_search_people').addClass('activated');
       $.ajax({
 	  type: "POST",
-	  url: people_search_url + '/only_role/'+$("#only_role").val(),
+	  url: people_search_url,
 	  success: function(html){
 	    $('.search_box').html(html);
 	  }
@@ -118,7 +114,7 @@ function toggleChangingChoice()
 
       $.ajax({
 	  type: "POST",
-	  url: '<?php echo url_for('institution/choose?with_js=0&is_choose=1&only_role=8');?>',
+	  url: '<?php echo url_for('institution/choose?with_js=0&is_choose=1');?>',
 	  success: function(html){
 	    $('.search_box').html(html);
 	  }

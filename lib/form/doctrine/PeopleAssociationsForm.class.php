@@ -14,7 +14,6 @@ class PeopleAssociationsForm extends BaseCataloguePeopleForm
   {
 
     $this->widgetSchema['people_type'] = new sfWidgetFormInputHidden(array('default'=>'collector'));
-    $only_role = People::getCorrespondingType($this->getObject()->getPeopleType()); 
     $people_id= $this->getObject()->getPeopleRef() ;
     $this->widgetSchema['people_ref'] = new sfWidgetFormInputHidden();
     if($people_id) $this->widgetSchema['people_ref']->setLabel(Doctrine::getTable('People')->find($people_id)->getFormatedName()) ;

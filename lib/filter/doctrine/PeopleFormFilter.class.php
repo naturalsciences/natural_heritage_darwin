@@ -17,19 +17,9 @@ class PeopleFormFilter extends BasePeopleFormFilter
     $this->addPagerItems();
 
     $this->widgetSchema['family_name'] = new sfWidgetFormInput();
-    $this->widgetSchema['only_role'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['only_role']->setDefault(0);
     
     $db_people_types = array(''=>'');
-    $typeVal = (!isset($this->defaults['only_role']))?0:intval($this->defaults['only_role']);
-    if($typeVal == 0)
-    {
-      $peopleTypes = People::getTypes();
-    }
-    else
-    {
-      $peopleTypes = People::getCorrespondingTypeAsArray($typeVal);
-    }
+    $peopleTypes = People::getTypes();
     foreach($peopleTypes as $flag => $name)
       $db_people_types[strval($flag)] = $name;
     $this->widgetSchema['db_people_type'] = new sfWidgetFormChoice(array('choices' => $db_people_types ));
@@ -38,7 +28,6 @@ class PeopleFormFilter extends BasePeopleFormFilter
     $this->setDefault('is_physical', true); 
 
     $this->validatorSchema['db_people_type'] = new sfValidatorChoice(array('required' => false, 'choices' => array_keys($db_people_types) ));
-    $this->validatorSchema['only_role'] = new sfValidatorNumber(array('required' => false));
 
     $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
