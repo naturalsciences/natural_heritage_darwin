@@ -1812,7 +1812,7 @@ DECLARE
 BEGIN
   IF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'expeditions' THEN
     IF NEW.name_indexed IS DISTINCT FROM OLD.name_indexed THEN
-      UPDATE darwin_flat
+      UPDATE specimens
       SET (expedition_name, expedition_name_ts, expedition_name_indexed) =
           (NEW.name, NEW.name_ts, NEW.name_indexed)
       WHERE expedition_ref = NEW.id;
@@ -1824,7 +1824,7 @@ BEGIN
     OR OLD.is_public IS DISTINCT FROM NEW.is_public
     OR OLD.path IS DISTINCT FROM NEW.path
     THEN
-      UPDATE darwin_flat
+      UPDATE specimens
       SET (collection_type, collection_code, collection_name, collection_is_public,
           collection_parent_ref, collection_path
           ) =
@@ -1834,7 +1834,7 @@ BEGIN
       WHERE collection_ref = NEW.id;
     END IF;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'gtu' THEN
-    UPDATE darwin_flat
+    UPDATE specimens
     SET (gtu_code, gtu_parent_ref, gtu_path, gtu_from_date, gtu_from_date_mask,
         gtu_to_date, gtu_to_date_mask, gtu_tag_values_indexed, gtu_location
         ) =
@@ -1844,13 +1844,13 @@ BEGIN
     WHERE gtu_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'igs' THEN
     IF NEW.ig_num_indexed IS DISTINCT FROM OLD.ig_num_indexed OR NEW.ig_date IS DISTINCT FROM OLD.ig_date THEN
-      UPDATE darwin_flat
+      UPDATE specimens
       SET (ig_num, ig_num_indexed, ig_date, ig_date_mask) =
           (NEW.ig_num, NEW.ig_num_indexed, NEW.ig_date, NEW.ig_date_mask)
       WHERE ig_ref = NEW.id;
     END IF;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'taxonomy' THEN
-    UPDATE darwin_flat
+    UPDATE specimens
     SET (taxon_name, taxon_name_indexed, taxon_name_order_by,
          taxon_level_ref, taxon_level_name,
          taxon_status, taxon_path, taxon_parent_ref, taxon_extinct
@@ -1865,7 +1865,7 @@ BEGIN
          WHERE id = NEW.level_ref
         ) subq
     WHERE taxon_ref = NEW.id;
-    UPDATE darwin_flat
+    UPDATE specimens
     SET (host_taxon_name, host_taxon_name_indexed, host_taxon_name_order_by,
          host_taxon_level_ref, host_taxon_level_name,
          host_taxon_status, host_taxon_path, host_taxon_parent_ref, host_taxon_extinct
@@ -1881,7 +1881,7 @@ BEGIN
         ) subq
     WHERE host_taxon_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'chronostratigraphy' THEN
-    UPDATE darwin_flat
+    UPDATE specimens
     SET (chrono_name, chrono_name_indexed, chrono_name_order_by,
          chrono_level_ref, chrono_level_name,
          chrono_status, 
@@ -1901,7 +1901,7 @@ BEGIN
         ) subq
     WHERE chrono_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'lithostratigraphy' THEN
-    UPDATE darwin_flat
+    UPDATE specimens
     SET (litho_name, litho_name_indexed, litho_name_order_by,
          litho_level_ref, litho_level_name,
          litho_status, 
@@ -1921,7 +1921,7 @@ BEGIN
         ) subq
     WHERE litho_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'lithology' THEN
-    UPDATE darwin_flat
+    UPDATE specimens
     SET (lithology_name, lithology_name_indexed, lithology_name_order_by,
          lithology_level_ref, lithology_level_name,
          lithology_status, 
@@ -1941,7 +1941,7 @@ BEGIN
         ) subq
     WHERE lithology_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'mineralogy' THEN
-    UPDATE darwin_flat
+    UPDATE specimens
     SET (mineral_name, mineral_name_indexed, mineral_name_order_by,
          mineral_level_ref, mineral_level_name,
          mineral_status, 
@@ -1960,980 +1960,141 @@ BEGIN
          WHERE id = NEW.level_ref
         ) subq
     WHERE mineral_ref = NEW.id;
-  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'specimens' THEN
-    UPDATE darwin_flat
-    SET (category,
-         collection_ref,collection_type,collection_code,collection_name, collection_is_public,
-         collection_parent_ref,collection_path,
-         expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-         station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-         gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
-         taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-         taxon_path,taxon_parent_ref,taxon_extinct,
-         chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-         chrono_local, chrono_color,
-         chrono_path,chrono_parent_ref,
-         litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-         litho_local, litho_color,
-         litho_path,litho_parent_ref,
-         lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-         lithology_local, lithology_color,
-         lithology_path,lithology_parent_ref,
-         mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-         mineral_local, mineral_color,
-         mineral_path,mineral_parent_ref,
-         host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-         host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-         host_specimen_ref,
-         acquisition_category,acquisition_date_mask,acquisition_date
-        )=
-        (NEW.category,
-         NEW.collection_ref, subq.coll_collection_type, subq.coll_code, subq.coll_name, subq.coll_is_public,
-         subq.coll_parent_ref, subq.coll_path,
-         NEW.expedition_ref, subq.expe_name, subq.expe_name_ts, subq.expe_name_indexed,
-         NEW.station_visible, NEW.gtu_ref, subq.gtu_code, subq.gtu_parent_ref, subq.gtu_path, subq.gtu_location,
-         subq.gtu_from_date_mask, subq.gtu_from_date, subq.gtu_to_date_mask, subq.gtu_to_date,
-         subq.gtu_tag_values_indexed, subq.taggr_tag_value, lineToTagArray(subq.taggr_tag_value),
-         NEW.taxon_ref, subq.taxon_name, subq.taxon_name_indexed, subq.taxon_name_order_by,
-         subq.taxon_level_ref, subq.taxon_level_level_name, subq.taxon_status,
-         subq.taxon_path, subq.taxon_parent_ref, subq.taxon_extinct,
-         NEW.chrono_ref, subq.chrono_name, subq.chrono_name_indexed, subq.chrono_name_order_by,
-         subq.chrono_level_ref, subq.chrono_level_level_name, subq.chrono_status,
-         subq.chrono_local, subq.chrono_color,
-         subq.chrono_path, subq.chrono_parent_ref,
-         NEW.litho_ref, subq.litho_name, subq.litho_name_indexed, subq.litho_name_order_by,
-         subq.litho_level_ref, subq.litho_level_level_name, subq.litho_status,
-         subq.litho_local, subq.litho_color,
-         subq.litho_path, subq.litho_parent_ref,
-         NEW.lithology_ref, subq.lithology_name, subq.lithology_name_indexed, subq.lithology_name_order_by,
-         subq.lithology_level_ref, subq.lithology_level_level_name, subq.lithology_status,
-         subq.lithology_local, subq.lithology_color,
-         subq.lithology_path, subq.lithology_parent_ref,
-         NEW.mineral_ref, subq.mineral_name, subq.mineral_name_indexed, subq.mineral_name_order_by,
-         subq.mineral_level_ref, subq.mineral_level_level_name, subq.mineral_status,
-         subq.mineral_local, subq.mineral_color,
-         subq.mineral_path, subq.mineral_parent_ref,
-         NEW.host_taxon_ref, NEW.host_relationship, subq.host_taxon_name, subq.host_taxon_name_indexed, subq.host_taxon_name_order_by,
-         subq.host_taxon_level_ref, subq.host_taxon_level_level_name, subq.host_taxon_status,
-         subq.host_taxon_path, subq.host_taxon_parent_ref, subq.host_taxon_extinct,
-         NEW.host_specimen_ref,
-         NEW.acquisition_category, NEW.acquisition_date_mask, NEW.acquisition_date
-        )
-        FROM
-        (SELECT coll.collection_type coll_collection_type, coll.code coll_code, coll.name coll_name, coll.is_public coll_is_public,
-                coll.parent_ref coll_parent_ref, coll.path coll_path,
-                expe.name expe_name, expe.name_ts expe_name_ts, expe.name_indexed expe_name_indexed,
-                gtu.code gtu_code, gtu.parent_ref gtu_parent_ref, gtu.path gtu_path,gtu.location gtu_location,
-                gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-                gtu.tag_values_indexed gtu_tag_values_indexed, taggr.tag_value taggr_tag_value, 
-                taxon.name taxon_name, taxon.name_indexed taxon_name_indexed, taxon.name_order_by taxon_name_order_by,
-                taxon.level_ref taxon_level_ref, taxon_level.level_name taxon_level_level_name, taxon.status taxon_status,
-                taxon.path taxon_path, taxon.parent_ref taxon_parent_ref, taxon.extinct taxon_extinct,
-                chrono.name chrono_name, chrono.name_indexed chrono_name_indexed, chrono.name_order_by chrono_name_order_by,
-                chrono.level_ref chrono_level_ref, chrono_level.level_name chrono_level_level_name, chrono.status chrono_status,
-                chrono.local_naming chrono_local, chrono.color chrono_color,
-                chrono.path chrono_path, chrono.parent_ref chrono_parent_ref,
-                litho.name litho_name, litho.name_indexed litho_name_indexed, litho.name_order_by litho_name_order_by,
-                litho.level_ref litho_level_ref, litho_level.level_name litho_level_level_name, litho.status litho_status,
-                litho.local_naming litho_local, litho.color litho_color,
-                litho.path litho_path, litho.parent_ref litho_parent_ref,
-                lithology.name lithology_name, lithology.name_indexed lithology_name_indexed, lithology.name_order_by lithology_name_order_by,
-                lithology.level_ref lithology_level_ref, lithology_level.level_name lithology_level_level_name, lithology.status lithology_status,
-                lithology.local_naming lithology_local, lithology.color lithology_color,
-                lithology.path lithology_path, lithology.parent_ref lithology_parent_ref,
-                mineral.name mineral_name, mineral.name_indexed mineral_name_indexed, mineral.name_order_by mineral_name_order_by,
-                mineral.level_ref mineral_level_ref, mineral_level.level_name mineral_level_level_name, mineral.status mineral_status,
-                mineral.local_naming mineral_local, mineral.color mineral_color,
-                mineral.path mineral_path, mineral.parent_ref mineral_parent_ref,
-                host_taxon.name host_taxon_name, host_taxon.name_indexed host_taxon_name_indexed, host_taxon.name_order_by host_taxon_name_order_by,
-                host_taxon.level_ref host_taxon_level_ref, host_taxon_level.level_name host_taxon_level_level_name, host_taxon.status host_taxon_status,
-                host_taxon.path host_taxon_path, host_taxon.parent_ref host_taxon_parent_ref, host_taxon.extinct host_taxon_extinct
-         FROM collections coll,
-              expeditions expe,
-              (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'),
-              (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id),
-              (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id),
-              (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id),
-              (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id),
-              (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id),
-              (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
-         WHERE coll.id = NEW.collection_ref
-           AND expe.id = NEW.expedition_ref
-           AND gtu.id = NEW.gtu_ref
-           AND taxon.id = NEW.taxon_ref
-           AND host_taxon.id = NEW.host_taxon_ref
-           AND chrono.id = NEW.chrono_ref
-           AND litho.id = NEW.litho_ref
-           AND lithology.id = NEW.lithology_ref
-           AND mineral.id = NEW.mineral_ref
-         LIMIT 1
-        ) subq
-    WHERE spec_ref = NEW.id;
-  ELSIF TG_OP = 'INSERT' AND TG_TABLE_NAME = 'specimens' THEN
-    INSERT INTO darwin_flat
-    (spec_ref,category,
-     collection_ref,collection_type,collection_code,collection_name, collection_is_public,
-     collection_parent_ref,collection_path,
-     expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-     station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-     gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-     gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,
-     taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-     taxon_path,taxon_parent_ref,taxon_extinct,
-     chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-     chrono_local,chrono_color,
-     chrono_path,chrono_parent_ref,
-     litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-     litho_local,litho_color,
-     litho_path,litho_parent_ref,
-     lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-     lithology_local,lithology_color,
-     lithology_path,lithology_parent_ref,
-     mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-     mineral_local,mineral_color,
-     mineral_path,mineral_parent_ref,
-     host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-     host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-     host_specimen_ref,
-     acquisition_category,acquisition_date_mask,acquisition_date
-    )
-    (SELECT NEW.id, NEW.category,
-            NEW.collection_ref, coll.collection_type, coll.code, coll.name, coll.is_public,
-            coll.parent_ref, coll.path,
-            NEW.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
-            NEW.station_visible, NEW.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
-            gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-            gtu.tag_values_indexed, taggr.tag_value,  lineToTagArray(taggr.tag_value),
-            NEW.taxon_ref, taxon.name, taxon.name_indexed, taxon.name_order_by, taxon.level_ref, taxon_level.level_name, taxon.status,
-            taxon.path, taxon.parent_ref, taxon.extinct,
-            NEW.chrono_ref, chrono.name, chrono.name_indexed, chrono.name_order_by, chrono.level_ref, chrono_level.level_name, chrono.status,
-            chrono.local_naming, chrono.color,
-            chrono.path, chrono.parent_ref,
-            NEW.litho_ref, litho.name, litho.name_indexed, litho.name_order_by, litho.level_ref, litho_level.level_name, litho.status,
-            litho.local_naming,litho.color,
-            litho.path, litho.parent_ref,
-            NEW.lithology_ref, lithology.name, lithology.name_indexed, lithology.name_order_by, lithology.level_ref, lithology_level.level_name, lithology.status,
-            lithology.local_naming,lithology.color,
-            lithology.path, lithology.parent_ref,
-            NEW.mineral_ref, mineral.name, mineral.name_indexed, mineral.name_order_by, mineral.level_ref, mineral_level.level_name, mineral.status,
-            mineral.local_naming,mineral.color,
-            mineral.path, mineral.parent_ref,
-            NEW.host_taxon_ref, NEW.host_relationship, host_taxon.name, host_taxon.name_indexed, host_taxon.name_order_by, host_taxon.level_ref, host_taxon_level.level_name, host_taxon.status,
-            host_taxon.path, host_taxon.parent_ref, host_taxon.extinct,
-            NEW.host_specimen_ref,
-            NEW.acquisition_category, NEW.acquisition_date_mask, NEW.acquisition_date
-     FROM collections coll,
-          expeditions expe,
-          (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'),
-          (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id),
-          (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id),
-          (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id),
-          (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id),
-          (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id),
-          (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
-     WHERE coll.id = NEW.collection_ref
-       AND expe.id = NEW.expedition_ref
-       AND gtu.id = NEW.gtu_ref
-       AND taxon.id = NEW.taxon_ref
-       AND host_taxon.id = NEW.host_taxon_ref
-       AND chrono.id = NEW.chrono_ref
-       AND litho.id = NEW.litho_ref
-       AND lithology.id = NEW.lithology_ref
-       AND mineral.id = NEW.mineral_ref
-     LIMIT 1
-    );
-  END IF;
-  IF TG_TABLE_NAME = 'tag_groups' THEN
+  
+  ELSIF TG_TABLE_NAME = 'tag_groups' THEN
     IF TG_OP = 'INSERT' THEN
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
-        UPDATE darwin_flat
+        UPDATE specimens
         SET gtu_country_tag_value = NEW.tag_value,
         gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
     ELSIF TG_OP = 'UPDATE' THEN
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
-        UPDATE darwin_flat
+        UPDATE specimens
         SET gtu_country_tag_value = NEW.tag_value,
         gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
 
       ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' THEN
-        UPDATE darwin_flat
+        UPDATE specimens
         SET gtu_country_tag_value = NULL,
         gtu_country_tag_indexed = NULL
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
     ELSIF TG_OP = 'DELETE' THEN
       IF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' THEN
-        UPDATE darwin_flat
+        UPDATE specimens
         SET gtu_country_tag_value = NULL,
         gtu_country_tag_indexed = NULL
         WHERE gtu_ref = OLD.gtu_ref;
       END IF;
     END IF;
   END IF;
-  IF TG_TABLE_NAME = 'specimen_individuals' THEN
-    /*Check there's at least one type - if insertion, this new one is taken in count due to after insert trigger*/
-    SELECT true INTO indType FROM specimen_individuals WHERE specimen_ref = NEW.specimen_ref AND type_group <> 'specimen' LIMIT 1;
-    IF NOT FOUND THEN
-      indType := false;
-    END IF;
-    IF TG_OP = 'INSERT' THEN
-      /*Test if the new individual inserted is the only one for the specimen concerned*/
-      SELECT COUNT(*) INTO indCount FROM specimen_individuals WHERE specimen_ref = NEW.specimen_ref;
-      IF indCount = 1 THEN
-        /*If it's the case, update the line concerned*/
-        UPDATE darwin_flat
-        SET
-        (with_individuals,
-         individual_ref,
-         individual_type, individual_type_group, individual_type_search,
-         individual_sex, individual_state, individual_stage,
-         individual_social_status, individual_rock_form,
-         individual_count_min, individual_count_max
-        )
-        =
-        (true,
-         NEW.id,
-         NEW.type, NEW.type_group, NEW.type_search,
-         NEW.sex, NEW.state, NEW.stage,
-         NEW.social_status, NEW.rock_form,
-         NEW.specimen_individuals_count_min, NEW.specimen_individuals_count_max
-        )
-        WHERE spec_ref = NEW.specimen_ref;
-      ELSE
-        /*If not insert new line*/
-        INSERT INTO darwin_flat
-        (spec_ref,category,
-         collection_ref,collection_type,collection_code,collection_name,collection_is_public,
-         collection_parent_ref,collection_path,
-         expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-         station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-         gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
-         taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-         taxon_path,taxon_parent_ref,taxon_extinct,
-         chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-         chrono_local,chrono_color,
-         chrono_path,chrono_parent_ref,
-         litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-         litho_local,litho_color,
-         litho_path,litho_parent_ref,
-         lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-         lithology_local,lithology_color,
-         lithology_path,lithology_parent_ref,
-         mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-         mineral_local,mineral_color,
-         mineral_path,mineral_parent_ref,
-         host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-         host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-         host_specimen_ref,
-         acquisition_category,acquisition_date_mask,acquisition_date,
-         ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date,
-         with_individuals,
-         individual_ref,
-         individual_type, individual_type_group, individual_type_search,
-         individual_sex, individual_state, individual_stage,
-         individual_social_status, individual_rock_form,
-         individual_count_min, individual_count_max
-        )
-        (SELECT
-         spec_ref,category,
-         collection_ref,collection_type,collection_code,collection_name,collection_is_public,
-         collection_parent_ref,collection_path,
-         expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-         station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-         gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
-         taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-         taxon_path,taxon_parent_ref,taxon_extinct,
-         chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-         chrono_local,chrono_color,
-         chrono_path,chrono_parent_ref,
-         litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-         litho_local,litho_color,
-         litho_path,litho_parent_ref,
-         lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-         lithology_local,lithology_color,
-         lithology_path,lithology_parent_ref,
-         mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-         mineral_local,mineral_color,
-         mineral_path,mineral_parent_ref,
-         host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-         host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-         host_specimen_ref,
-         acquisition_category,acquisition_date_mask,acquisition_date,
-         ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date,
-         true,
-         NEW.id,
-         NEW.type, NEW.type_group, NEW.type_search,
-         NEW.sex, NEW.state, NEW.stage,
-         NEW.social_status, NEW.rock_form,
-         NEW.specimen_individuals_count_min, NEW.specimen_individuals_count_max
-         FROM darwin_flat
-         WHERE spec_ref = NEW.specimen_ref
-         LIMIT 1
-        );
-      END IF;
-    ELSIF TG_OP = 'UPDATE' THEN
-      /*If it's an update, update first individuals data*/
-      UPDATE darwin_flat
-      SET
-      (individual_ref,
-       individual_type, individual_type_group, individual_type_search,
-       individual_sex, individual_state, individual_stage,
-       individual_social_status, individual_rock_form,
-       individual_count_min, individual_count_max
-      )
-      =
-      (NEW.id,
-       NEW.type, NEW.type_group, NEW.type_search,
-       NEW.sex, NEW.state, NEW.stage,
-       NEW.social_status, NEW.rock_form,
-       NEW.specimen_individuals_count_min, NEW.specimen_individuals_count_max
-      )
-      WHERE individual_ref = NEW.id;
-      /*If it's a move from one specimen to an other, then...*/
-      IF OLD.specimen_ref IS DISTINCT FROM NEW.specimen_ref THEN
-        /*Check first if the individual moved was the last one attached to the specimen concerned*/
-        SELECT COUNT(*) INTO indCount FROM specimen_individuals WHERE specimen_ref = OLD.specimen_ref AND id != OLD.id;
-        IF indCount = 0 THEN
-          /*If it's the case, create an empty line of the specimen the individual is moved from*/
-          INSERT INTO darwin_flat
-          ( spec_ref,category,
-            collection_ref,collection_type,collection_code,collection_name,collection_is_public,
-            collection_parent_ref,collection_path,
-            expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-            station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-            gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
-            taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-            taxon_path,taxon_parent_ref,taxon_extinct,
-            chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-            chrono_local,chrono_color,
-            chrono_path,chrono_parent_ref,
-            litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-            litho_local,litho_color,
-            litho_path,litho_parent_ref,
-            lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-            lithology_local,lithology_color,
-            lithology_path,lithology_parent_ref,
-            mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-            mineral_local,mineral_color,
-            mineral_path,mineral_parent_ref,
-            host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-            host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-            host_specimen_ref,
-            acquisition_category,acquisition_date_mask,acquisition_date,
-            ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date
-          )
-          (SELECT
-            spec_ref,category,
-            collection_ref,collection_type,collection_code,collection_name,collection_is_public,
-            collection_parent_ref,collection_path,
-            expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-            station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-            gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
-            taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-            taxon_path,taxon_parent_ref,taxon_extinct,
-            chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-            chrono_local,chrono_color,
-            chrono_path,chrono_parent_ref,
-            litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-            litho_local,litho_color,
-            litho_path,litho_parent_ref,
-            lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-            lithology_local,lithology_color,
-            lithology_path,lithology_parent_ref,
-            mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-            mineral_local,mineral_color,
-            mineral_path,mineral_parent_ref,
-            host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-            host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-            host_specimen_ref,
-            acquisition_category,acquisition_date_mask,acquisition_date,
-            ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date
-            FROM darwin_flat
-            WHERE spec_ref = OLD.specimen_ref
-            LIMIT 1
-          );
-        END IF;
-        /*Then update specimen data for lines for the individual concerned*/
-        UPDATE darwin_flat
-        SET ( spec_ref,category,
-              collection_ref,collection_type,collection_code,collection_name, collection_is_public,
-              collection_parent_ref,collection_path,
-              expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-              station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-              gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-              gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
-              taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-              taxon_path,taxon_parent_ref,taxon_extinct,
-              chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-              chrono_local,chrono_color,
-              chrono_path,chrono_parent_ref,
-              litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-              litho_local,litho_color,
-              litho_path,litho_parent_ref,
-              lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-              lithology_local,lithology_color,
-              lithology_path,lithology_parent_ref,
-              mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-              mineral_local,mineral_color,
-              mineral_path,mineral_parent_ref,
-              host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-              host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-              host_specimen_ref,
-              acquisition_category,acquisition_date_mask,acquisition_date,
-              ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date
-            )=
-            ( subq.spec_ref,subq.category,
-              subq.collection_ref,subq.collection_type,subq.collection_code,subq.collection_name,subq. collection_is_public,
-              subq.collection_parent_ref,subq.collection_path,
-              subq.expedition_ref,subq.expedition_name,subq.expedition_name_ts,subq.expedition_name_indexed,
-              subq.station_visible,subq.gtu_ref,subq.gtu_code,subq.gtu_parent_ref,subq.gtu_path,subq.gtu_location,
-              subq.gtu_from_date_mask,subq.gtu_from_date,subq.gtu_to_date_mask,subq.gtu_to_date,
-              subq.gtu_tag_values_indexed,subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
-              subq.taxon_ref,subq.taxon_name,subq.taxon_name_indexed,subq.taxon_name_order_by,subq.taxon_level_ref,subq.taxon_level_name,subq.taxon_status,
-              subq.taxon_path,subq.taxon_parent_ref,subq.taxon_extinct,
-              subq.chrono_ref,subq.chrono_name,subq.chrono_name_indexed,subq.chrono_name_order_by,subq.chrono_level_ref,subq.chrono_level_name,subq.chrono_status,
-              subq.chrono_local,subq.chrono_color,
-              subq.chrono_path,subq.chrono_parent_ref,
-              subq.litho_ref,subq.litho_name,subq.litho_name_indexed,subq.litho_name_order_by,subq.litho_level_ref,subq.litho_level_name,subq.litho_status,
-              subq.litho_local,subq.litho_color,
-              subq.litho_path,subq.litho_parent_ref,
-              subq.lithology_ref,subq.lithology_name,subq.lithology_name_indexed,subq.lithology_name_order_by,subq.lithology_level_ref,subq.lithology_level_name,subq.lithology_status,
-              subq.lithology_local,subq.lithology_color,
-              subq.lithology_path,subq.lithology_parent_ref,
-              subq.mineral_ref,subq.mineral_name,subq.mineral_name_indexed,subq.mineral_name_order_by,subq.mineral_level_ref,subq.mineral_level_name,subq.mineral_status,
-              subq.mineral_local,subq.mineral_color,
-              subq.mineral_path,subq.mineral_parent_ref,
-              subq.host_taxon_ref,subq.host_relationship,subq.host_taxon_name,subq.host_taxon_name_indexed,subq.host_taxon_name_order_by,subq.host_taxon_level_ref,subq.host_taxon_level_name,subq.host_taxon_status,
-              subq.host_taxon_path,subq.host_taxon_parent_ref,subq.host_taxon_extinct,
-              subq.host_specimen_ref,
-              subq.acquisition_category,subq.acquisition_date_mask,subq.acquisition_date,
-              subq.ig_ref,subq.ig_num,subq.ig_num_indexed,subq.ig_date_mask,subq.ig_date
-            )
-        FROM
-          ( SELECT
-            spec_ref,category,
-            collection_ref,collection_type,collection_code,collection_name,collection_is_public,
-            collection_parent_ref,collection_path,
-            expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-            station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-            gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
-            taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-            taxon_path,taxon_parent_ref,taxon_extinct,
-            chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-            chrono_local,chrono_color,
-            chrono_path,chrono_parent_ref,
-            litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-            litho_local,litho_color,
-            litho_path,litho_parent_ref,
-            lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-            lithology_local,lithology_color,
-            lithology_path,lithology_parent_ref,
-            mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-            mineral_local,mineral_color,
-            mineral_path,mineral_parent_ref,
-            host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-            host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-            host_specimen_ref,
-            acquisition_category,acquisition_date_mask,acquisition_date,
-            ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date
-            FROM darwin_flat
-            WHERE spec_ref = NEW.specimen_ref
-            LIMIT 1
-          ) subq
-        WHERE individual_ref = NEW.id;
-
-        /*Check if the specimen the individual is moved to has already individuals*/
-        SELECT COUNT(*) INTO indCount FROM specimen_individuals WHERE specimen_ref = NEW.specimen_ref AND id != NEW.id;
-        IF indCount = 0 THEN
-          /*If not, remove the line with null individual*/
-          DELETE FROM darwin_flat
-          WHERE spec_ref = NEW.specimen_ref AND individual_ref IS NULL;
-        END IF;
-
-      END IF;
-    END IF;
-
-    /*And then update with_types value for specimen concerned*/
-    UPDATE darwin_flat
-    SET with_types = indType
-    WHERE spec_ref = NEW.specimen_ref
-      AND with_types != indType;
-
-  END IF;
-  IF TG_TABLE_NAME = 'specimen_parts' THEN
-    IF TG_OP = 'INSERT' THEN
-
-      /*Tell now there are parts for individuals*/
-      UPDATE specimen_individuals
-      SET with_parts = true
-      WHERE id = NEW.specimen_individual_ref
-        AND with_parts = false;
-      /*Check if it's the first part inserted for the current individual or not*/
-      SELECT COUNT(*) INTO partCount FROM specimen_parts WHERE specimen_individual_ref = NEW.specimen_individual_ref;
-      IF partCount = 1 THEN
-        /*If it's the case, it's only an update that is needed*/
-        UPDATE darwin_flat
-        SET
-        (with_parts,
-         part_ref, part, part_status,
-         institution_ref,building, "floor", room, "row", shelf,
-         container_type, container_storage, "container",
-         sub_container_type, sub_container_storage, sub_container,
-         part_count_min, part_count_max,
-         specimen_status, "complete", surnumerary
-        )
-        =
-        (true,
-         NEW.id, NEW.specimen_part, NEW.specimen_status,
-         NEW.institution_ref,NEW.building, NEW.floor, NEW.room, NEW.row, NEW.shelf,
-         NEW.container_type, NEW.container_storage, NEW.container,
-         NEW.sub_container_type, NEW.sub_container_storage, NEW.sub_container,
-         NEW.specimen_part_count_min, NEW.specimen_part_count_max,
-         NEW.specimen_status, NEW.complete, NEW.surnumerary
-        )
-        WHERE individual_ref = NEW.specimen_individual_ref;
-      ELSE
-        /*Otherwise, the new individual is inserted with specimen data*/
-        INSERT INTO darwin_flat
-        (spec_ref,category,
-         collection_ref,collection_type,collection_code,collection_name,collection_is_public,
-         collection_parent_ref,collection_path,
-         expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-         station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-         gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
-         taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-         taxon_path,taxon_parent_ref,taxon_extinct,
-         chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-         chrono_local,chrono_color,
-         chrono_path,chrono_parent_ref,
-         litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-         litho_local,litho_color,
-         litho_path,litho_parent_ref,
-         lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-         lithology_local,lithology_color,
-         lithology_path,lithology_parent_ref,
-         mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-         mineral_local,mineral_color,
-         mineral_path,mineral_parent_ref,
-         host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-         host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-         host_specimen_ref,
-         acquisition_category,acquisition_date_mask,acquisition_date,
-         ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date,
-         with_types, with_individuals,
-         individual_ref,
-         individual_type, individual_type_group, individual_type_search,
-         individual_sex, individual_state, individual_stage,
-         individual_social_status, individual_rock_form,
-         individual_count_min, individual_count_max,
-         with_parts,
-         part_ref, part, part_status, institution_ref,
-         building, "floor", room, "row", shelf,
-         container_type, container_storage, "container",
-         sub_container_type, sub_container_storage, sub_container,
-         part_count_min, part_count_max,
-         specimen_status, "complete", surnumerary
-        )
-        (SELECT
-         spec_ref,category,
-         collection_ref,collection_type,collection_code,collection_name,collection_is_public,
-         collection_parent_ref,collection_path,
-         expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-         station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-         gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
-         taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-         taxon_path,taxon_parent_ref,taxon_extinct,
-         chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-         chrono_local,chrono_color,
-         chrono_path,chrono_parent_ref,
-         litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-         litho_local,litho_color,
-         litho_path,litho_parent_ref,
-         lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-         lithology_local,lithology_color,
-         lithology_path,lithology_parent_ref,
-         mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-         mineral_local,mineral_color,
-         mineral_path,mineral_parent_ref,
-         host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-         host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-         host_specimen_ref,
-         acquisition_category,acquisition_date_mask,acquisition_date,
-         ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date,
-         with_types, with_individuals,
-         individual_ref,
-         individual_type, individual_type_group, individual_type_search,
-         individual_sex, individual_state, individual_stage,
-         individual_social_status, individual_rock_form,
-         individual_count_min, individual_count_max,
-         true,
-         NEW.id, NEW.specimen_part, NEW.specimen_status, NEW.institution_ref,
-         NEW.building, NEW.floor, NEW.room, NEW.row, NEW.shelf,
-         NEW.container_type, NEW.container_storage, NEW.container,
-         NEW.sub_container_type, NEW.sub_container_storage, NEW.sub_container,
-         NEW.specimen_part_count_min, NEW.specimen_part_count_max,
-         NEW.specimen_status, NEW.complete, NEW.surnumerary
-         FROM darwin_flat
-         WHERE individual_ref = NEW.specimen_individual_ref
-         LIMIT 1
-        );
-      END IF;
-    ELSIF TG_OP = 'UPDATE' THEN
-      /*Update corresponding parts data in darwin_flat*/
-      UPDATE darwin_flat
-      SET
-      (part_ref, part, part_status, institution_ref,
-       building, "floor", room, "row", shelf,
-       container_type, container_storage, "container",
-       sub_container_type, sub_container_storage, sub_container,
-       part_count_min, part_count_max,
-       specimen_status, "complete", surnumerary
-      )
-      =
-      (NEW.id, NEW.specimen_part, NEW.specimen_status, NEW.institution_ref,
-       NEW.building, NEW.floor, NEW.room, NEW.row, NEW.shelf,
-       NEW.container_type, NEW.container_storage, NEW.container,
-       NEW.sub_container_type, NEW.sub_container_storage, NEW.sub_container,
-       NEW.specimen_part_count_min, NEW.specimen_part_count_max,
-       NEW.specimen_status, NEW.complete, NEW.surnumerary
-      )
-      WHERE part_ref = NEW.id;
-      /*Check if the part is moved from one individual to an other*/
-      IF OLD.specimen_individual_ref IS DISTINCT FROM NEW.specimen_individual_ref THEN
-        /*Check if the part moved is the last one attached to the individual concerned*/
-        SELECT COUNT(*) INTO partCount FROM specimen_parts WHERE specimen_individual_ref = OLD.specimen_individual_ref AND id != OLD.id;
-        IF partCount = 0 THEN
-          INSERT INTO darwin_flat
-          ( spec_ref,category,
-            collection_ref,collection_type,collection_code,collection_name,collection_is_public,
-            collection_parent_ref,collection_path,
-            expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-            station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-            gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
-            taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-            taxon_path,taxon_parent_ref,taxon_extinct,
-            chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-            chrono_local,chrono_color,
-            chrono_path,chrono_parent_ref,
-            litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-            litho_local,litho_color,
-            litho_path,litho_parent_ref,
-            lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-            lithology_local,lithology_color,
-            lithology_path,lithology_parent_ref,
-            mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-            mineral_local,mineral_color,
-            mineral_path,mineral_parent_ref,
-            host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-            host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-            host_specimen_ref,
-            acquisition_category,acquisition_date_mask,acquisition_date,
-            ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date,
-            with_types, with_individuals,
-            individual_ref,
-            individual_type, individual_type_group, individual_type_search,
-            individual_sex, individual_state, individual_stage,
-            individual_social_status, individual_rock_form,
-            individual_count_min, individual_count_max
-          )
-          (SELECT
-            spec_ref,category,
-            collection_ref,collection_type,collection_code,collection_name,collection_is_public,
-            collection_parent_ref,collection_path,
-            expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-            station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-            gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
-            taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-            taxon_path,taxon_parent_ref,taxon_extinct,
-            chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-            chrono_local,chrono_color,
-            chrono_path,chrono_parent_ref,
-            litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-            litho_local,litho_color,
-            litho_path,litho_parent_ref,
-            lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-            lithology_local,lithology_color,
-            lithology_path,lithology_parent_ref,
-            mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-            mineral_local,mineral_color,
-            mineral_path,mineral_parent_ref,
-            host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-            host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-            host_specimen_ref,
-            acquisition_category,acquisition_date_mask,acquisition_date,
-            ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date,
-            with_types, with_individuals,
-            individual_ref,
-            individual_type, individual_type_group, individual_type_search,
-            individual_sex, individual_state, individual_stage,
-            individual_social_status, individual_rock_form,
-            individual_count_min, individual_count_max
-            FROM darwin_flat
-            WHERE individual_ref = OLD.specimen_individual_ref
-            LIMIT 1
-          );
-        END IF;
-        /*Then update specimen and individuals data for the part moved*/
-        UPDATE darwin_flat
-        SET ( spec_ref,category,
-              collection_ref,collection_type,collection_code,collection_name, collection_is_public,
-              collection_parent_ref,collection_path,
-              expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-              station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-              gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-              gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
-              taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-              taxon_path,taxon_parent_ref,taxon_extinct,
-              chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-              chrono_local,chrono_color,
-              chrono_path,chrono_parent_ref,
-              litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-              litho_local,litho_color,
-              litho_path,litho_parent_ref,
-              lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-              lithology_local,lithology_color,
-              lithology_path,lithology_parent_ref,
-              mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-              mineral_local,mineral_color,
-              mineral_path,mineral_parent_ref,
-              host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-              host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-              host_specimen_ref,
-              acquisition_category,acquisition_date_mask,acquisition_date,
-              ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date,
-              with_types, with_individuals,
-              individual_ref,
-              individual_type, individual_type_group, individual_type_search,
-              individual_sex, individual_state, individual_stage,
-              individual_social_status, individual_rock_form,
-              individual_count_min, individual_count_max
-            )=
-            ( subq.spec_ref,subq.category,
-              subq.collection_ref,subq.collection_type,subq.collection_code,subq.collection_name,subq. collection_is_public,
-              subq.collection_parent_ref,subq.collection_path,
-              subq.expedition_ref,subq.expedition_name,subq.expedition_name_ts,subq.expedition_name_indexed,
-              subq.station_visible,subq.gtu_ref,subq.gtu_code,subq.gtu_parent_ref,subq.gtu_path,subq.gtu_location,
-              subq.gtu_from_date_mask,subq.gtu_from_date,subq.gtu_to_date_mask,subq.gtu_to_date,
-              subq.gtu_tag_values_indexed,subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
-              subq.taxon_ref,subq.taxon_name,subq.taxon_name_indexed,subq.taxon_name_order_by,subq.taxon_level_ref,subq.taxon_level_name,subq.taxon_status,
-              subq.taxon_path,subq.taxon_parent_ref,subq.taxon_extinct,
-              subq.chrono_ref,subq.chrono_name,subq.chrono_name_indexed,subq.chrono_name_order_by,subq.chrono_level_ref,subq.chrono_level_name,subq.chrono_status,
-              subq.chrono_local,subq.chrono_color,
-              subq.chrono_path,subq.chrono_parent_ref,
-              subq.litho_ref,subq.litho_name,subq.litho_name_indexed,subq.litho_name_order_by,subq.litho_level_ref,subq.litho_level_name,subq.litho_status,
-              subq.litho_local,subq.litho_color,
-              subq.litho_path,subq.litho_parent_ref,
-              subq.lithology_ref,subq.lithology_name,subq.lithology_name_indexed,subq.lithology_name_order_by,subq.lithology_level_ref,subq.lithology_level_name,subq.lithology_status,
-              subq.lithology_local,subq.lithology_color,
-              subq.lithology_path,subq.lithology_parent_ref,
-              subq.mineral_ref,subq.mineral_name,subq.mineral_name_indexed,subq.mineral_name_order_by,subq.mineral_level_ref,subq.mineral_level_name,subq.mineral_status,
-              subq.mineral_local,subq.mineral_color,
-              subq.mineral_path,subq.mineral_parent_ref,
-              subq.host_taxon_ref,subq.host_relationship,subq.host_taxon_name,subq.host_taxon_name_indexed,subq.host_taxon_name_order_by,subq.host_taxon_level_ref,subq.host_taxon_level_name,subq.host_taxon_status,
-              subq.host_taxon_path,subq.host_taxon_parent_ref,subq.host_taxon_extinct,
-              subq.host_specimen_ref,
-              subq.acquisition_category,subq.acquisition_date_mask,subq.acquisition_date,
-              subq.ig_ref,subq.ig_num,subq.ig_num_indexed,subq.ig_date_mask,subq.ig_date,
-              subq.with_types, subq.with_individuals,
-              subq.individual_ref,
-              subq.individual_type, subq.individual_type_group, subq.individual_type_search,
-              subq.individual_sex, subq.individual_state, subq.individual_stage,
-              subq.individual_social_status, subq.individual_rock_form,
-              subq.individual_count_min, subq.individual_count_max
-            )
-        FROM
-          ( SELECT
-            spec_ref,category,
-            collection_ref,collection_type,collection_code,collection_name,collection_is_public,
-            collection_parent_ref,collection_path,
-            expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-            station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
-            gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
-            taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
-            taxon_path,taxon_parent_ref,taxon_extinct,
-            chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
-            chrono_local,chrono_color,
-            chrono_path,chrono_parent_ref,
-            litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
-            litho_local,litho_color,
-            litho_path,litho_parent_ref,
-            lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
-            lithology_local,lithology_color,
-            lithology_path,lithology_parent_ref,
-            mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
-            mineral_local,mineral_color,
-            mineral_path,mineral_parent_ref,
-            host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-            host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-            host_specimen_ref,
-            acquisition_category,acquisition_date_mask,acquisition_date,
-            ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date,
-            with_types, with_individuals,
-            individual_ref,
-            individual_type, individual_type_group, individual_type_search,
-            individual_sex, individual_state, individual_stage,
-            individual_social_status, individual_rock_form,
-            individual_count_min, individual_count_max
-            FROM darwin_flat
-            WHERE individual_ref = NEW.specimen_individual_ref
-            LIMIT 1
-          ) subq
-        WHERE part_ref = NEW.id;
-
-        /*Check if the individual the part is moved to has already parts*/
-        SELECT COUNT(*) INTO partCount FROM specimen_parts WHERE specimen_individual_ref = NEW.specimen_individual_ref AND id != NEW.id;
-        IF partCount = 0 THEN
-          /*If not, remove the line with null part*/
-          DELETE FROM darwin_flat
-          WHERE individual_ref = NEW.specimen_individual_ref AND part_ref IS NULL;
-        END IF;
-
-      END IF;
-    END IF;
-  END IF;
-  IF TG_TABLE_NAME = 'specimens' THEN
-    IF COALESCE(NEW.ig_ref,0) = 0 THEN
-      UPDATE darwin_flat
-      SET (ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date) =
-          (NULL, NULL, NULL, NULL, NULL)
-      WHERE spec_ref = NEW.id;
-    ELSE
-      UPDATE darwin_flat
-      SET (ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date) =
-          (NEW.ig_ref, subq.ig_num, subq.ig_num_indexed, subq.ig_date_mask, subq.ig_date)
-          FROM
-          (SELECT ig_num, ig_num_indexed, ig_date_mask, ig_date
-           FROM igs
-           WHERE id = NEW.ig_ref
-          ) subq
-      WHERE spec_ref = NEW.id;
-    END IF;
-  END IF;
   RETURN NEW;
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION fct_delete_darwin_flat_ind_part() RETURNS TRIGGER
-language plpgsql
-AS
-$$
+
+
+CREATE OR REPLACE FUNCTION fct_update_specimen_flat() RETURNS TRIGGER
+AS $$
 DECLARE
-  indCount INTEGER := 0;
-  partCount INTEGER := 0;
-  indType BOOLEAN := false;
 BEGIN
-  IF TG_TABLE_NAME = 'specimen_individuals' THEN
-    SELECT COUNT(*) INTO indCount FROM specimen_individuals WHERE specimen_ref = OLD.specimen_ref;
-    /*If it was the last individual deleted, then update individuals and parts fiedls with default values*/
-    IF indCount = 0 THEN
-      SELECT COUNT(*) INTO indCount FROM darwin_flat WHERE spec_ref = OLD.specimen_ref AND individual_ref != OLD.id;
-      IF indCount = 0 THEN
-        SELECT COUNT(*) INTO indCount FROM darwin_flat WHERE spec_ref = OLD.specimen_ref AND individual_ref = OLD.id;
-        IF indCount > 1 THEN
-          DELETE FROM darwin_flat WHERE ctid = ANY (ARRAY(SELECT ctid FROM darwin_flat WHERE individual_ref = OLD.id LIMIT (indCount - 1)));
-        END IF;
-        UPDATE darwin_flat
-        SET
-        (individual_ref,
-         individual_type, individual_type_group, individual_type_search,
-         individual_sex, individual_state, individual_stage,
-         individual_social_status, individual_rock_form,
-         individual_count_min, individual_count_max,
-         with_types, with_individuals
-        )
-        =
-        (DEFAULT,
-         DEFAULT, DEFAULT, DEFAULT,
-         DEFAULT, DEFAULT, DEFAULT,
-         DEFAULT, DEFAULT,
-         DEFAULT, DEFAULT,
-         DEFAULT, DEFAULT
-        )
-        WHERE individual_ref = OLD.id;
-      ELSE
-        DELETE FROM darwin_flat WHERE individual_ref = OLD.id;
-      END IF;
-    ELSE
-      DELETE FROM darwin_flat
-      WHERE individual_ref = OLD.id;
 
-      /*Check for the with_types and with_individuals update*/
-      SELECT true INTO indType
-      FROM specimen_individuals
-      WHERE specimen_ref = OLD.specimen_ref
-        AND type_group <> 'specimen' LIMIT 1;
+  SELECT collection_type, code, name, is_public, parent_ref, path
+      INTO NEW.collection_type, NEW.collection_code, NEW.collection_name, NEW.collection_is_public,
+        NEW.collection_parent_ref, NEW.collection_path
+      FROM collections
+      WHERE id = NEW.collection_ref;
 
-      IF NOT FOUND THEN
-        indType := false;
-      END IF;
+  SELECT  name , name_ts , name_indexed
+      INTO NEW.expedition_name, NEW.expedition_name_ts, NEW.expedition_name_indexed
+      FROM expeditions
+      WHERE id = NEW.expedition_ref;
 
-      UPDATE darwin_flat
-      SET with_types = indType
-      WHERE spec_ref = OLD.specimen_ref;
+  
+  SELECT gtu.code, gtu.parent_ref, gtu.path, gtu.location, gtu.gtu_from_date_mask, gtu.gtu_from_date,
+        gtu.gtu_to_date_mask, gtu.gtu_to_date, gtu.tag_values_indexed, taggr.tag_value
+     INTO NEW.gtu_code, NEW.gtu_parent_ref, NEW.gtu_path, NEW.gtu_location,
+          NEW.gtu_from_date_mask, NEW.gtu_from_date, NEW.gtu_to_date_mask, NEW.gtu_to_date,
+          NEW.gtu_tag_values_indexed, NEW.gtu_country_tag_value, NEW.gtu_country_tag_indexed
+     FROM gtu LEFT JOIN tag_groups taggr 
+      ON id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'
+     WHERE id = NEW.gtu_ref; 
 
-    END IF;
-  ELSE /*Parts*/
-    SELECT COUNT(*) INTO partCount FROM specimen_parts WHERE specimen_individual_ref = OLD.specimen_individual_ref;
-    IF partCount = 0 THEN
 
-      SELECT COUNT(*) INTO partCount FROM darwin_flat WHERE individual_ref = OLD.specimen_individual_ref;
+  SELECT name, name_indexed, name_order_by, level_ref, taxon_level.level_name, status ,
+        path, parent_ref, extinct
+     INTO 
+         NEW.taxon_ref, NEW.taxon_name, NEW.taxon_name_indexed, NEW.taxon_name_order_by, NEW.taxon_level_ref,
+         NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_path, NEW.taxon_parent_ref, NEW.taxon_extinct
+     FROM 
+       taxonomy INNER JOIN catalogue_levels taxon_level ON level_ref = taxon_level.id     
+      WHERE id = NEW.taxon_ref;
 
-      IF partCount > 1 THEN
-        DELETE FROM darwin_flat WHERE part_ref = OLD.id;
-      ELSE
-        /*Update darwin flat*/
-        UPDATE darwin_flat
-        SET
-        (with_parts,
-         part_ref, part, part_status, institution_ref,
-         building, "floor", room, "row", shelf,
-         container_type, container_storage, "container",
-         sub_container_type, sub_container_storage, "sub_container",
-         part_count_min, part_count_max,
-         specimen_status,"complete",surnumerary
-        )
-        =
-        (DEFAULT,
-         DEFAULT, DEFAULT, DEFAULT, DEFAULT,
-         DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT,
-         DEFAULT, DEFAULT, DEFAULT,
-         DEFAULT, DEFAULT, DEFAULT,
-         DEFAULT, DEFAULT,
-         DEFAULT, DEFAULT, DEFAULT
-        )
-        WHERE part_ref = OLD.id;
 
-      END IF;
-      /*and also specimen_individuals table*/
-      UPDATE specimen_individuals
-      SET with_parts = DEFAULT
-      WHERE id = OLD.specimen_individual_ref
-        AND with_parts = true;
+  SELECT name, name_indexed , name_order_by, level_ref, 
+      chrono_level.level_name, status, local_naming, color, path, parent_ref
+     INTO 
+        NEW.chrono_ref, NEW.chrono_name, NEW.chrono_name_indexed, NEW.chrono_name_order_by, NEW.chrono_level_ref, NEW.chrono_level_name,
+        NEW.chrono_status, NEW.chrono_local, NEW.chrono_color, NEW.chrono_path, NEW.chrono_parent_ref
+     FROM 
+       chronostratigraphy INNER JOIN catalogue_levels chrono_level ON level_ref = chrono_level.id
+      WHERE id = NEW.chrono_ref;
+                
 
-    ELSE
+  SELECT name, name_indexed, name_order_by, level_ref, litho_level.level_name,
+        status, local_naming, color, path, parent_ref
+     INTO 
+         NEW.litho_name, NEW.litho_name_indexed, NEW.litho_name_order_by, NEW.litho_level_ref, NEW.litho_level_name, NEW.litho_status,
+         NEW.litho_local,  NEW.litho_color, NEW.litho_path,  NEW.litho_parent_ref
+     FROM 
+       lithostratigraphy INNER JOIN catalogue_levels litho_level ON level_ref = litho_level.id
+      WHERE id = NEW.litho_ref;
 
-      DELETE FROM darwin_flat
-      WHERE part_ref = OLD.id;
 
-    END IF;
-  END IF;
-  RETURN OLD;
+  SELECT name, name_indexed, name_order_by, level_ref, lithology_level.level_name, status,
+        local_naming, color, path, parent_ref
+     INTO 
+         NEW.lithology_name, NEW.lithology_name_indexed, NEW.lithology_name_order_by, NEW.lithology_level_ref, NEW.lithology_level_name,
+         NEW.lithology_status, NEW.lithology_local, NEW.lithology_color, NEW.lithology_path, NEW.lithology_parent_ref
+     FROM 
+       lithology INNER JOIN catalogue_levels lithology_level ON level_ref = lithology_level.id
+      WHERE id = NEW.lithology_ref;
+
+
+  SELECT name, name_indexed, name_order_by, level_ref, mineral_level.level_name, status,
+        local_naming, color, path, parent_ref
+     INTO 
+         NEW.mineral_name, NEW.mineral_name_indexed, NEW.mineral_name_order_by, NEW.mineral_level_ref, NEW.mineral_level_name, NEW.mineral_status,
+         NEW.mineral_local, NEW.mineral_color, NEW.mineral_path, NEW.mineral_parent_ref
+     FROM 
+       mineralogy INNER JOIN catalogue_levels mineral_level ON level_ref = mineral_level.id
+      WHERE id = NEW.mineral_ref;
+
+
+  SELECT name, name_indexed, name_order_by, level_ref, taxon_level.level_name, status ,
+        path, parent_ref, extinct
+     INTO 
+         NEW.host_taxon_ref, NEW.host_taxon_name, NEW.host_taxon_name_indexed, NEW.host_taxon_name_order_by, NEW.host_taxon_level_ref,
+         NEW.host_taxon_level_name, NEW.host_taxon_status, NEW.host_taxon_path, NEW.host_taxon_parent_ref, NEW.host_taxon_extinct
+     FROM 
+       taxonomy INNER JOIN catalogue_levels taxon_level ON level_ref = taxon_level.id     
+      WHERE id = NEW.host_taxon_ref;
+
+  SELECT ig_num, ig_date_mask, ig_date, ig_num_indexed
+    INTO 
+         NEW.ig_num, NEW.ig_date_mask, NEW.ig_date, NEW.ig_num_indexed
+    FROM 
+       igs
+      WHERE id = NEW.ig_ref;
+
+
+  RETURN NEW;
 END;
-$$;
+$$
+language plpgsql;
 
 CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER
 AS $$
