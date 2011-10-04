@@ -370,3 +370,4 @@
   DROP INDEX IF EXISTS idx_darwin_flat_part_ref_sub_container;
   DROP INDEX IF EXISTS idx_darwin_flat_part_ref_part_count_max;
   DROP INDEX IF EXISTS idx_gin_darwin_flat_gtu_country_tags;
+  DROP INDEX IF EXISTS idx_staging_people_record;

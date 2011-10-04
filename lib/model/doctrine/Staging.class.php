@@ -181,7 +181,7 @@ class Staging extends BaseStaging
     return 0;
   }
   public function setStatus($value)
-  {
+  {    
     $status = '' ;
     foreach($value as $field => $error)
     {
@@ -198,8 +198,12 @@ class Staging extends BaseStaging
     $fieldsToShow = array();
     foreach($status as $key => $value)
     {
-      if($tosave) $fieldsToShow[$key] = $value ;
-      else  $fieldsToShow[$key] = array(//'field' => $this->fieldName[$key],
+      if($tosave) 
+      {
+        // staging_people status are updated by a trigger, so we don't care about it here
+        if($value!='people') $fieldsToShow[$key] = $value ;
+      }
+      else  $fieldsToShow[$key] = array(
                                     'embedded_field' => $this->getFieldsToUseFor($key).'_'.$value, // to TEST 
                                     'display_error' => self::$errors[($key=='duplicate'?$key:$value)], 
                                     'fields' => $this->getFieldsToUseFor($key));
@@ -228,28 +232,10 @@ class Staging extends BaseStaging
     if($field == 'mineral') return('mineral_ref') ;
     if($field == 'lithology') return('lithology_ref') ;
     if($field == 'igs') return('ig_ref') ;
-    if($field == 'collectors') return('collectors') ; 
-    if($field == 'donators') return('donators') ;  
+    if($field == 'people') return('people') ;  
     if($field == 'identifiers') return('identifiers') ;
     if($field == 'institution') return('institution_ref') ;
     if($field == 'duplicate') return('spec_ref') ;    
     return($field) ;
-  }
-  
-  public function getPeopleInError($people_type,$people, $record_id = null)
-  {    
-    $conn_MGR = Doctrine_Manager::connection();
-    $conn = $conn_MGR->getDbh();
-    $people_in_error = array() ;
-    $relation = "staging" ;
-    $id = $record_id?$record_id:$this->getId() ;
-    if($people_type == 'identifier') $relation = 'identifications' ;
-    $statement = $conn->prepare("select * FROM (select name , (row_number() OVER() -1) as ord_by from unnest('$people'::text[]) as name) as peoples
-       where ord_by not in ( select order_by from catalogue_people where record_id = :id AND referenced_relation = '$relation' AND people_type = :type)") ;   
-    $statement->execute(array(':id' => $id,':type' => $people_type));
-    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
-    foreach($results as $record)  
-      $people_in_error[$record['ord_by']] = $record['name'] ;     
-    return $people_in_error ;
   }
 }

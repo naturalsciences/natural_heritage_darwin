@@ -28,7 +28,6 @@ class ImportsFormFilter extends BaseImportsFormFilter
         'choices' => $state_list
       )
     ); 
-    $this->widgetSchema->setHelp('state', 'Salut comment ca va ?');    
     $this->widgetSchema['filename'] = new sfWidgetFormInputText() ; 
     $this->widgetSchema['filename']->setAttributes(array('class'=>'small_size'));    
  //   $this->widgetSchema['user_ref'] = new sfWidgetFormInputHidden() ;        

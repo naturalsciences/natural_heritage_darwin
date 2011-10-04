@@ -130,7 +130,6 @@ create table staging
     acquisition_category varchar,
     acquisition_date_mask integer,
     acquisition_date date,
-
     individual_type varchar,
     individual_sex  varchar,
     individual_state varchar,
@@ -139,9 +138,6 @@ create table staging
     individual_rock_form varchar,
     individual_count_min integer,
     individual_count_max integer,
-    collectors text[],
-    donators text[],
-
     part varchar,
     part_status varchar,
 

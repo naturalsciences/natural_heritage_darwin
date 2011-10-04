@@ -23,13 +23,16 @@ class IdentificationsTable extends DarwinTable
     return $q->execute();
   }
   
-  public function getStagingId($id)
+  public function getStagingIds($id)
   {
      $q = Doctrine_Query::create()->
          from('Identifications')->
          where('referenced_relation = \'staging\'')->
          andWhere('record_id = ?', $id);
-    return $q->fetchOne(); 
+    $result = $q->execute(); 
+    $indent_ids = array() ;
+    foreach($result as $identification) $ident_ids[] = $identification->getId() ;
+    return $ident_ids ;
   }
 
 }

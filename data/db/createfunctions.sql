@@ -3980,80 +3980,47 @@ DECLARE
   p_name text;
   merge_status integer :=1;
   ident_line RECORD;
+  people_line RECORD ;
 BEGIN
 
-  FOR p_name in select item from unnest(line.collectors) as item
+
+  --  Donators and collectors
+
+  FOR people_line IN select * from staging_people WHERE referenced_relation ='staging' AND record_id = line.id 
   LOOP
-    cnt := cnt + 1;
-    IF EXISTS( SELECT id FROM catalogue_people WHERE referenced_relation ='staging' AND  record_id = line.id AND people_type = 'collector' AND order_by= cnt)  THEN
+    IF people_line.people_ref is not null THEN
       continue;
     END IF;
-    
-    SELECT fct_look_for_people(p_name) into ref_record;
+    SELECT fct_look_for_people(people_line.formated_name) into ref_record;
     CASE ref_record
       WHEN -1,0 THEN merge_status := -1 ;
       --WHEN 0 THEN merge_status := 0;
       ELSE
-        INSERT INTO catalogue_people(referenced_relation,record_id, people_type, order_by, people_ref)
-          VALUES ('staging', line.id, 'collector', cnt, ref_record);
+        UPDATE staging_people SET people_ref = ref_record WHERE id=people_line.id ;
     END CASE;
   END LOOP;
   IF merge_status = 1 THEN 
-    UPDATE staging SET status = delete(status,'collectors') where id=line.id;
+    UPDATE staging SET status = delete(status,'people') where id=line.id;
   ELSE
-    UPDATE staging SET status = (status || ('collectors' => 'people')) where id= line.id;  
+    UPDATE staging SET status = (status || ('people' => 'people')) where id= line.id;  
   END IF;
-
-  /*****
-  * DONATORS
-  *****/
-
-  cnt := -1;
-  merge_status :=1;
-  FOR p_name in select item from unnest(line.donators) as item
-  LOOP
-    cnt := cnt + 1;
-    IF EXISTS( SELECT id FROM catalogue_people WHERE referenced_relation ='staging' AND  record_id = line.id AND people_type = 'donator' AND order_by= cnt)  THEN
-      continue;
-    END IF;
-
-    SELECT fct_look_for_people(p_name) into ref_record;
-    CASE ref_record
-      WHEN -1 THEN merge_status := -1 ;
-      WHEN 0 THEN merge_status := 0;
-      ELSE
-        INSERT INTO catalogue_people(referenced_relation,record_id, people_type, order_by, people_ref)
-          VALUES ('staging', line.id, 'donator', cnt, ref_record);
-    END CASE;
-  END LOOP;
-  IF merge_status = 1 THEN 
-    UPDATE staging SET status = delete(status,'donators') where id=line.id;
-  ELSE
-    UPDATE staging SET status = (status || ('donators' => 'people')) where id= line.id;  
-  END IF;
-
-/****
-IDENTIFIERS
-******/
-  merge_status :=1;
+  
+  -- Indentifiers
+   
+  merge_status := 1 ; 
   FOR ident_line in select * from identifications where referenced_relation ='staging' AND  record_id = line.id
   LOOP
-    cnt := -1;
-    FOR p_name in select item from regexp_split_to_table(ident_line.determination_status, ',') as item where item != ''
+    FOR people_line IN select * from staging_people WHERE referenced_relation ='identifications' AND record_id = ident_line.id 
     LOOP
-      cnt := cnt + 1;
-
-      IF EXISTS( SELECT id FROM catalogue_people WHERE referenced_relation ='identifications' AND  record_id =  ident_line.id AND order_by= cnt)  THEN
+      IF people_line.people_ref is not null THEN
         continue;
       END IF;
-
-      SELECT fct_look_for_people(p_name) into ref_record;
+      SELECT fct_look_for_people(people_line.formated_name) into ref_record;
       CASE ref_record
-        WHEN -1 THEN merge_status := -1 ;
-        WHEN 0 THEN merge_status := 0;
+        WHEN -1,0 THEN merge_status := -1 ;
+        --WHEN 0 THEN merge_status := 0;
         ELSE
-          INSERT INTO catalogue_people(referenced_relation,record_id, people_type, order_by, people_ref)
-            VALUES ('identifications', ident_line.id, 'identifier', cnt, ref_record);
+          UPDATE staging_people SET people_ref = ref_record WHERE id=people_line.id ;
       END CASE;
     END LOOP;
   END LOOP;
@@ -4079,7 +4046,7 @@ IDENTIFIERS
 	  UPDATE staging SET status = delete(status,'institution'), institution_ref = ref_record where id=line.id;
       END CASE;
   END IF;
-
+  
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
@@ -4090,8 +4057,10 @@ AS $$
 DECLARE
   prev_levels hstore default '';
   rec_id integer;
+  people_id integer;
   line RECORD;
   s_line RECORD;
+  people_line RECORD;
   staging_line staging;
   old_level int;
 BEGIN
@@ -4108,7 +4077,10 @@ BEGIN
       raise info 'Children with errors';
       continue;
     END IF;
-
+    -- Import identifiers whitch identification have been updated
+    INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
+    SELECT s.id, s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = line.id ;
+    DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = line.id) ;
     BEGIN
       --Import Specimen
 
@@ -4133,7 +4105,6 @@ BEGIN
 	    COALESCE(line.acquisition_date,'01/01/0001'), COALESCE(line.station_visible,true),  line.ig_ref
 	  );
 	  UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
-    UPDATE identifications set determination_status = null where referenced_relation ='specimens' and record_id = rec_id;
 	ELSE
 	  rec_id = line.spec_ref;
 	END IF;
@@ -4173,10 +4144,10 @@ BEGIN
             COALESCE(s_line.individual_stage,'undefined'), COALESCE(s_line.individual_social_status,'not applicable'),
             COALESCE(s_line.individual_rock_form,'not applicable'),
             COALESCE(s_line.individual_count_min,'1'), COALESCE(s_line.individual_count_max,'1')
-          );
+          );       
           UPDATE template_table_record_ref SET referenced_relation ='specimen_individuals' , record_id = rec_id where referenced_relation ='staging' and record_id = s_line.id;
+                  
           prev_levels := (prev_levels || ('individual' => rec_id::text));
-          UPDATE identifications set determination_status = null where referenced_relation ='specimen_individuals' and record_id = rec_id;
 
         ELSIF lower(s_line.level) in ('specimen part','tissue part','dna part') THEN /*** @TODO:CHECK THIS!!**/
           rec_id := nextval('specimen_parts_id_seq');
@@ -4202,12 +4173,19 @@ BEGIN
             COALESCE(s_line.part_count_min,1),  COALESCE(s_line.part_count_max,2)
           );
           UPDATE template_table_record_ref SET referenced_relation ='specimen_parts' , record_id = rec_id where referenced_relation ='staging' and record_id = s_line.id;
-          prev_levels := (prev_levels || (s_line.level => rec_id::text));
-          UPDATE identifications set determination_status = null where referenced_relation ='specimen_parts' and record_id = rec_id;
-          ALTER TABLE specimen_parts ENABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
-        END IF;
 
+          prev_levels := (prev_levels || (s_line.level => rec_id::text));
+
+          ALTER TABLE specimen_parts ENABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
+        END IF; 
       END LOOP;
+      -- Import staging people into catalogue people
+      FOR people_line IN SELECT * from staging_people WHERE referenced_relation in ('specimens','specimen_individuals','specimen_parts') 
+      LOOP     
+        INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
+        VALUES(people_line.id,people_line.referenced_relation, people_line.record_id, people_line.people_type, people_line.people_sub_type, people_line.order_by, people_line.people_ref) ;
+      END LOOP;
+      DELETE FROM staging_people WHERE referenced_relation in ('specimens','specimen_individuals','specimen_parts') ;
 
       DELETE from staging where path like '/' || line.id || '/%' OR  id = line.id;
     EXCEPTION WHEN unique_violation THEN
@@ -4224,6 +4202,35 @@ BEGIN
     UPDATE imports set state = 'finished', is_finished = true where id = req_import_ref;
   END IF;
   RETURN true;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION fct_upd_people_staging_fields() RETURNS TRIGGER
+AS $$
+DECLARE
+  import_id integer;
+BEGIN
+ IF get_setting('darwin.upd_people_ref') is null OR  get_setting('darwin.upd_people_ref') = '' THEN
+    PERFORM set_config('darwin.upd_people_ref', 'ok', true);
+    IF OLD.referenced_relation = 'staging' THEN
+      select s.import_ref INTO import_id FROM staging s, staging_people sp WHERE sp.id=OLD.id AND sp.record_id = s.id ;
+    ELSE
+      select s.import_ref INTO import_id FROM staging s, staging_people sp, identifications i WHERE sp.id=OLD.id 
+      AND sp.record_id = i.id AND i.record_id = s.id ;    
+    END IF;
+    
+    UPDATE staging_people SET people_ref = NEW.people_ref WHERE id IN (
+      SELECT sp.id from staging_people sp, identifications i, staging s WHERE formated_name = OLD.formated_name AND s.import_ref = import_id
+      AND i.record_id = s.id AND sp.referenced_relation = 'identifications' AND sp.record_id = i.id 
+      UNION
+      SELECT sp.id from staging_people sp, staging s WHERE formated_name = OLD.formated_name AND s.import_ref = import_id AND
+      sp.record_id = s.id AND sp.referenced_relation = 'staging' 
+    ); 
+    -- update status field, if all error people are corrected, statut 'people' or 'identifiers' will be removed
+    PERFORM fct_imp_checker_people(s.*) FROM staging s WHERE import_ref = import_id AND (status::hstore ? 'people' OR status::hstore ? 'identifiers')  ; 
+    PERFORM set_config('darwin.upd_imp_ref', NULL, true);
+  END IF;
+  RETURN NEW;     
 END;
 $$ LANGUAGE plpgsql;
 
