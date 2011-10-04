@@ -8,4 +8,3 @@ ALTER TABLE chronostratigraphy add constraint fct_chk_onceInPath_chronostratigra
 ALTER TABLE lithostratigraphy add constraint fct_chk_onceInPath_lithostratigraphy CHECK(fct_chk_onceInPath( COALESCE(path,'') || '/' || id));
 ALTER TABLE mineralogy add constraint fct_chk_onceInPath_mineralogy CHECK(fct_chk_onceInPath( COALESCE(path,'') || '/' || id));
 ALTER TABLE lithology add constraint fct_chk_onceInPath_lithology CHECK(fct_chk_onceInPath( COALESCE(path,'') || '/' || id));
-ALTER TABLE habitats add constraint fct_chk_onceInPath_habitats CHECK(fct_chk_onceInPath( COALESCE(path,'') || '/' || id));

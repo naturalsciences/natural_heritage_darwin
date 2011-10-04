@@ -1196,62 +1196,6 @@ comment on column lithology.status is 'Validitiy status: valid, invalid, in disc
 comment on column lithology.path is 'Hierarchy path (/ for root)';
 comment on column lithology.parent_ref is 'Id of parent - id field from table itself';
 
-create sequence habitats_id_seq;
-
-create table habitats
-       (
-        id integer not null default nextval('habitats_id_seq'),
-        code varchar not null,
-        code_indexed varchar not null default '/',
-        description varchar not null,
-        description_ts tsvector not null,
-        description_language_full_text full_text_language,
-        habitat_system varchar not null default 'eunis',
-	parent_ref integer,
-        path varchar not null default '/',
-        constraint pk_habitats primary key (id),
-	constraint fk_habitats_parent_ref foreign key (parent_ref) references habitats(id) on delete cascade,
-        constraint unq_habitats unique (path, code_indexed, habitat_system)
-       );
-comment on table habitats is 'Habitats classifications';
-comment on column habitats.id is 'Unique identifier of a habitat';
-comment on column habitats.code is 'Code given to this habitat in the classification encoded';
-comment on column habitats.code_indexed is 'Indexed form of code field';
-comment on column habitats.description is 'General description of the habitat';
-comment on column habitats.description_ts is 'Indexed form of description field ready to be used with to_tsvector full text search function';
-comment on column habitats.description_language_full_text is 'Language used to compose the description_ts tsvector field';
-comment on column habitats.habitat_system is 'System used to describe habitat encoded';
-comment on column habitats.parent_ref is 'Reference of parent habitat';
-comment on column habitats.path is 'Hierarchy path (/ for root)';
-create table multimedia_keywords
-       (
-        object_ref integer not null,
-        keyword varchar not null,
-        keyword_indexed varchar not null,
-        constraint unq_multimedia_keywords unique (object_ref, keyword_indexed),
-        constraint fk_multimedia_keywords_multimedia foreign key (object_ref) references multimedia(id) on delete cascade
-       );
-comment on table multimedia_keywords is 'List of keywords associated to a multimedia object - encoded in the keywords field on the interface';
-comment on column multimedia_keywords.object_ref is 'Reference of multimedia object concerned';
-comment on column multimedia_keywords.keyword is 'Keyword associated';
-comment on column multimedia_keywords.keyword_indexed is 'Indexed form of keyword field';
-create table soortenregister
-       (
-        taxa_ref integer not null default 0,
-        gtu_ref integer not null default 0,
-        habitat_ref integer not null default 0,
-        date_from date,
-        date_to date,
-        constraint fk_soortenregister_taxonomy foreign key (taxa_ref) references taxonomy(id) on delete cascade,
-        constraint fk_soortenregister_gtu foreign key (gtu_ref) references gtu(id) on delete cascade,
-        constraint fk_soortenregister_habitats foreign key (habitat_ref) references habitats(id) on delete cascade
-       );
-comment on table soortenregister is 'Species register table - Indicates the presence of a certain species in a certain habitat at a given place from time to time';
-comment on column soortenregister.taxa_ref is 'Reference of taxon concerned - id field of taxonomy table';
-comment on column soortenregister.gtu_ref is 'Reference of gtu concerned - id field of gtu table';
-comment on column soortenregister.habitat_ref is 'Reference of habitat concerned - id field of habitats table';
-comment on column soortenregister.date_from is 'From date association definition';
-comment on column soortenregister.date_to is 'To date association definition';
 
 create sequence igs_id_seq;
 
@@ -1278,25 +1222,25 @@ create table specimens
        (
         id integer not null default nextval('specimens_id_seq'),
         category varchar not null default 'physical',
-        collection_ref integer not null default 0,
-        expedition_ref integer not null default 0,
-        gtu_ref integer not null default 0,
-        taxon_ref integer not null default 0,
-        litho_ref integer not null default 0,
-        chrono_ref integer not null default 0,
-        lithology_ref integer not null default 0,
-        mineral_ref integer not null default 0,
-        host_taxon_ref integer not null default 0,
+        collection_ref integer not null,
+        expedition_ref integer,
+        gtu_ref integer,
+        taxon_ref integer,
+        litho_ref integer,
+        chrono_ref integer,
+        lithology_ref integer,
+        mineral_ref integer,
+        host_taxon_ref integer,
         host_specimen_ref integer,
         host_relationship varchar,
         acquisition_category varchar not null default '',
-        acquisition_date_mask integer not null default 0,
+        acquisition_date_mask integer not null,
         acquisition_date date not null default '01/01/0001',
         station_visible boolean not null default true,
         multimedia_visible boolean not null default true,
         ig_ref integer,
+
         constraint pk_specimens primary key (id),
-        constraint unq_specimens unique (collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref, host_taxon_ref, acquisition_category, acquisition_date, ig_ref),
         constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
         constraint fk_specimens_gtu foreign key (gtu_ref) references gtu(id),
         constraint fk_specimens_collections foreign key (collection_ref) references collections(id),
@@ -1309,6 +1253,9 @@ create table specimens
         constraint fk_specimens_host_specimen foreign key (host_specimen_ref) references specimens(id) on delete set null,
         constraint fk_specimens_igs foreign key (ig_ref) references igs(id)
        );
+
+CREATE UNIQUE INDEX unq_specimens ON specimens (collection_ref, COALESCE(expedition_ref,0), COALESCE(gtu_ref,0), COALESCE(taxon_ref,0), COALESCE(litho_ref,0), COALESCE(chrono_ref,0), COALESCE(lithology_ref,0), COALESCE(mineral_ref,0), COALESCE(host_taxon_ref,0), acquisition_category, acquisition_date, COALESCE(ig_ref,0));
+
 comment on table specimens is 'Specimens or batch of specimens stored in collection';
 comment on column specimens.id is 'Unique identifier of a specimen or batch of specimens';
 comment on column specimens.collection_ref is 'Reference of collection the specimen is grouped under - id field of collections table';
@@ -1621,6 +1568,7 @@ comment on table preferences is 'Table to handle users preferences';
 comment on column preferences.user_ref is 'The referenced user id';
 comment on column preferences.pref_key is 'The classification key of the preference. eg: color';
 comment on column preferences.pref_value is 'The value of the preference for this user eg: red';
+
 
 create sequence darwin_flat_id_seq;
 

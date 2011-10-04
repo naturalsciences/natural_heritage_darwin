@@ -19,9 +19,6 @@ CREATE TRIGGER trg_cpy_fullToIndex_expeditions BEFORE INSERT OR UPDATE
 	ON expeditions FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
-CREATE TRIGGER trg_cpy_fullToIndex_expeditions BEFORE INSERT OR UPDATE
-	ON habitats FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
 CREATE TRIGGER trg_cpy_fullToIndex_identifications BEFORE INSERT OR UPDATE
 	ON identifications FOR EACH ROW
@@ -45,10 +42,6 @@ CREATE TRIGGER trg_cpy_fullToIndex_multimedia BEFORE INSERT OR UPDATE
 
 CREATE TRIGGER trg_cpy_fullToIndex_codes BEFORE INSERT OR UPDATE
 	ON codes FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_fullToIndex();
-
-CREATE TRIGGER trg_cpy_fullToIndex_multimediakeywords BEFORE INSERT OR UPDATE
-	ON multimedia_keywords FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
 CREATE TRIGGER trg_cpy_fullToIndex_taggroups BEFORE INSERT OR UPDATE
@@ -172,14 +165,6 @@ CREATE TRIGGER trg_clr_referenceRecord_lithology AFTER DELETE
 	ON lithology FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_habitats AFTER DELETE
-	ON habitats FOR EACH ROW
-	EXECUTE PROCEDURE fct_clear_referencedRecord();
-
-CREATE TRIGGER trg_clr_referenceRecord_soortenregister AFTER DELETE
-	ON soortenregister FOR EACH ROW
-	EXECUTE PROCEDURE fct_clear_referencedRecord();
-
 CREATE TRIGGER trg_clr_referenceRecord_specimens AFTER DELETE
 	ON specimens FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
@@ -225,10 +210,6 @@ CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_cpy_toFullText_expeditions BEFORE INSERT OR UPDATE
   ON expeditions FOR EACH ROW
   EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
-
-CREATE TRIGGER trg_cpy_toFullText_habitats BEFORE INSERT OR UPDATE
-  ON habitats FOR EACH ROW
-  EXECUTE PROCEDURE tsvector_update_trigger(description_ts, 'pg_catalog.simple', description );
 
 CREATE TRIGGER trg_cpy_toFullText_vernacularnames BEFORE INSERT OR UPDATE
   ON vernacular_names FOR EACH ROW
@@ -311,10 +292,6 @@ CREATE TRIGGER trg_cpy_path_gtu BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_cpy_path_specimen_parts BEFORE INSERT OR UPDATE
         ON specimen_parts FOR EACH ROW
         EXECUTE PROCEDURE fct_cpy_path();
-
-CREATE TRIGGER trg_cpy_path_habitats BEFORE INSERT OR UPDATE
-	ON habitats FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_path();
 
 CREATE TRIGGER trg_cpy_path_staging BEFORE INSERT OR UPDATE
         ON staging FOR EACH ROW
@@ -474,10 +451,6 @@ CREATE TRIGGER trg_trk_log_table_collection_maintenance AFTER INSERT OR UPDATE O
         ON collection_maintenance FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
-CREATE TRIGGER trg_trk_log_table_soortenregister AFTER INSERT OR UPDATE OR DELETE
-        ON soortenregister FOR EACH ROW
-        EXECUTE PROCEDURE fct_trk_log_table();
-
 CREATE TRIGGER trg_trk_log_table_igs AFTER INSERT OR UPDATE OR DELETE
         ON igs FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
@@ -520,10 +493,6 @@ CREATE TRIGGER trg_trk_log_table_mineralogy AFTER INSERT OR UPDATE OR DELETE
 
 CREATE TRIGGER trg_trk_log_table_lithology AFTER INSERT OR UPDATE OR DELETE
         ON lithology FOR EACH ROW
-        EXECUTE PROCEDURE fct_trk_log_table();
-
-CREATE TRIGGER trg_trk_log_table_habitats AFTER INSERT OR UPDATE OR DELETE
-        ON habitats FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
 CREATE TRIGGER trg_trk_log_table_people AFTER INSERT OR UPDATE OR DELETE
@@ -584,10 +553,6 @@ CREATE TRIGGER trg_words_ts_cpy_users BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_words_ts_cpy_expeditions BEFORE INSERT OR UPDATE
 	ON expeditions FOR EACH ROW
 	EXECUTE PROCEDURE fct_trg_word();
-/*
-CREATE TRIGGER trg_words_ts_cpy_habitats BEFORE INSERT OR UPDATE
-	ON habitats FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();*/
 
 CREATE TRIGGER trg_words_ts_cpy_mineralogy BEFORE INSERT OR UPDATE
 	ON mineralogy FOR EACH ROW
