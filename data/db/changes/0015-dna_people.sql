@@ -26,5 +26,5 @@ CREATE INDEX CONCURRENTLY idx_staging_people_record ON staging_people(record_id,
 
 CREATE TRIGGER trg_upd_people_ref_staging_people AFTER UPDATE
         ON staging_people FOR EACH ROW
-        EXECUTE PROCEDURE fct_upd_people_staging_fields();    
+        EXECUTE PROCEDURE fct_upd_people_staging_fields();
         

@@ -4041,10 +4041,7 @@ BEGIN
       raise info 'Children with errors';
       continue;
     END IF;
-    -- Import identifiers whitch identification have been updated
-    INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
-    SELECT s.id, s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = line.id ;
-    DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = line.id) ;
+
     BEGIN
       --Import Specimen
 
@@ -4069,6 +4066,9 @@ BEGIN
 	    COALESCE(line.acquisition_date,'01/01/0001'), COALESCE(line.station_visible,true),  line.ig_ref
 	  );
 	  UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
+    -- Import identifiers whitch identification have been updated to specimen
+    INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
+    SELECT s.id, s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;	  
 	ELSE
 	  rec_id = line.spec_ref;
 	END IF;
@@ -4110,7 +4110,9 @@ BEGIN
             COALESCE(s_line.individual_count_min,'1'), COALESCE(s_line.individual_count_max,'1')
           );       
           UPDATE template_table_record_ref SET referenced_relation ='specimen_individuals' , record_id = rec_id where referenced_relation ='staging' and record_id = s_line.id;
-                  
+          -- Import identifiers whitch identification have been updated to specimen
+          INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
+          SELECT s.id, s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimen_individuals' ;	                    
           prev_levels := (prev_levels || ('individual' => rec_id::text));
 
         ELSIF lower(s_line.level) in ('specimen part','tissue part','dna part') THEN /*** @TODO:CHECK THIS!!**/
@@ -4158,6 +4160,8 @@ BEGIN
       UPDATE staging SET to_import=false where path like '/' || line.id || '/%';
 
     END;
+  -- remove old obsolete identifiers
+  DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = line.id) ;    
   END LOOP;
 
   IF EXISTS( select id FROM  staging WHERE import_ref = req_import_ref) THEN
