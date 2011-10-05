@@ -33,10 +33,6 @@ INSERT INTO expeditions (id, name ) VALUES (1,'ÉLo Wÿorléds');
 SELECT ok( 'elowyorleds' = (SELECT name_indexed FROM expeditions WHERE id=1),'FulltoIndex on expeditions');
 SELECT ok( to_tsvector('simple', 'ÉLo Wÿorléds') = (SELECT name_ts FROM expeditions WHERE id=1),'To TextSearch expeditions');
 
-INSERT INTO habitats (id, code, description) VALUES (1,'Lé Hâbitôt','Lé Hâbitôt');
-SELECT ok( 'lehabitot' = (SELECT code_indexed FROM habitats WHERE id=1),'FulltoIndex on habitats');
-SELECT ok ( to_tsvector('simple', 'Lé Hâbitôt') = (SELECT description_ts FROM habitats WHERE id=1),'full text on habitats');
-
 INSERT INTO identifications (referenced_relation, record_id, notion_concerned, value_defined) VALUES ('taxonomy', 0, 'Expertise', 'Jé #spéè!');
 SELECT ok( 'jespee' = (SELECT value_defined_indexed FROM identifications WHERE record_id=0),'FulltoIndex on identifications');
 
@@ -55,9 +51,6 @@ SELECT ok( to_tsvector('simple', 'Lé bou/ caiéoui') = (SELECT name_indexed FRO
 INSERT INTO multimedia (id, title) VALUES (1, 'À L''énorme Tické!');
 SELECT ok( 'alenormeticke' = (SELECT title_indexed FROM multimedia WHERE id=1),'FulltoIndex on multimedia');
 SELECT ok( to_tsvector('simple', 'À L''énorme Tické!') = (SELECT descriptive_ts FROM multimedia WHERE id=1),'fulltext on multimedia');
-
-INSERT INTO multimedia_keywords (object_ref,keyword) VALUES (1,'La ''mèr'' Nwàre') ;
-SELECT ok( 'lamernware' = (SELECT keyword_indexed FROM multimedia_keywords WHERE object_ref=1),'FulltoIndex on multimedia_keywords');
 
 INSERT INTO codes (referenced_relation, record_id, code_prefix, code) VALUES ('multimedia',1, '12é-MOL7385',6847);
 SELECT ok( '12emol73856847' = (SELECT full_code_order_by FROM codes WHERE record_id = 1 AND referenced_relation = 'multimedia' ),'FulltoIndex on multimedia_codes');

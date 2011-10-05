@@ -2000,96 +2000,120 @@ $$;
 CREATE OR REPLACE FUNCTION fct_update_specimen_flat() RETURNS TRIGGER
 AS $$
 DECLARE
+  ROLD specimens%ROWTYPE;
+  RNEW specimens%ROWTYPE;
 BEGIN
+  IF TG_OP = 'INSERT' THEN
+    RNEW = NEW;
+  ELSE
+    RNEW = NEW;
+    ROLD = OLD;
+  END IF;
 
-  SELECT collection_type, code, name, is_public, parent_ref, path
-      INTO NEW.collection_type, NEW.collection_code, NEW.collection_name, NEW.collection_is_public,
-        NEW.collection_parent_ref, NEW.collection_path
-      FROM collections
-      WHERE id = NEW.collection_ref;
+  IF ROLD.collection_ref IS DISTINCT FROM RNEW.collection_ref THEN
+    SELECT collection_type, code, name, is_public, parent_ref, path
+        INTO NEW.collection_type, NEW.collection_code, NEW.collection_name, NEW.collection_is_public,
+          NEW.collection_parent_ref, NEW.collection_path
+        FROM collections c
+        WHERE c.id = NEW.collection_ref;
+  END IF;
 
-  SELECT  name , name_ts , name_indexed
-      INTO NEW.expedition_name, NEW.expedition_name_ts, NEW.expedition_name_indexed
-      FROM expeditions
-      WHERE id = NEW.expedition_ref;
-
+  IF ROLD.expedition_ref IS DISTINCT FROM RNEW.expedition_ref THEN
+    SELECT  name , name_ts , name_indexed
+        INTO NEW.expedition_name, NEW.expedition_name_ts, NEW.expedition_name_indexed
+        FROM expeditions
+        WHERE id = NEW.expedition_ref;
+  END IF;
   
-  SELECT gtu.code, gtu.parent_ref, gtu.path, gtu.location, gtu.gtu_from_date_mask, gtu.gtu_from_date,
-        gtu.gtu_to_date_mask, gtu.gtu_to_date, gtu.tag_values_indexed, taggr.tag_value
-     INTO NEW.gtu_code, NEW.gtu_parent_ref, NEW.gtu_path, NEW.gtu_location,
-          NEW.gtu_from_date_mask, NEW.gtu_from_date, NEW.gtu_to_date_mask, NEW.gtu_to_date,
-          NEW.gtu_tag_values_indexed, NEW.gtu_country_tag_value, NEW.gtu_country_tag_indexed
-     FROM gtu LEFT JOIN tag_groups taggr 
-      ON id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'
-     WHERE id = NEW.gtu_ref; 
+  IF ROLD.gtu_ref IS DISTINCT FROM RNEW.gtu_ref THEN
+    SELECT code, parent_ref, path, location, gtu_from_date_mask, gtu_from_date,
+          gtu_to_date_mask, gtu_to_date, tag_values_indexed, taggr.tag_value
+      INTO NEW.gtu_code, NEW.gtu_parent_ref, NEW.gtu_path, NEW.gtu_location,
+            NEW.gtu_from_date_mask, NEW.gtu_from_date, NEW.gtu_to_date_mask, NEW.gtu_to_date,
+            NEW.gtu_tag_values_indexed, NEW.gtu_country_tag_value, NEW.gtu_country_tag_indexed
+      FROM gtu g LEFT JOIN tag_groups taggr 
+        ON g.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'
+      WHERE g.id = NEW.gtu_ref; 
+  END IF;
+
+  IF ROLD.taxon_ref IS DISTINCT FROM RNEW.taxon_ref THEN
+    SELECT name, name_indexed, name_order_by, level_ref, taxon_level.level_name, status ,
+          path, parent_ref, extinct
+      INTO 
+          NEW.taxon_name, NEW.taxon_name_indexed, NEW.taxon_name_order_by, NEW.taxon_level_ref,
+          NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_path, NEW.taxon_parent_ref, NEW.taxon_extinct
+      FROM 
+        taxonomy t INNER JOIN catalogue_levels taxon_level ON level_ref = taxon_level.id     
+        WHERE t.id = NEW.taxon_ref;
+  END IF;
 
 
-  SELECT name, name_indexed, name_order_by, level_ref, taxon_level.level_name, status ,
-        path, parent_ref, extinct
-     INTO 
-         NEW.taxon_ref, NEW.taxon_name, NEW.taxon_name_indexed, NEW.taxon_name_order_by, NEW.taxon_level_ref,
-         NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_path, NEW.taxon_parent_ref, NEW.taxon_extinct
-     FROM 
-       taxonomy INNER JOIN catalogue_levels taxon_level ON level_ref = taxon_level.id     
-      WHERE id = NEW.taxon_ref;
+  IF ROLD.chrono_ref IS DISTINCT FROM RNEW.chrono_ref THEN
+    SELECT name, name_indexed , name_order_by, level_ref, 
+        chrono_level.level_name, status, local_naming, color, path, parent_ref
+      INTO 
+          NEW.chrono_name, NEW.chrono_name_indexed, NEW.chrono_name_order_by, NEW.chrono_level_ref, NEW.chrono_level_name,
+          NEW.chrono_status, NEW.chrono_local, NEW.chrono_color, NEW.chrono_path, NEW.chrono_parent_ref
+      FROM 
+        chronostratigraphy c INNER JOIN catalogue_levels chrono_level ON level_ref = chrono_level.id
+        WHERE c.id = NEW.chrono_ref;
+  END IF;
+
+  IF ROLD.litho_ref IS DISTINCT FROM RNEW.litho_ref THEN
+
+    SELECT name, name_indexed, name_order_by, level_ref, litho_level.level_name,
+          status, local_naming, color, path, parent_ref
+      INTO 
+          NEW.litho_name, NEW.litho_name_indexed, NEW.litho_name_order_by, NEW.litho_level_ref, NEW.litho_level_name, NEW.litho_status,
+          NEW.litho_local,  NEW.litho_color, NEW.litho_path,  NEW.litho_parent_ref
+      FROM 
+        lithostratigraphy l INNER JOIN catalogue_levels litho_level ON level_ref = litho_level.id
+        WHERE l.id = NEW.litho_ref;
+  END IF;
+
+  IF ROLD.lithology_ref IS DISTINCT FROM RNEW.lithology_ref THEN
+    SELECT name, name_indexed, name_order_by, level_ref, lithology_level.level_name, status,
+          local_naming, color, path, parent_ref
+      INTO 
+          NEW.lithology_name, NEW.lithology_name_indexed, NEW.lithology_name_order_by, NEW.lithology_level_ref, NEW.lithology_level_name,
+          NEW.lithology_status, NEW.lithology_local, NEW.lithology_color, NEW.lithology_path, NEW.lithology_parent_ref
+      FROM 
+        lithology l INNER JOIN catalogue_levels lithology_level ON level_ref = lithology_level.id
+        WHERE l.id = NEW.lithology_ref;
+  END IF;
 
 
-  SELECT name, name_indexed , name_order_by, level_ref, 
-      chrono_level.level_name, status, local_naming, color, path, parent_ref
-     INTO 
-        NEW.chrono_ref, NEW.chrono_name, NEW.chrono_name_indexed, NEW.chrono_name_order_by, NEW.chrono_level_ref, NEW.chrono_level_name,
-        NEW.chrono_status, NEW.chrono_local, NEW.chrono_color, NEW.chrono_path, NEW.chrono_parent_ref
-     FROM 
-       chronostratigraphy INNER JOIN catalogue_levels chrono_level ON level_ref = chrono_level.id
-      WHERE id = NEW.chrono_ref;
-                
-
-  SELECT name, name_indexed, name_order_by, level_ref, litho_level.level_name,
-        status, local_naming, color, path, parent_ref
-     INTO 
-         NEW.litho_name, NEW.litho_name_indexed, NEW.litho_name_order_by, NEW.litho_level_ref, NEW.litho_level_name, NEW.litho_status,
-         NEW.litho_local,  NEW.litho_color, NEW.litho_path,  NEW.litho_parent_ref
-     FROM 
-       lithostratigraphy INNER JOIN catalogue_levels litho_level ON level_ref = litho_level.id
-      WHERE id = NEW.litho_ref;
+  IF ROLD.mineral_ref IS DISTINCT FROM RNEW.mineral_ref THEN
+    SELECT name, name_indexed, name_order_by, level_ref, mineral_level.level_name, status,
+          local_naming, color, path, parent_ref
+      INTO 
+          NEW.mineral_name, NEW.mineral_name_indexed, NEW.mineral_name_order_by, NEW.mineral_level_ref, NEW.mineral_level_name, NEW.mineral_status,
+          NEW.mineral_local, NEW.mineral_color, NEW.mineral_path, NEW.mineral_parent_ref
+      FROM 
+        mineralogy m INNER JOIN catalogue_levels mineral_level ON level_ref = mineral_level.id
+        WHERE m.id = NEW.mineral_ref;
+  END IF;
 
 
-  SELECT name, name_indexed, name_order_by, level_ref, lithology_level.level_name, status,
-        local_naming, color, path, parent_ref
-     INTO 
-         NEW.lithology_name, NEW.lithology_name_indexed, NEW.lithology_name_order_by, NEW.lithology_level_ref, NEW.lithology_level_name,
-         NEW.lithology_status, NEW.lithology_local, NEW.lithology_color, NEW.lithology_path, NEW.lithology_parent_ref
-     FROM 
-       lithology INNER JOIN catalogue_levels lithology_level ON level_ref = lithology_level.id
-      WHERE id = NEW.lithology_ref;
+  IF ROLD.host_taxon_ref IS DISTINCT FROM RNEW.host_taxon_ref THEN
+    SELECT name, name_indexed, name_order_by, level_ref, taxon_level.level_name, status ,
+          path, parent_ref, extinct
+      INTO 
+          NEW.host_taxon_name, NEW.host_taxon_name_indexed, NEW.host_taxon_name_order_by, NEW.host_taxon_level_ref,
+          NEW.host_taxon_level_name, NEW.host_taxon_status, NEW.host_taxon_path, NEW.host_taxon_parent_ref, NEW.host_taxon_extinct
+      FROM 
+        taxonomy t INNER JOIN catalogue_levels taxon_level ON level_ref = taxon_level.id     
+        WHERE t.id = NEW.host_taxon_ref;
+  END IF;
 
-
-  SELECT name, name_indexed, name_order_by, level_ref, mineral_level.level_name, status,
-        local_naming, color, path, parent_ref
-     INTO 
-         NEW.mineral_name, NEW.mineral_name_indexed, NEW.mineral_name_order_by, NEW.mineral_level_ref, NEW.mineral_level_name, NEW.mineral_status,
-         NEW.mineral_local, NEW.mineral_color, NEW.mineral_path, NEW.mineral_parent_ref
-     FROM 
-       mineralogy INNER JOIN catalogue_levels mineral_level ON level_ref = mineral_level.id
-      WHERE id = NEW.mineral_ref;
-
-
-  SELECT name, name_indexed, name_order_by, level_ref, taxon_level.level_name, status ,
-        path, parent_ref, extinct
-     INTO 
-         NEW.host_taxon_ref, NEW.host_taxon_name, NEW.host_taxon_name_indexed, NEW.host_taxon_name_order_by, NEW.host_taxon_level_ref,
-         NEW.host_taxon_level_name, NEW.host_taxon_status, NEW.host_taxon_path, NEW.host_taxon_parent_ref, NEW.host_taxon_extinct
-     FROM 
-       taxonomy INNER JOIN catalogue_levels taxon_level ON level_ref = taxon_level.id     
-      WHERE id = NEW.host_taxon_ref;
-
-  SELECT ig_num, ig_date_mask, ig_date, ig_num_indexed
-    INTO 
-         NEW.ig_num, NEW.ig_date_mask, NEW.ig_date, NEW.ig_num_indexed
-    FROM 
-       igs
-      WHERE id = NEW.ig_ref;
-
+  IF ROLD.ig_ref IS DISTINCT FROM RNEW.ig_ref THEN
+    SELECT ig_num, ig_date_mask, ig_date, ig_num_indexed
+      INTO 
+          NEW.ig_num, NEW.ig_date_mask, NEW.ig_date, NEW.ig_num_indexed
+      FROM 
+        igs
+        WHERE id = NEW.ig_ref;
+  END IF;
 
   RETURN NEW;
 END;
@@ -2236,42 +2260,51 @@ BEGIN
 
   IF TG_TABLE_NAME = 'specimens' THEN
     IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-      PERFORM true WHERE NEW.collection_ref::integer IN (SELECT * FROM fct_search_authorized_encoding_collections(user_id));
-      IF NOT FOUND THEN
+      IF NOT EXISTS (SELECT 1 FROM fct_search_authorized_encoding_collections (user_id) as r WHERE r = NEW.collection_ref) THEN
         RAISE EXCEPTION 'You don''t have the rights to insert into or update a specimen in this collection';
       END IF;
     ELSE /*Delete*/
       PERFORM true WHERE OLD.collection_ref::integer IN (SELECT * FROM fct_search_authorized_encoding_collections(user_id));
-      IF NOT FOUND THEN
+      IF NOT EXISTS (SELECT 1 FROM fct_search_authorized_encoding_collections (user_id) as r WHERE r = OLD.collection_ref) THEN
         RAISE EXCEPTION 'You don''t have the rights to delete a specimen from this collection';
       END IF;
     END IF;
   ELSIF TG_TABLE_NAME = 'specimen_individuals' THEN
     IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
       PERFORM true WHERE (SELECT collection_ref::integer FROM darwin_flat WHERE spec_ref = NEW.specimen_ref LIMIT 1) IN (SELECT * FROM fct_search_authorized_encoding_collections(user_id));
-      IF NOT FOUND THEN
+      IF NOT EXISTS(SELECT 1 from  specimens s
+          INNER JOIN fct_search_authorized_encoding_collections (user_id) as r
+            ON s.collection_ref = r
+            WHERE s.id = NEW.specimen_ref) THEN
         RAISE EXCEPTION 'You don''t have the rights to insert into or update an individual in this collection';
       END IF;
     ELSE /*Delete*/
-      SELECT collection_ref::integer INTO col_ref FROM darwin_flat WHERE spec_ref = OLD.specimen_ref LIMIT 1;
-      IF FOUND THEN
-        PERFORM true WHERE (SELECT collection_ref::integer FROM darwin_flat WHERE spec_ref = OLD.specimen_ref LIMIT 1) IN (SELECT * FROM fct_search_authorized_encoding_collections(user_id));
-        IF NOT FOUND THEN
+      IF EXISTS(SELECT 1 FROM specimens where id = OLD.specimen_ref) THEN
+        IF NOT EXISTS(SELECT 1 from  specimens s
+          INNER JOIN fct_search_authorized_encoding_collections (user_id) as r
+            ON s.collection_ref = r
+            WHERE s.id = OLD.specimen_ref) THEN
           RAISE EXCEPTION 'You don''t have the rights to delete an individual from this collection';
         END IF;
       END IF;
     END IF;
   ELSIF TG_TABLE_NAME = 'specimen_parts' THEN
     IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-      PERFORM true WHERE (SELECT collection_ref::integer FROM darwin_flat WHERE individual_ref = NEW.specimen_individual_ref LIMIT 1) IN (SELECT * FROM fct_search_authorized_encoding_collections(user_id));
-      IF NOT FOUND THEN
+      IF NOT EXISTS(SELECT 1 from  specimens s
+          INNER JOIN specimen_individuals i on s.id = i.specimen_ref
+          INNER JOIN fct_search_authorized_encoding_collections (user_id) as r
+            ON s.collection_ref = r
+            WHERE i.id = NEW.specimen_individual_ref) THEN
+
         RAISE EXCEPTION 'You don''t have the rights to insert into or update a part in this collection';
       END IF;
     ELSE /*Delete*/
-      SELECT collection_ref::integer INTO col_ref FROM darwin_flat WHERE individual_ref = OLD.specimen_individual_ref LIMIT 1;
-      IF FOUND THEN
-        PERFORM true WHERE col_ref IN (SELECT * FROM fct_search_authorized_encoding_collections(user_id));
-        IF NOT FOUND THEN
+      IF EXISTS(SELECT 1 FROM specimen_individuals where id = OLD.specimen_individual_ref) THEN
+        IF NOT EXISTS(SELECT 1 from  specimens s
+          INNER JOIN specimen_individuals i on s.id = i.specimen_ref
+          INNER JOIN fct_search_authorized_encoding_collections (user_id) as r
+            ON s.collection_ref = r
+            WHERE i.id = NEW.specimen_individual_ref) THEN
           RAISE EXCEPTION 'You don''t have the rights to delete a part from this collection';
         END IF;
       END IF;
