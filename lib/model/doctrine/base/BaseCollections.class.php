@@ -28,10 +28,6 @@
  * @property Doctrine_Collection $Collections
  * @property Doctrine_Collection $CollectionsRights
  * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimenSearch
- * @property Doctrine_Collection $IndividualSearch
- * @property Doctrine_Collection $PartSearch
- * @property Doctrine_Collection $IgsSearch
  * @property Doctrine_Collection $Imports
  * 
  * @method integer             getId()                       Returns the current record's "id" value
@@ -57,10 +53,6 @@
  * @method Doctrine_Collection getCollections()              Returns the current record's "Collections" collection
  * @method Doctrine_Collection getCollectionsRights()        Returns the current record's "CollectionsRights" collection
  * @method Doctrine_Collection getSpecimens()                Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimenSearch()           Returns the current record's "SpecimenSearch" collection
- * @method Doctrine_Collection getIndividualSearch()         Returns the current record's "IndividualSearch" collection
- * @method Doctrine_Collection getPartSearch()               Returns the current record's "PartSearch" collection
- * @method Doctrine_Collection getIgsSearch()                Returns the current record's "IgsSearch" collection
  * @method Doctrine_Collection getImports()                  Returns the current record's "Imports" collection
  * @method Collections         setId()                       Sets the current record's "id" value
  * @method Collections         setCollectionType()           Sets the current record's "collection_type" value
@@ -85,10 +77,6 @@
  * @method Collections         setCollections()              Sets the current record's "Collections" collection
  * @method Collections         setCollectionsRights()        Sets the current record's "CollectionsRights" collection
  * @method Collections         setSpecimens()                Sets the current record's "Specimens" collection
- * @method Collections         setSpecimenSearch()           Sets the current record's "SpecimenSearch" collection
- * @method Collections         setIndividualSearch()         Sets the current record's "IndividualSearch" collection
- * @method Collections         setPartSearch()               Sets the current record's "PartSearch" collection
- * @method Collections         setIgsSearch()                Sets the current record's "IgsSearch" collection
  * @method Collections         setImports()                  Sets the current record's "Imports" collection
  * 
  * @package    darwin
@@ -202,22 +190,6 @@ abstract class BaseCollections extends sfDoctrineRecord
              'foreign' => 'collection_ref'));
 
         $this->hasMany('Specimens', array(
-             'local' => 'id',
-             'foreign' => 'collection_ref'));
-
-        $this->hasMany('SpecimenSearch', array(
-             'local' => 'id',
-             'foreign' => 'collection_ref'));
-
-        $this->hasMany('IndividualSearch', array(
-             'local' => 'id',
-             'foreign' => 'collection_ref'));
-
-        $this->hasMany('PartSearch', array(
-             'local' => 'id',
-             'foreign' => 'collection_ref'));
-
-        $this->hasMany('IgsSearch', array(
              'local' => 'id',
              'foreign' => 'collection_ref'));
 

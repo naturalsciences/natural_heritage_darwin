@@ -15,10 +15,6 @@
  * @property integer $expedition_to_date_mask
  * @property string $expedition_to_date
  * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimenSearch
- * @property Doctrine_Collection $IndividualSearch
- * @property Doctrine_Collection $PartSearch
- * @property Doctrine_Collection $IgsSearch
  * 
  * @method integer             getId()                        Returns the current record's "id" value
  * @method string              getName()                      Returns the current record's "name" value
@@ -30,10 +26,6 @@
  * @method integer             getExpeditionToDateMask()      Returns the current record's "expedition_to_date_mask" value
  * @method string              getExpeditionToDate()          Returns the current record's "expedition_to_date" value
  * @method Doctrine_Collection getSpecimens()                 Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimenSearch()            Returns the current record's "SpecimenSearch" collection
- * @method Doctrine_Collection getIndividualSearch()          Returns the current record's "IndividualSearch" collection
- * @method Doctrine_Collection getPartSearch()                Returns the current record's "PartSearch" collection
- * @method Doctrine_Collection getIgsSearch()                 Returns the current record's "IgsSearch" collection
  * @method Expeditions         setId()                        Sets the current record's "id" value
  * @method Expeditions         setName()                      Sets the current record's "name" value
  * @method Expeditions         setNameTs()                    Sets the current record's "name_ts" value
@@ -44,10 +36,6 @@
  * @method Expeditions         setExpeditionToDateMask()      Sets the current record's "expedition_to_date_mask" value
  * @method Expeditions         setExpeditionToDate()          Sets the current record's "expedition_to_date" value
  * @method Expeditions         setSpecimens()                 Sets the current record's "Specimens" collection
- * @method Expeditions         setSpecimenSearch()            Sets the current record's "SpecimenSearch" collection
- * @method Expeditions         setIndividualSearch()          Sets the current record's "IndividualSearch" collection
- * @method Expeditions         setPartSearch()                Sets the current record's "PartSearch" collection
- * @method Expeditions         setIgsSearch()                 Sets the current record's "IgsSearch" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -101,22 +89,6 @@ abstract class BaseExpeditions extends sfDoctrineRecord
     {
         parent::setUp();
         $this->hasMany('Specimens', array(
-             'local' => 'id',
-             'foreign' => 'expedition_ref'));
-
-        $this->hasMany('SpecimenSearch', array(
-             'local' => 'id',
-             'foreign' => 'expedition_ref'));
-
-        $this->hasMany('IndividualSearch', array(
-             'local' => 'id',
-             'foreign' => 'expedition_ref'));
-
-        $this->hasMany('PartSearch', array(
-             'local' => 'id',
-             'foreign' => 'expedition_ref'));
-
-        $this->hasMany('IgsSearch', array(
              'local' => 'id',
              'foreign' => 'expedition_ref'));
     }
