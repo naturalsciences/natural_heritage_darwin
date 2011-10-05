@@ -1,3 +1,4 @@
+SET search_path TO "$user",darwin2,public;
 
 DROP TABLE IF EXISTS public.darwin_flat;
 DROP TABLE IF EXISTS public.mineralogy;
@@ -75,6 +76,7 @@ create sequence public.flat_abcd_id_seq;
 
 CREATE TABLE public.flat_abcd as 
 (
+  SELECT 
   nextval('public.flat_abcd_id_seq') as id,
   f.id as flat_ref,
   
@@ -181,8 +183,9 @@ CREATE TABLE public.gtu_properties as
     property_unit,
     CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END ,
     CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END,
-    property_type,
-    property_sub_type
+    property_type  || ' / ' || property_sub_type,
+    gtu.id ,
+    property_qualifier
 );
 
 ALTER TABLE public.gtu_properties ADD CONSTRAINT pk_gtu_properties PRIMARY KEY (id);
@@ -203,8 +206,6 @@ CREATE TABLE public.gtu_place as
   WHERE sub_group_type != 'country'
 );
 
-
-
 CREATE SEQUENCE public.collectors_abcd_id_seq;
 
 CREATE TABLE public.collectors as
@@ -220,7 +221,6 @@ CREATE TABLE public.collectors as
     c.people_type = 'collector'
     AND exists (select 1 from darwin2.people p where p.id = c.people_ref and is_physical = true)
 );
-
 
 CREATE SEQUENCE public.collectors_institution_abcd_id_seq;
 
@@ -255,7 +255,6 @@ CREATE TABLE public.donators as
     c.people_type = 'donator'
     AND exists (select 1 from darwin2.people p where p.id = c.people_ref and is_physical = true)
 );
-
 
 CREATE SEQUENCE public.donators_institution_abcd_id_seq;
 
@@ -300,17 +299,17 @@ CREATE TABLE public.taxon_identified as
     nextval('public.taxon_identified_id_seq') as id,
     i.id as identification_ref,
     c.value_defined as taxon_name,
-    CASE WHEN c.value_defined == f.taxon_name THEN f.taxon_ref ELSE null::integer END as taxon_ref,
-    CASE WHEN c.value_defined == f.taxon_name THEN f.taxon_parent_ref ELSE null::integer END as taxon_parent_ref
+    CASE WHEN c.value_defined = f.taxon_name THEN f.taxon_ref ELSE null::integer END as taxon_ref,
+    CASE WHEN c.value_defined = f.taxon_name THEN f.taxon_parent_ref ELSE null::integer END as taxon_parent_ref
   FROM 
-    darwin2.identifications_abdc i
+    public.identifications_abdc i
     INNER JOIN darwin2.identifications as c ON i.old_identification_id = c.id
-    INNER JOIN darwin2.darwin_flat f ON  f.id = i.flat_abcd
+    INNER JOIN darwin2.darwin_flat f ON  f.id = i.flat_id
     WHERE 
       c.notion_concerned = 'taxonomy'
 );
 
-insert into identifications_abdc 
+insert into public.identifications_abdc 
 (
     id,
     flat_id,
@@ -326,11 +325,11 @@ insert into identifications_abdc
     '' as determination_status,
     true as is_current
     FROM  darwin2.darwin_flat  f
-    WHERE NOT EXISTS( SELECT 1 FROM darwin2.identifications_abdc i WHERE taxon_ref is not null and i.flat_id = f.id)
+    WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i WHERE taxon_ref is not null and i.flat_id = f.id)
 );
 
 
-insert into taxon_identified
+insert into public.taxon_identified
 (
     id,
     identification_ref,
@@ -345,7 +344,7 @@ insert into taxon_identified
     f.taxon_name as taxon_name,
     f.taxon_ref as taxon_ref,
     f.taxon_parent_ref as taxon_parent_ref
-    FROM  darwin2.identifications_abdc i
+    FROM  public.identifications_abdc i
     INNER JOIN darwin2.darwin_flat  f on i.flat_id = f.id
 
     WHERE i.is_current = true
@@ -353,9 +352,16 @@ insert into taxon_identified
 );
 
 
-ALTER COLUMN taxonomy.parent_ref DROP NOT NULL;
+ALTER TABLE darwin2.taxonomy ALTER COLUMN parent_ref DROP NOT NULL;
+ALTER TABLE darwin2.darwin_flat ALTER COLUMN taxon_parent_ref DROP NOT NULL;
+ALTER TABLE darwin2.darwin_flat ALTER COLUMN host_taxon_parent_ref DROP NOT NULL;
+
+SET SESSION session_replication_role = replica;  
 
 UPDATE darwin2.taxonomy SET parent_ref = NULL WHERE parent_ref = 0;
+UPDATE darwin2.darwin_flat SET taxon_parent_ref = NULL WHERE taxon_parent_ref = 0;
+
+SET SESSION session_replication_role = origin;  
 
 CREATE SEQUENCE public.bota_taxa_keywords_id_seq;
 
@@ -379,7 +385,7 @@ CREATE TABLE public.bota_taxa_keywords AS
   (SELECT keyword FROM darwin2.classification_keywords where 
         referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='InfraspecificEpithet' LIMIT 1) as InfraspecificEpithet
 
-  FROM darwin2.taxon_identified ti
+  FROM public.taxon_identified ti
   INNER JOIN darwin2.taxonomy t on t.id = ti.taxon_ref
   
   WHERE
@@ -410,7 +416,7 @@ CREATE TABLE public.zoo_taxa_keywords AS
   (SELECT keyword FROM darwin2.classification_keywords where 
         referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='Subgenus' LIMIT 1) as Subgenus
 
-  FROM darwin2.taxon_identified ti
+  FROM public.taxon_identified ti
   INNER JOIN darwin2.taxonomy t on t.id = ti.taxon_ref
   
   WHERE
@@ -426,7 +432,7 @@ CREATE TABLE public.taxa_vernacular_name as
   ti.id as taxon_identified_ref,
   community,
   v.name
-  FROM darwin2.taxon_identified ti
+  FROM public.taxon_identified ti
   INNER JOIN darwin2.taxonomy t on t.id = ti.taxon_ref
   INNER JOIN darwin2.class_vernacular_names c ON t.id = c.record_id AND c.referenced_relation = 'taxonomy' 
   INNER JOIN darwin2.vernacular_names v ON c.id = v.vernacular_class_ref
@@ -443,7 +449,7 @@ CREATE TABLE public.mineral_identified as
     null::integer as mineral_ref, 
     null::varchar as classification
   FROM 
-    darwin2.identifications_abdc i
+    public.identifications_abdc i
     INNER JOIN darwin2.identifications as c ON i.old_identification_id = c.id
     WHERE 
     c.notion_concerned = 'mineralogy'
@@ -465,7 +471,7 @@ insert into mineral_identified
     m.name as mineral_name,
     f.mineral_ref as mineral_ref,
     m.classification as classification
-    FROM  darwin2.identifications_abdc i
+    FROM  public.identifications_abdc i
     INNER JOIN darwin2.darwin_flat  f on i.flat_id = f.id
     INNER JOIN darwin2.mineralogy m on f.mineral_ref = m.id
     WHERE i.is_current = true
@@ -482,7 +488,7 @@ CREATE TABLE public.mineral_vernacular_name as
   ti.id as mineral_identified_ref,
   community,
   v.name
-  FROM darwin2.mineral_identified ti
+  FROM public.mineral_identified ti
   INNER JOIN darwin2.mineralogy t on t.id = ti.mineral_ref
   INNER JOIN darwin2.class_vernacular_names c ON t.id = c.record_id AND c.referenced_relation = 'mineralogy' 
   INNER JOIN darwin2.vernacular_names v ON c.id = v.vernacular_class_ref
@@ -497,7 +503,7 @@ CREATE TABLE public.identifier as
     i.id as identification_ref,
     c.people_ref
   FROM
-    darwin2.identifications_abdc i
+    public.identifications_abdc i
     INNER JOIN darwin2.catalogue_people c on i.old_identification_id = c.record_id AND c.referenced_relation='identifications'
     INNER JOIN darwin2.people p on p.id = c.people_ref
   WHERE
@@ -514,7 +520,7 @@ CREATE TABLE public.identifier_instituion as
     i.id as identification_ref,
     c.people_ref
   FROM
-    darwin2.identifications_abdc i
+    public.identifications_abdc i
     INNER JOIN darwin2.catalogue_people c on i.old_identification_id = c.record_id AND c.referenced_relation='identifications'
     INNER JOIN darwin2.people p on p.id = c.people_ref
   WHERE
@@ -705,6 +711,8 @@ ALTER TABLE darwin2.taxonomy SET SCHEMA public;
 ALTER TABLE darwin2.catalogue_levels SET SCHEMA public; 
 ALTER TABLE darwin2.darwin_flat SET SCHEMA public; 
 ALTER TABLE darwin2.mineralogy SET SCHEMA public; 
+ALTER TABLE darwin2.template_classifications SET SCHEMA public;
+
 
 ALTER TABLE public.darwin_flat 
   DROP COLUMN building,
@@ -723,6 +731,26 @@ ALTER TABLE public.darwin_flat
   DROP COLUMN with_types,
   DROP COLUMN with_individuals,
   DROP COLUMN with_parts;
+
+ALTER TABLE public.taxonomy DROP CONSTRAINT fct_chk_onceinpath_taxonomy;
+ALTER TABLE public.mineralogy DROP CONSTRAINT fct_chk_onceinpath_mineralogy;
+
+ALTER FUNCTION darwin2.gettagsindexedasarray(character varying) SET SCHEMA public;
+ALTER FUNCTION darwin2.array_accum(anyelement) SET SCHEMA public;
+ALTER FUNCTION darwin2.linetotagarray(text) SET SCHEMA public;
+ALTER FUNCTION darwin2.linetotagrows(text) SET SCHEMA public;
+ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyelement) SET SCHEMA public;
+ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyarray) SET SCHEMA public;
+
+\t
+\o drop_old_d2_triggers.sql
+select DISTINCT 'DROP TRIGGER IF EXISTS ' || trigger_name || ' ON ' || event_object_schema || '.' || event_object_table || ';' 
+FROM information_schema.triggers 
+WHERE event_object_table IN ('taxonomy', 'mineralogy');
+\o
+\i drop_old_d2_triggers.sql
+\! rm drop_old_d2_triggers.sql
+\t
 
 ANALYZE public.flat_abcd;
 ANALYZE public.gtu_properties;
@@ -752,9 +780,10 @@ ANALYZE public.darwin_flat;
 ANALYZE public.mineralogy;
 
 
-DROP SCHEMA IF EXISTS darwin1;
-DROP ROLE IF EXISTS darwin1;
+DROP SCHEMA IF EXISTS darwin1 CASCADE;
 
-DROP SCHEMA IF EXISTS darwin2;
+DROP SCHEMA IF EXISTS darwin2 CASCADE;
+
+DROP ROLE IF EXISTS darwin1;
 
 --\i ../createindexes_darwinflat.sql
