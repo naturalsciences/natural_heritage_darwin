@@ -2336,25 +2336,32 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_filter_encodable_row(ids varchar, col_name varchar, user_id integer) RETURNS SETOF integer
 AS $$
 DECLARE
-  ref refcursor;
-  rec RECORD;
+  rec_id integer;
 BEGIN
-        OPEN ref FOR EXECUTE 'SELECT distinct(' || quote_ident(col_name) || ') as result ' ||
-          ' FROM darwin_flat ' ||
-          'WHERE '|| quote_ident(col_name) || ' in (select X::int from regexp_split_to_table(' || quote_literal($1) || ', '','' ) as X) ' ||
-          'AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(' || user_id || ') as X)';
+    IF col_name = 'spec_ref' THEN    
+      FOR rec_id IN SELECT id FROM specimens WHERE id in (select X::int from regexp_split_to_table(ids, '','' ) as X)
+            AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
+      LOOP
+        return next rec_id;
+      END LOOP;
 
-        LOOP
-        FETCH ref INTO rec;
-            IF  NOT FOUND THEN
-                EXIT;  -- exit loop
-            END IF;
+    ELSIF col_name = 'individual_ref' THEN
+      FOR rec_id IN SELECT i.id FROM specimens s INNER JOIN specimen_individuals i ON s.id = i.specimen_ref
+            WHERE i.id in (select X::int from regexp_split_to_table(ids, '','' ) as X)
+            AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
+      LOOP
+        return next rec_id;
+      END LOOP;
 
-        return next rec.result;
-
-        END LOOP;
-
-        CLOSE ref;
+    ELSIF col_name = 'part_ref' THEN
+      FOR rec_id IN SELECT p.id FROM specimens s INNER JOIN specimen_individuals i ON s.id = i.specimen_ref
+            INNER JOIN specimen_parts p ON i.id = p.specimen_individual_ref
+            WHERE p.id in (select X::int from regexp_split_to_table(ids, '','' ) as X)
+            AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
+      LOOP
+        return next rec_id;
+      END LOOP;
+    END IF;
 
 END;
 $$ LANGUAGE plpgsql;
@@ -2687,6 +2694,7 @@ DECLARE
   ref_relation varchar ;
   rec_exists boolean ;
 BEGIN
+/*
   IF TG_OP = 'DELETE' THEN
     IF OLD.people_type = 'collector' THEN
       field_to_update := 'spec_coll_ids';
@@ -2696,7 +2704,6 @@ BEGIN
       ref_field_id := OLD.record_id ; 
     ELSIF OLD.people_type = 'identifier' THEN
       SELECT record_id,referenced_relation INTO ref_field_id, ref_relation FROM identifications where id=OLD.record_id ;
-      /* 'IF ref_field_id is Null, so the identification associated must have been deleted, we have nothing to do because an other trigger have done the job' */
       IF ref_field_id is NULL THEN
         RETURN OLD ;
       END IF ;      
@@ -2713,7 +2720,6 @@ BEGIN
               'WHERE i.record_id = ' || quote_literal(ref_field_id) || 
               '  AND people_ref = ' || quote_literal(OLD.people_ref) || 
               '  AND i.referenced_relation = ' || quote_literal(ref_relation) INTO rec_exists ;
-      /* 'IF rec_exists then that people exist in an other identification of the same record, so we must not remove it from flat' */
       IF rec_exists IS NOT NULL THEN
         RETURN OLD;
       END IF ;
@@ -2753,7 +2759,6 @@ BEGIN
             '              WHERE ' || quote_ident(field_to_update) || ' && ARRAY[' || NEW.people_ref::integer || '] ' || 
             '                AND ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ||
             '             )' INTO rec_exists ;
-    /* 'If true then this id is allready in this field, so we do not want to add it again' */
     IF rec_exists = TRUE THEN
       RETURN NEW ;
     END IF;
@@ -2767,6 +2772,7 @@ BEGIN
               'WHERE ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ;
     END IF;
   END IF;  
+*/
   RETURN NEW;
 END;
 $$ language plpgsql;
