@@ -20,15 +20,5 @@ DELETE FROM catalogue_people WHERE referenced_relation='taxonomy' AND record_id=
 
 SELECT lives_ok('UPDATE people SET db_people_type = 4 WHERE id=2');
 
-SELECT diag('Checking IF all author are authors :)');
-
-SELECT throws_ok('INSERT INTO catalogue_people (referenced_relation, record_id, people_type, order_by, people_ref)
- VALUES (''taxonomy'', 1, ''author'',0,2)');
-
-UPDATE people SET db_people_type = 6 WHERE id=2;
-SELECT lives_ok('INSERT INTO catalogue_people (referenced_relation, record_id, people_type, order_by, people_ref)
- VALUES (''taxonomy'', 1, ''author'',0,2)');
-
-
 SELECT * FROM finish();
 ROLLBACK;
