@@ -127,8 +127,14 @@ CREATE TABLE public.flat_abcd as
   CASE WHEN cp2.date_from_mask = 0 THEN null::timestamp ELSE cp2.date_from END as height_date_time,
 
 
-  (select array_to_string(array(select comment from darwin2.comments c_flat where ( c_flat.referenced_relation = 'gtu' AND c_flat.record_id=f.gtu_ref)
-or ( c_flat.referenced_relation = 'specimens' AND c_flat.record_id = f.spec_ref) ),'\r' )) as flat_comments,
+  (select array_to_string(array(select comment 
+                                from darwin2.comments c_flat 
+                                where ( c_flat.referenced_relation = 'gtu' AND c_flat.record_id=f.gtu_ref)
+                                   or ( c_flat.referenced_relation = 'specimens' AND c_flat.record_id = f.spec_ref)
+                                   or ( c_flat.referenced_relation = 'specimen_individuals' AND c_flat.record_id = f.individual_ref)  
+                                   or ( c_flat.referenced_relation = 'specimen_parts' AND c_flat.record_id = f.part_ref)  
+                               ),'\r' 
+                         )) as flat_comments,
 
   ( select min(property_value) from darwin2.properties_values where property_ref = cp3.id) as utm_text
 
