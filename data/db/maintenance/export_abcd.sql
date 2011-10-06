@@ -222,6 +222,8 @@ CREATE TABLE public.collectors as
     AND exists (select 1 from darwin2.people p where p.id = c.people_ref and is_physical = true)
 );
 
+ALTER TABLE public.collectors ADD CONSTRAINT pk_collectors_abcd PRIMARY KEY (id);
+
 CREATE SEQUENCE public.collectors_institution_abcd_id_seq;
 
 CREATE TABLE public.collectors_institution as
@@ -240,6 +242,8 @@ CREATE TABLE public.collectors_institution as
   
 );
 
+ALTER TABLE public.collectors_institution ADD CONSTRAINT pk_collectors_institutions_abcd PRIMARY KEY (id);
+
 CREATE SEQUENCE public.donators_abcd_id_seq;
 
 CREATE TABLE public.donators as
@@ -255,6 +259,8 @@ CREATE TABLE public.donators as
     c.people_type = 'donator'
     AND exists (select 1 from darwin2.people p where p.id = c.people_ref and is_physical = true)
 );
+
+ALTER TABLE public.donators ADD CONSTRAINT pk_donators_abcd PRIMARY KEY (id);
 
 CREATE SEQUENCE public.donators_institution_abcd_id_seq;
 
@@ -274,6 +280,8 @@ CREATE TABLE public.donators_institution as
   
 );
 
+ALTER TABLE public.donators_institution ADD CONSTRAINT pk_donators_institutions_abcd PRIMARY KEY (id);
+
 create sequence public.identifications_abdc_id_seq;
 
 CREATE TABLE public.identifications_abdc as
@@ -290,6 +298,8 @@ CREATE TABLE public.identifications_abdc as
   INNER JOIN darwin2.identifications as c ON f.spec_ref = c.record_id  AND c.referenced_relation = 'specimens'
 
 );
+
+ALTER TABLE public.identifications_abdc ADD CONSTRAINT pk_identifications_abcd PRIMARY KEY (id);
 
 create sequence public.taxon_identified_id_seq;
 
@@ -308,6 +318,8 @@ CREATE TABLE public.taxon_identified as
     WHERE 
       c.notion_concerned = 'taxonomy'
 );
+
+ALTER TABLE public.taxon_identified ADD CONSTRAINT pk_taxon_identified PRIMARY KEY (id);
 
 insert into public.identifications_abdc 
 (
@@ -392,6 +404,8 @@ CREATE TABLE public.bota_taxa_keywords AS
     t.path like '/-1/141538/%' --PLANTEA
 );
 
+ALTER TABLE public.bota_taxa_keywords ADD CONSTRAINT pk_bota_taxa_keywords PRIMARY KEY (id);
+
 CREATE SEQUENCE public.zoo_taxa_keywords_id_seq;
 
 CREATE TABLE public.zoo_taxa_keywords AS
@@ -423,6 +437,8 @@ CREATE TABLE public.zoo_taxa_keywords AS
     t.path like '/-1/1/%' --ANIMAL
 );
 
+ALTER TABLE public.zoo_taxa_keywords ADD CONSTRAINT pk_zoo_taxa_keywords PRIMARY KEY (id);
+
 CREATE SEQUENCE public.taxa_vernacular_name_id_seq;
 
 CREATE TABLE public.taxa_vernacular_name as
@@ -437,6 +453,8 @@ CREATE TABLE public.taxa_vernacular_name as
   INNER JOIN darwin2.class_vernacular_names c ON t.id = c.record_id AND c.referenced_relation = 'taxonomy' 
   INNER JOIN darwin2.vernacular_names v ON c.id = v.vernacular_class_ref
 );
+
+ALTER TABLE public.taxa_vernacular_name ADD CONSTRAINT pk_taxa_vernacular_name PRIMARY KEY (id);
 
 create sequence public.mineral_identified_id_seq;
 
@@ -455,6 +473,8 @@ CREATE TABLE public.mineral_identified as
     c.notion_concerned = 'mineralogy'
     AND i.is_current = FALSE
 );
+
+ALTER TABLE public.mineral_identified ADD CONSTRAINT pk_mineral_identified PRIMARY KEY (id);
 
 insert into mineral_identified
 (
@@ -494,6 +514,8 @@ CREATE TABLE public.mineral_vernacular_name as
   INNER JOIN darwin2.vernacular_names v ON c.id = v.vernacular_class_ref
 );
 
+ALTER TABLE public.mineral_vernacular_name ADD CONSTRAINT pk_mineral_veracular_name PRIMARY KEY (id);
+
 CREATE SEQUENCE public.identifier_abcd_id_seq;
 
 CREATE TABLE public.identifier as
@@ -510,6 +532,8 @@ CREATE TABLE public.identifier as
     p.is_physical = true
     
 );
+
+ALTER TABLE public.identifier ADD CONSTRAINT pk_identifier PRIMARY KEY (id);
 
 CREATE SEQUENCE public.identifier_institution_id_seq;
 
@@ -528,6 +552,7 @@ CREATE TABLE public.identifier_instituion as
     
 );
 
+ALTER TABLE public.identifier_instituion ADD CONSTRAINT pk_identifier_institution PRIMARY KEY (id);
 
 CREATE SEQUENCE public.flat_properties_id_seq;
 
@@ -620,6 +645,7 @@ UNION
     property_type  || ' / ' || property_sub_type
 );
 
+ALTER TABLE public.flat_properties ADD CONSTRAINT pk_flat_properties PRIMARY KEY (id);
 
 CREATE TABLE public.users_abc as 
 (
@@ -632,6 +658,8 @@ CREATE TABLE public.users_abc as
   
 );
 
+
+ALTER TABLE public.users_abc ADD CONSTRAINT pk_users_abc PRIMARY KEY (id);
 
 CREATE TABLE public.people_abc as 
 (
@@ -646,6 +674,8 @@ CREATE TABLE public.people_abc as
   
 );
 
+ALTER TABLE public.people_abc ADD CONSTRAINT pk_people_abc PRIMARY KEY (id);
+
 CREATE TABLE public.institutions_abc as
 (
   SELECT * ,
@@ -659,7 +689,7 @@ CREATE TABLE public.institutions_abc as
   
 );
 
-
+ALTER TABLE public.institutions_abc ADD CONSTRAINT pk_institutions_abc PRIMARY KEY (id);
 
 CREATE TABLE public.lithostratigraphy_abc as 
 (
@@ -672,7 +702,7 @@ CREATE TABLE public.lithostratigraphy_abc as
     
 );
 
-
+ALTER TABLE public.lithostratigraphy_abc ADD CONSTRAINT pk_litho_abc PRIMARY KEY (id);
 
 CREATE TABLE public.accomp_mineral AS
 (
@@ -691,6 +721,7 @@ CREATE TABLE public.accomp_mineral AS
 
 );
 
+ALTER TABLE public.accomp_mineral ADD CONSTRAINT pk_accomp_mineral_abc PRIMARY KEY (id);
 
 CREATE TABLE public.darwin_metadata AS
 (
@@ -741,6 +772,11 @@ ALTER FUNCTION darwin2.linetotagarray(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.linetotagrows(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyelement) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyarray) SET SCHEMA public;
+ALTER FUNCTION darwin2.fulltoindex(character varying,boolean)SET SCHEMA public;
+ALTER SEQUENCE darwin2.taxonomy_id_seq SET SCHEMA public;
+ALTER SEQUENCE darwin2.darwin_flat_id_seq SET SCHEMA public;
+ALTER SEQUENCE darwin2.catalogue_levels_id_seq SET SCHEMA public;
+ALTER SEQUENCE darwin2.mineralogy_id_seq SET SCHEMA public;
 
 \t
 \o drop_old_d2_triggers.sql
@@ -751,6 +787,34 @@ WHERE event_object_table IN ('taxonomy', 'mineralogy');
 \i drop_old_d2_triggers.sql
 \! rm drop_old_d2_triggers.sql
 \t
+
+GRANT SELECT ON  public.flat_abcd TO d2viewer;
+GRANT SELECT ON  public.gtu_properties TO d2viewer;
+GRANT SELECT ON  public.gtu_place TO d2viewer;
+GRANT SELECT ON  public.collectors TO d2viewer;
+GRANT SELECT ON  public.collectors_institution TO d2viewer;
+GRANT SELECT ON  public.donators TO d2viewer;
+GRANT SELECT ON  public.donators_institution TO d2viewer;
+GRANT SELECT ON  public.identifications_abdc TO d2viewer;
+GRANT SELECT ON  public.taxon_identified TO d2viewer;
+GRANT SELECT ON  public.bota_taxa_keywords TO d2viewer;
+GRANT SELECT ON  public.zoo_taxa_keywords TO d2viewer;
+GRANT SELECT ON  public.taxa_vernacular_name TO d2viewer;
+GRANT SELECT ON  public.mineral_identified TO d2viewer;
+GRANT SELECT ON  public.mineral_vernacular_name TO d2viewer;
+GRANT SELECT ON  public.identifier TO d2viewer;
+GRANT SELECT ON  public.identifier_instituion TO d2viewer;
+GRANT SELECT ON  public.flat_properties TO d2viewer;
+GRANT SELECT ON  public.users_abc TO d2viewer;
+GRANT SELECT ON  public.people_abc TO d2viewer;
+GRANT SELECT ON  public.institutions_abc TO d2viewer;
+GRANT SELECT ON  public.lithostratigraphy_abc TO d2viewer;
+GRANT SELECT ON  public.accomp_mineral TO d2viewer;
+GRANT SELECT ON  public.taxonomy TO d2viewer;
+GRANT SELECT ON  public.catalogue_levels TO d2viewer;
+GRANT SELECT ON  public.darwin_flat TO d2viewer;
+GRANT SELECT ON  public.mineralogy TO d2viewer;
+GRANT SELECT ON  public.darwin_metadata TO d2viewer;
 
 ANALYZE public.flat_abcd;
 ANALYZE public.gtu_properties;
@@ -783,6 +847,8 @@ ANALYZE public.mineralogy;
 DROP SCHEMA IF EXISTS darwin1 CASCADE;
 
 DROP SCHEMA IF EXISTS darwin2 CASCADE;
+
+revoke execute on function public.fulltoindex(character varying,boolean) from darwin1;
 
 DROP ROLE IF EXISTS darwin1;
 
