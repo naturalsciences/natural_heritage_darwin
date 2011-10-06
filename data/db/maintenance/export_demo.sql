@@ -24,7 +24,7 @@ DELETE FROM words;
 set session_replication_role=replica;
 \i ./demo.out
 
-
+\i /var/www/darwin/data/db/maintenance/sequences.sql
 ---
 --THEN
 ---
@@ -59,6 +59,8 @@ insert into people (id, is_physical, family_name) VALUES
 insert into collections (id, code, name, institution_ref, main_manager_ref) values (1, 'demo', 'demo', 1, 4);
 insert into collections_rights (collection_ref, user_ref, db_user_type) values (1, 3, 2);
 insert into collections_rights (collection_ref, user_ref, db_user_type) values (1, 2, 1);
+
+
 
 --- Run php symfony darwin:add-widget --reset 2
 --- Run php symfony darwin:add-widget --reset 3
