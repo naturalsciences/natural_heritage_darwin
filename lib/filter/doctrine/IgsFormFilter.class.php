@@ -60,9 +60,10 @@ class IgsFormFilter extends BaseIgsFormFilter
 
   public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
   {
-     if ($values != ""):
+     if ($values != "")
+     {
        $query->andWhere("ig_num_indexed like concat(fullToIndex(?), '%') ", $values);
-     endif;
+     }
      return $query;
   }
 

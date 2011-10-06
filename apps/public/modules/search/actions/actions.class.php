@@ -52,7 +52,7 @@ class searchActions extends DarwinActions
       // Replace the count query triggered by the Pager to get the number of records retrieved
       $count_q = clone $query;
       // Remove from query the group by and order by clauses
-      $count_q = $count_q->select('count( distinct spec_ref)')->removeDqlQueryPart('groupby')->removeDqlQueryPart('orderby')->limit(0);
+      $count_q = $count_q->select('count( distinct individual_ref)')->removeDqlQueryPart('groupby')->removeDqlQueryPart('orderby')->limit(0);
       // Initialize an empty count query
       $counted = new DoctrineCounted();
       // Define the correct select count() of the count query
