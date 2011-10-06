@@ -99,7 +99,9 @@ CREATE TRIGGER trg_cpy_gtuTags_TagGroups AFTER INSERT OR UPDATE OR DELETE
 **
 **
 *****************************************/
-
+CREATE TRIGGER trg_clr_referenceRecord_staging AFTER DELETE
+	ON staging FOR EACH ROW
+	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
 CREATE TRIGGER trg_clr_referenceRecord_gtu AFTER DELETE
 	ON gtu FOR EACH ROW
