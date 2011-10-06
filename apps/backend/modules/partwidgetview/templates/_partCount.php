@@ -5,12 +5,12 @@
   </tr>
   <tr>
   	<th><?php echo $accuracy=='Exact'?__("Specimen part count"):__("Specimen part count min");?></th>
-  	<td><?php echo $part->getPartCountMin() ; ?></td>
+  	<td><?php echo $part->getSpecimenPartCountMin() ; ?></td>
   </tr>
   <?php if($accuracy!='Exact') : ?>
   <tr>
 	  <th><?php echo __("Specimen part count max");?></th>
-  	<td><?php echo $part->getPartCountMax() ; ?></td>
+  	<td><?php echo $part->getSpecimenPartCountMax() ; ?></td>
   </tr>
   <?php endif ; ?>
 </table>

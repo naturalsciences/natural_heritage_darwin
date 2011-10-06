@@ -248,7 +248,7 @@ class specimenActions extends DarwinActions
     $this->form = $this->getSpecimenForm($request, true);
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($this->form->getObject()->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
+      if(in_array($this->form->getObject()->getCollectionRef(),Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
         $this->redirect("specimen/view?id=".$request->getParameter('id')) ;
     }
     $this->loadWidgets();
@@ -420,7 +420,7 @@ class specimenActions extends DarwinActions
     $this->forward404Unless($spec, 'Specimen does not exist');
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
+      if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
         $this->forwardToSecureAction();
     }
     try
@@ -441,7 +441,7 @@ class specimenActions extends DarwinActions
   
   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimenSearch')->findOneBySpecRef($request->getParameter('id')),'Specimen does not exist');  
+    $this->forward404Unless($this->specimen = Doctrine::getTable('Specimens')->find($request->getParameter('id')),'Specimen does not exist');  
     $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
   }  
 }

@@ -1,1 +1,1 @@
-<?php echo $indiv->getIndividualRockForm() ; ?>
+<?php echo $indiv->getRockForm() ; ?>

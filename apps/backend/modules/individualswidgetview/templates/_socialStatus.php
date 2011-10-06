@@ -1,1 +1,1 @@
-<?php echo $indiv->getIndividualSocialStatus(); ?>
+<?php echo $indiv->getSocialStatus(); ?>

@@ -2,7 +2,7 @@
   <tr>
 	<th class="top_aligned"><?php echo __('specimen_part');?></th>
 	<td>
-	  <?php echo $part->getPart();?>
+	  <?php echo $part->getSpecimenPart();?>
 	</td>
   </tr>
 </table>

@@ -1,1 +1,1 @@
-<?php echo $indiv->getIndividualStage() ?>
+<?php echo $indiv->getStage() ?>

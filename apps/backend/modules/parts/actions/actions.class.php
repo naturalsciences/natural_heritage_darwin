@@ -289,7 +289,8 @@ class partsActions extends DarwinActions
   
   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id')),'Part does not exist');  
-    $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
+    $this->part = Doctrine::getTable('SpecimenParts')->find($request->getParameter('id'));
+    $this->forward404Unless($this->part,'Part does not exist');  
+    $this->loadWidgets(null,$this->part->Individual->Specimens->getCollectionRef()); 
   }   
 }

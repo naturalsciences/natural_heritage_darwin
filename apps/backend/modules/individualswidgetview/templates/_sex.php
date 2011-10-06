@@ -2,11 +2,11 @@
   <tbody>
     <tr>
       <th><?php echo __('Sex') ; ?></th>
-      <td><?php echo $indiv->getIndividualSex() ?></td>
+      <td><?php echo $indiv->getSex() ?></td>
     </tr>
     <tr>
       <th><?php echo __('State') ; ?></th>
-      <td><?php echo $indiv->getIndividualState() ?></td>
+      <td><?php echo $indiv->getState() ?></td>
     </tr>
   </tbody>
 </table>
