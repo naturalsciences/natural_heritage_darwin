@@ -2716,3 +2716,18 @@ input[type='file']
     border: 1px solid #C0D147;
     border-top:none;
 }
+
+/** Has a copy in content.css */
+#demo_bottom {
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+  border: 2px solid red;
+  background-color:#FFEFBF;
+  text-align: center;
+  font-size: large;
+  padding: 0.5em;
+  opacity: 0.9;
+}
+#demo_bottom span { font-size: small; }
+#demo_bottom_padding { height :2em;}

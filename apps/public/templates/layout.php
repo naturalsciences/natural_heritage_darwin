@@ -38,5 +38,10 @@
         </td>     
       </tr>
     </table>
+    <?php if(sfConfig::get('app_demo', false)):?>
+      <div id="demo_bottom_padding"></div>
+      <div id="demo_bottom"><?php echo __('This is a demo application.  Data is restored nightly !');?>
+        <span><?php echo __('login with user/user or encoder/encoder or admin/admin');?></span></div>
+    <?php endif;?>
   </body>
 </html>
