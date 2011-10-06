@@ -751,6 +751,23 @@ ALTER TABLE darwin2.darwin_flat SET SCHEMA public;
 ALTER TABLE darwin2.mineralogy SET SCHEMA public; 
 ALTER TABLE darwin2.template_classifications SET SCHEMA public;
 
+CREATE SEQUENCE public.parent_taxonomy_id_seq;
+
+CREATE TABLE public.parent_taxonomy AS
+(
+  select nextval('public.parent_taxonomy_id_seq') as id, pt.child_id as child_id, pt.parent_id as parent_id, spt.name as taxon_name, spt.level_name as level_name from 
+  (select t.id as child_id, st.tax_parent::integer as parent_id
+  from taxonomy as t 
+  inner join 
+    (select id, regexp_split_to_table(path, '/') as tax_parent from taxonomy) as st on st.id = t.id
+  where st.tax_parent != '' 
+  ) as pt
+  inner join
+    (select taxonomy.id, name, level_name from taxonomy inner join catalogue_levels as cl on cl.id = taxonomy.level_ref where cl.level_name != 'unranked') as spt on spt.id = pt.parent_id
+);
+
+ALTER TABLE public.parent_taxonomy ADD CONSTRAINT pk_parent_taxonomy PRIMARY KEY (id);
+CREATE INDEX idx_parent_taxon_child_id ON public.parent_taxonomy (child_id);
 
 ALTER TABLE public.darwin_flat 
   DROP COLUMN building,
@@ -822,6 +839,7 @@ GRANT SELECT ON  public.catalogue_levels TO d2viewer;
 GRANT SELECT ON  public.darwin_flat TO d2viewer;
 GRANT SELECT ON  public.mineralogy TO d2viewer;
 GRANT SELECT ON  public.darwin_metadata TO d2viewer;
+GRANT SELECT ON  public.parent_taxonomy TO d2viewer;
 
 ANALYZE public.flat_abcd;
 ANALYZE public.gtu_properties;
@@ -849,7 +867,7 @@ ANALYZE public.taxonomy;
 ANALYZE public.catalogue_levels;
 ANALYZE public.darwin_flat;
 ANALYZE public.mineralogy;
-
+ANALYZE public.parent_taxonomy;
 
 DROP SCHEMA IF EXISTS darwin1 CASCADE;
 
