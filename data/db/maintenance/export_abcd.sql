@@ -112,21 +112,29 @@ CREATE TABLE public.flat_abcd as
 
   ( CASE WHEN cp1.date_to_mask = 0 THEN null::timestamp ELSE cp1.date_to END - CASE WHEN cp1.date_from_mask = 0 THEN NULL::timestamp ELSE cp1.date_from END ) as depth_duration,
   ( select min(property_value) from darwin2.properties_values where property_ref = cp1.id) as depth_lowervalue,
-  ( select max(property_value) from darwin2.properties_values where property_ref = cp1.id) as depth_uppervalue, /*** only if 1? **/
+  ( select case when max(property_value) = min(property_value) then null::text else max(property_value) end from darwin2.properties_values where property_ref = cp1.id) as depth_uppervalue, /*** only if 1? **/
+  ( select avg(property_accuracy_unified) from darwin2.properties_values where property_ref = cp1.id) as depth_accuracy,
   cp1.property_method as depth_method,
   cp1.property_unit as depth_unit,
   CASE WHEN cp1.date_from_mask = 0 THEN null::timestamp ELSE cp1.date_from END as depth_date_time,
 
   ( CASE WHEN cp2.date_to_mask = 0 THEN null::timestamp ELSE cp2.date_to END - CASE WHEN cp2.date_from_mask = 0 THEN NULL::timestamp ELSE cp2.date_from END ) as height_duration,
   ( select min(property_value) from darwin2.properties_values where property_ref = cp2.id) as height_lowervalue,
-  ( select max(property_value) from darwin2.properties_values where property_ref = cp2.id) as height_uppervalue, /*** only if 1? **/
+  ( select case when max(property_value) = min(property_value) then null::text else max(property_value) end from darwin2.properties_values where property_ref = cp2.id) as height_uppervalue, /*** only if 1? **/
+  ( select avg(property_accuracy_unified) from darwin2.properties_values where property_ref = cp2.id) as height_accuracy,
   cp2.property_method as height_method,
   cp2.property_unit as height_unit,
   CASE WHEN cp2.date_from_mask = 0 THEN null::timestamp ELSE cp2.date_from END as height_date_time,
 
 
-  (select array_to_string(array(select comment from darwin2.comments c_flat where ( c_flat.referenced_relation = 'gtu' AND c_flat.record_id=f.gtu_ref)
-or ( c_flat.referenced_relation = 'specimens' AND c_flat.record_id = f.spec_ref) ),' ' )) as flat_comments,
+  (select array_to_string(array(select comment 
+                                from darwin2.comments c_flat 
+                                where ( c_flat.referenced_relation = 'gtu' AND c_flat.record_id=f.gtu_ref)
+                                   or ( c_flat.referenced_relation = 'specimens' AND c_flat.record_id = f.spec_ref)
+                                   or ( c_flat.referenced_relation = 'specimen_individuals' AND c_flat.record_id = f.individual_ref)  
+                                   or ( c_flat.referenced_relation = 'specimen_parts' AND c_flat.record_id = f.part_ref)  
+                               ),'\r' 
+                         )) as flat_comments,
 
   ( select min(property_value) from darwin2.properties_values where property_ref = cp3.id) as utm_text
 
@@ -157,15 +165,15 @@ CREATE TABLE public.gtu_properties as
     flat.id as flat_id,
     (CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END) as duration,
     min(v.property_value) as lowervalue,
-    max(v.property_value) as uppervalue,
+    case when max(property_value) = min(property_value) then null::text else max(property_value) end as uppervalue,
     property_method as method ,
     property_unit as unit,
     CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END as date_from,
     CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END as date_to,
-    property_type  || ' / ' || property_sub_type as parameter,
+    trim(property_type  || ' / ' || lower(property_sub_type), ' / ') as parameter,
     gtu.id as gtu_ref,
     property_qualifier as qualifier,
-    min(v.property_accuracy) as accuracy
+    avg(v.property_accuracy_unified) as accuracy
   FROM 
     darwin2.darwin_flat as flat
     INNER JOIN darwin2.gtu ON flat.gtu_ref = gtu.id
@@ -183,7 +191,7 @@ CREATE TABLE public.gtu_properties as
     property_unit,
     CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END ,
     CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END,
-    property_type  || ' / ' || property_sub_type,
+    trim(property_type  || ' / ' || lower(property_sub_type), ' / '),
     gtu.id ,
     property_qualifier
 );
@@ -563,19 +571,18 @@ CREATE TABLE public.flat_properties as
     flat.id as flat_id,
     ( CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END) as duration,
     min(property_value) as lowervalue,
-    max(property_value) as uppervalue,
+    case when max(property_value) = min(property_value) then null::text else max(property_value) end as uppervalue,
     property_method as method ,
     property_unit as unit,
     CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END as date_from,
     CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END as date_to,
-    property_type  || ' / ' || property_sub_type as parameter
+    trim(property_type  || ' / ' || lower(property_sub_type), ' / ') as parameter
 
   FROM 
     darwin2.darwin_flat as flat
     INNER JOIN darwin2.catalogue_properties c ON referenced_relation = 'specimens' AND record_id = flat.spec_ref
     INNER JOIN darwin2.properties_values p ON property_ref = c.id 
-  /*WHERE 
-    property_type != 'geo position' and property_sub_type not in ('height', 'altitude', 'depth')    */
+
   GROUP BY 
     flat.id,
     c.id,
@@ -584,7 +591,7 @@ CREATE TABLE public.flat_properties as
     property_unit,
     CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END ,
     CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END ,
-    property_type  || ' / ' || property_sub_type
+    trim(property_type  || ' / ' || lower(property_sub_type), ' / ')
 
 UNION
 
@@ -594,12 +601,12 @@ UNION
     flat.id as flat_id,
     ( CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END) as duration,
     min(property_value) as lowervalue,
-    max(property_value) as uppervalue,
+    case when max(property_value) = min(property_value) then null::text else max(property_value) end as uppervalue,
     property_method as method ,
     property_unit as unit,
     CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END as date_from,
     CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END as date_to,
-    property_type  || ' / ' || property_sub_type as parameter
+    trim(property_type  || ' / ' || lower(property_sub_type), ' / ') as parameter
 
   FROM 
     darwin2.darwin_flat as flat
@@ -613,7 +620,7 @@ UNION
     property_unit,
     CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END,
     CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END ,
-    property_type  || ' / ' || property_sub_type
+    trim(property_type  || ' / ' || lower(property_sub_type), ' / ')
 
 UNION
 
@@ -623,16 +630,16 @@ UNION
     flat.id as flat_id,
     ( CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END - CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END) as duration,
     min(property_value) as lowervalue,
-    max(property_value) as uppervalue,
+    case when max(property_value) = min(property_value) then null::text else max(property_value) end as uppervalue,
     property_method as method ,
     property_unit as unit,
     CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END as date_from,
     CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END as date_to,
-    property_type  || ' / ' || property_sub_type as parameter
+    trim(property_type  || ' / ' || lower(property_sub_type), ' / ') as parameter
 
   FROM 
     darwin2.darwin_flat as flat
-    INNER JOIN darwin2.catalogue_properties c ON referenced_relation = 'part_ref' AND record_id = flat.individual_ref
+    INNER JOIN darwin2.catalogue_properties c ON referenced_relation = 'specimen_parts' AND record_id = flat.part_ref
     INNER JOIN darwin2.properties_values p ON property_ref = c.id 
   GROUP BY 
     flat.id,
@@ -642,7 +649,7 @@ UNION
     property_unit,
     CASE WHEN date_from_mask = 0 THEN NULL::timestamp ELSE date_from END ,
     CASE WHEN date_to_mask = 0 THEN NULL::timestamp ELSE date_to END ,
-    property_type  || ' / ' || property_sub_type
+    trim(property_type  || ' / ' || lower(property_sub_type), ' / ')
 );
 
 ALTER TABLE public.flat_properties ADD CONSTRAINT pk_flat_properties PRIMARY KEY (id);
@@ -849,7 +856,11 @@ DROP SCHEMA IF EXISTS darwin1 CASCADE;
 DROP SCHEMA IF EXISTS darwin2 CASCADE;
 
 revoke execute on function public.fulltoindex(character varying,boolean) from darwin1;
+revoke all on table public.geometry_columns from cebmpad;
+revoke all on table public.spatial_ref_sys from cebmpad;
 
 DROP ROLE IF EXISTS darwin1;
+
+DROP ROLE IF EXISTS cebmpad;
 
 --\i ../createindexes_darwinflat.sql
