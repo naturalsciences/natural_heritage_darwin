@@ -128,6 +128,19 @@ class SpecimenIndividualsTable extends DarwinTable
       $q->andWhere($alias . '.specimen_ref = ?', $id);
       return $q->execute() ;      
     }
+
+    public function getSpecimenByIndividual($id)
+    {
+      $q = Doctrine_Query::create()
+        ->select('id, specimen_ref')
+        ->from('SpecimenIndividuals i')
+        ->where('i.id = ?',$i);
+      $alias = $q->getRootAlias() ;
+      $r =  $q->execute();      
+      if($r->count())
+        return $r[0]->getSpecimenRef();
+      return null;
+    }    
     
     /**
     * Set required widget visible and opened 

@@ -20,10 +20,7 @@ class extLinksActions extends DarwinActions
       $this->forward404Unless($r,'No such item');     
       if(in_array($request->getParameter('table'),array_keys($this->ref_id)) )
       {
-        $spec = Doctrine::getTable('specimenSearch')->getRecordByRef($this->ref_id[$request->getParameter('table')],$request->getParameter('id'));
-        if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections($this->ref_id[$request->getParameter('table')],
-                                                                                                        $request->getParameter('id'), 
-                                                                                                        $this->getUser()->getId())))    
+        if(! Doctrine::getTable('Specimens')->hasRights($this->ref_id[$request->getParameter('table')],$request->getParameter('id'), $this->getUser()->getId()))
           $this->forwardToSecureAction();    
       }
     } 

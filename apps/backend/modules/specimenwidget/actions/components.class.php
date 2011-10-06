@@ -23,7 +23,7 @@ class specimenwidgetComponents extends sfComponents
         $this->spec_id = $this->eid;
         if(!$this->getUser()->isA(Users::ADMIN))
         {
-          if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('spec_ref',$this->eid, $this->getUser()->getId())))
+          if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $this->eid, $this->getUser()->getId()))
             die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;
         }            
       }

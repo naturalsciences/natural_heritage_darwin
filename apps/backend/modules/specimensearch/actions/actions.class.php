@@ -272,11 +272,7 @@ class specimensearchActions extends DarwinActions
 
   public function executeIndividualTree(sfWebRequest $request)
   {
-    $spec = Doctrine::getTable('SpecimenSearch')->findOneBySpecRef($request->getParameter('id'));
-    if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('spec_ref',
-                                                                                                      $request->getParameter('id'), 
-                                                                                                      $this->getUser()->getId())))
-       
+    if(! Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
       $this->user_allowed = false ;  
     else 
       $this->user_allowed = true ;  
@@ -287,14 +283,11 @@ class specimensearchActions extends DarwinActions
 
   public function executePartTree(sfWebRequest $request)
   {
-    $spec = Doctrine::getTable('Specimensearch')->findOneByIndividualRef($request->getParameter('id'));
-    if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('individual_ref',
-                                                                                                      $request->getParameter('id'), 
-                                                                                                      $this->getUser()->getId())))
-       
+    if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
       $this->user_allowed = false ;  
     else 
-      $this->user_allowed = true ;      
+      $this->user_allowed = true ;
+ 
     if($this->getUser()->isA(Users::ADMIN)) $this->user_allowed = true ;        
     $this->parts = Doctrine::getTable('SpecimenParts')
       ->findForIndividual($request->getParameter('id'));

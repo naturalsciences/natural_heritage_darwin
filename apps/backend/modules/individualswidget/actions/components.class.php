@@ -22,10 +22,10 @@ class individualswidgetComponents extends sfComponents
         $this->individual_id = $this->form->getObject()->getId();
         $this->spec_id = $this->form->getObject()->getSpecimenRef();
         if(!$this->getUser()->isAtLeast(Users::ENCODER)) die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;  
-        $spec = Doctrine::getTable('SpecimenSearch')->findOneByIndividualRef($this->eid);
         if(!$this->getUser()->isA(Users::ADMIN))
         {
-          if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('individual_ref',$this->eid, $this->getUser()->getId())))
+
+          if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$this->eid, $this->getUser()->getId()))
             die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;
         }          
       }
