@@ -395,7 +395,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
         $this->hasColumn('gtu_ref', 'integer', null, array(
              'type' => 'integer',
              'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('taxon_ref', 'integer', null, array(
              'type' => 'integer',
@@ -461,12 +460,9 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('collection_is_public', 'boolean', null, array(
              'type' => 'boolean',
-             'notnull' => true,
-             'default' => true,
              ));
         $this->hasColumn('collection_parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('collection_path', 'string', null, array(
              'type' => 'string',
@@ -485,7 +481,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('gtu_parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('gtu_path', 'string', null, array(
              'type' => 'string',
@@ -525,7 +520,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('taxon_level_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
              ));
         $this->hasColumn('taxon_level_name', 'string', null, array(
              'type' => 'string',
@@ -538,7 +532,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('taxon_parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('taxon_extinct', 'boolean', null, array(
              'type' => 'boolean',
@@ -554,8 +547,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('litho_level_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('litho_level_name', 'string', null, array(
              'type' => 'string',
@@ -574,7 +565,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('litho_parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('chrono_name', 'string', null, array(
              'type' => 'string',
@@ -587,8 +577,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('chrono_level_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('chrono_level_name', 'string', null, array(
              'type' => 'string',
@@ -607,7 +595,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('chrono_parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('lithology_name', 'string', null, array(
              'type' => 'string',
@@ -620,8 +607,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('lithology_level_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('lithology_level_name', 'string', null, array(
              'type' => 'string',
@@ -640,7 +625,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('lithology_parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('mineral_name', 'string', null, array(
              'type' => 'string',
@@ -653,8 +637,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('mineral_level_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('mineral_level_name', 'string', null, array(
              'type' => 'string',
@@ -673,7 +655,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('mineral_parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('host_taxon_name', 'string', null, array(
              'type' => 'string',
@@ -686,8 +667,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('host_taxon_level_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('host_taxon_level_name', 'string', null, array(
              'type' => 'string',
@@ -700,7 +679,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('host_taxon_parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('host_taxon_extinct', 'boolean', null, array(
              'type' => 'boolean',

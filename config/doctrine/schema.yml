@@ -674,16 +674,16 @@ Specimens:
         collection_type: { type: string}
         collection_code: { type: string}
         collection_name: { type: string}
-        collection_is_public: {type: boolean, notnull: true, default: true}
-        collection_parent_ref: { type: integer, default:0}
+        collection_is_public: {type: boolean}
+        collection_parent_ref: { type: integer}
         collection_path: { type: string}
         expedition_name: { type: string}
         expedition_name_ts: { type: string}
         expedition_name_indexed: { type: string}
         station_visible: { type: boolean}
-        gtu_ref: { type: integer, notnull: true, default:0}
+        gtu_ref: { type: integer, notnull: true}
         gtu_code: { type: string}
-        gtu_parent_ref: { type: integer, default:0}
+        gtu_parent_ref: { type: integer}
         gtu_path: { type: string}
         gtu_from_date_mask: { type: integer }
         gtu_from_date: { type: string}
@@ -696,60 +696,60 @@ Specimens:
         taxon_name:  { type: string}
         taxon_name_indexed: { type: string}
         taxon_name_order_by: { type: string}
-        taxon_level_ref: { type: integer, notnull: true }
+        taxon_level_ref: { type: integer}
         taxon_level_name: { type: string}
         taxon_status: { type: string}
         taxon_path: { type: string}
-        taxon_parent_ref: { type: integer, default:0}
+        taxon_parent_ref: { type: integer}
         taxon_extinct: { type: boolean}
         litho_name: { type: string}
         litho_name_indexed: { type: string}
         litho_name_order_by: { type: string}
-        litho_level_ref: { type: integer, notnull: true, default:0}
+        litho_level_ref: { type: integer}
         litho_level_name: { type: string}
         litho_status: { type: string}
         litho_local: { type: boolean}
         litho_color: { type: string}
         litho_path: { type: string}
-        litho_parent_ref: { type: integer, default:0}
+        litho_parent_ref: { type: integer}
         chrono_name: { type: string}
         chrono_name_indexed: { type: string}
         chrono_name_order_by: { type: string}
-        chrono_level_ref: { type: integer, notnull: true, default:0}
+        chrono_level_ref: { type: integer}
         chrono_level_name: { type: string}
         chrono_status: { type: string}
         chrono_local: {type: boolean}
         chrono_color: {type: string}
         chrono_path: { type: string}
-        chrono_parent_ref: { type: integer, default:0}
+        chrono_parent_ref: { type: integer}
         lithology_name: { type: string}
         lithology_name_indexed: { type: string}
         lithology_name_order_by: { type: string}
-        lithology_level_ref: { type: integer, notnull: true, default:0}
+        lithology_level_ref: { type: integer}
         lithology_level_name: { type: string}
         lithology_status: { type: string}
         lithology_local: { type: boolean}
         lithology_color: { type: string}
         lithology_path: { type: string}
-        lithology_parent_ref: { type: integer, default:0}
+        lithology_parent_ref: { type: integer}
         mineral_name: { type: string}
         mineral_name_indexed: { type: string}
         mineral_name_order_by: { type: string}
-        mineral_level_ref: { type: integer, notnull: true, default:0}
+        mineral_level_ref: { type: integer}
         mineral_level_name: { type: string}
         mineral_status: { type: string}
         mineral_local: { type: boolean}
         mineral_color: { type: string}
         mineral_path: { type: string}
-        mineral_parent_ref: { type: integer, default:0}
+        mineral_parent_ref: { type: integer}
         host_taxon_name: { type: string}
         host_taxon_name_indexed: { type: string}
         host_taxon_name_order_by: { type: string}
-        host_taxon_level_ref: { type: integer, notnull: true, default:0}
+        host_taxon_level_ref: { type: integer}
         host_taxon_level_name: { type: string}
         host_taxon_status: { type: string}
         host_taxon_path: { type: string}
-        host_taxon_parent_ref: { type: integer, default:0}
+        host_taxon_parent_ref: { type: integer}
         host_taxon_extinct: { type: boolean}
         ig_num: { type: string}
         ig_num_indexed: { type: string}
@@ -802,6 +802,17 @@ Specimens:
             refClass: SpecimensTools
             local: specimen_ref
             foreign: collecting_tool_ref
+IgsSearch:
+    tableName: specimens
+    columns:
+        ig_num: { type: string}
+        ig_num_indexed: { type: string}
+        ig_date_mask: { type: integer }
+        ig_ref: { type: integer, primary: true, autoincrement: true}
+        expedition_name: { type: string}
+        expedition_name_ts: { type: string}
+        expedition_name_indexed: { type: string}
+        expedition_ref: { type: integer}
 
 CollectingMethods:
     tableName: collecting_methods

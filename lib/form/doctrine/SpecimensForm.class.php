@@ -11,13 +11,22 @@ class SpecimensForm extends BaseSpecimensForm
 {
   public function configure()
   {
-    unset(
-      $this['id'],
-      $this['acquisition_date_mask'],
-      $this['multimedia_visible'],
-      $this['collecting_tools_list'],
-      $this['collecting_methods_list']
-    );
+    $this->useFields(array('category','collection_ref',
+        'expedition_ref',
+        'gtu_ref',
+        'taxon_ref',
+        'litho_ref',
+        'chrono_ref',
+        'lithology_ref',
+        'mineral_ref',
+        'host_taxon_ref',
+        'host_specimen_ref',
+        'host_relationship',
+        'acquisition_category',
+        'acquisition_date_mask',
+        'acquisition_date',
+        'station_visible',
+        'ig_ref'));
 
     $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
