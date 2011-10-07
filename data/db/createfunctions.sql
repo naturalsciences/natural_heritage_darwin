@@ -3782,7 +3782,7 @@ BEGIN
     RETURN true;
   END IF;
 
-  select id into ref_rec from igs where ig_num = line.ig_num  and ig_date = COALESCE(line.ig_date,'01/01/0001');
+  select id into ref_rec from igs where ig_num = line.ig_num ;
   IF NOT FOUND THEN
     IF import THEN
         INSERT INTO igs (ig_num, ig_date_mask, ig_date)
