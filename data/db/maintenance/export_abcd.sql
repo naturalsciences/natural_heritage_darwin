@@ -45,6 +45,19 @@ DROP SEQUENCE IF EXISTS public.mineral_vernacular_name_id_seq;
 DROP SEQUENCE IF EXISTS public.identifier_abcd_id_seq;
 DROP SEQUENCE IF EXISTS public.identifier_institution_id_seq;
 DROP SEQUENCE IF EXISTS public.flat_properties_id_seq;
+DROP SEQUENCE IF EXISTS public.taxonomy_id_seq;
+DROP SEQUENCE IF EXISTS public.darwin_flat_id_seq;
+DROP SEQUENCE IF EXISTS public.catalogue_levels_id_seq;
+DROP SEQUENCE IF EXISTS public.mineralogy_id_seq;
+
+DROP FUNCTION IF EXISTS public.gettagsindexedasarray(character varying);
+DROP AGGREGATE IF EXISTS public.array_accum(anyelement);
+DROP FUNCTION IF EXISTS public.linetotagarray(text);
+DROP FUNCTION IF EXISTS public.linetotagrows(text);
+DROP FUNCTION IF EXISTS public.fct_remove_array_elem(anyarray,anyelement);
+DROP FUNCTION IF EXISTS public.fct_remove_array_elem(anyarray,anyarray);
+DROP FUNCTION IF EXISTS public.fulltoindex(character varying);
+
 
 alter table darwin2.catalogue_levels DROP constraint unq_catalogue_levels;
 
@@ -133,7 +146,7 @@ CREATE TABLE public.flat_abcd as
                                    or ( c_flat.referenced_relation = 'specimens' AND c_flat.record_id = f.spec_ref)
                                    or ( c_flat.referenced_relation = 'specimen_individuals' AND c_flat.record_id = f.individual_ref)  
                                    or ( c_flat.referenced_relation = 'specimen_parts' AND c_flat.record_id = f.part_ref)  
-                               ),'\r' 
+                               ),E'\r\n' 
                          )) as flat_comments,
 
   ( select min(property_value) from darwin2.properties_values where property_ref = cp3.id) as utm_text
@@ -751,6 +764,23 @@ ALTER TABLE darwin2.darwin_flat SET SCHEMA public;
 ALTER TABLE darwin2.mineralogy SET SCHEMA public; 
 ALTER TABLE darwin2.template_classifications SET SCHEMA public;
 
+CREATE SEQUENCE public.parent_taxonomy_id_seq;
+
+CREATE TABLE public.parent_taxonomy AS
+(
+  select nextval('public.parent_taxonomy_id_seq') as id, pt.child_id as child_id, pt.parent_id as parent_id, spt.name as taxon_name, spt.level_name as level_name from 
+  (select t.id as child_id, st.tax_parent::integer as parent_id
+  from taxonomy as t 
+  inner join 
+    (select id, regexp_split_to_table(path, '/') as tax_parent from taxonomy) as st on st.id = t.id
+  where st.tax_parent != '' 
+  ) as pt
+  inner join
+    (select taxonomy.id, name, level_name from taxonomy inner join catalogue_levels as cl on cl.id = taxonomy.level_ref where cl.level_name != 'unranked') as spt on spt.id = pt.parent_id
+);
+
+ALTER TABLE public.parent_taxonomy ADD CONSTRAINT pk_parent_taxonomy PRIMARY KEY (id);
+CREATE INDEX idx_parent_taxon_child_id ON public.parent_taxonomy (child_id);
 
 ALTER TABLE public.darwin_flat 
   DROP COLUMN building,
@@ -779,7 +809,7 @@ ALTER FUNCTION darwin2.linetotagarray(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.linetotagrows(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyelement) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyarray) SET SCHEMA public;
-ALTER FUNCTION darwin2.fulltoindex(character varying,boolean)SET SCHEMA public;
+ALTER FUNCTION darwin2.fulltoindex(character varying) SET SCHEMA public;
 ALTER SEQUENCE darwin2.taxonomy_id_seq SET SCHEMA public;
 ALTER SEQUENCE darwin2.darwin_flat_id_seq SET SCHEMA public;
 ALTER SEQUENCE darwin2.catalogue_levels_id_seq SET SCHEMA public;
@@ -822,6 +852,7 @@ GRANT SELECT ON  public.catalogue_levels TO d2viewer;
 GRANT SELECT ON  public.darwin_flat TO d2viewer;
 GRANT SELECT ON  public.mineralogy TO d2viewer;
 GRANT SELECT ON  public.darwin_metadata TO d2viewer;
+GRANT SELECT ON  public.parent_taxonomy TO d2viewer;
 
 ANALYZE public.flat_abcd;
 ANALYZE public.gtu_properties;
@@ -849,13 +880,13 @@ ANALYZE public.taxonomy;
 ANALYZE public.catalogue_levels;
 ANALYZE public.darwin_flat;
 ANALYZE public.mineralogy;
-
+ANALYZE public.parent_taxonomy;
 
 DROP SCHEMA IF EXISTS darwin1 CASCADE;
 
 DROP SCHEMA IF EXISTS darwin2 CASCADE;
 
-revoke execute on function public.fulltoindex(character varying,boolean) from darwin1;
+revoke execute on function public.fulltoindex(character varying) from darwin1;
 revoke all on table public.geometry_columns from cebmpad;
 revoke all on table public.spatial_ref_sys from cebmpad;
 
