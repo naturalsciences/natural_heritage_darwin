@@ -51,7 +51,7 @@ DROP SEQUENCE IF EXISTS public.catalogue_levels_id_seq;
 DROP SEQUENCE IF EXISTS public.mineralogy_id_seq;
 
 DROP FUNCTION IF EXISTS public.gettagsindexedasarray(character varying);
-DROP FUNCTION IF EXISTS public.array_accum(anyelement);
+DROP AGGREGATE IF EXISTS public.array_accum(anyelement);
 DROP FUNCTION IF EXISTS public.linetotagarray(text);
 DROP FUNCTION IF EXISTS public.linetotagrows(text);
 DROP FUNCTION IF EXISTS public.fct_remove_array_elem(anyarray,anyelement);
