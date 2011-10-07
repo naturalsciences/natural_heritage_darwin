@@ -327,7 +327,7 @@ class specimenActions extends DarwinActions
     */
   public function executeSearch(sfWebRequest $request)
   {
-    // Forward to a 404 page if the method used is not a post
+//     // Forward to a 404 page if the method used is not a post
     $this->forward404Unless($request->isMethod('post'));
     $this->setCommonValues('specimen', 'collection_name', $request);
     $item = $request->getParameter('searchSpecimen',array(''));
@@ -350,6 +350,7 @@ class specimenActions extends DarwinActions
       // Bind form with data contained in searchExpedition array
       $form->bind($request->getParameter('searchSpecimen'));
       // Test that the form binded is still valid (no errors)
+
       if ($form->isValid())
       {
         // Define all properties that will be either used by the data query or by the pager
@@ -370,10 +371,11 @@ class specimenActions extends DarwinActions
         if (! $this->pagerLayout->getPager()->getExecuted())
            $this->specimens = $this->pagerLayout->execute();
 
+
         $specs = array();
         foreach($this->specimens as $specimen)
         {
-          $specs[$specimen->getSpecRef()] = $specimen->getSpecRef();
+          $specs[$specimen->getId()] = $specimen->getId();
         }
         $specCodes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens', $specs);
         $this->codes = array();
