@@ -95,4 +95,19 @@ class Specimens extends BaseSpecimens
         return $q->execute(array(), Doctrine::HYDRATE_SINGLE_SCALAR);
   }
 
+  public function getAggregatedName($sep = ' / ')
+  {
+    $items = array(
+        $this->getCollectionName(),
+        $this->getTaxonName(),
+        $this->getChronoName(),
+        $this->getLithoName(),
+        $this->getLithologyName(),
+        $this->getMineralName()
+   );
+
+    $items = array_filter($items);
+    return implode($sep, $items);
+  } 
+
 }

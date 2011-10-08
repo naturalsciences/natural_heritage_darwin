@@ -10,13 +10,13 @@
               <dt><?php echo __('Sampling Location :');?></dt>
               <dd><?php echo $item->getGtu(ESC_RAW);?></dd>
               <dt><?php echo __('Type :');?></dt>
-              <dd><?php echo $item->getIndividualTypeGroup();?></dd>
+              <dd><?php echo $item->SpecimenIndividuals[0]->getTypeGroup();?></dd>
               <dt><?php echo __('Sex :');?></dt>
-              <dd><?php echo $item->getIndividualSex();?></dd>
+              <dd><?php echo $item->SpecimenIndividuals[0]->getSex();?></dd>
               <dt><?php echo __('State :');?></dt>
-              <dd><?php echo $item->getIndividualState();?></dd>
+              <dd><?php echo $item->SpecimenIndividuals[0]->getState();?></dd>
               <dt><?php echo __('Social Status :');?></dt>
-              <dd><?php echo $item->getIndividualSocialStatus();?></dd>
+              <dd><?php echo $item->SpecimenIndividuals[0]->getSocialStatus();?></dd>
             </dl>
           </div>
         </td>
@@ -24,7 +24,7 @@
           <?php echo truncate_text($item->getAggregatedName(),40);?>
         </td>
         <td>
-          <input name="mass_action[item_list][]" type="hidden" value="<?php echo $item->getIndividualRef();?>" class="item_row">
+          <input name="mass_action[item_list][]" type="hidden" value="<?php echo $item->SpecimenIndividuals[0]->getId();?>" class="item_row">
           <a class="row_delete" href="#" title="<?php echo __('Are you sure ?') ?>"><?php echo image_tag('remove.png'); ?></a>
         </td>
       </tr>
