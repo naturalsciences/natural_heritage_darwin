@@ -8,7 +8,7 @@
  * @author     DB team <collections@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class PublicSearchFormFilter extends BaseSpecimenSearchFormFilter
+class PublicSearchFormFilter extends BaseSpecimensFormFilter
 {
   public function configure()
   {
@@ -173,6 +173,7 @@ class PublicSearchFormFilter extends BaseSpecimenSearchFormFilter
     $this->widgetSchema['current_page'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['current_page'] = new sfValidatorInteger(array('required'=>false,'empty_value'=>1));
 /** New Pagin System ***/
+    $this->widgetSchema->setNameFormat('specimen_search_filters[%s]');
   }
   
   public function addSexColumnQuery($query, $field, $val)
@@ -226,18 +227,9 @@ class PublicSearchFormFilter extends BaseSpecimenSearchFormFilter
   }     
   public function doBuildQuery(array $values)
   {
-    $fields = SpecimenSearchTable::getFieldsByType();  
-    $str = '';
-    $array_fld = array_merge($fields['specimens'],$fields['individuals']);
-    foreach($array_fld as $fld)
-    {
-      $str .= ' dummy_first( '. $fld .' ) as '.$fld.' ,' ;
-    }
-
     $query = Doctrine_Query::create()
-      ->from('IndividualSearch s')
-      ->select($str .' MIN(id) as id,  false as with_types')
-      ->groupBy('individual_ref'); 
+      ->from('SpecimenIndividuals i')
+      ->innerJoin('i.Specimens s');
     $this->options['query'] = $query;       
     $query = parent::doBuildQuery($values);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));
@@ -255,7 +247,7 @@ class PublicSearchFormFilter extends BaseSpecimenSearchFormFilter
     $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_indexed', $values['litho_name'],null,'litho_name_indexed');        
     $this->addNamingColumnQuery($query, 'lithology', 'name_indexed', $values['lithology_name'],null,'lithology_name_indexed');    
     $this->addNamingColumnQuery($query, 'mineralogy', 'name_indexed', $values['mineral_name'],null,'mineral_name_indexed');           
-    $query->andWhere('collection_is_public = true AND individual_ref is NOT NULL') ;
+    $query->andWhere('collection_is_public = true') ;
     if($values['tags'] != '') $query->andWhere("gtu_country_tag_indexed && getTagsIndexedAsArray(?)",$values['tags']);   
     $query->limit($this->getCatalogueRecLimits());
     return $query;
@@ -263,6 +255,6 @@ class PublicSearchFormFilter extends BaseSpecimenSearchFormFilter
 
   public function getWithOrderCriteria()
   {
-    return $this->getQuery()->orderby($this->getValue('order_by') . ' ' . $this->getValue('order_dir').', spec_ref');
+    return $this->getQuery()->orderby($this->getValue('order_by') . ' ' . $this->getValue('order_dir').'');
   }
 }

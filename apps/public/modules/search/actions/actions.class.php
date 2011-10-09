@@ -44,22 +44,19 @@ class searchActions extends DarwinActions
       // Get the generated query from the filter and add order criterion to the query
       $query = $this->form->getWithOrderCriteria();
 
-      $query->groupBy($this->form->getValue('order_by') . ', spec_ref, individual_ref ');
-
       // Define the pager
       $pager = new DarwinPager($query, $this->form->getValue('current_page'), $this->form->getValue('rec_per_page'));
 
       // Replace the count query triggered by the Pager to get the number of records retrieved
       $count_q = clone $query;
       // Remove from query the group by and order by clauses
-      $count_q = $count_q->select('count( distinct individual_ref)')->removeDqlQueryPart('groupby')->removeDqlQueryPart('orderby')->limit(0);
+      $count_q = $count_q->select('count(*)')->removeDqlQueryPart('orderby')->limit(0);
       // Initialize an empty count query
       $counted = new DoctrineCounted();
       // Define the correct select count() of the count query
       $counted->count_query = $count_q;
       // And replace the one of the pager with this new one
       $pager->setCountQuery($counted);         
-      
       // Define in one line a pager Layout based on a pagerLayoutWithArrows object
       // This pager layout is based on a Doctrine_Pager, itself based on a customed Doctrine_Query object (call to the getExpLike method of ExpeditionTable class)
 
@@ -99,25 +96,26 @@ class searchActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    $this->specimen = Doctrine::getTable('specimenSearch')->findOneByIndividualRef($request->getParameter('id'));   
-    $this->forward404Unless($this->specimen);
-    if(!$this->specimen->getCollectionIsPublic()) $this->forwardToSecureAction();
+    $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('id'));   
+    $this->forward404Unless($this->individual);
+    if(!$this->individual->Specimens->getCollectionIsPublic()) $this->forwardToSecureAction();
     
-    $collection = Doctrine::getTable('Collections')->findOneById($this->specimen->getCollectionRef());
+    $collection = Doctrine::getTable('Collections')->findOneById($this->individual->Specimens->getCollectionRef());
     $this->institute = Doctrine::getTable('People')->findOneById($collection->getInstitutionRef()) ;
     $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef()) ;
     $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());      
+
     $ids = $this->FecthIdForCommonNames() ;
     $this->common_names = Doctrine::getTable('ClassVernacularNames')->findAllCommonNames($ids) ;    
     
-    if ($tag = $this->specimen->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ; 
+    if ($tag = $this->individual->Specimens->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ; 
     else $this->tags = false ;
   }
     
   /**
   * Compute different sources to get the columns that must be showed
   * 1) from form request 2) from session 3) from default value
-  * @param sfForm $form The SpecimenSearch form with the 'fields' field defined
+  * @param sfForm $form The form with the 'fields' field defined
   * @return array of fields with check or uncheck or a list of visible fields separated by |
   */
   private function getVisibleColumns(sfForm $form)
@@ -231,22 +229,22 @@ class searchActions extends DarwinActions
     $tab = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(), 'lithology' => array(),'mineralogy' => array()) ;
     if(isset($this->search))
     {
-      foreach($this->search as $specimen)
+      foreach($this->search as $individual)
       {
-        if($specimen->getTaxonRef()) $tab['taxonomy'][] = $specimen->getTaxonRef() ;
-        if($specimen->getChronoRef()) $tab['chronostratigraphy'][] = $specimen->getChronoRef() ;
-        if($specimen->getLithoRef()) $tab['lithostratigraphy'][] = $specimen->getLithoRef() ;
-        if($specimen->getLithologyRef()) $tab['lithology'][] = $specimen->getLithologyRef() ;
-        if($specimen->getMineralRef()) $tab['mineralogy'][] = $specimen->getMineralRef() ;
+        if($individual->Specimens->getTaxonRef()) $tab['taxonomy'][] = $individual->Specimens->getTaxonRef() ;
+        if($individual->Specimens->getChronoRef()) $tab['chronostratigraphy'][] = $individual->Specimens->getChronoRef() ;
+        if($individual->Specimens->getLithoRef()) $tab['lithostratigraphy'][] = $individual->Specimens->getLithoRef() ;
+        if($individual->Specimens->getLithologyRef()) $tab['lithology'][] = $individual->Specimens->getLithologyRef() ;
+        if($individual->Specimens->getMineralRef()) $tab['mineralogy'][] = $individual->Specimens->getMineralRef() ;
       }
     }
     else
     {
-      if($this->specimen->getTaxonRef()) $tab['taxonomy'][] = $this->specimen->getTaxonRef() ;
-      if($this->specimen->getChronoRef()) $tab['chronostratigraphy'][] = $this->specimen->getChronoRef() ;
-      if($this->specimen->getLithoRef()) $tab['lithostratigraphy'][] = $this->specimen->getLithoRef() ;
-      if($this->specimen->getLithologyRef()) $tab['lithology'][] = $this->specimen->getLithologyRef() ;
-      if($this->specimen->getMineralRef()) $tab['mineralogy'][] = $this->specimen->getMineralRef() ;   
+      if($this->individual->Specimens->getTaxonRef()) $tab['taxonomy'][] = $this->individual->Specimens->getTaxonRef() ;
+      if($this->individual->Specimens->getChronoRef()) $tab['chronostratigraphy'][] = $this->individual->Specimens->getChronoRef() ;
+      if($this->individual->Specimens->getLithoRef()) $tab['lithostratigraphy'][] = $this->individual->Specimens->getLithoRef() ;
+      if($this->individual->Specimens->getLithologyRef()) $tab['lithology'][] = $this->individual->Specimens->getLithologyRef() ;
+      if($this->individual->Specimens->getMineralRef()) $tab['mineralogy'][] = $this->individual->Specimens->getMineralRef() ;   
     }
     return $tab ;
   }
