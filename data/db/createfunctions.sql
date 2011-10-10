@@ -2982,7 +2982,7 @@ BEGIN
     RETURN true;
   END IF;
 
-  select id into ref_rec from igs where ig_num = line.ig_num  and ig_date = COALESCE(line.ig_date,'01/01/0001');
+  select id into ref_rec from igs where ig_num = line.ig_num ;
   IF NOT FOUND THEN
     IF import THEN
         INSERT INTO igs (ig_num, ig_date_mask, ig_date)
@@ -3546,6 +3546,18 @@ BEGIN
   RETURN NEW;        
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION fct_mask_date(date_fld timestamp , mask_fld integer) RETURNS text as
+$$
+
+  SELECT 
+CASE WHEN ($2 & 32)!=0 THEN date_part('year',$1)::text ELSE 'xxxx' END || '-' ||
+CASE WHEN ($2 & 16)!=0 THEN date_part('month',$1)::text ELSE 'xx' END || '-' ||
+CASE WHEN ($2 & 8)!=0 THEN date_part('day',$1)::text ELSE 'xx' END; 
+$$
+LANGUAGE sql immutable;
+
 
 create or replace function upsert (tableName in varchar, keyValues in hstore) returns text language plpgsql as
 $$
