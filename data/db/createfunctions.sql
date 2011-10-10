@@ -4347,6 +4347,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION fct_mask_date(date_fld timestamp , mask_fld integer) RETURNS text as
+$$
+
+  SELECT 
+CASE WHEN ($2 & 32)!=0 THEN date_part('year',$1)::text ELSE 'xxxx' END || '-' ||
+CASE WHEN ($2 & 16)!=0 THEN date_part('month',$1)::text ELSE 'xx' END || '-' ||
+CASE WHEN ($2 & 8)!=0 THEN date_part('day',$1)::text ELSE 'xx' END; 
+$$
+LANGUAGE sql immutable;
+
+
 create or replace function upsert (tableName in varchar, keyValues in hstore) returns text language plpgsql as
 $$
 declare
