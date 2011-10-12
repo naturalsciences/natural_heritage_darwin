@@ -14,7 +14,7 @@ class specimensearchActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new SpecimenSearchFormFilter(null,array('user' => $this->getUser()));
+    $this->form = new UnitSearchFormFilter(null,array('user' => $this->getUser()));
 
     $this->form->setDefault('rec_per_page',$this->getUser()->fetchRecPerPage());
 
@@ -25,7 +25,7 @@ class specimensearchActions extends DarwinActions
       $criterias = unserialize($saved_search->getSearchCriterias());
 
       $this->fields = $saved_search->getVisibleFieldsInResultStr();
-      Doctrine::getTable('SpecimenSearch')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+      Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
       $this->form->bind($criterias['specimen_search_filters']) ;
     }
     else $this->form->addGtuTagValue(0);    
@@ -47,7 +47,7 @@ class specimensearchActions extends DarwinActions
     // Modify the s_url to call the searchResult action when on result page and playing with pager
     $this->s_url = 'specimensearch/searchResult'.'?is_choose='.$this->is_choose;
     // Initialize filter
-    $this->form = new SpecimenSearchFormFilter(null,array('user' => $this->getUser()));
+    $this->form = new UnitSearchFormFilter(null,array('user' => $this->getUser()));
     // If the search has been triggered by clicking on the search button or with pinned specimens
     if(($request->isMethod('post') && $request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
     {
@@ -101,7 +101,7 @@ class specimensearchActions extends DarwinActions
       if(isset($criterias['specimen_search_filters']))
       {
         // Bring all the required/necessary widgets on page
-        Doctrine::getTable('SpecimenSearch')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+        Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
         if($saved_search->getisOnlyId() && $criterias['specimen_search_filters']['spec_ids']=='')
           $criterias['specimen_search_filters']['spec_ids'] = '0';
         $this->form->bind($criterias['specimen_search_filters']) ;
@@ -118,7 +118,7 @@ class specimensearchActions extends DarwinActions
         {
           $this->setTemplate('index');
           // Bring all the required/necessary widgets on page
-          Doctrine::getTable('SpecimenSearch')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+          Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
           $this->loadWidgets();
           return;
         }
@@ -210,7 +210,7 @@ class specimensearchActions extends DarwinActions
 
     $this->setTemplate('index');
     if(isset($criterias['specimen_search_filters']))
-      Doctrine::getTable('SpecimenSearch')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+      Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
     $this->loadWidgets();
   }
   
@@ -218,7 +218,7 @@ class specimensearchActions extends DarwinActions
   * Compute different sources to get the columns that must be showed
   * 1) from form request 2) from session 3) from default value
   * @param sfBasicSecurityUser $user the user
-  * @param sfForm $form The SpecimenSearch form with the 'fields' field defined
+  * @param sfForm $form The filter form with the 'col_fields' field defined
   * @param bool $as_string specify if you want the return to be a string (concat of visible cols)
   * @return array of fields with check or uncheck or a list of visible fields separated by |
   */
@@ -316,7 +316,7 @@ class specimensearchActions extends DarwinActions
   {
     $number = intval($request->getParameter('num'));
 
-    $form = new SpecimenSearchFormFilter(null,array('user' => $this->getUser()));
+    $form = new UnitSearchFormFilter(null,array('user' => $this->getUser()));
     $form->addGtuTagValue($number);
     return $this->renderPartial('andSearch',array('form' => $form['Tags'][$number], 'row_line'=>$number));
   }  
@@ -325,7 +325,7 @@ class specimensearchActions extends DarwinActions
   {
     $number = intval($request->getParameter('num'));
 
-    $form = new SpecimenSearchFormFilter(null,array('user' => $this->getUser()));
+    $form = new UnitSearchFormFilter(null,array('user' => $this->getUser()));
     $form->addCodeValue($number);
     return $this->renderPartial('specimensearchwidget/codeline',array('code' => $form['Codes'][$number], 'row_line'=>$number));
   }

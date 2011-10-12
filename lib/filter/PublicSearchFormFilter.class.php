@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SpecimenSearch filter form.
+ * PublicSearchFormFilter filter form.
  *
  * @package    darwin
  * @subpackage filter

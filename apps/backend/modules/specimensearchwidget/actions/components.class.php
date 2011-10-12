@@ -14,7 +14,7 @@ class specimensearchwidgetComponents extends sfComponents
   {
     if(!$this->form)
     {
-     $this->form = new SpecimenSearchFormFilter() ;
+     $this->form = new UnitSearchFormFilter() ;
     }
   }
   
