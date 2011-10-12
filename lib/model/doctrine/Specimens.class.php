@@ -110,4 +110,32 @@ class Specimens extends BaseSpecimens
     return implode($sep, $items);
   } 
 
+
+  public function getCountryTags($is_view = false)
+  {
+    $tags = explode(';',$this->getGtuCountryTagValue(''));
+    $nbr = count($tags);
+    if(! $nbr) return "-";
+    $str = '<ul class="name_tags_view">';
+    foreach($tags as $value)
+      if (strlen($value))
+        $str .= '<li>' . trim($value).'</li>';
+    $str .= '</ul>';
+    
+    return $str;
+  }
+
+  public function getOtherGtuTags()
+  {
+    $tags = explode(';',$this->getGtuCountryTagValue(''));
+    $nbr = count($tags);
+    if(! $nbr) return "-";
+    $str = '<ul class="name_tags_view">';
+    foreach($tags as $value)
+      if (strlen($value))
+        $str .= '<li>' . trim($value).'</li>';
+    $str .= '</ul>';
+    
+    return $str;
+  }
 }

@@ -130,16 +130,8 @@ class specimensearchActions extends DarwinActions
 
           // Define all properties that will be either used by the data query or by the pager
           // They take their values from the request. If not present, a default value is defined
-          $ordered_searched = ' spec_ref ';
-          if($this->form->getValue('what_searched') == 'individual')
-            $ordered_searched = ' individual_ref ';
-
           $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir);
-          if($this->form->getValue('what_searched') != 'part')
-          {
-            $query->orderby($this->orderBy . ' ' . $this->orderDir . ', ' . $ordered_searched );
-            $query->groupBy($ordered_searched . ', ' . $this->orderBy);
-          }
+          
           // Define in one line a pager Layout based on a pagerLayoutWithArrows object
           // This pager layout is based on a Doctrine_Pager, itself based on a customed Doctrine_Query object (call to the getExpLike method of ExpeditionTable class)
           $pager = new DarwinPager($query,
@@ -149,13 +141,7 @@ class specimensearchActions extends DarwinActions
           // Replace the count query triggered by the Pager to get the number of records retrieved
           $count_q = clone $query;//$pager->getCountQuery();
           // Remove from query the group by and order by clauses
-          $count_q = $count_q->select('count( distinct spec_ref)')->removeDqlQueryPart('groupby')->removeDqlQueryPart('orderby')->limit(0);
-          if($this->form->getValue('what_searched') == 'individual')
-            $count_q->select('count( distinct individual_ref)');
-
-          if($this->form->getValue('what_searched') == 'part')
-            $count_q->select('count( distinct part_ref)');
-
+          $count_q = $count_q->select('count(id)')->removeDqlQueryPart('orderby')->limit(0);
           // Initialize an empty count query
           $counted = new DoctrineCounted();
           // Define the correct select count() of the count query
@@ -173,13 +159,12 @@ class specimensearchActions extends DarwinActions
             $this->specimensearch = $this->pagerLayout->execute();
           $spec_list = array();
           $part_list = array() ;
+
           $this->source = $this->form->getValue('what_searched');
 
           foreach($this->specimensearch as $key=>$specimen)
           {
-            $spec_list[] = $specimen->getSpecRef() ;
-            if( $this->source == 'part')
-              $part_list[] = $specimen->getPartRef();
+            $spec_list[] = $specimen['id'] ;
           }
           $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$spec_list) ;
           $this->codes = array();

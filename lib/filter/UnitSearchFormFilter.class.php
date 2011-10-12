@@ -517,6 +517,8 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     $this->validatorSchema['lon_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
 
     sfWidgetFormSchema::setDefaultFormFormatterName('list');
+    $this->widgetSchema->setNameFormat('specimen_search_filters[%s]');
+
   }
 
 
@@ -915,66 +917,17 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
 
   public function doBuildQuery(array $values)
   {
-//     $fields = SpecimenSearchTable::getFieldsByType($this->options['user']->getDbUserType());
-
-    $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
-    $this->cols = $this->getCollectionWithRights($this->options['user']);
-
-    if(!empty($values['collection_ref']))
-    {
-      $this->cols = array_intersect($values['collection_ref'], $this->cols);
-    }
-/*
-    if($values['what_searched'] == 'specimen')
-    {
-      $str = '';
-      foreach($fields['specimens'] as $fld)
-      {
-        $str .= ' dummy_first( '. $fld .' ) as '.$fld.' ,' ;
-      }
-      $query = DQ::create()
-        ->from('SpecimenSearch s')
-        ->groupBy('spec_ref')
-        ->select($str . ' MIN(id) as id');
-
-    }
-    elseif($values['what_searched'] == 'individual')
-    {
-      $str = '';
-      $array_fld = array_merge($fields['specimens'],$fields['individuals']);
-      foreach($array_fld as $fld)
-      {
-        $str .= ' dummy_first( '. $fld .' ) as '.$fld.' ,' ;
-      }
-
-      $query = DQ::create()
-        ->from('IndividualSearch s')
-        ->select($str .' MIN(id) as id,  false as with_types')
-        ->andWhere('individual_ref is not null ')
-        ->groupBy('individual_ref');
-    }
-    else
-    {
-      $array_fld = array_merge($fields['specimens'],$fields['individuals']);
-      $array_fld = array_merge($array_fld,$fields['parts']);
-      $str = implode(', ',$array_fld);
-      $query = DQ::create()
-        ->select($str.' , false as with_types,id')
-        ->andWhere('part_ref is not null ')
-        ->from('PartSearch s');
-    }
-    if($values['what_searched'] != 'part')
-      $query->addSelect('dummy_first(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
-    else
-      $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
-
-*/
-
-
-    $this->options['query'] = $query;
+    $this->scope = $values['what_searched'];
 
     $query = parent::doBuildQuery($values);
+    $alias = $query->getRootAlias();
+    $query->addSelect($alias.'.*');
+    $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
+    $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
 
+    $query->addSelect('true as with_types, true as with_individuals');
+
+    $this->cols = $this->getCollectionWithRights($this->options['user']);
     $query->andwhere('collection_ref in ( '.implode(',',$this->cols). ') ');
 
     if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
