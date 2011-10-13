@@ -123,6 +123,6 @@ function detachCollRightValue()
 {
   parent_el = $(this).closest('tr');
   $(parent_el).hide();
-  $(parent_el).attr('id','') ;
+  $(parent_el).removeAttr('id') ;
   $(parent_el).find('input[type=hidden]:first').val('') ;
 }
