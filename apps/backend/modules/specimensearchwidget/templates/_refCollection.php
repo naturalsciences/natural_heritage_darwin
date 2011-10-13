@@ -22,7 +22,7 @@ $(document).ready(function () {
     });    
     $('#clear_collections').click(function()
     {
-  	  $('table.widget_sub_table').find(':checkbox').attr('checked','');
+  	  $('table.widget_sub_table').find(':checkbox').removeAttr('checked';
     });
   
     $('#check_editable').click(function(){

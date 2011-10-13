@@ -197,7 +197,7 @@ $(document).ready(function () {
     });    
     $('#clear_collections').click(function()
     {
-  	  $('table.collections').find(':checkbox').attr('checked','');    
+  	  $('table.collections').find(':checkbox').removeAttr('checked');    
     });   
   var num_fld = 1;
   $('.and_tag').click(function()
