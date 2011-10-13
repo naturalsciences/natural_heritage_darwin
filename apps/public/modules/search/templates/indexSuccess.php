@@ -191,10 +191,12 @@ $(document).ready(function () {
     });
     $('.treelist li input[type=checkbox]').click(function()
     {
-	    class_val = $(this).closest('li').attr('class');
-   	  val = $(this).attr('checked') ;
-	    alt_val = $(this).closest('ul .'+class_val).find(':checkbox').attr('checked',val);
-    });    
+      class_val = $(this).closest('li').attr('class');
+      if(! $(this).is(':checked'))
+        $('.'+class_val).find(':checkbox').not($(this)).removeAttr('checked');
+      else
+        $('.'+class_val).find(':checkbox').not($(this)).attr('checked','checked');  
+    });
     $('#clear_collections').click(function()
     {
   	  $('table.collections').find(':checkbox').removeAttr('checked');    

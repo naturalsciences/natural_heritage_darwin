@@ -61,11 +61,11 @@ function checkGroup()
         if(html == "0" )
         {
           $(".merge_question").hide();
-          $(".merge_question input").attr('checked', true);
+          $(".merge_question input").attr('checked', 'checked');
         }
         else
         {
-          $(".merge_question input").attr('checked', false);
+          $(".merge_question input").removeAttr('checked');
           $(".merge_question").show();
         }
       },
