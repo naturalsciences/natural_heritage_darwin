@@ -173,7 +173,12 @@
             });
         </script>
       <?php endif ; ?>
-    </td>
+    </td>    
+    <td  class="col_ig">
+      <?php if($specimen->getIgRef() > 0) : ?>       
+          <a href="<?php echo url_for('igs/'.$action.'?id='.$specimen->getIgRef());?>"><?php echo $specimen->getIgNum();?></a>
+      <?php endif ;?>
+    </td>    
     <td  class="col_litho">
       <?php if($specimen->getLithoRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=litho_".$item_ref."_info");?>
@@ -233,11 +238,6 @@
             });
         </script> 
       <?php endif ; ?>
-    </td>
-    <td  class="col_ig">
-      <?php if($specimen->getIgRef() > 0) : ?>       
-          <a href="<?php echo url_for('igs/'.$action.'?id='.$specimen->getIgRef());?>"><?php echo $specimen->getIgNum();?></a>
-      <?php endif ;?>
     </td>
     <td class="col_expedition">
       <?php if($specimen->getExpeditionRef() > 0) : ?>
