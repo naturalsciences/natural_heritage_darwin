@@ -310,7 +310,7 @@ CREATE TABLE public.identifications_abdc as
   select
   nextval('public.identifications_abdc_id_seq') as id,
   f.id as flat_id,
-  CASE WHEN notion_date_mask = 0 THEN NULL::timestamp ELSE notion_date END as notion_date,
+  CASE WHEN notion_date_mask = 0 THEN current_timestamp ELSE notion_date END as notion_date,
   determination_status,
   false as is_current,
   notion_concerned,
