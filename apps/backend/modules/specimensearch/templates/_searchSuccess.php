@@ -57,10 +57,25 @@
             <th><!-- actions --></th>
           </tr>
         </thead>
-        <?php foreach($specimensearch as $specimen):?>
-          <?php if($source=="specimen") $itemRef = $specimen['id'];
-                elseif($source=="individual") $itemRef = $specimen->getIndividualRef();
-                else $itemRef = $specimen->getPartRef(); ?>
+        <?php foreach($specimensearch as $unit):?>
+          <?php if($source=="specimen")
+                {
+                  $specimen = $unit;
+                  $itemRef = $specimen['id'];
+                }
+                elseif($source=="individual")
+                {
+                  $individual = $unit;
+                  $specimen = $individual->Specimens;
+                  $itemRef = $individual['id'];
+                }
+                elseif($source=="part")
+                {
+                  $part = $unit;
+                  $individual = $unit->Individual;
+                  $specimen = $individual->Specimens;
+                  $itemRef = $part['id'];
+                }?>
           <tbody>
             <tr class="rid_<?php echo $itemRef?>">
 
@@ -72,7 +87,7 @@
               </td>
               <td rowspan="2">
                 <?php if($source != 'part'):?>
-                  <?php $expandable = ($source=='specimen') ? $specimen->getWithIndividuals() : $specimen->getWithParts();?>
+                  <?php $expandable = ($source=='specimen') ? true:true /** @TODO $specimen->getWithIndividuals() : $specimen->getWithParts()**/;?>
                   <?php if($expandable):?>
                     <?php echo image_tag('blue_expand.png', array('alt' => '+', 'class'=> 'tree_cmd_td collapsed')); ?>
                     <?php echo image_tag('blue_expand_up.png', array('alt' => '-', 'class'=> 'tree_cmd_td expanded')); ?>
@@ -92,10 +107,10 @@
               </td>
               <?php include_partial('result_content_specimen', array('item_ref'=>$itemRef, 'source'=>$source,'specimen' => $specimen, 'codes' => $codes, 'is_specimen_search' => $is_specimen_search)); ?>
               <?php if($source != 'specimen'):?>
-                <?php include_partial('result_content_individual', array('item_ref'=>$itemRef, 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
+                <?php include_partial('result_content_individual', array('item_ref'=>$itemRef, 'individual' => $individual, 'is_specimen_search' => $is_specimen_search)); ?>
               <?php endif;?>
               <?php if($source == 'part'):?>
-                <?php include_partial('result_content_part', array('item_ref'=>$itemRef, 'specimen' => $specimen, 'codes' => $part_codes, 'is_specimen_search' => $is_specimen_search)); ?>
+                <?php include_partial('result_content_part', array('item_ref'=>$itemRef, 'part' => $part, 'codes' => $part_codes, 'is_specimen_search' => $is_specimen_search)); ?>
               <?php endif;?>
               <td rowspan="2">
               <?php if($sf_user->isAtLeast(Users::ADMIN) || $specimen->getHasEncodingRights()) : ?>
@@ -103,12 +118,12 @@
                   case 'specimen':   $e_link = 'specimen/edit?id='.$specimen->getId();
                                      $v_link = 'specimen/view?id='.$specimen->getId();                  
                                      $d_link = 'specimen/new?duplicate_id='.$specimen->getId();break;
-                  case 'individual': $e_link = 'individuals/edit?id='.$specimen->getIndividualRef();
-                                     $v_link = 'individuals/view?id='.$specimen->getIndividualRef();
-                                     $d_link = 'individuals/edit?spec_id='.$specimen->getId().'&duplicate_id='.$specimen->getIndividualRef();break;
-                  default:           $e_link = 'parts/edit?id='.$specimen->getPartRef();
-                                     $v_link = 'parts/view?id='.$specimen->getPartRef();
-                                     $d_link = 'parts/edit?indid='.$specimen->getIndividualRef().'&duplicate_id='.$specimen->getPartRef();break;              
+                  case 'individual': $e_link = 'individuals/edit?id='.$individual->getId();
+                                     $v_link = 'individuals/view?id='.$individual->getId();
+                                     $d_link = 'individuals/edit?spec_id='.$specimen->getId().'&duplicate_id='.$individual->getId();break;
+                  default:           $e_link = 'parts/edit?id='.$part->getId();
+                                     $v_link = 'parts/view?id='.$part->getId();
+                                     $d_link = 'parts/edit?indid='.$individual->getId().'&duplicate_id='.$part->getId();break;              
                   };?>
                   <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), $e_link);?>
                   <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))), $d_link, array('class' => 'duplicate_link'));?>
@@ -150,25 +165,25 @@
               </tr>
             <?php elseif($source == 'specimen'):?>
               <tr class="ind_row sub_row"><td colspan="14"></td></tr>
-            <?php elseif($source == 'individual' && $specimen->getWithParts()):?>
-              <tr id="tr_part_<?php echo $specimen->getIndividualRef();?>" class="part_row sub_row">
+            <?php elseif($source == 'individual' /** @TODO  && $specimen->getWithParts()*/):?>
+              <tr id="tr_part_<?php echo $individual->getId();?>" class="part_row sub_row">
                 <td colspan="14"> 
-                  <div id="container_part_<?php echo $specimen->getIndividualRef();?>" class="tree"></div>
+                  <div id="container_part_<?php echo $individual->getId();?>" class="tree"></div>
                   <script type="text/javascript">
                   $(document).ready(function () {
-                    $('tr.rid_<?php echo $specimen->getIndividualRef(); ?> img.collapsed').click(function() 
+                    $('tr.rid_<?php echo $individual->getId(); ?> img.collapsed').click(function() 
                     {
                       $(this).hide();
                       $(this).siblings('.expanded').show();
-                      $.get('<?php echo url_for("specimensearch/partTree?id=".$specimen->getIndividualRef()) ;?>',function (html){
-                              $('#container_part_<?php echo $specimen->getIndividualRef();?>').html(html).slideDown();
+                      $.get('<?php echo url_for("specimensearch/partTree?id=".$individual->getId()) ;?>',function (html){
+                              $('#container_part_<?php echo $individual->getId();?>').html(html).slideDown();
                               });
                     });  
-                    $('tr.rid_<?php echo $specimen->getIndividualRef(); ?> img.expanded').click(function() 
+                    $('tr.rid_<?php echo $individual->getId(); ?> img.expanded').click(function() 
                     {
                       $(this).hide();
                       $(this).siblings('.collapsed').show();
-                      $('#container_part_<?php echo $specimen->getIndividualRef();?>').slideUp();
+                      $('#container_part_<?php echo $individual->getId();?>').slideUp();
                     });
                   });
                   </script>

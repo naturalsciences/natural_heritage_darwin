@@ -316,7 +316,7 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
       ));
     $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
     $this->validatorSchema['role_ref'] = new sfValidatorChoice(array('choices'=>array_keys($fields_to_search), 'required'=>false)) ;
-$this->validatorSchema['role_ref'] = new sfValidatorPass() ;    
+    $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     /* Labels */
     $this->widgetSchema->setLabels(array('gtu_code' => 'Sampling Location code',
                                          'taxon_name' => 'Taxon text search',
@@ -919,9 +919,35 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
   {
     $this->scope = $values['what_searched'];
 
+    if($this->scope == 'specimen')
+    {
+      $query = DQ::create()
+        ->select('s.*')
+        ->from('Specimens s');
+    }
+    elseif($this->scope == 'individual')
+    {
+      $query = DQ::create()
+        ->select('s.*, i.*, p.*')
+        ->from('SpecimenIndividuals i')
+        ->innerJoin('i.Specimens s');
+    }
+    elseif($this->scope == 'part')
+    {
+      $query = DQ::create()
+        ->select('s.*, i.*, p.*')
+        ->from('SpecimenParts p')
+        ->innerJoin('p.Individual i')
+        ->innerJoin('i.Specimens s');
+    }
+
+    $this->options['query'] = $query;
+
+
+
     $query = parent::doBuildQuery($values);
     $alias = $query->getRootAlias();
-    $query->addSelect($alias.'.*');
+
     $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
     $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
 
