@@ -310,7 +310,7 @@ CREATE TABLE public.identifications_abdc as
   select
   nextval('public.identifications_abdc_id_seq') as id,
   f.id as flat_id,
-  CASE WHEN notion_date_mask = 0 THEN NULL::timestamp ELSE notion_date END as notion_date,
+  CASE WHEN notion_date_mask = 0 THEN current_timestamp ELSE notion_date END as notion_date,
   determination_status,
   false as is_current,
   notion_concerned,
@@ -326,7 +326,7 @@ create sequence public.taxon_identified_id_seq;
 
 CREATE TABLE public.taxon_identified as
 (
-  SELECT 
+  SELECT DISTINCT ON (i.id, c.value_defined)
     nextval('public.taxon_identified_id_seq') as id,
     i.id as identification_ref,
     c.value_defined as taxon_name,
@@ -351,10 +351,10 @@ insert into public.identifications_abdc
     is_current
 )
 (
-  select
+  select 
    nextval('public.identifications_abdc_id_seq') as id,
     f.id as flat_id,
-    null::timestamp as notion_date,
+    current_timestamp as notion_date,
     '' as determination_status,
     true as is_current
     FROM  darwin2.darwin_flat  f
@@ -371,7 +371,7 @@ insert into public.taxon_identified
     taxon_parent_ref
 )
 (
-  select
+  select DISTINCT ON (i.id, f.taxon_name)
     nextval('public.taxon_identified_id_seq') as id,
     i.id as identification_ref,
     f.taxon_name as taxon_name,
