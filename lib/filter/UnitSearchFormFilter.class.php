@@ -10,6 +10,10 @@
  */
 class UnitSearchFormFilter extends BaseSpecimensFormFilter
 {
+  const SC_SPEC = 'specimen';
+  const SC_IND = 'individual';
+  const SC_PART = 'part';
+
   public function configure()
   {
     $this->useFields(array('gtu_code','gtu_from_date','gtu_to_date', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'litho_level_name', 'chrono_name', 'chrono_level_ref',
@@ -285,14 +289,14 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
 
 
     /* Define list of options available for different type of searches to provide */
-    $what_searched = array('specimen'=>$this->getI18N()->__('Specimens'), 
-                           'individual'=>$this->getI18N()->__('Individuals'), 
-                           'part'=>$this->getI18N()->__('Parts'));
+    $what_searched = array(self::SC_SPEC=>$this->getI18N()->__('Specimens'), 
+                           self::SC_IND=>$this->getI18N()->__('Individuals'), 
+                           self::SC_PART=>$this->getI18N()->__('Parts'));
     $this->widgetSchema['what_searched'] = new sfWidgetFormChoice(array(
         'choices' => $what_searched,
     ));
 
-    $this->validatorSchema['what_searched'] = new sfValidatorChoice(array('choices'=>array_keys($what_searched), 'required'=>false,'empty_value'=>'specimen'));
+    $this->validatorSchema['what_searched'] = new sfValidatorChoice(array('choices'=>array_keys($what_searched), 'required'=>false,'empty_value'=>self::SC_SPEC));
 
     //people widget
     $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
@@ -589,8 +593,8 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     foreach($val as $k => $v)
       $val[$k] = $conn_MGR->quote($v, 'string');
 
-    if($this->scope == 'specimen')
-      $this->exists_qry[] = ' i1.sex in ('.implode(',',$val).') ';
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.sex in ('.implode(',',$val).') ';
     else
       $query->andWhere('i.sex in ('.implode(',',$val).')');
     return $query ;
@@ -604,8 +608,8 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     foreach($val as $k => $v)
       $val[$k] = $conn_MGR->quote($v, 'string');
 
-    if($this->scope == 'specimen')
-      $this->exists_qry[] = ' i1.type_search in ('.implode(',',$val).') ';
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.type_search in ('.implode(',',$val).') ';
     else
       $query->andWhere('i.type_search in ('.implode(',',$val).')');
     return $query ;
@@ -620,8 +624,8 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     foreach($val as $k => $v)
       $val[$k] = $conn_MGR->quote($v, 'string');
 
-    if($this->scope == 'specimen')
-      $this->exists_qry[] = ' i1.stage in ('.implode(',',$val).') ';
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.stage in ('.implode(',',$val).') ';
     else
       $query->andWhere('i.stage in ('.implode(',',$val).')');
 
@@ -636,8 +640,8 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     foreach($val as $k => $v)
       $val[$k] = $conn_MGR->quote($v, 'string');
 
-    if($this->scope == 'specimen')
-      $this->exists_qry[] = ' i1.state in ('.implode(',',$val).') ';
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.state in ('.implode(',',$val).') ';
     else
       $query->andWhere('i.state in ('.implode(',',$val).')');
     return $query ;
@@ -651,8 +655,8 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     foreach($val as $k => $v)
       $val[$k] = $conn_MGR->quote($v, 'string');
 
-    if($this->scope == 'specimen')
-      $this->exists_qry[] = ' i1.social_status in ('.implode(',',$val).') ';
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.social_status in ('.implode(',',$val).') ';
     else
       $query->andWhere('i.social_status in ('.implode(',',$val).')');
     return $query ;
@@ -666,8 +670,8 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     foreach($val as $k => $v)
       $val[$k] = $conn_MGR->quote($v, 'string');
 
-    if($this->scope == 'specimen')
-      $this->exists_qry[] = ' i1.rock_form in ('.implode(',',$val).') ';
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.rock_form in ('.implode(',',$val).') ';
     else
       $query->andWhere('i.rock_form in ('.implode(',',$val).')');
 
@@ -676,13 +680,17 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
 
   public function addInstitutionRefColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      $query->andWhere('institution_ref = ?',$val);
-    }
+    if($val == '' &&  ! ctype_digit($val)) return ;
+    $conn_MGR = Doctrine_Manager::connection();
+    $val = $conn_MGR->quote($val, 'integer');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.institution_ref =  '. $val;
+    else
+      $query->andWhere(' p1.institution_ref =  '.$val);
+
     return $query ;
   }
-
 
   public function addContainerColumnQuery($query, $field, $val)
   {
@@ -720,61 +728,81 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
 
   public function addBuildingColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('building',$val);
-      else
-        $query->andWhere('building = ?',$val);
-    }
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.building in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('p.building in ('.implode(',',$val).')');
+
     return $query ;
   }
 
   public function addFloorColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('floor',$val);
-      else
-        $query->andWhere('floor = ?',$val);
-    }
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.floor in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('p.floor in ('.implode(',',$val).')');
+
     return $query ;
   }
 
   public function addRoomColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('room',$val);
-      else
-        $query->andWhere('room = ?',$val);
-    }
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.room in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('p.room in ('.implode(',',$val).')');
+
     return $query ;
   }
 
   public function addRowColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('row',$val);
-      else
-        $query->andWhere('row = ?',$val);
-    }
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.row in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('p.row in ('.implode(',',$val).')');
+
     return $query ;
   }
 
   public function addShelfColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('shelf',$val);
-      else
-        $query->andWhere('shelf = ?',$val);
-    }
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.shelf in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('p.shelf in ('.implode(',',$val).')');
+
     return $query ;
   }
 
@@ -849,13 +877,13 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     }
     if(! empty($params_part)) 
     {
-      if($this->scope == 'specimen')
+      if($this->scope == self::SC_SPEC)
         $query->addWhere("exists (select 1 from specimen_individuals i inner join specimen_parts p on p.specimen_individual_ref = i.id 
           inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.id  )", $params_part);
-      elseif($this->scope == 'individual')
+      elseif($this->scope == self::SC_IND)
         $query->addWhere("exists (select 1 from specimen_parts p on p.specimen_individual_ref = i.id 
           inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.id  )", $params_part);
-      elseif($this->scope == 'part')
+      elseif($this->scope == self::SC_PART)
         $query->addWhere("p.id in (select fct_searchCodes($str_params_part) )", $params_part);
 
     }
@@ -888,9 +916,9 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
 
     if(! empty($clean_ids))
     {
-      if($this->scope == 'specimen')
+      if($this->scope == self::SC_SPEC)
         $query->andWhereIn("s.id", $clean_ids);
-      elseif($this->scope == 'individual')
+      elseif($this->scope == self::SC_IND)
         $query->andWhereIn("i.id", $clean_ids);
       else
         $query->andWhereIn("p.id", $clean_ids);
@@ -947,23 +975,24 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
 
   public function doBuildQuery(array $values)
   {
-    $this->exists_qry = array();
+    $this->exists_qry_ind = array();
+    $this->exists_qry_part = array();
     $this->scope = $values['what_searched'];
 
-    if($this->scope == 'specimen')
+    if($this->scope == self::SC_SPEC)
     {
       $query = DQ::create()
         ->select('s.*')
         ->from('Specimens s');
     }
-    elseif($this->scope == 'individual')
+    elseif($this->scope == self::SC_IND)
     {
       $query = DQ::create()
         ->select('s.*, i.*, p.*')
         ->from('SpecimenIndividuals i')
         ->innerJoin('i.Specimens s');
     }
-    elseif($this->scope == 'part')
+    elseif($this->scope == self::SC_PART)
     {
       $query = DQ::create()
         ->select('s.*, i.*, p.*')
@@ -980,10 +1009,23 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     $query = parent::doBuildQuery($values);
 
     /** ADD exists to the query **/
-    if(! empty($this->exists_qry))
+    $where_exist = '';
+    if($this->scope == self::SC_SPEC && ! empty($this->exists_qry_part))
     {
-      $query->where('exists ( select 1 from specimen_individuals i1
-          where i1.specimen_ref= s.id AND '. implode(' AND ', $this->exists_qry). ')');
+       $query->where('exists ( select 1 from specimen_individuals i1
+          INNER JOIN specimen_parts p1 on i1.id = p1.specimen_individual_ref
+          where i1.specimen_ref= s.id AND '. implode(' AND ', array_merge($this->exists_qry_ind,$this->exists_qry_part)). ')');
+    }
+    elseif(! empty($this->exists_qry_ind)) // When scope = spec and look on ind only
+    {
+        $query->where('exists ( select 1 from specimen_individuals i1
+          where i1.specimen_ref= s.id AND '. implode(' AND ', $this->exists_qry_ind). ')');
+    }
+    elseif(! empty($this->exists_qry_part)) // When scope = ind and look on part
+    {
+        $alias = $query->getRootAlias();
+        $query->where('exists ( select 1 from specimen_parts p1
+          where p1.specimen_individual_ref= s.id AND '. implode(' AND ', $this->exists_qry_part). ')');
     }
 
     $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
