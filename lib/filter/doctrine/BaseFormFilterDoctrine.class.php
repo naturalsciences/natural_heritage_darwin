@@ -92,7 +92,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       $statement->execute(array(':table' => $table, ':field' => $field));
       $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-      //if $flat_field is not null then we want to use the fla table, change the $field value by $flat_field 
+      //if $flat_field is not null then we want to use the flat table, change the $field value by $flat_field 
       if ($flat_field != null) $field = $flat_field ;
       //print_r($results);
       if(count($results) == 0)

@@ -521,6 +521,13 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
 
   }
 
+  public function addGtuTagValue($num)
+  {
+      $form = new TagLineForm(null,array('num'=>$num));
+      $this->embeddedForms['Tags']->embedForm($num, $form);
+      $this->embedForm('Tags', $this->embeddedForms['Tags']);
+  }
+  
 
   public function addCodeValue($num)
   {
@@ -545,6 +552,165 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     }
     return $query;
   }
+
+  public function addToolsColumnQuery($query, $field, $val)
+  {
+    if($val != '' && is_array($val) && !empty($val))
+    {
+      $query->andWhere('s.id in (select fct_search_tools (?))',implode(',', $val));
+    }
+    return $query ;
+  }
+
+  public function addMethodsColumnQuery($query, $field, $val)
+  {
+    if($val != '' && is_array($val) && !empty($val))
+    {
+      $query->andWhere('s.id in (select fct_search_methods (?))',implode(',', $val));
+    }
+    return $query ;
+  }
+
+
+  public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
+  {
+     if ($values != "")
+     {
+       $query->andWhere("ig_num_indexed like concat(fullToIndex(?), '%') ", $values);
+     }
+     return $query;
+  }
+
+  public function addSexColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == 'specimen')
+    {
+      $query->andWhere('exists ( select 1 from specimen_individuals 
+          where specimen_ref= s.id and sex in ('.implode(',',$val).'))');
+    }
+    else
+    {
+      $query->andWhere('i.sex in ('.implode(',',$val).')');
+    }
+    return $query ;
+  }
+
+  public function addTypeColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == 'specimen')
+    {
+      $query->andWhere('exists ( select 1 from specimen_individuals 
+          where specimen_ref= s.id and type_search in ('.implode(',',$val).'))');
+    }
+    else
+    {
+      $query->andWhere('i.type_search in ('.implode(',',$val).')');
+    }
+    return $query ;
+  }
+
+
+  public function addStageColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == 'specimen')
+    {
+      $query->andWhere('exists ( select 1 from specimen_individuals 
+          where specimen_ref= s.id and stage in ('.implode(',',$val).'))');
+    }
+    else
+    {
+      $query->andWhere('i.stage in ('.implode(',',$val).')');
+    }
+    return $query ;
+  }
+
+  public function addStatusColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == 'specimen')
+    {
+      $query->andWhere('exists ( select 1 from specimen_individuals 
+          where specimen_ref= s.id and state in ('.implode(',',$val).'))');
+    }
+    else
+    {
+      $query->andWhere('i.state in ('.implode(',',$val).')');
+    }
+    return $query ;
+  }
+
+  public function addSocialColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == 'specimen')
+    {
+      $query->andWhere('exists ( select 1 from specimen_individuals 
+          where specimen_ref= s.id and social_status in ('.implode(',',$val).'))');
+    }
+    else
+    {
+      $query->andWhere('i.social_status in ('.implode(',',$val).')');
+    }
+    return $query ;
+  }
+
+  public function addRockformColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == 'specimen')
+    {
+      $query->andWhere('exists ( select 1 from specimen_individuals 
+          where specimen_ref= s.id and rock_form in ('.implode(',',$val).'))');
+    }
+    else
+    {
+      $query->andWhere('i.rock_form in ('.implode(',',$val).')');
+    }
+    return $query ;
+  }
+
+  public function addInstitutionRefColumnQuery($query, $field, $val)
+  {
+    if($val != '')
+    {
+      $query->andWhere('institution_ref = ?',$val);
+    }
+    return $query ;
+  }
+
 
   public function addContainerColumnQuery($query, $field, $val)
   {
@@ -576,114 +742,6 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
       }
       $query_array = array_fill(0,count($query_value),'lower(sub_container) like ?');
       $query->andWhere( implode(' or ',$query_array) ,$query_value);
-    }
-    return $query ;
-  }
-
-  public function addToolsColumnQuery($query, $field, $val)
-  {
-    if($val != '' && is_array($val) && !empty($val))
-    {
-      $query->andWhere('spec_ref in (select fct_search_tools (?))',implode(',', $val));
-    }
-    return $query ;
-  }
-
-  public function addMethodsColumnQuery($query, $field, $val)
-  {
-    if($val != '' && is_array($val) && !empty($val))
-    {
-      $query->andWhere('spec_ref in (select fct_search_methods (?))',implode(',', $val));
-    }
-    return $query ;
-  }
-
-  public function addSexColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_sex',$val);
-      else
-        $query->andWhere('individual_sex = ?',$val);
-    }
-    return $query ;
-  }
-
-  public function addTypeColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_type_search',$val);
-      else
-        $query->andWhere('individual_type_search = ?',$val);
-    }
-    return $query ;
-  }
-  
-  public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
-  {
-     if ($values != "")
-     {
-       $query->andWhere("ig_num_indexed like concat(fullToIndex(?), '%') ", $values);
-     }
-     return $query;
-  }  
-
-  public function addStageColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_stage',$val);
-      else
-        $query->andWhere('individual_stage = ?',$val);
-    }
-    return $query ;
-  }
-
-  public function addStatusColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_state',$val);
-      else
-        $query->andWhere('individual_state = ?',$val);
-    }
-    return $query ;
-  }
-
-  public function addSocialColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_social_status',$val);
-      else
-        $query->andWhere('individual_social_status = ?',$val);
-    }
-    return $query ;
-  }
-
-  public function addRockformColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_rock_form',$val);
-      else
-        $query->andWhere('individual_rock_form = ?',$val);
-    }
-    return $query ;
-  }
-
-  public function addInstitutionRefColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      $query->andWhere('institution_ref = ?',$val);
     }
     return $query ;
   }
@@ -815,12 +873,20 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     }
     if(! empty($params)) 
     {
-      $query->addWhere("spec_ref in (select fct_searchCodes($str_params) )", $params);      
+      $query->addWhere("s.id in (select fct_searchCodes($str_params) )", $params);
     }
     if(! empty($params_part)) 
     {
-      $query->addWhere("part_ref in (select fct_searchCodes($str_params_part) )", $params_part);      
-    }    
+      if($this->scope == 'specimen')
+        $query->addWhere("exists (select 1 from specimen_individuals i inner join specimen_parts p on p.specimen_individual_ref = i.id 
+          inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.id  )", $params_part);
+      elseif($this->scope == 'individual')
+        $query->addWhere("exists (select 1 from specimen_parts p on p.specimen_individual_ref = i.id 
+          inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.id  )", $params_part);
+      elseif($this->scope == 'part')
+        $query->addWhere("p.id in (select fct_searchCodes($str_params_part) )", $params_part);
+
+    }
     return $query ;
   }
 
@@ -838,13 +904,34 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     return $query ;  
   }
 
-  public function addGtuTagValue($num)
+  public function addSpecIdsColumnQuery($query, $field, $val)
   {
-      $form = new TagLineForm(null,array('num'=>$num));
-      $this->embeddedForms['Tags']->embedForm($num, $form);
-      $this->embedForm('Tags', $this->embeddedForms['Tags']);
+    $ids = explode(',', $val);
+    $clean_ids =array();
+    foreach($ids as $id)
+    {
+      if(ctype_digit($id))
+        $clean_ids[] = $id;
+    }
+
+    if(! empty($clean_ids))
+    {
+      if($this->scope == 'specimen')
+        $query->andWhereIn("s.id", $clean_ids);
+      elseif($this->scope == 'individual')
+        $query->andWhereIn("i.id", $clean_ids);
+      else
+        $query->andWhereIn("p.id", $clean_ids);
+    }
+    return $query ;
   }
-  
+
+  public function addCollectionRefColumnQuery($query, $field, $val)
+  {
+    //Do Nothing here, the job is done in the doBuildQuery with check collection rights
+    return $query;
+  }
+
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes']))
@@ -885,35 +972,6 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     }
     parent::bind($taintedValues, $taintedFiles);
   }
-  
-  public function addSpecIdsColumnQuery($query, $field, $val)
-  {
-    $ids = explode(',', $val);
-    $clean_ids =array();
-    foreach($ids as $id)
-    {
-      if(ctype_digit($id))
-        $clean_ids[] = $id;
-    }
-    
-    if(! empty($clean_ids))
-    {
-      if($this->getValue('what_searched') == 'specimen')
-        $query->andWhereIn("spec_ref", $clean_ids);
-      elseif($this->getValue('what_searched') == 'individual')
-        $query->andWhereIn("individual_ref", $clean_ids);
-      else
-        $query->andWhereIn("part_ref", $clean_ids);
-    }
-    return $query ;
-  }
-
-  public function addCollectionRefColumnQuery($query, $field, $val)
-  {
-    //Do Nothing here, the job is done in the doBuildQuery with check collection rights
-
-    return $query;
-  }
 
   public function doBuildQuery(array $values)
   {
@@ -944,16 +1002,20 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     $this->options['query'] = $query;
 
 
+    $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
 
     $query = parent::doBuildQuery($values);
     $alias = $query->getRootAlias();
 
-    $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
     $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
 
     $query->addSelect('true as with_types, true as with_individuals');
 
     $this->cols = $this->getCollectionWithRights($this->options['user']);
+    if(!empty($values['collection_ref']))
+    {
+      $this->cols = array_intersect($values['collection_ref'], $this->cols);
+    }
     $query->andwhere('collection_ref in ( '.implode(',',$this->cols). ') ');
 
     if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
@@ -964,13 +1026,14 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     if ($values['lithology_level_ref'] != '') $query->andWhere('lithology_level_ref = ?', intval($values['lithology_level_ref']));
     if ($values['mineral_level_ref'] != '') $query->andWhere('mineral_level_ref = ?', intval($values['mineral_level_ref']));
     $this->addLatLonColumnQuery($query, $values);
-    $this->addNamingColumnQuery($query, 'taxonomy', 'name_indexed', $values['taxon_name'],null,'taxon_name_indexed');
-    $this->addNamingColumnQuery($query, 'expeditions', 'name_ts', $values['expedition_name'],null,'expedition_name_ts');
+    $this->addNamingColumnQuery($query, 'expeditions', 's.name_ts', $values['expedition_name'],'s','expedition_name_ts');
 
-    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'name_indexed', $values['chrono_name'],null,'chrono_name_indexed');
-    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_indexed', $values['litho_name'],null,'litho_name_indexed');
-    $this->addNamingColumnQuery($query, 'lithology', 'name_indexed', $values['lithology_name'],null,'lithology_name_indexed');
-    $this->addNamingColumnQuery($query, 'mineralogy', 'name_indexed', $values['mineral_name'],null,'mineral_name_indexed');
+    $this->addNamingColumnQuery($query, 'taxonomy', 'name_indexed', $values['taxon_name'],'s','taxon_name_indexed');
+    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'name_indexed', $values['chrono_name'],'s','chrono_name_indexed');
+    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_indexed', $values['litho_name'],'s','litho_name_indexed');
+    $this->addNamingColumnQuery($query, 'lithology', 'name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
+    $this->addNamingColumnQuery($query, 'mineralogy', 'name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
+
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
     $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);    
