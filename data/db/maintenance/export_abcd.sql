@@ -460,23 +460,6 @@ CREATE TABLE public.zoo_taxa_keywords AS
 
 ALTER TABLE public.zoo_taxa_keywords ADD CONSTRAINT pk_zoo_taxa_keywords PRIMARY KEY (id);
 
-CREATE SEQUENCE public.taxa_vernacular_name_id_seq;
-
-CREATE TABLE public.taxa_vernacular_name as
-(
-  SELECT
-  nextval('public.taxa_vernacular_name_id_seq') as id,
-  ti.id as taxon_identified_ref,
-  community,
-  v.name
-  FROM public.taxon_identified ti
-  INNER JOIN darwin2.taxonomy t on t.id = ti.taxon_ref
-  INNER JOIN darwin2.class_vernacular_names c ON t.id = c.record_id AND c.referenced_relation = 'taxonomy' 
-  INNER JOIN darwin2.vernacular_names v ON c.id = v.vernacular_class_ref
-);
-
-ALTER TABLE public.taxa_vernacular_name ADD CONSTRAINT pk_taxa_vernacular_name PRIMARY KEY (id);
-
 create sequence public.mineral_identified_id_seq;
 
 CREATE TABLE public.mineral_identified as
@@ -519,23 +502,6 @@ insert into mineral_identified
       AND f.mineral_ref !=0 
       
 );
-
-CREATE SEQUENCE public.mineral_vernacular_name_id_seq;
-
-CREATE TABLE public.mineral_vernacular_name as
-(
-  SELECT
-  nextval('public.mineral_vernacular_name_id_seq') as id,
-  ti.id as mineral_identified_ref,
-  community,
-  v.name
-  FROM public.mineral_identified ti
-  INNER JOIN darwin2.mineralogy t on t.id = ti.mineral_ref
-  INNER JOIN darwin2.class_vernacular_names c ON t.id = c.record_id AND c.referenced_relation = 'mineralogy' 
-  INNER JOIN darwin2.vernacular_names v ON c.id = v.vernacular_class_ref
-);
-
-ALTER TABLE public.mineral_vernacular_name ADD CONSTRAINT pk_mineral_veracular_name PRIMARY KEY (id);
 
 CREATE SEQUENCE public.identifier_abcd_id_seq;
 
@@ -836,9 +802,7 @@ GRANT SELECT ON  public.identifications_abdc TO d2viewer;
 GRANT SELECT ON  public.taxon_identified TO d2viewer;
 GRANT SELECT ON  public.bota_taxa_keywords TO d2viewer;
 GRANT SELECT ON  public.zoo_taxa_keywords TO d2viewer;
-GRANT SELECT ON  public.taxa_vernacular_name TO d2viewer;
 GRANT SELECT ON  public.mineral_identified TO d2viewer;
-GRANT SELECT ON  public.mineral_vernacular_name TO d2viewer;
 GRANT SELECT ON  public.identifier TO d2viewer;
 GRANT SELECT ON  public.identifier_instituion TO d2viewer;
 GRANT SELECT ON  public.flat_properties TO d2viewer;
@@ -865,9 +829,7 @@ ANALYZE public.identifications_abdc;
 ANALYZE public.taxon_identified;
 ANALYZE public.bota_taxa_keywords;
 ANALYZE public.zoo_taxa_keywords;
-ANALYZE public.taxa_vernacular_name;
 ANALYZE public.mineral_identified;
-ANALYZE public.mineral_vernacular_name;
 ANALYZE public.identifier;
 ANALYZE public.identifier_instituion;
 ANALYZE public.flat_properties;
