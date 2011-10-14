@@ -590,14 +590,9 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
       $val[$k] = $conn_MGR->quote($v, 'string');
 
     if($this->scope == 'specimen')
-    {
-      $query->andWhere('exists ( select 1 from specimen_individuals 
-          where specimen_ref= s.id and sex in ('.implode(',',$val).'))');
-    }
+      $this->exists_qry[] = ' i1.sex in ('.implode(',',$val).') ';
     else
-    {
       $query->andWhere('i.sex in ('.implode(',',$val).')');
-    }
     return $query ;
   }
 
@@ -610,14 +605,9 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
       $val[$k] = $conn_MGR->quote($v, 'string');
 
     if($this->scope == 'specimen')
-    {
-      $query->andWhere('exists ( select 1 from specimen_individuals 
-          where specimen_ref= s.id and type_search in ('.implode(',',$val).'))');
-    }
+      $this->exists_qry[] = ' i1.type_search in ('.implode(',',$val).') ';
     else
-    {
       $query->andWhere('i.type_search in ('.implode(',',$val).')');
-    }
     return $query ;
   }
 
@@ -631,14 +621,10 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
       $val[$k] = $conn_MGR->quote($v, 'string');
 
     if($this->scope == 'specimen')
-    {
-      $query->andWhere('exists ( select 1 from specimen_individuals 
-          where specimen_ref= s.id and stage in ('.implode(',',$val).'))');
-    }
+      $this->exists_qry[] = ' i1.stage in ('.implode(',',$val).') ';
     else
-    {
       $query->andWhere('i.stage in ('.implode(',',$val).')');
-    }
+
     return $query ;
   }
 
@@ -651,14 +637,9 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
       $val[$k] = $conn_MGR->quote($v, 'string');
 
     if($this->scope == 'specimen')
-    {
-      $query->andWhere('exists ( select 1 from specimen_individuals 
-          where specimen_ref= s.id and state in ('.implode(',',$val).'))');
-    }
+      $this->exists_qry[] = ' i1.state in ('.implode(',',$val).') ';
     else
-    {
       $query->andWhere('i.state in ('.implode(',',$val).')');
-    }
     return $query ;
   }
 
@@ -671,14 +652,9 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
       $val[$k] = $conn_MGR->quote($v, 'string');
 
     if($this->scope == 'specimen')
-    {
-      $query->andWhere('exists ( select 1 from specimen_individuals 
-          where specimen_ref= s.id and social_status in ('.implode(',',$val).'))');
-    }
+      $this->exists_qry[] = ' i1.social_status in ('.implode(',',$val).') ';
     else
-    {
       $query->andWhere('i.social_status in ('.implode(',',$val).')');
-    }
     return $query ;
   }
 
@@ -691,14 +667,10 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
       $val[$k] = $conn_MGR->quote($v, 'string');
 
     if($this->scope == 'specimen')
-    {
-      $query->andWhere('exists ( select 1 from specimen_individuals 
-          where specimen_ref= s.id and rock_form in ('.implode(',',$val).'))');
-    }
+      $this->exists_qry[] = ' i1.rock_form in ('.implode(',',$val).') ';
     else
-    {
       $query->andWhere('i.rock_form in ('.implode(',',$val).')');
-    }
+
     return $query ;
   }
 
@@ -975,6 +947,7 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
 
   public function doBuildQuery(array $values)
   {
+    $this->exists_qry = array();
     $this->scope = $values['what_searched'];
 
     if($this->scope == 'specimen')
@@ -1005,7 +978,13 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
 
     $query = parent::doBuildQuery($values);
-    $alias = $query->getRootAlias();
+
+    /** ADD exists to the query **/
+    if(! empty($this->exists_qry))
+    {
+      $query->where('exists ( select 1 from specimen_individuals i1
+          where i1.specimen_ref= s.id AND '. implode(' AND ', $this->exists_qry). ')');
+    }
 
     $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
 
