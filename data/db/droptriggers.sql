@@ -61,7 +61,6 @@ DROP TRIGGER trg_cpy_toFullText_habitats ON habitats;
 DROP TRIGGER trg_cpy_toFullText_vernacularnames ON vernacular_names;
 
 /*DROP TRIGGER trg_cas_userType_users ON users;*/
-DROP TRIGGER trg_chk_peopleType ON people;
 DROP TRIGGER trg_chk_AreRole ON catalogue_people;
 
 DROP TRIGGER trg_cpy_FormattedName ON people;

@@ -519,50 +519,6 @@ END;
 $$
 language plpgsql;
 
-/**
-* fct_chk_peopleType
-* When removing author flag for a people, check if he is not referenced as author in a catalogue
-*/
-CREATE OR REPLACE FUNCTION fct_chk_peopleType() RETURNS TRIGGER
-AS $$
-DECLARE
-BEGIN
-  IF NEW.db_people_type IS DISTINCT FROM OLD.db_people_type THEN
-
-    /** AUTHOR FLAG IS 2 **/
-    IF NOT (NEW.db_people_type & 2)>0  THEN
-      IF EXISTS( SELECT * FROM catalogue_people WHERE people_ref=NEW.id AND people_type='author')  THEN
-        RAISE EXCEPTION 'Author still used as author.';
-      END IF;
-    END IF;
-
-    /** IDENTIFIER FLAG IS 4 **/
-    IF NOT (NEW.db_people_type & 4)>0  THEN
-      IF EXISTS( SELECT * FROM catalogue_people WHERE people_ref=NEW.id AND people_type='identifier')  THEN
-        RAISE EXCEPTION 'Identifier still used as identifier.';
-      END IF;
-    END IF;
-
-    /** Expert Flag is 8 **/
-    IF NOT (NEW.db_people_type & 8)>0  THEN
-      IF EXISTS( SELECT * FROM catalogue_people WHERE people_ref=NEW.id AND people_type='expert')  THEN
-        RAISE EXCEPTION 'Expert still used as expert.';
-      END IF;
-    END IF;
-
-          /** COLLECTOR Flag is 16 **/
-    IF NOT (NEW.db_people_type & 16)>0   THEN
-      IF EXISTS( SELECT * FROM catalogue_people WHERE people_ref=NEW.id AND people_type='collector')  THEN
-        RAISE EXCEPTION 'Collector still used as collector.';
-      END IF;
-    END IF;
-  END IF;
-  RETURN NEW;
-
-END;
-$$
-LANGUAGE plpgsql;
-
 
 CREATE OR REPLACE FUNCTION fct_chk_ReferencedRecord() RETURNS TRIGGER
 AS $$
@@ -4215,7 +4171,7 @@ BEGIN
         WHERE cl.id=t.level_ref AND t.id = NEW.taxon_ref;
 
         UPDATE staging set taxon_ref=NEW.taxon_ref, taxon_name = new.taxon_name, taxon_level_ref=new.taxon_level_ref, 
-          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct,
+          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct, taxon_parent = ''::hstore, 
         status = delete(status,'taxon')
 
         WHERE 
@@ -4234,7 +4190,7 @@ BEGIN
 
         UPDATE staging set chrono_ref=NEW.chrono_ref, chrono_name = NEW.chrono_name, chrono_level_ref=NEW.chrono_level_ref, chrono_level_name=NEW.chrono_level_name, chrono_status=NEW.chrono_status,
         chrono_local=NEW.chrono_local, chrono_color=NEW.chrono_color, chrono_upper_bound=NEW.chrono_upper_bound, chrono_lower_bound=NEW.chrono_lower_bound,
-        status = delete(status,'chrono')
+        status = delete(status,'chrono'), chrono_parent = ''::hstore
 
         WHERE 
         chrono_name  IS NOT DISTINCT FROM  OLD.chrono_name AND  chrono_level_ref IS NOT DISTINCT FROM OLD.chrono_level_ref AND 
@@ -4255,7 +4211,7 @@ BEGIN
       UPDATE staging set 
         litho_ref=NEW.litho_ref, litho_name=NEW.litho_name, litho_level_ref=NEW.litho_level_ref, litho_level_name=NEW.litho_level_name,
         litho_status=NEW.litho_status, litho_local=NEW.litho_local, litho_color=NEW.litho_color,
-        status = delete(status,'litho')
+        status = delete(status,'litho'), litho_parent = ''::hstore
 
       WHERE 
         litho_name IS NOT DISTINCT FROM  OLD.litho_name AND litho_level_ref IS NOT DISTINCT FROM  OLD.litho_level_ref AND 
@@ -4277,7 +4233,7 @@ BEGIN
         lithology_ref=NEW.lithology_ref, lithology_name=NEW.lithology_name, lithology_level_ref=NEW.lithology_level_ref,
         lithology_level_name=NEW.lithology_level_name, lithology_status=NEW.lithology_status, lithology_local=NEW.lithology_local,
         lithology_color=NEW.lithology_color,
-        status = delete(status,'lithology')
+        status = delete(status,'lithology'), lithology_parent = ''::hstore
 
       WHERE 
         lithology_name IS NOT DISTINCT FROM OLD.lithology_name AND  lithology_level_ref IS NOT DISTINCT FROM OLD.lithology_level_ref AND 
@@ -4299,7 +4255,7 @@ BEGIN
         mineral_ref=NEW.mineral_ref, mineral_name=NEW.mineral_name, mineral_level_ref=NEW.mineral_level_ref,
         mineral_level_name=NEW.mineral_level_name, mineral_status=NEW.mineral_status, mineral_local=NEW.mineral_local, 
         mineral_color=NEW.mineral_color, mineral_path=NEW.mineral_path,
-        status = delete(status,'mineral')
+        status = delete(status,'mineral'), mineral_parent = ''::hstore
 
       WHERE 
         mineral_name IS NOT DISTINCT FROM OLD.mineral_name AND  mineral_level_ref IS NOT DISTINCT FROM OLD.mineral_level_ref AND 

@@ -9,7 +9,7 @@ INSERT INTO users(id, family_name, formated_name, db_user_type) VALUES (100002, 
 INSERT INTO users(id, family_name, formated_name, db_user_type) VALUES (100003, 'Francka', 'Francka', 1);
 INSERT INTO users(id, family_name, formated_name, db_user_type) VALUES (100004, 'Clown', 'Clown', 4);
 
-INSERT INTO people(id, is_physical, db_people_type, sub_type, family_name, formated_name) VALUES (100002, false, 1, 'Federal Institution', 'Institut des Cocinnelles', 'Institut des Cocinnelles');
+INSERT INTO people(id, is_physical, sub_type, family_name, formated_name) VALUES (100002, false, 'Federal Institution', 'Institut des Cocinnelles', 'Institut des Cocinnelles');
 
 INSERT INTO collections(id, code, name, institution_ref, main_manager_ref) VALUES (100000, 'Bulots', 'Bulots', 100002, 100000);
 INSERT INTO collections(id, code, name, institution_ref, main_manager_ref, parent_ref) VALUES (100001, 'Bulots Af.', 'Bulots d''Afrique', 100002, 100001, 100000);

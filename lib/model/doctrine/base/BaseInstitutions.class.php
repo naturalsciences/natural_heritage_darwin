@@ -13,7 +13,6 @@
  * @property string $formated_name_ts
  * @property string $family_name
  * @property string $additional_names
- * @property integer $db_people_type
  * @property Doctrine_Collection $PeopleRelationships
  * 
  * @method integer             getId()                    Returns the current record's "id" value
@@ -24,7 +23,6 @@
  * @method string              getFormatedNameTs()        Returns the current record's "formated_name_ts" value
  * @method string              getFamilyName()            Returns the current record's "family_name" value
  * @method string              getAdditionalNames()       Returns the current record's "additional_names" value
- * @method integer             getDbPeopleType()          Returns the current record's "db_people_type" value
  * @method Doctrine_Collection getPeopleRelationships()   Returns the current record's "PeopleRelationships" collection
  * @method Institutions        setId()                    Sets the current record's "id" value
  * @method Institutions        setIsPhysical()            Sets the current record's "is_physical" value
@@ -34,7 +32,6 @@
  * @method Institutions        setFormatedNameTs()        Sets the current record's "formated_name_ts" value
  * @method Institutions        setFamilyName()            Sets the current record's "family_name" value
  * @method Institutions        setAdditionalNames()       Sets the current record's "additional_names" value
- * @method Institutions        setDbPeopleType()          Sets the current record's "db_people_type" value
  * @method Institutions        setPeopleRelationships()   Sets the current record's "PeopleRelationships" collection
  * 
  * @package    darwin
@@ -74,11 +71,6 @@ abstract class BaseInstitutions extends sfDoctrineRecord
              ));
         $this->hasColumn('additional_names', 'string', null, array(
              'type' => 'string',
-             ));
-        $this->hasColumn('db_people_type', 'integer', null, array(
-             'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
              ));
     }
 

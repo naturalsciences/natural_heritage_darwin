@@ -18,7 +18,6 @@
  * @property integer $birth_date_mask
  * @property string $birth_date
  * @property enum $gender
- * @property integer $db_people_type
  * @property integer $end_date_mask
  * @property string $end_date
  * @property string $activity_date_from
@@ -49,7 +48,6 @@
  * @method integer             getBirthDateMask()           Returns the current record's "birth_date_mask" value
  * @method string              getBirthDate()               Returns the current record's "birth_date" value
  * @method enum                getGender()                  Returns the current record's "gender" value
- * @method integer             getDbPeopleType()            Returns the current record's "db_people_type" value
  * @method integer             getEndDateMask()             Returns the current record's "end_date_mask" value
  * @method string              getEndDate()                 Returns the current record's "end_date" value
  * @method string              getActivityDateFrom()        Returns the current record's "activity_date_from" value
@@ -79,7 +77,6 @@
  * @method People              setBirthDateMask()           Sets the current record's "birth_date_mask" value
  * @method People              setBirthDate()               Sets the current record's "birth_date" value
  * @method People              setGender()                  Sets the current record's "gender" value
- * @method People              setDbPeopleType()            Sets the current record's "db_people_type" value
  * @method People              setEndDateMask()             Sets the current record's "end_date_mask" value
  * @method People              setEndDate()                 Sets the current record's "end_date" value
  * @method People              setActivityDateFrom()        Sets the current record's "activity_date_from" value
@@ -158,11 +155,6 @@ abstract class BasePeople extends sfDoctrineRecord
               0 => 'M',
               1 => 'F',
              ),
-             ));
-        $this->hasColumn('db_people_type', 'integer', null, array(
-             'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('end_date_mask', 'integer', null, array(
              'type' => 'integer',

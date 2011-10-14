@@ -23,7 +23,6 @@ abstract class BaseInstitutionsForm extends BaseFormDoctrine
       'formated_name_ts'      => new sfWidgetFormTextarea(),
       'family_name'           => new sfWidgetFormTextarea(),
       'additional_names'      => new sfWidgetFormTextarea(),
-      'db_people_type'        => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -35,7 +34,6 @@ abstract class BaseInstitutionsForm extends BaseFormDoctrine
       'formated_name_ts'      => new sfValidatorString(array('required' => false)),
       'family_name'           => new sfValidatorString(),
       'additional_names'      => new sfValidatorString(array('required' => false)),
-      'db_people_type'        => new sfValidatorInteger(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('institutions[%s]');

@@ -23,35 +23,4 @@ class Institutions extends BaseInstitutions
       8 => 'Expert',
     );
   }
-
-  public function getDbPeopleType()
-  {
-    $result = array();
-    foreach(self::getTypes() as $k => $value)
-    {
-      if($k & $this->_get('db_people_type'))
-      {
-	$result[] = $k;
-      }
-    }
-    return $result;
-  }
-
-  public function setDbPeopleType($db_types)
-  {
-    $result = 0;
-    $types = self::getTypes();
-    if(is_array($db_types))
-    {
-      foreach($db_types as $value)
-      {
-	if(isset($types[$value]))
-	  $result += $value;
-      }
-      $this->_set('db_people_type', $result);
-    }
-    else
-      $this->_set('db_people_type', $db_types);
-
-  }
 }
