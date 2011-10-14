@@ -4171,7 +4171,7 @@ BEGIN
         WHERE cl.id=t.level_ref AND t.id = NEW.taxon_ref;
 
         UPDATE staging set taxon_ref=NEW.taxon_ref, taxon_name = new.taxon_name, taxon_level_ref=new.taxon_level_ref, 
-          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct, taxon_parent = ''::hstore, 
+          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct, taxon_parents = ''::hstore, 
         status = delete(status,'taxon')
 
         WHERE 
