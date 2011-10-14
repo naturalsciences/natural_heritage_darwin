@@ -78,13 +78,6 @@ $(document).ready(function () {
           <?php echo $form['activity_date_to'] ?>
         </td>
       </tr>
-      <tr>
-        <th class="top_aligned"><?php echo $form['people_type']->renderLabel() ?></th>
-        <td>
-          <?php echo $form['people_type']->renderError() ?>
-          <?php echo $form['people_type'] ?>
-        </td>
-      </tr>
     </tbody>
     <tfoot>
       <tr>
