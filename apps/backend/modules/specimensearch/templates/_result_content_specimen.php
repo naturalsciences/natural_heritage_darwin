@@ -13,7 +13,7 @@
     <td  class="col_collection">
       <?php if($specimen->getCollectionRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=collection_".$item_ref."_info");?>
-        <?php if($sf_user->isAtLeast(Users::ADMIN) || ($sf_user->isAtLeast(Users::MANAGER) && $specimen->getHasEncodingRights())) : ?>           
+        <?php if($sf_user->isAtLeast(Users::ADMIN) || ($sf_user->isAtLeast(Users::MANAGER) && $unit->getHasEncodingRights())) : ?>           
           <a href="<?php echo url_for('collection/edit?id='.$specimen->getCollectionRef());?>"><?php echo $specimen->getCollectionName();?></a>
         <?php else : ?>
           <?php echo $specimen->getCollectionName();?>
@@ -65,7 +65,7 @@
     <?php endif;?>
     <td class="col_gtu">
       <?php if($specimen->getGtuRef() > 0) : ?>
-        <?php if($specimen->getHasEncodingRights() || $specimen->getStationVisible() || $sf_user->isAtLeast(Users::ADMIN) ):?>
+        <?php if($unit->getHasEncodingRights() || $specimen->getStationVisible() || $sf_user->isAtLeast(Users::ADMIN) ):?>
           <?php echo image_tag('info.png',"title=info class=info id=gtu_ctr_".$item_ref."_info");?>
           <script type="text/javascript">
             $(document).ready(function()

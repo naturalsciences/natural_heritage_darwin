@@ -57,7 +57,8 @@
             <th><!-- actions --></th>
           </tr>
         </thead>
-        <?php foreach($specimensearch as $unit):?>
+        <?php 
+        foreach($specimensearch as $unit):?>
           <?php if($source=="specimen")
                 {
                   $specimen = $unit;
@@ -105,15 +106,15 @@
                   <?php echo image_tag('blue_pin_off.png', array('class'=>'pin_but pin_off', 'alt' =>  __('Save this result'))) ; ?>
                 <?php endif;?>
               </td>
-              <?php include_partial('result_content_specimen', array('item_ref'=>$itemRef, 'source'=>$source,'specimen' => $specimen, 'codes' => $codes, 'is_specimen_search' => $is_specimen_search)); ?>
+              <?php include_partial('result_content_specimen', array('item_ref'=>$itemRef, 'source'=>$source,'specimen' => $specimen, 'codes' => $codes,'unit'=>$unit, 'is_specimen_search' => $is_specimen_search)); ?>
               <?php if($source != 'specimen'):?>
-                <?php include_partial('result_content_individual', array('item_ref'=>$itemRef, 'individual' => $individual, 'is_specimen_search' => $is_specimen_search)); ?>
+                <?php include_partial('result_content_individual', array('item_ref'=>$itemRef, 'individual' => $individual, 'is_specimen_search' => $is_specimen_search,'unit'=>$unit)); ?>
               <?php endif;?>
               <?php if($source == 'part'):?>
-                <?php include_partial('result_content_part', array('item_ref'=>$itemRef, 'part' => $part, 'codes' => $part_codes, 'is_specimen_search' => $is_specimen_search)); ?>
+                <?php include_partial('result_content_part', array('item_ref'=>$itemRef, 'part' => $part, 'codes' => $part_codes, 'is_specimen_search' => $is_specimen_search,'unit'=>$unit)); ?>
               <?php endif;?>
               <td rowspan="2">
-              <?php if($sf_user->isAtLeast(Users::ADMIN) || $specimen->getHasEncodingRights()) : ?>
+              <?php if($sf_user->isAtLeast(Users::ADMIN) || $unit->getHasEncodingRights()) : ?>
                 <?php switch($source){
                   case 'specimen':   $e_link = 'specimen/edit?id='.$specimen->getId();
                                      $v_link = 'specimen/view?id='.$specimen->getId();                  
