@@ -75,6 +75,7 @@ class DarwinPgErrorParser
     '/\bunq_multimedia_keywords\b/' => 'This multimedia keyword already exists',
     '/\bunq_associated_multimedia\b/' => 'This associated multimedia already exists',
     '/\buniq_words\b/' => 'This word already exists',
+    '/\bfk_taxonomy_parent_ref_taxonomy\b/' => 'This taxon still have children, you cannot delete it',
   );
 
 
