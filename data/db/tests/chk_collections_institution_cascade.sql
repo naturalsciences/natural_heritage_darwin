@@ -5,8 +5,8 @@ SELECT plan(5);
 
 INSERT INTO users(id, family_name, formated_name, db_user_type) VALUES (100000, 'Jos Chevremont', 'Jos Chevremont', 4);
 
-INSERT INTO people(id, is_physical, db_people_type, sub_type, family_name, formated_name) VALUES (100002, false, 1, 'Federal Institution', 'Institut des Cocinnelles', 'Institut des Cocinnelles');
-INSERT INTO people(id, is_physical, db_people_type, sub_type, family_name, formated_name) VALUES (100003, false, 1, 'Federal Institution', 'Institut des Fourmis', 'Institut des Fourmis');
+INSERT INTO people(id, is_physical, sub_type, family_name, formated_name) VALUES (100002, false, 'Federal Institution', 'Institut des Cocinnelles', 'Institut des Cocinnelles');
+INSERT INTO people(id, is_physical, sub_type, family_name, formated_name) VALUES (100003, false, 'Federal Institution', 'Institut des Fourmis', 'Institut des Fourmis');
 
 INSERT INTO collections(id, code, name, institution_ref, main_manager_ref) VALUES (100000, 'Bulots', 'Bulots', 100002, 100000);
 INSERT INTO collections(id, code, name, institution_ref, main_manager_ref, parent_ref) VALUES (100001, 'Bulots C.', 'Bulots Continentaux', 100002, 100000, 100000);

@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(61);
+SELECT plan(57);
 
 select diag('Test of staging check without levels');
 update people set name_formated_indexed = fulltoindex(coalesce(given_name,'') || coalesce(family_name,''));
@@ -78,11 +78,11 @@ select is(1 , (select min(fct_imp_checker_manager(s.*)::int) from staging s));
 select is(4, (select taxon_ref from staging s where id = 3));
 
 INSERT INTO taxonomy (id, name, level_ref,parent_ref) VALUES (5, 'Brolz', 2, 1);
-update staging SET taxon_parents = '"kingdom"=>"Brolz"'::hstore, taxon_ref = null, status = '' where id = 3;
+update staging SET taxon_parents = ''::hstore, taxon_ref = null, status = '' where id = 3;
 
 select is(1 , (select min(fct_imp_checker_manager(s.*)::int) from staging s));
-select is(null, (select taxon_ref from staging s where id = 3));
 
+select is(4, (select taxon_ref from staging s where id = 3));
 
 
 select diag('Test Igs');
@@ -100,22 +100,23 @@ select is(1459, (select ig_ref from staging where id = 1));
 
 update staging set ig_date = '02/11/2001' , ig_num = '13' where id = 3;
 select is(1 , (select min(fct_imp_checker_igs(s.*)::int) from staging s));
-select is(null, (select ig_ref from staging where id = 3)); /* Null or 1459 ?*/
+select is(1459, (select ig_ref from staging where id = 3)); 
 
 select diag('Test of Collectors');
 update people set title = 'Mr' where id = 2;
-update staging set collectors = '{Hello World,Paul Andre Duchesne}'::text[], status = delete(status,'taxon') where id =  3;
+insert into staging_people(id, record_id, referenced_relation, people_type, formated_name)
+VALUES(nextval('staging_people_id_seq'), 3, 'staging', 'collector','Paul Andre Duduche') ;
 select is(1 , (select min(fct_imp_checker_people(s.*)::int) from staging s));
-select is(1, (select count(*)::int from catalogue_people where record_id = 3 and referenced_relation='staging')); 
-select is('collectors=>people'::hstore, (select status from staging where id = 3)); 
+select is(1, (select count(*)::int from staging_people where record_id = 3 and referenced_relation='staging')); 
+select is('people=>people'::hstore, (select status from staging where id = 3)); 
 
-delete from catalogue_people where record_id = 3 and referenced_relation='staging';
+UPDATE staging_people set formated_name = 'Duchesne Paul Andre' where record_id=3 and referenced_relation='staging' ;
+insert into staging_people(id, record_id, referenced_relation, people_type, formated_name)
+VALUES(nextval('staging_people_id_seq'), 3, 'staging', 'collector','ROYAL BELGIAN INSTITUTE OF NATURAL SCIENCES') ;
 
-update staging set collectors = '{ROYAL BELGIAN INSTITUTE OF NATURAL SCIENCES,Duchesne Paul Andre}'::text[] where id =  3;
 select is(1 , (select min(fct_imp_checker_people(s.*)::int) from staging s));
-select is(2, (select count(*)::int from catalogue_people where record_id = 3 and referenced_relation='staging')); 
-select is(1,(select order_by from catalogue_people where record_id = 3 and referenced_relation='staging' and people_ref = 2));
-select is(0,(select order_by from catalogue_people where record_id = 3 and referenced_relation='staging' and people_ref = 1));
+select is(2, (select count(*)::int from staging_people where record_id = 3 and referenced_relation='staging')); 
+select is(1,(select order_by from staging_people where record_id = 3 and referenced_relation='staging' and people_ref = 2));
 select is(''::hstore, (select status from staging where id = 3)); 
 
 select '#' || min(fct_imp_checker_manager(s.*)::integer) from staging s;
@@ -123,13 +124,12 @@ select '#' || min(fct_imp_checker_manager(s.*)::integer) from staging s;
 select diag('Test of Import');
 
 update staging set level='individual', parent_ref=4 where id =  1;
-insert into staging (id,import_ref,parent_ref, "level",room) VALUES (6,1,1,'specimen part',12);
+insert into staging (id,import_ref,parent_ref, "level",room) VALUES (6,1,1,'specimen part','12');
 
 update staging set gtu_code='My Gtu', gtu_ref=null where id = 4;
 insert into staging_tag_groups (staging_ref,group_name, sub_group_name, tag_value)
   VALUES(4,'administrative area', 'populated place','Hello; world; ');
 update staging set to_import = true;
-
 
 select is(true, (select fct_importer_dna(1)));
 select is(1, (select count(*)::integer from specimen_individuals));
@@ -137,19 +137,11 @@ select is(1, (select count(*)::integer from specimen_parts));
 select is(1, (select count(*)::integer from specimens where gtu_ref = 1));
 select is('Hello; world; ', (select tag_value from tag_groups where gtu_ref = 1));
 
-update staging set gtu_code='My Gtuz' , gtu_ref=null, taxon_name=null, taxon_level_name=null ,status=''where id = 2;
+update staging set gtu_code='My Gtuz' , gtu_ref=null, taxon_name=null, taxon_level_name=null ,status='' where id = 2;
 
-select is(1 , (select min(fct_imp_checker_people(s.*)::int) from staging s));
+select is(1 , (select min(fct_imp_checker_gtu(s.*)::int) from staging s));
 select is(true, (select fct_importer_dna(1)));
-select is(2, (select gtu_ref from specimens where id=3));
-
-update staging set gtu_code='My Gtu' , gtu_ref=null, taxon_name=null, taxon_level_name=null,status='', ig_num = null where id = 3;
-select is(1 , (select min(fct_imp_checker_people(s.*)::int) from staging s));
-select is(true, (select fct_importer_dna(1)));
-select is(1, (select gtu_ref from specimens where id=4));
-
-select diag('Test of staging copy');
-
+select is(1, (select gtu_ref from specimens where id=3));
 
 insert into staging (id,import_ref, "level",taxon_name) VALUES (7,1,'specimens','Falco Pérégrinuz');
 insert into staging (id,import_ref, "level",taxon_name) VALUES (8,1,'specimens','Falco Pérégrinuz');

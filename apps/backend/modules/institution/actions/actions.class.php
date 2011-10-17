@@ -26,10 +26,6 @@ class institutionActions extends DarwinActions
   {
     $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;  
     $this->form = new InstitutionsFormFilter(array('family_name' => $name));
-    if( $request->getParameter('only_role','0') !=0)
-    {
-      $this->form->setDefault('only_role',$request->getParameter('only_role'));
-    }
   }
 
   public function executeIndex(sfWebRequest $request)

@@ -253,17 +253,15 @@ class DarwinTestFunctional extends sfTestFunctional
 	  return ($this) ;
   }  
 
-  public function addCustomPeople($name = '',$type = 0)
+  public function addCustomPeople($name = '')
   {
     if ($name == "") $name = 'people_test_'.rand(1,1000) ;
-    if($type == 0) $type = array_keys(People::getTypes()) ; else $type = array($type) ;
   	$this->setTester('doctrine', 'sfTesterDoctrine');
   	$this->
   	  info('** add a custom people **')->
     	  get('people/new')->  	
     	  with('response')->begin()->
-  	  click('#submit', array('people' => array('family_name' => $name,
-  	  								 'db_people_type' => $type)
+  	  click('#submit', array('people' => array('family_name' => $name)
   	  				    ))->end()->
        with('doctrine')->begin()->		    
        	check('People', array('family_name' => $name))->

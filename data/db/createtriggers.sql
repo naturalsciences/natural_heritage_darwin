@@ -99,7 +99,9 @@ CREATE TRIGGER trg_cpy_gtuTags_TagGroups AFTER INSERT OR UPDATE OR DELETE
 **
 **
 *****************************************/
-
+CREATE TRIGGER trg_clr_referenceRecord_staging AFTER DELETE
+	ON staging FOR EACH ROW
+	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
 CREATE TRIGGER trg_clr_referenceRecord_gtu AFTER DELETE
 	ON gtu FOR EACH ROW
@@ -278,15 +280,6 @@ CREATE TRIGGER trg_cpy_updateCollInstitutionCascade AFTER UPDATE
 
 /* trigger set BEFORE update, in order to avoid bad db_user_type to be set when this user is a collection manager */
 
-CREATE TRIGGER trg_chk_peopleType AFTER UPDATE
-	ON people FOR EACH ROW
-	EXECUTE PROCEDURE fct_chk_peopleType();
-
-CREATE TRIGGER trg_chk_AreRole AFTER INSERT OR UPDATE
-	ON catalogue_people FOR EACH ROW
-	EXECUTE PROCEDURE fct_chk_AreRole();
-
-
 CREATE TRIGGER trg_cpy_FormattedName BEFORE INSERT OR UPDATE
 	ON people FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_FormattedName();
@@ -325,7 +318,11 @@ CREATE TRIGGER trg_cpy_path_staging BEFORE INSERT OR UPDATE
         
 CREATE TRIGGER trg_upd_fields_staging BEFORE UPDATE
         ON staging FOR EACH ROW
-        EXECUTE PROCEDURE fct_upd_staging_fields();        
+        EXECUTE PROCEDURE fct_upd_staging_fields();   
+        
+CREATE TRIGGER trg_upd_people_ref_staging_people AFTER UPDATE
+        ON staging_people FOR EACH ROW
+        EXECUTE PROCEDURE fct_upd_people_staging_fields();               
 
 CREATE TRIGGER trg_cpy_path_chronostratigraphy BEFORE INSERT OR UPDATE
         ON chronostratigraphy FOR EACH ROW

@@ -430,6 +430,7 @@ BEGIN
 	DELETE FROM associated_multimedia WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM codes WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM insurances WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+  DELETE FROM staging_people WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;	
 	RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
@@ -517,86 +518,6 @@ BEGIN
 END;
 $$
 language plpgsql;
-
-/**
-* fct_chk_peopleType
-* When removing author flag for a people, check if he is not referenced as author in a catalogue
-*/
-CREATE OR REPLACE FUNCTION fct_chk_peopleType() RETURNS TRIGGER
-AS $$
-DECLARE
-BEGIN
-  IF NEW.db_people_type IS DISTINCT FROM OLD.db_people_type THEN
-
-    /** AUTHOR FLAG IS 2 **/
-    IF NOT (NEW.db_people_type & 2)>0  THEN
-      IF EXISTS( SELECT * FROM catalogue_people WHERE people_ref=NEW.id AND people_type='author')  THEN
-        RAISE EXCEPTION 'Author still used as author.';
-      END IF;
-    END IF;
-
-    /** IDENTIFIER FLAG IS 4 **/
-    IF NOT (NEW.db_people_type & 4)>0  THEN
-      IF EXISTS( SELECT * FROM catalogue_people WHERE people_ref=NEW.id AND people_type='identifier')  THEN
-        RAISE EXCEPTION 'Identifier still used as identifier.';
-      END IF;
-    END IF;
-
-    /** Expert Flag is 8 **/
-    IF NOT (NEW.db_people_type & 8)>0  THEN
-      IF EXISTS( SELECT * FROM catalogue_people WHERE people_ref=NEW.id AND people_type='expert')  THEN
-        RAISE EXCEPTION 'Expert still used as expert.';
-      END IF;
-    END IF;
-
-          /** COLLECTOR Flag is 16 **/
-    IF NOT (NEW.db_people_type & 16)>0   THEN
-      IF EXISTS( SELECT * FROM catalogue_people WHERE people_ref=NEW.id AND people_type='collector')  THEN
-        RAISE EXCEPTION 'Collector still used as collector.';
-      END IF;
-    END IF;
-  END IF;
-  RETURN NEW;
-
-END;
-$$
-LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION fct_chk_AreRole() RETURNS TRIGGER
-AS $$
-DECLARE
-BEGIN
-  IF NEW.people_type = 'author' THEN
-
-    IF NOT EXISTS( SELECT id FROM people WHERE (db_people_type & 2)!=0 AND id=NEW.people_ref) THEN
-      RAISE EXCEPTION 'Author must be defined as author.';
-    END IF;
-
-  ELSIF NEW.people_type = 'identifier' THEN
-
-    IF NOT EXISTS( SELECT id FROM people WHERE (db_people_type & 4)!=0 AND id=NEW.people_ref) THEN
-      RAISE EXCEPTION 'Experts must be defined as identifier.';
-    END IF;
-
-  ELSIF NEW.people_type = 'expert' THEN
-
-    IF NOT EXISTS( SELECT id FROM people WHERE (db_people_type & 8)!=0 AND id=NEW.people_ref) THEN
-      RAISE EXCEPTION 'Experts must be defined as expert.';
-    END IF;
-
-  ELSIF NEW.people_type = 'collector' THEN
-
-    IF NOT EXISTS( SELECT id FROM people WHERE (db_people_type & 16)!=0 AND id=NEW.people_ref) THEN
-      RAISE EXCEPTION 'Collectors must be defined as collector.';
-    END IF;
-
-  END IF;
-
-  RETURN NEW;
-END;
-$$
-LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION fct_chk_ReferencedRecord() RETURNS TRIGGER
@@ -3817,7 +3738,7 @@ BEGIN
     RETURN true;
   END IF;
 
-  select id into ref_rec from igs where ig_num = line.ig_num  and ig_date = COALESCE(line.ig_date,'01/01/0001');
+  select id into ref_rec from igs where ig_num = line.ig_num ;
   IF NOT FOUND THEN
     IF import THEN
         INSERT INTO igs (ig_num, ig_date_mask, ig_date)
@@ -3980,80 +3901,47 @@ DECLARE
   p_name text;
   merge_status integer :=1;
   ident_line RECORD;
+  people_line RECORD ;
 BEGIN
 
-  FOR p_name in select item from unnest(line.collectors) as item
+
+  --  Donators and collectors
+
+  FOR people_line IN select * from staging_people WHERE referenced_relation ='staging' AND record_id = line.id 
   LOOP
-    cnt := cnt + 1;
-    IF EXISTS( SELECT id FROM catalogue_people WHERE referenced_relation ='staging' AND  record_id = line.id AND people_type = 'collector' AND order_by= cnt)  THEN
+    IF people_line.people_ref is not null THEN
       continue;
     END IF;
-    
-    SELECT fct_look_for_people(p_name) into ref_record;
+    SELECT fct_look_for_people(people_line.formated_name) into ref_record;
     CASE ref_record
       WHEN -1,0 THEN merge_status := -1 ;
       --WHEN 0 THEN merge_status := 0;
       ELSE
-        INSERT INTO catalogue_people(referenced_relation,record_id, people_type, order_by, people_ref)
-          VALUES ('staging', line.id, 'collector', cnt, ref_record);
+        UPDATE staging_people SET people_ref = ref_record WHERE id=people_line.id ;
     END CASE;
   END LOOP;
   IF merge_status = 1 THEN 
-    UPDATE staging SET status = delete(status,'collectors') where id=line.id;
+    UPDATE staging SET status = delete(status,'people') where id=line.id;
   ELSE
-    UPDATE staging SET status = (status || ('collectors' => 'people')) where id= line.id;  
+    UPDATE staging SET status = (status || ('people' => 'people')) where id= line.id;  
   END IF;
-
-  /*****
-  * DONATORS
-  *****/
-
-  cnt := -1;
-  merge_status :=1;
-  FOR p_name in select item from unnest(line.donators) as item
-  LOOP
-    cnt := cnt + 1;
-    IF EXISTS( SELECT id FROM catalogue_people WHERE referenced_relation ='staging' AND  record_id = line.id AND people_type = 'donator' AND order_by= cnt)  THEN
-      continue;
-    END IF;
-
-    SELECT fct_look_for_people(p_name) into ref_record;
-    CASE ref_record
-      WHEN -1 THEN merge_status := -1 ;
-      WHEN 0 THEN merge_status := 0;
-      ELSE
-        INSERT INTO catalogue_people(referenced_relation,record_id, people_type, order_by, people_ref)
-          VALUES ('staging', line.id, 'donator', cnt, ref_record);
-    END CASE;
-  END LOOP;
-  IF merge_status = 1 THEN 
-    UPDATE staging SET status = delete(status,'donators') where id=line.id;
-  ELSE
-    UPDATE staging SET status = (status || ('donators' => 'people')) where id= line.id;  
-  END IF;
-
-/****
-IDENTIFIERS
-******/
-  merge_status :=1;
+  
+  -- Indentifiers
+   
+  merge_status := 1 ; 
   FOR ident_line in select * from identifications where referenced_relation ='staging' AND  record_id = line.id
   LOOP
-    cnt := -1;
-    FOR p_name in select item from regexp_split_to_table(ident_line.determination_status, ',') as item where item != ''
+    FOR people_line IN select * from staging_people WHERE referenced_relation ='identifications' AND record_id = ident_line.id 
     LOOP
-      cnt := cnt + 1;
-
-      IF EXISTS( SELECT id FROM catalogue_people WHERE referenced_relation ='identifications' AND  record_id =  ident_line.id AND order_by= cnt)  THEN
+      IF people_line.people_ref is not null THEN
         continue;
       END IF;
-
-      SELECT fct_look_for_people(p_name) into ref_record;
+      SELECT fct_look_for_people(people_line.formated_name) into ref_record;
       CASE ref_record
-        WHEN -1 THEN merge_status := -1 ;
-        WHEN 0 THEN merge_status := 0;
+        WHEN -1,0 THEN merge_status := -1 ;
+        --WHEN 0 THEN merge_status := 0;
         ELSE
-          INSERT INTO catalogue_people(referenced_relation,record_id, people_type, order_by, people_ref)
-            VALUES ('identifications', ident_line.id, 'identifier', cnt, ref_record);
+          UPDATE staging_people SET people_ref = ref_record WHERE id=people_line.id ;
       END CASE;
     END LOOP;
   END LOOP;
@@ -4079,7 +3967,7 @@ IDENTIFIERS
 	  UPDATE staging SET status = delete(status,'institution'), institution_ref = ref_record where id=line.id;
       END CASE;
   END IF;
-
+  
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
@@ -4090,8 +3978,10 @@ AS $$
 DECLARE
   prev_levels hstore default '';
   rec_id integer;
+  people_id integer;
   line RECORD;
   s_line RECORD;
+  people_line RECORD;
   staging_line staging;
   old_level int;
 BEGIN
@@ -4133,7 +4023,10 @@ BEGIN
 	    COALESCE(line.acquisition_date,'01/01/0001'), COALESCE(line.station_visible,true),  line.ig_ref
 	  );
 	  UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
-    UPDATE identifications set determination_status = null where referenced_relation ='specimens' and record_id = rec_id;
+    -- Import identifiers whitch identification have been updated to specimen
+    INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
+    SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
+    DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ) ;	  
 	ELSE
 	  rec_id = line.spec_ref;
 	END IF;
@@ -4173,10 +4066,13 @@ BEGIN
             COALESCE(s_line.individual_stage,'undefined'), COALESCE(s_line.individual_social_status,'not applicable'),
             COALESCE(s_line.individual_rock_form,'not applicable'),
             COALESCE(s_line.individual_count_min,'1'), COALESCE(s_line.individual_count_max,'1')
-          );
+          );       
           UPDATE template_table_record_ref SET referenced_relation ='specimen_individuals' , record_id = rec_id where referenced_relation ='staging' and record_id = s_line.id;
+           -- Import identifiers whitch identification have been updated to specimen
+          INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
+          SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimen_individuals' ;
+          DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimen_individuals') ;                 
           prev_levels := (prev_levels || ('individual' => rec_id::text));
-          UPDATE identifications set determination_status = null where referenced_relation ='specimen_individuals' and record_id = rec_id;
 
         ELSIF lower(s_line.level) in ('specimen part','tissue part','dna part') THEN /*** @TODO:CHECK THIS!!**/
           rec_id := nextval('specimen_parts_id_seq');
@@ -4202,12 +4098,19 @@ BEGIN
             COALESCE(s_line.part_count_min,1),  COALESCE(s_line.part_count_max,2)
           );
           UPDATE template_table_record_ref SET referenced_relation ='specimen_parts' , record_id = rec_id where referenced_relation ='staging' and record_id = s_line.id;
-          prev_levels := (prev_levels || (s_line.level => rec_id::text));
-          UPDATE identifications set determination_status = null where referenced_relation ='specimen_parts' and record_id = rec_id;
-          ALTER TABLE specimen_parts ENABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
-        END IF;
 
+          prev_levels := (prev_levels || (s_line.level => rec_id::text));
+
+          ALTER TABLE specimen_parts ENABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
+        END IF; 
       END LOOP;
+      -- Import staging people into catalogue people
+      FOR people_line IN SELECT * from staging_people WHERE referenced_relation in ('specimens','specimen_individuals','specimen_parts') 
+      LOOP     
+        INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
+        VALUES(nextval('catalogue_people_id_seq'),people_line.referenced_relation, people_line.record_id, people_line.people_type, people_line.people_sub_type, people_line.order_by, people_line.people_ref) ;
+      END LOOP;
+      DELETE FROM staging_people WHERE referenced_relation in ('specimens','specimen_individuals','specimen_parts') ;
 
       DELETE from staging where path like '/' || line.id || '/%' OR  id = line.id;
     EXCEPTION WHEN unique_violation THEN
@@ -4227,6 +4130,35 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION fct_upd_people_staging_fields() RETURNS TRIGGER
+AS $$
+DECLARE
+  import_id integer;
+BEGIN
+ IF get_setting('darwin.upd_people_ref') is null OR  get_setting('darwin.upd_people_ref') = '' THEN
+    PERFORM set_config('darwin.upd_people_ref', 'ok', true);
+    IF OLD.referenced_relation = 'staging' THEN
+      select s.import_ref INTO import_id FROM staging s, staging_people sp WHERE sp.id=OLD.id AND sp.record_id = s.id ;
+    ELSE
+      select s.import_ref INTO import_id FROM staging s, staging_people sp, identifications i WHERE sp.id=OLD.id 
+      AND sp.record_id = i.id AND i.record_id = s.id ;    
+    END IF;
+    
+    UPDATE staging_people SET people_ref = NEW.people_ref WHERE id IN (
+      SELECT sp.id from staging_people sp, identifications i, staging s WHERE formated_name = OLD.formated_name AND s.import_ref = import_id
+      AND i.record_id = s.id AND sp.referenced_relation = 'identifications' AND sp.record_id = i.id 
+      UNION
+      SELECT sp.id from staging_people sp, staging s WHERE formated_name = OLD.formated_name AND s.import_ref = import_id AND
+      sp.record_id = s.id AND sp.referenced_relation = 'staging' 
+    ); 
+    -- update status field, if all error people are corrected, statut 'people' or 'identifiers' will be removed
+    PERFORM fct_imp_checker_people(s.*) FROM staging s WHERE import_ref = import_id AND (status::hstore ? 'people' OR status::hstore ? 'identifiers')  ; 
+    PERFORM set_config('darwin.upd_imp_ref', NULL, true);
+  END IF;
+  RETURN NEW;     
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION fct_upd_staging_fields() RETURNS TRIGGER
 AS $$
 BEGIN
@@ -4239,7 +4171,7 @@ BEGIN
         WHERE cl.id=t.level_ref AND t.id = NEW.taxon_ref;
 
         UPDATE staging set taxon_ref=NEW.taxon_ref, taxon_name = new.taxon_name, taxon_level_ref=new.taxon_level_ref, 
-          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct,
+          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct, taxon_parents = ''::hstore, 
         status = delete(status,'taxon')
 
         WHERE 
@@ -4258,7 +4190,7 @@ BEGIN
 
         UPDATE staging set chrono_ref=NEW.chrono_ref, chrono_name = NEW.chrono_name, chrono_level_ref=NEW.chrono_level_ref, chrono_level_name=NEW.chrono_level_name, chrono_status=NEW.chrono_status,
         chrono_local=NEW.chrono_local, chrono_color=NEW.chrono_color, chrono_upper_bound=NEW.chrono_upper_bound, chrono_lower_bound=NEW.chrono_lower_bound,
-        status = delete(status,'chrono')
+        status = delete(status,'chrono'), chrono_parent = ''::hstore
 
         WHERE 
         chrono_name  IS NOT DISTINCT FROM  OLD.chrono_name AND  chrono_level_ref IS NOT DISTINCT FROM OLD.chrono_level_ref AND 
@@ -4279,7 +4211,7 @@ BEGIN
       UPDATE staging set 
         litho_ref=NEW.litho_ref, litho_name=NEW.litho_name, litho_level_ref=NEW.litho_level_ref, litho_level_name=NEW.litho_level_name,
         litho_status=NEW.litho_status, litho_local=NEW.litho_local, litho_color=NEW.litho_color,
-        status = delete(status,'litho')
+        status = delete(status,'litho'), litho_parent = ''::hstore
 
       WHERE 
         litho_name IS NOT DISTINCT FROM  OLD.litho_name AND litho_level_ref IS NOT DISTINCT FROM  OLD.litho_level_ref AND 
@@ -4301,7 +4233,7 @@ BEGIN
         lithology_ref=NEW.lithology_ref, lithology_name=NEW.lithology_name, lithology_level_ref=NEW.lithology_level_ref,
         lithology_level_name=NEW.lithology_level_name, lithology_status=NEW.lithology_status, lithology_local=NEW.lithology_local,
         lithology_color=NEW.lithology_color,
-        status = delete(status,'lithology')
+        status = delete(status,'lithology'), lithology_parent = ''::hstore
 
       WHERE 
         lithology_name IS NOT DISTINCT FROM OLD.lithology_name AND  lithology_level_ref IS NOT DISTINCT FROM OLD.lithology_level_ref AND 
@@ -4323,7 +4255,7 @@ BEGIN
         mineral_ref=NEW.mineral_ref, mineral_name=NEW.mineral_name, mineral_level_ref=NEW.mineral_level_ref,
         mineral_level_name=NEW.mineral_level_name, mineral_status=NEW.mineral_status, mineral_local=NEW.mineral_local, 
         mineral_color=NEW.mineral_color, mineral_path=NEW.mineral_path,
-        status = delete(status,'mineral')
+        status = delete(status,'mineral'), mineral_parent = ''::hstore
 
       WHERE 
         mineral_name IS NOT DISTINCT FROM OLD.mineral_name AND  mineral_level_ref IS NOT DISTINCT FROM OLD.mineral_level_ref AND 
@@ -4370,6 +4302,18 @@ BEGIN
   RETURN NEW;        
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION fct_mask_date(date_fld timestamp , mask_fld integer) RETURNS text as
+$$
+
+  SELECT 
+CASE WHEN ($2 & 32)!=0 THEN date_part('year',$1)::text ELSE 'xxxx' END || '-' ||
+CASE WHEN ($2 & 16)!=0 THEN date_part('month',$1)::text ELSE 'xx' END || '-' ||
+CASE WHEN ($2 & 8)!=0 THEN date_part('day',$1)::text ELSE 'xx' END; 
+$$
+LANGUAGE sql immutable;
+
 
 create or replace function upsert (tableName in varchar, keyValues in hstore) returns text language plpgsql as
 $$

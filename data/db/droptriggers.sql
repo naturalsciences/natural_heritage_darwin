@@ -24,6 +24,7 @@ DROP TRIGGER trg_clr_specialstatus_specimenindividuals ON specimen_individuals;
 DROP TRIGGER trg_clr_referenceRecord_cataloguerelationships ON catalogue_relationships;
 DROP TRIGGER trg_clr_referenceRecord_cataloguepeople ON catalogue_people;
 DROP TRIGGER trg_clr_referenceRecord_gtu ON gtu;
+DROP TRIGGER trg_clr_referenceRecord_staging ON staging;
 DROP TRIGGER trg_clr_referenceRecord_catalogueproperties ON catalogue_properties;
 DROP TRIGGER trg_clr_referenceRecord_identifications ON identifications;
 --DROP TRIGGER trg_clr_referenceRecord_expertises ON expertises;
@@ -60,7 +61,6 @@ DROP TRIGGER trg_cpy_toFullText_habitats ON habitats;
 DROP TRIGGER trg_cpy_toFullText_vernacularnames ON vernacular_names;
 
 /*DROP TRIGGER trg_cas_userType_users ON users;*/
-DROP TRIGGER trg_chk_peopleType ON people;
 DROP TRIGGER trg_chk_AreRole ON catalogue_people;
 
 DROP TRIGGER trg_cpy_FormattedName ON people;
@@ -380,7 +380,7 @@ DROP TRIGGER trg_nbr_in_synonym
 DROP TRIGGER trg_unpromotion_remove_cols
         ON users;
 
-
+DROP TRIGGER trg_upd_people_ref_staging_people ON staging_people;
 
 
 

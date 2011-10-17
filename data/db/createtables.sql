@@ -46,7 +46,6 @@ create sequence people_id_seq;
 create table people
        (
         id integer not null default nextval('people_id_seq'),
-        db_people_type integer not null default 1,
         end_date_mask integer not null default 0,
         end_date date not null default '01/01/0001',
         activity_date_from_mask integer not null default 0,
@@ -73,7 +72,6 @@ comment on column people.additional_names is 'Any additional names given to pers
 comment on column people.birth_date is 'Day of birth/creation';
 comment on column people.birth_date_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 comment on column people.gender is 'For physical persons give the gender: M or F';
-comment on column people.db_people_type is 'Sum of numbers in an arithmetic suite (1,2,4,8,...) that gives a unique number identifying people roles - each roles represented by one of the number in the arithmetic suite: 1 is contact, 2 is author, 4 is identifier, 8 is expert, 16 is collector, 32 preparator, 64 photographer...';
 comment on column people.end_date is 'End date';
 comment on column people.end_date_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 comment on column people.activity_date_from is 'person general activity period or person activity period in the organization referenced date from';
@@ -1934,7 +1932,7 @@ create table imports
     id integer not null default nextval('imports_id_seq'),
     user_ref integer not null,
     format varchar not null,
-    collection_ref integer not null default 0,
+    collection_ref integer not null,
     filename varchar not null,
     state varchar not null default '',
     created_at timestamp not null default now(),
@@ -2051,12 +2049,8 @@ create table staging
     individual_rock_form varchar,
     individual_count_min integer,
     individual_count_max integer,
-    collectors text[],
-    donators text[],
-
     part varchar,
     part_status varchar,
-
     institution_ref integer,
     institution_name varchar,
     building varchar,
@@ -2080,6 +2074,11 @@ create table staging
     constraint pk_staging primary key (id),
     constraint fk_staging_import foreign key (import_ref) references imports(id) on delete cascade,
     constraint fk_parent_ref foreign key (parent_ref) references staging(id) on delete cascade
+    constraint fk_staging_taxonomy foreign key (taxon_ref) references taxonomy(id) on delete cascade NULL
+    constraint fk_staging_chronostratigraphy foreign key (chrono_ref) references chronostratigraphy(id) on delete cascade NULL
+    constraint fk_staging_lithostratigraphy foreign key (litho_ref) references lithostratigraphy(id) on delete cascade NULL
+    constraint fk_staging_lithology foreign key (lithology_ref) references lithology(id) on delete cascade NULL    
+    constraint fk_staging_mineralogy foreign key (mineral_ref) references mineralogy(id) on delete cascade NULL    
   );
 
 create sequence staging_tag_groups_id_seq;
@@ -2100,3 +2099,27 @@ comment on column staging_tag_groups.staging_ref is 'Ref of an imported line';
 comment on column staging_tag_groups.group_name is 'Group name under which the tag is grouped: Administrative area, Topographic structure,...';
 comment on column staging_tag_groups.sub_group_name is 'Sub-Group name under which the tag is grouped: Country, River, Mountain,...';
 comment on column staging_tag_groups.tag_value is 'Ensemble of Tags';
+
+create sequence staging_people_id_seq;
+
+create table staging_people
+       (
+        id integer not null default nextval('staging_people_id_seq'),
+        people_type varchar not null default 'author',
+        people_sub_type varchar not null default '',
+        order_by integer not null default 1,
+        people_ref integer,
+        formated_name varchar,
+        constraint pk_staging_people primary key (id),
+        constraint fk_staging_people_list_person foreign key (people_ref) references people(id) on delete cascade
+       )
+inherits (template_table_record_ref);
+comment on table staging_people is 'List of people of staging units';
+comment on column staging_people.id is 'Unique identifier of record';
+comment on column staging_people.referenced_relation is 'Identifier-Name of table the units come from';
+comment on column staging_people.record_id is 'Identifier of record concerned in table concerned';
+comment on column staging_people.people_type is 'Type of "people" associated to the staging unit: authors, collectors, defined,  ...';
+comment on column staging_people.people_sub_type is 'Type of "people" associated to the staging unit: Main author, corrector, taking the sense from,...';
+comment on column staging_people.people_ref is 'Reference of person concerned - id field of people table';
+comment on column staging_people.order_by is 'Integer used to order the persons in a list';
+comment on column staging_people.formated_name is 'full name of the people';

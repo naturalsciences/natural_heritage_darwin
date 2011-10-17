@@ -33,13 +33,6 @@
           <?php echo $form['sub_type'] ?>
         </td>
       </tr>
-      <tr>
-        <th class="top_aligned"><?php echo $form['db_people_type']->renderLabel() ?></th>
-        <td>
-          <?php echo $form['db_people_type']->renderError() ?>
-          <?php echo $form['db_people_type'] ?>
-        </td>
-      </tr>
     </tbody>
     <tfoot>
       <tr>

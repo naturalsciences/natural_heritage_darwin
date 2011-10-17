@@ -54,7 +54,7 @@
             <td colspan="3">
               <div class="add_code">
                 <a href="<?php echo url_for($module.'/addIdentifier?spec_id='.($spec_id?$spec_id:'0').(($individual_id ==0 ) ? '': '&individual_id='.$individual_id).((!isset($identification_id))?'':'&identification_id='.$identification_id)).'/num/'.$row_num;?>/identifier_num/" class="hidden"></a>
-                <a id="add_identifier_<?php echo $row_num ;?>" href="<?php echo url_for('people/choose?only_role=4&with_js=1');?>"><?php echo __('Add identifier');?></a>              
+                <a id="add_identifier_<?php echo $row_num ;?>" href="<?php echo url_for('people/choose?with_js=1');?>"><?php echo __('Add identifier');?></a>              
               </div>
             </td>
           </tr>

@@ -1,12 +1,12 @@
 <?php
 
-class PeopleInErrorForm extends BaseCataloguePeopleForm
+class PeopleInErrorForm extends BaseStagingPeopleForm
 {
 
   public function configure()
   {
-    $name = isset($this->options['default_name'])?$this->options['default_name']:'';  
-    $link = isset($this->options['donator'])?'people/searchBoth':'people/choose?only_role='.$this->options['only_role'].'&name='.$name;  
+    $name = $this->getObject()->getFormatedName() ;
+    $link = $this->getObject()->getPeopleType()=='donator'?'people/searchBoth':'people/choose?name='.$name;  
     $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
        'model' => 'People',
        'link_url' => $link,

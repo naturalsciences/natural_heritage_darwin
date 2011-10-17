@@ -43,7 +43,7 @@ EOF;
             ->set('p.state','?','pending')
             ->andWhere('p.state = ?','loaded')
             ->execute();
-
+    
     if(empty($options['do-import']))
     {
       $sql = "update imports p set state = 'pending' where state = 'processing' and

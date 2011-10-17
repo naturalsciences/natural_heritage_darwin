@@ -97,6 +97,8 @@ class ImportDnaXml implements IImportModels
       elseif($key == 'comments') $this->processWithCommentsNode($array[$key],$id);
       elseif($key == 'properties') $this->processWithPropertiesNode($array[$key],$id);
       elseif($key == 'tag_groups') $this->processWithTagGroupsNode($array[$key],$id);
+      elseif($key == 'collectors') $this->processWithCollectorsNode($array[$key],$id);  
+      elseif($key == 'donators') $this->processWithDonatorsNode($array[$key],$id);                      
       else die('Unknown node '.$key) ;     
     }    
   }
@@ -117,8 +119,6 @@ class ImportDnaXml implements IImportModels
       elseif($childNode->nodeName == 'acquisition') $this->fillSimpleObject($childNode,$object);        
       elseif($childNode->nodeName == 'ig') $this->fillSimpleObject($childNode,$object);              
       elseif($childNode->nodeName == 'institution') $this->fillSimpleObject($childNode,$object);        
-      elseif($childNode->nodeName == 'donators') $this->processWithDonatorsNode($childNode,$object);      
-      elseif($childNode->nodeName == 'collectors') $this->processWithCollectorsNode($childNode,$object);      
       elseif($childNode->nodeName == 'taxon') $this->processWithTaxonNode($childNode,$object);         
       elseif($childNode->nodeName == 'chrono') $this->processWithChronoNode($childNode,$object);  
       elseif($childNode->nodeName == 'litho') $this->processWithLithoNode($childNode,$object);  
@@ -187,19 +187,18 @@ class ImportDnaXml implements IImportModels
    * This function fill the collector field from Staging
    * $collectors is defined to be used as an array in the db with all collectors separated by a ','
    */      
-  public function processWithCollectorsNode($xml_node,$object)
+  public function processWithCollectorsNode($xml_node,$id)
   {
-    $collector_node = $xml_node->getElementsByTagName("collector");  
-    $collectors = '{';
+    $collector_node = $xml_node->getElementsByTagName("collector"); 
+    $order_by = 0 ;     
     foreach ($collector_node as $collector) 
     { 
-      foreach($collector->childNodes as $collector_infos)
-      { 
-        if($collector_infos->nodeName == "family_name" && $collector_infos->parentNode->nodeName == 'collector') $collectors .= $collector_infos->nodeValue.' ' ;
-        if($collector_infos->nodeName == "given_name" && $collector_infos->parentNode->nodeName == 'collector') $collectors .= $collector_infos->nodeValue.',' ;
-      }
-    }
-    $object['collectors'] = substr($collectors,0,strlen($collectors)-1).'}' ;      
+      if($collector->nodeName == "#text") continue;    
+      $people = new stagingPeople();      
+      $people->fromArray(array('people_type' => 'collector', 'record_id' => $id, 'referenced_relation' => 'staging','order_by' => $order_by++));
+      $people['formated_name'] = $collector->getElementsByTagName("formated_name")->item(0)->nodeValue;
+      $people->save() ;
+    }   
   }  
    
    
@@ -410,25 +409,19 @@ class ImportDnaXml implements IImportModels
     $node = $xml_node->getElementsByTagName("identification");
     foreach($node as $identifications)    
     {
-      $identifiers = "" ;
+      $as_identifier = false ;        
       $identification = new Identifications() ;
       $identification['record_id'] = $id ;
       $identification['referenced_relation'] = 'staging' ;
       foreach ($identifications->childNodes as $identification_info) 
-      {          
+      {        
         if($identification_info->nodeName == "#text") continue;      
         if($identification_info->nodeName == 'notion_concerned') $identification['notion_concerned'] = $identification_info->nodeValue;
         elseif($identification_info->nodeName == 'value') $identification['value_defined'] = $identification_info->nodeValue;
         elseif($identification_info->nodeName == 'identifiers')
         {
-          $ident_tags = $identification_info->getElementsByTagName("identifier");
-          foreach($ident_tags as $ident_tag)
-          {
-            $identifiers .= $ident_tag->getElementsByTagName("family_name")->item(0)->nodeValue;
-            if($ident_tag->getElementsByTagName("given_name")->length != 0)
-              $identifiers .= " ".$ident_tag->getElementsByTagName("given_name")->item(0)->nodeValue;
-             $identifiers .= "," ;
-          }
+          $identifier_to_save = $identification_info;
+          $as_identifier = true ; 
         }
         elseif($identification_info->nodeName == 'comments')
         {
@@ -441,8 +434,19 @@ class ImportDnaXml implements IImportModels
           $this->complex_nodes['properties']['notion_concerned'] = 'identifications' ;
         }        
       }
-      $identification['determination_status'] = substr($identifiers,0,strlen($identifiers)-1) ;
       $identification->save() ;  
+      if($as_identifier)
+      {
+        $identifier = $identifier_to_save->getElementsByTagName("identifier")    ;  
+        $order_by = 0 ;
+        foreach($identifier as $ident_tag)
+        {    
+          $people = new stagingPeople();      
+          $people->fromArray(array('people_type' => 'identifier', 'record_id' => $identification->getId(), 'referenced_relation' => 'identifications','order_by' => $order_by++)) ;
+          $people['formated_name'] = $ident_tag->getElementsByTagName("formated_name")->item(0)->nodeValue;
+          $people->save() ;                
+        }
+      }
     }  
   } 
   
@@ -450,20 +454,17 @@ class ImportDnaXml implements IImportModels
    * This function fill the donator field from Staging
    * $donators is defined to be used as an array in the db with all donators separated by a ','
    */    
-  public function processWithDonatorsNode($xml_node,$object)
+  public function processWithDonatorsNode($xml_node,$id)
   {
     $donator_node = $xml_node->getElementsByTagName("donator");  
-    $donators = '{';
+    $order_by = 0 ;
     foreach ($donator_node as $donator) 
     { 
-      foreach($donator->childNodes as $donator_infos)
-      { 
-        if($donator_infos->nodeName == "family_name" && $donator_infos->parentNode->nodeName == 'donator') $donators .= $donator_infos->nodeValue.' ' ;
-        if($donator_infos->nodeName == "given_name" && $donator_infos->parentNode->nodeName == 'donator') $donators .= $donator_infos->nodeValue.',' ;
-      }
+      $people = new stagingPeople();      
+      $people->fromArray(array('people_type' => 'donator', 'record_id' => $id, 'referenced_relation' => 'staging','order_by' => $order_by++)) ;
+      $people['formated_name'] = $donator->getElementsByTagName("formated_name")->item(0)->nodeValue;
+      $people->save() ;
     }
-    // I remove the latest ',' and add the '}' 
-    $object['donators'] = substr($donators,0,strlen($donators)-1).'}' ; 
   } 
 
 

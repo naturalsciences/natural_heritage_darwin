@@ -26,7 +26,6 @@ DROP FUNCTION IF EXISTS fct_cpy_path_catalogs() CASCADE;
 
 DROP FUNCTION IF EXISTS fct_cpy_FormattedName() CASCADE;
 DROP FUNCTION IF EXISTS fct_chk_AreRole() CASCADE;
-DROP FUNCTION IF EXISTS fct_chk_peopleType() CASCADE;
 DROP FUNCTION IF EXISTS fct_cas_userType() CASCADE;
 DROP FUNCTION IF EXISTS fct_array_find(IN in_array varchar, IN elem anyelement,OUT item_order integer) CASCADE;
 DROP FUNCTION IF EXISTS fct_array_find(IN in_array anyarray, IN elem anyelement,OUT item_order integer) CASCADE;
@@ -95,6 +94,8 @@ DROP FUNCTION IF EXISTS trg_fct_chk_possible_upper_level() CASCADE;
 
 DROP FUNCTION IF EXISTS fct_set_user(user_id integer) ;
 DROP FUNCTION IF EXISTS fct_upd_staging_fields() CASCADE;
+DROP FUNCTION IF EXISTS fct_importer_dna();
+DROP FUNCTION IF EXISTS fct_upd_people_staging_fields();
 DROP FUNCTION IF EXISTS fct_add_in_dict(ref_table, ref_field, old_value, dict_value) CASCADE;
 DROP FUNCTION IF EXISTS fct_del_in_dict(ref_table, ref_field, dict_value, old_value) CASCADE;
 DROP FUNCTION IF EXISTS trg_ins_update_dict() CASCADE;
