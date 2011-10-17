@@ -20,10 +20,6 @@ $t->is(People::getCorrespondingTypeAsArray(2), array('2'=>'Author'), 'For key "2
 $t->is(People::getCorrespondingTypeAsArray(4), array('4'=>'Identifier'), 'For key "4", the "array(4=>Identifier)" is well returned');
 
 $t->info('DB people types tests');
-$t->is($p->getDbPeopleType(),array(),'We have only the "default" type ("empty array")');
-
-$p->setDbPeopleType(array('8','32'));
-$t->is($p->getDbPeopleType(),array('8','32'),'We have set "2" types');
 
 $p->setBirthDate('05/12/1908');
 $t->is($p->getBirthDate(), array('year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minute' => '','second' => ''),'We have set a null birth date');

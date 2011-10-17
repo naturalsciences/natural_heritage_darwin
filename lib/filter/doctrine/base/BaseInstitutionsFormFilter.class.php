@@ -20,7 +20,6 @@ abstract class BaseInstitutionsFormFilter extends BaseFormFilterDoctrine
       'formated_name_ts'      => new sfWidgetFormFilterInput(),
       'family_name'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'additional_names'      => new sfWidgetFormFilterInput(),
-      'db_people_type'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
 
     $this->setValidators(array(
@@ -31,7 +30,6 @@ abstract class BaseInstitutionsFormFilter extends BaseFormFilterDoctrine
       'formated_name_ts'      => new sfValidatorPass(array('required' => false)),
       'family_name'           => new sfValidatorPass(array('required' => false)),
       'additional_names'      => new sfValidatorPass(array('required' => false)),
-      'db_people_type'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
 
     $this->widgetSchema->setNameFormat('institutions_filters[%s]');
@@ -59,7 +57,6 @@ abstract class BaseInstitutionsFormFilter extends BaseFormFilterDoctrine
       'formated_name_ts'      => 'Text',
       'family_name'           => 'Text',
       'additional_names'      => 'Text',
-      'db_people_type'        => 'Number',
     );
   }
 }

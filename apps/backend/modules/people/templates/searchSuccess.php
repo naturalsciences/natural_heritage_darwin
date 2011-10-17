@@ -99,7 +99,7 @@
 <div class="error">
     <?php echo $form->renderGlobalErrors();?>
     <?php echo $form['activity_date_to']->renderError(); ?>
-    <?php echo $form['db_people_type']->renderError(); ?>
+    <?php echo $form['people_type']->renderError(); ?>
     <?php echo $form['is_physical']->renderError(); ?>
     <?php echo $form['activity_date_from']->renderError(); ?>
     <?php echo $form['family_name']->renderError(); ?>

@@ -7,8 +7,8 @@ SELECT diag('Darwin flat synchro tests');
 -- Insertion of catalogues data
 INSERT INTO users(id, family_name, formated_name) VALUES (100000, 'Jos Chevremont', 'Jos Chevremont');
 INSERT INTO users(id, family_name, formated_name) VALUES (100001, 'Paul Damblon', 'Paul Damblon');
-INSERT INTO people(id, is_physical, db_people_type, sub_type, family_name, formated_name) VALUES (100002, false, 1, 'Federal Institution', 'Institut des Cocinnelles', 'Institut des Cocinnelles');
-INSERT INTO people(id, is_physical, db_people_type, sub_type, family_name, formated_name) VALUES (100003, false, 1, 'ASBL', 'Centre d''écologie urbaine', 'Centre d''écologie urbaine');
+INSERT INTO people(id, is_physical, sub_type, family_name, formated_name) VALUES (100002, false, 'Federal Institution', 'Institut des Cocinnelles', 'Institut des Cocinnelles');
+INSERT INTO people(id, is_physical, sub_type, family_name, formated_name) VALUES (100003, false, 'ASBL', 'Centre d''écologie urbaine', 'Centre d''écologie urbaine');
 INSERT INTO collections(id, code, name, institution_ref, main_manager_ref) VALUES (100000, 'Bulots', 'Bulots', 100002, 100000);
 INSERT INTO collections(id, code, name, institution_ref, main_manager_ref, parent_ref) VALUES (100001, 'Bulots Af.', 'Bulots d''Afrique', 100002, 100000, 100000);
 INSERT INTO collections(id, code, name, institution_ref, main_manager_ref, parent_ref) VALUES (100002, 'Bulots As.', 'Bulots d''Asie', 100002, 100000, 100000);

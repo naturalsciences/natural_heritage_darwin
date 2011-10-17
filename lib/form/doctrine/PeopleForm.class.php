@@ -42,13 +42,6 @@ class PeopleForm extends BasePeopleForm
     $this->widgetSchema['given_name']->setAttributes(array('class'=>'medium_size'));
     $this->widgetSchema['additional_names']->setAttributes(array('class'=>'medium_size'));
 
-    $this->widgetSchema['db_people_type'] = new sfWidgetFormChoice(array(
-      'choices'        => People::getTypes(),
-      'expanded'       => true,
-      'multiple'       => true
-    ));
-    $this->widgetSchema['db_people_type']->setLabel('Role');
-    $this->validatorSchema['db_people_type'] = new sfValidatorChoice(array('choices' => array_keys(People::getTypes()), 'required' => false, 'multiple' => true));
     $this->validatorSchema['gender'] = new sfValidatorChoice(array('choices' => array('M' => 'M', 'F' => 'F'), 'required' => false));
     $this->Postvalidators = array();
     $this->initiateActivityItems();

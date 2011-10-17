@@ -264,14 +264,12 @@ People:
         family_name: Root
         given_name: Evil
         gender: M
-        db_people_type: 127
     p6:
         is_physical: true
         title: Mr
         family_name: Chambert
         given_name: Yann
-        gender: M
-        db_people_type: 127        
+        gender: M   
   
 Collections:
     c1:

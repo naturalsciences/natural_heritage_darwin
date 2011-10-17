@@ -23,7 +23,7 @@
        <td colspan="3">
          <div class="add_code">
            <a href="<?php echo url_for('specimen/AddCollector'.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" class="hidden"></a>
-           <a class='add_collector' href="<?php echo url_for('people/choose?with_js=1');?>"><?php echo __('Add collector');?></a>
+           <a class='add_collector' href="<?php echo url_for('people/searchBoth?with_js=1');?>"><?php echo __('Add collector');?></a>
          </div>
        </td>
      </tr>

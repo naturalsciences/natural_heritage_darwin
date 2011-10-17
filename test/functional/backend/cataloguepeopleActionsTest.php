@@ -44,7 +44,6 @@ $browser->
 
   $browser->test()->like($browser->getResponse()->getContent(),'/ok/','Content is ok');
   $rbins = Doctrine::getTable('People')->findOneByFamilyName('Institut Royal des Sciences Naturelles de Belgique');
-  $rbins->setDbPeopleType(2);
   $rbins->save();
 
 $browser->

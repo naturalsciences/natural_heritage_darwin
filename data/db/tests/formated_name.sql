@@ -2,8 +2,8 @@
 \i unit_launch.sql
 SELECT plan(18);
 
-insert into people (id, db_people_type, is_physical,family_name, given_name, birth_date, gender,end_date)
- VALUES (3,6, true, 'Zé Doe', 'Jo-zé', DATE 'June 20, 1989', 'M', DEFAULT);
+insert into people (id, is_physical,family_name, given_name, birth_date, gender,end_date)
+ VALUES (3, true, 'Zé Doe', 'Jo-zé', DATE 'June 20, 1989', 'M', DEFAULT);
 
 SELECT ok( 'Zé Doe Jo-zé' = (SELECT formated_name FROM people WHERE id=3),'formated_name composed');
 
