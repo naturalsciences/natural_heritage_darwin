@@ -694,6 +694,7 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
 
   public function addContainerColumnQuery($query, $field, $val)
   {
+
     if(trim($val) != '')
     {
       $values = explode(' ',$val);
@@ -703,12 +704,31 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
         if(trim($value) != '')
           $query_value[] = '%'.strtolower($value).'%';
       }
-      $query_array = array_fill(0,count($query_value),'lower(container) like ?');
-      $query->andWhere( implode(' or ',$query_array) ,$query_value);
+   
+
+      if($this->scope != self::SC_PART)
+      {
+        if(! empty($query_value))
+        {
+          $conn_MGR = Doctrine_Manager::connection();
+          $exist_qry ='';
+          foreach($query_value as $k=>$param)
+          {
+            if($k != 0)
+              $exist_qry .= ' or ';
+            $exist_qry .= 'lower(p1.container) like '. $conn_MGR->quote($param, 'string') ;
+          }
+          $this->exists_qry_part[] = $exist_qry;
+        }
+      }
+      else
+      {
+        $query_array = array_fill(0,count($query_value),'lower(p.container) like ?');
+        $query->andWhere( implode(' or ',$query_array) ,$query_value);
+      }
     }
     return $query ;
   }
-
   public function addSubContainerColumnQuery($query, $field, $val)
   {
     if(trim($val) != '')
@@ -720,8 +740,28 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
         if(trim($value) != '')
           $query_value[] = '%'.strtolower($value).'%';
       }
-      $query_array = array_fill(0,count($query_value),'lower(sub_container) like ?');
-      $query->andWhere( implode(' or ',$query_array) ,$query_value);
+   
+
+      if($this->scope != self::SC_PART)
+      {
+        if(! empty($query_value))
+        {
+          $conn_MGR = Doctrine_Manager::connection();
+          $exist_qry ='';
+          foreach($query_value as $k=>$param)
+          {
+            if($k != 0)
+              $exist_qry .= ' or ';
+            $exist_qry .= 'lower(p1.sub_container) like '. $conn_MGR->quote($param, 'string') ;
+          }
+          $this->exists_qry_part[] = $exist_qry;
+        }
+      }
+      else
+      {
+        $query_array = array_fill(0,count($query_value),'lower(p.sub_container) like ?');
+        $query->andWhere( implode(' or ',$query_array) ,$query_value);
+      }
     }
     return $query ;
   }
