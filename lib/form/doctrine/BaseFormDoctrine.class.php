@@ -32,15 +32,19 @@ abstract class BaseFormDoctrine extends sfFormDoctrine
     $fields_groups = $this->getFieldsByGroup();
     foreach($fields_groups as $group)
     {
+      $cnt_unset = 0;
       foreach($group as $field)
       {
-        if(!isset($taintedValues[$field]) && get_class($this->widgetSchema[$field]) != "sfWidgetFormInputCheckbox" &&  get_class($this->widgetSchema[$field]) != "widgetFormSelectDoubleListFilterable")
+        if(!isset($taintedValues[$field]))
+        {
+          $cnt_unset++;
+        }
+        if($cnt_unset == count($group))
         {
           foreach($group as $ufield)
           {
             $this->offsetUnset($ufield);
           }
-          break;
         }
       }
     }
