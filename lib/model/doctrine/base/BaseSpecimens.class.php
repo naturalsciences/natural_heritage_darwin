@@ -24,6 +24,8 @@
  * @property boolean $station_visible
  * @property boolean $multimedia_visible
  * @property integer $ig_ref
+ * @property boolean $with_individuals
+ * @property boolean $with_types
  * @property string $collection_type
  * @property string $collection_code
  * @property string $collection_name
@@ -144,6 +146,8 @@
  * @method boolean             getStationVisible()           Returns the current record's "station_visible" value
  * @method boolean             getMultimediaVisible()        Returns the current record's "multimedia_visible" value
  * @method integer             getIgRef()                    Returns the current record's "ig_ref" value
+ * @method boolean             getWithIndividuals()          Returns the current record's "with_individuals" value
+ * @method boolean             getWithTypes()                Returns the current record's "with_types" value
  * @method string              getCollectionType()           Returns the current record's "collection_type" value
  * @method string              getCollectionCode()           Returns the current record's "collection_code" value
  * @method string              getCollectionName()           Returns the current record's "collection_name" value
@@ -263,6 +267,8 @@
  * @method Specimens           setStationVisible()           Sets the current record's "station_visible" value
  * @method Specimens           setMultimediaVisible()        Sets the current record's "multimedia_visible" value
  * @method Specimens           setIgRef()                    Sets the current record's "ig_ref" value
+ * @method Specimens           setWithIndividuals()          Sets the current record's "with_individuals" value
+ * @method Specimens           setWithTypes()                Sets the current record's "with_types" value
  * @method Specimens           setCollectionType()           Sets the current record's "collection_type" value
  * @method Specimens           setCollectionCode()           Sets the current record's "collection_code" value
  * @method Specimens           setCollectionName()           Sets the current record's "collection_name" value
@@ -448,6 +454,12 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('ig_ref', 'integer', null, array(
              'type' => 'integer',
+             ));
+        $this->hasColumn('with_individuals', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('with_types', 'boolean', null, array(
+             'type' => 'boolean',
              ));
         $this->hasColumn('collection_type', 'string', null, array(
              'type' => 'string',

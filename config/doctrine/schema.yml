@@ -665,10 +665,8 @@ Specimens:
         multimedia_visible: { type: boolean, default: true}
         ig_ref: { type: integer}
 
-
-
-
-
+        with_individuals: {type: boolean}
+        with_types: {type: boolean}
         collection_type: { type: string}
         collection_code: { type: string}
         collection_name: { type: string}

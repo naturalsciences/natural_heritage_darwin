@@ -1070,8 +1070,6 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
 
     $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
 
-    $query->addSelect('true as with_types, true as with_individuals');
-
     $this->cols = $this->getCollectionWithRights($this->options['user']);
     if(!empty($values['collection_ref']))
     {

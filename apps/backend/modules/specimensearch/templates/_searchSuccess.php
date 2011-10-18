@@ -88,7 +88,7 @@
               </td>
               <td rowspan="2">
                 <?php if($source != 'part'):?>
-                  <?php $expandable = ($source=='specimen') ? true:true /** @TODO $specimen->getWithIndividuals() : $specimen->getWithParts()**/;?>
+                  <?php $expandable = ($source=='specimen') ? $specimen->getWithIndividuals() : $specimen->getWithParts();?>
                   <?php if($expandable):?>
                     <?php echo image_tag('blue_expand.png', array('alt' => '+', 'class'=> 'tree_cmd_td collapsed')); ?>
                     <?php echo image_tag('blue_expand_up.png', array('alt' => '-', 'class'=> 'tree_cmd_td expanded')); ?>
