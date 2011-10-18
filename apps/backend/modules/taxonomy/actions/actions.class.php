@@ -50,7 +50,7 @@ class taxonomyActions extends DarwinActions
     {
       $e = new DarwinPgErrorParser($ne);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-      $this->form = new TaxonomyForm($unit);
+      $this->form = new TaxonomyForm($taxon);
       $this->form->getErrorSchema()->addError($error); 
       $this->loadWidgets();
       $this->no_right_col = Doctrine::getTable('Taxonomy')->testNoRightsCollections('taxon_ref',$request->getParameter('id'), $this->getUser()->getId());

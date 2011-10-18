@@ -88,8 +88,9 @@ function checkItem()
   }
 }
 
-function chooseAction()
+function chooseAction(event)
 {
+  if(!event) return; 
   if(! $(this).is(':checked'))
   {
     $('#sub_form_'+$(this).val()).remove();
