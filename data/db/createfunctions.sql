@@ -2640,6 +2640,60 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION fct_count_units()
+RETURNS TRIGGER
+AS
+$$
+DECLARE
+  rid integer;
+  do_with_type boolean default true;
+BEGIN
+
+  IF TG_TABLE_NAME = 'specimen_individuals' THEN
+    IF TG_OP = 'INSERT' THEN
+      rid := NEW.specimen_ref;
+    ELSIF TG_OP = 'UPDATE' THEN
+      rid := OLD.specimen_ref;
+      IF OLD.type_group IS NOT DISTINCT FROM NEW.type_group THEN
+        do_with_type := false;
+      END IF;
+    ELSE
+      rid := OLD.specimen_ref;
+    END IF;
+
+    IF do_with_type THEN
+      UPDATE specimens s set 
+        with_types = exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.id AND  i2.type_group <> 'specimen')
+      WHERE
+         s.id = rid
+        AND with_types != exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.id AND  i2.type_group <> 'specimen');
+    END IF;
+
+    UPDATE specimens s set 
+      with_individuals = exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.id)
+      WHERE
+        s.id = rid
+      AND with_individuals != exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.id);
+
+  ELSIF TG_TABLE_NAME = 'specimen_parts' THEN
+
+    IF TG_OP = 'INSERT' THEN
+      rid = NEW.specimen_individual_ref;
+    ELSE
+      rid = OLD.specimen_individual_ref;
+    END IF;
+
+      UPDATE specimen_individuals i SET
+      with_parts = exists (select 1 from specimen_parts p WHERE p.specimen_individual_ref = i.id )
+      WHERE i.id = rid
+      AND with_parts != exists (select 1 from specimen_parts p WHERE p.specimen_individual_ref = i.id );
+  END IF;
+
+  RETURN NEW;
+END;
+$$ language plpgsql;
+
 CREATE OR REPLACE FUNCTION fct_upd_people_in_flat() RETURNS TRIGGER
 AS
 $$

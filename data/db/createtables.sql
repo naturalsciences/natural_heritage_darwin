@@ -1238,7 +1238,8 @@ create table specimens
         multimedia_visible boolean not null default true,
         ig_ref integer,
 
-
+    with_types boolean  not null default false,
+    with_individuals boolean not null default false,
     collection_type varchar,
     collection_code varchar,
     collection_name varchar,
@@ -1993,9 +1994,9 @@ ig_date,
   '{}'::integer[] as spec_coll_ids,
   '{}'::integer[] as spec_don_sel_ids,
 
-  exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.id AND  i2.type_group <> 'specimen') as with_types,
-  exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.id ) as with_individuals,
-  exists (select 1 from  specimen_individuals  i2  INNER JOIN specimen_parts p2 ON i2.id = p2.specimen_individual_ref WHERE i2.specimen_ref = s.id ) as with_parts,
+  s.with_types,
+  s.with_individuals,
+  COALESCE(i.with_parts,false) as with_parts,
 
   i.id as individual_ref,
   coalesce(i.type, 'specimen') as individual_type,

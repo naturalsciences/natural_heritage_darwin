@@ -1,7 +1,7 @@
 \unset ECHO
 \i unit_launch.sql
 -- Plan the tests.
-SELECT plan(56);
+SELECT plan(53);
 
 -- Run the tests.
 SELECT has_table('catalogue_relationships','catalogue_relationships exists');
@@ -39,9 +39,6 @@ SELECT has_table('users_multimedia','users_multimedia exists');
 SELECT has_table('collections','collections exists');
 SELECT has_table('template_collections_users','template_collections_users exists');
 SELECT has_table('collections_rights','collections_rights exists');
---SELECT has_table('collections_fields_visibilities','collections_fields_visibilities exists');
---SELECT has_table('users_coll_rights_asked','users_coll_rights_asked exists');
---SELECT has_table('record_visibilities','record_visibilities exists');
 SELECT has_table('users_workflow','users_workflow exists');
 SELECT has_table('users_tracking','users_tracking exists');
 SELECT has_table('collection_maintenance','collection_maintenance exists');
