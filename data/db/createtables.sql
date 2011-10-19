@@ -848,37 +848,6 @@ comment on column collections_rights.collection_ref is 'Reference of collection 
 comment on column collections_rights.user_ref is 'Reference of user - id field of users table';
 comment on column collections_rights.db_user_type is 'Integer is representing a role: 1 for registered user, 2 for encoder, 4 for collection manager, 8 for system admin,...';
 
-
--- create sequence users_coll_rights_asked_id_seq;
---
--- create table users_coll_rights_asked
---        (
---         id integer not null default nextval('users_coll_rights_asked_id_seq'),
---         field_group_name varchar not null,
---         db_user_type smallint not null,
---         searchable boolean not null default true,
---         visible boolean not null default true,
---         motivation varchar not null,
---         asking_date_time update_date_time,
---         with_sub_collections boolean not null default true,
---         constraint pk_users_coll_rights_asked primary key (id),
---         constraint unq_users_coll_rights_asked unique (collection_ref, user_ref, field_group_name, db_user_type),
---         constraint fk_users_coll_rights_asked_collections foreign key (collection_ref) references collections(id) on delete cascade,
---         constraint fk_users_coll_rights_asked_users foreign key (user_ref) references users(id) on delete cascade
---        )
--- inherits (template_collections_users);
--- comment on table users_coll_rights_asked is 'List all rights asked by a registered user or encoder to collection managers';
--- comment on column users_coll_rights_asked.collection_ref is 'Reference of collection concerned - id field of collections table';
--- comment on column users_coll_rights_asked.user_ref is 'Reference of user - id field of users table';
--- comment on column users_coll_rights_asked.field_group_name is 'Group of fields name';
--- comment on column users_coll_rights_asked.db_user_type is 'Integer is representing a role: 1 for registered user, 2 for encoder, 4 for collection manager, 8 for system admin,...';
--- comment on column users_coll_rights_asked.searchable is 'Flag telling if the field group is searchable - meaning these fields will appear as search criterias in the search form';
--- comment on column users_coll_rights_asked.visible is 'Flag telling if the field group is visible - meaning these fields will be displayable in the result table';
--- comment on column users_coll_rights_asked.motivation is 'Motivation given by asker';
--- comment on column users_coll_rights_asked.asking_date_time is 'Telling when right ask was done';
--- comment on column users_coll_rights_asked.with_sub_collections is 'Rights are asked on a single collection or on this collection with all the sub-collections included ?';
---
-
 create sequence users_workflow_id_seq;
 
 create table users_workflow
@@ -1238,6 +1207,10 @@ create table specimens
         multimedia_visible boolean not null default true,
         ig_ref integer,
 
+
+    spec_ident_ids integer[] not null default '{}',
+    spec_coll_ids integer[] not null default '{}',
+    spec_don_sel_ids integer[] not null default '{}',
     with_types boolean  not null default false,
     with_individuals boolean not null default false,
     collection_type varchar,
@@ -1421,6 +1394,7 @@ create table specimen_individuals
         specimen_individuals_count_min integer not null default 1,
         specimen_individuals_count_max integer not null default 1,
         with_parts boolean not null default false,
+        ind_ident_ids integer[] not null default '{}',
         constraint pk_specimen_individuals primary key (id),
         constraint unq_specimen_individuals unique (specimen_ref, type, sex, stage, state, social_status, rock_form),
         constraint fk_specimen_individuals_specimens foreign key (specimen_ref) references specimens(id) on delete cascade,
@@ -1994,10 +1968,10 @@ ig_date_mask,
 ig_date,
   s.id as spec_ref,
 
-  '{}'::integer[] as spec_ident_ids,
-  '{}'::integer[] as ind_ident_ids,
-  '{}'::integer[] as spec_coll_ids,
-  '{}'::integer[] as spec_don_sel_ids,
+  spec_ident_ids,
+  spec_coll_ids,
+  spec_don_sel_ids,
+  ind_ident_ids,
 
   s.with_types,
   s.with_individuals,

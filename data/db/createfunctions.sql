@@ -2703,7 +2703,106 @@ DECLARE
   ref_field varchar := 'spec_ref' ;
   ref_relation varchar ;
   rec_exists boolean ;
+  spec_row RECORD;
+  ident RECORD;
 BEGIN
+
+  IF TG_OP = 'DELETE' THEN
+    IF OLD.people_type = 'collector' THEN
+      UPDATE specimens s SET spec_coll_ids = fct_remove_array_elem(spec_coll_ids,ARRAY[OLD.people_ref])
+        WHERE id  = OLD.record_id;
+    ELSIF OLD.people_type = 'donator' THEN
+      UPDATE specimens s SET spec_don_sel_ids = fct_remove_array_elem(spec_don_sel_ids,ARRAY[OLD.people_ref])
+        WHERE id  = OLD.record_id;
+    ELSIF OLD.people_type = 'identifier' THEN
+      SELECT * into ident FROM identifications where id = OLD.record_id;
+      IF NOT FOUND Then
+        RETURN OLD;
+      ELSIF ident.referenced_relation =  'specimens' THEN
+        UPDATE specimens s SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,ARRAY[OLD.people_ref])
+          WHERE id  = ident.record_id 
+            AND NOT exists (
+              SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' 
+                WHERE i.record_id = ident.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens'
+            );
+      ELSE -- 'specimen_individuals'
+        UPDATE specimen_individuals SET ind_ident_ids = fct_remove_array_elem(ind_ident_ids,ARRAY[OLD.people_ref])
+          WHERE id  = ident.record_id 
+            AND NOT exists (
+              SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' 
+                WHERE i.record_id = ident.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimen_individuals'
+            );
+      END IF;
+    END IF;
+
+  ELSIF TG_OP = 'INSERT' THEN --- INSERT
+
+    IF NEW.people_type = 'collector' THEN
+      UPDATE specimens s SET spec_coll_ids = array_append(spec_coll_ids,NEW.people_ref)
+        WHERE id  = NEW.record_id and NOT (spec_coll_ids && ARRAY[ NEW.people_ref::integer ]);
+    ELSIF NEW.people_type = 'donator' THEN
+      UPDATE specimens s SET spec_don_sel_ids = array_append(spec_don_sel_ids,NEW.people_ref)
+        WHERE id  = NEW.record_id  and NOT (spec_don_sel_ids && ARRAY[ NEW.people_ref::integer ]);
+    ELSIF NEW.people_type = 'identifier' THEN
+      SELECT * into ident FROM identifications where id = NEW.record_id;
+      IF ident.referenced_relation =  'specimens' THEN
+        UPDATE specimens s SET spec_ident_ids = array_append(spec_ident_ids,NEW.people_ref)
+          WHERE id  = ident.record_id and NOT (spec_ident_ids && ARRAY[ NEW.people_ref::integer ]);
+      ELSE --spec_individuals
+        UPDATE specimen_individuals s SET ind_ident_ids = array_append(ind_ident_ids,NEW.people_ref)
+          WHERE id  = ident.record_id and NOT (ind_ident_ids && ARRAY[ NEW.people_ref::integer ]);
+      END IF;
+    END IF;
+
+  ELSIF OLD.people_ref != NEW.people_ref THEN --UPDATE
+
+    IF NEW.people_type = 'collector' THEN
+      UPDATE specimens s SET spec_coll_ids = array_append(fct_remove_array_elem(spec_coll_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
+        WHERE id  = NEW.record_id;
+    ELSIF NEW.people_type = 'donator' THEN
+      UPDATE specimens s SET spec_don_sel_ids = array_append(fct_remove_array_elem(spec_don_sel_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
+        WHERE id  = NEW.record_id;
+
+    ELSIF NEW.people_type = 'identifier' THEN
+      SELECT * into ident FROM identifications where id = NEW.record_id;
+
+      --DETERMIN IF IDENTIFICATION IS ON SPEC OR INDIV
+
+      IF ident.referenced_relation =  'specimens' THEN
+        SELECT id, spec_ident_ids INTO spec_row FROM specimens WHERE id = ident.record_id;
+
+        IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications' 
+          WHERE i.record_id = spec_row.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens' AND c.id != OLD.id
+        ) THEN 
+          spec_row.spec_ident_ids := fct_remove_array_elem(spec_row.spec_ident_ids ,ARRAY[OLD.people_ref]);
+        END IF;
+
+        IF NOT spec_row.spec_ident_ids && ARRAY[ NEW.people_ref::integer ] THEN 
+          spec_row.spec_ident_ids := array_append(spec_row.spec_ident_ids ,NEW.people_ref);
+        END IF;
+
+        UPDATE specimens SET spec_ident_ids = spec_row.spec_ident_ids WHERE id = spec_row.id;
+      ELSE --spec_individuals
+
+        SELECT id, ind_ident_ids INTO spec_row FROM specimen_individuals WHERE id = ident.record_id;
+
+        IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications' 
+          WHERE i.record_id = spec_row.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimen_individuals' AND c.id != OLD.id
+        ) THEN 
+          spec_row.ind_ident_ids := fct_remove_array_elem(spec_row.ind_ident_ids ,ARRAY[OLD.people_ref]);
+        END IF;
+
+        IF NOT spec_row.ind_ident_ids && ARRAY[ NEW.people_ref::integer ] THEN 
+          spec_row.ind_ident_ids := array_append(spec_row.ind_ident_ids ,NEW.people_ref);
+        END IF;
+
+        UPDATE specimen_individuals SET ind_ident_ids = spec_row.ind_ident_ids WHERE id = spec_row.id;
+      END IF;
+    END IF;
+  else  raise info 'ooh';
+  END IF;
+
+  
 /*
   IF TG_OP = 'DELETE' THEN
     IF OLD.people_type = 'collector' THEN
