@@ -6,14 +6,15 @@
 class People extends BasePeople
 {
   private static $type = array(
-      2 => 'Author',
-      4 => 'Identifier',
-      8 => 'Expert',
-      16 => 'Collector',
-      32 => 'Preparator',
-      64 => 'Photographer',
-      128 => 'Donator'
-    );   
+      'author' => 'Author',
+      'identifier' => 'Identifier',
+      'expert' => 'Expert',
+      'collector' => 'Collector',
+      'preparator' => 'Preparator',
+      'donator' => 'Donator',
+      'member' => 'Expedition Member'
+  );
+
   public static function getTypes()
   {
     try{

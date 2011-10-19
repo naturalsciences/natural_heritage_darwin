@@ -95,6 +95,10 @@
         <source>Click on the name below to replace the unit by his current name.</source>
         <target></target>
       </trans-unit>
+          <trans-unit id="1461">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;Actually this import module is reserved for the DNA department</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1396">
         <source>To be loaded</source>
         <target>Moet worden ingeladen</target>

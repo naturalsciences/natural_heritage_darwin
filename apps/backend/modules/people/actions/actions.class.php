@@ -32,7 +32,6 @@ class peopleActions extends DarwinActions
     $this->setCommonValues('people', 'family_name', $request);
     $this->form = new PeopleFormFilter();
     $this->is_choose = ($request->getParameter('is_choose', '') == '') ? 0 : intval($request->getParameter('is_choose') );
-
     if($request->getParameter('people_filters','') !== '')
     {
       $this->form->bind($request->getParameter('people_filters'));
