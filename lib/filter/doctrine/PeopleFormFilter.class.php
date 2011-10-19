@@ -83,18 +83,19 @@ class PeopleFormFilter extends BasePeopleFormFilter
   public function doBuildQuery(array $values)
   {    
     $query = parent::doBuildQuery($values);
-    $alias = $query->getRootAlias() ;
     $fields = array('activity_date_from', 'activity_date_to');
     $this->addDateFromToColumnQuery($query, $fields, $values['activity_date_from'], $values['activity_date_to']);
-    if($values['people_type'] != '')
-      $query->AddWhere("EXISTS (select c.id from cataloguePeople c where $alias.id = c.people_ref and people_type = ?)",People::getCorrespondingNumberType($values['people_type'])) ;
     $query->andWhere('id != 0');
     return $query;
   }
 
-  public function addDbPeopleTypeColumnQuery($query, $field, $val)
+  public function addPeopleTypeColumnQuery($query, $field, $val)
   {
-    $query->andWhere("($field &  ?) != 0 ", $val);
+    if($val != '')
+    {
+      $alias = $query->getRootAlias() ;
+      $query->andWhere("EXISTS (select c.id from cataloguePeople c where $alias.id = c.people_ref and people_type = ?)",$val);
+    }
     return $query;
   }
 
