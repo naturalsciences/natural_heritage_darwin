@@ -1,6 +1,6 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
-$t = new lime_test(26, new lime_output_color());
+$t = new lime_test(20, new lime_output_color());
 $p = new People();
 $p->setFormatedName('Mr Poilux Duchesne');
 $t->info('Test "__toString" method to get formated name of given person');
@@ -8,16 +8,8 @@ $t->is($p->__toString(),'Mr Poilux Duchesne','to string get "FormatedName": "Mr 
 
 $t->info('Get static list of people types');
 $types = People::getTypes();
-$t->is($types[4], 'Identifier','We have "Identifier" as Type');
-$t->is($types[16], 'Collector','We have "Collector" as Type');
-
-$t->info('Get the people type value for a given key');
-$t->is(People::getCorrespondingType('author'), '2', '"Author" is of value "2"');
-$t->is(People::getCorrespondingType('identifier'), '4', '"Identifier" is of value "4"');
-
-$t->info('For a given key, get the array entry from the static list');
-$t->is(People::getCorrespondingTypeAsArray(2), array('2'=>'Author'), 'For key "2", the "array(2=>Author)" is well returned');
-$t->is(People::getCorrespondingTypeAsArray(4), array('4'=>'Identifier'), 'For key "4", the "array(4=>Identifier)" is well returned');
+$t->is($types['identifier'], 'Identifier','We have "Identifier" as Type');
+$t->is($types['collector'], 'Collector','We have "Collector" as Type');
 
 $t->info('DB people types tests');
 
