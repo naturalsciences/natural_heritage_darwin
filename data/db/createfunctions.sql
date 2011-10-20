@@ -2698,11 +2698,6 @@ CREATE OR REPLACE FUNCTION fct_upd_people_in_flat() RETURNS TRIGGER
 AS
 $$
 DECLARE
-  ref_field_id integer ;
-  field_to_update varchar ;
-  ref_field varchar := 'spec_ref' ;
-  ref_relation varchar ;
-  rec_exists boolean ;
   spec_row RECORD;
   ident RECORD;
 BEGIN
@@ -2799,89 +2794,8 @@ BEGIN
         UPDATE specimen_individuals SET ind_ident_ids = spec_row.ind_ident_ids WHERE id = spec_row.id;
       END IF;
     END IF;
-  else  raise info 'ooh';
+    --else  raise info 'ooh';
   END IF;
-
-  
-/*
-  IF TG_OP = 'DELETE' THEN
-    IF OLD.people_type = 'collector' THEN
-      field_to_update := 'spec_coll_ids';
-      ref_field_id := OLD.record_id ;
-    ELSIF OLD.people_type = 'donator' THEN
-      field_to_update := 'spec_don_sel_ids';
-      ref_field_id := OLD.record_id ; 
-    ELSIF OLD.people_type = 'identifier' THEN
-      SELECT record_id,referenced_relation INTO ref_field_id, ref_relation FROM identifications where id=OLD.record_id ;
-      IF ref_field_id is NULL THEN
-        RETURN OLD ;
-      END IF ;      
-      IF ref_relation = 'specimens' THEN
-        field_to_update := 'spec_ident_ids';
-      ELSIF ref_relation = 'specimen_individuals' THEN
-        field_to_update := 'ind_ident_ids';
-        ref_field := 'individual_ref' ;
-      ELSE
-        RETURN NEW;
-      END IF ;
-      EXECUTE 'SELECT true ' ||
-              'FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = ' || quote_literal('identifications') || ' ' ||
-              'WHERE i.record_id = ' || quote_literal(ref_field_id) || 
-              '  AND people_ref = ' || quote_literal(OLD.people_ref) || 
-              '  AND i.referenced_relation = ' || quote_literal(ref_relation) INTO rec_exists ;
-      IF rec_exists IS NOT NULL THEN
-        RETURN OLD;
-      END IF ;
-    ELSE
-      RETURN OLD ;
-    END IF ;
-  ELSE
-    IF NEW.people_type = 'collector' THEN
-      field_to_update := 'spec_coll_ids';
-      ref_field_id := NEW.record_id;
-    ELSIF NEW.people_type = 'donator' THEN
-      field_to_update := 'spec_don_sel_ids';
-      ref_field_id := NEW.record_id;  
-    ELSIF NEW.people_type = 'identifier' THEN 
-      SELECT record_id, referenced_relation INTO ref_field_id, ref_relation FROM identifications where id=NEW.record_id ;    
-      IF (ref_relation = 'specimens') THEN
-        field_to_update := 'spec_ident_ids';
-      ELSIF ref_relation = 'specimen_individuals' THEN
-        field_to_update := 'ind_ident_ids';
-        ref_field := 'individual_ref' ;
-      ELSE
-        RETURN NEW;    
-      END IF ;
-    ELSE
-      RETURN NEW ;      
-    END IF;  
-  END IF ;
-  
-  IF TG_OP = 'DELETE' THEN
-    EXECUTE 'UPDATE darwin_flat ' ||
-            'SET ' || quote_ident(field_to_update) || '= fct_remove_array_elem(' || quote_ident(field_to_update) || ',ARRAY[' || OLD.people_ref || ']) ' || 
-            'WHERE ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ;
-  ELSIF TG_OP = 'INSERT' THEN
-    EXECUTE 'SELECT TRUE ' || 
-            'WHERE EXISTS (SELECT id ' ||
-            '              FROM darwin_flat ' ||
-            '              WHERE ' || quote_ident(field_to_update) || ' && ARRAY[' || NEW.people_ref::integer || '] ' || 
-            '                AND ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ||
-            '             )' INTO rec_exists ;
-    IF rec_exists = TRUE THEN
-      RETURN NEW ;
-    END IF;
-    EXECUTE 'UPDATE darwin_flat ' ||
-            'SET ' || quote_ident(field_to_update) || ' = array_append(' || quote_ident(field_to_update) || ',' || quote_literal(NEW.people_ref::integer) || ') ' || 
-            'WHERE ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ;
-  ELSE
-    IF OLD.people_ref != NEW.people_ref THEN
-      EXECUTE 'UPDATE darwin_flat ' ||
-              'SET ' || quote_ident(field_to_update) || ' = array_append(fct_remove_array_elem(' || quote_ident(field_to_update) || ',ARRAY[' || OLD.people_ref || ']),' || quote_literal(NEW.people_ref::integer) || ') ' || 
-              'WHERE ' || quote_ident(ref_field) || ' = ' || quote_literal(ref_field_id) ;
-    END IF;
-  END IF;  
-*/
   RETURN NEW;
 END;
 $$ language plpgsql;
@@ -2889,27 +2803,39 @@ $$ language plpgsql;
 CREATE OR REPLACE FUNCTION fct_clear_identifiers_in_flat() RETURNS TRIGGER
 AS
 $$
-DECLARE
-  people_to_delete integer[] ;
-  field_to_update varchar := 'spec_ident_ids';
-  ref_field varchar := 'spec_ref' ;
 BEGIN
     IF OLD.referenced_relation = 'specimen_individuals' THEN
-      field_to_update := 'ind_ident_ids' ;
-      ref_field := 'individual_ref' ;
-    END IF;    
-    /* 'IF FALSE SO THERE NO identifier associated to this identification' */
-    IF NOT EXISTS(SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' where i.id=OLD.id) THEN
-      RETURN OLD ;
-    END IF ;     
-    EXECUTE 'SELECT array_accum(people_ref) FROM catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND i.id =' || OLD.id || ' AND people_ref NOT in
-    (SELECT people_ref from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation =' ||  quote_literal(TG_TABLE_NAME) ||
-    ' AND p.people_type=' || quote_literal('identifier') || ' where i.record_id=' || OLD.record_id || ' AND i.referenced_relation=' || 
-    quote_literal(OLD.referenced_relation) || ' AND i.id !=' || OLD.id || ')' INTO people_to_delete ;
-    EXECUTE 'UPDATE darwin_flat
-      SET ' || quote_ident(field_to_update) || '= fct_remove_array_elem(' || quote_ident(field_to_update) || ',' || quote_literal(people_to_delete) ||
-      '::int[]) WHERE ' || quote_ident(ref_field) || ' = ' || OLD.record_id ;	      
+      IF EXISTS(SELECT true FROM catalogue_people cp WHERE cp.record_id = OLD.id AND cp.referenced_relation = 'identifications') THEN
+        -- There's some identifier associated to this identification'
+        UPDATE specimen_individuals SET ind_ident_ids = fct_remove_array_elem(ind_ident_ids, 
+          (
+            select array_accum(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
+            AND people_ref NOT in
+              (
+                SELECT people_ref from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications'
+                AND p.people_type='identifier' where i.record_id=OLD.record_id AND i.referenced_relation=OLD.referenced_relation AND i.id != OLD.id
+              )
+          ))
+          WHERE id = OLD.record_id;
+      END IF;
+    ELSIF OLD.referenced_relation = 'specimens' THEN
+      IF EXISTS(SELECT true FROM catalogue_people cp WHERE cp.record_id = OLD.id AND cp.referenced_relation = 'identifications') THEN
+        -- There's NO identifier associated to this identification'
+        UPDATE specimens SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids, 
+          (
+            select array_accum(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
+            AND people_ref NOT in
+              (
+                SELECT people_ref from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications'
+                AND p.people_type='identifier' where i.record_id=OLD.record_id AND i.referenced_relation=OLD.referenced_relation AND i.id != OLD.id
+              )
+          ))
+          WHERE id = OLD.record_id;
+      END IF;
+    END IF; 
+
   RETURN OLD;
+  
 END;
 $$ language plpgsql;
 

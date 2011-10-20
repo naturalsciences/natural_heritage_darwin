@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(27);
+SELECT plan(30);
 INSERT INTO specimens (id, collection_ref, taxon_ref) VALUES (10005,1,-2);
 SELECT diag('Insert a record in catalogue people');
 SELECT lives_ok('insert into catalogue_people(referenced_relation,record_id, people_type,people_sub_type, order_by,people_ref) VALUES(''specimens'', 10005,''collector'','''',1,1)','Add a collector');
@@ -70,6 +70,20 @@ SELECT is(1 , (SELECT count(*)::int FROM specimen_individuals WHERE ind_ident_id
 DELETE FROM catalogue_people where people_ref=5 and record_id = 100 and people_type = 'identifier';
 SELECT is(1 , (SELECT count(*)::int FROM specimens WHERE spec_ident_ids = ARRAY[1]),'spec ident field is delete');
 
+DELETE FROM identifications where id = 103;
+
+SELECT is(1 , (SELECT count(*)::int FROM specimen_individuals WHERE ind_ident_ids = '{}'::integer[]),'ind');
+
+delete from identifications;
+
+SELECT is(1 , (SELECT count(*)::int FROM specimens WHERE spec_ident_ids = '{}'::integer[]),'ind');
+
+INSERT INTO identifications (id, referenced_relation, record_id, notion_concerned, value_defined) 
+  VALUES (101, 'specimens', 10005, 'taxonomy', 'Jé #spéè!');
+
+delete from identifications;
+
+SELECT is(1 , (SELECT count(*)::int FROM specimens WHERE spec_ident_ids = '{}'::integer[]),'ind');
 
 SELECT * FROM finish();
 ROLLBACK;
