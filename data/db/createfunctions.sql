@@ -2227,7 +2227,6 @@ BEGIN
     END IF;
   ELSIF TG_TABLE_NAME = 'specimen_individuals' THEN
     IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-      PERFORM true WHERE (SELECT collection_ref::integer FROM darwin_flat WHERE spec_ref = NEW.specimen_ref LIMIT 1) IN (SELECT * FROM fct_search_authorized_encoding_collections(user_id));
       IF NOT EXISTS(SELECT 1 from  specimens s
           INNER JOIN fct_search_authorized_encoding_collections (user_id) as r
             ON s.collection_ref = r
