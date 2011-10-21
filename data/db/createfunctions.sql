@@ -182,41 +182,41 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION fct_cpy_fullToIndex() RETURNS trigger
 AS $$
 BEGIN
-	IF TG_TABLE_NAME = 'catalogue_properties' THEN
+	IF TG_TABLE_NAME::text = 'catalogue_properties' THEN
 		NEW.property_tool_indexed := COALESCE(fullToIndex(NEW.property_tool),'');
 		NEW.property_sub_type_indexed := COALESCE(fullToIndex(NEW.property_sub_type),'');
 		NEW.property_method_indexed := COALESCE(fullToIndex(NEW.property_method),'');
 		NEW.property_qualifier_indexed := COALESCE(fullToIndex(NEW.property_qualifier),'');
-	ELSIF TG_TABLE_NAME = 'chronostratigraphy' THEN
+	ELSIF TG_TABLE_NAME::text = 'chronostratigraphy' THEN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'collections' THEN
+	ELSIF TG_TABLE_NAME::text = 'collections' THEN
 		NEW.name_indexed := fullToIndex(NEW.name);		
-	ELSIF TG_TABLE_NAME = 'expeditions' THEN
+	ELSIF TG_TABLE_NAME::text = 'expeditions' THEN
 		NEW.name_indexed := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'habitats' THEN
+	ELSIF TG_TABLE_NAME::text = 'habitats' THEN
 		NEW.code_indexed := fullToIndex(NEW.code);
-	ELSIF TG_TABLE_NAME = 'identifications' THEN
+	ELSIF TG_TABLE_NAME::text = 'identifications' THEN
 		NEW.value_defined_indexed := COALESCE(fullToIndex(NEW.value_defined),'');
-	ELSIF TG_TABLE_NAME = 'lithology' THEN
+	ELSIF TG_TABLE_NAME::text = 'lithology' THEN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'lithostratigraphy' THEN
+	ELSIF TG_TABLE_NAME::text = 'lithostratigraphy' THEN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'mineralogy' THEN
+	ELSIF TG_TABLE_NAME::text = 'mineralogy' THEN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
 		NEW.formule_indexed := fullToIndex(NEW.formule);
-	ELSIF TG_TABLE_NAME = 'multimedia' THEN
+	ELSIF TG_TABLE_NAME::text = 'multimedia' THEN
 		NEW.title_indexed := fullToIndex(NEW.title);
-	ELSIF TG_TABLE_NAME = 'multimedia_keywords' THEN
+	ELSIF TG_TABLE_NAME::text = 'multimedia_keywords' THEN
 		NEW.keyword_indexed := fullToIndex(NEW.keyword);
-	ELSIF TG_TABLE_NAME = 'people' THEN
+	ELSIF TG_TABLE_NAME::text = 'people' THEN
 		NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
                 NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
                 NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
-	ELSIF TG_TABLE_NAME = 'codes' THEN
+	ELSIF TG_TABLE_NAME::text = 'codes' THEN
 		IF NEW.code ~ '^[0-9]+$' THEN
 		   NEW.code_num := NEW.code;
 		ELSE
@@ -224,26 +224,26 @@ BEGIN
 		END IF;
                 NEW.full_code_indexed := to_tsvector('simple', COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,''));
 		NEW.full_code_order_by := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
-	ELSIF TG_TABLE_NAME = 'tag_groups' THEN
+	ELSIF TG_TABLE_NAME::text = 'tag_groups' THEN
 		NEW.group_name_indexed := fullToIndex(NEW.group_name);
 		NEW.sub_group_name_indexed := fullToIndex(NEW.sub_group_name);
-	ELSIF TG_TABLE_NAME = 'taxonomy' THEN
+	ELSIF TG_TABLE_NAME::text = 'taxonomy' THEN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'classification_keywords' THEN
+	ELSIF TG_TABLE_NAME::text = 'classification_keywords' THEN
 		NEW.keyword_indexed := fullToIndex(NEW.keyword);
-	ELSIF TG_TABLE_NAME = 'users' THEN
+	ELSIF TG_TABLE_NAME::text = 'users' THEN
 		NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
                 NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
-	ELSIF TG_TABLE_NAME = 'class_vernacular_names' THEN
+	ELSIF TG_TABLE_NAME::text = 'class_vernacular_names' THEN
 		NEW.community_indexed := fullToIndex(NEW.community);
-	ELSIF TG_TABLE_NAME = 'vernacular_names' THEN
+	ELSIF TG_TABLE_NAME::text = 'vernacular_names' THEN
 		NEW.name_indexed := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'igs' THEN
+	ELSIF TG_TABLE_NAME::text = 'igs' THEN
 		NEW.ig_num_indexed := fullToIndex(NEW.ig_num);
-       ELSIF TG_TABLE_NAME = 'collecting_methods' THEN
+       ELSIF TG_TABLE_NAME::text = 'collecting_methods' THEN
                 NEW.method_indexed := fullToIndex(NEW.method);
-       ELSIF TG_TABLE_NAME = 'collecting_tools' THEN
+       ELSIF TG_TABLE_NAME::text = 'collecting_tools' THEN
                 NEW.tool_indexed := fullToIndex(NEW.tool);
 	END IF;
 	RETURN NEW;
@@ -418,19 +418,19 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_clear_referencedRecord() RETURNS TRIGGER
 AS $$
 BEGIN
-	DELETE FROM catalogue_people WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM comments WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM catalogue_properties WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM identifications WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM class_vernacular_names WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM classification_synonymies WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM classification_keywords WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM users_workflow WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM collection_maintenance WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM associated_multimedia WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM codes WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM insurances WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-  DELETE FROM staging_people WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;	
+	DELETE FROM catalogue_people WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM comments WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM catalogue_properties WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM identifications WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM class_vernacular_names WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM classification_synonymies WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM classification_keywords WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM users_workflow WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM collection_maintenance WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM associated_multimedia WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM codes WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM insurances WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+  DELETE FROM staging_people WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;	
 	RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
@@ -471,7 +471,7 @@ AS $$
 DECLARE
 response boolean;
 BEGIN
-  IF new_id = 0 OR (new_parent_ref = 0 AND new_level_ref IN (1, 55, 64, 70, 75)) THEN
+  IF new_id = 0 OR (new_parent_ref IS NULL AND new_level_ref IN (1, 55, 64, 70, 75)) THEN
     RETURN TRUE;
   ELSE
     EXECUTE 'SELECT true WHERE EXISTS( SELECT * ' ||
@@ -593,10 +593,10 @@ BEGIN
           TG_TABLE_NAME::text = 'staging') THEN
 
           IF NEW.id = 0 THEN
-            NEW.parent_ref = null;
+            NEW.parent_ref := null;
           END IF;
           IF NEW.parent_ref IS NULL THEN
-            NEW.path ='/';
+            NEW.path :='/';
           ELSE
             EXECUTE 'SELECT path || id || ' || quote_literal('/') ||' FROM ' || quote_ident(TG_TABLE_NAME::text) || ' WHERE id=' || quote_literal(NEW.parent_ref) INTO STRICT NEW.path;
           END IF;
@@ -605,7 +605,7 @@ BEGIN
             FROM people_relationships
             WHERE person_2_ref=NEW.person_1_ref;
           IF NEW.path is NULL THEN
-            NEW.path = '/' || NEW.person_1_ref || '/';
+            NEW.path := '/' || NEW.person_1_ref || '/';
           END IF;
         END IF;
       ELSIF TG_OP = 'UPDATE' THEN
@@ -618,7 +618,7 @@ BEGIN
 
           IF NEW.parent_ref IS DISTINCT FROM OLD.parent_ref THEN
             IF NEW.parent_ref IS NULL THEN
-              NEW.path ='/';
+              NEW.path := '/';
             ELSIF COALESCE(OLD.parent_ref,0) = COALESCE(NEW.parent_ref,0) THEN
               RETURN NEW;
             ELSE
@@ -633,7 +633,7 @@ BEGIN
             SELECT path ||  NEW.person_1_ref || '/' INTO NEW.path FROM people_relationships WHERE person_2_ref=NEW.person_1_ref;
 
               IF NEW.path is NULL THEN
-                NEW.path = '/' || NEW.person_1_ref || '/';
+                NEW.path := '/' || NEW.person_1_ref || '/';
               END IF;
               -- AND UPDATE CHILDRENS
               UPDATE people_relationships SET path=replace(path, OLD.path, NEW.path) WHERE person_1_ref=OLD.person_2_ref;
@@ -654,12 +654,12 @@ BEGIN
           TG_TABLE_NAME::text = 'mineralogy' OR
           TG_TABLE_NAME::text = 'chronostratigraphy') THEN
 
-          IF NEW.parent_ref = 0 THEN
+          IF NEW.parent_ref IS NULL THEN
             NEW.path ='/';
           ELSE
-            EXECUTE 'SELECT path || id || ' || quote_literal('/') ||' FROM ' || quote_ident(TG_TABLE_NAME::text) || ' WHERE id=' || quote_literal(NEW.parent_ref) INTO STRICT NEW.path;
+            
+            EXECUTE 'SELECT path || id || ''/'' FROM ' || quote_ident(TG_TABLE_NAME::text) || ' WHERE id=' || quote_literal(NEW.parent_ref) INTO STRICT NEW.path;
           END IF;
-
     ELSIF TG_OP = 'UPDATE' AND (TG_TABLE_NAME::text = 'taxonomy' OR
         TG_TABLE_NAME::text = 'lithology' OR
         TG_TABLE_NAME::text = 'lithostratigraphy' OR
@@ -667,12 +667,12 @@ BEGIN
         TG_TABLE_NAME::text = 'chronostratigraphy') THEN
 
         IF NEW.parent_ref IS DISTINCT FROM OLD.parent_ref THEN
-          IF NEW.parent_ref = 0 THEN
+          IF NEW.parent_ref IS NULL THEN
             NEW.path ='/';
-          ELSIF COALESCE(OLD.parent_ref,0) = COALESCE(NEW.parent_ref,0) THEN
+          ELSIF OLD.parent_ref IS NOT DISTINCT FROM NEW.parent_ref THEN
             RETURN NEW;
           ELSE
-            EXECUTE 'SELECT path || id ||' || quote_literal('/') ||'  FROM ' || quote_ident(TG_TABLE_NAME::text) || ' WHERE id=' || quote_literal(NEW.parent_ref) INTO STRICT NEW.path;
+            EXECUTE 'SELECT  path || id || ''/''  FROM ' || quote_ident(TG_TABLE_NAME::text) || ' WHERE id=' || quote_literal(NEW.parent_ref) INTO STRICT NEW.path;
           END IF;
 
           EXECUTE 'UPDATE ' || quote_ident(TG_TABLE_NAME::text) || ' SET path=replace(path, ' ||  quote_literal(OLD.path || OLD.id || '/') ||' , ' || quote_literal( NEW.path || OLD.id || '/') || ') ' ||
@@ -3293,10 +3293,9 @@ BEGIN
 	  rec_id := nextval('specimens_id_seq');
 	  INSERT INTO specimens (id, category, collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref,
 	      host_taxon_ref, host_specimen_ref, host_relationship, acquisition_category, acquisition_date_mask, acquisition_date, station_visible, ig_ref)
-	  VALUES (rec_id, COALESCE(line.category,'physical') , line.collection_ref, COALESCE(line.expedition_ref,0),
-          COALESCE(line.gtu_ref,0),
-	    COALESCE(line.taxon_ref,0), COALESCE(line.litho_ref,0), COALESCE(line.chrono_ref,0),
-	    COALESCE(line.lithology_ref,0), COALESCE(line.mineral_ref,0), COALESCE(line.host_taxon_ref,0),
+	  VALUES (rec_id, COALESCE(line.category,'physical') , line.collection_ref, line.expedition_ref, line.gtu_ref,
+	    line.taxon_ref, line.litho_ref, line.chrono_ref,
+	    line.lithology_ref, line.mineral_ref, line.host_taxon_ref,
 	    line.host_specimen_ref, line.host_relationship, COALESCE(line.acquisition_category,''), COALESCE(line.acquisition_date_mask,0),
 	    COALESCE(line.acquisition_date,'01/01/0001'), COALESCE(line.station_visible,true),  line.ig_ref
 	  );
@@ -3313,14 +3312,14 @@ BEGIN
 	SELECT id INTO rec_id FROM specimens WHERE
 	  category = COALESCE(line.category,'physical')
 	  AND collection_ref=line.collection_ref
-	  AND expedition_ref= COALESCE(line.expedition_ref,0)
-	  AND gtu_ref= COALESCE(line.gtu_ref,0)
-	  AND taxon_ref= COALESCE(line.taxon_ref,0)
-	  AND litho_ref = COALESCE(line.litho_ref,0)
-	  AND chrono_ref = COALESCE(line.chrono_ref,0)
-	  AND lithology_ref = COALESCE(line.lithology_ref,0)
-	  AND mineral_ref = COALESCE(line.mineral_ref,0)
-	  AND host_taxon_ref = COALESCE(line.host_taxon_ref,0)
+	  AND expedition_ref= line.expedition_ref
+	  AND gtu_ref= line.gtu_ref
+	  AND taxon_ref= line.taxon_ref
+	  AND litho_ref = line.litho_ref
+	  AND chrono_ref = line.chrono_ref
+	  AND lithology_ref = line.lithology_ref
+	  AND mineral_ref = line.mineral_ref
+	  AND host_taxon_ref = line.host_taxon_ref
 	  AND host_specimen_ref = line.host_specimen_ref
 	  AND host_relationship = line.host_relationship
 	  AND acquisition_category = COALESCE(line.acquisition_category,'')

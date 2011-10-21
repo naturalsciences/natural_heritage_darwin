@@ -994,7 +994,7 @@ create table template_classifications
         local_naming boolean not null default false,
         color varchar,
         path varchar not null default '/',
-        parent_ref integer not null default 0
+        parent_ref integer
        );
 comment on table template_classifications is 'Template table used to construct every common data in each classifications tables (taxonomy, chronostratigraphy, lithostratigraphy,...)';
 comment on column template_classifications.name is 'Classification unit name';

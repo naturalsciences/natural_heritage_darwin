@@ -14,17 +14,18 @@ SELECT ok( fullToIndex(null) is null,'With null argument');
 
 
 SELECT diag('FulltoIndex Trigger');
+INSERT INTO taxonomy (id, name,level_ref) VALUES (10, 'Brol',1);
 
+INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_unit, date_from, date_to) VALUES ('taxonomy',10,'Ph', 'm', TIMESTAMP '0001-01-01 00:00:00', TIMESTAMP '0001-01-01 00:00:00');
+SELECT ok( '' = (SELECT property_sub_type_indexed FROM catalogue_properties WHERE record_id=10),'FulltoIndex on catalogue_properties null - property_sub_type_indexed');
+SELECT ok( '' = (SELECT property_method_indexed FROM catalogue_properties WHERE record_id=10),'FulltoIndex on catalogue_properties null - property_method_indexed');
+SELECT ok( '' = (SELECT property_tool_indexed FROM catalogue_properties WHERE record_id=10),'FulltoIndex on catalogue_properties null - property_tool_indexed');
 
-INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_unit, date_from, date_to) VALUES ('taxonomy',0,'Ph', 'm', TIMESTAMP '0001-01-01 00:00:00', TIMESTAMP '0001-01-01 00:00:00');
-SELECT ok( '' = (SELECT property_sub_type_indexed FROM catalogue_properties WHERE record_id=0),'FulltoIndex on catalogue_properties null - property_sub_type_indexed');
-SELECT ok( '' = (SELECT property_method_indexed FROM catalogue_properties WHERE record_id=0),'FulltoIndex on catalogue_properties null - property_method_indexed');
-SELECT ok( '' = (SELECT property_tool_indexed FROM catalogue_properties WHERE record_id=0),'FulltoIndex on catalogue_properties null - property_tool_indexed');
-
-INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, date_from, date_to, property_unit, property_tool_indexed, property_method_indexed, property_sub_type_indexed ) VALUES ('taxonomy',0,'Temperature',NOW(),NOW(), 'degC', 'ham ér', 'cra hé', 'Lambert 72');
-SELECT ok( '' = (SELECT property_sub_type_indexed FROM catalogue_properties WHERE record_id=0 AND property_type='Temperature'),'FulltoIndex on catalogue_properties null - property_sub_type_indexed');
-SELECT ok( '' = (SELECT property_method_indexed FROM catalogue_properties WHERE record_id=0 AND property_type='Temperature'),'FulltoIndex on catalogue_properties null - property_method_indexed');
-SELECT ok( '' = (SELECT property_tool_indexed FROM catalogue_properties WHERE record_id=0 AND property_type='Temperature'),'FulltoIndex on catalogue_properties null - property_tool_indexed');
+INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, date_from, date_to, property_unit, property_tool_indexed, property_method_indexed, property_sub_type_indexed )
+  VALUES ('taxonomy',10,'Temperature',NOW(),NOW(), 'degC', 'ham ér', 'cra hé', 'Lambert 72');
+SELECT ok( '' = (SELECT property_sub_type_indexed FROM catalogue_properties WHERE record_id=10 AND property_type='Temperature'),'FulltoIndex on catalogue_properties null - property_sub_type_indexed');
+SELECT ok( '' = (SELECT property_method_indexed FROM catalogue_properties WHERE record_id=10 AND property_type='Temperature'),'FulltoIndex on catalogue_properties null - property_method_indexed');
+SELECT ok( '' = (SELECT property_tool_indexed FROM catalogue_properties WHERE record_id=10 AND property_type='Temperature'),'FulltoIndex on catalogue_properties null - property_tool_indexed');
 
 INSERT INTO chronostratigraphy (id, name, level_ref ) VALUES (1,'ÉLo Wÿorléds', 55);
 SELECT ok( to_tsvector('simple', 'ÉLo Wÿorléds') = (SELECT name_indexed FROM chronostratigraphy WHERE id=1),'FulltoIndex on chronostratigraphy');
@@ -33,11 +34,11 @@ INSERT INTO expeditions (id, name ) VALUES (1,'ÉLo Wÿorléds');
 SELECT ok( 'elowyorleds' = (SELECT name_indexed FROM expeditions WHERE id=1),'FulltoIndex on expeditions');
 SELECT ok( to_tsvector('simple', 'ÉLo Wÿorléds') = (SELECT name_ts FROM expeditions WHERE id=1),'To TextSearch expeditions');
 
-INSERT INTO identifications (referenced_relation, record_id, notion_concerned, value_defined) VALUES ('taxonomy', 0, 'Expertise', 'Jé #spéè!');
-SELECT ok( 'jespee' = (SELECT value_defined_indexed FROM identifications WHERE record_id=0),'FulltoIndex on identifications');
+INSERT INTO identifications (referenced_relation, record_id, notion_concerned, value_defined) VALUES ('taxonomy', 10, 'Expertise', 'Jé #spéè!');
+SELECT ok( 'jespee' = (SELECT value_defined_indexed FROM identifications WHERE record_id=10),'FulltoIndex on identifications');
 
-INSERT INTO identifications (referenced_relation, record_id, notion_concerned, value_defined) VALUES ('taxonomy', 0, 'Taxonomic identification' , null);
-SELECT ok( '' = (SELECT value_defined_indexed FROM identifications WHERE record_id=0 AND notion_concerned='Taxonomic identification'),'FulltoIndex on identifications with null');
+INSERT INTO identifications (referenced_relation, record_id, notion_concerned, value_defined) VALUES ('taxonomy', 10, 'Taxonomic identification' , null);
+SELECT ok( '' = (SELECT value_defined_indexed FROM identifications WHERE record_id=10 AND notion_concerned='Taxonomic identification'),'FulltoIndex on identifications with null');
 
 INSERT INTO lithology (id, name, level_ref) VALUES (1,'éLoow !', 1);
 SELECT ok( to_tsvector('simple', 'éLoow !') = (SELECT name_indexed FROM lithology WHERE id=1),'FulltoIndex on lithology');
@@ -64,8 +65,10 @@ INSERT INTO specimens (id, collection_ref) VALUES (1,1);
 INSERT INTO specimen_individuals (id, specimen_ref, type) VALUES (1,1,'holotype');
 INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (1, 1, 'head');
 
+INSERT INTO  gtu (id, code) VALUES (10,'bru12');
+INSERT INTO  gtu (id, parent_ref, code) VALUES (1,10,'bru66');
 
-INSERT INTO tag_groups (id, gtu_ref,group_name,sub_group_name,tag_value) VALUES (1, 0, 'Rév#ers','','La ''mèr'' Nwàre');
+INSERT INTO tag_groups (id, gtu_ref,group_name,sub_group_name,tag_value) VALUES (1, 1, 'Rév#ers','','La ''mèr'' Nwàre');
 SELECT ok( 'revers' = (SELECT group_name_indexed FROM tag_groups WHERE id=1),'FulltoIndex on tags_groups');
 
 INSERT INTO taxonomy (id, name, level_ref) VALUES (1, 'Méàleis Gùbularis&', 1);
@@ -76,7 +79,7 @@ insert into people (id, is_physical, family_name, given_name, birth_date, gender
 insert into people (id, is_physical, family_name, given_name, birth_date, gender) VALUES (5, true, 'Marechal', 'Bill', NOW(), 'M');
 
 
-INSERT INTO class_vernacular_names (referenced_relation, record_id, id, community) VALUES ('taxonomy',0,1,'testlang');
+INSERT INTO class_vernacular_names (referenced_relation, record_id, id, community) VALUES ('taxonomy',10,1,'testlang');
 INSERT INTO vernacular_names (vernacular_class_ref, name) VALUES (1,'Éléphant!');
 SELECT ok( 'elephant' = (SELECT name_indexed FROM vernacular_names WHERE vernacular_class_ref=1),'FulltoIndex on vernacular_names');
 SELECT ok ( to_tsvector('simple', 'Éléphant') = (SELECT name_ts FROM vernacular_names WHERE vernacular_class_ref=1),'Full TEXT on vernacular_names');

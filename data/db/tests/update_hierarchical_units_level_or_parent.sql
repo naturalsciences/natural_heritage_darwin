@@ -168,7 +168,7 @@ SELECT ok('/1/21/22/23/24/25/33/29/' = (SELECT path from taxonomy WHERE id = 30)
 SELECT ok('/1/21/22/23/24/25/33/29/30/' = (SELECT path from taxonomy WHERE id = 31), 'Path of unit 31: /1/21/22/23/24/25/33/29/30/');
 SELECT ok('/1/21/22/23/24/25/33/29/30/31/' = (SELECT path from taxonomy WHERE id = 32), 'Path of unit 32: /1/21/22/23/24/25/33/29/30/31/');
 
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (34, 'THEDOMAIN', 1, 0);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (34, 'THEDOMAIN', 1, null);
 INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (35, 'THEKINGDOM', 2, 34);
 INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (36, 'THESUPERPHYL', 3, 35);
 INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (37, 'THEPHYLUM', 4, 36);

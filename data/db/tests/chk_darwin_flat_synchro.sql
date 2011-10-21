@@ -27,14 +27,14 @@ INSERT INTO tag_groups(id, gtu_ref, group_name, sub_group_name, tag_value) VALUE
 INSERT INTO tag_groups(id, gtu_ref, group_name, sub_group_name, tag_value) VALUES (100004, 100002, 'Administrative area', 'City', 'Brugge;Bruge');
 INSERT INTO taxonomy(id, name, level_ref, parent_ref) VALUES (100000, 'Anicracra', 2, -1);
 INSERT INTO taxonomy(id, name, level_ref, parent_ref) VALUES (100001, 'Aniblabla', 2, -1);
-INSERT INTO chronostratigraphy(id, name, level_ref, parent_ref) VALUES (100000, 'Devotien', 55, 0);
-INSERT INTO chronostratigraphy(id, name, level_ref, parent_ref) VALUES (100001, 'Chronocouche', 55, 0);
-INSERT INTO lithostratigraphy(id, name, level_ref, parent_ref) VALUES (100000, 'Croute basse', 64, 0);
-INSERT INTO lithostratigraphy(id, name, level_ref, parent_ref) VALUES (100001, 'Lithocroute', 64, 0);
-INSERT INTO lithology(id, name, level_ref, parent_ref) VALUES (100000, 'Petits cailloux', 75, 0);
-INSERT INTO lithology(id, name, level_ref, parent_ref) VALUES (100001, 'Gros rochers', 75, 0);
-INSERT INTO mineralogy(id, code, name, level_ref, parent_ref) VALUES (100000, 'CAM1', 'Camion', 70, 0);
-INSERT INTO mineralogy(id, code, name, level_ref, parent_ref) VALUES (100001, 'ON2', 'Onion', 70, 0);
+INSERT INTO chronostratigraphy(id, name, level_ref) VALUES (100000, 'Devotien', 55);
+INSERT INTO chronostratigraphy(id, name, level_ref) VALUES (100001, 'Chronocouche', 55);
+INSERT INTO lithostratigraphy(id, name, level_ref) VALUES (100000, 'Croute basse', 64);
+INSERT INTO lithostratigraphy(id, name, level_ref) VALUES (100001, 'Lithocroute', 64);
+INSERT INTO lithology(id, name, level_ref) VALUES (100000, 'Petits cailloux', 75);
+INSERT INTO lithology(id, name, level_ref) VALUES (100001, 'Gros rochers', 75);
+INSERT INTO mineralogy(id, code, name, level_ref) VALUES (100000, 'CAM1', 'Camion', 70);
+INSERT INTO mineralogy(id, code, name, level_ref) VALUES (100001, 'ON2', 'Onion', 70);
 INSERT INTO igs(id, ig_num) VALUES (100000, '240275');
 INSERT INTO igs(id, ig_num) VALUES (100001, '240276');
 -- Insertion of specimens using these data
