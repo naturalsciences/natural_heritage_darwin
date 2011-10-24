@@ -27,33 +27,6 @@ class People extends BasePeople
     return array_map(array($i18n_object, '__'), self::$type);
   }  
 
-  public static function getCorrespondingType($type)
-  {
-    foreach (self::getTypes() as $key=>$value)
-    {
-      if($value == ucfirst($type)) return $key;
-    }
-    return 0;
-  }
-  
-  public static function getCorrespondingNumberType($type)
-  {
-    foreach (self::getTypes() as $key=>$value)
-    {
-      if($key == $type) return strtolower($value);
-    }
-    return 0;
-  }  
-  
-  public static function getCorrespondingTypeAsArray($typeKey)
-  {
-    foreach (self::getTypes() as $key=>$value)
-    {
-      if($key == $typeKey) return array($key=>$value);
-    }
-    return array(''=>'');
-  }
-
   public function __toString()
   {
     return $this->getFormatedName();
