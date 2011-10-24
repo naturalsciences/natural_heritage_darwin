@@ -728,7 +728,8 @@ CREATE TABLE public.darwin_metadata AS
     current_timestamp as metadata_revision_date,
     'Rue Vautier straat, 29 - 1000 Bruxelles/Brussels - Belgique/Belgïe'::text as content_technical_contact_address,
     'collections@naturalsciences.be'::text as content_technical_contact_email,
-    'RBINS contact'::text as content_technical_contact_name
+    'RBINS contact'::text as content_technical_contact_name,
+    E'All data given access here are the sole property of the Royal Belgian Institute for Natural Sciences (RBINS) and are protected by the laws of copyright.\r\n The reuse of data, for any purpose whatsoever, is subject to prior authorization given by the Royal Belgian Institute for Natural Sciences (RBINS).\r\n For more informations, comments or details on the above lines, please contact the Royal Belgian Institute for Natural Sciences (RBINS).'::text as IPRCopyright
 );
 
 ALTER TABLE darwin2.taxonomy SET SCHEMA public; 
