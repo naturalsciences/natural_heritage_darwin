@@ -132,7 +132,7 @@ Gtu:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
         code: {type: string, notnull: true}
-        parent_ref:  {type: integer, notnull: true}
+        parent_ref:  {type: integer}
         gtu_from_date_mask: { type: integer, notnull: true, default:0}
         gtu_from_date: { type: string, notnull: true, default: '0001-01-01'}
         gtu_to_date_mask: { type: integer, notnull: true, default:0}
@@ -936,8 +936,8 @@ SpecimensAccompanying:
     columns:
         accompanying_type: { type: string, notnull: true, default: biological}
         specimen_ref: { type: integer, notnull: true}
-        taxon_ref: { type: integer, notnull: true, default:0}
-        mineral_ref: { type: integer, notnull: true, default:0}
+        taxon_ref: { type: integer}
+        mineral_ref: { type: integer}
         form: { type: string, notnull: true, default: isolated}
         quantity: { type: decimal, length: 16, scale: 2}
         unit: { type: string, default: '%'}

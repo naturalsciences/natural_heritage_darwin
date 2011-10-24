@@ -17,7 +17,7 @@ abstract class BaseGtuForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'                 => new sfWidgetFormInputHidden(),
       'code'               => new sfWidgetFormTextarea(),
-      'parent_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => false)),
+      'parent_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
       'gtu_from_date_mask' => new sfWidgetFormInputText(),
       'gtu_from_date'      => new sfWidgetFormTextarea(),
       'gtu_to_date_mask'   => new sfWidgetFormInputText(),
@@ -33,7 +33,7 @@ abstract class BaseGtuForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'                 => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'code'               => new sfValidatorString(),
-      'parent_ref'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'))),
+      'parent_ref'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false)),
       'gtu_from_date_mask' => new sfValidatorInteger(array('required' => false)),
       'gtu_from_date'      => new sfValidatorString(array('required' => false)),
       'gtu_to_date_mask'   => new sfValidatorInteger(array('required' => false)),

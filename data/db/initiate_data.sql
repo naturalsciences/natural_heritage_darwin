@@ -77,6 +77,11 @@ insert into catalogue_levels (id, level_type, level_name, level_sys_name, option
 insert into catalogue_levels (id, level_type, level_name, level_sys_name, optional_level) values (76, 'lithology', 'group', 'unit_group', false);
 insert into catalogue_levels (id, level_type, level_name, level_sys_name, optional_level) values (77, 'lithology', 'sub group', 'unit_sub_group', true);
 insert into catalogue_levels (id, level_type, level_name, level_sys_name, optional_level) values (78, 'lithology', 'rock', 'unit_rock', false);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (1, null);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (55, null);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (64, null);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (70, null);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (75, null);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (2, 1);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (3, 2);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (4, 2);

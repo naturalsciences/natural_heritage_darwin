@@ -149,7 +149,7 @@ comment on column catalogue_levels.optional_level is 'Tells if the level is opti
 create table possible_upper_levels
        (
         level_ref integer not null,
-        level_upper_ref integer not null,
+        level_upper_ref integer,
         constraint unq_possible_upper_levels unique (level_ref, level_upper_ref),
         constraint fk_possible_upper_levels_catalogue_levels_01 foreign key (level_ref) references catalogue_levels(id) on delete cascade,
         constraint fk_possible_upper_levels_catalogue_levels_02 foreign key (level_upper_ref) references catalogue_levels(id)
@@ -1518,8 +1518,8 @@ create table specimens_accompanying
         id integer not null default nextval('specimens_accompanying_id_seq'),
         accompanying_type varchar not null default 'biological',
         specimen_ref integer not null,
-        taxon_ref integer not null default 0,
-        mineral_ref integer not null default 0,
+        taxon_ref integer,
+        mineral_ref integer,
         form varchar not null default 'isolated',
         quantity numeric(16,2),
         unit varchar default '%',

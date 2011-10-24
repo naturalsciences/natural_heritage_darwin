@@ -192,38 +192,38 @@ class DarwinTestFunctional extends sfTestFunctional
 
   public function addCustomSpecimen()
   {
-  $this->setTester('doctrine', 'sfTesterDoctrine');
-	$collections = Doctrine::getTable('Collections')->findAll();
-	$collection_id = $collections[rand(0,count($collections)-1)]->getId(); 
-	$collector_1 = $this->addCustomPeople() ;
-  $collector_2 = $this->addCustomPeople() ;
-	$taxonomy = Doctrine::getTable('Taxonomy')->getRealTaxon();
-	$taxon_id = $taxonomy[rand(0,count($taxonomy)-1)]->getId();	 		  
-  	$this->
-  	  info('** add a custom specimen **')->
-  	  get('specimen/new')->
-  	  with('response')->begin()->     
-  	  click('#submit_spec_f1', array('specimen' => array(
-  	  	  'collection_ref' => $collection_id,
-  	  	  'taxon_ref' => $taxon_id,
-                  'code' => 1,
-                  'collector' => 1,
-                  'comment'=>1,
-                  'ident' => 1,
-  	  	  'newCode' => array(
-                    0 => array('code_category' => 'secondary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 'code_suffix' => 'ary','code_suffix_separator' => '/', 'referenced_relation' => 'specimens'),
-                    1 => array('code_category' => 'main','code_prefix' => 'mn', 'code_prefix_separator' => '/','code' => '112', 'code_suffix' => 'nn','code_suffix_separator' => '/', 'referenced_relation' => 'specimens')  	  	  			
-                  ),
-  	  	  'newCollectors' => array(
-	              0 => array('people_ref' => $collector_1, 'referenced_relation' => 'specimens', 'order_by' => 1, 'people_type' => 'collector'),
-	              1 => array('people_ref' => $collector_2, 'referenced_relation' => 'specimens', 'order_by' => 2, 'people_type' => 'collector')
-	              ), 			
-	        'newComments' => array(
-	              0 => array('referenced_relation'=> 'specimens','notion_concerned' => 'collectors', 'comment' => 'Test comment for a collector')
-	              ),
-  	  	  'newIdentification' => array(
-  	  	  			0 => array('notion_date' => array('day' => 10, 'month' => 02,'year' => 1945),
-  	  	  					 'notion_concerned' => 'taxonomy',
+    $this->setTester('doctrine', 'sfTesterDoctrine');
+    $collections = Doctrine::getTable('Collections')->findAll();
+    $collection_id = $collections[rand(0,count($collections)-1)]->getId(); 
+    $collector_1 = $this->addCustomPeople() ;
+    $collector_2 = $this->addCustomPeople() ;
+    $taxonomy = Doctrine::getTable('Taxonomy')->getRealTaxon();
+    $taxon_id = $taxonomy[rand(0,count($taxonomy)-1)]->getId();	 		  
+    $this->
+      info('** add a custom specimen **')->
+      get('specimen/new')->
+      with('response')->begin()->     
+        click('#submit_spec_f1', array('specimen' => array(
+          'collection_ref' => $collection_id,
+          'taxon_ref' => $taxon_id,
+          'code' => 1,
+          'collector' => 1,
+          'comment'=>1,
+          'ident' => 1,
+          'newCode' => array(
+            0 => array('code_category' => 'secondary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 'code_suffix' => 'ary','code_suffix_separator' => '/', 'referenced_relation' => 'specimens'),
+            1 => array('code_category' => 'main','code_prefix' => 'mn', 'code_prefix_separator' => '/','code' => '112', 'code_suffix' => 'nn','code_suffix_separator' => '/', 'referenced_relation' => 'specimens')  	  	  			
+          ),
+          'newCollectors' => array(
+            0 => array('people_ref' => $collector_1, 'referenced_relation' => 'specimens', 'order_by' => 1, 'people_type' => 'collector'),
+            1 => array('people_ref' => $collector_2, 'referenced_relation' => 'specimens', 'order_by' => 2, 'people_type' => 'collector')
+	  ), 			
+          'newComments' => array(
+            0 => array('referenced_relation'=> 'specimens','notion_concerned' => 'collectors', 'comment' => 'Test comment for a collector')
+          ),
+          'newIdentification' => array(
+            0 => array('notion_date' => array('day' => 10, 'month' => 02,'year' => 1945),
+                                                         'notion_concerned' => 'taxonomy',
   	  	  					 'value_defined' => 'tst val ind',
                                                          'determination_status'=> '',
                                                          'referenced_relation' => 'specimens',
@@ -242,6 +242,9 @@ class DarwinTestFunctional extends sfTestFunctional
 		  'acquisition_category' => 'mission',
 		  'acquisition_date' => array('day' => 01, 'month' => 06, 'year' => 1984)
   	       )))->
+      end()->
+      with('form')->begin()->
+        hasErrors(0)->
       end()->
       with('doctrine')->begin()-> 
         check('Specimens', array(

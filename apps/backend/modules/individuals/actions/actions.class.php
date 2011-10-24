@@ -261,7 +261,7 @@ class individualsActions extends DarwinActions
       $this->setTemplate('edit');
       return ;
     }
-    $this->redirect('individuals/overview?spec_id='.$spec->getSpecRef());
+    $this->redirect('individuals/overview?spec_id='.$ind->getSpecimenRef());
   }  
   
   public function executeView(sfWebRequest $request)

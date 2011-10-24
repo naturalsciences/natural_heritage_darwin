@@ -102,7 +102,7 @@ $browser->
   $record = Doctrine::getTable('Specimens')->findOneByTaxonName('Falco Peregrinus');
   
 $browser->
-    get('specimen/edit?id='.$record->getSpecRef())->
+    get('specimen/edit?id='.$record->getId())->
     with('response')->begin()->
     isStatusCode(200)->
     checkElement('title','Edit Specimen')->

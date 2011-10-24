@@ -245,23 +245,23 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
 
-    $this->validatorSchema['expedition_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['expedition_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['taxon_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['taxon_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['chrono_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['chrono_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['litho_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['litho_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['lithology_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['lithology_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['mineral_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['mineral_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['gtu_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['gtu_ref'] = new sfValidatorInteger(array('required'=>false));
 
     $this->validatorSchema['host_specimen_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>null));
 
-    $this->validatorSchema['host_taxon_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['host_taxon_ref'] = new sfValidatorInteger(array('required'=>false));
 
     $this->validatorSchema['acquisition_category'] = new sfValidatorChoice(array(
         'choices' => array_keys(SpecimensTable::getDistinctCategories()),

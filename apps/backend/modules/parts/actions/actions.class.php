@@ -284,7 +284,7 @@ class partsActions extends DarwinActions
       $this->setTemplate('edit');
       return ;
     }
-    $this->redirect('parts/overview?id='.$spec->getIndividualRef());
+    $this->redirect('parts/overview?id='.$part->getSpecimenIndividualRef());
   }    
   
   public function executeView(sfWebRequest $request)
