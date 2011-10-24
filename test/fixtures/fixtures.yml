@@ -7,8 +7,6 @@ UsersTracking:
         old_value: '"name"=>"Hello"'
         new_value: '"name"=>"world"'
 Gtu:
-    gtu0:
-        id: '0'
     gtu1:
         code: 3615Danger
         gtu_from_date_mask: 56
@@ -26,12 +24,6 @@ Gtu:
     gtu4:
         code: tervuren
 Taxonomy:
-    ta0:
-        id: '0'
-        name: ''
-        level_ref: 0
-        status: valid
-        parent_ref: ~
     tam1:
         id: '-1'
         name: Eucaryota
@@ -99,9 +91,6 @@ Taxonomy:
         Parent: ta5
 
 Expeditions:
-    ex0:
-        id: '0'
-        name: ''
     ex1:
         name: 'PNG77'
         expedition_from_date: '1977-04-26'
@@ -561,22 +550,14 @@ ClassificationSynonymies:
         order_by: 2
 
 Chronostratigraphy:
-    chs0:
-        id: '0'
-        name: ''
-        level_ref: 0
-        status: valid
-        parent_ref: ~
     chs1:
         name: Phanerozoic
         level_ref: 55
         status: valid
-        parent_ref: 0
     chs2:
         name: Proterozoic
         level_ref: 55
         status: valid
-        parent_ref: 0
     chs3:
         name: Mesozoic
         level_ref: 56
@@ -634,22 +615,14 @@ Chronostratigraphy:
         Parent: chs2
 
 Lithostratigraphy:
-    ls0:
-        id: '0'
-        name: ''
-        level_ref: 0
-        status: valid
-        parent_ref: ~
     ls1:
         name: 'Groupe Houiller'
         level_ref: 64
         status: valid
-        parent_ref: 0
     ls2:
         name: 'Groupe du Hoyoux'
         level_ref: 64
         status: valid
-        parent_ref: 0
     ls3:
         name: "Formation d'Anhée"
         level_ref: 65
@@ -682,25 +655,16 @@ Lithostratigraphy:
         Parent: ls6
 
 Mineralogy:
-    min0:
-        id: '0'
-        code: ''
-        name: ''
-        level_ref: 0
-        status: valid
-        parent_ref: ~
     min1:
         code: '4'
         name: Oxides
         level_ref: 70
         status: valid
-        parent_ref: 0
     min2:
         code: '5'
         name: Carbonates
         level_ref: 70
         status: valid
-        parent_ref: 0
     min3:
         code: '4.A'
         name: 'Metal: Oxygen = 2:1 and 1:1'
@@ -757,22 +721,15 @@ Mineralogy:
         Parent: min5
 
 Lithology:
-    lol0:
-        id: '0'
-        name: ''
-        level_ref: 0
-        status: valid
-        parent_ref: ~
+
     lol1:
         name: Sedimentary rocks 
         level_ref: 75
         status: valid
-        parent_ref: 0
     lol2:
         name: Meteoric rocks
         level_ref: 75
         status: valid
-        parent_ref: 0
     lol3:
         name: Siliciclastic rocks
         level_ref: 76

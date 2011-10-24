@@ -116,7 +116,6 @@ abstract class BaseMineralogy extends sfDoctrineRecord
              ));
         $this->hasColumn('parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('code', 'string', null, array(
              'type' => 'string',

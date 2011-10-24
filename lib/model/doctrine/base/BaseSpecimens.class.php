@@ -396,7 +396,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('expedition_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('gtu_ref', 'integer', null, array(
              'type' => 'integer',
@@ -404,27 +403,21 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('taxon_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('litho_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('chrono_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('lithology_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('mineral_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('host_taxon_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('host_specimen_ref', 'integer', null, array(
              'type' => 'integer',

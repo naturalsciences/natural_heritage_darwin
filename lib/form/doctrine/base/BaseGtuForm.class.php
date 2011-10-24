@@ -33,7 +33,7 @@ abstract class BaseGtuForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'                 => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'code'               => new sfValidatorString(),
-      'parent_ref'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false)),
+      'parent_ref'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'))),
       'gtu_from_date_mask' => new sfValidatorInteger(array('required' => false)),
       'gtu_from_date'      => new sfValidatorString(array('required' => false)),
       'gtu_to_date_mask'   => new sfValidatorInteger(array('required' => false)),

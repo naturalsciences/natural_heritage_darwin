@@ -90,7 +90,6 @@ abstract class BaseTaxonomy extends sfDoctrineRecord
              ));
         $this->hasColumn('parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('extinct', 'boolean', null, array(
              'type' => 'boolean',

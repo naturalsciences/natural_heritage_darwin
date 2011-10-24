@@ -132,7 +132,7 @@ Gtu:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
         code: {type: string, notnull: true}
-        parent_ref:  {type: integer, notnull: true,default:0}
+        parent_ref:  {type: integer, notnull: true}
         gtu_from_date_mask: { type: integer, notnull: true, default:0}
         gtu_from_date: { type: string, notnull: true, default: '0001-01-01'}
         gtu_to_date_mask: { type: integer, notnull: true, default:0}
@@ -413,7 +413,7 @@ CollectionsRights:
     columns:
         id: { type: integer, primary: true, autoincrement: true}
         collection_ref: { type: integer, notnull: true }
-        user_ref: { type: integer, notnull: true, default:0 }
+        user_ref: { type: integer, notnull: true}
         db_user_type: { type: integer, notnull: true, default:1 }
     relations:
         Collections:
@@ -509,7 +509,7 @@ Taxonomy:
         level_ref: { type: integer, notnull: true}
         status: { type: string, notnull: true, default: valid}
         path: { type: string, notnull: false, default: '/'}
-        parent_ref: { type: integer, default: 0}
+        parent_ref: { type: integer}
         extinct: { type: boolean, notnull: true, default: false}
     relations:
         Parent:
@@ -551,7 +551,7 @@ Chronostratigraphy:
         local_naming: { type: boolean, notnull: true, default: false}
         color: { type: string}
         path: { type: string, notnull: false, default: '/'}
-        parent_ref: { type: integer, default: 0}
+        parent_ref: { type: integer}
         lower_bound: { type: decimal, length: 10, scale: 3}
         upper_bound: { type: decimal, length: 10, scale: 3}
     relations:
@@ -575,7 +575,7 @@ Lithostratigraphy:
         local_naming: { type: boolean, notnull: true, default: false}
         color: { type: string}
         path: { type: string, notnull: false, default: '/'}
-        parent_ref: { type: integer, default: 0}
+        parent_ref: { type: integer}
     relations:
         Parent:
             class: Lithostratigraphy
@@ -597,7 +597,7 @@ Mineralogy:
         local_naming: { type: boolean, notnull: true, default: false}
         color: { type: string}
         path: { type: string, notnull: false, default: '/'}
-        parent_ref: { type: integer, default: 0}
+        parent_ref: { type: integer}
         code: { type: string, notnull: true}
         classification: { type: string, notnull: true, default: strunz}
         formule: { type: string }
@@ -624,7 +624,7 @@ Lithology:
         local_naming: { type: boolean, notnull: true, default: false}
         color: { type: string}
         path: { type: string, notnull: false, default: '/'}
-        parent_ref: { type: integer, default: 0}
+        parent_ref: { type: integer}
     relations:
         Parent:
             class: Lithology
@@ -648,14 +648,14 @@ Specimens:
         id: { type: integer, primary: true, autoincrement: true },
         category: { type: string, notnull: true, default: physical },
         collection_ref: { type: integer, notnull: true }
-        expedition_ref: { type: integer, default: 0}
-        gtu_ref: { type: integer, default: 0}
-        taxon_ref: { type: integer, default: 0}
-        litho_ref: { type: integer, default: 0}
-        chrono_ref: { type: integer, default: 0}
-        lithology_ref: { type: integer, default: 0}
-        mineral_ref: { type: integer, default: 0}
-        host_taxon_ref: { type: integer, default: 0}
+        expedition_ref: { type: integer}
+        gtu_ref: { type: integer}
+        taxon_ref: { type: integer}
+        litho_ref: { type: integer}
+        chrono_ref: { type: integer}
+        lithology_ref: { type: integer}
+        mineral_ref: { type: integer}
+        host_taxon_ref: { type: integer}
         host_specimen_ref: { type: integer}
         host_relationship: { type: string}
         acquisition_category: { type: string, default: expedition}

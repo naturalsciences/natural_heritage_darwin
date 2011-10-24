@@ -83,7 +83,6 @@ abstract class BaseGtu extends sfDoctrineRecord
         $this->hasColumn('parent_ref', 'integer', null, array(
              'type' => 'integer',
              'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('gtu_from_date_mask', 'integer', null, array(
              'type' => 'integer',

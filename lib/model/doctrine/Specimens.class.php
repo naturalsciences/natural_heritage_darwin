@@ -57,6 +57,7 @@ class Specimens extends BaseSpecimens
       $this->_set('category', $value);
     }
   }
+
   public function getName()
   {
     $name = '-';
