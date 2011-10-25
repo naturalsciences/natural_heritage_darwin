@@ -1,6 +1,4 @@
-﻿begin;
-
-drop index if exists idx_gin_darwin_flat_spec_coll_ids;
+﻿drop index if exists idx_gin_darwin_flat_spec_coll_ids;
 drop index if exists idx_gin_darwin_flat_spec_don_sel_ids;
 drop index if exists idx_gin_darwin_flat_spec_ident_ids;
 drop index if exists idx_gin_darwin_flat_ind_ident_ids;
