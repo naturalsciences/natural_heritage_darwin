@@ -24,6 +24,9 @@
  * @property boolean $station_visible
  * @property boolean $multimedia_visible
  * @property integer $ig_ref
+ * @property string $spec_coll_ids
+ * @property string $spec_ident_ids
+ * @property string $spec_don_sel_ids
  * @property boolean $with_individuals
  * @property boolean $with_types
  * @property string $collection_type
@@ -146,6 +149,9 @@
  * @method boolean             getStationVisible()           Returns the current record's "station_visible" value
  * @method boolean             getMultimediaVisible()        Returns the current record's "multimedia_visible" value
  * @method integer             getIgRef()                    Returns the current record's "ig_ref" value
+ * @method string              getSpecCollIds()              Returns the current record's "spec_coll_ids" value
+ * @method string              getSpecIdentIds()             Returns the current record's "spec_ident_ids" value
+ * @method string              getSpecDonSelIds()            Returns the current record's "spec_don_sel_ids" value
  * @method boolean             getWithIndividuals()          Returns the current record's "with_individuals" value
  * @method boolean             getWithTypes()                Returns the current record's "with_types" value
  * @method string              getCollectionType()           Returns the current record's "collection_type" value
@@ -267,6 +273,9 @@
  * @method Specimens           setStationVisible()           Sets the current record's "station_visible" value
  * @method Specimens           setMultimediaVisible()        Sets the current record's "multimedia_visible" value
  * @method Specimens           setIgRef()                    Sets the current record's "ig_ref" value
+ * @method Specimens           setSpecCollIds()              Sets the current record's "spec_coll_ids" value
+ * @method Specimens           setSpecIdentIds()             Sets the current record's "spec_ident_ids" value
+ * @method Specimens           setSpecDonSelIds()            Sets the current record's "spec_don_sel_ids" value
  * @method Specimens           setWithIndividuals()          Sets the current record's "with_individuals" value
  * @method Specimens           setWithTypes()                Sets the current record's "with_types" value
  * @method Specimens           setCollectionType()           Sets the current record's "collection_type" value
@@ -447,6 +456,15 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('ig_ref', 'integer', null, array(
              'type' => 'integer',
+             ));
+        $this->hasColumn('spec_coll_ids', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('spec_ident_ids', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('spec_don_sel_ids', 'string', null, array(
+             'type' => 'string',
              ));
         $this->hasColumn('with_individuals', 'boolean', null, array(
              'type' => 'boolean',

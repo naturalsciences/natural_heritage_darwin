@@ -428,22 +428,4 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       return $results;
   }
-  
-  public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
-  {
-    $alias = $query->getRootAlias();
-    $build_query = ''; 
-    if(count($field_to_use) < 1) $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
-    foreach($field_to_use as $field)
-    {
-      if($field == 'ident_ids')
-       $build_query .= "($alias.spec_ident_ids @> ARRAY[$people_id]::int[] OR $alias.ind_ident_ids @> ARRAY[$people_id]::int[]) OR " ;
-      elseif($field == 'spec_coll_ids') $build_query .= "$alias.spec_coll_ids @> ARRAY[$people_id]::int[] OR " ;
-      else $build_query .= "$alias.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;    
-    }
-    // I remove the last 'OR ' at the end of the string
-    $build_query = substr($build_query,0,strlen($build_query) -3) ;
-    $query->AndWhere($build_query) ;
-    return $query ;
-  }
 }

@@ -966,6 +966,44 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     return $query ;
   }
 
+  public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
+  {
+    $build_query = ''; 
+    if(count($field_to_use) < 1)
+      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
+
+    foreach($field_to_use as $field)
+    {
+      if($field == 'ident_ids')
+      {
+        $build_query .= "(s.spec_ident_ids @> ARRAY[$people_id]::int[] OR ";
+        if($this->scope == self::SC_SPEC)
+        {
+          $build_query .= " exists ( select 1 from specimen_individuals i1
+          INNER JOIN specimen_parts p1 on i1.id = p1.specimen_individual_ref
+          where i1.specimen_ref= s.id AND  i1.ind_ident_ids @> ARRAY[$people_id]::int[] ) ";
+        }
+        else
+        {
+          $build_query .= " i.ind_ident_ids @> ARRAY[$people_id]::int[] ";
+        }
+        $build_query .= ") OR " ;
+      }
+      elseif($field == 'spec_coll_ids')
+      {
+        $build_query .= "s.spec_coll_ids @> ARRAY[$people_id]::int[] OR " ;
+      }
+      else
+      {
+        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;    
+      }
+    }
+    // I remove the last 'OR ' at the end of the string
+    $build_query = substr($build_query,0,strlen($build_query) -3) ;
+    $query->andWhere($build_query) ;
+    return $query ;
+  }
+
   public function addCollectionRefColumnQuery($query, $field, $val)
   {
     //Do Nothing here, the job is done in the doBuildQuery with check collection rights

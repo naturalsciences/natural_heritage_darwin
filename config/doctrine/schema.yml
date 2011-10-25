@@ -665,6 +665,9 @@ Specimens:
         multimedia_visible: { type: boolean, default: true}
         ig_ref: { type: integer}
 
+        spec_coll_ids: { type:string}
+        spec_ident_ids: { type:string}
+        spec_don_sel_ids: { type:string}
         with_individuals: {type: boolean}
         with_types: {type: boolean}
         collection_type: { type: string}
@@ -867,6 +870,7 @@ SpecimenIndividuals:
         specimen_individuals_count_min: { type: integer, notnull: true, default:1}
         specimen_individuals_count_max: { type: integer, notnull: true, default:1}
         with_parts: {type: boolean}
+        ind_ident_ids: { type:string}
     relations:
         Specimens:
             local: specimen_ref
