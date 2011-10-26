@@ -1,6 +1,6 @@
-DROP TABLE habitats;
-DROP TABLE multimedia_keywords;
-DROP TABLE soortenregister;
+DROP TABLE habitats CASCADE;
+DROP TABLE multimedia_keywords CASCADE;
+DROP TABLE soortenregister CASCADE;
 
 
 DROP TRIGGER trg_update_specimens_darwin_flat ON specimens;
@@ -10,48 +10,42 @@ DROP TRIGGER trg_update_specimen_parts_darwin_flat ON specimen_parts;
 DROP TRIGGER trg_delete_specimen_parts_darwin_flat ON specimen_parts;
 
 
-CREATE TRIGGER trg_update_specimens_darwin_flat BEFORE INSERT OR UPDATE
-        ON specimenss FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_specimen_flat();
- 
-CREATE TRIGGER trg_fct_count_units_individuals AFTER INSERT OR UPDATE OR DELETE
-         ON specimen_individuals FOR EACH ROW
-        EXECUTE PROCEDURE fct_count_units();
-
-CREATE TRIGGER trg_fct_count_units_parts AFTER INSERT OR DELETE
-         ON specimen_parts FOR EACH ROW
-         EXECUTE PROCEDURE fct_count_units();
+\i  ../createfunctions.sql
 
 
 DROP FUNCTION fct_delete_darwin_flat_ind_part() ;
 
-\i  ../createfunctions.sql
 
 
-ALTER TABLE RENAME specimens to old_spec;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_expeditions;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_gtu;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_collections;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_taxonomy;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_lithostratigraphy;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_lithology;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_mineralogy;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_chronostratigraphy;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_host_taxonomy;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_host_specimen;
+ALTER TABLE specimens DROP CONSTRAINT fk_specimens_igs;
 
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_expeditions;
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_gtu;
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_collections;
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_taxonomy;
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_lithostratigraphy;
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_lithology;
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_mineralogy;
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_chronostratigraphy;
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_host_taxonomy;
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_host_specimen;
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_specimens_igs;
+ALTER TABLE specimens DROP CONSTRAINT unq_specimens;
 
-DROP INDEX unq_specimens on old_specimens;
+ALTER TABLE darwin_flat DROP CONSTRAINT fk_darwin_flat_spec_ref;
+
+ALTER TABLE specimen_collecting_methods DROP CONSTRAINT fk_specimen_collecting_methods_specimen;
+ALTER TABLE specimen_collecting_tools DROP CONSTRAINT fk_specimen_collecting_tools_specimen;
+ALTER TABLE specimen_individuals DROP CONSTRAINT fk_specimen_individuals_specimens;
+ALTER TABLE specimens_accompanying DROP CONSTRAINT fk_specimens_accompanying_specimens;
+ALTER TABLE darwin_flat DROP CONSTRAINT fk_darwin_flat_host_specimen_ref;
 
 
-ALTER TABLE specimen_collecting_methods DROP CONSTRAINT IF EXISTS fk_specimen_collecting_methods_specimen
-ALTER TABLE specimen_collecting_tools DROP CONSTRAINT IF EXISTS fk_specimen_collecting_tools_specimen
-ALTER TABLE specimen_individuals DROP CONSTRAINT IF EXISTS fk_specimen_individuals_specimens
-ALTER TABLE specimens_accompanying DROP CONSTRAINT IF EXISTS fk_specimens_accompanying_specimens
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS fk_darwin_flat_spec_ref;
+ALTER TABLE specimens DROP CONSTRAINT pk_specimens;
 
-ALTER TABLE specimens DROP CONSTRAINT IF EXISTS pk_specimens;
+ALTER TABLE specimens RENAME to old_spec;
+
+
+
 
 create table specimens
        (
@@ -186,7 +180,6 @@ create table specimens
         constraint fk_specimens_igs foreign key (ig_ref) references igs(id)
        );
 
-CREATE UNIQUE INDEX unq_specimens ON specimens (collection_ref, COALESCE(expedition_ref,0), COALESCE(gtu_ref,0), COALESCE(taxon_ref,0), COALESCE(litho_ref,0), COALESCE(chrono_ref,0), COALESCE(lithology_ref,0), COALESCE(mineral_ref,0), COALESCE(host_taxon_ref,0), acquisition_category, acquisition_date, COALESCE(ig_ref,0));
 
 comment on table specimens is 'Specimens or batch of specimens stored in collection';
 comment on column specimens.id is 'Unique identifier of a specimen or batch of specimens';
@@ -208,6 +201,22 @@ comment on column specimens.mineral_ref is 'Reference of a mineral classificatio
 comment on column specimens.host_taxon_ref is 'Reference of taxon definition defining the host which holds the current specimen - id field of taxonomy table';
 comment on column specimens.ig_ref is 'Reference of ig number this specimen has been associated to';
 comment on column specimens.category is 'Type of specimen encoded: a physical object stored in collections, an observation, a figurate specimen,...';
+
+
+
+
+CREATE TRIGGER trg_update_specimens_darwin_flat BEFORE INSERT OR UPDATE
+        ON specimens FOR EACH ROW
+        EXECUTE PROCEDURE fct_update_specimen_flat();
+ 
+CREATE TRIGGER trg_fct_count_units_individuals AFTER INSERT OR UPDATE OR DELETE
+         ON specimen_individuals FOR EACH ROW
+        EXECUTE PROCEDURE fct_count_units();
+
+CREATE TRIGGER trg_fct_count_units_parts AFTER INSERT OR DELETE
+         ON specimen_parts FOR EACH ROW
+         EXECUTE PROCEDURE fct_count_units();
+
 
 INSERT INTO specimens
 (
@@ -252,33 +261,60 @@ INSERT INTO specimens
         station_visible,
         multimedia_visible,
         CASE WHEN ig_ref = 0 THEN NULL ELSE ig_ref END 
-  from specimens
+  from old_spec
 );
 
 CREATE UNIQUE INDEX unq_specimens ON specimens (collection_ref, COALESCE(expedition_ref,0), COALESCE(gtu_ref,0), COALESCE(taxon_ref,0), COALESCE(litho_ref,0), COALESCE(chrono_ref,0), COALESCE(lithology_ref,0), COALESCE(mineral_ref,0), COALESCE(host_taxon_ref,0), acquisition_category, acquisition_date, COALESCE(ig_ref,0));
 drop table old_specimens;
 
+/*********** CHANGE spec_indiv ****************/
+
+ALTER TABLE specimen_individuals ADD COLUMN with_parts boolean not null default false;
+ALTER TABLE specimen_individuals ADD COLUMN ind_ident_ids integer[] not null default '{}';
 
 
+UPDATE specimen_individuals ind SET
+      with_parts = exists (select 1 from specimen_parts p WHERE p.specimen_individual_ref = ind.id ),
+      ind_ident_ids = (SELECT array_accum(people_ref) FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' 
+                WHERE i.record_id = ind.id AND i.referenced_relation = 'specimen_individuals');
 /*****************
  * REMOVE ZERO REFS
  *
  ******************/
 
-ALTER COLUMN  possible_upper_levels.level_upper_ref DROP NOT NULL;
-ALTER COLUMN  template_classifications.parent_ref DROP NOT NULL;
-ALTER COLUMN  specimens_accompanying.taxon_ref DROP NOT NULL;
-ALTER COLUMN  specimens_accompanying.mineral_ref DROP NOT NULL;
+ALTER TABLE possible_upper_levels ALTER COLUMN level_upper_ref DROP NOT NULL;
+ALTER TABLE template_classifications ALTER COLUMN parent_ref DROP NOT NULL;
+ALTER TABLE specimens_accompanying ALTER COLUMN taxon_ref DROP NOT NULL;
+ALTER TABLE specimens_accompanying ALTER COLUMN mineral_ref DROP NOT NULL;
 
 update possible_upper_levels SET level_upper_ref = null where level_upper_ref = 0;
-update template_classifications SET parent_ref = null where parent_ref = 0;
+
+ALTER TABLE taxonomy DISABLE TRIGGER USER;
+update taxonomy SET parent_ref = null where parent_ref = 0;
+ALTER TABLE taxonomy ENABLE TRIGGER USER;
+
+ALTER TABLE gtu DISABLE TRIGGER USER;
+update gtu SET parent_ref = null where parent_ref = 0;
+ALTER TABLE gtu ENABLE TRIGGER USER;
+
+ALTER TABLE lithostratigraphy DISABLE TRIGGER USER;
+update lithostratigraphy SET parent_ref = null where parent_ref = 0;
+ALTER TABLE lithostratigraphy ENABLE TRIGGER USER;
+
+ALTER TABLE chronostratigraphy DISABLE TRIGGER USER;
+update chronostratigraphy SET parent_ref = null where parent_ref = 0;
+ALTER TABLE chronostratigraphy ENABLE TRIGGER USER;
+
+ALTER TABLE lithology DISABLE TRIGGER USER;
+update lithology SET parent_ref = null where parent_ref = 0;
+ALTER TABLE lithology ENABLE TRIGGER USER;
+
+ALTER TABLE mineralogy DISABLE TRIGGER USER;
+update mineralogy SET parent_ref = null where parent_ref = 0;
+ALTER TABLE mineralogy ENABLE TRIGGER USER;
+
 update specimens_accompanying SET taxon_ref = null where taxon_ref = 0;
 update specimens_accompanying SET mineral_ref = null where mineral_ref = 0;
-
-UPDATE possible_upper_levels set level_upper_ref = null where level_upper_ref = 0;
-
-UPDATE gtu set parent_ref = null where parent_ref = 0;
-
 
 
 DELETE from gtu where id = 0;
@@ -290,3 +326,173 @@ DELETE FROM lithology where id = 0;
 DELETE FROM taxonomy where id = 0;
 DELETE FROM users where id = 0;
 DELETE FROM people  where id = 0;
+
+
+/**** FINISH ****/
+
+
+drop table darwin_flat;
+
+create view darwin_flat as 
+  select
+
+ row_number() OVER (ORDER BY s.id) AS id, 
+
+category,
+collection_ref,
+expedition_ref,
+gtu_ref,
+taxon_ref,
+litho_ref,
+chrono_ref,
+lithology_ref,
+mineral_ref,
+host_taxon_ref,
+host_specimen_ref,
+host_relationship,
+acquisition_category,
+acquisition_date_mask,
+acquisition_date,
+station_visible,
+multimedia_visible,
+ig_ref,
+
+
+collection_type,
+collection_code,
+collection_name,
+collection_is_public,
+collection_parent_ref,
+collection_path,
+expedition_name,
+expedition_name_ts,
+expedition_name_indexed,
+
+gtu_code,
+gtu_parent_ref,
+gtu_path,
+gtu_from_date_mask,
+gtu_from_date,
+gtu_to_date_mask,
+gtu_to_date,
+gtu_tag_values_indexed,
+gtu_country_tag_value,
+gtu_country_tag_indexed,
+gtu_location,
+
+taxon_name,
+taxon_name_indexed,
+taxon_name_order_by,
+taxon_level_ref,
+taxon_level_name,
+taxon_status,
+taxon_path,
+taxon_parent_ref,
+taxon_extinct,
+
+litho_name,
+litho_name_indexed,
+litho_name_order_by,
+litho_level_ref,
+litho_level_name,
+litho_status,
+litho_local,
+litho_color,
+litho_path,
+litho_parent_ref,
+
+chrono_name,
+chrono_name_indexed,
+chrono_name_order_by,
+chrono_level_ref,
+chrono_level_name,
+chrono_status,
+chrono_local,
+chrono_color,
+chrono_path,
+chrono_parent_ref,
+
+lithology_name,
+lithology_name_indexed,
+lithology_name_order_by,
+lithology_level_ref,
+lithology_level_name,
+lithology_status,
+lithology_local,
+lithology_color,
+lithology_path,
+lithology_parent_ref,
+
+mineral_name,
+mineral_name_indexed,
+mineral_name_order_by,
+mineral_level_ref,
+mineral_level_name,
+mineral_status,
+mineral_local,
+mineral_color,
+mineral_path,
+mineral_parent_ref,
+
+host_taxon_name,
+host_taxon_name_indexed,
+host_taxon_name_order_by,
+host_taxon_level_ref,
+host_taxon_level_name,
+host_taxon_status,
+host_taxon_path,
+host_taxon_parent_ref,
+host_taxon_extinct,
+
+ig_num,
+ig_num_indexed,
+ig_date_mask,
+ig_date,
+  s.id as spec_ref,
+
+  s.spec_ident_ids,
+  s.spec_coll_ids,
+  s.spec_don_sel_ids,
+  i.ind_ident_ids,
+
+  s.with_types,
+  s.with_individuals,
+  COALESCE(i.with_parts,false) as with_parts,
+
+  i.id as individual_ref,
+  coalesce(i.type, 'specimen') as individual_type,
+  coalesce(i.type_group, 'specimen') as individual_type_group,
+  coalesce(i.type_search, 'specimen') as individual_type_search,
+  coalesce(i.sex, 'undefined') as individual_sex,
+  coalesce(i.state, 'not applicable') as individual_state,
+  coalesce(i.stage, 'undefined') as individual_stage,
+  coalesce(i.social_status, 'not applicable') as individual_social_status,
+  coalesce(i.rock_form, 'not applicable') as individual_rock_form,
+  coalesce(i.specimen_individuals_count_min, 1) as individual_count_min,
+  coalesce(i.specimen_individuals_count_max, 1) as individual_count_max,
+  p.id as part_ref,
+  p.specimen_part as part,
+  p.specimen_status as part_status,
+  p.institution_ref,
+  p.building,
+  p.floor ,
+  p.room ,
+  p.row  ,
+  p.shelf ,
+  p.container ,
+  p.sub_container ,
+  p.container_type ,
+  p.sub_container_type ,
+  p.container_storage ,
+  p.sub_container_storage ,
+  p.specimen_part_count_min as part_count_min,
+  p.specimen_part_count_max as part_count_max,
+  p.specimen_status,
+  p.complete,
+  p.surnumerary
+
+
+  from specimens s
+  LEFT JOIN specimen_individuals  i ON s.id = i.specimen_ref 
+  LEFT JOIN specimen_parts p ON i.id = p.specimen_individual_ref
+;
