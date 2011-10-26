@@ -269,7 +269,6 @@ drop table old_specimens;
 
 /*********** CHANGE spec_indiv ****************/
 
-ALTER TABLE specimen_individuals ADD COLUMN with_parts boolean not null default false;
 ALTER TABLE specimen_individuals ADD COLUMN ind_ident_ids integer[] not null default '{}';
 
 
