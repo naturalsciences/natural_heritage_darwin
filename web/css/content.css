@@ -955,7 +955,7 @@ a#register_link, a#login_lostpwd
 }
 
 /** Has a copy in main.css */
-#demo_bottom {
+#broadcast_bottom {
   width: 100%;
   position: fixed;
   bottom: 0px;
