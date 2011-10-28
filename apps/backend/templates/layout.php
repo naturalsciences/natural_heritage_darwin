@@ -19,9 +19,10 @@
     </script>
     <div class="clear"></div>
     <div id="load_indicator"><?php echo image_tag('loader.gif');?> <?php echo __('Loading');?></div>
-    <?php if(sfConfig::get('app_demo', false)):?>
-      <div id="demo_bottom_padding"></div>
-      <div id="demo_bottom"><?php echo __('This is a demo application. Data is restored nightly !');?></div>
+    <?php if(sfConfig::get('app_broadcast_enabled', false)):?>
+      <div id="broadcast_bottom_padding"></div>
+      <div id="broadcast_bottom"><?php echo __(sfConfig::get('app_broadcast_message', ''));?>
+      </div>
     <?php endif;?>
   </body>
 </html>
