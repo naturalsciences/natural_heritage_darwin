@@ -4,6 +4,10 @@ all:
        recPerPage: 10
        pagerSlidingSize: 5
        catalogueRecLimit: 200
+   broadcast:
+       enabled: true
+       message: This is a demo application. Data is restored nightly !
+       submessage: login with user/user or encoder/encoder or admin/admin
    recaptcha:
        public_key: "6Lf_ZL0SAAAAAN5AS3Wiiiu3VOs6CmpW3VMgZauH"
        private_key: "6Lf_ZL0SAAAAAEP1fcqjynm6NH3wbj1hc1It8iCH"
