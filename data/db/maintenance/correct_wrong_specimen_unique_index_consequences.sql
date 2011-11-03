@@ -1,5 +1,9 @@
 begin;
 
+/* Creation of temporary table with list of duplicated specimens and eventual duplicated individuals beneath
+   With chosen specimen and chosen individual to merge to
+   Thanks to B! for this...
+*/
 create temporary table spec_ind_dupli as
 (
 select specimen_ids, 
@@ -17,6 +21,8 @@ group by specimen_ids, specimen_merge_into, type, sex, state, stage, social_stat
 order by specimen_ids, specimen_merge_into, dummy_first(ind.id) 
 );
 
+
+/* Function that will update for all individuals to be grouped, the parts beneath */
 create or replace function updateParts() returns integer language plpgsql as $$
 declare 
   recInds RECORD;
@@ -42,6 +48,11 @@ $$;
 
 select updateParts() as PartsUpdatedCount;
 
+/* Function updating peripheral data for either specimens or specimen_individuals
+   It will select from array of duplicated specimens or individuals the ones to be merged and the one to be merged into.
+   Move from the ones to be merged to the one to be merged into all the peripheral data (catalogue_people, catalogue_properties,...) that
+   wouldn't produce unique constraint violation...
+*/
 create or replace function updatePeriphData(in table_concerned varchar) returns boolean language plpgsql as $$
 declare
   recConcerned RECORD;
@@ -205,7 +216,64 @@ $$;
 select updatePeriphData('specimen_individuals') as IndPeriphDataUpdated;
 select updatePeriphData('specimens') as SpecPeriphDataUpdated;
 
+create or replace function indMergeCountMinMax () returns boolean language plpgsql as $$
+declare
+  recConcerned RECORD;
+  count_min integer := 0;
+  count_max integer := 0;
+begin
+  FOR recConcerned IN select individual_ids, individual_merge_into from spec_ind_dupli order by individual_merge_into LOOP
+    update specimen_individuals
+    set specimen_individuals_count_min = subqry.ind_min,
+        specimen_individuals_count_max = subqry.ind_max 
+    from (
+          select min(specimen_individuals_count_min) as ind_min, max(specimen_individuals_count_max) as ind_max
+          from specimen_individuals
+          where array[id] && recConcerned.individual_ids
+         ) as subqry
+    where id = recConcerned.individual_merge_into
+    returning specimen_individuals_count_min, specimen_individuals_count_max INTO count_min, count_max;
+    RAISE NOTICE 'count min is now: %', count_min;
+    RAISE NOTICE 'count max is now: %', count_max;
+  END LOOP;
+  return true;
+exception
+  when others then
+    RAISE WARNING 'Error: %', SQLERRM;
+    rollback;
+    return false;
+end;
+$$;
+
+select indMergeCountMinMax() as MergeIndividualsCountMinAndMax;
+
+create function eraseDupliInd () returns boolean language plpgsql as $$
+declare
+  rowsDeleted integer := 0;
+begin
+  select count(*) into rowsDeleted from (select fct_explode_array(individual_ids) from spec_ind_dupli) as x;
+  RAISE NOTICE '% individuals in total.', rowsDeleted;
+  select count(distinct individual_merge_into) into rowsDeleted from spec_ind_dupli;
+  RAISE NOTICE '% distinct individuals to merge into.', rowsDeleted;
+  delete from specimen_individuals
+  where id in (select x.old_id
+              from (select distinct fct_explode_array(individual_ids) as old_id from spec_ind_dupli) as x
+                    left join
+                    (select distinct individual_merge_into as new_id from spec_ind_dupli) as y
+                    on x.old_id = y.new_id
+              where y.new_id is null
+              );
+  GET DIAGNOSTICS rowsDeleted = ROW_COUNT;
+  RAISE NOTICE '% rows deleted.', rowsDeleted;
+  return true;
+end;
+$$;
+
+select eraseDupliInd() as IndividualsInDuplicationDeleted;
+
 drop function if exists updateParts();
 drop function if exists updatePeriphData(table_concerned varchar);
+drop function if exists indMergeCountMinMax();
+drop function if exists eraseDupliInd();
 
-commit;
+rollback;
