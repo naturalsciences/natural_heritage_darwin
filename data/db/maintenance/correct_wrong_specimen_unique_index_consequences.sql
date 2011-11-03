@@ -46,8 +46,6 @@ exception when others then
 end;
 $$;
 
-select updateParts() as PartsUpdatedCount;
-
 /* Function updating peripheral data for either specimens or specimen_individuals
    It will select from array of duplicated specimens or individuals the ones to be merged and the one to be merged into.
    Move from the ones to be merged to the one to be merged into all the peripheral data (catalogue_people, catalogue_properties,...) that
@@ -213,9 +211,6 @@ exception
 end;
 $$;
 
-select updatePeriphData('specimen_individuals') as IndPeriphDataUpdated;
-select updatePeriphData('specimens') as SpecPeriphDataUpdated;
-
 create or replace function indMergeCountMinMax () returns boolean language plpgsql as $$
 declare
   recConcerned RECORD;
@@ -245,13 +240,11 @@ exception
 end;
 $$;
 
-select indMergeCountMinMax() as MergeIndividualsCountMinAndMax;
-
 create function eraseDupliInd () returns boolean language plpgsql as $$
 declare
   rowsDeleted integer := 0;
 begin
-  select count(*) into rowsDeleted from (select fct_explode_array(individual_ids) from spec_ind_dupli) as x;
+  select count(*) into rowsDeleted from (select distinct fct_explode_array(individual_ids) from spec_ind_dupli) as x;
   RAISE NOTICE '% individuals in total.', rowsDeleted;
   select count(distinct individual_merge_into) into rowsDeleted from spec_ind_dupli;
   RAISE NOTICE '% distinct individuals to merge into.', rowsDeleted;
@@ -266,14 +259,124 @@ begin
   GET DIAGNOSTICS rowsDeleted = ROW_COUNT;
   RAISE NOTICE '% rows deleted.', rowsDeleted;
   return true;
+exception
+  when others then
+    RAISE WARNING 'Error: %', SQLERRM;
+    rollback;
+    return false;
 end;
 $$;
 
+create or replace function updateSpecIntoMerge() returns boolean language plpgsql as $$
+declare
+  recConcerned RECORD;
+  iCounter integer := 0;
+  rowsHSpecUpdated integer := 0;
+  rowsHRelUpdated integer := 0;
+  rowsStationVisibleUpdated integer := 0;
+begin
+  FOR recConcerned IN select * from (select fct_explode_array(specimen_ids) as old_id, specimen_merge_into as new_id from spec_ind_dupli) as subqry where old_id != new_id order by new_id LOOP
+    update specimens
+    set host_specimen_ref = (select host_specimen_ref 
+                             from specimens
+                             where id = recConcerned.old_id
+                               and host_specimen_ref is not null
+                            )
+    where id = recConcerned.new_id
+      and exists (select host_specimen_ref
+                  from specimens
+                  where id = recConcerned.old_id
+                    and host_specimen_ref is not null
+                 )
+      and host_specimen_ref is null;
+    GET DIAGNOSTICS iCounter = ROW_COUNT;
+    rowsHSpecUpdated := rowsHSpecUpdated + iCounter;
+    update specimens
+    set host_relationship = (select host_relationship 
+                             from specimens
+                             where id = recConcerned.old_id
+                               and host_relationship is not null
+                            )
+    where id = recConcerned.new_id
+      and exists (select host_relationship
+                  from specimens
+                  where id = recConcerned.old_id
+                    and host_relationship is not null
+                 )
+      and host_relationship is null;
+    GET DIAGNOSTICS iCounter = ROW_COUNT;
+    rowsHRelUpdated := rowsHRelUpdated + iCounter;
+    update specimens
+    set station_visible = (select station_visible 
+                           from specimens
+                           where id = recConcerned.old_id
+                             and not station_visible
+                          )
+    where id = recConcerned.new_id
+      and exists (select station_visible
+                  from specimens
+                  where id = recConcerned.old_id
+                    and not station_visible
+                 )
+      and station_visible;
+    GET DIAGNOSTICS iCounter = ROW_COUNT;
+    rowsStationVisibleUpdated := rowsStationVisibleUpdated + iCounter;
+  END LOOP;
+  RAISE NOTICE '% host_specimen_ref in total updated', rowsHSpecUpdated;
+  RAISE NOTICE '% host_relationships in total updated', rowsHRelUpdated;
+  RAISE NOTICE '% station_visible in total updated', rowsStationVisibleUpdated;
+  return true;
+exception
+  when others then
+    RAISE WARNING 'Error: %', SQLERRM;
+    rollback;
+    return false;
+end;
+$$;
+
+create function eraseDupliSpec () returns boolean language plpgsql as $$
+declare
+  rowsDeleted integer := 0;
+begin
+  select count(*) into rowsDeleted from (select distinct fct_explode_array(specimen_ids) from spec_ind_dupli) as x;
+  RAISE NOTICE '% specimens in total.', rowsDeleted;
+  select count(distinct specimen_merge_into) into rowsDeleted from spec_ind_dupli;
+  RAISE NOTICE '% distinct specimens to merge into.', rowsDeleted;
+  delete from specimens
+  where id in (select x.old_id
+              from (select distinct fct_explode_array(specimen_ids) as old_id from spec_ind_dupli) as x
+                    left join
+                    (select distinct specimen_merge_into as new_id from spec_ind_dupli) as y
+                    on x.old_id = y.new_id
+              where y.new_id is null
+              );
+  GET DIAGNOSTICS rowsDeleted = ROW_COUNT;
+  RAISE NOTICE '% rows deleted.', rowsDeleted;
+  return true;
+exception
+  when others then
+    RAISE WARNING 'Error: %', SQLERRM;
+    rollback;
+    return false;
+end;
+$$;
+
+select updateParts() as PartsUpdatedCount;
+select updatePeriphData('specimen_individuals') as IndPeriphDataUpdated;
+select updatePeriphData('specimens') as SpecPeriphDataUpdated;
+select indMergeCountMinMax() as MergeIndividualsCountMinAndMax;
 select eraseDupliInd() as IndividualsInDuplicationDeleted;
+select updateSpecIntoMerge() as UpdateSpecimenCommonInfos;
+select eraseDupliSpec() as SpecimensInDuplicationDeleted;
 
 drop function if exists updateParts();
 drop function if exists updatePeriphData(table_concerned varchar);
 drop function if exists indMergeCountMinMax();
 drop function if exists eraseDupliInd();
+drop function if exists updateSpecIntoMerge();
+drop function if exists eraseDupliSpec();
+
+alter table specimens drop constraint unq_specimens CASCADE;
+create unique index unq_specimens on specimens (collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref, host_taxon_ref, acquisition_category, acquisition_date, coalesce(ig_ref, 0));
 
 rollback;
