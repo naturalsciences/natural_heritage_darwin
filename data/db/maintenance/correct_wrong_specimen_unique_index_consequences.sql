@@ -379,4 +379,4 @@ drop function if exists eraseDupliSpec();
 alter table specimens drop constraint unq_specimens CASCADE;
 create unique index unq_specimens on specimens (collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref, host_taxon_ref, acquisition_category, acquisition_date, coalesce(ig_ref, 0));
 
-rollback;
+commit;
