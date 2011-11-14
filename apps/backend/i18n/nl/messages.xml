@@ -87,17 +87,101 @@
         <source>Your file has been loaded and checked, you can edit line in errors or import corrects lines</source>
         <target>Uw bestand werd ingeladen en nagekeken en u kunt nu foute lijnen corrigeren of correcte lijnen importeren.</target>
       </trans-unit>
+          <trans-unit id="1462">
+        <source>This persons record still has links with others</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1463">
+        <source>This institution still has collections</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1464">
+        <source>This user is collection manager</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1475">
+        <source>This lithostratigraphical unit is linked with one or more specimens</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1476">
+        <source>This lithological unit is linked with one or more specimens</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1477">
+        <source>This mineralogical unit is linked with one or more specimens</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1478">
+        <source>This chronostratigraphical unit is linked with one or more specimens</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1481">
+        <source>This mineral is referenced as accompanying element</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1482">
+        <source>This taxon is referenced as accompanying element</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1465">
+        <source>This level is used in taxonomy</source>
+        <target>Dit niveau wordt gebruikt in de taxonomie</target>
+      </trans-unit>
+          <trans-unit id="1466">
+        <source>This level is used in chronostratigraphy</source>
+        <target>Dit niveau wordt gebruikt in de chronostratigrafie</target>
+      </trans-unit>
+          <trans-unit id="1467">
+        <source>This level is used in lithostratigraphy</source>
+        <target>Dit niveau wordt gebruikt in de lithostratigrafie</target>
+      </trans-unit>
+          <trans-unit id="1468">
+        <source>This level is used in mineralogy</source>
+        <target>Dit niveau wordt gebruikt in de mineralogie</target>
+      </trans-unit>
+          <trans-unit id="1469">
+        <source>This level is used in lithology</source>
+        <target>Dit niveau wordt gebruikt in de lithologie</target>
+      </trans-unit>
+          <trans-unit id="1470">
+        <source>This expedition is linked with one or more specimens</source>
+        <target>Deze expeditie is gekoppeld aan één of meerdere specimens</target>
+      </trans-unit>
+          <trans-unit id="1471">
+        <source>This I.G number is linked with one or more specimens</source>
+        <target>Dit I.G. nummer is gekoppeld aan één of meerdere specimens</target>
+      </trans-unit>
+          <trans-unit id="1472">
+        <source>This gtu is linked with one or more specimens</source>
+        <target>Deze gtu is gekoppeld aan één of meerdere specimens</target>
+      </trans-unit>
+          <trans-unit id="1473">
+        <source>This collection is linked with one or more specimens</source>
+        <target>Deze collectie is gekoppeld aan één of meerdere specimens</target>
+      </trans-unit>
+          <trans-unit id="1474">
+        <source>This taxon is linked with one or more specimens</source>
+        <target>Deze taxa is gekoppeld aan één of meerdere specimens</target>
+      </trans-unit>
+          <trans-unit id="1479">
+        <source>This taxon is referenced as host in one or more specimens</source>
+        <target>Deze taxa wordt gebruikt als host in één of meerdere specimens</target>
+      </trans-unit>
+          <trans-unit id="1480">
+        <source>This specimen is referenced as host in one or more specimens</source>
+        <target>Dit specimen wordt gebruikt als host in één of meerdere specimens</target>
+      </trans-unit>
           <trans-unit id="1459">
-        <source>The taxon you choose was marked as &quot;renamed&quot;.</source>
+        <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1460">
-        <source>Click on the name below to replace the unit by his current name.</source>
+        <source>Click on the name below to replace the unit by its current name.</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1461">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;Actually this import module is reserved for the DNA department</source>
-        <target></target>
+        <target>&lt;strong&gt;Pas op!&lt;/strong&gt;Deze import module is bestemd voor het departement DNA</target>
       </trans-unit>
           <trans-unit id="1396">
         <source>To be loaded</source>

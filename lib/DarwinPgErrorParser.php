@@ -75,9 +75,9 @@ class DarwinPgErrorParser
     '/\bunq_multimedia_keywords\b/' => 'This multimedia keyword already exists',
     '/\bunq_associated_multimedia\b/' => 'This associated multimedia already exists',
     '/\buniq_words\b/' => 'This word already exists',
-    '/\bfk_people_relationships_people_02\b/' => 'This person still have relationships with an other',
-    '/\bfk_collections_institutions\b/' => 'This institution still have collections',
-    '/\bfk_collections_users\b/' => 'This user is manager of collections',
+    '/\bfk_people_relationships_people_02\b/' => 'This persons record still has links with others',
+    '/\bfk_collections_institutions\b/' => 'This institution still has collections',
+    '/\bfk_collections_users\b/' => 'This user is collection manager',
     '/\bfk_taxonomy_level_ref_catalogue_levels\b/' => 'This level is used in taxonomy',
     '/\bfk_chronostratigraphy_level_ref_catalogue_levels\b/' => 'This level is used in chronostratigraphy',
     '/\bfk_lithostratigraphy_level_ref_catalogue_levels\b/' => 'This level is used in lithostratigraphy',
@@ -88,14 +88,14 @@ class DarwinPgErrorParser
     '/\bfk_specimens_gtu\b/' => 'This gtu is linked with one or more specimens',
     '/\bfk_specimens_collections\b/' => 'This collection is linked with one or more specimens',
     '/\bfk_specimens_taxonomy\b/' => 'This taxon is linked with one or more specimens',
-    '/\bfk_specimens_lithostratigraphy\b/' => 'This lithostratigraphy unit is linked with one or more specimens',
-    '/\bfk_specimens_lithology\b/' => 'This lithology is linked with one or more specimens',
-    '/\bfk_specimens_mineralogy\b/' => 'This mineralogy unit is linked with one or more specimens',
-    '/\bfk_specimens_chronostratigraphy\b/' => 'This chronostratigraphy unit is linked with one or more specimens',
+    '/\bfk_specimens_lithostratigraphy\b/' => 'This lithostratigraphical unit is linked with one or more specimens',
+    '/\bfk_specimens_lithology\b/' => 'This lithological unit is linked with one or more specimens',
+    '/\bfk_specimens_mineralogy\b/' => 'This mineralogical unit is linked with one or more specimens',
+    '/\bfk_specimens_chronostratigraphy\b/' => 'This chronostratigraphical unit is linked with one or more specimens',
     '/\bfk_specimens_host_taxonomy\b/' => 'This taxon is referenced as host in one or more specimens',            
     '/\bfk_specimens_host_specimen\b/' => 'This specimen is referenced as host in one or more specimens',    
-    '/\bfk_specimens_accompanying_mineralogy\b/' => 'This mineral is referenced as accompagnying element',
-    '/\bfk_specimens_accompanying_taxonomy\b/' => 'This taxon is referenced as accompagnying element'
+    '/\bfk_specimens_accompanying_mineralogy\b/' => 'This mineral is referenced as accompanying element',
+    '/\bfk_specimens_accompanying_taxonomy\b/' => 'This taxon is referenced as accompanying element',
   );
 
 

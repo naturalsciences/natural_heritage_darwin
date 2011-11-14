@@ -4553,11 +4553,11 @@
         <target>Annulé</target>
       </trans-unit>
           <trans-unit id="1459">
-        <source>The taxon you choose was marked as &quot;renamed&quot;.</source>
+        <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
         <target>Le taxon que vous avez choisit est marqué en &quot;renomé&quot;</target>
       </trans-unit>
           <trans-unit id="1460">
-        <source>Click on the name below to replace the unit by his current name.</source>
+        <source>Click on the name below to replace the unit by its current name.</source>
         <target>Cliquez sur le nom ci-dessous pour remplacer l&#039;unité par son nom courant</target>
       </trans-unit>
           <trans-unit id="1461">
@@ -4565,7 +4565,7 @@
         <target>&lt;strong&gt;Attention!&lt;/strong&gt;Actuellement ce module d&#039;import est réservé au departement ADN</target>
       </trans-unit>
           <trans-unit id="1462">
-        <source>This person still have relationships with an other</source>
+        <source>This persons record still has links with others</source>
         <target>Cette personne a toujours une relation avec une autre</target>
       </trans-unit>
           <trans-unit id="1387">
@@ -4573,11 +4573,11 @@
         <target>Ce fichier est prêt à être chargé, une tâche automatique sera activée pour charger les lignes</target>
       </trans-unit>
           <trans-unit id="1463">
-        <source>This institution still have collections</source>
+        <source>This institution still has collections</source>
         <target>Cette institution possède toujours des collections</target>
       </trans-unit>
           <trans-unit id="1464">
-        <source>This user is manager of collections</source>
+        <source>This user is collection manager</source>
         <target>Cet utilisateur est gestionnaire de certaines collections</target>
       </trans-unit>
           <trans-unit id="1467">
@@ -4613,19 +4613,19 @@
         <target>Ce taxon est lié avec un ou plusieurs échantillons</target>
       </trans-unit>
           <trans-unit id="1475">
-        <source>This lithostratigraphy unit is linked with one or more specimens</source>
+        <source>This lithostratigraphical unit is linked with one or more specimens</source>
         <target>Cette unité de lithostratigraphie est liée avec un ou plusieurs échantillons</target>
       </trans-unit>
           <trans-unit id="1476">
-        <source>This lithology is linked with one or more specimens</source>
+        <source>This lithological unit is linked with one or more specimens</source>
         <target>Cette unité de lithologie est liée avec un ou plusieurs échantillons</target>
       </trans-unit>
           <trans-unit id="1477">
-        <source>This mineralogy unit is linked with one or more specimens</source>
+        <source>This mineralogical unit is linked with one or more specimens</source>
         <target>Cette unité de minéralogie est liée avec un ou plusieurs échantillons</target>
       </trans-unit>
           <trans-unit id="1478">
-        <source>This chronostratigraphy unit is linked with one or more specimens</source>
+        <source>This chronostratigraphical unit is linked with one or more specimens</source>
         <target>Cette unité de chronostratigraphie est liée avec un ou plusieurs échantillons</target>
       </trans-unit>
           <trans-unit id="1479">
@@ -4637,11 +4637,11 @@
         <target>Cet échantillon est référencé en tant qu&#039;hôte dans un ou plusieurs échantillons</target>
       </trans-unit>
           <trans-unit id="1482">
-        <source>This taxon is referenced as accompagnying element</source>
+        <source>This taxon is referenced as accompanying element</source>
         <target>Ce taxon est référencé en tant qu&#039;élément accompagnateur</target>
       </trans-unit>
           <trans-unit id="1481">
-        <source>This mineral is referenced as accompagnying element</source>
+        <source>This mineral is referenced as accompanying element</source>
         <target>Ce minerai est référencé en tant qu&#039;élément accompagnateur</target>
       </trans-unit>
           <trans-unit id="1465">

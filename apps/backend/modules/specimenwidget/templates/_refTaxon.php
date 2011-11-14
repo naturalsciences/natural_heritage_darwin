@@ -1,6 +1,6 @@
-<div id="taxon_orig" class="hidden warn_message"><?php echo __('The taxon you choose was marked as "renamed".');?>
+<div id="taxon_orig" class="hidden warn_message"><?php echo __('The taxon you chose, was marked as "renamed".');?>
 <br />
-<?php echo __('Click on the name below to replace the unit by his current name.');?>
+<?php echo __('Click on the name below to replace the unit by its current name.');?>
 <span></span>
 </div>
 
