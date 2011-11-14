@@ -87,41 +87,29 @@
         <source>Your file has been loaded and checked, you can edit line in errors or import corrects lines</source>
         <target>Uw bestand werd ingeladen en nagekeken en u kunt nu foute lijnen corrigeren of correcte lijnen importeren.</target>
       </trans-unit>
-          <trans-unit id="1462">
-        <source>This persons record still has links with others</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1463">
-        <source>This institution still has collections</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1464">
-        <source>This user is collection manager</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1475">
-        <source>This lithostratigraphical unit is linked with one or more specimens</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1476">
         <source>This lithological unit is linked with one or more specimens</source>
-        <target></target>
+        <target>Deze lithologische eenheid is gelinkt aan één of meerdere specimens</target>
       </trans-unit>
           <trans-unit id="1477">
         <source>This mineralogical unit is linked with one or more specimens</source>
-        <target></target>
+        <target>Deze mineralogische eenheid is gelinkt aan één of meerdere specimens</target>
       </trans-unit>
           <trans-unit id="1478">
         <source>This chronostratigraphical unit is linked with one or more specimens</source>
-        <target></target>
+        <target>Deze chronostratigrafische eenheid is gelinkt aan één of meerdere specimens</target>
       </trans-unit>
           <trans-unit id="1481">
         <source>This mineral is referenced as accompanying element</source>
-        <target></target>
+        <target>Dit mineraal staat gereferenceerd als verwijzend element</target>
       </trans-unit>
           <trans-unit id="1482">
         <source>This taxon is referenced as accompanying element</source>
-        <target></target>
+        <target>Dit taxon staat gereferenceerd als verwijzend element</target>
+      </trans-unit>
+          <trans-unit id="1469">
+        <source>This level is used in lithology</source>
+        <target>Dit niveau wordt gebruikt in de lithologie</target>
       </trans-unit>
           <trans-unit id="1465">
         <source>This level is used in taxonomy</source>
@@ -138,10 +126,6 @@
           <trans-unit id="1468">
         <source>This level is used in mineralogy</source>
         <target>Dit niveau wordt gebruikt in de mineralogie</target>
-      </trans-unit>
-          <trans-unit id="1469">
-        <source>This level is used in lithology</source>
-        <target>Dit niveau wordt gebruikt in de lithologie</target>
       </trans-unit>
           <trans-unit id="1470">
         <source>This expedition is linked with one or more specimens</source>
@@ -171,13 +155,37 @@
         <source>This specimen is referenced as host in one or more specimens</source>
         <target>Dit specimen wordt gebruikt als host in één of meerdere specimens</target>
       </trans-unit>
+          <trans-unit id="1462">
+        <source>This persons record still has links with others</source>
+        <target>Het record van deze persoon is nog verbonden met andere records</target>
+      </trans-unit>
+          <trans-unit id="1463">
+        <source>This institution still has collections</source>
+        <target>Deze instelling bezit nog collecties</target>
+      </trans-unit>
+          <trans-unit id="1464">
+        <source>This user is collection manager</source>
+        <target>Deze gebruiker is een collectiebeheerder</target>
+      </trans-unit>
+          <trans-unit id="1475">
+        <source>This lithostratigraphical unit is linked with one or more specimens</source>
+        <target>Deze lithostratigrafische eenheid is gelinkt aan één of meerdere specimens</target>
+      </trans-unit>
           <trans-unit id="1459">
         <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
-        <target></target>
+        <target>De taxon die u koos, werd aangeduid als &quot;hernoemd&quot;.</target>
       </trans-unit>
           <trans-unit id="1460">
         <source>Click on the name below to replace the unit by its current name.</source>
-        <target></target>
+        <target>Klik op de onderstaande naam om de eenheid te vervangen door z&#039;n huidige naam.</target>
+      </trans-unit>
+          <trans-unit id="963">
+        <source>At least a reference to an accompanying element is required.</source>
+        <target>Ten minste één referentie naar een verwijzend element is verplicht.</target>
+      </trans-unit>
+          <trans-unit id="1036">
+        <source>This widget allows you to add two types of accompanying elements. In the first case, you could add a biological type of element. E.g Imagine that you have a shell that is covered by a colony of moss animals. You could add the Taxonomic name Membranipora tenuis Desor, 1848 in the widget and you could also specify the amount() of the area covered by the colony. In a second case, you could describe the different elements that constitute the whole mineral that you are encoding. E.g. your rock is made up by two mineralogic elements, one being 95% quartz and the second 5% calcite.</source>
+        <target>Via deze widget kunt u twee soorten verwijzende elementen toevoegen. In het eerste geval gaat het om een biologisch soort element. Bv. Stel u voor dat u een schelp heeft waarop een kolonie mosdiertjes leven. U zou de taxonomische naam van de diertjes, Membranipora tenuis Desor 1848, in de widget kunnen opnemen en eventueel ook het oppervlaktepercentage beschrijven dat de kolonie op de schelp innemen. In een tweede geval, zou u de verschillende elementen van een mineraal wensen te beschrijven. Bv. uw mineraal bestaat uit twee elementen, waarvan er één 95% kwarts is en de andere 5% calcite.</target>
       </trans-unit>
           <trans-unit id="1461">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;Actually this import module is reserved for the DNA department</source>
@@ -4135,10 +4143,6 @@
         <source>Unable to check the captcha from the server (%error%).</source>
         <target>Onmogelijk om de captcha na te gaan op de server (%error%)</target>
       </trans-unit>
-          <trans-unit id="963">
-        <source>At least a reference to an accompanying element is required.</source>
-        <target>Ten minste één referentie naar een verwijzend element is verplicht.</target>
-      </trans-unit>
           <trans-unit id="964">
         <source>Display help icons in forms or hide icons</source>
         <target>Toon de help iconen in de formulieren of verberg de iconen</target>
@@ -4399,10 +4403,6 @@
         <source>This widget allows you to add the reference to a lithological unit.</source>
         <target>Via deze widget kunt u de referentie naar een bepaalde lithologische eenheid toevoegen.</target>
       </trans-unit>
-          <trans-unit id="1036">
-        <source>This widget allows you to add two types of accompanying elements. In the first case, you could add a biological type of element. E.g Imagine that you have a shell that is covered by a colony of moss animals. You could add the Taxonomic name Membranipora tenuis Desor, 1848 in the widget and you could also specify the amount() of the area covered by the colony. In a second case, you could describe the different elements that constitute the whole mineral that you are encoding. E.g. your rock is made up by two mineralogic elements, one being 95% quartz and the second 5% calcite.</source>
-        <target>Via deze widget kunt u twee soorten verwijzende elementen toevoegen. In het eerste geval gaat het om een biologisch soort element. Bv. Stel u voor dat u een schelp heeft waarop een kolonie mosdiertjes leven. U zou de taxonomische naam van de diertjes, Membranipora tenuis Desor 1848, in de widget kunnen opnemen en eventueel ook het oppervlaktepercentage beschrijven dat de kolonie op de schelp innemen. In een tweede geval, zou u de verschillende elementen van een mineraal wensen te beschrijven. Bv. uw mineraal bestaat uit twee elementen, waarvan er één 95% kwarts is en de andere 5% calcite.</target>
-      </trans-unit>
           <trans-unit id="1037">
         <source>This widget allows you to add the reference to a Sampling location unit (Gtu).</source>
         <target>Via deze widget kunt u de referentie naar een bemonsteringsplaats toevoegen.</target>
@@ -4559,10 +4559,6 @@
         <source>This people already exists</source>
         <target>Deze persoon bestaat reeds</target>
       </trans-unit>
-          <trans-unit id="1081">
-        <source>This accompanying element already exists</source>
-        <target>Dit bijkomende element bestaat reeds</target>
-      </trans-unit>
           <trans-unit id="1082">
         <source>This tag group already exists</source>
         <target>Deze tag groep bestaat reeds</target>
@@ -4658,6 +4654,10 @@
           <trans-unit id="9">
         <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</source>
         <target>[0]Geen resultaat|[1]Uw opzoeking levert 1 record op(1,+Inf]Uw opzoeking levert %1% records op</target>
+      </trans-unit>
+          <trans-unit id="1081">
+        <source>This accompanying element already exists</source>
+        <target>Dit verwijzend element bestaat reeds</target>
       </trans-unit>
           <trans-unit id="1114">
         <source>Author name and year, used in mineralogy or bacterology</source>
@@ -4903,10 +4903,6 @@
         <source>Insurances</source>
         <target>Verzekeringen</target>
       </trans-unit>
-          <trans-unit id="1176">
-        <source>Accompanying elements</source>
-        <target>Verwijzende elementen</target>
-      </trans-unit>
           <trans-unit id="1177">
         <source>deleted</source>
         <target>gewist</target>
@@ -4934,6 +4930,10 @@
           <trans-unit id="1184">
         <source>People role</source>
         <target>Functie van persoon</target>
+      </trans-unit>
+          <trans-unit id="1176">
+        <source>Accompanying elements</source>
+        <target>Verwijzende elementen</target>
       </trans-unit>
           <trans-unit id="1185">
         <source>Via this widget you can perform a search in order to find all records where a specific person (or institution) appears. You can also choose one or more roles for this person (such as collector, identifier and/or donator/seller)</source>
