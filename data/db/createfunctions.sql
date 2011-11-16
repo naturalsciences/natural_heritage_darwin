@@ -425,7 +425,7 @@ BEGIN
 	DELETE FROM class_vernacular_names WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM classification_synonymies WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM classification_keywords WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM users_workflow WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM informative_workflow WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM collection_maintenance WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM associated_multimedia WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM codes WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
@@ -4373,4 +4373,17 @@ begin
   end;
   return 'inserted';
 end;
+$$;
+
+CREATE OR REPLACE function fct_remove_last_flag() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+BEGIN
+    UPDATE informative_workflow
+    SET is_last = false
+    WHERE referenced_relation = NEW.referenced_relation
+      AND record_id = NEW.record_id;
+  RETURN NEW;
+END;
 $$;

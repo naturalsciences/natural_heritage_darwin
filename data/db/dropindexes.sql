@@ -9,7 +9,7 @@
  DROP INDEX IF EXISTS idx_users_languages_preferred_language;
  DROP INDEX IF EXISTS idx_users_login_infos_login_system;
  DROP INDEX IF EXISTS idx_gin_chronostratigraphy_naming;
- DROP INDEX IF EXISTS idx_users_workflow_user_status;
+ DROP INDEX IF EXISTS idx_informative_workflow_user_status;
  DROP INDEX IF EXISTS idx_gist_vernacular_names_name_ts;
  DROP INDEX IF EXISTS idx_vernacular_names_name_indexed;
  DROP INDEX IF EXISTS idx_gist_comments_comment_ts;
@@ -55,7 +55,7 @@
  DROP INDEX IF EXISTS idx_collections_main_manager_ref;
  DROP INDEX IF EXISTS idx_people_addresses_person_user_ref;
  DROP INDEX IF EXISTS idx_users_comm_person_user_ref;
- DROP INDEX IF EXISTS idx_users_workflow_user_ref;
+ DROP INDEX IF EXISTS idx_informative_workflow_user_ref;
  DROP INDEX IF EXISTS idx_users_addresses_person_user_ref;
  DROP INDEX IF EXISTS idx_collections_parent_ref;
  DROP INDEX IF EXISTS idx_users_login_infos_user_ref;

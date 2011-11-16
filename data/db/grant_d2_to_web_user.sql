@@ -64,7 +64,7 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_login_infos TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_multimedia TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_addresses TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_workflow TO cebmpad;
+ GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.informative_workflow TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_tracking TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.my_saved_searches TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.preferences TO cebmpad;
@@ -102,7 +102,7 @@
  GRANT USAGE ON SEQUENCE darwin2.collections_id_seq TO cebmpad;
  GRANT USAGE ON SEQUENCE darwin2.my_saved_searches_id_seq TO cebmpad;
  GRANT USAGE ON SEQUENCE darwin2.collections_rights_id_seq TO cebmpad;
- GRANT USAGE ON SEQUENCE darwin2.users_workflow_id_seq TO cebmpad;
+ GRANT USAGE ON SEQUENCE darwin2.informative_workflow_id_seq TO cebmpad;
  GRANT USAGE ON SEQUENCE darwin2.my_widgets_id_seq TO cebmpad;
  GRANT USAGE ON SEQUENCE darwin2.users_tracking_id_seq TO cebmpad;
  GRANT USAGE ON SEQUENCE darwin2.collection_maintenance_id_seq TO cebmpad;
@@ -161,7 +161,7 @@
  GRANT SELECT ON SEQUENCE darwin2.collections_id_seq TO cebmpad;
  GRANT SELECT ON SEQUENCE darwin2.my_saved_searches_id_seq TO cebmpad;
  GRANT SELECT ON SEQUENCE darwin2.collections_rights_id_seq TO cebmpad;
- GRANT SELECT ON SEQUENCE darwin2.users_workflow_id_seq TO cebmpad;
+ GRANT SELECT ON SEQUENCE darwin2.informative_workflow_id_seq TO cebmpad;
  GRANT SELECT ON SEQUENCE darwin2.my_widgets_id_seq TO cebmpad;
  GRANT SELECT ON SEQUENCE darwin2.users_tracking_id_seq TO cebmpad;
  GRANT SELECT ON SEQUENCE darwin2.collection_maintenance_id_seq TO cebmpad;

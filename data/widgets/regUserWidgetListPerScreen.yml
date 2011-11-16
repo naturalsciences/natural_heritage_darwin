@@ -802,3 +802,123 @@ ins1:
    visible: true
    title_perso: Relationships
    all_public: true
+   
+ins7:
+   col_num: 2
+   category: people_institution_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Informative Workflow      
+   
+tw9:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: informativeWorkflow
+   order_by: 9
+   mandatory: false
+   opened: true
+   visible: true
+   title_perso: Informative Workflow
+   
+chw8:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Informative Workflow
+   
+lhw8:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Informative Workflow
+   
+miw8:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Informative Workflow
+   
+liw8:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Informative Workflow 
+
+gtu4:
+   col_num: 1
+   category: catalogue_gtu_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Informative Workflow  
+   
+u1wmetto4:
+   col_num: 1
+   category: catalogue_methods_and_tools_widget
+   group_name: informativeWorkflow
+   mandatory: false   
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Informative Workflow 
+      
+sw22:
+   col_num: 2
+   category: specimen_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 10
+   opened: true
+   visible: true
+   title_perso: Informative Workflow   
+
+spi11:
+   col_num: 2
+   category: individuals_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Informative Workflow   
+   
+sp12:
+   col_num: 2
+   category: part_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Informative Workflow
+
+pe8:
+   col_num: 1
+   category: people_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Informative Workflow

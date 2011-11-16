@@ -439,6 +439,21 @@ UsersTracking:
             local: user_ref
             foreign: id
 
+InformativeWorkflow:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        record_id: { type: integer, notnull: true},
+        referenced_relation: { type: string, notnull: true}
+        user_ref: { type: integer}
+        formated_name: {type: string}
+        status: {type: string}
+        modification_date_time : {type:string, notnull: true }
+        comment : { type:string}
+    relations:
+        Users:
+            local: user_ref
+            foreign: id
+            
 CollectionMaintenance:
     columns:
         id: { type: integer, primary: true, autoincrement: true }

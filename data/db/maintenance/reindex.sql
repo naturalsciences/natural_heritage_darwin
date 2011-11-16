@@ -58,7 +58,7 @@
  REINDEX TABLE users_addresses;
  REINDEX TABLE users_login_infos;
  REINDEX TABLE users_multimedia;
- REINDEX TABLE users_workflow;
+ REINDEX TABLE informative_workflow;
  REINDEX TABLE users_tracking;
  REINDEX TABLE my_saved_searches;
  REINDEX TABLE preferences;
