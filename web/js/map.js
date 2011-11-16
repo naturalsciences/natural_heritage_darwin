@@ -138,12 +138,27 @@ function fetchElevation(lonlat)
     }
   });
 }
+
+function fetchPositions(lonlat, zoom)
+{
+  $.ajax({
+  url: 'http://nominatim.openstreetmap.org/reverse',
+  dataType: 'json',
+  data: { lat: lonlat.lat, lon: lonlat.lon, zoom: zoom, addressdetails:1, format: 'json'  },
+  success: function(data) {
+    console.log(data);
+  }
+});
+
+}
+
 function setPoint( e )
 {
   lonlat = getEventPosition(e).wrapDateLine();
   $('#gtu_latitude').val(lonlat.lat);
   $('#gtu_longitude').val(lonlat.lon);
   fetchElevation(lonlat);
+  fetchPositions(lonlat,map.getZoom());
   //// GOOGLE ELE
   drawLatLong();
   drawAccuracy();
