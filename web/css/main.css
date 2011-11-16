@@ -2718,7 +2718,7 @@ input[type='file']
 }
 
 /** Has a copy in content.css */
-#demo_bottom {
+#broadcast_bottom {
   width: 100%;
   position: fixed;
   bottom: 0px;
