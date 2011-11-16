@@ -102,7 +102,7 @@ class TagGroupsTable extends DarwinTable
           $sql .= $sub_grouping_clause;
         $sql .= " ORDER BY similarity(tag, u_tags) desc, tag asc";
 
-        $sql = "select tag, 2 as size, 0 as precision
+        $sql = "select tag, 2 as size
                 from (" .$sql.") as subquery group by tag order by dummy_first(sims) desc ".$limit;
       }
       $fuzzyResults = $conn->fetchAssoc($sql);
