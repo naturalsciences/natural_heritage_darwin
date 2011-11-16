@@ -71,7 +71,7 @@ class TagGroupsTable extends DarwinTable
     {
       if( $group != "" &&  $sub_group != "")
       {
-        $sql = "select dummy_first(tag) as tag, dummy_first(similarity(x.tag, tagsi)) as sims from
+        $sql = "select dummy_first(tag) as tag, dummy_first(similarity(x.tag, tagsi)) as sims, 2 as size from
           (select distinct(tag) as tag from tags 
             where ". $grouping_clause.$sub_grouping_clause." ) as x
           inner join (select trim(tagsi) as tagsi FROM regexp_split_to_table($tags, ';') AS tagsi) as y
