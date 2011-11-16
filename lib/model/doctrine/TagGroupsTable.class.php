@@ -25,7 +25,7 @@ class TagGroupsTable extends DarwinTable
     $q_sub_group = $conn->quote($sub_group, 'string');
     $sub_grouping_clause = " AND sub_group_type = $q_sub_group";
 
-    $sql = "select dummy_first (tag) as tag, count(*) as cnt FROM (SELECT group_ref 
+    $sql = "select dummy_first (tag) as tag, count(*) as cnt , 1 as precision FROM (SELECT group_ref 
                  FROM tags 
                  WHERE tag_indexed IN 
                   (SELECT distinct(fulltoIndex(tags)) as u_tag 
