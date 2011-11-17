@@ -38,7 +38,7 @@
               </a>
             </th>                      
             <th><?php echo __("Progression") ; ?></th>
-            <th colspan="3"><?php echo __("Actions") ; ?></th>
+            <th colspan="4"><?php echo __("Actions") ; ?></th>
           </tr>
         </thead>
         <tbody>
@@ -63,6 +63,11 @@
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'staging/index?import='.$import->getId());?>
                 <?php endif ; ?>
               </td>
+              <td>
+                <?php if ($import->isEditableState()) : ?>
+                  <?php echo link_to(image_tag('checkbox_checked.png',array('title'=>__('Import "Ok" lines'))),'staging/markok?import='.$import->getId());?>
+                <?php endif ; ?>
+              </td>              
               <td>
                 <?php if (!$import->getIsFinished()) : ?>
                   <?php echo link_to(image_tag('remove_2.png',array('title'=>__('Abort import'))),'import/clear?id='.$import->getId(),'class=remove_import');?>

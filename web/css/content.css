@@ -955,7 +955,7 @@ a#register_link, a#login_lostpwd
 }
 
 /** Has a copy in main.css */
-#demo_bottom {
+#broadcast_bottom {
   width: 100%;
   position: fixed;
   bottom: 0px;
@@ -966,5 +966,5 @@ a#register_link, a#login_lostpwd
   padding: 0.5em;
   opacity: 0.9;
 }
-#demo_bottom span { font-size: small; }
-#demo_bottom_padding { height :2em;}
+#broadcast_bottom span { font-size: small; }
+#broadcast_bottom_padding { height :2em;}

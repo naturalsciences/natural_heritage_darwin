@@ -76,5 +76,9 @@ $(document).ready(function () {
   <?php if($form->hasErrors())
       echo "$('tr#parent_ref .button').show();";
   ?>
+  
+  <?php if($form['level_ref']->getValue()) 
+      echo "$('#lithostratigraphy_level_ref').trigger('change');" ;
+  ?>
 });
 </script>

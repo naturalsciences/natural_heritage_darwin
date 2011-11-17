@@ -138,12 +138,46 @@ function fetchElevation(lonlat)
     }
   });
 }
+
+
+function onReverseTagClick(event)
+{
+  event.preventDefault();
+  addTagToGroup($(this).attr('data-group'),$(this).attr('data-subgroup'),$(this).text());
+}
+
+//Reverse GeoCoding using OSM nominatim
+function fetchPositions(lonlat, zoom)
+{
+  $.ajax({
+  url: 'http://nominatim.openstreetmap.org/reverse',
+  dataType: 'json',
+  data: { lat: lonlat.lat, lon: lonlat.lon, zoom: zoom, addressdetails:1, format: 'json'  },
+  success: function(data) {
+     container = $('#reverse_tags ul');
+     container.html('');
+     container.append($('<li></li>').text(data.address.country).attr({ 'data-group': 'administrative area', 'data-subgroup': 'country' }));
+
+     if( data.address.state != undefined )
+      container.append($('<li></li>').text(data.address.state).attr({ 'data-group': 'administrative area', 'data-subgroup': 'state' }));
+
+     if( data.address.city != undefined )
+      container.append($('<li></li>').text(data.address.city).attr({ 'data-group': 'administrative area', 'data-subgroup': 'city' }));
+     
+     container.find('>li').click(onReverseTagClick);
+    $('#reverse_tags').show();
+  }
+});
+
+}
+
 function setPoint( e )
 {
   lonlat = getEventPosition(e).wrapDateLine();
   $('#gtu_latitude').val(lonlat.lat);
   $('#gtu_longitude').val(lonlat.lon);
   fetchElevation(lonlat);
+  fetchPositions(lonlat,map.getZoom());
   //// GOOGLE ELE
   drawLatLong();
   drawAccuracy();

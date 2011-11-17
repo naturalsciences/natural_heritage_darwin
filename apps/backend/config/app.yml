@@ -11,6 +11,11 @@ all:
        pagerSlidingSize: 5
        catalogueRecLimit: 200
        queryTimeout: 30000
+
+#    broadcast:
+#        enabled: true
+#        message: This is a demo application. Data is restored nightly !
+#        submessage: login with user/user or encoder/encoder or admin/admin
 #dev:
    tracking:
        enabled: true

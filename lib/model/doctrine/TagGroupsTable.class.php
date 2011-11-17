@@ -25,7 +25,7 @@ class TagGroupsTable extends DarwinTable
     $q_sub_group = $conn->quote($sub_group, 'string');
     $sub_grouping_clause = " AND sub_group_type = $q_sub_group";
 
-    $sql = "select dummy_first (tag) as tag, count(*) as cnt FROM (SELECT group_ref 
+    $sql = "select dummy_first (tag) as tag, count(*) as cnt , 1 as precision FROM (SELECT group_ref 
                  FROM tags 
                  WHERE tag_indexed IN 
                   (SELECT distinct(fulltoIndex(tags)) as u_tag 
@@ -71,7 +71,7 @@ class TagGroupsTable extends DarwinTable
     {
       if( $group != "" &&  $sub_group != "")
       {
-        $sql = "select dummy_first(tag) as tag, dummy_first(similarity(x.tag, tagsi)) as sims from
+        $sql = "select dummy_first(tag) as tag, dummy_first(similarity(x.tag, tagsi)) as sims, 2 as size from
           (select distinct(tag) as tag from tags 
             where ". $grouping_clause.$sub_grouping_clause." ) as x
           inner join (select trim(tagsi) as tagsi FROM regexp_split_to_table($tags, ';') AS tagsi) as y
@@ -102,7 +102,7 @@ class TagGroupsTable extends DarwinTable
           $sql .= $sub_grouping_clause;
         $sql .= " ORDER BY similarity(tag, u_tags) desc, tag asc";
 
-        $sql = "select tag, 2 as size, 0 as precision
+        $sql = "select tag, 2 as size
                 from (" .$sql.") as subquery group by tag order by dummy_first(sims) desc ".$limit;
       }
       $fuzzyResults = $conn->fetchAssoc($sql);

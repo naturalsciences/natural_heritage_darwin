@@ -1444,12 +1444,12 @@ tr.details .details_info tr:hover
 {
   display:block;
 }
-.purposed_tags
+.purposed_tags, #reverse_tags
 {
   max-width:600px;
 }
 
-.tag_selected, .tag_available, .name_tags li, .purposed_tags li
+.tag_selected, .tag_available, .name_tags li, .purposed_tags li, #reverse_tags li
 {
   background-color: #FAFAFA;
   min-height:1em;
@@ -1458,7 +1458,7 @@ tr.details .details_info tr:hover
   cursor: pointer;
 }
 
-.tag_selected li, .tag_available li, .name_tags li, .purposed_tags li
+.tag_selected li, .tag_available li, .name_tags li, .purposed_tags li, #reverse_tags li
 {
   float:left;
   padding:0.2em;
@@ -1536,7 +1536,7 @@ th .error_list
   font-weight:normal;
 }
 
-.name_tags li, .purposed_tags li
+.name_tags li, .purposed_tags li, #reverse_tags li
 {
   list-style:none;
   font-size: x-small;
@@ -1559,7 +1559,7 @@ th .error_list
   
 }
 
-.name_tags li:hover, .purposed_tags li:hover
+.name_tags li:hover, .purposed_tags li:hover, #reverse_tags li:hover
 {
   border-color:#C1CF56;
 }
@@ -2718,7 +2718,7 @@ input[type='file']
 }
 
 /** Has a copy in content.css */
-#demo_bottom {
+#broadcast_bottom {
   width: 100%;
   position: fixed;
   bottom: 0px;
@@ -2729,5 +2729,5 @@ input[type='file']
   padding: 0.5em;
   opacity: 0.9;
 }
-#demo_bottom span { font-size: small; }
-#demo_bottom_padding { height :2em;}
+#broadcast_bottom span { font-size: small; }
+#broadcast_bottom_padding { height :2em;}

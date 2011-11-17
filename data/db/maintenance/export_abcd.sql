@@ -140,14 +140,15 @@ CREATE TABLE public.flat_abcd as
   CASE WHEN cp2.date_from_mask = 0 THEN null::timestamp ELSE cp2.date_from END as height_date_time,
 
 
-  (select array_to_string(array(select comment 
-                                from darwin2.comments c_flat 
-                                where ( c_flat.referenced_relation = 'gtu' AND c_flat.record_id=f.gtu_ref)
-                                   or ( c_flat.referenced_relation = 'specimens' AND c_flat.record_id = f.spec_ref)
-                                   or ( c_flat.referenced_relation = 'specimen_individuals' AND c_flat.record_id = f.individual_ref)  
-                                   or ( c_flat.referenced_relation = 'specimen_parts' AND c_flat.record_id = f.part_ref)  
-                               ),E'\r\n' 
-                         )) as flat_comments,
+  (select translate(array_to_string(array(select comment 
+                                          from darwin2.comments c_flat 
+                                          where ( c_flat.referenced_relation = 'gtu' AND c_flat.record_id=f.gtu_ref)
+                                            or ( c_flat.referenced_relation = 'specimens' AND c_flat.record_id = f.spec_ref)
+                                            or ( c_flat.referenced_relation = 'specimen_individuals' AND c_flat.record_id = f.individual_ref)  
+                                            or ( c_flat.referenced_relation = 'specimen_parts' AND c_flat.record_id = f.part_ref)  
+                                         ),E'\r\n' 
+                                   ), chr(11), '')
+   ) as flat_comments,
 
   ( select min(property_value) from darwin2.properties_values where property_ref = cp3.id) as utm_text
 
@@ -713,15 +714,23 @@ CREATE TABLE public.darwin_metadata AS
 (
   SELECT
     1 as id,
+    'RBINS'::text as metadata_owner_abbrev,
+    'Royal Belgian Institute of Natural Sciences'::text as metadata_owner_name,
+    'Rue Vautier straat, 29 - 1000 Bruxelles/Brussels - Belgique/Belgïe'::text as metadata_owner_address,
+    'collections@naturalsciences.be'::text as metadata_owner_email,
+    'http://www.naturalsciences.be'::text as metadata_owner_url,
+    'http://www.naturalsciences.be/layout_images/logo'::text as metadata_owner_logo_uri,
     'Rue Vautier straat, 29 - 1000 Bruxelles/Brussels - Belgique/Belgïe'::text as content_contact_address,
     'collections@naturalsciences.be'::text as content_contact_email,
     'RBINS contact'::text as content_contact_name,
     'EN'::text as metadata_representation_language,
     'RBINS collections'::text as metadata_representation_title,
+    E'The Royal Belgian Institute of Natural Sciences houses a precious collection of zoological, anthropological, paleontological, mineralogical and geological materials and data. The renowned Iguanodons from Bernissart, ambassadors of the Belgian science institute in Brussels, represent a natural history collection currently estimated to hold over 37 million specimens.\r\nThe roots of the present day collection reach far back in history. It evolved from the Natural History collection of Karel of Lotharingen, governor of The Netherlands (1712-1780) and was part of didactic materials owned by the Central School of the City of Brussels. After the independence of Belgium, the City of Brussels donated the collection to the Belgian Government and became part of the autonomous Royal Natural History Museum in 1846, known as the Royal Belgian Institute of Natural Sciences since 1948. Fieldwork by researchers and collaborators, in Belgium and abroad, donations and purchases have been expanding the assets ever since.\r\nData presented here are coming from the darwin database, the collection management tool of the RBINS. Today, the darwin database manages information on about 350.000 specimens stored in the institute\'s depositories. This number rises on a daily basis thanks to the continued efforts of curators and their adjuncts that are responsible for maintaining the stored specimens and information. Our online database provides information about the collections of the Vertebrates, Invertebrates, Entomology and Paleobotany. The application will soon be expanded with paleontozoological data.\r\nThe Department of Geology and the Department of Marine Ecosystems provide information on different systems. More information on these departments can be found on www.sciencesnaturelles.be/institute/structure/geology/gsb_website And www.mumm.ac.be\r\nThe corner stone of the darwin database is the specimen and the information about its origin and its status. Although the status of the specimens follow the current regulations of the International Code on Zoological Nomenclature other status specifications not treated by the ICZN regulations (eg. topotype) have been maintained as supplementary information about the specimen(s) in question.\r\nEnjoy your virtual visit through our collections!'::text as metadata_representation_details,
     current_timestamp as metadata_revision_date,
     'Rue Vautier straat, 29 - 1000 Bruxelles/Brussels - Belgique/Belgïe'::text as content_technical_contact_address,
     'collections@naturalsciences.be'::text as content_technical_contact_email,
-    'RBINS contact'::text as content_technical_contact_name
+    'RBINS contact'::text as content_technical_contact_name,
+    E'All data given access here are the sole property of the Royal Belgian Institute for Natural Sciences (RBINS) and are protected by the laws of copyright.\r\n The reuse of data, for any purpose whatsoever, is subject to prior authorization given by the Royal Belgian Institute for Natural Sciences (RBINS).\r\n For more informations, comments or details on the above lines, please contact the Royal Belgian Institute for Natural Sciences (RBINS).'::text as IPRCopyright
 );
 
 ALTER TABLE darwin2.taxonomy SET SCHEMA public; 
