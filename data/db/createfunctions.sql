@@ -1471,12 +1471,10 @@ BEGIN
 
       seen_el := array_append(seen_el, entry_row.u_tag);
 
-      PERFORM * FROM tags
+     IF EXISTS( SELECT 1 FROM tags
                 WHERE gtu_ref = NEW.gtu_ref
                   AND group_ref = NEW.id
-                  AND tag_indexed = entry_row.u_tag
-                LIMIT 1;
-      IF FOUND THEN
+                  AND tag_indexed = entry_row.u_tag) THEN
         IF TG_OP = 'UPDATE' THEN
           IF OLD.sub_group_name != NEW.sub_group_name THEN
             UPDATE tags
