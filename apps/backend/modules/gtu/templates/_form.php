@@ -90,9 +90,12 @@ foreach($form['newVal'] as $group)
     </select>
     <a href="<?php echo url_for('gtu/addGroup'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>" id="add_group"><?php echo __('Add Group');?></a>
   </div>
+
 </div>
+    
   <fieldset id="location">
     <legend><?php echo __('Localisation');?></legend>
+    <div id="reverse_tags" style="display: none;"><ul></ul><br class="clear" /></div>
     <table>
       <tr>
         <th><?php echo $form['latitude']->renderLabel() ;?><?php echo $form['latitude']->renderError() ?></th>
@@ -218,18 +221,8 @@ $(document).ready(function () {
       }
     });
 
-    
-    function disableUsedGroups()
-    {
-      $('#groups_select option').removeAttr('disabled');
-      $('.tag_parts_screen fieldset:visible').each(function()
-      {
-	      var cur_group = $(this).attr('alt');
-	      $("#groups_select option[value='"+cur_group+"']").attr('disabled','disabled');
-	      if($("#groups_select option[value='"+cur_group+"']:selected"))
-	        $('#groups_select').val("");
-      });
-    }
+   
+
     disableUsedGroups();
     $('.purposed_tags li').live('click', function()
     {
@@ -266,54 +259,111 @@ $(document).ready(function () {
       });
     }
 
-    $('#add_group').click(function()
+    $('#add_group').click(function(event)
     {
+      event.preventDefault();
       selected_group = $('#groups_select option:selected').val();
-      selected_group_name = $('#groups_select option:selected').text();
-      if(selected_group != '')
-      {
-        hideForRefresh('#gtu_group_screen');
-        $.ajax({
-          type: "GET",
-          url: $('.tag_parts_screen').attr('alt')+'/group/'+ selected_group + '/num/' + (0+$('.tag_parts_screen ul li').length),
-          success: function(html)
-          {
-            if( $('fieldset[alt="'+selected_group+'"]').length != 0)
-            {
-              fld_set = $('fieldset[alt="'+selected_group+'"]');
-              fld_set.find('> ul').append(html);
-              fld_set.show();
-            }
-            else
-            {
-              html = '<fieldset alt="'+ selected_group +'"><legend>' + selected_group_name + '</legend><ul>'+html+'</ul><a class="sub_group"><?php echo __('Add Sub Group');?></a></fieldset>';
-              $('.tag_parts_screen').append(html);    
-            }
-            disableUsedGroups();
-            showAfterRefresh('#gtu_group_screen');
-          }
-        });
-      }
-      return false;
+      addGroup(selected_group);
     });
 
-    $('a.sub_group').live('click',function()
+    $('a.sub_group').live('click',function(event)
     {
-      hideForRefresh('#gtu_group_screen');
-      fieldset = $(this).closest('fieldset');
-      selected_group = fieldset.attr('alt');
-      list =  fieldset.find('> ul');
-      $.ajax({
-        type: "GET",
-        url: $('.tag_parts_screen').attr('alt')+'/group/'+ selected_group + '/num/' + (0+$('.tag_parts_screen ul li').length),
-        success: function(html)
-        {
-          list.append(html);
-          showAfterRefresh('#gtu_group_screen');
-        }
-      });
-      return false;
+      event.preventDefault();
+      addSubGroup( $(this).closest('fieldset').attr('alt'));
     });
 
 });
+
+function addSubGroup(selected_group, default_type, value)
+{
+    hideForRefresh('#gtu_group_screen');
+    fieldset = $('fieldset[alt="'+selected_group+'"]');
+    if( fieldset.length ==0 )
+    {
+      addGroup(selected_group, default_type, value);
+    }
+    list =  fieldset.find('>ul');
+    $.ajax({
+      type: "GET",
+      url: $('.tag_parts_screen').attr('alt')+'/group/'+ selected_group + '/num/' + (0+$('.tag_parts_screen ul li').length),
+      success: function(html)
+      {
+        html = $(html);
+        html.find('.complete_widget select').val(default_type);
+
+        if(value != undefined && value !='')
+        {
+          html.find('.tag_encod input').val(value);
+        }
+        list.append(html);
+
+        showAfterRefresh('#gtu_group_screen');
+      }
+    });
+}
+
+function addTagToGroup(group, sub_group, tag)
+{
+    console.log('brol '+group + '-'+sub_group);
+
+  if($('fieldset[alt="'+group+'"] .complete_widget input, fieldset[alt="'+group+'"] .complete_widget option:selected').filter(function()
+    { return $(this).is(':visible') && $(this).val() == sub_group; }).length == 0)
+  {
+    addSubGroup(group, sub_group, tag);
+  }
+  else
+  {
+    el = $('fieldset[alt="'+group+'"] .complete_widget input, fieldset[alt="'+group+'"] .complete_widget option:selected').filter('[value="'+sub_group+'"]');
+    el_input = el.closest('li').find('.tag_encod input');
+    el_input.val( el_input.val()  +' ; ' + tag);
+  }
+}
+
+function disableUsedGroups()
+{
+  $('#groups_select option').removeAttr('disabled');
+  $('.tag_parts_screen fieldset:visible').each(function()
+  {
+    var cur_group = $(this).attr('alt');
+    $("#groups_select option[value='"+cur_group+"']").attr('disabled','disabled');
+    if($("#groups_select option[value='"+cur_group+"']:selected"))
+      $('#groups_select').val("");
+  });
+}
+
+function addGroup(g_val, sub_group, value)
+{
+  if(g_val != '')
+  {
+    hideForRefresh('#gtu_group_screen');
+    g_name = $('[value="'+g_val+'"]').text();
+    $.ajax({
+      type: "GET",
+      url: $('.tag_parts_screen').attr('alt')+'/group/'+ g_val + '/num/' + (0+$('.tag_parts_screen ul li').length),
+      success: function(html)
+      {
+        html = $(html);
+        if( $('fieldset[alt="'+g_val+'"]').length == 0)
+        {
+          fld = '<fieldset alt="'+ g_val +'"><legend>' + g_name + '</legend><ul></ul><a class="sub_group"><?php echo __('Add Sub Group');?></a></fieldset>';
+          $('.tag_parts_screen').append(fld);    
+        }
+        //@TODO: What if not in select?
+        html.find('select').val(sub_group);
+        fld_set = $('fieldset[alt="'+g_val+'"]');
+
+        if(value != undefined && value !='')
+        {
+           html.find(' .tag_encod input').val(value);
+        }
+
+        fld_set.find('> ul').append(html);
+        fld_set.show();
+
+        disableUsedGroups();
+        showAfterRefresh('#gtu_group_screen');
+      }
+    });
+  }
+}
 </script>
