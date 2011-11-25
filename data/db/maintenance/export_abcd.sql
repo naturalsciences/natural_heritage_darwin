@@ -170,6 +170,11 @@ CREATE TABLE public.flat_abcd as
 
 ALTER TABLE public.flat_abcd ADD CONSTRAINT pk_flat_abcd PRIMARY KEY (id);
 
+CREATE INDEX idx_flat_abcd_flat_ref ON public.flat_abcd (flat_ref);
+CREATE INDEX idx_flat_abcd_collection_institution_ref ON public.flat_abcd (collection_institution_ref);
+CREATE INDEX idx_flat_abcd_collection_main_manager_ref ON public.flat_abcd (collection_main_manager_ref);
+CREATE INDEX idx_flat_abcd_gtu_country ON public.flat_abcd (gtu_country);
+
 CREATE SEQUENCE public.gtu_properties_id_seq;
 
 CREATE TABLE public.gtu_properties as
@@ -212,6 +217,10 @@ CREATE TABLE public.gtu_properties as
 
 ALTER TABLE public.gtu_properties ADD CONSTRAINT pk_gtu_properties PRIMARY KEY (id);
 
+CREATE INDEX idx_gtu_properties_flat_id ON public.gtu_properties (flat_id);
+CREATE INDEX idx_gtu_properties_gtu_ref ON public.gtu_properties (gtu_ref);
+
+
 CREATE SEQUENCE public.gtu_place_id_seq;
 
 CREATE TABLE public.gtu_place as
@@ -227,6 +236,11 @@ CREATE TABLE public.gtu_place as
 
   WHERE sub_group_type != 'country'
 );
+
+ALTER TABLE public.gtu_place ADD CONSTRAINT pk_gtu_place_id PRIMARY KEY (id);
+CREATE INDEX idx_gtu_place_flat_id ON public.gtu_place (flat_id);
+CREATE INDEX idx_gtu_place_place ON public.gtu_place (place);
+
 
 CREATE SEQUENCE public.collectors_abcd_id_seq;
 
@@ -245,6 +259,10 @@ CREATE TABLE public.collectors as
 );
 
 ALTER TABLE public.collectors ADD CONSTRAINT pk_collectors_abcd PRIMARY KEY (id);
+
+CREATE INDEX idx_collectors_flat_id ON public.collectors (flat_id);
+CREATE INDEX idx_collectors_people_ref ON public.collectors (people_ref);
+CREATE INDEX idx_collectors_order_by ON public.collectors (order_by);
 
 CREATE SEQUENCE public.collectors_institution_abcd_id_seq;
 
@@ -266,6 +284,10 @@ CREATE TABLE public.collectors_institution as
 
 ALTER TABLE public.collectors_institution ADD CONSTRAINT pk_collectors_institutions_abcd PRIMARY KEY (id);
 
+CREATE INDEX idx_collectors_institution_flat_id ON public.collectors_institution (flat_id);
+CREATE INDEX idx_collectors_institution_people_ref ON public.collectors_institution (people_ref);
+CREATE INDEX idx_collectors_institution_order_by ON public.collectors_institution (order_by);
+
 CREATE SEQUENCE public.donators_abcd_id_seq;
 
 CREATE TABLE public.donators as
@@ -283,6 +305,10 @@ CREATE TABLE public.donators as
 );
 
 ALTER TABLE public.donators ADD CONSTRAINT pk_donators_abcd PRIMARY KEY (id);
+
+CREATE INDEX idx_donators_flat_id ON public.donators (flat_id);
+CREATE INDEX idx_donators_people_ref ON public.donators (people_ref);
+CREATE INDEX idx_donators_order_by ON public.donators (order_by);
 
 CREATE SEQUENCE public.donators_institution_abcd_id_seq;
 
@@ -303,6 +329,10 @@ CREATE TABLE public.donators_institution as
 );
 
 ALTER TABLE public.donators_institution ADD CONSTRAINT pk_donators_institutions_abcd PRIMARY KEY (id);
+
+CREATE INDEX idx_donators_institution_flat_id ON public.donators_institution (flat_id);
+CREATE INDEX idx_donators_institution_people_ref ON public.donators_institution (people_ref);
+CREATE INDEX idx_donators_institution_order_by ON public.donators_institution (order_by);
 
 create sequence public.identifications_abdc_id_seq;
 
@@ -362,6 +392,7 @@ insert into public.identifications_abdc
     WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i WHERE taxon_ref is not null and i.flat_id = f.id)
 );
 
+CREATE INDEX idx_identifications_abdc_flat_id ON public.identifications_abdc (flat_id);
 
 insert into public.taxon_identified
 (
@@ -385,6 +416,10 @@ insert into public.taxon_identified
       AND taxon_ref !=0 
 );
 
+CREATE INDEX idx_taxon_identified_identification_ref ON public.taxon_identified (identification_ref);
+CREATE INDEX idx_taxon_identified_taxon_ref ON public.taxon_identified (taxon_ref);
+CREATE INDEX idx_taxon_identified_taxon_parent_ref ON public.taxon_identified (taxon_parent_ref);
+CREATE INDEX idx_taxon_identified_taxon_name ON public.taxon_identified (taxon_name);
 
 ALTER TABLE darwin2.taxonomy ALTER COLUMN parent_ref DROP NOT NULL;
 ALTER TABLE darwin2.darwin_flat ALTER COLUMN taxon_parent_ref DROP NOT NULL;
@@ -428,6 +463,10 @@ CREATE TABLE public.bota_taxa_keywords AS
 
 ALTER TABLE public.bota_taxa_keywords ADD CONSTRAINT pk_bota_taxa_keywords PRIMARY KEY (id);
 
+CREATE INDEX idx_bota_taxa_keywords_taxon_identified_ref ON public.bota_taxa_keywords (taxon_identified_ref);
+CREATE INDEX idx_bota_taxa_keywords_genusormonomial ON public.bota_taxa_keywords (genusormonomial);
+CREATE INDEX idx_bota_taxa_keywords_firstepithet ON public.bota_taxa_keywords (firstepithet);
+
 CREATE SEQUENCE public.zoo_taxa_keywords_id_seq;
 
 CREATE TABLE public.zoo_taxa_keywords AS
@@ -460,6 +499,10 @@ CREATE TABLE public.zoo_taxa_keywords AS
 );
 
 ALTER TABLE public.zoo_taxa_keywords ADD CONSTRAINT pk_zoo_taxa_keywords PRIMARY KEY (id);
+
+CREATE INDEX idx_zoo_taxa_keywords_taxon_identified_ref ON public.zoo_taxa_keywords (taxon_identified_ref);
+CREATE INDEX idx_zoo_taxa_keywords_genusormonomial ON public.zoo_taxa_keywords (genusormonomial);
+CREATE INDEX idx_zoo_taxa_keywords_speciesepithet ON public.zoo_taxa_keywords (speciesepithet);
 
 create sequence public.mineral_identified_id_seq;
 
@@ -504,6 +547,10 @@ insert into mineral_identified
       
 );
 
+CREATE INDEX idx_mineral_identified_identification_ref ON public.mineral_identified (identification_ref);
+CREATE INDEX idx_mineral_identified_mineral_ref ON public.mineral_identified (mineral_ref);
+CREATE INDEX idx_mineral_identified_mineral_name ON public.mineral_identified (mineral_name);
+
 CREATE SEQUENCE public.identifier_abcd_id_seq;
 
 CREATE TABLE public.identifier as
@@ -523,6 +570,9 @@ CREATE TABLE public.identifier as
 
 ALTER TABLE public.identifier ADD CONSTRAINT pk_identifier PRIMARY KEY (id);
 
+CREATE INDEX idx_identifier_identification_ref ON public.identifier (identification_ref);
+CREATE INDEX idx_identifier_people_ref ON public.identifier (people_ref);
+
 CREATE SEQUENCE public.identifier_institution_id_seq;
 
 CREATE TABLE public.identifier_instituion as
@@ -541,6 +591,9 @@ CREATE TABLE public.identifier_instituion as
 );
 
 ALTER TABLE public.identifier_instituion ADD CONSTRAINT pk_identifier_institution PRIMARY KEY (id);
+
+CREATE INDEX idx_identifier_instituion_identification_ref ON public.identifier_instituion (identification_ref);
+CREATE INDEX idx_identifier_instituion_people_ref ON public.identifier_instituion (people_ref);
 
 CREATE SEQUENCE public.flat_properties_id_seq;
 
@@ -633,6 +686,8 @@ UNION
 );
 
 ALTER TABLE public.flat_properties ADD CONSTRAINT pk_flat_properties PRIMARY KEY (id);
+
+CREATE INDEX idx_flat_properties_flat_id ON public.flat_properties (flat_id);
 
 CREATE TABLE public.users_abc as 
 (
@@ -755,7 +810,9 @@ CREATE TABLE public.parent_taxonomy AS
 );
 
 ALTER TABLE public.parent_taxonomy ADD CONSTRAINT pk_parent_taxonomy PRIMARY KEY (id);
+
 CREATE INDEX idx_parent_taxon_child_id ON public.parent_taxonomy (child_id);
+CREATE INDEX idx_parent_taxon_parent_id ON public.parent_taxonomy (parent_id);
 
 ALTER TABLE public.darwin_flat 
   DROP COLUMN building,
