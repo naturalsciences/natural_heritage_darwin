@@ -2171,15 +2171,15 @@ create table loan_items (
 ); 
 
 
-comment on table loans is 'Table holding an item of a loan. It may be a part from darwin or only an generic item';
+comment on table loan_items is 'Table holding an item of a loan. It may be a part from darwin or only an generic item';
 
-comment on column loans.id is 'Unique identifier of record';
-comment on column loans.loan_ref is 'Mandatory Reference to a loan';
-comment on column loans.from_date is 'Date when the item was sended';
-comment on column loans.to_date is 'Date when the item was recieved back';
-comment on column loans.ig_ref is 'Optional ref to an IG stored in the igs table';
-comment on column loans.part_ref is 'Optional reference to a Darwin Part';
-comment on column loans.details is 'Textual details describing the item';
+comment on column loan_items.id is 'Unique identifier of record';
+comment on column loan_items.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_items.from_date is 'Date when the item was sended';
+comment on column loan_items.to_date is 'Date when the item was recieved back';
+comment on column loan_items.ig_ref is 'Optional ref to an IG stored in the igs table';
+comment on column loan_items.part_ref is 'Optional reference to a Darwin Part';
+comment on column loan_items.details is 'Textual details describing the item';
 
 
 create sequence loan_rights_id_seq;
