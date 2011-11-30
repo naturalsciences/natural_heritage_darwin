@@ -2123,3 +2123,83 @@ comment on column staging_people.people_sub_type is 'Type of "people" associated
 comment on column staging_people.people_ref is 'Reference of person concerned - id field of people table';
 comment on column staging_people.order_by is 'Integer used to order the persons in a list';
 comment on column staging_people.formated_name is 'full name of the people';
+
+
+create sequence loans_id_seq;
+
+create table loans (
+  id integer not null default nextval('loans_id_seq'),
+  name varchar not null default '',
+  description varchar not null default '',
+  status varchar not null default 'new', 
+  from_date date not null default now(),
+  to_date date,
+  effective_to_date date,
+  
+  constraint pk_loans primary key (id)
+  );
+
+comment on table loans is 'Table holding an entire loan made of multiple loan items may also be linked to other table as comment, properties , ...';
+
+comment on column loans.id is 'Unique identifier of record';
+comment on column loans.name is 'Global name of the loan. May be a sort of code of other naming scheme';
+comment on column loans.description is 'Description of the meaning of the loan';
+comment on column loans.status  is 'Current status of the loan in a list (new, closed, running, ...)';
+comment on column loans.from_date  is 'Date of the start of the loan';
+comment on column loans.to_date  is 'Planned date of the end of the loan';
+comment on column loans.effective_to_date is 'Effective end date of the loan or null if it''s running';
+
+
+  
+create sequence loan_items_id_seq;
+
+create table loan_items (
+  id integer not null default nextval('loan_items_id_seq'),
+  loan_ref integer not null,
+  ig_ref integer,
+  from_date date,
+  to_date date,
+  part_ref integer,
+  details varchar default '',
+  
+  constraint pk_loan_items primary key (id),
+  constraint fk_loan_items_ig foreign key (ig_ref) references igs(id),
+  constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
+  constraint fk_loan_items_part_ref foreign key (part_ref) references specimen_parts(id) on delete set null,
+
+  constraint unique unq_loan_items (loan_ref, part_ref)
+); 
+
+
+comment on table loans is 'Table holding an item of a loan. It may be a part from darwin or only an generic item';
+
+comment on column loans.id is 'Unique identifier of record';
+comment on column loans.loan_ref is 'Mandatory Reference to a loan';
+comment on column loans.from_date is 'Date when the item was sended';
+comment on column loans.to_date is 'Date when the item was recieved back';
+comment on column loans.ig_ref is 'Optional ref to an IG stored in the igs table';
+comment on column loans.part_ref is 'Optional reference to a Darwin Part';
+comment on column loans.details is 'Textual details describing the item';
+
+
+create sequence loan_rights_id_seq;
+
+create table loan_rights (
+  id integer not null default nextval('loan_rights_id_seq'),
+  loan_ref integer not null,
+  user_ref integer not null,
+  has_encoding_right boolean not null default false,
+
+  constraint pk_loan_rights primary key (id),
+  constraint fk_loan_rights_loan_ref foreign key (loan_ref) references loans(id) on delete cascade,
+  constraint fk_loan_rights_user_ref foreign key (user_ref) references users(id) on delete cascade,
+  constraint unique unq_loan_rights (loan_ref, user_ref)
+);
+
+
+comment on table loan_rights is 'Table describing rights into an entire loan (if user is in the table he has at least viewing rights)';
+
+comment on column loan_rights.id is 'Unique identifier of record';
+comment on column loan_rights.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_rights.user_ref is 'Mandatory Reference to a user';
+comment on column loan_rights.has_encoding_right is 'Bool saying if the user can edit a loan';
