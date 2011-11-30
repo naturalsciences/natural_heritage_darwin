@@ -2167,7 +2167,7 @@ create table loan_items (
   constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
   constraint fk_loan_items_part_ref foreign key (part_ref) references specimen_parts(id) on delete set null,
 
-  constraint unique unq_loan_items (loan_ref, part_ref)
+  constraint unq_loan_items unique(loan_ref, part_ref)
 ); 
 
 
@@ -2193,7 +2193,7 @@ create table loan_rights (
   constraint pk_loan_rights primary key (id),
   constraint fk_loan_rights_loan_ref foreign key (loan_ref) references loans(id) on delete cascade,
   constraint fk_loan_rights_user_ref foreign key (user_ref) references users(id) on delete cascade,
-  constraint unique unq_loan_rights (loan_ref, user_ref)
+  constraint unq_loan_rights unique (loan_ref, user_ref)
 );
 
 
