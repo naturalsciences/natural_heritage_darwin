@@ -371,3 +371,10 @@
   DROP INDEX IF EXISTS idx_darwin_flat_part_ref_part_count_max;
   DROP INDEX IF EXISTS idx_gin_darwin_flat_gtu_country_tags;
   DROP INDEX IF EXISTS idx_staging_people_record;
+
+  DROP INDEX IF EXISTS idx_loans_status;
+  DROP INDEX IF EXISTS idx_loan_items_loan_ref;
+  DROP INDEX IF EXISTS idx_loan_items_ig_ref;
+  DROP INDEX IF EXISTS idx_loan_items_part_ref;
+  DROP INDEX IF EXISTS idx_loan_rights_ig_ref;
+  DROP INDEX IF EXISTS idx_loan_rights_part_ref;

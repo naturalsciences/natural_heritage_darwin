@@ -328,3 +328,18 @@ CREATE INDEX CONCURRENTLY idx_expeditions_expedition_to_date on expeditions(expe
 CREATE INDEX CONCURRENTLY idx_users_tracking_modification_date_time on users_tracking(modification_date_time);
 
 
+/** LOANS **/
+
+CREATE INDEX CONCURRENTLY idx_loans_status on loans(status);
+CREATE INDEX CONCURRENTLY idx_loan_items_loan_ref on loan_items(loan_ref);
+CREATE INDEX CONCURRENTLY idx_loan_items_ig_ref on loan_items(ig_ref);
+CREATE INDEX CONCURRENTLY idx_loan_items_part_ref on loan_items(part_ref);
+
+
+CREATE INDEX CONCURRENTLY idx_loan_rights_ig_ref on loan_rights(loan_ref);
+CREATE INDEX CONCURRENTLY idx_loan_rights_part_ref on loan_rights(user_ref);
+
+
+
+
+
