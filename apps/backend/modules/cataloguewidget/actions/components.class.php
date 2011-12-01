@@ -69,4 +69,11 @@ class cataloguewidgetComponents extends sfComponents
       if(substr($taxon->getPath(),0,6) == '/-1/14' || $taxon->getId() == '141538') $this->kingdom = 'botany' ;   
     }    
   }
+  public function executeInformativeWorkflow()
+  { 
+    $this->form = new informativeWorkflowForm(null, array('available_status' => informativeWorkflow::getAvailableStatus($this->getUser()->getDbUserType()))) ;
+    $this->informativeWorkflow = Doctrine::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
+    if(!isset($this->view)) $this->view = false ;
+  }
+  
 }

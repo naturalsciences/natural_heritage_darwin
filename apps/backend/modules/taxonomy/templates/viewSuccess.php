@@ -13,7 +13,7 @@ $(document).ready(function ()
    });
 });
 </script>
-
+<?php include_partial('catalogue/commonJs');?>
 <?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'catalogue_taxonomy','eid'=> $form->getObject()->getId(), 'view' => true)); ?>
 <?php slot('title', __('View Taxonomic unit'));  ?>
 <div class="page">
@@ -75,11 +75,13 @@ $(document).ready(function ()
       <?php endif;?>
     </tbody>
   </table>
-</div>  
+</div>
+ <div class="view_mode">  
  <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,
 	'category' => 'cataloguewidgetview',
 	'columns' => 1,
 	'options' => array('eid' => $form->getObject()->getId(), 'table' => 'taxonomy', 'view' => true)
 	)); ?>
+	</div>
 </div>

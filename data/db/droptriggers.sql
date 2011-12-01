@@ -398,7 +398,7 @@ DROP TRIGGER trg_chk_ref_record_identifications ON identifications;
 
 DROP TRIGGER trg_chk_ref_record_class_vernacular_names ON class_vernacular_names;
 
-DROP TRIGGER trg_chk_ref_record_users_workflow ON users_workflow;
+DROP TRIGGER trg_chk_ref_record_informative_workflow ON informative_workflow;
 
 DROP TRIGGER trg_chk_ref_record_collection_maintenance ON collection_maintenance;
 

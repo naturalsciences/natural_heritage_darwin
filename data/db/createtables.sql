@@ -879,26 +879,28 @@ comment on column collections_rights.db_user_type is 'Integer is representing a 
 -- comment on column users_coll_rights_asked.with_sub_collections is 'Rights are asked on a single collection or on this collection with all the sub-collections included ?';
 --
 
-create sequence users_workflow_id_seq;
+create sequence informative_workflow_id_seq;
 
-create table users_workflow
+create table informative_workflow
        (
-        id integer not null default nextval('users_workflow_id_seq'),
-        user_ref integer not null,
-        status varchar not null default 'to check',
+        id integer not null default nextval('informative_workflow_id_seq'),
+        user_ref integer,
+        formated_name varchar not null default 'anonymous',
+        status varchar not null default 'suggestion',
         modification_date_time update_date_time,
-        comment varchar,
-        constraint pk_users_workflow primary key (id),
-        constraint fk_users_workflow_users foreign key (user_ref) references users(id) on delete cascade
+        comment varchar not null ,
+        constraint pk_informative_workflow primary key (id),
+        constraint fk_informative_workflow_users foreign key (user_ref) references users(id)
        )
 inherits (template_table_record_ref);
-comment on table users_workflow is 'Workflow information for each record encoded';
-comment on column users_workflow.user_ref is 'Reference of user - id field of users table';
-comment on column users_workflow.referenced_relation is 'Reference-Name of table concerned';
-comment on column users_workflow.record_id is 'ID of record a workflow is defined for';
-comment on column users_workflow.status is 'Record status: to correct, to be corrected or published';
-comment on column users_workflow.modification_date_time is 'Date and time of status change - last date/time is used as actual status, but helps also to keep an history of status change';
-comment on column users_workflow.comment is 'Complementary comments';
+comment on table informative_workflow is 'Workflow information for each record encoded';
+comment on column informative_workflow.user_ref is 'Reference of user - id field of users table';
+comment on column informative_workflow.formated_name is 'used to allow non registered user to add a workflow' ;
+comment on column informative_workflow.referenced_relation is 'Reference-Name of table concerned';
+comment on column informative_workflow.record_id is 'ID of record a workflow is defined for';
+comment on column informative_workflow.status is 'Record status number: to correct, to be corrected or published ';
+comment on column informative_workflow.modification_date_time is 'Date and time of status change - last date/time is used as actual status, but helps also to keep an history of status change';
+comment on column informative_workflow.comment is 'Complementary comments';
 
 create sequence users_tracking_id_seq;
 

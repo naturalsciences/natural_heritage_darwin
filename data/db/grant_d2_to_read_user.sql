@@ -26,7 +26,7 @@
  GRANT SELECT ON darwin2.people_addresses TO d2viewer;
  GRANT SELECT ON darwin2.template_people_users_addr_common TO d2viewer;
  GRANT SELECT ON darwin2.multimedia TO d2viewer;
- GRANT SELECT ON darwin2.users_workflow TO d2viewer;
+ GRANT SELECT ON darwin2.informative_workflow TO d2viewer;
  GRANT SELECT ON darwin2.people_multimedia TO d2viewer;
  GRANT SELECT ON darwin2.template_people_users_multimedia TO d2viewer;
  GRANT SELECT ON darwin2.collections TO d2viewer;

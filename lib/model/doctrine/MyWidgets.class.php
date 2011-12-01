@@ -16,7 +16,8 @@ class MyWidgets extends BaseMyWidgets
         "synonym" => "This widget allows you to add synonyms, isonyms or homonyms of the catalogue item",
         "relationRecombination" => "In this widget you can add the original combination(s) that constitutes the present catalogue item",        
         "collectionsCodes" => "This widget allows you to preset the default prefix and/or separator and/or code and/or separator and/or suffix of the main code that will be used when choosing this collection in the specimen screen",
-        "insurances" => "In this widget you can specify one or more values of the whole collection belonging to the same IG number as estimated by a particular insurance institution and /or on a particular date.",        
+        "insurances" => "In this widget you can specify one or more values of the whole collection belonging to the same IG number as estimated by a particular insurance institution and /or on a particular date.", 
+        "informativeWorkflow" => "This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, an explanation when a modification is added. The number of options in the status field depend on your privileges", 
         ),
     "individualswidget"=>array(
         "refIdentifications" => "This widget allows you to add some information regarding the determination of either the type, sex, stage, social status and/or rock formation. You can potentially add the date on which the determination was made, what value was given as well as the determinators' names.",
@@ -29,6 +30,7 @@ class MyWidgets extends BaseMyWidgets
         "type" => "This widget allows you to add the information regarding the status of the individual e.g. holotype. You can, however, also add non conformistic nomenclatura types",
         "sex" => "This widget allows you to enter the sex of a particular individual. You can also add a specific attribute e.g. pregnant with eggs",
         "extLinks" => "This widget allows you to add a URL address to the record (ex : http://www.naturalsciences.be)", 
+        "informativeWorkflow" => "This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges",        
         ),
     "partwidget"=> array(
         "complete" => "This widget allows you to add information with regards to the physical state of the object. E.g. damaged. You can also indicate whether you have a complete object or a partial object by using the tickbox.",
@@ -43,6 +45,7 @@ class MyWidgets extends BaseMyWidgets
         "refCodes" => "This widget allows you to link one or more codes to an object. You can either associate a prefix, a separator, a code, a separator and/or a suffix to each type of code (main, temporary,etc.)",
         "maintenance" => "This widget shows you types of actions or observations with regards to the object. This can e.g. show you the date on which a person added alcohol to the container that houses the object or it could be the date on which a person observed that an object seemed to be broken. Information in this widget can, however, only be inserted by using the mass update functionality!",
         "refProperties" => "This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= measurement, sub type= weight, qualifier= shell, method= electronic, tool= scale, value units= g, value=2",
+        "informativeWorkflow" => "This widget allow you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges",        
         ),      
     "peoplewidget"=>array(
         "comment" => "This widget is used to add commentary.If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however",
@@ -52,6 +55,7 @@ class MyWidgets extends BaseMyWidgets
         "address" => "This widget allows you to add one or more addresses, it can be home address, work or more. The locality and the country are required fields", 
         "relation" => "This widget will allow you to add e.g. the institution/department/section the person works/worked for",
         "extLinks" => "This widget allows you to add a URL address to the record (ex : http://www.naturalsciences.be)",
+        "informativeWorkflow" => "This widget allow you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges",        
         ),
     "specimensearchwidget"=>array(
         "localisation" => "Via this widget you can search a specimen/individual/part by looking up a particular position in a particular depositary.",
@@ -79,6 +83,7 @@ class MyWidgets extends BaseMyWidgets
         "refIgs" => "Via this widget you can either look up by General inventory number (I.G.) or by looking up in a range of I.G. creation dates.",
         "acquisitions" => "Via this widget you can either look up by type of acquisition or by looking up in a range acquisition dates.",        
         "people_role" => "Via this widget you can perform a search in order to find all records where a specific person (or institution) appears. You can also choose one or more roles for this person (such as collector, identifier and/or donator/seller)",
+        "informativeWorkflow" => "Help to be written",        
         ),
     "specimenwidget"=> array(
         "refChrono" => "This widget allows you to add the reference to a chonostratigraphic unit.",
@@ -102,6 +107,7 @@ class MyWidgets extends BaseMyWidgets
         "tool" => "This widget allows you to add one or more tools used to collect the specimen.",
         "refIdentifications" => "This widget allows you to add some information regarding the determination of either the taxonomic, lithostratigraphic, chronostratigraphic, mineralogic unit or rock formation. You can potentially add the date on which the determination was made, what value was given as well as the determinators' names.",
         "acquisitionCategory" => "This widget specifies the manner in which the specimen was obtained. E.g. it was part of a donation on the 01/01/2010.",
+        "informativeWorkflow" => "This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges",        
         ),
     "userswidget"=>array(
         "address" => "This widget allows you to add one or more addresses, it can be home address, work or more. The locality and the country are required fields", 

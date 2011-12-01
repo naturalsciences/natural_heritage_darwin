@@ -94,10 +94,12 @@ $(document).ready(function ()
     </tbody>
   </table>
 </div>  
+<div class="view_mode">
  <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,
 	'category' => 'cataloguewidgetview',
 	'columns' => 1,
 	'options' => array('eid' => $form->getObject()->getId(), 'table' => 'chronostratigraphy', 'view' => true)
 	)); ?>
+</div>
 </div>

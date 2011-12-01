@@ -46,7 +46,7 @@
  select setval('tag_groups_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.tag_groups));
  select setval('users_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.users));
  select setval('users_languages_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.users_languages));
- select setval('users_workflow_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.users_workflow));
+ select setval('informative_workflow_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.informative_workflow));
  select setval('users_comm_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.users_comm));
  select setval('users_addresses_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.users_addresses));
  select setval('users_login_info_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.users_login_infos));

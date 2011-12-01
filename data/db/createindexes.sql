@@ -32,7 +32,7 @@ CREATE INDEX CONCURRENTLY idx_collections_rights_db_user_type on collections_rig
 --CREATE INDEX CONCURRENTLY idx_users_coll_rights_asked_collection_ref on users_coll_rights_asked(collection_ref);
 --CREATE INDEX CONCURRENTLY idx_users_coll_rights_asked_user_ref on users_coll_rights_asked(user_ref);
 --CREATE INDEX CONCURRENTLY idx_record_visibilities on record_visibilities(user_ref);
-CREATE INDEX CONCURRENTLY idx_users_workflow_user_ref on users_workflow(user_ref);
+CREATE INDEX CONCURRENTLY idx_informative_workflow_user_ref on informative_workflow(user_ref);
 CREATE INDEX CONCURRENTLY idx_collection_maintenance_user_ref on collection_maintenance(people_ref);
 CREATE INDEX CONCURRENTLY idx_my_saved_searches_user_ref on my_saved_searches(user_ref);
 CREATE INDEX CONCURRENTLY idx_my_widgets_user_ref on my_widgets(user_ref);
@@ -198,7 +198,7 @@ CREATE INDEX CONCURRENTLY idx_users_languages_preferred_language on users_langua
 -- CREATE INDEX CONCURRENTLY idx_users_login_infos_login_system on users_login_infos(login_system);
 -- CREATE INDEX CONCURRENTLY idx_users_login_infos_login_type on users_login_infos(login_type);
 -- CREATE INDEX CONCURRENTLY idx_users_login_infos_user_name on users_login_infos(user_name);
-CREATE INDEX CONCURRENTLY idx_users_workflow_user_status on users_workflow(user_ref, status);
+CREATE INDEX CONCURRENTLY idx_informative_workflow_user_status on informative_workflow(user_ref, status);
 CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
 
 /*** GiST and eventual GIN Indexes for ts_vector fields ***/

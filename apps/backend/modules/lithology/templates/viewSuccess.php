@@ -80,11 +80,13 @@ $(document).ready(function ()
       <?php endif;?>
     </tbody>
   </table>
-</div>  
+</div>
+<div class="view_mode">  
  <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,
 	'category' => 'cataloguewidgetview',
 	'columns' => 1,
 	'options' => array('eid' => $form->getObject()->getId(), 'table' => 'lithology', 'view' => true)
 	)); ?>
+</div>
 </div>

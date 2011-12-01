@@ -60,4 +60,8 @@ class cataloguewidgetViewComponents extends sfComponents
   {
     $this->keywords = Doctrine::getTable('ClassificationKeywords')->findForTable($this->table, $this->eid);
   }
+  public function executeInformativeWorkflow()
+  {
+    $this->informativeWorkflow = Doctrine::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
+  }
 }

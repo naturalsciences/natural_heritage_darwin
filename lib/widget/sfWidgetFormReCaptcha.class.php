@@ -58,18 +58,31 @@ class sfWidgetFormReCaptcha extends sfWidgetForm
     $this->addOption('server_url_ssl', 'https://api-secure.recaptcha.net');
     $this->addOption('theme', 'clean');
     $this->addOption('culture', 'en');
+    $this->addOption('ajax', false);    
   }
 
   /**
    * @see sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
-  {
+  {  
     $server = $this->getServerUrl();
     $key = $this->getOption('public_key');
     $theme = $this->getOption('theme');
     $culture = $this->getOption('culture');
-
+    // if ajax option is true then the captcha need to be reloaded in ajax
+    if($this->getOption('ajax'))
+    {
+      return sprintf('
+        <script type="text/javascript">
+          $(document).ready(function() {
+            Recaptcha.create(\'%s\', \'captchadiv\', {
+              theme: \'%s\',
+              lang : \'%s\' });
+          });
+        </script>          
+       ', $key, $theme, $culture) ;   
+    }
     return sprintf('
     <script type="text/javascript">
     var RecaptchaOptions = {

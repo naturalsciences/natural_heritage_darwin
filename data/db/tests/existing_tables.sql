@@ -42,7 +42,7 @@ SELECT has_table('collections_rights','collections_rights exists');
 --SELECT has_table('collections_fields_visibilities','collections_fields_visibilities exists');
 --SELECT has_table('users_coll_rights_asked','users_coll_rights_asked exists');
 --SELECT has_table('record_visibilities','record_visibilities exists');
-SELECT has_table('users_workflow','users_workflow exists');
+SELECT has_table('informative_workflow','informative_workflow exists');
 SELECT has_table('users_tracking','users_tracking exists');
 SELECT has_table('collection_maintenance','collection_maintenance exists');
 SELECT has_table('my_saved_searches','my_saved_searches exists');

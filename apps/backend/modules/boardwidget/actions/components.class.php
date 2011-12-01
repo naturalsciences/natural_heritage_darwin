@@ -87,5 +87,10 @@ class boardwidgetComponents extends sfComponents
         echo __("Unable to parse statistics file");
       } 
     }    
+  }
+  
+  public function executeWorkflowsSummary()
+  {
+    $this->form = new InformativeWorkflowFormFilter() ;
   }  
 }

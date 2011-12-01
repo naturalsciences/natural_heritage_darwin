@@ -721,9 +721,13 @@ CREATE TRIGGER trg_chk_ref_record_class_vernacular_names AFTER INSERT OR UPDATE
         ON class_vernacular_names FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
 
-CREATE TRIGGER trg_chk_ref_record_users_workflow AFTER INSERT OR UPDATE
-        ON users_workflow FOR EACH ROW
+CREATE TRIGGER trg_chk_ref_record_informative_workflow AFTER INSERT OR UPDATE
+        ON informative_workflow FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
+
+CREATE trigger trg_chk_is_last_informative_workflow BEFORE INSERT
+	ON informative_workflow FOR EACH ROW
+	EXECUTE PROCEDURE fct_remove_last_flag();
 
 CREATE TRIGGER trg_chk_ref_record_collection_maintenance AFTER INSERT OR UPDATE
         ON collection_maintenance FOR EACH ROW
