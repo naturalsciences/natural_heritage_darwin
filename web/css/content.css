@@ -682,6 +682,11 @@ li.uncheck span
   vertical-align: middle ;
 }
 
+.pager_nav input
+{
+  border: 1px solid black !important;
+}
+
 /* Tags */
 .purposed_tags
 {

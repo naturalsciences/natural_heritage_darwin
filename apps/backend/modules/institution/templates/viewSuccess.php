@@ -27,10 +27,12 @@
     </tbody>
   </table>
 </div>  
+<div class="view_mode">
  <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,
 	'category' => 'peoplewidgetview',
 	'columns' => 1,
 	'options' => array('eid' => $form->getObject()->getId(), 'table' => 'institution', 'view' => true)
 	)); ?>
+</div>
 </div>

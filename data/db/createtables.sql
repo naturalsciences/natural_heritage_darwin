@@ -885,12 +885,12 @@ create table informative_workflow
        (
         id integer not null default nextval('informative_workflow_id_seq'),
         user_ref integer,
-        formated_name varchar not null default 'annonymous',
-        status varchar not null default 0,
+        formated_name varchar not null default 'anonymous',
+        status varchar not null default 'suggestion',
         modification_date_time update_date_time,
-        comment varchar not null default 'to check',
+        comment varchar not null ,
         constraint pk_informative_workflow primary key (id),
-        constraint fk_informative_workflow_users foreign key (user_ref) references users(id) on delete cascade
+        constraint fk_informative_workflow_users foreign key (user_ref) references users(id)
        )
 inherits (template_table_record_ref);
 comment on table informative_workflow is 'Workflow information for each record encoded';

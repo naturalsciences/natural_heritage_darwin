@@ -73,6 +73,7 @@ class cataloguewidgetComponents extends sfComponents
   { 
     $this->form = new informativeWorkflowForm(null, array('available_status' => informativeWorkflow::getAvailableStatus($this->getUser()->getDbUserType()))) ;
     $this->informativeWorkflow = Doctrine::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
+    if(!isset($this->view)) $this->view = false ;
   }
   
 }

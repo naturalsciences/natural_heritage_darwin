@@ -12,11 +12,7 @@ class InformativeWorkflowForm extends BaseInformativeWorkflowForm
 {
   public function configure()
   {
-    unset(
-      $this['id'],
-      $this['modification_date_time'],
-      $this['people_ref'],
-      $this['formated_name']);
+    $this->useFields(array('status','comment')) ;
     $statuses = $this->options['available_status'] ; 
     $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
         'choices'  => $statuses,

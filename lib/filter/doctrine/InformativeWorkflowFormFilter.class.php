@@ -12,5 +12,20 @@ class InformativeWorkflowFormFilter extends BaseInformativeWorkflowFormFilter
 {
   public function configure()
   {
+    $this->useFields(array('status'));
+    $this->addPagerItems();
+    $this->widgetSchema->setNameFormat('searchWorkflows[%s]');        
+    $status = informativeWorkflow::getAvailableStatus('all')  ;  
+
+    $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
+        'choices'  => $status,
+    ));    
+    $this->validatorSchema['status'] = new sfValidatorChoice(array('choices'  => array_keys($status), 'required' => true));      
   }
+  
+  public function doBuildQuery(array $values)
+  {
+    $query = Doctrine::getTable("informativeWorkflow")->getAllLatestWorkflow($this->options['user'],$values['status']);
+    return $query ;
+  }  
 }

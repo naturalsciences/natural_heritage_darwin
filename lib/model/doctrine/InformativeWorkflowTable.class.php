@@ -36,12 +36,33 @@ class InformativeWorkflowTable extends DarwinTable
   public function findForTable($table_name, $record_id)
   {
     $q = self::prepareQuery($table_name, $record_id);
+    $q->limit(5) ;
     return $q->execute() ;
   }
 
-  public function findOneForTable($table_name, $record_id)
+  public function findAllForTable($table_name, $record_id)
   {
-    $q = self::prepareQuery($table_name, $record_id);
-    return $q->FetchOne() ;
+    $q = self::prepareQuery($table_name, $record_id);    
+    return $q->execute() ;
   }  
+  
+  public function getAllLatestWorkflow($user,$status)
+  {
+    $q = Doctrine_Query::create()
+      ->from('InformativeWorkflow i')
+      ->where('is_last=?',true) ;
+    if($status != 'all') $q->addWhere('status=?',$status) ;      
+    if($user->isA(Users::ADMIN))
+    {      
+	    $q->AndWhereIn('referenced_relation',array('specimens','specimen_individuals','specimen_parts'))   ;
+	    return $q ;	 
+    }	
+    $q->AddWhere("EXISTS(Select distinct collection_ref from darwin_flat where case
+          when i.referenced_relation = 'specimens' then spec_ref = i.record_id
+          when i.referenced_relation = 'specimen_individuals' then individual_ref = i.record_id
+          when i.referenced_relation = 'specimen_parts' then part_ref = i.record_id END
+          AND collection_ref IN (select fct_search_authorized_encoding_collections(".$user->getId().")))");
+    
+    return $q ; 
+  }
 }

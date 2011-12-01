@@ -276,6 +276,12 @@
         </tr>
       </table>
     </div>
+
+    <h2 class="title"><?php echo __("You think there's a mistake ? please suggest us a correction") ?></h2>  
+    <div class="suggestion_zone">
+      <?php include_partial('suggestion', array('form' => $form)) ; ?>    
+    </div>
+      
   <div class="check_right"> 
     <input type="button" id="close_butt" value="<?php echo __('Close this record'); ?>">
   </div>  

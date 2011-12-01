@@ -339,7 +339,10 @@ input:focus, textarea:focus
   border:1px solid #C1CF56;
 }
 
-
+.panel_view .catalogue_table input:focus,.panel_view .catalogue_table_view  textarea:focus
+{
+  border:1px solid #5BAABD !important;
+}
 
 .login input:focus, .login textarea:focus
 {
@@ -1024,6 +1027,15 @@ td.left_tabed
 {
   border-bottom: 1px solid #C1CF56;
 }
+.catalogue_table thead.empty, .catalogue_table_view thead.empty
+{
+border-bottom: none ;
+}
+
+.catalogue_table thead.workflow, .catalogue_table_view thead.workflow
+{
+  border-bottom: 1px solid grey;
+}
 
 .catalogue_table_view thead
 {
@@ -1662,16 +1674,30 @@ th .error_list
   display: block;
 }
 
-fieldset.opened
+.panel_view fieldset,.view_mode fieldset, .view_mode input:focus, .view_mode textarea:focus
 {
   border: 1px solid #5BAABD ;
   cursor : pointer ;
 }
 
-fieldset.opened > legend
+.panel_view fieldset > legend,.view_mode fieldset > legend
 {
   padding: 3px ;
   border: 1px solid #5BAABD ;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;  
+}
+
+.panel fieldset
+{
+  border: 1px solid #C1CF56 ;
+  cursor : pointer ;
+}
+
+.panel fieldset > legend
+{
+  padding: 3px ;
+  border: 1px solid #C1CF56 ;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;  
 }
@@ -2620,7 +2646,7 @@ body .ui-tooltip, body .qtip
 
 #ui-tooltip-modal .ui-tooltip-titlebar
 {
-  background-color:#5BABBD;
+  background-color:#5BABBD ;
   color:white;
 }
 
@@ -2632,6 +2658,10 @@ body .ui-tooltip, body .qtip
 {
   background-color:#C1CF56 !important;
   color:white;
+}
+.dialog-modal-view .ui-tooltip-titlebar
+{
+  background-color:grey !important;
 }
 /* custom appearence for input type file */
 #divFile

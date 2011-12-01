@@ -12,8 +12,69 @@
  */
 class InformativeWorkflow extends BaseInformativeWorkflow
 {
+  private static $status = array(
+      'all' => array('all' => 'All','checked' => 'Checked','suggestion' => 'Suggestion','to_check' => 'To check'),
+      Users::REGISTERED_USER => array('suggestion' => 'Suggestion'),
+      Users::ENCODER => array('to_check' => 'To check'),
+      Users::MANAGER => array('checked' => 'Checked')
+    );
+    
+  public function getFormattedStatus()
+  {
+    return self::$status['all'][$this->getStatus()] ;
+  }
+ 
+  /* if $user _right = all then we want all the status for the filter */
   public static function getAvailableStatus($user_right)
   { 
-    return array('suggestion' => 'Suggestion');
+    try{
+        $i18n_object = sfContext::getInstance()->getI18n();
+    }
+    catch( Exception $e )
+    {
+        return self::$status[$user_right];
+    }
+    return array_map(array($i18n_object, '__'), self::$status[$user_right]);
+  }
+  
+  public function getLink()
+  {
+    $result = $this->getLinkforKnownTable($this->_get('referenced_relation') , $this->_get('record_id'));
+    if($result)
+      return $result;
+    $result = $this->getLinkforRefTable($this->_get('referenced_relation') , $this->_get('record_id'));
+    if($result)
+      return $result;
+    return "";
+  }
+  
+  protected function getLinkforKnownTable($table, $id)
+  {
+    switch($table)
+    {
+      case 'collections':
+        $link = 'collection/view?id='.$id; break;
+      case 'specimens':
+        $link = 'specimen/view?id='.$id; break;
+      case 'specimen_individuals':
+        $link = 'individuals/view?id='.$id; break;
+      case 'specimen_parts':
+        $link = 'parts/view?id='.$id; break;
+      case 'expeditions':
+        $link = 'expedition/view?id='.$id; break;
+      case 'taxonomy':
+      case 'lithology':
+      case 'lithostratigraphy':
+      case 'chronostratigraphy':
+      case 'mineralogy':
+      case 'people':
+      case 'insurances':
+      case 'igs':
+      case 'gtu':
+        $link = $table.'/view?id='.$id; break;
+      default:
+        $link = false; break;
+    }
+    return $link;  
   }
 }
