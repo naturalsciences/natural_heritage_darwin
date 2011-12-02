@@ -264,8 +264,13 @@ CREATE TABLE public.collectors as
                    (
                      darwin2.people as p
                      left join 
-                     darwin2.people as ins
-                     on p.parent_ref = ins.id and ins.is_physical = false
+                     (
+                       darwin2.people as ins
+                       inner join
+                       darwin2.people_relationships as pr
+                       on ins.id = pr.person_2_ref and ins.is_physical = false
+                     )
+                     on p.id = pr.person_1_ref
                    )
                  on c.people_ref = p.id and p.is_physical = true
                ) 
@@ -321,8 +326,13 @@ CREATE TABLE public.donators as
                    (
                      darwin2.people as p
                      left join 
-                     darwin2.people as ins
-                     on p.parent_ref = ins.id and ins.is_physical = false
+                     (
+                       darwin2.people as ins
+                       inner join
+                       darwin2.people_relationships as pr
+                       on ins.id = pr.person_2_ref and ins.is_physical = false
+                     )
+                     on p.id = pr.person_1_ref
                    )
                  on d.people_ref = p.id and p.is_physical = true
                ) 
