@@ -247,92 +247,114 @@ CREATE SEQUENCE public.collectors_abcd_id_seq;
 CREATE TABLE public.collectors as
 (
   select 
-  nextval('public.collectors_abcd_id_seq') as id,
-  f.id as flat_id,
-  c.people_ref,
-  c.order_by
-  FROM  darwin2.darwin_flat f
-  inner join darwin2.catalogue_people as c ON f.spec_ref = c.record_id  AND c.referenced_relation = 'specimens'
-  WHERE 
-    c.people_type = 'collector'
-    AND exists (select 1 from darwin2.people p where p.id = c.people_ref and is_physical = true)
+    nextval('public.collectors_abcd_id_seq') as id,
+    f.id as flat_id,
+    c.order_by,
+    ins.formated_name as institution_formated_name,
+    p.formated_name as people_formated_name,
+    p.formated_name_indexed as people_sort_by,
+    p.family_name as people_family_name,
+    p.given_name as people_given_name,
+    p.title as people_prefix
+  FROM  
+    darwin2.darwin_flat f
+    inner join (
+                 darwin2.catalogue_people as c 
+                 inner join
+                   (
+                     darwin2.people as p
+                     left join 
+                     darwin2.people as ins
+                     on p.parent_ref = ins.id and ins.is_physical = false
+                   )
+                 on c.people_ref = p.id and p.is_physical = true
+               ) 
+    on f.spec_ref = c.record_id  AND c.referenced_relation = 'specimens' AND c.people_type = 'collector'
+  union
+  select
+    nextval('public.collectors_abcd_id_seq') as id,
+    f.id as flat_id,
+    c.order_by,
+    p.formated_name as institution_formated_name,
+    null::varchar as people_formated_name,
+    null::varchar  as people_sort_by,
+    null::varchar  as people_family_name,
+    null::varchar  as people_given_name,
+    null::varchar  as people_prefix
+  FROM  
+    darwin2.darwin_flat f
+    inner join (
+                 darwin2.catalogue_people as c 
+                 inner join
+                 darwin2.people as p
+                 on c.people_ref = p.id and p.is_physical = false
+               ) 
+    on f.spec_ref = c.record_id  AND c.referenced_relation = 'specimens' AND c.people_type = 'collector'
 );
 
 ALTER TABLE public.collectors ADD CONSTRAINT pk_collectors_abcd PRIMARY KEY (id);
 
 CREATE INDEX idx_collectors_flat_id ON public.collectors (flat_id);
-CREATE INDEX idx_collectors_people_ref ON public.collectors (people_ref);
 CREATE INDEX idx_collectors_order_by ON public.collectors (order_by);
-
-CREATE SEQUENCE public.collectors_institution_abcd_id_seq;
-
-CREATE TABLE public.collectors_institution as
-(
-  select 
-  nextval('public.collectors_institution_abcd_id_seq') as id,
-  f.id as flat_id,
-  c.people_ref,
-  c.order_by,
-  p.formated_name
-  FROM  darwin2.darwin_flat f
-  inner join darwin2.catalogue_people as c ON f.spec_ref = c.record_id  AND c.referenced_relation = 'specimens'
-  INNER JOIN darwin2.people p ON p.id = c.people_ref and is_physical = true
-  WHERE 
-    c.people_type = 'collector'
-  
-);
-
-ALTER TABLE public.collectors_institution ADD CONSTRAINT pk_collectors_institutions_abcd PRIMARY KEY (id);
-
-CREATE INDEX idx_collectors_institution_flat_id ON public.collectors_institution (flat_id);
-CREATE INDEX idx_collectors_institution_people_ref ON public.collectors_institution (people_ref);
-CREATE INDEX idx_collectors_institution_order_by ON public.collectors_institution (order_by);
+CREATE INDEX idx_collectors_people_formated_name ON public.collectors (people_formated_name) where people_formated_name is not null;
+CREATE INDEX idx_collectors_institution_formated_name ON public.collectors (institution_formated_name) where institution_formated_name is not null;
 
 CREATE SEQUENCE public.donators_abcd_id_seq;
 
 CREATE TABLE public.donators as
 (
   select 
-  nextval('public.donators_abcd_id_seq') as id,
-  f.id as flat_id,
-  c.people_ref,
-  c.order_by
-  FROM  darwin2.darwin_flat f
-  inner join darwin2.catalogue_people as c ON f.spec_ref = c.record_id  AND c.referenced_relation = 'specimens'
-  WHERE 
-    c.people_type = 'donator'
-    AND exists (select 1 from darwin2.people p where p.id = c.people_ref and is_physical = true)
+    nextval('public.donators_abcd_id_seq') as id,
+    f.id as flat_id,
+    d.order_by,
+    ins.formated_name as institution_formated_name,
+    p.formated_name as people_formated_name,
+    p.formated_name_indexed as people_sort_by,
+    p.family_name as people_family_name,
+    p.given_name as people_given_name,
+    p.title as people_prefix
+  FROM  
+    darwin2.darwin_flat f
+    inner join (
+                 darwin2.catalogue_people as d 
+                 inner join
+                   (
+                     darwin2.people as p
+                     left join 
+                     darwin2.people as ins
+                     on p.parent_ref = ins.id and ins.is_physical = false
+                   )
+                 on d.people_ref = p.id and p.is_physical = true
+               ) 
+    on f.spec_ref = d.record_id  AND d.referenced_relation = 'specimens' AND d.people_type = 'donator'
+  union
+  select
+    nextval('public.donators_abcd_id_seq') as id,
+    f.id as flat_id,
+    d.order_by,
+    p.formated_name as institution_formated_name,
+    null::varchar as people_formated_name,
+    null::varchar  as people_sort_by,
+    null::varchar  as people_family_name,
+    null::varchar  as people_given_name,
+    null::varchar  as people_prefix
+  FROM  
+    darwin2.darwin_flat f
+    inner join (
+                 darwin2.catalogue_people as d 
+                 inner join
+                 darwin2.people as p
+                 on d.people_ref = p.id and p.is_physical = false
+               ) 
+    on f.spec_ref = d.record_id  AND d.referenced_relation = 'specimens' AND d.people_type = 'donator'
 );
 
 ALTER TABLE public.donators ADD CONSTRAINT pk_donators_abcd PRIMARY KEY (id);
 
 CREATE INDEX idx_donators_flat_id ON public.donators (flat_id);
-CREATE INDEX idx_donators_people_ref ON public.donators (people_ref);
 CREATE INDEX idx_donators_order_by ON public.donators (order_by);
-
-CREATE SEQUENCE public.donators_institution_abcd_id_seq;
-
-CREATE TABLE public.donators_institution as
-(
-  select 
-  nextval('public.donators_institution_abcd_id_seq') as id,
-  f.id as flat_id,
-  c.people_ref,
-  c.order_by,
-  p.formated_name
-  FROM  darwin2.darwin_flat f
-  inner join darwin2.catalogue_people as c ON f.spec_ref = c.record_id  AND c.referenced_relation = 'specimens'
-  INNER JOIN darwin2.people p ON p.id = c.people_ref and is_physical = true
-  WHERE 
-    c.people_type = 'donator'
-  
-);
-
-ALTER TABLE public.donators_institution ADD CONSTRAINT pk_donators_institutions_abcd PRIMARY KEY (id);
-
-CREATE INDEX idx_donators_institution_flat_id ON public.donators_institution (flat_id);
-CREATE INDEX idx_donators_institution_people_ref ON public.donators_institution (people_ref);
-CREATE INDEX idx_donators_institution_order_by ON public.donators_institution (order_by);
+CREATE INDEX idx_donators_people_formated_name ON public.donators (people_formated_name) where people_formated_name is not null;
+CREATE INDEX idx_donators_institution_formated_name ON public.donators (institution_formated_name) where institution_formated_name is not null;
 
 create sequence public.identifications_abdc_id_seq;
 
@@ -362,7 +384,35 @@ CREATE TABLE public.taxon_identified as
     i.id as identification_ref,
     c.value_defined as taxon_name,
     CASE WHEN c.value_defined = f.taxon_name THEN f.taxon_ref ELSE null::integer END as taxon_ref,
-    CASE WHEN c.value_defined = f.taxon_name THEN f.taxon_parent_ref ELSE null::integer END as taxon_parent_ref
+    CASE WHEN c.value_defined = f.taxon_name THEN f.taxon_parent_ref ELSE null::integer END as taxon_parent_ref,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='AuthorTeam' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as AuthorTeam,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='AuthorTeamParenthesis' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as AuthorTeamParenthesis,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='AuthorTeamOriginalAndYear' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as AuthorTeamOriginalAndYear,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='AuthorTeamParenthesisAndYear' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as AuthorTeamParenthesisAndYear,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='CombinationAuthorTeamAndYear' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as CombinationAuthorTeamAndYear,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='CultivarGroupName' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as CultivarGroupName,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='CultivarName' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as CultivarName,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='GenusOrMonomial' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as GenusOrMonomial,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='Subgenus' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as Subgenus,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='FirstEpithet' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as FirstEpithet,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='SpeciesEpithet' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as SpeciesEpithet,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='InfraspecificEpithet' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as InfraspecificEpithet,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='Breed' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as Breed,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='NamedIndividual' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END LIMIT 1) as NamedIndividual
   FROM 
     public.identifications_abdc i
     INNER JOIN darwin2.identifications as c ON i.old_identification_id = c.id
@@ -400,7 +450,21 @@ insert into public.taxon_identified
     identification_ref,
     taxon_name,
     taxon_ref,
-    taxon_parent_ref
+    taxon_parent_ref,
+    AuthorTeam,
+    AuthorTeamParenthesis,
+    AuthorTeamOriginalAndYear,
+    AuthorTeamParenthesisAndYear,
+    CombinationAuthorTeamAndYear,
+    CultivarGroupName,
+    CultivarName,
+    GenusOrMonomial,
+    Subgenus,
+    FirstEpithet,
+    SpeciesEpithet,
+    InfraspecificEpithet,
+    Breed,
+    NamedIndividual
 )
 (
   select DISTINCT ON (i.id, f.taxon_name)
@@ -408,10 +472,37 @@ insert into public.taxon_identified
     i.id as identification_ref,
     f.taxon_name as taxon_name,
     f.taxon_ref as taxon_ref,
-    f.taxon_parent_ref as taxon_parent_ref
+    f.taxon_parent_ref as taxon_parent_ref,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='AuthorTeam' LIMIT 1) as AuthorTeam,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='AuthorTeamParenthesis' LIMIT 1) as AuthorTeamParenthesis,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='AuthorTeamOriginalAndYear' LIMIT 1) as AuthorTeamOriginalAndYear,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='AuthorTeamParenthesisAndYear' LIMIT 1) as AuthorTeamParenthesisAndYear,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='CombinationAuthorTeamAndYear' LIMIT 1) as CombinationAuthorTeamAndYear,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='CultivarGroupName' LIMIT 1) as CultivarGroupName,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='CultivarName' LIMIT 1) as CultivarName,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='GenusOrMonomial' LIMIT 1) as GenusOrMonomial,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='Subgenus' LIMIT 1) as Subgenus,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='FirstEpithet' LIMIT 1) as FirstEpithet,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='SpeciesEpithet' LIMIT 1) as SpeciesEpithet,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='InfraspecificEpithet' LIMIT 1) as InfraspecificEpithet,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='Breed' LIMIT 1) as Breed,
+    (SELECT keyword FROM darwin2.classification_keywords where 
+          referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='NamedIndividual' LIMIT 1) as NamedIndividual
     FROM  public.identifications_abdc i
     INNER JOIN darwin2.darwin_flat  f on i.flat_id = f.id
-
     WHERE i.is_current = true
       AND taxon_ref !=0 
 );
@@ -431,78 +522,6 @@ UPDATE darwin2.taxonomy SET parent_ref = NULL WHERE parent_ref = 0;
 UPDATE darwin2.darwin_flat SET taxon_parent_ref = NULL WHERE taxon_parent_ref = 0;
 
 SET SESSION session_replication_role = origin;  
-
-CREATE SEQUENCE public.bota_taxa_keywords_id_seq;
-
-CREATE TABLE public.bota_taxa_keywords AS
-(
-  SELECT
-  nextval('public.bota_taxa_keywords_id_seq') as id,  
-  ti.id as taxon_identified_ref,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='AuthorTeam' LIMIT 1) as AuthorTeam,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='AuthorTeamParenthesis' LIMIT 1) as AuthorTeamParenthesis,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='CultivarGroupName' LIMIT 1) as CultivarGroupName,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='CultivarName' LIMIT 1) as CultivarName,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='FirstEpithet' LIMIT 1) as FirstEpithet,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='GenusOrMonomial' LIMIT 1) as GenusOrMonomial,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='InfraspecificEpithet' LIMIT 1) as InfraspecificEpithet
-
-  FROM public.taxon_identified ti
-  INNER JOIN darwin2.taxonomy t on t.id = ti.taxon_ref
-  
-  WHERE
-    t.path like '/-1/141538/%' --PLANTEA
-);
-
-ALTER TABLE public.bota_taxa_keywords ADD CONSTRAINT pk_bota_taxa_keywords PRIMARY KEY (id);
-
-CREATE INDEX idx_bota_taxa_keywords_taxon_identified_ref ON public.bota_taxa_keywords (taxon_identified_ref);
-CREATE INDEX idx_bota_taxa_keywords_genusormonomial ON public.bota_taxa_keywords (genusormonomial);
-CREATE INDEX idx_bota_taxa_keywords_firstepithet ON public.bota_taxa_keywords (firstepithet);
-
-CREATE SEQUENCE public.zoo_taxa_keywords_id_seq;
-
-CREATE TABLE public.zoo_taxa_keywords AS
-(
-  SELECT
-  nextval('public.zoo_taxa_keywords_id_seq') as id,
-  ti.id as taxon_identified_ref,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='AuthorTeamOriginalAndYear' LIMIT 1) as AuthorTeamOriginalAndYear,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='AuthorTeamParenthesisAndYear' LIMIT 1) as AuthorTeamParenthesisAndYear,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='Breed' LIMIT 1) as Breed,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='CombinationAuthorTeamAndYear' LIMIT 1) as CombinationAuthorTeamAndYear,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='GenusOrMonomial' LIMIT 1) as GenusOrMonomial,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='NamedIndividual' LIMIT 1) as NamedIndividual,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='SpeciesEpithet' LIMIT 1) as SpeciesEpithet,
-  (SELECT keyword FROM darwin2.classification_keywords where 
-        referenced_relation = 'taxonomy' and record_id = t.id AND keyword_type='Subgenus' LIMIT 1) as Subgenus
-
-  FROM public.taxon_identified ti
-  INNER JOIN darwin2.taxonomy t on t.id = ti.taxon_ref
-  
-  WHERE
-    t.path like '/-1/1/%' --ANIMAL
-);
-
-ALTER TABLE public.zoo_taxa_keywords ADD CONSTRAINT pk_zoo_taxa_keywords PRIMARY KEY (id);
-
-CREATE INDEX idx_zoo_taxa_keywords_taxon_identified_ref ON public.zoo_taxa_keywords (taxon_identified_ref);
-CREATE INDEX idx_zoo_taxa_keywords_genusormonomial ON public.zoo_taxa_keywords (genusormonomial);
-CREATE INDEX idx_zoo_taxa_keywords_speciesepithet ON public.zoo_taxa_keywords (speciesepithet);
 
 create sequence public.mineral_identified_id_seq;
 
