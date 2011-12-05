@@ -101,10 +101,14 @@ CREATE TABLE public.flat_abcd as
 
   CASE WHEN individual_type = 'specimen' THEN null ELSE individual_type END as individual_simple_type,
 
-  coll.institution_ref as collection_institution_ref,
   i_col.formated_name as collection_institution_name,
-  coll.main_manager_ref as collection_main_manager_ref,
+  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM darwin2.people_addresses where person_user_ref = coll.institution_ref ORDER BY tag like '%pref%'LIMIT 1) as collection_institution_address,
+  ( SELECT entry FROM darwin2.people_comm where person_user_ref = coll.institution_ref and comm_type='e-mail' ORDER BY tag like '%pref%' LIMIT 1) as collection_institution_email,
   p_col.formated_name as collection_main_manager_name,
+  p_col.formated_name_indexed as collection_main_manager_sort_name,
+  p_col.family_name as collection_main_manager_inherited_name,
+  p_col.given_name as collection_main_manager_given_name,
+  p_col.title as collection_main_manager_title,
 
 -- GTU
   
@@ -155,9 +159,11 @@ CREATE TABLE public.flat_abcd as
 
   FROM darwin2.darwin_flat f
   
-  INNER JOIN darwin2.collections coll ON f.collection_ref = coll.id
-  INNER JOIN darwin2.people i_col ON i_col.id = coll.institution_ref
-  INNER JOIN darwin2.people p_col on p_col.id = coll.main_manager_ref
+  INNER JOIN (
+               darwin2.collections coll
+               INNER JOIN darwin2.people i_col ON i_col.id = coll.institution_ref
+               INNER JOIN darwin2.users p_col on p_col.id = coll.main_manager_ref
+             ) ON f.collection_ref = coll.id
   INNER JOIN darwin2.gtu ON f.gtu_ref = gtu.id
 
   LEFT JOIN darwin2.catalogue_properties cp1 ON cp1.referenced_relation = 'gtu' AND cp1.record_id = gtu.id AND cp1.property_type = 'physical measurement' and cp1.property_qualifier = 'depth'
@@ -395,6 +401,7 @@ CREATE TABLE public.taxon_identified as
     c.value_defined as taxon_name,
     CASE WHEN c.value_defined = f.taxon_name THEN f.taxon_ref ELSE null::integer END as taxon_ref,
     CASE WHEN c.value_defined = f.taxon_name THEN f.taxon_parent_ref ELSE null::integer END as taxon_parent_ref,
+    CASE WHEN c.value_defined = f.taxon_name THEN f.taxon_level_name ELSE null::varchar END as taxon_level_name,
     (SELECT keyword FROM darwin2.classification_keywords where 
           referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='AuthorTeam' AND CASE WHEN c.value_defined = f.taxon_name THEN true ELSE false END AND
           exists (select 1 from taxonomy where id = f.taxon_ref and path like '/-1/141538/%')
@@ -515,11 +522,34 @@ CREATE TABLE public.taxon_identified as
 
 ALTER TABLE public.taxon_identified ADD CONSTRAINT pk_taxon_identified PRIMARY KEY (id);
 
+create sequence public.mineral_identified_id_seq;
+
+CREATE TABLE public.mineral_identified as
+(
+  SELECT 
+    nextval('public.mineral_identified_id_seq') as id,
+    i.id as identification_ref,
+    c.value_defined as mineral_name,
+    CASE WHEN c.value_defined = f.mineral_name THEN f.mineral_ref ELSE null::integer END as mineral_ref,
+    CASE WHEN c.value_defined = f.mineral_name THEN f.mineral_parent_ref ELSE null::integer END as mineral_parent_ref,
+    CASE WHEN c.value_defined = f.mineral_name THEN f.mineral_level_name ELSE null::varchar END as mineral_level_name,
+    CASE WHEN c.value_defined = f.mineral_name THEN (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref) ELSE null::varchar END as mineral_classification
+  FROM 
+    public.identifications_abdc i
+    INNER JOIN darwin2.identifications as c ON i.old_identification_id = c.id
+    INNER JOIN darwin2.darwin_flat f ON  f.id = i.flat_id
+    WHERE 
+      c.notion_concerned = 'mineralogy'
+);
+
+ALTER TABLE public.mineral_identified ADD CONSTRAINT pk_mineral_identified PRIMARY KEY (id);
+
 insert into public.identifications_abdc 
 (
     id,
     flat_id,
     notion_date,
+    notion_concerned,
     determination_status,
     is_current
 )
@@ -528,13 +558,12 @@ insert into public.identifications_abdc
    nextval('public.identifications_abdc_id_seq') as id,
     f.id as flat_id,
     current_timestamp as notion_date,
+    'taxonomy' as notion_concerned,
     '' as determination_status,
     true as is_current
     FROM  darwin2.darwin_flat  f
-    WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i WHERE taxon_ref is not null and i.flat_id = f.id)
+    WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i WHERE f.taxon_ref is not null and f.taxon_ref != 0 and i.flat_id = f.id)
 );
-
-CREATE INDEX idx_identifications_abdc_flat_id ON public.identifications_abdc (flat_id);
 
 insert into public.taxon_identified
 (
@@ -543,6 +572,7 @@ insert into public.taxon_identified
     taxon_name,
     taxon_ref,
     taxon_parent_ref,
+    taxon_level_name,
     AuthorTeam,
     AuthorTeamParenthesis,
     AuthorTeamAndYear,
@@ -573,6 +603,7 @@ insert into public.taxon_identified
     f.taxon_name as taxon_name,
     f.taxon_ref as taxon_ref,
     f.taxon_parent_ref as taxon_parent_ref,
+    f.taxon_level_name as taxon_level_name,
     (SELECT keyword FROM darwin2.classification_keywords where 
           referenced_relation = 'taxonomy' and record_id = f.taxon_ref AND keyword_type='AuthorTeam' AND
           exists (select 1 from taxonomy where id = f.taxon_ref and path like '/-1/141538/%')
@@ -683,9 +714,10 @@ insert into public.taxon_identified
           exists (select 1 from taxonomy where id = f.taxon_ref and path like '/-1/1/%')
      LIMIT 1
     ) as NamedIndividual
-    FROM  public.identifications_abdc i
-    INNER JOIN darwin2.darwin_flat  f on i.flat_id = f.id
+    FROM public.identifications_abdc i
+    INNER JOIN darwin2.darwin_flat f on i.flat_id = f.id
     WHERE i.is_current = true
+      AND i.notion_concerned = 'taxonomy'
       AND taxon_ref !=0 
 );
 
@@ -693,6 +725,58 @@ CREATE INDEX idx_taxon_identified_identification_ref ON public.taxon_identified 
 CREATE INDEX idx_taxon_identified_taxon_ref ON public.taxon_identified (taxon_ref);
 CREATE INDEX idx_taxon_identified_taxon_parent_ref ON public.taxon_identified (taxon_parent_ref);
 CREATE INDEX idx_taxon_identified_taxon_name ON public.taxon_identified (taxon_name);
+
+insert into public.identifications_abdc 
+(
+    id,
+    flat_id,
+    notion_date,
+    notion_concerned,
+    determination_status,
+    is_current
+)
+(
+  select 
+    nextval('public.identifications_abdc_id_seq') as id,
+    f.id as flat_id,
+    current_timestamp as notion_date,
+    'mineralogy' as notion_concerned,
+    '' as determination_status,
+    true as is_current
+    FROM  darwin2.darwin_flat f
+    WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i WHERE f.mineral_ref is not null and f.mineral_ref != 0 and i.flat_id = f.id)
+);
+
+insert into mineral_identified
+(
+    id,
+    identification_ref,
+    mineral_name,
+    mineral_ref,
+    mineral_parent_ref,
+    mineral_level_name,
+    mineral_classification
+)
+(
+  select distinct on (i.id, f.mineral_name)
+    nextval('public.mineral_identified_id_seq') as id,
+    i.id as identification_ref,
+    f.mineral_name as mineral_name,
+    f.mineral_ref as mineral_ref,
+    f.mineral_level_name as mineral_level_name,
+    (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref)
+    FROM  public.identifications_abdc i
+    INNER JOIN darwin2.darwin_flat  f on i.flat_id = f.id
+    WHERE i.is_current = true
+      AND i.notion_concerned = 'mineralogy'
+      AND f.mineral_ref !=0 
+);
+
+CREATE INDEX idx_mineral_identified_identification_ref ON public.mineral_identified (identification_ref);
+CREATE INDEX idx_mineral_identified_mineral_ref ON public.mineral_identified (mineral_ref);
+CREATE INDEX idx_mineral_identified_mineral_name ON public.mineral_identified (mineral_name);
+
+CREATE INDEX idx_identifications_abdc_flat_id ON public.identifications_abdc (flat_id);
 
 ALTER TABLE darwin2.taxonomy ALTER COLUMN parent_ref DROP NOT NULL;
 ALTER TABLE darwin2.darwin_flat ALTER COLUMN taxon_parent_ref DROP NOT NULL;
@@ -705,53 +789,6 @@ UPDATE darwin2.darwin_flat SET taxon_parent_ref = NULL WHERE taxon_parent_ref = 
 
 SET SESSION session_replication_role = origin;  
 
-create sequence public.mineral_identified_id_seq;
-
-CREATE TABLE public.mineral_identified as
-(
-  SELECT 
-    nextval('public.mineral_identified_id_seq') as id,
-    i.id as identification_ref,
-    c.value_defined as mineral_name,
-    null::integer as mineral_ref, 
-    null::varchar as classification
-  FROM 
-    public.identifications_abdc i
-    INNER JOIN darwin2.identifications as c ON i.old_identification_id = c.id
-    WHERE 
-    c.notion_concerned = 'mineralogy'
-    AND i.is_current = FALSE
-);
-
-ALTER TABLE public.mineral_identified ADD CONSTRAINT pk_mineral_identified PRIMARY KEY (id);
-
-insert into mineral_identified
-(
-    id,
-    identification_ref,
-    mineral_name,
-    mineral_ref,
-    classification
-)
-(
-  select
-    nextval('public.mineral_identified_id_seq') as id,
-    i.id as identification_ref,
-    m.name as mineral_name,
-    f.mineral_ref as mineral_ref,
-    m.classification as classification
-    FROM  public.identifications_abdc i
-    INNER JOIN darwin2.darwin_flat  f on i.flat_id = f.id
-    INNER JOIN darwin2.mineralogy m on f.mineral_ref = m.id
-    WHERE i.is_current = true
-      AND f.mineral_ref !=0 
-      
-);
-
-CREATE INDEX idx_mineral_identified_identification_ref ON public.mineral_identified (identification_ref);
-CREATE INDEX idx_mineral_identified_mineral_ref ON public.mineral_identified (mineral_ref);
-CREATE INDEX idx_mineral_identified_mineral_name ON public.mineral_identified (mineral_name);
-
 CREATE SEQUENCE public.identifier_abcd_id_seq;
 
 CREATE TABLE public.identifier as
@@ -759,42 +796,34 @@ CREATE TABLE public.identifier as
   select
     nextval('public.identifier_abcd_id_seq') as id, 
     i.id as identification_ref,
-    c.people_ref
+    c.people_ref as people_ref,
+    p.title as title,
+    p.given_name as given_name,
+    p.family_name as inherited_name,
+    p.formated_name as full_name,
+    p.formated_name_indexed as sorting_name,
+    ins.formated_name as institution_formated_name
   FROM
     public.identifications_abdc i
     INNER JOIN darwin2.catalogue_people c on i.old_identification_id = c.record_id AND c.referenced_relation='identifications'
-    INNER JOIN darwin2.people p on p.id = c.people_ref
-  WHERE
-    p.is_physical = true
-    
+    INNER JOIN 
+    (
+      darwin2.people p 
+      left join 
+      (
+        darwin2.people as ins
+        inner join
+        darwin2.people_relationships as pr
+        on ins.id = pr.person_2_ref and ins.is_physical = false
+      )
+      on p.id = pr.person_1_ref
+    ) on p.id = c.people_ref and p.is_physical = true
 );
 
 ALTER TABLE public.identifier ADD CONSTRAINT pk_identifier PRIMARY KEY (id);
 
 CREATE INDEX idx_identifier_identification_ref ON public.identifier (identification_ref);
 CREATE INDEX idx_identifier_people_ref ON public.identifier (people_ref);
-
-CREATE SEQUENCE public.identifier_institution_id_seq;
-
-CREATE TABLE public.identifier_instituion as
-(
-  select 
-    nextval('public.identifier_institution_id_seq') as id,
-    i.id as identification_ref,
-    c.people_ref
-  FROM
-    public.identifications_abdc i
-    INNER JOIN darwin2.catalogue_people c on i.old_identification_id = c.record_id AND c.referenced_relation='identifications'
-    INNER JOIN darwin2.people p on p.id = c.people_ref
-  WHERE
-    p.is_physical = false
-    
-);
-
-ALTER TABLE public.identifier_instituion ADD CONSTRAINT pk_identifier_institution PRIMARY KEY (id);
-
-CREATE INDEX idx_identifier_instituion_identification_ref ON public.identifier_instituion (identification_ref);
-CREATE INDEX idx_identifier_instituion_people_ref ON public.identifier_instituion (people_ref);
 
 CREATE SEQUENCE public.flat_properties_id_seq;
 
@@ -889,50 +918,6 @@ UNION
 ALTER TABLE public.flat_properties ADD CONSTRAINT pk_flat_properties PRIMARY KEY (id);
 
 CREATE INDEX idx_flat_properties_flat_id ON public.flat_properties (flat_id);
-
-CREATE TABLE public.users_abc as 
-(
-  SELECT * ,
-
-  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM darwin2.users_addresses where  person_user_ref = u.id ORDER BY tag like '%pref%'  LIMIT 1) as address,
-  ( SELECT entry FROM darwin2.users_comm where  person_user_ref = u.id and comm_type='e-mail' ORDER BY tag like '%pref%' LIMIT 1) as email
-
-  from users u
-  
-);
-
-
-ALTER TABLE public.users_abc ADD CONSTRAINT pk_users_abc PRIMARY KEY (id);
-
-CREATE TABLE public.people_abc as 
-(
-  SELECT * ,
-
-  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM darwin2.people_addresses where  person_user_ref = p.id ORDER BY tag like '%pref%'LIMIT 1) as address,
-  ( SELECT entry FROM darwin2.people_comm where person_user_ref = p.id    and comm_type='e-mail' ORDER BY tag like '%pref%' LIMIT 1) as email
-
-  from people p
-  
-  WHERE is_physical = true
-  
-);
-
-ALTER TABLE public.people_abc ADD CONSTRAINT pk_people_abc PRIMARY KEY (id);
-
-CREATE TABLE public.institutions_abc as
-(
-  SELECT * ,
-
-  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM darwin2.people_addresses where  person_user_ref = p.id ORDER BY tag like '%pref%' LIMIT 1) as address,
-  ( SELECT entry FROM darwin2.people_comm where person_user_ref = p.id   and comm_type='e-mail' ORDER BY tag like '%pref%' LIMIT 1) as email
-
-  from people p
-  
-  WHERE is_physical = false
-  
-);
-
-ALTER TABLE public.institutions_abc ADD CONSTRAINT pk_institutions_abc PRIMARY KEY (id);
 
 CREATE TABLE public.lithostratigraphy_abc as 
 (
