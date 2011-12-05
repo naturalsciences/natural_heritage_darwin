@@ -400,6 +400,8 @@ DROP TRIGGER trg_chk_ref_record_class_vernacular_names ON class_vernacular_names
 
 DROP TRIGGER trg_chk_ref_record_informative_workflow ON informative_workflow;
 
+DROP TRIGGER trg_chk_is_last_informative_workflow ON informative_workflow;
+
 DROP TRIGGER trg_chk_ref_record_collection_maintenance ON collection_maintenance;
 
 DROP TRIGGER trg_chk_ref_record_template_table_record_ref ON template_table_record_ref;
