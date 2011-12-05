@@ -1015,7 +1015,7 @@ comment on column my_widgets.is_available is 'Flag telling if the widget can be 
 comment on column my_widgets.icon_ref is 'Reference of multimedia icon to be used before page element title';
 comment on column my_widgets.title_perso is 'Page element title given by user';
 comment on column my_widgets.collections is 'list of collections whitch user_ref has rights to see';
-comment on column my_widgets.all_public is 'Set to determine if the widget is public by default or not';
+comment on column my_widgets.all_public is 'Set to determine if the widget available for a registered user by default or not';
 
 create table template_classifications
        (

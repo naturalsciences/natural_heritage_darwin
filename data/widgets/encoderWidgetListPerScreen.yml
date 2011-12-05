@@ -44,6 +44,7 @@ bw6:
    opened: true
    visible: true
    title_perso: Statistics
+   all_public: true   
 
 bw7:
    col_num: 2

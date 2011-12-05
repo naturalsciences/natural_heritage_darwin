@@ -1446,3 +1446,13 @@ MyWidgets:
         visible: false
         is_available: true
         title_perso: Expedition
+
+    u1sps21:
+        User: u1
+        col_num: 2
+        category: board_widget
+        group_name: workflowsSummary
+        order_by: 4
+        opened: true
+        visible: true
+        title_perso: Workflows summary         
