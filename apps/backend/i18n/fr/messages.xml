@@ -4656,6 +4656,10 @@
         <source>You don\&#039;t have the rights to insert into or update a specimen in this collection</source>
         <target>Vous n\&#039;avez pas la permission d&#039;insérer ou mettre à jour un échantillon dans cet collection</target>
       </trans-unit>
+          <trans-unit id="1504">
+        <source>This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Cette widget vous permet d&#039;ajouter une note pour un échantillon spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
+      </trans-unit>
           <trans-unit id="1405">
         <source>Taxon.</source>
         <target>Taxon </target>
@@ -4703,6 +4707,62 @@
           <trans-unit id="1417">
         <source>Import a file</source>
         <target>Importer un fichier</target>
+      </trans-unit>
+          <trans-unit id="1489">
+        <source>Checked</source>
+        <target>Vérifié</target>
+      </trans-unit>
+          <trans-unit id="1490">
+        <source>Suggestion</source>
+        <target>Suggestion</target>
+      </trans-unit>
+          <trans-unit id="1491">
+        <source>To check</source>
+        <target>A vérifier</target>
+      </trans-unit>
+          <trans-unit id="1492">
+        <source>Latest Status</source>
+        <target>Dernier Status</target>
+      </trans-unit>
+          <trans-unit id="1493">
+        <source>By</source>
+        <target>Par</target>
+      </trans-unit>
+          <trans-unit id="1494">
+        <source>view all workflows</source>
+        <target>Voir tous les workflows</target>
+      </trans-unit>
+          <trans-unit id="1495">
+        <source>Browse entire history</source>
+        <target>Voir l&#039;historique intégral</target>
+      </trans-unit>
+          <trans-unit id="1497">
+        <source>Please save your part in order to add workflows</source>
+        <target>Veuillez sauver votre partie afin d&#039;ajouter un workflow</target>
+      </trans-unit>
+          <trans-unit id="1498">
+        <source>Please save your individual in order to add workflows</source>
+        <target>Veuillez sauver votre individue afin d&#039;ajouter un workflow</target>
+      </trans-unit>
+          <trans-unit id="1499">
+        <source>Please save your specimen in order to add workflows</source>
+        <target>Veuillez sauver votre échantillon afin d&#039;ajouter un workflow</target>
+      </trans-unit>
+          <trans-unit id="1500">
+        <source>This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Cette widget vous permet d&#039;ajouter une note pour un individu spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
+      </trans-unit>
+          <trans-unit id="1501">
+        <source>This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Cette widget vous permet d&#039;ajouter une note pour un catalogue spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
+      </trans-unit>
+          <trans-unit id="1502">
+        <source>This widget allow you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Cette widget vous permet d&#039;ajouter une note pour uen partie spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
+      </trans-unit>
+          <trans-unit id="1503">
+        <source>This widget allow you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Cette widget vous permet d&#039;ajouter une note pour une personne spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
       </trans-unit>
           <trans-unit id="1418">
         <source>Import</source>

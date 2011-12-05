@@ -339,6 +339,66 @@
         <source>Import a file</source>
         <target>Een bestand importeren</target>
       </trans-unit>
+          <trans-unit id="1489">
+        <source>Checked</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1490">
+        <source>Suggestion</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1491">
+        <source>To check</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1492">
+        <source>Latest Status</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1493">
+        <source>By</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1494">
+        <source>view all workflows</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1495">
+        <source>Browse entire history</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1497">
+        <source>Please save your part in order to add workflows</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1498">
+        <source>Please save your individual in order to add workflows</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1499">
+        <source>Please save your specimen in order to add workflows</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1500">
+        <source>This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1501">
+        <source>This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1502">
+        <source>This widget allow you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1503">
+        <source>This widget allow you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1504">
+        <source>This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1353">
         <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;</source>
         <target>Aangezien DaRWIN volledig gebaseerd is op open source software, zouden we ons verheugen mocht u wensen bij te dragen tot ons project.&lt;br /&gt; Suggesties, Patches, het doorgeven van Foutmeldingen of code sponsering zijn welkom op onze trac : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;;</target>

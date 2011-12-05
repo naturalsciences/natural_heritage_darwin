@@ -586,6 +586,30 @@
         <source>Abbreviation</source>
         <target>Afkorting</target>
       </trans-unit>
+          <trans-unit id="1483">
+        <source>Your Name</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1484">
+        <source>anonymous</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1485">
+        <source>You think there&#039;s a mistake ? please suggest us a correction</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1486">
+        <source>Submit</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1487">
+        <source>Comment</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1488">
+        <source>Thank you for your help</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1268">
         <source>Between </source>
         <target>Tussen </target>
