@@ -975,10 +975,7 @@ CREATE TABLE public.darwin_metadata AS
     E'All data given access here are the sole property of the Royal Belgian Institute for Natural Sciences (RBINS) and are protected by the laws of copyright.\r\n The reuse of data, for any purpose whatsoever, is subject to prior authorization given by the Royal Belgian Institute for Natural Sciences (RBINS).\r\n For more informations, comments or details on the above lines, please contact the Royal Belgian Institute for Natural Sciences (RBINS).'::text as IPRCopyright
 );
 
-ALTER TABLE darwin2.taxonomy SET SCHEMA public; 
-ALTER TABLE darwin2.catalogue_levels SET SCHEMA public; 
 ALTER TABLE darwin2.darwin_flat SET SCHEMA public; 
-ALTER TABLE darwin2.mineralogy SET SCHEMA public; 
 ALTER TABLE darwin2.template_classifications SET SCHEMA public;
 
 CREATE SEQUENCE public.parent_taxonomy_id_seq;
@@ -987,13 +984,13 @@ CREATE TABLE public.parent_taxonomy AS
 (
   select nextval('public.parent_taxonomy_id_seq') as id, pt.child_id as child_id, pt.parent_id as parent_id, spt.name as taxon_name, spt.level_name as level_name from 
   (select t.id as child_id, st.tax_parent::integer as parent_id
-  from taxonomy as t 
+  from darwin2.taxonomy as t 
   inner join 
-    (select id, regexp_split_to_table(path, '/') as tax_parent from taxonomy) as st on st.id = t.id
+    (select id, regexp_split_to_table(path, '/') as tax_parent from darwin2.taxonomy) as st on st.id = t.id
   where st.tax_parent != '' 
   ) as pt
   inner join
-    (select taxonomy.id, name, level_name from taxonomy inner join catalogue_levels as cl on cl.id = taxonomy.level_ref where cl.level_name != 'unranked') as spt on spt.id = pt.parent_id
+    (select taxonomy.id, name, level_name from darwin2.taxonomy inner join darwin2.catalogue_levels as cl on cl.id = taxonomy.level_ref where cl.level_name != 'unranked') as spt on spt.id = pt.parent_id
 );
 
 ALTER TABLE public.parent_taxonomy ADD CONSTRAINT pk_parent_taxonomy PRIMARY KEY (id);
@@ -1019,9 +1016,6 @@ ALTER TABLE public.darwin_flat
   DROP COLUMN with_individuals,
   DROP COLUMN with_parts;
 
-ALTER TABLE public.taxonomy DROP CONSTRAINT fct_chk_onceinpath_taxonomy;
-ALTER TABLE public.mineralogy DROP CONSTRAINT fct_chk_onceinpath_mineralogy;
-
 ALTER FUNCTION darwin2.gettagsindexedasarray(character varying) SET SCHEMA public;
 ALTER FUNCTION darwin2.array_accum(anyelement) SET SCHEMA public;
 ALTER FUNCTION darwin2.linetotagarray(text) SET SCHEMA public;
@@ -1029,20 +1023,7 @@ ALTER FUNCTION darwin2.linetotagrows(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyelement) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyarray) SET SCHEMA public;
 ALTER FUNCTION darwin2.fulltoindex(character varying) SET SCHEMA public;
-ALTER SEQUENCE darwin2.taxonomy_id_seq SET SCHEMA public;
 ALTER SEQUENCE darwin2.darwin_flat_id_seq SET SCHEMA public;
-ALTER SEQUENCE darwin2.catalogue_levels_id_seq SET SCHEMA public;
-ALTER SEQUENCE darwin2.mineralogy_id_seq SET SCHEMA public;
-
-\t
-\o drop_old_d2_triggers.sql
-select DISTINCT 'DROP TRIGGER IF EXISTS ' || trigger_name || ' ON ' || event_object_schema || '.' || event_object_table || ';' 
-FROM information_schema.triggers 
-WHERE event_object_table IN ('taxonomy', 'mineralogy');
-\o
-\i drop_old_d2_triggers.sql
-\! rm drop_old_d2_triggers.sql
-\t
 
 GRANT SELECT ON  public.flat_abcd TO d2viewer;
 GRANT SELECT ON  public.gtu_properties TO d2viewer;
@@ -1056,10 +1037,7 @@ GRANT SELECT ON  public.identifier TO d2viewer;
 GRANT SELECT ON  public.flat_properties TO d2viewer;
 GRANT SELECT ON  public.lithostratigraphy_abc TO d2viewer;
 GRANT SELECT ON  public.accomp_mineral TO d2viewer;
-GRANT SELECT ON  public.taxonomy TO d2viewer;
-GRANT SELECT ON  public.catalogue_levels TO d2viewer;
 GRANT SELECT ON  public.darwin_flat TO d2viewer;
-GRANT SELECT ON  public.mineralogy TO d2viewer;
 GRANT SELECT ON  public.darwin_metadata TO d2viewer;
 GRANT SELECT ON  public.parent_taxonomy TO d2viewer;
 
@@ -1075,10 +1053,7 @@ ANALYZE public.identifier;
 ANALYZE public.flat_properties;
 ANALYZE public.lithostratigraphy_abc;
 ANALYZE public.accomp_mineral;
-ANALYZE public.taxonomy;
-ANALYZE public.catalogue_levels;
 ANALYZE public.darwin_flat;
-ANALYZE public.mineralogy;
 ANALYZE public.parent_taxonomy;
 
 DROP SCHEMA IF EXISTS darwin1 CASCADE;
