@@ -1,4 +1,6 @@
 ALTER TABLE users_workflow RENAME TO informative_workflow ;
+create sequence informative_workflow_id_seq;
+drop sequence users_workflow_id_seq;
 ALTER TABLE informative_workflow add formated_name varchar not null default 'anonymous' ;
 ALTER TABLE informative_workflow add is_last boolean not null default true,
 ALTER TABLE informative_workflow ALTER user_ref TYPE integer ;
