@@ -764,7 +764,7 @@ insert into mineral_identified
     f.mineral_name as mineral_name,
     f.mineral_ref as mineral_ref,
     f.mineral_level_name as mineral_level_name,
-    (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref)
+    (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref) as mineral_classification
     FROM  public.identifications_abdc i
     INNER JOIN darwin2.darwin_flat  f on i.flat_id = f.id
     WHERE i.is_current = true
