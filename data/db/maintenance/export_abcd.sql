@@ -743,6 +743,8 @@ insert into public.identifications_abdc
     true as is_current
     FROM  darwin2.darwin_flat f
     WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i WHERE f.mineral_ref is not null and f.mineral_ref != 0 and i.flat_id = f.id)
+      AND f.mineral_ref != 0
+      AND f.mineral_ref is not null
 );
 
 insert into mineral_identified
@@ -1046,20 +1048,12 @@ GRANT SELECT ON  public.flat_abcd TO d2viewer;
 GRANT SELECT ON  public.gtu_properties TO d2viewer;
 GRANT SELECT ON  public.gtu_place TO d2viewer;
 GRANT SELECT ON  public.collectors TO d2viewer;
-GRANT SELECT ON  public.collectors_institution TO d2viewer;
 GRANT SELECT ON  public.donators TO d2viewer;
-GRANT SELECT ON  public.donators_institution TO d2viewer;
 GRANT SELECT ON  public.identifications_abdc TO d2viewer;
 GRANT SELECT ON  public.taxon_identified TO d2viewer;
-GRANT SELECT ON  public.bota_taxa_keywords TO d2viewer;
-GRANT SELECT ON  public.zoo_taxa_keywords TO d2viewer;
 GRANT SELECT ON  public.mineral_identified TO d2viewer;
 GRANT SELECT ON  public.identifier TO d2viewer;
-GRANT SELECT ON  public.identifier_instituion TO d2viewer;
 GRANT SELECT ON  public.flat_properties TO d2viewer;
-GRANT SELECT ON  public.users_abc TO d2viewer;
-GRANT SELECT ON  public.people_abc TO d2viewer;
-GRANT SELECT ON  public.institutions_abc TO d2viewer;
 GRANT SELECT ON  public.lithostratigraphy_abc TO d2viewer;
 GRANT SELECT ON  public.accomp_mineral TO d2viewer;
 GRANT SELECT ON  public.taxonomy TO d2viewer;
@@ -1073,20 +1067,12 @@ ANALYZE public.flat_abcd;
 ANALYZE public.gtu_properties;
 ANALYZE public.gtu_place;
 ANALYZE public.collectors;
-ANALYZE public.collectors_institution;
 ANALYZE public.donators;
-ANALYZE public.donators_institution;
 ANALYZE public.identifications_abdc;
 ANALYZE public.taxon_identified;
-ANALYZE public.bota_taxa_keywords;
-ANALYZE public.zoo_taxa_keywords;
 ANALYZE public.mineral_identified;
 ANALYZE public.identifier;
-ANALYZE public.identifier_instituion;
 ANALYZE public.flat_properties;
-ANALYZE public.users_abc;
-ANALYZE public.people_abc;
-ANALYZE public.institutions_abc;
 ANALYZE public.lithostratigraphy_abc;
 ANALYZE public.accomp_mineral;
 ANALYZE public.taxonomy;
