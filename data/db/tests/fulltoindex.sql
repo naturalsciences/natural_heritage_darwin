@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(32);
+SELECT plan(29);
 
 SELECT diag('FulltoIndex Function');
 SELECT ok('msdfnjrt' = fullToIndex('MsdfnJrt'),'With Majuscule and minuscule');
@@ -52,15 +52,8 @@ SELECT ok( to_tsvector('simple', 'Méalo-nÿeø@ß€') = (SELECT name_indexed F
 INSERT INTO mineralogy (id, name, code, level_ref) VALUES (1, 'Lé bou/ caiéoui', 0, 70);
 SELECT ok( to_tsvector('simple', 'Lé bou/ caiéoui') = (SELECT name_indexed FROM mineralogy WHERE id=1),'FulltoIndex on mineralogy');
 
-INSERT INTO multimedia (id, title) VALUES (1, 'À L''énorme Tické!');
-SELECT ok( 'alenormeticke' = (SELECT title_indexed FROM multimedia WHERE id=1),'FulltoIndex on multimedia');
-SELECT ok( to_tsvector('simple', 'À L''énorme Tické!') = (SELECT descriptive_ts FROM multimedia WHERE id=1),'fulltext on multimedia');
-
-INSERT INTO multimedia_keywords (object_ref,keyword) VALUES (1,'La ''mèr'' Nwàre') ;
-SELECT ok( 'lamernware' = (SELECT keyword_indexed FROM multimedia_keywords WHERE object_ref=1),'FulltoIndex on multimedia_keywords');
-
-INSERT INTO codes (referenced_relation, record_id, code_prefix, code) VALUES ('multimedia',1, '12é-MOL7385',6847);
-SELECT ok( '12emol73856847' = (SELECT full_code_order_by FROM codes WHERE record_id = 1 AND referenced_relation = 'multimedia' ),'FulltoIndex on multimedia_codes');
+INSERT INTO codes (referenced_relation, record_id, code_prefix, code) VALUES ('mineralogy',1, '12é-MOL7385',6847);
+SELECT ok( '12emol73856847' = (SELECT full_code_order_by FROM codes WHERE record_id = 1 AND referenced_relation = 'mineralogy' ),'FulltoIndex on code');
 
 insert into people (id, is_physical, formated_name, formated_name_indexed, formated_name_ts, family_name, birth_date, end_date ) VALUES
 (3, true, 'The Expert', 'theexpert', to_tsvector('simple', 'The Expert'),  'The Expert', '0001-01-01', DATE '0001-01-01');

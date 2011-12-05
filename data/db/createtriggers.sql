@@ -220,7 +220,7 @@ CREATE TRIGGER trg_cpy_toFullText_usersaddresses BEFORE INSERT OR UPDATE
 
 CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
 	ON multimedia FOR EACH ROW
-	EXECUTE PROCEDURE tsvector_update_trigger(descriptive_ts, 'pg_catalog.simple', title, subject );
+	EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title, subject );
 
 CREATE TRIGGER trg_cpy_toFullText_expeditions BEFORE INSERT OR UPDATE
   ON expeditions FOR EACH ROW

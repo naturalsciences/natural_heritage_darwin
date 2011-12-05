@@ -48,6 +48,7 @@ create table people
         id integer not null default nextval('people_id_seq'),
         end_date_mask integer not null default 0,
         end_date date not null default '01/01/0001',
+        is_legal boolean default false,
         activity_date_from_mask integer not null default 0,
         activity_date_from date not null default '01/01/0001',
         activity_date_to_mask integer not null default 0,
@@ -523,51 +524,31 @@ create table multimedia
         type varchar not null default 'image',
         sub_type varchar,
         title varchar not null,
-        title_indexed varchar not null,
-        subject varchar not null default '/',
-        coverage coverages not null default 'temporal',
-        apercu_path varchar,
-        copyright varchar,
-        license varchar,
+        description varchar not null default '/',
         uri varchar,
-        descriptive_ts tsvector not null,
-        descriptive_language_full_text full_text_language,
+        search_ts tsvector not null,
         creation_date date not null default '01/01/0001',
         creation_date_mask integer not null default 0,
-        publication_date_from date not null default '01/01/0001',
-        publication_date_from_mask integer not null default 0,
-        publication_date_to date not null default '31/12/2038',
-        publication_date_to_mask integer not null default 0,
-        parent_ref integer,
-        path varchar not null default '/',
         mime_type varchar,
-        constraint pk_multimedia primary key (id),
-	constraint fk_multimedia_parent_ref_multimedia foreign key (parent_ref) references multimedia(id) on delete cascade
-       );
+        constraint pk_multimedia primary key (id)
+      )
+      inherits (template_table_record_ref);
+
 comment on table multimedia is 'Stores all multimedia objects encoded in DaRWIN 2.0';
+comment on column multimedia.referenced_relation is 'Reference-Name of table concerned';
+comment on column multimedia.record_id is 'Identifier of record concerned';
 comment on column multimedia.id is 'Unique identifier of a multimedia object';
 comment on column multimedia.is_digital is 'Flag telling if the object is digital (true) or physical (false)';
 comment on column multimedia.type is 'Main multimedia object type: image, sound, video,...';
 comment on column multimedia.sub_type is 'Characterization of object type: article, publication in serie, book, glass plate,...';
-comment on column multimedia.title is 'Object title';
-comment on column multimedia.title_indexed is 'Indexed form of title field';
-comment on column multimedia.subject is 'Multimedia object subject (as required by Dublin Core...)';
-comment on column multimedia.coverage is 'Coverage of multimedia object: spatial or temporal (as required by Dublin Core...)';
-comment on column multimedia.apercu_path is 'URI path to the thumbnail illustrating the object';
-comment on column multimedia.copyright is 'Copyright notice';
-comment on column multimedia.license is 'License notice';
+comment on column multimedia.title is 'Title of the multimedia object';
+comment on column multimedia.description is 'Description of the current object';
 comment on column multimedia.uri is 'URI of object if digital';
 comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
-comment on column multimedia.publication_date_from is 'Object publication date from';
-comment on column multimedia.publication_date_from_mask is 'Mask used for object publication begining date display';
-comment on column multimedia.publication_date_to is 'Object publication date to';
-comment on column multimedia.publication_date_to_mask is 'Mask used for object publication end date display';
-comment on column multimedia.descriptive_ts is 'tsvector form of title and subject fields together';
-comment on column multimedia.descriptive_language_full_text is 'Language used for descriptive_ts tsvector field composition';
-comment on column multimedia.parent_ref is 'Reference of a parent multimedia. Such as an Article of a publication';
-comment on column multimedia.path is 'Path of parent of the object (automaticaly filled)';
+comment on column multimedia.search_ts is 'tsvector form of title and subject fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
+
 create table template_people_users_comm_common
        (
         person_user_ref integer not null,
@@ -1467,6 +1448,10 @@ create table insurances
         insurance_value numeric(16,2) not null,
         insurance_currency varchar not null default '€',
         insurance_year smallint not null default 0,
+        date_from_mask integer not null default 0,
+        date_from date not null default '01/01/0001',
+        date_to_mask integer not null default 0,
+        date_to date not null default '31/12/2038',
         insurer_ref integer,
         constraint pk_insurances primary key (id),
         constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, insurance_year),

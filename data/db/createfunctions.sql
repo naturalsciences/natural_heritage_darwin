@@ -208,8 +208,6 @@ BEGIN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
 		NEW.formule_indexed := fullToIndex(NEW.formule);
-	ELSIF TG_TABLE_NAME = 'multimedia' THEN
-		NEW.title_indexed := fullToIndex(NEW.title);
 	ELSIF TG_TABLE_NAME = 'multimedia_keywords' THEN
 		NEW.keyword_indexed := fullToIndex(NEW.keyword);
 	ELSIF TG_TABLE_NAME = 'people' THEN
@@ -585,8 +583,7 @@ CREATE OR REPLACE FUNCTION fct_cpy_path() RETURNS TRIGGER
 AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        IF( TG_TABLE_NAME::text = 'multimedia' OR
-          TG_TABLE_NAME::text = 'collections' OR
+        IF( TG_TABLE_NAME::text = 'collections' OR
           TG_TABLE_NAME::text = 'gtu' OR
           TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
@@ -609,8 +606,7 @@ BEGIN
           END IF;
         END IF;
       ELSIF TG_OP = 'UPDATE' THEN
-        IF( TG_TABLE_NAME::text = 'multimedia' OR
-          TG_TABLE_NAME::text = 'collections' OR
+        IF(TG_TABLE_NAME::text = 'collections' OR
           TG_TABLE_NAME::text = 'gtu' OR
           TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
@@ -1203,17 +1199,17 @@ BEGIN
       ELSE
         PERFORM fct_cpy_word('identifications','value_defined_ts', NEW.value_defined_ts);
       END IF;
-
+*/
    ELSIF TG_TABLE_NAME ='multimedia' THEN
 
       IF TG_OP = 'UPDATE' THEN
-        IF OLD.descriptive_ts IS DISTINCT FROM NEW.descriptive_ts THEN
-          PERFORM fct_cpy_word('multimedia','descriptive_ts', NEW.descriptive_ts);
+        IF OLD.search_ts IS DISTINCT FROM NEW.search_ts THEN
+          PERFORM fct_cpy_word('multimedia','search_ts', NEW.search_ts);
         END IF;
       ELSE
-        PERFORM fct_cpy_word('multimedia','descriptive_ts', NEW.descriptive_ts);
+        PERFORM fct_cpy_word('multimedia','search_ts', NEW.search_ts);
       END IF;
-*/
+
    ELSIF TG_TABLE_NAME ='people' THEN
 
       IF TG_OP = 'UPDATE' THEN
