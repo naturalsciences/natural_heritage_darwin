@@ -761,6 +761,7 @@ insert into mineral_identified
     i.id as identification_ref,
     f.mineral_name as mineral_name,
     f.mineral_ref as mineral_ref,
+    f.mineral_parent_ref as mineral_parent_ref,
     f.mineral_level_name as mineral_level_name,
     (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref) as mineral_classification
     FROM  public.identifications_abdc i
