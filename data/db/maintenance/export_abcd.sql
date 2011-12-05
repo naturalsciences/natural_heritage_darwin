@@ -177,8 +177,6 @@ CREATE TABLE public.flat_abcd as
 ALTER TABLE public.flat_abcd ADD CONSTRAINT pk_flat_abcd PRIMARY KEY (id);
 
 CREATE INDEX idx_flat_abcd_flat_ref ON public.flat_abcd (flat_ref);
-CREATE INDEX idx_flat_abcd_collection_institution_ref ON public.flat_abcd (collection_institution_ref);
-CREATE INDEX idx_flat_abcd_collection_main_manager_ref ON public.flat_abcd (collection_main_manager_ref);
 CREATE INDEX idx_flat_abcd_gtu_country ON public.flat_abcd (gtu_country);
 
 CREATE SEQUENCE public.gtu_properties_id_seq;
