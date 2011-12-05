@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS public.users_abc;
 DROP TABLE IF EXISTS public.people_abc;
 DROP TABLE IF EXISTS public.institutions_abc;
 DROP TABLE IF EXISTS public.lithostratigraphy_abc;
+DROP TABLE IF EXISTS public.chronostratigraphy_abc;
 DROP TABLE IF EXISTS public.accomp_mineral;
 DROP TABLE IF EXISTS public.darwin_metadata;
 
@@ -531,7 +532,9 @@ CREATE TABLE public.mineral_identified as
     CASE WHEN c.value_defined = f.mineral_name THEN f.mineral_ref ELSE null::integer END as mineral_ref,
     CASE WHEN c.value_defined = f.mineral_name THEN f.mineral_parent_ref ELSE null::integer END as mineral_parent_ref,
     CASE WHEN c.value_defined = f.mineral_name THEN f.mineral_level_name ELSE null::varchar END as mineral_level_name,
-    CASE WHEN c.value_defined = f.mineral_name THEN (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref) ELSE null::varchar END as mineral_classification
+    CASE WHEN c.value_defined = f.mineral_name THEN (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref) ELSE null::varchar END as mineral_classification,
+    CASE WHEN c.value_defined = f.mineral_name THEN (SELECT cristal_system FROM darwin2.mineralogy WHERE id = f.mineral_ref) ELSE null::varchar END as mineral_cristal_system,
+    CASE WHEN c.value_defined = f.mineral_name THEN (SELECT colour FROM darwin2.mineralogy WHERE id = f.mineral_ref) ELSE null::varchar END as mineral_colour
   FROM 
     public.identifications_abdc i
     INNER JOIN darwin2.identifications as c ON i.old_identification_id = c.id
@@ -560,7 +563,9 @@ insert into public.identifications_abdc
     '' as determination_status,
     true as is_current
     FROM  darwin2.darwin_flat  f
-    WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i WHERE f.taxon_ref is not null and f.taxon_ref != 0 and i.flat_id = f.id)
+    WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i INNER JOIN taxon_identified ti ON i.id = ti.identification_ref WHERE i.flat_id = f.id AND ti.taxon_ref = f.taxon_ref)
+      AND f.taxon_ref is not null
+      AND f.taxon_ref != 0
 );
 
 insert into public.taxon_identified
@@ -716,7 +721,6 @@ insert into public.taxon_identified
     INNER JOIN darwin2.darwin_flat f on i.flat_id = f.id
     WHERE i.is_current = true
       AND i.notion_concerned = 'taxonomy'
-      AND taxon_ref !=0 
 );
 
 CREATE INDEX idx_taxon_identified_identification_ref ON public.taxon_identified (identification_ref);
@@ -742,9 +746,9 @@ insert into public.identifications_abdc
     '' as determination_status,
     true as is_current
     FROM  darwin2.darwin_flat f
-    WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i WHERE f.mineral_ref is not null and f.mineral_ref != 0 and i.flat_id = f.id)
-      AND f.mineral_ref != 0
+    WHERE NOT EXISTS( SELECT 1 FROM public.identifications_abdc i INNER JOIN mineral_identified mi ON i.id = mi.identification_ref WHERE i.flat_id = f.id AND mi.mineral_ref = f.mineral_ref)
       AND f.mineral_ref is not null
+      AND f.mineral_ref != 0
 );
 
 insert into mineral_identified
@@ -755,7 +759,9 @@ insert into mineral_identified
     mineral_ref,
     mineral_parent_ref,
     mineral_level_name,
-    mineral_classification
+    mineral_classification,
+    mineral_cristal_system,
+    mineral_colour
 )
 (
   select distinct on (i.id, f.mineral_name)
@@ -765,12 +771,13 @@ insert into mineral_identified
     f.mineral_ref as mineral_ref,
     f.mineral_parent_ref as mineral_parent_ref,
     f.mineral_level_name as mineral_level_name,
-    (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref) as mineral_classification
+    (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref) as mineral_classification,
+    (SELECT cristal_system FROM darwin2.mineralogy WHERE id = f.mineral_ref) as mineral_cristal_system,
+    (SELECT colour FROM darwin2.mineralogy WHERE id = f.mineral_ref) as mineral_colour
     FROM  public.identifications_abdc i
     INNER JOIN darwin2.darwin_flat  f on i.flat_id = f.id
     WHERE i.is_current = true
       AND i.notion_concerned = 'mineralogy'
-      AND f.mineral_ref !=0 
 );
 
 CREATE INDEX idx_mineral_identified_identification_ref ON public.mineral_identified (identification_ref);
@@ -933,6 +940,22 @@ CREATE TABLE public.lithostratigraphy_abc as
 
 ALTER TABLE public.lithostratigraphy_abc ADD CONSTRAINT pk_litho_abc PRIMARY KEY (id);
 
+CREATE TABLE public.chronostratigraphy_abc as 
+(
+  SELECT * ,
+  ( SELECT name from darwin2.chronostratigraphy c2  WHERE level_ref = 55  AND c1.path like '%/' || c2.id || '/%' ) AS eon,
+  ( SELECT name from darwin2.chronostratigraphy c2  WHERE level_ref = 56  AND c1.path like '%/' || c2.id || '/%' ) as era,
+  ( SELECT name from darwin2.chronostratigraphy c2  WHERE level_ref = 57  AND c1.path like '%/' || c2.id || '/%' ) as subera,
+  ( SELECT name from darwin2.chronostratigraphy c2  WHERE level_ref = 58  AND c1.path like '%/' || c2.id || '/%' ) as system,
+  ( SELECT name from darwin2.chronostratigraphy c2  WHERE level_ref = 59  AND c1.path like '%/' || c2.id || '/%' ) as serie,
+  ( SELECT name from darwin2.chronostratigraphy c2  WHERE level_ref = 60  AND c1.path like '%/' || c2.id || '/%' ) as stage, 
+  ( SELECT name from darwin2.chronostratigraphy c2  WHERE level_ref = 61  AND c1.path like '%/' || c2.id || '/%' ) as substage
+  from darwin2.chronostratigraphy c1
+    
+);
+
+ALTER TABLE public.chronostratigraphy_abc ADD CONSTRAINT pk_chrono_abc PRIMARY KEY (id);
+
 CREATE TABLE public.accomp_mineral AS
 (
 
@@ -960,7 +983,7 @@ CREATE TABLE public.darwin_metadata AS
     'Royal Belgian Institute of Natural Sciences'::text as metadata_owner_name,
     'Rue Vautier straat, 29 - 1000 Bruxelles/Brussels - Belgique/Belgïe'::text as metadata_owner_address,
     'collections@naturalsciences.be'::text as metadata_owner_email,
-    'http://www.naturalsciences.be'::text as metadata_owner_url,
+    'http://darwin.naturalsciences.be'::text as metadata_owner_url,
     'http://www.naturalsciences.be/layout_images/logo'::text as metadata_owner_logo_uri,
     'Rue Vautier straat, 29 - 1000 Bruxelles/Brussels - Belgique/Belgïe'::text as content_contact_address,
     'collections@naturalsciences.be'::text as content_contact_email,
@@ -997,6 +1020,8 @@ ALTER TABLE public.parent_taxonomy ADD CONSTRAINT pk_parent_taxonomy PRIMARY KEY
 
 CREATE INDEX idx_parent_taxon_child_id ON public.parent_taxonomy (child_id);
 CREATE INDEX idx_parent_taxon_parent_id ON public.parent_taxonomy (parent_id);
+CREATE INDEX idx_darwin_flat_chrono_ref ON public.darwin_flat (chrono_ref);
+CREATE INDEX idx_darwin_flat_litho_ref ON public.darwin_flat (litho_ref);
 
 ALTER TABLE public.darwin_flat 
   DROP COLUMN building,
@@ -1036,6 +1061,7 @@ GRANT SELECT ON  public.mineral_identified TO d2viewer;
 GRANT SELECT ON  public.identifier TO d2viewer;
 GRANT SELECT ON  public.flat_properties TO d2viewer;
 GRANT SELECT ON  public.lithostratigraphy_abc TO d2viewer;
+GRANT SELECT ON  public.chronostratigraphy_abc TO d2viewer;
 GRANT SELECT ON  public.accomp_mineral TO d2viewer;
 GRANT SELECT ON  public.darwin_flat TO d2viewer;
 GRANT SELECT ON  public.darwin_metadata TO d2viewer;
@@ -1052,6 +1078,7 @@ ANALYZE public.mineral_identified;
 ANALYZE public.identifier;
 ANALYZE public.flat_properties;
 ANALYZE public.lithostratigraphy_abc;
+ANALYZE public.chronostratigraphy_abc;
 ANALYZE public.accomp_mineral;
 ANALYZE public.darwin_flat;
 ANALYZE public.parent_taxonomy;
