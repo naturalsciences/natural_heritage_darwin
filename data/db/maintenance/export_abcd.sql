@@ -579,10 +579,10 @@ insert into public.taxon_identified
     CombinationAuthorTeamAndYear,
     CultivarGroupName,
     CultivarName,
-    BotanyGenusOrMonomial
-    ZooGenusOrMonomial
+    BotanyGenusOrMonomial,
+    ZooGenusOrMonomial,
     BacterialGenusOrMonomial,
-    ZooSubgenus
+    ZooSubgenus,
     BacterialSubgenus,
     FirstEpithet,
     ZooSpeciesEpithet,
