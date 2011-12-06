@@ -138,7 +138,6 @@ CREATE INDEX CONCURRENTLY idx_igs_ig_num_indexed ON igs(ig_num_indexed text_patt
 CREATE INDEX CONCURRENTLY idx_collection_name_indexed on collections (name_indexed);
 CREATE INDEX CONCURRENTLY idx_insurances_referenced_record on insurances(referenced_relation, record_id);
 CREATE INDEX CONCURRENTLY idx_insurances_insurance_currency on insurances(insurance_currency);
-CREATE INDEX CONCURRENTLY idx_insurances_insurance_year on insurances(insurance_year);
 CREATE INDEX CONCURRENTLY idx_lithostratigraphy_name_order_by on lithostratigraphy(name_order_by);
 CREATE INDEX CONCURRENTLY idx_lithology_name_order_by on lithology(name_order_by);
 CREATE INDEX CONCURRENTLY idx_mineralogy_code on mineralogy(upper(code));
@@ -146,7 +145,6 @@ CREATE INDEX CONCURRENTLY idx_mineralogy_name_order_by on mineralogy(name_order_
 CREATE INDEX CONCURRENTLY idx_mineralogy_cristal_system on mineralogy(cristal_system) WHERE cristal_system <> '';
 CREATE INDEX CONCURRENTLY idx_multimedia_is_digital on multimedia(is_digital);
 CREATE INDEX CONCURRENTLY idx_multimedia_type on multimedia(type);
-CREATE INDEX CONCURRENTLY idx_multimedia_ref on multimedia(parent_ref);
 CREATE INDEX CONCURRENTLY idx_multimedia_keywords_keyword_indexed on multimedia_keywords(keyword_indexed);
 CREATE INDEX CONCURRENTLY idx_my_widgets_user_category on my_widgets(user_ref, category, group_name);
 CREATE INDEX CONCURRENTLY idx_my_widgets_group_name on my_widgets(user_ref, group_name);
@@ -211,7 +209,7 @@ CREATE INDEX CONCURRENTLY idx_gist_vernacular_names_name_ts on vernacular_names 
 CREATE INDEX CONCURRENTLY idx_gist_expeditions_name_ts on expeditions using gist(name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_people_formated_name_ts on people using gin(formated_name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_users_formated_name_ts on users using gin(formated_name_ts);
-CREATE INDEX CONCURRENTLY idx_gist_multimedia_descriptive_ts on multimedia using gist(descriptive_ts);
+CREATE INDEX CONCURRENTLY idx_gist_multimedia_description_ts on multimedia using gist(search_ts);
 CREATE INDEX CONCURRENTLY idx_gin_people_addresses_address_parts_ts on people_addresses using gin(address_parts_ts);
 CREATE INDEX CONCURRENTLY idx_gin_users_addresses_address_parts_ts on users_addresses using gin(address_parts_ts);
 /*CREATE INDEX CONCURRENTLY idx_gist_collection_maintenance_description_ts on collection_maintenance using gist(description_ts);*/
