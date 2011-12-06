@@ -534,7 +534,7 @@ CREATE TABLE public.mineral_identified as
     CASE WHEN c.value_defined = f.mineral_name THEN f.mineral_level_name ELSE null::varchar END as mineral_level_name,
     CASE WHEN c.value_defined = f.mineral_name THEN (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref) ELSE null::varchar END as mineral_classification,
     CASE WHEN c.value_defined = f.mineral_name THEN (SELECT cristal_system FROM darwin2.mineralogy WHERE id = f.mineral_ref) ELSE null::varchar END as mineral_cristal_system,
-    CASE WHEN c.value_defined = f.mineral_name THEN (SELECT colour FROM darwin2.mineralogy WHERE id = f.mineral_ref) ELSE null::varchar END as mineral_colour
+    CASE WHEN c.value_defined = f.mineral_name THEN (SELECT color FROM darwin2.mineralogy WHERE id = f.mineral_ref) ELSE null::varchar END as mineral_colour
   FROM 
     public.identifications_abdc i
     INNER JOIN darwin2.identifications as c ON i.old_identification_id = c.id
@@ -773,7 +773,7 @@ insert into mineral_identified
     f.mineral_level_name as mineral_level_name,
     (SELECT classification FROM darwin2.mineralogy WHERE id = f.mineral_ref) as mineral_classification,
     (SELECT cristal_system FROM darwin2.mineralogy WHERE id = f.mineral_ref) as mineral_cristal_system,
-    (SELECT colour FROM darwin2.mineralogy WHERE id = f.mineral_ref) as mineral_colour
+    (SELECT color FROM darwin2.mineralogy WHERE id = f.mineral_ref) as mineral_colour
     FROM  public.identifications_abdc i
     INNER JOIN darwin2.darwin_flat  f on i.flat_id = f.id
     WHERE i.is_current = true
