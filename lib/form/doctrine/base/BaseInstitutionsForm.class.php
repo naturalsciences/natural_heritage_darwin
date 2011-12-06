@@ -17,6 +17,7 @@ abstract class BaseInstitutionsForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'                    => new sfWidgetFormInputHidden(),
       'is_physical'           => new sfWidgetFormInputCheckbox(),
+      'is_legal'              => new sfWidgetFormInputCheckbox(),
       'sub_type'              => new sfWidgetFormTextarea(),
       'formated_name'         => new sfWidgetFormTextarea(),
       'formated_name_indexed' => new sfWidgetFormTextarea(),
@@ -28,6 +29,7 @@ abstract class BaseInstitutionsForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'                    => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'is_physical'           => new sfValidatorBoolean(array('required' => false)),
+      'is_legal'              => new sfValidatorBoolean(array('required' => false)),
       'sub_type'              => new sfValidatorString(array('required' => false)),
       'formated_name'         => new sfValidatorString(array('required' => false)),
       'formated_name_indexed' => new sfValidatorString(array('required' => false)),

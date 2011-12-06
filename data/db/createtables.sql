@@ -524,7 +524,7 @@ create table multimedia
         type varchar not null default 'image',
         sub_type varchar,
         title varchar not null,
-        description varchar not null default '/',
+        description varchar not null default '',
         uri varchar,
         search_ts tsvector not null,
         creation_date date not null default '01/01/0001',
@@ -1447,14 +1447,13 @@ create table insurances
         id integer not null default nextval('insurances_id_seq'),
         insurance_value numeric(16,2) not null,
         insurance_currency varchar not null default '€',
-        insurance_year smallint not null default 0,
         date_from_mask integer not null default 0,
         date_from date not null default '01/01/0001',
         date_to_mask integer not null default 0,
         date_to date not null default '31/12/2038',
         insurer_ref integer,
         constraint pk_insurances primary key (id),
-        constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, insurance_year),
+        constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, date_from, date_to),
         constraint fk_specimen_parts_insurances_people foreign key (insurer_ref) references people(id) on delete set null,
         constraint chk_chk_specimen_parts_insurances check (insurance_value > 0)
        )
@@ -1463,7 +1462,6 @@ comment on table insurances is 'List of insurances values for given specimen par
 comment on column insurances.referenced_relation is 'Reference-Name of table concerned';
 comment on column insurances.record_id is 'Identifier of record concerned';
 comment on column insurances.insurance_currency is 'Currency used with insurance value';
-comment on column insurances.insurance_year is 'Reference year for insurance subscription';
 comment on column insurances.insurance_value is 'Insurance value';
 comment on column insurances.insurer_ref is 'Reference of the insurance firm an insurance have been subscripted at';
 

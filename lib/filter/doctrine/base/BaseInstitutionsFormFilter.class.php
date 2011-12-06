@@ -14,6 +14,7 @@ abstract class BaseInstitutionsFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'is_physical'           => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'is_legal'              => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'sub_type'              => new sfWidgetFormFilterInput(),
       'formated_name'         => new sfWidgetFormFilterInput(),
       'formated_name_indexed' => new sfWidgetFormFilterInput(),
@@ -24,6 +25,7 @@ abstract class BaseInstitutionsFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'is_physical'           => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'is_legal'              => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'sub_type'              => new sfValidatorPass(array('required' => false)),
       'formated_name'         => new sfValidatorPass(array('required' => false)),
       'formated_name_indexed' => new sfValidatorPass(array('required' => false)),
@@ -51,6 +53,7 @@ abstract class BaseInstitutionsFormFilter extends BaseFormFilterDoctrine
     return array(
       'id'                    => 'Number',
       'is_physical'           => 'Boolean',
+      'is_legal'              => 'Boolean',
       'sub_type'              => 'Text',
       'formated_name'         => 'Text',
       'formated_name_indexed' => 'Text',

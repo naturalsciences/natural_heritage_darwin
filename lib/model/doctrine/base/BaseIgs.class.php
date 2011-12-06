@@ -15,6 +15,7 @@
  * @property Doctrine_Collection $IndividualSearch
  * @property Doctrine_Collection $PartSearch
  * @property Doctrine_Collection $IgsSearch
+ * @property Doctrine_Collection $LoanItems
  * 
  * @method integer             getId()               Returns the current record's "id" value
  * @method string              getIgNum()            Returns the current record's "ig_num" value
@@ -26,6 +27,7 @@
  * @method Doctrine_Collection getIndividualSearch() Returns the current record's "IndividualSearch" collection
  * @method Doctrine_Collection getPartSearch()       Returns the current record's "PartSearch" collection
  * @method Doctrine_Collection getIgsSearch()        Returns the current record's "IgsSearch" collection
+ * @method Doctrine_Collection getLoanItems()        Returns the current record's "LoanItems" collection
  * @method Igs                 setId()               Sets the current record's "id" value
  * @method Igs                 setIgNum()            Sets the current record's "ig_num" value
  * @method Igs                 setIgNumIndexed()     Sets the current record's "ig_num_indexed" value
@@ -36,6 +38,7 @@
  * @method Igs                 setIndividualSearch() Sets the current record's "IndividualSearch" collection
  * @method Igs                 setPartSearch()       Sets the current record's "PartSearch" collection
  * @method Igs                 setIgsSearch()        Sets the current record's "IgsSearch" collection
+ * @method Igs                 setLoanItems()        Sets the current record's "LoanItems" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -91,6 +94,10 @@ abstract class BaseIgs extends sfDoctrineRecord
              'foreign' => 'ig_ref'));
 
         $this->hasMany('IgsSearch', array(
+             'local' => 'id',
+             'foreign' => 'ig_ref'));
+
+        $this->hasMany('LoanItems', array(
              'local' => 'id',
              'foreign' => 'ig_ref'));
     }

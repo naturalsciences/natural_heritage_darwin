@@ -34,6 +34,7 @@
  * @property Doctrine_Collection $MySavedSearches
  * @property Doctrine_Collection $MyWidgets
  * @property Doctrine_Collection $Preferences
+ * @property Doctrine_Collection $LoanRights
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method boolean             getIsPhysical()            Returns the current record's "is_physical" value
@@ -64,6 +65,7 @@
  * @method Doctrine_Collection getMySavedSearches()       Returns the current record's "MySavedSearches" collection
  * @method Doctrine_Collection getMyWidgets()             Returns the current record's "MyWidgets" collection
  * @method Doctrine_Collection getPreferences()           Returns the current record's "Preferences" collection
+ * @method Doctrine_Collection getLoanRights()            Returns the current record's "LoanRights" collection
  * @method Users               setId()                    Sets the current record's "id" value
  * @method Users               setIsPhysical()            Sets the current record's "is_physical" value
  * @method Users               setSubType()               Sets the current record's "sub_type" value
@@ -93,6 +95,7 @@
  * @method Users               setMySavedSearches()       Sets the current record's "MySavedSearches" collection
  * @method Users               setMyWidgets()             Sets the current record's "MyWidgets" collection
  * @method Users               setPreferences()           Sets the current record's "Preferences" collection
+ * @method Users               setLoanRights()            Sets the current record's "LoanRights" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -222,6 +225,10 @@ abstract class BaseUsers extends sfDoctrineRecord
              'foreign' => 'user_ref'));
 
         $this->hasMany('Preferences', array(
+             'local' => 'id',
+             'foreign' => 'user_ref'));
+
+        $this->hasMany('LoanRights', array(
              'local' => 'id',
              'foreign' => 'user_ref'));
     }
