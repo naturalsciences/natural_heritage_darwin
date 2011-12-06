@@ -848,9 +848,14 @@ Insurances:
         date_from_mask: { type: integer, notnull: true, default:0}
         date_to: { type: string, notnull: true, default: '2038-12-31'}
         date_to_mask: { type: integer, notnull: true, default:0}
+        contact_ref: { type: integer}
     relations:
         People:
             local: insurer_ref
+            foreign: id
+        Contact:
+            class: People
+            local: contact_ref
             foreign: id
 
 SpecimensAccompanying:

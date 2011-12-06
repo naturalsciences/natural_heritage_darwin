@@ -15,7 +15,9 @@
  * @property integer $date_from_mask
  * @property string $date_to
  * @property integer $date_to_mask
+ * @property integer $contact_ref
  * @property People $People
+ * @property People $Contact
  * 
  * @method integer    getId()                  Returns the current record's "id" value
  * @method string     getReferencedRelation()  Returns the current record's "referenced_relation" value
@@ -27,7 +29,9 @@
  * @method integer    getDateFromMask()        Returns the current record's "date_from_mask" value
  * @method string     getDateTo()              Returns the current record's "date_to" value
  * @method integer    getDateToMask()          Returns the current record's "date_to_mask" value
+ * @method integer    getContactRef()          Returns the current record's "contact_ref" value
  * @method People     getPeople()              Returns the current record's "People" value
+ * @method People     getContact()             Returns the current record's "Contact" value
  * @method Insurances setId()                  Sets the current record's "id" value
  * @method Insurances setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method Insurances setRecordId()            Sets the current record's "record_id" value
@@ -38,7 +42,9 @@
  * @method Insurances setDateFromMask()        Sets the current record's "date_from_mask" value
  * @method Insurances setDateTo()              Sets the current record's "date_to" value
  * @method Insurances setDateToMask()          Sets the current record's "date_to_mask" value
+ * @method Insurances setContactRef()          Sets the current record's "contact_ref" value
  * @method Insurances setPeople()              Sets the current record's "People" value
+ * @method Insurances setContact()             Sets the current record's "Contact" value
  * 
  * @package    darwin
  * @subpackage model
@@ -97,6 +103,9 @@ abstract class BaseInsurances extends sfDoctrineRecord
              'notnull' => true,
              'default' => 0,
              ));
+        $this->hasColumn('contact_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
     }
 
     public function setUp()
@@ -104,6 +113,10 @@ abstract class BaseInsurances extends sfDoctrineRecord
         parent::setUp();
         $this->hasOne('People', array(
              'local' => 'insurer_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('People as Contact', array(
+             'local' => 'contact_ref',
              'foreign' => 'id'));
     }
 }

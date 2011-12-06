@@ -25,6 +25,7 @@ abstract class BaseInsurancesForm extends BaseFormDoctrine
       'date_from_mask'      => new sfWidgetFormInputText(),
       'date_to'             => new sfWidgetFormTextarea(),
       'date_to_mask'        => new sfWidgetFormInputText(),
+      'contact_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Contact'), 'add_empty' => true)),
     ));
 
     $this->setValidators(array(
@@ -38,6 +39,7 @@ abstract class BaseInsurancesForm extends BaseFormDoctrine
       'date_from_mask'      => new sfValidatorInteger(array('required' => false)),
       'date_to'             => new sfValidatorString(array('required' => false)),
       'date_to_mask'        => new sfValidatorInteger(array('required' => false)),
+      'contact_ref'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Contact'), 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('insurances[%s]');

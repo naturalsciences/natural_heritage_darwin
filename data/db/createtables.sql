@@ -1452,9 +1452,11 @@ create table insurances
         date_to_mask integer not null default 0,
         date_to date not null default '31/12/2038',
         insurer_ref integer,
+        contact_ref integer,
         constraint pk_insurances primary key (id),
         constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, date_from, date_to),
         constraint fk_specimen_parts_insurances_people foreign key (insurer_ref) references people(id) on delete set null,
+        constraint fk_specimen_parts_insurances_contact foreign key (contact_ref) references people(id) on delete set null,
         constraint chk_chk_specimen_parts_insurances check (insurance_value > 0)
        )
        inherits (template_table_record_ref);

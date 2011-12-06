@@ -22,6 +22,7 @@ abstract class BaseInsurancesFormFilter extends BaseFormFilterDoctrine
       'date_from_mask'      => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'date_to'             => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'date_to_mask'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'contact_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Contact'), 'add_empty' => true)),
     ));
 
     $this->setValidators(array(
@@ -34,6 +35,7 @@ abstract class BaseInsurancesFormFilter extends BaseFormFilterDoctrine
       'date_from_mask'      => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'date_to'             => new sfValidatorPass(array('required' => false)),
       'date_to_mask'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'contact_ref'         => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Contact'), 'column' => 'id')),
     ));
 
     $this->widgetSchema->setNameFormat('insurances_filters[%s]');
@@ -63,6 +65,7 @@ abstract class BaseInsurancesFormFilter extends BaseFormFilterDoctrine
       'date_from_mask'      => 'Number',
       'date_to'             => 'Text',
       'date_to_mask'        => 'Number',
+      'contact_ref'         => 'ForeignKey',
     );
   }
 }
