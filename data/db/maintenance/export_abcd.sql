@@ -1005,19 +1005,25 @@ CREATE SEQUENCE public.parent_taxonomy_id_seq;
 
 CREATE TABLE public.parent_taxonomy AS
 (
-  select nextval('public.parent_taxonomy_id_seq') as id, pt.child_id as child_id, pt.parent_id as parent_id, spt.name as taxon_name, spt.level_name as level_name from 
+  select nextval('public.parent_taxonomy_id_seq') as id, f.id as flat_id, pt.child_id as child_id, pt.parent_id as parent_id, spt.name as taxon_name, spt.level_name as level_name from 
   (select t.id as child_id, st.tax_parent::integer as parent_id
-  from darwin2.taxonomy as t 
-  inner join 
-    (select id, regexp_split_to_table(path, '/') as tax_parent from darwin2.taxonomy) as st on st.id = t.id
-  where st.tax_parent != '' 
+   from darwin2.taxonomy as t 
+   inner join 
+   (select id, regexp_split_to_table(path, '/') as tax_parent from darwin2.taxonomy) as st 
+   on st.id = t.id
+   where st.tax_parent != '' 
   ) as pt
   inner join
-    (select taxonomy.id, name, level_name from darwin2.taxonomy inner join darwin2.catalogue_levels as cl on cl.id = taxonomy.level_ref where cl.level_name != 'unranked') as spt on spt.id = pt.parent_id
+  (select taxonomy.id, name, level_name from darwin2.taxonomy inner join darwin2.catalogue_levels as cl on cl.id = taxonomy.level_ref where cl.level_name != 'unranked') as spt 
+  on spt.id = pt.parent_id
+  inner join
+  darwin_flat as f
+  on f.taxon_ref = pt.child_id
 );
 
 ALTER TABLE public.parent_taxonomy ADD CONSTRAINT pk_parent_taxonomy PRIMARY KEY (id);
 
+CREATE INDEX idx_parent_taxon_child_id ON public.parent_taxonomy (flat_id);
 CREATE INDEX idx_parent_taxon_child_id ON public.parent_taxonomy (child_id);
 CREATE INDEX idx_parent_taxon_parent_id ON public.parent_taxonomy (parent_id);
 CREATE INDEX idx_darwin_flat_chrono_ref ON public.darwin_flat (chrono_ref);
