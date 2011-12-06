@@ -73,6 +73,7 @@ CREATE INDEX CONCURRENTLY idx_specimen_collecting_methods_method_ref on specimen
 CREATE INDEX CONCURRENTLY idx_specimen_collecting_tools_specimen_ref on specimen_collecting_tools(specimen_ref);
 CREATE INDEX CONCURRENTLY idx_specimen_collecting_tools_tool_ref on specimen_collecting_tools(collecting_tool_ref);
 CREATE INDEX CONCURRENTLY idx_insurances_insurer_ref on insurances(insurer_ref);
+CREATE INDEX CONCURRENTLY idx_insurances_contact_ref on insurances(contact_ref);
 CREATE INDEX CONCURRENTLY idx_specimens_ig_ref on specimens(ig_ref);
 CREATE INDEX CONCURRENTLY idx_tags_gtu_ref on tags(gtu_ref);
 CREATE INDEX CONCURRENTLY idx_tags_group_ref on tags(group_ref);
