@@ -113,11 +113,11 @@ CREATE TABLE public.flat_abcd as
 
 -- GTU
   
-  gtu.elevation as gtu_altitude,
-  gtu.elevation_accuracy as gtu_altitude_accuracy,
-  gtu.latitude as gtu_latitude,
-  gtu.longitude as gtu_longitude,
-  gtu.lat_long_accuracy as gtu_lat_long_accuracy,
+  CASE WHEN station_visible = true THEN gtu.elevation ELSE null::double precision END as gtu_altitude,
+  CASE WHEN station_visible = true THEN gtu.elevation_accuracy ELSE null::double precision END as gtu_altitude_accuracy,
+  CASE WHEN station_visible = true THEN gtu.latitude ELSE null::double precision END as gtu_latitude,
+  CASE WHEN station_visible = true THEN gtu.longitude ELSE null::double precision END as gtu_longitude,
+  CASE WHEN station_visible = true THEN gtu.lat_long_accuracy ELSE null::double precision END as gtu_lat_long_accuracy,
   CASE WHEN gtu.gtu_from_date_mask = 0 THEN null::timestamp ELSE gtu.gtu_from_date END as gtu_from_date,
   CASE WHEN gtu.gtu_to_date_mask = 0 THEN null::timestamp ELSE gtu.gtu_to_date END as gtu_to_date,
 
@@ -129,17 +129,17 @@ CREATE TABLE public.flat_abcd as
 
 
   ( CASE WHEN cp1.date_to_mask = 0 THEN null::timestamp ELSE cp1.date_to END - CASE WHEN cp1.date_from_mask = 0 THEN NULL::timestamp ELSE cp1.date_from END ) as depth_duration,
-  ( select min(property_value) from darwin2.properties_values where property_ref = cp1.id) as depth_lowervalue,
-  ( select case when max(property_value) = min(property_value) then null::text else max(property_value) end from darwin2.properties_values where property_ref = cp1.id) as depth_uppervalue, /*** only if 1? **/
-  ( select avg(property_accuracy_unified) from darwin2.properties_values where property_ref = cp1.id) as depth_accuracy,
+  CASE WHEN station_visible = true THEN ( select min(property_value)::text from darwin2.properties_values where property_ref = cp1.id) ELSE null::text END as depth_lowervalue,
+  CASE WHEN station_visible = true THEN ( select case when max(property_value)::text = min(property_value)::text then null::text else max(property_value)::text end from darwin2.properties_values where property_ref = cp1.id) ELSE null::text END as depth_uppervalue, /*** only if 1? **/
+  CASE WHEN station_visible = true THEN ( select avg(property_accuracy)::real from darwin2.properties_values where property_ref = cp1.id) ELSE null::real END as depth_accuracy,
   cp1.property_method as depth_method,
   cp1.property_unit as depth_unit,
   CASE WHEN cp1.date_from_mask = 0 THEN null::timestamp ELSE cp1.date_from END as depth_date_time,
 
   ( CASE WHEN cp2.date_to_mask = 0 THEN null::timestamp ELSE cp2.date_to END - CASE WHEN cp2.date_from_mask = 0 THEN NULL::timestamp ELSE cp2.date_from END ) as height_duration,
-  ( select min(property_value) from darwin2.properties_values where property_ref = cp2.id) as height_lowervalue,
-  ( select case when max(property_value) = min(property_value) then null::text else max(property_value) end from darwin2.properties_values where property_ref = cp2.id) as height_uppervalue, /*** only if 1? **/
-  ( select avg(property_accuracy_unified) from darwin2.properties_values where property_ref = cp2.id) as height_accuracy,
+  CASE WHEN station_visible = true THEN ( select min(property_value)::text from darwin2.properties_values where property_ref = cp2.id) ELSE null::text END as height_lowervalue,
+  CASE WHEN station_visible = true THEN ( select case when max(property_value)::text = min(property_value)::text then null::text else max(property_value)::text end from darwin2.properties_values where property_ref = cp2.id) ELSE null::text END as height_uppervalue, /*** only if 1? **/
+  CASE WHEN station_visible = true THEN ( select avg(property_accuracy)::real from darwin2.properties_values where property_ref = cp2.id) ELSE null::text END as height_accuracy,
   cp2.property_method as height_method,
   cp2.property_unit as height_unit,
   CASE WHEN cp2.date_from_mask = 0 THEN null::timestamp ELSE cp2.date_from END as height_date_time,
@@ -155,7 +155,7 @@ CREATE TABLE public.flat_abcd as
                                    ), chr(11), '')
    ) as flat_comments,
 
-  ( select min(property_value) from darwin2.properties_values where property_ref = cp3.id) as utm_text
+  CASE WHEN station_visible = true THEN ( select min(property_value)::text from darwin2.properties_values where property_ref = cp3.id) ELSE null::text END as utm_text
 
 
   FROM darwin2.darwin_flat f
@@ -204,7 +204,7 @@ CREATE TABLE public.gtu_properties as
     INNER JOIN darwin2.catalogue_properties c ON referenced_relation = 'gtu' AND record_id = gtu.id
     INNER JOIN darwin2.properties_values v ON property_ref = c.id 
   WHERE 
-    property_type != 'geo position' and property_sub_type not in ('height', 'altitude', 'depth')
+    property_type != 'geo position' and property_sub_type not in ('height', 'altitude', 'depth') and station_visible = true
 
   GROUP BY 
     flat.id,
