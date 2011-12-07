@@ -12,10 +12,6 @@ class InsurancesSubForm extends BaseInsurancesForm
   public function configure()
   {
 
-    $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
-    array_unshift($yearsKeyVal, 0);
-    $years = array_combine($yearsKeyVal, $yearsKeyVal);
-    $years[0]='-';
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['referenced_relation'] = new sfValidatorString(array('required'=>false));
     $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
@@ -30,9 +26,6 @@ class InsurancesSubForm extends BaseInsurancesForm
                                                                                    'add_label' => '',
                                                                                    )
                                                                             );
-    $this->widgetSchema['insurance_year'] = new sfWidgetFormChoice(array('choices'  => $years,
-                                                                        )
-                                                                  );
     $this->widgetSchema['insurer_ref'] = new widgetFormButtonRef(array(
        'model' => 'People',
        'link_url' => 'institution/choose',
@@ -44,19 +37,84 @@ class InsurancesSubForm extends BaseInsurancesForm
       array('class'=>'inline',
            )
     );
-
+    $this->widgetSchema['contact_ref'] = new widgetFormButtonRef(array(
+       'model' => 'People',
+       'link_url' => 'people/choose',
+       'method' => 'getFormatedName',
+       'box_title' => $this->getI18N()->__('Choose contact'),
+       'nullable' => true,
+       'button_class'=>'',
+     ),
+      array('class'=>'inline',
+           )
+    );
     $this->widgetSchema->setLabels(array('insurance_value' => 'Value' ,
                                          'insurance_currency' => 'Currency',
                                          'insurance_year' => 'Year',
-                                         'insurer_ref' => 'Insurer:'
+                                         'insurer_ref' => 'Insurer:',
+                                         'contact_ref' => 'Contact'
                                         )
                                   );
 
     $this->widgetSchema['insurance_currency']->setAttributes(array('class'=>'vsmall_size'));
+
+    $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
+    $years = array_combine($yearsKeyVal, $yearsKeyVal);
+    $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
+    $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
+    $maxDate->setStart(false);
+
+    $this->widgetSchema['date_from'] = new widgetFormJQueryFuzzyDate(array('culture'=>  $this->getCurrentCulture(),
+                                                                               'image'=> '/images/calendar.gif', 
+                                                                               'format' => '%day%/%month%/%year%', 
+                                                                               'years' => $years,
+									       'with_time' => false ),
+                                                                         array('class' => 'from_date')
+                                                                        );
+    $this->widgetSchema['date_to'] = new widgetFormJQueryFuzzyDate(array('culture'=> $this->getCurrentCulture(),
+                                                                             'image'=> '/images/calendar.gif', 
+                                                                             'format' => '%day%/%month%/%year%', 
+                                                                             'years' => $years,
+                                                                             'with_time' => false),
+                                                                       array('class' => 'to_date')
+                                                                      );
+
+    $this->validatorSchema['date_from'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      'with_time' => true
+    ),
+    array('invalid' => 'Invalid date "from"')
+    );
+
+    $this->validatorSchema['date_to'] = new fuzzyDateValidator(array(
+	'required' => false,
+	'from_date' => false,
+	'min' => $minDate,
+	'max' => $maxDate,
+	'empty_value' => $dateUpperBound,
+	'with_time' => true
+    ),
+    array('invalid' => 'Invalid date "to"')
+    );
+
+     $this->validatorSchema->setPostValidator(
+	  new sfValidatorSchemaCompare(
+	    'date_from',
+	    '<=', 
+            'date_to', 
+            array('throw_global_error' => true),
+	    array('invalid'=>'The "from" date cannot be above the "to" date.'))) ;
+	  
+    
     $this->validatorSchema['insurance_currency']->setOption('required', false);
 
     $this->validatorSchema['insurance_value'] = new sfValidatorNumber(array('required'=>false));
-    $this->validatorSchema['insurance_year'] = new sfValidatorChoice(array('choices' => $yearsKeyVal,'required'=>false));
 
     /*Insurances post-validation to empty null values*/
     $this->mergePostValidator(new InsurancesValidatorSchema());

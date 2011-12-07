@@ -788,7 +788,7 @@ p.tree
   display:none;
 }
 
-.search_box
+.search_box, .contact_search_box
 {
   display:none;
   border: 2px solid #5BAABD;
@@ -1813,7 +1813,7 @@ img.info
   margin-left:2em;
 }
 
-#catalogue_people_screen .search_box, .search_catalogue_people_both
+#catalogue_people_screen .search_box,#catalogue_people_screen .contact_search_box, .search_catalogue_people_both
 {
   margin-top: 0.3em;
 }

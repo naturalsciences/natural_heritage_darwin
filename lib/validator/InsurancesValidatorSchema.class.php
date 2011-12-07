@@ -23,10 +23,6 @@ class InsurancesValidatorSchema extends sfValidatorSchema
     {
       return array();
     }
-    elseif (!$value['insurance_year'])
-    {
-      $errorSchemaLocal->addError(new sfValidatorError($this, 'required'),'insurance_year');
-    }
 
     if (count($errorSchemaLocal))
     {

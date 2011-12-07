@@ -2,8 +2,10 @@
   <thead>
     <tr>
       <th><?php echo __('Value');?></th>
-      <th><?php echo __('Year of reference');?></th>
+      <th><?php echo __('Date from');?></th>
+      <th><?php echo __('Date to');?></th>
       <th><?php echo __('Insurer');?></th>
+      <th><?php echo __('Person of contact'); ?></th>
       <th></th>
     </tr>
   </thead>
@@ -15,7 +17,8 @@
 	    <?php echo $insurance->getFormatedInsuranceValue();?>
 	  </a>
       </td>
-      <td><?php echo $insurance->getFormatedInsuranceYear();?></td>
+      <td><?php echo $insurance->getDateFromMasked(ESC_RAW);?></td>
+      <td><?php echo $insurance->getDateToMasked(ESC_RAW);?></td>      
       <td>
         <?php if($insurance->People): ?>
           <?php echo $insurance->People->getFamilyName();?>
@@ -23,6 +26,13 @@
           <?php echo '-'; ?>
         <?php endif; ?>
       </td>
+      <td>
+        <?php if($insurance->Contact): ?>
+          <?php echo $insurance->Contact->getFamilyName();?>
+        <?php else: ?>
+          <?php echo '-'; ?>
+        <?php endif; ?>
+      </td>      
       <td class="widget_row_delete">
         <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=insurances&id='.$insurance->getId());?>" title="<?php echo __('Are you sure ?') ?>"><?php echo image_tag('remove.png'); ?>
         </a>
