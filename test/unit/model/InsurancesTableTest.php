@@ -8,6 +8,8 @@ $insurances->setInsuranceValue(750);
 $insurances->setInsuranceCurrency('€');
 $insurances->setReferencedRelation('igs');
 $insurances->setRecordId($lastIg->getId());
+$insurances->setDateFrom('2001-01-01');
+$insurances->setDateFromMask('56');
 $insurances->save();
 
 $insurances = Doctrine::getTable('insurances')->findForTable('igs', $lastIg->getId());

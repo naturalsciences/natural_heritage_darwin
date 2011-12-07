@@ -113,11 +113,11 @@ CREATE TABLE public.flat_abcd as
 
 -- GTU
   
-  gtu.elevation as gtu_altitude,
-  gtu.elevation_accuracy as gtu_altitude_accuracy,
-  gtu.latitude as gtu_latitude,
-  gtu.longitude as gtu_longitude,
-  gtu.lat_long_accuracy as gtu_lat_long_accuracy,
+  CASE WHEN station_visible = true THEN gtu.elevation ELSE null::double precision END as gtu_altitude,
+  CASE WHEN station_visible = true THEN gtu.elevation_accuracy ELSE null::double precision END as gtu_altitude_accuracy,
+  CASE WHEN station_visible = true THEN gtu.latitude ELSE null::double precision END as gtu_latitude,
+  CASE WHEN station_visible = true THEN gtu.longitude ELSE null::double precision END as gtu_longitude,
+  CASE WHEN station_visible = true THEN gtu.lat_long_accuracy ELSE null::double precision END as gtu_lat_long_accuracy,
   CASE WHEN gtu.gtu_from_date_mask = 0 THEN null::timestamp ELSE gtu.gtu_from_date END as gtu_from_date,
   CASE WHEN gtu.gtu_to_date_mask = 0 THEN null::timestamp ELSE gtu.gtu_to_date END as gtu_to_date,
 
@@ -129,17 +129,17 @@ CREATE TABLE public.flat_abcd as
 
 
   ( CASE WHEN cp1.date_to_mask = 0 THEN null::timestamp ELSE cp1.date_to END - CASE WHEN cp1.date_from_mask = 0 THEN NULL::timestamp ELSE cp1.date_from END ) as depth_duration,
-  ( select min(property_value) from darwin2.properties_values where property_ref = cp1.id) as depth_lowervalue,
-  ( select case when max(property_value) = min(property_value) then null::text else max(property_value) end from darwin2.properties_values where property_ref = cp1.id) as depth_uppervalue, /*** only if 1? **/
-  ( select avg(property_accuracy_unified) from darwin2.properties_values where property_ref = cp1.id) as depth_accuracy,
+  CASE WHEN station_visible = true THEN ( select min(property_value)::text from darwin2.properties_values where property_ref = cp1.id) ELSE null::text END as depth_lowervalue,
+  CASE WHEN station_visible = true THEN ( select case when max(property_value)::text = min(property_value)::text then null::text else max(property_value)::text end from darwin2.properties_values where property_ref = cp1.id) ELSE null::text END as depth_uppervalue, /*** only if 1? **/
+  CASE WHEN station_visible = true THEN ( select avg(property_accuracy)::real from darwin2.properties_values where property_ref = cp1.id) ELSE null::real END as depth_accuracy,
   cp1.property_method as depth_method,
   cp1.property_unit as depth_unit,
   CASE WHEN cp1.date_from_mask = 0 THEN null::timestamp ELSE cp1.date_from END as depth_date_time,
 
   ( CASE WHEN cp2.date_to_mask = 0 THEN null::timestamp ELSE cp2.date_to END - CASE WHEN cp2.date_from_mask = 0 THEN NULL::timestamp ELSE cp2.date_from END ) as height_duration,
-  ( select min(property_value) from darwin2.properties_values where property_ref = cp2.id) as height_lowervalue,
-  ( select case when max(property_value) = min(property_value) then null::text else max(property_value) end from darwin2.properties_values where property_ref = cp2.id) as height_uppervalue, /*** only if 1? **/
-  ( select avg(property_accuracy_unified) from darwin2.properties_values where property_ref = cp2.id) as height_accuracy,
+  CASE WHEN station_visible = true THEN ( select min(property_value)::text from darwin2.properties_values where property_ref = cp2.id) ELSE null::text END as height_lowervalue,
+  CASE WHEN station_visible = true THEN ( select case when max(property_value)::text = min(property_value)::text then null::text else max(property_value)::text end from darwin2.properties_values where property_ref = cp2.id) ELSE null::text END as height_uppervalue, /*** only if 1? **/
+  CASE WHEN station_visible = true THEN ( select avg(property_accuracy)::real from darwin2.properties_values where property_ref = cp2.id) ELSE null::real END as height_accuracy,
   cp2.property_method as height_method,
   cp2.property_unit as height_unit,
   CASE WHEN cp2.date_from_mask = 0 THEN null::timestamp ELSE cp2.date_from END as height_date_time,
@@ -155,7 +155,7 @@ CREATE TABLE public.flat_abcd as
                                    ), chr(11), '')
    ) as flat_comments,
 
-  ( select min(property_value) from darwin2.properties_values where property_ref = cp3.id) as utm_text
+  CASE WHEN station_visible = true THEN ( select min(property_value)::text from darwin2.properties_values where property_ref = cp3.id) ELSE null::text END as utm_text
 
 
   FROM darwin2.darwin_flat f
@@ -204,7 +204,7 @@ CREATE TABLE public.gtu_properties as
     INNER JOIN darwin2.catalogue_properties c ON referenced_relation = 'gtu' AND record_id = gtu.id
     INNER JOIN darwin2.properties_values v ON property_ref = c.id 
   WHERE 
-    property_type != 'geo position' and property_sub_type not in ('height', 'altitude', 'depth')
+    property_type != 'geo position' and property_sub_type not in ('height', 'altitude', 'depth') and station_visible = true
 
   GROUP BY 
     flat.id,
@@ -239,7 +239,7 @@ CREATE TABLE public.gtu_place as
   
   inner join darwin2.tags ON f.gtu_ref = tags.gtu_ref
 
-  WHERE sub_group_type != 'country'
+  WHERE sub_group_type != 'country' and station_visible = true
 );
 
 ALTER TABLE public.gtu_place ADD CONSTRAINT pk_gtu_place_id PRIMARY KEY (id);
@@ -1005,19 +1005,25 @@ CREATE SEQUENCE public.parent_taxonomy_id_seq;
 
 CREATE TABLE public.parent_taxonomy AS
 (
-  select nextval('public.parent_taxonomy_id_seq') as id, pt.child_id as child_id, pt.parent_id as parent_id, spt.name as taxon_name, spt.level_name as level_name from 
+  select nextval('public.parent_taxonomy_id_seq') as id, f.id as flat_id, pt.child_id as child_id, pt.parent_id as parent_id, spt.name as taxon_name, spt.level_name as level_name from 
   (select t.id as child_id, st.tax_parent::integer as parent_id
-  from darwin2.taxonomy as t 
-  inner join 
-    (select id, regexp_split_to_table(path, '/') as tax_parent from darwin2.taxonomy) as st on st.id = t.id
-  where st.tax_parent != '' 
+   from darwin2.taxonomy as t 
+   inner join 
+   (select id, regexp_split_to_table(path, '/') as tax_parent from darwin2.taxonomy) as st 
+   on st.id = t.id
+   where st.tax_parent != '' 
   ) as pt
   inner join
-    (select taxonomy.id, name, level_name from darwin2.taxonomy inner join darwin2.catalogue_levels as cl on cl.id = taxonomy.level_ref where cl.level_name != 'unranked') as spt on spt.id = pt.parent_id
+  (select taxonomy.id, name, level_name from darwin2.taxonomy inner join darwin2.catalogue_levels as cl on cl.id = taxonomy.level_ref where cl.level_name != 'unranked') as spt 
+  on spt.id = pt.parent_id
+  inner join
+  darwin_flat as f
+  on f.taxon_ref = pt.child_id
 );
 
 ALTER TABLE public.parent_taxonomy ADD CONSTRAINT pk_parent_taxonomy PRIMARY KEY (id);
 
+CREATE INDEX idx_parent_taxon_child_id ON public.parent_taxonomy (flat_id);
 CREATE INDEX idx_parent_taxon_child_id ON public.parent_taxonomy (child_id);
 CREATE INDEX idx_parent_taxon_parent_id ON public.parent_taxonomy (parent_id);
 CREATE INDEX idx_darwin_flat_chrono_ref ON public.darwin_flat (chrono_ref);
