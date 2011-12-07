@@ -239,7 +239,7 @@ CREATE TABLE public.gtu_place as
   
   inner join darwin2.tags ON f.gtu_ref = tags.gtu_ref
 
-  WHERE sub_group_type != 'country'
+  WHERE sub_group_type != 'country' and station_visible = true
 );
 
 ALTER TABLE public.gtu_place ADD CONSTRAINT pk_gtu_place_id PRIMARY KEY (id);
