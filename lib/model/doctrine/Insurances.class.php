@@ -65,7 +65,7 @@ class Insurances extends BaseInsurances
   * @param string $tag Tag wich will be arround fuzzy values (default < em >)
   * @return string the Date masked
   */
-  public function getFromDateMasked($tag='em')
+  public function getDateFromMasked($tag='em')
   {
     $dateTime = new FuzzyDateTime($this->_get('date_from'), $this->_get('date_from_mask'),true,true);
     return $dateTime->getDateMasked($tag);
@@ -76,7 +76,7 @@ class Insurances extends BaseInsurances
   * @param string $tag Tag wich will be arround fuzzy values (default < em >)
   * @return string the Date masked
   */
-  public function getToDateMasked($tag='em')
+  public function getDateToMasked($tag='em')
   {
     $dateTime = new FuzzyDateTime($this->_get('date_to'), $this->_get('date_to_mask'),false,true);
     return $dateTime->getDateMasked($tag);
