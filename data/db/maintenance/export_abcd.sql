@@ -139,7 +139,7 @@ CREATE TABLE public.flat_abcd as
   ( CASE WHEN cp2.date_to_mask = 0 THEN null::timestamp ELSE cp2.date_to END - CASE WHEN cp2.date_from_mask = 0 THEN NULL::timestamp ELSE cp2.date_from END ) as height_duration,
   CASE WHEN station_visible = true THEN ( select min(property_value)::text from darwin2.properties_values where property_ref = cp2.id) ELSE null::text END as height_lowervalue,
   CASE WHEN station_visible = true THEN ( select case when max(property_value)::text = min(property_value)::text then null::text else max(property_value)::text end from darwin2.properties_values where property_ref = cp2.id) ELSE null::text END as height_uppervalue, /*** only if 1? **/
-  CASE WHEN station_visible = true THEN ( select avg(property_accuracy)::real from darwin2.properties_values where property_ref = cp2.id) ELSE null::text END as height_accuracy,
+  CASE WHEN station_visible = true THEN ( select avg(property_accuracy)::real from darwin2.properties_values where property_ref = cp2.id) ELSE null::real END as height_accuracy,
   cp2.property_method as height_method,
   cp2.property_unit as height_unit,
   CASE WHEN cp2.date_from_mask = 0 THEN null::timestamp ELSE cp2.date_from END as height_date_time,
