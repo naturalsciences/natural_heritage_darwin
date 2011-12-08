@@ -84,6 +84,51 @@ ELSE 'unranked'
 END)
 ;
 
+CREATE TABLE public.darwin_flat AS
+(
+  SELECT id, collection_ref, collection_name, expedition_ref, expedition_name, gtu_ref, 
+         gtu_code, gtu_from_date, gtu_to_date, gtu_country_tag_value, taxon_ref, 
+         case when taxon_name = '' then null::varchar else taxon_name end  as taxon_name, 
+         taxon_level_ref, taxon_level_name, litho_ref, 
+         case when litho_name = '' then null::varchar else litho_name end as litho_name,
+         litho_level_ref, litho_level_name, litho_local, litho_color, chrono_ref, 
+         case when chrono_name = '' then null::varchar else chrono_name end as chrono_name,
+         chrono_level_ref, chrono_level_name, chrono_local, chrono_color, lithology_ref, 
+         case when lithology_name = '' then null:varchar else lithology_name end as lithology_name, 
+         lithology_level_ref, lithology_level_name, lithology_local, lithology_color, mineral_ref, 
+         case when mineral_name = '' then null::varchar else mineral_name end as mineral_name,
+         mineral_level_ref, mineral_level_name, mineral_local, mineral_color, acquisition_category, acquisition_date, 
+         individual_ref, individual_type, individual_type_group, individual_type_search, 
+         individual_sex, individual_state, individual_stage, individual_social_status, individual_rock_form, 
+         part_ref, part
+  FROM darwin2.darwin_flat
+  WHERE collection_is_public = true and part_ref is not null
+);
+
+CREATE INDEX idx_df_id ON public.darwin_flat(id);
+CREATE INDEX idx_df_taxon_ref ON public.darwin_flat(taxon_ref);
+CREATE INDEX idx_df_lithology_ref ON public.darwin_flat(lithology_ref);
+CREATE INDEX idx_df_litho_ref ON public.darwin_flat(litho_ref);
+CREATE INDEX idx_df_chrono_ref ON public.darwin_flat(chrono_ref);
+CREATE INDEX idx_df_mineral_ref ON public.darwin_flat(mineral_ref);
+CREATE INDEX idx_df_collection_ref ON public.darwin_flat(collection_ref);
+CREATE INDEX idx_df_expedition_ref ON public.darwin_flat(expedition_ref);
+CREATE INDEX idx_df_taxon_name ON public.darwin_flat(taxon_name);
+CREATE INDEX idx_df_lithology_name ON public.darwin_flat(lithology_name);
+CREATE INDEX idx_df_litho_name ON public.darwin_flat(litho_name);
+CREATE INDEX idx_df_chrono_name ON public.darwin_flat(chrono_name);
+CREATE INDEX idx_df_mineral_name ON public.darwin_flat(mineral_name);
+CREATE INDEX idx_df_collection_name ON public.darwin_flat(collection_name);
+CREATE INDEX idx_df_expedition_name ON public.darwin_flat(expedition_name);
+CREATE INDEX idx_df_gtu_code ON public.darwin_flat(gtu_code);
+CREATE INDEX idx_df_part_ref ON public.darwin_flat(part_ref);
+CREATE INDEX idx_df_part ON public.darwin_flat(part);
+CREATE INDEX idx_df_individual_type ON public.darwin_flat(individual_type);
+CREATE INDEX idx_df_individual_sex ON public.darwin_flat(individual_sex);
+CREATE INDEX idx_df_individual_stage ON public.darwin_flat(individual_stage);
+CREATE INDEX idx_df_individual_rock_form ON public.darwin_flat(individual_rock_form);
+
+
 DELETE FROM darwin2.darwin_flat where collection_is_public = false;
 DELETE FROM darwin2.darwin_flat where part_ref is null;
 
@@ -999,7 +1044,6 @@ CREATE TABLE public.darwin_metadata AS
     E'All data given access here are the sole property of the Royal Belgian Institute for Natural Sciences (RBINS) and are protected by the laws of copyright.\r\n The reuse of data, for any purpose whatsoever, is subject to prior authorization given by the Royal Belgian Institute for Natural Sciences (RBINS).\r\n For more informations, comments or details on the above lines, please contact the Royal Belgian Institute for Natural Sciences (RBINS).'::text as IPRCopyright
 );
 
-ALTER TABLE darwin2.darwin_flat SET SCHEMA public; 
 ALTER TABLE darwin2.template_classifications SET SCHEMA public;
 
 CREATE SEQUENCE public.parent_taxonomy_id_seq;
@@ -1030,23 +1074,7 @@ CREATE INDEX idx_parent_taxon_parent_id ON public.parent_taxonomy (parent_id);
 CREATE INDEX idx_darwin_flat_chrono_ref ON public.darwin_flat (chrono_ref);
 CREATE INDEX idx_darwin_flat_litho_ref ON public.darwin_flat (litho_ref);
 
-ALTER TABLE public.darwin_flat 
-  DROP COLUMN building,
-  DROP COLUMN "floor",
-  DROP COLUMN room,
-  DROP COLUMN "row",
-  DROP COLUMN shelf,
-  DROP COLUMN "container",
-  DROP COLUMN container_type,
-  DROP COLUMN container_storage,
-  DROP COLUMN sub_container,
-  DROP COLUMN sub_container_type,
-  DROP COLUMN sub_container_storage,
-  DROP COLUMN gtu_location,
-  DROP COLUMN gtu_tag_values_indexed,
-  DROP COLUMN with_types,
-  DROP COLUMN with_individuals,
-  DROP COLUMN with_parts;
+
 
 ALTER FUNCTION darwin2.gettagsindexedasarray(character varying) SET SCHEMA public;
 ALTER FUNCTION darwin2.array_accum(anyelement) SET SCHEMA public;
