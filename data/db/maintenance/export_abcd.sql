@@ -84,7 +84,7 @@ ELSE 'unranked'
 END)
 ;
 
-CREATE TABLE public.darwin_flat AS
+CREATE TABLE public.darwin_flat_bis AS
 (
   SELECT id, collection_ref, collection_name, expedition_ref, expedition_name, gtu_ref, 
          gtu_code, gtu_from_date, gtu_to_date, gtu_country_tag_value, taxon_ref, 
@@ -105,28 +105,28 @@ CREATE TABLE public.darwin_flat AS
   WHERE collection_is_public = true and part_ref is not null
 );
 
-CREATE INDEX idx_df_id ON public.darwin_flat(id);
-CREATE INDEX idx_df_taxon_ref ON public.darwin_flat(taxon_ref);
-CREATE INDEX idx_df_lithology_ref ON public.darwin_flat(lithology_ref);
-CREATE INDEX idx_df_litho_ref ON public.darwin_flat(litho_ref);
-CREATE INDEX idx_df_chrono_ref ON public.darwin_flat(chrono_ref);
-CREATE INDEX idx_df_mineral_ref ON public.darwin_flat(mineral_ref);
-CREATE INDEX idx_df_collection_ref ON public.darwin_flat(collection_ref);
-CREATE INDEX idx_df_expedition_ref ON public.darwin_flat(expedition_ref);
-CREATE INDEX idx_df_taxon_name ON public.darwin_flat(taxon_name);
-CREATE INDEX idx_df_lithology_name ON public.darwin_flat(lithology_name);
-CREATE INDEX idx_df_litho_name ON public.darwin_flat(litho_name);
-CREATE INDEX idx_df_chrono_name ON public.darwin_flat(chrono_name);
-CREATE INDEX idx_df_mineral_name ON public.darwin_flat(mineral_name);
-CREATE INDEX idx_df_collection_name ON public.darwin_flat(collection_name);
-CREATE INDEX idx_df_expedition_name ON public.darwin_flat(expedition_name);
-CREATE INDEX idx_df_gtu_code ON public.darwin_flat(gtu_code);
-CREATE INDEX idx_df_part_ref ON public.darwin_flat(part_ref);
-CREATE INDEX idx_df_part ON public.darwin_flat(part);
-CREATE INDEX idx_df_individual_type ON public.darwin_flat(individual_type);
-CREATE INDEX idx_df_individual_sex ON public.darwin_flat(individual_sex);
-CREATE INDEX idx_df_individual_stage ON public.darwin_flat(individual_stage);
-CREATE INDEX idx_df_individual_rock_form ON public.darwin_flat(individual_rock_form);
+CREATE INDEX idx_df_id ON public.darwin_flat_bis(id);
+CREATE INDEX idx_df_taxon_ref ON public.darwin_flat_bis(taxon_ref);
+CREATE INDEX idx_df_lithology_ref ON public.darwin_flat_bis(lithology_ref);
+CREATE INDEX idx_df_litho_ref ON public.darwin_flat_bis(litho_ref);
+CREATE INDEX idx_df_chrono_ref ON public.darwin_flat_bis(chrono_ref);
+CREATE INDEX idx_df_mineral_ref ON public.darwin_flat_bis(mineral_ref);
+CREATE INDEX idx_df_collection_ref ON public.darwin_flat_bis(collection_ref);
+CREATE INDEX idx_df_expedition_ref ON public.darwin_flat_bis(expedition_ref);
+CREATE INDEX idx_df_taxon_name ON public.darwin_flat_bis(taxon_name);
+CREATE INDEX idx_df_lithology_name ON public.darwin_flat_bis(lithology_name);
+CREATE INDEX idx_df_litho_name ON public.darwin_flat_bis(litho_name);
+CREATE INDEX idx_df_chrono_name ON public.darwin_flat_bis(chrono_name);
+CREATE INDEX idx_df_mineral_name ON public.darwin_flat_bis(mineral_name);
+CREATE INDEX idx_df_collection_name ON public.darwin_flat_bis(collection_name);
+CREATE INDEX idx_df_expedition_name ON public.darwin_flat_bis(expedition_name);
+CREATE INDEX idx_df_gtu_code ON public.darwin_flat_bis(gtu_code);
+CREATE INDEX idx_df_part_ref ON public.darwin_flat_bis(part_ref);
+CREATE INDEX idx_df_part ON public.darwin_flat_bis(part);
+CREATE INDEX idx_df_individual_type ON public.darwin_flat_bis(individual_type);
+CREATE INDEX idx_df_individual_sex ON public.darwin_flat_bis(individual_sex);
+CREATE INDEX idx_df_individual_stage ON public.darwin_flat_bis(individual_stage);
+CREATE INDEX idx_df_individual_rock_form ON public.darwin_flat_bis(individual_rock_form);
 
 
 DELETE FROM darwin2.darwin_flat where collection_is_public = false;
@@ -1085,6 +1085,12 @@ ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyarray) SET SCHEMA publi
 ALTER FUNCTION darwin2.fulltoindex(character varying) SET SCHEMA public;
 ALTER SEQUENCE darwin2.darwin_flat_id_seq SET SCHEMA public;
 
+DROP SCHEMA IF EXISTS darwin1 CASCADE;
+
+DROP SCHEMA IF EXISTS darwin2 CASCADE;
+
+ALTER TABLE darwin_flat_bis RENAME darwin_flat;
+
 GRANT SELECT ON  public.flat_abcd TO d2viewer;
 GRANT SELECT ON  public.gtu_properties TO d2viewer;
 GRANT SELECT ON  public.gtu_place TO d2viewer;
@@ -1117,10 +1123,6 @@ ANALYZE public.chronostratigraphy_abc;
 ANALYZE public.accomp_mineral;
 ANALYZE public.darwin_flat;
 ANALYZE public.parent_taxonomy;
-
-DROP SCHEMA IF EXISTS darwin1 CASCADE;
-
-DROP SCHEMA IF EXISTS darwin2 CASCADE;
 
 revoke execute on function public.fulltoindex(character varying) from darwin1;
 revoke all on table public.geometry_columns from cebmpad;
