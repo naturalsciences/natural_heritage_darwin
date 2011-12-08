@@ -869,6 +869,7 @@ create table informative_workflow
         formated_name varchar not null default 'anonymous',
         status varchar not null default 'suggestion',
         modification_date_time update_date_time,
+        is_last boolean not null default true,        
         comment varchar not null ,
         constraint pk_informative_workflow primary key (id),
         constraint fk_informative_workflow_users foreign key (user_ref) references users(id)
@@ -882,6 +883,7 @@ comment on column informative_workflow.record_id is 'ID of record a workflow is 
 comment on column informative_workflow.status is 'Record status number: to correct, to be corrected or published ';
 comment on column informative_workflow.modification_date_time is 'Date and time of status change - last date/time is used as actual status, but helps also to keep an history of status change';
 comment on column informative_workflow.comment is 'Complementary comments';
+COMMENT on COLUMN informative_workflow.is_last is 'a flag witch allow us to know if the workflow for this referenced_relation/record id is the latest' ;
 
 create sequence users_tracking_id_seq;
 

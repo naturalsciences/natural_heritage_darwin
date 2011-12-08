@@ -17,8 +17,8 @@
 	    <?php echo $insurance->getFormatedInsuranceValue();?>
 	  </a>
       </td>
-      <td><?php echo $insurance->getDateFromMasked(ESC_RAW);?></td>
-      <td><?php echo $insurance->getDateToMasked(ESC_RAW);?></td>      
+      <td><?php echo $insurance->getDateFromMasked('em','Y/m/d', ESC_RAW);?></td>
+      <td><?php echo $insurance->getDateToMasked('em','Y/m/d', ESC_RAW);?></td>      
       <td>
         <?php if($insurance->People): ?>
           <?php echo $insurance->People->getFamilyName();?>

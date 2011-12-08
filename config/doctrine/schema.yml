@@ -450,6 +450,7 @@ InformativeWorkflow:
         status: {type: string}
         modification_date_time : {type:string, notnull: true }
         comment : { type:string}
+        is_last : { type:boolean; notnull: true }
     relations:
         Users:
             local: user_ref
