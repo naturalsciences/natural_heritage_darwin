@@ -28,6 +28,7 @@ DROP TABLE IF EXISTS public.lithostratigraphy_abc;
 DROP TABLE IF EXISTS public.chronostratigraphy_abc;
 DROP TABLE IF EXISTS public.accomp_mineral;
 DROP TABLE IF EXISTS public.darwin_metadata;
+DROP TABLE IF EXISTS public.darwin_flat_bis;
 
 DROP SEQUENCE IF EXISTS public.flat_abcd_id_seq;
 DROP SEQUENCE IF EXISTS public.gtu_properties_id_seq;
