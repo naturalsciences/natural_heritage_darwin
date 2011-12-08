@@ -85,6 +85,7 @@ END)
 ;
 
 DELETE FROM darwin2.darwin_flat where collection_is_public = false;
+DELETE FROM darwin2.darwin_flat where part_ref is null;
 
 create sequence public.flat_abcd_id_seq;
 
