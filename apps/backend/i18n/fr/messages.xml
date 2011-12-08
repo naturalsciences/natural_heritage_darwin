@@ -4840,6 +4840,14 @@
         <source>People role</source>
         <target>Rôle d&#039;une personne</target>
       </trans-unit>
+          <trans-unit id="1505">
+        <source>Choose contact</source>
+        <target>Choisir un contact</target>
+      </trans-unit>
+          <trans-unit id="1506">
+        <source>Person of contact</source>
+        <target>Personne de contact</target>
+      </trans-unit>
           <trans-unit id="1363">
         <source>This widget can be used to add the equivalent vernacular name of the record in different languages. You can even add more than one vernacular name in the same language</source>
         <target>Ce widget peut être utilisé pour ajouter le nom vernaculaire équivalent de l&#039;enregistrement dans des langues différentes. Vous pouvez même ajouter plus d&#039;un nom vernaculaire dans la même langue.</target>
