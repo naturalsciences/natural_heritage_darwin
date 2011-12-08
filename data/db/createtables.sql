@@ -830,35 +830,6 @@ comment on column collections_rights.user_ref is 'Reference of user - id field o
 comment on column collections_rights.db_user_type is 'Integer is representing a role: 1 for registered user, 2 for encoder, 4 for collection manager, 8 for system admin,...';
 
 
--- create sequence users_coll_rights_asked_id_seq;
---
--- create table users_coll_rights_asked
---        (
---         id integer not null default nextval('users_coll_rights_asked_id_seq'),
---         field_group_name varchar not null,
---         db_user_type smallint not null,
---         searchable boolean not null default true,
---         visible boolean not null default true,
---         motivation varchar not null,
---         asking_date_time update_date_time,
---         with_sub_collections boolean not null default true,
---         constraint pk_users_coll_rights_asked primary key (id),
---         constraint unq_users_coll_rights_asked unique (collection_ref, user_ref, field_group_name, db_user_type),
---         constraint fk_users_coll_rights_asked_collections foreign key (collection_ref) references collections(id) on delete cascade,
---         constraint fk_users_coll_rights_asked_users foreign key (user_ref) references users(id) on delete cascade
---        )
--- inherits (template_collections_users);
--- comment on table users_coll_rights_asked is 'List all rights asked by a registered user or encoder to collection managers';
--- comment on column users_coll_rights_asked.collection_ref is 'Reference of collection concerned - id field of collections table';
--- comment on column users_coll_rights_asked.user_ref is 'Reference of user - id field of users table';
--- comment on column users_coll_rights_asked.field_group_name is 'Group of fields name';
--- comment on column users_coll_rights_asked.db_user_type is 'Integer is representing a role: 1 for registered user, 2 for encoder, 4 for collection manager, 8 for system admin,...';
--- comment on column users_coll_rights_asked.searchable is 'Flag telling if the field group is searchable - meaning these fields will appear as search criterias in the search form';
--- comment on column users_coll_rights_asked.visible is 'Flag telling if the field group is visible - meaning these fields will be displayable in the result table';
--- comment on column users_coll_rights_asked.motivation is 'Motivation given by asker';
--- comment on column users_coll_rights_asked.asking_date_time is 'Telling when right ask was done';
--- comment on column users_coll_rights_asked.with_sub_collections is 'Rights are asked on a single collection or on this collection with all the sub-collections included ?';
---
 
 create sequence informative_workflow_id_seq;
 
@@ -997,7 +968,7 @@ comment on column my_widgets.color is 'Color given to page element by user';
 comment on column my_widgets.is_available is 'Flag telling if the widget can be used or not';
 comment on column my_widgets.icon_ref is 'Reference of multimedia icon to be used before page element title';
 comment on column my_widgets.title_perso is 'Page element title given by user';
-comment on column my_widgets.collections is 'list of collections whitch user_ref has rights to see';
+comment on column my_widgets.collections is 'list of collections which user_ref has rights to see';
 comment on column my_widgets.all_public is 'Set to determine if the widget available for a registered user by default or not';
 
 create table template_classifications
@@ -2120,7 +2091,6 @@ create table loans (
   id integer not null default nextval('loans_id_seq'),
   name varchar not null default '',
   description varchar not null default '',
-  status varchar not null default 'new', 
   from_date date not null default now(),
   to_date date,
   effective_to_date date,
@@ -2133,7 +2103,6 @@ comment on table loans is 'Table holding an entire loan made of multiple loan it
 comment on column loans.id is 'Unique identifier of record';
 comment on column loans.name is 'Global name of the loan. May be a sort of code of other naming scheme';
 comment on column loans.description is 'Description of the meaning of the loan';
-comment on column loans.status  is 'Current status of the loan in a list (new, closed, running, ...)';
 comment on column loans.from_date  is 'Date of the start of the loan';
 comment on column loans.to_date  is 'Planned date of the end of the loan';
 comment on column loans.effective_to_date is 'Effective end date of the loan or null if it''s running';
@@ -2192,3 +2161,32 @@ comment on column loan_rights.id is 'Unique identifier of record';
 comment on column loan_rights.loan_ref is 'Mandatory Reference to a loan';
 comment on column loan_rights.user_ref is 'Mandatory Reference to a user';
 comment on column loan_rights.has_encoding_right is 'Bool saying if the user can edit a loan';
+
+
+
+
+create sequence loan_status_id_seq;
+
+create table loan_status (
+  id integer not null default nextval('loan_status_id_seq'),
+  loan_ref integer not null,
+  user_ref integer not null,
+  status varchar not null default 'new',
+  modification_date_time update_date_time,
+  comment varchar not null default '',
+  is_last boolean not null default true,
+  constraint pk_loan_status primary key (id),
+  constraint fk_loan_status_loan_ref foreign key (loan_ref) references loans(id) on delete cascade,
+  constraint fk_loan_status_user_ref foreign key (user_ref) references users(id) on delete cascade
+
+);
+
+comment on table loan_status is 'Table describing various states of a loan';
+
+comment on column loan_status.id is 'Unique identifier of record';
+comment on column loan_status.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_status.user_ref is 'Mandatory Reference to a user';
+comment on column loan_status.status is 'Current status of the loan in a list (new, closed, running, ...)';
+comment on column loan_status.modification_date_time is 'date of the modification';
+comment on column loan_status.comment is 'comment of the status modification';
+comment on column loan_status.is_last is 'flag telling which line is the current line';

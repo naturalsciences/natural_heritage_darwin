@@ -100,7 +100,6 @@ endif
 
 install-db:
 	$(PARAM_PSQL) -f createdomains.sql
-	$(PARAM_PSQL) -f createtypes.sql
 	$(PARAM_PSQL) -f createtables.sql
 	$(PARAM_PSQL) -f initiate_data.sql
 	$(PARAM_PSQL) -f createfunctions.sql
@@ -116,7 +115,6 @@ uninstall-db:
 	$(PARAM_PSQL) -f dropfunctions.sql
 	$(PARAM_PSQL) -f dropindexes.sql
 	$(PARAM_PSQL) -f droptables.sql
-	$(PARAM_PSQL) -f droptypes.sql
 	$(PARAM_PSQL) -f dropdomains.sql
 
 create-schema:

@@ -2120,7 +2120,6 @@ Loans:
         id: { type: integer, primary: true, autoincrement: true }
         name: { type: string, notnull: true, default:''}
         description: { type: string, notnull: true, default:''}
-        status: { type: string, notnull: true, default:'new'}
         to_date: { type: string}
         effective_to_date: { type: string}
 
@@ -2161,4 +2160,22 @@ LoanRights:
         User:
             local: user_ref
             foreign: id
-            class: Users 
+            class: Users
+
+LoanStatus:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        loan_ref: { type: integer, notnull: true}
+        user_ref: { type: integer, notnull: true}
+        status: {type: string}
+        modification_date_time : {type:string, notnull: true }
+        comment : { type:string}
+        is_last : { type:boolean, notnull: true }
+    relations:
+        Loan:
+            local: loan_ref
+            foreign: id
+            class: Loans 
+        Users:
+            local: user_ref
+            foreign: id
