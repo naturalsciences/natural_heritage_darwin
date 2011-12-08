@@ -94,7 +94,7 @@ CREATE TABLE public.darwin_flat_bis AS
          litho_level_ref, litho_level_name, litho_local, litho_color, chrono_ref, 
          case when chrono_name = '' then null::varchar else chrono_name end as chrono_name,
          chrono_level_ref, chrono_level_name, chrono_local, chrono_color, lithology_ref, 
-         case when lithology_name = '' then null:varchar else lithology_name end as lithology_name, 
+         case when lithology_name = '' then null::varchar else lithology_name end as lithology_name, 
          lithology_level_ref, lithology_level_name, lithology_local, lithology_color, mineral_ref, 
          case when mineral_name = '' then null::varchar else mineral_name end as mineral_name,
          mineral_level_ref, mineral_level_name, mineral_local, mineral_color, acquisition_category, acquisition_date, 
