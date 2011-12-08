@@ -15,10 +15,8 @@
       <td>
   	    <?php echo $insurance->getFormatedInsuranceValue();?>
       </td>
-      <td><?php $date = new DateTime($insurance->getDateFrom());
-      		echo $date->format('Y/m/d');?></td>
-      <td><?php $date = new DateTime($insurance->getDateTo());
-      		echo $date->format('Y/m/d');?></td>      		
+      <td><?php echo $insurance->getDateFromMasked(ESC_RAW) ; ?></td>
+      <td><?php echo $insurance->getDateToMasked(ESC_RAW);?></td>       		
       <td>
         <?php if($insurance->People): ?>
           <?php echo $insurance->People->getFamilyName();?>

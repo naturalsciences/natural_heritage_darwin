@@ -35,7 +35,7 @@ class Insurances extends BaseInsurances
      }
      else
      {
-      $this->_set('date_from', $fd->format('Y/m/d H:i:s') );
+      $this->_set('date_from', $fd->format('Y/m/d') );
       $this->_set('date_from_mask', $fd->getMask() );
      }
      return $this;
@@ -54,7 +54,7 @@ class Insurances extends BaseInsurances
      }
      else
      {
-      $this->_set('date_to', $fd->format('Y/m/d H:i:s') );
+      $this->_set('date_to', $fd->format('Y/m/d') );
       $this->_set('date_to_mask', $fd->getMask() );
      }
      return $this;

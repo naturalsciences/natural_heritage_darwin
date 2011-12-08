@@ -16,7 +16,8 @@ class InformativeWorkflow extends BaseInformativeWorkflow
       'all' => array('all' => 'All','checked' => 'Checked','suggestion' => 'Suggestion','to_check' => 'To check'),
       Users::REGISTERED_USER => array('suggestion' => 'Suggestion'),
       Users::ENCODER => array('to_check' => 'To check'),
-      Users::MANAGER => array('checked' => 'Checked')
+      Users::MANAGER => array('checked' => 'Checked'),
+      Users::ADMIN => array('checked' => 'Checked','suggestion' => 'Suggestion','to_check' => 'To check')
     );
     
   public function getFormattedStatus()
