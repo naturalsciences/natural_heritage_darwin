@@ -1090,7 +1090,7 @@ DROP SCHEMA IF EXISTS darwin1 CASCADE;
 
 DROP SCHEMA IF EXISTS darwin2 CASCADE;
 
-ALTER TABLE darwin_flat_bis RENAME darwin_flat;
+ALTER TABLE darwin_flat_bis RENAME TO darwin_flat;
 
 GRANT SELECT ON  public.flat_abcd TO d2viewer;
 GRANT SELECT ON  public.gtu_properties TO d2viewer;
