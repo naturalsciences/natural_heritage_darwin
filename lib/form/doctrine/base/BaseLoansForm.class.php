@@ -18,7 +18,6 @@ abstract class BaseLoansForm extends BaseFormDoctrine
       'id'                => new sfWidgetFormInputHidden(),
       'name'              => new sfWidgetFormTextarea(),
       'description'       => new sfWidgetFormTextarea(),
-      'status'            => new sfWidgetFormTextarea(),
       'to_date'           => new sfWidgetFormTextarea(),
       'effective_to_date' => new sfWidgetFormTextarea(),
     ));
@@ -27,7 +26,6 @@ abstract class BaseLoansForm extends BaseFormDoctrine
       'id'                => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'name'              => new sfValidatorString(array('required' => false)),
       'description'       => new sfValidatorString(array('required' => false)),
-      'status'            => new sfValidatorString(array('required' => false)),
       'to_date'           => new sfValidatorString(array('required' => false)),
       'effective_to_date' => new sfValidatorString(array('required' => false)),
     ));

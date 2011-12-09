@@ -443,116 +443,66 @@ DROP TRIGGER fct_chk_PeopleIsMoral_collections ON collections;
 
 /********************* DICT Add / remove  **************/
 
-CREATE TRIGGER fct_cpy_ins_update_dict_codes AFTER INSERT OR UPDATE
-        ON codes FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_codes ON codes;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_catalogue_people AFTER INSERT OR UPDATE
-        ON catalogue_people FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_catalogue_people ON catalogue_people;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_collection_maintenance AFTER INSERT OR UPDATE
-        ON collection_maintenance FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_collection_maintenance ON collection_maintenance;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_identifications AFTER INSERT OR UPDATE
-        ON identifications FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_identifications ON identifications;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_people AFTER INSERT OR UPDATE
-        ON people FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_people ON people;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_people_addresses AFTER INSERT OR UPDATE
-        ON people_addresses FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_people_addresses ON people_addresses;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_insurances AFTER INSERT OR UPDATE
-        ON insurances FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_insurances ON insurances;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_mineralogy AFTER INSERT OR UPDATE
-        ON mineralogy FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_mineralogy ON mineralogy;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_specimen_individuals AFTER INSERT OR UPDATE
-        ON specimen_individuals FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_specimen_individuals ON specimen_individuals;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_specimens AFTER INSERT OR UPDATE
-        ON specimens FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_specimens ON specimens;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_specimens_accompanying AFTER INSERT OR UPDATE
-        ON specimens_accompanying FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_specimens_accompanying ON specimens_accompanying;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_users AFTER INSERT OR UPDATE
-        ON users FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_users ON users;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_users_addresses AFTER INSERT OR UPDATE
-        ON users_addresses FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_users_addresses ON users_addresses;
 
-CREATE TRIGGER fct_cpy_ins_update_dict_specimen_parts AFTER INSERT OR UPDATE
-        ON specimen_parts FOR EACH ROW
-        EXECUTE PROCEDURE ins_update_dict();
+DROP TRIGGER fct_cpy_ins_update_dict_specimen_parts ON specimen_parts;
 
 /******************* DELETE FROM DICT ******************/
 
-CREATE TRIGGER fct_cpy_del_dict_codes AFTER INSERT OR UPDATE
-        ON codes FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_codes ON codes ;
 
-CREATE TRIGGER fct_cpy_del_dict_catalogue_people AFTER INSERT OR UPDATE
-        ON catalogue_people FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_catalogue_people ON catalogue_people ;
 
-CREATE TRIGGER fct_cpy_del_dict_collection_maintenance AFTER INSERT OR UPDATE
-        ON collection_maintenance FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_collection_maintenance ON collection_maintenance ;
 
-CREATE TRIGGER fct_cpy_del_dict_identifications AFTER INSERT OR UPDATE
-        ON identifications FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_identifications ON identifications ;
 
-CREATE TRIGGER fct_cpy_del_dict_people AFTER INSERT OR UPDATE
-        ON people FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_people ON people ;
 
-CREATE TRIGGER fct_cpy_del_dict_people_addresses AFTER INSERT OR UPDATE
-        ON people_addresses FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_people_addresses ON people_addresses ;
 
-CREATE TRIGGER fct_cpy_del_dict_insurances AFTER INSERT OR UPDATE
-        ON insurances FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_insurances ON insurances ;
 
-CREATE TRIGGER fct_cpy_del_dict_mineralogy AFTER INSERT OR UPDATE
-        ON mineralogy FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_mineralogy ON mineralogy ;
 
-CREATE TRIGGER fct_cpy_del_dict_specimen_individuals AFTER INSERT OR UPDATE
-        ON specimen_individuals FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_specimen_individuals ON specimen_individuals ;
 
-CREATE TRIGGER fct_cpy_del_dict_specimens AFTER INSERT OR UPDATE
-        ON specimens FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_specimens ON specimens ;
 
-CREATE TRIGGER fct_cpy_del_dict_specimens_accompanying AFTER INSERT OR UPDATE
-        ON specimens_accompanying FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_specimens_accompanying ON specimens_accompanying ;
 
-CREATE TRIGGER fct_cpy_del_dict_users AFTER INSERT OR UPDATE
-        ON users FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_users ON users ;
 
-CREATE TRIGGER fct_cpy_del_dict_users_addresses AFTER INSERT OR UPDATE
-        ON users_addresses FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_users_addresses ON users_addresses ;
 
-CREATE TRIGGER fct_cpy_del_dict_specimen_parts AFTER INSERT OR UPDATE
-        ON specimen_parts FOR EACH ROW
-        EXECUTE PROCEDURE del_dict();
+DROP TRIGGER fct_cpy_del_dict_specimen_parts ON specimen_parts ;
+
+
+/**** LOANS ***/
+
+DROP trigger trg_chk_is_last_loan_status ON loan_status;
+

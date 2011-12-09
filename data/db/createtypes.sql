@@ -1,1 +1,0 @@
-create type coverages as enum ('temporal', 'spatial');

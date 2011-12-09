@@ -8,28 +8,28 @@
  * @property integer $id
  * @property string $name
  * @property string $description
- * @property string $status
  * @property string $to_date
  * @property string $effective_to_date
  * @property Doctrine_Collection $LoanItems
  * @property Doctrine_Collection $LoanRights
+ * @property Doctrine_Collection $LoanStatus
  * 
  * @method integer             getId()                Returns the current record's "id" value
  * @method string              getName()              Returns the current record's "name" value
  * @method string              getDescription()       Returns the current record's "description" value
- * @method string              getStatus()            Returns the current record's "status" value
  * @method string              getToDate()            Returns the current record's "to_date" value
  * @method string              getEffectiveToDate()   Returns the current record's "effective_to_date" value
  * @method Doctrine_Collection getLoanItems()         Returns the current record's "LoanItems" collection
  * @method Doctrine_Collection getLoanRights()        Returns the current record's "LoanRights" collection
+ * @method Doctrine_Collection getLoanStatus()        Returns the current record's "LoanStatus" collection
  * @method Loans               setId()                Sets the current record's "id" value
  * @method Loans               setName()              Sets the current record's "name" value
  * @method Loans               setDescription()       Sets the current record's "description" value
- * @method Loans               setStatus()            Sets the current record's "status" value
  * @method Loans               setToDate()            Sets the current record's "to_date" value
  * @method Loans               setEffectiveToDate()   Sets the current record's "effective_to_date" value
  * @method Loans               setLoanItems()         Sets the current record's "LoanItems" collection
  * @method Loans               setLoanRights()        Sets the current record's "LoanRights" collection
+ * @method Loans               setLoanStatus()        Sets the current record's "LoanStatus" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -56,11 +56,6 @@ abstract class BaseLoans extends sfDoctrineRecord
              'notnull' => true,
              'default' => '',
              ));
-        $this->hasColumn('status', 'string', null, array(
-             'type' => 'string',
-             'notnull' => true,
-             'default' => 'new',
-             ));
         $this->hasColumn('to_date', 'string', null, array(
              'type' => 'string',
              ));
@@ -77,6 +72,10 @@ abstract class BaseLoans extends sfDoctrineRecord
              'foreign' => 'loan_ref'));
 
         $this->hasMany('LoanRights', array(
+             'local' => 'id',
+             'foreign' => 'loan_ref'));
+
+        $this->hasMany('LoanStatus', array(
              'local' => 'id',
              'foreign' => 'loan_ref'));
     }

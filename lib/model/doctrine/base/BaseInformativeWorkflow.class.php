@@ -13,6 +13,7 @@
  * @property string $status
  * @property string $modification_date_time
  * @property string $comment
+ * @property boolean $is_last
  * @property Users $Users
  * 
  * @method integer             getId()                     Returns the current record's "id" value
@@ -23,6 +24,7 @@
  * @method string              getStatus()                 Returns the current record's "status" value
  * @method string              getModificationDateTime()   Returns the current record's "modification_date_time" value
  * @method string              getComment()                Returns the current record's "comment" value
+ * @method boolean             getIsLast()                 Returns the current record's "is_last" value
  * @method Users               getUsers()                  Returns the current record's "Users" value
  * @method InformativeWorkflow setId()                     Sets the current record's "id" value
  * @method InformativeWorkflow setRecordId()               Sets the current record's "record_id" value
@@ -32,6 +34,7 @@
  * @method InformativeWorkflow setStatus()                 Sets the current record's "status" value
  * @method InformativeWorkflow setModificationDateTime()   Sets the current record's "modification_date_time" value
  * @method InformativeWorkflow setComment()                Sets the current record's "comment" value
+ * @method InformativeWorkflow setIsLast()                 Sets the current record's "is_last" value
  * @method InformativeWorkflow setUsers()                  Sets the current record's "Users" value
  * 
  * @package    darwin
@@ -72,6 +75,10 @@ abstract class BaseInformativeWorkflow extends sfDoctrineRecord
              ));
         $this->hasColumn('comment', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('is_last', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
              ));
     }
 
