@@ -4371,6 +4371,7 @@ begin
 end;
 $$;
 
+
 CREATE OR REPLACE function fct_remove_last_flag() RETURNS TRIGGER
 language plpgsql
 AS
@@ -4380,6 +4381,18 @@ BEGIN
     SET is_last = false
     WHERE referenced_relation = NEW.referenced_relation
       AND record_id = NEW.record_id;
+  RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE function fct_remove_last_flag_loan() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+BEGIN
+    UPDATE loan_status
+    SET is_last = false
+    WHERE loan_ref = NEW.loan_ref;
   RETURN NEW;
 END;
 $$;
