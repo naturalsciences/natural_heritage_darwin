@@ -36,6 +36,7 @@
     <?php endforeach ; ?>   
   </tbody>
 </table>
+ <?php  if($items->count() > 10) include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
 <script type="text/javascript">
 $(document).ready(function()
 {
@@ -49,7 +50,21 @@ $(document).ready(function()
      position: { my : 'bottom right',target: 'mouse'}
     });
   });
+ 
+   $(function () {
+     $('#workflowsSummary .pager_nav a').click(function(event)
+     {
+	event.preventDefault();
+	$.ajax({
+	  url: $(this).attr('href')+'/status/<?php echo $form["status"]->getValue() ; ?>',
+          success: function(html) {
+	    $('#workflowsSummary .search_results_content').html(html);
+	  }
+	});
+     });
+  });  
 });
 </script>
- <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
+<?php else :?>
+  <?php echo __('Nothing here');?>
 <?php endif;?>

@@ -21,11 +21,5 @@ class InformativeWorkflowFormFilter extends BaseInformativeWorkflowFormFilter
         'choices'  => $status,
     ));    
     $this->validatorSchema['status'] = new sfValidatorChoice(array('choices'  => array_keys($status), 'required' => true));      
-  }
-  
-  public function doBuildQuery(array $values)
-  {
-    $query = Doctrine::getTable("informativeWorkflow")->getAllLatestWorkflow($this->options['user'],$values['status']);
-    return $query ;
-  }  
+  } 
 }

@@ -872,7 +872,7 @@ create table informative_workflow
         is_last boolean not null default true,        
         comment varchar not null ,
         constraint pk_informative_workflow primary key (id),
-        constraint fk_informative_workflow_users foreign key (user_ref) references users(id)
+        constraint fk_informative_workflow_users foreign key (user_ref) references users(id) ON DELETE CASCADE
        )
 inherits (template_table_record_ref);
 comment on table informative_workflow is 'Workflow information for each record encoded';

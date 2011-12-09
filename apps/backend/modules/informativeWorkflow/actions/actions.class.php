@@ -42,41 +42,40 @@ class informativeWorkflowActions extends DarwinActions
   
   public function executeSearch(sfWebRequest $request)
   {
-    $this->form = new InformativeWorkflowFormFilter(null,array('user' => $this->getUser()));
-
+    $this->form = new InformativeWorkflowFormFilter();
     $this->setCommonValues('informativeWorkflow', 'modification_date_time', $request);
     if( $request->getParameter('orderby', '') == '' && $request->getParameter('orderdir', '') == '')
       $this->orderDir = 'Desc';
 
     $this->s_url = 'informativeWorkflow/search';
     $this->o_url = '?orderby='.$this->orderBy.'&orderdir='.$this->orderDir;
-
     if($request->getParameter('searchWorkflows','') !== '')
     {
       $workflows = $request->getParameter('searchWorkflows');
       $this->form->bind($request->getParameter('searchWorkflows'));
-      if ($this->form->isValid())
-      {
+      $status = $workflows['status'] ;
+    }
+    else
+    {
+      $status = $request->getParameter('status');
+      $this->form->bind(array('status' => $request->getParameter('status')));
+    }
+    $query = Doctrine::getTable("informativeWorkflow")->getAllLatestWorkflow($this->getUser(),$status);   
+    $this->pagerLayout = new PagerLayoutWithArrows(
+      new DarwinPager(
+        $query,
+        $this->currentPage,
+        $this->form->getValue('rec_per_page')
+      ),
+      new Doctrine_Pager_Range_Sliding(
+        array('chunk' => $this->pagerSlidingSize)
+      ),
+      $this->getController()->genUrl($this->s_url.$this->o_url) . '/page/{%page_number}'
+    );
 
-        $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir) ;
-        $this->pagerLayout = new PagerLayoutWithArrows(
-          new DarwinPager(
-            $query,
-            $this->currentPage,
-            $this->form->getValue('rec_per_page')
-          ),
-          new Doctrine_Pager_Range_Sliding(
-            array('chunk' => $this->pagerSlidingSize)
-          ),
-          $this->getController()->genUrl($this->s_url.$this->o_url) . '/page/{%page_number}'
-        );
+    $this->setDefaultPaggingLayout($this->pagerLayout);
 
-        $this->setDefaultPaggingLayout($this->pagerLayout);
-
-        if (! $this->pagerLayout->getPager()->getExecuted())
-          $this->items = $this->pagerLayout->execute();       
-     }
-   }  
-  
+    if (! $this->pagerLayout->getPager()->getExecuted())
+      $this->items = $this->pagerLayout->execute();       
   }
 }
