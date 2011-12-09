@@ -35,3 +35,7 @@ SELECT ok('/11/' = (SELECT path FROM collections WHERE id = 13), 'Path of collec
 SELECT ok('/11/13/' = (SELECT path FROM collections WHERE id = 14), 'Path of collections 4');
 SELECT ok('/' = (SELECT path FROM collections WHERE id = 15), 'Path of collections 5');
 -- select id, path from collections;
+
+
+SELECT * FROM finish();
+ROLLBACK;

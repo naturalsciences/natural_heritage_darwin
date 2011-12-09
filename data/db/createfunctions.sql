@@ -4396,3 +4396,21 @@ BEGIN
   RETURN NEW;
 END;
 $$;
+
+
+
+CREATE OR REPLACE function fct_auto_insert_status_history() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+DECLARE
+ user_id int;
+BEGIN
+    SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
+    INSERT INTO loan_status
+      (loan_ref, user_ref, status, modification_date_time, comment, is_last)
+      VALUES
+      (NEW.id, user_id, 'new', now(), '', true);
+  RETURN NEW;
+END;
+$$;

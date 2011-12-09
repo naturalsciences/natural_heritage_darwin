@@ -504,5 +504,5 @@ DROP TRIGGER fct_cpy_del_dict_specimen_parts ON specimen_parts ;
 
 /**** LOANS ***/
 
-DROP trigger trg_chk_is_last_loan_status ON loan_status;
-
+DROP TRIGGER trg_chk_is_last_loan_status ON loan_status;
+DROP TRIGGER trg_add_status_history ON loans;

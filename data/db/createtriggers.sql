@@ -915,3 +915,7 @@ CREATE TRIGGER trg_upd_people_in_flat AFTER INSERT OR UPDATE OR DELETE
 CREATE trigger trg_chk_is_last_loan_status BEFORE INSERT
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE fct_remove_last_flag_loan();
+
+CREATE trigger trg_add_status_history after INSERT
+        ON loans FOR EACH ROW
+        EXECUTE PROCEDURE fct_auto_insert_status_history();
