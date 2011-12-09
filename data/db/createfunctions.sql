@@ -4407,10 +4407,20 @@ DECLARE
  user_id int;
 BEGIN
     SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
+    IF user_id = 0 THEN
+      RETURN NEW;
+    END IF;
+
     INSERT INTO loan_status
       (loan_ref, user_ref, status, modification_date_time, comment, is_last)
       VALUES
       (NEW.id, user_id, 'new', now(), '', true);
+
+    INSERT INTO loan_rights
+      (loan_ref, user_ref, has_encoding_right)
+      VALUES
+      (NEW.id, user_id, true);
+
   RETURN NEW;
 END;
 $$;
