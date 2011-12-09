@@ -321,7 +321,6 @@ class DarwinTestFunctional extends sfTestFunctional
      										'newInsurance' => array(
      													0 => array(
                                                                                                           'referenced_relation' => 'specimen_parts',
-     															'insurance_year' => 1977,
      															'insurance_value' => 666,
      															'insurance_currency' => '120€',
      															'insurer_ref' => $institution))	,
