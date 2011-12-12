@@ -48,7 +48,6 @@ create table people
         id integer not null default nextval('people_id_seq'),
         end_date_mask integer not null default 0,
         end_date date not null default '01/01/0001',
-        is_legal boolean default false,
         activity_date_from_mask integer not null default 0,
         activity_date_from date not null default '01/01/0001',
         activity_date_to_mask integer not null default 0,
