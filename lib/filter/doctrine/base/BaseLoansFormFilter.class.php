@@ -15,6 +15,7 @@ abstract class BaseLoansFormFilter extends BaseFormFilterDoctrine
     $this->setWidgets(array(
       'name'              => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'description'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'from_date'         => new sfWidgetFormFilterInput(),
       'to_date'           => new sfWidgetFormFilterInput(),
       'effective_to_date' => new sfWidgetFormFilterInput(),
     ));
@@ -22,6 +23,7 @@ abstract class BaseLoansFormFilter extends BaseFormFilterDoctrine
     $this->setValidators(array(
       'name'              => new sfValidatorPass(array('required' => false)),
       'description'       => new sfValidatorPass(array('required' => false)),
+      'from_date'         => new sfValidatorPass(array('required' => false)),
       'to_date'           => new sfValidatorPass(array('required' => false)),
       'effective_to_date' => new sfValidatorPass(array('required' => false)),
     ));
@@ -46,6 +48,7 @@ abstract class BaseLoansFormFilter extends BaseFormFilterDoctrine
       'id'                => 'Number',
       'name'              => 'Text',
       'description'       => 'Text',
+      'from_date'         => 'Text',
       'to_date'           => 'Text',
       'effective_to_date' => 'Text',
     );

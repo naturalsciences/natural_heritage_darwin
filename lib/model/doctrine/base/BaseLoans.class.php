@@ -8,6 +8,7 @@
  * @property integer $id
  * @property string $name
  * @property string $description
+ * @property string $from_date
  * @property string $to_date
  * @property string $effective_to_date
  * @property Doctrine_Collection $LoanItems
@@ -17,6 +18,7 @@
  * @method integer             getId()                Returns the current record's "id" value
  * @method string              getName()              Returns the current record's "name" value
  * @method string              getDescription()       Returns the current record's "description" value
+ * @method string              getFromDate()          Returns the current record's "from_date" value
  * @method string              getToDate()            Returns the current record's "to_date" value
  * @method string              getEffectiveToDate()   Returns the current record's "effective_to_date" value
  * @method Doctrine_Collection getLoanItems()         Returns the current record's "LoanItems" collection
@@ -25,6 +27,7 @@
  * @method Loans               setId()                Sets the current record's "id" value
  * @method Loans               setName()              Sets the current record's "name" value
  * @method Loans               setDescription()       Sets the current record's "description" value
+ * @method Loans               setFromDate()          Sets the current record's "from_date" value
  * @method Loans               setToDate()            Sets the current record's "to_date" value
  * @method Loans               setEffectiveToDate()   Sets the current record's "effective_to_date" value
  * @method Loans               setLoanItems()         Sets the current record's "LoanItems" collection
@@ -55,6 +58,9 @@ abstract class BaseLoans extends sfDoctrineRecord
              'type' => 'string',
              'notnull' => true,
              'default' => '',
+             ));
+        $this->hasColumn('from_date', 'string', null, array(
+             'type' => 'string',
              ));
         $this->hasColumn('to_date', 'string', null, array(
              'type' => 'string',

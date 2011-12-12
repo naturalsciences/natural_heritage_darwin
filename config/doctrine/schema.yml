@@ -2120,6 +2120,7 @@ Loans:
         id: { type: integer, primary: true, autoincrement: true }
         name: { type: string, notnull: true, default:''}
         description: { type: string, notnull: true, default:''}
+        from_date: { type: string}
         to_date: { type: string}
         effective_to_date: { type: string}
 
