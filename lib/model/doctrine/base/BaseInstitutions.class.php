@@ -7,7 +7,6 @@
  * 
  * @property integer $id
  * @property boolean $is_physical
- * @property boolean $is_legal
  * @property string $sub_type
  * @property string $formated_name
  * @property string $formated_name_indexed
@@ -18,7 +17,6 @@
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method boolean             getIsPhysical()            Returns the current record's "is_physical" value
- * @method boolean             getIsLegal()               Returns the current record's "is_legal" value
  * @method string              getSubType()               Returns the current record's "sub_type" value
  * @method string              getFormatedName()          Returns the current record's "formated_name" value
  * @method string              getFormatedNameIndexed()   Returns the current record's "formated_name_indexed" value
@@ -28,7 +26,6 @@
  * @method Doctrine_Collection getPeopleRelationships()   Returns the current record's "PeopleRelationships" collection
  * @method Institutions        setId()                    Sets the current record's "id" value
  * @method Institutions        setIsPhysical()            Sets the current record's "is_physical" value
- * @method Institutions        setIsLegal()               Sets the current record's "is_legal" value
  * @method Institutions        setSubType()               Sets the current record's "sub_type" value
  * @method Institutions        setFormatedName()          Sets the current record's "formated_name" value
  * @method Institutions        setFormatedNameIndexed()   Sets the current record's "formated_name_indexed" value
@@ -53,10 +50,6 @@ abstract class BaseInstitutions extends sfDoctrineRecord
              'autoincrement' => true,
              ));
         $this->hasColumn('is_physical', 'boolean', null, array(
-             'type' => 'boolean',
-             'notnull' => false,
-             ));
-        $this->hasColumn('is_legal', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => false,
              ));

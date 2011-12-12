@@ -3,7 +3,6 @@ Institutions:
   columns:
         id: { type: integer, notnull: true,primary: true, autoincrement: true}
         is_physical: { type: boolean, notnull: false}
-        is_legal: { type: boolean, notnull: false}
         sub_type: { type: string }
         formated_name: { type: string},
         formated_name_indexed: { type: string}

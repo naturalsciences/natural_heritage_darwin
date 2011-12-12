@@ -33,7 +33,7 @@
 	    </a>
           </th>
           <th>
-<!-- 	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=to_date'.( ($orderBy=='to_date' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>"> -->
+	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=to_date'.( ($orderBy=='to_date' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
 	      <?php echo __('To');?>
 	      <?php if($orderBy=='to_date') echo $orderSign ?>
 	    </a>
