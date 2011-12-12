@@ -10,7 +10,7 @@
  */
 class loanActions extends DarwinActions
 {
-  protected $widgetCategory = 'loan_widget';
+  protected $widgetCategory = 'loans';
 
   public function executeIndex(sfWebRequest $request)
   {
@@ -51,4 +51,29 @@ class loanActions extends DarwinActions
       }
     }
   }
+
+
+  public function executeNew(sfWebRequest $request)
+  {
+    $loan = new Loans() ;
+    $duplic = $request->getParameter('duplicate_id','0') ;
+    $loan = $this->getRecordIfDuplicate($duplic, $loan);
+    if($request->hasParameter('expedition')) $expedition->fromArray($request->getParameter('expedition'));            
+    // Initialization of a new encoding expedition form
+    $this->form = new LoansForm($loan);
+    if ($duplic)
+    {
+    }
+  }
+
+
+  public function executeEdit(sfWebRequest $request)
+  {
+    // Forward to a 404 page if the requested expedition id is not found
+    $this->forward404Unless($expeditions = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
+    $this->form = new LoansForm($expeditions);
+    $this->loadWidgets();
+  }
+
+
 }
