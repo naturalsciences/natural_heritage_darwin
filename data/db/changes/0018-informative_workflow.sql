@@ -1,6 +1,6 @@
 ALTER TABLE users_workflow RENAME TO informative_workflow ;
 DELETE FROM informative_workflow WHERE referenced_relation != 'lithology';
-UPDATE informative_workflow_workflow SET status = 'checked' WHERE status = 'published';
+UPDATE informative_workflow SET status = 'checked' WHERE status = 'published';
 ALTER TABLE informative_workflow add formated_name varchar not null default 'anonymous' ;
 ALTER TABLE informative_workflow add is_last boolean not null default true;
 ALTER TABLE informative_workflow ALTER user_ref TYPE integer ;
