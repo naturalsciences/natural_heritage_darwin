@@ -177,3 +177,7 @@ table.extended_info hr
     margin-top: 1em;
     text-decoration: underline;
 }
+
+.loan_form textarea {
+  width: 100%;
+}

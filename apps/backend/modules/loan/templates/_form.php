@@ -8,10 +8,10 @@ $(document).ready(function ()
 });
 </script>
 
-<?php echo form_tag('loan/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition'));?>
+<?php echo form_tag('loan/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition loan_form'));?>
 
 <?php if (!$form->getObject()->isNew()): ?>
-<input type="hidden" name="sf_method" value="put" />
+<input type="hidden" name="sf_method" value="put"/>
 <?php endif; ?>
   <table>
     <tbody>
@@ -22,8 +22,6 @@ $(document).ready(function ()
           <?php echo $form['name']->renderError() ?>
           <?php echo $form['name'] ?>
         </td>
-      </tr>
-      <tr>
         <th><?php echo $form['from_date']->renderLabel() ?></th>
         <td>
           <?php echo $form['from_date']->renderError() ?>
@@ -31,12 +29,34 @@ $(document).ready(function ()
         </td>
       </tr>
       <tr>
+        <td></td>
+        <td></td>
         <th><?php echo $form['to_date']->renderLabel() ?></th>
         <td>
           <?php echo $form['to_date']->renderError() ?>
           <?php echo $form['to_date'] ?>
         </td>
       </tr>
+      <?php if (! $form->getObject()->isNew()): ?>
+      <tr>
+        <td></td>
+        <td></td>
+        <th><?php echo $form['effective_to_date']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['effective_to_date']->renderError() ?>
+          <?php echo $form['effective_to_date'] ?>
+        </td>
+      </tr>
+      <?php endif;?>
+
+      <tr>
+        <th><?php echo $form['description']->renderLabel() ?></th>
+        <td colspan="3">
+          <?php echo $form['description']->renderError() ?>
+          <?php echo $form['description'] ?>
+        </td>
+      </tr>
+
     </tbody>
     <tfoot>
       <tr>
