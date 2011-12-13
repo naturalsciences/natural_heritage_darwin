@@ -13,11 +13,11 @@
 class InformativeWorkflow extends BaseInformativeWorkflow
 {
   private static $status = array(
-      'all' => array('all' => 'All','checked' => 'Checked','suggestion' => 'Suggestion','to_check' => 'To check'),
+      'all' => array('all' => 'All','checked' => 'Checked','suggestion' => 'Suggestion','to check' => 'To check'),
       Users::REGISTERED_USER => array('suggestion' => 'Suggestion'),
-      Users::ENCODER => array('to_check' => 'To check'),
+      Users::ENCODER => array('to check' => 'To check'),
       Users::MANAGER => array('checked' => 'Checked'),
-      Users::ADMIN => array('checked' => 'Checked','suggestion' => 'Suggestion','to_check' => 'To check')
+      Users::ADMIN => array('checked' => 'Checked','suggestion' => 'Suggestion','to check' => 'To check')
     );
     
   public function getFormattedStatus()
