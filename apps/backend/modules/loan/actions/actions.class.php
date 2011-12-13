@@ -76,4 +76,43 @@ class loanActions extends DarwinActions
   }
 
 
+
+  protected function processForm(sfWebRequest $request, sfForm $form)
+  {
+    $form->bind($request->getParameter($form->getName()));
+    if ($form->isValid())
+    {
+      try
+      {
+        $item = $form->save();
+        $this->redirect('loan/edit?id='.$item->getId());
+      }
+      catch(Doctrine_Exception $ne)
+      {
+        $e = new DarwinPgErrorParser($ne);
+        $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+        $form->getErrorSchema()->addError($error); 
+      }
+    }
+  }
+
+
+  public function executeCreate(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->isMethod('post'));
+    $this->form = new LoansForm();
+    // Process the form for saving informations
+    $this->processForm($request, $this->form);
+    $this->setTemplate('new');
+  }
+  public function executeUpdate(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
+    $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loans does not exist (%s).', array($request->getParameter('id'))));
+    $this->form = new LoansForm($loan);
+    $this->processForm($request, $this->form);
+    $this->loadWidgets();
+    $this->setTemplate('edit');
+  }
+
 }
