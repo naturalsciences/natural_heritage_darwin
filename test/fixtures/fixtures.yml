@@ -192,7 +192,7 @@ Users:
         given_name: Root
         gender: M
         db_user_type: 8
-        People: p5
+        People: p5               
         
 UsersLoginInfos:
     u1l1:
@@ -858,3 +858,10 @@ SpecimenIndividuals:
     spi1:
         Specimens: sp4
 
+InformativeWorkflow:
+    iw1:
+        referenced_relation: taxonomy
+        record_id: 8
+        status : to check
+        comment: test de workflow pour les tests
+        Users: u1
