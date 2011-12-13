@@ -106,7 +106,7 @@ CREATE TABLE public.darwin_flat_bis AS
   WHERE collection_is_public = true and part_ref is not null
 );
 
-CREATE INDEX idx_df_id ON public.darwin_flat_bis(id);
+ALTER TABLE public.darwin_flat_bis ADD CONSTRAINT pk_df_id PRIMARY KEY (id);
 CREATE INDEX idx_df_taxon_ref ON public.darwin_flat_bis(taxon_ref);
 CREATE INDEX idx_df_lithology_ref ON public.darwin_flat_bis(lithology_ref);
 CREATE INDEX idx_df_litho_ref ON public.darwin_flat_bis(litho_ref);
@@ -1046,6 +1046,7 @@ CREATE TABLE public.darwin_metadata AS
 );
 
 ALTER TABLE darwin2.template_classifications SET SCHEMA public;
+ALTER TABLE public.template_classifications OWNER TO postgres;
 
 CREATE SEQUENCE public.parent_taxonomy_id_seq;
 
@@ -1075,10 +1076,8 @@ CREATE INDEX idx_parent_taxon_parent_id ON public.parent_taxonomy (parent_id);
 CREATE INDEX idx_darwin_flat_chrono_ref ON public.darwin_flat (chrono_ref);
 CREATE INDEX idx_darwin_flat_litho_ref ON public.darwin_flat (litho_ref);
 
-
-
 ALTER FUNCTION darwin2.gettagsindexedasarray(character varying) SET SCHEMA public;
-ALTER FUNCTION darwin2.array_accum(anyelement) SET SCHEMA public;
+ALTER AGGREGATE darwin2.array_accum(anyelement) SET SCHEMA public;
 ALTER FUNCTION darwin2.linetotagarray(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.linetotagrows(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyelement) SET SCHEMA public;
@@ -1086,9 +1085,30 @@ ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyarray) SET SCHEMA publi
 ALTER FUNCTION darwin2.fulltoindex(character varying) SET SCHEMA public;
 ALTER SEQUENCE darwin2.darwin_flat_id_seq SET SCHEMA public;
 
+ALTER FUNCTION public.gettagsindexedasarray(character varying) OWNER TO postgres;
+ALTER AGGREGATE public.array_accum(anyelement) OWNER TO postgres;
+ALTER FUNCTION public.linetotagarray(text) OWNER TO postgres;
+ALTER FUNCTION public.linetotagrows(text) OWNER TO postgres;
+ALTER FUNCTION public.fct_remove_array_elem(anyarray,anyelement) OWNER TO postgres;
+ALTER FUNCTION public.fct_remove_array_elem(anyarray,anyarray) OWNER TO postgres;
+ALTER FUNCTION public.fulltoindex(character varying) OWNER TO postgres;
+ALTER SEQUENCE public.darwin_flat_id_seq OWNER TO postgres;
+
 DROP SCHEMA IF EXISTS darwin1 CASCADE;
 
 DROP SCHEMA IF EXISTS darwin2 CASCADE;
+
+revoke execute on function public.fulltoindex(character varying) from darwin1;
+revoke all on table public.geometry_columns from cebmpad;
+revoke all on table public.spatial_ref_sys from cebmpad;
+revoke all on table public.geometry_columns from darwin2;
+revoke all on table public.spatial_ref_sys from darwin2;
+
+DROP ROLE IF EXISTS darwin2 CASCADE;
+
+DROP ROLE IF EXISTS darwin1 CASCADE;
+
+DROP ROLE IF EXISTS cebmpad CASCADE;
 
 ALTER TABLE darwin_flat_bis RENAME TO darwin_flat;
 
@@ -1124,13 +1144,3 @@ ANALYZE public.chronostratigraphy_abc;
 ANALYZE public.accomp_mineral;
 ANALYZE public.darwin_flat;
 ANALYZE public.parent_taxonomy;
-
-revoke execute on function public.fulltoindex(character varying) from darwin1;
-revoke all on table public.geometry_columns from cebmpad;
-revoke all on table public.spatial_ref_sys from cebmpad;
-
-DROP ROLE IF EXISTS darwin1;
-
-DROP ROLE IF EXISTS cebmpad;
-
---\i ../createindexes_darwinflat.sql
