@@ -10,7 +10,7 @@ $browser->
   get('/board/index')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',2)->
-    checkElement('.board_col:last .widget',2)->
+    checkElement('.board_col:last .widget',3)->
   end()->
   
   info('1.1 - no widget when it is the bad category')->
@@ -21,7 +21,7 @@ $browser->
   get('/board/index')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',2)->
-    checkElement('.board_col:last .widget',2)->
+    checkElement('.board_col:last .widget',3)->
   end()->
 
 
@@ -29,7 +29,7 @@ $browser->
   get('/specimen/new')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',6)->
-    checkElement('.board_col:last .widget',9)->
+    checkElement('.board_col:last .widget',10)->
   end()->
   
   info('1.3 - add widget when the category is ok')->
@@ -40,7 +40,7 @@ $browser->
   get('/board/index')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',2)->
-    checkElement('.board_col:last .widget',2)->
+    checkElement('.board_col:last .widget',3)->
   end()->
 
 //-------------------- 
@@ -52,7 +52,7 @@ $browser->
   get('/board/index')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',2)->
-    checkElement('.board_col:last .widget',1)->
+    checkElement('.board_col:last .widget',2)->
   end()->
   info('2.1 - hide a hidden widget')->
   get('/widgets/changeStatus?category=board&widget=addTaxon&status=hidden')->
@@ -62,7 +62,7 @@ $browser->
   get('/board/index')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',2)->
-    checkElement('.board_col:last .widget',1)->
+    checkElement('.board_col:last .widget',2)->
   end()->
 
 //-------------------- 
@@ -115,7 +115,7 @@ $browser->
   get('/board/index')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',0)->
-    checkElement('.board_col:last .widget',3)->
+    checkElement('.board_col:last .widget',4)->
     checkElement('.board_col:last .widget:first .widget_top_bar span','/Add specimens/')-> //First widget
     checkElement('.board_col:last .widget:nth-child(2) .widget_top_bar span','/My saved specimens/')->//Second widget
   end()->
@@ -129,7 +129,7 @@ $browser->
   get('/board/index')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',1)->
-    checkElement('.board_col:last .widget',2)->
+    checkElement('.board_col:last .widget',3)->
     checkElement('.board_col:first .widget:first .widget_top_bar span','/My saved searches/')-> 
     checkElement('.board_col:last .widget:first .widget_top_bar span','/Add specimens/')->
   end()->
@@ -143,7 +143,7 @@ $browser->
   get('/board/index')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',1)->
-    checkElement('.board_col:last .widget',2)->
+    checkElement('.board_col:last .widget',3)->
     checkElement('.board_col:first .widget:first .widget_top_bar span','/My saved searches/')-> 
     checkElement('.board_col:last .widget:first .widget_top_bar span','/Add specimens/')->
   end()->
@@ -157,7 +157,7 @@ $browser->
   get('/board/index')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',1)->
-    checkElement('.board_col:last .widget',2)->
+    checkElement('.board_col:last .widget',3)->
     checkElement('.board_col:first .widget:first .widget_top_bar span','/My saved searches/')->
     checkElement('.board_col:last .widget:first .widget_top_bar span','/Add specimens/')->
   end()

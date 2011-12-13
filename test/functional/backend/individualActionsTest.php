@@ -17,7 +17,7 @@ $browser->addCustomSpecimen('777','Collection test for individual','Taxon test f
     checkElement('title','Add specimen individual')->
     checkElement('.board_col',2)->
     checkElement('.board_col:first .widget',3)->
-    checkElement('.board_col:last .widget',5)->
+    checkElement('.board_col:last .widget',6)->
     checkElement('.board_col:first .widget:first .widget_top_bar span','/Type/')->
     checkElement('.board_col:first .widget:nth-child(2) .widget_top_bar span','/Sex/')->
     checkElement('.board_col:first .widget:nth-child(3) .widget_top_bar span','/Stage/')->

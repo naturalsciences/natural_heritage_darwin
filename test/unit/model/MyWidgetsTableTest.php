@@ -19,10 +19,10 @@ $t->isnt(Doctrine::getTable('MyWidgets')->setUserRef($userEvil)->addCategoryUser
 
 $t->is(count(Doctrine::getTable('MyWidgets')
         ->setUserRef($userEvil)
-        ->getWidgets('board_widget')),4,'Get all board widget');
+        ->getWidgets('board_widget')),5,'Get all board widget');
 $t->is(count(Doctrine::getTable('MyWidgets')
         ->setUserRef($userEvil)
-        ->getWidgets('specimen_widget')),21,'Get all specimen widget');
+        ->getWidgets('specimen_widget')),22,'Get all specimen widget');
 
 $t->comment('->changeWidgetStatus()');
 
