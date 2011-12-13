@@ -25,7 +25,7 @@ CREATE trigger trg_chk_is_last_informative_workflow BEFORE INSERT
 	ON informative_workflow FOR EACH ROW
 	EXECUTE PROCEDURE fct_remove_last_flag();
 
-GRANT USAGE ON informative_workflow_id_seq TO d2viewer;
+GRANT USAGE, SELECT ON informative_workflow_id_seq TO d2viewer;
 GRANT INSERT, UPDATE ON informative_workflow TO d2viewer;
 
 -- don't forget to relaunch createfunction.sql before launch this !
