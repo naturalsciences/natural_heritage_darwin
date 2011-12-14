@@ -32,6 +32,17 @@ bw3:
    all_public: true
    is_available: true
 
+bw4:
+   col_num: 2
+   category: board_widget
+   group_name: myLoans
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: My loans
+   all_public: true
+
 usr0:
    col_num: 1
    category: users_widget

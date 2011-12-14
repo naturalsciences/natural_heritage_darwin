@@ -93,4 +93,7 @@ class boardwidgetComponents extends sfComponents
   {
     $this->form = new InformativeWorkflowFormFilter() ;
   }  
+
+  public function executeMyLoans()
+  {}
 }
