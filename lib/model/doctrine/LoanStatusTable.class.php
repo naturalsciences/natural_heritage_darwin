@@ -16,4 +16,18 @@ class LoanStatusTable extends DarwinTable
   {
     return $this->createFlatDistinct('loan_status', 'status', 'status')->execute();
   }
+
+  public function getStatusRelatedArray($loan_refs = array())
+  {
+    if(!is_array($loan_refs))
+      $loan_refs = array($loan_refs);
+        if(empty($loan_refs)) return array();
+     $q = Doctrine_Query::create()->
+         from('LoanStatus')->
+         andWhere('is_last = ?', true)->
+         andWhereIn('loan_ref', $loan_refs)->
+         orderBy('id desc');
+    return $q->execute();
+  }
+
 }

@@ -52,7 +52,7 @@
           <tr class="rid_<?php echo $item->getId();?>">
             <td><?php echo image_tag('info.png',"title=info class=info");?></td>
             <td class="item_name"><?php echo $item->getName();?></td>
-            <td><?php echo $item->LoanStatus[0]->getStatus() ?></td>
+            <td><?php echo $status[$item->getId()]->getStatus() ?></td>
             <td class="datesNum">
 	      <?php echo $item->getFromDate();?>
             </td>

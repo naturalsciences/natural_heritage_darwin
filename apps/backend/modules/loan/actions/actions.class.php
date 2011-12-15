@@ -47,7 +47,16 @@ class loanActions extends DarwinActions
         $this->setDefaultPaggingLayout($this->pagerLayout);
         // If pager not yet executed, this means the query has to be executed for data loading
         if (! $this->pagerLayout->getPager()->getExecuted())
-           $this->items = $this->pagerLayout->execute();  
+           $this->items = $this->pagerLayout->execute();
+          $loan_list = array();
+          foreach($this->items as $loan) {
+            $loan_list[] = $loan->getId() ;
+          }
+          $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
+          $this->status = array();
+          foreach($status as $sta) {
+            $this->status[$sta->getLoanRef()] = $sta;
+          }
       }
     }
   }

@@ -98,17 +98,14 @@ class LoansFormFilter extends BaseLoansFormFilter
 
   }
 
-
-
-  public function doBuildQuery(array $values)
+/*
+  public function addStatusColumnQuery($query, $field, $val)
   {
-    $query = parent::doBuildQuery($values);
-    $alias = $query->getRootAlias() ;
-    $query->innerJoin($alias.'.LoanStatus st')
-      ->select($alias.'.*, st.status');
-      //->
-
-    
+    if($val != '')
+    {
+      $alias = $query->getRootAlias() ;
+      $query->andWhere("EXISTS (select c.id from LoanStatus c where $alias.id = c.loan_ref and is_last=true and status = ?)",$val);
+    }
     return $query;
-  }
+  }*/
 }
