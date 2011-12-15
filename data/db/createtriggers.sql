@@ -852,6 +852,10 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimen_parts AFTER INSERT OR UPDATE
         ON specimen_parts FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_loan_status AFTER INSERT OR UPDATE
+        ON loan_status FOR EACH ROW
+        EXECUTE PROCEDURE trg_ins_update_dict();
+
 /******************* DELETE FROM DICT ******************/
 
 CREATE TRIGGER fct_cpy_trg_del_dict_codes AFTER DELETE  OR UPDATE
@@ -904,6 +908,10 @@ CREATE TRIGGER fct_cpy_trg_del_dict_users_addresses AFTER DELETE  OR UPDATE
 
 CREATE TRIGGER fct_cpy_trg_del_dict_specimen_parts AFTER DELETE  OR UPDATE
         ON specimen_parts FOR EACH ROW
+        EXECUTE PROCEDURE trg_del_dict();
+
+CREATE TRIGGER fct_cpy_trg_del_dict_loan_status AFTER DELETE OR UPDATE
+        ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
   
 /********************* *****/

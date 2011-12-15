@@ -21,7 +21,15 @@ class LoansFormFilter extends BaseLoansFormFilter
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
 
-    $this->widgetSchema['status'] = new sfWidgetFormChoice(array('choices' => array() )); 
+    $this->widgetSchema['status'] = new sfWidgetFormDoctrineChoice(array(
+        'model' => 'LoanStatus',
+        'table_method' => 'getDistinctStatus',
+        'method' => 'getStatus',
+        'key_method' => 'getStatus',
+        'add_empty' => true,
+    ));
+    $this->validatorSchema['status'] = new sfValidatorString(array('required' => false));
+
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
                                                                                 array('class' => 'from_date')
                                                                                );

@@ -7,13 +7,8 @@
  */
 class LoansTable extends DarwinTable
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object LoansTable
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('Loans');
-    }
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('Loans');
+  }
 }

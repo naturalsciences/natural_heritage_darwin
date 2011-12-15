@@ -3358,7 +3358,8 @@ BEGIN
       PERFORM fct_del_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_del_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
       PERFORM fct_del_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
-
+    ELSIF TG_TABLE_NAME = 'loan_status' THEN
+      PERFORM fct_del_in_dict('loan_status','status', oldfield.status, newfield.status);
   END IF;
 
   RETURN NEW;
@@ -3424,6 +3425,8 @@ BEGIN
       PERFORM fct_add_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_add_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
       PERFORM fct_add_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
+    ELSIF TG_TABLE_NAME = 'loan_status' THEN
+      PERFORM fct_add_in_dict('loan_status','status', oldfield.status, newfield.status);
   END IF;
 
   RETURN NEW;
