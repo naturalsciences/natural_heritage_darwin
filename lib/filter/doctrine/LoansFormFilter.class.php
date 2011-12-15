@@ -93,9 +93,6 @@ class LoansFormFilter extends BaseLoansFormFilter
 
     $this->validatorSchema['ig_ref'] = new sfValidatorInteger(array('required' => false)) ;
 
-    //$this->widgetSchema->setNameFormat('searchForm[%s]');
-
-
   }
 
 
@@ -106,6 +103,16 @@ class LoansFormFilter extends BaseLoansFormFilter
       $alias = $query->getRootAlias() ;
       $query->andWhere("EXISTS (select c.id from LoanStatus c where $alias.id = c.loan_ref and is_last=true and status = ?)",$val);
     }
+    return $query;
+  }
+
+  public function doBuildQuery(array $values)
+  {
+    $query = parent::doBuildQuery($values);
+    $fields = array('from_date', 'to_date');
+    //$this->addNamingColumnQuery($query, 'expeditions', 'name_ts', $values['name']);
+    $this->addExactDateFromToColumnQuery($query, $fields, $values['from_date'], $values['to_date']);
+    $query->andWhere("id > 0 ");
     return $query;
   }
 }

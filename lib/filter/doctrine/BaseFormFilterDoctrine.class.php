@@ -224,6 +224,23 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     return $terms;
   }
 
+  public function addExactDateFromToColumnQuery(Doctrine_Query $query, array $dateFields, $val_from, $val_to)
+  {
+    if (count($dateFields) > 0) {
+      if (count($dateFields) == 1) {
+        $query->andWhere($dateFields[0] . " Between ? and ? ",
+          array($val_from->format('d/m/Y'), 
+            $val_to->format('d/m/Y')
+          )
+        );
+      } else {
+        $query->andWhere(" " . $dateFields[0] . " >= ? ", $val_from->format('d/m/Y'))
+          ->andWhere(" " . $dateFields[1] . " <= ? ", $val_to->format('d/m/Y'));
+      }
+    }
+    return $query;
+  }
+
   public function addDateFromToColumnQuery(Doctrine_Query $query, array $dateFields, $val_from, $val_to)
   {
     if (count($dateFields) > 0)
