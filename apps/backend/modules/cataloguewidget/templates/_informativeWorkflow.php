@@ -12,7 +12,7 @@
   </thead>
 </table>
 </fieldset>
-<?php if($informativeWorkflow->count() > 0) : ?>
+<?php if($informativeWorkflow->count() > 0 && $sf_user->isAtLeast(Users::ENCODER)) : ?>
 <table class="catalogue_table">
   <thead class="workflow">
     <tr><th colspan=4><?php echo __("Latest Status") ; ?></th></tr>
