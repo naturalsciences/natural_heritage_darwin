@@ -690,7 +690,7 @@ $$BEGIN
     value := NULL;
 END;$$;
 
-DROP FUNCTION fct_set_user(integer);
+DROP FUNCTION IF EXISTS fct_set_user(integer);
 
 /**
  Set user id 
