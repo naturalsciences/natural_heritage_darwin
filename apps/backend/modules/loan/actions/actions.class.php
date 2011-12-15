@@ -31,15 +31,21 @@ class loanActions extends DarwinActions
       if ($this->form->isValid())
       {
         $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
-        $this->pagerLayout = new PagerLayoutWithArrows(
-          new DarwinPager(
-            $query,
-            $this->currentPage,
-            $this->form->getValue('rec_per_page')
-          ),
-          new Doctrine_Pager_Range_Sliding(
-            array('chunk' => $this->pagerSlidingSize)
-            ),
+
+
+        $pager = new DarwinPager($query,
+          $this->currentPage,
+          $this->form->getValue('rec_per_page')
+        );
+        $count_q = clone $query;//$pager->getCountQuery();
+        $count_q = $count_q->select('count(*)')->removeDqlQueryPart('orderby')->limit(0);
+        $counted = new DoctrineCounted();
+        $counted->count_query = $count_q;
+          // And replace the one of the pager with this new one
+          $pager->setCountQuery($counted);
+
+        $this->pagerLayout = new PagerLayoutWithArrows($pager,
+          new Doctrine_Pager_Range_Sliding(array('chunk' => $this->pagerSlidingSize)),
           $this->getController()->genUrl($this->s_url.$this->o_url).'/page/{%page_number}'
         );
 

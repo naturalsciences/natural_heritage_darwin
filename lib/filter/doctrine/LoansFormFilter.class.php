@@ -98,7 +98,7 @@ class LoansFormFilter extends BaseLoansFormFilter
 
   }
 
-/*
+
   public function addStatusColumnQuery($query, $field, $val)
   {
     if($val != '')
@@ -107,5 +107,5 @@ class LoansFormFilter extends BaseLoansFormFilter
       $query->andWhere("EXISTS (select c.id from LoanStatus c where $alias.id = c.loan_ref and is_last=true and status = ?)",$val);
     }
     return $query;
-  }*/
+  }
 }
