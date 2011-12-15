@@ -50,12 +50,13 @@
 $(document).ready(function () 
 {
   
-  $('#add_workflow').click(function() {   
+  $('#add_workflow').click(function(event) {   
    event.preventDefault();
    if($('#informative_workflow_status').val() && $('#informative_workflow_comment').val())
    {
-     $(this).load($(this).attr('href'),{'status':$('#informative_workflow_status').val(),'comment':$('#informative_workflow_comment').val()})
-     $('body').data('widgets_screen').refreshWidget(event, $(this)) ;
+     $(this).load($(this).attr('href'),{'status':$('#informative_workflow_status').val(),'comment':$('#informative_workflow_comment').val()}, function(){
+       $('body').data('widgets_screen').refreshWidget(event, $(this));
+     });
    }
   });
 });
