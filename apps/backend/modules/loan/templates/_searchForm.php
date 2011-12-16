@@ -6,10 +6,10 @@
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
       <thead>
         <tr>
-          <th><?php echo $form['name']->renderLabel('') ?></th>
-          <th><?php echo $form['status']->renderLabel('') ?></th>
-          <th><?php echo $form['from_date']->renderLabel('') ?></th>
-          <th><?php echo $form['to_date']->renderLabel('') ?></th>
+          <th><?php echo $form['name']->renderLabel() ?></th>
+          <th><?php echo $form['status']->renderLabel() ?></th>
+          <th><?php echo $form['from_date']->renderLabel() ?></th>
+          <th><?php echo $form['to_date']->renderLabel() ?></th>
         </tr>
       </thead>
       <tbody>
@@ -22,9 +22,9 @@
       </tbody>
       <thead>
         <tr>
-          <th><?php echo $form['people_ref']->renderLabel('') ?></th>
-          <th><?php echo $form['ig_ref']->renderLabel('') ?></th>
-          <th><?php echo $form['only_darwin']->renderLabel('') ?></th>
+          <th><?php echo $form['people_ref']->renderLabel() ?></th>
+          <th><?php echo $form['ig_ref']->renderLabel() ?></th>
+          <th><?php echo $form['only_darwin']->renderLabel() ?></th>
         </tr>
         <tr>
           <th><?php echo $form['people_ref']->render() ?></th>

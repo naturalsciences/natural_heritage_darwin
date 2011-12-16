@@ -36,10 +36,6 @@ class LoansFormFilter extends BaseLoansFormFilter
     $this->widgetSchema['to_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
                                                                               array('class' => 'to_date')
                                                                              );
-    $this->widgetSchema->setLabels(array('from_date' => 'Between',
-                                         'date_to' => 'and',
-                                        )
-                                  );
     $this->validatorSchema['name'] = new sfValidatorString(array('required' => false, 'trim' => true));
     $this->validatorSchema['from_date'] = new fuzzyDateValidator(array('required' => false,
                                                                                   'from_date' => true,
@@ -66,7 +62,8 @@ class LoansFormFilter extends BaseLoansFormFilter
                                             );
     
     $this->widgetSchema['only_darwin'] = new sfWidgetFormInputCheckbox();
-  
+
+    $this->validatorSchema['only_darwin'] = new sfValidatorBoolean();
     $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
        'model' => 'People',
        'link_url' => 'people/searchBoth',
@@ -92,7 +89,11 @@ class LoansFormFilter extends BaseLoansFormFilter
     );
 
     $this->validatorSchema['ig_ref'] = new sfValidatorInteger(array('required' => false)) ;
-
+    $this->widgetSchema->setLabels(array('from_date' => 'Between',
+                                         'date_to' => 'and',
+                                         'only_darwin' => 'Contains Darwin items',
+                                        )
+                                  );
   }
 
 
@@ -106,13 +107,22 @@ class LoansFormFilter extends BaseLoansFormFilter
     return $query;
   }
 
+  public function addOnlyDarwinColumnQuery($query, $field, $val)
+  {
+    if($val)
+    {
+      $alias = $query->getRootAlias() ;
+      $query->andWhere("EXISTS (select c.id from LoanItems c where $alias.id = c.loan_ref and part_ref is not null)");
+    }
+    return $query;
+  }
+
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
     $fields = array('from_date', 'to_date');
     //$this->addNamingColumnQuery($query, 'expeditions', 'name_ts', $values['name']);
     $this->addExactDateFromToColumnQuery($query, $fields, $values['from_date'], $values['to_date']);
-    $query->andWhere("id > 0 ");
     return $query;
   }
 }
