@@ -77,15 +77,14 @@ class LoansFormFilter extends BaseLoansFormFilter
     $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
 
 
-    $this->widgetSchema['ig_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Igs',
-       'link_url' => 'igs/search',
-       'box_title' => $this->getI18N()->__('Choose Ig'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
+    $this->widgetSchema['ig_ref'] = new widgetFormInputChecked(
+      array(
+        'model' => 'Igs',
+        'method' => 'getIgNum',
+        'nullable' => true,
+        'link_url' => 'igs/searchFor',
+        'notExistingAddDisplay' => false
+      )
     );
 
     $this->validatorSchema['ig_ref'] = new sfValidatorInteger(array('required' => false)) ;
@@ -113,6 +112,17 @@ class LoansFormFilter extends BaseLoansFormFilter
     {
       $alias = $query->getRootAlias() ;
       $query->andWhere("EXISTS (select c.id from LoanItems c where $alias.id = c.loan_ref and part_ref is not null)");
+    }
+    return $query;
+  }
+
+
+  public function addIgRefColumnQuery($query, $field, $val)
+  {
+    if($val != '')
+    {
+      $alias = $query->getRootAlias() ;
+      $query->andWhere("EXISTS (select c.id from LoanItems c where $alias.id = c.loan_ref and ig_ref = ?)", $val);
     }
     return $query;
   }
