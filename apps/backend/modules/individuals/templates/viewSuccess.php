@@ -2,7 +2,6 @@
 <?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'individuals', 'table' => 'specimen_individuals','eid'=> $specimen->getIndividualRef(),'view' => true)); ?>
 <?php use_stylesheet('widgets.css') ?>
 <?php use_javascript('widgets.js') ?>
-<?php use_javascript('catalogue.js') ?>
 <?php use_javascript('button_ref.js') ?>
 <div class="page">
   <div class="tabs_view">
