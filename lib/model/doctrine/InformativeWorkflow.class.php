@@ -38,9 +38,9 @@ class InformativeWorkflow extends BaseInformativeWorkflow
     return array_map(array($i18n_object, '__'), self::$status[$user_right]);
   }
   
-  public function getLink()
+  public function getLink($mode='view')
   {
-    $result = $this->getLinkforKnownTable($this->_get('referenced_relation') , $this->_get('record_id'));
+    $result = $this->getLinkforKnownTable($this->_get('referenced_relation') , $this->_get('record_id'),$mode);
     if($result)
       return $result;
     $result = $this->getLinkforRefTable($this->_get('referenced_relation') , $this->_get('record_id'));
@@ -49,20 +49,20 @@ class InformativeWorkflow extends BaseInformativeWorkflow
     return "";
   }
   
-  protected function getLinkforKnownTable($table, $id)
+  protected function getLinkforKnownTable($table, $id, $mode)
   {
     switch($table)
     {
       case 'collections':
-        $link = 'collection/view?id='.$id; break;
+        $link = 'collection/'.$mode.'?id='.$id; break;
       case 'specimens':
-        $link = 'specimen/view?id='.$id; break;
+        $link = 'specimen/'.$mode.'?id='.$id; break;
       case 'specimen_individuals':
-        $link = 'individuals/view?id='.$id; break;
+        $link = 'individuals/'.$mode.'?id='.$id; break;
       case 'specimen_parts':
-        $link = 'parts/view?id='.$id; break;
+        $link = 'parts/'.$mode.'?id='.$id; break;
       case 'expeditions':
-        $link = 'expedition/view?id='.$id; break;
+        $link = 'expedition/'.$mode.'?id='.$id; break;
       case 'taxonomy':
       case 'lithology':
       case 'lithostratigraphy':
@@ -72,7 +72,7 @@ class InformativeWorkflow extends BaseInformativeWorkflow
       case 'insurances':
       case 'igs':
       case 'gtu':
-        $link = $table.'/view?id='.$id; break;
+        $link = $table.'/'.$mode.'?id='.$id; break;
       default:
         $link = false; break;
     }

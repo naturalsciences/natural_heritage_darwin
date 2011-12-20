@@ -1674,7 +1674,7 @@ th .error_list
   display: block;
 }
 
-.panel_view fieldset,.view_mode fieldset, .view_mode input:focus, .view_mode textarea:focus
+.panel_view fieldset,.view_mode fieldset, .view_mode input:focus, .view_mode textarea:focus, .panel_view textarea:focus
 {
   border: 1px solid #5BAABD ;
   cursor : pointer ;
