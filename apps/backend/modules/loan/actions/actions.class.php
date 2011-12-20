@@ -14,7 +14,7 @@ class loanActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new LoansFormFilter();
+    $this->form = new LoansFormFilter(null,array('user' => $this->getUser()));
   }
 
   public function executeSearch(sfWebRequest $request)
@@ -22,7 +22,7 @@ class loanActions extends DarwinActions
     $this->forward404Unless($request->isMethod('post'));
     $this->setCommonValues('loan', 'from_date', $request);
 
-    $this->form = new LoansFormFilter();
+    $this->form = new LoansFormFilter(null,array('user' => $this->getUser()));
     $this->is_choose = ($request->getParameter('is_choose', '') == '') ? 0 : intval($request->getParameter('is_choose') );
     if($request->getParameter('loans_filters','') !== '')
     {

@@ -101,7 +101,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     if($val != '')
     {
       $alias = $query->getRootAlias() ;
-      $query->andWhere("EXISTS (select c.id from LoanStatus c where $alias.id = c.loan_ref and is_last=true and status = ?)",$val);
+      $query->andWhere("EXISTS (selects.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status = ?)",$val);
     }
     return $query;
   }
@@ -111,7 +111,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     if($val)
     {
       $alias = $query->getRootAlias() ;
-      $query->andWhere("EXISTS (select c.id from LoanItems c where $alias.id = c.loan_ref and part_ref is not null)");
+      $query->andWhere("EXISTS (select d.id from LoanItems d where $alias.id = d.loan_ref and part_ref is not null)");
     }
     return $query;
   }
@@ -121,7 +121,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     if($val != '')
     {
       $alias = $query->getRootAlias() ;
-      $query->andWhere("EXISTS (select c.id from CataloguePeople c where $alias.id = c.record_id and referenced_relation='loans' and people_ref = ?)", $val);
+      $query->andWhere("EXISTS (select cp.id from CataloguePeople cp where $alias.id = cp.record_id and referenced_relation='loans' and people_ref = ?)", $val);
     }
     return $query;
   }
@@ -132,9 +132,17 @@ class LoansFormFilter extends BaseLoansFormFilter
     if($val != '')
     {
       $alias = $query->getRootAlias() ;
-      $query->andWhere("EXISTS (select c.id from LoanItems c where $alias.id = c.loan_ref and ig_ref = ?)", $val);
+      $query->andWhere("EXISTS (select i.id from LoanItems i where $alias.id = i.loan_ref and ig_ref = ?)", $val);
     }
     return $query;
+  }
+
+  public function filterByRight($query, $user)
+  {
+    if($user->isAtLeast(Users::ADMIN)) return;
+
+    $alias = $query->getRootAlias() ;
+    $query->andWhere("EXISTS (select lr.id from LoanRights lr where $alias.id = lr.loan_ref and user_ref = ?)", $user->getId());
   }
 
   public function doBuildQuery(array $values)
@@ -143,6 +151,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     $fields = array('from_date', 'to_date');
     //$this->addNamingColumnQuery($query, 'expeditions', 'name_ts', $values['name']);
     $this->addExactDateFromToColumnQuery($query, $fields, $values['from_date'], $values['to_date']);
+    $this->filterByRight($query, $this->options['user']);
     return $query;
   }
 }
