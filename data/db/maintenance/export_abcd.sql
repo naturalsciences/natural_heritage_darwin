@@ -1104,11 +1104,11 @@ revoke all on table public.spatial_ref_sys from cebmpad;
 revoke all on table public.geometry_columns from darwin2;
 revoke all on table public.spatial_ref_sys from darwin2;
 
-DROP ROLE IF EXISTS darwin2 CASCADE;
+DROP ROLE IF EXISTS darwin2;
 
-DROP ROLE IF EXISTS darwin1 CASCADE;
+DROP ROLE IF EXISTS darwin1;
 
-DROP ROLE IF EXISTS cebmpad CASCADE;
+DROP ROLE IF EXISTS cebmpad;
 
 ALTER TABLE darwin_flat_bis RENAME TO darwin_flat;
 
