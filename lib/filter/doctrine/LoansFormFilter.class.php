@@ -116,6 +116,16 @@ class LoansFormFilter extends BaseLoansFormFilter
     return $query;
   }
 
+  public function addPeopleRefColumnQuery($query, $field, $val)
+  {
+    if($val != '')
+    {
+      $alias = $query->getRootAlias() ;
+      $query->andWhere("EXISTS (select c.id from CataloguePeople c where $alias.id = c.record_id and referenced_relation='loans' and people_ref = ?)", $val);
+    }
+    return $query;
+  }
+
 
   public function addIgRefColumnQuery($query, $field, $val)
   {
