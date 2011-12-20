@@ -2090,7 +2090,8 @@ create table loans (
   id integer not null default nextval('loans_id_seq'),
   name varchar not null default '',
   description varchar not null default '',
-  from_date date not null default now(),
+  description_ts tsvector not null,
+  from_date date,
   to_date date,
   effective_to_date date,
   
@@ -2102,6 +2103,7 @@ comment on table loans is 'Table holding an entire loan made of multiple loan it
 comment on column loans.id is 'Unique identifier of record';
 comment on column loans.name is 'Global name of the loan. May be a sort of code of other naming scheme';
 comment on column loans.description is 'Description of the meaning of the loan';
+comment on column loans.description is 'tsvector getting Description and title of the loan';
 comment on column loans.from_date  is 'Date of the start of the loan';
 comment on column loans.to_date  is 'Planned date of the end of the loan';
 comment on column loans.effective_to_date is 'Effective end date of the loan or null if it''s running';

@@ -12,6 +12,7 @@ class LoansForm extends BaseLoansForm
 {
   public function configure()
   {
+    unset($this['description_ts']);
     $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
@@ -37,7 +38,7 @@ class LoansForm extends BaseLoansForm
         'from_date' => true,
         'min' => $minDate,
         'max' => $maxDate,
-        'empty_value' => $dateLowerBound,
+       // 'empty_value' => $dateLowerBound,
         'with_time' => false
       ),
       array('invalid' => 'Invalid date "from"')
@@ -61,7 +62,6 @@ class LoansForm extends BaseLoansForm
         'from_date' => false,
         'min' => $minDate,
         'max' => $maxDate,
-        'empty_value' => $dateLowerBound,
         'with_time' => false
       ),
       array('invalid' => 'Invalid date "to"')
@@ -84,7 +84,6 @@ class LoansForm extends BaseLoansForm
         'from_date' => false,
         'min' => $minDate,
         'max' => $maxDate,
-        'empty_value' => $dateLowerBound,
         'with_time' => false
       ),
       array('invalid' => 'Invalid date "effective"')

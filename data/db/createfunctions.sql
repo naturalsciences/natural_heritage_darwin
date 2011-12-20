@@ -243,6 +243,8 @@ BEGIN
                 NEW.method_indexed := fullToIndex(NEW.method);
        ELSIF TG_TABLE_NAME = 'collecting_tools' THEN
                 NEW.tool_indexed := fullToIndex(NEW.tool);
+        ELSIF TG_TABLE_NAME = 'loans' THEN
+                NEW.description_ts := to_tsvector('simple', COALESCE(NEW.name,'') || COALESCE(NEW.description,'') );
 	END IF;
 	RETURN NEW;
 END;
@@ -1294,6 +1296,15 @@ BEGIN
         END IF;
       ELSE
         PERFORM fct_cpy_word('taxonomy','name_indexed', NEW.name_indexed);
+      END IF;
+   ELSIF TG_TABLE_NAME ='loans' THEN
+
+      IF TG_OP = 'UPDATE' THEN
+        IF OLD.description_ts IS DISTINCT FROM NEW.description_ts THEN
+          PERFORM fct_cpy_word('loans','description_ts', NEW.description_ts);
+        END IF;
+      ELSE
+        PERFORM fct_cpy_word('loans','description_ts', NEW.description_ts);
       END IF;
 /*
    ELSIF TG_TABLE_NAME ='codes' THEN

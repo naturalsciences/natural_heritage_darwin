@@ -87,6 +87,10 @@ CREATE TRIGGER trg_cpy_fullToIndex_collecting_tools BEFORE INSERT OR UPDATE
   ON collecting_tools FOR EACH ROW
   EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
+CREATE TRIGGER trg_cpy_fullToIndex_loans BEFORE INSERT OR UPDATE
+  ON loans FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_fullToIndex();
+
 CREATE TRIGGER trg_clr_specialstatus_specimenindividuals BEFORE INSERT OR UPDATE
 	ON specimen_individuals FOR EACH ROW
 	EXECUTE PROCEDURE fct_clr_specialstatus();
@@ -604,6 +608,10 @@ CREATE TRIGGER trg_words_ts_cpy_lithology BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_words_ts_cpy_taxonomy BEFORE INSERT OR UPDATE
 	ON taxonomy FOR EACH ROW
 	EXECUTE PROCEDURE fct_trg_word();
+
+CREATE TRIGGER trg_words_ts_cpy_loans BEFORE INSERT OR UPDATE
+        ON loans FOR EACH ROW
+        EXECUTE PROCEDURE fct_trg_word();
 /*
 CREATE TRIGGER trg_words_ts_cpy_codes BEFORE INSERT OR UPDATE
 	ON codes FOR EACH ROW

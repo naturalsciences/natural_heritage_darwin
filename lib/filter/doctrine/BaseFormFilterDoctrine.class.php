@@ -227,16 +227,9 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   public function addExactDateFromToColumnQuery(Doctrine_Query $query, array $dateFields, $val_from, $val_to)
   {
     if (count($dateFields) > 0) {
-      if (count($dateFields) == 1) {
-        $query->andWhere($dateFields[0] . " Between ? and ? ",
-          array($val_from->format('d/m/Y'), 
-            $val_to->format('d/m/Y')
-          )
-        );
-      } else {
-        $query->andWhere(" " . $dateFields[0] . " >= ? ", $val_from->format('d/m/Y'))
-          ->andWhere(" " . $dateFields[1] . " <= ? ", $val_to->format('d/m/Y'));
-      }
+      $query->andWhere(" CASE WHEN " . $dateFields[0] . " is NULL THEN '01/01/0001' ELSE ".$dateFields[0]." END >= ? ", $val_from->format('d/m/Y'))
+      ->andWhere(" CASE WHEN " . $dateFields[1] . " is NULL THEN '31/12/2038' ELSE ".$dateFields[1]." END >= ? ", $val_to->format('d/m/Y'));
+
     }
     return $query;
   }

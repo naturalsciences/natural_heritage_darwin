@@ -36,6 +36,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     $this->widgetSchema['to_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
                                                                               array('class' => 'to_date')
                                                                              );
+    $this->widgetSchema['name'] = new sfWidgetFormInput(array());
     $this->validatorSchema['name'] = new sfValidatorString(array('required' => false, 'trim' => true));
     $this->validatorSchema['from_date'] = new fuzzyDateValidator(array('required' => false,
                                                                                   'from_date' => true,
@@ -91,6 +92,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     $this->widgetSchema->setLabels(array('from_date' => 'Between',
                                          'date_to' => 'and',
                                          'only_darwin' => 'Contains Darwin items',
+                                         'people_ref' => 'Person',
                                         )
                                   );
   }
@@ -149,7 +151,7 @@ class LoansFormFilter extends BaseLoansFormFilter
   {
     $query = parent::doBuildQuery($values);
     $fields = array('from_date', 'to_date');
-    //$this->addNamingColumnQuery($query, 'expeditions', 'name_ts', $values['name']);
+    $this->addNamingColumnQuery($query, 'loans', 'description_ts', $values['name']);
     $this->addExactDateFromToColumnQuery($query, $fields, $values['from_date'], $values['to_date']);
     $this->filterByRight($query, $this->options['user']);
     return $query;
