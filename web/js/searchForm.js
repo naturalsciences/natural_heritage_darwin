@@ -1,101 +1,59 @@
-jQuery(function () 
-{
-  $(".search_form").bind('submit.sform',search_form_submit);
-});
-
-function search_form_submit()
-{
-  $(".tree").slideUp().html("");
-  $.ajax({
+(function($){
+  $.choose_form = function(el, options){
+    // To avoid scope issues, use 'base' instead of 'this'
+    // to reference this class from internal events and functions.
+    var base = this;
+    
+    // Access to jQuery and DOM versions of element
+    base.$el = $(el);
+    base.el = el;
+    
+    // Add a reverse reference to the DOM object
+    base.$el.data("choose_form", base);
+    
+    base.search_form_submit = function search_form_submit(event)
+    {
+      event.preventDefault();
+      base.$el.find(".tree").slideUp().html("");
+        $.ajax({
           type: "POST",
           url: $(this).attr('action'),
-          data: $('.search_form').serialize(),
+          data: $(this).serialize(),
           success: function(html){
-                                  $(".search_results_content").html(html);
-                                  $('.search_results').slideDown();
-                                  }
+            base.$el.find(base.options['content_elem']).html(html);
+            base.$el.find(base.options['result_container']).slideDown();
           }
-        );
-  $(".search_results_content").html('<img src="/images/loader.gif" />');
-  return false;
-}
-
-
-/**********************************
- * Specimen Search related functions
- * 
- ************************************/
-
-/***
- * Update the visible columns list in specimens_search
- */
-function update_list(li)
-{
-  val = li.attr('class') ;
-  if (val == 'check')
-  {
-    li.removeClass('check') ;
-    li.addClass('uncheck') ; 
-  }
-  else
-  {
-    li.removeClass('uncheck') ;
-    li.addClass('check') ; 
-  }
-}
-
-function getColVisible()
-{
-  column_str = '';
-  if($('.column_menu ul > li.check').length)
-  {
-    $('.column_menu ul > li.check').each(function (index)
-    {
-      if(column_str != '') column_str += '|';
-      column_str += $(this).attr('id').substr(3);
-    });
-  }
-  return column_str;
-}
-/**
-* set the individual colspan depending on how many fields are visible
-*/
-function initIndividualColspan()
-{
-  cpt = 1 ;
-  $('ul.column_menu > li > ul').find('>li').each(function() {
-    if( $(this).hasClass('check'))
-    {
-      cpt++ ;
+        });
+      base.$el.find(base.options['content_elem']).html('<img src="/images/loader.gif" />');
+      return false;
     }
-   });  
-  $('table.spec_results tbody tr.sub_row').find('td:first').attr('colspan', cpt);
-  $('#specimen_search_filters_col_fields').val(getColVisible());
-}
+    
+    
+    
+    base.init = function(){
+      base.options = $.extend({},$.choose_form.defaultOptions, options);
+      base.$el.find(base.options['form_elem']).bind('submit.sform',base.search_form_submit);
+    };
+    
+    base.init();
+  };
+  
 
-/***
- * Hide or show table column when a column is checked as visible
- */
-function hide_or_show(li)
-{
-  field = li.attr('id') ;
-  column = field.substr(3) ;
-  val = li.attr('class') ;
-  if(val == 'uncheck')
-  {
-    $("li #"+field).find('span:first').hide();
-    $("li #"+field).find('span:nth-child(2)').show();
-    $('table.spec_results thead tr th.col_'+column).hide();
-    $('table.spec_results tbody tr td.col_'+column).hide();
-    //this line below is neccessary to avoid table border to be cut
-  }
-  else
-  {
-    $("li #"+field).find('span:first').show();
-    $("li #"+field).find('span:nth-child(2)').hide();
-    $('table.spec_results thead tr th.col_'+column).show();
-    $('table.spec_results tbody tr td.col_'+column).show();
-    //this line below is neccessary to avoid table border to be cut    
-  }
-  initIndividualColspan();
-}
+
+    
+  $.choose_form.defaultOptions = {
+    content_elem: '.search_results_content',
+    form_elem: '.search_form',
+    result_container: '.search_results'
+  };
+  
+  $.fn.choose_form = function(options){
+    return this.each(function(){
+      (new $.choose_form(this, options));
+    });
+  };
+
+})(jQuery);
+
+
+

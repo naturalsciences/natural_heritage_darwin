@@ -1,6 +1,6 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-
+<div class="catalogue_users">
 <?php echo form_tag('user/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'users_filter'));?>
   <div class="container">
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
@@ -27,3 +27,9 @@
     </div> 
   </div>
 </form> 
+</div>
+<script language="javascript">
+$(document).ready(function () {
+  $('.catalogue_users').choose_form({});
+});
+</script>

@@ -1,20 +1,7 @@
 <?php include_stylesheets_for_form($searchForm) ?>
 <?php include_javascripts_for_form($searchForm) ?>
 
-<script type="text/javascript">
-$(document).ready(function () 
-{
-  $('#clear_cat_relation').click(function (event)
-  {
-    event.preventDefault();
-    $('.search_item_name').html('');
-    $('#searchCatalogue_item_ref').val('');
-    $('.search_item_name').closest('tr').hide();
-  });
-
-});
-</script>
-
+<div class="catalogue_filter">
 <?php echo form_tag('catalogue/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'catalogue_filter'));?>
 <div class="container">
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
@@ -73,6 +60,15 @@ $(document).ready(function ()
 </form>
 <script>
 $(document).ready(function () {
+  $('.catalogue_filter').choose_form({});
+  $('#clear_cat_relation').click(function (event)
+  {
+    event.preventDefault();
+    $('.search_item_name').html('');
+    $('#searchCatalogue_item_ref').val('');
+    $('.search_item_name').closest('tr').hide();
+  });
+
   $(".new_link").click( function()
   {
    url = $(this).find('a').attr('href'),
@@ -83,3 +79,4 @@ $(document).ready(function () {
   });
 });
 </script>
+</div>

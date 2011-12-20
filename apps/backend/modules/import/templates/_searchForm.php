@@ -1,6 +1,6 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-
+  <div class="import_filter">
   <?php echo form_tag('import/search', array('class'=>'search_form','id'=>'import_filter'));?>
   <div class="container">
     <table class="search" id="search">
@@ -32,4 +32,10 @@
     </div>
   </div>
 </form>  
+  </div>
 
+<script type="text/javascript">
+ $(document).ready(function () {
+  $('.import_filter').choose_form({});
+});
+</script>
