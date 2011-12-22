@@ -134,7 +134,6 @@ create-db:
 	$(PRIV_PSQL) -f createdb.sql
 
 install-lib:
-	$(PRIV_PSQL_DB) -f lib/accent.sql
 	#Make this more dynamical
 	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pg_trgm.sql
 	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pgcrypto.sql
