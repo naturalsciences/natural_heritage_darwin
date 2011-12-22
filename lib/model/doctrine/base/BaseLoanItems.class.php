@@ -11,7 +11,7 @@
  * @property string $from_date
  * @property string $to_date
  * @property integer $part_ref
- * @property string $detail
+ * @property string $details
  * @property Loans $Loan
  * @property Igs $Ig
  * @property SpecimenParts $DarwinParts
@@ -22,7 +22,7 @@
  * @method string        getFromDate()    Returns the current record's "from_date" value
  * @method string        getToDate()      Returns the current record's "to_date" value
  * @method integer       getPartRef()     Returns the current record's "part_ref" value
- * @method string        getDetail()      Returns the current record's "detail" value
+ * @method string        getDetails()     Returns the current record's "details" value
  * @method Loans         getLoan()        Returns the current record's "Loan" value
  * @method Igs           getIg()          Returns the current record's "Ig" value
  * @method SpecimenParts getDarwinParts() Returns the current record's "DarwinParts" value
@@ -32,7 +32,7 @@
  * @method LoanItems     setFromDate()    Sets the current record's "from_date" value
  * @method LoanItems     setToDate()      Sets the current record's "to_date" value
  * @method LoanItems     setPartRef()     Sets the current record's "part_ref" value
- * @method LoanItems     setDetail()      Sets the current record's "detail" value
+ * @method LoanItems     setDetails()     Sets the current record's "details" value
  * @method LoanItems     setLoan()        Sets the current record's "Loan" value
  * @method LoanItems     setIg()          Sets the current record's "Ig" value
  * @method LoanItems     setDarwinParts() Sets the current record's "DarwinParts" value
@@ -68,7 +68,7 @@ abstract class BaseLoanItems extends sfDoctrineRecord
         $this->hasColumn('part_ref', 'integer', null, array(
              'type' => 'integer',
              ));
-        $this->hasColumn('detail', 'string', null, array(
+        $this->hasColumn('details', 'string', null, array(
              'type' => 'string',
              'notnull' => true,
              'default' => '',

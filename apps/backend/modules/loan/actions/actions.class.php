@@ -85,8 +85,8 @@ class loanActions extends DarwinActions
   public function executeEdit(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $this->forward404Unless($expeditions = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
-    $this->form = new LoansForm($expeditions);
+    $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
+    $this->form = new LoansForm($loan);
     $this->loadWidgets();
   }
 
@@ -148,6 +148,11 @@ class loanActions extends DarwinActions
     $this->processForm($request, $this->form);
     $this->loadWidgets();
     $this->setTemplate('edit');
+  }
+
+  public function executeOverview(sfWebRequest $request) {
+    $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
+    $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
   }
 
 }
