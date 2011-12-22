@@ -87,7 +87,7 @@ END)
 
 CREATE TABLE public.darwin_flat_bis AS
 (
-  SELECT id, collection_ref, collection_name, expedition_ref, expedition_name, gtu_ref, 
+  SELECT df.id, collection_ref, collection_name, expedition_ref, expedition_name, gtu_ref, 
          gtu_code, gtu_from_date, gtu_to_date, gtu_country_tag_value, taxon_ref, 
          case when taxon_name = '' then null::varchar else taxon_name end  as taxon_name, 
          taxon_level_ref, taxon_level_name, litho_ref, 
@@ -98,11 +98,12 @@ CREATE TABLE public.darwin_flat_bis AS
          case when lithology_name = '' then null::varchar else lithology_name end as lithology_name, 
          lithology_level_ref, lithology_level_name, lithology_local, lithology_color, mineral_ref, 
          case when mineral_name = '' then null::varchar else mineral_name end as mineral_name,
-         mineral_level_ref, mineral_level_name, mineral_local, mineral_color, acquisition_category, acquisition_date, 
+         mineral_level_ref, mineral_level_name, mineral_local, mineral_color, min.classification as mineral_classification, min.cristal_system as mineral_cristal_system, 
+         acquisition_category, acquisition_date, 
          individual_ref, individual_type, individual_type_group, individual_type_search, 
          individual_sex, individual_state, individual_stage, individual_social_status, individual_rock_form, 
          part_ref, part
-  FROM darwin2.darwin_flat
+  FROM darwin2.darwin_flat as df LEFT JOIN darwin2.mineralogy as min ON df.mineral_ref = min.id
   WHERE collection_is_public = true and part_ref is not null
 );
 
@@ -356,7 +357,7 @@ CREATE INDEX idx_collectors_order_by ON public.collectors (order_by);
 CREATE INDEX idx_collectors_people_formated_name ON public.collectors (people_formated_name) where people_formated_name is not null;
 CREATE INDEX idx_collectors_institution_formated_name ON public.collectors (institution_formated_name) where institution_formated_name is not null;
 
-CREATE SEQUENCE public.donators_abcd_id_seq;
+/*CREATE SEQUENCE public.donators_abcd_id_seq;
 
 CREATE TABLE public.donators as
 (
@@ -417,7 +418,7 @@ CREATE INDEX idx_donators_flat_id ON public.donators (flat_id);
 CREATE INDEX idx_donators_order_by ON public.donators (order_by);
 CREATE INDEX idx_donators_people_formated_name ON public.donators (people_formated_name) where people_formated_name is not null;
 CREATE INDEX idx_donators_institution_formated_name ON public.donators (institution_formated_name) where institution_formated_name is not null;
-
+*/
 create sequence public.identifications_abdc_id_seq;
 
 CREATE TABLE public.identifications_abdc as
@@ -1116,7 +1117,7 @@ GRANT SELECT ON  public.flat_abcd TO d2viewer;
 GRANT SELECT ON  public.gtu_properties TO d2viewer;
 GRANT SELECT ON  public.gtu_place TO d2viewer;
 GRANT SELECT ON  public.collectors TO d2viewer;
-GRANT SELECT ON  public.donators TO d2viewer;
+/*GRANT SELECT ON  public.donators TO d2viewer;*/
 GRANT SELECT ON  public.identifications_abdc TO d2viewer;
 GRANT SELECT ON  public.taxon_identified TO d2viewer;
 GRANT SELECT ON  public.mineral_identified TO d2viewer;
@@ -1133,7 +1134,7 @@ ANALYZE public.flat_abcd;
 ANALYZE public.gtu_properties;
 ANALYZE public.gtu_place;
 ANALYZE public.collectors;
-ANALYZE public.donators;
+/*ANALYZE public.donators;*/
 ANALYZE public.identifications_abdc;
 ANALYZE public.taxon_identified;
 ANALYZE public.mineral_identified;
