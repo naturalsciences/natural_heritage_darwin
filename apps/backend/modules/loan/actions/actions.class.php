@@ -155,4 +155,13 @@ class loanActions extends DarwinActions
     $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
   }
 
+  public function executeAddLoanItem(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+    $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
+    $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
+    $this->form->addItem($number);
+    return $this->renderPartial('loanLine',array('form' => $this->form['newLoanItems'][$number]));
+  }
+
 }

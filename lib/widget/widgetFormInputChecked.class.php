@@ -95,7 +95,7 @@ class widgetFormInputChecked extends sfWidgetFormInputHidden
     $input .= sprintf(<<<EOF
 <script type="text/javascript">
   var lastCaller;
-  function updateHiddenId (value, link_url)
+  function %1\$s_updateHiddenId (value, link_url)
   {
     $.ajax({type: "GET",
             url: link_url,
@@ -127,7 +127,7 @@ $(document).ready(function () {
       toggledMsg.find('option:first').attr('selected', "selected");
       toggledMsg.find('option:last').removeAttr('selected');
       lastCaller = "onChange";
-      updateHiddenId($(this).val(), link_url);
+      %1\$s_updateHiddenId($(this).val(), link_url);
     });
     if ('%4\$s')
     {
@@ -136,7 +136,7 @@ $(document).ready(function () {
                          {
                            hideForRefresh($(this).closest('.widget_content'));
                            lastCaller = "result";
-                           updateHiddenId(formatted, link_url);
+                           %1\$s_updateHiddenId(formatted, link_url);
                          });
     }
 });
