@@ -66,7 +66,7 @@ class LoanOverviewForm extends sfForm
     foreach($this->embeddedForms['newLoanItems']->getEmbeddedForms() as $name => $form)
     {
       // @TODO: FIND BETTER deterministic key
-      if (!isset($value['newLoanItems'][$name]['description']) || $value['newLoanItems'][$name]['description']=='' )
+      if (!isset($value['newLoanItems'][$name]['details']) || $value['newLoanItems'][$name]['details']=='' )
       {
         unset($this->embeddedForms['newLoanItems'][$name]);
       }
@@ -81,7 +81,7 @@ class LoanOverviewForm extends sfForm
     {
 
       // @TODO: FIND BETTER deterministic key
-      if (!isset($value['LoanItems'][$name]['description']) || $value['LoanItems'][$name]['description']=='' )
+      if (!isset($value['LoanItems'][$name]['details']) || $value['LoanItems'][$name]['details']=='' )
       {
         $form->getObject()->delete();
         unset($this->embeddedForms['LoanItems'][$name]);
@@ -93,5 +93,10 @@ class LoanOverviewForm extends sfForm
       }
     }
     
+  }
+
+  public function getJavaScripts()
+  {
+    return array('/js/jquery.autocomplete.js');
   }
 }

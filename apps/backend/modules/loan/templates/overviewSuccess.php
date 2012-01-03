@@ -10,6 +10,7 @@
 
       <?php echo form_tag('loan/overview?id='.$loan->getId(), array('class'=>'edition loan_overview_form'));?>
 
+
         <table>
         <thead>
           <tr>
@@ -49,16 +50,18 @@ $(document).ready(function () {
     {
         event.preventDefault();
         hideForRefresh('.loan_overview_form');
-        parent_el = $('.loan_overview_form table tbody tr');
+        parent_el = $('.loan_overview_form table tbody');
         $.ajax(
         {
           type: "GET",
-          url: $(this).attr('href')+ '/num/' + ( parent_el.length),
+          url: $(this).attr('href')+ '/num/' + ( parent_el.find('tr').length),
           success: function(html)
           {                    
             //console.log(parent_el);
-            parent_el.closest('tbody').append(html);
+            parent_el.append(html);
             showAfterRefresh('.loan_overview_form');
+            $('.loan_overview_form').css({position: 'absolute'});
+ 
           }
         });
         return false;

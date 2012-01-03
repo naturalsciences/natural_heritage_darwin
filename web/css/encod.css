@@ -181,3 +181,6 @@ table.extended_info hr
 .loan_form textarea {
   width: 100%;
 }
+.loan_overview_form {
+  z-index:-1;
+}

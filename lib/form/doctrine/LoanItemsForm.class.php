@@ -20,6 +20,8 @@ class LoanItemsForm extends BaseLoanItemsForm
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
 
+    $this->widgetSchema['loan_ref'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['loan_ref'] = new sfValidatorPass();
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
