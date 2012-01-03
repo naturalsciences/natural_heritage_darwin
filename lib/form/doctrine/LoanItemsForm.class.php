@@ -86,7 +86,18 @@ class LoanItemsForm extends BaseLoanItemsForm
       )
     );
 
-    $this->widgetSchema['part_ref'] = new sfWidgetFormInputHidden();
+    $this->widgetSchema['part_ref'] = new widgetFormButtonRef(
+      array('model' => 'SpecimenParts',
+            'link_url' => 'parts/choosePinned',
+            'method' => 'getId',
+            'box_title' => $this->getI18N()->__('Choose Darwin Part'),
+            'button_class'=>'',
+            'nullable'=> true,
+           ),
+      array('class'=>'inline',
+           )
+     );
+    $this->validatorSchema['part_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->mergePostValidator(new LoanOverviewLineValidatorSchema());
   }
 }

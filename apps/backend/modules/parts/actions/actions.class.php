@@ -295,5 +295,16 @@ class partsActions extends DarwinActions
   {
     $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id')),'Part does not exist');  
     $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
-  }   
+  }
+
+  public function executeChoosePinned(sfWebRequest $request)
+  {
+    /** @TODO: change this when flat_less branch is merged */
+    $items_ids = $this->getUser()->getAllPinned('part');
+    $this->items = Doctrine::getTable('SpecimenSearch')->getByMultipleIds($items_ids, 'part', $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
+    /** END TODO */
+
+
+  }
+
 }

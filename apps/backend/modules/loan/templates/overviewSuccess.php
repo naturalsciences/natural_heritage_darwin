@@ -1,6 +1,7 @@
 <?php slot('title', __('Loan Overview'));  ?>
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
+<?php use_javascript('button_ref.js') ?>
 
 <div class="page">
     <h1 class="edit_mode"><?php echo __('Overview');?></h1>
