@@ -53,7 +53,6 @@ class LoanOverviewForm extends sfForm
       foreach($taintedValues['LoanItems'] as $key=>$newVal)
       {
         $taintedValues['LoanItems'][$key]['loan_ref'] = $this->options['loan']->getId();
-
       }
     }
     parent::bind($taintedValues, $taintedFiles);
@@ -66,7 +65,7 @@ class LoanOverviewForm extends sfForm
     foreach($this->embeddedForms['newLoanItems']->getEmbeddedForms() as $name => $form)
     {
       // @TODO: FIND BETTER deterministic key
-      if (!isset($value['newLoanItems'][$name]['details']) || $value['newLoanItems'][$name]['details']=='' )
+      if (!isset($value['newLoanItems'][$name]['details'])/* || $value['newLoanItems'][$name]['details']=='' */)
       {
         unset($this->embeddedForms['newLoanItems'][$name]);
       }
@@ -79,9 +78,8 @@ class LoanOverviewForm extends sfForm
 
     foreach($this->embeddedForms['LoanItems']->getEmbeddedForms() as $name => $form)
     {
-
       // @TODO: FIND BETTER deterministic key
-      if (!isset($value['LoanItems'][$name]['details']) || $value['LoanItems'][$name]['details']=='' )
+      if (!isset($value['LoanItems'][$name]['details']) /*|| $value['LoanItems'][$name]['details']==''*/ )
       {
         $form->getObject()->delete();
         unset($this->embeddedForms['LoanItems'][$name]);

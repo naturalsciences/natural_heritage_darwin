@@ -161,7 +161,7 @@ class loanActions extends DarwinActions
         try
         {
           $this->form->save();
-         // $this->redirect('loan/edit?id='.$this->loan->getId());
+          return $this->redirect('loan/overview?id='.$this->loan->getId());
         }
         catch(Doctrine_Exception $ne)
         {
@@ -177,9 +177,11 @@ class loanActions extends DarwinActions
   {
     $number = intval($request->getParameter('num'));
     $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
+    $item = new LoanItems();
+    $item->setLoanRef($this->loan->getId());
     $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
     $this->form->addItem($number);
-    return $this->renderPartial('loanLine',array('form' => $this->form['newLoanItems'][$number]));
+    return $this->renderPartial('loanLine',array('form' => $this->form['newLoanItems'][$number], 'lineObj'=> $item));
   }
 
 }

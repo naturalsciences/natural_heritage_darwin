@@ -20,6 +20,10 @@ class LoanItemsForm extends BaseLoanItemsForm
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
 
+    $this->widgetSchema['loan_item_ind'] = new sfWidgetFormInputHidden(); // Indicator of line presence
+    $this->setDefault('loan_item_ind', 1);
+    $this->validatorSchema['loan_item_ind'] = new sfValidatorPass();
+
     $this->widgetSchema['loan_ref'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['loan_ref'] = new sfValidatorPass();
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
@@ -83,6 +87,6 @@ class LoanItemsForm extends BaseLoanItemsForm
     );
 
     $this->widgetSchema['part_ref'] = new sfWidgetFormInputHidden();
-
+    $this->mergePostValidator(new LoanOverviewLineValidatorSchema());
   }
 }

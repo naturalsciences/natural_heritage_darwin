@@ -20,15 +20,17 @@
             <th><?php echo __('Details') ;?></th>
             <th><?php echo __('Expedition') ;?></th>
             <th><?php echo __('Return') ;?></th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          <?php foreach($form['LoanItems'] as $sf):?>
-            <?php include_partial('loanLine', array('loan'=> $loan, 'form'=>$sf)); ?>
+          <?php foreach($form['LoanItems'] as $name => $sf):?>
+            <?php include_partial('loanLine', array('loan'=> $loan, 'form'=>$sf, 'lineObj' => $form->getEmbeddedForm('LoanItems')->getEmbeddedForm($name)->getObject())); ?>
           <?php endforeach;?>
 
-          <?php foreach($form['newLoanItems'] as $sf):?>
-            <?php include_partial('loanLine', array('loan'=> $loan, 'form'=>$sf)); ?>
+          <?php foreach($form['newLoanItems'] as $name => $sf):?>
+            <?php include_partial('loanLine', array('loan'=> $loan, 'form'=>$sf, 'lineObj' => $form->getEmbeddedForm('LoanItems')->getEmbeddedForm($name)->getObject())); ?>
           <?php endforeach;?>
         </tbody>
        </table>
