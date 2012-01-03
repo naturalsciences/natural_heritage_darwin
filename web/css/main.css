@@ -2768,3 +2768,6 @@ input[type='file']
 }
 #broadcast_bottom span { font-size: small; }
 #broadcast_bottom_padding { height :2em;}
+.inline.hidden {
+  display:none;
+}
