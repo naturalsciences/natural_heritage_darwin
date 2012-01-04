@@ -11,7 +11,7 @@
 
       <?php echo form_tag('loan/overview?id='.$loan->getId(), array('class'=>'edition loan_overview_form'));?>
 
-
+      <?php echo $form->renderGlobalErrors();?>
         <table>
         <thead>
           <tr>
