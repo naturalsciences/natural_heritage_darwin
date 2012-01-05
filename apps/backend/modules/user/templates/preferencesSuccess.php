@@ -68,6 +68,7 @@
           <td><?php echo $form['help_message_activated'];?></td>
         </tr>
         <tr>
+      </tbody>
       <thead>
         <tr>
           <th colspan="2"><?php echo __("Map");?></th>
