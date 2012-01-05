@@ -188,4 +188,13 @@ class GtuForm extends BaseGtuForm
       }
       return parent::saveEmbeddedForms($con, $forms);
     }
+
+  public function getJavaScripts()
+  {
+    $javascripts=parent::getJavascripts();
+    $javascripts[]='/js/OpenLayers.js';
+    $javascripts[]='/js/map.js';
+    return $javascripts;
+  }
+
 }

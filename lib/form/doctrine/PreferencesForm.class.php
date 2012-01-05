@@ -12,7 +12,8 @@ class PreferencesForm extends BaseForm
 {
   public function configure()
   {
-    $pref_keys = array('search_cols_specimen', 'search_cols_individual', 'search_cols_part', 'board_search_rec_pp', 'board_spec_rec_pp','help_message_activated');
+    $pref_keys = array('search_cols_specimen', 'search_cols_individual', 'search_cols_part', 'board_search_rec_pp',
+      'board_spec_rec_pp','help_message_activated', 'gtu_google_activated');
     $this->db_keys = Doctrine::getTable('Preferences')->getAllPreferences($this->options['user']->getId(), $pref_keys);
     $is_reg_user = $this->options['user']->isA(Users::REGISTERED_USER) ;
     $choices = Doctrine::getTable('MySavedSearches')->getAllFields('specimen') ;
@@ -88,6 +89,12 @@ class PreferencesForm extends BaseForm
     $this->widgetSchema['help_message_activated']->setLabel("Display help icons") ;
     $this->validatorSchema['help_message_activated'] = new sfValidatorboolean() ;
     
+    $this->widgetSchema['gtu_google_activated'] = new sfWidgetFormInputCheckbox() ;
+    $this->widgetSchema->setHelp('gtu_google_activated',"Add possibilty to use Google Map in sampling locations");
+    $this->widgetSchema['gtu_google_activated']->setDefault((boolean)$this->db_keys['gtu_google_activated']) ;
+    $this->widgetSchema['gtu_google_activated']->setLabel("use Google Map") ;
+    $this->validatorSchema['gtu_google_activated'] = new sfValidatorboolean() ;
+
     $this->widgetSchema->setNameFormat('preferences[%s]');
   }
 
@@ -113,6 +120,7 @@ class PreferencesForm extends BaseForm
       'board_search_rec_pp'=> $this->getValue('board_search_rec_pp'),
       'board_spec_rec_pp'=> $this->getValue('board_spec_rec_pp'),
       'help_message_activated' => intval($this->getValue('help_message_activated')),
+      'gtu_google_activated' => intval($this->getValue('gtu_google_activated')),
     );
     Doctrine::getTable('Preferences')->saveAllPreferences($this->options['user']->getId(),$results);
   }

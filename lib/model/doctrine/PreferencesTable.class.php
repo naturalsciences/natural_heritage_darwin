@@ -83,6 +83,8 @@ class PreferencesTable extends Doctrine_Table
       case 'board_search_rec_pp': return '10'; break;
       case 'board_spec_rec_pp': return '10'; break;
       case 'help_message_activated': return true; break;
+      case 'gtu_google_activated': return false; break;
+
     }
   }
 }
