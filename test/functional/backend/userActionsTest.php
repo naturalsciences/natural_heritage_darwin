@@ -284,7 +284,7 @@ $browser->
     checkElement('h1','/My Preferences/')->
     checkElement('.user_table > thead',4)->
     checkElement('.user_table > tbody',4)->
-    checkElement('.user_table > tbody > tr',8)->
+    checkElement('.user_table > tbody > tr',9)->
     checkElement('#preferences_board_spec_rec_pp option[selected]','10')->
     checkElement('#preferences_board_search_rec_pp option[selected]','10')->
   end()->
