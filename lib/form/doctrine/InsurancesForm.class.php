@@ -13,7 +13,7 @@ class InsurancesForm extends BaseInsurancesForm
   {
     unset($this['id']);
 
-    $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     array_unshift($yearsKeyVal, 0);
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $years[0]='-';

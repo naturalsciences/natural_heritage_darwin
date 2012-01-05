@@ -4,6 +4,10 @@ class publicConfiguration extends sfApplicationConfiguration
 {
   protected $backendRouting = null;
 
+  public function configure() {
+    require_once($this->getConfigCache()->checkConfig('config/darwin.yml'));
+  }
+
   public function generateBackendUrl($name, $parameters = array(), $request=null)
   {
     $env_str = '';
