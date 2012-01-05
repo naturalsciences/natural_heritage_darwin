@@ -141,4 +141,11 @@ class GtuFormFilter extends BaseGtuFormFilter
     $query->andWhere("id > 0 ");
     return $query;
   }
+  public function getJavaScripts()
+  {
+    $javascripts=parent::getJavascripts();
+    $javascripts[]='/js/OpenLayers.js';
+    $javascripts[]='/js/map.js';
+    return $javascripts;
+  }
 }

@@ -108,13 +108,13 @@
         <li class="exit" ><?php echo link_to(image_tag('exit.png', 'alt=Exit'),'account/logout');?></li>
     </ul>
 </div>
-<script src="http://maps.google.com/maps/api/js?v=3.3&amp;sensor=false"></script>
-<?php echo javascript_include_tag('OpenLayers.js'); ?>
-<?php echo javascript_include_tag('map.js'); ?>
 
+<?php if($sf_user->getPreference('gtu_google_activated', true)):?>
+  <script src="http://maps.google.com/maps/api/js?v=3.3&amp;sensor=false"></script>
+<?php endif;?>
 
 <script  type="text/javascript">
-
+ var with_gmap= <?php echo $sf_user->getPreference('gtu_google_activated', true) ? 'true' : 'false';?>;
 $(document).ready(function () {
   o = {"dropShadows":false, "autoArrows":true,"delay":400};
   $('ul.main_menu').supersubs().superfish(o);

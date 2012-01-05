@@ -43,7 +43,8 @@ function initMap(mapId)
   mapnik.addOptions({wrapDateLine:true});
   map.addLayer(mapnik);
 
-  // the SATELLITE layer has all 22 zoom level, so we add it first to
+  if(with_gmap) {
+    // the SATELLITE layer has all 22 zoom level, so we add it first to
     // become the internal base layer that determines the zoom levels of the
     // map.
     gsat = new OpenLayers.Layer.Google(
@@ -64,7 +65,8 @@ function initMap(mapId)
     );
     vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", { displayInLayerSwitcher: false, projection: new OpenLayers.Projection("EPSG:4326")});
     map.addLayers([gsat, gphy, gmap, ghyb,vectorLayer]);
-
+  }
+  
 
   markers = new OpenLayers.Layer.Markers("Markers", {
     displayInLayerSwitcher: false,
