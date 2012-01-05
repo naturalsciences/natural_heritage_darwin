@@ -27,7 +27,7 @@ class trackingFilter extends sfFilter
         }
         $user->setAttribute('db_user_type', $usr->getDbUserType());
       }
-      if($user->isAuthenticated() && sfConfig::get('app_tracking_enabled',null))
+      if($user->isAuthenticated() && sfConfig::get('dw_tracking_enabled',null))
       {
         $conn = Doctrine_Manager::connection();
         $conn->exec("select fct_set_user(".$user->getId().");");

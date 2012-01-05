@@ -145,7 +145,7 @@ UsersLoginInfos:
     u1l1:
         User: u1
         user_name: root
-        password: "<?php echo sha1(sfConfig::get('app_salt').'evil');?>"
+        password: "<?php echo sha1(sfConfig::get('dw_salt').'evil');?>"
 
 UsersLanguages:
     ul1:

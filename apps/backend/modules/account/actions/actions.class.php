@@ -16,7 +16,7 @@ class accountActions extends DarwinActions
   protected function sendPwdRenewMail($userParams, $partial='pwdRenewMail')
   {
     $message = $this->getMailer()->compose();
-    $message->setFrom(array(sfConfig::get('app_mailer_sender') => 'DaRWIN 2 team'));
+    $message->setFrom(array(sfConfig::get('dw_mailer_sender') => 'DaRWIN 2 team'));
     if(is_array($userParams) && ! empty($partial))
     {
       if (isset($userParams['mail']) && isset($userParams['name']) && isset($userParams['physical']) && isset($userParams['user_id']) && isset($userParams['hash']))
@@ -99,7 +99,7 @@ class accountActions extends DarwinActions
             $user = Doctrine::getTable('Users')->getUserByLoginOnly($this->form->getValue('user_name'));
           }
 
-          $renewHash = hash('sha1', sfConfig::get('app_salt').$user->UsersLoginInfos[0]->getUserName());
+          $renewHash = hash('sha1', sfConfig::get('dw_salt').$user->UsersLoginInfos[0]->getUserName());
           $user->UsersLoginInfos[0]->setRenewHash($renewHash);
           $user->UsersLoginInfos[0]->save();
           

@@ -15,11 +15,11 @@ class GtuFormFilter extends BaseGtuFormFilter
 
     $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date'));
     $this->addPagerItems();
-    $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')))).'/01/01'));
-    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')))).'/12/31'));
+    $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
+    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));
     $maxDate->setStart(false);
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
-    $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $this->widgetSchema['tags'] = new sfWidgetFormInputText();
     $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
                                                                                 array('class' => 'from_date')

@@ -14,7 +14,7 @@ class registerActions extends DarwinActions
   protected function sendConfirmationMail($userParams)
   {
     $message = $this->getMailer()->compose();
-    $message->setFrom(array(sfConfig::get('app_mailer_sender') => 'DaRWIN 2 team'));
+    $message->setFrom(array(sfConfig::get('dw_mailer_sender') => 'DaRWIN 2 team'));
     if(is_array($userParams))
     {
       if (isset($userParams['mail']) && isset($userParams['name']) && isset($userParams['physical']))

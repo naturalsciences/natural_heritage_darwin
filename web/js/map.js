@@ -177,7 +177,7 @@ function setPoint( e )
   $('#gtu_latitude').val(lonlat.lat);
   $('#gtu_longitude').val(lonlat.lon);
   fetchElevation(lonlat);
-  fetchPositions(lonlat,map.getZoom());
+  //fetchPositions(lonlat,map.getZoom());
   //// GOOGLE ELE
   drawLatLong();
   drawAccuracy();

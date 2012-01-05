@@ -19,9 +19,9 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     $recPerPages = array("1"=>"1", "2"=>"2", "5"=>"5", "10"=>"10", "25"=>"25", "50"=>"50", "75"=>"75", "100"=>"100");
     
     $this->widgetSchema['rec_per_page'] = new sfWidgetFormChoice(array('choices' => $recPerPages), array('class'=>'rec_per_page'));
-    $this->setDefault('rec_per_page', strval(sfConfig::get('app_recPerPage'))); 
+    $this->setDefault('rec_per_page', strval(sfConfig::get('dw_recPerPage'))); 
     $this->widgetSchema->setLabels(array('rec_per_page' => 'Records per page: ',));    
-    $this->validatorSchema['rec_per_page'] = new sfValidatorChoice(array('required' => false, 'choices'=>$recPerPages, 'empty_value'=>strval(sfConfig::get('app_recPerPage'))));
+    $this->validatorSchema['rec_per_page'] = new sfValidatorChoice(array('required' => false, 'choices'=>$recPerPages, 'empty_value'=>strval(sfConfig::get('dw_recPerPage'))));
     $this->hasPager = true;
   }
 
@@ -39,7 +39,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 
   protected function getDateItemOptions()
   {
-    $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     return array(
@@ -53,7 +53,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 
   protected function getCatalogueRecLimits()
   {
-    return intval(sfConfig::get('app_catalogueRecLimit'));
+    return intval(sfConfig::get('dw_catalogueRecLimit'));
   }
 
   /**
