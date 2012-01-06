@@ -69,7 +69,55 @@ $(document).ready(function () {
         });
         return false;
     }); 
+
+
 });
+
+
+function bind_ext_line(f_name, subf_name) {
+  $('#loan_overview_' + f_name + '_' + subf_name + '_part_ref').bind('change',function(event) {
+      $(this).closest('tr').find('.extd_info').show();
+    });
+
+    $('#loan_overview_' + f_name + '_' + subf_name + '_part_ref').bind('clear',function(event) {
+      $(this).closest('tr').find('.extd_info').hide();
+    });
+
+    //INIT on first launch
+    if($('#loan_overview_' + f_name + '_' + subf_name + '_part_ref').val() == '') {
+      $('#loan_overview_' + f_name + '_' + subf_name + '_part_ref').closest('tr').find('.extd_info').hide();
+    }
+
+    $('#loan_overview_' + f_name + '_' + subf_name + '_part_ref').closest('tr').find('.extd_info').mouseover(function(event){
+      $(this).qtip({
+        show: {
+          ready: true,
+          delay: 0,
+          event: event.type,
+          solo: true,
+        },
+        //hide: { event: 'mouseout' },
+        style: {
+          tip: true, // Give it a speech bubble tip with automatic corner detection
+          name: 'cream'
+        },
+        content: {
+          text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
+          title: { text: '<?php echo __("Linked Info") ; ?>' },
+          ajax: {
+            url: '<?php echo url_for("loan/getPartInfo");?>',
+            type: 'GET',
+            data: { id:   $('#loan_overview_' + f_name + '_' + subf_name + '_part_ref').val() }
+          }
+        },
+        events: {
+          hide: function(event, api) {
+            api.destroy();
+          }
+        }
+      });
+    });
+}
 </script>
 
 

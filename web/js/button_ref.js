@@ -75,4 +75,6 @@ function button_ref_clear(event)
   $(this).next().find('.but_text .on').removeClass('hidden');
   $(this).next().find('.but_text .off').addClass('hidden');
   $(this).hide();
+
+  $(this).prevAll('.ref_name').prev().trigger('clear');
 }

@@ -184,4 +184,9 @@ class loanActions extends DarwinActions
     return $this->renderPartial('loanLine',array('form' => $this->form['newLoanItems'][$number], 'lineObj'=> $item));
   }
 
+  public function executeGetPartInfo(sfWebRequest $request)
+  {
+    $this->forward404Unless($item = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id')),'Part does not exist');  
+    return $this->renderPartial('extInfo',array('item' => $item)); 
+  }
 }

@@ -40,6 +40,8 @@
       parent_el.hide();
       parent_el.find('input[type="hidden"][id$=\"_loan_item_ind\"]').val('');
     });
+
+    bind_ext_line('<?php echo $form->getparent()->getName();?>',  '<?php echo $form->getName();?>')
   });
 </script>
 
