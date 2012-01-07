@@ -46,5 +46,8 @@
         <span><?php echo __(sfConfig::get('dw_broadcast_submessage', ''));?></span>
       </div>
     <?php endif;?>
+    <?php if(sfConfig::get('dw_analytics_enabled', false)):?>
+			<?php include_partial('global/analytics') ?>
+    <?php endif;?>
   </body>
 </html>

@@ -23,6 +23,9 @@ all:
   tracking:
     enabled: true
 
+  analytics:
+    enabled: false
+    code: UA-XXXXX-X
 #Uncomment this if you want to set a Broadcast message like demo or maintenance
 #    broadcast:
 #        enabled: true
