@@ -115,4 +115,9 @@ class myUser extends sfBasicSecurityUser
     $this->setAttribute('helpIcon',$val);    
   }
 
+
+  public function getPreference($name, $take_def)
+  {
+    return Doctrine::getTable("Preferences")->getPreference($this->getId(), $name, $take_def);
+  }
 }

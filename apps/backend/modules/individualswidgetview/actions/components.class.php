@@ -72,6 +72,12 @@ class individualswidgetViewComponents extends sfComponents
   {
   }
   
+  public function executeInformativeWorkflow()
+  {    
+    if(isset($this->form) )
+      $this->eid = $this->form->getObject()->getId() ;
+  } 
+    
   public function executeExtLinks()
   {}
 }

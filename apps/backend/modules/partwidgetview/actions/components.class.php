@@ -73,4 +73,10 @@ class partwidgetViewComponents extends sfComponents
   }
   public function executeExtLinks()
   {}  
+  
+  public function executeInformativeWorkflow()
+  {    
+    if(isset($this->form) )
+      $this->eid = $this->form->getObject()->getId() ;
+  }   
 }

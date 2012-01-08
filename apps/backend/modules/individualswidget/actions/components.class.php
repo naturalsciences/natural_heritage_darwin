@@ -101,4 +101,9 @@ class individualswidgetComponents extends sfComponents
     if(!isset($this->form['newExtLinks']))
     $this->form->loadEmbedLink();
   }  
+  public function executeInformativeWorkflow()
+  {    
+    if(isset($this->form) )
+      $this->eid = $this->form->getObject()->getId() ;
+  }    
 }

@@ -2,7 +2,6 @@
 <?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'specimen','eid'=> $specimen->getId(),'view' => true)); ?>
 <?php use_stylesheet('widgets.css') ?>
 <?php use_javascript('widgets.js') ?>
-<?php use_javascript('catalogue.js') ?>
 <?php use_javascript('button_ref.js') ?>
 <div class="page">
   <div class="tabs_view">
@@ -27,3 +26,11 @@
     </p>
   </div>
 </div>
+<script  type="text/javascript">
+
+$(document).ready(function () {
+//  $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>'});
+  $('body').catalogue({});
+  
+});
+</script>

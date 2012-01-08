@@ -20,12 +20,12 @@ class IgsForm extends BaseIgsForm
     unset($this['ig_date_mask'],
           $this['ig_num_indexed']);
 
-    $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $maxDate->setStart(false);
 
     $this->widgetSchema['ig_num'] = new sfWidgetFormInputText();

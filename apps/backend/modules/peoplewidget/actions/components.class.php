@@ -29,4 +29,8 @@ class peoplewidgetComponents extends sfComponents
   {
     $this->relations  = Doctrine::getTable('PeopleRelationships')->findAllRelated($this->eid);
   }
+  public function executeInformativeWorkflow()
+  {
+    $this->informativeWorkflow = Doctrine::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
+  }  
 }

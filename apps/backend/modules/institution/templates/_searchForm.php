@@ -1,6 +1,6 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-
+<div class="catalogue_institutions">
   <?php echo form_tag('institution/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'institution_filter'));?>
   <div class="container">
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
@@ -24,8 +24,10 @@
     <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('institution/new') ; ?>"><?php echo __('New');?></a></div>
   </div>
 </form> 
+</div>
 <script>
 $(document).ready(function () {
+  $('.catalogue_institutions').choose_form({});
   $(".new_link").click( function()
   {
    url = $(this).find('a').attr('href'),

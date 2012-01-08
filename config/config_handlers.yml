@@ -1,0 +1,4 @@
+config/darwin.yml:
+  class:    sfDefineEnvironmentConfigHandler
+  param:
+    prefix: dw_

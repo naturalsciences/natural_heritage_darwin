@@ -20,8 +20,12 @@ abstract class BaseInsurancesForm extends BaseFormDoctrine
       'record_id'           => new sfWidgetFormInputText(),
       'insurance_value'     => new sfWidgetFormInputText(),
       'insurance_currency'  => new sfWidgetFormTextarea(),
-      'insurance_year'      => new sfWidgetFormInputText(),
       'insurer_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => true)),
+      'date_from'           => new sfWidgetFormTextarea(),
+      'date_from_mask'      => new sfWidgetFormInputText(),
+      'date_to'             => new sfWidgetFormTextarea(),
+      'date_to_mask'        => new sfWidgetFormInputText(),
+      'contact_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Contact'), 'add_empty' => true)),
     ));
 
     $this->setValidators(array(
@@ -30,8 +34,12 @@ abstract class BaseInsurancesForm extends BaseFormDoctrine
       'record_id'           => new sfValidatorInteger(),
       'insurance_value'     => new sfValidatorNumber(),
       'insurance_currency'  => new sfValidatorString(array('required' => false)),
-      'insurance_year'      => new sfValidatorInteger(array('required' => false)),
       'insurer_ref'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'required' => false)),
+      'date_from'           => new sfValidatorString(array('required' => false)),
+      'date_from_mask'      => new sfValidatorInteger(array('required' => false)),
+      'date_to'             => new sfValidatorString(array('required' => false)),
+      'date_to_mask'        => new sfValidatorInteger(array('required' => false)),
+      'contact_ref'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Contact'), 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('insurances[%s]');

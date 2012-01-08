@@ -6,21 +6,20 @@ $lastIg = Doctrine::getTable('igs')->findOneByIgNum('2653');
 $insurances = new Insurances();
 $insurances->setInsuranceValue(750);
 $insurances->setInsuranceCurrency('€');
-$insurances->setInsuranceYear(1975);
 $insurances->setReferencedRelation('igs');
 $insurances->setRecordId($lastIg->getId());
+$insurances->setDateFrom('2001-01-01');
+$insurances->setDateFromMask('56');
 $insurances->save();
 
 $insurances = Doctrine::getTable('insurances')->findForTable('igs', $lastIg->getId());
 $t->is( count($insurances) , 1, 'Theres a new insurance inserted...');
 $t->is( $insurances[0]->getInsuranceValue() , 750, 'Insurance value is well "750"');
 $t->is( $insurances[1]->getInsuranceCurrency() , '€', 'Insurance currency is well "€"');
-$t->is( $insurances[2]->getInsuranceYear() , 0, 'Insurance year is well "0"');
 
 $insurances = new Insurances();
 $insurances->setInsuranceValue(1000);
 $insurances->setInsuranceCurrency('$');
-$insurances->setInsuranceYear(1976);
 $insurances->setReferencedRelation('igs');
 $insurances->setRecordId($lastIg->getId());
 $insurances->save();

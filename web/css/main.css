@@ -339,7 +339,10 @@ input:focus, textarea:focus
   border:1px solid #C1CF56;
 }
 
-
+.panel_view .catalogue_table input:focus,.panel_view .catalogue_table_view  textarea:focus
+{
+  border:1px solid #5BAABD !important;
+}
 
 .login input:focus, .login textarea:focus
 {
@@ -785,7 +788,7 @@ p.tree
   display:none;
 }
 
-.search_box
+.search_box, .contact_search_box
 {
   display:none;
   border: 2px solid #5BAABD;
@@ -1023,6 +1026,15 @@ td.left_tabed
 .catalogue_table thead, .user_table thead
 {
   border-bottom: 1px solid #C1CF56;
+}
+.catalogue_table thead.empty, .catalogue_table_view thead.empty
+{
+border-bottom: none ;
+}
+
+.catalogue_table thead.workflow, .catalogue_table_view thead.workflow
+{
+  border-bottom: 1px solid grey;
 }
 
 .catalogue_table_view thead
@@ -1662,16 +1674,30 @@ th .error_list
   display: block;
 }
 
-fieldset.opened
+.panel_view fieldset,.view_mode fieldset, .view_mode input:focus, .view_mode textarea:focus, .panel_view textarea:focus
 {
   border: 1px solid #5BAABD ;
   cursor : pointer ;
 }
 
-fieldset.opened > legend
+.panel_view fieldset > legend,.view_mode fieldset > legend
 {
   padding: 3px ;
   border: 1px solid #5BAABD ;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;  
+}
+
+.panel fieldset
+{
+  border: 1px solid #C1CF56 ;
+  cursor : pointer ;
+}
+
+.panel fieldset > legend
+{
+  padding: 3px ;
+  border: 1px solid #C1CF56 ;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;  
 }
@@ -1787,7 +1813,7 @@ img.info
   margin-left:2em;
 }
 
-#catalogue_people_screen .search_box, .search_catalogue_people_both
+#catalogue_people_screen .search_box,#catalogue_people_screen .contact_search_box, .search_catalogue_people_both
 {
   margin-top: 0.3em;
 }
@@ -2426,6 +2452,13 @@ dd
 	color:#d3d3d1;
 }
 
+.tab_content {
+  margin-top: -2px;
+}
+.tab_content form
+{
+    padding-top: 5px;
+}
 .panel_view
 {
 	margin-top:-2px;
@@ -2620,7 +2653,7 @@ body .ui-tooltip, body .qtip
 
 #ui-tooltip-modal .ui-tooltip-titlebar
 {
-  background-color:#5BABBD;
+  background-color:#5BABBD ;
   color:white;
 }
 
@@ -2632,6 +2665,10 @@ body .ui-tooltip, body .qtip
 {
   background-color:#C1CF56 !important;
   color:white;
+}
+.dialog-modal-view .ui-tooltip-titlebar
+{
+  background-color:grey !important;
 }
 /* custom appearence for input type file */
 #divFile
@@ -2731,3 +2768,6 @@ input[type='file']
 }
 #broadcast_bottom span { font-size: small; }
 #broadcast_bottom_padding { height :2em;}
+.inline.hidden {
+  display:none;
+}

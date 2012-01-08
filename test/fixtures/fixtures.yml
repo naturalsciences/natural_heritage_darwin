@@ -181,13 +181,13 @@ Users:
         given_name: Root
         gender: M
         db_user_type: 8
-        People: p5
+        People: p5               
         
 UsersLoginInfos:
     u1l1:
         User: u1
         user_name: root
-        password: "<?php echo sha1(sfConfig::get('app_salt').'evil');?>"
+        password: "<?php echo sha1(sfConfig::get('dw_salt').'evil');?>"
  
 UsersLanguages:
     ul1:
@@ -815,3 +815,10 @@ SpecimenIndividuals:
     spi1:
         Specimens: sp4
 
+InformativeWorkflow:
+    iw1:
+        referenced_relation: taxonomy
+        record_id: 8
+        status : to check
+        comment: test de workflow pour les tests
+        Users: u1

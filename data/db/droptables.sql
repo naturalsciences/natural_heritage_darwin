@@ -20,7 +20,7 @@ DROP TABLE  IF EXISTS my_widgets CASCADE;
 DROP TABLE  IF EXISTS my_saved_searches CASCADE;
 DROP TABLE  IF EXISTS collection_maintenance CASCADE;
 DROP TABLE  IF EXISTS users_tracking CASCADE;
-DROP TABLE  IF EXISTS users_workflow CASCADE;
+DROP TABLE  IF EXISTS informative_workflow CASCADE;
 DROP TABLE  IF EXISTS record_visibilities CASCADE;
 DROP TABLE  IF EXISTS users_coll_rights_asked CASCADE;
 DROP TABLE  IF EXISTS collections_fields_visibilities CASCADE;
@@ -77,6 +77,10 @@ DROP TABLE  IF EXISTS import_id CASCADE;
 DROP TABLE  IF EXISTS staging CASCADE;
 DROP TABLE  IF EXISTS staging_tag_groups CASCADE;
 DROP TABLE  IF EXISTS staging_people CASCADE;
+DROP TABLE  IF EXISTS loans CASCADE;
+DROP TABLE  IF EXISTS loan_items CASCADE;
+DROP TABLE  IF EXISTS loan_rights CASCADE;
+DROP TABLE  IF EXISTS loan_status CASCADE;
 
 
 DROP SEQUENCE IF EXISTS people_id_seq  CASCADE;
@@ -109,7 +113,7 @@ DROP SEQUENCE IF EXISTS collections_rights_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS collections_fields_visibilities_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS users_coll_rights_asked_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS record_visibilities_id_seq  CASCADE;
-DROP SEQUENCE IF EXISTS users_workflow_id_seq  CASCADE;
+DROP SEQUENCE IF EXISTS informative_workflow_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS users_tracking_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS collection_maintenance_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS my_saved_searches_id_seq  CASCADE;
@@ -142,3 +146,8 @@ DROP SEQUENCE IF EXISTS imports_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS staging_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS staging_tag_groups_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS staging_people_id_seq CASCADE;
+
+DROP SEQUENCE IF EXISTS loans_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS loan_items_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS loan_rights_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS loan_status_id_seq CASCADE;

@@ -46,6 +46,7 @@
 
   <script language="javascript" type="text/javascript"> 
   $(function () {
+     $('#myLastsItems').choose_form({});
      $('#myLastsItems .pager_nav a').click(function(event)
      {
 	event.preventDefault();

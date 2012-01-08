@@ -13,12 +13,12 @@ class CollectionMaintenanceForm extends BaseCollectionMaintenanceForm
   {
 	$this->useFields(array('id','people_ref', 'category', 'action_observation', 'description','modification_date_time'));
 
-    $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
-    $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
 
 	$this->widgetSchema['modification_date_time'] = new widgetFormJQueryFuzzyDate(array('culture'=>$this->getCurrentCulture(), 
 		'image'=>'/images/calendar.gif', 

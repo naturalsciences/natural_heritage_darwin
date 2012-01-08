@@ -80,6 +80,10 @@ CREATE TRIGGER trg_cpy_fullToIndex_collecting_tools BEFORE INSERT OR UPDATE
   ON collecting_tools FOR EACH ROW
   EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
+CREATE TRIGGER trg_cpy_fullToIndex_loans BEFORE INSERT OR UPDATE
+  ON loans FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_fullToIndex();
+
 CREATE TRIGGER trg_clr_specialstatus_specimenindividuals BEFORE INSERT OR UPDATE
 	ON specimen_individuals FOR EACH ROW
 	EXECUTE PROCEDURE fct_clr_specialstatus();
@@ -205,7 +209,7 @@ CREATE TRIGGER trg_cpy_toFullText_usersaddresses BEFORE INSERT OR UPDATE
 
 CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
 	ON multimedia FOR EACH ROW
-	EXECUTE PROCEDURE tsvector_update_trigger(descriptive_ts, 'pg_catalog.simple', title, subject );
+	EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title, subject );
 
 CREATE TRIGGER trg_cpy_toFullText_expeditions BEFORE INSERT OR UPDATE
   ON expeditions FOR EACH ROW
@@ -569,6 +573,10 @@ CREATE TRIGGER trg_words_ts_cpy_lithology BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_words_ts_cpy_taxonomy BEFORE INSERT OR UPDATE
 	ON taxonomy FOR EACH ROW
 	EXECUTE PROCEDURE fct_trg_word();
+
+CREATE TRIGGER trg_words_ts_cpy_loans BEFORE INSERT OR UPDATE
+        ON loans FOR EACH ROW
+        EXECUTE PROCEDURE fct_trg_word();
 /*
 CREATE TRIGGER trg_words_ts_cpy_codes BEFORE INSERT OR UPDATE
 	ON codes FOR EACH ROW
@@ -680,9 +688,13 @@ CREATE TRIGGER trg_chk_ref_record_class_vernacular_names AFTER INSERT OR UPDATE
         ON class_vernacular_names FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
 
-CREATE TRIGGER trg_chk_ref_record_users_workflow AFTER INSERT OR UPDATE
-        ON users_workflow FOR EACH ROW
+CREATE TRIGGER trg_chk_ref_record_informative_workflow AFTER INSERT OR UPDATE
+        ON informative_workflow FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
+
+CREATE trigger trg_chk_is_last_informative_workflow BEFORE INSERT
+	ON informative_workflow FOR EACH ROW
+	EXECUTE PROCEDURE fct_remove_last_flag();
 
 CREATE TRIGGER trg_chk_ref_record_collection_maintenance AFTER INSERT OR UPDATE
         ON collection_maintenance FOR EACH ROW
@@ -807,6 +819,10 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimen_parts AFTER INSERT OR UPDATE
         ON specimen_parts FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_loan_status AFTER INSERT OR UPDATE
+        ON loan_status FOR EACH ROW
+        EXECUTE PROCEDURE trg_ins_update_dict();
+
 /******************* DELETE FROM DICT ******************/
 
 CREATE TRIGGER fct_cpy_trg_del_dict_codes AFTER DELETE  OR UPDATE
@@ -860,7 +876,21 @@ CREATE TRIGGER fct_cpy_trg_del_dict_users_addresses AFTER DELETE  OR UPDATE
 CREATE TRIGGER fct_cpy_trg_del_dict_specimen_parts AFTER DELETE  OR UPDATE
         ON specimen_parts FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
-        
+
+CREATE TRIGGER fct_cpy_trg_del_dict_loan_status AFTER DELETE OR UPDATE
+        ON loan_status FOR EACH ROW
+        EXECUTE PROCEDURE trg_del_dict();
+  
+/********************* *****/
+      
 CREATE TRIGGER trg_upd_people_in_flat AFTER INSERT OR UPDATE OR DELETE
   ON catalogue_people FOR EACH ROW
   EXECUTE PROCEDURE fct_upd_people_in_flat();
+
+CREATE trigger trg_chk_is_last_loan_status BEFORE INSERT
+        ON loan_status FOR EACH ROW
+        EXECUTE PROCEDURE fct_remove_last_flag_loan();
+
+CREATE trigger trg_add_status_history after INSERT
+        ON loans FOR EACH ROW
+        EXECUTE PROCEDURE fct_auto_insert_status_history();

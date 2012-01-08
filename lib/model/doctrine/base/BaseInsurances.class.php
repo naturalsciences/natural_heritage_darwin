@@ -10,26 +10,41 @@
  * @property integer $record_id
  * @property decimal $insurance_value
  * @property string $insurance_currency
- * @property integer $insurance_year
  * @property integer $insurer_ref
+ * @property string $date_from
+ * @property integer $date_from_mask
+ * @property string $date_to
+ * @property integer $date_to_mask
+ * @property integer $contact_ref
  * @property People $People
+ * @property People $Contact
  * 
  * @method integer    getId()                  Returns the current record's "id" value
  * @method string     getReferencedRelation()  Returns the current record's "referenced_relation" value
  * @method integer    getRecordId()            Returns the current record's "record_id" value
  * @method decimal    getInsuranceValue()      Returns the current record's "insurance_value" value
  * @method string     getInsuranceCurrency()   Returns the current record's "insurance_currency" value
- * @method integer    getInsuranceYear()       Returns the current record's "insurance_year" value
  * @method integer    getInsurerRef()          Returns the current record's "insurer_ref" value
+ * @method string     getDateFrom()            Returns the current record's "date_from" value
+ * @method integer    getDateFromMask()        Returns the current record's "date_from_mask" value
+ * @method string     getDateTo()              Returns the current record's "date_to" value
+ * @method integer    getDateToMask()          Returns the current record's "date_to_mask" value
+ * @method integer    getContactRef()          Returns the current record's "contact_ref" value
  * @method People     getPeople()              Returns the current record's "People" value
+ * @method People     getContact()             Returns the current record's "Contact" value
  * @method Insurances setId()                  Sets the current record's "id" value
  * @method Insurances setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method Insurances setRecordId()            Sets the current record's "record_id" value
  * @method Insurances setInsuranceValue()      Sets the current record's "insurance_value" value
  * @method Insurances setInsuranceCurrency()   Sets the current record's "insurance_currency" value
- * @method Insurances setInsuranceYear()       Sets the current record's "insurance_year" value
  * @method Insurances setInsurerRef()          Sets the current record's "insurer_ref" value
+ * @method Insurances setDateFrom()            Sets the current record's "date_from" value
+ * @method Insurances setDateFromMask()        Sets the current record's "date_from_mask" value
+ * @method Insurances setDateTo()              Sets the current record's "date_to" value
+ * @method Insurances setDateToMask()          Sets the current record's "date_to_mask" value
+ * @method Insurances setContactRef()          Sets the current record's "contact_ref" value
  * @method Insurances setPeople()              Sets the current record's "People" value
+ * @method Insurances setContact()             Sets the current record's "Contact" value
  * 
  * @package    darwin
  * @subpackage model
@@ -65,11 +80,30 @@ abstract class BaseInsurances extends sfDoctrineRecord
              'notnull' => true,
              'default' => '€',
              ));
-        $this->hasColumn('insurance_year', 'integer', null, array(
+        $this->hasColumn('insurer_ref', 'integer', null, array(
              'type' => 'integer',
+             ));
+        $this->hasColumn('date_from', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => '0001-01-01',
+             ));
+        $this->hasColumn('date_from_mask', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
              'default' => 0,
              ));
-        $this->hasColumn('insurer_ref', 'integer', null, array(
+        $this->hasColumn('date_to', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => '2038-12-31',
+             ));
+        $this->hasColumn('date_to_mask', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             'default' => 0,
+             ));
+        $this->hasColumn('contact_ref', 'integer', null, array(
              'type' => 'integer',
              ));
     }
@@ -79,6 +113,10 @@ abstract class BaseInsurances extends sfDoctrineRecord
         parent::setUp();
         $this->hasOne('People', array(
              'local' => 'insurer_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('People as Contact', array(
+             'local' => 'contact_ref',
              'foreign' => 'id'));
     }
 }

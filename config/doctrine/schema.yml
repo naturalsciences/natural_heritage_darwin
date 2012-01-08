@@ -439,6 +439,22 @@ UsersTracking:
             local: user_ref
             foreign: id
 
+InformativeWorkflow:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        record_id: { type: integer, notnull: true},
+        referenced_relation: { type: string, notnull: true}
+        user_ref: { type: integer}
+        formated_name: {type: string}
+        status: {type: string}
+        modification_date_time : {type:string, notnull: true }
+        comment : { type:string}
+        is_last : { type:boolean, notnull: true }
+    relations:
+        Users:
+            local: user_ref
+            foreign: id
+            
 CollectionMaintenance:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -929,11 +945,19 @@ Insurances:
         record_id: { type: integer, notnull: true}
         insurance_value: { type: decimal, length: 16, scale: 2, notnull: true}
         insurance_currency: { type: string, notnull: true, default: '€'}
-        insurance_year: { type: integer, default:0}
         insurer_ref: { type: integer}
+        date_from: { type: string, notnull: true, default: '0001-01-01'}
+        date_from_mask: { type: integer, notnull: true, default:0}
+        date_to: { type: string, notnull: true, default: '2038-12-31'}
+        date_to_mask: { type: integer, notnull: true, default:0}
+        contact_ref: { type: integer}
     relations:
         People:
             local: insurer_ref
+            foreign: id
+        Contact:
+            class: People
+            local: contact_ref
             foreign: id
 
 SpecimensAccompanying:
@@ -1176,4 +1200,88 @@ StagingPeople:
     relations:
         People:
             local: people_ref
-            foreign: id              
+            foreign: id
+
+Multimedia:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        referenced_relation: { type: string, notnull: true}
+        record_id: { type: integer}
+        is_digital: {type: boolean, notnull:true, default: true}
+        type: { type: string, notnull: true, default: 'image'}
+        sub_type: { type: string }
+        title: { type: string, notnull: true}
+        description: { type: string, notnull: true, default:''}
+        uri: { type: string }
+        search_ts: { type: string }
+        creation_date: { type: string, notnull: true, default: '0001-01-01'}
+        creation_date_mask: { type: integer, notnull: true, default:0}
+        mime_type: { type: string },
+
+
+Loans:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        name: { type: string, notnull: true, default:''}
+        description: { type: string, notnull: true, default:''}
+        description_ts: { type: string}
+        from_date: { type: string}
+        to_date: { type: string}
+        effective_to_date: { type: string}
+
+LoanItems:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        loan_ref: { type: integer, notnull: true}
+        ig_ref: { type: integer}
+        from_date: { type: string}
+        to_date: { type: string}
+        part_ref: { type: integer}
+        details: { type: string, notnull: true, default:''}
+    relations:
+        Loan:
+            local: loan_ref
+            foreign: id
+            class: Loans 
+        Ig:
+            local: ig_ref
+            foreign: id
+            class: Igs 
+        DarwinParts:
+            local: part_ref
+            foreign: id
+            class: SpecimenParts 
+
+LoanRights:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        loan_ref: { type: integer, notnull: true}
+        user_ref: { type: integer, notnull: true}
+        has_encoding_right: { type: boolean, notnull: true, default:false}
+    relations:
+        Loan:
+            local: loan_ref
+            foreign: id
+            class: Loans 
+        User:
+            local: user_ref
+            foreign: id
+            class: Users
+
+LoanStatus:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        loan_ref: { type: integer, notnull: true}
+        user_ref: { type: integer, notnull: true}
+        status: {type: string}
+        modification_date_time : {type:string, notnull: true }
+        comment : { type:string}
+        is_last : { type:boolean, notnull: true }
+    relations:
+        Loan:
+            local: loan_ref
+            foreign: id
+            class: Loans 
+        Users:
+            local: user_ref
+            foreign: id

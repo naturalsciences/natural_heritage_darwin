@@ -523,51 +523,31 @@ create table multimedia
         type varchar not null default 'image',
         sub_type varchar,
         title varchar not null,
-        title_indexed varchar not null,
-        subject varchar not null default '/',
-        coverage coverages not null default 'temporal',
-        apercu_path varchar,
-        copyright varchar,
-        license varchar,
+        description varchar not null default '',
         uri varchar,
-        descriptive_ts tsvector not null,
-        descriptive_language_full_text full_text_language,
+        search_ts tsvector not null,
         creation_date date not null default '01/01/0001',
         creation_date_mask integer not null default 0,
-        publication_date_from date not null default '01/01/0001',
-        publication_date_from_mask integer not null default 0,
-        publication_date_to date not null default '31/12/2038',
-        publication_date_to_mask integer not null default 0,
-        parent_ref integer,
-        path varchar not null default '/',
         mime_type varchar,
-        constraint pk_multimedia primary key (id),
-	constraint fk_multimedia_parent_ref_multimedia foreign key (parent_ref) references multimedia(id) on delete cascade
-       );
+        constraint pk_multimedia primary key (id)
+      )
+      inherits (template_table_record_ref);
+
 comment on table multimedia is 'Stores all multimedia objects encoded in DaRWIN 2.0';
+comment on column multimedia.referenced_relation is 'Reference-Name of table concerned';
+comment on column multimedia.record_id is 'Identifier of record concerned';
 comment on column multimedia.id is 'Unique identifier of a multimedia object';
 comment on column multimedia.is_digital is 'Flag telling if the object is digital (true) or physical (false)';
 comment on column multimedia.type is 'Main multimedia object type: image, sound, video,...';
 comment on column multimedia.sub_type is 'Characterization of object type: article, publication in serie, book, glass plate,...';
-comment on column multimedia.title is 'Object title';
-comment on column multimedia.title_indexed is 'Indexed form of title field';
-comment on column multimedia.subject is 'Multimedia object subject (as required by Dublin Core...)';
-comment on column multimedia.coverage is 'Coverage of multimedia object: spatial or temporal (as required by Dublin Core...)';
-comment on column multimedia.apercu_path is 'URI path to the thumbnail illustrating the object';
-comment on column multimedia.copyright is 'Copyright notice';
-comment on column multimedia.license is 'License notice';
+comment on column multimedia.title is 'Title of the multimedia object';
+comment on column multimedia.description is 'Description of the current object';
 comment on column multimedia.uri is 'URI of object if digital';
 comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
-comment on column multimedia.publication_date_from is 'Object publication date from';
-comment on column multimedia.publication_date_from_mask is 'Mask used for object publication begining date display';
-comment on column multimedia.publication_date_to is 'Object publication date to';
-comment on column multimedia.publication_date_to_mask is 'Mask used for object publication end date display';
-comment on column multimedia.descriptive_ts is 'tsvector form of title and subject fields together';
-comment on column multimedia.descriptive_language_full_text is 'Language used for descriptive_ts tsvector field composition';
-comment on column multimedia.parent_ref is 'Reference of a parent multimedia. Such as an Article of a publication';
-comment on column multimedia.path is 'Path of parent of the object (automaticaly filled)';
+comment on column multimedia.search_ts is 'tsvector form of title and subject fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
+
 create table template_people_users_comm_common
        (
         person_user_ref integer not null,
@@ -848,26 +828,30 @@ comment on column collections_rights.collection_ref is 'Reference of collection 
 comment on column collections_rights.user_ref is 'Reference of user - id field of users table';
 comment on column collections_rights.db_user_type is 'Integer is representing a role: 1 for registered user, 2 for encoder, 4 for collection manager, 8 for system admin,...';
 
-create sequence users_workflow_id_seq;
+create sequence informative_workflow_id_seq;
 
-create table users_workflow
+create table informative_workflow
        (
-        id integer not null default nextval('users_workflow_id_seq'),
-        user_ref integer not null,
-        status varchar not null default 'to check',
+        id integer not null default nextval('informative_workflow_id_seq'),
+        user_ref integer,
+        formated_name varchar not null default 'anonymous',
+        status varchar not null default 'suggestion',
         modification_date_time update_date_time,
-        comment varchar,
-        constraint pk_users_workflow primary key (id),
-        constraint fk_users_workflow_users foreign key (user_ref) references users(id) on delete cascade
+        is_last boolean not null default true,        
+        comment varchar not null ,
+        constraint pk_informative_workflow primary key (id),
+        constraint fk_informative_workflow_users foreign key (user_ref) references users(id) ON DELETE CASCADE
        )
 inherits (template_table_record_ref);
-comment on table users_workflow is 'Workflow information for each record encoded';
-comment on column users_workflow.user_ref is 'Reference of user - id field of users table';
-comment on column users_workflow.referenced_relation is 'Reference-Name of table concerned';
-comment on column users_workflow.record_id is 'ID of record a workflow is defined for';
-comment on column users_workflow.status is 'Record status: to correct, to be corrected or published';
-comment on column users_workflow.modification_date_time is 'Date and time of status change - last date/time is used as actual status, but helps also to keep an history of status change';
-comment on column users_workflow.comment is 'Complementary comments';
+comment on table informative_workflow is 'Workflow information for each record encoded';
+comment on column informative_workflow.user_ref is 'Reference of user - id field of users table';
+comment on column informative_workflow.formated_name is 'used to allow non registered user to add a workflow' ;
+comment on column informative_workflow.referenced_relation is 'Reference-Name of table concerned';
+comment on column informative_workflow.record_id is 'ID of record a workflow is defined for';
+comment on column informative_workflow.status is 'Record status number: to correct, to be corrected or published ';
+comment on column informative_workflow.modification_date_time is 'Date and time of status change - last date/time is used as actual status, but helps also to keep an history of status change';
+comment on column informative_workflow.comment is 'Complementary comments';
+COMMENT on COLUMN informative_workflow.is_last is 'a flag witch allow us to know if the workflow for this referenced_relation/record id is the latest' ;
 
 create sequence users_tracking_id_seq;
 
@@ -981,8 +965,8 @@ comment on column my_widgets.color is 'Color given to page element by user';
 comment on column my_widgets.is_available is 'Flag telling if the widget can be used or not';
 comment on column my_widgets.icon_ref is 'Reference of multimedia icon to be used before page element title';
 comment on column my_widgets.title_perso is 'Page element title given by user';
-comment on column my_widgets.collections is 'list of collections whitch user_ref has rights to see';
-comment on column my_widgets.all_public is 'Set to determine if the widget is public by default or not';
+comment on column my_widgets.collections is 'list of collections which user_ref has rights to see';
+comment on column my_widgets.all_public is 'Set to determine if the widget available for a registered user by default or not';
 
 create table template_classifications
        (
@@ -1478,11 +1462,16 @@ create table insurances
         id integer not null default nextval('insurances_id_seq'),
         insurance_value numeric(16,2) not null,
         insurance_currency varchar not null default '€',
-        insurance_year smallint not null default 0,
+        date_from_mask integer not null default 0,
+        date_from date not null default '01/01/0001',
+        date_to_mask integer not null default 0,
+        date_to date not null default '31/12/2038',
         insurer_ref integer,
+        contact_ref integer,
         constraint pk_insurances primary key (id),
-        constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, insurance_year),
+        constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, date_from, date_to),
         constraint fk_specimen_parts_insurances_people foreign key (insurer_ref) references people(id) on delete set null,
+        constraint fk_specimen_parts_insurances_contact foreign key (contact_ref) references people(id) on delete set null,
         constraint chk_chk_specimen_parts_insurances check (insurance_value > 0)
        )
        inherits (template_table_record_ref);
@@ -1490,7 +1479,6 @@ comment on table insurances is 'List of insurances values for given specimen par
 comment on column insurances.referenced_relation is 'Reference-Name of table concerned';
 comment on column insurances.record_id is 'Identifier of record concerned';
 comment on column insurances.insurance_currency is 'Currency used with insurance value';
-comment on column insurances.insurance_year is 'Reference year for insurance subscription';
 comment on column insurances.insurance_value is 'Insurance value';
 comment on column insurances.insurer_ref is 'Reference of the insurance firm an insurance have been subscripted at';
 
@@ -2014,3 +2002,111 @@ ig_date,
   LEFT JOIN specimen_individuals  i ON s.id = i.specimen_ref 
   LEFT JOIN specimen_parts p ON i.id = p.specimen_individual_ref
 ;
+
+create sequence loans_id_seq;
+
+create table loans (
+  id integer not null default nextval('loans_id_seq'),
+  name varchar not null default '',
+  description varchar not null default '',
+  description_ts tsvector not null,
+  from_date date,
+  to_date date,
+  effective_to_date date,
+  
+  constraint pk_loans primary key (id)
+  );
+
+comment on table loans is 'Table holding an entire loan made of multiple loan items may also be linked to other table as comment, properties , ...';
+
+comment on column loans.id is 'Unique identifier of record';
+comment on column loans.name is 'Global name of the loan. May be a sort of code of other naming scheme';
+comment on column loans.description is 'Description of the meaning of the loan';
+comment on column loans.description is 'tsvector getting Description and title of the loan';
+comment on column loans.from_date  is 'Date of the start of the loan';
+comment on column loans.to_date  is 'Planned date of the end of the loan';
+comment on column loans.effective_to_date is 'Effective end date of the loan or null if it''s running';
+
+
+  
+create sequence loan_items_id_seq;
+
+create table loan_items (
+  id integer not null default nextval('loan_items_id_seq'),
+  loan_ref integer not null,
+  ig_ref integer,
+  from_date date,
+  to_date date,
+  part_ref integer,
+  details varchar default '',
+  
+  constraint pk_loan_items primary key (id),
+  constraint fk_loan_items_ig foreign key (ig_ref) references igs(id),
+  constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
+  constraint fk_loan_items_part_ref foreign key (part_ref) references specimen_parts(id) on delete set null,
+
+  constraint unq_loan_items unique(loan_ref, part_ref)
+); 
+
+
+comment on table loan_items is 'Table holding an item of a loan. It may be a part from darwin or only an generic item';
+
+comment on column loan_items.id is 'Unique identifier of record';
+comment on column loan_items.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_items.from_date is 'Date when the item was sended';
+comment on column loan_items.to_date is 'Date when the item was recieved back';
+comment on column loan_items.ig_ref is 'Optional ref to an IG stored in the igs table';
+comment on column loan_items.part_ref is 'Optional reference to a Darwin Part';
+comment on column loan_items.details is 'Textual details describing the item';
+
+
+create sequence loan_rights_id_seq;
+
+create table loan_rights (
+  id integer not null default nextval('loan_rights_id_seq'),
+  loan_ref integer not null,
+  user_ref integer not null,
+  has_encoding_right boolean not null default false,
+
+  constraint pk_loan_rights primary key (id),
+  constraint fk_loan_rights_loan_ref foreign key (loan_ref) references loans(id) on delete cascade,
+  constraint fk_loan_rights_user_ref foreign key (user_ref) references users(id) on delete cascade,
+  constraint unq_loan_rights unique (loan_ref, user_ref)
+);
+
+
+comment on table loan_rights is 'Table describing rights into an entire loan (if user is in the table he has at least viewing rights)';
+
+comment on column loan_rights.id is 'Unique identifier of record';
+comment on column loan_rights.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_rights.user_ref is 'Mandatory Reference to a user';
+comment on column loan_rights.has_encoding_right is 'Bool saying if the user can edit a loan';
+
+
+
+
+create sequence loan_status_id_seq;
+
+create table loan_status (
+  id integer not null default nextval('loan_status_id_seq'),
+  loan_ref integer not null,
+  user_ref integer not null,
+  status varchar not null default 'new',
+  modification_date_time update_date_time,
+  comment varchar not null default '',
+  is_last boolean not null default true,
+  constraint pk_loan_status primary key (id),
+  constraint fk_loan_status_loan_ref foreign key (loan_ref) references loans(id) on delete cascade,
+  constraint fk_loan_status_user_ref foreign key (user_ref) references users(id) on delete cascade
+
+);
+
+comment on table loan_status is 'Table describing various states of a loan';
+
+comment on column loan_status.id is 'Unique identifier of record';
+comment on column loan_status.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_status.user_ref is 'Mandatory Reference to a user';
+comment on column loan_status.status is 'Current status of the loan in a list (new, closed, running, ...)';
+comment on column loan_status.modification_date_time is 'date of the modification';
+comment on column loan_status.comment is 'comment of the status modification';
+comment on column loan_status.is_last is 'flag telling which line is the current line';

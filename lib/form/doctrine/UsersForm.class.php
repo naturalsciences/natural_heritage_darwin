@@ -99,12 +99,12 @@ class UsersForm extends BaseUsersForm
     $this->widgetSchema['additional_names'] = new sfWidgetFormInput();
     $this->widgetSchema['additional_names']->setAttributes(array('class'=>'medium_size'));
      
-    $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
     $maxDate = new FuzzyDateTime(date('Y').'/12/31');
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $maxDate->setStart(false);
 
     $this->widgetSchema['birth_date'] = new widgetFormJQueryFuzzyDate(

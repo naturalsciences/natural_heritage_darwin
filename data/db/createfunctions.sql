@@ -245,6 +245,8 @@ BEGIN
                 NEW.method_indexed := fullToIndex(NEW.method);
        ELSIF TG_TABLE_NAME::text = 'collecting_tools' THEN
                 NEW.tool_indexed := fullToIndex(NEW.tool);
+        ELSIF TG_TABLE_NAME = 'loans' THEN
+                NEW.description_ts := to_tsvector('simple', COALESCE(NEW.name,'') || COALESCE(NEW.description,'') );
 	END IF;
 	RETURN NEW;
 END;
@@ -585,8 +587,7 @@ CREATE OR REPLACE FUNCTION fct_cpy_path() RETURNS TRIGGER
 AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
-        IF( TG_TABLE_NAME::text = 'multimedia' OR
-          TG_TABLE_NAME::text = 'collections' OR
+        IF( TG_TABLE_NAME::text = 'collections' OR
           TG_TABLE_NAME::text = 'gtu' OR
           TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
@@ -609,8 +610,7 @@ BEGIN
           END IF;
         END IF;
       ELSIF TG_OP = 'UPDATE' THEN
-        IF( TG_TABLE_NAME::text = 'multimedia' OR
-          TG_TABLE_NAME::text = 'collections' OR
+        IF(TG_TABLE_NAME::text = 'collections' OR
           TG_TABLE_NAME::text = 'gtu' OR
           TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
@@ -685,9 +685,6 @@ END;
 $$
 language plpgsql;
 
-
-
-
 CREATE OR REPLACE FUNCTION get_setting(IN param text, OUT value text)
 LANGUAGE plpgsql STABLE STRICT AS
 $$BEGIN
@@ -697,6 +694,7 @@ $$BEGIN
     value := NULL;
 END;$$;
 
+DROP FUNCTION IF EXISTS fct_set_user(integer);
 
 /**
  Set user id 
@@ -710,50 +708,47 @@ $$;
 CREATE OR REPLACE FUNCTION fct_trk_log_table() RETURNS TRIGGER
 AS $$
 DECLARE
-	user_id integer;
-        track_level integer;
-	track_fields integer;
-	trk_id bigint;
-	tbl_row RECORD;
-	new_val varchar;
-	old_val varchar;
+  user_id integer;
+  track_level integer;
+  track_fields integer;
+  trk_id bigint;
+  tbl_row RECORD;
+  new_val varchar;
+  old_val varchar;
 BEGIN
+  SELECT COALESCE(get_setting('darwin.track_level'),'10')::integer INTO track_level;
+  IF track_level = 0 THEN --NO Tracking
+    RETURN NEW;
+  ELSIF track_level = 1 THEN -- Track Only Main tables
+    IF TG_TABLE_NAME::text NOT IN ('specimens', 'specimen_individuals', 'specimen_parts', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
+      'mineralogy', 'lithology', 'habitats', 'people') THEN
+      RETURN NEW;
+    END IF;
+  END IF;
 
+  SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
+  IF user_id = 0 THEN
+    RETURN NEW;
+  END IF;
 
+  IF TG_OP = 'INSERT' THEN
+    INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, new_value)
+        VALUES (TG_TABLE_NAME::text, NEW.id, user_id, 'insert', now(), hstore(NEW)) RETURNING id into trk_id;
+  ELSEIF TG_OP = 'UPDATE' THEN
 
-        SELECT COALESCE(get_setting('darwin.track_level'),'10')::integer INTO track_level;
-        IF track_level = 0 THEN --NO Tracking
-          RETURN NEW;
-        ELSIF track_level = 1 THEN -- Track Only Main tables
-          IF TG_TABLE_NAME::text NOT IN ('specimens', 'specimen_individuals', 'specimen_parts', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
-            'mineralogy', 'lithology', 'habitats', 'people') THEN
-            RETURN NEW;
-          END IF;
-        END IF;
+    IF ROW(NEW.*) IS DISTINCT FROM ROW(OLD.*) THEN
+    INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, new_value, old_value)
+        VALUES (TG_TABLE_NAME::text, NEW.id, user_id, 'update', now(), hstore(NEW), hstore(OLD)) RETURNING id into trk_id;
+    ELSE
+      RAISE info 'unnecessary update on table "%" and id "%"', TG_TABLE_NAME::text, NEW.id;
+    END IF;
 
-	SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
-	IF user_id = 0 THEN
-	  RETURN NEW;
-	END IF;
+  ELSEIF TG_OP = 'DELETE' THEN
+    INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, old_value)
+      VALUES (TG_TABLE_NAME::text, OLD.id, user_id, 'delete', now(), hstore(OLD));
+  END IF;
 
-	IF TG_OP = 'INSERT' THEN
-		INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, new_value)
-				VALUES (TG_TABLE_NAME::text, NEW.id, user_id, 'insert', now(), hstore(NEW)) RETURNING id into trk_id;
-	ELSEIF TG_OP = 'UPDATE' THEN
-
-	  IF ROW(NEW.*) IS DISTINCT FROM ROW(OLD.*) THEN
-		INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, new_value, old_value)
-		    VALUES (TG_TABLE_NAME::text, NEW.id, user_id, 'update', now(), hstore(NEW), hstore(OLD)) RETURNING id into trk_id;
-	  ELSE
-	    RAISE info 'unnecessary update on table "%" and id "%"', TG_TABLE_NAME::text, NEW.id;
-	  END IF;
-
-	ELSEIF TG_OP = 'DELETE' THEN
-		INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, old_value)
- 			VALUES (TG_TABLE_NAME::text, OLD.id, user_id, 'delete', now(), hstore(OLD));
-	END IF;
-
-	RETURN NULL;
+  RETURN NULL;
 END;
 $$
 LANGUAGE plpgsql;
@@ -1203,17 +1198,17 @@ BEGIN
       ELSE
         PERFORM fct_cpy_word('identifications','value_defined_ts', NEW.value_defined_ts);
       END IF;
-
+*/
    ELSIF TG_TABLE_NAME ='multimedia' THEN
 
       IF TG_OP = 'UPDATE' THEN
-        IF OLD.descriptive_ts IS DISTINCT FROM NEW.descriptive_ts THEN
-          PERFORM fct_cpy_word('multimedia','descriptive_ts', NEW.descriptive_ts);
+        IF OLD.search_ts IS DISTINCT FROM NEW.search_ts THEN
+          PERFORM fct_cpy_word('multimedia','search_ts', NEW.search_ts);
         END IF;
       ELSE
-        PERFORM fct_cpy_word('multimedia','descriptive_ts', NEW.descriptive_ts);
+        PERFORM fct_cpy_word('multimedia','search_ts', NEW.search_ts);
       END IF;
-*/
+
    ELSIF TG_TABLE_NAME ='people' THEN
 
       IF TG_OP = 'UPDATE' THEN
@@ -1303,6 +1298,15 @@ BEGIN
         END IF;
       ELSE
         PERFORM fct_cpy_word('taxonomy','name_indexed', NEW.name_indexed);
+      END IF;
+   ELSIF TG_TABLE_NAME ='loans' THEN
+
+      IF TG_OP = 'UPDATE' THEN
+        IF OLD.description_ts IS DISTINCT FROM NEW.description_ts THEN
+          PERFORM fct_cpy_word('loans','description_ts', NEW.description_ts);
+        END IF;
+      ELSE
+        PERFORM fct_cpy_word('loans','description_ts', NEW.description_ts);
       END IF;
 /*
    ELSIF TG_TABLE_NAME ='codes' THEN
@@ -2565,7 +2569,8 @@ BEGIN
       PERFORM fct_del_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_del_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
       PERFORM fct_del_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
-
+    ELSIF TG_TABLE_NAME = 'loan_status' THEN
+      PERFORM fct_del_in_dict('loan_status','status', oldfield.status, newfield.status);
   END IF;
 
   RETURN NEW;
@@ -2631,6 +2636,8 @@ BEGIN
       PERFORM fct_add_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_add_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
       PERFORM fct_add_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
+    ELSIF TG_TABLE_NAME = 'loan_status' THEN
+      PERFORM fct_add_in_dict('loan_status','status', oldfield.status, newfield.status);
   END IF;
 
   RETURN NEW;
@@ -3648,4 +3655,58 @@ begin
   end;
   return 'inserted';
 end;
+$$;
+
+
+CREATE OR REPLACE function fct_remove_last_flag() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+BEGIN
+    UPDATE informative_workflow
+    SET is_last = false
+    WHERE referenced_relation = NEW.referenced_relation
+      AND record_id = NEW.record_id;
+  RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE function fct_remove_last_flag_loan() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+BEGIN
+    UPDATE loan_status
+    SET is_last = false
+    WHERE loan_ref = NEW.loan_ref;
+  RETURN NEW;
+END;
+$$;
+
+
+
+CREATE OR REPLACE function fct_auto_insert_status_history() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+DECLARE
+ user_id int;
+BEGIN
+    SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
+    IF user_id = 0 THEN
+      RETURN NEW;
+    END IF;
+
+    INSERT INTO loan_status
+      (loan_ref, user_ref, status, modification_date_time, comment, is_last)
+      VALUES
+      (NEW.id, user_id, 'new', now(), '', true);
+
+    INSERT INTO loan_rights
+      (loan_ref, user_ref, has_encoding_right)
+      VALUES
+      (NEW.id, user_id, true);
+
+  RETURN NEW;
+END;
 $$;

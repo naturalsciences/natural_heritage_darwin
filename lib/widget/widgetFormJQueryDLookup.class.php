@@ -11,11 +11,13 @@ class widgetFormJQueryDLookup extends sfWidgetFormInputText
         $this->addOption('nullable', false);
         $this->addOption('is_hidden', false);
         $this->addOption('fieldsHidders', array());
+        $this->addOption('divname', '') ; //option added when this widget is used twice in qtip
     }
 
     public function render($name, $value = null, $attributes = array(), $errors = array())
     {
         $values = array_merge(array('text' => '', 'is_empty' => false), is_array($value) ? $value : array());
+        $divname = $this->getOption('divname') ;
         $obj_name = $this->getName($value);
         $obj_id = $this->generateId($name)."_name";
         $input = parent::render($name, $value, $attributes, $errors);
@@ -26,7 +28,7 @@ class widgetFormJQueryDLookup extends sfWidgetFormInputText
         {
           $options = array(
             'src' => '/images/remove.png',
-            'class' => 'reference_clear'
+            'class' => $divname.'_reference_clear'
           );
 
           if($obj_name == '')
@@ -39,33 +41,33 @@ class widgetFormJQueryDLookup extends sfWidgetFormInputText
 
         $script_formated = sprintf('jQuery("#%1$s").focus(function() 
                                     {
-                                      if (jQuery("div.search_box:hidden").length)
+                                      if (jQuery("div.%2$ssearch_box:hidden").length)
                                       {
-                                        jQuery("div.search_box, ul.tab_choice").slideDown();
+                                        jQuery("div.%2$ssearch_box, ul.tab_choice").slideDown();
                                       }
-                                      jQuery("div.search_box table#search_and_choose tbody td:first input:first").focus();
+                                      jQuery("div.%2$ssearch_box table#search_and_choose tbody td:first input:first").focus();
                                     });
                                     
-                                    $(".reference_clear").click(function()
+                                    $(".%2$sreference_clear").click(function()
                                     {
                                       $(this).prevAll("input").val("");
                                       $(this).hide();
                                     });
                                    ',
-                                   $obj_id
+                                   $obj_id,$divname
                                   );
 
         foreach ($this->getOption('fieldsHidders') as $key=>$value)
         {
           $script_formated .= sprintf('jQuery("#%1$s").focus(function() 
                                        {
-                                         if (jQuery("div.search_box:visible").length)
+                                         if (jQuery("div.%2$ssearch_box:visible").length)
                                          {
-                                           jQuery("div.search_box, ul.tab_choice").slideUp();
+                                           jQuery("div.%2$ssearch_box, ul.tab_choice").slideUp();
                                          }
                                        });
                                       ',
-                                       $value
+                                       $value,$divname
                                      );
         }        
 

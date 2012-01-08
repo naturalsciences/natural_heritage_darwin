@@ -127,4 +127,10 @@ class specimenwidgetviewComponents extends sfComponents
   {
     $this->accompanying = Doctrine::getTable("SpecimensAccompanying")->findBySpecimenRef($this->eid) ;
   }
+  
+  public function executeInformativeWorkflow()
+  {    
+    if(isset($this->form) )
+      $this->eid = $this->form->getObject()->getId() ;
+  }   
 }

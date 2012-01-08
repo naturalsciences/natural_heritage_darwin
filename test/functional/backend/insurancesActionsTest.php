@@ -23,26 +23,31 @@ $browser->
     checkElement('form table tbody tr:nth-child(2) input[id="insurances_insurance_value"]')->
     checkElement('form table tbody tr:nth-child(3) input[id="insurances_insurance_currency_input"][value="€"]')->
     checkElement('form table tbody tr:nth-child(3) select option', 0)->
-    checkElement('form table tbody tr:nth-child(4) select[id="insurances_insurance_year"] option[selected="selected"]', '-')->
+    checkElement('form table tbody tr:nth-child(4) select[id="insurances_date_from_day"] option[selected="selected"]', '')->
+    checkElement('form table tbody tr:nth-child(5) select[id="insurances_date_to_day"] option[selected="selected"]', '')->    
+    checkElement('form table tbody tr:nth-child(6) input[id="insurances_insurer_ref_name"]')->    
+    checkElement('form table tbody tr:nth-child(7) input[id="insurances_contact_ref_name"]')->        
   end()->
   info('Try to save no value for IG 10795: wait for value required error...')->
   click('Save', 
         array('insurances' => array('insurance_value' => '',
                                     'insurance_currency' => '€',
-                                    'insurance_year' => 0,
+                                    'date_from' => array('day' => 01, 'month' => 01, 'year' => 2000),
+                                    'date_to' => array('day' => 01, 'month' => 01, 'year' => 1999)
                                    )
              )
        )->
   with('form')->
   begin()->
-    hasErrors(1)->
+    hasErrors(2)->
     isError('insurance_value', 'required')->
   end()->
   info('Save 750€ value for IG 10795')->
   click('Save', 
         array('insurances' => array('insurance_value' => '750',
                                     'insurance_currency' => '€',
-                                    'insurance_year' => 0,
+                                    'date_from' => array('day' => 01, 'month' => 01, 'year' => 2000),
+                                    'date_to' => array('day' => 01, 'month' => 01, 'year' => 2001) 
                                    )
              )
        )->

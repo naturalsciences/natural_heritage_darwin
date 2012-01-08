@@ -32,7 +32,7 @@ CREATE INDEX CONCURRENTLY idx_collections_rights_db_user_type on collections_rig
 --CREATE INDEX CONCURRENTLY idx_users_coll_rights_asked_collection_ref on users_coll_rights_asked(collection_ref);
 --CREATE INDEX CONCURRENTLY idx_users_coll_rights_asked_user_ref on users_coll_rights_asked(user_ref);
 --CREATE INDEX CONCURRENTLY idx_record_visibilities on record_visibilities(user_ref);
-CREATE INDEX CONCURRENTLY idx_users_workflow_user_ref on users_workflow(user_ref);
+CREATE INDEX CONCURRENTLY idx_informative_workflow_user_ref on informative_workflow(user_ref);
 CREATE INDEX CONCURRENTLY idx_collection_maintenance_user_ref on collection_maintenance(people_ref);
 CREATE INDEX CONCURRENTLY idx_my_saved_searches_user_ref on my_saved_searches(user_ref);
 CREATE INDEX CONCURRENTLY idx_my_widgets_user_ref on my_widgets(user_ref);
@@ -69,6 +69,7 @@ CREATE INDEX CONCURRENTLY idx_specimen_collecting_methods_method_ref on specimen
 CREATE INDEX CONCURRENTLY idx_specimen_collecting_tools_specimen_ref on specimen_collecting_tools(specimen_ref);
 CREATE INDEX CONCURRENTLY idx_specimen_collecting_tools_tool_ref on specimen_collecting_tools(collecting_tool_ref);
 CREATE INDEX CONCURRENTLY idx_insurances_insurer_ref on insurances(insurer_ref);
+CREATE INDEX CONCURRENTLY idx_insurances_contact_ref on insurances(contact_ref);
 CREATE INDEX CONCURRENTLY idx_specimens_ig_ref on specimens(ig_ref);
 CREATE INDEX CONCURRENTLY idx_tags_gtu_ref on tags(gtu_ref);
 CREATE INDEX CONCURRENTLY idx_tags_group_ref on tags(group_ref);
@@ -133,7 +134,6 @@ CREATE INDEX CONCURRENTLY idx_igs_ig_num_indexed ON igs(ig_num_indexed text_patt
 CREATE INDEX CONCURRENTLY idx_collection_name_indexed on collections (name_indexed);
 CREATE INDEX CONCURRENTLY idx_insurances_referenced_record on insurances(referenced_relation, record_id);
 CREATE INDEX CONCURRENTLY idx_insurances_insurance_currency on insurances(insurance_currency);
-CREATE INDEX CONCURRENTLY idx_insurances_insurance_year on insurances(insurance_year);
 CREATE INDEX CONCURRENTLY idx_lithostratigraphy_name_order_by on lithostratigraphy(name_order_by);
 CREATE INDEX CONCURRENTLY idx_lithology_name_order_by on lithology(name_order_by);
 CREATE INDEX CONCURRENTLY idx_mineralogy_code on mineralogy(upper(code));
@@ -141,7 +141,7 @@ CREATE INDEX CONCURRENTLY idx_mineralogy_name_order_by on mineralogy(name_order_
 CREATE INDEX CONCURRENTLY idx_mineralogy_cristal_system on mineralogy(cristal_system) WHERE cristal_system <> '';
 CREATE INDEX CONCURRENTLY idx_multimedia_is_digital on multimedia(is_digital);
 CREATE INDEX CONCURRENTLY idx_multimedia_type on multimedia(type);
-CREATE INDEX CONCURRENTLY idx_multimedia_ref on multimedia(parent_ref);
+CREATE INDEX CONCURRENTLY idx_multimedia_keywords_keyword_indexed on multimedia_keywords(keyword_indexed);
 CREATE INDEX CONCURRENTLY idx_my_widgets_user_category on my_widgets(user_ref, category, group_name);
 CREATE INDEX CONCURRENTLY idx_my_widgets_group_name on my_widgets(user_ref, group_name);
 CREATE INDEX CONCURRENTLY idx_my_widgets_is_available on my_widgets(is_available);
@@ -193,7 +193,7 @@ CREATE INDEX CONCURRENTLY idx_users_languages_preferred_language on users_langua
 -- CREATE INDEX CONCURRENTLY idx_users_login_infos_login_system on users_login_infos(login_system);
 -- CREATE INDEX CONCURRENTLY idx_users_login_infos_login_type on users_login_infos(login_type);
 -- CREATE INDEX CONCURRENTLY idx_users_login_infos_user_name on users_login_infos(user_name);
-CREATE INDEX CONCURRENTLY idx_users_workflow_user_status on users_workflow(user_ref, status);
+CREATE INDEX CONCURRENTLY idx_informative_workflow_user_status on informative_workflow(user_ref, status);
 CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
 
 /*** GiST and eventual GIN Indexes for ts_vector fields ***/
@@ -205,7 +205,7 @@ CREATE INDEX CONCURRENTLY idx_gist_vernacular_names_name_ts on vernacular_names 
 CREATE INDEX CONCURRENTLY idx_gist_expeditions_name_ts on expeditions using gist(name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_people_formated_name_ts on people using gin(formated_name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_users_formated_name_ts on users using gin(formated_name_ts);
-CREATE INDEX CONCURRENTLY idx_gist_multimedia_descriptive_ts on multimedia using gist(descriptive_ts);
+CREATE INDEX CONCURRENTLY idx_gist_multimedia_description_ts on multimedia using gist(search_ts);
 CREATE INDEX CONCURRENTLY idx_gin_people_addresses_address_parts_ts on people_addresses using gin(address_parts_ts);
 CREATE INDEX CONCURRENTLY idx_gin_users_addresses_address_parts_ts on users_addresses using gin(address_parts_ts);
 /*CREATE INDEX CONCURRENTLY idx_gist_collection_maintenance_description_ts on collection_maintenance using gist(description_ts);*/
@@ -320,5 +320,20 @@ CREATE INDEX CONCURRENTLY idx_igs_ig_date on igs(ig_date, ig_date_mask);
 CREATE INDEX CONCURRENTLY idx_expeditions_expedition_from_date on expeditions(expedition_from_date, expedition_from_date_mask);
 CREATE INDEX CONCURRENTLY idx_expeditions_expedition_to_date on expeditions(expedition_to_date, expedition_to_date_mask);
 CREATE INDEX CONCURRENTLY idx_users_tracking_modification_date_time on users_tracking(modification_date_time);
+
+
+/** LOANS **/
+
+CREATE INDEX CONCURRENTLY idx_loan_items_loan_ref on loan_items(loan_ref);
+CREATE INDEX CONCURRENTLY idx_loan_items_ig_ref on loan_items(ig_ref);
+CREATE INDEX CONCURRENTLY idx_loan_items_part_ref on loan_items(part_ref);
+
+
+CREATE INDEX CONCURRENTLY idx_loan_rights_ig_ref on loan_rights(loan_ref);
+CREATE INDEX CONCURRENTLY idx_loan_rights_part_ref on loan_rights(user_ref);
+
+CREATE INDEX CONCURRENTLY idx_loan_status_user_ref on loan_status(user_ref);
+CREATE INDEX CONCURRENTLY idx_loan_status_loan_ref on loan_status(loan_ref);
+CREATE INDEX CONCURRENTLY idx_loan_status_loan_ref_is_last on loan_status(loan_ref,is_last);
 
 

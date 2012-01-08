@@ -283,7 +283,17 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true
-        title_perso: External Url       
+        title_perso: External Url  
+    u1ws22:
+        User: u1
+        col_num: 2
+        category: specimen_widget
+        group_name: informativeWorkflow
+        order_by: 12
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Informative Workflow             
     u1wtax0:
         User: u1
         col_num: 1
@@ -363,7 +373,17 @@ MyWidgets:
         opened: false
         visible: true
         is_available: true
-        title_perso: External Url        
+        title_perso: External Url    
+    u1wtax9:
+        User: u1
+        col_num: 1
+        category: catalogue_taxonomy_widget
+        group_name: informativeWorkflow
+        order_by: 8
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Informative Workflow
     u1wchs0:
         User: u1
         col_num: 1
@@ -1164,7 +1184,18 @@ MyWidgets:
         visible: true
         is_available: true
         title_perso: External Url 
-           
+
+    u1spi11:
+        User: u1
+        col_num: 2
+        category: individuals_widget
+        group_name: informativeWorkflow
+        order_by: 6
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Informative Workflow
+                   
     u1sps0:
         User: u1
         col_num: 1
@@ -1446,3 +1477,14 @@ MyWidgets:
         visible: false
         is_available: true
         title_perso: Expedition
+
+    u1sps22:
+        User: u1
+        col_num: 2
+        category: board_widget
+        group_name: workflowsSummary
+        order_by: 4
+        opened: true
+        visible: true
+        is_available: true        
+        title_perso: Workflows summary         

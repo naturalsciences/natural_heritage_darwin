@@ -35,7 +35,7 @@ bw5:
    opened: true
    visible: true
    title_perso: My activity
-
+ 
 bw6:
    col_num: 1
    category: board_widget
@@ -45,7 +45,16 @@ bw6:
    visible: true
    title_perso: Statistics
    all_public: true   
-   
+
+bw7:
+   col_num: 2
+   category: board_widget
+   group_name: workflowsSummary
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Workflows summary 
+        
 sps18:
    col_num: 2
    category: specimensearch_widget

@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(81);
+SELECT plan(73);
 
 SELECT diag('Chronostratigraphy level/parent update tests');
 
@@ -180,27 +180,6 @@ INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (42, 'THECLASS', 1
 INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (43, 'THESECPHYLUM', 4, 36);
 
 SELECT lives_ok('UPDATE taxonomy SET level_ref = 5, parent_ref = 43 WHERE id = 40', 'Unit 40 moved from parent unit 39 to parent unit 43 and changed from level 9 (sub_cohort_botany) to level 5 (sub_phylum)');
-
-SELECT diag('Update Multimedia');
-
-INSERT INTO multimedia(id, title) VALUES (1,'Testing');
-INSERT INTO multimedia(id, title) VALUES (2,'TestingBis');
-INSERT INTO multimedia(id, title,parent_ref) VALUES (3,'Testing child and parent',1);
-INSERT INTO multimedia(id, title,parent_ref) VALUES (4,'Testing testing child',3);
-
-SELECT ok('/' = (SELECT path from multimedia WHERE id=1), 'Path is right initialised');
-SELECT ok('/' = (SELECT path from multimedia WHERE id=2), 'Path is right initialised with other');
-SELECT ok('/1/' = (SELECT path from multimedia WHERE id=3), 'Path take parent_ref');
-SELECT ok('/1/3/' = (SELECT path from multimedia WHERE id=4), 'Path add parent to previous path');
-
-UPDATE multimedia SET parent_ref=2 WHERE id=3;
-
-SELECT ok('/2/' = (SELECT path from multimedia WHERE id=3), 'Path is updated');
-SELECT ok('/2/3/' = (SELECT path from multimedia WHERE id=4),'Path is updated for children too');
-
-UPDATE multimedia SET parent_ref=NULL WHERE id=3;
-SELECT ok('/' = (SELECT path from multimedia WHERE id=3),'Path is set to / with null parent');
-SELECT ok('/3/' = (SELECT path from multimedia WHERE id=4), 'Childrens path is updated too');
 
 
 SELECT diag('Update people_relationships path');

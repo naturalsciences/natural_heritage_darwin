@@ -31,7 +31,7 @@ class UsersTrackingFormFilter extends BaseUsersTrackingFormFilter
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31');
     $maxDate->setStart(false);
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime('now');
 
     $this->widgetSchema['user_ref'] = new sfWidgetFormDoctrineChoice(array(

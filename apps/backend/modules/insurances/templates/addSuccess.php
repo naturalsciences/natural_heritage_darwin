@@ -30,12 +30,19 @@
       </td>
     </tr>
     <tr>
-      <th><?php echo $form['insurance_year']->renderLabel();?>:</th>
+      <th><?php echo $form['date_from']->renderLabel();?>:</th>
       <td>
-        <?php echo $form['insurance_year']->renderError(); ?>
-        <?php echo $form['insurance_year'];?>
+        <?php echo $form['date_from']->renderError(); ?>
+        <?php echo $form['date_from'];?>
       </td>
     </tr>
+    <tr>
+      <th><?php echo $form['date_to']->renderLabel();?>:</th>
+      <td>
+        <?php echo $form['date_to']->renderError(); ?>
+        <?php echo $form['date_to'];?>
+      </td>
+    </tr>    
     <tr>
       <th><?php echo $form['insurer_ref']->renderLabel();?>:</th>
       <td>
@@ -43,6 +50,13 @@
         <?php echo $form['insurer_ref'];?>
       </td>
     </tr>
+    <tr>
+      <th><?php echo $form['contact_ref']->renderLabel();?>:</th>
+      <td>
+        <?php echo $form['contact_ref']->renderError(); ?>
+        <?php echo $form['contact_ref'];?>
+      </td>
+    </tr>    
   </tbody>
   <tfoot>
     <tr>
@@ -65,16 +79,36 @@
      $('.result_choose').live('click',function () 
      {
        el = $(this).closest('tr');
-       $("#insurances_insurer_ref").val(getIdInClasses(el));
-       $("#insurances_insurer_ref_name").val(el.find('.item_name').text()).show();
-       $('.reference_clear').show();
-       $('div.search_box').slideUp();
+       if(!$("div.search_box':hidden").length)
+       {
+         $("#insurances_insurer_ref").val(getIdInClasses(el));
+         $("#insurances_insurer_ref_name").val(el.find('.item_name').text()).show();
+         $('#insurances_insurer_ref .reference_clear').show();
+         $('div.search_box').slideUp();
+       }
+       else
+       {
+         $("#insurances_contact_ref").val(getIdInClasses(el));
+         $("#insurances_contact_ref_name").val(el.find('.item_name').text()).show();
+         $('#insurances_contact_ref .contact_reference_clear').show();
+         $('div.contact_search_box').slideUp();          
+       }
      });
+  $('#insurances_insurer_ref_name').click( function() 
+  {
+    $('.search_results_content').empty() ;
+  });
+  $('#insurances_contact_ref_name').click( function() 
+  {
+    $('.search_results_content').empty() ;
+  });       
    });
 </script>
   
   <div class="search_box">
     <?php include_partial('institution/searchForm', array('form' => new InstitutionsFormFilter(),'is_choose'=>true)) ?>
   </div>
-
+  <div class="contact_search_box">
+    <?php include_partial('people/searchForm', array('form' => new PeopleFormFilter(),'is_choose'=>true)) ?>
+  </div>
 </div>

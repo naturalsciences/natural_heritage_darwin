@@ -170,4 +170,10 @@ class specimenwidgetComponents extends sfComponents
 
   public function executeLinkHabitat()
   {}
+  
+  public function executeInformativeWorkflow()
+  {    
+    if(isset($this->form) )
+      $this->eid = $this->form->getObject()->getId() ;
+  }  
 }

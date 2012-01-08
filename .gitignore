@@ -5,6 +5,7 @@ data/stats/*.yml
 log/*
 !log/.gitignore
 config/databases.yml
+config/darwin.yml
 web/favicon.ico
 uploads/*
 *~

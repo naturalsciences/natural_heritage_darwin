@@ -81,7 +81,7 @@ DROP FUNCTION IF EXISTS convert_to_integer(v_input varchar) CASCADE;
 DROP FUNCTION IF EXISTS fct_search_authorized_encoding_collections (user_id integer) CASCADE;
 DROP FUNCTION IF EXISTS fct_search_authorized_view_collections (user_id integer) CASCADE;
 DROP FUNCTION IF EXISTS fct_filter_encodable_row(ids varchar, col_name varchar, user_id integer) CASCADE;
-
+DROP FUNCTION IF EXISTS fct_remove_last_flag();
 
 DROP FUNCTION IF EXISTS fct_chk_PeopleIsMoral() CASCADE;
 DROP FUNCTION IF EXISTS fct_chk_one_pref_language() CASCADE;

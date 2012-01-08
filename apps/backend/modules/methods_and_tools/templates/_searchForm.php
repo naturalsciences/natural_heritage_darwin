@@ -1,5 +1,6 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
+<div class="catalogue_methods">
 <?php if(isset($notion) && (($notion == 'method' || $notion =='tool'))):?>
   <?php echo form_tag('methods_and_tools/search?notion='.$notion.( isset($is_choose) ? '&is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'methods_and_tools_filter'));?>
     <div class="container">
@@ -29,8 +30,10 @@
 <?php else:?>
   <?php echo __('You need to specify if you wish to work on tools or methods');?>
 <?php endif;?>
+</div>
 <script language="javascript">
 $(document).ready(function () {
+  $('.catalogue_methods').choose_form({});
   $('form#methods_and_tools_filter').submit();
 });
 </script>

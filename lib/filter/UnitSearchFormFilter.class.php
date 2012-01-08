@@ -145,11 +145,11 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['mineral_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
 
 
-    $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')))).'/01/01'));
-    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')))).'/12/31'));
+    $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
+    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));
     $maxDate->setStart(false);
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
-    $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $this->widgetSchema['ig_num'] = new sfWidgetFormInputText();
     $this->widgetSchema['ig_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
                                                                      array('class' => 'from_date')
@@ -235,11 +235,11 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['mineral_level_ref'] = new sfValidatorInteger(array('required' => false));
 
 
-    $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')))).'/01/01'));
-    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')))).'/12/31'));
+    $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
+    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));
     $maxDate->setStart(false);
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
-    $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $this->widgetSchema['tags'] = new sfWidgetFormInputText();
     $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
                                                                                 array('class' => 'from_date')

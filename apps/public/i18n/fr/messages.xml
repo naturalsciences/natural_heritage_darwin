@@ -603,6 +603,30 @@
         <source>Abbreviation</source>
         <target>Abréviation</target>
       </trans-unit>
+          <trans-unit id="1483">
+        <source>Your Name</source>
+        <target>Votre Nom</target>
+      </trans-unit>
+          <trans-unit id="1484">
+        <source>anonymous</source>
+        <target>Anonyme</target>
+      </trans-unit>
+          <trans-unit id="1488">
+        <source>Thank you for your help</source>
+        <target>Merci pour votre aide</target>
+      </trans-unit>
+          <trans-unit id="1485">
+        <source>You think there&#039;s a mistake ? please suggest us a correction</source>
+        <target>Vous pensez qu&#039;il y a une erreur ? vous pouvez nous proposer une correction</target>
+      </trans-unit>
+          <trans-unit id="1486">
+        <source>Submit</source>
+        <target>Soumettre</target>
+      </trans-unit>
+          <trans-unit id="1487">
+        <source>Comment</source>
+        <target>Commetaire</target>
+      </trans-unit>
           <trans-unit id="1279">
         <source>Types</source>
         <target>Types</target>

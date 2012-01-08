@@ -96,6 +96,17 @@ class searchActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
+    $ajax = false ;
+    if($request->isXmlHttpRequest()) 
+    {
+      $suggestion = $request->getParameter('suggestion') ;    
+      $captcha = array(
+        'recaptcha_challenge_field' => $request->getParameter('recaptcha_challenge_field'),
+        'recaptcha_response_field'  => $request->getParameter('recaptcha_response_field'),
+      );    
+      $id = $suggestion['id'] ;
+      $ajax = true ;
+    }
     $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('id'));   
     $this->forward404Unless($this->individual);
     if(!$this->individual->Specimens->getCollectionIsPublic()) $this->forwardToSecureAction();
@@ -110,6 +121,26 @@ class searchActions extends DarwinActions
     
     if ($tag = $this->individual->Specimens->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ; 
     else $this->tags = false ;
+    $this->form = new SuggestionForm(null,array('ref_id' => $id, 'ajax' => $ajax)) ;
+    if($request->isXmlHttpRequest())
+    {
+      $this->form->bind($suggestion, array('captcha' => $captcha)) ;
+      if ($this->form->isBound() && $this->form->isValid())
+      {
+        $data = array(
+            'referenced_relation' => 'specimen_individuals',
+            'record_id' => $suggestion['id'],
+            'status' => 'suggestion',   
+            'comment' => $suggestion['comment'],    
+            'formated_name' => $suggestion['formated_name']!=''?$suggestion['formated_name']:'anonymous') ;    
+            
+        $workflow = new InformativeWorkflow() ;
+        $workflow->fromArray($data) ;
+        $workflow->save() ;
+        return $this->renderPartial("info_msg") ;
+      }
+      return $this->renderPartial("suggestion", array('form' => $this->form)) ;
+    }
   }
     
   /**

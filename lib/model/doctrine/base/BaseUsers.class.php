@@ -30,9 +30,12 @@
  * @property Doctrine_Collection $Collections
  * @property Doctrine_Collection $CollectionsRights
  * @property Doctrine_Collection $UsersTracking
+ * @property Doctrine_Collection $InformativeWorkflow
  * @property Doctrine_Collection $MySavedSearches
  * @property Doctrine_Collection $MyWidgets
  * @property Doctrine_Collection $Preferences
+ * @property Doctrine_Collection $LoanRights
+ * @property Doctrine_Collection $LoanStatus
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method boolean             getIsPhysical()            Returns the current record's "is_physical" value
@@ -59,9 +62,12 @@
  * @method Doctrine_Collection getCollections()           Returns the current record's "Collections" collection
  * @method Doctrine_Collection getCollectionsRights()     Returns the current record's "CollectionsRights" collection
  * @method Doctrine_Collection getUsersTracking()         Returns the current record's "UsersTracking" collection
+ * @method Doctrine_Collection getInformativeWorkflow()   Returns the current record's "InformativeWorkflow" collection
  * @method Doctrine_Collection getMySavedSearches()       Returns the current record's "MySavedSearches" collection
  * @method Doctrine_Collection getMyWidgets()             Returns the current record's "MyWidgets" collection
  * @method Doctrine_Collection getPreferences()           Returns the current record's "Preferences" collection
+ * @method Doctrine_Collection getLoanRights()            Returns the current record's "LoanRights" collection
+ * @method Doctrine_Collection getLoanStatus()            Returns the current record's "LoanStatus" collection
  * @method Users               setId()                    Sets the current record's "id" value
  * @method Users               setIsPhysical()            Sets the current record's "is_physical" value
  * @method Users               setSubType()               Sets the current record's "sub_type" value
@@ -87,9 +93,12 @@
  * @method Users               setCollections()           Sets the current record's "Collections" collection
  * @method Users               setCollectionsRights()     Sets the current record's "CollectionsRights" collection
  * @method Users               setUsersTracking()         Sets the current record's "UsersTracking" collection
+ * @method Users               setInformativeWorkflow()   Sets the current record's "InformativeWorkflow" collection
  * @method Users               setMySavedSearches()       Sets the current record's "MySavedSearches" collection
  * @method Users               setMyWidgets()             Sets the current record's "MyWidgets" collection
  * @method Users               setPreferences()           Sets the current record's "Preferences" collection
+ * @method Users               setLoanRights()            Sets the current record's "LoanRights" collection
+ * @method Users               setLoanStatus()            Sets the current record's "LoanStatus" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -206,6 +215,10 @@ abstract class BaseUsers extends sfDoctrineRecord
              'local' => 'id',
              'foreign' => 'user_ref'));
 
+        $this->hasMany('InformativeWorkflow', array(
+             'local' => 'id',
+             'foreign' => 'user_ref'));
+
         $this->hasMany('MySavedSearches', array(
              'local' => 'id',
              'foreign' => 'user_ref'));
@@ -215,6 +228,14 @@ abstract class BaseUsers extends sfDoctrineRecord
              'foreign' => 'user_ref'));
 
         $this->hasMany('Preferences', array(
+             'local' => 'id',
+             'foreign' => 'user_ref'));
+
+        $this->hasMany('LoanRights', array(
+             'local' => 'id',
+             'foreign' => 'user_ref'));
+
+        $this->hasMany('LoanStatus', array(
              'local' => 'id',
              'foreign' => 'user_ref'));
     }

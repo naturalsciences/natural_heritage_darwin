@@ -96,8 +96,7 @@
     $.catalogue = function(el, options){
         // To avoid scope issues, use 'base' instead of 'this'
         // to reference this class from internal events and functions.
-        var base = this;
-        
+        var base = this;        
         // Access to jQuery and DOM versions of element
         base.$el = $(el);
         base.el = el;
@@ -116,6 +115,8 @@
         {
           event.preventDefault();
           var last_position = $('body').scrollTop() ;
+          var style = 'dialog-modal-edit';
+          if($(this).attr('information')) style = 'dialog-modal-view' ;           
           scroll(0,0);
           $(this).qtip({
             id: 'modal',
@@ -161,7 +162,7 @@
                 api.destroy();
               }
             },
-            style: 'ui-tooltip-light ui-tooltip-rounded dialog-modal-edit'
+            style: 'ui-tooltip-light ui-tooltip-rounded '+style
           },event);
         };
 

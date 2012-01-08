@@ -2,11 +2,14 @@
   <thead style="<?php echo ($form['Insurances']->count() || $form['newInsurance']->count())?'':'display: none;';?>">
     <tr>
       <th>
-        <?php echo __('Year'); ?>
-      </th>
+        <?php echo __('Date from'); ?>
+      </th>      
+      <th>
+        <?php echo __('Date to'); ?>
+      </th>   
       <th>
         <?php echo __('Value'); ?>
-      </th>
+      </th>         
       <th>
         <?php echo __('Currency'); ?>
       </th>
@@ -26,7 +29,7 @@
     <?php endforeach;?>
   <tfoot>
     <tr>
-      <td colspan='4'>
+      <td colspan='5'>
         <div class="add_code">
           <a href="<?php echo url_for('parts/addInsurance'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_insurance"><?php echo __('Add Insurance');?></a>
         </div>

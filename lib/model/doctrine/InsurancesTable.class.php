@@ -16,7 +16,7 @@ class InsurancesTable extends DarwinTable
     $q = Doctrine_Query::create()
 	 ->from('Insurances i')
          ->leftJoin('i.People p')
-	 ->orderBy('i.insurance_year DESC');
+	 ->orderBy('i.date_from DESC');
     $q = $this->addCatalogueReferences($q, $table_name, $record_id, 'i', true);
     return $q->execute();
   }
@@ -50,7 +50,7 @@ class InsurancesTable extends DarwinTable
          from('Insurances')->
          where('referenced_relation = ?', $table)->
          andWhereIn('record_id', $partIds)->
-         orderBy('record_id, insurance_year ASC');
+         orderBy('record_id, date_from ASC');
     return $q->execute();
   }
 

@@ -47,7 +47,7 @@ class RegisterForm extends BaseUsersForm
 
     /* Captcha */
     
-    $this->widgetSchema['captcha'] = new sfWidgetFormReCaptcha(array('public_key' => sfConfig::get('app_recaptcha_public_key')));
+    $this->widgetSchema['captcha'] = new sfWidgetFormReCaptcha(array('public_key' => sfConfig::get('dw_recaptcha_public_key')));
  
     /* Validators */
 
@@ -68,9 +68,9 @@ class RegisterForm extends BaseUsersForm
                                                                          'invalid' => 'The value provided for name is invalid'
                                                                         )
                                                                  );
-    $this->validatorSchema['captcha'] = new sfValidatorReCaptcha(array('private_key' => sfConfig::get('app_recaptcha_private_key'),
-                                                                       'proxy_host' => sfConfig::get('app_recaptcha_proxy_host'),
-                                                                       'proxy_port' => sfConfig::get('app_recaptcha_proxy_port'),
+    $this->validatorSchema['captcha'] = new sfValidatorReCaptcha(array('private_key' => sfConfig::get('dw_recaptcha_private_key'),
+                                                                       'proxy_host' => sfConfig::get('dw_recaptcha_proxy_host'),
+                                                                       'proxy_port' => sfConfig::get('dw_recaptcha_proxy_port'),
                                                                       ));
 
     /* Labels */
