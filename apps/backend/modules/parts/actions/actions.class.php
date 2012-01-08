@@ -297,9 +297,7 @@ class partsActions extends DarwinActions
 
   public function executeChoosePinned(sfWebRequest $request)
   {
-    /** @TODO: change this when flat_less branch is merged */
     $items_ids = $this->getUser()->getAllPinned('part');
-    $this->items = Doctrine::getTable('SpecimenSearch')->getByMultipleIds($items_ids, 'part', $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
-    /** END TODO */
+    $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids,'part', $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
   }
 }
