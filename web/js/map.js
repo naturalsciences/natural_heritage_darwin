@@ -42,7 +42,10 @@ function initMap(mapId)
   mapnik = new OpenLayers.Layer.OSM();
   mapnik.addOptions({wrapDateLine:true});
   map.addLayer(mapnik);
-
+  
+  vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", { displayInLayerSwitcher: false, projection: new OpenLayers.Projection("EPSG:4326")});
+  map.addLayers([vectorLayer]);
+    
   if(with_gmap) {
     // the SATELLITE layer has all 22 zoom level, so we add it first to
     // become the internal base layer that determines the zoom levels of the
@@ -63,8 +66,7 @@ function initMap(mapId)
         "Google Hybrid",
         {sphericalMercator: true,type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false}
     );
-    vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", { displayInLayerSwitcher: false, projection: new OpenLayers.Projection("EPSG:4326")});
-    map.addLayers([gsat, gphy, gmap, ghyb,vectorLayer]);
+    map.addLayers([gsat, gphy, gmap, ghyb]);
   }
   
 
