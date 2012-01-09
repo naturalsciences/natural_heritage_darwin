@@ -1,4 +1,4 @@
-<tr>
+<tr class="line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
   <td><?php echo $form->renderError();?></td>
   <td>
       <?php echo image_tag('info.png',"title=info class=extd_info");?>
@@ -42,6 +42,22 @@
     });
 
     bind_ext_line('<?php echo $form->getparent()->getName();?>',  '<?php echo $form->getName();?>')
+
+
+    $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> [id$=\"_ig_ref_check\"]").change(function(){
+      if($(this).val()) 
+      {
+        $.ajax({
+          type: 'POST',
+          url: "<?php echo url_for('igs/addNew') ?>",
+          data: "num=" + $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> [id$=\"_ig_ref_name\"]").val(),
+          success: function(html){
+            $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> li#toggledMsg").hide();
+            $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> [id$=\"_ig_ref\"]").val(html) ;
+          }
+        });  
+      }
+    }) ;
   });
 </script>
 

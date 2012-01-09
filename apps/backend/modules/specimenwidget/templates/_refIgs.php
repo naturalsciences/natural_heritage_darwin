@@ -10,7 +10,7 @@ $('#specimen_ig_ref_check').change(function(){
       url: "<?php echo url_for('igs/addNew') ?>",
       data: "num="+$('#specimen_ig_ref_name').val(),
       success: function(html){
-        $('li#toggledMsg').attr('style','display:none') ;
+        $('li#toggledMsg').hide();
         $('#specimen_ig_ref').val(html) ;
       }
     });  
