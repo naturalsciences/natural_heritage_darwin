@@ -200,6 +200,14 @@ CREATE TRIGGER trg_clr_referenceRecord_specimensaccompanying AFTER DELETE
 	ON specimens_accompanying FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
+CREATE TRIGGER trg_clr_referenceRecord_loans AFTER DELETE
+        ON loans FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE
+        ON loan_items FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
+
 /**** BEGIN _TS *****/
 
 CREATE TRIGGER trg_cpy_toFullText_comments BEFORE INSERT OR UPDATE
