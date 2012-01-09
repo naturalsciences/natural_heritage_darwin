@@ -45,6 +45,7 @@
                 </li>
 
                 <li><?php echo link_to(__('Collections'),'collection/index');?></li>
+                <li><?php echo link_to(__('Loans'),'loan/index');?></li>
             </ul>
         </li>
         <?php if($sf_user->isAtLeast(Users::ENCODER)) : ?>
@@ -71,6 +72,7 @@
                 <li><?php echo link_to(__('Specimens'),'specimen/new');?></li>
                 <?php if($sf_user->isAtLeast(Users::MANAGER)) : ?>
                 <li><?php echo link_to(__('Collections'),'collection/new');?></li>
+                <li><?php echo link_to(__('Loans'),'loan/new');?></li>
                 <?php endif ?>
             </ul>
         </li>
