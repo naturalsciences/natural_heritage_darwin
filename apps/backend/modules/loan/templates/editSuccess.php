@@ -8,7 +8,7 @@
     </div>
  <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,
-	'category' => 'loans',
+	'category' => 'loanwidget',
 	'columns' => 1,
 	'options' => array('eid' => $form->getObject()->getId(), 'table' => 'loans')
 	)); ?>

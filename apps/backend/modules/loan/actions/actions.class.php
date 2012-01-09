@@ -10,7 +10,7 @@
  */
 class loanActions extends DarwinActions
 {
-  protected $widgetCategory = 'loans';
+  protected $widgetCategory = 'loan_widget';
 
   public function executeIndex(sfWebRequest $request)
   {
@@ -79,6 +79,7 @@ class loanActions extends DarwinActions
     if ($duplic)
     {
     }
+    $this->loadWidgets();    
   }
 
 
