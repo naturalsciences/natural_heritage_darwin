@@ -2893,7 +2893,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER
+CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER IMMUTABLE
 AS $$
 DECLARE v_int_value INTEGER DEFAULT 0;
 BEGIN
