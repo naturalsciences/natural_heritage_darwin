@@ -88,6 +88,7 @@ class loanActions extends DarwinActions
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
     $this->form = new LoansForm($loan);
+    $this->setTemplate('new') ;
     $this->loadWidgets();
   }
 
