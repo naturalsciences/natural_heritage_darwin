@@ -194,9 +194,7 @@ DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
 CREATE INDEX idx_labeling_ig_num_coalesced ON darwin_flat(coalesce(ig_num, '-'));
 CREATE INDEX idx_labeling_ig_num_numeric ON darwin_flat(convert_to_integer(coalesce(ig_num, '-')));
 
-drop view if exists "public"."lenglet_tickets";
-
-create or replace view "public"."lenglet_tickets" as
+create or replace view "public"."labeling" as
 select df.part_ref as unique_id,
        df.collection_ref as collection,
        df.collection_path as collection_path, 
@@ -217,7 +215,10 @@ select df.part_ref as unique_id,
        labeling_individual_stage_for_indexation(df.individual_stage) as stage,
        CAST(array_to_string(labeling_code_for_indexation(part_ref), ';') AS varchar) as lenglet_code,
        labeling_code_for_indexation(df.part_ref) as lenglet_code_array,
-       df.taxon_name as taxa_name,
+       df.taxon_ref as taxon_ref,
+       df.taxon_name as taxon_name,
+       df.taxon_name_indexed as taxon_name_indexed,
+       df.taxon_path as taxon_path,
        (select fam.name 
         from (select x.id::integer as id from
                  (select regexp_split_to_table(path, '/') as id 
@@ -253,12 +254,6 @@ select df.part_ref as unique_id,
               where cp.people_type = 'collector' and cp.referenced_relation = 'specimens' and cp.record_id = df.spec_ref order by cp.order_by
              ) as x
        )::varchar as collectors,
-       /*(select 'Donn.: ' || array_to_string(array_agg(people_list), ' - ') 
-        from (select trim(formated_name) as people_list 
-              from catalogue_people as cp inner join people as peo on cp.people_ref = peo.id 
-              where cp.people_type = 'donator' and cp.referenced_relation = 'specimens' and cp.record_id = df.spec_ref order by cp.order_by
-             ) as x
-       )::varchar as donator,*/
        (select 'Dét.: ' || array_to_string(array_agg(people_list), ' - ') 
         from (select trim(formated_name) as people_list 
               from (catalogue_people as cp inner join people as peo on cp.people_ref = peo.id) inner join identifications as ident on cp.record_id = ident.id and cp.referenced_relation = 'identifications' and cp.people_type = 'identifier' 
@@ -269,59 +264,8 @@ select df.part_ref as unique_id,
        case when df.part_count_min <> df.part_count_max and df.part_count_min is not null and df.part_count_max is not null then 'Count: ' || df.part_count_min || ' - ' || df.part_count_max else case when df.part_count_min is not null then 'Count: ' || df.part_count_min else '' end end as specimen_number,
        case when exists(select 1 from comments where (referenced_relation = 'specimens' and record_id = df.spec_ref) or (referenced_relation = 'specimen_parts' and record_id = df.part_ref)) then 'Comm.?: Y' else 'Comm.?: N' end as comments
 from darwin_flat as df inner join gtu on df.gtu_ref = gtu.id
+
 where part_ref is not null;
 
-ALTER VIEW "public"."lenglet_tickets" OWNER TO darwin2;
-GRANT SELECT ON "public"."lenglet_tickets" TO d2viewer;
-
-select *
-from
-"public"."lenglet_tickets" as df
-where (collection = 1 or collection_path like '/1/%')
-  and case when coalesce('?InviteCollection','') = '' then true else collection in (select id from collections where name_indexed in (select fullToIndex(regexp_split_to_table('?InviteCollection', ';')))) end
-  and case when coalesce('?InviteCodeFrom', '') = '' and coalesce('?InviteCodeTo', '') = '' then true
-           else coalesce('?InviteCodeFrom', '') != ''
-            and (lenglet_code_array && (string_to_array(coalesce(translate('?InviteCodeFrom', E',/\\#', ';;;;'),''),';'))::varchar[]
-                 or
-                 case 
-                   when convert_to_integer(coalesce('?InviteCodeFrom','')) != 0 and convert_to_integer(coalesce('?InviteCodeTo','')) != 0 then
-                     convert_to_integer(lenglet_code) between convert_to_integer(coalesce('?InviteCodeFrom','')) and convert_to_integer(coalesce('?InviteCodeTo',''))
-                   else
-                     false
-                 end 
-                )
-           end
-  and case when coalesce('?InvitePays', '') = '' then true 
-           else countries_array && (select array_agg(countriesList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InvitePays', E',/\\#.', ';;;; '),''),';')) as countriesList) as subqry)  
-           end
-  and case when coalesce('?InviteProvince', '') = '' then true 
-           else provinces_array && (select array_agg(provincesList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteProvince', E',/\\#.', ';;;; '),''),';')) as provincesList) as subqry)  
-           end
-  and case when coalesce('?InviteLocalisation', '') = '' then true 
-           else location_array && (select array_agg(locationsList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteLocalisation', E',/\\#.', ';;;; '),''),';')) as locationsList) as subqry)  
-           end
-  and case when coalesce('?InviteIGFrom', '') = '' and coalesce('?InviteIGTo', '') = '' then true
-      else df.ig_num != '-' and 
-           (df.ig_num in (select trim(regexp_split_to_table(coalesce('?InviteIGFrom',''), ';'))) 
-            or
-            case 
-              when convert_to_integer(coalesce('?InviteIGFrom','')) != 0 and convert_to_integer(coalesce('?InviteIGTo','')) != 0 then
-                convert_to_integer(df.ig_num) between convert_to_integer(coalesce('?InviteIGFrom','')) and convert_to_integer(coalesce('?InviteIGTo',''))
-              else
-                false
-            end 
-           )
-      end
-  and case when coalesce('?InviteItem', '') = '' then true
-           else df.part && (select array_agg(itemList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteItem', E',/\\#.', ';;;; '),''),';')) as itemList) as subqry)
-           end
-  and case when coalesce('?InviteType', '') = '' then true
-           else df.type && (select array_agg(typeList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteType', E',/\\#.', ';;;; '),''),';')) as typeList) as subqry)
-           end
-  and case when coalesce('?InviteSex', '') = '' then true
-           else df.sex && (select array_agg(sexList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteSex', E',/\\#.', ';;;; '),''),';')) as sexList) as subqry)
-           end
-  and case when coalesce('?InviteStage', '') = '' then true
-           else df.stage && (select array_agg(stageList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteStage', E',/\\#.', ';;;; '),''),';')) as stageList) as subqry)
-           end
-;
+ALTER VIEW "public"."labeling" OWNER TO darwin2;
+GRANT SELECT ON "public"."labeling" TO d2viewer;
