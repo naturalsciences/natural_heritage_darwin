@@ -1,6 +1,6 @@
 select *
 from
-"public"."labeling" as df 
+"public"."labeling"  
 where (collection = 1 or collection_path like '/1/%')
   and case when coalesce('?InviteCollection','') = '' then true else collection in (select id from collections where name_indexed in (select fullToIndex(regexp_split_to_table('?InviteCollection', ';')))) end
   and case when coalesce('?InviteCodeFrom', '') = '' and coalesce('?InviteCodeTo', '') = '' then true
@@ -25,34 +25,34 @@ where (collection = 1 or collection_path like '/1/%')
            else location_array && (select array_agg(locationsList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteLocalisation', E',/\\#.', ';;;; '),''),';')) as locationsList) as subqry)  
            end
   and case when coalesce('?InviteIGFrom', '') = '' and coalesce('?InviteIGTo', '') = '' then true
-      else df.ig_num != '-' and 
-           (df.ig_num in (select trim(regexp_split_to_table(coalesce('?InviteIGFrom',''), ';'))) 
+      else labeling.ig_num != '-' and 
+           (labeling.ig_num in (select trim(regexp_split_to_table(coalesce('?InviteIGFrom',''), ';'))) 
             or
             case 
               when convert_to_integer(coalesce('?InviteIGFrom','')) != 0 and convert_to_integer(coalesce('?InviteIGTo','')) != 0 then
-                convert_to_integer(df.ig_num) between convert_to_integer(coalesce('?InviteIGFrom','')) and convert_to_integer(coalesce('?InviteIGTo',''))
+                convert_to_integer(labeling.ig_num) between convert_to_integer(coalesce('?InviteIGFrom','')) and convert_to_integer(coalesce('?InviteIGTo',''))
               else
                 false
             end 
            )
       end
   and case when coalesce('?InviteItem', '') = '' then true
-           else df.part && (select array_agg(itemList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteItem', E',/\\#.', ';;;; '),''),';')) as itemList) as subqry)
+           else labeling.part && (select array_agg(itemList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteItem', E',/\\#.', ';;;; '),''),';')) as itemList) as subqry)
            end
   and case when coalesce('?InviteType', '') = '' then true
-           else df.type && (select array_agg(typeList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteType', E',/\\#.', ';;;; '),''),';')) as typeList) as subqry)
+           else labeling.type && (select array_agg(typeList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteType', E',/\\#.', ';;;; '),''),';')) as typeList) as subqry)
            end
   and case when coalesce('?InviteSex', '') = '' then true
-           else df.sex && (select array_agg(sexList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteSex', E',/\\#.', ';;;; '),''),';')) as sexList) as subqry)
+           else labeling.sex && (select array_agg(sexList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteSex', E',/\\#.', ';;;; '),''),';')) as sexList) as subqry)
            end
   and case when coalesce('?InviteStage', '') = '' then true
-           else df.stage && (select array_agg(stageList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteStage', E',/\\#.', ';;;; '),''),';')) as stageList) as subqry)
+           else labeling.stage && (select array_agg(stageList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteStage', E',/\\#.', ';;;; '),''),';')) as stageList) as subqry)
            end
   and case when coalesce('?InviteHigherTaxa', '') = '' then true
-      else df.taxon_path like (select path || id || '%' from taxonomy where name = '?InviteHigherTaxa')
+      else labeling.taxon_path like (select path || id || '%' from taxonomy where name = '?InviteHigherTaxa')
       end
   and case when trim(translate(coalesce('?InviteTaxa', ''), E'.,;&|\\/#()', '          ')) = '' then true
-      else df.taxon_name_indexed @@ to_tsquery('simple', translate('?InviteTaxa', E'.,;&|\\/#() ', '  |&||||  &'))
+      else labeling.taxon_name_indexed @@ to_tsquery('simple', translate('?InviteTaxa', E'.,;&|\\/#() ', '  |&||||  &'))
       end
   limit convert_to_integer('?InviteLimit')
 ;
