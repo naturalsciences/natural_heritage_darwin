@@ -25,7 +25,7 @@
   </td>
   <td>
     <?php if(! $lineObj->isNew()):?>
-      <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),'loan/itemEdit?id='.$lineObj->getId());?>
+      <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),'loanitem/edit?id='.$lineObj->getId());?>
     <?php endif;?>
   </td>
 
