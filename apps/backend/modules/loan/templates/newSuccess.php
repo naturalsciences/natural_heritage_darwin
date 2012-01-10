@@ -11,7 +11,6 @@
         </ul>
       </div>   
       <?php echo form_tag('loan/create', array('class'=>'edition loan_form'));?>
-        <input type="hidden" name="sf_method" value="put"/>
         <div>
           <?php if($form->hasGlobalErrors()):?>
             <ul class="loan_error_list">
