@@ -19,15 +19,7 @@ $$ LANGUAGE plpgsql;
 create or replace function labeling_country_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
 select array_agg(tags_list)
-from (select CAST(lower(trim(regexp_split_to_table(translate(tag_value, 
-                                                             E',/\\#âãäåāăąÁÂÃÄÅĀĂĄèééêëēĕėęěĒĔĖĘĚìíîïìĩīĭÌÍÎÏÌĨĪĬóôõöōŏőÒÓÔÕÖŌŎŐùúûüũūŭůÙÚÛÜŨŪŬŮñÐşŞ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßýþÿ', 
-                                                              ';;;;aaaaaaaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiiiiiiooooooooooooooouuuuuuuuuuuuuuuundss  cL YS sCa  -R     Zu .z   EeY?AAAAAAACEEEEIIII NOOOOOxOUUUUYTByty'
-                                                            ), 
-                                                   ';'
-                                                  )
-                            )
-                       ) AS varchar
-                 ) as tags_list 
+from (select lineToTagRows(tag_value) as tags_list 
       from tag_groups as tg 
       where tg.gtu_ref = $1 and tg.sub_group_name = 'country'
      ) as x;
@@ -35,11 +27,8 @@ $$;
 
 create or replace function labeling_country_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
 $$
-select array_to_string(array_agg(tags_list),';')
-from (select CAST(trim(regexp_split_to_table(tag_value,';')) AS varchar) as tags_list 
-      from tag_groups as tg 
-      where tg.gtu_ref = $1 and tg.sub_group_name = 'country'
-     ) as x;
+select array_to_string(x.tags_list,';')
+from (select labeling_country_for_indexation_array($1) as tags_list) as x;
 $$;
 
 GRANT EXECUTE ON FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) TO d2viewer;
@@ -55,15 +44,7 @@ CREATE INDEX idx_labeling_country ON darwin_flat USING gin (labeling_country_for
 create or replace function labeling_province_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
 select array_agg(tags_list)
-from (select CAST(lower(trim(regexp_split_to_table(translate(tag_value, 
-                                                             E',/\\#âãäåāăąÁÂÃÄÅĀĂĄèééêëēĕėęěĒĔĖĘĚìíîïìĩīĭÌÍÎÏÌĨĪĬóôõöōŏőÒÓÔÕÖŌŎŐùúûüũūŭůÙÚÛÜŨŪŬŮñÐşŞ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßýþÿ', 
-                                                              ';;;;aaaaaaaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiiiiiiooooooooooooooouuuuuuuuuuuuuuuundss  cL YS sCa  -R     Zu .z   EeY?AAAAAAACEEEEIIII NOOOOOxOUUUUYTByty'
-                                                            ), 
-                                                   ';'
-                                                  )
-                            )
-                       ) AS varchar
-                 ) as tags_list 
+from (select lineToTagRows(tag_value) as tags_list 
       from tag_groups as tg 
       where tg.gtu_ref = $1 and tg.sub_group_name = 'province'
      ) as x;
@@ -71,11 +52,8 @@ $$;
 
 create or replace function labeling_province_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
 $$
-select array_to_string(array_agg(tags_list),';')
-from (select CAST(trim(regexp_split_to_table(tag_value,';')) AS varchar) as tags_list 
-      from tag_groups as tg 
-      where tg.gtu_ref = $1 and tg.sub_group_name = 'province'
-     ) as x;
+select array_to_string(x.tags_list,';')
+from (select labeling_province_for_indexation_array($1) as tags_list) as x;
 $$;
 
 GRANT EXECUTE ON FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) TO d2viewer;
@@ -91,15 +69,7 @@ CREATE INDEX idx_labeling_province ON darwin_flat USING gin (labeling_province_f
 create or replace function labeling_other_gtu_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
 select array_agg(tags_list)
-from (select CAST(lower(trim(regexp_split_to_table(translate(tag_value, 
-                                                             E',/\\#âãäåāăąÁÂÃÄÅĀĂĄèééêëēĕėęěĒĔĖĘĚìíîïìĩīĭÌÍÎÏÌĨĪĬóôõöōŏőÒÓÔÕÖŌŎŐùúûüũūŭůÙÚÛÜŨŪŬŮñÐşŞ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßýþÿ', 
-                                                              ';;;;aaaaaaaaaaaaaaaeeeeeeeeeeeeeeeiiiiiiiiiiiiiiiiooooooooooooooouuuuuuuuuuuuuuuundss  cL YS sCa  -R     Zu .z   EeY?AAAAAAACEEEEIIII NOOOOOxOUUUUYTByty'
-                                                            ), 
-                                                   ';'
-                                                  )
-                            )
-                       ) AS varchar
-                 ) as tags_list 
+from (select lineToTagRows(tag_value) as tags_list 
       from tag_groups as tg 
       where tg.gtu_ref = $1 and tg.sub_group_name not in ('country','province')
      ) as x;
@@ -107,11 +77,8 @@ $$;
 
 create or replace function labeling_other_gtu_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
 $$
-select array_to_string(array_agg(tags_list),';')
-from (select CAST(trim(regexp_split_to_table(tag_value,';')) AS varchar) as tags_list 
-      from tag_groups as tg 
-      where tg.gtu_ref = $1 and tg.sub_group_name not in ('country','province')
-     ) as x;
+select array_to_string(x.tags_list,';')
+from (select labeling_other_gtu_for_indexation_array($1) as tags_list) as x;
 $$;
 
 GRANT EXECUTE ON FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) TO d2viewer;
@@ -136,16 +103,30 @@ from (select trim(coalesce(code_prefix, '') || coalesce(code_prefix_separator, '
      ) as x;
 $$;
 
+create or replace function labeling_code_num_for_indexation(in part_ref specimen_parts.id%TYPE) returns codes.code_num%TYPE language SQL IMMUTABLE as
+$$
+select code_num
+from codes
+where referenced_relation = 'specimen_parts'
+  and record_id = $1
+  and code_category = 'main'
+  and code_prefix != 'RBINS'
+limit 1;
+$$;
+
 GRANT EXECUTE ON FUNCTION labeling_code_for_indexation(specimen_parts.id%TYPE) TO d2viewer;
 GRANT ALL ON FUNCTION labeling_code_for_indexation(specimen_parts.id%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_code_for_indexation(specimen_parts.id%TYPE) OWNER TO darwin2;
+GRANT EXECUTE ON FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) TO d2viewer;
+GRANT ALL ON FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) TO cebmpad, darwin2;
+ALTER FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) OWNER TO darwin2;
 
 DROP INDEX IF EXISTS idx_labeling_code;
 DROP INDEX IF EXISTS idx_labeling_code_varchar;
 DROP INDEX IF EXISTS idx_labeling_code_numeric;
 CREATE INDEX idx_labeling_code ON darwin_flat USING gin (labeling_code_for_indexation(part_ref)) WHERE part_ref IS NOT NULL;
 CREATE INDEX idx_labeling_code_varchar ON darwin_flat (CAST(array_to_string(labeling_code_for_indexation(part_ref), ';') AS varchar)) WHERE part_ref IS NOT NULL;
-CREATE INDEX idx_labeling_code_numeric ON darwin_flat (convert_to_integer(coalesce(CAST(array_to_string(labeling_code_for_indexation(part_ref), ';') AS varchar),''))) WHERE part_ref IS NOT NULL;
+CREATE INDEX idx_labeling_code_numeric ON darwin_flat (labeling_code_num_for_indexation(part_ref)) WHERE part_ref IS NOT NULL;
 
 create or replace function labeling_individual_type_for_indexation(in individual_type specimen_individuals.type%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
@@ -194,6 +175,8 @@ DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
 CREATE INDEX idx_labeling_ig_num_coalesced ON darwin_flat(coalesce(ig_num, '-'));
 CREATE INDEX idx_labeling_ig_num_numeric ON darwin_flat(convert_to_integer(coalesce(ig_num, '-')));
 
+drop view "public"."labeling";
+
 create or replace view "public"."labeling" as
 select df.part_ref as unique_id,
        df.collection_ref as collection,
@@ -213,8 +196,9 @@ select df.part_ref as unique_id,
        labeling_individual_type_for_indexation(df.individual_type) as type,
        labeling_individual_sex_for_indexation(df.individual_sex) as sex,
        labeling_individual_stage_for_indexation(df.individual_stage) as stage,
-       CAST(array_to_string(labeling_code_for_indexation(part_ref), ';') AS varchar) as lenglet_code,
-       labeling_code_for_indexation(df.part_ref) as lenglet_code_array,
+       CAST(array_to_string(labeling_code_for_indexation(part_ref), ';') AS varchar) as code,
+       labeling_code_num_for_indexation(part_ref) as code_num,
+       labeling_code_for_indexation(df.part_ref) as code_array,
        df.taxon_ref as taxon_ref,
        df.taxon_name as taxon_name,
        df.taxon_name_indexed as taxon_name_indexed,

@@ -5,11 +5,11 @@ where (collection = 1 or collection_path like '/1/%')
   and case when coalesce('?InviteCollection','') = '' then true else collection in (select id from collections where name_indexed in (select fullToIndex(regexp_split_to_table('?InviteCollection', ';')))) end
   and case when coalesce('?InviteCodeFrom', '') = '' and coalesce('?InviteCodeTo', '') = '' then true
            else coalesce('?InviteCodeFrom', '') != ''
-            and (lenglet_code_array && (string_to_array(coalesce(translate('?InviteCodeFrom', E',/\\#', ';;;;'),''),';'))::varchar[]
+            and (code_array && (string_to_array(coalesce(translate('?InviteCodeFrom', E',/\\#', ';;;;'),''),';'))::varchar[]
                  or
                  case 
                    when convert_to_integer(coalesce('?InviteCodeFrom','')) != 0 and convert_to_integer(coalesce('?InviteCodeTo','')) != 0 then
-                     convert_to_integer(lenglet_code) between convert_to_integer(coalesce('?InviteCodeFrom','')) and convert_to_integer(coalesce('?InviteCodeTo',''))
+                     code_num between convert_to_integer(coalesce('?InviteCodeFrom','')) and convert_to_integer(coalesce('?InviteCodeTo',''))
                    else
                      false
                  end 
