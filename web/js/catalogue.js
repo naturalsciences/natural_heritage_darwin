@@ -41,7 +41,7 @@
               modal: {
                 on: true,
                 blur: false
-              },
+              }
             },
             hide: {
               event: 'close_modal',
@@ -53,7 +53,7 @@
               adjust:{
                 y: 250 // option set in case of the qtip become too big
               },         
-              target: $(document.body),
+              target: $(document.body)
             },
             style: ' ui-tooltip-rounded ui-tooltip-dialogue',
             events: {
@@ -134,7 +134,7 @@
               adjust:{
                 y: 250 // option set in case of the qtip become too big
               },         
-              target: $(document.body),
+              target: $(document.body)
             },
             
             show: {
@@ -145,7 +145,7 @@
               modal: {
                 on: true,
                 blur: false
-              },
+              }
             },
             hide: {
               event: 'close_modal',
