@@ -11,49 +11,51 @@ class ActorsForm extends CataloguePeopleForm
 {
   public function configure()
   {
+    unset($this['referenced_relation']);
+    $this->widgetSchema['people_type'] = new sfWidgetFormInputHidden();    
+    
     $this->widgetSchema['people_ref'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required'=>false));    
+    
+    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
+    $this->validatorSchema['record_id'] = new sfValidatorInteger();
+    
+    $types = CataloguePeople::getTypes() ;
+    
+    $this->widgetSchema['order_by'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['order_by'] = new sfValidatorInteger();
+    
+    $this->widgetSchema['people_sub_type'] = new sfWidgetFormChoice(array(
+                                                       'choices'=>$types,
+                                                       'expanded'=> true,
+                                                       'multiple' => true,
+                                                       'renderer_options' => 
+                                                       array('formatter' => array('ActorsForm', 'RenderInLine'))
+                                                       ));
 
-    $types = array(
-       'sender' => $this->getI18N()->__('Sender'),
-      'receiver' => $this->getI18N()->__('Receiver'),
-      );
-
-    if($this->getObject()->getReferencedRelation()=='loans')
+    $this->validatorSchema['people_sub_type'] = new sfValidatorChoice(array('choices'=>array_keys($types),
+                                                                            'required' => true,
+                                                                            'multiple' => true
+                            ),array('required' => 'Please choose at least one role for the person below'));
+ 
+    $people_id= $this->getObject()->getPeopleRef() ;
+    if($people_id)
     {
-      $types = array('member' => $this->getI18N()->__('Members'));
-      $this->getObject()->setPeopleType('member');
+      $people = Doctrine::getTable('People')->find($this->getObject()->getPeopleRef()) ;
+      $this->widgetSchema['people_ref']->setLabel($people->getFormatedName()) ;
     }
-
-    $this->widgetSchema['people_type'] = new sfWidgetFormChoice(array('choices'=>$types));
-
-    $this->validatorSchema['people_type'] = new sfValidatorChoice(array('choices'=>array_keys($types)));
-
-    $this->widgetSchema['people_sub_type'] = new widgetFormSelectComplete(array(
-        'model' => 'CataloguePeople',
-        'change_label' => 'Pick a type in the list',
-        'add_label' => 'Add another type',
-    ));
-
-    if($this->getObject()->isNew() && $this->getObject()->getPeopleType()=="author")
-      $this->widgetSchema['people_sub_type']->setDefault('Main Author');
-    else
-      $this->widgetSchema['people_sub_type']->setDefault('General');
-    $this->widgetSchema['people_sub_type']->setOption('forced_choices', Doctrine::getTable('CataloguePeople')->getDistinctSubType($this->getObject()->getPeopleType()) );
-
-    $this->widgetSchema->setLabels(array('people_type' => $this->getI18N()->__('Type'),
-                                         'people_sub_type' => $this->getI18N()->__('Sub-Type'),
-                                         'people_ref' => $this->getI18N()->__('Associated'),
-                                        )
-                                  );
-    $this->widgetSchema->setHelps(array('people_type' => $this->getI18N()->__('Type'),
-                                         'people_sub_type' => $this->getI18N()->__('Sub-Type'),
-                                         'people_ref' => $this->getI18N()->__('Associated'),
-                                        )
-                                  );
+    else 
+    {
+      $this->widgetSchema['people_ref']->setAttribute('class','hidden_record');
+      $this->validatorSchema['people_sub_type']->addOption('required', false) ;
+    }                            
   }
   
-  public function forceSubType()
+  public static function RenderInLine($widget, $inputs) 
   {
-    $this->widgetSchema['people_sub_type']->setOption('forced_choices', Doctrine::getTable('CataloguePeople')->getDistinctSubType($this->getObject()->getPeopleType()) );
-  }
+   $result = '';
+   foreach ($inputs as $input) 
+      $result .= '<td>' . $input ['input'] . '</td>';
+   return $result;
+  }  
 }

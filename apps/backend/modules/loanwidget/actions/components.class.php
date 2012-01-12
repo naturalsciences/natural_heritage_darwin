@@ -57,9 +57,11 @@ class loanwidgetComponents extends sfComponents
   public function executeActors()
   {
     $this->defineForm();
-  //  if(!isset($this->form['newActors']))
-  //    $this->form->loadEmbedActors();    
-  }
+    if(!isset($this->form['newActorsSender']))
+      $this->form->loadEmbedActorsSender();    
+    if(!isset($this->form['newActorsReceiver']))
+      $this->form->loadEmbedActorsReceiver();          
+  }  
     
   public function executeRefRelatedFiles()
   { 

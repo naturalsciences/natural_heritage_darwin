@@ -21,6 +21,7 @@ class LoansForm extends BaseLoansForm
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
 
     $this->widgetSchema['name'] = new sfWidgetFormInput();
+    $this->validatorSchema['name'] = new sfValidatorString(array('required' => true)) ;
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
@@ -94,25 +95,25 @@ class LoansForm extends BaseLoansForm
                                         )
                                   );    
     $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->widgetSchema['actors'] = new sfWidgetFormInputHidden(array('default'=>1));    
+    $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
+    $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));        
     $this->widgetSchema['relatedfiles'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['users'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['insurances'] = new sfWidgetFormInputHidden(array('default'=>1));    
 
     $this->validatorSchema['comment'] = new sfValidatorPass();
-    $this->validatorSchema['actors'] = new sfValidatorPass();
+    $this->validatorSchema['sender'] = new sfValidatorPass();
+    $this->validatorSchema['receiver'] = new sfValidatorPass();    
     $this->validatorSchema['relatedfiles'] = new sfValidatorPass();
     $this->validatorSchema['users'] = new sfValidatorPass();
     $this->validatorSchema['insurances'] = new sfValidatorPass();               
   }
   
-  // NOT CREATED IN ACTION AGAIN  
-  public function addActorsSender($num, $obj=null)
+  public function addActorsSender($num, $people_ref, $order_by=0)
   {
       if(! isset($this['newActorsSender'])) $this->loadEmbedActorsSender();
-      $options = array('referenced_relation' => 'loans', 'record_id' => $this->getObject()->getId(), 'people_type' => 'sender');
-      if (!$obj) $val = new CataloguePeople();
-      else $val = $obj ;      
+      $options = array('referenced_relation' => 'loans', 'people_ref' => $people_ref, 'people_type' => 'sender', 'order_by' => $order_by);
+      $val = new CataloguePeople();
       $val->fromArray($options);
       $val->setRecordId($this->getObject()->getId());
       $form = new ActorsForm($val);
@@ -142,13 +143,11 @@ class LoansForm extends BaseLoansForm
     $this->embedForm('newActorsSender',$subForm);
   } 
 
-  // NOT CREATED IN ACTION AGAIN
-  public function addActorsReceiver($num, $obj=null)
+  public function addActorsReceiver($num, $people_ref, $order_by=0)
   {
       if(! isset($this['newActorsReceiver'])) $this->loadEmbedActorsReceiver();
-      $options = array('referenced_relation' => 'loans', 'record_id' => $this->getObject()->getId(), 'people_type' => 'receiver');
-      if (!$obj) $val = new CataloguePeople();
-      else $val = $obj ;      
+      $options = array('referenced_relation' => 'loans', 'people_ref' => $people_ref, 'people_type' => 'receiver', 'order_by' => $order_by);
+      $val = new CataloguePeople();     
       $val->fromArray($options);
       $val->setRecordId($this->getObject()->getId());
       $form = new ActorsForm($val);
@@ -211,41 +210,7 @@ class LoansForm extends BaseLoansForm
 
     $subForm = new sfForm();
     $this->embedForm('newComments',$subForm);
-    
-    /* Actors receiver form */
-    $subForm = new sfForm();
-    $this->embedForm('ActorsReceiver',$subForm);    
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('cataloguePeople')->findActors($this->getObject()->getId(),'receiver') as $key=>$vals)
-      {
-        $form = new ActorsForm($vals);
-        $this->embeddedForms['ActorsReceiver']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('ActorsReceiver', $this->embeddedForms['ActorsReceiver']);
-    }
-
-    $subForm = new sfForm();
-    $this->embedForm('newActorsReceiver',$subForm);  
-
-    /* Actors sender form */
-    $subForm = new sfForm();
-    $this->embedForm('ActorsSender',$subForm);    
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('cataloguePeople')->findActors($this->getObject()->getId(),'sender') as $key=>$vals)
-      {
-        $form = new ActorsForm($vals,array('table' => 'loans'));
-        $this->embeddedForms['ActorsSender']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('ActorsSender', $this->embeddedForms['ActorsSender']);
-    }
-
-    $subForm = new sfForm();
-    $this->embedForm('newActorsSender',$subForm);      
-  } 
+  }
   
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
@@ -293,7 +258,7 @@ class LoansForm extends BaseLoansForm
         {
           if (!isset($this['newActorsSender'][$key]))
           {
-            $this->addActorsSender($key);
+            $this->addActorsSender($key,$newVal['people_ref'],$newVal['order_by']);
           }
           $taintedValues['newActorsSender'][$key]['record_id'] = 0;
         }
@@ -316,7 +281,7 @@ class LoansForm extends BaseLoansForm
         {
           if (!isset($this['newActorsReceiver'][$key]))
           {
-            $this->addActorsReceiver($key);
+            $this->addActorsReceiver($key,$newVal['people_ref'],$newVal['order_by']);
           }
           $taintedValues['newActorsReceiver'][$key]['record_id'] = 0;
         }
@@ -354,7 +319,7 @@ class LoansForm extends BaseLoansForm
       $value = $this->getValue('newActorsSender');
       foreach($this->embeddedForms['newActorsSender']->getEmbeddedForms() as $name => $form)
       {
-        if(!isset($value[$name]['sender'] ))
+        if(!isset($value[$name]['people_ref'] ))
           unset($this->embeddedForms['newActorsSender'][$name]);
         else
         {
@@ -364,7 +329,7 @@ class LoansForm extends BaseLoansForm
       $value = $this->getValue('ActorsSender');
       foreach($this->embeddedForms['ActorsSender']->getEmbeddedForms() as $name => $form)
       {
-        if (!isset($value[$name]['sender'] ))
+        if (!isset($value[$name]['people_ref'] ))
         {
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsSender'][$name]);
@@ -376,7 +341,7 @@ class LoansForm extends BaseLoansForm
       $value = $this->getValue('newActorsReceiver');
       foreach($this->embeddedForms['newActorsReceiver']->getEmbeddedForms() as $name => $form)
       {
-        if(!isset($value[$name]['receiver'] ))
+        if(!isset($value[$name]['people_ref'] ))
           unset($this->embeddedForms['newActorsReceiver'][$name]);
         else
         {
@@ -386,7 +351,7 @@ class LoansForm extends BaseLoansForm
       $value = $this->getValue('ActorsReceiver');
       foreach($this->embeddedForms['ActorsReceiver']->getEmbeddedForms() as $name => $form)
       {
-        if (!isset($value[$name]['receiver'] ))
+        if (!isset($value[$name]['people_ref'] ))
         {
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsReceiver'][$name]);

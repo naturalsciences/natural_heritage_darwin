@@ -11,7 +11,31 @@ class CataloguePeople extends BaseCataloguePeople
 	                   'Publisher' => 'Publisher', 
 	                   'Corrector' => 'Corrector', 
 	                   'Related' => 'Related');
-
+	                   
+  // array of actors roles in loans module, 
+  //we use the key to have a number representing witch role someone have or not
+  private static $actor_role = array(
+    2 => 'Responsible',
+    4 => 'contact',
+    8 => 'Checker',
+    16 => 'Preparator',
+    32 => 'Accompanist',
+    64 => 'Transporter',
+    128 => 'Other'
+  ) ;
+  
+  public static function getTypes()
+  {
+    try{
+        $i18n_object = sfContext::getInstance()->getI18n();
+    }
+    catch( Exception $e )
+    {
+        return self::$actor_role;
+    }
+    return array_map(array($i18n_object, '__'), self::$actor_role);
+  } 
+  
   public static function getAuthorTypes()
   {
     try{
@@ -23,5 +47,34 @@ class CataloguePeople extends BaseCataloguePeople
     }
     return array_map(array($i18n_object, '__'), self::$auth_type);
   }  
- 
+  
+  public function setPeopleSubType($db_types)
+  {
+    $result = 0;
+    $types = self::getTypes();
+    if(is_array($db_types))
+    {
+      foreach($db_types as $value)
+      {
+        if(isset($types[$value]))
+        $result += $value;
+      }
+      $this->_set('people_sub_type', $result);
+    }
+    else
+      $this->_set('people_sub_type', $db_types);
+  } 
+  
+  public function getPeopleSubType()
+  {
+    $result = array();
+    foreach(self::getTypes() as $k => $value)
+    {
+      if($k & $this->_get('people_sub_type'))
+      {
+        $result[] = $k;
+      }
+    }
+    return $result;
+  }  
 }

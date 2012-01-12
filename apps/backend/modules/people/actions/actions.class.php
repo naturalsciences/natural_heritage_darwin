@@ -303,5 +303,10 @@ class peopleActions extends DarwinActions
     $this->form = new PeopleForm($this->people);
     $this->types = People::getTypes() ;
     $this->loadWidgets();
+  } 
+   
+  public function executeExtendedInfo(sfWebRequest $request)
+  {
+    $this->people = Doctrine::getTable('People')->findOneById($request->getParameter('id'));
   }  
 }
