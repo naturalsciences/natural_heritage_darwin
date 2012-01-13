@@ -56,4 +56,84 @@
 })(jQuery);
 
 
+(function($){
+  $.pager = function(el, options){
+    // To avoid scope issues, use 'base' instead of 'this'
+    // to reference this class from internal events and functions.
+    var base = this;
+    
+    // Access to jQuery and DOM versions of element
+    base.$el = $(el);
+    base.el = el;
+    
+    // Add a reverse reference to the DOM object
+    base.$el.data("pager", base);
+    
+    
+
+    base.submit_form = function submit_search_form(elem, url)
+    {
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: $(elem).closest('form').serialize(),
+        success: function(html) {
+          $(base.options['result_content']).html(html);
+          $(base.options['result_container']).slideDown();
+        }
+      });
+      $(base.options['result_content']).html('<img src="/images/loader.gif" />');
+    };
+    
+    base.change_nbr_per_page = function change_nbr_per_page(event)
+    {
+      event.preventDefault();
+      base.submit_form($(this), $(this).closest('form').attr('action'));
+    }
+
+    base.change_page = function change_page(event)
+    {
+      event.preventDefault();
+      base.submit_form($(this), $(this).attr("href"));
+
+      $(this).closest('form').attr('action', $(this).attr("href"))
+    };
+
+    base.change_sort = function change_sort(event)
+    {
+      event.preventDefault();
+      base.submit_form($(this), $(this).attr("href"));
+    };
+
+    base.init = function(){
+      base.options = $.extend({},$.pager.defaultOptions, options);
+      $(base.options['fld_rec_per_page']).bind('change', base.change_nbr_per_page);
+      $(base.options['pager_links']).bind('click', base.change_page);
+      $(base.options['sort_links']).bind('click', base.change_sort);
+    };
+    
+    base.init();
+  };
+  
+  
+  $.pager.defaultOptions = {
+    fld_rec_per_page: '.rec_per_page',
+    result_container: '.search_results',
+    result_content: '.search_results_content',
+    pager_links: 'a.sort',
+    sort_links: '.pager a'
+  };
+  
+  $.fn.pager = function(options){
+    return this.each(function(){
+      (new $.pager(this, options));
+    });
+  };
+
+})(jQuery);
+
+
+
+
+
 

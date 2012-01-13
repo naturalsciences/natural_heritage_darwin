@@ -13,53 +13,9 @@
 
   <script type="text/javascript">
   $(document).ready(function () {
-    $(".rec_per_page").change(function (event)
-    {
-      event.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: $(this).closest('form').attr('action'),
-        data: $(this).closest('form').serialize(),
-        success: function(html) {
-          $(".search_results_content").html(html);
-          $('.search_results').slideDown();
-        }
-      });
-      
-      $(".search_results_content").html('<img src="/images/loader.gif" />');
+    $('.paging_info').pager({
+    <?php if(isset($result_content)) echo "result_content: '$result_content'";?>
     });
-
-    $("a.sort").click(function (event)
-    {
-      event.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: $(this).attr("href"),
-        data: $(this).closest('form').serialize(),
-        success: function(html){
-          $(".search_results_content").html(html);
-          $('.search_results').slideDown();
-        }
-      });
-      $(".search_results_content").html('<img src="/images/loader.gif" />');
-      $(this).closest('form').attr('action', $(this).attr("href"))
-    });
-  
-    $(".pager a").click(function (event)
-    {
-      event.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: $(this).attr("href"),
-        data: $(this).closest('form').serialize(),
-        success: function(html){
-          $(".search_results_content").html(html);
-          $('.search_results').slideDown();
-        }
-      });
-      $(".search_results_content").html('<img src="/images/loader.gif" />');
-    });
-
   });
   </script>
 <?php endif; ?>

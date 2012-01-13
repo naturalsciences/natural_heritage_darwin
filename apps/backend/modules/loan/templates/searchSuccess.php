@@ -6,8 +6,9 @@
     else
       $orderSign = '<span class="order_sign_up">&nbsp;&#9650;</span>';
   ?>
+
   <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
-  <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>
+  <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'result_content' => '.loan_search_results_content')); ?>
   <div class="results_container">
     <table class="results <?php if($is_choose) echo 'is_choose';?>">
       <thead>
