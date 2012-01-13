@@ -68,6 +68,9 @@ class CataloguePeople extends BaseCataloguePeople
   public function getPeopleSubType()
   {
     $result = array();
+    // people_sub_type in loans is a binary witch allow multirole, see $actor_role for each possible roles
+    if($this->_get('referenced_relation') != "loans")
+      return ($this->_get('people_sub_type')) ;    
     foreach(self::getTypes() as $k => $value)
     {
       if($k & $this->_get('people_sub_type'))
