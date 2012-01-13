@@ -4,7 +4,7 @@
 
  $(document).ready(function () 
 {
-  $('body').choose_form({content_elem: '.loan_search_results_content' });
+  $('body').choose_form({content_elem: '.search_results_content' });
 });
 </script>
 <?php echo form_tag('loan/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'loans_filter'));?>
@@ -42,7 +42,7 @@
       </tbody>
     </table>
     <div class="search_results">
-      <div class="loan_search_results_content"> 
+      <div class="search_results_content"> 
       </div>
     </div> 
     <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('loan/new') ; ?>"><?php echo __('New');?></a></div>

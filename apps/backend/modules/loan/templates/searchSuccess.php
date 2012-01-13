@@ -8,7 +8,7 @@
   ?>
 
   <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
-  <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'result_content' => '.loan_search_results_content')); ?>
+  <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container' => '#loans_filter .results_container')); ?>
   <div class="results_container">
     <table class="results <?php if($is_choose) echo 'is_choose';?>">
       <thead>
@@ -16,16 +16,13 @@
           <th></th>
           <th class="hidden"></th>
           <th>
-            <a class="sort" href="<?php echo url_for($s_url.'&orderby=title'.( ($orderBy=='name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+            <a class="sort" href="<?php echo url_for($s_url.'&orderby=name'.( ($orderBy=='name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
               <?php echo __('Name');?>
-              <?php if($orderBy=='Name') echo $orderSign ?>
+              <?php if($orderBy=='name') echo $orderSign ?>
             </a>
           </th>
           <th>
-	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=status'.( ($orderBy=='status' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
 	      <?php echo __('Status');?>
-	      <?php if($orderBy=='family_name') echo $orderSign ?>
-	    </a>
           </th>
           <th>
 	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=from_date'.( ($orderBy=='from_date' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">

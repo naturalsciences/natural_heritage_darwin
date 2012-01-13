@@ -13,9 +13,8 @@
 
   <script type="text/javascript">
   $(document).ready(function () {
-    $('.paging_info').pager({
-    <?php if(isset($result_content)) echo "result_content: '$result_content'";?>
-    });
+    $("<?php if(! isset($container)) echo ".results_container"; else echo $container;?>").pager({});
+    console.log(" ATTACH TO <?php if(! isset($container)) echo ".results_container"; else echo $container;?>");
   });
   </script>
 <?php endif; ?>
