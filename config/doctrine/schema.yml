@@ -2123,6 +2123,7 @@ Loans:
         from_date: { type: string}
         to_date: { type: string}
         effective_to_date: { type: string}
+        extended_to_date: { type: string}
 
 LoanItems:
     columns:

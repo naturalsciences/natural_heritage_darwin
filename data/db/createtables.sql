@@ -2094,7 +2094,7 @@ create table loans (
   from_date date,
   to_date date,
   effective_to_date date,
-  
+  extended_to_date date,
   constraint pk_loans primary key (id)
   );
 
