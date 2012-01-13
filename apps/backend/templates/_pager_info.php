@@ -14,7 +14,6 @@
   <script type="text/javascript">
   $(document).ready(function () {
     $("<?php if(! isset($container)) echo ".results_container"; else echo $container;?>").pager({});
-    console.log(" ATTACH TO <?php if(! isset($container)) echo ".results_container"; else echo $container;?>");
   });
   </script>
 <?php endif; ?>
