@@ -210,7 +210,6 @@ class partsActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
-    $collectionId = $request->getParameter('collection_id', null);
     $form = $this->getSpecimenPartForm($request);
     $form->addInsurances($number);
     return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));

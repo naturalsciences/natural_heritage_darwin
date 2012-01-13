@@ -1,7 +1,7 @@
 <?php slot('title',  __( $form->isNew() ? 'Add Loan' : 'Edit Loan'));  ?>
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'loanwidget','eid'=> (! $form->getObject()->isNew() ? $form->getObject()->getId() : null ))); ?>
+<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'loan','eid'=> (! $form->getObject()->isNew() ? $form->getObject()->getId() : null ))); ?>
 <div class="page">
     <?php include_partial('tabs', array('loan'=> $form->getObject())); ?>
     <div class="tab_content">

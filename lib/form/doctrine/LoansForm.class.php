@@ -99,27 +99,27 @@ class LoansForm extends BaseLoansForm
     $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));        
     $this->widgetSchema['relatedfiles'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['users'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->widgetSchema['insurances'] = new sfWidgetFormInputHidden(array('default'=>1));    
+    $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));    
 
     $this->validatorSchema['comment'] = new sfValidatorPass();
     $this->validatorSchema['sender'] = new sfValidatorPass();
     $this->validatorSchema['receiver'] = new sfValidatorPass();    
     $this->validatorSchema['relatedfiles'] = new sfValidatorPass();
     $this->validatorSchema['users'] = new sfValidatorPass();
-    $this->validatorSchema['insurances'] = new sfValidatorPass();               
+    $this->validatorSchema['insurance'] = new sfValidatorPass();               
   }
   
   public function addActorsSender($num, $people_ref, $order_by=0)
   {
-      if(! isset($this['newActorsSender'])) $this->loadEmbedActorsSender();
-      $options = array('referenced_relation' => 'loans', 'people_ref' => $people_ref, 'people_type' => 'sender', 'order_by' => $order_by);
-      $val = new CataloguePeople();
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new ActorsForm($val);
-      $this->embeddedForms['newActorsSender']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newActorsSender', $this->embeddedForms['newActorsSender']);
+    if(! isset($this['newActorsSender'])) $this->loadEmbedActorsSender();
+    $options = array('referenced_relation' => 'loans', 'people_ref' => $people_ref, 'people_type' => 'sender', 'order_by' => $order_by);
+    $val = new CataloguePeople();
+    $val->fromArray($options);
+    $val->setRecordId($this->getObject()->getId());
+    $form = new ActorsForm($val);
+    $this->embeddedForms['newActorsSender']->embedForm($num, $form);
+    //Re-embedding the container
+    $this->embedForm('newActorsSender', $this->embeddedForms['newActorsSender']);
   }
 
   public function loadEmbedActorsSender()
@@ -145,17 +145,17 @@ class LoansForm extends BaseLoansForm
 
   public function addActorsReceiver($num, $people_ref, $order_by=0)
   {
-      if(! isset($this['newActorsReceiver'])) $this->loadEmbedActorsReceiver();
-      $options = array('referenced_relation' => 'loans', 'people_ref' => $people_ref, 'people_type' => 'receiver', 'order_by' => $order_by);
-      $val = new CataloguePeople();     
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new ActorsForm($val);
-      $this->embeddedForms['newActorsReceiver']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newActorsReceiver', $this->embeddedForms['newActorsReceiver']);
+    if(! isset($this['newActorsReceiver'])) $this->loadEmbedActorsReceiver();
+    $options = array('referenced_relation' => 'loans', 'people_ref' => $people_ref, 'people_type' => 'receiver', 'order_by' => $order_by);
+    $val = new CataloguePeople();     
+    $val->fromArray($options);
+    $val->setRecordId($this->getObject()->getId());
+    $form = new ActorsForm($val);
+    $this->embeddedForms['newActorsReceiver']->embedForm($num, $form);
+    //Re-embedding the container
+    $this->embedForm('newActorsReceiver', $this->embeddedForms['newActorsReceiver']);
   }
-
+   
   public function loadEmbedActorsReceiver()
   {
     if($this->isBound()) return;
@@ -177,6 +177,42 @@ class LoansForm extends BaseLoansForm
     $this->embedForm('newActorsReceiver',$subForm);
   }
   
+  public function addInsurances($num, $obj=null)
+  {
+    if(! isset($this['newInsurance'])) $this->loadEmbedInsurance();
+    $options = array('referenced_relation' => 'loans');
+    if(!$obj) $val = new Insurances();
+    else $val = $obj ;
+    $val->fromArray($options);
+    $val->setRecordId($this->getObject()->getId());
+    $form = new InsurancesSubForm($val);
+    $this->embeddedForms['newInsurance']->embedForm($num, $form);
+    //Re-embedding the container
+    $this->embedForm('newInsurance', $this->embeddedForms['newInsurance']);
+  }
+  
+  public function loadEmbedInsurance()
+  {
+    if($this->isBound()) return;
+
+    /* Comments sub form */
+    $subForm = new sfForm();
+    $this->embedForm('Insurances',$subForm);
+    if($this->getObject()->getId() !='')
+    {
+      foreach(Doctrine::getTable('Insurances')->findForTable('loans', $this->getObject()->getId()) as $key=>$vals)
+      {
+        $form = new InsurancesSubForm($vals,array('table' => 'loans'));
+        $this->embeddedForms['Insurances']->embedForm($key, $form);
+      }
+      //Re-embedding the container
+      $this->embedForm('Insurances', $this->embeddedForms['Insurances']);
+    }
+
+    $subForm = new sfForm();
+    $this->embedForm('newInsurance',$subForm);
+  }
+    
   public function addComments($num, $obj=null)
   {
       if(! isset($this['newComments'])) $this->loadEmbedComments();
@@ -287,6 +323,30 @@ class LoansForm extends BaseLoansForm
         }
       }
     }    
+
+    if(!isset($taintedValues['insurance']))
+    {
+      $this->offsetUnset('Insurances');
+      unset($taintedValues['Insurances']);
+      $this->offsetUnset('newInsurance');
+      unset($taintedValues['newInsurance']);
+    }
+    else
+    {
+      $this->loadEmbedInsurance();
+      if(isset($taintedValues['newInsurance']))
+      {
+        foreach($taintedValues['newInsurance'] as $key=>$newVal)
+        {
+          if (!isset($this['newInsurance'][$key]))
+          {
+            $this->addInsurances($key);
+          }
+          $taintedValues['newInsurance'][$key]['record_id'] = 0;
+        }
+      }
+    }
+        
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -357,7 +417,28 @@ class LoansForm extends BaseLoansForm
           unset($this->embeddedForms['ActorsReceiver'][$name]);
         }
       }
-    }        
+    }
+    if (null === $forms && $this->getValue('insurance'))
+    {
+      $value = $this->getValue('newInsurance');
+      foreach($this->embeddedForms['newInsurance']->getEmbeddedForms() as $name => $form)
+      {
+        if(!isset($value[$name]['insurance_value']))
+          unset($this->embeddedForms['newInsurance'][$name]);
+        else
+          $form->getObject()->setRecordId($this->getObject()->getId());
+      }
+
+      $value = $this->getValue('Insurances');
+      foreach($this->embeddedForms['Insurances']->getEmbeddedForms() as $name => $form)
+      {
+        if (!isset($value[$name]['insurance_value']))
+        {
+          $form->getObject()->delete();
+          unset($this->embeddedForms['Insurances'][$name]);
+        }
+      }
+    }            
     return parent::saveEmbeddedForms($con, $forms);
   }   
 }

@@ -230,5 +230,14 @@ class loanActions extends DarwinActions
     $form = $this->getLoanForm($request);
     $form->addComments($number);
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
+  }
+    
+  public function executeAddInsurance(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $form = $this->getLoanForm($request);
+    $form->addInsurances($number);
+    return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
   }  
 }

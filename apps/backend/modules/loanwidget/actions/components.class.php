@@ -32,8 +32,8 @@ class loanwidgetComponents extends sfComponents
   public function executeRefInsurances()
   {
     $this->defineForm();
-  //  if(!isset($this->form['newInsurance']))
- //     $this->form->loadEmbedInsurance();  
+    if(!isset($this->form['newInsurance']))
+      $this->form->loadEmbedInsurance();  
   }
 
   public function executeRefProperties()
