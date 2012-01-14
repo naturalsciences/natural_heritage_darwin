@@ -1,9 +1,9 @@
 <div class="menu_top">
-    <ul class="sf-menu main_menu">
+    <ul id="navigation">
         <li class="house"><?php echo link_to(image_tag('home.png', 'alt=Home'),'board/index');?></li>
         <li>
-            <a href="#"><?php echo __('My Preferences');?></a>
-            <ul>
+            <a href="#" class="subtitle"><?php echo __('My Preferences');?></a>
+            <ul class="submenu">
               <li><?php echo link_to(__('My Profile'),'user/profile');?></li>
               <li><?php echo link_to(__('My Widgets'),'user/widget');?></li>
               <li><?php echo link_to(__('My Preferences'),'user/preferences');?></li>
@@ -12,11 +12,11 @@
             </ul>
         </li>
         <li>
-            <a href="#"><?php echo __('Searches');?></a>
-            <ul>
+            <a href="#" class="subtitle"><?php echo __('Searches');?></a>
+            <ul class="submenu">
                 <li>
-                    <a href="#"><?php echo __('Catalogues');?></a>
-                    <ul>
+                    <a href="#" class="subtitle"><?php echo __('Catalogues');?> »</a>
+                    <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Taxonomy'),'taxonomy/index');?></li>
                         <li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/index');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'lithostratigraphy/index');?></li>
@@ -36,8 +36,8 @@
                 </li>
                 <li><?php echo link_to(__('Specimens'),'specimensearch/index');?></li>
                 <li>
-                  <a href="#"><?php echo __('Pinned Items');?></a>
-                  <ul>
+                  <a href="#" class="subtitle"><?php echo __('Pinned Items');?> »</a>
+                  <ul class="submenu lvl_2">
                     <li><?php echo link_to(sprintf(__('Specimens (%d)'), count($sf_user->getAllPinned('specimen'))),'specimensearch/search?pinned=true&source=specimen');?></li>
                     <li><?php echo link_to(sprintf(__('Individuals (%d)'), count($sf_user->getAllPinned('individual'))),'specimensearch/search?pinned=true&source=individual');?></li>
                     <li><?php echo link_to(sprintf(__('Parts (%d)'), count($sf_user->getAllPinned('part'))),'specimensearch/search?pinned=true&source=part');?></li>
@@ -50,11 +50,11 @@
         </li>
         <?php if($sf_user->isAtLeast(Users::ENCODER)) : ?>
         <li>
-            <a href="#"><?php echo __('Add');?></a>
-            <ul>
+            <a href="#" class="subtitle"><?php echo __('Add');?></a>
+            <ul class="submenu">
                 <li>
-                    <a href="#"><?php echo __('Catalogues');?></a>
-                    <ul>
+                    <a href="#" class="subtitle"><?php echo __('Catalogues');?> »</a>
+                    <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Taxonomy'),'taxonomy/new');?></li>
                         <li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/new');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'lithostratigraphy/new');?></li>
@@ -79,8 +79,8 @@
         <?php endif ?>
         <?php if($sf_user->isAtLeast(Users::ENCODER) ): ?>
         <li>
-            <a href=""><?php echo __('Administration');?></a>
-            <ul>
+            <a href="" class="subtitle"><?php echo __('Administration');?></a>
+            <ul class="submenu">
                 <li><?php echo link_to(__('Mass Actions'),'massactions/index');?></li>
                 <li><?php echo link_to(__('Import'),'import/index');?></li>
                 <?php if($sf_user->isAtLeast(Users::ADMIN) ): ?>
@@ -88,8 +88,8 @@
                 <?php endif ; ?>
                 <?php if($sf_user->isAtLeast(Users::MANAGER) ): ?>
                   <li>
-                    <a href="#"><?php echo __('User');?></a>
-                    <ul>
+                    <a href="#" class="subtitle"><?php echo __('User');?> »</a>
+                    <ul class="submenu lvl_2">
                       <li><?php echo link_to(__('Add'),'user/new');?></li>
                       <li><?php echo link_to(__('Search'),'user/index');?></li>
                     </ul>
@@ -99,8 +99,8 @@
         </li>
         <?php endif ?>
         <li>
-            <a href=""><?php echo __('Help');?></a>
-            <ul>
+            <a href="" class="subtitle"><?php echo __('Help');?></a>
+            <ul class="submenu">
                 <li><?php echo link_to(__('Help'),'help/index');?></li>                
                 <li><?php echo link_to(__('Contacts'),'help/contact');?></li>
                 <li><?php echo link_to(__('Contribute'),'help/contrib');?></li>
@@ -117,9 +117,66 @@
 
 <script  type="text/javascript">
  var with_gmap= <?php echo $sf_user->getPreference('gtu_google_activated', true) ? 'true' : 'false';?>;
-$(document).ready(function () {
-  o = {"dropShadows":false, "autoArrows":true,"delay":400};
-  $('ul.main_menu').supersubs().superfish(o);
-  $('ul.main_menu > li:not(.house):not(.exit)').append('<img class="highlight" src="/images/menu_expand.png" alt="" />');
+$(document).ready(function()
+{
+   $('#navigation').delegate('a.subtitle', 'mouseover', function(event) {
+      var self = $(this),
+         qtip = '.qtip.ui-tooltip',
+         container = $(event.delegateTarget || event.liveFired),
+         submenu = self.next('ul'),
+ 
+      // Determine whether this is a top-level menu
+      isTopMenu = self.parents(qtip).length < 1;
+ 
+      // If it's not a top level and we can't find a sub-menu... return
+      if(isTopMenu && !submenu.length) { return false; }
+      /*
+       * Top-level menus will be placed below the menu item, all others
+       * will be placed to the right of each other, top aligned.
+       */
+      position = isTopMenu ?
+         { my: 'top center', at: 'bottom center' } :
+         { my: 'top left', at: 'right top' }
+   
+      // Create the tooltip
+      self.qtip({
+         overwrite: false, // Make sure we only render one tooltip
+         content: {
+            text: self.next('ul') // Use the submenu as the qTip content
+         },
+         position: $.extend(true, position, {
+            // Append the nav tooltips to the #navigation element (see show.solo below)
+            container: container,
+            // We'll make sure the menus stay visible by shifting/flipping them back into the viewport
+            viewport: $(window), adjust: { method: 'shift flip', y: isTopMenu ? -5 : 0}
+         }),
+         show: {
+            event: event.type, // Make sure to sue the same event as above
+            ready: true, // Make sure it shows on first mouseover
+ 
+            /*
+             * If it's a top level menu, make sure only one is shown at a time!
+             * We'll pass the container element through too so it doesn't hide
+             * tooltips unrelated to the menu itself
+             */
+            solo: isTopMenu ? container : false
+         },
+         hide: {
+            delay: 100,
+            event: 'unfocus mouseleave',
+            fixed: true // Make sure we can interact with the qTip by setting it as fixed
+         },
+         style: {
+            classes: 'ui-tooltip-nav', // Basic styles
+            tip: isTopMenu // We don't want a tip... it's a menu duh!
+         },
+         events: {
+            // Toggle an active class on each menus activator
+            toggle: function(event, api) {
+               api.elements.target.toggleClass('active', event.type === 'tooltipshow');
+            }
+         }
+      });
+   });
 });
 </script>
