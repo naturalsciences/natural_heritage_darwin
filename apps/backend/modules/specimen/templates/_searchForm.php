@@ -40,3 +40,8 @@
     </div>
   </div>
 </form>
+<script type="text/javascript">
+ $(document).ready(function () {
+  $('.host_search').choose_form({});
+});
+</script>
