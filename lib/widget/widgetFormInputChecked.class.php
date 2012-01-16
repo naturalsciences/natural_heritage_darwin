@@ -108,13 +108,14 @@ $(document).ready(function () {
 						response( ndata );
 					}
 				});
-			},
-			change: function (event) {
+			}
+		}).bind('blur',function (event) {
 				$(this).prev().val('');
 				$(this).closest('ul').find('#toggledMsg select').val(0);
 
 				$.ajax({type: "GET",
             url: '%2\$s',
+						async:false, //Unfortunaley keep this to avoid racing condition
             data: {'searchedCrit' : $(this).val()},
             success: function(html){
 							if (html == 'not found') {
@@ -126,8 +127,7 @@ $(document).ready(function () {
 							}
 						}
 				});
-			}
-		});
+			});
 	});
 </script>
 
