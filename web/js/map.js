@@ -127,18 +127,18 @@ function drawLatLong()
   marker = addMarkerToMap(lonlat, null);
   drawAccuracy();
 }
-
 function fetchElevation(lonlat)
 {
-  ////GOOGLE ELE
-  glatlng = new google.maps.LatLng(lonlat.lat,lonlat.lon);
-  elevator = new google.maps.ElevationService();
-  positionalRequest = {'locations': [glatlng] };
-  elevator.getElevationForLocations(positionalRequest, function(results, status) 
-  {
-    if (status == google.maps.ElevationStatus.OK && results[0]) 
-    {
-      $('#gtu_elevation').val(results[0].elevation.toFixed(3));
+  $.ajax({
+    type: "GET",
+    dataType: 'JSONP',
+    url: 'http://open.mapquestapi.com/elevation/v1/getElevationProfile',
+    data : {inFormat:'kvp', outFormat: 'json', latLngCollection: lonlat.lat+','+lonlat.lon, unit:'m', shapeFormat: 'raw'},
+    success: function(data){
+      if(data.elevationProfile[0])
+        $('#gtu_elevation').val(data.elevationProfile[0].height);
+      else
+        $('#gtu_elevation').val(0);
     }
   });
 }
@@ -182,7 +182,6 @@ function setPoint( e )
   $('#gtu_longitude').val(lonlat.lon);
   fetchElevation(lonlat);
   //fetchPositions(lonlat,map.getZoom());
-  //// GOOGLE ELE
   drawLatLong();
   drawAccuracy();
 }
