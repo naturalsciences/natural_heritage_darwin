@@ -93,12 +93,6 @@ class LoanOverviewForm extends sfForm
     
   }
 
-  public function getJavaScripts()
-  {
-    return array('/js/jquery.autocomplete.js');
-  }
-
-
   public function getStylesheets()
   {
     return array('/css/ui.datepicker.css' => 'all');

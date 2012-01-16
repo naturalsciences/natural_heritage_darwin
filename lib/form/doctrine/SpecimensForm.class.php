@@ -1084,7 +1084,6 @@ class SpecimensForm extends BaseSpecimensForm
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/js/jquery-datepicker-lang.js';
-    $javascripts[]='/js/jquery.autocomplete.js';
     return $javascripts;
   }
 
@@ -1092,7 +1091,6 @@ class SpecimensForm extends BaseSpecimensForm
   {
     $javascripts=parent::getStylesheets();
     $javascripts['/css/ui.datepicker.css']='all';
-    $javascripts['/css/jquery.autocomplete.css']='all';
     return $javascripts;
   }
 }
