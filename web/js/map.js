@@ -191,8 +191,7 @@ function addMarkerToMap(position, icon)
   var marker = new OpenLayers.Marker(position.clone().transform(epsg4326, map.getProjectionObject()), icon);
   markers.addMarker(marker);
 
-            // create a point feature
-
+  // create a point feature
   drawAccuracy();
   return marker;
 }
