@@ -11,7 +11,7 @@ default:
 
   stylesheets:    [reset.css, main.css, menu.css, /qtip2/dist/jquery.qtip.min.css]
 
-  javascripts:    [jquery-1.6.4.min.js, jquery.ui.all.min.js, core.js, jquery.hoverIntent.minified.js, superfish.js, supersubs.js, /qtip2/dist/jquery.qtip.min.js , catalogue.js]
+  javascripts:    [jquery-1.7.1.min.js, jquery-ui-1.8.17.custom.min.js, core.js, /qtip2/dist/jquery.qtip.min.js , catalogue.js]
 
   has_layout:     true
   layout:         layout

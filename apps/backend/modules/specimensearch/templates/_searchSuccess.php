@@ -10,7 +10,7 @@
         $orderSign = '<span class="order_sign_up">&nbsp;&#9650;</span>';
     ?>
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
-    <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>
+    <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container'=> '.spec_results')); ?>
 
       <div id="source"><?php 
         if($source=="specimen")

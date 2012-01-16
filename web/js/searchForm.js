@@ -68,14 +68,11 @@
     
     // Add a reverse reference to the DOM object
     if(base.$el.data("pager")) {
-      console.log('DOUBLE');
       return;
     }
     base.top_form = $(el).closest('form');
     base.$el.data("pager", base);
     
-    
-    console.log(base.top_form);
     base.submit_form = function submit_search_form(url)
     {
       $.ajax({
@@ -83,7 +80,6 @@
         url: url,
         data: base.top_form.serialize(),
         success: function(html) {
-          console.log('replace');
           base.top_form.find(base.options['result_content']).html(html);
           base.top_form.find(base.options['result_container']).slideDown();
         }
@@ -113,7 +109,6 @@
 
     base.init = function(){
       base.options = $.extend({},$.pager.defaultOptions, options);
-      console.log(base.top_form.find(base.options['fld_rec_per_page']));
       base.top_form.find(base.options['fld_rec_per_page']).bind('change', base.change_nbr_per_page);
       base.top_form.find(base.options['pager_links']).bind('click', base.change_page);
       base.top_form.find(base.options['sort_links']).bind('click', base.change_sort);
