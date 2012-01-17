@@ -10,7 +10,7 @@ class widgetFormInputChecked extends sfWidgetFormInputHidden
         $this->addOption('behindScene', true);
         $this->addOption('method', '__toString');
         $this->addOption('notExistingAddDisplay', true);
-        $this->addOption('notExistingAddTitle', 'This entry do not exist. Would you like we had it ?');
+        $this->addOption('notExistingAddTitle', 'This entry does not exist. Would you like to add it ?');
         $this->addOption('notExistingAddValues', array('Yes', 'No'));
         $this->addOption('notExistingAddSelected', 0);
         $this->addOption('autocomplete', true);
@@ -86,54 +86,55 @@ class widgetFormInputChecked extends sfWidgetFormInputHidden
     $input .= '</ul>';
     if(!function_exists('url_for'))
       sfContext::getInstance()->getConfiguration()->loadHelpers('Url');
-		
-		$input .=  sprintf(<<<EOF
+    
+    $input .=  sprintf(<<<EOF
 <script type="text/javascript">
 $(document).ready(function () {
-		var cache = {},
-			lastXhr;
-			$('#%1\$s').autocomplete({
-			minLength: %6\$s,
-			source: function( request, response ) {
-				var term = request.term;
-				if ( term in cache ) {
-					response( cache[ term ] );
-					return;
-				}
+    var cache = {},
+      lastXhr;
+      $('#%1\$s').autocomplete({
+      minLength: %6\$s,
+      source: function( request, response ) {
+        var term = request.term;
+        if ( term in cache ) {
+          response( cache[ term ] );
+          return;
+        }
 
-				lastXhr = $.get('%3\$s', {q : request.term, limit: %5\$s }, function( data, status, xhr ) {
-					ndata = data.split("\\n");
-					cache[ term ] = ndata;
-					if ( xhr === lastXhr ) {
-						response( ndata );
-					}
-				});
-			}
-		}).bind('blur',function (event) {
-				$(this).prev().val('');
-				$(this).closest('ul').find('#toggledMsg select').val(0);
+        lastXhr = $.get('%3\$s', {q : request.term, limit: %5\$s }, function( data, status, xhr ) {
+          ndata = data.split("\\n");
+          cache[ term ] = ndata;
+          if ( xhr === lastXhr ) {
+            response( ndata );
+          }
+        });
+      }
+    }).bind('blur',function (event) {
+        $(this).prev().val('');
+        $(this).closest('ul').find('#toggledMsg select').val(0);
 
-				$.ajax({type: "GET",
+        $.ajax({type: "GET",
             url: '%2\$s',
-						async:false, //Unfortunaley keep this to avoid racing condition
+            async:false, //Unfortunaley keep this to avoid racing condition
             data: {'searchedCrit' : $(this).val()},
             success: function(html){
-							if (html == 'not found') {
-									$('#%1\$s').closest('ul').children('li#toggledMsg').show("slow");
+              if (html == 'not found') {
+                  $('#%1\$s').closest('ul').children('li#toggledMsg').show("slow");
+                  $('#%1\$s').trigger('missing');
               }
               else {
-								$('#%1\$s').closest('ul').children('li#toggledMsg').slideUp("fast");
+                $('#%1\$s').closest('ul').children('li#toggledMsg').slideUp("fast");
                 $('#%8\$s').val(html);
-							}
-						}
-				});
-			});
-	});
+              }
+            }
+        });
+      });
+  });
 </script>
 
 EOF
  ,$showedInputName,
-	url_for($this->getOption('link_url')),
+  url_for($this->getOption('link_url')),
   url_for($this->getOption('link_url').'Limited'),
   $this->getOption('autocomplete'),
   $this->getOption('autocomplete_max'),

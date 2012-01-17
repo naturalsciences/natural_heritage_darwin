@@ -5,6 +5,11 @@
  $(document).ready(function () 
 {
   $('body').choose_form({content_elem: '.search_results_content' });
+  $('#loans_filters_ig_ref_name').bind('blur',function (event) {
+    $(this).removeClass('complete_missing');
+  }).bind('missing',function (event) {
+    $(this).addClass('complete_missing');
+  });
 });
 </script>
 <?php echo form_tag('loan/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'loans_filter'));?>

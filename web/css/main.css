@@ -2826,3 +2826,6 @@ input[type='file']
 	}	
 .ui-autocomplete { position: absolute; cursor: default; }	
 
+input.complete_missing {
+  border: 1px solid red;
+}
