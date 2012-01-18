@@ -101,8 +101,8 @@ class loanActions extends DarwinActions
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
     $this->form = new LoansForm($loan);
-    $this->setTemplate('new') ;
     $this->loadWidgets();
+    $this->setTemplate('new') ;    
   }
 
 
@@ -222,6 +222,16 @@ class loanActions extends DarwinActions
     $form->addActorsReceiver($number,$people_ref,$request->getParameter('order_by',0));
     return $this->renderPartial('actors_association',array('type'=>'receiver','form' => $form['newActorsReceiver'][$number], 'row_num'=>$number));  
   }
+
+  public function executeAddUsers(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $user_ref = intval($request->getParameter('user_ref')) ;
+    $form = $this->getLoanForm($request);
+    $form->addUsers($number,$user_ref,$request->getParameter('order_by',0));
+    return $this->renderPartial('darwin_user',array('form' => $form['newUsers'][$number], 'row_num'=>$number));  
+  }
   
   public function executeAddComments(sfWebRequest $request)
   {
@@ -239,5 +249,29 @@ class loanActions extends DarwinActions
     $form = $this->getLoanForm($request);
     $form->addInsurances($number);
     return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
+  }  
+  
+  public function executeAddStatus(sfWebRequest $request)
+  {    
+    if($request->isXmlHttpRequest()) 
+    {    
+      $form = new InformativeWorkflowForm(null, array('available_status' => LoanStatus::getAvailableStatus())) ;
+      $form->bind(array('comment'=>$request->getParameter('comment'),'status'=>$request->getParameter('status'))) ;
+      if($form->isValid())
+      {        
+        $data = array(
+            'loan_ref' => $request->getParameter('id'),
+            'status' => $request->getParameter('status'),   
+            'comment' => $request->getParameter('comment'),    
+            'user_ref' => $this->getUser()->getId()) ;    
+            
+        $loanstatus = new LoanStatus() ;
+        $loanstatus->fromArray($data) ;
+        $loanstatus->save() ;
+      }
+      // else : nothing append, and it's a good thing
+      return $this->renderText('ok') ;
+    }
+    $this->redirect('board/index') ;
   }  
 }

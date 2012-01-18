@@ -1,4 +1,3 @@
-<?php use_javascript('button_ref.js') ?>
 <table  class="property_values">
   <thead style="<?php echo ($form['Insurances']->count() || $form['newInsurance']->count())?'':'display: none;';?>">
     <tr>

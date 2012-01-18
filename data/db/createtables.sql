@@ -1426,7 +1426,7 @@ create table insurances
         insurer_ref integer,
         contact_ref integer,
         constraint pk_insurances primary key (id),
-        constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, date_from, date_to),
+        constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, date_from, date_to, insurer_ref),
         constraint fk_specimen_parts_insurances_people foreign key (insurer_ref) references people(id) on delete set null,
         constraint fk_specimen_parts_insurances_contact foreign key (contact_ref) references people(id) on delete set null,
         constraint chk_chk_specimen_parts_insurances check (insurance_value > 0)

@@ -12,14 +12,6 @@
       </div>   
       <?php echo form_tag('loan/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition loan_form'));?>
         <div>
-          <?php if($form->hasGlobalErrors()):?>
-            <ul class="loan_error_list">
-              <?php foreach ($form->getErrorSchema()->getErrors() as $name => $error): ?>
-                <li class="error_fld_<?php echo $name;?>"><?php echo __($error) ?></li>
-              <?php endforeach; ?>
-            </ul>
-          <?php endif;?>
-
           <?php include_partial('widgets/screen', array(
             'widgets' => $widgets,
             'category' => 'loanwidget',
@@ -50,6 +42,10 @@
         $('ul#error_list').hide();
         $('ul#error_list').find('li').text(' ');
       }   
+      $(document).ready(function () {
+//        $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>'});
+        $('body').catalogue({}); 
+      });
       </script>   
     </div>
 </div>

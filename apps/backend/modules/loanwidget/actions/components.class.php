@@ -19,13 +19,9 @@ class loanwidgetComponents extends sfComponents
       {
         $loan = Doctrine::getTable('Loans')->find($this->eid);
         $this->form = new LoansForm($loan);
-        $this->loan_id = $this->eid;
       }
       else
-      {
         $this->form = new LoansForm();
-        $this->loan_id = 0;
-      }
     }
   }
 
@@ -45,8 +41,8 @@ class loanwidgetComponents extends sfComponents
   public function executeRefUsers()
   {
     $this->defineForm();
-   // if(!isset($this->form['newUsers']))
-  //    $this->form->loadEmbedUsers();  
+    if(!isset($this->form['newUsers']))
+      $this->form->loadEmbedUsers();  
   }
 
   public function executeMainInfo()
@@ -77,9 +73,13 @@ class loanwidgetComponents extends sfComponents
       $this->form->loadEmbedComments();   
   }
   
-  public function executeInformativeWorkflow()
-  {    
-    if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId() ;
+  public function executeLoanStatus()
+  { 
+    if(isset($this->form))
+      $this->eid = $this->form->getObject()->getId() ;  
+    if(isset($this->eid))
+       $this->loanstatus = Doctrine::getTable('LoanStatus')->getLoanStatus($this->eid);
+    else $this->eid = false;
+    $this->form = new informativeWorkflowForm(null, array('available_status' => LoanStatus::getAvailableStatus())) ;     
   }   
 }

@@ -663,12 +663,12 @@ lw2:
 lw3:
     col_num: 1
     category: loan_widget
-    group_name: informativeWorkflow
+    group_name: loanStatus
     order_by: 3
     opened: true
     visible: true
     is_available: true 
-    title_perso: Informative Workflow
+    title_perso: Loan status
 
 lw4:
     col_num: 1

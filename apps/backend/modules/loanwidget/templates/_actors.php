@@ -1,4 +1,3 @@
-<?php echo javascript_include_tag('catalogue_people.js') ?>
 <table id="sender_table" class="catalogue_table edition">
   <thead>
     <tr>

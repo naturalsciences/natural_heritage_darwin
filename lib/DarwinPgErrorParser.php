@@ -45,7 +45,7 @@ class DarwinPgErrorParser
     '/\bunq_ext_links\b/' => 'This External link is already set',
     '/\bunq_identifications\b/' => 'You cannot set the same identification twice',
     '/\bunq_igs\b/' => 'This Ig already exists',
-    '/\bunq_specimen_parts_insurances\b/' => 'This code already exists',
+    '/\bunq_specimen_parts_insurances\b/' => 'This insurance already exists',
     '/\bunq_my_saved_searches\b/' => 'You\'ve already save a search with this name',
     '/\buunq_my_saved_specimens\b/' => 'You\'ve already save a list of specimen with this name',
     '/\bunq_people\b/' => 'This people already exists',

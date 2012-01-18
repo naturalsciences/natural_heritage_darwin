@@ -1516,12 +1516,12 @@ MyWidgets:
         User: u1
         col_num: 1
         category: loan_widget
-        group_name: informativeWorkflow
+        group_name: loanStatus
         order_by: 3
         opened: true
         visible: true
         is_available: true 
-        title_perso: Informative Workflow
+        title_perso: Loan Status
 
     u1lw4:
         User: u1
