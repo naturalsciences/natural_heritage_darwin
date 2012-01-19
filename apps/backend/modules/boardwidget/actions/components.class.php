@@ -97,7 +97,7 @@ class boardwidgetComponents extends sfComponents
   public function executeMyLoans()
   {
     /**/
-    $this->pagerSlidingSize = intval(sfConfig::get('app_pagerSlidingSize'));
+    $this->pagerSlidingSize = intval(sfConfig::get('dw_pagerSlidingSize'));
     $query = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId());
     $this->pagerLayout = new PagerLayoutWithArrows(
       new DarwinPager(

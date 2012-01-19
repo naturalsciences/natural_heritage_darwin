@@ -55,7 +55,7 @@ $exp_val_arr = array('collmanager' => array(
                                       ), 
                               'root' => array(
                                              'f_widg'  => 2,   
-                                             'l_widg'  => 3,
+                                             'l_widg'  => 4,
                                              'nr_rows' => array( 'page1' => 1 ),
                                              'pager'        => false,
                                              'add_link'     => false,
@@ -94,7 +94,7 @@ foreach( $user_array as $usr_k => $usr_v  )
      {
         $browser->
           with('response')->begin()->
-            checkElement('.board_col:last .widget:eq(2) .widget_top_bar span','/My Loans/')->
+            checkElement('.board_col:last .widget:last .widget_top_bar span','/My Loans/')->
             checkElement('#myLoans .widget_content', '/Nothing here/')->
           end();
      }
@@ -166,11 +166,17 @@ foreach( $user_array as $usr_k => $usr_v  )
            end()->
 
            click('a.edit_loan', array() )->
+             with('request')->begin()->
+               isParameter('module', 'loan')->
+               isParameter('action', 'edit')->
+               isParameter('id', 5)->
+             end()->
+
              with('response')->begin()->
                isStatusCode(200)->
-               checkElement('h1.edit_mode', '/Edit Loan/')->
-               checkElement('#loans_name', 'Dragon of goyet')->
-           end();
+               checkElement('#tab_0', '/Edit Loan/')->
+               checkElement('a.selected', '/Edit Loan/')->
+             end();
         
          $browser->  
            info(sprintf('Checking: Clicking on the "Add" button for %s', $usr_k))->
@@ -180,9 +186,14 @@ foreach( $user_array as $usr_k => $usr_v  )
            end()->
 
            click('a.add_link', array() )->
+             with('request')->begin()->
+               isParameter('module', 'loan')->
+               isParameter('action', 'new')->
+             end()->
+
              with('response')->begin()->
                isStatusCode(200)->
-               checkElement('h1.edit_mode', '/New Loan/')->
+               checkElement('a.selected', '/New Loan/')->
            end();
       }
       else

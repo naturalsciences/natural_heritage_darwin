@@ -127,28 +127,6 @@ class loanActions extends DarwinActions
     }
   }
 
-  public function executeDelete(sfWebRequest $request)
-  {
-    $this->forward404Unless($loan = Doctrine::getTable('Loans')->find(array($request->getParameter('id'))), sprintf('Object loans does not exist (%s).', array($request->getParameter('id'))));
-    try
-    {
-      $loan->delete();
-      if( $request->hasParameter('on_board') )
-	$this->redirect('board/index');
-      else
-	$this->redirect('loan/index');
-    }
-    catch(Doctrine_Exception $ne)
-    {
-      $e = new DarwinPgErrorParser($ne);
-      $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-      $this->form = new LoansForm($loan);
-      $this->form->getErrorSchema()->addError($error); 
-      $this->loadWidgets();
-      $this->setTemplate('edit');
-    }
-  }
-
   public function executeViewAll(sfWebRequest $request)
   {  
     $this->loans = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId())->execute(); 
