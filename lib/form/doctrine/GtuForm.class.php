@@ -24,13 +24,13 @@ class GtuForm extends BaseGtuForm
        'nullable' => true,
      ));
     $this->widgetSchema['code'] = new sfWidgetFormInput();
-    $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
-    $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $maxDate->setStart(false);
 
     $this->widgetSchema['name'] = new sfWidgetFormInputText();
@@ -188,4 +188,13 @@ class GtuForm extends BaseGtuForm
       }
       return parent::saveEmbeddedForms($con, $forms);
     }
+
+  public function getJavaScripts()
+  {
+    $javascripts=parent::getJavascripts();
+    $javascripts[]='/js/OpenLayers.js';
+    $javascripts[]='/js/map.js';
+    return $javascripts;
+  }
+
 }

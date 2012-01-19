@@ -33,10 +33,17 @@ class Insurances extends BaseInsurances
      {
         $this->_set('date_from',$fd);
      }
+     elseif ($fd instanceof FuzzyDateTime)
+     {
+       $this->_set('date_from', $fd->format('Y/m/d') );
+       $this->_set('date_from_mask', $fd->getMask() );    
+     }     
      else
      {
-      $this->_set('date_from', $fd->format('Y/m/d') );
-      $this->_set('date_from_mask', $fd->getMask() );
+       if(empty($fd['day']) && empty($fd['month']) && empty($fd['year'])) return ;
+       $dateTime = new FuzzyDateTime($fd, 56, false); 
+       $this->_set('date_from', $dateTime->format('Y/m/d'));
+       $this->_set('date_from_mask', $dateTime->getMask());
      }
      return $this;
   }
@@ -52,11 +59,18 @@ class Insurances extends BaseInsurances
      {
         $this->_set('date_to',$fd);
      }
-     else
+     elseif ($fd instanceof FuzzyDateTime)
      {
       $this->_set('date_to', $fd->format('Y/m/d') );
       $this->_set('date_to_mask', $fd->getMask() );
      }
+     else
+     {
+       if(empty($fd['day']) && empty($fd['month']) && empty($fd['year'])) return ;
+       $dateTime = new FuzzyDateTime($fd, 56, false); 
+       $this->_set('date_to', $dateTime->format('Y/m/d'));
+       $this->_set('date_to_mask', $dateTime->getMask());
+     }     
      return $this;
   }
   

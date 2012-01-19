@@ -12,7 +12,7 @@
   </thead>
 </table>
 </fieldset>
-<?php if($informativeWorkflow->count() > 0) : ?>
+<?php if($informativeWorkflow->count() > 0 && $sf_user->isAtLeast(Users::ENCODER)) : ?>
 <table class="catalogue_table">
   <thead class="workflow">
     <tr><th colspan=4><?php echo __("Latest Status") ; ?></th></tr>
@@ -50,12 +50,13 @@
 $(document).ready(function () 
 {
   
-  $('#add_workflow').click(function() {   
+  $('#add_workflow').click(function(event) {   
    event.preventDefault();
    if($('#informative_workflow_status').val() && $('#informative_workflow_comment').val())
    {
-     $(this).load($(this).attr('href'),{'status':$('#informative_workflow_status').val(),'comment':$('#informative_workflow_comment').val()})
-     $('body').data('widgets_screen').refreshWidget(event, $(this)) ;
+     $(this).load($(this).attr('href'),{'status':$('#informative_workflow_status').val(),'comment':$('#informative_workflow_comment').val()}, function(){
+       $('body').data('widgets_screen').refreshWidget(event, $(this));
+     });
    }
   });
 });

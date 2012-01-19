@@ -21,7 +21,7 @@ abstract class BaseLoanItemsForm extends BaseFormDoctrine
       'from_date' => new sfWidgetFormTextarea(),
       'to_date'   => new sfWidgetFormTextarea(),
       'part_ref'  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('DarwinParts'), 'add_empty' => true)),
-      'detail'    => new sfWidgetFormTextarea(),
+      'details'   => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -31,7 +31,7 @@ abstract class BaseLoanItemsForm extends BaseFormDoctrine
       'from_date' => new sfValidatorString(array('required' => false)),
       'to_date'   => new sfValidatorString(array('required' => false)),
       'part_ref'  => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('DarwinParts'), 'required' => false)),
-      'detail'    => new sfValidatorString(array('required' => false)),
+      'details'   => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('loan_items[%s]');

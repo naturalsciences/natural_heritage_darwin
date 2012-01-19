@@ -19,16 +19,16 @@ class LoansTable extends DarwinTable
   }
 
 
-   /**
-   * getMyLoans
-   *
-   * Get the loans for a user that are not Closed/Returned/Rejected
-   *
-   * @param int $user_id The user id to look for
-   * @param int $max_items a number loans to get
-   *
-   * @return Doctrine_Query Query with loans ordered by from_date desc
-   */
+  /**
+  * getMyLoans
+  *
+  * Get the loans for a user that are not Closed/Returned/Rejected
+  *
+  * @param int $user_id The user id to look for
+  * @param int $max_items a number loans to get
+  *
+  * @return Doctrine_Query Query with loans ordered by from_date desc
+  */
 
   public function getMyLoans($user_id, $max_items = FALSE) 
   {

@@ -1,6 +1,6 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-
+<div class="catalogue_people">
 <?php echo form_tag('people/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'people_filter'));?>
   <div class="container">
     <?php echo $form['is_physical'];?>
@@ -31,8 +31,10 @@
     <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('people/new?name='.$form['family_name']->getValue()) ; ?>"><?php echo __('New');?></a></div>
   </div>
 </form> 
+<div>
 <script>
 $(document).ready(function () {
+  $('.catalogue_people').choose_form({});
   $(".new_link").click( function()
   {
    url = $(this).find('a').attr('href'),

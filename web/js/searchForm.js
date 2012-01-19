@@ -1,101 +1,140 @@
-jQuery(function () 
-{
-  $(".search_form").bind('submit.sform',search_form_submit);
-});
-
-function search_form_submit()
-{
-  $(".tree").slideUp().html("");
-  $.ajax({
+(function($){
+  $.choose_form = function(el, options){
+    // To avoid scope issues, use 'base' instead of 'this'
+    // to reference this class from internal events and functions.
+    var base = this;
+    
+    // Access to jQuery and DOM versions of element
+    base.$el = $(el);
+    base.el = el;
+    
+    // Add a reverse reference to the DOM object
+    base.$el.data("choose_form", base);
+    
+    base.search_form_submit = function search_form_submit(event)
+    {
+      event.preventDefault();
+      base.$el.find(".tree").slideUp().html("");
+        $.ajax({
           type: "POST",
           url: $(this).attr('action'),
-          data: $('.search_form').serialize(),
+          data: $(this).serialize(),
           success: function(html){
-                                  $(".search_results_content").html(html);
-                                  $('.search_results').slideDown();
-                                  }
+            base.$el.find(base.options['content_elem']).html(html);
+            base.$el.find(base.options['result_container']).slideDown();
           }
-        );
-  $(".search_results_content").html('<img src="/images/loader.gif" />');
-  return false;
-}
-
-
-/**********************************
- * Specimen Search related functions
- * 
- ************************************/
-
-/***
- * Update the visible columns list in specimens_search
- */
-function update_list(li)
-{
-  val = li.attr('class') ;
-  if (val == 'check')
-  {
-    li.removeClass('check') ;
-    li.addClass('uncheck') ; 
-  }
-  else
-  {
-    li.removeClass('uncheck') ;
-    li.addClass('check') ; 
-  }
-}
-
-function getColVisible()
-{
-  column_str = '';
-  if($('.column_menu ul > li.check').length)
-  {
-    $('.column_menu ul > li.check').each(function (index)
-    {
-      if(column_str != '') column_str += '|';
-      column_str += $(this).attr('id').substr(3);
-    });
-  }
-  return column_str;
-}
-/**
-* set the individual colspan depending on how many fields are visible
-*/
-function initIndividualColspan()
-{
-  cpt = 1 ;
-  $('ul.column_menu > li > ul').find('>li').each(function() {
-    if( $(this).hasClass('check'))
-    {
-      cpt++ ;
+        });
+      base.$el.find(base.options['content_elem']).html('<img src="/images/loader.gif" />');
+      return false;
     }
-   });  
-  $('table.spec_results tbody tr.sub_row').find('td:first').attr('colspan', cpt);
-  $('#specimen_search_filters_col_fields').val(getColVisible());
-}
+    
+    
+    
+    base.init = function(){
+      base.options = $.extend({},$.choose_form.defaultOptions, options);
+      base.$el.find(base.options['form_elem']).bind('submit.sform',base.search_form_submit);
+    };
+    
+    base.init();
+  };
+  
 
-/***
- * Hide or show table column when a column is checked as visible
- */
-function hide_or_show(li)
-{
-  field = li.attr('id') ;
-  column = field.substr(3) ;
-  val = li.attr('class') ;
-  if(val == 'uncheck')
-  {
-    $("li #"+field).find('span:first').hide();
-    $("li #"+field).find('span:nth-child(2)').show();
-    $('table.spec_results thead tr th.col_'+column).hide();
-    $('table.spec_results tbody tr td.col_'+column).hide();
-    //this line below is neccessary to avoid table border to be cut
-  }
-  else
-  {
-    $("li #"+field).find('span:first').show();
-    $("li #"+field).find('span:nth-child(2)').hide();
-    $('table.spec_results thead tr th.col_'+column).show();
-    $('table.spec_results tbody tr td.col_'+column).show();
-    //this line below is neccessary to avoid table border to be cut    
-  }
-  initIndividualColspan();
-}
+
+    
+  $.choose_form.defaultOptions = {
+    content_elem: '.search_results_content',
+    form_elem: '.search_form',
+    result_container: '.search_results'
+  };
+  
+  $.fn.choose_form = function(options){
+    return this.each(function(){
+      (new $.choose_form(this, options));
+    });
+  };
+
+})(jQuery);
+
+
+(function($){
+  $.pager = function(el, options){
+    // To avoid scope issues, use 'base' instead of 'this'
+    // to reference this class from internal events and functions.
+    var base = this;
+    
+    // Access to jQuery and DOM versions of element
+    base.$el = $(el);
+    base.el = el;
+    
+    // Add a reverse reference to the DOM object
+    if(base.$el.data("pager")) {
+      return;
+    }
+    base.top_form = $(el).closest('form');
+    base.$el.data("pager", base);
+    
+    base.submit_form = function submit_search_form(url)
+    {
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: base.top_form.serialize(),
+        success: function(html) {
+          base.top_form.find(base.options['result_content']).html(html);
+          base.top_form.find(base.options['result_container']).slideDown();
+        }
+      });
+      base.top_form.find(base.options['result_content']).html('<img src="/images/loader.gif" />');
+    };
+    
+    base.change_nbr_per_page = function change_nbr_per_page(event)
+    {
+      event.preventDefault();
+      base.submit_form(base.top_form.attr('action'));
+    }
+
+    base.change_page = function change_page(event)
+    {
+      event.preventDefault();
+      base.submit_form($(this).attr("href"));
+
+      base.top_form.attr('action', $(this).attr("href"))
+    };
+
+    base.change_sort = function change_sort(event)
+    {
+      event.preventDefault();
+      base.submit_form($(this).attr("href"));
+    };
+
+    base.init = function(){
+      base.options = $.extend({},$.pager.defaultOptions, options);
+      base.top_form.find(base.options['fld_rec_per_page']).bind('change', base.change_nbr_per_page);
+      base.top_form.find(base.options['pager_links']).bind('click', base.change_page);
+      base.top_form.find(base.options['sort_links']).bind('click', base.change_sort);
+    };
+    base.init();
+  };
+  
+  
+  $.pager.defaultOptions = {
+    fld_rec_per_page: '.rec_per_page',
+    result_container: '.search_results',
+    result_content: '.search_results_content',
+    pager_links: 'a.sort',
+    sort_links: '.pager a'
+  };
+  
+  $.fn.pager = function(options){
+    return this.each(function(){
+      (new $.pager(this, options));
+    });
+  };
+
+})(jQuery);
+
+
+
+
+
+

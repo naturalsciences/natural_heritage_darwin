@@ -18,7 +18,7 @@ abstract class BaseLoanItemsFormFilter extends BaseFormFilterDoctrine
       'from_date' => new sfWidgetFormFilterInput(),
       'to_date'   => new sfWidgetFormFilterInput(),
       'part_ref'  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('DarwinParts'), 'add_empty' => true)),
-      'detail'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'details'   => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
 
     $this->setValidators(array(
@@ -27,7 +27,7 @@ abstract class BaseLoanItemsFormFilter extends BaseFormFilterDoctrine
       'from_date' => new sfValidatorPass(array('required' => false)),
       'to_date'   => new sfValidatorPass(array('required' => false)),
       'part_ref'  => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('DarwinParts'), 'column' => 'id')),
-      'detail'    => new sfValidatorPass(array('required' => false)),
+      'details'   => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('loan_items_filters[%s]');
@@ -53,7 +53,7 @@ abstract class BaseLoanItemsFormFilter extends BaseFormFilterDoctrine
       'from_date' => 'Text',
       'to_date'   => 'Text',
       'part_ref'  => 'ForeignKey',
-      'detail'    => 'Text',
+      'details'   => 'Text',
     );
   }
 }

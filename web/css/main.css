@@ -1674,7 +1674,7 @@ th .error_list
   display: block;
 }
 
-.panel_view fieldset,.view_mode fieldset, .view_mode input:focus, .view_mode textarea:focus
+.panel_view fieldset,.view_mode fieldset, .view_mode input:focus, .view_mode textarea:focus, .panel_view textarea:focus
 {
   border: 1px solid #5BAABD ;
   cursor : pointer ;
@@ -2470,6 +2470,13 @@ dd
 	color:#d3d3d1;
 }
 
+.tab_content {
+  margin-top: -2px;
+}
+.tab_content form
+{
+    padding-top: 5px;
+}
 .panel_view
 {
 	margin-top:-2px;
@@ -2779,3 +2786,64 @@ input[type='file']
 }
 #broadcast_bottom span { font-size: small; }
 #broadcast_bottom_padding { height :2em;}
+
+.inline.hidden {
+  display:none;
+}
+
+
+/*
+ * jQuery UI Menu 1.8.17
+ *
+ * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Menu#theming
+ */
+.ui-menu {
+	list-style:none;
+	padding: 2px;
+	margin: 0;
+	display:block;
+	float: left;
+}
+.ui-menu .ui-menu {
+	margin-top: -3px;
+}
+.ui-menu .ui-menu-item {
+	margin:0;
+	padding: 0;
+	zoom: 1;
+	float: left;
+	clear: left;
+	width: 100%;
+}
+.ui-menu .ui-menu-item a {
+	text-decoration:none;
+	display:block;
+	padding:.2em .4em;
+	line-height:1.5;
+	zoom:1;
+}
+.ui-menu .ui-menu-item a.ui-state-hover,
+.ui-menu .ui-menu-item a.ui-state-active {
+	font-weight: normal;
+	margin: -1px;
+}
+.ui-autocomplete-loading { background: white url('/images/loader.gif') right center no-repeat; }
+
+.ui-autocomplete {
+		max-height: 100px;
+		overflow-y: auto;
+		/* prevent horizontal scrollbar */
+		overflow-x: hidden;
+		overflow:hidden;
+		/* add padding to account for vertical scrollbar */
+		padding-right: 20px;
+	}	
+.ui-autocomplete { position: absolute; cursor: default; }	
+
+input.complete_missing {
+  border: 1px solid red;
+}

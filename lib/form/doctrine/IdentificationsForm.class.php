@@ -14,12 +14,12 @@ class IdentificationsForm extends BaseIdentificationsForm
 
     $this->useFields(array('id', 'referenced_relation', 'record_id', 'notion_date', 'notion_concerned', 'value_defined', 'determination_status', 'order_by'));
 
-    $yearsKeyVal = range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')));
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $maxDate->setStart(false);
     $choices = array('taxonomy'=> 'Taxon.', 'mineralogy' => 'Miner.', 'chronostratigraphy' => 'Chron.', 'lithostratigraphy' => 'Litho.', 'lithology' => 'Rock') ;
     if($this->getObject()->getReferencedRelation() == 'specimen_individuals')

@@ -1,4 +1,4 @@
-<div class="page">
+<div class="page host_search">
   <h1><?php echo __('Choose a specimen');?></h1>
   <script language="javascript">
     $(document).ready(function () {

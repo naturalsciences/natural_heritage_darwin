@@ -31,7 +31,7 @@ function collection_add_user(event){
         modal: {
           on: true,
           blur: false
-        },
+        }
       },
       hide: {
         event: 'close_modal',
@@ -66,38 +66,38 @@ function collection_add_rights(event){
           url: $(this).attr('href'),
                  type: 'GET'
         }
-    },
-    position: {
-      my: 'center',
-      at: 'center',
-      target: $(document.body)
-    },
-    show: {
-      ready: true,
-      delay: 0,
-      event: event.type,
-      solo: true,
-      modal: {
-        on: true,
-        blur: false
       },
-    },
-    hide: {
-      event: 'close_modal',
-      target: $('body')
-    },
-    events: {
-      show: function () {
-        ref_element_id = null;
-        ref_element_name = null;
+      position: {
+        my: 'center',
+        at: 'center',
+        target: $(document.body)
       },
-      hide: function(event, api) {
-        scroll(0,last_position) ;
-        api.destroy();
-      }
-    },
-    style: 'ui-tooltip-light ui-tooltip-rounded dialog-modal-edit'
-    });
+      show: {
+        ready: true,
+        delay: 0,
+        event: event.type,
+        solo: true,
+        modal: {
+          on: true,
+          blur: false
+        }
+      },
+      hide: {
+        event: 'close_modal',
+        target: $('body')
+      },
+      events: {
+        show: function () {
+          ref_element_id = null;
+          ref_element_name = null;
+        },
+        hide: function(event, api) {
+          scroll(0,last_position) ;
+          api.destroy();
+        }
+      },
+      style: 'ui-tooltip-light ui-tooltip-rounded dialog-modal-edit'
+      });
     return false;
  }
  

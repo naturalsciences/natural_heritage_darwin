@@ -222,19 +222,19 @@ UsersLoginInfos:
     u1l1:
         User: u1
         user_name: root
-        password: "<?php echo sha1(sfConfig::get('app_salt').'evil');?>"
+        password: "<?php echo sha1(sfConfig::get('dw_salt').'evil');?>"
     u1l2:
         User: u2
         user_name: reguser
-        password: "<?php echo sha1(sfConfig::get('app_salt').'reguser');?>"
+        password: "<?php echo sha1(sfConfig::get('dw_salt').'reguser');?>"
     u1l3:
         User: u3
         user_name: encoder
-        password: "<?php echo sha1(sfConfig::get('app_salt').'encoder');?>"
+        password: "<?php echo sha1(sfConfig::get('dw_salt').'encoder');?>"
     u1l4:
         User: u4
         user_name: collmanager
-        password: "<?php echo sha1(sfConfig::get('app_salt').'collmanager');?>"
+        password: "<?php echo sha1(sfConfig::get('dw_salt').'collmanager');?>"
  
 UsersLanguages:
     ul1:
@@ -1114,3 +1114,10 @@ SpecimenIndividuals:
     spi1:
         Specimens: sp4
 
+InformativeWorkflow:
+    iw1:
+        referenced_relation: taxonomy
+        record_id: 8
+        status : to check
+        comment: test de workflow pour les tests
+        Users: u1

@@ -2119,9 +2119,11 @@ Loans:
         id: { type: integer, primary: true, autoincrement: true }
         name: { type: string, notnull: true, default:''}
         description: { type: string, notnull: true, default:''}
+        description_ts: { type: string}
         from_date: { type: string}
         to_date: { type: string}
         effective_to_date: { type: string}
+        extended_to_date: { type: string}
 
 LoanItems:
     columns:
@@ -2131,7 +2133,7 @@ LoanItems:
         from_date: { type: string}
         to_date: { type: string}
         part_ref: { type: integer}
-        detail: { type: string, notnull: true, default:''}
+        details: { type: string, notnull: true, default:''}
     relations:
         Loan:
             local: loan_ref

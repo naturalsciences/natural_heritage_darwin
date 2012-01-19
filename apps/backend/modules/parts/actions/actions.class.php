@@ -210,7 +210,6 @@ class partsActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
-    $collectionId = $request->getParameter('collection_id', null);
     $form = $this->getSpecimenPartForm($request);
     $form->addInsurances($number);
     return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
@@ -295,5 +294,16 @@ class partsActions extends DarwinActions
   {
     $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id')),'Part does not exist');  
     $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
-  }   
+  }
+
+  public function executeChoosePinned(sfWebRequest $request)
+  {
+    /** @TODO: change this when flat_less branch is merged */
+    $items_ids = $this->getUser()->getAllPinned('part');
+    $this->items = Doctrine::getTable('SpecimenSearch')->getByMultipleIds($items_ids, 'part', $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
+    /** END TODO */
+
+
+  }
+
 }

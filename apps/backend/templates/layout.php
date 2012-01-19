@@ -19,10 +19,13 @@
     </script>
     <div class="clear"></div>
     <div id="load_indicator"><?php echo image_tag('loader.gif');?> <?php echo __('Loading');?></div>
-    <?php if(sfConfig::get('app_broadcast_enabled', false)):?>
+    <?php if(sfConfig::get('dw_broadcast_enabled', false)):?>
       <div id="broadcast_bottom_padding"></div>
-      <div id="broadcast_bottom"><?php echo __(sfConfig::get('app_broadcast_message', ''));?>
+      <div id="broadcast_bottom"><?php echo __(sfConfig::get('dw_broadcast_message', ''));?>
       </div>
+    <?php endif;?>
+    <?php if(sfConfig::get('dw_analytics_enabled', false)):?>
+			<?php include_partial('global/analytics') ?>
     <?php endif;?>
   </body>
 </html>

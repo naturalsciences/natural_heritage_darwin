@@ -148,11 +148,11 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
     $this->validatorSchema['mineral_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
 
 
-    $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')))).'/01/01'));
-    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')))).'/12/31'));
+    $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
+    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));
     $maxDate->setStart(false);
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
-    $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $this->widgetSchema['ig_num'] = new sfWidgetFormInputText();
     $this->widgetSchema['ig_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
                                                                      array('class' => 'from_date')
@@ -238,11 +238,11 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
     $this->validatorSchema['mineral_level_ref'] = new sfValidatorInteger(array('required' => false));
 
 
-    $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')))).'/01/01'));
-    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('app_yearRangeMin')), intval(sfConfig::get('app_yearRangeMax')))).'/12/31'));
+    $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
+    $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));
     $maxDate->setStart(false);
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('app_dateLowerBound'));
-    $dateUpperBound = new FuzzyDateTime(sfConfig::get('app_dateUpperBound'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $this->widgetSchema['tags'] = new sfWidgetFormInputText();
     $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
                                                                                 array('class' => 'from_date')
@@ -834,10 +834,10 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     if($val != '')
     {
       $query->andWhere("
-        (station_visible = true AND  gtu_code like ? )
+        (station_visible = true AND  LOWER(gtu_code) like ? )
         OR
         (station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
-          AND gtu_code like ? )", array(strtolower('%'.$val.'%'),strtolower('%'.$val.'%')));
+          AND LOWER(gtu_code) like ? )", array(strtolower('%'.$val.'%'),strtolower('%'.$val.'%')));
       $query->whereParenWrap();
     }
     return $query ;  
@@ -1004,11 +1004,11 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);    
     $this->addDateFromToColumnQuery($query, array('acquisition_date'), $values['acquisition_from_date'], $values['acquisition_to_date']);
 
-    $this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'Taxonomy','taxon');
-    $this->addCatalogueRelationColumnQuery($query, $values['chrono_item_ref'], $values['chrono_relation'],'Chronostratigraphy','chrono');
-    $this->addCatalogueRelationColumnQuery($query, $values['litho_item_ref'], $values['litho_relation'],'Lithostratigraphy','litho');
-    $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'Lithology','lithology');
-    $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'Mineralogy','mineral');
+    $this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
+    $this->addCatalogueRelationColumnQuery($query, $values['chrono_item_ref'], $values['chrono_relation'],'chronostratigraphy','chrono');
+    $this->addCatalogueRelationColumnQuery($query, $values['litho_item_ref'], $values['litho_relation'],'lithostratigraphy','litho');
+    $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology');
+    $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral');
 
     $query->limit($this->getCatalogueRecLimits());
 //     print $query->getSqlQuery();

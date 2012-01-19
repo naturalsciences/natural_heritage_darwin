@@ -5,8 +5,6 @@
 <div class="search_box search_catalogue_people_both">
   
 </div>
-<!--<span class="both_search_people"><?php echo __('People');?> : <input name="type_search" type="radio" value="people" /></span>
-<span class="both_search_institutions"><?php echo __('Institution');?> <input name="type_search" type="radio" value="institution" /></span>-->
 
 <script language="javascript">
 

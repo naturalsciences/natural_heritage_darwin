@@ -5,7 +5,7 @@ class DarwinActions extends sfActions
   {
     // Define all properties that will be either used by the data query or by the pager
     // They take their values from the request. If not present, a default value is defined
-    $this->pagerSlidingSize = intval(sfConfig::get('app_pagerSlidingSize'));
+    $this->pagerSlidingSize = intval(sfConfig::get('dw_pagerSlidingSize'));
     $this->currentPage = ($request->getParameter('page', '') == '')? 1: $request->getParameter('page');
     $this->is_choose = ($request->getParameter('is_choose', '') == '')?0:intval($request->getParameter('is_choose'));
     $this->orderBy = ($request->getParameter('orderby', '') == '')?$defaultOrderByField:$request->getParameter('orderby');

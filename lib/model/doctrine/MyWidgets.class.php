@@ -114,7 +114,17 @@ class MyWidgets extends BaseMyWidgets
         "lang" => "This widget shows all known languages for this user. A language can be set as mothertongue. A language can also be set as preferred that will be used by DaRWIN. If our application cannot translate the preferred language the default language will be used (English)",
         "info" => "This widget is used to specify or change a login and password. if desired, a user can have more than one couple of Login/password.",
         "comm" => "This widget regroups all communication information of a user, such as phone/fax number, email. You can use our tags to set the type of entry (work or home phone for instance)",
-        )
+        ),
+    "loanwidget"=>array(
+        "mainInfo" => "Insert the name of the loan here, You can also set a description, the begining and the end date of the loan.",
+        "actors" => "TODO",
+        "refComments" => "This widget is used to add commentary.If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however",
+        "refProperties" => "This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= watertemperature, sub type= C°,Date from=01/07/1974 10:05:00, value= 15",
+        "loanStatus" => "TODO",
+        "refUsers" => "TODO",
+        "refRelatedFiles" => "TODO",
+        "refInsurances" => "TODO"
+        ),
   ) ;
   /**
   * Get Widget list file for a given role

@@ -26,7 +26,7 @@ function button_ref_modal(event)
         adjust:{
           y: 250 // option set in case of the qtip become too big
         },         
-        target: $(document.body),
+        target: $(document.body)
       },
       
       show: {
@@ -37,7 +37,7 @@ function button_ref_modal(event)
         modal: {
           on: true,
           blur: false
-        },
+        }
       },
       hide: {
         event: 'close_modal',
@@ -75,4 +75,6 @@ function button_ref_clear(event)
   $(this).next().find('.but_text .on').removeClass('hidden');
   $(this).next().find('.but_text .off').addClass('hidden');
   $(this).hide();
+
+  $(this).prevAll('.ref_name').prev().trigger('clear');
 }

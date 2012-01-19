@@ -2,7 +2,6 @@
 <?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'part', 'table' => 'specimen_parts','eid'=> $specimen->getPartRef(),'view' => true)); ?>
 <?php use_stylesheet('widgets.css') ?>
 <?php use_javascript('widgets.js') ?>
-<?php use_javascript('catalogue.js') ?>
 <?php use_javascript('button_ref.js') ?>
 <div class="page">
   <div class="tabs_view">
@@ -30,6 +29,7 @@
 </div>
 <script  type="text/javascript">
 $(document).ready(function () {
+  $('body').catalogue({});
   check_screen_size() ;
   $(window).resize(function(){
     check_screen_size();

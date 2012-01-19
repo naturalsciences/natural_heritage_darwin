@@ -12,5 +12,20 @@ class LoanRightsForm extends BaseLoanRightsForm
 {
   public function configure()
   {
+    unset($this['id']) ;
+    $this->widgetSchema['loan_ref'] = new sfWidgetFormInputHidden();
+    $this->widgetSchema['user_ref'] = new sfWidgetFormInputHidden();    
+    $user_id= $this->getObject()->getUserRef() ;
+    if($user_id)
+    {
+      $user = Doctrine::getTable('Users')->find($this->getObject()->getUserRef()) ;
+      $this->widgetSchema['user_ref']->setLabel($user->getFormatedName()) ;
+    }
+    else 
+      $this->widgetSchema['user_ref']->setAttribute('class','hidden_record');
+    
+    $this->validatorSchema['loan_ref'] = new sfValidatorInteger();
+    $this->validatorSchema['user_ref'] = new sfValidatorInteger(array('required'=>false));
+    $this->mergePostValidator(new LoanRightValidatorSchema());  
   }
 }

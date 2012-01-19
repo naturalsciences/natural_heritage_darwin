@@ -27,10 +27,10 @@ class SuggestionForm extends BaseInformativeWorkflowForm
     $this->validatorSchema['formated_name'] = new sfValidatorPass() ;
     $this->validatorSchema['id'] = new sfValidatorPass() ;
     /* Captcha */
-    $this->widgetSchema['captcha'] = new sfWidgetFormReCaptcha(array('public_key' => sfConfig::get('app_recaptcha_public_key'),'ajax' => $this->options['ajax']));    
-    $this->validatorSchema['captcha'] = new sfValidatorReCaptcha(array('private_key' => sfConfig::get('app_recaptcha_private_key'),
-                                                                       'proxy_host' => sfConfig::get('app_recaptcha_proxy_host'),
-                                                                       'proxy_port' => sfConfig::get('app_recaptcha_proxy_port'),
+    $this->widgetSchema['captcha'] = new sfWidgetFormReCaptcha(array('public_key' => sfConfig::get('dw_recaptcha_public_key'),'ajax' => $this->options['ajax']));    
+    $this->validatorSchema['captcha'] = new sfValidatorReCaptcha(array('private_key' => sfConfig::get('dw_recaptcha_private_key'),
+                                                                       'proxy_host' => sfConfig::get('dw_recaptcha_proxy_host'),
+                                                                       'proxy_port' => sfConfig::get('dw_recaptcha_proxy_port'),
                                                                       ));    
   }
 }

@@ -1,6 +1,6 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-
+<div  class="catalogue_expeditionigs">
 <?php echo form_tag('expeditionsIgs/search' , array('class'=>'search_form','id'=>'expeditionsIgs_filter'));?>
   <div class="container">
     <table class="search" id="search">
@@ -25,4 +25,15 @@
     </div>
   </div>
 </form>
+</div>
+<script type="text/javascript">
+ $(document).ready(function () {
+  $('.catalogue_expeditionigs').choose_form({});
+  $('#searchExpeditionIgs_ig_ref_name').bind('focus',function (event) {
+    $(this).removeClass('complete_missing');
+  }).bind('missing',function (event) {
+    $(this).addClass('complete_missing');
+  });
 
+ });
+</script>

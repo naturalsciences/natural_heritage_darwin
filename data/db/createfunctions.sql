@@ -243,6 +243,8 @@ BEGIN
                 NEW.method_indexed := fullToIndex(NEW.method);
        ELSIF TG_TABLE_NAME = 'collecting_tools' THEN
                 NEW.tool_indexed := fullToIndex(NEW.tool);
+        ELSIF TG_TABLE_NAME = 'loans' THEN
+                NEW.description_ts := to_tsvector('simple', COALESCE(NEW.name,'') || COALESCE(NEW.description,'') );
 	END IF;
 	RETURN NEW;
 END;
@@ -681,9 +683,6 @@ END;
 $$
 language plpgsql;
 
-
-
-
 CREATE OR REPLACE FUNCTION get_setting(IN param text, OUT value text)
 LANGUAGE plpgsql STABLE STRICT AS
 $$BEGIN
@@ -693,6 +692,7 @@ $$BEGIN
     value := NULL;
 END;$$;
 
+DROP FUNCTION IF EXISTS fct_set_user(integer);
 
 /**
  Set user id 
@@ -706,50 +706,47 @@ $$;
 CREATE OR REPLACE FUNCTION fct_trk_log_table() RETURNS TRIGGER
 AS $$
 DECLARE
-	user_id integer;
-        track_level integer;
-	track_fields integer;
-	trk_id bigint;
-	tbl_row RECORD;
-	new_val varchar;
-	old_val varchar;
+  user_id integer;
+  track_level integer;
+  track_fields integer;
+  trk_id bigint;
+  tbl_row RECORD;
+  new_val varchar;
+  old_val varchar;
 BEGIN
+  SELECT COALESCE(get_setting('darwin.track_level'),'10')::integer INTO track_level;
+  IF track_level = 0 THEN --NO Tracking
+    RETURN NEW;
+  ELSIF track_level = 1 THEN -- Track Only Main tables
+    IF TG_TABLE_NAME::text NOT IN ('specimens', 'specimen_individuals', 'specimen_parts', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
+      'mineralogy', 'lithology', 'habitats', 'people') THEN
+      RETURN NEW;
+    END IF;
+  END IF;
 
+  SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
+  IF user_id = 0 THEN
+    RETURN NEW;
+  END IF;
 
+  IF TG_OP = 'INSERT' THEN
+    INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, new_value)
+        VALUES (TG_TABLE_NAME::text, NEW.id, user_id, 'insert', now(), hstore(NEW)) RETURNING id into trk_id;
+  ELSEIF TG_OP = 'UPDATE' THEN
 
-        SELECT COALESCE(get_setting('darwin.track_level'),'10')::integer INTO track_level;
-        IF track_level = 0 THEN --NO Tracking
-          RETURN NEW;
-        ELSIF track_level = 1 THEN -- Track Only Main tables
-          IF TG_TABLE_NAME::text NOT IN ('specimens', 'specimen_individuals', 'specimen_parts', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
-            'mineralogy', 'lithology', 'habitats', 'people') THEN
-            RETURN NEW;
-          END IF;
-        END IF;
+    IF ROW(NEW.*) IS DISTINCT FROM ROW(OLD.*) THEN
+    INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, new_value, old_value)
+        VALUES (TG_TABLE_NAME::text, NEW.id, user_id, 'update', now(), hstore(NEW), hstore(OLD)) RETURNING id into trk_id;
+    ELSE
+      RAISE info 'unnecessary update on table "%" and id "%"', TG_TABLE_NAME::text, NEW.id;
+    END IF;
 
-	SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
-	IF user_id = 0 THEN
-	  RETURN NEW;
-	END IF;
+  ELSEIF TG_OP = 'DELETE' THEN
+    INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, old_value)
+      VALUES (TG_TABLE_NAME::text, OLD.id, user_id, 'delete', now(), hstore(OLD));
+  END IF;
 
-	IF TG_OP = 'INSERT' THEN
-		INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, new_value)
-				VALUES (TG_TABLE_NAME::text, NEW.id, user_id, 'insert', now(), hstore(NEW)) RETURNING id into trk_id;
-	ELSEIF TG_OP = 'UPDATE' THEN
-
-	  IF ROW(NEW.*) IS DISTINCT FROM ROW(OLD.*) THEN
-		INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, new_value, old_value)
-		    VALUES (TG_TABLE_NAME::text, NEW.id, user_id, 'update', now(), hstore(NEW), hstore(OLD)) RETURNING id into trk_id;
-	  ELSE
-	    RAISE info 'unnecessary update on table "%" and id "%"', TG_TABLE_NAME::text, NEW.id;
-	  END IF;
-
-	ELSEIF TG_OP = 'DELETE' THEN
-		INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, old_value)
- 			VALUES (TG_TABLE_NAME::text, OLD.id, user_id, 'delete', now(), hstore(OLD));
-	END IF;
-
-	RETURN NULL;
+  RETURN NULL;
 END;
 $$
 LANGUAGE plpgsql;
@@ -1299,6 +1296,15 @@ BEGIN
         END IF;
       ELSE
         PERFORM fct_cpy_word('taxonomy','name_indexed', NEW.name_indexed);
+      END IF;
+   ELSIF TG_TABLE_NAME ='loans' THEN
+
+      IF TG_OP = 'UPDATE' THEN
+        IF OLD.description_ts IS DISTINCT FROM NEW.description_ts THEN
+          PERFORM fct_cpy_word('loans','description_ts', NEW.description_ts);
+        END IF;
+      ELSE
+        PERFORM fct_cpy_word('loans','description_ts', NEW.description_ts);
       END IF;
 /*
    ELSIF TG_TABLE_NAME ='codes' THEN
@@ -2887,7 +2893,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER
+CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER IMMUTABLE
 AS $$
 DECLARE v_int_value INTEGER DEFAULT 0;
 BEGIN
@@ -3363,7 +3369,8 @@ BEGIN
       PERFORM fct_del_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_del_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
       PERFORM fct_del_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
-
+    ELSIF TG_TABLE_NAME = 'loan_status' THEN
+      PERFORM fct_del_in_dict('loan_status','status', oldfield.status, newfield.status);
   END IF;
 
   RETURN NEW;
@@ -3429,6 +3436,8 @@ BEGIN
       PERFORM fct_add_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_add_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
       PERFORM fct_add_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
+    ELSIF TG_TABLE_NAME = 'loan_status' THEN
+      PERFORM fct_add_in_dict('loan_status','status', oldfield.status, newfield.status);
   END IF;
 
   RETURN NEW;

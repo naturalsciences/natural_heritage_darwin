@@ -15,7 +15,8 @@
 </form>
 <script type="text/javascript">
 $(document).ready(function () 
-{ 
+{
+  $('#workflowsSummary').choose_form({});
   $('#workflow_filter').submit();
   $('#searchWorkflows_status').change(function() { $('#workflow_filter').submit() });
 });

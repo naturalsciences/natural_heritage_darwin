@@ -822,7 +822,8 @@ ins7:
    order_by: 6
    opened: true
    visible: true
-   title_perso: Informative Workflow      
+   title_perso: Informative Workflow 
+   all_public: true        
    
 tw9:
    col_num: 1
@@ -833,6 +834,7 @@ tw9:
    opened: true
    visible: true
    title_perso: Informative Workflow
+   all_public: true   
    
 chw8:
    col_num: 1
@@ -843,6 +845,7 @@ chw8:
    opened: true
    visible: true
    title_perso: Informative Workflow
+   all_public: true   
    
 lhw8:
    col_num: 1
@@ -853,6 +856,7 @@ lhw8:
    opened: true
    visible: true
    title_perso: Informative Workflow
+   all_public: true
    
 miw8:
    col_num: 1
@@ -863,6 +867,7 @@ miw8:
    opened: true
    visible: true
    title_perso: Informative Workflow
+   all_public: true   
    
 liw8:
    col_num: 1
@@ -873,6 +878,7 @@ liw8:
    opened: true
    visible: true
    title_perso: Informative Workflow 
+   all_public: true   
 
 gtu4:
    col_num: 1
@@ -883,6 +889,7 @@ gtu4:
    opened: true
    visible: true
    title_perso: Informative Workflow  
+   all_public: true   
    
 u1wmetto4:
    col_num: 1
@@ -893,6 +900,7 @@ u1wmetto4:
    opened: true
    visible: true
    title_perso: Informative Workflow 
+   all_public: true
       
 sw22:
    col_num: 2
@@ -903,6 +911,7 @@ sw22:
    opened: true
    visible: true
    title_perso: Informative Workflow   
+   all_public: true   
 
 spi11:
    col_num: 2
@@ -913,6 +922,7 @@ spi11:
    opened: true
    visible: true
    title_perso: Informative Workflow   
+   all_public: true   
    
 sp12:
    col_num: 2
@@ -923,6 +933,7 @@ sp12:
    opened: true
    visible: true
    title_perso: Informative Workflow
+   all_public: true   
 
 pe8:
    col_num: 1
@@ -933,3 +944,4 @@ pe8:
    opened: true
    visible: true
    title_perso: Informative Workflow
+   all_public: true   

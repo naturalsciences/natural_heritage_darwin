@@ -100,7 +100,7 @@ class FuzzyDateTime extends DateTime
     // If static max year value is not defined,
     // take it from a config parameter in a config file
     if (!isset( self::$defaultMaxValues['year']) )
-        self::$defaultMaxValues['year'] = sfConfig::get('app_yearUpperBound');
+        self::$defaultMaxValues['year'] = sfConfig::get('dw_yearUpperBound');
     return self::$defaultMaxValues;
   }
 

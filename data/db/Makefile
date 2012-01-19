@@ -12,9 +12,6 @@ PRIV_PSQL_DB = $(PRIV_PSQL) -d $(DB_NAME)
 PG_VER = 8.4
 
 PG_PROVE = /usr/local/bin/pg_prove
-#CLUSTER_NAME = darwin
-#CLUSTER_PATH = /var/lib/postgresql/$(PG_VER)/$(CLUSTER_NAME)
-CLUSTER_PATH = $(shell pg_lsclusters -h | awk '{print $$6}' )
 PASSWD = ''
 
 help: help-target help-param
@@ -82,9 +79,6 @@ help-param:
 	@echo "PORT (Default: 5432)"
 	@echo "   Port for the connection to the database"
 	@echo ""
-	@echo "CLUSTER_PATH (Default: first line  returned by pg_lsclusters. [/var/lib/postgresql/8.4/main] on debian)"
-	@echo "   The path where to create the tablespace"
-	@echo ""
 	@echo "Other advanced parameters are available in the makefile"
 	@echo ""
 
@@ -134,7 +128,6 @@ create-db:
 	$(PRIV_PSQL) -f createdb.sql
 
 install-lib:
-	$(PRIV_PSQL_DB) -f lib/accent.sql
 	#Make this more dynamical
 	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pg_trgm.sql
 	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pgcrypto.sql

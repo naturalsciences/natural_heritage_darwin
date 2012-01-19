@@ -67,7 +67,22 @@
           </th>
           <td><?php echo $form['help_message_activated'];?></td>
         </tr>
-        <tr> 
+        <tr>
+      </tbody>
+      <thead>
+        <tr>
+          <th colspan="2"><?php echo __("Map");?></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>
+            <?php echo $form['gtu_google_activated']->renderLabel();?>
+            <?php echo help_ico($form['gtu_google_activated']->renderHelp(),$sf_user);?>
+          </th>
+          <td><?php echo $form['gtu_google_activated'];?></td>
+        </tr>
+        <tr>
       </tbody>
       <tfoot>
         <tr>

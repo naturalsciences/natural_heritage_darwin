@@ -8,9 +8,11 @@
  * @property integer $id
  * @property string $name
  * @property string $description
+ * @property string $description_ts
  * @property string $from_date
  * @property string $to_date
  * @property string $effective_to_date
+ * @property string $extended_to_date
  * @property Doctrine_Collection $LoanItems
  * @property Doctrine_Collection $LoanRights
  * @property Doctrine_Collection $LoanStatus
@@ -18,18 +20,22 @@
  * @method integer             getId()                Returns the current record's "id" value
  * @method string              getName()              Returns the current record's "name" value
  * @method string              getDescription()       Returns the current record's "description" value
+ * @method string              getDescriptionTs()     Returns the current record's "description_ts" value
  * @method string              getFromDate()          Returns the current record's "from_date" value
  * @method string              getToDate()            Returns the current record's "to_date" value
  * @method string              getEffectiveToDate()   Returns the current record's "effective_to_date" value
+ * @method string              getExtendedToDate()    Returns the current record's "extended_to_date" value
  * @method Doctrine_Collection getLoanItems()         Returns the current record's "LoanItems" collection
  * @method Doctrine_Collection getLoanRights()        Returns the current record's "LoanRights" collection
  * @method Doctrine_Collection getLoanStatus()        Returns the current record's "LoanStatus" collection
  * @method Loans               setId()                Sets the current record's "id" value
  * @method Loans               setName()              Sets the current record's "name" value
  * @method Loans               setDescription()       Sets the current record's "description" value
+ * @method Loans               setDescriptionTs()     Sets the current record's "description_ts" value
  * @method Loans               setFromDate()          Sets the current record's "from_date" value
  * @method Loans               setToDate()            Sets the current record's "to_date" value
  * @method Loans               setEffectiveToDate()   Sets the current record's "effective_to_date" value
+ * @method Loans               setExtendedToDate()    Sets the current record's "extended_to_date" value
  * @method Loans               setLoanItems()         Sets the current record's "LoanItems" collection
  * @method Loans               setLoanRights()        Sets the current record's "LoanRights" collection
  * @method Loans               setLoanStatus()        Sets the current record's "LoanStatus" collection
@@ -59,6 +65,9 @@ abstract class BaseLoans extends sfDoctrineRecord
              'notnull' => true,
              'default' => '',
              ));
+        $this->hasColumn('description_ts', 'string', null, array(
+             'type' => 'string',
+             ));
         $this->hasColumn('from_date', 'string', null, array(
              'type' => 'string',
              ));
@@ -66,6 +75,9 @@ abstract class BaseLoans extends sfDoctrineRecord
              'type' => 'string',
              ));
         $this->hasColumn('effective_to_date', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('extended_to_date', 'string', null, array(
              'type' => 'string',
              ));
     }

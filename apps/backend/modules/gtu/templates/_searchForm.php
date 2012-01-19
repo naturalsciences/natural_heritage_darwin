@@ -1,6 +1,6 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-
+<div class="catalogue_gtu">
 <?php echo form_tag('gtu/search'.( isset($is_choose) && $is_choose  ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'gtu_filter'));?>
   <div class="container">
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
@@ -82,6 +82,8 @@
     var selectControl=0;
     $(document).ready(function()
     {
+      $('.catalogue_gtu').choose_form({});
+
        $('#show_accuracy').change(function(){
           if(results)
           results.setVisibility($('#show_accuracy').is(':checked'));
@@ -125,7 +127,7 @@
           {
              //$(this).closest('form').addClass('search_form');
             $('#gtu_filter').unbind('submit.map_form');
-            $('#gtu_filter').bind('submit.sform',search_form_submit);
+            $('#gtu_filter').bind('submit.sform',$('.catalogue_gtu').data('choose_form').search_form_submit);
             $('#lat_long_set table').show();
             $('#map_search_form').hide();
           }
@@ -282,3 +284,4 @@ function addMarkersFromFeatures()
     <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('gtu/new') ?>"><?php echo __('New');?></a></div>
   </div>
 </form> 
+</div>

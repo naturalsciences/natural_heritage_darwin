@@ -18,18 +18,22 @@ abstract class BaseLoansForm extends BaseFormDoctrine
       'id'                => new sfWidgetFormInputHidden(),
       'name'              => new sfWidgetFormTextarea(),
       'description'       => new sfWidgetFormTextarea(),
+      'description_ts'    => new sfWidgetFormTextarea(),
       'from_date'         => new sfWidgetFormTextarea(),
       'to_date'           => new sfWidgetFormTextarea(),
       'effective_to_date' => new sfWidgetFormTextarea(),
+      'extended_to_date'  => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
       'id'                => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'name'              => new sfValidatorString(array('required' => false)),
       'description'       => new sfValidatorString(array('required' => false)),
+      'description_ts'    => new sfValidatorString(array('required' => false)),
       'from_date'         => new sfValidatorString(array('required' => false)),
       'to_date'           => new sfValidatorString(array('required' => false)),
       'effective_to_date' => new sfValidatorString(array('required' => false)),
+      'extended_to_date'  => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('loans[%s]');

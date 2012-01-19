@@ -1,6 +1,6 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-
+<div class="catalogue_ig">
   <?php echo form_tag('igs/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'igs_filter'));?>
   <div class="container">
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
@@ -28,3 +28,10 @@
     <?php if($sf_user->isAtLeast(Users::ENCODER)):?> <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('igs/new') ?>"><?php echo __('New');?></a></div><?php endif;?>
   </div>
 </form>
+</div>
+
+<script type="text/javascript">
+ $(document).ready(function () {
+  $('.catalogue_ig').choose_form({});
+});
+</script>

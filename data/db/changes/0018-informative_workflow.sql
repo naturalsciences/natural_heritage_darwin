@@ -1,5 +1,6 @@
 ALTER TABLE users_workflow RENAME TO informative_workflow ;
-
+DELETE FROM informative_workflow WHERE referenced_relation != 'lithology';
+UPDATE informative_workflow SET status = 'checked' WHERE status = 'published';
 ALTER TABLE informative_workflow add formated_name varchar not null default 'anonymous' ;
 ALTER TABLE informative_workflow add is_last boolean not null default true;
 ALTER TABLE informative_workflow ALTER user_ref TYPE integer ;
@@ -23,6 +24,9 @@ ALTER INDEX idx_users_workflow_user_status RENAME TO idx_informative_workflow_us
 CREATE trigger trg_chk_is_last_informative_workflow BEFORE INSERT
 	ON informative_workflow FOR EACH ROW
 	EXECUTE PROCEDURE fct_remove_last_flag();
+
+GRANT USAGE, SELECT ON informative_workflow_id_seq TO d2viewer;
+GRANT INSERT, UPDATE ON informative_workflow TO d2viewer;
 
 -- don't forget to relaunch createfunction.sql before launch this !
 

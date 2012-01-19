@@ -87,7 +87,7 @@ END)
 
 CREATE TABLE public.darwin_flat_bis AS
 (
-  SELECT id, collection_ref, collection_name, expedition_ref, expedition_name, gtu_ref, 
+  SELECT df.id, collection_ref, collection_name, expedition_ref, expedition_name, gtu_ref, 
          gtu_code, gtu_from_date, gtu_to_date, gtu_country_tag_value, taxon_ref, 
          case when taxon_name = '' then null::varchar else taxon_name end  as taxon_name, 
          taxon_level_ref, taxon_level_name, litho_ref, 
@@ -98,15 +98,16 @@ CREATE TABLE public.darwin_flat_bis AS
          case when lithology_name = '' then null::varchar else lithology_name end as lithology_name, 
          lithology_level_ref, lithology_level_name, lithology_local, lithology_color, mineral_ref, 
          case when mineral_name = '' then null::varchar else mineral_name end as mineral_name,
-         mineral_level_ref, mineral_level_name, mineral_local, mineral_color, acquisition_category, acquisition_date, 
+         mineral_level_ref, mineral_level_name, mineral_local, mineral_color, min.classification as mineral_classification, min.cristal_system as mineral_cristal_system, 
+         acquisition_category, acquisition_date, 
          individual_ref, individual_type, individual_type_group, individual_type_search, 
          individual_sex, individual_state, individual_stage, individual_social_status, individual_rock_form, 
          part_ref, part
-  FROM darwin2.darwin_flat
+  FROM darwin2.darwin_flat as df LEFT JOIN darwin2.mineralogy as min ON df.mineral_ref = min.id
   WHERE collection_is_public = true and part_ref is not null
 );
 
-CREATE INDEX idx_df_id ON public.darwin_flat_bis(id);
+ALTER TABLE public.darwin_flat_bis ADD CONSTRAINT pk_df_id PRIMARY KEY (id);
 CREATE INDEX idx_df_taxon_ref ON public.darwin_flat_bis(taxon_ref);
 CREATE INDEX idx_df_lithology_ref ON public.darwin_flat_bis(lithology_ref);
 CREATE INDEX idx_df_litho_ref ON public.darwin_flat_bis(litho_ref);
@@ -356,7 +357,7 @@ CREATE INDEX idx_collectors_order_by ON public.collectors (order_by);
 CREATE INDEX idx_collectors_people_formated_name ON public.collectors (people_formated_name) where people_formated_name is not null;
 CREATE INDEX idx_collectors_institution_formated_name ON public.collectors (institution_formated_name) where institution_formated_name is not null;
 
-CREATE SEQUENCE public.donators_abcd_id_seq;
+/*CREATE SEQUENCE public.donators_abcd_id_seq;
 
 CREATE TABLE public.donators as
 (
@@ -417,7 +418,7 @@ CREATE INDEX idx_donators_flat_id ON public.donators (flat_id);
 CREATE INDEX idx_donators_order_by ON public.donators (order_by);
 CREATE INDEX idx_donators_people_formated_name ON public.donators (people_formated_name) where people_formated_name is not null;
 CREATE INDEX idx_donators_institution_formated_name ON public.donators (institution_formated_name) where institution_formated_name is not null;
-
+*/
 create sequence public.identifications_abdc_id_seq;
 
 CREATE TABLE public.identifications_abdc as
@@ -1046,6 +1047,7 @@ CREATE TABLE public.darwin_metadata AS
 );
 
 ALTER TABLE darwin2.template_classifications SET SCHEMA public;
+ALTER TABLE public.template_classifications OWNER TO postgres;
 
 CREATE SEQUENCE public.parent_taxonomy_id_seq;
 
@@ -1075,10 +1077,8 @@ CREATE INDEX idx_parent_taxon_parent_id ON public.parent_taxonomy (parent_id);
 CREATE INDEX idx_darwin_flat_chrono_ref ON public.darwin_flat (chrono_ref);
 CREATE INDEX idx_darwin_flat_litho_ref ON public.darwin_flat (litho_ref);
 
-
-
 ALTER FUNCTION darwin2.gettagsindexedasarray(character varying) SET SCHEMA public;
-ALTER FUNCTION darwin2.array_accum(anyelement) SET SCHEMA public;
+ALTER AGGREGATE darwin2.array_accum(anyelement) SET SCHEMA public;
 ALTER FUNCTION darwin2.linetotagarray(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.linetotagrows(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyelement) SET SCHEMA public;
@@ -1086,9 +1086,30 @@ ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyarray) SET SCHEMA publi
 ALTER FUNCTION darwin2.fulltoindex(character varying) SET SCHEMA public;
 ALTER SEQUENCE darwin2.darwin_flat_id_seq SET SCHEMA public;
 
+ALTER FUNCTION public.gettagsindexedasarray(character varying) OWNER TO postgres;
+ALTER AGGREGATE public.array_accum(anyelement) OWNER TO postgres;
+ALTER FUNCTION public.linetotagarray(text) OWNER TO postgres;
+ALTER FUNCTION public.linetotagrows(text) OWNER TO postgres;
+ALTER FUNCTION public.fct_remove_array_elem(anyarray,anyelement) OWNER TO postgres;
+ALTER FUNCTION public.fct_remove_array_elem(anyarray,anyarray) OWNER TO postgres;
+ALTER FUNCTION public.fulltoindex(character varying) OWNER TO postgres;
+ALTER SEQUENCE public.darwin_flat_id_seq OWNER TO postgres;
+
 DROP SCHEMA IF EXISTS darwin1 CASCADE;
 
 DROP SCHEMA IF EXISTS darwin2 CASCADE;
+
+revoke execute on function public.fulltoindex(character varying) from darwin1;
+revoke all on table public.geometry_columns from cebmpad;
+revoke all on table public.spatial_ref_sys from cebmpad;
+revoke all on table public.geometry_columns from darwin2;
+revoke all on table public.spatial_ref_sys from darwin2;
+
+DROP ROLE IF EXISTS darwin2;
+
+DROP ROLE IF EXISTS darwin1;
+
+DROP ROLE IF EXISTS cebmpad;
 
 ALTER TABLE darwin_flat_bis RENAME TO darwin_flat;
 
@@ -1096,7 +1117,7 @@ GRANT SELECT ON  public.flat_abcd TO d2viewer;
 GRANT SELECT ON  public.gtu_properties TO d2viewer;
 GRANT SELECT ON  public.gtu_place TO d2viewer;
 GRANT SELECT ON  public.collectors TO d2viewer;
-GRANT SELECT ON  public.donators TO d2viewer;
+/*GRANT SELECT ON  public.donators TO d2viewer;*/
 GRANT SELECT ON  public.identifications_abdc TO d2viewer;
 GRANT SELECT ON  public.taxon_identified TO d2viewer;
 GRANT SELECT ON  public.mineral_identified TO d2viewer;
@@ -1113,7 +1134,7 @@ ANALYZE public.flat_abcd;
 ANALYZE public.gtu_properties;
 ANALYZE public.gtu_place;
 ANALYZE public.collectors;
-ANALYZE public.donators;
+/*ANALYZE public.donators;*/
 ANALYZE public.identifications_abdc;
 ANALYZE public.taxon_identified;
 ANALYZE public.mineral_identified;
@@ -1124,13 +1145,3 @@ ANALYZE public.chronostratigraphy_abc;
 ANALYZE public.accomp_mineral;
 ANALYZE public.darwin_flat;
 ANALYZE public.parent_taxonomy;
-
-revoke execute on function public.fulltoindex(character varying) from darwin1;
-revoke all on table public.geometry_columns from cebmpad;
-revoke all on table public.spatial_ref_sys from cebmpad;
-
-DROP ROLE IF EXISTS darwin1;
-
-DROP ROLE IF EXISTS cebmpad;
-
---\i ../createindexes_darwinflat.sql

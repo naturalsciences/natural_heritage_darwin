@@ -28,7 +28,7 @@ class informativeWorkflowActions extends DarwinActions
         $workflow->fromArray($data) ;
         $workflow->save() ;
       }
-      else $this->redirect(informativeWorkflow::getAvailableStatus($this->getUser()->getDbUserType())) ;
+      // else : nothing append, and it's a good thing
       return $this->renderText('ok') ;
     }
     $this->redirect('board/index') ;

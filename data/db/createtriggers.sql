@@ -87,6 +87,10 @@ CREATE TRIGGER trg_cpy_fullToIndex_collecting_tools BEFORE INSERT OR UPDATE
   ON collecting_tools FOR EACH ROW
   EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
+CREATE TRIGGER trg_cpy_fullToIndex_loans BEFORE INSERT OR UPDATE
+  ON loans FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_fullToIndex();
+
 CREATE TRIGGER trg_clr_specialstatus_specimenindividuals BEFORE INSERT OR UPDATE
 	ON specimen_individuals FOR EACH ROW
 	EXECUTE PROCEDURE fct_clr_specialstatus();
@@ -195,6 +199,14 @@ CREATE TRIGGER trg_clr_referenceRecord_specimenparts AFTER DELETE
 CREATE TRIGGER trg_clr_referenceRecord_specimensaccompanying AFTER DELETE
 	ON specimens_accompanying FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_loans AFTER DELETE
+        ON loans FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE
+        ON loan_items FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
 
 /**** BEGIN _TS *****/
 
@@ -604,6 +616,10 @@ CREATE TRIGGER trg_words_ts_cpy_lithology BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_words_ts_cpy_taxonomy BEFORE INSERT OR UPDATE
 	ON taxonomy FOR EACH ROW
 	EXECUTE PROCEDURE fct_trg_word();
+
+CREATE TRIGGER trg_words_ts_cpy_loans BEFORE INSERT OR UPDATE
+        ON loans FOR EACH ROW
+        EXECUTE PROCEDURE fct_trg_word();
 /*
 CREATE TRIGGER trg_words_ts_cpy_codes BEFORE INSERT OR UPDATE
 	ON codes FOR EACH ROW
@@ -852,6 +868,10 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimen_parts AFTER INSERT OR UPDATE
         ON specimen_parts FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_loan_status AFTER INSERT OR UPDATE
+        ON loan_status FOR EACH ROW
+        EXECUTE PROCEDURE trg_ins_update_dict();
+
 /******************* DELETE FROM DICT ******************/
 
 CREATE TRIGGER fct_cpy_trg_del_dict_codes AFTER DELETE  OR UPDATE
@@ -904,6 +924,10 @@ CREATE TRIGGER fct_cpy_trg_del_dict_users_addresses AFTER DELETE  OR UPDATE
 
 CREATE TRIGGER fct_cpy_trg_del_dict_specimen_parts AFTER DELETE  OR UPDATE
         ON specimen_parts FOR EACH ROW
+        EXECUTE PROCEDURE trg_del_dict();
+
+CREATE TRIGGER fct_cpy_trg_del_dict_loan_status AFTER DELETE OR UPDATE
+        ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
   
 /********************* *****/

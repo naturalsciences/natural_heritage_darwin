@@ -30,7 +30,8 @@
         <ul class="field_change">
             <?php echo $info['comment'];?>     
         </ul>
-        <?php echo link_to(image_tag('next.png'), $info->getLink());?>
+        <?php echo link_to(image_tag('blue_eyel.png'), $info->getLink('view'));?>
+        <?php echo link_to(image_tag('edit.png'), $info->getLink('edit'));?>        
       </td>
     </tr>
     <?php endforeach ; ?>   
