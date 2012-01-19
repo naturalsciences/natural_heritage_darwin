@@ -14,6 +14,47 @@ class LoanStatusTable extends Doctrine_Table
      */
     public static function getInstance()
     {
-        return Doctrine_Core::getTable('LoanStatus');
+      return Doctrine_Core::getTable('LoanStatus');
+    }
+
+    /**
+     * getFromLoans
+     *
+     * Returns an array that contains the LoanStatusses for the loans
+     * whose ids are mentioned in the $loan_ids variable.
+     * When $loan_ids is an empty array, an empty array will be returned.
+     *
+     * Only loans that are not Closed/Returned/Rejected will be returned
+     * because only ids of loans that are not Closed/Returned/Rejected are
+     * received.
+     * 
+     * @param $loan_ids an array of ids of loans
+     * 
+     * @return an array of statusses for the given loan_ids
+     *            key: id of the loan
+     *            value: the (last) status of that loan
+     *         or an empty array if no loan_ids were given.   
+     */ 
+
+    public function getFromLoans( array $loan_ids )
+    { 
+      $res_array = array();
+      if( !empty($loan_ids) ) 
+      {
+	$status_group = array_values(loans::getStatusFromGroup('closed'));              
+	$status_group_params = implode(',',array_fill(0,count($status_group),'?')); 
+
+	$q = Doctrine_Query::create()
+	  ->select('loan_ref, status, is_last')
+	  ->from('LoanStatus')
+	  ->whereIn('loan_ref', $loan_ids)
+	  ->andWhere( 'is_last = TRUE AND status NOT IN (' . $status_group_params . ')', $status_group);
+	$result = $q->execute();    
+	
+	foreach( $result as $res )
+	  $res_array[$res->getLoanRef()] = $res->getStatus(); 
+      }
+	
+      return $res_array;
     }
 }

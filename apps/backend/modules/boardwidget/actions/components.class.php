@@ -95,5 +95,42 @@ class boardwidgetComponents extends sfComponents
   }  
 
   public function executeMyLoans()
-  {}
+  {
+    /**/
+    $this->pagerSlidingSize = intval(sfConfig::get('app_pagerSlidingSize'));
+    $query = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId());
+    $this->pagerLayout = new PagerLayoutWithArrows(
+      new DarwinPager(
+        $query,
+        $this->getRequestParameter('page',1),
+        5
+      ),
+      new Doctrine_Pager_Range_Sliding(
+        array('chunk' => $this->pagerSlidingSize)
+      ),
+      $this->getController()->genUrl('widgets/reloadContent?category=board&widget=myLoans') . '/page/{%page_number}'
+    );
+
+    $this->pagerLayout->setTemplate('<li><a href="{%url}">{%page}</a></li>');
+    $this->pagerLayout->setSelectedTemplate('<li>{%page}</li>');
+    $this->pagerLayout->setSeparatorTemplate('<span class="pager_separator">::</span>');
+
+    if (! $this->pagerLayout->getPager()->getExecuted())
+      $this->loans = $this->pagerLayout->execute();  
+
+    $this->myTotalLoans = $this->pagerLayout->getPager()->getNumResults();
+    //$this->loans = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId(), 5); 
+    $this->rights = Doctrine::getTable('LoanRights')->getEncodingRightsForUser($this->getUser()->getId());
+
+    if( count($this->loans) )
+    {
+      $ids = array();
+      foreach($this->loans as $loan)
+ 	$ids[] = $loan->getId();
+      
+      if( !empty($ids) )
+	$this->status = Doctrine::getTable('LoanStatus')->getFromLoans($ids);
+    }
+
+  }
 }

@@ -14,7 +14,8 @@ class loanActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new LoansFormFilter();
+    //$this->form = new LoansFormFilter();
+    $this->form = new LoansForm();
   }
 
   public function executeSearch(sfWebRequest $request)
@@ -73,6 +74,44 @@ class loanActions extends DarwinActions
     $this->forward404Unless($expeditions = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
     $this->form = new LoansForm($expeditions);
     $this->loadWidgets();
+  }
+
+  public function executeDelete(sfWebRequest $request)
+  {
+    $this->forward404Unless($loan = Doctrine::getTable('Loans')->find(array($request->getParameter('id'))), sprintf('Object loans does not exist (%s).', array($request->getParameter('id'))));
+    try
+    {
+      $loan->delete();
+      if( $request->hasParameter('on_board') )
+	$this->redirect('board/index');
+      else
+	$this->redirect('loan/index');
+    }
+    catch(Doctrine_Exception $ne)
+    {
+      $e = new DarwinPgErrorParser($ne);
+      $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+      $this->form = new LoansForm($loan);
+      $this->form->getErrorSchema()->addError($error); 
+      $this->loadWidgets();
+      $this->setTemplate('edit');
+    }
+  }
+
+  public function executeViewAll(sfWebRequest $request)
+  {  
+    $this->loans = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId())->execute(); 
+    $this->rights = Doctrine::getTable('LoanRights')->getEncodingRightsForUser($this->getUser()->getId());
+
+    if( count($this->loans) )
+    {
+      $ids = array();
+      foreach($this->loans as $loan)
+ 	$ids[] = $loan->getId();
+      
+      if( !empty($ids) )
+	$this->status = Doctrine::getTable('LoanStatus')->getFromLoans($ids);
+    }
   }
 
 

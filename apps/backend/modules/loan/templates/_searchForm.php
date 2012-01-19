@@ -7,7 +7,7 @@
       <thead>
         <tr>
           <th><?php echo $form['name']->renderLabel('') ?></th>
-          <th><?php echo $form['status']->renderLabel('') ?></th>
+          <th><?php //echo $form['status']->renderLabel('') ?></th>
           <th><?php echo $form['from_date']->renderLabel('') ?></th>
           <th><?php echo $form['to_date']->renderLabel('') ?></th>
         </tr>
@@ -15,21 +15,21 @@
       <tbody>
         <tr>
           <th><?php echo $form['name']->render() ?></th>
-          <th><?php echo $form['status']->render() ?></th>
+          <th><?php //echo $form['status']->render() ?></th>
           <th><?php echo $form['from_date']->render() ?></th>
           <th><?php echo $form['to_date']->render() ?></th>
         </tr>
       </tbody>
       <thead>
         <tr>
-          <th><?php echo $form['people_ref']->renderLabel('') ?></th>
-          <th><?php echo $form['ig_ref']->renderLabel('') ?></th>
-          <th><?php echo $form['only_darwin']->renderLabel('') ?></th>
+          <th><?php //echo $form['people_ref']->renderLabel('') ?></th>
+          <th><?php //echo $form['ig_ref']->renderLabel('') ?></th>
+          <th><?php //echo $form['only_darwin']->renderLabel('') ?></th>
         </tr>
         <tr>
-          <th><?php echo $form['people_ref']->render() ?></th>
-          <th><?php echo $form['ig_ref']->render() ?></th>
-          <th><?php echo $form['only_darwin']->render() ?>
+          <th><?php //echo $form['people_ref']->render() ?></th>
+          <th><?php //echo $form['ig_ref']->render() ?></th>
+          <th><?php //echo $form['only_darwin']->render() ?>
           <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </th>
         </tr>

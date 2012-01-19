@@ -502,7 +502,7 @@ MyWidgets:
         is_available: { type: boolean, notnull: true, default: false}
         opened: { type: boolean, notnull: true, default: true}
         color: { type: string, default:'#5BAABD'}
-        is_available: { type: boolean, default: false}
+        #is_available: { type: boolean, default: false}
         icon_ref: { type: integer}
         title_perso: { type: string}
         collections: { type: string }

@@ -12,5 +12,6 @@ class LoansForm extends BaseLoansForm
 {
   public function configure()
   {
+      
   }
 }
