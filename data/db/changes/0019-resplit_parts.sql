@@ -1,5 +1,7 @@
 ﻿begin;
 
+
+
 ALTER TABLE specimen_parts DISABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
 
 CREATE TYPE recPartsDetail AS (
@@ -36,7 +38,23 @@ CREATE TYPE recPartsDetail AS (
                                 specimen_part_count_min integer,
                                 specimen_part_count_max integer,
                                 complete boolean,
-                                part_comment varchar
+                                part_comment varchar,
+                                freshness_level varchar,
+                                old_length_min numeric,
+                                old_length_max numeric,
+                                old_length_unit varchar,
+                                old_height_min numeric,
+                                old_height_max numeric,
+                                old_height_unit varchar,
+                                old_depth_min numeric,
+                                old_depth_max numeric,
+                                old_depth_unit varchar,
+                                old_weight_min numeric,
+                                old_weight_max numeric,
+                                old_weight_unit varchar,
+                                old_vol_min numeric,
+                                old_vol_max numeric,
+                                old_vol_unit varchar
                               );
 
 create or replace function decrementCount(IN partId specimen_parts.id%TYPE, IN decrementVal bigint) RETURNS boolean language plpgsql AS
@@ -106,7 +124,7 @@ begin
     codes_prefix_separator := '.';
     code_to_insert:= '78427';
   ELSIF substr(codeToSplit, 1, 4) IN ('AST.', 'CRI.', 'HOL.', 'INV.', 'NIV.', 'OPH.', 'POP.') THEN
-    codes_prefix := substr(codeToSplit, 1, 4);
+    codes_prefix := substr(codeToSplit, 1, 3);
     codes_prefix_separator := '.';
     IF length(codeToSplit) > 4 THEN
       code_to_insert:= substr(codeToSplit, 5);
@@ -150,6 +168,54 @@ exception
   when others then
     RAISE WARNING 'Error in createCodes: %', SQLERRM;
     return -1;
+end;
+$$;
+
+create or replace function checkAndCreateProperties(IN part_id specimen_parts.id%TYPE, IN new_part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail) RETURNS  integer language plpgsql
+AS
+$$
+declare
+begin
+  SELECT count(full_code_order_by) INTO code_count
+  FROM codes
+  WHERE referenced_relation = 'specimen_parts'
+    AND code_category = 'main'
+    AND record_id = part_id;
+  IF code_count > 1 THEN
+    UPDATE codes
+    SET record_id = new_part_id
+    WHERE referenced_relation = 'specimen_parts'
+      AND record_id = part_id
+      AND code_category = 'main'
+      AND full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code);
+    GET DIAGNOSTICS code_count = ROW_COUNT;
+    IF code_count = 0 THEN
+      IF createCodes (new_part_id, recPartsDetails.main_code) < 0 THEN
+        return -1;
+      END IF;
+    END IF;
+  ELSIF code_count = 1 THEN
+    INSERT INTO codes
+    (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
+    (SELECT 'specimen_parts', new_part_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask
+     FROM codes
+     WHERE referenced_relation = 'specimen_parts'
+       AND record_id = part_id
+       AND code_category = 'main'
+       AND full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code)
+    );
+    GET DIAGNOSTICS code_count = ROW_COUNT;
+    IF code_count = 0 THEN
+      IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
+        return -1;
+      END IF;
+    END IF;
+  ELSE
+    IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
+      return -1;
+    END IF;
+  END IF;
+  return 1;
 end;
 $$;
 
@@ -255,7 +321,23 @@ begin
                                   when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
                                   else false 
                                 end as complete,
-                                sgr_comment as part_comment
+                                sgr_comment as part_comment,
+                                case when sfl_description = 'Undefined' then null else sfl_description end as freshness_level,
+                                sgr_length_min as old_length_min,
+                                sgr_length_max as old_length_max,
+                                length_unit.uni_unit as old_length_unit,
+                                sgr_height_min as old_height_min,
+                                sgr_height_max as old_height_max,
+                                height_unit.uni_unit as old_height_unit,
+                                sgr_depth_min as old_depth_min,
+                                sgr_depth_max as old_depth_max,
+                                depth_unit.uni_unit as old_depth_unit,
+                                sgr_weight_min as old_weight_min,
+                                sgr_weight_max as old_weight_max,
+                                weight_unit.uni_unit as old_weight_unit,
+                                sgr_vol_min as old_vol_min,
+                                sgr_vol_max as old_vol_max,
+                                vol_unit.uni_unit as old_vol_unit
                           from darwin1.tbl_specimen_groups 
                           inner join darwin1.id_refs 
                           on sgr_id_ctn = old_id and system = 'individuals'
@@ -274,9 +356,15 @@ begin
                           inner join darwin1.tbl_storage on sto_id_ctn = sgr_storage_nr
                           inner join darwin1.tbl_container_types on cty_id_ctn = sgr_container_type_nr
                           inner join darwin1.tbl_batches on sgr_batch_nr = bat_id_ctn
+                          inner join darwin1.tbl_spec_freshness_levels on sfl_level = sgr_freshness_level_nr
+                          inner join darwin1.tbl_units as length_unit on sgr_length_min_uni_nr = length_unit.uni_id_ctn
+                          inner join darwin1.tbl_units as height_unit on sgr_height_min_uni_nr = height_unit.uni_id_ctn
+                          inner join darwin1.tbl_units as depth_unit on sgr_depth_min_uni_nr = depth_unit.uni_id_ctn
+                          inner join darwin1.tbl_units as weight_unit on sgr_weight_min_uni_nr = weight_unit.uni_id_ctn
+                          inner join darwin1.tbl_units as vol_unit on sgr_vol_min_uni_nr = vol_unit.uni_id_ctn
                           inner join 
                           specimen_parts
-                          on     specimen_individual_ref = new_id
+                          on  specimen_individual_ref = new_id
                               and specimen_part = lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation'))
                               and coalesce(specimen_parts.building,'') = 
                                   case 
@@ -493,8 +581,8 @@ begin
           IF new_part_id < 0 THEN
             return false;
           END IF;
-          select array_agg(full_code_order_by) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
-          select array_agg(full_code_order_by) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
+          select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+          select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
           RAISE NOTICE '++ Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
         END IF;
       ELSE
@@ -502,7 +590,7 @@ begin
         IF createCodes (part_id, recPartsDetails.old_main_code) < 0 THEN
           return false;
         END IF;
-        select array_agg(full_code_order_by) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
         RAISE NOTICE '++ Actual codes: %', recActualCodes;
       END IF;
     ELSE
@@ -511,8 +599,8 @@ begin
       IF new_part_id < 0 THEN
         return false;
       END IF;
-      select array_agg(full_code_order_by) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
-      select array_agg(full_code_order_by) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
+      select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+      select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
       RAISE NOTICE '-- Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
     END IF;
   END LOOP;
