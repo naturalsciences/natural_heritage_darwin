@@ -125,7 +125,7 @@ BEGIN
     temp_string := translate(temp_string, 'ìíîïìĩīĭÌÍÎÏÌĨĪĬ', 'iiiiiiiiiiiiiiii');
     temp_string := translate(temp_string, 'óôõöōŏőÒÓÔÕÖŌŎŐ', 'ooooooooooooooo');
     temp_string := translate(temp_string, 'ùúûüũūŭůÙÚÛÜŨŪŬŮ', 'uuuuuuuuuuuuuuuu');
-    temp_string := REPLACE(to_indexed, 'Œ', 'oe');
+    temp_string := REPLACE(temp_string, 'Œ', 'oe');
     temp_string := REPLACE(temp_string, 'Ӕ', 'ae');
     temp_string := REPLACE(temp_string, 'œ', 'oe');
     temp_string := REPLACE(temp_string, 'æ', 'ae');

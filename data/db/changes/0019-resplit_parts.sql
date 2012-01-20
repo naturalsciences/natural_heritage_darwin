@@ -230,14 +230,11 @@ create or replace function resplit_parts () returns boolean language plpgsql as
 $$
 declare
   recPartsDetails recPartsDetail;
-  recCounting RECORD;
   part_id specimen_parts.id%TYPE := 0;
   new_part_id specimen_parts.id%TYPE;
-  rowsUpdated integer;
-  rowsCounted integer;
   code_count integer;
-  coding varchar;
-  recCodes varchar[];
+  recActualCodes varchar[];
+  recTransferedCodes varchar[];
 begin
   FOR recPartsDetails IN select specimen_individual_ref,  specimen_parts.id as parts_id, fullToIndex(sgr_code) as main_code, 
                                 fullToIndex(bat_unique_rbins_code) as rbins_code, fullToIndex(bat_code) as batch_main_code, fullToIndex(bat_inventory_code) as inventory_code, sgr_code as old_main_code,
@@ -312,7 +309,7 @@ begin
                           limit 50
   LOOP
     IF part_id != recPartsDetails.parts_id THEN
-      RAISE NOTICE 'Infos: %', recPartsDetails;
+      RAISE NOTICE 'Next part infos: %', recPartsDetails;
       part_id := recPartsDetails.parts_id;
       IF recPartsDetails.specimen_part_count_min = 0 AND recPartsDetails.part_count_min > 0 THEN
         IF recPartsDetails.specimen_part_count_max = recPartsDetails.specimen_part_count_min THEN
@@ -491,22 +488,32 @@ begin
               ) 
             ) as x;
         IF code_count > 0 THEN
+          RAISE NOTICE '+ Need of new part creation';
           SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
           IF new_part_id < 0 THEN
             return false;
           END IF;
+          select array_agg(full_code_order_by) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+          select array_agg(full_code_order_by) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
+          RAISE NOTICE '++ Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
         END IF;
       ELSE
+        RAISE NOTICE '+ New code creation for next part';
         IF createCodes (part_id, recPartsDetails.old_main_code) < 0 THEN
           return false;
         END IF;
+        select array_agg(full_code_order_by) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+        RAISE NOTICE '++ Actual codes: %', recActualCodes;
       END IF;
     ELSE
-      RAISE NOTICE '-Infos: %', recPartsDetails;
+      RAISE NOTICE '- Same part id infos: %', recPartsDetails;
       SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
       IF new_part_id < 0 THEN
         return false;
       END IF;
+      select array_agg(full_code_order_by) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+      select array_agg(full_code_order_by) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
+      RAISE NOTICE '-- Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
     END IF;
   END LOOP;
   return true;
