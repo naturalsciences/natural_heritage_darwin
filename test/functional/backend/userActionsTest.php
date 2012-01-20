@@ -245,7 +245,7 @@ $browser->
   get('/user/widget')->
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('tbody[alt="board_widget"] tr',4)->
+    checkElement('tbody[alt="board_widget"] tr',5)->
   end()->
 
   click('#submit', array('user_widget' => array(
