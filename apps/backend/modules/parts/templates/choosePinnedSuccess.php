@@ -26,13 +26,6 @@
 
     <script  type="text/javascript">
     $(document).ready(function () {
-      /* $('.row_delete').click(function(event)
-        {
-          event.preventDefault();
-          $(this).closest('tr').remove();
-          checkItem();
-        });
-  */
         $('img.extd_info').each(function(){
           tip_content = $(this).next().html();
           $(this).qtip(
@@ -54,6 +47,7 @@
     });
     </script>
 <?php else:?>
-  <p class="warn_message"><?php echo __('No Items here. Please pin some items or another source to be able to do a mass action');?></p>
+  <p class="warn_message"><?php echo __('No Items here.');?> <?php echo link_to(__('Please pin some parts.'),'specimensearch/index');?></p>
+
 <?php endif;?>
 </div>

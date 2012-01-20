@@ -1,8 +1,12 @@
 <tr class="line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
-  <td><?php echo $form->renderError();?></td>
+  <td>
+    <?php echo $form->renderError();?>
+    <?php if(!$lineObj->isNew()):?>
+      <input value="<?php echo $lineObj->getId();?>" type="checkbox" class="select_chk_box" />
+    <?php endif;?>
+  </td>
   <td>
       <?php echo image_tag('info.png',"title=info class=extd_info");?>
-
     <?php echo $form['part_ref']->renderError();?>
     <?php echo $form['part_ref'];?>
   </td>
