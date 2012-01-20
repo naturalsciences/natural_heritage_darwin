@@ -47,10 +47,11 @@ class SpecimensFormFilter extends BaseSpecimenSearchFormFilter
     if ($values != "")
     {
       $alias = $query->getRootAlias();    
+      $conn_MGR = Doctrine_Manager::connection();
       $query->leftJoin($alias.'.SpecimensCodes cod')
           ->andWhere("cod.referenced_relation = ?", array('specimens'))
           ->andWhere("cod.record_id = $alias.spec_ref")
-          ->andWhere("cod.full_code_order_by = fullToIndex(?) ",$values);
+          ->andWhere("cod.full_code_order_by = fullToIndex(".$conn_MGR->quote($values, 'string').") ");
     }
     return $query;
   }
@@ -58,7 +59,8 @@ class SpecimensFormFilter extends BaseSpecimenSearchFormFilter
   {
      if ($values != "")
      {
-       $query->andWhere("ig_num_indexed like concat(fullToIndex(?), '%') ", $values);
+       $conn_MGR = Doctrine_Manager::connection();
+       $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
      }
      return $query;
   } 
@@ -67,7 +69,8 @@ class SpecimensFormFilter extends BaseSpecimenSearchFormFilter
   {
      if ($values != "")
      {
-       $query->andWhere("collection_ref in (SELECT c.id FROM Collections c WHERE c.name_indexed like concat(fullToIndex(?), '%')) ", $values);
+       $conn_MGR = Doctrine_Manager::connection();
+       $query->andWhere("collection_ref in (SELECT c.id FROM Collections c WHERE c.name_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%')) ");
      }
      return $query;
   }  

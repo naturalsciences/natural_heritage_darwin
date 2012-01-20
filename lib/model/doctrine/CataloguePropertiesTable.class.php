@@ -59,9 +59,10 @@ class CataloguePropertiesTable extends DarwinTable
   public function getDistinctQualifier($sub_type=null)
   {
     $q = $this->createDistinct('CatalogueProperties', 'property_qualifier', 'qualifier','');
-
+    
+    $conn_MGR = Doctrine_Manager::connection();
     if(! is_null($sub_type))
-      $q->addWhere('property_sub_type_indexed = fullToIndex(?)',$sub_type);
+      $q->addWhere('property_sub_type_indexed = fullToIndex('.$conn_MGR->quote($sub_type, 'string').')');
     $results = $q->fetchArray();
     $rez=array(''=>''); //@TODO: don't know why but doctrine doesnt like it otherwise
     foreach($results as $item)

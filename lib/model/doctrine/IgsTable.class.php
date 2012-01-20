@@ -7,9 +7,10 @@ class IgsTable extends DarwinTable
 {
   public function fetchByIgNumLimited($ig_num, $limit)
   {
+    $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
          ->from('Igs i')
-         ->where("i.ig_num_indexed like concat (fullToIndex(?), '%') ", $ig_num)
+         ->where("i.ig_num_indexed like concat (fullToIndex(".$conn_MGR->quote($ig_num, 'string')."), '%') ")
          ->limit($limit)
          ->orderBy("i.ig_num_indexed ASC");
     return $q->execute();

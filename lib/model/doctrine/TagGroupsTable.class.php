@@ -6,8 +6,9 @@ class TagGroupsTable extends DarwinTable
 {
   public function getDistinctSubGroups($group)
   {
+    $conn_MGR = Doctrine_Manager::connection();
     $q = $this->createDistinct('TagGroups  INDEXBY sgn', 'sub_group_name', 'sgn','');
-    $q->andWhere('group_name_indexed = fulltoIndex(?)', $group);
+    $q->andWhere('group_name_indexed = fulltoIndex('.$conn_MGR->quote($group, 'string').')');
     $results = $q->fetchArray();
     if(count($results))
       $results = array_combine(array_keys($results),array_keys($results));
