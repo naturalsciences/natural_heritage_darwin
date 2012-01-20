@@ -80,5 +80,20 @@ $(document).ready(function () {
   <?php if($form['level_ref']->getValue()) 
       echo "$('#lithostratigraphy_level_ref').trigger('change');" ;
   ?>
+
+  $('#lithostratigraphy_name').autocomplete({
+      minLength: 3,
+      source: function( request, response ) {
+        $.getJSON('<?php echo url_for('catalogue/completeName?table=lithostratigraphy');?>', {term : request.term }, function( data) {
+            response( $.map( data, function( item ) {
+              return {
+                label: item.name,
+                value: item.name
+              }
+            }));
+
+        });
+      }
+    });
 });
 </script>

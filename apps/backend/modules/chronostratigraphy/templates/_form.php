@@ -93,5 +93,20 @@ $(document).ready(function () {
   <?php if($form['level_ref']->getValue()) 
       echo "$('#chronostratigraphy_level_ref').trigger('change');" ;
   ?>
+
+  $('#chronostratigraphy_name').autocomplete({
+      minLength: 3,
+      source: function( request, response ) {
+        $.getJSON('<?php echo url_for('catalogue/completeName?table=chronostratigraphy');?>', {term : request.term }, function( data) {
+            response( $.map( data, function( item ) {
+              return {
+                label: item.name,
+                value: item.name
+              }
+            }));
+
+        });
+      }
+    });
 });
 </script>

@@ -35,6 +35,7 @@
           <?php endforeach;?>
         </tbody>
        </table>
+          <input type="button" id="add_maint_items" value="<?php echo __('Add Maintenance for checked');?>" />
 
 
           <?php echo link_to(__('Back to Loan'), 'loan/edit?id='.$loan->getId()) ?>
@@ -70,6 +71,53 @@ $(document).ready(function () {
         return false;
     }); 
 
+    $('#add_maint_items').click(function (event) {
+      event.preventDefault();
+
+      var last_position = $('body').scrollTop() ;
+      scroll(0,0) ;
+      $('#add_maint_items').qtip({
+          id: 'modal',
+          content: {
+            text: '<img src="/images/loader.gif" alt="loading"> loading ...',
+            title: { button: true, text: '<?php echo __('Add Maintenance')?>' },
+            ajax: {
+              url: '<?php echo url_for("loaditem/maintenances");?>/ids/'  + '',
+              type: 'GET'
+            }
+          },
+        position: {
+          my: 'top center',
+          at: 'top center',
+          adjust:{
+            y: 250 // option set in case of the qtip become too big
+          },         
+          target: $(document.body),
+        },
+          
+          show: {
+            ready: true,
+            delay: 0,
+            event: event.type,
+            solo: true,
+            modal: {
+              on: true,
+              blur: false
+            },
+          },
+          hide: {
+            event: 'close_modal',
+            target: $('body')
+          },
+          events: {
+            hide: function(event, api) {                
+              scroll(0,last_position);
+              api.destroy();
+            }
+          },
+          style: 'ui-tooltip-light ui-tooltip-rounded'
+        });
+  });
 
 });
 
