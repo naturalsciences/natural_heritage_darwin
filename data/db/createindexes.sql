@@ -106,6 +106,8 @@ CREATE INDEX CONCURRENTLY idx_properties_values_property_ref ON properties_value
 CREATE INDEX CONCURRENTLY idx_chronostratigraphy_lower_bound on chronostratigraphy(coalesce(lower_bound, -4600));
 CREATE INDEX CONCURRENTLY idx_chronostratigraphy_upper_bound on chronostratigraphy(coalesce(upper_bound, 1));
 CREATE INDEX CONCURRENTLY idx_chronostratigraphy_name_order_by on chronostratigraphy(name_order_by);
+CREATE INDEX CONCURRENTLY idx_chronostratigraphy_name_order_by_txt_op on chronostratigraphy USING btree ( name_order_by text_pattern_ops);
+
 CREATE INDEX CONCURRENTLY idx_classification_keywords_referenced_record on classification_keywords(referenced_relation, record_id);
 CREATE INDEX CONCURRENTLY idx_classification_synonymies_grouping on classification_synonymies(group_id, is_basionym);
 CREATE INDEX CONCURRENTLY idx_classification_synonymies_order_by on classification_synonymies(group_name, order_by);
@@ -139,9 +141,15 @@ CREATE INDEX CONCURRENTLY idx_collection_name_indexed on collections (name_index
 CREATE INDEX CONCURRENTLY idx_insurances_referenced_record on insurances(referenced_relation, record_id);
 CREATE INDEX CONCURRENTLY idx_insurances_insurance_currency on insurances(insurance_currency);
 CREATE INDEX CONCURRENTLY idx_lithostratigraphy_name_order_by on lithostratigraphy(name_order_by);
+CREATE INDEX CONCURRENTLY idx_lithostratigraphy_name_order_by_txt_op on lithostratigraphy USING btree ( name_order_by text_pattern_ops);
+
 CREATE INDEX CONCURRENTLY idx_lithology_name_order_by on lithology(name_order_by);
+CREATE INDEX CONCURRENTLY idx_lithology_name_order_by_txt_op on lithology USING btree ( name_order_by text_pattern_ops);
+
 CREATE INDEX CONCURRENTLY idx_mineralogy_code on mineralogy(upper(code));
 CREATE INDEX CONCURRENTLY idx_mineralogy_name_order_by on mineralogy(name_order_by);
+CREATE INDEX CONCURRENTLY idx_mineralogy_name_order_by_txt_op on mineralogy USING btree ( name_order_by text_pattern_ops);
+
 CREATE INDEX CONCURRENTLY idx_mineralogy_cristal_system on mineralogy(cristal_system) WHERE cristal_system <> '';
 CREATE INDEX CONCURRENTLY idx_multimedia_is_digital on multimedia(is_digital);
 CREATE INDEX CONCURRENTLY idx_multimedia_type on multimedia(type);
@@ -182,6 +190,8 @@ CREATE INDEX CONCURRENTLY idx_specimen_parts_sub_container_type on specimen_part
 CREATE INDEX CONCURRENTLY idx_specimen_parts_container_storage on specimen_parts(container_storage);
 CREATE INDEX CONCURRENTLY idx_specimen_parts_sub_container_storage on specimen_parts(sub_container_storage);
 CREATE INDEX CONCURRENTLY idx_taxonomy_name_order_by on taxonomy(name_order_by);
+CREATE INDEX CONCURRENTLY idx_taxonomy_name_order_by_txt_op on taxonomy USING btree ( name_order_by text_pattern_ops);
+
 CREATE INDEX CONCURRENTLY idx_taxonomy_path on taxonomy(path text_pattern_ops);
 CREATE INDEX CONCURRENTLY idx_tag_groups_group_name_indexed on tag_groups(group_name_indexed);
 CREATE INDEX CONCURRENTLY idx_tag_groups_sub_group_name on tag_groups(sub_group_name);
@@ -194,17 +204,13 @@ CREATE INDEX CONCURRENTLY idx_users_addresses_country on users_addresses(country
 CREATE INDEX CONCURRENTLY idx_users_comm_comm_type on users_comm(comm_type);
 CREATE INDEX CONCURRENTLY idx_users_languages_language_country on users_languages(language_country);
 CREATE INDEX CONCURRENTLY idx_users_languages_preferred_language on users_languages(preferred_language);
--- CREATE INDEX CONCURRENTLY idx_users_login_infos_login_system on users_login_infos(login_system);
--- CREATE INDEX CONCURRENTLY idx_users_login_infos_login_type on users_login_infos(login_type);
--- CREATE INDEX CONCURRENTLY idx_users_login_infos_user_name on users_login_infos(user_name);
+
 CREATE INDEX CONCURRENTLY idx_informative_workflow_user_status on informative_workflow(user_ref, status);
 CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
 
 /*** GiST and eventual GIN Indexes for ts_vector fields ***/
 
 CREATE INDEX CONCURRENTLY idx_gist_comments_comment_ts on comments using gist(comment_ts);
--- CREATE INDEX CONCURRENTLY idx_gist_codes_full_code_indexed on codes using gist(full_code_indexed);
--- CREATE INDEX CONCURRENTLY idx_gin_identifications_value_defined_ts on identifications using gin(value_defined_ts);
 CREATE INDEX CONCURRENTLY idx_gist_vernacular_names_name_ts on vernacular_names using gist(name_ts);
 CREATE INDEX CONCURRENTLY idx_gist_expeditions_name_ts on expeditions using gist(name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_people_formated_name_ts on people using gin(formated_name_ts);
@@ -220,94 +226,6 @@ CREATE INDEX CONCURRENTLY idx_gin_lithostratigraphy_naming on lithostratigraphy 
 CREATE INDEX CONCURRENTLY idx_gin_mineralogy_naming on mineralogy using gin(name_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_lithology_naming on lithology using gin(name_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_gtu_tags_values on gtu using gin(tag_values_indexed);
-/*
-
-@TODO: Remove what's here when performance search checked...
-If not OK, adapt these lines to use GIN index
-
-CREATE INDEX CONCURRENTLY idx_taxonomy_domain_indexed on taxonomy(domain_indexed);
-CREATE INDEX CONCURRENTLY idx_taxonomy_kingdom_indexed on taxonomy(kingdom_indexed);
-CREATE INDEX CONCURRENTLY idx_taxonomy_super_phylum_indexed on taxonomy(super_phylum_indexed) WHERE super_phylum_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_phylum_indexed on taxonomy(phylum_indexed);
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_phylum_indexed on taxonomy(sub_phylum_indexed) WHERE sub_phylum_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_infra_phylum_indexed on taxonomy(infra_phylum_indexed) WHERE infra_phylum_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_super_cohort_botany_indexed on taxonomy(super_cohort_botany_indexed) WHERE super_cohort_botany_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_cohort_botany_indexed on taxonomy(cohort_botany_indexed) WHERE cohort_botany_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_cohort_botany_indexed on taxonomy(sub_cohort_botany_indexed) WHERE sub_cohort_botany_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_infra_cohort_botany_indexed on taxonomy(infra_cohort_botany_indexed) WHERE infra_cohort_botany_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_super_class_indexed on taxonomy(super_class_indexed) WHERE super_class_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_class_indexed on taxonomy(class_indexed);
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_class_indexed on taxonomy(sub_class_indexed) WHERE sub_class_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_infra_class_indexed on taxonomy(infra_class_indexed) WHERE infra_class_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_super_division_indexed on taxonomy(super_division_indexed) WHERE super_division_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_division_indexed on taxonomy(division_indexed) WHERE division_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_division_indexed on taxonomy(sub_division_indexed) WHERE sub_division_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_infra_division_indexed on taxonomy(infra_division_indexed) WHERE infra_division_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_super_legion_indexed on taxonomy(super_legion_indexed) WHERE super_legion_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_legion_indexed on taxonomy(legion_indexed) WHERE legion_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_legion_indexed on taxonomy(sub_legion_indexed) WHERE sub_legion_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_infra_legion_indexed on taxonomy(infra_legion_indexed) WHERE infra_legion_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_super_cohort_zoology_indexed on taxonomy(super_cohort_zoology_indexed) WHERE super_cohort_zoology_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_cohort_zoology_indexed on taxonomy(cohort_zoology_indexed) WHERE cohort_zoology_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_cohort_zoology_indexed on taxonomy(sub_cohort_zoology_indexed) WHERE sub_cohort_zoology_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_infra_cohort_zoology_indexed on taxonomy(infra_cohort_zoology_indexed) WHERE infra_cohort_zoology_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_super_order_indexed on taxonomy(super_order_indexed) WHERE super_order_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_order_indexed on taxonomy(order_indexed);
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_order_indexed on taxonomy(sub_order_indexed) WHERE sub_order_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_infra_order_indexed on taxonomy(infra_order_indexed) WHERE infra_order_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_section_zoology_indexed on taxonomy(section_zoology_indexed) WHERE section_zoology_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_section_zoology_indexed on taxonomy(sub_section_zoology_indexed) WHERE sub_section_zoology_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_super_family_indexed on taxonomy(super_family_indexed) WHERE super_family_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_family_indexed on taxonomy(family_indexed);
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_family_indexed on taxonomy(sub_family_indexed) WHERE sub_family_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_infra_family_indexed on taxonomy(infra_family_indexed) WHERE infra_family_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_super_tribe_indexed on taxonomy(super_tribe_indexed) WHERE super_tribe_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_tribe_indexed on taxonomy(tribe_indexed) WHERE tribe_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_tribe_indexed on taxonomy(sub_tribe_indexed) WHERE sub_tribe_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_infra_tribe_indexed on taxonomy(infra_tribe_indexed) WHERE infra_tribe_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_genus_indexed on taxonomy(genus_indexed) WHERE genus_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_genus_indexed on taxonomy(sub_genus_indexed) WHERE sub_genus_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_section_botany_indexed on taxonomy(section_botany_indexed) WHERE section_botany_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_section_botany_indexed on taxonomy(sub_section_botany_indexed) WHERE sub_section_botany_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_serie_indexed on taxonomy(serie_indexed) WHERE serie_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_serie_indexed on taxonomy(sub_serie_indexed) WHERE sub_serie_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_super_species_indexed on taxonomy(super_species_indexed) WHERE super_species_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_species_indexed on taxonomy(species_indexed) WHERE species_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_species_indexed on taxonomy(sub_species_indexed) WHERE sub_species_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_variety_indexed on taxonomy(variety_indexed) WHERE variety_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_variety_indexed on taxonomy(sub_variety_indexed) WHERE sub_variety_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_form_indexed on taxonomy(form_indexed) WHERE form_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_sub_form_indexed on taxonomy(sub_form_indexed) WHERE sub_form_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_taxonomy_abberans_indexed on taxonomy(abberans_indexed) WHERE abberans_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_eon_indexed on chronostratigraphy(eon_indexed);
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_era_indexed on chronostratigraphy(era_indexed);
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_sub_era_indexed on chronostratigraphy(sub_era_indexed) WHERE sub_era_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_system_indexed on chronostratigraphy(system_indexed) WHERE system_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_serie_indexed on chronostratigraphy(serie_indexed) WHERE serie_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_stage_indexed on chronostratigraphy(stage_indexed) WHERE stage_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_sub_stage_indexed on chronostratigraphy(sub_stage_indexed) WHERE sub_stage_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_sub_level_1_indexed on chronostratigraphy(sub_level_1_indexed) WHERE sub_level_1_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_sub_level_2_indexed on chronostratigraphy(sub_level_2_indexed) WHERE sub_level_2_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_lithostratigraphy_group_indexed on lithostratigraphy(group_indexed);
-CREATE INDEX CONCURRENTLY idx_lithostratigraphy_formation_indexed on lithostratigraphy(formation_indexed);
-CREATE INDEX CONCURRENTLY idx_lithostratigraphy_member_indexed on lithostratigraphy(member_indexed) WHERE member_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_lithostratigraphy_layer_indexed on lithostratigraphy(layer_indexed) WHERE layer_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_lithostratigraphy_sub_level_1_indexed on lithostratigraphy(sub_level_1_indexed) WHERE sub_level_1_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_lithostratigraphy_sub_level_2_indexed on lithostratigraphy(sub_level_2_indexed) WHERE sub_level_2_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_mineralogy_unit_class_indexed on mineralogy(unit_class_indexed);
-CREATE INDEX CONCURRENTLY idx_mineralogy_unit_division_indexed on mineralogy(unit_division_indexed);
-CREATE INDEX CONCURRENTLY idx_mineralogy_unit_family_indexed on mineralogy(unit_family_indexed) WHERE unit_family_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_mineralogy_unit_group_indexed on mineralogy(unit_group_indexed) WHERE unit_group_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_mineralogy_unit_variety_indexed on mineralogy(unit_variety_indexed) WHERE unit_variety_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_lithology_unit_main_group_indexed on lithology(unit_main_group_indexed) WHERE unit_main_group_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_lithology_unit_group_indexed on lithology(unit_group_indexed) WHERE unit_group_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_lithology_unit_sub_group_indexed on lithology(unit_sub_group_indexed) WHERE unit_sub_group_indexed <> '';
-CREATE INDEX CONCURRENTLY idx_lithology_unit_rock_indexed on lithology(unit_rock_indexed) WHERE unit_rock_indexed <> '';
-*/
-
-/*** @TODO: GiST Indexes created for array manipulations ***/
-
--- !!! Additional modules will have to be installed if this functionality is needed !!!
 
 
 /*** @TODO:Additional BTree Indexes created to fasten application ***/
