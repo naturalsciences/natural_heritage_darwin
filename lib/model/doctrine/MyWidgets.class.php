@@ -200,6 +200,10 @@ class MyWidgets extends BaseMyWidgets
   
   public static function getHelpIcon($category,$groupname)
   {
+    if(! isset(MyWidgets::$help_widget[$category][$groupname])){
+      sfContext::getInstance()->getLogger()->err("Help not found cat: ".$category." - Group : ".$groupname );
+      return '';
+    }
     $help_widget = MyWidgets::$help_widget[$category][$groupname] ;
     try{
         $i18n_object = sfContext::getInstance()->getI18n();
