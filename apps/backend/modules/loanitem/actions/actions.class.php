@@ -60,4 +60,42 @@ class loanitemActions extends DarwinActions
       $this->setTemplate('edit');
     }
   }
+
+  public function executeMaintenances(sfWebRequest $request)
+  {
+    // Forward to a 404 page if the requested expedition id is not found
+    $this->forward404Unless($items = explode(',',$request->getParameter('ids')) );
+    
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+/*@TODO: Change User permission !! */
+
+    $this->form = new MultiCollectionMaintenanceForm();
+    if($request->isMethod('post'))
+    {
+      $this->form->bind($request->getParameter('collection_maintenance'));
+
+      if($this->form->isValid())
+      {
+        try
+        {
+          $obj = $this->form->updateObject();
+          $obj->setReferencedRelation('loan_items');
+          foreach($items as $it)
+          {
+            $o = clone $obj;
+            $o->setRecordId($it);
+            $o->save();
+          }
+          return $this->renderText('ok');
+        }
+        catch(Doctrine_Exception $ne)
+        {
+          $e = new DarwinPgErrorParser($ne);
+          $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+          $this->form->getErrorSchema()->addError($error); 
+        }
+      }
+    }
+    //return $this->renderText('ok '.implode('-',$items)) ;
+  }
 }

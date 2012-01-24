@@ -35,15 +35,20 @@
           <?php endforeach;?>
         </tbody>
        </table>
+       <?php if(! count($form['LoanItems']) && ! count($form['newLoanItems'])):?>
+        <div class="warn_message"><?php echo __('There is currently items in your loan. Do not forget to add them.');?></div>
+       <?php endif;?>
+  
+        <div class="form_buttons">
           <input type="button" id="add_maint_items" value="<?php echo __('Add Maintenance for checked');?>" />
-
 
           <?php echo link_to(__('Back to Loan'), 'loan/edit?id='.$loan->getId()) ?>
           <a href="<?php echo url_for('loan/index') ?>"><?php echo __('Cancel');?></a>
 
           <a href="<?php echo url_for('loan/addLoanItem?id='.$loan->getId()) ?>" id="add_item"><?php echo __('Add item');?></a>
           <input id="submit" type="submit" value="<?php echo __('Save');?>" />
-
+        </div>
+        
       </form>
 
 
@@ -63,8 +68,10 @@ $(document).ready(function () {
           {                    
             //console.log(parent_el);
             parent_el.append(html);
+            $('.warn_message').hide();
             showAfterRefresh('.loan_overview_form');
             $('.loan_overview_form').css({position: 'absolute'});
+            
  
           }
         });
@@ -73,7 +80,12 @@ $(document).ready(function () {
 
     $('#add_maint_items').click(function (event) {
       event.preventDefault();
+      var ids = [];
+      $('.select_chk_box:checked').each(function (i) {
+        ids.push($(this).val());
+      });
 
+      if(ids.length ==0) return;
       var last_position = $('body').scrollTop() ;
       scroll(0,0) ;
       $('#add_maint_items').qtip({
@@ -82,7 +94,7 @@ $(document).ready(function () {
             text: '<img src="/images/loader.gif" alt="loading"> loading ...',
             title: { button: true, text: '<?php echo __('Add Maintenance')?>' },
             ajax: {
-              url: '<?php echo url_for("loaditem/maintenances");?>/ids/'  + '',
+              url: '<?php echo url_for("loanitem/maintenances");?>/ids/'  + ids,
               type: 'GET'
             }
           },

@@ -1279,7 +1279,7 @@ table.edit_synon td
   text-align:right;
 }
 
-.edition input[type="submit"], .edition button, .edition input[type="reset"], .edition tfoot a, .renamed input[type="submit"], .renamed button, .renamed tfoot a, .bt_close_green a, .form_buttons a,
+.edition input[type="button"], .edition input[type="submit"], .edition button, .edition input[type="reset"], .edition tfoot a, .renamed input[type="submit"], .renamed button, .renamed tfoot a, .bt_close_green a, .form_buttons a,
 .edition a.but
 {
   border:1px solid #C1CC33;
@@ -2846,4 +2846,13 @@ input[type='file']
 
 input.complete_missing {
   border: 1px solid red;
+}
+
+.loan_overview_form thead {
+    border-bottom: 1px solid #C1CF56;
+}
+.loan_overview_form .form_buttons
+{
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
