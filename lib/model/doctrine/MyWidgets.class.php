@@ -123,7 +123,16 @@ class MyWidgets extends BaseMyWidgets
         "loanStatus" => "TODO",
         "refUsers" => "TODO",
         "refRelatedFiles" => "TODO",
-        "refInsurances" => "TODO"
+        "refInsurances" => "In this widget you can specify one or more values with regards to the object(s) as estimated by a particular insurance institution and /or on a particular date.",
+        ),
+    "loanitemwidget"=>array(
+        "mainInfo" => "Main informations about the loan item",
+        "actors" => "TODO",
+        "refComments" => "This widget is used to add commentary.If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however",
+        "refProperties" => "This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= watertemperature, sub type= C°,Date from=01/07/1974 10:05:00, value= 15",
+        "loanStatus" => "TODO",
+        "refRelatedFiles" => "TODO",
+        "refInsurances" => "In this widget you can specify one or more values with regards to the object(s) as estimated by a particular insurance institution and /or on a particular date."
         ),
   ) ;
   /**
