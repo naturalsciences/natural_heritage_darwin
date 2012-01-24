@@ -364,7 +364,6 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/js/jquery-datepicker-lang.js';
-    $javascripts[]='/js/jquery.autocomplete.js';
     $javascripts[]='/js/button_ref.js'; 
     $javascripts[]='/js/catalogue_people.js';   
     return $javascripts;
@@ -374,7 +373,6 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   {
     $javascripts=parent::getStylesheets();
     $javascripts['/css/ui.datepicker.css']='all';
-    $javascripts['/css/jquery.autocomplete.css']='all';
     return $javascripts;
   }  
 }
