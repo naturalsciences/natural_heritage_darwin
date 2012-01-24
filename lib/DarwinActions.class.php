@@ -105,5 +105,15 @@ class DarwinActions extends sfActions
     }
     return $obj ;
   }
-
+  protected function checkUploadPathAvailable()
+  {
+    //function used to verify if the folder for the uploaded file exists
+    $pathyear = sfConfig::get('sf_upload_dir')."/multimedia/".date("Y") ;
+    $pathmonth = $pathyear."/".date("m") ;
+    $pathday = $pathmonth."/".date("d") ;
+    if(!is_dir($pathyear)) mkdir($pathyear) ;
+    if(!is_dir($pathmonth)) mkdir($pathmonth) ;
+    if(!is_dir($pathday)) mkdir(pathday) ;
+    return ($pathday) ;    
+  }
 }

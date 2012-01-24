@@ -18,8 +18,8 @@ $(document).ready(function ()
         <th><?php echo $form['uploadfield']->renderLabel() ?> :</th>
         <td>
           <?php echo $form['uploadfield']->renderError() ?>
-          <div id="containerFile">
-            <div id="divFile">
+          <div class="containerFile">
+            <div class="divFile">
               <input id="input_text_file" class="inputText"
               readonly="readonly"/>
               <?php echo $form['uploadfield']; ?>

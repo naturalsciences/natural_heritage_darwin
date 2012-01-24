@@ -115,25 +115,29 @@ class LoansForm extends BaseLoansForm
       ),
       array('invalid' => 'Invalid date "Close"')
     );
-    /* Labels */
-
-
+    
+    /* input file for related files */
+    $this->widgetSchema['filenames'] = new sfWidgetFormInputFile(array(),array('class' => 'Add_related_file'));        
+$this->validatorSchema['filenames'] = new sfValidatorFile(
+  array(
+      'required' => false,
+      'validated_file_class' => 'myValidatedFile'
+  )); 
+    
 
     $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));        
-    $this->widgetSchema['relatedfiles'] = new sfWidgetFormInputHidden(array('default'=>1));    
+    $this->widgetSchema['relatedfile'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['users'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));    
-    $this->widgetSchema['users'] = new sfWidgetFormInputHidden(array('default'=>1));    
 
     $this->validatorSchema['comment'] = new sfValidatorPass();
     $this->validatorSchema['sender'] = new sfValidatorPass();
     $this->validatorSchema['receiver'] = new sfValidatorPass();    
-    $this->validatorSchema['relatedfiles'] = new sfValidatorPass();
+    $this->validatorSchema['relatedfile'] = new sfValidatorPass();
     $this->validatorSchema['users'] = new sfValidatorPass();
-    $this->validatorSchema['insurance'] = new sfValidatorPass();
-    $this->validatorSchema['users'] = new sfValidatorPass();                                  
+    $this->validatorSchema['insurance'] = new sfValidatorPass();                                     
   }
   
   public function addUsers($num, $user_ref, $order_by=0)
@@ -272,13 +276,49 @@ class LoansForm extends BaseLoansForm
     $subForm = new sfForm();
     $this->embedForm('newInsurance',$subForm);
   }
+
+  public function addRelatedFiles($num, $file=null)
+  {
+    if(! isset($this['newRelatedFiles'])) $this->loadEmbedRelatedFiles();
+    $options = array('referenced_relation' => 'loans');
+    $val = new Multimedia();
+    $val->fromArray($options);
+    $val->setRecordId($this->getObject()->getId());
+    $val->setTitle($file) ;
+    $form = new MultimediaForm($val,array('file'=>$file));
+    $this->embeddedForms['newRelatedFiles']->embedForm($num, $form);
+    //Re-embedding the container
+    $this->embedForm('newRelatedFiles', $this->embeddedForms['newRelatedFiles']);
+  }
+  
+  public function loadEmbedRelatedFiles()
+  {
+    if($this->isBound()) return;
+
+    /* Comments sub form */
+    $subForm = new sfForm();
+    $this->embedForm('RelatedFiles',$subForm);
+    if($this->getObject()->getId() !='')
+    {
+      foreach(Doctrine::getTable('Multimedia')->findForTable('loans', $this->getObject()->getId()) as $key=>$vals)
+      {
+        $form = new MultimadiaForm($vals,array('table' => 'loans'));
+        $this->embeddedForms['RelatedFiles']->embedForm($key, $form);
+      }
+      //Re-embedding the container
+      $this->embedForm('RelatedFiles', $this->embeddedForms['RelatedFiles']);
+    }
+
+    $subForm = new sfForm();
+    $this->embedForm('newRelatedFiles',$subForm);
+  }
     
   public function addComments($num, $obj=null)
   {
       if(! isset($this['newComments'])) $this->loadEmbedComments();
       $options = array('referenced_relation' => 'loans', 'record_id' => $this->getObject()->getId());
       if (!$obj) $val = new Comments();
-      else $val = $obj ;      
+      else $val = $obj ; 
       $val->fromArray($options);
       $val->setRecordId($this->getObject()->getId());
       $form = new CommentsSubForm($val,array('table' => 'loans', 'line_display' => true));
@@ -314,7 +354,6 @@ class LoansForm extends BaseLoansForm
      * test if the widget is on screen by testing a flag field present on the concerned widget
      * If widget is not on screen, remove the field from list of fields to be bound, and than potentially saved
     */
-
     if(!isset($taintedValues['comment']))
     {
       $this->offsetUnset('Comments');
@@ -429,6 +468,28 @@ class LoansForm extends BaseLoansForm
         }
       }
     }  
+    if(!isset($taintedValues['relatedfile']))
+    {
+      $this->offsetUnset('RelatedFiles');
+      unset($taintedValues['RelatedFiles']);
+      $this->offsetUnset('newRelatedFiles');
+      unset($taintedValues['newRelatedFiles']);
+    }
+    else
+    {
+      $this->loadEmbedRelatedFiles();
+      if(isset($taintedValues['newRelatedFiles']))
+      {
+        foreach($taintedValues['newRelatedFiles'] as $key=>$newVal)
+        {
+          if (!isset($this['newRelatedFiles'][$key]))
+          {
+            $this->addRelatedFiles($key,$newVal['filename']);
+          }
+          $taintedValues['newRelatedFiles'][$key]['record_id'] = 0;
+        }
+      }
+    }     
     parent::bind($taintedValues, $taintedFiles);   
   }
 
@@ -542,7 +603,28 @@ class LoansForm extends BaseLoansForm
           unset($this->embeddedForms['Insurances'][$name]);
         }
       }
-    }              
+    }  
+    if (null === $forms && $this->getValue('relatedfiles'))
+    {
+      $value = $this->getValue('newRelatedFiles');
+      foreach($this->embeddedForms['newRelatedFiles']->getEmbeddedForms() as $name => $form)
+      {
+        if(!isset($value[$name]['referenced_relation']))
+          unset($this->embeddedForms['newRelatedFiles'][$name]);
+        else
+          $form->getObject()->setRecordId($this->getObject()->getId());
+      }
+
+      $value = $this->getValue('RelatedFiles');
+      foreach($this->embeddedForms['RelatedFiles']->getEmbeddedForms() as $name => $form)
+      {
+        if (!isset($value[$name]['title']))
+        {
+          $form->getObject()->delete();
+          unset($this->embeddedForms['RelatedFiles'][$name]);
+        }
+      }
+    }                 
     return parent::saveEmbeddedForms($con, $forms);
   }   
   
@@ -550,7 +632,6 @@ class LoansForm extends BaseLoansForm
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/js/jquery-datepicker-lang.js';
-    $javascripts[]='/js/jquery.autocomplete.js';
     $javascripts[]='/js/button_ref.js'; 
     $javascripts[]='/js/catalogue_people.js';   
     return $javascripts;
@@ -560,7 +641,6 @@ class LoansForm extends BaseLoansForm
   {
     $javascripts=parent::getStylesheets();
     $javascripts['/css/ui.datepicker.css']='all';
-    $javascripts['/css/jquery.autocomplete.css']='all';
     return $javascripts;
   }  
 }

@@ -2606,13 +2606,24 @@ ul.board_news li div.news_info
   max-width:723px;
 }
 /* style for input type file entry */
-#containerFile #divFile
+.little-frame
+{
+opacity : 0; 
+filter : alpha(opacity=0); 
+position : absolute;
+width : 2px;
+height : 2px;
+
+}
+
+.containerFile .divFile
 {
 position : relative;
 width : 300px;
 text-align : left;
 }
-input[type='file']
+
+#uploadfield
 {
 opacity : 0; 
 filter : alpha(opacity=0); 
@@ -2620,7 +2631,7 @@ position : absolute;
 right : 0;
 top : 0;
 }
-#containerFile .inputText
+.containerFile .inputText
 {
 border : 1px solid #010101 ;
 padding : 0px 5px;
@@ -2688,32 +2699,6 @@ body .ui-tooltip, body .qtip
 {
   background-color:grey !important;
 }
-/* custom appearence for input type file */
-#divFile
-{
-  position : relative;
-  width : 250px;
-  text-align : left;
-}
-
-input[type='file']
-{
-  opacity : 0; /* for !IE */
-  filter : alpha(opacity=0); /* for IE */
-  position : absolute;
-  right : 0;
-  top : 0;
-}
-#input_text_file
-{
-  border : none;
-  padding : 0px 0px;
-  background : #def;
-  width : 200px;
-  height: 20px;
-  border : 1px solid black ;
-}
-
 
 /** Import ***/
 

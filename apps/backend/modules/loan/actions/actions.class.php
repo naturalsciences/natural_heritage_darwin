@@ -115,8 +115,7 @@ class loanActions extends DarwinActions
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
-  //  die(print_r($request->getParameter($form->getName()))) ;
-    $form->bind($request->getParameter($form->getName()));
+    $form->bind($request->getParameter($form->getName()),$request->getFiles($this->form->getName()));
     if ($form->isValid())
     {
       try
@@ -130,7 +129,7 @@ class loanActions extends DarwinActions
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
         $form->getErrorSchema()->addError($error); 
       }
-    }
+    } 
   }
 
   public function executeViewAll(sfWebRequest $request)
@@ -165,7 +164,7 @@ class loanActions extends DarwinActions
       $this->form = new LoansForm($loan);
       $this->form->getErrorSchema()->addError($error); 
       $this->loadWidgets();
-      $this->setTemplate('edit');
+      $this->setTemplate('new');
     }
   }
 
@@ -272,7 +271,45 @@ class loanActions extends DarwinActions
     $form->addInsurances($number);
     return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
   }  
-  
+
+  public function executeInsertFile(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    if($request->hasParameter('table'))
+    {
+      if($request->getParameter('table') == 'loans') $form = new LoansForm();    
+      else  $form = new LoanItemsForm();    
+      $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));    
+      $file = $form->getValue('filenames');
+      // first save the file
+      $filename = sha1($file->getOriginalName().$request->getParameter('table'));
+      $extension = $file->getExtension($file->getOriginalExtension());
+      $file->save(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename.$extension);
+      
+  /*    $file_info = array(
+        'record_id' => $request->hasParameter('id')?$request->getParameter('id'):-1,
+        'referenced_relation' => $request->getParameter('table'),
+        'title' => $file->getOriginalName(),
+        'uri' => "multimedia/temp/",
+        'type' => substr($extension,1,strlen($extension)),
+        'creation_date' => date('Y-m-d')
+      ) ;
+      $multimedia = new Multimedia();
+      $multimedia->fromArray($file_info) ;
+      $multimedia->save() ;*/
+      return $this->renderText('ok') ;
+    }
+  }
+
+  public function executeAddRelatedFiles(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $form = $this->getLoanForm($request);
+    $form->addRelatedFiles($number,$request->getParameter('title'));
+    return $this->renderPartial('loan/multimedia',array('form' => $form['newRelatedFiles'][$number], 'row_num'=>$number));
+  }  
+    
   public function executeAddStatus(sfWebRequest $request)
   {    
     if($request->isXmlHttpRequest()) 

@@ -192,6 +192,7 @@ Users:
         given_name: Root
         gender: M
         db_user_type: 8
+<<<<<<< HEAD
         People: p5
     u2:
         is_physical: true
@@ -218,6 +219,18 @@ Users:
         db_user_type: 4
         People: p6
        
+=======
+        People: p5               
+    u2:
+        is_physical: true
+        title: Mr
+        family_name: Chambert
+        given_name: Yann
+        gender: M
+        db_user_type: 4
+        selected_lang : fr
+        People: p6 
+        
 UsersLoginInfos:
     u1l1:
         User: u1
@@ -234,7 +247,7 @@ UsersLoginInfos:
     u1l4:
         User: u4
         user_name: collmanager
-        password: "<?php echo sha1(sfConfig::get('dw_salt').'collmanager');?>"
+        password: "<?php echo sha1(sfConfig::get('dw_salt').'collmanager');?>" 
  
 UsersLanguages:
     ul1:

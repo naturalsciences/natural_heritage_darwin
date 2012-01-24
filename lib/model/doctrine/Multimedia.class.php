@@ -12,4 +12,5 @@
  */
 class Multimedia extends BaseMultimedia
 {
+
 }
