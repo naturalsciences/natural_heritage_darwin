@@ -41,11 +41,12 @@
   
         <div class="form_buttons">
           <input type="button" id="add_maint_items" value="<?php echo __('Add Maintenance for checked');?>" />
+          <a href="<?php echo url_for('loan/addLoanItem?id='.$loan->getId()) ?>" id="add_item"><?php echo __('Add item');?></a>
+          &nbsp;
 
           <?php echo link_to(__('Back to Loan'), 'loan/edit?id='.$loan->getId()) ?>
           <a href="<?php echo url_for('loan/index') ?>"><?php echo __('Cancel');?></a>
 
-          <a href="<?php echo url_for('loan/addLoanItem?id='.$loan->getId()) ?>" id="add_item"><?php echo __('Add item');?></a>
           <input id="submit" type="submit" value="<?php echo __('Save');?>" />
         </div>
         
