@@ -1636,7 +1636,7 @@ MyWidgets:
         visible: true
         is_available: true 
         mandatory : true
-        title_perso: Loan
+        title_perso: Loan Item
         
     u1liw2:
         User: u1
@@ -1648,17 +1648,6 @@ MyWidgets:
         visible: true
         is_available: true 
         title_perso: Actors / People implied
-        
-    u1liw3:
-        User: u1
-        col_num: 1
-        category: loanitem_widget
-        group_name: loanStatus
-        order_by: 3
-        opened: true
-        visible: true
-        is_available: true 
-        title_perso: Loan Status
 
     u1liw4:
         User: u1
@@ -1703,14 +1692,3 @@ MyWidgets:
         visible: true
         is_available: true 
         title_perso: Related Files
-
-    u1liw8:
-        User: u1
-        col_num: 1
-        category: loanitem_widget
-        group_name: refUsers
-        order_by: 8
-        opened: true
-        visible: true
-        is_available: true 
-        title_perso: Darwin Users

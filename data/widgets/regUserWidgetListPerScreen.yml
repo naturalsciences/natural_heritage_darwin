@@ -1045,7 +1045,7 @@ liw1:
    opened: true
    visible: true
    is_available: true 
-   title_perso: Loan
+   title_perso: Loan Item
    all_public: true
 
 liw2:

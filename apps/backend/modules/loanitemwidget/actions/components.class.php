@@ -38,13 +38,6 @@ class loanitemwidgetComponents extends sfComponents
       $this->eid = $this->form->getObject()->getId() ;  
   }
 
-  public function executeRefUsers()
-  {
-    $this->defineForm();
-    if(!isset($this->form['newUsers']))
-      $this->form->loadEmbedUsers();  
-  }
-
   public function executeMainInfo()
   { 
     $this->defineForm();
@@ -73,13 +66,4 @@ class loanitemwidgetComponents extends sfComponents
       $this->form->loadEmbedComments();   
   }
   
-  public function executeLoanStatus()
-  { 
-    if(isset($this->form))
-      $this->eid = $this->form->getObject()->getId() ;  
-    if(isset($this->eid))
-       $this->loanstatus = Doctrine::getTable('LoanStatus')->getLoanStatus($this->eid);
-    else $this->eid = false;
-    $this->form = new informativeWorkflowForm(null, array('available_status' => LoanStatus::getAvailableStatus())) ;     
-  }   
 }

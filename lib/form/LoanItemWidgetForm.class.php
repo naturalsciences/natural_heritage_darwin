@@ -18,52 +18,15 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));        
     $this->widgetSchema['relatedfiles'] = new sfWidgetFormInputHidden(array('default'=>1));    
-    $this->widgetSchema['users'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));    
-    $this->widgetSchema['users'] = new sfWidgetFormInputHidden(array('default'=>1));    
 
     $this->validatorSchema['comment'] = new sfValidatorPass();
     $this->validatorSchema['sender'] = new sfValidatorPass();
     $this->validatorSchema['receiver'] = new sfValidatorPass();    
     $this->validatorSchema['relatedfiles'] = new sfValidatorPass();
-    $this->validatorSchema['users'] = new sfValidatorPass();
     $this->validatorSchema['insurance'] = new sfValidatorPass();
-    $this->validatorSchema['users'] = new sfValidatorPass();                                  
-  }
-  
-  public function addUsers($num, $user_ref, $order_by=0)
-  {
-    if(! isset($this['newUsers'])) $this->loadEmbedUsers();
-    $val = new LoanRights();
-    $val->setUserRef($user_ref) ;
-    $val->setLoanRef($this->getObject()->getId());
-    $form = new LoanRightsForm($val);
-    $this->embeddedForms['newUsers']->embedForm($num, $form);
-    //Re-embedding the container
-    $this->embedForm('newUsers', $this->embeddedForms['newUsers']);
   }
 
-  public function loadEmbedUsers()
-  {
-    if($this->isBound()) return;
-    /* Comments sub form */
-    $subForm = new sfForm();
-    $this->embedForm('Users',$subForm);    
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('LoanRights')->findByLoanRef($this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new LoanRightsForm($vals);
-        $this->embeddedForms['Users']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('Users', $this->embeddedForms['Users']);
-    }
-
-    $subForm = new sfForm();
-    $this->embedForm('newUsers',$subForm);
-  }  
-  
   public function addActorsSender($num, $people_ref, $order_by=0)
   {
     if(! isset($this['newActorsSender'])) $this->loadEmbedActorsSender();
@@ -256,29 +219,6 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
       }
     }
 
-    if(!isset($taintedValues['users']))
-    {
-      $this->offsetUnset('Users');
-      unset($taintedValues['Users']);
-      $this->offsetUnset('newUsers');
-      unset($taintedValues['newUsers']);
-    }
-    else
-    {
-      $this->loadEmbedUsers();
-      if(isset($taintedValues['newUsers']))
-      {
-        foreach($taintedValues['newUsers'] as $key=>$newVal)
-        {
-          if (!isset($this['newUsers'][$key]))
-          {
-            $this->addUsers($key,$newVal['user_ref']);
-          }
-          $taintedValues['newUsers'][$key]['loan_ref'] = 0;
-        }
-      }
-    }
-
     if(!isset($taintedValues['receiver']))
     {
       $this->offsetUnset('ActorsReceiver');
@@ -372,29 +312,8 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
           unset($this->embeddedForms['ActorsSender'][$name]);
         }
       }
-    } 
-    if (null === $forms && $this->getValue('users'))
-    {
-      $value = $this->getValue('newUsers');
-      foreach($this->embeddedForms['newUsers']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['user_ref'] ))
-          unset($this->embeddedForms['newUsers'][$name]);
-        else
-        {
-          $form->getObject()->setLoanRef($this->getObject()->getId());
-        }
-      }
-      $value = $this->getValue('Users');
-      foreach($this->embeddedForms['Users']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['user_ref'] ))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Users'][$name]);
-        }
-      }
-    }        
+    }
+
     if (null === $forms && $this->getValue('receiver'))
     {
       $value = $this->getValue('newActorsReceiver');
@@ -457,5 +376,5 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $javascripts['/css/ui.datepicker.css']='all';
     $javascripts['/css/jquery.autocomplete.css']='all';
     return $javascripts;
-  }
+  }  
 }
