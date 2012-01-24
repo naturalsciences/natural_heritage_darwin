@@ -35,9 +35,13 @@ class DarwinTestFunctional extends sfTestFunctional
     $conn->exec("SELECT setval('specimens_id_seq',100)");
     $conn->exec("SELECT nextval('catalogue_people_id_seq')");
     $conn->exec("SELECT setval('catalogue_people_id_seq',100)");
-//@johnnycomment voor men users ids te initializeren. Loans ...
 
-
+    $conn->exec("SELECT nextval('loans_id_seq')");
+    $conn->exec("SELECT setval('loans_id_seq',100)");
+    $conn->exec("SELECT nextval('loan_status_id_seq')");
+    $conn->exec("SELECT setval('loan_status_id_seq',100)");
+    $conn->exec("SELECT nextval('loan_rights_id_seq')");
+    $conn->exec("SELECT setval('loan_rights_id_seq',100)");
 
     $conn->exec("TRUNCATE TABLE specimens CASCADE");
     $conn->exec("TRUNCATE TABLE insurances CASCADE");
