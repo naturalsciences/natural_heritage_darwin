@@ -155,7 +155,6 @@ CREATE INDEX CONCURRENTLY idx_my_widgets_group_name on my_widgets(user_ref, grou
 CREATE INDEX CONCURRENTLY idx_my_widgets_is_available on my_widgets(is_available);
 CREATE INDEX CONCURRENTLY idx_my_widgets_order_by on my_widgets(order_by);
 CREATE INDEX CONCURRENTLY idx_my_widgets_visible on my_widgets(visible);
-CREATE INDEX CONCURRENTLY idx_people_title on people(title) WHERE title <> '';
 CREATE INDEX CONCURRENTLY idx_people_is_physical on people(is_physical);
 CREATE INDEX CONCURRENTLY idx_people_sub_type on people(sub_type) WHERE NOT sub_type IS NULL;
 CREATE INDEX CONCURRENTLY idx_people_family_name on people(family_name);
