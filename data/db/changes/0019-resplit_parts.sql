@@ -187,24 +187,10 @@ exception
 end;
 $$;
 
-create or replace function checkAndCreateProperties(IN part_id specimen_parts.id%TYPE, IN new_part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail) RETURNS  integer language plpgsql
-AS
-$$
-declare
-begin
-  return 1;
-EXCEPTION
-  WHEN OTHERS THEN
-    RAISE WARNING 'Error in checkAndCreateProperties: %', SQLERRM;
-    return -1;
-end;
-$$;
-
 create or replace function createNewPart(IN part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail) RETURNS specimen_parts.id%TYPE language plpgsql AS
 $$
 DECLARE  
   new_part_id specimen_parts.id%TYPE;
-  recProperties RECORD;
   code_count integer;
 BEGIN
   INSERT INTO specimen_parts
@@ -262,33 +248,24 @@ BEGIN
     END IF;
   END IF;
   /* Comments are not treated: only two are in identifiable corresponding old parts, but do not need to be splitted*/
-  SELECT array_agg(property_value) 
-  INTO recProperties
-  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-  WHERE referenced_relation = 'specimen_parts'
-    AND record_id = part_id;
-  RAISE NOTICE '+++ Properties before transfert: %', recProperties;
-  IF checkAndCreateProperties(part_id, new_part_id, recPartsDetails) < 0 THEN
-    return -1;
-  END IF;
-  SELECT array_agg(property_value) 
-  INTO recProperties
-  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-  WHERE referenced_relation = 'specimen_parts'
-    AND record_id = part_id;
-  RAISE NOTICE '+++ Properties after transfert: %', recProperties;
-  SELECT array_agg(property_value) 
-  INTO recProperties
-  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-  WHERE referenced_relation = 'specimen_parts'
-    AND record_id = new_part_id;
-  RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
   return new_part_id;
 EXCEPTION
   WHEN OTHERS THEN
-    RAISE WARNING 'Error: %', SQLERRM;
+    RAISE WARNING 'Error in createNewPart: %', SQLERRM;
     return -1;
 END;
+$$;
+
+create or replace function moveOrCreateProp (IN part_id specimen_parts.id%TYPE, IN new_part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail) returns integer language plpgsql AS
+$$
+declare
+begin
+  return 1;
+exception
+  when others then
+    raise warning 'Error in moveOrCreateProp: %', SQLERRM;
+    return -1;
+end;
 $$;
 
 create or replace function createProperties (IN part_id specimen_parts.id%TYPE, recPartsDetails recPartsDetail) returns integer language plpgsql AS
@@ -488,6 +465,7 @@ declare
   recActualCodes varchar[];
   recTransferedCodes varchar[];
   recPropertiesValues varchar[];
+  recProperties RECORD;
 begin
   FOR recPartsDetails IN select specimen_individual_ref,  specimen_parts.id as parts_id, fullToIndex(sgr_code) as main_code, 
                                 fullToIndex(bat_unique_rbins_code) as rbins_code, fullToIndex(bat_code) as batch_main_code, fullToIndex(bat_inventory_code) as inventory_code, sgr_code as old_main_code,
@@ -583,7 +561,7 @@ begin
                                   end
                           /*where bat_collection_id_nr between 1 and 8*/
                                 /*where bat_collection_id_nr = 133*/
-                          where sgr_length_min is not null or sgr_length_max is not null 
+                          where sgr_height_min is not null or sgr_height_max is not null
                           /*where sfl_description is not null and sfl_description != 'Undefined'*/
                                 /*exists (select 1 from comments where comment is not null and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id limit 1)*/
                           order by new_id desc, specimen_part, main_code 
@@ -777,6 +755,9 @@ begin
           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
           RAISE NOTICE '++ Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
+          IF moveOrCreateProp(part_id, new_part_id, recPartsDetails) < 0 THEN
+            return false;
+          END IF;
         END IF;
       ELSE
         RAISE NOTICE '+ New code creation for next part';
@@ -803,8 +784,32 @@ begin
       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
       RAISE NOTICE '-- Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
+      IF moveOrCreateProp(part_id, new_part_id, recPartsDetails) < 0 THEN
+        return false;
+      END IF;
     END IF;
   END LOOP;
+/*  SELECT array_agg(property_value)
+  INTO recProperties
+  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+  WHERE referenced_relation = 'specimen_parts'
+    AND record_id = part_id;
+  RAISE NOTICE '+++ Properties before transfert: %', recProperties;
+  IF checkAndCreateProperties(part_id, new_part_id, recPartsDetails) < 0 THEN
+    return -1;
+  END IF;
+  SELECT array_agg(property_value)
+  INTO recProperties
+  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+  WHERE referenced_relation = 'specimen_parts'
+    AND record_id = part_id;
+  RAISE NOTICE '+++ Properties after transfert: %', recProperties;
+  SELECT array_agg(property_value)
+  INTO recProperties
+  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+  WHERE referenced_relation = 'specimen_parts'
+    AND record_id = new_part_id;
+  RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;*/
   return true;
 exception
   when others then
