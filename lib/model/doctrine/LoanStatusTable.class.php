@@ -41,20 +41,16 @@ class LoanStatusTable extends DarwinTable
     $res_array = array();
     if( !empty($loan_ids) ) 
     {
-      $status_group = array_values(loans::getStatusFromGroup('closed'));              
-      $status_group_params = implode(',',array_fill(0,count($status_group),'?')); 
-
       $q = Doctrine_Query::create()
-	->select('loan_ref, status, is_last')
-	->from('LoanStatus')
-	->whereIn('loan_ref', $loan_ids)
-	->andWhere( 'is_last = TRUE AND status NOT IN (' . $status_group_params . ')', $status_group);
-      $result = $q->execute();    
-      
+        ->select('loan_ref, status, is_last')
+        ->from('LoanStatus')
+        ->whereIn('loan_ref', $loan_ids)
+        ->andWhere( 'is_last = true');
+      $result = $q->execute();
+
       foreach( $result as $res )
-	$res_array[$res->getLoanRef()] = $res->getStatus(); 
+        $res_array[$res->getLoanRef()] = $res->getStatus(); 
     }
-      
     return $res_array;
   }
 

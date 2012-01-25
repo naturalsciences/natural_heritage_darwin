@@ -12,34 +12,4 @@
  */
 class Loans extends BaseLoans
 {
-  private static $status = array(
-      'all' => array('new' => 'New','under_evaluation' => 'Under Evaluation','pending' => 'Pending',
-                     'accepted' => 'Accepted', 'rejected' => 'Rejected', 'running' => 'Running', 
-                     'extended' => 'Extended', 'returned' => 'Returned', 'closed' => 'Closed'),
-
-      'closed' => array('returned' => 'Returned', 'closed'  => 'Closed', 'rejected'  => 'Rejected'),
-
-      'open'=> array('new' => 'New','under_evaluation' => 'Under Evaluation','pending' => 'Pending',
-                     'accepted' => 'Accepted', 'running' => 'Running', 'extended' => 'Extended'),
-  );
-    
-  public function getFormattedStatus()
-  {
-    return self::$status['all'][$this->getStatus()] ;
-  }
- 
-  public static function getStatusFromGroup($status_group)
-  { 
-    try{
-        $i18n_object = sfContext::getInstance()->getI18n();
-    }
-    catch( Exception $e )
-    {
-        return self::$status[$status_group];
-    }
-    return array_map(array($i18n_object, '__'), self::$status[$status_group]);
-
-    //return self::$status[$status_group];
-  }
-
 }

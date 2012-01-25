@@ -33,7 +33,7 @@ class LoansTable extends DarwinTable
   public function getMyLoans($user_id, $max_items = FALSE) 
   {
 
-    $status_group = array_values(loans::getStatusFromGroup('closed'));
+    $status_group = LoanStatus::getClosedStatus('closed');
     $status_group_params = implode(',',array_fill(0,count($status_group),'?'));
 
     $q = Doctrine_Query::create()
