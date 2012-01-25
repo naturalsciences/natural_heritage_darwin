@@ -94,7 +94,7 @@ CREATE INDEX CONCURRENTLY idx_catalogue_people_people_ref on catalogue_people(pe
 CREATE INDEX CONCURRENTLY idx_catalogue_people_referenced_record on catalogue_people(referenced_relation, record_id, people_type);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_type on catalogue_properties(property_type);
 -- CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_sub_type on catalogue_properties(property_sub_type);
-CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_sub_type_indexed on catalogue_properties(property_sub_type_indexed);
+
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_referenced_record on catalogue_properties(referenced_relation, record_id, property_type);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_qualifier on catalogue_properties(property_qualifier);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_unit on catalogue_properties(property_unit);
@@ -115,12 +115,8 @@ CREATE INDEX CONCURRENTLY idx_classification_synonymies_referenced_record on cla
 CREATE INDEX CONCURRENTLY idx_class_vernacular_names_community on class_vernacular_names(community);
 CREATE INDEX CONCURRENTLY idx_class_vernacular_names_community_indexed on class_vernacular_names (community_indexed);
 CREATE INDEX CONCURRENTLY idx_class_vernacular_names_referenced_record on class_vernacular_names (referenced_relation, record_id);
-CREATE INDEX CONCURRENTLY idx_codes_code_prefix on codes(code_prefix) WHERE NOT code_prefix IS NULL;
-CREATE INDEX CONCURRENTLY idx_codes_code_suffix on codes(code_suffix) WHERE NOT code_suffix IS NULL;
-CREATE INDEX CONCURRENTLY idx_codes_code_prefix_separator on codes(code_prefix_separator) WHERE NOT code_prefix_separator IS NULL;
-CREATE INDEX CONCURRENTLY idx_codes_code_suffix_separator on codes(code_suffix_separator) WHERE NOT code_suffix_separator IS NULL;
-CREATE INDEX CONCURRENTLY idx_codes_code on codes(code) WHERE NOT code IS NULL;
-CREATE INDEX CONCURRENTLY idx_codes_referenced_record on codes(referenced_relation, record_id, code_category, code_date, full_code_order_by);
+
+CREATE INDEX CONCURRENTLY idx_codes_code_num on codes(code_num) WHERE NOT code_num IS NULL;
 CREATE INDEX CONCURRENTLY idx_codes_full_code_order_by ON codes USING btree (full_code_order_by);
 CREATE INDEX CONCURRENTLY idx_collecting_methods_method_indexed on collecting_methods(method_indexed);
 CREATE INDEX CONCURRENTLY idx_collecting_tools_tool_indexed on collecting_tools(tool_indexed);

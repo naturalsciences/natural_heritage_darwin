@@ -319,3 +319,10 @@ select setval('darwin_flat_id_seq'::regclass, (select case when max(id) = 0 then
 
 
 \i ../createindexes_darwinflat.sql
+
+
+ALTER TABLE darwin_flat_id_seq
+  OWNER TO darwin2;
+
+GRANT ALL ON TABLE darwin_flat TO darwin2;
+GRANT SELECT ON TABLE darwin_flat TO d2viewer;
