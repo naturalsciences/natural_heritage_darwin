@@ -19,7 +19,7 @@ class LoanStatus extends BaseLoanStatus
     'accepted' => 'Accepted',
     'rejected' => 'Rejected',
     'running' => 'Running',
-    'extended' => 'extended',
+    'extended' => 'Extended',
     'returned' => 'Returned',
     'closed' => 'Closed'
   );
