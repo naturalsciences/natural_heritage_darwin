@@ -4,29 +4,24 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_spec_ref on darwin_flat(spec_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_collection_ref on darwin_flat(collection_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_expedition_ref on darwin_flat(expedition_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_ref on darwin_flat(gtu_ref);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_parent_ref on darwin_flat(gtu_parent_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_taxon_ref on darwin_flat(taxon_ref);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_taxon_parent_ref on darwin_flat(taxon_parent_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_taxon_level_ref on darwin_flat(taxon_level_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_host_taxon_ref on darwin_flat(host_taxon_ref);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_host_taxon_parent_ref on darwin_flat(host_taxon_parent_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_host_taxon_level_ref on darwin_flat(host_taxon_level_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_chrono_ref on darwin_flat(chrono_ref);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_chrono_parent_ref on darwin_flat(chrono_parent_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_chrono_level_ref on darwin_flat(chrono_level_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_litho_ref on darwin_flat(litho_ref);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_litho_parent_ref on darwin_flat(litho_parent_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_litho_level_ref on darwin_flat(litho_level_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_lithology_ref on darwin_flat(lithology_ref);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_lithology_parent_ref on darwin_flat(lithology_parent_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_lithology_level_ref on darwin_flat(lithology_level_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_mineral_ref on darwin_flat(mineral_ref);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_mineral_parent_ref on darwin_flat(mineral_parent_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_mineral_level_ref on darwin_flat(mineral_level_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_ig_ref on darwin_flat(ig_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_ref on darwin_flat(individual_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_part_ref on darwin_flat(part_ref);
 
+
+CREATE INDEX CONCURRENTLY idx_darwin_flat_host_specimen_ref on darwin_flat(host_specimen_ref);
 
 
 /*** BTree indexes for search purposes in Darwin flat table ***/
