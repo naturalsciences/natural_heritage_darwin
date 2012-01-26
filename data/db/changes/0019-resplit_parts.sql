@@ -2,6 +2,8 @@
 
 ALTER TABLE specimen_parts DISABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
 
+CREATE TEMPORARY TABLE partsSplitFromAndTo ("start" boolean not null default true, "id" integer not null);
+
 CREATE OR REPLACE FUNCTION convert_to_real(v_input varchar) RETURNS REAL IMMUTABLE
 AS $$
 DECLARE v_int_value REAL DEFAULT 0;
@@ -70,7 +72,14 @@ CREATE TYPE recPartsDetail AS (
                                 old_weight_min_unified varchar,
                                 old_weight_max varchar,
                                 old_weight_max_unified varchar,
-                                old_weight_unit varchar
+                                old_weight_unit varchar,
+                                old_insurance_value numeric,
+                                old_insurance_year smallint,
+                                maintenance_people_ref integer,
+                                maintenance_category varchar,
+                                maintenance_action_observation varchar,
+                                maintenance_modification_date_time timestamp,
+                                maintenance_modification_date_mask integer
                               );
 
 create or replace function decrementCount(IN partId specimen_parts.id%TYPE, IN decrementVal bigint) RETURNS boolean language plpgsql AS
@@ -206,6 +215,8 @@ BEGIN
     WHERE id = part_id
   )
   RETURNING id INTO new_part_id;
+  INSERT INTO partsSplitFromAndTo (id, "start")
+  (SELECT new_part_id, false WHERE NOT EXISTS (SELECT 1 FROM partsSplitFromAndTo WHERE NOT "start" ));
   if decrementCount(part_id, recPartsDetails.part_count_min) then
   end if;
   SELECT count(full_code_order_by) INTO code_count
@@ -256,10 +267,104 @@ EXCEPTION
 END;
 $$;
 
-create or replace function moveOrCreateProp (IN part_id specimen_parts.id%TYPE, IN new_part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail) returns integer language plpgsql AS
+create or replace function moveOrCreateProp (IN part_id specimen_parts.id%TYPE, IN new_part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail, IN recFirstPartsDetails recPartsDetail) returns integer language plpgsql AS
 $$
 declare
+  prop_count integer;
+  update_count integer;
+  booUpdate boolean := false;
+  booContinue boolean := false;
 begin
+  /*Freshness Level*/
+  IF coalesce(recPartsDetails.freshness_level, '') != '' THEN
+    SELECT COUNT(*)
+    INTO prop_count
+    FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
+    WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'part state' AND property_sub_type = 'freshness level' AND property_value_unified = recPartsDetails.freshness_level;
+    INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type)
+    (
+      SELECT 'specimen_parts', new_part_id, 'part state', 'freshness level'
+      WHERE NOT EXISTS (SELECT 1
+                        FROM catalogue_properties
+                        WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'part state' AND property_sub_type = 'freshness level'
+                      )
+    );
+    IF prop_count >= 1 THEN
+      IF prop_count > 1 OR (prop_count = 1 AND recPartsDetails.freshness_level != recFirstPartsDetails.freshness_level) THEN
+        booUpdate := true;
+      ELSIF prop_count = 1 AND recPartsDetails.freshness_level = recFirstPartsDetails.freshness_level THEN
+        booContinue := true;
+      END IF;
+      IF booUpdate THEN
+        UPDATE properties_values
+        SET property_ref = (SELECT id
+                            FROM catalogue_properties
+                            WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'part state' AND property_sub_type = 'freshness level'
+                          )
+        WHERE property_ref = (SELECT DISTINCT catalogue_properties.id
+                              FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
+                              WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'part state' AND property_sub_type = 'freshness level' AND property_value_unified = recPartsDetails.freshness_level
+                              LIMIT 1
+                            )
+          AND property_value_unified = recPartsDetails.freshness_level
+          AND id IN (SELECT properties_values.id
+                     FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
+                     WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'part state' AND property_sub_type = 'freshness level' AND property_value_unified = recPartsDetails.freshness_level
+                     LIMIT 1
+                    );
+        GET DIAGNOSTICS update_count = ROW_COUNT;
+        IF update_count = 0 THEN
+          booContinue := true;
+        END IF;
+      END IF;
+    ELSE
+      booContinue := true;
+    END IF;
+    IF booContinue THEN
+      INSERT INTO properties_values (property_ref, property_value)
+      (SELECT id, recPartsDetails.freshness_level
+        FROM catalogue_properties
+        WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'part state' AND property_sub_type = 'freshness level'
+      );
+    END IF;
+  END IF;
+  /*Insurances*/
+  IF recPartsDetails.old_insurance_value IS NOT NULL THEN
+    SELECT COUNT(*)
+    INTO prop_count
+    FROM insurances
+    WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND insurance_value = recPartsDetails.old_insurance_value AND insurance_year = coalesce(recPartsDetails.old_insurance_year,0);
+    IF prop_count >= 1 THEN
+      IF prop_count > 1 OR (prop_count = 1 AND recPartsDetails.old_insurance_value != recFirstPartsDetails.old_insurance_value AND coalesce(recPartsDetails.old_insurance_year,0) != coalesce(recFirstPartsDetails.old_insurance_year,0)) THEN
+        booUpdate := true;
+      ELSIF prop_count = 1 AND (recPartsDetails.old_insurance_value = recFirstPartsDetails.old_insurance_value OR coalesce(recPartsDetails.old_insurance_year,0) = coalesce(recFirstPartsDetails.old_insurance_year,0)) THEN
+        booContinue := true;
+      END IF;
+      IF booUpdate THEN
+        UPDATE insurances
+        SET record_id = new_part_id
+        WHERE referenced_relation = 'specimen_parts'
+          AND record_id = part_id
+          AND insurance_value = recPartsDetails.old_insurance_value
+          AND insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
+          AND id IN (SELECT id
+                     FROM insurances
+                     WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND insurance_value = recPartsDetails.old_insurance_value AND insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
+                     LIMIT 1
+                    );
+        GET DIAGNOSTICS update_count = ROW_COUNT;
+        IF update_count = 0 THEN
+          booContinue := true;
+        END IF;
+      END IF;
+    ELSE
+      booContinue := true;
+    END IF;
+    IF booContinue THEN
+      INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_year)
+      (SELECT 'specimen_parts', new_part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0));
+    END IF;
+  END IF;
   return 1;
 exception
   when others then
@@ -297,6 +402,39 @@ begin
                           where property_ref = prop_id
                             and property_value = recPartsDetails.freshness_level
                         )
+    );
+  END IF;
+  /*Insurances*/
+  IF recPartsDetails.old_insurance_value IS NOT NULL THEN
+    insert into insurances (referenced_relation, record_id, insurance_value, insurance_year)
+    (
+      select 'specimen_parts', part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0)
+      where not exists (
+                          select 1
+                          from insurances
+                          where referenced_relation = 'specimen_parts'
+                            and record_id = part_id
+                            and insurance_value = recPartsDetails.old_insurance_value
+                            and insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
+                       )
+    );
+  END IF;
+  /*Maintenances*/
+  IF recPartsDetails.maintenance_people_ref IS NOT NULL THEN
+    insert into collection_maintenance (referenced_relation, record_id, people_ref, "category", action_observation, modification_date_time, modification_date_mask)
+    (
+      select 'specimen_parts', part_id, recPartsDetails.maintenance_people_ref, recPartsDetails.maintenance_category, recPartsDetails.maintenance_action_observation, recPartsDetails.maintenance_modification_date_time, recPartsDetails.maintenance_modification_date_mask
+      where not exists (
+                          select 1
+                          from collection_maintenance
+                          where referenced_relation = 'specimen_parts'
+                            and record_id = part_id
+                            and people_ref = recPartsDetails.maintenance_people_ref
+                            and "category" = recPartsDetails.maintenance_category
+                            and action_observation = recPartsDetails.maintenance_action_observation
+                            and modification_date_time = recPartsDetails.maintenance_modification_date_time
+                            and modification_date_mask = recPartsDetails.maintenance_modification_date_mask
+                       )
     );
   END IF;
   /*Length level*/
@@ -459,14 +597,60 @@ create or replace function resplit_parts () returns boolean language plpgsql as
 $$
 declare
   recPartsDetails recPartsDetail;
+  recFirstPart recPartsDetail;
   part_id specimen_parts.id%TYPE := 0;
   new_part_id specimen_parts.id%TYPE;
   code_count integer;
   recActualCodes varchar[];
   recTransferedCodes varchar[];
-  recPropertiesValues varchar[];
   recProperties RECORD;
+  recInsurances RECORD;
 begin
+  INSERT INTO partsSplitFromAndTo (id)
+  (
+    SELECT max(specimen_parts.id)
+    FROM darwin1.tbl_specimen_groups
+          inner join darwin1.id_refs
+          on sgr_id_ctn = old_id and system = 'individuals'
+          inner join (
+                        darwin1.tbl_rooms
+                        inner join (
+                                    darwin1.tbl_building_floors
+                                    inner join darwin1.tbl_buildings
+                                    on bui_id_ctn = bfl_building_nr
+                                  )
+                        on bfl_id_ctn = rom_building_floor_nr
+                      )
+          on sgr_room_nr = rom_id_ctn
+          inner join
+          specimen_parts
+          on  specimen_individual_ref = new_id
+              and specimen_part = lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation'))
+              and coalesce(specimen_parts.building,'') =
+                  case
+                    when sgr_room_nr = 0 then ''
+                    else bui_name
+                  end::varchar
+              and coalesce(specimen_parts.floor,'') =
+                  case
+                    when sgr_room_nr = 0 then ''
+                    else bfl_floor
+                  end::varchar
+              and coalesce(specimen_parts.room, '') =
+                  case
+                    when sgr_room_nr = 0 then ''
+                    else rom_code
+                  end::varchar
+              and coalesce(specimen_parts.row, '') = coalesce(sgr_row, '')
+              and coalesce(specimen_parts.shelf, '') = coalesce(sgr_shelf, '')
+              and coalesce(specimen_parts.container, '') = coalesce(sgr_container, '')
+              and coalesce(specimen_parts.sub_container, '') = coalesce(sgr_subcontainer, '')
+              and complete =
+                  case
+                    when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true
+                    else false
+                  end    
+  );
   FOR recPartsDetails IN select specimen_individual_ref,  specimen_parts.id as parts_id, fullToIndex(sgr_code) as main_code, 
                                 fullToIndex(bat_unique_rbins_code) as rbins_code, fullToIndex(bat_code) as batch_main_code, fullToIndex(bat_inventory_code) as inventory_code, sgr_code as old_main_code,
                                 specimen_part, building, coalesce(building, '') as coalesced_building, 
@@ -486,7 +670,7 @@ begin
                                   when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
                                   else false 
                                 end as complete,
-                                case when sfl_description = 'Undefined' then null else sfl_description end as freshness_level,
+                                case when sfl_description = 'Undefined' then '' else coalesce(sfl_description,'') end as freshness_level,
                                 sgr_length_min::varchar as old_length_min,
                                 convert_to_unified(sgr_length_min::varchar, length_unit.uni_unit, 'length') as length_min_unified,
                                 sgr_length_max::varchar as old_length_max,
@@ -506,8 +690,26 @@ begin
                                 convert_to_unified(sgr_weight_min::varchar, weight_unit.uni_unit, 'weight') as weight_min_unified,
                                 sgr_weight_max::varchar as old_weight_max,
                                 convert_to_unified(sgr_weight_max::varchar, weight_unit.uni_unit, 'weight') as weight_max_unified,
-                                weight_unit.uni_unit as old_weight_unit
-                          from darwin1.tbl_specimen_groups 
+                                weight_unit.uni_unit as old_weight_unit,
+                                bat_value as old_insurance_value,
+                                bat_value_year as old_insurance_year,
+                                case when exists(select 1 from people where id = sgr_preparator_nr) then case when sgr_preparator_nr = 0 then null else sgr_preparator_nr end else null::integer end as maintenance_people_ref,
+                                'action' as maintenance_category,
+                                'preparation' as maintenance_action_observation,
+                                (
+                                    ('01/' ||
+                                    CASE WHEN sgr_preparation_month IS NULL THEN '01' ELSE sgr_preparation_month::varchar END
+                                    || '/' ||
+                                    CASE WHEN sgr_preparation_year IS NULL THEN '0001' ELSE sgr_preparation_year::varchar END
+                                    )::timestamp
+                                    + (CASE WHEN sgr_preparation_day IS NULL OR sgr_preparation_day = 0 THEN '0' ELSE (sgr_preparation_day::integer - 1)::varchar END || ' days')::interval
+                                )::timestamp as maintenance_modification_date_time,
+                                CASE WHEN sgr_preparation_day IS NOT NULL THEN 8 ELSE 0 END
+                                +
+                                CASE WHEN sgr_preparation_month IS NOT NULL THEN 16 ELSE 0 END
+                                +
+                                CASE WHEN sgr_preparation_year IS NOT NULL THEN 32 ELSE 0 END as maintenance_modification_date_mask
+                          from darwin1.tbl_specimen_groups
                           inner join darwin1.id_refs 
                           on sgr_id_ctn = old_id and system = 'individuals'
                           inner join (
@@ -559,9 +761,10 @@ begin
                                     when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
                                     else false 
                                   end
+                          where bat_value is not null
                           /*where bat_collection_id_nr between 1 and 8*/
                                 /*where bat_collection_id_nr = 133*/
-                          where sgr_height_min is not null or sgr_height_max is not null
+                          /*where sgr_height_min is not null or sgr_height_max is not null*/
                           /*where sfl_description is not null and sfl_description != 'Undefined'*/
                                 /*exists (select 1 from comments where comment is not null and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id limit 1)*/
                           order by new_id desc, specimen_part, main_code 
@@ -569,6 +772,7 @@ begin
   LOOP
     IF part_id != recPartsDetails.parts_id THEN
       RAISE NOTICE 'Next part infos: %', recPartsDetails;
+      recFirstPart := recPartsDetails;
       part_id := recPartsDetails.parts_id;
       IF recPartsDetails.specimen_part_count_min = 0 AND recPartsDetails.part_count_min > 0 THEN
         IF recPartsDetails.specimen_part_count_max = recPartsDetails.specimen_part_count_min THEN
@@ -748,16 +952,40 @@ begin
             ) as x;
         IF code_count > 0 THEN
           RAISE NOTICE '+ Need of new part creation';
-          SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
+          SELECT createNewPart(part_id, recPartsDetails, recFirstPart) INTO new_part_id;
           IF new_part_id < 0 THEN
             return false;
           END IF;
           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
           RAISE NOTICE '++ Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
-          IF moveOrCreateProp(part_id, new_part_id, recPartsDetails) < 0 THEN
+          SELECT array_agg(property_value)
+          INTO recProperties
+          FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Properties before transfert: %', recProperties;
+          SELECT array_agg(insurance_value), array_agg(insurance_year)
+          INTO recInsurances
+          FROM insurances
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
+          IF moveOrCreateProp(part_id, new_part_id, recPartsDetails, recFirstPart) < 0 THEN
             return false;
           END IF;
+          SELECT array_agg(property_value)
+          INTO recProperties
+          FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = new_part_id;
+          RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
+          SELECT array_agg(insurance_value), array_agg(insurance_year)
+          INTO recInsurances
+          FROM insurances
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = new_part_id;
+          RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
         END IF;
       ELSE
         RAISE NOTICE '+ New code creation for next part';
@@ -766,14 +994,31 @@ begin
         END IF;
         select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
         RAISE NOTICE '++ Actual codes: %', recActualCodes;
+        select array_agg(property_value)
+        into recProperties
+        from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+        where referenced_relation = 'specimen_parts' and record_id = part_id;
+        RAISE NOTICE '+++ Properties before creation: %', recProperties;
+        SELECT array_agg(insurance_value), array_agg(insurance_year)
+        INTO recInsurances
+        FROM insurances
+        WHERE referenced_relation = 'specimen_parts'
+          AND record_id = part_id;
+        RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
         IF createProperties (part_id, recPartsDetails) < 0 THEN
           return false;
         END IF;
         select array_agg(property_value)
-        into recPropertiesValues
+        into recProperties
         from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
         where referenced_relation = 'specimen_parts' and record_id = part_id;
-        RAISE NOTICE '++ Actual properties: %', recPropertiesValues;
+        RAISE NOTICE '+++ Actual properties: %', recProperties;
+        SELECT array_agg(insurance_value), array_agg(insurance_year)
+        INTO recInsurances
+        FROM insurances
+        WHERE referenced_relation = 'specimen_parts'
+          AND record_id = part_id;
+        RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
       END IF;
     ELSE
       RAISE NOTICE '- Same part id infos: %', recPartsDetails;
@@ -784,32 +1029,47 @@ begin
       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
       RAISE NOTICE '-- Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
-      IF moveOrCreateProp(part_id, new_part_id, recPartsDetails) < 0 THEN
+      SELECT array_agg(property_value)
+      INTO recProperties
+      FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Properties before transfert: %', recProperties;
+      SELECT array_agg(insurance_value), array_agg(insurance_year)
+      INTO recInsurances
+      FROM insurances
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
+      IF moveOrCreateProp(part_id, new_part_id, recPartsDetails, recFirstPart) < 0 THEN
         return false;
       END IF;
+      SELECT array_agg(property_value)
+      INTO recProperties
+      FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Properties after transfert: %', recProperties;
+      SELECT array_agg(insurance_value), array_agg(insurance_year)
+      INTO recInsurances
+      FROM insurances
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Insurances after transfert: %', recInsurances;
+      SELECT array_agg(property_value)
+      INTO recProperties
+      FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = new_part_id;
+      RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
+      SELECT array_agg(insurance_value), array_agg(insurance_year)
+      INTO recInsurances
+      FROM insurances
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = new_part_id;
+      RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
     END IF;
   END LOOP;
-/*  SELECT array_agg(property_value)
-  INTO recProperties
-  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-  WHERE referenced_relation = 'specimen_parts'
-    AND record_id = part_id;
-  RAISE NOTICE '+++ Properties before transfert: %', recProperties;
-  IF checkAndCreateProperties(part_id, new_part_id, recPartsDetails) < 0 THEN
-    return -1;
-  END IF;
-  SELECT array_agg(property_value)
-  INTO recProperties
-  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-  WHERE referenced_relation = 'specimen_parts'
-    AND record_id = part_id;
-  RAISE NOTICE '+++ Properties after transfert: %', recProperties;
-  SELECT array_agg(property_value)
-  INTO recProperties
-  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-  WHERE referenced_relation = 'specimen_parts'
-    AND record_id = new_part_id;
-  RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;*/
   return true;
 exception
   when others then
