@@ -2,8 +2,13 @@
   <div class="menu_top">
     <table>
       <tr class="menu_header_image">
-        <td>&nbsp;</td>
-        <td></td>
+        <td colspan="2">
+          <ul id="header_map">
+            <li><?php echo link_to(' ','@homepage', 'class="img_drop"');?></li>
+            <li><?php echo link_to(' ','@homepage', 'class="img_DaRWIN"');?></li>
+          </ul>
+        </td>
+        <!--<td></td>-->
       </tr>
       <tr>
         <td colspan="2">

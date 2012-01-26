@@ -1,4 +1,4 @@
-<br />
+
 <h1>Welkom in onze KBIN-collectie databank</h1>
 
 <p>
@@ -22,3 +22,9 @@ De hoeksteen van de DARWIN database is het specimen en de informatie over de her
 </p>
 <br />
 <p>Wij wensen u een prettig bezoek doorheen onze virtuele collecties!</p>
+<br />
+<p>
+  <a href="<?php echo __('http://www.natuurwetenschappen.be');?>">
+            <?php echo image_tag('public/rbins_logo.png', 'class=logo_center_align');?><br />
+          </a>
+</p>

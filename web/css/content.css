@@ -831,8 +831,8 @@ a#register_link, a#login_lostpwd
 
 .tour
 {
-  padding: 1.5em;
-  width:900px !important;
+  /*padding: 1.5em;*/
+  /*width:900px !important;*/
 }
 
 .tour h2
@@ -973,3 +973,10 @@ a#register_link, a#login_lostpwd
 }
 #broadcast_bottom span { font-size: small; }
 #broadcast_bottom_padding { height :2em;}
+
+.logo_center_align
+{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

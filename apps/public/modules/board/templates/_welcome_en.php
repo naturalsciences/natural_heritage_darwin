@@ -1,4 +1,4 @@
-<br />
+
 <h1>Welcome to the RBINS-collection database</h1>
 
 <br />
@@ -24,3 +24,9 @@ The corner stone of the darwin database is the specimen and the information abou
 </p>
 <br />
 <p>Enjoy your virtual visit through our collections!</p>
+<br />
+<p>
+  <a href="<?php echo __('http://www.naturalsciences.be');?>">
+            <?php echo image_tag('public/rbins_logo.png', 'class=logo_center_align');?><br />
+          </a>
+</p>

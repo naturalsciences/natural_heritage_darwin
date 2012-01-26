@@ -1,4 +1,4 @@
-<br />
+
 <h1>Bienvenue dans notre base de données des collections de l’ Institut</h1>
 
 <p>
@@ -38,3 +38,9 @@ vous y trouverez tout autre statut non reconnu par le CINZ (par exemple topotype
 </p>
 <br />
 <p>Nous vous souhaitons une agréable visite virtuelle parmi nos collections!</p>
+<br />
+<p>
+  <a href="<?php echo __('http://www.sciencesnaturelles.be');?>">
+            <?php echo image_tag('public/rbins_logo.png', 'class=logo_center_align');?><br />
+          </a>
+</p>
