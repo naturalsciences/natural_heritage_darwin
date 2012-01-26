@@ -42,14 +42,13 @@ class LoanStatusTable extends DarwinTable
     if( !empty($loan_ids) ) 
     {
       $q = Doctrine_Query::create()
-        ->select('loan_ref, status, is_last')
         ->from('LoanStatus')
         ->whereIn('loan_ref', $loan_ids)
         ->andWhere( 'is_last = true');
       $result = $q->execute();
 
       foreach( $result as $res )
-        $res_array[$res->getLoanRef()] = $res->getStatus(); 
+        $res_array[$res->getLoanRef()] = $res; 
     }
     return $res_array;
   }

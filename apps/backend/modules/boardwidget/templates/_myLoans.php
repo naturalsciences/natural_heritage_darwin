@@ -28,7 +28,7 @@
         </ul>
       </td>
       <td><?php echo truncate_text($loan['name'],$max_stringlengte); ?></td>
-      <td><?php echo $status[$loan->getId()]; ?></td>
+      <td><?php echo $status[$loan->getId()]->getFormattedStatus(); ?></td>
       <td><?php echo $loan['from_date_formatted']; ?></td>
       <td><?php echo $loan['to_date_formatted']; ?></td>
       <td><?php echo link_to(image_tag('blue_eyel.png'),'loan/index', 'class=view_loan');?></td> 

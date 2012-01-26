@@ -107,7 +107,6 @@ class boardwidgetComponents extends sfComponents
     $counted->count_query = $count_q;
 
     $pager = new DarwinPager($query,
-      $this->currentPage,
       $this->getRequestParameter('page',1),
       5
     );
