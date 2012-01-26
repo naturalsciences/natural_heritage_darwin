@@ -50,12 +50,12 @@
           <tr class="rid_<?php echo $item->getId();?>">
             <td><?php echo image_tag('info.png',"title=info class=info");?></td>
             <td class="item_name"><?php echo $item->getName();?></td>
-            <td><?php if(isset($status[$item->getId()])) echo $status[$item->getId()]->getStatus(); ?></td>
+            <td><?php if(isset($status[$item->getId()])) echo $status[$item->getId()]->getFormattedStatus(); ?></td>
             <td class="datesNum">
-	      <?php echo $item->getFromDate();?>
+	      <?php echo $item->getFromDateFormatted();?>
             </td>
             <td class="datesNum">
-              <?php echo $item->getToDate();?>
+              <?php echo $item->getToDateFormatted();?>
             </td>            
             <td>
               <?php echo $item->getDescription();?>

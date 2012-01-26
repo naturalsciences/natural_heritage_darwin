@@ -26,7 +26,7 @@ class LoanStatus extends BaseLoanStatus
 
   private static $closed_status = array('returned', 'closed', 'rejected');
 
-  public static function getFormattedStatus()
+  public function getFormattedStatus()
   {
     $trans_status = self::getAvailableStatus();
     return $trans_status[$this->getStatus()] ;

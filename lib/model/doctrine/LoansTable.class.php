@@ -37,10 +37,9 @@ class LoansTable extends DarwinTable
     $status_group_params = implode(',',array_fill(0,count($status_group),'?'));
 
     $q = Doctrine_Query::create()
-      ->select('l.*')
       ->from('Loans l')
-      ->andWhere('EXISTS (SELECT * FROM LoanRights lr WHERE loan_ref = l.id AND lr.user_ref = ? )', $user_id)
-      ->andWhere("EXISTS (SELECT * FROM LoanStatus ls WHERE loan_ref = l.id AND ls.status NOT IN (". $status_group_params.") AND is_last = TRUE )", $status_group)
+      ->where('EXISTS (SELECT lr.id FROM LoanRights lr WHERE lr.loan_ref = l.id AND lr.user_ref = ? )', $user_id)
+      ->andWhere("EXISTS (SELECT ls.id FROM LoanStatus ls WHERE loan_ref = l.id AND ls.status NOT IN (". $status_group_params.") AND is_last = TRUE )", $status_group)
       ->orderBy('l.from_date desc');
       if( $max_items )
 	$q->limit($max_items);
