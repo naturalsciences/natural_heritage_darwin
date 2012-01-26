@@ -331,6 +331,8 @@ input.small
   margin: 0;
   padding: 0;
   list-style: none;
+  height: 0px;
+  /*border: 1px solid red;*/
 }
 
 #header_map li a
@@ -372,9 +374,10 @@ input.small
 
 #header_map a.img_DaRWIN
 {  
-  top: -153px;
+  top: -3px;
   left: -344px;
   width: 400px;
   height: 95px;
-  /*border: 1px solid red;*/
+  
+  /*border: 1px solid green;*/
 }
