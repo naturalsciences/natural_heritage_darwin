@@ -19,7 +19,7 @@
      <tr>
        <td colspan="3">
          <div class="add_comments">
-           <a href="<?php echo url_for('loan/addComments'.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_comment"><?php echo __('Add comment');?></a>
+           <a href="<?php echo url_for('loan/addComments?table='.$table.($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/num/" id="add_comment"><?php echo __('Add comment');?></a>
          </div>
        </td>
      </tr>

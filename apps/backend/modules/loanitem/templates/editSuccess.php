@@ -6,7 +6,7 @@
     <h1 class="edit_mode"><?php echo __('Edit Loan Item');?></h1>
     <?php include_partial('loan/tabs', array('loan'=> $form->getObject()->getLoan(), 'item' => $form->getObject())); ?>
     <div class="tab_content">
-      <?php echo form_tag('loan/create', array('class'=>'edition loan_form'));?>
+      <?php echo form_tag('loanitem/update?id='.$form->getObject()->getId(), array('class'=>'edition loanitem_form'));?>
 
         <?php include_partial('widgets/screen', array(
           'widgets' => $widgets,

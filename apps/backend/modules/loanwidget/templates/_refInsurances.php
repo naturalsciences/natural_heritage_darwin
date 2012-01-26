@@ -31,7 +31,7 @@
     <tr>
       <td colspan='5'>
         <div class="add_code">
-          <a href="<?php echo url_for('loan/addInsurance'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_insurance"><?php echo __('Add Insurance');?></a>
+          <a href="<?php echo url_for('loan/addInsurance?table='.$table. ($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/num/" id="add_insurance"><?php echo __('Add Insurance');?></a>
         </div>
       </td>
     </tr>

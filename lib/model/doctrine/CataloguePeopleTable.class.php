@@ -81,12 +81,12 @@ class CataloguePeopleTable extends DarwinTable
     return $q->execute();
   }
   
-  public function findActors($rec_id, $type)
+  public function findActors($rec_id, $type, $table = 'loans')
   {
      $q = Doctrine_Query::create()->
          from('CataloguePeople')->
-         where('referenced_relation = ?', 'loans')->
-         AndWhere('people_type = ?', $type)->
+         andWhere('referenced_relation = ?', $table)->
+         andWhere('people_type = ?', $type)->
          andWhere('record_id = ?', $rec_id)->
          orderBy('order_by ASC'); 
      return $q->execute();

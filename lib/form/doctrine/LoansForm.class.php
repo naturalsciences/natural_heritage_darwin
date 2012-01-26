@@ -190,7 +190,7 @@ class LoansForm extends BaseLoansForm
     $this->embedForm('ActorsSender',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'sender') as $key=>$vals)
+      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'sender','loans') as $key=>$vals)
       {
         $form = new ActorsForm($vals);
         $this->embeddedForms['ActorsSender']->embedForm($key, $form);
@@ -224,7 +224,7 @@ class LoansForm extends BaseLoansForm
     $this->embedForm('ActorsReceiver',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'receiver') as $key=>$vals)
+      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'receiver','loans') as $key=>$vals)
       {
         $form = new ActorsForm($vals);
         $this->embeddedForms['ActorsReceiver']->embedForm($key, $form);

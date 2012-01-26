@@ -30,7 +30,7 @@
  <tfoot>
    <tr>
      <td colspan="12">
-         <a href="<?php echo url_for('loan/addActors'.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/type/sender/num/" class="hidden"></a>
+         <a href="<?php echo url_for('loan/addActors?table='.$table.($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/type/sender/num/" class="hidden"></a>
          <a class="add_actor" href="<?php echo url_for('people/searchBoth?with_js=1');?>"><?php echo __('Add Sender');?></a>
      </td>
    </tr>
@@ -69,7 +69,7 @@
  <tfoot>
    <tr>
      <td colspan="12">
-         <a href="<?php echo url_for('loan/addActors'.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/type/receiver/num/" class="hidden"></a>
+         <a href="<?php echo url_for('loan/addActors?table='.$table.($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/type/receiver/num/" class="hidden"></a>
          <a class="add_actor" href="<?php echo url_for('people/searchBoth?with_js=1');?>"><?php echo __('Add Receiver');?></a>
      </td>
    </tr>

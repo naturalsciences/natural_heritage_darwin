@@ -15,7 +15,7 @@
           <?php include_partial('widgets/screen', array(
             'widgets' => $widgets,
             'category' => 'loanwidget',
-            'options' => array('form' => $form/*, 'level' => 1*/),
+            'options' => array('form' => $form , 'table' => 'loans'),
           )); ?>
         </div>
         <p class="clear"></p>

@@ -55,8 +55,8 @@ class CommentsTable extends DarwinTable
                      'conservation_mean' => 'Conservation mean',
                      'conservation_location' => 'Conservation location', 'preparation' => 'Preparation'
                    ),
-    'loans' => array('usage' => 'Usage', 'state_observation' => 'State observation'  
-                   )                
+    'loans' => array('usage' => 'Usage', 'state_observation' => 'State observation'),
+    'loan_items' => array('usage' => 'Usage', 'state_observation' => 'State observation'),
                                    );
 
   /**

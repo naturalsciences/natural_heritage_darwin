@@ -12,7 +12,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
 {
   public function configure()
   {
-    $this->useFields(array());
+    $this->useFields(array('id'));
 
     $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
@@ -30,7 +30,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   public function addActorsSender($num, $people_ref, $order_by=0)
   {
     if(! isset($this['newActorsSender'])) $this->loadEmbedActorsSender();
-    $options = array('referenced_relation' => 'loans', 'people_ref' => $people_ref, 'people_type' => 'sender', 'order_by' => $order_by);
+    $options = array('referenced_relation' => 'loan_items', 'people_ref' => $people_ref, 'people_type' => 'sender', 'order_by' => $order_by);
     $val = new CataloguePeople();
     $val->fromArray($options);
     $val->setRecordId($this->getObject()->getId());
@@ -48,7 +48,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->embedForm('ActorsSender',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'sender') as $key=>$vals)
+      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'sender','loan_items') as $key=>$vals)
       {
         $form = new ActorsForm($vals);
         $this->embeddedForms['ActorsSender']->embedForm($key, $form);
@@ -64,10 +64,9 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   public function addActorsReceiver($num, $people_ref, $order_by=0)
   {
     if(! isset($this['newActorsReceiver'])) $this->loadEmbedActorsReceiver();
-    $options = array('referenced_relation' => 'loans', 'people_ref' => $people_ref, 'people_type' => 'receiver', 'order_by' => $order_by);
+    $options = array('referenced_relation' => 'loan_items', 'people_ref' => $people_ref, 'people_type' => 'receiver', 'order_by' => $order_by, 'record_id' => $this->getObject()->getId());
     $val = new CataloguePeople();     
     $val->fromArray($options);
-    $val->setRecordId($this->getObject()->getId());
     $form = new ActorsForm($val);
     $this->embeddedForms['newActorsReceiver']->embedForm($num, $form);
     //Re-embedding the container
@@ -82,7 +81,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->embedForm('ActorsReceiver',$subForm);    
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'receiver') as $key=>$vals)
+      foreach(Doctrine::getTable('CataloguePeople')->findActors($this->getObject()->getId(),'receiver','loan_items') as $key=>$vals)
       {
         $form = new ActorsForm($vals);
         $this->embeddedForms['ActorsReceiver']->embedForm($key, $form);
@@ -98,7 +97,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   public function addInsurances($num, $obj=null)
   {
     if(! isset($this['newInsurance'])) $this->loadEmbedInsurance();
-    $options = array('referenced_relation' => 'loans');
+    $options = array('referenced_relation' => 'loan_items');
     if(!$obj) $val = new Insurances();
     else $val = $obj ;
     $val->fromArray($options);
@@ -118,9 +117,9 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->embedForm('Insurances',$subForm);
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('Insurances')->findForTable('loans', $this->getObject()->getId()) as $key=>$vals)
+      foreach(Doctrine::getTable('Insurances')->findForTable('loan_items', $this->getObject()->getId()) as $key=>$vals)
       {
-        $form = new InsurancesSubForm($vals,array('table' => 'loans'));
+        $form = new InsurancesSubForm($vals,array('table' => 'loan_items'));
         $this->embeddedForms['Insurances']->embedForm($key, $form);
       }
       //Re-embedding the container
@@ -134,12 +133,12 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   public function addComments($num, $obj=null)
   {
       if(! isset($this['newComments'])) $this->loadEmbedComments();
-      $options = array('referenced_relation' => 'loans', 'record_id' => $this->getObject()->getId());
+      $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
       if (!$obj) $val = new Comments();
       else $val = $obj ;      
       $val->fromArray($options);
       $val->setRecordId($this->getObject()->getId());
-      $form = new CommentsSubForm($val,array('table' => 'loans', 'line_display' => true));
+      $form = new CommentsSubForm($val,array('table' => 'loan_items', 'line_display' => true));
       $this->embeddedForms['newComments']->embedForm($num, $form);
       //Re-embedding the container
       $this->embedForm('newComments', $this->embeddedForms['newComments']);
@@ -150,12 +149,12 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     if($this->isBound()) return;
     /* Comments sub form */
     $subForm = new sfForm();
-    $this->embedForm('Comments',$subForm);    
+    $this->embedForm('Comments',$subForm);
     if($this->getObject()->getId() !='')
     {
-      foreach(Doctrine::getTable('comments')->findForTable('loans', $this->getObject()->getId()) as $key=>$vals)
+      foreach(Doctrine::getTable('comments')->findForTable('loan_items', $this->getObject()->getId()) as $key=>$vals)
       {
-        $form = new CommentsSubForm($vals,array('table' => 'loans'));
+        $form = new CommentsSubForm($vals,array('table' => 'loan_items'));
         $this->embeddedForms['Comments']->embedForm($key, $form);
       }
       //Re-embedding the container

@@ -12,20 +12,6 @@ class loanitemActions extends DarwinActions
 {
   protected $widgetCategory = 'loanitem_widget';
 
-  /*
-  protected function getLoanForm(sfWebRequest $request, $fwd404=false, $parameter='id')
-  {
-    $loan = null;
-
-    if ($fwd404)
-      $this->forward404Unless($item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter,0)));
-    elseif($request->hasParameter($parameter) && $request->getParameter($parameter))
-      $item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
-
-    $form = new LoanItemWidgetForm($item);
-    return $form;
-  }*/
-
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
@@ -52,6 +38,7 @@ class loanitemActions extends DarwinActions
     $form->bind($request->getParameter($form->getName()));
     if ($form->isValid())
     {
+
       try
       {
         $item = $form->save();
