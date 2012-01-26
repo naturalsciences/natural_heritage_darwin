@@ -12,14 +12,39 @@ class loanitemActions extends DarwinActions
 {
   protected $widgetCategory = 'loanitem_widget';
 
+  /*
+  protected function getLoanForm(sfWebRequest $request, $fwd404=false, $parameter='id')
+  {
+    $loan = null;
+
+    if ($fwd404)
+      $this->forward404Unless($item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter,0)));
+    elseif($request->hasParameter($parameter) && $request->getParameter($parameter))
+      $item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
+
+    $form = new LoanItemWidgetForm($item);
+    return $form;
+  }*/
+
+  public function executeUpdate(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
+    $this->forward404Unless($loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+    $this->form = new LoanItemWidgetForm($loan);
+    $this->processForm($request, $this->form);
+    $this->loadWidgets();
+    $this->setTemplate('edit');
+  }
+
+
   public function executeEdit(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $this->forward404Unless($item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
-    $this->form = new LoanItemsForm($item);
+    $this->forward404Unless($loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+    $this->form = new LoanItemWidgetForm($loan);
     $this->loadWidgets();
+    $this->setTemplate('edit') ;    
   }
-
 
 
   protected function processForm(sfWebRequest $request, sfForm $form)
@@ -30,7 +55,7 @@ class loanitemActions extends DarwinActions
       try
       {
         $item = $form->save();
-        $this->redirect('loan/edit?id='.$item->getId());
+        $this->redirect('loanitem/edit?id='.$item->getId());
       }
       catch(Doctrine_Exception $ne)
       {
@@ -54,7 +79,7 @@ class loanitemActions extends DarwinActions
     {
       $e = new DarwinPgErrorParser($ne);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-      $this->form = new LoansForm($loan);
+      $this->form = new LoanItemWidgetForm($loan);
       $this->form->getErrorSchema()->addError($error); 
       $this->loadWidgets();
       $this->setTemplate('edit');

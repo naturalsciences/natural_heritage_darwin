@@ -99,12 +99,21 @@ class boardwidgetComponents extends sfComponents
     /**/
     $this->pagerSlidingSize = intval(sfConfig::get('dw_pagerSlidingSize'));
     $query = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId());
-    $this->pagerLayout = new PagerLayoutWithArrows(
-      new DarwinPager(
-        $query,
-        $this->getRequestParameter('page',1),
-        5
-      ),
+
+
+    $count_q = clone $query;
+    $count_q = $count_q->select('count(*)')->removeDqlQueryPart('orderby')->limit(0);
+    $counted = new DoctrineCounted();
+    $counted->count_query = $count_q;
+
+    $pager = new DarwinPager($query,
+      $this->currentPage,
+      $this->getRequestParameter('page',1),
+      5
+    );
+    $pager->setCountQuery($counted);
+
+    $this->pagerLayout = new PagerLayoutWithArrows($pager,
       new Doctrine_Pager_Range_Sliding(
         array('chunk' => $this->pagerSlidingSize)
       ),
@@ -119,7 +128,6 @@ class boardwidgetComponents extends sfComponents
       $this->loans = $this->pagerLayout->execute();  
 
     $this->myTotalLoans = $this->pagerLayout->getPager()->getNumResults();
-    //$this->loans = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId(), 5); 
     $this->rights = Doctrine::getTable('LoanRights')->getEncodingRightsForUser($this->getUser()->getId());
 
     if( count($this->loans) )

@@ -469,7 +469,7 @@ LoanStatus:
        id: 1
        Loan: l1
        Users: u4
-       status: Pending
+       status: pending
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: false
@@ -477,7 +477,7 @@ LoanStatus:
        id: 2
        Loan: l1
        Users: u4
-       status: Open
+       status: new
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: false
@@ -485,7 +485,7 @@ LoanStatus:
        id: 3
        Loan: l1
        Users: u4
-       status: Closed
+       status: closed
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: true
@@ -493,7 +493,7 @@ LoanStatus:
        id: 4
        Loan: l3
        Users: u4
-       status: Pending
+       status: pending
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: true
@@ -501,7 +501,7 @@ LoanStatus:
        id: 5
        Loan: l2
        Users: u4
-       status: Open
+       status: new
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: true
@@ -509,7 +509,7 @@ LoanStatus:
        id: 6
        Loan: l9
        Users: u4
-       status: Open
+       status: new
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: true
@@ -517,7 +517,7 @@ LoanStatus:
        id: 7
        Loan: l4
        Users: u4
-       status: Closed
+       status: closed
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: true
@@ -525,7 +525,7 @@ LoanStatus:
        id: 8
        Loan: l5
        Users: u2
-       status: Open
+       status: new
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: true
@@ -533,7 +533,7 @@ LoanStatus:
        id: 9
        Loan: l6
        Users: u2
-       status: Open
+       status: new
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: true
@@ -541,7 +541,7 @@ LoanStatus:
        id: 10
        Loan: l10
        Users: u4
-       status: Accepted
+       status: accepted
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: true
@@ -549,7 +549,7 @@ LoanStatus:
        id: 11
        Loan: l8
        Users: u4
-       status: Accepted
+       status: accepted
        modification_date_time: '2010-10-05'
        comment: No need for a comment
        is_last: true

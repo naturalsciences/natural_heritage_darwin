@@ -1017,4 +1017,13 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     return $query;
   }
 
+  public function getJavaScripts()
+  {
+    $javascripts=parent::getJavascripts();
+    $javascripts[]='/js/OpenLayers.js';
+    $javascripts[]='/js/map.js';
+    return $javascripts;
+  }
+
+
 }

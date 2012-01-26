@@ -13,23 +13,30 @@
 class LoanStatus extends BaseLoanStatus
 {
   private static $status = array(
-        'new' => 'New',
-        'under_evaluation' => 'Under evaluation',
-        'pending' => 'Pending',
-        'accepted' => 'Accepted',
-        'rejected' => 'Rejected',
-        'running' => 'Running',
-        'extended' => 'extended',
-        'returned' => 'Returned',
-        'closed' => 'Closed');
-        
+    'new' => 'New',
+    'under_evaluation' => 'Under evaluation',
+    'pending' => 'Pending',
+    'accepted' => 'Accepted',
+    'rejected' => 'Rejected',
+    'running' => 'Running',
+    'extended' => 'Extended',
+    'returned' => 'Returned',
+    'closed' => 'Closed'
+  );
+
+  private static $closed_status = array('returned', 'closed', 'rejected');
+
   public function getFormattedStatus()
   {
-    return self::$status[$this->getStatus()] ;
-  }  
-    
+    $trans_status = self::getAvailableStatus();
+    return $trans_status[$this->getStatus()] ;
+  }
+
+  public static function getClosedStatus() {
+    return self::$closed_status;
+  }
   public static function getAvailableStatus()
-  { 
+  {
     try{
         $i18n_object = sfContext::getInstance()->getI18n();
     }

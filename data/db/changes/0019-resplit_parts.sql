@@ -1,8 +1,20 @@
 ﻿begin;
 
-
-
 ALTER TABLE specimen_parts DISABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
+
+CREATE OR REPLACE FUNCTION convert_to_real(v_input varchar) RETURNS REAL IMMUTABLE
+AS $$
+DECLARE v_int_value REAL DEFAULT 0;
+BEGIN
+    BEGIN
+        v_int_value := v_input::REAL;
+    EXCEPTION WHEN OTHERS THEN
+/*        RAISE NOTICE 'Invalid integer value: "%".  Returning NULL.', v_input;*/
+        RETURN 0;
+    END;
+RETURN v_int_value;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE TYPE recPartsDetail AS (
                                 specimen_individual_ref integer,  
@@ -38,23 +50,27 @@ CREATE TYPE recPartsDetail AS (
                                 specimen_part_count_min integer,
                                 specimen_part_count_max integer,
                                 complete boolean,
-                                part_comment varchar,
                                 freshness_level varchar,
-                                old_length_min numeric,
-                                old_length_max numeric,
+                                old_length_min varchar,
+                                old_length_min_unified varchar,
+                                old_length_max varchar,
+                                old_length_max_unified varchar,
                                 old_length_unit varchar,
-                                old_height_min numeric,
-                                old_height_max numeric,
+                                old_height_min varchar,
+                                old_height_min_unified varchar,
+                                old_height_max varchar,
+                                old_height_max_unified varchar,
                                 old_height_unit varchar,
-                                old_depth_min numeric,
-                                old_depth_max numeric,
+                                old_depth_min varchar,
+                                old_depth_min_unified varchar,
+                                old_depth_max varchar,
+                                old_depth_max_unified varchar,
                                 old_depth_unit varchar,
-                                old_weight_min numeric,
-                                old_weight_max numeric,
-                                old_weight_unit varchar,
-                                old_vol_min numeric,
-                                old_vol_max numeric,
-                                old_vol_unit varchar
+                                old_weight_min varchar,
+                                old_weight_min_unified varchar,
+                                old_weight_max varchar,
+                                old_weight_max_unified varchar,
+                                old_weight_unit varchar
                               );
 
 create or replace function decrementCount(IN partId specimen_parts.id%TYPE, IN decrementVal bigint) RETURNS boolean language plpgsql AS
@@ -171,60 +187,10 @@ exception
 end;
 $$;
 
-create or replace function checkAndCreateProperties(IN part_id specimen_parts.id%TYPE, IN new_part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail) RETURNS  integer language plpgsql
-AS
-$$
-declare
-begin
-  SELECT count(full_code_order_by) INTO code_count
-  FROM codes
-  WHERE referenced_relation = 'specimen_parts'
-    AND code_category = 'main'
-    AND record_id = part_id;
-  IF code_count > 1 THEN
-    UPDATE codes
-    SET record_id = new_part_id
-    WHERE referenced_relation = 'specimen_parts'
-      AND record_id = part_id
-      AND code_category = 'main'
-      AND full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code);
-    GET DIAGNOSTICS code_count = ROW_COUNT;
-    IF code_count = 0 THEN
-      IF createCodes (new_part_id, recPartsDetails.main_code) < 0 THEN
-        return -1;
-      END IF;
-    END IF;
-  ELSIF code_count = 1 THEN
-    INSERT INTO codes
-    (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
-    (SELECT 'specimen_parts', new_part_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask
-     FROM codes
-     WHERE referenced_relation = 'specimen_parts'
-       AND record_id = part_id
-       AND code_category = 'main'
-       AND full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code)
-    );
-    GET DIAGNOSTICS code_count = ROW_COUNT;
-    IF code_count = 0 THEN
-      IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
-        return -1;
-      END IF;
-    END IF;
-  ELSE
-    IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
-      return -1;
-    END IF;
-  END IF;
-  return 1;
-end;
-$$;
-
 create or replace function createNewPart(IN part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail) RETURNS specimen_parts.id%TYPE language plpgsql AS
 $$
 DECLARE  
   new_part_id specimen_parts.id%TYPE;
-  recNewProperties RECORD;
-  recOldProperties RECORD;
   code_count integer;
 BEGIN
   INSERT INTO specimen_parts
@@ -282,13 +248,210 @@ BEGIN
     END IF;
   END IF;
   /* Comments are not treated: only two are in identifiable corresponding old parts, but do not need to be splitted*/
-  
   return new_part_id;
 EXCEPTION
   WHEN OTHERS THEN
-    RAISE WARNING 'Error: %', SQLERRM;
+    RAISE WARNING 'Error in createNewPart: %', SQLERRM;
     return -1;
 END;
+$$;
+
+create or replace function moveOrCreateProp (IN part_id specimen_parts.id%TYPE, IN new_part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail) returns integer language plpgsql AS
+$$
+declare
+begin
+  return 1;
+exception
+  when others then
+    raise warning 'Error in moveOrCreateProp: %', SQLERRM;
+    return -1;
+end;
+$$;
+
+create or replace function createProperties (IN part_id specimen_parts.id%TYPE, recPartsDetails recPartsDetail) returns integer language plpgsql AS
+$$
+declare
+  prop_id integer;
+begin
+  /*Freshness level*/
+  IF recPartsDetails.freshness_level IS NOT NULL THEN
+    insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type)
+    (
+      select 'specimen_parts', part_id, 'part state', 'freshness level'
+      where not exists (
+                          select 1
+                          from catalogue_properties
+                          where referenced_relation = 'specimen_parts'
+                            and record_id = part_id
+                            and property_type = 'part state'
+                            and property_sub_type = 'freshness level'
+                        )
+    );
+    select id into prop_id from catalogue_properties where referenced_relation = 'specimen_parts' and record_id = part_id and property_type = 'part state' and property_sub_type = 'freshness level';
+    insert into properties_values (property_ref, property_value)
+    (
+      select prop_id, recPartsDetails.freshness_level
+      where not exists (
+                          select 1
+                          from properties_values
+                          where property_ref = prop_id
+                            and property_value = recPartsDetails.freshness_level
+                        )
+    );
+  END IF;
+  /*Length level*/
+  IF coalesce(recPartsDetails.old_length_min,'') != '' OR coalesce(recPartsDetails.old_length_max,'') != '' THEN
+    insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
+    (
+      select 'specimen_parts', part_id, 'physical measurement', 'length', NULL, recPartsDetails.old_length_unit, recPartsDetails.old_length_unit
+      where not exists (
+                          select 1
+                          from catalogue_properties
+                          where referenced_relation = 'specimen_parts'
+                            and record_id = part_id
+                            and property_type = 'physical measurement'
+                            and property_sub_type = 'length'
+                            and coalesce(property_qualifier, '') = ''
+                        )
+    );
+    select id into prop_id from catalogue_properties where referenced_relation = 'specimen_parts' and record_id = part_id and property_type = 'physical measurement' and property_sub_type = 'length' and coalesce(property_qualifier, '') = '';
+    insert into properties_values (property_ref, property_value)
+    (
+      select prop_id, recPartsDetails.old_length_min
+      where not exists (
+                          select 1
+                          from properties_values
+                          where property_ref = prop_id
+                            and property_value_unified = recPartsDetails.old_length_min_unified
+                        )
+        and coalesce(recPartsDetails.old_length_min, '') != ''
+      union
+      select prop_id, recPartsDetails.old_length_max
+      where not exists (
+                          select 1
+                          from properties_values
+                          where property_ref = prop_id
+                            and property_value_unified = recPartsDetails.old_length_max_unified
+                        )
+        and coalesce(recPartsDetails.old_length_max, '') != ''
+    );
+  END IF;
+  /*Height level*/
+  IF coalesce(recPartsDetails.old_height_min,'') != '' OR coalesce(recPartsDetails.old_height_max,'') != '' THEN
+    insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
+    (
+      select 'specimen_parts', part_id, 'physical measurement', 'length', 'height', recPartsDetails.old_height_unit, recPartsDetails.old_height_unit
+      where not exists (
+                          select 1
+                          from catalogue_properties
+                          where referenced_relation = 'specimen_parts'
+                            and record_id = part_id
+                            and property_type = 'physical measurement'
+                            and property_sub_type = 'length'
+                            and property_qualifier = 'height'
+                        )
+    );
+    select id into prop_id from catalogue_properties where referenced_relation = 'specimen_parts' and record_id = part_id and property_type = 'physical measurement' and property_sub_type = 'length' and property_qualifier = 'height';
+    insert into properties_values (property_ref, property_value)
+    (
+      select prop_id, recPartsDetails.old_height_min
+      where not exists (
+                          select 1
+                          from properties_values
+                          where property_ref = prop_id
+                            and property_value_unified = recPartsDetails.old_height_min_unified
+                        )
+        and coalesce(recPartsDetails.old_height_min, '') != ''
+      union
+      select prop_id, recPartsDetails.old_height_max
+      where not exists (
+                          select 1
+                          from properties_values
+                          where property_ref = prop_id
+                            and property_value_unified = recPartsDetails.old_height_max_unified
+                        )
+        and coalesce(recPartsDetails.old_height_max, '') != ''
+    );
+  END IF;
+  /*Depth level*/
+  IF coalesce(recPartsDetails.old_depth_min,'') != '' OR coalesce(recPartsDetails.old_depth_max,'') != '' THEN
+    insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
+    (
+      select 'specimen_parts', part_id, 'physical measurement', 'length', 'depth', recPartsDetails.old_depth_unit, recPartsDetails.old_depth_unit
+      where not exists (
+                          select 1
+                          from catalogue_properties
+                          where referenced_relation = 'specimen_parts'
+                            and record_id = part_id
+                            and property_type = 'physical measurement'
+                            and property_sub_type = 'length'
+                            and property_qualifier = 'depth'
+                        )
+    );
+    select id into prop_id from catalogue_properties where referenced_relation = 'specimen_parts' and record_id = part_id and property_type = 'physical measurement' and property_sub_type = 'length' and property_qualifier = 'depth';
+    insert into properties_values (property_ref, property_value)
+    (
+      select prop_id, recPartsDetails.old_depth_min
+      where not exists (
+                          select 1
+                          from properties_values
+                          where property_ref = prop_id
+                            and property_value_unified = recPartsDetails.old_depth_min_unified
+                        )
+        and coalesce(recPartsDetails.old_depth_min, '') != ''
+      union
+      select prop_id, recPartsDetails.old_depth_max
+      where not exists (
+                          select 1
+                          from properties_values
+                          where property_ref = prop_id
+                            and property_value_unified = recPartsDetails.old_depth_max_unified
+                        )
+        and coalesce(recPartsDetails.old_depth_max, '') != ''
+    );
+  END IF;
+  /*Weight level*/
+  IF coalesce(recPartsDetails.old_weight_min,'') != '' OR coalesce(recPartsDetails.old_weight_max,'') != '' THEN
+    insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
+    (
+      select 'specimen_parts', part_id, 'physical measurement', 'weight', NULL, recPartsDetails.old_weight_unit, recPartsDetails.old_weight_unit
+      where not exists (
+                          select 1
+                          from catalogue_properties
+                          where referenced_relation = 'specimen_parts'
+                            and record_id = part_id
+                            and property_type = 'physical measurement'
+                            and property_sub_type = 'weight'
+                        )
+    );
+    select id into prop_id from catalogue_properties where referenced_relation = 'specimen_parts' and record_id = part_id and property_type = 'physical measurement' and property_sub_type = 'weight';
+    insert into properties_values (property_ref, property_value)
+    (
+      select prop_id, recPartsDetails.old_weight_min
+      where not exists (
+                          select 1
+                          from properties_values
+                          where property_ref = prop_id
+                            and property_value_unified = recPartsDetails.old_weight_min_unified
+                        )
+        and coalesce(recPartsDetails.old_weight_min, '') != ''
+      union
+      select prop_id, recPartsDetails.old_weight_max
+      where not exists (
+                          select 1
+                          from properties_values
+                          where property_ref = prop_id
+                            and property_value_unified = recPartsDetails.old_weight_max_unified
+                        )
+        and coalesce(recPartsDetails.old_weight_max, '') != ''
+    );
+  END IF;
+  return 1;
+exception
+  when others then
+    RAISE WARNING 'Error in createProperties: %', SQLERRM;
+    return -1;
+end;
 $$;
 
 drop function if exists resplit_parts();
@@ -301,6 +464,8 @@ declare
   code_count integer;
   recActualCodes varchar[];
   recTransferedCodes varchar[];
+  recPropertiesValues varchar[];
+  recProperties RECORD;
 begin
   FOR recPartsDetails IN select specimen_individual_ref,  specimen_parts.id as parts_id, fullToIndex(sgr_code) as main_code, 
                                 fullToIndex(bat_unique_rbins_code) as rbins_code, fullToIndex(bat_code) as batch_main_code, fullToIndex(bat_inventory_code) as inventory_code, sgr_code as old_main_code,
@@ -321,23 +486,27 @@ begin
                                   when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
                                   else false 
                                 end as complete,
-                                sgr_comment as part_comment,
                                 case when sfl_description = 'Undefined' then null else sfl_description end as freshness_level,
-                                sgr_length_min as old_length_min,
-                                sgr_length_max as old_length_max,
+                                sgr_length_min::varchar as old_length_min,
+                                convert_to_unified(sgr_length_min::varchar, length_unit.uni_unit, 'length') as length_min_unified,
+                                sgr_length_max::varchar as old_length_max,
+                                convert_to_unified(sgr_length_max::varchar, length_unit.uni_unit, 'length') as length_max_unified,
                                 length_unit.uni_unit as old_length_unit,
-                                sgr_height_min as old_height_min,
-                                sgr_height_max as old_height_max,
+                                sgr_height_min::varchar as old_height_min,
+                                convert_to_unified(sgr_height_min::varchar, height_unit.uni_unit, 'length') as height_min_unified,
+                                sgr_height_max::varchar as old_height_max,
+                                convert_to_unified(sgr_height_max::varchar, height_unit.uni_unit, 'length') as height_max_unified,
                                 height_unit.uni_unit as old_height_unit,
-                                sgr_depth_min as old_depth_min,
-                                sgr_depth_max as old_depth_max,
+                                sgr_depth_min::varchar as old_depth_min,
+                                convert_to_unified(sgr_depth_min::varchar, depth_unit.uni_unit, 'length') as depth_min_unified,
+                                sgr_depth_max::varchar as old_depth_max,
+                                convert_to_unified(sgr_depth_max::varchar, depth_unit.uni_unit, 'length') as depth_max_unified,
                                 depth_unit.uni_unit as old_depth_unit,
-                                sgr_weight_min as old_weight_min,
-                                sgr_weight_max as old_weight_max,
-                                weight_unit.uni_unit as old_weight_unit,
-                                sgr_vol_min as old_vol_min,
-                                sgr_vol_max as old_vol_max,
-                                vol_unit.uni_unit as old_vol_unit
+                                sgr_weight_min::varchar as old_weight_min,
+                                convert_to_unified(sgr_weight_min::varchar, weight_unit.uni_unit, 'weight') as weight_min_unified,
+                                sgr_weight_max::varchar as old_weight_max,
+                                convert_to_unified(sgr_weight_max::varchar, weight_unit.uni_unit, 'weight') as weight_max_unified,
+                                weight_unit.uni_unit as old_weight_unit
                           from darwin1.tbl_specimen_groups 
                           inner join darwin1.id_refs 
                           on sgr_id_ctn = old_id and system = 'individuals'
@@ -391,7 +560,9 @@ begin
                                     else false 
                                   end
                           /*where bat_collection_id_nr between 1 and 8*/
-                                where bat_collection_id_nr = 133
+                                /*where bat_collection_id_nr = 133*/
+                          where sgr_height_min is not null or sgr_height_max is not null
+                          /*where sfl_description is not null and sfl_description != 'Undefined'*/
                                 /*exists (select 1 from comments where comment is not null and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id limit 1)*/
                           order by new_id desc, specimen_part, main_code 
                           limit 50
@@ -584,6 +755,9 @@ begin
           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
           RAISE NOTICE '++ Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
+          IF moveOrCreateProp(part_id, new_part_id, recPartsDetails) < 0 THEN
+            return false;
+          END IF;
         END IF;
       ELSE
         RAISE NOTICE '+ New code creation for next part';
@@ -592,6 +766,14 @@ begin
         END IF;
         select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
         RAISE NOTICE '++ Actual codes: %', recActualCodes;
+        IF createProperties (part_id, recPartsDetails) < 0 THEN
+          return false;
+        END IF;
+        select array_agg(property_value)
+        into recPropertiesValues
+        from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+        where referenced_relation = 'specimen_parts' and record_id = part_id;
+        RAISE NOTICE '++ Actual properties: %', recPropertiesValues;
       END IF;
     ELSE
       RAISE NOTICE '- Same part id infos: %', recPartsDetails;
@@ -602,8 +784,32 @@ begin
       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
       RAISE NOTICE '-- Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
+      IF moveOrCreateProp(part_id, new_part_id, recPartsDetails) < 0 THEN
+        return false;
+      END IF;
     END IF;
   END LOOP;
+/*  SELECT array_agg(property_value)
+  INTO recProperties
+  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+  WHERE referenced_relation = 'specimen_parts'
+    AND record_id = part_id;
+  RAISE NOTICE '+++ Properties before transfert: %', recProperties;
+  IF checkAndCreateProperties(part_id, new_part_id, recPartsDetails) < 0 THEN
+    return -1;
+  END IF;
+  SELECT array_agg(property_value)
+  INTO recProperties
+  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+  WHERE referenced_relation = 'specimen_parts'
+    AND record_id = part_id;
+  RAISE NOTICE '+++ Properties after transfert: %', recProperties;
+  SELECT array_agg(property_value)
+  INTO recProperties
+  FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+  WHERE referenced_relation = 'specimen_parts'
+    AND record_id = new_part_id;
+  RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;*/
   return true;
 exception
   when others then

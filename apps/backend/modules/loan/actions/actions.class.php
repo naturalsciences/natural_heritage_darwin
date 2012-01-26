@@ -50,7 +50,7 @@ class loanActions extends DarwinActions
           $this->currentPage,
           $this->form->getValue('rec_per_page')
         );
-        $count_q = clone $query;//$pager->getCountQuery();
+        $count_q = clone $query;
         $count_q = $count_q->select('count(*)')->removeDqlQueryPart('orderby')->limit(0);
         $counted = new DoctrineCounted();
         $counted->count_query = $count_q;
