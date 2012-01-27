@@ -11,6 +11,7 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_part_ref on darwin_flat(part_ref);
 
 
 CREATE INDEX CONCURRENTLY idx_darwin_flat_host_specimen_ref on darwin_flat(host_specimen_ref);
+CREATE INDEX CONCURRENTLY idx_darwin_flat_category on darwin_flat(category);
 
 
 /*** BTree indexes for search purposes in Darwin flat table ***/
