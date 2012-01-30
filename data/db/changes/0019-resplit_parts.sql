@@ -374,58 +374,107 @@ create or replace function createProperties (IN part_id specimen_parts.id%TYPE, 
 $$
 declare
   cat_prop_id integer := 0;
-  cat_prop_unit varchar := 'm'
   prop_id integer := 0;
   prop_count integer;
-  recUpdate RECORD;
-  booNewInsert boolean := false;
+  booContinue boolean := true;
 begin
   /*Freshness level*/
-  IF recPartsDetails.freshness_level IS NOT NULL THEN
-    insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type)
-    (
-      select 'specimen_parts', part_id, 'part state', 'freshness level'
-      where not exists (
-                          select 1
-                          from catalogue_properties
-                          where referenced_relation = 'specimen_parts'
-                            and record_id = part_id
-                            and property_type = 'part state'
-                            and property_sub_type = 'freshness level'
+  IF coalesce(recPartsDetails.freshness_level,'') != '' THEN
+    SELECT id INTO cat_prop_id
+    FROM catalogue_properties as cp
+    WHERE referenced_relation = 'specimen_parts'
+      AND record_id = part_id
+      AND property_type = 'part state'
+      AND property_sub_type = 'freshness level'
+      AND coalesce(property_method, '') = ''
+      AND coalesce(property_tool, '') = ''
+      AND date_from = '0001-01-01 00:00:00'
+      AND date_to = '2038-12-31 00:00:00'
+      AND NOT EXISTS (SELECT 1 FROM users_tracking WHERE referenced_relation = 'catalogue_properties' AND record_id = cp.id AND action IN ('insert','update'));
+    IF coalesce(cat_prop_id, 0) = 0 THEN
+      SELECT NOT EXISTS(SELECT 1
+                        FROM users_tracking
+                        WHERE referenced_relation = 'catalogue_properties'
+                          AND action = 'delete'
+                          AND old_value -> 'referenced_relation' = 'specimen_parts'
+                          AND old_value -> 'record_id' = part_id::varchar
+                          AND old_value -> 'property_type' = 'part state'
+                          AND old_value -> 'property_sub_type' = 'freshness level'
+                          AND coalesce(old_value -> 'property_method', '') = ''
+                          AND coalesce(old_value -> 'property_tool', '') = ''
+                          AND old_value -> 'date_from' = '0001-01-01 00:00:00'
+                          AND old_value -> 'date_to' = '2038-12-31 00:00:00'
+                       ) INTO booContinue;
+    END IF;
+    IF booContinue THEN
+      SELECT NOT EXISTS ( SELECT 1
+                          FROM properties_values as pv
+                          WHERE pv.property_ref = cat_prop_id
+                            AND EXISTS (SELECT 1 FROM users_tracking WHERE referenced_relation = 'properties_values' AND record_id = pv.id AND action IN ('insert','update'))
                         )
-    );
-    select id into prop_id from catalogue_properties where referenced_relation = 'specimen_parts' and record_id = part_id and property_type = 'part state' and property_sub_type = 'freshness level';
-    insert into properties_values (property_ref, property_value)
-    (
-      select prop_id, recPartsDetails.freshness_level
-      where not exists (
-                          select 1
-                          from properties_values
-                          where property_ref = prop_id
-                            and property_value = recPartsDetails.freshness_level
-                        )
-    );
+        AND NOT EXISTS ( SELECT 1
+                         FROM users_tracking
+                         WHERE referenced_relation = 'properties_values'
+                           AND action = 'delete'
+                           AND coalesce(old_value -> 'property_ref', '') = (coalesce(cat_prop_id,0))::varchar
+                       )
+      INTO booContinue;
+      IF booContinue THEN
+        DELETE FROM catalogue_properties
+        WHERE id = cat_prop_id;
+        insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type)
+        (
+          select 'specimen_parts', part_id, 'part state', 'freshness level'
+        )
+        returning id INTO cat_prop_id;
+        IF cat_prop_id != 0 THEN
+          insert into properties_values (property_ref, property_value)
+          (
+            select cat_prop_id, recPartsDetails.freshness_level
+          );
+        END IF;
+      END IF;
+    END IF;
+    cat_prop_id := 0;
+    booContinue := true;
   END IF;
   /*Insurances*/
   IF coalesce(recPartsDetails.old_insurance_value,0) != 0 THEN
-    update insurances
-    set insurance_value = recPartsDetails.old_insurance_value
-    where referenced_relation = 'specimen_parts'
-      and record_id = part_id
-      and insurance_year = coalesce(recPartsDetails.old_insurance_year,0);
-    GET DIAGNOSTICS prop_count = ROW_COUNT;
-    IF prop_count = 0 THEN
-      insert into insurances (referenced_relation, record_id, insurance_value, insurance_year)
-      (
-        select 'specimen_parts', part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0)
-        where not exists (
-                            select 1
-                            from insurances
-                            where referenced_relation = 'specimen_parts'
-                              and record_id = part_id
-                              and insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
-                        )
-      );
+    SELECT NOT EXISTS ( select 1
+                        from users_tracking
+                        where referenced_relation = 'insurances'
+                          and (action in ('delete', 'update')
+                                and old_value -> 'referenced_relation' = 'specimen_parts'
+                                and old_value -> 'record_id' = part_id::varchar
+                                and old_value -> 'insurance_year' = coalesce(recPartsDetails.old_insurance_year,0)::varchar
+                              )
+                          or (action in ('insert')
+                                and new_value -> 'referenced_relation' = 'specimen_parts'
+                                and new_value -> 'record_id' = part_id::varchar
+                                and new_value -> 'insurance_year' = coalesce(recPartsDetails.old_insurance_year,0)::varchar
+                              )
+                      )
+    INTO booContinue;
+    IF booContinue THEN
+      update insurances
+      set insurance_value = recPartsDetails.old_insurance_value
+      where referenced_relation = 'specimen_parts'
+        and record_id = part_id
+        and insurance_year = coalesce(recPartsDetails.old_insurance_year,0);
+      GET DIAGNOSTICS prop_count = ROW_COUNT;
+      IF prop_count = 0 THEN
+        insert into insurances (referenced_relation, record_id, insurance_value, insurance_year)
+        (
+          select 'specimen_parts', part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0)
+          where not exists (
+                              select 1
+                              from insurances
+                              where referenced_relation = 'specimen_parts'
+                                and record_id = part_id
+                                and insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
+                           )
+        );
+      END IF;
     END IF;
   END IF;
   /*Maintenances*/
@@ -444,245 +493,292 @@ begin
                             and modification_date_time = recPartsDetails.maintenance_modification_date_time
                             and modification_date_mask = recPartsDetails.maintenance_modification_date_mask
                        )
+        and not exists (
+                          select 1
+                          from users_tracking
+                          where referenced_relation = 'collection_maintenance'
+                            and (action in ('delete', 'update')
+                                  and old_value -> 'referenced_relation' = 'specimen_parts'
+                                  and old_value -> 'record_id' = part_id::varchar
+                                  and old_value -> 'people_ref' = recPartsDetails.maintenance_people_ref::varchar
+                                  and old_value -> 'category' = recPartsDetails.maintenance_category::varchar
+                                  and old_value -> 'action_observation' = recPartsDetails.maintenance_action_observation::varchar
+                                  and old_value -> 'modification_date_time' = recPartsDetails.maintenance_modification_date_time::varchar
+                                  and old_value -> 'modification_date_mask' = recPartsDetails.maintenance_modification_date_mask::varchar
+                                )
+                            or (action in ('delete', 'update')
+                                  and new_value -> 'referenced_relation' = 'specimen_parts'
+                                  and new_value -> 'record_id' = part_id::varchar
+                                  and new_value -> 'people_ref' = recPartsDetails.maintenance_people_ref::varchar
+                                  and new_value -> 'category' = recPartsDetails.maintenance_category::varchar
+                                  and new_value -> 'action_observation' = recPartsDetails.maintenance_action_observation::varchar
+                                  and new_value -> 'modification_date_time' = recPartsDetails.maintenance_modification_date_time::varchar
+                                  and new_value -> 'modification_date_mask' = recPartsDetails.maintenance_modification_date_mask::varchar
+                               )
+                       )
     );
   END IF;
   /*Length level*/
-  IF coalesce(recPartsDetails.old_length_min,'') != '' OR coalesce(recPartsDetails.old_length_max,'') != '' THEN
-    insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
-    (
-      select 'specimen_parts', part_id, 'physical measurement', 'length', NULL, recPartsDetails.old_length_unit, recPartsDetails.old_length_unit
-      where not exists (
-                          select 1
-                          from catalogue_properties
-                          where referenced_relation = 'specimen_parts'
-                            and record_id = part_id
-                            and property_type = 'physical measurement'
-                            and property_sub_type = 'length'
-                            and coalesce(property_qualifier, '') = ''
+  IF coalesce(recPartsDetails.old_length_min, '') != '' OR coalesce(recPartsDetails.old_length_max, '') != '' THEN
+    SELECT id INTO cat_prop_id
+    FROM catalogue_properties as cp
+    WHERE referenced_relation = 'specimen_parts'
+      AND record_id = part_id
+      AND property_type = 'physical measurement'
+      AND property_sub_type = 'length'
+      AND property_qualifier NOT IN ('height','depth')
+      AND coalesce(property_method, '') = ''
+      AND coalesce(property_tool, '') = ''
+      AND date_from = '0001-01-01 00:00:00'
+      AND date_to = '2038-12-31 00:00:00'
+      AND NOT EXISTS (SELECT 1 FROM users_tracking WHERE referenced_relation = 'catalogue_properties' AND record_id = cp.id AND action IN ('insert','update'));
+    IF coalesce(cat_prop_id, 0) = 0 THEN
+      SELECT NOT EXISTS(SELECT 1
+                        FROM users_tracking
+                        WHERE referenced_relation = 'catalogue_properties'
+                          AND action = 'delete'
+                          AND old_value -> 'referenced_relation' = 'specimen_parts'
+                          AND old_value -> 'record_id' = part_id::varchar
+                          AND old_value -> 'property_type' = 'physical measurement'
+                          AND old_value -> 'property_sub_type' = 'length'
+                          AND old_value -> 'property_qualifier' NOT IN ('height','depth')
+                          AND coalesce(old_value -> 'property_method', '') = ''
+                          AND coalesce(old_value -> 'property_tool', '') = ''
+                          AND old_value -> 'date_from' = '0001-01-01 00:00:00'
+                          AND old_value -> 'date_to' = '2038-12-31 00:00:00'
+                       ) INTO booContinue;
+    END IF;
+    IF booContinue THEN
+      SELECT NOT EXISTS ( SELECT 1
+                          FROM properties_values as pv
+                          WHERE pv.property_ref = cat_prop_id
+                            AND EXISTS (SELECT 1 FROM users_tracking WHERE referenced_relation = 'properties_values' AND record_id = pv.id AND action IN ('insert','update'))
                         )
-    );
-    select id into prop_id from catalogue_properties where referenced_relation = 'specimen_parts' and record_id = part_id and property_type = 'physical measurement' and property_sub_type = 'length' and coalesce(property_qualifier, '') = '';
-    insert into properties_values (property_ref, property_value)
-    (
-      select prop_id, recPartsDetails.old_length_min
-      where not exists (
-                          select 1
-                          from properties_values
-                          where property_ref = prop_id
-                            and property_value_unified = recPartsDetails.old_length_min_unified
-                        )
-        and coalesce(recPartsDetails.old_length_min, '') != ''
-      union
-      select prop_id, recPartsDetails.old_length_max
-      where not exists (
-                          select 1
-                          from properties_values
-                          where property_ref = prop_id
-                            and property_value_unified = recPartsDetails.old_length_max_unified
-                        )
-        and coalesce(recPartsDetails.old_length_max, '') != ''
-    );
+        AND NOT EXISTS ( SELECT 1
+                         FROM users_tracking
+                         WHERE referenced_relation = 'properties_values'
+                           AND action = 'delete'
+                           AND coalesce(old_value -> 'property_ref', '') = (coalesce(cat_prop_id,0))::varchar
+                       )
+      INTO booContinue;
+      IF booContinue THEN
+        DELETE FROM catalogue_properties
+        WHERE id = cat_prop_id;
+        insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
+        (
+          select 'specimen_parts', part_id, 'physical measurement', 'length', '', recPartsDetails.old_length_unit, recPartsDetails.old_length_unit
+        )
+        returning id INTO cat_prop_id;
+        IF cat_prop_id != 0 THEN
+          insert into properties_values (property_ref, property_value)
+          (
+            select cat_prop_id, recPartsDetails.old_length_min
+            where coalesce(recPartsDetails.old_length_min, '') != ''
+            union
+            select cat_prop_id, recPartsDetails.old_length_max
+            where coalesce(recPartsDetails.old_length_max, '') != ''
+          );
+        END IF;
+      END IF;
+    END IF;
+    cat_prop_id := 0;
+    booContinue := true;
   END IF;
   /*Height level*/
-  IF coalesce(recPartsDetails.old_height_min,'') != '' OR coalesce(recPartsDetails.old_height_max,'') != '' THEN
-    SELECT id, property_unit
-    INTO cat_prop_id, cat_prop_unit
+  IF coalesce(recPartsDetails.old_height_min, '') != '' OR coalesce(recPartsDetails.old_height_max, '') != '' THEN
+    SELECT id INTO cat_prop_id
     FROM catalogue_properties as cp
     WHERE referenced_relation = 'specimen_parts'
       AND record_id = part_id
       AND property_type = 'physical measurement'
       AND property_sub_type = 'length'
       AND property_qualifier = 'height'
-      AND property_method is null
-      AND property_tool is null
+      AND coalesce(property_method, '') = ''
+      AND coalesce(property_tool, '') = ''
       AND date_from = '0001-01-01 00:00:00'
-      AND date_to = '0001-01-01 00:00:00'
-      AND NOT EXISTS (SELECT 1
-                      FROM users_tracking
-                      WHERE referenced_relation = 'catalogue_properties'
-                        AND record_id = cp.id
-                        AND (
-                              (action = 'update' AND old_value->property_unit != new_value->property_unit)
-                              OR
-                              (action = 'delete')
-                            )
-                     );
-    IF cat_prop_id != 0 AND recPartsDetails.old_height_unit != ''THEN
-      UPDATE properties_values
-      SET property_value = CASE WHEN (cat_prop_unit = 'm' AND recPartsDetails.old_height_unit = 'cm')
-                                  OR (cat_prop_unit = 'cm' AND recPartsDetails.old_height_unit = 'mm')
-                                THEN
-                                  convert_to_real(property_value) * 10
-                                WHEN (cat_prop_unit = 'cm' AND recPartsDetails.old_height_unit = 'm')
-                                  OR (cat_prop_unit = 'mm' AND recPartsDetails.old_height_unit = 'cm')
-                                THEN
-                                  convert_to_real(property_value)/10
-                                WHEN (cat_prop_unit = 'm' AND recPartsDetails.old_height_unit = 'mm')
-                                THEN
-                                  convert_to_real(property_value) * 100
-                                WHEN (cat_prop_unit = 'mm' AND recPartsDetails.old_height_unit = 'm')
-                                THEN
-                                  convert_to_real(property_value)/100
-                           END
-      WHERE cat_prop_unit != recPartsDetails.old_height_unit
-        AND convert_to_real(property_value) != 0
-        AND property_ref = cat_prop_id;
-      UPDATE catalogue_properties
-      SET property_unit = recPartsDetails.old_height_unit,
-          property_accuracy_unit = recPartsDetails.old_height_unit
-      WHERE id = cat_prop_id;
-
-      /* Find a way to delete lines not updated or inserted and insert lines except if first update occured with old_values = old_height_value ...hum hum... is it possible ?
-
-
---       DELETE FROM properties_values
---       WHERE property_ref = cat_prop_id
---         AND NOT EXISTS (SELECT 1
---                         FROM users_tracking
---                         WHERE referenced_relation = 'specimen_parts' AND record_id = properties_values.id AND ((action = 'update' AND old_value->property_value_unified != new_value->property_value_unified)
---                                                                                                                OR
---                                                                                                                (action = 'insert')
---                                                                                                               )
---                        );
---       insert into properties_values (property_ref, property_value)
---       (
---         select cat_prop_id, recPartsDetails.old_height_min, recPartsDetails.old_height_min_unified
---         where not exists (
---                             select 1
---                             from properties_values as pv left join users_tracking as ut on ut.referenced_relation = 'properties_values' and ut.record_id = pv.id and (
---                                                                                                                                                                        (action = 'update' AND old_value->property_value_unified != new_value->property_value_unified)
---                                                                                                                                                                        OR
---                                                                                                                                                                        (action = 'delete')
---                                                                                                                                                                        OR
---                                                                                                                                                                        (action = 'insert')
---                                                                                                                                                                      )
---                             where property_ref = cat_prop_id
---                               and property_value_unified = recPartsDetails.old_height_min_unified
---                           )
---           and coalesce(recPartsDetails.old_height_min, '') != ''
---         union
---         select prop_id, recPartsDetails.old_height_max, recPartsDetails.old_height_max_unified
---         where not exists (
---                             select 1
---                             from properties_values
---                             where property_ref = prop_id
---                               and property_value_unified = recPartsDetails.old_height_max_unified
---                           )
---           and coalesce(recPartsDetails.old_height_max, '') != ''
---       );
+      AND date_to = '2038-12-31 00:00:00'
+      AND NOT EXISTS (SELECT 1 FROM users_tracking WHERE referenced_relation = 'catalogue_properties' AND record_id = cp.id AND action IN ('insert','update'));
+    IF coalesce(cat_prop_id, 0) = 0 THEN
+      SELECT NOT EXISTS(SELECT 1
+                        FROM users_tracking
+                        WHERE referenced_relation = 'catalogue_properties'
+                          AND action = 'delete'
+                          AND old_value -> 'referenced_relation' = 'specimen_parts'
+                          AND old_value -> 'record_id' = part_id::varchar
+                          AND old_value -> 'property_type' = 'physical measurement'
+                          AND old_value -> 'property_sub_type' = 'length'
+                          AND old_value -> 'property_qualifier' = 'height'
+                          AND coalesce(old_value -> 'property_method', '') = ''
+                          AND coalesce(old_value -> 'property_tool', '') = ''
+                          AND old_value -> 'date_from' = '0001-01-01 00:00:00'
+                          AND old_value -> 'date_to' = '2038-12-31 00:00:00'
+                       ) INTO booContinue;
     END IF;
-    prop_id := 0;
-    cat_prop_id := 0;
-    insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
-    (
-      select 'specimen_parts', part_id, 'physical measurement', 'length', 'height', recPartsDetails.old_height_unit, recPartsDetails.old_height_unit
-      where not exists (
-                          select 1
-                          from catalogue_properties
-                          where referenced_relation = 'specimen_parts'
-                            and record_id = part_id
-                            and property_type = 'physical measurement'
-                            and property_sub_type = 'length'
-                            and property_qualifier = 'height'
+    IF booContinue THEN
+      SELECT NOT EXISTS ( SELECT 1
+                          FROM properties_values as pv
+                          WHERE pv.property_ref = cat_prop_id
+                            AND EXISTS (SELECT 1 FROM users_tracking WHERE referenced_relation = 'properties_values' AND record_id = pv.id AND action IN ('insert','update'))
                         )
-    )
-    returning id INTO cat_prop_id;
-    IF cat_prop_id != 0 THEN
-      insert into properties_values (property_ref, property_value)
-      (
-        select cat_prop_id, recPartsDetails.old_height_min, recPartsDetails.old_height_min_unified
-        where not exists (
-                            select 1
-                            from properties_values left join users_tracking on
-                            where property_ref = cat_prop_id
-                              and property_value_unified = recPartsDetails.old_height_min_unified
-                          )
-          and coalesce(recPartsDetails.old_height_min, '') != ''
-        union
-        select cat_prop_id, recPartsDetails.old_height_max, recPartsDetails.old_height_max_unified
-        where not exists (
-                            select 1
-                            from properties_values
-                            where property_ref = cat_prop_id
-                              and property_value_unified = recPartsDetails.old_height_max_unified
-                          )
-          and coalesce(recPartsDetails.old_height_max, '') != ''
-      );
+        AND NOT EXISTS ( SELECT 1
+                         FROM users_tracking
+                         WHERE referenced_relation = 'properties_values'
+                           AND action = 'delete'
+                           AND coalesce(old_value -> 'property_ref', '') = (coalesce(cat_prop_id,0))::varchar
+                       )
+      INTO booContinue;
+      IF booContinue THEN
+        DELETE FROM catalogue_properties
+        WHERE id = cat_prop_id;
+        insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
+        (
+          select 'specimen_parts', part_id, 'physical measurement', 'length', 'height', recPartsDetails.old_height_unit, recPartsDetails.old_height_unit
+        )
+        returning id INTO cat_prop_id;
+        IF cat_prop_id != 0 THEN
+          insert into properties_values (property_ref, property_value)
+          (
+            select cat_prop_id, recPartsDetails.old_height_min
+            where coalesce(recPartsDetails.old_height_min, '') != ''
+            union
+            select cat_prop_id, recPartsDetails.old_height_max
+            where coalesce(recPartsDetails.old_height_max, '') != ''
+          );
+        END IF;
+      END IF;
     END IF;
     cat_prop_id := 0;
+    booContinue := true;
   END IF;
   /*Depth level*/
-  IF coalesce(recPartsDetails.old_depth_min,'') != '' OR coalesce(recPartsDetails.old_depth_max,'') != '' THEN
-    insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
-    (
-      select 'specimen_parts', part_id, 'physical measurement', 'length', 'depth', recPartsDetails.old_depth_unit, recPartsDetails.old_depth_unit
-      where not exists (
-                          select 1
-                          from catalogue_properties
-                          where referenced_relation = 'specimen_parts'
-                            and record_id = part_id
-                            and property_type = 'physical measurement'
-                            and property_sub_type = 'length'
-                            and property_qualifier = 'depth'
+  IF coalesce(recPartsDetails.old_depth_min, '') != '' OR coalesce(recPartsDetails.old_depth_max, '') != '' THEN
+    SELECT id INTO cat_prop_id
+    FROM catalogue_properties as cp
+    WHERE referenced_relation = 'specimen_parts'
+      AND record_id = part_id
+      AND property_type = 'physical measurement'
+      AND property_sub_type = 'length'
+      AND property_qualifier = 'depth'
+      AND coalesce(property_method, '') = ''
+      AND coalesce(property_tool, '') = ''
+      AND date_from = '0001-01-01 00:00:00'
+      AND date_to = '2038-12-31 00:00:00'
+      AND NOT EXISTS (SELECT 1 FROM users_tracking WHERE referenced_relation = 'catalogue_properties' AND record_id = cp.id AND action IN ('insert','update'));
+    IF coalesce(cat_prop_id, 0) = 0 THEN
+      SELECT NOT EXISTS(SELECT 1
+                        FROM users_tracking
+                        WHERE referenced_relation = 'catalogue_properties'
+                          AND action = 'delete'
+                          AND old_value -> 'referenced_relation' = 'specimen_parts'
+                          AND old_value -> 'record_id' = part_id::varchar
+                          AND old_value -> 'property_type' = 'physical measurement'
+                          AND old_value -> 'property_sub_type' = 'length'
+                          AND old_value -> 'property_qualifier' = 'depth'
+                          AND coalesce(old_value -> 'property_method', '') = ''
+                          AND coalesce(old_value -> 'property_tool', '') = ''
+                          AND old_value -> 'date_from' = '0001-01-01 00:00:00'
+                          AND old_value -> 'date_to' = '2038-12-31 00:00:00'
+                       ) INTO booContinue;
+    END IF;
+    IF booContinue THEN
+      SELECT NOT EXISTS ( SELECT 1
+                          FROM properties_values as pv
+                          WHERE pv.property_ref = cat_prop_id
+                            AND EXISTS (SELECT 1 FROM users_tracking WHERE referenced_relation = 'properties_values' AND record_id = pv.id AND action IN ('insert','update'))
                         )
-    );
-    select id into prop_id from catalogue_properties where referenced_relation = 'specimen_parts' and record_id = part_id and property_type = 'physical measurement' and property_sub_type = 'length' and property_qualifier = 'depth';
-    insert into properties_values (property_ref, property_value)
-    (
-      select prop_id, recPartsDetails.old_depth_min
-      where not exists (
-                          select 1
-                          from properties_values
-                          where property_ref = prop_id
-                            and property_value_unified = recPartsDetails.old_depth_min_unified
-                        )
-        and coalesce(recPartsDetails.old_depth_min, '') != ''
-      union
-      select prop_id, recPartsDetails.old_depth_max
-      where not exists (
-                          select 1
-                          from properties_values
-                          where property_ref = prop_id
-                            and property_value_unified = recPartsDetails.old_depth_max_unified
-                        )
-        and coalesce(recPartsDetails.old_depth_max, '') != ''
-    );
+        AND NOT EXISTS ( SELECT 1
+                         FROM users_tracking
+                         WHERE referenced_relation = 'properties_values'
+                           AND action = 'delete'
+                           AND coalesce(old_value -> 'property_ref', '') = (coalesce(cat_prop_id,0))::varchar
+                       )
+      INTO booContinue;
+      IF booContinue THEN
+        DELETE FROM catalogue_properties
+        WHERE id = cat_prop_id;
+        insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
+        (
+          select 'specimen_parts', part_id, 'physical measurement', 'length', 'depth', recPartsDetails.old_depth_unit, recPartsDetails.old_depth_unit
+        )
+        returning id INTO cat_prop_id;
+        IF cat_prop_id != 0 THEN
+          insert into properties_values (property_ref, property_value)
+          (
+            select cat_prop_id, recPartsDetails.old_depth_min
+            where coalesce(recPartsDetails.old_depth_min, '') != ''
+            union
+            select cat_prop_id, recPartsDetails.old_depth_max
+            where coalesce(recPartsDetails.old_depth_max, '') != ''
+          );
+        END IF;
+      END IF;
+    END IF;
+    cat_prop_id := 0;
+    booContinue := true;
   END IF;
   /*Weight level*/
-  IF coalesce(recPartsDetails.old_weight_min,'') != '' OR coalesce(recPartsDetails.old_weight_max,'') != '' THEN
-    insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
-    (
-      select 'specimen_parts', part_id, 'physical measurement', 'weight', NULL, recPartsDetails.old_weight_unit, recPartsDetails.old_weight_unit
-      where not exists (
-                          select 1
-                          from catalogue_properties
-                          where referenced_relation = 'specimen_parts'
-                            and record_id = part_id
-                            and property_type = 'physical measurement'
-                            and property_sub_type = 'weight'
+  IF coalesce(recPartsDetails.old_weight_min, '') != '' OR coalesce(recPartsDetails.old_weight_max, '') != '' THEN
+    SELECT id INTO cat_prop_id
+    FROM catalogue_properties as cp
+    WHERE referenced_relation = 'specimen_parts'
+      AND record_id = part_id
+      AND property_type = 'physical measurement'
+      AND property_sub_type = 'weight'
+      AND coalesce(property_method, '') = ''
+      AND coalesce(property_tool, '') = ''
+      AND date_from = '0001-01-01 00:00:00'
+      AND date_to = '2038-12-31 00:00:00'
+      AND NOT EXISTS (SELECT 1 FROM users_tracking WHERE referenced_relation = 'catalogue_properties' AND record_id = cp.id AND action IN ('insert','update'));
+    IF coalesce(cat_prop_id, 0) = 0 THEN
+      SELECT NOT EXISTS(SELECT 1
+                        FROM users_tracking
+                        WHERE referenced_relation = 'catalogue_properties'
+                          AND action = 'delete'
+                          AND old_value -> 'referenced_relation' = 'specimen_parts'
+                          AND old_value -> 'record_id' = part_id::varchar
+                          AND old_value -> 'property_type' = 'physical measurement'
+                          AND old_value -> 'property_sub_type' = 'weight'
+                          AND coalesce(old_value -> 'property_method', '') = ''
+                          AND coalesce(old_value -> 'property_tool', '') = ''
+                          AND old_value -> 'date_from' = '0001-01-01 00:00:00'
+                          AND old_value -> 'date_to' = '2038-12-31 00:00:00'
+                       ) INTO booContinue;
+    END IF;
+    IF booContinue THEN
+      SELECT NOT EXISTS ( SELECT 1
+                          FROM properties_values as pv
+                          WHERE pv.property_ref = cat_prop_id
+                            AND EXISTS (SELECT 1 FROM users_tracking WHERE referenced_relation = 'properties_values' AND record_id = pv.id AND action IN ('insert','update'))
                         )
-    );
-    select id into prop_id from catalogue_properties where referenced_relation = 'specimen_parts' and record_id = part_id and property_type = 'physical measurement' and property_sub_type = 'weight';
-    insert into properties_values (property_ref, property_value)
-    (
-      select prop_id, recPartsDetails.old_weight_min
-      where not exists (
-                          select 1
-                          from properties_values
-                          where property_ref = prop_id
-                            and property_value_unified = recPartsDetails.old_weight_min_unified
-                        )
-        and coalesce(recPartsDetails.old_weight_min, '') != ''
-      union
-      select prop_id, recPartsDetails.old_weight_max
-      where not exists (
-                          select 1
-                          from properties_values
-                          where property_ref = prop_id
-                            and property_value_unified = recPartsDetails.old_weight_max_unified
-                        )
-        and coalesce(recPartsDetails.old_weight_max, '') != ''
-    );
+        AND NOT EXISTS ( SELECT 1
+                         FROM users_tracking
+                         WHERE referenced_relation = 'properties_values'
+                           AND action = 'delete'
+                           AND coalesce(old_value -> 'property_ref', '') = (coalesce(cat_prop_id,0))::varchar
+                       )
+      INTO booContinue;
+      IF booContinue THEN
+        DELETE FROM catalogue_properties
+        WHERE id = cat_prop_id;
+        insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
+        (
+          select 'specimen_parts', part_id, 'physical measurement', 'weight', '', recPartsDetails.old_weight_unit, recPartsDetails.old_weight_unit
+        )
+        returning id INTO cat_prop_id;
+        IF cat_prop_id != 0 THEN
+          insert into properties_values (property_ref, property_value)
+          (
+            select cat_prop_id, recPartsDetails.old_weight_min
+            where coalesce(recPartsDetails.old_weight_min, '') != ''
+            union
+            select cat_prop_id, recPartsDetails.old_weight_max
+            where coalesce(recPartsDetails.old_weight_max, '') != ''
+          );
+        END IF;
+      END IF;
+    END IF;
+    cat_prop_id := 0;
+    booContinue := true;
   END IF;
   return 1;
 exception
@@ -772,25 +868,25 @@ begin
                                 end as complete,
                                 case when sfl_description = 'Undefined' then '' else coalesce(sfl_description,'') end as freshness_level,
                                 sgr_length_min::varchar as old_length_min,
-                                convert_to_unified(sgr_length_min::varchar, length_unit.uni_unit, 'length') as length_min_unified,
+                                convert_to_unified(sgr_length_min::varchar, case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END, 'length') as length_min_unified,
                                 sgr_length_max::varchar as old_length_max,
-                                convert_to_unified(sgr_length_max::varchar, length_unit.uni_unit, 'length') as length_max_unified,
-                                length_unit.uni_unit as old_length_unit,
+                                convert_to_unified(sgr_length_max::varchar, case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END, 'length') as length_max_unified,
+                                case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END as old_length_unit,
                                 sgr_height_min::varchar as old_height_min,
-                                convert_to_unified(sgr_height_min::varchar, height_unit.uni_unit, 'length') as height_min_unified,
+                                convert_to_unified(sgr_height_min::varchar, case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END, 'length') as height_min_unified,
                                 sgr_height_max::varchar as old_height_max,
-                                convert_to_unified(sgr_height_max::varchar, height_unit.uni_unit, 'length') as height_max_unified,
-                                height_unit.uni_unit as old_height_unit,
+                                convert_to_unified(sgr_height_max::varchar, case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END, 'length') as height_max_unified,
+                                case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END as old_height_unit,
                                 sgr_depth_min::varchar as old_depth_min,
-                                convert_to_unified(sgr_depth_min::varchar, depth_unit.uni_unit, 'length') as depth_min_unified,
+                                convert_to_unified(sgr_depth_min::varchar, case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END, 'length') as depth_min_unified,
                                 sgr_depth_max::varchar as old_depth_max,
-                                convert_to_unified(sgr_depth_max::varchar, depth_unit.uni_unit, 'length') as depth_max_unified,
-                                depth_unit.uni_unit as old_depth_unit,
+                                convert_to_unified(sgr_depth_max::varchar, case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END, 'length') as depth_max_unified,
+                                case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END as old_depth_unit,
                                 sgr_weight_min::varchar as old_weight_min,
-                                convert_to_unified(sgr_weight_min::varchar, weight_unit.uni_unit, 'weight') as weight_min_unified,
+                                convert_to_unified(sgr_weight_min::varchar, case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END, 'weight') as weight_min_unified,
                                 sgr_weight_max::varchar as old_weight_max,
-                                convert_to_unified(sgr_weight_max::varchar, weight_unit.uni_unit, 'weight') as weight_max_unified,
-                                weight_unit.uni_unit as old_weight_unit,
+                                convert_to_unified(sgr_weight_max::varchar, case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END, 'weight') as weight_max_unified,
+                                case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END as old_weight_unit,
                                 bat_value as old_insurance_value,
                                 bat_value_year as old_insurance_year,
                                 case when exists(select 1 from people where id = sgr_preparator_nr) then case when sgr_preparator_nr = 0 then null else sgr_preparator_nr end else null::integer end as maintenance_people_ref,
@@ -861,10 +957,12 @@ begin
                                     when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
                                     else false 
                                   end
-                          /*where bat_value is not null and specimen_parts.id = 594237*/
+                          where sgr_preparator_nr is not null and sgr_preparator_nr != 0
+                          /*where bat_value is not null *//*and specimen_parts.id = 594237*/
                           /*where bat_collection_id_nr between 1 and 8*/
                                 /*where bat_collection_id_nr = 133*/
-                          where sgr_height_min is not null or sgr_height_max is not null
+                          /*where (sgr_weight_min is not null or sgr_weight_max is not null)*/
+                            /*and specimen_parts.id in (585835, 585836)*/
                           /*where sfl_description is not null and sfl_description != 'Undefined'*/
                                 /*exists (select 1 from comments where comment is not null and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id limit 1)*/
                           order by new_id desc, specimen_part, main_code 
@@ -1052,7 +1150,7 @@ begin
             ) as x;
         IF code_count > 0 THEN
           RAISE NOTICE '+ Need of new part creation';
-          SELECT createNewPart(part_id, recPartsDetails, recFirstPart) INTO new_part_id;
+          SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
           IF new_part_id < 0 THEN
             return false;
           END IF;
@@ -1071,6 +1169,12 @@ begin
           WHERE referenced_relation = 'specimen_parts'
             AND record_id = part_id;
           RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
+          SELECT array_agg(people_ref)
+          INTO recProperties
+          FROM collection_maintenance
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
           IF moveOrCreateProp(part_id, new_part_id, recPartsDetails, recFirstPart) < 0 THEN
             return false;
           END IF;
@@ -1086,6 +1190,39 @@ begin
           WHERE referenced_relation = 'specimen_parts'
             AND record_id = new_part_id;
           RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
+          SELECT array_agg(people_ref)
+          INTO recProperties
+          FROM collection_maintenance
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = new_part_id;
+          RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
+        ELSE
+          RAISE NOTICE '+ Need of properties reCheck at least !';
+          select array_agg(property_value_unified)
+          into recProperties
+          from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+          where referenced_relation = 'specimen_parts' and record_id = part_id;
+          RAISE NOTICE '+++ Properties before creation: %', recProperties;
+          SELECT array_agg(insurance_value), array_agg(insurance_year)
+          INTO recInsurances
+          FROM insurances
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
+          IF createProperties (part_id, recPartsDetails) < 0 THEN
+            return false;
+          END IF;
+          select array_agg(property_value_unified)
+          into recProperties
+          from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+          where referenced_relation = 'specimen_parts' and record_id = part_id;
+          RAISE NOTICE '+++ Actual properties: %', recProperties;
+          SELECT array_agg(insurance_value), array_agg(insurance_year)
+          INTO recInsurances
+          FROM insurances
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
         END IF;
       ELSE
         RAISE NOTICE '+ New code creation for next part';
@@ -1097,7 +1234,7 @@ begin
         select array_agg(property_value_unified)
         into recProperties
         from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
-        where referenced_relation = 'specimen_parts' and record_id = part_id and property_qualifier = 'height';
+        where referenced_relation = 'specimen_parts' and record_id = part_id;
         RAISE NOTICE '+++ Properties before creation: %', recProperties;
         SELECT array_agg(insurance_value), array_agg(insurance_year)
         INTO recInsurances
@@ -1105,13 +1242,19 @@ begin
         WHERE referenced_relation = 'specimen_parts'
           AND record_id = part_id;
         RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
+        SELECT array_agg(people_ref)
+        INTO recProperties
+        FROM collection_maintenance
+        WHERE referenced_relation = 'specimen_parts'
+          AND record_id = part_id;
+        RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
         IF createProperties (part_id, recPartsDetails) < 0 THEN
           return false;
         END IF;
         select array_agg(property_value_unified)
         into recProperties
         from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
-        where referenced_relation = 'specimen_parts' and record_id = part_id and property_qualifier = 'height';
+        where referenced_relation = 'specimen_parts' and record_id = part_id;
         RAISE NOTICE '+++ Actual properties: %', recProperties;
         SELECT array_agg(insurance_value), array_agg(insurance_year)
         INTO recInsurances
@@ -1119,6 +1262,12 @@ begin
         WHERE referenced_relation = 'specimen_parts'
           AND record_id = part_id;
         RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
+        SELECT array_agg(people_ref)
+        INTO recProperties
+        FROM collection_maintenance
+        WHERE referenced_relation = 'specimen_parts'
+          AND record_id = part_id;
+        RAISE NOTICE '+++ Actual Maintenance: %', recProperties;
       END IF;
     ELSE
       RAISE NOTICE '- Same part id infos: %', recPartsDetails;
@@ -1141,6 +1290,12 @@ begin
       WHERE referenced_relation = 'specimen_parts'
         AND record_id = part_id;
       RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
+      SELECT array_agg(people_ref)
+      INTO recProperties
+      FROM collection_maintenance
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
       IF moveOrCreateProp(part_id, new_part_id, recPartsDetails, recFirstPart) < 0 THEN
         return false;
       END IF;
@@ -1156,6 +1311,12 @@ begin
       WHERE referenced_relation = 'specimen_parts'
         AND record_id = part_id;
       RAISE NOTICE '+++ Insurances after transfert: %', recInsurances;
+      SELECT array_agg(people_ref)
+      INTO recProperties
+      FROM collection_maintenance
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Maintenance after transfert: %', recProperties;
       SELECT array_agg(property_value_unified)
       INTO recProperties
       FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
@@ -1168,6 +1329,12 @@ begin
       WHERE referenced_relation = 'specimen_parts'
         AND record_id = new_part_id;
       RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
+      SELECT array_agg(people_ref)
+      INTO recProperties
+      FROM collection_maintenance
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = new_part_id;
+      RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
     END IF;
   END LOOP;
   return true;
