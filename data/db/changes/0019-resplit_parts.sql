@@ -1209,6 +1209,12 @@ begin
           WHERE referenced_relation = 'specimen_parts'
             AND record_id = part_id;
           RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
+          SELECT array_agg(people_ref)
+          INTO recProperties
+          FROM collection_maintenance
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Maintenance before creation: %', recProperties;
           IF createProperties (part_id, recPartsDetails) < 0 THEN
             return false;
           END IF;
@@ -1223,6 +1229,12 @@ begin
           WHERE referenced_relation = 'specimen_parts'
             AND record_id = part_id;
           RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
+          SELECT array_agg(people_ref)
+          INTO recProperties
+          FROM collection_maintenance
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Maintenance after creation: %', recProperties;
         END IF;
       ELSE
         RAISE NOTICE '+ New code creation for next part';
