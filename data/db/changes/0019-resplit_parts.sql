@@ -273,6 +273,7 @@ $$
 declare
   prop_count integer;
   update_count integer;
+  cat_prop_id integer;
   booUpdate boolean := false;
   booContinue boolean := false;
 begin
@@ -281,14 +282,14 @@ begin
     SELECT COUNT(*)
     INTO prop_count
     FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
-    WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'part state' AND property_sub_type = 'freshness level' AND property_value_unified = recPartsDetails.freshness_level;
+    WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'part state' AND property_sub_type = 'freshness level' AND property_value = recPartsDetails.freshness_level;
     INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type)
     (
       SELECT 'specimen_parts', new_part_id, 'part state', 'freshness level'
       WHERE NOT EXISTS (SELECT 1
                         FROM catalogue_properties
                         WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'part state' AND property_sub_type = 'freshness level'
-                      )
+                       )
     );
     IF prop_count >= 1 THEN
       IF prop_count > 1 OR (prop_count = 1 AND recPartsDetails.freshness_level != recFirstPartsDetails.freshness_level) THEN
@@ -304,13 +305,13 @@ begin
                           )
         WHERE property_ref = (SELECT DISTINCT catalogue_properties.id
                               FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
-                              WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'part state' AND property_sub_type = 'freshness level' AND property_value_unified = recPartsDetails.freshness_level
+                              WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'part state' AND property_sub_type = 'freshness level' AND property_value = recPartsDetails.freshness_level
                               LIMIT 1
                             )
           AND property_value_unified = recPartsDetails.freshness_level
           AND id IN (SELECT properties_values.id
                      FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
-                     WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'part state' AND property_sub_type = 'freshness level' AND property_value_unified = recPartsDetails.freshness_level
+                     WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'part state' AND property_sub_type = 'freshness level' AND property_value = recPartsDetails.freshness_level
                      LIMIT 1
                     );
         GET DIAGNOSTICS update_count = ROW_COUNT;
@@ -329,6 +330,194 @@ begin
       );
     END IF;
   END IF;
+  booContinue := false;
+  booUpdate := false;
+  /*Weight level*/
+  SELECT
+  NOT EXISTS (SELECT 1
+              FROM users_tracking as ut
+              WHERE (ut.referenced_relation = 'catalogue_properties'
+                     AND ((ut.action IN ('update', 'delete')
+                           AND ut.old_value -> 'referenced_relation' = 'specimen_parts'
+                           AND ut.old_value -> 'record_id' = part_id::varchar
+                           AND ut.old_value -> 'property_type' = 'physical measurement'
+                           AND ut.old_value -> 'property_sub_type' = 'weight'
+                          )
+                          OR
+                          (ut.action IN ('insert')
+                           AND ut.new_value -> 'referenced_relation' = 'specimen_parts'
+                           AND ut.new_value -> 'record_id' = part_id::varchar
+                          )
+                         )
+                    )
+                 OR (ut.referenced_relation = 'properties_values'
+                     AND ((ut.action IN ('update', 'delete')
+                           AND ut.old_value -> 'property_ref' = (SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' LIMIT 1)
+                          )
+                          OR
+                          (ut.action IN ('insert')
+                           AND ut.new_value -> 'property_ref' = (SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' LIMIT 1)
+                          )
+                         )
+                    )
+             )
+  INTO booContinue;
+  IF booContinue THEN
+    IF coalesce(recPartsDetails.old_weight_min, '') != '' OR coalesce(recPartsDetails.old_weight_max, '') != '' THEN
+      INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type)
+      (
+        SELECT 'specimen_parts', new_part_id, 'part state', 'freshness level'
+        WHERE NOT EXISTS (SELECT 1
+                          FROM catalogue_properties
+                          WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'part state' AND property_sub_type = 'freshness level'
+                        )
+      );
+      IF coalesce(recPartsDetails.old_weight_min, '') = coalesce(recPartsDetails.old_weight_max, '') THEN
+        INSERT INTO properties_values (property_ref, property_value)
+        (SELECT id, recPartsDetails.old_weight_min
+          FROM catalogue_properties
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = new_part_id
+            AND property_type = 'physical measurement'
+            AND property_sub_type = 'weight'
+        );
+      ELSE
+        IF coalesce(recPartsDetails.old_weight_min, '') != '' THEN
+          INSERT INTO properties_values (property_ref, property_value)
+          (SELECT id, recPartsDetails.old_weight_min
+            FROM catalogue_properties
+            WHERE referenced_relation = 'specimen_parts'
+              AND record_id = new_part_id
+              AND property_type = 'physical measurement'
+              AND property_sub_type = 'weight'
+          );
+        END IF;
+        IF coalesce(recPartsDetails.old_weight_max, '') != '' THEN
+          INSERT INTO properties_values (property_ref, property_value)
+          (SELECT id, recPartsDetails.old_weight_max
+            FROM catalogue_properties
+            WHERE referenced_relation = 'specimen_parts'
+              AND record_id = new_part_id
+              AND property_type = 'physical measurement'
+              AND property_sub_type = 'weight'
+          );
+        END IF;
+      END IF;
+    END IF;
+  ELSE
+    INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_method, property_tool, property_unit, property_accuracy_unit)
+    (SELECT referenced_relation, new_part_id, property_type, property_sub_type, property_method, property_tool, property_unit, property_accuracy_unit
+      FROM catalogue_properties
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND property_type = 'physical measurement'
+        AND property_sub_type = 'weight'
+    )
+    RETURNING id INTO cat_prop_id;
+    INSERT INTO properties_values (property_ref, property_value, property_accuracy)
+    (SELECT DISTINCT cat_prop_id, property_value, property_accuracy
+      FROM catalogue_properties as cp INNER JOIN properties_values as pv ON cp.id = pv.property_ref
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND property_type = 'physical measurement'
+        AND property_sub_type = 'weight'
+    );
+  END IF;
+  booContinue := false;
+  booUpdate := false;
+--     IF coalesce(recPartsDetails.old_weight_min,'') != coalesce(recPartsDetails.old_weight_max,'') THEN
+--       SELECT COUNT(*)
+--       INTO phys_prop_count_min
+--       FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
+--       WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_min_unified;
+--       SELECT COUNT(*)
+--       INTO phys_prop_count_max
+--       FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
+--       WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_max_unified;
+--       IF phys_prop_count_min >= 1 AND coalesce(recPartsDetails.old_weight_min, '') != '' THEN
+--         IF phys_prop_count_min > 1 OR (phys_prop_count_min = 1 AND recPartsDetails.old_spec_id != recFirstPartsDetails.old_spec_id) THEN
+--           booUpdate := true;
+--         ELSIF phys_prop_count_min = 1 AND recPartsDetails.old_spec_id = recFirstPartsDetails.old_spec_id THEN
+--           booContinue := true;
+--         END IF;
+--         IF booUpdate THEN
+--           UPDATE properties_values
+--           SET property_ref = (SELECT id
+--                               FROM catalogue_properties
+--                               WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight'
+--                             )
+--           WHERE property_ref = (SELECT DISTINCT catalogue_properties.id
+--                                 FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
+--                                 WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_min_unified
+--                                 LIMIT 1
+--                               )
+--             AND property_value_unified = recPartsDetails.old_weight_min_unified
+--             AND id = (SELECT properties_values.id
+--                       FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
+--                       WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_min_unified
+--                       LIMIT 1
+--                     );
+--           GET DIAGNOSTICS update_count = ROW_COUNT;
+--           IF update_count = 0 THEN
+--             booContinue := true;
+--           END IF;
+--         END IF;
+--       ELSIF coalesce(recPartsDetails.old_weight_min, '') != '' THEN
+--         booContinue := true;
+--       END IF;
+--       IF booContinue THEN
+--         RAISE NOTICE '*Min value: %', recPartsDetails.old_weight_min;
+--         INSERT INTO properties_values (property_ref, property_value)
+--         (SELECT id, recPartsDetails.old_weight_min
+--           FROM catalogue_properties
+--           WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight'
+--         );
+--       END IF;
+--       booContinue := false;
+--       booUpdate := false;
+--       IF phys_prop_count_max >= 1 AND coalesce(recPartsDetails.old_weight_max, '') != '' THEN
+--         IF phys_prop_count_max > 1 OR (phys_prop_count_max = 1 AND recPartsDetails.old_spec_id != recFirstPartsDetails.old_spec_id) THEN
+--           booUpdate := true;
+--         ELSIF phys_prop_count_max = 1 AND recPartsDetails.old_spec_id = recFirstPartsDetails.old_spec_id THEN
+--           booContinue := true;
+--         END IF;
+--         IF booUpdate THEN
+--           UPDATE properties_values
+--           SET property_ref = (SELECT id
+--                               FROM catalogue_properties
+--                               WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight'
+--                             )
+--           WHERE property_ref = (SELECT DISTINCT catalogue_properties.id
+--                                 FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
+--                                 WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_max_unified
+--                                 LIMIT 1
+--                               )
+--             AND property_value_unified = recPartsDetails.old_weight_max_unified
+--             AND id IN (SELECT properties_values.id
+--                       FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
+--                       WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_max_unified
+--                       LIMIT 1
+--                       );
+--           GET DIAGNOSTICS update_count = ROW_COUNT;
+--           IF update_count = 0 THEN
+--             booContinue := true;
+--           END IF;
+--         END IF;
+--       ELSIF coalesce(recPartsDetails.old_weight_max, '') != '' THEN
+--         booContinue := true;
+--       END IF;
+--       IF booContinue THEN
+--         RAISE NOTICE '*Max value: %', recPartsDetails.old_weight_max;
+--         INSERT INTO properties_values (property_ref, property_value)
+--         (SELECT id, recPartsDetails.old_weight_max
+--           FROM catalogue_properties
+--           WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight'
+--         );
+--       END IF;
+--     ELSE
+--       RAISE NOTICE 'Insert the same value'
+--     END IF;
+--   END IF;
   /*Insurances*/
   IF recPartsDetails.old_insurance_value > 0 THEN
     IF coalesce(recPartsDetails.old_spec_id = recFirstPartsDetails.old_spec_id) AND coalesce(recPartsDetails.old_insurance_value,0) != 0 THEN
@@ -362,6 +551,69 @@ begin
       (SELECT 'specimen_parts', new_part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0) WHERE NOT EXISTS (SELECT 1 FROM insurances WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND insurance_year = coalesce(recPartsDetails.old_insurance_year,0)));
     END IF;
   END IF;
+  booContinue := false;
+  booUpdate := false;
+  /*Maintenances*/
+  IF recPartsDetails.maintenance_people_ref > 0 AND recPartsDetails.maintenance_people_ref IS NOT NULL THEN
+    IF coalesce(recPartsDetails.old_spec_id = recFirstPartsDetails.old_spec_id) THEN
+      booUpdate := true;
+    ELSE
+      SELECT COUNT(*) INTO prop_count
+      FROM collection_maintenance
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND "category" = recPartsDetails.maintenance_category
+        AND action_observation = recPartsDetails.maintenance_action_observation
+        AND people_ref = recPartsDetails.maintenance_people_ref
+        AND modification_date_time = recPartsDetails.maintenance_modification_date_time
+        AND 1 < (SELECT COUNT(*)
+                 FROM collection_maintenance
+                 WHERE referenced_relation = 'specimen_parts'
+                   AND record_id = part_id
+                   AND "category" = recPartsDetails.maintenance_category
+                   AND action_observation = recPartsDetails.maintenance_action_observation
+                   AND people_ref = recPartsDetails.maintenance_people_ref
+                   AND modification_date_time = recPartsDetails.maintenance_modification_date_time
+                );
+      IF prop_count = 1 THEN
+        booUpdate := true;
+      ELSE
+        booContinue := true;
+      END IF;
+    END IF;
+    IF booUpdate THEN
+      UPDATE collection_maintenance
+      SET record_id = new_part_id,
+          modification_date_mask = recPartsDetails.maintenance_modification_date_mask
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND "category" = recPartsDetails.maintenance_category
+        AND action_observation = recPartsDetails.maintenance_action_observation
+        AND people_ref = recPartsDetails.maintenance_people_ref
+        AND modification_date_time = recPartsDetails.maintenance_modification_date_time;
+      GET DIAGNOSTICS update_count = ROW_COUNT;
+      IF update_count = 0 THEN
+        booContinue := true;
+      END IF;
+    END IF;
+    IF booContinue THEN
+      INSERT INTO collection_maintenance (referenced_relation, record_id, people_ref, "category", action_observation, modification_date_time, modification_date_mask)
+      (SELECT 'specimen_parts', new_part_id, recPartsDetails.maintenance_people_ref, recPartsDetails.maintenance_category, recPartsDetails.maintenance_action_observation, recPartsDetails.maintenance_modification_date_time, recPartsDetails.maintenance_modification_date_mask
+       WHERE NOT EXISTS
+             (SELECT 1
+              FROM collection_maintenance
+              WHERE referenced_relation = 'specimen_parts'
+                AND record_id = new_part_id
+                AND "category" = recPartsDetails.maintenance_category
+                AND action_observation = recPartsDetails.maintenance_action_observation
+                AND people_ref = recPartsDetails.maintenance_people_ref
+                AND modification_date_time = recPartsDetails.maintenance_modification_date_time
+             )
+      );
+    END IF;
+  END IF;
+  booContinue := false;
+  booUpdate := false;
   return 1;
 exception
   when others then
@@ -516,6 +768,7 @@ begin
                                   and new_value -> 'modification_date_mask' = recPartsDetails.maintenance_modification_date_mask::varchar
                                )
                        )
+        and exists (select 1 from people where id = recPartsDetails.maintenance_people_ref)
     );
   END IF;
   /*Length level*/
@@ -957,11 +1210,12 @@ begin
                                     when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
                                     else false 
                                   end
-                          where sgr_preparator_nr is not null and sgr_preparator_nr != 0
+/*                          where sgr_preparator_nr is not null and sgr_preparator_nr != 0*/
                           /*where bat_value is not null *//*and specimen_parts.id = 594237*/
                           /*where bat_collection_id_nr between 1 and 8*/
                                 /*where bat_collection_id_nr = 133*/
-                          /*where (sgr_weight_min is not null or sgr_weight_max is not null)*/
+                          where (sgr_weight_min is not null or sgr_weight_max is not null)
+--                             where specimen_parts.id in (585835, 585836)
                             /*and specimen_parts.id in (585835, 585836)*/
                           /*where sfl_description is not null and sfl_description != 'Undefined'*/
                                 /*exists (select 1 from comments where comment is not null and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id limit 1)*/

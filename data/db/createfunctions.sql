@@ -3254,7 +3254,7 @@ END;
 $$;
 
 /*Function to split a catalogue unit path and try to find the corresponding unit opf a given level*/
-create or replace function getSpecificParentForLevel(referenced_relation IN catalogue_levels.level_type%TYPE, path IN template_classifications.path%TYPE, level_searched IN catalogue_levels.level_name%TYPE) RETURNS template_classifications.name%TYPE LANGUAGE plpgsql AS
+create or replace function getSpecificParentForLevel(referenced_relation IN catalogue_levels.level_type%TYPE, path IN template_classifications.path%TYPE, level_searched IN catalogue_levels.level_name%TYPE) RETURNS template_classifications.name%TYPE LANGUAGE plpgsql IMMUTABLE AS
 $$
 DECLARE
   response template_classifications.name%TYPE := ''; 
