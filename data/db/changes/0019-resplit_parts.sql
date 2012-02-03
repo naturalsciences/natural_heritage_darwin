@@ -352,27 +352,31 @@ begin
                     )
                  OR (ut.referenced_relation = 'properties_values'
                      AND ((ut.action IN ('update', 'delete')
-                           AND ut.old_value -> 'property_ref' = (SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' LIMIT 1)
+                           AND ut.old_value -> 'property_ref' = (SELECT id::varchar FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' LIMIT 1)
                           )
                           OR
                           (ut.action IN ('insert')
-                           AND ut.new_value -> 'property_ref' = (SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' LIMIT 1)
+                           AND ut.new_value -> 'property_ref' = (SELECT id::varchar FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' LIMIT 1)
                           )
                          )
                     )
              )
   INTO booContinue;
-  IF booContinue THEN
+--   RAISE NOTICE '< No User tracking for this part ?: %', booContinue;
+  IF booContinue AND recPartsDetails.old_spec_id != recFirstPartsDetails.old_spec_id THEN
     IF coalesce(recPartsDetails.old_weight_min, '') != '' OR coalesce(recPartsDetails.old_weight_max, '') != '' THEN
-      INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type)
+      INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_unit, property_accuracy_unit)
       (
-        SELECT 'specimen_parts', new_part_id, 'part state', 'freshness level'
+        SELECT 'specimen_parts', new_part_id, 'physical measurement', 'weight', recPartsDetails.old_weight_unit, recPartsDetails.old_weight_unit
         WHERE NOT EXISTS (SELECT 1
                           FROM catalogue_properties
-                          WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'part state' AND property_sub_type = 'freshness level'
+                          WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight'
                         )
       );
+--       GET DIAGNOSTICS prop_count = ROW_COUNT;
+--       RAISE NOTICE '<< Catalogue prop inserted: %', prop_count;
       IF coalesce(recPartsDetails.old_weight_min, '') = coalesce(recPartsDetails.old_weight_max, '') THEN
+--         RAISE NOTICE '<<< Min and Max the same';
         INSERT INTO properties_values (property_ref, property_value)
         (SELECT id, recPartsDetails.old_weight_min
           FROM catalogue_properties
@@ -381,7 +385,10 @@ begin
             AND property_type = 'physical measurement'
             AND property_sub_type = 'weight'
         );
+--         GET DIAGNOSTICS prop_count = ROW_COUNT;
+--         RAISE NOTICE '<< Catalogue prop value inserted: %', prop_count;
       ELSE
+--         RAISE NOTICE '<<< Min and Max Not the same';
         IF coalesce(recPartsDetails.old_weight_min, '') != '' THEN
           INSERT INTO properties_values (property_ref, property_value)
           (SELECT id, recPartsDetails.old_weight_min
@@ -391,6 +398,8 @@ begin
               AND property_type = 'physical measurement'
               AND property_sub_type = 'weight'
           );
+--           GET DIAGNOSTICS prop_count = ROW_COUNT;
+--           RAISE NOTICE '<< Catalogue prop value min inserted: %', prop_count;
         END IF;
         IF coalesce(recPartsDetails.old_weight_max, '') != '' THEN
           INSERT INTO properties_values (property_ref, property_value)
@@ -401,6 +410,8 @@ begin
               AND property_type = 'physical measurement'
               AND property_sub_type = 'weight'
           );
+--           GET DIAGNOSTICS prop_count = ROW_COUNT;
+--           RAISE NOTICE '<< Catalogue prop value max inserted: %', prop_count;
         END IF;
       END IF;
     END IF;
@@ -422,102 +433,347 @@ begin
         AND property_type = 'physical measurement'
         AND property_sub_type = 'weight'
     );
+--     GET DIAGNOSTICS prop_count = ROW_COUNT;
+--     RAISE NOTICE '< All in one insertion: %', prop_count;
   END IF;
   booContinue := false;
   booUpdate := false;
---     IF coalesce(recPartsDetails.old_weight_min,'') != coalesce(recPartsDetails.old_weight_max,'') THEN
---       SELECT COUNT(*)
---       INTO phys_prop_count_min
---       FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
---       WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_min_unified;
---       SELECT COUNT(*)
---       INTO phys_prop_count_max
---       FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
---       WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_max_unified;
---       IF phys_prop_count_min >= 1 AND coalesce(recPartsDetails.old_weight_min, '') != '' THEN
---         IF phys_prop_count_min > 1 OR (phys_prop_count_min = 1 AND recPartsDetails.old_spec_id != recFirstPartsDetails.old_spec_id) THEN
---           booUpdate := true;
---         ELSIF phys_prop_count_min = 1 AND recPartsDetails.old_spec_id = recFirstPartsDetails.old_spec_id THEN
---           booContinue := true;
---         END IF;
---         IF booUpdate THEN
---           UPDATE properties_values
---           SET property_ref = (SELECT id
---                               FROM catalogue_properties
---                               WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight'
---                             )
---           WHERE property_ref = (SELECT DISTINCT catalogue_properties.id
---                                 FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
---                                 WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_min_unified
---                                 LIMIT 1
---                               )
---             AND property_value_unified = recPartsDetails.old_weight_min_unified
---             AND id = (SELECT properties_values.id
---                       FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
---                       WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_min_unified
---                       LIMIT 1
---                     );
---           GET DIAGNOSTICS update_count = ROW_COUNT;
---           IF update_count = 0 THEN
---             booContinue := true;
---           END IF;
---         END IF;
---       ELSIF coalesce(recPartsDetails.old_weight_min, '') != '' THEN
---         booContinue := true;
---       END IF;
---       IF booContinue THEN
---         RAISE NOTICE '*Min value: %', recPartsDetails.old_weight_min;
---         INSERT INTO properties_values (property_ref, property_value)
---         (SELECT id, recPartsDetails.old_weight_min
---           FROM catalogue_properties
---           WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight'
---         );
---       END IF;
---       booContinue := false;
---       booUpdate := false;
---       IF phys_prop_count_max >= 1 AND coalesce(recPartsDetails.old_weight_max, '') != '' THEN
---         IF phys_prop_count_max > 1 OR (phys_prop_count_max = 1 AND recPartsDetails.old_spec_id != recFirstPartsDetails.old_spec_id) THEN
---           booUpdate := true;
---         ELSIF phys_prop_count_max = 1 AND recPartsDetails.old_spec_id = recFirstPartsDetails.old_spec_id THEN
---           booContinue := true;
---         END IF;
---         IF booUpdate THEN
---           UPDATE properties_values
---           SET property_ref = (SELECT id
---                               FROM catalogue_properties
---                               WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight'
---                             )
---           WHERE property_ref = (SELECT DISTINCT catalogue_properties.id
---                                 FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
---                                 WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_max_unified
---                                 LIMIT 1
---                               )
---             AND property_value_unified = recPartsDetails.old_weight_max_unified
---             AND id IN (SELECT properties_values.id
---                       FROM catalogue_properties INNER JOIN properties_values ON catalogue_properties.id = properties_values.property_ref
---                       WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight' AND property_value_unified = recPartsDetails.old_weight_max_unified
---                       LIMIT 1
---                       );
---           GET DIAGNOSTICS update_count = ROW_COUNT;
---           IF update_count = 0 THEN
---             booContinue := true;
---           END IF;
---         END IF;
---       ELSIF coalesce(recPartsDetails.old_weight_max, '') != '' THEN
---         booContinue := true;
---       END IF;
---       IF booContinue THEN
---         RAISE NOTICE '*Max value: %', recPartsDetails.old_weight_max;
---         INSERT INTO properties_values (property_ref, property_value)
---         (SELECT id, recPartsDetails.old_weight_max
---           FROM catalogue_properties
---           WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'weight'
---         );
---       END IF;
---     ELSE
---       RAISE NOTICE 'Insert the same value'
---     END IF;
---   END IF;
+  /*Length level*/
+  SELECT
+  NOT EXISTS (SELECT 1
+              FROM users_tracking as ut
+              WHERE (ut.referenced_relation = 'catalogue_properties'
+                     AND ((ut.action IN ('update', 'delete')
+                           AND ut.old_value -> 'referenced_relation' = 'specimen_parts'
+                           AND ut.old_value -> 'record_id' = part_id::varchar
+                           AND ut.old_value -> 'property_type' = 'physical measurement'
+                           AND ut.old_value -> 'property_sub_type' = 'length'
+                           AND coalesce(ut.old_value -> 'property_qualifier' , '') NOT IN ('height', 'depth')
+                          )
+                          OR
+                          (ut.action IN ('insert')
+                           AND ut.new_value -> 'referenced_relation' = 'specimen_parts'
+                           AND ut.new_value -> 'record_id' = part_id::varchar
+                          )
+                         )
+                    )
+                 OR (ut.referenced_relation = 'properties_values'
+                     AND ((ut.action IN ('update', 'delete')
+                           AND ut.old_value -> 'property_ref' = (SELECT id::varchar FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'length' AND coalesce(property_qualifier,'') NOT IN ('height','depth') LIMIT 1)
+                          )
+                          OR
+                          (ut.action IN ('insert')
+                           AND ut.new_value -> 'property_ref' = (SELECT id::varchar FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'length' AND coalesce(property_qualifier,'') NOT IN ('height','depth') LIMIT 1)
+                          )
+                         )
+                    )
+             )
+  INTO booContinue;
+--   RAISE NOTICE '< No User tracking for this part ?: %', booContinue;
+  IF booContinue AND recPartsDetails.old_spec_id != recFirstPartsDetails.old_spec_id  THEN
+    IF coalesce(recPartsDetails.old_length_min, '') != '' OR coalesce(recPartsDetails.old_length_max, '') != '' THEN
+      INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_unit, property_accuracy_unit)
+      (
+        SELECT 'specimen_parts', new_part_id, 'physical measurement', 'length', recPartsDetails.old_length_unit, recPartsDetails.old_length_unit
+        WHERE NOT EXISTS (SELECT 1
+                          FROM catalogue_properties
+                          WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'length' AND coalesce(property_qualifier, '') NOT IN ('height','depth')
+                        )
+      );
+--       GET DIAGNOSTICS prop_count = ROW_COUNT;
+--       RAISE NOTICE '<< Catalogue prop inserted: %', prop_count;
+      IF coalesce(recPartsDetails.old_length_min, '') = coalesce(recPartsDetails.old_length_max, '') THEN
+--         RAISE NOTICE '<<< Min and Max the same';
+        INSERT INTO properties_values (property_ref, property_value)
+        (SELECT id, recPartsDetails.old_length_min
+          FROM catalogue_properties
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = new_part_id
+            AND property_type = 'physical measurement'
+            AND property_sub_type = 'length'
+            AND coalesce(property_qualifier, '') NOT IN ('height','depth')
+        );
+--         GET DIAGNOSTICS prop_count = ROW_COUNT;
+--         RAISE NOTICE '<< Catalogue prop value inserted: %', prop_count;
+      ELSE
+--         RAISE NOTICE '<<< Min and Max Not the same';
+        IF coalesce(recPartsDetails.old_length_min, '') != '' THEN
+          INSERT INTO properties_values (property_ref, property_value)
+          (SELECT id, recPartsDetails.old_length_min
+            FROM catalogue_properties
+            WHERE referenced_relation = 'specimen_parts'
+              AND record_id = new_part_id
+              AND property_type = 'physical measurement'
+              AND property_sub_type = 'length'
+              AND coalesce(property_qualifier, '') NOT IN ('height','depth')
+          );
+--           GET DIAGNOSTICS prop_count = ROW_COUNT;
+--           RAISE NOTICE '<< Catalogue prop value min inserted: %', prop_count;
+        END IF;
+        IF coalesce(recPartsDetails.old_length_max, '') != '' THEN
+          INSERT INTO properties_values (property_ref, property_value)
+          (SELECT id, recPartsDetails.old_length_max
+            FROM catalogue_properties
+            WHERE referenced_relation = 'specimen_parts'
+              AND record_id = new_part_id
+              AND property_type = 'physical measurement'
+              AND property_sub_type = 'length'
+              AND coalesce(property_qualifier, '') NOT IN ('height','depth')
+          );
+--           GET DIAGNOSTICS prop_count = ROW_COUNT;
+--           RAISE NOTICE '<< Catalogue prop value max inserted: %', prop_count;
+        END IF;
+      END IF;
+    END IF;
+  ELSE
+    INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_method, property_tool, property_unit, property_accuracy_unit)
+    (SELECT referenced_relation, new_part_id, property_type, property_sub_type, property_method, property_tool, property_unit, property_accuracy_unit
+      FROM catalogue_properties
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND property_type = 'physical measurement'
+        AND property_sub_type = 'length'
+        AND coalesce(property_qualifier, '') NOT IN ('height','depth')
+    )
+    RETURNING id INTO cat_prop_id;
+    INSERT INTO properties_values (property_ref, property_value, property_accuracy)
+    (SELECT DISTINCT cat_prop_id, property_value, property_accuracy
+      FROM catalogue_properties as cp INNER JOIN properties_values as pv ON cp.id = pv.property_ref
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND property_type = 'physical measurement'
+        AND property_sub_type = 'length'
+        AND coalesce(property_qualifier, '') NOT IN ('height','depth')
+    );
+--     GET DIAGNOSTICS prop_count = ROW_COUNT;
+--     RAISE NOTICE '< All in one insertion: %', prop_count;
+  END IF;
+  booContinue := false;
+  booUpdate := false;
+  /*Height level*/
+  SELECT
+  NOT EXISTS (SELECT 1
+              FROM users_tracking as ut
+              WHERE (ut.referenced_relation = 'catalogue_properties'
+                     AND ((ut.action IN ('update', 'delete')
+                           AND ut.old_value -> 'referenced_relation' = 'specimen_parts'
+                           AND ut.old_value -> 'record_id' = part_id::varchar
+                           AND ut.old_value -> 'property_type' = 'physical measurement'
+                           AND ut.old_value -> 'property_sub_type' = 'length'
+                           AND coalesce(ut.old_value -> 'property_qualifier' , '') = 'height'
+                          )
+                          OR
+                          (ut.action IN ('insert')
+                           AND ut.new_value -> 'referenced_relation' = 'specimen_parts'
+                           AND ut.new_value -> 'record_id' = part_id::varchar
+                          )
+                         )
+                    )
+                 OR (ut.referenced_relation = 'properties_values'
+                     AND ((ut.action IN ('update', 'delete')
+                           AND ut.old_value -> 'property_ref' = (SELECT id::varchar FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'length' AND coalesce(property_qualifier,'') = 'height' LIMIT 1)
+                          )
+                          OR
+                          (ut.action IN ('insert')
+                           AND ut.new_value -> 'property_ref' = (SELECT id::varchar FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'length' AND coalesce(property_qualifier,'') = 'height' LIMIT 1)
+                          )
+                         )
+                    )
+             )
+  INTO booContinue;
+--   RAISE NOTICE '< No User tracking for this part ?: %', booContinue;
+  IF booContinue AND recPartsDetails.old_spec_id != recFirstPartsDetails.old_spec_id  THEN
+    IF coalesce(recPartsDetails.old_height_min, '') != '' OR coalesce(recPartsDetails.old_height_max, '') != '' THEN
+      INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
+      (
+        SELECT 'specimen_parts', new_part_id, 'physical measurement', 'length', 'height', recPartsDetails.old_height_unit, recPartsDetails.old_height_unit
+        WHERE NOT EXISTS (SELECT 1
+                          FROM catalogue_properties
+                          WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'length' AND coalesce(property_qualifier, '') = 'height'
+                        )
+      );
+--       GET DIAGNOSTICS prop_count = ROW_COUNT;
+--       RAISE NOTICE '<< Catalogue prop inserted: %', prop_count;
+      IF coalesce(recPartsDetails.old_height_min, '') = coalesce(recPartsDetails.old_height_max, '') THEN
+--         RAISE NOTICE '<<< Min and Max the same';
+        INSERT INTO properties_values (property_ref, property_value)
+        (SELECT id, recPartsDetails.old_height_min
+          FROM catalogue_properties
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = new_part_id
+            AND property_type = 'physical measurement'
+            AND property_sub_type = 'length'
+            AND coalesce(property_qualifier, '') = 'height'
+        );
+--         GET DIAGNOSTICS prop_count = ROW_COUNT;
+--         RAISE NOTICE '<< Catalogue prop value inserted: %', prop_count;
+      ELSE
+--         RAISE NOTICE '<<< Min and Max Not the same';
+        IF coalesce(recPartsDetails.old_height_min, '') != '' THEN
+          INSERT INTO properties_values (property_ref, property_value)
+          (SELECT id, recPartsDetails.old_height_min
+            FROM catalogue_properties
+            WHERE referenced_relation = 'specimen_parts'
+              AND record_id = new_part_id
+              AND property_type = 'physical measurement'
+              AND property_sub_type = 'length'
+              AND coalesce(property_qualifier, '') = 'height'
+          );
+--           GET DIAGNOSTICS prop_count = ROW_COUNT;
+--           RAISE NOTICE '<< Catalogue prop value min inserted: %', prop_count;
+        END IF;
+        IF coalesce(recPartsDetails.old_height_max, '') != '' THEN
+          INSERT INTO properties_values (property_ref, property_value)
+          (SELECT id, recPartsDetails.old_height_max
+            FROM catalogue_properties
+            WHERE referenced_relation = 'specimen_parts'
+              AND record_id = new_part_id
+              AND property_type = 'physical measurement'
+              AND property_sub_type = 'length'
+              AND coalesce(property_qualifier, '') = 'height'
+          );
+--           GET DIAGNOSTICS prop_count = ROW_COUNT;
+--           RAISE NOTICE '<< Catalogue prop value max inserted: %', prop_count;
+        END IF;
+      END IF;
+    END IF;
+  ELSE
+    INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_method, property_tool, property_unit, property_accuracy_unit)
+    (SELECT referenced_relation, new_part_id, property_type, property_sub_type, property_qualifier, property_method, property_tool, property_unit, property_accuracy_unit
+      FROM catalogue_properties
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND property_type = 'physical measurement'
+        AND property_sub_type = 'length'
+        AND coalesce(property_qualifier, '') = 'height'
+    )
+    RETURNING id INTO cat_prop_id;
+    INSERT INTO properties_values (property_ref, property_value, property_accuracy)
+    (SELECT DISTINCT cat_prop_id, property_value, property_accuracy
+      FROM catalogue_properties as cp INNER JOIN properties_values as pv ON cp.id = pv.property_ref
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND property_type = 'physical measurement'
+        AND property_sub_type = 'length'
+        AND coalesce(property_qualifier, '') = 'height'
+    );
+--     GET DIAGNOSTICS prop_count = ROW_COUNT;
+--     RAISE NOTICE '< All in one insertion: %', prop_count;
+  END IF;
+  booContinue := false;
+  booUpdate := false;
+  /*Depth level*/
+  SELECT
+  NOT EXISTS (SELECT 1
+              FROM users_tracking as ut
+              WHERE (ut.referenced_relation = 'catalogue_properties'
+                     AND ((ut.action IN ('update', 'delete')
+                           AND ut.old_value -> 'referenced_relation' = 'specimen_parts'
+                           AND ut.old_value -> 'record_id' = part_id::varchar
+                           AND ut.old_value -> 'property_type' = 'physical measurement'
+                           AND ut.old_value -> 'property_sub_type' = 'length'
+                           AND coalesce(ut.old_value -> 'property_qualifier' , '') = 'depth'
+                          )
+                          OR
+                          (ut.action IN ('insert')
+                           AND ut.new_value -> 'referenced_relation' = 'specimen_parts'
+                           AND ut.new_value -> 'record_id' = part_id::varchar
+                          )
+                         )
+                    )
+                 OR (ut.referenced_relation = 'properties_values'
+                     AND ((ut.action IN ('update', 'delete')
+                           AND ut.old_value -> 'property_ref' = (SELECT id::varchar FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'length' AND coalesce(property_qualifier,'') = 'depth' LIMIT 1)
+                          )
+                          OR
+                          (ut.action IN ('insert')
+                           AND ut.new_value -> 'property_ref' = (SELECT id::varchar FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = part_id AND property_type = 'physical measurement' AND property_sub_type = 'length' AND coalesce(property_qualifier,'') = 'depth' LIMIT 1)
+                          )
+                         )
+                    )
+             )
+  INTO booContinue;
+--   RAISE NOTICE '< No User tracking for this part ?: %', booContinue;
+  IF booContinue AND recPartsDetails.old_spec_id != recFirstPartsDetails.old_spec_id  THEN
+    IF coalesce(recPartsDetails.old_depth_min, '') != '' OR coalesce(recPartsDetails.old_depth_max, '') != '' THEN
+      INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
+      (
+        SELECT 'specimen_parts', new_part_id, 'physical measurement', 'length', 'depth', recPartsDetails.old_depth_unit, recPartsDetails.old_depth_unit
+        WHERE NOT EXISTS (SELECT 1
+                          FROM catalogue_properties
+                          WHERE referenced_relation = 'specimen_parts' AND record_id = new_part_id AND property_type = 'physical measurement' AND property_sub_type = 'length' AND coalesce(property_qualifier, '') = 'depth'
+                        )
+      );
+--       GET DIAGNOSTICS prop_count = ROW_COUNT;
+--       RAISE NOTICE '<< Catalogue prop inserted: %', prop_count;
+      IF coalesce(recPartsDetails.old_depth_min, '') = coalesce(recPartsDetails.old_depth_max, '') THEN
+--         RAISE NOTICE '<<< Min and Max the same';
+        INSERT INTO properties_values (property_ref, property_value)
+        (SELECT id, recPartsDetails.old_depth_min
+          FROM catalogue_properties
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = new_part_id
+            AND property_type = 'physical measurement'
+            AND property_sub_type = 'length'
+            AND coalesce(property_qualifier, '') = 'depth'
+        );
+--         GET DIAGNOSTICS prop_count = ROW_COUNT;
+--         RAISE NOTICE '<< Catalogue prop value inserted: %', prop_count;
+      ELSE
+--         RAISE NOTICE '<<< Min and Max Not the same';
+        IF coalesce(recPartsDetails.old_depth_min, '') != '' THEN
+          INSERT INTO properties_values (property_ref, property_value)
+          (SELECT id, recPartsDetails.old_depth_min
+            FROM catalogue_properties
+            WHERE referenced_relation = 'specimen_parts'
+              AND record_id = new_part_id
+              AND property_type = 'physical measurement'
+              AND property_sub_type = 'length'
+              AND coalesce(property_qualifier, '') = 'depth'
+          );
+--           GET DIAGNOSTICS prop_count = ROW_COUNT;
+--           RAISE NOTICE '<< Catalogue prop value min inserted: %', prop_count;
+        END IF;
+        IF coalesce(recPartsDetails.old_depth_max, '') != '' THEN
+          INSERT INTO properties_values (property_ref, property_value)
+          (SELECT id, recPartsDetails.old_depth_max
+            FROM catalogue_properties
+            WHERE referenced_relation = 'specimen_parts'
+              AND record_id = new_part_id
+              AND property_type = 'physical measurement'
+              AND property_sub_type = 'length'
+              AND coalesce(property_qualifier, '') = 'depth'
+          );
+--           GET DIAGNOSTICS prop_count = ROW_COUNT;
+--           RAISE NOTICE '<< Catalogue prop value max inserted: %', prop_count;
+        END IF;
+      END IF;
+    END IF;
+  ELSE
+    INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_method, property_tool, property_unit, property_accuracy_unit)
+    (SELECT referenced_relation, new_part_id, property_type, property_sub_type, property_qualifier, property_method, property_tool, property_unit, property_accuracy_unit
+      FROM catalogue_properties
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND property_type = 'physical measurement'
+        AND property_sub_type = 'length'
+        AND coalesce(property_qualifier, '') = 'depth'
+    )
+    RETURNING id INTO cat_prop_id;
+    INSERT INTO properties_values (property_ref, property_value, property_accuracy)
+    (SELECT DISTINCT cat_prop_id, property_value, property_accuracy
+      FROM catalogue_properties as cp INNER JOIN properties_values as pv ON cp.id = pv.property_ref
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND property_type = 'physical measurement'
+        AND property_sub_type = 'length'
+        AND coalesce(property_qualifier, '') = 'depth'
+    );
+--     GET DIAGNOSTICS prop_count = ROW_COUNT;
+--     RAISE NOTICE '< All in one insertion: %', prop_count;
+  END IF;
+  booContinue := false;
+  booUpdate := false;
   /*Insurances*/
   IF recPartsDetails.old_insurance_value > 0 THEN
     IF coalesce(recPartsDetails.old_spec_id = recFirstPartsDetails.old_spec_id) AND coalesce(recPartsDetails.old_insurance_value,0) != 0 THEN
@@ -1054,6 +1310,8 @@ declare
   recTransferedCodes varchar[];
   recProperties RECORD;
   recInsurances RECORD;
+  spec_part_count_min integer;
+  spec_part_count_max integer;
 begin
   INSERT INTO partsSplitFromAndTo (id)
   (
@@ -1214,16 +1472,16 @@ begin
                           /*where bat_value is not null *//*and specimen_parts.id = 594237*/
                           /*where bat_collection_id_nr between 1 and 8*/
                                 /*where bat_collection_id_nr = 133*/
-                          where (sgr_weight_min is not null or sgr_weight_max is not null)
+                          /*where (sgr_weight_min is not null or sgr_weight_max is not null *//*and sgr_length_min != sgr_length_max*//*)*/
 --                             where specimen_parts.id in (585835, 585836)
                             /*and specimen_parts.id in (585835, 585836)*/
-                          /*where sfl_description is not null and sfl_description != 'Undefined'*/
+--                           where sfl_description is not null and sfl_description != 'Undefined'
                                 /*exists (select 1 from comments where comment is not null and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id limit 1)*/
                           order by new_id desc, specimen_part, main_code 
-                          /*limit 50*/
+                          limit 50
   LOOP
     IF part_id != recPartsDetails.parts_id THEN
-      RAISE NOTICE 'Next part infos: %', recPartsDetails;
+--       RAISE NOTICE 'Next part infos: %', recPartsDetails;
       recFirstPart := recPartsDetails;
       part_id := recPartsDetails.parts_id;
       IF recPartsDetails.specimen_part_count_min = 0 AND recPartsDetails.part_count_min > 0 THEN
@@ -1403,204 +1661,212 @@ begin
               ) 
             ) as x;
         IF code_count > 0 THEN
-          RAISE NOTICE '+ Need of new part creation';
+--           RAISE NOTICE '+ Need of new part creation';
           SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
           IF new_part_id < 0 THEN
             return false;
           END IF;
-          select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
-          select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
-          RAISE NOTICE '++ Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
-          SELECT array_agg(property_value_unified)
-          INTO recProperties
-          FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Properties before transfert: %', recProperties;
-          SELECT array_agg(insurance_value), array_agg(insurance_year)
-          INTO recInsurances
-          FROM insurances
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
-          SELECT array_agg(people_ref)
-          INTO recProperties
-          FROM collection_maintenance
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
+--           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+--           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
+--           RAISE NOTICE '++ Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
+--           SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
+--           RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
+--           SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = new_part_id;
+--           RAISE NOTICE '++Transfered count min and max: % and %', spec_part_count_min, spec_part_count_max;
+--           SELECT array_agg(property_value/*_unified*/)
+--           INTO recProperties
+--           FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+--           WHERE referenced_relation = 'specimen_parts'
+--             AND record_id = part_id;
+--           RAISE NOTICE '+++ Properties before transfert: %', recProperties;
+--           SELECT array_agg(insurance_value), array_agg(insurance_year)
+--           INTO recInsurances
+--           FROM insurances
+--           WHERE referenced_relation = 'specimen_parts'
+--             AND record_id = part_id;
+--           RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
+--           SELECT array_agg(people_ref)
+--           INTO recProperties
+--           FROM collection_maintenance
+--           WHERE referenced_relation = 'specimen_parts'
+--             AND record_id = part_id;
+--           RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
           IF moveOrCreateProp(part_id, new_part_id, recPartsDetails, recFirstPart) < 0 THEN
             return false;
           END IF;
-          SELECT array_agg(property_value_unified)
-          INTO recProperties
-          FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = new_part_id;
-          RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
-          SELECT array_agg(insurance_value), array_agg(insurance_year)
-          INTO recInsurances
-          FROM insurances
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = new_part_id;
-          RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
-          SELECT array_agg(people_ref)
-          INTO recProperties
-          FROM collection_maintenance
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = new_part_id;
-          RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
+--           SELECT array_agg(property_value/*_unified*/)
+--           INTO recProperties
+--           FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+--           WHERE referenced_relation = 'specimen_parts'
+--             AND record_id = new_part_id;
+--           RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
+--           SELECT array_agg(insurance_value), array_agg(insurance_year)
+--           INTO recInsurances
+--           FROM insurances
+--           WHERE referenced_relation = 'specimen_parts'
+--             AND record_id = new_part_id;
+--           RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
+--           SELECT array_agg(people_ref)
+--           INTO recProperties
+--           FROM collection_maintenance
+--           WHERE referenced_relation = 'specimen_parts'
+--             AND record_id = new_part_id;
+--           RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
         ELSE
-          RAISE NOTICE '+ Need of properties reCheck at least !';
-          select array_agg(property_value_unified)
-          into recProperties
-          from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
-          where referenced_relation = 'specimen_parts' and record_id = part_id;
-          RAISE NOTICE '+++ Properties before creation: %', recProperties;
-          SELECT array_agg(insurance_value), array_agg(insurance_year)
-          INTO recInsurances
-          FROM insurances
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
-          SELECT array_agg(people_ref)
-          INTO recProperties
-          FROM collection_maintenance
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Maintenance before creation: %', recProperties;
+--           RAISE NOTICE '+ Need of properties reCheck at least !';
+--           select array_agg(property_value/*_unified*/)
+--           into recProperties
+--           from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+--           where referenced_relation = 'specimen_parts' and record_id = part_id;
+--           RAISE NOTICE '+++ Properties before creation: %', recProperties;
+--           SELECT array_agg(insurance_value), array_agg(insurance_year)
+--           INTO recInsurances
+--           FROM insurances
+--           WHERE referenced_relation = 'specimen_parts'
+--             AND record_id = part_id;
+--           RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
+--           SELECT array_agg(people_ref)
+--           INTO recProperties
+--           FROM collection_maintenance
+--           WHERE referenced_relation = 'specimen_parts'
+--             AND record_id = part_id;
+--           RAISE NOTICE '+++ Maintenance before creation: %', recProperties;
           IF createProperties (part_id, recPartsDetails) < 0 THEN
             return false;
           END IF;
-          select array_agg(property_value_unified)
-          into recProperties
-          from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
-          where referenced_relation = 'specimen_parts' and record_id = part_id;
-          RAISE NOTICE '+++ Actual properties: %', recProperties;
-          SELECT array_agg(insurance_value), array_agg(insurance_year)
-          INTO recInsurances
-          FROM insurances
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
-          SELECT array_agg(people_ref)
-          INTO recProperties
-          FROM collection_maintenance
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Maintenance after creation: %', recProperties;
+--           select array_agg(property_value/*_unified*/)
+--           into recProperties
+--           from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+--           where referenced_relation = 'specimen_parts' and record_id = part_id;
+--           RAISE NOTICE '+++ Actual properties: %', recProperties;
+--           SELECT array_agg(insurance_value), array_agg(insurance_year)
+--           INTO recInsurances
+--           FROM insurances
+--           WHERE referenced_relation = 'specimen_parts'
+--             AND record_id = part_id;
+--           RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
+--           SELECT array_agg(people_ref)
+--           INTO recProperties
+--           FROM collection_maintenance
+--           WHERE referenced_relation = 'specimen_parts'
+--             AND record_id = part_id;
+--           RAISE NOTICE '+++ Maintenance after creation: %', recProperties;
         END IF;
       ELSE
-        RAISE NOTICE '+ New code creation for next part';
+--         RAISE NOTICE '+ New code creation for next part';
         IF createCodes (part_id, recPartsDetails.old_main_code) < 0 THEN
           return false;
         END IF;
-        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
-        RAISE NOTICE '++ Actual codes: %', recActualCodes;
-        select array_agg(property_value_unified)
-        into recProperties
-        from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
-        where referenced_relation = 'specimen_parts' and record_id = part_id;
-        RAISE NOTICE '+++ Properties before creation: %', recProperties;
-        SELECT array_agg(insurance_value), array_agg(insurance_year)
-        INTO recInsurances
-        FROM insurances
-        WHERE referenced_relation = 'specimen_parts'
-          AND record_id = part_id;
-        RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
-        SELECT array_agg(people_ref)
-        INTO recProperties
-        FROM collection_maintenance
-        WHERE referenced_relation = 'specimen_parts'
-          AND record_id = part_id;
-        RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
+--         select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+--         RAISE NOTICE '++ Actual codes: %', recActualCodes;
+--         select array_agg(property_value/*_unified*/)
+--         into recProperties
+--         from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+--         where referenced_relation = 'specimen_parts' and record_id = part_id;
+--         RAISE NOTICE '+++ Properties before creation: %', recProperties;
+--         SELECT array_agg(insurance_value), array_agg(insurance_year)
+--         INTO recInsurances
+--         FROM insurances
+--         WHERE referenced_relation = 'specimen_parts'
+--           AND record_id = part_id;
+--         RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
+--         SELECT array_agg(people_ref)
+--         INTO recProperties
+--         FROM collection_maintenance
+--         WHERE referenced_relation = 'specimen_parts'
+--           AND record_id = part_id;
+--         RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
         IF createProperties (part_id, recPartsDetails) < 0 THEN
           return false;
         END IF;
-        select array_agg(property_value_unified)
-        into recProperties
-        from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
-        where referenced_relation = 'specimen_parts' and record_id = part_id;
-        RAISE NOTICE '+++ Actual properties: %', recProperties;
-        SELECT array_agg(insurance_value), array_agg(insurance_year)
-        INTO recInsurances
-        FROM insurances
-        WHERE referenced_relation = 'specimen_parts'
-          AND record_id = part_id;
-        RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
-        SELECT array_agg(people_ref)
-        INTO recProperties
-        FROM collection_maintenance
-        WHERE referenced_relation = 'specimen_parts'
-          AND record_id = part_id;
-        RAISE NOTICE '+++ Actual Maintenance: %', recProperties;
+--         select array_agg(property_value/*_unified*/)
+--         into recProperties
+--         from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+--         where referenced_relation = 'specimen_parts' and record_id = part_id;
+--         RAISE NOTICE '+++ Actual properties: %', recProperties;
+--         SELECT array_agg(insurance_value), array_agg(insurance_year)
+--         INTO recInsurances
+--         FROM insurances
+--         WHERE referenced_relation = 'specimen_parts'
+--           AND record_id = part_id;
+--         RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
+--         SELECT array_agg(people_ref)
+--         INTO recProperties
+--         FROM collection_maintenance
+--         WHERE referenced_relation = 'specimen_parts'
+--           AND record_id = part_id;
+--         RAISE NOTICE '+++ Actual Maintenance: %', recProperties;
       END IF;
     ELSE
-      RAISE NOTICE '- Same part id infos: %', recPartsDetails;
+--       RAISE NOTICE '- Same part id infos: %', recPartsDetails;
       SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
       IF new_part_id < 0 THEN
         return false;
       END IF;
-      select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
-      select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
-      RAISE NOTICE '-- Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
-      SELECT array_agg(property_value_unified)
-      INTO recProperties
-      FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = part_id;
-      RAISE NOTICE '+++ Properties before transfert: %', recProperties;
-      SELECT array_agg(insurance_value), array_agg(insurance_year)
-      INTO recInsurances
-      FROM insurances
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = part_id;
-      RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
-      SELECT array_agg(people_ref)
-      INTO recProperties
-      FROM collection_maintenance
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = part_id;
-      RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
+--       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+--       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
+--       RAISE NOTICE '-- Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
+--       SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
+--       RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
+--       SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = new_part_id;
+--       RAISE NOTICE '++Transfered count min and max: % and %', spec_part_count_min, spec_part_count_max;
+--       SELECT array_agg(property_value/*_unified*/)
+--       INTO recProperties
+--       FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+--       WHERE referenced_relation = 'specimen_parts'
+--         AND record_id = part_id;
+--       RAISE NOTICE '+++ Properties before transfert: %', recProperties;
+--       SELECT array_agg(insurance_value), array_agg(insurance_year)
+--       INTO recInsurances
+--       FROM insurances
+--       WHERE referenced_relation = 'specimen_parts'
+--         AND record_id = part_id;
+--       RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
+--       SELECT array_agg(people_ref)
+--       INTO recProperties
+--       FROM collection_maintenance
+--       WHERE referenced_relation = 'specimen_parts'
+--         AND record_id = part_id;
+--       RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
       IF moveOrCreateProp(part_id, new_part_id, recPartsDetails, recFirstPart) < 0 THEN
         return false;
       END IF;
-      SELECT array_agg(property_value_unified)
-      INTO recProperties
-      FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = part_id;
-      RAISE NOTICE '+++ Properties after transfert: %', recProperties;
-      SELECT array_agg(insurance_value), array_agg(insurance_year)
-      INTO recInsurances
-      FROM insurances
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = part_id;
-      RAISE NOTICE '+++ Insurances after transfert: %', recInsurances;
-      SELECT array_agg(people_ref)
-      INTO recProperties
-      FROM collection_maintenance
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = part_id;
-      RAISE NOTICE '+++ Maintenance after transfert: %', recProperties;
-      SELECT array_agg(property_value_unified)
-      INTO recProperties
-      FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = new_part_id;
-      RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
-      SELECT array_agg(insurance_value), array_agg(insurance_year)
-      INTO recInsurances
-      FROM insurances
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = new_part_id;
-      RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
-      SELECT array_agg(people_ref)
-      INTO recProperties
-      FROM collection_maintenance
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = new_part_id;
-      RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
+--       SELECT array_agg(property_value/*_unified*/)
+--       INTO recProperties
+--       FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+--       WHERE referenced_relation = 'specimen_parts'
+--         AND record_id = part_id;
+--       RAISE NOTICE '+++ Properties after transfert: %', recProperties;
+--       SELECT array_agg(insurance_value), array_agg(insurance_year)
+--       INTO recInsurances
+--       FROM insurances
+--       WHERE referenced_relation = 'specimen_parts'
+--         AND record_id = part_id;
+--       RAISE NOTICE '+++ Insurances after transfert: %', recInsurances;
+--       SELECT array_agg(people_ref)
+--       INTO recProperties
+--       FROM collection_maintenance
+--       WHERE referenced_relation = 'specimen_parts'
+--         AND record_id = part_id;
+--       RAISE NOTICE '+++ Maintenance after transfert: %', recProperties;
+--       SELECT array_agg(property_value/*_unified*/)
+--       INTO recProperties
+--       FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+--       WHERE referenced_relation = 'specimen_parts'
+--         AND record_id = new_part_id;
+--       RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
+--       SELECT array_agg(insurance_value), array_agg(insurance_year)
+--       INTO recInsurances
+--       FROM insurances
+--       WHERE referenced_relation = 'specimen_parts'
+--         AND record_id = new_part_id;
+--       RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
+--       SELECT array_agg(people_ref)
+--       INTO recProperties
+--       FROM collection_maintenance
+--       WHERE referenced_relation = 'specimen_parts'
+--         AND record_id = new_part_id;
+--       RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
     END IF;
   END LOOP;
   return true;
@@ -1615,11 +1881,21 @@ AS
 $$
 declare
   response boolean;
+  recPartsAfter RECORD;
 begin
   select resplit_parts() INTO response;
   IF NOT response THEN
     ROLLBACK;
   END IF;
+  FOR recPartsAfter IN
+    SELECT id
+    FROM specimen_parts
+    WHERE id Between (select id from partsSplitFromAndTo where "start") and (select id from partsSplitFromAndTo where not "start")
+      AND 1 < (select count(*) from codes where referenced_relation = 'specimen_parts' and record_id = specimen_parts.id)
+  LOOP
+    RAISE NOTICE 'Start:%', recPartsAfter.id;
+    EXIT;
+  END LOOP;
   return response;
 end;
 $$;
