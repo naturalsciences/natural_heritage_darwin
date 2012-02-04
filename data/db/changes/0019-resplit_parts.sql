@@ -1,5 +1,4 @@
 ﻿
-
 begin;
 
 ALTER TABLE specimen_parts DISABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
@@ -20,6 +19,7 @@ RETURN v_int_value;
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TYPE IF EXISTS recPartsDetail CASCADE;
 CREATE TYPE recPartsDetail AS (
                                 old_spec_id integer,
                                 specimen_individual_ref integer,  
@@ -1938,6 +1938,10 @@ begin
     END LOOP;
   END LOOP;
   return response;
+exception
+  when others then
+    RAISE WARNING 'Error in split_parts: %', SQLERRM;
+    rollback;
 end;
 $$;
 
