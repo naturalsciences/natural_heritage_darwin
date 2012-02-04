@@ -1478,7 +1478,7 @@ begin
 --                           where sfl_description is not null and sfl_description != 'Undefined'
                                 /*exists (select 1 from comments where comment is not null and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id limit 1)*/
                           order by new_id desc, specimen_part, main_code 
-                          limit 50
+--                           limit 50
   LOOP
     IF part_id != recPartsDetails.parts_id THEN
 --       RAISE NOTICE 'Next part infos: %', recPartsDetails;
@@ -1882,6 +1882,11 @@ $$
 declare
   response boolean;
   recPartsAfter RECORD;
+  recPartsAfterCodes RECORD;
+  recPartsAfterDiverse RECORD;
+  partsAfterCodeId codes.id%TYPE := 0;
+  newPartId specimen_parts.id%TYPE;
+  newDiverseId catalogue_properties.id%TYPE;
 begin
   select resplit_parts() INTO response;
   IF NOT response THEN
@@ -1890,11 +1895,45 @@ begin
   FOR recPartsAfter IN
     SELECT id
     FROM specimen_parts
-    WHERE id Between (select id from partsSplitFromAndTo where "start") and (select id from partsSplitFromAndTo where not "start")
+    WHERE id > (select id from partsSplitFromAndTo where "start") and id < (select id from partsSplitFromAndTo where not "start")
       AND 1 < (select count(*) from codes where referenced_relation = 'specimen_parts' and record_id = specimen_parts.id)
   LOOP
-    RAISE NOTICE 'Start:%', recPartsAfter.id;
-    EXIT;
+    RAISE NOTICE 'Part id is: %', recPartsAfter.id;
+    FOR recPartsAfterCodes IN
+      SELECT id
+      FROM codes
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = recPartsAfter.id
+        AND code_category = 'main'
+    LOOP
+      IF partsAfterCodeId != recPartsAfterCodes.id THEN
+        partsAfterCodeId := recPartsAfterCodes.id;
+      ELSE
+        INSERT INTO specimen_parts (parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref)
+        (SELECT parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref FROM specimen_parts WHERE id = recPartsAfter.id)
+        RETURNING id INTO newPartId;
+        UPDATE codes
+        SET record_id = newPartId
+        WHERE id = recPartsAfterCodes.id;
+        INSERT INTO codes (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
+        (SELECT 'specimen_parts', newPartId, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id AND code_category != 'main');
+        INSERT INTO comments (referenced_relation, record_id, notion_concerned, "comment")
+        (SELECT 'specimen_parts', newPartId, notion_concerned, "comment" FROM comments WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
+        INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_currency, insurance_year, insurer_ref)
+        (SELECT 'specimen_parts', newPartId, insurance_value, insurance_currency, insurance_year, insurer_ref FROM insurances WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
+        INSERT INTO collection_maintenance (referenced_relation, record_id, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask)
+        (SELECT 'specimen_parts', newPartId, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask FROM collection_maintenance WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
+        FOR recPartsAfterDiverse IN
+        SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id
+        LOOP
+          INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool)
+          (SELECT 'specimen_parts', newPartId, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id)
+          RETURNING id INTO newDiverseId;
+          INSERT INTO properties_values (property_ref, property_value, property_accuracy)
+          (SELECT newDiverseId, property_value, property_accuracy FROM properties_values WHERE property_ref = recPartsAfterDiverse.id);
+        END LOOP;
+      END IF;
+    END LOOP;
   END LOOP;
   return response;
 end;
