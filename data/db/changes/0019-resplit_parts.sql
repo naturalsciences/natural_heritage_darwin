@@ -1,4 +1,6 @@
-﻿begin;
+﻿
+
+begin;
 
 ALTER TABLE specimen_parts DISABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
 
