@@ -91,8 +91,8 @@ declare
   result boolean := true;
 begin
   UPDATE specimen_parts
-  SET specimen_part_count_min = case when specimen_part_count_min = 1 then specimen_part_count_min else specimen_part_count_min - decrementVal end,
-      specimen_part_count_max = case when specimen_part_count_max = 1 then specimen_part_count_max else specimen_part_count_max - decrementVal end
+  SET specimen_part_count_min = case when specimen_part_count_min = 1 then specimen_part_count_min else case when specimen_part_count_min - decrementVal < 1 then 1 else specimen_part_count_min - decrementVal end end,
+      specimen_part_count_max = case when specimen_part_count_max = 1 then specimen_part_count_max else case when specimen_part_count_max - decrementVal < 1 then 1 else specimen_part_count_max - decrementVal end end
   WHERE id = partId;
   return result;
 exception when others then
