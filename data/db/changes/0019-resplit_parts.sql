@@ -1947,8 +1947,16 @@ $$;
 
 SELECT split_parts();
 
+DROP FUNCTION IF EXISTS moveOrCreateProp (specimen_parts.id%TYPE, specimen_parts.id%TYPE, recPartsDetail, recPartsDetail) CASCADE;
+DROP FUNCTION IF EXISTS createProperties (specimen_parts.id%TYPE, recPartsDetail) CASCADE;
+DROP FUNCTION IF EXISTS createNewPart(specimen_parts.id%TYPE, recPartsDetail) CASCADE;
 DROP TYPE IF EXISTS recPartsDetail CASCADE;
+DROP FUNCTION IF EXISTS decrementCount(specimen_parts.id%TYPE, bigint) CASCADE;
+DROP FUNCTION IF EXISTS createCodes(specimen_parts.id%TYPE, varchar) CASCADE;
+DROP FUNCTION IF EXISTS split_parts() CASCADE;
+DROP FUNCTION IF EXISTS resplit_parts () CASCADE;
+
 
 ALTER TABLE specimen_parts ENABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
 
-rollback;
+commit;
