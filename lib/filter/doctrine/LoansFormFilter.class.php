@@ -12,8 +12,6 @@ class LoansFormFilter extends BaseLoansFormFilter
 {
   public function configure()
   {
-    $this->useFields(array('name','from_date','to_date'));
-
     $this->addPagerItems();
     $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));
@@ -156,4 +154,5 @@ class LoansFormFilter extends BaseLoansFormFilter
     $this->filterByRight($query, $this->options['user']);
     return $query;
   }
+
 }

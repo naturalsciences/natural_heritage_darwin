@@ -1,0 +1,1 @@
+<?php include_partial('loanwidget/refComments',  array('table' => 'loan_items', 'eid' => $eid, 'form' => $form));?>

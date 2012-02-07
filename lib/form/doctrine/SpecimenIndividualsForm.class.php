@@ -487,4 +487,18 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
     }
     return parent::saveEmbeddedForms($con, $forms);
   }
+
+  public function getJavaScripts()
+  {
+    $javascripts=parent::getJavascripts();
+    $javascripts[]='/js/jquery-datepicker-lang.js';
+    return $javascripts;
+  }
+
+  public function getStylesheets()
+  {
+    $javascripts=parent::getStylesheets();
+    $javascripts['/css/ui.datepicker.css']='all';
+    return $javascripts;
+  }
 }

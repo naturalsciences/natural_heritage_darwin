@@ -13,7 +13,7 @@ class LoanItemsForm extends BaseLoanItemsForm
   public function configure()
   {
     $this->useFields(array('ig_ref','from_date', 'to_date','part_ref', 'details'));
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+    $yearsKeyVal = range(1970, intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
@@ -34,21 +34,17 @@ class LoanItemsForm extends BaseLoanItemsForm
         'years' => $years,
         'with_time' => false
       ),
-      array('class' => 'from_date')
+      array('class' => 'to_date')
     );
 
-    $this->validatorSchema['from_date'] = new fuzzyDateValidator(
+    $this->validatorSchema['from_date'] = new sfValidatorDate(
       array(
         'required' => false,
-        'from_date' => true,
-        'min' => $minDate,
-        'max' => $maxDate,
-       // 'empty_value' => $dateLowerBound,
-        'with_time' => false
+        'min' => $minDate->getDateTime(),
+        'date_format' => 'd/M/Y',
       ),
       array('invalid' => 'Invalid date "from"')
     );
-
 
     $this->widgetSchema['to_date'] = new widgetFormJQueryFuzzyDate(
       array(
@@ -58,18 +54,16 @@ class LoanItemsForm extends BaseLoanItemsForm
         'years' => $years,
         'with_time' => false
       ),
-      array('class' => 'from_date')
+      array('class' => 'to_date')
     );
 
-    $this->validatorSchema['to_date'] = new fuzzyDateValidator(
+    $this->validatorSchema['to_date'] = new sfValidatorDate(
       array(
         'required' => false,
-        'from_date' => false,
-        'min' => $minDate,
-        'max' => $maxDate,
-        'with_time' => false
+        'min' => $minDate->getDateTime(),
+        'date_format' => 'd/M/Y',
       ),
-      array('invalid' => 'Invalid date "to"')
+      array('invalid' => 'Invalid date "return"')
     );
 
     $this->widgetSchema['ig_ref'] = new widgetFormInputChecked(

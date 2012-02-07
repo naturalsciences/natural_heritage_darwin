@@ -17,6 +17,7 @@ class TagGroups extends BaseTagGroups
       'underground' => 'Underground',
       'road' => 'Road',
       'vegetation' => 'Vegetation',
+      'habitat' => 'Habitat',
       'other' => 'Other'
     );
 

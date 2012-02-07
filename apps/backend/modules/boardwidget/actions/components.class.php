@@ -93,4 +93,51 @@ class boardwidgetComponents extends sfComponents
   {
     $this->form = new InformativeWorkflowFormFilter() ;
   }  
+
+  public function executeMyLoans()
+  {
+    /**/
+    $this->pagerSlidingSize = intval(sfConfig::get('dw_pagerSlidingSize'));
+    $query = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId());
+
+
+    $count_q = clone $query;
+    $count_q = $count_q->select('count(*)')->removeDqlQueryPart('orderby')->limit(0);
+    $counted = new DoctrineCounted();
+    $counted->count_query = $count_q;
+
+    $pager = new DarwinPager($query,
+      $this->getRequestParameter('page',1),
+      5
+    );
+    $pager->setCountQuery($counted);
+
+    $this->pagerLayout = new PagerLayoutWithArrows($pager,
+      new Doctrine_Pager_Range_Sliding(
+        array('chunk' => $this->pagerSlidingSize)
+      ),
+      $this->getController()->genUrl('widgets/reloadContent?category=board&widget=myLoans') . '/page/{%page_number}'
+    );
+
+    $this->pagerLayout->setTemplate('<li><a href="{%url}">{%page}</a></li>');
+    $this->pagerLayout->setSelectedTemplate('<li>{%page}</li>');
+    $this->pagerLayout->setSeparatorTemplate('<span class="pager_separator">::</span>');
+
+    if (! $this->pagerLayout->getPager()->getExecuted())
+      $this->loans = $this->pagerLayout->execute();  
+
+    $this->myTotalLoans = $this->pagerLayout->getPager()->getNumResults();
+    $this->rights = Doctrine::getTable('LoanRights')->getEncodingRightsForUser($this->getUser()->getId());
+
+    if( count($this->loans) )
+    {
+      $ids = array();
+      foreach($this->loans as $loan)
+ 	$ids[] = $loan->getId();
+      
+      if( !empty($ids) )
+	$this->status = Doctrine::getTable('LoanStatus')->getFromLoans($ids);
+    }
+
+  }
 }

@@ -11,6 +11,8 @@ class InsurancesSubForm extends BaseInsurancesForm
 {
   public function configure()
   {
+    unset($this['date_from_mask'], 
+      $this['date_to_mask']);
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['referenced_relation'] = new sfValidatorString(array('required'=>false));
     $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    

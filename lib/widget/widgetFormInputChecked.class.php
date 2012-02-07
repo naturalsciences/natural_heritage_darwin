@@ -10,7 +10,7 @@ class widgetFormInputChecked extends sfWidgetFormInputHidden
         $this->addOption('behindScene', true);
         $this->addOption('method', '__toString');
         $this->addOption('notExistingAddDisplay', true);
-        $this->addOption('notExistingAddTitle', 'This entry do not exist. Would you like we had it ?');
+        $this->addOption('notExistingAddTitle', 'This entry does not exist. Would you like to add it ?');
         $this->addOption('notExistingAddValues', array('Yes', 'No'));
         $this->addOption('notExistingAddSelected', 0);
         $this->addOption('autocomplete', true);
@@ -21,14 +21,9 @@ class widgetFormInputChecked extends sfWidgetFormInputHidden
         $this->addOption('is_hidden', false);
     }
 
-  public function getJavaScripts()
-  {
-    return array('/js/jquery.autocomplete.js');
-  }
-
   public function getStylesheets()
   {
-    return array('/css/jquery.autocomplete.css' => 'all');
+    return array('/css/ui.datepicker.css' => 'all');
   }
 
   public function getName($value)
@@ -91,66 +86,61 @@ class widgetFormInputChecked extends sfWidgetFormInputHidden
     $input .= '</ul>';
     if(!function_exists('url_for'))
       sfContext::getInstance()->getConfiguration()->loadHelpers('Url');
-
-    $input .= sprintf(<<<EOF
+    
+    $input .=  sprintf(<<<EOF
 <script type="text/javascript">
-  var lastCaller;
-  function %1\$s_updateHiddenId (value, link_url)
-  {
-    $.ajax({type: "GET",
-            url: link_url,
-            data: {'searchedCrit' : value},
-            success: function(html){
-                                     if (html == 'not found')
-                                     {
-                                       if (lastCaller == 'onChange')
-                                       {
-                                         $('#%1\$s').closest('ul').children('li#toggledMsg').show("slow");
-                                       }
-                                     }
-                                     else
-                                     {
-                                       $('#%1\$s').closest('ul').children('li#toggledMsg').slideUp("fast");
-                                       $('#%8\$s').val(html);
-                                     }
-                                     showAfterRefresh($('#%1\$s').closest('.widget_content'));
-                                   }
-           });
-  }
 $(document).ready(function () {
-    var link_url = '%2\$s';
-    $('#%1\$s').live('change', function()
-    {
-      hideForRefresh($(this).closest('.widget_content'));
-      $(this).prev().val('');
-      toggledMsg = $(this).closest('ul').children('li#toggledMsg');
-      toggledMsg.find('option:first').attr('selected', "selected");
-      toggledMsg.find('option:last').removeAttr('selected');
-      lastCaller = "onChange";
-      %1\$s_updateHiddenId($(this).val(), link_url);
-    });
-    if ('%4\$s')
-    {
-      $("#%1\$s").autocomplete('%3\$s').setOptions({max: %5\$s, minChars: %6\$s, autoFill: '%7\$s'});
-      $("#%1\$s").result(function(event, data, formatted) 
-                         {
-                           hideForRefresh($(this).closest('.widget_content'));
-                           lastCaller = "result";
-                           %1\$s_updateHiddenId(formatted, link_url);
-                         });
-    }
-});
+    var cache = {},
+      lastXhr;
+      $('#%1\$s').autocomplete({
+      minLength: %6\$s,
+      source: function( request, response ) {
+        var term = request.term;
+        if ( term in cache ) {
+          response( cache[ term ] );
+          return;
+        }
+
+        lastXhr = $.get('%3\$s', {q : request.term, limit: %5\$s }, function( data, status, xhr ) {
+          ndata = data.split("\\n");
+          cache[ term ] = ndata;
+          if ( xhr === lastXhr ) {
+            response( ndata );
+          }
+        });
+      }
+    }).bind('blur',function (event) {
+        $(this).prev().val('');
+        $(this).closest('ul').find('#toggledMsg select').val(0);
+
+        $.ajax({type: "GET",
+            url: '%2\$s',
+            async:false, //Unfortunaley keep this to avoid racing condition
+            data: {'searchedCrit' : $(this).val()},
+            success: function(html){
+              if (html == 'not found') {
+                  $('#%1\$s').closest('ul').children('li#toggledMsg').show("slow");
+                  $('#%1\$s').trigger('missing');
+              }
+              else {
+                $('#%1\$s').closest('ul').children('li#toggledMsg').slideUp("fast");
+                $('#%8\$s').val(html);
+              }
+            }
+        });
+      });
+  });
 </script>
+
 EOF
-    ,
-    $showedInputName,
-    url_for($this->getOption('link_url')),
-    url_for($this->getOption('link_url').'Limited'),
-    $this->getOption('autocomplete'),
-    $this->getOption('autocomplete_max'),
-    $this->getOption('autocomplete_minChars'),
-    $this->getOption('autocomplete_autoFill'),
-    $this->generateId($name));
+ ,$showedInputName,
+  url_for($this->getOption('link_url')),
+  url_for($this->getOption('link_url').'Limited'),
+  $this->getOption('autocomplete'),
+  $this->getOption('autocomplete_max'),
+  $this->getOption('autocomplete_minChars'),
+  $this->getOption('autocomplete_autoFill'),
+  $this->generateId($name));
     return $input;
   }  
 }

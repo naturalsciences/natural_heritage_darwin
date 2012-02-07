@@ -12,4 +12,15 @@
  */
 class Loans extends BaseLoans
 {
+  public function getFromDateFormatted()
+  {
+    $dt = new DateTime($this->getFromDate());
+    return $dt->format('d/m/Y');
+  }
+
+  public function getToDateFormatted()
+  {
+    $dt = new DateTime($this->getToDate());
+    return $dt->format('d/m/Y');
+  }
 }

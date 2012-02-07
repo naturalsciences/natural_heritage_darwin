@@ -218,6 +218,8 @@ function postToUrl(url, params, newWindow)
 
 
 
+
+
 /**********************************
  * Specimen Search related functions
  * 

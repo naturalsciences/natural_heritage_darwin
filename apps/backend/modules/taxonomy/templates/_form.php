@@ -65,7 +65,9 @@
     </tfoot>
   </table>
 </form>
+<?php use_stylesheet('ui.datepicker.css'); ?>
 <script type="text/javascript">
+
 $(document).ready(function () {
   <?php if($form->hasErrors())
       echo "$('tr#parent_ref .button').show();";      
@@ -74,5 +76,19 @@ $(document).ready(function () {
   <?php if($form['level_ref']->getValue())  
       echo "$('#taxonomy_level_ref').trigger('change');" ; 
   ?>
+  $('#taxonomy_name').autocomplete({
+      minLength: 3,
+      source: function( request, response ) {
+        $.getJSON('<?php echo url_for('catalogue/completeName?table=taxonomy');?>', {term : request.term }, function( data) {
+            response( $.map( data, function( item ) {
+              return {
+                label: item.name,
+                value: item.name
+              }
+            }));
+
+        });
+      }
+    });
 });
 </script>

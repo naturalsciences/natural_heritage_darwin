@@ -6,8 +6,9 @@
     else
       $orderSign = '<span class="order_sign_up">&nbsp;&#9650;</span>';
   ?>
+
   <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
-  <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>
+  <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container' => '#loans_filter .results_container')); ?>
   <div class="results_container">
     <table class="results <?php if($is_choose) echo 'is_choose';?>">
       <thead>
@@ -15,16 +16,13 @@
           <th></th>
           <th class="hidden"></th>
           <th>
-            <a class="sort" href="<?php echo url_for($s_url.'&orderby=title'.( ($orderBy=='name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+            <a class="sort" href="<?php echo url_for($s_url.'&orderby=name'.( ($orderBy=='name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
               <?php echo __('Name');?>
-              <?php if($orderBy=='Name') echo $orderSign ?>
+              <?php if($orderBy=='name') echo $orderSign ?>
             </a>
           </th>
           <th>
-	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=status'.( ($orderBy=='status' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
 	      <?php echo __('Status');?>
-	      <?php if($orderBy=='family_name') echo $orderSign ?>
-	    </a>
           </th>
           <th>
 	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=from_date'.( ($orderBy=='from_date' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
@@ -52,12 +50,12 @@
           <tr class="rid_<?php echo $item->getId();?>">
             <td><?php echo image_tag('info.png',"title=info class=info");?></td>
             <td class="item_name"><?php echo $item->getName();?></td>
-            <td><?php echo $status[$item->getId()]->getStatus() ?></td>
+            <td><?php if(isset($status[$item->getId()])) echo $status[$item->getId()]->getFormattedStatus(); ?></td>
             <td class="datesNum">
-	      <?php echo $item->getFromDate();?>
+	      <?php echo $item->getFromDateFormatted();?>
             </td>
             <td class="datesNum">
-              <?php echo $item->getToDate();?>
+              <?php echo $item->getToDateFormatted();?>
             </td>            
             <td>
               <?php echo $item->getDescription();?>

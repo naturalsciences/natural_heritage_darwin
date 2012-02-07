@@ -136,7 +136,7 @@ class catalogueActions extends DarwinActions
       {
         $query = $form
                  ->getQuery()
-                 ->orderBy($this->orderBy .' '.$this->orderDir .', id' );
+                 ->orderBy($this->orderBy .' '.$this->orderDir);
         if($this->is_choose == 0)
           $query->andWhere('id > 0');
 
@@ -258,5 +258,10 @@ class catalogueActions extends DarwinActions
       return $this->renderText('{}'); // The record is a current name
     $item = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->find($current);
     return $this->renderText(json_encode(array('name'=>$item->getName(), 'id'=>$item->getId() )));
+  }
+
+  public function executeCompleteName(sfWebRequest $request) {
+    $result = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->completeaAsArray($request->getParameter('term'));
+    return $this->renderText(json_encode($result));
   }
 }

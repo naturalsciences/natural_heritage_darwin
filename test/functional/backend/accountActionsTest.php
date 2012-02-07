@@ -56,6 +56,7 @@ $browser->
   end()->
 
   followRedirect()->
+  followRedirect()->
 
   with('request')->begin()->
     isParameter('module', 'board')->

@@ -62,7 +62,8 @@ class IgsFormFilter extends BaseIgsFormFilter
   {
      if ($values != "")
      {
-       $query->andWhere("ig_num_indexed like concat(fullToIndex(?), '%') ", $values);
+       $conn_MGR = Doctrine_Manager::connection();
+       $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
      }
      return $query;
   }

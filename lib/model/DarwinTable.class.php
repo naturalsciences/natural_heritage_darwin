@@ -220,4 +220,20 @@ class DarwinTable extends Doctrine_Table
     $noRights = array_diff($ids,$rights_cols);
     return $noRights;
   }
+
+  public function completeaAsArray($name, $limit = 30)
+  {
+    $conn_MGR = Doctrine_Manager::connection();
+    $q = Doctrine_Query::create()
+         ->from($this->getTableName())
+         ->andWhere("name_order_by like concat(fulltoindex(".$conn_MGR->quote($name, 'string')."),'%') ")
+         ->orderBy('path ASC')
+         ->limit($limit);
+    $q_results = $q->execute();
+    $result = array();
+    foreach($q_results as $item) {
+      $result[] = array('name' => $item->getName(), 'name_order_by'=> $item->getNameOrderBy(), 'id'=> $item->getId() );
+    }
+    return $result;
+  }
 }

@@ -8,18 +8,26 @@
         <?php echo $spec->getStationVisible()?__("yes"):__("no") ; ?>
       </td>
     </tr>
-    <?php if($spec->getStationVisible() || (!$spec->getStationVisible() && $sf_user->isAtLeast(Users::ENCODER))) : ?>
+    <?php if(isset($gtu) && ($spec->getStationVisible() || (!$spec->getStationVisible() && $sf_user->isAtLeast(Users::ENCODER)))) : ?>
     <tr>
       <th><label><?php echo __('Sampling location code');?></label></th>
-      <td id="specimen_gtu_ref_code"><?php echo $spec->getGtuCode() ; ?></td>
+      <td id="specimen_gtu_ref_code"><?php echo $gtu->getCode() ; ?></td>
     </tr>
     <tr>
       <th><label><?php echo __('Latitude');?></label></th>
-      <td id="specimen_gtu_ref_lat"><?php echo $spec->Gtu->getLatitude() ; ?></td>
+      <td id="specimen_gtu_ref_lat"><?php echo $gtu->getLatitude() ; ?></td>
     </tr>
     <tr>
       <th><label><?php echo __('Longitude');?></label></th>
-      <td id="specimen_gtu_ref_lon"><?php echo $spec->Gtu->getLongitude(); ?></td>
+      <td id="specimen_gtu_ref_lon"><?php echo $gtu->getLongitude(); ?></td>
+    </tr>
+    <tr>
+      <th><label><?php echo __('Date from');?></label></th>
+      <td id="specimen_gtu_date_from" class="datesNum"><?php echo $gtu->getGtuToDateMasked(ESC_RAW);?></td>
+    </tr>
+    <tr>
+      <th><label><?php echo __('Date to');?></label></th>
+      <td id="specimen_gtu_date_to" class="datesNum"><?php echo $gtu->getGtuFromDateMasked(ESC_RAW);?></td>
     </tr>
     <tr>
       <th class="top_aligned">
@@ -27,13 +35,13 @@
       </th>
       <td>
         <div class="inline">
-          <?php echo $spec->Gtu->getName(ESC_RAW); ?>
+          <?php echo $gtu->getName(ESC_RAW); ?>
         </div>
       </td>
     </tr>
     <tr>
       <td colspan="2" id="specimen_gtu_ref_map">
-        <?php echo $spec->Gtu->getMap(ESC_RAW);?>
+        <?php echo $gtu->getMap(ESC_RAW);?>
       </td>
     </tr>
     <?php endif ; ?>

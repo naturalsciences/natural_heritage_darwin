@@ -7,9 +7,7 @@
       <?php echo __('Darwin is an <strong>Open Source</strong> tool for collection management.<br />
     It has been build by the IT departement of the Royal Belgian Institute of Natural Sciences.<br />');?>
     </p>
-  </div>
-  <div class="about_content">
-    <h2><?php echo __('Our Partners :');?></h2>
+    <br />
     <ul>
       <li>
         <a href="<?php echo __('http://www.naturalsciences.be');?>">
@@ -17,6 +15,12 @@
           <span><?php echo __('Royal Belgian Institute of Natural Sciences');?></span>
         </a>
       </li>
+    </ul>
+    <br />
+  </div>
+  <div class="about_content">
+    <h2><?php echo __('Our Partners :');?></h2>
+    <ul>
       <li>
         <a href="<?php echo __('http://www.belspo.be');?>">
           <?php echo image_tag('public/belspo_logo.jpg');?>

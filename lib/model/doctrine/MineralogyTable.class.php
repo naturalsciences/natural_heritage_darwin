@@ -15,9 +15,10 @@ class MineralogyTable extends DarwinTable
 
   public function fetchByCodeLimited($code, $limit)
   {
+    $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
          ->from('Mineralogy')
-         ->where("upper(code) like concat (upper(?), '%') ", $code)
+         ->where("upper(code) like concat (upper(".$conn_MGR->quote($code, 'string')."), '%') ")
          ->limit($limit)
          ->orderBy("code ASC");
     return $q->execute();

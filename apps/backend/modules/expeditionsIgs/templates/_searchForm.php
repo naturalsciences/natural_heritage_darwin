@@ -29,5 +29,11 @@
 <script type="text/javascript">
  $(document).ready(function () {
   $('.catalogue_expeditionigs').choose_form({});
+  $('#searchExpeditionIgs_ig_ref_name').bind('focus',function (event) {
+    $(this).removeClass('complete_missing');
+  }).bind('missing',function (event) {
+    $(this).addClass('complete_missing');
+  });
+
  });
 </script>

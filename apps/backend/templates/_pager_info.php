@@ -13,53 +13,7 @@
 
   <script type="text/javascript">
   $(document).ready(function () {
-    $(".rec_per_page").change(function (event)
-    {
-      event.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: $(this).closest('form').attr('action'),
-        data: $(this).closest('form').serialize(),
-        success: function(html) {
-          $(".search_results_content").html(html);
-          $('.search_results').slideDown();
-        }
-      });
-      
-      $(".search_results_content").html('<img src="/images/loader.gif" />');
-    });
-
-    $("a.sort").click(function (event)
-    {
-      event.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: $(this).attr("href"),
-        data: $(this).closest('form').serialize(),
-        success: function(html){
-          $(".search_results_content").html(html);
-          $('.search_results').slideDown();
-        }
-      });
-      $(".search_results_content").html('<img src="/images/loader.gif" />');
-      $(this).closest('form').attr('action', $(this).attr("href"))
-    });
-  
-    $(".pager a").click(function (event)
-    {
-      event.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: $(this).attr("href"),
-        data: $(this).closest('form').serialize(),
-        success: function(html){
-          $(".search_results_content").html(html);
-          $('.search_results').slideDown();
-        }
-      });
-      $(".search_results_content").html('<img src="/images/loader.gif" />');
-    });
-
+    $("<?php if(! isset($container)) echo ".results_container"; else echo $container;?>").pager({});
   });
   </script>
 <?php endif; ?>

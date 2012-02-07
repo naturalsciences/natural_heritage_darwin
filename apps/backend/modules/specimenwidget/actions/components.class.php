@@ -176,4 +176,5 @@ class specimenwidgetComponents extends sfComponents
     if(isset($this->form) )
       $this->eid = $this->form->getObject()->getId() ;
   }  
+
 }

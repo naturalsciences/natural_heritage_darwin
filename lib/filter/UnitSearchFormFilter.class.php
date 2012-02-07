@@ -580,10 +580,11 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
   {
      if ($values != "")
      {
-       $query->andWhere("ig_num_indexed like concat(fullToIndex(?), '%') ", $values);
+       $conn_MGR = Doctrine_Manager::connection();
+       $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
      }
      return $query;
-  }
+  } 
 
   public function addSexColumnQuery($query, $field, $val)
   {
@@ -614,7 +615,6 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
       $query->andWhere('i.type_search in ('.implode(',',$val).')');
     return $query ;
   }
-
 
   public function addStageColumnQuery($query, $field, $val)
   {
@@ -935,10 +935,10 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     if($val != '')
     {
       $query->andWhere("
-        (station_visible = true AND  gtu_code like ? )
+        (station_visible = true AND  LOWER(gtu_code) like ? )
         OR
         (station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
-          AND gtu_code like ? )", array(strtolower('%'.$val.'%'),strtolower('%'.$val.'%')));
+          AND LOWER(gtu_code) like ? )", array(strtolower('%'.$val.'%'),strtolower('%'.$val.'%')));
       $query->whereParenWrap();
     }
     return $query ;  
@@ -1136,15 +1136,24 @@ class UnitSearchFormFilter extends BaseSpecimensFormFilter
     $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);    
     $this->addDateFromToColumnQuery($query, array('acquisition_date'), $values['acquisition_from_date'], $values['acquisition_to_date']);
 
-    $this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'Taxonomy','taxon');
-    $this->addCatalogueRelationColumnQuery($query, $values['chrono_item_ref'], $values['chrono_relation'],'Chronostratigraphy','chrono');
-    $this->addCatalogueRelationColumnQuery($query, $values['litho_item_ref'], $values['litho_relation'],'Lithostratigraphy','litho');
-    $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'Lithology','lithology');
-    $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'Mineralogy','mineral');
+    $this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');
+    $this->addCatalogueRelationColumnQuery($query, $values['chrono_item_ref'], $values['chrono_relation'],'chronostratigraphy','chrono');
+    $this->addCatalogueRelationColumnQuery($query, $values['litho_item_ref'], $values['litho_relation'],'lithostratigraphy','litho');
+    $this->addCatalogueRelationColumnQuery($query, $values['lithology_item_ref'], $values['lithology_relation'],'lithology','lithology');
+    $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral');
 
     $query->limit($this->getCatalogueRecLimits());
 
     return $query;
   }
+
+  public function getJavaScripts()
+  {
+    $javascripts=parent::getJavascripts();
+    $javascripts[]='/js/OpenLayers.js';
+    $javascripts[]='/js/map.js';
+    return $javascripts;
+  }
+
 
 }

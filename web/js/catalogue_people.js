@@ -34,7 +34,7 @@
             adjust:{
               y: 250 // option set in case of the qtip become too big
             },         
-            target: $(document.body),
+            target: $(document.body)
           },
           show: {
             ready: true,
@@ -44,7 +44,7 @@
             modal: {
               on: true,
               blur: false
-            },
+            }
           },
           hide: {
             event: 'close_modal',

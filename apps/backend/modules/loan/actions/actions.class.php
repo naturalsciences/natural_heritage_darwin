@@ -10,8 +10,27 @@
  */
 class loanActions extends DarwinActions
 {
-  protected $widgetCategory = 'loans';
+  protected $widgetCategory = 'loan_widget';
+  
+  protected function getLoanForm(sfWebRequest $request, $fwd404=false, $parameter='id')
+  {
+    $loan = null;
 
+    if ($fwd404)
+      return $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter,0)));
+
+    if($request->hasParameter($parameter) && $request->getParameter($parameter) && $request->getParameter('table','loans')== 'loans')
+    {
+      $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter) );
+      $form = new LoansForm($loan);
+    }else
+    {
+      $loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
+      $form = new LoanItemWidgetForm($loan);
+    }
+    return $form;
+  }
+  
   public function executeIndex(sfWebRequest $request)
   {
     $this->form = new LoansFormFilter(null,array('user' => $this->getUser()));
@@ -37,7 +56,7 @@ class loanActions extends DarwinActions
           $this->currentPage,
           $this->form->getValue('rec_per_page')
         );
-        $count_q = clone $query;//$pager->getCountQuery();
+        $count_q = clone $query;
         $count_q = $count_q->select('count(*)')->removeDqlQueryPart('orderby')->limit(0);
         $counted = new DoctrineCounted();
         $counted->count_query = $count_q;
@@ -79,6 +98,7 @@ class loanActions extends DarwinActions
     if ($duplic)
     {
     }
+    $this->loadWidgets();    
   }
 
 
@@ -88,12 +108,14 @@ class loanActions extends DarwinActions
     $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
     $this->form = new LoansForm($loan);
     $this->loadWidgets();
+    $this->setTemplate('new') ;    
   }
 
 
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
+  //  die(print_r($request->getParameter($form->getName()))) ;
     $form->bind($request->getParameter($form->getName()));
     if ($form->isValid())
     {
@@ -108,6 +130,22 @@ class loanActions extends DarwinActions
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
         $form->getErrorSchema()->addError($error); 
       }
+    }
+  }
+
+  public function executeViewAll(sfWebRequest $request)
+  {  
+    $this->loans = Doctrine::getTable('Loans')->getMyLoans($this->getUser()->getId())->execute(); 
+    $this->rights = Doctrine::getTable('LoanRights')->getEncodingRightsForUser($this->getUser()->getId());
+
+    if( count($this->loans) )
+    {
+      $ids = array();
+      foreach($this->loans as $loan)
+ 	$ids[] = $loan->getId();
+      
+      if( !empty($ids) )
+	$this->status = Doctrine::getTable('LoanStatus')->getFromLoans($ids);
     }
   }
 
@@ -138,7 +176,9 @@ class loanActions extends DarwinActions
     $this->form = new LoansForm();
     // Process the form for saving informations
     $this->processForm($request, $this->form);
+    $this->loadWidgets();    
     $this->setTemplate('new');
+    
   }
   public function executeUpdate(sfWebRequest $request)
   {
@@ -147,7 +187,7 @@ class loanActions extends DarwinActions
     $this->form = new LoansForm($loan);
     $this->processForm($request, $this->form);
     $this->loadWidgets();
-    $this->setTemplate('edit');
+    $this->setTemplate('new');
   }
 
   public function executeOverview(sfWebRequest $request) {
@@ -189,4 +229,71 @@ class loanActions extends DarwinActions
     $this->forward404Unless($item = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id')),'Part does not exist');  
     return $this->renderPartial('extInfo',array('item' => $item)); 
   }
+  
+  public function executeAddActors(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $people_ref = intval($request->getParameter('people_ref')) ;
+    $form = $this->getLoanForm($request);
+    if ($request->getParameter('type') == 'sender')
+    {
+      $form->addActorsSender($number,$people_ref,$request->getParameter('order_by',0));    
+      return $this->renderPartial('actors_association',array('type'=>'sender','form' => $form['newActorsSender'][$number], 'row_num'=>$number));        
+    }
+    $form->addActorsReceiver($number,$people_ref,$request->getParameter('order_by',0));
+    return $this->renderPartial('actors_association',array('type'=>'receiver','form' => $form['newActorsReceiver'][$number], 'row_num'=>$number));  
+  }
+
+  public function executeAddUsers(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $user_ref = intval($request->getParameter('user_ref')) ;
+    $form = $this->getLoanForm($request);
+    $form->addUsers($number,$user_ref,$request->getParameter('order_by',0));
+    return $this->renderPartial('darwin_user',array('form' => $form['newUsers'][$number], 'row_num'=>$number));  
+  }
+  
+  public function executeAddComments(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $form = $this->getLoanForm($request);
+    $form->addComments($number);
+    return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
+  }
+    
+  public function executeAddInsurance(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $form = $this->getLoanForm($request);
+    $form->addInsurances($number);
+    return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
+  }  
+  
+  public function executeAddStatus(sfWebRequest $request)
+  {    
+    if($request->isXmlHttpRequest()) 
+    {    
+      $form = new InformativeWorkflowForm(null, array('available_status' => LoanStatus::getAvailableStatus())) ;
+      $form->bind(array('comment'=>$request->getParameter('comment'),'status'=>$request->getParameter('status'))) ;
+      if($form->isValid())
+      {        
+        $data = array(
+            'loan_ref' => $request->getParameter('id'),
+            'status' => $request->getParameter('status'),   
+            'comment' => $request->getParameter('comment'),    
+            'user_ref' => $this->getUser()->getId()) ;    
+            
+        $loanstatus = new LoanStatus() ;
+        $loanstatus->fromArray($data) ;
+        $loanstatus->save() ;
+      }
+      // else : nothing append, and it's a good thing
+      return $this->renderText('ok') ;
+    }
+    $this->redirect('board/index') ;
+  }  
 }

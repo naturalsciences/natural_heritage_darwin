@@ -1,8 +1,12 @@
-<tr>
-  <td><?php echo $form->renderError();?></td>
+<tr class="line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
+  <td>
+    <?php echo $form->renderError();?>
+    <?php if(!$lineObj->isNew()):?>
+      <input value="<?php echo $lineObj->getId();?>" type="checkbox" class="select_chk_box" />
+    <?php endif;?>
+  </td>
   <td>
       <?php echo image_tag('info.png',"title=info class=extd_info");?>
-
     <?php echo $form['part_ref']->renderError();?>
     <?php echo $form['part_ref'];?>
   </td>
@@ -25,7 +29,7 @@
   </td>
   <td>
     <?php if(! $lineObj->isNew()):?>
-      <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),'loan/itemEdit?id='.$lineObj->getId());?>
+      <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),'loanitem/edit?id='.$lineObj->getId());?>
     <?php endif;?>
   </td>
 
@@ -42,6 +46,22 @@
     });
 
     bind_ext_line('<?php echo $form->getparent()->getName();?>',  '<?php echo $form->getName();?>')
+
+
+    $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> [id$=\"_ig_ref_check\"]").change(function(){
+      if($(this).val()) 
+      {
+        $.ajax({
+          type: 'POST',
+          url: "<?php echo url_for('igs/addNew') ?>",
+          data: "num=" + $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> [id$=\"_ig_ref_name\"]").val(),
+          success: function(html){
+            $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> li#toggledMsg").hide();
+            $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> [id$=\"_ig_ref\"]").val(html) ;
+          }
+        });  
+      }
+    }) ;
   });
 </script>
 

@@ -111,4 +111,11 @@ class Users extends BaseUsers
     }
     return $count_widget;
   }
+  
+  public function getCorrespondingImage()
+  {
+    if(!$this->getIsPhysical()) return "user_suit_moral.png" ;
+    if($this->getGender() == 'M') return "user_suit_m.png" ;
+    return "user_suit_f.png" ;
+  }  
 }

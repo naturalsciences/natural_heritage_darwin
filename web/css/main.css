@@ -1279,7 +1279,7 @@ table.edit_synon td
   text-align:right;
 }
 
-.edition input[type="submit"], .edition button, .edition input[type="reset"], .edition tfoot a, .renamed input[type="submit"], .renamed button, .renamed tfoot a, .bt_close_green a, .form_buttons a,
+.edition input[type="button"], .edition input[type="submit"], .edition button, .edition input[type="reset"], .edition tfoot a, .renamed input[type="submit"], .renamed button, .renamed tfoot a, .bt_close_green a, .form_buttons a,
 .edition a.but
 {
   border:1px solid #C1CC33;
@@ -2040,6 +2040,24 @@ tr.tag_line input
   background-color:white;
 }
 
+#myLoans .show_table tbody {
+  background-color:#E9F2F7;
+}
+
+#myLoans .show_table tbody tr:nth-child(odd)
+{
+  background-color:white;
+}
+
+#myLoansViewAllTable .show_table  tbody{
+  background-color:#E9F2F7;
+}
+
+#myLoansViewAllTable .show_table tbody tr:nth-child(odd)
+{
+  background-color:white;
+}
+
 #myChangesPlotted  .widget_content a, #myChangesPlotted  .widget_content  a[href], .maintenace_form table a
 {
   background-color: #55AFC5;
@@ -2768,6 +2786,73 @@ input[type='file']
 }
 #broadcast_bottom span { font-size: small; }
 #broadcast_bottom_padding { height :2em;}
+
 .inline.hidden {
   display:none;
+}
+
+
+/*
+ * jQuery UI Menu 1.8.17
+ *
+ * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Menu#theming
+ */
+.ui-menu {
+	list-style:none;
+	padding: 2px;
+	margin: 0;
+	display:block;
+	float: left;
+}
+.ui-menu .ui-menu {
+	margin-top: -3px;
+}
+.ui-menu .ui-menu-item {
+	margin:0;
+	padding: 0;
+	zoom: 1;
+	float: left;
+	clear: left;
+	width: 100%;
+}
+.ui-menu .ui-menu-item a {
+	text-decoration:none;
+	display:block;
+	padding:.2em .4em;
+	line-height:1.5;
+	zoom:1;
+}
+.ui-menu .ui-menu-item a.ui-state-hover,
+.ui-menu .ui-menu-item a.ui-state-active {
+	font-weight: normal;
+	margin: -1px;
+}
+.ui-autocomplete-loading { background: white url('/images/loader.gif') right center no-repeat; }
+
+.ui-autocomplete {
+		max-height: 100px;
+		overflow-y: auto;
+		/* prevent horizontal scrollbar */
+		overflow-x: hidden;
+		overflow:hidden;
+		/* add padding to account for vertical scrollbar */
+		padding-right: 20px;
+	}	
+.ui-autocomplete { position: absolute; cursor: default; }	
+
+input.complete_missing {
+  border: 1px solid red;
+}
+
+.loan_overview_form thead {
+    border-bottom: 1px solid #C1CF56;
+}
+.loan_overview_form .form_buttons
+{
+  margin-top: 1em;
+  margin-bottom: 1em;
 }

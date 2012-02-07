@@ -125,7 +125,7 @@ BEGIN
     temp_string := translate(temp_string, 'ìíîïìĩīĭÌÍÎÏÌĨĪĬ', 'iiiiiiiiiiiiiiii');
     temp_string := translate(temp_string, 'óôõöōŏőÒÓÔÕÖŌŎŐ', 'ooooooooooooooo');
     temp_string := translate(temp_string, 'ùúûüũūŭůÙÚÛÜŨŪŬŮ', 'uuuuuuuuuuuuuuuu');
-    temp_string := REPLACE(to_indexed, 'Œ', 'oe');
+    temp_string := REPLACE(temp_string, 'Œ', 'oe');
     temp_string := REPLACE(temp_string, 'Ӕ', 'ae');
     temp_string := REPLACE(temp_string, 'œ', 'oe');
     temp_string := REPLACE(temp_string, 'æ', 'ae');
@@ -1069,7 +1069,7 @@ BEGIN
         RETURN fct_cpy_temperature_conversion(r_val, property_unit)::text;
     END IF;
 
-    IF property_type = 'length' AND property_unit IN ('m', 'dm', 'cm', 'mm', 'µm', 'nm', 'pm', 'fm', 'am', 'zm', 'ym', 'am', 'dam', 'hm', 'km', 'Mm', 'Gm', 'Tm', 'Pm', 'Em', 'Zm', 'Ym', 'mam', 'mom', 'Å', 'ua', 'ch', 'fathom', 'fermi', 'ft', 'in', 'K', 'l.y.', 'ly', 'µ', 'mil', 'mi', 'nautical mi', 'pc', 'point', 'pt', 'pica', 'rd', 'yd', 'arp', 'lieue', 'league', 'cal', 'twp', 'p', 'P', 'fur', 'brasse', 'vadem', 'fms') THEN
+    IF property_type IN ('length') AND property_unit IN ('m', 'dm', 'cm', 'mm', 'µm', 'nm', 'pm', 'fm', 'am', 'zm', 'ym', 'am', 'dam', 'hm', 'km', 'Mm', 'Gm', 'Tm', 'Pm', 'Em', 'Zm', 'Ym', 'mam', 'mom', 'Å', 'ua', 'ch', 'fathom', 'fermi', 'ft', 'in', 'K', 'l.y.', 'ly', 'µ', 'mil', 'mi', 'nautical mi', 'pc', 'point', 'pt', 'pica', 'rd', 'yd', 'arp', 'lieue', 'league', 'cal', 'twp', 'p', 'P', 'fur', 'brasse', 'vadem', 'fms') THEN
         RETURN fct_cpy_length_conversion(r_val, property_unit)::text;
     END IF;
 
@@ -2078,12 +2078,26 @@ END;
 $$
 language plpgsql;
 
-CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER
+CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER IMMUTABLE
 AS $$
 DECLARE v_int_value INTEGER DEFAULT 0;
 BEGIN
     BEGIN
         v_int_value := v_input::INTEGER;
+    EXCEPTION WHEN OTHERS THEN
+/*        RAISE NOTICE 'Invalid integer value: "%".  Returning NULL.', v_input;*/
+        RETURN 0;
+    END;
+RETURN v_int_value;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION convert_to_real(v_input varchar) RETURNS REAL IMMUTABLE
+AS $$
+DECLARE v_int_value REAL DEFAULT 0;
+BEGIN
+    BEGIN
+        v_int_value := v_input::REAL;
     EXCEPTION WHEN OTHERS THEN
 /*        RAISE NOTICE 'Invalid integer value: "%".  Returning NULL.', v_input;*/
         RETURN 0;
@@ -2440,7 +2454,7 @@ END;
 $$;
 
 /*Function to split a catalogue unit path and try to find the corresponding unit opf a given level*/
-create or replace function getSpecificParentForLevel(referenced_relation IN catalogue_levels.level_type%TYPE, path IN template_classifications.path%TYPE, level_searched IN catalogue_levels.level_name%TYPE) RETURNS template_classifications.name%TYPE LANGUAGE plpgsql AS
+create or replace function getSpecificParentForLevel(referenced_relation IN catalogue_levels.level_type%TYPE, path IN template_classifications.path%TYPE, level_searched IN catalogue_levels.level_name%TYPE) RETURNS template_classifications.name%TYPE LANGUAGE plpgsql IMMUTABLE AS
 $$
 DECLARE
   response template_classifications.name%TYPE := ''; 

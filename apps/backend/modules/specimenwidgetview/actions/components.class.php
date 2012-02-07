@@ -79,6 +79,10 @@ class specimenwidgetviewComponents extends sfComponents
   public function executeRefGtu()
   {
     $this->defineObject();
+    if($this->spec->getGtuRef())
+    {
+      $this->gtu = Doctrine::getTable('Gtu')->find($this->spec->getGtuRef());
+    }
   }
 
   public function executeRefHosts()

@@ -22,6 +22,7 @@ abstract class BaseLoansForm extends BaseFormDoctrine
       'from_date'         => new sfWidgetFormTextarea(),
       'to_date'           => new sfWidgetFormTextarea(),
       'effective_to_date' => new sfWidgetFormTextarea(),
+      'extended_to_date'  => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -32,6 +33,7 @@ abstract class BaseLoansForm extends BaseFormDoctrine
       'from_date'         => new sfValidatorString(array('required' => false)),
       'to_date'           => new sfValidatorString(array('required' => false)),
       'effective_to_date' => new sfValidatorString(array('required' => false)),
+      'extended_to_date'  => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('loans[%s]');

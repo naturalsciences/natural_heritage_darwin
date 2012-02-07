@@ -42,7 +42,10 @@ function initMap(mapId)
   mapnik = new OpenLayers.Layer.OSM();
   mapnik.addOptions({wrapDateLine:true});
   map.addLayer(mapnik);
-
+  
+  vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", { displayInLayerSwitcher: false, projection: new OpenLayers.Projection("EPSG:4326")});
+  map.addLayers([vectorLayer]);
+    
   if(with_gmap) {
     // the SATELLITE layer has all 22 zoom level, so we add it first to
     // become the internal base layer that determines the zoom levels of the
@@ -63,8 +66,7 @@ function initMap(mapId)
         "Google Hybrid",
         {sphericalMercator: true,type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false}
     );
-    vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", { displayInLayerSwitcher: false, projection: new OpenLayers.Projection("EPSG:4326")});
-    map.addLayers([gsat, gphy, gmap, ghyb,vectorLayer]);
+    map.addLayers([gsat, gphy, gmap, ghyb]);
   }
   
 
@@ -125,18 +127,18 @@ function drawLatLong()
   marker = addMarkerToMap(lonlat, null);
   drawAccuracy();
 }
-
 function fetchElevation(lonlat)
 {
-  ////GOOGLE ELE
-  glatlng = new google.maps.LatLng(lonlat.lat,lonlat.lon);
-  elevator = new google.maps.ElevationService();
-  positionalRequest = {'locations': [glatlng] };
-  elevator.getElevationForLocations(positionalRequest, function(results, status) 
-  {
-    if (status == google.maps.ElevationStatus.OK && results[0]) 
-    {
-      $('#gtu_elevation').val(results[0].elevation.toFixed(3));
+  $.ajax({
+    type: "GET",
+    dataType: 'JSONP',
+    url: 'http://open.mapquestapi.com/elevation/v1/getElevationProfile',
+    data : {inFormat:'kvp', outFormat: 'json', latLngCollection: lonlat.lat+','+lonlat.lon, unit:'m', shapeFormat: 'raw'},
+    success: function(data){
+      if(data.elevationProfile[0])
+        $('#gtu_elevation').val(data.elevationProfile[0].height);
+      else
+        $('#gtu_elevation').val(0);
     }
   });
 }
@@ -180,7 +182,6 @@ function setPoint( e )
   $('#gtu_longitude').val(lonlat.lon);
   fetchElevation(lonlat);
   //fetchPositions(lonlat,map.getZoom());
-  //// GOOGLE ELE
   drawLatLong();
   drawAccuracy();
 }
@@ -190,8 +191,7 @@ function addMarkerToMap(position, icon)
   var marker = new OpenLayers.Marker(position.clone().transform(epsg4326, map.getProjectionObject()), icon);
   markers.addMarker(marker);
 
-            // create a point feature
-
+  // create a point feature
   drawAccuracy();
   return marker;
 }
