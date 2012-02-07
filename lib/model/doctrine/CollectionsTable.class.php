@@ -8,11 +8,12 @@ class CollectionsTable extends DarwinTable
     public function fetchByInstitutionList($user, $institutionId = null, $public_only = false, $only_encodable = false)
     {
       $q = Doctrine_Query::create()
-            ->select('p.*, col.*,r.id,r.db_user_type, CONCAT(col.path,col.id,E\'/\') as col_path_id')
+            ->select('p.*, col.*,r.id,r.db_user_type, CONCAT(col.path,col.id,E\'/\') as col_path_id,  regexp_split_to_array(CONCAT(col.path,col.id,E\'/\'), E\'/\') as col_path_id2')
             ->from('People p')
             ->innerJoin('p.Collections col')
             ->andWhere('p.is_physical = false')
-            ->orderBy('p.id ASC, col_path_id ASC, col.name ASC');
+            ->orderBy('p.id ASC, col_path_id2 ASC, col.name ASC');
+
 
       if($user && ! $user->isA(Users::ADMIN) )
       {
