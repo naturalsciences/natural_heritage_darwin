@@ -2108,10 +2108,11 @@ Multimedia:
         title: { type: string, notnull: true}
         description: { type: string, notnull: true, default:''}
         uri: { type: string }
+        filename: : { type: string }
         search_ts: { type: string }
         creation_date: { type: string, notnull: true, default: '0001-01-01'}
         creation_date_mask: { type: integer, notnull: true, default:0}
-        mime_type: { type: string },
+        mime_type: { type: string }
 
 
 Loans:

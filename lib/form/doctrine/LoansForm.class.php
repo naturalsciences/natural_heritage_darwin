@@ -19,9 +19,10 @@ class LoansForm extends BaseLoansForm
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
-
+    //Loan form is submited to upload file, when called like that we don't want some fields to be required
+    $required = isset($this->options['no_name'])?false:true ;
     $this->widgetSchema['name'] = new sfWidgetFormInput();
-    $this->validatorSchema['name'] = new sfValidatorString(array('required' => true)) ;
+    $this->validatorSchema['name'] = new sfValidatorString(array('required' => $required)) ;
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
@@ -117,13 +118,14 @@ class LoansForm extends BaseLoansForm
     );
     
     /* input file for related files */
-    $this->widgetSchema['filenames'] = new sfWidgetFormInputFile(array(),array('class' => 'Add_related_file'));        
+    $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
+    $this->widgetSchema['filenames']->setLabel("Add File") ;
+    $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
 $this->validatorSchema['filenames'] = new sfValidatorFile(
   array(
       'required' => false,
       'validated_file_class' => 'myValidatedFile'
-  )); 
-    
+  ));  
 
     $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
@@ -277,15 +279,15 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
     $this->embedForm('newInsurance',$subForm);
   }
 
-  public function addRelatedFiles($num, $file=null)
+  public function addRelatedFiles($num,$file=null)
   {
     if(! isset($this['newRelatedFiles'])) $this->loadEmbedRelatedFiles();
     $options = array('referenced_relation' => 'loans');
+    if($file) $options = $file ;
     $val = new Multimedia();
     $val->fromArray($options);
     $val->setRecordId($this->getObject()->getId());
-    $val->setTitle($file) ;
-    $form = new MultimediaForm($val,array('file'=>$file));
+    $form = new MultimediaForm($val);
     $this->embeddedForms['newRelatedFiles']->embedForm($num, $form);
     //Re-embedding the container
     $this->embedForm('newRelatedFiles', $this->embeddedForms['newRelatedFiles']);
@@ -302,7 +304,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
     {
       foreach(Doctrine::getTable('Multimedia')->findForTable('loans', $this->getObject()->getId()) as $key=>$vals)
       {
-        $form = new MultimadiaForm($vals,array('table' => 'loans'));
+        $form = new MultimediaForm($vals);
         $this->embeddedForms['RelatedFiles']->embedForm($key, $form);
       }
       //Re-embedding the container
@@ -321,7 +323,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
       else $val = $obj ; 
       $val->fromArray($options);
       $val->setRecordId($this->getObject()->getId());
-      $form = new CommentsSubForm($val,array('table' => 'loans', 'line_display' => true));
+      $form = new CommentsSubForm($val,array('table' => 'loans'));
       $this->embeddedForms['newComments']->embedForm($num, $form);
       //Re-embedding the container
       $this->embedForm('newComments', $this->embeddedForms['newComments']);
@@ -484,7 +486,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
         {
           if (!isset($this['newRelatedFiles'][$key]))
           {
-            $this->addRelatedFiles($key,$newVal['filename']);
+            $this->addRelatedFiles($key);
           }
           $taintedValues['newRelatedFiles'][$key]['record_id'] = 0;
         }
@@ -492,7 +494,12 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
     }     
     parent::bind($taintedValues, $taintedFiles);   
   }
-
+  
+  public function save($con = null)
+  {
+    $this->offsetUnset('filenames');
+    return parent::save($con);
+  }
   public function saveEmbeddedForms($con = null, $forms = null)
   {
     if (null === $forms && $this->getValue('comment'))
@@ -604,27 +611,30 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
         }
       }
     }  
-    if (null === $forms && $this->getValue('relatedfiles'))
-    {
+    if (null === $forms && $this->getValue('relatedfile'))
+    {  
       $value = $this->getValue('newRelatedFiles');
       foreach($this->embeddedForms['newRelatedFiles']->getEmbeddedForms() as $name => $form)
       {
         if(!isset($value[$name]['referenced_relation']))
           unset($this->embeddedForms['newRelatedFiles'][$name]);
         else
+        {
           $form->getObject()->setRecordId($this->getObject()->getId());
+          $form->getObject()->changeUri() ;
+        }
       }
 
       $value = $this->getValue('RelatedFiles');
       foreach($this->embeddedForms['RelatedFiles']->getEmbeddedForms() as $name => $form)
       {
-        if (!isset($value[$name]['title']))
+        if (!isset($value[$name]['referenced_relation']))
         {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['RelatedFiles'][$name]);
+          $form->getObject()->deleteObjectAndFile();
+          unset($this->embeddedForms['RelatedFiles'][$name]);          
         }
       }
-    }                 
+    }            
     return parent::saveEmbeddedForms($con, $forms);
   }   
   

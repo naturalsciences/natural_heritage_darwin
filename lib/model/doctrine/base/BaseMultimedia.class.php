@@ -14,6 +14,7 @@
  * @property string $title
  * @property string $description
  * @property string $uri
+ * @property : { type: string } $filename
  * @property string $search_ts
  * @property string $creation_date
  * @property integer $creation_date_mask
@@ -92,6 +93,9 @@ abstract class BaseMultimedia extends sfDoctrineRecord
              ));
         $this->hasColumn('uri', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('filename', ': { type: string }', null, array(
+             'type' => ': { type: string }',
              ));
         $this->hasColumn('search_ts', 'string', null, array(
              'type' => 'string',

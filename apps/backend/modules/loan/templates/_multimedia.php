@@ -6,10 +6,15 @@
   </td>
   <td><?php echo $form['description']->render() ; ?></td>  
   <td>
-    <?php echo $form['filename']->renderLabel(); ?>
+    <?php if(isset($edit)) : ?>
+      <?php echo link_to($form['filename']->getValue()." ".image_tag('criteria.png'),
+                         'multimedia/downloadFile?id='.$form['id']->getValue()) ; ?>
+    <?php else : ?>
+      <?php echo $form['filename']->getValue(); ?>
+    <?php endif ; ?>
   </td>
-  <td></td>
-  <td></td>
+  <td><?php echo $form['mime_type']->getValue() ; ?></td>
+  <td><?php echo $form['creation_date']->getValue(); ?></td>
   <td class="widget_row_delete">
     <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_file_'.$row_num); ?>
     <?php echo $form->renderHiddenFields();?>

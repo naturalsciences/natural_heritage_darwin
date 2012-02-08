@@ -28,8 +28,7 @@
  
 <script  type="text/javascript">
 $(document).ready(function () {
- // $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>'});
- // $('body').catalogue({});
+
   $('#add_comment').click( function()
   {
       hideForRefresh('#refComment');

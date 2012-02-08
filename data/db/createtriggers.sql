@@ -300,9 +300,9 @@ CREATE TRIGGER trg_cpy_FormattedName BEFORE INSERT OR UPDATE
 	ON users FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_FormattedName();
 
-CREATE TRIGGER trg_cpy_path_multimedia BEFORE INSERT OR UPDATE
+/*CREATE TRIGGER trg_cpy_path_multimedia BEFORE INSERT OR UPDATE
 	ON multimedia FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_path();
+	EXECUTE PROCEDURE fct_cpy_path();*/
 
 CREATE TRIGGER trg_cpy_path_collections BEFORE INSERT OR UPDATE
 	ON collections FOR EACH ROW

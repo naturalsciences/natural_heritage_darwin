@@ -14,7 +14,7 @@
         <?php echo __('Format'); ?>
       </th>
       <th>
-        <?php echo __('Updated on') ; ?>
+        <?php echo __('Created At') ; ?>
       </th>
       <th>
 	      <?php echo $form['relatedfile'];?>
@@ -24,21 +24,28 @@
   <tbody id="file_body">
     <?php $retainedKey = 0;?>
     <?php foreach($form['RelatedFiles'] as $form_value):?>
-      <?php include_partial('loan/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'new' => true));?>
+      <?php include_partial('loan/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'edit' => true));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
     <?php foreach($form['newRelatedFiles'] as $form_value):?>
-      <?php include_partial('loan/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'new' => false));?>
+      <?php include_partial('loan/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
   </tbody>
   <tfoot>
     <tr>
-      <td colspan='5'><?php echo $form['filenames'];?>
+      <td colspan='5'>
+        <ul class="error_list" id="file_error_message" style="display:none">
+          <li></li>
+        </ul>
+        <div class="relatedFile">
+          <?php echo $form['filenames']->renderLabel();?>
+          <?php echo $form['filenames'];?>
+        </div>
         <div class="add_code">
           <a href="<?php echo url_for('loan/addRelatedFiles'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_file" class="hidden"></a>
         </div>
-        <iframe name="hiddenFrame" class="little-frame">
+        <iframe name="hiddenFrame" id="hiddenFrame" class="little-frame">
         </iframe>
       </td>
     </tr>
@@ -48,25 +55,40 @@
   $(document).ready(function () {
     $('.Add_related_file').change(function()
     {
+      hideFileError();
       name = $(this).val().replace(/C:\\fakepath\\/i, '') ;
       form = $(this).closest('form') ;
-      form.attr('action','<?php echo url_for("loan/insertFile?table=loans".(isset($eid)?"&id=".$eid:'')) ;?>') ;
+      form.attr('action','<?php echo url_for("loan/insertFile?table=loans".($form->getObject()->isNew()?"":"&id=".$form->getObject()->getId())) ;?>') ;
       form.attr('target','hiddenFrame') ;
       form.submit();
-      hideForRefresh('#refRelatedFiles');
-      parent_el = $(this).closest('table.property_values');
-      $.ajax(
-      {
-        type: "GET",
-        url: $('#add_file').attr('href')+ (0+$('#file_body').find('tr').length)+'/title/'+name,
-        success: function(html)
-        {
-          $('#file_body').append(html);
-          $(parent_el).find('thead:hidden').show();
-          showAfterRefresh('#refRelatedFiles');
-        }
-      });
       return false;
     });
+    
+    $('#clear_file_error').click(function() { hideFileError(); });
   });
+  function getFileInfo(file_id) 
+  {
+    hideForRefresh('#refRelatedFiles');  
+    parent_el = $(this).closest('table.property_values');
+    $.ajax(
+    {
+      type: "GET",
+      url: $('#add_file').attr('href')+ (0+$('#file_body tr').length)+'/file_id/'+file_id,
+      success: function(html)
+      {
+        $('#file_body').append(html);
+        $(parent_el).find('thead:hidden').show();
+        showAfterRefresh('#refRelatedFiles');
+      }
+    });
+  }  
+  function displayFileError(err_msg)
+  {
+    $('#file_error_message li:first').html(err_msg) ;
+    $('#file_error_message').show() ;
+  }
+  function hideFileError()
+  {
+    $('#file_error_message').hide() ;
+  }
 </script>

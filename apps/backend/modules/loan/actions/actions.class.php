@@ -92,7 +92,7 @@ class loanActions extends DarwinActions
     $loan = new Loans() ;
     $duplic = $request->getParameter('duplicate_id','0') ;
     $loan = $this->getRecordIfDuplicate($duplic, $loan);
-    if($request->hasParameter('expedition')) $expedition->fromArray($request->getParameter('expedition'));            
+    if($request->hasParameter('expedition')) $expedition->fromArray($request->getParameter('expedition'));
     // Initialization of a new encoding expedition form
     $this->form = new LoansForm($loan);
     if ($duplic)
@@ -119,7 +119,7 @@ class loanActions extends DarwinActions
     if ($form->isValid())
     {
       try
-      {
+      {        
         $item = $form->save();
         $this->redirect('loan/edit?id='.$item->getId());
       }
@@ -274,30 +274,41 @@ class loanActions extends DarwinActions
 
   public function executeInsertFile(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    //if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    if($request->hasParameter('id'))
+      $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id'));
+    else
+      $loan=null;  
     if($request->hasParameter('table'))
     {
-      if($request->getParameter('table') == 'loans') $form = new LoansForm();    
-      else  $form = new LoanItemsForm();    
-      $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));    
+      if($request->getParameter('table') == 'loans') $form = new LoansForm($loan,array('no_name'=>true));    
+      else  $form = new LoanItemsForm($loan);    
+      $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
       $file = $form->getValue('filenames');
-      // first save the file
-      $filename = sha1($file->getOriginalName().$request->getParameter('table'));
-      $extension = $file->getExtension($file->getOriginalExtension());
-      $file->save(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename.$extension);
-      
-  /*    $file_info = array(
-        'record_id' => $request->hasParameter('id')?$request->getParameter('id'):-1,
-        'referenced_relation' => $request->getParameter('table'),
-        'title' => $file->getOriginalName(),
-        'uri' => "multimedia/temp/",
-        'type' => substr($extension,1,strlen($extension)),
-        'creation_date' => date('Y-m-d')
-      ) ;
-      $multimedia = new Multimedia();
-      $multimedia->fromArray($file_info) ;
-      $multimedia->save() ;*/
-      return $this->renderText('ok') ;
+      if($form->isValid()) 
+      {       
+        if(!Multimedia::CheckMymeType($file->getType()))
+          return $this->renderText("<script>parent.displayFileError('This type of file is not allowed')</script>") ;
+        // first save the file
+        $filename = sha1($file->getOriginalName().rand());
+        while(file_exists(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename))
+          $filename = sha1($file->getOriginalName().rand());
+        $extension = $file->getExtension($file->getOriginalExtension());
+        $file->save(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename);      
+        if($file->isSaved())
+          $file_info = array(
+            'title' => $file->getOriginalName(),
+            'filename' => $file->getOriginalName(),
+            'mime_type' => $file->getType(),
+            'type' => $extension,
+            'uri' => $filename,
+            'referenced_relation' => 'loans',
+            'creation_date' => date('Y/m/d')
+          ) ;
+          $this->getUser()->setAttribute($filename, $file_info);
+        return $this->renderText("<script>parent.getFileInfo('$filename')</script>") ;
+      }
+      return $this->renderText("<script>parent.displayFileError('".$form->getErrorSchema()->current()."')</script>") ;
     }
   }
 
@@ -306,7 +317,8 @@ class loanActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
     $form = $this->getLoanForm($request);
-    $form->addRelatedFiles($number,$request->getParameter('title'));
+    $file = $this->getUser()->getAttribute($request->getParameter('file_id')) ;    
+    $form->addRelatedFiles($number,$file);
     return $this->renderPartial('loan/multimedia',array('form' => $form['newRelatedFiles'][$number], 'row_num'=>$number));
   }  
     

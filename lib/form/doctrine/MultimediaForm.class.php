@@ -13,31 +13,44 @@ class MultimediaForm extends BaseMultimediaForm
   public function configure()
   {
     unset(
-      $this['id'],
-      $this['creation_date'],
       $this['creation_date_mask']
       );
-
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['referenced_relation'] = new sfValidatorString(array('required'=>false));
+    $this->validatorSchema['referenced_relation'] = new sfValidatorString(array('required'=>false));    
+    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
           
-    $this->widgetSchema['title'] = new sfWidgetFormInput();       
-    $this->widgetSchema['title']->setAttributes(array('class'=>'medium_small_size'));  
-    $this->validatorSchema['title'] = new sfValidatorString(); 
+    $this->widgetSchema['title'] = new sfWidgetFormInput();
+    $this->widgetSchema['title']->setAttributes(array('class'=>'medium_small_size'));
+    $this->validatorSchema['title'] = new sfValidatorString();
     
-    $this->widgetSchema['description'] = new sfWidgetFormInput();       
+    if($this->getObject()->isNew())
+    {
+      $this->widgetSchema['uri'] = new sfWidgetFormInputHidden();
+      $this->validatorSchema['uri'] = new sfValidatorString();
+    }
+    else unset($this['uri']) ;
+      
+    $this->widgetSchema['description'] = new sfWidgetFormInput();    
     $this->widgetSchema['description']->setAttributes(array('class'=>'medium_size'));  
     $this->validatorSchema['description'] = new sfValidatorString(array('required'=>false)); 
 
-    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
-    $this->validatorSchema['record_id'] = new sfValidatorInteger();
-
-    $this->widgetSchema['filename'] = new sfWidgetFormInputHidden();        
-    $this->validatorSchema['filename'] = new sfValidatorPass();
-    $this->widgetSchema['filename']->setLabel($this->options['file']) ;
-    $this->setDefault('filename',$this->options['file']);
-
-
-    $this->mergePostValidator(new relatedFileValidatorSchema());    
+    $this->widgetSchema['filename'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['filename'] = new sfValidatorPass();  
+    
+    $this->widgetSchema['mime_type'] = new sfWidgetFormInputHidden(); 
+    $this->validatorSchema['mime_type'] = new sfValidatorString();     
+    
+    $this->widgetSchema['type'] = new sfWidgetFormInputHidden(); 
+    $this->validatorSchema['type'] = new sfValidatorString(array('required'=>false));         
+    
+    $this->widgetSchema['creation_date'] = new sfWidgetFormInputHidden(); 
+    $this->validatorSchema['creation_date'] = new sfValidatorPass();  
+    
+    $this->mergePostValidator(new MultimediaFileValidatorSchema());    
+  }  
+  
+  public function doSave($con = null)
+  {
+    $this->offsetUnset('id');     
   }
 }
