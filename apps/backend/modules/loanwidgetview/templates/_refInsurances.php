@@ -1,0 +1,1 @@
+<?php include_partial('partwidgetview/refInsurances',  array('Insurances' => $Insurances));?>

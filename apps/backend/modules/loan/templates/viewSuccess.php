@@ -8,12 +8,12 @@
 
   <div class="panel_view encod_screen" id="intro">
    <div>        
-      <?php /*include_partial('widgets/screen', array(
+      <?php include_partial('widgets/screen', array(
         'widgets' => $widgets,
-        'category' => 'loanwidgetview',     
+        'category' => 'loanwidgetview',
         'columns' => 1, 
         'options' => array('eid'=> $loan->getid(), 'level' => 2, 'view' => true),
-      ));*/ ?>
+      )); ?>
     </div>
     
     <p class="clear"></p>
