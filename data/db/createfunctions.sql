@@ -3276,6 +3276,11 @@ EXCEPTION
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION fct_find_tax_level(tax_path text, searched_level integer) RETURNS int as
+$$
+   SELECT id FROM taxonomy where  level_ref = $2 and id in (select i::int from regexp_split_to_table($1, E'\/') as i where i != '');
+$$
+LANGUAGE sql stable;
 
 CREATE OR REPLACE FUNCTION fct_add_in_dict(ref_relation text, ref_field text, old_value text, dict_val text) RETURNS boolean
 AS
