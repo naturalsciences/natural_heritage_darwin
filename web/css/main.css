@@ -2615,23 +2615,38 @@ width : 1px;
 height : 1px;
 
 }
-.relatedFile input["type=file"]
+.relatedFile
 {
   position: relative;
-  height: 100%;
-  width: 250px;
-  opacity: 0;
-  filter : alpha(opacity=0); 
+}
+
+.relatedFile input[type="file"]
+{
+  position: relative;
+	text-align: right;
+  width:150px;	
+	opacity:0 ;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	z-index: 2;
 }
 
 .relatedFile label
 {
-border : 1px solid #010101 ;
-padding : 0px 5px;
-background : #95bd4c !important;
-width : 250px;
-height : 20px;
-background: transparent ;
+  border:1px solid #C1CC33;
+  background-color:#C1CF56;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding:2px;
+  color:white;
+  width:150px;
+  text-decoration: none;
+  font-size:90%;
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+  vertical-align: middle;  
+  text-align : center ;  
 }
 
 .containerFile .divFile
