@@ -4,7 +4,7 @@ class MultimediaFileValidatorSchema extends sfValidatorSchema
   protected function configure($options = array(), $messages = array())
   {
     $this->addMessage('invalid_file_type', 'this type of extention is not allowed here');
-    $this->addMessage('file_not_found', "Please don't try stupid things, don't touch the uri");    
+    $this->addMessage('file_not_found', "Please don't try stupid things, don't touch the uri");
   }
    
   protected function doClean($value)
@@ -17,11 +17,12 @@ class MultimediaFileValidatorSchema extends sfValidatorSchema
     }   
     if($value['record_id'] == 0)
     {    
-      //TODO replace the line below with a nice preg_replace function (instead of str_replace)
-      if(!file_exists(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.str_replace("/","",$value['uri'])))
-      {
-          $errorSchemaLocal->addError(new sfValidatorError($this, 'file_not_found'));    
-      }         
+      if( ! preg_match("/^[a-zA-Z0-9\.]+$/", $value['uri'])) {
+        $errorSchemaLocal->addError(new sfValidatorError($this, 'file_not_found'));
+      }
+      if(! file_exists(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$value['uri'])) {
+        $errorSchemaLocal->addError(new sfValidatorError($this, 'file_not_found'));    
+      }
     }
     return $value;
   }
