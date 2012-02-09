@@ -25,12 +25,9 @@ class CataloguePropertiesTable extends DarwinTable
   * Get Distincts type of properties
   * @return array an Array of types in keys
   */
-  public function getDistinctType($ref_relation=null)
+  public function getDistinctType($ref_relation)
   {
-    $q = $this->createDistinct('CatalogueProperties', 'property_type', 'type');
-    if(! is_null($ref_relation))
-      $q->addWhere('referenced_relation = ?', $ref_relation) ;
-    return $q->execute() ;
+    return array_merge(array(''=>''), $this->createDistinctDepend('catalogue_properties', 'property_type' , 'referenced_relation', $ref_relation));
   }
 
   /**
@@ -39,15 +36,9 @@ class CataloguePropertiesTable extends DarwinTable
   * @param string $type a type
   * @return array an Array of sub-types in keys/values
   */
-  public function getDistinctSubType($type=null)
+  public function getDistinctSubType($type)
   {
-    $q = $this->createDistinct('CatalogueProperties INDEXBY sub_type', 'property_sub_type', 'sub_type','');
-    if(! is_null($type))
-      $q->addWhere('property_type = ?',$type);
-    $results = $q->fetchArray();
-    if(count($results))
-      $results = array_combine(array_keys($results),array_keys($results));
-    return array_merge(array(''=>''), $results);
+    return array_merge(array(''=>''), $this->createDistinctDepend('catalogue_properties', 'property_sub_type' , 'property_type', $type));
   }
 
   /**
@@ -56,18 +47,9 @@ class CataloguePropertiesTable extends DarwinTable
   * @param string $sub_type a type
   * @return array an Array of Qualifier in keys/values
   */
-  public function getDistinctQualifier($sub_type=null)
+  public function getDistinctQualifier($sub_type)
   {
-    $q = $this->createDistinct('CatalogueProperties', 'property_qualifier', 'qualifier','');
-    
-    $conn_MGR = Doctrine_Manager::connection();
-    if(! is_null($sub_type))
-      $q->addWhere('property_sub_type_indexed = fullToIndex('.$conn_MGR->quote($sub_type, 'string').')');
-    $results = $q->fetchArray();
-    $rez=array(''=>''); //@TODO: don't know why but doctrine doesnt like it otherwise
-    foreach($results as $item)
-      $rez[$item['qualifier']]=$item['qualifier'];
-    return $rez;
+    return array_merge(array(''=>''), $this->createDistinctDepend('catalogue_properties', 'property_qualifier' , 'property_sub_type', $sub_type));
   }
   
   /**
@@ -76,25 +58,11 @@ class CataloguePropertiesTable extends DarwinTable
   * @param string $type a type
   * @return array an Array of Qualifier in keys/values
   */
-  public function getDistinctUnit($type=null)
+  public function getDistinctUnit($type)
   {
-    $q = $this->createDistinct('CatalogueProperties INDEXBY unit', 'property_unit', 'unit','');
+    $results_unit = $this->createDistinctDepend('catalogue_properties', 'property_unit' , 'property_type', $type);
+    $results_accuracy = $this->createDistinctDepend('catalogue_properties', 'property_accuracy_unit' , 'property_type', $type);
 
-    if(! is_null($type))
-      $q->addWhere('property_type = ?',$type);
-    $q->andWhere('property_unit is not null');
-    $results_unit = $q->fetchArray();
-
-    $q = $this->createDistinct('CatalogueProperties INDEXBY unit', 'property_accuracy_unit', 'unit','');
-
-    if(! is_null($type))
-      $q->addWhere('property_type = ?',$type);
-    $q->andWhere('property_accuracy_unit is not null');
-    $results_accuracy = $q->fetchArray();
-    $results = array_merge($results_unit, $results_accuracy);
-  
-    if(count($results))
-      $results = array_combine(array_keys($results),array_keys($results));
-    return array_merge(array(''=>'unit'), $results);
+    return array_merge(array(''=>'unit'), array_merge($results_unit, $results_accuracy));
   }
 }

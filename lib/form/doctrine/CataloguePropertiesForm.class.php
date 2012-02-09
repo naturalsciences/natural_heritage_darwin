@@ -80,8 +80,6 @@ class CataloguePropertiesForm extends BaseCataloguePropertiesForm
     $this->widgetSchema['property_type'] = new widgetFormSelectComplete(array(
         'model' => 'CatalogueProperties',
         'table_method' => array('method' => 'getDistinctType', 'parameters' => array($this->options['ref_relation'])),
-        'method' => 'getType',
-        'key_method' => 'getType',
         'add_empty' => true,
 	'change_label' => 'Pick a type in the list',
 	'add_label' => 'Add another type',

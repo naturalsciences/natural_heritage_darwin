@@ -93,7 +93,7 @@ CREATE INDEX CONCURRENTLY idx_catalogue_people_people_order_by on catalogue_peop
 CREATE INDEX CONCURRENTLY idx_catalogue_people_people_ref on catalogue_people(people_ref);
 CREATE INDEX CONCURRENTLY idx_catalogue_people_referenced_record on catalogue_people(referenced_relation, record_id, people_type);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_type on catalogue_properties(property_type);
--- CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_sub_type on catalogue_properties(property_sub_type);
+CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_sub_type on catalogue_properties(property_sub_type);
 
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_referenced_record on catalogue_properties(referenced_relation, record_id, property_type);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_qualifier on catalogue_properties(property_qualifier);
@@ -101,6 +101,8 @@ CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_unit on catalogue_pr
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_accuracy_unit on catalogue_properties(property_accuracy_unit);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_method_indexed on catalogue_properties(property_method_indexed);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_tool_indexed on catalogue_properties(property_tool_indexed);
+CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_sub_type ON catalogue_properties (property_sub_type);
+
 CREATE INDEX CONCURRENTLY idx_catalogue_relationships_relations on catalogue_relationships (referenced_relation, record_id_1, relationship_type);
 CREATE INDEX CONCURRENTLY idx_properties_values_property_ref ON properties_values (property_ref);
 CREATE INDEX CONCURRENTLY idx_chronostratigraphy_lower_bound on chronostratigraphy(coalesce(lower_bound, -4600));

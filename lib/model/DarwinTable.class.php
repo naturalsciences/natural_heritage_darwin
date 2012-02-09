@@ -110,6 +110,19 @@ class DarwinTable extends Doctrine_Table
     return $q;
   }
 
+  public function createDistinctDepend($table, $field , $dpt_fld, $dpt_val)
+  {
+    $conn_MGR = Doctrine_Manager::connection();
+    $conn = $conn_MGR->getDbh();
+    $stmt = $conn->prepare("select distinct_skip(".$conn_MGR->quote($table).", ".
+      $conn_MGR->quote($field).", ". $conn_MGR->quote($dpt_fld)." ,". $conn_MGR->quote($dpt_val).") as container order by container");
+    $stmt->execute();
+    while($col = $stmt->fetchColumn()) {
+      $results[$col] = $col;
+    }
+    return $results;
+  }
+
   /**
    * findWithParents
    * Find records with his parents order by the path ( root first)
