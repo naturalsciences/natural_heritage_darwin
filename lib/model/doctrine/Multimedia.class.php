@@ -105,12 +105,8 @@ class Multimedia extends BaseMultimedia
   protected function checkUploadPathAvailable()
   {
     //function used to verify if the folder for the uploaded file exists
-    $pathyear = sfConfig::get('sf_upload_dir')."/multimedia/".date("Y") ;
-    $pathmonth = $pathyear."/".date("m") ;
-    $pathday = $pathmonth."/".date("d") ;
-    if(!is_dir($pathyear)) mkdir($pathyear) ;
-    if(!is_dir($pathmonth)) mkdir($pathmonth) ;
-    if(!is_dir($pathday)) mkdir($pathday) ;
+    $path = sfConfig::get('sf_upload_dir')."/multimedia/".date("Y/m/d") ;
+    if(!is_dir($path)) mkdir($path,0750,true) ;
     return (date("Y/m/d")) ;    
   }  
   

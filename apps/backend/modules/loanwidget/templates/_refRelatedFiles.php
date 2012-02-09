@@ -59,6 +59,7 @@
       form.attr('action','<?php echo url_for("loan/insertFile?table=loans".($form->getObject()->isNew()?"":"&id=".$form->getObject()->getId())) ;?>') ;
       form.attr('target','hiddenFrame') ;
       form.submit();
+      hideForRefresh('#refRelatedFiles');        
       return false;
     });
     
@@ -66,7 +67,6 @@
   });
   function getFileInfo(file_id) 
   {
-    hideForRefresh('#refRelatedFiles');  
     parent_el = $(this).closest('table.property_values');
     $.ajax(
     {

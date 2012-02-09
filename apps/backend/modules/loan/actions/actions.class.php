@@ -19,13 +19,15 @@ class loanActions extends DarwinActions
     if ($fwd404)
       return $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter,0)));
 
-    if($request->hasParameter($parameter) && $request->getParameter($parameter) && $request->getParameter('table','loans')== 'loans')
+    if($request->getParameter('table','loans')== 'loans')
     {
-      $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter) );
+      if($request->hasParameter($parameter))
+        $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter) );      
       $form = new LoansForm($loan);
     }else
     {
-      $loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
+      if($request->hasParameter($parameter))    
+        $loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
       $form = new LoanItemWidgetForm($loan);
     }
     return $form;

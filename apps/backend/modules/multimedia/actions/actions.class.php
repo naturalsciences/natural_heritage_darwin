@@ -12,16 +12,18 @@ class multimediaActions extends DarwinActions
 {
   public function executeDownloadFile(sfWebRequest $request)
   {
+    $this->setLayout(false);  
     $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
     $file = sfConfig::get('sf_upload_dir').'/multimedia/'.$multimedia->getUri() ;
-    header("Content-disposition: attachment; filename=".$multimedia->getFilename()); 
-    header("Content-Type: application/force-download"); 
-    header("Content-Transfer-Encoding: ".$multimedia->getMimeType()."\n");
-    header("Content-Length: ".filesize($file)); 
-    header("Pragma: no-cache"); 
-    header("Cache-Control: must-revalidate, post-check=0, pre-check=0, public"); 
-    header("Expires: 0"); 
-    readfile($file); 
-    return(0) ;
+    // Adding the file to the Response object
+    $this->getResponse()->clearHttpHeaders();
+    $this->getResponse()->setHttpHeader('Pragma: public', true);    
+    $this->getResponse()->setHttpHeader('Content-Disposition',
+                            'attachment; filename="'.
+                            $multimedia->getFilename().'"');    
+    $this->getResponse()->setContentType("application/force-download ".$multimedia->getMimeType());    
+    $this->getResponse()->sendHttpHeaders();
+    $this->getResponse()->setContent(readfile($file));    
+    return sfView::NONE;
   } 
 }
