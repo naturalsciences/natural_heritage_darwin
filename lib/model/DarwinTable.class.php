@@ -117,6 +117,7 @@ class DarwinTable extends Doctrine_Table
     $stmt = $conn->prepare("select distinct_skip(".$conn_MGR->quote($table).", ".
       $conn_MGR->quote($field).", ". $conn_MGR->quote($dpt_fld)." ,". $conn_MGR->quote($dpt_val).") as container order by container");
     $stmt->execute();
+    $results = array();
     while($col = $stmt->fetchColumn()) {
       $results[$col] = $col;
     }
