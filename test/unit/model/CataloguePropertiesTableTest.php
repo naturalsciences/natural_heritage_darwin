@@ -7,15 +7,13 @@ $t->is( count($properties) , 2, 'There is properties for this table / record_id'
 $t->is( $properties[0]->getPropertyType() , 'physical measurement', 'ordered correcty');
 $t->is( count($properties[0]->PropertiesValues) , 2, 'There is also 2 properties values');
 
-$types =
-Doctrine::getTable('CatalogueProperties')->getDistinctType('taxonomy');
-$t->is( count($types) , 3, 'There is 2 different type');
-$t->is( $types["protection status"] , 'protection status', 'the ');
+$types = Doctrine::getTable('CatalogueProperties')->getDistinctType();
+$t->is( count($types) , 2, 'There is 2 different type');
+$t->is( $types[1]->getType() , 'protection status', 'the and is accessible through getType');
 
-$stype =
-Doctrine::getTable('CatalogueProperties')->getDistinctSubType('protection status');
-$t->is( count($stype) , 3, 'There is different sub type');
-$t->is( $stype['top'] , 'top', 'the and is accessible');
+$stype = Doctrine::getTable('CatalogueProperties')->getDistinctSubType();
+$t->is( count($stype) , 4, 'There is 4 different sub type');
+$t->is( $stype['length'] , 'length', 'the and is accessible through getType');
 
 $stype = Doctrine::getTable('CatalogueProperties')->getDistinctSubType('physical measurement');
 $t->is( count($stype) ,2, 'There is 2 different sub type with this type');

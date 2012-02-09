@@ -110,20 +110,6 @@ class DarwinTable extends Doctrine_Table
     return $q;
   }
 
-  public function createDistinctDepend($table, $field , $dpt_fld, $dpt_val)
-  {
-    $conn_MGR = Doctrine_Manager::connection();
-    $conn = $conn_MGR->getDbh();
-    $stmt = $conn->prepare("select distinct_skip(".$conn_MGR->quote($table).", ".
-      $conn_MGR->quote($field).", ". $conn_MGR->quote($dpt_fld)." ,". $conn_MGR->quote($dpt_val).") as container order by container");
-    $stmt->execute();
-    $results = array();
-    while($row = $stmt->fetch(PDO::FETCH_NUM)) {
-      $results[$row[0]] = $row[0];
-    }
-    return $results;
-  }
-
   /**
    * findWithParents
    * Find records with his parents order by the path ( root first)
@@ -146,11 +132,11 @@ class DarwinTable extends Doctrine_Table
   
   public function findRights($user, $table)
   {
-    $q = Doctrine_Query::create()
-      ->select('collection_ref')
-      ->from($table)
-      ->andWhere('user_ref = ?', $user) ;
-    return $q->execute() ; 
+ 		$q = Doctrine_Query::create()
+		   ->select('collection_ref')
+		   ->from($table)
+		   ->andWhere('user_ref = ?', $user) ;
+		return $q->execute() ; 
   }
 
   /** Search in flat specimens with a given value ($unit_id) for a field (field_name)

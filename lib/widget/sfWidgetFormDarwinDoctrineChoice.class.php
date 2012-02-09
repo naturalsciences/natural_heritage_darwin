@@ -96,17 +96,14 @@ class sfWidgetFormDarwinDoctrineChoice extends sfWidgetFormDoctrineChoice
       {
         $objects = $results->execute();
       }
-      elseif ($results instanceof Doctrine_Collection)
+      else if ($results instanceof Doctrine_Collection)
       {
         $objects = $results;
       }
-      elseif ($results instanceof Doctrine_Record)
+      else if ($results instanceof Doctrine_Record)
       {
         $objects = new Doctrine_Collection($this->getOption('model'));
         $objects[] = $results;
-      }
-      elseif (is_array($results)) {
-        return $results;
       }
       else
       {

@@ -4452,24 +4452,3 @@ BEGIN
   RETURN NEW;
 END;
 $$;
-
-
-CREATE OR REPLACE FUNCTION distinct_skip(search_table varchar, fld varchar, depend_fld varchar, depend_value varchar)
-RETURNS SETOF varchar
-LANGUAGE plpgsql stable 
-AS $$
-DECLARE
-    _x  varchar;
-    sql varchar;
-BEGIN
-    execute 'select min(' || quote_ident(fld) || ' ) FROM ' || quote_ident(search_table) || 
-     ' where ' || quote_ident(depend_fld) || ' = ' || quote_literal(depend_value) into _x;
-    WHILE _x IS NOT NULL LOOP
-        RETURN NEXT _x;
-        sql := 'select min(' || quote_ident(fld) || ' ) FROM ' || quote_ident(search_table) || 
-         ' where ' || quote_ident(fld) || ' > ' || quote_literal(_x) || 
-         ' AND ' || quote_ident(depend_fld) || ' = ' || quote_literal(depend_value);
-        execute sql  into _x;
-    END LOOP;
-END;
-$$ ;
