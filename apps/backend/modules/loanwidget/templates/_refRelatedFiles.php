@@ -42,8 +42,8 @@
           <?php echo $form['filenames']->renderLabel();?>
           <?php echo $form['filenames'];?>
         </div>
-          <a href="<?php echo url_for('loan/addRelatedFiles'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_file" class="hidden"></a>
-        <iframe name="hiddenFrame" id="hiddenFrame" class="little-frame">
+          <a href="<?php echo url_for('loan/addRelatedFiles?table=$table'. ($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/num/" id="add_file" class="hidden"></a>
+        <iframe name="hiddenFrame" id="hiddenFrame" class="lttle-frame">
         </iframe>
       </td>
     </tr>
@@ -56,7 +56,7 @@
       hideFileError();
       name = $(this).val().replace(/C:\\fakepath\\/i, '') ;
       form = $(this).closest('form') ;
-      form.attr('action','<?php echo url_for("loan/insertFile?table=loans".($form->getObject()->isNew()?"":"&id=".$form->getObject()->getId())) ;?>') ;
+      form.attr('action','<?php echo url_for("loan/insertFile?table=$table".($form->getObject()->isNew()?"":"&id=".$form->getObject()->getId())) ;?>') ;
       form.attr('target','hiddenFrame') ;
       form.submit();
       hideForRefresh('#refRelatedFiles');        

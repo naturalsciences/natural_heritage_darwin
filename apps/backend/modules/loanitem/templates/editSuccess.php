@@ -1,12 +1,13 @@
 <?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'loanitem','eid'=> $form->getObject()->getId() )); ?>
 <?php slot('title', __('Edit Loan Item'));  ?>
+<?php $action = 'loanitem/update?id='.$form->getObject()->getId() ;?>
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
 <div class="page">
     <h1 class="edit_mode"><?php echo __('Edit Loan Item');?></h1>
     <?php include_partial('loan/tabs', array('loan'=> $form->getObject()->getLoan(), 'item' => $form->getObject())); ?>
     <div class="tab_content">
-      <?php echo form_tag('loanitem/update?id='.$form->getObject()->getId(), array('class'=>'edition loanitem_form'));?>
+      <?php echo form_tag($action, array('class'=>'edition loanitem_form','enctype'=>'multipart/form-data'));?>
 
         <?php include_partial('widgets/screen', array(
           'widgets' => $widgets,
@@ -36,6 +37,13 @@
       }   
       $(document).ready(function () {
         $('body').catalogue({}); 
+        $('#submit_loan').click(function() 
+        {
+          form = $(this).closest('form') ;
+          form.removeAttr('target') ;
+          form.attr('action', '<?php echo url_for($action) ; ?>') ;
+          form.submit() ;
+        });        
       });
     </script>   
 </div>
