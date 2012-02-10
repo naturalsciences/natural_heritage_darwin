@@ -1876,7 +1876,8 @@ create table flat_dict
   referenced_relation varchar not null,
   dict_field varchar not null,
   dict_value varchar not null,
-  constraint unq_flat_dict unique (dict_value, dict_field, referenced_relation),
+  dict_depend varchar not null default '',
+  constraint unq_flat_dict unique (dict_value, dict_field, referenced_relation, dict_depend),
   constraint pk_flat_dict primary key (id)
 );
 

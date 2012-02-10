@@ -872,6 +872,14 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_loan_status AFTER INSERT OR UPDATE
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_catalogue_properties AFTER INSERT OR UPDATE
+        ON catalogue_properties FOR EACH ROW
+        EXECUTE PROCEDURE trg_ins_update_dict();
+
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_tag_groups AFTER INSERT OR UPDATE
+        ON tag_groups FOR EACH ROW
+        EXECUTE PROCEDURE trg_ins_update_dict();
+
 /******************* DELETE FROM DICT ******************/
 
 CREATE TRIGGER fct_cpy_trg_del_dict_codes AFTER DELETE  OR UPDATE
@@ -929,7 +937,15 @@ CREATE TRIGGER fct_cpy_trg_del_dict_specimen_parts AFTER DELETE  OR UPDATE
 CREATE TRIGGER fct_cpy_trg_del_dict_loan_status AFTER DELETE OR UPDATE
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
-  
+
+CREATE TRIGGER fct_cpy_trg_del_dict_catalogue_properties AFTER DELETE OR UPDATE
+        ON catalogue_properties FOR EACH ROW
+        EXECUTE PROCEDURE trg_del_dict();
+
+CREATE TRIGGER fct_cpy_trg_del_dict_tag_groups AFTER DELETE OR UPDATE
+        ON tag_groups FOR EACH ROW
+        EXECUTE PROCEDURE trg_del_dict();
+
 /********************* *****/
       
 CREATE TRIGGER trg_upd_people_in_flat AFTER INSERT OR UPDATE OR DELETE

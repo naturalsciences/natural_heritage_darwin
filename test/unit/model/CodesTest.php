@@ -4,7 +4,7 @@ $t = new lime_test(5, new lime_output_color());
 
 $taxon = Doctrine::getTable('Taxonomy')->findOneByName('Falco Peregrinus');
 $specimen = Doctrine::getTable('Specimens')->findOneByTaxonRef($taxon->getId());
-$code = new Codes;
+$code = new Codes();
 $code->setReferencedRelation('specimens');
 $code->setRecordId($specimen->getId());
 $code->setCodeCategory('Temporary');

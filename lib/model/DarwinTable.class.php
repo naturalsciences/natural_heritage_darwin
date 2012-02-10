@@ -96,7 +96,7 @@ class DarwinTable extends Doctrine_Table
       ->orderBy("$new_col ASC");
     return $q;
   }
-  
+
   public function createFlatDistinct($table, $column, $new_col='item')
   {
     $q = Doctrine_Query::create()
@@ -105,6 +105,19 @@ class DarwinTable extends Doctrine_Table
       ->From('FlatDict')
       ->select('dict_value as '.$new_col)
       ->where('dict_field = ?', $column)
+      ->andwhere('referenced_relation = ?', $table)
+      ->orderBy("$new_col ASC");
+    return $q;
+  }
+  public function createFlatDistinctDepend($table, $column, $depend, $new_col='item')
+  {
+    $q = Doctrine_Query::create()
+      ->useResultCache(new Doctrine_Cache_Apc())
+      ->setResultCacheLifeSpan(5) //5 sec
+      ->From('FlatDict')
+      ->select('dict_value as '.$new_col)
+      ->where('dict_field = ?', $column)
+      ->andWhere('dict_depend = ?', $depend)
       ->andwhere('referenced_relation = ?', $table)
       ->orderBy("$new_col ASC");
     return $q;
