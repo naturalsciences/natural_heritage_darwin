@@ -1,7 +1,28 @@
-﻿
-begin;
+\echo Start of split the `date`
+
+BEGIN;
 
 ALTER TABLE specimen_parts DISABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
+ALTER TABLE specimen_parts DISABLE TRIGGER fct_cpy_trg_ins_update_dict_specimen_parts;
+ALTER TABLE specimen_parts DISABLE TRIGGER trg_chk_specimenpartcollectionallowed;
+ALTER TABLE specimen_parts DISABLE TRIGGER trg_cpy_path_specimen_parts;
+ALTER TABLE specimen_parts DISABLE TRIGGER trg_trk_log_table_specimen_parts;
+ALTER TABLE specimen_parts DISABLE TRIGGER trg_update_specimen_parts_darwin_flat;
+ALTER TABLE codes DISABLE TRIGGER trg_chk_ref_record_catalogue_codes;
+ALTER TABLE codes DISABLE TRIGGER trg_trk_log_table_codes;
+ALTER TABLE codes DISABLE TRIGGER fct_cpy_trg_del_dict_codes;
+ALTER TABLE codes DISABLE TRIGGER fct_cpy_trg_ins_update_dict_codes;
+ALTER TABLE catalogue_properties DISABLE TRIGGER trg_chk_ref_record_catalogue_properties;
+ALTER TABLE catalogue_properties DISABLE TRIGGER trg_trk_log_table_catalogue_properties;
+ALTER TABLE properties_values DISABLE TRIGGER trg_trk_log_table_properties_values;
+ALTER TABLE collection_maintenance DISABLE TRIGGER trg_chk_ref_record_collection_maintenance;
+ALTER TABLE collection_maintenance DISABLE TRIGGER trg_trk_log_table_collection_maintenance;
+ALTER TABLE collection_maintenance DISABLE TRIGGER fct_cpy_trg_del_dict_collection_maintenance;
+ALTER TABLE collection_maintenance DISABLE TRIGGER fct_cpy_trg_ins_update_dict_collection_maintenance;
+ALTER TABLE insurances DISABLE TRIGGER trg_chk_ref_record_insurances;
+ALTER TABLE insurances DISABLE TRIGGER trg_trk_log_table_insurances;
+ALTER TABLE insurances DISABLE TRIGGER fct_cpy_trg_del_dict_insurances;
+ALTER TABLE insurances DISABLE TRIGGER fct_cpy_trg_ins_update_dict_insurances;
 
 CREATE TEMPORARY TABLE partsSplitFromAndTo ("start" boolean not null default true, "id" integer not null);
 
@@ -1314,6 +1335,7 @@ declare
   recInsurances RECORD;
   spec_part_count_min integer;
   spec_part_count_max integer;
+  comptage integer := 0;
 begin
   INSERT INTO partsSplitFromAndTo (id)
   (
@@ -1482,6 +1504,10 @@ begin
                           order by new_id desc, specimen_part, main_code 
 --                           limit 50
   LOOP
+    comptage := comptage + 1;
+    IF comptage IN (5000, 10000, 20000, 40000, 50000, 75000, 90000, 100000, 125000, 150000, 175000, 200000, 225000, 250000, 275000, 300000, 325000, 350000, 375000) THEN
+      RAISE NOTICE 'Already % records parsed ;)', comptage;
+    END IF;
     IF part_id != recPartsDetails.parts_id THEN
 --       RAISE NOTICE 'Next part infos: %', recPartsDetails;
       recFirstPart := recPartsDetails;
@@ -1900,7 +1926,7 @@ begin
     WHERE id > (select id from partsSplitFromAndTo where "start") and id < (select id from partsSplitFromAndTo where not "start")
       AND 1 < (select count(*) from codes where referenced_relation = 'specimen_parts' and record_id = specimen_parts.id)
   LOOP
-    RAISE NOTICE 'Part id is: %', recPartsAfter.id;
+    RAISE NOTICE 'After migration correction, part id splitted is: %', recPartsAfter.id;
     FOR recPartsAfterCodes IN
       SELECT id
       FROM codes
@@ -1956,7 +1982,32 @@ DROP FUNCTION IF EXISTS createCodes(specimen_parts.id%TYPE, varchar) CASCADE;
 DROP FUNCTION IF EXISTS split_parts() CASCADE;
 DROP FUNCTION IF EXISTS resplit_parts () CASCADE;
 
-
 ALTER TABLE specimen_parts ENABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
+ALTER TABLE specimen_parts ENABLE TRIGGER fct_cpy_trg_ins_update_dict_specimen_parts;
+ALTER TABLE specimen_parts ENABLE TRIGGER trg_chk_specimenpartcollectionallowed;
+ALTER TABLE specimen_parts ENABLE TRIGGER trg_cpy_path_specimen_parts;
+ALTER TABLE specimen_parts ENABLE TRIGGER trg_trk_log_table_specimen_parts;
+ALTER TABLE specimen_parts ENABLE TRIGGER trg_update_specimen_parts_darwin_flat;
+ALTER TABLE codes ENABLE TRIGGER trg_chk_ref_record_catalogue_codes;
+ALTER TABLE codes ENABLE TRIGGER trg_trk_log_table_codes;
+ALTER TABLE codes ENABLE TRIGGER fct_cpy_trg_del_dict_codes;
+ALTER TABLE codes ENABLE TRIGGER fct_cpy_trg_ins_update_dict_codes;
+ALTER TABLE catalogue_properties ENABLE TRIGGER trg_chk_ref_record_catalogue_properties;
+ALTER TABLE catalogue_properties ENABLE TRIGGER trg_trk_log_table_catalogue_properties;
+ALTER TABLE properties_values ENABLE TRIGGER trg_trk_log_table_properties_values;
+ALTER TABLE collection_maintenance ENABLE TRIGGER trg_chk_ref_record_collection_maintenance;
+ALTER TABLE collection_maintenance ENABLE TRIGGER trg_trk_log_table_collection_maintenance;
+ALTER TABLE collection_maintenance ENABLE TRIGGER fct_cpy_trg_del_dict_collection_maintenance;
+ALTER TABLE collection_maintenance ENABLE TRIGGER fct_cpy_trg_ins_update_dict_collection_maintenance;
+ALTER TABLE insurances ENABLE TRIGGER trg_chk_ref_record_insurances;
+ALTER TABLE insurances ENABLE TRIGGER trg_trk_log_table_insurances;
+ALTER TABLE insurances ENABLE TRIGGER fct_cpy_trg_del_dict_insurances;
+ALTER TABLE insurances ENABLE TRIGGER fct_cpy_trg_ins_update_dict_insurances;
+
+\echo Split ended the `date`
 
 commit;
+
+\i ../maintenance/recreate_flat.sql
+
+\echo Flat refreshed the `date`
