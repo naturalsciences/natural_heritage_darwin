@@ -1759,7 +1759,7 @@ $$
 $$;
 
 
-CREATE OR REPLACE FUNCTION fct_update_darwin_flat() returns TRIGGER
+CREATE OR REPLACE FUNCTION fct_update_specimens_flat() returns TRIGGER
 language plpgsql
 AS
 $$
@@ -1768,9 +1768,14 @@ DECLARE
   partCount INTEGER := 0;
   indType BOOLEAN := false;
 BEGIN
-  IF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'expeditions' THEN
+  IF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'specimens' THEN
+      UPDATE specimens_flat f
+      SET (collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref, host_taxon_ref, host_specimen_ref, ig_ref) =
+          (NEW.collection_ref, NEW.expedition_ref, NEW.gtu_ref, NEW.taxon_ref, NEW.litho_ref, NEW.chrono_ref, NEW.lithology_ref, NEW.mineral_ref, NEW.host_taxon_ref, NEW.host_specimen_ref, NEW.ig_ref)
+      WHERE specimen_ref = NEW.id;
+  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'expeditions' THEN
     IF NEW.name_indexed IS DISTINCT FROM OLD.name_indexed THEN
-      UPDATE specimens
+      UPDATE specimens_flat
       SET (expedition_name, expedition_name_ts, expedition_name_indexed) =
           (NEW.name, NEW.name_ts, NEW.name_indexed)
       WHERE expedition_ref = NEW.id;
@@ -1782,7 +1787,7 @@ BEGIN
     OR OLD.is_public IS DISTINCT FROM NEW.is_public
     OR OLD.path IS DISTINCT FROM NEW.path
     THEN
-      UPDATE specimens
+      UPDATE specimens_flat
       SET (collection_type, collection_code, collection_name, collection_is_public,
           collection_parent_ref, collection_path
           ) =
@@ -1792,7 +1797,7 @@ BEGIN
       WHERE collection_ref = NEW.id;
     END IF;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'gtu' THEN
-    UPDATE specimens
+    UPDATE specimens_flat
     SET (gtu_code, gtu_parent_ref, gtu_path, gtu_from_date, gtu_from_date_mask,
         gtu_to_date, gtu_to_date_mask, gtu_tag_values_indexed, gtu_location
         ) =
@@ -1802,13 +1807,13 @@ BEGIN
     WHERE gtu_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'igs' THEN
     IF NEW.ig_num_indexed IS DISTINCT FROM OLD.ig_num_indexed OR NEW.ig_date IS DISTINCT FROM OLD.ig_date THEN
-      UPDATE specimens
+      UPDATE specimens_flat
       SET (ig_num, ig_num_indexed, ig_date, ig_date_mask) =
           (NEW.ig_num, NEW.ig_num_indexed, NEW.ig_date, NEW.ig_date_mask)
       WHERE ig_ref = NEW.id;
     END IF;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'taxonomy' THEN
-    UPDATE specimens
+    UPDATE specimens_flat
     SET (taxon_name, taxon_name_indexed, taxon_name_order_by,
          taxon_level_ref, taxon_level_name,
          taxon_status, taxon_path, taxon_parent_ref, taxon_extinct
@@ -1823,7 +1828,7 @@ BEGIN
          WHERE id = NEW.level_ref
         ) subq
     WHERE taxon_ref = NEW.id;
-    UPDATE specimens
+    UPDATE specimens_flat
     SET (host_taxon_name, host_taxon_name_indexed, host_taxon_name_order_by,
          host_taxon_level_ref, host_taxon_level_name,
          host_taxon_status, host_taxon_path, host_taxon_parent_ref, host_taxon_extinct
@@ -1839,7 +1844,7 @@ BEGIN
         ) subq
     WHERE host_taxon_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'chronostratigraphy' THEN
-    UPDATE specimens
+    UPDATE specimens_flat
     SET (chrono_name, chrono_name_indexed, chrono_name_order_by,
          chrono_level_ref, chrono_level_name,
          chrono_status, 
@@ -1859,7 +1864,7 @@ BEGIN
         ) subq
     WHERE chrono_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'lithostratigraphy' THEN
-    UPDATE specimens
+    UPDATE specimens_flat
     SET (litho_name, litho_name_indexed, litho_name_order_by,
          litho_level_ref, litho_level_name,
          litho_status, 
@@ -1879,7 +1884,7 @@ BEGIN
         ) subq
     WHERE litho_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'lithology' THEN
-    UPDATE specimens
+    UPDATE specimens_flat
     SET (lithology_name, lithology_name_indexed, lithology_name_order_by,
          lithology_level_ref, lithology_level_name,
          lithology_status, 
@@ -1899,7 +1904,7 @@ BEGIN
         ) subq
     WHERE lithology_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'mineralogy' THEN
-    UPDATE specimens
+    UPDATE specimens_flat
     SET (mineral_name, mineral_name_indexed, mineral_name_order_by,
          mineral_level_ref, mineral_level_name,
          mineral_status, 
@@ -1922,27 +1927,27 @@ BEGIN
   ELSIF TG_TABLE_NAME = 'tag_groups' THEN
     IF TG_OP = 'INSERT' THEN
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
-        UPDATE specimens
+        UPDATE specimens_flat
         SET gtu_country_tag_value = NEW.tag_value,
         gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
     ELSIF TG_OP = 'UPDATE' THEN
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
-        UPDATE specimens
+        UPDATE specimens_flat
         SET gtu_country_tag_value = NEW.tag_value,
         gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
 
       ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' THEN
-        UPDATE specimens
+        UPDATE specimens_flat
         SET gtu_country_tag_value = NULL,
         gtu_country_tag_indexed = NULL
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
     ELSIF TG_OP = 'DELETE' THEN
       IF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' THEN
-        UPDATE specimens
+        UPDATE specimens_flat
         SET gtu_country_tag_value = NULL,
         gtu_country_tag_indexed = NULL
         WHERE gtu_ref = OLD.gtu_ref;
@@ -1957,123 +1962,192 @@ $$;
 
 CREATE OR REPLACE FUNCTION fct_update_specimen_flat() RETURNS TRIGGER
 AS $$
-DECLARE
-  ROLD specimens%ROWTYPE;
-  RNEW specimens%ROWTYPE;
 BEGIN
-  IF TG_OP = 'INSERT' THEN
-    RNEW = NEW;
-  ELSE
-    RNEW = NEW;
-    ROLD = OLD;
+ IF TG_OP = 'INSERT' AND TG_TABLE_NAME = 'specimens' THEN
+    INSERT INTO darwin_flat
+    (specimen_ref,category,
+     collection_ref,collection_type,collection_code,collection_name, collection_is_public,
+     collection_parent_ref,collection_path,
+     expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
+     station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
+     gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
+     gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,
+     taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
+     taxon_path,taxon_parent_ref,taxon_extinct,
+     chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
+     chrono_local,chrono_color,
+     chrono_path,chrono_parent_ref,
+     litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
+     litho_local,litho_color,
+     litho_path,litho_parent_ref,
+     lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
+     lithology_local,lithology_color,
+     lithology_path,lithology_parent_ref,
+     mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
+     mineral_local,mineral_color,
+     mineral_path,mineral_parent_ref,
+     host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
+     host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
+     host_specimen_ref,
+     acquisition_category,acquisition_date_mask,acquisition_date
+    )
+    (SELECT NEW.id, NEW.category,
+            NEW.collection_ref, coll.collection_type, coll.code, coll.name, coll.is_public,
+            coll.parent_ref, coll.path,
+            NEW.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
+            NEW.station_visible, NEW.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
+            gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
+            gtu.tag_values_indexed, taggr.tag_value,  lineToTagArray(taggr.tag_value),
+            NEW.taxon_ref, taxon.name, taxon.name_indexed, taxon.name_order_by, taxon.level_ref, taxon_level.level_name, taxon.status,
+            taxon.path, taxon.parent_ref, taxon.extinct,
+            NEW.chrono_ref, chrono.name, chrono.name_indexed, chrono.name_order_by, chrono.level_ref, chrono_level.level_name, chrono.status,
+            chrono.local_naming, chrono.color,
+            chrono.path, chrono.parent_ref,
+            NEW.litho_ref, litho.name, litho.name_indexed, litho.name_order_by, litho.level_ref, litho_level.level_name, litho.status,
+            litho.local_naming,litho.color,
+            litho.path, litho.parent_ref,
+            NEW.lithology_ref, lithology.name, lithology.name_indexed, lithology.name_order_by, lithology.level_ref, lithology_level.level_name, lithology.status,
+            lithology.local_naming,lithology.color,
+            lithology.path, lithology.parent_ref,
+            NEW.mineral_ref, mineral.name, mineral.name_indexed, mineral.name_order_by, mineral.level_ref, mineral_level.level_name, mineral.status,
+            mineral.local_naming,mineral.color,
+            mineral.path, mineral.parent_ref,
+            NEW.host_taxon_ref, NEW.host_relationship, host_taxon.name, host_taxon.name_indexed, host_taxon.name_order_by, host_taxon.level_ref, host_taxon_level.level_name, host_taxon.status,
+            host_taxon.path, host_taxon.parent_ref, host_taxon.extinct,
+            NEW.host_specimen_ref,
+            NEW.acquisition_category, NEW.acquisition_date_mask, NEW.acquisition_date
+     FROM collections coll,
+          expeditions expe,
+          (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'),
+          (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id),
+          (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id),
+          (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id),
+          (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id),
+          (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id),
+          (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
+     WHERE coll.id = NEW.collection_ref
+       AND expe.id = NEW.expedition_ref
+       AND gtu.id = NEW.gtu_ref
+       AND taxon.id = NEW.taxon_ref
+       AND host_taxon.id = NEW.host_taxon_ref
+       AND chrono.id = NEW.chrono_ref
+       AND litho.id = NEW.litho_ref
+       AND lithology.id = NEW.lithology_ref
+       AND mineral.id = NEW.mineral_ref
+     LIMIT 1
+    );
+ ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'specimens' THEN
+    UPDATE darwin_flat
+    SET (category,
+         collection_ref,collection_type,collection_code,collection_name, collection_is_public,
+         collection_parent_ref,collection_path,
+         expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
+         station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
+         gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
+         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
+         taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
+         taxon_path,taxon_parent_ref,taxon_extinct,
+         chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
+         chrono_local, chrono_color,
+         chrono_path,chrono_parent_ref,
+         litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
+         litho_local, litho_color,
+         litho_path,litho_parent_ref,
+         lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
+         lithology_local, lithology_color,
+         lithology_path,lithology_parent_ref,
+         mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
+         mineral_local, mineral_color,
+         mineral_path,mineral_parent_ref,
+         host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
+         host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
+         host_specimen_ref,
+         acquisition_category,acquisition_date_mask,acquisition_date
+        )=
+        (NEW.category,
+         NEW.collection_ref, subq.coll_collection_type, subq.coll_code, subq.coll_name, subq.coll_is_public,
+         subq.coll_parent_ref, subq.coll_path,
+         NEW.expedition_ref, subq.expe_name, subq.expe_name_ts, subq.expe_name_indexed,
+         NEW.station_visible, NEW.gtu_ref, subq.gtu_code, subq.gtu_parent_ref, subq.gtu_path, subq.gtu_location,
+         subq.gtu_from_date_mask, subq.gtu_from_date, subq.gtu_to_date_mask, subq.gtu_to_date,
+         subq.gtu_tag_values_indexed, subq.taggr_tag_value, lineToTagArray(subq.taggr_tag_value),
+         NEW.taxon_ref, subq.taxon_name, subq.taxon_name_indexed, subq.taxon_name_order_by,
+         subq.taxon_level_ref, subq.taxon_level_level_name, subq.taxon_status,
+         subq.taxon_path, subq.taxon_parent_ref, subq.taxon_extinct,
+         NEW.chrono_ref, subq.chrono_name, subq.chrono_name_indexed, subq.chrono_name_order_by,
+         subq.chrono_level_ref, subq.chrono_level_level_name, subq.chrono_status,
+         subq.chrono_local, subq.chrono_color,
+         subq.chrono_path, subq.chrono_parent_ref,
+         NEW.litho_ref, subq.litho_name, subq.litho_name_indexed, subq.litho_name_order_by,
+         subq.litho_level_ref, subq.litho_level_level_name, subq.litho_status,
+         subq.litho_local, subq.litho_color,
+         subq.litho_path, subq.litho_parent_ref,
+         NEW.lithology_ref, subq.lithology_name, subq.lithology_name_indexed, subq.lithology_name_order_by,
+         subq.lithology_level_ref, subq.lithology_level_level_name, subq.lithology_status,
+         subq.lithology_local, subq.lithology_color,
+         subq.lithology_path, subq.lithology_parent_ref,
+         NEW.mineral_ref, subq.mineral_name, subq.mineral_name_indexed, subq.mineral_name_order_by,
+         subq.mineral_level_ref, subq.mineral_level_level_name, subq.mineral_status,
+         subq.mineral_local, subq.mineral_color,
+         subq.mineral_path, subq.mineral_parent_ref,
+         NEW.host_taxon_ref, NEW.host_relationship, subq.host_taxon_name, subq.host_taxon_name_indexed, subq.host_taxon_name_order_by,
+         subq.host_taxon_level_ref, subq.host_taxon_level_level_name, subq.host_taxon_status,
+         subq.host_taxon_path, subq.host_taxon_parent_ref, subq.host_taxon_extinct,
+         NEW.host_specimen_ref,
+         NEW.acquisition_category, NEW.acquisition_date_mask, NEW.acquisition_date
+        )
+        FROM
+        (SELECT coll.collection_type coll_collection_type, coll.code coll_code, coll.name coll_name, coll.is_public coll_is_public,
+                coll.parent_ref coll_parent_ref, coll.path coll_path,
+                expe.name expe_name, expe.name_ts expe_name_ts, expe.name_indexed expe_name_indexed,
+                gtu.code gtu_code, gtu.parent_ref gtu_parent_ref, gtu.path gtu_path,gtu.location gtu_location,
+                gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
+                gtu.tag_values_indexed gtu_tag_values_indexed, taggr.tag_value taggr_tag_value, 
+                taxon.name taxon_name, taxon.name_indexed taxon_name_indexed, taxon.name_order_by taxon_name_order_by,
+                taxon.level_ref taxon_level_ref, taxon_level.level_name taxon_level_level_name, taxon.status taxon_status,
+                taxon.path taxon_path, taxon.parent_ref taxon_parent_ref, taxon.extinct taxon_extinct,
+                chrono.name chrono_name, chrono.name_indexed chrono_name_indexed, chrono.name_order_by chrono_name_order_by,
+                chrono.level_ref chrono_level_ref, chrono_level.level_name chrono_level_level_name, chrono.status chrono_status,
+                chrono.local_naming chrono_local, chrono.color chrono_color,
+                chrono.path chrono_path, chrono.parent_ref chrono_parent_ref,
+                litho.name litho_name, litho.name_indexed litho_name_indexed, litho.name_order_by litho_name_order_by,
+                litho.level_ref litho_level_ref, litho_level.level_name litho_level_level_name, litho.status litho_status,
+                litho.local_naming litho_local, litho.color litho_color,
+                litho.path litho_path, litho.parent_ref litho_parent_ref,
+                lithology.name lithology_name, lithology.name_indexed lithology_name_indexed, lithology.name_order_by lithology_name_order_by,
+                lithology.level_ref lithology_level_ref, lithology_level.level_name lithology_level_level_name, lithology.status lithology_status,
+                lithology.local_naming lithology_local, lithology.color lithology_color,
+                lithology.path lithology_path, lithology.parent_ref lithology_parent_ref,
+                mineral.name mineral_name, mineral.name_indexed mineral_name_indexed, mineral.name_order_by mineral_name_order_by,
+                mineral.level_ref mineral_level_ref, mineral_level.level_name mineral_level_level_name, mineral.status mineral_status,
+                mineral.local_naming mineral_local, mineral.color mineral_color,
+                mineral.path mineral_path, mineral.parent_ref mineral_parent_ref,
+                host_taxon.name host_taxon_name, host_taxon.name_indexed host_taxon_name_indexed, host_taxon.name_order_by host_taxon_name_order_by,
+                host_taxon.level_ref host_taxon_level_ref, host_taxon_level.level_name host_taxon_level_level_name, host_taxon.status host_taxon_status,
+                host_taxon.path host_taxon_path, host_taxon.parent_ref host_taxon_parent_ref, host_taxon.extinct host_taxon_extinct
+         FROM collections coll,
+              expeditions expe,
+              (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'),
+              (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id),
+              (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id),
+              (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id),
+              (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id),
+              (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id),
+              (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
+         WHERE coll.id = NEW.collection_ref
+           AND expe.id = NEW.expedition_ref
+           AND gtu.id = NEW.gtu_ref
+           AND taxon.id = NEW.taxon_ref
+           AND host_taxon.id = NEW.host_taxon_ref
+           AND chrono.id = NEW.chrono_ref
+           AND litho.id = NEW.litho_ref
+           AND lithology.id = NEW.lithology_ref
+           AND mineral.id = NEW.mineral_ref
+         LIMIT 1
+        ) subq
+    WHERE specimen_ref = NEW.id;
   END IF;
 
-  IF ROLD.collection_ref IS DISTINCT FROM RNEW.collection_ref THEN
-    SELECT collection_type, code, name, is_public, parent_ref, path
-        INTO NEW.collection_type, NEW.collection_code, NEW.collection_name, NEW.collection_is_public,
-          NEW.collection_parent_ref, NEW.collection_path
-        FROM collections c
-        WHERE c.id = NEW.collection_ref;
-  END IF;
-
-  IF ROLD.expedition_ref IS DISTINCT FROM RNEW.expedition_ref THEN
-    SELECT  name , name_ts , name_indexed
-        INTO NEW.expedition_name, NEW.expedition_name_ts, NEW.expedition_name_indexed
-        FROM expeditions
-        WHERE id = NEW.expedition_ref;
-  END IF;
-  
-  IF ROLD.gtu_ref IS DISTINCT FROM RNEW.gtu_ref THEN
-    SELECT code, parent_ref, path, location, gtu_from_date_mask, gtu_from_date,
-          gtu_to_date_mask, gtu_to_date, tag_values_indexed, taggr.tag_value
-      INTO NEW.gtu_code, NEW.gtu_parent_ref, NEW.gtu_path, NEW.gtu_location,
-            NEW.gtu_from_date_mask, NEW.gtu_from_date, NEW.gtu_to_date_mask, NEW.gtu_to_date,
-            NEW.gtu_tag_values_indexed, NEW.gtu_country_tag_value, NEW.gtu_country_tag_indexed
-      FROM gtu g LEFT JOIN tag_groups taggr 
-        ON g.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'
-      WHERE g.id = NEW.gtu_ref; 
-  END IF;
-
-  IF ROLD.taxon_ref IS DISTINCT FROM RNEW.taxon_ref THEN
-    SELECT name, name_indexed, name_order_by, level_ref, taxon_level.level_name, status ,
-          path, parent_ref, extinct
-      INTO 
-          NEW.taxon_name, NEW.taxon_name_indexed, NEW.taxon_name_order_by, NEW.taxon_level_ref,
-          NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_path, NEW.taxon_parent_ref, NEW.taxon_extinct
-      FROM 
-        taxonomy t INNER JOIN catalogue_levels taxon_level ON level_ref = taxon_level.id     
-        WHERE t.id = NEW.taxon_ref;
-  END IF;
-
-
-  IF ROLD.chrono_ref IS DISTINCT FROM RNEW.chrono_ref THEN
-    SELECT name, name_indexed , name_order_by, level_ref, 
-        chrono_level.level_name, status, local_naming, color, path, parent_ref
-      INTO 
-          NEW.chrono_name, NEW.chrono_name_indexed, NEW.chrono_name_order_by, NEW.chrono_level_ref, NEW.chrono_level_name,
-          NEW.chrono_status, NEW.chrono_local, NEW.chrono_color, NEW.chrono_path, NEW.chrono_parent_ref
-      FROM 
-        chronostratigraphy c INNER JOIN catalogue_levels chrono_level ON level_ref = chrono_level.id
-        WHERE c.id = NEW.chrono_ref;
-  END IF;
-
-  IF ROLD.litho_ref IS DISTINCT FROM RNEW.litho_ref THEN
-
-    SELECT name, name_indexed, name_order_by, level_ref, litho_level.level_name,
-          status, local_naming, color, path, parent_ref
-      INTO 
-          NEW.litho_name, NEW.litho_name_indexed, NEW.litho_name_order_by, NEW.litho_level_ref, NEW.litho_level_name, NEW.litho_status,
-          NEW.litho_local,  NEW.litho_color, NEW.litho_path,  NEW.litho_parent_ref
-      FROM 
-        lithostratigraphy l INNER JOIN catalogue_levels litho_level ON level_ref = litho_level.id
-        WHERE l.id = NEW.litho_ref;
-  END IF;
-
-  IF ROLD.lithology_ref IS DISTINCT FROM RNEW.lithology_ref THEN
-    SELECT name, name_indexed, name_order_by, level_ref, lithology_level.level_name, status,
-          local_naming, color, path, parent_ref
-      INTO 
-          NEW.lithology_name, NEW.lithology_name_indexed, NEW.lithology_name_order_by, NEW.lithology_level_ref, NEW.lithology_level_name,
-          NEW.lithology_status, NEW.lithology_local, NEW.lithology_color, NEW.lithology_path, NEW.lithology_parent_ref
-      FROM 
-        lithology l INNER JOIN catalogue_levels lithology_level ON level_ref = lithology_level.id
-        WHERE l.id = NEW.lithology_ref;
-  END IF;
-
-
-  IF ROLD.mineral_ref IS DISTINCT FROM RNEW.mineral_ref THEN
-    SELECT name, name_indexed, name_order_by, level_ref, mineral_level.level_name, status,
-          local_naming, color, path, parent_ref
-      INTO 
-          NEW.mineral_name, NEW.mineral_name_indexed, NEW.mineral_name_order_by, NEW.mineral_level_ref, NEW.mineral_level_name, NEW.mineral_status,
-          NEW.mineral_local, NEW.mineral_color, NEW.mineral_path, NEW.mineral_parent_ref
-      FROM 
-        mineralogy m INNER JOIN catalogue_levels mineral_level ON level_ref = mineral_level.id
-        WHERE m.id = NEW.mineral_ref;
-  END IF;
-
-
-  IF ROLD.host_taxon_ref IS DISTINCT FROM RNEW.host_taxon_ref THEN
-    SELECT name, name_indexed, name_order_by, level_ref, taxon_level.level_name, status ,
-          path, parent_ref, extinct
-      INTO 
-          NEW.host_taxon_name, NEW.host_taxon_name_indexed, NEW.host_taxon_name_order_by, NEW.host_taxon_level_ref,
-          NEW.host_taxon_level_name, NEW.host_taxon_status, NEW.host_taxon_path, NEW.host_taxon_parent_ref, NEW.host_taxon_extinct
-      FROM 
-        taxonomy t INNER JOIN catalogue_levels taxon_level ON level_ref = taxon_level.id     
-        WHERE t.id = NEW.host_taxon_ref;
-  END IF;
-
-  IF ROLD.ig_ref IS DISTINCT FROM RNEW.ig_ref THEN
-    SELECT ig_num, ig_date_mask, ig_date, ig_num_indexed
-      INTO 
-          NEW.ig_num, NEW.ig_date_mask, NEW.ig_date, NEW.ig_num_indexed
-      FROM 
-        igs
-        WHERE id = NEW.ig_ref;
-  END IF;
-
-  RETURN NEW;
 END;
 $$
 language plpgsql;
@@ -2681,18 +2755,18 @@ BEGIN
     END IF;
 
     IF do_with_type THEN
-      UPDATE specimens s set 
-        with_types = exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.id AND  i2.type_group <> 'specimen')
+      UPDATE specimens_flat s set 
+        with_types = exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.specimen_ref AND  i2.type_group <> 'specimen')
       WHERE
-         s.id = rid
-        AND with_types != exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.id AND  i2.type_group <> 'specimen');
+         s.specimen_ref = rid
+        AND with_types != exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.specimen_ref AND  i2.type_group <> 'specimen');
     END IF;
 
-    UPDATE specimens s set 
-      with_individuals = exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.id)
+    UPDATE specimens_flat s set 
+      with_individuals = exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.specimen_ref)
       WHERE
-        s.id = rid
-      AND with_individuals != exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.id);
+        s.specimen_ref = rid
+      AND with_individuals != exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.specimen_ref);
 
   ELSIF TG_TABLE_NAME = 'specimen_parts' THEN
 
@@ -2722,18 +2796,18 @@ BEGIN
 
   IF TG_OP = 'DELETE' THEN
     IF OLD.people_type = 'collector' THEN
-      UPDATE specimens s SET spec_coll_ids = fct_remove_array_elem(spec_coll_ids,ARRAY[OLD.people_ref])
-        WHERE id  = OLD.record_id;
+      UPDATE specimens_flat s SET spec_coll_ids = fct_remove_array_elem(spec_coll_ids,ARRAY[OLD.people_ref])
+        WHERE specimen_ref  = OLD.record_id;
     ELSIF OLD.people_type = 'donator' THEN
-      UPDATE specimens s SET spec_don_sel_ids = fct_remove_array_elem(spec_don_sel_ids,ARRAY[OLD.people_ref])
-        WHERE id  = OLD.record_id;
+      UPDATE specimens_flat s SET spec_don_sel_ids = fct_remove_array_elem(spec_don_sel_ids,ARRAY[OLD.people_ref])
+        WHERE specimen_ref  = OLD.record_id;
     ELSIF OLD.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = OLD.record_id;
       IF NOT FOUND Then
         RETURN OLD;
       ELSIF ident.referenced_relation =  'specimens' THEN
-        UPDATE specimens s SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,ARRAY[OLD.people_ref])
-          WHERE id  = ident.record_id 
+        UPDATE specimens_flat s SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,ARRAY[OLD.people_ref])
+          WHERE specimen_ref  = ident.record_id 
             AND NOT exists (
               SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' 
                 WHERE i.record_id = ident.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens'
@@ -2751,16 +2825,16 @@ BEGIN
   ELSIF TG_OP = 'INSERT' THEN --- INSERT
 
     IF NEW.people_type = 'collector' THEN
-      UPDATE specimens s SET spec_coll_ids = array_append(spec_coll_ids,NEW.people_ref)
-        WHERE id  = NEW.record_id and NOT (spec_coll_ids && ARRAY[ NEW.people_ref::integer ]);
+      UPDATE specimens_flat s SET spec_coll_ids = array_append(spec_coll_ids,NEW.people_ref)
+        WHERE specimen_ref  = NEW.record_id and NOT (spec_coll_ids && ARRAY[ NEW.people_ref::integer ]);
     ELSIF NEW.people_type = 'donator' THEN
-      UPDATE specimens s SET spec_don_sel_ids = array_append(spec_don_sel_ids,NEW.people_ref)
-        WHERE id  = NEW.record_id  and NOT (spec_don_sel_ids && ARRAY[ NEW.people_ref::integer ]);
+      UPDATE specimens_flat s SET spec_don_sel_ids = array_append(spec_don_sel_ids,NEW.people_ref)
+        WHERE specimen_ref  = NEW.record_id  and NOT (spec_don_sel_ids && ARRAY[ NEW.people_ref::integer ]);
     ELSIF NEW.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = NEW.record_id;
       IF ident.referenced_relation =  'specimens' THEN
-        UPDATE specimens s SET spec_ident_ids = array_append(spec_ident_ids,NEW.people_ref)
-          WHERE id  = ident.record_id and NOT (spec_ident_ids && ARRAY[ NEW.people_ref::integer ]);
+        UPDATE specimens_flat s SET spec_ident_ids = array_append(spec_ident_ids,NEW.people_ref)
+          WHERE specimen_ref  = ident.record_id and NOT (spec_ident_ids && ARRAY[ NEW.people_ref::integer ]);
       ELSE --spec_individuals
         UPDATE specimen_individuals s SET ind_ident_ids = array_append(ind_ident_ids,NEW.people_ref)
           WHERE id  = ident.record_id and NOT (ind_ident_ids && ARRAY[ NEW.people_ref::integer ]);
@@ -2770,11 +2844,11 @@ BEGIN
   ELSIF OLD.people_ref != NEW.people_ref THEN --UPDATE
 
     IF NEW.people_type = 'collector' THEN
-      UPDATE specimens s SET spec_coll_ids = array_append(fct_remove_array_elem(spec_coll_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
-        WHERE id  = NEW.record_id;
+      UPDATE specimens_flat s SET spec_coll_ids = array_append(fct_remove_array_elem(spec_coll_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
+        WHERE specimen_ref  = NEW.record_id;
     ELSIF NEW.people_type = 'donator' THEN
-      UPDATE specimens s SET spec_don_sel_ids = array_append(fct_remove_array_elem(spec_don_sel_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
-        WHERE id  = NEW.record_id;
+      UPDATE specimens_flat s SET spec_don_sel_ids = array_append(fct_remove_array_elem(spec_don_sel_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
+        WHERE specimen_ref  = NEW.record_id;
 
     ELSIF NEW.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = NEW.record_id;
@@ -2782,10 +2856,10 @@ BEGIN
       --DETERMIN IF IDENTIFICATION IS ON SPEC OR INDIV
 
       IF ident.referenced_relation =  'specimens' THEN
-        SELECT id, spec_ident_ids INTO spec_row FROM specimens WHERE id = ident.record_id;
+        SELECT specimen_ref, spec_ident_ids INTO spec_row FROM specimens_flat WHERE id = ident.record_id;
 
         IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications' 
-          WHERE i.record_id = spec_row.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens' AND c.id != OLD.id
+          WHERE i.record_id = spec_row.specimen_ref AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens' AND c.id != OLD.id
         ) THEN 
           spec_row.spec_ident_ids := fct_remove_array_elem(spec_row.spec_ident_ids ,ARRAY[OLD.people_ref]);
         END IF;
@@ -2794,7 +2868,7 @@ BEGIN
           spec_row.spec_ident_ids := array_append(spec_row.spec_ident_ids ,NEW.people_ref);
         END IF;
 
-        UPDATE specimens SET spec_ident_ids = spec_row.spec_ident_ids WHERE id = spec_row.id;
+        UPDATE specimens_flat SET spec_ident_ids = spec_row.spec_ident_ids WHERE specimen_ref = spec_row.specimen_ref;
       ELSE --spec_individuals
 
         SELECT id, ind_ident_ids INTO spec_row FROM specimen_individuals WHERE id = ident.record_id;
