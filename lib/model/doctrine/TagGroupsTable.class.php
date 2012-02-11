@@ -10,13 +10,10 @@ class TagGroupsTable extends DarwinTable
       $q = $this->createFlatDistinct('tag_groups', 'sub_group_name', 'sgn');
     else
       $q = $this->createFlatDistinctDepend('tag_groups', 'sub_group_name', $group, 'sgn');
-    $sgps = $q->execute();
-    $res = array(''=>'');
-    foreach($sgps as $row)
-     $res[$row->getSgn()] = $row->getSgn();
-
-    return $res;
-  }
+    
+    $a = DarwinTable::CollectionToArray($q->execute(), 'sgn');
+    return array_merge(array(''=>''),$a);
+	}
 
   public function getPropositions($value, $group="", $sub_group="")
   {
