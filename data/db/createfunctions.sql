@@ -3344,7 +3344,7 @@ DECLARE
   result boolean;
   query_str text;
 BEGIN
-  IF old_value IS NOT DISTINCT FROM new_val THEN 
+  IF old_value IS null OR old_value IS NOT DISTINCT FROM new_val THEN 
     RETURN TRUE;
   END IF;
   query_str := ' SELECT EXISTS( SELECT 1 from ' || quote_ident(ref_relation) || ' where ' || quote_ident(ref_field) || ' = ' || quote_literal(old_value) || ');';
