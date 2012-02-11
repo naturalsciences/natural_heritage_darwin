@@ -204,4 +204,15 @@ class DarwinTable extends Doctrine_Table
     }
     return $result;
   }
+
+	public static function CollectionToArray($collection, $key)
+	{
+		$result = array();
+		foreach($collection as $row)
+		{
+			$val = $row[$key];
+			$result[$val] = $val;
+		}
+		return $result;
+	}
 }

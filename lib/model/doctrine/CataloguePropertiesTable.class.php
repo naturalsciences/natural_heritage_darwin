@@ -31,7 +31,8 @@ class CataloguePropertiesTable extends DarwinTable
       $q = $this->createFlatDistinct('catalogue_properties', 'property_type', 'type');
     else
       $q = $this->createFlatDistinctDepend('catalogue_properties', 'property_type', $ref_relation, 'type');
-    return $q->execute() ;
+    $a = DarwinTable::CollectionToArray($q->execute(), 'type');
+    return array_merge(array(''=>''),$a);
   }
 
   /**
@@ -46,7 +47,9 @@ class CataloguePropertiesTable extends DarwinTable
       $q = $this->createFlatDistinct('catalogue_properties', 'property_sub_type', 'sub_type');
     else
       $q = $this->createFlatDistinctDepend('catalogue_properties', 'property_sub_type', $type, 'sub_type');
-    return $q->execute() ;
+    $a =  DarwinTable::CollectionToArray($q->execute(), 'sub_type');
+    return array_merge(array(''=>''),$a);
+
   }
 
   /**
@@ -61,7 +64,8 @@ class CataloguePropertiesTable extends DarwinTable
       $q = $this->createFlatDistinct('catalogue_properties', 'property_qualifier', 'qualifier');
     else
       $q = $this->createFlatDistinctDepend('catalogue_properties', 'property_qualifier', $sub_type, 'qualifier');
-    return $q->execute() ;
+    $a = DarwinTable::CollectionToArray($q->execute(), 'qualifier');
+    return array_merge(array(''=>''),$a);
   }
   
   /**
@@ -76,19 +80,15 @@ class CataloguePropertiesTable extends DarwinTable
       $q = $this->createFlatDistinct('catalogue_properties', 'property_unit', 'unit');
     else
       $q = $this->createFlatDistinctDepend('catalogue_properties', 'property_unit', $type, 'unit');
-    $res_unit= $q->execute() ;
-    $results = array(''=>'unit');
-    foreach($res_unit as $row)
-      $results[$row->getUnit()] = $row->getUnit();
+    $res_unit= DarwinTable::CollectionToArray($q->execute(), 'unit');
+    $res_unit['']='unit';
 
     if(is_null($type))
       $q = $this->createFlatDistinct('catalogue_properties', 'property_accuracy_unit', 'unit');
     else
       $q = $this->createFlatDistinctDepend('catalogue_properties', 'property_accuracy_unit', $type, 'unit');
 
-    foreach($res_unit as $row)
-      $results[$row->getUnit()] = $row->getUnit();
-
-    return $results;
+    $results= DarwinTable::CollectionToArray($q->execute(), 'unit');
+    return array_merge($res_unit, $results);
   }
 }
