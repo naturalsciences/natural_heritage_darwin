@@ -427,7 +427,7 @@ BEGIN
 	DELETE FROM class_vernacular_names WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
 	DELETE FROM classification_synonymies WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
 	DELETE FROM classification_keywords WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM users_workflow WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
+	DELETE FROM informative_workflow WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
 	DELETE FROM collection_maintenance WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
 	DELETE FROM associated_multimedia WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
 	DELETE FROM codes WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
@@ -1759,7 +1759,7 @@ $$
 $$;
 
 
-CREATE OR REPLACE FUNCTION fct_update_specimens_flat() returns TRIGGER
+CREATE OR REPLACE FUNCTION fct_update_specimens_flat_related() returns TRIGGER
 language plpgsql
 AS
 $$
@@ -1962,14 +1962,16 @@ $$;
 
 CREATE OR REPLACE FUNCTION fct_update_specimen_flat() RETURNS TRIGGER
 AS $$
+DECLARE cnt integer;
 BEGIN
- IF TG_OP = 'INSERT' AND TG_TABLE_NAME = 'specimens' THEN
-    INSERT INTO darwin_flat
-    (specimen_ref,category,
+ IF TG_OP = 'INSERT' THEN
+
+    INSERT INTO specimens_flat
+    (specimen_ref,
      collection_ref,collection_type,collection_code,collection_name, collection_is_public,
      collection_parent_ref,collection_path,
      expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-     station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
+     gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
      gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
      gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,
      taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
@@ -1986,16 +1988,14 @@ BEGIN
      mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
      mineral_local,mineral_color,
      mineral_path,mineral_parent_ref,
-     host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
+     host_taxon_ref,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
      host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-     host_specimen_ref,
-     acquisition_category,acquisition_date_mask,acquisition_date
-    )
-    (SELECT NEW.id, NEW.category,
+     host_specimen_ref,ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date )
+    (SELECT NEW.id, 
             NEW.collection_ref, coll.collection_type, coll.code, coll.name, coll.is_public,
             coll.parent_ref, coll.path,
             NEW.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
-            NEW.station_visible, NEW.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
+            NEW.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
             gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
             gtu.tag_values_indexed, taggr.tag_value,  lineToTagArray(taggr.tag_value),
             NEW.taxon_ref, taxon.name, taxon.name_indexed, taxon.name_order_by, taxon.level_ref, taxon_level.level_name, taxon.status,
@@ -2012,37 +2012,46 @@ BEGIN
             NEW.mineral_ref, mineral.name, mineral.name_indexed, mineral.name_order_by, mineral.level_ref, mineral_level.level_name, mineral.status,
             mineral.local_naming,mineral.color,
             mineral.path, mineral.parent_ref,
-            NEW.host_taxon_ref, NEW.host_relationship, host_taxon.name, host_taxon.name_indexed, host_taxon.name_order_by, host_taxon.level_ref, host_taxon_level.level_name, host_taxon.status,
+            NEW.host_taxon_ref, host_taxon.name, host_taxon.name_indexed, host_taxon.name_order_by, host_taxon.level_ref, host_taxon_level.level_name, host_taxon.status,
             host_taxon.path, host_taxon.parent_ref, host_taxon.extinct,
-            NEW.host_specimen_ref,
-            NEW.acquisition_category, NEW.acquisition_date_mask, NEW.acquisition_date
-     FROM collections coll,
-          expeditions expe,
-          (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'),
-          (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id),
-          (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id),
-          (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id),
-          (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id),
-          (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id),
-          (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
-     WHERE coll.id = NEW.collection_ref
-       AND expe.id = NEW.expedition_ref
-       AND gtu.id = NEW.gtu_ref
-       AND taxon.id = NEW.taxon_ref
-       AND host_taxon.id = NEW.host_taxon_ref
-       AND chrono.id = NEW.chrono_ref
-       AND litho.id = NEW.litho_ref
-       AND lithology.id = NEW.lithology_ref
-       AND mineral.id = NEW.mineral_ref
-     LIMIT 1
+            NEW.host_specimen_ref, NEW.ig_ref, igs.ig_num, igs.ig_num_indexed, igs.ig_date_mask, igs.ig_date
+     FROM collections coll
+      LEFT JOIN
+          igs ON igs.id = NEW.ig_ref
+      LEFT JOIN
+      	expeditions expe ON expe.id = NEW.expedition_ref
+      LEFT JOIN
+      	(gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country')
+      	ON gtu.id = NEW.gtu_ref
+      LEFT JOIN 
+        (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id)
+      	ON taxon.id=NEW.taxon_ref
+      LEFT JOIN 
+        (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id)
+      	ON host_taxon.id=NEW.host_taxon_ref
+      LEFT JOIN 
+        (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id)
+      	ON chrono.id=NEW.chrono_ref
+      LEFT JOIN 
+        (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id)
+      	ON litho.id=NEW.litho_ref
+      LEFT JOIN 
+        (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id)
+      	ON lithology.id=NEW.lithology_ref
+      LEFT JOIN 
+        (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
+        ON mineral.id=NEW.mineral_ref
+      
+      WHERE coll.id = NEW.collection_ref
+      LIMIT 1
     );
- ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'specimens' THEN
-    UPDATE darwin_flat
-    SET (category,
-         collection_ref,collection_type,collection_code,collection_name, collection_is_public,
+ 
+ ELSIF TG_OP = 'UPDATE' THEN
+    UPDATE specimens_flat
+    SET (collection_ref,collection_type,collection_code,collection_name, collection_is_public,
          collection_parent_ref,collection_path,
          expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-         station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
+         gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
          gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
          gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
          taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
@@ -2059,16 +2068,16 @@ BEGIN
          mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
          mineral_local, mineral_color,
          mineral_path,mineral_parent_ref,
-         host_taxon_ref,host_relationship,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
+         host_taxon_ref,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
          host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-         host_specimen_ref,
-         acquisition_category,acquisition_date_mask,acquisition_date
-        )=
-        (NEW.category,
-         NEW.collection_ref, subq.coll_collection_type, subq.coll_code, subq.coll_name, subq.coll_is_public,
+         host_specimen_ref,ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date)
+         
+         =
+         
+        (NEW.collection_ref, subq.coll_collection_type, subq.coll_code, subq.coll_name, subq.coll_is_public,
          subq.coll_parent_ref, subq.coll_path,
          NEW.expedition_ref, subq.expe_name, subq.expe_name_ts, subq.expe_name_indexed,
-         NEW.station_visible, NEW.gtu_ref, subq.gtu_code, subq.gtu_parent_ref, subq.gtu_path, subq.gtu_location,
+         NEW.gtu_ref, subq.gtu_code, subq.gtu_parent_ref, subq.gtu_path, subq.gtu_location,
          subq.gtu_from_date_mask, subq.gtu_from_date, subq.gtu_to_date_mask, subq.gtu_to_date,
          subq.gtu_tag_values_indexed, subq.taggr_tag_value, lineToTagArray(subq.taggr_tag_value),
          NEW.taxon_ref, subq.taxon_name, subq.taxon_name_indexed, subq.taxon_name_order_by,
@@ -2090,12 +2099,10 @@ BEGIN
          subq.mineral_level_ref, subq.mineral_level_level_name, subq.mineral_status,
          subq.mineral_local, subq.mineral_color,
          subq.mineral_path, subq.mineral_parent_ref,
-         NEW.host_taxon_ref, NEW.host_relationship, subq.host_taxon_name, subq.host_taxon_name_indexed, subq.host_taxon_name_order_by,
+         NEW.host_taxon_ref, subq.host_taxon_name, subq.host_taxon_name_indexed, subq.host_taxon_name_order_by,
          subq.host_taxon_level_ref, subq.host_taxon_level_level_name, subq.host_taxon_status,
          subq.host_taxon_path, subq.host_taxon_parent_ref, subq.host_taxon_extinct,
-         NEW.host_specimen_ref,
-         NEW.acquisition_category, NEW.acquisition_date_mask, NEW.acquisition_date
-        )
+         NEW.host_specimen_ref,NEW.ig_ref, subq.ig_num, subq.ig_num_indexed, subq.ig_date_mask, subq.ig_date)
         FROM
         (SELECT coll.collection_type coll_collection_type, coll.code coll_code, coll.name coll_name, coll.is_public coll_is_public,
                 coll.parent_ref coll_parent_ref, coll.path coll_path,
@@ -2124,30 +2131,40 @@ BEGIN
                 mineral.path mineral_path, mineral.parent_ref mineral_parent_ref,
                 host_taxon.name host_taxon_name, host_taxon.name_indexed host_taxon_name_indexed, host_taxon.name_order_by host_taxon_name_order_by,
                 host_taxon.level_ref host_taxon_level_ref, host_taxon_level.level_name host_taxon_level_level_name, host_taxon.status host_taxon_status,
-                host_taxon.path host_taxon_path, host_taxon.parent_ref host_taxon_parent_ref, host_taxon.extinct host_taxon_extinct
-         FROM collections coll,
-              expeditions expe,
-              (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'),
-              (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id),
-              (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id),
-              (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id),
-              (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id),
-              (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id),
-              (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
-         WHERE coll.id = NEW.collection_ref
-           AND expe.id = NEW.expedition_ref
-           AND gtu.id = NEW.gtu_ref
-           AND taxon.id = NEW.taxon_ref
-           AND host_taxon.id = NEW.host_taxon_ref
-           AND chrono.id = NEW.chrono_ref
-           AND litho.id = NEW.litho_ref
-           AND lithology.id = NEW.lithology_ref
-           AND mineral.id = NEW.mineral_ref
-         LIMIT 1
-        ) subq
+                host_taxon.path host_taxon_path, host_taxon.parent_ref host_taxon_parent_ref, host_taxon.extinct host_taxon_extinct,
+                NEW.ig_ref, igs.ig_num, igs.ig_num_indexed, igs.ig_date_mask, igs.ig_date
+       FROM collections coll
+        LEFT JOIN
+          expeditions expe ON expe.id = NEW.expedition_ref
+        LEFT JOIN
+          igs ON igs.id = NEW.ig_ref
+        LEFT JOIN
+          (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country')
+          ON gtu.id = NEW.gtu_ref
+        LEFT JOIN 
+          (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id)
+          ON taxon.id=NEW.taxon_ref
+        LEFT JOIN 
+          (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id)
+          ON host_taxon.id=NEW.host_taxon_ref
+        LEFT JOIN 
+          (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id)
+          ON chrono.id=NEW.chrono_ref
+        LEFT JOIN 
+          (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id)
+          ON litho.id=NEW.litho_ref
+        LEFT JOIN 
+          (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id)
+          ON lithology.id=NEW.lithology_ref
+        LEFT JOIN 
+          (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
+          ON mineral.id=NEW.mineral_ref
+        WHERE coll.id = NEW.collection_ref
+        LIMIT 1
+      ) subq
     WHERE specimen_ref = NEW.id;
   END IF;
-
+  RETURN NEW;
 END;
 $$
 language plpgsql;
