@@ -18,6 +18,7 @@
  * @property CatalogueLevels $Level
  * @property Doctrine_Collection $Taxonomy
  * @property Doctrine_Collection $Specimens
+ * @property Doctrine_Collection $SpecimensFlat
  * @property Doctrine_Collection $SpecimensAccompanying
  * 
  * @method integer             getId()                    Returns the current record's "id" value
@@ -33,6 +34,7 @@
  * @method CatalogueLevels     getLevel()                 Returns the current record's "Level" value
  * @method Doctrine_Collection getTaxonomy()              Returns the current record's "Taxonomy" collection
  * @method Doctrine_Collection getSpecimens()             Returns the current record's "Specimens" collection
+ * @method Doctrine_Collection getSpecimensFlat()         Returns the current record's "SpecimensFlat" collection
  * @method Doctrine_Collection getSpecimensAccompanying() Returns the current record's "SpecimensAccompanying" collection
  * @method Taxonomy            setId()                    Sets the current record's "id" value
  * @method Taxonomy            setName()                  Sets the current record's "name" value
@@ -47,6 +49,7 @@
  * @method Taxonomy            setLevel()                 Sets the current record's "Level" value
  * @method Taxonomy            setTaxonomy()              Sets the current record's "Taxonomy" collection
  * @method Taxonomy            setSpecimens()             Sets the current record's "Specimens" collection
+ * @method Taxonomy            setSpecimensFlat()         Sets the current record's "SpecimensFlat" collection
  * @method Taxonomy            setSpecimensAccompanying() Sets the current record's "SpecimensAccompanying" collection
  * 
  * @package    darwin
@@ -114,6 +117,10 @@ abstract class BaseTaxonomy extends sfDoctrineRecord
              'foreign' => 'parent_ref'));
 
         $this->hasMany('Specimens', array(
+             'local' => 'id',
+             'foreign' => 'taxon_ref'));
+
+        $this->hasMany('SpecimensFlat', array(
              'local' => 'id',
              'foreign' => 'taxon_ref'));
 

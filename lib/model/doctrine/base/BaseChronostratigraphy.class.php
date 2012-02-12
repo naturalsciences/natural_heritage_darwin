@@ -21,6 +21,7 @@
  * @property CatalogueLevels $Level
  * @property Doctrine_Collection $Chronostratigraphy
  * @property Doctrine_Collection $Specimens
+ * @property Doctrine_Collection $SpecimensFlat
  * 
  * @method integer             getId()                 Returns the current record's "id" value
  * @method string              getName()               Returns the current record's "name" value
@@ -38,6 +39,7 @@
  * @method CatalogueLevels     getLevel()              Returns the current record's "Level" value
  * @method Doctrine_Collection getChronostratigraphy() Returns the current record's "Chronostratigraphy" collection
  * @method Doctrine_Collection getSpecimens()          Returns the current record's "Specimens" collection
+ * @method Doctrine_Collection getSpecimensFlat()      Returns the current record's "SpecimensFlat" collection
  * @method Chronostratigraphy  setId()                 Sets the current record's "id" value
  * @method Chronostratigraphy  setName()               Sets the current record's "name" value
  * @method Chronostratigraphy  setNameIndexed()        Sets the current record's "name_indexed" value
@@ -54,6 +56,7 @@
  * @method Chronostratigraphy  setLevel()              Sets the current record's "Level" value
  * @method Chronostratigraphy  setChronostratigraphy() Sets the current record's "Chronostratigraphy" collection
  * @method Chronostratigraphy  setSpecimens()          Sets the current record's "Specimens" collection
+ * @method Chronostratigraphy  setSpecimensFlat()      Sets the current record's "SpecimensFlat" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -133,6 +136,10 @@ abstract class BaseChronostratigraphy extends sfDoctrineRecord
              'foreign' => 'parent_ref'));
 
         $this->hasMany('Specimens', array(
+             'local' => 'id',
+             'foreign' => 'chrono_ref'));
+
+        $this->hasMany('SpecimensFlat', array(
              'local' => 'id',
              'foreign' => 'chrono_ref'));
     }

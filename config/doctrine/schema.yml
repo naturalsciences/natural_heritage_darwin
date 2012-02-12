@@ -680,6 +680,68 @@ Specimens:
         station_visible: { type: boolean, default: true}
         multimedia_visible: { type: boolean, default: true}
         ig_ref: { type: integer}
+    relations:
+        Collections:
+            local: collection_ref
+            foreign: id
+        Expeditions:
+            local: expedition_ref
+            foreign: id
+        Gtu:
+            local: gtu_ref
+            foreign: id
+        Taxonomy:
+            local: taxon_ref
+            foreign: id
+        Lithostratigraphy:
+            local: litho_ref
+            foreign: id
+        Chronostratigraphy:
+            local: chrono_ref
+            foreign: id
+        Lithology:
+            local: lithology_ref
+            foreign: id
+        Mineralogy:
+            local: mineral_ref
+            foreign: id
+        HostTaxon:
+            class: Taxonomy
+            local: host_taxon_ref
+            foreign: id
+        HostSpecimen:
+            class: Specimens
+            local: host_specimen_ref
+            foreign: id
+        Igs:
+            class: Igs
+            local: ig_ref
+            foreign: id
+        CollectingMethods:
+            class: CollectingMethods
+            refClass: SpecimensMethods
+            local: specimen_ref
+            foreign: collecting_method_ref
+        CollectingTools:
+            class: CollectingTools
+            refClass: SpecimensTools
+            local: specimen_ref
+            foreign: collecting_tool_ref
+
+SpecimensFlat:
+    columns:
+        specimen_ref: { type: integer, primary: true},
+        collection_ref: { type: integer, notnull: true }
+        expedition_ref: { type: integer}
+        gtu_ref: { type: integer}
+        taxon_ref: { type: integer}
+        litho_ref: { type: integer}
+        chrono_ref: { type: integer}
+        lithology_ref: { type: integer}
+        mineral_ref: { type: integer}
+        host_taxon_ref: { type: integer}
+        host_specimen_ref: { type: integer}
+        ig_ref: { type: integer}
 
         spec_coll_ids: { type:string}
         spec_ident_ids: { type:string}
@@ -771,6 +833,10 @@ Specimens:
         ig_date_mask: { type: integer }
 
     relations:
+        Specimen:
+            class: Specimens
+            local: specimen_ref
+            foreign: id
         Collections:
             local: collection_ref
             foreign: id
@@ -803,22 +869,10 @@ Specimens:
             class: Specimens
             local: host_specimen_ref
             foreign: id
-        Igs:
-            class: Igs
-            local: ig_ref
-            foreign: id
-        CollectingMethods:
-            class: CollectingMethods
-            refClass: SpecimensMethods
-            local: specimen_ref
-            foreign: collecting_method_ref
-        CollectingTools:
-            class: CollectingTools
-            refClass: SpecimensTools
-            local: specimen_ref
-            foreign: collecting_tool_ref
+
+
 IgsSearch:
-    tableName: specimens
+    tableName: specimens_flat
     columns:
         ig_num: { type: string}
         ig_num_indexed: { type: string}

@@ -19,6 +19,7 @@
  * @property CatalogueLevels $Level
  * @property Doctrine_Collection $Lithology
  * @property Doctrine_Collection $Specimens
+ * @property Doctrine_Collection $SpecimensFlat
  * 
  * @method integer             getId()            Returns the current record's "id" value
  * @method string              getName()          Returns the current record's "name" value
@@ -34,6 +35,7 @@
  * @method CatalogueLevels     getLevel()         Returns the current record's "Level" value
  * @method Doctrine_Collection getLithology()     Returns the current record's "Lithology" collection
  * @method Doctrine_Collection getSpecimens()     Returns the current record's "Specimens" collection
+ * @method Doctrine_Collection getSpecimensFlat() Returns the current record's "SpecimensFlat" collection
  * @method Lithology           setId()            Sets the current record's "id" value
  * @method Lithology           setName()          Sets the current record's "name" value
  * @method Lithology           setNameIndexed()   Sets the current record's "name_indexed" value
@@ -48,6 +50,7 @@
  * @method Lithology           setLevel()         Sets the current record's "Level" value
  * @method Lithology           setLithology()     Sets the current record's "Lithology" collection
  * @method Lithology           setSpecimens()     Sets the current record's "Specimens" collection
+ * @method Lithology           setSpecimensFlat() Sets the current record's "SpecimensFlat" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -117,6 +120,10 @@ abstract class BaseLithology extends sfDoctrineRecord
              'foreign' => 'parent_ref'));
 
         $this->hasMany('Specimens', array(
+             'local' => 'id',
+             'foreign' => 'lithology_ref'));
+
+        $this->hasMany('SpecimensFlat', array(
              'local' => 'id',
              'foreign' => 'lithology_ref'));
     }

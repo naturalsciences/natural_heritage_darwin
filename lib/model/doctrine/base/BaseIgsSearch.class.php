@@ -40,7 +40,7 @@ abstract class BaseIgsSearch extends sfDoctrineRecord
 {
     public function setTableDefinition()
     {
-        $this->setTableName('specimens');
+        $this->setTableName('specimens_flat');
         $this->hasColumn('ig_num', 'string', null, array(
              'type' => 'string',
              ));

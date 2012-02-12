@@ -28,6 +28,7 @@
  * @property Doctrine_Collection $Collections
  * @property Doctrine_Collection $CollectionsRights
  * @property Doctrine_Collection $Specimens
+ * @property Doctrine_Collection $SpecimensFlat
  * @property Doctrine_Collection $Imports
  * 
  * @method integer             getId()                       Returns the current record's "id" value
@@ -53,6 +54,7 @@
  * @method Doctrine_Collection getCollections()              Returns the current record's "Collections" collection
  * @method Doctrine_Collection getCollectionsRights()        Returns the current record's "CollectionsRights" collection
  * @method Doctrine_Collection getSpecimens()                Returns the current record's "Specimens" collection
+ * @method Doctrine_Collection getSpecimensFlat()            Returns the current record's "SpecimensFlat" collection
  * @method Doctrine_Collection getImports()                  Returns the current record's "Imports" collection
  * @method Collections         setId()                       Sets the current record's "id" value
  * @method Collections         setCollectionType()           Sets the current record's "collection_type" value
@@ -77,6 +79,7 @@
  * @method Collections         setCollections()              Sets the current record's "Collections" collection
  * @method Collections         setCollectionsRights()        Sets the current record's "CollectionsRights" collection
  * @method Collections         setSpecimens()                Sets the current record's "Specimens" collection
+ * @method Collections         setSpecimensFlat()            Sets the current record's "SpecimensFlat" collection
  * @method Collections         setImports()                  Sets the current record's "Imports" collection
  * 
  * @package    darwin
@@ -190,6 +193,10 @@ abstract class BaseCollections extends sfDoctrineRecord
              'foreign' => 'collection_ref'));
 
         $this->hasMany('Specimens', array(
+             'local' => 'id',
+             'foreign' => 'collection_ref'));
+
+        $this->hasMany('SpecimensFlat', array(
              'local' => 'id',
              'foreign' => 'collection_ref'));
 
