@@ -1,6 +1,7 @@
 <?php slot('title',  __( $form->isNew() ? 'Add Loan' : 'Edit Loan'));  ?>
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
+<?php $action = 'loan/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()) ;?>
 <?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'loan','eid'=> (! $form->getObject()->isNew() ? $form->getObject()->getId() : null ))); ?>
 <div class="page">
     <?php include_partial('tabs', array('loan'=> $form->getObject())); ?>
@@ -10,7 +11,7 @@
           <li></li>
         </ul>
       </div>   
-      <?php echo form_tag('loan/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition loan_form'));?>
+      <?php echo form_tag($action, array('class'=>'edition loan_form','enctype'=>'multipart/form-data'));?>
         <div>
           <?php include_partial('widgets/screen', array(
             'widgets' => $widgets,
@@ -45,6 +46,13 @@
       $(document).ready(function () {
 //        $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>'});
         $('body').catalogue({}); 
+        $('#submit_loan').click(function() 
+        {
+          form = $(this).closest('form') ;
+          form.removeAttr('target') ;
+          form.attr('action', '<?php echo url_for($action) ; ?>') ;
+          form.submit() ;
+        });
       });
       </script>   
     </div>

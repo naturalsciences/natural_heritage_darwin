@@ -19,13 +19,15 @@ class loanActions extends DarwinActions
     if ($fwd404)
       return $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter,0)));
 
-    if($request->hasParameter($parameter) && $request->getParameter($parameter) && $request->getParameter('table','loans')== 'loans')
+    if($request->getParameter('table','loans')== 'loans')
     {
-      $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter) );
+      if($request->hasParameter($parameter))
+        $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter) );      
       $form = new LoansForm($loan);
     }else
     {
-      $loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
+      if($request->hasParameter($parameter))    
+        $loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
       $form = new LoanItemWidgetForm($loan);
     }
     return $form;
@@ -92,7 +94,7 @@ class loanActions extends DarwinActions
     $loan = new Loans() ;
     $duplic = $request->getParameter('duplicate_id','0') ;
     $loan = $this->getRecordIfDuplicate($duplic, $loan);
-    if($request->hasParameter('expedition')) $expedition->fromArray($request->getParameter('expedition'));            
+    if($request->hasParameter('expedition')) $expedition->fromArray($request->getParameter('expedition'));
     // Initialization of a new encoding expedition form
     $this->form = new LoansForm($loan);
     if ($duplic)
@@ -111,16 +113,20 @@ class loanActions extends DarwinActions
     $this->setTemplate('new') ;    
   }
 
-
+  public function executeView(sfWebRequest $request)
+  {
+    // Forward to a 404 page if the requested expedition id is not found
+    $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
+    $this->loadWidgets();
+  }
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
-  //  die(print_r($request->getParameter($form->getName()))) ;
-    $form->bind($request->getParameter($form->getName()));
+    $form->bind($request->getParameter($form->getName()),$request->getFiles($this->form->getName()));
     if ($form->isValid())
     {
       try
-      {
+      {        
         $item = $form->save();
         $this->redirect('loan/edit?id='.$item->getId());
       }
@@ -130,7 +136,7 @@ class loanActions extends DarwinActions
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
         $form->getErrorSchema()->addError($error); 
       }
-    }
+    } 
   }
 
   public function executeViewAll(sfWebRequest $request)
@@ -165,7 +171,7 @@ class loanActions extends DarwinActions
       $this->form = new LoansForm($loan);
       $this->form->getErrorSchema()->addError($error); 
       $this->loadWidgets();
-      $this->setTemplate('edit');
+      $this->setTemplate('new');
     }
   }
 
@@ -272,7 +278,57 @@ class loanActions extends DarwinActions
     $form->addInsurances($number);
     return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
   }  
-  
+
+  public function executeInsertFile(sfWebRequest $request)
+  {
+    //if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    if($request->hasParameter('id'))
+      $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id'));
+    else
+      $loan=null;  
+    if($request->hasParameter('table'))
+    {
+      if($request->getParameter('table') == 'loans') $form = new LoansForm($loan,array('no_name'=>true));    
+      else  $form = new LoanItemsForm($loan);    
+      $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
+      $file = $form->getValue('filenames');
+      if($form->isValid()) 
+      {       
+        if(!Multimedia::CheckMymeType($file->getType()))
+          return $this->renderText("<script>parent.displayFileError('This type of file is not allowed')</script>") ;
+        // first save the file
+        $filename = sha1($file->getOriginalName().rand());
+        while(file_exists(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename))
+          $filename = sha1($file->getOriginalName().rand());
+        $extension = $file->getExtension($file->getOriginalExtension());
+        $file->save(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename);      
+        if($file->isSaved())
+          $file_info = array(
+            'title' => $file->getOriginalName(),
+            'filename' => $file->getOriginalName(),
+            'mime_type' => $file->getType(),
+            'type' => $extension,
+            'uri' => $filename,
+            'referenced_relation' => 'loans',
+            'creation_date' => date('Y/m/d')
+          ) ;
+          $this->getUser()->setAttribute($filename, $file_info);
+        return $this->renderText("<script>parent.getFileInfo('$filename')</script>") ;
+      }
+      return $this->renderText("<script>parent.displayFileError('".$form->getErrorSchema()->current()."')</script>") ;
+    }
+  }
+
+  public function executeAddRelatedFiles(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $form = $this->getLoanForm($request);
+    $file = $this->getUser()->getAttribute($request->getParameter('file_id')) ;    
+    $form->addRelatedFiles($number,$file);
+    return $this->renderPartial('loan/multimedia',array('form' => $form['newRelatedFiles'][$number], 'row_num'=>$number));
+  }  
+    
   public function executeAddStatus(sfWebRequest $request)
   {    
     if($request->isXmlHttpRequest()) 

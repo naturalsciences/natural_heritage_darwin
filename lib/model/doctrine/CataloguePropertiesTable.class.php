@@ -27,10 +27,12 @@ class CataloguePropertiesTable extends DarwinTable
   */
   public function getDistinctType($ref_relation=null)
   {
-    $q = $this->createDistinct('CatalogueProperties', 'property_type', 'type');
-    if(! is_null($ref_relation))
-      $q->addWhere('referenced_relation = ?', $ref_relation) ;
-    return $q->execute() ;
+    if(is_null($ref_relation))
+      $q = $this->createFlatDistinct('catalogue_properties', 'property_type', 'type');
+    else
+      $q = $this->createFlatDistinctDepend('catalogue_properties', 'property_type', $ref_relation, 'type');
+    $a = DarwinTable::CollectionToArray($q->execute(), 'type');
+    return array_merge(array(''=>''),$a);
   }
 
   /**
@@ -41,13 +43,13 @@ class CataloguePropertiesTable extends DarwinTable
   */
   public function getDistinctSubType($type=null)
   {
-    $q = $this->createDistinct('CatalogueProperties INDEXBY sub_type', 'property_sub_type', 'sub_type','');
-    if(! is_null($type))
-      $q->addWhere('property_type = ?',$type);
-    $results = $q->fetchArray();
-    if(count($results))
-      $results = array_combine(array_keys($results),array_keys($results));
-    return array_merge(array(''=>''), $results);
+    if(is_null($type))
+      $q = $this->createFlatDistinct('catalogue_properties', 'property_sub_type', 'sub_type');
+    else
+      $q = $this->createFlatDistinctDepend('catalogue_properties', 'property_sub_type', $type, 'sub_type');
+    $a =  DarwinTable::CollectionToArray($q->execute(), 'sub_type');
+    return array_merge(array(''=>''),$a);
+
   }
 
   /**
@@ -58,16 +60,12 @@ class CataloguePropertiesTable extends DarwinTable
   */
   public function getDistinctQualifier($sub_type=null)
   {
-    $q = $this->createDistinct('CatalogueProperties', 'property_qualifier', 'qualifier','');
-    
-    $conn_MGR = Doctrine_Manager::connection();
-    if(! is_null($sub_type))
-      $q->addWhere('property_sub_type_indexed = fullToIndex('.$conn_MGR->quote($sub_type, 'string').')');
-    $results = $q->fetchArray();
-    $rez=array(''=>''); //@TODO: don't know why but doctrine doesnt like it otherwise
-    foreach($results as $item)
-      $rez[$item['qualifier']]=$item['qualifier'];
-    return $rez;
+    if(is_null($sub_type))
+      $q = $this->createFlatDistinct('catalogue_properties', 'property_qualifier', 'qualifier');
+    else
+      $q = $this->createFlatDistinctDepend('catalogue_properties', 'property_qualifier', $sub_type, 'qualifier');
+    $a = DarwinTable::CollectionToArray($q->execute(), 'qualifier');
+    return array_merge(array(''=>''),$a);
   }
   
   /**
@@ -78,23 +76,19 @@ class CataloguePropertiesTable extends DarwinTable
   */
   public function getDistinctUnit($type=null)
   {
-    $q = $this->createDistinct('CatalogueProperties INDEXBY unit', 'property_unit', 'unit','');
+    if(is_null($type))
+      $q = $this->createFlatDistinct('catalogue_properties', 'property_unit', 'unit');
+    else
+      $q = $this->createFlatDistinctDepend('catalogue_properties', 'property_unit', $type, 'unit');
+    $res_unit= DarwinTable::CollectionToArray($q->execute(), 'unit');
+    $res_unit['']='unit';
 
-    if(! is_null($type))
-      $q->addWhere('property_type = ?',$type);
-    $q->andWhere('property_unit is not null');
-    $results_unit = $q->fetchArray();
+    if(is_null($type))
+      $q = $this->createFlatDistinct('catalogue_properties', 'property_accuracy_unit', 'unit');
+    else
+      $q = $this->createFlatDistinctDepend('catalogue_properties', 'property_accuracy_unit', $type, 'unit');
 
-    $q = $this->createDistinct('CatalogueProperties INDEXBY unit', 'property_accuracy_unit', 'unit','');
-
-    if(! is_null($type))
-      $q->addWhere('property_type = ?',$type);
-    $q->andWhere('property_accuracy_unit is not null');
-    $results_accuracy = $q->fetchArray();
-    $results = array_merge($results_unit, $results_accuracy);
-  
-    if(count($results))
-      $results = array_combine(array_keys($results),array_keys($results));
-    return array_merge(array(''=>'unit'), $results);
+    $results= DarwinTable::CollectionToArray($q->execute(), 'unit');
+    return array_merge($res_unit, $results);
   }
 }

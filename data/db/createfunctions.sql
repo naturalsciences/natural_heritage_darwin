@@ -2550,23 +2550,28 @@ EXCEPTION
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION fct_find_tax_level(tax_path text, searched_level integer) RETURNS int as
+$$
+   SELECT id FROM taxonomy where  level_ref = $2 and id in (select i::int from regexp_split_to_table($1, E'\/') as i where i != '');
+$$
+LANGUAGE sql stable;
 
-CREATE OR REPLACE FUNCTION fct_add_in_dict(ref_relation text, ref_field text, old_value text, dict_val text) RETURNS boolean
+CREATE OR REPLACE FUNCTION fct_add_in_dict(ref_relation text, ref_field text, old_value text, new_val text) RETURNS boolean
 AS
 $$
 DECLARE
   query_str varchar;
 BEGIN
-  IF dict_val is NULL OR old_value IS NOT DISTINCT FROM dict_val THEN 
+  IF new_val is NULL OR old_value IS NOT DISTINCT FROM new_val THEN 
     RETURN TRUE;
   END IF;
     query_str := ' INSERT INTO flat_dict (referenced_relation, dict_field, dict_value)
     (
-      SELECT ' || quote_literal(ref_relation) || ' , ' || quote_literal(ref_field) || ', ' || quote_literal(dict_val) || ' WHERE NOT EXISTS
+      SELECT ' || quote_literal(ref_relation) || ' , ' || quote_literal(ref_field) || ', ' || quote_literal(new_val) || ' WHERE NOT EXISTS
       (SELECT id FROM flat_dict WHERE
         referenced_relation = ' || quote_literal(ref_relation) || '
         AND dict_field = ' || quote_literal(ref_field) || '
-        AND dict_value = ' || quote_literal(dict_val) || ')
+        AND dict_value = ' || quote_literal(new_val) || ')
     );';
     execute query_str;
     RETURN true;
@@ -2574,24 +2579,81 @@ END;
 $$
 LANGUAGE plpgsql;
 
-
-CREATE OR REPLACE FUNCTION fct_del_in_dict(ref_relation text, ref_field text, dict_val text, old_value text) RETURNS boolean
-AS $$
+CREATE OR REPLACE FUNCTION fct_add_in_dict_dept(ref_relation text, ref_field text, old_value text, new_val text,
+     depending_old_value text, depending_new_value text) RETURNS boolean
+AS
+$$
 DECLARE
-  result integer;
-  query_str text;
+  query_str varchar;
+  dpt_new_val varchar;
 BEGIN
-  IF dict_val is NULL OR old_value IS NOT DISTINCT FROM dict_val THEN 
+  IF new_val is NULL OR ( old_value IS NOT DISTINCT FROM new_val AND depending_old_value IS NOT DISTINCT FROM depending_new_value ) THEN 
     RETURN TRUE;
   END IF;
-  query_str := ' SELECT 1 WHERE EXISTS( SELECT id from ' || quote_ident(ref_relation) || ' where ' || quote_ident(ref_field) || ' = ' || quote_literal(dict_val) || ');';
+  dpt_new_val := coalesce(depending_new_value,'');
+
+    query_str := ' INSERT INTO flat_dict (referenced_relation, dict_field, dict_value, dict_depend)
+    (
+      SELECT ' || quote_literal(ref_relation) || ' , ' || quote_literal(ref_field) || ', ' || quote_literal(new_val) || ', '
+        || quote_literal(dpt_new_val) || ' WHERE NOT EXISTS
+      (SELECT id FROM flat_dict WHERE
+        referenced_relation = ' || quote_literal(ref_relation) || '
+        AND dict_field = ' || quote_literal(ref_field) || '
+        AND dict_value = ' || quote_literal(new_val) || '
+        AND dict_depend = ' || quote_literal(dpt_new_val) || '
+      )
+    );';
+    --RAISE info 'hem %' ,  dpt_new_val;
+    execute query_str;
+    RETURN true;
+END;
+$$
+LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION fct_del_in_dict(ref_relation text, ref_field text, old_value text, new_val text) RETURNS boolean
+AS $$
+DECLARE
+  result boolean;
+  query_str text;
+BEGIN
+  IF old_value IS null OR old_value IS NOT DISTINCT FROM new_val THEN 
+    RETURN TRUE;
+  END IF;
+  query_str := ' SELECT EXISTS( SELECT 1 from ' || quote_ident(ref_relation) || ' where ' || quote_ident(ref_field) || ' = ' || quote_literal(old_value) || ');';
   execute query_str into result;
 
-  IF result IS NULL THEN
+  IF result = false THEN
     DELETE FROM flat_dict where 
           referenced_relation = ref_relation
           AND dict_field = ref_field
-          AND dict_value = dict_val;
+          AND dict_value = old_value;
+  END IF;
+  RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION fct_del_in_dict_dept(ref_relation text, ref_field text, old_value text, new_val text,
+     depending_old_value text,  depending_new_value text, depending_field text) RETURNS boolean
+AS $$
+DECLARE
+  result boolean;
+  query_str text;
+BEGIN
+  IF old_value is NULL OR ( old_value IS NOT DISTINCT FROM new_val AND depending_old_value IS NOT DISTINCT FROM depending_new_value ) THEN 
+    RETURN TRUE;
+  END IF;
+  query_str := ' SELECT EXISTS( SELECT id from ' || quote_ident(ref_relation) || ' where ' || quote_ident(ref_field) || ' = ' || quote_literal(old_value)
+  || ' AND ' || quote_ident(depending_field) || ' = ' || quote_literal(depending_old_value) || ' );';
+  execute query_str into result;
+
+  IF result = false THEN
+    DELETE FROM flat_dict where 
+          referenced_relation = ref_relation
+          AND dict_field = ref_field
+          AND dict_value = old_value
+          AND dict_depend = depending_old_value;
   END IF;
   RETURN TRUE;
 END;
@@ -2656,9 +2718,32 @@ BEGIN
       PERFORM fct_del_in_dict('specimen_parts','row', oldfield.row, newfield.row);
       PERFORM fct_del_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_del_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
-      PERFORM fct_del_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
+      PERFORM fct_del_in_dict('specimen_parts','building', oldfield.building, newfield.building);
+
+      PERFORM fct_del_in_dict_dept('specimen_parts','container_storage', oldfield.container_storage, newfield.container_storage,
+        oldfield.container_type, newfield.container_type, 'container_type' );
+      PERFORM fct_del_in_dict_dept('specimen_parts','sub_container_storage', oldfield.sub_container_storage, newfield.sub_container_storage,
+        oldfield.sub_container_type, newfield.sub_container_type, 'sub_container_type' );
+
     ELSIF TG_TABLE_NAME = 'loan_status' THEN
       PERFORM fct_del_in_dict('loan_status','status', oldfield.status, newfield.status);
+
+    ELSIF TG_TABLE_NAME = 'catalogue_properties' THEN
+
+      PERFORM fct_del_in_dict_dept('catalogue_properties','property_type', oldfield.property_type, newfield.property_type,
+        oldfield.referenced_relation, newfield.referenced_relation, 'referenced_relation' );
+      PERFORM fct_del_in_dict_dept('catalogue_properties','property_sub_type', oldfield.property_sub_type, newfield.property_sub_type,
+        oldfield.property_type, newfield.property_type, 'property_type' );
+      PERFORM fct_del_in_dict_dept('catalogue_properties','property_qualifier', oldfield.property_qualifier, newfield.property_qualifier,
+        oldfield.property_sub_type, newfield.property_sub_type, 'property_sub_type' );
+      PERFORM fct_del_in_dict_dept('catalogue_properties','property_unit', oldfield.property_unit, newfield.property_unit,
+        oldfield.property_type, newfield.property_type, 'property_type' );
+      PERFORM fct_del_in_dict_dept('catalogue_properties','property_accuracy_unit', oldfield.property_accuracy_unit, newfield.property_accuracy_unit,
+        oldfield.property_type, newfield.property_type, 'property_type' );
+
+    ELSIF TG_TABLE_NAME = 'tag_groups' THEN
+      PERFORM fct_del_in_dict_dept('tag_groups','sub_group_name', oldfield.sub_group_name, newfield.sub_group_name,
+        oldfield.group_name, newfield.group_name, 'group_name' );
   END IF;
 
   RETURN NEW;
@@ -2724,9 +2809,33 @@ BEGIN
       PERFORM fct_add_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_add_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
       PERFORM fct_add_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
+
+      PERFORM fct_add_in_dict_dept('specimen_parts','container_storage', oldfield.container_storage, newfield.container_storage,
+        oldfield.container_type, newfield.container_type);
+      PERFORM fct_add_in_dict_dept('specimen_parts','sub_container_storage', oldfield.sub_container_storage, newfield.sub_container_storage,
+        oldfield.sub_container_type, newfield.sub_container_type);
+
     ELSIF TG_TABLE_NAME = 'loan_status' THEN
       PERFORM fct_add_in_dict('loan_status','status', oldfield.status, newfield.status);
-  END IF;
+
+    ELSIF TG_TABLE_NAME = 'catalogue_properties' THEN
+
+      PERFORM fct_add_in_dict_dept('catalogue_properties','property_type', oldfield.property_type, newfield.property_type,
+        oldfield.referenced_relation, newfield.referenced_relation);
+      PERFORM fct_add_in_dict_dept('catalogue_properties','property_sub_type', oldfield.property_sub_type, newfield.property_sub_type,
+        oldfield.property_type, newfield.property_type);
+      PERFORM fct_add_in_dict_dept('catalogue_properties','property_qualifier', oldfield.property_qualifier, newfield.property_qualifier,
+        oldfield.property_sub_type, newfield.property_sub_type);
+      PERFORM fct_add_in_dict_dept('catalogue_properties','property_unit', oldfield.property_unit, newfield.property_unit,
+        oldfield.property_type, newfield.property_type);
+      PERFORM fct_add_in_dict_dept('catalogue_properties','property_accuracy_unit', oldfield.property_accuracy_unit, newfield.property_accuracy_unit,
+        oldfield.property_type, newfield.property_type );
+
+    ELSIF TG_TABLE_NAME = 'tag_groups' THEN
+      PERFORM fct_add_in_dict_dept('tag_groups','sub_group_name', oldfield.sub_group_name, newfield.sub_group_name,
+        oldfield.group_name, newfield.group_name);
+
+    END IF;
 
   RETURN NEW;
 END;

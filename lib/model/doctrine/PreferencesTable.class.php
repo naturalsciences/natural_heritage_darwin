@@ -11,6 +11,8 @@ class PreferencesTable extends Doctrine_Table
   public function getPreference($user_id, $key, $take_from_default=true)
   {
     $result = Doctrine_Query::create()
+      ->useResultCache(new Doctrine_Cache_Apc())
+      ->setResultCacheLifeSpan(15) //5 sec
       ->from('Preferences p')
       ->andwhere('p.user_ref = ?', $user_id)
       ->andWhere('p.pref_key = ?',$key)

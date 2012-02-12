@@ -217,7 +217,7 @@ CREATE TRIGGER trg_cpy_toFullText_usersaddresses BEFORE INSERT OR UPDATE
 
 CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
 	ON multimedia FOR EACH ROW
-	EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title, subject );
+	EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title);
 
 CREATE TRIGGER trg_cpy_toFullText_expeditions BEFORE INSERT OR UPDATE
   ON expeditions FOR EACH ROW
@@ -281,9 +281,9 @@ CREATE TRIGGER trg_cpy_FormattedName BEFORE INSERT OR UPDATE
 	ON users FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_FormattedName();
 
-CREATE TRIGGER trg_cpy_path_multimedia BEFORE INSERT OR UPDATE
+/*CREATE TRIGGER trg_cpy_path_multimedia BEFORE INSERT OR UPDATE
 	ON multimedia FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_path();
+	EXECUTE PROCEDURE fct_cpy_path();*/
 
 CREATE TRIGGER trg_cpy_path_collections BEFORE INSERT OR UPDATE
 	ON collections FOR EACH ROW
@@ -831,6 +831,14 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_loan_status AFTER INSERT OR UPDATE
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_catalogue_properties AFTER INSERT OR UPDATE
+        ON catalogue_properties FOR EACH ROW
+        EXECUTE PROCEDURE trg_ins_update_dict();
+
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_tag_groups AFTER INSERT OR UPDATE
+        ON tag_groups FOR EACH ROW
+        EXECUTE PROCEDURE trg_ins_update_dict();
+
 /******************* DELETE FROM DICT ******************/
 
 CREATE TRIGGER fct_cpy_trg_del_dict_codes AFTER DELETE  OR UPDATE
@@ -888,7 +896,15 @@ CREATE TRIGGER fct_cpy_trg_del_dict_specimen_parts AFTER DELETE  OR UPDATE
 CREATE TRIGGER fct_cpy_trg_del_dict_loan_status AFTER DELETE OR UPDATE
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
-  
+
+CREATE TRIGGER fct_cpy_trg_del_dict_catalogue_properties AFTER DELETE OR UPDATE
+        ON catalogue_properties FOR EACH ROW
+        EXECUTE PROCEDURE trg_del_dict();
+
+CREATE TRIGGER fct_cpy_trg_del_dict_tag_groups AFTER DELETE OR UPDATE
+        ON tag_groups FOR EACH ROW
+        EXECUTE PROCEDURE trg_del_dict();
+
 /********************* *****/
       
 CREATE TRIGGER trg_upd_people_in_flat AFTER INSERT OR UPDATE OR DELETE

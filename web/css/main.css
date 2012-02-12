@@ -2606,13 +2606,57 @@ ul.board_news li div.news_info
   max-width:723px;
 }
 /* style for input type file entry */
-#containerFile #divFile
+.little-frame
+{
+opacity : 0; 
+filter : alpha(opacity=0); 
+position : absolute;
+width : 1px;
+height : 1px;
+
+}
+.relatedFile
+{
+  position: relative;
+}
+
+.relatedFile input[type="file"]
+{
+  position: relative;
+	text-align: right;
+  width:150px;	
+	opacity:0 ;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	z-index: 2;
+}
+
+.relatedFile label
+{
+  border:1px solid #C1CC33;
+  background-color:#C1CF56;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding:2px;
+  color:white;
+  width:150px;
+  text-decoration: none;
+  font-size:90%;
+  position: absolute;
+  top: 0px;
+  z-index: 1;
+  vertical-align: middle;  
+  text-align : center ;  
+}
+
+.containerFile .divFile
 {
 position : relative;
 width : 300px;
 text-align : left;
 }
-input[type='file']
+
+#uploadfield
 {
 opacity : 0; 
 filter : alpha(opacity=0); 
@@ -2620,7 +2664,8 @@ position : absolute;
 right : 0;
 top : 0;
 }
-#containerFile .inputText
+
+.containerFile .inputText
 {
 border : 1px solid #010101 ;
 padding : 0px 5px;
@@ -2629,7 +2674,6 @@ width : 250px;
 height : 20px;
 background: transparent ;
 }
-
 
 .olLayerGoogleCopyright{right:3px;bottom:2px;left:auto;}.olLayerGoogleV3.olLayerGoogleCopyright{display:none;bottom:0;right:0!important;}.olLayerGooglePoweredBy{left:2px;bottom:2px;}.olLayerGoogleV3.olLayerGooglePoweredBy{bottom:0!important;}
 
@@ -2688,32 +2732,6 @@ body .ui-tooltip, body .qtip
 {
   background-color:grey !important;
 }
-/* custom appearence for input type file */
-#divFile
-{
-  position : relative;
-  width : 250px;
-  text-align : left;
-}
-
-input[type='file']
-{
-  opacity : 0; /* for !IE */
-  filter : alpha(opacity=0); /* for IE */
-  position : absolute;
-  right : 0;
-  top : 0;
-}
-#input_text_file
-{
-  border : none;
-  padding : 0px 0px;
-  background : #def;
-  width : 200px;
-  height: 20px;
-  border : 1px solid black ;
-}
-
 
 /** Import ***/
 
@@ -2855,4 +2873,17 @@ input.complete_missing {
 {
   margin-top: 1em;
   margin-bottom: 1em;
+}
+/*
+.table_main_info {
+  width:100%;
+}*/
+
+.table_main_info td {
+
+  padding-left: 2em;
+  padding-right: 2em;
+}
+.loanitem_details {
+  vertical-align:top;  
 }

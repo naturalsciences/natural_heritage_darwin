@@ -525,10 +525,11 @@ create table multimedia
         title varchar not null,
         description varchar not null default '',
         uri varchar,
+        filename varchar,
         search_ts tsvector not null,
         creation_date date not null default '01/01/0001',
         creation_date_mask integer not null default 0,
-        mime_type varchar,
+        mime_type varchar not null,
         constraint pk_multimedia primary key (id)
       )
       inherits (template_table_record_ref);
@@ -543,6 +544,7 @@ comment on column multimedia.sub_type is 'Characterization of object type: artic
 comment on column multimedia.title is 'Title of the multimedia object';
 comment on column multimedia.description is 'Description of the current object';
 comment on column multimedia.uri is 'URI of object if digital';
+comment on column multimedia.filename is 'The original name of the saved file';
 comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
 comment on column multimedia.search_ts is 'tsvector form of title and subject fields together';
@@ -1533,7 +1535,8 @@ create table flat_dict
   referenced_relation varchar not null,
   dict_field varchar not null,
   dict_value varchar not null,
-  constraint unq_flat_dict unique (dict_value, dict_field, referenced_relation),
+  dict_depend varchar not null default '',
+  constraint unq_flat_dict unique (dict_value, dict_field, referenced_relation, dict_depend),
   constraint pk_flat_dict primary key (id)
 );
 

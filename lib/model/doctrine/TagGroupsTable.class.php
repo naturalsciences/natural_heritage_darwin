@@ -6,15 +6,14 @@ class TagGroupsTable extends DarwinTable
 {
   public function getDistinctSubGroups($group)
   {
-    $conn_MGR = Doctrine_Manager::connection();
-    $q = $this->createDistinct('TagGroups  INDEXBY sgn', 'sub_group_name', 'sgn','');
-    $q->andWhere('group_name_indexed = fulltoIndex('.$conn_MGR->quote($group, 'string').')');
-    $results = $q->fetchArray();
-    if(count($results))
-      $results = array_combine(array_keys($results),array_keys($results));
-
-    return array_merge(array(''=>''), $results);
-  }
+    if(is_null($group))
+      $q = $this->createFlatDistinct('tag_groups', 'sub_group_name', 'sgn');
+    else
+      $q = $this->createFlatDistinctDepend('tag_groups', 'sub_group_name', $group, 'sgn');
+    
+    $a = DarwinTable::CollectionToArray($q->execute(), 'sgn');
+    return array_merge(array(''=>''),$a);
+	}
 
   public function getPropositions($value, $group="", $sub_group="")
   {

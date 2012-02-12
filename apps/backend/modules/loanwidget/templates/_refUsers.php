@@ -20,9 +20,11 @@
  </tbody> 
  <tfoot>
    <tr>
-     <td colspan="5">
+     <td colspan="4">
+      <div class="add_code">
          <a href="<?php echo url_for('loan/addUsers'.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" class="hidden"></a>
          <a class="add_user" href="<?php echo url_for('user/choose');?>"><?php echo __('Add new');?></a>
+       </div>
      </td>
    </tr>
  </tfoot> 

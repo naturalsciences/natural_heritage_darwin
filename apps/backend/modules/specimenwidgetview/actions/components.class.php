@@ -13,7 +13,8 @@ class specimenwidgetviewComponents extends sfComponents
 
   protected function defineObject()
   {
-    $this->spec = Doctrine::getTable('Specimens')->find($this->eid);
+    if(! isset($this->spec) )
+      $this->spec = Doctrine::getTable('Specimens')->find($this->eid);
   }
 
   public function executeRefCollection()

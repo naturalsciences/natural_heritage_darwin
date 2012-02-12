@@ -105,5 +105,4 @@ class DarwinActions extends sfActions
     }
     return $obj ;
   }
-
 }

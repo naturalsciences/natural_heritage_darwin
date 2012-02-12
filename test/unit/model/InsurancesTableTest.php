@@ -1,6 +1,6 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
-$t = new lime_test(8, new lime_output_color());
+$t = new lime_test(7, new lime_output_color());
 
 $lastIg = Doctrine::getTable('igs')->findOneByIgNum('2653');
 $insurances = new Insurances();
