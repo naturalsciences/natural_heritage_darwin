@@ -2982,7 +2982,7 @@ BEGIN
       --DETERMIN IF IDENTIFICATION IS ON SPEC OR INDIV
 
       IF ident.referenced_relation =  'specimens' THEN
-        SELECT specimen_ref, spec_ident_ids INTO spec_row FROM specimens_flat WHERE id = ident.record_id;
+        SELECT specimen_ref, spec_ident_ids INTO spec_row FROM specimens_flat WHERE specimen_ref = ident.record_id;
 
         IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications' 
           WHERE i.record_id = spec_row.specimen_ref AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens' AND c.id != OLD.id
@@ -3039,7 +3039,7 @@ BEGIN
     ELSIF OLD.referenced_relation = 'specimens' THEN
       IF EXISTS(SELECT true FROM catalogue_people cp WHERE cp.record_id = OLD.id AND cp.referenced_relation = 'identifications') THEN
         -- There's NO identifier associated to this identification'
-        UPDATE specimens SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids, 
+        UPDATE specimens_flat SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids, 
           (
             select array_accum(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
             AND people_ref NOT in
@@ -3048,7 +3048,7 @@ BEGIN
                 AND p.people_type='identifier' where i.record_id=OLD.record_id AND i.referenced_relation=OLD.referenced_relation AND i.id != OLD.id
               )
           ))
-          WHERE id = OLD.record_id;
+          WHERE specimen_ref = OLD.record_id;
       END IF;
     END IF; 
 
