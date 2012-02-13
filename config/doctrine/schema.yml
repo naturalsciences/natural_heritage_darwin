@@ -730,6 +730,7 @@ Specimens:
 
 SpecimensFlat:
     columns:
+        specimen_ref: { type: integer, primary: true},
         category: { type: string, notnull: true, default: physical },
         collection_ref: { type: integer, notnull: true }
         expedition_ref: { type: integer}
@@ -839,6 +840,9 @@ SpecimensFlat:
         ig_date_mask: { type: integer }
 
     relations:
+        SpecimenIndividuals:
+            local: specimen_ref
+            foreign: specimen_ref
         Specimen:
             class: Specimens
             local: specimen_ref

@@ -144,7 +144,6 @@ CREATE INDEX CONCURRENTLY idx_mineralogy_name_order_by_txt_op on mineralogy USIN
 CREATE INDEX CONCURRENTLY idx_mineralogy_cristal_system on mineralogy(cristal_system) WHERE cristal_system <> '';
 CREATE INDEX CONCURRENTLY idx_multimedia_is_digital on multimedia(is_digital);
 CREATE INDEX CONCURRENTLY idx_multimedia_type on multimedia(type);
-CREATE INDEX CONCURRENTLY idx_multimedia_keywords_keyword_indexed on multimedia_keywords(keyword_indexed);
 CREATE INDEX CONCURRENTLY idx_my_widgets_user_category on my_widgets(user_ref, category, group_name);
 CREATE INDEX CONCURRENTLY idx_my_widgets_group_name on my_widgets(user_ref, group_name);
 CREATE INDEX CONCURRENTLY idx_my_widgets_is_available on my_widgets(is_available);

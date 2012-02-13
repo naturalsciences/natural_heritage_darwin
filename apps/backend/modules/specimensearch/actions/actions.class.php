@@ -14,7 +14,7 @@ class specimensearchActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new UnitSearchFormFilter(null,array('user' => $this->getUser()));
+    $this->form = new SpecimensFlatFormFilter(null,array('user' => $this->getUser()));
 
     $this->form->setDefault('rec_per_page',$this->getUser()->fetchRecPerPage());
 
@@ -47,7 +47,7 @@ class specimensearchActions extends DarwinActions
     // Modify the s_url to call the searchResult action when on result page and playing with pager
     $this->s_url = 'specimensearch/searchResult'.'?is_choose='.$this->is_choose;
     // Initialize filter
-    $this->form = new UnitSearchFormFilter(null,array('user' => $this->getUser()));
+    $this->form = new SpecimensFlatFormFilter(null,array('user' => $this->getUser()));
     // If the search has been triggered by clicking on the search button or with pinned specimens
     if(($request->isMethod('post') && $request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
     {
@@ -301,7 +301,7 @@ class specimensearchActions extends DarwinActions
   {
     $number = intval($request->getParameter('num'));
 
-    $form = new UnitSearchFormFilter(null,array('user' => $this->getUser()));
+    $form = new SpecimensFlatFormFilter(null,array('user' => $this->getUser()));
     $form->addGtuTagValue($number);
     return $this->renderPartial('andSearch',array('form' => $form['Tags'][$number], 'row_line'=>$number));
   }  
@@ -310,7 +310,7 @@ class specimensearchActions extends DarwinActions
   {
     $number = intval($request->getParameter('num'));
 
-    $form = new UnitSearchFormFilter(null,array('user' => $this->getUser()));
+    $form = new SpecimensFlatFormFilter(null,array('user' => $this->getUser()));
     $form->addCodeValue($number);
     return $this->renderPartial('specimensearchwidget/codeline',array('code' => $form['Codes'][$number], 'row_line'=>$number));
   }

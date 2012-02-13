@@ -8,7 +8,7 @@
  * @author     DB team <collections@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class PublicSearchFormFilter extends BaseSpecimensFormFilter
+class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
 {
   public function configure()
   {
@@ -229,7 +229,7 @@ class PublicSearchFormFilter extends BaseSpecimensFormFilter
   {
     $query = Doctrine_Query::create()
       ->from('SpecimenIndividuals i')
-      ->innerJoin('i.Specimens s');
+      ->innerJoin('i.SpecimensFlat s');
     $this->options['query'] = $query;       
     $query = parent::doBuildQuery($values);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));

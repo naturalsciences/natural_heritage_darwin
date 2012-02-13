@@ -13,6 +13,7 @@ abstract class BaseSpecimensFlatFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
+      'category'                 => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'collection_ref'           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true)),
       'expedition_ref'           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Expeditions'), 'add_empty' => true)),
       'gtu_ref'                  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Gtu'), 'add_empty' => true)),
@@ -23,6 +24,12 @@ abstract class BaseSpecimensFlatFormFilter extends BaseFormFilterDoctrine
       'mineral_ref'              => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Mineralogy'), 'add_empty' => true)),
       'host_taxon_ref'           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('HostTaxon'), 'add_empty' => true)),
       'host_specimen_ref'        => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('HostSpecimen'), 'add_empty' => true)),
+      'host_relationship'        => new sfWidgetFormFilterInput(),
+      'acquisition_category'     => new sfWidgetFormFilterInput(),
+      'acquisition_date_mask'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'acquisition_date'         => new sfWidgetFormFilterInput(),
+      'station_visible'          => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'multimedia_visible'       => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'ig_ref'                   => new sfWidgetFormFilterInput(),
       'spec_coll_ids'            => new sfWidgetFormFilterInput(),
       'spec_ident_ids'           => new sfWidgetFormFilterInput(),
@@ -38,7 +45,6 @@ abstract class BaseSpecimensFlatFormFilter extends BaseFormFilterDoctrine
       'expedition_name'          => new sfWidgetFormFilterInput(),
       'expedition_name_ts'       => new sfWidgetFormFilterInput(),
       'expedition_name_indexed'  => new sfWidgetFormFilterInput(),
-      'station_visible'          => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'gtu_code'                 => new sfWidgetFormFilterInput(),
       'gtu_parent_ref'           => new sfWidgetFormFilterInput(),
       'gtu_path'                 => new sfWidgetFormFilterInput(),
@@ -114,6 +120,7 @@ abstract class BaseSpecimensFlatFormFilter extends BaseFormFilterDoctrine
     ));
 
     $this->setValidators(array(
+      'category'                 => new sfValidatorPass(array('required' => false)),
       'collection_ref'           => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id')),
       'expedition_ref'           => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Expeditions'), 'column' => 'id')),
       'gtu_ref'                  => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Gtu'), 'column' => 'id')),
@@ -124,6 +131,12 @@ abstract class BaseSpecimensFlatFormFilter extends BaseFormFilterDoctrine
       'mineral_ref'              => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Mineralogy'), 'column' => 'id')),
       'host_taxon_ref'           => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('HostTaxon'), 'column' => 'id')),
       'host_specimen_ref'        => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('HostSpecimen'), 'column' => 'id')),
+      'host_relationship'        => new sfValidatorPass(array('required' => false)),
+      'acquisition_category'     => new sfValidatorPass(array('required' => false)),
+      'acquisition_date_mask'    => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'acquisition_date'         => new sfValidatorPass(array('required' => false)),
+      'station_visible'          => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'multimedia_visible'       => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'ig_ref'                   => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'spec_coll_ids'            => new sfValidatorPass(array('required' => false)),
       'spec_ident_ids'           => new sfValidatorPass(array('required' => false)),
@@ -139,7 +152,6 @@ abstract class BaseSpecimensFlatFormFilter extends BaseFormFilterDoctrine
       'expedition_name'          => new sfValidatorPass(array('required' => false)),
       'expedition_name_ts'       => new sfValidatorPass(array('required' => false)),
       'expedition_name_indexed'  => new sfValidatorPass(array('required' => false)),
-      'station_visible'          => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'gtu_code'                 => new sfValidatorPass(array('required' => false)),
       'gtu_parent_ref'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'gtu_path'                 => new sfValidatorPass(array('required' => false)),
@@ -232,6 +244,7 @@ abstract class BaseSpecimensFlatFormFilter extends BaseFormFilterDoctrine
   {
     return array(
       'specimen_ref'             => 'Number',
+      'category'                 => 'Text',
       'collection_ref'           => 'ForeignKey',
       'expedition_ref'           => 'ForeignKey',
       'gtu_ref'                  => 'ForeignKey',
@@ -242,6 +255,12 @@ abstract class BaseSpecimensFlatFormFilter extends BaseFormFilterDoctrine
       'mineral_ref'              => 'ForeignKey',
       'host_taxon_ref'           => 'ForeignKey',
       'host_specimen_ref'        => 'ForeignKey',
+      'host_relationship'        => 'Text',
+      'acquisition_category'     => 'Text',
+      'acquisition_date_mask'    => 'Number',
+      'acquisition_date'         => 'Text',
+      'station_visible'          => 'Boolean',
+      'multimedia_visible'       => 'Boolean',
       'ig_ref'                   => 'Number',
       'spec_coll_ids'            => 'Text',
       'spec_ident_ids'           => 'Text',
@@ -257,7 +276,6 @@ abstract class BaseSpecimensFlatFormFilter extends BaseFormFilterDoctrine
       'expedition_name'          => 'Text',
       'expedition_name_ts'       => 'Text',
       'expedition_name_indexed'  => 'Text',
-      'station_visible'          => 'Boolean',
       'gtu_code'                 => 'Text',
       'gtu_parent_ref'           => 'Number',
       'gtu_path'                 => 'Text',
