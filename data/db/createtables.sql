@@ -1858,6 +1858,7 @@ comment on column loan_status.is_last is 'flag telling which line is the current
 CREATE TABLE specimens_flat (
     specimen_ref integer not null,
 
+    category varchar not null,
     collection_ref integer not null,
     expedition_ref integer,
     gtu_ref integer,
@@ -1868,6 +1869,12 @@ CREATE TABLE specimens_flat (
     mineral_ref integer,
     host_taxon_ref integer,
     host_specimen_ref integer,
+    host_relationship varchar,
+    acquisition_category varchar not null,
+    acquisition_date_mask integer not null,
+    acquisition_date date not null,
+    station_visible boolean not null,
+    multimedia_visible boolean not null,
     ig_ref integer,
 
     spec_ident_ids integer[] not null default '{}',

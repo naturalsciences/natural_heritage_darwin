@@ -730,7 +730,7 @@ Specimens:
 
 SpecimensFlat:
     columns:
-        specimen_ref: { type: integer, primary: true},
+        category: { type: string, notnull: true, default: physical },
         collection_ref: { type: integer, notnull: true }
         expedition_ref: { type: integer}
         gtu_ref: { type: integer}
@@ -741,6 +741,12 @@ SpecimensFlat:
         mineral_ref: { type: integer}
         host_taxon_ref: { type: integer}
         host_specimen_ref: { type: integer}
+        host_relationship: { type: string}
+        acquisition_category: { type: string, default: expedition}
+        acquisition_date_mask: { type: integer, notnull: true, default:0}
+        acquisition_date: { type: string, default: '0001-01-01'}
+        station_visible: { type: boolean, default: true}
+        multimedia_visible: { type: boolean, default: true}
         ig_ref: { type: integer}
 
         spec_coll_ids: { type:string}
