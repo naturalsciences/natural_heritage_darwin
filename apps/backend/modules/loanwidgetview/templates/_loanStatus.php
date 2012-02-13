@@ -1,6 +1,6 @@
 <table class="catalogue_table">
   <thead class="workflow">
-    <tr><th colspan=4><?php echo __("Latest Status") ; ?></th></tr>
+    <tr><th colspan=4><?php echo __("Latest Statuses") ; ?> :</th></tr>
     <tr>
       <th><?php echo __('Date');?></th>
       <th><?php echo __('Status');?></th>

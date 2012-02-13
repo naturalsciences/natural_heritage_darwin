@@ -1,4 +1,4 @@
-<table id="sender_table" class="catalogue_table edition">
+<table id="sender_table" class="catalogue_table_view">
   <thead>
     <tr>
       <th colspan="4"><?php echo __("Actors(sender side)") ; ?></th>
@@ -16,14 +16,21 @@
     </tr>
   </thead>
  <tbody id="sender_body">
-   <?php /*foreach($form['ActorsSender'] as $form_value):?>   
-     <?php include_partial('loan/actors_association', array('type' => 'sender','form' => $form_value, 'row_num'=>$retainedKey));?>
-     <?php $retainedKey = $retainedKey+1;?>
-   <?php endforeach;*/?>
+   <?php foreach($senders as $actor):?>
+      <td colspan="4">  <?php echo image_tag($people_ids[$actor->getPeopleRef()]->getCorrespondingImage()) ; ?> <?php echo $people_ids[$actor->getPeopleRef()]->getFormatedName(); ?></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Responsible') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Contact') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Checker') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Preparator') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Accompanist') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Transporter') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Other') ? 'on':'off'; ?>" /></td>
+   <?php endforeach;?>
  </tbody>
 </table>
 
-<table id="receiver_table" class="catalogue_table edition">
+<br /><br />
+<table id="receiver_table" class="catalogue_table_view">
   <thead>
     <tr>
       <th colspan="4"><?php echo __("Actors(receiver side)") ; ?></th>
@@ -41,9 +48,15 @@
     </tr>
   </thead>
  <tbody id="receiver_body">
-   <?php /*foreach($form['ActorsReceiver'] as $form_value):?>   
-     <?php include_partial('loan/actors_association', array('type' => 'receiver','form' => $form_value, 'row_num'=>$retainedKey));?>
-     <?php $retainedKey = $retainedKey+1;?>
-   <?php endforeach;*/?>
+   <?php foreach($receiver as $actor):?>
+      <td colspan="4">  <?php echo image_tag($people_ids[$actor->getPeopleRef()]->getCorrespondingImage()) ; ?> <?php echo $people_ids[$actor->getPeopleRef()]->getFormatedName(); ?></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Responsible') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Contact') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Checker') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Preparator') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Accompanist') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Transporter') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Other') ? 'on':'off'; ?>" /></td>
+   <?php endforeach;?>
  </tbody> 
 </table>

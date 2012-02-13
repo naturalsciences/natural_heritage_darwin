@@ -1,16 +1,15 @@
-<table id="user_table" class="catalogue_table edition">
+<table id="user_table" class="catalogue_table_view">
   <thead>
     <tr>
-      <th></th>
       <th><?php echo __("Name") ; ?></th>
       <th><?php echo __("Edition right") ; ?></th>
     </tr>
   </thead>
  <tbody id="user_body">
-   <?php /*foreach($form['Users'] as $form_value):?>   
-     <?php include_partial('loan/darwin_user', array('form' => $form_value, 'row_num'=>$retainedKey));?>
-     <?php $retainedKey = $retainedKey+1;?>
-   <?php endforeach; */?>
+   <?php foreach($users_rights as $usr):?>
+      <td><?php echo image_tag($users_ids[$usr->getUserRef()]->getCorrespondingImage()) ; ?> <?php echo $users_ids[$usr->getUserRef()]->getFormatedName(); ?></td>
+      <td><span class="spr_checkbox_<?php echo $usr->getHasEncodingRight() ? 'on':'off'; ?>" /></td>
+   <?php endforeach;?>
  </tbody> 
 </table>
 

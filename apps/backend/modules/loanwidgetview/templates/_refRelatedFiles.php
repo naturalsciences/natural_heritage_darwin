@@ -1,27 +1,22 @@
-<table class="property_values">
+<table class="catalogue_table_view">
   <thead>
     <tr>
-      <th>
-        <?php echo __('Name'); ?>
-      </th>      
-      <th>
-        <?php echo __('Description'); ?>
-      </th>   
-      <th>
-        <?php echo __('File'); ?>
-      </th>         
-      <th>
-        <?php echo __('Format'); ?>
-      </th>
-      <th>
-        <?php echo __('Created At') ; ?>
-      </th>
+      <th><?php echo __('Name'); ?></th>
+      <th><?php echo __('Description'); ?></th>
+      <th><?php echo __('File'); ?></th>
+      <th><?php echo __('Format'); ?></th>
+      <th><?php echo __('Created At') ; ?></th>
     </tr>
   </thead>
   <tbody id="file_body">
-    <?php /*foreach($form['RelatedFiles'] as $form_value):?>
-      <?php include_partial('loan/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'edit' => true));?>
-      <?php $retainedKey = $retainedKey+1;?>
-    <?php endforeach;*/?>
+    <?php foreach($files as $file):?>
+    <tr>
+      <td><?php echo $file->getTitle(); ?></td>
+      <td><?php echo $file->getDescription(); ?></td>
+      <td><?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId()) ; ?></td>
+      <td><?php echo $file->getMimeType(); ?></td>
+      <td><?php echo $file->getCreationDate(); ?></td>
+    </tr>
+    <?php endforeach;?>
   </tbody>
 </table>

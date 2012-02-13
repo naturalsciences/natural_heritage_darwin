@@ -16,7 +16,7 @@ class CataloguePeople extends BaseCataloguePeople
   //we use the key to have a number representing witch role someone have or not
   private static $actor_role = array(
     2 => 'Responsible',
-    4 => 'contact',
+    4 => 'Contact',
     8 => 'Checker',
     16 => 'Preparator',
     32 => 'Accompanist',
@@ -79,5 +79,15 @@ class CataloguePeople extends BaseCataloguePeople
       }
     }
     return $result;
-  }  
+  }
+
+  public function getIsARole($role_name)
+  {
+    //Find role id
+    $role_key = array_search($role_name, self::$actor_role);
+    $roles = $this->getPeopleSubType();
+    //Find if role id is set for this people
+    $role_found = array_search($role_key, $roles);
+    return $role_found !== false;
+  }
 }

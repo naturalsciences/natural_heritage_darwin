@@ -2887,3 +2887,19 @@ input.complete_missing {
 .loanitem_details {
   vertical-align:top;  
 }
+
+.spr_checkbox_on
+{
+  width:14px;
+  height:14px;
+  background: url("/images/checkbox.png") no-repeat scroll 0 -28px transparent;
+  display: block;
+}
+
+.spr_checkbox_off
+{
+  width:14px;
+  height:14px;
+  background-image: url("/images/checkbox.png");
+  display: block;
+}
