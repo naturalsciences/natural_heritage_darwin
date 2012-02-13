@@ -45,5 +45,17 @@ class LoanRightsTable extends Doctrine_Table
 
     return $rights;
   }
+  
+  public function isAllowed($user_id, $loan_id)
+  {
+    $q = Doctrine_Query::create()      
+      ->from('LoanRights')
+      ->where('user_ref = ?', $user_id)
+      ->AndWhere('loan_ref =?', $loan_id)
+      ->fetchOne(); 
+    if(!$q->count()) return false ; 
+    if($q->getHasEncodingRight()) return true ;
+    return 'view' ;
+  }
 
 }

@@ -12,10 +12,20 @@ class loanitemActions extends DarwinActions
 {
   protected $widgetCategory = 'loanitem_widget';
 
+  protected function checkRight($loan_item_id)  
+  {
+    // Forward to a 404 page if the requested expedition id is not found
+    $this->forward404Unless($loanitem = Doctrine::getTable('LoanItems')->findExcept($loan_item_id), sprintf('Object loanitem does not exist (%s).', array($loan_item_id)));
+    if(!$right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef()))
+      $this->forwardToSecureAction();
+    if($right==="view") $this->redirect('loanitem/view?id='.$loanitem->getId());      
+    return $loanitem ;
+  }  
+
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
-    $this->forward404Unless($loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+    $loan = $this->checkRight($request->getParameter('id')) ;
     $this->form = new LoanItemWidgetForm($loan);
     $this->processForm($request, $this->form);
     $this->loadWidgets();
@@ -25,8 +35,7 @@ class loanitemActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    // Forward to a 404 page if the requested expedition id is not found
-    $this->forward404Unless($loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+    $loan = $this->checkRight($request->getParameter('id')) ;
     $this->form = new LoanItemWidgetForm($loan);
     $this->loadWidgets();
     $this->setTemplate('edit') ;    
@@ -56,7 +65,7 @@ class loanitemActions extends DarwinActions
 
   public function executeDelete(sfWebRequest $request)
   {
-    $this->forward404Unless($loan = Doctrine::getTable('Loans')->find(array($request->getParameter('id'))), sprintf('Object loans does not exist (%s).', array($request->getParameter('id'))));
+    $loan = $this->checkRight($request->getParameter('id')) ;
     try
     {
       $loan->delete();
