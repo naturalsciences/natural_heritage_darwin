@@ -101,7 +101,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     if($val != '')
     {
       $alias = $query->getRootAlias() ;
-      $query->andWhere("EXISTS (selects.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status = ?)",$val);
+      $query->andWhere("EXISTS (select s.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status = ?)",$val);
     }
     return $query;
   }
