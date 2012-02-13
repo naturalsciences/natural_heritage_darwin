@@ -90,7 +90,7 @@ class loanitemActions extends DarwinActions
     
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
 /*@TODO: Change User permission !! */
-
+// verifier que le loan ref de toutes les id est le meme et si le user a le droit d'y toucher
     $this->form = new MultiCollectionMaintenanceForm();
     if($request->isMethod('post'))
     {
