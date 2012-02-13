@@ -16,6 +16,7 @@ class loanActions extends DarwinActions
   {
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($loan_id), sprintf('Object loan does not exist (%s).', array($loan_id)));
+    if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;    
     if(!$right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()))
       $this->forwardToSecureAction();
     if($right==="view") $this->redirect('loan/view?id='.$loan->getId());      
