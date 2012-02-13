@@ -120,4 +120,11 @@ class loanitemActions extends DarwinActions
     }
     //return $this->renderText('ok '.implode('-',$items)) ;
   }
+
+  public function executeView(sfWebRequest $request)
+  {
+    // Forward to a 404 page if the requested expedition id is not found
+    $this->forward404Unless($this->loan_item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+    $this->loadWidgets();
+  }
 }

@@ -48,10 +48,10 @@ class loanwidgetviewComponents extends sfComponents
   {
     $this->defineObject();
     $this->senders = Doctrine::getTable('CataloguePeople')->findActors($this->loan->getId(),'sender','loans');
-    $this->receiver = Doctrine::getTable('CataloguePeople')->findActors($this->loan->getId(),'receiver','loans');
+    $this->receivers = Doctrine::getTable('CataloguePeople')->findActors($this->loan->getId(),'receiver','loans');
     $this->people_ids = array();
     foreach($this->senders as $peo) $this->people_ids[$peo->getPeopleRef()] = '';
-    foreach($this->receiver as $peo) $this->people_ids[$peo->getPeopleRef()] = '';
+    foreach($this->receivers as $peo) $this->people_ids[$peo->getPeopleRef()] = '';
     $people = Doctrine::getTable('People')->getIdsFromArrayQuery('People', array_keys($this->people_ids));
     foreach($people as $peo) $this->people_ids[$peo->getId()] = $peo;
   }  

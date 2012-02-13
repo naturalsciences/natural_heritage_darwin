@@ -48,7 +48,7 @@
     </tr>
   </thead>
  <tbody id="receiver_body">
-   <?php foreach($receiver as $actor):?>
+   <?php foreach($receivers as $actor):?>
       <td colspan="4">  <?php echo image_tag($people_ids[$actor->getPeopleRef()]->getCorrespondingImage()) ; ?> <?php echo $people_ids[$actor->getPeopleRef()]->getFormatedName(); ?></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Responsible') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Contact') ? 'on':'off'; ?>" /></td>

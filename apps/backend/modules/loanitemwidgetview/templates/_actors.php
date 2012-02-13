@@ -1,0 +1,1 @@
+<?php echo get_component('loanwidgetview', 'refRelatedFiles', array('table' => 'loan_item', 'eid' => $eid, 'senders'=>$senders, 'receivers'=>$receivers, 'people_ids' => $people_ids));?>
