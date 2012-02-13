@@ -148,7 +148,7 @@ class LoansFormFilter extends BaseLoansFormFilter
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
-    $fields = array('from_date', 'to_date');
+    $fields = array('from_date', 'effective_to_date');
     $this->addNamingColumnQuery($query, 'loans', 'description_ts', $values['name']);
     $this->addExactDateFromToColumnQuery($query, $fields, $values['from_date'], $values['to_date']);
     $this->filterByRight($query, $this->options['user']);
