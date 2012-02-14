@@ -8,15 +8,11 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_taxon_ref on darwin_flat(taxon_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_ig_ref on darwin_flat(ig_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_ref on darwin_flat(individual_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_part_ref on darwin_flat(part_ref);
-
-
 CREATE INDEX CONCURRENTLY idx_darwin_flat_host_specimen_ref on darwin_flat(host_specimen_ref);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_category on darwin_flat(category);
 
 
 /*** BTree indexes for search purposes in Darwin flat table ***/
 CREATE INDEX CONCURRENTLY idx_darwin_flat_station_visible on darwin_flat(station_visible);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_code on darwin_flat(gtu_code);
 
 CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_from_date_mask on darwin_flat(gtu_from_date_mask);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_to_date_mask on darwin_flat(gtu_to_date_mask);

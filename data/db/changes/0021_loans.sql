@@ -384,3 +384,16 @@ DROP INDEX IF EXISTS idx_gin_darwin_flat_chrono_name_indexed;
 DROP INDEX IF EXISTS idx_gin_darwin_flat_litho_name_indexed;
 DROP INDEX IF EXISTS idx_gin_darwin_flat_lithology_name_indexed;
 DROP INDEX IF EXISTS idx_gin_darwin_flat_mineral_name_indexed;
+
+DROP INDEX IF EXISTS idx_darwin_flat_gtu_code;
+DROP INDEX IF EXISTS idx_darwin_flat_category;
+
+DROP INDEX IF EXISTS idx_my_widgets_group_name;
+DROP INDEX IF EXISTS idx_my_widgets_order_by;
+DROP INDEX IF EXISTS idx_my_widgets_icon_ref;
+DROP INDEX IF EXISTS idx_my_widgets_collections;
+DROP INDEX IF EXISTS idx_my_widgets_visible;
+DROP INDEX IF EXISTS idx_my_widgets_is_available;
+DROP INDEX IF EXISTS idx_catalogue_properties_property_method_indexed;
+DROP INDEX IF EXISTS idx_catalogue_properties_property_tool_indexed;
+DROP INDEX IF EXISTS idx_catalogue_properties_property_accuracy_unit;
