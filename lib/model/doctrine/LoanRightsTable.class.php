@@ -51,10 +51,10 @@ class LoanRightsTable extends Doctrine_Table
     $q = Doctrine_Query::create()      
       ->from('LoanRights')
       ->where('user_ref = ?', $user_id)
-      ->AndWhere('loan_ref =?', $loan_id)
-      ->fetchOne(); 
-    if(!$q->count()) return false ; 
-    if($q->getHasEncodingRight()) return true ;
+      ->AndWhere('loan_ref =?', $loan_id);
+    $result = $q->fetchOne(); 
+    if(!$result) return false ; 
+    if($result->getHasEncodingRight()) return true ;
     return 'view' ;
   }
 

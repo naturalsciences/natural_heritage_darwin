@@ -87,10 +87,9 @@ class loanitemActions extends DarwinActions
   {
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($items = explode(',',$request->getParameter('ids')) );
-    
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-/*@TODO: Change User permission !! */
-// verifier que le loan ref de toutes les id est le meme et si le user a le droit d'y toucher
+    if(!$id = doctrine::getTable('loanItems')->getLoanRef($items)) $this->forwardToSecureAction();
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$id))
+      $this->forwardToSecureAction();
     $this->form = new MultiCollectionMaintenanceForm();
     if($request->isMethod('post'))
     {

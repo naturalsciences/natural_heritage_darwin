@@ -16,4 +16,19 @@ class LoanItemsTable extends DarwinTable
     return $q->execute();
   }
 
+  public function getLoanRef($ids)
+  {
+    $loan_ref = null;
+    $q = Doctrine_Query::create()
+      ->select('i.loan_ref')
+      ->From('LoanItems i')
+      ->andwhereIn('i.id', $ids)
+      ->execute();    
+    foreach($q as $item)
+    {
+      if($loan_ref == null) $loan_ref = $item->getLoanRef() ;
+      if ($loan_ref != $item->getLoanRef()) return false ;
+    }
+    return $loan_ref ;
+  }
 }
