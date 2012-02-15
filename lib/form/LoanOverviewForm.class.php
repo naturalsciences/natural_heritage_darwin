@@ -64,8 +64,7 @@ class LoanOverviewForm extends sfForm
     $value = $this->getValues();
     foreach($this->embeddedForms['newLoanItems']->getEmbeddedForms() as $name => $form)
     {
-      // @TODO: FIND BETTER deterministic key
-      if (!isset($value['newLoanItems'][$name]['details'])/* || $value['newLoanItems'][$name]['details']=='' */)
+      if (!isset($value['newLoanItems'][$name]['item_visible']))
       {
         unset($this->embeddedForms['newLoanItems'][$name]);
       }
@@ -78,8 +77,7 @@ class LoanOverviewForm extends sfForm
 
     foreach($this->embeddedForms['LoanItems']->getEmbeddedForms() as $name => $form)
     {
-      // @TODO: FIND BETTER deterministic key
-      if (!isset($value['LoanItems'][$name]['details']) /*|| $value['LoanItems'][$name]['details']==''*/ )
+      if (!isset($value['LoanItems'][$name]['item_visible']))
       {
         $form->getObject()->delete();
         unset($this->embeddedForms['LoanItems'][$name]);

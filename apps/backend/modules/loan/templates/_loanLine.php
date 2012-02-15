@@ -28,6 +28,7 @@
     <?php echo $form['loan_item_ind'];?>
   </td>
   <td>
+    <?php echo $form['item_visible'];?>
     <?php if(! $lineObj->isNew()):?>
       <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),'loanitem/edit?id='.$lineObj->getId());?>
     <?php endif;?>
@@ -42,7 +43,7 @@
     {
       parent_el = $(this).closest('tr');
       parent_el.hide();
-      parent_el.find('input[type="hidden"][id$=\"_loan_item_ind\"]').val('');
+      parent_el.find('input[type="hidden"][id$=\"_item_visible\"]').val('');
     });
 
     bind_ext_line('<?php echo $form->getparent()->getName();?>',  '<?php echo $form->getName();?>')

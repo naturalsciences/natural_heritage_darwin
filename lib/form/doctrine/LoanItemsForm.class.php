@@ -26,6 +26,11 @@ class LoanItemsForm extends BaseLoanItemsForm
 
     $this->widgetSchema['loan_ref'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['loan_ref'] = new sfValidatorPass();
+
+    $this->widgetSchema['item_visible'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['item_visible'] = new sfValidatorPass();
+    $this->setDefault('item_visible', 'true');
+
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 

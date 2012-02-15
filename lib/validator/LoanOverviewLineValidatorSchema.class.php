@@ -10,7 +10,7 @@ class LoanOverviewLineValidatorSchema extends sfValidatorSchema
     $errorSchema = new sfValidatorErrorSchema($this);
     $errorSchemaLocal = new sfValidatorErrorSchema($this);
 
-    if($value['loan_item_ind'] != 1)
+    if($value['item_visible'] != "true")
     {
       return array();
     }
