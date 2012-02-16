@@ -76,7 +76,7 @@
                 elem = item_row.find('#gtu_<?php echo $item_ref;?>_details');
                 if(elem.is(":hidden"))
                 { 
-                  $.get('<?php echo url_for("gtu/completeTag?id=".$specimen->getId()."&view=true") ;?>',function (html){
+                  $.get('<?php echo url_for("gtu/completeTag?id=".$specimen->getSpecimenRef()."&view=true") ;?>',function (html){
                     item_row.find('.general_gtu').slideUp();
                     elem.html(html).slideDown();
                   });
@@ -110,8 +110,8 @@
     </td> 
 
     <td class="col_codes">
-      <?php if(isset($codes[$specimen->getId()])):?>
-        <?php if(count($codes[$specimen->getId()]) <= 3):?>
+      <?php if(isset($codes[$specimen->getSpecimenRef()])):?>
+        <?php if(count($codes[$specimen->getSpecimenRef()]) <= 3):?>
           <?php echo image_tag('info-bw.png',"title=info class=info");?>
         <?php else:?>
           <?php echo image_tag('info.png',"title=info class=info id=spec_code_".$item_ref."_info");?>
@@ -133,7 +133,7 @@
           </script>
         <?php endif;?>
         <ul>
-        <?php $cpt = 0 ; foreach($codes[$specimen->getId()] as $key=>$code):?>            
+        <?php $cpt = 0 ; foreach($codes[$specimen->getSpecimenRef()] as $key=>$code):?>            
             <?php if($code->getCodeCategory() == 'main') : ?>
               <?php $cpt++ ; ?>
               <li <?php if($cpt > 3) echo("class='hidden code_supp'"); ?>>

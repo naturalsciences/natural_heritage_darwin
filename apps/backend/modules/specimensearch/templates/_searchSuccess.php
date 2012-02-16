@@ -62,19 +62,19 @@
           <?php if($source=="specimen")
                 {
                   $specimen = $unit;
-                  $itemRef = $specimen['id'];
+                  $itemRef = $specimen['specimen_ref'];
                 }
                 elseif($source=="individual")
                 {
                   $individual = $unit;
-                  $specimen = $individual->Specimens;
+                  $specimen = $individual->SpecimensFlat;
                   $itemRef = $individual['id'];
                 }
                 elseif($source=="part")
                 {
                   $part = $unit;
                   $individual = $unit->Individual;
-                  $specimen = $individual->Specimens;
+                  $specimen = $individual->SpecimensFlat;
                   $itemRef = $part['id'];
                 }?>
           <tbody>
@@ -88,7 +88,7 @@
               </td>
               <td rowspan="2">
                 <?php if($source != 'part'):?>
-                  <?php $expandable = ($source=='specimen') ? $specimen->getWithIndividuals() : $specimen->getWithParts();?>
+                  <?php $expandable = ($source == 'specimen') ? $specimen->getWithIndividuals() : $individual->getWithParts();?>
                   <?php if($expandable):?>
                     <?php echo image_tag('blue_expand.png', array('alt' => '+', 'class'=> 'tree_cmd_td collapsed')); ?>
                     <?php echo image_tag('blue_expand_up.png', array('alt' => '-', 'class'=> 'tree_cmd_td expanded')); ?>
@@ -116,12 +116,12 @@
               <td rowspan="2">
               <?php if($sf_user->isAtLeast(Users::ADMIN) || $unit->getHasEncodingRights()) : ?>
                 <?php switch($source){
-                  case 'specimen':   $e_link = 'specimen/edit?id='.$specimen->getId();
-                                     $v_link = 'specimen/view?id='.$specimen->getId();                  
-                                     $d_link = 'specimen/new?duplicate_id='.$specimen->getId();break;
+                  case 'specimen':   $e_link = 'specimen/edit?id='.$specimen->getSpecimenRef();
+                                     $v_link = 'specimen/view?id='.$specimen->getSpecimenRef();                  
+                                     $d_link = 'specimen/new?duplicate_id='.$specimen->getSpecimenRef();break;
                   case 'individual': $e_link = 'individuals/edit?id='.$individual->getId();
                                      $v_link = 'individuals/view?id='.$individual->getId();
-                                     $d_link = 'individuals/edit?spec_id='.$specimen->getId().'&duplicate_id='.$individual->getId();break;
+                                     $d_link = 'individuals/edit?spec_id='.$specimen->getSpecimenRef().'&duplicate_id='.$individual->getId();break;
                   default:           $e_link = 'parts/edit?id='.$part->getId();
                                      $v_link = 'parts/view?id='.$part->getId();
                                      $d_link = 'parts/edit?indid='.$individual->getId().'&duplicate_id='.$part->getId();break;              
@@ -131,7 +131,7 @@
               <?php else : ?>
 
                 <?php switch($source){
-                  case 'specimen':   $v_link = 'specimen/view?id='.$specimen->getId();break;
+                  case 'specimen':   $v_link = 'specimen/view?id='.$specimen->getSpecimenRef();break;
                   case 'individual': $v_link = 'individuals/view?id='.$specimen->getIndividualRef();break;
                   default:           $v_link = 'parts/view?id='.$specimen->getPartRef();break;
                   };?>
@@ -141,24 +141,24 @@
             </tr>
 
             <?php if($source == 'specimen' && $specimen->getWithIndividuals()):?>
-              <tr id="tr_individual_<?php echo $specimen->getId();?>" class="ind_row sub_row">
+              <tr id="tr_individual_<?php echo $specimen->getSpecimenRef();?>" class="ind_row sub_row">
                 <td colspan="14"> 
-                  <div id="container_individual_<?php echo $specimen->getId();?>" class="tree"></div>
+                  <div id="container_individual_<?php echo $specimen->getSpecimenRef();?>" class="tree"></div>
                   <script type="text/javascript">
                     $(document).ready(function () {
-                    $('tr.rid_<?php echo $specimen->getId(); ?> img.collapsed').click(function() 
+                    $('tr.rid_<?php echo $specimen->getSpecimenRef(); ?> img.collapsed').click(function() 
                     {
                       $(this).hide();
                       $(this).siblings('.expanded').show();
-                      $.get('<?php echo url_for("specimensearch/individualTree?id=".$specimen->getId()) ;?>',function (html){
-                              $('#container_individual_<?php echo $specimen->getId();?>').html(html).slideDown();
+                      $.get('<?php echo url_for("specimensearch/individualTree?id=".$specimen->getSpecimenRef()) ;?>',function (html){
+                              $('#container_individual_<?php echo $specimen->getSpecimenRef();?>').html(html).slideDown();
                               });
                     });  
-                    $('tr.rid_<?php echo $specimen->getId(); ?> img.expanded').click(function() 
+                    $('tr.rid_<?php echo $specimen->getSpecimenRef(); ?> img.expanded').click(function() 
                     {
                       $(this).hide();
                       $(this).siblings('.collapsed').show();
-                      $('#container_individual_<?php echo $specimen->getId();?>').slideUp();
+                      $('#container_individual_<?php echo $specimen->getSpecimenRef();?>').slideUp();
                     });
                   });
                   </script>

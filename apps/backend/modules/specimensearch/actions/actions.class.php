@@ -141,7 +141,7 @@ class specimensearchActions extends DarwinActions
           // Replace the count query triggered by the Pager to get the number of records retrieved
           $count_q = clone $query;//$pager->getCountQuery();
           // Remove from query the group by and order by clauses
-          $count_q = $count_q->select('count(id)')->removeDqlQueryPart('orderby')->limit(0);
+          $count_q = $count_q->select('count(s.specimen_ref)')->removeDqlQueryPart('orderby')->limit(0);
           // Initialize an empty count query
           $counted = new DoctrineCounted();
           // Define the correct select count() of the count query
@@ -162,9 +162,14 @@ class specimensearchActions extends DarwinActions
 
           $this->source = $this->form->getValue('what_searched');
 
-          foreach($this->specimensearch as $key=>$specimen)
+          foreach($this->specimensearch as $key=>$unit)
           {
-            $spec_list[] = $specimen['id'] ;
+            if($this->source == 'specimen')
+              $spec_list[] = $unit['specimen_ref'] ;
+            elseif($this->source == 'individual')
+              $spec_list[] = $unit->SpecimensFlat['specimen_ref'] ;
+            else
+              $spec_list[] = $unit->Individual->SpecimensFlat['specimen_ref'] ;
           }
           $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$spec_list) ;
           $this->codes = array();
