@@ -1448,6 +1448,12 @@ SELECT distinct(fulltoIndex(tags)) FROM regexp_split_to_table($1, ';') as tags W
 $$
 LANGUAGE 'sql' IMMUTABLE STRICT;
 
+CREATE OR REPLACE FUNCTION lineToTagRowsFormatConserved(IN line text) RETURNS SETOF varchar AS
+$$
+SELECT distinct on (fulltoIndex(tags)) tags FROM regexp_split_to_table($1, ';') as tags WHERE fulltoIndex(tags) != '' ;
+$$
+LANGUAGE 'sql' IMMUTABLE STRICT;
+
 CREATE OR REPLACE FUNCTION lineToTagArray(IN line text) RETURNS varchar[] AS
 $$
 select array_agg(tags_list) FROM (SELECT lineToTagRows($1) AS tags_list ) as x;

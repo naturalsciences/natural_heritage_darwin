@@ -1,4 +1,4 @@
-\echo Start of split the `date`
+-- \echo Start of split the `date`
 
 BEGIN;
 
@@ -226,64 +226,64 @@ DECLARE
   new_part_id specimen_parts.id%TYPE;
   code_count integer;
 BEGIN
-  INSERT INTO specimen_parts
-  (parent_ref, path, specimen_individual_ref, specimen_part, complete,
-    building, "floor", room, "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, 
-    surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref
-  )
-  (
-    SELECT parent_ref, path, specimen_individual_ref, specimen_part, complete, 
-          building, "floor", room, "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage,
-          surnumerary, specimen_status, recPartsDetails.part_count_min, recPartsDetails.part_count_min, institution_ref
-    FROM specimen_parts 
-    WHERE id = part_id
-  )
-  RETURNING id INTO new_part_id;
-  INSERT INTO partsSplitFromAndTo (id, "start")
-  (SELECT new_part_id, false WHERE NOT EXISTS (SELECT 1 FROM partsSplitFromAndTo WHERE NOT "start" ));
-  if decrementCount(part_id, recPartsDetails.part_count_min) then
-  end if;
-  SELECT count(full_code_order_by) INTO code_count
-  FROM codes
-  WHERE referenced_relation = 'specimen_parts'
-    AND code_category = 'main'
-    AND record_id = part_id;
-  IF code_count > 1 THEN
-    UPDATE codes
-    SET record_id = new_part_id
+    INSERT INTO specimen_parts
+    (parent_ref, path, specimen_individual_ref, specimen_part, complete,
+      building, "floor", room, "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage,
+      surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref
+    )
+    (
+      SELECT parent_ref, path, specimen_individual_ref, specimen_part, complete,
+            building, "floor", room, "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage,
+            surnumerary, specimen_status, recPartsDetails.part_count_min, recPartsDetails.part_count_min, institution_ref
+      FROM specimen_parts
+      WHERE id = part_id
+    )
+    RETURNING id INTO new_part_id;
+    INSERT INTO partsSplitFromAndTo (id, "start")
+    (SELECT new_part_id, false WHERE NOT EXISTS (SELECT 1 FROM partsSplitFromAndTo WHERE NOT "start" ));
+    if decrementCount(part_id, recPartsDetails.part_count_min) then
+    end if;
+    SELECT count(full_code_order_by) INTO code_count
+    FROM codes
     WHERE referenced_relation = 'specimen_parts'
-      AND record_id = part_id
       AND code_category = 'main'
-      AND full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code);
-    GET DIAGNOSTICS code_count = ROW_COUNT;
-    IF code_count = 0 THEN
-      IF createCodes (new_part_id, recPartsDetails.main_code) < 0 THEN
-        return -1;
+      AND record_id = part_id;
+    IF code_count > 1 THEN
+      UPDATE codes
+      SET record_id = new_part_id
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND code_category = 'main'
+        AND full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code);
+      GET DIAGNOSTICS code_count = ROW_COUNT;
+      IF code_count = 0 THEN
+        IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
+          return -1;
+        END IF;
       END IF;
-    END IF;
-  ELSIF code_count = 1 THEN
-    INSERT INTO codes
-    (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
-    (SELECT 'specimen_parts', new_part_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask
-     FROM codes
-     WHERE referenced_relation = 'specimen_parts'
-       AND record_id = part_id
-       AND code_category = 'main'
-       AND full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code)
-    );
-    GET DIAGNOSTICS code_count = ROW_COUNT;
-    IF code_count = 0 THEN
+    ELSIF code_count = 1 THEN
+      INSERT INTO codes
+      (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
+      (SELECT 'specimen_parts', new_part_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask
+      FROM codes
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND code_category = 'main'
+        AND full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code)
+      );
+      GET DIAGNOSTICS code_count = ROW_COUNT;
+      IF code_count = 0 THEN
+        IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
+          return -1;
+        END IF;
+      END IF;
+    ELSE
       IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
         return -1;
       END IF;
     END IF;
-  ELSE
-    IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
-      return -1;
-    END IF;
-  END IF;
-  /* Comments are not treated: only two are in identifiable corresponding old parts, but do not need to be splitted*/
-  return new_part_id;
+    /* Comments are not treated: only two are in identifiable corresponding old parts, but do not need to be splitted*/
+    return new_part_id;
 EXCEPTION
   WHEN OTHERS THEN
     RAISE WARNING 'Error in createNewPart: %', SQLERRM;
@@ -1492,6 +1492,7 @@ begin
                                     when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
                                     else false 
                                   end
+                          where 1 < (select count(*) from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id)
 /*                          where sgr_preparator_nr is not null and sgr_preparator_nr != 0*/
                           /*where bat_value is not null *//*and specimen_parts.id = 594237*/
                           /*where bat_collection_id_nr between 1 and 8*/
@@ -1502,14 +1503,14 @@ begin
 --                           where sfl_description is not null and sfl_description != 'Undefined'
                                 /*exists (select 1 from comments where comment is not null and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id limit 1)*/
                           order by new_id desc, specimen_part, main_code 
---                           limit 50
+                           limit 50
   LOOP
     comptage := comptage + 1;
     IF comptage IN (5000, 10000, 20000, 40000, 50000, 75000, 90000, 100000, 125000, 150000, 175000, 200000, 225000, 250000, 275000, 300000, 325000, 350000, 375000) THEN
       RAISE NOTICE 'Already % records parsed ;)', comptage;
     END IF;
     IF part_id != recPartsDetails.parts_id THEN
---       RAISE NOTICE 'Next part infos: %', recPartsDetails;
+      RAISE NOTICE 'Next part infos: %', recPartsDetails;
       recFirstPart := recPartsDetails;
       part_id := recPartsDetails.parts_id;
       IF recPartsDetails.specimen_part_count_min = 0 AND recPartsDetails.part_count_min > 0 THEN
@@ -1689,212 +1690,219 @@ begin
               ) 
             ) as x;
         IF code_count > 0 THEN
---           RAISE NOTICE '+ Need of new part creation';
+/*
+
+
+We need to act here to avoid the codes updated or deleted to be the ones treated
+
+
+*/
+          RAISE NOTICE '+ Need of new part creation';
           SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
           IF new_part_id < 0 THEN
             return false;
           END IF;
---           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
---           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
---           RAISE NOTICE '++ Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
---           SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
---           RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
---           SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = new_part_id;
---           RAISE NOTICE '++Transfered count min and max: % and %', spec_part_count_min, spec_part_count_max;
---           SELECT array_agg(property_value/*_unified*/)
---           INTO recProperties
---           FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
---           WHERE referenced_relation = 'specimen_parts'
---             AND record_id = part_id;
---           RAISE NOTICE '+++ Properties before transfert: %', recProperties;
---           SELECT array_agg(insurance_value), array_agg(insurance_year)
---           INTO recInsurances
---           FROM insurances
---           WHERE referenced_relation = 'specimen_parts'
---             AND record_id = part_id;
---           RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
---           SELECT array_agg(people_ref)
---           INTO recProperties
---           FROM collection_maintenance
---           WHERE referenced_relation = 'specimen_parts'
---             AND record_id = part_id;
---           RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
+          select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+          select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
+          RAISE NOTICE '++ Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
+          SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
+          RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
+          SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = new_part_id;
+          RAISE NOTICE '++Transfered count min and max: % and %', spec_part_count_min, spec_part_count_max;
+          SELECT array_agg(property_value/*_unified*/)
+          INTO recProperties
+          FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Properties before transfert: %', recProperties;
+          SELECT array_agg(insurance_value), array_agg(insurance_year)
+          INTO recInsurances
+          FROM insurances
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
+          SELECT array_agg(people_ref)
+          INTO recProperties
+          FROM collection_maintenance
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
           IF moveOrCreateProp(part_id, new_part_id, recPartsDetails, recFirstPart) < 0 THEN
             return false;
           END IF;
---           SELECT array_agg(property_value/*_unified*/)
---           INTO recProperties
---           FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
---           WHERE referenced_relation = 'specimen_parts'
---             AND record_id = new_part_id;
---           RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
---           SELECT array_agg(insurance_value), array_agg(insurance_year)
---           INTO recInsurances
---           FROM insurances
---           WHERE referenced_relation = 'specimen_parts'
---             AND record_id = new_part_id;
---           RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
---           SELECT array_agg(people_ref)
---           INTO recProperties
---           FROM collection_maintenance
---           WHERE referenced_relation = 'specimen_parts'
---             AND record_id = new_part_id;
---           RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
+          SELECT array_agg(property_value/*_unified*/)
+          INTO recProperties
+          FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = new_part_id;
+          RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
+          SELECT array_agg(insurance_value), array_agg(insurance_year)
+          INTO recInsurances
+          FROM insurances
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = new_part_id;
+          RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
+          SELECT array_agg(people_ref)
+          INTO recProperties
+          FROM collection_maintenance
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = new_part_id;
+          RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
         ELSE
---           RAISE NOTICE '+ Need of properties reCheck at least !';
---           select array_agg(property_value/*_unified*/)
---           into recProperties
---           from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
---           where referenced_relation = 'specimen_parts' and record_id = part_id;
---           RAISE NOTICE '+++ Properties before creation: %', recProperties;
---           SELECT array_agg(insurance_value), array_agg(insurance_year)
---           INTO recInsurances
---           FROM insurances
---           WHERE referenced_relation = 'specimen_parts'
---             AND record_id = part_id;
---           RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
---           SELECT array_agg(people_ref)
---           INTO recProperties
---           FROM collection_maintenance
---           WHERE referenced_relation = 'specimen_parts'
---             AND record_id = part_id;
---           RAISE NOTICE '+++ Maintenance before creation: %', recProperties;
+          RAISE NOTICE '+ Need of properties reCheck at least !';
+          select array_agg(property_value/*_unified*/)
+          into recProperties
+          from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+          where referenced_relation = 'specimen_parts' and record_id = part_id;
+          RAISE NOTICE '+++ Properties before creation: %', recProperties;
+          SELECT array_agg(insurance_value), array_agg(insurance_year)
+          INTO recInsurances
+          FROM insurances
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
+          SELECT array_agg(people_ref)
+          INTO recProperties
+          FROM collection_maintenance
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Maintenance before creation: %', recProperties;
           IF createProperties (part_id, recPartsDetails) < 0 THEN
             return false;
           END IF;
---           select array_agg(property_value/*_unified*/)
---           into recProperties
---           from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
---           where referenced_relation = 'specimen_parts' and record_id = part_id;
---           RAISE NOTICE '+++ Actual properties: %', recProperties;
---           SELECT array_agg(insurance_value), array_agg(insurance_year)
---           INTO recInsurances
---           FROM insurances
---           WHERE referenced_relation = 'specimen_parts'
---             AND record_id = part_id;
---           RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
---           SELECT array_agg(people_ref)
---           INTO recProperties
---           FROM collection_maintenance
---           WHERE referenced_relation = 'specimen_parts'
---             AND record_id = part_id;
---           RAISE NOTICE '+++ Maintenance after creation: %', recProperties;
+          select array_agg(property_value/*_unified*/)
+          into recProperties
+          from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+          where referenced_relation = 'specimen_parts' and record_id = part_id;
+          RAISE NOTICE '+++ Actual properties: %', recProperties;
+          SELECT array_agg(insurance_value), array_agg(insurance_year)
+          INTO recInsurances
+          FROM insurances
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
+          SELECT array_agg(people_ref)
+          INTO recProperties
+          FROM collection_maintenance
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Maintenance after creation: %', recProperties;
         END IF;
       ELSE
---         RAISE NOTICE '+ New code creation for next part';
+        RAISE NOTICE '+ New code creation for next part';
         IF createCodes (part_id, recPartsDetails.old_main_code) < 0 THEN
           return false;
         END IF;
---         select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
---         RAISE NOTICE '++ Actual codes: %', recActualCodes;
---         select array_agg(property_value/*_unified*/)
---         into recProperties
---         from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
---         where referenced_relation = 'specimen_parts' and record_id = part_id;
---         RAISE NOTICE '+++ Properties before creation: %', recProperties;
---         SELECT array_agg(insurance_value), array_agg(insurance_year)
---         INTO recInsurances
---         FROM insurances
---         WHERE referenced_relation = 'specimen_parts'
---           AND record_id = part_id;
---         RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
---         SELECT array_agg(people_ref)
---         INTO recProperties
---         FROM collection_maintenance
---         WHERE referenced_relation = 'specimen_parts'
---           AND record_id = part_id;
---         RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
+        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+        RAISE NOTICE '++ Actual codes: %', recActualCodes;
+        select array_agg(property_value/*_unified*/)
+        into recProperties
+        from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+        where referenced_relation = 'specimen_parts' and record_id = part_id;
+        RAISE NOTICE '+++ Properties before creation: %', recProperties;
+        SELECT array_agg(insurance_value), array_agg(insurance_year)
+        INTO recInsurances
+        FROM insurances
+        WHERE referenced_relation = 'specimen_parts'
+          AND record_id = part_id;
+        RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
+        SELECT array_agg(people_ref)
+        INTO recProperties
+        FROM collection_maintenance
+        WHERE referenced_relation = 'specimen_parts'
+          AND record_id = part_id;
+        RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
         IF createProperties (part_id, recPartsDetails) < 0 THEN
           return false;
         END IF;
---         select array_agg(property_value/*_unified*/)
---         into recProperties
---         from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
---         where referenced_relation = 'specimen_parts' and record_id = part_id;
---         RAISE NOTICE '+++ Actual properties: %', recProperties;
---         SELECT array_agg(insurance_value), array_agg(insurance_year)
---         INTO recInsurances
---         FROM insurances
---         WHERE referenced_relation = 'specimen_parts'
---           AND record_id = part_id;
---         RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
---         SELECT array_agg(people_ref)
---         INTO recProperties
---         FROM collection_maintenance
---         WHERE referenced_relation = 'specimen_parts'
---           AND record_id = part_id;
---         RAISE NOTICE '+++ Actual Maintenance: %', recProperties;
+        select array_agg(property_value/*_unified*/)
+        into recProperties
+        from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
+        where referenced_relation = 'specimen_parts' and record_id = part_id;
+        RAISE NOTICE '+++ Actual properties: %', recProperties;
+        SELECT array_agg(insurance_value), array_agg(insurance_year)
+        INTO recInsurances
+        FROM insurances
+        WHERE referenced_relation = 'specimen_parts'
+          AND record_id = part_id;
+        RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
+        SELECT array_agg(people_ref)
+        INTO recProperties
+        FROM collection_maintenance
+        WHERE referenced_relation = 'specimen_parts'
+          AND record_id = part_id;
+        RAISE NOTICE '+++ Actual Maintenance: %', recProperties;
       END IF;
     ELSE
---       RAISE NOTICE '- Same part id infos: %', recPartsDetails;
+      RAISE NOTICE '- Same part id infos: %', recPartsDetails;
       SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
       IF new_part_id < 0 THEN
         return false;
       END IF;
---       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
---       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
---       RAISE NOTICE '-- Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
---       SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
---       RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
---       SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = new_part_id;
---       RAISE NOTICE '++Transfered count min and max: % and %', spec_part_count_min, spec_part_count_max;
---       SELECT array_agg(property_value/*_unified*/)
---       INTO recProperties
---       FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = part_id;
---       RAISE NOTICE '+++ Properties before transfert: %', recProperties;
---       SELECT array_agg(insurance_value), array_agg(insurance_year)
---       INTO recInsurances
---       FROM insurances
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = part_id;
---       RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
---       SELECT array_agg(people_ref)
---       INTO recProperties
---       FROM collection_maintenance
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = part_id;
---       RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
+      select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+      select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
+      RAISE NOTICE '-- Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
+      SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
+      RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
+      SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = new_part_id;
+      RAISE NOTICE '++Transfered count min and max: % and %', spec_part_count_min, spec_part_count_max;
+      SELECT array_agg(property_value/*_unified*/)
+      INTO recProperties
+      FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Properties before transfert: %', recProperties;
+      SELECT array_agg(insurance_value), array_agg(insurance_year)
+      INTO recInsurances
+      FROM insurances
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Insurances before transfert: %', recInsurances;
+      SELECT array_agg(people_ref)
+      INTO recProperties
+      FROM collection_maintenance
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
       IF moveOrCreateProp(part_id, new_part_id, recPartsDetails, recFirstPart) < 0 THEN
         return false;
       END IF;
---       SELECT array_agg(property_value/*_unified*/)
---       INTO recProperties
---       FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = part_id;
---       RAISE NOTICE '+++ Properties after transfert: %', recProperties;
---       SELECT array_agg(insurance_value), array_agg(insurance_year)
---       INTO recInsurances
---       FROM insurances
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = part_id;
---       RAISE NOTICE '+++ Insurances after transfert: %', recInsurances;
---       SELECT array_agg(people_ref)
---       INTO recProperties
---       FROM collection_maintenance
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = part_id;
---       RAISE NOTICE '+++ Maintenance after transfert: %', recProperties;
---       SELECT array_agg(property_value/*_unified*/)
---       INTO recProperties
---       FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = new_part_id;
---       RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
---       SELECT array_agg(insurance_value), array_agg(insurance_year)
---       INTO recInsurances
---       FROM insurances
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = new_part_id;
---       RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
---       SELECT array_agg(people_ref)
---       INTO recProperties
---       FROM collection_maintenance
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = new_part_id;
---       RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
+      SELECT array_agg(property_value/*_unified*/)
+      INTO recProperties
+      FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Properties after transfert: %', recProperties;
+      SELECT array_agg(insurance_value), array_agg(insurance_year)
+      INTO recInsurances
+      FROM insurances
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Insurances after transfert: %', recInsurances;
+      SELECT array_agg(people_ref)
+      INTO recProperties
+      FROM collection_maintenance
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id;
+      RAISE NOTICE '+++ Maintenance after transfert: %', recProperties;
+      SELECT array_agg(property_value/*_unified*/)
+      INTO recProperties
+      FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = new_part_id;
+      RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
+      SELECT array_agg(insurance_value), array_agg(insurance_year)
+      INTO recInsurances
+      FROM insurances
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = new_part_id;
+      RAISE NOTICE '+++ Insurances after transfert for new part: %', recInsurances;
+      SELECT array_agg(people_ref)
+      INTO recProperties
+      FROM collection_maintenance
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = new_part_id;
+      RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
     END IF;
   END LOOP;
   return true;
@@ -1920,49 +1928,49 @@ begin
   IF NOT response THEN
     ROLLBACK;
   END IF;
-  FOR recPartsAfter IN
-    SELECT id
-    FROM specimen_parts
-    WHERE id > (select id from partsSplitFromAndTo where "start") and id < (select id from partsSplitFromAndTo where not "start")
-      AND 1 < (select count(*) from codes where referenced_relation = 'specimen_parts' and record_id = specimen_parts.id)
-  LOOP
-    RAISE NOTICE 'After migration correction, part id splitted is: %', recPartsAfter.id;
-    FOR recPartsAfterCodes IN
-      SELECT id
-      FROM codes
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = recPartsAfter.id
-        AND code_category = 'main'
-    LOOP
-      IF partsAfterCodeId != recPartsAfterCodes.id THEN
-        partsAfterCodeId := recPartsAfterCodes.id;
-      ELSE
-        INSERT INTO specimen_parts (parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref)
-        (SELECT parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref FROM specimen_parts WHERE id = recPartsAfter.id)
-        RETURNING id INTO newPartId;
-        UPDATE codes
-        SET record_id = newPartId
-        WHERE id = recPartsAfterCodes.id;
-        INSERT INTO codes (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
-        (SELECT 'specimen_parts', newPartId, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id AND code_category != 'main');
-        INSERT INTO comments (referenced_relation, record_id, notion_concerned, "comment")
-        (SELECT 'specimen_parts', newPartId, notion_concerned, "comment" FROM comments WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
-        INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_currency, insurance_year, insurer_ref)
-        (SELECT 'specimen_parts', newPartId, insurance_value, insurance_currency, insurance_year, insurer_ref FROM insurances WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
-        INSERT INTO collection_maintenance (referenced_relation, record_id, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask)
-        (SELECT 'specimen_parts', newPartId, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask FROM collection_maintenance WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
-        FOR recPartsAfterDiverse IN
-        SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id
-        LOOP
-          INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool)
-          (SELECT 'specimen_parts', newPartId, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id)
-          RETURNING id INTO newDiverseId;
-          INSERT INTO properties_values (property_ref, property_value, property_accuracy)
-          (SELECT newDiverseId, property_value, property_accuracy FROM properties_values WHERE property_ref = recPartsAfterDiverse.id);
-        END LOOP;
-      END IF;
-    END LOOP;
-  END LOOP;
+--   FOR recPartsAfter IN
+--     SELECT id
+--     FROM specimen_parts
+--     WHERE id > (select id from partsSplitFromAndTo where "start") and id < (select id from partsSplitFromAndTo where not "start")
+--       AND 1 < (select count(*) from codes where referenced_relation = 'specimen_parts' and record_id = specimen_parts.id and code_category = 'main')
+--   LOOP
+--     RAISE NOTICE 'After migration correction, part id splitted is: %', recPartsAfter.id;
+--     FOR recPartsAfterCodes IN
+--       SELECT id
+--       FROM codes
+--       WHERE referenced_relation = 'specimen_parts'
+--         AND record_id = recPartsAfter.id
+--         AND code_category = 'main'
+--     LOOP
+--       IF partsAfterCodeId != recPartsAfterCodes.id THEN
+--         partsAfterCodeId := recPartsAfterCodes.id;
+--       ELSE
+--         INSERT INTO specimen_parts (parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref)
+--         (SELECT parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref FROM specimen_parts WHERE id = recPartsAfter.id)
+--         RETURNING id INTO newPartId;
+--         UPDATE codes
+--         SET record_id = newPartId
+--         WHERE id = recPartsAfterCodes.id;
+--         INSERT INTO codes (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
+--         (SELECT 'specimen_parts', newPartId, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id AND code_category != 'main');
+--         INSERT INTO comments (referenced_relation, record_id, notion_concerned, "comment")
+--         (SELECT 'specimen_parts', newPartId, notion_concerned, "comment" FROM comments WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
+--         INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_currency, insurance_year, insurer_ref)
+--         (SELECT 'specimen_parts', newPartId, insurance_value, insurance_currency, insurance_year, insurer_ref FROM insurances WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
+--         INSERT INTO collection_maintenance (referenced_relation, record_id, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask)
+--         (SELECT 'specimen_parts', newPartId, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask FROM collection_maintenance WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
+--         FOR recPartsAfterDiverse IN
+--         SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id
+--         LOOP
+--           INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool)
+--           (SELECT 'specimen_parts', newPartId, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id)
+--           RETURNING id INTO newDiverseId;
+--           INSERT INTO properties_values (property_ref, property_value, property_accuracy)
+--           (SELECT newDiverseId, property_value, property_accuracy FROM properties_values WHERE property_ref = recPartsAfterDiverse.id);
+--         END LOOP;
+--       END IF;
+--     END LOOP;
+--   END LOOP;
   return response;
 exception
   when others then
@@ -2004,10 +2012,11 @@ ALTER TABLE insurances ENABLE TRIGGER trg_trk_log_table_insurances;
 ALTER TABLE insurances ENABLE TRIGGER fct_cpy_trg_del_dict_insurances;
 ALTER TABLE insurances ENABLE TRIGGER fct_cpy_trg_ins_update_dict_insurances;
 
-\echo Split ended the `date`
+-- \echo Split ended the `date`
 
-commit;
+rollback;
+-- commit;
+-- 
+-- \i ../maintenance/recreate_flat.sql
 
-\i ../maintenance/recreate_flat.sql
-
-\echo Flat refreshed the `date`
+-- \echo Flat refreshed the `date`

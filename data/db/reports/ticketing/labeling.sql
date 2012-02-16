@@ -1,4 +1,4 @@
-﻿/*Modification of an existing function to make it immutable*/
+﻿/* Modification of an existing function to make it immutable */
 
 CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER IMMUTABLE
 AS $$
@@ -25,18 +25,9 @@ from (select lineToTagRows(tag_value) as tags_list
      ) as x;
 $$;
 
-create or replace function labeling_country_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
-$$
-select array_to_string(x.tags_list,';')
-from (select labeling_country_for_indexation_array($1) as tags_list) as x;
-$$;
-
 GRANT EXECUTE ON FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) TO d2viewer;
 GRANT ALL ON FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
-GRANT EXECUTE ON FUNCTION labeling_country_for_indexation(gtu.id%TYPE) TO d2viewer;
-GRANT ALL ON FUNCTION labeling_country_for_indexation(gtu.id%TYPE) TO cebmpad, darwin2;
-ALTER FUNCTION labeling_country_for_indexation(gtu.id%TYPE) OWNER TO darwin2;
 
 DROP INDEX IF EXISTS idx_labeling_country;
 CREATE INDEX idx_labeling_country ON darwin_flat USING gin (labeling_country_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
@@ -53,7 +44,12 @@ $$;
 create or replace function labeling_province_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
 $$
 select array_to_string(x.tags_list,';')
-from (select labeling_province_for_indexation_array($1) as tags_list) as x;
+from (select array_agg(y.tags_list) as tags_list
+      from (select lineToTagRowsFormatConserved(tag_value) as tags_list
+            from tag_groups as tg
+            where tg.gtu_ref = $1 and tg.sub_group_name = 'province'
+           ) as y
+     ) as x;
 $$;
 
 GRANT EXECUTE ON FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) TO d2viewer;
@@ -78,7 +74,12 @@ $$;
 create or replace function labeling_other_gtu_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
 $$
 select array_to_string(x.tags_list,';')
-from (select labeling_other_gtu_for_indexation_array($1) as tags_list) as x;
+from (select array_agg(y.tags_list) as tags_list
+      from (select lineToTagRowsFormatConserved(tag_value) as tags_list
+            from tag_groups as tg
+            where tg.gtu_ref = $1 and tg.sub_group_name not in ('province', 'country')
+           ) as y
+     ) as x;
 $$;
 
 GRANT EXECUTE ON FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) TO d2viewer;
@@ -172,14 +173,15 @@ CREATE INDEX idx_labeling_part ON darwin_flat using gin (labeling_part_for_index
 
 DROP INDEX IF EXISTS idx_labeling_ig_num_numeric;
 DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
-CREATE INDEX idx_labeling_ig_num_coalesced ON darwin_flat(coalesce(ig_num, '-'));
-CREATE INDEX idx_labeling_ig_num_numeric ON darwin_flat(convert_to_integer(coalesce(ig_num, '-')));
+CREATE INDEX idx_labeling_ig_num_coalesced ON darwin_flat(coalesce(ig_num, '-')) where part_ref is not null;
+CREATE INDEX idx_labeling_ig_num_numeric ON darwin_flat(convert_to_integer(coalesce(ig_num, '-'))) where part_ref is not null;
 
 drop view "public"."labeling";
 
 create or replace view "public"."labeling" as
 select df.part_ref as unique_id,
        df.collection_ref as collection,
+       df.collection_name as collection_name,
        df.collection_path as collection_path, 
        trim(both ',' from
         trim(case when coalesce(df.part,'') in ('specimen', 'animal', 'undefined', 'unknown', '') then '' else df.part end 
@@ -203,6 +205,36 @@ select df.part_ref as unique_id,
        df.taxon_name as taxon_name,
        df.taxon_name_indexed as taxon_name_indexed,
        df.taxon_path as taxon_path,
+       (select phyl.name
+        from (select x.id::integer as id from
+                 (select regexp_split_to_table(path, '/') as id
+                  from taxonomy as taxphyls
+                  where taxphyls.id = df.taxon_ref
+                 ) as x
+              where x.id != ''
+             ) as y
+             inner join taxonomy as phyl on y.id = phyl.id and phyl.level_ref = 4
+       )::varchar as phyl,
+       (select clas.name
+        from (select x.id::integer as id from
+                 (select regexp_split_to_table(path, '/') as id
+                  from taxonomy as taxclass
+                  where taxclass.id = df.taxon_ref
+                 ) as x
+              where x.id != ''
+             ) as y
+             inner join taxonomy as clas on y.id = clas.id and clas.level_ref = 12
+       )::varchar as clas,
+       (select ordo.name
+        from (select x.id::integer as id from
+                 (select regexp_split_to_table(path, '/') as id
+                  from taxonomy as taxord
+                  where taxord.id = df.taxon_ref
+                 ) as x
+              where x.id != ''
+             ) as y
+             inner join taxonomy as ordo on y.id = ordo.id and ordo.level_ref = 28
+       )::varchar as ordo,
        (select fam.name 
         from (select x.id::integer as id from
                  (select regexp_split_to_table(path, '/') as id 
@@ -222,7 +254,7 @@ select df.part_ref as unique_id,
        )::varchar as current_name,
        case when df.acquisition_category is not null then 'Acq.: ' || df.acquisition_category else '' end as acquisition_category,
        df.gtu_ref as gtu_ref,
-       labeling_country_for_indexation(df.gtu_ref) as countries,
+       replace(df.gtu_country_tag_value, ' ', '')::varchar as countries,
        labeling_country_for_indexation_array(df.gtu_ref) as countries_array,
        labeling_province_for_indexation(df.gtu_ref) as provinces,
        labeling_province_for_indexation_array(df.gtu_ref) as provinces_array,
@@ -244,7 +276,14 @@ select df.part_ref as unique_id,
               where ident.referenced_relation = 'specimens' and ident.record_id = df.spec_ref order by cp.order_by
              ) as x
        )::varchar as identifiers,
+       (select 'Don.: ' || array_to_string(array_agg(people_list), ' - ')
+        from (select trim(formated_name) as people_list
+              from catalogue_people as cp inner join people as peo on cp.people_ref = peo.id
+              where cp.people_type = 'donator' and cp.referenced_relation = 'specimens' and cp.record_id = df.spec_ref order by cp.order_by
+             ) as x
+       )::varchar as donators,
        coalesce(df.ig_num, '-') as ig_num,
+       convert_to_integer(coalesce(ig_num, '-')) as ig_numeric,
        case when df.part_count_min <> df.part_count_max and df.part_count_min is not null and df.part_count_max is not null then 'Count: ' || df.part_count_min || ' - ' || df.part_count_max else case when df.part_count_min is not null then 'Count: ' || df.part_count_min else '' end end as specimen_number,
        case when exists(select 1 from comments where (referenced_relation = 'specimens' and record_id = df.spec_ref) or (referenced_relation = 'specimen_parts' and record_id = df.part_ref)) then 'Comm.?: Y' else 'Comm.?: N' end as comments
 from darwin_flat as df inner join gtu on df.gtu_ref = gtu.id
