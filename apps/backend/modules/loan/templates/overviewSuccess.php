@@ -36,7 +36,7 @@
         </tbody>
        </table>
        <?php if(! count($form['LoanItems']) && ! count($form['newLoanItems'])):?>
-        <div class="warn_message"><?php echo __('There is currently items in your loan. Do not forget to add them.');?></div>
+        <div class="warn_message"><?php echo __('There is currently no items in your loan. Do not forget to add them.');?></div>
        <?php endif;?>
   
         <div class="form_buttons">
