@@ -375,7 +375,7 @@ class specimenActions extends DarwinActions
         $specs = array();
         foreach($this->specimens as $specimen)
         {
-          $specs[$specimen->getId()] = $specimen->getId();
+          $specs[$specimen->getSpecimenRef()] = $specimen->getSpecimenRef();
         }
         $specCodes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens', $specs);
         $this->codes = array();

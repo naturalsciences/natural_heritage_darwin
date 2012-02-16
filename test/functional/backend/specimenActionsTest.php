@@ -99,7 +99,7 @@ $browser->
     checkElement('table.results tbody tr td:nth-child(3)', 'Falco Peregrinus')->
   end()->
   info('2.5 - edition...');
-  $record = Doctrine::getTable('Specimens')->findOneByTaxonName('Falco Peregrinus');
+  $record = Doctrine::getTable('Specimens')->findOneByTaxonRef('2');//Falco Peregrinus');
   
 $browser->
     get('specimen/edit?id='.$record->getId())->

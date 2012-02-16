@@ -8,7 +8,7 @@
  * @author     DB team <collections@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class SpecimensFormFilter extends BaseSpecimensFormFilter
+class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
 {
   public function configure()
   {
@@ -60,7 +60,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $conn_MGR = Doctrine_Manager::connection();
       $query->leftJoin($alias.'.SpecimensCodes cod')
           ->andWhere("cod.referenced_relation = ?", array('specimens'))
-          ->andWhere("cod.record_id = $alias.id")
+          ->andWhere("cod.record_id = $alias.specimen_ref")
           ->andWhere("cod.full_code_order_by = fullToIndex(".$conn_MGR->quote($values, 'string').") ");
     }
     return $query;
@@ -90,7 +90,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
      if ($values != "")
      {
        $alias = $query->getRootAlias();       
-       $query->andWhere($alias.'.id != ?', $values);
+       $query->andWhere($alias.'.specimen_ref != ?', $values);
      }
      return $query;
   }
