@@ -11,7 +11,7 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
 {
   public function configure()
   { 
-    unset($this['type_group'], $this['type_search'], $this['id'], $this['with_parts']);
+    unset($this['type_group'], $this['type_search'], $this['id'], $this['with_parts'], $this['ind_ident_ids']);
     $this->widgetSchema['specimen_ref'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['type'] = new widgetFormSelectComplete(array(
         'model' => 'SpecimenIndividuals',
