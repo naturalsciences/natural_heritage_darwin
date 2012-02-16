@@ -42,7 +42,7 @@
           <?php echo $form['filenames']->renderLabel();?>
           <?php echo $form['filenames'];?>
         </div>
-          <a href="<?php echo url_for('loan/addRelatedFiles?table=$table'. ($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/num/" id="add_file" class="hidden"></a>
+          <a href="<?php echo url_for('loan/addRelatedFiles?table='.$table.($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/num/" id="add_file" class="hidden"></a>
         <iframe name="hiddenFrame" id="hiddenFrame" class="little-frame" style="display:none">
         </iframe>
       </td>

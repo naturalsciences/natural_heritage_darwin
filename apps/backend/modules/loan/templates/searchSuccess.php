@@ -61,8 +61,10 @@
               <?php echo $item->getDescription();?>
             </td>           
             <td class="">
+	            <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loan/view?id='.$item->getId());?>            
+              <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
               <?php echo link_to(image_tag('edit.png',array('title'=>'Edit loan')),'loan/edit?id='.$item->getId());?>
-	      <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loan/view?id='.$item->getId());?>
+              <?php endif ; ?>
             </td>
           </tr>
           <tr class="hidden details details_rid_<?php echo $item->getId();?>" >

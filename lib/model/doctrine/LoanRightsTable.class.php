@@ -41,7 +41,10 @@ class LoanRightsTable extends Doctrine_Table
 
     $rights = array();
     foreach( $result as $res )
-      $rights[$res->getLoanRef()] = $res->getHasEncodingRight();
+    {
+      if($res->getHasEncodingRight())
+        $rights[] = $res->getLoanRef() ; //$res->getHasEncodingRight();
+    }
 
     return $rights;
   }

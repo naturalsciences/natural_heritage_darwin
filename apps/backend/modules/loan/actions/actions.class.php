@@ -23,9 +23,10 @@ class loanActions extends DarwinActions
     return $loan ;
   }  
   
-  protected function getLoanForm(sfWebRequest $request, $fwd404=false, $parameter='id')
+  protected function getLoanForm(sfWebRequest $request, $fwd404=false, $parameter='id',$options=null)
   {
     $loan = null;
+    
 
     if ($fwd404)
       return $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter,0)));
@@ -34,12 +35,12 @@ class loanActions extends DarwinActions
     {
       if($request->hasParameter($parameter))
         $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter) );      
-      $form = new LoansForm($loan);
+      $form = new LoansForm($loan,$options);
     }else
     {
       if($request->hasParameter($parameter))    
         $loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
-      $form = new LoanItemWidgetForm($loan);
+      $form = new LoanItemWidgetForm($loan,$options);
     }
     return $form;
   }
@@ -94,6 +95,7 @@ class loanActions extends DarwinActions
           $this->status = array();
           foreach($status as $sta) {
             $this->status[$sta->getLoanRef()] = $sta;
+          $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
           }
       }
     }
@@ -136,6 +138,7 @@ class loanActions extends DarwinActions
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
+ //   die(print_r($request->getParameter($form->getName())));
     $form->bind($request->getParameter($form->getName()),$request->getFiles($this->form->getName()));   
     if ($form->isValid())
     {
@@ -191,8 +194,9 @@ class loanActions extends DarwinActions
 
 
   public function executeCreate(sfWebRequest $request)
-  {
-    $loan = $this->checkRight($request->getParameter('id')) ;
+  {    
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
+    $loan = new Loans() ;
     $this->form = new LoansForm();
     // Process the form for saving informations
     $this->processForm($request, $this->form);
@@ -295,9 +299,9 @@ class loanActions extends DarwinActions
 
   public function executeInsertFile(sfWebRequest $request)
   {
-    $form = $this->getLoanForm($request);
+    $form = $this->getLoanForm($request,false,'id',array('no_name'=>true));
     $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
-    $file = $form->getValue('filenames');
+    $file = $form->getValue('filenames');    
     if($form->isValid()) 
     {       
       if(!Multimedia::CheckMymeType($file->getType()))
@@ -328,7 +332,7 @@ class loanActions extends DarwinActions
   public function executeAddRelatedFiles(sfWebRequest $request)
   {
     $number = intval($request->getParameter('num'));
-    $form = $this->getLoanForm($request);
+    $form = $this->getLoanForm($request);    
     $file = $this->getUser()->getAttribute($request->getParameter('file_id')) ;    
     $form->addRelatedFiles($number,$file);
     return $this->renderPartial('loan/multimedia',array('form' => $form['newRelatedFiles'][$number], 'row_num'=>$number));

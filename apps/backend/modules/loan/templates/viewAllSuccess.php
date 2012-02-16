@@ -27,7 +27,7 @@
 		  echo $toDate->format('d/m/Y');
 	    ?></td>   
 	<td><?php echo link_to(image_tag('blue_eyel.png'),url_for(array('module'=> 'loan', 'action' => 'index', 'id' => $loan->getId())));?></td> 
-	<?php if( $rights[$loan->getId()] ) :?>
+	<?php if( in_array($loan->getId(),sfOutputEscaper::unescape($rights)) ) :?>
 	<td><?php echo link_to(image_tag('edit.png'),url_for(array('module'=> 'loan', 'action' => 'edit', 'id' => $loan->getId())));?></td>
 	<td><?php echo link_to(image_tag('remove.png'),
 			      url_for(array('module'=> 'loan', 'action' => 'delete', 'id' => $loan->getId())), 
