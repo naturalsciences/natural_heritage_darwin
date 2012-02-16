@@ -24,7 +24,7 @@ ALTER TABLE insurances DISABLE TRIGGER trg_trk_log_table_insurances;
 ALTER TABLE insurances DISABLE TRIGGER fct_cpy_trg_del_dict_insurances;
 ALTER TABLE insurances DISABLE TRIGGER fct_cpy_trg_ins_update_dict_insurances;
 
-CREATE TEMPORARY TABLE partsSplitFromAndTo ("start" boolean not null default true, "id" integer not null);
+-- CREATE TEMPORARY TABLE partsSplitFromAndTo ("start" boolean not null default true, "id" integer not null);
 
 CREATE OR REPLACE FUNCTION convert_to_real(v_input varchar) RETURNS REAL IMMUTABLE
 AS $$
@@ -43,35 +43,35 @@ $$ LANGUAGE plpgsql;
 DROP TYPE IF EXISTS recPartsDetail CASCADE;
 CREATE TYPE recPartsDetail AS (
                                 old_spec_id integer,
-                                specimen_individual_ref integer,  
-                                parts_id bigint, 
-                                main_code varchar, 
-                                rbins_code varchar, 
-                                batch_main_code varchar, 
+                                specimen_individual_ref integer,
+                                parts_id bigint,
+                                main_code varchar,
+                                rbins_code varchar,
+                                batch_main_code varchar,
                                 inventory_code varchar,
                                 old_main_code varchar,
-                                specimen_part varchar, 
-                                building varchar, 
-                                coalesced_building varchar, 
-                                "floor" varchar, 
-                                coalesced_floor varchar, 
-                                room varchar, 
+                                specimen_part varchar,
+                                building varchar,
+                                coalesced_building varchar,
+                                "floor" varchar,
+                                coalesced_floor varchar,
+                                room varchar,
                                 coalesced_room varchar,
-                                "row" varchar, 
-                                coalesced_row varchar,  
-                                shelf varchar, 
-                                coalesced_shelf varchar, 
-                                container varchar, 
-                                coalesced_container varchar, 
-                                sub_container varchar, 
-                                coalesced_sub_container varchar, 
-                                container_and_sub_container_type varchar, 
-                                container_type varchar, 
+                                "row" varchar,
+                                coalesced_row varchar,
+                                shelf varchar,
+                                coalesced_shelf varchar,
+                                container varchar,
+                                coalesced_container varchar,
+                                sub_container varchar,
+                                coalesced_sub_container varchar,
+                                container_and_sub_container_type varchar,
+                                container_type varchar,
                                 sub_container_type varchar,
-                                container_and_sub_container_storage varchar, 
-                                container_storage varchar, 
+                                container_and_sub_container_storage varchar,
+                                container_storage varchar,
                                 sub_container_storage varchar,
-                                specimen_status varchar, 
+                                specimen_status varchar,
                                 part_count_min bigint,
                                 specimen_part_count_min integer,
                                 specimen_part_count_max integer,
@@ -222,7 +222,7 @@ $$;
 
 create or replace function createNewPart(IN part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail) RETURNS specimen_parts.id%TYPE language plpgsql AS
 $$
-DECLARE  
+DECLARE
   new_part_id specimen_parts.id%TYPE;
   code_count integer;
 BEGIN
@@ -239,8 +239,8 @@ BEGIN
       WHERE id = part_id
     )
     RETURNING id INTO new_part_id;
-    INSERT INTO partsSplitFromAndTo (id, "start")
-    (SELECT new_part_id, false WHERE NOT EXISTS (SELECT 1 FROM partsSplitFromAndTo WHERE NOT "start" ));
+--     INSERT INTO partsSplitFromAndTo (id, "start")
+--     (SELECT new_part_id, false WHERE NOT EXISTS (SELECT 1 FROM partsSplitFromAndTo WHERE NOT "start" ));
     if decrementCount(part_id, recPartsDetails.part_count_min) then
     end if;
     SELECT count(full_code_order_by) INTO code_count
@@ -1336,70 +1336,73 @@ declare
   spec_part_count_min integer;
   spec_part_count_max integer;
   comptage integer := 0;
+  new_code_id codes.id%TYPE;
+  new_code_insertion boolean := false;
+  booUpdateProperties boolean := false;
 begin
-  INSERT INTO partsSplitFromAndTo (id)
-  (
-    SELECT max(specimen_parts.id)
-    FROM darwin1.tbl_specimen_groups
-          inner join darwin1.id_refs
-          on sgr_id_ctn = old_id and system = 'individuals'
-          inner join (
-                        darwin1.tbl_rooms
-                        inner join (
-                                    darwin1.tbl_building_floors
-                                    inner join darwin1.tbl_buildings
-                                    on bui_id_ctn = bfl_building_nr
-                                  )
-                        on bfl_id_ctn = rom_building_floor_nr
-                      )
-          on sgr_room_nr = rom_id_ctn
-          inner join
-          specimen_parts
-          on  specimen_individual_ref = new_id
-              and specimen_part = lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation'))
-              and coalesce(specimen_parts.building,'') =
-                  case
-                    when sgr_room_nr = 0 then ''
-                    else bui_name
-                  end::varchar
-              and coalesce(specimen_parts.floor,'') =
-                  case
-                    when sgr_room_nr = 0 then ''
-                    else bfl_floor
-                  end::varchar
-              and coalesce(specimen_parts.room, '') =
-                  case
-                    when sgr_room_nr = 0 then ''
-                    else rom_code
-                  end::varchar
-              and coalesce(specimen_parts.row, '') = coalesce(sgr_row, '')
-              and coalesce(specimen_parts.shelf, '') = coalesce(sgr_shelf, '')
-              and coalesce(specimen_parts.container, '') = coalesce(sgr_container, '')
-              and coalesce(specimen_parts.sub_container, '') = coalesce(sgr_subcontainer, '')
-              and complete =
-                  case
-                    when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true
-                    else false
-                  end    
-  );
+--   INSERT INTO partsSplitFromAndTo (id)
+--   (
+--     SELECT max(specimen_parts.id)
+--     FROM darwin1.tbl_specimen_groups
+--           inner join darwin1.id_refs
+--           on sgr_id_ctn = old_id and system = 'individuals'
+--           inner join (
+--                         darwin1.tbl_rooms
+--                         inner join (
+--                                     darwin1.tbl_building_floors
+--                                     inner join darwin1.tbl_buildings
+--                                     on bui_id_ctn = bfl_building_nr
+--                                   )
+--                         on bfl_id_ctn = rom_building_floor_nr
+--                       )
+--           on sgr_room_nr = rom_id_ctn
+--           inner join
+--           specimen_parts
+--           on  specimen_individual_ref = new_id
+--               and specimen_part = lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation'))
+--               and coalesce(specimen_parts.building,'') =
+--                   case
+--                     when sgr_room_nr = 0 then ''
+--                     else bui_name
+--                   end::varchar
+--               and coalesce(specimen_parts.floor,'') =
+--                   case
+--                     when sgr_room_nr = 0 then ''
+--                     else bfl_floor
+--                   end::varchar
+--               and coalesce(specimen_parts.room, '') =
+--                   case
+--                     when sgr_room_nr = 0 then ''
+--                     else rom_code
+--                   end::varchar
+--               and coalesce(specimen_parts.row, '') = coalesce(sgr_row, '')
+--               and coalesce(specimen_parts.shelf, '') = coalesce(sgr_shelf, '')
+--               and coalesce(specimen_parts.container, '') = coalesce(sgr_container, '')
+--               and coalesce(specimen_parts.sub_container, '') = coalesce(sgr_subcontainer, '')
+--               and complete =
+--                   case
+--                     when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true
+--                     else false
+--                   end
+--   );
   FOR recPartsDetails IN select sgr_id_ctn as old_spec_id, specimen_individual_ref,  specimen_parts.id as parts_id, fullToIndex(sgr_code) as main_code,
                                 fullToIndex(bat_unique_rbins_code) as rbins_code, fullToIndex(bat_code) as batch_main_code, fullToIndex(bat_inventory_code) as inventory_code, sgr_code as old_main_code,
-                                specimen_part, building, coalesce(building, '') as coalesced_building, 
-                                "floor", coalesce("floor", '') as coalesced_floor, 
-                                room, coalesce("room", '') as coalesced_room, 
-                                specimen_parts.row as row, coalesce("row", '') as coalesced_row,  
-                                specimen_parts.shelf as shelf, coalesce("shelf", '') as coalesced_shelf, 
-                                specimen_parts.container as container, coalesce("container", '') as coalesced_container, 
-                                specimen_parts.sub_container as sub_container, coalesce("sub_container", '') as coalesced_sub_container, 
+                                specimen_part, building, coalesce(building, '') as coalesced_building,
+                                "floor", coalesce("floor", '') as coalesced_floor,
+                                room, coalesce("room", '') as coalesced_room,
+                                specimen_parts.row as row, coalesce("row", '') as coalesced_row,
+                                specimen_parts.shelf as shelf, coalesce("shelf", '') as coalesced_shelf,
+                                specimen_parts.container as container, coalesce("container", '') as coalesced_container,
+                                specimen_parts.sub_container as sub_container, coalesce("sub_container", '') as coalesced_sub_container,
                                 lower(cty_type_short_descr) as container_and_sub_container_type, specimen_parts.container_type as container_type, specimen_parts.sub_container_type as sub_container_type,
                                 lower(sto_storage) as container_and_sub_container_storage, specimen_parts.container_storage as container_storage, specimen_parts.sub_container_storage as sub_container_storage,
-                                specimen_status, 
+                                specimen_status,
                                 case when sgr_number_in_group < 1 or sgr_number_in_group is null then 1 else sgr_number_in_group end as part_count_min,
                                 specimen_part_count_min,
                                 specimen_part_count_max,
-                                case 
-                                  when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
-                                  else false 
+                                case
+                                  when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true
+                                  else false
                                 end as complete,
                                 case when sfl_description = 'Undefined' then '' else coalesce(sfl_description,'') end as freshness_level,
                                 sgr_length_min::varchar as old_length_min,
@@ -1441,19 +1444,19 @@ begin
                                 +
                                 CASE WHEN sgr_preparation_year IS NOT NULL THEN 32 ELSE 0 END as maintenance_modification_date_mask
                           from darwin1.tbl_specimen_groups
-                          inner join darwin1.id_refs 
+                          inner join darwin1.id_refs
                           on sgr_id_ctn = old_id and system = 'individuals'
                           inner join (
                                         darwin1.tbl_rooms
                                         inner join (
                                                     darwin1.tbl_building_floors
-                                                    inner join darwin1.tbl_buildings 
+                                                    inner join darwin1.tbl_buildings
                                                     on bui_id_ctn = bfl_building_nr
                                                   )
                                         on bfl_id_ctn = rom_building_floor_nr
                                       )
                           on sgr_room_nr = rom_id_ctn
-                          inner join darwin1.tbl_specimen_status 
+                          inner join darwin1.tbl_specimen_status
                           on sst_id_ctn = sgr_status_nr
                           inner join darwin1.tbl_storage on sto_id_ctn = sgr_storage_nr
                           inner join darwin1.tbl_container_types on cty_id_ctn = sgr_container_type_nr
@@ -1464,35 +1467,44 @@ begin
                           inner join darwin1.tbl_units as depth_unit on sgr_depth_min_uni_nr = depth_unit.uni_id_ctn
                           inner join darwin1.tbl_units as weight_unit on sgr_weight_min_uni_nr = weight_unit.uni_id_ctn
                           inner join darwin1.tbl_units as vol_unit on sgr_vol_min_uni_nr = vol_unit.uni_id_ctn
-                          inner join 
+                          inner join
                           specimen_parts
                           on  specimen_individual_ref = new_id
                               and specimen_part = lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation'))
-                              and coalesce(specimen_parts.building,'') = 
-                                  case 
-                                    when sgr_room_nr = 0 then '' 
-                                    else bui_name 
+                              and coalesce(specimen_parts.building,'') =
+                                  case
+                                    when sgr_room_nr = 0 then ''
+                                    else bui_name
                                   end::varchar
-                              and coalesce(specimen_parts.floor,'') = 
-                                  case 
-                                    when sgr_room_nr = 0 then '' 
-                                    else bfl_floor 
+                              and coalesce(specimen_parts.floor,'') =
+                                  case
+                                    when sgr_room_nr = 0 then ''
+                                    else bfl_floor
                                   end::varchar
-                              and coalesce(specimen_parts.room, '') = 
-                                  case 
-                                    when sgr_room_nr = 0 then '' 
-                                    else rom_code 
+                              and coalesce(specimen_parts.room, '') =
+                                  case
+                                    when sgr_room_nr = 0 then ''
+                                    else rom_code
                                   end::varchar
                               and coalesce(specimen_parts.row, '') = coalesce(sgr_row, '')
                               and coalesce(specimen_parts.shelf, '') = coalesce(sgr_shelf, '')
                               and coalesce(specimen_parts.container, '') = coalesce(sgr_container, '')
                               and coalesce(specimen_parts.sub_container, '') = coalesce(sgr_subcontainer, '')
-                              and complete = 
-                                  case 
-                                    when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
-                                    else false 
+                              and complete =
+                                  case
+                                    when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true
+                                    else false
                                   end
-                          where 1 < (select count(*) from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id)
+                          where /*1 < (select count(*) from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id)*/
+                                not exists (select 1
+                                            from users_tracking
+                                            where referenced_relation = 'codes'
+                                              and action = 'delete'
+                                              and old_value -> 'referenced_relation' = 'specimen_parts'
+                                              and old_value -> 'record_id' = specimen_parts.id::varchar
+                                              and old_value -> 'code_category' = 'main'
+                                              and old_value -> 'full_code_order_by' = fullToIndex(sgr_code)
+                                           )
 /*                          where sgr_preparator_nr is not null and sgr_preparator_nr != 0*/
                           /*where bat_value is not null *//*and specimen_parts.id = 594237*/
                           /*where bat_collection_id_nr between 1 and 8*/
@@ -1502,7 +1514,7 @@ begin
                             /*and specimen_parts.id in (585835, 585836)*/
 --                           where sfl_description is not null and sfl_description != 'Undefined'
                                 /*exists (select 1 from comments where comment is not null and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id limit 1)*/
-                          order by new_id desc, specimen_part, main_code 
+                          order by new_id desc, specimen_part, main_code
                            limit 50
   LOOP
     comptage := comptage + 1;
@@ -1510,205 +1522,87 @@ begin
       RAISE NOTICE 'Already % records parsed ;)', comptage;
     END IF;
     IF part_id != recPartsDetails.parts_id THEN
+
       RAISE NOTICE 'Next part infos: %', recPartsDetails;
       recFirstPart := recPartsDetails;
       part_id := recPartsDetails.parts_id;
-      IF recPartsDetails.specimen_part_count_min = 0 AND recPartsDetails.part_count_min > 0 THEN
-        IF recPartsDetails.specimen_part_count_max = recPartsDetails.specimen_part_count_min THEN
-          UPDATE specimen_parts
-          SET specimen_part_count_min = recPartsDetails.part_count_min,
-              specimen_part_count_max = recPartsDetails.part_count_min
-          WHERE id = part_id;
-        ELSIF recPartsDetails.specimen_part_count_max >= recPartsDetails.part_count_min THEN
-          UPDATE specimen_parts
-          SET specimen_part_count_min = recPartsDetails.part_count_min
-          WHERE id = part_id;
-        END IF;
-      END IF;
+
       SELECT count(full_code_order_by) INTO code_count
       FROM codes
       where referenced_relation = 'specimen_parts'
         and record_id = part_id
         and code_category = 'main';
-      IF code_count != 0 then
-        select count(full_code)
-        into code_count
-        from (
-              select full_code_order_by as full_code
-              from codes
-              where referenced_relation = 'specimen_parts'
-                and code_category = 'main'
-                and record_id = part_id
-              except
-              (
-                select fullToIndex(sgr_code) as full_code
-                from darwin1.tbl_specimen_groups 
-                inner join darwin1.id_refs on sgr_id_ctn = old_id and system = 'individuals'
-                inner join (
-                              darwin1.tbl_rooms
-                              inner join (
-                                          darwin1.tbl_building_floors
-                                          inner join darwin1.tbl_buildings 
-                                          on bui_id_ctn = bfl_building_nr
-                                        )
-                              on bfl_id_ctn = rom_building_floor_nr
-                            )
-                on sgr_room_nr = rom_id_ctn
-                where new_id = recPartsDetails.specimen_individual_ref
-                  and lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation')) = recPartsDetails.specimen_part
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else bui_name 
-                      end::varchar = recPartsDetails.coalesced_building
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else bfl_floor 
-                      end::varchar = recPartsDetails.coalesced_floor
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else rom_code 
-                      end::varchar = recPartsDetails.coalesced_room
-                  and coalesce(sgr_row, '') = recPartsDetails.coalesced_row
-                  and coalesce(sgr_shelf, '') = recPartsDetails.coalesced_shelf
-                  and coalesce(sgr_container, '') = recPartsDetails.coalesced_container
-                  and coalesce(sgr_subcontainer, '') = recPartsDetails.coalesced_sub_container
-                  and case 
-                        when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
-                        else false 
-                      end = recPartsDetails.complete
-                union
-                select fullToIndex(bat_code) as full_code
-                from darwin1.tbl_specimen_groups 
-                inner join darwin1.id_refs on sgr_id_ctn = old_id and system = 'individuals'
-                inner join (
-                              darwin1.tbl_rooms
-                              inner join (
-                                          darwin1.tbl_building_floors
-                                          inner join darwin1.tbl_buildings 
-                                          on bui_id_ctn = bfl_building_nr
-                                        )
-                              on bfl_id_ctn = rom_building_floor_nr
-                            )
-                on sgr_room_nr = rom_id_ctn
-                inner join darwin1.tbl_batches on sgr_batch_nr = bat_id_ctn
-                where new_id = recPartsDetails.specimen_individual_ref
-                  and lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation')) = recPartsDetails.specimen_part
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else bui_name 
-                      end::varchar = recPartsDetails.coalesced_building
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else bfl_floor 
-                      end::varchar = recPartsDetails.coalesced_floor
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else rom_code 
-                      end::varchar = recPartsDetails.coalesced_room
-                  and coalesce(sgr_row, '') = recPartsDetails.coalesced_row
-                  and coalesce(sgr_shelf, '') = recPartsDetails.coalesced_shelf
-                  and coalesce(sgr_container, '') = recPartsDetails.coalesced_container
-                  and coalesce(sgr_subcontainer, '') = recPartsDetails.coalesced_sub_container
-                  and case 
-                        when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
-                        else false 
-                      end = recPartsDetails.complete
-                union
-                select fullToIndex(bat_unique_rbins_code) as full_code
-                from darwin1.tbl_specimen_groups 
-                inner join darwin1.id_refs on sgr_id_ctn = old_id and system = 'individuals'
-                inner join (
-                              darwin1.tbl_rooms
-                              inner join (
-                                          darwin1.tbl_building_floors
-                                          inner join darwin1.tbl_buildings 
-                                          on bui_id_ctn = bfl_building_nr
-                                        )
-                              on bfl_id_ctn = rom_building_floor_nr
-                            )
-                on sgr_room_nr = rom_id_ctn
-                inner join darwin1.tbl_batches on sgr_batch_nr = bat_id_ctn
-                where new_id = recPartsDetails.specimen_individual_ref
-                  and lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation')) = recPartsDetails.specimen_part
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else bui_name 
-                      end::varchar = recPartsDetails.coalesced_building
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else bfl_floor 
-                      end::varchar = recPartsDetails.coalesced_floor
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else rom_code 
-                      end::varchar = recPartsDetails.coalesced_room
-                  and coalesce(sgr_row, '') = recPartsDetails.coalesced_row
-                  and coalesce(sgr_shelf, '') = recPartsDetails.coalesced_shelf
-                  and coalesce(sgr_container, '') = recPartsDetails.coalesced_container
-                  and coalesce(sgr_subcontainer, '') = recPartsDetails.coalesced_sub_container
-                  and case 
-                        when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
-                        else false 
-                      end = recPartsDetails.complete
-                union
-                select fullToIndex(bat_inventory_code) as full_code
-                from darwin1.tbl_specimen_groups 
-                inner join darwin1.id_refs on sgr_id_ctn = old_id and system = 'individuals'
-                inner join (
-                              darwin1.tbl_rooms
-                              inner join (
-                                          darwin1.tbl_building_floors
-                                          inner join darwin1.tbl_buildings 
-                                          on bui_id_ctn = bfl_building_nr
-                                        )
-                              on bfl_id_ctn = rom_building_floor_nr
-                            )
-                on sgr_room_nr = rom_id_ctn
-                inner join darwin1.tbl_batches on sgr_batch_nr = bat_id_ctn
-                where new_id = recPartsDetails.specimen_individual_ref
-                  and lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation')) = recPartsDetails.specimen_part
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else bui_name 
-                      end::varchar = recPartsDetails.coalesced_building
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else bfl_floor 
-                      end::varchar = recPartsDetails.coalesced_floor
-                  and case 
-                        when sgr_room_nr = 0 then '' 
-                        else rom_code 
-                      end::varchar = recPartsDetails.coalesced_room
-                  and coalesce(sgr_row, '') = recPartsDetails.coalesced_row
-                  and coalesce(sgr_shelf, '') = recPartsDetails.coalesced_shelf
-                  and coalesce(sgr_container, '') = recPartsDetails.coalesced_container
-                  and coalesce(sgr_subcontainer, '') = recPartsDetails.coalesced_sub_container
-                  and case 
-                        when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true 
-                        else false 
-                      end = recPartsDetails.complete
-              ) 
-            ) as x;
-        IF code_count > 0 THEN
-/*
-
-
-We need to act here to avoid the codes updated or deleted to be the ones treated
-
-
-*/
-          RAISE NOTICE '+ Need of new part creation';
-          SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
-          IF new_part_id < 0 THEN
-            return false;
+      IF code_count = 0 THEN
+        RAISE NOTICE '+New code creation for next part';
+        IF createCodes (part_id, recPartsDetails.old_main_code) < 0 THEN
+          return false;
+        END IF;
+        code_count := 1;
+      END IF;
+      IF code_count = 1 THEN
+        IF recPartsDetails.specimen_part_count_min = 0 AND recPartsDetails.part_count_min > 0 THEN
+          IF recPartsDetails.specimen_part_count_max = recPartsDetails.specimen_part_count_min THEN
+            UPDATE specimen_parts
+            SET specimen_part_count_min = recPartsDetails.part_count_min,
+                specimen_part_count_max = recPartsDetails.part_count_min
+            WHERE id = part_id;
+          ELSIF recPartsDetails.specimen_part_count_max >= recPartsDetails.part_count_min THEN
+            UPDATE specimen_parts
+            SET specimen_part_count_min = recPartsDetails.part_count_min
+            WHERE id = part_id;
           END IF;
+        END IF;
+        booUpdateProperties := true;
+      ELSE
+        RAISE NOTICE '*More than one code...';
+        SELECT EXISTS(SELECT 1
+                      FROM users_tracking
+                      WHERE referenced_relation = 'codes'
+                        AND action = 'insert'
+                        AND new_value -> 'referenced_relation' = 'specimen_parts'
+                        AND new_value -> 'record_id' = part_id::varchar
+                        AND new_value -> 'code_category' = 'main'
+                      ) INTO new_code_insertion;
+        IF new_code_insertion THEN
+          RAISE NOTICE '+Insertions occured for this part...';
+          INSERT INTO specimen_parts
+          (parent_ref, path, specimen_individual_ref, specimen_part, complete,
+            building, "floor", room, "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage,
+            surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref
+          )
+          (
+            SELECT parent_ref, path, specimen_individual_ref, specimen_part, complete,
+                  building, "floor", room, "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage,
+                  surnumerary, specimen_status, recPartsDetails.part_count_min, recPartsDetails.part_count_min, institution_ref
+            FROM specimen_parts
+            WHERE id = part_id
+          )
+          RETURNING id INTO new_part_id;
+          RAISE NOTICE '+New part created: %', new_part_id;
           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+          UPDATE codes
+          SET record_id = new_part_id
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id
+            AND id NOT IN (SELECT id
+                            FROM codes
+                            WHERE referenced_relation = 'specimen_parts'
+                              AND record_id = part_id
+                              AND EXISTS (SELECT 1
+                                          FROM users_tracking
+                                          WHERE referenced_relation = 'codes'
+                                            AND record_id = codes.id
+                                            AND action = 'insert'
+                                            AND new_value -> 'referenced_relation' = 'specimen_parts'
+                                            AND new_value -> 'record_id' = part_id::varchar
+                                        )
+                          );
           select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
-          RAISE NOTICE '++ Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
+          RAISE NOTICE '++ Left part codes: %, New part codes: %', recActualCodes, recTransferedCodes;
           SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
-          RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
+          RAISE NOTICE '++Left part count min and max: % and %', spec_part_count_min, spec_part_count_max;
           SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = new_part_id;
-          RAISE NOTICE '++Transfered count min and max: % and %', spec_part_count_min, spec_part_count_max;
+          RAISE NOTICE '++New part count min and max: % and %', spec_part_count_min, spec_part_count_max;
           SELECT array_agg(property_value/*_unified*/)
           INTO recProperties
           FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
@@ -1734,8 +1628,20 @@ We need to act here to avoid the codes updated or deleted to be the ones treated
           INTO recProperties
           FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
           WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Properties after transfert for left part: %', recProperties;
+          SELECT array_agg(property_value/*_unified*/)
+          INTO recProperties
+          FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
+          WHERE referenced_relation = 'specimen_parts'
             AND record_id = new_part_id;
           RAISE NOTICE '+++ Properties after transfert for new part: %', recProperties;
+          SELECT array_agg(insurance_value), array_agg(insurance_year)
+          INTO recInsurances
+          FROM insurances
+          WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Insurances after transfert for left part: %', recInsurances;
           SELECT array_agg(insurance_value), array_agg(insurance_year)
           INTO recInsurances
           FROM insurances
@@ -1746,72 +1652,38 @@ We need to act here to avoid the codes updated or deleted to be the ones treated
           INTO recProperties
           FROM collection_maintenance
           WHERE referenced_relation = 'specimen_parts'
+            AND record_id = part_id;
+          RAISE NOTICE '+++ Maintenance after transfert for left part: %', recProperties;
+          SELECT array_agg(people_ref)
+          INTO recProperties
+          FROM collection_maintenance
+          WHERE referenced_relation = 'specimen_parts'
             AND record_id = new_part_id;
           RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
         ELSE
-          RAISE NOTICE '+ Need of properties reCheck at least !';
-          select array_agg(property_value/*_unified*/)
-          into recProperties
-          from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
-          where referenced_relation = 'specimen_parts' and record_id = part_id;
-          RAISE NOTICE '+++ Properties before creation: %', recProperties;
-          SELECT array_agg(insurance_value), array_agg(insurance_year)
-          INTO recInsurances
-          FROM insurances
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
-          SELECT array_agg(people_ref)
-          INTO recProperties
-          FROM collection_maintenance
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Maintenance before creation: %', recProperties;
-          IF createProperties (part_id, recPartsDetails) < 0 THEN
-            return false;
-          END IF;
-          select array_agg(property_value/*_unified*/)
-          into recProperties
-          from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
-          where referenced_relation = 'specimen_parts' and record_id = part_id;
-          RAISE NOTICE '+++ Actual properties: %', recProperties;
-          SELECT array_agg(insurance_value), array_agg(insurance_year)
-          INTO recInsurances
-          FROM insurances
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Actual Insurances: %', recInsurances;
-          SELECT array_agg(people_ref)
-          INTO recProperties
-          FROM collection_maintenance
-          WHERE referenced_relation = 'specimen_parts'
-            AND record_id = part_id;
-          RAISE NOTICE '+++ Maintenance after creation: %', recProperties;
+          booUpdateProperties := true;
         END IF;
-      ELSE
-        RAISE NOTICE '+ New code creation for next part';
-        IF createCodes (part_id, recPartsDetails.old_main_code) < 0 THEN
-          return false;
-        END IF;
-        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
-        RAISE NOTICE '++ Actual codes: %', recActualCodes;
+      END IF;
+      IF booUpdateProperties THEN
+        SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
+        RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
         select array_agg(property_value/*_unified*/)
         into recProperties
         from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
         where referenced_relation = 'specimen_parts' and record_id = part_id;
-        RAISE NOTICE '+++ Properties before creation: %', recProperties;
+        RAISE NOTICE '+++ Properties before update: %', recProperties;
         SELECT array_agg(insurance_value), array_agg(insurance_year)
         INTO recInsurances
         FROM insurances
         WHERE referenced_relation = 'specimen_parts'
           AND record_id = part_id;
-        RAISE NOTICE '+++ Insurances before creation: %', recInsurances;
+        RAISE NOTICE '+++ Insurances before update: %', recInsurances;
         SELECT array_agg(people_ref)
         INTO recProperties
         FROM collection_maintenance
         WHERE referenced_relation = 'specimen_parts'
           AND record_id = part_id;
-        RAISE NOTICE '+++ Maintenance before transfert: %', recProperties;
+        RAISE NOTICE '+++ Maintenance before update: %', recProperties;
         IF createProperties (part_id, recPartsDetails) < 0 THEN
           return false;
         END IF;
@@ -1833,8 +1705,29 @@ We need to act here to avoid the codes updated or deleted to be the ones treated
           AND record_id = part_id;
         RAISE NOTICE '+++ Actual Maintenance: %', recProperties;
       END IF;
+      booUpdateProperties := false;
     ELSE
       RAISE NOTICE '- Same part id infos: %', recPartsDetails;
+
+/* Effet réel ici de l'existence d'update de codes !!!!!! */
+
+      SELECT record_id INTO new_code_id
+      FROM users_tracking
+      WHERE referenced_relation = 'codes'
+        AND action = 'update'
+        AND old_value -> 'referenced_relation' = 'specimen_parts'
+        AND old_value -> 'record_id' = specimen_parts.id::varchar
+        AND old_value -> 'code_category' = 'main'
+        AND old_value -> 'full_code_order_by' = recPartsDetails.main_code::varchar;
+
+      IF coalesce(new_code_id,'') = '' THEN
+        RAISE NOTICE 'No update occured for code: %', recPartsDetails.main_code;
+        /*Classique séparation revérifier le code du createnew et à priori bon*/
+      ELSE
+        RAISE NOTICE 'At least one update occured for code: % ', recPartsDetails.main_code;
+        /* Séparation non classique car on doit faire un createnew mais pr le codes extraire celui qui a le new_code_id */
+      END IF
+      /*Pour le reste ce sera du moveorcreateprop mais revérifier ce qu'on y fait*/
       SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
       IF new_part_id < 0 THEN
         return false;
@@ -1904,6 +1797,7 @@ We need to act here to avoid the codes updated or deleted to be the ones treated
         AND record_id = new_part_id;
       RAISE NOTICE '+++ Maintenance after transfert for new part: %', recProperties;
     END IF;
+    new_code_id := NULL;
   END LOOP;
   return true;
 exception
@@ -1928,49 +1822,48 @@ begin
   IF NOT response THEN
     ROLLBACK;
   END IF;
---   FOR recPartsAfter IN
---     SELECT id
---     FROM specimen_parts
---     WHERE id > (select id from partsSplitFromAndTo where "start") and id < (select id from partsSplitFromAndTo where not "start")
---       AND 1 < (select count(*) from codes where referenced_relation = 'specimen_parts' and record_id = specimen_parts.id and code_category = 'main')
---   LOOP
---     RAISE NOTICE 'After migration correction, part id splitted is: %', recPartsAfter.id;
---     FOR recPartsAfterCodes IN
---       SELECT id
---       FROM codes
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = recPartsAfter.id
---         AND code_category = 'main'
---     LOOP
---       IF partsAfterCodeId != recPartsAfterCodes.id THEN
---         partsAfterCodeId := recPartsAfterCodes.id;
---       ELSE
---         INSERT INTO specimen_parts (parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref)
---         (SELECT parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref FROM specimen_parts WHERE id = recPartsAfter.id)
---         RETURNING id INTO newPartId;
---         UPDATE codes
---         SET record_id = newPartId
---         WHERE id = recPartsAfterCodes.id;
---         INSERT INTO codes (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
---         (SELECT 'specimen_parts', newPartId, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id AND code_category != 'main');
---         INSERT INTO comments (referenced_relation, record_id, notion_concerned, "comment")
---         (SELECT 'specimen_parts', newPartId, notion_concerned, "comment" FROM comments WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
---         INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_currency, insurance_year, insurer_ref)
---         (SELECT 'specimen_parts', newPartId, insurance_value, insurance_currency, insurance_year, insurer_ref FROM insurances WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
---         INSERT INTO collection_maintenance (referenced_relation, record_id, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask)
---         (SELECT 'specimen_parts', newPartId, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask FROM collection_maintenance WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
---         FOR recPartsAfterDiverse IN
---         SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id
---         LOOP
---           INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool)
---           (SELECT 'specimen_parts', newPartId, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id)
---           RETURNING id INTO newDiverseId;
---           INSERT INTO properties_values (property_ref, property_value, property_accuracy)
---           (SELECT newDiverseId, property_value, property_accuracy FROM properties_values WHERE property_ref = recPartsAfterDiverse.id);
---         END LOOP;
---       END IF;
---     END LOOP;
---   END LOOP;
+  FOR recPartsAfter IN
+    SELECT id
+    FROM specimen_parts
+    WHERE 1 < (select count(*) from codes where referenced_relation = 'specimen_parts' and record_id = specimen_parts.id and code_category = 'main')
+  LOOP
+    RAISE NOTICE 'After migration correction, part id splitted is: %', recPartsAfter.id;
+    FOR recPartsAfterCodes IN
+      SELECT id
+      FROM codes
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = recPartsAfter.id
+        AND code_category = 'main'
+    LOOP
+      IF partsAfterCodeId != recPartsAfterCodes.id THEN
+        partsAfterCodeId := recPartsAfterCodes.id;
+      ELSE
+        INSERT INTO specimen_parts (parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref)
+        (SELECT parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref FROM specimen_parts WHERE id = recPartsAfter.id)
+        RETURNING id INTO newPartId;
+        UPDATE codes
+        SET record_id = newPartId
+        WHERE id = recPartsAfterCodes.id;
+        INSERT INTO codes (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
+        (SELECT 'specimen_parts', newPartId, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id AND code_category != 'main');
+        INSERT INTO comments (referenced_relation, record_id, notion_concerned, "comment")
+        (SELECT 'specimen_parts', newPartId, notion_concerned, "comment" FROM comments WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
+        INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_currency, insurance_year, insurer_ref)
+        (SELECT 'specimen_parts', newPartId, insurance_value, insurance_currency, insurance_year, insurer_ref FROM insurances WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
+        INSERT INTO collection_maintenance (referenced_relation, record_id, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask)
+        (SELECT 'specimen_parts', newPartId, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask FROM collection_maintenance WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
+        FOR recPartsAfterDiverse IN
+        SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id
+        LOOP
+          INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool)
+          (SELECT 'specimen_parts', newPartId, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id)
+          RETURNING id INTO newDiverseId;
+          INSERT INTO properties_values (property_ref, property_value, property_accuracy)
+          (SELECT newDiverseId, property_value, property_accuracy FROM properties_values WHERE property_ref = recPartsAfterDiverse.id);
+        END LOOP;
+      END IF;
+    END LOOP;
+  END LOOP;
   return response;
 exception
   when others then
@@ -2016,7 +1909,7 @@ ALTER TABLE insurances ENABLE TRIGGER fct_cpy_trg_ins_update_dict_insurances;
 
 rollback;
 -- commit;
--- 
+--
 -- \i ../maintenance/recreate_flat.sql
 
 -- \echo Flat refreshed the `date`
