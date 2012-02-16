@@ -17,12 +17,17 @@
         </thead>
         <tbody>
           <?php foreach($items as $item):?>
-            <td><?php echo $item->getPartRef();?></td>
-            <td><?php echo $item->getIgRef();?></td>
-            <td><?php echo $item->getDetails();?></td>
-            <td><?php echo $item->getFromDate();?></td>
-            <td><?php echo $item->getToDate();?></td>
-            <td><?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loanitem/view?id='.$item->getId());?></td>
+            <tr>
+              <td><?php if($item->getPartRef()):?>
+                <?php echo image_tag('info.png',"title=info class=extd_info data_id=".$item->getPartRef());?>
+                <?php echo link_to('#' . $item->getPartRef(), 'part/view?id='. $item->getPartRef());?>
+              <?php endif;?></td>
+              <td><?php echo $item->Ig->getIgNum();?></td>
+              <td><?php echo $item->getDetails();?></td>
+              <td><?php echo $item->getFromDate();?></td>
+              <td><?php echo $item->getToDate();?></td>
+              <td><?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loanitem/view?id='.$item->getId());?></td>
+            </tr>
           <?php endforeach;?>
         </tbody>
        </table>
@@ -38,3 +43,36 @@
     </div>
 
 </div>
+<script  type="text/javascript">
+$(document).ready(function () {
+  $('.extd_info').mouseover(function(event){
+      $(this).qtip({
+        show: {
+          ready: true,
+          delay: 0,
+          event: event.type,
+          solo: true,
+        },
+        //hide: { event: 'mouseout' },
+        style: {
+          tip: true, // Give it a speech bubble tip with automatic corner detection
+          name: 'cream'
+        },
+        content: {
+          text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
+          title: { text: '<?php echo __("Linked Info") ; ?>' },
+          ajax: {
+            url: '<?php echo url_for("loan/getPartInfo");?>',
+            type: 'GET',
+            data: { id:   $(this).attr('data_id') }
+          }
+        },
+        events: {
+          hide: function(event, api) {
+            api.destroy();
+          }
+        }
+      });
+    });
+  });
+</script>
