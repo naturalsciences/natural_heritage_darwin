@@ -561,7 +561,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
   {
     if($val != '' && is_array($val) && !empty($val))
     {
-      $query->andWhere('s.id in (select fct_search_tools (?))',implode(',', $val));
+      $query->andWhere('s.specimen_ref in (select fct_search_tools (?))',implode(',', $val));
     }
     return $query ;
   }
@@ -570,7 +570,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
   {
     if($val != '' && is_array($val) && !empty($val))
     {
-      $query->andWhere('s.id in (select fct_search_methods (?))',implode(',', $val));
+      $query->andWhere('s.specimen_ref in (select fct_search_methods (?))',implode(',', $val));
     }
     return $query ;
   }
@@ -913,16 +913,16 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     }
     if(! empty($params)) 
     {
-      $query->addWhere("s.id in (select fct_searchCodes($str_params) )", $params);
+      $query->addWhere("s.specimen_ref in (select fct_searchCodes($str_params) )", $params);
     }
     if(! empty($params_part)) 
     {
       if($this->scope == self::SC_SPEC)
         $query->addWhere("exists (select 1 from specimen_individuals i inner join specimen_parts p on p.specimen_individual_ref = i.id 
-          inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.id  )", $params_part);
+          inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.specimen_ref  )", $params_part);
       elseif($this->scope == self::SC_IND)
         $query->addWhere("exists (select 1 from specimen_parts p on p.specimen_individual_ref = i.id 
-          inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.id  )", $params_part);
+          inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.specimen_ref  )", $params_part);
       elseif($this->scope == self::SC_PART)
         $query->addWhere("p.id in (select fct_searchCodes($str_params_part) )", $params_part);
 
@@ -957,7 +957,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     if(! empty($clean_ids))
     {
       if($this->scope == self::SC_SPEC)
-        $query->andWhereIn("s.id", $clean_ids);
+        $query->andWhereIn("s.specimen_ref", $clean_ids);
       elseif($this->scope == self::SC_IND)
         $query->andWhereIn("i.id", $clean_ids);
       else
@@ -981,7 +981,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
         {
           $build_query .= " exists ( select 1 from specimen_individuals i1
           INNER JOIN specimen_parts p1 on i1.id = p1.specimen_individual_ref
-          where i1.specimen_ref= s.id AND  i1.ind_ident_ids @> ARRAY[$people_id]::int[] ) ";
+          where i1.specimen_ref= s.specimen_ref AND  i1.ind_ident_ids @> ARRAY[$people_id]::int[] ) ";
         }
         else
         {
@@ -1092,18 +1092,18 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     {
        $query->where('exists ( select 1 from specimen_individuals i1
           INNER JOIN specimen_parts p1 on i1.id = p1.specimen_individual_ref
-          where i1.specimen_ref= s.id AND '. implode(' AND ', array_merge($this->exists_qry_ind,$this->exists_qry_part)). ')');
+          where i1.specimen_ref= s.specimen_ref AND '. implode(' AND ', array_merge($this->exists_qry_ind,$this->exists_qry_part)). ')');
     }
     elseif(! empty($this->exists_qry_ind)) // When scope = spec and look on ind only
     {
         $query->where('exists ( select 1 from specimen_individuals i1
-          where i1.specimen_ref= s.id AND '. implode(' AND ', $this->exists_qry_ind). ')');
+          where i1.specimen_ref= s.specimen_ref AND '. implode(' AND ', $this->exists_qry_ind). ')');
     }
     elseif(! empty($this->exists_qry_part)) // When scope = ind and look on part
     {
         $alias = $query->getRootAlias();
         $query->where('exists ( select 1 from specimen_parts p1
-          where p1.specimen_individual_ref= s.id AND '. implode(' AND ', $this->exists_qry_part). ')');
+          where p1.specimen_individual_ref= s.specimen_ref AND '. implode(' AND ', $this->exists_qry_part). ')');
     }
 
     $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
