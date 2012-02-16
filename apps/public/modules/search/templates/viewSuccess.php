@@ -8,7 +8,7 @@
         <tbody>
           <tr>
             <td class="line">
-                <span class="pager_nav"><?php echo __("Name") ; ?>: </span><span><?php echo $individual->Specimens->getCollectionName() ; ?></span>
+                <span class="pager_nav"><?php echo __("Name") ; ?>: </span><span><?php echo $individual->SpecimensFlat->getCollectionName() ; ?></span>
                 <?php echo image_tag('info.png',"title=info class=info id=collection_info");?>
               <div id="collection_tree" class="tree"></div>
                 <script type="text/javascript">
@@ -16,7 +16,7 @@
                    {
                      if($('#collection_tree').is(":hidden"))
                      {
-                       $.get('<?php echo url_for("search/tree?table=collections&id=".$individual->Specimens->getCollectionRef()) ;?>',function (html){
+                       $.get('<?php echo url_for("search/tree?table=collections&id=".$individual->SpecimensFlat->getCollectionRef()) ;?>',function (html){
                          $('#collection_tree').html(html).slideDown();
                          });
                      }
@@ -62,12 +62,12 @@
           </tr>
         </thead>
         <tbody>
-          <?php include_partial('classification',array('common_name' => $common_names->getRawValue(), 'spec' => $individual->Specimens)) ; ?>
+          <?php include_partial('classification',array('common_name' => $common_names->getRawValue(), 'spec' => $individual->SpecimensFlat)) ; ?>
         </tbody>
       </table>
     </div>
     <?php endif ; ?>
-    <?php if($individual->Specimens->getTaxonRef() || $individual->Specimens->getChronoRef() || $individual->Specimens->getLithoRef() || $individual->Specimens->getMineralRef() || $individual->Specimens->getLithologyRef()):?>
+    <?php if($individual->SpecimensFlat->getTaxonRef() || $individual->SpecimensFlat->getChronoRef() || $individual->SpecimensFlat->getLithoRef() || $individual->SpecimensFlat->getMineralRef() || $individual->SpecimensFlat->getLithologyRef()):?>
     <h2 class="title"><?php echo __("Classifications") ?></h2>  
     <div class="borded right_padded">        
       <table>
@@ -78,14 +78,14 @@
           </tr>
         </thead>
         <tbody>
-        <?php if($individual->Specimens->getTaxonRef()) : ?>
+        <?php if($individual->SpecimensFlat->getTaxonRef()) : ?>
           <tr>
             <td class="line">
-              <span class="pager_nav"><?php echo __("Taxonomy") ; ?>: </span><span><?php echo $individual->Specimens->getTaxonName() ; ?></span>
+              <span class="pager_nav"><?php echo __("Taxonomy") ; ?>: </span><span><?php echo $individual->SpecimensFlat->getTaxonName() ; ?></span>
               <?php echo image_tag('info.png',"title=info class=info id=taxon_info");?>
             </td>
             <td class="view_level">
-              <span><?php echo $individual->Specimens->getTaxonLevelName() ; ?></span>
+              <span><?php echo $individual->SpecimensFlat->getTaxonLevelName() ; ?></span>
             </td>
           </tr>
           <tr>
@@ -96,7 +96,7 @@
                  {
                    if($('#taxon_tree').is(":hidden"))
                    {
-                     $.get('<?php echo url_for("search/tree?table=taxonomy&id=".$individual->Specimens->getTaxonRef()) ;?>',function (html){
+                     $.get('<?php echo url_for("search/tree?table=taxonomy&id=".$individual->SpecimensFlat->getTaxonRef()) ;?>',function (html){
                        $('#taxon_tree').html(html).slideDown();
                        });
                    }
@@ -108,14 +108,14 @@
             <td></td>
           </tr>
         <?php endif ; ?>
-        <?php if($individual->Specimens->getChronoRef()) : ?>
+        <?php if($individual->SpecimensFlat->getChronoRef()) : ?>
           <tr>
             <td class="line">
-              <span class="pager_nav"><?php echo __("Chronostratigraphy") ; ?>: </span><span><?php echo $individual->Specimens->getChronoName() ; ?></span>
+              <span class="pager_nav"><?php echo __("Chronostratigraphy") ; ?>: </span><span><?php echo $individual->SpecimensFlat->getChronoName() ; ?></span>
               <?php echo image_tag('info.png',"title=info class=info id=chrono_info");?>
             </td>
             <td>
-              <span><?php echo $individual->Specimens->getChronoLevelRef() ; ?></span>
+              <span><?php echo $individual->SpecimensFlat->getChronoLevelRef() ; ?></span>
             </td>
           </tr>
           <tr>
@@ -126,7 +126,7 @@
                  {
                    if($('#chrono_tree').is(":hidden"))
                    {
-                     $.get('<?php echo url_for("search/tree?table=chronostratigraphy&id=".$individual->Specimens->getChronoRef()) ;?>',function (html){
+                     $.get('<?php echo url_for("search/tree?table=chronostratigraphy&id=".$individual->SpecimensFlat->getChronoRef()) ;?>',function (html){
                        $('#chrono_tree').html(html).slideDown();
                        });
                    }
@@ -137,14 +137,14 @@
             </td>
           </tr>
         <?php endif ; ?>     
-        <?php if($individual->Specimens->getLithoRef()) : ?>
+        <?php if($individual->SpecimensFlat->getLithoRef()) : ?>
           <tr>
             <td class="line">
-              <span class="pager_nav"><?php echo __("Lithostatigraphy") ; ?>: </span><span><?php echo $individual->Specimens->getLithoName() ; ?></span>
+              <span class="pager_nav"><?php echo __("Lithostatigraphy") ; ?>: </span><span><?php echo $individual->SpecimensFlat->getLithoName() ; ?></span>
               <?php echo image_tag('info.png',"title=info class=info id=litho_info");?>
             </td>
             <td>
-              <span><?php echo $individual->Specimens->getLithoLevelRef() ; ?></span>
+              <span><?php echo $individual->SpecimensFlat->getLithoLevelRef() ; ?></span>
             </td>
           </tr>
           <tr>
@@ -155,7 +155,7 @@
                  {
                    if($('#litho_tree').is(":hidden"))
                    {
-                     $.get('<?php echo url_for("search/tree?table=lithostratigraphy&id=".$individual->Specimens->getLithoRef()) ;?>',function (html){
+                     $.get('<?php echo url_for("search/tree?table=lithostratigraphy&id=".$individual->SpecimensFlat->getLithoRef()) ;?>',function (html){
                        $('#litho_tree').html(html).slideDown();
                        });
                    }
@@ -166,14 +166,14 @@
             </td>
           </tr>
         <?php endif ; ?>       
-        <?php if($individual->Specimens->getLithologyRef()) : ?>
+        <?php if($individual->SpecimensFlat->getLithologyRef()) : ?>
           <tr>
             <td class="line">
-              <span class="pager_nav"><?php echo __("Lithology") ; ?>: </span><span><?php echo $individual->Specimens->getLithologyName() ; ?></span>
+              <span class="pager_nav"><?php echo __("Lithology") ; ?>: </span><span><?php echo $individual->SpecimensFlat->getLithologyName() ; ?></span>
               <?php echo image_tag('info.png',"title=info class=info id=lithology_info");?>
             </td>
             <td>
-              <span><?php echo $individual->Specimens->getLithologyLevelRef() ; ?></span>
+              <span><?php echo $individual->SpecimensFlat->getLithologyLevelRef() ; ?></span>
             </td>
           </tr>
           <tr>
@@ -184,7 +184,7 @@
                  {
                    if($('#lithology_tree').is(":hidden"))
                    {
-                     $.get('<?php echo url_for("search/tree?table=lithology&id=".$individual->Specimens->getLithologyRef()) ;?>',function (html){
+                     $.get('<?php echo url_for("search/tree?table=lithology&id=".$individual->SpecimensFlat->getLithologyRef()) ;?>',function (html){
                        $('#lithology_tree').html(html).slideDown();
                        });
                    }
@@ -195,14 +195,14 @@
             </td>
           </tr>
         <?php endif ; ?>  
-        <?php if($individual->Specimens->getMineralRef()) : ?>
+        <?php if($individual->SpecimensFlat->getMineralRef()) : ?>
           <tr>
             <td class="line">
-              <span class="pager_nav"><?php echo __("Mineralogy") ; ?>: </span><span><?php echo $individual->Specimens->getMineralName() ; ?></span>
+              <span class="pager_nav"><?php echo __("Mineralogy") ; ?>: </span><span><?php echo $individual->SpecimensFlat->getMineralName() ; ?></span>
               <?php echo image_tag('info.png',"title=info class=info id=mineral_info");?>
             </td>
             <td>
-              <span><?php echo $individual->Specimens->getMineralLevelRef() ; ?></span>
+              <span><?php echo $individual->SpecimensFlat->getMineralLevelRef() ; ?></span>
             </td>
           </tr>
           <tr>
@@ -213,7 +213,7 @@
                  {
                    if($('#mineral_tree').is(":hidden"))
                    {
-                     $.get('<?php echo url_for("search/tree?table=mineralogy&id=".$individual->Specimens->getMineralRef()) ;?>',function (html){
+                     $.get('<?php echo url_for("search/tree?table=mineralogy&id=".$individual->SpecimensFlat->getMineralRef()) ;?>',function (html){
                        $('#mineral_tree').html(html).slideDown();
                        });
                    }

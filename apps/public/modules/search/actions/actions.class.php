@@ -107,11 +107,13 @@ class searchActions extends DarwinActions
       $id = $suggestion['id'] ;
       $ajax = true ;
     }
+    else $id = $request->getParameter('id') ;
+
     $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('id'));   
     $this->forward404Unless($this->individual);
-    if(!$this->individual->Specimens->getCollectionIsPublic()) $this->forwardToSecureAction();
+    if(!$this->individual->SpecimensFlat->getCollectionIsPublic()) $this->forwardToSecureAction();
     
-    $collection = Doctrine::getTable('Collections')->findOneById($this->individual->Specimens->getCollectionRef());
+    $collection = Doctrine::getTable('Collections')->findOneById($this->individual->SpecimensFlat->getCollectionRef());
     $this->institute = Doctrine::getTable('People')->findOneById($collection->getInstitutionRef()) ;
     $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef()) ;
     $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());      
@@ -119,7 +121,7 @@ class searchActions extends DarwinActions
     $ids = $this->FecthIdForCommonNames() ;
     $this->common_names = Doctrine::getTable('ClassVernacularNames')->findAllCommonNames($ids) ;    
     
-    if ($tag = $this->individual->Specimens->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ; 
+    if ($tag = $this->individual->SpecimensFlat->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ; 
     else $this->tags = false ;
     $this->form = new SuggestionForm(null,array('ref_id' => $id, 'ajax' => $ajax)) ;
     if($request->isXmlHttpRequest())
@@ -262,20 +264,20 @@ class searchActions extends DarwinActions
     {
       foreach($this->search as $individual)
       {
-        if($individual->Specimens->getTaxonRef()) $tab['taxonomy'][] = $individual->Specimens->getTaxonRef() ;
-        if($individual->Specimens->getChronoRef()) $tab['chronostratigraphy'][] = $individual->Specimens->getChronoRef() ;
-        if($individual->Specimens->getLithoRef()) $tab['lithostratigraphy'][] = $individual->Specimens->getLithoRef() ;
-        if($individual->Specimens->getLithologyRef()) $tab['lithology'][] = $individual->Specimens->getLithologyRef() ;
-        if($individual->Specimens->getMineralRef()) $tab['mineralogy'][] = $individual->Specimens->getMineralRef() ;
+        if($individual->SpecimensFlat->getTaxonRef()) $tab['taxonomy'][] = $individual->SpecimensFlat->getTaxonRef() ;
+        if($individual->SpecimensFlat->getChronoRef()) $tab['chronostratigraphy'][] = $individual->SpecimensFlat->getChronoRef() ;
+        if($individual->SpecimensFlat->getLithoRef()) $tab['lithostratigraphy'][] = $individual->SpecimensFlat->getLithoRef() ;
+        if($individual->SpecimensFlat->getLithologyRef()) $tab['lithology'][] = $individual->SpecimensFlat->getLithologyRef() ;
+        if($individual->SpecimensFlat->getMineralRef()) $tab['mineralogy'][] = $individual->SpecimensFlat->getMineralRef() ;
       }
     }
     else
     {
-      if($this->individual->Specimens->getTaxonRef()) $tab['taxonomy'][] = $this->individual->Specimens->getTaxonRef() ;
-      if($this->individual->Specimens->getChronoRef()) $tab['chronostratigraphy'][] = $this->individual->Specimens->getChronoRef() ;
-      if($this->individual->Specimens->getLithoRef()) $tab['lithostratigraphy'][] = $this->individual->Specimens->getLithoRef() ;
-      if($this->individual->Specimens->getLithologyRef()) $tab['lithology'][] = $this->individual->Specimens->getLithologyRef() ;
-      if($this->individual->Specimens->getMineralRef()) $tab['mineralogy'][] = $this->individual->Specimens->getMineralRef() ;   
+      if($this->individual->SpecimensFlat->getTaxonRef()) $tab['taxonomy'][] = $this->individual->SpecimensFlat->getTaxonRef() ;
+      if($this->individual->SpecimensFlat->getChronoRef()) $tab['chronostratigraphy'][] = $this->individual->SpecimensFlat->getChronoRef() ;
+      if($this->individual->SpecimensFlat->getLithoRef()) $tab['lithostratigraphy'][] = $this->individual->SpecimensFlat->getLithoRef() ;
+      if($this->individual->SpecimensFlat->getLithologyRef()) $tab['lithology'][] = $this->individual->SpecimensFlat->getLithologyRef() ;
+      if($this->individual->SpecimensFlat->getMineralRef()) $tab['mineralogy'][] = $this->individual->SpecimensFlat->getMineralRef() ;   
     }
     return $tab ;
   }

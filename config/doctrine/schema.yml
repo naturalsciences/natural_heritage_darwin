@@ -840,9 +840,6 @@ SpecimensFlat:
         ig_date_mask: { type: integer }
 
     relations:
-        SpecimenIndividuals:
-            local: specimen_ref
-            foreign: specimen_ref
         Specimen:
             class: Specimens
             local: specimen_ref
@@ -955,6 +952,10 @@ SpecimenIndividuals:
         Specimens:
             local: specimen_ref
             foreign: id
+        SpecimensFlat:
+            local: specimen_ref
+            foreign: specimen_ref
+
 
 SpecimenParts:
     columns:

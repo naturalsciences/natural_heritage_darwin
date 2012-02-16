@@ -35,8 +35,8 @@
               <td style="vertical-align:middle;">
                   <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'search/view?id='.$individual->getId(),array('popup' => true));?>
               </td>
-              <?php include_partial('result_content_specimen', array('specimen' => $individual->Specimens, 'id' => $i++)); ?>
-              <?php include_partial('tagCommonName',array('common_names'=>$common_names->getRawValue(), 'spec'=> $individual->Specimens)) ; ?>
+              <?php include_partial('result_content_specimen', array('specimen' => $individual->SpecimensFlat, 'id' => $i++)); ?>
+              <?php include_partial('tagCommonName',array('common_names'=>$common_names->getRawValue(), 'spec'=> $individual->SpecimensFlat)) ; ?>
               <?php include_partial('result_content_individual', array('specimen' => $individual)); ?>                                                       
             </tr>            
           </tbody>

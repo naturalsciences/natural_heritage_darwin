@@ -110,7 +110,6 @@
  * @property string $ig_num
  * @property string $ig_num_indexed
  * @property integer $ig_date_mask
- * @property SpecimenIndividuals $SpecimenIndividuals
  * @property Specimens $Specimen
  * @property Collections $Collections
  * @property Expeditions $Expeditions
@@ -122,6 +121,7 @@
  * @property Mineralogy $Mineralogy
  * @property Taxonomy $HostTaxon
  * @property Specimens $HostSpecimen
+ * @property Doctrine_Collection $SpecimenIndividuals
  * 
  * @method integer             getSpecimenRef()              Returns the current record's "specimen_ref" value
  * @method string              getCategory()                 Returns the current record's "category" value
@@ -228,7 +228,6 @@
  * @method string              getIgNum()                    Returns the current record's "ig_num" value
  * @method string              getIgNumIndexed()             Returns the current record's "ig_num_indexed" value
  * @method integer             getIgDateMask()               Returns the current record's "ig_date_mask" value
- * @method SpecimenIndividuals getSpecimenIndividuals()      Returns the current record's "SpecimenIndividuals" value
  * @method Specimens           getSpecimen()                 Returns the current record's "Specimen" value
  * @method Collections         getCollections()              Returns the current record's "Collections" value
  * @method Expeditions         getExpeditions()              Returns the current record's "Expeditions" value
@@ -240,6 +239,7 @@
  * @method Mineralogy          getMineralogy()               Returns the current record's "Mineralogy" value
  * @method Taxonomy            getHostTaxon()                Returns the current record's "HostTaxon" value
  * @method Specimens           getHostSpecimen()             Returns the current record's "HostSpecimen" value
+ * @method Doctrine_Collection getSpecimenIndividuals()      Returns the current record's "SpecimenIndividuals" collection
  * @method SpecimensFlat       setSpecimenRef()              Sets the current record's "specimen_ref" value
  * @method SpecimensFlat       setCategory()                 Sets the current record's "category" value
  * @method SpecimensFlat       setCollectionRef()            Sets the current record's "collection_ref" value
@@ -345,7 +345,6 @@
  * @method SpecimensFlat       setIgNum()                    Sets the current record's "ig_num" value
  * @method SpecimensFlat       setIgNumIndexed()             Sets the current record's "ig_num_indexed" value
  * @method SpecimensFlat       setIgDateMask()               Sets the current record's "ig_date_mask" value
- * @method SpecimensFlat       setSpecimenIndividuals()      Sets the current record's "SpecimenIndividuals" value
  * @method SpecimensFlat       setSpecimen()                 Sets the current record's "Specimen" value
  * @method SpecimensFlat       setCollections()              Sets the current record's "Collections" value
  * @method SpecimensFlat       setExpeditions()              Sets the current record's "Expeditions" value
@@ -357,6 +356,7 @@
  * @method SpecimensFlat       setMineralogy()               Sets the current record's "Mineralogy" value
  * @method SpecimensFlat       setHostTaxon()                Sets the current record's "HostTaxon" value
  * @method SpecimensFlat       setHostSpecimen()             Sets the current record's "HostSpecimen" value
+ * @method SpecimensFlat       setSpecimenIndividuals()      Sets the current record's "SpecimenIndividuals" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -698,10 +698,6 @@ abstract class BaseSpecimensFlat extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('SpecimenIndividuals', array(
-             'local' => 'specimen_ref',
-             'foreign' => 'specimen_ref'));
-
         $this->hasOne('Specimens as Specimen', array(
              'local' => 'specimen_ref',
              'foreign' => 'id'));
@@ -745,5 +741,9 @@ abstract class BaseSpecimensFlat extends sfDoctrineRecord
         $this->hasOne('Specimens as HostSpecimen', array(
              'local' => 'host_specimen_ref',
              'foreign' => 'id'));
+
+        $this->hasMany('SpecimenIndividuals', array(
+             'local' => 'specimen_ref',
+             'foreign' => 'specimen_ref'));
     }
 }

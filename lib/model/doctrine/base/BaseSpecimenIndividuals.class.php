@@ -20,7 +20,7 @@
  * @property boolean $with_parts
  * @property string $ind_ident_ids
  * @property Specimens $Specimens
- * @property Doctrine_Collection $SpecimensFlat
+ * @property SpecimensFlat $SpecimensFlat
  * @property Doctrine_Collection $SpecimenParts
  * 
  * @method integer             getId()                             Returns the current record's "id" value
@@ -38,7 +38,7 @@
  * @method boolean             getWithParts()                      Returns the current record's "with_parts" value
  * @method string              getIndIdentIds()                    Returns the current record's "ind_ident_ids" value
  * @method Specimens           getSpecimens()                      Returns the current record's "Specimens" value
- * @method Doctrine_Collection getSpecimensFlat()                  Returns the current record's "SpecimensFlat" collection
+ * @method SpecimensFlat       getSpecimensFlat()                  Returns the current record's "SpecimensFlat" value
  * @method Doctrine_Collection getSpecimenParts()                  Returns the current record's "SpecimenParts" collection
  * @method SpecimenIndividuals setId()                             Sets the current record's "id" value
  * @method SpecimenIndividuals setSpecimenRef()                    Sets the current record's "specimen_ref" value
@@ -55,7 +55,7 @@
  * @method SpecimenIndividuals setWithParts()                      Sets the current record's "with_parts" value
  * @method SpecimenIndividuals setIndIdentIds()                    Sets the current record's "ind_ident_ids" value
  * @method SpecimenIndividuals setSpecimens()                      Sets the current record's "Specimens" value
- * @method SpecimenIndividuals setSpecimensFlat()                  Sets the current record's "SpecimensFlat" collection
+ * @method SpecimenIndividuals setSpecimensFlat()                  Sets the current record's "SpecimensFlat" value
  * @method SpecimenIndividuals setSpecimenParts()                  Sets the current record's "SpecimenParts" collection
  * 
  * @package    darwin
@@ -142,7 +142,7 @@ abstract class BaseSpecimenIndividuals extends sfDoctrineRecord
              'local' => 'specimen_ref',
              'foreign' => 'id'));
 
-        $this->hasMany('SpecimensFlat', array(
+        $this->hasOne('SpecimensFlat', array(
              'local' => 'specimen_ref',
              'foreign' => 'specimen_ref'));
 
