@@ -14,7 +14,7 @@
     <?php echo $form['ig_ref']->renderError();?>
     <?php echo $form['ig_ref'];?>
   </td>
-  <td>
+  <td rowspan="2">
     <?php echo $form['details']->renderError();?>
     <?php echo $form['details'];?>
   </td>
@@ -63,9 +63,51 @@
           }
         });  
       }
-    }) ;
+    });
+    <?php if(!$lineObj->isNew()):?>
+
+    $(".main_but_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> .maint_butt").click(function(){
+      but_link = $(this);
+      el = $(".maint_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> .maintenance_details");
+      if(! el.is(':visible')) {
+        $.ajax({
+          url: "<?php echo url_for('loanitem/showmaintenances');?>",
+          data: { id: <?php echo $lineObj->getId();?> },
+          success: function(html){
+            $(el).html(html);
+            el.show();
+            but_link.find('img').attr('src','<?php echo url_for('/images/blue_expand_up.png');?>');
+          }
+        });
+
+      } else {
+        el.hide();
+        $(this).find('img').attr('src','<?php echo url_for('/images/blue_expand.png');?>');
+      }
+    });
+    <?php endif;?>
   });
 </script>
 
   </td>
 </tr>
+<tr class="main_but_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
+  <td></td>
+  <td></td>
+  <td colspan="2">
+    <a class="maint_butt<?php if($lineObj->isNew()) echo 'disabled';?>" href="#">
+      <?php echo image_tag( ($lineObj->isNew() ? 'grey' : 'blue' ).'_expand.png');?> <?php echo __('Maintenances');?>
+    </a>
+  </td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+</tr>
+<tr class="maint_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
+  <td></td>
+  <td colspan="6"><div class="maintenance_details"></div>
+  </td>
+  <td></td>
+</tr>
+

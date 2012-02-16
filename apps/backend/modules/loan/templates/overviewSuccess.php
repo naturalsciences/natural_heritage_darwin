@@ -55,7 +55,6 @@
 
 <script  type="text/javascript">
 $(document).ready(function () {
-
     $('#add_item').click( function(event)
     {
         event.preventDefault();

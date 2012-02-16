@@ -2903,3 +2903,8 @@ input.complete_missing {
   background-image: url("/images/checkbox.png");
   display: block;
 }
+
+.maintenance_details { 
+  display:none;
+  
+}

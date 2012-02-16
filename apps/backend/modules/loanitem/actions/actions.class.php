@@ -88,7 +88,7 @@ class loanitemActions extends DarwinActions
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($items = explode(',',$request->getParameter('ids')) );
     if(!$id = doctrine::getTable('loanItems')->getLoanRef($items)) $this->forwardToSecureAction();
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$id))
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$id) !== true)
       $this->forwardToSecureAction();
     $this->form = new MultiCollectionMaintenanceForm();
     if($request->isMethod('post'))
@@ -124,6 +124,32 @@ class loanitemActions extends DarwinActions
   {
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($this->loan_item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
+      $this->forwardToSecureAction();
     $this->loadWidgets();
+  }
+
+  public function executeShowmaintenances(sfWebRequest $request)
+  {
+    $this->forward404Unless($this->loan_item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
+      $this->forwardToSecureAction();
+
+    $this->maintenances =  Doctrine::getTable('CollectionMaintenance')->getRelatedArray('loan_items', $this->loan_item->getId());
+  }
+  public function executeDelmaintenance(sfWebRequest $request)
+  {
+    $maint = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id'));
+    $this->forward404Unless($maint->getReferencedRelation() == 'loan_items');
+    $this->loan_item = Doctrine::getTable('LoanItems')->findExcept($maint->getRecordId());
+
+    $rights = $this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() )
+    if(! $rights === true)
+      $this->forwardToSecureAction();
+
+    $maint->delete();
+    return $this->renderText('ok');
   }
 }
