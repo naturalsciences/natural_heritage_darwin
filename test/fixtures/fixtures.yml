@@ -1121,3 +1121,12 @@ InformativeWorkflow:
         status : to check
         comment: test de workflow pour les tests
         Users: u1
+
+CollectionMaintenance:
+    colm1:
+        referenced_relation: taxonomy
+        record_id: 4
+        category : to check
+        description: test de workflow pour les tests
+        People: p1
+        action_observation: observation

@@ -33,6 +33,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
     $this->validatorSchema['receiver'] = new sfValidatorPass();    
     $this->validatorSchema['relatedfile'] = new sfValidatorPass();
     $this->validatorSchema['insurance'] = new sfValidatorPass();
+    $this->widgetSchema->setNameFormat('loan_item_widget[%s]');
   }
   public function addRelatedFiles($num,$file=null)
   {

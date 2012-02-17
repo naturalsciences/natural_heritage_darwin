@@ -17,8 +17,8 @@ class loanitemwidgetComponents extends sfComponents
     {
       if(isset($this->eid) && $this->eid != null)
       {
-        $loan = Doctrine::getTable('LoanItems')->find($this->eid);
-        $this->form = new LoanItemWidgetForm($loan);
+        $loanitem = Doctrine::getTable('LoanItems')->find($this->eid);
+        $this->form = new LoanItemWidgetForm($loanitem);
       }
       else
         $this->form = new LoanItemWidgetForm();
@@ -47,9 +47,9 @@ class loanitemwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newActorsSender']))
-      $this->form->loadEmbedActorsSender();    
+      $this->form->loadEmbedActorsSender();
     if(!isset($this->form['newActorsReceiver']))
-      $this->form->loadEmbedActorsReceiver();          
+      $this->form->loadEmbedActorsReceiver();
   }  
     
   public function executeRefRelatedFiles()

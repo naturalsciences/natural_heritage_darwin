@@ -10,7 +10,7 @@
     </tr>
     <tr>
       <th><?php echo __('I.G. Number');?></th>
-      <td><?php echo $obj->Ig->getIgNum();?></td>
+      <td><?php  if($obj->getIgRef()) echo $obj->Ig->getIgNum();?></td>
     </tr>
     <tr>
       <th><?php echo __('Return Date');?></th>

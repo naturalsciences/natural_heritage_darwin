@@ -105,6 +105,7 @@ abstract class BaseMyWidgets extends sfDoctrineRecord
              ));
         $this->hasColumn('is_available', 'boolean', null, array(
              'type' => 'boolean',
+             'notnull' => true,
              'default' => false,
              ));
         $this->hasColumn('opened', 'boolean', null, array(
