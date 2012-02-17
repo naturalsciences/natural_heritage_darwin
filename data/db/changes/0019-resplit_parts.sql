@@ -1,5 +1,159 @@
 -- \echo Start of split the `date`
 
+create index idx_id_refs_old_id on id_refs ("system", old_id) where "system" = 'individuals';
+create index idx_id_refs_new_id on id_refs ("system", new_id) where "system" = 'individuals';
+create index idx_buildings on darwin1.tbl_buildings (bui_id_ctn);
+create index idx_building_floors on darwin1.tbl_building_floors (bfl_id_ctn);
+create index idx_building_floors_bui on darwin1.tbl_building_floors (bfl_building_nr);
+create index idx_rooms on darwin1.tbl_rooms (rom_id_ctn);
+create index idx_spec_status on darwin1.tbl_specimen_status (sst_id_ctn);
+create index idx_spec_storages on darwin1.tbl_storage (sto_id_ctn);
+create index idx_spec_cont_types on darwin1.tbl_container_types (cty_id_ctn);
+create index idx_spec_freshness on darwin1.tbl_spec_freshness_levels (sfl_level);
+create index idx_spec_units on darwin1.tbl_units (uni_id_ctn);
+create index idx_batches on darwin1.tbl_batches (bat_id_ctn);
+create index idx_spec_groups on darwin1.tbl_specimen_groups (sgr_id_ctn);
+create index idx_spec_spec_sst on darwin1.tbl_specimen_groups (sgr_status_nr);
+create index idx_spec_spec_prep on darwin1.tbl_specimen_groups (sgr_preparator_nr);
+create index idx_spec_spec_batch on darwin1.tbl_specimen_groups (sgr_batch_nr);
+create index idx_spec_spec_freshness on darwin1.tbl_specimen_groups (sgr_freshness_level_nr);
+create index idx_spec_spec_room on darwin1.tbl_specimen_groups (sgr_room_nr);
+create index idx_spec_spec_item on darwin1.tbl_specimen_groups (sgr_item_concerned_nr);
+create index idx_spec_spec_storage on darwin1.tbl_specimen_groups (sgr_storage_nr);
+create index idx_spec_spec_cont_type on darwin1.tbl_specimen_groups (sgr_container_type_nr);
+create index idx_spec_spec_weight_unit on darwin1.tbl_specimen_groups (sgr_weight_min_uni_nr);
+create index idx_spec_spec_height_unit on darwin1.tbl_specimen_groups (sgr_height_min_uni_nr);
+create index idx_spec_spec_depth_unit on darwin1.tbl_specimen_groups (sgr_depth_min_uni_nr);
+
+create table migrated_parts as
+(
+ select sgr_id_ctn::integer as old_spec_id,
+        specimen_individual_ref::integer as specimen_individual_ref,  specimen_parts.id::bigint as parts_id, (fullToIndex(sgr_code))::varchar as main_code,
+        (fullToIndex(bat_unique_rbins_code))::varchar as rbins_code, (fullToIndex(bat_code))::varchar as batch_main_code, (fullToIndex(bat_inventory_code))::varchar as inventory_code, sgr_code::varchar as old_main_code,
+        specimen_part::varchar as specimen_part, building::varchar, (coalesce(building, ''))::varchar as coalesced_building,
+        ("floor")::varchar, (coalesce("floor", ''))::varchar as coalesced_floor,
+        room::varchar, (coalesce("room", ''))::varchar as coalesced_room,
+        (specimen_parts.row)::varchar as row, (coalesce("row", ''))::varchar as coalesced_row,
+        (specimen_parts.shelf)::varchar as shelf, (coalesce("shelf", ''))::varchar as coalesced_shelf,
+        (specimen_parts.container)::varchar as container, (coalesce("container", ''))::varchar as coalesced_container,
+        (specimen_parts.sub_container)::varchar as sub_container, (coalesce("sub_container", ''))::varchar as coalesced_sub_container,
+        (lower(cty_type_short_descr))::varchar as container_and_sub_container_type, (specimen_parts.container_type)::varchar as container_type, (specimen_parts.sub_container_type)::varchar as sub_container_type,
+        (lower(sto_storage))::varchar as container_and_sub_container_storage, (specimen_parts.container_storage)::varchar as container_storage, (specimen_parts.sub_container_storage)::varchar as sub_container_storage,
+        specimen_status::varchar as specimen_status,
+        case when sgr_number_in_group < 1 or sgr_number_in_group is null then 1 else sgr_number_in_group end::bigint as part_count_min,
+        specimen_part_count_min::integer as specimen_part_count_min,
+        specimen_part_count_max::integer as specimen_part_count_max,
+        case
+          when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true
+          else false
+        end::boolean as complete,
+        case when sfl_description = 'Undefined' then '' else coalesce(sfl_description,'') end::varchar as freshness_level,
+        sgr_length_min::varchar as old_length_min,
+        (convert_to_unified(sgr_length_min::varchar, case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END, 'length'))::varchar as length_min_unified,
+        sgr_length_max::varchar as old_length_max,
+        (convert_to_unified(sgr_length_max::varchar, case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END, 'length'))::varchar as length_max_unified,
+        case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END::varchar as old_length_unit,
+        sgr_height_min::varchar as old_height_min,
+        (convert_to_unified(sgr_height_min::varchar, case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END, 'length'))::varchar as height_min_unified,
+        sgr_height_max::varchar as old_height_max,
+        (convert_to_unified(sgr_height_max::varchar, case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END, 'length'))::varchar as height_max_unified,
+        case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END::varchar as old_height_unit,
+        sgr_depth_min::varchar as old_depth_min,
+        (convert_to_unified(sgr_depth_min::varchar, case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END, 'length'))::varchar as depth_min_unified,
+        sgr_depth_max::varchar as old_depth_max,
+        (convert_to_unified(sgr_depth_max::varchar, case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END, 'length'))::varchar as depth_max_unified,
+        case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END::varchar as old_depth_unit,
+        sgr_weight_min::varchar as old_weight_min,
+        (convert_to_unified(sgr_weight_min::varchar, case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END, 'weight'))::varchar as weight_min_unified,
+        sgr_weight_max::varchar as old_weight_max,
+        (convert_to_unified(sgr_weight_max::varchar, case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END, 'weight'))::varchar as weight_max_unified,
+        case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END::varchar as old_weight_unit,
+        bat_value::numeric as old_insurance_value,
+        bat_value_year::smallint as old_insurance_year,
+        case when exists(select 1 from people where id = sgr_preparator_nr) then case when sgr_preparator_nr = 0 then null else sgr_preparator_nr end else null::integer end::integer as maintenance_people_ref,
+        'action'::varchar as maintenance_category,
+        'preparation'::varchar as maintenance_action_observation,
+        (
+          ('01/' ||
+            CASE WHEN sgr_preparation_month IS NULL THEN '01' ELSE sgr_preparation_month::varchar END
+            || '/' ||
+            CASE WHEN sgr_preparation_year IS NULL THEN '0001' ELSE sgr_preparation_year::varchar END
+          )::timestamp
+          + (CASE WHEN sgr_preparation_day IS NULL OR sgr_preparation_day = 0 THEN '0' ELSE (sgr_preparation_day::integer - 1)::varchar END || ' days')::interval
+        )::timestamp as maintenance_modification_date_time,
+        CASE WHEN sgr_preparation_day IS NOT NULL THEN 8 ELSE 0 END
+        +
+        CASE WHEN sgr_preparation_month IS NOT NULL THEN 16 ELSE 0 END
+        +
+        CASE WHEN sgr_preparation_year IS NOT NULL THEN 32 ELSE 0 END::integer as maintenance_modification_date_mask
+  from darwin1.tbl_specimen_groups
+  inner join darwin1.id_refs
+  on system = 'individuals' and sgr_id_ctn = old_id
+  inner join (
+              darwin1.tbl_rooms
+              inner join (
+                          darwin1.tbl_building_floors
+                          inner join darwin1.tbl_buildings
+                          on bui_id_ctn = bfl_building_nr
+                        )
+              on bfl_id_ctn = rom_building_floor_nr
+            )
+  on sgr_room_nr = rom_id_ctn
+  inner join darwin1.tbl_specimen_status
+  on sst_id_ctn = sgr_status_nr
+  inner join darwin1.tbl_storage on sto_id_ctn = sgr_storage_nr
+  inner join darwin1.tbl_container_types on cty_id_ctn = sgr_container_type_nr
+  inner join darwin1.tbl_batches on sgr_batch_nr = bat_id_ctn
+  inner join darwin1.tbl_spec_freshness_levels on sfl_level = sgr_freshness_level_nr
+  inner join darwin1.tbl_units as length_unit on sgr_length_min_uni_nr = length_unit.uni_id_ctn
+  inner join darwin1.tbl_units as height_unit on sgr_height_min_uni_nr = height_unit.uni_id_ctn
+  inner join darwin1.tbl_units as depth_unit on sgr_depth_min_uni_nr = depth_unit.uni_id_ctn
+  inner join darwin1.tbl_units as weight_unit on sgr_weight_min_uni_nr = weight_unit.uni_id_ctn
+  inner join darwin1.tbl_units as vol_unit on sgr_vol_min_uni_nr = vol_unit.uni_id_ctn
+  inner join
+  specimen_parts
+  on "system" = 'individuals' and specimen_individual_ref = new_id
+    and specimen_part = lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation'))
+    and coalesce(specimen_parts.building,'') =
+        case
+          when sgr_room_nr = 0 then ''
+          else bui_name
+        end::varchar
+    and coalesce(specimen_parts.floor,'') =
+        case
+          when sgr_room_nr = 0 then ''
+          else bfl_floor
+        end::varchar
+    and coalesce(specimen_parts.room, '') =
+        case
+          when sgr_room_nr = 0 then ''
+          else rom_code
+        end::varchar
+    and coalesce(specimen_parts.row, '') = coalesce(sgr_row, '')
+    and coalesce(specimen_parts.shelf, '') = coalesce(sgr_shelf, '')
+    and coalesce(specimen_parts.container, '') = coalesce(sgr_container, '')
+    and coalesce(specimen_parts.sub_container, '') = coalesce(sgr_subcontainer, '')
+    and complete =
+        case
+          when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true
+          else false
+        end
+  where
+      not exists (select 1
+                  from users_tracking
+                  where referenced_relation = 'codes'
+                    and action = 'delete'
+                    and old_value -> 'referenced_relation' = 'specimen_parts'
+                    and old_value -> 'record_id' = specimen_parts.id::varchar
+                    and old_value -> 'code_category' = 'main'
+                    and old_value -> 'full_code_order_by' = fullToIndex(sgr_code)
+                  )
+);
+
+CREATE INDEX idx_migrated_parts ON migrated_parts (specimen_individual_ref, parts_id, specimen_part, main_code);
+
+ALTER TABLE migrated_parts SET OWNER TO darwin2;
+
 BEGIN;
 
 ALTER TABLE specimen_parts DISABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
@@ -23,8 +177,6 @@ ALTER TABLE insurances DISABLE TRIGGER trg_chk_ref_record_insurances;
 ALTER TABLE insurances DISABLE TRIGGER trg_trk_log_table_insurances;
 ALTER TABLE insurances DISABLE TRIGGER fct_cpy_trg_del_dict_insurances;
 ALTER TABLE insurances DISABLE TRIGGER fct_cpy_trg_ins_update_dict_insurances;
-
--- CREATE TEMPORARY TABLE partsSplitFromAndTo ("start" boolean not null default true, "id" integer not null);
 
 CREATE OR REPLACE FUNCTION convert_to_real(v_input varchar) RETURNS REAL IMMUTABLE
 AS $$
@@ -220,7 +372,7 @@ exception
 end;
 $$;
 
-create or replace function createNewPart(IN part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail) RETURNS specimen_parts.id%TYPE language plpgsql AS
+create or replace function createNewPart(IN part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail, IN new_code_id codes.id%TYPE DEFAULT NULL) RETURNS specimen_parts.id%TYPE language plpgsql AS
 $$
 DECLARE
   new_part_id specimen_parts.id%TYPE;
@@ -239,8 +391,6 @@ BEGIN
       WHERE id = part_id
     )
     RETURNING id INTO new_part_id;
---     INSERT INTO partsSplitFromAndTo (id, "start")
---     (SELECT new_part_id, false WHERE NOT EXISTS (SELECT 1 FROM partsSplitFromAndTo WHERE NOT "start" ));
     if decrementCount(part_id, recPartsDetails.part_count_min) then
     end if;
     SELECT count(full_code_order_by) INTO code_count
@@ -254,7 +404,10 @@ BEGIN
       WHERE referenced_relation = 'specimen_parts'
         AND record_id = part_id
         AND code_category = 'main'
-        AND full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code);
+        AND (full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code)
+             OR
+             CASE WHEN coalesce(new_code_id,0) = 0 THEN true ELSE id = new_code_id END
+            );
       GET DIAGNOSTICS code_count = ROW_COUNT;
       IF code_count = 0 THEN
         IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
@@ -265,11 +418,14 @@ BEGIN
       INSERT INTO codes
       (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
       (SELECT 'specimen_parts', new_part_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask
-      FROM codes
-      WHERE referenced_relation = 'specimen_parts'
-        AND record_id = part_id
-        AND code_category = 'main'
-        AND full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code)
+       FROM codes
+       WHERE referenced_relation = 'specimen_parts'
+         AND record_id = part_id
+         AND code_category = 'main'
+         AND (full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code)
+              OR
+              CASE WHEN coalesce(new_code_id,0) = 0 THEN true ELSE id = new_code_id END
+             )
       );
       GET DIAGNOSTICS code_count = ROW_COUNT;
       IF code_count = 0 THEN
@@ -1340,182 +1496,10 @@ declare
   new_code_insertion boolean := false;
   booUpdateProperties boolean := false;
 begin
---   INSERT INTO partsSplitFromAndTo (id)
---   (
---     SELECT max(specimen_parts.id)
---     FROM darwin1.tbl_specimen_groups
---           inner join darwin1.id_refs
---           on sgr_id_ctn = old_id and system = 'individuals'
---           inner join (
---                         darwin1.tbl_rooms
---                         inner join (
---                                     darwin1.tbl_building_floors
---                                     inner join darwin1.tbl_buildings
---                                     on bui_id_ctn = bfl_building_nr
---                                   )
---                         on bfl_id_ctn = rom_building_floor_nr
---                       )
---           on sgr_room_nr = rom_id_ctn
---           inner join
---           specimen_parts
---           on  specimen_individual_ref = new_id
---               and specimen_part = lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation'))
---               and coalesce(specimen_parts.building,'') =
---                   case
---                     when sgr_room_nr = 0 then ''
---                     else bui_name
---                   end::varchar
---               and coalesce(specimen_parts.floor,'') =
---                   case
---                     when sgr_room_nr = 0 then ''
---                     else bfl_floor
---                   end::varchar
---               and coalesce(specimen_parts.room, '') =
---                   case
---                     when sgr_room_nr = 0 then ''
---                     else rom_code
---                   end::varchar
---               and coalesce(specimen_parts.row, '') = coalesce(sgr_row, '')
---               and coalesce(specimen_parts.shelf, '') = coalesce(sgr_shelf, '')
---               and coalesce(specimen_parts.container, '') = coalesce(sgr_container, '')
---               and coalesce(specimen_parts.sub_container, '') = coalesce(sgr_subcontainer, '')
---               and complete =
---                   case
---                     when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true
---                     else false
---                   end
---   );
-  FOR recPartsDetails IN select sgr_id_ctn as old_spec_id, specimen_individual_ref,  specimen_parts.id as parts_id, fullToIndex(sgr_code) as main_code,
-                                fullToIndex(bat_unique_rbins_code) as rbins_code, fullToIndex(bat_code) as batch_main_code, fullToIndex(bat_inventory_code) as inventory_code, sgr_code as old_main_code,
-                                specimen_part, building, coalesce(building, '') as coalesced_building,
-                                "floor", coalesce("floor", '') as coalesced_floor,
-                                room, coalesce("room", '') as coalesced_room,
-                                specimen_parts.row as row, coalesce("row", '') as coalesced_row,
-                                specimen_parts.shelf as shelf, coalesce("shelf", '') as coalesced_shelf,
-                                specimen_parts.container as container, coalesce("container", '') as coalesced_container,
-                                specimen_parts.sub_container as sub_container, coalesce("sub_container", '') as coalesced_sub_container,
-                                lower(cty_type_short_descr) as container_and_sub_container_type, specimen_parts.container_type as container_type, specimen_parts.sub_container_type as sub_container_type,
-                                lower(sto_storage) as container_and_sub_container_storage, specimen_parts.container_storage as container_storage, specimen_parts.sub_container_storage as sub_container_storage,
-                                specimen_status,
-                                case when sgr_number_in_group < 1 or sgr_number_in_group is null then 1 else sgr_number_in_group end as part_count_min,
-                                specimen_part_count_min,
-                                specimen_part_count_max,
-                                case
-                                  when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true
-                                  else false
-                                end as complete,
-                                case when sfl_description = 'Undefined' then '' else coalesce(sfl_description,'') end as freshness_level,
-                                sgr_length_min::varchar as old_length_min,
-                                convert_to_unified(sgr_length_min::varchar, case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END, 'length') as length_min_unified,
-                                sgr_length_max::varchar as old_length_max,
-                                convert_to_unified(sgr_length_max::varchar, case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END, 'length') as length_max_unified,
-                                case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END as old_length_unit,
-                                sgr_height_min::varchar as old_height_min,
-                                convert_to_unified(sgr_height_min::varchar, case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END, 'length') as height_min_unified,
-                                sgr_height_max::varchar as old_height_max,
-                                convert_to_unified(sgr_height_max::varchar, case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END, 'length') as height_max_unified,
-                                case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END as old_height_unit,
-                                sgr_depth_min::varchar as old_depth_min,
-                                convert_to_unified(sgr_depth_min::varchar, case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END, 'length') as depth_min_unified,
-                                sgr_depth_max::varchar as old_depth_max,
-                                convert_to_unified(sgr_depth_max::varchar, case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END, 'length') as depth_max_unified,
-                                case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END as old_depth_unit,
-                                sgr_weight_min::varchar as old_weight_min,
-                                convert_to_unified(sgr_weight_min::varchar, case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END, 'weight') as weight_min_unified,
-                                sgr_weight_max::varchar as old_weight_max,
-                                convert_to_unified(sgr_weight_max::varchar, case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END, 'weight') as weight_max_unified,
-                                case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END as old_weight_unit,
-                                bat_value as old_insurance_value,
-                                bat_value_year as old_insurance_year,
-                                case when exists(select 1 from people where id = sgr_preparator_nr) then case when sgr_preparator_nr = 0 then null else sgr_preparator_nr end else null::integer end as maintenance_people_ref,
-                                'action' as maintenance_category,
-                                'preparation' as maintenance_action_observation,
-                                (
-                                    ('01/' ||
-                                    CASE WHEN sgr_preparation_month IS NULL THEN '01' ELSE sgr_preparation_month::varchar END
-                                    || '/' ||
-                                    CASE WHEN sgr_preparation_year IS NULL THEN '0001' ELSE sgr_preparation_year::varchar END
-                                    )::timestamp
-                                    + (CASE WHEN sgr_preparation_day IS NULL OR sgr_preparation_day = 0 THEN '0' ELSE (sgr_preparation_day::integer - 1)::varchar END || ' days')::interval
-                                )::timestamp as maintenance_modification_date_time,
-                                CASE WHEN sgr_preparation_day IS NOT NULL THEN 8 ELSE 0 END
-                                +
-                                CASE WHEN sgr_preparation_month IS NOT NULL THEN 16 ELSE 0 END
-                                +
-                                CASE WHEN sgr_preparation_year IS NOT NULL THEN 32 ELSE 0 END as maintenance_modification_date_mask
-                          from darwin1.tbl_specimen_groups
-                          inner join darwin1.id_refs
-                          on sgr_id_ctn = old_id and system = 'individuals'
-                          inner join (
-                                        darwin1.tbl_rooms
-                                        inner join (
-                                                    darwin1.tbl_building_floors
-                                                    inner join darwin1.tbl_buildings
-                                                    on bui_id_ctn = bfl_building_nr
-                                                  )
-                                        on bfl_id_ctn = rom_building_floor_nr
-                                      )
-                          on sgr_room_nr = rom_id_ctn
-                          inner join darwin1.tbl_specimen_status
-                          on sst_id_ctn = sgr_status_nr
-                          inner join darwin1.tbl_storage on sto_id_ctn = sgr_storage_nr
-                          inner join darwin1.tbl_container_types on cty_id_ctn = sgr_container_type_nr
-                          inner join darwin1.tbl_batches on sgr_batch_nr = bat_id_ctn
-                          inner join darwin1.tbl_spec_freshness_levels on sfl_level = sgr_freshness_level_nr
-                          inner join darwin1.tbl_units as length_unit on sgr_length_min_uni_nr = length_unit.uni_id_ctn
-                          inner join darwin1.tbl_units as height_unit on sgr_height_min_uni_nr = height_unit.uni_id_ctn
-                          inner join darwin1.tbl_units as depth_unit on sgr_depth_min_uni_nr = depth_unit.uni_id_ctn
-                          inner join darwin1.tbl_units as weight_unit on sgr_weight_min_uni_nr = weight_unit.uni_id_ctn
-                          inner join darwin1.tbl_units as vol_unit on sgr_vol_min_uni_nr = vol_unit.uni_id_ctn
-                          inner join
-                          specimen_parts
-                          on  specimen_individual_ref = new_id
-                              and specimen_part = lower(replace(replace(replace(pit_item, 'Anat.', 'anatomic'), 'Microsc. prep.', 'microscopic preparation'), 'Microsc.prep.', 'microscopic preparation'))
-                              and coalesce(specimen_parts.building,'') =
-                                  case
-                                    when sgr_room_nr = 0 then ''
-                                    else bui_name
-                                  end::varchar
-                              and coalesce(specimen_parts.floor,'') =
-                                  case
-                                    when sgr_room_nr = 0 then ''
-                                    else bfl_floor
-                                  end::varchar
-                              and coalesce(specimen_parts.room, '') =
-                                  case
-                                    when sgr_room_nr = 0 then ''
-                                    else rom_code
-                                  end::varchar
-                              and coalesce(specimen_parts.row, '') = coalesce(sgr_row, '')
-                              and coalesce(specimen_parts.shelf, '') = coalesce(sgr_shelf, '')
-                              and coalesce(specimen_parts.container, '') = coalesce(sgr_container, '')
-                              and coalesce(specimen_parts.sub_container, '') = coalesce(sgr_subcontainer, '')
-                              and complete =
-                                  case
-                                    when sgr_item_concerned_nr in (20, 95, 136, 217, 218, 236, 336) then true
-                                    else false
-                                  end
-                          where /*1 < (select count(*) from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id)*/
-                                not exists (select 1
-                                            from users_tracking
-                                            where referenced_relation = 'codes'
-                                              and action = 'delete'
-                                              and old_value -> 'referenced_relation' = 'specimen_parts'
-                                              and old_value -> 'record_id' = specimen_parts.id::varchar
-                                              and old_value -> 'code_category' = 'main'
-                                              and old_value -> 'full_code_order_by' = fullToIndex(sgr_code)
-                                           )
-/*                          where sgr_preparator_nr is not null and sgr_preparator_nr != 0*/
-                          /*where bat_value is not null *//*and specimen_parts.id = 594237*/
-                          /*where bat_collection_id_nr between 1 and 8*/
-                                /*where bat_collection_id_nr = 133*/
-                          /*where (sgr_weight_min is not null or sgr_weight_max is not null *//*and sgr_length_min != sgr_length_max*//*)*/
---                             where specimen_parts.id in (585835, 585836)
-                            /*and specimen_parts.id in (585835, 585836)*/
---                           where sfl_description is not null and sfl_description != 'Undefined'
-                                /*exists (select 1 from comments where comment is not null and referenced_relation = 'specimen_parts' and record_id = specimen_parts.id limit 1)*/
-                          order by new_id desc, specimen_part, main_code
-                           limit 50
+  FOR recPartsDetails IN select *
+                         from darwin2.migrated_parts
+                         order by new_id desc, parts_id, specimen_part, main_code
+                         limit 50
   LOOP
     comptage := comptage + 1;
     IF comptage IN (5000, 10000, 20000, 40000, 50000, 75000, 90000, 100000, 125000, 150000, 175000, 200000, 225000, 250000, 275000, 300000, 325000, 350000, 375000) THEN
@@ -1722,15 +1706,16 @@ begin
 
       IF coalesce(new_code_id,'') = '' THEN
         RAISE NOTICE 'No update occured for code: %', recPartsDetails.main_code;
-        /*Classique séparation revérifier le code du createnew et à priori bon*/
+        SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
+        IF new_part_id < 0 THEN
+          return false;
+        END IF;
       ELSE
         RAISE NOTICE 'At least one update occured for code: % ', recPartsDetails.main_code;
-        /* Séparation non classique car on doit faire un createnew mais pr le codes extraire celui qui a le new_code_id */
-      END IF
-      /*Pour le reste ce sera du moveorcreateprop mais revérifier ce qu'on y fait*/
-      SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
-      IF new_part_id < 0 THEN
-        return false;
+        SELECT createNewPart(part_id, recPartsDetails, new_code_id) INTO new_part_id;
+        IF new_part_id < 0 THEN
+          return false;
+        END IF;
       END IF;
       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
       select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
@@ -1817,11 +1802,19 @@ declare
   partsAfterCodeId codes.id%TYPE := 0;
   newPartId specimen_parts.id%TYPE;
   newDiverseId catalogue_properties.id%TYPE;
+  countStillCodes integer;
 begin
   select resplit_parts() INTO response;
   IF NOT response THEN
     ROLLBACK;
   END IF;
+  SELECT COUNT(*) INTO countStillCodes
+  FROM specimen_parts
+  WHERE EXISTS (SELECT 1 FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = specimen_parts.id AND code_category = 'main' GROUP BY referenced_relation, record_id, code_category HAVING COUNT(*) > 1)
+    AND EXISTS (SELECT 1 FROM darwin1.id_refs WHERE "system" = 'individuals' AND new_id = specimen_parts.specimen_individual_ref)
+  GROUP BY id;
+  RAISE NOTICE 'Still % parts that were migrated and that have multiple main codes !', countStillCodes;
+  RETURN true;
   FOR recPartsAfter IN
     SELECT id
     FROM specimen_parts
