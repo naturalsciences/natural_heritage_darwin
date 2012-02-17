@@ -59,7 +59,7 @@ $(document).ready(function () {
     {
         event.preventDefault();
         hideForRefresh('.loan_overview_form');
-        parent_el = $('.loan_overview_form table tbody');
+        parent_el = $('.loan_overview_form > table > tbody');
         $.ajax(
         {
           type: "GET",
