@@ -475,6 +475,14 @@
         <source>This button (only visible when your file is on Pending state) will allow you to edit or remove data</source>
         <target>Deze knop (enkel zichtbaar in de Wacht status) laat u toe om data te wijzigen of te verwijderen</target>
       </trans-unit>
+          <trans-unit id="1505">
+        <source>Choose contact</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1506">
+        <source>Person of contact</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1358">
         <source>As a reminder, here is your username: %username%</source>
         <target>Ter herinnering, uw gebruikersnaam: %username%</target>
