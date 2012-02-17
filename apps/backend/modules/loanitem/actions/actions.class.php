@@ -145,7 +145,7 @@ class loanitemActions extends DarwinActions
     $this->forward404Unless($maint->getReferencedRelation() == 'loan_items');
     $this->loan_item = Doctrine::getTable('LoanItems')->findExcept($maint->getRecordId());
 
-    $rights = $this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() )
+    $rights = $this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() );
     if(! $rights === true)
       $this->forwardToSecureAction();
 
