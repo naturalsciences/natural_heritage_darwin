@@ -13,7 +13,7 @@
           'widgets' => $widgets,
           'category' => 'loanitemwidget',
           'columns' => 1,
-          'options' => array('eid' => $form->getObject()->getId(), 'table' => 'loan_items')
+          'options' => array('eid' => $form->getObject()->getId(), 'table' => 'loan_items','form' => $form)
           )); ?>
         <p class="clear"></p>
         <p class="form_buttons">
