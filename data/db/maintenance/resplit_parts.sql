@@ -150,9 +150,9 @@ create table migrated_parts as
                   )
 );
 
-CREATE INDEX idx_migrated_parts ON migrated_parts (specimen_individual_ref, parts_id, specimen_part, main_code);
+CREATE INDEX idx_migrated_parts ON migrated_parts (specimen_individual_ref desc, parts_id, specimen_part, main_code);
 
-ALTER TABLE migrated_parts SET OWNER TO darwin2;
+ALTER TABLE migrated_parts OWNER TO darwin2;
 
 BEGIN;
 
@@ -356,6 +356,16 @@ begin
     codes_suffix := substring(codeToSplit from E'\\w+\\W+\\w+$');
   ELSIF codeToSplit Like 'ALEX %' THEN
     code_to_insert:= codeToSplit;
+  ELSIF lower(codeToSplit) ~ E'^[a-z]{3}\\d+[a-z]\\w+$' THEN
+    codes_prefix := substr(codeToSplit, 1, 3);
+    codes_prefix_separator := '.';
+    code_to_insert:= trim(substring(trim(substr(codeToSplit, 4)) from E'^\\d+'));
+    codes_suffix_separator := '';
+    codes_suffix := substring(trim(substr(codeToSplit,length(code_prefix)+length(code_to_insert))) from E'[a-z]\\w+$');
+  ELSIF lower(codeToSplit) ~ E'^[a-z]{3}\\d+$' THEN
+    codes_prefix := substr(codeToSplit, 1, 3);
+    codes_prefix_separator := '.';
+    code_to_insert:= trim(substring(trim(substr(codeToSplit, 4)) from E'^\\d+'));
   ELSE
     return response;
   END IF;
@@ -1498,7 +1508,7 @@ declare
 begin
   FOR recPartsDetails IN select *
                          from darwin2.migrated_parts
-                         order by new_id desc, parts_id, specimen_part, main_code
+                         order by specimen_individual_ref desc, parts_id, specimen_part, main_code
                          limit 50
   LOOP
     comptage := comptage + 1;
@@ -1518,12 +1528,18 @@ begin
         and code_category = 'main';
       IF code_count = 0 THEN
         RAISE NOTICE '+New code creation for next part';
+        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+        RAISE NOTICE '++ Codes before creation: %', recActualCodes;
         IF createCodes (part_id, recPartsDetails.old_main_code) < 0 THEN
           return false;
         END IF;
+        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+        RAISE NOTICE '++ Codes after creation: %', recActualCodes;
         code_count := 1;
       END IF;
       IF code_count = 1 THEN
+        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+        RAISE NOTICE '+++ Code is exactly one: %', recActualCodes;
         IF recPartsDetails.specimen_part_count_min = 0 AND recPartsDetails.part_count_min > 0 THEN
           IF recPartsDetails.specimen_part_count_max = recPartsDetails.specimen_part_count_min THEN
             UPDATE specimen_parts
@@ -1700,18 +1716,18 @@ begin
       WHERE referenced_relation = 'codes'
         AND action = 'update'
         AND old_value -> 'referenced_relation' = 'specimen_parts'
-        AND old_value -> 'record_id' = specimen_parts.id::varchar
+        AND old_value -> 'record_id' = part_id::varchar
         AND old_value -> 'code_category' = 'main'
         AND old_value -> 'full_code_order_by' = recPartsDetails.main_code::varchar;
 
-      IF coalesce(new_code_id,'') = '' THEN
-        RAISE NOTICE 'No update occured for code: %', recPartsDetails.main_code;
+      IF coalesce(new_code_id,0) = 0 THEN
+        RAISE NOTICE 'No update occured for code: %', recPartsDetails.old_main_code;
         SELECT createNewPart(part_id, recPartsDetails) INTO new_part_id;
         IF new_part_id < 0 THEN
           return false;
         END IF;
       ELSE
-        RAISE NOTICE 'At least one update occured for code: % ', recPartsDetails.main_code;
+        RAISE NOTICE 'At least one update occured for code: % ', recPartsDetails.old_main_code;
         SELECT createNewPart(part_id, recPartsDetails, new_code_id) INTO new_part_id;
         IF new_part_id < 0 THEN
           return false;
@@ -1811,8 +1827,7 @@ begin
   SELECT COUNT(*) INTO countStillCodes
   FROM specimen_parts
   WHERE EXISTS (SELECT 1 FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = specimen_parts.id AND code_category = 'main' GROUP BY referenced_relation, record_id, code_category HAVING COUNT(*) > 1)
-    AND EXISTS (SELECT 1 FROM darwin1.id_refs WHERE "system" = 'individuals' AND new_id = specimen_parts.specimen_individual_ref)
-  GROUP BY id;
+    AND EXISTS (SELECT 1 FROM darwin1.id_refs WHERE "system" = 'individuals' AND new_id = specimen_parts.specimen_individual_ref);
   RAISE NOTICE 'Still % parts that were migrated and that have multiple main codes !', countStillCodes;
   RETURN true;
   FOR recPartsAfter IN
