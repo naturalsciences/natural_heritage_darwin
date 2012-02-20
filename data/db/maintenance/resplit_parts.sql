@@ -510,6 +510,7 @@ BEGIN
              )
       );
       GET DIAGNOSTICS code_count = ROW_COUNT;
+      RAISE NOTICE '°°Number of records inserted: %', code_count;
       IF code_count = 0 THEN
         IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
           return -1;
