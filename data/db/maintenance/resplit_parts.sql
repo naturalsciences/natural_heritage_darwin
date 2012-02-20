@@ -282,6 +282,7 @@ declare
   code_to_insert varchar;
   codes_suffix_separator varchar;
   codes_suffix varchar;
+  code_temp varchar;
   response integer := 0;
 begin
   IF codeToSplit = 'A.193' THEN
@@ -324,29 +325,11 @@ begin
     codes_prefix := 'V';
     codes_prefix_separator := '.';
     code_to_insert:= '78427';
-  ELSIF substr(codeToSplit, 1, 4) IN ('AST.', 'CRI.', 'HOL.', 'INV.', 'NIV.', 'OPH.', 'POP.') THEN
-    codes_prefix := substr(codeToSplit, 1, 3);
-    codes_prefix_separator := '.';
-    IF length(codeToSplit) > 4 THEN
-      code_to_insert:= substr(codeToSplit, 5);
-    END IF;
   ELSIF substr(codeToSplit, 1, 3) ='IN.' THEN
     codes_prefix := 'INV';
     codes_prefix_separator := '.';
     IF length(codeToSplit) > 3 THEN
       code_to_insert:= substr(codeToSplit, 4);
-    END IF;
-  ELSIF substr(codeToSplit, 1, 5) = 'HIST.' THEN
-    codes_prefix := 'HIST';
-    codes_prefix_separator := '.';
-    IF length(codeToSplit) > 5 THEN
-      code_to_insert:= substr(codeToSplit, 6);
-    END IF;
-  ELSIF substr(codeToSplit, 1, 6) = 'KREPS.' THEN
-    codes_prefix := 'KREPS';
-    codes_prefix_separator := '.';
-    IF length(codeToSplit) > 6 THEN
-      code_to_insert:= substr(codeToSplit, 7);
     END IF;
   ELSIF codeToSplit ~ E'^[PRT]\\s{1,2}\\d+\\s{1}\\w+\\W+\\w+$' THEN
     codes_prefix := substr(codeToSplit, 1, 1);
@@ -356,16 +339,103 @@ begin
     codes_suffix := substring(codeToSplit from E'\\w+\\W+\\w+$');
   ELSIF codeToSplit Like 'ALEX %' THEN
     code_to_insert:= codeToSplit;
-  ELSIF lower(codeToSplit) ~ E'^[a-z]{3}\\d+[a-z]\\w+$' THEN
-    codes_prefix := substr(codeToSplit, 1, 3);
-    codes_prefix_separator := '.';
-    code_to_insert:= trim(substring(trim(substr(codeToSplit, 4)) from E'^\\d+'));
-    codes_suffix_separator := '';
-    codes_suffix := substring(trim(substr(codeToSplit,length(code_prefix)+length(code_to_insert))) from E'[a-z]\\w+$');
-  ELSIF lower(codeToSplit) ~ E'^[a-z]{3}\\d+$' THEN
-    codes_prefix := substr(codeToSplit, 1, 3);
-    codes_prefix_separator := '.';
-    code_to_insert:= trim(substring(trim(substr(codeToSplit, 4)) from E'^\\d+'));
+  ELSIF codeToSplit ~ E'^[a-zA-Z]+[\\s.?#&\\B/\;]*' THEN
+    codes_prefix := substring(codeToSplit from E'^[a-zA-Z]+');
+    codes_prefix_separator := substring(substr(codeToSplit, length(codes_prefix)+1) from E'^\\s+');
+    IF length(codes_prefix_separator) > 0 then
+      codes_prefix_separator := ' ';
+    ELSE
+      codes_prefix_separator := substring(substr(codeToSplit, length(codes_prefix)+1) from E'^[\\B]+');
+      IF length(codes_prefix_separator) > 0 then
+        codes_prefix_separator := E'\\B';
+      ELSE
+        codes_prefix_separator := substring(substr(codeToSplit, length(codes_prefix)+1) from E'^/+');
+        IF length(codes_prefix_separator) > 0 then
+          codes_prefix_separator := '/';
+        ELSE
+          codes_prefix_separator := '.';
+        END IF;
+      END IF;
+    END IF;
+    code_temp := substr(codeToSplit, length(codes_prefix)+ length(substring(substr(codeToSplit, length(codes_prefix)+1) from E'^[\\s.?#&\\B/\;]*'))+1);
+    IF code_temp != '' THEN
+      IF code_temp ~ E'^\\d+' THEN
+        IF code_temp ~ E'^\\d+[a-zA-Z\\s.\\B/&?#\;]+' THEN
+          code_to_insert := substring(code_temp from E'^\\d+');
+          codes_suffix_separator := trim(substring(substr(code_temp, length(code_to_insert)+1) from E'^[\\s.?#&\\B/\;]*'));
+          IF coalesce(code_suffix_separator,'') != '' THEN
+            codes_suffix := trim(substr(code_temp,length(code_to_insert)+ length(substring(substr(code_temp, length(code_to_insert)+1) from E'^[\\s.?#&\\B/\;]*'))+1));
+          ELSE
+            codes_suffix := trim(substr(code_temp, length(code_to_insert)+1));
+          END IF;
+        ELSE
+          code_to_insert := trim(code_temp);
+        END IF;
+      ELSE
+        code_to_insert := trim(code_temp);
+      END IF;
+    END IF;
+  ELSIF codeToSplit ~ E'^\\d+[\\s.?#&\\B/\;]*[a-zA-Z\\d]+' THEN
+    code_to_insert := substring(codeToSplit from E'^\\d+');
+    codes_suffix_separator := substring(substr(codeToSplit, length(code_to_insert)+1) from E'^\\s+');
+    IF length(codes_suffix_separator) > 0 then
+      codes_suffix_separator := ' ';
+    ELSE
+      codes_suffix_separator := substring(substr(codeToSplit, length(code_to_insert)+1) from E'^[\\B]+');
+      IF length(codes_suffix_separator) > 0 then
+        codes_suffix_separator := E'\\B';
+      ELSE
+        codes_suffix_separator := substring(substr(codeToSplit, length(code_to_insert)+1) from E'^/+');
+        IF length(codes_suffix_separator) > 0 then
+          codes_suffix_separator := '/';
+        ELSE
+          codes_suffix_separator := '.';
+        END IF;
+      END IF;
+    END IF;
+    IF coalesce(code_suffix_separator,'') != '' THEN
+      codes_suffix := trim(substr(codeToSplit,length(code_to_insert)+ length(substring(substr(codeToSplit, length(code_to_insert)+1) from E'^[\\s.?#&\\B/\;]+'))+1));
+    ELSE
+      codes_suffix := trim(substr(codeToSplit, length(code_to_insert)+1));
+    END IF;
+--   ELSIF substr(codeToSplit, 1, 4) IN ('AST.', 'CRI.', 'HOL.', 'INV.', 'NIV.', 'OPH.', 'POP.') THEN
+--     codes_prefix := substr(codeToSplit, 1, 3);
+--     codes_prefix_separator := '.';
+--     IF length(codeToSplit) > 4 THEN
+--       code_to_insert:= substr(codeToSplit, 5);
+--     END IF;
+--   ELSIF substr(codeToSplit, 1, 5) = 'HIST.' THEN
+--     codes_prefix := 'HIST';
+--     codes_prefix_separator := '.';
+--     IF length(codeToSplit) > 5 THEN
+--       code_to_insert:= substr(codeToSplit, 6);
+--     END IF;
+--   ELSIF substr(codeToSplit, 1, 6) = 'KREPS.' THEN
+--     codes_prefix := 'KREPS';
+--     codes_prefix_separator := '.';
+--     IF length(codeToSplit) > 6 THEN
+--       code_to_insert:= substr(codeToSplit, 7);
+--     END IF;
+--   ELSIF lower(codeToSplit) ~ E'^[a-z]{3}\\d+[a-z]\\w+$' THEN
+--     codes_prefix := substr(codeToSplit, 1, 3);
+--     codes_prefix_separator := '.';
+--     code_to_insert:= trim(substring(trim(substr(codeToSplit, 4)) from E'^\\d+'));
+--     codes_suffix_separator := '';
+--     codes_suffix := substring(trim(substr(codeToSplit,length(code_prefix)+length( substring(substr(codeToSplit, 4) from E'^\\d+') ))) from E'[a-z]\\w+$');
+--   ELSIF lower(codeToSplit) ~ E'^[a-z]{3}\\s+\\d+[a-z]\\w+$' THEN
+--     codes_prefix := substr(codeToSplit, 1, 3);
+--     codes_prefix_separator := '.';
+--     code_to_insert:= trim(substring(trim(substr(codeToSplit, 4)) from E'^\\d+'));
+--     codes_suffix_separator := '';
+--     codes_suffix := substring(trim(substr(codeToSplit,length(code_prefix)+length( substring(substr(codeToSplit, 4) from E'^\\s+\\d+') ))) from E'[a-z]\\w+$');
+--   ELSIF lower(codeToSplit) ~ E'^[a-z]{3}\\d+$' THEN
+--     codes_prefix := substr(codeToSplit, 1, 3);
+--     codes_prefix_separator := '.';
+--     code_to_insert:= trim(substring(trim(substr(codeToSplit, 4)) from E'^\\d+'));
+--   ELSIF lower(codeToSplit) ~ E'^[a-z]{3}\\s+\\d+$' THEN
+--     codes_prefix := substr(codeToSplit, 1, 3);
+--     codes_prefix_separator := '.';
+--     code_to_insert:= trim(substring(trim(substr(codeToSplit, 4)) from E'^\\d+'));
   ELSE
     return response;
   END IF;
@@ -408,6 +478,7 @@ BEGIN
     WHERE referenced_relation = 'specimen_parts'
       AND code_category = 'main'
       AND record_id = part_id;
+    RAISE NOTICE '°Code count in new part creation: %', code_count;
     IF code_count > 1 THEN
       UPDATE codes
       SET record_id = new_part_id
@@ -416,9 +487,10 @@ BEGIN
         AND code_category = 'main'
         AND (full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code)
              OR
-             CASE WHEN coalesce(new_code_id,0) = 0 THEN true ELSE id = new_code_id END
+             CASE WHEN coalesce(new_code_id,0) = 0 THEN false ELSE id = new_code_id END
             );
       GET DIAGNOSTICS code_count = ROW_COUNT;
+      RAISE NOTICE '°°Number of records updated: %', code_count;
       IF code_count = 0 THEN
         IF createCodes (new_part_id, recPartsDetails.old_main_code) < 0 THEN
           return -1;
@@ -434,7 +506,7 @@ BEGIN
          AND code_category = 'main'
          AND (full_code_order_by IN (recPartsDetails.main_code, recPartsDetails.rbins_code, recPartsDetails.inventory_code, recPartsDetails.batch_main_code)
               OR
-              CASE WHEN coalesce(new_code_id,0) = 0 THEN true ELSE id = new_code_id END
+              CASE WHEN coalesce(new_code_id,0) = 0 THEN false ELSE id = new_code_id END
              )
       );
       GET DIAGNOSTICS code_count = ROW_COUNT;
@@ -1495,8 +1567,8 @@ declare
   part_id specimen_parts.id%TYPE := 0;
   new_part_id specimen_parts.id%TYPE;
   code_count integer;
-  recActualCodes varchar[];
-  recTransferedCodes varchar[];
+  recActualCodes RECORD;
+  recTransferedCodes RECORD;
   recProperties RECORD;
   recInsurances RECORD;
   spec_part_count_min integer;
@@ -1508,8 +1580,9 @@ declare
 begin
   FOR recPartsDetails IN select *
                          from darwin2.migrated_parts
+                         where lower(old_main_code) like '%oc%'
                          order by specimen_individual_ref desc, parts_id, specimen_part, main_code
-                         limit 50
+                         limit 200
   LOOP
     comptage := comptage + 1;
     IF comptage IN (5000, 10000, 20000, 40000, 50000, 75000, 90000, 100000, 125000, 150000, 175000, 200000, 225000, 250000, 275000, 300000, 325000, 350000, 375000) THEN
@@ -1518,6 +1591,17 @@ begin
     IF part_id != recPartsDetails.parts_id THEN
 
       RAISE NOTICE 'Next part infos: %', recPartsDetails;
+
+      SELECT COUNT(*) INTO code_count
+      FROM codes
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = part_id
+        AND code_category = 'main';
+
+      IF code_count > 1 THEN
+        RAISE WARNING 'There are more than one code left for part: %', part_id;
+      END IF;
+
       recFirstPart := recPartsDetails;
       part_id := recPartsDetails.parts_id;
 
@@ -1528,17 +1612,17 @@ begin
         and code_category = 'main';
       IF code_count = 0 THEN
         RAISE NOTICE '+New code creation for next part';
-        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')), code_prefix, code, code_suffix into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id group by code_prefix, code, code_suffix;
         RAISE NOTICE '++ Codes before creation: %', recActualCodes;
         IF createCodes (part_id, recPartsDetails.old_main_code) < 0 THEN
           return false;
         END IF;
-        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')), code_prefix, code, code_suffix into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id group by code_prefix, code, code_suffix;
         RAISE NOTICE '++ Codes after creation: %', recActualCodes;
         code_count := 1;
       END IF;
       IF code_count = 1 THEN
-        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+        select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')), code_prefix, code, code_suffix into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id group by code_prefix, code, code_suffix;
         RAISE NOTICE '+++ Code is exactly one: %', recActualCodes;
         IF recPartsDetails.specimen_part_count_min = 0 AND recPartsDetails.part_count_min > 0 THEN
           IF recPartsDetails.specimen_part_count_max = recPartsDetails.specimen_part_count_min THEN
@@ -1579,7 +1663,7 @@ begin
           )
           RETURNING id INTO new_part_id;
           RAISE NOTICE '+New part created: %', new_part_id;
-          select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
+          select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')), code_prefix, code, code_suffix  into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id group by code_prefix, code, code_suffix;
           UPDATE codes
           SET record_id = new_part_id
           WHERE referenced_relation = 'specimen_parts'
@@ -1597,7 +1681,7 @@ begin
                                             AND new_value -> 'record_id' = part_id::varchar
                                         )
                           );
-          select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
+          select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')), code_prefix, code, code_suffix into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id  group by code_prefix, code, code_suffix;
           RAISE NOTICE '++ Left part codes: %, New part codes: %', recActualCodes, recTransferedCodes;
           SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
           RAISE NOTICE '++Left part count min and max: % and %', spec_part_count_min, spec_part_count_max;
@@ -1733,8 +1817,8 @@ begin
           return false;
         END IF;
       END IF;
-      select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id;
-      select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')) into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id;
+      select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')), code_prefix, code, code_suffix into recActualCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = part_id group by code_prefix, code, code_suffix;
+      select array_agg(coalesce(code_prefix, '') || case when code_prefix is null then '' else coalesce(code_prefix_separator, ' ') end || coalesce(code, '') || case when code_suffix is null then '' else coalesce(code_suffix_separator, ' ') end || coalesce(code_suffix, '')), code_prefix, code, code_suffix into recTransferedCodes from codes where code_category = 'main' and referenced_relation = 'specimen_parts' and record_id = new_part_id  group by code_prefix, code, code_suffix;
       RAISE NOTICE '-- Actual codes: %, Transfered codes: %', recActualCodes, recTransferedCodes;
       SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
       RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
@@ -1829,6 +1913,11 @@ begin
   WHERE EXISTS (SELECT 1 FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = specimen_parts.id AND code_category = 'main' GROUP BY referenced_relation, record_id, code_category HAVING COUNT(*) > 1)
     AND EXISTS (SELECT 1 FROM darwin1.id_refs WHERE "system" = 'individuals' AND new_id = specimen_parts.specimen_individual_ref);
   RAISE NOTICE 'Still % parts that were migrated and that have multiple main codes !', countStillCodes;
+  SELECT COUNT(*) INTO countStillCodes
+  FROM specimen_parts
+  WHERE EXISTS (SELECT 1 FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = specimen_parts.id AND code_category = 'main' GROUP BY referenced_relation, record_id, code_category HAVING COUNT(*) > 1)
+    AND NOT EXISTS (SELECT 1 FROM darwin1.id_refs WHERE "system" = 'individuals' AND new_id = specimen_parts.specimen_individual_ref);
+  RAISE NOTICE 'Still % parts that were not migrated and that have multiple main codes !', countStillCodes;
   RETURN true;
   FOR recPartsAfter IN
     SELECT id
@@ -1872,11 +1961,20 @@ begin
       END IF;
     END LOOP;
   END LOOP;
+  SELECT COUNT(*) INTO countStillCodes
+  FROM specimen_parts
+  WHERE EXISTS (SELECT 1 FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = specimen_parts.id AND code_category = 'main' GROUP BY referenced_relation, record_id, code_category HAVING COUNT(*) > 1);
+  RAISE NOTICE 'Still % parts that have multiple main codes ! - Not possible !!!', countStillCodes;
+  IF countStillCodes != 0 THEN
+    rollback;
+    return false;
+  END IF;
   return response;
 exception
   when others then
     RAISE WARNING 'Error in split_parts: %', SQLERRM;
     rollback;
+    return false;
 end;
 $$;
 

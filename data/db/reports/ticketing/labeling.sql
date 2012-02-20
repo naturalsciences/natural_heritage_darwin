@@ -1,4 +1,4 @@
-﻿/* Modification of an existing function to make it immutable */
+/* Modification of an existing function to make it immutable */
 
 CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER IMMUTABLE
 AS $$

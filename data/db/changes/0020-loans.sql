@@ -1,13 +1,15 @@
 \i ../createfunctions.sql
 
+ALTER TABLE multimedia RENAME TO old_multimedia;
 
-ALTER TABLE RENAME multimedia TO old_multimedia;
+create sequence multimedia_new_id_seq;
 
-create sequence multimedia_id_seq;
+-- To release only if possible to insert elec. publi of Cathy -- select setval('multimedia_new_id_seq', (select max(id)+1 from old_multimedia), false);
 
 create table multimedia
        (
-        id integer not null default nextval('multimedia_id_seq'),
+        id integer not null default nextval('multimedia_new_id_seq'),
+        parent_ref integer,
         is_digital boolean not null default true,
         type varchar not null default 'image',
         sub_type varchar,
@@ -19,7 +21,7 @@ create table multimedia
         creation_date date not null default '01/01/0001',
         creation_date_mask integer not null default 0,
         mime_type varchar not null,
-        constraint pk_multimedia primary key (id)
+        constraint pk_multimedia_new primary key (id)
       )
       inherits (template_table_record_ref);
 
@@ -27,6 +29,7 @@ comment on table multimedia is 'Stores all multimedia objects encoded in DaRWIN 
 comment on column multimedia.referenced_relation is 'Reference-Name of table concerned';
 comment on column multimedia.record_id is 'Identifier of record concerned';
 comment on column multimedia.id is 'Unique identifier of a multimedia object';
+comment on column multimedia.parent_ref is 'Identifier of the object the multimedia record is an extract of';
 comment on column multimedia.is_digital is 'Flag telling if the object is digital (true) or physical (false)';
 comment on column multimedia.type is 'Main multimedia object type: image, sound, video,...';
 comment on column multimedia.sub_type is 'Characterization of object type: article, publication in serie, book, glass plate,...';
@@ -39,15 +42,13 @@ comment on column multimedia.creation_date_mask is 'Mask used for object creatio
 comment on column multimedia.search_ts is 'tsvector form of title and subject fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
 
-
-INSERT INTO multimedia(is_digital,type, sub_type, title, description, uri, filename, creation_date, creation_date_mask, mime_type)
-AS (
-SELECT is_digital,type, sub_type, title, subject,  uri, '', creation_date, creation_date_mask, ''
-FROM old_multimedia
-);
-
-DROP TABLE old_multimedia;
-
+-- INSERT INTO multimedia(referenced_relation, record_id, id, parent_ref, is_digital,type, sub_type, title, description, uri, filename, creation_date, creation_date_mask, mime_type)
+-- (
+-- SELECT /*!!! No referenced relation and record id !!!*/, id, parent_ref, is_digital,type, sub_type, title, subject,  uri, '', creation_date, creation_date_mask, ''
+-- FROM old_multimedia
+-- );
+-- 
+-- DROP TABLE old_multimedia;
 
 ALTER TABLE insurances add column date_from_mask integer not null default 0;
 ALTER TABLE insurances add column date_from date not null default '01/01/0001';
@@ -177,12 +178,7 @@ comment on column loan_status.comment is 'comment of the status modification';
 comment on column loan_status.is_last is 'flag telling which line is the current line';
 
 
-
-
-
-
-
-DROP TRIGGER trg_cpy_toFullText_multimedia on multimedia
+DROP TRIGGER trg_cpy_toFullText_multimedia on multimedia;
 
 
 CREATE TRIGGER trg_cpy_fullToIndex_loans BEFORE INSERT OR UPDATE
@@ -224,17 +220,6 @@ CREATE trigger trg_chk_is_last_loan_status BEFORE INSERT
 CREATE trigger trg_add_status_history after INSERT
         ON loans FOR EACH ROW
         EXECUTE PROCEDURE fct_auto_insert_status_history();
-
-
-
-
-
-
-
-
-
-
-
 
 
 
