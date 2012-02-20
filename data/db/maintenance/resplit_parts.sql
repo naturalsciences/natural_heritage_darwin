@@ -363,7 +363,7 @@ begin
         IF code_temp ~ E'^\\d+[a-zA-Z\\s.\\B/&?#\;]+' THEN
           code_to_insert := substring(code_temp from E'^\\d+');
           codes_suffix_separator := trim(substring(substr(code_temp, length(code_to_insert)+1) from E'^[\\s.?#&\\B/\;]*'));
-          IF coalesce(code_suffix_separator,'') != '' THEN
+          IF coalesce(codes_suffix_separator,'') != '' THEN
             codes_suffix := trim(substr(code_temp,length(code_to_insert)+ length(substring(substr(code_temp, length(code_to_insert)+1) from E'^[\\s.?#&\\B/\;]*'))+1));
           ELSE
             codes_suffix := trim(substr(code_temp, length(code_to_insert)+1));
@@ -393,7 +393,7 @@ begin
         END IF;
       END IF;
     END IF;
-    IF coalesce(code_suffix_separator,'') != '' THEN
+    IF coalesce(codes_suffix_separator,'') != '' THEN
       codes_suffix := trim(substr(codeToSplit,length(code_to_insert)+ length(substring(substr(codeToSplit, length(code_to_insert)+1) from E'^[\\s.?#&\\B/\;]+'))+1));
     ELSE
       codes_suffix := trim(substr(codeToSplit, length(code_to_insert)+1));
