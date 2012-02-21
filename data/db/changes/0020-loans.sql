@@ -51,23 +51,22 @@ comment on column multimedia.mime_type is 'Mime/Type of the linked digital objec
 -- DROP TABLE old_multimedia;
 
 ALTER TABLE insurances add column date_from_mask integer not null default 0;
-ALTER TABLE insurances add column date_from date not null default '01/01/0001';
+ALTER TABLE insurances add column date_from date not null default '0001-01-01';
 ALTER TABLE insurances add column date_to_mask integer not null default 0;
-ALTER TABLE insurances add column date_to date not null default '31/12/2038';
+ALTER TABLE insurances add column date_to date not null default '2038-12-31';
 ALTER TABLE insurances add column contact_ref integer;
 
-ALTER TABLE insurances DROP constraint unq_specimen_parts_insurance;
+ALTER TABLE insurances DROP constraint unq_specimen_parts_insurances;
 
-UPDATE insurances set date_from = '01/01/' || insurance_year, date_to = '01/01/' || insurance_year, date_from_mask = 32, date_to_mask = 32
+UPDATE insurances set date_from = DATE (insurance_year::varchar || '-01-01') , date_to = DATE (insurance_year || '-12-31'), date_from_mask = 32, date_to_mask = 32
 where insurance_year != 0;
 
+UPDATE insurances set date_from = default, date_to = default, date_from_mask = default, date_to_mask = default where insurance_year = 0;
 
 ALTER TABLE insurances ADD constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, date_from, date_to, insurer_ref);
 ALTER TABLE insurances ADD constraint fk_specimen_parts_insurances_contact foreign key (contact_ref) references people(id) on delete set null;
 
-ALTER TABLE insurances DROP column insurance_year;
-
-
+-- ALTER TABLE insurances DROP column insurance_year;
 
 create sequence loans_id_seq;
 
