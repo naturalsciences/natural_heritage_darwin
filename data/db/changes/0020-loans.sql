@@ -1,6 +1,12 @@
 \i ../createfunctions.sql
 
 ALTER TABLE multimedia RENAME TO old_multimedia;
+DROP TRIGGER IF EXISTS trg_clr_referencerecord_multimedia ON old_multimedia;
+DROP TRIGGER IF EXISTS trg_cpy_fulltoindex_multimedia ON old_multimedia;
+DROP TRIGGER IF EXISTS trg_cpy_path_multimedia ON old_multimedia;
+DROP TRIGGER IF EXISTS trg_cpy_tofulltext_multimedia ON old_multimedia;
+DROP TRIGGER IF EXISTS trg_trk_log_table_multimedia ON old_multimedia;
+DROP TRIGGER IF EXISTS trg_words_ts_cpy_multimedia ON old_multimedia;
 
 create sequence multimedia_new_id_seq;
 
@@ -18,7 +24,7 @@ create table multimedia
         uri varchar,
         filename varchar,
         search_ts tsvector not null,
-        creation_date date not null default '01/01/0001',
+        creation_date date not null default '0001-01-01',
         creation_date_mask integer not null default 0,
         mime_type varchar not null,
         constraint pk_multimedia_new primary key (id)
@@ -41,6 +47,42 @@ comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
 comment on column multimedia.search_ts is 'tsvector form of title and subject fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
+
+CREATE TRIGGER trg_clr_referencerecord_multimedia
+  AFTER DELETE
+  ON multimedia
+  FOR EACH ROW
+  EXECUTE PROCEDURE fct_clear_referencedrecord();
+
+CREATE TRIGGER trg_cpy_fulltoindex_multimedia
+  BEFORE INSERT OR UPDATE
+  ON multimedia
+  FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_fulltoindex();
+
+CREATE TRIGGER trg_cpy_path_multimedia
+  BEFORE INSERT OR UPDATE
+  ON multimedia
+  FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_path();
+
+CREATE TRIGGER trg_cpy_tofulltext_multimedia
+  BEFORE INSERT OR UPDATE
+  ON multimedia
+  FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_tofulltext();
+
+CREATE TRIGGER trg_trk_log_table_multimedia
+  AFTER INSERT OR UPDATE OR DELETE
+  ON multimedia
+  FOR EACH ROW
+  EXECUTE PROCEDURE fct_trk_log_table();
+
+CREATE TRIGGER trg_words_ts_cpy_multimedia
+  BEFORE INSERT OR UPDATE
+  ON multimedia
+  FOR EACH ROW
+  EXECUTE PROCEDURE fct_trg_word();
 
 -- INSERT INTO multimedia(referenced_relation, record_id, id, parent_ref, is_digital,type, sub_type, title, description, uri, filename, creation_date, creation_date_mask, mime_type)
 -- (
