@@ -1,4 +1,4 @@
-<?php slot('title',  __( $form->isNew() ? 'Add Loan' : 'Edit Loan'));  ?>
+<?php slot('title',  __( $form->isNew() ? 'Add loan' : 'Edit loan'));  ?>
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
 <?php $action = 'loan/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()) ;?>
