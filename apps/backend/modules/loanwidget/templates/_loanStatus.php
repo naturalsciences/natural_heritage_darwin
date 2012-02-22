@@ -13,7 +13,7 @@
   </thead>
 </table>
 </fieldset>
-<?php if($loanstatus->count() > 0 && $sf_user->isAtLeast(Users::ENCODER)) : ?>
+<?php if($loanstatus->count() > 0) : ?>
 <table class="catalogue_table">
   <thead class="workflow">
     <tr><th colspan=4><?php echo __("Latest Status") ; ?></th></tr>
@@ -38,7 +38,7 @@
     <tr>
       <td colspan="3">&nbsp;</td>
       <td>
-        <a class="link_catalogue" information="true" title="<?php echo __('view all workflows');?>" href="<?php echo url_for('informativeWorkflow/viewAll?table='.$table.'&id='.$eid); ?>">
+        <a class="link_catalogue" information="true" title="<?php echo __('view all workflows');?>" href="<?php echo url_for('informativeWorkflow/viewAll?table=loans&id='.$eid); ?>">
         <?php echo __('History');?></a>
       </td>
     </tr>   
