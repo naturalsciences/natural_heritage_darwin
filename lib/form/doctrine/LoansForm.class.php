@@ -20,9 +20,9 @@ class LoansForm extends BaseLoansForm
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     //Loan form is submited to upload file, when called like that we don't want some fields to be required
-    $required = isset($this->options['no_name'])?false:true ;
+
     $this->widgetSchema['name'] = new sfWidgetFormInput();
-    $this->validatorSchema['name'] = new sfValidatorString(array('required' => $required)) ;
+    $this->validatorSchema['name'] = new sfValidatorString(array('required' => true)) ;
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
@@ -121,7 +121,7 @@ class LoansForm extends BaseLoansForm
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setLabel("Add File") ;
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
-$this->validatorSchema['filenames'] = new sfValidatorFile(
+    $this->validatorSchema['filenames'] = new sfValidatorFile(
   array(
       'required' => false,
       'validated_file_class' => 'myValidatedFile'

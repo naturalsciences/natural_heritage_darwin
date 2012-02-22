@@ -299,8 +299,8 @@ class loanActions extends DarwinActions
 
   public function executeInsertFile(sfWebRequest $request)
   {
-    $form = $this->getLoanForm($request,false,'id',array('no_name'=>true));
-    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
+    $form = new RelatedFileForm() ;
+    $form->bind(null, $request->getFiles($request->getParameter('table')));
     $file = $form->getValue('filenames');    
     if($form->isValid()) 
     {       

@@ -61,10 +61,10 @@
       form.submit();
       hideForRefresh('#refRelatedFiles');        
       return false;
-    });
-    
+    });    
     $('#clear_file_error').click(function() { hideFileError(); });
   });
+  
   function getFileInfo(file_id) 
   {
     parent_el = $(this).closest('table.property_values');
@@ -84,6 +84,7 @@
   {
     $('#file_error_message li:first').html(err_msg) ;
     $('#file_error_message').show() ;
+    showAfterRefresh('#refRelatedFiles');    
   }
   function hideFileError()
   {
