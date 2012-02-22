@@ -58,14 +58,28 @@ class LoanStatusTable extends DarwinTable
     return $this->createFlatDistinct('loan_status', 'status', 'status')->execute();
   }
   
-  public function getLoanStatus($loan_ref)
+  private function prepare_query($loan_ref)
   {
     $q = Doctrine_Query::create()
-       ->from('LoanStatus')  
-       ->orderBy('modification_date_time DESC')
+       ->from('LoanStatus')    
+       ->orderBy('modification_date_time DESC')       
        ->where('loan_ref= ?', $loan_ref);
+    return $q ;       
+  }
+  
+  public function getLoanStatus($loan_ref)
+  {
+    $q = $this->prepare_query($loan_ref);
+    $q->limit(5) ;
     return $q->execute();       
   }
+  
+  public function getallLoanStatus($loan_ref)
+  { 
+    $q = $this->prepare_query($loan_ref);
+    return $q->execute();   
+  }
+  
   public function getStatusRelatedArray($loan_refs = array())
   {
     if(!is_array($loan_refs))

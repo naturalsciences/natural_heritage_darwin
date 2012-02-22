@@ -172,7 +172,11 @@ class loanActions extends DarwinActions
     }
   }
 
-
+  public function executeViewAllStatus(sfWebRequest $request)
+  {    
+    $this->informativeWorkflow = Doctrine::getTable('LoanStatus')->getallLoanStatus($request->getParameter('id'));
+    $this->setTemplate('viewAll','informativeWorkflow') ;
+  }
   public function executeDelete(sfWebRequest $request)
   {
     $loan = $this->checkRight($request->getParameter('id')) ;  
