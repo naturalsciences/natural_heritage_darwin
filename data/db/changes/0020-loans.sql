@@ -91,9 +91,9 @@ CREATE TRIGGER trg_words_ts_cpy_multimedia
 -- DROP TABLE old_multimedia;
 
 ALTER TABLE insurances add column date_from_mask integer not null default 0;
-ALTER TABLE insurances add column date_from date not null default '0001-01-01';
+ALTER TABLE insurances add column date_from date not null default '0001-01-01'::date;
 ALTER TABLE insurances add column date_to_mask integer not null default 0;
-ALTER TABLE insurances add column date_to date not null default '2038-12-31';
+ALTER TABLE insurances add column date_to date not null default '2038-12-31'::date;
 ALTER TABLE insurances add column contact_ref integer;
 
 ALTER TABLE insurances DROP constraint unq_specimen_parts_insurances;

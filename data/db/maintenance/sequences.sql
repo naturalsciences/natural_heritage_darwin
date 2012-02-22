@@ -26,7 +26,8 @@
  select setval('lithostratigraphy_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.lithostratigraphy));
  select setval('lithology_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.lithology));
  select setval('mineralogy_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.mineralogy));
- select setval('multimedia_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.multimedia));
+ select setval('multimedia_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.old_multimedia));
+ select setval('multimedia_new_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.multimedia));
  select setval('my_saved_searches_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.my_saved_searches));
  select setval('my_widgets_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.my_widgets));
  select setval('people_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.people));
