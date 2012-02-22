@@ -427,7 +427,7 @@ BEGIN
 	DELETE FROM classification_keywords WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM informative_workflow WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM collection_maintenance WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM associated_multimedia WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM multimedia WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM codes WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
 	DELETE FROM insurances WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
   DELETE FROM staging_people WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;	
@@ -589,6 +589,7 @@ BEGIN
           TG_TABLE_NAME::text = 'gtu' OR
           TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
+          TG_TABLE_NAME::text = 'multimedia' OR
           TG_TABLE_NAME::text = 'staging') THEN
 
           IF NEW.id = 0 THEN
@@ -612,6 +613,7 @@ BEGIN
           TG_TABLE_NAME::text = 'gtu' OR
           TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
+          TG_TABLE_NAME::text = 'multimedia' OR
           TG_TABLE_NAME::text = 'staging') THEN
 
           IF NEW.parent_ref IS DISTINCT FROM OLD.parent_ref THEN

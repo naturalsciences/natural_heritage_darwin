@@ -1,6 +1,8 @@
 \i ../createfunctions.sql
 
 ALTER TABLE multimedia RENAME TO old_multimedia;
+ALTER TABLE old_multimedia ALTER COLUMN id SET DEFAULT NULL;
+DROP SEQUENCE IF EXISTS multimedia_id_seq;
 DROP TRIGGER IF EXISTS trg_clr_referencerecord_multimedia ON old_multimedia;
 DROP TRIGGER IF EXISTS trg_cpy_fulltoindex_multimedia ON old_multimedia;
 DROP TRIGGER IF EXISTS trg_cpy_path_multimedia ON old_multimedia;
@@ -16,6 +18,7 @@ create table multimedia
        (
         id integer not null default nextval('multimedia_new_id_seq'),
         parent_ref integer,
+        path varchar not null,
         is_digital boolean not null default true,
         type varchar not null default 'image',
         sub_type varchar,
@@ -24,7 +27,7 @@ create table multimedia
         uri varchar,
         filename varchar,
         search_ts tsvector not null,
-        creation_date date not null default '0001-01-01',
+        creation_date date not null default '0001-01-01'::date,
         creation_date_mask integer not null default 0,
         mime_type varchar not null,
         constraint pk_multimedia_new primary key (id)
@@ -36,6 +39,7 @@ comment on column multimedia.referenced_relation is 'Reference-Name of table con
 comment on column multimedia.record_id is 'Identifier of record concerned';
 comment on column multimedia.id is 'Unique identifier of a multimedia object';
 comment on column multimedia.parent_ref is 'Identifier of the object the multimedia record is an extract of';
+comment on column multimedia.path is 'In case of recursive relationship, defines the hierarchical path';
 comment on column multimedia.is_digital is 'Flag telling if the object is digital (true) or physical (false)';
 comment on column multimedia.type is 'Main multimedia object type: image, sound, video,...';
 comment on column multimedia.sub_type is 'Characterization of object type: article, publication in serie, book, glass plate,...';
@@ -45,7 +49,7 @@ comment on column multimedia.uri is 'URI of object if digital';
 comment on column multimedia.filename is 'The original name of the saved file';
 comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
-comment on column multimedia.search_ts is 'tsvector form of title and subject fields together';
+comment on column multimedia.search_ts is 'tsvector form of title and description fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
 
 CREATE TRIGGER trg_clr_referencerecord_multimedia
@@ -53,12 +57,6 @@ CREATE TRIGGER trg_clr_referencerecord_multimedia
   ON multimedia
   FOR EACH ROW
   EXECUTE PROCEDURE fct_clear_referencedrecord();
-
-CREATE TRIGGER trg_cpy_fulltoindex_multimedia
-  BEFORE INSERT OR UPDATE
-  ON multimedia
-  FOR EACH ROW
-  EXECUTE PROCEDURE fct_cpy_fulltoindex();
 
 CREATE TRIGGER trg_cpy_path_multimedia
   BEFORE INSERT OR UPDATE
