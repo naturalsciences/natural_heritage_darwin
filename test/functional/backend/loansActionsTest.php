@@ -74,6 +74,8 @@ $browser->
     checkElement('.board_col .widget:nth-child(2) .widget_top_bar tbody#receiver_body tr:nth-child(2) td:nth-child(4)','/Chambert Yann/')->  
     checkElement('#loanStatus table.catalogue_table tbody tr:first td:nth-child(4)','/Evil Root/')->  
     checkElement('#refUsers table.catalogue_table tbody tr:first td:nth-child(2) label','/Evil Root/')->      
+    checkElement('#refUsers table.catalogue_table tbody tr:nth-child(2) td:nth-child(2) label','/reguser/')->
+    checkElement('#refUsers table.catalogue_table tbody tr:nth-child(3) td:nth-child(2) label','/encoder/')->
     end()->
   info('3 - Look for our new loan in search')->
   post('/loan/search',array('orderby'=>'name', 'orderdir'=>'desc', 'page'=>1, 'is_choose'=>0,'loans_filters'=> array('name' => 'loan for test')))->
