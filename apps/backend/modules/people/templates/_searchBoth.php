@@ -10,7 +10,6 @@
 
 $(document).ready(function () {
     $('.search_box').slideDown();
-
   $('.both_search_people').not('.activated').click( function(event)
   {
     event.preventDefault();
@@ -27,7 +26,7 @@ $(document).ready(function () {
       }
     });
   });
-
+  $('.both_search_people').trigger('click');
   $('.both_search_institutions').not('.activated').click( function(event)
   {
     event.preventDefault();
