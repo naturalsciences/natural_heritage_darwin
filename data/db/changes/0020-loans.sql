@@ -1,3 +1,5 @@
+SET search_path = darwin2, public;
+
 \i ../createfunctions.sql
 
 ALTER TABLE multimedia RENAME TO old_multimedia;
@@ -51,6 +53,12 @@ comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
 comment on column multimedia.search_ts is 'tsvector form of title and description fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
+
+ALTER TABLE multimedia OWNER TO darwin2;
+ALTER SEQUENCE multimedia_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.multimedia_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.multimedia TO cebmpad;
+GRANT SELECT ON darwin2.multimedia TO d2viewer;
 
 CREATE TRIGGER trg_clr_referencerecord_multimedia
   AFTER DELETE
