@@ -12,7 +12,18 @@ class propertyActions extends DarwinActions
   protected $ref_id = array('specimens' => 'spec_ref','specimen_individuals' => 'individual_ref','specimen_parts' => 'part_ref') ;
   public function executeAdd(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
+
+    if($this->getUser()->isA(Users::REGISTERED_USER)) 
+    {
+      if($request->getParameter('table') == 'loans' || $request->getParameter('table') == 'loan_items')
+      {
+        $loan = Doctrine::getTable($request->getParameter('table')=='loans'?'Loans':'LoanItems')->findExcept($request->getParameter('id')) ;
+        if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$request->getParameter('table')=='loans'?$loan->getId():$loan->getLoanRef()))
+          $this->forwardToSecureAction();
+      }
+      else
+        $this->forwardToSecureAction();  
+    }
     if($request->hasParameter('id'))
     {  
       $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));

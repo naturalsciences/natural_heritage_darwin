@@ -12,7 +12,6 @@ class loanitemwidgetComponents extends sfComponents
 {
   protected function defineForm()
   {
-    if(!$this->getUser()->isAtLeast(Users::ENCODER)) die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;   
     if(! isset($this->form) )
     {
       if(isset($this->eid) && $this->eid != null)

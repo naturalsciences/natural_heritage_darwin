@@ -90,7 +90,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     $this->widgetSchema->setLabels(array('from_date' => 'Between',
                                          'date_to' => 'and',
                                          'only_darwin' => 'Contains Darwin items',
-                                         'people_ref' => 'Person',
+                                         'people_ref' => 'Specific Actor',
                                         )
                                   );
   }
