@@ -2099,7 +2099,7 @@ StagingPeople:
 
 Multimedia:
     columns:
-        id: { type: integer, primary: true}
+        id: { type: integer, primary: true, autoincrement: true }
         referenced_relation: { type: string, notnull: true}
         record_id: { type: integer}
         is_digital: {type: boolean, notnull:true, default: true}

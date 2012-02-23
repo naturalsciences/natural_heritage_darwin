@@ -94,7 +94,6 @@
  GRANT USAGE ON SEQUENCE darwin2.people_languages_id_seq TO cebmpad;
  GRANT USAGE ON SEQUENCE darwin2.users_languages_id_seq TO cebmpad;
  GRANT USAGE ON SEQUENCE darwin2.multimedia_id_seq TO cebmpad;
- GRANT USAGE ON SEQUENCE darwin2.multimedia_new_id_seq TO cebmpad;
  GRANT USAGE ON SEQUENCE darwin2.people_relationships_id_seq TO cebmpad;
  GRANT USAGE ON SEQUENCE darwin2.users_login_info_id_seq TO cebmpad;
  GRANT USAGE ON SEQUENCE darwin2.people_comm_id_seq TO cebmpad;

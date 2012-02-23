@@ -514,11 +514,11 @@ comment on column users_languages.language_country is 'Reference of Language - l
 comment on column users_languages.mother is 'Flag telling if its mother language or not';
 comment on column users_languages.preferred_language is 'Flag telling which language is preferred in communications';
 
-create sequence multimedia_new_id_seq;
+create sequence multimedia_id_seq;
 
 create table multimedia
        (
-        id integer not null default nextval('multimedia_new_id_seq'),
+        id integer not null default nextval('multimedia_id_seq'),
         parent_ref integer,
         path varchar not null,
         is_digital boolean not null default true,

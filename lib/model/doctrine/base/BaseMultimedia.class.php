@@ -60,6 +60,7 @@ abstract class BaseMultimedia extends sfDoctrineRecord
         $this->hasColumn('id', 'integer', null, array(
              'type' => 'integer',
              'primary' => true,
+             'autoincrement' => true,
              ));
         $this->hasColumn('referenced_relation', 'string', null, array(
              'type' => 'string',

@@ -10,13 +10,13 @@ DROP TRIGGER IF EXISTS trg_cpy_tofulltext_multimedia ON old_multimedia;
 DROP TRIGGER IF EXISTS trg_trk_log_table_multimedia ON old_multimedia;
 DROP TRIGGER IF EXISTS trg_words_ts_cpy_multimedia ON old_multimedia;
 
-create sequence multimedia_new_id_seq;
+create sequence multimedia_id_seq;
 
 -- To release only if possible to insert elec. publi of Cathy -- select setval('multimedia_new_id_seq', (select max(id)+1 from old_multimedia), false);
 
 create table multimedia
        (
-        id integer not null default nextval('multimedia_new_id_seq'),
+        id integer not null default nextval('multimedia_id_seq'),
         parent_ref integer,
         path varchar not null,
         is_digital boolean not null default true,
@@ -64,11 +64,9 @@ CREATE TRIGGER trg_cpy_path_multimedia
   FOR EACH ROW
   EXECUTE PROCEDURE fct_cpy_path();
 
-CREATE TRIGGER trg_cpy_tofulltext_multimedia
-  BEFORE INSERT OR UPDATE
-  ON multimedia
-  FOR EACH ROW
-  EXECUTE PROCEDURE fct_cpy_tofulltext();
+CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
+  ON multimedia FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title, description);
 
 CREATE TRIGGER trg_trk_log_table_multimedia
   AFTER INSERT OR UPDATE OR DELETE
@@ -421,3 +419,67 @@ DROP INDEX IF EXISTS idx_my_widgets_is_available;
 DROP INDEX IF EXISTS idx_catalogue_properties_property_method_indexed;
 DROP INDEX IF EXISTS idx_catalogue_properties_property_tool_indexed;
 DROP INDEX IF EXISTS idx_catalogue_properties_property_accuracy_unit;
+
+/*** For Updating the toFullText TS Vector triggers everywhere ***/
+
+DROP TRIGGER IF EXISTS trg_cpy_toFullText_collectionmaintenance ON collection_maintenance;
+
+CREATE TRIGGER trg_cpy_toFullText_collectionmaintenance BEFORE INSERT OR UPDATE
+  ON collection_maintenance FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(description_ts, 'pg_catalog.simple', description);
+
+DROP TRIGGER IF EXISTS trg_cpy_toFullText_comments ON comments;
+
+CREATE TRIGGER trg_cpy_toFullText_comments BEFORE INSERT OR UPDATE
+  ON comments FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(comment_ts, 'pg_catalog.simple', comment);
+
+DROP TRIGGER IF EXISTS trg_cpy_toFullText_expeditions ON expeditions;
+
+CREATE TRIGGER trg_cpy_toFullText_expeditions BEFORE INSERT OR UPDATE
+  ON expeditions FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
+
+DROP TRIGGER IF EXISTS trg_cpy_toFullText_ext_links ON ext_links;
+
+CREATE TRIGGER trg_cpy_toFullText_ext_links BEFORE INSERT OR UPDATE
+  ON ext_links FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(comment_ts, 'pg_catalog.simple', comment);
+
+DROP TRIGGER IF EXISTS trg_cpy_toFullText_habitats ON habitats;
+
+CREATE TRIGGER trg_cpy_toFullText_habitats BEFORE INSERT OR UPDATE
+  ON habitats FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(description_ts, 'pg_catalog.simple', description );
+
+DROP TRIGGER IF EXISTS trg_cpy_toFullText_identifications ON identifications;
+
+CREATE TRIGGER trg_cpy_toFullText_identifications BEFORE INSERT OR UPDATE
+  ON identifications FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(value_defined_ts, 'pg_catalog.simple', value_defined);
+
+DROP TRIGGER IF EXISTS trg_cpy_toFullText_multimedia ON multimedia;
+
+CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
+  ON multimedia FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title, description);
+
+DROP TRIGGER IF EXISTS trg_cpy_toFullText_peopleaddresses ON people_addresses;
+
+CREATE TRIGGER trg_cpy_toFullText_peopleaddresses BEFORE INSERT OR UPDATE
+  ON people_addresses FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(address_parts_ts, 'pg_catalog.simple', entry, po_box, extended_address, locality, region, zip_code, country);
+
+DROP TRIGGER IF EXISTS trg_cpy_toFullText_usersaddresses ON users_addresses;
+
+CREATE TRIGGER trg_cpy_toFullText_usersaddresses BEFORE INSERT OR UPDATE
+  ON users_addresses FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(address_parts_ts, 'pg_catalog.simple', entry, po_box, extended_address, locality, region, zip_code, country);
+
+DROP TRIGGER IF EXISTS trg_cpy_toFullText_vernacularnames ON vernacular_names;
+
+CREATE TRIGGER trg_cpy_toFullText_vernacularnames BEFORE INSERT OR UPDATE
+  ON vernacular_names FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
+
+DROP FUNCTION IF EXISTS fct_cpy_tofulltext();

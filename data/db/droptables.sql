@@ -101,7 +101,6 @@ DROP SEQUENCE IF EXISTS expeditions_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS users_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS people_languages_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS users_languages_id_seq  CASCADE;
-DROP SEQUENCE IF EXISTS multimedia_new_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS multimedia_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS people_relationships_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS people_comm_id_seq  CASCADE;
