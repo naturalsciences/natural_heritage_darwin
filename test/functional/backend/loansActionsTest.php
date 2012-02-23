@@ -19,7 +19,7 @@ $browser->
   info('1.1 - is everything ok on screen')->
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('title','Add Loan')->
+    checkElement('title','Add loan')->
     checkElement('.board_col',1)->
     checkElement('.board_col .widget',8)->
     checkElement('.board_col .widget:first .widget_top_bar span','/Loan/')->
@@ -69,7 +69,7 @@ $browser->
     with('response')->begin()->    
     isStatusCode(200)->
     info('2 - Edition screen')->
-    checkElement('title','Edit Loan')->    
+    checkElement('title','Edit loan')->    
     checkElement('.board_col .widget:nth-child(2) .widget_top_bar tbody#sender_body tr:nth-child(2) td:nth-child(4)','/Chambert Yann/')-> 
     checkElement('.board_col .widget:nth-child(2) .widget_top_bar tbody#receiver_body tr:nth-child(2) td:nth-child(4)','/Chambert Yann/')->  
     checkElement('#loanStatus table.catalogue_table tbody tr:first td:nth-child(4)','/Evil Root/')->  

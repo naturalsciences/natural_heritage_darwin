@@ -38,7 +38,7 @@
     <tr>
       <td colspan="3">&nbsp;</td>
       <td>
-        <a class="link_catalogue" information="true" title="<?php echo __('view all workflows');?>" href="<?php echo url_for('loan/viewAllStatus?id='.$eid); ?>">
+        <a class="link_catalogue" information="true" title="<?php echo __('view all status');?>" href="<?php echo url_for('loan/viewAllStatus?id='.$eid); ?>">
         <?php echo __('History');?></a>
       </td>
     </tr>   

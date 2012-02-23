@@ -121,11 +121,11 @@ class LoansForm extends BaseLoansForm
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setLabel("Add File") ;
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
-    $this->validatorSchema['filenames'] = new sfValidatorFile(
+    $this->validatorSchema['filenames'] = new sfValidatorPass() ;/*File(
   array(
       'required' => false,
       'validated_file_class' => 'myValidatedFile'
-  ));  
+  ));  */
 
     $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
@@ -494,12 +494,7 @@ class LoansForm extends BaseLoansForm
     }     
     parent::bind($taintedValues, $taintedFiles);   
   }
-  
-  public function save($con = null)
-  {
-    $this->offsetUnset('filenames');
-    return parent::save($con);
-  }
+
   public function saveEmbeddedForms($con = null, $forms = null)
   {
     if (null === $forms && $this->getValue('comment'))
@@ -553,10 +548,12 @@ class LoansForm extends BaseLoansForm
       {
         if(!isset($value[$name]['user_ref'] ))
           unset($this->embeddedForms['newUsers'][$name]);
-        else
+        elseif($value[$name]['user_ref'] != sfContext::getInstance()->getUser()->getId())
         {
+          
           $form->getObject()->setLoanRef($this->getObject()->getId());
         }
+        else unset($this->embeddedForms['newUsers'][$name]);
       }
       $value = $this->getValue('Users');
       foreach($this->embeddedForms['Users']->getEmbeddedForms() as $name => $form)
