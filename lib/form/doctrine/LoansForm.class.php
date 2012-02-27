@@ -529,6 +529,7 @@ class LoansForm extends BaseLoansForm
     if (null === $forms && $this->getValue('sender'))
     {
       $value = $this->getValue('newActorsSender');
+
       foreach($this->embeddedForms['newActorsSender']->getEmbeddedForms() as $name => $form)
       {
         if(!isset($value[$name]['people_ref'] ))
@@ -536,6 +537,7 @@ class LoansForm extends BaseLoansForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
+          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
         }
       }
       $value = $this->getValue('ActorsSender');
@@ -546,6 +548,7 @@ class LoansForm extends BaseLoansForm
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsSender'][$name]);
         }
+        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
       }
     } 
     if (null === $forms && $this->getValue('users'))
@@ -582,6 +585,7 @@ class LoansForm extends BaseLoansForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
+          if(is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
         }
       }
       $value = $this->getValue('ActorsReceiver');
@@ -592,6 +596,7 @@ class LoansForm extends BaseLoansForm
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsReceiver'][$name]);
         }
+        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
       }
     }
     if (null === $forms && $this->getValue('insurance'))
