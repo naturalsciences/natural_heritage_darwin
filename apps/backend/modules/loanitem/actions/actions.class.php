@@ -152,4 +152,12 @@ class loanitemActions extends DarwinActions
     $maint->delete();
     return $this->renderText('ok');
   }
+
+  public function executeGetIgNum(sfWebRequest $request)
+  {
+    /** @Todo: Change for flat_less */
+    $spec = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id'));
+    $this->getResponse()->setHttpHeader('Content-type', 'application/json');
+    return $this->renderText( json_encode(array('ig_num'=>$spec->getIgNum(), 'ig_ref'=>$spec->getIgRef())));
+  }
 }

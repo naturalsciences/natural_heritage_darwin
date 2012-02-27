@@ -40,6 +40,17 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
+
+    $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> [id$=\"_part_ref\"]").change(function(){
+      el = $(this);
+      $.getJSON('<?php echo url_for('loanitem/getIgNum');?>', {id : $(this).val() }, function( data) {
+        ig_ref = el.closest('tr').find('[id$=\"_ig_ref\"]');
+        ig_name = el.closest('tr').find('[id$=\"_ig_ref_name\"]');
+        ig_ref.val(data.ig_ref);
+        ig_name.val(data.ig_num);
+      });  
+    });
+
     $("#clear_code_<?php echo ($lineObj->isNew() ? 'n_' : 'o_').$form->getName();?>").click( function()
     {
       parent_el = $(this).closest('tr');
