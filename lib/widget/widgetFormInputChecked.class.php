@@ -108,6 +108,9 @@ $(document).ready(function () {
             response( ndata );
           }
         });
+      },
+      select: function(event, ui) {
+        $('#%1\$s').closest('ul').children('li#toggledMsg').slideUp("fast");
       }
     }).bind('blur',function (event) {
         $(this).prev().val('');
@@ -119,11 +122,11 @@ $(document).ready(function () {
             data: {'searchedCrit' : $(this).val()},
             success: function(html){
               if (html == 'not found') {
-                  $('#%1\$s').closest('ul').children('li#toggledMsg').show("slow");
+                  $('#%1\$s').closest('ul').children('li#toggledMsg').show();
                   $('#%1\$s').trigger('missing');
               }
               else {
-                $('#%1\$s').closest('ul').children('li#toggledMsg').slideUp("fast");
+                $('#%1\$s').closest('ul').children('li#toggledMsg').hide();
                 $('#%8\$s').val(html);
               }
             }
