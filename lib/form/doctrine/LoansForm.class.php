@@ -19,6 +19,8 @@ class LoansForm extends BaseLoansForm
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
+    $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
+
     //Loan form is submited to upload file, when called like that we don't want some fields to be required
 
     $this->widgetSchema['name'] = new sfWidgetFormInput();
@@ -29,7 +31,9 @@ class LoansForm extends BaseLoansForm
         'image'=>'/images/calendar.gif', 
         'format' => '%day%/%month%/%year%', 
         'years' => $years,
-        'with_time' => false
+        'with_time' => false,
+        'empty_values' => $dateText,
+
       ),
       array('class' => 'from_date')
     );
@@ -50,7 +54,8 @@ class LoansForm extends BaseLoansForm
         'image'=>'/images/calendar.gif', 
         'format' => '%day%/%month%/%year%', 
         'years' => $years,
-        'with_time' => false
+        'with_time' => false,
+        'empty_values' => $dateText,
       ),
       array('class' => 'from_date')
     );
@@ -78,7 +83,8 @@ class LoansForm extends BaseLoansForm
         'image'=>'/images/calendar.gif', 
         'format' => '%day%/%month%/%year%', 
         'years' => $years,
-        'with_time' => false
+        'with_time' => false,
+        'empty_values' => $dateText,
       ),
       array('class' => 'to_date')
     );
@@ -103,7 +109,8 @@ class LoansForm extends BaseLoansForm
         'image'=>'/images/calendar.gif', 
         'format' => '%day%/%month%/%year%', 
         'years' => $years,
-        'with_time' => false
+        'with_time' => false,
+        'empty_values' => $dateText,
       ),
       array('class' => 'to_date')
     );
