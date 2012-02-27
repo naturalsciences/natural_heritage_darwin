@@ -12,7 +12,8 @@
     </tr>
     <tr>
       <th><?php echo __('Return Date');?></th>
-      <td><?php echo $loan->getToDate();?></td>
+      <td><?php $date = new DateTime($loan->getToDate());
+                echo $date->format('d/m/Y'); ?></td>
     </tr>
   </tbody>
 </table>

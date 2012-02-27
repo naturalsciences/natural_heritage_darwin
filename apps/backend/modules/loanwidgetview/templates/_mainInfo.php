@@ -7,11 +7,14 @@
       </td>
       <th><?php echo __('Start On');?> :</th>
       <td>
-        <?php echo $loan->getFromDate();?>
+        <?php $date = new DateTime($loan->getFromDate());
+                echo $date->format('d/m/Y'); ?>
       </td>
 
       <th><?php echo __('Extended to');?> :</th>
       <td>
+        <?php $date = new DateTime($loan->getToDate());
+                echo $date->format('d/m/Y'); ?>
         <?php echo $loan->getExtendedToDate();?>
       </td>
     </tr>
@@ -21,13 +24,14 @@
       <td></td>
 
       <th><?php echo __('Ends On');?> :</th>
-      <td>
-        <?php echo $loan->getToDate();?>
+      <td><?php $date = new DateTime($loan->getToDate());
+                echo $date->format('d/m/Y'); ?>
       </td>
 
       <th><?php echo __('Effective to');?> :</th>
       <td>
-        <?php echo $loan->getEffectiveToDate();?>
+        <?php $date = new DateTime($loan->getEffectiveToDate());
+                echo $date->format('d/m/Y'); ?>
       </td>
     </tr>
 

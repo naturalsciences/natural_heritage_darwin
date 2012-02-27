@@ -15,7 +15,8 @@
       <td><?php echo $file->getDescription(); ?></td>
       <td><?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId()) ; ?></td>
       <td><?php echo $file->getMimeType(); ?></td>
-      <td><?php echo $file->getCreationDate(); ?></td>
+      <td> <?php $date = new DateTime($file->getCreationDate());
+                echo $date->format('d/m/Y'); ?></td>
     </tr>
     <?php endforeach;?>
   </tbody>

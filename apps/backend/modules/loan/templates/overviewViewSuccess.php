@@ -24,8 +24,10 @@
               <?php endif;?></td>
               <td><?php echo $item->Ig->getIgNum();?></td>
               <td><?php echo $item->getDetails();?></td>
-              <td><?php echo $item->getFromDate();?></td>
-              <td><?php echo $item->getToDate();?></td>
+              <td> <?php $date = new DateTime($item->getFromDate());
+                echo $date->format('d/m/Y'); ?></td>
+              <td> <?php $date = new DateTime($item->getToDate());
+                echo $date->format('d/m/Y'); ?></td>
               <td><?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loanitem/view?id='.$item->getId());?></td>
             </tr>
           <?php endforeach;?>

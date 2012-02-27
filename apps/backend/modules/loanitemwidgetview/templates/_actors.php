@@ -1,1 +1,1 @@
-<?php echo get_component('loanwidgetview', 'refRelatedFiles', array('table' => 'loan_item', 'eid' => $eid, 'senders'=>$senders, 'receivers'=>$receivers, 'people_ids' => $people_ids));?>
+<?php echo include_partial('loanwidgetview/actors', array('table' => 'loan_items', 'eid' => $eid, 'senders'=>$senders, 'receivers'=>$receivers, 'people_ids' => $people_ids));?>

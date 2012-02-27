@@ -324,7 +324,7 @@ class loanActions extends DarwinActions
           'type' => $extension,
           'uri' => $filename,
           'referenced_relation' => $request->getParameter('table'),
-          'creation_date' => date('Y/m/d')
+          'creation_date' => date('m/d/Y')
         ) ;
         $this->getUser()->setAttribute($filename, $file_info);
       return $this->renderText("<script>parent.getFileInfo('$filename')</script>") ;

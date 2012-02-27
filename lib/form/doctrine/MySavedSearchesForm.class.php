@@ -20,9 +20,11 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     $this->widgetSchema['favorite']->setAttribute('class','hidden');    
     $this->widgetSchema['modification_date_time'] = new sfWidgetFormInputText() ;
     $this->widgetSchema['modification_date_time']->setLabel('Last modification');
-    $default_name = sprintf($this->getI18N()->__("My search on %s"),date('Y/m/d H:i:s'));
+    $default_name = sprintf($this->getI18N()->__("My search on
+%s"),date('d/m/Y H:i:s'));
     if(isset($this->options['type']) && $this->options['type']=='pin')
-      $default_name = sprintf($this->getI18N()->__("My specimens on %s"),date('Y/m/d H:i:s'));
+      $default_name = sprintf($this->getI18N()->__("My specimens on
+%s"),date('d/m/Y H:i:s'));
 
     if($this->getObject()->getName() == "")
       $this->widgetSchema['name']->setDefault($default_name) ;
@@ -75,7 +77,7 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
     $values = $this->getValues();
     $this->getObject()->fromArray($values) ;
     $string_fields = implode('|',$values['visible_fields_in_result']) ;
-    $this->getObject()->setModificationDateTime(date('Y/m/d H:i:s'));
+    $this->getObject()->setModificationDateTime(date('d/m/Y H:i:s'));
     $this->getObject()->setVisibleFieldsInResult($string_fields) ;
     $this->getObject()->save();
   }

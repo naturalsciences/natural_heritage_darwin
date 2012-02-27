@@ -28,7 +28,7 @@
     <?php foreach($loanstatus as $info) : ?>
     <tr>
       <td><?php $date = new DateTime($info->getModificationDateTime());
-      		echo $date->format('Y/m/d H:i:s'); ?></td>
+      		echo $date->format('d/m/Y H:i:s'); ?></td>
       <td><?php echo $info->getFormattedStatus();?></td>
       <td><?php echo $info->getComment();?></td>
       <td><?php echo $info->Users->__toString() ;?></td>      
