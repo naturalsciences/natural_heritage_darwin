@@ -138,7 +138,6 @@ class loanActions extends DarwinActions
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
- //   die(print_r($request->getParameter($form->getName())));
     $form->bind($request->getParameter($form->getName()),$request->getFiles($this->form->getName()));   
     if ($form->isValid())
     {
@@ -219,7 +218,7 @@ class loanActions extends DarwinActions
   }
 
   public function executeOverview(sfWebRequest $request) {
-    $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
+    $this->loan = $this->checkRight($request->getParameter('id')) ; 
     $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
     if($request->getParameter('loan_overview','') !== '')
     {
