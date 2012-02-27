@@ -13,6 +13,7 @@ class LoanItemsForm extends BaseLoanItemsForm
   public function configure()
   {
     $this->useFields(array('ig_ref','from_date', 'to_date','part_ref', 'details'));
+    $this->widgetSchema['details'] = new sfWidgetFormTextarea(array(),array('rows'=>3));
     $yearsKeyVal = range(1970, intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');

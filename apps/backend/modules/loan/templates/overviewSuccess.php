@@ -12,7 +12,7 @@
       <?php echo form_tag('loan/overview?id='.$loan->getId(), array('class'=>'edition loan_overview_form'));?>
 
       <?php echo $form->renderGlobalErrors();?>
-        <table>
+        <table <?php if(! count($form['LoanItems']) && ! count($form['newLoanItems'])) echo 'class="hidden"';?>>
         <thead>
           <tr>
             <th></th>
@@ -35,9 +35,9 @@
           <?php endforeach;?>
         </tbody>
        </table>
-       <?php if(! count($form['LoanItems']) && ! count($form['newLoanItems'])):?>
-        <div class="warn_message"><?php echo __('There is currently no items in your loan. Do not forget to add them.');?></div>
-       <?php endif;?>
+       
+        <div class="warn_message <?php if(count($form['LoanItems']) ||  count($form['newLoanItems'])) echo 'hidden'?>">
+          <?php echo __('There is currently no items in your loan. Do not forget to add them.');?></div>
   
         <div class="form_buttons">
           <input type="button" id="add_maint_items" value="<?php echo __('Add Maintenance for checked');?>" />
@@ -68,10 +68,11 @@ $(document).ready(function () {
           {                    
             //console.log(parent_el);
             parent_el.append(html);
-            $('.warn_message').hide();
+            $('.warn_message').addClass('hidden');
             showAfterRefresh('.loan_overview_form');
             $('.loan_overview_form').css({position: 'absolute'});
-            
+
+            $('.loan_overview_form > table').removeClass('hidden');
  
           }
         });

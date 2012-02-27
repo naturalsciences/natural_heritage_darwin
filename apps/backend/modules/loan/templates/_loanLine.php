@@ -44,7 +44,13 @@
     {
       parent_el = $(this).closest('tr');
       parent_el.hide();
+      parent_el.next().hide();
+      parent_el.next().next().hide();
       parent_el.find('input[type="hidden"][id$=\"_item_visible\"]').val('');
+      if($('.loan_overview_form > table tbody > tr:visible').length ==0){
+        $('.loan_overview_form > table').addClass('hidden');
+         $('.warn_message').removeClass('hidden');
+      }
     });
 
     bind_ext_line('<?php echo $form->getparent()->getName();?>',  '<?php echo $form->getName();?>')
