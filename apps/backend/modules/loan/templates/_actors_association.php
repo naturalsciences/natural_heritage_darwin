@@ -4,11 +4,11 @@
     <tr class="<?php echo $type;?>_data" id="<?php echo $type;?>_<?php echo $row_num; ?>">
       <td><?php echo image_tag('drag.png','class='.$type.'_table_handle');?></td>
       <td>
-        <?php echo image_tag('info-green.png',"title=info class=extd_info_$row_num");?>
+        <?php echo image_tag('info-green.png',"title=info class=".$type."_extd_info_$row_num");?>
         <div class="extended_info" style="display:none;">          
         </div>
         <script  type="text/javascript">
-          $(".extd_info_<?php echo $row_num;?>").qtip({
+          $(".<?php echo $type;?>_extd_info_<?php echo $row_num;?>").qtip({
             show: { solo: true, event:'mouseover' },
             hide: { event:'mouseout' },
             style: 'ui-tooltip-light ui-tooltip-rounded ui-tooltip-dialogue',
