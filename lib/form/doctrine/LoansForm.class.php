@@ -73,10 +73,6 @@ class LoansForm extends BaseLoansForm
                                          'to_date' => 'Ends on'
                                         )
                                   );
-    $this->widgetSchema->setLabels(array('from_date' => 'Start on',
-                                         'to_date' => 'Ends on'
-                                        )
-                                  );
     $this->widgetSchema['effective_to_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
@@ -97,11 +93,6 @@ class LoansForm extends BaseLoansForm
       ),
       array('invalid' => 'Invalid date "effective"')
     );
-    /* Labels */
-    $this->widgetSchema->setLabels(array('from_date' => 'Start on',
-                                         'to_date' => 'Ends on'
-                                        )
-                                  );
 
     $this->widgetSchema['extended_to_date'] = new widgetFormJQueryFuzzyDate(
       array(
@@ -121,7 +112,7 @@ class LoansForm extends BaseLoansForm
         'min' => $minDate->getDateTime(),
         'date_format' => 'd/M/Y',
       ),
-      array('invalid' => 'Invalid date "Close"')
+      array('invalid' => 'Invalid date "Extended"')
     );
     
     /* input file for related files */
@@ -146,7 +137,9 @@ class LoansForm extends BaseLoansForm
     $this->validatorSchema['receiver'] = new sfValidatorPass();    
     $this->validatorSchema['relatedfile'] = new sfValidatorPass();
     $this->validatorSchema['users'] = new sfValidatorPass();
-    $this->validatorSchema['insurance'] = new sfValidatorPass();                                     
+    $this->validatorSchema['insurance'] = new sfValidatorPass();
+
+    $this->mergePostValidator( new LoanValidatorDates()) ;
   }
   
   public function addUsers($num, $user_ref, $order_by=0)

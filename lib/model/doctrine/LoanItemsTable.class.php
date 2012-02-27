@@ -12,7 +12,7 @@ class LoanItemsTable extends DarwinTable
     $q = Doctrine_Query::create()
       ->From('LoanItems i')
       ->andwhere('i.loan_ref = ?', $id)
-      ->orderBy('i.id');
+      ->orderBy('to_date DESC, i.id');
     return $q->execute();
   }
 
