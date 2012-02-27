@@ -31,7 +31,7 @@
           <?php endforeach;?>
 
           <?php foreach($form['newLoanItems'] as $name => $sf):?>
-            <?php include_partial('loanLine', array('loan'=> $loan, 'form'=>$sf, 'lineObj' => $form->getEmbeddedForm('LoanItems')->getEmbeddedForm($name)->getObject())); ?>
+            <?php include_partial('loanLine', array('loan'=> $loan, 'form'=>$sf, 'lineObj' => $form->getEmbeddedForm('newLoanItems')->getEmbeddedForm($name)->getObject())); ?>
           <?php endforeach;?>
         </tbody>
        </table>

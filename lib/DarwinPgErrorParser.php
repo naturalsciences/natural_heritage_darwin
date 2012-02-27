@@ -75,6 +75,7 @@ class DarwinPgErrorParser
     '/\bunq_multimedia_keywords\b/' => 'This multimedia keyword already exists',
     '/\bunq_associated_multimedia\b/' => 'This associated multimedia already exists',
     '/\buniq_words\b/' => 'This word already exists',
+    '/\bunq_loan_items\b/' => 'You have 2 similar loan items',
     '/\bfk_people_relationships_people_02\b/' => 'This persons record still has links with others',
     '/\bfk_collections_institutions\b/' => 'This institution still has collections',
     '/\bfk_collections_users\b/' => 'This user is collection manager',
