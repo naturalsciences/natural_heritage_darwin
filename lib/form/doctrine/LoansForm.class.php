@@ -585,7 +585,7 @@ class LoansForm extends BaseLoansForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
-          if(is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
+          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
         }
       }
       $value = $this->getValue('ActorsReceiver');
