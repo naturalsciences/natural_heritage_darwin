@@ -70,12 +70,12 @@ $browser->
     isStatusCode(200)->
     info('2 - Edition screen')->
     checkElement('title','Edit loan')->    
-    checkElement('.board_col .widget:nth-child(2) .widget_top_bar tbody#sender_body tr:nth-child(2) td:nth-child(4)','/Chambert Yann/')-> 
-    checkElement('.board_col .widget:nth-child(2) .widget_top_bar tbody#receiver_body tr:nth-child(2) td:nth-child(4)','/Chambert Yann/')->  
+    checkElement('.board_col .widget:nth-child(2) .widget_top_bar tbody#sender_body tr:first td:nth-child(4)','/Chambert Yann/')-> 
+    checkElement('.board_col .widget:nth-child(2) .widget_top_bar tbody#receiver_body tr:first td:nth-child(4)','/Chambert Yann/')->  
     checkElement('#loanStatus table.catalogue_table tbody tr:first td:nth-child(4)','/Evil Root/')->  
     end()->
   info('3 - Look for our new loan in search')->
   post('/loan/search',array('orderby'=>'name', 'orderdir'=>'desc', 'page'=>1, 'is_choose'=>0,'loans_filters'=> array('name' => 'loan for test')))->
   with('response')->begin()->
-  checkElement('table.results tbody tr td:nth-child(2)','/loan for test/')->    
+  checkElement('table.results tbody tr td:first','/loan for test/')->    
   end();    
