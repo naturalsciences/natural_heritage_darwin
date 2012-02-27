@@ -34,9 +34,9 @@ class ActorsForm extends CataloguePeopleForm
                                                        ));
 
     $this->validatorSchema['people_sub_type'] = new sfValidatorChoice(array('choices'=>array_keys($types),
-                                                                            'required' => true,
+                                                                            'required' => false,
                                                                             'multiple' => true
-                            ),array('required' => 'Please choose at least one role for the person below'));
+                            ));
  
     $people_id= $this->getObject()->getPeopleRef() ;
     if($people_id)
