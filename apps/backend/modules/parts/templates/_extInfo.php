@@ -11,6 +11,7 @@
     <dd><?php echo $item->getIndividualSex();?></dd>
     <dt><?php echo __('State :');?></dt>
     <dd><?php echo $item->getIndividualState();?></dd>
+    <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
     <dt><?php echo __('Building :');?></dt>
     <dd><?php echo $item->getBuilding();?></dd>
     <dt><?php echo __('Floor :');?></dt>
@@ -21,4 +22,5 @@
     <dd><?php echo $item->getRow();?></dd>
     <dt><?php echo __('Shelf :');?></dt>
     <dd><?php echo $item->getShelf();?></dd>
+    <?php endif;?>
 </dl>
