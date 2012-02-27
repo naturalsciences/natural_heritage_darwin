@@ -47,7 +47,7 @@
     });
     </script>
 <?php else:?>
-  <p class="warn_message"><?php echo __('No Items here.');?> <?php echo link_to(__('Please pin some parts.'),'specimensearch/index',array('target'=>'_blank'));?></p>
+  <p class="warn_message"><?php echo __('No Items here.');?> <?php echo link_to(__('Please pin some parts.'),'specimensearch/index?specimen_search_filters[what_searched]=part',array('target'=>'_blank'));?></p>
 
 <?php endif;?>
 </div>

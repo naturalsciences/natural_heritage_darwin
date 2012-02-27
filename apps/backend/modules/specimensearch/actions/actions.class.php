@@ -14,7 +14,7 @@ class specimensearchActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new SpecimenSearchFormFilter(null,array('user' => $this->getUser()));
+    $this->form = new SpecimenSearchFormFilter($request->getParameter('specimen_search_filters'),array('user' => $this->getUser()));
 
     $this->form->setDefault('rec_per_page',$this->getUser()->fetchRecPerPage());
 
