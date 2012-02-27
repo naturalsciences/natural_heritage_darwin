@@ -5,4 +5,9 @@
  */
 class Comments extends BaseComments
 {
+  public function getNotionText()
+  {
+    $notions = CommentsTable::getNotionsFor($this->get('referenced_relation'));
+    return $notions[$this->getNotionConcerned()];
+  }
 }

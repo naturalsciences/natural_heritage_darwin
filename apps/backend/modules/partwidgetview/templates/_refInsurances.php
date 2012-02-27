@@ -18,8 +18,8 @@
   </thead>
   <tbody  class="parts_insurances_data"">
     <tr>
-      <td><?php echo $insurance->getDateFromMasked(ESC_RAW);?></td> 
-      <td><?php echo $insurance->getDateToMasked(ESC_RAW);?></td>       
+      <td class="datesNum"><?php echo $insurance->getDateFromMasked(ESC_RAW);?></td> 
+      <td class="datesNum"><?php echo $insurance->getDateToMasked(ESC_RAW);?></td>       
       <td>
         <?php echo $insurance->getInsuranceValue();?>
       </td>
