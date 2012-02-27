@@ -1,6 +1,3 @@
-    <tr>
-      <td colspan="11"><?php echo $form['people_sub_type']->renderError() ; ?></td>
-    </tr>
     <tr class="<?php echo $type;?>_data" id="<?php echo $type;?>_<?php echo $row_num; ?>">
       <td><?php echo image_tag('drag.png','class='.$type.'_table_handle');?></td>
       <td>

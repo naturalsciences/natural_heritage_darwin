@@ -102,7 +102,7 @@ $browser->
   end()->
 
   click('#submit_loan',
-          array('loan_item_widget'=> array(
+          array('loan_items'=> array(
               'receiver' => '1',
               'sender' => '1',
               'newActorsSender' => array(
@@ -130,7 +130,7 @@ $browser->
   with('response')->begin()->
     isStatusCode(200)->
     checkElement('#sender_body')->
-    checkElement('#sender_body tr',2)->
+    checkElement('#sender_body tr',1)->
   end()->
 
  info('Delete Loan Item')->
