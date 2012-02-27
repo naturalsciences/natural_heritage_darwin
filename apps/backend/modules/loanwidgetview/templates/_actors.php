@@ -17,6 +17,7 @@
   </thead>
  <tbody id="sender_body">
    <?php foreach($senders as $actor):?>
+      <tr>
       <td colspan="4">  <?php echo image_tag($people_ids[$actor->getPeopleRef()]->getCorrespondingImage()) ; ?> <?php echo $people_ids[$actor->getPeopleRef()]->getFormatedName(); ?></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Responsible') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Contact') ? 'on':'off'; ?>" /></td>
@@ -25,6 +26,7 @@
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Accompanist') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Transporter') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Other') ? 'on':'off'; ?>" /></td>
+      </tr>
    <?php endforeach;?>
  </tbody>
 </table>
@@ -49,6 +51,7 @@
   </thead>
  <tbody id="receiver_body">
    <?php foreach($receivers as $actor):?>
+      <tr>
       <td colspan="4">  <?php echo image_tag($people_ids[$actor->getPeopleRef()]->getCorrespondingImage()) ; ?> <?php echo $people_ids[$actor->getPeopleRef()]->getFormatedName(); ?></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Responsible') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Contact') ? 'on':'off'; ?>" /></td>
@@ -57,6 +60,7 @@
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Accompanist') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Transporter') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Other') ? 'on':'off'; ?>" /></td>
+     </tr>
    <?php endforeach;?>
  </tbody> 
 </table>
