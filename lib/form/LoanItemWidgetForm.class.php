@@ -372,6 +372,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
+          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
         }
       }
       $value = $this->getValue('ActorsSender');
@@ -382,6 +383,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsSender'][$name]);
         }
+        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));        
       }
     }
 
@@ -395,6 +397,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
+          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
         }
       }
       $value = $this->getValue('ActorsReceiver');
@@ -405,6 +408,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsReceiver'][$name]);
         }
+        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));        
       }
     }
     if (null === $forms && $this->getValue('insurance'))

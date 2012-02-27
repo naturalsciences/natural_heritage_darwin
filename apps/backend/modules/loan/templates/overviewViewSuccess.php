@@ -20,7 +20,7 @@
             <tr>
               <td><?php if($item->getPartRef()):?>
                 <?php echo image_tag('info.png',"title=info class=extd_info data_id=".$item->getPartRef());?>
-                <?php echo link_to('#' . $item->getPartRef(), 'part/view?id='. $item->getPartRef());?>
+                <?php echo link_to('#' . $item->getPartRef(), 'parts/view?id='. $item->getPartRef());?>
               <?php endif;?></td>
               <td><?php echo $item->Ig->getIgNum();?></td>
               <td><?php echo $item->getDetails();?></td>
