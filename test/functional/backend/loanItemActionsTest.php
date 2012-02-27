@@ -46,7 +46,6 @@ $browser->
   end()->
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('.warn_message',0)->
     checkElement('.loan_overview_form tbody tr',3)-> // 3 Row per items
     checkElement('textarea','details message')->
     checkElement('img[title="View"]')->
@@ -137,7 +136,6 @@ $browser->
  get('/loan/overview?id=1')->
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('.warn_message',0)->
     checkElement('.loan_overview_form tbody tr',3)-> // 3 Row per items
   end()->
  click('Save', array('loan_overview' => array('LoanItems'=> array('0'=>array(
