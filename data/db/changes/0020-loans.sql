@@ -308,9 +308,6 @@ CREATE INDEX CONCURRENTLY idx_loan_status_loan_ref_is_last on loan_status(loan_r
 
 /************ FLAT *******************/
 CREATE INDEX CONCURRENTLY idx_darwin_flat_host_specimen_ref on darwin_flat(host_specimen_ref);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_category on darwin_flat(category);
-
-
 
 DROP INDEX IF EXISTS idx_darwin_flat_collection_parent_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_gtu_parent_ref;
@@ -416,7 +413,6 @@ DROP INDEX IF EXISTS idx_gin_darwin_flat_lithology_name_indexed;
 DROP INDEX IF EXISTS idx_gin_darwin_flat_mineral_name_indexed;
 
 DROP INDEX IF EXISTS idx_darwin_flat_gtu_code;
-DROP INDEX IF EXISTS idx_darwin_flat_category;
 
 DROP INDEX IF EXISTS idx_my_widgets_group_name;
 DROP INDEX IF EXISTS idx_my_widgets_order_by;

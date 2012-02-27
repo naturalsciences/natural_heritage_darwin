@@ -1,4 +1,3 @@
--- \echo Start of split the `date`
 
 create index idx_id_refs_old_id on id_refs ("system", old_id) where "system" = 'individuals';
 create index idx_id_refs_new_id on id_refs ("system", new_id) where "system" = 'individuals';
@@ -1905,6 +1904,106 @@ $$;
 
 SELECT resplit_parts();
 
+create or replace function split_parts() returns boolean language plpgsql
+AS
+$$
+declare
+  response boolean := true;
+  recPartsAfter RECORD;
+  recPartsAfterCodes RECORD;
+  recPartsAfterDiverse RECORD;
+  intCounter integer := 0;
+  newPartId specimen_parts.id%TYPE;
+  newDiverseId catalogue_properties.id%TYPE;
+  countStillCodes integer;
+begin
+  FOR recPartsAfter IN
+    SELECT DISTINCT id
+    FROM specimen_parts
+    WHERE EXISTS (select 1 from codes where referenced_relation = 'specimen_parts' and record_id = specimen_parts.id and code_category = 'main' GROUP BY referenced_relation, record_id, code_category HAVING COUNT(*) > 1)
+  LOOP
+--     RAISE NOTICE 'After migration correction, part id splitted is: %', recPartsAfter.id;
+    FOR recPartsAfterCodes IN
+      SELECT id
+      FROM codes
+      WHERE referenced_relation = 'specimen_parts'
+        AND record_id = recPartsAfter.id
+        AND code_category = 'main'
+    LOOP
+      IF intCounter != 0 THEN
+        INSERT INTO specimen_parts (parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref)
+        (SELECT parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref
+         FROM specimen_parts
+         WHERE id = recPartsAfter.id
+        )
+        RETURNING id INTO newPartId;
+--         RAISE NOTICE '--Updating codes--';
+        UPDATE codes
+        SET record_id = newPartId
+        WHERE id = recPartsAfterCodes.id;
+--         RAISE NOTICE '--Insertion of non main codes--';
+        INSERT INTO codes (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
+        (SELECT 'specimen_parts', newPartId, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask
+         FROM codes
+         WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id AND code_category != 'main'
+        );
+--         RAISE NOTICE '--Copy comments--';
+        INSERT INTO comments (referenced_relation, record_id, notion_concerned, "comment")
+        (SELECT 'specimen_parts', newPartId, notion_concerned, "comment"
+         FROM comments
+         WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id
+        );
+--         RAISE NOTICE '--Copy insurances--';
+        INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_currency, insurance_year, insurer_ref)
+        (SELECT 'specimen_parts', newPartId, insurance_value, insurance_currency, insurance_year, insurer_ref
+         FROM insurances
+         WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id
+        );
+--         RAISE NOTICE '--Copy collection maintenances--';
+        INSERT INTO collection_maintenance (referenced_relation, record_id, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask)
+        (SELECT 'specimen_parts', newPartId, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask
+         FROM collection_maintenance
+         WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id
+        );
+        FOR recPartsAfterDiverse IN
+          SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id
+        LOOP
+--           RAISE NOTICE '---Properties---';
+          INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool)
+          (SELECT 'specimen_parts', newPartId, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool
+           FROM catalogue_properties
+           WHERE id = recPartsAfterDiverse.id
+          )
+          RETURNING id INTO newDiverseId;
+          INSERT INTO properties_values (property_ref, property_value, property_accuracy)
+          (SELECT newDiverseId, property_value, property_accuracy
+           FROM properties_values WHERE property_ref = recPartsAfterDiverse.id
+          );
+        END LOOP;
+      END IF;
+      intCounter := intCounter + 1;
+    END LOOP;
+    intCounter := 0;
+  END LOOP;
+  SELECT COUNT(*) INTO countStillCodes
+  FROM specimen_parts
+  WHERE EXISTS (SELECT 1 FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = specimen_parts.id AND code_category = 'main' GROUP BY referenced_relation, record_id, code_category HAVING COUNT(*) > 1);
+  IF countStillCodes != 0 THEN
+    RAISE NOTICE 'Still % parts that have multiple main codes ! - Not possible !!!', countStillCodes;
+    rollback;
+    return false;
+  END IF;
+  return response;
+exception
+  when others then
+    RAISE WARNING 'Error in split_parts: %', SQLERRM;
+    rollback;
+    return false;
+end;
+$$;
+
+select split_parts();
+
 DROP FUNCTION IF EXISTS moveOrCreateProp (specimen_parts.id%TYPE, specimen_parts.id%TYPE, recPartsDetail, recPartsDetail) CASCADE;
 DROP FUNCTION IF EXISTS createProperties (specimen_parts.id%TYPE, recPartsDetail) CASCADE;
 DROP FUNCTION IF EXISTS createNewPart(specimen_parts.id%TYPE, recPartsDetail) CASCADE;
@@ -1912,6 +2011,7 @@ DROP TYPE IF EXISTS recPartsDetail CASCADE;
 DROP FUNCTION IF EXISTS decrementCount(specimen_parts.id%TYPE, bigint) CASCADE;
 DROP FUNCTION IF EXISTS createCodes(specimen_parts.id%TYPE, varchar) CASCADE;
 DROP FUNCTION IF EXISTS resplit_parts () CASCADE;
+DROP FUNCTION IF EXISTS split_parts () CASCADE;
 
 ALTER TABLE specimen_parts ENABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
 ALTER TABLE specimen_parts ENABLE TRIGGER fct_cpy_trg_ins_update_dict_specimen_parts;
@@ -1935,99 +2035,4 @@ ALTER TABLE insurances ENABLE TRIGGER trg_trk_log_table_insurances;
 ALTER TABLE insurances ENABLE TRIGGER fct_cpy_trg_del_dict_insurances;
 ALTER TABLE insurances ENABLE TRIGGER fct_cpy_trg_ins_update_dict_insurances;
 
--- \echo Split ended the `date`
-
--- rollback;
 commit;
---
-
--- create or replace function split_parts() returns boolean language plpgsql
--- AS
--- $$
--- declare
---   response boolean;
---   recPartsAfter RECORD;
---   recPartsAfterCodes RECORD;
---   recPartsAfterDiverse RECORD;
---   partsAfterCodeId codes.id%TYPE := 0;
---   newPartId specimen_parts.id%TYPE;
---   newDiverseId catalogue_properties.id%TYPE;
---   countStillCodes integer;
--- begin
---   select resplit_parts() INTO response;
---   IF NOT response THEN
---     ROLLBACK;
---   END IF;
--- --   SELECT COUNT(*) INTO countStillCodes
--- --   FROM specimen_parts
--- --   WHERE EXISTS (SELECT 1 FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = specimen_parts.id AND code_category = 'main' GROUP BY referenced_relation, record_id, code_category HAVING COUNT(*) > 1)
--- --     AND EXISTS (SELECT 1 FROM darwin1.id_refs WHERE "system" = 'individuals' AND new_id = specimen_parts.specimen_individual_ref);
--- --   RAISE NOTICE 'Still % parts that were migrated and that have multiple main codes !', countStillCodes;
--- --   SELECT COUNT(*) INTO countStillCodes
--- --   FROM specimen_parts
--- --   WHERE EXISTS (SELECT 1 FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = specimen_parts.id AND code_category = 'main' GROUP BY referenced_relation, record_id, code_category HAVING COUNT(*) > 1)
--- --     AND NOT EXISTS (SELECT 1 FROM darwin1.id_refs WHERE "system" = 'individuals' AND new_id = specimen_parts.specimen_individual_ref);
--- --   RAISE NOTICE 'Still % parts that were not migrated and that have multiple main codes !', countStillCodes;
--- --   RETURN true;
---   FOR recPartsAfter IN
---     SELECT id
---     FROM specimen_parts
---     WHERE 1 < (select count(*) from codes where referenced_relation = 'specimen_parts' and record_id = specimen_parts.id and code_category = 'main')
---   LOOP
--- --     RAISE NOTICE 'After migration correction, part id splitted is: %', recPartsAfter.id;
---     FOR recPartsAfterCodes IN
---       SELECT id
---       FROM codes
---       WHERE referenced_relation = 'specimen_parts'
---         AND record_id = recPartsAfter.id
---         AND code_category = 'main'
---     LOOP
---       IF partsAfterCodeId != recPartsAfterCodes.id THEN
---         partsAfterCodeId := recPartsAfterCodes.id;
---       ELSE
---         INSERT INTO specimen_parts (parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref)
---         (SELECT parent_ref, path, specimen_individual_ref, specimen_part, "complete", building, "floor", "room", "row", shelf, "container", sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status, specimen_part_count_min, specimen_part_count_max, institution_ref FROM specimen_parts WHERE id = recPartsAfter.id)
---         RETURNING id INTO newPartId;
---         UPDATE codes
---         SET record_id = newPartId
---         WHERE id = recPartsAfterCodes.id;
---         INSERT INTO codes (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask)
---         (SELECT 'specimen_parts', newPartId, code_category, code_prefix, code_prefix_separator, code, code_suffix, code_suffix_separator, code_date, code_date_mask FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id AND code_category != 'main');
---         INSERT INTO comments (referenced_relation, record_id, notion_concerned, "comment")
---         (SELECT 'specimen_parts', newPartId, notion_concerned, "comment" FROM comments WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
---         INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_currency, insurance_year, insurer_ref)
---         (SELECT 'specimen_parts', newPartId, insurance_value, insurance_currency, insurance_year, insurer_ref FROM insurances WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
---         INSERT INTO collection_maintenance (referenced_relation, record_id, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask)
---         (SELECT 'specimen_parts', newPartId, people_ref, "category", action_observation, description, modification_date_time, modification_date_mask FROM collection_maintenance WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id);
---         FOR recPartsAfterDiverse IN
---         SELECT id FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id
---         LOOP
---           INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool)
---           (SELECT 'specimen_parts', newPartId, property_type, property_sub_type, property_qualifier, date_from_mask, date_from, date_to_mask, date_to, property_unit, property_accuracy_unit, property_method, property_tool FROM catalogue_properties WHERE referenced_relation = 'specimen_parts' AND record_id = recPartsAfter.id)
---           RETURNING id INTO newDiverseId;
---           INSERT INTO properties_values (property_ref, property_value, property_accuracy)
---           (SELECT newDiverseId, property_value, property_accuracy FROM properties_values WHERE property_ref = recPartsAfterDiverse.id);
---         END LOOP;
---       END IF;
---     END LOOP;
---   END LOOP;
---   SELECT COUNT(*) INTO countStillCodes
---   FROM specimen_parts
---   WHERE EXISTS (SELECT 1 FROM codes WHERE referenced_relation = 'specimen_parts' AND record_id = specimen_parts.id AND code_category = 'main' GROUP BY referenced_relation, record_id, code_category HAVING COUNT(*) > 1);
---   RAISE NOTICE 'Still % parts that have multiple main codes ! - Not possible !!!', countStillCodes;
---   IF countStillCodes != 0 THEN
---     rollback;
---     return false;
---   END IF;
---   return response;
--- exception
---   when others then
---     RAISE WARNING 'Error in split_parts: %', SQLERRM;
---     rollback;
---     return false;
--- end;
--- $$;
-
--- \i ../maintenance/recreate_flat.sql
-
--- \echo Flat refreshed the `date`

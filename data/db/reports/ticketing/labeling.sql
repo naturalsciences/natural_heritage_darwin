@@ -14,8 +14,6 @@ RETURN v_int_value;
 END;
 $$ LANGUAGE plpgsql;
 
-/*END*/
-
 create or replace function labeling_country_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
 select array_agg(tags_list)
@@ -287,7 +285,6 @@ select df.part_ref as unique_id,
        case when df.part_count_min <> df.part_count_max and df.part_count_min is not null and df.part_count_max is not null then 'Count: ' || df.part_count_min || ' - ' || df.part_count_max else case when df.part_count_min is not null then 'Count: ' || df.part_count_min else '' end end as specimen_number,
        case when exists(select 1 from comments where (referenced_relation = 'specimens' and record_id = df.spec_ref) or (referenced_relation = 'specimen_parts' and record_id = df.part_ref)) then 'Comm.?: Y' else 'Comm.?: N' end as comments
 from darwin_flat as df inner join gtu on df.gtu_ref = gtu.id
-
 where part_ref is not null;
 
 ALTER VIEW "public"."labeling" OWNER TO darwin2;
