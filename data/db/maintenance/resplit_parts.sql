@@ -1,6 +1,7 @@
+SET search_path = darwin1, darwin2, public;
 
-create index idx_id_refs_old_id on id_refs ("system", old_id) where "system" = 'individuals';
-create index idx_id_refs_new_id on id_refs ("system", new_id) where "system" = 'individuals';
+create index idx_id_refs_old_id on darwin1.id_refs ("system", old_id) where "system" = 'individuals';
+create index idx_id_refs_new_id on darwin1.id_refs ("system", new_id) where "system" = 'individuals';
 create index idx_buildings on darwin1.tbl_buildings (bui_id_ctn);
 create index idx_building_floors on darwin1.tbl_building_floors (bfl_id_ctn);
 create index idx_building_floors_bui on darwin1.tbl_building_floors (bfl_building_nr);
@@ -84,7 +85,8 @@ create table migrated_parts as
         +
         CASE WHEN sgr_preparation_month IS NOT NULL THEN 16 ELSE 0 END
         +
-        CASE WHEN sgr_preparation_year IS NOT NULL THEN 32 ELSE 0 END::integer as maintenance_modification_date_mask
+        CASE WHEN sgr_preparation_year IS NOT NULL THEN 32 ELSE 0 END::integer as maintenance_modification_date_mask,
+        coalesce(sgr_comment, '')::varchar as part_comment
   from darwin1.tbl_specimen_groups
   inner join darwin1.id_refs
   on system = 'individuals' and sgr_id_ctn = old_id
@@ -176,6 +178,8 @@ ALTER TABLE insurances DISABLE TRIGGER trg_chk_ref_record_insurances;
 ALTER TABLE insurances DISABLE TRIGGER trg_trk_log_table_insurances;
 ALTER TABLE insurances DISABLE TRIGGER fct_cpy_trg_del_dict_insurances;
 ALTER TABLE insurances DISABLE TRIGGER fct_cpy_trg_ins_update_dict_insurances;
+ALTER TABLE comments DISABLE TRIGGER trg_chk_ref_record_comments;
+ALTER TABLE comments DISABLE TRIGGER trg_trk_log_table_comments;
 
 CREATE OR REPLACE FUNCTION convert_to_real(v_input varchar) RETURNS REAL IMMUTABLE
 AS $$
@@ -254,7 +258,8 @@ CREATE TYPE recPartsDetail AS (
                                 maintenance_category varchar,
                                 maintenance_action_observation varchar,
                                 maintenance_modification_date_time timestamp,
-                                maintenance_modification_date_mask integer
+                                maintenance_modification_date_mask integer,
+                                part_comment varchar
                               );
 
 create or replace function decrementCount(IN partId specimen_parts.id%TYPE, IN decrementVal bigint) RETURNS boolean language plpgsql AS
@@ -496,10 +501,29 @@ $$
 declare
   prop_count integer;
   update_count integer;
+  insert_count integer;
   cat_prop_id integer;
   booUpdate boolean := false;
   booContinue boolean := false;
 begin
+  /* Comments */
+  IF recPartsDetails.part_comment != '' THEN
+    INSERT INTO comments (referenced_relation, record_id, notion_concerned, comment)
+    (
+      SELECT 'specimen_parts', new_part_id, 'general', recPartsDetails.part_comment
+      WHERE NOT EXISTS (
+                        SELECT 1
+                        FROM comments
+                        WHERE referenced_relation = 'specimen_parts'
+                          AND record_id = new_part_id
+                          AND notion_concerned = 'general'
+                       )
+    );
+    GET DIAGNOSTICS insert_count = ROW_COUNT;
+    IF insert_count != 0 THEN
+      RAISE NOTICE 'Comment inserted';
+    END IF;
+  END IF;
   /*Freshness Level*/
   IF coalesce(recPartsDetails.freshness_level, '') != '' THEN
     SELECT COUNT(*)
@@ -1123,6 +1147,24 @@ declare
   prop_count integer;
   booContinue boolean := true;
 begin
+  /* Comments */
+  IF recPartsDetails.part_comment != '' THEN
+    INSERT INTO comments (referenced_relation, record_id, notion_concerned, comment)
+    (
+      SELECT 'specimen_parts', part_id, 'general', recPartsDetails.part_comment
+      WHERE NOT EXISTS (
+                        SELECT 1
+                        FROM comments
+                        WHERE referenced_relation = 'specimen_parts'
+                          AND record_id = part_id
+                          AND notion_concerned = 'general'
+                       )
+    );
+    GET DIAGNOSTICS insert_count = ROW_COUNT;
+    IF insert_count != 0 THEN
+      RAISE NOTICE 'Comment inserted';
+    END IF;
+  END IF;
   /*Freshness level*/
   IF coalesce(recPartsDetails.freshness_level,'') != '' THEN
     SELECT id INTO cat_prop_id
@@ -1562,9 +1604,10 @@ declare
 begin
   FOR recPartsDetails IN select *
                          from darwin2.migrated_parts
+                            where part_comment != ''
 --                          where old_weight_min is not null and old_weight_min != '0'
                          order by specimen_individual_ref desc, parts_id, specimen_part, main_code
---                          limit 200
+                         limit 20
   LOOP
     comptage := comptage + 1;
     IF comptage IN (5000, 10000, 20000, 40000, 50000, 75000, 90000, 100000, 125000, 150000, 175000, 200000, 225000, 250000, 275000, 300000, 325000, 350000, 375000) THEN
@@ -1901,8 +1944,9 @@ exception
 end;
 $$;
 
-
 SELECT resplit_parts();
+
+rollback;
 
 create or replace function split_parts() returns boolean language plpgsql
 AS
@@ -2034,5 +2078,7 @@ ALTER TABLE insurances ENABLE TRIGGER trg_chk_ref_record_insurances;
 ALTER TABLE insurances ENABLE TRIGGER trg_trk_log_table_insurances;
 ALTER TABLE insurances ENABLE TRIGGER fct_cpy_trg_del_dict_insurances;
 ALTER TABLE insurances ENABLE TRIGGER fct_cpy_trg_ins_update_dict_insurances;
+ALTER TABLE comments ENABLE TRIGGER trg_chk_ref_record_comments;
+ALTER TABLE comments ENABLE TRIGGER trg_trk_log_table_comments;
 
 commit;

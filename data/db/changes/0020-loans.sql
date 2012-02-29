@@ -4,15 +4,13 @@ SET search_path = darwin2, public;
 
 ALTER TABLE multimedia RENAME TO old_multimedia;
 ALTER TABLE old_multimedia ALTER COLUMN id SET DEFAULT NULL;
-DROP SEQUENCE IF EXISTS multimedia_id_seq;
+ALTER TABLE old_multimedia DROP CONSTRAINT pk_multimedia CASCADE;
 DROP TRIGGER IF EXISTS trg_clr_referencerecord_multimedia ON old_multimedia;
 DROP TRIGGER IF EXISTS trg_cpy_fulltoindex_multimedia ON old_multimedia;
 DROP TRIGGER IF EXISTS trg_cpy_path_multimedia ON old_multimedia;
 DROP TRIGGER IF EXISTS trg_cpy_tofulltext_multimedia ON old_multimedia;
 DROP TRIGGER IF EXISTS trg_trk_log_table_multimedia ON old_multimedia;
 DROP TRIGGER IF EXISTS trg_words_ts_cpy_multimedia ON old_multimedia;
-
-create sequence multimedia_id_seq;
 
 -- To release only if possible to insert elec. publi of Cathy -- select setval('multimedia_new_id_seq', (select max(id)+1 from old_multimedia), false);
 
@@ -32,7 +30,7 @@ create table multimedia
         creation_date date not null default '0001-01-01'::date,
         creation_date_mask integer not null default 0,
         mime_type varchar not null,
-        constraint pk_multimedia_new primary key (id)
+        constraint pk_multimedia primary key (id)
       )
       inherits (template_table_record_ref);
 
@@ -55,7 +53,7 @@ comment on column multimedia.search_ts is 'tsvector form of title and descriptio
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
 
 ALTER TABLE multimedia OWNER TO darwin2;
-ALTER SEQUENCE multimedia_id_seq OWNER TO darwin2;
+ALTER TABLE multimedia_id_seq OWNER TO darwin2;
 GRANT USAGE ON SEQUENCE darwin2.multimedia_id_seq TO cebmpad;
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.multimedia TO cebmpad;
 GRANT SELECT ON darwin2.multimedia TO d2viewer;
