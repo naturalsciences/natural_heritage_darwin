@@ -25,7 +25,9 @@ create index idx_spec_spec_weight_unit on darwin1.tbl_specimen_groups (sgr_weigh
 create index idx_spec_spec_height_unit on darwin1.tbl_specimen_groups (sgr_height_min_uni_nr);
 create index idx_spec_spec_depth_unit on darwin1.tbl_specimen_groups (sgr_depth_min_uni_nr);
 
-create table migrated_parts as
+drop table if exists darwin2.migrated_parts CASCADE;
+
+create table darwin2.migrated_parts as
 (
  select sgr_id_ctn::integer as old_spec_id,
         specimen_individual_ref::integer as specimen_individual_ref,  specimen_parts.id::bigint as parts_id, (fullToIndex(sgr_code))::varchar as main_code,
@@ -49,25 +51,25 @@ create table migrated_parts as
         end::boolean as complete,
         case when sfl_description = 'Undefined' then '' else coalesce(sfl_description,'') end::varchar as freshness_level,
         sgr_length_min::varchar as old_length_min,
-        (convert_to_unified(sgr_length_min::varchar, case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END, 'length'))::varchar as length_min_unified,
+        (convert_to_unified(sgr_length_min::varchar, case when length_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(length_unit.uni_unit,'') END, 'length'))::varchar as length_min_unified,
         sgr_length_max::varchar as old_length_max,
-        (convert_to_unified(sgr_length_max::varchar, case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END, 'length'))::varchar as length_max_unified,
-        case when length_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(length_unit.uni_unit,'m') END::varchar as old_length_unit,
+        (convert_to_unified(sgr_length_max::varchar, case when length_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(length_unit.uni_unit,'') END, 'length'))::varchar as length_max_unified,
+        case when length_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(length_unit.uni_unit,'') END::varchar as old_length_unit,
         sgr_height_min::varchar as old_height_min,
-        (convert_to_unified(sgr_height_min::varchar, case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END, 'length'))::varchar as height_min_unified,
+        (convert_to_unified(sgr_height_min::varchar, case when height_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(height_unit.uni_unit,'') END, 'length'))::varchar as height_min_unified,
         sgr_height_max::varchar as old_height_max,
-        (convert_to_unified(sgr_height_max::varchar, case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END, 'length'))::varchar as height_max_unified,
-        case when height_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(height_unit.uni_unit,'m') END::varchar as old_height_unit,
+        (convert_to_unified(sgr_height_max::varchar, case when height_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(height_unit.uni_unit,'') END, 'length'))::varchar as height_max_unified,
+        case when height_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(height_unit.uni_unit,'') END::varchar as old_height_unit,
         sgr_depth_min::varchar as old_depth_min,
-        (convert_to_unified(sgr_depth_min::varchar, case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END, 'length'))::varchar as depth_min_unified,
+        (convert_to_unified(sgr_depth_min::varchar, case when depth_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(depth_unit.uni_unit,'') END, 'length'))::varchar as depth_min_unified,
         sgr_depth_max::varchar as old_depth_max,
-        (convert_to_unified(sgr_depth_max::varchar, case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END, 'length'))::varchar as depth_max_unified,
-        case when depth_unit.uni_unit = 'Undef.' THEN 'm' ELSE coalesce(depth_unit.uni_unit,'m') END::varchar as old_depth_unit,
+        (convert_to_unified(sgr_depth_max::varchar, case when depth_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(depth_unit.uni_unit,'') END, 'length'))::varchar as depth_max_unified,
+        case when depth_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(depth_unit.uni_unit,'') END::varchar as old_depth_unit,
         sgr_weight_min::varchar as old_weight_min,
-        (convert_to_unified(sgr_weight_min::varchar, case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END, 'weight'))::varchar as weight_min_unified,
+        (convert_to_unified(sgr_weight_min::varchar, case when weight_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(weight_unit.uni_unit,'') END, 'weight'))::varchar as weight_min_unified,
         sgr_weight_max::varchar as old_weight_max,
-        (convert_to_unified(sgr_weight_max::varchar, case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END, 'weight'))::varchar as weight_max_unified,
-        case when weight_unit.uni_unit = 'Undef.' THEN 'g' ELSE coalesce(weight_unit.uni_unit,'g') END::varchar as old_weight_unit,
+        (convert_to_unified(sgr_weight_max::varchar, case when weight_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(weight_unit.uni_unit,'') END, 'weight'))::varchar as weight_max_unified,
+        case when weight_unit.uni_unit = 'Undef.' THEN '' ELSE coalesce(weight_unit.uni_unit,'') END::varchar as old_weight_unit,
         bat_value::numeric as old_insurance_value,
         bat_value_year::smallint as old_insurance_year,
         case when exists(select 1 from people where id = sgr_preparator_nr) then case when sgr_preparator_nr = 0 then null else sgr_preparator_nr end else null::integer end::integer as maintenance_people_ref,
@@ -149,6 +151,11 @@ create table migrated_parts as
                     and old_value -> 'code_category' = 'main'
                     and old_value -> 'full_code_order_by' = fullToIndex(sgr_code)
                   )
+
+/*>Remove when ready*/
+--     and sgr_length_min is not null and sgr_length_min != 0
+--   limit 100
+/*<Remove when ready*/
 );
 
 CREATE INDEX idx_migrated_parts ON migrated_parts (specimen_individual_ref desc, parts_id, specimen_part, main_code);
@@ -501,7 +508,7 @@ $$
 declare
   prop_count integer;
   update_count integer;
-  insert_count integer;
+--   insert_count integer;
   cat_prop_id integer;
   booUpdate boolean := false;
   booContinue boolean := false;
@@ -519,10 +526,10 @@ begin
                           AND notion_concerned = 'general'
                        )
     );
-    GET DIAGNOSTICS insert_count = ROW_COUNT;
-    IF insert_count != 0 THEN
-      RAISE NOTICE 'Comment inserted';
-    END IF;
+--     GET DIAGNOSTICS insert_count = ROW_COUNT;
+--     IF coalesce(insert_count,0) != 0 THEN
+--       RAISE NOTICE 'Comment inserted';
+--     END IF;
   END IF;
   /*Freshness Level*/
   IF coalesce(recPartsDetails.freshness_level, '') != '' THEN
@@ -1145,6 +1152,7 @@ declare
   cat_prop_id integer := 0;
   prop_id integer := 0;
   prop_count integer;
+--   insert_count integer;
   booContinue boolean := true;
 begin
   /* Comments */
@@ -1160,10 +1168,10 @@ begin
                           AND notion_concerned = 'general'
                        )
     );
-    GET DIAGNOSTICS insert_count = ROW_COUNT;
-    IF insert_count != 0 THEN
-      RAISE NOTICE 'Comment inserted';
-    END IF;
+--     GET DIAGNOSTICS insert_count = ROW_COUNT;
+--     IF insert_count != 0 THEN
+--       RAISE NOTICE 'Comment inserted';
+--     END IF;
   END IF;
   /*Freshness level*/
   IF coalesce(recPartsDetails.freshness_level,'') != '' THEN
@@ -1313,6 +1321,7 @@ begin
   END IF;
   /*Length level*/
   IF coalesce(recPartsDetails.old_length_min, '') != '' OR coalesce(recPartsDetails.old_length_max, '') != '' THEN
+--     RAISE NOTICE '**Length';
     SELECT id INTO cat_prop_id
     FROM catalogue_properties as cp
     WHERE referenced_relation = 'specimen_parts'
@@ -1357,11 +1366,13 @@ begin
       IF booContinue THEN
         DELETE FROM catalogue_properties
         WHERE id = cat_prop_id;
+        RAISE NOTICE 'Existing property:%', cat_prop_id;
         insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
         (
           select 'specimen_parts', part_id, 'physical measurement', 'length', '', recPartsDetails.old_length_unit, recPartsDetails.old_length_unit
         )
         returning id INTO cat_prop_id;
+--         RAISE NOTICE 'New property:%', cat_prop_id;
         IF cat_prop_id != 0 THEN
           insert into properties_values (property_ref, property_value)
           (
@@ -1379,6 +1390,7 @@ begin
   END IF;
   /*Height level*/
   IF coalesce(recPartsDetails.old_height_min, '') != '' OR coalesce(recPartsDetails.old_height_max, '') != '' THEN
+--     RAISE NOTICE '**Height';
     SELECT id INTO cat_prop_id
     FROM catalogue_properties as cp
     WHERE referenced_relation = 'specimen_parts'
@@ -1445,6 +1457,7 @@ begin
   END IF;
   /*Depth level*/
   IF coalesce(recPartsDetails.old_depth_min, '') != '' OR coalesce(recPartsDetails.old_depth_max, '') != '' THEN
+--     RAISE NOTICE '**Depth';
     SELECT id INTO cat_prop_id
     FROM catalogue_properties as cp
     WHERE referenced_relation = 'specimen_parts'
@@ -1511,6 +1524,7 @@ begin
   END IF;
   /*Weight level*/
   IF coalesce(recPartsDetails.old_weight_min, '') != '' OR coalesce(recPartsDetails.old_weight_max, '') != '' THEN
+--     RAISE NOTICE '**Weight';
     SELECT id INTO cat_prop_id
     FROM catalogue_properties as cp
     WHERE referenced_relation = 'specimen_parts'
@@ -1576,7 +1590,7 @@ begin
   return 1;
 exception
   when others then
-    RAISE WARNING 'Error in createProperties: %', SQLERRM;
+    RAISE WARNING 'For part: % Error in createProperties: %', part_id, SQLERRM;
     return -1;
 end;
 $$;
@@ -1604,10 +1618,7 @@ declare
 begin
   FOR recPartsDetails IN select *
                          from darwin2.migrated_parts
-                            where part_comment != ''
 --                          where old_weight_min is not null and old_weight_min != '0'
-                         order by specimen_individual_ref desc, parts_id, specimen_part, main_code
-                         limit 20
   LOOP
     comptage := comptage + 1;
     IF comptage IN (5000, 10000, 20000, 40000, 50000, 75000, 90000, 100000, 125000, 150000, 175000, 200000, 225000, 250000, 275000, 300000, 325000, 350000, 375000) THEN
@@ -1789,7 +1800,7 @@ begin
       IF booUpdateProperties THEN
 --         SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = part_id;
 --         RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
---         select array_agg(property_value/*_unified*/)
+--         select array_agg(property_value_unified), array_agg(property_value)
 --         into recProperties
 --         from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
 --         where referenced_relation = 'specimen_parts' and record_id = part_id;
@@ -1809,7 +1820,8 @@ begin
         IF createProperties (part_id, recPartsDetails) < 0 THEN
           return false;
         END IF;
---         select array_agg(property_value/*_unified*/)
+
+--         select array_agg(property_value_unified), array_agg(property_value)
 --         into recProperties
 --         from catalogue_properties inner join properties_values on catalogue_properties.id = properties_values.property_ref
 --         where referenced_relation = 'specimen_parts' and record_id = part_id;
@@ -1877,7 +1889,7 @@ begin
 --       RAISE NOTICE '++Actual count min and max: % and %', spec_part_count_min, spec_part_count_max;
 --       SELECT specimen_part_count_min, specimen_part_count_max INTO spec_part_count_min, spec_part_count_max FROM specimen_parts WHERE id = new_part_id;
 --       RAISE NOTICE '++Transfered count min and max: % and %', spec_part_count_min, spec_part_count_max;
---       SELECT array_agg(property_value/*_unified*/)
+--       SELECT array_agg(property_value_unified), array_agg(property_value/*_unified*/)
 --       INTO recProperties
 --       FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
 --       WHERE referenced_relation = 'specimen_parts'
@@ -1898,7 +1910,8 @@ begin
       IF moveOrCreateProp(part_id, new_part_id, recPartsDetails, recFirstPart) < 0 THEN
         return false;
       END IF;
---       SELECT array_agg(property_value/*_unified*/)
+
+--       SELECT array_agg(property_value_unified), array_agg(property_value/*_unified*/)
 --       INTO recProperties
 --       FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
 --       WHERE referenced_relation = 'specimen_parts'
@@ -1916,7 +1929,7 @@ begin
 --       WHERE referenced_relation = 'specimen_parts'
 --         AND record_id = case when coalesce(new_first_part_id,0)=0 then part_id else new_first_part_id end;
 --       RAISE NOTICE '+++ Maintenance after transfert: %', recProperties;
---       SELECT array_agg(property_value/*_unified*/)
+--       SELECT array_agg(property_value_unified), array_agg(property_value/*_unified*/)
 --       INTO recProperties
 --       FROM catalogue_properties inner join properties_values on catalogue_properties.id = property_ref
 --       WHERE referenced_relation = 'specimen_parts'
@@ -1945,8 +1958,6 @@ end;
 $$;
 
 SELECT resplit_parts();
-
-rollback;
 
 create or replace function split_parts() returns boolean language plpgsql
 AS
@@ -2082,3 +2093,5 @@ ALTER TABLE comments ENABLE TRIGGER trg_chk_ref_record_comments;
 ALTER TABLE comments ENABLE TRIGGER trg_trk_log_table_comments;
 
 commit;
+
+/*\i ./recreate_flat.sql*/
