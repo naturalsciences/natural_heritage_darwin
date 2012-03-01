@@ -25,7 +25,7 @@ create index idx_spec_spec_weight_unit on darwin1.tbl_specimen_groups (sgr_weigh
 create index idx_spec_spec_height_unit on darwin1.tbl_specimen_groups (sgr_height_min_uni_nr);
 create index idx_spec_spec_depth_unit on darwin1.tbl_specimen_groups (sgr_depth_min_uni_nr);
 
-drop table if exists darwin2.migrated_parts CASCADE;
+/*drop table if exists darwin2.migrated_parts CASCADE;*/
 
 create table darwin2.migrated_parts as
 (
@@ -1366,7 +1366,7 @@ begin
       IF booContinue THEN
         DELETE FROM catalogue_properties
         WHERE id = cat_prop_id;
-        RAISE NOTICE 'Existing property:%', cat_prop_id;
+--         RAISE NOTICE 'Existing property:%', cat_prop_id;
         insert into catalogue_properties (referenced_relation, record_id, property_type, property_sub_type, property_qualifier, property_unit, property_accuracy_unit)
         (
           select 'specimen_parts', part_id, 'physical measurement', 'length', '', recPartsDetails.old_length_unit, recPartsDetails.old_length_unit
