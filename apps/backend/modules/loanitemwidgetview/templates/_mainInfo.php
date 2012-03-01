@@ -12,11 +12,11 @@
       <td rowspan="3" class="loanitem_details"><?php echo $loan->getDetails();?></td>
     </tr>
     <tr>
-      <th><?php echo __('I.G. Number');?></th>
+      <th><?php echo __('I.G. number');?></th>
       <td><?php echo $loan->Ig->getIgNum();?></td>
     </tr>
     <tr>
-      <th><?php echo __('Return Date');?></th>
+      <th><?php echo __('Return date');?></th>
       <td><?php $date = new DateTime($loan->getToDate());
                 echo $date->format('d/m/Y'); ?></td>
     </tr>

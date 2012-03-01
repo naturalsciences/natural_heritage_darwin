@@ -3323,6 +3323,14 @@
         <source>This user already exists</source>
         <target>Cet utilisateur existe déjà</target>
       </trans-unit>
+          <trans-unit id="1546">
+        <source>Checker</source>
+        <target>Vérificateur</target>
+      </trans-unit>
+          <trans-unit id="1548">
+        <source>Accompanist</source>
+        <target>Accompagnateur</target>
+      </trans-unit>
           <trans-unit id="865">
         <source>Edit Name</source>
         <target>Editer Nom</target>
@@ -4508,6 +4516,26 @@
         <source>Your file has been loaded, but still need to be checked</source>
         <target>Votre fichier a été chargé, mais doit encore être examiné.</target>
       </trans-unit>
+          <trans-unit id="1549">
+        <source>Transporter</source>
+        <target>Transporteur</target>
+      </trans-unit>
+          <trans-unit id="1551">
+        <source>Usage</source>
+        <target>Utilisation</target>
+      </trans-unit>
+          <trans-unit id="1552">
+        <source>State observation</source>
+        <target>Observation d&#039;état</target>
+      </trans-unit>
+          <trans-unit id="1586">
+        <source>Add Maintenance for checked</source>
+        <target>Ajouter maintenance pour les sélectionnés</target>
+      </trans-unit>
+          <trans-unit id="1587">
+        <source>Back to Loan</source>
+        <target>Retour au prêt</target>
+      </trans-unit>
           <trans-unit id="1384">
         <source>Between %min% and %max%</source>
         <target>Entre %min% et %max%</target>
@@ -4519,6 +4547,10 @@
           <trans-unit id="1458">
         <source>One or more %field% were not found or have too many results. In both cases, you must choose an existing one or create one.</source>
         <target>Un ou plusieurs %field% n&#039;ont pas été trouvés ou présentent trop de résultats. Dans les deux cas, vous devez choisir une référence ou en créer une.</target>
+      </trans-unit>
+          <trans-unit id="1589">
+        <source>Choose Darwin Part</source>
+        <target>Choisissez une partie Darwin</target>
       </trans-unit>
           <trans-unit id="1381">
         <source>Dear %title% %name%,</source>
@@ -4567,6 +4599,26 @@
           <trans-unit id="1462">
         <source>This persons record still has links with others</source>
         <target>Cette personne est toujours liée à une autre</target>
+      </trans-unit>
+          <trans-unit id="1507">
+        <source>Search Loans</source>
+        <target>Rechercher des prêts</target>
+      </trans-unit>
+          <trans-unit id="1508">
+        <source>Loans Search</source>
+        <target>Recherche de prêt</target>
+      </trans-unit>
+          <trans-unit id="1553">
+        <source>Edit loan item</source>
+        <target>Editer objet de prêt</target>
+      </trans-unit>
+          <trans-unit id="1590">
+        <source>No Items here.</source>
+        <target>Pas d&#039;objets ici.</target>
+      </trans-unit>
+          <trans-unit id="1591">
+        <source>Please pin some parts.</source>
+        <target>Veuillez épingler des parties</target>
       </trans-unit>
           <trans-unit id="1473">
         <source>This collection is linked with one or more specimens</source>
@@ -4652,6 +4704,34 @@
         <source>This gtu is linked with one or more specimens</source>
         <target>Ce GTU est lié avec un ou plusieurs échantillons</target>
       </trans-unit>
+          <trans-unit id="1509">
+        <source>Contains Darwin items</source>
+        <target>Contient des objets Darwin</target>
+      </trans-unit>
+          <trans-unit id="1588">
+        <source>Add item</source>
+        <target>Ajouter objet</target>
+      </trans-unit>
+          <trans-unit id="1554">
+        <source>Add Maintenance :</source>
+        <target>Ajouter maintenance :</target>
+      </trans-unit>
+          <trans-unit id="1593">
+        <source>Choose Insurer</source>
+        <target>Choisissez un assureur</target>
+      </trans-unit>
+          <trans-unit id="1510">
+        <source>Person</source>
+        <target>Personne</target>
+      </trans-unit>
+          <trans-unit id="1556">
+        <source>Part Id</source>
+        <target>Id de partie</target>
+      </trans-unit>
+          <trans-unit id="1594">
+        <source>Latest Statuses</source>
+        <target>Dernier Status</target>
+      </trans-unit>
           <trans-unit id="806">
         <source>You don\&#039;t have the rights to insert into or update a specimen in this collection</source>
         <target>Vous n\&#039;avez pas la permission d&#039;insérer ou mettre à jour un échantillon dans cet collection</target>
@@ -4659,6 +4739,22 @@
           <trans-unit id="1504">
         <source>This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
         <target>Cette widget vous permet d&#039;ajouter une note pour un échantillon spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
+      </trans-unit>
+          <trans-unit id="1511">
+        <source>Edit loan</source>
+        <target>Editer prêt</target>
+      </trans-unit>
+          <trans-unit id="1513">
+        <source>New loan</source>
+        <target>Nouveau prêt</target>
+      </trans-unit>
+          <trans-unit id="1514">
+        <source>Duplicate loan</source>
+        <target>Dupliquer prêt</target>
+      </trans-unit>
+          <trans-unit id="1557">
+        <source>Return date</source>
+        <target>Date de retour</target>
       </trans-unit>
           <trans-unit id="1405">
         <source>Taxon.</source>
@@ -4764,6 +4860,10 @@
         <source>This widget allow you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
         <target>Cette widget vous permet d&#039;ajouter une note pour une personne spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
       </trans-unit>
+          <trans-unit id="1558">
+        <source>Please save your loan item in order to add properties</source>
+        <target>Veuillez sauvegarder votre objet de prêt afin d&#039;ajouter des propriétés</target>
+      </trans-unit>
           <trans-unit id="1418">
         <source>Import</source>
         <target>Importer</target>
@@ -4779,6 +4879,10 @@
           <trans-unit id="1421">
         <source>Delete import</source>
         <target>Supprimer l&#039;import</target>
+      </trans-unit>
+          <trans-unit id="1515">
+        <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
+        <target>La soumission du formulaire n&#039;a pas été effectuée. Cela veut probablement dire que vous avez uploadé un fichier trop volumineux</target>
       </trans-unit>
           <trans-unit id="1352">
         <source>This application requires an authentication.</source>
@@ -4832,6 +4936,18 @@
         <source>Which role</source>
         <target>Quel rôle</target>
       </trans-unit>
+          <trans-unit id="1516">
+        <source>Add loan</source>
+        <target>Ajouter prêt</target>
+      </trans-unit>
+          <trans-unit id="1559">
+        <source>Please save your loan in order to add properties</source>
+        <target>Veuillez sauvegarder votre prêt afin d&#039;ajouter des propriétés</target>
+      </trans-unit>
+          <trans-unit id="1560">
+        <source>Sender side</source>
+        <target>Coté expéditeur</target>
+      </trans-unit>
           <trans-unit id="1362">
         <source>This widget allows you to add people that can have different roles. e.g. an author, a reviewer, an expert in a certain domain, etc.</source>
         <target>Ce widget vous permet d&#039;ajouter des personnes qui peuvent avoir des rôles différents. par exemple, un auteur, un réviseur, un expert dans un domaine particulier, etc.</target>
@@ -4847,6 +4963,22 @@
           <trans-unit id="1506">
         <source>Person of contact</source>
         <target>Personne de contact</target>
+      </trans-unit>
+          <trans-unit id="1561">
+        <source>Roles</source>
+        <target>Rôles</target>
+      </trans-unit>
+          <trans-unit id="1562">
+        <source>Receiver side</source>
+        <target>Coté destinataire</target>
+      </trans-unit>
+          <trans-unit id="1563">
+        <source>Add Sender</source>
+        <target>Ajouter expéditeur</target>
+      </trans-unit>
+          <trans-unit id="1564">
+        <source>Add Receiver</source>
+        <target>Ajouter destinataire</target>
       </trans-unit>
           <trans-unit id="1363">
         <source>This widget can be used to add the equivalent vernacular name of the record in different languages. You can even add more than one vernacular name in the same language</source>
@@ -4904,6 +5036,26 @@
         <source>All children will be deleted too, Are you sure ?</source>
         <target>Tous les enfants seront également effacés, êtes vous sûr(e) ? </target>
       </trans-unit>
+          <trans-unit id="1517">
+        <source>The return date must be after the expedition date.</source>
+        <target>La date de retour doit être après la date d&#039;expédition</target>
+      </trans-unit>
+          <trans-unit id="1518">
+        <source>The end, extended and effective date must be after the start date.</source>
+        <target>La date de fin, de prolongation et effective doivent être après la date de début.</target>
+      </trans-unit>
+          <trans-unit id="1519">
+        <source>The end date must be before the extended to date</source>
+        <target>La date de fin doit être avant la date de prolongation</target>
+      </trans-unit>
+          <trans-unit id="1565">
+        <source>New Status</source>
+        <target>Nouveau status</target>
+      </trans-unit>
+          <trans-unit id="1567">
+        <source>View all status</source>
+        <target>Voir tous les status</target>
+      </trans-unit>
           <trans-unit id="1185">
         <source>Via this widget you can perform a search in order to find all records where a specific person (or institution) appears. You can also choose one or more roles for this person (such as collector, identifier and/or donator/seller)</source>
         <target>Via cette widget, vous pouvez effectuer une recherche afin de trouver tous les enregistrements où une personne spécifique (ou un institut) apparait. Vous pouvez aussi choisir un ou plusieurs rôles pour cette personne (tel que collecteur, Identificateur et/ou donnateur/vendeur)</target>
@@ -4911,6 +5063,14 @@
           <trans-unit id="1437">
         <source>Help on available button</source>
         <target>Aide sur les boutons disponibles</target>
+      </trans-unit>
+          <trans-unit id="1568">
+        <source>History</source>
+        <target>Historique</target>
+      </trans-unit>
+          <trans-unit id="1569">
+        <source>Please save your loan in order to add status</source>
+        <target>Veuillez sauvegarder votre prêt afin d&#039;ajouter des status</target>
       </trans-unit>
           <trans-unit id="1186">
         <source>Donator or seller</source>
@@ -4932,9 +5092,21 @@
         <source>This widget allows you to link one or more codes to a specimen. You can either associate a prefix, a separator, a code, a separator and/or a suffix to each type of code (main, temporary,etc.)</source>
         <target>Ce widget vous permet de relier un ou plusieurs codes à un spécimen. Vous pouvez associer un préfixe, un séparateur, un code, un séparateur et/ou un suffixe à chaque type de code (principal, temporaires, etc)</target>
       </trans-unit>
+          <trans-unit id="1520">
+        <source>You have 2 similar loan items</source>
+        <target>Vous avez 2 objets de prêt similaires</target>
+      </trans-unit>
           <trans-unit id="1438">
         <source>Application Language</source>
         <target>Langue de travail</target>
+      </trans-unit>
+          <trans-unit id="1572">
+        <source>Edition right</source>
+        <target>Droit d&#039;édition</target>
+      </trans-unit>
+          <trans-unit id="1573">
+        <source>Related Files</source>
+        <target>Fichier </target>
       </trans-unit>
           <trans-unit id="1366">
         <source>Specify which function you want to give to this user for your collection. Two buttons are available on edition. The button &#039;on sub collection...&#039; allow you to also give right for this user on sub collections managed by you. With the button &#039;manage widget&#039; (visible only for register_user function), you can allow the visibility (read only) of private widget wicth a registered user normaly won&#039;t have right to see it</source>
@@ -4944,6 +5116,22 @@
         <source>Filename</source>
         <target>Nom de fichier</target>
       </trans-unit>
+          <trans-unit id="1576">
+        <source>Darwin Users</source>
+        <target>Utilisateurs Darwin</target>
+      </trans-unit>
+          <trans-unit id="1577">
+        <source>Loan status</source>
+        <target>Statut du prêt</target>
+      </trans-unit>
+          <trans-unit id="1578">
+        <source>Informative Workflow</source>
+        <target>Flux d&#039;information</target>
+      </trans-unit>
+          <trans-unit id="1575">
+        <source>Loan Item</source>
+        <target>Objet de prêt</target>
+      </trans-unit>
           <trans-unit id="1443">
         <source>You may want to include &lt;em&gt;rows without errors&lt;/em&gt;</source>
         <target>Vous pourriez souhaiter inclure les &lt;em&gt;lignes sans erreurs&lt;/em&gt;</target>
@@ -4952,9 +5140,73 @@
         <source>Show finished</source>
         <target>Montrer les enregistrement terminés</target>
       </trans-unit>
+          <trans-unit id="1524">
+        <source>Ends on</source>
+        <target>Fini en </target>
+      </trans-unit>
+          <trans-unit id="1525">
+        <source>Invalid date &quot;Extended&quot;</source>
+        <target>Invalide date &quot;prolongée&quot;</target>
+      </trans-unit>
+          <trans-unit id="1526">
+        <source>Add File</source>
+        <target>Ajouter fichier</target>
+      </trans-unit>
+          <trans-unit id="1521">
+        <source>this type of extention is not allowed here</source>
+        <target>Ce type d&#039;extension n&#039;est pas permis ici</target>
+      </trans-unit>
+          <trans-unit id="1522">
+        <source>Please don&#039;t try stupid things, don&#039;t touch the uri</source>
+        <target>S&#039;il vous plait, n&#039;essayez pas ce genre d&#039;action stupide, ne touchez pas à l&#039;uri</target>
+      </trans-unit>
+          <trans-unit id="1529">
+        <source>Specific person</source>
+        <target>Personne spécifique</target>
+      </trans-unit>
           <trans-unit id="1367">
         <source>Whom are you looking for</source>
         <target>Qui recherchez vous</target>
+      </trans-unit>
+          <trans-unit id="1523">
+        <source>Start on</source>
+        <target>Commence en</target>
+      </trans-unit>
+          <trans-unit id="1531">
+        <source>Maintenances</source>
+        <target>Maintenances</target>
+      </trans-unit>
+          <trans-unit id="1544">
+        <source>Responsible</source>
+        <target>Responsable</target>
+      </trans-unit>
+          <trans-unit id="1532">
+        <source>Darwin Part</source>
+        <target>Partie Darwin</target>
+      </trans-unit>
+          <trans-unit id="1570">
+        <source>Created At</source>
+        <target>Créé le</target>
+      </trans-unit>
+          <trans-unit id="1533">
+        <source>I.g. Num</source>
+        <target>Numéro I.g.</target>
+      </trans-unit>
+          <trans-unit id="1571">
+        <source>Format</source>
+        <target>Format</target>
+      </trans-unit>
+          <trans-unit id="1534">
+        <source>Details</source>
+        <target>Détails</target>
+      </trans-unit>
+          <trans-unit id="1580">
+        <source>People involved</source>
+        <target>Personnes concernées</target>
+      </trans-unit>
+          <trans-unit id="1581">
+        <source>All the loans you\&#039;re involved in.</source>
+        <target>Tout les prêts qui vous concernent</target>
       </trans-unit>
           <trans-unit id="1445">
         <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
@@ -5000,13 +5252,53 @@
         <source>There are no corresponding records.</source>
         <target>Aucun enregistrement correspondant.</target>
       </trans-unit>
+          <trans-unit id="1535">
+        <source>Return</source>
+        <target>Retour</target>
+      </trans-unit>
+          <trans-unit id="1536">
+        <source>There is currently no items in your loan. Do not forget to add them.</source>
+        <target>Il n&#039;y a actuellement pas d&#039;objets dans votre prêt. N&#039;oubliez pas d&#039;en ajouter.</target>
+      </trans-unit>
+          <trans-unit id="1537">
+        <source>There is currently no items in the loan.</source>
+        <target>Il n&#039;y a actuellement pas d&#039;objets dans le prêt</target>
+      </trans-unit>
           <trans-unit id="1370">
         <source>DaRWIN 2 team</source>
         <target>L&#039;équipe DaRWIN 2</target>
       </trans-unit>
+          <trans-unit id="1538">
+        <source>Items overview</source>
+        <target>Aperçu des objets</target>
+      </trans-unit>
+          <trans-unit id="1539">
+        <source>Edit item</source>
+        <target>Editer objet</target>
+      </trans-unit>
+          <trans-unit id="1582">
+        <source>Loans</source>
+        <target>Prêts</target>
+      </trans-unit>
           <trans-unit id="1456">
         <source>Show only row with errors</source>
         <target>Afficher seulement les lignes en erreur</target>
+      </trans-unit>
+          <trans-unit id="1540">
+        <source>View loan</source>
+        <target>Voir le prêt</target>
+      </trans-unit>
+          <trans-unit id="1541">
+        <source>View item</source>
+        <target>Voir l&#039;objet</target>
+      </trans-unit>
+          <trans-unit id="1583">
+        <source>Extended to date</source>
+        <target>Date d’extension de fin</target>
+      </trans-unit>
+          <trans-unit id="1584">
+        <source>Effective to date</source>
+        <target>Date effective de fin</target>
       </trans-unit>
           <trans-unit id="1378">
         <source>Field to be corrected</source>
@@ -5015,6 +5307,14 @@
           <trans-unit id="1377">
         <source>No errors on this record</source>
         <target>Aucune erreur sur cet enregistrement</target>
+      </trans-unit>
+          <trans-unit id="1543">
+        <source>Back to board</source>
+        <target>Retour au tableau de bord</target>
+      </trans-unit>
+          <trans-unit id="1585">
+        <source>People Info</source>
+        <target>Information</target>
       </trans-unit>
           <trans-unit id="1375">
         <source>This %field% was not found in our database, please choose an existing one or remove it</source>

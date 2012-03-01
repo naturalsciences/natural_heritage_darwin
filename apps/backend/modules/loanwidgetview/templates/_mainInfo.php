@@ -5,13 +5,13 @@
       <td>
         <?php echo $loan->getName();?>
       </td>
-      <th><?php echo __('Start On');?> :</th>
+      <th><?php echo __('Start on');?> :</th>
       <td>
         <?php $date = new DateTime($loan->getFromDate());
                 echo $date->format('d/m/Y'); ?>
       </td>
 
-      <th><?php echo __('Extended to');?> :</th>
+      <th><?php echo __('Extended to date');?> :</th>
       <td>
         <?php $date = new DateTime($loan->getToDate());
                 echo $date->format('d/m/Y'); ?>
@@ -23,12 +23,12 @@
       <th></th>
       <td></td>
 
-      <th><?php echo __('Ends On');?> :</th>
+      <th><?php echo __('Ends on');?> :</th>
       <td><?php $date = new DateTime($loan->getToDate());
                 echo $date->format('d/m/Y'); ?>
       </td>
 
-      <th><?php echo __('Effective to');?> :</th>
+      <th><?php echo __('Effective to date');?> :</th>
       <td>
         <?php $date = new DateTime($loan->getEffectiveToDate());
                 echo $date->format('d/m/Y'); ?>

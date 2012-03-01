@@ -14,11 +14,11 @@
       <td rowspan="3" class="loanitem_details"><?php echo $obj->getDetails();?></td>
     </tr>
     <tr>
-      <th><?php echo __('I.G. Number');?></th>
+      <th><?php echo __('I.G. number');?></th>
       <td><?php  if($obj->getIgRef()) echo $obj->Ig->getIgNum();?></td>
     </tr>
     <tr>
-      <th><?php echo __('Return Date');?></th>
+      <th><?php echo __('Return date');?></th>
       <td><?php $date = new DateTime($obj->getToDate());
                 echo $date->format('d/m/Y'); ?></td>
     </tr>

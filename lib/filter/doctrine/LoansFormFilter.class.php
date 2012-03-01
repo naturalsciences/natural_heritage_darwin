@@ -88,9 +88,9 @@ class LoansFormFilter extends BaseLoansFormFilter
 
     $this->validatorSchema['ig_ref'] = new sfValidatorInteger(array('required' => false)) ;
     $this->widgetSchema->setLabels(array('from_date' => 'Between',
-                                         'date_to' => 'and',
+                                         'to_date' => 'and',
                                          'only_darwin' => 'Contains Darwin items',
-                                         'people_ref' => 'Specific Actor',
+                                         'people_ref' => 'Specific person',
                                         )
                                   );
   }

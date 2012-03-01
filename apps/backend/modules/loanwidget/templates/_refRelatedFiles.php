@@ -67,7 +67,7 @@
   
   function getFileInfo(file_id) 
   {
-    parent_el = $(this).closest('table.property_values');
+    parent_el = $('#add_file').closest('table.property_values');
     $.ajax(
     {
       type: "GET",

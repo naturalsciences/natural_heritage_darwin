@@ -966,7 +966,7 @@ lw2:
    opened: true
    visible: true
    is_available: true 
-   title_perso: Actors / People implied
+   title_perso: People involved
    all_public: true
 
 lw3:
@@ -1056,7 +1056,7 @@ liw2:
    opened: true
    visible: true
    is_available: true 
-   title_perso: Actors / People implied   
+   title_perso: People involved   
    all_public: true
 
 
