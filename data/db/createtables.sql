@@ -1255,7 +1255,7 @@ create table specimens
         multimedia_visible boolean not null default true,
         ig_ref integer,
         constraint pk_specimens primary key (id),
-        constraint unq_specimens unique (collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref, host_taxon_ref, acquisition_category, acquisition_date, ig_ref),
+        constraint unq_specimens unique (collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref, host_taxon_ref, acquisition_category, acquisition_date, COALESCE(ig_ref,0)),
         constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
         constraint fk_specimens_gtu foreign key (gtu_ref) references gtu(id),
         constraint fk_specimens_collections foreign key (collection_ref) references collections(id),
