@@ -12,7 +12,7 @@
       <?php echo form_tag('loan/overview?id='.$loan->getId(), array('class'=>'edition loan_overview_form'));?>
 
       <?php echo $form->renderGlobalErrors();?>
-        <table <?php if(! count($form['LoanItems']) && ! count($form['newLoanItems'])) echo 'class="hidden"';?>>
+        <table <?php if(! count($form['LoanItems']) && ! count($form['newLoanItems'])) echo 'class="hidden"';?> id="items_table">
         <thead>
           <tr>
             <th></th>
@@ -43,7 +43,8 @@
           <input type="button" id="add_maint_items" value="<?php echo __('Add Maintenance for checked');?>" />
           <a href="<?php echo url_for('loan/addLoanItem?id='.$loan->getId()) ?>" id="add_item"><?php echo __('Add item');?></a>
           &nbsp;
-
+          <a href="<?php echo url_for('parts/choosePinned') ?>" id="add_multiple_pin"><?php echo __('Add multiple items');?></a>
+          &nbsp;
           <?php echo link_to(__('Back to Loan'), 'loan/edit?id='.$loan->getId()) ?>
           <a href="<?php echo url_for('loan/index') ?>"><?php echo __('Cancel');?></a>
 
@@ -131,7 +132,32 @@ $(document).ready(function () {
           style: 'ui-tooltip-light ui-tooltip-rounded'
         });
   });
+  function addPinned(part_id, part_name)
+  { 
+    info = 'ok';
+    ref_table = $('.loan_overview_form > table > tbody');
+    ref_table.find('tr').each(function() {
+      if($(this).find('input[id$=\"_part_ref\"]').val() === part_id) info = 'bad' ;
+    });
+    if(info != 'ok') return false;
+    hideForRefresh('.loan_overview_form') ; 
+    $.ajax(
+    {
+      type: "GET",
+      url: $('#add_item').attr('href')+ '/num/' + ( 0+$(ref_table).find('tr').length)+'/part_ref/'+part_id,
+      success: function(html)
+      {
+        ref_table.append(html);
+        $('.warn_message').addClass('hidden');
+        showAfterRefresh('.loan_overview_form');
+        $('.loan_overview_form').css({position: 'absolute'});
 
+        $('.loan_overview_form > table').removeClass('hidden');
+      }
+    }); 
+    return true;
+  }
+  $(".loan_overview_form").catalogue_people({add_button: '#add_multiple_pin', q_tip_text: 'Choose Darwin Part',update_row_fct: addPinned });
 });
 
 

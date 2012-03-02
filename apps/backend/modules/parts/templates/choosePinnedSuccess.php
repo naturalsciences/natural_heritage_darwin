@@ -41,8 +41,21 @@
       $('.result_choose').bind('click', function () {
           ref_element_id = getIdInClasses($(this).closest('tr'));
           ref_element_name = $(this).closest('tr').children("td.item_name").text();
-          $('.results tbody tr').die('click');
-          $('body').trigger('close_modal');
+          if(typeof fct_update=="function")
+          {
+            $(this).closest('tr').remove();            
+            fct_update(ref_element_id, ref_element_name);
+            if($('table.part_pinned_choose').find('tr').length == 0) 
+            {
+              $('.results tbody tr').die('click');
+             $('body').trigger('close_modal');           
+            }
+          }
+          else
+          {
+            $('.results tbody tr').die('click');
+            $('body').trigger('close_modal');
+          }
       });
     });
     </script>

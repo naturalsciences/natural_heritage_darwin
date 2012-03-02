@@ -25,9 +25,11 @@ class LoanOverviewForm extends sfForm
   }
 
   
-  public function addItem($num)
+  public function addItem($num,$part_ref=null)
   {
-    $form = new LoanItemsForm();
+    $item = new LoanItems() ;  
+    if($part_ref) $item->setPartRef($part_ref) ;
+    $form = new LoanItemsForm($item);    
     $this->embeddedForms['newLoanItems']->embedForm($num, $form);
     //Re-embedding the container
     $this->embedForm('newLoanItems', $this->embeddedForms['newLoanItems']);
@@ -90,7 +92,12 @@ class LoanOverviewForm extends sfForm
     }
     
   }
-
+  public function getJavaScripts()
+  {
+    $javascripts=parent::getJavascripts();
+    $javascripts[]='/js/catalogue_people.js';   
+    return $javascripts;
+  }
   public function getStylesheets()
   {
     return array('/css/ui.datepicker.css' => 'all');

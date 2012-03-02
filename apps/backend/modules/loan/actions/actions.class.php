@@ -250,8 +250,9 @@ class loanActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $this->loan = $this->checkRight($request->getParameter('id'));
     $item = new LoanItems();
+    $part_ref = $request->getParameter('part_ref',null);
     $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
-    $this->form->addItem($number);
+    $this->form->addItem($number,$part_ref);
     return $this->renderPartial('loanLine',array('form' => $this->form['newLoanItems'][$number], 'lineObj'=> $item));
   }
 

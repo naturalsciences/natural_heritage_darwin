@@ -6,7 +6,7 @@
     <?php endif;?>
   </td>
   <td>
-      <?php echo image_tag('info.png',"title=info class=extd_info");?>
+    <?php echo image_tag('info.png',"class=extd_info");?>
     <?php echo $form['part_ref']->renderError();?>
     <?php echo $form['part_ref'];?>
   </td>
