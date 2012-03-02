@@ -1294,7 +1294,6 @@ create table specimens
         multimedia_visible boolean not null default true,
         ig_ref integer,
         constraint pk_specimens primary key (id),
-        constraint unq_specimens unique (collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref, host_taxon_ref, acquisition_category, acquisition_date, ig_ref),
         constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
         constraint fk_specimens_gtu foreign key (gtu_ref) references gtu(id),
         constraint fk_specimens_collections foreign key (collection_ref) references collections(id),
@@ -1307,6 +1306,11 @@ create table specimens
         constraint fk_specimens_host_specimen foreign key (host_specimen_ref) references specimens(id) on delete set null,
         constraint fk_specimens_igs foreign key (ig_ref) references igs(id)
        );
+CREATE UNIQUE INDEX unq_specimens
+  ON specimens
+  USING btree
+  (collection_ref , expedition_ref , gtu_ref , taxon_ref , litho_ref , chrono_ref , lithology_ref , mineral_ref , host_taxon_ref , acquisition_category , acquisition_date , (COALESCE(ig_ref, 0)) );
+
 comment on table specimens is 'Specimens or batch of specimens stored in collection';
 comment on column specimens.id is 'Unique identifier of a specimen or batch of specimens';
 comment on column specimens.collection_ref is 'Reference of collection the specimen is grouped under - id field of collections table';
