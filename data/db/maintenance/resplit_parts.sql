@@ -503,6 +503,21 @@ EXCEPTION
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION column_exists(colname text, tablename text) RETURNS boolean LANGUAGE plpgsql AS
+$$
+DECLARE
+  q text;
+  onerow record;
+BEGIN
+  q = 'SELECT attname FROM pg_attribute WHERE attrelid = ( SELECT oid FROM pg_class WHERE relname = ' || quote_literal(tablename) || ') AND attname = ' || quote_literal(colname);
+  FOR onerow IN EXECUTE q
+  LOOP
+    RETURN true;
+  END LOOP;
+  RETURN false;
+END;
+$$;
+
 create or replace function moveOrCreateProp (IN part_id specimen_parts.id%TYPE, IN new_part_id specimen_parts.id%TYPE, IN recPartsDetails recPartsDetail, IN recFirstPartsDetails recPartsDetail) returns integer language plpgsql AS
 $$
 declare
@@ -1057,22 +1072,34 @@ begin
       END IF;
     END IF;
     IF booContinue THEN
-      INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_year,
-                              date_from, date_from_mask,
-                              date_to, date_to_mask
-                             )
-      (SELECT 'specimen_parts', new_part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0),
-              case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then DATE ('0001-01-01') else DATE (recPartsDetails.old_insurance_year || '-01-01') end,
-              case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then 0 else 32 end,
-              case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then DATE ('2038-12-31') else DATE (recPartsDetails.old_insurance_year || '-12-31') end,
-              case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then 0 else 32 end
-       WHERE NOT EXISTS (SELECT 1
-                         FROM insurances
-                         WHERE referenced_relation = 'specimen_parts'
-                           AND record_id = new_part_id
-                           AND insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
-                        )
-      );
+      IF column_exists('date_from', 'insurances') THEN
+        INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_year,
+                                date_from, date_from_mask,
+                                date_to, date_to_mask
+                              )
+        (SELECT 'specimen_parts', new_part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0),
+                case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then DATE ('0001-01-01') else DATE (recPartsDetails.old_insurance_year || '-01-01') end,
+                case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then 0 else 32 end,
+                case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then DATE ('2038-12-31') else DATE (recPartsDetails.old_insurance_year || '-12-31') end,
+                case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then 0 else 32 end
+         WHERE NOT EXISTS (SELECT 1
+                           FROM insurances
+                           WHERE referenced_relation = 'specimen_parts'
+                             AND record_id = new_part_id
+                             AND insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
+                          )
+        );
+      ELSE
+        INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_year)
+        (SELECT 'specimen_parts', new_part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0)
+         WHERE NOT EXISTS (SELECT 1
+                           FROM insurances
+                           WHERE referenced_relation = 'specimen_parts'
+                             AND record_id = new_part_id
+                             AND insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
+                          )
+        );
+      END IF;
     END IF;
   END IF;
   booContinue := false;
@@ -1258,22 +1285,34 @@ begin
         and insurance_year = coalesce(recPartsDetails.old_insurance_year,0);
       GET DIAGNOSTICS prop_count = ROW_COUNT;
       IF prop_count = 0 THEN
-        INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_year,
-                                date_from, date_from_mask,
-                                date_to, date_to_mask
-                              )
-        (SELECT 'specimen_parts', part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0),
-                case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then DATE ('0001-01-01') else DATE (recPartsDetails.old_insurance_year || '-01-01') end,
-                case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then 0 else 32 end,
-                case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then DATE ('2038-12-31') else DATE (recPartsDetails.old_insurance_year || '-12-31') end,
-                case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then 0 else 32 end
-        WHERE NOT EXISTS (SELECT 1
-                          FROM insurances
-                          WHERE referenced_relation = 'specimen_parts'
-                            AND record_id = part_id
-                            AND insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
-                          )
-        );
+        IF column_exists('date_from', 'insurances') THEN
+          INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_year,
+                                  date_from, date_from_mask,
+                                  date_to, date_to_mask
+                                )
+          (SELECT 'specimen_parts', part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0),
+                  case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then DATE ('0001-01-01') else DATE (recPartsDetails.old_insurance_year || '-01-01') end,
+                  case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then 0 else 32 end,
+                  case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then DATE ('2038-12-31') else DATE (recPartsDetails.old_insurance_year || '-12-31') end,
+                  case when coalesce(recPartsDetails.old_insurance_year,0) = 0 then 0 else 32 end
+           WHERE NOT EXISTS (SELECT 1
+                             FROM insurances
+                             WHERE referenced_relation = 'specimen_parts'
+                               AND record_id = part_id
+                               AND insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
+                            )
+          );
+        ELSE
+          INSERT INTO insurances (referenced_relation, record_id, insurance_value, insurance_year)
+          (SELECT 'specimen_parts', part_id, recPartsDetails.old_insurance_value, coalesce(recPartsDetails.old_insurance_year,0)
+           WHERE NOT EXISTS (SELECT 1
+                             FROM insurances
+                             WHERE referenced_relation = 'specimen_parts'
+                               AND record_id = part_id
+                               AND insurance_year = coalesce(recPartsDetails.old_insurance_year,0)
+                            )
+          );
+        END IF;
       END IF;
     END IF;
   END IF;
@@ -2067,6 +2106,7 @@ DROP FUNCTION IF EXISTS decrementCount(specimen_parts.id%TYPE, bigint) CASCADE;
 DROP FUNCTION IF EXISTS createCodes(specimen_parts.id%TYPE, varchar) CASCADE;
 DROP FUNCTION IF EXISTS resplit_parts () CASCADE;
 DROP FUNCTION IF EXISTS split_parts () CASCADE;
+DROP FUNCTION IF EXISTS column_exists(text,text) CASCADE;
 
 ALTER TABLE specimen_parts ENABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
 ALTER TABLE specimen_parts ENABLE TRIGGER fct_cpy_trg_ins_update_dict_specimen_parts;
