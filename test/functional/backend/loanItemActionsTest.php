@@ -15,7 +15,7 @@ $browser->
 
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('#tab_0', ' < Edit Loan > ')->
+    checkElement('#tab_0', ' < Edit loan > ')->
   end()->
   click('Items overview')->
   with('request')->begin()->
