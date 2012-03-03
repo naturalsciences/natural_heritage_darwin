@@ -1,3 +1,5 @@
+SET search_path = darwin2, public;
+
 BEGIN;
 
 DROP TABLE IF EXISTS darwin_flat CASCADE;
