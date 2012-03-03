@@ -2134,4 +2134,4 @@ ALTER TABLE comments ENABLE TRIGGER trg_trk_log_table_comments;
 
 commit;
 
-/*\i ./recreate_flat.sql*/
+\i ./recreate_flat.sql
