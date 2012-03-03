@@ -1,4 +1,4 @@
-SET search_path = darwin1, darwin2, public;
+SET search_path = darwin2, darwin1, public;
 
 create index idx_id_refs_old_id on darwin1.id_refs ("system", old_id) where "system" = 'individuals';
 create index idx_id_refs_new_id on darwin1.id_refs ("system", new_id) where "system" = 'individuals';
