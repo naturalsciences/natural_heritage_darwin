@@ -250,14 +250,26 @@ class DarwinTable extends Doctrine_Table
     return $result;
   }
 
-	public static function CollectionToArray($collection, $key)
-	{
-		$result = array();
-		foreach($collection as $row)
-		{
-			$val = $row[$key];
-			$result[$val] = $val;
-		}
-		return $result;
-	}
+  public static function CollectionToArray($collection, $key)
+  {
+    $result = array();
+    foreach($collection as $row)
+    {
+      $val = $row[$key];
+      $result[$val] = $val;
+    }
+    return $result;
+  }
+
+  public function getIdsFromArrayQuery($table, $Ids)
+  {
+    if(!is_array($Ids))
+      $Ids = array($Ids);
+        if(empty($Ids)) return array();
+    $q = Doctrine_Query::create()->
+         from($table)->
+         andWhereIn('id', $Ids)->
+         orderBy('id ASC');
+    return $q->execute();
+  }
 }

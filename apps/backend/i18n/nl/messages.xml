@@ -87,6 +87,30 @@
         <source>Your file has been loaded and checked, you can edit line in errors or import corrects lines</source>
         <target>Uw bestand werd ingeladen en nagekeken en u kunt nu foute lijnen corrigeren of correcte lijnen importeren.</target>
       </trans-unit>
+          <trans-unit id="1544">
+        <source>Responsible</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1546">
+        <source>Checker</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1548">
+        <source>Accompanist</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1549">
+        <source>Transporter</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1551">
+        <source>Usage</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1552">
+        <source>State observation</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1476">
         <source>This lithological unit is linked with one or more specimens</source>
         <target>Deze lithologische eenheid is gelinkt aan één of meerdere specimens</target>
@@ -190,6 +214,26 @@
           <trans-unit id="1461">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;Actually this import module is reserved for the DNA department</source>
         <target>&lt;strong&gt;Pas op!&lt;/strong&gt;Deze import module is bestemd voor het departement DNA</target>
+      </trans-unit>
+          <trans-unit id="1553">
+        <source>Edit loan item</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1507">
+        <source>Search Loans</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1508">
+        <source>Loans Search</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1509">
+        <source>Contains Darwin items</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1510">
+        <source>Person</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1396">
         <source>To be loaded</source>
@@ -399,6 +443,18 @@
         <source>This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
         <target></target>
       </trans-unit>
+          <trans-unit id="1511">
+        <source>Edit loan</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1513">
+        <source>New loan</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1514">
+        <source>Duplicate loan</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1353">
         <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;</source>
         <target>Aangezien DaRWIN volledig gebaseerd is op open source software, zouden we ons verheugen mocht u wensen bij te dragen tot ons project.&lt;br /&gt; Suggesties, Patches, het doorgeven van Foutmeldingen of code sponsering zijn welkom op onze trac : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;;</target>
@@ -406,6 +462,22 @@
           <trans-unit id="1352">
         <source>This application requires an authentication.</source>
         <target>Deze applicatie vergt een toegangscode.</target>
+      </trans-unit>
+          <trans-unit id="1554">
+        <source>Add Maintenance :</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1556">
+        <source>Part Id</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1557">
+        <source>Return date</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1558">
+        <source>Please save your loan item in order to add properties</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1418">
         <source>Import</source>
@@ -475,6 +547,22 @@
         <source>This button (only visible when your file is on Pending state) will allow you to edit or remove data</source>
         <target>Deze knop (enkel zichtbaar in de Wacht status) laat u toe om data te wijzigen of te verwijderen</target>
       </trans-unit>
+          <trans-unit id="1515">
+        <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1516">
+        <source>Add loan</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1505">
+        <source>Choose contact</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1506">
+        <source>Person of contact</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1358">
         <source>As a reminder, here is your username: %username%</source>
         <target>Ter herinnering, uw gebruikersnaam: %username%</target>
@@ -506,6 +594,18 @@
           <trans-unit id="1363">
         <source>This widget can be used to add the equivalent vernacular name of the record in different languages. You can even add more than one vernacular name in the same language</source>
         <target>Via deze widget kunt u een inheemse naam toevoegen aan het record en dit in verschillende talen. U kunt zelfs meer dan één inheemse naam per taal invoeren.</target>
+      </trans-unit>
+          <trans-unit id="1517">
+        <source>The return date must be after the expedition date.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1518">
+        <source>The end, extended and effective date must be after the start date.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1519">
+        <source>The end date must be before the extended to date</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="500">
         <source>Choose a Mineralogic unit</source>
@@ -1435,6 +1535,10 @@
         <source>Chronostratigraphic unit</source>
         <target>Chronostratigrafische eenheid</target>
       </trans-unit>
+          <trans-unit id="1520">
+        <source>You have 2 similar loan items</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="170">
         <source>Ig unit</source>
         <target>Ig eenheid</target>
@@ -1771,6 +1875,14 @@
         <source>yes</source>
         <target>Ja</target>
       </trans-unit>
+          <trans-unit id="1521">
+        <source>this type of extention is not allowed here</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1522">
+        <source>Please don&#039;t try stupid things, don&#039;t touch the uri</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="262">
         <source>no</source>
         <target>Neen</target>
@@ -1794,6 +1906,22 @@
           <trans-unit id="1365">
         <source>This widget allows you to link one or more codes to a specimen. You can either associate a prefix, a separator, a code, a separator and/or a suffix to each type of code (main, temporary,etc.)</source>
         <target>Via deze widget kunt u één of meerdere codes aan een staal toevoegen. U kunt zowel een prefix, scheidingsteken, een code, een andere scheidingsteken en/of een suffix toevoegen aan elke soort code (hoofdcode, tijdelijke code, etc.)</target>
+      </trans-unit>
+          <trans-unit id="1571">
+        <source>Format</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1572">
+        <source>Edition right</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1559">
+        <source>Please save your loan in order to add properties</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1560">
+        <source>Sender side</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="266">
         <source>Sampling location Tags</source>
@@ -2075,6 +2203,62 @@
         <source>You may want to include &lt;em&gt;rows without errors&lt;/em&gt;</source>
         <target>U wenst misschien &lt;em&gt;lijnen zonder fouten&lt;/em&gt; te zien</target>
       </trans-unit>
+          <trans-unit id="1561">
+        <source>Roles</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1562">
+        <source>Receiver side</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1563">
+        <source>Add Sender</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1564">
+        <source>Add Receiver</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1565">
+        <source>New Status</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1567">
+        <source>View all status</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1568">
+        <source>History</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1569">
+        <source>Please save your loan in order to add status</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1570">
+        <source>Created At</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1573">
+        <source>Related Files</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1575">
+        <source>Loan Item</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1576">
+        <source>Darwin Users</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1577">
+        <source>Loan status</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1578">
+        <source>Informative Workflow</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1367">
         <source>Whom are you looking for</source>
         <target>Wie zoekt u</target>
@@ -2083,6 +2267,30 @@
         <source>This %field% was not found in our database, please choose an existing one or remove it</source>
         <target>Dit veld werd niet gevonden in onze databank. Gelieve een bestaande waarde te kiezen of de waarde te verwijderen.</target>
       </trans-unit>
+          <trans-unit id="1523">
+        <source>Start on</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1524">
+        <source>Ends on</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1525">
+        <source>Invalid date &quot;Extended&quot;</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1526">
+        <source>Add File</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1529">
+        <source>Specific person</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1531">
+        <source>Maintenances</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1383">
         <source>Set rights on widgets for %name%</source>
         <target>Gelieve de widget rechten voor %name% in te stellen</target>
@@ -2090,6 +2298,14 @@
           <trans-unit id="1370">
         <source>DaRWIN 2 team</source>
         <target>Het DaRWIN2 team</target>
+      </trans-unit>
+          <trans-unit id="1580">
+        <source>People involved</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1581">
+        <source>All the loans you\&#039;re involved in.</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1445">
         <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
@@ -3971,6 +4187,10 @@
         <source>Choose New Floor</source>
         <target>Nieuwe verdieping kiezen</target>
       </trans-unit>
+          <trans-unit id="1532">
+        <source>Darwin Part</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="905">
         <source>Choose Lithologic unit</source>
         <target>Een Lithologische eenheid kiezen</target>
@@ -4719,6 +4939,22 @@
         <source>This accompanying element already exists</source>
         <target>Dit verwijzend element bestaat reeds</target>
       </trans-unit>
+          <trans-unit id="1533">
+        <source>I.g. Num</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1534">
+        <source>Details</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1535">
+        <source>Return</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1536">
+        <source>There is currently no items in your loan. Do not forget to add them.</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1114">
         <source>Author name and year, used in mineralogy or bacterology</source>
         <target>Naam auteur en jaartal, gebruikt in mineralogie of bacteriologie</target>
@@ -4995,6 +5231,10 @@
         <source>Accompanying elements</source>
         <target>Verwijzende elementen</target>
       </trans-unit>
+          <trans-unit id="1537">
+        <source>There is currently no items in the loan.</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1185">
         <source>Via this widget you can perform a search in order to find all records where a specific person (or institution) appears. You can also choose one or more roles for this person (such as collector, identifier and/or donator/seller)</source>
         <target>Via deze widget kunt u alle records zoeken waar een specifieke persoon (of instelling) in voorkomt. U kunt ook één of meerdere functies voor deze persoon selecteren (zoals verzamelaar, determinator en/of schenker/verkoper) </target>
@@ -5018,6 +5258,42 @@
           <trans-unit id="476">
         <source>Complete</source>
         <target>Volledig</target>
+      </trans-unit>
+          <trans-unit id="1538">
+        <source>Items overview</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1539">
+        <source>Edit item</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1540">
+        <source>View loan</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1541">
+        <source>View item</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1543">
+        <source>Back to board</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1582">
+        <source>Loans</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1583">
+        <source>Extended to date</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1584">
+        <source>Effective to date</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1585">
+        <source>People Info</source>
+        <target></target>
       </trans-unit>
         </body>
   </file>

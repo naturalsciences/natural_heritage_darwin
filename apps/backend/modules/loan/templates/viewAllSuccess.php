@@ -1,6 +1,6 @@
 <?php slot('title', __('Search Loans'));  ?>
 <div id="myLoansViewAllTable" class="page">
-  <h1><?php echo __('All the loans you\'re implied in.');?></h1>
+  <h1><?php echo __('All the loans you\'re involved in.');?></h1>
   <?php if( count($loans) ) : ?> 
   <?php use_helper('Text');?>  
   <table class="show_table">
@@ -27,7 +27,7 @@
 		  echo $toDate->format('d/m/Y');
 	    ?></td>   
 	<td><?php echo link_to(image_tag('blue_eyel.png'),url_for(array('module'=> 'loan', 'action' => 'index', 'id' => $loan->getId())));?></td> 
-	<?php if( $rights[$loan->getId()] ) :?>
+	<?php if( in_array($loan->getId(),sfOutputEscaper::unescape($rights)) ) :?>
 	<td><?php echo link_to(image_tag('edit.png'),url_for(array('module'=> 'loan', 'action' => 'edit', 'id' => $loan->getId())));?></td>
 	<td><?php echo link_to(image_tag('remove.png'),
 			      url_for(array('module'=> 'loan', 'action' => 'delete', 'id' => $loan->getId())), 

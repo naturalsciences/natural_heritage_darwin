@@ -1,1134 +1,669 @@
-<?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE xliff PUBLIC '-//XLIFF//DTD XLIFF//EN' 'http://www.oasis-open.org/committees/xliff/documents/xliff.dtd'>
+<?xml version="1.0" encoding="utf-8" ?><!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
 <xliff version="1.0">
-  <file original="messages" product-name="messages" target-language="en" datatype="plaintext" source-language="EN" date="2010-05-10T13:11:35Z">
-    <header>
-      <phase-group>
-        <phase contact-name="Brice Maron" tool-id="lokalize-1.0" phase-name="approval-1" contact-email="bmaron@naturalsciences.be" process-name="approval" date="2009-10-13"/>
-      </phase-group>
-      <tool tool-id="lokalize-1.0" tool-name="Lokalize" tool-version="1.0"/>
-    </header>
+  <file source-language="en" target-language="" datatype="plaintext" original="en">
+    <header/>
     <body>
-      <trans-unit approved="yes">
-        <source>Username</source> <target phase-name="approval-1">Username</target> </trans-unit>
-      <trans-unit>
-        <source>Password</source> <target phase-name="approval-1" state="signed-off">Password</target> </trans-unit>
-      <trans-unit>
-        <source>Log in</source>
-        <target phase-name="approval-1" state="signed-off">Log in</target>
-      </trans-unit>
-      <trans-unit>
-        <source>This application requires an authentication.
-    Please Log in with your username and password.</source> <target phase-name="approval-1" state="signed-off">This application requires an authentication.
-    Please Log in with your username and password.</target> </trans-unit>
-      <trans-unit>
-        <source>"%value%" must be at least %min_length% characters.</source> <target phase-name="approval-1" state="signed-off">"%value%" must be at least %min_length% characters.</target> </trans-unit>
-      <trans-unit>
-        <source>Required.</source>
-        <target phase-name="approval-1" state="signed-off">Required.</target>
-      </trans-unit>
-      <trans-unit>
-        <source>Invalid login or password</source> <target phase-name="approval-1" state="signed-off">Invalid login or password</target> </trans-unit>
-      <trans-unit>
-        <source>Logout</source> <target phase-name="approval-1" state="signed-off">Logout</target> </trans-unit>
-      <trans-unit id="1">
-        <source>My Profile</source>
-        <target phase-name="approval-1" state="signed-off">My Profile</target>
-      </trans-unit>
-      <trans-unit id="2">
-        <source>Searches</source>
-        <target phase-name="approval-1" state="signed-off">Searches</target>
-      </trans-unit>
-      <trans-unit id="4">
-        <source>Add</source>
-        <target phase-name="approval-1" state="signed-off">Add</target>
-      </trans-unit>
-      <trans-unit id="5">
-        <source>Administration</source>
-        <target phase-name="approval-1" state="signed-off">Administration</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>Dashboard</source>
-        <target phase-name="approval-1" state="signed-off">Dashboard</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>My Saved Searches</source>
-        <target phase-name="approval-1" state="signed-off">My Saved Searches</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>My Saved Specimens</source>
-        <target phase-name="approval-1" state="signed-off">My Saved Specimens</target>
-      </trans-unit>
-      <trans-unit id="2">
-        <source>Customise your interface !</source>
-        <target phase-name="approval-1" state="signed-off">Customise your interface !</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>Specimens</source>
-        <target phase-name="approval-1" state="signed-off">Specimens</target>
-      </trans-unit>
-      <trans-unit id="2">
-        <source>Add Specimens</source>
-        <target phase-name="approval-1" state="signed-off">Add Specimens</target>
-      </trans-unit>
-      <trans-unit id="3">
-        <source>Add New Specimen</source>
-        <target phase-name="approval-1" state="signed-off">Add New Specimen</target>
-      </trans-unit>
-      <trans-unit id="4">
-        <source>Add New Taxon</source>
-        <target phase-name="approval-1" state="signed-off">Add New Taxon</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>Collections</source>
-        <target phase-name="approval-1" state="signed-off">Collections</target>
-      </trans-unit>
-      <trans-unit id="2">
-        <source>Acquisition</source>
-        <target phase-name="approval-1" state="signed-off">Acquisition</target>
-      </trans-unit>
-      <trans-unit id="3">
-        <source>Specimen Count</source>
-        <target phase-name="approval-1" state="signed-off">Specimen Count</target>
-      </trans-unit>
-      <trans-unit id="4">
-        <source>Collection</source>
-        <target phase-name="approval-1" state="signed-off">Collection</target>
-      </trans-unit>
-      <trans-unit id="5">
-        <source>Loan</source>
-        <target phase-name="approval-1" state="signed-off">Loan</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>&amp;lt; New Specimen &amp;gt;</source>
-        <target phase-name="approval-1" state="signed-off"> &amp;lt; Nouveau Spécimen &amp;gt;</target>
-      </trans-unit>
-      <trans-unit id="2">
-        <source>Individuals</source>
-        <target phase-name="approval-1" state="signed-off">Individuals</target>
-      </trans-unit>
-      <trans-unit id="3">
-        <source>Properties</source>
-        <target phase-name="approval-1" state="signed-off">Properties</target>
-      </trans-unit>
-      <trans-unit id="4">
-        <source>Submit</source>
-        <target phase-name="approval-1" state="signed-off">Submit</target>
-      </trans-unit>
-      <trans-unit id="5">
-        <source>Go next</source>
-        <target phase-name="approval-1" state="signed-off">Go next</target>
-      </trans-unit>
-      <trans-unit id="6">
-        <source>Add Another method</source>
-        <target phase-name="approval-1" state="signed-off">Add Another method</target>
-      </trans-unit>
-      <trans-unit id="7">
-        <source>Pick a Method in the List</source>
-        <target phase-name="approval-1" state="signed-off">Pick a Method in the List</target>
-      </trans-unit>
-      <trans-unit id="8">
-        <source>Collecting Tool</source>
-        <target phase-name="approval-1" state="signed-off">Collecting Tool</target>
-      </trans-unit>
-      <trans-unit id="9">
-        <source>Add Another Tool</source>
-        <target phase-name="approval-1" state="signed-off">Add Another Tool</target>
-      </trans-unit>
-      <trans-unit id="10">
-        <source>Pick a Tool in the List</source>
-        <target phase-name="approval-1" state="signed-off">Pick a Tool in the List</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>(e)</source>
-        <target phase-name="approval-1" state="signed-off">(e)</target>
-      </trans-unit>
-      <trans-unit id="2">
-        <source>Collection List</source>
-        <target phase-name="approval-1" state="signed-off">Collection List</target>
-      </trans-unit>
-      <trans-unit id="3">
-        <source>New</source>
-        <target phase-name="approval-1" state="signed-off">New</target>
-      </trans-unit>
-      <trans-unit id="4">
-        <source>Cancel</source>
-        <target phase-name="approval-1" state="signed-off">Cancel</target>
-      </trans-unit>
-      <trans-unit id="5">
-        <source>Are you sure?</source>
-        <target phase-name="approval-1" state="signed-off">Are you sure?</target>
-      </trans-unit>
-      <trans-unit id="6">
-        <source>Save</source>
-        <target phase-name="approval-1" state="signed-off">Save</target>
-      </trans-unit>
-      <trans-unit id="7">
-        <source>Choose a collection</source>
-        <target phase-name="approval-1" state="signed-off"> Choisissez une collection</target>
-      </trans-unit>
-      <trans-unit id="8">
-        <source>New Collection</source>
-        <target phase-name="approval-1" state="signed-off">New Collection</target>
-      </trans-unit>
-      <trans-unit id="9">
-        <source>Edit Collection</source>
-        <target phase-name="approval-1" state="signed-off">Edit Collection</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>Add new specimen</source>
-        <target phase-name="approval-1" state="signed-off">Add new specimen</target>
-      </trans-unit>
-      <trans-unit id="2">
-        <source>More</source>
-        <target phase-name="approval-1" state="signed-off">More</target>
-      </trans-unit>
-      <trans-unit id="3">
-        <source>Add new Taxon</source>
-        <target phase-name="approval-1" state="signed-off">Add new Taxon</target>
-      </trans-unit>
-      <trans-unit id="4">
-        <source>Close</source>
-        <target phase-name="approval-1" state="signed-off">Close</target>
-      </trans-unit>
-      <trans-unit id="5">
-        <source>Choose !</source>
-        <target phase-name="approval-1" state="signed-off">Choose !</target>
-      </trans-unit>
-      <trans-unit id="6">
-        <source>Change !</source>
-        <target phase-name="approval-1" state="signed-off">Change !</target>
-      </trans-unit>
-      <trans-unit id="7">
-        <source>Accuracy</source>
-        <target phase-name="approval-1" state="signed-off">Accuracy</target>
-      </trans-unit>
-      <trans-unit id="8">
-        <source>exact</source>
-        <target phase-name="approval-1" state="signed-off">exact</target>
-      </trans-unit>
-      <trans-unit id="9">
-        <source>imprecise</source>
-        <target phase-name="approval-1" state="signed-off">imprecise</target>
-      </trans-unit>
-      <trans-unit id="10">
-        <source>Specimen count min</source>
-        <target phase-name="approval-1" state="signed-off">Specimen count min</target>
-      </trans-unit>
-      <trans-unit id="11">
-        <source>Specimen count max</source>
-        <target phase-name="approval-1" state="signed-off">Specimen count max</target>
-      </trans-unit>
-      <trans-unit>
-        <source>Expedition List</source>
-        <target phase-name="approval-1" state="signed-off">Expedition List</target>
-      </trans-unit>
-      <trans-unit>
-        <source>begins with</source>
-        <target phase-name="approval-1" state="signed-off">begins with</target>
-      </trans-unit>
-      <trans-unit>
-        <source>contains</source>
-        <target phase-name="approval-1" state="signed-off">contains</target>
-      </trans-unit>
-      <trans-unit>
-        <source>ends by</source>
-        <target phase-name="approval-1" state="signed-off">ends by</target>
-      </trans-unit>
-      <trans-unit>
-        <source>Between</source>
-        <target phase-name="approval-1" state="signed-off">Between</target>
-      </trans-unit>
-      <trans-unit>
-        <source>and</source>
-        <target phase-name="approval-1" state="signed-off"> et</target>
-      </trans-unit>
-      <trans-unit>
-        <source>Name</source>
-        <target phase-name="approval-1" state="signed-off">Name</target>
-      </trans-unit>
-      <trans-unit>
-        <source>Search</source>
-        <target phase-name="approval-1" state="signed-off">Search</target>
-      </trans-unit>
-      <trans-unit id="1">
-        <source>Taxa</source>
-        <target phase-name="approval-1" state="signed-off">Taxa</target>
-      </trans-unit>
-      <trans-unit id="2">
-        <source>Add Collection</source>
-        <target phase-name="approval-1" state="signed-off">Add Collection</target>
-      </trans-unit>
-      <trans-unit id="3">
-        <source>No Taxa Matching</source>
-        <target phase-name="approval-1" state="signed-off">No Taxa Matching</target>
-      </trans-unit>
-      <trans-unit id="4">
-        <source>Search Taxonomic unit</source>
-        <target phase-name="approval-1" state="signed-off">Search Taxonomic unit</target>
-      </trans-unit>
-      <trans-unit id="5">
-        <source>Details :</source>
-        <target phase-name="approval-1" state="signed-off">Details :</target>
-      </trans-unit>
-      <trans-unit id="6">
-        <source>Search Results :</source>
-        <target phase-name="approval-1" state="signed-off">Search Results :</target>
-      </trans-unit>
-      <trans-unit id="7">
-        <source>Taxon Search</source>
-        <target phase-name="approval-1" state="signed-off">Taxon Search</target>
-      </trans-unit>
-      <trans-unit id="8">
-        <source>Recombination</source>
-        <target phase-name="approval-1" state="signed-off">Recombination</target>
-      </trans-unit>
-      <trans-unit id="9">
-        <source>Of</source>
-        <target phase-name="approval-1" state="signed-off">Of</target>
-      </trans-unit>
-      <trans-unit id="10">
-        <source>With</source>
-        <target phase-name="approval-1" state="signed-off">With</target>
-      </trans-unit>
-      <trans-unit id="11">
-        <source>Renamed</source>
-        <target phase-name="approval-1" state="signed-off">Renamed</target>
-      </trans-unit>
-      <trans-unit id="12">
-        <source>Current Name</source>
-        <target phase-name="approval-1" state="signed-off">Current Name</target>
-      </trans-unit>
-      <trans-unit id="13">
-        <source>Choose a Taxon</source>
-        <target phase-name="approval-1" state="signed-off">Choose a Taxon</target>
-      </trans-unit>
-      <trans-unit id="14">
-        <source>Add Taxonomic unit</source>
-        <target phase-name="approval-1" state="signed-off">Add Taxonomic unit</target>
-      </trans-unit>
-      <trans-unit id="15">
-        <source>New Taxonomic unit</source>
-        <target phase-name="approval-1" state="signed-off">New Taxonomic unit</target>
-      </trans-unit>
-      <trans-unit id="16">
-        <source>Edit Taxonomic unit</source>
-        <target phase-name="approval-1" state="signed-off">Edit Taxonomic unit</target>
-      </trans-unit>
-      <trans-unit id="17">
-        <source>Taxonomy</source>
-        <target phase-name="approval-1" state="signed-off">Taxonomy</target>
-      </trans-unit>
-      <trans-unit id="18">
-        <source>From</source>
-        <target phase-name="approval-1" state="signed-off">From</target>
-      </trans-unit>
-      <trans-unit id="19">
-        <source>To</source>
-        <target phase-name="approval-1" state="signed-off">To</target>
-      </trans-unit>
-      <trans-unit id="20">
-        <source>No Expedition Matching</source>
-        <target phase-name="approval-1" state="signed-off">No Expedition Matching</target>
-      </trans-unit>
-      <trans-unit id="21">
-        <source>Level</source>
-        <target phase-name="approval-1" state="signed-off">Level</target>
-      </trans-unit>
-      <trans-unit id="22">
-        <source>Extinct</source>
-        <target phase-name="approval-1" state="signed-off">Extinct</target>
-      </trans-unit>
-      <trans-unit id="23">
+          <trans-unit id="1321">
         <source>Status</source>
-        <target phase-name="approval-1" state="signed-off">Status</target>
+        <target>Status</target>
       </trans-unit>
-      <trans-unit id="23">
-        <source>Delete</source>
-        <target phase-name="approval-1" state="signed-off">Delete</target>
+          <trans-unit id="1322">
+        <source>Gender</source>
+        <target>Gender</target>
       </trans-unit>
-      <trans-unit id="23">
-        <source>Preferred</source>
-        <target phase-name="approval-1" state="signed-off">Preferred</target>
+          <trans-unit id="1191">
+        <source>Logout</source>
+        <target>Logout</target>
       </trans-unit>
-      <trans-unit id="1">
-        <source>My Widgets</source> <target phase-name="approval-1" state="signed-off">My Widgets</target> </trans-unit>
-      <trans-unit id="2">
-        <source>Chronostratigraphy</source> <target phase-name="approval-1" state="signed-off">Chronostratigraphy</target> </trans-unit>
-      <trans-unit id="3">
-        <source>Lithostratigraphy</source> <target phase-name="approval-1" state="signed-off">Lithostratigraphy</target> </trans-unit>
-      <trans-unit id="4">
-        <source>Lithology</source> <target phase-name="approval-1" state="signed-off">Lithology</target> </trans-unit>
-      <trans-unit id="5">
-        <source>Mineralogy</source> <target phase-name="approval-1" state="signed-off">Mineralogy</target> </trans-unit>
-      <trans-unit id="6">
-        <source>Expeditions</source> <target phase-name="approval-1" state="signed-off">Expeditions</target> </trans-unit>
-      <trans-unit id="7">
-        <source>I.G. Numbers</source> <target phase-name="approval-1" state="signed-off">I.G. Numbers</target> </trans-unit>
-      <trans-unit id="8">
-        <source>Institutions</source> <target phase-name="approval-1" state="signed-off">Institutions</target> </trans-unit>
-      <trans-unit id="9">
-        <source>People</source> <target phase-name="approval-1" state="signed-off">People</target> </trans-unit>
-      <trans-unit id="10">
-        <source>Sampling location</source> <target phase-name="approval-1" state="signed-off">Sampling location</target> </trans-unit>
-      <trans-unit id="11">
-        <source>User</source> <target phase-name="approval-1" state="signed-off">User</target> </trans-unit>
-      <trans-unit id="12">
-        <source>[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</source> <target phase-name="approval-1" state="signed-off">[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</target> </trans-unit>
-      <trans-unit id="13">
-        <source>Are you sure ?</source> <target phase-name="approval-1" state="signed-off">Are you sure ?</target> </trans-unit>
-      <trans-unit id="14">
-        <source>Date</source> <target phase-name="approval-1" state="signed-off">Date</target> </trans-unit>
-      <trans-unit id="15">
-        <source>Subject</source> <target phase-name="approval-1" state="signed-off">Subject</target> </trans-unit>
-      <trans-unit id="16">
-        <source>Value</source> <target phase-name="approval-1" state="signed-off">Value</target> </trans-unit>
-      <trans-unit id="17">
-        <source>Det. St.</source> <target phase-name="approval-1" state="signed-off">Det. St.</target> </trans-unit>
-      <trans-unit id="18">
-        <source>Add Ident.</source> <target phase-name="approval-1" state="signed-off">Add Ident.</target> </trans-unit>
-      <trans-unit id="19">
-        <source>Clear also host taxon reference ?</source> <target phase-name="approval-1" state="signed-off">Clear also host taxon reference ?</target> </trans-unit>
-      <trans-unit id="20">
-        <source>Category</source> <target phase-name="approval-1" state="signed-off">Category</target> </trans-unit>
-      <trans-unit id="21">
-        <source>Prefix</source> <target phase-name="approval-1" state="signed-off">Prefix</target> </trans-unit>
-      <trans-unit id="22">
-        <source>sep.</source> <target phase-name="approval-1" state="signed-off">sep.</target> </trans-unit>
-      <trans-unit id="23">
-        <source>Code</source>
-        <target phase-name="approval-1" state="signed-off">Code</target>
+          <trans-unit id="1192">
+        <source>Collections</source>
+        <target>Collections</target>
       </trans-unit>
-      <trans-unit id="24">
-        <source>Suffix</source> <target phase-name="approval-1" state="signed-off">Suffix</target> </trans-unit>
-      <trans-unit id="25">
-        <source>Add Code</source> <target phase-name="approval-1" state="signed-off">Add Code</target> </trans-unit>
-      <trans-unit id="26">
-        <source>This application requires an authentication. Please Log in with your username and password.</source> <target phase-name="approval-1" state="signed-off">This application requires an authentication. Please Log in with your username and password.</target> </trans-unit>
-      <trans-unit id="27">
-        <source>Browse Collections</source> <target phase-name="approval-1" state="signed-off">Browse Collections</target> </trans-unit>
-      <trans-unit id="28">
-        <source>Lower bound (My)</source> <target phase-name="approval-1" state="signed-off">Lower bound (My)</target> </trans-unit>
-      <trans-unit id="29">
-        <source>Upper bound (My)</source>
-        <target phase-name="approval-1" state="signed-off">Upper bound (My)</target>
+          <trans-unit id="1193">
+        <source>Collection</source>
+        <target>Collection</target>
       </trans-unit>
-      <trans-unit id="30">
-        <source>Invalid</source>
-        <target phase-name="approval-1" state="signed-off">Invalid</target>
+          <trans-unit id="1194">
+        <source>Name</source>
+        <target>Name</target>
       </trans-unit>
-      <trans-unit id="31">
-        <source>Deprecated</source>
-        <target phase-name="approval-1" state="signed-off">Deprecated</target>
+          <trans-unit id="1195">
+        <source>Search</source>
+        <target>Search</target>
       </trans-unit>
-      <trans-unit id="32">
-        <source>Choose</source>
-        <target phase-name="approval-1" state="signed-off">Choose</target>
+          <trans-unit id="1196">
+        <source>Details :</source>
+        <target>Details :</target>
       </trans-unit>
-      <trans-unit id="33">
-        <source>No Matching Items</source>
-        <target phase-name="approval-1" state="signed-off">No Matching Items</target>
+          <trans-unit id="1197">
+        <source>Taxonomy</source>
+        <target>Taxonomy</target>
       </trans-unit>
-      <trans-unit id="34">
-        <source>New Unit</source>
-        <target phase-name="approval-1" state="signed-off">New Unit</target>
+          <trans-unit id="1198">
+        <source>Level</source>
+        <target>Level</target>
       </trans-unit>
-      <trans-unit id="35">
+          <trans-unit id="1199">
+        <source>Chronostratigraphy</source>
+        <target>Chronostratigraphy</target>
+      </trans-unit>
+          <trans-unit id="1200">
+        <source>Lithostratigraphy</source>
+        <target>Lithostratigraphy</target>
+      </trans-unit>
+          <trans-unit id="1201">
+        <source>Lithology</source>
+        <target>Lithology</target>
+      </trans-unit>
+          <trans-unit id="1202">
+        <source>Mineralogy</source>
+        <target>Mineralogy</target>
+      </trans-unit>
+          <trans-unit id="1203">
+        <source>Category</source>
+        <target>Category</target>
+      </trans-unit>
+          <trans-unit id="1204">
         <source>Type</source>
-        <target phase-name="approval-1" state="signed-off">Type</target>
+        <target>Type</target>
       </trans-unit>
-      <trans-unit id="36">
-        <source>Keyword</source>
-        <target phase-name="approval-1" state="signed-off">Keyword</target>
-      </trans-unit>
-      <trans-unit id="37">
-        <source>You must select a part of the name to add a tag</source>
-        <target phase-name="approval-1" state="signed-off">You must select a part of the name to add a tag</target>
-      </trans-unit>
-      <trans-unit id="38">
-        <source>Choose a Lithologic unit</source>
-        <target phase-name="approval-1" state="signed-off">Choose a Lithologic unit</target>
-      </trans-unit>
-      <trans-unit id="39">
-        <source>Add Lithologic unit</source>
-        <target phase-name="approval-1" state="signed-off">Add Lithologic unit</target>
-      </trans-unit>
-      <trans-unit id="40">
-        <source>New Lithologic unit</source>
-        <target phase-name="approval-1" state="signed-off">New Lithologic unit</target>
-      </trans-unit>
-      <trans-unit id="41">
-        <source>Search Lithologic unit</source>
-        <target phase-name="approval-1" state="signed-off">Search Lithologic unit</target>
-      </trans-unit>
-      <trans-unit id="42">
-        <source>Lithologic unit Search</source>
-        <target phase-name="approval-1" state="signed-off">Lithologic unit Search</target>
-      </trans-unit>
-      <trans-unit id="43">
-        <source>The parenty does not follow the possible upper level rule</source>
-        <target phase-name="approval-1" state="signed-off">The parenty does not follow the possible upper level rule</target>
-      </trans-unit>
-      <trans-unit id="44">
-        <source>Edit Lithologic unit</source>
-        <target phase-name="approval-1" state="signed-off">Edit Lithologic unit</target>
-      </trans-unit>
-      <trans-unit id="45">
-        <source>Edit User widgets</source>
-        <target phase-name="approval-1" state="signed-off">Edit User widgets</target>
-      </trans-unit>
-      <trans-unit id="46">
-        <source>Add a new login</source>
-        <target phase-name="approval-1" state="signed-off">Add a new login</target>
-      </trans-unit>
-      <trans-unit id="47">
-        <source>Edit your widgets</source>
-        <target phase-name="approval-1" state="signed-off">Edit your widgets</target>
-      </trans-unit>
-      <trans-unit id="48">
-        <source>Search User</source>
-        <target phase-name="approval-1" state="signed-off">Search User</target>
-      </trans-unit>
-      <trans-unit id="49">
-        <source>Add User</source>
-        <target phase-name="approval-1" state="signed-off">Add User</target>
-      </trans-unit>
-      <trans-unit id="50">
-        <source>New User</source>
-        <target phase-name="approval-1" state="signed-off">New User</target>
-      </trans-unit>
-      <trans-unit id="51">
-        <source>Surname</source>
-        <target phase-name="approval-1" state="signed-off">Surname</target>
-      </trans-unit>
-      <trans-unit id="52">
-        <source>Search Users</source>
-        <target phase-name="approval-1" state="signed-off">Search Users</target>
-      </trans-unit>
-      <trans-unit id="53">
-        <source>Users Search</source>
-        <target phase-name="approval-1" state="signed-off">Users Search</target>
-      </trans-unit>
-      <trans-unit id="54">
-        <source>Edit Profile</source>
-        <target phase-name="approval-1" state="signed-off">Edit Profile</target>
-      </trans-unit>
-      <trans-unit id="55">
-        <source>Show link with </source>
-        <target phase-name="approval-1" state="signed-off">Show link with </target>
-      </trans-unit>
-      <trans-unit id="56">
-        <source>Hide link with </source>
-        <target phase-name="approval-1" state="signed-off">Hide link with </target>
-      </trans-unit>
-      <trans-unit id="57">
-        <source>Edit user widgets</source>
-        <target phase-name="approval-1" state="signed-off">Edit user widgets</target>
-      </trans-unit>
-      <trans-unit id="58">
-        <source>Choose a Chronostratigraphic unit</source>
-        <target phase-name="approval-1" state="signed-off">Choose a Chronostratigraphic unit</target>
-      </trans-unit>
-      <trans-unit id="59">
-        <source>Add Chronostratigraphic unit</source>
-        <target phase-name="approval-1" state="signed-off">Add Chronostratigraphic unit</target>
-      </trans-unit>
-      <trans-unit id="60">
-        <source>New Chronostratigraphic unit</source>
-        <target phase-name="approval-1" state="signed-off">New Chronostratigraphic unit</target>
-      </trans-unit>
-      <trans-unit id="61">
-        <source>Search Chronostratigraphic unit</source>
-        <target phase-name="approval-1" state="signed-off">Search Chronostratigraphic unit</target>
-      </trans-unit>
-      <trans-unit id="62">
-        <source>Chronostratigraphic unit Search</source>
-        <target phase-name="approval-1" state="signed-off">Chronostratigraphic unit Search</target>
-      </trans-unit>
-      <trans-unit id="63">
-        <source>Edit Chronostratigraphic unit</source>
-        <target phase-name="approval-1" state="signed-off">Edit Chronostratigraphic unit</target>
-      </trans-unit>
-      <trans-unit id="64">
+          <trans-unit id="1205">
         <source>Institution</source>
-        <target phase-name="approval-1" state="signed-off">Institution</target>
+        <target>Institution</target>
       </trans-unit>
-      <trans-unit id="65">
-        <source>Choose a type</source>
-        <target phase-name="approval-1" state="signed-off">Choose a type</target>
-      </trans-unit>
-      <trans-unit id="66">
-        <source>This element already has synonyms.&lt;br />Are you sure that you want to merge them together?</source>
-        <target phase-name="approval-1" state="signed-off">This element already has synonyms.&lt;br />Are you sure that you want to merge them together?</target>
-      </trans-unit>
-      <trans-unit id="67">
-        <source>Yes </source>
-        <target phase-name="approval-1" state="signed-off">Yes </target>
-      </trans-unit>
-      <trans-unit id="68">
-        <source>Year of reference</source>
-        <target phase-name="approval-1" state="signed-off">Year of reference</target>
-      </trans-unit>
-      <trans-unit id="69">
-        <source>Insurer</source>
-        <target phase-name="approval-1" state="signed-off">Insurer</target>
-      </trans-unit>
-      <trans-unit id="70">
-        <source>Edit (insurances) Values</source>
-        <target phase-name="approval-1" state="signed-off">Edit (insurances) Values</target>
-      </trans-unit>
-      <trans-unit id="71">
-        <source>Add (insurance) Value</source>
-        <target phase-name="approval-1" state="signed-off">Add (insurance) Value</target>
-      </trans-unit>
-      <trans-unit id="72">
-        <source>Sub-Type</source>
-        <target phase-name="approval-1" state="signed-off">Sub-Type</target>
-      </trans-unit>
-      <trans-unit id="73">
-        <source>Qualifier</source>
-        <target phase-name="approval-1" state="signed-off">Qualifier</target>
-      </trans-unit>
-      <trans-unit id="74">
-        <source>Date From</source>
-        <target phase-name="approval-1" state="signed-off">Date From</target>
-      </trans-unit>
-      <trans-unit id="75">
-        <source>Date To</source>
-        <target phase-name="approval-1" state="signed-off">Date To</target>
-      </trans-unit>
-      <trans-unit id="76">
-        <source>Values</source>
-        <target phase-name="approval-1" state="signed-off">Values</target>
-      </trans-unit>
-      <trans-unit id="77">
-        <source>Edit Properties</source>
-        <target phase-name="approval-1" state="signed-off">Edit Properties</target>
-      </trans-unit>
-      <trans-unit id="78">
-        <source>[1]Show 1 Value|(1,+Inf]Show %1% Values</source>
-        <target phase-name="approval-1" state="signed-off">[1]Show 1 Value|(1,+Inf]Show %1% Values</target>
-      </trans-unit>
-      <trans-unit id="79">
-        <source>Hide Values</source>
-        <target phase-name="approval-1" state="signed-off">Hide Values</target>
-      </trans-unit>
-      <trans-unit id="80">
-        <source>No Values</source>
-        <target phase-name="approval-1" state="signed-off">No Values</target>
-      </trans-unit>
-      <trans-unit id="81">
-        <source>Add Properties</source>
-        <target phase-name="approval-1" state="signed-off">Add Properties</target>
-      </trans-unit>
-      <trans-unit id="82">
-        <source>Notion</source>
-        <target phase-name="approval-1" state="signed-off">Notion</target>
-      </trans-unit>
-      <trans-unit id="83">
-        <source>Comment</source>
-        <target phase-name="approval-1" state="signed-off">Comment</target>
-      </trans-unit>
-      <trans-unit id="84">
-        <source>Edit Comment</source>
-        <target phase-name="approval-1" state="signed-off">Edit Comment</target>
-      </trans-unit>
-      <trans-unit id="85">
-        <source>Add Comment</source>
-        <target phase-name="approval-1" state="signed-off">Add Comment</target>
-      </trans-unit>
-      <trans-unit id="86">
-        <source>Community</source>
-        <target phase-name="approval-1" state="signed-off">Community</target>
-      </trans-unit>
-      <trans-unit id="87">
+          <trans-unit id="1206">
         <source>Names</source>
-        <target phase-name="approval-1" state="signed-off">Names</target>
+        <target>Names</target>
       </trans-unit>
-      <trans-unit id="88">
-        <source>Edit Vernacular Names</source>
-        <target phase-name="approval-1" state="signed-off">Edit Vernacular Names</target>
-      </trans-unit>
-      <trans-unit id="89">
-        <source>[1]Show 1 Name|(1,+Inf]Show %1% Names</source>
-        <target phase-name="approval-1" state="signed-off">[1]Show 1 Name|(1,+Inf]Show %1% Names</target>
-      </trans-unit>
-      <trans-unit id="90">
-        <source>Hide Names</source>
-        <target phase-name="approval-1" state="signed-off">Hide Names</target>
-      </trans-unit>
-      <trans-unit id="91">
-        <source>No Names</source>
-        <target phase-name="approval-1" state="signed-off">No Names</target>
-      </trans-unit>
-      <trans-unit id="92">
-        <source>Add Names</source>
-        <target phase-name="approval-1" state="signed-off">Add Names</target>
-      </trans-unit>
-      <trans-unit id="93">
-        <source>Items</source>
-        <target phase-name="approval-1" state="signed-off">Items</target>
-      </trans-unit>
-      <trans-unit id="94">
-        <source>Basionym</source>
-        <target phase-name="approval-1" state="signed-off">Basionym</target>
-      </trans-unit>
-      <trans-unit id="95">
-        <source>Add Synonymies</source>
-        <target phase-name="approval-1" state="signed-off">Add Synonymies</target>
-      </trans-unit>
-      <trans-unit id="96">
-        <source>Renamed to</source>
-        <target phase-name="approval-1" state="signed-off">Renamed to</target>
-      </trans-unit>
-      <trans-unit id="97">
-        <source>Rename</source>
-        <target phase-name="approval-1" state="signed-off">Rename</target>
-      </trans-unit>
-      <trans-unit id="98">
-        <source>Code prefix</source>
-        <target phase-name="approval-1" state="signed-off">Code prefix</target>
-      </trans-unit>
-      <trans-unit id="99">
-        <source>Code prefix sep.</source>
-        <target phase-name="approval-1" state="signed-off">Code prefix sep.</target>
-      </trans-unit>
-      <trans-unit id="100">
-        <source>Code suffix sep.</source>
-        <target phase-name="approval-1" state="signed-off">Code suffix sep.</target>
-      </trans-unit>
-      <trans-unit id="101">
-        <source>Code suffix</source>
-        <target phase-name="approval-1" state="signed-off">Code suffix</target>
-      </trans-unit>
-      <trans-unit id="102">
-        <source>Auto incremented ?</source>
-        <target phase-name="approval-1" state="signed-off">Auto incremented ?</target>
-      </trans-unit>
-      <trans-unit id="103">
-        <source>Same for parts ?</source>
-        <target phase-name="approval-1" state="signed-off">Same for parts ?</target>
-      </trans-unit>
-      <trans-unit id="104">
-        <source>Edit default specimen codes prefix and suffix</source>
-        <target phase-name="approval-1" state="signed-off">Edit default specimen codes prefix and suffix</target>
-      </trans-unit>
-      <trans-unit id="105">
-        <source>Edit People</source>
-        <target phase-name="approval-1" state="signed-off">Edit People</target>
-      </trans-unit>
-      <trans-unit id="106">
-        <source>Add People</source>
-        <target phase-name="approval-1" state="signed-off">Add People</target>
-      </trans-unit>
-      <trans-unit id="107">
-        <source>Combination of</source>
-        <target phase-name="approval-1" state="signed-off">Combination of</target>
-      </trans-unit>
-      <trans-unit id="108">
-        <source>Choose an expedition</source>
-        <target phase-name="approval-1" state="signed-off">Choose an expedition</target>
-      </trans-unit>
-      <trans-unit id="109">
-        <source>Add Expedition</source>
-        <target phase-name="approval-1" state="signed-off">Add Expedition</target>
-      </trans-unit>
-      <trans-unit id="110">
-        <source>New Expedition</source>
-        <target phase-name="approval-1" state="signed-off">New Expedition</target>
-      </trans-unit>
-      <trans-unit id="111">
-        <source>Search Expeditions</source>
-        <target phase-name="approval-1" state="signed-off">Search Expeditions</target>
-      </trans-unit>
-      <trans-unit id="112">
-        <source>Edit Expedition</source>
-        <target phase-name="approval-1" state="signed-off">Edit Expedition</target>
-      </trans-unit>
-      <trans-unit id="113">
-        <source>Choose an I.G. number</source>
-        <target phase-name="approval-1" state="signed-off">Choose an I.G. number</target>
-      </trans-unit>
-      <trans-unit id="114">
-        <source>Add an I.G. number</source>
-        <target phase-name="approval-1" state="signed-off">Add an I.G. number</target>
-      </trans-unit>
-      <trans-unit id="115">
-        <source>New I.G. number</source>
-        <target phase-name="approval-1" state="signed-off">New I.G. number</target>
-      </trans-unit>
-      <trans-unit id="116">
-        <source>I.G.</source>
-        <target phase-name="approval-1" state="signed-off">I.G.</target>
-      </trans-unit>
-      <trans-unit id="117">
-        <source>I.G. creation date</source>
-        <target phase-name="approval-1" state="signed-off">I.G. creation date</target>
-      </trans-unit>
-      <trans-unit id="118">
-        <source>No I.G. Matching</source>
-        <target phase-name="approval-1" state="signed-off">No I.G. Matching</target>
-      </trans-unit>
-      <trans-unit id="119">
-        <source>Search IG Number</source>
-        <target phase-name="approval-1" state="signed-off">Search IG Number</target>
-      </trans-unit>
-      <trans-unit id="120">
-        <source>General Inventory Numbers List</source>
-        <target phase-name="approval-1" state="signed-off">General Inventory Numbers List</target>
-      </trans-unit>
-      <trans-unit id="121">
-        <source>I.G. number:</source>
-        <target phase-name="approval-1" state="signed-off">I.G. number:</target>
-      </trans-unit>
-      <trans-unit id="122">
-        <source>I.G. creation date:</source>
-        <target phase-name="approval-1" state="signed-off">I.G. creation date:</target>
-      </trans-unit>
-      <trans-unit id="123">
-        <source>New I.G.</source>
-        <target phase-name="approval-1" state="signed-off">New I.G.</target>
-      </trans-unit>
-      <trans-unit id="124">
-        <source>Edit I.G. number</source>
-        <target phase-name="approval-1" state="signed-off">Edit I.G. number</target>
-      </trans-unit>
-      <trans-unit id="125">
-        <source>Edit I.G.</source>
-        <target phase-name="approval-1" state="signed-off">Edit I.G.</target>
-      </trans-unit>
-      <trans-unit id="126">
-        <source>Addresses</source>
-        <target phase-name="approval-1" state="signed-off">Addresses</target>
-      </trans-unit>
-      <trans-unit id="127">
+          <trans-unit id="1207">
         <source>Country</source>
-        <target phase-name="approval-1" state="signed-off">Country</target>
+        <target>Country</target>
       </trans-unit>
-      <trans-unit id="128">
-        <source>Region</source>
-        <target phase-name="approval-1" state="signed-off">Region</target>
-      </trans-unit>
-      <trans-unit id="129">
-        <source>Locality</source>
-        <target phase-name="approval-1" state="signed-off">Locality</target>
-      </trans-unit>
-      <trans-unit id="130">
-        <source>Address</source>
-        <target phase-name="approval-1" state="signed-off">Address</target>
-      </trans-unit>
-      <trans-unit id="131">
-        <source>Organisation</source>
-        <target phase-name="approval-1" state="signed-off">Organisation</target>
-      </trans-unit>
-      <trans-unit id="132">
+          <trans-unit id="1208">
         <source>Tags</source>
-        <target phase-name="approval-1" state="signed-off">Tags</target>
+        <target>Tags</target>
       </trans-unit>
-      <trans-unit id="133">
-        <source>Edit Address</source>
-        <target phase-name="approval-1" state="signed-off">Edit Address</target>
-      </trans-unit>
-      <trans-unit id="134">
-        <source>Add Address</source>
-        <target phase-name="approval-1" state="signed-off">Add Address</target>
-      </trans-unit>
-      <trans-unit id="135">
-        <source>Edit Communication Means</source>
-        <target phase-name="approval-1" state="signed-off">Edit Communication Means</target>
-      </trans-unit>
-      <trans-unit id="136">
-        <source>Phone</source>
-        <target phase-name="approval-1" state="signed-off">Phone</target>
-      </trans-unit>
-      <trans-unit id="137">
-        <source>e-Mail</source>
-        <target phase-name="approval-1" state="signed-off">e-Mail</target>
-      </trans-unit>
-      <trans-unit id="138">
-        <source>Add Communication Means</source>
-        <target phase-name="approval-1" state="signed-off">Add Communication Means</target>
-      </trans-unit>
-      <trans-unit id="139">
-        <source>Language</source>
-        <target phase-name="approval-1" state="signed-off">Language</target>
-      </trans-unit>
-      <trans-unit id="140">
-        <source>Is Mother Language</source>
-        <target phase-name="approval-1" state="signed-off">Is Mother Language</target>
-      </trans-unit>
-      <trans-unit id="141">
-        <source>Edit Languages</source>
-        <target phase-name="approval-1" state="signed-off">Edit Languages</target>
-      </trans-unit>
-      <trans-unit id="142">
-        <source>Yes</source>
-        <target phase-name="approval-1" state="signed-off">Yes</target>
-      </trans-unit>
-      <trans-unit id="143">
-        <source>Add Language</source>
-        <target phase-name="approval-1" state="signed-off">Add Language</target>
-      </trans-unit>
-      <trans-unit id="144">
-        <source>Login Type</source>
-        <target phase-name="approval-1" state="signed-off">Login Type</target>
-      </trans-unit>
-      <trans-unit id="145">
-        <source>Login System Id</source>
-        <target phase-name="approval-1" state="signed-off">Login System Id</target>
-      </trans-unit>
-      <trans-unit id="146">
-        <source>User Name</source>
-        <target phase-name="approval-1" state="signed-off">User Name</target>
-      </trans-unit>
-      <trans-unit id="147">
-        <source>Edit Login</source>
-        <target phase-name="approval-1" state="signed-off">Edit Login</target>
-      </trans-unit>
-      <trans-unit id="148">
-        <source>Add Login</source>
-        <target phase-name="approval-1" state="signed-off">Add Login</target>
-      </trans-unit>
-      <trans-unit id="149">
-        <source>Add Value</source>
-        <target phase-name="approval-1" state="signed-off">Add Value</target>
-      </trans-unit>
-      <trans-unit id="150">
-        <source>Relation</source>
-        <target phase-name="approval-1" state="signed-off">Relation</target>
-      </trans-unit>
-      <trans-unit id="151">
-        <source>Role</source>
-        <target phase-name="approval-1" state="signed-off">Role</target>
-      </trans-unit>
-      <trans-unit id="152">
-        <source>Period</source>
-        <target phase-name="approval-1" state="signed-off">Period</target>
-      </trans-unit>
-      <trans-unit id="153">
-        <source>Edit Relation</source>
-        <target phase-name="approval-1" state="signed-off">Edit Relation</target>
-      </trans-unit>
-      <trans-unit id="154">
-        <source>Add Relationship</source>
-        <target phase-name="approval-1" state="signed-off">Add Relationship</target>
-      </trans-unit>
-      <trans-unit id="155">
-        <source>Choose a Mineralogic unit</source>
-        <target phase-name="approval-1" state="signed-off">Choose a Mineralogic unit</target>
-      </trans-unit>
-      <trans-unit id="156">
-        <source>Add Mineralogic unit</source>
-        <target phase-name="approval-1" state="signed-off">Add Mineralogic unit</target>
-      </trans-unit>
-      <trans-unit id="157">
-        <source>New Mineralogic unit</source>
-        <target phase-name="approval-1" state="signed-off">New Mineralogic unit</target>
-      </trans-unit>
-      <trans-unit id="158">
-        <source>Search Mineralogic unit</source>
-        <target phase-name="approval-1" state="signed-off">Search Mineralogic unit</target>
-      </trans-unit>
-      <trans-unit id="159">
-        <source>Mineralogic unit Search</source>
-        <target phase-name="approval-1" state="signed-off">Mineralogic unit Search</target>
-      </trans-unit>
-      <trans-unit id="160">
-        <source>Edit Mineralogic unit</source>
-        <target phase-name="approval-1" state="signed-off">Edit Mineralogic unit</target>
-      </trans-unit>
-      <trans-unit id="161">
-        <source>Search People</source>
-        <target phase-name="approval-1" state="signed-off">Search People</target>
-      </trans-unit>
-      <trans-unit id="162">
-        <source>New People</source>
-        <target phase-name="approval-1" state="signed-off">New People</target>
-      </trans-unit>
-      <trans-unit id="163">
-        <source>Title</source>
-        <target phase-name="approval-1" state="signed-off">Title</target>
-      </trans-unit>
-      <trans-unit id="164">
-        <source>Family Name</source>
-        <target phase-name="approval-1" state="signed-off">Family Name</target>
-      </trans-unit>
-      <trans-unit id="165">
-        <source>Given Name</source>
-        <target phase-name="approval-1" state="signed-off">Given Name</target>
-      </trans-unit>
-      <trans-unit id="166">
-        <source>Additional Names</source>
-        <target phase-name="approval-1" state="signed-off">Additional Names</target>
-      </trans-unit>
-      <trans-unit id="167">
-        <source>Life</source>
-        <target phase-name="approval-1" state="signed-off">Life</target>
-      </trans-unit>
-      <trans-unit id="168">
-        <source>Activity</source>
-        <target phase-name="approval-1" state="signed-off">Activity</target>
-      </trans-unit>
-      <trans-unit id="169">
-        <source>Communiction Means</source>
-        <target phase-name="approval-1" state="signed-off">Communiction Means</target>
-      </trans-unit>
-      <trans-unit id="170">
-        <source>(mother)</source>
-        <target phase-name="approval-1" state="signed-off">(mother)</target>
-      </trans-unit>
-      <trans-unit id="171">
-        <source>(preferred)</source>
-        <target phase-name="approval-1" state="signed-off">(preferred)</target>
-      </trans-unit>
-      <trans-unit id="172">
-        <source>Relationships</source>
-        <target phase-name="approval-1" state="signed-off">Relationships</target>
-      </trans-unit>
-      <trans-unit id="173">
-        <source>People Search</source>
-        <target phase-name="approval-1" state="signed-off">People Search</target>
-      </trans-unit>
-      <trans-unit id="174">
-        <source>Search Institution</source>
-        <target phase-name="approval-1" state="signed-off">Search Institution</target>
-      </trans-unit>
-      <trans-unit id="175">
-        <source>Institution Search</source>
-        <target phase-name="approval-1" state="signed-off">Institution Search</target>
-      </trans-unit>
-      <trans-unit id="176">
-        <source>Add Instution</source>
-        <target phase-name="approval-1" state="signed-off">Add Instution</target>
-      </trans-unit>
-      <trans-unit id="177">
-        <source>New Institution</source>
-        <target phase-name="approval-1" state="signed-off">New Institution</target>
-      </trans-unit>
-      <trans-unit id="178">
-        <source>Abbreviation</source>
-        <target phase-name="approval-1" state="signed-off">Abbreviation</target>
-      </trans-unit>
-      <trans-unit id="179">
-        <source>Search Institutions</source>
-        <target phase-name="approval-1" state="signed-off">Search Institutions</target>
-      </trans-unit>
-      <trans-unit id="180">
-        <source>Institutions Search</source>
-        <target phase-name="approval-1" state="signed-off">Institutions Search</target>
-      </trans-unit>
-      <trans-unit id="181">
-        <source>Edit Institution</source>
-        <target phase-name="approval-1" state="signed-off">Edit Institution</target>
-      </trans-unit>
-      <trans-unit id="182">
-        <source>Search sampling location</source>
-        <target phase-name="approval-1" state="signed-off">Search sampling location</target>
-      </trans-unit>
-      <trans-unit id="183">
-        <source>Sampling location search</source>
-        <target phase-name="approval-1" state="signed-off">Sampling location search</target>
-      </trans-unit>
-      <trans-unit id="184">
-        <source>Add A Sampling Location</source>
-        <target phase-name="approval-1" state="signed-off">Add A Sampling Location</target>
-      </trans-unit>
-      <trans-unit id="185">
-        <source>New Sampling Location</source>
-        <target phase-name="approval-1" state="signed-off">New Sampling Location</target>
-      </trans-unit>
-      <trans-unit id="186">
-        <source>Location</source>
-        <target phase-name="approval-1" state="signed-off">Location</target>
-      </trans-unit>
-      <trans-unit id="187">
-        <source>And</source>
-        <target phase-name="approval-1" state="signed-off">And</target>
-      </trans-unit>
-      <trans-unit id="188">
-        <source>Add Sub Group</source>
-        <target phase-name="approval-1" state="signed-off">Add Sub Group</target>
-      </trans-unit>
-      <trans-unit id="189">
-        <source>Add Group</source>
-        <target phase-name="approval-1" state="signed-off">Add Group</target>
-      </trans-unit>
-      <trans-unit id="190">
-        <source>New Gtu</source>
-        <target phase-name="approval-1" state="signed-off">New Gtu</target>
-      </trans-unit>
-      <trans-unit id="191">
-        <source>Edit Sampling Location</source>
-        <target phase-name="approval-1" state="signed-off">Edit Sampling Location</target>
-      </trans-unit>
-      <trans-unit id="192">
-        <source>Choose a Lithostratigraphic unit</source>
-        <target phase-name="approval-1" state="signed-off">Choose a Lithostratigraphic unit</target>
-      </trans-unit>
-      <trans-unit id="193">
-        <source>Add Lithostratigraphic unit</source>
-        <target phase-name="approval-1" state="signed-off">Add Lithostratigraphic unit</target>
-      </trans-unit>
-      <trans-unit id="194">
-        <source>New Lithostratigraphic unit</source>
-        <target phase-name="approval-1" state="signed-off">New Lithostratigraphic unit</target>
-      </trans-unit>
-      <trans-unit id="195">
-        <source>Search Lithostratigraphic unit</source>
-        <target phase-name="approval-1" state="signed-off">Search Lithostratigraphic unit</target>
-      </trans-unit>
-      <trans-unit id="196">
-        <source>Lithostratigraphic unit Search</source>
-        <target phase-name="approval-1" state="signed-off">Lithostratigraphic unit Search</target>
-      </trans-unit>
-      <trans-unit id="197">
-        <source>Edit Lithostratigraphic unit</source>
-        <target phase-name="approval-1" state="signed-off">Edit Lithostratigraphic unit</target>
-      </trans-unit>
-      <trans-unit id="198">
-        <source>There are no widgets here. Pick one from the widgets collection.</source>
-        <target phase-name="approval-1" state="signed-off">There are no widgets here. Pick one from the widgets collection.</target>
-      </trans-unit>
-      <trans-unit id="199">
-        <source>There are no more widgets to add</source>
-        <target phase-name="approval-1" state="signed-off">There are no more widgets to add</target>
-      </trans-unit>
-      <trans-unit id="200">
-        <source>Vernacular name</source>
-        <target phase-name="approval-1" state="signed-off">Vernacular name</target>
-      </trans-unit>
-      <trans-unit id="201">
-        <source>Choose a specimen</source>
-        <target phase-name="approval-1" state="signed-off">Choose a specimen</target>
-      </trans-unit>
-      <trans-unit id="202">
-        <source>Identifiers</source>
-        <target phase-name="approval-1" state="signed-off">Identifiers</target>
-      </trans-unit>
-      <trans-unit id="203">
-        <source>Code(s)</source>
-        <target phase-name="approval-1" state="signed-off">Code(s)</target>
-      </trans-unit>
-      <trans-unit id="204">
+          <trans-unit id="1209">
         <source>Taxon</source>
-        <target phase-name="approval-1" state="signed-off">Taxon</target>
+        <target>Taxon</target>
       </trans-unit>
-      <trans-unit id="205">
+          <trans-unit id="1210">
         <source>No Specimen Matching</source>
-        <target phase-name="approval-1" state="signed-off">No Specimen Matching</target>
+        <target>No Specimen Matching</target>
       </trans-unit>
-      <trans-unit id="206">
-        <source>Search Specimens</source>
-        <target phase-name="approval-1" state="signed-off">Search Specimens</target>
+          <trans-unit id="1211">
+        <source>Our Collections</source>
+        <target>Our Collections</target>
       </trans-unit>
-      <trans-unit id="207">
-        <source>Specimens List</source>
-        <target phase-name="approval-1" state="signed-off">Specimens List</target>
+          <trans-unit id="1212">
+        <source>Take a tour</source>
+        <target>Take a tour</target>
       </trans-unit>
-      <trans-unit id="208">
-        <source>New Taxa</source>
-        <target phase-name="approval-1" state="signed-off">New Taxa</target>
+          <trans-unit id="1213">
+        <source>Contacts</source>
+        <target>Contacts</target>
       </trans-unit>
-    </body>
+          <trans-unit id="1214">
+        <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</source>
+        <target>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</target>
+      </trans-unit>
+          <trans-unit id="1215">
+        <source>About</source>
+        <target>About</target>
+      </trans-unit>
+          <trans-unit id="1216">
+        <source>About Us</source>
+        <target>About Us</target>
+      </trans-unit>
+          <trans-unit id="1217">
+        <source>Contact</source>
+        <target>Contact</target>
+      </trans-unit>
+          <trans-unit id="1218">
+        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:collections@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</source>
+        <target>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:collections@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</target>
+      </trans-unit>
+          <trans-unit id="1219">
+        <source>If you have a question about a specimen, please contact the collection manager of the specimen. &lt;br /&gt;
+      you can find his or her e-mail address in the record.</source>
+        <target>If you have a question about a specimen, please contact the collection manager of the specimen. &lt;br /&gt;
+      you can find his or her e-mail address in the record.</target>
+      </trans-unit>
+          <trans-unit id="1220">
+        <source>Welcome In DaRWIN</source>
+        <target>Welcome In DaRWIN</target>
+      </trans-unit>
+          <trans-unit id="1221">
+        <source>Discover DaRWIN</source>
+        <target>Discover DaRWIN</target>
+      </trans-unit>
+          <trans-unit id="1222">
+        <source>Discover the DaRWIN Interface</source>
+        <target>Discover the DaRWIN Interface</target>
+      </trans-unit>
+          <trans-unit id="1223">
+        <source>DaRWIN is not just a website for displaying our collections, it&#039;s an entire product of collection management.
+    &lt;br /&gt;You can register free of charge and discover this nice tool.&lt;br /&gt;
+    Let&#039;s take a look of some of our amazing features :</source>
+        <target>DaRWIN is not just a website for displaying our collections, it&#039;s an entire product of collection management.
+    &lt;br /&gt;You can register free of charge and discover this nice tool.&lt;br /&gt;
+    Let&#039;s take a look of some of our amazing features :</target>
+      </trans-unit>
+          <trans-unit id="1224">
+        <source>Register Now!</source>
+        <target>Register Now!</target>
+      </trans-unit>
+          <trans-unit id="1225">
+        <source>Friendly Working Space:</source>
+        <target>Friendly Working Space:</target>
+      </trans-unit>
+          <trans-unit id="1226">
+        <source>Everything in the DaRWIN interface is build to make &lt;strong&gt;YOUR&lt;/strong&gt; job easier.&lt;br /&gt;
+     You work on a set of specimens? You want to save a search you often use? you want to know who has changed the info?&lt;br /&gt;
+     &lt;strong&gt;DaRWIN can do that!&lt;/strong&gt;</source>
+        <target>Everything in the DaRWIN interface is build to make &lt;strong&gt;YOUR&lt;/strong&gt; job easier.&lt;br /&gt;
+     You work on a set of specimens? You want to save a search you often use? you want to know who has changed the info?&lt;br /&gt;
+     &lt;strong&gt;DaRWIN can do that!&lt;/strong&gt;</target>
+      </trans-unit>
+          <trans-unit id="1227">
+        <source>Enhanced Search :</source>
+        <target>Enhanced Search :</target>
+      </trans-unit>
+          <trans-unit id="1319">
+        <source>The captcha is not valid (%error%).</source>
+        <target>The captcha is not valid (%error%).</target>
+      </trans-unit>
+          <trans-unit id="1320">
+        <source>I accept the </source>
+        <target>I accept the </target>
+      </trans-unit>
+          <trans-unit id="1228">
+        <source>You find the public search a little bit too restrictive? &lt;br /&gt;
+      Let&#039;s try our DaRWIN search tool. You will be able to search for tons of information.&lt;br /&gt;
+      From Map to complex taxonomy and synonymies searches.</source>
+        <target>You find the public search a little bit too restrictive? &lt;br /&gt;
+      Let&#039;s try our DaRWIN search tool. You will be able to search for tons of information.&lt;br /&gt;
+      From Map to complex taxonomy and synonymies searches.</target>
+      </trans-unit>
+          <trans-unit id="1229">
+        <source>Customizable Interface :</source>
+        <target>Customizable Interface :</target>
+      </trans-unit>
+          <trans-unit id="1230">
+        <source>In the Darwin tool you have the ability to customize freely your interface.&lt;br /&gt;
+      You are only interested in taxomy? No problem, no other infos will clutter your tool.&lt;br /&gt;
+      Hide or minimize the information you don&#039;t need to focus on.</source>
+        <target>In the Darwin tool you have the ability to customize freely your interface.&lt;br /&gt;
+      You are only interested in taxomy? No problem, no other infos will clutter your tool.&lt;br /&gt;
+      Hide or minimize the information you don&#039;t need to focus on.</target>
+      </trans-unit>
+          <trans-unit id="1231">
+        <source>About us</source>
+        <target>About us</target>
+      </trans-unit>
+          <trans-unit id="1232">
+        <source>Darwin is an &lt;strong&gt;Open Source&lt;/strong&gt; tool for collection management.&lt;br /&gt;
+    It has been build by the IT departement of the Royal Belgian Institute of Natural Sciences.&lt;br /&gt;</source>
+        <target>Darwin is an &lt;strong&gt;Open Source&lt;/strong&gt; tool for collection management.&lt;br /&gt;
+    It has been build by the IT departement of the Royal Belgian Institute of Natural Sciences.&lt;br /&gt;</target>
+      </trans-unit>
+          <trans-unit id="1233">
+        <source>Our Partners :</source>
+        <target>Our Partners :</target>
+      </trans-unit>
+          <trans-unit id="1234">
+        <source>http://www.naturalsciences.be</source>
+        <target>http://www.naturalsciences.be</target>
+      </trans-unit>
+          <trans-unit id="1235">
+        <source>Royal Belgian Institute of Natural Sciences</source>
+        <target>Royal Belgian Institute of Natural Sciences</target>
+      </trans-unit>
+          <trans-unit id="1236">
+        <source>http://www.belspo.be</source>
+        <target>http://www.belspo.be</target>
+      </trans-unit>
+          <trans-unit id="1237">
+        <source>The Belgian Federal Science Policy Office</source>
+        <target>The Belgian Federal Science Policy Office</target>
+      </trans-unit>
+          <trans-unit id="1238">
+        <source>Register</source>
+        <target>Register</target>
+      </trans-unit>
+          <trans-unit id="1239">
+        <source>Go to Backend</source>
+        <target>Go to Backend</target>
+      </trans-unit>
+          <trans-unit id="1240">
+        <source>Chronostratigraphic unit</source>
+        <target>Chronostratigraphic unit</target>
+      </trans-unit>
+          <trans-unit id="1241">
+        <source>Lithostratigraphic unit</source>
+        <target>Lithostratigraphic unit</target>
+      </trans-unit>
+          <trans-unit id="1242">
+        <source>Lithologic unit</source>
+        <target>Lithologic unit</target>
+      </trans-unit>
+          <trans-unit id="1243">
+        <source>Mineralogic unit</source>
+        <target>Mineralogic unit</target>
+      </trans-unit>
+          <trans-unit id="1244">
+        <source>Expedition</source>
+        <target>Expedition</target>
+      </trans-unit>
+          <trans-unit id="1245">
+        <source>Taxon common name</source>
+        <target>Taxon common name</target>
+      </trans-unit>
+          <trans-unit id="1246">
+        <source>Chrono common name</source>
+        <target>Chrono common name</target>
+      </trans-unit>
+          <trans-unit id="1247">
+        <source>Litho common name</source>
+        <target>Litho common name</target>
+      </trans-unit>
+          <trans-unit id="1248">
+        <source>Lithologic common name</source>
+        <target>Lithologic common name</target>
+      </trans-unit>
+          <trans-unit id="1249">
+        <source>Mineral common name</source>
+        <target>Mineral common name</target>
+      </trans-unit>
+          <trans-unit id="1250">
+        <source>Sex</source>
+        <target>Sex</target>
+      </trans-unit>
+          <trans-unit id="1251">
+        <source>State</source>
+        <target>State</target>
+      </trans-unit>
+          <trans-unit id="1252">
+        <source>Stage</source>
+        <target>Stage</target>
+      </trans-unit>
+          <trans-unit id="1253">
+        <source>Social Status</source>
+        <target>Social Status</target>
+      </trans-unit>
+          <trans-unit id="1254">
+        <source>Rock Form</source>
+        <target>Rock Form</target>
+      </trans-unit>
+          <trans-unit id="1255">
+        <source>Individual Count</source>
+        <target>Individual Count</target>
+      </trans-unit>
+          <trans-unit id="1256">
+        <source>View Specimens</source>
+        <target>View Specimens</target>
+      </trans-unit>
+          <trans-unit id="1257">
+        <source>Specimen Record</source>
+        <target>Specimen Record</target>
+      </trans-unit>
+          <trans-unit id="1258">
+        <source>Collection manager</source>
+        <target>Collection manager</target>
+      </trans-unit>
+          <trans-unit id="1259">
+        <source>Common Names</source>
+        <target>Common Names</target>
+      </trans-unit>
+          <trans-unit id="1260">
+        <source>Classification</source>
+        <target>Classification</target>
+      </trans-unit>
+          <trans-unit id="1261">
+        <source>Community/language</source>
+        <target>Community/language</target>
+      </trans-unit>
+          <trans-unit id="1262">
+        <source>Classifications</source>
+        <target>Classifications</target>
+      </trans-unit>
+          <trans-unit id="1263">
+        <source>level</source>
+        <target>level</target>
+      </trans-unit>
+          <trans-unit id="1265">
+        <source>Lithostatigraphy</source>
+        <target>Lithostatigraphy</target>
+      </trans-unit>
+          <trans-unit id="1266">
+        <source>Specimen Characteristics</source>
+        <target>Specimen Characteristics</target>
+      </trans-unit>
+          <trans-unit id="1267">
+        <source>Number of individual</source>
+        <target>Number of individual</target>
+      </trans-unit>
+          <trans-unit id="1268">
+        <source>Between </source>
+        <target>Between </target>
+      </trans-unit>
+          <trans-unit id="1269">
+        <source>Close this record</source>
+        <target>Close this record</target>
+      </trans-unit>
+          <trans-unit id="1270">
+        <source>Physical</source>
+        <target>Physical</target>
+      </trans-unit>
+          <trans-unit id="1272">
+        <source>Other</source>
+        <target>Other</target>
+      </trans-unit>
+          <trans-unit id="1273">
+        <source>Search Specimens/Rocks/Minerals</source>
+        <target>Search Specimens/Rocks/Minerals</target>
+      </trans-unit>
+          <trans-unit id="1274">
+        <source>Specimen search criteria</source>
+        <target>Specimen search criteria</target>
+      </trans-unit>
+          <trans-unit id="1275">
+        <source>Scientific Name</source>
+        <target>Scientific Name</target>
+      </trans-unit>
+          <trans-unit id="1276">
+        <source>Common Name</source>
+        <target>Common Name</target>
+      </trans-unit>
+          <trans-unit id="1277">
+        <source>Countries</source>
+        <target>Countries</target>
+      </trans-unit>
+          <trans-unit id="1278">
+        <source>Please use &quot;;&quot; as tag separator.</source>
+        <target>Please use &quot;;&quot; as tag separator.</target>
+      </trans-unit>
+          <trans-unit id="1279">
+        <source>Types</source>
+        <target>Types</target>
+      </trans-unit>
+          <trans-unit id="1280">
+        <source>Sexes</source>
+        <target>Sexes</target>
+      </trans-unit>
+          <trans-unit id="1281">
+        <source>Stages</source>
+        <target>Stages</target>
+      </trans-unit>
+          <trans-unit id="1282">
+        <source>Clear</source>
+        <target>Clear</target>
+      </trans-unit>
+          <trans-unit id="1283">
+        <source>Search results</source>
+        <target>Search results</target>
+      </trans-unit>
+          <trans-unit id="1284">
+        <source>Search Results</source>
+        <target>Search Results</target>
+      </trans-unit>
+          <trans-unit id="1285">
+        <source>Back to criteria</source>
+        <target>Back to criteria</target>
+      </trans-unit>
+          <trans-unit id="1286">
+        <source>View</source>
+        <target>View</target>
+      </trans-unit>
+          <trans-unit id="1287">
+        <source>Specimen criteria</source>
+        <target>Specimen criteria</target>
+      </trans-unit>
+          <trans-unit id="1288">
+        <source>Specimen</source>
+        <target>Specimen</target>
+      </trans-unit>
+          <trans-unit id="1289">
+        <source>Individual</source>
+        <target>Individual</target>
+      </trans-unit>
+          <trans-unit id="1291">
+        <source>Your password has been successfully renewed.</source>
+        <target>Your password has been successfully renewed.</target>
+      </trans-unit>
+          <trans-unit id="1292">
+        <source>You can now log in and enjoy our enhanced collection services.</source>
+        <target>You can now log in and enjoy our enhanced collection services.</target>
+      </trans-unit>
+          <trans-unit id="1294">
+        <source>Dear</source>
+        <target>Dear</target>
+      </trans-unit>
+          <trans-unit id="1295">
+        <source>Thank you for having registered on DaRWIN 2.</source>
+        <target>Thank you for having registered on DaRWIN 2.</target>
+      </trans-unit>
+          <trans-unit id="1296">
+        <source>You should have received a reminder of your username and password on the e-mail address provided.</source>
+        <target>You should have received a reminder of your username and password on the e-mail address provided.</target>
+      </trans-unit>
+          <trans-unit id="1297">
+        <source>Please fill in the application form</source>
+        <target>Please fill in the application form</target>
+      </trans-unit>
+          <trans-unit id="1298">
+        <source>For your reminder, here is your user name:</source>
+        <target>For your reminder, here is your user name:</target>
+      </trans-unit>
+          <trans-unit id="1299">
+        <source>Rocks</source>
+        <target>Rocks</target>
+      </trans-unit>
+          <trans-unit id="1300">
+        <source>Mineral</source>
+        <target>Mineral</target>
+      </trans-unit>
+          <trans-unit id="1301">
+        <source>Records per page: </source>
+        <target>Records per page: </target>
+      </trans-unit>
+          <trans-unit id="1302">
+        <source>&quot;%value%&quot; must be at least %min_length% characters.</source>
+        <target>&quot;%value%&quot; must be at least %min_length% characters.</target>
+      </trans-unit>
+          <trans-unit id="1303">
+        <source>Password must be at least %min_length% characters length</source>
+        <target>Password must be at least %min_length% characters length</target>
+      </trans-unit>
+          <trans-unit id="1304">
+        <source>Passwords must be equal and may not contain spaces</source>
+        <target>Passwords must be equal and may not contain spaces</target>
+      </trans-unit>
+          <trans-unit id="1305">
+        <source>You cannot register without accepting DaRWIN 2  terms of use</source>
+        <target>You cannot register without accepting DaRWIN 2  terms of use</target>
+      </trans-unit>
+          <trans-unit id="1306">
+        <source>Required.</source>
+        <target>Required.</target>
+      </trans-unit>
+          <trans-unit id="1307">
+        <source>If you&#039;ve lost your password, please</source>
+        <target>If you&#039;ve lost your password, please</target>
+      </trans-unit>
+          <trans-unit id="1308">
+        <source>reset your password</source>
+        <target>reset your password</target>
+      </trans-unit>
+          <trans-unit id="1309">
+        <source>Send me a &#039;reset account&#039; mail</source>
+        <target>Send me a &#039;reset account&#039; mail</target>
+      </trans-unit>
+          <trans-unit id="1310">
+        <source>Reset your account.</source>
+        <target>Reset your account.</target>
+      </trans-unit>
+          <trans-unit id="1311">
+        <source>Your login</source>
+        <target>Your login</target>
+      </trans-unit>
+          <trans-unit id="1313">
+        <source>We didn&#039;t find any reference with the login and password you provided</source>
+        <target>We didn&#039;t find any reference with the login and password you provided</target>
+      </trans-unit>
+          <trans-unit id="1314">
+        <source>E-mail is required</source>
+        <target>E-mail is required</target>
+      </trans-unit>
+          <trans-unit id="1315">
+        <source>Invalid E-mail address</source>
+        <target>Invalid E-mail address</target>
+      </trans-unit>
+          <trans-unit id="1316">
+        <source>must be at least 4 characters.</source>
+        <target>must be at least 4 characters.</target>
+      </trans-unit>
+          <trans-unit id="1317">
+        <source>Bad login or password</source>
+        <target>Bad login or password</target>
+      </trans-unit>
+          <trans-unit id="1318">
+        <source>Login is required</source>
+        <target>Login is required</target>
+      </trans-unit>
+          <trans-unit id="1323">
+        <source>Family Name</source>
+        <target>Family Name</target>
+      </trans-unit>
+          <trans-unit id="1324">
+        <source>Given Name</source>
+        <target>Given Name</target>
+      </trans-unit>
+          <trans-unit id="1325">
+        <source>Login</source>
+        <target>Login</target>
+      </trans-unit>
+          <trans-unit id="1326">
+        <source>Password</source>
+        <target>Password</target>
+      </trans-unit>
+          <trans-unit id="1327">
+        <source>Confirm password</source>
+        <target>Confirm password</target>
+      </trans-unit>
+          <trans-unit id="1328">
+        <source>e-mail</source>
+        <target>e-mail</target>
+      </trans-unit>
+          <trans-unit id="1329">
+        <source>Preferred language</source>
+        <target>Preferred language</target>
+      </trans-unit>
+          <trans-unit id="1330">
+        <source>Title</source>
+        <target>Title</target>
+      </trans-unit>
+          <trans-unit id="1331">
+        <source>Captcha</source>
+        <target>Captcha</target>
+      </trans-unit>
+          <trans-unit id="1332">
+        <source>Moral person</source>
+        <target>Moral person</target>
+      </trans-unit>
+          <trans-unit id="1333">
+        <source>Physical person</source>
+        <target>Physical person</target>
+      </trans-unit>
+          <trans-unit id="1334">
+        <source>Name is required</source>
+        <target>Name is required</target>
+      </trans-unit>
+          <trans-unit id="1335">
+        <source>E-mail is not of a valid form</source>
+        <target>E-mail is not of a valid form</target>
+      </trans-unit>
+          <trans-unit id="1336">
+        <source>Password must contain at least :&lt;br /&gt; * a case mix&lt;br /&gt; * one digit&lt;br /&gt; * minimum 6 characters length</source>
+        <target>Password must contain at least :&lt;br /&gt; * a case mix&lt;br /&gt; * one digit&lt;br /&gt; * minimum 6 characters length</target>
+      </trans-unit>
+          <trans-unit id="1339">
+        <source>Username</source>
+        <target>Username</target>
+      </trans-unit>
+          <trans-unit id="1341">
+        <source>Scientists wishing to visit one of our collections should contact the collection manager directly.  For more information on how to apply for a visit, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</source>
+        <target>Scientists wishing to visit one of our collections should contact the collection manager directly.  For more information on how to apply for a visit, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</target>
+      </trans-unit>
+          <trans-unit id="1342">
+        <source>Academic personnel wishing to loan collection objects should contact the collection manager directly.  For more information on how to apply for a loan, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</source>
+        <target>Academic personnel wishing to loan collection objects should contact the collection manager directly.  For more information on how to apply for a loan, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</target>
+      </trans-unit>
+          <trans-unit id="1343">
+        <source>Settlement of loans for study</source>
+        <target>Settlement of loans for study</target>
+      </trans-unit>
+          <trans-unit id="1344">
+        <source>Settlement of external visiting scientists</source>
+        <target>Settlement of external visiting scientists</target>
+      </trans-unit>
+          <trans-unit id="1345">
+        <source>terms of use</source>
+        <target>terms of use</target>
+      </trans-unit>
+          <trans-unit id="1346">
+        <source>Dear %username%</source>
+        <target>Dear %username%</target>
+      </trans-unit>
+          <trans-unit id="1347">
+        <source>Dear %usertitle% %username%</source>
+        <target>Dear %usertitle% %username%</target>
+      </trans-unit>
+          <trans-unit id="1348">
+        <source>To log you in, you can visit us on %darwinurl%</source>
+        <target>To log you in, you can visit us on %darwinurl%</target>
+      </trans-unit>
+          <trans-unit id="1350">
+        <source>User name: %username%</source>
+        <target>User name: %username%</target>
+      </trans-unit>
+          <trans-unit id="1351">
+        <source>Abbreviation</source>
+        <target>Abbreviation</target>
+      </trans-unit>
+          <trans-unit id="1368">
+        <source>DaRWIN 2 registration</source>
+        <target>DaRWIN 2 registration</target>
+      </trans-unit>
+          <trans-unit id="1369">
+        <source>DaRWIN 2 team</source>
+        <target>DaRWIN 2 team</target>
+      </trans-unit>
+          <trans-unit id="1483">
+        <source>Your Name</source>
+        <target>Your Name</target>
+      </trans-unit>
+          <trans-unit id="1484">
+        <source>anonymous</source>
+        <target>anonymous</target>
+      </trans-unit>
+          <trans-unit id="1485">
+        <source>You think there&#039;s a mistake ? please suggest us a correction</source>
+        <target>You think there&#039;s a mistake ? please suggest us a correction</target>
+      </trans-unit>
+          <trans-unit id="1486">
+        <source>Submit</source>
+        <target>Submit</target>
+      </trans-unit>
+          <trans-unit id="1487">
+        <source>Comment</source>
+        <target>Comment</target>
+      </trans-unit>
+          <trans-unit id="1488">
+        <source>Thank you for your help</source>
+        <target>Thank you for your help</target>
+      </trans-unit>
+        </body>
   </file>
 </xliff>
+

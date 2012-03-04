@@ -17,8 +17,8 @@ class LoanRightsForm extends BaseLoanRightsForm
     $this->widgetSchema['user_ref'] = new sfWidgetFormInputHidden();    
     $user_id= $this->getObject()->getUserRef() ;
     if($user_id)
-    {
-      $user = Doctrine::getTable('Users')->find($this->getObject()->getUserRef()) ;
+    {      
+      $user = Doctrine::getTable('Users')->findOneById($user_id) ;
       $this->widgetSchema['user_ref']->setLabel($user->getFormatedName()) ;
     }
     else 

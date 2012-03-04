@@ -1,6 +1,6 @@
 <table class="catalogue_table">
   <thead class="workflow">
-    <tr><th colspan=4><?php echo __("Latest Status") ; ?></th></tr>
+    <tr><th colspan=4><?php echo __("Latest Statuses") ; ?> :</th></tr>
     <tr>
       <th><?php echo __('Date');?></th>
       <th><?php echo __('Status');?></th>
@@ -12,7 +12,7 @@
     <?php foreach($loanstatus as $info) : ?>
     <tr>
       <td><?php $date = new DateTime($info->getModificationDateTime());
-      		echo $date->format('Y/m/d H:i:s'); ?></td>
+      		echo $date->format('d/m/Y H:i:s'); ?></td>
       <td><?php echo $info->getFormattedStatus();?></td>
       <td><?php echo $info->getComment();?></td>
       <td><?php echo $info->Users->__toString() ;?></td>      

@@ -2,7 +2,7 @@ all:
   .general:
     salt: salt
     yearRangeMin: 1700
-    yearRangeMax: <?php echo date('Y')+2; ?>
+    yearRangeMax:  <?php echo date('Y')+2 ."\n"; ?>
     dateUpperBound: '2038/12/31'
     dateLowerBound: '0001/01/01'
     yearUpperBound: '2038'

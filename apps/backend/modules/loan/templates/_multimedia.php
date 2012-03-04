@@ -14,7 +14,8 @@
     <?php endif ; ?>
   </td>
   <td><?php echo $form['mime_type']->getValue() ; ?></td>
-  <td><?php echo $form['creation_date']->getValue(); ?></td>
+  <td><?php $date = new DateTime($form['creation_date']->getValue());
+                echo $date->format('d/m/Y'); ?></td>
   <td class="widget_row_delete">
     <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_file_'.$row_num); ?>
     <?php echo $form->renderHiddenFields();?>

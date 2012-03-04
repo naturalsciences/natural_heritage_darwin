@@ -8,10 +8,6 @@ class UsersLoginInfos extends BaseUsersLoginInfos
   protected function addLoginInfo($user)
   {
      $this->loadDataFromArray($user)->save();
-/*     $this->user_ref = $user->getId() ;
-     $this->login_type = $user->getLoginType();
-    	$this->user_name = $user->getFamilyName() ;
-     $this->save() 	;*/
   }
   
   public function setNewPassword($values)

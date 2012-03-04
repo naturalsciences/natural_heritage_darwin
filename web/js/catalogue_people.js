@@ -53,11 +53,12 @@
           events: {
             show: function () {
               ref_element_id = null;
-              ref_element_name = null;
+              ref_element_name = null;      
               fct_update = options['update_row_fct'];
             },
             hide: function(event, api) {
               $('.result_choose').die('click') ;
+              fct_update = undefined ;
               scroll(0,last_position) ;
               api.destroy();
             }

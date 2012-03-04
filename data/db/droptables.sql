@@ -39,6 +39,7 @@ DROP TABLE  IF EXISTS people_addresses CASCADE;
 DROP TABLE  IF EXISTS template_people_users_comm_common CASCADE;
 DROP TABLE  IF EXISTS template_people_users_rel_common CASCADE;
 DROP TABLE  IF EXISTS template_people_users_addr_common CASCADE;
+DROP TABLE  IF EXISTS old_multimedia CASCADE;
 DROP TABLE  IF EXISTS multimedia CASCADE;
 DROP TABLE  IF EXISTS people_languages CASCADE;
 DROP TABLE  IF EXISTS users_languages CASCADE;

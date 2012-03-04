@@ -17,7 +17,7 @@
       else
       {
         $('.result_choose').die('click');
-	$('body').trigger('close_modal');
+	      $('body').trigger('close_modal');
       }
     });
   });

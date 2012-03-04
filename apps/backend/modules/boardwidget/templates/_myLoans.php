@@ -33,7 +33,7 @@
       <td><?php echo $loan['to_date_formatted']; ?></td>
       <td><?php echo link_to(image_tag('blue_eyel.png'),'loan/index', 'class=view_loan');?></td> 
 
-      <?php if( $rights[$loan->getId()] ) :?>
+      <?php if( in_array($loan->getId(),sfOutputEscaper::unescape($rights)) ) :?>
         <td><?php echo link_to(image_tag('edit.png'),'loan/edit?id='.$loan->getId(), 'class=edit_loan');?></td>
         <td><?php echo link_to(image_tag('remove.png'), 'loan/delete?onboard=1&id='.$loan->getId(), 
            array('method' => 'delete', 'confirm' => __('Are you sure?'), 'class' => 'delete_loan'));?>

@@ -8,8 +8,7 @@
     <a class="enabled selected" id="tab_0"> &lt; <?php echo sprintf(__('Specimen %d'),$specimen->getId());?> &gt; </a>
 		<?php echo link_to(__('Individuals overview'), 'individuals/overview?spec_id='.$specimen->getId()."&view=true", array('class'=>'enabled', 'id' => 'tab_1'));?>
 			<a class="disabled" id="tab_3"><?php echo __('Parts overview');?></a>
-  </div>s
-
+  </div>
   <div class="panel_view encod_screen edition" id="intro">
    <div>	
       <?php include_partial('widgets/screen', array(

@@ -19,17 +19,21 @@ class LoansForm extends BaseLoansForm
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
+    $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
+
     //Loan form is submited to upload file, when called like that we don't want some fields to be required
-    $required = isset($this->options['no_name'])?false:true ;
+
     $this->widgetSchema['name'] = new sfWidgetFormInput();
-    $this->validatorSchema['name'] = new sfValidatorString(array('required' => $required)) ;
+    $this->validatorSchema['name'] = new sfValidatorString(array('required' => true)) ;
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
         'image'=>'/images/calendar.gif', 
         'format' => '%day%/%month%/%year%', 
         'years' => $years,
-        'with_time' => false
+        'with_time' => false,
+        'empty_values' => $dateText,
+
       ),
       array('class' => 'from_date')
     );
@@ -50,7 +54,8 @@ class LoansForm extends BaseLoansForm
         'image'=>'/images/calendar.gif', 
         'format' => '%day%/%month%/%year%', 
         'years' => $years,
-        'with_time' => false
+        'with_time' => false,
+        'empty_values' => $dateText,
       ),
       array('class' => 'from_date')
     );
@@ -68,17 +73,14 @@ class LoansForm extends BaseLoansForm
                                          'to_date' => 'Ends on'
                                         )
                                   );
-    $this->widgetSchema->setLabels(array('from_date' => 'Start on',
-                                         'to_date' => 'Ends on'
-                                        )
-                                  );
     $this->widgetSchema['effective_to_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
         'image'=>'/images/calendar.gif', 
         'format' => '%day%/%month%/%year%', 
         'years' => $years,
-        'with_time' => false
+        'with_time' => false,
+        'empty_values' => $dateText,
       ),
       array('class' => 'to_date')
     );
@@ -91,11 +93,6 @@ class LoansForm extends BaseLoansForm
       ),
       array('invalid' => 'Invalid date "effective"')
     );
-    /* Labels */
-    $this->widgetSchema->setLabels(array('from_date' => 'Start on',
-                                         'to_date' => 'Ends on'
-                                        )
-                                  );
 
     $this->widgetSchema['extended_to_date'] = new widgetFormJQueryFuzzyDate(
       array(
@@ -103,7 +100,8 @@ class LoansForm extends BaseLoansForm
         'image'=>'/images/calendar.gif', 
         'format' => '%day%/%month%/%year%', 
         'years' => $years,
-        'with_time' => false
+        'with_time' => false,
+        'empty_values' => $dateText,
       ),
       array('class' => 'to_date')
     );
@@ -114,18 +112,18 @@ class LoansForm extends BaseLoansForm
         'min' => $minDate->getDateTime(),
         'date_format' => 'd/M/Y',
       ),
-      array('invalid' => 'Invalid date "Close"')
+      array('invalid' => 'Invalid date "Extended"')
     );
     
     /* input file for related files */
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setLabel("Add File") ;
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
-$this->validatorSchema['filenames'] = new sfValidatorFile(
+    $this->validatorSchema['filenames'] = new sfValidatorPass() ;/*File(
   array(
       'required' => false,
       'validated_file_class' => 'myValidatedFile'
-  ));  
+  ));  */
 
     $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
@@ -139,7 +137,9 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
     $this->validatorSchema['receiver'] = new sfValidatorPass();    
     $this->validatorSchema['relatedfile'] = new sfValidatorPass();
     $this->validatorSchema['users'] = new sfValidatorPass();
-    $this->validatorSchema['insurance'] = new sfValidatorPass();                                     
+    $this->validatorSchema['insurance'] = new sfValidatorPass();
+
+    $this->mergePostValidator( new LoanValidatorDates()) ;
   }
   
   public function addUsers($num, $user_ref, $order_by=0)
@@ -494,12 +494,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
     }     
     parent::bind($taintedValues, $taintedFiles);   
   }
-  
-  public function save($con = null)
-  {
-    $this->offsetUnset('filenames');
-    return parent::save($con);
-  }
+
   public function saveEmbeddedForms($con = null, $forms = null)
   {
     if (null === $forms && $this->getValue('comment'))
@@ -527,6 +522,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
     if (null === $forms && $this->getValue('sender'))
     {
       $value = $this->getValue('newActorsSender');
+
       foreach($this->embeddedForms['newActorsSender']->getEmbeddedForms() as $name => $form)
       {
         if(!isset($value[$name]['people_ref'] ))
@@ -534,6 +530,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
+          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
         }
       }
       $value = $this->getValue('ActorsSender');
@@ -544,6 +541,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsSender'][$name]);
         }
+        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
       }
     } 
     if (null === $forms && $this->getValue('users'))
@@ -553,10 +551,12 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
       {
         if(!isset($value[$name]['user_ref'] ))
           unset($this->embeddedForms['newUsers'][$name]);
-        else
+        elseif($value[$name]['user_ref'] != sfContext::getInstance()->getUser()->getId())
         {
+          
           $form->getObject()->setLoanRef($this->getObject()->getId());
         }
+        else unset($this->embeddedForms['newUsers'][$name]);
       }
       $value = $this->getValue('Users');
       foreach($this->embeddedForms['Users']->getEmbeddedForms() as $name => $form)
@@ -578,6 +578,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
+          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
         }
       }
       $value = $this->getValue('ActorsReceiver');
@@ -588,6 +589,7 @@ $this->validatorSchema['filenames'] = new sfValidatorFile(
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsReceiver'][$name]);
         }
+        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
       }
     }
     if (null === $forms && $this->getValue('insurance'))

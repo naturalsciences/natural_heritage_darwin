@@ -36,8 +36,6 @@ CREATE INDEX CONCURRENTLY idx_informative_workflow_user_ref on informative_workf
 CREATE INDEX CONCURRENTLY idx_collection_maintenance_user_ref on collection_maintenance(people_ref);
 CREATE INDEX CONCURRENTLY idx_my_saved_searches_user_ref on my_saved_searches(user_ref);
 CREATE INDEX CONCURRENTLY idx_my_widgets_user_ref on my_widgets(user_ref);
-CREATE INDEX CONCURRENTLY idx_my_widgets_icon_ref on my_widgets(icon_ref);
-CREATE INDEX CONCURRENTLY idx_my_widgets_collections on my_widgets(collections) ;
 CREATE INDEX CONCURRENTLY idx_taxonomy_level_ref on taxonomy(level_ref);
 CREATE INDEX CONCURRENTLY idx_taxonomy_parent_ref on taxonomy(parent_ref);
 CREATE INDEX CONCURRENTLY idx_chronostratigraphy_level_ref on chronostratigraphy(level_ref);
@@ -94,9 +92,6 @@ CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_type on catalogue_pr
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_referenced_record on catalogue_properties(referenced_relation, record_id, property_type);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_qualifier on catalogue_properties(property_qualifier);
 CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_unit on catalogue_properties(property_unit);
-CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_accuracy_unit on catalogue_properties(property_accuracy_unit);
-CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_method_indexed on catalogue_properties(property_method_indexed);
-CREATE INDEX CONCURRENTLY idx_catalogue_properties_property_tool_indexed on catalogue_properties(property_tool_indexed);
 CREATE INDEX CONCURRENTLY idx_catalogue_relationships_relations on catalogue_relationships (referenced_relation, record_id_1, relationship_type);
 CREATE INDEX CONCURRENTLY idx_properties_values_property_ref ON properties_values (property_ref);
 CREATE INDEX CONCURRENTLY idx_chronostratigraphy_lower_bound on chronostratigraphy(coalesce(lower_bound, -4600));
@@ -145,10 +140,6 @@ CREATE INDEX CONCURRENTLY idx_mineralogy_cristal_system on mineralogy(cristal_sy
 CREATE INDEX CONCURRENTLY idx_multimedia_is_digital on multimedia(is_digital);
 CREATE INDEX CONCURRENTLY idx_multimedia_type on multimedia(type);
 CREATE INDEX CONCURRENTLY idx_my_widgets_user_category on my_widgets(user_ref, category, group_name);
-CREATE INDEX CONCURRENTLY idx_my_widgets_group_name on my_widgets(user_ref, group_name);
-CREATE INDEX CONCURRENTLY idx_my_widgets_is_available on my_widgets(is_available);
-CREATE INDEX CONCURRENTLY idx_my_widgets_order_by on my_widgets(order_by);
-CREATE INDEX CONCURRENTLY idx_my_widgets_visible on my_widgets(visible);
 CREATE INDEX CONCURRENTLY idx_people_is_physical on people(is_physical);
 CREATE INDEX CONCURRENTLY idx_people_sub_type on people(sub_type) WHERE NOT sub_type IS NULL;
 CREATE INDEX CONCURRENTLY idx_people_family_name on people(family_name);

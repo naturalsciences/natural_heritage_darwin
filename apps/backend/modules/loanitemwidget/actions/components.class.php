@@ -12,13 +12,12 @@ class loanitemwidgetComponents extends sfComponents
 {
   protected function defineForm()
   {
-    if(!$this->getUser()->isAtLeast(Users::ENCODER)) die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;   
     if(! isset($this->form) )
     {
       if(isset($this->eid) && $this->eid != null)
       {
-        $loan = Doctrine::getTable('LoanItems')->find($this->eid);
-        $this->form = new LoanItemWidgetForm($loan);
+        $loanitem = Doctrine::getTable('LoanItems')->find($this->eid);
+        $this->form = new LoanItemWidgetForm($loanitem);
       }
       else
         $this->form = new LoanItemWidgetForm();
@@ -47,16 +46,16 @@ class loanitemwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newActorsSender']))
-      $this->form->loadEmbedActorsSender();    
+      $this->form->loadEmbedActorsSender();
     if(!isset($this->form['newActorsReceiver']))
-      $this->form->loadEmbedActorsReceiver();          
+      $this->form->loadEmbedActorsReceiver();
   }  
     
   public function executeRefRelatedFiles()
   { 
     $this->defineForm();
-   // if(!isset($this->form['newRelatedFiles']))
-   //   $this->form->loadEmbedRelatedFiles();  
+    if(!isset($this->form['newRelatedFiles']))
+      $this->form->loadEmbedRelatedFiles();  
   }  
 
   public function executeRefComments()

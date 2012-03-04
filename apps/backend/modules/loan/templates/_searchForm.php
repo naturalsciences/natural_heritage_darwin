@@ -41,7 +41,7 @@
           <th><?php echo $form['people_ref']->render() ?></th>
           <th><?php echo $form['ig_ref']->render() ?></th>
           <th><?php echo $form['only_darwin']->render() ?>
-          <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
+          <td class="right_aligned"><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </th>
         </tr>
       </tbody>

@@ -25,9 +25,11 @@ class LoanOverviewForm extends sfForm
   }
 
   
-  public function addItem($num)
+  public function addItem($num,$part_ref=null)
   {
-    $form = new LoanItemsForm();
+    $item = new LoanItems() ;  
+    if($part_ref) $item->setPartRef($part_ref) ;
+    $form = new LoanItemsForm($item);    
     $this->embeddedForms['newLoanItems']->embedForm($num, $form);
     //Re-embedding the container
     $this->embedForm('newLoanItems', $this->embeddedForms['newLoanItems']);
@@ -64,8 +66,7 @@ class LoanOverviewForm extends sfForm
     $value = $this->getValues();
     foreach($this->embeddedForms['newLoanItems']->getEmbeddedForms() as $name => $form)
     {
-      // @TODO: FIND BETTER deterministic key
-      if (!isset($value['newLoanItems'][$name]['details'])/* || $value['newLoanItems'][$name]['details']=='' */)
+      if (!isset($value['newLoanItems'][$name]['item_visible']))
       {
         unset($this->embeddedForms['newLoanItems'][$name]);
       }
@@ -78,8 +79,7 @@ class LoanOverviewForm extends sfForm
 
     foreach($this->embeddedForms['LoanItems']->getEmbeddedForms() as $name => $form)
     {
-      // @TODO: FIND BETTER deterministic key
-      if (!isset($value['LoanItems'][$name]['details']) /*|| $value['LoanItems'][$name]['details']==''*/ )
+      if (!isset($value['LoanItems'][$name]['item_visible']))
       {
         $form->getObject()->delete();
         unset($this->embeddedForms['LoanItems'][$name]);
@@ -92,7 +92,12 @@ class LoanOverviewForm extends sfForm
     }
     
   }
-
+  public function getJavaScripts()
+  {
+    $javascripts=parent::getJavascripts();
+    $javascripts[]='/js/catalogue_people.js';   
+    return $javascripts;
+  }
   public function getStylesheets()
   {
     return array('/css/ui.datepicker.css' => 'all');

@@ -1,7 +1,7 @@
 <table id="sender_table" class="catalogue_table edition">
   <thead>
     <tr>
-      <th colspan="4"><?php echo __("Actors(sender side)") ; ?></th>
+      <th colspan="4"><?php echo __("Sender side") ; ?></th>
       <th colspan="8"><?php echo __("Roles") ; ?></th>
     </tr>
     <tr>
@@ -40,7 +40,7 @@
 <table id="receiver_table" class="catalogue_table edition">
   <thead>
     <tr>
-      <th colspan="4"><?php echo __("Actors(receiver side)") ; ?></th>
+      <th colspan="4"><?php echo __("Receiver side") ; ?></th>
       <th colspan="8"><?php echo __("Roles") ; ?></th>
     </tr>
     <tr>

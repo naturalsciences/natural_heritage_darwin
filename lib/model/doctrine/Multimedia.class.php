@@ -93,12 +93,9 @@ class Multimedia extends BaseMultimedia
   
   public function changeUri()
   {
-    $path = $this->checkUploadPathAvailable() ; 
+    $path = $this->checkUploadPathAvailable() ;     
     rename(sfConfig::get('sf_upload_dir')."/multimedia/temp/".$this->_get('uri'),
-                      sfConfig::get('sf_upload_dir')."/multimedia/".$path.'/'.$this->_get('uri'));
-                      
-  
-   // unlink(sfConfig::get('sf_upload_dir')."/multimedia/temp/".$this->_get('uri')) ;                      
+                      sfConfig::get('sf_upload_dir')."/multimedia/".$path.'/'.$this->_get('uri'));                    
     $this->setUri($path.'/'.$this->_get('uri')) ;
   }   
 

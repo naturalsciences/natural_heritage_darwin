@@ -13,7 +13,6 @@
     <table class="results <?php if($is_choose) echo 'is_choose';?>">
       <thead>
         <tr>
-          <th></th>
           <th class="hidden"></th>
           <th>
             <a class="sort" href="<?php echo url_for($s_url.'&orderby=name'.( ($orderBy=='name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
@@ -48,7 +47,6 @@
       <tbody>
         <?php foreach($items as $item):?>
           <tr class="rid_<?php echo $item->getId();?>">
-            <td><?php echo image_tag('info.png',"title=info class=info");?></td>
             <td class="item_name"><?php echo $item->getName();?></td>
             <td><?php if(isset($status[$item->getId()])) echo $status[$item->getId()]->getFormattedStatus(); ?></td>
             <td class="datesNum">
@@ -61,8 +59,10 @@
               <?php echo $item->getDescription();?>
             </td>           
             <td class="">
-              <?php echo link_to(image_tag('edit.png',array('title'=>'Edit loan')),'loan/edit?id='.$item->getId());?>
-	      <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loan/view?id='.$item->getId());?>
+	            <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loan/view?id='.$item->getId());?>            
+              <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
+              <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId());?>
+              <?php endif ; ?>
             </td>
           </tr>
           <tr class="hidden details details_rid_<?php echo $item->getId();?>" >
@@ -87,24 +87,3 @@
     <?php echo $form['ig_ref']->renderError(); ?>
 </div>
 <?php endif;?>
-<script>
- /* $("img.info").click(function() {
-      item_row=$(this).closest('tr');
-      el_id  = getIdInClasses(item_row);
-      if($('.details_rid_'+el_id).is(":hidden"))
-      {
-	if($('.details_rid_'+el_id+' > td:first ').html() == '')
-	{
-	  $.get('<?php echo url_for('loan/details');?>/id/'+el_id,function (html){
-	    $('.details_rid_'+el_id+' > td:first ').html(html).parent().show();
-	  });
-	}
-	else
-	{
-	  $('.details_rid_'+el_id+'').show();
-	}
-      }
-      else
-	$('.details_rid_'+el_id+'').hide();
-  });*/
-</script>

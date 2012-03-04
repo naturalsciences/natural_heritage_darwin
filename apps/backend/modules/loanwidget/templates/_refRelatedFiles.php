@@ -42,8 +42,8 @@
           <?php echo $form['filenames']->renderLabel();?>
           <?php echo $form['filenames'];?>
         </div>
-          <a href="<?php echo url_for('loan/addRelatedFiles'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_file" class="hidden"></a>
-        <iframe name="hiddenFrame" id="hiddenFrame" class="little-frame">
+          <a href="<?php echo url_for('loan/addRelatedFiles?table='.$table.($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/num/" id="add_file" class="hidden"></a>
+        <iframe name="hiddenFrame" id="hiddenFrame" class="little-frame" style="display:none">
         </iframe>
       </td>
     </tr>
@@ -56,18 +56,18 @@
       hideFileError();
       name = $(this).val().replace(/C:\\fakepath\\/i, '') ;
       form = $(this).closest('form') ;
-      form.attr('action','<?php echo url_for("loan/insertFile?table=loans".($form->getObject()->isNew()?"":"&id=".$form->getObject()->getId())) ;?>') ;
+      form.attr('action','<?php echo url_for("loan/insertFile?table=$table".($form->getObject()->isNew()?"":"&id=".$form->getObject()->getId())) ;?>') ;
       form.attr('target','hiddenFrame') ;
       form.submit();
       hideForRefresh('#refRelatedFiles');        
       return false;
-    });
-    
+    });    
     $('#clear_file_error').click(function() { hideFileError(); });
   });
+  
   function getFileInfo(file_id) 
   {
-    parent_el = $(this).closest('table.property_values');
+    parent_el = $('#add_file').closest('table.property_values');
     $.ajax(
     {
       type: "GET",
@@ -84,6 +84,7 @@
   {
     $('#file_error_message li:first').html(err_msg) ;
     $('#file_error_message').show() ;
+    showAfterRefresh('#refRelatedFiles');    
   }
   function hideFileError()
   {

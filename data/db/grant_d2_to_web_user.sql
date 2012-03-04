@@ -14,6 +14,7 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.expeditions TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.people_languages TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_people_users_rel_common TO cebmpad;
+ GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.old_multimedia TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.multimedia TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.class_vernacular_names TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_people_users_comm_common TO cebmpad;

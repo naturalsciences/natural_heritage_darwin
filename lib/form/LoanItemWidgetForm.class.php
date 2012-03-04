@@ -13,20 +13,64 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   public function configure()
   {
     $this->useFields(array('id'));
-
+    /* input file for related files */
+    $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
+    $this->widgetSchema['filenames']->setLabel("Add File") ;
+    $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
+$this->validatorSchema['filenames'] = new sfValidatorFile(
+  array(
+      'required' => false,
+      'validated_file_class' => 'myValidatedFile'
+  ));
     $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));        
-    $this->widgetSchema['relatedfiles'] = new sfWidgetFormInputHidden(array('default'=>1));    
+    $this->widgetSchema['relatedfile'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));    
 
     $this->validatorSchema['comment'] = new sfValidatorPass();
     $this->validatorSchema['sender'] = new sfValidatorPass();
     $this->validatorSchema['receiver'] = new sfValidatorPass();    
-    $this->validatorSchema['relatedfiles'] = new sfValidatorPass();
+    $this->validatorSchema['relatedfile'] = new sfValidatorPass();
     $this->validatorSchema['insurance'] = new sfValidatorPass();
+    $this->widgetSchema->setNameFormat('loan_items[%s]');
   }
+  public function addRelatedFiles($num,$file=null)
+  {
+    if(! isset($this['newRelatedFiles'])) $this->loadEmbedRelatedFiles();
+    $options = array('referenced_relation' => 'loan_items');
+    if($file) $options = $file ;
+    $val = new Multimedia();
+    $val->fromArray($options);
+    $val->setRecordId($this->getObject()->getId());
+    $form = new MultimediaForm($val);
+    $this->embeddedForms['newRelatedFiles']->embedForm($num, $form);
+    //Re-embedding the container
+    $this->embedForm('newRelatedFiles', $this->embeddedForms['newRelatedFiles']);
+  }
+  
+  public function loadEmbedRelatedFiles()
+  {
+    if($this->isBound()) return;
 
+    /* Comments sub form */
+    $subForm = new sfForm();
+    $this->embedForm('RelatedFiles',$subForm);
+    if($this->getObject()->getId() !='')
+    {
+      foreach(Doctrine::getTable('Multimedia')->findForTable('loan_items', $this->getObject()->getId()) as $key=>$vals)
+      {
+        $form = new MultimediaForm($vals);
+        $this->embeddedForms['RelatedFiles']->embedForm($key, $form);
+      }
+      //Re-embedding the container
+      $this->embedForm('RelatedFiles', $this->embeddedForms['RelatedFiles']);
+    }
+
+    $subForm = new sfForm();
+    $this->embedForm('newRelatedFiles',$subForm);
+  }
+  
   public function addActorsSender($num, $people_ref, $order_by=0)
   {
     if(! isset($this['newActorsSender'])) $this->loadEmbedActorsSender();
@@ -262,10 +306,38 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
           $taintedValues['newInsurance'][$key]['record_id'] = 0;
         }
       }
-    }  
+    } 
+    if(!isset($taintedValues['relatedfile']))
+    {
+      $this->offsetUnset('RelatedFiles');
+      unset($taintedValues['RelatedFiles']);
+      $this->offsetUnset('newRelatedFiles');
+      unset($taintedValues['newRelatedFiles']);
+    }
+    else
+    {
+      $this->loadEmbedRelatedFiles();
+      if(isset($taintedValues['newRelatedFiles']))
+      {
+        foreach($taintedValues['newRelatedFiles'] as $key=>$newVal)
+        {
+          if (!isset($this['newRelatedFiles'][$key]))
+          {
+            $this->addRelatedFiles($key);
+          }
+          $taintedValues['newRelatedFiles'][$key]['record_id'] = 0;
+        }
+      }
+    }      
     parent::bind($taintedValues, $taintedFiles);   
   }
-
+  
+  public function save($con = null)
+  {
+    $this->offsetUnset('filenames');
+    return parent::save($con);
+  }
+  
   public function saveEmbeddedForms($con = null, $forms = null)
   {
     if (null === $forms && $this->getValue('comment'))
@@ -300,6 +372,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
+          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
         }
       }
       $value = $this->getValue('ActorsSender');
@@ -310,6 +383,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsSender'][$name]);
         }
+        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));        
       }
     }
 
@@ -323,6 +397,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
+          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
         }
       }
       $value = $this->getValue('ActorsReceiver');
@@ -333,6 +408,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsReceiver'][$name]);
         }
+        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));        
       }
     }
     if (null === $forms && $this->getValue('insurance'))
@@ -355,7 +431,31 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
           unset($this->embeddedForms['Insurances'][$name]);
         }
       }
-    }              
+    }  
+    if (null === $forms && $this->getValue('relatedfile'))
+    {  
+      $value = $this->getValue('newRelatedFiles');
+      foreach($this->embeddedForms['newRelatedFiles']->getEmbeddedForms() as $name => $form)
+      {
+        if(!isset($value[$name]['referenced_relation']))
+          unset($this->embeddedForms['newRelatedFiles'][$name]);
+        else
+        {
+          $form->getObject()->setRecordId($this->getObject()->getId());
+          $form->getObject()->changeUri() ;
+        }
+      }
+
+      $value = $this->getValue('RelatedFiles');
+      foreach($this->embeddedForms['RelatedFiles']->getEmbeddedForms() as $name => $form)
+      {
+        if (!isset($value[$name]['referenced_relation']))
+        {
+          $form->getObject()->deleteObjectAndFile();
+          unset($this->embeddedForms['RelatedFiles'][$name]);          
+        }
+      }
+    }                
     return parent::saveEmbeddedForms($con, $forms);
   }   
   

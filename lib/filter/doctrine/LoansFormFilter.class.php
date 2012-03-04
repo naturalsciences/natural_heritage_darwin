@@ -88,9 +88,9 @@ class LoansFormFilter extends BaseLoansFormFilter
 
     $this->validatorSchema['ig_ref'] = new sfValidatorInteger(array('required' => false)) ;
     $this->widgetSchema->setLabels(array('from_date' => 'Between',
-                                         'date_to' => 'and',
+                                         'to_date' => 'and',
                                          'only_darwin' => 'Contains Darwin items',
-                                         'people_ref' => 'Person',
+                                         'people_ref' => 'Specific person',
                                         )
                                   );
   }
@@ -101,7 +101,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     if($val != '')
     {
       $alias = $query->getRootAlias() ;
-      $query->andWhere("EXISTS (selects.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status = ?)",$val);
+      $query->andWhere("EXISTS (select s.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status = ?)",$val);
     }
     return $query;
   }
@@ -148,7 +148,7 @@ class LoansFormFilter extends BaseLoansFormFilter
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
-    $fields = array('from_date', 'to_date');
+    $fields = array('from_date', 'effective_to_date');
     $this->addNamingColumnQuery($query, 'loans', 'description_ts', $values['name']);
     $this->addExactDateFromToColumnQuery($query, $fields, $values['from_date'], $values['to_date']);
     $this->filterByRight($query, $this->options['user']);

@@ -174,8 +174,8 @@ foreach( $user_array as $usr_k => $usr_v  )
 
              with('response')->begin()->
                isStatusCode(200)->
-               checkElement('#tab_0', '/Edit Loan/')->
-               checkElement('a.selected', '/Edit Loan/')->
+               checkElement('#tab_0', '/Edit loan/')->
+               checkElement('a.selected', '/Edit loan/')->
              end();
         
          $browser->  
@@ -193,7 +193,7 @@ foreach( $user_array as $usr_k => $usr_v  )
 
              with('response')->begin()->
                isStatusCode(200)->
-               checkElement('a.selected', '/New Loan/')->
+               checkElement('a.selected', '/New loan/')->
            end();
       }
       else

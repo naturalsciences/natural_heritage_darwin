@@ -37,7 +37,7 @@ class gtuActions extends DarwinActions
 
  public function executeSearch(sfWebRequest $request)
   {
-    $this->setCommonValues('gtu', 'code', $request);
+    $this->setCommonValues('gtu', 'code,gtu_from_date', $request);
 
     $this->form = new GtuFormFilter();
     $this->is_choose = ($request->getParameter('is_choose', '') == '')?0:intval($request->getParameter('is_choose'));

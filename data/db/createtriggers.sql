@@ -195,17 +195,33 @@ CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE
 
 /**** BEGIN _TS *****/
 
+CREATE TRIGGER trg_cpy_toFullText_collectionmaintenance BEFORE INSERT OR UPDATE
+  ON collection_maintenance FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(description_ts, 'pg_catalog.simple', description);
+
 CREATE TRIGGER trg_cpy_toFullText_comments BEFORE INSERT OR UPDATE
 	ON comments FOR EACH ROW
 	EXECUTE PROCEDURE tsvector_update_trigger(comment_ts, 'pg_catalog.simple', comment);
+
+CREATE TRIGGER trg_cpy_toFullText_expeditions BEFORE INSERT OR UPDATE
+  ON expeditions FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
 
 CREATE TRIGGER trg_cpy_toFullText_ext_links BEFORE INSERT OR UPDATE
 	ON ext_links FOR EACH ROW
 	EXECUTE PROCEDURE tsvector_update_trigger(comment_ts, 'pg_catalog.simple', comment);
 
+CREATE TRIGGER trg_cpy_toFullText_habitats BEFORE INSERT OR UPDATE
+  ON habitats FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(description_ts, 'pg_catalog.simple', description );
+
 CREATE TRIGGER trg_cpy_toFullText_identifications BEFORE INSERT OR UPDATE
 	ON identifications FOR EACH ROW
 	EXECUTE PROCEDURE tsvector_update_trigger(value_defined_ts, 'pg_catalog.simple', value_defined);
+
+CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
+  ON multimedia FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title, description);
 
 CREATE TRIGGER trg_cpy_toFullText_peopleaddresses BEFORE INSERT OR UPDATE
 	ON people_addresses FOR EACH ROW
@@ -226,10 +242,6 @@ CREATE TRIGGER trg_cpy_toFullText_expeditions BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_cpy_toFullText_vernacularnames BEFORE INSERT OR UPDATE
   ON vernacular_names FOR EACH ROW
   EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
-
-CREATE TRIGGER trg_cpy_toFullText_collectionmaintenance BEFORE INSERT OR UPDATE
-	ON collection_maintenance FOR EACH ROW
-	EXECUTE PROCEDURE tsvector_update_trigger(description_ts, 'pg_catalog.simple', description);
 
 CREATE TRIGGER trg_cpy_updateCollectionRights AFTER INSERT OR UPDATE
 	ON collections FOR EACH ROW
@@ -281,9 +293,9 @@ CREATE TRIGGER trg_cpy_FormattedName BEFORE INSERT OR UPDATE
 	ON users FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_FormattedName();
 
-/*CREATE TRIGGER trg_cpy_path_multimedia BEFORE INSERT OR UPDATE
+CREATE TRIGGER trg_cpy_path_multimedia BEFORE INSERT OR UPDATE
 	ON multimedia FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_path();*/
+	EXECUTE PROCEDURE fct_cpy_path();
 
 CREATE TRIGGER trg_cpy_path_collections BEFORE INSERT OR UPDATE
 	ON collections FOR EACH ROW

@@ -420,19 +420,19 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_clear_referencedRecord() RETURNS TRIGGER
 AS $$
 BEGIN
-	DELETE FROM catalogue_people WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM comments WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM catalogue_properties WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM identifications WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM class_vernacular_names WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM classification_synonymies WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM classification_keywords WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM informative_workflow WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM collection_maintenance WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM associated_multimedia WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM codes WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-	DELETE FROM insurances WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;
-  DELETE FROM staging_people WHERE referenced_relation = TG_TABLE_NAME::text AND record_id = OLD.id;	
+	DELETE FROM catalogue_people WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM comments WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM catalogue_properties WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM identifications WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM class_vernacular_names WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM classification_synonymies WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM classification_keywords WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM informative_workflow WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM collection_maintenance WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM multimedia WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM codes WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+	DELETE FROM insurances WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+        DELETE FROM staging_people WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;	
 	RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
@@ -591,6 +591,7 @@ BEGIN
           TG_TABLE_NAME::text = 'gtu' OR
           TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
+          TG_TABLE_NAME::text = 'multimedia' OR
           TG_TABLE_NAME::text = 'staging') THEN
 
           IF NEW.id = 0 THEN
@@ -614,6 +615,7 @@ BEGIN
           TG_TABLE_NAME::text = 'gtu' OR
           TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
+          TG_TABLE_NAME::text = 'multimedia' OR
           TG_TABLE_NAME::text = 'staging') THEN
 
           IF NEW.parent_ref IS DISTINCT FROM OLD.parent_ref THEN
@@ -1447,6 +1449,12 @@ $$;
 CREATE OR REPLACE FUNCTION lineToTagRows(IN line text) RETURNS SETOF varchar AS
 $$
 SELECT distinct(fulltoIndex(tags)) FROM regexp_split_to_table($1, ';') as tags WHERE fulltoIndex(tags) != '' ;
+$$
+LANGUAGE 'sql' IMMUTABLE STRICT;
+
+CREATE OR REPLACE FUNCTION lineToTagRowsFormatConserved(IN line text) RETURNS SETOF varchar AS
+$$
+SELECT distinct on (fulltoIndex(tags)) tags FROM regexp_split_to_table($1, ';') as tags WHERE fulltoIndex(tags) != '' ;
 $$
 LANGUAGE 'sql' IMMUTABLE STRICT;
 

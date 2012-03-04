@@ -33,7 +33,7 @@ class InsurancesSubForm extends BaseInsurancesForm
        'method' => 'getFormatedName',
        'box_title' => $this->getI18N()->__('Choose Insurer'),
        'nullable' => true,
-       'button_class'=>'',
+       'button_class'=>'add_insurance_insurer_ref',
      ),
       array('class'=>'inline',
            )
@@ -44,7 +44,7 @@ class InsurancesSubForm extends BaseInsurancesForm
        'method' => 'getFormatedName',
        'box_title' => $this->getI18N()->__('Choose contact'),
        'nullable' => true,
-       'button_class'=>'',
+       'button_class'=>'add_insurance_contact_ref',
      ),
       array('class'=>'inline',
            )

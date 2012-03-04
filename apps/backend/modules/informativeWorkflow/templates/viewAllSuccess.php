@@ -12,7 +12,7 @@
     <?php foreach($informativeWorkflow as $info) : ?>
     <tr>
       <th><?php $date = new DateTime($info->getModificationDateTime());
-      		echo $date->format('Y/m/d H:i:s'); ?></th>
+      		echo $date->format('d/m/Y H:i:s'); ?></th>
       <th><?php echo $info->getStatus();?></th>
       <th><?php echo $info->getComment();?></th>
       <th><?php echo $info->getUserRef()?$info->Users->__toString():$info->getFormatedName();?></th>      

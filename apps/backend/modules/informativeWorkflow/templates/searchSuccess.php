@@ -21,7 +21,7 @@
     <?php foreach($items as $info) : ?>
     <tr>
       <td><?php $date = new DateTime($info['modification_date_time']);
-      		echo $date->format('Y/m/d H:i:s'); ?></td>
+      		echo $date->format('d/m/Y H:i:s'); ?></td>
       <td><?php echo $info['referenced_relation']; ?></td>
       <td><?php echo __($info['formattedStatus']) ;?></td>
       <td><?php echo truncate_text($info['comment'],30);?></td>

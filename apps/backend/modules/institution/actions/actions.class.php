@@ -14,7 +14,7 @@ class institutionActions extends DarwinActions
   
   public function preExecute()
   {
-    if (! strstr('view',$this->getActionName()) && ! strstr('index',$this->getActionName()) && ! strstr('search',$this->getActionName()))
+    if (! strstr('view',$this->getActionName()) && ! strstr('index',$this->getActionName()) && ! strstr('search',$this->getActionName())&& ! strstr('choose',$this->getActionName()))
     {
       if(! $this->getUser()->isAtLeast(Users::ENCODER))
       {
