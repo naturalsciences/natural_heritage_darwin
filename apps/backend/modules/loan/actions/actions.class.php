@@ -308,7 +308,7 @@ class loanActions extends DarwinActions
     $file = $form->getValue('filenames');    
     if($form->isValid()) 
     {       
-      if(!Multimedia::CheckMymeType($file->getType()))
+      if(!Multimedia::CheckMimeType($file->getType()))
         return $this->renderText("<script>parent.displayFileError('This type of file is not allowed')</script>") ;
       // first save the file
       $filename = sha1($file->getOriginalName().rand());

@@ -12,7 +12,7 @@
  */
 class Multimedia extends BaseMultimedia
 {
-  private static $allowed_myme_type = array(
+  private static $allowed_mime_type = array(
     'txt' => 'text/plain',
 //   'htm' => 'text/html',
     'html' => 'text/html',
@@ -107,8 +107,10 @@ class Multimedia extends BaseMultimedia
     return (date("Y/m/d")) ;    
   }  
   
-  public static function CheckMymeType($myme_type)
+  public static function CheckMimeType($mime_type)
   {
-    return(in_array($myme_type,self::$allowed_myme_type)?true:false);
+    return(in_array($mime_type,self::$allowed_mime_type)?true:false);
   }
+
+  
 }
