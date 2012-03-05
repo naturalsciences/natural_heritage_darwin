@@ -15,7 +15,7 @@
  *
  * @package    symfony
  * @subpackage doctrine
- * @author     DaRWIN Team <collections@naturalsciences.be>
+ * @author     DaRWIN Team <darwin-ict@naturalsciences.be>
  */
 class widgetFormSelectDoubleListFilterable extends sfWidgetForm
 {

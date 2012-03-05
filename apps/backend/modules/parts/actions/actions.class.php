@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage parts
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  */
 class partsActions extends DarwinActions
 {

@@ -32,7 +32,7 @@
 
     <dl class="sfTMessageInfo">
       <dt>Something is broken</dt>
-      <dd>Please e-mail us at <a href="mailto:collections@naturalsciences.be">collections@naturalsciences.be</a> and let us know what you were doing when this error occurred. We will fix it as soon as possible.
+      <dd>Please e-mail us at <a href="mailto:darwin-ict@naturalsciences.be">darwin-ict@naturalsciences.be</a> and let us know what you were doing when this error occurred. We will fix it as soon as possible.
       Sorry for any inconvenience caused.</dd>
 
       <dt>What's next</dt>

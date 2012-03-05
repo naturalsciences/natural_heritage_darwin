@@ -6,7 +6,7 @@
  *
  * @package    darwin
  * @subpackage validator
- * @author     DB Team <collections@naturalsciences.be>
+ * @author     DB Team <darwin-ict@naturalsciences.be>
  */
 class fuzzyDateValidator extends sfValidatorDate
 {

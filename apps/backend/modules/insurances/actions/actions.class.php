@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage insurances
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  */
 class insurancesActions extends DarwinActions
 {

@@ -1728,8 +1728,8 @@
         <target>Contact :</target>
       </trans-unit>
           <trans-unit id="222">
-        <source>You can reach us at &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</source>
-        <target>U kunt ons bereiken via &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</target>
+        <source>You can reach us at &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;darwin-ict@naturalsciences.be&lt;/a&gt;</source>
+        <target>U kunt ons bereiken via &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;darwin-ict@naturalsciences.be&lt;/a&gt;</target>
       </trans-unit>
           <trans-unit id="223">
         <source>Dawin Help</source>

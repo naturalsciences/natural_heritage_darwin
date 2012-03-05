@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage vernacularnames
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  */
 class vernacularnamesActions extends DarwinActions
 {
