@@ -7,7 +7,7 @@
  *
  * @package    darwin
  * @subpackage form
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
 abstract class BaseInsurancesForm extends BaseFormDoctrine
