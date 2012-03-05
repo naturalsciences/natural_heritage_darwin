@@ -1,4 +1,4 @@
-<table  class="property_values">
+<table class="catalogue_table">
   <thead style="<?php echo ($form['RelatedFiles']->count() || $form['newRelatedFiles']->count())?'':'display: none;';?>">
     <tr>
       <th>

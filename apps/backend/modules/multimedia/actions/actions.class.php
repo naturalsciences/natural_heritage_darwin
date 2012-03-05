@@ -15,13 +15,13 @@ class multimediaActions extends DarwinActions
     $this->setLayout(false);  
     $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
     if(!($this->getUser()->isAtLeast(Users::ADMIN) || $this->checkRights($multimedia))) $this->forwardToSecureAction();
-    $this->forward404Unless(file_exists($file = sfConfig::get('sf_upload_dir').'/multimedia/'.$multimedia->getUri()),sprintf('This file does not exist') );
+    $this->forward404Unless(file_exists($file = $multimedia->getFullURI()),sprintf('This file does not exist') );
     // Adding the file to the Response object
     $this->getResponse()->clearHttpHeaders();
-    $this->getResponse()->setHttpHeader('Pragma: public', true);    
+    $this->getResponse()->setHttpHeader('Pragma: private', true);
     $this->getResponse()->setHttpHeader('Content-Disposition',
                             'attachment; filename="'.
-                            $multimedia->getFilename().'"');    
+                            $multimedia->getFilename().'"');
     $this->getResponse()->setContentType("application/force-download ".$multimedia->getMimeType());    
     $this->getResponse()->sendHttpHeaders();
     $this->getResponse()->setContent(readfile($file));    

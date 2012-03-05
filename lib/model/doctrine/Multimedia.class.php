@@ -112,5 +112,9 @@ class Multimedia extends BaseMultimedia
     return(in_array($mime_type,self::$allowed_mime_type)?true:false);
   }
 
-  
+  public function getFullURI()
+  {
+    return sfConfig::get('sf_upload_dir').'/multimedia/'.$this->getUri();
+  }
+
 }

@@ -34,7 +34,7 @@
       });
       $('.uploadfield_<?php echo $row_num ; ?>').bind('change', function() {
         $(this).closest('.divFile').find('.inputText').val($(this).val());
-      });      
+      });
     </script>
   </td> 
 </tr>
