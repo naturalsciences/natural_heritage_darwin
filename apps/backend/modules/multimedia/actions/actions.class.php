@@ -41,4 +41,20 @@ class multimediaActions extends DarwinActions
      returns false */
     return false ;
   }
+
+  public function executePreview(sfWebRequest $request)
+  {
+    $this->setLayout(false);  
+    $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
+    if(!($this->getUser()->isAtLeast(Users::ADMIN) || $this->checkRights($multimedia))) $this->forwardToSecureAction();
+    $this->forward404Unless(file_exists($multimedia->getFullURI()),sprintf('This file does not exist') );
+  
+    // Adding the file to the Response object
+    $this->getResponse()->clearHttpHeaders();
+    $this->getResponse()->setHttpHeader('Pragma: private', true);
+    $this->getResponse()->setHttpHeader('Content-type', $multimedia->getMimeType());
+    $this->getResponse()->sendHttpHeaders();
+    $this->getResponse()->setContent(imagejpeg($multimedia->getPreview(100,100)));
+    return sfView::NONE;
+  }
 }

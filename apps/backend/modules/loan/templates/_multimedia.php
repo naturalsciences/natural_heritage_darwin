@@ -7,8 +7,14 @@
   <td><?php echo $form['description']->render() ; ?></td>  
   <td>
     <?php if(isset($edit)) : ?>
-      <?php echo link_to($form['filename']->getValue()." ".image_tag('criteria.png'),
-                         'multimedia/downloadFile?id='.$form['id']->getValue()) ; ?>
+        
+      <?php  //If image => preview
+        if(in_array($form['mime_type']->getValue() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
+           <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$form['id']->getValue());?>"><img src="<?php echo url_for('multimedia/preview?id='.$form['id']->getValue());?>" width="100" /></a>
+      <?php else:?>
+        <?php echo link_to($form['filename']->getValue()." ".image_tag('criteria.png'),
+            'multimedia/downloadFile?id='.$form['id']->getValue()) ; ?>
+      <?php endif;?>
     <?php else : ?>
       <?php echo $form['filename']->getValue(); ?>
     <?php endif ; ?>

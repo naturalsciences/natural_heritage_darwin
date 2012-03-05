@@ -117,4 +117,35 @@ class Multimedia extends BaseMultimedia
     return sfConfig::get('sf_upload_dir').'/multimedia/'.$this->getUri();
   }
 
+  public function getPreview($new_w = 200, $new_h = 200)
+  {
+    if(in_array($this->getMimeType(),array('png' => 'image/png', 'jpg' => 'image/jpeg') ) )
+    {
+      $src_img = '';
+      if($this->getMimeType() == 'image/png') {
+        $src_img=imagecreatefrompng($this->getFullURI());
+      }
+      if($this->getMimeType() == 'image/jpeg') {
+        $src_img=imagecreatefromjpeg($this->getFullURI());
+      }
+      $old_x=imageSX($src_img);
+      $old_y=imageSY($src_img);
+      if ($old_x > $old_y) {
+        $thumb_w=$new_w;
+        $thumb_h=$old_y*($new_h/$old_x);
+      }
+      if ($old_x < $old_y) {
+        $thumb_w=$old_x*($new_w/$old_y);
+        $thumb_h=$new_h;
+      }
+      if ($old_x == $old_y) {
+        $thumb_w=$new_w;
+        $thumb_h=$new_h;
+      }
+      $dst_img=ImageCreateTrueColor($thumb_w,$thumb_h);
+      imagecopyresampled($dst_img,$src_img,0,0,0,0,$thumb_w,$thumb_h,$old_x,$old_y);
+      imagedestroy($src_img);
+      return $dst_img;
+    }
+  }
 }
