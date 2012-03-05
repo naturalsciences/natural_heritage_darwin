@@ -7,7 +7,7 @@
  *
  * @package    darwin
  * @subpackage widget
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  *
  */
 class widgetFormJQueryFuzzyDate extends sfWidgetFormDate

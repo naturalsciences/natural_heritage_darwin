@@ -12,10 +12,10 @@
   <dd>You may have typed the address (URL) incorrectly. Check it to make sure you've got the exact right spelling, capitalization, etc.</dd>
 
   <dt>Did you follow a link from somewhere else at this site?</dt>
-  <dd>If you reached this page from another part of this site, please email us at <?php echo mail_to('collections@naturalsciences.be') ?> so we can correct our mistake.</dd>
+  <dd>If you reached this page from another part of this site, please email us at <?php echo mail_to('darwin-ict@naturalsciences.be') ?> so we can correct our mistake.</dd>
 
   <dt>Did you follow a link from another site?</dt>
-  <dd>Links from other sites can sometimes be outdated or misspelled. Email us at <?php echo mail_to('collections@naturalsciences.be') ?> where you came from and we can try to contact the other site in order to fix the problem.</dd>
+  <dd>Links from other sites can sometimes be outdated or misspelled. Email us at <?php echo mail_to('darwin-ict@naturalsciences.be') ?> where you came from and we can try to contact the other site in order to fix the problem.</dd>
 
   <dt>What's next</dt>
   <dd>

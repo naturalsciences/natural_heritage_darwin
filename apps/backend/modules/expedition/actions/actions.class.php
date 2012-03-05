@@ -6,7 +6,7 @@
  * @package    darwin
  * @subpackage expedition
  * @category   actions
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  */
 class expeditionActions extends DarwinActions
 {

@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage default
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class defaultActions extends sfActions

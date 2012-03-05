@@ -4,7 +4,7 @@
  *
  * @package    symfony
  * @subpackage form
- * @author     DaRWIN2 team <collections@naturalsciences.be>
+ * @author     DaRWIN2 team <darwin-ict@naturalsciences.be>
  */
 
 class widgetFormColorPicker extends sfWidgetFormInput
