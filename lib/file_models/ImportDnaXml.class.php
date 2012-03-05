@@ -131,7 +131,7 @@ class ImportDnaXml implements IImportModels
   // function used to get an XML tag and return the associated field in the Staging table
   protected function getSimpleField($xml_node, $object)
   {
-    if(array_key_exists($xml_node->nodeName,$this->simpleArrayField)) $object[$this->simpleArrayField[$xml_node->nodeName]] = $xml_node->nodeValue ;  
+    if(isset($this->simpleArrayField[$xml_node->nodeName])) $object[$this->simpleArrayField[$xml_node->nodeName]] = $xml_node->nodeValue ;  
   }
   
   /**

@@ -15,9 +15,9 @@ class widgetFormSelectComplete extends sfWidgetFormDarwinDoctrineChoice
     if(! isset($this->choices))
     {
       if($this->getOption('forced_choices') !== false )
-	$this->choices = $this->getOption('forced_choices');
+        $this->choices = $this->getOption('forced_choices');
       else
-	$this->choices = parent::getChoices();
+        $this->choices = parent::getChoices();
     }
     return $this->choices;
   }
@@ -27,19 +27,19 @@ class widgetFormSelectComplete extends sfWidgetFormDarwinDoctrineChoice
       $this->getChoices();
       $widget = '<div id="'.$this->generateId($name).'_parent" class="complete_widget">';
       $class = (!isset($attributes['class']))?'':$attributes['class'];
-      if( array_key_exists($value,$this->choices))
+      if( isset($this->choices[$value]) )
       {
-	$widget .= $this->renderTag('input', array( 'type' => 'text', 'id' => $id = $this->generateId($name).'_input', 'class' => 'hidden ' . $class ));
-	$widget .= parent::render($name, $value, $attributes, $errors);
-	$add_class='';
-	$pick_class=' hidden';
+        $widget .= $this->renderTag('input', array( 'type' => 'text', 'id' => $id = $this->generateId($name).'_input', 'class' => 'hidden ' . $class ));
+        $widget .= parent::render($name, $value, $attributes, $errors);
+        $add_class='';
+        $pick_class=' hidden';
       }
       else
       {
-	$widget .= $this->renderTag('input', array( 'type' => 'text', 'id' => $id = $this->generateId($name).'_input', 'value' => $value, 'name'=> $name, 'class'=>$class));
-	$widget .= parent::render('', $value, array('class'=>'hidden'), $errors);
-	$add_class=' hidden';
-	$pick_class='';
+        $widget .= $this->renderTag('input', array( 'type' => 'text', 'id' => $id = $this->generateId($name).'_input', 'value' => $value, 'name'=> $name, 'class'=>$class));
+        $widget .= parent::render('', $value, array('class'=>'hidden'), $errors);
+        $add_class=' hidden';
+        $pick_class='';
       }
       $widget .= '<div class="add_item_button'. $add_class .'">'.$this->renderTag('img',array('src'=>'/images/add_green.png', 'alt'=>'+')).'<span>'.__($this->getOption('add_label')).'</span></div>';
       $widget .= '<div class="change_item_button'. $pick_class .'">'.$this->renderTag('img',array('src'=>'/images/refresh_green.png', 'alt'=>'+')).'<span>'.__($this->getOption('change_label')).'</span></div>';
