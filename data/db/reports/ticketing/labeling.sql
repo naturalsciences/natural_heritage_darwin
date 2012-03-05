@@ -1,4 +1,4 @@
-SET search_path = darin2, public;
+SET search_path = darwin2, public;
 /* Modification of an existing function to make it immutable */
 
 CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER IMMUTABLE
@@ -14,6 +14,12 @@ BEGIN
 RETURN v_int_value;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION lineToTagRowsFormatConserved(IN line text) RETURNS SETOF varchar AS
+$$
+SELECT distinct on (fulltoIndex(tags)) tags FROM regexp_split_to_table($1, ';') as tags WHERE fulltoIndex(tags) != '' ;
+$$
+LANGUAGE 'sql' IMMUTABLE STRICT;
 
 create or replace function labeling_country_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
