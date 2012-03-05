@@ -111,12 +111,13 @@
     </ul>
 </div>
 
-<?php if($sf_user->getPreference('gtu_google_activated', true)):?>
+<?php $is_google_active = $sf_user->getPreference('gtu_google_activated', true);
+    if($is_google_active):?>
   <script src="http://maps.google.com/maps/api/js?v=3.3&amp;sensor=false"></script>
 <?php endif;?>
 
 <script  type="text/javascript">
- var with_gmap= <?php echo $sf_user->getPreference('gtu_google_activated', true) ? 'true' : 'false';?>;
+ var with_gmap= <?php echo $is_google_active ? 'true' : 'false';?>;
 $(document).ready(function()
 {
    $('#navigation').delegate('a.subtitle', 'mouseover', function(event) {
