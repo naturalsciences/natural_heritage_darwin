@@ -21,6 +21,10 @@ SELECT distinct on (fulltoIndex(tags)) tags FROM regexp_split_to_table($1, ';') 
 $$
 LANGUAGE 'sql' IMMUTABLE STRICT;
 
+GRANT EXECUTE ON FUNCTION lineToTagRowsFormatConserved(text) TO d2viewer;
+GRANT ALL ON FUNCTION lineToTagRowsFormatConserved(text) TO cebmpad, darwin2;
+ALTER FUNCTION lineToTagRowsFormatConserved(text) OWNER TO darwin2;
+
 create or replace function labeling_country_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
 select array_agg(tags_list)
