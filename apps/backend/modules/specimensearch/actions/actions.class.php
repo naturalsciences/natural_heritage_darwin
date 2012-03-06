@@ -45,7 +45,7 @@ class specimensearchActions extends DarwinActions
     // Initialize the order by and paging values: order by collection_name here
     $this->setCommonValues('specimensearch', 'collection_name', $request);
     // Modify the s_url to call the searchResult action when on result page and playing with pager
-    $this->s_url = 'specimensearch/searchResult'.'?is_choose='.$this->is_choose;
+    $this->s_url = 'specimensearch/search'.'?is_choose='.$this->is_choose;
     // Initialize filter
     $this->form = new SpecimenSearchFormFilter(null,array('user' => $this->getUser()));
     // If the search has been triggered by clicking on the search button or with pinned specimens
@@ -124,6 +124,8 @@ class specimensearchActions extends DarwinActions
         }
         else
         {
+          $this->source = $this->form->getValue('what_searched');
+
           $this->spec_lists = Doctrine::getTable('MySavedSearches')
             ->getListFor($this->getUser()->getId(), $this->form->getValue('what_searched'));
 
@@ -131,11 +133,11 @@ class specimensearchActions extends DarwinActions
           // Define all properties that will be either used by the data query or by the pager
           // They take their values from the request. If not present, a default value is defined
           $ordered_searched = ' spec_ref ';
-          if($this->form->getValue('what_searched') == 'individual')
+          if($this->source == 'individual')
             $ordered_searched = ' individual_ref ';
 
           $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir);
-          if($this->form->getValue('what_searched') != 'part')
+          if($this->source != 'part')
           {
             $query->orderby($this->orderBy . ' ' . $this->orderDir . ', ' . $ordered_searched );
             $query->groupBy($ordered_searched . ', ' . $this->orderBy);
@@ -150,10 +152,10 @@ class specimensearchActions extends DarwinActions
           $count_q = clone $query;//$pager->getCountQuery();
           // Remove from query the group by and order by clauses
           $count_q = $count_q->select('count( distinct spec_ref)')->removeDqlQueryPart('groupby')->removeDqlQueryPart('orderby')->limit(0);
-          if($this->form->getValue('what_searched') == 'individual')
+          if($this->source == 'individual')
             $count_q->select('count( distinct individual_ref)');
 
-          if($this->form->getValue('what_searched') == 'part')
+          if($this->source == 'part')
             $count_q->select('count( distinct part_ref)');
 
           // Initialize an empty count query
@@ -173,37 +175,13 @@ class specimensearchActions extends DarwinActions
             $this->specimensearch = $this->pagerLayout->execute();
           $spec_list = array();
           $part_list = array() ;
-          $this->source = $this->form->getValue('what_searched');
 
-          foreach($this->specimensearch as $key=>$specimen)
-          {
-            $spec_list[] = $specimen->getSpecRef() ;
-            if( $this->source == 'part')
-              $part_list[] = $specimen->getPartRef();
-          }
-          $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$spec_list) ;
-          $this->codes = array();
-          foreach($codes_collection as $code)
-          {
-            if(! isset($this->codes[$code->getRecordId()]))
-              $this->codes[$code->getRecordId()] = array();
-            $this->codes[$code->getRecordId()][] = $code;
-          }
-          $this->part_codes = array();        
-          if($this->form->getValue('what_searched') == 'part')
-          {
-            $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('specimen_parts',$part_list) ;
-            foreach($codes_collection as $code)
-            {
-              if(! isset($this->part_codes[$code->getRecordId()]))
-                $this->part_codes[$code->getRecordId()] = array();
-              $this->part_codes[$code->getRecordId()][] = $code;
-            }
-          }
+          //Load Codes and related for each item
+          $this->loadRelated();
 
           $this->field_to_show = $this->getVisibleColumns($this->getUser(), $this->form);
           $this->defineFields($this->source);
-          return;
+          return $request->isXmlHttpRequest()? $this->renderPartial('searchSuccess'): null;
         }
       }
     }
@@ -214,6 +192,35 @@ class specimensearchActions extends DarwinActions
     $this->loadWidgets();
   }
   
+  /** Load related things for the specimens / ind or part and define a $code var for template*/
+  protected function loadRelated()
+  {
+    foreach($this->specimensearch as $key=>$specimen)
+    {
+      $spec_list[] = $specimen->getSpecRef() ;
+        if( $this->source == 'part')
+          $part_list[] = $specimen->getPartRef();
+    }
+    $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$spec_list) ;
+    $this->codes = array();
+    foreach($codes_collection as $code)
+    {
+      if(! isset($this->codes[$code->getRecordId()]))
+        $this->codes[$code->getRecordId()] = array();
+      $this->codes[$code->getRecordId()][] = $code;
+    }
+    $this->part_codes = array();        
+    if($this->source == 'part')
+    {
+      $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('specimen_parts',$part_list) ;
+      foreach($codes_collection as $code)
+      {
+        if(! isset($this->part_codes[$code->getRecordId()]))
+          $this->part_codes[$code->getRecordId()] = array();
+        $this->part_codes[$code->getRecordId()][] = $code;
+      }
+    }
+  }
   /**
   * Compute different sources to get the columns that must be showed
   * 1) from form request 2) from session 3) from default value
@@ -256,19 +263,6 @@ class specimensearchActions extends DarwinActions
     }
     return $flds;
   }
-
-  /**
-  * This search is ajaxly called to render only the results -> i.e. triggered from a pager action
-  * @param sfWebRequest $request the request passed
-  * @return A partial with the results
-  */
-  public function executeSearchResult(sfWebRequest $request)
-  {
-    // Do the same as a executeSearch...
-    $this->executeSearch($request) ;
-    // ... and render partial searchSuccess
-    return $this->renderPartial('searchSuccess');
-  }  
 
   public function executeIndividualTree(sfWebRequest $request)
   {
