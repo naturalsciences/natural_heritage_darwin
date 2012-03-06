@@ -1,3 +1,4 @@
+<?php use_helper('Darwin');?>
 <td class="col_taxon_common_name">
   <?php if(isset($common_names['taxonomy'][$spec->getTaxonRef()])) : ?>
     <ul class="common_name_tags">
