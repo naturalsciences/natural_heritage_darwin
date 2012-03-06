@@ -1,4 +1,4 @@
-<?php slot('title', __('View Specimens'));  ?>  
+<?php slot('title', __('View Specimens') .  ( $specimen->getTaxonRef()  ? " : ".$specimen->getTaxonName() : ""));  ?>  
 
 <div class="page viewer">
   <h1><?php echo __("Specimen Record");?></h1>
