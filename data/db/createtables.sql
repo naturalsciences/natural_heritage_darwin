@@ -519,8 +519,6 @@ create sequence multimedia_id_seq;
 create table multimedia
        (
         id integer not null default nextval('multimedia_id_seq'),
-        parent_ref integer,
-        path varchar not null,
         is_digital boolean not null default true,
         type varchar not null default 'image',
         sub_type varchar,
@@ -551,8 +549,6 @@ comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
 comment on column multimedia.search_ts is 'tsvector form of title and description fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
-comment on column multimedia.parent_ref is 'In case of hierarchical structure - object depending on an other... give the id of parent';
-comment on column multimedia.path is 'In case of hierarchical structure - full path';
 
 create table template_people_users_comm_common
        (

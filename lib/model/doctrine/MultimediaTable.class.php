@@ -25,4 +25,14 @@ class MultimediaTable extends DarwinTable
     $q = $this->addCatalogueReferences($q, $table_name, $record_id, 'm', true);
     return $q->execute();
   }    
+  
+  public function deleteMultimediaRelated($table,$record_id)
+  {
+    foreach(self::findForTable($table, $record_id) as $media)
+    {
+//      die(sfConfig::get('sf_upload_dir')."/multimedia/".$media->getUri());
+      unlink(sfConfig::get('sf_upload_dir')."/multimedia/".$media->getUri());
+      $media->delete() ;
+    }
+  }
 }

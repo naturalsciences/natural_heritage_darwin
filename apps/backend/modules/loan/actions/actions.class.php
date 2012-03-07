@@ -176,12 +176,15 @@ class loanActions extends DarwinActions
     $this->informativeWorkflow = Doctrine::getTable('LoanStatus')->getallLoanStatus($request->getParameter('id'));
     $this->setTemplate('viewAll','informativeWorkflow') ;
   }
+  
+  
   public function executeDelete(sfWebRequest $request)
   {
     $loan = $this->checkRight($request->getParameter('id')) ;  
     try
     {
       $loan->delete();
+      Doctrine::getTable("Multimedia")->deleteMultimediaRelated('loans',$request->getParameter('id')) ; 
       $this->redirect('loan/index');
     }
     catch(Doctrine_Exception $ne)
