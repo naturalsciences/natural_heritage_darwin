@@ -87,10 +87,6 @@
         <source>Your file has been loaded and checked, you can edit line in errors or import corrects lines</source>
         <target>Uw bestand werd ingeladen en nagekeken en u kunt nu foute lijnen corrigeren of correcte lijnen importeren.</target>
       </trans-unit>
-          <trans-unit id="1544">
-        <source>Responsible</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1546">
         <source>Checker</source>
         <target></target>
@@ -103,13 +99,17 @@
         <source>Transporter</source>
         <target></target>
       </trans-unit>
-          <trans-unit id="1551">
-        <source>Usage</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1552">
         <source>State observation</source>
         <target></target>
+      </trans-unit>
+          <trans-unit id="1544">
+        <source>Responsible</source>
+        <target>Verantwoordelijk</target>
+      </trans-unit>
+          <trans-unit id="1551">
+        <source>Usage</source>
+        <target>Gebruik</target>
       </trans-unit>
           <trans-unit id="1476">
         <source>This lithological unit is linked with one or more specimens</source>
@@ -195,6 +195,10 @@
         <source>This lithostratigraphical unit is linked with one or more specimens</source>
         <target>Deze lithostratigrafische eenheid is gelinkt aan één of meerdere specimens</target>
       </trans-unit>
+          <trans-unit id="1534">
+        <source>Details</source>
+        <target>Details</target>
+      </trans-unit>
           <trans-unit id="1459">
         <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
         <target>De taxon die u koos, werd aangeduid als &quot;hernoemd&quot;.</target>
@@ -233,7 +237,7 @@
       </trans-unit>
           <trans-unit id="1510">
         <source>Person</source>
-        <target></target>
+        <target>Persoon</target>
       </trans-unit>
           <trans-unit id="1396">
         <source>To be loaded</source>
@@ -263,6 +267,38 @@
         <source>Aborted</source>
         <target>Afgebroken</target>
       </trans-unit>
+          <trans-unit id="1586">
+        <source>Add Maintenance for checked</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1587">
+        <source>Back to Loan</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1589">
+        <source>Choose Darwin Part</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1591">
+        <source>Please pin some parts.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1593">
+        <source>Choose Insurer</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1594">
+        <source>Latest Statuses</source>
+        <target>Meest recente statussen</target>
+      </trans-unit>
+          <trans-unit id="1588">
+        <source>Add item</source>
+        <target>Voeg item toe</target>
+      </trans-unit>
+          <trans-unit id="1590">
+        <source>No Items here.</source>
+        <target>Geen items te vinden.</target>
+      </trans-unit>
           <trans-unit id="1058">
         <source>You can now log in and enjoy our enhanced collection services.</source>
         <target>U kunt zich nu inloggen en genieten van onze vernieuwde collectiefunctionaliteiten.</target>
@@ -271,9 +307,25 @@
         <source>Subgenus name, used in zoology or bacteriology</source>
         <target>Subgenus naam, gebruikt in de zoologie of de bacteriologie</target>
       </trans-unit>
+          <trans-unit id="1489">
+        <source>Checked</source>
+        <target>Gevalideerd</target>
+      </trans-unit>
+          <trans-unit id="1490">
+        <source>Suggestion</source>
+        <target>Suggestie</target>
+      </trans-unit>
+          <trans-unit id="1491">
+        <source>To check</source>
+        <target>Te valideren</target>
+      </trans-unit>
           <trans-unit id="988">
         <source>This widget allows you to add information with regards to the storage conditions in the depositaries of the institute. You can specify a container and/or sub container as well as the condition in which the object is conserved. The supernumerary option allows you to indicate that the objects should potentially be moved to a more spacious container.</source>
         <target>Via deze widget kunt u informatie toevoegen betreffende de bewaaromstandigheden van de stalen in de bewaarplaatsen van het instituut. U kunt zowel een container als subcontainer aanduiden evenals de omstandigheden waarin het bewaard wordt. De boventallig optie laat u toe aan te duiden of de objecten op termijn naar een ruimere container dienen te worden overgezet.</target>
+      </trans-unit>
+          <trans-unit id="1492">
+        <source>Latest Status</source>
+        <target>Meest recente status</target>
       </trans-unit>
           <trans-unit id="229">
         <source>What can be found in DaRWIN?</source>
@@ -383,26 +435,6 @@
         <source>Import a file</source>
         <target>Een bestand importeren</target>
       </trans-unit>
-          <trans-unit id="1489">
-        <source>Checked</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1490">
-        <source>Suggestion</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1491">
-        <source>To check</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1492">
-        <source>Latest Status</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1493">
-        <source>By</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1494">
         <source>view all workflows</source>
         <target></target>
@@ -421,14 +453,6 @@
       </trans-unit>
           <trans-unit id="1499">
         <source>Please save your specimen in order to add workflows</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1500">
-        <source>This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1501">
-        <source>This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1502">
@@ -454,6 +478,18 @@
           <trans-unit id="1514">
         <source>Duplicate loan</source>
         <target></target>
+      </trans-unit>
+          <trans-unit id="1493">
+        <source>By</source>
+        <target>door</target>
+      </trans-unit>
+          <trans-unit id="1500">
+        <source>This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Dit widget laat u toe een nota toe te voegen voor dit specifieke individu. Deze nota kan een suggestie tot wijziging zijn, een vraag die bestemd is voor de beheerders, een nota om zichzelf eraan te herinneren dat iets nog dient te gebeuren of de verklaring voor een bepaalde wijziging.  Het aantal opties in het status veld is afhankelijk van uw rechten. </target>
+      </trans-unit>
+          <trans-unit id="1501">
+        <source>This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Dit widget laat u toe een nota toe te voegen voor deze specifieke catalogus. Deze nota kan een suggestie tot wijziging zijn, een vraag tot validatie door de beheerders, een controle, een verklaring voor een wijziging.  Het aantal opties in het status veld is afhankelijk van uw rechten.</target>
       </trans-unit>
           <trans-unit id="1353">
         <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;</source>
@@ -547,21 +583,21 @@
         <source>This button (only visible when your file is on Pending state) will allow you to edit or remove data</source>
         <target>Deze knop (enkel zichtbaar in de Wacht status) laat u toe om data te wijzigen of te verwijderen</target>
       </trans-unit>
-          <trans-unit id="1515">
-        <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1516">
         <source>Add loan</source>
         <target></target>
       </trans-unit>
+          <trans-unit id="1515">
+        <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
+        <target>Het ingediende formulier kan niet verwerkt worden.  U hebt wellicht een te groot bestand geüpload.</target>
+      </trans-unit>
           <trans-unit id="1505">
         <source>Choose contact</source>
-        <target></target>
+        <target>Kies contactpersoon</target>
       </trans-unit>
           <trans-unit id="1506">
         <source>Person of contact</source>
-        <target></target>
+        <target>Contactpersoon</target>
       </trans-unit>
           <trans-unit id="1358">
         <source>As a reminder, here is your username: %username%</source>
@@ -1195,10 +1231,6 @@
         <source>Record Id</source>
         <target>Record Id</target>
       </trans-unit>
-          <trans-unit id="13">
-        <source>Saved Specimens list</source>
-        <target>List met bewaarde specimens</target>
-      </trans-unit>
           <trans-unit id="14">
         <source>Saved search</source>
         <target>Bewaarde zoekcriteria</target>
@@ -1218,6 +1250,10 @@
           <trans-unit id="18">
         <source>Chronostratigraphy</source>
         <target>Chronostratigrafie</target>
+      </trans-unit>
+          <trans-unit id="13">
+        <source>Saved Specimens list</source>
+        <target>Lijst met bewaarde specimens</target>
       </trans-unit>
           <trans-unit id="88">
         <source>Choose a Lithologic unit</source>
@@ -1877,11 +1913,11 @@
       </trans-unit>
           <trans-unit id="1521">
         <source>this type of extention is not allowed here</source>
-        <target></target>
+        <target>Dit is een ongeldige bestandsextensie</target>
       </trans-unit>
           <trans-unit id="1522">
         <source>Please don&#039;t try stupid things, don&#039;t touch the uri</source>
-        <target></target>
+        <target>Gelieve geen domme dingen te doen, pas de URI niet aan</target>
       </trans-unit>
           <trans-unit id="262">
         <source>no</source>
@@ -1907,14 +1943,6 @@
         <source>This widget allows you to link one or more codes to a specimen. You can either associate a prefix, a separator, a code, a separator and/or a suffix to each type of code (main, temporary,etc.)</source>
         <target>Via deze widget kunt u één of meerdere codes aan een staal toevoegen. U kunt zowel een prefix, scheidingsteken, een code, een andere scheidingsteken en/of een suffix toevoegen aan elke soort code (hoofdcode, tijdelijke code, etc.)</target>
       </trans-unit>
-          <trans-unit id="1571">
-        <source>Format</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1572">
-        <source>Edition right</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1559">
         <source>Please save your loan in order to add properties</source>
         <target></target>
@@ -1922,6 +1950,14 @@
           <trans-unit id="1560">
         <source>Sender side</source>
         <target></target>
+      </trans-unit>
+          <trans-unit id="1572">
+        <source>Edition right</source>
+        <target>Editeer recht</target>
+      </trans-unit>
+          <trans-unit id="1571">
+        <source>Format</source>
+        <target>Formaat</target>
       </trans-unit>
           <trans-unit id="266">
         <source>Sampling location Tags</source>
@@ -2203,44 +2239,12 @@
         <source>You may want to include &lt;em&gt;rows without errors&lt;/em&gt;</source>
         <target>U wenst misschien &lt;em&gt;lijnen zonder fouten&lt;/em&gt; te zien</target>
       </trans-unit>
-          <trans-unit id="1561">
-        <source>Roles</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1562">
         <source>Receiver side</source>
         <target></target>
       </trans-unit>
-          <trans-unit id="1563">
-        <source>Add Sender</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1564">
-        <source>Add Receiver</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1565">
-        <source>New Status</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1567">
-        <source>View all status</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1568">
-        <source>History</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1569">
         <source>Please save your loan in order to add status</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1570">
-        <source>Created At</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1573">
-        <source>Related Files</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1575">
@@ -2259,6 +2263,38 @@
         <source>Informative Workflow</source>
         <target></target>
       </trans-unit>
+          <trans-unit id="1570">
+        <source>Created At</source>
+        <target>Aangemaakt op</target>
+      </trans-unit>
+          <trans-unit id="1573">
+        <source>Related Files</source>
+        <target>Verwante bestanden</target>
+      </trans-unit>
+          <trans-unit id="1563">
+        <source>Add Sender</source>
+        <target>Voeg zender toe</target>
+      </trans-unit>
+          <trans-unit id="1564">
+        <source>Add Receiver</source>
+        <target>Voeg ontvanger toe</target>
+      </trans-unit>
+          <trans-unit id="1565">
+        <source>New Status</source>
+        <target>Nieuwe status</target>
+      </trans-unit>
+          <trans-unit id="1567">
+        <source>View all status</source>
+        <target>Bekijk alle statussen</target>
+      </trans-unit>
+          <trans-unit id="1568">
+        <source>History</source>
+        <target>Geschiedenis</target>
+      </trans-unit>
+          <trans-unit id="1561">
+        <source>Roles</source>
+        <target>Rollen</target>
+      </trans-unit>
           <trans-unit id="1367">
         <source>Whom are you looking for</source>
         <target>Wie zoekt u</target>
@@ -2267,29 +2303,29 @@
         <source>This %field% was not found in our database, please choose an existing one or remove it</source>
         <target>Dit veld werd niet gevonden in onze databank. Gelieve een bestaande waarde te kiezen of de waarde te verwijderen.</target>
       </trans-unit>
-          <trans-unit id="1523">
-        <source>Start on</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1524">
-        <source>Ends on</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1525">
-        <source>Invalid date &quot;Extended&quot;</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1526">
-        <source>Add File</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1529">
         <source>Specific person</source>
         <target></target>
       </trans-unit>
+          <trans-unit id="1526">
+        <source>Add File</source>
+        <target>Voeg bestand toe</target>
+      </trans-unit>
           <trans-unit id="1531">
         <source>Maintenances</source>
-        <target></target>
+        <target>Onderhoudswerken</target>
+      </trans-unit>
+          <trans-unit id="1523">
+        <source>Start on</source>
+        <target>Begint op</target>
+      </trans-unit>
+          <trans-unit id="1524">
+        <source>Ends on</source>
+        <target>Eindigt op</target>
+      </trans-unit>
+          <trans-unit id="1525">
+        <source>Invalid date &quot;Extended&quot;</source>
+        <target>Ongeldige datum &quot;Verlenging&quot;</target>
       </trans-unit>
           <trans-unit id="1383">
         <source>Set rights on widgets for %name%</source>
@@ -4943,17 +4979,13 @@
         <source>I.g. Num</source>
         <target></target>
       </trans-unit>
-          <trans-unit id="1534">
-        <source>Details</source>
+          <trans-unit id="1536">
+        <source>There is currently no items in your loan. Do not forget to add them.</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1535">
         <source>Return</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1536">
-        <source>There is currently no items in your loan. Do not forget to add them.</source>
-        <target></target>
+        <target>Terugbrengen</target>
       </trans-unit>
           <trans-unit id="1114">
         <source>Author name and year, used in mineralogy or bacterology</source>
@@ -5259,20 +5291,8 @@
         <source>Complete</source>
         <target>Volledig</target>
       </trans-unit>
-          <trans-unit id="1538">
-        <source>Items overview</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1539">
-        <source>Edit item</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1540">
         <source>View loan</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1541">
-        <source>View item</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1543">
@@ -5294,6 +5314,18 @@
           <trans-unit id="1585">
         <source>People Info</source>
         <target></target>
+      </trans-unit>
+          <trans-unit id="1538">
+        <source>Items overview</source>
+        <target>Overzicht van de items</target>
+      </trans-unit>
+          <trans-unit id="1539">
+        <source>Edit item</source>
+        <target>Editeer item</target>
+      </trans-unit>
+          <trans-unit id="1541">
+        <source>View item</source>
+        <target>Bekijk item</target>
       </trans-unit>
         </body>
   </file>
