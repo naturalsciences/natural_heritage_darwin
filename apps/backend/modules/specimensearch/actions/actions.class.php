@@ -173,8 +173,6 @@ class specimensearchActions extends DarwinActions
           // If pager not yet executed, this means the query has to be executed for data loading
           if (! $this->pagerLayout->getPager()->getExecuted())
             $this->specimensearch = $this->pagerLayout->execute();
-          $spec_list = array();
-          $part_list = array() ;
 
           //Load Codes and related for each item
           $this->loadRelated();
@@ -195,13 +193,15 @@ class specimensearchActions extends DarwinActions
   /** Load related things for the specimens / ind or part and define a $code var for template*/
   protected function loadRelated()
   {
+    $spec_list = array();
+    $part_list = array() ;
     foreach($this->specimensearch as $key=>$specimen)
     {
       $spec_list[] = $specimen->getSpecRef() ;
         if( $this->source == 'part')
           $part_list[] = $specimen->getPartRef();
     }
-    $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$spec_list) ;
+    $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
     $this->codes = array();
     foreach($codes_collection as $code)
     {
@@ -212,7 +212,7 @@ class specimensearchActions extends DarwinActions
     $this->part_codes = array();        
     if($this->source == 'part')
     {
-      $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('specimen_parts',$part_list) ;
+      $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimen_parts',$part_list) ;
       foreach($codes_collection as $code)
       {
         if(! isset($this->part_codes[$code->getRecordId()]))
