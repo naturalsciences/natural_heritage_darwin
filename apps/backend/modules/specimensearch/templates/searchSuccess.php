@@ -91,6 +91,11 @@
             }
           });
         <?php endif;?>
+          $('#export_spec').click(function(event){
+            $('form.specimensearch_form').attr('action', $('form.specimensearch_form').attr('action') + '/export/csv');
+            $('form.specimensearch_form').submit();
+          });
+
         });
       </script>
     </form>
@@ -106,6 +111,8 @@
         <input type="button" id="criteria_butt" class="save_search" value="<?php echo __('Back to criteria'); ?>">
       <?php elseif(! isset($is_pinned_only_search) && $is_specimen_search):?>
         <input type="button" id="del_from_spec" class="save_search" value="<?php echo __('Remove selected'); ?>">
-      <?php endif;?>     
+      <?php endif;?>
+      <input type="button" id="export_spec" class="save_search" value="<?php echo __('Export');?>" />
+  
   </div>
 </div>

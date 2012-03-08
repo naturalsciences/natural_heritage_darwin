@@ -142,6 +142,17 @@ class specimensearchActions extends DarwinActions
             $query->orderby($this->orderBy . ' ' . $this->orderDir . ', ' . $ordered_searched );
             $query->groupBy($ordered_searched . ', ' . $this->orderBy);
           }
+          //If export is defined export it!
+          
+          if($request->getParameter('export','') != '')
+          {
+            $this->specimensearch = $query->limit(1000)->execute();
+            $this->setLayout(false);
+            $this->loadRelated();
+            $this->getResponse()->setHttpHeader('Content-type', 'text/csv');
+            $this->setTemplate('exportCsv');
+            return ;
+          }
           // Define in one line a pager Layout based on a pagerLayoutWithArrows object
           // This pager layout is based on a Doctrine_Pager, itself based on a customed Doctrine_Query object (call to the getExpLike method of ExpeditionTable class)
           $pager = new DarwinPager($query,
