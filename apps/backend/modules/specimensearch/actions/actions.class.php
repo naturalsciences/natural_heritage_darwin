@@ -149,7 +149,10 @@ class specimensearchActions extends DarwinActions
             $this->specimensearch = $query->limit(1000)->execute();
             $this->setLayout(false);
             $this->loadRelated();
-            $this->getResponse()->setHttpHeader('Content-type', 'text/csv');
+            $this->getResponse()->setHttpHeader('Pragma: private', true);
+            $this->getResponse()->setHttpHeader('Content-Disposition',
+                            'attachment; filename="export.csv"');
+            $this->getResponse()->setContentType("application/force-download text/csv"); 
             $this->setTemplate('exportCsv');
             return ;
           }
