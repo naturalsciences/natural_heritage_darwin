@@ -9,7 +9,7 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_ig_ref on darwin_flat(ig_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_ref on darwin_flat(individual_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_part_ref on darwin_flat(part_ref);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_host_specimen_ref on darwin_flat(host_specimen_ref);
-
+CREATE INDEX CONCURRENTLY idx_darwin_flat_host_taxon_ref on darwin_flat(host_taxon_ref);
 
 /*** BTree indexes for search purposes in Darwin flat table ***/
 CREATE INDEX CONCURRENTLY idx_darwin_flat_station_visible on darwin_flat(station_visible);
@@ -18,15 +18,14 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_from_date_mask on darwin_flat(gtu_
 CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_to_date_mask on darwin_flat(gtu_to_date_mask);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_to_date on darwin_flat(gtu_to_date);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_from_date on darwin_flat(gtu_from_date);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_taxon_name_order_by on darwin_flat(taxon_name_order_by);
 
 CREATE INDEX CONCURRENTLY idx_darwin_flat_ig_num on darwin_flat(ig_num_indexed text_pattern_ops);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_group on darwin_flat(individual_type_group);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_search on darwin_flat(individual_type_search);
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_group on darwin_flat(individual_type_group) WHERE individual_type_group <> 'specimen';
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_search on darwin_flat(individual_type_search) WHERE individual_type_search <> 'specimen';
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_sex on darwin_flat(individual_sex);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_state on darwin_flat(individual_state);
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_state on darwin_flat(individual_state) WHERE individual_state <> 'not applicable';
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_stage on darwin_flat(individual_stage);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_social_status on darwin_flat(individual_social_status);
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_social_status on darwin_flat(individual_social_status) WHERE individual_social_status <> 'not applicable';
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_rock_form on darwin_flat(individual_rock_form);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_part on darwin_flat(part);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_part_status on darwin_flat(part_status);
@@ -41,8 +40,6 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_container_type on darwin_flat(containe
 CREATE INDEX CONCURRENTLY idx_darwin_flat_sub_container_type on darwin_flat(sub_container_type);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_container_storage on darwin_flat(container_storage);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_sub_container_storage on darwin_flat(sub_container_storage);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_collection_is_public on darwin_flat(collection_is_public);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_collection_name on darwin_flat(collection_name, spec_ref);
 
 /*CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_collection_institution_formated_name_ts on darwin_flat using gin(collection_institution_formated_name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_collection_main_manager_formated_name_ts on darwin_flat using gin(collection_main_manager_formated_name_ts);*/
@@ -56,12 +53,6 @@ CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_spec_ident_ids on darwin_flat usin
 CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_spec_coll_ids on darwin_flat using gin(spec_coll_ids);
 CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_spec_don_sel_ids on darwin_flat using gin(spec_don_sel_ids);
 CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_ind_ident_ids on darwin_flat using gin(ind_ident_ids);
-
-/*** For Public search ***/
-CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_gtu_country_tags on darwin_flat using gin (getTagsIndexedAsArray(gtu_country_tag_value));
-
-
-
 
 /*** TEMP DISABLE ***/
 

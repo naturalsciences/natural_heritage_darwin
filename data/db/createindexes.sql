@@ -50,7 +50,9 @@ CREATE INDEX CONCURRENTLY idx_multimedia_keywords_object_ref on multimedia_keywo
 CREATE INDEX CONCURRENTLY idx_soortenregister_taxa_ref on soortenregister(taxa_ref);
 CREATE INDEX CONCURRENTLY idx_soortenregister_gtu_ref on soortenregister(gtu_ref);
 CREATE INDEX CONCURRENTLY idx_soortenregister_habitat_ref on soortenregister(habitat_ref);
-CREATE INDEX CONCURRENTLY idx_specimens_collection_ref on specimens(collection_ref);
+
+--CREATE INDEX CONCURRENTLY idx_specimens_collection_ref on specimens(collection_ref); -- Unused because of UNQ
+
 CREATE INDEX CONCURRENTLY idx_specimens_expedition_ref on specimens(expedition_ref) WHERE expedition_ref <> 0;
 CREATE INDEX CONCURRENTLY idx_specimens_gtu_ref on specimens(gtu_ref) WHERE gtu_ref <> 0;
 CREATE INDEX CONCURRENTLY idx_specimens_taxon_ref on specimens(taxon_ref) WHERE taxon_ref <> 0;
@@ -155,12 +157,11 @@ CREATE INDEX CONCURRENTLY idx_people_languages_language_country on people_langua
 --CREATE INDEX CONCURRENTLY idx_specimens_host_relationship on specimens(host_relationship) WHERE NOT host_relationship IS NULL;
 CREATE INDEX CONCURRENTLY idx_specimens_accompanying_form on specimens_accompanying(form);
 CREATE INDEX CONCURRENTLY idx_specimens_accompanying_unit on specimens_accompanying(unit);
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_type_search on specimen_individuals(type_search) WHERE type_search <> '';
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_type on specimen_individuals(type);
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_type_search on specimen_individuals(type_search) WHERE type_search <> 'specimen';
 CREATE INDEX CONCURRENTLY idx_specimen_individuals_sex on specimen_individuals(sex);
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals(stage);
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_state on specimen_individuals(sex, state);
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_social_status on specimen_individuals(social_status);
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals(stage) WHERE stage <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_state on specimen_individuals(state) WHERE state <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_social_status on specimen_individuals(social_status)  WHERE social_status <> 'not applicable';
 CREATE INDEX CONCURRENTLY idx_specimen_individuals_rock_form on specimen_individuals(rock_form);
 CREATE INDEX CONCURRENTLY idx_specimen_parts_specimen_part on specimen_parts(specimen_part);
 CREATE INDEX CONCURRENTLY idx_specimen_parts_parent_ref on specimen_parts(parent_ref);
@@ -173,7 +174,6 @@ CREATE INDEX CONCURRENTLY idx_specimen_parts_container_type on specimen_parts(co
 CREATE INDEX CONCURRENTLY idx_specimen_parts_sub_container_type on specimen_parts(sub_container_type);
 CREATE INDEX CONCURRENTLY idx_specimen_parts_container_storage on specimen_parts(container_storage);
 CREATE INDEX CONCURRENTLY idx_specimen_parts_sub_container_storage on specimen_parts(sub_container_storage);
-CREATE INDEX CONCURRENTLY idx_taxonomy_name_order_by on taxonomy(name_order_by);
 CREATE INDEX CONCURRENTLY idx_taxonomy_name_order_by_txt_op on taxonomy USING btree ( name_order_by text_pattern_ops);
 
 CREATE INDEX CONCURRENTLY idx_taxonomy_path on taxonomy(path text_pattern_ops);

@@ -422,6 +422,41 @@ DROP INDEX IF EXISTS idx_catalogue_properties_property_method_indexed;
 DROP INDEX IF EXISTS idx_catalogue_properties_property_tool_indexed;
 DROP INDEX IF EXISTS idx_catalogue_properties_property_accuracy_unit;
 
+
+/*** Batch 2 ***/
+
+DROP INDEX IF EXISTS idx_specimens_collection_ref;
+DROP INDEX IF EXISTS idx_specimen_individuals_type_search
+DROP INDEX IF EXISTS idx_specimen_individuals_type
+DROP INDEX IF EXISTS idx_specimen_individuals_stage;
+DROP INDEX IF EXISTS idx_specimen_individuals_state;
+DROP INDEX IF EXISTS idx_specimen_individuals_social_status;
+DROP INDEX IF EXISTS idx_taxonomy_name_order_by;
+
+DROP INDEX IF EXISTS idx_darwin_flat_taxon_name_order_by
+DROP INDEX IF EXISTS  idx_darwin_flat_individual_type_group
+DROP INDEX IF EXISTS idx_darwin_flat_individual_type_search
+DROP INDEX IF EXISTS idx_darwin_flat_individual_state
+DROP INDEX IF EXISTS idx_darwin_flat_individual_social_status
+DROP INDEX IF EXISTS idx_darwin_flat_collection_is_public
+DROP INDEX IF EXISTS idx_darwin_flat_collection_name
+DROP INDEX IF EXISTS idx_gin_darwin_flat_gtu_country_tags
+
+
+
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_type_search on specimen_individuals(type_search) WHERE type_search <> 'specimen';
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_state on specimen_individuals(state) WHERE state <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals(stage) WHERE stage <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_social_status on specimen_individuals(social_status)  WHERE social_status <> 'not applicable';
+
+CREATE INDEX CONCURRENTLY idx_darwin_flat_host_taxon_ref on darwin_flat(host_taxon_ref);
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_group on darwin_flat(individual_type_group) WHERE individual_type_group <> 'specimen';
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_search on darwin_flat(individual_type_search) WHERE individual_type_search <> 'specimen';
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_state on darwin_flat(individual_state) WHERE individual_state <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_social_status on darwin_flat(individual_social_status) WHERE individual_social_status <> 'not applicable';
+
+
+
 /*** For Updating the toFullText TS Vector triggers everywhere ***/
 
 DROP TRIGGER IF EXISTS trg_cpy_toFullText_collectionmaintenance ON collection_maintenance;
