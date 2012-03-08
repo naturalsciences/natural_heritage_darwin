@@ -42,7 +42,9 @@ drop function if exists labeling_country_for_indexation_array(gtu.id%TYPE) CASCA
 DROP INDEX IF EXISTS idx_labeling_country;
 -- CREATE INDEX idx_labeling_country ON darwin_flat USING gin (labeling_country_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
 
-create or replace function labeling_province_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
+drop function if exists labeling_province_for_indexation_array(gtu.id%TYPE) CASCADE;
+
+create or replace function labeling_province_for_indexation_array(in gtu_ref gtu.id%TYPE) returns text[] language SQL IMMUTABLE as
 $$
 select array_agg(fullToIndex(tag))
 from tags where tags.gtu_ref = $1 and sub_group_type = 'province';
@@ -66,7 +68,9 @@ ALTER FUNCTION labeling_province_for_indexation(gtu.id%TYPE) OWNER TO darwin2;
 DROP INDEX IF EXISTS idx_labeling_province;
 CREATE INDEX idx_labeling_province ON darwin_flat USING gin (labeling_province_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
 
-create or replace function labeling_other_gtu_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
+drop function if exists labeling_other_gtu_for_indexation_array(gtu.id%TYPE) CASCADE;
+
+create or replace function labeling_other_gtu_for_indexation_array(in gtu_ref gtu.id%TYPE) returns text[] language SQL IMMUTABLE as
 $$
 select array_agg(fullToIndex(tag))
 from tags where tags.gtu_ref = $1 and sub_group_type not in ('country', 'province');
@@ -171,7 +175,7 @@ CREATE INDEX idx_labeling_part ON darwin_flat using gin (labeling_part_for_index
 
 DROP INDEX IF EXISTS idx_labeling_ig_num_numeric;
 DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
-CREATE INDEX idx_labeling_ig_num_coalesced ON darwin_flat(coalesce(ig_num, '-')) where part_ref is not null;
+-- CREATE INDEX idx_labeling_ig_num_coalesced ON darwin_flat(coalesce(ig_num, '-')) where part_ref is not null;
 CREATE INDEX idx_labeling_ig_num_numeric ON darwin_flat(convert_to_integer(coalesce(ig_num, '-'))) where part_ref is not null;
 
 drop view "public"."labeling";
@@ -281,6 +285,7 @@ select df.part_ref as unique_id,
              ) as x
        )::varchar as donators,
        coalesce(df.ig_num, '-') as ig_num,
+       df.ig_num_indexed as ig_num_indexed,
        convert_to_integer(coalesce(ig_num, '-')) as ig_numeric,
        case when df.part_count_min <> df.part_count_max and df.part_count_min is not null and df.part_count_max is not null then 'Count: ' || df.part_count_min || ' - ' || df.part_count_max else case when df.part_count_min is not null then 'Count: ' || df.part_count_min else '' end end as specimen_number,
        case when exists(select 1 from comments where (referenced_relation = 'specimens' and record_id = df.spec_ref) or (referenced_relation = 'specimen_parts' and record_id = df.part_ref)) then 'Comm.?: Y' else 'Comm.?: N' end as comments

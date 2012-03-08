@@ -27,9 +27,9 @@ where (collection = 1 or collection_path like '/1/%')
   and case when coalesce(replace('?InviteIGFrom','-',''), '') = '' and coalesce(replace('?InviteIGTo','-',''), '') = '' then true
            else
             case when coalesce(replace('?InviteIGFrom','-',''), '') != '' and coalesce(replace('?InviteIGTo','-',''), '') = '' then
-                   labeling.ig_num in (select trim(regexp_split_to_table(translate('?InviteIGFrom', E',/\\#.', ';;;; '), ';')))
+                   labeling.ig_num_indexed in (select fullToIndex(regexp_split_to_table(translate('?InviteIGFrom', E',/\\#.', ';;;; '), ';')))
                  when coalesce(replace('?InviteIGFrom','-',''), '') = '' and coalesce(replace('?InviteIGTo','-',''), '') != '' then
-                   labeling.ig_num in (select trim(regexp_split_to_table(translate('?InviteIGTo', E',/\\#.', ';;;; '), ';')))
+                   labeling.ig_num_indexed in (select fullToIndex(regexp_split_to_table(translate('?InviteIGTo', E',/\\#.', ';;;; '), ';')))
                  when convert_to_integer(coalesce(replace('?InviteIGFrom','-',''), '')) != 0 and convert_to_integer(coalesce(replace('?InviteIGTo','-',''), '')) != 0 then
                    labeling.ig_numeric between convert_to_integer('?InviteIGFrom') and convert_to_integer('?InviteIGTo')
                  else
