@@ -26,13 +26,12 @@ class MultimediaTable extends DarwinTable
     return $q->execute();
   }    
   
-  public function deleteMultimediaRelated($table,$record_id)
+  /* return an array of URIs in order to delete related files */
+  public function getMultimediaRelated($table,$record_id)
   {
+    $files = array() ;
     foreach(self::findForTable($table, $record_id) as $media)
-    {
-//      die(sfConfig::get('sf_upload_dir')."/multimedia/".$media->getUri());
-      unlink(sfConfig::get('sf_upload_dir')."/multimedia/".$media->getUri());
-      $media->delete() ;
-    }
+      $files[] = sfConfig::get('sf_upload_dir')."/multimedia/".$media->getUri();
+    return $files ;
   }
 }

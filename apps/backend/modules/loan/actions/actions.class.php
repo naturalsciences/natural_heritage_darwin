@@ -183,8 +183,9 @@ class loanActions extends DarwinActions
     $loan = $this->checkRight($request->getParameter('id')) ;  
     try
     {
-      $loan->delete();
-      Doctrine::getTable("Multimedia")->deleteMultimediaRelated('loans',$request->getParameter('id')) ; 
+      $files = Doctrine::getTable("Multimedia")->getMultimediaRelated('loans',$request->getParameter('id')) ; 
+      $loan->delete();    
+      foreach($files as $file) unlink($file) ;  
       $this->redirect('loan/index');
     }
     catch(Doctrine_Exception $ne)
