@@ -15,49 +15,44 @@ RETURN v_int_value;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION lineToTagRowsFormatConserved(IN line text) RETURNS SETOF varchar AS
-$$
-SELECT distinct on (fulltoIndex(tags)) tags FROM regexp_split_to_table($1, ';') as tags WHERE fulltoIndex(tags) != '' ;
-$$
-LANGUAGE 'sql' IMMUTABLE STRICT;
+DROP FUNCTION if exists lineToTagRowsFormatConserved(text) CASCADE;
 
-GRANT EXECUTE ON FUNCTION lineToTagRowsFormatConserved(text) TO d2viewer;
-GRANT ALL ON FUNCTION lineToTagRowsFormatConserved(text) TO cebmpad, darwin2;
-ALTER FUNCTION lineToTagRowsFormatConserved(text) OWNER TO darwin2;
+-- CREATE OR REPLACE FUNCTION lineToTagRowsFormatConserved(IN line text) RETURNS SETOF varchar AS
+-- $$
+-- SELECT distinct on (fulltoIndex(tags)) tags FROM regexp_split_to_table($1, ';') as tags WHERE fulltoIndex(tags) != '' ;
+-- $$
+-- LANGUAGE 'sql' IMMUTABLE STRICT;
+-- 
+-- GRANT EXECUTE ON FUNCTION lineToTagRowsFormatConserved(text) TO d2viewer;
+-- GRANT ALL ON FUNCTION lineToTagRowsFormatConserved(text) TO cebmpad, darwin2;
+-- ALTER FUNCTION lineToTagRowsFormatConserved(text) OWNER TO darwin2;
 
-create or replace function labeling_country_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
-$$
-select array_agg(tags_list)
-from (select lineToTagRows(tag_value) as tags_list 
-      from tag_groups as tg 
-      where tg.gtu_ref = $1 and tg.sub_group_name = 'country'
-     ) as x;
-$$;
+drop function if exists labeling_country_for_indexation_array(gtu.id%TYPE) CASCADE;
 
-GRANT EXECUTE ON FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) TO d2viewer;
-GRANT ALL ON FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
-ALTER FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
-
+-- create or replace function labeling_country_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
+-- $$
+-- select array_agg(fullToIndex(tag))
+-- from tags where tags.gtu_ref = $1 and sub_group_type = 'country';
+-- $$;
+-- 
+-- GRANT EXECUTE ON FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) TO d2viewer;
+-- GRANT ALL ON FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
+-- ALTER FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
+-- 
 DROP INDEX IF EXISTS idx_labeling_country;
-CREATE INDEX idx_labeling_country ON darwin_flat USING gin (labeling_country_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
+-- CREATE INDEX idx_labeling_country ON darwin_flat USING gin (labeling_country_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
 
 create or replace function labeling_province_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
-select array_agg(tags_list)
-from (select lineToTagRows(tag_value) as tags_list 
-      from tag_groups as tg 
-      where tg.gtu_ref = $1 and tg.sub_group_name = 'province'
-     ) as x;
+select array_agg(fullToIndex(tag))
+from tags where tags.gtu_ref = $1 and sub_group_type = 'province';
 $$;
 
 create or replace function labeling_province_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
 $$
 select array_to_string(x.tags_list,';')
-from (select array_agg(y.tags_list) as tags_list
-      from (select lineToTagRowsFormatConserved(tag_value) as tags_list
-            from tag_groups as tg
-            where tg.gtu_ref = $1 and tg.sub_group_name = 'province'
-           ) as y
+from (select array_agg(tag) as tags_list
+      from tags where tags.gtu_ref = $1 and sub_group_type = 'province'
      ) as x;
 $$;
 
@@ -73,21 +68,15 @@ CREATE INDEX idx_labeling_province ON darwin_flat USING gin (labeling_province_f
 
 create or replace function labeling_other_gtu_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
-select array_agg(tags_list)
-from (select lineToTagRows(tag_value) as tags_list 
-      from tag_groups as tg 
-      where tg.gtu_ref = $1 and tg.sub_group_name not in ('country','province')
-     ) as x;
+select array_agg(fullToIndex(tag))
+from tags where tags.gtu_ref = $1 and sub_group_type not in ('country', 'province');
 $$;
 
 create or replace function labeling_other_gtu_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
 $$
 select array_to_string(x.tags_list,';')
-from (select array_agg(y.tags_list) as tags_list
-      from (select lineToTagRowsFormatConserved(tag_value) as tags_list
-            from tag_groups as tg
-            where tg.gtu_ref = $1 and tg.sub_group_name not in ('province', 'country')
-           ) as y
+from (select array_agg(tag) as tags_list
+      from tags where tags.gtu_ref = $1 and sub_group_type not in ('province', 'country')
      ) as x;
 $$;
 
@@ -263,8 +252,8 @@ select df.part_ref as unique_id,
        )::varchar as current_name,
        case when df.acquisition_category is not null then 'Acq.: ' || df.acquisition_category else '' end as acquisition_category,
        df.gtu_ref as gtu_ref,
-       replace(df.gtu_country_tag_value, ' ', '')::varchar as countries,
-       labeling_country_for_indexation_array(df.gtu_ref) as countries_array,
+       df.gtu_country_tag_value::varchar as countries,
+       df.gtu_country_tag_indexed as countries_array,
        labeling_province_for_indexation(df.gtu_ref) as provinces,
        labeling_province_for_indexation_array(df.gtu_ref) as provinces_array,
        labeling_other_gtu_for_indexation(df.gtu_ref) as location,
