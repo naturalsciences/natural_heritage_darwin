@@ -158,8 +158,8 @@ CREATE INDEX CONCURRENTLY idx_people_languages_language_country on people_langua
 CREATE INDEX CONCURRENTLY idx_specimens_accompanying_form on specimens_accompanying(form);
 CREATE INDEX CONCURRENTLY idx_specimens_accompanying_unit on specimens_accompanying(unit);
 CREATE INDEX CONCURRENTLY idx_specimen_individuals_type_search on specimen_individuals(type_search) WHERE type_search <> 'specimen';
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_sex on specimen_individuals(sex);
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals(stage) WHERE stage <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_sex on specimen_individuals(sex) where sex not in ('undefined', 'unknown');
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals(stage) WHERE stage not in ('undefined', 'unknown');
 CREATE INDEX CONCURRENTLY idx_specimen_individuals_state on specimen_individuals(state) WHERE state <> 'not applicable';
 CREATE INDEX CONCURRENTLY idx_specimen_individuals_social_status on specimen_individuals(social_status)  WHERE social_status <> 'not applicable';
 CREATE INDEX CONCURRENTLY idx_specimen_individuals_rock_form on specimen_individuals(rock_form);

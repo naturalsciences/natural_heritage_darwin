@@ -1,21 +1,27 @@
 SET search_path = darwin2, public;
-/* Modification of an existing function to make it immutable */
-
-CREATE OR REPLACE FUNCTION convert_to_integer(v_input varchar) RETURNS INTEGER IMMUTABLE
-AS $$
-DECLARE v_int_value INTEGER DEFAULT 0;
-BEGIN
-    BEGIN
-        v_int_value := v_input::INTEGER;
-    EXCEPTION WHEN OTHERS THEN
-/*        RAISE NOTICE 'Invalid integer value: "%".  Returning NULL.', v_input;*/
-        RETURN 0;
-    END;
-RETURN v_int_value;
-END;
-$$ LANGUAGE plpgsql;
 
 DROP FUNCTION if exists lineToTagRowsFormatConserved(text) CASCADE;
+drop function if exists labeling_country_for_indexation_array(gtu.id%TYPE) CASCADE;
+drop function if exists labeling_province_for_indexation_array(gtu.id%TYPE) CASCADE;
+drop function if exists labeling_other_gtu_for_indexation_array(gtu.id%TYPE) CASCADE;
+DROP FUNCTION IF EXISTS labeling_code_num_for_indexation(specimen_parts.id%TYPE) CASCADE;
+drop function if exists labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) CASCADE;
+drop function if exists labeling_individual_stage_for_indexation(specimen_individuals.stage%TYPE) CASCADE;
+
+DROP INDEX IF EXISTS idx_labeling_country;
+DROP INDEX IF EXISTS idx_labeling_province;
+DROP INDEX IF EXISTS idx_labeling_other_gtu;
+DROP INDEX IF EXISTS idx_labeling_code;
+DROP INDEX IF EXISTS idx_labeling_code_varchar;
+DROP INDEX IF EXISTS idx_labeling_code_numeric;
+DROP INDEX IF EXISTS idx_labeling_individual_type;
+DROP INDEX IF EXISTS idx_labeling_individual_sex;
+DROP INDEX IF EXISTS idx_darwin_flat_individual_sex;
+DROP INDEX IF EXISTS idx_labeling_individual_stage;
+DROP INDEX IF EXISTS idx_darwin_flat_individual_stage;
+DROP INDEX IF EXISTS idx_labeling_part;
+DROP INDEX IF EXISTS idx_labeling_ig_num_numeric;
+DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
 
 -- CREATE OR REPLACE FUNCTION lineToTagRowsFormatConserved(IN line text) RETURNS SETOF varchar AS
 -- $$
@@ -27,8 +33,6 @@ DROP FUNCTION if exists lineToTagRowsFormatConserved(text) CASCADE;
 -- GRANT ALL ON FUNCTION lineToTagRowsFormatConserved(text) TO cebmpad, darwin2;
 -- ALTER FUNCTION lineToTagRowsFormatConserved(text) OWNER TO darwin2;
 
-drop function if exists labeling_country_for_indexation_array(gtu.id%TYPE) CASCADE;
-
 -- create or replace function labeling_country_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 -- $$
 -- select array_agg(fullToIndex(tag))
@@ -39,12 +43,9 @@ drop function if exists labeling_country_for_indexation_array(gtu.id%TYPE) CASCA
 -- GRANT ALL ON FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
 -- ALTER FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
 -- 
-DROP INDEX IF EXISTS idx_labeling_country;
 -- CREATE INDEX idx_labeling_country ON darwin_flat USING gin (labeling_country_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
 
-drop function if exists labeling_province_for_indexation_array(gtu.id%TYPE) CASCADE;
-
-create or replace function labeling_province_for_indexation_array(in gtu_ref gtu.id%TYPE) returns text[] language SQL IMMUTABLE as
+create or replace function labeling_province_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
 select array_agg(fullToIndex(tag))
 from tags where tags.gtu_ref = $1 and sub_group_type = 'province';
@@ -65,12 +66,9 @@ GRANT EXECUTE ON FUNCTION labeling_province_for_indexation(gtu.id%TYPE) TO d2vie
 GRANT ALL ON FUNCTION labeling_province_for_indexation(gtu.id%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_province_for_indexation(gtu.id%TYPE) OWNER TO darwin2;
 
-DROP INDEX IF EXISTS idx_labeling_province;
 CREATE INDEX idx_labeling_province ON darwin_flat USING gin (labeling_province_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
 
-drop function if exists labeling_other_gtu_for_indexation_array(gtu.id%TYPE) CASCADE;
-
-create or replace function labeling_other_gtu_for_indexation_array(in gtu_ref gtu.id%TYPE) returns text[] language SQL IMMUTABLE as
+create or replace function labeling_other_gtu_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
 select array_agg(fullToIndex(tag))
 from tags where tags.gtu_ref = $1 and sub_group_type not in ('country', 'province');
@@ -91,7 +89,6 @@ GRANT EXECUTE ON FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) TO d2vi
 GRANT ALL ON FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) OWNER TO darwin2;
 
-DROP INDEX IF EXISTS idx_labeling_other_gtu;
 CREATE INDEX idx_labeling_other_gtu ON darwin_flat USING gin (labeling_other_gtu_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
 
 create or replace function labeling_code_for_indexation(in part_ref specimen_parts.id%TYPE) returns varchar[] language SQL IMMUTABLE as
@@ -106,75 +103,68 @@ from (select trim(coalesce(code_prefix, '') || coalesce(code_prefix_separator, '
      ) as x;
 $$;
 
-create or replace function labeling_code_num_for_indexation(in part_ref specimen_parts.id%TYPE) returns codes.code_num%TYPE language SQL IMMUTABLE as
-$$
-select code_num
-from codes
-where referenced_relation = 'specimen_parts'
-  and record_id = $1
-  and code_category = 'main'
-  and code_prefix != 'RBINS'
-limit 1;
-$$;
+-- create or replace function labeling_code_num_for_indexation(in part_ref specimen_parts.id%TYPE) returns codes.code_num%TYPE language SQL IMMUTABLE as
+-- $$
+-- select code_num
+-- from codes
+-- where referenced_relation = 'specimen_parts'
+--   and record_id = $1
+--   and code_category = 'main'
+--   and code_prefix != 'RBINS'
+-- limit 1;
+-- $$;
 
 GRANT EXECUTE ON FUNCTION labeling_code_for_indexation(specimen_parts.id%TYPE) TO d2viewer;
 GRANT ALL ON FUNCTION labeling_code_for_indexation(specimen_parts.id%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_code_for_indexation(specimen_parts.id%TYPE) OWNER TO darwin2;
-GRANT EXECUTE ON FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) TO d2viewer;
-GRANT ALL ON FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) TO cebmpad, darwin2;
-ALTER FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) OWNER TO darwin2;
+-- GRANT EXECUTE ON FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) TO d2viewer;
+-- GRANT ALL ON FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) TO cebmpad, darwin2;
+-- ALTER FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) OWNER TO darwin2;
 
-DROP INDEX IF EXISTS idx_labeling_code;
-DROP INDEX IF EXISTS idx_labeling_code_varchar;
-DROP INDEX IF EXISTS idx_labeling_code_numeric;
 CREATE INDEX idx_labeling_code ON darwin_flat USING gin (labeling_code_for_indexation(part_ref)) WHERE part_ref IS NOT NULL;
-CREATE INDEX idx_labeling_code_varchar ON darwin_flat (CAST(array_to_string(labeling_code_for_indexation(part_ref), ';') AS varchar)) WHERE part_ref IS NOT NULL;
-CREATE INDEX idx_labeling_code_numeric ON darwin_flat (labeling_code_num_for_indexation(part_ref)) WHERE part_ref IS NOT NULL;
+-- CREATE INDEX idx_labeling_code_varchar ON darwin_flat (CAST(array_to_string(labeling_code_for_indexation(part_ref), ';') AS varchar)) WHERE part_ref IS NOT NULL;
+-- CREATE INDEX idx_labeling_code_numeric ON darwin_flat (labeling_code_num_for_indexation(part_ref)) WHERE part_ref IS NOT NULL;
 
 create or replace function labeling_individual_type_for_indexation(in individual_type specimen_individuals.type%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
-SELECT case when fullToIndex($1) = 'specimen' then array['-'] else array[coalesce(fullToIndex($1),'/')] end;
+SELECT array[coalesce(fullToIndex($1),'-')];
 $$;
 
-create or replace function labeling_individual_sex_for_indexation(in individual_sex specimen_individuals.sex%TYPE) returns varchar[] language SQL IMMUTABLE as
-$$
-SELECT case when fullToIndex($1) in ('undefined', 'unknown', 'notstated', 'nonapplicable') then array['-'] else array[coalesce(fullToIndex($1),'/')] end;
-$$;
+-- create or replace function labeling_individual_sex_for_indexation(in individual_sex specimen_individuals.sex%TYPE) returns varchar[] language SQL IMMUTABLE as
+-- $$
+-- SELECT case when fullToIndex($1) in ('undefined', 'unknown', 'notstated', 'nonapplicable') then array['-'] else array[coalesce(fullToIndex($1),'/')] end;
+-- $$;
 
-create or replace function labeling_individual_stage_for_indexation(in individual_stage specimen_individuals.stage%TYPE) returns varchar[] language SQL IMMUTABLE as
-$$
-SELECT case when fullToIndex($1) in ('undefined', 'unknown', 'notstated', 'nonapplicable') then array['-'] else array[coalesce(fullToIndex($1),'/')] end;
-$$;
+-- create or replace function labeling_individual_stage_for_indexation(in individual_stage specimen_individuals.stage%TYPE) returns varchar[] language SQL IMMUTABLE as
+-- $$
+-- SELECT case when fullToIndex($1) in ('undefined', 'unknown', 'notstated', 'nonapplicable') then array['-'] else array[coalesce(fullToIndex($1),'/')] end;
+-- $$;
 
 create or replace function labeling_part_for_indexation(in part specimen_parts.specimen_part%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
-SELECT case when fullToIndex($1) in ('undefined', 'unknown', 'animal', 'specimen', '') then array['-'] else array[coalesce(fullToIndex($1),'/')] end;
+SELECT array[coalesce(fullToIndex($1),'-')];
 $$;
 
 GRANT EXECUTE ON FUNCTION labeling_individual_type_for_indexation(specimen_individuals.type%TYPE) TO d2viewer;
 GRANT ALL ON FUNCTION labeling_individual_type_for_indexation(specimen_individuals.type%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_individual_type_for_indexation(specimen_individuals.type%TYPE) OWNER TO darwin2;
-GRANT EXECUTE ON FUNCTION labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) TO d2viewer;
-GRANT ALL ON FUNCTION labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) TO cebmpad, darwin2;
-ALTER FUNCTION labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) OWNER TO darwin2;
-GRANT EXECUTE ON FUNCTION labeling_individual_stage_for_indexation(specimen_individuals.stage%TYPE) TO d2viewer;
-GRANT ALL ON FUNCTION labeling_individual_stage_for_indexation(specimen_individuals.stage%TYPE) TO cebmpad, darwin2;
-ALTER FUNCTION labeling_individual_stage_for_indexation(specimen_individuals.stage%TYPE) OWNER TO darwin2;
+-- GRANT EXECUTE ON FUNCTION labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) TO d2viewer;
+-- GRANT ALL ON FUNCTION labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) TO cebmpad, darwin2;
+-- ALTER FUNCTION labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) OWNER TO darwin2;
+-- GRANT EXECUTE ON FUNCTION labeling_individual_stage_for_indexation(specimen_individuals.stage%TYPE) TO d2viewer;
+-- GRANT ALL ON FUNCTION labeling_individual_stage_for_indexation(specimen_individuals.stage%TYPE) TO cebmpad, darwin2;
+-- ALTER FUNCTION labeling_individual_stage_for_indexation(specimen_individuals.stage%TYPE) OWNER TO darwin2;
 GRANT EXECUTE ON FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) TO d2viewer;
 GRANT ALL ON FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) OWNER TO darwin2;
 
-DROP INDEX IF EXISTS idx_labeling_individual_type;
 CREATE INDEX idx_labeling_individual_type ON darwin_flat using gin (labeling_individual_type_for_indexation(individual_type));
-DROP INDEX IF EXISTS idx_labeling_individual_sex;
-CREATE INDEX idx_labeling_individual_sex ON darwin_flat using gin (labeling_individual_sex_for_indexation(individual_sex));
-DROP INDEX IF EXISTS idx_labeling_individual_stage;
-CREATE INDEX idx_labeling_individual_stage ON darwin_flat using gin (labeling_individual_stage_for_indexation(individual_stage));
-DROP INDEX IF EXISTS idx_labeling_part;
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_sex ON darwin_flat using btree (individual_sex text_pattern_ops) where individual_sex not in ('undefined', 'unknown');
+-- CREATE INDEX idx_labeling_individual_sex ON darwin_flat using btree (fullToIndex(individual_sex) text_pattern_ops);
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_stage ON darwin_flat using btree (individual_stage text_pattern_ops) where individual_stage not in ('undefined', 'unknown');
+-- CREATE INDEX idx_labeling_individual_stage ON darwin_flat using btree (fullToIndex(individual_sex) text_pattern_ops);
 CREATE INDEX idx_labeling_part ON darwin_flat using gin (labeling_part_for_indexation(part));
 
-DROP INDEX IF EXISTS idx_labeling_ig_num_numeric;
-DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
 -- CREATE INDEX idx_labeling_ig_num_coalesced ON darwin_flat(coalesce(ig_num, '-')) where part_ref is not null;
 CREATE INDEX idx_labeling_ig_num_numeric ON darwin_flat(convert_to_integer(coalesce(ig_num, '-'))) where part_ref is not null;
 
@@ -196,12 +186,12 @@ select df.part_ref as unique_id,
               || 
               case when coalesce(df.container_storage, '') in ('unknown', '/', '') then '' || case when coalesce(df.sub_container_storage, '') in ('unknown', '/', '')  then '' else ', ' || df.sub_container_storage end else ', ' || df.container_storage || case when coalesce(df.sub_container_storage, '') in ('unknown', '/', '') or df.sub_container_storage = df.container_storage then '' else ' - ' || df.sub_container_storage end end
             )) as item,
-       labeling_part_for_indexation(df.part) as part,
-       labeling_individual_type_for_indexation(df.individual_type) as type,
-       labeling_individual_sex_for_indexation(df.individual_sex) as sex,
-       labeling_individual_stage_for_indexation(df.individual_stage) as stage,
-       CAST(array_to_string(labeling_code_for_indexation(part_ref), ';') AS varchar) as code,
-       labeling_code_num_for_indexation(part_ref) as code_num,
+       array[fullToIndex(df.part)] as part,
+       array[fullToIndex(df.individual_type)] as type,
+       df.individual_sex as sex,
+       df.individual_stage as stage,
+       CAST(array_to_string(labeling_code_for_indexation(df.part_ref), ';') AS varchar) as code,
+       (select code_num from codes where referenced_relation = 'specimen_parts' and record_id = df.part_ref and code_category = 'main' and code_prefix != 'RBINS' and code_num is not null limit 1) as code_num,
        labeling_code_for_indexation(df.part_ref) as code_array,
        df.taxon_ref as taxon_ref,
        df.taxon_name as taxon_name,
@@ -294,3 +284,9 @@ where part_ref is not null;
 
 ALTER VIEW "public"."labeling" OWNER TO darwin2;
 GRANT SELECT ON "public"."labeling" TO d2viewer;
+
+DROP INDEX IF EXISTS idx_specimen_individuals_sex;
+DROP INDEX IF EXISTS idx_specimen_individuals_stage;
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_sex on specimen_individuals(sex) where sex not in ('undefined', 'unknown');
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals(stage) WHERE stage not in ('undefined', 'unknown');
+

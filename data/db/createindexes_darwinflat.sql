@@ -22,9 +22,9 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_from_date on darwin_flat(gtu_from_
 CREATE INDEX CONCURRENTLY idx_darwin_flat_ig_num on darwin_flat(ig_num_indexed text_pattern_ops);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_group on darwin_flat(individual_type_group) WHERE individual_type_group <> 'specimen';
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_search on darwin_flat(individual_type_search) WHERE individual_type_search <> 'specimen';
-CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_sex on darwin_flat(individual_sex);
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_sex ON darwin_flat using btree (individual_sex text_pattern_ops) where individual_sex not in ('undefined', 'unknown');
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_state on darwin_flat(individual_state) WHERE individual_state <> 'not applicable';
-CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_stage on darwin_flat(individual_stage);
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_stage ON darwin_flat using btree (individual_stage text_pattern_ops) where individual_stage not in ('undefined', 'unknown');
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_social_status on darwin_flat(individual_social_status) WHERE individual_social_status <> 'not applicable';
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_rock_form on darwin_flat(individual_rock_form);
 CREATE INDEX CONCURRENTLY idx_darwin_flat_part on darwin_flat(part);
