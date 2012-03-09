@@ -529,11 +529,11 @@ class LoansForm extends BaseLoansForm
       $value = $this->getValue('newUsers');
       foreach($this->embeddedForms['newUsers']->getEmbeddedForms() as $name => $form)
       {
-        if(!isset($value[$name]['user_ref'] ))
+        if(!isset($value[$name]['user_ref'] )) {
           unset($this->embeddedForms['newUsers'][$name]);
-        elseif($value[$name]['user_ref'] != sfContext::getInstance()->getUser()->getId())
-        {
-          
+        } //On add, current user will be added by trigger
+        elseif($value[$name]['user_ref'] != sfContext::getInstance()->getUser()->getId() || sfContext::getInstance()->getUser()->isAtLeast(Users::ADMIN) )
+        { 
           $form->getObject()->setLoanRef($this->getObject()->getId());
         }
         else unset($this->embeddedForms['newUsers'][$name]);
