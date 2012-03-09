@@ -2926,3 +2926,12 @@ input.complete_missing {
 {
   color:red;
 }
+
+.closed_message {
+  text-align:center;
+  background-color: #FFEFBF;
+  border: 2px solid #F4BB0F;
+  padding: 0.2em;
+  margin:0.5em;
+  text-align: center;
+}

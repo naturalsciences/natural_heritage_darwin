@@ -1,3 +1,6 @@
+<?php if(!$form->getObject()->isNew() && isset($status) && isset($status[$form->getObject()->getId()]) && $status[$form->getObject()->getId()]->getStatus()=="closed"):?>
+  <div class="closed_message"><?php echo __('Loan closed on %date%.',array('%date%'=>$status[$form->getObject()->getId()]->getDate()));?></div>
+<?php endif;?>
 <table>
   <tbody>
     <?php echo $form->renderGlobalErrors() ?>
