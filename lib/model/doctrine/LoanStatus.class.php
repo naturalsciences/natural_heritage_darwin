@@ -35,6 +35,12 @@ class LoanStatus extends BaseLoanStatus
   public static function getClosedStatus() {
     return self::$closed_status;
   }
+
+  public function getDate() {
+    $dt = new DateTime($this->getModificationDateTime());
+    return $dt->format('d/m/Y');
+  }
+
   public static function getAvailableStatus()
   {
     try{

@@ -38,7 +38,7 @@ class Loans extends BaseLoans
 
     $dt = new DateTime($this->getExtendedToDate() ? $this->getExtendedToDate() : $this->getToDate());
     $now = new DateTime('now');
-    if($dt < $now && !$this->getEffectiveToDate()) return true;
+    if($dt < $now) return true;
     return false;
   }
 }

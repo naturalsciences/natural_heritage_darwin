@@ -13,10 +13,8 @@
         <?php echo $form['from_date'] ?>
       </td>
 
-      <th><?php echo $form['extended_to_date']->renderLabel() ?></th>
+      <th></th>
       <td>
-        <?php echo $form['extended_to_date']->renderError() ?>
-        <?php echo $form['extended_to_date'] ?>
       </td>
     </tr>
     <tr>
@@ -29,10 +27,11 @@
         <?php echo $form['to_date'] ?>
       </td>
 
-      <th><?php echo $form['effective_to_date']->renderLabel() ?></th>
+
+      <th><?php echo $form['extended_to_date']->renderLabel() ?></th>
       <td>
-        <?php echo $form['effective_to_date']->renderError() ?>
-        <?php echo $form['effective_to_date'] ?>
+        <?php echo $form['extended_to_date']->renderError() ?>
+        <?php echo $form['extended_to_date'] ?>
       </td>
     </tr>
     <tr>

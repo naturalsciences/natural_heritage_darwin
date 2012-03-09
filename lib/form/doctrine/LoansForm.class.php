@@ -69,30 +69,10 @@ class LoansForm extends BaseLoansForm
       array('invalid' => 'Invalid date "to"')
     );
 
-    $this->widgetSchema->setLabels(array('from_date' => 'Start on',
+    $this->widgetSchema->setLabels(array('from_date' => 'Starts on',
                                          'to_date' => 'Ends on'
                                         )
                                   );
-    $this->widgetSchema['effective_to_date'] = new widgetFormJQueryFuzzyDate(
-      array(
-        'culture'=> $this->getCurrentCulture(), 
-        'image'=>'/images/calendar.gif', 
-        'format' => '%day%/%month%/%year%', 
-        'years' => $years,
-        'with_time' => false,
-        'empty_values' => $dateText,
-      ),
-      array('class' => 'to_date')
-    );
-
-    $this->validatorSchema['effective_to_date'] = new sfValidatorDate(
-      array(
-        'required' => false,
-        'min' => $minDate->getDateTime(),
-        'date_format' => 'd/M/Y',
-      ),
-      array('invalid' => 'Invalid date "effective"')
-    );
 
     $this->widgetSchema['extended_to_date'] = new widgetFormJQueryFuzzyDate(
       array(

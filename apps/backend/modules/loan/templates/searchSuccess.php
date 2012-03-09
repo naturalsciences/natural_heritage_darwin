@@ -51,7 +51,7 @@
             <td class="loan_status_col"><?php if(isset($status[$item->getId()])):?>
                 <?php echo $status[$item->getId()]->getFormattedStatus(); ?>
                 <?php if($status[$item->getId()]->getStatus() =='closed'):?>
-                  <em>(<?php echo __('on %date%',array('%date%'=> $item->getEffectiveToDate() ));?>)</em>
+                  <em>(<?php echo __('on %date%',array('%date%'=> $status[$item->getId()]->getDate() ));?>)</em>
                 <?php endif?>
               <?php endif?>
             </td>
