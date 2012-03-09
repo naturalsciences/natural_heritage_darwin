@@ -2910,3 +2910,19 @@ input.complete_missing {
   display:none;
   
 }
+
+.loan_line_closed {
+  color: gray;
+}
+.loan_line_closed .loan_overdue
+{
+  color:gray;
+}
+.loan_status_col em{
+ font-size: smaller;
+ vertical-align: super;
+}
+.loan_overdue
+{
+  color:red;
+}

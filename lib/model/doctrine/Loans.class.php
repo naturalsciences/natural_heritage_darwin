@@ -14,13 +14,31 @@ class Loans extends BaseLoans
 {
   public function getFromDateFormatted()
   {
+    if(!$this->getFromDate()) return '';
     $dt = new DateTime($this->getFromDate());
     return $dt->format('d/m/Y');
   }
 
   public function getToDateFormatted()
   {
+    if(!$this->getToDate()) return '';
     $dt = new DateTime($this->getToDate());
     return $dt->format('d/m/Y');
+  }
+  public function getExtendedToDateFormatted()
+  {
+    if(!$this->getExtendedToDate()) return '';
+    $dt = new DateTime($this->getExtendedToDate());
+    return $dt->format('d/m/Y');
+  }
+
+  public function getIsOverdue()
+  {
+    if(! $this->getExtendedToDate() && ! $this->getToDate()) return false;
+
+    $dt = new DateTime($this->getExtendedToDate() ? $this->getExtendedToDate() : $this->getToDate());
+    $now = new DateTime('now');
+    if($dt < $now && !$this->getEffectiveToDate()) return true;
+    return false;
   }
 }
