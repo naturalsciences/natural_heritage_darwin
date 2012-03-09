@@ -399,70 +399,60 @@ Loans:
        description: This is a funny dog to watch
        from_date: '2009-02-24'
        to_date: '2011-08-11'
-       effective_to_date: '2011-09-15'
     l2:
        id: 2
        name: Cat of goyet
        description: This is a funny cat to watch
        from_date: '2009-01-15'
        to_date: '2011-07-19'
-       effective_to_date: '2011-09-10'
     l3:
        id: 3
        name: Elephant of goyet
        description: This is a funny elephant to watch
        from_date: '2009-02-02'
        to_date: '2012-08-13'
-       effective_to_date: '2012-09-17'
     l4:
        id: 4
        name: Tiger of goyet
        description: This is a funny tiger to watch
        from_date: '2009-01-01'
        to_date: '2012-07-08'
-       effective_to_date: '2013-09-05'
     l5:
        id: 5
        name: Dragon of goyet
        description: This is a funny dragon to watch
        from_date: '2009-02-04'
        to_date: '2011-08-01'
-       effective_to_date: '2011-09-05'
     l6:
        id: 6
        name: Horse of goyet
        description: This is a funny horse to watch
        from_date: '2009-01-10'
        to_date: '2011-07-10'
-       effective_to_date: '2011-09-02'
     l7:
        id: 7
        name: Mule of goyet
        description: This is a funny mule to watch
        from_date: '2009-01-04'
        to_date: '2011-04-12'
-       effective_to_date: '2011-08-05'
     l8:
        id: 8
        name: Goat Herder of goyet
        description: This is a funny goat to watch
        from_date: '2008-05-04'
        to_date: '2001-07-28'
-       effective_to_date: '2013-09-05'
     l9:
        id: 9
        name: Sheep of goyet
        description: This is a funny sheep to watch
        from_date: '2007-05-22'
        to_date: '2011-11-11'
-       effective_to_date: '2012-12-15'
     l10:
        id: 10
        name: Crow of goyet
        description: This is a funny crow to watch
        from_date: '2004-04-04'
        to_date: '2010-05-15'
-       effective_to_date: '2010-10-05'
 
 LoanStatus:
     ls1:

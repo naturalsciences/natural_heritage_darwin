@@ -7,16 +7,16 @@ SELECT diag('Loans');
 
 set darwin.userid = 0;
 
-insert into  loans (id,  name, description, from_date, to_date, effective_to_date)
-  VALUES (1, 'Test loan', '', now(), now()+'12 days'::interval, null);
+insert into  loans (id,  name, description, from_date, to_date)
+  VALUES (1, 'Test loan', '', now(), now()+'12 days'::interval);
 SELECT is(0, (select count(*)::int from loan_status where loan_ref = 1), 'Status was not added');
 SELECT is(0, (select count(*)::int from loan_rights where loan_ref = 1), 'User was not added');
 
 
 select fct_set_user(1);
 
-insert into  loans (id,  name, description, from_date, to_date, effective_to_date)
-  VALUES (2, 'Test loan', '', now(), now()+'12 days'::interval, null);
+insert into  loans (id,  name, description, from_date, to_date)
+  VALUES (2, 'Test loan', '', now(), now()+'12 days'::interval);
 
 SELECT is(1, (select count(*)::int from loan_status where loan_ref = 2), 'Status was added');
 

@@ -2100,7 +2100,6 @@ create table loans (
   description_ts tsvector not null,
   from_date date,
   to_date date,
-  effective_to_date date,
   extended_to_date date,
   constraint pk_loans primary key (id)
   );
@@ -2113,7 +2112,6 @@ comment on column loans.description is 'Description of the meaning of the loan';
 comment on column loans.description_ts is 'tsvector getting Description and title of the loan';
 comment on column loans.from_date  is 'Date of the start of the loan';
 comment on column loans.to_date  is 'Planned date of the end of the loan';
-comment on column loans.effective_to_date is 'Effective end date of the loan or null if it''s running';
 
 
   
