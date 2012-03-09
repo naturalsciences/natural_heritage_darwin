@@ -17,8 +17,8 @@ DROP TRIGGER IF EXISTS trg_words_ts_cpy_multimedia ON old_multimedia;
 create table multimedia
        (
         id integer not null default nextval('multimedia_id_seq'),
-        parent_ref integer,
-        path varchar not null,
+--         parent_ref integer,
+--         path varchar not null,
         is_digital boolean not null default true,
         type varchar not null default 'image',
         sub_type varchar,
@@ -38,8 +38,8 @@ comment on table multimedia is 'Stores all multimedia objects encoded in DaRWIN 
 comment on column multimedia.referenced_relation is 'Reference-Name of table concerned';
 comment on column multimedia.record_id is 'Identifier of record concerned';
 comment on column multimedia.id is 'Unique identifier of a multimedia object';
-comment on column multimedia.parent_ref is 'Identifier of the object the multimedia record is an extract of';
-comment on column multimedia.path is 'In case of recursive relationship, defines the hierarchical path';
+-- comment on column multimedia.parent_ref is 'Identifier of the object the multimedia record is an extract of';
+-- comment on column multimedia.path is 'In case of recursive relationship, defines the hierarchical path';
 comment on column multimedia.is_digital is 'Flag telling if the object is digital (true) or physical (false)';
 comment on column multimedia.type is 'Main multimedia object type: image, sound, video,...';
 comment on column multimedia.sub_type is 'Characterization of object type: article, publication in serie, book, glass plate,...';
@@ -64,11 +64,11 @@ CREATE TRIGGER trg_clr_referencerecord_multimedia
   FOR EACH ROW
   EXECUTE PROCEDURE fct_clear_referencedrecord();
 
-CREATE TRIGGER trg_cpy_path_multimedia
-  BEFORE INSERT OR UPDATE
-  ON multimedia
-  FOR EACH ROW
-  EXECUTE PROCEDURE fct_cpy_path();
+-- CREATE TRIGGER trg_cpy_path_multimedia
+--   BEFORE INSERT OR UPDATE
+--   ON multimedia
+--   FOR EACH ROW
+--   EXECUTE PROCEDURE fct_cpy_path();
 
 CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
   ON multimedia FOR EACH ROW
@@ -110,7 +110,7 @@ UPDATE insurances set date_from = default, date_to = default, date_from_mask = d
 ALTER TABLE insurances ADD constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, date_from, date_to, insurer_ref);
 ALTER TABLE insurances ADD constraint fk_specimen_parts_insurances_contact foreign key (contact_ref) references people(id) on delete set null;
 
--- ALTER TABLE insurances DROP column insurance_year;
+ALTER TABLE insurances DROP column insurance_year;
 
 create sequence loans_id_seq;
 
