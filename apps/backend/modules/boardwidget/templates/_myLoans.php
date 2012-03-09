@@ -30,14 +30,17 @@
       <td><?php echo truncate_text($loan['name'],$max_stringlengte); ?></td>
       <td><?php echo $status[$loan->getId()]->getFormattedStatus(); ?></td>
       <td><?php echo $loan['from_date_formatted']; ?></td>
-      <td><?php echo $loan['to_date_formatted']; ?></td>
+      <td class="<?php if($loan->getIsOverdue()) echo 'loan_overdue';?>">
+        <?php if($loan->getExtendedToDateFormatted() != ''):?>
+          <?php echo $loan->getExtendedToDateFormatted();?>
+        <?php else:?>
+          <?php echo $loan->getToDateFormatted();?>
+        <?php endif;?>
+      </td>
       <td><?php echo link_to(image_tag('blue_eyel.png'),'loan/index', 'class=view_loan');?></td> 
 
       <?php if( in_array($loan->getId(),sfOutputEscaper::unescape($rights)) ) :?>
         <td><?php echo link_to(image_tag('edit.png'),'loan/edit?id='.$loan->getId(), 'class=edit_loan');?></td>
-        <td><?php echo link_to(image_tag('remove.png'), 'loan/delete?onboard=1&id='.$loan->getId(), 
-           array('method' => 'delete', 'confirm' => __('Are you sure?'), 'class' => 'delete_loan'));?>
-        </td>
       <?php else :?>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
