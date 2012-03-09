@@ -816,8 +816,8 @@
         <target>Contact :</target>
       </trans-unit>
           <trans-unit id="222">
-        <source>You can reach us at &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;darwin-ict@naturalsciences.be&lt;/a&gt;</source>
-        <target>Vous pouvez nous contacter via &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;darwin-ict@naturalsciences.be&lt;/a&gt;</target>
+        <source>You can reach us at &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</source>
+        <target>Vous pouvez nous contacter via &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</target>
       </trans-unit>
           <trans-unit id="223">
         <source>Dawin Help</source>
@@ -2090,10 +2090,6 @@
           <trans-unit id="545">
         <source>Visible</source>
         <target>Visible</target>
-      </trans-unit>
-          <trans-unit id="546">
-        <source>Opened</source>
-        <target>Ouverte</target>
       </trans-unit>
           <trans-unit id="547">
         <source>Custom title</source>
@@ -4712,6 +4708,18 @@
         <source>Add item</source>
         <target>Ajouter objet</target>
       </trans-unit>
+          <trans-unit id="1595">
+        <source>The end and extended date must be after the start date.</source>
+        <target>La date étendue et de fin doivent être après la date de début</target>
+      </trans-unit>
+          <trans-unit id="1596">
+        <source>on %date%</source>
+        <target>le %date%</target>
+      </trans-unit>
+          <trans-unit id="1597">
+        <source>Starts on</source>
+        <target>Commence le</target>
+      </trans-unit>
           <trans-unit id="1554">
         <source>Add Maintenance :</source>
         <target>Ajouter maintenance :</target>
@@ -4731,6 +4739,10 @@
           <trans-unit id="1594">
         <source>Latest Statuses</source>
         <target>Dernier Status</target>
+      </trans-unit>
+          <trans-unit id="1598">
+        <source>Loan closed on %date%.</source>
+        <target>Prêt fermé le %date%</target>
       </trans-unit>
           <trans-unit id="806">
         <source>You don\&#039;t have the rights to insert into or update a specimen in this collection</source>
@@ -4864,6 +4876,30 @@
         <source>Please save your loan item in order to add properties</source>
         <target>Veuillez sauvegarder votre objet de prêt afin d&#039;ajouter des propriétés</target>
       </trans-unit>
+          <trans-unit id="1599">
+        <source>Accepted</source>
+        <target>Accepté</target>
+      </trans-unit>
+          <trans-unit id="1600">
+        <source>Closed</source>
+        <target>Fermé</target>
+      </trans-unit>
+          <trans-unit id="1601">
+        <source>Returned</source>
+        <target>Renvoyé</target>
+      </trans-unit>
+          <trans-unit id="1602">
+        <source>Extended</source>
+        <target>Etendu</target>
+      </trans-unit>
+          <trans-unit id="1603">
+        <source>Running</source>
+        <target>En cours</target>
+      </trans-unit>
+          <trans-unit id="1604">
+        <source>Under evaluation</source>
+        <target>Sujet à évaluation</target>
+      </trans-unit>
           <trans-unit id="1418">
         <source>Import</source>
         <target>Importer</target>
@@ -4883,6 +4919,10 @@
           <trans-unit id="1515">
         <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
         <target>La soumission du formulaire n&#039;a pas été effectuée. Cela veut probablement dire que vous avez uploadé un fichier trop volumineux</target>
+      </trans-unit>
+          <trans-unit id="546">
+        <source>Opened</source>
+        <target>Ouvert</target>
       </trans-unit>
           <trans-unit id="1352">
         <source>This application requires an authentication.</source>
@@ -5040,10 +5080,6 @@
         <source>The return date must be after the expedition date.</source>
         <target>La date de retour doit être après la date d&#039;expédition</target>
       </trans-unit>
-          <trans-unit id="1518">
-        <source>The end, extended and effective date must be after the start date.</source>
-        <target>La date de fin, de prolongation et effective doivent être après la date de début.</target>
-      </trans-unit>
           <trans-unit id="1519">
         <source>The end date must be before the extended to date</source>
         <target>La date de fin doit être avant la date de prolongation</target>
@@ -5168,10 +5204,6 @@
         <source>Whom are you looking for</source>
         <target>Qui recherchez vous</target>
       </trans-unit>
-          <trans-unit id="1523">
-        <source>Start on</source>
-        <target>Commence en</target>
-      </trans-unit>
           <trans-unit id="1531">
         <source>Maintenances</source>
         <target>Maintenances</target>
@@ -5295,10 +5327,6 @@
           <trans-unit id="1583">
         <source>Extended to date</source>
         <target>Date d’extension de fin</target>
-      </trans-unit>
-          <trans-unit id="1584">
-        <source>Effective to date</source>
-        <target>Date effective de fin</target>
       </trans-unit>
           <trans-unit id="1378">
         <source>Field to be corrected</source>

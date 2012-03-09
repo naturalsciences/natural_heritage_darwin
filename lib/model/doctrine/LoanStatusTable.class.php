@@ -55,7 +55,11 @@ class LoanStatusTable extends DarwinTable
 
   public function getDistinctStatus()
   {
-    return $this->createFlatDistinct('loan_status', 'status', 'status')->execute();
+    $status = array('' => 'All','opened' => 'Opened');
+    $all_status = LoanStatus::getAvailableStatus() ;
+    foreach($this->createFlatDistinct('loan_status', 'status', 'status')->execute() as $record)
+      $status[$record->getStatus()] = $all_status[$record->getStatus()] ;
+    return $status ;
   }
   
   private function prepare_query($loan_ref)

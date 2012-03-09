@@ -19,12 +19,8 @@ class LoansFormFilter extends BaseLoansFormFilter
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
 
-    $this->widgetSchema['status'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'LoanStatus',
-        'table_method' => 'getDistinctStatus',
-        'method' => 'getStatus',
-        'key_method' => 'getStatus',
-        'add_empty' => true,
+    $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
+        'choices' => Doctrine::getTable('LoanStatus')->getDistinctStatus()
     ));
     $this->validatorSchema['status'] = new sfValidatorString(array('required' => false));
 
@@ -101,6 +97,9 @@ class LoansFormFilter extends BaseLoansFormFilter
     if($val != '')
     {
       $alias = $query->getRootAlias() ;
+      if($val == 'opened')
+      $query->andWhere("EXISTS (select s.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status != ?)",'closed');      
+      else
       $query->andWhere("EXISTS (select s.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status = ?)",$val);
     }
     return $query;

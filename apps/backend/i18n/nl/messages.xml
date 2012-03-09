@@ -199,6 +199,14 @@
         <source>Details</source>
         <target>Details</target>
       </trans-unit>
+          <trans-unit id="1595">
+        <source>The end and extended date must be after the start date.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1596">
+        <source>on %date%</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1459">
         <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
         <target>De taxon die u koos, werd aangeduid als &quot;hernoemd&quot;.</target>
@@ -238,6 +246,10 @@
           <trans-unit id="1510">
         <source>Person</source>
         <target>Persoon</target>
+      </trans-unit>
+          <trans-unit id="1597">
+        <source>Starts on</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1396">
         <source>To be loaded</source>
@@ -283,10 +295,6 @@
         <source>Please pin some parts.</source>
         <target></target>
       </trans-unit>
-          <trans-unit id="1593">
-        <source>Choose Insurer</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1594">
         <source>Latest Statuses</source>
         <target>Meest recente statussen</target>
@@ -298,6 +306,14 @@
           <trans-unit id="1590">
         <source>No Items here.</source>
         <target>Geen items te vinden.</target>
+      </trans-unit>
+          <trans-unit id="1593">
+        <source>Choose Insurer</source>
+        <target>Kies Verzekeraar</target>
+      </trans-unit>
+          <trans-unit id="1598">
+        <source>Loan closed on %date%.</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1058">
         <source>You can now log in and enjoy our enhanced collection services.</source>
@@ -439,10 +455,6 @@
         <source>view all workflows</source>
         <target></target>
       </trans-unit>
-          <trans-unit id="1495">
-        <source>Browse entire history</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1497">
         <source>Please save your part in order to add workflows</source>
         <target></target>
@@ -490,6 +502,10 @@
           <trans-unit id="1501">
         <source>This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
         <target>Dit widget laat u toe een nota toe te voegen voor deze specifieke catalogus. Deze nota kan een suggestie tot wijziging zijn, een vraag tot validatie door de beheerders, een controle, een verklaring voor een wijziging.  Het aantal opties in het status veld is afhankelijk van uw rechten.</target>
+      </trans-unit>
+          <trans-unit id="1495">
+        <source>Browse entire history</source>
+        <target>Gehele geschiedenis doorbladeren</target>
       </trans-unit>
           <trans-unit id="1353">
         <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;</source>
@@ -633,10 +649,6 @@
       </trans-unit>
           <trans-unit id="1517">
         <source>The return date must be after the expedition date.</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1518">
-        <source>The end, extended and effective date must be after the start date.</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1519">
@@ -1764,8 +1776,8 @@
         <target>Contact :</target>
       </trans-unit>
           <trans-unit id="222">
-        <source>You can reach us at &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;darwin-ict@naturalsciences.be&lt;/a&gt;</source>
-        <target>U kunt ons bereiken via &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;darwin-ict@naturalsciences.be&lt;/a&gt;</target>
+        <source>You can reach us at &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</source>
+        <target>U kunt ons bereiken via &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</target>
       </trans-unit>
           <trans-unit id="223">
         <source>Dawin Help</source>
@@ -2251,10 +2263,6 @@
         <source>Loan Item</source>
         <target></target>
       </trans-unit>
-          <trans-unit id="1576">
-        <source>Darwin Users</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1577">
         <source>Loan status</source>
         <target></target>
@@ -2295,6 +2303,10 @@
         <source>Roles</source>
         <target>Rollen</target>
       </trans-unit>
+          <trans-unit id="1576">
+        <source>Darwin Users</source>
+        <target>Darwin Gebruikers</target>
+      </trans-unit>
           <trans-unit id="1367">
         <source>Whom are you looking for</source>
         <target>Wie zoekt u</target>
@@ -2315,10 +2327,6 @@
         <source>Maintenances</source>
         <target>Onderhoudswerken</target>
       </trans-unit>
-          <trans-unit id="1523">
-        <source>Start on</source>
-        <target>Begint op</target>
-      </trans-unit>
           <trans-unit id="1524">
         <source>Ends on</source>
         <target>Eindigt op</target>
@@ -2335,13 +2343,13 @@
         <source>DaRWIN 2 team</source>
         <target>Het DaRWIN2 team</target>
       </trans-unit>
-          <trans-unit id="1580">
-        <source>People involved</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1581">
         <source>All the loans you\&#039;re involved in.</source>
         <target></target>
+      </trans-unit>
+          <trans-unit id="1580">
+        <source>People involved</source>
+        <target>Betrokkenen</target>
       </trans-unit>
           <trans-unit id="1445">
         <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
@@ -5305,10 +5313,6 @@
       </trans-unit>
           <trans-unit id="1583">
         <source>Extended to date</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1584">
-        <source>Effective to date</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1585">
