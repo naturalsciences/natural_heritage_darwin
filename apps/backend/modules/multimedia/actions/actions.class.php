@@ -48,9 +48,21 @@ class multimediaActions extends DarwinActions
     $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
     if(!($this->getUser()->isAtLeast(Users::ADMIN) || $this->checkRights($multimedia))) $this->forwardToSecureAction();
     $this->forward404Unless(file_exists($multimedia->getFullURI()),sprintf('This file does not exist') );
-  
+
     // Adding the file to the Response object
     $this->getResponse()->clearHttpHeaders();
+
+
+    if($multimedia->getSize() > (1024 * 1024 * sfConfig::get('dw_preview_max_size', '10')) )
+    {
+      $url = sfConfig::get('sf_web_dir').'/'.sfConfig::get('sf_web_images_dir_name', 'images').'/img_placeholder.png';
+      $this->getResponse()->setHttpHeader('Content-type', 'image/png');
+      $this->getResponse()->sendHttpHeaders();
+      $file = file_get_contents($url);
+      $this->getResponse()->setContent($file);
+      return sfView::NONE;
+    }
+
     $this->getResponse()->setHttpHeader('Pragma: private', true);
     $this->getResponse()->setHttpHeader('Content-type', $multimedia->getMimeType());
     $this->getResponse()->sendHttpHeaders();
