@@ -17,6 +17,10 @@ class helpActions extends DarwinActions
 
   public function executeContact(sfWebRequest $request)
   {
+    $this->contact = array(
+        "mail" => sfConfig::get('dw_contactMail'),
+        "mail_git" => sfConfig::get('dw_contactMailGit'),
+    );
   }
 
   public function executeAbout(sfWebRequest $request)

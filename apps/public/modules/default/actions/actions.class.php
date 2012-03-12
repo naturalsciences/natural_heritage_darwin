@@ -16,6 +16,9 @@ class defaultActions extends sfActions
   */
   public function executeError404()
   {
+    $this->contact = array(
+        "mail" => sfConfig::get('dw_contactMail'),
+    );
   }
 
   /**

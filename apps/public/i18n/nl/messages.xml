@@ -111,10 +111,6 @@
         <source>Contact</source>
         <target>Contact</target>
       </trans-unit>
-          <trans-unit id="1218">
-        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:collections@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</source>
-        <target>Indien u moeilijkheden ondervind in het gebruik van onze tool, of indien u ons wilt helpen: schrijf ons een berichtje op &lt;a href=&quot;mailto:collections@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</target>
-      </trans-unit>
           <trans-unit id="1219">
         <source>If you have a question about a specimen, please contact the collection manager of the specimen. &lt;br /&gt;
       you can find his or her e-mail address in the record.</source>
@@ -653,6 +649,50 @@
         <target>Alles binnen de DARWIN interface is zo opgezet om &lt;strong&gt;UW&lt;/strong&gt; job te vergemakkelijken.&lt;br/&gt;
      Werkt u op een reeks stalen? Wenst u vaak voorkomende zoekcriteria op te slaan voor later gebruik? Weet u graag wie welke info heeft gewijzigd?&lt;br/&gt;
      &lt;strong&gt;DaRWIN kan u daar goed bij helpen!&lt;/strong&gt;</target>
+      </trans-unit>
+          <trans-unit id="1606">
+        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1607">
+        <source>Oops! Page Not Found</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1608">
+        <source>The server returned a 404 response.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1609">
+        <source>Did you type the URL?</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1610">
+        <source>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1611">
+        <source>Did you follow a link from somewhere else at this site?</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1612">
+        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1613">
+        <source>Did you follow a link from another site?</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1614">
+        <source>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1615">
+        <source>What&#039;s next</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1616">
+        <source>Back to previous page</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1368">
         <source>DaRWIN 2 registration</source>

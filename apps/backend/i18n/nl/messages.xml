@@ -205,7 +205,7 @@
       </trans-unit>
           <trans-unit id="1596">
         <source>on %date%</source>
-        <target></target>
+        <target>op %date%</target>
       </trans-unit>
           <trans-unit id="1459">
         <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
@@ -229,15 +229,7 @@
       </trans-unit>
           <trans-unit id="1553">
         <source>Edit loan item</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1507">
-        <source>Search Loans</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1508">
-        <source>Loans Search</source>
-        <target></target>
+        <target>Wijzig item van de ontlening</target>
       </trans-unit>
           <trans-unit id="1509">
         <source>Contains Darwin items</source>
@@ -247,9 +239,17 @@
         <source>Person</source>
         <target>Persoon</target>
       </trans-unit>
+          <trans-unit id="1507">
+        <source>Search Loans</source>
+        <target>Zoek Ontleningen</target>
+      </trans-unit>
+          <trans-unit id="1508">
+        <source>Loans Search</source>
+        <target>Ontleningen zoeken</target>
+      </trans-unit>
           <trans-unit id="1597">
         <source>Starts on</source>
-        <target></target>
+        <target>Begint op</target>
       </trans-unit>
           <trans-unit id="1396">
         <source>To be loaded</source>
@@ -283,10 +283,6 @@
         <source>Add Maintenance for checked</source>
         <target></target>
       </trans-unit>
-          <trans-unit id="1587">
-        <source>Back to Loan</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1589">
         <source>Choose Darwin Part</source>
         <target></target>
@@ -311,9 +307,13 @@
         <source>Choose Insurer</source>
         <target>Kies Verzekeraar</target>
       </trans-unit>
+          <trans-unit id="1587">
+        <source>Back to Loan</source>
+        <target>Terug naar Ontlening</target>
+      </trans-unit>
           <trans-unit id="1598">
         <source>Loan closed on %date%.</source>
-        <target></target>
+        <target>Ontlening werd afgesloten op %date%.</target>
       </trans-unit>
           <trans-unit id="1058">
         <source>You can now log in and enjoy our enhanced collection services.</source>
@@ -479,18 +479,6 @@
         <source>This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
         <target></target>
       </trans-unit>
-          <trans-unit id="1511">
-        <source>Edit loan</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1513">
-        <source>New loan</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1514">
-        <source>Duplicate loan</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1493">
         <source>By</source>
         <target>door</target>
@@ -506,6 +494,18 @@
           <trans-unit id="1495">
         <source>Browse entire history</source>
         <target>Gehele geschiedenis doorbladeren</target>
+      </trans-unit>
+          <trans-unit id="1511">
+        <source>Edit loan</source>
+        <target>Wijzig ontlening</target>
+      </trans-unit>
+          <trans-unit id="1513">
+        <source>New loan</source>
+        <target>Nieuwe ontlening</target>
+      </trans-unit>
+          <trans-unit id="1514">
+        <source>Duplicate loan</source>
+        <target>Ontlening dupliceren</target>
       </trans-unit>
           <trans-unit id="1353">
         <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;</source>
@@ -529,7 +529,31 @@
       </trans-unit>
           <trans-unit id="1558">
         <source>Please save your loan item in order to add properties</source>
+        <target>Gelieve uw te ontlenen item te bewaren alvorens er eigenschappen aan toe te voegen.</target>
+      </trans-unit>
+          <trans-unit id="1604">
+        <source>Under evaluation</source>
         <target></target>
+      </trans-unit>
+          <trans-unit id="1599">
+        <source>Accepted</source>
+        <target>Toegelaten</target>
+      </trans-unit>
+          <trans-unit id="1600">
+        <source>Closed</source>
+        <target>Afgesloten</target>
+      </trans-unit>
+          <trans-unit id="1601">
+        <source>Returned</source>
+        <target>Teruggebracht</target>
+      </trans-unit>
+          <trans-unit id="1602">
+        <source>Extended</source>
+        <target>Verlengd</target>
+      </trans-unit>
+          <trans-unit id="1603">
+        <source>Running</source>
+        <target>Lopende</target>
       </trans-unit>
           <trans-unit id="1418">
         <source>Import</source>
@@ -599,13 +623,17 @@
         <source>This button (only visible when your file is on Pending state) will allow you to edit or remove data</source>
         <target>Deze knop (enkel zichtbaar in de Wacht status) laat u toe om data te wijzigen of te verwijderen</target>
       </trans-unit>
-          <trans-unit id="1516">
-        <source>Add loan</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1515">
         <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
         <target>Het ingediende formulier kan niet verwerkt worden.  U hebt wellicht een te groot bestand geüpload.</target>
+      </trans-unit>
+          <trans-unit id="1516">
+        <source>Add loan</source>
+        <target>Voeg ontlening toe</target>
+      </trans-unit>
+          <trans-unit id="1605">
+        <source>Person involved</source>
+        <target>Betrokken persoon </target>
       </trans-unit>
           <trans-unit id="1505">
         <source>Choose contact</source>
@@ -614,6 +642,10 @@
           <trans-unit id="1506">
         <source>Person of contact</source>
         <target>Contactpersoon</target>
+      </trans-unit>
+          <trans-unit id="1536">
+        <source>There is currently no items in your loan. Do not forget to add them.</source>
+        <target>Uw ontlening bevat op dit moment geen items.  Vergeet deze niet toe te voegen.</target>
       </trans-unit>
           <trans-unit id="1358">
         <source>As a reminder, here is your username: %username%</source>
@@ -654,6 +686,10 @@
           <trans-unit id="1519">
         <source>The end date must be before the extended to date</source>
         <target></target>
+      </trans-unit>
+          <trans-unit id="1537">
+        <source>There is currently no items in the loan.</source>
+        <target>Er zijn momenteel geen items in deze ontlening.</target>
       </trans-unit>
           <trans-unit id="500">
         <source>Choose a Mineralogic unit</source>
@@ -1585,7 +1621,7 @@
       </trans-unit>
           <trans-unit id="1520">
         <source>You have 2 similar loan items</source>
-        <target></target>
+        <target>U hebt 2 gelijkaardige items in uw ontlening</target>
       </trans-unit>
           <trans-unit id="170">
         <source>Ig unit</source>
@@ -1775,10 +1811,6 @@
         <source>Contact :</source>
         <target>Contact :</target>
       </trans-unit>
-          <trans-unit id="222">
-        <source>You can reach us at &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</source>
-        <target>U kunt ons bereiken via &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</target>
-      </trans-unit>
           <trans-unit id="223">
         <source>Dawin Help</source>
         <target>DaRWIN Help</target>
@@ -1931,6 +1963,10 @@
         <source>Please don&#039;t try stupid things, don&#039;t touch the uri</source>
         <target>Gelieve geen domme dingen te doen, pas de URI niet aan</target>
       </trans-unit>
+          <trans-unit id="1559">
+        <source>Please save your loan in order to add properties</source>
+        <target>Gelieve uw ontlening te bewaren alvorens er eigenschappen aan toe te voegen.</target>
+      </trans-unit>
           <trans-unit id="262">
         <source>no</source>
         <target>Neen</target>
@@ -1954,10 +1990,6 @@
           <trans-unit id="1365">
         <source>This widget allows you to link one or more codes to a specimen. You can either associate a prefix, a separator, a code, a separator and/or a suffix to each type of code (main, temporary,etc.)</source>
         <target>Via deze widget kunt u één of meerdere codes aan een staal toevoegen. U kunt zowel een prefix, scheidingsteken, een code, een andere scheidingsteken en/of een suffix toevoegen aan elke soort code (hoofdcode, tijdelijke code, etc.)</target>
-      </trans-unit>
-          <trans-unit id="1559">
-        <source>Please save your loan in order to add properties</source>
-        <target></target>
       </trans-unit>
           <trans-unit id="1560">
         <source>Sender side</source>
@@ -2255,18 +2287,6 @@
         <source>Receiver side</source>
         <target></target>
       </trans-unit>
-          <trans-unit id="1569">
-        <source>Please save your loan in order to add status</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1575">
-        <source>Loan Item</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1577">
-        <source>Loan status</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1578">
         <source>Informative Workflow</source>
         <target></target>
@@ -2307,6 +2327,18 @@
         <source>Darwin Users</source>
         <target>Darwin Gebruikers</target>
       </trans-unit>
+          <trans-unit id="1569">
+        <source>Please save your loan in order to add status</source>
+        <target>Gelieve uw ontlening te bewaren alvorens er een status aan toe te voegen.</target>
+      </trans-unit>
+          <trans-unit id="1575">
+        <source>Loan Item</source>
+        <target>Item van de ontlening</target>
+      </trans-unit>
+          <trans-unit id="1577">
+        <source>Loan status</source>
+        <target>Status van de ontlening</target>
+      </trans-unit>
           <trans-unit id="1367">
         <source>Whom are you looking for</source>
         <target>Wie zoekt u</target>
@@ -2339,17 +2371,61 @@
         <source>Set rights on widgets for %name%</source>
         <target>Gelieve de widget rechten voor %name% in te stellen</target>
       </trans-unit>
+          <trans-unit id="1618">
+        <source>Oops! Page Not Found</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1619">
+        <source>The server returned a 404 response.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1620">
+        <source>Did you type the URL?</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1370">
         <source>DaRWIN 2 team</source>
         <target>Het DaRWIN2 team</target>
       </trans-unit>
-          <trans-unit id="1581">
-        <source>All the loans you\&#039;re involved in.</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1580">
         <source>People involved</source>
         <target>Betrokkenen</target>
+      </trans-unit>
+          <trans-unit id="1581">
+        <source>All the loans you\&#039;re involved in.</source>
+        <target>Alle ontleningen waar u in betrokken bent.</target>
+      </trans-unit>
+          <trans-unit id="1621">
+        <source>You can reach us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1622">
+        <source>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1623">
+        <source>Did you follow a link from somewhere else at this site?</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1624">
+        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1625">
+        <source>Did you follow a link from another site?</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1626">
+        <source>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1627">
+        <source>Back to previous page</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1628">
+        <source>What&#039;s next</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1445">
         <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
@@ -4987,10 +5063,6 @@
         <source>I.g. Num</source>
         <target></target>
       </trans-unit>
-          <trans-unit id="1536">
-        <source>There is currently no items in your loan. Do not forget to add them.</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1535">
         <source>Return</source>
         <target>Terugbrengen</target>
@@ -5271,10 +5343,6 @@
         <source>Accompanying elements</source>
         <target>Verwijzende elementen</target>
       </trans-unit>
-          <trans-unit id="1537">
-        <source>There is currently no items in the loan.</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1185">
         <source>Via this widget you can perform a search in order to find all records where a specific person (or institution) appears. You can also choose one or more roles for this person (such as collector, identifier and/or donator/seller)</source>
         <target>Via deze widget kunt u alle records zoeken waar een specifieke persoon (of instelling) in voorkomt. U kunt ook één of meerdere functies voor deze persoon selecteren (zoals verzamelaar, determinator en/of schenker/verkoper) </target>
@@ -5299,16 +5367,8 @@
         <source>Complete</source>
         <target>Volledig</target>
       </trans-unit>
-          <trans-unit id="1540">
-        <source>View loan</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1543">
         <source>Back to board</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1582">
-        <source>Loans</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1583">
@@ -5330,6 +5390,14 @@
           <trans-unit id="1541">
         <source>View item</source>
         <target>Bekijk item</target>
+      </trans-unit>
+          <trans-unit id="1540">
+        <source>View loan</source>
+        <target>Bekijk ontlening</target>
+      </trans-unit>
+          <trans-unit id="1582">
+        <source>Loans</source>
+        <target>Ontleningen</target>
       </trans-unit>
         </body>
   </file>

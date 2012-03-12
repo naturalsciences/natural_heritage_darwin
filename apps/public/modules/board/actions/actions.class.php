@@ -35,7 +35,10 @@ class boardActions extends DarwinActions
     {
       $this->file1 = "http://projects.naturalsciences.be/attachments/224/annexe_2_F_v1_2010.pdf" ;
       $this->file2 = "http://projects.naturalsciences.be/attachments/225/annexe_4_F_v1_2010.pdf" ;    
-    }  
+    }
+    $this->contact = array(
+        "mail" => sfConfig::get('dw_contactMail'),
+    );
   }
 
   public function executeAbout(sfWebRequest $request)

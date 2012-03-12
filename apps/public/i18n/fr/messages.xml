@@ -107,10 +107,6 @@
         <source>Contact</source>
         <target>Contact</target>
       </trans-unit>
-          <trans-unit id="1218">
-        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:collections@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</source>
-        <target>Si vous rencontrez des ploblèmes sur l&#039;utilisation de l&#039;outil ou si vous souhaitez de l&#039;aide : écrivez un mail à &lt;a href=&quot;mailto:collections@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</target>
-      </trans-unit>
           <trans-unit id="1219">
         <source>If you have a question about a specimen, please contact the collection manager of the specimen. &lt;br /&gt;
       you can find his or her e-mail address in the record.</source>
@@ -611,21 +607,21 @@
         <source>anonymous</source>
         <target>Anonyme</target>
       </trans-unit>
+          <trans-unit id="1486">
+        <source>Submit</source>
+        <target>Envoyer</target>
+      </trans-unit>
+          <trans-unit id="1487">
+        <source>Comment</source>
+        <target>Commentaire</target>
+      </trans-unit>
           <trans-unit id="1488">
         <source>Thank you for your help</source>
         <target>Merci pour votre aide</target>
       </trans-unit>
           <trans-unit id="1485">
         <source>You think there&#039;s a mistake ? please suggest us a correction</source>
-        <target>Vous pensez qu&#039;il y a une erreur ? vous pouvez nous proposer une correction</target>
-      </trans-unit>
-          <trans-unit id="1486">
-        <source>Submit</source>
-        <target>Soumettre</target>
-      </trans-unit>
-          <trans-unit id="1487">
-        <source>Comment</source>
-        <target>Commetaire</target>
+        <target>Vous pensez qu&#039;il y a une erreur ? Vous pouvez nous proposer une correction</target>
       </trans-unit>
           <trans-unit id="1279">
         <source>Types</source>
@@ -654,6 +650,50 @@
           <trans-unit id="1262">
         <source>Classifications</source>
         <target>Classifications</target>
+      </trans-unit>
+          <trans-unit id="1606">
+        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
+        <target>Si vous rencontrez des problèmes dans l&#039;utilisation de l&#039;outil ou si vous souhaitez contribuer: envoyez-nous un e-mail à &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</target>
+      </trans-unit>
+          <trans-unit id="1607">
+        <source>Oops! Page Not Found</source>
+        <target>Oups ! La page n&#039;a pu être trouvée</target>
+      </trans-unit>
+          <trans-unit id="1608">
+        <source>The server returned a 404 response.</source>
+        <target>Le serveur a retourné une erreur 404.</target>
+      </trans-unit>
+          <trans-unit id="1609">
+        <source>Did you type the URL?</source>
+        <target>Avez-vous rentré l&#039;URL manuellement ?</target>
+      </trans-unit>
+          <trans-unit id="1610">
+        <source>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</source>
+        <target>Il se peut que vous ayez incorrectement entré l&#039;adresse de la page (URL). Veuillez vérifier qu&#039;elle est correctement épelée, la casse des caractères, etc...</target>
+      </trans-unit>
+          <trans-unit id="1611">
+        <source>Did you follow a link from somewhere else at this site?</source>
+        <target>Avez-vous suivi un lien depuis une autre page de ce site ?</target>
+      </trans-unit>
+          <trans-unit id="1612">
+        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
+        <target>Si vous avez été redirigé vers cette page depuis une autre page de ce site, nous vous serions gré de bien vouloir nous le signaler par mail à l&#039;adresse suivante: &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; afin que nous puissions corriger cette erreur.</target>
+      </trans-unit>
+          <trans-unit id="1613">
+        <source>Did you follow a link from another site?</source>
+        <target>Avez-vous suivi un lien depuis la page d&#039;un autre site ?</target>
+      </trans-unit>
+          <trans-unit id="1614">
+        <source>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</source>
+        <target>Les liens présents sur d&#039;autres sites peuvent parfois être obsolètes ou mal écrits. Nous vous serions gré de bien vouloir nous le signaler par mail à l&#039;adresse suivante: &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; afin que nous puissions contacter l&#039;administrateur du site concerné.</target>
+      </trans-unit>
+          <trans-unit id="1615">
+        <source>What&#039;s next</source>
+        <target>Autres possibilités</target>
+      </trans-unit>
+          <trans-unit id="1616">
+        <source>Back to previous page</source>
+        <target>Retour à la page précédente</target>
       </trans-unit>
           <trans-unit id="1369">
         <source>DaRWIN 2 team</source>
