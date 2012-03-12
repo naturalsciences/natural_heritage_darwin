@@ -23,9 +23,16 @@ class SuggestionForm extends BaseInformativeWorkflowForm
     $this->setDefaults(array('id' => $this->options['ref_id'])) ;
     $this->widgetSchema['formated_name'] = new sfWidgetFormInputText();
     $this->widgetSchema['formated_name']->setLabel("Your Name") ;
-    $this->validatorSchema['comment'] = new sfValidatorString(array('trim'=>true, 'required'=>true));
+    $this->widgetSchema['formated_name']->setAttributes(array('class'=>'small_medium_size'));    
+    $this->widgetSchema['email'] = new sfWidgetFormInputText();
+    $this->widgetSchema['email']->setLabel("e-Mail") ;
+    $this->widgetSchema['email']->setAttributes(array('class'=>'medium_size'));
+    $this->validatorSchema['comment'] = new sfValidatorString(array('trim'=>true, 'required'=>true));    
     $this->validatorSchema['formated_name'] = new sfValidatorPass() ;
+    $this->validatorSchema['email'] = new sfValidatorEmail(array('required'=> false),
+                                                           array('invalid' => 'E-mail is not of a valid form')); 
     $this->validatorSchema['id'] = new sfValidatorPass() ;
+    
     /* Captcha */
     $this->widgetSchema['captcha'] = new sfWidgetFormReCaptcha(array('public_key' => sfConfig::get('dw_recaptcha_public_key'),'ajax' => $this->options['ajax']));    
     $this->validatorSchema['captcha'] = new sfValidatorReCaptcha(array('private_key' => sfConfig::get('dw_recaptcha_private_key'),

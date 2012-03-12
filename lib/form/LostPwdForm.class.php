@@ -22,8 +22,7 @@ class LostPwdForm extends sfForm
     $this->widgetSchema['user_email']->setAttributes(array('class'=>'medium_size'));
 
     $this->validatorSchema['user_email'] = new sfValidatorEmail(array('required'=> false),
-                                                                array('required'=>'E-mail is required',
-                                                                      'invalid' => 'E-mail is not of a valid form'
+                                                                array('invalid' => 'E-mail is not of a valid form'
                                                                 )
                                                           );
     $this->widgetSchema->setNameFormat('lost_pwd[%s]');

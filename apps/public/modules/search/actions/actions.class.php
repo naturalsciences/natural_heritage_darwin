@@ -130,11 +130,13 @@ class searchActions extends DarwinActions
       $this->form->bind($suggestion, array('captcha' => $captcha)) ;
       if ($this->form->isBound() && $this->form->isValid())
       {
+        $comment = $suggestion['comment'];
+        if($suggestion['email'] != '') $comment = $this->getI18N()->__("Suggestion send by")." : ".$suggestion['email']."\n".$suggestion['comment']; ;
         $data = array(
             'referenced_relation' => 'specimen_individuals',
             'record_id' => $suggestion['id'],
             'status' => 'suggestion',   
-            'comment' => $suggestion['comment'],    
+            'comment' => $comment,    
             'formated_name' => $suggestion['formated_name']!=''?$suggestion['formated_name']:'anonymous') ;    
             
         $workflow = new InformativeWorkflow() ;

@@ -10,15 +10,19 @@
         </td>
       </tr>
       <tr>
+        <td><span class="pager_nav"><?php echo $form['formated_name']->renderLabel() ; ?></span></td>
+        <td><span class="pager_nav"><?php echo $form['formated_name']->render() ; ?></span></td>          
+        <td><span class="pager_nav"><?php echo $form['email']->renderLabel() ; ?></span></td>
+        <td><span class="pager_nav"><?php echo $form['email']->render() ; ?></span></td>   
+      </tr>      
+      <tr>
         <td><span class="pager_nav"><?php echo $form['comment']->renderLabel() ; ?></span></td>
         <td><span class="pager_nav"><?php echo $form['comment']->render() ; ?></span></td>
         <td><span class="pager_nav"><?php echo $form['captcha']->renderLabel() ; ?></span></td>
         <td><span class="pager_nav"><div id="captchadiv"><?php echo $form['captcha']->render() ; ?></div></span></td>
       </tr>
       <tr>
-        <td><span class="pager_nav"><?php echo $form['formated_name']->renderLabel() ; ?></span></td>
-        <td><span class="pager_nav"><?php echo $form['formated_name']->render() ; ?></span></td>          
-        <td colspan="2" class="right_aligned">
+        <td colspan="4" class="right_aligned">
           <?php echo $form->renderHiddenFields();?>
           <input class="search_submit" type="submit" name="submit" value="<?php echo __('Submit'); ?>" />
         </td>
