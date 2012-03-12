@@ -114,7 +114,6 @@ foreach( $user_array as $usr_k => $usr_v  )
 	   checkElement('tbody tr .more_name', intval($exp_val_arr[$usr_k]['more_name']['page1']))->
 	   checkElement('tbody tr:eq(0) .view_loan'  , $exp_val_arr[$usr_k]['enc_rights']['page1'][0][0])->
 	   checkElement('tbody tr:eq(0) .edit_loan'  , $exp_val_arr[$usr_k]['enc_rights']['page1'][0][1])->
-	   checkElement('tbody tr:eq(0) .delete_loan', $exp_val_arr[$usr_k]['enc_rights']['page1'][0][2])->
 	 end();
   
        if( $usr_k == 'collmanager' )
@@ -125,7 +124,7 @@ foreach( $user_array as $usr_k => $usr_v  )
 	      with('response')->begin()->
 		checkElement('tbody tr:eq('.$i.') .view_loan'  , $exp_val_arr[$usr_k]['enc_rights']['page1'][$i][0])->
 		checkElement('tbody tr:eq('.$i.') .edit_loan'  , $exp_val_arr[$usr_k]['enc_rights']['page1'][$i][1])->
-		checkElement('tbody tr:eq('.$i.') .delete_loan', $exp_val_arr[$usr_k]['enc_rights']['page1'][$i][2])->
+
 	      end();
          }
 	 $browser->
@@ -148,7 +147,6 @@ foreach( $user_array as $usr_k => $usr_v  )
 	     checkElement('tbody tr .more_name', intval($exp_val_arr[$usr_k]['more_name']['page2']))->
 	     checkElement('tbody tr:eq(0) .view_loan'  , $exp_val_arr[$usr_k]['enc_rights']['page2'][0][0])->
 	     checkElement('tbody tr:eq(0) .edit_loan'  , $exp_val_arr[$usr_k]['enc_rights']['page2'][0][1])->
-	     checkElement('tbody tr:eq(0) .delete_loan', $exp_val_arr[$usr_k]['enc_rights']['page2'][0][2])->
 	     checkElement('tfoot .pager_separator', $exp_val_arr[$usr_k]['pager'])->
 	     checkElement('tfoot tr:first a', 3)->
 	     checkElement('tfoot tr:first a:eq(2)', '1')->
