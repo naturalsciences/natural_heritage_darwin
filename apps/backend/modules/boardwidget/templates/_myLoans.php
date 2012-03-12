@@ -54,7 +54,7 @@
     <tr><td colspan="2">&nbsp;</td>
         <td colspan="3">
           <?php echo image_tag('blue_eyel.png');?>&nbsp;
-          <?php echo link_to(__('View all loans I\'m implied in'), 'loan/index', 'class=view_all');?></td>
+          <?php echo link_to(__('View all loans I\'m implied in'), 'loan/index?loans_filters[status]=opened', 'class=view_all');?></td>
         <td colspan="3">
           <?php if ($sf_user->isAtLeast(Users::ENCODER)):?>
             <?php echo image_tag('add_blue.png');?>&nbsp;
