@@ -72,13 +72,13 @@
             </td>            
             <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
                 <?php if(! $is_choose):?>
-                  <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?> 	              
+                  <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'people/view?id='.$item->getId());?>
+                  <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
 	                  <?php echo link_to(image_tag('edit.png',array('title'=>'Edit People')),'people/edit?id='.$item->getId());?>
 	                  <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate People')),'people/new?duplicate_id='.$item->getId());?>
-	                <?php endif ; ?>
-	                <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'people/view?id='.$item->getId());?>
+	          <?php endif ; ?>
                 <?php else:?>
-                    <div class="result_choose"><?php echo __('Choose');?></div>           
+                    <div class="result_choose"><?php echo __('Choose');?></div>
                 <?php endif;?>
             </td>
           </tr>
