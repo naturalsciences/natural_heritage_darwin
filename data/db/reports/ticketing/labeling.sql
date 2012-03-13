@@ -99,7 +99,7 @@ from (select trim(coalesce(code_prefix, '') || coalesce(code_prefix_separator, '
       where referenced_relation = 'specimen_parts'
         and record_id = $1
         and code_category = 'main'
-        and code_prefix != 'RBINS'
+        and coalesce(upper(code_prefix),'') != 'RBINS'
      ) as x;
 $$;
 
@@ -191,7 +191,7 @@ select df.part_ref as unique_id,
        df.individual_sex as sex,
        df.individual_stage as stage,
        CAST(array_to_string(labeling_code_for_indexation(df.part_ref), ';') AS varchar) as code,
-       (select code_num from codes where referenced_relation = 'specimen_parts' and record_id = df.part_ref and code_category = 'main' and code_prefix != 'RBINS' and code_num is not null limit 1) as code_num,
+       (select code_num from codes where referenced_relation = 'specimen_parts' and record_id = df.part_ref and code_category = 'main' and coalesce(upper(code_prefix),'') != 'RBINS' and code_num is not null limit 1) as code_num,
        labeling_code_for_indexation(df.part_ref) as code_array,
        df.taxon_ref as taxon_ref,
        df.taxon_name as taxon_name,
@@ -244,7 +244,7 @@ select df.part_ref as unique_id,
                           where referenced_relation = 'taxonomy' and record_id = df.taxon_ref and group_name = 'rename'
                          )
        )::varchar as current_name,
-       case when df.acquisition_category is not null then 'Acq.: ' || df.acquisition_category else '' end as acquisition_category,
+       case when df.acquisition_category is not null and trim(df.acquisition_category) !='' then 'Acq.: ' || df.acquisition_category else '' end as acquisition_category,
        df.gtu_ref as gtu_ref,
        df.gtu_country_tag_value::varchar as countries,
        df.gtu_country_tag_indexed as countries_array,
