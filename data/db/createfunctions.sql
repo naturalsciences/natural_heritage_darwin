@@ -4524,6 +4524,19 @@ END;
 $$;
 
 
+CREATE OR REPLACE function chk_part_not_loaned() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+BEGIN
+
+    IF exists( SELECT 1 FROM loan_items i INNER JOIN loan_status s on i.loan_ref = s.loan_ref
+        WHERE s.is_last= true AND s.status != 'closed' AND i.part_ref = OLD.id ) THEN
+      RAISE EXCEPTION 'The Part is currently used in an ongoing loan';
+    END IF;
+    RETURN OLD;
+END;
+$$;
 
 CREATE OR REPLACE function fct_auto_insert_status_history() RETURNS TRIGGER
 language plpgsql

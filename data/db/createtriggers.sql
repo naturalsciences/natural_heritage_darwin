@@ -955,3 +955,7 @@ CREATE trigger trg_chk_is_last_loan_status BEFORE INSERT
 CREATE trigger trg_add_status_history after INSERT
         ON loans FOR EACH ROW
         EXECUTE PROCEDURE fct_auto_insert_status_history();
+
+CREATE TRIGGER trg_chk_part_not_loaned BEFORE DELETE
+  ON specimen_parts FOR EACH ROW
+  EXECUTE PROCEDURE chk_part_not_loaned();
