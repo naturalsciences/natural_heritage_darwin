@@ -134,7 +134,11 @@ comment on column loans.description_ts is 'tsvector getting Description and titl
 comment on column loans.from_date  is 'Date of the start of the loan';
 comment on column loans.to_date  is 'Planned date of the end of the loan';
 
-
+ALTER TABLE loans OWNER TO darwin2;
+ALTER TABLE loans_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.loans_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loans TO cebmpad;
+GRANT SELECT ON darwin2.loans TO d2viewer;
   
 create sequence loan_items_id_seq;
 
@@ -166,6 +170,11 @@ comment on column loan_items.ig_ref is 'Optional ref to an IG stored in the igs 
 comment on column loan_items.part_ref is 'Optional reference to a Darwin Part';
 comment on column loan_items.details is 'Textual details describing the item';
 
+ALTER TABLE loan_items OWNER TO darwin2;
+ALTER TABLE loan_items_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.loan_items_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_items TO cebmpad;
+GRANT SELECT ON darwin2.loan_items TO d2viewer;
 
 create sequence loan_rights_id_seq;
 
@@ -189,8 +198,11 @@ comment on column loan_rights.loan_ref is 'Mandatory Reference to a loan';
 comment on column loan_rights.user_ref is 'Mandatory Reference to a user';
 comment on column loan_rights.has_encoding_right is 'Bool saying if the user can edit a loan';
 
-
-
+ALTER TABLE loan_rights OWNER TO darwin2;
+ALTER TABLE loan_rights_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.loan_rights_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_rights TO cebmpad;
+GRANT SELECT ON darwin2.loan_rights TO d2viewer;
 
 create sequence loan_status_id_seq;
 
@@ -218,9 +230,13 @@ comment on column loan_status.modification_date_time is 'date of the modificatio
 comment on column loan_status.comment is 'comment of the status modification';
 comment on column loan_status.is_last is 'flag telling which line is the current line';
 
+ALTER TABLE loan_status OWNER TO darwin2;
+ALTER TABLE loan_status_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.loan_status_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_status TO cebmpad;
+GRANT SELECT ON darwin2.loan_status TO d2viewer;
 
 DROP TRIGGER trg_cpy_toFullText_multimedia on multimedia;
-
 
 CREATE TRIGGER trg_cpy_fullToIndex_loans BEFORE INSERT OR UPDATE
   ON loans FOR EACH ROW
@@ -276,7 +292,6 @@ DROP INDEX IF EXISTS idx_users_title;
 DROP INDEX IF EXISTS idx_users_sub_type;
 DROP INDEX IF EXISTS idx_users_workflow_user_status;
 DROP INDEX IF EXISTS idx_gist_multimedia_descriptive_ts;
-
 
 
 CREATE INDEX CONCURRENTLY idx_informative_workflow_user_ref on informative_workflow(user_ref);
@@ -424,22 +439,21 @@ DROP INDEX IF EXISTS idx_catalogue_properties_property_accuracy_unit;
 /*** Batch 2 ***/
 
 DROP INDEX IF EXISTS idx_specimens_collection_ref;
-DROP INDEX IF EXISTS idx_specimen_individuals_type_search
-DROP INDEX IF EXISTS idx_specimen_individuals_type
+DROP INDEX IF EXISTS idx_specimen_individuals_type_search;
+DROP INDEX IF EXISTS idx_specimen_individuals_type;
 DROP INDEX IF EXISTS idx_specimen_individuals_stage;
 DROP INDEX IF EXISTS idx_specimen_individuals_state;
 DROP INDEX IF EXISTS idx_specimen_individuals_social_status;
 DROP INDEX IF EXISTS idx_taxonomy_name_order_by;
 
-DROP INDEX IF EXISTS idx_darwin_flat_taxon_name_order_by
-DROP INDEX IF EXISTS  idx_darwin_flat_individual_type_group
-DROP INDEX IF EXISTS idx_darwin_flat_individual_type_search
-DROP INDEX IF EXISTS idx_darwin_flat_individual_state
-DROP INDEX IF EXISTS idx_darwin_flat_individual_social_status
-DROP INDEX IF EXISTS idx_darwin_flat_collection_is_public
-DROP INDEX IF EXISTS idx_darwin_flat_collection_name
-DROP INDEX IF EXISTS idx_gin_darwin_flat_gtu_country_tags
-
+DROP INDEX IF EXISTS idx_darwin_flat_taxon_name_order_by;
+DROP INDEX IF EXISTS  idx_darwin_flat_individual_type_group;
+DROP INDEX IF EXISTS idx_darwin_flat_individual_type_search;
+DROP INDEX IF EXISTS idx_darwin_flat_individual_state;
+DROP INDEX IF EXISTS idx_darwin_flat_individual_social_status;
+DROP INDEX IF EXISTS idx_darwin_flat_collection_is_public;
+DROP INDEX IF EXISTS idx_darwin_flat_collection_name;
+DROP INDEX IF EXISTS idx_gin_darwin_flat_gtu_country_tags;
 
 
 CREATE INDEX CONCURRENTLY idx_specimen_individuals_type_search on specimen_individuals(type_search) WHERE type_search <> 'specimen';
@@ -452,7 +466,6 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_group on darwin_flat(i
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_search on darwin_flat(individual_type_search) WHERE individual_type_search <> 'specimen';
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_state on darwin_flat(individual_state) WHERE individual_state <> 'not applicable';
 CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_social_status on darwin_flat(individual_social_status) WHERE individual_social_status <> 'not applicable';
-
 
 
 /*** For Updating the toFullText TS Vector triggers everywhere ***/
