@@ -88,8 +88,8 @@ class LoanStatusTable extends DarwinTable
   {
     if(!is_array($loan_refs))
       $loan_refs = array($loan_refs);
-        if(empty($loan_refs)) return array();
-     $q = Doctrine_Query::create()->
+    if(empty($loan_refs)) return array();
+    $q = Doctrine_Query::create()->
          from('LoanStatus')->
          andWhere('is_last = ?', true)->
          andWhereIn('loan_ref', $loan_refs)->

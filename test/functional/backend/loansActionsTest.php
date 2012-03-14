@@ -6,8 +6,8 @@ $browser = new DarwinTestFunctional(new sfBrowser());
 $browser->loadData($configuration)->login('root','evil');
 $browser->setTester('doctrine', 'sfTesterDoctrine');
 $people = Doctrine::getTable('People')->findOneByFamilyName('Chambert') ;
-$reguser = Doctrine::getTable('Users')->findOneByFamilyName('reguser') ;
-$encoder = Doctrine::getTable('Users')->findOneByFamilyName('encoder') ;
+$reguser = $browser->addCustomUserAndLogin('reguser','evil') ;
+$encoder = $browser->addCustomUserAndLogin('encoder','evil') ;
 
 $browser->
   info('1 - New Loan screen')->
@@ -52,10 +52,10 @@ $browser->
                                       ),              
              'newUsers' => array(
                               0 => array(
-                                'user_ref' => $reguser->getId(),
+                                'user_ref' => $reguser,
                                         ),
                               1 => array(
-                                'user_ref' => $encoder->getId(),
+                                'user_ref' => $encoder,
                                 'has_encoding_right' => 'on'
                                         ),
                                 )                                      

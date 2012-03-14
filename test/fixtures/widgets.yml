@@ -1502,39 +1502,6 @@ MyWidgets:
         visible: true
         title_perso: My Loans 
         all_public: true
-    u2ml1:
-        User: u2
-        col_num: 2
-        category: board_widget
-        group_name: myLoans
-        order_by: 5
-        opened: true
-        is_available: true
-        visible: true
-        title_perso: My Loans 
-        all_public: true
-    u3ml1:
-        User: u3
-        col_num: 2
-        category: board_widget
-        group_name: myLoans
-        order_by: 5
-        opened: true
-        is_available: true
-        visible: true
-        title_perso: My Loans
-        all_public: true 
-    u4ml1:
-        User: u4
-        col_num: 2
-        category: board_widget
-        group_name: myLoans
-        order_by: 5
-        opened: true
-        is_available: true
-        visible: true
-        title_perso: My Loans 
-        all_public: true
         
     u1lw1:
         User: u1

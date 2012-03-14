@@ -67,7 +67,8 @@ class DarwinTestFunctional extends sfTestFunctional
   }
   
   public function addCustomUserAndLogin($name = '' ,$password = 'nothing')
-  {
+  { 
+    if($user= Doctrine::getTable("Users")->findOneByFamilyName($name)) return($user->getId()) ;
   	if ($name == '') $name = 'user_test_'.rand(1,1000) ;
   	$this->setTester('doctrine', 'sfTesterDoctrine');
   	$this->

@@ -138,7 +138,7 @@ class LoansFormFilter extends BaseLoansFormFilter
 
   public function filterByRight($query, $user)
   {
-    if($user->isAtLeast(Users::ADMIN)) return;
+    if($user->isAtLeast(Users::MANAGER)) return;
 
     $alias = $query->getRootAlias() ;
     $query->andWhere("EXISTS (select lr.id from LoanRights lr where $alias.id = lr.loan_ref and user_ref = ?)", $user->getId());

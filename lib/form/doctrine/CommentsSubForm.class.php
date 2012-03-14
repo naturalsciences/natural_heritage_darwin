@@ -23,8 +23,8 @@ class CommentsSubForm extends CommentsForm
 
     /* Validators */
     $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));
-    $this->validatorSchema['notion_concerned'] = new sfValidatorChoice(array('required'=>true,'choices'=>array_keys($choices)));
-    $this->validatorSchema['comment'] = new sfValidatorString(array('trim'=>true, 'required'=>true));
+    $this->validatorSchema['notion_concerned'] = new sfValidatorChoice(array('required'=>false,'choices'=>array_keys($choices)));
+    $this->validatorSchema['comment'] = new sfValidatorString(array('trim'=>true, 'required'=>false));
     /*Comments post-validation to empty null values*/
     $this->mergePostValidator(new CommentsValidatorSchema());
   }

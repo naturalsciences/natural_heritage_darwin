@@ -17,9 +17,11 @@ class loanitemActions extends DarwinActions
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($loanitem = Doctrine::getTable('LoanItems')->findExcept($loan_item_id), sprintf('Object loanitem does not exist (%s).', array($loan_item_id)));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loanitem ;
-    if(!$right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef()))
+    $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef());
+    if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
       $this->forwardToSecureAction();
-    if($right==="view") $this->redirect('loanitem/view?id='.$loanitem->getId());      
+    if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER))
+      $this->redirect('loanitem/view?id='.$loanitem->getId());      
     return $loanitem ;
   }  
 
@@ -125,7 +127,7 @@ class loanitemActions extends DarwinActions
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($this->loan_item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
 
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
+    if(!$this->getUser()->isAtLeast(Users::MANAGER) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
       $this->forwardToSecureAction();
     $this->loadWidgets();
   }
@@ -145,7 +147,7 @@ class loanitemActions extends DarwinActions
     $this->forward404Unless($maint->getReferencedRelation() == 'loan_items');
     $this->loan_item = Doctrine::getTable('LoanItems')->findExcept($maint->getRecordId());
 
-    $rights = $this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() );
+    $rights = $this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() );
     if(! $rights === true)
       $this->forwardToSecureAction();
 

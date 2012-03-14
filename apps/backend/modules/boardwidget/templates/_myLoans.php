@@ -37,9 +37,8 @@
           <?php echo $loan->getToDateFormatted();?>
         <?php endif;?>
       </td>
-      <td><?php echo link_to(image_tag('blue_eyel.png'),'loan/index', 'class=view_loan');?></td> 
-
-      <?php if( in_array($loan->getId(),sfOutputEscaper::unescape($rights)) ) :?>
+      <td><?php echo link_to(image_tag('blue_eyel.png'),'loan/view?id='.$loan->getId(), 'class=view_loan');?></td>
+      <?php if( in_array($loan->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isA(Users::ADMIN) ) :?>
         <td><?php echo link_to(image_tag('edit.png'),'loan/edit?id='.$loan->getId(), 'class=edit_loan');?></td>
       <?php else :?>
         <td>&nbsp;</td>

@@ -16,10 +16,12 @@ class loanActions extends DarwinActions
   {
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($loan_id), sprintf('Object loan does not exist (%s).', array($loan_id)));
-    if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;    
-    if(!$right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()))
+    if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;
+    $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
+    if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
       $this->forwardToSecureAction();
-    if($right==="view") $this->redirect('loan/view?id='.$loan->getId());      
+    if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER)) 
+      $this->redirect('loan/view?id='.$loan->getId());      
     return $loan ;
   }  
   
@@ -130,7 +132,7 @@ class loanActions extends DarwinActions
   {
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
-    if(!$this->getUser()->isAtLeast(Users::ADMIN))    
+    if(!$this->getUser()->isAtLeast(Users::MANAGER))    
       if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId()))
        $this->forwardToSecureAction();
     $this->loadWidgets();

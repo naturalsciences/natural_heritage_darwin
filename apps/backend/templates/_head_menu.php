@@ -71,9 +71,9 @@
                 </li>
                 <li><?php echo link_to(__('Specimens'),'specimen/new');?></li>
                 <?php if($sf_user->isAtLeast(Users::MANAGER)) : ?>
-                <li><?php echo link_to(__('Collections'),'collection/new');?></li>
-                <li><?php echo link_to(__('Loans'),'loan/new');?></li>
+                <li><?php echo link_to(__('Collections'),'collection/new');?></li>                
                 <?php endif ?>
+                <li><?php echo link_to(__('Loans'),'loan/new');?></li>                
             </ul>
         </li>
         <?php endif ?>

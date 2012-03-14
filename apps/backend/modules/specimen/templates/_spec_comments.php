@@ -23,7 +23,8 @@
       {
         parent_el = $(this).closest('tbody');
         parentTableId = $(parent_el).closest('table').attr('id');
-        $(parent_el).find('textarea[id$=\"_comment\"]').html('');      
+        $(parent_el).find('textarea[id$=\"_comment\"]').val('');      
+        $(parent_el).find('select[id$=\"_notion_concerned\"]').val('');         
         $(parent_el).hide();
         visibles = $('table#'+parentTableId+' tbody.spec_ident_comments_data:visible').size();
         if(!visibles)
