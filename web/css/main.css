@@ -1287,7 +1287,7 @@ table.edit_synon td
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   padding:2px;
-  color:white;
+  color:#525A20;
   text-decoration: none;
   font-size:90%;
 }
@@ -2064,7 +2064,7 @@ tr.tag_line input
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   padding:0.2em;
-  color:white;
+  color: white;
   text-decoration: none;
 }
 
@@ -2726,7 +2726,7 @@ body .ui-tooltip, body .qtip
 .dialog-modal-edit .ui-tooltip-titlebar
 {
   background-color:#C1CF56 !important;
-  color:white;
+  color:#525A20 !important;
 }
 .dialog-modal-view .ui-tooltip-titlebar
 {
