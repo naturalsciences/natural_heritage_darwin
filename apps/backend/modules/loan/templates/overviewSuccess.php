@@ -128,7 +128,7 @@ $(document).ready(function () {
               api.destroy();
             }
           },
-          style: 'ui-tooltip-light ui-tooltip-rounded'
+          style: 'ui-tooltip-light ui-tooltip-rounded dialog-modal-edit'
         });
   });
   function addPinned(part_id, part_name)

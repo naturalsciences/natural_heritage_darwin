@@ -1,7 +1,6 @@
 <div>
   <form class="edition qtiped_form" method="post" id="collection_maintenance" action="<?php echo url_for('loanitem/maintenances?ids='.$sf_request->getParameter('ids'));?>">
       <h1><?php echo __('Add Maintenance :');?></h1>
-      <div class="add_maintenances">
     <?php include_stylesheets_for_form($form) ?>
     <?php include_javascripts_for_form($form) ?>
     
@@ -52,8 +51,7 @@
         </td>
       </tr>
     </tfoot>
-
-
+   </table>
   <script  type="text/javascript">
   $(document).ready(function () {
     $('form.qtiped_form').modal_screen();
@@ -84,10 +82,8 @@
 
   });
   </script>
-   </table>
 </form>
 
   <div class="search_box">
     <?php include_partial('people/searchForm', array('form' => new PeopleFormFilter(),'is_choose'=>true)) ?>
   </div>
-</div>
