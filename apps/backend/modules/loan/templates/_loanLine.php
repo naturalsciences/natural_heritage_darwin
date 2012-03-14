@@ -20,12 +20,21 @@
   </td>
   <td>
     <?php echo $form['from_date']->renderError();?>
-    <?php echo $form['from_date'];?>
-  </td>
-  <td>
     <?php echo $form['to_date']->renderError();?>
-    <?php echo $form['to_date'];?>
     <?php echo $form['loan_item_ind'];?>
+
+
+    <div class="loan_item_date_button">
+      <input type="checkbox"  <?php if(! $form['from_date']->getValue() &&  !$form['to_date']->getValue() ) echo 'checked="checked"';?> />
+      <label><?php echo __('Use Loan dates');?></label>
+    </div>
+    <br />
+    <div class="loan_item_dates <?php if(! $form['from_date']->getValue() &&  !$form['to_date']->getValue() ) echo 'hidden';?>">
+      <?php echo $form['from_date']->renderLabel();?><br />
+      <?php echo $form['from_date'];?><br />
+      <?php echo $form['to_date']->renderLabel();?><br />
+      <?php echo $form['to_date'];?><br />
+    </div>
   </td>
   <td>
     <?php echo $form['item_visible'];?>
@@ -40,6 +49,16 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
+    $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> .loan_item_date_button input").change(function(event)
+    {
+      if($(this).is(':checked')){
+        $(this).closest('td').find('.loan_item_dates').hide();
+        $(this).closest('td').find('.loan_item_dates select,.loan_item_dates input ').val('');
+      }
+      else {
+        $(this).closest('td').find('.loan_item_dates').show();
+      }
+    });
 
     $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> [id$=\"_part_ref\"]").change(function(){
       el = $(this);
@@ -119,11 +138,10 @@
   <td></td>
   <td></td>
   <td></td>
-  <td></td>
 </tr>
-<tr class="maint_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
+<tr class="maintenance_table_line maint_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
   <td></td>
-  <td colspan="6"><div class="maintenance_details"></div>
+  <td colspan="5"><div class="maintenance_details"></div>
   </td>
   <td></td>
 </tr>

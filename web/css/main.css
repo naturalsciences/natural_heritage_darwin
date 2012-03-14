@@ -2935,3 +2935,14 @@ input.complete_missing {
   margin:0.5em;
   text-align: center;
 }
+
+.loan_item_dates label
+{
+  font-weight:bold;
+  padding-bottom: 0.3em;
+}
+
+#items_table tbody td
+{
+  vertical-align:top;
+}
