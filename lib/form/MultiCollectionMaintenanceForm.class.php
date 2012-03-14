@@ -40,7 +40,7 @@ class MultiCollectionMaintenanceForm extends BaseCollectionMaintenanceForm
 	  ),
 	  array('invalid' => 'Invalid date "from"')
     );
-
+    $this->setDefault('modification_date_time', time());
     $this->widgetSchema['people_ref'] = new widgetFormJQueryDLookup(
       array(
         'model' => 'People',
@@ -50,6 +50,7 @@ class MultiCollectionMaintenanceForm extends BaseCollectionMaintenanceForm
       ),
       array('class' => 'hidden',)
     );
+    $this->widgetSchema['people_ref']->setLabel('Person');
 
     $this->validatorSchema['people_ref'] = new sfValidatorInteger();
 
