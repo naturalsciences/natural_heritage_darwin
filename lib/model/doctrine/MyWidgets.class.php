@@ -124,6 +124,7 @@ class MyWidgets extends BaseMyWidgets
         "refUsers" => "TODO",
         "refRelatedFiles" => "TODO",
         "refInsurances" => "In this widget you can specify one or more values with regards to the object(s) as estimated by a particular insurance institution and /or on a particular date.",
+        "maintenances"=> "In this widget you can preview all maintenances done on this loan or the related items",
         ),
     "loanitemwidget"=>array(
         "mainInfo" => "Main informations about the loan item",

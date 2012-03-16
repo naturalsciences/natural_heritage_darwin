@@ -1592,6 +1592,16 @@ MyWidgets:
         is_available: true 
         title_perso: Darwin Users
 
+    u1lw9:
+        User: u1
+        col_num: 1
+        category: loan_widget
+        group_name: maintenances
+        order_by: 9
+        opened: true
+        visible: true
+        is_available: true 
+        title_perso: Maintenances
 
     u1liw1:
         User: u1
@@ -1655,6 +1665,17 @@ MyWidgets:
         category: loanitem_widget
         group_name: refRelatedFiles
         order_by: 7
+        opened: true
+        visible: true
+        is_available: true 
+        title_perso: Related Files
+
+    u1liw8:
+        User: u1
+        col_num: 1
+        category: loanitem_widget
+        group_name: maintenances
+        order_by: 8
         opened: true
         visible: true
         is_available: true 

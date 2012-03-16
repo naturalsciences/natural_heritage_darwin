@@ -64,4 +64,12 @@ class loanitemwidgetComponents extends sfComponents
     if(!isset($this->form['newComments']))
       $this->form->loadEmbedComments();   
   }
+
+  public function executeMaintenances()
+  { 
+    if(isset($this->form))
+      $this->eid = $this->form->getObject()->getId();
+    if(isset($this->eid))
+       $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getMergedMaintenances('loan_items', $this->eid);
+  }
 }

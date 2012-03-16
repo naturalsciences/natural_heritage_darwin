@@ -2623,12 +2623,12 @@ height : 1px;
 .relatedFile input[type="file"]
 {
   position: relative;
-	text-align: right;
+  text-align: right;
   width:150px;	
-	opacity:0 ;
-	filter:alpha(opacity: 0);
-	opacity: 0;
-	z-index: 2;
+  opacity:0 ;
+  filter:alpha(opacity: 0);
+  z-index: 2;
+  cursor:pointer;
 }
 
 .relatedFile label
@@ -2638,7 +2638,7 @@ height : 1px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   padding:2px;
-  color:white;
+  color:#525A20;
   width:150px;
   text-decoration: none;
   font-size:90%;
@@ -2646,7 +2646,7 @@ height : 1px;
   top: 0px;
   z-index: 1;
   vertical-align: middle;  
-  text-align : center ;  
+  text-align : center;
 }
 
 .containerFile .divFile
@@ -2945,4 +2945,9 @@ input.complete_missing {
 #items_table tbody td
 {
   vertical-align:top;
+}
+
+#maintenances .buttons 
+{
+  text-align:right;
 }
