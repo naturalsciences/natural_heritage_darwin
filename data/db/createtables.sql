@@ -725,38 +725,6 @@ comment on column users_login_infos.password is 'For some system (local, ldap, k
 comment on column users_login_infos.login_system is 'For some system (shibbolet, openID,...) provides the user id';
 comment on column users_login_infos.renew_hash is 'Hashed key defined when asking to renew a password';
 
-create table template_people_users_multimedia
-       (
-        person_user_ref integer not null,
-        object_ref integer not null,
-        category varchar not null default 'avatar',
-        constraint fk_template_people_users_multimedia foreign key (object_ref) references multimedia(id) on delete cascade
-       );
-comment on table template_people_users_multimedia is 'Template table used to construct people/users associated multimedia table';
-comment on column template_people_users_multimedia.person_user_ref is 'Reference of person/user - id field of people/users table';
-comment on column template_people_users_multimedia.object_ref is 'Reference of multimedia object - id field of multimedia table';
-comment on column template_people_users_multimedia.category is 'Category qualifying the multimedia object use for this person';
-create table people_multimedia
-       (
-        constraint unq_people_multimedia unique (person_user_ref, object_ref, category),
-        constraint fk_people_multimedia_people foreign key (person_user_ref) references people(id) on delete cascade
-       )
-inherits (template_people_users_multimedia);
-comment on table people_multimedia is 'Multimedia objects linked to persons';
-comment on column people_multimedia.person_user_ref is 'Reference of person concerned - id field of people table';
-comment on column people_multimedia.object_ref is 'Reference of multimedia object associated - id field of multimedia table';
-comment on column people_multimedia.category is 'Object catégory: avatar, spelled name,...';
-create table users_multimedia
-       (
-        constraint unq_users_multimedia unique (person_user_ref, object_ref, category),
-        constraint fk_users_multimedia_users foreign key (person_user_ref) references users(id) on delete cascade
-       )
-inherits (template_people_users_multimedia);
-comment on table users_multimedia is 'Multimedia objects linked to users';
-comment on column users_multimedia.person_user_ref is 'Reference of user concerned - id field of users table';
-comment on column users_multimedia.object_ref is 'Reference of multimedia object associated - id field of multimedia table';
-comment on column users_multimedia.category is 'Object catégory: avatar, spelled name,...';
-
 create sequence collections_id_seq;
 
 create table collections
@@ -1151,63 +1119,6 @@ comment on column lithology.status is 'Validitiy status: valid, invalid, in disc
 comment on column lithology.path is 'Hierarchy path (/ for root)';
 comment on column lithology.parent_ref is 'Id of parent - id field from table itself';
 
-create sequence habitats_id_seq;
-
-create table habitats
-       (
-        id integer not null default nextval('habitats_id_seq'),
-        code varchar not null,
-        code_indexed varchar not null default '/',
-        description varchar not null,
-        description_ts tsvector not null,
-        description_language_full_text full_text_language,
-        habitat_system varchar not null default 'eunis',
-	parent_ref integer,
-        path varchar not null default '/',
-        constraint pk_habitats primary key (id),
-	constraint fk_habitats_parent_ref foreign key (parent_ref) references habitats(id) on delete cascade,
-        constraint unq_habitats unique (path, code_indexed, habitat_system)
-       );
-comment on table habitats is 'Habitats classifications';
-comment on column habitats.id is 'Unique identifier of a habitat';
-comment on column habitats.code is 'Code given to this habitat in the classification encoded';
-comment on column habitats.code_indexed is 'Indexed form of code field';
-comment on column habitats.description is 'General description of the habitat';
-comment on column habitats.description_ts is 'Indexed form of description field ready to be used with to_tsvector full text search function';
-comment on column habitats.description_language_full_text is 'Language used to compose the description_ts tsvector field';
-comment on column habitats.habitat_system is 'System used to describe habitat encoded';
-comment on column habitats.parent_ref is 'Reference of parent habitat';
-comment on column habitats.path is 'Hierarchy path (/ for root)';
-create table multimedia_keywords
-       (
-        object_ref integer not null,
-        keyword varchar not null,
-        keyword_indexed varchar not null,
-        constraint unq_multimedia_keywords unique (object_ref, keyword_indexed),
-        constraint fk_multimedia_keywords_multimedia foreign key (object_ref) references multimedia(id) on delete cascade
-       );
-comment on table multimedia_keywords is 'List of keywords associated to a multimedia object - encoded in the keywords field on the interface';
-comment on column multimedia_keywords.object_ref is 'Reference of multimedia object concerned';
-comment on column multimedia_keywords.keyword is 'Keyword associated';
-comment on column multimedia_keywords.keyword_indexed is 'Indexed form of keyword field';
-create table soortenregister
-       (
-        taxa_ref integer not null default 0,
-        gtu_ref integer not null default 0,
-        habitat_ref integer not null default 0,
-        date_from date,
-        date_to date,
-        constraint fk_soortenregister_taxonomy foreign key (taxa_ref) references taxonomy(id) on delete cascade,
-        constraint fk_soortenregister_gtu foreign key (gtu_ref) references gtu(id) on delete cascade,
-        constraint fk_soortenregister_habitats foreign key (habitat_ref) references habitats(id) on delete cascade
-       );
-comment on table soortenregister is 'Species register table - Indicates the presence of a certain species in a certain habitat at a given place from time to time';
-comment on column soortenregister.taxa_ref is 'Reference of taxon concerned - id field of taxonomy table';
-comment on column soortenregister.gtu_ref is 'Reference of gtu concerned - id field of gtu table';
-comment on column soortenregister.habitat_ref is 'Reference of habitat concerned - id field of habitats table';
-comment on column soortenregister.date_from is 'From date association definition';
-comment on column soortenregister.date_to is 'To date association definition';
-
 create sequence igs_id_seq;
 
 create table igs
@@ -1444,23 +1355,6 @@ comment on column insurances.record_id is 'Identifier of record concerned';
 comment on column insurances.insurance_currency is 'Currency used with insurance value';
 comment on column insurances.insurance_value is 'Insurance value';
 comment on column insurances.insurer_ref is 'Reference of the insurance firm an insurance have been subscripted at';
-
-create sequence associated_multimedia_id_seq;
-
-create table associated_multimedia
-       (
-        id integer not null default nextval('associated_multimedia_id_seq'),
-        multimedia_ref integer not null,
-        constraint pk_associated_multimedia primary key (id),
-        constraint unq_associated_multimedia unique (multimedia_ref, referenced_relation, record_id),
-        constraint fk_associated_multimedia_multimedia foreign key (multimedia_ref) references multimedia(id) on delete cascade
-       )
-       inherits (template_table_record_ref);
-comment on table associated_multimedia is 'List of all associated multimedia to an element of DaRWIN 2 application: specimen, catalogue unit';
-comment on column associated_multimedia.id is 'Unique identifier of a multimedia association';
-comment on column associated_multimedia.referenced_relation is 'Reference-Name of table concerned';
-comment on column associated_multimedia.record_id is 'Identifier of record concerned';
-comment on column associated_multimedia.multimedia_ref is 'Reference of multimedia object concerned - id field of multimedia table';
 
 create sequence specimens_accompanying_id_seq;
 

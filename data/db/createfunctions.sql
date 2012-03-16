@@ -194,8 +194,6 @@ BEGIN
 		NEW.name_indexed := fullToIndex(NEW.name);		
 	ELSIF TG_TABLE_NAME = 'expeditions' THEN
 		NEW.name_indexed := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'habitats' THEN
-		NEW.code_indexed := fullToIndex(NEW.code);
 	ELSIF TG_TABLE_NAME = 'identifications' THEN
 		NEW.value_defined_indexed := COALESCE(fullToIndex(NEW.value_defined),'');
 	ELSIF TG_TABLE_NAME = 'lithology' THEN
@@ -208,8 +206,6 @@ BEGIN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
 		NEW.formule_indexed := fullToIndex(NEW.formule);
-	ELSIF TG_TABLE_NAME = 'multimedia_keywords' THEN
-		NEW.keyword_indexed := fullToIndex(NEW.keyword);
 	ELSIF TG_TABLE_NAME = 'people' THEN
 		NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
                 NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
@@ -575,7 +571,6 @@ BEGIN
     IF TG_OP = 'INSERT' THEN
         IF( TG_TABLE_NAME::text = 'collections' OR
           TG_TABLE_NAME::text = 'gtu' OR
-          TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
           TG_TABLE_NAME::text = 'staging') THEN
 
@@ -598,7 +593,6 @@ BEGIN
       ELSIF TG_OP = 'UPDATE' THEN
         IF(TG_TABLE_NAME::text = 'collections' OR
           TG_TABLE_NAME::text = 'gtu' OR
-          TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
           TG_TABLE_NAME::text = 'staging') THEN
 
@@ -707,7 +701,7 @@ BEGIN
     RETURN NEW;
   ELSIF track_level = 1 THEN -- Track Only Main tables
     IF TG_TABLE_NAME::text NOT IN ('specimens', 'specimen_individuals', 'specimen_parts', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
-      'mineralogy', 'lithology', 'habitats', 'people') THEN
+      'mineralogy', 'lithology', 'people') THEN
       RETURN NEW;
     END IF;
   END IF;
@@ -1224,17 +1218,6 @@ BEGIN
       ELSE
         PERFORM fct_cpy_word('expeditions','name_ts', NEW.name_ts);
       END IF;
-/*
-   ELSIF TG_TABLE_NAME ='habitats' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.description_ts IS DISTINCT FROM NEW.description_ts THEN
-          PERFORM fct_cpy_word('habitats','description_ts', NEW.description_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('habitats','description_ts', NEW.description_ts);
-      END IF;
-*/
 
    ELSIF TG_TABLE_NAME ='mineralogy' THEN
 

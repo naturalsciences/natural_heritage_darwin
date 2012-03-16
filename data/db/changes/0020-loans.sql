@@ -531,3 +531,6 @@ CREATE TRIGGER trg_cpy_toFullText_vernacularnames BEFORE INSERT OR UPDATE
   EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
 
 DROP FUNCTION IF EXISTS fct_cpy_tofulltext();
+
+
+

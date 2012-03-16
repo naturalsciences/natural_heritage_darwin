@@ -28,7 +28,7 @@ class loanitemwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newInsurance']))
-      $this->form->loadEmbedInsurance();  
+      $this->form->loadEmbedInsurance();
   }
 
   public function executeRefProperties()
@@ -41,7 +41,7 @@ class loanitemwidgetComponents extends sfComponents
   { 
     $this->defineForm();
   }
-  
+
   public function executeActors()
   {
     $this->defineForm();
@@ -49,8 +49,8 @@ class loanitemwidgetComponents extends sfComponents
       $this->form->loadEmbedActorsSender();
     if(!isset($this->form['newActorsReceiver']))
       $this->form->loadEmbedActorsReceiver();
-  }  
-    
+  }
+
   public function executeRefRelatedFiles()
   { 
     $this->defineForm();
@@ -64,5 +64,4 @@ class loanitemwidgetComponents extends sfComponents
     if(!isset($this->form['newComments']))
       $this->form->loadEmbedComments();   
   }
-  
 }
