@@ -34,10 +34,6 @@ CREATE INDEX CONCURRENTLY idx_mineralogy_level_ref on mineralogy(level_ref);
 CREATE INDEX CONCURRENTLY idx_mineralogy_parent_ref on mineralogy(parent_ref);
 CREATE INDEX CONCURRENTLY idx_lithology_level_ref on lithology(level_ref);
 CREATE INDEX CONCURRENTLY idx_lithology_parent_ref on lithology(parent_ref);
-CREATE INDEX CONCURRENTLY idx_multimedia_keywords_object_ref on multimedia_keywords(object_ref);
-CREATE INDEX CONCURRENTLY idx_soortenregister_taxa_ref on soortenregister(taxa_ref);
-CREATE INDEX CONCURRENTLY idx_soortenregister_gtu_ref on soortenregister(gtu_ref);
-CREATE INDEX CONCURRENTLY idx_soortenregister_habitat_ref on soortenregister(habitat_ref);
 
 CREATE INDEX CONCURRENTLY idx_specimens_expedition_ref on specimens(expedition_ref) WHERE expedition_ref <> 0;
 CREATE INDEX CONCURRENTLY idx_specimens_gtu_ref on specimens(gtu_ref) WHERE gtu_ref <> 0;
@@ -174,7 +170,6 @@ CREATE INDEX CONCURRENTLY idx_gist_multimedia_description_ts on multimedia using
 CREATE INDEX CONCURRENTLY idx_gin_people_addresses_address_parts_ts on people_addresses using gin(address_parts_ts);
 CREATE INDEX CONCURRENTLY idx_gin_users_addresses_address_parts_ts on users_addresses using gin(address_parts_ts);
 /*CREATE INDEX CONCURRENTLY idx_gist_collection_maintenance_description_ts on collection_maintenance using gist(description_ts);*/
-CREATE INDEX CONCURRENTLY idx_gist_habitats_description_ts on habitats using gist(description_ts);
 CREATE INDEX CONCURRENTLY idx_gin_taxonomy_naming on taxonomy using gin(name_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_chronostratigraphy_naming on chronostratigraphy using gin(name_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_lithostratigraphy_naming on lithostratigraphy using gin(name_indexed);

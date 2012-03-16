@@ -14,7 +14,6 @@
  ALTER TABLE darwin2.expeditions DISABLE TRIGGER trg_trk_log_table_expeditions;
  ALTER TABLE darwin2.ext_links DISABLE TRIGGER trg_trk_log_table_ext_links;
  ALTER TABLE darwin2.gtu DISABLE TRIGGER trg_trk_log_table_gtu;
- ALTER TABLE darwin2.habitats DISABLE TRIGGER trg_trk_log_table_habitats;
  ALTER TABLE darwin2.identifications DISABLE TRIGGER trg_trk_log_table_identifications;
  ALTER TABLE darwin2.igs DISABLE TRIGGER trg_trk_log_table_igs;
  ALTER TABLE darwin2.insurances DISABLE TRIGGER trg_trk_log_table_insurances;
@@ -25,10 +24,8 @@
  ALTER TABLE darwin2.people_addresses DISABLE TRIGGER trg_trk_log_table_people_addresses;
  ALTER TABLE darwin2.people_comm DISABLE TRIGGER trg_trk_log_table_people_comm;
  ALTER TABLE darwin2.people DISABLE TRIGGER trg_trk_log_table_people;
- ALTER TABLE darwin2.people_multimedia DISABLE TRIGGER trg_trk_log_table_people_multimedia;
  ALTER TABLE darwin2.people_relationships DISABLE TRIGGER trg_trk_log_table_people_relationships;
  ALTER TABLE darwin2.properties_values DISABLE TRIGGER trg_trk_log_table_properties_values;
- ALTER TABLE darwin2.soortenregister DISABLE TRIGGER trg_trk_log_table_soortenregister;
  ALTER TABLE darwin2.specimen_collecting_methods DISABLE TRIGGER trg_trk_log_table_specimen_collecting_methods;
  ALTER TABLE darwin2.specimen_collecting_tools DISABLE TRIGGER trg_trk_log_table_specimen_collecting_tools;
  ALTER TABLE darwin2.specimen_individuals DISABLE TRIGGER trg_trk_log_table_specimen_individuals;

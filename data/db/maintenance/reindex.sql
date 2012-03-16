@@ -18,20 +18,15 @@
  REINDEX TABLE template_people_users_comm_common;
  REINDEX TABLE people_relationships;
  REINDEX TABLE template_people_users_addr_common;
- REINDEX TABLE template_people_users_multimedia;
  REINDEX TABLE people_comm;
  REINDEX TABLE template_collections_users;
  REINDEX TABLE people;
  REINDEX TABLE collection_maintenance;
  REINDEX TABLE template_classifications;
- REINDEX TABLE multimedia_keywords;
  REINDEX TABLE chronostratigraphy;
  REINDEX TABLE lithostratigraphy;
- REINDEX TABLE soortenregister;
- REINDEX TABLE habitats;
  REINDEX TABLE insurances;
  REINDEX TABLE codes;
- REINDEX TABLE associated_multimedia;
  REINDEX TABLE specimen_collecting_tools;
  REINDEX TABLE collecting_tools;
  REINDEX TABLE taxonomy;
@@ -47,7 +42,6 @@
  REINDEX TABLE classification_keywords;
  REINDEX TABLE classification_synonymies;
  REINDEX TABLE people_addresses;
- REINDEX TABLE people_multimedia;
  REINDEX TABLE tag_groups;
  REINDEX TABLE tags;
  REINDEX TABLE specimen_parts;
@@ -57,7 +51,6 @@
  REINDEX TABLE users_comm;
  REINDEX TABLE users_addresses;
  REINDEX TABLE users_login_infos;
- REINDEX TABLE users_multimedia;
  REINDEX TABLE informative_workflow;
  REINDEX TABLE users_tracking;
  REINDEX TABLE my_saved_searches;

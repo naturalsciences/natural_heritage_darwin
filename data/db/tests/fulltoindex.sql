@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(29);
+SELECT plan(27);
 
 SELECT diag('FulltoIndex Function');
 SELECT ok('msdfnjrt' = fullToIndex('MsdfnJrt'),'With Majuscule and minuscule');
@@ -32,10 +32,6 @@ SELECT ok( to_tsvector('simple', 'ÉLo Wÿorléds') = (SELECT name_indexed FROM 
 INSERT INTO expeditions (id, name ) VALUES (1,'ÉLo Wÿorléds');
 SELECT ok( 'elowyorleds' = (SELECT name_indexed FROM expeditions WHERE id=1),'FulltoIndex on expeditions');
 SELECT ok( to_tsvector('simple', 'ÉLo Wÿorléds') = (SELECT name_ts FROM expeditions WHERE id=1),'To TextSearch expeditions');
-
-INSERT INTO habitats (id, code, description) VALUES (1,'Lé Hâbitôt','Lé Hâbitôt');
-SELECT ok( 'lehabitot' = (SELECT code_indexed FROM habitats WHERE id=1),'FulltoIndex on habitats');
-SELECT ok ( to_tsvector('simple', 'Lé Hâbitôt') = (SELECT description_ts FROM habitats WHERE id=1),'full text on habitats');
 
 INSERT INTO identifications (referenced_relation, record_id, notion_concerned, value_defined) VALUES ('taxonomy', 0, 'Expertise', 'Jé #spéè!');
 SELECT ok( 'jespee' = (SELECT value_defined_indexed FROM identifications WHERE record_id=0),'FulltoIndex on identifications');

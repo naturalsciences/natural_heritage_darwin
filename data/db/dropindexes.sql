@@ -32,7 +32,6 @@
  DROP INDEX IF EXISTS idx_gin_darwin_flat_lithology_name_indexed;
  DROP INDEX IF EXISTS idx_gin_darwin_flat_mineral_name_indexed;
  DROP INDEX IF EXISTS idx_gin_darwin_flat_gtu_tag_values_indexed;
- DROP INDEX IF EXISTS idx_gist_habitats_description_ts;
  DROP INDEX IF EXISTS idx_gin_lithostratigraphy_naming;
  DROP INDEX IF EXISTS idx_gin_mineralogy_naming;
  DROP INDEX IF EXISTS idx_gin_lithology_naming;
@@ -40,7 +39,6 @@
  DROP INDEX IF EXISTS idx_words_table_field;
  DROP INDEX IF EXISTS idx_igs_ig_date;
  DROP INDEX IF EXISTS idx_expeditions_expedition_from_date;
- DROP INDEX IF EXISTS idx_users_multimedia_object_ref;
  DROP INDEX IF EXISTS idx_possible_upper_levels_level_ref;
  DROP INDEX IF EXISTS idx_possible_upper_levels_level_upper_ref;
  DROP INDEX IF EXISTS idx_record_visibilities;
@@ -59,10 +57,7 @@
  DROP INDEX IF EXISTS idx_users_addresses_person_user_ref;
  DROP INDEX IF EXISTS idx_collections_parent_ref;
  DROP INDEX IF EXISTS idx_users_login_infos_user_ref;
- DROP INDEX IF EXISTS idx_people_multimedia_person_user_ref;
- DROP INDEX IF EXISTS idx_people_multimedia_object_ref;
  DROP INDEX IF EXISTS idx_collections_rights_collection_ref;
- DROP INDEX IF EXISTS idx_users_multimedia_person_user_ref;
  DROP INDEX IF EXISTS idx_collections_rights_db_user_type;
  DROP INDEX IF EXISTS idx_taxonomy_parent_ref;
  DROP INDEX IF EXISTS idx_collection_maintenance_user_ref;
@@ -83,14 +78,10 @@
  DROP INDEX IF EXISTS idx_lithostratigraphy_parent_ref;
  DROP INDEX IF EXISTS idx_mineralogy_level_ref;
  DROP INDEX IF EXISTS idx_mineralogy_parent_ref;
- DROP INDEX IF EXISTS idx_soortenregister_habitat_ref;
  DROP INDEX IF EXISTS idx_mineralogy_unit_family_ref;
- DROP INDEX IF EXISTS idx_soortenregister_taxa_ref;
  DROP INDEX IF EXISTS idx_lithology_level_ref;
  DROP INDEX IF EXISTS idx_lithology_unit_sub_group_ref;
  DROP INDEX IF EXISTS idx_lithology_parent_ref;
- DROP INDEX IF EXISTS idx_multimedia_keywords_object_ref;
- DROP INDEX IF EXISTS idx_soortenregister_gtu_ref;
  DROP INDEX IF EXISTS idx_specimens_expedition_ref;
  DROP INDEX IF EXISTS idx_specimens_collection_ref;
  DROP INDEX IF EXISTS idx_expeditions_expedition_to_date;
@@ -105,7 +96,6 @@
  DROP INDEX IF EXISTS idx_specimens_host_specimen_ref;
  DROP INDEX IF EXISTS idx_specimen_individuals_specimen_ref;
  DROP INDEX IF EXISTS idx_specimen_parts_specimen_individual_ref;
- DROP INDEX IF EXISTS idx_associated_multimedia_multimedia_ref;
  DROP INDEX IF EXISTS idx_specimens_accompanying_specimen_ref;
  DROP INDEX IF EXISTS idx_specimens_accompanying_taxon_ref;
  DROP INDEX IF EXISTS idx_specimens_accompanying_mineral_ref;
@@ -171,7 +161,6 @@
  DROP INDEX IF EXISTS idx_my_widgets_visible;
  DROP INDEX IF EXISTS idx_multimedia_type;
  DROP INDEX IF EXISTS idx_my_widgets_group_name;
- DROP INDEX IF EXISTS idx_multimedia_keywords_keyword_indexed;
  DROP INDEX IF EXISTS idx_my_widgets_is_available;
  DROP INDEX IF EXISTS idx_people_title;
  DROP INDEX IF EXISTS idx_my_widgets_order_by;
