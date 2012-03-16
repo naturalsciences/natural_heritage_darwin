@@ -1,5 +1,4 @@
-<?php if(! $form->getObject()->isNew()):?>
-<table class="catalogue_table edition">
+<table class="catalogue_table_view">
 <thead>
   <tr>
     <th><?php echo __('Target') ;?></th>
@@ -20,11 +19,11 @@
           <?php if($table == 'loans'):?>
             <?php echo __('Loans');?>
           <?php elseif($table.'loan_items'):?>
-            <?php echo link_to(__("Loan"),'loan/edit?id='.$item->getRecordId());?>
+            <?php echo link_to(__("Loan"),'loan/view?id='.$item->getRecordId());?>
           <?php endif;?>
         <?php elseif($item->getReferencedRelation() == 'loan_items'):?>
           <?php if($table == 'loans'):?>
-            <?php echo link_to(__("Item #%id%",array('%id%'=>$item->getRecordId())) ,'loanitem/edit?id='.$item->getRecordId());?>
+            <?php echo link_to(__("Item #%id%",array('%id%'=>$item->getRecordId())) ,'loanitem/view?id='.$item->getRecordId());?>
           <?php elseif($table.'loan_items'):?>
             <?php echo __('Loan Item');?>
           <?php endif;?>
@@ -38,35 +37,8 @@
       <td><?php if($item->getWithMultimedia()) echo image_tag('attach.png'); else echo '-';?></td>
       <td class="buttons">
         <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'maintenances/view?id='.$item->getId());?>
-        <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit'))),'maintenances/edit?id='.$item->getId());?>
-        <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))),'maintenances/delmaintenance?id='.$item->getId(),'class=delete_maint_button');?>
-      </td>
+     </td>
     </tr>
   <?php endforeach;?>
 </tbody>
- <tfoot>
-   <tr>
-     <td colspan="8">
-        <a href="<?php echo url_for('maintenances/add?table='.$table.'&record_id='.$eid);?>"><?php echo __('Add');?></a>
-     </td>
-   </tr>
-  </tfoot>
 </table>
-<script type="text/javascript">
-  $(document).ready(function () {
-    $('.delete_maint_button').click(function(event)
-    {
-      event.preventDefault();
-      el = $(this);
-      $.ajax({
-        url: el.attr('href'),
-        success: function(html){
-          el.closest('tr').hide();
-        }
-      });
-    });
-  });
-</script>
-<?php else:?>
-  <?php echo __('Please save your item in order to view related maintenances') ?>
-<?php endif;?>

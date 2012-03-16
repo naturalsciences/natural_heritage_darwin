@@ -13,6 +13,7 @@ class loanitemwidgetviewComponents extends sfComponents
 
   protected function defineObject()
   {
+    $this->table ="loan_items";
     if(! isset($this->loan) )
       $this->loan = Doctrine::getTable('LoanItems')->find($this->eid);
   }
@@ -58,4 +59,9 @@ class loanitemwidgetviewComponents extends sfComponents
     $this->Comments = Doctrine::getTable('Comments')->findForTable('loan_items', $this->loan->getId()) ;
   }
 
+  public function executeMaintenances()
+  { 
+    $this->defineObject();
+    $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getMergedMaintenances('loan_items', $this->loan->getId());
+  }
 }
