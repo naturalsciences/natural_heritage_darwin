@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(8);
+SELECT plan(9);
 
 SELECT diag('Loans');
 
@@ -28,12 +28,20 @@ SELECT is(2, (select count(*)::int from loan_status where loan_ref = 2), 'Status
 SELECT is(1, (select count(*)::int from loan_status where loan_ref = 2 and is_last = true), 'only one is last');
 SELECT is(1, (select count(*)::int from loan_rights where loan_ref = 2), 'User was added');
 
-INSERT INTO specimens (id, collection_ref) VALUES (1,1);
+INSERT INTO igs(id, ig_num) VALUES (1458, '11');
+INSERT INTO igs(id, ig_num) VALUES (1459, '12');
+
+INSERT INTO specimens (id, collection_ref, ig_ref) VALUES (1,1, 1458);
 INSERT INTO specimen_individuals (id, specimen_ref, type) VALUES (1,1,'holotype');
 INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (1, 1, 'head');
 
-insert into  loan_items (id, loan_ref, part_ref)
-  VALUES (1, 2 , 1);
+
+insert into  loan_items (id, loan_ref, part_ref, ig_ref)
+  VALUES (1, 2 , 1, 1458);
+
+UPDATE specimens set ig_ref = 1459 where id = 1;
+SELECT is(1459, (select ig_ref from loan_items where id = 1), 'ig was changed');
+
 
 SELECT throws_ok('DELETE FROM specimen_parts WHERE ID = 1');
 

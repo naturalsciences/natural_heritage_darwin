@@ -4546,3 +4546,19 @@ BEGIN
   RETURN NEW;
 END;
 $$;
+
+
+CREATE OR REPLACE FUNCTION fct_cpy_ig_to_loan_items() RETURNS trigger
+AS $$
+BEGIN
+  IF OLD.ig_ref is distinct from NEW.ig_ref THEN
+    UPDATE loan_items li SET ig_ref = NEW.ig_ref
+    WHERE part_ref in ( SELECT s.id from specimen_parts s
+      INNER JOIN specimen_individuals i on s.id=s.specimen_individual_ref
+      WHERE i.specimen_ref = NEW.ID
+      )
+    AND li.ig_ref IS NOT DISTINCT FROM OLD.ig_ref;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;

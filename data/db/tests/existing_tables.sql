@@ -1,7 +1,7 @@
 \unset ECHO
 \i unit_launch.sql
 -- Plan the tests.
-SELECT plan(56);
+SELECT plan(49);
 
 -- Run the tests.
 SELECT has_table('catalogue_relationships','catalogue_relationships exists');

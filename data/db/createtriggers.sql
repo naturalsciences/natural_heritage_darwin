@@ -905,13 +905,17 @@ CREATE TRIGGER trg_upd_people_in_flat AFTER INSERT OR UPDATE OR DELETE
   EXECUTE PROCEDURE fct_upd_people_in_flat();
 
 CREATE trigger trg_chk_is_last_loan_status BEFORE INSERT
-        ON loan_status FOR EACH ROW
-        EXECUTE PROCEDURE fct_remove_last_flag_loan();
+  ON loan_status FOR EACH ROW
+  EXECUTE PROCEDURE fct_remove_last_flag_loan();
 
 CREATE trigger trg_add_status_history after INSERT
-        ON loans FOR EACH ROW
-        EXECUTE PROCEDURE fct_auto_insert_status_history();
+  ON loans FOR EACH ROW
+  EXECUTE PROCEDURE fct_auto_insert_status_history();
 
 CREATE TRIGGER trg_chk_part_not_loaned BEFORE DELETE
   ON specimen_parts FOR EACH ROW
   EXECUTE PROCEDURE chk_part_not_loaned();
+
+CREATE TRIGGER trg_cpy_ig_to_loan_items AFTER UPDATE
+  ON specimens FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_ig_to_loan_items();
