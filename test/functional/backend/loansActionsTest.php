@@ -21,7 +21,6 @@ $browser->
     isStatusCode(200)->
     checkElement('title','Add loan')->
     checkElement('.board_col',1)->
-    checkElement('.board_col .widget',8)->
     checkElement('.board_col .widget:first .widget_top_bar span','/Loan/')->
     checkElement('.board_col .widget:nth-child(2) .widget_top_bar span','/Actors/')->
     checkElement('.board_col .widget:nth-child(3) .widget_top_bar span','/Loan Status/')->
