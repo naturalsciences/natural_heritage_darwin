@@ -1680,3 +1680,46 @@ MyWidgets:
         visible: true
         is_available: true 
         title_perso: Related Files
+    u1m1:
+        User: u1
+        col_num: 1
+        category: maintenances_widget
+        group_name: refRelatedFiles
+        order_by: 1
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Related Files
+        all_public: true   
+    u1m2:
+        User: u1
+        col_num: 1
+        category: maintenances_widget
+        group_name: refComments
+        order_by: 2
+        opened: true
+        visible: false
+        is_available: true
+        title_perso: Comments
+        all_public: true
+    u1m3:
+        col_num: 1
+        category: maintenances_widget
+        group_name: refProperties
+        order_by: 3
+        opened: true
+        visible: false
+        is_available: true
+        title_perso: Properties
+        all_public: true       
+    u1m4:
+        User: u1
+        col_num: 1
+        category: maintenances_widget
+        group_name: extLinks
+        order_by: 4
+        opened: true
+        visible: false
+        is_available: true
+        title_perso: External Url
+        all_public: true          

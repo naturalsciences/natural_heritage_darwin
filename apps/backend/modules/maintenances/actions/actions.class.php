@@ -48,10 +48,16 @@ class maintenancesActions extends DarwinActions
     $this->forward404Unless($request->getParameter('id'));  
     $this->form = $this->getMaintenancesForm($request);
     $this->table = $this->form->getObject()->getReferencedRelation();
-    $this->loadWidgets();    
-    $this->setTemplate('edit');    
+    $this->loadWidgets();      
   } 
-  
+
+  public function executeView(sfWebRequest $request)
+  {
+    //@TODO DON'T FORGET TO ADD SECURITY //
+    $this->forward404Unless($this->maintenance = Doctrine::getTable('CollectionMaintenance')->findExcept($request->getParameter('id')));    
+    $this->loadWidgets();    
+  } 
+    
   public function executeUpdate(sfWebRequest $request)
   {
     if(!$request->isMethod('post')) $this->forwardTosecureAction();

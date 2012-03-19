@@ -2,7 +2,7 @@
 <?php $action = 'maintenances/create?table='.$sf_request->getParameter('table').'&record_id='.$sf_request->getParameter('record_id') ;?>
 <div class="page">
   <?php echo form_tag($action, array('class'=>'edition','enctype'=>'multipart/form-data'));?>
-  <h1><?php echo __('New Maintenance (table : ').$sf_request->getParameter('table').')';?></h1>
+  <h1><?php echo __('New Maintenance');?></h1>
   
   <?php include_partial("maintenances", array('form' => $form)) ; ?>  
   <div>

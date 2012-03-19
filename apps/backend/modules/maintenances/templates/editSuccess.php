@@ -2,7 +2,7 @@
 <?php $action = 'maintenances/update?id='.$form->getObject()->getId() ;?>
 <div class="page">
   <?php echo form_tag($action, array('class'=>'edition','enctype'=>'multipart/form-data'));?>
-  <h1><?php echo __('Edit Maintenance (table : ').$table.(')');?></h1>
+  <h1><?php echo __('Edit Maintenance');?></h1>
   
   <?php include_partial("maintenances", array('form' => $form)) ; ?>  
   <div>
