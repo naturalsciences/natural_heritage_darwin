@@ -4508,13 +4508,13 @@
         <source>State observation</source>
         <target>Observation d&#039;état</target>
       </trans-unit>
-          <trans-unit id="1586">
-        <source>Add Maintenance for checked</source>
-        <target>Ajouter une maintenance pour les éléments sélectionnés</target>
-      </trans-unit>
           <trans-unit id="1587">
         <source>Back to Loan</source>
         <target>Retour au prêt</target>
+      </trans-unit>
+          <trans-unit id="1586">
+        <source>Add Maintenance for checked</source>
+        <target>Ajouter maintenance pour les objets cochés</target>
       </trans-unit>
           <trans-unit id="1384">
         <source>Between %min% and %max%</source>
@@ -5204,6 +5204,10 @@
         <source>Informative Workflow</source>
         <target>&quot;Workflow&quot; informatif</target>
       </trans-unit>
+          <trans-unit id="1645">
+        <source>Overview</source>
+        <target>Aperçu</target>
+      </trans-unit>
           <trans-unit id="1443">
         <source>You may want to include &lt;em&gt;rows without errors&lt;/em&gt;</source>
         <target>Vous pourriez souhaiter inclure les &lt;em&gt;lignes sans erreurs&lt;/em&gt;</target>
@@ -5223,6 +5227,14 @@
           <trans-unit id="1526">
         <source>Add File</source>
         <target>Ajouter un fichier</target>
+      </trans-unit>
+          <trans-unit id="1646">
+        <source>Add maintenance for this item</source>
+        <target>Ajouter maintenance pour cet objet</target>
+      </trans-unit>
+          <trans-unit id="1647">
+        <source>Add multiple items</source>
+        <target>Ajouter plusieurs objets</target>
       </trans-unit>
           <trans-unit id="1618">
         <source>Oops! Page Not Found</source>
@@ -5256,9 +5268,29 @@
         <source>Maintenances</source>
         <target>Maintenances</target>
       </trans-unit>
+          <trans-unit id="1648">
+        <source>Are you sure you want to do an archive of your loan ?</source>
+        <target>Etes vous sûr de vouloir faire une archive de votre prêt ?</target>
+      </trans-unit>
+          <trans-unit id="1650">
+        <source>Never synchronized</source>
+        <target>Jamais synchronisé</target>
+      </trans-unit>
+          <trans-unit id="1651">
+        <source>This will take a snapshot of the loan for archiving purposes.</source>
+        <target>Ceci fera une sauvegarde de votre prêt afin de l&#039;archiver</target>
+      </trans-unit>
+          <trans-unit id="1652">
+        <source>Take a snapshot of the loan.</source>
+        <target>Faire une sauvegarde du prêt</target>
+      </trans-unit>
           <trans-unit id="1544">
         <source>Responsible</source>
         <target>Responsable</target>
+      </trans-unit>
+          <trans-unit id="1653">
+        <source>Last synchronization on %date%</source>
+        <target>Dernière synchronisation le %date%</target>
       </trans-unit>
           <trans-unit id="1532">
         <source>Darwin Part</source>

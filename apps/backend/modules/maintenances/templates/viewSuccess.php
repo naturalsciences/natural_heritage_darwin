@@ -31,7 +31,13 @@
         </tr>
       </tbody>
     </table>
-  </div>
+    <input type="button" class="bt_close" value="<?php echo __('Close this Tab'); ?>">
+    <script>
+      $('input[class="bt_close"]').click(function(){
+        window.close() ;
+      });
+    </script>     
+  </div> 
   <div>
      <?php include_partial('widgets/screen', array(
 	   'widgets' => $widgets,

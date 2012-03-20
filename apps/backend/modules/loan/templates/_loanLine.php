@@ -112,13 +112,13 @@
           success: function(html){
             $(el).html(html);
             el.show();
-            but_link.find('img').attr('src','<?php echo url_for('/images/blue_expand_up.png');?>');
+            but_link.find('img').attr('src','<?php echo url_for('/images/individual_expand_up.png');?>');
           }
         });
 
       } else {
         el.hide();
-        $(this).find('img').attr('src','<?php echo url_for('/images/blue_expand.png');?>');
+        $(this).find('img').attr('src','<?php echo url_for('/images/individual_expand.png');?>');
       }
     });
     <?php endif;?>
@@ -132,7 +132,7 @@
   <td></td>
   <td colspan="2">
     <a class="maint_butt<?php if($lineObj->isNew()) echo 'disabled';?>" href="#">
-      <?php echo image_tag( ($lineObj->isNew() ? 'grey' : 'blue' ).'_expand.png');?> <?php echo __('Maintenances');?>
+      <?php echo image_tag( ($lineObj->isNew() ? 'grey' : 'individual' ).'_expand.png');?> <?php echo __('Maintenances');?>
     </a>
   </td>
   <td></td>

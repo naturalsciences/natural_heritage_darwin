@@ -17,10 +17,18 @@
       <td><?php echo $item->getDescription();?></td>
       <td><?php echo $item->People->getFormatedName();?></td>
       <td><?php echo $item->getModificationDateTimeMasked(ESC_RAW);?></td>
-      <td><?php echo link_to(image_tag('remove.png', array("title" => __("View"))),'loanitem/delmaintenance?id='.$item->getId(),'class=delete_maint_button');?></td>
+      <td>
+<?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'maintenances/view?id='.$item->getId(),'target=_blank');?>   
+   <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),'maintenances/edit?id='.$item->getId(),'target=_blank');?> 
+      <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))),'loanitem/delmaintenance?id='.$item->getId(),'class=delete_maint_button');?></td>
     </tr>
   <?php endforeach;?>
 </tbody>
+<tfoot>
+  <tr>
+    <td colspan="6"><a href="<?php echo url_for('maintenances/new?table=loan_items&record_id='.$loan_item->getId()); ?>" target="_blank"><?php echo __("Add maintenance for this item") ; ?></a></td>
+  </tr>
+</tfoot>
 </table>
 <script type="text/javascript">
   $(document).ready(function () {

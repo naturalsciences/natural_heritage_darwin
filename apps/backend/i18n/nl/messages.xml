@@ -735,6 +735,18 @@
         <source>There is currently no items in the loan.</source>
         <target>Er zijn momenteel geen items in deze ontlening.</target>
       </trans-unit>
+          <trans-unit id="1642">
+        <source>Donator</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1643">
+        <source>Expedition member</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1644">
+        <source>View Maintenance</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="500">
         <source>Choose a Mineralogic unit</source>
         <target>Mineralogische eenheid kiezen</target>
@@ -2386,6 +2398,18 @@
           <trans-unit id="1367">
         <source>Whom are you looking for</source>
         <target>Wie zoekt u</target>
+      </trans-unit>
+          <trans-unit id="1645">
+        <source>Overview</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1646">
+        <source>Add maintenance for this item</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1647">
+        <source>Add multiple items</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1375">
         <source>This %field% was not found in our database, please choose an existing one or remove it</source>

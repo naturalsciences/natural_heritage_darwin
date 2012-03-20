@@ -16,7 +16,7 @@
           <?php include_partial('widgets/screen', array(
             'widgets' => $widgets,
             'category' => 'loanwidget',
-            'options' => array('form' => $form , 'table' => 'loans'),
+            'options' => array('form' => $form , 'table' => 'loans', 'eid' => $form->getObject()->isNew() ? null : $form->getObject()->getId()),
           )); ?>
         </div>
         <p class="clear"></p>

@@ -14,6 +14,7 @@
 	  )); ?>
 	</div>
     <p class="form_buttons">
+      <input type="button" class="bt_close" value="<?php echo __('Close this Tab'); ?>">      
       <input id="submit_maintenance" type="submit" value="<?php echo __('Save');?>"/>
     </p>	
   </form>	
@@ -38,7 +39,10 @@
         form.removeAttr('target') ;
         form.attr('action', '<?php echo url_for($action) ; ?>') ;
         form.submit() ;
-      });        
+      });    
+      $('input[class="bt_close"]').click(function(){
+        window.close() ;
+      });           
     });
   </script>  
 </div>	

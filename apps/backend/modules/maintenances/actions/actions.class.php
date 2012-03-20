@@ -11,7 +11,44 @@
 class maintenancesActions extends DarwinActions
 {
   protected $widgetCategory = 'maintenances_widget';
-
+  
+  protected function checkRight(sfWebRequest $request)  
+  {
+    if($this->getUser()->isAtLeast(Users::ADMIN)) return true ;
+    if($request->hasParameter('id'))
+    {
+      $this->forward404Unless($maintenance = Doctrine::getTable('CollectionMaintenance')->findExcept($request->getParameter('id'))) ;
+      $table = $maintenance->getReferencedRelation() ;
+      $record_id = $maintenance->getRecordId() ;
+    }  
+    else
+    {
+      $table = $request->getParameter('table') ;
+      $record_id = $request->getParameter('record_id') ;      
+    }
+    if($table == 'loans')
+    {
+      $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$record_id) ;
+      if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
+        $this->forwardToSecureAction();
+      if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER)) 
+        return 'view' ;
+      else return true ;   
+    }
+    elseif($table == 'loan_items')
+    {
+      $loanitem = Doctrine::getTable('LoanItems')->findExcept($record_id) ;
+      $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef()) ;
+      if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
+        $this->forwardToSecureAction();
+      if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER)) 
+        return 'view' ;
+      else return true ;      
+    }
+    elseif($this->getUser()->isAtLeast(Users::ENCODER)) return true ;
+    else return 'view' ;
+  }
+  
   protected function getMaintenancesForm(sfWebRequest $request, $fwd404=false, $parameter='id')
   {
     $maintenances = null;
@@ -24,7 +61,7 @@ class maintenancesActions extends DarwinActions
     
   public function executeNew(sfWebRequest $request)
   {
-    //@TODO DON'T FORGET TO ADD SECURITY //
+    if($this->checkRight($request) !== true) $this->forwardTosecureAction();
     $this->forward404Unless($request->getParameter('record_id'));
     $this->forward404Unless($request->getParameter('table'));    
     $this->form = new MaintenanceForm();
@@ -33,6 +70,7 @@ class maintenancesActions extends DarwinActions
   
   public function executeCreate(sfWebRequest $request)
   {
+    if($this->checkRight($request) !== true) $this->forwardTosecureAction();  
     if(!$request->isMethod('post')) $this->forwardTosecureAction();
     $this->form = new MaintenanceForm();
     $this->form->getObject()->setReferencedRelation($request->getParameter('table'));
@@ -44,8 +82,9 @@ class maintenancesActions extends DarwinActions
   
   public function executeEdit(sfWebRequest $request)
   {
-    //@TODO DON'T FORGET TO ADD SECURITY //
-    $this->forward404Unless($request->getParameter('id'));  
+    $right = $this->checkRight($request)  ;
+    if($right === false) $this->forwardTosecureAction();
+    if($right === 'view') $this->redirect('maintenances/view?id='.$request->getParameter('id')); 
     $this->form = $this->getMaintenancesForm($request);
     $this->table = $this->form->getObject()->getReferencedRelation();
     $this->loadWidgets();      
@@ -53,17 +92,20 @@ class maintenancesActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    //@TODO DON'T FORGET TO ADD SECURITY //
+    if($this->checkRight($request) === false) $this->forwardTosecureAction();  
     $this->forward404Unless($this->maintenance = Doctrine::getTable('CollectionMaintenance')->findExcept($request->getParameter('id')));    
     $this->loadWidgets();    
   } 
     
   public function executeUpdate(sfWebRequest $request)
   {
+    if($this->checkRight($request) !== true) $this->forwardTosecureAction();    
     if(!$request->isMethod('post')) $this->forwardTosecureAction();
     $this->form = $this->getMaintenancesForm($request); 
     $this->processForm($request, $this->form);
   }  
+  
+  
   protected function processForm(sfWebRequest $request, sfForm $form)  
   {
     if($request->isMethod('post'))
