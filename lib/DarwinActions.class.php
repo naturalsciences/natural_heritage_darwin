@@ -1,6 +1,92 @@
 <?php
 class DarwinActions extends sfActions
 {
+
+  protected static $correspondingTable = array (
+    'specimens'=>'Specimens',
+    'specimen_individuals'=>'SpecimenIndividuals',
+    'specimen_parts'=>'SpecimenParts',
+    'loans'=>'Loans',
+    'loan_items'=>'LoanItems',
+    'taxonomy'=>'Taxonomy',
+    'chronostratigraphy'=>'Chronostratigraphy',
+    'lithostratigraphy'=>'Lithostratigraphy',
+    'lithology'=>'Lithology',
+    'mineralogy'=>'Mineralogy',
+    'people'=>'People',
+    'insitutions'=>'People',
+    'gtu'=>'Gtu',
+    'expeditions'=>'Expeditions',
+  );
+
+  protected function getSpecificForm(sfWebRequest $request, $options=null)
+  {
+    $tableRecord = null;
+
+    $this->forward404Unless($request->hasParameter('table') && array_key_exists ($request->getParameter('table',''),self::$correspondingTable));
+
+    if($request->hasParameter('id'))
+      $tableRecord = Doctrine::getTable(self::$correspondingTable[$request->getParameter('table')])->findExcept($request->getParameter('id',0));
+
+    if($request->getParameter('table','')== 'loans')
+    {
+      $form = new LoansForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'loan_items')
+    {
+      $form = new LoanItemWidgetForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'specimens')
+    {
+      $form = new SpecimensForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'specimen_individuals')
+    {
+      $form = new SpecimenIndividualsForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'specimen_parts')
+    {
+      $form = new SpecimenPartsForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'taxonomy')
+    {
+      $form = new TaxonomyForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'lithology')
+    {
+      $form = new LithologyForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'mineralogy')
+    {
+      $form = new MineralogyForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'chronostratigraphy')
+    {
+      $form = new ChronostratigraphyForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'lithostratigraphy')
+    {
+      $form = new LithostratigraphyForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'people')
+    {
+      $form = new PeopleForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'institutions')
+    {
+      $form = new InstitutionsForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'gtu')
+    {
+      $form = new GtuForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'expeditions')
+    {
+      $form = new ExpeditionsForm($tableRecord,$options);
+    }
+    return $form;
+  }
+
   protected function setCommonValues($moduleName, $defaultOrderByField, sfWebRequest $request)
   {
     // Define all properties that will be either used by the data query or by the pager

@@ -2936,6 +2936,9 @@ input.complete_missing {
   text-align: center;
 }
 
+#hiddenFrame {
+  display:none;
+}
 .loan_item_dates label
 {
   font-weight:bold;

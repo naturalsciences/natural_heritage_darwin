@@ -13,6 +13,7 @@
 class Multimedia extends BaseMultimedia
 {
   private static $allowed_mime_type = array(
+    'csv' => 'text/csv',
     'txt' => 'text/plain',
 //   'htm' => 'text/html',
     'html' => 'text/html',
@@ -21,18 +22,19 @@ class Multimedia extends BaseMultimedia
 //    'js' => 'application/javascript',
 //    'json' => 'application/json',
     'xml' => 'application/xml',
+    'xsd' => 'application/xsd',
 //    'swf' => 'application/x-shockwave-flash',
 //    'flv' => 'video/x-flv',
 
     // images
     'png' => 'image/png',
 //    'jpe' => 'image/jpeg',
-//    'jpeg' => 'image/jpeg',
+    'jpeg' => 'image/jpeg',
     'jpg' => 'image/jpeg',
     'gif' => 'image/gif',
     'bmp' => 'image/bmp',
     'ico' => 'image/vnd.microsoft.icon',
-//    'tiff' => 'image/tiff',
+    'tiff' => 'image/tiff',
     'tif' => 'image/tiff',
     'svg' => 'image/svg+xml',
     'ogg' => 'application/ogg',
@@ -49,6 +51,8 @@ class Multimedia extends BaseMultimedia
     'mp3' => 'audio/mpeg',    
     'wma' => 'audio/x-ms-wma',
     'rla' => 'audio/vnd.rn-realaudio',
+    'flac' => 'audio/flac',
+    'aac' => 'audio/aac',
     // video
 //    'qt' => 'video/quicktime',
     'mov' => 'video/quicktime',

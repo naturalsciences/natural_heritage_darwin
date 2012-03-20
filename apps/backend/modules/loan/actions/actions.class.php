@@ -29,7 +29,6 @@ class loanActions extends DarwinActions
   {
     $loan = null;
     
-
     if ($fwd404)
       return $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter,0)));
 
@@ -38,7 +37,8 @@ class loanActions extends DarwinActions
       if($request->hasParameter($parameter))
         $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter) );      
       $form = new LoansForm($loan,$options);
-    }else
+    }
+    else
     {
       if($request->hasParameter($parameter))    
         $loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
@@ -305,47 +305,6 @@ class loanActions extends DarwinActions
     $form = $this->getLoanForm($request);
     $form->addInsurances($number);
     return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
-  }  
-
-  public function executeInsertFile(sfWebRequest $request)
-  {
-    $form = new RelatedFileForm() ;
-    $form->bind(null, $request->getFiles($request->getParameter('table')));
-    $file = $form->getValue('filenames');    
-    if($form->isValid()) 
-    {       
-      if(!Multimedia::CheckMimeType($file->getType()))
-        return $this->renderText("<script>parent.displayFileError('This type of file is not allowed')</script>") ;
-      // first save the file
-      $filename = sha1($file->getOriginalName().rand());
-      while(file_exists(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename))
-        $filename = sha1($file->getOriginalName().rand());
-      $extension = $file->getExtension($file->getOriginalExtension());
-      $file->save(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename);      
-      if($file->isSaved())
-        $file_info = array(
-          'title' => $file->getOriginalName(),
-          'filename' => $file->getOriginalName(),
-          'mime_type' => $file->getType(),
-          'type' => $extension,
-          'uri' => $filename,
-          'referenced_relation' => $request->getParameter('table'),
-          'creation_date' => date('m/d/Y')
-        ) ;
-        $this->getUser()->setAttribute($filename, $file_info);
-      return $this->renderText("<script>parent.getFileInfo('$filename')</script>") ;
-    }
-    return $this->renderText("<script>parent.displayFileError('".$form->getErrorSchema()->current()."')</script>") ;
-
-  }
-
-  public function executeAddRelatedFiles(sfWebRequest $request)
-  {
-    $number = intval($request->getParameter('num'));
-    $form = $this->getLoanForm($request);    
-    $file = $this->getUser()->getAttribute($request->getParameter('file_id')) ;    
-    $form->addRelatedFiles($number,$file);
-    return $this->renderPartial('loan/multimedia',array('form' => $form['newRelatedFiles'][$number], 'row_num'=>$number));
   }  
     
   public function executeAddStatus(sfWebRequest $request)
