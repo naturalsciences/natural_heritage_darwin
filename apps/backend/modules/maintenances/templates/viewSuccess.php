@@ -9,11 +9,11 @@
               <td><?php echo $maintenance->getCategory() ; ?></td>
         </tr>
         <tr>
-              <th><?php echo __('Action observation');?></th>
+              <th><?php echo __('Action / Observation');?></th>
               <td><?php echo $maintenance->getActionObservation() ?></td>
         </tr>
         <tr>
-              <th><?php echo __('Modification date time');?></th>
+              <th><?php echo __('Last update date');?></th>
               <td><?php $maintenance->getModificationDateTime() ?>
               </td>
         </tr>

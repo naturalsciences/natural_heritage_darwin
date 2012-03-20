@@ -8,7 +8,7 @@
     <th><?php echo __('Details') ;?></th>
     <th><?php echo __('Person') ;?></th>
     <th><?php echo __('Date') ;?></th>
-    <th><?php echo __('Has Files') ;?></th>
+    <th><?php echo __('Has files') ;?></th>
     <th></th>
   </tr>
 </thead>
@@ -47,7 +47,7 @@
  <tfoot>
    <tr>
      <td colspan="8">
-        <a href="<?php echo url_for('maintenances/add?table='.$table.'&record_id='.$eid);?>"><?php echo __('Add');?></a>
+        <a href="<?php echo url_for('maintenances/new?table='.$table.'&record_id='.$eid);?>" target="_blank"><?php echo __('Add');?></a>
      </td>
    </tr>
   </tfoot>

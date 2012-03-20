@@ -1,3 +1,4 @@
+<?php if(count($files) > 0) : ?>
 <table class="catalogue_table_view">
   <thead>
     <tr>
@@ -21,3 +22,4 @@
     <?php endforeach;?>
   </tbody>
 </table>
+<?php endif ; ?>

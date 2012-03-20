@@ -111,6 +111,10 @@
         <source>Usage</source>
         <target>Gebruik</target>
       </trans-unit>
+          <trans-unit id="1630">
+        <source>Add Status</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1476">
         <source>This lithological unit is linked with one or more specimens</source>
         <target>Deze lithologische eenheid is gelinkt aan één of meerdere specimens</target>
@@ -210,6 +214,14 @@
           <trans-unit id="1459">
         <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
         <target>De taxon die u koos, werd aangeduid als &quot;hernoemd&quot;.</target>
+      </trans-unit>
+          <trans-unit id="1631">
+        <source>Use Loan dates</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1632">
+        <source>Expedition / Return</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1460">
         <source>Click on the name below to replace the unit by its current name.</source>
@@ -634,6 +646,38 @@
           <trans-unit id="1605">
         <source>Person involved</source>
         <target>Betrokken persoon </target>
+      </trans-unit>
+          <trans-unit id="1633">
+        <source>Please save your item in order to view related maintenances</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1634">
+        <source>Rejected</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1635">
+        <source>Target</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1637">
+        <source>Has files</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1638">
+        <source>New Maintenance</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1639">
+        <source>Pick an action in the list</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1640">
+        <source>People ref</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1641">
+        <source>Last update date</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1505">
         <source>Choose contact</source>
@@ -4007,6 +4051,10 @@
         <source>Show only row with errors</source>
         <target>Toon enkel de rijen met fouten</target>
       </trans-unit>
+          <trans-unit id="1629">
+        <source>Suggestion send by</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="826">
         <source>must be at least 4 characters.</source>
         <target>moet ten minste 4 karakters bevatten.</target>
@@ -5018,14 +5066,6 @@
           <trans-unit id="1100">
         <source>This taxonomy already exists</source>
         <target>Deze taxonomie bestaat reeds</target>
-      </trans-unit>
-          <trans-unit id="1101">
-        <source>This habitat already exists</source>
-        <target>Deze habitat bestaat reeds</target>
-      </trans-unit>
-          <trans-unit id="1103">
-        <source>This associated multimedia already exists</source>
-        <target>De geassocieerde multimedia bestaat reeds</target>
       </trans-unit>
           <trans-unit id="1104">
         <source>This word already exists</source>

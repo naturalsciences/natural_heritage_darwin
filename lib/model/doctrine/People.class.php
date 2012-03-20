@@ -12,7 +12,7 @@ class People extends BasePeople
       'collector' => 'Collector',
       'preparator' => 'Preparator',
       'donator' => 'Donator',
-      'member' => 'Expedition Member'
+      'member' => 'Expedition member'
   );
 
   

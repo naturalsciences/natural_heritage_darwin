@@ -799,6 +799,10 @@
         <source>Specimen</source>
         <target>Echantillon</target>
       </trans-unit>
+          <trans-unit id="220">
+        <source>Contact</source>
+        <target>Contact</target>
+      </trans-unit>
           <trans-unit id="217">
         <source>Contribute</source>
         <target>Contributeur</target>
@@ -806,10 +810,6 @@
           <trans-unit id="218">
         <source>Contribute :</source>
         <target>contributeur :</target>
-      </trans-unit>
-          <trans-unit id="220">
-        <source>Contact</source>
-        <target>contact</target>
       </trans-unit>
           <trans-unit id="221">
         <source>Contact :</source>
@@ -4188,14 +4188,6 @@
         <source>This taxonomy already exists</source>
         <target>Ce taxon existe déjà</target>
       </trans-unit>
-          <trans-unit id="1101">
-        <source>This habitat already exists</source>
-        <target>Cet habitat existe déjà</target>
-      </trans-unit>
-          <trans-unit id="1103">
-        <source>This associated multimedia already exists</source>
-        <target>Ce multimédia associé existe déjà</target>
-      </trans-unit>
           <trans-unit id="1104">
         <source>This word already exists</source>
         <target>Ce mot existe déjà</target>
@@ -4608,6 +4600,14 @@
         <source>No Items here.</source>
         <target>Pas d&#039;objets ici.</target>
       </trans-unit>
+          <trans-unit id="1631">
+        <source>Use Loan dates</source>
+        <target>Utiliser les dates du prêt</target>
+      </trans-unit>
+          <trans-unit id="1632">
+        <source>Expedition / Return</source>
+        <target>Expédition / Retour</target>
+      </trans-unit>
           <trans-unit id="1473">
         <source>This collection is linked with one or more specimens</source>
         <target>Cette collection est liée avec un ou plusieurs échantillons</target>
@@ -4720,6 +4720,10 @@
         <source>Choose Insurer</source>
         <target>Choisissez un assureur</target>
       </trans-unit>
+          <trans-unit id="1633">
+        <source>Please save your item in order to view related maintenances</source>
+        <target>Veuillez sauvegarder l&#039;objet afin de voir les maintenances associées</target>
+      </trans-unit>
           <trans-unit id="1510">
         <source>Person</source>
         <target>Personne</target>
@@ -4735,6 +4739,10 @@
           <trans-unit id="1598">
         <source>Loan closed on %date%.</source>
         <target>Prêt fermé le %date%</target>
+      </trans-unit>
+          <trans-unit id="1634">
+        <source>Rejected</source>
+        <target>Rejeté</target>
       </trans-unit>
           <trans-unit id="806">
         <source>You don\&#039;t have the rights to insert into or update a specimen in this collection</source>
@@ -4864,6 +4872,10 @@
         <source>This widget allow you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
         <target>Cette widget vous permet d&#039;ajouter une note pour une partie spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges</target>
       </trans-unit>
+          <trans-unit id="1635">
+        <source>Target</source>
+        <target>Cible</target>
+      </trans-unit>
           <trans-unit id="1601">
         <source>Returned</source>
         <target>Renvoyé</target>
@@ -4875,6 +4887,10 @@
           <trans-unit id="1603">
         <source>Running</source>
         <target>En cours</target>
+      </trans-unit>
+          <trans-unit id="1637">
+        <source>Has files</source>
+        <target>Contient des fichiers</target>
       </trans-unit>
           <trans-unit id="1604">
         <source>Under evaluation</source>
@@ -4916,6 +4932,18 @@
         <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
         <target>L&#039;envoi du formulaire n&#039;a pu être réalisé. Cela signifie probablement que vous avez tenté de charger un fichier trop volumineux</target>
       </trans-unit>
+          <trans-unit id="1638">
+        <source>New Maintenance</source>
+        <target>Nouvelle Maintenance</target>
+      </trans-unit>
+          <trans-unit id="1639">
+        <source>Pick an action in the list</source>
+        <target>Choisissez une action dans la liste</target>
+      </trans-unit>
+          <trans-unit id="1640">
+        <source>People ref</source>
+        <target>Personne de ref</target>
+      </trans-unit>
           <trans-unit id="1352">
         <source>This application requires an authentication.</source>
         <target>Cette application nécessite une authentification.</target>
@@ -4955,6 +4983,10 @@
           <trans-unit id="1356">
         <source>This person already has this role</source>
         <target>Cette personne a déjà ce rôle</target>
+      </trans-unit>
+          <trans-unit id="1641">
+        <source>Last update date</source>
+        <target>Date de dernière mise à jour</target>
       </trans-unit>
           <trans-unit id="1180">
         <source>People role search</source>
@@ -5015,6 +5047,18 @@
           <trans-unit id="1363">
         <source>This widget can be used to add the equivalent vernacular name of the record in different languages. You can even add more than one vernacular name in the same language</source>
         <target>Ce widget peut être utilisé pour ajouter le nom vernaculaire équivalent de l&#039;enregistrement dans des langues différentes. Vous pouvez même ajouter plus d&#039;un nom vernaculaire dans la même langue.</target>
+      </trans-unit>
+          <trans-unit id="1642">
+        <source>Donator</source>
+        <target>Donateur</target>
+      </trans-unit>
+          <trans-unit id="1643">
+        <source>Expedition member</source>
+        <target>Membre d&#039;expédition</target>
+      </trans-unit>
+          <trans-unit id="1644">
+        <source>View Maintenance</source>
+        <target>Voir Maintenance</target>
       </trans-unit>
           <trans-unit id="1424">
         <source>This button (only visible when your file is on Pending state) will allow you to edit or remove data</source>
@@ -5372,6 +5416,10 @@
         <source>Extended to date</source>
         <target>Date de prolongation</target>
       </trans-unit>
+          <trans-unit id="1629">
+        <source>Suggestion send by</source>
+        <target>Suggestion envoyée par</target>
+      </trans-unit>
           <trans-unit id="1378">
         <source>Field to be corrected</source>
         <target>Champs à corriger</target>
@@ -5399,6 +5447,10 @@
           <trans-unit id="1457">
         <source>This file has been aborted. This line will remain for a limited time in the summary list just for information purposes only.</source>
         <target>Ce fichier a été annulé, cette ligne reste pendant un temps limité dans le résumé à titre d&#039;information.</target>
+      </trans-unit>
+          <trans-unit id="1630">
+        <source>Add Status</source>
+        <target>Ajouter Status</target>
       </trans-unit>
         </body>
   </file>
