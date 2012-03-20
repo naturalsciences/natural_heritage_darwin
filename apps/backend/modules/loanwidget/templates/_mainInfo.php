@@ -44,5 +44,55 @@
         <?php echo $form['description'] ?>
       </td>
     </tr>
+    <?php if(! $form->getObject()->isNew()):?>
+    <tr>
+      <td colspan="6">
+        <div>
+          <a href="#" id="loan_sync" title="<?php echo __('This will take a snapshot of the loan for archiving purposes.');?>">
+            <?php echo image_tag('arrow_refresh.png', 'id=arrow_spin');?> <?php echo __('Take a snapshot of the loan.');?>
+          </a>
+          <div class="last_sync_message">
+            <?php $hist = $form->getObject()->fetchHistories();
+            if(empty($hist)):?>
+              <?php echo __('Never synchronized');?>
+            <?php else:?>
+              <?php echo __('Last Synchronization on %date%', array('%date%'=> strftime("%d/%m/%Y %H:%M", strtotime($hist[0]['date']))));?>
+            <?php endif;?>
+          </div>
+        </div>
+        <script type="text/javascript">
+          $(document).ready(function () {
+            $('#loan_sync').click(function(event)
+            {
+              event.preventDefault();
+              el = $(this);
+              var answer = confirm('<?php echo __('Are you sure you want to do an archive of your loan ?');?>');
+              if(answer) {
+                should_rotate = true;
+                rotate();
+                $.ajax({
+                  url: '<?php echo url_for('loan/sync?id='.$form->getObject()->getId());?>',
+                  success: function(html){
+                    should_rotate = false;
+                  }
+                });
+              }
+            });
+            // dirty rotate script \o/
+            var count = 0;
+            should_rotate = false;
+            function rotate() {
+              var elem2 = document.getElementById('arrow_spin');
+                elem2.style.MozTransform = 'rotate('+count+'deg)';
+                elem2.style.WebkitTransform = 'rotate('+count+'deg)';
+                if (count==360) { count = 0 }
+                count+=45;
+                if(should_rotate) window.setTimeout(rotate, 100);
+            }
+          });
+        </script>
+      </td>
+    </tr>
+    <?php endif;?>
   </tbody>
 </table>

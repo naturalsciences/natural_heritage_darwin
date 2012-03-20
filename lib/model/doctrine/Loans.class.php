@@ -41,4 +41,9 @@ class Loans extends BaseLoans
     if($dt < $now) return true;
     return false;
   }
+
+  public function fetchHistories()
+  {
+     return Doctrine::getTable('Loans')->fetchHistories($this->getId());
+  }
 }

@@ -12,7 +12,6 @@ class LoansTable extends DarwinTable
    *
    * @return object LoansTable
    */
-  
   public static function getInstance()
   {
     return Doctrine_Core::getTable('Loans');
@@ -29,7 +28,6 @@ class LoansTable extends DarwinTable
   *
   * @return Doctrine_Query Query with loans ordered by from_date desc
   */
-
   public function getMyLoans($user_id, $max_items = FALSE) 
   {
 
@@ -46,5 +44,21 @@ class LoansTable extends DarwinTable
 
     return $q;
   }
+  
+  public function syncHistory($id) {
 
+    $conn_MGR = Doctrine_Manager::connection();
+    $conn = $conn_MGR->getDbh();
+    $conn->exec('SELECT fct_cpy_loan_history('.intval($id).')');
+  }
+
+  public function fetchHistories($id) {
+    $conn_MGR = Doctrine_Manager::connection();
+    $conn = $conn_MGR->getDbh();
+    $statement = $conn->prepare('SELECT loan_ref, count(*) as items, modification_date_time as date FROM loan_history where loan_ref = :id group by
+      loan_ref, modification_date_time  order by modification_date_time desc');
+    $statement->execute(array(':id' => $id)); 
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $results;
+  }
 }

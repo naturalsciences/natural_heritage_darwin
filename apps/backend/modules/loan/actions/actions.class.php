@@ -12,7 +12,7 @@ class loanActions extends DarwinActions
 {
   protected $widgetCategory = 'loan_widget';
 
-  protected function checkRight($loan_id)  
+  protected function checkRight($loan_id)
   {
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($loan_id), sprintf('Object loan does not exist (%s).', array($loan_id)));
@@ -329,5 +329,12 @@ class loanActions extends DarwinActions
       return $this->renderText('ok') ;
     }
     $this->redirect('board/index') ;
-  }  
+  }
+
+  public function executeSync(sfWebRequest $request)
+  {
+    $this->checkRight($request->getParameter('id'));
+    Doctrine::getTable('Loans')->syncHistory($request->getParameter('id'));
+    return $this->renderText('ok') ;
+  }
 }

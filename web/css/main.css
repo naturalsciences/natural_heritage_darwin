@@ -2954,3 +2954,12 @@ input.complete_missing {
 {
   text-align:right;
 }
+
+#loan_sync {
+  cursor: pointer;
+}
+.last_sync_message {
+  color: gray;
+
+  font-size: x-small;
+}
