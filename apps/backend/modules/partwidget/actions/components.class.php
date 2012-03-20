@@ -114,6 +114,12 @@ class partwidgetComponents extends sfComponents
     $this->form->loadEmbedLink();
 
   }  
+  public function executeRefRelatedFiles()
+  {
+    $this->defineForm();
+    if(!isset($this->form['newRelatedFiles']))
+      $this->form->loadEmbedRelatedFiles();
+  }
   public function executeMaintenance()
   {
     if(isset($this->form) )

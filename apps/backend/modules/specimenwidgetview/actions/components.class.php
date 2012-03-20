@@ -132,7 +132,12 @@ class specimenwidgetviewComponents extends sfComponents
   {
     $this->accompanying = Doctrine::getTable("SpecimensAccompanying")->findBySpecimenRef($this->eid) ;
   }
-  
+
+  public function executeRefRelatedFiles()
+  {
+    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimens', $this->eid) ;
+  }
+
   public function executeInformativeWorkflow()
   {    
     if(isset($this->form) )

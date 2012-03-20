@@ -74,6 +74,11 @@ class partwidgetViewComponents extends sfComponents
   public function executeExtLinks()
   {}  
   
+  public function executeRefRelatedFiles()
+  {
+    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimen_parts', $this->eid) ;
+  }
+
   public function executeInformativeWorkflow()
   {    
     if(isset($this->form) )

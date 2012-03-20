@@ -78,6 +78,11 @@ class individualswidgetViewComponents extends sfComponents
       $this->eid = $this->form->getObject()->getId() ;
   } 
     
+  public function executeRefRelatedFiles()
+  {
+    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimen_individuals', $this->eid) ;
+  }
+
   public function executeExtLinks()
   {}
 }

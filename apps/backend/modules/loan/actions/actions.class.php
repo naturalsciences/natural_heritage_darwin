@@ -130,17 +130,17 @@ class loanActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    // Forward to a 404 page if the requested expedition id is not found
+    // Forward to a 404 page if the requested loan id is not found
     $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
     if(!$this->getUser()->isAtLeast(Users::MANAGER))    
       if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId()))
-       $this->forwardToSecureAction();
+        $this->forwardToSecureAction();
     $this->loadWidgets();
   }
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
-    $form->bind($request->getParameter($form->getName()),$request->getFiles($this->form->getName()));   
+    $form->bind($request->getParameter($form->getName()),$request->getFiles($form->getName()));
     if ($form->isValid())
     {
       try
@@ -166,10 +166,10 @@ class loanActions extends DarwinActions
     {
       $ids = array();
       foreach($this->loans as $loan)
- 	$ids[] = $loan->getId();
+        $ids[] = $loan->getId();
       
       if( !empty($ids) )
-	$this->status = Doctrine::getTable('LoanStatus')->getFromLoans($ids);
+        $this->status = Doctrine::getTable('LoanStatus')->getFromLoans($ids);
     }
   }
 

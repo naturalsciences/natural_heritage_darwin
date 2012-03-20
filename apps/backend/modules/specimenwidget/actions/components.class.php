@@ -151,7 +151,14 @@ class specimenwidgetComponents extends sfComponents
     $this->defineForm();
     if(!isset($this->form['newExtLinks']))
       $this->form->loadEmbedLink();
-  }    
+  }
+    
+  public function executeRefRelatedFiles()
+  {
+    $this->defineForm();
+    if(!isset($this->form['newRelatedFiles']))
+      $this->form->loadEmbedRelatedFiles();
+  }
   
   public function executeRefIdentifications()
   {
@@ -168,9 +175,6 @@ class specimenwidgetComponents extends sfComponents
     $this->form->loadEmbedAccompanying();
   }
 
-  public function executeLinkHabitat()
-  {}
-  
   public function executeInformativeWorkflow()
   {    
     if(isset($this->form) )

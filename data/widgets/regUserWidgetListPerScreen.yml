@@ -483,6 +483,29 @@ sw17:
    title_perso: Donators or Sellers
    all_public: true
 
+sw22:
+   col_num: 2
+   category: specimen_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 10
+   opened: true
+   visible: true
+   title_perso: Informative Workflow
+   all_public: true
+
+sw23:
+   col_num: 2
+   category: specimen_widget
+   group_name: refRelatedFiles
+   mandatory: false
+   order_by: 11
+   opened: false
+   visible: false
+   is_available: true
+   title_perso: Related Files
+   all_public: true
+
 spi1:
    col_num: 1
    category: individuals_widget
@@ -549,6 +572,29 @@ spi6:
   title_perso: Count
   all_public: true
 
+spi11:
+   col_num: 2
+   category: individuals_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Informative Workflow
+   all_public: true
+
+spi12:
+   col_num: 2
+   category: individuals_widget
+   group_name: refRelatedFiles
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Related Files
+   all_public: true
+
 sp1:
    col_num: 1
    category: part_widget
@@ -580,6 +626,29 @@ sp11:
    opened: true
    visible: true
    title_perso: Codes
+   all_public: true
+
+sp12:
+   col_num: 2
+   category: part_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Informative Workflow
+   all_public: true
+
+sp13:
+   col_num: 2
+   category: part_widget
+   group_name: refRelatedFiles
+   mandatory: false
+   order_by: 7
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Related Files
    all_public: true
 
 tw1:
@@ -902,39 +971,6 @@ u1wmetto4:
    title_perso: Informative Workflow 
    all_public: true
      
-sw22:
-   col_num: 2
-   category: specimen_widget
-   group_name: informativeWorkflow
-   mandatory: false
-   order_by: 10
-   opened: true
-   visible: true
-   title_perso: Informative Workflow   
-   all_public: true   
-
-spi11:
-   col_num: 2
-   category: individuals_widget
-   group_name: informativeWorkflow
-   mandatory: false
-   order_by: 2
-   opened: true
-   visible: true
-   title_perso: Informative Workflow   
-   all_public: true   
-   
-sp12:
-   col_num: 2
-   category: part_widget
-   group_name: informativeWorkflow
-   mandatory: false
-   order_by: 6
-   opened: true
-   visible: true
-   title_perso: Informative Workflow
-   all_public: true   
-
 pe8:
    col_num: 1
    category: people_widget

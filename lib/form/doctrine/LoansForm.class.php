@@ -21,10 +21,7 @@ class LoansForm extends BaseLoansForm
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
 
-    //Loan form is submited to upload file, when called like that we don't want some fields to be required
-
     $this->widgetSchema['name'] = new sfWidgetFormInput();
-    $this->validatorSchema['name'] = new sfValidatorString(array('required' => true)) ;
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
@@ -38,16 +35,6 @@ class LoansForm extends BaseLoansForm
       array('class' => 'from_date')
     );
 
-    $this->validatorSchema['from_date'] = new sfValidatorDate(
-      array(
-        'required' => false,
-        'min' => $minDate->getDateTime(),
-        'date_format' => 'd/M/Y',
-      ),
-      array('invalid' => 'Invalid date "from"')
-    );
-
-
     $this->widgetSchema['to_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
@@ -60,20 +47,6 @@ class LoansForm extends BaseLoansForm
       array('class' => 'from_date')
     );
 
-    $this->validatorSchema['to_date'] = new sfValidatorDate(
-      array(
-        'required' => false,
-        'min' => $minDate->getDateTime(),
-        'date_format' => 'd/M/Y',
-      ),
-      array('invalid' => 'Invalid date "to"')
-    );
-
-    $this->widgetSchema->setLabels(array('from_date' => 'Starts on',
-                                         'to_date' => 'Ends on'
-                                        )
-                                  );
-
     $this->widgetSchema['extended_to_date'] = new widgetFormJQueryFuzzyDate(
       array(
         'culture'=> $this->getCurrentCulture(), 
@@ -85,7 +58,35 @@ class LoansForm extends BaseLoansForm
       ),
       array('class' => 'to_date')
     );
+    $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));    
+    $this->widgetSchema['users'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->widgetSchema['relatedfile'] = new sfWidgetFormInputHidden(array('default'=>1));
+    /* Input file for related files */
+    $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
+    $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
 
+    /*Validators*/
+
+    $this->validatorSchema['name'] = new sfValidatorString(array('required' => true)) ;
+    $this->validatorSchema['from_date'] = new sfValidatorDate(
+      array(
+        'required' => false,
+        'min' => $minDate->getDateTime(),
+        'date_format' => 'd/M/Y',
+      ),
+      array('invalid' => 'Invalid date "from"')
+    );
+    $this->validatorSchema['to_date'] = new sfValidatorDate(
+      array(
+        'required' => false,
+        'min' => $minDate->getDateTime(),
+        'date_format' => 'd/M/Y',
+      ),
+      array('invalid' => 'Invalid date "to"')
+    );
     $this->validatorSchema['extended_to_date'] = new sfValidatorDate(
       array(
         'required' => false,
@@ -94,32 +95,30 @@ class LoansForm extends BaseLoansForm
       ),
       array('invalid' => 'Invalid date "Extended"')
     );
-    
-    /* input file for related files */
-    $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
-    $this->widgetSchema['filenames']->setLabel("Add File") ;
-    $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
-    $this->validatorSchema['filenames'] = new sfValidatorPass() ;/*File(
+
+    $this->validatorSchema['comment'] = new sfValidatorPass();
+    $this->validatorSchema['sender'] = new sfValidatorPass();
+    $this->validatorSchema['receiver'] = new sfValidatorPass();
+    $this->validatorSchema['users'] = new sfValidatorPass();
+    $this->validatorSchema['insurance'] = new sfValidatorPass();
+    $this->validatorSchema['relatedfile'] = new sfValidatorPass();
+    //Loan form is submited to upload file, when called like that we don't want some fields to be required
+    $this->validatorSchema['filenames'] = new sfValidatorPass();/*File(
   array(
       'required' => false,
       'validated_file_class' => 'myValidatedFile'
   ));  */
 
-    $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
-    $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));        
-    $this->widgetSchema['relatedfile'] = new sfWidgetFormInputHidden(array('default'=>1));    
-    $this->widgetSchema['users'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));    
-
-    $this->validatorSchema['comment'] = new sfValidatorPass();
-    $this->validatorSchema['sender'] = new sfValidatorPass();
-    $this->validatorSchema['receiver'] = new sfValidatorPass();    
-    $this->validatorSchema['relatedfile'] = new sfValidatorPass();
-    $this->validatorSchema['users'] = new sfValidatorPass();
-    $this->validatorSchema['insurance'] = new sfValidatorPass();
-
     $this->mergePostValidator( new LoanValidatorDates()) ;
+
+    /*Labels*/
+
+    $this->widgetSchema->setLabels(array('from_date' => 'Starts on',
+                                         'to_date' => 'Ends on',
+                                         'filenames' => 'Add File'
+                                        )
+                                  );
+
   }
   
   public function addUsers($num, $user_ref, $order_by=0)

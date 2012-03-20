@@ -1,0 +1,1 @@
+<?php include_partial('multimedia/refRelatedFiles',  array('table' => 'specimen_individuals', 'eid' => $eid, 'form' => $form));?>

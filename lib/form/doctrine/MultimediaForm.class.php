@@ -20,7 +20,7 @@ class MultimediaForm extends BaseMultimediaForm
     $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
           
     $this->widgetSchema['title'] = new sfWidgetFormInput();
-    $this->widgetSchema['title']->setAttributes(array('class'=>'medium_small_size'));
+    $this->widgetSchema['title']->setAttributes(array('class'=>'small_size'));
     $this->validatorSchema['title'] = new sfValidatorString();
     
     if($this->getObject()->isNew())
@@ -31,7 +31,7 @@ class MultimediaForm extends BaseMultimediaForm
     else unset($this['uri']) ;
       
     $this->widgetSchema['description'] = new sfWidgetFormInput();    
-    $this->widgetSchema['description']->setAttributes(array('class'=>'medium_size'));  
+    $this->widgetSchema['description']->setAttributes(array('class'=>'medium_small_size'));
     $this->validatorSchema['description'] = new sfValidatorString(array('required'=>false)); 
 
     $this->widgetSchema['filename'] = new sfWidgetFormInputHidden();
@@ -51,6 +51,6 @@ class MultimediaForm extends BaseMultimediaForm
   
   public function doSave($con = null)
   {
-    $this->offsetUnset('id');     
+    $this->offsetUnset('id');  
   }
 }

@@ -177,8 +177,17 @@ class specimenActions extends DarwinActions
           $links = $this->getRecordIfDuplicate($val->getId(),$links); 
           $this->form->addExtLinks($key, $links) ;          
         } 
-        $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('specimens',$duplic) ;
+        // reembed Related files
+        $RelatedFiles = Doctrine::getTable('Multimedia')->findForTable('specimens',$duplic) ;
+        foreach ($RelatedFiles as $key=>$val)
+        {
+          $relFile = new Multimedia();
+          $relFile = $this->getRecordIfDuplicate($val->getId(),$relFile);
+// @ToDo Correct this
+//          $this->form->addRelatedFiles($key, $relFile) ;
+        }
         // reembed duplicated collector
+        $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('specimens',$duplic) ;
         if(count($Catalogue))
         {
           foreach ($Catalogue['collector'] as $key=>$val)
@@ -269,7 +278,7 @@ class specimenActions extends DarwinActions
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
-    $form->bind($request->getParameter($form->getName()));
+    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
     if ($form->isValid())
     {
       try

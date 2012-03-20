@@ -84,6 +84,15 @@ class individualsActions extends DarwinActions
           $links = $this->getRecordIfDuplicate($val->getId(),$links); 
           $this->individual->addExtLinks($key, $links) ;          
         }        
+        // reembed Related files
+        $RelatedFiles = Doctrine::getTable('Multimedia')->findForTable('specimen_individuals',$duplic) ;
+        foreach ($RelatedFiles as $key=>$val)
+        {
+          $relFile = new Multimedia();
+          $relFile = $this->getRecordIfDuplicate($val->getId(),$relFile);
+// @ToDo Correct this
+//          $this->form->addRelatedFiles($key, $relFile) ;
+        }
         //reembed identification
         $Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimen_individuals',$duplic) ;
         foreach ($Identifications as $key=>$val)
@@ -103,7 +112,7 @@ class individualsActions extends DarwinActions
     }
     if($request->isMethod('post'))
     {
-      $this->individual->bind( $request->getParameter('specimen_individuals') );
+      $this->individual->bind( $request->getParameter('specimen_individuals'), $request->getFiles('specimen_individuals') );
       if( $this->individual->isValid())
       {
         try

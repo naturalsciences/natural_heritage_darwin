@@ -56,9 +56,12 @@
       hideFileError();
       name = $(this).val().replace(/C:\\fakepath\\/i, '') ;
       form = $(this).closest('form') ;
-      form.attr('action','<?php echo url_for("multimedia/insertFile?table=$table".($form->getObject()->isNew()?"":"&id=".$form->getObject()->getId())) ;?>') ;
+      recoverAction = form.attr('action');
+      form.attr('action','<?php echo url_for("multimedia/insertFile?table=$table&formname=".$form->getName().($form->getObject()->isNew()?"":"&id=".$form->getObject()->getId())) ;?>') ;
       form.attr('target','hiddenFrame') ;
       form.submit();
+      form.attr('action', recoverAction);
+      form.removeAttr('target');
       hideForRefresh('#refRelatedFiles');
       return false;
     });

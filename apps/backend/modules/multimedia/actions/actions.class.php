@@ -74,12 +74,12 @@ class multimediaActions extends DarwinActions
   public function executeInsertFile(sfWebRequest $request)
   {
     $form = new RelatedFileForm() ;
-    $form->bind(null, $request->getFiles($request->getParameter('table')));
+    $form->bind(null, $request->getFiles($request->getParameter('formname')));
     $file = $form->getValue('filenames');
     if($form->isValid())
     {
       if(!Multimedia::CheckMimeType($file->getType()))
-        return $this->renderText("<script>parent.displayFileError('This type of file is not allowed')</script>") ;
+        return $this->renderText('<script type="text/javascript">parent.displayFileError(\'This type of file is not allowed\')</script>') ;
       // first save the file
       $filename = sha1($file->getOriginalName().rand());
       while(file_exists(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename))

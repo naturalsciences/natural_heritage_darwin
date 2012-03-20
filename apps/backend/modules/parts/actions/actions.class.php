@@ -68,6 +68,15 @@ class partsActions extends DarwinActions
           $links = $this->getRecordIfDuplicate($val->getId(),$links); 
           $this->form->addExtLinks($key, $links) ;          
         }            
+        // reembed Related files
+        $RelatedFiles = Doctrine::getTable('Multimedia')->findForTable('specimen_parts',$duplic) ;
+        foreach ($RelatedFiles as $key=>$val)
+        {
+          $relFile = new Multimedia();
+          $relFile = $this->getRecordIfDuplicate($val->getId(),$relFile);
+// @ToDo Correct this
+//          $this->form->addRelatedFiles($key, $relFile) ;
+        }
         // reembed duplicated codes
         $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimen_parts',$duplic) ;
         foreach ($Codes as $key=>$val)
@@ -88,7 +97,7 @@ class partsActions extends DarwinActions
     }
     if($request->isMethod('post'))
     {
-      $this->form->bind( $request->getParameter('specimen_parts') );
+      $this->form->bind( $request->getParameter('specimen_parts'), $request->getFiles('specimen_parts') );
       if( $this->form->isValid() )
       {
         try
