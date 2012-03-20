@@ -56,7 +56,7 @@
             if(empty($hist)):?>
               <?php echo __('Never synchronized');?>
             <?php else:?>
-              <?php echo __('Last Synchronization on %date%', array('%date%'=> strftime("%d/%m/%Y %H:%M", strtotime($hist[0]['date']))));?>
+              <?php echo __('Last synchronization on %date%', array('%date%'=> strftime("%d/%m/%Y %H:%M", strtotime($hist[0]['date']))));?>
             <?php endif;?>
           </div>
         </div>
