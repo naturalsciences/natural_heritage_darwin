@@ -4562,3 +4562,57 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION fct_cpy_loan_history(loan_id integer) RETURNS boolean
+AS $$
+BEGIN
+
+  -- LOAN
+  INSERT INTO loan_history (loan_ref, referenced_table, record_line)
+  (
+    select loan_id, 'loans', hstore(l.*) from loans l where l.id = loan_id
+
+    UNION
+
+    select loan_id, 'catalogue_people', hstore(p.*) from catalogue_people p where 
+      (referenced_relation='loans'  AND record_id = loan_id) OR (referenced_relation='loan_items'  AND record_id in (select id from loan_items l where l.loan_ref = loan_id) )
+
+    UNION
+
+    select loan_id, 'catalogue_properties', hstore(c.*) from catalogue_properties c where 
+      (referenced_relation='loans'  AND record_id = loan_id) OR (referenced_relation='loan_items'  AND record_id in (select id from loan_items l where l.loan_ref = loan_id) )
+
+  );
+
+
+  --ITEMS
+  INSERT INTO loan_history (loan_ref, referenced_table, record_line)
+  (
+    select loan_id, 'loan_items', hstore(l.*) from loan_items l where l.loan_ref = loan_id
+
+    UNION
+
+    select loan_id, 'darwin_flat', hstore(f.*) from darwin_flat f where f.part_ref in (select part_ref from loan_items l where l.loan_ref = loan_id)
+  );
+
+  -- BOTH
+  INSERT INTO loan_history (loan_ref, referenced_table, record_line)
+  (
+    select loan_id, 'people', hstore(p.*) from people p where id in (select (record_line->'people_ref')::int from loan_history where loan_ref = loan_id 
+      and referenced_table='catalogue_people' and modification_date_time = now())
+
+    UNION
+
+    select loan_id, 'people_addresses', hstore(p.*) from people_addresses p where person_user_ref in (select (record_line->'id')::int from loan_history where loan_ref = loan_id 
+      and referenced_table='people' and modification_date_time = now())
+
+    UNION
+
+    select loan_id, 'properties_values', hstore(v.*) from properties_values v where property_ref in (select (record_line->'id')::int from loan_history where loan_ref = loan_id 
+      and referenced_table='catalogue_properties' and modification_date_time = now())
+  );
+  RETURN true;
+END;
+$$ LANGUAGE plpgsql;
+

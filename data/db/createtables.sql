@@ -2090,3 +2090,21 @@ comment on column loan_status.status is 'Current status of the loan in a list (n
 comment on column loan_status.modification_date_time is 'date of the modification';
 comment on column loan_status.comment is 'comment of the status modification';
 comment on column loan_status.is_last is 'flag telling which line is the current line';
+
+
+create table loan_history (
+  id serial,
+  loan_ref integer not null,
+  referenced_table text not null,
+  modification_date_time update_date_time,
+  record_line hstore,
+  constraint pk_loan_history primary key (id),
+  constraint fk_loan_history_loan_ref foreign key (loan_ref) references loans(id) on delete cascade
+);
+
+comment on table loan_status is 'Table is a snapshot of an entire loan and related informations at a certain time';
+
+comment on column loan_history.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_history.referenced_table is 'Mandatory Reference to the table refereced';
+comment on column loan_history.modification_date_time is 'date of the modification';
+comment on column loan_history.record_line is 'hstore containing the whole line of referenced_table';
