@@ -1680,6 +1680,7 @@ MyWidgets:
         visible: true
         is_available: true 
         title_perso: Related Files
+        
     u1m1:
         User: u1
         col_num: 1
@@ -1691,6 +1692,7 @@ MyWidgets:
         is_available: true
         title_perso: Related Files
         all_public: true   
+        
     u1m2:
         User: u1
         col_num: 1
@@ -1702,7 +1704,9 @@ MyWidgets:
         is_available: true
         title_perso: Comments
         all_public: true
+        
     u1m3:
+        User: u1    
         col_num: 1
         category: maintenances_widget
         group_name: refProperties
@@ -1711,7 +1715,8 @@ MyWidgets:
         visible: false
         is_available: true
         title_perso: Properties
-        all_public: true       
+        all_public: true   
+            
     u1m4:
         User: u1
         col_num: 1
