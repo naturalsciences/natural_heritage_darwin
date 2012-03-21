@@ -913,7 +913,7 @@ table.widget_right tbody td
 table.encoding thead
 {
   background-color: #C3CF56;
-  color:white;
+  color:#525A20;
   border: 1px solid #C1CF56;
 }
 
@@ -1168,7 +1168,7 @@ thead.spec_ident_identifiers_head tr td
   padding-top:0.3em;
   padding-bottom:0.3em;
   background-color:#c1cf56;
-  color:white;
+  color:#525A20;
 }
 
 tbody.spec_ident_identifiers_data tr td
@@ -1191,7 +1191,7 @@ tbody.spec_ident_identifiers_data tr td
 {
   vertical-align:middle;
   text-decoration:none;
-  color:white;
+  color:#525A20;
   margin-top:0.3em ;
   margin-bottom:0.3em ;    
 
