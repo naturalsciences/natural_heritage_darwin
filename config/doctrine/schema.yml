@@ -678,7 +678,6 @@ Specimens:
         acquisition_date_mask: { type: integer, notnull: true, default:0}
         acquisition_date: { type: string, default: '0001-01-01'}
         station_visible: { type: boolean, default: true}
-        multimedia_visible: { type: boolean, default: true}
         ig_ref: { type: integer}
     relations:
         Collections:
@@ -2113,7 +2112,8 @@ Multimedia:
         creation_date: { type: string, notnull: true, default: '0001-01-01'}
         creation_date_mask: { type: integer, notnull: true, default:0}
         mime_type: { type: string }
-
+        visible: {type:boolean, notnull: true, default: true}
+        publishable: {type:boolean, notnull: true, default: true}
 
 Loans:
     columns:

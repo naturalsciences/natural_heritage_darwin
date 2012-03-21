@@ -156,6 +156,8 @@ class specimenwidgetComponents extends sfComponents
   public function executeRefRelatedFiles()
   {
     $this->defineForm();
+    if(isset($this->form) )
+      $this->eid = $this->form->getObject()->getId() ;
     if(!isset($this->form['newRelatedFiles']))
       $this->form->loadEmbedRelatedFiles();
   }

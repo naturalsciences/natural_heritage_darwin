@@ -19,6 +19,8 @@
  * @property string $creation_date
  * @property integer $creation_date_mask
  * @property string $mime_type
+ * @property boolean $visible
+ * @property boolean $publishable
  * 
  * @method integer    getId()                  Returns the current record's "id" value
  * @method string     getReferencedRelation()  Returns the current record's "referenced_relation" value
@@ -33,6 +35,8 @@
  * @method string     getCreationDate()        Returns the current record's "creation_date" value
  * @method integer    getCreationDateMask()    Returns the current record's "creation_date_mask" value
  * @method string     getMimeType()            Returns the current record's "mime_type" value
+ * @method boolean    getVisible()             Returns the current record's "visible" value
+ * @method boolean    getPublishable()         Returns the current record's "publishable" value
  * @method Multimedia setId()                  Sets the current record's "id" value
  * @method Multimedia setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method Multimedia setRecordId()            Sets the current record's "record_id" value
@@ -46,6 +50,8 @@
  * @method Multimedia setCreationDate()        Sets the current record's "creation_date" value
  * @method Multimedia setCreationDateMask()    Sets the current record's "creation_date_mask" value
  * @method Multimedia setMimeType()            Sets the current record's "mime_type" value
+ * @method Multimedia setVisible()             Sets the current record's "visible" value
+ * @method Multimedia setPublishable()         Sets the current record's "publishable" value
  * 
  * @package    darwin
  * @subpackage model
@@ -112,6 +118,16 @@ abstract class BaseMultimedia extends sfDoctrineRecord
              ));
         $this->hasColumn('mime_type', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('visible', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => true,
+             ));
+        $this->hasColumn('publishable', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => true,
              ));
     }
 

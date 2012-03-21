@@ -29,6 +29,8 @@ abstract class BaseMultimediaForm extends BaseFormDoctrine
       'creation_date'       => new sfWidgetFormTextarea(),
       'creation_date_mask'  => new sfWidgetFormInputText(),
       'mime_type'           => new sfWidgetFormTextarea(),
+      'visible'             => new sfWidgetFormInputCheckbox(),
+      'publishable'         => new sfWidgetFormInputCheckbox(),
     ));
 
     $this->setValidators(array(
@@ -46,6 +48,8 @@ abstract class BaseMultimediaForm extends BaseFormDoctrine
       'creation_date'       => new sfValidatorString(array('required' => false)),
       'creation_date_mask'  => new sfValidatorInteger(array('required' => false)),
       'mime_type'           => new sfValidatorString(array('required' => false)),
+      'visible'             => new sfValidatorBoolean(array('required' => false)),
+      'publishable'         => new sfValidatorBoolean(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('multimedia[%s]');

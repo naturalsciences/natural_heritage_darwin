@@ -46,6 +46,12 @@ class MultimediaForm extends BaseMultimediaForm
     $this->widgetSchema['creation_date'] = new sfWidgetFormInputHidden(); 
     $this->validatorSchema['creation_date'] = new sfValidatorPass();  
     
+    $this->widgetSchema['visible'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['visible'] = new sfValidatorBoolean();
+
+    $this->widgetSchema['publishable'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['publishable'] = new sfValidatorBoolean();
+
     $this->mergePostValidator(new MultimediaFileValidatorSchema());    
   }  
   

@@ -14,7 +14,6 @@ class SpecimensForm extends BaseSpecimensForm
     unset(
       $this['id'],
       $this['acquisition_date_mask'],
-      $this['multimedia_visible'],
       $this['collecting_tools_list'],
       $this['collecting_methods_list']
     );

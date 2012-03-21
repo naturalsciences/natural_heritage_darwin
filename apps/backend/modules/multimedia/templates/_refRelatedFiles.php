@@ -11,6 +11,12 @@
         <?php echo __('Created At') ; ?>
       </th>
       <th>
+        <?php echo __('Visible ?') ; ?>
+      </th>
+      <th>
+        <?php echo __('Publishable ?') ; ?>
+      </th>
+      <th>
         <?php echo $form['relatedfile'];?>
       </th>
     </tr>
@@ -28,7 +34,7 @@
   </tbody>
   <tfoot>
     <tr>
-      <td colspan='4'>
+      <td colspan='6'>
         <ul class="error_list" id="file_error_message" style="display:none">
           <li></li>
         </ul>

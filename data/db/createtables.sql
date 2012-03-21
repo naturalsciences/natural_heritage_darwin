@@ -493,6 +493,8 @@ create table multimedia
         creation_date date not null default '0001-01-01'::date,
         creation_date_mask integer not null default 0,
         mime_type varchar not null,
+        visible boolean not null default true,
+        publishable boolean not null default true,
         constraint pk_multimedia primary key (id)
       )
       inherits (template_table_record_ref);
@@ -512,6 +514,8 @@ comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
 comment on column multimedia.search_ts is 'tsvector form of title and description fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
+comment on column multimedia.visible is 'Flag telling if the related file has been chosen to be publically visible or not';
+comment on column multimedia.publishable is 'Flag telling if the related file has been chosen as a prefered item for publication - Would be for example used for preselection of media published for Open Up project';
 
 create table template_people_users_comm_common
        (
@@ -1082,7 +1086,6 @@ create table specimens
         acquisition_date_mask integer not null default 0,
         acquisition_date date not null default '01/01/0001',
         station_visible boolean not null default true,
-        multimedia_visible boolean not null default true,
         ig_ref integer,
         constraint pk_specimens primary key (id),
         constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
@@ -1116,7 +1119,6 @@ comment on column specimens.host_specimen_ref is 'When current specimen encoded 
 comment on column specimens.acquisition_category is 'Describe how the specimen was collected: expedition, donation,...';
 comment on column specimens.acquisition_date_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 comment on column specimens.acquisition_date is 'Date Composed (if possible) of the acquisition';
-comment on column specimens.multimedia_visible is 'Flag telling if the multimedia attached to this specimen can be visible or not';
 comment on column specimens.station_visible is 'Flag telling if the sampling location can be visible or must be hidden for the specimen encoded';
 comment on column specimens.lithology_ref is 'Reference of a rock classification unit associated to the specimen encoded - id field of lithology table';
 comment on column specimens.mineral_ref is 'Reference of a mineral classification unit associated to the specimen encoded - id field of mineralogy table';

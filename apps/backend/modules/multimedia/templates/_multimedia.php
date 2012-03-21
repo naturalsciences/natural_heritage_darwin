@@ -7,6 +7,8 @@
   <td><?php echo $form['description']->render() ; ?></td>
   <td><?php $date = new DateTime($form['creation_date']->getValue());
                 echo $date->format('d/m/Y'); ?></td>
+  <td><?php echo $form['visible']->render() ; ?></td>
+  <td><?php echo $form['publishable']->render() ; ?></td>
   <td class="widget_row_delete" rowspan="2">
     <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_file_'.$row_num); ?>
     <?php echo $form->renderHiddenFields();?>
@@ -42,6 +44,6 @@
       <?php echo $form['filename']->getValue(); ?>
     <?php endif ; ?>
   </td>
-  <td colspan="2"><?php echo $form['mime_type']->getValue() ; ?></td>
+  <td colspan="4"><?php echo $form['mime_type']->getValue() ; ?></td>
 </tr>
 <?php endif; ?>

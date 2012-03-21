@@ -113,7 +113,7 @@ class taxonomyActions extends DarwinActions
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
-    $form->bind( $request->getParameter($form->getName()) );
+    $form->bind( $request->getParameter($form->getName()),$request->getFiles($form->getName()) );
     if ($form->isValid())
     {
       try

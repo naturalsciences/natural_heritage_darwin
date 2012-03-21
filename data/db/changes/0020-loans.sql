@@ -2,6 +2,8 @@ SET search_path = darwin2, public;
 
 \i ../createfunctions.sql
 
+ALTER TABLE specimens DROP COLUMN multimedia_visible CASCADE;
+
 ALTER TABLE multimedia RENAME TO old_multimedia;
 ALTER TABLE old_multimedia ALTER COLUMN id SET DEFAULT NULL;
 ALTER TABLE old_multimedia DROP CONSTRAINT pk_multimedia CASCADE;
@@ -30,6 +32,8 @@ create table multimedia
         creation_date date not null default '0001-01-01'::date,
         creation_date_mask integer not null default 0,
         mime_type varchar not null,
+        visible boolean not null default true,
+        publishable boolean not null default true,
         constraint pk_multimedia primary key (id)
       )
       inherits (template_table_record_ref);
@@ -51,6 +55,8 @@ comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
 comment on column multimedia.search_ts is 'tsvector form of title and description fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
+comment on column multimedia.visible is 'Flag telling if the related file has been chosen to be publically visible or not';
+comment on column multimedia.publishable is 'Flag telling if the related file has been chosen as a prefered item for publication - Would be for example used for preselection of media published for Open Up project';
 
 ALTER TABLE multimedia OWNER TO darwin2;
 ALTER TABLE multimedia_id_seq OWNER TO darwin2;
