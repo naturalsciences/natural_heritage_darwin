@@ -230,13 +230,42 @@ comment on column loan_status.modification_date_time is 'date of the modificatio
 comment on column loan_status.comment is 'comment of the status modification';
 comment on column loan_status.is_last is 'flag telling which line is the current line';
 
+
 ALTER TABLE loan_status OWNER TO darwin2;
 ALTER TABLE loan_status_id_seq OWNER TO darwin2;
 GRANT USAGE ON SEQUENCE darwin2.loan_status_id_seq TO cebmpad;
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_status TO cebmpad;
 GRANT SELECT ON darwin2.loan_status TO d2viewer;
 
+
+
+create table loan_history (
+  id serial,
+  loan_ref integer not null,
+  referenced_table text not null,
+  modification_date_time update_date_time,
+  record_line hstore,
+  constraint pk_loan_history primary key (id),
+  constraint fk_loan_history_loan_ref foreign key (loan_ref) references loans(id) on delete cascade
+);
+
+comment on table loan_history is 'Table is a snapshot of an entire loan and related informations at a certain time';
+
+comment on column loan_history.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_history.referenced_table is 'Mandatory Reference to the table refereced';
+comment on column loan_history.modification_date_time is 'date of the modification';
+comment on column loan_history.record_line is 'hstore containing the whole line of referenced_table';
+
+ALTER TABLE loan_history OWNER TO darwin2;
+ALTER TABLE loan_history_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.loan_history_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_history TO cebmpad;
+
 DROP TRIGGER trg_cpy_toFullText_multimedia on multimedia;
+
+CREATE TRIGGER trg_cpy_ig_to_loan_items AFTER UPDATE
+  ON specimens FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_ig_to_loan_items();
 
 CREATE TRIGGER trg_cpy_fullToIndex_loans BEFORE INSERT OR UPDATE
   ON loans FOR EACH ROW

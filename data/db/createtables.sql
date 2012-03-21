@@ -2102,7 +2102,7 @@ create table loan_history (
   constraint fk_loan_history_loan_ref foreign key (loan_ref) references loans(id) on delete cascade
 );
 
-comment on table loan_status is 'Table is a snapshot of an entire loan and related informations at a certain time';
+comment on table loan_history is 'Table is a snapshot of an entire loan and related informations at a certain time';
 
 comment on column loan_history.loan_ref is 'Mandatory Reference to a loan';
 comment on column loan_history.referenced_table is 'Mandatory Reference to the table refereced';
