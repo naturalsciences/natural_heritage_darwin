@@ -1,16 +1,16 @@
 <?php
 
 /**
- * BibliographyPeople form base class.
+ * CatalogueBibliography form base class.
  *
- * @method BibliographyPeople getObject() Returns the current form's model object
+ * @method CatalogueBibliography getObject() Returns the current form's model object
  *
  * @package    darwin
  * @subpackage form
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-abstract class BaseBibliographyPeopleForm extends BaseFormDoctrine
+abstract class BaseCatalogueBibliographyForm extends BaseFormDoctrine
 {
   public function setup()
   {
@@ -28,7 +28,7 @@ abstract class BaseBibliographyPeopleForm extends BaseFormDoctrine
       'bibliography_ref'    => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Bibliography'))),
     ));
 
-    $this->widgetSchema->setNameFormat('bibliography_people[%s]');
+    $this->widgetSchema->setNameFormat('catalogue_bibliography[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
@@ -39,7 +39,7 @@ abstract class BaseBibliographyPeopleForm extends BaseFormDoctrine
 
   public function getModelName()
   {
-    return 'BibliographyPeople';
+    return 'CatalogueBibliography';
   }
 
 }

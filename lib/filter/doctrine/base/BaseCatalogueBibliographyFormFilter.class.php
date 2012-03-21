@@ -1,14 +1,14 @@
 <?php
 
 /**
- * BibliographyPeople filter form base class.
+ * CatalogueBibliography filter form base class.
  *
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-abstract class BaseBibliographyPeopleFormFilter extends BaseFormFilterDoctrine
+abstract class BaseCatalogueBibliographyFormFilter extends BaseFormFilterDoctrine
 {
   public function setup()
   {
@@ -24,7 +24,7 @@ abstract class BaseBibliographyPeopleFormFilter extends BaseFormFilterDoctrine
       'bibliography_ref'    => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Bibliography'), 'column' => 'id')),
     ));
 
-    $this->widgetSchema->setNameFormat('bibliography_people_filters[%s]');
+    $this->widgetSchema->setNameFormat('catalogue_bibliography_filters[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
 
@@ -35,7 +35,7 @@ abstract class BaseBibliographyPeopleFormFilter extends BaseFormFilterDoctrine
 
   public function getModelName()
   {
-    return 'BibliographyPeople';
+    return 'CatalogueBibliography';
   }
 
   public function getFields()

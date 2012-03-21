@@ -12,24 +12,24 @@
  * @property string $type
  * @property string $abstract
  * @property integer $year
- * @property Doctrine_Collection $BibliographyPeople
+ * @property Doctrine_Collection $CatalogueBibliography
  * 
- * @method integer             getId()                 Returns the current record's "id" value
- * @method string              getTitle()              Returns the current record's "title" value
- * @method string              getTitleTs()            Returns the current record's "title_ts" value
- * @method string              getTitleIndexed()       Returns the current record's "title_indexed" value
- * @method string              getType()               Returns the current record's "type" value
- * @method string              getAbstract()           Returns the current record's "abstract" value
- * @method integer             getYear()               Returns the current record's "year" value
- * @method Doctrine_Collection getBibliographyPeople() Returns the current record's "BibliographyPeople" collection
- * @method Bibliography        setId()                 Sets the current record's "id" value
- * @method Bibliography        setTitle()              Sets the current record's "title" value
- * @method Bibliography        setTitleTs()            Sets the current record's "title_ts" value
- * @method Bibliography        setTitleIndexed()       Sets the current record's "title_indexed" value
- * @method Bibliography        setType()               Sets the current record's "type" value
- * @method Bibliography        setAbstract()           Sets the current record's "abstract" value
- * @method Bibliography        setYear()               Sets the current record's "year" value
- * @method Bibliography        setBibliographyPeople() Sets the current record's "BibliographyPeople" collection
+ * @method integer             getId()                    Returns the current record's "id" value
+ * @method string              getTitle()                 Returns the current record's "title" value
+ * @method string              getTitleTs()               Returns the current record's "title_ts" value
+ * @method string              getTitleIndexed()          Returns the current record's "title_indexed" value
+ * @method string              getType()                  Returns the current record's "type" value
+ * @method string              getAbstract()              Returns the current record's "abstract" value
+ * @method integer             getYear()                  Returns the current record's "year" value
+ * @method Doctrine_Collection getCatalogueBibliography() Returns the current record's "CatalogueBibliography" collection
+ * @method Bibliography        setId()                    Sets the current record's "id" value
+ * @method Bibliography        setTitle()                 Sets the current record's "title" value
+ * @method Bibliography        setTitleTs()               Sets the current record's "title_ts" value
+ * @method Bibliography        setTitleIndexed()          Sets the current record's "title_indexed" value
+ * @method Bibliography        setType()                  Sets the current record's "type" value
+ * @method Bibliography        setAbstract()              Sets the current record's "abstract" value
+ * @method Bibliography        setYear()                  Sets the current record's "year" value
+ * @method Bibliography        setCatalogueBibliography() Sets the current record's "CatalogueBibliography" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -71,7 +71,7 @@ abstract class BaseBibliography extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
-        $this->hasMany('BibliographyPeople', array(
+        $this->hasMany('CatalogueBibliography', array(
              'local' => 'id',
              'foreign' => 'bibliography_ref'));
     }

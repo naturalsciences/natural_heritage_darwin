@@ -11,5 +11,19 @@
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 class Bibliography extends BaseBibliography
-{
+{/*
+article
+book
+booklet
+conference
+inbook
+incollection
+inproceedings
+manual
+mastersthesis
+misc
+phdthesis
+proceedings
+techreport
+unpublished*/
 }

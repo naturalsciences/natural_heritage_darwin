@@ -2192,7 +2192,7 @@ Bibliography:
         abstract : { type:string }
         year : { type:integer}
 
-BibliographyPeople:
+CatalogueBibliography:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
         referenced_relation: { type: string, notnull: true}
