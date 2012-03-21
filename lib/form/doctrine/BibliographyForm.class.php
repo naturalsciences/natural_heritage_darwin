@@ -17,6 +17,7 @@ class BibliographyForm extends BaseBibliographyForm
     $this->widgetSchema['title']->setAttributes(array('class'=>'medium_size'));
     $this->validatorSchema['title'] = new sfValidatorString(array('required' => true, 'trim' => true));
 
+    $this->validatorSchema['year'] = new sfValidatorInteger(array('required'=>false,'min'=> 0,'max' => date('Y')+2  ));
     $this->widgetSchema['year']->setAttributes(array('class'=>'small_size'));
 
     $choices = Bibliography::getAvailableTypes();
@@ -27,7 +28,7 @@ class BibliographyForm extends BaseBibliographyForm
 
     $subForm = new sfForm();
     $this->embedForm('Authors',$subForm);   
-    foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated('bibliography','member',$this->getObject()->getId()) as $key=>$vals)
+    foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated('bibliography','author',$this->getObject()->getId()) as $key=>$vals)
     {
       $form = new PeopleAssociationsForm($vals);
       $this->embeddedForms['Authors']->embedForm($key, $form);

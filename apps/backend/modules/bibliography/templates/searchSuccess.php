@@ -13,9 +13,9 @@
         <thead>
           <tr>
             <th>
-              <a class="sort" href="<?php echo url_for($s_url.'&orderby=name'.( ($orderBy=='name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
-                <?php echo __('Name');?>
-                <?php if($orderBy=='name') echo $orderSign ?>
+              <a class="sort" href="<?php echo url_for($s_url.'&orderby=title'.( ($orderBy=='title' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+                <?php echo __('Title');?>
+                <?php if($orderBy=='title') echo $orderSign ?>
               </a>
             </th>
             <th>&nbsp;</th>
@@ -27,7 +27,7 @@
               <td><?php echo $bib->getTitle();?></td>
                 <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
                   <?php if(! $is_choose):?>
-                    <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>                  
+                    <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
                       <?php echo link_to(image_tag('edit.png',array('title'=>'Edit bibliography')),'bibliography/edit?id='.$bib->getId());?>
                       <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate bibliography')),'bibliography/new?duplicate_id='.$bib->getId());?>
                     <?php endif ; ?>

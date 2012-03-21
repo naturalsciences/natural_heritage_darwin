@@ -34,7 +34,8 @@ $(document).ready(function ()
         <th><?php echo $form['year']->renderLabel() ?></th>
         <td>
           <?php echo $form['year']->renderError() ?>
-          <?php echo $form['year'] ?> <span class="small_info"><?php echo __('(year on 4 digits)');?></span>
+          <?php echo $form['year'] ?>
+          <div class="small_info"><?php echo __('(The year of publication (or, if unpublished, the year of creation) on 4 digits)');?></div>
         </td>
       </tr>
       <tr>
