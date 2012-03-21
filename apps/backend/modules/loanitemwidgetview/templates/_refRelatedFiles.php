@@ -1,1 +1,1 @@
-<?php echo include_partial('loanwidgetview/refRelatedFiles', array('table' => 'loan_items', 'eid' => $eid, 'files'=>$files));?>
+<?php include_partial('multimedia/refRelatedFilesView',  array('files' => $files));?>

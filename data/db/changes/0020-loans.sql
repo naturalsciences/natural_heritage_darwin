@@ -237,8 +237,6 @@ GRANT USAGE ON SEQUENCE darwin2.loan_status_id_seq TO cebmpad;
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_status TO cebmpad;
 GRANT SELECT ON darwin2.loan_status TO d2viewer;
 
-
-
 create table loan_history (
   id serial,
   loan_ref integer not null,
@@ -260,6 +258,7 @@ ALTER TABLE loan_history OWNER TO darwin2;
 ALTER TABLE loan_history_id_seq OWNER TO darwin2;
 GRANT USAGE ON SEQUENCE darwin2.loan_history_id_seq TO cebmpad;
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_history TO cebmpad;
+GRANT SELECT ON darwin2.loan_history TO d2viewer;
 
 DROP TRIGGER trg_cpy_toFullText_multimedia on multimedia;
 
@@ -279,8 +278,7 @@ CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE
         ON loan_items FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-
- CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
+CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
        ON multimedia FOR EACH ROW
        EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title);
 
@@ -288,16 +286,13 @@ CREATE TRIGGER trg_words_ts_cpy_loans BEFORE INSERT OR UPDATE
         ON loans FOR EACH ROW
         EXECUTE PROCEDURE fct_trg_word();
 
-
 CREATE TRIGGER fct_cpy_trg_ins_update_dict_loan_status AFTER INSERT OR UPDATE
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
-
 CREATE TRIGGER fct_cpy_trg_del_dict_loan_status AFTER DELETE OR UPDATE
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
-
 
 CREATE trigger trg_chk_is_last_loan_status BEFORE INSERT
         ON loan_status FOR EACH ROW
@@ -306,7 +301,6 @@ CREATE trigger trg_chk_is_last_loan_status BEFORE INSERT
 CREATE trigger trg_add_status_history after INSERT
         ON loans FOR EACH ROW
         EXECUTE PROCEDURE fct_auto_insert_status_history();
-
 
 
 DROP INDEX IF EXISTS idx_users_workflow_user_ref;
@@ -560,6 +554,3 @@ CREATE TRIGGER trg_cpy_toFullText_vernacularnames BEFORE INSERT OR UPDATE
   EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
 
 DROP FUNCTION IF EXISTS fct_cpy_tofulltext();
-
-
-

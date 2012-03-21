@@ -41,11 +41,9 @@ comment on column template_people_languages.language_country is 'Reference of La
 comment on column template_people_languages.mother is 'Flag telling if its mother language or not';
 comment on column template_people_languages.preferred_language is 'Flag telling which language is preferred in communications';
 
-create sequence people_id_seq;
-
 create table people
        (
-        id integer not null default nextval('people_id_seq'),
+        id serial,
         end_date_mask integer not null default 0,
         end_date date not null default '01/01/0001',
         activity_date_from_mask integer not null default 0,
@@ -79,12 +77,9 @@ comment on column people.activity_date_from_mask is 'person general activity per
 comment on column people.activity_date_to is 'person general activity period or person activity period in the organization referenced date to';
 comment on column people.activity_date_to_mask is 'person general activity period or person activity period in the organization referenced date to mask';
 
-
-create sequence catalogue_relationships_id_seq;
-
 create table catalogue_relationships
        (
-        id integer not null default nextval('catalogue_relationships_id_seq'),
+        id serial,
         referenced_relation varchar not null,
         record_id_1 integer not null,
         record_id_2 integer not null,
@@ -105,11 +100,9 @@ comment on table template_table_record_ref is 'Template called to add referenced
 comment on column template_table_record_ref.referenced_relation is 'Reference-Name of table concerned';
 comment on column template_table_record_ref.record_id is 'Id of record concerned';
 
-create sequence catalogue_people_id_seq;
-
 create table catalogue_people
        (
-        id integer not null default nextval('catalogue_people_id_seq'),
+        id serial,
         people_type varchar not null default 'author',
         people_sub_type varchar not null default '',
         order_by integer not null default 1,
@@ -128,11 +121,9 @@ comment on column catalogue_people.people_sub_type is 'Type of "people" associat
 comment on column catalogue_people.people_ref is 'Reference of person concerned - id field of people table';
 comment on column catalogue_people.order_by is 'Integer used to order the persons in a list';
 
-create sequence catalogue_levels_id_seq;
-
 create table catalogue_levels
        (
-        id integer not null default nextval('catalogue_levels_id_seq'),
+        id serial,
         level_type varchar not null,
         level_name varchar not null,
         level_sys_name varchar not null,
@@ -146,6 +137,7 @@ comment on column catalogue_levels.level_type is 'Type of unit the levels is app
 comment on column catalogue_levels.level_name is 'Name given to level concerned';
 comment on column catalogue_levels.level_sys_name is 'Name given to level concerned in the system. i.e.: cohort zoology will be writen in system as cohort_zoology';
 comment on column catalogue_levels.optional_level is 'Tells if the level is optional';
+
 create table possible_upper_levels
        (
         level_ref integer not null,
@@ -158,11 +150,9 @@ comment on table possible_upper_levels is 'For each level, list all the availble
 comment on column possible_upper_levels.level_ref is 'Reference of current level';
 comment on column possible_upper_levels.level_upper_ref is 'Reference of authorized parent level';
 
-create sequence comments_id_seq;
-
 create table comments
        (
-        id integer not null default nextval('comments_id_seq'),
+        id serial,
         notion_concerned varchar not null,
         comment text not null,
         comment_ts tsvector not null,
@@ -180,11 +170,9 @@ comment on column comments.comment is 'Comment';
 comment on column comments.comment_ts is 'tsvector form of comment field';
 comment on column comments.comment_language_full_text is 'Corresponding language to the language/country reference recognized by full text search to_tsvector function';
 
-create sequence ext_links_id_seq;
-
 create table ext_links
        (
-        id integer not null default nextval('ext_links_id_seq'),
+        id serial,
         url varchar not null,
         comment text not null,
         comment_ts tsvector not null,
@@ -202,12 +190,9 @@ comment on column ext_links.comment is 'Comment';
 comment on column ext_links.comment_ts is 'tsvector form of comment field';
 comment on column ext_links.comment_language_full_text is 'Corresponding language to the language/country reference recognized by full text search to_tsvector function';
 
-
-create sequence gtu_id_seq;
-
 create table gtu
        (
-        id integer not null default nextval('gtu_id_seq'),
+        id serial,
         code varchar not null,
         parent_ref integer,
         gtu_from_date_mask integer not null default 0,
@@ -242,11 +227,9 @@ comment on column gtu.elevation is 'Elevation from the level of the sea in meter
 comment on column gtu.elevation_accuracy is 'Accuracy in meter of the elevation';
 --SELECT substring(AddGeometryColumn('gtu', 'location', 4326, 'POLYGON', 2) for 0);
 
-create sequence tag_groups_id_seq;
-
 create table tag_groups
        (
-        id bigint not null default nextval('tag_groups_id_seq'),
+        id serial,
         gtu_ref integer not null,
         group_name varchar not null,
         group_name_indexed varchar not null,
@@ -288,12 +271,9 @@ comment on column tags.sub_group_type is 'Indexed form of a sub-group name';
 comment on column tags.tag is 'The readable version of the tag';
 comment on column tags.tag_indexed is 'The indexed version of the tag';
 
-
-create sequence catalogue_properties_id_seq;
-
 create table catalogue_properties
        (
-        id integer not null default nextval('catalogue_properties_id_seq'),
+        id serial,
         property_type varchar not null,
         property_sub_type varchar not null default '',
         property_sub_type_indexed varchar not null,
@@ -333,11 +313,9 @@ comment on column catalogue_properties.property_accuracy_unit is 'Unit used for 
 comment on column catalogue_properties.property_tool is 'Tool used to collect property value';
 comment on column catalogue_properties.property_tool_indexed is 'Indexed version of property_tool field - if null, takes a generic replacement value';
 
-create sequence properties_values_id_seq;
-
 create table properties_values
       (
-        id integer not null default nextval('properties_values_id_seq'),
+        id serial,
         property_ref integer not null,
         property_value varchar not null,
         property_value_unified varchar not null default '',
@@ -353,11 +331,9 @@ comment on column properties_values.property_value_unified is 'Unified version o
 comment on column properties_values.property_accuracy is 'Accuracy of property measurement';
 comment on column properties_values.property_accuracy_unified is 'Unified version of accuracy on property or sub property value -> means that the value is converted into a common unit allowing comparisons';
 
-CREATE sequence identifications_id_seq;
-
 create table identifications
        (
-        id integer not null default nextval('identifications_id_seq'),
+        id serial,
         notion_concerned varchar not null,
         notion_date timestamp not null default '0001-01-01 00:00:00'::timestamp,
         notion_date_mask integer not null default 0,
@@ -383,11 +359,9 @@ comment on column identifications.value_defined_indexed is 'Indexed form of valu
 comment on column identifications.determination_status is 'Status of identification - can either be a percentage of certainty or a code describing the identification step in the process';
 comment on column identifications.order_by is 'Integer used to order the identifications when no date entered';
 
-create sequence class_vernacular_names_id_seq;
-
 create table class_vernacular_names
        (
-        id integer not null default nextval('class_vernacular_names_id_seq'),
+        id serial,
         community varchar not null,
         community_indexed varchar not null,
         constraint pk_class_vernacular_names primary key (id),
@@ -400,11 +374,9 @@ comment on column class_vernacular_names.referenced_relation is 'Reference of th
 comment on column class_vernacular_names.record_id is 'Identifier of record a vernacular name for a language community has to be defined';
 comment on column class_vernacular_names.community is 'Language community, a unit translation is available for';
 
-create sequence vernacular_names_id_seq;
-
 create table vernacular_names
        (
-        id integer not null default nextval('vernacular_names_id_seq'),
+        id serial,
         vernacular_class_ref integer not null,
         name varchar not null,
         name_ts tsvector not null,
@@ -419,11 +391,9 @@ comment on column vernacular_names.name is 'Vernacular name';
 comment on column vernacular_names.name_ts is 'tsvector version of name field';
 comment on column vernacular_names.name_indexed is 'Indexed form of vernacular name';
 
-create sequence expeditions_id_seq;
-
 create table expeditions
        (
-        id integer not null default nextval('expeditions_id_seq'),
+        id serial,
         name varchar not null,
         name_ts tsvector not null,
         name_indexed varchar not null,
@@ -446,16 +416,14 @@ comment on column expeditions.expedition_from_date is 'Start date of the expedit
 comment on column expeditions.expedition_to_date is 'End date of the expedition';
 comment on column expeditions.expedition_to_date_mask is  'Contains the Mask flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 
-create sequence users_id_seq;
-
 create table users
        (
-        id integer not null default nextval('users_id_seq'),
+        id serial,
         db_user_type smallint default 1 not null,
         people_id integer,
         last_seen timestamp,
         created_at timestamp default now(),
-	selected_lang varchar not null default 'en',
+        selected_lang varchar not null default 'en',
         constraint pk_users primary key (id),
         constraint unq_users unique (is_physical, gender, formated_name_unique, birth_date, birth_date_mask),
         constraint fk_user_people_id foreign key (people_id) references people(id) on delete set NULL
@@ -481,11 +449,9 @@ comment on column users.gender is 'For physical users give the gender: M or F';
 comment on column users.selected_lang is 'Lang of the interface for the user en,fr,nl ,....';
 comment on column users.last_seen is 'Last time the user has logged in.';
 
-create sequence people_languages_id_seq;
-
 create table people_languages
        (
-        id integer not null default nextval('people_languages_id_seq'),
+        id serial,
         people_ref integer not null,
         constraint pk_people_languages primary key (id),
         constraint unq_people_languages unique (people_ref, language_country),
@@ -498,10 +464,9 @@ comment on column people_languages.language_country is 'Reference of Language - 
 comment on column people_languages.mother is 'Flag telling if its mother language or not';
 comment on column people_languages.preferred_language is 'Flag telling which language is preferred in communications';
 
-create sequence users_languages_id_seq;
 create table users_languages
        (
-        id integer not null default nextval('users_languages_id_seq'),
+        id serial,
         users_ref integer not null,
         constraint pk_users_languages primary key (id),
         constraint unq_users_languages unique (users_ref, language_country),
@@ -514,11 +479,9 @@ comment on column users_languages.language_country is 'Reference of Language - l
 comment on column users_languages.mother is 'Flag telling if its mother language or not';
 comment on column users_languages.preferred_language is 'Flag telling which language is preferred in communications';
 
-create sequence multimedia_id_seq;
-
 create table multimedia
        (
-        id integer not null default nextval('multimedia_id_seq'),
+        id serial,
         is_digital boolean not null default true,
         type varchar not null default 'image',
         sub_type varchar,
@@ -558,12 +521,14 @@ create table template_people_users_comm_common
 comment on table template_people_users_comm_common is 'Template table used to construct people communication tables (tel and e-mail)';
 comment on column template_people_users_comm_common.person_user_ref is 'Reference of person/user - id field of people/users table';
 comment on column template_people_users_comm_common.entry is 'Communication entry';
+
 create table template_people_users_rel_common
        (
         person_user_role varchar
        );
 comment on table template_people_users_rel_common is 'Template table used to propagate three field in different tables depending it''s people or user dedicated';
 comment on column template_people_users_rel_common.person_user_role is 'Role the person/user have in the moral person he depends of';
+
 create table template_people_users_addr_common
        (
         po_box varchar,
@@ -583,11 +548,9 @@ comment on column template_people_users_addr_common.zip_code is 'zip code';
 comment on column template_people_users_addr_common.country is 'Country';
 comment on column template_people_users_addr_common.address_parts_ts is 'tsvector field containing vectorized form of all addresses fields: country, region, locality, extended address,...';
 
-create sequence people_relationships_id_seq;
-
 create table people_relationships
        (
-        id integer not null default nextval('people_relationships_id_seq'),
+        id serial,
         relationship_type varchar not null default 'belongs to',
         person_1_ref integer not null,
         person_2_ref integer not null,
@@ -613,11 +576,9 @@ comment on column people_relationships.activity_date_to is 'person activity peri
 comment on column people_relationships.activity_date_to_mask is 'person activity period or person activity period in the organization referenced date to mask';
 comment on column people_relationships.path is 'Hierarchical path of the organization structure';
 
-create sequence people_comm_id_seq;
-
 create table people_comm
        (
-        id integer not null default nextval('people_comm_id_seq'),
+        id serial,
         comm_type varchar default 'phone/fax' not null,
         tag varchar not null default '',
         constraint pk_people_comm primary key (id),
@@ -632,11 +593,9 @@ comment on column people_comm.entry is 'Communication entry';
 comment on column people_comm.comm_type is 'Type of communication table concerned: address, phone or e-mail';
 comment on column people_comm.tag is 'List of descriptive tags separated by , : internet, tel, fax, pager, public, private,...';
 
-create sequence people_addresses_id_seq;
-
 create table people_addresses
        (
-        id integer not null default nextval('people_addresses_id_seq'),
+        id serial,
         tag varchar not null default '',
         constraint pk_people_addresses primary key (id),
         constraint fk_people_addresses_people foreign key (person_user_ref) references people(id) on delete cascade
@@ -655,11 +614,9 @@ comment on column people_addresses.region is 'Region';
 comment on column people_addresses.zip_code is 'Zip code';
 comment on column people_addresses.tag is 'List of descriptive tags: home, work,...';
 
-create sequence users_comm_id_seq;
-
 create table users_comm
        (
-        id integer not null default nextval('users_comm_id_seq'),
+        id serial,
         comm_type varchar not null default 'phone/fax',
         tag varchar not null default '',
         constraint pk_users_comm primary key (id),
@@ -674,11 +631,9 @@ comment on column users_comm.entry is 'Communication entry';
 comment on column users_comm.comm_type is 'Type of communication table concerned: address, phone or e-mail';
 comment on column users_comm.tag is 'List of descriptive tags: internet, tel, fax, pager, public, private,...';
 
-create sequence users_addresses_id_seq;
-
 create table users_addresses
        (
-        id integer not null default nextval('users_addresses_id_seq'),
+        id serial,
         organization_unit varchar,
         tag varchar not null default '',
         constraint pk_users_addresses primary key (id),
@@ -701,11 +656,9 @@ comment on column users_addresses.person_user_role is 'User role in the organiza
 comment on column users_addresses.tag is 'List of descriptive tags: home, work,...';
 
 
-create sequence users_login_info_id_seq;
-
 create table users_login_infos
        (
-        id integer not null default nextval('users_login_info_id_seq'),
+        id serial,
         user_ref integer not null,
         login_type varchar not null default 'local',
         user_name varchar,
@@ -725,11 +678,9 @@ comment on column users_login_infos.password is 'For some system (local, ldap, k
 comment on column users_login_infos.login_system is 'For some system (shibbolet, openID,...) provides the user id';
 comment on column users_login_infos.renew_hash is 'Hashed key defined when asking to renew a password';
 
-create sequence collections_id_seq;
-
 create table collections
        (
-        id integer not null default nextval('collections_id_seq'),
+        id serial,
         collection_type varchar not null default 'mix',
         code varchar not null,
         name varchar not null,
@@ -771,6 +722,7 @@ comment on column collections.code_suffix is 'Default code suffix to be used for
 comment on column collections.code_suffix_separator is 'Character chain used to separate code suffix from code core';
 comment on column collections.code_part_code_auto_copy is 'Flag telling if the whole specimen code has to be copied for a part, when inserting a new one';
 comment on column collections.is_public is 'Flag telling if the collection can be found in the public search';
+
 create table template_collections_users
        (
         collection_ref integer not null default 0,
@@ -780,11 +732,9 @@ comment on table template_collections_users is 'Template table used to construct
 comment on column template_collections_users.collection_ref is 'Reference of collection concerned - id field of collections table';
 comment on column template_collections_users.user_ref is 'Reference of user - id field of users table';
 
-create sequence collections_rights_id_seq;
-
 create table collections_rights
        (
-        id integer not null default nextval('collections_rights_id_seq'),
+        id serial,
         db_user_type smallint not null default 1,
         constraint pk_collections_right primary key (id),
         constraint fk_collections_rights_users foreign key (user_ref) references users(id) on delete cascade,
@@ -798,13 +748,9 @@ comment on column collections_rights.collection_ref is 'Reference of collection 
 comment on column collections_rights.user_ref is 'Reference of user - id field of users table';
 comment on column collections_rights.db_user_type is 'Integer is representing a role: 1 for registered user, 2 for encoder, 4 for collection manager, 8 for system admin,...';
 
-
-
-create sequence informative_workflow_id_seq;
-
 create table informative_workflow
        (
-        id integer not null default nextval('informative_workflow_id_seq'),
+        id serial,
         user_ref integer,
         formated_name varchar not null default 'anonymous',
         status varchar not null default 'suggestion',
@@ -825,11 +771,9 @@ comment on column informative_workflow.modification_date_time is 'Date and time 
 comment on column informative_workflow.comment is 'Complementary comments';
 COMMENT on COLUMN informative_workflow.is_last is 'a flag witch allow us to know if the workflow for this referenced_relation/record id is the latest' ;
 
-create sequence users_tracking_id_seq;
-
 create table users_tracking
        (
-        id bigint not null default nextval('users_tracking_id_seq'),
+        id serial,
         referenced_relation varchar not null,
         record_id integer not null,
         user_ref integer not null,
@@ -848,11 +792,9 @@ comment on column users_tracking.user_ref is 'Reference of user having made an a
 comment on column users_tracking.action is 'Action done on table record: insert, update, delete';
 comment on column users_tracking.modification_date_time is 'Track date and time';
 
-create sequence collection_maintenance_id_seq;
-
 create table collection_maintenance
        (
-        id integer not null default nextval('collection_maintenance_id_seq'),
+        id serial,
         people_ref integer not null,
         category varchar not null default 'action',
         action_observation varchar not null,
@@ -875,18 +817,17 @@ comment on column collection_maintenance.description is 'Complementary descripti
 comment on column collection_maintenance.description_ts is 'tsvector form of description field';
 comment on column collection_maintenance.modification_date_time is 'Last update date/time';
 
-create sequence my_saved_searches_id_seq;
 create table my_saved_searches
        (
-        id integer not null default nextval('my_saved_searches_id_seq'),
+        id serial,
         user_ref integer not null,
         name varchar not null default 'default',
         search_criterias varchar not null,
         favorite boolean not null default false,
         modification_date_time update_date_time,
         visible_fields_in_result varchar not null,
-	is_only_id boolean not null default false,
-	subject varchar not null default 'specimen',
+        is_only_id boolean not null default false,
+        subject varchar not null default 'specimen',
         constraint pk_my_saved_searches primary key (id),
         constraint unq_my_saved_searches unique (user_ref, name),
         constraint fk_my_saved_searches_users foreign key (user_ref) references users(id) on delete cascade
@@ -900,11 +841,9 @@ comment on column my_saved_searches.modification_date_time is 'Last modification
 comment on column my_saved_searches.visible_fields_in_result is 'Array of fields that were set visible in the result table at the time the search was saved';
 comment on column my_saved_searches.is_only_id is 'Tell if the search only contains saved specimen (ids) or it is a normal saved search';
 
-create sequence my_widgets_id_seq;
-
 create table my_widgets
        (
-        id integer not null default nextval('my_widgets_id_seq'),
+        id serial,
         user_ref integer not null,
         category varchar not null default 'board_widget',
         group_name varchar not null,
@@ -963,11 +902,9 @@ comment on column template_classifications.color is 'Hexadecimal value of color 
 comment on column template_classifications.path is 'Hierarchy path (/ for root)';
 comment on column template_classifications.parent_ref is 'Id of parent - id field from table itself';
 
-create sequence classification_keywords_id_seq;
-
 create table classification_keywords
   (
-    id integer not null default nextval('classification_keywords_id_seq'),
+    id serial,
     keyword_type varchar not null default 'name',
     keyword varchar not null,
     keyword_indexed varchar not null,
@@ -981,18 +918,18 @@ comment on column classification_keywords.record_id is 'Id of record concerned';
 comment on column classification_keywords.keyword_type is 'Keyword type: name, year, authoritative keyword,...';
 comment on column classification_keywords.keyword is 'Keyword';
 
-create sequence classification_synonymies_id_seq;
 create sequence classification_synonymies_group_id_seq;
+
 create table classification_synonymies
-	(
-    id integer not null default nextval('classification_synonymies_id_seq'),
+  (
+    id serial,
     group_id integer not null,
     group_name varchar not null,
     is_basionym boolean DEFAULT false,
     order_by integer not null default 0,
     constraint unq_synonym unique (referenced_relation, record_id, group_id),
     constraint pk_synonym_id primary key (id)
-	)
+  )
 inherits (template_table_record_ref);
 
 comment on table classification_synonymies is 'Table containing classification synonymies';
@@ -1003,11 +940,9 @@ comment on column classification_synonymies.group_id is 'Id given to group';
 comment on column classification_synonymies.order_by is 'Order by used to qualify order amongst synonyms - used mainly for senio and junior synonyms';
 comment on column classification_synonymies.is_basionym is 'If record is a basionym';
 
-create sequence taxonomy_id_seq;
-
 create table taxonomy
        (
-        id integer not null default nextval('taxonomy_id_seq'),
+        id serial,
         extinct boolean default false not null,
         constraint pk_taxonomy primary key (id),
         constraint unq_taxonomy unique (path, name_indexed, level_ref),
@@ -1025,11 +960,9 @@ comment on column taxonomy.extinct is 'Tells if taxonomy is extinct or not';
 comment on column taxonomy.path is 'Hierarchy path (/ for root)';
 comment on column taxonomy.parent_ref is 'Id of parent - id field from table itself';
 
-create sequence chronostratigraphy_id_seq;
-
 create table chronostratigraphy
        (
-        id integer not null default nextval('chronostratigraphy_id_seq'),
+        id serial,
         lower_bound numeric(10,3),
         upper_bound numeric(10,3),
        constraint pk_chronostratigraphy primary key (id),
@@ -1049,11 +982,9 @@ comment on column chronostratigraphy.upper_bound is 'Upper age boundary in years
 comment on column chronostratigraphy.path is 'Hierarchy path (/ for root)';
 comment on column chronostratigraphy.parent_ref is 'Id of parent - id field from table itself';
 
-create sequence lithostratigraphy_id_seq;
-
 create table lithostratigraphy
        (
-        id integer not null default nextval('lithostratigraphy_id_seq'),
+        id serial,
         constraint pk_lithostratigraphy primary key (id),
         constraint unq_lithostratigraphy unique (path, name_indexed, level_ref),
         constraint fk_lithostratigraphy_catalogue_levels foreign key (level_ref) references catalogue_levels(id),
@@ -1069,11 +1000,9 @@ comment on column lithostratigraphy.status is 'Validitiy status: valid, invalid,
 comment on column lithostratigraphy.path is 'Hierarchy path (/ for root)';
 comment on column lithostratigraphy.parent_ref is 'Id of parent - id field from table itself';
 
-create sequence mineralogy_id_seq;
-
 create table mineralogy
        (
-        id integer not null default nextval('mineralogy_id_seq'),
+        id serial,
         code varchar not null,
         classification varchar not null default 'strunz',
         formule varchar,
@@ -1099,11 +1028,9 @@ comment on column mineralogy.cristal_system is 'Cristal system defining the mine
 comment on column mineralogy.path is 'Hierarchy path (/ for root)';
 comment on column mineralogy.parent_ref is 'Id of parent - id field from table itself';
 
-create sequence lithology_id_seq;
-
 create table lithology
        (
-        id integer not null default nextval('lithology_id_seq'),
+        id serial,
         constraint pk_lithology primary key (id),
         constraint unq_lithology unique (path, name_indexed, level_ref),
         constraint fk_lithology_parent_ref_lithology foreign key (parent_ref) references lithology(id) on delete cascade,
@@ -1119,11 +1046,9 @@ comment on column lithology.status is 'Validitiy status: valid, invalid, in disc
 comment on column lithology.path is 'Hierarchy path (/ for root)';
 comment on column lithology.parent_ref is 'Id of parent - id field from table itself';
 
-create sequence igs_id_seq;
-
 create table igs
        (
-         id integer default nextval('igs_id_seq'),
+         id serial,
          ig_num varchar not null,
          ig_num_indexed varchar not null,
          ig_date_mask integer not null default 0,
@@ -1138,11 +1063,9 @@ comment on column igs.ig_num is 'IG number';
 comment on column igs.ig_date_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 comment on column igs.ig_date is 'Date of ig number creation';
 
-create sequence specimens_id_seq;
-
 create table specimens
        (
-        id integer not null default nextval('specimens_id_seq'),
+        id serial,
         category varchar not null default 'physical',
         collection_ref integer not null default 0,
         expedition_ref integer not null default 0,
@@ -1174,6 +1097,7 @@ create table specimens
         constraint fk_specimens_host_specimen foreign key (host_specimen_ref) references specimens(id) on delete set null,
         constraint fk_specimens_igs foreign key (ig_ref) references igs(id)
        );
+
 CREATE UNIQUE INDEX unq_specimens
   ON specimens
   USING btree
@@ -1200,11 +1124,9 @@ comment on column specimens.host_taxon_ref is 'Reference of taxon definition def
 comment on column specimens.ig_ref is 'Reference of ig number this specimen has been associated to';
 comment on column specimens.category is 'Type of specimen encoded: a physical object stored in collections, an observation, a figurate specimen,...';
 
-create sequence codes_id_seq;
-
 create table codes
        (
-        id integer not null default nextval('codes_id_seq'),
+        id serial,
         code_category varchar not null default 'main',
         code_prefix varchar,
         code_prefix_separator varchar,
@@ -1236,11 +1158,9 @@ comment on column codes.code_date_mask is 'Mask used for code date';
 comment on column codes.referenced_relation is 'Reference name of table concerned';
 comment on column codes.record_id is 'Identifier of record concerned';
 
-create sequence specimen_individuals_id_seq;
-
 create table specimen_individuals
        (
-        id integer not null default nextval('specimen_individuals_id_seq'),
+        id serial,
         specimen_ref integer not null,
         type varchar not null default 'specimen',
         type_group varchar not null default 'specimen',
@@ -1274,11 +1194,9 @@ comment on column specimen_individuals.specimen_individuals_count_min is 'Minimu
 comment on column specimen_individuals.specimen_individuals_count_max is 'Maximum number of individuals';
 comment on column specimen_individuals.with_parts is 'Flag telling if they are parts for current individual - Triggerly composed';
 
-create sequence specimen_parts_id_seq;
-
 create table specimen_parts
        (
-        id integer not null default nextval('specimen_parts_id_seq'),
+        id serial,
         parent_ref integer,
         path varchar not null default '/',
         specimen_individual_ref integer not null,
@@ -1329,11 +1247,9 @@ comment on column specimen_parts.specimen_part_count_min is 'Minimum number of p
 comment on column specimen_parts.specimen_part_count_max is 'Maximum number of parts/individuals';
 comment on column specimen_parts.complete is 'Flag telling if part/specimen is complete or not';
 
-create sequence insurances_id_seq;
-
 create table insurances
        (
-        id integer not null default nextval('insurances_id_seq'),
+        id serial,
         insurance_value numeric(16,2) not null,
         insurance_currency varchar not null default '€',
         date_from_mask integer not null default 0,
@@ -1356,11 +1272,9 @@ comment on column insurances.insurance_currency is 'Currency used with insurance
 comment on column insurances.insurance_value is 'Insurance value';
 comment on column insurances.insurer_ref is 'Reference of the insurance firm an insurance have been subscripted at';
 
-create sequence specimens_accompanying_id_seq;
-
 create table specimens_accompanying
        (
-        id integer not null default nextval('specimens_accompanying_id_seq'),
+        id serial,
         accompanying_type varchar not null default 'biological',
         specimen_ref integer not null,
         taxon_ref integer not null default 0,
@@ -1383,11 +1297,9 @@ comment on column specimens_accompanying.unit is 'Unit used for quantity of acco
 comment on column specimens_accompanying.taxon_ref is 'Reference of the accompanying taxon (if it''s a biological unit accompanying) - id field of taxonomy table';
 comment on column specimens_accompanying.form is 'Form of accompanying specimen presence: colony, aggregate, isolated,...';
 
-create sequence collecting_tools_id_seq;
-
 create table collecting_tools
        (
-        id integer not null default nextval('collecting_tools_id_seq'),
+        id serial,
         tool varchar not null,
         tool_indexed varchar not null,
         constraint pk_collecting_tools primary key (id),
@@ -1399,11 +1311,9 @@ comment on column collecting_tools.id is 'Unique identifier of a collecting tool
 comment on column collecting_tools.tool is 'Tool used';
 comment on column collecting_tools.tool_indexed is 'Indexed form of tool used - for ordering and filtering purposes';
 
-create sequence specimen_collecting_tools_id_seq;
-
 create table specimen_collecting_tools
   (
-    id integer not null default nextval('specimen_collecting_tools_id_seq'),
+    id serial,
     specimen_ref integer not null,
     collecting_tool_ref integer not null,
     constraint pk_specimen_collecting_tools primary key (id),
@@ -1417,11 +1327,9 @@ comment on column specimen_collecting_tools.id is 'Unique identifier of an assoc
 comment on column specimen_collecting_tools.specimen_ref is 'Identifier of a specimen - comes from specimens table (id field)';
 comment on column specimen_collecting_tools.collecting_tool_ref is 'Identifier of a collecting tool - comes from collecting_tools table (id field)';
 
-create sequence collecting_methods_id_seq;
-
 create table collecting_methods
        (
-        id integer not null default nextval('collecting_methods_id_seq'),
+        id serial,
         method varchar not null,
         method_indexed varchar not null,
         constraint pk_collecting_methods primary key (id),
@@ -1433,11 +1341,9 @@ comment on column collecting_methods.id is 'Unique identifier of a collecting me
 comment on column collecting_methods.method is 'Method used';
 comment on column collecting_methods.method_indexed is 'Indexed form of method used - for ordering and filtering purposes';
 
-create sequence specimen_collecting_methods_id_seq;
-
 create table specimen_collecting_methods
   (
-    id integer not null default nextval('specimen_collecting_methods_id_seq'),
+    id serial,
     specimen_ref integer not null,
     collecting_method_ref integer not null,
     constraint pk_specimen_collecting_methods primary key (id),
@@ -1463,11 +1369,9 @@ comment on column words.referenced_relation is 'Reference of table concerned';
 comment on column words.field_name is 'Reference of field in the table';
 comment on column words.word is 'word founded';
 
-create sequence preferences_id_seq;
-
 create table preferences
   (
-    id integer not null default nextval('preferences_id_seq'),
+    id serial,
     user_ref integer not null,
     pref_key varchar not null,
     pref_value varchar not null,
@@ -1479,11 +1383,9 @@ comment on column preferences.user_ref is 'The referenced user id';
 comment on column preferences.pref_key is 'The classification key of the preference. eg: color';
 comment on column preferences.pref_value is 'The value of the preference for this user eg: red';
 
-create sequence darwin_flat_id_seq;
-
 create table darwin_flat
   (
-    id integer not null default nextval('darwin_flat_id_seq'),
+    id serial,
     spec_ref integer not null,
     category varchar,
     collection_ref integer not null default 0,
@@ -1766,11 +1668,9 @@ comment on column darwin_flat.spec_coll_ids is 'Array of collectors referenced i
 comment on column darwin_flat.spec_don_sel_ids is 'Array of donators or sellers referenced in this specimen';
 
 
-create sequence flat_dict_id_seq;
-
 create table flat_dict
 (
-  id integer not null default nextval('flat_dict_id_seq'),
+  id serial,
   referenced_relation varchar not null,
   dict_field varchar not null,
   dict_value varchar not null,
@@ -1785,11 +1685,9 @@ comment on column flat_dict.referenced_relation is 'The table where the value co
 comment on column flat_dict.dict_field is 'the field name of where the value come from';
 comment on column flat_dict.dict_value is 'the distinct value';
 
-create sequence imports_id_seq;
-
 create table imports
   (
-    id integer not null default nextval('imports_id_seq'),
+    id serial,
     user_ref integer not null,
     format varchar not null,
     collection_ref integer not null,
@@ -1815,11 +1713,9 @@ comment on column imports.updated_at is 'When the data has been modified lately'
 comment on column imports.initial_count is 'Number of rows of staging when the import was created';
 comment on column imports.is_finished is 'Boolean to mark if the import is finished or still need some operations';
 
-create sequence staging_id_seq;
-
 create table staging
   (
-    id integer not null default nextval('staging_id_seq'),
+    id serial,
     import_ref integer not null,
     parent_ref integer,
     path varchar,
@@ -1900,7 +1796,6 @@ create table staging
     acquisition_category varchar,
     acquisition_date_mask integer,
     acquisition_date date,
-
     individual_type varchar,
     individual_sex  varchar,
     individual_state varchar,
@@ -1941,11 +1836,9 @@ create table staging
     constraint fk_staging_mineralogy foreign key (mineral_ref) references mineralogy(id) on delete set NULL
   );
 
-create sequence staging_tag_groups_id_seq;
-
 create table  staging_tag_groups
        (
-        id bigint not null default nextval('staging_tag_groups_id_seq'),
+        id serial,
         staging_ref integer not null,
         group_name varchar not null,
         sub_group_name varchar not null,
@@ -1960,11 +1853,9 @@ comment on column staging_tag_groups.group_name is 'Group name under which the t
 comment on column staging_tag_groups.sub_group_name is 'Sub-Group name under which the tag is grouped: Country, River, Mountain,...';
 comment on column staging_tag_groups.tag_value is 'Ensemble of Tags';
 
-create sequence staging_people_id_seq;
-
 create table staging_people
        (
-        id integer not null default nextval('staging_people_id_seq'),
+        id serial,
         people_type varchar not null default 'author',
         people_sub_type varchar not null default '',
         order_by integer not null default 1,
@@ -1984,19 +1875,17 @@ comment on column staging_people.people_ref is 'Reference of person concerned - 
 comment on column staging_people.order_by is 'Integer used to order the persons in a list';
 comment on column staging_people.formated_name is 'full name of the people';
 
-
-create sequence loans_id_seq;
-
-create table loans (
-  id integer not null default nextval('loans_id_seq'),
-  name varchar not null default '',
-  description varchar not null default '',
-  description_ts tsvector not null,
-  from_date date,
-  to_date date,
-  extended_to_date date,
-  constraint pk_loans primary key (id)
-  );
+create table loans
+    (
+      id serial,
+      name varchar not null default '',
+      description varchar not null default '',
+      description_ts tsvector not null,
+      from_date date,
+      to_date date,
+      extended_to_date date,
+      constraint pk_loans primary key (id)
+    );
 
 comment on table loans is 'Table holding an entire loan made of multiple loan items may also be linked to other table as comment, properties , ...';
 
@@ -2007,27 +1896,20 @@ comment on column loans.description_ts is 'tsvector getting Description and titl
 comment on column loans.from_date  is 'Date of the start of the loan';
 comment on column loans.to_date  is 'Planned date of the end of the loan';
 
-
-  
-create sequence loan_items_id_seq;
-
 create table loan_items (
-  id integer not null default nextval('loan_items_id_seq'),
+  id serial,
   loan_ref integer not null,
   ig_ref integer,
   from_date date,
   to_date date,
   part_ref integer,
-  details varchar default '',
-  
+  details varchar default '',  
   constraint pk_loan_items primary key (id),
   constraint fk_loan_items_ig foreign key (ig_ref) references igs(id),
   constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
   constraint fk_loan_items_part_ref foreign key (part_ref) references specimen_parts(id) on delete set null,
-
   constraint unq_loan_items unique(loan_ref, part_ref)
 ); 
-
 
 comment on table loan_items is 'Table holding an item of a loan. It may be a part from darwin or only an generic item';
 
@@ -2039,11 +1921,8 @@ comment on column loan_items.ig_ref is 'Optional ref to an IG stored in the igs 
 comment on column loan_items.part_ref is 'Optional reference to a Darwin Part';
 comment on column loan_items.details is 'Textual details describing the item';
 
-
-create sequence loan_rights_id_seq;
-
 create table loan_rights (
-  id integer not null default nextval('loan_rights_id_seq'),
+  id serial,
   loan_ref integer not null,
   user_ref integer not null,
   has_encoding_right boolean not null default false,
@@ -2062,13 +1941,8 @@ comment on column loan_rights.loan_ref is 'Mandatory Reference to a loan';
 comment on column loan_rights.user_ref is 'Mandatory Reference to a user';
 comment on column loan_rights.has_encoding_right is 'Bool saying if the user can edit a loan';
 
-
-
-
-create sequence loan_status_id_seq;
-
 create table loan_status (
-  id integer not null default nextval('loan_status_id_seq'),
+  id serial,
   loan_ref integer not null,
   user_ref integer not null,
   status varchar not null default 'new',
@@ -2090,7 +1964,6 @@ comment on column loan_status.status is 'Current status of the loan in a list (n
 comment on column loan_status.modification_date_time is 'date of the modification';
 comment on column loan_status.comment is 'comment of the status modification';
 comment on column loan_status.is_last is 'flag telling which line is the current line';
-
 
 create table loan_history (
   id serial,

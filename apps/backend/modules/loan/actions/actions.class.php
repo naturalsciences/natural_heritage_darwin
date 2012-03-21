@@ -23,7 +23,7 @@ class loanActions extends DarwinActions
     if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER)) 
       $this->redirect('loan/view?id='.$loan->getId());      
     return $loan ;
-  }  
+  }
   
   protected function getLoanForm(sfWebRequest $request, $fwd404=false, $parameter='id',$options=null)
   {
@@ -213,6 +213,7 @@ class loanActions extends DarwinActions
     $this->setTemplate('new');
     
   }
+
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));

@@ -177,15 +177,6 @@ class specimenActions extends DarwinActions
           $links = $this->getRecordIfDuplicate($val->getId(),$links); 
           $this->form->addExtLinks($key, $links) ;          
         } 
-        // reembed Related files
-        $RelatedFiles = Doctrine::getTable('Multimedia')->findForTable('specimens',$duplic) ;
-        foreach ($RelatedFiles as $key=>$val)
-        {
-          $relFile = new Multimedia();
-          $relFile = $this->getRecordIfDuplicate($val->getId(),$relFile);
-// @ToDo Correct this
-//          $this->form->addRelatedFiles($key, $relFile) ;
-        }
         // reembed duplicated collector
         $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('specimens',$duplic) ;
         if(count($Catalogue))
