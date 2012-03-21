@@ -10,7 +10,20 @@
  */
 class BibliographyFormFilter extends BaseBibliographyFormFilter
 {
-  public function configure()
-  {
+  public function configure() {
+    $this->useFields(array('title'));
+    $this->addPagerItems();
+    $this->widgetSchema['title'] = new sfWidgetFormInputText();
+    $this->widgetSchema->setNameFormat('searchBibliography[%s]');
+    $this->validatorSchema['title'] = new sfValidatorString(array('required' => false, 'trim' => true));
   }
+
+  public function doBuildQuery(array $values)
+  {
+    $query = parent::doBuildQuery($values);
+    $this->addNamingColumnQuery($query, 'bibliography', 'title_ts', $values['title']);
+    $query->andWhere("id > 0 ");
+    return $query;
+  }
+
 }

@@ -11,19 +11,41 @@
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 class Bibliography extends BaseBibliography
-{/*
-article
-book
-booklet
-conference
-inbook
-incollection
-inproceedings
-manual
-mastersthesis
-misc
-phdthesis
-proceedings
-techreport
-unpublished*/
+{
+  
+  static $type_list = array(
+    'article' => 'Article',
+    'book' => 'Book',
+    'booklet' => 'Booklet',
+    'conference' => 'Conference',
+    'inbook' => 'InBook',
+    'incollection' => 'InCollection',
+    'inproceedings' => 'InProceedings',
+    'manual' => 'Manual',
+    'mastersthesis' => 'Masters Thesis',
+    'phdthesis' => 'PHD thesis',
+    'proceedings' => 'Proceedings',
+    'techreport' => 'Tech Report',
+    'webpublished' => 'Web published',
+    'unpublished' => 'Unpublished',
+    'misc' => 'Misc',
+  );
+
+  public function getTypeFormatted()
+  {
+    $trans_type = self::getAvailableTypes();
+    return $trans_type[$this->getType()] ;
+  }
+
+  public static function getAvailableTypes()
+  {
+    try{
+        $i18n_object = sfContext::getInstance()->getI18n();
+    }
+    catch( Exception $e )
+    {
+        return self::$type_list;
+    }
+    return array_map(array($i18n_object, '__'), self::$type_list);
+  }
 }
