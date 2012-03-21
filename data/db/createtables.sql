@@ -1994,7 +1994,7 @@ CREATE TABLE bibliography (
   abstract varchar not null default '',
   year integer,
   constraint pk_bibliography primary key (id),
-  constraint unq_bibliography unique (name_indexed, type)
+  constraint unq_bibliography unique (title_indexed, type)
 
 );
 comment on table bibliography is 'List of expeditions made to collect specimens';
@@ -2013,7 +2013,7 @@ create table catalogue_bibliography
   bibliography_ref integer not null,
   constraint pk_catalogue_bibliography primary key (id),
   constraint fk_bibliography foreign key (bibliography_ref) references bibliography(id) on delete cascade,
-  constraint unq_catalogue_people unique (referenced_relation, record_id, catalogue_bibliography)
+  constraint unq_catalogue_bibliography unique (referenced_relation, record_id, bibliography_ref)
   )
 inherits (template_table_record_ref);
 
