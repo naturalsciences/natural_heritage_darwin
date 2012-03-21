@@ -1983,3 +1983,42 @@ comment on column loan_history.loan_ref is 'Mandatory Reference to a loan';
 comment on column loan_history.referenced_table is 'Mandatory Reference to the table refereced';
 comment on column loan_history.modification_date_time is 'date of the modification';
 comment on column loan_history.record_line is 'hstore containing the whole line of referenced_table';
+
+
+CREATE TABLE bibliography (
+  id serial,
+  title varchar not null,
+  title_ts tsvector not null,
+  title_indexed varchar not null,
+  type varchar not null,
+  abstract varchar not null default '',
+  year integer,
+  constraint pk_bibliography primary key (id),
+  constraint unq_bibliography unique (name_indexed, type)
+
+);
+comment on table bibliography is 'List of expeditions made to collect specimens';
+comment on column bibliography.id is 'Unique identifier';
+comment on column bibliography.title is 'bibliography title';
+comment on column bibliography.title_ts is 'tsvector version of title field';
+comment on column bibliography.title_indexed is 'Indexed form of title';
+comment on column bibliography.type is 'bibliography type : article, book, booklet';
+comment on column bibliography.abstract is 'optional abstract of the bibliography';
+comment on column bibliography.year is 'The year of publication (or, if unpublished, the year of creation)';
+
+
+create table catalogue_bibliography
+(
+  id serial,
+  bibliography_ref integer not null,
+  constraint pk_catalogue_bibliography primary key (id),
+  constraint fk_bibliography foreign key (bibliography_ref) references bibliography(id) on delete cascade,
+  constraint unq_catalogue_people unique (referenced_relation, record_id, catalogue_bibliography)
+  )
+inherits (template_table_record_ref);
+
+comment on table catalogue_bibliography is 'List of people of catalogues units - Taxonomy, Chronostratigraphy,...';
+comment on column catalogue_bibliography.id is 'Unique identifier of record';
+comment on column catalogue_bibliography.referenced_relation is 'Identifier-Name of table the units come from';
+comment on column catalogue_bibliography.record_id is 'Identifier of record concerned in table concerned';
+comment on column catalogue_bibliography.bibliography_ref is 'Reference of the biblio concerned - id field of people table';

@@ -194,6 +194,8 @@ BEGIN
 		NEW.name_indexed := fullToIndex(NEW.name);		
 	ELSIF TG_TABLE_NAME = 'expeditions' THEN
 		NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'bibliography' THEN
+                NEW.title_indexed := fullToIndex(NEW.title);
 	ELSIF TG_TABLE_NAME = 'identifications' THEN
 		NEW.value_defined_indexed := COALESCE(fullToIndex(NEW.value_defined),'');
 	ELSIF TG_TABLE_NAME = 'lithology' THEN
@@ -1219,6 +1221,15 @@ BEGIN
         PERFORM fct_cpy_word('expeditions','name_ts', NEW.name_ts);
       END IF;
 
+   ELSIF TG_TABLE_NAME ='bibliography' THEN
+
+      IF TG_OP = 'UPDATE' THEN
+        IF OLD.title_ts IS DISTINCT FROM NEW.title_ts THEN
+          PERFORM fct_cpy_word('bibliography','NEW.title_ts', NEW.title_ts);
+        END IF;
+      ELSE
+        PERFORM fct_cpy_word('bibliography','title_ts', NEW.title_ts);
+      END IF;
    ELSIF TG_TABLE_NAME ='mineralogy' THEN
 
       IF TG_OP = 'UPDATE' THEN
@@ -4615,4 +4626,3 @@ BEGIN
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
-
