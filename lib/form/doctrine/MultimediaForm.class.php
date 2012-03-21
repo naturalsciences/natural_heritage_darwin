@@ -20,7 +20,7 @@ class MultimediaForm extends BaseMultimediaForm
     $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
           
     $this->widgetSchema['title'] = new sfWidgetFormInput();
-    $this->widgetSchema['title']->setAttributes(array('class'=>'small_size'));
+    $this->widgetSchema['title']->setAttributes(array('class'=>'medium_small_size'));
     $this->validatorSchema['title'] = new sfValidatorString();
     
     if($this->getObject()->isNew())

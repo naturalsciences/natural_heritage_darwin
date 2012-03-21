@@ -1,4 +1,4 @@
-<table class="catalogue_table">
+<table class="catalogue_table related_files">
   <thead style="<?php echo ($form['RelatedFiles']->count() || $form['newRelatedFiles']->count())?'':'display: none;';?>">
     <tr>
       <th>
@@ -6,12 +6,6 @@
       </th>
       <th>
         <?php echo __('Description'); ?>
-      </th>
-      <th>
-        <?php echo __('File'); ?>
-      </th>
-      <th>
-        <?php echo __('Format'); ?>
       </th>
       <th>
         <?php echo __('Created At') ; ?>
@@ -34,15 +28,15 @@
   </tbody>
   <tfoot>
     <tr>
-      <td colspan='5'>
+      <td colspan='4'>
         <ul class="error_list" id="file_error_message" style="display:none">
           <li></li>
         </ul>
         <div class="relatedFile">
+          <a href="<?php echo url_for('multimedia/addRelatedFiles?table='.$table.($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/num/" id="add_file" class="hidden"></a>
           <?php echo $form['filenames']->renderLabel();?>
           <?php echo $form['filenames'];?>
         </div>
-          <a href="<?php echo url_for('multimedia/addRelatedFiles?table='.$table.($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/num/" id="add_file" class="hidden"></a>
         <iframe name="hiddenFrame" id="hiddenFrame">
         </iframe>
       </td>

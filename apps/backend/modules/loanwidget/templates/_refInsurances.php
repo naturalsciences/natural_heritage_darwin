@@ -14,7 +14,7 @@
         <?php echo __('Currency'); ?>
       </th>
       <th>
-	<?php echo $form['insurance'];?>
+        <?php echo $form['insurance'];?>
       </th>
     </tr>
   </thead>

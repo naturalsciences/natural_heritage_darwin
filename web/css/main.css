@@ -2647,6 +2647,7 @@ height : 1px;
   z-index: 1;
   vertical-align: middle;  
   text-align : center;
+  cursor:pointer;
 }
 
 .containerFile .divFile
@@ -2959,8 +2960,13 @@ input.complete_missing {
 #loan_sync {
   cursor: pointer;
 }
+
 .last_sync_message {
   color: gray;
 
   font-size: x-small;
+}
+
+span.label {
+  font-weight:bold;
 }
