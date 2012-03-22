@@ -211,6 +211,10 @@
         <source>on %date%</source>
         <target>op %date%</target>
       </trans-unit>
+          <trans-unit id="1665">
+        <source>Darwin users added here will have either read or write rights on this loan and its related items. Needless to add yourself when you are the one creating the loan</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1459">
         <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
         <target>De taxon die u koos, werd aangeduid als &quot;hernoemd&quot;.</target>
@@ -290,6 +294,14 @@
           <trans-unit id="1403">
         <source>Aborted</source>
         <target>Afgebroken</target>
+      </trans-unit>
+          <trans-unit id="1666">
+        <source>Insert the name of the loan here, You can also set a description, the begining and the end date of the loan</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1667">
+        <source>Here you can define all people involved during the loan process. The sender side being the lenders and the receiver side being the borrowers</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1586">
         <source>Add Maintenance for checked</source>
@@ -2451,6 +2463,26 @@
         <source>Did you type the URL?</source>
         <target></target>
       </trans-unit>
+          <trans-unit id="1648">
+        <source>Are you sure you want to do an archive of your loan ?</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1650">
+        <source>Never synchronized</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1651">
+        <source>This will take a snapshot of the loan for archiving purposes.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1652">
+        <source>Take a snapshot of the loan.</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1653">
+        <source>Last synchronization on %date%</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1370">
         <source>DaRWIN 2 team</source>
         <target>Het DaRWIN2 team</target>
@@ -2493,6 +2525,10 @@
       </trans-unit>
           <trans-unit id="1628">
         <source>What&#039;s next</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1655">
+        <source>In this widget you can preview all maintenances done on this loan or the related items</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1445">
@@ -4079,6 +4115,10 @@
         <source>Suggestion send by</source>
         <target></target>
       </trans-unit>
+          <trans-unit id="1662">
+        <source>You can associate files to this loan or to the related items. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="826">
         <source>must be at least 4 characters.</source>
         <target>moet ten minste 4 karakters bevatten.</target>
@@ -5462,6 +5502,14 @@
           <trans-unit id="1582">
         <source>Loans</source>
         <target>Ontleningen</target>
+      </trans-unit>
+          <trans-unit id="1663">
+        <source>You can associate files to this maintenance. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1664">
+        <source>This widget describes all steps of your loan since its creation. The available statuses are displayed in the combo box and you can also add an comment for each selected status but it&#039;s not mandatory</source>
+        <target></target>
       </trans-unit>
         </body>
   </file>

@@ -1524,7 +1524,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true 
-        title_perso: Actors / People implied
+        title_perso: People involved
         
     u1lw3:
         User: u1
@@ -1624,7 +1624,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true 
-        title_perso: Actors / People implied
+        title_perso: People involved
 
     u1liw4:
         User: u1
@@ -1679,7 +1679,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true 
-        title_perso: Related Files
+        title_perso: Maintenances
         
     u1m1:
         User: u1

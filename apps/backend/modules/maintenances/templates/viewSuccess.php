@@ -31,7 +31,7 @@
         </tr>
       </tbody>
     </table>
-    <input type="button" class="bt_close" value="<?php echo __('Close this Tab'); ?>">
+    <input type="button" class="bt_close" value="<?php echo __('Close this tab'); ?>">
     <script>
       $('input[class="bt_close"]').click(function(){
         window.close() ;

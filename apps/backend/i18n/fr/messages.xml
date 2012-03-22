@@ -4532,6 +4532,10 @@
         <source>Choose Darwin Part</source>
         <target>Choisissez une partie Darwin</target>
       </trans-unit>
+          <trans-unit id="1665">
+        <source>Darwin users added here will have either read or write rights on this loan and its related items. Needless to add yourself when you are the one creating the loan</source>
+        <target>Les utilisateurs Darwin ajoutés ici auront des droits en lecture ou écriture sur le prêt ou sur les objets associés. Inutile de vous ajouter lorsque c&#039;est vous qui créez le prêt</target>
+      </trans-unit>
           <trans-unit id="1381">
         <source>Dear %title% %name%,</source>
         <target>Cher %title% %name%,</target>
@@ -4660,6 +4664,10 @@
         <source>Starts on</source>
         <target>Commence le</target>
       </trans-unit>
+          <trans-unit id="1666">
+        <source>Insert the name of the loan here, You can also set a description, the begining and the end date of the loan</source>
+        <target>Insérez le nom du prêt ici, vous pouvez également ajouter une description une date de début et de fin de prêt</target>
+      </trans-unit>
           <trans-unit id="1463">
         <source>This institution still has collections</source>
         <target>Cette institution possède toujours des collections</target>
@@ -4723,6 +4731,10 @@
           <trans-unit id="1633">
         <source>Please save your item in order to view related maintenances</source>
         <target>Veuillez sauvegarder l&#039;objet afin de voir les maintenances associées</target>
+      </trans-unit>
+          <trans-unit id="1667">
+        <source>Here you can define all people involved during the loan process. The sender side being the lenders and the receiver side being the borrowers</source>
+        <target>Vous pouvez définir ici toutes les personnes impliquées dans le processus de prêt. Le coté expédition sont les envoyeurs et le coté destinataire sont les emprunteurs</target>
       </trans-unit>
           <trans-unit id="1510">
         <source>Person</source>
@@ -4876,6 +4888,10 @@
         <source>Target</source>
         <target>Cible</target>
       </trans-unit>
+          <trans-unit id="1668">
+        <source>Close this tab</source>
+        <target>Fermer cet onglet</target>
+      </trans-unit>
           <trans-unit id="1601">
         <source>Returned</source>
         <target>Renvoyé</target>
@@ -4907,6 +4923,10 @@
           <trans-unit id="1600">
         <source>Closed</source>
         <target>Fermé</target>
+      </trans-unit>
+          <trans-unit id="1669">
+        <source>Main informations about the loan item</source>
+        <target>Informations principale de l&#039;objet du prêt</target>
       </trans-unit>
           <trans-unit id="1418">
         <source>Import</source>
@@ -5174,7 +5194,7 @@
       </trans-unit>
           <trans-unit id="1573">
         <source>Related Files</source>
-        <target>Fichier lié</target>
+        <target>Fichiers liés</target>
       </trans-unit>
           <trans-unit id="1572">
         <source>Edition right</source>
@@ -5356,6 +5376,10 @@
         <source>All the loans you\&#039;re involved in.</source>
         <target>Tout les prêts qui vous concernent.</target>
       </trans-unit>
+          <trans-unit id="1655">
+        <source>In this widget you can preview all maintenances done on this loan or the related items</source>
+        <target>Dans cette widget vous pouvez apercevoir toute les maintenances effectuées sur ce prêt ou sur les objets associés</target>
+      </trans-unit>
           <trans-unit id="1445">
         <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
         <target>La hiérarchie de ce %field% est incorrecte, nous vous prions d\&#039;en sélectionner une autre ou de laisse le champ vide</target>
@@ -5451,6 +5475,18 @@
           <trans-unit id="1629">
         <source>Suggestion send by</source>
         <target>Suggestion envoyée par</target>
+      </trans-unit>
+          <trans-unit id="1662">
+        <source>You can associate files to this loan or to the related items. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</source>
+        <target>vous pouvez associer des fichiers dans ce prêt ou dans les objets liés. Ce peut être des photos, documents ou n&#039;importe quel autre fichiers que vous estimez nécessaire. Une miniature apparaîtra quand votre ficher sera une image</target>
+      </trans-unit>
+          <trans-unit id="1663">
+        <source>You can associate files to this maintenance. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</source>
+        <target>vous pouvez associer des fichiers dans cette maintenance. Ce peut être des photos, documents ou n&#039;importe quel autre fichiers que vous estimez nécessaire. Une miniature apparaîtra quand votre ficher sera une image</target>
+      </trans-unit>
+          <trans-unit id="1664">
+        <source>This widget describes all steps of your loan since its creation. The available statuses are displayed in the combo box and you can also add an comment for each selected status but it&#039;s not mandatory</source>
+        <target>Cette widget décrit tous les états du prêt depuis sa création. Les états disponibles sont affichés dans le menu déroulant et vous pouvez également ajouter un commentaire pour chaque état sélectionné mais ce n&#039;est pas nécessaire</target>
       </trans-unit>
           <trans-unit id="1378">
         <source>Field to be corrected</source>
