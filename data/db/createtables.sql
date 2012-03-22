@@ -1826,7 +1826,6 @@ create view darwin_flat as
   s.acquisition_date_mask,
   s.acquisition_date,
   s.station_visible,
-  s.multimedia_visible,
   s.ig_ref,
 
 
