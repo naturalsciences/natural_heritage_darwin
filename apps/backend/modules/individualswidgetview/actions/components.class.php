@@ -81,6 +81,16 @@ class individualswidgetViewComponents extends sfComponents
   public function executeRefRelatedFiles()
   {
     $this->files = Doctrine::getTable('Multimedia')->findForTable('specimen_individuals', $this->eid) ;
+    $this->atLeastOneFileVisible = true;
+    if(!$this->getUser()->isAtLeast(Users::ENCODER)) {
+      $this->atLeastOneFileVisible = false;
+      foreach($this->files as $file) {
+        if($file->getVisible()){
+          $this->atLeastOneFileVisible = $file->getVisible();
+          break;
+        }
+      }
+    }
   }
 
   public function executeExtLinks()

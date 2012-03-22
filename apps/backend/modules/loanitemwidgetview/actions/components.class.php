@@ -51,6 +51,7 @@ class loanitemwidgetviewComponents extends sfComponents
   { 
     $this->defineObject();
     $this->files = Doctrine::getTable('Multimedia')->findForTable('loan_items', $this->loan->getId()) ;
+    $this->atLeastOneFileVisible = true;
   }  
 
   public function executeRefComments()

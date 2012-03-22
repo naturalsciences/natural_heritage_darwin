@@ -7,8 +7,8 @@
   <td><?php echo $form['description']->render() ; ?></td>
   <td><?php $date = new DateTime($form['creation_date']->getValue());
                 echo $date->format('d/m/Y'); ?></td>
-  <td><?php echo $form['visible']->render() ; ?></td>
-  <td><?php echo $form['publishable']->render() ; ?></td>
+  <td><?php if($table!='loans' && $table!='loan_items'):?><?php echo $form['visible']->render() ; ?><?php endif;?></td>
+  <td><?php if($table!='loans' && $table!='loan_items'):?><?php echo $form['publishable']->render() ; ?><?php endif;?></td>
   <td class="widget_row_delete" rowspan="2">
     <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_file_'.$row_num); ?>
     <?php echo $form->renderHiddenFields();?>

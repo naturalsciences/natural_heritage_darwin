@@ -11,10 +11,14 @@
         <?php echo __('Created At') ; ?>
       </th>
       <th>
-        <?php echo __('Visible ?') ; ?>
+        <?php if($table!='loans' && $table!='loan_items'):?>
+          <?php echo image_tag('blue_eyel.png', array("title" => __('Visible ?'), "alt" => __('Publicly display this file ?')));?>
+        <?php endif;?>
       </th>
       <th>
-        <?php echo __('Publishable ?') ; ?>
+        <?php if($table!='loans' && $table!='loan_items'):?>
+          <?php echo image_tag('book.png', array("title" => __('Publishable?'), "alt" => __('Select this file as a publishable file ?')));?>
+        <?php endif;?>
       </th>
       <th>
         <?php echo $form['relatedfile'];?>
@@ -24,11 +28,11 @@
   <tbody id="file_body">
     <?php $retainedKey = 0;?>
     <?php foreach($form['RelatedFiles'] as $form_value):?>
-      <?php include_partial('multimedia/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'edit' => true));?>
+      <?php include_partial('multimedia/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'edit' => true, 'table' => $table));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
     <?php foreach($form['newRelatedFiles'] as $form_value):?>
-      <?php include_partial('multimedia/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey));?>
+      <?php include_partial('multimedia/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'table' => $table));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
   </tbody>
