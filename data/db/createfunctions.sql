@@ -1944,7 +1944,7 @@ BEGIN
 
     INSERT INTO specimens_flat
     (specimen_ref,category, host_relationship, acquisition_category, acquisition_date_mask,
-     acquisition_date, station_visible, multimedia_visible,
+     acquisition_date, station_visible,
      collection_ref,collection_type,collection_code,collection_name, collection_is_public,
      collection_parent_ref,collection_path,
      expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
@@ -1969,7 +1969,7 @@ BEGIN
      host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
      host_specimen_ref,ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date )
     (SELECT NEW.id,  NEW.category,  NEW.host_relationship,  NEW.acquisition_category,  NEW.acquisition_date_mask,
-            NEW.acquisition_date,  NEW.station_visible,  NEW.multimedia_visible,
+            NEW.acquisition_date,  NEW.station_visible,
             NEW.collection_ref, coll.collection_type, coll.code, coll.name, coll.is_public,
             coll.parent_ref, coll.path,
             NEW.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
@@ -2027,7 +2027,7 @@ BEGIN
  ELSIF TG_OP = 'UPDATE' THEN
     UPDATE specimens_flat
     SET (category, host_relationship, acquisition_category, acquisition_date_mask,
-         acquisition_date, station_visible, multimedia_visible,
+         acquisition_date, station_visible,
          collection_ref,collection_type,collection_code,collection_name, collection_is_public,
          collection_parent_ref,collection_path,
          expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
@@ -2055,7 +2055,7 @@ BEGIN
          =
          
         (NEW.category, NEW.host_relationship, NEW.acquisition_category, NEW.acquisition_date_mask,
-         NEW.acquisition_date, NEW.station_visible, NEW.multimedia_visible,
+         NEW.acquisition_date, NEW.station_visible,
          NEW.collection_ref, subq.coll_collection_type, subq.coll_code, subq.coll_name, subq.coll_is_public,
          subq.coll_parent_ref, subq.coll_path,
          NEW.expedition_ref, subq.expe_name, subq.expe_name_ts, subq.expe_name_indexed,

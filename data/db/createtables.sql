@@ -1701,7 +1701,6 @@ CREATE TABLE specimens_flat (
     acquisition_date_mask integer not null,
     acquisition_date date not null,
     station_visible boolean not null,
-    multimedia_visible boolean not null,
     ig_ref integer,
 
     spec_ident_ids integer[] not null default '{}',
