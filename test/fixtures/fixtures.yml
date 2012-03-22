@@ -182,48 +182,13 @@ Users:
         gender: M
         db_user_type: 8
         People: p5
-    u2:
-        is_physical: true
-        title: Mrs
-        family_name: reguser
-        given_name: reguser
-        gender: M
-        db_user_type: 1
-        People: p3
-    u3:
-        is_physical: true
-        title: Mr
-        family_name: encoder
-        given_name: encoder
-        gender: M
-        db_user_type: 2
-        People: p4
-    u4:
-        is_physical: true
-        title: Mr
-        family_name: collmanager
-        given_name: collmanager
-        gender: M
-        db_user_type: 4
-        People: p6
         
 UsersLoginInfos:
     u1l1:
         User: u1
         user_name: root
         password: "<?php echo sha1(sfConfig::get('dw_salt').'evil');?>"
-    u1l2:
-        User: u2
-        user_name: reguser
-        password: "<?php echo sha1(sfConfig::get('dw_salt').'reguser');?>"
-    u1l3:
-        User: u3
-        user_name: encoder
-        password: "<?php echo sha1(sfConfig::get('dw_salt').'encoder');?>"
-    u1l4:
-        User: u4
-        user_name: collmanager
-        password: "<?php echo sha1(sfConfig::get('dw_salt').'collmanager');?>" 
+
  
 UsersLanguages:
     ul1:
@@ -388,76 +353,66 @@ Loans:
        description: This is a funny dog to watch
        from_date: '2009-02-24'
        to_date: '2011-08-11'
-       effective_to_date: '2011-09-15'
     l2:
        id: 2
        name: Cat of goyet
        description: This is a funny cat to watch
        from_date: '2009-01-15'
        to_date: '2011-07-19'
-       effective_to_date: '2011-09-10'
     l3:
        id: 3
        name: Elephant of goyet
        description: This is a funny elephant to watch
        from_date: '2009-02-02'
        to_date: '2012-08-13'
-       effective_to_date: '2012-09-17'
     l4:
        id: 4
        name: Tiger of goyet
        description: This is a funny tiger to watch
        from_date: '2009-01-01'
        to_date: '2012-07-08'
-       effective_to_date: '2013-09-05'
     l5:
        id: 5
        name: Dragon of goyet
        description: This is a funny dragon to watch
        from_date: '2009-02-04'
        to_date: '2011-08-01'
-       effective_to_date: '2011-09-05'
     l6:
        id: 6
        name: Horse of goyet
        description: This is a funny horse to watch
        from_date: '2009-01-10'
        to_date: '2011-07-10'
-       effective_to_date: '2011-09-02'
     l7:
        id: 7
        name: Mule of goyet
        description: This is a funny mule to watch
        from_date: '2009-01-04'
        to_date: '2011-04-12'
-       effective_to_date: '2011-08-05'
     l8:
        id: 8
        name: Goat Herder of goyet
        description: This is a funny goat to watch
        from_date: '2008-05-04'
        to_date: '2001-07-28'
-       effective_to_date: '2013-09-05'
     l9:
        id: 9
        name: Sheep of goyet
        description: This is a funny sheep to watch
        from_date: '2007-05-22'
        to_date: '2011-11-11'
-       effective_to_date: '2012-12-15'
     l10:
        id: 10
        name: Crow of goyet
        description: This is a funny crow to watch
        from_date: '2004-04-04'
        to_date: '2010-05-15'
-       effective_to_date: '2010-10-05'
 
 LoanStatus:
     ls1:
        id: 1
        Loan: l1
-       Users: u4
+       Users: u1
        status: pending
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -465,7 +420,7 @@ LoanStatus:
     ls2:
        id: 2
        Loan: l1
-       Users: u4
+       Users: u1
        status: new
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -473,7 +428,7 @@ LoanStatus:
     ls3:
        id: 3
        Loan: l1
-       Users: u4
+       Users: u1
        status: closed
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -481,7 +436,7 @@ LoanStatus:
     ls4:
        id: 4
        Loan: l3
-       Users: u4
+       Users: u1
        status: pending
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -489,7 +444,7 @@ LoanStatus:
     ls5:
        id: 5
        Loan: l2
-       Users: u4
+       Users: u1
        status: new
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -497,7 +452,7 @@ LoanStatus:
     ls6:
        id: 6
        Loan: l9
-       Users: u4
+       Users: u1
        status: new
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -505,7 +460,7 @@ LoanStatus:
     ls7:
        id: 7
        Loan: l4
-       Users: u4
+       Users: u1
        status: closed
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -513,7 +468,7 @@ LoanStatus:
     ls8:
        id: 8
        Loan: l5
-       Users: u2
+       Users: u1
        status: new
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -521,7 +476,7 @@ LoanStatus:
     ls9:
        id: 9
        Loan: l6
-       Users: u2
+       Users: u1
        status: new
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -529,7 +484,7 @@ LoanStatus:
     ls10:
        id: 10
        Loan: l10
-       Users: u4
+       Users: u1
        status: accepted
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -537,7 +492,7 @@ LoanStatus:
     ls11:
        id: 11
        Loan: l8
-       Users: u4
+       Users: u1
        status: accepted
        modification_date_time: '2010-10-05'
        comment: No need for a comment
@@ -547,59 +502,38 @@ LoanRights:
     lr1:
        id: 1
        Loan: l1
-       User: u4
+       User: u1
        has_encoding_right: true
     lr2:
        id: 2
        Loan: l2
-       User: u4
+       User: u1
        has_encoding_right: false
     lr3:
        id: 3
        Loan: l6
-       User: u4
+       User: u1
        has_encoding_right: false
     lr4:
        id: 4
        Loan: l5
-       User: u4
+       User: u1
        has_encoding_right: true
     lr5:
        id: 5
        Loan: l4
-       User: u4
-       has_encoding_right: true
-    lr6:
-       id: 6
-       Loan: l3
-       User: u4
-       has_encoding_right: false
-    lr7:
-       id: 7
-       Loan: l1
-       User: u2
-       has_encoding_right: false
-    lr8:
-       id: 8
-       Loan: l2
-       User: u2
+       User: u1
        has_encoding_right: true
     lr9:
        id: 9
        Loan: l8
-       User: u4
+       User: u1
        has_encoding_right: true
     lr10:
        id: 10
        Loan: l9
-       User: u4
+       User: u1
        has_encoding_right: true
-    lr11:
-       id: 12
-       Loan: l9
-       User: u3
-       has_encoding_right: true
-
 
 Codes:
     cosp1:

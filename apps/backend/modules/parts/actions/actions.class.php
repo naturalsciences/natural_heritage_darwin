@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage parts
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  */
 class partsActions extends DarwinActions
 {
@@ -86,7 +86,7 @@ class partsActions extends DarwinActions
     }
     if($request->isMethod('post'))
     {
-      $this->form->bind( $request->getParameter('specimen_parts') );
+      $this->form->bind( $request->getParameter('specimen_parts'), $request->getFiles('specimen_parts') );
       if( $this->form->isValid() )
       {
         try

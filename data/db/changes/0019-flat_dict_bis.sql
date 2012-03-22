@@ -1,3 +1,5 @@
+set search_path=darwin2, public;
+
 alter table flat_dict add column dict_depend varchar not null default '';
 alter table flat_dict drop constraint unq_flat_dict;
 alter table flat_dict add constraint unq_flat_dict unique (dict_value, dict_field, referenced_relation, dict_depend);

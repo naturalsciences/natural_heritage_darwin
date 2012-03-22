@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage filter
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class LoansFormFilter extends BaseLoansFormFilter
@@ -19,12 +19,8 @@ class LoansFormFilter extends BaseLoansFormFilter
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
 
-    $this->widgetSchema['status'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'LoanStatus',
-        'table_method' => 'getDistinctStatus',
-        'method' => 'getStatus',
-        'key_method' => 'getStatus',
-        'add_empty' => true,
+    $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
+        'choices' => Doctrine::getTable('LoanStatus')->getDistinctStatus()
     ));
     $this->validatorSchema['status'] = new sfValidatorString(array('required' => false));
 
@@ -90,7 +86,7 @@ class LoansFormFilter extends BaseLoansFormFilter
     $this->widgetSchema->setLabels(array('from_date' => 'Between',
                                          'to_date' => 'and',
                                          'only_darwin' => 'Contains Darwin items',
-                                         'people_ref' => 'Specific person',
+                                         'people_ref' => 'Person involved',
                                         )
                                   );
   }
@@ -101,6 +97,9 @@ class LoansFormFilter extends BaseLoansFormFilter
     if($val != '')
     {
       $alias = $query->getRootAlias() ;
+      if($val == 'opened')
+      $query->andWhere("EXISTS (select s.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status != ?)",'closed');      
+      else
       $query->andWhere("EXISTS (select s.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status = ?)",$val);
     }
     return $query;
@@ -139,7 +138,7 @@ class LoansFormFilter extends BaseLoansFormFilter
 
   public function filterByRight($query, $user)
   {
-    if($user->isAtLeast(Users::ADMIN)) return;
+    if($user->isAtLeast(Users::MANAGER)) return;
 
     $alias = $query->getRootAlias() ;
     $query->andWhere("EXISTS (select lr.id from LoanRights lr where $alias.id = lr.loan_ref and user_ref = ?)", $user->getId());
@@ -148,7 +147,7 @@ class LoansFormFilter extends BaseLoansFormFilter
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
-    $fields = array('from_date', 'effective_to_date');
+    $fields = array('from_date', 'to_date');
     $this->addNamingColumnQuery($query, 'loans', 'description_ts', $values['name']);
     $this->addExactDateFromToColumnQuery($query, $fields, $values['from_date'], $values['to_date']);
     $this->filterByRight($query, $this->options['user']);

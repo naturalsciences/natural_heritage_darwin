@@ -49,7 +49,7 @@ $browser->
     checkElement('div[class="pager paging_info"] table tr td:nth-child(2)', 1)->
   end()->
   info('Edit this record')->
-  click('td.edit a:nth-child(2)')->
+  click('td.edit a:nth-child(3)')->
   with('response')->begin()->
     isStatusCode(200)->
     setField('chronostratigraphy[name]', '')->

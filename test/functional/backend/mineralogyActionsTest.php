@@ -41,7 +41,7 @@ $browser->
     checkElement('table.results tbody tr:first td:nth-child(4)', '/Invalid/')->
   end()->
   info('Edit invalid record')->
-  click('table.results tbody tr:first td.edit a:nth-child(2)')->
+  click('table.results tbody tr:first td.edit a:nth-child(3)')->
   with('response')->begin()->
     isStatusCode(200)->
     setField('mineralogy[code]', '')->

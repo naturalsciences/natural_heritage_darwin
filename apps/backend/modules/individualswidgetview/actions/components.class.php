@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage individuals_widget
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: actions.class.php 12479 2008-10-31 10:54:40Z fabien $
  */
 class individualswidgetViewComponents extends sfComponents
@@ -78,6 +78,21 @@ class individualswidgetViewComponents extends sfComponents
       $this->eid = $this->form->getObject()->getId() ;
   } 
     
+  public function executeRefRelatedFiles()
+  {
+    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimen_individuals', $this->eid) ;
+    $this->atLeastOneFileVisible = true;
+    if(!$this->getUser()->isAtLeast(Users::ENCODER)) {
+      $this->atLeastOneFileVisible = false;
+      foreach($this->files as $file) {
+        if($file->getVisible()){
+          $this->atLeastOneFileVisible = $file->getVisible();
+          break;
+        }
+      }
+    }
+  }
+
   public function executeExtLinks()
   {}
 }

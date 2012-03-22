@@ -7,7 +7,7 @@
  *
  * @package    Darwin
  * @subpackage Libs
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
 */
 
 /**
@@ -15,7 +15,7 @@
  * and an applied mask to render the fuzzyness.
  *
  * @package Darwin
- * @author  DB team <collections@naturalsciences.be>
+ * @author  DB team <darwin-ict@naturalsciences.be>
  */
 class FuzzyDateTime extends DateTime
 {

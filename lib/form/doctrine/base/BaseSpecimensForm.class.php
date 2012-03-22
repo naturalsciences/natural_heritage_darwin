@@ -7,7 +7,7 @@
  *
  * @package    darwin
  * @subpackage form
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
 abstract class BaseSpecimensForm extends BaseFormDoctrine
@@ -32,7 +32,6 @@ abstract class BaseSpecimensForm extends BaseFormDoctrine
       'acquisition_date_mask'   => new sfWidgetFormInputText(),
       'acquisition_date'        => new sfWidgetFormTextarea(),
       'station_visible'         => new sfWidgetFormInputCheckbox(),
-      'multimedia_visible'      => new sfWidgetFormInputCheckbox(),
       'ig_ref'                  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Igs'), 'add_empty' => true)),
       'collecting_methods_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'CollectingMethods')),
       'collecting_tools_list'   => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'CollectingTools')),
@@ -56,7 +55,6 @@ abstract class BaseSpecimensForm extends BaseFormDoctrine
       'acquisition_date_mask'   => new sfValidatorInteger(array('required' => false)),
       'acquisition_date'        => new sfValidatorString(array('required' => false)),
       'station_visible'         => new sfValidatorBoolean(array('required' => false)),
-      'multimedia_visible'      => new sfValidatorBoolean(array('required' => false)),
       'ig_ref'                  => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Igs'), 'required' => false)),
       'collecting_methods_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'CollectingMethods', 'required' => false)),
       'collecting_tools_list'   => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'CollectingTools', 'required' => false)),

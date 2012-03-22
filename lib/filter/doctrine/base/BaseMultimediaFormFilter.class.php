@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage filter
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
 abstract class BaseMultimediaFormFilter extends BaseFormFilterDoctrine
@@ -26,6 +26,8 @@ abstract class BaseMultimediaFormFilter extends BaseFormFilterDoctrine
       'creation_date'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'creation_date_mask'  => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'mime_type'           => new sfWidgetFormFilterInput(),
+      'visible'             => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'publishable'         => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
     ));
 
     $this->setValidators(array(
@@ -42,6 +44,8 @@ abstract class BaseMultimediaFormFilter extends BaseFormFilterDoctrine
       'creation_date'       => new sfValidatorPass(array('required' => false)),
       'creation_date_mask'  => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'mime_type'           => new sfValidatorPass(array('required' => false)),
+      'visible'             => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'publishable'         => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
     ));
 
     $this->widgetSchema->setNameFormat('multimedia_filters[%s]');
@@ -75,6 +79,8 @@ abstract class BaseMultimediaFormFilter extends BaseFormFilterDoctrine
       'creation_date'       => 'Text',
       'creation_date_mask'  => 'Number',
       'mime_type'           => 'Text',
+      'visible'             => 'Boolean',
+      'publishable'         => 'Boolean',
     );
   }
 }

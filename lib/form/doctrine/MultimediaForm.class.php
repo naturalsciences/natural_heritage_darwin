@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage form
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class MultimediaForm extends BaseMultimediaForm
@@ -31,7 +31,7 @@ class MultimediaForm extends BaseMultimediaForm
     else unset($this['uri']) ;
       
     $this->widgetSchema['description'] = new sfWidgetFormInput();    
-    $this->widgetSchema['description']->setAttributes(array('class'=>'medium_size'));  
+    $this->widgetSchema['description']->setAttributes(array('class'=>'medium_small_size'));
     $this->validatorSchema['description'] = new sfValidatorString(array('required'=>false)); 
 
     $this->widgetSchema['filename'] = new sfWidgetFormInputHidden();
@@ -46,11 +46,17 @@ class MultimediaForm extends BaseMultimediaForm
     $this->widgetSchema['creation_date'] = new sfWidgetFormInputHidden(); 
     $this->validatorSchema['creation_date'] = new sfValidatorPass();  
     
+    $this->widgetSchema['visible'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['visible'] = new sfValidatorBoolean();
+
+    $this->widgetSchema['publishable'] = new sfWidgetFormInputCheckbox();
+    $this->validatorSchema['publishable'] = new sfValidatorBoolean();
+
     $this->mergePostValidator(new MultimediaFileValidatorSchema());    
   }  
   
   public function doSave($con = null)
   {
-    $this->offsetUnset('id');     
+    $this->offsetUnset('id');  
   }
 }

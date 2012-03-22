@@ -27,9 +27,9 @@ where (collection = 1 or collection_path like '/1/%')
   and case when coalesce(replace('?InviteIGFrom','-',''), '') = '' and coalesce(replace('?InviteIGTo','-',''), '') = '' then true
            else
             case when coalesce(replace('?InviteIGFrom','-',''), '') != '' and coalesce(replace('?InviteIGTo','-',''), '') = '' then
-                   labeling.ig_num in (select trim(regexp_split_to_table(translate('?InviteIGFrom', E',/\\#.', ';;;; '), ';')))
+                   labeling.ig_num_indexed in (select fullToIndex(regexp_split_to_table(translate('?InviteIGFrom', E',/\\#.', ';;;; '), ';')))
                  when coalesce(replace('?InviteIGFrom','-',''), '') = '' and coalesce(replace('?InviteIGTo','-',''), '') != '' then
-                   labeling.ig_num in (select trim(regexp_split_to_table(translate('?InviteIGTo', E',/\\#.', ';;;; '), ';')))
+                   labeling.ig_num_indexed in (select fullToIndex(regexp_split_to_table(translate('?InviteIGTo', E',/\\#.', ';;;; '), ';')))
                  when convert_to_integer(coalesce(replace('?InviteIGFrom','-',''), '')) != 0 and convert_to_integer(coalesce(replace('?InviteIGTo','-',''), '')) != 0 then
                    labeling.ig_numeric between convert_to_integer('?InviteIGFrom') and convert_to_integer('?InviteIGTo')
                  else
@@ -43,10 +43,10 @@ where (collection = 1 or collection_path like '/1/%')
            else labeling.type && (select array_agg(typeList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteType', E',/\\#.', ';;;; '),''),';')) as typeList) as subqry)
            end
   and case when coalesce('?InviteSex', '') = '' then true
-           else labeling.sex && (select array_agg(sexList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteSex', E',/\\#.', ';;;; '),''),';')) as sexList) as subqry)
+           else labeling.sex Like '?InviteSex' || '%'
            end
   and case when coalesce('?InviteStage', '') = '' then true
-           else labeling.stage && (select array_agg(stageList)::varchar[] from (select fullToIndex(regexp_split_to_table(coalesce(translate('?InviteStage', E',/\\#.', ';;;; '),''),';')) as stageList) as subqry)
+           else labeling.stage Like '?InviteStage' || '%'
            end
   and case when coalesce('?InviteHigherTaxa', '') = '' then true
       else labeling.taxon_path like (select path || id || '%' from taxonomy where name = '?InviteHigherTaxa')

@@ -116,24 +116,31 @@ class MyWidgets extends BaseMyWidgets
         "comm" => "This widget regroups all communication information of a user, such as phone/fax number, email. You can use our tags to set the type of entry (work or home phone for instance)",
         ),
     "loanwidget"=>array(
-        "mainInfo" => "Insert the name of the loan here, You can also set a description, the begining and the end date of the loan.",
-        "actors" => "TODO",
-        "refComments" => "This widget is used to add commentary.If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however",
+        "mainInfo" => "Insert the name of the loan here, You can also set a description, the begining and the end date of the loan",
+        "actors" => "Here you can define all people involved during the loan process. The sender side being the lenders and the receiver side being the borrowers",
+        "refComments" => "This widget is used to add commentary. If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however",
         "refProperties" => "This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= watertemperature, sub type= C°,Date from=01/07/1974 10:05:00, value= 15",
-        "loanStatus" => "TODO",
-        "refUsers" => "TODO",
-        "refRelatedFiles" => "TODO",
+        "loanStatus" => "This widget describes all steps of your loan since its creation. The available statuses are displayed in the combo box and you can also add an comment for each selected status but it's not mandatory",
+        "refUsers" => "Darwin users added here will have either read or write rights on this loan and its related items. Needless to add yourself when you are the one creating the loan",
+        "refRelatedFiles" => "You can associate files to this loan or to the related items. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image",
         "refInsurances" => "In this widget you can specify one or more values with regards to the object(s) as estimated by a particular insurance institution and /or on a particular date.",
+        "maintenances"=> "In this widget you can preview all maintenances done on this loan or the related items",
         ),
     "loanitemwidget"=>array(
         "mainInfo" => "Main informations about the loan item",
-        "actors" => "TODO",
+        "actors" => "Here you can define all people involved during the loan process. The sender side being the lenders and the receiver side being the borrowers",
+        "refComments" => "This widget is used to add commentary. If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however",
+        "refProperties" => "This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= watertemperature, sub type= C°,Date from=01/07/1974 10:05:00, value= 15",
+        "refRelatedFiles" => "You can associate files to this loan or to the related items. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image",
+        "refInsurances" => "In this widget you can specify one or more values with regards to the object(s) as estimated by a particular insurance institution and /or on a particular date.",
+        "maintenances"=> "In this widget you can preview all maintenances done on this loan or the related items",
+        ),
+    "maintenanceswidget"=>array(
         "refComments" => "This widget is used to add commentary.If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however",
         "refProperties" => "This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= watertemperature, sub type= C°,Date from=01/07/1974 10:05:00, value= 15",
-        "loanStatus" => "TODO",
-        "refRelatedFiles" => "TODO",
-        "refInsurances" => "In this widget you can specify one or more values with regards to the object(s) as estimated by a particular insurance institution and /or on a particular date."
-        ),
+        "extLinks" => "This widget allows you to add a URL address to the record (ex : http://www.naturalsciences.be)",
+        "refRelatedFiles" => "You can associate files to this maintenance. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image"
+       ),
   ) ;
   /**
   * Get Widget list file for a given role

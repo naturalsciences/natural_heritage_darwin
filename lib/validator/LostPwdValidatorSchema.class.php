@@ -5,7 +5,7 @@
  *
  * @package    symfony
  * @subpackage validator
- * @author     DarWIN2 team <collections@naturalsciences.be>
+ * @author     DarWIN2 team <darwin-ict@naturalsciences.be>
  */
 
 class LostPwdValidatorSchema extends sfValidatorBase

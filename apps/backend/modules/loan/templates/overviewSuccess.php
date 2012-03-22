@@ -19,8 +19,7 @@
             <th><?php echo __('Darwin Part') ;?></th>
             <th><?php echo __('I.g. Num');?></th>
             <th><?php echo __('Details') ;?></th>
-            <th><?php echo __('Expedition') ;?></th>
-            <th><?php echo __('Return') ;?></th>
+            <th><?php echo __('Expedition / Return') ;?></th>
             <th></th>
             <th></th>
           </tr>
@@ -129,7 +128,7 @@ $(document).ready(function () {
               api.destroy();
             }
           },
-          style: 'ui-tooltip-light ui-tooltip-rounded'
+          style: 'ui-tooltip-light ui-tooltip-rounded dialog-modal-edit'
         });
   });
   function addPinned(part_id, part_name)

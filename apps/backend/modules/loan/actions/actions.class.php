@@ -5,29 +5,30 @@
  *
  * @package    darwin
  * @subpackage loan
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class loanActions extends DarwinActions
 {
   protected $widgetCategory = 'loan_widget';
 
-  protected function checkRight($loan_id)  
+  protected function checkRight($loan_id)
   {
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($loan_id), sprintf('Object loan does not exist (%s).', array($loan_id)));
-    if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;    
-    if(!$right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()))
+    if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;
+    $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
+    if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
       $this->forwardToSecureAction();
-    if($right==="view") $this->redirect('loan/view?id='.$loan->getId());      
+    if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER)) 
+      $this->redirect('loan/view?id='.$loan->getId());      
     return $loan ;
-  }  
+  }
   
   protected function getLoanForm(sfWebRequest $request, $fwd404=false, $parameter='id',$options=null)
   {
     $loan = null;
     
-
     if ($fwd404)
       return $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter,0)));
 
@@ -36,7 +37,8 @@ class loanActions extends DarwinActions
       if($request->hasParameter($parameter))
         $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter) );      
       $form = new LoansForm($loan,$options);
-    }else
+    }
+    else
     {
       if($request->hasParameter($parameter))    
         $loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
@@ -47,7 +49,7 @@ class loanActions extends DarwinActions
   
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new LoansFormFilter(null,array('user' => $this->getUser()));
+    $this->form = new LoansFormFilter($request->getParameter('loans_filters'),array('user' => $this->getUser()));
   }
 
   public function executeSearch(sfWebRequest $request)
@@ -128,17 +130,17 @@ class loanActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    // Forward to a 404 page if the requested expedition id is not found
+    // Forward to a 404 page if the requested loan id is not found
     $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
-    if(!$this->getUser()->isAtLeast(Users::ADMIN))    
+    if(!$this->getUser()->isAtLeast(Users::MANAGER))    
       if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId()))
-       $this->forwardToSecureAction();
+        $this->forwardToSecureAction();
     $this->loadWidgets();
   }
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
-    $form->bind($request->getParameter($form->getName()),$request->getFiles($this->form->getName()));   
+    $form->bind($request->getParameter($form->getName()),$request->getFiles($form->getName()));
     if ($form->isValid())
     {
       try
@@ -164,10 +166,10 @@ class loanActions extends DarwinActions
     {
       $ids = array();
       foreach($this->loans as $loan)
- 	$ids[] = $loan->getId();
+        $ids[] = $loan->getId();
       
       if( !empty($ids) )
-	$this->status = Doctrine::getTable('LoanStatus')->getFromLoans($ids);
+        $this->status = Doctrine::getTable('LoanStatus')->getFromLoans($ids);
     }
   }
 
@@ -176,12 +178,16 @@ class loanActions extends DarwinActions
     $this->informativeWorkflow = Doctrine::getTable('LoanStatus')->getallLoanStatus($request->getParameter('id'));
     $this->setTemplate('viewAll','informativeWorkflow') ;
   }
+  
+  
   public function executeDelete(sfWebRequest $request)
   {
     $loan = $this->checkRight($request->getParameter('id')) ;  
     try
     {
-      $loan->delete();
+      $files = Doctrine::getTable("Multimedia")->getMultimediaRelated('loans',$request->getParameter('id')) ; 
+      $loan->delete();    
+      foreach($files as $file) unlink($file) ;  
       $this->redirect('loan/index');
     }
     catch(Doctrine_Exception $ne)
@@ -207,6 +213,7 @@ class loanActions extends DarwinActions
     $this->setTemplate('new');
     
   }
+
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
@@ -300,47 +307,6 @@ class loanActions extends DarwinActions
     $form->addInsurances($number);
     return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
   }  
-
-  public function executeInsertFile(sfWebRequest $request)
-  {
-    $form = new RelatedFileForm() ;
-    $form->bind(null, $request->getFiles($request->getParameter('table')));
-    $file = $form->getValue('filenames');    
-    if($form->isValid()) 
-    {       
-      if(!Multimedia::CheckMymeType($file->getType()))
-        return $this->renderText("<script>parent.displayFileError('This type of file is not allowed')</script>") ;
-      // first save the file
-      $filename = sha1($file->getOriginalName().rand());
-      while(file_exists(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename))
-        $filename = sha1($file->getOriginalName().rand());
-      $extension = $file->getExtension($file->getOriginalExtension());
-      $file->save(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename);      
-      if($file->isSaved())
-        $file_info = array(
-          'title' => $file->getOriginalName(),
-          'filename' => $file->getOriginalName(),
-          'mime_type' => $file->getType(),
-          'type' => $extension,
-          'uri' => $filename,
-          'referenced_relation' => $request->getParameter('table'),
-          'creation_date' => date('m/d/Y')
-        ) ;
-        $this->getUser()->setAttribute($filename, $file_info);
-      return $this->renderText("<script>parent.getFileInfo('$filename')</script>") ;
-    }
-    return $this->renderText("<script>parent.displayFileError('".$form->getErrorSchema()->current()."')</script>") ;
-
-  }
-
-  public function executeAddRelatedFiles(sfWebRequest $request)
-  {
-    $number = intval($request->getParameter('num'));
-    $form = $this->getLoanForm($request);    
-    $file = $this->getUser()->getAttribute($request->getParameter('file_id')) ;    
-    $form->addRelatedFiles($number,$file);
-    return $this->renderPartial('loan/multimedia',array('form' => $form['newRelatedFiles'][$number], 'row_num'=>$number));
-  }  
     
   public function executeAddStatus(sfWebRequest $request)
   {    
@@ -364,5 +330,12 @@ class loanActions extends DarwinActions
       return $this->renderText('ok') ;
     }
     $this->redirect('board/index') ;
-  }  
+  }
+
+  public function executeSync(sfWebRequest $request)
+  {
+    $this->checkRight($request->getParameter('id'));
+    Doctrine::getTable('Loans')->syncHistory($request->getParameter('id'));
+    return $this->renderText('ok') ;
+  }
 }

@@ -6,11 +6,12 @@ class RelatedFileForm extends BaseForm
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setLabel("Add File") ;
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
-$this->validatorSchema['filenames'] = new sfValidatorFile(
-  array(
-      'required' => false,
-      'validated_file_class' => 'myValidatedFile'
-  ));    
+    $this->validatorSchema['filenames'] = new sfValidatorFile(
+      array(
+          'required' => false,
+          'mime_type_guessers' => array('guessFromFileinfo'),
+          'validated_file_class' => 'myValidatedFile'
+      ));    
   }
   
 }

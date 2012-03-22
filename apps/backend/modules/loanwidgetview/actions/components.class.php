@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage loan_widget
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: actions.class.php 12479 2008-10-31 10:54:40Z fabien $
  */
 class loanwidgetviewComponents extends sfComponents
@@ -13,6 +13,7 @@ class loanwidgetviewComponents extends sfComponents
 
   protected function defineObject()
   {
+    $this->table ="loans";
     if(! isset($this->loan) )
       $this->loan = Doctrine::getTable('Loans')->find($this->eid);
   }
@@ -60,6 +61,7 @@ class loanwidgetviewComponents extends sfComponents
   { 
     $this->defineObject();
     $this->files = Doctrine::getTable('Multimedia')->findForTable('loans', $this->loan->getId()) ;
+    $this->atLeastOneFileVisible = true;
   }  
 
   public function executeRefComments()
@@ -72,5 +74,11 @@ class loanwidgetviewComponents extends sfComponents
   { 
     $this->defineObject();
     $this->loanstatus = Doctrine::getTable('LoanStatus')->getLoanStatus($this->loan->getId());
-  }   
+  }
+
+  public function executeMaintenances()
+  { 
+    $this->defineObject();
+    $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getMergedMaintenances('loans', $this->loan->getId());
+  }
 }

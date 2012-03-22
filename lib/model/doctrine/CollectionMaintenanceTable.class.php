@@ -45,4 +45,53 @@ class CollectionMaintenanceTable extends DarwinTable
          orderBy('referenced_relation ASC, record_id ASC, modification_date_time DESC, id ASC');
     return $q->execute();
   }
+
+  public function getMergedMaintenances($table, $id)
+  { 
+    if($table == 'loans')
+    {
+      $sql = "SELECT * , exists( select 1 from multimedia where referenced_relation='collection_maintenance' and record_id = cm.id) as with_multimedia
+        FROM collection_maintenance cm where referenced_relation='loans' and record_id = :id 
+
+      UNION ALL
+
+      SELECT * , exists( select 1 from multimedia where referenced_relation='collection_maintenance' and record_id = cm.id) as with_multimedia
+        FROM collection_maintenance cm where referenced_relation='loan_items' and 
+          record_id in (select id from loan_items where loan_ref = :id)
+      ORDER BY modification_date_time DESC
+      ";
+      $conn_MGR = Doctrine_Manager::connection();
+      $conn = $conn_MGR->getDbh();
+      $statement = $conn->prepare($sql);
+      $statement->execute(array(':id' => $id));
+      $res = $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+    if($table == 'loan_items')
+    {
+      $sql = "SELECT * , exists( select 1 from multimedia where referenced_relation='collection_maintenance' and record_id = cm.id) as with_multimedia
+        FROM collection_maintenance cm where referenced_relation='loans' and record_id = (select loan_ref from loan_items where id = :id) 
+
+      UNION ALL
+
+      SELECT * , exists( select 1 from multimedia where referenced_relation='collection_maintenance' and record_id = cm.id) as with_multimedia
+        FROM collection_maintenance cm where referenced_relation='loan_items' and 
+          record_id = :id
+      ORDER BY modification_date_time DESC
+      ";
+      $conn_MGR = Doctrine_Manager::connection();
+      $conn = $conn_MGR->getDbh();
+      $statement = $conn->prepare($sql);
+      $statement->execute(array(':id' => $id));
+      $res = $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    $array_results = array();
+    foreach($res as $item)
+    {
+      $m = new CollectionMaintenance();
+      $m->hydrate($item);
+      $array_results[] = $m;
+    }
+    return $array_results;
+  }
 }

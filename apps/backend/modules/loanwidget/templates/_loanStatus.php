@@ -8,9 +8,14 @@
     </tr>
     <tr>
       <td><?php echo $form["status"] ; ?></td>
-      <td><?php echo $form["comment"] ; ?><a title="<?php echo __('Add');?>" id="add_status" href="<?php echo url_for('loan/addStatus?id='.$eid); ?>"><?php echo __('Add');?></a></td>
+      <td><?php echo $form["comment"] ; ?></td>
     </tr>    
   </thead>
+  <tfoot>
+    <tr>
+      <td colspan="2"><a title="<?php echo __('Add');?>" id="add_status" href="<?php echo url_for('loan/addStatus?id='.$eid); ?>"><?php echo __('Add Status');?></a></td>
+    </tr>
+  </tfoot>
 </table>
 </fieldset>
 <?php if($loanstatus->count() > 0) : ?>

@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage property
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  */
 class propertyActions extends DarwinActions
 {

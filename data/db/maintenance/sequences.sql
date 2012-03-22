@@ -1,4 +1,3 @@
- select setval('associated_multimedia_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.associated_multimedia));
  select setval('catalogue_levels_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.catalogue_levels));
  select setval('catalogue_people_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.catalogue_people));
  select setval('catalogue_properties_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.catalogue_properties));
@@ -19,7 +18,6 @@
  select setval('ext_links_id_seq'::regclass,(select case when max(id) = 0 then 1 else max(id) end from only darwin2.ext_links));
  select setval('expeditions_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.expeditions));
  select setval('gtu_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.gtu));
- select setval('habitats_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.habitats));
  select setval('identifications_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.identifications));
  select setval('igs_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.igs));
  select setval('insurances_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.insurances));

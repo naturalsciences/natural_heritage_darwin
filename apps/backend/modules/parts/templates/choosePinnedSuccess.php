@@ -26,6 +26,7 @@
 
     <script  type="text/javascript">
     $(document).ready(function () {
+        $.fn.qtip.zindex = 16001; // Non-modal z-index
         $('img.extd_info').each(function(){
           tip_content = $(this).next().html();
           $(this).qtip(
@@ -34,10 +35,9 @@
             style: {
               tip: true, // Give it a speech bubble tip with automatic corner detection
               name: 'cream'
-          }
+            }
           });
         });
-
       $('.result_choose').bind('click', function () {
           ref_element_id = getIdInClasses($(this).closest('tr'));
           ref_element_name = $(this).closest('tr').children("td.item_name").text();

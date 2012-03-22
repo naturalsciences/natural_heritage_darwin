@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage individuals_widget
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: actions.class.php 12479 2008-10-31 10:54:40Z fabien $
  */
 class individualswidgetComponents extends sfComponents
@@ -101,6 +101,14 @@ class individualswidgetComponents extends sfComponents
     if(!isset($this->form['newExtLinks']))
     $this->form->loadEmbedLink();
   }  
+  public function executeRefRelatedFiles()
+  {
+    $this->defineForm();
+    if(isset($this->form) )
+      $this->eid = $this->form->getObject()->getId() ;
+    if(!isset($this->form['newRelatedFiles']))
+      $this->form->loadEmbedRelatedFiles();
+  }
   public function executeInformativeWorkflow()
   {    
     if(isset($this->form) )

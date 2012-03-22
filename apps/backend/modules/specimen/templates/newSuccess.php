@@ -31,7 +31,7 @@ $(document).ready(function ()
     </ul>
   </div>
 
-  <?php echo form_tag('specimen/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border'));?>
+  <?php echo form_tag('specimen/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition no_border','enctype'=>'multipart/form-data'));?>
     <div>
       <?php if($form->hasGlobalErrors()):?>
         <ul class="spec_error_list">

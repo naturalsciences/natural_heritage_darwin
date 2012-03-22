@@ -5,7 +5,7 @@
  * 
  * @package    darwin
  * @subpackage form
- * @author     DB team <collections@naturalsciences.be> 
+ * @author     DB team <darwin-ict@naturalsciences.be> 
  * @version    SVN: $Id: BaseForm.class.php 20147 2009-07-13 11:46:57Z FabianLange $
  */
 class LostPwdForm extends sfForm
@@ -22,8 +22,7 @@ class LostPwdForm extends sfForm
     $this->widgetSchema['user_email']->setAttributes(array('class'=>'medium_size'));
 
     $this->validatorSchema['user_email'] = new sfValidatorEmail(array('required'=> false),
-                                                                array('required'=>'E-mail is required',
-                                                                      'invalid' => 'E-mail is not of a valid form'
+                                                                array('invalid' => 'E-mail is not of a valid form'
                                                                 )
                                                           );
     $this->widgetSchema->setNameFormat('lost_pwd[%s]');

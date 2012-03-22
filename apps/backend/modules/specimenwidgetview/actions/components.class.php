@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage speicmen_widget
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: actions.class.php 12479 2008-10-31 10:54:40Z fabien $
  */
 class specimenwidgetviewComponents extends sfComponents
@@ -132,7 +132,22 @@ class specimenwidgetviewComponents extends sfComponents
   {
     $this->accompanying = Doctrine::getTable("SpecimensAccompanying")->findBySpecimenRef($this->eid) ;
   }
-  
+
+  public function executeRefRelatedFiles()
+  {
+    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimens', $this->eid) ;
+    $this->atLeastOneFileVisible = true;
+    if(!$this->getUser()->isAtLeast(Users::ENCODER)) {
+      $this->atLeastOneFileVisible = false;
+      foreach($this->files as $file) {
+        if($file->getVisible()){
+          $this->atLeastOneFileVisible = $file->getVisible();
+          break;
+        }
+      }
+    }
+  }
+
   public function executeInformativeWorkflow()
   {    
     if(isset($this->form) )

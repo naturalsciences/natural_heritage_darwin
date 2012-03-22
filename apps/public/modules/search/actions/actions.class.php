@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage search
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class searchActions extends DarwinActions
@@ -129,11 +129,13 @@ class searchActions extends DarwinActions
       $this->form->bind($suggestion, array('captcha' => $captcha)) ;
       if ($this->form->isBound() && $this->form->isValid())
       {
+        $comment = $suggestion['comment'];
+        if($suggestion['email'] != '') $comment = $this->getI18N()->__("Suggestion send by")." : ".$suggestion['email']."\n".$suggestion['comment']; ;
         $data = array(
             'referenced_relation' => 'specimen_individuals',
             'record_id' => $suggestion['id'],
             'status' => 'suggestion',   
-            'comment' => $suggestion['comment'],    
+            'comment' => $comment,    
             'formated_name' => $suggestion['formated_name']!=''?$suggestion['formated_name']:'anonymous') ;    
             
         $workflow = new InformativeWorkflow() ;

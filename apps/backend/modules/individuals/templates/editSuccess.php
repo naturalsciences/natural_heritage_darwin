@@ -12,7 +12,7 @@
 </ul>
 </div>
 
-<?php echo form_tag('individuals/edit'. ($individual->isNew() ? '?spec_id='.$specimen->getId() : '?id='.$individual->getObject()->getId()) );?>
+<?php echo form_tag('individuals/edit'. ($individual->isNew() ? '?spec_id='.$specimen->getId() : '?id='.$individual->getObject()->getId()), array('enctype'=>'multipart/form-data') );?>
   <div>
     <?php echo $individual['specimen_ref']->render(); ?>
     <?php if($individual->hasGlobalErrors()):?>

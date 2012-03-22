@@ -6,8 +6,8 @@ $browser = new DarwinTestFunctional(new sfBrowser());
 $browser->loadData($configuration)->login('root','evil');
 $browser->setTester('doctrine', 'sfTesterDoctrine');
 $people = Doctrine::getTable('People')->findOneByFamilyName('Chambert') ;
-$reguser = Doctrine::getTable('Users')->findOneByFamilyName('reguser') ;
-$encoder = Doctrine::getTable('Users')->findOneByFamilyName('encoder') ;
+$reguser = $browser->addCustomUserAndLogin('reguser','evil') ;
+$encoder = $browser->addCustomUserAndLogin('encoder','evil') ;
 
 $browser->
   info('1 - New Loan screen')->
@@ -21,9 +21,8 @@ $browser->
     isStatusCode(200)->
     checkElement('title','Add loan')->
     checkElement('.board_col',1)->
-    checkElement('.board_col .widget',8)->
     checkElement('.board_col .widget:first .widget_top_bar span','/Loan/')->
-    checkElement('.board_col .widget:nth-child(2) .widget_top_bar span','/Actors/')->
+    checkElement('.board_col .widget:nth-child(2) .widget_top_bar span','/People involved/')->
     checkElement('.board_col .widget:nth-child(3) .widget_top_bar span','/Loan Status/')->
     checkElement('.board_col .widget:nth-child(4) .widget_top_bar span','/Properties/')->
     checkElement('.board_col .widget:nth-child(5) .widget_top_bar span','/Comments/')->
@@ -52,10 +51,10 @@ $browser->
                                       ),              
              'newUsers' => array(
                               0 => array(
-                                'user_ref' => $reguser->getId(),
+                                'user_ref' => $reguser,
                                         ),
                               1 => array(
-                                'user_ref' => $encoder->getId(),
+                                'user_ref' => $encoder,
                                 'has_encoding_right' => 'on'
                                         ),
                                 )                                      

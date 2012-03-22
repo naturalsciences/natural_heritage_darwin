@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage loan_widget
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: actions.class.php 12479 2008-10-31 10:54:40Z fabien $
  */
 class loanwidgetComponents extends sfComponents
@@ -47,15 +47,20 @@ class loanwidgetComponents extends sfComponents
   public function executeMainInfo()
   { 
     $this->defineForm();
+    if(! $this->form->getObject()->isNew())
+    {
+      $this->status =  Doctrine::getTable('LoanStatus')->getFromLoans(array($this->form->getObject()->getId()));
+    }
+    
   }
   
   public function executeActors()
   {
     $this->defineForm();
     if(!isset($this->form['newActorsSender']))
-      $this->form->loadEmbedActorsSender();    
+      $this->form->loadEmbedActorsSender();
     if(!isset($this->form['newActorsReceiver']))
-      $this->form->loadEmbedActorsReceiver();          
+      $this->form->loadEmbedActorsReceiver();
   }  
     
   public function executeRefRelatedFiles()
@@ -71,7 +76,7 @@ class loanwidgetComponents extends sfComponents
     if(!isset($this->form['newComments']))
       $this->form->loadEmbedComments();   
   }
-  
+
   public function executeLoanStatus()
   { 
     if(isset($this->form))
@@ -80,5 +85,13 @@ class loanwidgetComponents extends sfComponents
        $this->loanstatus = Doctrine::getTable('LoanStatus')->getLoanStatus($this->eid);
     else $this->eid = false;
     $this->form = new informativeWorkflowForm(null, array('available_status' => LoanStatus::getAvailableStatus())) ;     
-  }   
+  }
+
+  public function executeMaintenances()
+  { 
+    if(isset($this->form))
+      $this->eid = $this->form->getObject()->getId();
+    if(isset($this->eid))
+       $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getMergedMaintenances('loans', $this->eid);
+  }
 }

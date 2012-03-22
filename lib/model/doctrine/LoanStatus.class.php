@@ -7,7 +7,7 @@
  * 
  * @package    darwin
  * @subpackage model
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 class LoanStatus extends BaseLoanStatus
@@ -35,6 +35,12 @@ class LoanStatus extends BaseLoanStatus
   public static function getClosedStatus() {
     return self::$closed_status;
   }
+
+  public function getDate() {
+    $dt = new DateTime($this->getModificationDateTime());
+    return $dt->format('d/m/Y');
+  }
+
   public static function getAvailableStatus()
   {
     try{

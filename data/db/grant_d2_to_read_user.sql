@@ -28,11 +28,8 @@
  GRANT SELECT ON darwin2.old_multimedia TO d2viewer;
  GRANT SELECT ON darwin2.multimedia TO d2viewer;
  GRANT SELECT ON darwin2.informative_workflow TO d2viewer;
- GRANT SELECT ON darwin2.people_multimedia TO d2viewer;
- GRANT SELECT ON darwin2.template_people_users_multimedia TO d2viewer;
  GRANT SELECT ON darwin2.collections TO d2viewer;
  GRANT SELECT ON darwin2.collections_rights TO d2viewer;
- GRANT SELECT ON darwin2.users_multimedia TO d2viewer;
  GRANT SELECT ON darwin2.template_collections_users TO d2viewer;
  GRANT SELECT ON darwin2.users_tracking TO d2viewer;
  GRANT SELECT ON darwin2.collection_maintenance TO d2viewer;
@@ -42,8 +39,6 @@
  GRANT SELECT ON darwin2.chronostratigraphy TO d2viewer;
  GRANT SELECT ON darwin2.template_classifications TO d2viewer;
  GRANT SELECT ON darwin2.taxonomy TO d2viewer;
- GRANT SELECT ON darwin2.soortenregister TO d2viewer;
- GRANT SELECT ON darwin2.multimedia_keywords TO d2viewer;
  GRANT SELECT ON darwin2.gtu TO d2viewer;
  GRANT SELECT ON darwin2.lithostratigraphy TO d2viewer;
  GRANT SELECT ON darwin2.habitats TO d2viewer;
@@ -52,7 +47,6 @@
  GRANT SELECT ON darwin2.specimen_parts TO d2viewer;
  GRANT SELECT ON darwin2.specimen_individuals TO d2viewer;
  GRANT SELECT ON darwin2.mineralogy TO d2viewer;
- GRANT SELECT ON darwin2.associated_multimedia TO d2viewer;
  GRANT SELECT ON darwin2.igs TO d2viewer;
  GRANT SELECT ON darwin2.specimens_accompanying TO d2viewer;
  GRANT SELECT ON darwin2.codes TO d2viewer;

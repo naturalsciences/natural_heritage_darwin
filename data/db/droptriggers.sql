@@ -10,7 +10,6 @@ DROP TRIGGER trg_cpy_fullToIndex_lithostratigraphy ON lithostratigraphy;
 DROP TRIGGER trg_cpy_fullToIndex_mineralogy ON mineralogy;
 DROP TRIGGER trg_cpy_fullToIndex_multimedia ON multimedia;
 DROP TRIGGER trg_cpy_fullToIndex_codes ON codes ;
-DROP TRIGGER trg_cpy_fullToIndex_multimediakeywords ON multimedia_keywords;
 DROP TRIGGER trg_cpy_fullToIndex_taggroups ON tag_groups;
 DROP TRIGGER trg_cpy_fullToIndex_taxa ON taxonomy;
 DROP TRIGGER trg_cpy_fullToIndex_collection ON collections;
@@ -41,8 +40,6 @@ DROP TRIGGER trg_clr_referenceRecord_chronostratigraphy ON chronostratigraphy;
 DROP TRIGGER trg_clr_referenceRecord_lithostratigraphy ON lithostratigraphy;
 DROP TRIGGER trg_clr_referenceRecord_mineralogy ON mineralogy;
 DROP TRIGGER trg_clr_referenceRecord_lithology ON lithology;
-DROP TRIGGER trg_clr_referenceRecord_habitats ON habitats;
-DROP TRIGGER trg_clr_referenceRecord_soortenregister ON soortenregister;
 DROP TRIGGER trg_clr_referenceRecord_specimens ON specimens;
 DROP TRIGGER trg_clr_referenceRecord_specimenindividuals ON specimen_individuals;
 DROP TRIGGER trg_clr_referenceRecord_specimenparts ON specimen_parts;
@@ -57,7 +54,6 @@ DROP TRIGGER trg_cpy_toFullText_usersaddresses ON users_addresses;
 DROP TRIGGER trg_cpy_toFullText_multimedia ON multimedia;
 DROP TRIGGER trg_cpy_toFullText_collectionmaintenance ON collection_maintenance;
 DROP TRIGGER trg_cpy_toFullText_expeditions ON expeditions;
-DROP TRIGGER trg_cpy_toFullText_habitats ON habitats;
 DROP TRIGGER trg_cpy_toFullText_vernacularnames ON vernacular_names;
 
 /*DROP TRIGGER trg_cas_userType_users ON users;*/
@@ -99,9 +95,6 @@ DROP TRIGGER trg_words_ts_cpy_users
 
 DROP TRIGGER trg_words_ts_cpy_expeditions
 	ON expeditions;
-
-DROP TRIGGER trg_words_ts_cpy_habitats
-	ON habitats;
 
 DROP TRIGGER trg_words_ts_cpy_mineralogy
 	ON mineralogy;
@@ -155,9 +148,6 @@ DROP TRIGGER trg_trk_log_table_people_comm
 DROP TRIGGER trg_trk_log_table_people_addresses 
         ON people_addresses;
 
-DROP TRIGGER trg_trk_log_table_people_multimedia 
-        ON people_multimedia;
-
 DROP TRIGGER trg_trk_log_table_collections_rights 
         ON collections_rights;
 
@@ -200,9 +190,6 @@ DROP TRIGGER trg_trk_log_table_collections
 DROP TRIGGER trg_trk_log_table_collection_maintenance 
         ON collection_maintenance;
 
-DROP TRIGGER trg_trk_log_table_soortenregister 
-        ON soortenregister;
-
 DROP TRIGGER trg_trk_log_table_igs 
         ON igs;
 
@@ -235,9 +222,6 @@ DROP TRIGGER trg_trk_log_table_mineralogy
 
 DROP TRIGGER trg_trk_log_table_lithology 
         ON lithology;
-
-DROP TRIGGER trg_trk_log_table_habitats 
-        ON habitats;
 
 DROP TRIGGER trg_trk_log_table_people 
         ON people;
@@ -296,9 +280,6 @@ DROP TRIGGER trg_update_specimen_individuals_darwin_flat
 DROP TRIGGER trg_update_specimen_parts_darwin_flat
         ON specimen_parts;
 
-DROP TRIGGER trg_cpy_fulltoindex_expeditions
-        ON habitats;
-
 DROP TRIGGER trg_cpy_fulltoindex_classification_keywords
         ON classification_keywords;
 
@@ -356,9 +337,6 @@ DROP TRIGGER trg_cpy_path_gtu
 DROP TRIGGER trg_cpy_path_specimen_parts
         ON specimen_parts;
 
-DROP TRIGGER trg_cpy_path_habitats
-        ON habitats;
-
 DROP TRIGGER trg_cpy_path_staging
         ON staging;
         
@@ -409,8 +387,6 @@ DROP TRIGGER trg_chk_ref_record_template_table_record_ref ON template_table_reco
 DROP TRIGGER trg_chk_ref_record_classification_synonymies ON classification_synonymies;
 
 DROP TRIGGER trg_chk_ref_record_catalogue_codes ON codes;
-
-DROP TRIGGER trg_chk_ref_record_associated_multimedia ON associated_multimedia;
 
 DROP TRIGGER trg_chk_ref_record_insurances ON insurances;
 

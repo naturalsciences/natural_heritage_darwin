@@ -13,7 +13,6 @@ CREATE INDEX CONCURRENTLY idx_specimens_flat_part_ref on specimens_flat(part_ref
 CREATE INDEX CONCURRENTLY idx_specimens_flat_host_specimen_ref on specimens_flat(host_specimen_ref);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_category on specimens_flat(category);
 
-
 /*** BTree indexes for search purposes in Darwin flat table ***/
 CREATE INDEX CONCURRENTLY idx_specimens_flat_station_visible on specimens_flat(station_visible);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_code on specimens_flat(gtu_code);
@@ -40,6 +39,3 @@ CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_spec_ident_ids on specimens_fla
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_spec_coll_ids on specimens_flat using gin(spec_coll_ids);
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_spec_don_sel_ids on specimens_flat using gin(spec_don_sel_ids);
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_ind_ident_ids on specimens_flat using gin(ind_ident_ids);
-
-/*** For Public search ***/
-CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_gtu_country_tags on specimens_flat using gin (getTagsIndexedAsArray(gtu_country_tag_value));

@@ -7,12 +7,13 @@
  * 
  * @package    darwin
  * @subpackage model
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 class Multimedia extends BaseMultimedia
 {
-  private static $allowed_myme_type = array(
+  private static $allowed_mime_type = array(
+    'csv' => 'text/csv',
     'txt' => 'text/plain',
 //   'htm' => 'text/html',
     'html' => 'text/html',
@@ -21,18 +22,19 @@ class Multimedia extends BaseMultimedia
 //    'js' => 'application/javascript',
 //    'json' => 'application/json',
     'xml' => 'application/xml',
+    'xsd' => 'application/xsd',
 //    'swf' => 'application/x-shockwave-flash',
 //    'flv' => 'video/x-flv',
 
     // images
     'png' => 'image/png',
 //    'jpe' => 'image/jpeg',
-//    'jpeg' => 'image/jpeg',
+    'jpeg' => 'image/jpeg',
     'jpg' => 'image/jpeg',
     'gif' => 'image/gif',
     'bmp' => 'image/bmp',
     'ico' => 'image/vnd.microsoft.icon',
-//    'tiff' => 'image/tiff',
+    'tiff' => 'image/tiff',
     'tif' => 'image/tiff',
     'svg' => 'image/svg+xml',
     'ogg' => 'application/ogg',
@@ -49,6 +51,8 @@ class Multimedia extends BaseMultimedia
     'mp3' => 'audio/mpeg',    
     'wma' => 'audio/x-ms-wma',
     'rla' => 'audio/vnd.rn-realaudio',
+    'flac' => 'audio/flac',
+    'aac' => 'audio/aac',
     // video
 //    'qt' => 'video/quicktime',
     'mov' => 'video/quicktime',
@@ -107,8 +111,49 @@ class Multimedia extends BaseMultimedia
     return (date("Y/m/d")) ;    
   }  
   
-  public static function CheckMymeType($myme_type)
+  public static function CheckMimeType($mime_type)
   {
-    return(in_array($myme_type,self::$allowed_myme_type)?true:false);
+    return(in_array($mime_type,self::$allowed_mime_type)?true:false);
+  }
+
+  public function getFullURI()
+  {
+    return sfConfig::get('sf_upload_dir').'/multimedia/'.$this->getUri();
+  }
+  public function getSize()
+  {
+    return filesize($this->getFullURI());
+  }
+
+  public function getPreview($new_w = 200, $new_h = 200)
+  {
+    if(in_array($this->getMimeType(),array('png' => 'image/png', 'jpg' => 'image/jpeg') ) )
+    {
+      $src_img = '';
+      if($this->getMimeType() == 'image/png') {
+        $src_img=imagecreatefrompng($this->getFullURI());
+      }
+      if($this->getMimeType() == 'image/jpeg') {
+        $src_img=imagecreatefromjpeg($this->getFullURI());
+      }
+      $old_x=imageSX($src_img);
+      $old_y=imageSY($src_img);
+      if ($old_x > $old_y) {
+        $thumb_w=$new_w;
+        $thumb_h=$old_y*($new_h/$old_x);
+      }
+      if ($old_x < $old_y) {
+        $thumb_w=$old_x*($new_w/$old_y);
+        $thumb_h=$new_h;
+      }
+      if ($old_x == $old_y) {
+        $thumb_w=$new_w;
+        $thumb_h=$new_h;
+      }
+      $dst_img=ImageCreateTrueColor($thumb_w,$thumb_h);
+      imagecopyresampled($dst_img,$src_img,0,0,0,0,$thumb_w,$thumb_h,$old_x,$old_y);
+      imagedestroy($src_img);
+      return $dst_img;
+    }
   }
 }

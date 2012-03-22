@@ -1,7 +1,7 @@
 \unset ECHO
 \i unit_launch.sql
 -- Plan the tests.
-SELECT plan(53);
+SELECT plan(49);
 
 -- Run the tests.
 SELECT has_table('catalogue_relationships','catalogue_relationships exists');
@@ -33,16 +33,9 @@ SELECT has_table('people_addresses','people_addresses exists');
 SELECT has_table('users_comm','users_comm exists');
 SELECT has_table('users_addresses','users_addresses exists');
 SELECT has_table('users_login_infos','users_login_infos exists');
-SELECT has_table('template_people_users_multimedia','template_people_users_multimedia exists');
-SELECT has_table('people_multimedia','people_multimedia exists');
-SELECT has_table('users_multimedia','users_multimedia exists');
 SELECT has_table('collections','collections exists');
 SELECT has_table('template_collections_users','template_collections_users exists');
 SELECT has_table('collections_rights','collections_rights exists');
-
---SELECT has_table('collections_fields_visibilities','collections_fields_visibilities exists');
---SELECT has_table('users_coll_rights_asked','users_coll_rights_asked exists');
---SELECT has_table('record_visibilities','record_visibilities exists');
 SELECT has_table('informative_workflow','informative_workflow exists');
 SELECT has_table('users_tracking','users_tracking exists');
 SELECT has_table('collection_maintenance','collection_maintenance exists');
@@ -60,7 +53,6 @@ SELECT has_table('specimen_individuals','specimen_individuals exists');
 SELECT has_table('specimen_parts','specimen_parts exists');
 SELECT has_table('insurances', 'insurances exists');
 /*SELECT has_table('igs', 'igs exists');*/
-SELECT has_table('associated_multimedia','associated_multimedia exists');
 SELECT has_table('specimens_accompanying','specimens_accompanying exists');
 
 -- Finish the tests and clean up.

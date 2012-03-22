@@ -22,7 +22,6 @@
  * @property integer $acquisition_date_mask
  * @property string $acquisition_date
  * @property boolean $station_visible
- * @property boolean $multimedia_visible
  * @property integer $ig_ref
  * @property Collections $Collections
  * @property Expeditions $Expeditions
@@ -62,7 +61,6 @@
  * @method integer             getAcquisitionDateMask()   Returns the current record's "acquisition_date_mask" value
  * @method string              getAcquisitionDate()       Returns the current record's "acquisition_date" value
  * @method boolean             getStationVisible()        Returns the current record's "station_visible" value
- * @method boolean             getMultimediaVisible()     Returns the current record's "multimedia_visible" value
  * @method integer             getIgRef()                 Returns the current record's "ig_ref" value
  * @method Collections         getCollections()           Returns the current record's "Collections" value
  * @method Expeditions         getExpeditions()           Returns the current record's "Expeditions" value
@@ -101,7 +99,6 @@
  * @method Specimens           setAcquisitionDateMask()   Sets the current record's "acquisition_date_mask" value
  * @method Specimens           setAcquisitionDate()       Sets the current record's "acquisition_date" value
  * @method Specimens           setStationVisible()        Sets the current record's "station_visible" value
- * @method Specimens           setMultimediaVisible()     Sets the current record's "multimedia_visible" value
  * @method Specimens           setIgRef()                 Sets the current record's "ig_ref" value
  * @method Specimens           setCollections()           Sets the current record's "Collections" value
  * @method Specimens           setExpeditions()           Sets the current record's "Expeditions" value
@@ -126,7 +123,7 @@
  * 
  * @package    darwin
  * @subpackage model
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
 abstract class BaseSpecimens extends sfDoctrineRecord
@@ -192,10 +189,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              'default' => '0001-01-01',
              ));
         $this->hasColumn('station_visible', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => true,
-             ));
-        $this->hasColumn('multimedia_visible', 'boolean', null, array(
              'type' => 'boolean',
              'default' => true,
              ));

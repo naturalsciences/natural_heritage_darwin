@@ -2,6 +2,8 @@ SET search_path = darwin2, public;
 
 \i ../createfunctions.sql
 
+ALTER TABLE specimens DROP COLUMN multimedia_visible CASCADE;
+
 ALTER TABLE multimedia RENAME TO old_multimedia;
 ALTER TABLE old_multimedia ALTER COLUMN id SET DEFAULT NULL;
 ALTER TABLE old_multimedia DROP CONSTRAINT pk_multimedia CASCADE;
@@ -17,8 +19,8 @@ DROP TRIGGER IF EXISTS trg_words_ts_cpy_multimedia ON old_multimedia;
 create table multimedia
        (
         id integer not null default nextval('multimedia_id_seq'),
-        parent_ref integer,
-        path varchar not null,
+--         parent_ref integer,
+--         path varchar not null,
         is_digital boolean not null default true,
         type varchar not null default 'image',
         sub_type varchar,
@@ -30,6 +32,8 @@ create table multimedia
         creation_date date not null default '0001-01-01'::date,
         creation_date_mask integer not null default 0,
         mime_type varchar not null,
+        visible boolean not null default true,
+        publishable boolean not null default true,
         constraint pk_multimedia primary key (id)
       )
       inherits (template_table_record_ref);
@@ -38,8 +42,8 @@ comment on table multimedia is 'Stores all multimedia objects encoded in DaRWIN 
 comment on column multimedia.referenced_relation is 'Reference-Name of table concerned';
 comment on column multimedia.record_id is 'Identifier of record concerned';
 comment on column multimedia.id is 'Unique identifier of a multimedia object';
-comment on column multimedia.parent_ref is 'Identifier of the object the multimedia record is an extract of';
-comment on column multimedia.path is 'In case of recursive relationship, defines the hierarchical path';
+-- comment on column multimedia.parent_ref is 'Identifier of the object the multimedia record is an extract of';
+-- comment on column multimedia.path is 'In case of recursive relationship, defines the hierarchical path';
 comment on column multimedia.is_digital is 'Flag telling if the object is digital (true) or physical (false)';
 comment on column multimedia.type is 'Main multimedia object type: image, sound, video,...';
 comment on column multimedia.sub_type is 'Characterization of object type: article, publication in serie, book, glass plate,...';
@@ -51,6 +55,8 @@ comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
 comment on column multimedia.search_ts is 'tsvector form of title and description fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
+comment on column multimedia.visible is 'Flag telling if the related file has been chosen to be publically visible or not';
+comment on column multimedia.publishable is 'Flag telling if the related file has been chosen as a prefered item for publication - Would be for example used for preselection of media published for Open Up project';
 
 ALTER TABLE multimedia OWNER TO darwin2;
 ALTER TABLE multimedia_id_seq OWNER TO darwin2;
@@ -64,11 +70,11 @@ CREATE TRIGGER trg_clr_referencerecord_multimedia
   FOR EACH ROW
   EXECUTE PROCEDURE fct_clear_referencedrecord();
 
-CREATE TRIGGER trg_cpy_path_multimedia
-  BEFORE INSERT OR UPDATE
-  ON multimedia
-  FOR EACH ROW
-  EXECUTE PROCEDURE fct_cpy_path();
+-- CREATE TRIGGER trg_cpy_path_multimedia
+--   BEFORE INSERT OR UPDATE
+--   ON multimedia
+--   FOR EACH ROW
+--   EXECUTE PROCEDURE fct_cpy_path();
 
 CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
   ON multimedia FOR EACH ROW
@@ -110,7 +116,7 @@ UPDATE insurances set date_from = default, date_to = default, date_from_mask = d
 ALTER TABLE insurances ADD constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, date_from, date_to, insurer_ref);
 ALTER TABLE insurances ADD constraint fk_specimen_parts_insurances_contact foreign key (contact_ref) references people(id) on delete set null;
 
--- ALTER TABLE insurances DROP column insurance_year;
+ALTER TABLE insurances DROP column insurance_year;
 
 create sequence loans_id_seq;
 
@@ -121,7 +127,6 @@ create table loans (
   description_ts tsvector not null,
   from_date date,
   to_date date,
-  effective_to_date date,
   extended_to_date date,
   constraint pk_loans primary key (id)
   );
@@ -134,9 +139,12 @@ comment on column loans.description is 'Description of the meaning of the loan';
 comment on column loans.description_ts is 'tsvector getting Description and title of the loan';
 comment on column loans.from_date  is 'Date of the start of the loan';
 comment on column loans.to_date  is 'Planned date of the end of the loan';
-comment on column loans.effective_to_date is 'Effective end date of the loan or null if it''s running';
 
-
+ALTER TABLE loans OWNER TO darwin2;
+ALTER TABLE loans_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.loans_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loans TO cebmpad;
+GRANT SELECT ON darwin2.loans TO d2viewer;
   
 create sequence loan_items_id_seq;
 
@@ -168,6 +176,11 @@ comment on column loan_items.ig_ref is 'Optional ref to an IG stored in the igs 
 comment on column loan_items.part_ref is 'Optional reference to a Darwin Part';
 comment on column loan_items.details is 'Textual details describing the item';
 
+ALTER TABLE loan_items OWNER TO darwin2;
+ALTER TABLE loan_items_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.loan_items_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_items TO cebmpad;
+GRANT SELECT ON darwin2.loan_items TO d2viewer;
 
 create sequence loan_rights_id_seq;
 
@@ -191,8 +204,11 @@ comment on column loan_rights.loan_ref is 'Mandatory Reference to a loan';
 comment on column loan_rights.user_ref is 'Mandatory Reference to a user';
 comment on column loan_rights.has_encoding_right is 'Bool saying if the user can edit a loan';
 
-
-
+ALTER TABLE loan_rights OWNER TO darwin2;
+ALTER TABLE loan_rights_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.loan_rights_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_rights TO cebmpad;
+GRANT SELECT ON darwin2.loan_rights TO d2viewer;
 
 create sequence loan_status_id_seq;
 
@@ -221,8 +237,40 @@ comment on column loan_status.comment is 'comment of the status modification';
 comment on column loan_status.is_last is 'flag telling which line is the current line';
 
 
+ALTER TABLE loan_status OWNER TO darwin2;
+ALTER TABLE loan_status_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.loan_status_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_status TO cebmpad;
+GRANT SELECT ON darwin2.loan_status TO d2viewer;
+
+create table loan_history (
+  id serial,
+  loan_ref integer not null,
+  referenced_table text not null,
+  modification_date_time update_date_time,
+  record_line hstore,
+  constraint pk_loan_history primary key (id),
+  constraint fk_loan_history_loan_ref foreign key (loan_ref) references loans(id) on delete cascade
+);
+
+comment on table loan_history is 'Table is a snapshot of an entire loan and related informations at a certain time';
+
+comment on column loan_history.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_history.referenced_table is 'Mandatory Reference to the table refereced';
+comment on column loan_history.modification_date_time is 'date of the modification';
+comment on column loan_history.record_line is 'hstore containing the whole line of referenced_table';
+
+ALTER TABLE loan_history OWNER TO darwin2;
+ALTER TABLE loan_history_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.loan_history_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_history TO cebmpad;
+GRANT SELECT ON darwin2.loan_history TO d2viewer;
+
 DROP TRIGGER trg_cpy_toFullText_multimedia on multimedia;
 
+CREATE TRIGGER trg_cpy_ig_to_loan_items AFTER UPDATE
+  ON specimens FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_ig_to_loan_items();
 
 CREATE TRIGGER trg_cpy_fullToIndex_loans BEFORE INSERT OR UPDATE
   ON loans FOR EACH ROW
@@ -236,8 +284,7 @@ CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE
         ON loan_items FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-
- CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
+CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
        ON multimedia FOR EACH ROW
        EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title);
 
@@ -245,16 +292,13 @@ CREATE TRIGGER trg_words_ts_cpy_loans BEFORE INSERT OR UPDATE
         ON loans FOR EACH ROW
         EXECUTE PROCEDURE fct_trg_word();
 
-
 CREATE TRIGGER fct_cpy_trg_ins_update_dict_loan_status AFTER INSERT OR UPDATE
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
-
 CREATE TRIGGER fct_cpy_trg_del_dict_loan_status AFTER DELETE OR UPDATE
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
-
 
 CREATE trigger trg_chk_is_last_loan_status BEFORE INSERT
         ON loan_status FOR EACH ROW
@@ -263,7 +307,6 @@ CREATE trigger trg_chk_is_last_loan_status BEFORE INSERT
 CREATE trigger trg_add_status_history after INSERT
         ON loans FOR EACH ROW
         EXECUTE PROCEDURE fct_auto_insert_status_history();
-
 
 
 DROP INDEX IF EXISTS idx_users_workflow_user_ref;
@@ -278,7 +321,6 @@ DROP INDEX IF EXISTS idx_users_title;
 DROP INDEX IF EXISTS idx_users_sub_type;
 DROP INDEX IF EXISTS idx_users_workflow_user_status;
 DROP INDEX IF EXISTS idx_gist_multimedia_descriptive_ts;
-
 
 
 CREATE INDEX CONCURRENTLY idx_informative_workflow_user_ref on informative_workflow(user_ref);
@@ -421,6 +463,39 @@ DROP INDEX IF EXISTS idx_my_widgets_is_available;
 DROP INDEX IF EXISTS idx_catalogue_properties_property_method_indexed;
 DROP INDEX IF EXISTS idx_catalogue_properties_property_tool_indexed;
 DROP INDEX IF EXISTS idx_catalogue_properties_property_accuracy_unit;
+
+
+/*** Batch 2 ***/
+
+DROP INDEX IF EXISTS idx_specimens_collection_ref;
+DROP INDEX IF EXISTS idx_specimen_individuals_type_search;
+DROP INDEX IF EXISTS idx_specimen_individuals_type;
+DROP INDEX IF EXISTS idx_specimen_individuals_stage;
+DROP INDEX IF EXISTS idx_specimen_individuals_state;
+DROP INDEX IF EXISTS idx_specimen_individuals_social_status;
+DROP INDEX IF EXISTS idx_taxonomy_name_order_by;
+
+DROP INDEX IF EXISTS idx_darwin_flat_taxon_name_order_by;
+DROP INDEX IF EXISTS  idx_darwin_flat_individual_type_group;
+DROP INDEX IF EXISTS idx_darwin_flat_individual_type_search;
+DROP INDEX IF EXISTS idx_darwin_flat_individual_state;
+DROP INDEX IF EXISTS idx_darwin_flat_individual_social_status;
+DROP INDEX IF EXISTS idx_darwin_flat_collection_is_public;
+DROP INDEX IF EXISTS idx_darwin_flat_collection_name;
+DROP INDEX IF EXISTS idx_gin_darwin_flat_gtu_country_tags;
+
+
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_type_search on specimen_individuals(type_search) WHERE type_search <> 'specimen';
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_state on specimen_individuals(state) WHERE state <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals(stage) WHERE stage <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_social_status on specimen_individuals(social_status)  WHERE social_status <> 'not applicable';
+
+CREATE INDEX CONCURRENTLY idx_darwin_flat_host_taxon_ref on darwin_flat(host_taxon_ref);
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_group on darwin_flat(individual_type_group) WHERE individual_type_group <> 'specimen';
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_type_search on darwin_flat(individual_type_search) WHERE individual_type_search <> 'specimen';
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_state on darwin_flat(individual_state) WHERE individual_state <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_social_status on darwin_flat(individual_social_status) WHERE individual_social_status <> 'not applicable';
+
 
 /*** For Updating the toFullText TS Vector triggers everywhere ***/
 

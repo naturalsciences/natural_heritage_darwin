@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage specimen
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: actions.class.php 12479 2008-10-31 10:54:40Z fabien $
  */
 class specimenActions extends DarwinActions
@@ -177,8 +177,8 @@ class specimenActions extends DarwinActions
           $links = $this->getRecordIfDuplicate($val->getId(),$links); 
           $this->form->addExtLinks($key, $links) ;          
         } 
-        $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('specimens',$duplic) ;
         // reembed duplicated collector
+        $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('specimens',$duplic) ;
         if(count($Catalogue))
         {
           foreach ($Catalogue['collector'] as $key=>$val)
@@ -269,7 +269,7 @@ class specimenActions extends DarwinActions
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
-    $form->bind($request->getParameter($form->getName()));
+    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
     if ($form->isValid())
     {
       try

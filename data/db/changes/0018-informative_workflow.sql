@@ -1,3 +1,7 @@
+SET search_path = darwin2, public;
+
+\i ../createfunctions.sql
+
 ALTER TABLE users_workflow RENAME TO informative_workflow ;
 DELETE FROM informative_workflow WHERE referenced_relation != 'lithology';
 UPDATE informative_workflow SET status = 'checked' WHERE status = 'published';
@@ -28,5 +32,5 @@ CREATE trigger trg_chk_is_last_informative_workflow BEFORE INSERT
 GRANT USAGE, SELECT ON informative_workflow_id_seq TO d2viewer;
 GRANT INSERT, UPDATE ON informative_workflow TO d2viewer;
 
--- don't forget to relaunch createfunction.sql before launch this !
+CREATE INDEX CONCURRENTLY idx_informative_workflow_user_ref on informative_workflow(user_ref);
 

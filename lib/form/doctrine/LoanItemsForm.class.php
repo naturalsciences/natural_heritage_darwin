@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage form
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class LoanItemsForm extends BaseLoanItemsForm
@@ -97,6 +97,10 @@ class LoanItemsForm extends BaseLoanItemsForm
       array('class'=>'inline',
            )
      );
+    $this->widgetSchema->setLabels(array('from_date' => 'Expedition',
+                                         'to_date' => 'Return'
+                                        )
+                                  );
     $this->validatorSchema['part_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->mergePostValidator(new LoanOverviewLineValidatorSchema());
   }

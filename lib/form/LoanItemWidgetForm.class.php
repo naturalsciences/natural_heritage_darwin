@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage form
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class LoanItemWidgetForm extends BaseLoanItemsForm
@@ -17,11 +17,11 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setLabel("Add File") ;
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
-$this->validatorSchema['filenames'] = new sfValidatorFile(
-  array(
-      'required' => false,
-      'validated_file_class' => 'myValidatedFile'
-  ));
+    $this->validatorSchema['filenames'] = new sfValidatorFile(
+      array(
+          'required' => false,
+          'validated_file_class' => 'myValidatedFile'
+      ));
     $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));        

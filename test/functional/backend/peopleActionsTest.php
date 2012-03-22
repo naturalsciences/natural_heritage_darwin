@@ -141,7 +141,7 @@ $browser->
     'is_physical' => 1,)
     )
   )->
-  click('td.edit a')->
+  click('td.edit a:nth-child(2)')->
 
   with('response')->begin()->
     isStatusCode(200)->
@@ -184,7 +184,7 @@ $browser->
     'is_physical' => 1,)
     )
   )->
-  click('td.edit a')->
+  click('td.edit a:nth-child(2)')->
 
   with('response')->begin()->
     isStatusCode(200)->
@@ -215,7 +215,7 @@ $browser->
     'is_physical' => 1,)
     )
   )->
-  click('td.edit a')->
+  click('td.edit a:nth-child(2)')->
 
   with('response')->begin()->
     isStatusCode(200)->
@@ -257,7 +257,7 @@ $browser->
     'is_physical' => 1,)
     )
   )->
-  click('td.edit a')->
+  click('td.edit a:nth-child(2)')->
 
   with('response')->begin()->
     isStatusCode(200)->
@@ -288,7 +288,7 @@ $browser->
     'is_physical' => 1,)
     )
   )->
-  click('td.edit a')->
+  click('td.edit a:nth-child(2)')->
 
   with('response')->begin()->
     isStatusCode(200)->
@@ -333,7 +333,7 @@ $browser->
     'is_physical' => 1,)
     )
   )->
-  click('td.edit a')->
+  click('td.edit a:nth-child(2)')->
 
   with('response')->begin()->
     isStatusCode(200)->
@@ -364,7 +364,7 @@ $browser->
     'is_physical' => 1,)
     )
   )->
-  click('td.edit a')->
+  click('td.edit a:nth-child(2)')->
 
   with('response')->begin()->
     isStatusCode(200)->
@@ -411,7 +411,7 @@ $browser->
     'is_physical' => 1,)
     )
   )->
-  click('td.edit a')->
+  click('td.edit a:nth-child(2)')->
 
   with('response')->begin()->
     isStatusCode(200)->
@@ -441,7 +441,7 @@ $browser->
     'is_physical' => 1,)
     )
   )->
-  click('td.edit a')->
+  click('td.edit a:nth-child(2)')->
 
   with('response')->begin()->
     isStatusCode(200)->

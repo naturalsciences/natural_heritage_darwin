@@ -162,6 +162,12 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->widgetSchema['extlink'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['extlink'] = new sfValidatorPass();
 
+    $this->widgetSchema['relatedfile'] = new sfWidgetFormInputHidden(array('default'=>1));
+
+    /*Input file for related files*/
+    $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
+    $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));
+
     $this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => false, 'trim' => true));
 
     $this->validatorSchema['code'] = new sfValidatorPass();
@@ -170,6 +176,14 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->validatorSchema['insurance'] = new sfValidatorPass();
 
     $this->widgetSchema['surnumerary']->setLabel('supernumerary');
+
+    $this->validatorSchema['relatedfile'] = new sfValidatorPass();
+    //Loan form is submited to upload file, when called like that we don't want some fields to be required
+    $this->validatorSchema['filenames'] = new sfValidatorPass();/*File(
+  array(
+      'required' => false,
+      'validated_file_class' => 'myValidatedFile'
+  ));  */
 
     $this->validatorSchema->setPostValidator(new sfValidatorCallback(array('callback' => array($this, 'checkSelfAttached'))));
     $this->mergePostValidator(new sfValidatorSchemaCompare('specimen_part_count_min', '<=', 'specimen_part_count_max',
@@ -201,6 +215,21 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       $this->embeddedForms['newExtLinks']->embedForm($num, $form);
       //Re-embedding the container
       $this->embedForm('newExtLinks', $this->embeddedForms['newExtLinks']);
+  }
+
+  public function addRelatedFiles($num,$file=null)
+  {
+    if(! isset($this['newRelatedFiles'])) $this->loadEmbedRelatedFiles();
+    $options = array('referenced_relation' => 'specimen_parts', 'record_id' => $this->getObject()->getId());
+    if($file) $options = $file ;
+    $val = new Multimedia();
+//     die(print_r($val));
+    $val->fromArray($options);
+    $val->setRecordId($this->getObject()->getId());
+    $form = new MultimediaForm($val);
+    $this->embeddedForms['newRelatedFiles']->embedForm($num, $form);
+    //Re-embedding the container
+    $this->embedForm('newRelatedFiles', $this->embeddedForms['newRelatedFiles']);
   }
 
   public function checkSelfAttached($validator, $values)
@@ -364,6 +393,29 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->embedForm('newComments',$subForm);
   }
 
+  public function loadEmbedRelatedFiles()
+  {
+    if($this->isBound()) return;
+
+    /* Related files sub form */
+    $subForm = new sfForm();
+    $this->embedForm('RelatedFiles',$subForm);
+    if($this->getObject()->getId() !='')
+    {
+      foreach(Doctrine::getTable('Multimedia')->findForTable('specimen_parts', $this->getObject()->getId()) as $key=>$vals)
+      {
+        $form = new MultimediaForm($vals);
+        $this->embeddedForms['RelatedFiles']->embedForm($key, $form);
+      }
+      //Re-embedding the container
+      $this->embedForm('RelatedFiles', $this->embeddedForms['RelatedFiles']);
+    }
+
+    $subForm = new sfForm();
+    $this->embedForm('newRelatedFiles',$subForm);
+  }
+
+
   public function loadEmbedCode()
   {
     if($this->isBound()) return;
@@ -513,6 +565,29 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       }
     }
 
+    if(!isset($taintedValues['relatedfile']))
+    {
+      $this->offsetUnset('RelatedFiles');
+      unset($taintedValues['RelatedFiles']);
+      $this->offsetUnset('newRelatedFiles');
+      unset($taintedValues['newRelatedFiles']);
+    }
+    else
+    {
+      $this->loadEmbedRelatedFiles();
+      if(isset($taintedValues['newRelatedFiles']))
+      {
+        foreach($taintedValues['newRelatedFiles'] as $key=>$newVal)
+        {
+          if (!isset($this['newRelatedFiles'][$key]))
+          {
+            $this->addRelatedFiles($key);
+          }
+          $taintedValues['newRelatedFiles'][$key]['record_id'] = 0;
+        }
+      }
+    }
+
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -634,6 +709,30 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
         {
           $form->getObject()->delete();
           unset($this->embeddedForms['ExtLinks'][$name]);
+        }
+      }
+    }
+    if (null === $forms && $this->getValue('relatedfile'))
+    {
+      $value = $this->getValue('newRelatedFiles');
+      foreach($this->embeddedForms['newRelatedFiles']->getEmbeddedForms() as $name => $form)
+      {
+        if(!isset($value[$name]['referenced_relation']))
+          unset($this->embeddedForms['newRelatedFiles'][$name]);
+        else
+        {
+          $form->getObject()->setRecordId($this->getObject()->getId());
+          $form->getObject()->changeUri() ;
+        }
+      }
+
+      $value = $this->getValue('RelatedFiles');
+      foreach($this->embeddedForms['RelatedFiles']->getEmbeddedForms() as $name => $form)
+      {
+        if (!isset($value[$name]['referenced_relation']))
+        {
+          $form->getObject()->deleteObjectAndFile();
+          unset($this->embeddedForms['RelatedFiles'][$name]);
         }
       }
     }

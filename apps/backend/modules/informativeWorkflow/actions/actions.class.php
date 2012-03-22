@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage informativeWorkflow
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  */
 class informativeWorkflowActions extends DarwinActions
 {

@@ -913,7 +913,7 @@ table.widget_right tbody td
 table.encoding thead
 {
   background-color: #C3CF56;
-  color:white;
+  color:#525A20;
   border: 1px solid #C1CF56;
 }
 
@@ -1168,7 +1168,7 @@ thead.spec_ident_identifiers_head tr td
   padding-top:0.3em;
   padding-bottom:0.3em;
   background-color:#c1cf56;
-  color:white;
+  color:#525A20;
 }
 
 tbody.spec_ident_identifiers_data tr td
@@ -1191,7 +1191,7 @@ tbody.spec_ident_identifiers_data tr td
 {
   vertical-align:middle;
   text-decoration:none;
-  color:white;
+  color:#525A20;
   margin-top:0.3em ;
   margin-bottom:0.3em ;    
 
@@ -1287,7 +1287,7 @@ table.edit_synon td
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   padding:2px;
-  color:white;
+  color:#525A20;
   text-decoration: none;
   font-size:90%;
 }
@@ -2064,7 +2064,7 @@ tr.tag_line input
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   padding:0.2em;
-  color:white;
+  color: white;
   text-decoration: none;
 }
 
@@ -2623,12 +2623,12 @@ height : 1px;
 .relatedFile input[type="file"]
 {
   position: relative;
-	text-align: right;
+  text-align: right;
   width:150px;	
-	opacity:0 ;
-	filter:alpha(opacity: 0);
-	opacity: 0;
-	z-index: 2;
+  opacity:0 ;
+  filter:alpha(opacity: 0);
+  z-index: 2;
+  cursor:pointer;
 }
 
 .relatedFile label
@@ -2638,7 +2638,7 @@ height : 1px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   padding:2px;
-  color:white;
+  color:#525A20;
   width:150px;
   text-decoration: none;
   font-size:90%;
@@ -2646,7 +2646,8 @@ height : 1px;
   top: 0px;
   z-index: 1;
   vertical-align: middle;  
-  text-align : center ;  
+  text-align : center;
+  cursor:pointer;
 }
 
 .containerFile .divFile
@@ -2726,7 +2727,7 @@ body .ui-tooltip, body .qtip
 .dialog-modal-edit .ui-tooltip-titlebar
 {
   background-color:#C1CF56 !important;
-  color:white;
+  color:#525A20 !important;
 }
 .dialog-modal-view .ui-tooltip-titlebar
 {
@@ -2909,4 +2910,63 @@ input.complete_missing {
 .maintenance_details { 
   display:none;
   
+}
+
+.loan_line_closed {
+  color: gray;
+}
+.loan_line_closed .loan_overdue
+{
+  color:gray;
+}
+.loan_status_col em{
+ font-size: smaller;
+ vertical-align: super;
+}
+.loan_overdue
+{
+  color:red;
+}
+
+.closed_message {
+  text-align:center;
+  background-color: #FFEFBF;
+  border: 2px solid #F4BB0F;
+  padding: 0.2em;
+  margin:0.5em;
+  text-align: center;
+}
+
+#hiddenFrame {
+  display:none;
+}
+
+.loan_item_dates label
+{
+  font-weight:bold;
+  padding-bottom: 0.3em;
+}
+
+#items_table tbody td
+{
+  vertical-align:top;
+}
+
+#maintenances .buttons 
+{
+  text-align:right;
+}
+
+#loan_sync {
+  cursor: pointer;
+}
+
+.last_sync_message {
+  color: gray;
+
+  font-size: x-small;
+}
+
+span.label {
+  font-weight:bold;
 }

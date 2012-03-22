@@ -13,18 +13,7 @@
   <td class="col_sub_container_type"><?php echo $part->getSubContainerType();?></td> 
   <td class="col_sub_container_storage"><?php echo $part->getSubContainerStorage();?></td>
 <?php endif ; ?>   
-<!--<td class="col_part_codes"><?php if(isset($codes[$part->getId()])):?>
-  <ul><?php foreach($codes[$part->getId()] as $code):?>
-  <?php if ($code->getCodeCategory() == "main") : ?>
-  	<li><b><?php echo $code->getCodeFormated();?></b></li>  
-  <?php else : ?>
-  	<li><?php echo $code->getCodeFormated();?></li>
-  <?php endif ; ?>
-  <?php endforeach;?></ul>
-<?php endif;?>
-</td>
 
--->
     <td class="col_part_codes">
       <?php if(isset($codes[$part->getId()])):?>
         <?php if(count($codes[$part->getId()]) <= 1 || $sf_user->isA(Users::REGISTERED_USER)):?>
@@ -54,14 +43,14 @@
             <?php if($code->getCodeCategory() == 'main' ): ?>
               <li>
                 <strong>
-                  <?php echo $code->getCodePrefix().$code->getCodePrefixSeparator().$code->getCode().$code->getCodeSuffixSeparator().$code->getCodeSuffix(); ?>
+                  <?php echo $code->getFullCode(); ?>
                 </strong>
               </li>
             <?php endif;?>  
           <?php else : ?>
             <li class="<?php if($i++ >= 1) echo 'hidden code_supp';?>" >
               <?php if($code->getCodeCategory() == 'main' ): ?><strong><?php endif;?>
-                <?php echo $code->getCodePrefix().$code->getCodePrefixSeparator().$code->getCode().$code->getCodeSuffixSeparator().$code->getCodeSuffix(); ?>
+                <?php echo $code->getFullCode(); ?>
               <?php if($code->getCodeCategory() == 'main' ): ?></strong><?php endif;?>
             </li>
           <?php endif ; ?>

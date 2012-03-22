@@ -27,7 +27,6 @@ delete from codes where referenced_relation in ('specimen_parts', 'specimen_indi
 delete from identifications where referenced_relation in ('specimen_parts', 'specimen_individuals', 'specimens');
 delete from catalogue_people where referenced_relation in ('specimen_parts', 'specimen_individuals', 'specimens');
 delete from catalogue_properties where referenced_relation in ('specimen_parts', 'specimen_individuals', 'specimens');
-delete from associated_multimedia where referenced_relation in ('specimen_parts', 'specimen_individuals', 'specimens');
 delete from ext_links where referenced_relation in ('specimen_parts', 'specimen_individuals', 'specimens');
 delete from insurances where referenced_relation in ('specimen_parts', 'specimen_individuals', 'specimens');
 delete from my_saved_searches where is_only_id = true;

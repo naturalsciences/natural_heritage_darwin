@@ -13,12 +13,12 @@
   </div>
 
   <input id="collection_id" type="hidden" value="<?php echo $specimen->getCollectionRef();?>">
-  <?php echo form_tag('parts/edit'. ($form->isNew() ? '?indid='.$individual->getId() : '?id='.$form->getObject()->getId()) );?>
+  <?php echo form_tag('parts/edit'. ($form->isNew() ? '?indid='.$individual->getId() : '?id='.$form->getObject()->getId()), array('enctype'=>'multipart/form-data') );?>
     <div>
       <?php if($form->hasGlobalErrors()):?>
         <ul class="spec_error_list">
           <?php foreach ($form->getGlobalErrors() as $name => $error): ?>
-            <?php if(!in_array($error,$form->getErrorSchema()->getErrors())) : ?>					  
+            <?php if(!in_array($error,$form->getErrorSchema()->getErrors())) : ?>
               <li><?php echo __($name." ".$error); ?></li>
             <?php endif ; ?>
           <?php endforeach; ?>

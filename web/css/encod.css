@@ -56,7 +56,12 @@
 /**** WIDGET ENCODING ****/
 .encod_screen .widget .widget_top_bar
 {
-	background-color:#C1CF56;
+  background-color:#C1CF56;
+  color:#525A20
+}
+.encod_screen .widget .widget_top_bar span
+{
+  text-shadow: 1px 1px 1px white;
 }
 
 .encod_screen .widget .widget_content {
@@ -69,7 +74,7 @@
 	line-height: 20px;
 }
 
-form.edition .help_ico
+.help_ico
 {
 	vertical-align:middle;
 }

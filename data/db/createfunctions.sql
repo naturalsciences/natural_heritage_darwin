@@ -182,41 +182,35 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION fct_cpy_fullToIndex() RETURNS trigger
 AS $$
 BEGIN
-	IF TG_TABLE_NAME::text = 'catalogue_properties' THEN
+	IF TG_TABLE_NAME = 'catalogue_properties' THEN
 		NEW.property_tool_indexed := COALESCE(fullToIndex(NEW.property_tool),'');
 		NEW.property_sub_type_indexed := COALESCE(fullToIndex(NEW.property_sub_type),'');
 		NEW.property_method_indexed := COALESCE(fullToIndex(NEW.property_method),'');
 		NEW.property_qualifier_indexed := COALESCE(fullToIndex(NEW.property_qualifier),'');
-	ELSIF TG_TABLE_NAME::text = 'chronostratigraphy' THEN
+	ELSIF TG_TABLE_NAME = 'chronostratigraphy' THEN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME::text = 'collections' THEN
+	ELSIF TG_TABLE_NAME = 'collections' THEN
 		NEW.name_indexed := fullToIndex(NEW.name);		
-	ELSIF TG_TABLE_NAME::text = 'expeditions' THEN
+	ELSIF TG_TABLE_NAME = 'expeditions' THEN
 		NEW.name_indexed := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME::text = 'habitats' THEN
-		NEW.code_indexed := fullToIndex(NEW.code);
-	ELSIF TG_TABLE_NAME::text = 'identifications' THEN
+	ELSIF TG_TABLE_NAME = 'identifications' THEN
 		NEW.value_defined_indexed := COALESCE(fullToIndex(NEW.value_defined),'');
-	ELSIF TG_TABLE_NAME::text = 'lithology' THEN
+	ELSIF TG_TABLE_NAME = 'lithology' THEN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME::text = 'lithostratigraphy' THEN
+	ELSIF TG_TABLE_NAME = 'lithostratigraphy' THEN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME::text = 'mineralogy' THEN
+	ELSIF TG_TABLE_NAME = 'mineralogy' THEN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
 		NEW.formule_indexed := fullToIndex(NEW.formule);
-	ELSIF TG_TABLE_NAME::text = 'multimedia' THEN
-		NEW.title_indexed := fullToIndex(NEW.title);
-	ELSIF TG_TABLE_NAME::text = 'multimedia_keywords' THEN
-		NEW.keyword_indexed := fullToIndex(NEW.keyword);
-	ELSIF TG_TABLE_NAME::text = 'people' THEN
+	ELSIF TG_TABLE_NAME = 'people' THEN
 		NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
                 NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
                 NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
-	ELSIF TG_TABLE_NAME::text = 'codes' THEN
+	ELSIF TG_TABLE_NAME = 'codes' THEN
 		IF NEW.code ~ '^[0-9]+$' THEN
 		   NEW.code_num := NEW.code;
 		ELSE
@@ -224,26 +218,26 @@ BEGIN
 		END IF;
                 NEW.full_code_indexed := to_tsvector('simple', COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,''));
 		NEW.full_code_order_by := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
-	ELSIF TG_TABLE_NAME::text = 'tag_groups' THEN
+	ELSIF TG_TABLE_NAME = 'tag_groups' THEN
 		NEW.group_name_indexed := fullToIndex(NEW.group_name);
 		NEW.sub_group_name_indexed := fullToIndex(NEW.sub_group_name);
-	ELSIF TG_TABLE_NAME::text = 'taxonomy' THEN
+	ELSIF TG_TABLE_NAME = 'taxonomy' THEN
 		NEW.name_indexed := to_tsvector('simple', NEW.name);
 		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME::text = 'classification_keywords' THEN
+	ELSIF TG_TABLE_NAME = 'classification_keywords' THEN
 		NEW.keyword_indexed := fullToIndex(NEW.keyword);
-	ELSIF TG_TABLE_NAME::text = 'users' THEN
+	ELSIF TG_TABLE_NAME = 'users' THEN
 		NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
                 NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
-	ELSIF TG_TABLE_NAME::text = 'class_vernacular_names' THEN
+	ELSIF TG_TABLE_NAME = 'class_vernacular_names' THEN
 		NEW.community_indexed := fullToIndex(NEW.community);
-	ELSIF TG_TABLE_NAME::text = 'vernacular_names' THEN
+	ELSIF TG_TABLE_NAME = 'vernacular_names' THEN
 		NEW.name_indexed := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME::text = 'igs' THEN
+	ELSIF TG_TABLE_NAME = 'igs' THEN
 		NEW.ig_num_indexed := fullToIndex(NEW.ig_num);
-       ELSIF TG_TABLE_NAME::text = 'collecting_methods' THEN
+       ELSIF TG_TABLE_NAME = 'collecting_methods' THEN
                 NEW.method_indexed := fullToIndex(NEW.method);
-       ELSIF TG_TABLE_NAME::text = 'collecting_tools' THEN
+       ELSIF TG_TABLE_NAME = 'collecting_tools' THEN
                 NEW.tool_indexed := fullToIndex(NEW.tool);
         ELSIF TG_TABLE_NAME = 'loans' THEN
                 NEW.description_ts := to_tsvector('simple', COALESCE(NEW.name,'') || COALESCE(NEW.description,'') );
@@ -420,20 +414,9 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_clear_referencedRecord() RETURNS TRIGGER
 AS $$
 BEGIN
-	DELETE FROM catalogue_people WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM comments WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM catalogue_properties WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM identifications WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM class_vernacular_names WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM classification_synonymies WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM classification_keywords WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM informative_workflow WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM collection_maintenance WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM multimedia WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM codes WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-	DELETE FROM insurances WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-        DELETE FROM staging_people WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;	
-	RETURN OLD;
+
+  DELETE FROM template_table_record_ref where referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+  RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -589,9 +572,7 @@ BEGIN
     IF TG_OP = 'INSERT' THEN
         IF( TG_TABLE_NAME::text = 'collections' OR
           TG_TABLE_NAME::text = 'gtu' OR
-          TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
-          TG_TABLE_NAME::text = 'multimedia' OR
           TG_TABLE_NAME::text = 'staging') THEN
 
           IF NEW.id = 0 THEN
@@ -613,9 +594,7 @@ BEGIN
       ELSIF TG_OP = 'UPDATE' THEN
         IF(TG_TABLE_NAME::text = 'collections' OR
           TG_TABLE_NAME::text = 'gtu' OR
-          TG_TABLE_NAME::text = 'habitats' OR
           TG_TABLE_NAME::text = 'specimen_parts' OR
-          TG_TABLE_NAME::text = 'multimedia' OR
           TG_TABLE_NAME::text = 'staging') THEN
 
           IF NEW.parent_ref IS DISTINCT FROM OLD.parent_ref THEN
@@ -723,7 +702,7 @@ BEGIN
     RETURN NEW;
   ELSIF track_level = 1 THEN -- Track Only Main tables
     IF TG_TABLE_NAME::text NOT IN ('specimens', 'specimen_individuals', 'specimen_parts', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
-      'mineralogy', 'lithology', 'habitats', 'people') THEN
+      'mineralogy', 'lithology', 'people') THEN
       RETURN NEW;
     END IF;
   END IF;
@@ -1240,17 +1219,6 @@ BEGIN
       ELSE
         PERFORM fct_cpy_word('expeditions','name_ts', NEW.name_ts);
       END IF;
-/*
-   ELSIF TG_TABLE_NAME ='habitats' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.description_ts IS DISTINCT FROM NEW.description_ts THEN
-          PERFORM fct_cpy_word('habitats','description_ts', NEW.description_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('habitats','description_ts', NEW.description_ts);
-      END IF;
-*/
 
    ELSIF TG_TABLE_NAME ='mineralogy' THEN
 
@@ -3912,6 +3880,19 @@ END;
 $$;
 
 
+CREATE OR REPLACE function chk_part_not_loaned() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+BEGIN
+
+    IF exists( SELECT 1 FROM loan_items i INNER JOIN loan_status s on i.loan_ref = s.loan_ref
+        WHERE s.is_last= true AND s.status != 'closed' AND i.part_ref = OLD.id ) THEN
+      RAISE EXCEPTION 'The Part is currently used in an ongoing loan';
+    END IF;
+    RETURN OLD;
+END;
+$$;
 
 CREATE OR REPLACE function fct_auto_insert_status_history() RETURNS TRIGGER
 language plpgsql
@@ -3938,3 +3919,73 @@ BEGIN
   RETURN NEW;
 END;
 $$;
+
+
+CREATE OR REPLACE FUNCTION fct_cpy_ig_to_loan_items() RETURNS trigger
+AS $$
+BEGIN
+  IF OLD.ig_ref is distinct from NEW.ig_ref THEN
+    UPDATE loan_items li SET ig_ref = NEW.ig_ref
+    WHERE part_ref in ( SELECT s.id from specimen_parts s
+      INNER JOIN specimen_individuals i on s.id=s.specimen_individual_ref
+      WHERE i.specimen_ref = NEW.ID
+      )
+    AND li.ig_ref IS NOT DISTINCT FROM OLD.ig_ref;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION fct_cpy_loan_history(loan_id integer) RETURNS boolean
+AS $$
+BEGIN
+
+  -- LOAN
+  INSERT INTO loan_history (loan_ref, referenced_table, record_line)
+  (
+    select loan_id, 'loans', hstore(l.*) from loans l where l.id = loan_id
+
+    UNION
+
+    select loan_id, 'catalogue_people', hstore(p.*) from catalogue_people p where 
+      (referenced_relation='loans'  AND record_id = loan_id) OR (referenced_relation='loan_items'  AND record_id in (select id from loan_items l where l.loan_ref = loan_id) )
+
+    UNION
+
+    select loan_id, 'catalogue_properties', hstore(c.*) from catalogue_properties c where 
+      (referenced_relation='loans'  AND record_id = loan_id) OR (referenced_relation='loan_items'  AND record_id in (select id from loan_items l where l.loan_ref = loan_id) )
+
+  );
+
+
+  --ITEMS
+  INSERT INTO loan_history (loan_ref, referenced_table, record_line)
+  (
+    select loan_id, 'loan_items', hstore(l.*) from loan_items l where l.loan_ref = loan_id
+
+    UNION
+
+    select loan_id, 'darwin_flat', hstore(f.*) from darwin_flat f where f.part_ref in (select part_ref from loan_items l where l.loan_ref = loan_id)
+  );
+
+  -- BOTH
+  INSERT INTO loan_history (loan_ref, referenced_table, record_line)
+  (
+    select loan_id, 'people', hstore(p.*) from people p where id in (select (record_line->'people_ref')::int from loan_history where loan_ref = loan_id 
+      and referenced_table='catalogue_people' and modification_date_time = now())
+
+    UNION
+
+    select loan_id, 'people_addresses', hstore(p.*) from people_addresses p where person_user_ref in (select (record_line->'id')::int from loan_history where loan_ref = loan_id 
+      and referenced_table='people' and modification_date_time = now())
+
+    UNION
+
+    select loan_id, 'properties_values', hstore(v.*) from properties_values v where property_ref in (select (record_line->'id')::int from loan_history where loan_ref = loan_id 
+      and referenced_table='catalogue_properties' and modification_date_time = now())
+  );
+  RETURN true;
+END;
+$$ LANGUAGE plpgsql;
+

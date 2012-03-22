@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage bigbro
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  */
 class bigbroActions extends DarwinActions
 {

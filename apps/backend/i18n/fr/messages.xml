@@ -799,6 +799,10 @@
         <source>Specimen</source>
         <target>Echantillon</target>
       </trans-unit>
+          <trans-unit id="220">
+        <source>Contact</source>
+        <target>Contact</target>
+      </trans-unit>
           <trans-unit id="217">
         <source>Contribute</source>
         <target>Contributeur</target>
@@ -807,17 +811,9 @@
         <source>Contribute :</source>
         <target>contributeur :</target>
       </trans-unit>
-          <trans-unit id="220">
-        <source>Contact</source>
-        <target>contact</target>
-      </trans-unit>
           <trans-unit id="221">
         <source>Contact :</source>
         <target>Contact :</target>
-      </trans-unit>
-          <trans-unit id="222">
-        <source>You can reach us at &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</source>
-        <target>Vous pouvez nous contacter via &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;collections@naturalsciences.be&lt;/a&gt;</target>
       </trans-unit>
           <trans-unit id="223">
         <source>Dawin Help</source>
@@ -2091,10 +2087,6 @@
         <source>Visible</source>
         <target>Visible</target>
       </trans-unit>
-          <trans-unit id="546">
-        <source>Opened</source>
-        <target>Ouverte</target>
-      </trans-unit>
           <trans-unit id="547">
         <source>Custom title</source>
         <target>Titre personnalisé</target>
@@ -3323,13 +3315,13 @@
         <source>This user already exists</source>
         <target>Cet utilisateur existe déjà</target>
       </trans-unit>
-          <trans-unit id="1546">
-        <source>Checker</source>
-        <target>Vérificateur</target>
-      </trans-unit>
           <trans-unit id="1548">
         <source>Accompanist</source>
         <target>Accompagnateur</target>
+      </trans-unit>
+          <trans-unit id="1546">
+        <source>Checker</source>
+        <target>Vérificateur</target>
       </trans-unit>
           <trans-unit id="865">
         <source>Edit Name</source>
@@ -4196,14 +4188,6 @@
         <source>This taxonomy already exists</source>
         <target>Ce taxon existe déjà</target>
       </trans-unit>
-          <trans-unit id="1101">
-        <source>This habitat already exists</source>
-        <target>Cet habitat existe déjà</target>
-      </trans-unit>
-          <trans-unit id="1103">
-        <source>This associated multimedia already exists</source>
-        <target>Ce multimédia associé existe déjà</target>
-      </trans-unit>
           <trans-unit id="1104">
         <source>This word already exists</source>
         <target>Ce mot existe déjà</target>
@@ -4516,10 +4500,6 @@
         <source>Your file has been loaded, but still need to be checked</source>
         <target>Votre fichier a été chargé, mais doit encore être examiné.</target>
       </trans-unit>
-          <trans-unit id="1549">
-        <source>Transporter</source>
-        <target>Transporteur</target>
-      </trans-unit>
           <trans-unit id="1551">
         <source>Usage</source>
         <target>Utilisation</target>
@@ -4528,13 +4508,13 @@
         <source>State observation</source>
         <target>Observation d&#039;état</target>
       </trans-unit>
-          <trans-unit id="1586">
-        <source>Add Maintenance for checked</source>
-        <target>Ajouter maintenance pour les sélectionnés</target>
-      </trans-unit>
           <trans-unit id="1587">
         <source>Back to Loan</source>
         <target>Retour au prêt</target>
+      </trans-unit>
+          <trans-unit id="1586">
+        <source>Add Maintenance for checked</source>
+        <target>Ajouter maintenance pour les objets cochés</target>
       </trans-unit>
           <trans-unit id="1384">
         <source>Between %min% and %max%</source>
@@ -4551,6 +4531,10 @@
           <trans-unit id="1589">
         <source>Choose Darwin Part</source>
         <target>Choisissez une partie Darwin</target>
+      </trans-unit>
+          <trans-unit id="1665">
+        <source>Darwin users added here will have either read or write rights on this loan and its related items. Needless to add yourself when you are the one creating the loan</source>
+        <target>Les utilisateurs Darwin ajoutés ici auront des droits en lecture ou écriture sur le prêt ou sur les objets associés. Inutile de vous ajouter lorsque c&#039;est vous qui créez le prêt</target>
       </trans-unit>
           <trans-unit id="1381">
         <source>Dear %title% %name%,</source>
@@ -4602,23 +4586,31 @@
       </trans-unit>
           <trans-unit id="1507">
         <source>Search Loans</source>
-        <target>Rechercher des prêts</target>
+        <target>Recherche de prêts</target>
       </trans-unit>
           <trans-unit id="1508">
         <source>Loans Search</source>
-        <target>Recherche de prêt</target>
+        <target>Recherche de prêts</target>
       </trans-unit>
           <trans-unit id="1553">
         <source>Edit loan item</source>
-        <target>Editer objet de prêt</target>
+        <target>Editer un objet de prêt</target>
+      </trans-unit>
+          <trans-unit id="1591">
+        <source>Please pin some parts.</source>
+        <target>Veuillez épingler des parties.</target>
       </trans-unit>
           <trans-unit id="1590">
         <source>No Items here.</source>
         <target>Pas d&#039;objets ici.</target>
       </trans-unit>
-          <trans-unit id="1591">
-        <source>Please pin some parts.</source>
-        <target>Veuillez épingler des parties</target>
+          <trans-unit id="1631">
+        <source>Use Loan dates</source>
+        <target>Utiliser les dates du prêt</target>
+      </trans-unit>
+          <trans-unit id="1632">
+        <source>Expedition / Return</source>
+        <target>Expédition / Retour</target>
       </trans-unit>
           <trans-unit id="1473">
         <source>This collection is linked with one or more specimens</source>
@@ -4663,6 +4655,18 @@
           <trans-unit id="1482">
         <source>This taxon is referenced as accompanying element</source>
         <target>Ce taxon est référencé en tant qu&#039;élément accompagnant</target>
+      </trans-unit>
+          <trans-unit id="1596">
+        <source>on %date%</source>
+        <target>le %date%</target>
+      </trans-unit>
+          <trans-unit id="1597">
+        <source>Starts on</source>
+        <target>Commence le</target>
+      </trans-unit>
+          <trans-unit id="1666">
+        <source>Insert the name of the loan here, You can also set a description, the begining and the end date of the loan</source>
+        <target>Insérez le nom du prêt ici, vous pouvez également ajouter une description une date de début et de fin de prêt</target>
       </trans-unit>
           <trans-unit id="1463">
         <source>This institution still has collections</source>
@@ -4710,15 +4714,27 @@
       </trans-unit>
           <trans-unit id="1588">
         <source>Add item</source>
-        <target>Ajouter objet</target>
+        <target>Ajouter un objet</target>
+      </trans-unit>
+          <trans-unit id="1595">
+        <source>The end and extended date must be after the start date.</source>
+        <target>La date de prolongation et de fin doivent être postérieures à la date de début</target>
       </trans-unit>
           <trans-unit id="1554">
         <source>Add Maintenance :</source>
-        <target>Ajouter maintenance :</target>
+        <target>Ajouter une maintenance :</target>
       </trans-unit>
           <trans-unit id="1593">
         <source>Choose Insurer</source>
         <target>Choisissez un assureur</target>
+      </trans-unit>
+          <trans-unit id="1633">
+        <source>Please save your item in order to view related maintenances</source>
+        <target>Veuillez sauvegarder l&#039;objet afin de voir les maintenances associées</target>
+      </trans-unit>
+          <trans-unit id="1667">
+        <source>Here you can define all people involved during the loan process. The sender side being the lenders and the receiver side being the borrowers</source>
+        <target>Vous pouvez définir ici toutes les personnes impliquées dans le processus de prêt. Le coté expédition sont les envoyeurs et le coté destinataire sont les emprunteurs</target>
       </trans-unit>
           <trans-unit id="1510">
         <source>Person</source>
@@ -4732,29 +4748,17 @@
         <source>Latest Statuses</source>
         <target>Dernier Status</target>
       </trans-unit>
+          <trans-unit id="1598">
+        <source>Loan closed on %date%.</source>
+        <target>Prêt fermé le %date%</target>
+      </trans-unit>
+          <trans-unit id="1634">
+        <source>Rejected</source>
+        <target>Rejeté</target>
+      </trans-unit>
           <trans-unit id="806">
         <source>You don\&#039;t have the rights to insert into or update a specimen in this collection</source>
         <target>Vous n\&#039;avez pas la permission d&#039;insérer ou mettre à jour un échantillon dans cet collection</target>
-      </trans-unit>
-          <trans-unit id="1504">
-        <source>This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target>Cette widget vous permet d&#039;ajouter une note pour un échantillon spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
-      </trans-unit>
-          <trans-unit id="1511">
-        <source>Edit loan</source>
-        <target>Editer prêt</target>
-      </trans-unit>
-          <trans-unit id="1513">
-        <source>New loan</source>
-        <target>Nouveau prêt</target>
-      </trans-unit>
-          <trans-unit id="1514">
-        <source>Duplicate loan</source>
-        <target>Dupliquer prêt</target>
-      </trans-unit>
-          <trans-unit id="1557">
-        <source>Return date</source>
-        <target>Date de retour</target>
       </trans-unit>
           <trans-unit id="1405">
         <source>Taxon.</source>
@@ -4804,6 +4808,54 @@
         <source>Import a file</source>
         <target>Importer un fichier</target>
       </trans-unit>
+          <trans-unit id="1495">
+        <source>Browse entire history</source>
+        <target>Parcourir l&#039;entièreté de l&#039;historique</target>
+      </trans-unit>
+          <trans-unit id="1497">
+        <source>Please save your part in order to add workflows</source>
+        <target>Veuillez sauver votre partie afin d&#039;ajouter un workflow</target>
+      </trans-unit>
+          <trans-unit id="1498">
+        <source>Please save your individual in order to add workflows</source>
+        <target>Veuillez sauver votre individu afin d&#039;ajouter un workflow</target>
+      </trans-unit>
+          <trans-unit id="1499">
+        <source>Please save your specimen in order to add workflows</source>
+        <target>Veuillez sauver votre échantillon afin d&#039;ajouter un workflow</target>
+      </trans-unit>
+          <trans-unit id="1500">
+        <source>This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Cette widget vous permet d&#039;ajouter une note pour un individu spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges utilisateur</target>
+      </trans-unit>
+          <trans-unit id="1501">
+        <source>This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Cette widget vous permet d&#039;ajouter une note pour un catalogue spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges</target>
+      </trans-unit>
+          <trans-unit id="1503">
+        <source>This widget allow you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Cette widget vous permet d&#039;ajouter une note pour une personne spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges</target>
+      </trans-unit>
+          <trans-unit id="1504">
+        <source>This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <target>Cette widget vous permet d&#039;ajouter une note pour un échantillon spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges</target>
+      </trans-unit>
+          <trans-unit id="1511">
+        <source>Edit loan</source>
+        <target>Editer un prêt</target>
+      </trans-unit>
+          <trans-unit id="1513">
+        <source>New loan</source>
+        <target>Nouveau prêt</target>
+      </trans-unit>
+          <trans-unit id="1514">
+        <source>Duplicate loan</source>
+        <target>Dupliquer un prêt</target>
+      </trans-unit>
+          <trans-unit id="1557">
+        <source>Return date</source>
+        <target>Date de retour</target>
+      </trans-unit>
           <trans-unit id="1489">
         <source>Checked</source>
         <target>Vérifié</target>
@@ -4828,41 +4880,53 @@
         <source>view all workflows</source>
         <target>Voir tous les workflows</target>
       </trans-unit>
-          <trans-unit id="1495">
-        <source>Browse entire history</source>
-        <target>Voir l&#039;historique intégral</target>
-      </trans-unit>
-          <trans-unit id="1497">
-        <source>Please save your part in order to add workflows</source>
-        <target>Veuillez sauver votre partie afin d&#039;ajouter un workflow</target>
-      </trans-unit>
-          <trans-unit id="1498">
-        <source>Please save your individual in order to add workflows</source>
-        <target>Veuillez sauver votre individue afin d&#039;ajouter un workflow</target>
-      </trans-unit>
-          <trans-unit id="1499">
-        <source>Please save your specimen in order to add workflows</source>
-        <target>Veuillez sauver votre échantillon afin d&#039;ajouter un workflow</target>
-      </trans-unit>
-          <trans-unit id="1500">
-        <source>This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target>Cette widget vous permet d&#039;ajouter une note pour un individu spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
-      </trans-unit>
-          <trans-unit id="1501">
-        <source>This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target>Cette widget vous permet d&#039;ajouter une note pour un catalogue spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
-      </trans-unit>
           <trans-unit id="1502">
         <source>This widget allow you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target>Cette widget vous permet d&#039;ajouter une note pour uen partie spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
+        <target>Cette widget vous permet d&#039;ajouter une note pour une partie spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges</target>
       </trans-unit>
-          <trans-unit id="1503">
-        <source>This widget allow you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target>Cette widget vous permet d&#039;ajouter une note pour une personne spécifique, cette note peut être une modification, une question destiné au gestionnaires, une note personnelle pour se rappeler de quelque chose à faire, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ Status dépens de vos privilèges</target>
+          <trans-unit id="1635">
+        <source>Target</source>
+        <target>Cible</target>
+      </trans-unit>
+          <trans-unit id="1668">
+        <source>Close this tab</source>
+        <target>Fermer cet onglet</target>
+      </trans-unit>
+          <trans-unit id="1601">
+        <source>Returned</source>
+        <target>Renvoyé</target>
+      </trans-unit>
+          <trans-unit id="1602">
+        <source>Extended</source>
+        <target>Prolongé</target>
+      </trans-unit>
+          <trans-unit id="1603">
+        <source>Running</source>
+        <target>En cours</target>
+      </trans-unit>
+          <trans-unit id="1637">
+        <source>Has files</source>
+        <target>Contient des fichiers</target>
+      </trans-unit>
+          <trans-unit id="1604">
+        <source>Under evaluation</source>
+        <target>Soumis à évaluation</target>
       </trans-unit>
           <trans-unit id="1558">
         <source>Please save your loan item in order to add properties</source>
         <target>Veuillez sauvegarder votre objet de prêt afin d&#039;ajouter des propriétés</target>
+      </trans-unit>
+          <trans-unit id="1599">
+        <source>Accepted</source>
+        <target>Accepté</target>
+      </trans-unit>
+          <trans-unit id="1600">
+        <source>Closed</source>
+        <target>Fermé</target>
+      </trans-unit>
+          <trans-unit id="1669">
+        <source>Main informations about the loan item</source>
+        <target>Informations principale de l&#039;objet du prêt</target>
       </trans-unit>
           <trans-unit id="1418">
         <source>Import</source>
@@ -4880,9 +4944,25 @@
         <source>Delete import</source>
         <target>Supprimer l&#039;import</target>
       </trans-unit>
+          <trans-unit id="546">
+        <source>Opened</source>
+        <target>Ouvert</target>
+      </trans-unit>
           <trans-unit id="1515">
         <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
-        <target>La soumission du formulaire n&#039;a pas été effectuée. Cela veut probablement dire que vous avez uploadé un fichier trop volumineux</target>
+        <target>L&#039;envoi du formulaire n&#039;a pu être réalisé. Cela signifie probablement que vous avez tenté de charger un fichier trop volumineux</target>
+      </trans-unit>
+          <trans-unit id="1638">
+        <source>New Maintenance</source>
+        <target>Nouvelle Maintenance</target>
+      </trans-unit>
+          <trans-unit id="1639">
+        <source>Pick an action in the list</source>
+        <target>Choisissez une action dans la liste</target>
+      </trans-unit>
+          <trans-unit id="1640">
+        <source>People ref</source>
+        <target>Personne de ref</target>
       </trans-unit>
           <trans-unit id="1352">
         <source>This application requires an authentication.</source>
@@ -4924,6 +5004,10 @@
         <source>This person already has this role</source>
         <target>Cette personne a déjà ce rôle</target>
       </trans-unit>
+          <trans-unit id="1641">
+        <source>Last update date</source>
+        <target>Date de dernière mise à jour</target>
+      </trans-unit>
           <trans-unit id="1180">
         <source>People role search</source>
         <target>Recherche par rôle d&#039;une personne</target>
@@ -4938,7 +5022,7 @@
       </trans-unit>
           <trans-unit id="1516">
         <source>Add loan</source>
-        <target>Ajouter prêt</target>
+        <target>Ajouter un prêt</target>
       </trans-unit>
           <trans-unit id="1559">
         <source>Please save your loan in order to add properties</source>
@@ -4946,7 +5030,7 @@
       </trans-unit>
           <trans-unit id="1560">
         <source>Sender side</source>
-        <target>Coté expéditeur</target>
+        <target>Côté expéditeur</target>
       </trans-unit>
           <trans-unit id="1362">
         <source>This widget allows you to add people that can have different roles. e.g. an author, a reviewer, an expert in a certain domain, etc.</source>
@@ -4958,7 +5042,7 @@
       </trans-unit>
           <trans-unit id="1505">
         <source>Choose contact</source>
-        <target>Choisir un contact</target>
+        <target>Choisissez un contact</target>
       </trans-unit>
           <trans-unit id="1506">
         <source>Person of contact</source>
@@ -4970,19 +5054,31 @@
       </trans-unit>
           <trans-unit id="1562">
         <source>Receiver side</source>
-        <target>Coté destinataire</target>
+        <target>Côté destinataire</target>
       </trans-unit>
           <trans-unit id="1563">
         <source>Add Sender</source>
-        <target>Ajouter expéditeur</target>
+        <target>Ajouter un expéditeur</target>
       </trans-unit>
           <trans-unit id="1564">
         <source>Add Receiver</source>
-        <target>Ajouter destinataire</target>
+        <target>Ajouter un destinataire</target>
       </trans-unit>
           <trans-unit id="1363">
         <source>This widget can be used to add the equivalent vernacular name of the record in different languages. You can even add more than one vernacular name in the same language</source>
         <target>Ce widget peut être utilisé pour ajouter le nom vernaculaire équivalent de l&#039;enregistrement dans des langues différentes. Vous pouvez même ajouter plus d&#039;un nom vernaculaire dans la même langue.</target>
+      </trans-unit>
+          <trans-unit id="1642">
+        <source>Donator</source>
+        <target>Donateur</target>
+      </trans-unit>
+          <trans-unit id="1643">
+        <source>Expedition member</source>
+        <target>Membre d&#039;expédition</target>
+      </trans-unit>
+          <trans-unit id="1644">
+        <source>View Maintenance</source>
+        <target>Voir Maintenance</target>
       </trans-unit>
           <trans-unit id="1424">
         <source>This button (only visible when your file is on Pending state) will allow you to edit or remove data</source>
@@ -5038,15 +5134,11 @@
       </trans-unit>
           <trans-unit id="1517">
         <source>The return date must be after the expedition date.</source>
-        <target>La date de retour doit être après la date d&#039;expédition</target>
-      </trans-unit>
-          <trans-unit id="1518">
-        <source>The end, extended and effective date must be after the start date.</source>
-        <target>La date de fin, de prolongation et effective doivent être après la date de début.</target>
+        <target>La date de retour doit être postérieure à la date d&#039;expédition</target>
       </trans-unit>
           <trans-unit id="1519">
         <source>The end date must be before the extended to date</source>
-        <target>La date de fin doit être avant la date de prolongation</target>
+        <target>La date de fin doit précéder la date de prolongation</target>
       </trans-unit>
           <trans-unit id="1565">
         <source>New Status</source>
@@ -5100,13 +5192,13 @@
         <source>Application Language</source>
         <target>Langue de travail</target>
       </trans-unit>
+          <trans-unit id="1573">
+        <source>Related Files</source>
+        <target>Fichiers liés</target>
+      </trans-unit>
           <trans-unit id="1572">
         <source>Edition right</source>
         <target>Droit d&#039;édition</target>
-      </trans-unit>
-          <trans-unit id="1573">
-        <source>Related Files</source>
-        <target>Fichier </target>
       </trans-unit>
           <trans-unit id="1366">
         <source>Specify which function you want to give to this user for your collection. Two buttons are available on edition. The button &#039;on sub collection...&#039; allow you to also give right for this user on sub collections managed by you. With the button &#039;manage widget&#039; (visible only for register_user function), you can allow the visibility (read only) of private widget wicth a registered user normaly won&#039;t have right to see it</source>
@@ -5115,6 +5207,10 @@
           <trans-unit id="1440">
         <source>Filename</source>
         <target>Nom de fichier</target>
+      </trans-unit>
+          <trans-unit id="1575">
+        <source>Loan Item</source>
+        <target>Objet de prêt</target>
       </trans-unit>
           <trans-unit id="1576">
         <source>Darwin Users</source>
@@ -5126,11 +5222,11 @@
       </trans-unit>
           <trans-unit id="1578">
         <source>Informative Workflow</source>
-        <target>Flux d&#039;information</target>
+        <target>&quot;Workflow&quot; informatif</target>
       </trans-unit>
-          <trans-unit id="1575">
-        <source>Loan Item</source>
-        <target>Objet de prêt</target>
+          <trans-unit id="1645">
+        <source>Overview</source>
+        <target>Aperçu</target>
       </trans-unit>
           <trans-unit id="1443">
         <source>You may want to include &lt;em&gt;rows without errors&lt;/em&gt;</source>
@@ -5146,39 +5242,75 @@
       </trans-unit>
           <trans-unit id="1525">
         <source>Invalid date &quot;Extended&quot;</source>
-        <target>Invalide date &quot;prolongée&quot;</target>
+        <target>Date de prolongation non valide</target>
       </trans-unit>
           <trans-unit id="1526">
         <source>Add File</source>
-        <target>Ajouter fichier</target>
+        <target>Ajouter un fichier</target>
+      </trans-unit>
+          <trans-unit id="1646">
+        <source>Add maintenance for this item</source>
+        <target>Ajouter maintenance pour cet objet</target>
+      </trans-unit>
+          <trans-unit id="1647">
+        <source>Add multiple items</source>
+        <target>Ajouter plusieurs objets</target>
+      </trans-unit>
+          <trans-unit id="1618">
+        <source>Oops! Page Not Found</source>
+        <target>Oups ! La page n&#039;a pu être trouvée</target>
+      </trans-unit>
+          <trans-unit id="1619">
+        <source>The server returned a 404 response.</source>
+        <target>Le serveur a retourné une erreur 404.</target>
+      </trans-unit>
+          <trans-unit id="1620">
+        <source>Did you type the URL?</source>
+        <target>Avez-vous rentré l&#039;URL manuellement ?</target>
       </trans-unit>
           <trans-unit id="1521">
         <source>this type of extention is not allowed here</source>
-        <target>Ce type d&#039;extension n&#039;est pas permis ici</target>
-      </trans-unit>
-          <trans-unit id="1522">
-        <source>Please don&#039;t try stupid things, don&#039;t touch the uri</source>
-        <target>S&#039;il vous plait, n&#039;essayez pas ce genre d&#039;action stupide, ne touchez pas à l&#039;uri</target>
+        <target>Ce type d&#039;extension n&#039;est pas autorisé</target>
       </trans-unit>
           <trans-unit id="1529">
         <source>Specific person</source>
         <target>Personne spécifique</target>
       </trans-unit>
+          <trans-unit id="1522">
+        <source>Please don&#039;t try stupid things, don&#039;t touch the uri</source>
+        <target>S&#039;il vous plait, n&#039;essayez pas ce genre d&#039;action stupide, ne touchez pas à l&#039;uri</target>
+      </trans-unit>
           <trans-unit id="1367">
         <source>Whom are you looking for</source>
         <target>Qui recherchez vous</target>
-      </trans-unit>
-          <trans-unit id="1523">
-        <source>Start on</source>
-        <target>Commence en</target>
       </trans-unit>
           <trans-unit id="1531">
         <source>Maintenances</source>
         <target>Maintenances</target>
       </trans-unit>
+          <trans-unit id="1648">
+        <source>Are you sure you want to do an archive of your loan ?</source>
+        <target>Etes vous sûr de vouloir faire une archive de votre prêt ?</target>
+      </trans-unit>
+          <trans-unit id="1650">
+        <source>Never synchronized</source>
+        <target>Jamais synchronisé</target>
+      </trans-unit>
+          <trans-unit id="1651">
+        <source>This will take a snapshot of the loan for archiving purposes.</source>
+        <target>Ceci fera une sauvegarde de votre prêt afin de l&#039;archiver</target>
+      </trans-unit>
+          <trans-unit id="1652">
+        <source>Take a snapshot of the loan.</source>
+        <target>Faire une sauvegarde du prêt</target>
+      </trans-unit>
           <trans-unit id="1544">
         <source>Responsible</source>
         <target>Responsable</target>
+      </trans-unit>
+          <trans-unit id="1653">
+        <source>Last synchronization on %date%</source>
+        <target>Dernière synchronisation le %date%</target>
       </trans-unit>
           <trans-unit id="1532">
         <source>Darwin Part</source>
@@ -5188,6 +5320,38 @@
         <source>Created At</source>
         <target>Créé le</target>
       </trans-unit>
+          <trans-unit id="1621">
+        <source>You can reach us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
+        <target>Vous pouvez nous contacter à l&#039;adresse suivante: &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</target>
+      </trans-unit>
+          <trans-unit id="1622">
+        <source>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</source>
+        <target>Il se peut que vous ayez incorrectement entré l&#039;adresse de la page (URL). Veuillez vérifier qu&#039;elle est correctement épelée, la casse des caractères, etc...</target>
+      </trans-unit>
+          <trans-unit id="1623">
+        <source>Did you follow a link from somewhere else at this site?</source>
+        <target>Avez-vous suivi un lien depuis une autre page de ce site ?</target>
+      </trans-unit>
+          <trans-unit id="1624">
+        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
+        <target>Si vous avez été redirigé vers cette page depuis une autre page de ce site, nous vous serions gré de bien vouloir nous le signaler par mail à l&#039;adresse suivante: &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; afin que nous puissions corriger cette erreur.</target>
+      </trans-unit>
+          <trans-unit id="1625">
+        <source>Did you follow a link from another site?</source>
+        <target>Avez-vous suivi un lien depuis la page d&#039;un autre site ?</target>
+      </trans-unit>
+          <trans-unit id="1626">
+        <source>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</source>
+        <target>Les liens présents sur d&#039;autres sites peuvent parfois être obsolètes ou mal écrits. Nous vous serions gré de bien vouloir nous le signaler par mail à l&#039;adresse suivante: &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; afin que nous puissions contacter l&#039;administrateur du site concerné.</target>
+      </trans-unit>
+          <trans-unit id="1627">
+        <source>Back to previous page</source>
+        <target>Retour à la page précédente</target>
+      </trans-unit>
+          <trans-unit id="1628">
+        <source>What&#039;s next</source>
+        <target>Autres possibilités</target>
+      </trans-unit>
           <trans-unit id="1533">
         <source>I.g. Num</source>
         <target>Numéro I.g.</target>
@@ -5195,6 +5359,10 @@
           <trans-unit id="1571">
         <source>Format</source>
         <target>Format</target>
+      </trans-unit>
+          <trans-unit id="1605">
+        <source>Person involved</source>
+        <target>Personne concernée</target>
       </trans-unit>
           <trans-unit id="1534">
         <source>Details</source>
@@ -5206,7 +5374,11 @@
       </trans-unit>
           <trans-unit id="1581">
         <source>All the loans you\&#039;re involved in.</source>
-        <target>Tout les prêts qui vous concernent</target>
+        <target>Tout les prêts qui vous concernent.</target>
+      </trans-unit>
+          <trans-unit id="1655">
+        <source>In this widget you can preview all maintenances done on this loan or the related items</source>
+        <target>Dans cette widget vous pouvez apercevoir toute les maintenances effectuées sur ce prêt ou sur les objets associés</target>
       </trans-unit>
           <trans-unit id="1445">
         <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
@@ -5258,11 +5430,11 @@
       </trans-unit>
           <trans-unit id="1536">
         <source>There is currently no items in your loan. Do not forget to add them.</source>
-        <target>Il n&#039;y a actuellement pas d&#039;objets dans votre prêt. N&#039;oubliez pas d&#039;en ajouter.</target>
+        <target>Il n&#039;y a actuellement aucun objets dans votre prêt. N&#039;oubliez pas d&#039;en ajouter.</target>
       </trans-unit>
           <trans-unit id="1537">
         <source>There is currently no items in the loan.</source>
-        <target>Il n&#039;y a actuellement pas d&#039;objets dans le prêt</target>
+        <target>Il n&#039;y a actuellement aucun objets dans le prêt.</target>
       </trans-unit>
           <trans-unit id="1370">
         <source>DaRWIN 2 team</source>
@@ -5274,7 +5446,11 @@
       </trans-unit>
           <trans-unit id="1539">
         <source>Edit item</source>
-        <target>Editer objet</target>
+        <target>Editer un objet</target>
+      </trans-unit>
+          <trans-unit id="1549">
+        <source>Transporter</source>
+        <target>Transporteur</target>
       </trans-unit>
           <trans-unit id="1582">
         <source>Loans</source>
@@ -5294,11 +5470,23 @@
       </trans-unit>
           <trans-unit id="1583">
         <source>Extended to date</source>
-        <target>Date d’extension de fin</target>
+        <target>Date de prolongation</target>
       </trans-unit>
-          <trans-unit id="1584">
-        <source>Effective to date</source>
-        <target>Date effective de fin</target>
+          <trans-unit id="1629">
+        <source>Suggestion send by</source>
+        <target>Suggestion envoyée par</target>
+      </trans-unit>
+          <trans-unit id="1662">
+        <source>You can associate files to this loan or to the related items. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</source>
+        <target>vous pouvez associer des fichiers dans ce prêt ou dans les objets liés. Ce peut être des photos, documents ou n&#039;importe quel autre fichiers que vous estimez nécessaire. Une miniature apparaîtra quand votre ficher sera une image</target>
+      </trans-unit>
+          <trans-unit id="1663">
+        <source>You can associate files to this maintenance. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</source>
+        <target>vous pouvez associer des fichiers dans cette maintenance. Ce peut être des photos, documents ou n&#039;importe quel autre fichiers que vous estimez nécessaire. Une miniature apparaîtra quand votre ficher sera une image</target>
+      </trans-unit>
+          <trans-unit id="1664">
+        <source>This widget describes all steps of your loan since its creation. The available statuses are displayed in the combo box and you can also add an comment for each selected status but it&#039;s not mandatory</source>
+        <target>Cette widget décrit tous les états du prêt depuis sa création. Les états disponibles sont affichés dans le menu déroulant et vous pouvez également ajouter un commentaire pour chaque état sélectionné mais ce n&#039;est pas nécessaire</target>
       </trans-unit>
           <trans-unit id="1378">
         <source>Field to be corrected</source>
@@ -5308,13 +5496,13 @@
         <source>No errors on this record</source>
         <target>Aucune erreur sur cet enregistrement</target>
       </trans-unit>
-          <trans-unit id="1543">
-        <source>Back to board</source>
-        <target>Retour au tableau de bord</target>
-      </trans-unit>
           <trans-unit id="1585">
         <source>People Info</source>
         <target>Information</target>
+      </trans-unit>
+          <trans-unit id="1543">
+        <source>Back to board</source>
+        <target>Retour au tableau de bord</target>
       </trans-unit>
           <trans-unit id="1375">
         <source>This %field% was not found in our database, please choose an existing one or remove it</source>
@@ -5327,6 +5515,10 @@
           <trans-unit id="1457">
         <source>This file has been aborted. This line will remain for a limited time in the summary list just for information purposes only.</source>
         <target>Ce fichier a été annulé, cette ligne reste pendant un temps limité dans le résumé à titre d&#039;information.</target>
+      </trans-unit>
+          <trans-unit id="1630">
+        <source>Add Status</source>
+        <target>Ajouter Status</target>
       </trans-unit>
         </body>
   </file>

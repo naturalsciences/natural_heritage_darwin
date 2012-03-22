@@ -3,9 +3,8 @@ class LoanValidatorDates extends sfValidatorSchema
 {
   protected function configure($options = array(), $messages = array())
   {
-    $this->addMessage('from_date', 'The end, extended and effective date must be after the start date.');
+    $this->addMessage('from_date', 'The end and extended date must be after the start date.');
     $this->addMessage('end_date', 'The end date must be before the extended to date');
-
   }
  
   protected function doClean($value)
@@ -18,10 +17,6 @@ class LoanValidatorDates extends sfValidatorSchema
     }
 
     if ($value['from_date'] != '' &&  $value['extended_to_date'] != '' && $value['from_date'] > $value['extended_to_date']) {
-      $errorSchema->addError(new sfValidatorError($this, 'from_date'));
-    }
-
-    if ($value['from_date'] != '' &&  $value['effective_to_date'] != '' && $value['from_date'] > $value['effective_to_date']) {
       $errorSchema->addError(new sfValidatorError($this, 'from_date'));
     }
 

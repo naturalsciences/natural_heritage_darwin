@@ -29,7 +29,7 @@ $browser->
     checkElement('table.results tbody tr:nth-child(6) td:nth-child(3)', '/Invalid/')->
   end()->
   info('Edit this record')->
-  click('table.results tbody tr:nth-child(6) td.edit a:nth-child(2)')->
+  click('table.results tbody tr:nth-child(6) td.edit a:nth-child(3)')->
   with('response')->begin()->
     isStatusCode(200)->
     setField('lithology[name]', '')->

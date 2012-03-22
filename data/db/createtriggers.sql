@@ -19,7 +19,6 @@ CREATE TRIGGER trg_cpy_fullToIndex_expeditions BEFORE INSERT OR UPDATE
 	ON expeditions FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
-
 CREATE TRIGGER trg_cpy_fullToIndex_identifications BEFORE INSERT OR UPDATE
 	ON identifications FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
@@ -211,10 +210,6 @@ CREATE TRIGGER trg_cpy_toFullText_ext_links BEFORE INSERT OR UPDATE
 	ON ext_links FOR EACH ROW
 	EXECUTE PROCEDURE tsvector_update_trigger(comment_ts, 'pg_catalog.simple', comment);
 
-CREATE TRIGGER trg_cpy_toFullText_habitats BEFORE INSERT OR UPDATE
-  ON habitats FOR EACH ROW
-  EXECUTE PROCEDURE tsvector_update_trigger(description_ts, 'pg_catalog.simple', description );
-
 CREATE TRIGGER trg_cpy_toFullText_identifications BEFORE INSERT OR UPDATE
 	ON identifications FOR EACH ROW
 	EXECUTE PROCEDURE tsvector_update_trigger(value_defined_ts, 'pg_catalog.simple', value_defined);
@@ -292,10 +287,6 @@ CREATE TRIGGER trg_cpy_FormattedName BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_cpy_FormattedName BEFORE INSERT OR UPDATE
 	ON users FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_FormattedName();
-
-CREATE TRIGGER trg_cpy_path_multimedia BEFORE INSERT OR UPDATE
-	ON multimedia FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_path();
 
 CREATE TRIGGER trg_cpy_path_collections BEFORE INSERT OR UPDATE
 	ON collections FOR EACH ROW
@@ -409,10 +400,6 @@ CREATE TRIGGER trg_trk_log_table_people_comm AFTER INSERT OR UPDATE OR DELETE
 
 CREATE TRIGGER trg_trk_log_table_people_addresses AFTER INSERT OR UPDATE OR DELETE
         ON people_addresses FOR EACH ROW
-        EXECUTE PROCEDURE fct_trk_log_table();
-
-CREATE TRIGGER trg_trk_log_table_people_multimedia AFTER INSERT OR UPDATE OR DELETE
-        ON people_multimedia FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
 CREATE TRIGGER trg_trk_log_table_collections_rights AFTER INSERT OR UPDATE OR DELETE
@@ -732,10 +719,6 @@ CREATE TRIGGER trg_chk_ref_record_catalogue_codes AFTER INSERT OR UPDATE
         ON codes FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
 
-CREATE TRIGGER trg_chk_ref_record_associated_multimedia AFTER INSERT OR UPDATE
-        ON associated_multimedia FOR EACH ROW
-        EXECUTE PROCEDURE fct_chk_ReferencedRecord();
-
 CREATE TRIGGER trg_chk_ref_record_insurances AFTER INSERT OR UPDATE
         ON insurances FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
@@ -924,9 +907,17 @@ CREATE TRIGGER trg_upd_people_in_flat AFTER INSERT OR UPDATE OR DELETE
   EXECUTE PROCEDURE fct_upd_people_in_flat();
 
 CREATE trigger trg_chk_is_last_loan_status BEFORE INSERT
-        ON loan_status FOR EACH ROW
-        EXECUTE PROCEDURE fct_remove_last_flag_loan();
+  ON loan_status FOR EACH ROW
+  EXECUTE PROCEDURE fct_remove_last_flag_loan();
 
 CREATE trigger trg_add_status_history after INSERT
-        ON loans FOR EACH ROW
-        EXECUTE PROCEDURE fct_auto_insert_status_history();
+  ON loans FOR EACH ROW
+  EXECUTE PROCEDURE fct_auto_insert_status_history();
+
+CREATE TRIGGER trg_chk_part_not_loaned BEFORE DELETE
+  ON specimen_parts FOR EACH ROW
+  EXECUTE PROCEDURE chk_part_not_loaned();
+
+CREATE TRIGGER trg_cpy_ig_to_loan_items AFTER UPDATE
+  ON specimens FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_ig_to_loan_items();

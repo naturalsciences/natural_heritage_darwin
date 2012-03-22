@@ -1502,39 +1502,6 @@ MyWidgets:
         visible: true
         title_perso: My Loans 
         all_public: true
-    u2ml1:
-        User: u2
-        col_num: 2
-        category: board_widget
-        group_name: myLoans
-        order_by: 5
-        opened: true
-        is_available: true
-        visible: true
-        title_perso: My Loans 
-        all_public: true
-    u3ml1:
-        User: u3
-        col_num: 2
-        category: board_widget
-        group_name: myLoans
-        order_by: 5
-        opened: true
-        is_available: true
-        visible: true
-        title_perso: My Loans
-        all_public: true 
-    u4ml1:
-        User: u4
-        col_num: 2
-        category: board_widget
-        group_name: myLoans
-        order_by: 5
-        opened: true
-        is_available: true
-        visible: true
-        title_perso: My Loans 
-        all_public: true
         
     u1lw1:
         User: u1
@@ -1557,7 +1524,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true 
-        title_perso: Actors / People implied
+        title_perso: People involved
         
     u1lw3:
         User: u1
@@ -1625,6 +1592,16 @@ MyWidgets:
         is_available: true 
         title_perso: Darwin Users
 
+    u1lw9:
+        User: u1
+        col_num: 1
+        category: loan_widget
+        group_name: maintenances
+        order_by: 9
+        opened: true
+        visible: true
+        is_available: true 
+        title_perso: Maintenances
 
     u1liw1:
         User: u1
@@ -1647,7 +1624,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true 
-        title_perso: Actors / People implied
+        title_perso: People involved
 
     u1liw4:
         User: u1
@@ -1692,3 +1669,62 @@ MyWidgets:
         visible: true
         is_available: true 
         title_perso: Related Files
+
+    u1liw8:
+        User: u1
+        col_num: 1
+        category: loanitem_widget
+        group_name: maintenances
+        order_by: 8
+        opened: true
+        visible: true
+        is_available: true 
+        title_perso: Maintenances
+        
+    u1m1:
+        User: u1
+        col_num: 1
+        category: maintenances_widget
+        group_name: refRelatedFiles
+        order_by: 1
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Related Files
+        all_public: true   
+        
+    u1m2:
+        User: u1
+        col_num: 1
+        category: maintenances_widget
+        group_name: refComments
+        order_by: 2
+        opened: true
+        visible: false
+        is_available: true
+        title_perso: Comments
+        all_public: true
+        
+    u1m3:
+        User: u1    
+        col_num: 1
+        category: maintenances_widget
+        group_name: refProperties
+        order_by: 3
+        opened: true
+        visible: false
+        is_available: true
+        title_perso: Properties
+        all_public: true   
+            
+    u1m4:
+        User: u1
+        col_num: 1
+        category: maintenances_widget
+        group_name: extLinks
+        order_by: 4
+        opened: true
+        visible: false
+        is_available: true
+        title_perso: External Url
+        all_public: true          

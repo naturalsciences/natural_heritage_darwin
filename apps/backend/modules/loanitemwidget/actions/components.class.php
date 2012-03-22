@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage loan_widget
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: actions.class.php 12479 2008-10-31 10:54:40Z fabien $
  */
 class loanitemwidgetComponents extends sfComponents
@@ -28,7 +28,7 @@ class loanitemwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newInsurance']))
-      $this->form->loadEmbedInsurance();  
+      $this->form->loadEmbedInsurance();
   }
 
   public function executeRefProperties()
@@ -41,7 +41,7 @@ class loanitemwidgetComponents extends sfComponents
   { 
     $this->defineForm();
   }
-  
+
   public function executeActors()
   {
     $this->defineForm();
@@ -49,8 +49,8 @@ class loanitemwidgetComponents extends sfComponents
       $this->form->loadEmbedActorsSender();
     if(!isset($this->form['newActorsReceiver']))
       $this->form->loadEmbedActorsReceiver();
-  }  
-    
+  }
+
   public function executeRefRelatedFiles()
   { 
     $this->defineForm();
@@ -64,5 +64,12 @@ class loanitemwidgetComponents extends sfComponents
     if(!isset($this->form['newComments']))
       $this->form->loadEmbedComments();   
   }
-  
+
+  public function executeMaintenances()
+  { 
+    if(isset($this->form))
+      $this->eid = $this->form->getObject()->getId();
+    if(isset($this->eid))
+       $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getMergedMaintenances('loan_items', $this->eid);
+  }
 }

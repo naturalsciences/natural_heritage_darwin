@@ -10,7 +10,6 @@ class CommentsValidatorSchema extends sfValidatorSchema
   {
     $errorSchema = new sfValidatorErrorSchema($this);
     $errorSchemaLocal = new sfValidatorErrorSchema($this);
-
     if (!$value['comment'])
     {
       return array();

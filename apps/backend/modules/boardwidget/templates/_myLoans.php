@@ -30,14 +30,16 @@
       <td><?php echo truncate_text($loan['name'],$max_stringlengte); ?></td>
       <td><?php echo $status[$loan->getId()]->getFormattedStatus(); ?></td>
       <td><?php echo $loan['from_date_formatted']; ?></td>
-      <td><?php echo $loan['to_date_formatted']; ?></td>
-      <td><?php echo link_to(image_tag('blue_eyel.png'),'loan/index', 'class=view_loan');?></td> 
-
-      <?php if( in_array($loan->getId(),sfOutputEscaper::unescape($rights)) ) :?>
+      <td class="<?php if($loan->getIsOverdue()) echo 'loan_overdue';?>">
+        <?php if($loan->getExtendedToDateFormatted() != ''):?>
+          <?php echo $loan->getExtendedToDateFormatted();?>
+        <?php else:?>
+          <?php echo $loan->getToDateFormatted();?>
+        <?php endif;?>
+      </td>
+      <td><?php echo link_to(image_tag('blue_eyel.png'),'loan/view?id='.$loan->getId(), 'class=view_loan');?></td>
+      <?php if( in_array($loan->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isA(Users::ADMIN) ) :?>
         <td><?php echo link_to(image_tag('edit.png'),'loan/edit?id='.$loan->getId(), 'class=edit_loan');?></td>
-        <td><?php echo link_to(image_tag('remove.png'), 'loan/delete?onboard=1&id='.$loan->getId(), 
-           array('method' => 'delete', 'confirm' => __('Are you sure?'), 'class' => 'delete_loan'));?>
-        </td>
       <?php else :?>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
@@ -51,7 +53,7 @@
     <tr><td colspan="2">&nbsp;</td>
         <td colspan="3">
           <?php echo image_tag('blue_eyel.png');?>&nbsp;
-          <?php echo link_to(__('View all loans I\'m implied in'), 'loan/index', 'class=view_all');?></td>
+          <?php echo link_to(__('View all loans I\'m implied in'), 'loan/index?loans_filters[status]=opened', 'class=view_all');?></td>
         <td colspan="3">
           <?php if ($sf_user->isAtLeast(Users::ENCODER)):?>
             <?php echo image_tag('add_blue.png');?>&nbsp;

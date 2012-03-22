@@ -138,14 +138,14 @@
               <?php $cpt++ ; ?>
               <li <?php if($cpt > 3) echo("class='hidden code_supp'"); ?>>
                 <strong>
-                  <?php echo $code->getCodePrefix().$code->getCodePrefixSeparator().$code->getCode().$code->getCodeSuffixSeparator().$code->getCodeSuffix(); ?>
+                  <?php echo $code->getFullCode(); ?>
                 </strong>
               </li> 
           <?php elseif ($sf_user->isAtLeast(Users::ENCODER)) : ?>
                       
             <li class="hidden code_supp" >
                 <?php if ($code->getCodeCategory() == 'main') echo "<strong>" ; ?>            
-                <?php echo $code->getCodePrefix().$code->getCodePrefixSeparator().$code->getCode().$code->getCodeSuffixSeparator().$code->getCodeSuffix(); ?>
+                <?php echo $code->getFullCode(); ?>
                 <?php if ($code->getCodeCategory() == 'main') echo "</strong>" ; ?>
             </li>         
           <?php endif ; ?>

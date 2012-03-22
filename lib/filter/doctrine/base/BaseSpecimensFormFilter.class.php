@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage filter
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
 abstract class BaseSpecimensFormFilter extends BaseFormFilterDoctrine
@@ -29,7 +29,6 @@ abstract class BaseSpecimensFormFilter extends BaseFormFilterDoctrine
       'acquisition_date_mask'   => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'acquisition_date'        => new sfWidgetFormFilterInput(),
       'station_visible'         => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
-      'multimedia_visible'      => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'ig_ref'                  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Igs'), 'add_empty' => true)),
       'collecting_methods_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'CollectingMethods')),
       'collecting_tools_list'   => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'CollectingTools')),
@@ -52,7 +51,6 @@ abstract class BaseSpecimensFormFilter extends BaseFormFilterDoctrine
       'acquisition_date_mask'   => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'acquisition_date'        => new sfValidatorPass(array('required' => false)),
       'station_visible'         => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
-      'multimedia_visible'      => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'ig_ref'                  => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Igs'), 'column' => 'id')),
       'collecting_methods_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'CollectingMethods', 'required' => false)),
       'collecting_tools_list'   => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'CollectingTools', 'required' => false)),
@@ -128,7 +126,6 @@ abstract class BaseSpecimensFormFilter extends BaseFormFilterDoctrine
       'acquisition_date_mask'   => 'Number',
       'acquisition_date'        => 'Text',
       'station_visible'         => 'Boolean',
-      'multimedia_visible'      => 'Boolean',
       'ig_ref'                  => 'ForeignKey',
       'collecting_methods_list' => 'ManyKey',
       'collecting_tools_list'   => 'ManyKey',

@@ -170,7 +170,7 @@ drop-db:
 	$(PRIV_PSQL_DB) -f dropdb.sql
 
 love:
-	@echo "Send Your Thanks to : collections@naturalsciences.be"
+	@echo "Send Your Thanks to : darwin-ict@naturalsciences.be"
 	@echo "And chocolates or postcards to : "
 	@echo "   DBTeam - Service ICT"
 	@echo "   29 Rue Vautier,"

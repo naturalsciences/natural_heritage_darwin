@@ -5,7 +5,7 @@
  *
  * @package    darwin
  * @subpackage individuals
- * @author     DB team <collections@naturalsciences.be>
+ * @author     DB team <darwin-ict@naturalsciences.be>
  */
 class individualsActions extends DarwinActions
 {
@@ -100,7 +100,7 @@ class individualsActions extends DarwinActions
     }
     if($request->isMethod('post'))
     {
-      $this->individual->bind( $request->getParameter('specimen_individuals') );
+      $this->individual->bind( $request->getParameter('specimen_individuals'), $request->getFiles('specimen_individuals') );
       if( $this->individual->isValid())
       {
         try
