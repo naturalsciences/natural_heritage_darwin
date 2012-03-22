@@ -6,12 +6,14 @@
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
       <thead>
         <tr>
+          <th><?php echo $form['type']->renderLabel() ?></th>
           <th><?php echo $form['title']->renderLabel() ?></th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         <tr>
+          <td><?php echo $form['type']->render() ?></td>
           <td><?php echo $form['title']->render() ?></td>
           <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" /></td>
         </tr>

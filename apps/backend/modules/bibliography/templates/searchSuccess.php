@@ -13,9 +13,23 @@
         <thead>
           <tr>
             <th>
+              <a class="sort" href="<?php echo url_for($s_url.'&orderby=type'.( ($orderBy=='type' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+                <?php echo __('Type');?>
+                <?php if($orderBy=='type') echo $orderSign ?>
+              </a>
+            </th>
+
+            <th>
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=title'.( ($orderBy=='title' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __('Title');?>
                 <?php if($orderBy=='title') echo $orderSign ?>
+              </a>
+            </th>
+
+            <th>
+              <a class="sort" href="<?php echo url_for($s_url.'&orderby=year'.( ($orderBy=='year' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+                <?php echo __('Year');?>
+                <?php if($orderBy=='year') echo $orderSign ?>
               </a>
             </th>
             <th>&nbsp;</th>
@@ -24,8 +38,10 @@
         <tbody>
           <?php foreach($bibliography as $bib):?>
             <tr class="rid_<?php echo $bib->getId(); ?>">
+              <td><?php echo $bib->getTypeFormatted();?></td>
               <td><?php echo $bib->getTitle();?></td>
-                <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
+              <td><?php echo $bib->getYear();?></td>
+              <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
                   <?php if(! $is_choose):?>
                     <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
                       <?php echo link_to(image_tag('edit.png',array('title'=>'Edit bibliography')),'bibliography/edit?id='.$bib->getId());?>
@@ -35,7 +51,7 @@
                   <?php else:?>
                     <div class="result_choose"><?php echo __('Choose');?></div>
                   <?php endif;?>
-                </td>
+               </td>
             </tr>
           <?php endforeach;?>
         </tbody>

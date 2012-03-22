@@ -16,6 +16,12 @@ class BibliographyFormFilter extends BaseBibliographyFormFilter
     $this->widgetSchema['title'] = new sfWidgetFormInputText();
     $this->widgetSchema->setNameFormat('searchBibliography[%s]');
     $this->validatorSchema['title'] = new sfValidatorString(array('required' => false, 'trim' => true));
+
+    $choices = array_merge(array(''=>''),Bibliography::getAvailableTypes());
+    $this->widgetSchema['type'] =  new sfWidgetFormChoice(array(
+      'choices' =>  $choices,
+    ));
+    $this->validatorSchema['type'] = new sfValidatorChoice(array('required'=>false,'choices'=>array_keys($choices)));
   }
 
   public function doBuildQuery(array $values)
@@ -26,4 +32,11 @@ class BibliographyFormFilter extends BaseBibliographyFormFilter
     return $query;
   }
 
+  public function addTypeColumnQuery($query, $field, $val) {
+    if($val != '') {
+      $alias = $query->getRootAlias() ;
+      $query->andWhere($alias.".type = ?",$val);
+    }
+    return $query;
+  }
 }
