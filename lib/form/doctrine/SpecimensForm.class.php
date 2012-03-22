@@ -211,7 +211,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->widgetSchema['collector'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['code'] = new sfWidgetFormInputHidden(array('default'=>1));
 
-    $this->widgetSchema['collector'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->widgetSchema['bibliography'] = new sfWidgetFormInputHidden(array('default'=>1));
 
 
     $this->widgetSchema['donator'] = new sfWidgetFormInputHidden(array('default'=>1));
@@ -301,6 +301,8 @@ class SpecimensForm extends BaseSpecimensForm
       'validated_file_class' => 'myValidatedFile'
   ));  */
 
+    $this->validatorSchema['bibliography'] = new sfValidatorPass();
+
   }
 
   public function addExtLinks($num, $obj=null)
@@ -370,6 +372,19 @@ class SpecimensForm extends BaseSpecimensForm
       $this->embeddedForms['newCollectors']->embedForm($num, $form);
       //Re-embedding the container
       $this->embedForm('newCollectors', $this->embeddedForms['newCollectors']);
+  }
+
+  public function addBiblio($num, $bib_ref, $order_by=0)
+  {
+      if(! isset($this['newBiblio']))  $this->loadEmbedBiblio();
+      $options = array('referenced_relation' => 'specimens', 'bibliography_ref' => $bib_ref);
+      $val = new CatalogueBibliography();
+      $val->fromArray($options);
+      $val->setRecordId($this->getObject()->getId());
+      $form = new BiblioAssociationsForm($val);
+      $this->embeddedForms['newBiblio']->embedForm($num, $form);
+      //Re-embedding the container
+      $this->embedForm('newBiblio', $this->embeddedForms['newBiblio']);
   }
 
   public function addDonators($num, $people_ref, $order_by=0)
@@ -524,6 +539,25 @@ class SpecimensForm extends BaseSpecimensForm
     }
     $subForm = new sfForm();
     $this->embedForm('newCollectors',$subForm);
+  }
+
+  public function loadEmbedBiblio()
+  {
+    if($this->isBound()) return;
+    $subForm = new sfForm();
+    $this->embedForm('Biblio',$subForm);
+    if($this->getObject()->getId() !='')
+    {
+      foreach(Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $this->getObject()->getId()) as $key=>$vals)
+      {
+        $form = new BiblioAssociationsForm($vals);
+        $this->embeddedForms['Biblio']->embedForm($key, $form);
+      }
+      //Re-embedding the container
+      $this->embedForm('Biblio', $this->embeddedForms['Biblio']);
+    }
+    $subForm = new sfForm();
+    $this->embedForm('newBiblio',$subForm);
   }
 
   public function loadEmbedDonators()
@@ -733,6 +767,28 @@ class SpecimensForm extends BaseSpecimensForm
       }
     }
 
+    if(!isset($taintedValues['bibliography']))
+    {
+      $this->offsetUnset('Biblio');
+      unset($taintedValues['Biblio']);
+      $this->offsetUnset('newBiblio');
+      unset($taintedValues['newBiblio']);
+    }
+    else
+    {
+      $this->loadEmbedBiblio();
+      if(isset($taintedValues['newBiblio']))
+      {
+        foreach($taintedValues['newBiblio'] as $key=>$newVal)
+        {
+          if (!isset($this['newBiblio'][$key]))
+          {
+            $this->addBiblio($key,$newVal['bibliography_ref']);
+          }
+          $taintedValues['newBiblio'][$key]['record_id'] = 0;
+        }
+      }
+    }
 
     if(!isset($taintedValues['donator']))
     {
@@ -1062,6 +1118,27 @@ class SpecimensForm extends BaseSpecimensForm
         {
           $form->getObject()->delete();
           unset($this->embeddedForms['Collectors'][$name]);
+        }
+      }
+    }
+
+    if (null === $forms && $this->getValue('bibliography'))
+    {
+      $value = $this->getValue('newBiblio');
+      foreach($this->embeddedForms['newBiblio']->getEmbeddedForms() as $name => $form)
+      {
+        if(!isset($value[$name]['bibliography_ref']))
+          unset($this->embeddedForms['newBiblio'][$name]);
+        else
+          $form->getObject()->setRecordId($this->getObject()->getId());
+      }
+      $value = $this->getValue('Biblio');
+      foreach($this->embeddedForms['Biblio']->getEmbeddedForms() as $name => $form)
+      {
+        if (!isset($value[$name]['bibliography_ref']))
+        {
+          $form->getObject()->delete();
+          unset($this->embeddedForms['Biblio'][$name]);
         }
       }
     }

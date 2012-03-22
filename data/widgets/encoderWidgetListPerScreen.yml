@@ -154,6 +154,15 @@ sw21:
    opened: true
    visible: true
    title_perso: External Links
+sw22:
+   col_num: 2
+   category: specimen_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 12
+   opened: false
+   visible: false
+   title_perso: Bibliography
 
 spi7:
   col_num: 2
@@ -655,7 +664,7 @@ bib6:
 bib7:
    col_num: 1
    category: catalogue_bibliography_widget
-   group_name: properties
+#    group_name: properties
    order_by: 7
    mandatory: false
    opened: false

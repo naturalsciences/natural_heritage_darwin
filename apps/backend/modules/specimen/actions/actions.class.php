@@ -56,6 +56,16 @@ class specimenActions extends DarwinActions
     return $this->renderPartial('spec_people_associations',array('type'=>'collector','form' => $form['newCollectors'][$number], 'row_num'=>$number));
   }
 
+  public function executeAddBiblio(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $bibliography_ref = intval($request->getParameter('biblio_ref')) ;
+    $form = $this->getSpecimenForm($request);
+    $form->addBiblio($number,$bibliography_ref,$request->getParameter('iorder_by',0));
+    return $this->renderPartial('biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
+  }
+
   public function executeAddDonator(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     

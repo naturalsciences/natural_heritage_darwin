@@ -39,7 +39,7 @@
           <?php foreach($bibliography as $bib):?>
             <tr class="rid_<?php echo $bib->getId(); ?>">
               <td><?php echo $bib->getTypeFormatted();?></td>
-              <td><?php echo $bib->getTitle();?></td>
+              <td class="item_name"><?php echo $bib->getTitle();?></td>
               <td><?php echo $bib->getYear();?></td>
               <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
                   <?php if(! $is_choose):?>

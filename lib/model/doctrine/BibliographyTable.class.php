@@ -29,4 +29,5 @@ class BibliographyTable extends DarwinTable
   {
     return array();
   }
+
 }

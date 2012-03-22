@@ -183,4 +183,10 @@ class specimenwidgetComponents extends sfComponents
       $this->eid = $this->form->getObject()->getId() ;
   }  
 
+  public function executeBiblio()
+  {    
+    $this->defineForm();
+    if(!isset($this->form['newBiblio']))
+      $this->form->loadEmbedBiblio();
+  }  
 }
