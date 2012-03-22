@@ -751,6 +751,16 @@ tw8:
    opened: true
    visible: true
    title_perso: Bibliography
+
+tw10:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 7
+   opened: true
+   visible: true
+   title_perso: Related Files
    all_public: true
 
 chw1:
