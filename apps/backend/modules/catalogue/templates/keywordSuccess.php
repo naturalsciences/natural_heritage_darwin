@@ -4,7 +4,7 @@
   
   <p id="unit_original_name">
     <label id="original_name_label"><?php echo __('Unit Name :');?></label>
-    <input id="original_name" type="text" class="large_size" value="<?php echo $ref_object->getName() ?>" />
+    <input id="original_name" type="text" class="large_size" value="<?php echo isset($ref_object['name']) ?$ref_object['name'] :$ref_object['title']; ?>" />
   </p>
   <table id="keyword_table">
     <thead>

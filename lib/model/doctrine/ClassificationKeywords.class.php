@@ -55,13 +55,46 @@ class ClassificationKeywords extends BaseClassificationKeywords
         "GenusOrMonomial",
         "Acronym",
         "ViralSpeciesDesignation",  ///-->
-      )
+      ),
+      'bibliography' => array(
+        "address",
+        "annote",
+        "author",
+        "booktitle",
+        "chapter",
+        "crossref",
+        "edition",
+        "editor",
+        "eprint",
+        "howpublished",
+        "institution",
+        "journal",
+        "key",
+        "month",
+        "note",
+        "number",
+        "organization",
+        "pages",
+        "publisher",
+        "school",
+        "series",
+        "title",
+        "type",
+        "url",
+        "volume",
+        "year",
+      ),
     );
     if($type=='taxonomy' && $kingdom)
     {
       $k_tags = $ts[$kingdom] ;
     }
-    else $k_tags = $ts['mineral'] ;
+    elseif($type == 'bibliography') {
+      $k_tags = $ts[$type];
+    }
+    else
+      $k_tags = $ts['mineral'] ;
+
     foreach($k_tags as $t)
     {
         $tags[$t] = sfInflector::humanize( sfInflector::tableize($t));
@@ -95,6 +128,34 @@ class ClassificationKeywords extends BaseClassificationKeywords
         "Breed" => array('title' => 'Name of the breed of an animal', 'class' => 'Tags_Vir'), ///Tags_Zoo
         "Acronym" => array('title' => 'The accepted acronym for the Virus, e.g. PCV for Peanut Clump Virus', 'class' => 'Tags_Vir'),
         "ViralSpeciesDesignation" => array('title' => 'The formal name of a viral species. Example: Saccharomyces cerevisiae virus L-A', 'class' => 'Tags_Vir'),  ///-->
+
+        "address" => array('title' => 'Publisher\'s address (usually just the city, but can be the full address for lesser-known publishers)', 'class' => 'Tags_mix'),
+        "annote" => array('title' => 'An annotation for annotated bibliography styles (not typical)', 'class' => 'Tags_mix'),
+        "author" => array('title' => 'The name(s) of the author(s) (in the case of more than one author, separated by and)', 'class' => 'Tags_mix'),
+        "booktitle" => array('title' => 'The title of the book, if only part of it is being cited', 'class' => 'Tags_mix'),
+        "chapter" => array('title' => 'The chapter number', 'class' => 'Tags_mix'),
+        "crossref" => array('title' => 'The key of the cross-referenced entry', 'class' => 'Tags_mix'),
+        "edition" => array('title' => 'The edition of a book, long form (such as "first" or "second")', 'class' => 'Tags_mix'),
+        "editor" => array('title' => 'The name(s) of the editor(s)', 'class' => 'Tags_mix'),
+        "eprint" => array('title' => 'A specification of an electronic publication, often a preprint or a technical report', 'class' => 'Tags_mix'),
+        "howpublished" => array('title' => 'How it was published, if the publishing method is nonstandard', 'class' => 'Tags_mix'),
+        "institution" => array('title' => 'The institution that was involved in the publishing, but not necessarily the publisher', 'class' => 'Tags_mix'),
+        "journal" => array('title' => 'The journal or magazine the work was published in', 'class' => 'Tags_mix'),
+        "key" => array('title' => 'A hidden field used for specifying or overriding the alphabetical order of entries (when the "author" and "editor" fields are missing). Note that this is very different from the key (mentioned just after this list) that is used to cite or cross-reference the entry.', 'class' => 'Tags_mix'),
+        "month" => array('title' => 'The month of publication (or, if unpublished, the month of creation)', 'class' => 'Tags_mix'),
+        "note" => array('title' => 'Miscellaneous extra information', 'class' => 'Tags_mix'),
+        "number" => array('title' => 'The "(issue) number" of a journal, magazine, or tech-report, if applicable. (Most publications have a "volume", but no "number" field.)', 'class' => 'Tags_mix'),
+        "organization" => array('title' => 'The conference sponsor', 'class' => 'Tags_mix'),
+        "pages" => array('title' => ' Page numbers, separated either by commas or double-hyphens.', 'class' => 'Tags_mix'),
+        "publisher" => array('title' => 'The publisher\'s name', 'class' => 'Tags_mix'),
+        "school" => array('title' => 'The school where the thesis was written', 'class' => 'Tags_mix'),
+        "series" => array('title' => 'The series of books the book was published in (e.g. "The Hardy Boys" or "Lecture Notes in Computer Science")', 'class' => 'Tags_mix'),
+        "title" => array('title' => 'The title of the work', 'class' => 'Tags_mix'),
+        "type" => array('title' => 'The field overriding the default type of publication (e.g. "Research Note" for techreport, "{PhD} dissertation" for phdthesis, "Section" for inbook/incollection)', 'class' => 'Tags_mix'),
+        "url" => array('title' => 'The WWW address', 'class' => 'Tags_mix'),
+        "volume" => array('title' => 'The volume of a journal or multi-volume book', 'class' => 'Tags_mix'),
+        "year" => array('title' => 'The year of publication (or, if unpublished, the year of creation)', 'class' => 'Tags_mix'),
+
       )  ;
       return($ts[$key]) ;
   }

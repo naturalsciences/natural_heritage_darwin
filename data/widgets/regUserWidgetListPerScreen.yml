@@ -970,7 +970,18 @@ u1wmetto4:
    visible: true
    title_perso: Informative Workflow 
    all_public: true
-     
+
+bi2:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: keywords
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Keywords
+   all_public: true
+
 pe8:
    col_num: 1
    category: people_widget
@@ -1201,4 +1212,5 @@ m4:
    visible: false
    is_available: true
    title_perso: External Url
-   all_public: true     
+   all_public: true
+

@@ -1994,7 +1994,7 @@ CREATE TABLE bibliography (
   abstract varchar not null default '',
   year integer,
   constraint pk_bibliography primary key (id),
-  constraint unq_bibliography unique (title_indexed, type)
+  constraint unq_bibliography unique (title_ts, type)
 
 );
 comment on table bibliography is 'List of expeditions made to collect specimens';

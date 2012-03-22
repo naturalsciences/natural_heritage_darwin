@@ -641,3 +641,33 @@ u1wmetto3:
     opened: true
     visible: true
     title_perso: External Links
+
+bib6:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: comment
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Comments
+
+bib7:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: properties
+   order_by: 7
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: Properties
+
+bib8:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: extLinks
+   order_by: 8
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: External Links
