@@ -191,14 +191,20 @@ class specimenActions extends DarwinActions
         $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('specimens',$duplic) ;
         if(count($Catalogue))
         {
-          foreach ($Catalogue['collector'] as $key=>$val)
+          if(isset($Catalogue['collector']))
           {
-             $this->form->addCollectors($key, $val->getPeopleRef(),$val->getOrderBy());
+            foreach ($Catalogue['collector'] as $key=>$val)
+            {
+              $this->form->addCollectors($key, $val->getPeopleRef(),$val->getOrderBy());
+            }
           }
-          foreach ($Catalogue['donator'] as $key=>$val)
+          if(isset($Catalogue['donator']))
           {
-             $this->form->addDonators($key, $val->getPeopleRef(),$val->getOrderBy());
-          }          
+            foreach ($Catalogue['donator'] as $key=>$val)
+            {
+              $this->form->addDonators($key, $val->getPeopleRef(),$val->getOrderBy());
+            }
+          }
         }
         //reembed identification
          $Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$duplic) ;
