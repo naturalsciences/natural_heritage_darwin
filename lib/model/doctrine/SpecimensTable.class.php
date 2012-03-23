@@ -143,30 +143,35 @@ class SpecimensTable extends DarwinTable
 
     if($type == 'specimen')
     {
-      $q = Doctrine_Query::create()
+      /*$q = Doctrine_Query::create()
       ->select('s.id, s.taxon_name')
       ->from('Specimens s')
       ->wherein('s.id', $ids)
-      ->orderBy('id');
+      ->orderBy('id');*/
+
+      $q = DQ::create()
+        ->from('SpecimensFlat s')
+        ->wherein('s.specimen_ref', $ids)
+        ->orderBy('s.specimen_ref');
     }
     elseif($type == 'individual')
     {
-      $q = Doctrine_Query::create()
-      ->select('s.id, i.id, s.taxon_name')
-      ->from('Specimens s')
-      ->innerJoin('s.SpecimenIndividuals i ')
-      ->wherein('i.id', $ids)
-      ->orderBy('s.id, i.id');
+      $q = DQ::create()
+        ->select('s.*, i.*')
+        ->from('SpecimenIndividuals i')
+        ->innerJoin('i.SpecimensFlat s')
+        ->wherein('i.id', $ids)
+        ->orderBy('i.specimen_ref, i.id');
     }
     elseif($type == 'part')
     {
-      $q = Doctrine_Query::create()
-      ->select('s.id, i.id, s.taxon_name, p.id')
-      ->from('Specimens s')
-      ->innerJoin('s.SpecimenIndividuals i ')
-      ->innerJoin('i.SpecimenParts p')
-      ->wherein('p.id', $ids)
-      ->orderBy('s.id, i.id,p.id');
+      $q = DQ::create()
+        ->select('s.*, i.*, p.*')
+        ->from('SpecimenParts p')
+        ->innerJoin('p.Individual i')
+        ->innerJoin('i.SpecimensFlat s')
+        ->wherein('p.id', $ids)
+        ->orderBy('i.specimen_ref, i.id,p.id');
     }
     else return array(); //Error
     if(!$is_admin)

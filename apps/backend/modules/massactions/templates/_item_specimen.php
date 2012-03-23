@@ -24,7 +24,7 @@
     <?php echo truncate_text($item->getAggregatedName(),40);?>
   </td>
   <td>
-    <input name="mass_action[item_list][]" type="hidden" value="<?php echo $item->getId();?>" class="item_row">
+    <input name="mass_action[item_list][]" type="hidden" value="<?php echo $item->getSpecimenRef();?>" class="item_row">
     <a class="row_delete" href="#" title="<?php echo __('Are you sure ?') ?>"><?php echo image_tag('remove.png'); ?></a>
   </td>
 </tr>

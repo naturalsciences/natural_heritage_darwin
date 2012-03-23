@@ -5,16 +5,16 @@
   <table class="part_pinned_choose results">
   <?php use_helper('Text');?>
   <?php foreach($items as $i => $item):?>
-    <tr class="rid_<?php echo $item->getPartRef(); ?>">
+    <tr class="rid_<?php echo $item->SpecimenIndividuals[0]->SpecimenParts[0]->getId(); ?>">
       <td>
         <?php echo image_tag('info.png',"title=info class=extd_info");?>
         <div class="extended_info" style="display:none;">
-          <?php include_partial('extInfo', array('item'=> $item)); ?>
+          <?php //include_partial('extInfo', array('item'=> $item)); ?>
         </div>
       </td>
-      <td class="item_name hidden"><?php echo $item->getPartRef();?></td>
+      <td class="item_name hidden"><?php echo $item->SpecimenIndividuals[0]->SpecimenParts[0]->getId();?></td>
       <td>
-        <?php echo truncate_text($item->getAggregatedName(),40);?>
+        <?php //echo truncate_text($item->getAggregatedName(),40);?>
       </td>
       <td>
         <div class="result_choose"><?php echo __('Choose');?></div>
