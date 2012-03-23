@@ -22,7 +22,7 @@
      <tr>
        <td colspan="3">
          <div class="add_code">
-           <a href="<?php echo url_for('specimen/AddBiblio'.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" class="hidden"></a>
+           <a href="<?php echo url_for($module.'/AddBiblio'.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" class="hidden"></a>
            <a class='add_biblio' href="<?php echo url_for('bibliography/choose?with_js=1');?>"><?php echo __('Add bibliography');?></a>
          </div>
        </td>
