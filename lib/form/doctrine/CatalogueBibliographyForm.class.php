@@ -25,6 +25,7 @@ class CatalogueBibliographyForm extends BaseCatalogueBibliographyForm
       ),
       array('class' => 'hidden',)
     );
-
+    $this->widgetSchema['bibliography_ref']->setLabel('Bibliography');
+   
   }
 }

@@ -699,6 +699,66 @@
         <source>Last update date</source>
         <target></target>
       </trans-unit>
+          <trans-unit id="1670">
+        <source>Abstract</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1671">
+        <source>Authors</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1672">
+        <source>Add Author</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1673">
+        <source>Duplicate bibliography</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1675">
+        <source>Edit Bibliography</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1676">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; This unit might be used in items where you do no have encoding rights.&lt;br/&gt;Be sure of what you do!</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1677">
+        <source>Search Bibliography</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1678">
+        <source>Bibliography Search</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1681">
+        <source>No bibliography Matching</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1682">
+        <source>View Bibliography</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1683">
+        <source>Bibliography</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1684">
+        <source>Article</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1685">
+        <source>Book</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1686">
+        <source>Booklet</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1687">
+        <source>Conference</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1505">
         <source>Choose contact</source>
         <target>Kies contactpersoon</target>
@@ -710,6 +770,58 @@
           <trans-unit id="1536">
         <source>There is currently no items in your loan. Do not forget to add them.</source>
         <target>Uw ontlening bevat op dit moment geen items.  Vergeet deze niet toe te voegen.</target>
+      </trans-unit>
+          <trans-unit id="1688">
+        <source>InBook</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1689">
+        <source>InCollection</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1690">
+        <source>InProceedings</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1691">
+        <source>Manual</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1692">
+        <source>Masters Thesis</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1693">
+        <source>PHD thesis</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1694">
+        <source>Proceedings</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1695">
+        <source>Tech Report</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1696">
+        <source>Web published</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1697">
+        <source>Unpublished</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1698">
+        <source>Misc</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1699">
+        <source>(The year of publication (or, if unpublished, the year of creation) on 4 digits)</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1701">
+        <source>Choose a bibliography</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1358">
         <source>As a reminder, here is your username: %username%</source>

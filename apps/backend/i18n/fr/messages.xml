@@ -5092,14 +5092,6 @@
         <source>Add Author</source>
         <target>Ajouter Auteur</target>
       </trans-unit>
-          <trans-unit id="1679">
-        <source>Add Bibliography</source>
-        <target>Ajouter une bibliographie</target>
-      </trans-unit>
-          <trans-unit id="1680">
-        <source>New Bibliography</source>
-        <target>Nouvelle bibliographie</target>
-      </trans-unit>
           <trans-unit id="1681">
         <source>No bibliography Matching</source>
         <target>Aucune bibliographie correspondante</target>

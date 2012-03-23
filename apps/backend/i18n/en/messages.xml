@@ -5551,14 +5551,6 @@
         <source>Bibliography Search</source>
         <target>Bibliography Search</target>
       </trans-unit>
-          <trans-unit id="1679">
-        <source>Add Bibliography</source>
-        <target>Add Bibliography</target>
-      </trans-unit>
-          <trans-unit id="1680">
-        <source>New Bibliography</source>
-        <target>New Bibliography</target>
-      </trans-unit>
           <trans-unit id="1681">
         <source>No bibliography Matching</source>
         <target>No bibliography Matching</target>

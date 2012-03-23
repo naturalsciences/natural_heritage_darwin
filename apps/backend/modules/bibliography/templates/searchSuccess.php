@@ -44,8 +44,8 @@
               <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
                   <?php if(! $is_choose):?>
                     <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-                      <?php echo link_to(image_tag('edit.png',array('title'=>'Edit bibliography')),'bibliography/edit?id='.$bib->getId());?>
-                      <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate bibliography')),'bibliography/new?duplicate_id='.$bib->getId());?>
+                      <?php echo link_to(image_tag('edit.png',array('title'=>'Edit')),'bibliography/edit?id='.$bib->getId());?>
+                      <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate')),'bibliography/new?duplicate_id='.$bib->getId());?>
                     <?php endif ; ?>
                     <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'bibliography/view?id='.$bib->getId());?>               
                   <?php else:?>
