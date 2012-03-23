@@ -109,7 +109,7 @@ class individualsActions extends DarwinActions
         try
         {
           $this->individual->save();
-          $this->redirect('individuals/edit?id='.$this->individual->getObject()->getSpecimenRef());
+          $this->redirect('individuals/edit?id='.$this->individual->getObject()->getId());
         }
         catch(Doctrine_Exception $ne)
         {
