@@ -75,5 +75,9 @@ class cataloguewidgetComponents extends sfComponents
     $this->informativeWorkflow = Doctrine::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
     if(!isset($this->view)) $this->view = false ;
   }
-  
+
+  public function executeBiblio()
+  {
+    $this->Biblios = Doctrine::getTable('CatalogueBibliography')->findForTable($this->table, $this->eid);
+  }
 }
