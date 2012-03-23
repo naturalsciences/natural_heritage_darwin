@@ -1125,7 +1125,19 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true
-        title_perso: External Url        
+        title_perso: External Url  
+    u1sp1:
+        User: u1
+        col_num: 2
+        category: part_widget
+        group_name: biblio
+        mandatory: false
+        order_by: 7
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Bibliography
+      
     u1spi1:
         User: u1
         col_num: 1
@@ -1256,6 +1268,17 @@ MyWidgets:
         visible: true
         is_available: true
         title_perso: Informative Workflow
+
+    u1spi11:
+        User: u1
+        col_num: 2
+        category: individuals_widget
+        group_name: biblio
+        order_by: 7
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Bibliography
                    
     u1sps0:
         User: u1

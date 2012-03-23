@@ -185,12 +185,47 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       'validated_file_class' => 'myValidatedFile'
   ));  */
 
+   $this->widgetSchema['bibliography'] = new sfWidgetFormInputHidden(array('default'=>1));
+   $this->validatorSchema['bibliography'] = new sfValidatorPass();
+
     $this->validatorSchema->setPostValidator(new sfValidatorCallback(array('callback' => array($this, 'checkSelfAttached'))));
     $this->mergePostValidator(new sfValidatorSchemaCompare('specimen_part_count_min', '<=', 'specimen_part_count_max',
       array(),
       array('invalid' => 'The min number ("%left_field%") must be lower or equal the max number ("%right_field%")' )
     ));
 
+  }
+
+  public function addBiblio($num, $bib_ref, $order_by=0)
+  {
+      if(! isset($this['newBiblio']))  $this->loadEmbedBiblio();
+      $options = array('referenced_relation' => 'specimen_parts', 'bibliography_ref' => $bib_ref);
+      $val = new CatalogueBibliography();
+      $val->fromArray($options);
+      $val->setRecordId($this->getObject()->getId());
+      $form = new BiblioAssociationsForm($val);
+      $this->embeddedForms['newBiblio']->embedForm($num, $form);
+      //Re-embedding the container
+      $this->embedForm('newBiblio', $this->embeddedForms['newBiblio']);
+  }
+
+  public function loadEmbedBiblio()
+  {
+    if($this->isBound()) return;
+    $subForm = new sfForm();
+    $this->embedForm('Biblio',$subForm);
+    if($this->getObject()->getId() !='')
+    {
+      foreach(Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_parts', $this->getObject()->getId()) as $key=>$vals)
+      {
+        $form = new BiblioAssociationsForm($vals);
+        $this->embeddedForms['Biblio']->embedForm($key, $form);
+      }
+      //Re-embedding the container
+      $this->embedForm('Biblio', $this->embeddedForms['Biblio']);
+    }
+    $subForm = new sfForm();
+    $this->embedForm('newBiblio',$subForm);
   }
 
   public function forceContainerChoices()
@@ -588,6 +623,29 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       }
     }
 
+
+    if(!isset($taintedValues['bibliography']))
+    {
+      $this->offsetUnset('Biblio');
+      unset($taintedValues['Biblio']);
+      $this->offsetUnset('newBiblio');
+      unset($taintedValues['newBiblio']);
+    }
+    else
+    {
+      $this->loadEmbedBiblio();
+      if(isset($taintedValues['newBiblio']))
+      {
+        foreach($taintedValues['newBiblio'] as $key=>$newVal)
+        {
+          if (!isset($this['newBiblio'][$key]))
+          {
+            $this->addBiblio($key,$newVal['bibliography_ref']);
+          }
+          $taintedValues['newBiblio'][$key]['record_id'] = 0;
+        }
+      }
+    }
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -736,6 +794,29 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
         }
       }
     }
+
+
+    if (null === $forms && $this->getValue('bibliography'))
+    {
+      $value = $this->getValue('newBiblio');
+      foreach($this->embeddedForms['newBiblio']->getEmbeddedForms() as $name => $form)
+      {
+        if(!isset($value[$name]['bibliography_ref']))
+          unset($this->embeddedForms['newBiblio'][$name]);
+        else
+          $form->getObject()->setRecordId($this->getObject()->getId());
+      }
+      $value = $this->getValue('Biblio');
+      foreach($this->embeddedForms['Biblio']->getEmbeddedForms() as $name => $form)
+      {
+        if (!isset($value[$name]['bibliography_ref']))
+        {
+          $form->getObject()->delete();
+          unset($this->embeddedForms['Biblio'][$name]);
+        }
+      }
+    }
+
     return parent::saveEmbeddedForms($con, $forms);
   }
 

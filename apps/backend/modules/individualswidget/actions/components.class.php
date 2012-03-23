@@ -44,7 +44,7 @@ class individualswidgetComponents extends sfComponents
     if(! isset($this->module) )
     {
       $this->module = 'individuals';
-    }  
+    }
   }
 
   public function executeType()

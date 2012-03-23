@@ -607,6 +607,18 @@ spi12:
    title_perso: Related Files
    all_public: true
 
+spi13:
+   col_num: 2
+   category: individuals_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 4
+   opened: false
+   visible: false
+   is_available: true
+   title_perso: Bibliography
+   all_public: true
+
 sp1:
    col_num: 1
    category: part_widget
@@ -661,6 +673,18 @@ sp13:
    visible: true
    is_available: true
    title_perso: Related Files
+   all_public: true
+
+spp14:
+   col_num: 2
+   category: part_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 8
+   opened: false
+   visible: false
+   is_available: true
+   title_perso: Bibliography
    all_public: true
 
 tw1:
