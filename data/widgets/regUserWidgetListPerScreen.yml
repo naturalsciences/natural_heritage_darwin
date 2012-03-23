@@ -742,6 +742,17 @@ tw6:
    title_perso: Keywords
    all_public: true
 
+tw8:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Bibliography
+   all_public: true
+
 chw1:
    col_num: 1
    category: catalogue_chronostratigraphy_widget
@@ -774,6 +785,17 @@ chw4:
    opened: true
    visible: true
    title_perso: Vernacular names
+   all_public: true
+
+chw5:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: biblo
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Bibliography
    all_public: true
 
 lhw1:
@@ -809,6 +831,17 @@ lhw4:
    title_perso: Vernacular names
    all_public: true
 
+lhw5:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Bibliography
+   all_public: true
+
 liw1:
    col_num: 1
    category: catalogue_lithology_widget
@@ -840,6 +873,17 @@ liw4:
    opened: true
    visible: true
    title_perso: Vernacular names
+   all_public: true
+
+liw5:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Bibliography
    all_public: true
 
 miw1:
@@ -884,6 +928,17 @@ miw5:
    opened: true
    visible: true
    title_perso: Keywords
+   all_public: true
+
+miw6:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Bibliography
    all_public: true
 
 pe1:
