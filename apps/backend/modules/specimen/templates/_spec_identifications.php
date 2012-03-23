@@ -73,7 +73,7 @@
 
       $(parent_el).find('select').append("<option value=''></option>").val('');
 
-      $(parent).hide();
+      $(parent_el).hide();
       reOrderIdent();
       visibles = $('table#identifications tbody.spec_ident_data:visible').size();
       if(!visibles)
