@@ -506,6 +506,18 @@ sw23:
    title_perso: Related Files
    all_public: true
 
+sw24:
+   col_num: 2
+   category: specimen_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 12
+   opened: false
+   visible: false
+   is_available: true
+   title_perso: Bibliography
+   all_public: true
+
 spi1:
    col_num: 1
    category: individuals_widget

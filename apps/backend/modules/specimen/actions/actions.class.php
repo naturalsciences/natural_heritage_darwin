@@ -206,6 +206,14 @@ class specimenActions extends DarwinActions
             }
           }
         }
+
+        //reembed biblio
+        $bib =  Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $duplic);
+        foreach($bib as $key=>$vals)
+        {
+          $this->form->addBiblio($key, $vals->getBibliographyRef());
+        }
+
         //reembed identification
          $Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$duplic) ;
         foreach ($Identifications as $key=>$val)

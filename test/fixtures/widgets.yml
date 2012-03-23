@@ -293,7 +293,18 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true
-        title_perso: Informative Workflow             
+        title_perso: Informative Workflow
+    u1ws23:
+        User: u1
+        col_num: 2
+        category: specimen_widget
+        group_name: biblio
+        order_by: 13
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Bibliography   
+
     u1wtax0:
         User: u1
         col_num: 1
