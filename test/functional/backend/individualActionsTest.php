@@ -9,7 +9,8 @@ $browser->addCustomSpecimen('777','Collection test for individual','Taxon test f
     isRedirected()->
     followRedirect()->
   
-  with('request')->begin()->
+  with('response')->begin()->
+     isStatusCode(200)->
     click('#tab_2')->
   end()->
   with('response')->begin()->
