@@ -1,5 +1,5 @@
 <div class="page">
-  <h1><?php echo __('Choose an bibliography');?></h1>
+  <h1><?php echo __('Choose a bibliography');?></h1>
   <?php if($sf_params->get('with_js') == true):?>
 
 <script  type="text/javascript">

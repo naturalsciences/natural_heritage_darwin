@@ -851,10 +851,6 @@
         <source>Contact :</source>
         <target>Contact :</target>
       </trans-unit>
-          <trans-unit id="222">
-        <source>You can reach us at &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;darwin-ict@naturalsciences.be&lt;/a&gt;</source>
-        <target>You can reach us at &lt;a href=&quot;mailto:collections+git@naturalsciences.be&quot;&gt;darwin-ict@naturalsciences.be&lt;/a&gt;</target>
-      </trans-unit>
           <trans-unit id="223">
         <source>Dawin Help</source>
         <target>Dawin Help</target>
@@ -4195,14 +4191,6 @@
         <source>This taxonomy already exists</source>
         <target>This taxonomy already exists</target>
       </trans-unit>
-          <trans-unit id="1101">
-        <source>This habitat already exists</source>
-        <target>This habitat already exists</target>
-      </trans-unit>
-          <trans-unit id="1103">
-        <source>This associated multimedia already exists</source>
-        <target>This associated multimedia already exists</target>
-      </trans-unit>
           <trans-unit id="1104">
         <source>This word already exists</source>
         <target>This word already exists</target>
@@ -4955,6 +4943,14 @@
         <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
         <target>The taxon you chose, was marked as &quot;renamed&quot;.</target>
       </trans-unit>
+          <trans-unit id="1571">
+        <source>Format</source>
+        <target>Format</target>
+      </trans-unit>
+          <trans-unit id="1572">
+        <source>Edition right</source>
+        <target>Edition right</target>
+      </trans-unit>
           <trans-unit id="1460">
         <source>Click on the name below to replace the unit by its current name.</source>
         <target>Click on the name below to replace the unit by its current name.</target>
@@ -5026,6 +5022,622 @@
           <trans-unit id="1506">
         <source>Person of contact</source>
         <target>Person of contact</target>
+      </trans-unit>
+          <trans-unit id="1507">
+        <source>Search Loans</source>
+        <target>Search Loans</target>
+      </trans-unit>
+          <trans-unit id="1508">
+        <source>Loans Search</source>
+        <target>Loans Search</target>
+      </trans-unit>
+          <trans-unit id="1509">
+        <source>Contains Darwin items</source>
+        <target>Contains Darwin items</target>
+      </trans-unit>
+          <trans-unit id="1510">
+        <source>Person</source>
+        <target>Person</target>
+      </trans-unit>
+          <trans-unit id="1511">
+        <source>Edit loan</source>
+        <target>Edit loan</target>
+      </trans-unit>
+          <trans-unit id="1513">
+        <source>New loan</source>
+        <target>New loan</target>
+      </trans-unit>
+          <trans-unit id="1514">
+        <source>Duplicate loan</source>
+        <target>Duplicate loan</target>
+      </trans-unit>
+          <trans-unit id="1515">
+        <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
+        <target>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</target>
+      </trans-unit>
+          <trans-unit id="1516">
+        <source>Add loan</source>
+        <target>Add loan</target>
+      </trans-unit>
+          <trans-unit id="1517">
+        <source>The return date must be after the expedition date.</source>
+        <target>The return date must be after the expedition date.</target>
+      </trans-unit>
+          <trans-unit id="1519">
+        <source>The end date must be before the extended to date</source>
+        <target>The end date must be before the extended to date</target>
+      </trans-unit>
+          <trans-unit id="1520">
+        <source>You have 2 similar loan items</source>
+        <target>You have 2 similar loan items</target>
+      </trans-unit>
+          <trans-unit id="1521">
+        <source>this type of extention is not allowed here</source>
+        <target>this type of extention is not allowed here</target>
+      </trans-unit>
+          <trans-unit id="1522">
+        <source>Please don&#039;t try stupid things, don&#039;t touch the uri</source>
+        <target>Please don&#039;t try stupid things, don&#039;t touch the uri</target>
+      </trans-unit>
+          <trans-unit id="1524">
+        <source>Ends on</source>
+        <target>Ends on</target>
+      </trans-unit>
+          <trans-unit id="1525">
+        <source>Invalid date &quot;Extended&quot;</source>
+        <target>Invalid date &quot;Extended&quot;</target>
+      </trans-unit>
+          <trans-unit id="1526">
+        <source>Add File</source>
+        <target>Add File</target>
+      </trans-unit>
+          <trans-unit id="1529">
+        <source>Specific person</source>
+        <target>Specific person</target>
+      </trans-unit>
+          <trans-unit id="1531">
+        <source>Maintenances</source>
+        <target>Maintenances</target>
+      </trans-unit>
+          <trans-unit id="1532">
+        <source>Darwin Part</source>
+        <target>Darwin Part</target>
+      </trans-unit>
+          <trans-unit id="1533">
+        <source>I.g. Num</source>
+        <target>I.g. Num</target>
+      </trans-unit>
+          <trans-unit id="1534">
+        <source>Details</source>
+        <target>Details</target>
+      </trans-unit>
+          <trans-unit id="1535">
+        <source>Return</source>
+        <target>Return</target>
+      </trans-unit>
+          <trans-unit id="1536">
+        <source>There is currently no items in your loan. Do not forget to add them.</source>
+        <target>There is currently no items in your loan. Do not forget to add them.</target>
+      </trans-unit>
+          <trans-unit id="1537">
+        <source>There is currently no items in the loan.</source>
+        <target>There is currently no items in the loan.</target>
+      </trans-unit>
+          <trans-unit id="1538">
+        <source>Items overview</source>
+        <target>Items overview</target>
+      </trans-unit>
+          <trans-unit id="1539">
+        <source>Edit item</source>
+        <target>Edit item</target>
+      </trans-unit>
+          <trans-unit id="1540">
+        <source>View loan</source>
+        <target>View loan</target>
+      </trans-unit>
+          <trans-unit id="1541">
+        <source>View item</source>
+        <target>View item</target>
+      </trans-unit>
+          <trans-unit id="1543">
+        <source>Back to board</source>
+        <target>Back to board</target>
+      </trans-unit>
+          <trans-unit id="1544">
+        <source>Responsible</source>
+        <target>Responsible</target>
+      </trans-unit>
+          <trans-unit id="1546">
+        <source>Checker</source>
+        <target>Checker</target>
+      </trans-unit>
+          <trans-unit id="1548">
+        <source>Accompanist</source>
+        <target>Accompanist</target>
+      </trans-unit>
+          <trans-unit id="1549">
+        <source>Transporter</source>
+        <target>Transporter</target>
+      </trans-unit>
+          <trans-unit id="1551">
+        <source>Usage</source>
+        <target>Usage</target>
+      </trans-unit>
+          <trans-unit id="1552">
+        <source>State observation</source>
+        <target>State observation</target>
+      </trans-unit>
+          <trans-unit id="1553">
+        <source>Edit loan item</source>
+        <target>Edit loan item</target>
+      </trans-unit>
+          <trans-unit id="1554">
+        <source>Add Maintenance :</source>
+        <target>Add Maintenance :</target>
+      </trans-unit>
+          <trans-unit id="1556">
+        <source>Part Id</source>
+        <target>Part Id</target>
+      </trans-unit>
+          <trans-unit id="1557">
+        <source>Return date</source>
+        <target>Return date</target>
+      </trans-unit>
+          <trans-unit id="1558">
+        <source>Please save your loan item in order to add properties</source>
+        <target>Please save your loan item in order to add properties</target>
+      </trans-unit>
+          <trans-unit id="1559">
+        <source>Please save your loan in order to add properties</source>
+        <target>Please save your loan in order to add properties</target>
+      </trans-unit>
+          <trans-unit id="1560">
+        <source>Sender side</source>
+        <target>Sender side</target>
+      </trans-unit>
+          <trans-unit id="1561">
+        <source>Roles</source>
+        <target>Roles</target>
+      </trans-unit>
+          <trans-unit id="1562">
+        <source>Receiver side</source>
+        <target>Receiver side</target>
+      </trans-unit>
+          <trans-unit id="1563">
+        <source>Add Sender</source>
+        <target>Add Sender</target>
+      </trans-unit>
+          <trans-unit id="1564">
+        <source>Add Receiver</source>
+        <target>Add Receiver</target>
+      </trans-unit>
+          <trans-unit id="1565">
+        <source>New Status</source>
+        <target>New Status</target>
+      </trans-unit>
+          <trans-unit id="1567">
+        <source>View all status</source>
+        <target>View all status</target>
+      </trans-unit>
+          <trans-unit id="1568">
+        <source>History</source>
+        <target>History</target>
+      </trans-unit>
+          <trans-unit id="1569">
+        <source>Please save your loan in order to add status</source>
+        <target>Please save your loan in order to add status</target>
+      </trans-unit>
+          <trans-unit id="1570">
+        <source>Created At</source>
+        <target>Created At</target>
+      </trans-unit>
+          <trans-unit id="1573">
+        <source>Related Files</source>
+        <target>Related Files</target>
+      </trans-unit>
+          <trans-unit id="1575">
+        <source>Loan Item</source>
+        <target>Loan Item</target>
+      </trans-unit>
+          <trans-unit id="1576">
+        <source>Darwin Users</source>
+        <target>Darwin Users</target>
+      </trans-unit>
+          <trans-unit id="1577">
+        <source>Loan status</source>
+        <target>Loan status</target>
+      </trans-unit>
+          <trans-unit id="1578">
+        <source>Informative Workflow</source>
+        <target>Informative Workflow</target>
+      </trans-unit>
+          <trans-unit id="1580">
+        <source>People involved</source>
+        <target>People involved</target>
+      </trans-unit>
+          <trans-unit id="1581">
+        <source>All the loans you\&#039;re involved in.</source>
+        <target>All the loans you\&#039;re involved in.</target>
+      </trans-unit>
+          <trans-unit id="1582">
+        <source>Loans</source>
+        <target>Loans</target>
+      </trans-unit>
+          <trans-unit id="1583">
+        <source>Extended to date</source>
+        <target>Extended to date</target>
+      </trans-unit>
+          <trans-unit id="1585">
+        <source>People Info</source>
+        <target>People Info</target>
+      </trans-unit>
+          <trans-unit id="1586">
+        <source>Add Maintenance for checked</source>
+        <target>Add Maintenance for checked</target>
+      </trans-unit>
+          <trans-unit id="1587">
+        <source>Back to Loan</source>
+        <target>Back to Loan</target>
+      </trans-unit>
+          <trans-unit id="1588">
+        <source>Add item</source>
+        <target>Add item</target>
+      </trans-unit>
+          <trans-unit id="1589">
+        <source>Choose Darwin Part</source>
+        <target>Choose Darwin Part</target>
+      </trans-unit>
+          <trans-unit id="1590">
+        <source>No Items here.</source>
+        <target>No Items here.</target>
+      </trans-unit>
+          <trans-unit id="1591">
+        <source>Please pin some parts.</source>
+        <target>Please pin some parts.</target>
+      </trans-unit>
+          <trans-unit id="1593">
+        <source>Choose Insurer</source>
+        <target>Choose Insurer</target>
+      </trans-unit>
+          <trans-unit id="1594">
+        <source>Latest Statuses</source>
+        <target>Latest Statuses</target>
+      </trans-unit>
+          <trans-unit id="1595">
+        <source>The end and extended date must be after the start date.</source>
+        <target>The end and extended date must be after the start date.</target>
+      </trans-unit>
+          <trans-unit id="1596">
+        <source>on %date%</source>
+        <target>on %date%</target>
+      </trans-unit>
+          <trans-unit id="1597">
+        <source>Starts on</source>
+        <target>Starts on</target>
+      </trans-unit>
+          <trans-unit id="1598">
+        <source>Loan closed on %date%.</source>
+        <target>Loan closed on %date%.</target>
+      </trans-unit>
+          <trans-unit id="1599">
+        <source>Accepted</source>
+        <target>Accepted</target>
+      </trans-unit>
+          <trans-unit id="1600">
+        <source>Closed</source>
+        <target>Closed</target>
+      </trans-unit>
+          <trans-unit id="1601">
+        <source>Returned</source>
+        <target>Returned</target>
+      </trans-unit>
+          <trans-unit id="1602">
+        <source>Extended</source>
+        <target>Extended</target>
+      </trans-unit>
+          <trans-unit id="1603">
+        <source>Running</source>
+        <target>Running</target>
+      </trans-unit>
+          <trans-unit id="1604">
+        <source>Under evaluation</source>
+        <target>Under evaluation</target>
+      </trans-unit>
+          <trans-unit id="1605">
+        <source>Person involved</source>
+        <target>Person involved</target>
+      </trans-unit>
+          <trans-unit id="1618">
+        <source>Oops! Page Not Found</source>
+        <target>Oops! Page Not Found</target>
+      </trans-unit>
+          <trans-unit id="1619">
+        <source>The server returned a 404 response.</source>
+        <target>The server returned a 404 response.</target>
+      </trans-unit>
+          <trans-unit id="1620">
+        <source>Did you type the URL?</source>
+        <target>Did you type the URL?</target>
+      </trans-unit>
+          <trans-unit id="1621">
+        <source>You can reach us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
+        <target>You can reach us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</target>
+      </trans-unit>
+          <trans-unit id="1622">
+        <source>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</source>
+        <target>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</target>
+      </trans-unit>
+          <trans-unit id="1623">
+        <source>Did you follow a link from somewhere else at this site?</source>
+        <target>Did you follow a link from somewhere else at this site?</target>
+      </trans-unit>
+          <trans-unit id="1624">
+        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
+        <target>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</target>
+      </trans-unit>
+          <trans-unit id="1625">
+        <source>Did you follow a link from another site?</source>
+        <target>Did you follow a link from another site?</target>
+      </trans-unit>
+          <trans-unit id="1626">
+        <source>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</source>
+        <target>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</target>
+      </trans-unit>
+          <trans-unit id="1627">
+        <source>Back to previous page</source>
+        <target>Back to previous page</target>
+      </trans-unit>
+          <trans-unit id="1628">
+        <source>What&#039;s next</source>
+        <target>What&#039;s next</target>
+      </trans-unit>
+          <trans-unit id="1629">
+        <source>Suggestion send by</source>
+        <target>Suggestion send by</target>
+      </trans-unit>
+          <trans-unit id="1630">
+        <source>Add Status</source>
+        <target>Add Status</target>
+      </trans-unit>
+          <trans-unit id="1631">
+        <source>Use Loan dates</source>
+        <target>Use Loan dates</target>
+      </trans-unit>
+          <trans-unit id="1632">
+        <source>Expedition / Return</source>
+        <target>Expedition / Return</target>
+      </trans-unit>
+          <trans-unit id="1633">
+        <source>Please save your item in order to view related maintenances</source>
+        <target>Please save your item in order to view related maintenances</target>
+      </trans-unit>
+          <trans-unit id="1634">
+        <source>Rejected</source>
+        <target>Rejected</target>
+      </trans-unit>
+          <trans-unit id="1635">
+        <source>Target</source>
+        <target>Target</target>
+      </trans-unit>
+          <trans-unit id="1637">
+        <source>Has files</source>
+        <target>Has files</target>
+      </trans-unit>
+          <trans-unit id="1638">
+        <source>New Maintenance</source>
+        <target>New Maintenance</target>
+      </trans-unit>
+          <trans-unit id="1639">
+        <source>Pick an action in the list</source>
+        <target>Pick an action in the list</target>
+      </trans-unit>
+          <trans-unit id="1640">
+        <source>People ref</source>
+        <target>People ref</target>
+      </trans-unit>
+          <trans-unit id="1641">
+        <source>Last update date</source>
+        <target>Last update date</target>
+      </trans-unit>
+          <trans-unit id="1642">
+        <source>Donator</source>
+        <target>Donator</target>
+      </trans-unit>
+          <trans-unit id="1643">
+        <source>Expedition member</source>
+        <target>Expedition member</target>
+      </trans-unit>
+          <trans-unit id="1644">
+        <source>View Maintenance</source>
+        <target>View Maintenance</target>
+      </trans-unit>
+          <trans-unit id="1645">
+        <source>Overview</source>
+        <target>Overview</target>
+      </trans-unit>
+          <trans-unit id="1646">
+        <source>Add maintenance for this item</source>
+        <target>Add maintenance for this item</target>
+      </trans-unit>
+          <trans-unit id="1647">
+        <source>Add multiple items</source>
+        <target>Add multiple items</target>
+      </trans-unit>
+          <trans-unit id="1648">
+        <source>Are you sure you want to do an archive of your loan ?</source>
+        <target>Are you sure you want to do an archive of your loan ?</target>
+      </trans-unit>
+          <trans-unit id="1650">
+        <source>Never synchronized</source>
+        <target>Never synchronized</target>
+      </trans-unit>
+          <trans-unit id="1651">
+        <source>This will take a snapshot of the loan for archiving purposes.</source>
+        <target>This will take a snapshot of the loan for archiving purposes.</target>
+      </trans-unit>
+          <trans-unit id="1652">
+        <source>Take a snapshot of the loan.</source>
+        <target>Take a snapshot of the loan.</target>
+      </trans-unit>
+          <trans-unit id="1653">
+        <source>Last synchronization on %date%</source>
+        <target>Last synchronization on %date%</target>
+      </trans-unit>
+          <trans-unit id="1655">
+        <source>In this widget you can preview all maintenances done on this loan or the related items</source>
+        <target>In this widget you can preview all maintenances done on this loan or the related items</target>
+      </trans-unit>
+          <trans-unit id="1662">
+        <source>You can associate files to this loan or to the related items. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</source>
+        <target>You can associate files to this loan or to the related items. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</target>
+      </trans-unit>
+          <trans-unit id="1663">
+        <source>You can associate files to this maintenance. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</source>
+        <target>You can associate files to this maintenance. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</target>
+      </trans-unit>
+          <trans-unit id="1664">
+        <source>This widget describes all steps of your loan since its creation. The available statuses are displayed in the combo box and you can also add an comment for each selected status but it&#039;s not mandatory</source>
+        <target>This widget describes all steps of your loan since its creation. The available statuses are displayed in the combo box and you can also add an comment for each selected status but it&#039;s not mandatory</target>
+      </trans-unit>
+          <trans-unit id="1665">
+        <source>Darwin users added here will have either read or write rights on this loan and its related items. Needless to add yourself when you are the one creating the loan</source>
+        <target>Darwin users added here will have either read or write rights on this loan and its related items. Needless to add yourself when you are the one creating the loan</target>
+      </trans-unit>
+          <trans-unit id="1666">
+        <source>Insert the name of the loan here, You can also set a description, the begining and the end date of the loan</source>
+        <target>Insert the name of the loan here, You can also set a description, the begining and the end date of the loan</target>
+      </trans-unit>
+          <trans-unit id="1667">
+        <source>Here you can define all people involved during the loan process. The sender side being the lenders and the receiver side being the borrowers</source>
+        <target>Here you can define all people involved during the loan process. The sender side being the lenders and the receiver side being the borrowers</target>
+      </trans-unit>
+          <trans-unit id="1668">
+        <source>Close this tab</source>
+        <target>Close this tab</target>
+      </trans-unit>
+          <trans-unit id="1669">
+        <source>Main informations about the loan item</source>
+        <target>Main informations about the loan item</target>
+      </trans-unit>
+          <trans-unit id="1670">
+        <source>Abstract</source>
+        <target>Abstract</target>
+      </trans-unit>
+          <trans-unit id="1671">
+        <source>Authors</source>
+        <target>Authors</target>
+      </trans-unit>
+          <trans-unit id="1672">
+        <source>Add Author</source>
+        <target>Add Author</target>
+      </trans-unit>
+          <trans-unit id="1673">
+        <source>Duplicate bibliography</source>
+        <target>Duplicate bibliography</target>
+      </trans-unit>
+          <trans-unit id="1675">
+        <source>Edit Bibliography</source>
+        <target>Edit Bibliography</target>
+      </trans-unit>
+          <trans-unit id="1676">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; This unit might be used in items where you do no have encoding rights.&lt;br/&gt;Be sure of what you do!</source>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; This unit might be used in items where you do no have encoding rights.&lt;br/&gt;Be sure of what you do!</target>
+      </trans-unit>
+          <trans-unit id="1677">
+        <source>Search Bibliography</source>
+        <target>Search Bibliography</target>
+      </trans-unit>
+          <trans-unit id="1678">
+        <source>Bibliography Search</source>
+        <target>Bibliography Search</target>
+      </trans-unit>
+          <trans-unit id="1679">
+        <source>Add Bibliography</source>
+        <target>Add Bibliography</target>
+      </trans-unit>
+          <trans-unit id="1680">
+        <source>New Bibliography</source>
+        <target>New Bibliography</target>
+      </trans-unit>
+          <trans-unit id="1681">
+        <source>No bibliography Matching</source>
+        <target>No bibliography Matching</target>
+      </trans-unit>
+          <trans-unit id="1682">
+        <source>View Bibliography</source>
+        <target>View Bibliography</target>
+      </trans-unit>
+          <trans-unit id="1683">
+        <source>Bibliography</source>
+        <target>Bibliography</target>
+      </trans-unit>
+          <trans-unit id="1684">
+        <source>Article</source>
+        <target>Article</target>
+      </trans-unit>
+          <trans-unit id="1685">
+        <source>Book</source>
+        <target>Book</target>
+      </trans-unit>
+          <trans-unit id="1686">
+        <source>Booklet</source>
+        <target>Booklet</target>
+      </trans-unit>
+          <trans-unit id="1687">
+        <source>Conference</source>
+        <target>Conference</target>
+      </trans-unit>
+          <trans-unit id="1688">
+        <source>InBook</source>
+        <target>InBook</target>
+      </trans-unit>
+          <trans-unit id="1689">
+        <source>InCollection</source>
+        <target>InCollection</target>
+      </trans-unit>
+          <trans-unit id="1690">
+        <source>InProceedings</source>
+        <target>InProceedings</target>
+      </trans-unit>
+          <trans-unit id="1691">
+        <source>Manual</source>
+        <target>Manual</target>
+      </trans-unit>
+          <trans-unit id="1692">
+        <source>Masters Thesis</source>
+        <target>Masters Thesis</target>
+      </trans-unit>
+          <trans-unit id="1693">
+        <source>PHD thesis</source>
+        <target>PHD thesis</target>
+      </trans-unit>
+          <trans-unit id="1694">
+        <source>Proceedings</source>
+        <target>Proceedings</target>
+      </trans-unit>
+          <trans-unit id="1695">
+        <source>Tech Report</source>
+        <target>Tech Report</target>
+      </trans-unit>
+          <trans-unit id="1696">
+        <source>Web published</source>
+        <target>Web published</target>
+      </trans-unit>
+          <trans-unit id="1697">
+        <source>Unpublished</source>
+        <target>Unpublished</target>
+      </trans-unit>
+          <trans-unit id="1698">
+        <source>Misc</source>
+        <target>Misc</target>
+      </trans-unit>
+          <trans-unit id="1699">
+        <source>(The year of publication (or, if unpublished, the year of creation) on 4 digits)</source>
+        <target>(The year of publication (or, if unpublished, the year of creation) on 4 digits)</target>
+      </trans-unit>
+          <trans-unit id="1701">
+        <source>Choose a bibliography</source>
+        <target>Choose a bibliography</target>
       </trans-unit>
         </body>
   </file>

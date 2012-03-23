@@ -3,7 +3,7 @@
 <div class="page">
     <h1 class="edit_mode"><?php echo __('Edit Bibliography');?></h1>
     <div class="warn_message">
-      <?php echo __('<strong>Warning!</strong><br /> This unit might be used in items where you do no have encoding rights.<br/>Be sure of what you do!');?>
+      <?php echo __('<strong>Warning!</strong><br /> This unit might be used in items for which you do no have encoding rights.<br/>Be sure of what you do!');?>
     </div>
 
     <?php include_partial('form', array('form' => $form)) ?>

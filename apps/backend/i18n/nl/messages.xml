@@ -555,6 +555,14 @@
         <source>Please save your loan item in order to add properties</source>
         <target>Gelieve uw te ontlenen item te bewaren alvorens er eigenschappen aan toe te voegen.</target>
       </trans-unit>
+          <trans-unit id="1668">
+        <source>Close this tab</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1669">
+        <source>Main informations about the loan item</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1604">
         <source>Under evaluation</source>
         <target></target>
