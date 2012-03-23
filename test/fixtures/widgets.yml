@@ -303,7 +303,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true
-        title_perso: Bibliography   
+        title_perso: Bibliography
 
     u1wtax0:
         User: u1

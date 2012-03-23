@@ -22,7 +22,7 @@ $t->is(count(Doctrine::getTable('MyWidgets')
         ->getWidgets('board_widget')),6,'Get all board widget');
 $t->is(count(Doctrine::getTable('MyWidgets')
         ->setUserRef($userEvil)
-        ->getWidgets('specimen_widget')),22,'Get all specimen widget');
+        ->getWidgets('specimen_widget')),23,'Get all specimen widget');
 
 $t->comment('->changeWidgetStatus()');
 
@@ -128,7 +128,7 @@ $t->is(count(Doctrine::getTable('MyWidgets')
         ->setUserRef($userEvil)
         ->getWidgets('board_widget')),0,'All widget would have been deleted');
 
-$t->comment('->addWidgets()');        
+$t->comment('->addWidgets()');
 
 $brol_user = new Users();
 $brol_user->setFamilyName('Brolus');
