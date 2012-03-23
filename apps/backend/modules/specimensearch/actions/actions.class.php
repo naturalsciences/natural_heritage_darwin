@@ -14,7 +14,7 @@ class specimensearchActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new SpecimenSearchFormFilter($request->getParameter('specimen_search_filters'),array('user' => $this->getUser()));
+    $this->form = new SpecimensFlatFormFilter($request->getParameter('specimen_search_filters'),array('user' => $this->getUser()));
 
     $this->form->setDefault('rec_per_page',$this->getUser()->fetchRecPerPage());
 
@@ -129,19 +129,7 @@ class specimensearchActions extends DarwinActions
           $this->spec_lists = Doctrine::getTable('MySavedSearches')
             ->getListFor($this->getUser()->getId(), $this->form->getValue('what_searched'));
 
-
-          // Define all properties that will be either used by the data query or by the pager
-          // They take their values from the request. If not present, a default value is defined
-          $ordered_searched = ' spec_ref ';
-          if($this->source == 'individual')
-            $ordered_searched = ' individual_ref ';
-
           $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir);
-          if($this->source != 'part')
-          {
-            $query->orderby($this->orderBy . ' ' . $this->orderDir . ', ' . $ordered_searched );
-            $query->groupBy($ordered_searched . ', ' . $this->orderBy);
-          }
           //If export is defined export it!
           
           if($request->getParameter('export','') != '')
@@ -204,10 +192,15 @@ class specimensearchActions extends DarwinActions
     $spec_list = array();
     $part_list = array() ;
     foreach($this->specimensearch as $key=>$specimen)
-    {
-      $spec_list[] = $specimen->getSpecRef() ;
-        if( $this->source == 'part')
-          $part_list[] = $specimen->getPartRef();
+    {      
+      if( $this->source == 'part') {
+        $part_list[] = $specimen->getId();
+        $spec_list[] = $specimen->Individual->getSpecimenRef() ;
+      }
+      else {
+        $spec_list[] = $specimen->getSpecimenRef() ;
+      }
+
     }
     $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
     $this->codes = array();
