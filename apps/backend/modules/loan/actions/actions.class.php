@@ -265,8 +265,9 @@ class loanActions extends DarwinActions
 
   public function executeGetPartInfo(sfWebRequest $request)
   {
-    $this->forward404Unless($item = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id')),'Part does not exist');  
-    return $this->renderPartial('extInfo',array('item' => $item)); 
+    $item = Doctrine::getTable('Specimens')->getByMultipleIds(array($request->getParameter('id')),'part', $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
+    $this->forward404Unless(count($item),'Part does not exist');
+    return $this->renderPartial('extInfo',array('item' => $item[0])); 
   }
   
   public function executeAddActors(sfWebRequest $request)
