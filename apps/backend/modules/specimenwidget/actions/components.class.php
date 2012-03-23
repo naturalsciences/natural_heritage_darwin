@@ -42,7 +42,7 @@ class specimenwidgetComponents extends sfComponents
     if(! isset($this->module) )
     {
       $this->module = 'specimen';
-    }  
+    }
   }
 
   public function executeRefCollection()
@@ -178,9 +178,15 @@ class specimenwidgetComponents extends sfComponents
   }
 
   public function executeInformativeWorkflow()
-  {    
+  {
     if(isset($this->form) )
       $this->eid = $this->form->getObject()->getId() ;
-  }  
+  }
 
+  public function executeBiblio()
+  {
+    $this->defineForm();
+    if(!isset($this->form['newBiblio']))
+      $this->form->loadEmbedBiblio();
+  }
 }

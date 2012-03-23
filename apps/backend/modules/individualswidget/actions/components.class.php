@@ -44,7 +44,7 @@ class individualswidgetComponents extends sfComponents
     if(! isset($this->module) )
     {
       $this->module = 'individuals';
-    }  
+    }
   }
 
   public function executeType()
@@ -110,8 +110,15 @@ class individualswidgetComponents extends sfComponents
       $this->form->loadEmbedRelatedFiles();
   }
   public function executeInformativeWorkflow()
-  {    
+  {
     if(isset($this->form) )
       $this->eid = $this->form->getObject()->getId() ;
-  }    
+  }
+
+  public function executeBiblio()
+  {
+    $this->defineForm();
+    if(!isset($this->form['newBiblio']))
+      $this->form->loadEmbedBiblio();
+  }
 }

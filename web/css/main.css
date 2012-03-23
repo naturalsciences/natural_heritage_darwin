@@ -2961,9 +2961,8 @@ input.complete_missing {
   cursor: pointer;
 }
 
-.last_sync_message {
+.last_sync_message, .small_info {
   color: gray;
-
   font-size: x-small;
 }
 

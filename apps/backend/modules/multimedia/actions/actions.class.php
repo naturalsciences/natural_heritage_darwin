@@ -110,7 +110,46 @@ class multimediaActions extends DarwinActions
     $form = $this->getSpecificForm($request);
     $file = $this->getUser()->getAttribute($request->getParameter('file_id')) ;
     $form->addRelatedFiles($number,$file);
-    return $this->renderPartial('multimedia/multimedia',array('form' => $form['newRelatedFiles'][$number], 'row_num'=>$number));
+    return $this->renderPartial('multimedia/multimedia',array('form' => $form['newRelatedFiles'][$number], 'row_num'=>$number, 'table' => $request->getParameter('table')));
+  }
+
+  public function executeAdd(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    $this->files = null;
+    if($request->hasParameter('rid'))
+    {
+      $this->files = Doctrine::getTable('Multimedia')->findExcept($request->getParameter('rid'));
+    }
+
+    if(! $this->files)
+    {
+     $this->files = new Multimedia();
+     $this->files->setRecordId($request->getParameter('id'));
+     $this->files->setReferencedRelation($request->getParameter('table'));
+    }
+    $this->form = new MultimediaForm($this->files);
+
+    if($request->isMethod('post'))
+    {
+      $this->form->bind($request->getParameter('multimedia'));
+      if($this->form->isValid())
+      {
+        try{
+          $this->form->getObject()->changeUri() ;
+          $this->form->save();
+          $this->form->getObject()->refreshRelated();
+          $this->form = new MultimediaForm($this->form->getObject()); //Ugly refresh
+          return $this->renderText('ok');
+        }
+        catch(Doctrine_Exception $ne)
+        {
+          $e = new DarwinPgErrorParser($ne);
+          $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+          $this->form->getErrorSchema()->addError($error);
+        }
+      }
+    }
   }
 
 }

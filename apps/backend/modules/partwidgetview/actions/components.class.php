@@ -90,8 +90,13 @@ class partwidgetViewComponents extends sfComponents
   }
 
   public function executeInformativeWorkflow()
-  {    
+  {
     if(isset($this->form) )
       $this->eid = $this->form->getObject()->getId() ;
-  }   
+  }
+
+  public function executeBiblio()
+  {
+    $this->Biblios = Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_parts', $this->eid);
+  }
 }

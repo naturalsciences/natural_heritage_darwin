@@ -40,6 +40,11 @@ class cataloguewidgetComponents extends sfComponents
     $this->vernacular_names =  Doctrine::getTable('ClassVernacularNames')->findForTable($this->table, $this->eid);
   }
 
+  public function executeRelatedFiles()
+  {
+    $this->files = Doctrine::getTable('Multimedia')->findForTable($this->table, $this->eid) ;
+  }
+
   public function executeSynonym()
   {
     $this->synonyms = Doctrine::getTable('ClassificationSynonymies')->findAllForRecord($this->table, $this->eid);
@@ -75,5 +80,9 @@ class cataloguewidgetComponents extends sfComponents
     $this->informativeWorkflow = Doctrine::getTable('InformativeWorkflow')->findForTable($this->table, $this->eid);
     if(!isset($this->view)) $this->view = false ;
   }
-  
+
+  public function executeBiblio()
+  {
+    $this->Biblios = Doctrine::getTable('CatalogueBibliography')->findForTable($this->table, $this->eid);
+  }
 }

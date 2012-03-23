@@ -1,0 +1,1 @@
+<?php include_component('specimenwidget','biblio', array('form' => $form, 'module'=>$module));?>

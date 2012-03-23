@@ -83,6 +83,10 @@ CREATE TRIGGER trg_cpy_fullToIndex_loans BEFORE INSERT OR UPDATE
   ON loans FOR EACH ROW
   EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
+CREATE TRIGGER trg_cpy_fullToIndex_bibliography BEFORE INSERT OR UPDATE
+        ON bibliography FOR EACH ROW
+        EXECUTE PROCEDURE fct_cpy_fullToIndex();
+
 CREATE TRIGGER trg_clr_specialstatus_specimenindividuals BEFORE INSERT OR UPDATE
 	ON specimen_individuals FOR EACH ROW
 	EXECUTE PROCEDURE fct_clr_specialstatus();
@@ -139,6 +143,10 @@ CREATE TRIGGER trg_clr_referenceRecord_multimedia AFTER DELETE
 CREATE TRIGGER trg_clr_referenceRecord_collections AFTER DELETE
 	ON collections FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_bibliography AFTER DELETE
+        ON bibliography FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
 
 /*CREATE TRIGGER trg_clr_referenceRecord_userscollrightsasked AFTER DELETE
 	ON users_coll_rights_asked FOR EACH ROW
@@ -205,6 +213,10 @@ CREATE TRIGGER trg_cpy_toFullText_comments BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_cpy_toFullText_expeditions BEFORE INSERT OR UPDATE
   ON expeditions FOR EACH ROW
   EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
+
+CREATE TRIGGER trg_cpy_toFullText_bibliography BEFORE INSERT OR UPDATE
+  ON bibliography FOR EACH ROW
+  EXECUTE PROCEDURE tsvector_update_trigger(title_ts, 'pg_catalog.simple', title);
 
 CREATE TRIGGER trg_cpy_toFullText_ext_links BEFORE INSERT OR UPDATE
 	ON ext_links FOR EACH ROW
@@ -446,6 +458,10 @@ CREATE TRIGGER trg_trk_log_table_expeditions AFTER INSERT OR UPDATE OR DELETE
         ON expeditions FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
+CREATE TRIGGER trg_trk_log_table_bibliography AFTER INSERT OR UPDATE OR DELETE
+        ON bibliography FOR EACH ROW
+        EXECUTE PROCEDURE fct_trk_log_table();
+
 CREATE TRIGGER trg_trk_log_table_multimedia AFTER INSERT OR UPDATE OR DELETE
         ON multimedia FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
@@ -560,6 +576,10 @@ CREATE TRIGGER trg_words_ts_cpy_users BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_words_ts_cpy_expeditions BEFORE INSERT OR UPDATE
 	ON expeditions FOR EACH ROW
 	EXECUTE PROCEDURE fct_trg_word();
+
+CREATE TRIGGER trg_words_ts_cpy_bibliography BEFORE INSERT OR UPDATE
+        ON bibliography FOR EACH ROW
+        EXECUTE PROCEDURE fct_trg_word();
 
 CREATE TRIGGER trg_words_ts_cpy_mineralogy BEFORE INSERT OR UPDATE
 	ON mineralogy FOR EACH ROW

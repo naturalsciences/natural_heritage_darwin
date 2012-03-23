@@ -76,7 +76,7 @@ class Users extends BaseUsers
     {
         return $type;
     }
-    return $i18n_object->__($type);    
+    return $i18n_object->__($type);
   }
 
 

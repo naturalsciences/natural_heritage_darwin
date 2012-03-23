@@ -506,6 +506,18 @@ sw23:
    title_perso: Related Files
    all_public: true
 
+sw24:
+   col_num: 2
+   category: specimen_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 12
+   opened: false
+   visible: false
+   is_available: true
+   title_perso: Bibliography
+   all_public: true
+
 spi1:
    col_num: 1
    category: individuals_widget
@@ -595,6 +607,18 @@ spi12:
    title_perso: Related Files
    all_public: true
 
+spi13:
+   col_num: 2
+   category: individuals_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 4
+   opened: false
+   visible: false
+   is_available: true
+   title_perso: Bibliography
+   all_public: true
+
 sp1:
    col_num: 1
    category: part_widget
@@ -649,6 +673,18 @@ sp13:
    visible: true
    is_available: true
    title_perso: Related Files
+   all_public: true
+
+spp14:
+   col_num: 2
+   category: part_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 8
+   opened: false
+   visible: false
+   is_available: true
+   title_perso: Bibliography
    all_public: true
 
 tw1:
@@ -706,6 +742,27 @@ tw6:
    title_perso: Keywords
    all_public: true
 
+tw8:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Bibliography
+
+tw10:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 7
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
 chw1:
    col_num: 1
    category: catalogue_chronostratigraphy_widget
@@ -738,6 +795,17 @@ chw4:
    opened: true
    visible: true
    title_perso: Vernacular names
+   all_public: true
+
+chw5:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: biblo
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Bibliography
    all_public: true
 
 lhw1:
@@ -773,6 +841,17 @@ lhw4:
    title_perso: Vernacular names
    all_public: true
 
+lhw5:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Bibliography
+   all_public: true
+
 liw1:
    col_num: 1
    category: catalogue_lithology_widget
@@ -804,6 +883,17 @@ liw4:
    opened: true
    visible: true
    title_perso: Vernacular names
+   all_public: true
+
+liw5:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Bibliography
    all_public: true
 
 miw1:
@@ -848,6 +938,17 @@ miw5:
    opened: true
    visible: true
    title_perso: Keywords
+   all_public: true
+
+miw6:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Bibliography
    all_public: true
 
 pe1:
@@ -970,7 +1071,49 @@ u1wmetto4:
    visible: true
    title_perso: Informative Workflow 
    all_public: true
-     
+
+bi2:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: keywords
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Keywords
+   all_public: true
+
+
+bib6:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: comment
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Comments
+
+bib7:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: properties
+   order_by: 7
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: Properties
+
+bib8:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: extLinks
+   order_by: 8
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: External Links
+
 pe8:
    col_num: 1
    category: people_widget
@@ -1201,4 +1344,5 @@ m4:
    visible: false
    is_available: true
    title_perso: External Url
-   all_public: true     
+   all_public: true
+

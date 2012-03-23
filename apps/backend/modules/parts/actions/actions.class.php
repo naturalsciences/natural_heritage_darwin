@@ -81,7 +81,13 @@ class partsActions extends DarwinActions
           $insurance = new Insurances() ;
           $insurance = $this->getRecordIfDuplicate($val->getId(),$insurance); 
           $this->form->addInsurances($key, $insurance) ;          
-        }      
+        }
+
+        $bib =  Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_parts', $duplic);
+        foreach($bib as $key=>$vals)
+        {
+          $this->form->addBiblio($key, $vals->getBibliographyRef());
+        }
       }
     }
     if($request->isMethod('post'))
@@ -298,5 +304,15 @@ class partsActions extends DarwinActions
   {
     $items_ids = $this->getUser()->getAllPinned('part');
     $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids,'part', $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
+  }
+
+  public function executeAddBiblio(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $bibliography_ref = intval($request->getParameter('biblio_ref')) ;
+    $form = $this->getSpecimenPartForm($request);
+    $form->addBiblio($number,$bibliography_ref,$request->getParameter('iorder_by',0));
+    return $this->renderPartial('specimen/biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
   }
 }

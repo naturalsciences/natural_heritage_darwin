@@ -264,4 +264,43 @@ class catalogueActions extends DarwinActions
     $result = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->completeaAsArray($request->getParameter('term'));
     return $this->renderText(json_encode($result));
   }
+
+  public function executeBiblio(sfWebRequest $request)
+  {
+    if(! $this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();  
+    $this->biblio = null;
+    if($request->hasParameter('id'))
+    {
+      $this->biblio = Doctrine::getTable('CatalogueBibliography')->find($request->getParameter('id'));
+    }
+    if(! $this->biblio)
+    {
+     $this->biblio = new CatalogueBibliography();
+     $this->biblio->setRecordId($request->getParameter('rid'));
+     $this->biblio->setReferencedRelation($request->getParameter('table'));
+    }
+
+    $this->form = new CatalogueBibliographyForm($this->biblio);
+    
+    if($request->isMethod('post'))
+    {
+      $this->form->bind($request->getParameter('catalogue_bibliography'));
+      if($this->form->isValid())
+      {
+        try{
+          $this->form->save();
+          $this->form->getObject()->refreshRelated();
+          $this->form = new CatalogueBibliographyForm($this->form->getObject()); //Ugly refresh
+          return $this->renderText('ok');
+        }
+        catch(Doctrine_Exception $ne)
+        {
+          $e = new DarwinPgErrorParser($ne);
+          $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+          $this->form->getErrorSchema()->addError($error);
+        }
+      }
+    }
+    $this->searchForm = new BibliographyFormFilter();
+  }
 }

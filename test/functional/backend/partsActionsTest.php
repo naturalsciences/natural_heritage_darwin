@@ -18,17 +18,6 @@ $browser->
     isStatusCode(200)->
     checkElement('title','Add Part')->
     checkElement('.board_col',2)->
-    checkElement('.board_col:first .widget',4)->
-    checkElement('.board_col:last .widget',8)->
-    checkElement('.board_col:first .widget:first .widget_top_bar span','/Part/')->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_top_bar span','/Count/')->
-    checkElement('.board_col:first .widget:nth-child(3) .widget_top_bar span','/Container/')->
-    checkElement('.board_col:last .widget:first .widget_top_bar span','/Complete/')->
-    checkElement('.board_col:last .widget:nth-child(2) .widget_top_bar span','/Localisation/')->
-    checkElement('.board_col:last .widget:nth-child(3) .widget_top_bar span','/Properties/')->
-    checkElement('.board_col:last .widget:nth-child(4) .widget_top_bar span','/Insurances/')->
-    checkElement('.board_col:last .widget:nth-child(5) .widget_top_bar span','/Maintenance/')->
-    checkElement('.board_col:last .widget:nth-child(6) .widget_top_bar span','/Comments/')->
   end()
 ;
 

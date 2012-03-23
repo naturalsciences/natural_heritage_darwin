@@ -56,6 +56,16 @@ class specimenActions extends DarwinActions
     return $this->renderPartial('spec_people_associations',array('type'=>'collector','form' => $form['newCollectors'][$number], 'row_num'=>$number));
   }
 
+  public function executeAddBiblio(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $bibliography_ref = intval($request->getParameter('biblio_ref')) ;
+    $form = $this->getSpecimenForm($request);
+    $form->addBiblio($number,$bibliography_ref,$request->getParameter('iorder_by',0));
+    return $this->renderPartial('biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
+  }
+
   public function executeAddDonator(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
@@ -181,15 +191,29 @@ class specimenActions extends DarwinActions
         $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('specimens',$duplic) ;
         if(count($Catalogue))
         {
-          foreach ($Catalogue['collector'] as $key=>$val)
+          if(isset($Catalogue['collector']))
           {
-             $this->form->addCollectors($key, $val->getPeopleRef(),$val->getOrderBy());
+            foreach ($Catalogue['collector'] as $key=>$val)
+            {
+              $this->form->addCollectors($key, $val->getPeopleRef(),$val->getOrderBy());
+            }
           }
-          foreach ($Catalogue['donator'] as $key=>$val)
+          if(isset($Catalogue['donator']))
           {
-             $this->form->addDonators($key, $val->getPeopleRef(),$val->getOrderBy());
-          }          
+            foreach ($Catalogue['donator'] as $key=>$val)
+            {
+              $this->form->addDonators($key, $val->getPeopleRef(),$val->getOrderBy());
+            }
+          }
         }
+
+        //reembed biblio
+        $bib =  Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $duplic);
+        foreach($bib as $key=>$vals)
+        {
+          $this->form->addBiblio($key, $vals->getBibliographyRef());
+        }
+
         //reembed identification
          $Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$duplic) ;
         foreach ($Identifications as $key=>$val)

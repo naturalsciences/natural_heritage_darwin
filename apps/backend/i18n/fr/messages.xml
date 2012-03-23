@@ -5020,6 +5020,34 @@
         <source>Which role</source>
         <target>Quel rôle</target>
       </trans-unit>
+          <trans-unit id="1673">
+        <source>Duplicate bibliography</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1690">
+        <source>InProceedings</source>
+        <target>InProceedings</target>
+      </trans-unit>
+          <trans-unit id="1691">
+        <source>Manual</source>
+        <target>Manuel</target>
+      </trans-unit>
+          <trans-unit id="1693">
+        <source>PHD thesis</source>
+        <target>Thèse de doctorat</target>
+      </trans-unit>
+          <trans-unit id="1675">
+        <source>Edit Bibliography</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1676">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; This unit might be used in items where you do no have encoding rights.&lt;br/&gt;Be sure of what you do!</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1677">
+        <source>Search Bibliography</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1516">
         <source>Add loan</source>
         <target>Ajouter un prêt</target>
@@ -5031,6 +5059,86 @@
           <trans-unit id="1560">
         <source>Sender side</source>
         <target>Côté expéditeur</target>
+      </trans-unit>
+          <trans-unit id="1678">
+        <source>Bibliography Search</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1692">
+        <source>Masters Thesis</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1694">
+        <source>Proceedings</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1698">
+        <source>Misc</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1699">
+        <source>(The year of publication (or, if unpublished, the year of creation) on 4 digits)</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1670">
+        <source>Abstract</source>
+        <target>Résumé</target>
+      </trans-unit>
+          <trans-unit id="1671">
+        <source>Authors</source>
+        <target>Auteurs</target>
+      </trans-unit>
+          <trans-unit id="1672">
+        <source>Add Author</source>
+        <target>Ajouter Auteur</target>
+      </trans-unit>
+          <trans-unit id="1681">
+        <source>No bibliography Matching</source>
+        <target>Aucune bibliographie correspondante</target>
+      </trans-unit>
+          <trans-unit id="1682">
+        <source>View Bibliography</source>
+        <target>Bibliographie</target>
+      </trans-unit>
+          <trans-unit id="1683">
+        <source>Bibliography</source>
+        <target>Bibliographie</target>
+      </trans-unit>
+          <trans-unit id="1684">
+        <source>Article</source>
+        <target>Article</target>
+      </trans-unit>
+          <trans-unit id="1685">
+        <source>Book</source>
+        <target>Livre</target>
+      </trans-unit>
+          <trans-unit id="1686">
+        <source>Booklet</source>
+        <target>Brochure</target>
+      </trans-unit>
+          <trans-unit id="1687">
+        <source>Conference</source>
+        <target>Conférence</target>
+      </trans-unit>
+          <trans-unit id="1688">
+        <source>InBook</source>
+        <target>InBook</target>
+      </trans-unit>
+          <trans-unit id="1689">
+        <source>InCollection</source>
+        <target>InCollection</target>
+      </trans-unit>
+          <trans-unit id="1695">
+        <source>Tech Report</source>
+        <target>Rapport Technique</target>
+      </trans-unit>
+          <trans-unit id="1696">
+        <source>Web published</source>
+        <target>Publication web</target>
+      </trans-unit>
+          <trans-unit id="1697">
+        <source>Unpublished</source>
+        <target>Non publié</target>
       </trans-unit>
           <trans-unit id="1362">
         <source>This widget allows you to add people that can have different roles. e.g. an author, a reviewer, an expert in a certain domain, etc.</source>
@@ -5063,6 +5171,10 @@
           <trans-unit id="1564">
         <source>Add Receiver</source>
         <target>Ajouter un destinataire</target>
+      </trans-unit>
+          <trans-unit id="1701">
+        <source>Choose a bibliography</source>
+        <target></target>
       </trans-unit>
           <trans-unit id="1363">
         <source>This widget can be used to add the equivalent vernacular name of the record in different languages. You can even add more than one vernacular name in the same language</source>

@@ -95,4 +95,9 @@ class individualswidgetViewComponents extends sfComponents
 
   public function executeExtLinks()
   {}
+
+  public function executeBiblio()
+  {
+    $this->Biblios = Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_individuals', $this->eid);
+  }
 }

@@ -52,6 +52,16 @@ class MultimediaForm extends BaseMultimediaForm
     $this->widgetSchema['publishable'] = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['publishable'] = new sfValidatorBoolean();
 
+    /*Labels*/
+
+    $this->widgetSchema->setLabels(array('title' => 'Name',
+                                         'description' => 'Description',
+                                         'creation_date' => 'Created At',
+                                         'visible' => 'Visible ?',
+                                         'publishable' => 'Publishable ?'
+                                        )
+                                  );
+
     $this->mergePostValidator(new MultimediaFileValidatorSchema());    
   }  
   

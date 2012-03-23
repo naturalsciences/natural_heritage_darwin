@@ -30,6 +30,10 @@ class UsersTracking extends BaseUsersTracking
         $link = 'parts/edit?id='.$id; break;
       case 'expeditions':
         $link = 'expedition/edit?id='.$id; break;
+      case 'loans':
+        $link = 'loan/edit?id='.$id; break;
+      case 'loan_items':
+        $link = 'loanitem/edit?id='.$id; break;
       case 'taxonomy':
       case 'lithology':
       case 'lithostratigraphy':
@@ -38,7 +42,9 @@ class UsersTracking extends BaseUsersTracking
       case 'people':
       case 'insurances':
       case 'igs':
+      case 'igs':
       case 'gtu':
+      case 'bibliography':
         $link = $table.'/edit?id='.$id; break;
       default:
         $link = false; break;

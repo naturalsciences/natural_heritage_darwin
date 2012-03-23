@@ -119,10 +119,6 @@
         <source>Contact</source>
         <target>Contact</target>
       </trans-unit>
-          <trans-unit id="1218">
-        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:darwin-ict@naturalsciences.be&quot;&gt;darwin-ict@naturalsciences.be&lt;/a&gt;</source>
-        <target>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:darwin-ict@naturalsciences.be&quot;&gt;darwin-ict@naturalsciences.be&lt;/a&gt;</target>
-      </trans-unit>
           <trans-unit id="1219">
         <source>If you have a question about a specimen, please contact the collection manager of the specimen. &lt;br /&gt;
       you can find his or her e-mail address in the record.</source>
@@ -662,6 +658,50 @@
           <trans-unit id="1488">
         <source>Thank you for your help</source>
         <target>Thank you for your help</target>
+      </trans-unit>
+          <trans-unit id="1606">
+        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
+        <target>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</target>
+      </trans-unit>
+          <trans-unit id="1607">
+        <source>Oops! Page Not Found</source>
+        <target>Oops! Page Not Found</target>
+      </trans-unit>
+          <trans-unit id="1608">
+        <source>The server returned a 404 response.</source>
+        <target>The server returned a 404 response.</target>
+      </trans-unit>
+          <trans-unit id="1609">
+        <source>Did you type the URL?</source>
+        <target>Did you type the URL?</target>
+      </trans-unit>
+          <trans-unit id="1610">
+        <source>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</source>
+        <target>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</target>
+      </trans-unit>
+          <trans-unit id="1611">
+        <source>Did you follow a link from somewhere else at this site?</source>
+        <target>Did you follow a link from somewhere else at this site?</target>
+      </trans-unit>
+          <trans-unit id="1612">
+        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
+        <target>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</target>
+      </trans-unit>
+          <trans-unit id="1613">
+        <source>Did you follow a link from another site?</source>
+        <target>Did you follow a link from another site?</target>
+      </trans-unit>
+          <trans-unit id="1614">
+        <source>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</source>
+        <target>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</target>
+      </trans-unit>
+          <trans-unit id="1615">
+        <source>What&#039;s next</source>
+        <target>What&#039;s next</target>
+      </trans-unit>
+          <trans-unit id="1616">
+        <source>Back to previous page</source>
+        <target>Back to previous page</target>
       </trans-unit>
         </body>
   </file>

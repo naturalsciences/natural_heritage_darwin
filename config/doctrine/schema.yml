@@ -1351,3 +1351,24 @@ LoanStatus:
         Users:
             local: user_ref
             foreign: id
+
+Bibliography:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        title: { type: string, notnull: true}
+        title_ts: { type: string}
+        title_indexed: {type: string}
+        type : {type:string, notnull: true }
+        abstract : { type:string }
+        year : { type:integer}
+
+CatalogueBibliography:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        referenced_relation: { type: string, notnull: true}
+        record_id: { type: integer, notnull: true}
+        bibliography_ref: { type: integer, notnull: true}
+    relations:
+        Bibliography:
+            local: bibliography_ref
+            foreign: id
