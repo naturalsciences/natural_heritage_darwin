@@ -238,14 +238,6 @@ CREATE TRIGGER trg_cpy_toFullText_usersaddresses BEFORE INSERT OR UPDATE
 	ON users_addresses FOR EACH ROW
 	EXECUTE PROCEDURE tsvector_update_trigger(address_parts_ts, 'pg_catalog.simple', entry, po_box, extended_address, locality, region, zip_code, country);
 
-CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
-	ON multimedia FOR EACH ROW
-	EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title);
-
-CREATE TRIGGER trg_cpy_toFullText_expeditions BEFORE INSERT OR UPDATE
-  ON expeditions FOR EACH ROW
-  EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
-
 CREATE TRIGGER trg_cpy_toFullText_vernacularnames BEFORE INSERT OR UPDATE
   ON vernacular_names FOR EACH ROW
   EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
