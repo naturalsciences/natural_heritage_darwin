@@ -28,22 +28,22 @@ class vernacularnamesActions extends DarwinActions
     
     if($request->isMethod('post'))
     {
-	    $this->form->bind($request->getParameter('class_vernacular_names'));
-	    if($this->form->isValid())
-	    {
-	      try{
-	        $this->form->save();
-	        $this->form->getObject()->refreshRelated();
-	        $this->form = new ClassVernacularNamesForm($this->form->getObject()); //Ugly refresh
-	        return $this->renderText('ok');
-	      }
+      $this->form->bind($request->getParameter('class_vernacular_names'));
+      if($this->form->isValid())
+      {
+        try{
+          $this->form->save();
+          $this->form->getObject()->refreshRelated();
+          $this->form = new ClassVernacularNamesForm($this->form->getObject()); //Ugly refresh
+          return $this->renderText('ok');
+        }
         catch(Doctrine_Exception $ne)
         {
           $e = new DarwinPgErrorParser($ne);
           $error = new sfValidatorError(new savedValidator(),$e->getMessage());
           $this->form->getErrorSchema()->addError($error);
-	      }
-	    }
+        }
+      }
     }
   }
   

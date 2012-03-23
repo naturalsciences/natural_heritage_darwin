@@ -8,15 +8,6 @@ class DarwinActions extends sfActions
     'specimen_parts'=>'SpecimenParts',
     'loans'=>'Loans',
     'loan_items'=>'LoanItems',
-    'taxonomy'=>'Taxonomy',
-    'chronostratigraphy'=>'Chronostratigraphy',
-    'lithostratigraphy'=>'Lithostratigraphy',
-    'lithology'=>'Lithology',
-    'mineralogy'=>'Mineralogy',
-    'people'=>'People',
-    'insitutions'=>'People',
-    'gtu'=>'Gtu',
-    'expeditions'=>'Expeditions',
   );
 
   protected function getSpecificForm(sfWebRequest $request, $options=null)
@@ -47,42 +38,6 @@ class DarwinActions extends sfActions
     elseif ($request->getParameter('table','')== 'specimen_parts')
     {
       $form = new SpecimenPartsForm($tableRecord,$options);
-    }
-    elseif ($request->getParameter('table','')== 'taxonomy')
-    {
-      $form = new TaxonomyForm($tableRecord,$options);
-    }
-    elseif ($request->getParameter('table','')== 'lithology')
-    {
-      $form = new LithologyForm($tableRecord,$options);
-    }
-    elseif ($request->getParameter('table','')== 'mineralogy')
-    {
-      $form = new MineralogyForm($tableRecord,$options);
-    }
-    elseif ($request->getParameter('table','')== 'chronostratigraphy')
-    {
-      $form = new ChronostratigraphyForm($tableRecord,$options);
-    }
-    elseif ($request->getParameter('table','')== 'lithostratigraphy')
-    {
-      $form = new LithostratigraphyForm($tableRecord,$options);
-    }
-    elseif ($request->getParameter('table','')== 'people')
-    {
-      $form = new PeopleForm($tableRecord,$options);
-    }
-    elseif ($request->getParameter('table','')== 'institutions')
-    {
-      $form = new InstitutionsForm($tableRecord,$options);
-    }
-    elseif ($request->getParameter('table','')== 'gtu')
-    {
-      $form = new GtuForm($tableRecord,$options);
-    }
-    elseif ($request->getParameter('table','')== 'expeditions')
-    {
-      $form = new ExpeditionsForm($tableRecord,$options);
     }
     return $form;
   }
