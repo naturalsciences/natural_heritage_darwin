@@ -512,10 +512,6 @@ MyWidgets:
             class: Users
             local: user_ref
             foreign: id
-#         Multimedia:
-#             local: icon_ref
-#             foreign: id
-
 Taxonomy:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -746,7 +742,6 @@ SpecimensFlat:
         acquisition_date_mask: { type: integer, notnull: true, default:0}
         acquisition_date: { type: string, default: '0001-01-01'}
         station_visible: { type: boolean, default: true}
-        multimedia_visible: { type: boolean, default: true}
         ig_ref: { type: integer}
 
         spec_coll_ids: { type:string}

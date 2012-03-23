@@ -22,7 +22,6 @@
  * @property integer $acquisition_date_mask
  * @property string $acquisition_date
  * @property boolean $station_visible
- * @property boolean $multimedia_visible
  * @property integer $ig_ref
  * @property string $spec_coll_ids
  * @property string $spec_ident_ids
@@ -140,7 +139,6 @@
  * @method integer             getAcquisitionDateMask()      Returns the current record's "acquisition_date_mask" value
  * @method string              getAcquisitionDate()          Returns the current record's "acquisition_date" value
  * @method boolean             getStationVisible()           Returns the current record's "station_visible" value
- * @method boolean             getMultimediaVisible()        Returns the current record's "multimedia_visible" value
  * @method integer             getIgRef()                    Returns the current record's "ig_ref" value
  * @method string              getSpecCollIds()              Returns the current record's "spec_coll_ids" value
  * @method string              getSpecIdentIds()             Returns the current record's "spec_ident_ids" value
@@ -257,7 +255,6 @@
  * @method SpecimensFlat       setAcquisitionDateMask()      Sets the current record's "acquisition_date_mask" value
  * @method SpecimensFlat       setAcquisitionDate()          Sets the current record's "acquisition_date" value
  * @method SpecimensFlat       setStationVisible()           Sets the current record's "station_visible" value
- * @method SpecimensFlat       setMultimediaVisible()        Sets the current record's "multimedia_visible" value
  * @method SpecimensFlat       setIgRef()                    Sets the current record's "ig_ref" value
  * @method SpecimensFlat       setSpecCollIds()              Sets the current record's "spec_coll_ids" value
  * @method SpecimensFlat       setSpecIdentIds()             Sets the current record's "spec_ident_ids" value
@@ -427,10 +424,6 @@ abstract class BaseSpecimensFlat extends sfDoctrineRecord
              ));
         $this->hasColumn('station_visible', 'boolean', null, array(
              'type' => 'boolean',
-             ));
-        $this->hasColumn('multimedia_visible', 'boolean', null, array(
-             'type' => 'boolean',
-             'default' => true,
              ));
         $this->hasColumn('ig_ref', 'integer', null, array(
              'type' => 'integer',
