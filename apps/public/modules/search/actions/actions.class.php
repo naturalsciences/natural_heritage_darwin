@@ -236,25 +236,25 @@ class searchActions extends DarwinActions
 
     $this->columns['individual'] = array(     
       'individual_type' => array(
-        'individual_type_search',
+        'type_search',
         $this->getI18N()->__('Type'),),        
       'sex' => array(
-        'individual_sex',
+        'sex',
         $this->getI18N()->__('Sex'),),
       'state' => array(
-        'individual_state',
+        'state',
         $this->getI18N()->__('State'),),
       'stage' => array(
-        'individual_stage',
+        'stage',
         $this->getI18N()->__('Stage'),),
       'social_status' => array(
-        'individual_social_status',
+        'social_status',
         $this->getI18N()->__('Social Status'),),
       'rock_form' => array(
-        'individual_rock_form',
+        'rock_form',
         $this->getI18N()->__('Rock Form'),),
       'individual_count' => array(
-        'individual_count_max',
+        'specimen_individuals_count_max',
         $this->getI18N()->__('Individual Count'),),
       );
   }  
