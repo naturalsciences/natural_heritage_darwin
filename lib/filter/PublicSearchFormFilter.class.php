@@ -181,9 +181,9 @@ class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
     if($val != '')
     {
       if(is_array($val))
-        $query->andWhereIn('individual_sex',$val);
+        $query->andWhereIn('sex',$val);
       else
-        $query->andWhere('individual_sex = ?',$val);
+        $query->andWhere('sex = ?',$val);
     }
     return $query ;
   }
@@ -193,9 +193,9 @@ class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
     if($val != '')
     {
       if(is_array($val))
-        $query->andWhereIn('individual_stage',$val);
+        $query->andWhereIn('stage',$val);
       else
-        $query->andWhere('individual_stage = ?',$val);
+        $query->andWhere('stage = ?',$val);
     }
     return $query ;
   } 
@@ -205,9 +205,9 @@ class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
     if($val != '')
     {
       if(is_array($val))
-        $query->andWhereIn('individual_type_search',$val);
+        $query->andWhereIn('type_search',$val);
       else
-        $query->andWhere('individual_type_search = ?',$val);
+        $query->andWhere('type_search = ?',$val);
     }
     return $query ;
   }    
