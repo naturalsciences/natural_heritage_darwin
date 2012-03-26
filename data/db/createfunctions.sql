@@ -3366,7 +3366,7 @@ BEGIN
       PERFORM fct_del_in_dict('specimen_parts','row', oldfield.row, newfield.row);
       PERFORM fct_del_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_del_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
-      PERFORM fct_del_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
+      PERFORM fct_del_in_dict('specimen_parts','building', oldfield.building, newfield.building);
 
   END IF;
 
@@ -3432,7 +3432,7 @@ BEGIN
       PERFORM fct_add_in_dict('specimen_parts','row', oldfield.row, newfield.row);
       PERFORM fct_add_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_add_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
-      PERFORM fct_add_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
+      PERFORM fct_add_in_dict('specimen_parts','building', oldfield.building, newfield.building);
   END IF;
 
   RETURN NEW;
