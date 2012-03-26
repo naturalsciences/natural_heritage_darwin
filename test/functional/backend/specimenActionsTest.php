@@ -167,7 +167,7 @@ $browser->
   get('specimen/getTaxon', array('specId'=>$specId, 'targetField'=>'specimen_host_taxon'))->
   with('response')->begin()->
     isStatusCode(200)->
-    matches('/","specimen_host_taxon_name":"<i>Animalia<\/i>"}/')->
+    matches('/specimen_host_taxon_name":"Animalia"}/')->
   end();
 
 $num = 5;

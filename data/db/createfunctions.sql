@@ -3522,7 +3522,7 @@ BEGIN
       PERFORM fct_add_in_dict('specimen_parts','row', oldfield.row, newfield.row);
       PERFORM fct_add_in_dict('specimen_parts','room', oldfield.room, newfield.room);
       PERFORM fct_add_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
-      PERFORM fct_add_in_dict('specimen_parts','building', oldfield.specimen_status, newfield.building);
+      PERFORM fct_add_in_dict('specimen_parts','building', oldfield.building, newfield.building);
 
       PERFORM fct_add_in_dict_dept('specimen_parts','container_storage', oldfield.container_storage, newfield.container_storage,
         oldfield.container_type, newfield.container_type);

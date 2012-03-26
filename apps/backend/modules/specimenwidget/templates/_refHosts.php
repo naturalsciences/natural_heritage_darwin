@@ -117,7 +117,7 @@ $(document).ready(function ()
             success: function(html) 
                      {
                        $('#<?php echo $hostTaxonId; ?>').val(html.<?php echo $hostTaxonId; ?>);
-                       $('#<?php echo $hostTaxonId; ?>_name').html(html.<?php echo $hostTaxonId.'_name'; ?>);
+                       $('#<?php echo $hostTaxonId; ?>_name').html('<i>' + html.<?php echo $hostTaxonId.'_name'; ?> + '</i>');
                        if($('#<?php echo $hostTaxonId; ?>_name').text() == '-')
                        {
                          $('#<?php echo $hostTaxonId; ?>_clear').hide();

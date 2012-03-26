@@ -430,7 +430,7 @@ class specimenActions extends DarwinActions
     $targetField = $request->getParameter('targetField');
     $specimen = Doctrine::getTable('Specimens')->findOneById($request->getParameter('specId'));
     $this->forward404Unless($specimen);
-    return $this->renderText(json_encode(array($targetField=> $specimen->Taxonomy->getId(), $targetField.'_name' => $specimen->Taxonomy->getNameWithFormat())));
+    return $this->renderText(json_encode(array($targetField=> $specimen->Taxonomy->getId(), $targetField.'_name' => $specimen->Taxonomy->getName()) ));
   }
 
   public function executeDelete(sfWebRequest $request)
