@@ -1315,6 +1315,7 @@ m1:
    is_available: true
    title_perso: Related Files
    all_public: true   
+   
 m2:
    col_num: 1
    category: maintenances_widget
@@ -1325,6 +1326,7 @@ m2:
    is_available: true
    title_perso: Comments
    all_public: true
+   
 m3:
    col_num: 1
    category: maintenances_widget
@@ -1334,7 +1336,8 @@ m3:
    visible: false
    is_available: true
    title_perso: Properties
-   all_public: true       
+   all_public: true  
+        
 m4:
    col_num: 1
    category: maintenances_widget
@@ -1344,11 +1347,8 @@ m4:
    visible: false
    is_available: true
    title_perso: External Url
-<<<<<<< HEAD
    all_public: true
-
-=======
-   all_public: true     
+    
 ig3:
    col_num: 1
    category: catalogue_igs_widget
@@ -1416,33 +1416,33 @@ gtu3:
    all_public: true  
 
 u1wmetto1:
-    col_num: 1
-    category: catalogue_methods_and_tools_widget
-    group_name: properties
-    order_by: 1
-    opened: true
-    visible: true
-    title_perso: Properties
+   col_num: 1
+   category: catalogue_methods_and_tools_widget
+   group_name: properties
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Properties
    all_public: true  
 
 u1wmetto2:
-    col_num: 1
-    category: catalogue_methods_and_tools_widget
-    group_name: comment
-    order_by: 2
-    opened: true
-    visible: true
-    title_perso: Comments
+   col_num: 1
+   category: catalogue_methods_and_tools_widget
+   group_name: comment
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Comments
    all_public: true  
 
 u1wmetto3:
-    col_num: 1
-    category: catalogue_methods_and_tools_widget
-    group_name: extLinks
-    order_by: 3
-    opened: true
-    visible: true
-    title_perso: External Links   
+   col_num: 1
+   category: catalogue_methods_and_tools_widget
+   group_name: extLinks
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: External Links   
    all_public: true  
    
 ins4:
@@ -1721,25 +1721,25 @@ sp9:
    all_public: true     
 
 spi7:
-  col_num: 2
-  category: individuals_widget
-  group_name: refProperties
-  mandatory: false
-  order_by: 2
-  opened: false
-  visible: false
-  title_perso: Properties
+   col_num: 2
+   category: individuals_widget
+   group_name: refProperties
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: false
+   title_perso: Properties
    all_public: true  
 
 spi9:
-  col_num: 2
-  category: individuals_widget
-  group_name: specimenIndividualComments
-  mandatory: false
-  order_by: 4
-  opened: true
-  visible: true
-  title_perso: Comments
+   col_num: 2
+   category: individuals_widget
+   group_name: comments
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Comments
    all_public: true  
 
 spi10:
@@ -1785,3 +1785,4 @@ sw21:
    visible: true
    title_perso: External Links 
    all_public: true    
+  

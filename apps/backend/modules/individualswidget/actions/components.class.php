@@ -77,7 +77,7 @@ class individualswidgetComponents extends sfComponents
     $this->defineForm();
   }
 
-  public function executeSpecimenIndividualComments()
+  public function executeComments()
   {
     $this->defineForm();
     if(!isset($this->form['newComments']))
