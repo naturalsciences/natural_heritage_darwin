@@ -96,9 +96,9 @@ class loanActions extends DarwinActions
           $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
           $this->status = array();
           foreach($status as $sta) {
-            $this->status[$sta->getLoanRef()] = $sta;
-          $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
+            $this->status[$sta->getLoanRef()] = $sta;          
           }
+          $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());          
       }
     }
   }
