@@ -103,9 +103,12 @@ class Users extends BaseUsers
           $array_values['user_ref'] = $this->getId();
           $pref->fromArray($array_values);
           $pref->setIsAvailable(true);
-
-          $pref->save();
-          $count_widget++;
+          try
+          {
+            $pref->save();
+            $count_widget++;            
+          }
+          catch(Doctrine_Exception $ne) {}
         }
       }
     }

@@ -1293,7 +1293,7 @@ MyWidgets:
         User: u1
         col_num: 2
         category: individuals_widget
-        group_name: specimenIndividualComments
+        group_name: comments
         mandatory: false
         order_by: 4
         opened: true

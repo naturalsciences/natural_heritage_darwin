@@ -31,7 +31,7 @@ $(document).ready(function () {
 
     $('#add_comment').click( function()
     {
-        hideForRefresh('#specimenIndividualComments');
+        hideForRefresh('#comments');
         parent_el = $(this).closest('table.comments');
         parentId = $(parent_el).attr('id');
         $.ajax(
@@ -41,7 +41,7 @@ $(document).ready(function () {
           success: function(html)
           {                    
             $(parent_el).append(html);
-            showAfterRefresh('#specimenIndividualComments');
+            showAfterRefresh('#comments');
           }
         });
         $(this).closest('table.comments').find('thead').show();

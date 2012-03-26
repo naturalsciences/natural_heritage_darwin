@@ -25,7 +25,7 @@ class MyWidgets extends BaseMyWidgets
         "rockForm" => "This widget allows you to add a sterioscopic form that you can find when analysing a mineral composition.",
         "specimenIndividualCount" => "In this widget you can specify the exact number of individuals belonging to the same specimen or you can specify a lower and upperbound estimate of the number of individuals",
         "stage" => "This widget lets you describe the stage of the present individual e.g. a larva",
-        "specimenIndividualComments" =>  "his widget is used to add commentary. If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however",    
+        "comments" =>  "his widget is used to add commentary. If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however",    
         "refProperties" => "This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= measurement, sub type= lenght, qualifier= wing, method= manual, tool= ruler, value units= cm, Accuracy units= mm , value= 3, accuracy=0.2",
         "type" => "This widget allows you to add the information regarding the status of the individual e.g. holotype. You can, however, also add non conformistic nomenclatura types",
         "sex" => "This widget allows you to enter the sex of a particular individual. You can also add a specific attribute e.g. pregnant with eggs",
