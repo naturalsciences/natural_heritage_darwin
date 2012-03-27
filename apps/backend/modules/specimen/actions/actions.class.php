@@ -52,7 +52,7 @@ class specimenActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $people_ref = intval($request->getParameter('people_ref')) ;
     $form = $this->getSpecimenForm($request);
-    $form->addCollectors($number,array('people_ref' => $people_ref),$request->getParameter('iorder_by',0));
+    $form->addCollectors($number,array('people_ref' => $people_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('spec_people_associations',array('type'=>'collector','form' => $form['newCollectors'][$number], 'row_num'=>$number));
   }
 
@@ -73,7 +73,7 @@ class specimenActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $people_ref = intval($request->getParameter('people_ref')) ;
     $form = $this->getSpecimenForm($request);
-    $form->addDonators($number,$people_ref,$request->getParameter('iorder_by',0));
+    $form->addDonators($number, array('people_ref' => $people_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('spec_people_associations',array('type'=>'donator','form' => $form['newDonators'][$number], 'row_num'=>$number));
   }
 
@@ -203,7 +203,7 @@ class specimenActions extends DarwinActions
           {
             foreach ($Catalogue['donator'] as $key=>$val)
             {
-              $this->form->addDonators($key, $val->getPeopleRef(),$val->getOrderBy());
+              $this->form->addDonators($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
             }
           }
         }

@@ -130,7 +130,7 @@ class specimenwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newDonators']))
-    $this->form->loadEmbedDonators();
+      $this->form->loadEmbed('Donators');
   }
 
   public function executeRefProperties()
