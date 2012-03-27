@@ -808,6 +808,17 @@ chw5:
    title_perso: Bibliography
    all_public: true
 
+chw7:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
 lhw1:
    col_num: 1
    category: catalogue_lithostratigraphy_widget
@@ -852,6 +863,17 @@ lhw5:
    title_perso: Bibliography
    all_public: true
 
+lhw7:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
 liw1:
    col_num: 1
    category: catalogue_lithology_widget
@@ -894,6 +916,17 @@ liw5:
    opened: true
    visible: true
    title_perso: Bibliography
+   all_public: true
+
+liw7:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Related Files
    all_public: true
 
 miw1:
@@ -949,6 +982,17 @@ miw6:
    opened: true
    visible: true
    title_perso: Bibliography
+   all_public: true
+
+miw8:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 7
+   opened: true
+   visible: true
+   title_perso: Related Files
    all_public: true
 
 pe1:

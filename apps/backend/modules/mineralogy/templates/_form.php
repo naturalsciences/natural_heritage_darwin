@@ -1,7 +1,7 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
 
-<?php echo form_tag('mineralogy/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition'));?>
+<?php echo form_tag('mineralogy/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()), array('class'=>'edition', 'enctype'=>'multipart/form-data'));?>
   <?php include_partial('catalogue/commonJs');?>
   <table class="classifications_edit">
     <tbody>

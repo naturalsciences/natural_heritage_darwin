@@ -12,9 +12,7 @@ class MultimediaForm extends BaseMultimediaForm
 {
   public function configure()
   {
-    unset(
-      $this['creation_date_mask']
-      );
+    $this->useFields(array('referenced_relation','record_id', 'title','uri', 'description', 'type', 'creation_date', 'visible', 'publishable', 'filename', 'mime_type'));
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['referenced_relation'] = new sfValidatorString(array('required'=>false));    
     $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
@@ -67,6 +65,7 @@ class MultimediaForm extends BaseMultimediaForm
   
   public function doSave($con = null)
   {
-    $this->offsetUnset('id');  
+    //$this->offsetUnset('id');
+    parent::doSave();
   }
 }

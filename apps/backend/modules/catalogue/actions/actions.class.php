@@ -13,7 +13,7 @@ class catalogueActions extends DarwinActions
   protected $catalogue = array(
    'catalogue_relationships','catalogue_people','class_vernacular_names','catalogue_properties','comments',
    'specimens','specimen_individuals','specimen_parts','ext_links','collection_maintenance', 'insurances',
-   'people_addresses', 'people_comm','people_languages', 'people_relationships', 'classification_keywords');
+   'people_addresses', 'people_comm','people_languages', 'people_relationships', 'classification_keywords', 'multimedia');
 
   protected $ref_id = array('specimens' => 'spec_ref','specimen_individuals' => 'individual_ref','specimen_parts' => 'part_ref') ;
   public function executeRelation(sfWebRequest $request)
@@ -119,7 +119,11 @@ class catalogueActions extends DarwinActions
     }
 
     try{
-      $r->delete();
+          if($request->getParameter('table')=='multimedia'){
+            $r->deleteObjectAndFile();
+          }
+          else
+            $r->delete();
     }
     catch(Doctrine_Exception $ne)
     {
