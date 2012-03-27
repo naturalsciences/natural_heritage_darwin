@@ -208,11 +208,7 @@ class SpecimensForm extends BaseSpecimensForm
                                                                            );
 
     $this->widgetSchema['accompanying'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->widgetSchema['collector'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['code'] = new sfWidgetFormInputHidden(array('default'=>1));
-
-    $this->widgetSchema['bibliography'] = new sfWidgetFormInputHidden(array('default'=>1));
-
 
     $this->widgetSchema['donator'] = new sfWidgetFormInputHidden(array('default'=>1));
 
@@ -277,7 +273,6 @@ class SpecimensForm extends BaseSpecimensForm
                                                                              )
                                                                        );
 
-    $this->validatorSchema['collector'] = new sfValidatorPass();
 
     $this->validatorSchema['donator'] = new sfValidatorPass();
 
@@ -301,7 +296,11 @@ class SpecimensForm extends BaseSpecimensForm
       'validated_file_class' => 'myValidatedFile'
   ));  */
 
-    $this->validatorSchema['bibliography'] = new sfValidatorPass();
+    $this->widgetSchema['Biblio_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->validatorSchema['Biblio_holder'] = new sfValidatorPass();
+    
+    $this->validatorSchema['Collectors_holder'] = new sfValidatorPass();
+    $this->widgetSchema['Collectors_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
   }
 
@@ -359,34 +358,6 @@ class SpecimensForm extends BaseSpecimensForm
       //Re-embedding the container
       $this->embedForm('newCode', $this->embeddedForms['newCode']);
   }
-
-
-  public function addCollectors($num, $people_ref, $order_by=0)
-  {
-      if(! isset($this['newCollectors']))  $this->loadEmbedCollectors();
-      $options = array('referenced_relation' => 'specimens', 'people_type' => 'collector', 'people_ref' => $people_ref, 'order_by' => $order_by);
-      $val = new CataloguePeople();
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new PeopleAssociationsForm($val);
-      $this->embeddedForms['newCollectors']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newCollectors', $this->embeddedForms['newCollectors']);
-  }
-
-  public function addBiblio($num, $bib_ref, $order_by=0)
-  {
-      if(! isset($this['newBiblio']))  $this->loadEmbedBiblio();
-      $options = array('referenced_relation' => 'specimens', 'bibliography_ref' => $bib_ref);
-      $val = new CatalogueBibliography();
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new BiblioAssociationsForm($val);
-      $this->embeddedForms['newBiblio']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newBiblio', $this->embeddedForms['newBiblio']);
-  }
-
   public function addDonators($num, $people_ref, $order_by=0)
   {
       if(! isset($this['newDonators']))  $this->loadEmbedDonators();
@@ -521,45 +492,6 @@ class SpecimensForm extends BaseSpecimensForm
     $this->setDefault('collecting_methods_list', $this->object->CollectingMethods->getPrimaryKeys());
   }
   
-
-  public function loadEmbedCollectors()
-  {
-    if($this->isBound()) return;
-    $subForm = new sfForm();
-    $this->embedForm('Collectors',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens','collector', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new PeopleAssociationsForm($vals);
-        $this->embeddedForms['Collectors']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('Collectors', $this->embeddedForms['Collectors']);
-    }
-    $subForm = new sfForm();
-    $this->embedForm('newCollectors',$subForm);
-  }
-
-  public function loadEmbedBiblio()
-  {
-    if($this->isBound()) return;
-    $subForm = new sfForm();
-    $this->embedForm('Biblio',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new BiblioAssociationsForm($vals);
-        $this->embeddedForms['Biblio']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('Biblio', $this->embeddedForms['Biblio']);
-    }
-    $subForm = new sfForm();
-    $this->embedForm('newBiblio',$subForm);
-  }
-
   public function loadEmbedDonators()
   {
     if($this->isBound()) return;
@@ -743,53 +675,6 @@ class SpecimensForm extends BaseSpecimensForm
         }
       }
     }
-
-    if(!isset($taintedValues['collector']))
-    {
-      $this->offsetUnset('Collectors');
-      unset($taintedValues['Collectors']);
-      $this->offsetUnset('newCollectors');
-      unset($taintedValues['newCollectors']);
-    }
-    else
-    {
-      $this->loadEmbedCollectors();
-      if(isset($taintedValues['newCollectors']))
-      {
-        foreach($taintedValues['newCollectors'] as $key=>$newVal)
-        {
-          if (!isset($this['newCollectors'][$key]))
-          {
-            $this->addCollectors($key,$newVal['people_ref'],$newVal['order_by']);
-          }
-          $taintedValues['newCollectors'][$key]['record_id'] = 0;
-        }
-      }
-    }
-
-    if(!isset($taintedValues['bibliography']))
-    {
-      $this->offsetUnset('Biblio');
-      unset($taintedValues['Biblio']);
-      $this->offsetUnset('newBiblio');
-      unset($taintedValues['newBiblio']);
-    }
-    else
-    {
-      $this->loadEmbedBiblio();
-      if(isset($taintedValues['newBiblio']))
-      {
-        foreach($taintedValues['newBiblio'] as $key=>$newVal)
-        {
-          if (!isset($this['newBiblio'][$key]))
-          {
-            $this->addBiblio($key,$newVal['bibliography_ref']);
-          }
-          $taintedValues['newBiblio'][$key]['record_id'] = 0;
-        }
-      }
-    }
-
     if(!isset($taintedValues['donator']))
     {
       $this->offsetUnset('Donators');
@@ -989,11 +874,52 @@ class SpecimensForm extends BaseSpecimensForm
     else
       $this->loadEmbedMethods();
 
+    $this->bindEmbed('Biblio', 'addBiblio' , $taintedValues);
+    $this->bindEmbed('Collectors', 'addCollectors' , $taintedValues);
+
     parent::bind($taintedValues, $taintedFiles);
+  }
+
+  public function addBiblio($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'specimens', 'bibliography_ref' => $values['bibliography_ref'], 'record_id' => $this->getObject()->getId());
+    $val = new CatalogueBibliography();
+    $val->fromArray($options);
+    $this->attachEmbedRecord('Biblio', new BiblioAssociationsForm($val), $num);
+  }
+
+  public function addCollectors($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'specimens', 'people_type' => 'collector', 'people_ref' => $values['people_ref'], 'order_by' => $order_by,
+      'record_id' => $this->getObject()->getId());
+    $val = new CataloguePeople();
+    $val->fromArray($options);
+    $this->attachEmbedRecord('Collectors', new PeopleAssociationsForm($val), $num);
+  }
+
+  public function getEmbedRecords($emFieldName, $record_id = false)
+  {
+    if($record_id === false)
+      $record_id = $this->getObject()->getId();
+    if( $emFieldName =='Biblio' )
+      return Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $record_id);
+    if( $emFieldName =='Collectors' )
+      return Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens','collector', $record_id);
+  }
+
+  public function getEmbedRelationForm($emFieldName, $values)
+  {
+   if( $emFieldName =='Biblio' )
+      return new BiblioAssociationsForm($values);
+    if( $emFieldName =='Collectors' )
+      return new PeopleAssociationsForm($values);
   }
 
   public function saveEmbeddedForms($con = null, $forms = null)
   {
+    $this->saveEmbed('Biblio', 'bibliography_ref' ,$forms,array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
+    $this->saveEmbed('Collectors', 'people_ref' ,$forms,array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
+
     if (null === $forms && $this->getValue('ident'))
     {
       $value = $this->getValue('newIdentification');
@@ -1100,49 +1026,6 @@ class SpecimensForm extends BaseSpecimensForm
         }
       }
     }
-
-    if (null === $forms && $this->getValue('collector'))
-    {
-      $value = $this->getValue('newCollectors');
-      foreach($this->embeddedForms['newCollectors']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['people_ref']))
-          unset($this->embeddedForms['newCollectors'][$name]);
-        else
-          $form->getObject()->setRecordId($this->getObject()->getId());
-      }
-      $value = $this->getValue('Collectors');
-      foreach($this->embeddedForms['Collectors']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['people_ref']))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Collectors'][$name]);
-        }
-      }
-    }
-
-    if (null === $forms && $this->getValue('bibliography'))
-    {
-      $value = $this->getValue('newBiblio');
-      foreach($this->embeddedForms['newBiblio']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['bibliography_ref']))
-          unset($this->embeddedForms['newBiblio'][$name]);
-        else
-          $form->getObject()->setRecordId($this->getObject()->getId());
-      }
-      $value = $this->getValue('Biblio');
-      foreach($this->embeddedForms['Biblio']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['bibliography_ref']))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Biblio'][$name]);
-        }
-      }
-    }
-
 
     if (null === $forms && $this->getValue('donator'))
     {

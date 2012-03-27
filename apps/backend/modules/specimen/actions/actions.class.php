@@ -52,7 +52,7 @@ class specimenActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $people_ref = intval($request->getParameter('people_ref')) ;
     $form = $this->getSpecimenForm($request);
-    $form->addCollectors($number,$people_ref,$request->getParameter('iorder_by',0));
+    $form->addCollectors($number,array('people_ref' => $people_ref),$request->getParameter('iorder_by',0));
     return $this->renderPartial('spec_people_associations',array('type'=>'collector','form' => $form['newCollectors'][$number], 'row_num'=>$number));
   }
 
@@ -61,8 +61,9 @@ class specimenActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
     $bibliography_ref = intval($request->getParameter('biblio_ref')) ;
+
     $form = $this->getSpecimenForm($request);
-    $form->addBiblio($number,$bibliography_ref,$request->getParameter('iorder_by',0));
+    $form->addBiblio($number, array( 'bibliography_ref' => $bibliography_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
   }
 
@@ -195,7 +196,7 @@ class specimenActions extends DarwinActions
           {
             foreach ($Catalogue['collector'] as $key=>$val)
             {
-              $this->form->addCollectors($key, $val->getPeopleRef(),$val->getOrderBy());
+              $this->form->addCollectors($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
             }
           }
           if(isset($Catalogue['donator']))
@@ -208,10 +209,10 @@ class specimenActions extends DarwinActions
         }
 
         //reembed biblio
-        $bib =  Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $duplic);
+        $bib =  $this->form->getEmbedRecords('Biblio', $duplic);
         foreach($bib as $key=>$vals)
         {
-          $this->form->addBiblio($key, $vals->getBibliographyRef());
+          $this->form->addBiblio($key, array('bibliography_ref' => $vals->getBibliographyRef()) );
         }
 
         //reembed identification

@@ -215,7 +215,7 @@ class DarwinTestFunctional extends sfTestFunctional
   	  	  'collection_ref' => $collection_id,
   	  	  'taxon_ref' => $taxon_id,
                   'code' => 1,
-                  'collector' => 1,
+                  'Collectors_holder' => 1,
                   'comment'=>1,
                   'ident' => 1,
   	  	  'newCode' => array(
@@ -251,6 +251,7 @@ class DarwinTestFunctional extends sfTestFunctional
 		  'acquisition_date' => array('day' => 01, 'month' => 06, 'year' => 1984)
   	       )))->
       end()->
+      //with('form')->begin()->debug()->
       with('doctrine')->begin()-> 
         check('Specimens', array(
           'collection_ref' => $collection_id,
@@ -267,7 +268,7 @@ class DarwinTestFunctional extends sfTestFunctional
   	$this->setTester('doctrine', 'sfTesterDoctrine');
   	$this->
   	  info('** add a custom people **')->
-    	  get('people/new')->  	
+    	  get('people/new')->
     	  with('response')->begin()->
   	  click('#submit', array('people' => array('family_name' => $name)
   	  				    ))->end()->

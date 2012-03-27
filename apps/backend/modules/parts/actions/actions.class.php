@@ -318,7 +318,7 @@ class partsActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $bibliography_ref = intval($request->getParameter('biblio_ref')) ;
     $form = $this->getSpecimenPartForm($request);
-    $form->addBiblio($number,$bibliography_ref,$request->getParameter('iorder_by',0));
+    $form->addBiblio($number, array( 'bibliography_ref' => $bibliography_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('specimen/biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
   }
 }

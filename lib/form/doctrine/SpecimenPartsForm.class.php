@@ -185,8 +185,8 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       'validated_file_class' => 'myValidatedFile'
   ));  */
 
-   $this->widgetSchema['bibliography'] = new sfWidgetFormInputHidden(array('default'=>1));
-   $this->validatorSchema['bibliography'] = new sfValidatorPass();
+   $this->widgetSchema['Biblio_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+   $this->validatorSchema['Biblio_holder'] = new sfValidatorPass();
 
     $this->validatorSchema->setPostValidator(new sfValidatorCallback(array('callback' => array($this, 'checkSelfAttached'))));
     $this->mergePostValidator(new sfValidatorSchemaCompare('specimen_part_count_min', '<=', 'specimen_part_count_max',
@@ -196,36 +196,20 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
 
   }
 
-  public function addBiblio($num, $bib_ref, $order_by=0)
+  public function addBiblio($num, $values, $order_by=0)
   {
-      if(! isset($this['newBiblio']))  $this->loadEmbedBiblio();
-      $options = array('referenced_relation' => 'specimen_parts', 'bibliography_ref' => $bib_ref);
-      $val = new CatalogueBibliography();
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new BiblioAssociationsForm($val);
-      $this->embeddedForms['newBiblio']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newBiblio', $this->embeddedForms['newBiblio']);
+    $options = array('referenced_relation' => 'specimen_individuals', 'bibliography_ref' => $values['bibliography_ref'], 'record_id' => $this->getObject()->getId());
+    $val = new CatalogueBibliography();
+    $val->fromArray($options);
+    $this->attachEmbedRecord('Biblio', new BiblioAssociationsForm($val), $num);
   }
 
-  public function loadEmbedBiblio()
+  public function getEmbedRecords($emFieldName, $record_id = false)
   {
-    if($this->isBound()) return;
-    $subForm = new sfForm();
-    $this->embedForm('Biblio',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_parts', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new BiblioAssociationsForm($vals);
-        $this->embeddedForms['Biblio']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('Biblio', $this->embeddedForms['Biblio']);
-    }
-    $subForm = new sfForm();
-    $this->embedForm('newBiblio',$subForm);
+    if($record_id === false)
+      $record_id = $this->getObject()->getId();
+    if( $emFieldName =='Biblio' )
+      return Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $record_id);
   }
 
   public function forceContainerChoices()
@@ -622,36 +606,15 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
         }
       }
     }
-
-
-    if(!isset($taintedValues['bibliography']))
-    {
-      $this->offsetUnset('Biblio');
-      unset($taintedValues['Biblio']);
-      $this->offsetUnset('newBiblio');
-      unset($taintedValues['newBiblio']);
-    }
-    else
-    {
-      $this->loadEmbedBiblio();
-      if(isset($taintedValues['newBiblio']))
-      {
-        foreach($taintedValues['newBiblio'] as $key=>$newVal)
-        {
-          if (!isset($this['newBiblio'][$key]))
-          {
-            $this->addBiblio($key,$newVal['bibliography_ref']);
-          }
-          $taintedValues['newBiblio'][$key]['record_id'] = 0;
-        }
-      }
-    }
+    $this->bindEmbed('Biblio', 'addBiblio' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);
   }
 
 
   public function saveEmbeddedForms($con = null, $forms = null)
   {
+    $this->saveEmbed('Biblio', 'bibliography_ref' ,$forms,array('referenced_relation'=>'specimen_individuals', 'record_id' => $this->getObject()->getId()));
+
     if (null === $forms && $this->getValue('code'))
     {
       $value = $this->getValue('newCode');
@@ -791,28 +754,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
         {
           $form->getObject()->deleteObjectAndFile();
           unset($this->embeddedForms['RelatedFiles'][$name]);
-        }
-      }
-    }
-
-
-    if (null === $forms && $this->getValue('bibliography'))
-    {
-      $value = $this->getValue('newBiblio');
-      foreach($this->embeddedForms['newBiblio']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['bibliography_ref']))
-          unset($this->embeddedForms['newBiblio'][$name]);
-        else
-          $form->getObject()->setRecordId($this->getObject()->getId());
-      }
-      $value = $this->getValue('Biblio');
-      foreach($this->embeddedForms['Biblio']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['bibliography_ref']))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Biblio'][$name]);
         }
       }
     }

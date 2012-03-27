@@ -119,6 +119,6 @@ class individualswidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newBiblio']))
-      $this->form->loadEmbedBiblio();
+      $this->form->loadEmbed('Biblio');
   }
 }

@@ -123,7 +123,7 @@ class specimenwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newCollectors']))
-    $this->form->loadEmbedCollectors();
+      $this->form->loadEmbed('Collectors');
   }
 
   public function executeRefDonators()
@@ -187,6 +187,6 @@ class specimenwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newBiblio']))
-      $this->form->loadEmbedBiblio();
+      $this->form->loadEmbed('Biblio');
   }
 }

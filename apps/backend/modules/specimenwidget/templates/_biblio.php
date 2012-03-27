@@ -3,7 +3,7 @@
    <thead style="<?php echo ($form['Biblio']->count() || $form['newBiblio']->count())?'':'display: none;';?>" class="spec_ident_biblio_head">
 	<tr>
 	   <th colspan='3'>
-		   <?php echo $form['bibliography'];?>
+		   <?php echo $form['Biblio_holder'];?>
 	   </th>
 	</tr>
    </thead>

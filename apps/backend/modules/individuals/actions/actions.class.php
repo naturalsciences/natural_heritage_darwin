@@ -17,12 +17,12 @@ class individualsActions extends DarwinActions
     if(! $request->hasParameter('id'))
     {
       $this->spec_individual = new SpecimenIndividuals(); 
-      $duplic = $request->getParameter('duplicate_id','0') ;          
+      $duplic = $request->getParameter('duplicate_id','0') ;
       if ($duplic) // then it's a duplicate individual
       {
         $this->spec_individual = $this->getRecordIfDuplicate($duplic,$this->spec_individual);    
         // set all necessary widgets to visible 
-        if($request->hasParameter('all_duplicate'))        
+        if($request->hasParameter('all_duplicate'))
           Doctrine::getTable('SpecimenIndividuals')->getRequiredWidget($this->spec_individual, $this->getUser()->getId(), 'individuals_widget',1);
       }    
     }
@@ -291,7 +291,7 @@ class individualsActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $bibliography_ref = intval($request->getParameter('biblio_ref')) ;
     $form = $this->getSpecimenIndividualsForm($request);
-    $form->addBiblio($number,$bibliography_ref,$request->getParameter('iorder_by',0));
+    $form->addBiblio($number, array( 'bibliography_ref' => $bibliography_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('specimen/biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
   }
 
