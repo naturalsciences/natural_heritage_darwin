@@ -214,13 +214,13 @@ class DarwinTestFunctional extends sfTestFunctional
   	  click('#submit_spec_f1', array('specimen' => array(
   	  	  'collection_ref' => $collection_id,
   	  	  'taxon_ref' => $taxon_id,
-                  'code' => 1,
+                  'Codes_holder' => 1,
                   'Collectors_holder' => 1,
                   'comment'=>1,
                   'ident' => 1,
-  	  	  'newCode' => array(
-                    0 => array('code_category' => 'secondary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 'code_suffix' => 'ary','code_suffix_separator' => '/', 'referenced_relation' => 'specimens'),
-                    1 => array('code_category' => 'main','code_prefix' => 'mn', 'code_prefix_separator' => '/','code' => '112', 'code_suffix' => 'nn','code_suffix_separator' => '/', 'referenced_relation' => 'specimens')  	  	  			
+  	  	  'newCodes' => array(
+                    0 => array('code_category' => 'secondary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 'code_suffix' => 'ary','code_suffix_separator' => '/'),
+                    1 => array('code_category' => 'main','code_prefix' => 'mn', 'code_prefix_separator' => '/','code' => '112', 'code_suffix' => 'nn','code_suffix_separator' => '/')
                   ),
   	  	  'newCollectors' => array(
 	              0 => array('people_ref' => $collector_1, 'referenced_relation' => 'specimens', 'order_by' => 1, 'people_type' => 'collector'),
@@ -286,6 +286,7 @@ class DarwinTestFunctional extends sfTestFunctional
      	info('** add a custom Individual **')->
      	get('individuals/edit/spec_id/'.$specimen_id)->
      	with('response')->begin()->
+        isStatusCode(200)->
      	click('#submit_spec_individual_f1', array('specimen_individuals' => array(
                           'comment'=>1,
      	                  'newComments' => array(0 => array(
@@ -315,36 +316,42 @@ class DarwinTestFunctional extends sfTestFunctional
   
   public function addCustomPart($individual_id)
   {
-     $institution = Doctrine::getTable('People')->getPeopleByName('Institut Royal des Sciences Naturelles de Belgique')->getId();
-     $this->setTester('doctrine', 'sfTesterDoctrine');
-     $this->
-     	info('** add a custom Individual **')->
-     	get('parts/edit/indid/'.$individual_id)->
-     	with('response')->begin()->  	
-     	click('#submit_spec_f1', array('specimen_parts' => array(
-     										'container' => 'Test for parts',
-                                                                                'code'=>1,
-                                                                                'comment'=>1,
-     										'surnumerary' => true,
-     										'sub_container' => 'Sub test for parts',
-     										'newInsurance' => array(
-     													0 => array(
-                                                                                                          'referenced_relation' => 'specimen_parts',
-     															'insurance_value' => 666,
-     															'insurance_currency' => '€',
-     															'insurer_ref' => $institution))	,
-     										 'newComments' => array(0 => array(
-                                                                                    'referenced_relation' => 'specimen_parts',
-                                                                                    'notion_concerned'=> 'preparation',
-                                                                                    'comment' => 'part preparation')),
-     										 'newCode' => array(
-                	  	  			0 => array('code_category' => 'temporary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 
-                	  	  			    'code_suffix' => 'ary', 'code_suffix_separator' => '/', 'referenced_relation' => 'specimen_parts'))
-     						)))->end()->
-       with('doctrine')->begin()->		    
-       check('SpecimenParts', array('specimen_individual_ref' => $individual_id,
-       							'container' => 'Test for parts',
-       							'sub_container' => 'Sub test for parts'))->
-	  end();
+    $institution = Doctrine::getTable('People')->getPeopleByName('Institut Royal des Sciences Naturelles de Belgique')->getId();
+    $this->setTester('doctrine', 'sfTesterDoctrine');
+    $this->
+      info('** add a custom Individual **')->
+      get('parts/edit/indid/'.$individual_id)->
+      with('response')->begin()->
+        isStatusCode(200)->
+        click('#submit_spec_f1', array(
+          'specimen_parts' => array(
+            'container' => 'Test for parts',
+            'Codes_holder'=>1,
+            'comment'=>1,
+            'surnumerary' => true,
+            'sub_container' => 'Sub test for parts',
+            'newInsurance' => array(
+              0 => array(
+                'referenced_relation' => 'specimen_parts',
+                'insurance_value' => 666,
+                'insurance_currency' => '€',
+                'insurer_ref' => $institution))	,
+            'newComments' => array(
+              0 => array(
+                'referenced_relation' => 'specimen_parts',
+                'notion_concerned'=> 'preparation',
+                'comment' => 'part preparation')),
+                'newCodes' => array(
+                  0 => array(
+                    'code_category' => 'temporary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 
+                    'code_suffix' => 'ary', 'code_suffix_separator' => '/', 'referenced_relation' => 'specimen_parts'))
+        )))->
+      end()->
+      with('doctrine')->begin()->
+      check('SpecimenParts', array(
+        'specimen_individual_ref' => $individual_id,
+        'container' => 'Test for parts',
+        'sub_container' => 'Sub test for parts'))->
+      end();
   } 
 }

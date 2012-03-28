@@ -24,7 +24,7 @@ class individualsActions extends DarwinActions
         // set all necessary widgets to visible 
         if($request->hasParameter('all_duplicate'))
           Doctrine::getTable('SpecimenIndividuals')->getRequiredWidget($this->spec_individual, $this->getUser()->getId(), 'individuals_widget',1);
-      }    
+      }
     }
     else
     {
@@ -99,13 +99,7 @@ class individualsActions extends DarwinActions
             $this->individual->reembedNewIdentification($ident, $key);    
           }
         }
-
-        $bib =  Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_individuals', $duplic);
-        foreach($bib as $key=>$vals)
-        {
-          $this->form->addBiblio($key, $vals->getBibliographyRef());
-        }
-
+        $this->individual->duplicate($duplic);
       }
     }
     if($request->isMethod('post'))
@@ -287,10 +281,10 @@ class individualsActions extends DarwinActions
 
   public function executeAddBiblio(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
     $bibliography_ref = intval($request->getParameter('biblio_ref')) ;
-    $form = $this->getSpecimenIndividualsForm($request);
+    $form = new SpecimenIndividualsForm();
     $form->addBiblio($number, array( 'bibliography_ref' => $bibliography_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('specimen/biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
   }

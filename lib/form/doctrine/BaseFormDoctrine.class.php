@@ -147,10 +147,10 @@ abstract class BaseFormDoctrine extends sfFormDoctrine
           if (!isset($this['new'.$emFieldName][$key]))
           {
             //Call the add function of the embeddedForm
-            $this->$fct_add($key,$newVal, $key); ///OUCH
+            $this->$fct_add($key, $newVal, $key);
           }
           /** May not be usefull */
-          $taintedValues['new'.$emFieldName][$key]['record_id'] = 0; ///OUCH
+          //$taintedValues['new'.$emFieldName][$key]['record_id'] = 0; ///OUCH
         }
       }
     }

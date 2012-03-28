@@ -122,12 +122,20 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
     $this->validatorSchema['Biblio_holder'] = new sfValidatorPass();
   }
 
+
+  public function duplicate($id)
+  {
+    //reembed biblio
+    $bib =  $this->getEmbedRecords('Biblio', $id);
+    foreach($bib as $key=>$vals) {
+      $this->addBiblio($key, array('bibliography_ref' => $vals->getBibliographyRef()) );
+    }
+  }
+
   public function addBiblio($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'specimen_individuals', 'bibliography_ref' => $values['bibliography_ref'], 'record_id' => $this->getObject()->getId());
-    $val = new CatalogueBibliography();
-    $val->fromArray($options);
-    $this->attachEmbedRecord('Biblio', new BiblioAssociationsForm($val), $num);
+    $this->attachEmbedRecord('Biblio', new BiblioAssociationsForm(DarwinTable::newObjectFromArray('CatalogueBibliography',$options)), $num);
   }
 
   public function loadEmbedIndentifications()
@@ -622,5 +630,13 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
     $javascripts=parent::getStylesheets();
     $javascripts['/css/ui.datepicker.css']='all';
     return $javascripts;
+  }
+
+  public function getEmbedRelationForm($emFieldName, $values)
+  {
+    if( $emFieldName =='Biblio' )
+      return new BiblioAssociationsForm($values);
+    if( $emFieldName =='Codes' )
+      return new CodesForm($values);
   }
 }

@@ -72,8 +72,8 @@ class partwidgetComponents extends sfComponents
   public function executeRefCodes()
   {
     $this->defineForm();
-    if(!isset($this->form['newCode']))  
-     $this->form->loadEmbedCode();
+    if(!isset($this->form['newCodes']))
+      $this->form->loadEmbed('Codes');
 
     $this->code_copy = false;
     if($this->form->getObject()->isNew())
@@ -86,8 +86,6 @@ class partwidgetComponents extends sfComponents
       if($col)
         $this->code_copy = $col->getCodePartCodeAutoCopy();
     }
-
-    $this->defineForm();
   }
 
   public function executeRefInsurances()

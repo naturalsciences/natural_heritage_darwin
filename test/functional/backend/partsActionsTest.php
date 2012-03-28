@@ -24,7 +24,7 @@ $browser->
 $browser->addCustomPart($indivId);
 	
 $browser->
-  get('parts/overview/id/'.$indivId)-> 
+  get('parts/overview/id/'.$indivId)->
   with('response')->begin()->
      isStatusCode(200)->
      checkElement('title', 'Parts overview')->

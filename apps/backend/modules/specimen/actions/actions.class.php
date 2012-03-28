@@ -41,9 +41,8 @@ class specimenActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
-    $collectionId = $request->getParameter('collection_id', null);
-    $form->addCodes($number, $collectionId);
-    return $this->renderPartial('spec_codes',array('form' => $form['newCode'][$number], 'rownum'=>$number));
+    $form->addCodes($number, array());
+    return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number));
   }
 
   public function executeAddCollector(sfWebRequest $request)
@@ -156,14 +155,7 @@ class specimenActions extends DarwinActions
       $this->form = new SpecimensForm($specimen);
       if($duplic)
       {
-        // reembed duplicated codes
-        $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$duplic) ;
-        foreach ($Codes as $key=>$val)
-        {
-           $code = new Codes() ;
-           $code = $this->getRecordIfDuplicate($val->getId(),$code);
-           $this->form->addCodes($key,null,$code);
-        }
+        $this->form->duplicate($duplic);
         // reembed duplicated specimen Accompanying
         $spec_a = Doctrine::getTable('SpecimensAccompanying')->findBySpecimen($duplic) ;
         foreach ($spec_a as $key=>$val)
@@ -188,32 +180,6 @@ class specimenActions extends DarwinActions
           $links = $this->getRecordIfDuplicate($val->getId(),$links); 
           $this->form->addExtLinks($key, $links) ;          
         } 
-        // reembed duplicated collector
-        $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('specimens',$duplic) ;
-        if(count($Catalogue))
-        {
-          if(isset($Catalogue['collector']))
-          {
-            foreach ($Catalogue['collector'] as $key=>$val)
-            {
-              $this->form->addCollectors($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
-            }
-          }
-          if(isset($Catalogue['donator']))
-          {
-            foreach ($Catalogue['donator'] as $key=>$val)
-            {
-              $this->form->addDonators($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
-            }
-          }
-        }
-
-        //reembed biblio
-        $bib =  $this->form->getEmbedRecords('Biblio', $duplic);
-        foreach($bib as $key=>$vals)
-        {
-          $this->form->addBiblio($key, array('bibliography_ref' => $vals->getBibliographyRef()) );
-        }
 
         //reembed identification
          $Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$duplic) ;

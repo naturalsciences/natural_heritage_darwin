@@ -152,11 +152,34 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
         'expanded' => true,
     ));
 
+
+    $this->widgetSchema['prefix_separator'] = new sfWidgetFormDoctrineChoice(array(
+        'model' => 'Codes',
+        'table_method' => 'getDistinctPrefixSep',
+        'method' => 'getCodePrefixSeparator',
+        'key_method' => 'getCodePrefixSeparator',
+        'add_empty' => true,
+    ));
+
+    $this->widgetSchema['prefix_separator']->setAttributes(array('class'=>'vvsmall_size'));
+
+    $this->widgetSchema['suffix_separator'] = new sfWidgetFormDoctrineChoice(array(
+        'model' => 'Codes',
+        'table_method' => 'getDistinctSuffixSep',
+        'method' => 'getCodeSuffixSeparator',
+        'key_method' => 'getCodeSuffixSeparator',
+        'add_empty' => true,
+    ));
+
+    $this->widgetSchema['suffix_separator']->setAttributes(array('class'=>'vvsmall_size'));
+
+    $this->validatorSchema['prefix_separator'] = new sfValidatorPass();
+    $this->validatorSchema['suffix_separator'] = new sfValidatorPass();
+
+
     $this->setDefault('accuracy', 1);
     $this->widgetSchema['accuracy']->setLabel('Accuracy');
     $this->validatorSchema['accuracy'] = new sfValidatorPass();
-
-    $this->widgetSchema['code'] = new sfWidgetFormInputHidden(array('default'=>1));
 
     $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['extlink'] = new sfWidgetFormInputHidden(array('default'=>1));
@@ -170,7 +193,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
 
     $this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => false, 'trim' => true));
 
-    $this->validatorSchema['code'] = new sfValidatorPass();
     $this->validatorSchema['comment'] = new sfValidatorPass();
     $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['insurance'] = new sfValidatorPass();
@@ -194,14 +216,15 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       array('invalid' => 'The min number ("%left_field%") must be lower or equal the max number ("%right_field%")' )
     ));
 
+    $this->validatorSchema['Codes_holder'] = new sfValidatorPass();
+    $this->widgetSchema['Codes_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+
   }
 
   public function addBiblio($num, $values, $order_by=0)
   {
-    $options = array('referenced_relation' => 'specimen_individuals', 'bibliography_ref' => $values['bibliography_ref'], 'record_id' => $this->getObject()->getId());
-    $val = new CatalogueBibliography();
-    $val->fromArray($options);
-    $this->attachEmbedRecord('Biblio', new BiblioAssociationsForm($val), $num);
+    $options = array('referenced_relation' => 'specimen_parts', 'bibliography_ref' => $values['bibliography_ref'], 'record_id' => $this->getObject()->getId());
+    $this->attachEmbedRecord('Biblio', new BiblioAssociationsForm(DarwinTable::newObjectFromArray('CatalogueBibliography',$options)), $num);
   }
 
   public function getEmbedRecords($emFieldName, $record_id = false)
@@ -209,7 +232,9 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Biblio' )
-      return Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $record_id);
+      return Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_parts', $record_id);
+    if( $emFieldName =='Codes' )
+      return Doctrine::getTable('Codes')->getCodesRelated('specimen_parts', $record_id);
   }
 
   public function forceContainerChoices()
@@ -261,32 +286,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     return $values;
   }
 
-  public function addCodes($num, $collectionId=null, $obj=null)
-  {
-      if(! isset($this['newCode'])) $this->loadEmbedCode();
-      $options = array('referenced_relation' => 'specimen_parts');
-      $form_options = array();
-      if ($collectionId)
-      {
-        $collection = Doctrine::getTable('Collections')->findOneById($collectionId);
-        if($collection)
-        {
-          $options['code_prefix'] = $collection->getCodePrefix();
-          $options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
-          $options['code_suffix'] = $collection->getCodeSuffix();
-          $options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
-        }
-      }
-      if(!$obj) $val = new Codes();
-      else $val = $obj ;
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new CodesForm($val);
-      $this->embeddedForms['newCode']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newCode', $this->embeddedForms['newCode']);
-  }
-  
   public function addInsurances($num, $obj=null)
   {
       if(! isset($this['newInsurance'])) $this->loadEmbedInsurance();
@@ -435,50 +434,22 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
   }
 
 
-  public function loadEmbedCode()
+  public function addCodes($num, $values, $order_by=0)
   {
-    if($this->isBound()) return;
-    /* Codes sub form */
-    $subForm = new sfForm();
-    $this->embedForm('Codes',$subForm);
-    if($this->getObject()->getId() !='')
+    $options = array('referenced_relation' => 'specimen_parts', 'record_id' => $this->getObject()->getId());
+    if (! $this->getObject()->isNew())
     {
-      foreach(Doctrine::getTable('Codes')->getCodesRelated('specimen_parts', $this->getObject()->getId()) as $key=>$vals)
+      $collection = $this->getObject()->Individual->Specimen->Collection();
+      if($collection)
       {
-        $form = new CodesForm($vals);
-        $this->embeddedForms['Codes']->embedForm($key, $form);
+        $options['code_prefix'] = $collection->getCodePrefix();
+        $options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
+        $options['code_suffix'] = $collection->getCodeSuffix();
+        $options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
       }
-      //Re-embedding the container
-      $this->embedForm('Codes', $this->embeddedForms['Codes']);
     }
-    $subForm = new sfForm();
-    $this->embedForm('newCode',$subForm);
-
-
-    $this->widgetSchema['prefix_separator'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'Codes',
-        'table_method' => 'getDistinctPrefixSep',
-        'method' => 'getCodePrefixSeparator',
-        'key_method' => 'getCodePrefixSeparator',
-        'add_empty' => true,
-    ));
-
-    $this->widgetSchema['prefix_separator']->setAttributes(array('class'=>'vvsmall_size'));
-
-    $this->widgetSchema['suffix_separator'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'Codes',
-        'table_method' => 'getDistinctSuffixSep',
-        'method' => 'getCodeSuffixSeparator',
-        'key_method' => 'getCodeSuffixSeparator',
-        'add_empty' => true,
-    ));
-
-    $this->widgetSchema['suffix_separator']->setAttributes(array('class'=>'vvsmall_size'));
-    $this->validatorSchema['prefix_separator'] = new sfValidatorPass();
-
-    $this->validatorSchema['suffix_separator'] = new sfValidatorPass();
+    $this->attachEmbedRecord('Codes', new CodesForm(DarwinTable::newObjectFromArray('Codes',$options)), $num);
   }
-
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
@@ -489,31 +460,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
         $taintedValues['specimen_part_count_max'] = $taintedValues['specimen_part_count_min'];
       }
     }
-
-
-    if(!isset($taintedValues['code']))
-    {
-      $this->offsetUnset('Codes');
-      unset($taintedValues['Codes']);
-      $this->offsetUnset('newCode');
-      unset($taintedValues['newCode']);
-    }
-    else
-    {
-      $this->loadEmbedCode();
-      if(isset($taintedValues['newCode']))
-      {
-        foreach($taintedValues['newCode'] as $key=>$newVal)
-        {
-          if (!isset($this['newCode'][$key]))
-          {
-            $this->addCodes($key);
-          }
-          $taintedValues['newCode'][$key]['record_id'] = 0;
-        }
-      }
-    }
-
 
     if(!isset($taintedValues['comment']))
     {
@@ -607,60 +553,16 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       }
     }
     $this->bindEmbed('Biblio', 'addBiblio' , $taintedValues);
+    $this->bindEmbed('Codes', 'addCodes' , $taintedValues);
+
     parent::bind($taintedValues, $taintedFiles);
   }
 
 
   public function saveEmbeddedForms($con = null, $forms = null)
   {
-    $this->saveEmbed('Biblio', 'bibliography_ref' ,$forms,array('referenced_relation'=>'specimen_individuals', 'record_id' => $this->getObject()->getId()));
-
-    if (null === $forms && $this->getValue('code'))
-    {
-      $value = $this->getValue('newCode');
-      $collection = Doctrine::getTable('Collections')->findOneById($this->collection);
-      foreach($this->embeddedForms['newCode']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['code']))
-        {
-          unset($this->embeddedForms['newCode'][$name]);
-        }
-        elseif($value[$name]['code']=='' && $value[$name]['code_prefix']=='' && $value[$name]['code_suffix']=='' && $collection)
-        {
-          if($collection->getCodeAutoIncrement())
-          {
-            $form->getObject()->setCode(Doctrine::getTable('Collections')->getAndUpdateLastCode($this->collection));
-            $form->getObject()->setRecordId($this->getObject()->getId());
-          }
-          else
-          {
-            unset($this->embeddedForms['newCode'][$name]);
-          }
-        }
-        else
-        {
-          if($value[$name]['code']=='' && $collection)
-          {
-            if($collection->getCodeAutoIncrement())
-            {
-              $form->getObject()->setCode(Doctrine::getTable('Collections')->getAndUpdateLastCode($this->collection));
-            }
-          }
-          $form->getObject()->setRecordId($this->getObject()->getId());
-        }
-      }
-
-      $value = $this->getValue('Codes');
-      foreach($this->embeddedForms['Codes']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['code']) || ($value[$name]['code_prefix']=='' && $value[$name]['code']=='' && $value[$name]['code_suffix']==''))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Codes'][$name]);
-        }
-      }
-    }
-
+    $this->saveEmbed('Biblio', 'bibliography_ref' ,$forms,array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
+    $this->saveEmbed('Codes', 'code' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('insurance'))
     {
@@ -760,6 +662,25 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     return parent::saveEmbeddedForms($con, $forms);
   }
 
+
+  public function duplicate($id)
+  {
+    //reembed biblio
+    $bib =  $this->getEmbedRecords('Biblio', $id);
+    foreach($bib as $key=>$vals) {
+      $this->addBiblio($key, array('bibliography_ref' => $vals->getBibliographyRef()) );
+    }
+
+    $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimen_parts',$id) ;
+    foreach ($Codes as $key=> $code)
+    {
+      $newCode = new Codes();
+      $newCode->fromArray($code->toArray());
+      $form = new CodesForm($newCode);
+      $this->attachEmbedRecord('Codes', $form, $key);
+    }
+  }
+
   public function getJavaScripts()
   {
     $javascripts=parent::getJavascripts();
@@ -772,5 +693,13 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $javascripts=parent::getStylesheets();
     $javascripts['/css/ui.datepicker.css']='all';
     return $javascripts;
+  }
+
+  public function getEmbedRelationForm($emFieldName, $values)
+  {
+    if( $emFieldName =='Biblio' )
+      return new BiblioAssociationsForm($values);
+    if( $emFieldName =='Codes' )
+      return new CodesForm($values);
   }
 }

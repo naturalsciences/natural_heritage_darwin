@@ -11,11 +11,7 @@ class CodesForm extends BaseCodesForm
 {
   public function configure()
   {
-
-    $this->useFields(array('id', 'referenced_relation', 'record_id', 'code_category', 'code_prefix', 'code_prefix_separator', 'code', 'code_suffix', 'code_suffix_separator'));
-
-    $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();
+    $this->useFields(array('code_category', 'code_prefix', 'code_prefix_separator', 'code', 'code_suffix', 'code_suffix_separator'));
     $this->widgetSchema['code_category'] = new sfWidgetFormChoice(array(
         'choices' => Codes::getCategories()
       ));
@@ -49,10 +45,6 @@ class CodesForm extends BaseCodesForm
         'add_label' => '',
     ));
     $this->widgetSchema['code_suffix_separator']->setAttributes(array('class'=>'vvsmall_size'));
-
-    $this->validatorSchema['referenced_relation'] = new sfValidatorString();
-    $this->validatorSchema['record_id'] = new sfValidatorInteger();
-    $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));
     $this->mergePostValidator(new CodesValidatorSchema());
   }
 }

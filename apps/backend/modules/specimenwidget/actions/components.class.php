@@ -116,7 +116,7 @@ class specimenwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newCodes']))
-    $this->form->loadEmbedCode();
+      $this->form->loadEmbed('Codes');
   }
 
   public function executeRefCollectors()
