@@ -68,4 +68,9 @@ class cataloguewidgetViewComponents extends sfComponents
   {
     $this->Biblios = Doctrine::getTable('CatalogueBibliography')->findForTable($this->table, $this->eid);
   }
+  public function executeRelatedFiles()
+  {
+    $this->files = Doctrine::getTable('Multimedia')->findForTable($this->table, $this->eid) ;
+    $this->atLeastOneFileVisible = true;
+  }
 }

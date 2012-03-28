@@ -442,7 +442,6 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
-          $form->getObject()->changeUri() ;
         }
       }
 

@@ -602,7 +602,6 @@ class LoansForm extends BaseLoansForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
-          $form->getObject()->changeUri() ;
         }
       }
 

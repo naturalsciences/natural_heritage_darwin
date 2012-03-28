@@ -62,10 +62,15 @@ class MultimediaForm extends BaseMultimediaForm
 
     $this->mergePostValidator(new MultimediaFileValidatorSchema());    
   }  
-  
-  public function doSave($con = null)
+
+  public function updateObject($values = null)
   {
-    //$this->offsetUnset('id');
-    parent::doSave();
+    $object = parent::updateObject($values);
+
+    if($object->isNew())
+      $object->changeUri();
+
+    return $object;
   }
+
 }

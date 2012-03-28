@@ -1056,7 +1056,6 @@ class SpecimensForm extends BaseSpecimensForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
-          $form->getObject()->changeUri() ;
         }
       }
 

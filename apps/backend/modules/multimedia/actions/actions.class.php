@@ -40,7 +40,7 @@ class multimediaActions extends DarwinActions
     }
     /* Actualy multimedia is only in loans and loan items, so for the moment any otehr referenced relation
      returns false */
-    return false ;
+    return true;
   }
 
   public function executePreview(sfWebRequest $request)
@@ -141,8 +141,6 @@ class multimediaActions extends DarwinActions
       if($this->form->isValid())
       {
         try{
-          if($request->hasParameter('file_id'))
-            $this->form->getObject()->changeUri();
           $this->form->save();
           $this->form->getObject()->refreshRelated();
           $this->form = new MultimediaForm($this->form->getObject()); //Ugly refresh

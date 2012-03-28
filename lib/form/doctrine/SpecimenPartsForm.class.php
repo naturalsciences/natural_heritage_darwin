@@ -743,7 +743,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
-          $form->getObject()->changeUri() ;
         }
       }
 
