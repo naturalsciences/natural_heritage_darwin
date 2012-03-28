@@ -356,16 +356,12 @@ DROP INDEX IF EXISTS idx_darwin_flat_taxon_level_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_host_taxon_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_host_taxon_parent_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_host_taxon_level_ref;
-DROP INDEX IF EXISTS idx_darwin_flat_chrono_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_chrono_parent_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_chrono_level_ref;
-DROP INDEX IF EXISTS idx_darwin_flat_litho_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_litho_parent_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_litho_level_ref;
-DROP INDEX IF EXISTS idx_darwin_flat_lithology_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_lithology_parent_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_lithology_level_ref;
-DROP INDEX IF EXISTS idx_darwin_flat_mineral_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_mineral_parent_ref;
 DROP INDEX IF EXISTS idx_darwin_flat_mineral_level_ref;
 
@@ -476,7 +472,7 @@ DROP INDEX IF EXISTS idx_specimen_individuals_social_status;
 DROP INDEX IF EXISTS idx_taxonomy_name_order_by;
 
 DROP INDEX IF EXISTS idx_darwin_flat_taxon_name_order_by;
-DROP INDEX IF EXISTS  idx_darwin_flat_individual_type_group;
+DROP INDEX IF EXISTS idx_darwin_flat_individual_type_group;
 DROP INDEX IF EXISTS idx_darwin_flat_individual_type_search;
 DROP INDEX IF EXISTS idx_darwin_flat_individual_state;
 DROP INDEX IF EXISTS idx_darwin_flat_individual_social_status;

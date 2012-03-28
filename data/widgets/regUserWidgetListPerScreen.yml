@@ -986,7 +986,7 @@ chw8:
 chw9:
    col_num: 1
    category: catalogue_chronostratigraphy_widget
-   group_name: biblo
+   group_name: biblio
    mandatory: false
    order_by: 5
    opened: true

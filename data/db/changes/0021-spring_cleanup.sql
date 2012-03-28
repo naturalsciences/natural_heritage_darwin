@@ -7,6 +7,10 @@ DROP INDEX IF EXISTS idx_catalogue_people_referenced_record;
 
 CREATE INDEX CONCURRENTLY idx_catalogue_people_referenced_record on catalogue_people(referenced_relation, record_id);
 
+drop index idx_users_tracking_modification_date_time;
+drop index idx_users_tracking_user_ref;
+create index idx_users_tracking_user_ref_date_time on users_tracking (user_ref, modification_date_time desc);
+
 DROP INDEX IF EXISTS idx_catalogue_properties_referenced_record;
 DROP INDEX IF EXISTS idx_class_vernacular_names_referenced_record;
 DROP INDEX IF EXISTS idx_collections_institution_ref;
