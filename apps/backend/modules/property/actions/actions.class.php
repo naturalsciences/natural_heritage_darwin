@@ -50,8 +50,10 @@ class propertyActions extends DarwinActions
      $this->property = new CatalogueProperties();
      $this->property->setRecordId($request->getParameter('id'));
      $this->property->setReferencedRelation($request->getParameter('table'));
+     if($request->hasParameter('model'))
+       $this->property->setPropertyTemplate($request->getParameter('model'));     
     }
-    $this->form = new CataloguePropertiesForm($this->property,array('ref_relation' => $request->getParameter('table')));
+    $this->form = new CataloguePropertiesForm($this->property,array('ref_relation' => $request->getParameter('table'),'hasmodel' => $request->getParameter('model')?true:false));
     
     if($request->isMethod('post'))
     {

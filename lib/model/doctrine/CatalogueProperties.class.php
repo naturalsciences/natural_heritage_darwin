@@ -5,6 +5,28 @@
  */
 class CatalogueProperties extends BaseCatalogueProperties
 {
+  private static $model = array(
+      "" => "No templates",
+      "length" => "Measurement unit (length)",
+      "width" => "Measurement unit (width)",
+      "weight" => "Weight",
+      "longitude" => "Geographical position (longitude)",
+      "latitude" => "Geographical position (latitude)",
+      "speed" => "Speed unit",            
+  );
+
+  public static function getModels()
+  {
+    try{
+        $i18n_object = sfContext::getInstance()->getI18n();
+    }
+    catch( Exception $e )
+    {
+        return self::$model;
+    }
+    return array_map(array($i18n_object, '__'), self::$model);
+  }  
+  
   /**
   * Set DateFrom field and mask if a fuzzyDateTime is passed
   * @param string|fuzzyDateTime $fd a fuzzyDateTime object or a string to pass to postgres
@@ -85,5 +107,16 @@ class CatalogueProperties extends BaseCatalogueProperties
   {
     $date = new FuzzyDateTime($this->_get('date_from'),$this->_get('date_from_mask'),false, true);
     return $date->getDateTimeMaskedAsArray();
+  }
+  
+  public function setPropertyTemplate($template)
+  {
+    $file=sfConfig::get('sf_data_dir').'/feed/properties_template.yml' ;
+    $data = new Doctrine_Parser_Yml();
+    $array = $data->loadData($file);
+    if(@is_array($array[$this->getReferencedRelation()][$template]))
+      $this->fromArray($array[$this->getReferencedRelation()][$template]) ;
+    else
+      return null ;
   }
 }
