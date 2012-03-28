@@ -319,7 +319,7 @@ class DarwinTestFunctional extends sfTestFunctional
     $institution = Doctrine::getTable('People')->getPeopleByName('Institut Royal des Sciences Naturelles de Belgique')->getId();
     $this->setTester('doctrine', 'sfTesterDoctrine');
     $this->
-      info('** add a custom Individual **')->
+      info('** add a custom Individual for Part **')->
       get('parts/edit/indid/'.$individual_id)->
       with('response')->begin()->
         isStatusCode(200)->
@@ -344,8 +344,11 @@ class DarwinTestFunctional extends sfTestFunctional
                 'newCodes' => array(
                   0 => array(
                     'code_category' => 'temporary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 
-                    'code_suffix' => 'ary', 'code_suffix_separator' => '/', 'referenced_relation' => 'specimen_parts'))
+                    'code_suffix' => 'ary', 'code_suffix_separator' => '/'))
         )))->
+      end()->
+      with('form')->begin()->
+        hasErrors(0)->
       end()->
       with('doctrine')->begin()->
       check('SpecimenParts', array(
