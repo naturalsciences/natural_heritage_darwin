@@ -65,9 +65,6 @@ class BibliographyForm extends BaseBibliographyForm
         {
           $this->addAuthor($key,$newVal['people_ref']);
         }
-        $taintedValues['newAuthor'][$key]['record_id'] = 0;
-        $taintedValues['newAuthor'][$key]['referenced_relation'] = 'bibliography';
-
       }
     }
     parent::bind($taintedValues, $taintedFiles);

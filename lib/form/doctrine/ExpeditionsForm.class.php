@@ -125,9 +125,6 @@ class ExpeditionsForm extends BaseExpeditionsForm
         {
           $this->addMember($key,$newVal['people_ref']);
         }
-        $taintedValues['newMember'][$key]['record_id'] = 0;
-        $taintedValues['newMember'][$key]['referenced_relation'] = 'expeditions';
-
       }
     }
     parent::bind($taintedValues, $taintedFiles);
