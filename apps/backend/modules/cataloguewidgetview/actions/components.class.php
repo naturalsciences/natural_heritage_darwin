@@ -70,7 +70,10 @@ class cataloguewidgetViewComponents extends sfComponents
   }
   public function executeRelatedFiles()
   {
-    $this->files = Doctrine::getTable('Multimedia')->findForTable($this->table, $this->eid) ;
-    $this->atLeastOneFileVisible = true;
+    $this->atLeastOneFileVisible = $this->getUser()->isAtLeast(Users::ENCODER);
+    $this->files = Doctrine::getTable('Multimedia')->findForTable($this->table, $this->eid, !($this->atLeastOneFileVisible));
+    if(!($this->atLeastOneFileVisible)) {
+      $this->atLeastOneFileVisible = ($this->files->count()>0);
+    }
   }
 }

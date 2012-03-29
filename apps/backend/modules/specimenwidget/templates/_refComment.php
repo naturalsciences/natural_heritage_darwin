@@ -3,11 +3,11 @@
     <tr>   
       <th><?php echo __('Notion');?></th>
       <th><?php echo __('Comment');?></th>
-      <th><?php echo $form['comment'];?></th>
+      <th><?php echo $form['Comments_holder'];?></th>
     </tr>
   </thead>
   <?php $retainedKey = 0;?>
-  <?php foreach($form['Comments'] as $form_value):?>   
+  <?php foreach($form['Comments'] as $form_value):?>
      <?php include_partial('specimen/spec_comments', array('form' => $form_value, 'rownum'=>$retainedKey));?>
      <?php $retainedKey = $retainedKey+1;?>
   <?php endforeach;?>
@@ -19,7 +19,13 @@
      <tr>
        <td colspan="3">
          <div class="add_comments">
-           <a href="<?php echo url_for('specimen/addComments'.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_comment"><?php echo __('Add comment');?></a>
+          <?php if($module == 'specimen') $url = 'specimen/addComments';
+          if($module == 'individuals') $url = 'individuals/addComments';
+          if($module == 'parts') $url = 'parts/addComments';
+          if($module == 'loans') $url = 'loan/addComments';
+          if($module == 'loan_items') $url = 'loanitem/addComments';
+          ?>
+           <a href="<?php echo url_for($url.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_comment"><?php echo __('Add comment');?></a>
          </div>
        </td>
      </tr>

@@ -11,11 +11,8 @@ class CommentsSubForm extends CommentsForm
 {
   public function configure()
   {
-    $choices = CommentsTable::getNotionsFor($this->options['table']);
-    $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();
-    unset($this['comment_ts']);
-    unset($this['comment_language_full_text']); // @TODO : check this!
+    $this->useFields(array('id','notion_concerned','comment'));
+    $choices = CommentsTable::getNotionsFor($this->getObject()->getReferencedRelation());
     $this->widgetSchema['notion_concerned'] =  new sfWidgetFormChoice(array(
       'choices' =>  $choices,  
     ));

@@ -53,14 +53,7 @@ class partsActions extends DarwinActions
       if($duplic)
       {
         $this->form->duplicate($duplic);
-        // reembed duplicated comment
-        $Comments = Doctrine::getTable('Comments')->findForTable('specimen_parts',$duplic) ;
-        foreach ($Comments as $key=>$val)
-        {
-          $comment = new Comments() ;
-          $comment = $this->getRecordIfDuplicate($val->getId(),$comment); 
-          $this->form->addComments($key, $comment) ;          
-        }
+
         // reembed duplicated external url
         $ExtLinks = Doctrine::getTable('ExtLinks')->findForTable('specimen_parts',$duplic) ;
         foreach ($ExtLinks as $key=>$val)
@@ -222,7 +215,7 @@ class partsActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
     $form = new SpecimenPartsForm();
-    $form->addComments($number);
+    $form->addComments($number,array());
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
 

@@ -62,7 +62,7 @@ class loanitemwidgetComponents extends sfComponents
   { 
     $this->defineForm();
     if(!isset($this->form['newComments']))
-      $this->form->loadEmbedComments();   
+      $this->form->loadEmbed('Comments');   
   }
 
   public function executeMaintenances()
