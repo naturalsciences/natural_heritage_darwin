@@ -58,7 +58,7 @@
 <?php echo form_tag('multimedia/insertFile?table='.$table.'&formname=multimedia&id='.$eid, array('enctype'=>'multipart/form-data'));?>
   <div class="relatedFile">
     <a title="<?php echo __('Add Files');?>" href="<?php echo url_for('multimedia/add?table='.$table.'&id='.$eid);?>" id="add_file" class="link_catalogue hidden"></a>
-    <label for="multimedia_filenames"><?php echo __('Add Files');?></label><input class="Add_related_file" type="file" name="multimedia[filenames]" id="multimedia_filenames">
+    <label for="multimedia_filenames"><?php echo __('Add File');?></label><input class="Add_related_file" type="file" name="multimedia[filenames]" id="multimedia_filenames">
   </div>
   <iframe name="hiddenFrame" id="hiddenFrame">
   </iframe>

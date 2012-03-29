@@ -82,7 +82,7 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
     /*Input file for related files*/
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));
-
+    $this->widgetSchema['filenames']->setLabel('Add File');
     /* Validators */
 
     $this->validatorSchema['specimen_ref'] = new sfValidatorInteger(array('required'=>false));
@@ -106,11 +106,7 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
     $this->validatorSchema['ident'] = new sfValidatorPass();
     $this->validatorSchema['relatedfile'] = new sfValidatorPass();
     //Loan form is submited to upload file, when called like that we don't want some fields to be required
-    $this->validatorSchema['filenames'] = new sfValidatorPass();/*File(
-  array(
-      'required' => false,
-      'validated_file_class' => 'myValidatedFile'
-  ));  */
+    $this->validatorSchema['filenames'] = new sfValidatorPass();
 
     $this->widgetSchema['Biblio_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['Biblio_holder'] = new sfValidatorPass();
