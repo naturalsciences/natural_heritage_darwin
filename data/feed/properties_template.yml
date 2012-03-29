@@ -1,5 +1,6 @@
 taxonomy:
   length:
+    model_name : Measurement unit (length)
     property_type : physical measurement
     property_sub_type : length
     property_qualifier : 
@@ -9,30 +10,35 @@ taxonomy:
     property_unit : cm
     
   width:
+    model_name : Measurement unit (width)  
     property_type : physical measurement
     property_sub_type : width
     property_accuracy_unit : mm
     property_unit : cm  
 
   weight:
+    model_name : Weight  
     property_type : physical measurement
     property_sub_type : weight
     property_accuracy_unit : g
     property_unit : kg 
 
   longitude:
+    model_name : Geographical position (longitude)  
     property_type : geo position
     property_sub_type : longitude
     property_tool : Map
     property_unit : DMS
     
   latitude:
+    model_name : Geographical position (longitude)  
     property_type : geo position
     property_sub_type : width
     property_tool : Map
     property_unit : DMS
    
   speed:
+    model_name : Speed unit  
     property_type : physical measurement
     property_sub_type : speed
     property_unit : km/h

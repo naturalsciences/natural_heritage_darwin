@@ -64,7 +64,7 @@ $('.hide_value').click(hideValues);
 <?php echo __("with this pre defined template") ; ?>:
 <select id='property_template'>
 <?php 
-  foreach(CatalogueProperties::getModels() as $key=>$values) echo "<option value=\"$key\">$values" ;
+  foreach(CatalogueProperties::getModels($table) as $key=>$values) echo "<option value=\"$key\">$values" ;
 ?>
 </select>
 

@@ -5,26 +5,28 @@
  */
 class CatalogueProperties extends BaseCatalogueProperties
 {
-  private static $model = array(
-      "" => "No templates",
-      "length" => "Measurement unit (length)",
-      "width" => "Measurement unit (width)",
-      "weight" => "Weight",
-      "longitude" => "Geographical position (longitude)",
-      "latitude" => "Geographical position (latitude)",
-      "speed" => "Speed unit",            
-  );
-
-  public static function getModels()
+  private static function getModelList($table)
   {
+    $file=sfConfig::get('sf_data_dir').'/feed/properties_template.yml' ;
+    $data = new Doctrine_Parser_Yml();
+    $array = $data->loadData($file);
+    $model = array("" => "No templates") ;
+    foreach($array[$table] as $key => $value)
+      $model[$key] = $value['model_name'] ;
+    return $model ;
+  }
+
+  public static function getModels($table)
+  {
+
     try{
         $i18n_object = sfContext::getInstance()->getI18n();
     }
     catch( Exception $e )
     {
-        return self::$model;
+        return self::getModelList($table);
     }
-    return array_map(array($i18n_object, '__'), self::$model);
+    return array_map(array($i18n_object, '__'), self::getModelList($table));
   }  
   
   /**
