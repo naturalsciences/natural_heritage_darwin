@@ -114,6 +114,7 @@ class Multimedia extends BaseMultimedia
   {
     return sfConfig::get('sf_upload_dir').'/multimedia/'.$this->getUri();
   }
+
   public function getSize()
   {
     return filesize($this->getFullURI());
