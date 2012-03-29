@@ -1983,6 +1983,15 @@ comment on column loan_history.referenced_table is 'Mandatory Reference to the t
 comment on column loan_history.modification_date_time is 'date of the modification';
 comment on column loan_history.record_line is 'hstore containing the whole line of referenced_table';
 
+create table multimedia_todelete (
+  id serial,
+  uri text,
+  constraint pk_multimedia_todelete primary key (id)
+);
+
+comment on table multimedia_todelete is 'Table here to save deleted multimedia files waiting for a deletion on the disk';
+comment on column multimedia_todelete.uri is 'URI of the file to delete';
+
 
 CREATE TABLE bibliography (
   id serial,

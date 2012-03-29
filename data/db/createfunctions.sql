@@ -4574,6 +4574,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION fct_cpy_deleted_file() RETURNS trigger
+AS $$
+BEGIN
+  INSERT INTO multimedia_todelete (uri) VALUES (OLD.uri);
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION fct_cpy_loan_history(loan_id integer) RETURNS boolean
 AS $$

@@ -20,8 +20,6 @@ DROP TRIGGER IF EXISTS trg_words_ts_cpy_multimedia ON old_multimedia;
 create table multimedia
        (
         id integer not null default nextval('multimedia_id_seq'),
---         parent_ref integer,
---         path varchar not null,
         is_digital boolean not null default true,
         type varchar not null default 'image',
         sub_type varchar,
@@ -43,8 +41,6 @@ comment on table multimedia is 'Stores all multimedia objects encoded in DaRWIN 
 comment on column multimedia.referenced_relation is 'Reference-Name of table concerned';
 comment on column multimedia.record_id is 'Identifier of record concerned';
 comment on column multimedia.id is 'Unique identifier of a multimedia object';
--- comment on column multimedia.parent_ref is 'Identifier of the object the multimedia record is an extract of';
--- comment on column multimedia.path is 'In case of recursive relationship, defines the hierarchical path';
 comment on column multimedia.is_digital is 'Flag telling if the object is digital (true) or physical (false)';
 comment on column multimedia.type is 'Main multimedia object type: image, sound, video,...';
 comment on column multimedia.sub_type is 'Characterization of object type: article, publication in serie, book, glass plate,...';
@@ -65,17 +61,31 @@ GRANT USAGE ON SEQUENCE darwin2.multimedia_id_seq TO cebmpad;
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.multimedia TO cebmpad;
 GRANT SELECT ON darwin2.multimedia TO d2viewer;
 
+
+create table multimedia_todelete (
+  id serial,
+  uri text,
+  constraint pk_multimedia_todelete primary key (id)
+);
+
+comment on table multimedia_todelete is 'Table here to save deleted multimedia files waiting for a deletion on the disk';
+comment on column multimedia_todelete.uri is 'URI of the file to delete';
+
+ALTER TABLE multimedia_todelete OWNER TO darwin2;
+ALTER TABLE multimedia_todelete_id_seq OWNER TO darwin2;
+GRANT USAGE ON SEQUENCE darwin2.multimedia_todelete_id_seq TO cebmpad;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.multimedia_todelete TO cebmpad;
+
+CREATE TRIGGER trg_cpy_deleted_file AFTER DELETE
+  ON multimedia FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_deleted_file();
+
 CREATE TRIGGER trg_clr_referencerecord_multimedia
   AFTER DELETE
   ON multimedia
   FOR EACH ROW
   EXECUTE PROCEDURE fct_clear_referencedrecord();
 
--- CREATE TRIGGER trg_cpy_path_multimedia
---   BEFORE INSERT OR UPDATE
---   ON multimedia
---   FOR EACH ROW
---   EXECUTE PROCEDURE fct_cpy_path();
 
 CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
   ON multimedia FOR EACH ROW
