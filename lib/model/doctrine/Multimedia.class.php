@@ -76,12 +76,6 @@ class Multimedia extends BaseMultimedia
     'odt' => 'application/vnd.oasis.opendocument.text',
     'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
         );
-        
-  public function deleteObjectAndFile()
-  {
-    unlink(sfConfig::get('sf_upload_dir')."/multimedia/".$this->_get('uri'));
-    $this->delete() ;
-  }
   
   public function getCreationDateMasked()
   {
@@ -155,5 +149,13 @@ class Multimedia extends BaseMultimedia
       imagedestroy($src_img);
       return $dst_img;
     }
+  }
+
+
+  public function delete(Doctrine_Connection $conn = null)
+  {
+    $url = $this->getFullURI();
+    parent::delete($conn);
+    unlink($url);
   }
 }

@@ -39,6 +39,9 @@ class specimenwidgetComponents extends sfComponents
       $this->individual_id = 0;
       $this->spec_id = $this->form->getObject()->getId();
     }
+
+    if(!isset($this->eid))
+      $this->eid = $this->form->getObject()->getId();
     if(! isset($this->module) )
     {
       $this->module = 'specimen';
@@ -156,10 +159,8 @@ class specimenwidgetComponents extends sfComponents
   public function executeRefRelatedFiles()
   {
     $this->defineForm();
-    if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId() ;
     if(!isset($this->form['newRelatedFiles']))
-      $this->form->loadEmbedRelatedFiles();
+      $this->form->loadEmbed('RelatedFiles');
   }
   
   public function executeRefIdentifications()

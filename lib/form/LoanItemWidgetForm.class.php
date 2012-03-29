@@ -35,43 +35,11 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
 
     $this->validatorSchema['Comments_holder'] = new sfValidatorPass();
     $this->widgetSchema['Comments_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-  }
-  public function addRelatedFiles($num,$file=null)
-  {
-    if(! isset($this['newRelatedFiles'])) $this->loadEmbedRelatedFiles();
-    $options = array('referenced_relation' => 'loan_items');
-    if($file) $options = $file ;
-    $val = new Multimedia();
-    $val->fromArray($options);
-    $val->setRecordId($this->getObject()->getId());
-    $form = new MultimediaForm($val);
-    $this->embeddedForms['newRelatedFiles']->embedForm($num, $form);
-    //Re-embedding the container
-    $this->embedForm('newRelatedFiles', $this->embeddedForms['newRelatedFiles']);
-  }
-  
-  public function loadEmbedRelatedFiles()
-  {
-    if($this->isBound()) return;
 
-    /* Comments sub form */
-    $subForm = new sfForm();
-    $this->embedForm('RelatedFiles',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('Multimedia')->findForTable('loan_items', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new MultimediaForm($vals);
-        $this->embeddedForms['RelatedFiles']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('RelatedFiles', $this->embeddedForms['RelatedFiles']);
-    }
-
-    $subForm = new sfForm();
-    $this->embedForm('newRelatedFiles',$subForm);
+    $this->validatorSchema['RelatedFiles_holder'] = new sfValidatorPass();
+    $this->widgetSchema['RelatedFiles_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
   }
-  
+
   public function addActorsSender($num, $people_ref, $order_by=0)
   {
     if(! isset($this['newActorsSender'])) $this->loadEmbedActorsSender();
@@ -182,6 +150,13 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
   }
 
+  public function addRelatedFiles($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
+    $this->attachEmbedRecord('RelatedFiles', new MultimediaForm(DarwinTable::newObjectFromArray('Multimedia',$options)), $num);
+  }
+
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     /* For each embedded informations 
@@ -255,30 +230,10 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
           $taintedValues['newInsurance'][$key]['record_id'] = 0;
         }
       }
-    } 
-    if(!isset($taintedValues['relatedfile']))
-    {
-      $this->offsetUnset('RelatedFiles');
-      unset($taintedValues['RelatedFiles']);
-      $this->offsetUnset('newRelatedFiles');
-      unset($taintedValues['newRelatedFiles']);
     }
-    else
-    {
-      $this->loadEmbedRelatedFiles();
-      if(isset($taintedValues['newRelatedFiles']))
-      {
-        foreach($taintedValues['newRelatedFiles'] as $key=>$newVal)
-        {
-          if (!isset($this['newRelatedFiles'][$key]))
-          {
-            $this->addRelatedFiles($key);
-          }
-          $taintedValues['newRelatedFiles'][$key]['record_id'] = 0;
-        }
-      }
-    }
+
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
+    $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);   
   }
 
@@ -291,6 +246,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   public function saveEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
+    $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('sender'))
     {
@@ -361,30 +317,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
           unset($this->embeddedForms['Insurances'][$name]);
         }
       }
-    }  
-    if (null === $forms && $this->getValue('relatedfile'))
-    {  
-      $value = $this->getValue('newRelatedFiles');
-      foreach($this->embeddedForms['newRelatedFiles']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['referenced_relation']))
-          unset($this->embeddedForms['newRelatedFiles'][$name]);
-        else
-        {
-          $form->getObject()->setRecordId($this->getObject()->getId());
-        }
-      }
-
-      $value = $this->getValue('RelatedFiles');
-      foreach($this->embeddedForms['RelatedFiles']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['referenced_relation']))
-        {
-          $form->getObject()->deleteObjectAndFile();
-          unset($this->embeddedForms['RelatedFiles'][$name]);          
-        }
-      }
-    }                
+    }       
     return parent::saveEmbeddedForms($con, $forms);
   }   
   
@@ -411,6 +344,8 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Comments' )
       return Doctrine::getTable('Comments')->findForTable('loan_items', $record_id);
+    if( $emFieldName =='RelatedFiles' )
+      return Doctrine::getTable('Multimedia')->findForTable('loan_items', $record_id);
   }
 
   public function duplicate($id)
@@ -430,6 +365,8 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   {
     if( $emFieldName =='Comments' )
       return new CommentsSubForm($values);
+    if( $emFieldName =='RelatedFiles' )
+      return new MultimediaForm($values);
   }
 
 }

@@ -70,14 +70,15 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
     $this->widgetSchema['filenames']->setLabel("Add File") ;
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));
     $this->validatorSchema['filenames'] = new sfValidatorPass() ;
-    $this->widgetSchema['relatedfile'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->validatorSchema['relatedfile'] = new sfValidatorPass();
 
     $this->validatorSchema['Comments_holder'] = new sfValidatorPass();
     $this->widgetSchema['Comments_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
     $this->validatorSchema['ExtLinks_holder'] = new sfValidatorPass();
     $this->widgetSchema['ExtLinks_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+
+    $this->validatorSchema['RelatedFiles_holder'] = new sfValidatorPass();
+    $this->widgetSchema['RelatedFiles_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
   }
 
   public function getEmbedRecords($emFieldName, $record_id = false)
@@ -88,42 +89,8 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
       return Doctrine::getTable('Comments')->findForTable('collection_maintenance', $record_id);
     if( $emFieldName =='ExtLinks' )
       return Doctrine::getTable('ExtLinks')->findForTable('collection_maintenance', $record_id);
-  }
-
-  public function addRelatedFiles($num,$file=null)
-  {
-    if(! isset($this['newRelatedFiles'])) $this->loadEmbedRelatedFiles();
-    $options = array('referenced_relation' => 'collection_maintenance');
-    if($file) $options = $file ;
-    $val = new Multimedia();
-    $val->fromArray($options);
-    $val->setRecordId($this->getObject()->getId());
-    $form = new MultimediaForm($val);
-    $this->embeddedForms['newRelatedFiles']->embedForm($num, $form);
-    //Re-embedding the container
-    $this->embedForm('newRelatedFiles', $this->embeddedForms['newRelatedFiles']);
-  }
-  
-  public function loadEmbedRelatedFiles()
-  {
-    if($this->isBound()) return;
-
-    /* Comments sub form */
-    $subForm = new sfForm();
-    $this->embedForm('RelatedFiles',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('Multimedia')->findForTable('collection_maintenance', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new MultimediaForm($vals);
-        $this->embeddedForms['RelatedFiles']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('RelatedFiles', $this->embeddedForms['RelatedFiles']);
-    }
-
-    $subForm = new sfForm();
-    $this->embedForm('newRelatedFiles',$subForm);
+    if( $emFieldName =='RelatedFiles' )
+      return Doctrine::getTable('Multimedia')->findForTable('collection_maintenance', $record_id);
   }
 
   public function addExtLinks($num, $obj=null)
@@ -138,37 +105,19 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
     $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
   }
 
+  public function addRelatedFiles($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'collection_maintenance', 'record_id' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
+    $this->attachEmbedRecord('RelatedFiles', new MultimediaForm(DarwinTable::newObjectFromArray('Multimedia',$options)), $num);
+  }
+
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
-    /* For each embedded informations 
-     * test if the widget is on screen by testing a flag field present on the concerned widget
-     * If widget is not on screen, remove the field from list of fields to be bound, and than potentially saved
-    */
+    /* For each embedded informations If widget is not on screen, remove the field from list of fields to be bound, and than potentially saved */
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     $this->bindEmbed('ExtLinks', 'addExtLinks' , $taintedValues);
-
-    if(!isset($taintedValues['relatedfile']))
-    {
-      $this->offsetUnset('RelatedFiles');
-      unset($taintedValues['RelatedFiles']);
-      $this->offsetUnset('newRelatedFiles');
-      unset($taintedValues['newRelatedFiles']);
-    }
-    else
-    {
-      $this->loadEmbedRelatedFiles();
-      if(isset($taintedValues['newRelatedFiles']))
-      {
-        foreach($taintedValues['newRelatedFiles'] as $key=>$newVal)
-        {
-          if (!isset($this['newRelatedFiles'][$key]))
-          {
-            $this->addRelatedFiles($key);
-          }
-          $taintedValues['newRelatedFiles'][$key]['record_id'] = 0;
-        }
-      }
-    }     
+    $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);   
   }
 
@@ -176,31 +125,7 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
   {
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'collection_maintenance', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'collection_maintenance', 'record_id' => $this->getObject()->getId()));
-
-    if (null === $forms && $this->getValue('relatedfile'))
-    {  
-      $value = $this->getValue('newRelatedFiles');
-      foreach($this->embeddedForms['newRelatedFiles']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['referenced_relation']))
-          unset($this->embeddedForms['newRelatedFiles'][$name]);
-        else
-        {
-          $form->getObject()->setRecordId($this->getObject()->getId());
-          $form->getObject()->changeUri() ;
-        }
-      }
-
-      $value = $this->getValue('RelatedFiles');
-      foreach($this->embeddedForms['RelatedFiles']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['referenced_relation']))
-        {
-          $form->getObject()->deleteObjectAndFile();
-          unset($this->embeddedForms['RelatedFiles'][$name]);          
-        }
-      }
-    }
+    $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'collection_maintenance', 'record_id' => $this->getObject()->getId()));
 
     return parent::saveEmbeddedForms($con, $forms);
   }
@@ -211,5 +136,7 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
       return new CommentsSubForm($values);
     if( $emFieldName =='ExtLinks' )
       return new ExtLinksForm($values);
+    if( $emFieldName =='RelatedFiles' )
+      return new MultimediaForm($values);
   }
 }

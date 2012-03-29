@@ -41,6 +41,9 @@ class individualswidgetComponents extends sfComponents
       $this->individual_id = $this->form->getObject()->getId();
       $this->spec_id = $this->form->getObject()->getSpecimenRef();
     }
+    if(!isset($this->eid))
+      $this->eid = $this->form->getObject()->getId();
+
     if(! isset($this->module) )
     {
       $this->module = 'individuals';
@@ -104,10 +107,8 @@ class individualswidgetComponents extends sfComponents
   public function executeRefRelatedFiles()
   {
     $this->defineForm();
-    if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId() ;
     if(!isset($this->form['newRelatedFiles']))
-      $this->form->loadEmbedRelatedFiles();
+      $this->form->loadEmbed('RelatedFiles');
   }
   public function executeInformativeWorkflow()
   {

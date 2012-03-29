@@ -141,6 +141,8 @@ class multimediaActions extends DarwinActions
       if($this->form->isValid())
       {
         try{
+          if($this->form->getObject()->isNew())
+            $this->form->setRecordRef($request->getParameter('table'), $request->getParameter('id'));
           $this->form->save();
           $this->form->getObject()->refreshRelated();
           $this->form = new MultimediaForm($this->form->getObject()); //Ugly refresh

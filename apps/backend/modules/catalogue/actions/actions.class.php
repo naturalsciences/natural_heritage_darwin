@@ -120,7 +120,7 @@ class catalogueActions extends DarwinActions
 
     try{
           if($request->getParameter('table')=='multimedia'){
-            $r->deleteObjectAndFile();
+            $r->delete();
           }
           else
             $r->delete();

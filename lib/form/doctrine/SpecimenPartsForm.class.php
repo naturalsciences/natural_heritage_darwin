@@ -184,8 +184,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->widgetSchema['extlink'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['extlink'] = new sfValidatorPass();
 
-    $this->widgetSchema['relatedfile'] = new sfWidgetFormInputHidden(array('default'=>1));
-
     /*Input file for related files*/
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));
@@ -198,18 +196,17 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
 
     $this->widgetSchema['surnumerary']->setLabel('supernumerary');
 
-    $this->validatorSchema['relatedfile'] = new sfValidatorPass();
     //Loan form is submited to upload file, when called like that we don't want some fields to be required
     $this->validatorSchema['filenames'] = new sfValidatorPass();
-
-   $this->widgetSchema['Biblio_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-   $this->validatorSchema['Biblio_holder'] = new sfValidatorPass();
 
     $this->validatorSchema->setPostValidator(new sfValidatorCallback(array('callback' => array($this, 'checkSelfAttached'))));
     $this->mergePostValidator(new sfValidatorSchemaCompare('specimen_part_count_min', '<=', 'specimen_part_count_max',
       array(),
       array('invalid' => 'The min number ("%left_field%") must be lower or equal the max number ("%right_field%")' )
     ));
+
+   $this->widgetSchema['Biblio_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+   $this->validatorSchema['Biblio_holder'] = new sfValidatorPass();
 
     $this->validatorSchema['Codes_holder'] = new sfValidatorPass();
     $this->widgetSchema['Codes_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
@@ -219,14 +216,10 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
 
     $this->validatorSchema['ExtLinks_holder'] = new sfValidatorPass();
     $this->widgetSchema['ExtLinks_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-  }
 
-  public function addBiblio($num, $values, $order_by=0)
-  {
-    $options = array('referenced_relation' => 'specimen_parts', 'bibliography_ref' => $values['bibliography_ref'], 'record_id' => $this->getObject()->getId());
-    $this->attachEmbedRecord('Biblio', new BiblioAssociationsForm(DarwinTable::newObjectFromArray('CatalogueBibliography',$options)), $num);
+    $this->validatorSchema['RelatedFiles_holder'] = new sfValidatorPass();
+    $this->widgetSchema['RelatedFiles_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
   }
-
   public function getEmbedRecords($emFieldName, $record_id = false)
   {
     if($record_id === false)
@@ -239,6 +232,8 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       return Doctrine::getTable('Comments')->findForTable('specimen_parts', $record_id);
     if( $emFieldName =='ExtLinks' )
       return Doctrine::getTable('ExtLinks')->findForTable('specimen_parts', $record_id);
+    if( $emFieldName =='RelatedFiles' )
+      return Doctrine::getTable('Multimedia')->findForTable('specimen_parts', $record_id);
   }
 
   public function forceContainerChoices()
@@ -252,25 +247,23 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     );
   }
 
+  public function addBiblio($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'specimen_parts', 'bibliography_ref' => $values['bibliography_ref'], 'record_id' => $this->getObject()->getId());
+    $this->attachEmbedRecord('Biblio', new BiblioAssociationsForm(DarwinTable::newObjectFromArray('CatalogueBibliography',$options)), $num);
+  }
+
   public function addExtLinks($num, $obj=null)
   {
     $options = array('referenced_relation' => 'specimen_parts', 'record_id' => $this->getObject()->getId());
     $this->attachEmbedRecord('ExtLinks', new ExtLinksForm(DarwinTable::newObjectFromArray('ExtLinks',$options)), $num);
   }
 
-  public function addRelatedFiles($num,$file=null)
+  public function addRelatedFiles($num, $values, $order_by=0)
   {
-    if(! isset($this['newRelatedFiles'])) $this->loadEmbedRelatedFiles();
     $options = array('referenced_relation' => 'specimen_parts', 'record_id' => $this->getObject()->getId());
-    if($file) $options = $file ;
-    $val = new Multimedia();
-//     die(print_r($val));
-    $val->fromArray($options);
-    $val->setRecordId($this->getObject()->getId());
-    $form = new MultimediaForm($val);
-    $this->embeddedForms['newRelatedFiles']->embedForm($num, $form);
-    //Re-embedding the container
-    $this->embedForm('newRelatedFiles', $this->embeddedForms['newRelatedFiles']);
+    $options = array_merge($values, $options);
+    $this->attachEmbedRecord('RelatedFiles', new MultimediaForm(DarwinTable::newObjectFromArray('Multimedia',$options)), $num);
   }
 
   public function checkSelfAttached($validator, $values)
@@ -351,29 +344,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->embedForm('newInsurance',$subForm);
   }
 
-  public function loadEmbedRelatedFiles()
-  {
-    if($this->isBound()) return;
-
-    /* Related files sub form */
-    $subForm = new sfForm();
-    $this->embedForm('RelatedFiles',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('Multimedia')->findForTable('specimen_parts', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new MultimediaForm($vals);
-        $this->embeddedForms['RelatedFiles']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('RelatedFiles', $this->embeddedForms['RelatedFiles']);
-    }
-
-    $subForm = new sfForm();
-    $this->embedForm('newRelatedFiles',$subForm);
-  }
-
-
   public function addCodes($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'specimen_parts', 'record_id' => $this->getObject()->getId());
@@ -430,32 +400,11 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       }
     }
 
-    if(!isset($taintedValues['relatedfile']))
-    {
-      $this->offsetUnset('RelatedFiles');
-      unset($taintedValues['RelatedFiles']);
-      $this->offsetUnset('newRelatedFiles');
-      unset($taintedValues['newRelatedFiles']);
-    }
-    else
-    {
-      $this->loadEmbedRelatedFiles();
-      if(isset($taintedValues['newRelatedFiles']))
-      {
-        foreach($taintedValues['newRelatedFiles'] as $key=>$newVal)
-        {
-          if (!isset($this['newRelatedFiles'][$key]))
-          {
-            $this->addRelatedFiles($key);
-          }
-          $taintedValues['newRelatedFiles'][$key]['record_id'] = 0;
-        }
-      }
-    }
     $this->bindEmbed('Biblio', 'addBiblio' , $taintedValues);
     $this->bindEmbed('Codes', 'addCodes' , $taintedValues);
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     $this->bindEmbed('ExtLinks', 'addExtLinks' , $taintedValues);
+    $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -466,6 +415,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->saveEmbed('Codes', 'code' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
+    $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('insurance'))
     {
@@ -485,30 +435,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
         {
           $form->getObject()->delete();
           unset($this->embeddedForms['Insurances'][$name]);
-        }
-      }
-    }
-
-    if (null === $forms && $this->getValue('relatedfile'))
-    {
-      $value = $this->getValue('newRelatedFiles');
-      foreach($this->embeddedForms['newRelatedFiles']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['referenced_relation']))
-          unset($this->embeddedForms['newRelatedFiles'][$name]);
-        else
-        {
-          $form->getObject()->setRecordId($this->getObject()->getId());
-        }
-      }
-
-      $value = $this->getValue('RelatedFiles');
-      foreach($this->embeddedForms['RelatedFiles']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['referenced_relation']))
-        {
-          $form->getObject()->deleteObjectAndFile();
-          unset($this->embeddedForms['RelatedFiles'][$name]);
         }
       }
     }
@@ -578,5 +504,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       return new CommentsSubForm($values);
     if( $emFieldName =='ExtLinks' )
       return new ExtLinksForm($values);
+    if( $emFieldName =='RelatedFiles' )
+      return new MultimediaForm($values);
   }
 }

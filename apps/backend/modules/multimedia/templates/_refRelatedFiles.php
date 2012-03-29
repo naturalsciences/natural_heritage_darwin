@@ -21,7 +21,7 @@
         <?php endif;?>
       </th>
       <th>
-        <?php echo $form['relatedfile'];?>
+        <?php echo $form['RelatedFiles_holder'];?>
       </th>
     </tr>
   </thead>

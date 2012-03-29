@@ -149,8 +149,6 @@ abstract class BaseFormDoctrine extends sfFormDoctrine
             //Call the add function of the embeddedForm
             $this->$fct_add($key, $newVal, $key);
           }
-          /** May not be usefull */
-          //$taintedValues['new'.$emFieldName][$key]['record_id'] = 0; ///OUCH
         }
       }
     }
