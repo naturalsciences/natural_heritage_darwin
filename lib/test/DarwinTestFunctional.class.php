@@ -337,11 +337,12 @@ class DarwinTestFunctional extends sfTestFunctional
                 'insurer_ref' => $institution))	,
             'newComments' => array(
               0 => array(
+                'notion_concerned' =>'container',
                 'comment' => 'part preparation')),
-                'newCodes' => array(
-                  0 => array(
-                    'code_category' => 'temporary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 
-                    'code_suffix' => 'ary', 'code_suffix_separator' => '/'))
+            'newCodes' => array(
+              0 => array(
+                'code_category' => 'temporary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 
+                'code_suffix' => 'ary', 'code_suffix_separator' => '/'))
         )))->
       end()->
       with('form')->begin()->
