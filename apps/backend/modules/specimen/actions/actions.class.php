@@ -78,7 +78,7 @@ class specimenActions extends DarwinActions
 
   public function executeAddComments(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
     $form->addComments($number);
@@ -164,14 +164,7 @@ class specimenActions extends DarwinActions
           $spec = $this->getRecordIfDuplicate($val->getId(),$spec);
           $this->form->addSpecimensAccompanying($key, $spec) ;
         }
-        // reembed duplicated comment
-        $Comments = Doctrine::getTable('Comments')->findForTable('specimens',$duplic) ;
-        foreach ($Comments as $key=>$val)
-        {
-          $comment = new Comments() ;
-          $comment = $this->getRecordIfDuplicate($val->getId(),$comment);
-          $this->form->addComments($key, $comment) ;
-        }
+
         // reembed duplicated external url
         $ExtLinks = Doctrine::getTable('ExtLinks')->findForTable('specimens',$duplic) ;
         foreach ($ExtLinks as $key=>$val)

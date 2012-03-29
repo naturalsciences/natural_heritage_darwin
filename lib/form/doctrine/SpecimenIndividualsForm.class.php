@@ -78,8 +78,6 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
 
     $this->widgetSchema['ident'] = new sfWidgetFormInputHidden(array('default'=>1));
 
-    $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
-
     $this->widgetSchema['extlink'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['relatedfile'] = new sfWidgetFormInputHidden(array('default'=>1));
 
@@ -108,7 +106,6 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
         );
 
     $this->validatorSchema['ident'] = new sfValidatorPass();
-    $this->validatorSchema['comment'] = new sfValidatorPass();
     $this->validatorSchema['extlink'] = new sfValidatorPass();
     $this->validatorSchema['relatedfile'] = new sfValidatorPass();
     //Loan form is submited to upload file, when called like that we don't want some fields to be required
@@ -120,6 +117,9 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
 
     $this->widgetSchema['Biblio_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['Biblio_holder'] = new sfValidatorPass();
+
+    $this->validatorSchema['Comments_holder'] = new sfValidatorPass();
+    $this->widgetSchema['Comments_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
   }
 
 
@@ -129,6 +129,16 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
     $bib =  $this->getEmbedRecords('Biblio', $id);
     foreach($bib as $key=>$vals) {
       $this->addBiblio($key, array('bibliography_ref' => $vals->getBibliographyRef()) );
+    }
+
+    // reembed duplicated comment
+    $Comments = Doctrine::getTable('Comments')->findForTable('specimen_individuals',$id) ;
+    foreach ($Comments as $key=>$val)
+    {
+      $comment = new Comments();
+      $comment->fromArray($val->toArray());
+      $form = new CommentsSubForm($comment);
+      $this->attachEmbedRecord('Comments', $form, $key);
     }
   }
 
@@ -177,28 +187,6 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
     }
     $subForm = new sfForm();
     $this->embedForm('newExtLinks',$subForm);
-  }
-
-  public function loadEmbedComment()
-  {
-    if($this->isBound()) return;
-
-    /* Comments sub form */
-    $subForm = new sfForm();
-    $this->embedForm('Comments',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('comments')->findForTable('specimen_individuals', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new CommentsSubForm($vals,array('table' => 'individuals'));
-        $this->embeddedForms['Comments']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('Comments', $this->embeddedForms['Comments']);
-    }
-
-    $subForm = new sfForm();
-    $this->embedForm('newComments',$subForm);
   }
 
   public function loadEmbedRelatedFiles()
@@ -285,22 +273,13 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
       //Re-embedding the container
       $this->embedForm('newExtLinks', $this->embeddedForms['newExtLinks']);
   }
-  
-  public function addComments($num, $obj=null)
-  {
-      if(! isset($this['newComments'])) $this->loadEmbedComment();
 
-      $options = array('referenced_relation' => 'specimen_individuals', 'record_id' => $this->getObject()->getId());
-      if(!$obj) $val = new Comments();
-      else $val = $obj ;      
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new CommentsSubForm($val,array('table' => 'individuals'));
-      $this->embeddedForms['newComments']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newComments', $this->embeddedForms['newComments']);
+  public function addComments($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'specimen_individuals', 'record_id' => $this->getObject()->getId());
+    $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
   }
-  
+
   public function addRelatedFiles($num,$file=null)
   {
     if(! isset($this['newRelatedFiles'])) $this->loadEmbedRelatedFiles();
@@ -396,29 +375,6 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
       }
     }
 
-    if(!isset($taintedValues['comment']))
-    {
-      $this->offsetUnset('Comments');
-      unset($taintedValues['Comments']);
-      $this->offsetUnset('newComments');
-      unset($taintedValues['newComments']);
-    }
-    else
-    {
-      $this->loadEmbedComment();
-      if(isset($taintedValues['newComments']))
-      {
-        foreach($taintedValues['newComments'] as $key=>$newVal)
-        {
-          if (!isset($this['newComments'][$key]))
-          {
-            $this->addComments($key);
-          }
-          $taintedValues['newComments'][$key]['record_id'] = 0;
-        }
-      }
-    }
-
     if(!isset($taintedValues['extlink']))
     {
       $this->offsetUnset('ExtLinks');
@@ -466,7 +422,7 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
     }
 
     $this->bindEmbed('Biblio', 'addBiblio' , $taintedValues);
-
+    $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -477,13 +433,15 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
       $record_id = $this->getObject()->getId();
     if( $emFieldName == 'Biblio' )
       return Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_individuals', $record_id);
-
+    if( $emFieldName =='Comments' )
+      return Doctrine::getTable('Comments')->findForTable('specimen_individuals', $record_id);
   }
 
 
   public function saveEmbeddedForms($con = null, $forms = null)
   {
     $this->saveEmbed('Biblio', 'bibliography_ref' ,$forms,array('referenced_relation'=>'specimen_individuals', 'record_id' => $this->getObject()->getId()));
+    $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'specimen_individuals', 'record_id' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('ident'))
     {
@@ -543,29 +501,6 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
               unset($form->embeddedForms['Identifiers'][$subname]);
             }
           }
-        }
-      }
-    }
-
-    if (null === $forms && $this->getValue('comment'))
-    {
-      $value = $this->getValue('newComments');
-      foreach($this->embeddedForms['newComments']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['comment'] ))
-          unset($this->embeddedForms['newComments'][$name]);
-        else
-        {
-          $form->getObject()->setRecordId($this->getObject()->getId());
-        }
-      }
-      $value = $this->getValue('Comments');
-      foreach($this->embeddedForms['Comments']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['comment'] ))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Comments'][$name]);
         }
       }
     }
@@ -638,5 +573,7 @@ class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
       return new BiblioAssociationsForm($values);
     if( $emFieldName =='Codes' )
       return new CodesForm($values);
+    if( $emFieldName =='Comments' )
+      return new CommentsSubForm($values);
   }
 }

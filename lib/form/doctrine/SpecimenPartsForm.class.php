@@ -181,7 +181,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->widgetSchema['accuracy']->setLabel('Accuracy');
     $this->validatorSchema['accuracy'] = new sfValidatorPass();
 
-    $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['extlink'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['extlink'] = new sfValidatorPass();
 
@@ -193,7 +192,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
 
     $this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => false, 'trim' => true));
 
-    $this->validatorSchema['comment'] = new sfValidatorPass();
     $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['insurance'] = new sfValidatorPass();
 
@@ -219,6 +217,9 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->validatorSchema['Codes_holder'] = new sfValidatorPass();
     $this->widgetSchema['Codes_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
+
+    $this->validatorSchema['Comments_holder'] = new sfValidatorPass();
+    $this->widgetSchema['Comments_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
   }
 
   public function addBiblio($num, $values, $order_by=0)
@@ -235,6 +236,8 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       return Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_parts', $record_id);
     if( $emFieldName =='Codes' )
       return Doctrine::getTable('Codes')->getCodesRelated('specimen_parts', $record_id);
+    if( $emFieldName =='Comments' )
+      return Doctrine::getTable('Comments')->findForTable('specimen_parts', $record_id);
   }
 
   public function forceContainerChoices()
@@ -298,20 +301,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       $this->embeddedForms['newInsurance']->embedForm($num, $form);
       //Re-embedding the container
       $this->embedForm('newInsurance', $this->embeddedForms['newInsurance']);
-  }
-
-  public function addComments($num,$obj=null)
-  {
-      if(! isset($this['newComments'])) $this->loadEmbedComment();
-      $options = array('referenced_relation' => 'specimen_parts', 'record_id' => $this->getObject()->getId());
-      if(!$obj) $val = new Comments();
-      else $val = $obj ;
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new CommentsSubForm($val,array('table' => 'parts'));
-      $this->embeddedForms['newComments']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newComments', $this->embeddedForms['newComments']);
   }
 
   protected function getFieldsByGroup()
@@ -389,28 +378,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->embedForm('newExtLinks',$subForm);
   }
 
-  public function loadEmbedComment()
-  {
-    if($this->isBound()) return;
-
-    /* Comments sub form */
-    $subForm = new sfForm();
-    $this->embedForm('Comments',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('comments')->findForTable('specimen_parts', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new CommentsSubForm($vals,array('table' => 'parts'));
-        $this->embeddedForms['Comments']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('Comments', $this->embeddedForms['Comments']);
-    }
-
-    $subForm = new sfForm();
-    $this->embedForm('newComments',$subForm);
-  }
-
   public function loadEmbedRelatedFiles()
   {
     if($this->isBound()) return;
@@ -451,6 +418,12 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->attachEmbedRecord('Codes', new CodesForm(DarwinTable::newObjectFromArray('Codes',$options)), $num);
   }
 
+  public function addComments($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'specimen_parts', 'record_id' => $this->getObject()->getId());
+    $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
+  }
+
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     if(isset($taintedValues['accuracy']))
@@ -458,29 +431,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       if($taintedValues['accuracy'] == 0 ) //exact
       {
         $taintedValues['specimen_part_count_max'] = $taintedValues['specimen_part_count_min'];
-      }
-    }
-
-    if(!isset($taintedValues['comment']))
-    {
-      $this->offsetUnset('Comments');
-      unset($taintedValues['Comments']);
-      $this->offsetUnset('newComments');
-      unset($taintedValues['newComments']);
-    }
-    else
-    {
-      $this->loadEmbedComment();
-      if(isset($taintedValues['newComments']))
-      {
-        foreach($taintedValues['newComments'] as $key=>$newVal)
-        {
-          if (!isset($this['newComments'][$key]))
-          {
-            $this->addComments($key);
-          }
-          $taintedValues['newComments'][$key]['record_id'] = 0;
-        }
       }
     }
 
@@ -554,6 +504,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     }
     $this->bindEmbed('Biblio', 'addBiblio' , $taintedValues);
     $this->bindEmbed('Codes', 'addCodes' , $taintedValues);
+    $this->bindEmbed('Comments', 'addComments' , $taintedValues);
 
     parent::bind($taintedValues, $taintedFiles);
   }
@@ -563,6 +514,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
   {
     $this->saveEmbed('Biblio', 'bibliography_ref' ,$forms,array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('Codes', 'code' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
+    $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('insurance'))
     {
@@ -582,32 +534,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
         {
           $form->getObject()->delete();
           unset($this->embeddedForms['Insurances'][$name]);
-        }
-      }
-    }
-
-    if (null === $forms && $this->getValue('comment'))
-    {
-      $value = $this->getValue('newComments');
-      foreach($this->embeddedForms['newComments']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['comment'] ))
-        {
-          unset($this->embeddedForms['newComments'][$name]);
-        }
-        else
-        {
-          $form->getObject()->setRecordId($this->getObject()->getId());
-        }
-      }
-
-      $value = $this->getValue('Comments');
-      foreach($this->embeddedForms['Comments']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['comment'] ))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Comments'][$name]);
         }
       }
     }
@@ -679,6 +605,16 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       $form = new CodesForm($newCode);
       $this->attachEmbedRecord('Codes', $form, $key);
     }
+
+    // reembed duplicated comment
+    $Comments = Doctrine::getTable('Comments')->findForTable('specimen_parts',$id) ;
+    foreach ($Comments as $key=>$val)
+    {
+      $comment = new Comments();
+      $comment->fromArray($val->toArray());
+      $form = new CommentsSubForm($comment);
+      $this->attachEmbedRecord('Comments', $form, $key);
+    }
   }
 
   public function getJavaScripts()
@@ -701,5 +637,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       return new BiblioAssociationsForm($values);
     if( $emFieldName =='Codes' )
       return new CodesForm($values);
+    if( $emFieldName =='Comments' )
+      return new CommentsSubForm($values);
   }
 }

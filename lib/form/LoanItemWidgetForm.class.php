@@ -22,18 +22,19 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
           'required' => false,
           'validated_file_class' => 'myValidatedFile'
       ));
-    $this->widgetSchema['comment'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));        
     $this->widgetSchema['relatedfile'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));    
 
-    $this->validatorSchema['comment'] = new sfValidatorPass();
     $this->validatorSchema['sender'] = new sfValidatorPass();
     $this->validatorSchema['receiver'] = new sfValidatorPass();    
     $this->validatorSchema['relatedfile'] = new sfValidatorPass();
     $this->validatorSchema['insurance'] = new sfValidatorPass();
     $this->widgetSchema->setNameFormat('loan_items[%s]');
+
+    $this->validatorSchema['Comments_holder'] = new sfValidatorPass();
+    $this->widgetSchema['Comments_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
   }
   public function addRelatedFiles($num,$file=null)
   {
@@ -173,72 +174,20 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $subForm = new sfForm();
     $this->embedForm('newInsurance',$subForm);
   }
-    
-  public function addComments($num, $obj=null)
-  {
-      if(! isset($this['newComments'])) $this->loadEmbedComments();
-      $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
-      if (!$obj) $val = new Comments();
-      else $val = $obj ;      
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new CommentsSubForm($val,array('table' => 'loan_items', 'line_display' => true));
-      $this->embeddedForms['newComments']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newComments', $this->embeddedForms['newComments']);
-  }  
-  
-  public function loadEmbedComments()
-  {
-    if($this->isBound()) return;
-    /* Comments sub form */
-    $subForm = new sfForm();
-    $this->embedForm('Comments',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('comments')->findForTable('loan_items', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new CommentsSubForm($vals,array('table' => 'loan_items'));
-        $this->embeddedForms['Comments']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('Comments', $this->embeddedForms['Comments']);
-    }
 
-    $subForm = new sfForm();
-    $this->embedForm('newComments',$subForm);
+
+  public function addComments($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
+    $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
   }
-  
+
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     /* For each embedded informations 
      * test if the widget is on screen by testing a flag field present on the concerned widget
      * If widget is not on screen, remove the field from list of fields to be bound, and than potentially saved
     */
-
-    if(!isset($taintedValues['comment']))
-    {
-      $this->offsetUnset('Comments');
-      unset($taintedValues['Comments']);
-      $this->offsetUnset('newComments');
-      unset($taintedValues['newComments']);
-    }
-    else
-    {
-      $this->loadEmbedComments();
-      if(isset($taintedValues['newComments']))
-      {
-        foreach($taintedValues['newComments'] as $key=>$newVal)
-        {
-          if (!isset($this['newComments'][$key]))
-          {
-            $this->addComments($key);
-          }
-          $taintedValues['newComments'][$key]['record_id'] = 0;
-        }
-      }
-    }
-
     if(!isset($taintedValues['sender']))
     {
       $this->offsetUnset('ActorsSender');
@@ -283,7 +232,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
           $taintedValues['newActorsReceiver'][$key]['record_id'] = 0;
         }
       }
-    }    
+    }
 
     if(!isset($taintedValues['insurance']))
     {
@@ -328,10 +277,11 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
           $taintedValues['newRelatedFiles'][$key]['record_id'] = 0;
         }
       }
-    }      
+    }
+    $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);   
   }
-  
+
   public function save($con = null)
   {
     $this->offsetUnset('filenames');
@@ -340,28 +290,8 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   
   public function saveEmbeddedForms($con = null, $forms = null)
   {
-    if (null === $forms && $this->getValue('comment'))
-    {
-      $value = $this->getValue('newComments');
-      foreach($this->embeddedForms['newComments']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['comment'] ))
-          unset($this->embeddedForms['newComments'][$name]);
-        else
-        {
-          $form->getObject()->setRecordId($this->getObject()->getId());
-        }
-      }
-      $value = $this->getValue('Comments');
-      foreach($this->embeddedForms['Comments']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['comment'] ))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Comments'][$name]);
-        }
-      }
-    }  
+    $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
+
     if (null === $forms && $this->getValue('sender'))
     {
       $value = $this->getValue('newActorsSender');
@@ -472,5 +402,34 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $javascripts=parent::getStylesheets();
     $javascripts['/css/ui.datepicker.css']='all';
     return $javascripts;
-  }  
+  }
+
+
+  public function getEmbedRecords($emFieldName, $record_id = false)
+  {
+    if($record_id === false)
+      $record_id = $this->getObject()->getId();
+    if( $emFieldName =='Comments' )
+      return Doctrine::getTable('Comments')->findForTable('loan_items', $record_id);
+  }
+
+  public function duplicate($id)
+  {
+    // reembed duplicated comment
+    $Comments = Doctrine::getTable('Comments')->findForTable('loan_items',$id) ;
+    foreach ($Comments as $key=>$val)
+    {
+      $comment = new Comments();
+      $comment->fromArray($val->toArray());
+      $form = new CommentsSubForm($comment);
+      $this->attachEmbedRecord('Comments', $form, $key);
+    }
+  }
+
+  public function getEmbedRelationForm($emFieldName, $values)
+  {
+    if( $emFieldName =='Comments' )
+      return new CommentsSubForm($values);
+  }
+
 }

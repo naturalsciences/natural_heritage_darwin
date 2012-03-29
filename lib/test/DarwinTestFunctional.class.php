@@ -216,7 +216,7 @@ class DarwinTestFunctional extends sfTestFunctional
   	  	  'taxon_ref' => $taxon_id,
                   'Codes_holder' => 1,
                   'Collectors_holder' => 1,
-                  'comment'=>1,
+                  'Comments_holder'=>1,
                   'ident' => 1,
   	  	  'newCodes' => array(
                     0 => array('code_category' => 'secondary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 'code_suffix' => 'ary','code_suffix_separator' => '/'),
@@ -227,7 +227,7 @@ class DarwinTestFunctional extends sfTestFunctional
 	              1 => array('people_ref' => $collector_2, 'referenced_relation' => 'specimens', 'order_by' => 2, 'people_type' => 'collector')
 	              ), 			
 	        'newComments' => array(
-	              0 => array('referenced_relation'=> 'specimens','notion_concerned' => 'collectors', 'comment' => 'Test comment for a collector')
+	              0 => array('notion_concerned' => 'collectors', 'comment' => 'Test comment for a collector')
 	              ),
   	  	  'newIdentification' => array(
   	  	  			0 => array('notion_date' => array('day' => 10, 'month' => 02,'year' => 1945),
@@ -288,9 +288,8 @@ class DarwinTestFunctional extends sfTestFunctional
      	with('response')->begin()->
         isStatusCode(200)->
      	click('#submit_spec_individual_f1', array('specimen_individuals' => array(
-                          'comment'=>1,
+                          'Comments_holder'=>1,
      	                  'newComments' => array(0 => array(
-                            'referenced_relation'=>'specimen_individuals',
                             'notion_concerned'=> 'stage',
                             'comment' => 'stage of individual')
                           ),
@@ -327,7 +326,7 @@ class DarwinTestFunctional extends sfTestFunctional
           'specimen_parts' => array(
             'container' => 'Test for parts',
             'Codes_holder'=>1,
-            'comment'=>1,
+            'Comments_holder'=>1,
             'surnumerary' => true,
             'sub_container' => 'Sub test for parts',
             'newInsurance' => array(
@@ -338,8 +337,6 @@ class DarwinTestFunctional extends sfTestFunctional
                 'insurer_ref' => $institution))	,
             'newComments' => array(
               0 => array(
-                'referenced_relation' => 'specimen_parts',
-                'notion_concerned'=> 'preparation',
                 'comment' => 'part preparation')),
                 'newCodes' => array(
                   0 => array(

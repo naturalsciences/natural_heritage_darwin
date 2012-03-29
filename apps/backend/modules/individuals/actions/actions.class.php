@@ -68,14 +68,8 @@ class individualsActions extends DarwinActions
       $duplic = $request->getParameter('duplicate_id') ;
       if($duplic)
       {
-        // reembed duplicated comment
-        $Comments = Doctrine::getTable('Comments')->findForTable('specimen_individuals',$duplic) ;
-        foreach ($Comments as $key=>$val)
-        {
-          $comment = new Comments() ;
-          $comment = $this->getRecordIfDuplicate($val->getId(),$comment); 
-          $this->individual->addComments($key, $comment) ;          
-        }
+        $this->individual->duplicate($duplic);
+
         // reembed duplicated external url
         $ExtLinks = Doctrine::getTable('ExtLinks')->findForTable('specimen_individuals',$duplic) ;
         foreach ($ExtLinks as $key=>$val)
@@ -99,7 +93,6 @@ class individualsActions extends DarwinActions
             $this->individual->reembedNewIdentification($ident, $key);    
           }
         }
-        $this->individual->duplicate($duplic);
       }
     }
     if($request->isMethod('post'))
@@ -213,18 +206,10 @@ class individualsActions extends DarwinActions
 
   public function executeAddComments(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
-    if(in_array($request->getParameter('id'),Doctrine::getTable('Specimens')->testNoRightsCollections('individual_ref',
-                                                                                                      $request->getParameter('id'), 
-                                                                                                      $this->getUser()->getId())))  
-      $this->forwardToSecureAction();    
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
-    $spec = null;
-
-    if($request->hasParameter('id') && $request->getParameter('id'))
-      $spec = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id') );
-    $form = new SpecimenIndividualsForm($spec);
-    $form->addComments($number);
+    $form = new SpecimenIndividualsForm();
+    $form->addComments($number,array());
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
  

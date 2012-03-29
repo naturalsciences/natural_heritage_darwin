@@ -143,7 +143,7 @@ class specimenwidgetComponents extends sfComponents
   {    
     $this->defineForm();
     if(!isset($this->form['newComments']))
-      $this->form->loadEmbedComment();
+      $this->form->loadEmbed('Comments');
   }
 
   public function executeExtLinks()

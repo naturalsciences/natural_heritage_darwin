@@ -42,7 +42,9 @@ class CommentsTable extends DarwinTable
                                  ),
     'specimen_parts' => array('container' => 'Container',
                               'disposal' => 'Disposal',
-                              'part' => 'Parts',
+                              'part' => 'Parts','general' => 'General', 'description' => 'Description', 
+                     'conservation_mean' => 'Conservation mean',
+                     'conservation_location' => 'Conservation location', 'preparation' => 'Preparation'
                              ),
     'specimens' => array('general' => 'General', 'taxonomy' => 'Taxonomy', 
         'chronostratigraphy' => 'Chronostratigraphy',
@@ -50,14 +52,10 @@ class CommentsTable extends DarwinTable
     		'sampling_locations' => 'Sampling locations', 'igs' => 'IGs', 'identifications' => 'Identifications',
     		'collectors' => 'Collectors', 'hosting' => 'Hosting'
     		            ),
-    'individuals' => array('general' => 'General', 'type' => 'Type', 'stage' => 'Stage', 'sex' => 'Sex',
+    'specimen_individuals' => array('general' => 'General', 'type' => 'Type', 'stage' => 'Stage', 'sex' => 'Sex',
     		              'social_status' => 'Social status', 'rock_form' => 'Rock form', 
                   		'identifications' => 'Identifications'
     		            ),
-    'parts' => array('general' => 'General', 'description' => 'Description', 
-                     'conservation_mean' => 'Conservation mean',
-                     'conservation_location' => 'Conservation location', 'preparation' => 'Preparation'
-                   ),
     'loans' => array('usage' => 'Usage', 'state_observation' => 'State observation'),
     'loan_items' => array('usage' => 'Usage', 'state_observation' => 'State observation'),
     'bibliography' => array('general information' => 'general information', 'diverse' => 'Diverse'),
