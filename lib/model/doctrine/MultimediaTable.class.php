@@ -17,12 +17,14 @@ class MultimediaTable extends DarwinTable
       return Doctrine_Core::getTable('Multimedia');
   }
   
-  public function findForTable($table_name, $record_id)
+  public function findForTable($table_name, $record_id, $onlyVisible=false)
   {
     $q = Doctrine_Query::create()
-	 ->from('Multimedia m')
-	 ->orderBy('m.creation_date DESC');
+        ->from('Multimedia m')
+        ->orderBy('m.creation_date DESC');
     $q = $this->addCatalogueReferences($q, $table_name, $record_id, 'm', true);
+    if($onlyVisible)
+      $q->andWhere('visible = true');
     return $q->execute();
   }    
   

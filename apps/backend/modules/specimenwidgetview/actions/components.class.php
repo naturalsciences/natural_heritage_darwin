@@ -135,16 +135,10 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeRefRelatedFiles()
   {
-    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimens', $this->eid) ;
-    $this->atLeastOneFileVisible = true;
-    if(!$this->getUser()->isAtLeast(Users::ENCODER)) {
-      $this->atLeastOneFileVisible = false;
-      foreach($this->files as $file) {
-        if($file->getVisible()){
-          $this->atLeastOneFileVisible = $file->getVisible();
-          break;
-        }
-      }
+    $this->atLeastOneFileVisible = $this->getUser()->isAtLeast(Users::ENCODER);
+    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimens', $this->eid, !($this->atLeastOneFileVisible));
+    if(!($this->atLeastOneFileVisible)) {
+      $this->atLeastOneFileVisible = ($this->files->count()>0);
     }
   }
 

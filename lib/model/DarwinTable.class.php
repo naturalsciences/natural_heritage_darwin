@@ -74,7 +74,7 @@ class DarwinTable extends Doctrine_Table
     $query->andWhere($alias.'.referenced_relation = ?',$table_name)
          ->andWhere($alias.'.record_id = ?',$record_id);
     if(! $with_zero)
-	 $query->andWhere($alias.'.record_id != 0');
+      $query->andWhere($alias.'.record_id != 0');
     return $query;
   }
 
