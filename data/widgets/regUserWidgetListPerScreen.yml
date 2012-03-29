@@ -1379,6 +1379,17 @@ pe8:
    title_perso: Informative Workflow
    all_public: true
 
+pe9:
+   col_num: 1
+   category: people_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 9
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
 ins1:
    col_num: 1
    category: people_institution_widget
@@ -1428,12 +1439,23 @@ ins7:
    category: people_institution_widget
    group_name: informativeWorkflow
    mandatory: false
-   order_by: 6
+   order_by: 7
    opened: true
    visible: true
    title_perso: Informative Workflow 
    all_public: true      
    
+ins8:
+   col_num: 2
+   category: people_institution_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
 bib2:
    col_num: 1
    category: catalogue_bibliography_widget
@@ -1475,6 +1497,16 @@ bib8:
    opened: false
    visible: false
    title_perso: External Links
+
+bib9:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: relatedFiles
+   order_by: 9
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: Related Files
 
 lw1:   
    col_num: 1
@@ -1743,6 +1775,17 @@ ex2:
    title_perso: External Links
    all_public: true     
 
+ex3:
+   col_num: 1
+   category: catalogue_expeditions_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
 gtu1:
    col_num: 1
    category: catalogue_gtu_widget
@@ -1781,10 +1824,21 @@ gtu4:
    category: catalogue_gtu_widget
    group_name: informativeWorkflow
    mandatory: false
-   order_by: 2
+   order_by: 4
    opened: true
    visible: true
    title_perso: Informative Workflow
+   all_public: true
+
+gtu5:
+   col_num: 1
+   category: catalogue_gtu_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Related Files
    all_public: true
 
 u1wmetto1:
