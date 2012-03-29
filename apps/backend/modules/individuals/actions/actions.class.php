@@ -69,15 +69,6 @@ class individualsActions extends DarwinActions
       if($duplic)
       {
         $this->individual->duplicate($duplic);
-
-        // reembed duplicated external url
-        $ExtLinks = Doctrine::getTable('ExtLinks')->findForTable('specimen_individuals',$duplic) ;
-        foreach ($ExtLinks as $key=>$val)
-        {
-          $links = new ExtLinks() ;
-          $links = $this->getRecordIfDuplicate($val->getId(),$links); 
-          $this->individual->addExtLinks($key, $links) ;          
-        }        
         //reembed identification
         $Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimen_individuals',$duplic) ;
         foreach ($Identifications as $key=>$val)
@@ -206,7 +197,7 @@ class individualsActions extends DarwinActions
 
   public function executeAddComments(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
     $form = new SpecimenIndividualsForm();
     $form->addComments($number,array());
@@ -215,18 +206,10 @@ class individualsActions extends DarwinActions
  
   public function executeAddExtLinks(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
-    if(in_array($request->getParameter('id'),Doctrine::getTable('Specimens')->testNoRightsCollections('individual_ref',
-                                                                                                      $request->getParameter('id'), 
-                                                                                                      $this->getUser()->getId())))  
-      $this->forwardToSecureAction();    
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
-    $spec = null;
-
-    if($request->hasParameter('id') && $request->getParameter('id'))
-      $spec = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id') );
-    $form = new SpecimenIndividualsForm($spec);
-    $form->addExtLinks($number);
+    $form = new SpecimenIndividualsForm();
+    $form->addExtLinks($number,array());
     return $this->renderPartial('specimen/spec_links',array('form' => $form['newExtLinks'][$number], 'rownum'=>$number));
   }
   

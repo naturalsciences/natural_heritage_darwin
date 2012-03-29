@@ -1,5 +1,6 @@
 <?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'maintenances','eid'=> $form->getObject()->getId() )); ?>
 <?php $action = 'maintenances/update?id='.$form->getObject()->getId() ;?>
+<?php slot('title', __('Edit Maintenance'));  ?>
 <div class="page">
   <?php echo form_tag($action, array('class'=>'edition','enctype'=>'multipart/form-data'));?>
   <h1><?php echo __('Edit Maintenance');?></h1>

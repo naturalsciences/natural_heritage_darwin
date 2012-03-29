@@ -99,7 +99,7 @@ class individualswidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newExtLinks']))
-    $this->form->loadEmbedLink();
+      $this->form->loadEmbed('ExtLinks');
   }  
   public function executeRefRelatedFiles()
   {

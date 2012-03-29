@@ -34,7 +34,7 @@ class maintenanceswidgetComponents extends sfComponents
   { 
     $this->defineForm();
     if(!isset($this->form['newExtLinks']))
-      $this->form->loadEmbedLink();   
+      $this->form->loadEmbed('ExtLinks');
   }
       
   public function executeRefRelatedFiles()
@@ -48,6 +48,6 @@ class maintenanceswidgetComponents extends sfComponents
   { 
     $this->defineForm();
     if(!isset($this->form['newComments']))
-      $this->form->loadEmbedComments();   
+      $this->form->loadEmbed('Comments');   
   }
 }

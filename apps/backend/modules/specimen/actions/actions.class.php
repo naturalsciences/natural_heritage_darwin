@@ -30,11 +30,6 @@ class specimenActions extends DarwinActions
   public function executeConfirm(sfWebRequest $request)
   {
   }
-  
-  public function callSecureAction()
-  {
-    $this->forwardToSecureAction();
-  }
 
   public function executeAddCode(sfWebRequest $request)
   {
@@ -164,15 +159,6 @@ class specimenActions extends DarwinActions
           $spec = $this->getRecordIfDuplicate($val->getId(),$spec);
           $this->form->addSpecimensAccompanying($key, $spec) ;
         }
-
-        // reembed duplicated external url
-        $ExtLinks = Doctrine::getTable('ExtLinks')->findForTable('specimens',$duplic) ;
-        foreach ($ExtLinks as $key=>$val)
-        {
-          $links = new ExtLinks() ;
-          $links = $this->getRecordIfDuplicate($val->getId(),$links); 
-          $this->form->addExtLinks($key, $links) ;          
-        } 
 
         //reembed identification
          $Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$duplic) ;

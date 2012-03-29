@@ -135,8 +135,16 @@ class maintenancesActions extends DarwinActions
     $form = $this->getMaintenancesForm($request); 
     $form->addComments($number);
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
-  }  
-  
+  }
+
+  public function executeAddExtLinks(sfWebRequest $request)
+  {   
+    $number = intval($request->getParameter('num'));
+    $form = $this->getMaintenancesForm($request); 
+    $form->addExtLinks($number);
+    return $this->renderPartial('specimen/spec_links',array('form' => $form['newExtLinks'][$number], 'rownum'=>$number));
+  }
+
   public function executeAddRelatedFiles(sfWebRequest $request)
   {
     $number = intval($request->getParameter('num'));
@@ -145,11 +153,5 @@ class maintenancesActions extends DarwinActions
     $form->addRelatedFiles($number,$file);
     return $this->renderPartial('loan/multimedia',array('form' => $form['newRelatedFiles'][$number], 'row_num'=>$number));
   }   
-  public function executeAddExtLinks(sfWebRequest $request)
-  {   
-    $number = intval($request->getParameter('num'));
-    $form = $this->getMaintenancesForm($request); 
-    $form->addExtLinks($number);
-    return $this->renderPartial('specimen/spec_links',array('form' => $form['newExtLinks'][$number], 'rownum'=>$number));
-  }  
+
 }

@@ -1,5 +1,6 @@
 <?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'maintenances','eid'=> null )); ?>
 <?php $action = 'maintenances/create?table='.$sf_request->getParameter('table').'&record_id='.$sf_request->getParameter('record_id') ;?>
+<?php slot('title', __('New Maintenance'));  ?>
 <div class="page">
   <?php echo form_tag($action, array('class'=>'edition','enctype'=>'multipart/form-data'));?>
   <h1><?php echo __('New Maintenance');?></h1>

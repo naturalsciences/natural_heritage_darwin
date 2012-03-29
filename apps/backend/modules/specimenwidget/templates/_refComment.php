@@ -24,6 +24,7 @@
           if($module == 'parts') $url = 'parts/addComments';
           if($module == 'loans') $url = 'loan/addComments';
           if($module == 'loan_items') $url = 'loanitem/addComments';
+          if($module == 'maintenances') $url = 'maintenances/addComments';
           ?>
            <a href="<?php echo url_for($url.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_comment"><?php echo __('Add comment');?></a>
          </div>
