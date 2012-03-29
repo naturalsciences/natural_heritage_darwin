@@ -11,8 +11,12 @@ class CatalogueProperties extends BaseCatalogueProperties
     $data = new Doctrine_Parser_Yml();
     $array = $data->loadData($file);
     $model = array("" => "No templates") ;
-    foreach($array[$table] as $key => $value)
-      $model[$key] = $value['model_name'] ;
+    //This test below is theoricaly not necessary since the table should exist in properties_template.yml
+    if(@is_array($array[$table]))
+    {
+      foreach($array[$table] as $key => $value)
+        $model[$key] = $value['model_name'] ;
+    }
     return $model ;
   }
 
@@ -116,6 +120,7 @@ class CatalogueProperties extends BaseCatalogueProperties
     $file=sfConfig::get('sf_data_dir').'/feed/properties_template.yml' ;
     $data = new Doctrine_Parser_Yml();
     $array = $data->loadData($file);
+    //This test below is theoricaly not necessary since the table should exist in properties_template.yml    
     if(@is_array($array[$this->getReferencedRelation()][$template]))
       $this->fromArray($array[$this->getReferencedRelation()][$template]) ;
     else
