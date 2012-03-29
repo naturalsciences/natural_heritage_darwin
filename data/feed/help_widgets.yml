@@ -13,6 +13,7 @@ all:
       insurances: In this widget you can specify one or more values of the whole collection belonging to the same IG number as estimated by a particular insurance institution and /or on a particular date.
       informativeWorkflow: This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, an explanation when a modification is added. The number of options in the status field depend on your privileges
       biblio : This widget allow you to add a bibliographic reference of the item
+      relatedFiles : This widget allow you to add a file related to the item - This can either be a document describing the item or an illustration of it.
 
     individualswidget:
       refIdentifications: This widget allows you to add some information regarding the determination of either the type, sex, stage, social status and/or rock formation. You can potentially add the date on which the determination was made, what value was given as well as the determinators' names.
@@ -27,6 +28,7 @@ all:
       extLinks: This widget allows you to add a URL address to the record (ex : http://www.naturalsciences.be)
       informativeWorkflow: This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges
       biblio : This widget allow you to add a bibliographic reference of the item
+      refRelatedFiles : This widget allow you to add a file related to the item - This can either be a document describing the item or an illustration of it.
 
     partwidget:
       complete: This widget allows you to add information with regards to the physical state of the object. E.g. damaged. You can also indicate whether you have a complete object or a partial object by using the tickbox.
@@ -43,6 +45,7 @@ all:
       refProperties: This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= measurement, sub type= weight, qualifier= shell, method= electronic, tool= scale, value units= g, value=2
       informativeWorkflow: This widget allow you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges
       biblio : This widget allow you to add a bibliographic reference of the item
+      refRelatedFiles : This widget allow you to add a file related to the item - This can either be a document describing the item or an illustration of it.
 
     peoplewidget:
       comment: This widget is used to add commentary.If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however
@@ -54,6 +57,7 @@ all:
       extLinks: This widget allows you to add a URL address to the record (ex : http://www.naturalsciences.be)
       informativeWorkflow: This widget allow you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges
       biblio : This widget allow you to add a bibliographic reference of the item
+      relatedFiles : This widget allow you to add a file related to the item - This can either be a document describing the item or an illustration of it.
 
     specimensearchwidget:
       localisation: Via this widget you can search a specimen/individual/part by looking up a particular position in a particular depositary.
@@ -107,6 +111,7 @@ all:
       acquisitionCategory: This widget specifies the manner in which the specimen was obtained. E.g. it was part of a donation on the 01/01/2010.
       informativeWorkflow: This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges
       biblio : This widget allow you to add a bibliographic reference of the item
+      refRelatedFiles : This widget allow you to add a file related to the item - This can either be a document describing the item or an illustration of it.
 
     userswidget:
       address: This widget allows you to add one or more addresses, it can be home address, work or more. The locality and the country are required fields
@@ -139,4 +144,3 @@ all:
       refProperties: This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= watertemperature, sub type= C°,Date from=01/07/1974 10:05:00, value= 15
       extLinks: This widget allows you to add a URL address to the record (ex : http://www.naturalsciences.be)
       refRelatedFiles: You can associate files to this maintenance. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image
-
