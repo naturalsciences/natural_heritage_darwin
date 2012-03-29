@@ -3,6 +3,7 @@ SET search_path = darwin2, public;
 \i ../createfunctions.sql
 
 ALTER TABLE specimens DROP COLUMN multimedia_visible CASCADE;
+ALTER TABLE comments DROP constraint unq_comments ;
 
 ALTER TABLE multimedia RENAME TO old_multimedia;
 ALTER TABLE old_multimedia ALTER COLUMN id SET DEFAULT NULL;

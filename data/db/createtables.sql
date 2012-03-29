@@ -157,8 +157,7 @@ create table comments
         comment text not null,
         comment_ts tsvector not null,
         comment_language_full_text full_text_language,
-        constraint pk_comments primary key (id),
-        constraint unq_comments unique (referenced_relation, record_id, notion_concerned)
+        constraint pk_comments primary key (id)
        )
        inherits (template_table_record_ref);
 comment on table comments is 'Comments associated to a record of a given table (and maybe a given field) on a given subject';

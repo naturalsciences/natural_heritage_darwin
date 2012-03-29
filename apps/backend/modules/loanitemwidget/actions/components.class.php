@@ -55,7 +55,7 @@ class loanitemwidgetComponents extends sfComponents
   { 
     $this->defineForm();
     if(!isset($this->form['newRelatedFiles']))
-      $this->form->loadEmbedRelatedFiles();  
+      $this->form->loadEmbed('RelatedFiles');
   }  
 
   public function executeRefComments()
