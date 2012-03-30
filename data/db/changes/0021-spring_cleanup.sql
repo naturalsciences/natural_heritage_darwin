@@ -27,7 +27,7 @@ DROP INDEX IF EXISTS idx_people_languages_people_ref;
 DROP INDEX IF EXISTS idx_possible_upper_levels_level_ref;
 DROP INDEX IF EXISTS idx_specimen_collecting_methods_specimen_ref;
 DROP INDEX IF EXISTS idx_specimen_collecting_tools_specimen_ref;
-DROP INDEX IF EXISTS idx_specimen_individuals_specimen_ref
+DROP INDEX IF EXISTS idx_specimen_individuals_specimen_ref;
 DROP INDEX IF EXISTS idx_specimens_accompanying_specimen_ref;
 DROP INDEX IF EXISTS idx_tag_groups_gtu_ref;
 DROP INDEX IF EXISTS idx_users_languages_users_ref;
