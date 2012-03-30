@@ -13,10 +13,9 @@ class BibliographyForm extends BaseBibliographyForm
   public function configure()
   {
     $this->useFields(array('title', 'type', 'abstract','year'));
-    $this->widgetSchema['title'] = new sfWidgetFormInputText();
-    $this->widgetSchema['title']->setAttributes(array('class'=>'medium_size'));
     $this->validatorSchema['title'] = new sfValidatorString(array('required' => true, 'trim' => true));
-
+    $this->widgetSchema['title']->setLabel('Full Bibliographic reference');
+ 
     $this->validatorSchema['year'] = new sfValidatorInteger(array('required'=>false,'min'=> 0,'max' => date('Y')+2  ));
     $this->widgetSchema['year']->setAttributes(array('class'=>'small_size'));
 
