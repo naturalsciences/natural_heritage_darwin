@@ -1,6 +1,7 @@
 <table class="catalogue_table">
   <thead>
     <tr>
+      <th></th>
       <th><?php echo __('Link');?></th>
       <th><?php echo __('Comment');?></th>
       <th></th>
@@ -9,11 +10,13 @@
   <tbody>
   <?php foreach($links as $link):?>
   <tr>
-    <td>  
-      <?php echo link_to($link->getUrl(),'extlinks/extLinks?table='.$table.'&cid='.$link->getId().'&id='.$eid,array('class' => 'link_catalogue','title' => __('Edit Url') )) ; ?>  
+    <td>
+      <?php echo link_to(image_tag('edit.png'),'extlinks/extLinks?table='.$table.'&cid='.$link->getId().'&id='.$eid,array('class' => 'link_catalogue','title' => __('Edit Url') )) ; ?>  
+    </td>
+    <td>
       <a href="<?php echo $link->getUrl();?>" target="_pop" class='complete_widget'>
-      <?php echo image_tag('next.png',array('title'=>__('Go to this link'))) ; ?>
-      </a>          
+        <?php echo $link->getUrl();?>
+      </a>
     </td>
     <td>
       <?php echo $link->getComment();?>
