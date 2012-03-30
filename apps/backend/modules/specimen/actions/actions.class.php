@@ -30,20 +30,14 @@ class specimenActions extends DarwinActions
   public function executeConfirm(sfWebRequest $request)
   {
   }
-  
-  public function callSecureAction()
-  {
-    $this->forwardToSecureAction();
-  }
 
   public function executeAddCode(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
-    $collectionId = $request->getParameter('collection_id', null);
-    $form->addCodes($number, $collectionId);
-    return $this->renderPartial('spec_codes',array('form' => $form['newCode'][$number], 'rownum'=>$number));
+    $form->addCodes($number, array());
+    return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number));
   }
 
   public function executeAddCollector(sfWebRequest $request)
@@ -52,7 +46,7 @@ class specimenActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $people_ref = intval($request->getParameter('people_ref')) ;
     $form = $this->getSpecimenForm($request);
-    $form->addCollectors($number,$people_ref,$request->getParameter('iorder_by',0));
+    $form->addCollectors($number,array('people_ref' => $people_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('spec_people_associations',array('type'=>'collector','form' => $form['newCollectors'][$number], 'row_num'=>$number));
   }
 
@@ -61,8 +55,9 @@ class specimenActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
     $bibliography_ref = intval($request->getParameter('biblio_ref')) ;
+
     $form = $this->getSpecimenForm($request);
-    $form->addBiblio($number,$bibliography_ref,$request->getParameter('iorder_by',0));
+    $form->addBiblio($number, array( 'bibliography_ref' => $bibliography_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
   }
 
@@ -72,13 +67,13 @@ class specimenActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $people_ref = intval($request->getParameter('people_ref')) ;
     $form = $this->getSpecimenForm($request);
-    $form->addDonators($number,$people_ref,$request->getParameter('iorder_by',0));
+    $form->addDonators($number, array('people_ref' => $people_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('spec_people_associations',array('type'=>'donator','form' => $form['newDonators'][$number], 'row_num'=>$number));
   }
 
   public function executeAddComments(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
     $form->addComments($number);
@@ -155,14 +150,7 @@ class specimenActions extends DarwinActions
       $this->form = new SpecimensForm($specimen);
       if($duplic)
       {
-        // reembed duplicated codes
-        $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$duplic) ;
-        foreach ($Codes as $key=>$val)
-        {
-           $code = new Codes() ;
-           $code = $this->getRecordIfDuplicate($val->getId(),$code);
-           $this->form->addCodes($key,null,$code);
-        }
+        $this->form->duplicate($duplic);
         // reembed duplicated specimen Accompanying
         $spec_a = Doctrine::getTable('SpecimensAccompanying')->findBySpecimen($duplic) ;
         foreach ($spec_a as $key=>$val)
@@ -170,48 +158,6 @@ class specimenActions extends DarwinActions
           $spec = new SpecimensAccompanying() ;
           $spec = $this->getRecordIfDuplicate($val->getId(),$spec);
           $this->form->addSpecimensAccompanying($key, $spec) ;
-        }
-        // reembed duplicated comment
-        $Comments = Doctrine::getTable('Comments')->findForTable('specimens',$duplic) ;
-        foreach ($Comments as $key=>$val)
-        {
-          $comment = new Comments() ;
-          $comment = $this->getRecordIfDuplicate($val->getId(),$comment);
-          $this->form->addComments($key, $comment) ;
-        }
-        // reembed duplicated external url
-        $ExtLinks = Doctrine::getTable('ExtLinks')->findForTable('specimens',$duplic) ;
-        foreach ($ExtLinks as $key=>$val)
-        {
-          $links = new ExtLinks() ;
-          $links = $this->getRecordIfDuplicate($val->getId(),$links); 
-          $this->form->addExtLinks($key, $links) ;          
-        } 
-        // reembed duplicated collector
-        $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('specimens',$duplic) ;
-        if(count($Catalogue))
-        {
-          if(isset($Catalogue['collector']))
-          {
-            foreach ($Catalogue['collector'] as $key=>$val)
-            {
-              $this->form->addCollectors($key, $val->getPeopleRef(),$val->getOrderBy());
-            }
-          }
-          if(isset($Catalogue['donator']))
-          {
-            foreach ($Catalogue['donator'] as $key=>$val)
-            {
-              $this->form->addDonators($key, $val->getPeopleRef(),$val->getOrderBy());
-            }
-          }
-        }
-
-        //reembed biblio
-        $bib =  Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $duplic);
-        foreach($bib as $key=>$vals)
-        {
-          $this->form->addBiblio($key, $vals->getBibliographyRef());
         }
 
         //reembed identification
@@ -432,13 +378,9 @@ class specimenActions extends DarwinActions
     $targetField = $request->getParameter('targetField');
     $specimen = Doctrine::getTable('Specimens')->findOneById($request->getParameter('specId'));
     $this->forward404Unless($specimen);
-    return $this->renderText('{'.
-                             '"'.$targetField.'":"'.$specimen->Taxonomy->getId().'",'.
-                             '"'.$targetField.'_name":"'.$specimen->Taxonomy->getNameWithFormat().'"'.
-                             '}'
-                            );
+    return $this->renderText(json_encode(array($targetField=> $specimen->Taxonomy->getId(), $targetField.'_name' => $specimen->Taxonomy->getName()) ));
   }
-  
+
   public function executeDelete(sfWebRequest $request)
   {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();  

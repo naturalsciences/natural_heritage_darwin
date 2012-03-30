@@ -1,7 +1,7 @@
 <?php include_javascripts_for_form($form) ?>
 <div id="link_screen">
 
-<?php echo form_tag('extlinks/extLinks?table='.$sf_params->get('table') . ($form->getObject()->isNew() ? '': '&cid='.$form->getObject()->getId()), array('class'=>'edition qtiped_form', 'id' => 'link_form'));?>
+<?php echo form_tag('extlinks/extLinks?table='.$sf_params->get('table') . ($form->getObject()->isNew() ? '&id='.$sf_params->get('id'): '&cid='.$form->getObject()->getId()), array('class'=>'edition qtiped_form', 'id' => 'link_form'));?>
 <table>
   <tbody>
     <tr>

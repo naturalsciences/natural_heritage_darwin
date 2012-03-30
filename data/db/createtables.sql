@@ -157,8 +157,7 @@ create table comments
         comment text not null,
         comment_ts tsvector not null,
         comment_language_full_text full_text_language,
-        constraint pk_comments primary key (id),
-        constraint unq_comments unique (referenced_relation, record_id, notion_concerned)
+        constraint pk_comments primary key (id)
        )
        inherits (template_table_record_ref);
 comment on table comments is 'Comments associated to a record of a given table (and maybe a given field) on a given subject';
@@ -1985,6 +1984,15 @@ comment on column loan_history.loan_ref is 'Mandatory Reference to a loan';
 comment on column loan_history.referenced_table is 'Mandatory Reference to the table refereced';
 comment on column loan_history.modification_date_time is 'date of the modification';
 comment on column loan_history.record_line is 'hstore containing the whole line of referenced_table';
+
+create table multimedia_todelete (
+  id serial,
+  uri text,
+  constraint pk_multimedia_todelete primary key (id)
+);
+
+comment on table multimedia_todelete is 'Table here to save deleted multimedia files waiting for a deletion on the disk';
+comment on column multimedia_todelete.uri is 'URI of the file to delete';
 
 
 CREATE TABLE bibliography (

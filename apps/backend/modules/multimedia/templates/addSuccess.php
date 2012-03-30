@@ -1,6 +1,6 @@
 <?php include_javascripts_for_form($form) ?>
 <div id="multimedia_screen">
-  <?php echo form_tag('multimedia/add?table='.$sf_request->getParameter('table').'&id='.$sf_request->getParameter('id'). ($form->getObject()->isNew() ? '': '&rid='.$form->getObject()->getId() ) , array('class'=>'edition qtiped_form', 'enctype'=>'multipart/form-data'));?>
+  <?php $request_params = ($sf_request->hasParameter('rid'))?'?rid='.$sf_request->getParameter('rid'):'?table='.$sf_request->getParameter('table').'&id='.$sf_request->getParameter('id').'&file_id='.$sf_request->getParameter('file_id') ; echo form_tag('multimedia/add'.$request_params , array('class'=>'edition qtiped_form', 'enctype'=>'multipart/form-data'));?>
     <?php echo $form->renderHiddenFields();?>
     <table>
       <tbody>

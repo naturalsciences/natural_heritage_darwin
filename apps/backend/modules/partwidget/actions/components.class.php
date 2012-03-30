@@ -32,10 +32,12 @@ class partwidgetComponents extends sfComponents
         $this->form = new SpecimenPartsForm();
       }
     }
+    if(!isset($this->eid))
+      $this->eid = $this->form->getObject()->getId();
     if(! isset($this->module) )
     {
       $this->module = 'parts';
-    }  
+    }
   }
 
   public function executeParent()
@@ -72,8 +74,8 @@ class partwidgetComponents extends sfComponents
   public function executeRefCodes()
   {
     $this->defineForm();
-    if(!isset($this->form['newCode']))  
-     $this->form->loadEmbedCode();
+    if(!isset($this->form['newCodes']))
+      $this->form->loadEmbed('Codes');
 
     $this->code_copy = false;
     if($this->form->getObject()->isNew())
@@ -86,8 +88,6 @@ class partwidgetComponents extends sfComponents
       if($col)
         $this->code_copy = $col->getCodePartCodeAutoCopy();
     }
-
-    $this->defineForm();
   }
 
   public function executeRefInsurances()
@@ -100,37 +100,31 @@ class partwidgetComponents extends sfComponents
 
   public function executeRefProperties()
   {
-    if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId() ;
+    $this->defineForm();
   }
 
   public function executeComments()
   {
     $this->defineForm();
     if(!isset($this->form['newComments']))
-    $this->form->loadEmbedComment();
+      $this->form->loadEmbed('Comments');
   }
 
   public function executeExtLinks()
   {
     $this->defineForm();
     if(!isset($this->form['newExtLinks']))
-    $this->form->loadEmbedLink();
-
+      $this->form->loadEmbed('ExtLinks');
   }  
   public function executeRefRelatedFiles()
   {
     $this->defineForm();
-    if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId() ;
     if(!isset($this->form['newRelatedFiles']))
-      $this->form->loadEmbedRelatedFiles();
+      $this->form->loadEmbed('RelatedFiles');
   }
   public function executeMaintenance()
   {
-    if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId();
-
+    $this->defineForm();
     if($this->eid)
     {
       $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimen_parts', array($this->eid));
@@ -139,14 +133,13 @@ class partwidgetComponents extends sfComponents
 
   public function executeInformativeWorkflow()
   {
-    if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId() ;
+    $this->defineForm();
   }
 
   public function executeBiblio()
   {
     $this->defineForm();
     if(!isset($this->form['newBiblio']))
-      $this->form->loadEmbedBiblio();
+      $this->form->loadEmbed('Biblio');
   }
 }

@@ -41,6 +41,9 @@ class individualswidgetComponents extends sfComponents
       $this->individual_id = $this->form->getObject()->getId();
       $this->spec_id = $this->form->getObject()->getSpecimenRef();
     }
+    if(!isset($this->eid))
+      $this->eid = $this->form->getObject()->getId();
+
     if(! isset($this->module) )
     {
       $this->module = 'individuals';
@@ -77,11 +80,11 @@ class individualswidgetComponents extends sfComponents
     $this->defineForm();
   }
 
-  public function executeSpecimenIndividualComments()
+  public function executeComments()
   {
     $this->defineForm();
     if(!isset($this->form['newComments']))
-    $this->form->loadEmbedComment();
+      $this->form->loadEmbed('Comments');
   }
   
   public function executeRefIdentifications()
@@ -99,15 +102,13 @@ class individualswidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newExtLinks']))
-    $this->form->loadEmbedLink();
+      $this->form->loadEmbed('ExtLinks');
   }  
   public function executeRefRelatedFiles()
   {
     $this->defineForm();
-    if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId() ;
     if(!isset($this->form['newRelatedFiles']))
-      $this->form->loadEmbedRelatedFiles();
+      $this->form->loadEmbed('RelatedFiles');
   }
   public function executeInformativeWorkflow()
   {
@@ -119,6 +120,6 @@ class individualswidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newBiblio']))
-      $this->form->loadEmbedBiblio();
+      $this->form->loadEmbed('Biblio');
   }
 }

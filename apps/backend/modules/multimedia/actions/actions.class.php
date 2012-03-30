@@ -18,12 +18,14 @@ class multimediaActions extends DarwinActions
     if(!($this->getUser()->isAtLeast(Users::ADMIN) || $this->checkRights($multimedia))) $this->forwardToSecureAction();
     $this->forward404Unless(file_exists($file = $multimedia->getFullURI()),sprintf('This file does not exist') );
     // Adding the file to the Response object
+
     $this->getResponse()->clearHttpHeaders();
     $this->getResponse()->setHttpHeader('Pragma: private', true);
     $this->getResponse()->setHttpHeader('Content-Disposition',
                             'attachment; filename="'.
                             $multimedia->getFilename().'"');
-    $this->getResponse()->setContentType("application/force-download ".$multimedia->getMimeType());    
+    //$this->getResponse()->setContentType("application/force-download ".$multimedia->getMimeType());
+    $this->getResponse()->setHttpHeader('content-type', 'application/octet-stream', true);
     $this->getResponse()->sendHttpHeaders();
     $this->getResponse()->setContent(readfile($file));    
     return sfView::NONE;
@@ -40,7 +42,7 @@ class multimediaActions extends DarwinActions
     }
     /* Actualy multimedia is only in loans and loan items, so for the moment any otehr referenced relation
      returns false */
-    return false ;
+    return true;
   }
 
   public function executePreview(sfWebRequest $request)
@@ -94,7 +96,7 @@ class multimediaActions extends DarwinActions
           'type' => $extension,
           'uri' => $filename,
           'referenced_relation' => $request->getParameter('table'),
-          'creation_date' => date('m/d/Y')
+          'creation_date' => date('Y-m-d')
         ) ;
         $this->getUser()->setAttribute($filename, $file_info);
       }
@@ -116,19 +118,24 @@ class multimediaActions extends DarwinActions
   public function executeAdd(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    $this->files = null;
+    $file_record = null;
+
     if($request->hasParameter('rid'))
     {
-      $this->files = Doctrine::getTable('Multimedia')->findExcept($request->getParameter('rid'));
+      $file_record = Doctrine::getTable('Multimedia')->findExcept($request->getParameter('rid'));
     }
 
-    if(! $this->files)
+    if(! $file_record)
     {
-     $this->files = new Multimedia();
-     $this->files->setRecordId($request->getParameter('id'));
-     $this->files->setReferencedRelation($request->getParameter('table'));
+      $this->forward404Unless($request->hasParameter('id') && $request->hasParameter('table') && $request->hasParameter('file_id'));
+      $file = $this->getUser()->getAttribute($request->getParameter('file_id')) ;
+      $file_record = new Multimedia();
+      $file_record->fromArray($file);
+      $file_record->setReferencedRelation($request->getParameter('table'));
+      $file_record->setRecordId($request->getParameter('id'));
     }
-    $this->form = new MultimediaForm($this->files);
+   
+    $this->form = new MultimediaForm($file_record);
 
     if($request->isMethod('post'))
     {
@@ -136,7 +143,8 @@ class multimediaActions extends DarwinActions
       if($this->form->isValid())
       {
         try{
-          $this->form->getObject()->changeUri() ;
+          if($this->form->getObject()->isNew())
+            $this->form->setRecordRef($request->getParameter('table'), $request->getParameter('id'));
           $this->form->save();
           $this->form->getObject()->refreshRelated();
           $this->form = new MultimediaForm($this->form->getObject()); //Ugly refresh

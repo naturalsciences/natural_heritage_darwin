@@ -5,6 +5,34 @@
  */
 class CatalogueProperties extends BaseCatalogueProperties
 {
+  private static function getModelList($table)
+  {
+    $file=sfConfig::get('sf_data_dir').'/feed/properties_template.yml' ;
+    $data = new Doctrine_Parser_Yml();
+    $array = $data->loadData($file);
+    $model = array("" => "No templates") ;
+    //This test below is theoricaly not necessary since the table should exist in properties_template.yml
+    if(@is_array($array[$table]))
+    {
+      foreach($array[$table] as $key => $value)
+        $model[$key] = $value['model_name'] ;
+    }
+    return $model ;
+  }
+
+  public static function getModels($table)
+  {
+
+    try{
+        $i18n_object = sfContext::getInstance()->getI18n();
+    }
+    catch( Exception $e )
+    {
+        return self::getModelList($table);
+    }
+    return array_map(array($i18n_object, '__'), self::getModelList($table));
+  }  
+  
   /**
   * Set DateFrom field and mask if a fuzzyDateTime is passed
   * @param string|fuzzyDateTime $fd a fuzzyDateTime object or a string to pass to postgres
@@ -85,5 +113,17 @@ class CatalogueProperties extends BaseCatalogueProperties
   {
     $date = new FuzzyDateTime($this->_get('date_from'),$this->_get('date_from_mask'),false, true);
     return $date->getDateTimeMaskedAsArray();
+  }
+  
+  public function setPropertyTemplate($template)
+  {
+    $file=sfConfig::get('sf_data_dir').'/feed/properties_template.yml' ;
+    $data = new Doctrine_Parser_Yml();
+    $array = $data->loadData($file);
+    //This test below is theoricaly not necessary since the table should exist in properties_template.yml    
+    if(@is_array($array[$this->getReferencedRelation()][$template]))
+      $this->fromArray($array[$this->getReferencedRelation()][$template]) ;
+    else
+      return null ;
   }
 }

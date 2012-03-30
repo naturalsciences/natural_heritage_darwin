@@ -12,10 +12,7 @@ class ExtLinksForm extends BaseExtLinksForm
 {
   public function configure()
   {
-    $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();
-    unset($this['comment_ts']);
-    unset($this['comment_language_full_text']); // @TODO : check this!
+    $this->useFields(array('id','url','comment'));
     $this->widgetSchema['url'] = new sfWidgetFormInputText();
     $this->widgetSchema['url']->setAttributes(array('class'=>'small_medium_size'));
 
@@ -23,5 +20,23 @@ class ExtLinksForm extends BaseExtLinksForm
     $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['url'] = new sfValidatorString(array('required'=>false));
     $this->validatorSchema['comment'] = new sfValidatorString(array('trim'=>true, 'required'=>false));
+    $this->mergePostValidator(new ExtLinksValidatorSchema());
+
+  }
+  public function setRecordRef($relation, $rid)
+  {
+    $this->ref_relation =$relation;
+    $this->ref_record_id = $rid;
+  }
+
+  public function updateObject($values = null)
+  {
+    $object = parent::updateObject($values);
+    if(isset($this->ref_relation) && isset($this->ref_record_id))
+    {
+      $object->setReferencedRelation($this->ref_relation);
+      $object->setRecordId($this->ref_record_id);
+    }
+    return $object;
   }
 }

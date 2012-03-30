@@ -933,3 +933,7 @@ CREATE TRIGGER trg_chk_part_not_loaned BEFORE DELETE
 CREATE TRIGGER trg_cpy_ig_to_loan_items AFTER UPDATE
   ON specimens FOR EACH ROW
   EXECUTE PROCEDURE fct_cpy_ig_to_loan_items();
+
+CREATE TRIGGER trg_cpy_deleted_file AFTER DELETE
+  ON multimedia FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_deleted_file();

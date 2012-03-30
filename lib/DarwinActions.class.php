@@ -8,6 +8,7 @@ class DarwinActions extends sfActions
     'specimen_parts'=>'SpecimenParts',
     'loans'=>'Loans',
     'loan_items'=>'LoanItems',
+    'collection_maintenance' => 'CollectionMaintenance'
   );
 
   protected function getSpecificForm(sfWebRequest $request, $options=null)
@@ -26,6 +27,10 @@ class DarwinActions extends sfActions
     elseif ($request->getParameter('table','')== 'loan_items')
     {
       $form = new LoanItemWidgetForm($tableRecord,$options);
+    }
+    elseif ($request->getParameter('table','')== 'collection_maintenance')
+    {
+      $form = new MaintenanceForm($tableRecord,$options);
     }
     elseif ($request->getParameter('table','')== 'specimens')
     {

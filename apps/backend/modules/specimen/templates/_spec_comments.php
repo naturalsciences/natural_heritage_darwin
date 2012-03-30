@@ -5,6 +5,8 @@
           <?php echo $form['notion_concerned'];?>
       </td>
       <td>
+        <?php echo $form->renderError();?>
+
         <?php echo $form['comment']->renderError(); ?>
         <?php echo $form['comment'];?>
       </td>

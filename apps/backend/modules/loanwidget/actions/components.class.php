@@ -22,6 +22,13 @@ class loanwidgetComponents extends sfComponents
       else
         $this->form = new LoansForm();
     }
+    if(!isset($this->eid))
+      $this->eid = $this->form->getObject()->getId();
+
+    if(! isset($this->module) )
+    {
+      $this->module = 'loans';
+    }
   }
 
   public function executeRefInsurances()
@@ -67,31 +74,26 @@ class loanwidgetComponents extends sfComponents
   { 
     $this->defineForm();
     if(!isset($this->form['newRelatedFiles']))
-      $this->form->loadEmbedRelatedFiles();  
+      $this->form->loadEmbed('RelatedFiles');
   }  
 
   public function executeRefComments()
   { 
     $this->defineForm();
     if(!isset($this->form['newComments']))
-      $this->form->loadEmbedComments();   
+      $this->form->loadEmbed('Comments');
   }
 
   public function executeLoanStatus()
   { 
-    if(isset($this->form))
-      $this->eid = $this->form->getObject()->getId() ;  
-    if(isset($this->eid))
-       $this->loanstatus = Doctrine::getTable('LoanStatus')->getLoanStatus($this->eid);
-    else $this->eid = false;
+    $this->defineForm();
+    $this->loanstatus = Doctrine::getTable('LoanStatus')->getLoanStatus($this->eid);
     $this->form = new informativeWorkflowForm(null, array('available_status' => LoanStatus::getAvailableStatus())) ;     
   }
 
   public function executeMaintenances()
   { 
-    if(isset($this->form))
-      $this->eid = $this->form->getObject()->getId();
-    if(isset($this->eid))
-       $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getMergedMaintenances('loans', $this->eid);
+    $this->defineForm();
+    $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getMergedMaintenances('loans', $this->eid);
   }
 }

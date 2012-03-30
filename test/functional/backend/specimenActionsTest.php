@@ -166,7 +166,7 @@ $browser->
   get('specimen/getTaxon', array('specId'=>$specId, 'targetField'=>'specimen_host_taxon'))->
   with('response')->begin()->
     isStatusCode(200)->
-    matches('/","specimen_host_taxon_name":"\<i\>Animalia\<\/i\>"}/')->
+    matches('/specimen_host_taxon_name":"Animalia"}/')->
   end();
 
 $num = 5;
@@ -176,12 +176,12 @@ $browser->
   get('specimen/addCode', array('id'=>$specId, 'num'=>$num, 'collectionId'=>$collectionId))->
   with('response')->begin()->
     isStatusCode()->
-    checkElement('tr td:first select#specimen_newCode_'.$num.'_code_category',1)->
-    checkElement('tr td:nth-child(2) input#specimen_newCode_'.$num.'_code_prefix',1)->
-    checkElement('tr td:nth-child(3) div#specimen_newCode_'.$num.'_code_prefix_separator_parent',1)->
-    checkElement('tr td:nth-child(4) input#specimen_newCode_'.$num.'_code',1)->
-    checkElement('tr td:nth-child(5) div#specimen_newCode_'.$num.'_code_suffix_separator_parent',1)->
-    checkElement('tr td:nth-child(6) input#specimen_newCode_'.$num.'_code_suffix',1)->
+    checkElement('tr td:first select#specimen_newCodes_'.$num.'_code_category',1)->
+    checkElement('tr td:nth-child(2) input#specimen_newCodes_'.$num.'_code_prefix',1)->
+    checkElement('tr td:nth-child(3) div#specimen_newCodes_'.$num.'_code_prefix_separator_parent',1)->
+    checkElement('tr td:nth-child(4) input#specimen_newCodes_'.$num.'_code',1)->
+    checkElement('tr td:nth-child(5) div#specimen_newCodes_'.$num.'_code_suffix_separator_parent',1)->
+    checkElement('tr td:nth-child(6) input#specimen_newCodes_'.$num.'_code_suffix',1)->
   end();
 
 $num = 1;

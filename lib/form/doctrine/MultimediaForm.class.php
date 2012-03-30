@@ -12,16 +12,11 @@ class MultimediaForm extends BaseMultimediaForm
 {
   public function configure()
   {
-    unset(
-      $this['creation_date_mask']
-      );
-    $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['referenced_relation'] = new sfValidatorString(array('required'=>false));    
-    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
-          
+    $this->useFields(array('title','uri', 'description', 'type', 'creation_date', 'visible', 'publishable', 'filename', 'mime_type'));
+
     $this->widgetSchema['title'] = new sfWidgetFormInput();
     $this->widgetSchema['title']->setAttributes(array('class'=>'medium_small_size'));
-    $this->validatorSchema['title'] = new sfValidatorString();
+    $this->validatorSchema['title'] = new sfValidatorString(array('required'=>false));
     
     if($this->getObject()->isNew())
     {
@@ -38,10 +33,10 @@ class MultimediaForm extends BaseMultimediaForm
     $this->validatorSchema['filename'] = new sfValidatorPass();  
     
     $this->widgetSchema['mime_type'] = new sfWidgetFormInputHidden(); 
-    $this->validatorSchema['mime_type'] = new sfValidatorString();     
+    $this->validatorSchema['mime_type'] = new sfValidatorString(array('required'=>false)); 
     
     $this->widgetSchema['type'] = new sfWidgetFormInputHidden(); 
-    $this->validatorSchema['type'] = new sfValidatorString(array('required'=>false));         
+    $this->validatorSchema['type'] = new sfValidatorString(array('required'=>false));
     
     $this->widgetSchema['creation_date'] = new sfWidgetFormInputHidden(); 
     $this->validatorSchema['creation_date'] = new sfValidatorPass();  
@@ -51,7 +46,6 @@ class MultimediaForm extends BaseMultimediaForm
 
     $this->widgetSchema['publishable'] = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['publishable'] = new sfValidatorBoolean();
-
     /*Labels*/
 
     $this->widgetSchema->setLabels(array('title' => 'Name',
@@ -63,10 +57,22 @@ class MultimediaForm extends BaseMultimediaForm
                                   );
 
     $this->mergePostValidator(new MultimediaFileValidatorSchema());    
-  }  
-  
-  public function doSave($con = null)
-  {
-    $this->offsetUnset('id');  
   }
+
+  public function setRecordRef($relation, $rid)
+  {
+    $this->ref_relation =$relation;
+    $this->ref_record_id = $rid;
+  }
+
+  public function updateObject($values = null)
+  {
+    $object = parent::updateObject($values);
+    if(isset($this->ref_relation) && isset($this->ref_record_id))
+    {
+      $object->setReferencedRelation($this->ref_relation);
+      $object->setRecordId($this->ref_record_id);
+    }
+  }
+
 }

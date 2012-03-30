@@ -96,9 +96,9 @@ class loanActions extends DarwinActions
           $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
           $this->status = array();
           foreach($status as $sta) {
-            $this->status[$sta->getLoanRef()] = $sta;
-          $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
+            $this->status[$sta->getLoanRef()] = $sta;          
           }
+          $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());          
       }
     }
   }
@@ -296,7 +296,7 @@ class loanActions extends DarwinActions
   public function executeAddComments(sfWebRequest $request)
   {
     $number = intval($request->getParameter('num'));
-    $form = $this->getLoanForm($request);
+    $form = new LoansForm();
     $form->addComments($number);
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
@@ -307,8 +307,8 @@ class loanActions extends DarwinActions
     $form = $this->getLoanForm($request);
     $form->addInsurances($number);
     return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
-  }  
-    
+  }
+
   public function executeAddStatus(sfWebRequest $request)
   {    
     if($request->isXmlHttpRequest()) 

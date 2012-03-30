@@ -35,7 +35,7 @@ class partsActions extends DarwinActions
       $duplic = $request->getParameter('duplicate_id') ;
       if ($duplic) // then it's a duplicate part
       {
-        $this->part = $this->getRecordIfDuplicate($duplic, $this->part);    
+        $this->part = $this->getRecordIfDuplicate($duplic, $this->part);
         // set all necessary widgets to visible 
         if($request->hasParameter('all_duplicate'))        
           Doctrine::getTable('SpecimenParts')->getRequiredWidget($this->part, $this->getUser()->getId(), 'part_widget',1);      
@@ -50,43 +50,14 @@ class partsActions extends DarwinActions
     {
       if($duplic)
       {
-        // reembed duplicated comment
-        $Comments = Doctrine::getTable('Comments')->findForTable('specimen_parts',$duplic) ;
-        foreach ($Comments as $key=>$val)
-        {
-          $comment = new Comments() ;
-          $comment = $this->getRecordIfDuplicate($val->getId(),$comment); 
-          $this->form->addComments($key, $comment) ;          
-        }
-        // reembed duplicated external url
-        $ExtLinks = Doctrine::getTable('ExtLinks')->findForTable('specimen_parts',$duplic) ;
-        foreach ($ExtLinks as $key=>$val)
-        {
-          $links = new ExtLinks() ;
-          $links = $this->getRecordIfDuplicate($val->getId(),$links); 
-          $this->form->addExtLinks($key, $links) ;          
-        }            
-        // reembed duplicated codes
-        $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimen_parts',$duplic) ;
-        foreach ($Codes as $key=>$val)
-        {
-           $code = new Codes() ;
-           $code = $this->getRecordIfDuplicate($val->getId(),$code);  
-           $this->form->addCodes($key,null,$code);
-        } 
+        $this->form->duplicate($duplic);
         // reembed duplicated insurances
         $Insurances = Doctrine::getTable('Insurances')->findForTable('specimen_parts',$duplic) ;
         foreach ($Insurances as $key=>$val)
         {
           $insurance = new Insurances() ;
           $insurance = $this->getRecordIfDuplicate($val->getId(),$insurance); 
-          $this->form->addInsurances($key, $insurance) ;          
-        }
-
-        $bib =  Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_parts', $duplic);
-        foreach($bib as $key=>$vals)
-        {
-          $this->form->addBiblio($key, $vals->getBibliographyRef());
+          $this->form->addInsurances($key, $insurance) ;
         }
       }
     }
@@ -203,10 +174,9 @@ class partsActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
-    $collectionId = $request->getParameter('collection_id', null);
     $form = $this->getSpecimenPartForm($request);
-    $form->addCodes($number, $collectionId);
-    return $this->renderPartial('specimen/spec_codes',array('form' => $form['newCode'][$number], 'rownum'=>$number));
+    $form->addCodes($number, array());
+    return $this->renderPartial('specimen/spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number));
   }
 
   public function executeAddInsurance(sfWebRequest $request)
@@ -217,23 +187,22 @@ class partsActions extends DarwinActions
     $form->addInsurances($number);
     return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
   }
-  
 
   public function executeAddExtLinks(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenPartForm($request);
-    $form->addExtLinks($number);
+    $form->addExtLinks($number,array());
     return $this->renderPartial('specimen/spec_links',array('form' => $form['newExtLinks'][$number], 'rownum'=>$number));
   }
-    
+
   public function executeAddComments(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
     $form = new SpecimenPartsForm();
-    $form->addComments($number);
+    $form->addComments($number,array());
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
 
@@ -312,7 +281,7 @@ class partsActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $bibliography_ref = intval($request->getParameter('biblio_ref')) ;
     $form = $this->getSpecimenPartForm($request);
-    $form->addBiblio($number,$bibliography_ref,$request->getParameter('iorder_by',0));
+    $form->addBiblio($number, array( 'bibliography_ref' => $bibliography_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('specimen/biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
   }
 }

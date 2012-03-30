@@ -3,7 +3,7 @@
     <tr>   
       <th><?php echo __('Url');?></th>
       <th><?php echo __('Comment');?></th>
-      <th><?php echo $form['extlink'];?></th>
+      <th><?php echo $form['ExtLinks_holder'];?></th>
     </tr>
   </thead>
   <?php $retainedKey = 0;?>
@@ -19,7 +19,14 @@
      <tr>
        <td colspan="3">
          <div class="add_comments">
-           <a href="<?php echo url_for('specimen/addExtLinks'.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_links"><?php echo __('Add Url');?></a>
+          <?php if($module == 'specimen') $url = 'specimen/addExtLinks';
+          if($module == 'individuals') $url = 'individuals/addExtLinks';
+          if($module == 'parts') $url = 'parts/addExtLinks';
+          if($module == 'maintenances') $url = 'loan/addExtLinks';
+          if($module == 'loan_items') $url = 'loanitem/addExtLinks';
+          if($module == 'maintenances') $url = 'maintenances/addExtLinks';
+          ?>
+           <a href="<?php echo url_for($url.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_links"><?php echo __('Add Url');?></a>
          </div>
        </td>
      </tr>
@@ -40,7 +47,7 @@ $(document).ready(function () {
           type: "GET",
           url: $(this).attr('href')+ ($('table#'+parentId+' tbody.spec_ident_extlinks_data').length),
           success: function(html)
-          {                    
+          {
             $(parent_el).append(html);
             showAfterRefresh('#extLinks');
           }

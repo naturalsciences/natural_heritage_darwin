@@ -10,6 +10,9 @@ class peoplewidgetViewComponents extends sfComponents
   public function executeExtLinks()
   {}    
 
+  public function executeRelatedFiles()
+  {}
+
   public function executeAddress()
   {
     $this->addresses =  Doctrine::getTable('PeopleAddresses')->fetchByPeople($this->eid);

@@ -39,6 +39,7 @@ $(document).ready(function ()
       </tr>
       <tr>
         <td colspan="2">
+          <?php echo $form['Members_holder'];?>
           <table class="encoding collections_rights" id="exp_member_table">
             <thead>
               <tr>
@@ -53,7 +54,7 @@ $(document).ready(function ()
                 <?php include_partial('member_row', array('form' => $form_value, 'ref_id' => ($form->getObject()->isNew() ? '':$form->getObject()->getId()), 'row_num'=>$retainedKey));
         $retainedKey++;?>
               <?php endforeach;?>
-              <?php foreach($form['newMember'] as $form_value):?>
+              <?php foreach($form['newMembers'] as $form_value):?>
                 <?php include_partial('member_row', array('form' => $form_value, 'ref_id' => ($form->getObject()->isNew() ? '':$form->getObject()->getId()), 'row_num'=>$retainedKey));
         $retainedKey++;?>
               <?php endforeach;?>

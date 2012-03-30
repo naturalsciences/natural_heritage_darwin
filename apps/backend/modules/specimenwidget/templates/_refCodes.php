@@ -1,5 +1,5 @@
 <table  class="property_values">
-  <thead style="<?php echo ($form['Codes']->count() || $form['newCode']->count())?'':'display: none;';?>">
+  <thead style="<?php echo ($form['Codes']->count() || $form['newCodes']->count())?'':'display: none;';?>">
     <tr>
       <th>
         <?php echo __('Category'); ?>
@@ -24,7 +24,7 @@
     </tr>
     <tr>
       <th colspan='2'>
-        <?php echo $form['code'];?>
+        <?php echo $form['Codes_holder'];?>
       </th>
       <th class="reseted">
         <?php echo $form['prefix_separator'];?>
@@ -43,7 +43,7 @@
       <?php include_partial('specimen/spec_codes', array('form' => $form_value, 'rownum'=>$retainedKey));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
-    <?php foreach($form['newCode'] as $form_value):?>
+    <?php foreach($form['newCodes'] as $form_value):?>
       <?php include_partial('specimen/spec_codes', array('form' => $form_value, 'rownum'=>$retainedKey));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
@@ -51,7 +51,9 @@
     <tr>
       <td colspan='8'>
         <div class="add_code">
-          <a href="<?php echo url_for('specimen/addCode'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_code"><?php echo __('Add code');?></a>
+          <?php if($module == 'specimen') $url = 'specimen/addCode';
+          if($module == 'parts') $url = 'parts/addCode';?>
+          <a href="<?php echo url_for($url. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_code"><?php echo __('Add code');?></a>
         </div>
       </td>
     </tr>
@@ -68,7 +70,7 @@ $(document).ready(function () {
         $.ajax(
         {
           type: "GET",
-          url: $(this).attr('href')+ (0+$(parent_el).find('tbody').length) + '/collection_id/' + $('input#specimen_collection_ref').val(),
+          url: $(this).attr('href')+ (0+$(parent_el).find('tbody').length),
           success: function(html)
           {
             $(parent_el).append(html);

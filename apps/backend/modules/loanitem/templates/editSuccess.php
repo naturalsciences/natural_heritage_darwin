@@ -8,6 +8,13 @@
     <?php include_partial('loan/tabs', array('loan'=> $form->getObject()->getLoan(), 'item' => $form->getObject())); ?>
     <div class="tab_content">
       <?php echo form_tag($action, array('class'=>'edition loanitem_form','enctype'=>'multipart/form-data'));?>
+      <?php if($form->hasGlobalErrors()):?>
+        <ul class="spec_error_list">
+          <?php foreach ($form->getErrorSchema()->getErrors() as $name => $error): ?>
+            <li class="error_fld_<?php echo $name;?>"><?php echo __($error) ?></li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endif;?>
 
         <?php include_partial('widgets/screen', array(
           'widgets' => $widgets,

@@ -5,8 +5,8 @@
     <td>
       <a class="link_catalogue" title="<?php echo __('Bibliography');?>" href="<?php echo url_for('catalogue/biblio?id='.$bib->getBibliographyRef()) ; ?>"><?php echo $bib->Bibliography->getTitle(); ?></a>
     </td>
-    <td class="widget_row_delete">   
-      <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=catalogue_relationships&id='.$renamed['id']);?>" title="<?php echo __('Delete Recombination') ?>"><?php echo image_tag('remove.png'); ?>
+    <td class="widget_row_delete">
+      <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=catalogue_bibliography&id='.$bib['id']);?>" title="<?php echo __('Delete Bibliography') ?>"><?php echo image_tag('remove.png'); ?>
       </a>
     </td>
   </tr>

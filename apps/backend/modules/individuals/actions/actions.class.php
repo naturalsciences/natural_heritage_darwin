@@ -17,14 +17,14 @@ class individualsActions extends DarwinActions
     if(! $request->hasParameter('id'))
     {
       $this->spec_individual = new SpecimenIndividuals(); 
-      $duplic = $request->getParameter('duplicate_id','0') ;          
+      $duplic = $request->getParameter('duplicate_id','0') ;
       if ($duplic) // then it's a duplicate individual
       {
         $this->spec_individual = $this->getRecordIfDuplicate($duplic,$this->spec_individual);    
         // set all necessary widgets to visible 
-        if($request->hasParameter('all_duplicate'))        
+        if($request->hasParameter('all_duplicate'))
           Doctrine::getTable('SpecimenIndividuals')->getRequiredWidget($this->spec_individual, $this->getUser()->getId(), 'individuals_widget',1);
-      }    
+      }
     }
     else
     {
@@ -65,22 +65,7 @@ class individualsActions extends DarwinActions
       $duplic = $request->getParameter('duplicate_id') ;
       if($duplic)
       {
-        // reembed duplicated comment
-        $Comments = Doctrine::getTable('Comments')->findForTable('specimen_individuals',$duplic) ;
-        foreach ($Comments as $key=>$val)
-        {
-          $comment = new Comments() ;
-          $comment = $this->getRecordIfDuplicate($val->getId(),$comment); 
-          $this->individual->addComments($key, $comment) ;          
-        }
-        // reembed duplicated external url
-        $ExtLinks = Doctrine::getTable('ExtLinks')->findForTable('specimen_individuals',$duplic) ;
-        foreach ($ExtLinks as $key=>$val)
-        {
-          $links = new ExtLinks() ;
-          $links = $this->getRecordIfDuplicate($val->getId(),$links); 
-          $this->individual->addExtLinks($key, $links) ;          
-        }        
+        $this->individual->duplicate($duplic);
         //reembed identification
         $Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimen_individuals',$duplic) ;
         foreach ($Identifications as $key=>$val)
@@ -96,13 +81,6 @@ class individualsActions extends DarwinActions
             $this->individual->reembedNewIdentification($ident, $key);    
           }
         }
-
-        $bib =  Doctrine::getTable('CatalogueBibliography')->findForTable('specimen_individuals', $duplic);
-        foreach($bib as $key=>$vals)
-        {
-          $this->form->addBiblio($key, $vals->getBibliographyRef());
-        }
-
       }
     }
     if($request->isMethod('post'))
@@ -215,31 +193,19 @@ class individualsActions extends DarwinActions
 
   public function executeAddComments(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
-    if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
-      $this->forwardToSecureAction();    
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
-    $spec = null;
-
-    if($request->hasParameter('id') && $request->getParameter('id'))
-      $spec = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id') );
-    $form = new SpecimenIndividualsForm($spec);
-    $form->addComments($number);
+    $form = new SpecimenIndividualsForm();
+    $form->addComments($number,array());
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
  
   public function executeAddExtLinks(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
-      $this->forwardToSecureAction();    
     $number = intval($request->getParameter('num'));
-    $spec = null;
-
-    if($request->hasParameter('id') && $request->getParameter('id'))
-      $spec = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id') );
-    $form = new SpecimenIndividualsForm($spec);
-    $form->addExtLinks($number);
+    $form = new SpecimenIndividualsForm();
+    $form->addExtLinks($number,array());
     return $this->renderPartial('specimen/spec_links',array('form' => $form['newExtLinks'][$number], 'rownum'=>$number));
   }
   
@@ -279,11 +245,11 @@ class individualsActions extends DarwinActions
 
   public function executeAddBiblio(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
     $bibliography_ref = intval($request->getParameter('biblio_ref')) ;
-    $form = $this->getSpecimenIndividualsForm($request);
-    $form->addBiblio($number,$bibliography_ref,$request->getParameter('iorder_by',0));
+    $form = new SpecimenIndividualsForm();
+    $form->addBiblio($number, array( 'bibliography_ref' => $bibliography_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('specimen/biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
   }
 }

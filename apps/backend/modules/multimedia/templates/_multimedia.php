@@ -1,4 +1,3 @@
-<?php if($form['referenced_relation']->getValue()!=""):?>
 <tr class="row_num_<?php echo $row_num;?>">
   <td>
     <?php echo $form['title']->renderError() ?>
@@ -17,7 +16,7 @@
       {
         parent_el = $(this).closest('tbody');
         parent_tr = $(parent_el).find('tr.row_num_<?php echo $row_num;?>');
-        $(parent_tr).find('input[id$=\"_referenced_relation\"]').val('');
+        $(parent_tr).find('input').val('');
         $(parent_tr).hide();
         visibles = $(parent_el).find('tr:visible').size();
         if(visibles==0)
@@ -43,4 +42,3 @@
   </td>
   <td colspan="4"><?php echo $form['mime_type']->getValue() ; ?></td>
 </tr>
-<?php endif; ?>

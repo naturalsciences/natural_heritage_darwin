@@ -22,6 +22,12 @@ class maintenanceswidgetComponents extends sfComponents
       else
         $this->form = new MaintenanceForm();
     }
+    if(!isset($this->eid))
+      $this->eid = $this->form->getObject()->getId();
+    if(! isset($this->module) )
+    {
+      $this->module = 'maintenances';
+    }
   }
 
   public function executeRefProperties()
@@ -34,20 +40,20 @@ class maintenanceswidgetComponents extends sfComponents
   { 
     $this->defineForm();
     if(!isset($this->form['newExtLinks']))
-      $this->form->loadEmbedLink();   
+      $this->form->loadEmbed('ExtLinks');
   }
       
   public function executeRefRelatedFiles()
   { 
     $this->defineForm();
     if(!isset($this->form['newRelatedFiles']))
-      $this->form->loadEmbedRelatedFiles();  
+      $this->form->loadEmbed('RelatedFiles');
   }  
 
   public function executeRefComments()
   { 
     $this->defineForm();
     if(!isset($this->form['newComments']))
-      $this->form->loadEmbedComments();   
+      $this->form->loadEmbed('Comments');   
   }
 }

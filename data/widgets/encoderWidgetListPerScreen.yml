@@ -115,26 +115,6 @@ sw17:
    visible: true
    title_perso: Collectors
 
-sw18:
-   col_num: 2
-   category: specimen_widget
-   group_name: refProperties
-   mandatory: false
-   order_by: 8
-   opened: true
-   visible: true
-   title_perso: Properties
-
-sw19:
-   col_num: 2
-   category: specimen_widget
-   group_name: refComment
-   mandatory: false
-   order_by: 9
-   opened: true
-   visible: true
-   title_perso: Comments   
-
 sw20:
    col_num: 2
    category: specimen_widget
@@ -145,26 +125,6 @@ sw20:
    visible: true
    title_perso: Accompanying elements
 
-sw21:
-   col_num: 2
-   category: specimen_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 11
-   opened: true
-   visible: true
-   title_perso: External Links
-
-spi7:
-  col_num: 2
-  category: individuals_widget
-  group_name: refProperties
-  mandatory: false
-  order_by: 2
-  opened: false
-  visible: false
-  title_perso: Properties
-
 spi8:
   col_num: 2
   category: individuals_widget
@@ -173,27 +133,7 @@ spi8:
   order_by: 3
   opened: true
   visible: true
-  title_perso: Identifications
-
-spi9:
-  col_num: 2
-  category: individuals_widget
-  group_name: specimenIndividualComments
-  mandatory: false
-  order_by: 4
-  opened: true
-  visible: true
-  title_perso: Comments
-
-spi10:
-   col_num: 2
-   category: individuals_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 5
-   opened: true
-   visible: true
-   title_perso: External Links  
+  title_perso: Identifications  
 
 sp3:
    col_num: 2
@@ -225,16 +165,6 @@ sp5:
    visible: true
    title_perso: Container
  
-sp6:
-   col_num: 2
-   category: part_widget
-   group_name: refProperties
-   mandatory: false
-   order_by: 3
-   opened: true
-   visible: true
-   title_perso: Properties
-
 sp7:
    col_num: 2
    category: part_widget
@@ -253,17 +183,7 @@ sp8:
    order_by: 3
    opened: true
    visible: true
-   title_perso: Maintenance
-   
-sp9:
-   col_num: 2
-   category: part_widget
-   group_name: comments
-   mandatory: false   
-   order_by: 4
-   opened: true
-   visible: true
-   title_perso: Comments
+   title_perso: Maintenance   
 
 sp10:
    col_num: 2
@@ -273,17 +193,7 @@ sp10:
    order_by: 5
    opened: true
    visible: true
-   title_perso: Parent
-   
-sp11:
-   col_num: 2
-   category: part_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 11
-   opened: true
-   visible: true
-   title_perso: External Links   
+   title_perso: Parent 
 
 pe3:
    col_num: 1
@@ -303,37 +213,7 @@ pe4:
    order_by: 3
    opened: false
    visible: false
-   title_perso: Communications
-
-pe5:
-   col_num: 1
-   category: people_widget
-   group_name: properties
-   mandatory: false
-   order_by: 4
-   opened: false
-   visible: false
-   title_perso: Properties
-
-pe6:
-   col_num: 1
-   category: people_widget
-   group_name: comment
-   mandatory: false
-   order_by: 5
-   opened: false
-   visible: false
-   title_perso: Comments
-
-pe7:
-   col_num: 1
-   category: people_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 6
-   opened: false
-   visible: false
-   title_perso: External Links   
+   title_perso: Communications 
 
 ins2:
    col_num: 1
@@ -355,196 +235,6 @@ ins3:
    visible: false
    title_perso: Communications
 
-ins4:
-   col_num: 1
-   category: people_institution_widget
-   group_name: properties
-   mandatory: false
-   order_by: 4
-   opened: false
-   visible: false
-   title_perso: Properties
-
-ins5:
-   col_num: 1
-   category: people_institution_widget
-   group_name: comment
-   mandatory: false
-   order_by: 5
-   opened: false
-   visible: false
-   title_perso: Comments
-
-ins5:
-   col_num: 1
-   category: people_institution_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 6
-   opened: false
-   visible: false
-   title_perso: External Links
-
-tw6:
-   col_num: 1
-   category: catalogue_taxonomy_widget
-   group_name: comment
-   mandatory: false
-   order_by: 6
-   opened: false
-   visible: false
-   title_perso: Comments
-
-tw7:
-   col_num: 1
-   category: catalogue_taxonomy_widget
-   group_name: properties
-   order_by: 7
-   mandatory: false
-   opened: false
-   visible: false
-   title_perso: Properties
-
-tw8:
-   col_num: 1
-   category: catalogue_taxonomy_widget
-   group_name: extLinks
-   order_by: 8
-   mandatory: false
-   opened: false
-   visible: false
-   title_perso: External Links
-
-chw5:
-   col_num: 1
-   category: catalogue_chronostratigraphy_widget
-   group_name: comment
-   mandatory: false
-   order_by: 5
-   opened: false
-   visible: false
-   title_perso: Comments   
-
-chw6:
-   col_num: 1
-   category: catalogue_chronostratigraphy_widget
-   group_name: properties
-   mandatory: false
-   order_by: 6
-   opened: false
-   visible: false
-   title_perso: Properties
-
-chw7:
-   col_num: 1
-   category: catalogue_chronostratigraphy_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 6
-   opened: false
-   visible: false
-   title_perso: External Links   
-
-lhw5:
-   col_num: 1
-   category: catalogue_lithostratigraphy_widget
-   group_name: comment
-   mandatory: false
-   order_by: 5
-   opened: false
-   visible: false
-   title_perso: Comments
-
-lhw6:
-   col_num: 1
-   category: catalogue_lithostratigraphy_widget
-   group_name: properties
-   mandatory: false
-   order_by: 6
-   opened: false
-   visible: false
-   title_perso: Properties
-
-lhw7:
-   col_num: 1
-   category: catalogue_lithostratigraphy_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 7
-   opened: false
-   visible: false
-   title_perso: External Links
-
-liw5:
-   col_num: 1
-   category: catalogue_lithology_widget
-   group_name: comment
-   mandatory: false
-   order_by: 5
-   opened: false
-   visible: false
-   title_perso: Comments
-
-liw6:
-   col_num: 1
-   category: catalogue_lithology_widget
-   group_name: properties
-   mandatory: false
-   order_by: 6
-   opened: false
-   visible: false
-   title_perso: Properties
-
-liw7:
-   col_num: 1
-   category: catalogue_lithology_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 7
-   opened: false
-   visible: false
-   title_perso: External Links
-
-miw5:
-   col_num: 1
-   category: catalogue_mineralogy_widget
-   group_name: comment
-   mandatory: false
-   order_by: 5
-   opened: false
-   visible: false
-   title_perso: Comments
-
-miw6:
-   col_num: 1
-   category: catalogue_mineralogy_widget
-   group_name: properties
-   mandatory: false
-   order_by: 6
-   opened: false
-   visible: false
-   title_perso: Properties
-
-miw7:
-   col_num: 1
-   category: catalogue_mineralogy_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 7
-   opened: false
-   visible: false
-   title_perso: External Links
-
-ig1:
-   col_num: 1
-   category: catalogue_igs_widget
-   group_name: comment
-   mandatory: false
-   order_by: 0
-   opened: true
-   visible: true
-   title_perso: Comments
-
 ig2:
    col_num: 1
    category: catalogue_igs_widget
@@ -554,90 +244,3 @@ ig2:
    opened: false
    visible: false
    title_perso: Insurances
-
-ig3:
-   col_num: 1
-   category: catalogue_igs_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 2
-   opened: true
-   visible: true
-   title_perso: External Links
-
-ex1:
-   col_num: 1
-   category: catalogue_expeditions_widget
-   group_name: comment
-   mandatory: false
-   order_by: 0
-   opened: true
-   visible: true
-   title_perso: Comments
-
-ex2:
-   col_num: 1
-   category: catalogue_expeditions_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 1
-   opened: true
-   visible: true
-   title_perso: External Links   
-
-gtu1:
-   col_num: 1
-   category: catalogue_gtu_widget
-   group_name: comment
-   mandatory: false
-   order_by: 1
-   opened: false
-   visible: true
-   title_perso: Comments
-
-gtu2:
-   col_num: 1
-   category: catalogue_gtu_widget
-   group_name: properties
-   mandatory: false
-   order_by: 2
-   opened: true
-   visible: true
-   title_perso: Properties
-
-gtu3:
-   col_num: 1
-   category: catalogue_gtu_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 3
-   opened: true
-   visible: true
-   title_perso: External Links
-
-u1wmetto1:
-    col_num: 1
-    category: catalogue_methods_and_tools_widget
-    group_name: properties
-    order_by: 1
-    opened: true
-    visible: true
-    title_perso: Properties
-
-u1wmetto2:
-    col_num: 1
-    category: catalogue_methods_and_tools_widget
-    group_name: comment
-    order_by: 2
-    opened: true
-    visible: true
-    title_perso: Comments
-
-u1wmetto3:
-    col_num: 1
-    category: catalogue_methods_and_tools_widget
-    group_name: extLinks
-    order_by: 3
-    opened: true
-    visible: true
-    title_perso: External Links

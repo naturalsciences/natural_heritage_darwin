@@ -74,9 +74,10 @@ class DarwinTable extends Doctrine_Table
     $query->andWhere($alias.'.referenced_relation = ?',$table_name)
          ->andWhere($alias.'.record_id = ?',$record_id);
     if(! $with_zero)
-	 $query->andWhere($alias.'.record_id != 0');
+      $query->andWhere($alias.'.record_id != 0');
     return $query;
   }
+
   /**
    * createDistinct 
    * Initiate a distinct query on a given model and column
@@ -271,5 +272,12 @@ class DarwinTable extends Doctrine_Table
          andWhereIn('id', $Ids)->
          orderBy('id ASC');
     return $q->execute();
+  }
+
+  public static function newObjectFromArray($o_name, $a_array)
+  {
+    $object = new $o_name();
+    $object->fromArray($a_array);
+    return $object;
   }
 }

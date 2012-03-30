@@ -1311,7 +1311,7 @@ td.row_delete
 
 td.widget_row_delete
 {
-  vertical-align:top;
+  vertical-align:middle;
   text-align:right;
 }
 

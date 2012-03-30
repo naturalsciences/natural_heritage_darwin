@@ -1367,3 +1367,8 @@ CatalogueBibliography:
         Bibliography:
             local: bibliography_ref
             foreign: id
+
+MultimediaTodelete:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        uri: { type: string, notnull: true}

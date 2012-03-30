@@ -92,7 +92,7 @@ class CataloguePropertiesForm extends BaseCataloguePropertiesForm
 	'change_label' => 'Pick a sub-type in the list',
 	'add_label' => 'Add another sub-type',
     ));
-    if(! $this->getObject()->isNew())
+    if(! $this->getObject()->isNew() || $this->options['hasmodel'])
       $this->widgetSchema['property_sub_type']->setOption('forced_choices', Doctrine::getTable('CatalogueProperties')->getDistinctSubType($this->getObject()->getPropertyType()) );
     else
       $this->widgetSchema['property_sub_type']->setOption('forced_choices',array(''=>''));
@@ -102,7 +102,7 @@ class CataloguePropertiesForm extends BaseCataloguePropertiesForm
 	'change_label' => 'Pick a qualifier in the list',
 	'add_label' => 'Add another qualifier',
     ));
-    if(! $this->getObject()->isNew())
+    if(! $this->getObject()->isNew() || $this->options['hasmodel'])
       $this->widgetSchema['property_qualifier']->setOption('forced_choices', Doctrine::getTable('CatalogueProperties')->getDistinctQualifier($this->getObject()->getPropertySubType()) );
     else
       $this->widgetSchema['property_qualifier']->setOption('forced_choices',array(''=>''));
@@ -112,7 +112,7 @@ class CataloguePropertiesForm extends BaseCataloguePropertiesForm
 	'change_label' => '',//'Pick an unit in the list',
 	'add_label' => '',//'Add another unit',
     ));
-    if(! $this->getObject()->isNew())
+    if(! $this->getObject()->isNew() || $this->options['hasmodel'])
       $this->widgetSchema['property_accuracy_unit']->setOption('forced_choices', Doctrine::getTable('CatalogueProperties')->getDistinctUnit($this->getObject()->getPropertyType()) );
     else
       $this->widgetSchema['property_accuracy_unit']->setOption('forced_choices', array(''=>''));
@@ -122,7 +122,7 @@ class CataloguePropertiesForm extends BaseCataloguePropertiesForm
 	'change_label' => '',//Pick a unit in the list',
 	'add_label' => '',//'Add another unit'
     ));
-    if(! $this->getObject()->isNew())
+    if(! $this->getObject()->isNew() || $this->options['hasmodel'])
       $this->widgetSchema['property_unit']->setOption('forced_choices', Doctrine::getTable('CatalogueProperties')->getDistinctUnit($this->getObject()->getPropertyType()) );
     else
       $this->widgetSchema['property_unit']->setOption('forced_choices',array(''=>''));

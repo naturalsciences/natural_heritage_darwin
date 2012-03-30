@@ -59,4 +59,20 @@ $('.display_value').click(showValues);
 $('.hide_value').click(hideValues);
 </script>
 <br />
-<?php echo image_tag('add_green.png');?><a title="<?php echo __('Add Properties');?>" class="link_catalogue" href="<?php echo url_for('property/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add');?></a>
+<?php echo image_tag('add_green.png');?>
+<a title="<?php echo __('Add Properties');?>" class="link_catalogue" href="<?php echo url_for('property/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add property');?></a> 
+<?php if(count(CatalogueProperties::getModels($table)) > 1):?>
+  <?php echo __("with this pre defined template") ; ?>:
+  <select id='property_template'>
+    <?php foreach(CatalogueProperties::getModels($table) as $key=>$values)
+      echo "<option value=\"$key\">$values" ;?>
+  </select>
+<?php endif;?>
+<script>
+  $('a.link_catalogue').click(function() {
+    if($('#property_template').val() != "")
+    {
+      $(this).attr('href',$(this).attr('href')+"/model/"+$('#property_template').val()) ;
+    }
+  });
+</script>

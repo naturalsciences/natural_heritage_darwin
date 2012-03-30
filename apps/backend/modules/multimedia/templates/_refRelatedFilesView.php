@@ -18,7 +18,13 @@
                     echo $date->format('d/m/Y'); ?></td>
         </tr>
         <tr>
-          <td><?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId()) ; ?></td>
+          <td>
+            <?php  /*If image => preview*/ if(in_array($file->getMimeType() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
+              <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$file->getId());?>"><img src="<?php echo url_for('multimedia/preview?id='.$file->getId());?>" width="100" /></a>
+            <?php else:?>
+              <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId()) ; ?>
+            <?php endif;?>
+          </td>
           <td colspan="2"><?php echo $file->getMimeType(); ?></td>
         </tr>
       <?php endforeach;?>

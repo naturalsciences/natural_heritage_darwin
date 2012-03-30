@@ -40,18 +40,18 @@ class commentActions extends DarwinActions
     
     if($request->isMethod('post'))
     { 
-	    $this->form->bind($request->getParameter('comments'));
-	    if($this->form->isValid())
-	    {
-	      try{
-	        $this->form->save();
-	      }
-	      catch(Exception $e)
-	      {
-	        return $this->renderText($e->getMessage());
-	      }
-	      return $this->renderText('ok');
-	    }
+      $this->form->bind($request->getParameter('comments'));
+      if($this->form->isValid())
+      {
+        try{
+          $this->form->save();
+        }
+        catch(Exception $e)
+        {
+          return $this->renderText($e->getMessage());
+        }
+        return $this->renderText('ok');
+      }
     }
   }
 }

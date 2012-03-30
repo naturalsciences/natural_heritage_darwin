@@ -113,7 +113,7 @@ class lithostratigraphyActions extends DarwinActions
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
-    $form->bind( $request->getParameter($form->getName()) );
+    $form->bind( $request->getParameter($form->getName()),$request->getFiles($form->getName()) );
     if ($form->isValid())
     {
       try{

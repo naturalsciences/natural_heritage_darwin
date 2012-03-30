@@ -12,6 +12,7 @@ class BiblioAssociationsForm extends BaseCatalogueBibliographyForm
 
   public function configure()
   {
+    $this->useFields(array('bibliography_ref'));
     $bib_id= $this->getObject()->getBibliographyRef() ;
     $this->widgetSchema['bibliography_ref'] = new sfWidgetFormInputHidden();
     if($bib_id) {
@@ -22,10 +23,6 @@ class BiblioAssociationsForm extends BaseCatalogueBibliographyForm
     }
 
     $this->validatorSchema['bibliography_ref'] = new sfValidatorInteger(array('required'=>false));
-    $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['referenced_relation'] = new sfValidatorString();
-    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
-    $this->validatorSchema['record_id'] = new sfValidatorInteger();
     $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));
 
     $this->mergePostValidator(new BiblioValidatorSchema());

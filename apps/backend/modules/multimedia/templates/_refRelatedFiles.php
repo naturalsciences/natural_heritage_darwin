@@ -21,7 +21,7 @@
         <?php endif;?>
       </th>
       <th>
-        <?php echo $form['relatedfile'];?>
+        <?php echo $form['RelatedFiles_holder'];?>
       </th>
     </tr>
   </thead>
@@ -69,12 +69,11 @@
       hideForRefresh('#refRelatedFiles');
       return false;
     });
-//     $('#clear_file_error').click(function() { hideFileError(); });
   });
 
   function getFileInfo(file_id)
   {
-    parent_el = $('#add_file').closest('table.property_values');
+    parent_el = $('#add_file').closest('table.related_files');
     $.ajax(
     {
       type: "GET",

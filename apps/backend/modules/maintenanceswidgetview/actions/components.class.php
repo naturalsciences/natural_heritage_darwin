@@ -23,10 +23,11 @@ class maintenanceswidgetviewComponents extends sfComponents
   }
 
   public function executeRefRelatedFiles()
-  { 
+  {
     $this->defineObject();
     $this->files = Doctrine::getTable('Multimedia')->findForTable('collection_maintenance', $this->maintenance->getId()) ;
-  }  
+    $this->atLeastOneFileVisible = true;
+  }
 
   public function executeRefComments()
   { 

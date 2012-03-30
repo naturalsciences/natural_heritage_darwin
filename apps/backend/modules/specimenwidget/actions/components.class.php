@@ -39,6 +39,9 @@ class specimenwidgetComponents extends sfComponents
       $this->individual_id = 0;
       $this->spec_id = $this->form->getObject()->getId();
     }
+
+    if(!isset($this->eid))
+      $this->eid = $this->form->getObject()->getId();
     if(! isset($this->module) )
     {
       $this->module = 'specimen';
@@ -116,21 +119,21 @@ class specimenwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newCodes']))
-    $this->form->loadEmbedCode();
+      $this->form->loadEmbed('Codes');
   }
 
   public function executeRefCollectors()
   {
     $this->defineForm();
     if(!isset($this->form['newCollectors']))
-    $this->form->loadEmbedCollectors();
+      $this->form->loadEmbed('Collectors');
   }
 
   public function executeRefDonators()
   {
     $this->defineForm();
     if(!isset($this->form['newDonators']))
-    $this->form->loadEmbedDonators();
+      $this->form->loadEmbed('Donators');
   }
 
   public function executeRefProperties()
@@ -143,23 +146,21 @@ class specimenwidgetComponents extends sfComponents
   {    
     $this->defineForm();
     if(!isset($this->form['newComments']))
-      $this->form->loadEmbedComment();
+      $this->form->loadEmbed('Comments');
   }
 
   public function executeExtLinks()
   {
     $this->defineForm();
     if(!isset($this->form['newExtLinks']))
-      $this->form->loadEmbedLink();
+      $this->form->loadEmbed('ExtLinks');
   }
     
   public function executeRefRelatedFiles()
   {
     $this->defineForm();
-    if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId() ;
     if(!isset($this->form['newRelatedFiles']))
-      $this->form->loadEmbedRelatedFiles();
+      $this->form->loadEmbed('RelatedFiles');
   }
   
   public function executeRefIdentifications()
@@ -187,6 +188,6 @@ class specimenwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newBiblio']))
-      $this->form->loadEmbedBiblio();
+      $this->form->loadEmbed('Biblio');
   }
 }

@@ -3,7 +3,7 @@
    <thead style="<?php echo ($form['Donators']->count() || $form['newDonators']->count())?'':'display: none;';?>" class="spec_ident_donator_head">
   <tr>
      <th colspan='3'>
-       <?php echo $form['donator'];?>
+       <?php echo $form['Donators_holder'];?>
      </th>
   </tr>
    </thead>

@@ -1,5 +1,6 @@
 <?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'maintenances','eid'=> $form->getObject()->getId() )); ?>
 <?php $action = 'maintenances/update?id='.$form->getObject()->getId() ;?>
+<?php slot('title', __('Edit Maintenance'));  ?>
 <div class="page">
   <?php echo form_tag($action, array('class'=>'edition','enctype'=>'multipart/form-data'));?>
   <h1><?php echo __('Edit Maintenance');?></h1>
@@ -14,7 +15,6 @@
 	  )); ?>
 	</div>
     <p class="form_buttons">
-      <input type="button" class="bt_close" value="<?php echo __('Close this tab'); ?>">      
       <input id="submit_maintenance" type="submit" value="<?php echo __('Save');?>"/>
     </p>	
   </form>	
@@ -39,10 +39,7 @@
         form.removeAttr('target') ;
         form.attr('action', '<?php echo url_for($action) ; ?>') ;
         form.submit() ;
-      });    
-      $('input[class="bt_close"]').click(function(){
-        window.close() ;
-      });           
+      });
     });
   </script>  
 </div>	
