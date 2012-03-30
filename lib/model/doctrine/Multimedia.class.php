@@ -91,18 +91,31 @@ class Multimedia extends BaseMultimedia
   
   public function changeUri()
   {
-    $path = $this->checkUploadPathAvailable() ;     
-    rename(sfConfig::get('sf_upload_dir')."/multimedia/temp/".$this->_get('uri'),
-                      sfConfig::get('sf_upload_dir')."/multimedia/".$path.'/'.$this->_get('uri'));                    
-    $this->setUri($path.'/'.$this->_get('uri')) ;
-  }   
+    $this->checkUploadPathAvailable() ;
+    rename(
+      sfConfig::get('sf_upload_dir')."/multimedia/temp/".$this->_get('uri'),
+      sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedUrl()
+    );
+    $this->setUri($this->getBuildedUrl()) ;
+  }
+
+  public function getBuildedUrl()
+  {
+    return $this->getBuildedDir().'/'. $this->_get('uri');
+  }
+  public function getBuildedDir()
+  {
+    //Make something like multimedia/00/01/01/12  for the multimed of id= 10112
+    $num = sprintf('%08d', $this->getRecordId());
+    return $this->getReferencedRelation().'/'.implode('/',str_split($num,'2'));
+  }
 
   protected function checkUploadPathAvailable()
   {
     //function used to verify if the folder for the uploaded file exists
-    $path = sfConfig::get('sf_upload_dir')."/multimedia/".date("Y/m/d") ;
+    $path = sfConfig::get('sf_upload_dir')."/multimedia/".$this->getBuildedDir();
     if(!is_dir($path)) mkdir($path,0750,true) ;
-    return (date("Y/m/d")) ;    
+    return true;
   }  
   
   public static function CheckMimeType($mime_type)
@@ -152,6 +165,12 @@ class Multimedia extends BaseMultimedia
     }
   }
 
+  public function save(Doctrine_Connection $conn = null)
+  {
+    if($this->isNew())
+      $this->changeUri();
+    parent::save($conn);
+  }
 
   public function delete(Doctrine_Connection $conn = null)
   {

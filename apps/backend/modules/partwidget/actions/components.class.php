@@ -100,6 +100,7 @@ class partwidgetComponents extends sfComponents
 
   public function executeRefProperties()
   {
+    $this->defineForm();
   }
 
   public function executeComments()
@@ -123,6 +124,7 @@ class partwidgetComponents extends sfComponents
   }
   public function executeMaintenance()
   {
+    $this->defineForm();
     if($this->eid)
     {
       $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimen_parts', array($this->eid));
@@ -131,6 +133,7 @@ class partwidgetComponents extends sfComponents
 
   public function executeInformativeWorkflow()
   {
+    $this->defineForm();
   }
 
   public function executeBiblio()

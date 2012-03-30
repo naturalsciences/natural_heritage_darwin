@@ -73,10 +73,6 @@ class MultimediaForm extends BaseMultimediaForm
       $object->setReferencedRelation($this->ref_relation);
       $object->setRecordId($this->ref_record_id);
     }
-    if($object->isNew())
-      $object->changeUri();
-
-    return $object;
   }
 
 }
