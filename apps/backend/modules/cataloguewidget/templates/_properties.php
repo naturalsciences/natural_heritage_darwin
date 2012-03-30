@@ -61,13 +61,13 @@ $('.hide_value').click(hideValues);
 <br />
 <?php echo image_tag('add_green.png');?>
 <a title="<?php echo __('Add Properties');?>" class="link_catalogue" href="<?php echo url_for('property/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add property');?></a> 
-<?php echo __("with this pre defined template") ; ?>:
-<select id='property_template'>
-<?php 
-  foreach(CatalogueProperties::getModels($table) as $key=>$values) echo "<option value=\"$key\">$values" ;
-?>
-</select>
-
+<?php if(count(CatalogueProperties::getModels($table)) > 1):?>
+  <?php echo __("with this pre defined template") ; ?>:
+  <select id='property_template'>
+    <?php foreach(CatalogueProperties::getModels($table) as $key=>$values)
+      echo "<option value=\"$key\">$values" ;?>
+  </select>
+<?php endif;?>
 <script>
   $('a.link_catalogue').click(function() {
     if($('#property_template').val() != "")
