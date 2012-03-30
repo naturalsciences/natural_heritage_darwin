@@ -12,26 +12,10 @@ class ExpeditionsForm extends BaseExpeditionsForm
 {
  /**
   * Configure the form with its widgets and validators
-  *
-  * @var   array         $yearsKeyVal    Array of years - constructed from two bound coming from configuration parameters
-  * @var   array         $years          Array of years taking keys and values from $yearsKeyVal
-  * @var   array         $dateText       Array constructed for default empty values that should be displayed in select boxes
-  * @var   FuzzyDateTime $minDate        FuzzyDateTime object instantiated to define the date lower bound
-  * @var   FuzzyDateTime $maxDate        FuzzyDateTime object instantiated to define the date upper bound
-  * @var   FuzzyDateTime $dateLowerBound FuzzyDateTime object instantiated to define the lowest date possible
-  * @var   FuzzyDateTime $dateUpperBound FuzzyDateTime object instantiated to define the upper date possible
-  *
   */
   public function configure()
   {
-
-    unset($this['name_ts'], 
-          $this['name_indexed'], 
-          $this['name_language_full_text'], 
-          $this['expedition_from_date_mask'], 
-          $this['expedition_to_date_mask']
-         );
-
+    $this->useFields(array('name','expedition_from_date', 'expedition_to_date'));
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
@@ -86,76 +70,54 @@ class ExpeditionsForm extends BaseExpeditionsForm
                                                                          )
                                             );
 
-    $subForm = new sfForm();
-    $this->embedForm('Members',$subForm);   
-    foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated('expeditions','member',$this->getObject()->getId()) as $key=>$vals)
-    {
-      $form = new PeopleAssociationsForm($vals);
-      $this->embeddedForms['Members']->embedForm($key, $form);
-    }
-    //Re-embedding the container
-    $this->embedForm('Members', $this->embeddedForms['Members']); 
-    
-    $subForm = new sfForm();
-    $this->embedForm('newMember',$subForm);
-  }
+    $this->validatorSchema['Members_holder'] = new sfValidatorPass();
+    $this->widgetSchema['Members_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
-  public function addMember($num, $people_ref,$order_by=0 , $user = null)
-  {
-      $options = array('referenced_relation' => 'expeditions', 'people_type' => 'member', 'people_ref' => $people_ref, 'order_by' => $order_by);
-      if(!$user)
-       $val = new CataloguePeople();
-      else
-       $val = $user ; 
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new PeopleAssociationsForm($val);
-      $this->embeddedForms['newMember']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newMember', $this->embeddedForms['newMember']);
+    $this->loadEmbed('Members');//force load of member
   }
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
-    if(isset($taintedValues['newMember']))
-    {
-      foreach($taintedValues['newMember'] as $key=>$newVal)
-      {
-        if (!isset($this['newMember'][$key]))
-        {
-          $this->addMember($key,$newVal['people_ref']);
-        }
+    $this->bindEmbed('Members', 'addMembers' , $taintedValues);
+    parent::bind($taintedValues, $taintedFiles);
+  }
+
+  public function addMembers($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'expeditions', 'people_type' => 'member', 'people_ref' => $values['people_ref'], 'order_by' => $order_by,
+      'record_id' => $this->getObject()->getId());
+    $this->attachEmbedRecord('Members', new PeopleAssociationsForm(DarwinTable::newObjectFromArray('CataloguePeople',$options)), $num);
+  }
+
+
+  public function getEmbedRecords($emFieldName, $record_id = false)
+  {
+    if($record_id === false)
+      $record_id = $this->getObject()->getId();
+    if( $emFieldName =='Members' )
+      return Doctrine::getTable('CataloguePeople')->getPeopleRelated('expeditions','member', $record_id);
+  }
+
+  public function getEmbedRelationForm($emFieldName, $values)
+  {
+    if( $emFieldName == 'Members')
+      return new PeopleAssociationsForm($values);
+  }
+
+  public function duplicate($id)
+  {
+    // reembed duplicated members
+    $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('expeditions',$id) ;
+    if(isset($Catalogue['member'])) {
+      foreach ($Catalogue['member'] as $key=>$val) {
+        $this->addMembers($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
       }
     }
-    parent::bind($taintedValues, $taintedFiles);
   }
 
   public function saveEmbeddedForms($con = null, $forms = null)
   {
-   if (null === $forms)
-   {
-      $value = $this->getValue('Members');
-      foreach($this->embeddedForms['Members']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['people_ref']))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Members'][$name]);
-        }
-        else
-        {
-          $form->getObject()->setRecordId($this->getObject()->getId());
-          $form->getObject()->setReferencedRelation('expeditions');
-        }
-      }
-
-      $value = $this->getValue('newMember');
-      foreach($this->embeddedForms['newMember']->getEmbeddedForms() as $name => $form)
-      {
-        $form->getObject()->setRecordId($this->getObject()->getId());
-        $form->getObject()->setReferencedRelation('expeditions');
-      } 
-   }
-   return parent::saveEmbeddedForms($con, $forms);
+    $this->saveEmbed('Members', 'people_ref', $forms, array('people_type'=>'member','referenced_relation'=>'expeditions', 'record_id' => $this->getObject()->getId()));
+    return parent::saveEmbeddedForms($con, $forms);
   }
 }

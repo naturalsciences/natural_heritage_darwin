@@ -59,16 +59,7 @@ class bibliographyActions extends DarwinActions
     $this->form = new BibliographyForm($bibliography);
     if ($duplic)
     {
-      $User = Doctrine::getTable('CataloguePeople')->findForTableByType('bibliography',$duplic) ;
-      if(count($User))
-      {
-        foreach ($User['author'] as $key=>$val)
-        {
-           $user = new CataloguePeople() ;
-           $user = $this->getRecordIfDuplicate($val->getRecordId(), $user);
-           $this->form->addAuthor($key, $val->getPeopleRef(), $val->getOrderBy(), $user);
-        }
-      }
+      $this->form->duplicate($duplic);
     }
   }
 
@@ -172,8 +163,8 @@ class bibliographyActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $people_ref = intval($request->getParameter('people_ref'));
     $this->form = new BibliographyForm();
-    $this->form->addAuthor($number,$people_ref,$request->getParameter('iorder_by',0));
-    return $this->renderPartial('author_row',array('form' =>  $this->form['newAuthor'][$number], 'row_num'=>$number));
+    $this->form->addAuthors($number, array('people_ref'=>$people_ref),$request->getParameter('iorder_by',0));
+    return $this->renderPartial('author_row',array('form' =>  $this->form['newAuthors'][$number], 'row_num'=>$number));
   }
 
   /**

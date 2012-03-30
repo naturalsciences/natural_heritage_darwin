@@ -47,6 +47,7 @@ $(document).ready(function ()
       </tr>
       <tr>
         <td colspan="2">
+          <?php echo $form['Authors_holder'];?>
           <table class="encoding collections_rights" id="bib_author_table">
             <thead>
               <tr>
@@ -61,7 +62,7 @@ $(document).ready(function ()
                 <?php include_partial('author_row', array('form' => $form_value, 'ref_id' => ($form->getObject()->isNew() ? '':$form->getObject()->getId()), 'row_num'=>$retainedKey));
         $retainedKey++;?>
               <?php endforeach;?>
-              <?php foreach($form['newAuthor'] as $form_value):?>
+              <?php foreach($form['newAuthors'] as $form_value):?>
                 <?php include_partial('author_row', array('form' => $form_value, 'ref_id' => ($form->getObject()->isNew() ? '':$form->getObject()->getId()), 'row_num'=>$retainedKey));
         $retainedKey++;?>
               <?php endforeach;?>

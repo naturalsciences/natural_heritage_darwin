@@ -25,76 +25,54 @@ class BibliographyForm extends BaseBibliographyForm
     ));
     $this->validatorSchema['type'] = new sfValidatorChoice(array('required'=>true,'choices'=>array_keys($choices)));
 
-    $subForm = new sfForm();
-    $this->embedForm('Authors',$subForm);   
-    foreach(Doctrine::getTable('CataloguePeople')->getPeopleRelated('bibliography','author',$this->getObject()->getId()) as $key=>$vals)
-    {
-      $form = new PeopleAssociationsForm($vals);
-      $this->embeddedForms['Authors']->embedForm($key, $form);
-    }
-    //Re-embedding the container
-    $this->embedForm('Authors', $this->embeddedForms['Authors']); 
-    
-    $subForm = new sfForm();
-    $this->embedForm('newAuthor',$subForm);
-  }
+    $this->validatorSchema['Authors_holder'] = new sfValidatorPass();
+    $this->widgetSchema['Authors_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
-  public function addAuthor($num, $people_ref,$order_by=0 , $user = null)
-  {
-      $options = array('referenced_relation' => 'bibliography', 'people_type' => 'author', 'people_ref' => $people_ref, 'order_by' => $order_by);
-      if(!$user)
-       $val = new CataloguePeople();
-      else
-       $val = $user ; 
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new PeopleAssociationsForm($val);
-      $this->embeddedForms['newAuthor']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newAuthor', $this->embeddedForms['newAuthor']);
+    $this->loadEmbed('Authors');//force load of authors
   }
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
-    if(isset($taintedValues['newAuthor']))
-    {
-      foreach($taintedValues['newAuthor'] as $key=>$newVal)
-      {
-        if (!isset($this['newAuthor'][$key]))
-        {
-          $this->addAuthor($key,$newVal['people_ref']);
-        }
+    $this->bindEmbed('Authors', 'addAuthors' , $taintedValues);
+    parent::bind($taintedValues, $taintedFiles);
+  }
+
+  public function addAuthors($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'bibliography', 'people_type' => 'author', 'people_ref' => $values['people_ref'], 'order_by' => $order_by,
+      'record_id' => $this->getObject()->getId());
+    $this->attachEmbedRecord('Authors', new PeopleAssociationsForm(DarwinTable::newObjectFromArray('CataloguePeople',$options)), $num);
+  }
+
+
+  public function getEmbedRecords($emFieldName, $record_id = false)
+  {
+    if($record_id === false)
+      $record_id = $this->getObject()->getId();
+    if( $emFieldName =='Authors' )
+      return Doctrine::getTable('CataloguePeople')->getPeopleRelated('bibliography','author', $record_id);
+  }
+
+  public function getEmbedRelationForm($emFieldName, $values)
+  {
+    if( $emFieldName == 'Authors')
+      return new PeopleAssociationsForm($values);
+  }
+
+  public function duplicate($id)
+  {
+    // reembed duplicated authro
+    $Catalogue = Doctrine::getTable('CataloguePeople')->findForTableByType('bibliography',$id) ;
+    if(isset($Catalogue['author'])) {
+      foreach ($Catalogue['author'] as $key=>$val) {
+        $this->addAuthors($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
       }
     }
-    parent::bind($taintedValues, $taintedFiles);
   }
 
   public function saveEmbeddedForms($con = null, $forms = null)
   {
-   if (null === $forms)
-   {
-      $value = $this->getValue('Authors');
-      foreach($this->embeddedForms['Authors']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['people_ref']))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Authors'][$name]);
-        }
-        else
-        {
-          $form->getObject()->setRecordId($this->getObject()->getId());
-          $form->getObject()->setReferencedRelation('bibliography');
-        }
-      }
-
-      $value = $this->getValue('newAuthor');
-      foreach($this->embeddedForms['newAuthor']->getEmbeddedForms() as $name => $form)
-      {
-        $form->getObject()->setRecordId($this->getObject()->getId());
-        $form->getObject()->setReferencedRelation('bibliography');
-      } 
-   }
-   return parent::saveEmbeddedForms($con, $forms);
+    $this->saveEmbed('Authors', 'people_ref', $forms, array('people_type'=>'author','referenced_relation'=>'bibliography', 'record_id' => $this->getObject()->getId()));
+    return parent::saveEmbeddedForms($con, $forms);
   }
 }

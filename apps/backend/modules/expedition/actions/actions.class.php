@@ -59,16 +59,7 @@ class expeditionActions extends DarwinActions
     $this->form = new ExpeditionsForm($expedition);
     if ($duplic)
     {
-      $User = Doctrine::getTable('CataloguePeople')->findForTableByType('expeditions',$duplic) ;
-      if(count($User))
-      {
-        foreach ($User['member'] as $key=>$val)
-        {
-           $user = new CataloguePeople() ;
-           $user = $this->getRecordIfDuplicate($val->getRecordId(), $user);
-           $this->form->addMember($key, $val->getPeopleRef(), $val->getOrderBy(), $user);
-        }
-      }
+      $this->form->duplicate($duplic);
     }
     
   }
@@ -173,8 +164,8 @@ class expeditionActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $people_ref = intval($request->getParameter('people_ref'));
     $this->form = new ExpeditionsForm();
-    $this->form->addMember($number,$people_ref,$request->getParameter('iorder_by',0));
-    return $this->renderPartial('member_row',array('form' =>  $this->form['newMember'][$number], 'row_num'=>$number));
+    $this->form->addMembers($number,array('people_ref'=>$people_ref),$request->getParameter('iorder_by',0));
+    return $this->renderPartial('member_row',array('form' =>  $this->form['newMembers'][$number], 'row_num'=>$number));
   }
 
   /**
