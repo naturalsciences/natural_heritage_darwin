@@ -20,8 +20,11 @@ class MultimediaTodelete extends BaseMultimediaTodelete
   public function deleteFile()
   {
     $url = $this->getFullURI();
-    if(! is_writable($url))
+    if(! is_writable(dirname($url) ))
       throw new Exception('Folder is not writable');
+
+    /// check if the file was not already deleted
+    if(! file_exists($url)) return ;
 
     unlink($url);
     if(file_exists($url))

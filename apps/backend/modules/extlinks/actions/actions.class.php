@@ -40,18 +40,20 @@ class extLinksActions extends DarwinActions
     
     if($request->isMethod('post'))
     { 
-	    $this->form->bind($request->getParameter('ext_links'));
-	    if($this->form->isValid())
-	    {
-	      try{
-	        $this->form->save();
-	      }
-	      catch(Exception $e)
-	      {
-	        return $this->renderText($e->getMessage());
-	      }
-	      return $this->renderText('ok');
-	    }
+      $this->form->bind($request->getParameter('ext_links'));
+      if($this->form->isValid())
+      {
+        try{
+          if($this->form->getObject()->isNew())
+            $this->form->setRecordRef($request->getParameter('table'), $request->getParameter('id'));
+          $this->form->save();
+        }
+        catch(Exception $e)
+        {
+          return $this->renderText($e->getMessage());
+        }
+        return $this->renderText('ok');
+      }
     }
   }
 }

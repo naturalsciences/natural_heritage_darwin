@@ -23,4 +23,20 @@ class ExtLinksForm extends BaseExtLinksForm
     $this->mergePostValidator(new ExtLinksValidatorSchema());
 
   }
+  public function setRecordRef($relation, $rid)
+  {
+    $this->ref_relation =$relation;
+    $this->ref_record_id = $rid;
+  }
+
+  public function updateObject($values = null)
+  {
+    $object = parent::updateObject($values);
+    if(isset($this->ref_relation) && isset($this->ref_record_id))
+    {
+      $object->setReferencedRelation($this->ref_relation);
+      $object->setRecordId($this->ref_record_id);
+    }
+    return $object;
+  }
 }
