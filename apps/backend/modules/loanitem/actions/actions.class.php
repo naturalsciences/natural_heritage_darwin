@@ -148,19 +148,6 @@ class loanitemActions extends DarwinActions
 
     $this->maintenances =  Doctrine::getTable('CollectionMaintenance')->getRelatedArray('loan_items', $this->loan_item->getId());
   }
-  public function executeDelmaintenance(sfWebRequest $request)
-  {
-    $maint = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id'));
-    $this->forward404Unless($maint->getReferencedRelation() == 'loan_items');
-    $this->loan_item = Doctrine::getTable('LoanItems')->findExcept($maint->getRecordId());
-
-    $rights = $this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() );
-    if(! $rights === true)
-      $this->forwardToSecureAction();
-
-    $maint->delete();
-    return $this->renderText('ok');
-  }
 
   public function executeGetIgNum(sfWebRequest $request)
   {

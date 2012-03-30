@@ -152,6 +152,26 @@ class maintenancesActions extends DarwinActions
     $file = $this->getUser()->getAttribute($request->getParameter('file_id')) ;    
     $form->addRelatedFiles($number,$file);
     return $this->renderPartial('loan/multimedia',array('form' => $form['newRelatedFiles'][$number], 'row_num'=>$number));
-  }   
+  }
 
+  public function executeDelmaintenance(sfWebRequest $request)
+  {
+    $maint = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id'));
+    $this->forward404Unless($maint);
+    if($maint->getReferencedRelation() == 'loan_items') {
+      $loan_item = Doctrine::getTable('LoanItems')->findExcept($maint->getRecordId());
+      $loan_ref = $loan_item->getLoanRef();
+    }
+    if($maint->getReferencedRelation() == 'loans') {
+      $loan_ref = $maint->getRecordId();
+    }
+    $this->forward404Unless(isset($loan_ref));
+
+    $rights = $this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(), $loan_ref );
+    if(! $rights === true)
+      $this->forwardToSecureAction();
+
+    $maint->delete();
+    return $this->renderText('ok');
+  }
 }

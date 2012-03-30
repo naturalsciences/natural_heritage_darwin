@@ -20,7 +20,7 @@
       <td>
 <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'maintenances/view?id='.$item->getId(),'target=_blank');?>   
    <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),'maintenances/edit?id='.$item->getId(),'target=_blank');?> 
-      <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))),'loanitem/delmaintenance?id='.$item->getId(),'class=delete_maint_button');?></td>
+      <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))),'maintenances/delmaintenance?id='.$item->getId(),'class=delete_maint_button');?></td>
     </tr>
   <?php endforeach;?>
 </tbody>

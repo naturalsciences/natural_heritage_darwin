@@ -306,8 +306,8 @@ class loanActions extends DarwinActions
     $form = $this->getLoanForm($request);
     $form->addInsurances($number);
     return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
-  }  
-    
+  }
+
   public function executeAddStatus(sfWebRequest $request)
   {    
     if($request->isXmlHttpRequest()) 
