@@ -47,3 +47,5 @@ DROP sequence IF EXISTS  associated_multimedia_id_seq;
 DROP table IF EXISTS people_multimedia;
 DROP table IF EXISTS users_multimedia;
 DROP table IF EXISTS template_people_users_multimedia;
+
+UPDATE my_widgets SET group_name = 'comments' WHERE category = 'individuals_widget' and group_name = 'specimenIndividualComments';
