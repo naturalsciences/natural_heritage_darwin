@@ -1,6 +1,6 @@
 /*** BTree indexes for foreign keys in Darwin Flat table ***/
 
-CREATE INDEX CONCURRENTLY idx_specimens_flat_spec_ref on specimens_flat(spec_ref);
+CREATE INDEX CONCURRENTLY idx_specimens_flat_spec_ref on specimens_flat(specimen_ref);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_collection_ref on specimens_flat(collection_ref);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_expedition_ref on specimens_flat(expedition_ref);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_ref on specimens_flat(gtu_ref);
