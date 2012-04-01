@@ -217,6 +217,7 @@ class DarwinTestFunctional extends sfTestFunctional
                   'Codes_holder' => 1,
                   'Collectors_holder' => 1,
                   'Comments_holder'=>1,
+                  'SpecimensAccompanying_holder' => 1,
                   'ident' => 1,
   	  	  'newCodes' => array(
                     0 => array('code_category' => 'secondary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 'code_suffix' => 'ary','code_suffix_separator' => '/'),

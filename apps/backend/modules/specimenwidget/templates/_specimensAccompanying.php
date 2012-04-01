@@ -10,10 +10,8 @@
       <th colspan="2">
         <?php echo __('Quantity'); ?>
       </th>
-      <th>
-	<?php echo $form['accompanying'];?>
-      </th>
-        <th></th>   
+      <th><?php echo $form['SpecimensAccompanying_holder'];?></th>
+      <th></th>
     </tr>
   </thead>
     <?php $retainedKey = 0;?>

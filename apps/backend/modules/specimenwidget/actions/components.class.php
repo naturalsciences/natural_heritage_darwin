@@ -175,7 +175,7 @@ class specimenwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if(!isset($this->form['newSpecimensAccompanying']))
-    $this->form->loadEmbedAccompanying();
+      $this->form->loadEmbed('SpecimensAccompanying');
   }
 
   public function executeInformativeWorkflow()

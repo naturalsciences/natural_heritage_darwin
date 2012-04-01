@@ -94,8 +94,8 @@ class specimenActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
-    $form->addSpecimensAccompanying($number);
-    return $this->renderPartial('specimens_accompanying',array('form' => $form['newSpecimensAccompanying'][$number], 'rownum'=>$number));
+    $form->addSpecimensAccompanying($number, array());
+    return $this->renderPartial('specimens_accompanying', array('form' => $form['newSpecimensAccompanying'][$number], 'rownum'=>$number));
   }
 
   public function executeAddIdentification(sfWebRequest $request)
@@ -151,14 +151,6 @@ class specimenActions extends DarwinActions
       if($duplic)
       {
         $this->form->duplicate($duplic);
-        // reembed duplicated specimen Accompanying
-        $spec_a = Doctrine::getTable('SpecimensAccompanying')->findBySpecimen($duplic) ;
-        foreach ($spec_a as $key=>$val)
-        {
-          $spec = new SpecimensAccompanying() ;
-          $spec = $this->getRecordIfDuplicate($val->getId(),$spec);
-          $this->form->addSpecimensAccompanying($key, $spec) ;
-        }
 
         //reembed identification
          $Identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$duplic) ;

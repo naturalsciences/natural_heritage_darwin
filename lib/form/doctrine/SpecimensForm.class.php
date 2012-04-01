@@ -321,22 +321,9 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->validatorSchema['RelatedFiles_holder'] = new sfValidatorPass();
     $this->widgetSchema['RelatedFiles_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
-  }
 
-
-  public function addSpecimensAccompanying($num, $obj=null)
-  {
-      if(! isset($this['newSpecimensAccompanying'])) $this->loadEmbedAccompanying();
-      $options = array('unit' => '%', 'specimen_ref' => $this->getObject()->getId());
-      if (!$obj) $val = new SpecimensAccompanying();
-      else $val = $obj ;
-      $val->fromArray($options);
-      $val->Specimens = $this->getObject();
-//      $val->setSpecimenRef($this->getObject()->getId());
-      $form = new SpecimensAccompanyingForm($val);
-      $this->embeddedForms['newSpecimensAccompanying']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newSpecimensAccompanying', $this->embeddedForms['newSpecimensAccompanying']);
+    $this->validatorSchema['SpecimensAccompanying_holder'] = new sfValidatorPass();
+    $this->widgetSchema['SpecimensAccompanying_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
   }
 
   public function addIdentifications($num, $order_by=0, $obj=null)
@@ -430,15 +417,6 @@ class SpecimensForm extends BaseSpecimensForm
     $this->setDefault('collecting_methods_list', $this->object->CollectingMethods->getPrimaryKeys());
   }
 
-  public function loadEmbedAccompanying()
-  {
-    /* Accompanying elements sub form */
-    if($this->isBound()) return;
-    $this->embedRelation('SpecimensAccompanying');
-    $subForm = new sfForm();
-    $this->embedForm('newSpecimensAccompanying',$subForm);
-  }
-
   public function loadEmbedIndentifications()
   {
     /* Identifications sub form */
@@ -465,29 +443,6 @@ class SpecimensForm extends BaseSpecimensForm
      * test if the widget is on screen by testing a flag field present on the concerned widget
      * If widget is not on screen, remove the field from list of fields to be bound, and than potentially saved
     */
-
-    if(!isset($taintedValues['accompanying']))
-    {
-      $this->offsetUnset('SpecimensAccompanying');
-      unset($taintedValues['SpecimensAccompanying']);
-      $this->offsetUnset('newSpecimensAccompanying');
-      unset($taintedValues['newSpecimensAccompanying']);
-    }
-    else
-    {
-      $this->loadEmbedAccompanying();
-      if(isset($taintedValues['newSpecimensAccompanying']))
-      {
-        foreach($taintedValues['newSpecimensAccompanying'] as $key=>$newVal)
-        {
-          if (!isset($this['newSpecimensAccompanying'][$key]))
-          {
-            $this->addSpecimensAccompanying($key);
-          }
-        }
-      }
-    }
-
     if(!isset($taintedValues['ident']))
     {
       $this->offsetUnset('Identifications');
@@ -580,8 +535,16 @@ class SpecimensForm extends BaseSpecimensForm
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     $this->bindEmbed('ExtLinks', 'addExtLinks' , $taintedValues);
     $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
-
+    $this->bindEmbed('SpecimensAccompanying', 'addSpecimensAccompanying' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);
+  }
+
+
+  public function addSpecimensAccompanying($num, $values, $order_by=0)
+  {
+    $options = array('unit' => '%', 'specimen_ref' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
+    $this->attachEmbedRecord('SpecimensAccompanying', new SpecimensAccompanyingForm(DarwinTable::newObjectFromArray('SpecimensAccompanying',$options)), $num);
   }
 
   public function addRelatedFiles($num, $values, $order_by=0)
@@ -658,6 +621,8 @@ class SpecimensForm extends BaseSpecimensForm
       return Doctrine::getTable('ExtLinks')->findForTable('specimens', $record_id);
     if( $emFieldName =='RelatedFiles' )
       return Doctrine::getTable('Multimedia')->findForTable('specimens', $record_id);
+    if( $emFieldName =='SpecimensAccompanying' )
+      return Doctrine::getTable('SpecimensAccompanying')->findBySpecimenRef($record_id);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -674,6 +639,8 @@ class SpecimensForm extends BaseSpecimensForm
       return new ExtLinksForm($values);
     if( $emFieldName =='RelatedFiles' )
       return new MultimediaForm($values);
+    if( $emFieldName =='SpecimensAccompanying' )
+      return new SpecimensAccompanyingForm($values);
   }
 
   public function duplicate($id)
@@ -727,6 +694,16 @@ class SpecimensForm extends BaseSpecimensForm
       $this->attachEmbedRecord('ExtLinks', $form, $key);
     } 
 
+    // reembed duplicated specimen Accompanying
+    $spec_a = Doctrine::getTable('SpecimensAccompanying')->findBySpecimen($id) ;
+    foreach ($spec_a as $key=>$val)
+    {
+      $spec = new SpecimensAccompanying() ;
+      $spec->fromArray($val->toArray());
+      $form = new SpecimensAccompanyingForm($spec);
+      $this->attachEmbedRecord('SpecimensAccompanying', $key, $spec) ;
+    }
+
   }
 
   public function saveEmbeddedForms($con = null, $forms = null)
@@ -738,6 +715,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
+    $this->saveEmbed('SpecimensAccompanying', 'taxon_ref' ,$forms, array('specimen_ref' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('ident'))
     {
@@ -800,26 +778,6 @@ class SpecimensForm extends BaseSpecimensForm
         }
       }
     }
-
-    if (null === $forms && $this->getValue('accompanying'))
-    {
-      $value = $this->getValue('newSpecimensAccompanying');
-      foreach($this->embeddedForms['newSpecimensAccompanying']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['taxon_ref']) && !isset($value[$name]['mineral_ref']))
-          unset($this->embeddedForms['newSpecimensAccompanying'][$name]);
-      }
-      $value = $this->getValue('SpecimensAccompanying');
-      foreach($this->embeddedForms['SpecimensAccompanying']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['taxon_ref']) && !isset($value[$name]['mineral_ref']))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['SpecimensAccompanying'][$name]);
-        }
-      }
-    }
-
     return parent::saveEmbeddedForms($con, $forms);
   }
 
