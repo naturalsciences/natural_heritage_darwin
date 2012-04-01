@@ -328,9 +328,10 @@ class DarwinTestFunctional extends sfTestFunctional
             'container' => 'Test for parts',
             'Codes_holder'=>1,
             'Comments_holder'=>1,
+            'Insurances_holder'=>1,
             'surnumerary' => true,
             'sub_container' => 'Sub test for parts',
-            'newInsurance' => array(
+            'newInsurances' => array(
               0 => array(
                 'referenced_relation' => 'specimen_parts',
                 'insurance_value' => 666,

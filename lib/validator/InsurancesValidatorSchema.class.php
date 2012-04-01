@@ -11,11 +11,7 @@ class InsurancesValidatorSchema extends sfValidatorSchema
     $errorSchema = new sfValidatorErrorSchema($this);
     $errorSchemaLocal = new sfValidatorErrorSchema($this);
 
-    if (!$value['referenced_relation'])
-    {
-      return array();
-    }
-    elseif ($value['insurance_currency'] && !$value['insurance_value'] )
+    if ($value['insurance_currency'] && !$value['insurance_value'] )
     {
       $errorSchemaLocal->addError(new sfValidatorError($this, 'insurance_value'));
     }

@@ -93,8 +93,8 @@ class partwidgetComponents extends sfComponents
   public function executeRefInsurances()
   {
     $this->defineForm();
-    if(!isset($this->form['newInsurance']))
-      $this->form->loadEmbedInsurance();
+    if(!isset($this->form['newInsurances']))
+      $this->form->loadEmbed('Insurances');
 
   }
 

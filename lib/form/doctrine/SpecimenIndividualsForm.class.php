@@ -10,8 +10,8 @@
 class SpecimenIndividualsForm extends BaseSpecimenIndividualsForm
 {
   public function configure()
-  { 
-    unset($this['type_group'], $this['type_search'], $this['id'], $this['with_parts']);
+  {
+    $this->useFields(array('specimen_ref', 'type', 'sex', 'state','stage','social_status','rock_form', 'specimen_individuals_count_min', 'specimen_individuals_count_max'));
     $this->widgetSchema['specimen_ref'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['type'] = new widgetFormSelectComplete(array(
         'model' => 'SpecimenIndividuals',

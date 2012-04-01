@@ -1,1 +1,1 @@
-<?php include_partial('loanwidget/refInsurances',  array('table' => 'loan_items', 'eid' => $eid, 'form' => $form));?>
+<?php include_partial('partwidget/refInsurances',  array('module' => 'loan_items', 'form' => $form));?>

@@ -11,12 +11,7 @@ class InsurancesSubForm extends BaseInsurancesForm
 {
   public function configure()
   {
-    unset($this['date_from_mask'], 
-      $this['date_to_mask']);
-    $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
-    $this->validatorSchema['referenced_relation'] = new sfValidatorString(array('required'=>false));
-    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
-    $this->validatorSchema['record_id'] = new sfValidatorInteger();
+    $this->useFields(array('insurance_currency', 'insurer_ref', 'contact_ref', 'insurance_value', 'date_from', 'date_to' ));
     $this->validatorSchema['id'] = new sfValidatorInteger(array('required'=>false));
     $this->widgetSchema['insurance_currency'] = new widgetFormSelectComplete(array('model' => 'Insurances',
                                                                                    'table_method' => 'getDistinctCurrencies',
@@ -51,7 +46,6 @@ class InsurancesSubForm extends BaseInsurancesForm
     );
     $this->widgetSchema->setLabels(array('insurance_value' => 'Value' ,
                                          'insurance_currency' => 'Currency',
-                                         'insurance_year' => 'Year',
                                          'insurer_ref' => 'Insurer:',
                                          'contact_ref' => 'Contact'
                                         )

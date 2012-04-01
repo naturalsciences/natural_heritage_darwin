@@ -156,4 +156,12 @@ class loanitemActions extends DarwinActions
     $this->getResponse()->setHttpHeader('Content-type', 'application/json');
     return $this->renderText( json_encode(array('ig_num'=>$spec->getIgNum(), 'ig_ref'=>$spec->getIgRef())));
   }
+
+  public function executeAddInsurance(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+    $form = new LoanItemWidgetForm();
+    $form->addInsurances($number, array());
+    return $this->renderPartial('parts/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
+  }
 }

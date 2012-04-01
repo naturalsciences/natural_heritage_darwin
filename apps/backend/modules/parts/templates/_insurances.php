@@ -1,4 +1,3 @@
-<?php if($form['referenced_relation']->getValue()!=""):?>
 <tbody  class="parts_insurances_data" id="parts_insurances_data_<?php echo $rownum;?>">
   <?php if($form->hasError()): ?>
   <tr>
@@ -63,4 +62,3 @@
     });
   });
 </script>
-<?php endif;?>

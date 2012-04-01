@@ -115,6 +115,7 @@ class loanActions extends DarwinActions
     $this->form = new LoansForm($loan);
     if ($duplic)
     {
+      $this->form->duplicate($duplic);
     }
     $this->loadWidgets();    
   }
@@ -299,13 +300,13 @@ class loanActions extends DarwinActions
     $form->addComments($number);
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
-    
+
   public function executeAddInsurance(sfWebRequest $request)
-  {    
+  {
     $number = intval($request->getParameter('num'));
-    $form = $this->getLoanForm($request);
-    $form->addInsurances($number);
-    return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
+    $form = new LoansForm();
+    $form->addInsurances($number, array());
+    return $this->renderPartial('parts/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
   }
 
   public function executeAddStatus(sfWebRequest $request)

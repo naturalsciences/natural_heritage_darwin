@@ -11,7 +11,9 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
 {
   public function configure()
   {
-    unset( $this['specimen_individual_ref'] , $this['id'],$this['path'], $this['with_parts']);
+    $this->useFields(array('parent_ref', 'specimen_part', 'complete', 'institution_ref', 'building', 'floor', 'room',
+      'row', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
+      'container_storage', 'sub_container_storage', 'surnumerary', 'specimen_status', 'specimen_part_count_min', 'specimen_part_count_max',));
 
     $individual = $this->getOption('individual', '');
     $this->widgetSchema['parent_ref'] = new widgetFormButtonRef(array(
@@ -191,9 +193,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
 
     $this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => false, 'trim' => true));
 
-    $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->validatorSchema['insurance'] = new sfValidatorPass();
-
     $this->widgetSchema['surnumerary']->setLabel('supernumerary');
 
     //Loan form is submited to upload file, when called like that we don't want some fields to be required
@@ -219,6 +218,9 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
 
     $this->validatorSchema['RelatedFiles_holder'] = new sfValidatorPass();
     $this->widgetSchema['RelatedFiles_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+
+    $this->widgetSchema['Insurances_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->validatorSchema['Insurances_holder'] = new sfValidatorPass();
   }
   public function getEmbedRecords($emFieldName, $record_id = false)
   {
@@ -234,6 +236,8 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       return Doctrine::getTable('ExtLinks')->findForTable('specimen_parts', $record_id);
     if( $emFieldName =='RelatedFiles' )
       return Doctrine::getTable('Multimedia')->findForTable('specimen_parts', $record_id);
+    if( $emFieldName =='Insurances' )
+      return Doctrine::getTable('Insurances')->findForTable('specimen_parts', $record_id);
   }
 
   public function forceContainerChoices()
@@ -266,6 +270,13 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->attachEmbedRecord('RelatedFiles', new MultimediaForm(DarwinTable::newObjectFromArray('Multimedia',$options)), $num);
   }
 
+  public function addInsurances($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'specimen_parts', 'record_id' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
+    $this->attachEmbedRecord('Insurances', new InsurancesSubForm(DarwinTable::newObjectFromArray('Insurances',$options)), $num);
+  }
+
   public function checkSelfAttached($validator, $values)
   {
     if(!$this->getObject()->isNew() && $values['parent_ref'] == $this->getObject()->getId())
@@ -274,20 +285,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       throw new sfValidatorErrorSchema($validator, array('parent_ref' => $error));
     }
     return $values;
-  }
-
-  public function addInsurances($num, $obj=null)
-  {
-      if(! isset($this['newInsurance'])) $this->loadEmbedInsurance();
-      $options = array('referenced_relation' => 'specimen_parts');
-      if(!$obj) $val = new Insurances();
-      else $val = $obj ;
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new InsurancesSubForm($val);
-      $this->embeddedForms['newInsurance']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newInsurance', $this->embeddedForms['newInsurance']);
   }
 
   protected function getFieldsByGroup()
@@ -320,28 +317,6 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
         'specimen_part_count_max',
       ),
     );
-  }
-
-  public function loadEmbedInsurance()
-  {
-    if($this->isBound()) return;
-
-    /* Comments sub form */
-    $subForm = new sfForm();
-    $this->embedForm('Insurances',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('Insurances')->findForTable('specimen_parts', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new InsurancesSubForm($vals,array('table' => 'parts'));
-        $this->embeddedForms['Insurances']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('Insurances', $this->embeddedForms['Insurances']);
-    }
-
-    $subForm = new sfForm();
-    $this->embedForm('newInsurance',$subForm);
   }
 
   public function addCodes($num, $values, $order_by=0)
@@ -377,34 +352,12 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       }
     }
 
-    if(!isset($taintedValues['insurance']))
-    {
-      $this->offsetUnset('Insurances');
-      unset($taintedValues['Insurances']);
-      $this->offsetUnset('newInsurance');
-      unset($taintedValues['newInsurance']);
-    }
-    else
-    {
-      $this->loadEmbedInsurance();
-      if(isset($taintedValues['newInsurance']))
-      {
-        foreach($taintedValues['newInsurance'] as $key=>$newVal)
-        {
-          if (!isset($this['newInsurance'][$key]))
-          {
-            $this->addInsurances($key);
-          }
-          $taintedValues['newInsurance'][$key]['record_id'] = 0;
-        }
-      }
-    }
-
     $this->bindEmbed('Biblio', 'addBiblio' , $taintedValues);
     $this->bindEmbed('Codes', 'addCodes' , $taintedValues);
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     $this->bindEmbed('ExtLinks', 'addExtLinks' , $taintedValues);
     $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
+    $this->bindEmbed('Insurances', 'addInsurances' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -416,28 +369,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
-
-    if (null === $forms && $this->getValue('insurance'))
-    {
-      $value = $this->getValue('newInsurance');
-      foreach($this->embeddedForms['newInsurance']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['insurance_value']))
-          unset($this->embeddedForms['newInsurance'][$name]);
-        else
-          $form->getObject()->setRecordId($this->getObject()->getId());
-      }
-
-      $value = $this->getValue('Insurances');
-      foreach($this->embeddedForms['Insurances']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['insurance_value']))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Insurances'][$name]);
-        }
-      }
-    }
+    $this->saveEmbed('Insurances', 'insurance_value' ,$forms, array('referenced_relation'=>'specimen_parts', 'record_id' => $this->getObject()->getId()));
 
     return parent::saveEmbeddedForms($con, $forms);
   }
@@ -478,6 +410,16 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       $form = new ExtLinksForm($links);
       $this->attachEmbedRecord('ExtLinks', $form, $key);
     }
+
+    // reembed duplicated insurances
+    $Insurances = Doctrine::getTable('Insurances')->findForTable('specimen_parts',$id) ;
+    foreach ($Insurances as $key=>$val)
+    {
+      $insurance = new Insurances() ;
+      $insurance->fromArray($val->toArray());
+      $form = new InsurancesSubForm($insurance);
+      $this->attachEmbedRecord('Insurances', $form, $key);
+    }
   }
 
   public function getJavaScripts()
@@ -506,5 +448,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
       return new ExtLinksForm($values);
     if( $emFieldName =='RelatedFiles' )
       return new MultimediaForm($values);
+    if( $emFieldName =='Insurances' )
+      return new InsurancesSubForm($values);
   }
 }

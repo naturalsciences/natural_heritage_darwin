@@ -1,21 +1,19 @@
 <table  class="property_values">
-  <thead style="<?php echo ($form['Insurances']->count() || $form['newInsurance']->count())?'':'display: none;';?>">
+  <thead style="<?php echo ($form['Insurances']->count() || $form['newInsurances']->count())?'':'display: none;';?>">
     <tr>
       <th>
         <?php echo __('Date from'); ?>
-      </th>      
+      </th>
       <th>
         <?php echo __('Date to'); ?>
-      </th>   
+      </th>
       <th>
         <?php echo __('Value'); ?>
-      </th>         
+      </th>
       <th>
         <?php echo __('Currency'); ?>
       </th>
-      <th>
-	<?php echo $form['insurance'];?>
-      </th>
+      <th><?php echo $form['Insurances_holder'];?></th>
     </tr>
   </thead>
     <?php $retainedKey = 0;?>
@@ -23,7 +21,7 @@
       <?php include_partial('parts/insurances', array('form' => $form_value, 'rownum'=>$retainedKey));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
-    <?php foreach($form['newInsurance'] as $form_value):?>
+    <?php foreach($form['newInsurances'] as $form_value):?>
       <?php include_partial('parts/insurances', array('form' => $form_value, 'rownum'=>$retainedKey));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
@@ -31,7 +29,12 @@
     <tr>
       <td colspan='5'>
         <div class="add_code">
-          <a href="<?php echo url_for('parts/addInsurance'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_insurance"><?php echo __('Add Insurance');?></a>
+          <?php
+          if($module == 'parts') $url = 'parts/addInsurance';
+          if($module == 'loans') $url = 'loan/addInsurance';
+          if($module == 'loan_items') $url = 'loanitem/addInsurance';
+          ?>
+          <a href="<?php echo url_for($url. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_insurance"><?php echo __('Add Insurance');?></a>
         </div>
       </td>
     </tr>

@@ -53,14 +53,6 @@ class partsActions extends DarwinActions
       if($duplic)
       {
         $this->form->duplicate($duplic);
-        // reembed duplicated insurances
-        $Insurances = Doctrine::getTable('Insurances')->findForTable('specimen_parts',$duplic) ;
-        foreach ($Insurances as $key=>$val)
-        {
-          $insurance = new Insurances() ;
-          $insurance = $this->getRecordIfDuplicate($val->getId(),$insurance); 
-          $this->form->addInsurances($key, $insurance) ;
-        }
       }
     }
     if($request->isMethod('post'))
@@ -186,9 +178,9 @@ class partsActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
-    $form = $this->getSpecimenPartForm($request);
-    $form->addInsurances($number);
-    return $this->renderPartial('parts/insurances',array('form' => $form['newInsurance'][$number], 'rownum'=>$number));
+    $form = new SpecimenPartsForm();
+    $form->addInsurances($number, array());
+    return $this->renderPartial('parts/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
   }
 
   public function executeAddExtLinks(sfWebRequest $request)

@@ -62,7 +62,6 @@ class LoansForm extends BaseLoansForm
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['users'] = new sfWidgetFormInputHidden(array('default'=>1));
-    $this->widgetSchema['insurance'] = new sfWidgetFormInputHidden(array('default'=>1));
     /* Input file for related files */
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
@@ -98,13 +97,8 @@ class LoansForm extends BaseLoansForm
     $this->validatorSchema['sender'] = new sfValidatorPass();
     $this->validatorSchema['receiver'] = new sfValidatorPass();
     $this->validatorSchema['users'] = new sfValidatorPass();
-    $this->validatorSchema['insurance'] = new sfValidatorPass();
     //Loan form is submited to upload file, when called like that we don't want some fields to be required
-    $this->validatorSchema['filenames'] = new sfValidatorPass();/*File(
-  array(
-      'required' => false,
-      'validated_file_class' => 'myValidatedFile'
-  ));  */
+    $this->validatorSchema['filenames'] = new sfValidatorPass();
 
     $this->mergePostValidator( new LoanValidatorDates()) ;
 
@@ -122,6 +116,9 @@ class LoansForm extends BaseLoansForm
 
     $this->validatorSchema['RelatedFiles_holder'] = new sfValidatorPass();
     $this->widgetSchema['RelatedFiles_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+
+    $this->validatorSchema['Insurances_holder'] = new sfValidatorPass();
+    $this->widgetSchema['Insurances_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
   }
   
   public function addUsers($num, $user_ref, $order_by=0)
@@ -224,41 +221,12 @@ class LoansForm extends BaseLoansForm
     $subForm = new sfForm();
     $this->embedForm('newActorsReceiver',$subForm);
   }
-  
-  public function addInsurances($num, $obj=null)
-  {
-    if(! isset($this['newInsurance'])) $this->loadEmbedInsurance();
-    $options = array('referenced_relation' => 'loans');
-    if(!$obj) $val = new Insurances();
-    else $val = $obj ;
-    $val->fromArray($options);
-    $val->setRecordId($this->getObject()->getId());
-    $form = new InsurancesSubForm($val);
-    $this->embeddedForms['newInsurance']->embedForm($num, $form);
-    //Re-embedding the container
-    $this->embedForm('newInsurance', $this->embeddedForms['newInsurance']);
-  }
-  
-  public function loadEmbedInsurance()
-  {
-    if($this->isBound()) return;
 
-    /* Comments sub form */
-    $subForm = new sfForm();
-    $this->embedForm('Insurances',$subForm);
-    if($this->getObject()->getId() !='')
-    {
-      foreach(Doctrine::getTable('Insurances')->findForTable('loans', $this->getObject()->getId()) as $key=>$vals)
-      {
-        $form = new InsurancesSubForm($vals,array('table' => 'loans'));
-        $this->embeddedForms['Insurances']->embedForm($key, $form);
-      }
-      //Re-embedding the container
-      $this->embedForm('Insurances', $this->embeddedForms['Insurances']);
-    }
-
-    $subForm = new sfForm();
-    $this->embedForm('newInsurance',$subForm);
+  public function addInsurances($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'loans', 'record_id' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
+    $this->attachEmbedRecord('Insurances', new InsurancesSubForm(DarwinTable::newObjectFromArray('Insurances',$options)), $num);
   }
 
   public function addRelatedFiles($num, $values, $order_by=0)
@@ -347,31 +315,9 @@ class LoansForm extends BaseLoansForm
           $taintedValues['newActorsReceiver'][$key]['record_id'] = 0;
         }
       }
-    }    
-
-    if(!isset($taintedValues['insurance']))
-    {
-      $this->offsetUnset('Insurances');
-      unset($taintedValues['Insurances']);
-      $this->offsetUnset('newInsurance');
-      unset($taintedValues['newInsurance']);
-    }
-    else
-    {
-      $this->loadEmbedInsurance();
-      if(isset($taintedValues['newInsurance']))
-      {
-        foreach($taintedValues['newInsurance'] as $key=>$newVal)
-        {
-          if (!isset($this['newInsurance'][$key]))
-          {
-            $this->addInsurances($key);
-          }
-          $taintedValues['newInsurance'][$key]['record_id'] = 0;
-        }
-      }
     }
 
+    $this->bindEmbed('Insurances', 'addInsurances' , $taintedValues);
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);   
@@ -381,6 +327,8 @@ class LoansForm extends BaseLoansForm
   {
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'loans', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'loans', 'record_id' => $this->getObject()->getId()));
+    $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'loans', 'record_id' => $this->getObject()->getId()));
+    $this->saveEmbed('Insurances', 'insurance_value' ,$forms, array('referenced_relation'=>'loans', 'record_id' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('sender'))
     {
@@ -455,27 +403,6 @@ class LoansForm extends BaseLoansForm
         elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
       }
     }
-    if (null === $forms && $this->getValue('insurance'))
-    {
-      $value = $this->getValue('newInsurance');
-      foreach($this->embeddedForms['newInsurance']->getEmbeddedForms() as $name => $form)
-      {
-        if(!isset($value[$name]['insurance_value']))
-          unset($this->embeddedForms['newInsurance'][$name]);
-        else
-          $form->getObject()->setRecordId($this->getObject()->getId());
-      }
-
-      $value = $this->getValue('Insurances');
-      foreach($this->embeddedForms['Insurances']->getEmbeddedForms() as $name => $form)
-      {
-        if (!isset($value[$name]['insurance_value']))
-        {
-          $form->getObject()->delete();
-          unset($this->embeddedForms['Insurances'][$name]);
-        }
-      }
-    }
 
     return parent::saveEmbeddedForms($con, $forms);
   }
@@ -488,6 +415,8 @@ class LoansForm extends BaseLoansForm
       return Doctrine::getTable('Comments')->findForTable('loans', $record_id);
     if( $emFieldName =='RelatedFiles' )
       return Doctrine::getTable('Multimedia')->findForTable('loans', $record_id);
+    if( $emFieldName =='Insurances' )
+      return Doctrine::getTable('Insurances')->findForTable('loans', $record_id);
   }
 
   public function duplicate($id)
@@ -501,6 +430,16 @@ class LoansForm extends BaseLoansForm
       $form = new CommentsSubForm($comment);
       $this->attachEmbedRecord('Comments', $form, $key);
     }
+
+    // reembed duplicated insurances
+    $Insurances = Doctrine::getTable('Insurances')->findForTable('loans',$id) ;
+    foreach ($Insurances as $key=>$val)
+    {
+      $insurance = new Insurances() ;
+      $insurance->fromArray($val->toArray());
+      $form = new InsurancesSubForm($insurance);
+      $this->attachEmbedRecord('Insurances', $form, $key);
+    }
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -509,6 +448,8 @@ class LoansForm extends BaseLoansForm
       return new CommentsSubForm($values);
     if( $emFieldName =='RelatedFiles' )
       return new MultimediaForm($values);
+    if( $emFieldName =='Insurances' )
+      return new InsurancesSubForm($values);
   }
 
   public function getJavaScripts()
