@@ -333,7 +333,6 @@ class DarwinTestFunctional extends sfTestFunctional
             'sub_container' => 'Sub test for parts',
             'newInsurances' => array(
               0 => array(
-                'referenced_relation' => 'specimen_parts',
                 'insurance_value' => 666,
                 'insurance_currency' => '€',
                 'insurer_ref' => $institution))	,
