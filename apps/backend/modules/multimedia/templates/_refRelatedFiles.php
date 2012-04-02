@@ -38,7 +38,7 @@
   </tbody>
   <tfoot>
     <tr>
-      <td colspan='6'>
+      <td colspan="6">
         <ul class="error_list" id="file_error_message" style="display:none">
           <li></li>
         </ul>

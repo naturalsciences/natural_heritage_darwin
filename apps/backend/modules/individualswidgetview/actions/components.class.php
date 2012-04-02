@@ -48,7 +48,7 @@ class individualswidgetViewComponents extends sfComponents
     else $this->accuracy = "Imprecise" ;
   }
 
-  public function executeSpecimenIndividualComments()
+  public function executeComments()
   {
     $this->Comments = Doctrine::getTable('Comments')->findForTable('specimen_individuals',$this->eid) ;
   }
@@ -81,7 +81,7 @@ class individualswidgetViewComponents extends sfComponents
   public function executeRefRelatedFiles()
   {
     $this->atLeastOneFileVisible = $this->getUser()->isAtLeast(Users::ENCODER);
-    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimens', $this->eid, !($this->atLeastOneFileVisible));
+    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimen_individuals', $this->eid, !($this->atLeastOneFileVisible));
     if(!($this->atLeastOneFileVisible)) {
       $this->atLeastOneFileVisible = ($this->files->count()>0);
     }

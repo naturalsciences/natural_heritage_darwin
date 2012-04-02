@@ -111,13 +111,15 @@ class searchActions extends DarwinActions
       $ajax = true ;
     }
     else $id = $request->getParameter('id') ;
-    $this->specimen = Doctrine::getTable('specimenSearch')->findOneByIndividualRef($id);   
+    $this->specimen = Doctrine::getTable('specimenSearch')->findOneByIndividualRef($id);
     $this->forward404Unless($this->specimen);
     if(!$this->specimen->getCollectionIsPublic()) $this->forwardToSecureAction();
     
     $collection = Doctrine::getTable('Collections')->findOneById($this->specimen->getCollectionRef());
     $this->institute = Doctrine::getTable('People')->findOneById($collection->getInstitutionRef()) ;
-    $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef()) ;
+    $this->classificationFiles = Doctrine::getTable('Multimedia')->findForTable('taxonomy', $this->specimen->getTaxonRef(), true);
+    $this->specFiles = Doctrine::getTable('Multimedia')->findForTable('specimens', $this->specimen->getSpecRef(), true);
+    $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef());
     $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());      
     $ids = $this->FecthIdForCommonNames() ;
     $this->common_names = Doctrine::getTable('ClassVernacularNames')->findAllCommonNames($ids) ;    

@@ -77,7 +77,7 @@ class partwidgetViewComponents extends sfComponents
   public function executeRefRelatedFiles()
   {
     $this->atLeastOneFileVisible = $this->getUser()->isAtLeast(Users::ENCODER);
-    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimens', $this->eid, !($this->atLeastOneFileVisible));
+    $this->files = Doctrine::getTable('Multimedia')->findForTable('specimen_parts', $this->eid, !($this->atLeastOneFileVisible));
     if(!($this->atLeastOneFileVisible)) {
       $this->atLeastOneFileVisible = ($this->files->count()>0);
     }

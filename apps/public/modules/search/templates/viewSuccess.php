@@ -89,7 +89,7 @@
             </td>
           </tr>
           <tr>
-            <td>
+            <td colspan="2">
               <div id="taxon_tree" class="tree"></div>
               <script type="text/javascript">
                  $('#taxon_info').click(function() 
@@ -224,6 +224,38 @@
             </td>
           </tr>
         <?php endif ; ?>
+          <tr>
+            <td class="line" colspan="2">
+            <?php if($classificationFiles->count()):?>
+              <table class="public_files">
+                <thead>
+                  <tr>
+                    <th colspan="2"><?php echo __('Related Files');?></th>
+                  </tr>
+                  <tr>
+                    <th><?php echo __('Name');?></th>
+                    <th><?php echo __('Link');?></th>
+                  </tr>
+                </thead>
+                <tbody>
+                <?php foreach($classificationFiles as $file):?>
+                  <tr>
+                    <td><?php echo $file->getTitle();?></td>
+                    <td>
+                      <?php $alt=($file->getDescription()!='')?$file->getTitle().' / '.$file->getDescription():$file->getTitle();?>
+                      <?php  /*If image => preview*/ if(in_array($file->getMimeType() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
+                        <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$file->getId());?>" alt="<?php echo $alt;?>" title="<?php echo $alt;?>" ><img src="<?php echo url_for('multimedia/preview?id='.$file->getId());?>" alt="<?php echo $alt;?>" width="100" /></a>
+                      <?php else:?>
+                        <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId(), array('alt'=> $alt, 'title' => $alt)) ; ?>
+                      <?php endif;?>
+                    </td>
+                  </tr>
+                <?php endforeach;?>
+                </tbody>
+              </table>
+            <?php endif;?>
+            </td>
+          </tr>
         </tbody>
       </table>      
     </div>
@@ -272,6 +304,38 @@
             <?php else : ?>
               <span>-</span>
             <?php endif ; ?>
+          </td>
+        </tr>
+        <tr>
+          <td class="line" colspan="2">
+          <?php if($specFiles->count()):?>
+            <table class="public_files">
+              <thead>
+                <tr>
+                  <th colspan="2"><?php echo __('Related Files');?></th>
+                </tr>
+                <tr>
+                  <th><?php echo __('Name');?></th>
+                  <th><?php echo __('Link');?></th>
+                </tr>
+              </thead>
+              <tbody>
+              <?php foreach($specFiles as $file):?>
+                <tr>
+                  <td><?php echo $file->getTitle();?></td>
+                  <td>
+                    <?php $alt=($file->getDescription()!='')?$file->getTitle().' / '.$file->getDescription():$file->getTitle();?>
+                    <?php  /*If image => preview*/ if(in_array($file->getMimeType() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
+                      <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$file->getId());?>" alt="<?php echo $alt;?>" title="<?php echo $alt;?>" ><img src="<?php echo url_for('multimedia/preview?id='.$file->getId());?>" alt="<?php echo $alt;?>" width="100" /></a>
+                    <?php else:?>
+                      <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId(), array('alt'=> $alt, 'title' => $alt)) ; ?>
+                    <?php endif;?>
+                  </td>
+                </tr>
+              <?php endforeach;?>
+              </tbody>
+            </table>
+          <?php endif;?>
           </td>
         </tr>
       </table>

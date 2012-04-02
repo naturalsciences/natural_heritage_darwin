@@ -980,3 +980,11 @@ a#register_link, a#login_lostpwd
   margin-left: auto;
   margin-right: auto;
 }
+
+table.public_files th {
+  border-bottom:1px solid #5BAABD;
+}
+
+table.public_files tbody tr:hover {
+  background-color:#EBF5F5;
+}
