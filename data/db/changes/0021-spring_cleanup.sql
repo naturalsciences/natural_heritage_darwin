@@ -34,7 +34,7 @@ DROP INDEX IF EXISTS idx_users_languages_users_ref;
 DROP INDEX IF EXISTS idx_words_table_field;
 
 
-DROP TABLE IF EXISTS habitats;
+DROP TABLE IF EXISTS habitats CASCADE;
 
 DROP sequence IF EXISTS habitats_id_seq;
 DROP table IF EXISTS multimedia_keywords;
