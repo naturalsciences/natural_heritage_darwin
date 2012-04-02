@@ -44,7 +44,7 @@
                 echo $date->format('d/m/Y'); ?></td>
       <td><?php echo image_tag(($file->getVisible())?'checkbox_checked.png':'checkbox_unchecked.png', array("title" => __('Visible ?'), "alt" => __('Publicly display this file ?')));?></td>
       <td><?php echo image_tag(($file->getPublishable())?'checkbox_checked.png':'checkbox_unchecked.png', array("title" => __('Visible ?'), "alt" => __('Publicly display this file ?')));?></td>
-      <td class="widget_row_delete">
+      <td class="middle_aligned widget_row_delete">
         <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=multimedia&id='.$file->getId());?>" title="<?php echo __('Delete File') ?>"><?php echo image_tag('remove.png'); ?></a>
       </td>
     </tr>
@@ -58,7 +58,12 @@
 <?php echo form_tag('multimedia/insertFile?table='.$table.'&formname=multimedia&id='.$eid, array('enctype'=>'multipart/form-data'));?>
   <div class="relatedFile">
     <a title="<?php echo __('Add Files');?>" href="<?php echo url_for('multimedia/add?table='.$table.'&id='.$eid);?>" id="add_file" class="link_catalogue hidden"></a>
-    <label for="multimedia_filenames"><?php echo __('Add File');?></label><input class="Add_related_file" type="file" name="multimedia[filenames]" id="multimedia_filenames">
+    <div id="relatedFileLabel">
+      <label for="multimedia_filenames"><?php echo __('Add File');?></label>
+    </div>
+    <div id="relatedFileInput">
+      <input class="Add_related_file" type="file" name="multimedia[filenames]" id="multimedia_filenames">
+    </div>
   </div>
   <iframe name="hiddenFrame" id="hiddenFrame">
   </iframe>

@@ -64,3 +64,15 @@
   </td>
   <td colspan="4"><?php echo $form['mime_type']->getValue() ; ?></td>
 </tr>
+<script type="text/javascript">
+  $("tr.row_num_<?php echo $row_num;?>").hover(function(){
+                                                          parent_el = $(this).closest('tbody');
+                                                          parent_tr = $(parent_el).children('tr.row_num_<?php echo $row_num;?>');
+                                                          $(parent_tr).css('background-color', '#E9EDBE');
+                                                         },
+                                               function(){
+                                                          parent_el = $(this).closest('tbody');
+                                                          parent_tr = $(parent_el).children('tr.row_num_<?php echo $row_num;?>');
+                                                          $(parent_tr).css('background-color', '#F6F6F6');
+                                                         });
+</script>

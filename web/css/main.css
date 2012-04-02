@@ -1311,7 +1311,7 @@ td.row_delete
 
 td.widget_row_delete
 {
-  vertical-align:middle;
+  vertical-align:top;
   text-align:right;
 }
 
@@ -2615,19 +2615,25 @@ width : 1px;
 height : 1px;
 
 }
+
 .relatedFile
 {
-  position: relative;
+  float:right;
+  margin-right:158px;
+}
+
+.relatedFile div {
+  position:absolute;
+  overflow:hidden;
+  width:158px;
+  height:20px;
+  padding:3px;
 }
 
 .relatedFile input[type="file"]
 {
-  position: relative;
-  text-align: right;
-  width:150px;	
-  opacity:0 ;
+  opacity:0;
   filter:alpha(opacity: 0);
-  z-index: 2;
   cursor:pointer;
 }
 
@@ -2637,14 +2643,11 @@ height : 1px;
   background-color:#C1CF56;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  padding:2px;
+  padding:3px;
   color:#525A20;
-  width:150px;
   text-decoration: none;
   font-size:90%;
-  position: absolute;
   top: 0px;
-  z-index: 1;
   vertical-align: middle;  
   text-align : center;
   cursor:pointer;
@@ -2652,28 +2655,28 @@ height : 1px;
 
 .containerFile .divFile
 {
-position : relative;
-width : 300px;
-text-align : left;
+  position : relative;
+  width : 300px;
+  text-align : left;
 }
 
 #uploadfield
 {
-opacity : 0; 
-filter : alpha(opacity=0); 
-position : absolute;
-right : 0;
-top : 0;
+  opacity : 0;
+  filter : alpha(opacity=0);
+  position : absolute;
+  right : 0;
+  top : 0;
 }
 
 .containerFile .inputText
 {
-border : 1px solid #010101 ;
-padding : 0px 5px;
-background : #def;
-width : 250px;
-height : 20px;
-background: transparent ;
+  border : 1px solid #010101 ;
+  padding : 0px 5px;
+  background : #def;
+  width : 250px;
+  height : 20px;
+  background: transparent ;
 }
 
 .olLayerGoogleCopyright{right:3px;bottom:2px;left:auto;}.olLayerGoogleV3.olLayerGoogleCopyright{display:none;bottom:0;right:0!important;}.olLayerGooglePoweredBy{left:2px;bottom:2px;}.olLayerGoogleV3.olLayerGooglePoweredBy{bottom:0!important;}
@@ -2968,4 +2971,8 @@ input.complete_missing {
 
 span.label {
   font-weight:bold;
+}
+
+.middle_aligned {
+  vertical-align:middle !important;
 }

@@ -44,8 +44,12 @@
         </ul>
         <div class="relatedFile">
           <a href="<?php echo url_for('multimedia/addRelatedFiles?table='.$table.($form->getObject()->isNew() ? '': '&id='.$form->getObject()->getId()) );?>/num/" id="add_file" class="hidden"></a>
-          <?php echo $form['filenames']->renderLabel();?>
-          <?php echo $form['filenames'];?>
+          <div id="relatedFileLabel">
+            <?php echo $form['filenames']->renderLabel();?>
+          </div>
+          <div id="relatedFileInput">
+            <?php echo $form['filenames'];?>
+          </div>
         </div>
         <iframe name="hiddenFrame" id="hiddenFrame">
         </iframe>
