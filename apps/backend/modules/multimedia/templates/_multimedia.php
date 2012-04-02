@@ -6,8 +6,30 @@
   <td><?php echo $form['description']->render() ; ?></td>
   <td><?php $date = new DateTime($form['creation_date']->getValue());
                 echo $date->format('d/m/Y'); ?></td>
-  <td><?php if($table!='loans' && $table!='loan_items'):?><?php echo $form['visible']->render() ; ?><?php endif;?></td>
-  <td><?php if($table!='loans' && $table!='loan_items'):?><?php echo $form['publishable']->render() ; ?><?php endif;?></td>
+  <td>
+    <?php if($table!='loans' && $table!='loan_items'):?>
+      <?php echo $form['visible']->render() ; ?>
+      <script tpe="text/javascript">
+        $("input#<?php echo $form['visible']->renderId();?>").change(function () {
+          if (!($(this).attr('checked'))) {
+            $("input#<?php echo $form['publishable']->renderId();?>").attr('checked', false);
+          }
+        });
+      </script>
+    <?php endif;?>
+  </td>
+  <td>
+    <?php if($table!='loans' && $table!='loan_items'):?>
+      <?php echo $form['publishable']->render() ; ?>
+      <script tpe="text/javascript">
+        $("input#<?php echo $form['publishable']->renderId();?>").change(function () {
+          if ($(this).attr('checked')) {
+            $("input#<?php echo $form['visible']->renderId();?>").attr('checked', true);
+          }
+        });
+      </script>
+    <?php endif;?>
+  </td>
   <td class="widget_row_delete" rowspan="2">
     <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_file_'.$row_num); ?>
     <?php echo $form->renderHiddenFields();?>

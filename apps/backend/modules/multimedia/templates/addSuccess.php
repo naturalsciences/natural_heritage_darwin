@@ -65,6 +65,19 @@
       $('form.qtiped_form').modal_screen();
 
     });
+
+    $('input#multimedia_visible').change(function () {
+      if (!($(this).attr('checked'))) {
+        $('input#multimedia_publishable').attr('checked', false);
+      }
+    });
+
+    $('input#multimedia_publishable').change(function () {
+      if ($(this).attr('checked')) {
+        $('input#multimedia_visible').attr('checked', true);
+      }
+    });
+
   </script>
 
 </div>
