@@ -56,12 +56,22 @@ class InformativeWorkflowTable extends DarwinTable
     {      
 	    $q->AndWhereIn('referenced_relation',array('specimens','specimen_individuals','specimen_parts'))   ;
 	    return $q ;	 
-    }	
-    $q->AddWhere("EXISTS(Select distinct collection_ref from darwin_flat where case
-          when i.referenced_relation = 'specimens' then spec_ref = i.record_id
-          when i.referenced_relation = 'specimen_individuals' then individual_ref = i.record_id
-          when i.referenced_relation = 'specimen_parts' then part_ref = i.record_id END
-          AND collection_ref IN (select fct_search_authorized_encoding_collections(".$user->getId().")))");
+    }
+    $col_refs = Doctrine::getTable('CollectionsRights')->getCollectionsByRight($user->getId());
+    $col_refs = implode(',', $col_refs);
+    if($col_refs == '')
+      return $q->andWhere('false');
+    $q->AddWhere(" (i.referenced_relation = 'specimens' AND exists( select 1 from specimens where id = i.record_id  and collection_ref IN 
+($col_refs))
+) OR
+
+ (i.referenced_relation = 'specimen_individuals' AND exists( select 1 from darwin_flat where individual_ref = i.record_id  and collection_ref IN 
+($col_refs))
+) OR
+
+ (i.referenced_relation = 'specimens' AND exists( select 1 from darwin_flat where part_ref = i.record_id  and collection_ref IN 
+  ($col_refs))
+)");
     
     return $q ; 
   }
