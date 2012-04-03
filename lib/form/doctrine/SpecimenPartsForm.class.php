@@ -324,7 +324,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $options = array('referenced_relation' => 'specimen_parts', 'record_id' => $this->getObject()->getId());
     if (! $this->getObject()->isNew())
     {
-      $collection = $this->getObject()->Individual->Specimen->Collection();
+      $collection = $this->getObject()->Individual->Specimens->Collections;
       if($collection)
       {
         $options['code_prefix'] = $collection->getCodePrefix();
