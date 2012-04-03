@@ -31,20 +31,6 @@ class multimediaActions extends DarwinActions
     return sfView::NONE;
   }
 
-  public function checkRights($multimedia)
-  {
-    if($multimedia->getReferencedRelation() == 'loans')
-      return(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $multimedia->getRecordId()));
-    if($multimedia->getReferencedRelation() == 'loan_items')
-    {
-      $item = Doctrine::getTable('LoanItems')->findOneById($multimedia->getRecordId()) ;
-      return(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $item->getLoanRef()));
-    }
-    /* Actualy multimedia is only in loans and loan items, so for the moment any otehr referenced relation
-     returns false */
-    return true;
-  }
-
   public function executePreview(sfWebRequest $request)
   {
     $this->setLayout(false);

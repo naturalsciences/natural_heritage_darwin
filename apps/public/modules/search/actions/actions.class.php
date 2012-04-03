@@ -117,8 +117,30 @@ class searchActions extends DarwinActions
     
     $collection = Doctrine::getTable('Collections')->findOneById($this->specimen->getCollectionRef());
     $this->institute = Doctrine::getTable('People')->findOneById($collection->getInstitutionRef()) ;
-    $this->classificationFiles = Doctrine::getTable('Multimedia')->findForTable('taxonomy', $this->specimen->getTaxonRef(), true);
-    $this->specFiles = Doctrine::getTable('Multimedia')->findForTable('specimens', $this->specimen->getSpecRef(), true);
+    $this->files = Doctrine::getTable('Multimedia')->findForPublic(array($this->specimen->getSpecRef(), $id, $id, $this->specimen->getTaxonRef(), $this->specimen->getChronoRef(), $this->specimen->getLithoRef(), $this->specimen->getLithologyRef(), $this->specimen->getMineralRef()));
+    $this->specFilesCount = $this->taxFilesCount = $this->chronoFilesCount = $this->lithoFilesCount = $this->lithologyFilesCount = $this->mineraloFilesCount = 0;
+    foreach($this->files as $file) {
+      switch ($file->getReferencedRelation()){
+        case 'taxonomy':
+          $this->taxFilesCount+=1;
+          break;
+        case 'chronostratigraphy':
+          $this->chronoFilesCount+=1;
+          break;
+        case 'lithostratigraphy':
+          $this->lithoFilesCount+=1;
+          break;
+        case 'lithology':
+          $this->lithologyFilesCount+=1;
+          break;
+        case 'mineralogy':
+          $this->mineraloFilesCount+=1;
+          break;
+        default:
+          $this->specFilesCount+=1;
+          break;
+      }
+    }
     $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef());
     $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());      
     $ids = $this->FecthIdForCommonNames() ;
