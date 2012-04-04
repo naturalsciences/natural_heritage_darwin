@@ -3985,7 +3985,10 @@ BEGIN
 
     UNION
 
-    select loan_id, 'darwin_flat', hstore(f.*) from darwin_flat f where f.part_ref in (select part_ref from loan_items l where l.loan_ref = loan_id)
+    select loan_id, 'specimens_flat', hstore(sfl.*) || hstore(si.*) || hstore(sp.*) from specimens_flat sfl
+      inner join specimen_individuals si on sfl.specimen_ref = si.specimen_ref
+      inner join specimen_parts sp on si.id = sp.specimen_individual_ref
+      where sp.id in (select part_ref from loan_items l where l.loan_ref = loan_id)
   );
 
   -- BOTH

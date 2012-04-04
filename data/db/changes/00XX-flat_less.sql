@@ -112,6 +112,26 @@ DELETE FROM users where id = 0;
 DELETE FROM people  where id = 0;
 
 
+/*** RESET CONSTRAINTS ***/
+
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_expeditions FOREIGN KEY (expedition_ref) REFERENCES expeditions(id);
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_gtu FOREIGN KEY (gtu_ref) REFERENCES gtu(id);
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_collections FOREIGN KEY (collection_ref) REFERENCES collections(id);
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_taxonomy FOREIGN KEY (taxon_ref) REFERENCES taxonomy(id);
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_lithostratigraphy FOREIGN KEY (litho_ref) REFERENCES lithostratigraphy(id);
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_lithology FOREIGN KEY (lithology_ref) REFERENCES lithology(id);
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_mineralogy FOREIGN KEY (mineral_ref) REFERENCES mineralogy(id);
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_chronostratigraphy FOREIGN KEY (chrono_ref) REFERENCES chronostratigraphy(id);
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_host_taxonomy FOREIGN KEY (host_taxon_ref) REFERENCES taxonomy(id);
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_host_specimen FOREIGN KEY (host_specimen_ref) REFERENCES specimens(id) on delete set null;
+ALTER TABLE specimens ADD CONSTRAINT fk_specimens_igs FOREIGN KEY (ig_ref) REFERENCES igs(id);
+
+
+ALTER TABLE specimen_collecting_methods ADD CONSTRAINT fk_specimen_collecting_methods_specimen FOREIGN KEY (specimen_ref) REFERENCES specimens(id);
+ALTER TABLE specimen_collecting_tools ADD CONSTRAINT fk_specimen_collecting_tools_specimen FOREIGN KEY (specimen_ref) REFERENCES specimens(id);
+ALTER TABLE specimen_individuals ADD CONSTRAINT fk_specimen_individuals_specimens FOREIGN KEY (specimen_ref) REFERENCES specimens(id);
+ALTER TABLE specimens_accompanying ADD CONSTRAINT fk_specimens_accompanying_specimens FOREIGN KEY (specimen_ref) REFERENCES specimens(id);
+
 /**** FINISH ****/
 
 
