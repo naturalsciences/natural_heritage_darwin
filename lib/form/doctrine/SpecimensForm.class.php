@@ -665,15 +665,6 @@ class SpecimensForm extends BaseSpecimensForm
       $this->addBiblio($key, array('bibliography_ref' => $vals->getBibliographyRef()) );
     }
 
-    $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$id) ;
-    foreach ($Codes as $key=> $code)
-    {
-      $newCode = new Codes();
-      $newCode->fromArray($code->toArray());
-      $form = new CodesForm($newCode);
-      $this->attachEmbedRecord('Codes', $form, $key);
-    }
-
     // reembed duplicated comment
     $Comments = Doctrine::getTable('Comments')->findForTable('specimens', $id) ;
     foreach ($Comments as $key=>$val)
