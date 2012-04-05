@@ -684,7 +684,8 @@ DROP FUNCTION IF EXISTS fct_set_user(integer);
 CREATE OR REPLACE FUNCTION fct_set_user(userid integer) RETURNS void
 language SQL AS
 $$
-  update users_login_infos set last_seen = now() where user_ref = $1  and login_type='local' and set_config('darwin.userid', $1::varchar, false) is distinct from 'noop';
+  select set_config('darwin.userid', $1::varchar, false) ;
+  update users_login_infos set last_seen = now() where user_ref = $1  and login_type='local';
 $$;
 
 CREATE OR REPLACE FUNCTION fct_trk_log_table() RETURNS TRIGGER

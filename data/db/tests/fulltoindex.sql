@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(27);
+SELECT plan(26);
 
 SELECT diag('FulltoIndex Function');
 SELECT ok('msdfnjrt' = fullToIndex('MsdfnJrt'),'With Majuscule and minuscule');
@@ -9,7 +9,6 @@ SELECT ok('elowyorleds' = fullToIndex('ÉLo Wÿorléds!'),'Majuscule, minuscule,
 SELECT ok( 'aaaaaaceeeeiiiinoooooxouuuuy' = fullToIndex('ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖ×ØÙÚÛÜÝ'),'a Bunch of weird chars');
 SELECT ok( 'aaaaaaceeeeiiiinoooooouuuuy'= fullToIndex('àáâãäåçèéêëìíîïñòóôõöøùúûüý'),'another Bunch of lower weird chars');
 SELECT ok( 'aeoeaeoe' = fullToIndex('æ œ Ӕ Œ'),'ligature ae-oe');
-SELECT ok( 'sfdfdfggdfklmfklmgfdndgndgnfnnfnfngndfg' = fullToIndex('sfdfdfggdfklmfklmgfd,ndgndgnfnnfnfngndfgndgfndfnvbvloùsdop osdf,n'),'More than 40 chars');
 SELECT ok( fullToIndex(null) is null,'With null argument');
 
 
