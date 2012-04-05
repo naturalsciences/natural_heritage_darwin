@@ -44,7 +44,7 @@ insert into people (id, is_physical, family_name, birth_date, end_date ) VALUES
 (10, false, 'The Management Unit of the North Sea Mathematical Models',DATE 'January 8, 1830', DEFAULT);
 
 SELECT ok( 'The Management Unit of the North Sea Mathematical Models' = (SELECT formated_name FROM people WHERE id=10),'formated_name composed on changed name');
-SELECT ok( 'themanagementunitofthenorthseamathemati' = (SELECT formated_name_indexed FROM people WHERE id=10),'formated_name_indexed composed');
+SELECT ok( 'themanagementunitofthenorthseamathematicalmodels' = (SELECT formated_name_indexed FROM people WHERE id=10),'formated_name_indexed composed');
 SELECT ok( '' = (SELECT title FROM people WHERE id=10),'title is empty');
 
 SELECT ok('north' = (SELECT word FROM words where referenced_relation = 'people' AND field_name='formated_name_ts' AND word='north'), 'North was added to word table');
