@@ -15,11 +15,11 @@ class SpecimenPartsTable extends DarwinTable
     'shelf' => 'localisation' ,
     'container' => 'container' ,
     'sub_container' => 'container' ,
-    'container_type' => 'container',    
+    'container_type' => 'container',
     'sub_container_type' => 'container',
     'container_storage' => 'container',
     'sub_container_storage' => 'container',
-    'surnumerary' => 'container',            
+    'surnumerary' => 'container',
     'specimen_individuals_count_min' => 'partCount' ,
     'specimen_individuals_count_min' => 'partCount' 
   );

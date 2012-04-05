@@ -245,7 +245,6 @@ Users:
         gender: { type: enum, values: ['M','F'] }
         db_user_type: { type: integer, notnull: true, default: 1}
         people_id: { type: integer}
-        last_seen: { type: string}
         selected_lang: { type: string,notnull:true, default:en}
     relations:
         People:
@@ -370,6 +369,7 @@ UsersLoginInfos:
         password: { type: string }
         login_system: { type: string}
         renew_hash: {type: string}
+        last_seen: { type: string}
     relations:
         User:
             class: Users

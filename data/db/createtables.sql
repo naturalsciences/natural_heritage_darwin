@@ -420,7 +420,6 @@ create table users
         id serial,
         db_user_type smallint default 1 not null,
         people_id integer,
-        last_seen timestamp,
         created_at timestamp default now(),
         selected_lang varchar not null default 'en',
         constraint pk_users primary key (id),
@@ -446,7 +445,6 @@ comment on column users.birth_date_mask is 'Mask Flag to know wich part of the d
 comment on column users.birth_date is 'Birth/Creation date composed';
 comment on column users.gender is 'For physical users give the gender: M or F';
 comment on column users.selected_lang is 'Lang of the interface for the user en,fr,nl ,....';
-comment on column users.last_seen is 'Last time the user has logged in.';
 
 create table people_languages
        (
@@ -668,6 +666,7 @@ create table users_login_infos
         password varchar,
         login_system varchar,
         renew_hash varchar,
+        last_seen timestamp,
         constraint pk_users_login_infos primary key (id),
         constraint unq_users_login_infos unique (user_ref, login_type),
         constraint unq_users_login_infos_user_name unique (user_name, login_type),
@@ -680,6 +679,7 @@ comment on column users_login_infos.user_name is 'For some system (local, ldap, 
 comment on column users_login_infos.password is 'For some system (local, ldap, kerberos,...) provides the password (encrypted form)';
 comment on column users_login_infos.login_system is 'For some system (shibbolet, openID,...) provides the user id';
 comment on column users_login_infos.renew_hash is 'Hashed key defined when asking to renew a password';
+comment on column users_login_infos.last_seen is 'Last time the user has logged in.';
 
 create table collections
        (

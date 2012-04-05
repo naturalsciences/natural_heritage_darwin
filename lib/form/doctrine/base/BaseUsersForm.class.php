@@ -30,7 +30,6 @@ abstract class BaseUsersForm extends BaseFormDoctrine
       'gender'                => new sfWidgetFormChoice(array('choices' => array('M' => 'M', 'F' => 'F'))),
       'db_user_type'          => new sfWidgetFormInputText(),
       'people_id'             => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => true)),
-      'last_seen'             => new sfWidgetFormTextarea(),
       'selected_lang'         => new sfWidgetFormTextarea(),
     ));
 
@@ -50,7 +49,6 @@ abstract class BaseUsersForm extends BaseFormDoctrine
       'gender'                => new sfValidatorChoice(array('choices' => array(0 => 'M', 1 => 'F'), 'required' => false)),
       'db_user_type'          => new sfValidatorInteger(array('required' => false)),
       'people_id'             => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'required' => false)),
-      'last_seen'             => new sfValidatorString(array('required' => false)),
       'selected_lang'         => new sfValidatorString(array('required' => false)),
     ));
 
