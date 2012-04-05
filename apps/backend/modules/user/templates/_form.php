@@ -95,11 +95,11 @@
         <tr>
           <td colspan="2"><hr /></td>
         </tr>
-        <?php if($sf_user->isAtLeast(Users::ADMIN)):?>
+        <?php if($sf_user->isAtLeast(Users::ADMIN) && count($form->getObject()->UsersLoginInfos) ):?>
           <tr>
             <th><?php echo __('Last seen');?></th>
             <?php use_helper('Date');?>
-            <td><?php echo format_datetime($form->getObject()->getLastSeen(),'f');?></td>
+            <td><?php echo format_datetime($form->getObject()->UsersLoginInfos[0]->getLastSeen(),'f');?></td>
           </tr>
         <?php endif;?>
         <tr class="trusted_user_links">

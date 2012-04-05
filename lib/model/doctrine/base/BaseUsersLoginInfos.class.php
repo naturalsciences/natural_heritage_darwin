@@ -12,6 +12,7 @@
  * @property string $password
  * @property string $login_system
  * @property string $renew_hash
+ * @property string $last_seen
  * @property Users $User
  * 
  * @method integer         getId()           Returns the current record's "id" value
@@ -21,6 +22,7 @@
  * @method string          getPassword()     Returns the current record's "password" value
  * @method string          getLoginSystem()  Returns the current record's "login_system" value
  * @method string          getRenewHash()    Returns the current record's "renew_hash" value
+ * @method string          getLastSeen()     Returns the current record's "last_seen" value
  * @method Users           getUser()         Returns the current record's "User" value
  * @method UsersLoginInfos setId()           Sets the current record's "id" value
  * @method UsersLoginInfos setUserRef()      Sets the current record's "user_ref" value
@@ -29,6 +31,7 @@
  * @method UsersLoginInfos setPassword()     Sets the current record's "password" value
  * @method UsersLoginInfos setLoginSystem()  Sets the current record's "login_system" value
  * @method UsersLoginInfos setRenewHash()    Sets the current record's "renew_hash" value
+ * @method UsersLoginInfos setLastSeen()     Sets the current record's "last_seen" value
  * @method UsersLoginInfos setUser()         Sets the current record's "User" value
  * 
  * @package    darwin
@@ -64,6 +67,9 @@ abstract class BaseUsersLoginInfos extends sfDoctrineRecord
              'type' => 'string',
              ));
         $this->hasColumn('renew_hash', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('last_seen', 'string', null, array(
              'type' => 'string',
              ));
     }
