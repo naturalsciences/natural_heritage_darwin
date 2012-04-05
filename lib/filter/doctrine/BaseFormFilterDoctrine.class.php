@@ -79,16 +79,15 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       
       $conn_MGR = Doctrine_Manager::connection();
       $conn = $conn_MGR->getDbh();
-      $pg_array_string  = '';
-      foreach($terms as $term)
-            $pg_array_string .= $conn_MGR->quote($term, 'string').',';
       $conn->exec('SELECT set_limit(0.1)');
-      $pg_array_string = substr($pg_array_string, 0, -1); //remove last ','
-      $statement = $conn->prepare("SELECT distinct vt.orig as search, word from (select e.anyelement,e.anyelement as orig from fct_explode_array(array[$pg_array_string]) e union select fulltoindex(f.anyelement),f.anyelement as orig from fct_explode_array(array[$pg_array_string]) as f) as vt  
-            LEFT JOIN words on word % vt.anyelement
-            WHERE referenced_relation = :table
-            AND field_name = :field
-            AND fulltoindex(word) ilike '%' || fulltoindex(vt.anyelement) || '%'");
+      $sql_search = array();
+      foreach($terms as $term) {
+        $word_quoted = $conn_MGR->quote($term, 'string');
+        $sql_search[] = "SELECT $word_quoted as search, word from words where word % fulltoindex($word_quoted)
+          AND fulltoindex(word) like '%' || fulltoindex($word_quoted) || '%'
+          AND referenced_relation = :table AND field_name = :field ";
+      }
+      $statement = $conn->prepare(implode(' UNION ',  $sql_search));
       $statement->execute(array(':table' => $table, ':field' => $field));
       $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
