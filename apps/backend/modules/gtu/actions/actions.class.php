@@ -37,7 +37,7 @@ class gtuActions extends DarwinActions
 
  public function executeSearch(sfWebRequest $request)
   {
-    $this->setCommonValues('gtu', 'code,gtu_from_date', $request);
+    $this->setCommonValues('gtu', 'code', $request);
 
     $this->form = new GtuFormFilter();
     $this->is_choose = ($request->getParameter('is_choose', '') == '')?0:intval($request->getParameter('is_choose'));
@@ -50,7 +50,6 @@ class gtuActions extends DarwinActions
       {
         //@TODO: We need to refactor and avoid doing too much queries when format is xml
         $query = $this->form->getQuery();
-        $query->andWhere('code=code');
         if($request->getParameter('format') == 'xml' || $request->getParameter('format') == 'text')
         {
           $query->orderBy($this->orderBy .' '.$this->orderDir)
