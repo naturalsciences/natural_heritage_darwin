@@ -155,7 +155,7 @@ BEGIN
       '  cL YS sCa  -R     Zu .z   EeY?AAAAAAACEEEEIIII NOOOOOxOUUUUYTBaaaaaaaceeeeiiii nooooo/ouuuuyty');
 	--Remove ALL none alphanumerical char
     temp_string := lower(regexp_replace(temp_string,'[^[:alnum:]]','', 'g'));
-    return substring(temp_string from 0 for 40);
+    return temp_string;
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 

@@ -47,7 +47,7 @@ DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
 
 create or replace function labeling_province_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
-select array_agg(fullToIndex(tag))
+select array_agg(tag_indexed)
 from tags where tags.gtu_ref = $1 and sub_group_type = 'province';
 $$;
 
@@ -70,7 +70,7 @@ CREATE INDEX idx_labeling_province ON darwin_flat USING gin (labeling_province_f
 
 create or replace function labeling_other_gtu_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
-select array_agg(fullToIndex(tag))
+select array_agg(tag_indexed)
 from tags where tags.gtu_ref = $1 and sub_group_type not in ('country', 'province');
 $$;
 

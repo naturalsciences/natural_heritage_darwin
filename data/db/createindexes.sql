@@ -90,7 +90,6 @@ CREATE INDEX CONCURRENTLY idx_class_vernacular_names_community_indexed on class_
 CREATE INDEX CONCURRENTLY idx_vernacular_names_vernacular_class_ref on vernacular_names (vernacular_class_ref);
 
 CREATE INDEX CONCURRENTLY idx_codes_code_num on codes(code_num) WHERE NOT code_num IS NULL;
-CREATE INDEX CONCURRENTLY idx_codes_full_code_order_by ON codes USING btree (full_code_order_by);
 CREATE INDEX CONCURRENTLY idx_collecting_methods_method_indexed on collecting_methods(method_indexed);
 CREATE INDEX CONCURRENTLY idx_collecting_tools_tool_indexed on collecting_tools(tool_indexed);
 CREATE INDEX CONCURRENTLY idx_collection_maintenance_action on collection_maintenance(action_observation);

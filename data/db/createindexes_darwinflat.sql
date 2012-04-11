@@ -45,6 +45,8 @@ CREATE INDEX CONCURRENTLY idx_darwin_flat_sub_container_storage on darwin_flat(s
 CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_collection_main_manager_formated_name_ts on darwin_flat using gin(collection_main_manager_formated_name_ts);*/
 CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_expedition_name_ts on darwin_flat using gin(expedition_name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_taxon_name_indexed on darwin_flat using gin(taxon_name_indexed);
+CREATE INDEX CONCURRENTLY idx_darwin_flat_taxon_path on darwin_flat(taxon_path text_pattern_ops);
+
 CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_gtu_tag_values_indexed on darwin_flat using gin(gtu_tag_values_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_darwin_flat_gtu_country_tag_indexed_indexed on darwin_flat using gin(gtu_country_tag_indexed);
 CREATE INDEX CONCURRENTLY idx_gist_darwin_flat_gtu_location ON darwin_flat USING GIST ( gtu_location );
