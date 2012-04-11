@@ -67,10 +67,14 @@ $(document).ready(function () {
     {
         hideForRefresh('#refCodes');
         parent_el = $(this).closest('table.property_values');
+        url = $(this).attr('href')+ (0+$(parent_el).find('tbody').length);
+        <?php if($module == 'specimen'):?>
+          url += '/collection_id/' + $('input#specimen_collection_ref').val();
+        <?php endif;?>
         $.ajax(
         {
           type: "GET",
-          url: $(this).attr('href')+ (0+$(parent_el).find('tbody').length),
+          url: url,
           success: function(html)
           {
             $(parent_el).append(html);

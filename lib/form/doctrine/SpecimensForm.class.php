@@ -583,17 +583,19 @@ class SpecimensForm extends BaseSpecimensForm
   public function addCodes($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
-    if (! $this->getObject()->isNew())
-      {
-        $collection = Doctrine::getTable('Collections')->find( $this->getObject()->getCollectionRef() );
-        if($collection)
-        {
-          $options['code_prefix'] = $collection->getCodePrefix();
-          $options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
-          $options['code_suffix'] = $collection->getCodeSuffix();
-          $options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
-        }
-      }
+    if(isset($values['collection_ref']))
+      $col = $values['collection_ref'];
+    else
+      $col = $this->getObject()->getCollectionRef();
+
+    $collection = Doctrine::getTable('Collections')->find($col);
+    if($collection)
+    {
+      $options['code_prefix'] = $collection->getCodePrefix();
+      $options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
+      $options['code_suffix'] = $collection->getCodeSuffix();
+      $options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
+    }
     $this->attachEmbedRecord('Codes', new CodesForm(DarwinTable::newObjectFromArray('Codes',$options)), $num);
   }
 

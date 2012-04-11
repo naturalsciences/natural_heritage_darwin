@@ -33,10 +33,10 @@ class specimenActions extends DarwinActions
 
   public function executeAddCode(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
-    $form->addCodes($number, array());
+    $form->addCodes($number, array('collection_ref' => $request->getParameter('collection_id', null)));
     return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number));
   }
 
