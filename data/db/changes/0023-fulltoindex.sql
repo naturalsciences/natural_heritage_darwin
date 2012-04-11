@@ -9,6 +9,8 @@ UPDATE catalogue_properties SET
                 property_method_indexed = COALESCE(fullToIndex(property_method),''),
                 property_qualifier_indexed = COALESCE(fullToIndex(property_qualifier),''); 
 
+UPDATE bibliography set title_indexed = fullToIndex(title);
+
 UPDATE chronostratigraphy SET
                 name_order_by = fullToIndex(name);
 
@@ -17,9 +19,6 @@ UPDATE collections SET
             
 UPDATE expeditions SET 
                 name_indexed = fullToIndex(name);
-
-UPDATE habitats SET 
-                code_indexed = fullToIndex(code);
 
 UPDATE identifications SET 
                 value_defined_indexed = COALESCE(fullToIndex(value_defined),'');
@@ -32,12 +31,6 @@ UPDATE lithostratigraphy SET
 UPDATE mineralogy SET 
                 name_order_by = fullToIndex(name),
                 formule_indexed = fullToIndex(formule);
-
-UPDATE multimedia SET 
-                title_indexed = fullToIndex(title);
-
-UPDATE multimedia_keywords SET 
-                keyword_indexed = fullToIndex(keyword);
 
 UPDATE people SET 
                 formated_name_indexed = COALESCE(fullToIndex(formated_name),''),
@@ -100,3 +93,5 @@ UPDATE darwin_flat f SET
      gtu_country_tag_indexed = ( select lineToTagArray(taggr.tag_value) from tag_groups taggr WHERE taggr.gtu_ref=f.gtu_ref
         AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country')
 ;
+
+
