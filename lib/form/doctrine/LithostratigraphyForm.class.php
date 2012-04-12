@@ -16,6 +16,8 @@ class LithostratigraphyForm extends BaseLithostratigraphyForm
     $this->widgetSchema['table'] = new sfWidgetFormInputHidden(array('default'=>'lithostratigraphy'));
     $this->widgetSchema['name'] = new sfWidgetFormInput();
     $this->widgetSchema['name']->setAttributes(array('class'=>'large_size'));
+    $this->validatorSchema['name']->setOption('trim', true);
+
     $this->widgetSchema['color'] = new widgetFormColorPicker();    
     $this->widgetSchema['color']->setAttributes(array('class'=>'vsmall_size'));    
     $statuses = array('valid'=>$this->getI18N()->__('valid'), 'invalid'=>$this->getI18N()->__('invalid'), 'deprecated'=>$this->getI18N()->__('deprecated'));
