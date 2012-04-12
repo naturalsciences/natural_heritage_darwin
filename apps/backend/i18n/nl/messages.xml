@@ -1491,6 +1491,10 @@
         <source>Saved Specimens list</source>
         <target>Lijst met bewaarde specimens</target>
       </trans-unit>
+          <trans-unit id="1703">
+        <source>This widget allow you to add a bibliographic reference of the item</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="88">
         <source>Choose a Lithologic unit</source>
         <target>Een Lithologische eenheid kiezen</target>
@@ -2527,6 +2531,10 @@
         <source>Loan status</source>
         <target>Status van de ontlening</target>
       </trans-unit>
+          <trans-unit id="1704">
+        <source>This widget allow you to add a file related to the item - This can either be a document describing the item or an illustration of it.</source>
+        <target></target>
+      </trans-unit>
           <trans-unit id="1367">
         <source>Whom are you looking for</source>
         <target>Wie zoekt u</target>
@@ -2541,6 +2549,10 @@
       </trans-unit>
           <trans-unit id="1647">
         <source>Add multiple items</source>
+        <target></target>
+      </trans-unit>
+          <trans-unit id="1705">
+        <source>Suggestions / Report problem</source>
         <target></target>
       </trans-unit>
           <trans-unit id="1375">
