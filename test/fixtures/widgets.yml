@@ -293,7 +293,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true
-        title_perso: Informative Workflow
+        title_perso: Suggestions / Report problem
     u1ws23:
         User: u1
         col_num: 2
@@ -394,7 +394,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true
-        title_perso: Informative Workflow
+        title_perso: Suggestions / Report problem
 
     u1wtax10:
         User: u1
@@ -1050,7 +1050,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true
-        title_perso: Informative Workflow
+        title_perso: Suggestions / Report problem
     u1sp1:
         User: u1
         col_num: 1
@@ -1322,7 +1322,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true
-        title_perso: Informative Workflow
+        title_perso: Suggestions / Report problem
 
     u1spi11:
         User: u1

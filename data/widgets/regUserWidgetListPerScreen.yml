@@ -524,7 +524,7 @@ sw22:
    order_by: 10
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
 
 sw23:
@@ -658,7 +658,7 @@ spi11:
    order_by: 2
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
 
 spi12:
@@ -759,7 +759,7 @@ sp13:
    order_by: 6
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
 
 sp14:
@@ -882,7 +882,7 @@ tw10:
    mandatory: false
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
 
 tw11:
@@ -980,7 +980,7 @@ chw8:
    order_by: 8
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
 
 chw9:
@@ -1079,7 +1079,7 @@ lhw8:
    order_by: 8
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
 
 lhw9:
@@ -1178,7 +1178,7 @@ liw8:
    order_by: 6
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
 
 liw9:
@@ -1288,7 +1288,7 @@ miw9:
    order_by: 6
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
 
 miw10:
@@ -1376,7 +1376,7 @@ pe8:
    order_by: 8
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
 
 pe9:
@@ -1442,7 +1442,7 @@ ins7:
    order_by: 7
    opened: true
    visible: true
-   title_perso: Informative Workflow 
+   title_perso: Suggestions / Report problem 
    all_public: true      
    
 ins8:
@@ -1827,7 +1827,7 @@ gtu4:
    order_by: 4
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
 
 gtu5:
@@ -1879,5 +1879,5 @@ u1wmetto4:
    order_by: 1
    opened: true
    visible: true
-   title_perso: Informative Workflow
+   title_perso: Suggestions / Report problem
    all_public: true
