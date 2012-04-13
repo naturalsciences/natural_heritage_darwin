@@ -133,9 +133,14 @@ class Multimedia extends BaseMultimedia
     return filesize($this->getFullURI());
   }
 
+  public function hasPreview()
+  {
+    if(in_array($this->getMimeType() ,array('image/png', 'image/jpeg') ) )
+      return true;
+  }
   public function getPreview($new_w = 200, $new_h = 200)
   {
-    if(in_array($this->getMimeType(),array('png' => 'image/png', 'jpg' => 'image/jpeg') ) )
+    if($this->hasPreview())
     {
       $src_img = '';
       if($this->getMimeType() == 'image/png') {

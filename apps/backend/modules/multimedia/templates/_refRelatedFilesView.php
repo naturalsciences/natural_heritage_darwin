@@ -20,7 +20,7 @@
         <tr class="row_num_<?php echo $row_num;?>">
           <td>
             <?php $alt=($file->getDescription()!='')?$file->getTitle().' / '.$file->getDescription():$file->getTitle();?>
-            <?php  /*If image => preview*/ if(in_array($file->getMimeType() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
+            <?php if($file->hasPreview()):?>
               <a href="<?php echo url_for('multimedia/downloadFile?id='.$file->getId());?>" alt="<?php echo $alt;?>" title="<?php echo $alt;?>"><img src="<?php echo url_for('multimedia/preview?id='.$file->getId());?>" alt="<?php echo $alt;?>" width="100" /></a>
             <?php else:?>
               <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId(), array('alt'=>$alt, 'title'=>$alt)) ; ?>

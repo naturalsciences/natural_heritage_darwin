@@ -981,18 +981,19 @@ a#register_link, a#login_lostpwd
   margin-right: auto;
 }
 
-td.line h3 {
+.borded h3 {
   border-bottom:1px solid #5BAABD;
   margin-bottom:6px;
   padding-bottom:4px;
 }
-
+/*
 td.line h3 a {
-  vertical-align:middle;
+
   cursor:pointer;
-}
+}*/
 
 div.files {
+  vertical-align:middle;
   float:left;
   margin-right:2px;
   height:120px;
@@ -1000,21 +1001,12 @@ div.files {
   overflow:hidden;
   border:1px solid #5BAABD;
   padding:4px;
-}
-
-div.files table {
-  width:100%;
   text-align:center;
-}
-
-div.files table tr:first-child td {
-  height:100px;
-  width:100%;
-}
-
-div.files table tr:nth-child(2) td {
-  height:20px;
-  width:100%;
-  white-space:nowrap;
   text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+div.files .file_title {
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
