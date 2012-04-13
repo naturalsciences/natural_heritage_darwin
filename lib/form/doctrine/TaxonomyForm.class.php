@@ -15,6 +15,7 @@ class TaxonomyForm extends BaseTaxonomyForm
     $this->widgetSchema['table'] = new sfWidgetFormInputHidden(array('default'=>'taxonomy'));
     $this->widgetSchema['name'] = new sfWidgetFormInput();
     $this->widgetSchema['name']->setAttributes(array('class'=>'large_size'));
+    $this->validatorSchema['name']->setOption('trim', true);
     $statuses = array('valid'=>$this->getI18N()->__('valid'), 'invalid'=>$this->getI18N()->__('invalid'), 'deprecated'=>$this->getI18N()->__('deprecated'));
     $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
         'choices'  => $statuses,

@@ -16,7 +16,7 @@ class MultimediaForm extends BaseMultimediaForm
 
     $this->widgetSchema['title'] = new sfWidgetFormInput();
     $this->widgetSchema['title']->setAttributes(array('class'=>'medium_small_size'));
-    $this->validatorSchema['title'] = new sfValidatorString(array('required'=>false));
+    $this->validatorSchema['title'] = new sfValidatorString(array('required'=>false,'trim'=>true));
     
     if($this->getObject()->isNew())
     {

@@ -16,6 +16,8 @@ class ChronostratigraphyForm extends BaseChronostratigraphyForm
     $this->widgetSchema['table'] = new sfWidgetFormInputHidden(array('default'=>'chronostratigraphy'));
     $this->widgetSchema['name'] = new sfWidgetFormInput();
     $this->widgetSchema['name']->setAttributes(array('class'=>'large_size'));
+    $this->validatorSchema['name']->setOption('trim', true);
+
     $this->widgetSchema['lower_bound'] = new sfWidgetFormInput();
     $this->widgetSchema['lower_bound']->setAttributes(array('class'=>'small_size datesNum'));
     $this->widgetSchema['upper_bound'] = new sfWidgetFormInput();
