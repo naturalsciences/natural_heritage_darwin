@@ -107,46 +107,9 @@
             </td>
             <td></td>
           </tr>
-          <tr>
-            <td class="line" colspan="2">
-            <?php if($taxFilesCount):?>
-              <h3><?php echo __('Related Files').' <a id="tax_file_expand" title="'.__('Show related files').'" alt="'.__('Show related files').'">'.image_tag('blue_expand.png', array('alt'=>__('Show related files')).'</a>');?></h3>
-              <div id="tax_files_list" class="hidden">
-              <?php foreach($files as $file):?>
-                <?php if($file->getReferencedRelation()=='taxonomy'):?>
-                  <div class="files">
-                    <table>
-                    <tr><td>
-                      <?php $alt=($file->getDescription()!='')?$file->getTitle().' / '.$file->getDescription():$file->getTitle();?>
-                      <?php  /*If image => preview*/ if(in_array($file->getMimeType() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
-                        <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$file->getId());?>" alt="<?php echo $alt;?>" title="<?php echo $alt;?>" ><img src="<?php echo url_for('multimedia/preview?id='.$file->getId());?>" alt="<?php echo $alt;?>" width="100" /></a>
-                      <?php else:?>
-                        <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId(), array('alt'=> $alt, 'title' => $alt)) ; ?>
-                      <?php endif;?>
-                    </td></tr>
-                    <tr><td><?php echo $file->getTitle();?></td></tr>
-                    </table>
-                  </div>
-                <?php endif;?>
-              <?php endforeach;?>
-              </div>
-              <script type="text/javascript">
-                 $('#tax_file_expand').click(function()
-                 {
-                   if($('#tax_files_list').is(":hidden"))
-                   {
-                     $(this).find('img').attr('src', '/images/blue_expand_up.png');
-                     $('#tax_files_list').slideDown();
-                   }
-                   else {
-                     $(this).find('img').attr('src', '/images/blue_expand.png');
-                     $('#tax_files_list').slideUp();
-                   }
-                 });
-              </script>
-            <?php endif;?>
-            </td>
-          </tr>
+          <tr><td colspan="2">
+            <?php include_partial('multimedia_classification', array('files' => $files, 'count' => $taxFilesCount,'type' => 'taxonomy')) ; ?>
+          </td></tr>
         <?php endif ; ?>
         <?php if($specimen->getChronoRef()) : ?>
           <tr>
@@ -176,46 +139,9 @@
               </div>          
             </td>
           </tr>
-          <tr>
-            <td class="line" colspan="2">
-            <?php if($chronoFilesCount):?>
-              <h3><?php echo __('Related Files').' <a id="chrono_file_expand" title="'.__('Show related files').'" alt="'.__('Show related files').'">'.image_tag('blue_expand.png', array('alt'=>__('Show related files')).'</a>');?></h3>
-              <div id="chrono_files_list" class="hidden">
-              <?php foreach($files as $file):?>
-                <?php if($file->getReferencedRelation()=='chronostratigraphy'):?>
-                  <div class="files">
-                    <table>
-                    <tr><td>
-                      <?php $alt=($file->getDescription()!='')?$file->getTitle().' / '.$file->getDescription():$file->getTitle();?>
-                      <?php  /*If image => preview*/ if(in_array($file->getMimeType() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
-                        <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$file->getId());?>" alt="<?php echo $alt;?>" title="<?php echo $alt;?>" ><img src="<?php echo url_for('multimedia/preview?id='.$file->getId());?>" alt="<?php echo $alt;?>" width="100" /></a>
-                      <?php else:?>
-                        <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId(), array('alt'=> $alt, 'title' => $alt)) ; ?>
-                      <?php endif;?>
-                    </td></tr>
-                    <tr><td><?php echo $file->getTitle();?></td></tr>
-                    </table>
-                  </div>
-                <?php endif;?>
-              <?php endforeach;?>
-              </div>
-              <script type="text/javascript">
-                  $('#chrono_file_expand').click(function()
-                  {
-                    if($('#chrono_files_list').is(":hidden"))
-                    {
-                      $(this).find('img').attr('src', '/images/blue_expand_up.png');
-                      $('#chrono_files_list').slideDown();
-                    }
-                    else {
-                      $(this).find('img').attr('src', '/images/blue_expand.png');
-                      $('#chrono_files_list').slideUp();
-                    }
-                  });
-              </script>
-            <?php endif;?>
-            </td>
-          </tr>
+          <tr><td colspan="2">
+            <?php include_partial('multimedia_classification', array('files' => $files, 'count' => $chronoFilesCount,'type' => 'chronostratigraphy')) ; ?>
+          </td></tr>
         <?php endif ; ?>
         <?php if($specimen->getLithoRef()) : ?>
           <tr>
@@ -245,47 +171,10 @@
               </div>          
             </td>
           </tr>
-          <tr>
-            <td class="line" colspan="2">
-            <?php if($lithoFilesCount):?>
-              <h3><?php echo __('Related Files').' <a id="litho_file_expand" title="'.__('Show related files').'" alt="'.__('Show related files').'">'.image_tag('blue_expand.png', array('alt'=>__('Show related files')).'</a>');?></h3>
-              <div id="litho_files_list" class="hidden">
-              <?php foreach($files as $file):?>
-                <?php if($file->getReferencedRelation()=='lithostratigraphy'):?>
-                  <div class="files">
-                    <table>
-                    <tr><td>
-                      <?php $alt=($file->getDescription()!='')?$file->getTitle().' / '.$file->getDescription():$file->getTitle();?>
-                      <?php  /*If image => preview*/ if(in_array($file->getMimeType() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
-                        <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$file->getId());?>" alt="<?php echo $alt;?>" title="<?php echo $alt;?>" ><img src="<?php echo url_for('multimedia/preview?id='.$file->getId());?>" alt="<?php echo $alt;?>" width="100" /></a>
-                      <?php else:?>
-                        <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId(), array('alt'=> $alt, 'title' => $alt)) ; ?>
-                      <?php endif;?>
-                    </td></tr>
-                    <tr><td><?php echo $file->getTitle();?></td></tr>
-                    </table>
-                  </div>
-                <?php endif;?>
-              <?php endforeach;?>
-              </div>
-              <script type="text/javascript">
-                  $('#litho_file_expand').click(function()
-                  {
-                    if($('#litho_files_list').is(":hidden"))
-                    {
-                      $(this).find('img').attr('src', '/images/blue_expand_up.png');
-                      $('#litho_files_list').slideDown();
-                    }
-                    else {
-                      $(this).find('img').attr('src', '/images/blue_expand.png');
-                      $('#litho_files_list').slideUp();
-                    }
-                  });
-              </script>
-            <?php endif;?>
-            </td>
-          </tr>
-        <?php endif ; ?>       
+          <tr><td colspan="2">
+            <?php include_partial('multimedia_classification', array('files' => $files, 'count' => $lithoFilesCount,'type' => 'lithostratigraphy')) ; ?>
+          </td></tr>
+        <?php endif ; ?>
         <?php if($specimen->getLithologyRef()) : ?>
           <tr>
             <td class="line">
@@ -314,47 +203,10 @@
               </div>          
             </td>
           </tr>
-          <tr>
-            <td class="line" colspan="2">
-            <?php if($lithologyFilesCount):?>
-              <h3><?php echo __('Related Files').' <a id="lithology_file_expand" title="'.__('Show related files').'" alt="'.__('Show related files').'">'.image_tag('blue_expand.png', array('alt'=>__('Show related files')).'</a>');?></h3>
-              <div id="lithology_files_list" class="hidden">
-              <?php foreach($files as $file):?>
-                <?php if($file->getReferencedRelation()=='lithology'):?>
-                  <div class="files">
-                    <table>
-                    <tr><td>
-                      <?php $alt=($file->getDescription()!='')?$file->getTitle().' / '.$file->getDescription():$file->getTitle();?>
-                      <?php  /*If image => preview*/ if(in_array($file->getMimeType() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
-                        <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$file->getId());?>" alt="<?php echo $alt;?>" title="<?php echo $alt;?>" ><img src="<?php echo url_for('multimedia/preview?id='.$file->getId());?>" alt="<?php echo $alt;?>" width="100" /></a>
-                      <?php else:?>
-                        <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId(), array('alt'=> $alt, 'title' => $alt)) ; ?>
-                      <?php endif;?>
-                    </td></tr>
-                    <tr><td><?php echo $file->getTitle();?></td></tr>
-                    </table>
-                  </div>
-                <?php endif;?>
-              <?php endforeach;?>
-              </div>
-              <script type="text/javascript">
-                  $('#lithology_file_expand').click(function()
-                  {
-                    if($('#lithology_files_list').is(":hidden"))
-                    {
-                      $(this).find('img').attr('src', '/images/blue_expand_up.png');
-                      $('#lithology_files_list').slideDown();
-                    }
-                    else {
-                      $(this).find('img').attr('src', '/images/blue_expand.png');
-                      $('#lithology_files_list').slideUp();
-                    }
-                  });
-              </script>
-            <?php endif;?>
-            </td>
-          </tr>
-        <?php endif ; ?>  
+          <tr><td colspan="2">
+            <?php include_partial('multimedia_classification', array('files' => $files, 'count' => $lithologyFilesCount,'type' => 'lithology')) ; ?>
+          </td></tr>
+        <?php endif ; ?>
         <?php if($specimen->getMineralRef()) : ?>
           <tr>
             <td class="line">
@@ -375,54 +227,17 @@
                    {
                      $.get('<?php echo url_for("search/tree?table=mineralogy&id=".$specimen->getMineralRef()) ;?>',function (html){
                        $('#mineral_tree').html(html).slideDown();
-                       });
+                     });
                    }
                    $('#mineral_tree').slideUp();
                  });
               </script>
-              </div>          
-            </td>
-          </tr>
-          <tr>
-            <td class="line" colspan="2">
-            <?php if($mineraloFilesCount):?>
-              <h3><?php echo __('Related Files').' <a id="mineralo_file_expand" title="'.__('Show related files').'" alt="'.__('Show related files').'">'.image_tag('blue_expand.png', array('alt'=>__('Show related files')).'</a>');?></h3>
-              <div id="mineralo_files_list" class="hidden">
-              <?php foreach($files as $file):?>
-                <?php if($file->getReferencedRelation()=='mineralogy'):?>
-                  <div class="files">
-                    <table>
-                    <tr><td>
-                      <?php $alt=($file->getDescription()!='')?$file->getTitle().' / '.$file->getDescription():$file->getTitle();?>
-                      <?php  /*If image => preview*/ if(in_array($file->getMimeType() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
-                        <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$file->getId());?>" alt="<?php echo $alt;?>" title="<?php echo $alt;?>" ><img src="<?php echo url_for('multimedia/preview?id='.$file->getId());?>" alt="<?php echo $alt;?>" width="100" /></a>
-                      <?php else:?>
-                        <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId(), array('alt'=> $alt, 'title' => $alt)) ; ?>
-                      <?php endif;?>
-                    </td></tr>
-                    <tr><td><?php echo $file->getTitle();?></td></tr>
-                    </table>
-                  </div>
-                <?php endif;?>
-              <?php endforeach;?>
               </div>
-              <script type="text/javascript">
-                  $('#mineralo_file_expand').click(function()
-                  {
-                    if($('#mineralo_files_list').is(":hidden"))
-                    {
-                      $(this).find('img').attr('src', '/images/blue_expand_up.png');
-                      $('#mineralo_files_list').slideDown();
-                    }
-                    else {
-                      $(this).find('img').attr('src', '/images/blue_expand.png');
-                      $('#mineralo_files_list').slideUp();
-                    }
-                  });
-              </script>
-            <?php endif;?>
             </td>
           </tr>
+          <tr><td colspan="2">
+            <?php include_partial('multimedia_classification', array('files' => $files, 'count' => $mineraloFilesCount,'type' => 'mineralogy')) ; ?>
+          </td></tr>
         <?php endif ; ?>
         </tbody>
       </table>      
@@ -474,47 +289,11 @@
             <?php endif ; ?>
           </td>
         </tr>
-        <tr>
-          <td class="line" colspan="2">
-          <?php if($specFilesCount):?>
-            <h3><?php echo __('Related Files').' <a id="spec_file_expand" title="'.__('Show related files').'" alt="'.__('Show related files').'">'.image_tag('blue_expand.png', array('alt'=>__('Show related files')).'</a>');?></h3>
-            <div id="spec_files_list" class="hidden">
-            <?php foreach($files as $file):?>
-              <?php if($file->getReferencedRelation()=='specimens' || $file->getReferencedRelation()=='specimen_individuals' || $file->getReferencedRelation()=='specimen_parts'):?>
-                <div class="files">
-                  <table>
-                  <tr><td>
-                    <?php $alt=($file->getDescription()!='')?$file->getTitle().' / '.$file->getDescription():$file->getTitle();?>
-                    <?php  /*If image => preview*/ if(in_array($file->getMimeType() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
-                      <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$file->getId());?>" alt="<?php echo $alt;?>" title="<?php echo $alt;?>" ><img src="<?php echo url_for('multimedia/preview?id='.$file->getId());?>" alt="<?php echo $alt;?>" width="100" /></a>
-                    <?php else:?>
-                      <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId(), array('alt'=> $alt, 'title' => $alt)) ; ?>
-                    <?php endif;?>
-                  </td></tr>
-                  <tr><td><?php echo $file->getTitle();?></td></tr>
-                  </table>
-                </div>
-              <?php endif;?>
-            <?php endforeach;?>
-            </div>
-            <script type="text/javascript">
-                $('#spec_file_expand').click(function()
-                {
-                  if($('#spec_files_list').is(":hidden"))
-                  {
-                    $(this).find('img').attr('src', '/images/blue_expand_up.png');
-                    $('#spec_files_list').slideDown();
-                  }
-                  else {
-                    $(this).find('img').attr('src', '/images/blue_expand.png');
-                    $('#spec_files_list').slideUp();
-                  }
-                });
-            </script>
-          <?php endif;?>
-          </td>
-        </tr>
+        <tr><td colspan="2">
+          <?php include_partial('multimedia_classification', array('files' => $files, 'count' => $specFilesCount,'type' => 'spec')) ; ?>
+        </td></tr>
       </table>
+
     </div>
 
     <h2 class="title"><?php echo __("You think there's a mistake ? please suggest us a correction") ?></h2>  
@@ -525,9 +304,25 @@
   <div class="check_right"> 
     <input type="button" id="close_butt" value="<?php echo __('Close this record'); ?>">
   </div>  
-  <script>
-    $('#close_butt').click(function(){
-      window.close() ;
-    });
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#close_butt').click(function(){
+        window.close() ;
+      });
+
+      $('.expand_button').click(function()
+      {
+        zone = $(this).closest('td').find('.expand_zone');
+        if(zone.is(":hidden"))
+        {
+          $(this).find('img').attr('src', '/images/blue_expand_up.png');
+          zone.slideDown();
+        }
+        else {
+          $(this).find('img').attr('src', '/images/blue_expand.png');
+          zone.slideUp();
+        }
+      });
+  });
   </script> 
 </div>
