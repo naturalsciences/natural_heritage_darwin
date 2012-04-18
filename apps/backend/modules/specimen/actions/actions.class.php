@@ -210,7 +210,7 @@ class specimenActions extends DarwinActions
     $this->form = $this->getSpecimenForm($request, true);
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($this->form->getObject()->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
+      if(in_array($this->form->getObject()->getCollectionRef(),Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
         $this->redirect("specimen/view?id=".$request->getParameter('id')) ;
     }
     $this->loadWidgets();
@@ -289,7 +289,7 @@ class specimenActions extends DarwinActions
     */
   public function executeSearch(sfWebRequest $request)
   {
-    // Forward to a 404 page if the method used is not a post
+//     // Forward to a 404 page if the method used is not a post
     $this->forward404Unless($request->isMethod('post'));
     $this->setCommonValues('specimen', 'collection_name', $request);
     $item = $request->getParameter('searchSpecimen',array(''));
@@ -312,6 +312,7 @@ class specimenActions extends DarwinActions
       // Bind form with data contained in searchExpedition array
       $form->bind($request->getParameter('searchSpecimen'));
       // Test that the form binded is still valid (no errors)
+
       if ($form->isValid())
       {
         // Define all properties that will be either used by the data query or by the pager
@@ -332,10 +333,11 @@ class specimenActions extends DarwinActions
         if (! $this->pagerLayout->getPager()->getExecuted())
            $this->specimens = $this->pagerLayout->execute();
 
+
         $specs = array();
         foreach($this->specimens as $specimen)
         {
-          $specs[$specimen->getSpecRef()] = $specimen->getSpecRef();
+          $specs[$specimen->getSpecimenRef()] = $specimen->getSpecimenRef();
         }
         $specCodes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens', $specs);
         $this->codes = array();
@@ -378,7 +380,7 @@ class specimenActions extends DarwinActions
     $this->forward404Unless($spec, 'Specimen does not exist');
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
+      if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
         $this->forwardToSecureAction();
     }
     try
@@ -399,7 +401,7 @@ class specimenActions extends DarwinActions
   
   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimenSearch')->findOneBySpecRef($request->getParameter('id')),'Specimen does not exist');  
+    $this->forward404Unless($this->specimen = Doctrine::getTable('Specimens')->find($request->getParameter('id')),'Specimen does not exist');  
     $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
   }  
 }

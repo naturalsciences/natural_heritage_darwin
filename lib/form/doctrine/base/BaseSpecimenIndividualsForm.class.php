@@ -28,6 +28,7 @@ abstract class BaseSpecimenIndividualsForm extends BaseFormDoctrine
       'specimen_individuals_count_min' => new sfWidgetFormInputText(),
       'specimen_individuals_count_max' => new sfWidgetFormInputText(),
       'with_parts'                     => new sfWidgetFormInputCheckbox(),
+      'ind_ident_ids'                  => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -44,6 +45,7 @@ abstract class BaseSpecimenIndividualsForm extends BaseFormDoctrine
       'specimen_individuals_count_min' => new sfValidatorInteger(array('required' => false)),
       'specimen_individuals_count_max' => new sfValidatorInteger(array('required' => false)),
       'with_parts'                     => new sfValidatorBoolean(array('required' => false)),
+      'ind_ident_ids'                  => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('specimen_individuals[%s]');

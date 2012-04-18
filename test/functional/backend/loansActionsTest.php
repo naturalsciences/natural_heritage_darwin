@@ -76,5 +76,5 @@ $browser->
   info('3 - Look for our new loan in search')->
   post('/loan/search',array('orderby'=>'name', 'orderdir'=>'desc', 'page'=>1, 'is_choose'=>0,'loans_filters'=> array('name' => 'loan for test')))->
   with('response')->begin()->
-  checkElement('table.results tbody tr td:first','/loan for test/')->    
+    checkElement('table.results tbody tr td:first','/loan for test/')->
   end();    

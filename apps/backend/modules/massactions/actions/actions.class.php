@@ -33,7 +33,7 @@ class massactionsActions extends DarwinActions
       }
 
       $items_ids = $actions['item_list'];
-      $this->items = Doctrine::getTable('SpecimenSearch')->getByMultipleIds($items_ids,$actions['source'], $this->getUser()->getId());
+      $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids,$actions['source'], $this->getUser()->getId());
 
     }
 
@@ -56,7 +56,7 @@ class massactionsActions extends DarwinActions
   {
     $this->source = $request->getParameter('source','specimen');
     $items_ids = $this->getUser()->getAllPinned($this->source);
-    $this->items = Doctrine::getTable('SpecimenSearch')->getByMultipleIds($items_ids, $this->source, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
+    $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids, $this->source, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
   }
   
 }

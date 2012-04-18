@@ -55,10 +55,7 @@ class individualsActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     if($request->hasParameter('id') && !$this->getUser()->isA(Users::ADMIN))
     {    
-      $spec = Doctrine::getTable('SpecimenSearch')->findOneByIndividualRef($request->getParameter('id'));
-      if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('individual_ref',
-                                                                                                      $request->getParameter('id'), 
-                                                                                                      $this->getUser()->getId())))    
+      if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
         $this->redirect("individuals/view?id=".$request->getParameter('id')) ;  
     }
     $this->individual = $this->getSpecimenIndividualsForm($request);  
@@ -131,7 +128,8 @@ class individualsActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->view_only=true ;
     if(!$this->getUser()->isA(Users::ADMIN))
     {    
-      if(in_array($this->specimen->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('spec_ref',$this->specimen->getId(), $this->getUser()->getId())))  
+      if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $this->specimen->getId(), $this->getUser()->getId()))
+ 
       // if this user is not in collection Right, so the overview is displayed in readOnly
         $this->view_only = true;
     }
@@ -139,10 +137,9 @@ class individualsActions extends DarwinActions
 
   public function executeAddIdentification(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
-    if(in_array($request->getParameter('id'),Doctrine::getTable('Specimens')->testNoRightsCollections('individual_ref',
-                                                                                                      $request->getParameter('id'), 
-                                                                                                      $this->getUser()->getId())))  
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
+
       $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
     $order_by = intval($request->getParameter('order_by',0));
@@ -162,9 +159,8 @@ class individualsActions extends DarwinActions
   public function executeAddIdentifier(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
-    if(in_array($request->getParameter('id'),Doctrine::getTable('Specimens')->testNoRightsCollections('individual_ref',
-                                                                                                      $request->getParameter('id'), 
-                                                                                                      $this->getUser()->getId())))  
+    if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
+
       $this->forwardToSecureAction();
 
     $this->spec_individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('individual_id'));
@@ -215,36 +211,36 @@ class individualsActions extends DarwinActions
   
   public function executeDelete(sfWebRequest $request)
   {
-    if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();  
-    $spec = Doctrine::getTable('SpecimenSearch')->findOneByIndividualRef($request->getParameter('id'));
-    $this->forward404Unless($spec, 'Individual does not exist');
+    if(!$this->getUser()->isAtLeast(Users::ENCODER))
+      $this->forwardToSecureAction();  
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('individual_ref',$request->getParameter('id'), $this->getUser()->getId())))
+      if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
         $this->forwardToSecureAction();
     }
-    $part = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id'));    
+    $ind = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id'));
+    $this->forward404Unless($ind, 'Individual does not exist');
     try
     {
-      $part->delete();
+      $ind->delete();
     }
     catch(Doctrine_Connection_Pgsql_Exception $e)
     {
       $request->checkCSRFProtection();
-      $this->form = new specimenIndividualsForm($spec);
+      $this->form = new specimenIndividualsForm($ind);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
       $this->form->getErrorSchema()->addError($error); 
       $this->loadWidgets();
       $this->setTemplate('edit');
       return ;
     }
-    $this->redirect('individuals/overview?spec_id='.$spec->getSpecRef());
+    $this->redirect('individuals/overview?spec_id='.$ind->getSpecimenRef());
   }  
   
   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimenSearch')->findOneByIndividualRef($request->getParameter('id')),'Individual does not exist');  
-    $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
+    $this->forward404Unless($this->individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id')),'Individual does not exist');
+    $this->loadWidgets(null,$this->individual->Specimens->getCollectionRef()); 
   }
 
   public function executeAddBiblio(sfWebRequest $request)
@@ -256,5 +252,4 @@ class individualsActions extends DarwinActions
     $form->addBiblio($number, array( 'bibliography_ref' => $bibliography_ref), $request->getParameter('iorder_by',0));
     return $this->renderPartial('specimen/biblio_associations',array('form' => $form['newBiblio'][$number], 'row_num'=>$number));
   }
-
 }

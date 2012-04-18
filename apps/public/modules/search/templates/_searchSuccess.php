@@ -29,15 +29,15 @@
           </tr>
         </thead>
         <?php $i = 0 ; ?>
-        <?php foreach($search as $specimen):?>
+        <?php foreach($search as $individual):?>
           <tbody>
             <tr>
               <td style="vertical-align:middle;">
-                  <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'search/view?id='.$specimen->getIndividualRef(),array('popup' => true));?>
+                  <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'search/view?id='.$individual->getId(),array('popup' => true));?>
               </td>
-              <?php include_partial('result_content_specimen', array('specimen' => $specimen, 'id' => $i++)); ?>
-              <?php include_partial('tagCommonName',array('common_names'=>$common_names->getRawValue(), 'spec'=> $specimen)) ; ?>
-              <?php include_partial('result_content_individual', array('specimen' => $specimen)); ?>                                                       
+              <?php include_partial('result_content_specimen', array('specimen' => $individual->SpecimensFlat, 'id' => $i++)); ?>
+              <?php include_partial('tagCommonName',array('common_names'=>$common_names->getRawValue(), 'spec'=> $individual->SpecimensFlat)) ; ?>
+              <?php include_partial('result_content_individual', array('specimen' => $individual)); ?>                                                       
             </tr>            
           </tbody>
         <?php endforeach;?>

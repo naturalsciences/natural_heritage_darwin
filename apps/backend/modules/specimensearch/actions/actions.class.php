@@ -14,7 +14,7 @@ class specimensearchActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new SpecimenSearchFormFilter($request->getParameter('specimen_search_filters'),array('user' => $this->getUser()));
+    $this->form = new SpecimensFlatFormFilter($request->getParameter('specimen_search_filters'),array('user' => $this->getUser()));
 
     $this->form->setDefault('rec_per_page',$this->getUser()->fetchRecPerPage());
 
@@ -25,7 +25,7 @@ class specimensearchActions extends DarwinActions
       $criterias = unserialize($saved_search->getSearchCriterias());
 
       $this->fields = $saved_search->getVisibleFieldsInResultStr();
-      Doctrine::getTable('SpecimenSearch')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+      Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
       $this->form->bind($criterias['specimen_search_filters']) ;
     }
     else $this->form->addGtuTagValue(0);    
@@ -47,7 +47,7 @@ class specimensearchActions extends DarwinActions
     // Modify the s_url to call the searchResult action when on result page and playing with pager
     $this->s_url = 'specimensearch/search'.'?is_choose='.$this->is_choose;
     // Initialize filter
-    $this->form = new SpecimenSearchFormFilter(null,array('user' => $this->getUser()));
+    $this->form = new SpecimensFlatFormFilter(null,array('user' => $this->getUser()));
     // If the search has been triggered by clicking on the search button or with pinned specimens
     if(($request->isMethod('post') && $request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
     {
@@ -101,7 +101,7 @@ class specimensearchActions extends DarwinActions
       if(isset($criterias['specimen_search_filters']))
       {
         // Bring all the required/necessary widgets on page
-        Doctrine::getTable('SpecimenSearch')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+        Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
         if($saved_search->getisOnlyId() && $criterias['specimen_search_filters']['spec_ids']=='')
           $criterias['specimen_search_filters']['spec_ids'] = '0';
         $this->form->bind($criterias['specimen_search_filters']) ;
@@ -118,7 +118,7 @@ class specimensearchActions extends DarwinActions
         {
           $this->setTemplate('index');
           // Bring all the required/necessary widgets on page
-          Doctrine::getTable('SpecimenSearch')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+          Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
           $this->loadWidgets();
           return;
         }
@@ -129,19 +129,7 @@ class specimensearchActions extends DarwinActions
           $this->spec_lists = Doctrine::getTable('MySavedSearches')
             ->getListFor($this->getUser()->getId(), $this->form->getValue('what_searched'));
 
-
-          // Define all properties that will be either used by the data query or by the pager
-          // They take their values from the request. If not present, a default value is defined
-          $ordered_searched = ' spec_ref ';
-          if($this->source == 'individual')
-            $ordered_searched = ' individual_ref ';
-
           $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir);
-          if($this->source != 'part')
-          {
-            $query->orderby($this->orderBy . ' ' . $this->orderDir . ', ' . $ordered_searched );
-            $query->groupBy($ordered_searched . ', ' . $this->orderBy);
-          }
           //If export is defined export it!
           
           if($request->getParameter('export','') != '')
@@ -165,12 +153,7 @@ class specimensearchActions extends DarwinActions
           // Replace the count query triggered by the Pager to get the number of records retrieved
           $count_q = clone $query;//$pager->getCountQuery();
           // Remove from query the group by and order by clauses
-          $count_q = $count_q->select('count( distinct spec_ref)')->removeDqlQueryPart('groupby')->removeDqlQueryPart('orderby')->limit(0);
-          if($this->source == 'individual')
-            $count_q->select('count( distinct individual_ref)');
-
-          if($this->source == 'part')
-            $count_q->select('count( distinct part_ref)');
+          $count_q = $count_q->select('count(s.specimen_ref)')->removeDqlQueryPart('orderby')->limit(0);
 
           // Initialize an empty count query
           $counted = new DoctrineCounted();
@@ -190,7 +173,6 @@ class specimensearchActions extends DarwinActions
 
           //Load Codes and related for each item
           $this->loadRelated();
-
           $this->field_to_show = $this->getVisibleColumns($this->getUser(), $this->form);
           $this->defineFields($this->source);
           return $request->isXmlHttpRequest()? $this->renderPartial('searchSuccess'): null;
@@ -200,7 +182,7 @@ class specimensearchActions extends DarwinActions
 
     $this->setTemplate('index');
     if(isset($criterias['specimen_search_filters']))
-      Doctrine::getTable('SpecimenSearch')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
+      Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
     $this->loadWidgets();
   }
   
@@ -210,10 +192,15 @@ class specimensearchActions extends DarwinActions
     $spec_list = array();
     $part_list = array() ;
     foreach($this->specimensearch as $key=>$specimen)
-    {
-      $spec_list[] = $specimen->getSpecRef() ;
-        if( $this->source == 'part')
-          $part_list[] = $specimen->getPartRef();
+    {      
+      if( $this->source == 'part') {
+        $part_list[] = $specimen->getId();
+        $spec_list[] = $specimen->Individual->getSpecimenRef() ;
+      }
+      else {
+        $spec_list[] = $specimen->getSpecimenRef() ;
+      }
+
     }
     $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
     $this->codes = array();
@@ -239,7 +226,7 @@ class specimensearchActions extends DarwinActions
   * Compute different sources to get the columns that must be showed
   * 1) from form request 2) from session 3) from default value
   * @param sfBasicSecurityUser $user the user
-  * @param sfForm $form The SpecimenSearch form with the 'fields' field defined
+  * @param sfForm $form The filter form with the 'col_fields' field defined
   * @param bool $as_string specify if you want the return to be a string (concat of visible cols)
   * @return array of fields with check or uncheck or a list of visible fields separated by |
   */
@@ -280,11 +267,7 @@ class specimensearchActions extends DarwinActions
 
   public function executeIndividualTree(sfWebRequest $request)
   {
-    $spec = Doctrine::getTable('SpecimenSearch')->findOneBySpecRef($request->getParameter('id'));
-    if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('spec_ref',
-                                                                                                      $request->getParameter('id'), 
-                                                                                                      $this->getUser()->getId())))
-       
+    if(! Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
       $this->user_allowed = false ;  
     else 
       $this->user_allowed = true ;  
@@ -295,14 +278,11 @@ class specimensearchActions extends DarwinActions
 
   public function executePartTree(sfWebRequest $request)
   {
-    $spec = Doctrine::getTable('Specimensearch')->findOneByIndividualRef($request->getParameter('id'));
-    if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('individual_ref',
-                                                                                                      $request->getParameter('id'), 
-                                                                                                      $this->getUser()->getId())))
-       
+    if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
       $this->user_allowed = false ;  
     else 
-      $this->user_allowed = true ;      
+      $this->user_allowed = true ;
+ 
     if($this->getUser()->isA(Users::ADMIN)) $this->user_allowed = true ;        
     $this->parts = Doctrine::getTable('SpecimenParts')
       ->findForIndividual($request->getParameter('id'));
@@ -331,7 +311,7 @@ class specimensearchActions extends DarwinActions
   {
     $number = intval($request->getParameter('num'));
 
-    $form = new SpecimenSearchFormFilter(null,array('user' => $this->getUser()));
+    $form = new SpecimensFlatFormFilter(null,array('user' => $this->getUser()));
     $form->addGtuTagValue($number);
     return $this->renderPartial('andSearch',array('form' => $form['Tags'][$number], 'row_line'=>$number));
   }  
@@ -340,7 +320,7 @@ class specimensearchActions extends DarwinActions
   {
     $number = intval($request->getParameter('num'));
 
-    $form = new SpecimenSearchFormFilter(null,array('user' => $this->getUser()));
+    $form = new SpecimensFlatFormFilter(null,array('user' => $this->getUser()));
     $form->addCodeValue($number);
     return $this->renderPartial('specimensearchwidget/codeline',array('code' => $form['Codes'][$number], 'row_line'=>$number));
   }
@@ -395,25 +375,25 @@ class specimensearchActions extends DarwinActions
       unset($this->columns['specimen']['type']);
       $this->columns['individual'] = array(
         'individual_type' => array(
-          'individual_type_group',
+          'type_group',
           $this->getI18N()->__('Type'),),
         'sex' => array(
-          'individual_sex',
+          'sex',
           $this->getI18N()->__('Sex'),),
         'state' => array(
-          'individual_state',
+          'state',
           $this->getI18N()->__('State'),),
         'stage' => array(
-          'individual_stage',
+          'stage',
           $this->getI18N()->__('Stage'),),
         'social_status' => array(
-          'individual_social_status',
+          'social_status',
           $this->getI18N()->__('Social Status'),),
         'rock_form' => array(
-          'individual_rock_form',
+          'rock_form',
           $this->getI18N()->__('Rock Form'),),
         'individual_count' => array(
-          'individual_count_max',
+          'specimen_individuals_count_max',
           $this->getI18N()->__('Individual Count'),),
         );
     }
@@ -424,16 +404,16 @@ class specimensearchActions extends DarwinActions
       {
         $this->columns['part'] = array(
           'part' => array(
-            'part',
+            'specimen_part',
             $this->getI18N()->__('Part'),),
           'part_status' => array(
-            'part_status',
+            'specimen_status',
             $this->getI18N()->__('Part Status'),),
           'part_codes' => array(
             false,
             $this->getI18N()->__('Part Codes'),),            
           'part_count' => array(
-            'part_count_max',
+            'specimen_part_count_max',
             $this->getI18N()->__('Part Count'),),
           );      
       }
@@ -441,10 +421,10 @@ class specimensearchActions extends DarwinActions
       {
         $this->columns['part'] = array(
           'part' => array(
-            'part',
+            'specimen_part',
             $this->getI18N()->__('Part'),),
           'part_status' => array(
-            'part_status',
+            'specimen_status',
             $this->getI18N()->__('Part Status'),),
           'building' => array(
             'building',
@@ -484,7 +464,7 @@ class specimensearchActions extends DarwinActions
            false,
             $this->getI18N()->__('Part Codes'),),             
           'part_count' => array(
-            'part_count_max',
+            'specimen_part_count_max',
             $this->getI18N()->__('Part Count'),),
           );
         }

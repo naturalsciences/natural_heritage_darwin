@@ -37,14 +37,12 @@
  * @property Doctrine_Collection $CollectingMethods
  * @property Doctrine_Collection $CollectingTools
  * @property Doctrine_Collection $Specimens
+ * @property Doctrine_Collection $SpecimensFlat
  * @property Doctrine_Collection $SpecimenIndividuals
  * @property Doctrine_Collection $SpecimensAccompanying
+ * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
  * @property Doctrine_Collection $SpecimensTools
- * @property Doctrine_Collection $SpecimenSearch
- * @property Doctrine_Collection $IndividualSearch
- * @property Doctrine_Collection $PartSearch
- * @property Doctrine_Collection $IgsSearch
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method string              getCategory()              Returns the current record's "category" value
@@ -78,14 +76,12 @@
  * @method Doctrine_Collection getCollectingMethods()     Returns the current record's "CollectingMethods" collection
  * @method Doctrine_Collection getCollectingTools()       Returns the current record's "CollectingTools" collection
  * @method Doctrine_Collection getSpecimens()             Returns the current record's "Specimens" collection
+ * @method Doctrine_Collection getSpecimensFlat()         Returns the current record's "SpecimensFlat" collection
  * @method Doctrine_Collection getSpecimenIndividuals()   Returns the current record's "SpecimenIndividuals" collection
  * @method Doctrine_Collection getSpecimensAccompanying() Returns the current record's "SpecimensAccompanying" collection
+ * @method Doctrine_Collection getSpecimensCodes()        Returns the current record's "SpecimensCodes" collection
  * @method Doctrine_Collection getSpecimensMethods()      Returns the current record's "SpecimensMethods" collection
  * @method Doctrine_Collection getSpecimensTools()        Returns the current record's "SpecimensTools" collection
- * @method Doctrine_Collection getSpecimenSearch()        Returns the current record's "SpecimenSearch" collection
- * @method Doctrine_Collection getIndividualSearch()      Returns the current record's "IndividualSearch" collection
- * @method Doctrine_Collection getPartSearch()            Returns the current record's "PartSearch" collection
- * @method Doctrine_Collection getIgsSearch()             Returns the current record's "IgsSearch" collection
  * @method Specimens           setId()                    Sets the current record's "id" value
  * @method Specimens           setCategory()              Sets the current record's "category" value
  * @method Specimens           setCollectionRef()         Sets the current record's "collection_ref" value
@@ -118,14 +114,12 @@
  * @method Specimens           setCollectingMethods()     Sets the current record's "CollectingMethods" collection
  * @method Specimens           setCollectingTools()       Sets the current record's "CollectingTools" collection
  * @method Specimens           setSpecimens()             Sets the current record's "Specimens" collection
+ * @method Specimens           setSpecimensFlat()         Sets the current record's "SpecimensFlat" collection
  * @method Specimens           setSpecimenIndividuals()   Sets the current record's "SpecimenIndividuals" collection
  * @method Specimens           setSpecimensAccompanying() Sets the current record's "SpecimensAccompanying" collection
+ * @method Specimens           setSpecimensCodes()        Sets the current record's "SpecimensCodes" collection
  * @method Specimens           setSpecimensMethods()      Sets the current record's "SpecimensMethods" collection
  * @method Specimens           setSpecimensTools()        Sets the current record's "SpecimensTools" collection
- * @method Specimens           setSpecimenSearch()        Sets the current record's "SpecimenSearch" collection
- * @method Specimens           setIndividualSearch()      Sets the current record's "IndividualSearch" collection
- * @method Specimens           setPartSearch()            Sets the current record's "PartSearch" collection
- * @method Specimens           setIgsSearch()             Sets the current record's "IgsSearch" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -153,35 +147,27 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              ));
         $this->hasColumn('expedition_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('gtu_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('taxon_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('litho_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('chrono_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('lithology_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('mineral_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('host_taxon_ref', 'integer', null, array(
              'type' => 'integer',
-             'default' => 0,
              ));
         $this->hasColumn('host_specimen_ref', 'integer', null, array(
              'type' => 'integer',
@@ -272,6 +258,10 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              'local' => 'id',
              'foreign' => 'host_specimen_ref'));
 
+        $this->hasMany('SpecimensFlat', array(
+             'local' => 'id',
+             'foreign' => 'specimen_ref'));
+
         $this->hasMany('SpecimenIndividuals', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
@@ -280,6 +270,10 @@ abstract class BaseSpecimens extends sfDoctrineRecord
              'local' => 'id',
              'foreign' => 'specimen_ref'));
 
+        $this->hasMany('SpecimensCodes', array(
+             'local' => 'id',
+             'foreign' => 'record_id'));
+
         $this->hasMany('SpecimensMethods', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
@@ -287,21 +281,5 @@ abstract class BaseSpecimens extends sfDoctrineRecord
         $this->hasMany('SpecimensTools', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
-
-        $this->hasMany('SpecimenSearch', array(
-             'local' => 'id',
-             'foreign' => 'spec_ref'));
-
-        $this->hasMany('IndividualSearch', array(
-             'local' => 'id',
-             'foreign' => 'spec_ref'));
-
-        $this->hasMany('PartSearch', array(
-             'local' => 'id',
-             'foreign' => 'spec_ref'));
-
-        $this->hasMany('IgsSearch', array(
-             'local' => 'id',
-             'foreign' => 'spec_ref'));
     }
 }

@@ -252,7 +252,9 @@ class DarwinTestFunctional extends sfTestFunctional
 		  'acquisition_date' => array('day' => 01, 'month' => 06, 'year' => 1984)
   	       )))->
       end()->
-      //with('form')->begin()->debug()->
+      with('form')->begin()->
+        hasErrors(0)->
+      end()->
       with('doctrine')->begin()-> 
         check('Specimens', array(
           'collection_ref' => $collection_id,

@@ -44,16 +44,16 @@
         </thead>
         <tbody>
           <?php foreach($specimens as $specimen):?>
-            <tr class="rid_<?php echo $specimen->getSpecRef(); ?>">
+            <tr class="rid_<?php echo $specimen->getSpecimenRef(); ?>">
               <td class="top_aligned"><?php echo $specimen->getCollectionName();?></td>            
               <td>
                 <ul>
-                  <?php if (!isset($codes[$specimen->getSpecRef()])): ?>
+                  <?php if (!isset($codes[$specimen->getSpecimenRef()])): ?>
                     <li>
                       <?php echo '-';?>
                     </li>
                   <?php else:?>
-					<?php foreach($codes[$specimen->getSpecRef()] as $code):?>
+					<?php foreach($codes[$specimen->getSpecimenRef()] as $code):?>
 					  <li style="font-weight:<?php echo ($code->getCodeCategory()=='main')?'bold':'normal';?>">
 						<?php echo $code->getCodeFormated(); ?>
 					  </li>

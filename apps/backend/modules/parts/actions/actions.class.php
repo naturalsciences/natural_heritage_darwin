@@ -17,11 +17,9 @@ class partsActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     if($request->hasParameter('id') && !$this->getUser()->isA(Users::ADMIN))
     {  
-      $spec = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id'));
-      if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('part_ref',
-                                                                                                        $request->getParameter('id'), 
-                                                                                                        $this->getUser()->getId())))
+      if(! Doctrine::getTable('Specimens')->hasRights('part_ref',$request->getParameter('id'), $this->getUser()->getId()))
         $this->redirect("parts/view?id=".$request->getParameter('id')) ;    
+
     }
     $this->part = Doctrine::getTable('SpecimenParts')->findExcept($request->getParameter('id'));
     if($this->part)
@@ -135,19 +133,18 @@ class partsActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->view=true ;
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      $specimen = Doctrine::getTable('SpecimenSearch')->findOneByIndividualRef($request->getParameter('id',0));
-      if(in_array($specimen->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('individual_ref',$request->getParameter('id'), $this->getUser()->getId())))  // if this user is not in collection Right, so the overview is displayed in readOnly
-      $this->view = true;
+      if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
+        $this->view = true;
     }
   }
 
   public function executeGetStorage(sfWebRequest $request)
   {
-	  if($request->getParameter('item')=="container")
-	    $items = Doctrine::getTable('SpecimenParts')->getDistinctContainerStorages($request->getParameter('type'));
-	  else
-	    $items = Doctrine::getTable('SpecimenParts')->getDistinctSubContainerStorages($request->getParameter('type'));
-	  return $this->renderPartial('options', array('items'=> $items ));
+    if($request->getParameter('item')=="container")
+      $items = Doctrine::getTable('SpecimenParts')->getDistinctContainerStorages($request->getParameter('type'));
+    else
+      $items = Doctrine::getTable('SpecimenParts')->getDistinctSubContainerStorages($request->getParameter('type'));
+    return $this->renderPartial('options', array('items'=> $items ));
   }
 
   protected function getSpecimenPartForm(sfWebRequest $request, $fwd404=false, $parameter='id')
@@ -232,14 +229,13 @@ class partsActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();  
-    $spec = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id'));
-    $this->forward404Unless($spec, 'Part does not exist');
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections('part_ref',$request->getParameter('id'), $this->getUser()->getId())))
+      if(! Doctrine::getTable('Specimens')->hasRights('part_ref',$request->getParameter('id'), $this->getUser()->getId()))
         $this->forwardToSecureAction();
     }
     $part = Doctrine::getTable('SpecimenParts')->findExcept($request->getParameter('id'));    
+    $this->forward404Unless($part, 'Part does not exist');
     try
     {
       $part->delete();
@@ -247,30 +243,28 @@ class partsActions extends DarwinActions
     catch(Doctrine_Connection_Pgsql_Exception $e)
     {
       $request->checkCSRFProtection();
-      $this->form = new specimenPartsForm($spec);
+      $this->form = new specimenPartsForm($part);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
       $this->form->getErrorSchema()->addError($error); 
       $this->loadWidgets();
       $this->setTemplate('edit');
       return ;
     }
-    $this->redirect('parts/overview?id='.$spec->getIndividualRef());
+    $this->redirect('parts/overview?id='.$part->getSpecimenIndividualRef());
   }    
   
   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id')),'Part does not exist');  
-    $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
-  }
+    $this->part = Doctrine::getTable('SpecimenParts')->find($request->getParameter('id'));
+    $this->forward404Unless($this->part,'Part does not exist');  
+    $this->loadWidgets(null,$this->part->Individual->Specimens->getCollectionRef()); 
+  }   
+
 
   public function executeChoosePinned(sfWebRequest $request)
   {
-    /** @TODO: change this when flat_less branch is merged */
     $items_ids = $this->getUser()->getAllPinned('part');
-    $this->items = Doctrine::getTable('SpecimenSearch')->getByMultipleIds($items_ids, 'part', $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
-    /** END TODO */
-
-
+    $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids,'part', $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
   }
 
   public function executeAddBiblio(sfWebRequest $request)

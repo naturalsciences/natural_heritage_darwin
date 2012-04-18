@@ -1,1 +1,1 @@
-<?php echo $indiv->getIndividualType() ?>
+<?php echo $indiv->getType() ?>

@@ -11,12 +11,22 @@ class SpecimensForm extends BaseSpecimensForm
 {
   public function configure()
   {
-    unset(
-      $this['id'],
-      $this['acquisition_date_mask'],
-      $this['collecting_tools_list'],
-      $this['collecting_methods_list']
-    );
+    $this->useFields(array('category','collection_ref',
+        'expedition_ref',
+        'gtu_ref',
+        'taxon_ref',
+        'litho_ref',
+        'chrono_ref',
+        'lithology_ref',
+        'mineral_ref',
+        'host_taxon_ref',
+        'host_specimen_ref',
+        'host_relationship',
+        'acquisition_category',
+        'acquisition_date_mask',
+        'acquisition_date',
+        'station_visible',
+        'ig_ref'));
 
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
@@ -231,23 +241,23 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
 
-    $this->validatorSchema['expedition_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['expedition_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['taxon_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['taxon_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['chrono_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['chrono_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['litho_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['litho_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['lithology_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['lithology_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['mineral_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['mineral_ref'] = new sfValidatorInteger(array('required'=>false));
 
-    $this->validatorSchema['gtu_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['gtu_ref'] = new sfValidatorInteger(array('required'=>false));
 
     $this->validatorSchema['host_specimen_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>null));
 
-    $this->validatorSchema['host_taxon_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
+    $this->validatorSchema['host_taxon_ref'] = new sfValidatorInteger(array('required'=>false));
 
     $this->validatorSchema['acquisition_category'] = new sfValidatorChoice(array(
         'choices' => array_keys(SpecimensTable::getDistinctCategories()),

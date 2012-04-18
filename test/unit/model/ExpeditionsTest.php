@@ -1,6 +1,6 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
-$t = new lime_test(14, new lime_output_color());
+$t = new lime_test(13, new lime_output_color());
 
 $fromDate = new FuzzyDateTime('1975/01/01', 32);
 $toDate = new FuzzyDateTime('2009/12/31', 32);
@@ -22,5 +22,3 @@ $t->is( $expedition->getExpeditionToDateMasked() , '31/12/2009', 'Correct to dat
 $t->is( $expedition->getExpeditionFromDate() , array('year'=>1975, 'month'=>01, 'day'=>01, 'hour'=>'', 'minute'=>'', 'second'=>''), 'Correct from date masked as array for "Antarctica 1988"');
 $t->is( $expedition->getExpeditionToDate() , array('year'=>2009, 'month'=>12, 'day'=>31, 'hour'=>'', 'minute'=>'', 'second'=>''), 'Correct to date masked as array for "Antarctica 1988"');
 $t->is( $expedition->getName(), 'Antarctica 1988', 'Correct return of getName() method');
-$expedition = Doctrine::getTable('Expeditions')->findOneById(0);
-$t->is( $expedition->getName(), '-', 'For expedition "0" the name returned by getName() method is well "-"');

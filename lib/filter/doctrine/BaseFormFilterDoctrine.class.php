@@ -91,7 +91,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       $statement->execute(array(':table' => $table, ':field' => $field));
       $results = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-      //if $flat_field is not null then we want to use the fla table, change the $field value by $flat_field 
+      //if $flat_field is not null then we want to use the flat table, change the $field value by $flat_field 
       if ($flat_field != null) $field = $flat_field ;
       //print_r($results);
       if(count($results) == 0)
@@ -226,9 +226,14 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   public function addExactDateFromToColumnQuery(Doctrine_Query $query, array $dateFields, $val_from, $val_to)
   {
     if (count($dateFields) > 0) {
-      $query->andWhere(" CASE WHEN " . $dateFields[0] . " is NULL THEN '01/01/0001' ELSE ".$dateFields[0]." END >= ? ", $val_from->format('d/m/Y'))
-      ->andWhere(" CASE WHEN " . $dateFields[1] . " is NULL THEN '31/12/2038' ELSE ".$dateFields[1]." END <= ? ", $val_to->format('d/m/Y'));
-
+      if ($val_from->getMask() > 0)
+      {
+        $query->andWhere(" CASE WHEN " . $dateFields[0] . " is NULL THEN '01/01/0001' ELSE ".$dateFields[0]." END >= ? ", $val_from->format('d/m/Y'));
+      } 
+      if ($val_to->getMask() > 0)
+      {
+        $query->andWhere(" CASE WHEN " . $dateFields[1] . " is NULL THEN '31/12/2038' ELSE ".$dateFields[1]." END <= ? ", $val_to->format('d/m/Y'));
+      }
     }
     return $query;
   }
@@ -436,23 +441,5 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
         $results[] = $col[0];
       }
       return $results;
-  }
-  
-  public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
-  {
-    $alias = $query->getRootAlias();
-    $build_query = ''; 
-    if(count($field_to_use) < 1) $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
-    foreach($field_to_use as $field)
-    {
-      if($field == 'ident_ids')
-       $build_query .= "($alias.spec_ident_ids @> ARRAY[$people_id]::int[] OR $alias.ind_ident_ids @> ARRAY[$people_id]::int[]) OR " ;
-      elseif($field == 'spec_coll_ids') $build_query .= "$alias.spec_coll_ids @> ARRAY[$people_id]::int[] OR " ;
-      else $build_query .= "$alias.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;    
-    }
-    // I remove the last 'OR ' at the end of the string
-    $build_query = substr($build_query,0,strlen($build_query) -3) ;
-    $query->AndWhere($build_query) ;
-    return $query ;
   }
 }

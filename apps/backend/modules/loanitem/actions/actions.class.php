@@ -151,10 +151,11 @@ class loanitemActions extends DarwinActions
 
   public function executeGetIgNum(sfWebRequest $request)
   {
-    /** @Todo: Change for flat_less */
-    $spec = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($request->getParameter('id'));
+    $ig = Doctrine::getTable('Igs')->findIgByPartRef($request->getParameter('id'));
     $this->getResponse()->setHttpHeader('Content-type', 'application/json');
-    return $this->renderText( json_encode(array('ig_num'=>$spec->getIgNum(), 'ig_ref'=>$spec->getIgRef())));
+    if($ig)
+      return $this->renderText( json_encode(array('ig_num'=>$ig->getIgNum(), 'ig_ref'=>$ig->getId())));
+    return $this->renderText( json_encode(array('ig_num'=> 0, 'ig_ref'=>'')));
   }
 
   public function executeAddInsurance(sfWebRequest $request)

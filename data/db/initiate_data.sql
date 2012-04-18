@@ -1,5 +1,4 @@
 \set log_error_verbosity terse
-insert into catalogue_levels (id, level_type, level_name, level_sys_name, optional_level) values (0, 'all', '-', '-', false);
 insert into catalogue_levels (id, level_type, level_name, level_sys_name, optional_level) values (1, 'taxonomy', 'domain', 'domain', false);
 insert into catalogue_levels (id, level_type, level_name, level_sys_name, optional_level) values (2, 'taxonomy', 'kingdom', 'kingdom', false);
 insert into catalogue_levels (id, level_type, level_name, level_sys_name, optional_level) values (3, 'taxonomy', 'super phylum', 'super_phylum', true);
@@ -78,11 +77,11 @@ insert into catalogue_levels (id, level_type, level_name, level_sys_name, option
 insert into catalogue_levels (id, level_type, level_name, level_sys_name, optional_level) values (76, 'lithology', 'group', 'unit_group', false);
 insert into catalogue_levels (id, level_type, level_name, level_sys_name, optional_level) values (77, 'lithology', 'sub group', 'unit_sub_group', true);
 insert into catalogue_levels (id, level_type, level_name, level_sys_name, optional_level) values (78, 'lithology', 'rock', 'unit_rock', false);
-insert into possible_upper_levels (level_ref, level_upper_ref) values (1, 0);
-insert into possible_upper_levels (level_ref, level_upper_ref) values (55, 0);
-insert into possible_upper_levels (level_ref, level_upper_ref) values (64, 0);
-insert into possible_upper_levels (level_ref, level_upper_ref) values (70, 0);
-insert into possible_upper_levels (level_ref, level_upper_ref) values (75, 0);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (1, null);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (55, null);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (64, null);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (70, null);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (75, null);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (2, 1);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (3, 2);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (4, 2);
@@ -492,13 +491,6 @@ insert into possible_upper_levels (level_ref, level_upper_ref) values (76, 75);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (77, 76);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (78, 76);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (78, 77);
-INSERT INTO gtu (id, code) VALUES (0,0);
-INSERT INTO expeditions (id, name, name_ts, name_indexed) VALUES (0, '', to_tsvector(''), '');
-INSERT INTO chronostratigraphy (id, name, name_indexed, level_ref) VALUES (0, '', '', 0);
-INSERT INTO lithostratigraphy (id, name, name_indexed, level_ref) VALUES (0, '', '', 0);
-INSERT INTO mineralogy (id, name, name_indexed, code, level_ref) VALUES (0, '', '', 0, 0);
-INSERT INTO lithology (id, name, name_indexed, level_ref) VALUES (0, '', '', 0);
-INSERT INTO taxonomy (id, name, name_indexed, level_ref) VALUES (0, '', '', 0);
 INSERT INTO taxonomy (id, name, name_indexed, level_ref, status) VALUES (-4, 'Virus', to_tsvector('Virus'), 1, 'valid');
 INSERT INTO taxonomy (id, name, name_indexed, level_ref, status) VALUES (-3, 'Archaea', to_tsvector('Archaea'), 1, 'valid');
 INSERT INTO taxonomy (id, name, name_indexed, level_ref, status) VALUES (-2, 'Bacteria', to_tsvector('Bacteria'), 1, 'valid');
@@ -507,5 +499,3 @@ INSERT INTO classification_keywords (referenced_relation, record_id, keyword_typ
 INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) VALUES ('taxonomy', -3, 'GenusOrMonomial', 'Archea', 'archea');
 INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) VALUES ('taxonomy', -2, 'GenusOrMonomial', 'Bacteria', 'bacteria');
 INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) VALUES ('taxonomy', -1, 'GenusOrMonomial', 'Eucaryota', 'eucaryota');
-INSERT INTO users (id, formated_name, formated_name_indexed, formated_name_unique, formated_name_ts, family_name) VALUES (0,'','','',to_tsvector(''),'');
-INSERT INTO people (id, formated_name, formated_name_indexed, formated_name_unique, formated_name_ts, family_name) VALUES (0,'','','',to_tsvector(''),'');

@@ -129,4 +129,53 @@ class SpecimensTable extends DarwinTable
 
     return $q->fetchOne();
   }
+
+
+  /**
+  * Fetch all specimens by an array of ids
+  * @param array $ids Ids of specimen to search
+  * @return Doctrine_collection
+  */
+  public function getByMultipleIds(array $ids, $type = "specimen", $user_id = -1, $is_admin = false)
+  {
+    if( empty($ids))
+      return $ids;
+
+    if($type == 'specimen')
+    {
+      /*$q = Doctrine_Query::create()
+      ->select('s.id, s.taxon_name')
+      ->from('Specimens s')
+      ->wherein('s.id', $ids)
+      ->orderBy('id');*/
+
+      $q = DQ::create()
+        ->from('SpecimensFlat s')
+        ->wherein('s.specimen_ref', $ids)
+        ->orderBy('s.specimen_ref');
+    }
+    elseif($type == 'individual')
+    {
+      $q = DQ::create()
+        ->select('s.*, i.*')
+        ->from('SpecimenIndividuals i')
+        ->innerJoin('i.SpecimensFlat s')
+        ->wherein('i.id', $ids)
+        ->orderBy('i.specimen_ref, i.id');
+    }
+    elseif($type == 'part')
+    {
+      $q = DQ::create()
+        ->select('s.*, i.*, p.*')
+        ->from('SpecimenParts p')
+        ->innerJoin('p.Individual i')
+        ->innerJoin('i.SpecimensFlat s')
+        ->wherein('p.id', $ids)
+        ->orderBy('i.specimen_ref, i.id,p.id');
+    }
+    else return array(); //Error
+    if(!$is_admin)
+      $q->andWhere('s.collection_ref in (select fct_search_authorized_encoding_collections(?))',$user_id);
+    return $q->execute();
+  }
 }

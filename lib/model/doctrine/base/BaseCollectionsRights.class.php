@@ -47,7 +47,6 @@ abstract class BaseCollectionsRights extends sfDoctrineRecord
         $this->hasColumn('user_ref', 'integer', null, array(
              'type' => 'integer',
              'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('db_user_type', 'integer', null, array(
              'type' => 'integer',

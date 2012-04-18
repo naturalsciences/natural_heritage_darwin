@@ -8,11 +8,11 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class SpecimensFormFilter extends BaseSpecimenSearchFormFilter
+class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
 {
   public function configure()
   {
-    $this->useFields(array('taxon_name','collection_name','ig_num','taxon_level_ref')) ;
+    $this->useFields(array('ig_num','taxon_name','collection_name')) ;
 
     $this->addPagerItems();
     $this->widgetSchema->setNameFormat('searchSpecimen[%s]');
@@ -31,15 +31,25 @@ class SpecimensFormFilter extends BaseSpecimenSearchFormFilter
         'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'taxonomy'))),
         'add_empty' => $this->getI18N()->__('All')
       ));
-    $this->widgetSchema['collection_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));                             
-    $this->widgetSchema['ig_num'] = new sfWidgetFormInputText();                                     
+    $this->widgetSchema['collection_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    $this->widgetSchema['ig_num'] = new sfWidgetFormInputText();
     $this->widgetSchema['ig_num']->setAttributes(array('class'=>'medium_size'));
-    $this->validatorSchema['ig_num'] = new sfValidatorString(array('required' => false, 'trim' => true));                                  
+    $this->validatorSchema['ig_num'] = new sfValidatorString(array('required' => false, 'trim' => true));
     $this->validatorSchema['code'] = new sfValidatorString(array('required' => false,
                                                                  'trim' => true
                                                                 )
                                                           );
     $this->validatorSchema['caller_id'] = new sfValidatorString(array('required' => false));
+
+
+    $this->widgetSchema['taxon_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
+        'model' => 'CatalogueLevels',
+        'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'taxonomy'))),
+        'add_empty' => 'All'
+      ));
+    $this->widgetSchema['taxon_level_ref']->setAttribute('class','medium_small_size') ;
+    $this->validatorSchema['taxon_level_ref'] = new sfValidatorInteger(array('required' => false));
+
   }
 
   public function addCodeColumnQuery(Doctrine_Query $query, $field, $values)
@@ -50,7 +60,7 @@ class SpecimensFormFilter extends BaseSpecimenSearchFormFilter
       $conn_MGR = Doctrine_Manager::connection();
       $query->leftJoin($alias.'.SpecimensCodes cod')
           ->andWhere("cod.referenced_relation = ?", array('specimens'))
-          ->andWhere("cod.record_id = $alias.spec_ref")
+          ->andWhere("cod.record_id = $alias.specimen_ref")
           ->andWhere("cod.full_code_order_by = fullToIndex(".$conn_MGR->quote($values, 'string').") ");
     }
     return $query;
@@ -80,7 +90,7 @@ class SpecimensFormFilter extends BaseSpecimenSearchFormFilter
      if ($values != "")
      {
        $alias = $query->getRootAlias();       
-       $query->andWhere($alias.'.spec_ref != ?', $values);
+       $query->andWhere($alias.'.specimen_ref != ?', $values);
      }
      return $query;
   }

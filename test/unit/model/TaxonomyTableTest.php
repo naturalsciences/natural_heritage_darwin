@@ -1,6 +1,6 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
-$t = new lime_test(16, new lime_output_color());
+$t = new lime_test(14, new lime_output_color());
 
 $taxs = Doctrine::getTable('Taxonomy')->findOneByName('Falco Peregrinus eliticus');
 $t->info('findWithParents($id)');
@@ -22,8 +22,6 @@ $t->is(DarwinTable::getModelForTable('classification_syonymies'),"Classification
 
 $t->is(Doctrine::getTable('Taxonomy')->findExcept(4)->toArray(),true,'We got the record with findExcept');
 $t->is(Doctrine::getTable('Taxonomy')->findExcept(-1)->toArray(),true,'Record bellow 0 are found  with findExcept');
-$t->is(Doctrine::getTable('Taxonomy')->findExcept(0),false,'Record 0 cannot be found with findExcept');
-$t->is(Doctrine::getTable('Taxonomy')->findById(0)->toArray(),true,'Prove the record 0 can be found by an other mean (findById)');
 
 $keywords = Doctrine::getTable('ClassificationKeywords')->findForTable('taxonomy', 4);
 $t->is(count($keywords),0,'No KW per default');

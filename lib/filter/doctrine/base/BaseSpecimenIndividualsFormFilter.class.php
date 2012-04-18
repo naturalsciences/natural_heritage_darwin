@@ -25,6 +25,7 @@ abstract class BaseSpecimenIndividualsFormFilter extends BaseFormFilterDoctrine
       'specimen_individuals_count_min' => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'specimen_individuals_count_max' => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'with_parts'                     => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'ind_ident_ids'                  => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -40,6 +41,7 @@ abstract class BaseSpecimenIndividualsFormFilter extends BaseFormFilterDoctrine
       'specimen_individuals_count_min' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'specimen_individuals_count_max' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'with_parts'                     => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'ind_ident_ids'                  => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('specimen_individuals_filters[%s]');
@@ -72,6 +74,7 @@ abstract class BaseSpecimenIndividualsFormFilter extends BaseFormFilterDoctrine
       'specimen_individuals_count_min' => 'Number',
       'specimen_individuals_count_max' => 'Number',
       'with_parts'                     => 'Boolean',
+      'ind_ident_ids'                  => 'Text',
     );
   }
 }

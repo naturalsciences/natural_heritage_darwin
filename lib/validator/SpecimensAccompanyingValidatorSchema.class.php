@@ -13,11 +13,11 @@ class SpecimensAccompanyingValidatorSchema extends sfValidatorSchema
 
     if($value['accompanying_type']=='biological')
     {
-      $value['mineral_ref'] = 0;
+      $value['mineral_ref'] = null;
     }
     else
     {
-      $value['taxon_ref'] = 0;
+      $value['taxon_ref'] = null;
     }
     
     // If type is known but nothing else

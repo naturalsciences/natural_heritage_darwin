@@ -13,7 +13,7 @@ class partwidgetViewComponents extends sfComponents
 
   protected function defineForm()
   {
-    $this->part = Doctrine::getTable('SpecimenSearch')->findOneByPartRef($this->eid);
+    $this->part = Doctrine::getTable('SpecimenParts')->find($this->eid);
   }
 
   public function executeParent()
@@ -25,7 +25,7 @@ class partwidgetViewComponents extends sfComponents
   public function executePartCount()
   {
     $this->defineForm();
-    if ($this->part->getPartCountMin() === $this->part->getPartCountMax()) $this->accuracy = "Exact" ;
+    if ($this->part->getSpecimenPartCountMin() === $this->part->getSpecimenPartCountMax()) $this->accuracy = "Exact" ;
     else $this->accuracy = "Imprecise" ;    
   }
 

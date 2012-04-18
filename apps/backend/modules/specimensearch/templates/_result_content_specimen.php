@@ -13,7 +13,7 @@
     <td  class="col_collection">
       <?php if($specimen->getCollectionRef() > 0) : ?>
         <?php echo image_tag('info.png',"title=info class=info id=collection_".$item_ref."_info");?>
-        <?php if($sf_user->isAtLeast(Users::ADMIN) || ($sf_user->isAtLeast(Users::MANAGER) && $specimen->getHasEncodingRights())) : ?>           
+        <?php if($sf_user->isAtLeast(Users::ADMIN) || ($sf_user->isAtLeast(Users::MANAGER) && $unit->getHasEncodingRights())) : ?>           
           <a href="<?php echo url_for('collection/edit?id='.$specimen->getCollectionRef());?>"><?php echo $specimen->getCollectionName();?></a>
         <?php else : ?>
           <?php echo $specimen->getCollectionName();?>
@@ -65,7 +65,7 @@
     <?php endif;?>
     <td class="col_gtu">
       <?php if($specimen->getGtuRef() > 0) : ?>
-        <?php if($specimen->getHasEncodingRights() || $specimen->getStationVisible() || $sf_user->isAtLeast(Users::ADMIN) ):?>
+        <?php if($unit->getHasEncodingRights() || $specimen->getStationVisible() || $sf_user->isAtLeast(Users::ADMIN) ):?>
           <?php echo image_tag('info.png',"title=info class=info id=gtu_ctr_".$item_ref."_info");?>
           <script type="text/javascript">
             $(document).ready(function()
@@ -76,7 +76,7 @@
                 elem = item_row.find('#gtu_<?php echo $item_ref;?>_details');
                 if(elem.is(":hidden"))
                 { 
-                  $.get('<?php echo url_for("gtu/completeTag?id=".$specimen->getSpecRef()."&view=true") ;?>',function (html){
+                  $.get('<?php echo url_for("gtu/completeTag?id=".$specimen->getSpecimenRef()."&view=true") ;?>',function (html){
                     item_row.find('.general_gtu').slideUp();
                     elem.html(html).slideDown();
                   });
@@ -110,8 +110,8 @@
     </td> 
 
     <td class="col_codes">
-      <?php if(isset($codes[$specimen->getSpecRef()])):?>
-        <?php if(count($codes[$specimen->getSpecRef()]) <= 3):?>
+      <?php if(isset($codes[$specimen->getSpecimenRef()])):?>
+        <?php if(count($codes[$specimen->getSpecimenRef()]) <= 3):?>
           <?php echo image_tag('info-bw.png',"title=info class=info");?>
         <?php else:?>
           <?php echo image_tag('info.png',"title=info class=info id=spec_code_".$item_ref."_info");?>
@@ -133,7 +133,7 @@
           </script>
         <?php endif;?>
         <ul>
-        <?php $cpt = 0 ; foreach($codes[$specimen->getSpecRef()] as $key=>$code):?>            
+        <?php $cpt = 0 ; foreach($codes[$specimen->getSpecimenRef()] as $key=>$code):?>            
             <?php if($code->getCodeCategory() == 'main') : ?>
               <?php $cpt++ ; ?>
               <li <?php if($cpt > 3) echo("class='hidden code_supp'"); ?>>

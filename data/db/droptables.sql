@@ -58,7 +58,7 @@ DROP TABLE  IF EXISTS classification_keywords CASCADE;
 DROP TABLE  IF EXISTS template_table_record_ref CASCADE;
 DROP TABLE  IF EXISTS catalogue_relationships CASCADE;
 DROP TABLE  IF EXISTS words CASCADE;
-DROP TABLE  IF EXISTS darwin_flat CASCADE;
+DROP TABLE  IF EXISTS specimens_flat CASCADE;
 DROP TABLE  IF EXISTS collecting_methods CASCADE;
 DROP TABLE  IF EXISTS collecting_tools CASCADE;
 DROP TABLE  IF EXISTS specimen_collecting_methods CASCADE;

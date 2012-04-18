@@ -23,10 +23,7 @@
  * @property Doctrine_Collection $Tags
  * @property Doctrine_Collection $Gtu
  * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimenSearch
- * @property Doctrine_Collection $IndividualSearch
- * @property Doctrine_Collection $PartSearch
- * @property Doctrine_Collection $IgsSearch
+ * @property Doctrine_Collection $SpecimensFlat
  * 
  * @method integer             getId()                 Returns the current record's "id" value
  * @method string              getCode()               Returns the current record's "code" value
@@ -46,10 +43,7 @@
  * @method Doctrine_Collection getTags()               Returns the current record's "Tags" collection
  * @method Doctrine_Collection getGtu()                Returns the current record's "Gtu" collection
  * @method Doctrine_Collection getSpecimens()          Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimenSearch()     Returns the current record's "SpecimenSearch" collection
- * @method Doctrine_Collection getIndividualSearch()   Returns the current record's "IndividualSearch" collection
- * @method Doctrine_Collection getPartSearch()         Returns the current record's "PartSearch" collection
- * @method Doctrine_Collection getIgsSearch()          Returns the current record's "IgsSearch" collection
+ * @method Doctrine_Collection getSpecimensFlat()      Returns the current record's "SpecimensFlat" collection
  * @method Gtu                 setId()                 Sets the current record's "id" value
  * @method Gtu                 setCode()               Sets the current record's "code" value
  * @method Gtu                 setParentRef()          Sets the current record's "parent_ref" value
@@ -68,10 +62,7 @@
  * @method Gtu                 setTags()               Sets the current record's "Tags" collection
  * @method Gtu                 setGtu()                Sets the current record's "Gtu" collection
  * @method Gtu                 setSpecimens()          Sets the current record's "Specimens" collection
- * @method Gtu                 setSpecimenSearch()     Sets the current record's "SpecimenSearch" collection
- * @method Gtu                 setIndividualSearch()   Sets the current record's "IndividualSearch" collection
- * @method Gtu                 setPartSearch()         Sets the current record's "PartSearch" collection
- * @method Gtu                 setIgsSearch()          Sets the current record's "IgsSearch" collection
+ * @method Gtu                 setSpecimensFlat()      Sets the current record's "SpecimensFlat" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -94,8 +85,6 @@ abstract class BaseGtu extends sfDoctrineRecord
              ));
         $this->hasColumn('parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('gtu_from_date_mask', 'integer', null, array(
              'type' => 'integer',
@@ -160,19 +149,7 @@ abstract class BaseGtu extends sfDoctrineRecord
              'local' => 'id',
              'foreign' => 'gtu_ref'));
 
-        $this->hasMany('SpecimenSearch', array(
-             'local' => 'id',
-             'foreign' => 'gtu_ref'));
-
-        $this->hasMany('IndividualSearch', array(
-             'local' => 'id',
-             'foreign' => 'gtu_ref'));
-
-        $this->hasMany('PartSearch', array(
-             'local' => 'id',
-             'foreign' => 'gtu_ref'));
-
-        $this->hasMany('IgsSearch', array(
+        $this->hasMany('SpecimensFlat', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
     }

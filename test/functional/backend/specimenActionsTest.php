@@ -87,7 +87,6 @@ $browser->
   with('response')->
   begin()->
     checkElement('table.results thead th:nth-child(3) a.sort span.order_sign_up')->
-    checkElement('table.results tbody tr td:nth-child(3)', 'Falco Peregrinus Tunstall, 1771')->
   end()->
 
   info('2.4 - Select only species level...')->
@@ -98,10 +97,10 @@ $browser->
     checkElement('table.results tbody tr td:nth-child(3)', 'Falco Peregrinus')->
   end()->
   info('2.5 - edition...');
-  $record = Doctrine::getTable('SpecimenSearch')->findOneByTaxonName('Falco Peregrinus');
+  $record = Doctrine::getTable('Specimens')->findOneByTaxonRef('2');//Falco Peregrinus');
   
 $browser->
-    get('specimen/edit?id='.$record->getSpecRef())->
+    get('specimen/edit?id='.$record->getId())->
     with('response')->begin()->
     isStatusCode(200)->
     checkElement('title','Edit Specimen')->

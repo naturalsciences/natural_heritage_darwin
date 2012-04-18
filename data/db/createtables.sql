@@ -141,7 +141,7 @@ comment on column catalogue_levels.optional_level is 'Tells if the level is opti
 create table possible_upper_levels
        (
         level_ref integer not null,
-        level_upper_ref integer not null,
+        level_upper_ref integer,
         constraint unq_possible_upper_levels unique (level_ref, level_upper_ref),
         constraint fk_possible_upper_levels_catalogue_levels_01 foreign key (level_ref) references catalogue_levels(id) on delete cascade,
         constraint fk_possible_upper_levels_catalogue_levels_02 foreign key (level_upper_ref) references catalogue_levels(id)
@@ -892,7 +892,7 @@ create table template_classifications
         local_naming boolean not null default false,
         color varchar,
         path varchar not null default '/',
-        parent_ref integer not null default 0
+        parent_ref integer
        );
 comment on table template_classifications is 'Template table used to construct every common data in each classifications tables (taxonomy, chronostratigraphy, lithostratigraphy,...)';
 comment on column template_classifications.name is 'Classification unit name';
@@ -1070,15 +1070,15 @@ create table specimens
        (
         id serial,
         category varchar not null default 'physical',
-        collection_ref integer not null default 0,
-        expedition_ref integer not null default 0,
-        gtu_ref integer not null default 0,
-        taxon_ref integer not null default 0,
-        litho_ref integer not null default 0,
-        chrono_ref integer not null default 0,
-        lithology_ref integer not null default 0,
-        mineral_ref integer not null default 0,
-        host_taxon_ref integer not null default 0,
+        collection_ref integer not null,
+        expedition_ref integer,
+        gtu_ref integer,
+        taxon_ref integer,
+        litho_ref integer,
+        chrono_ref integer,
+        lithology_ref integer,
+        mineral_ref integer,
+        host_taxon_ref integer,
         host_specimen_ref integer,
         host_relationship varchar,
         acquisition_category varchar not null default '',
@@ -1086,6 +1086,7 @@ create table specimens
         acquisition_date date not null default '01/01/0001',
         station_visible boolean not null default true,
         ig_ref integer,
+
         constraint pk_specimens primary key (id),
         constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
         constraint fk_specimens_gtu foreign key (gtu_ref) references gtu(id),
@@ -1100,10 +1101,7 @@ create table specimens
         constraint fk_specimens_igs foreign key (ig_ref) references igs(id)
        );
 
-CREATE UNIQUE INDEX unq_specimens
-  ON specimens
-  USING btree
-  (collection_ref , expedition_ref , gtu_ref , taxon_ref , litho_ref , chrono_ref , lithology_ref , mineral_ref , host_taxon_ref , acquisition_category , acquisition_date , (COALESCE(ig_ref, 0)) );
+CREATE UNIQUE INDEX unq_specimens ON specimens (collection_ref, COALESCE(expedition_ref,0), COALESCE(gtu_ref,0), COALESCE(taxon_ref,0), COALESCE(litho_ref,0), COALESCE(chrono_ref,0), COALESCE(lithology_ref,0), COALESCE(mineral_ref,0), COALESCE(host_taxon_ref,0), acquisition_category, acquisition_date, COALESCE(ig_ref,0));
 
 comment on table specimens is 'Specimens or batch of specimens stored in collection';
 comment on column specimens.id is 'Unique identifier of a specimen or batch of specimens';
@@ -1174,6 +1172,7 @@ create table specimen_individuals
         specimen_individuals_count_min integer not null default 1,
         specimen_individuals_count_max integer not null default 1,
         with_parts boolean not null default false,
+        ind_ident_ids integer[] not null default '{}',
         constraint pk_specimen_individuals primary key (id),
         constraint unq_specimen_individuals unique (specimen_ref, type, sex, stage, state, social_status, rock_form),
         constraint fk_specimen_individuals_specimens foreign key (specimen_ref) references specimens(id) on delete cascade,
@@ -1278,8 +1277,8 @@ create table specimens_accompanying
         id serial,
         accompanying_type varchar not null default 'biological',
         specimen_ref integer not null,
-        taxon_ref integer not null default 0,
-        mineral_ref integer not null default 0,
+        taxon_ref integer,
+        mineral_ref integer,
         form varchar not null default 'isolated',
         quantity numeric(16,2),
         unit varchar default '%',
@@ -1383,291 +1382,6 @@ comment on table preferences is 'Table to handle users preferences';
 comment on column preferences.user_ref is 'The referenced user id';
 comment on column preferences.pref_key is 'The classification key of the preference. eg: color';
 comment on column preferences.pref_value is 'The value of the preference for this user eg: red';
-
-create table darwin_flat
-  (
-    id serial,
-    spec_ref integer not null,
-    category varchar,
-    collection_ref integer not null default 0,
-    collection_type varchar,
-    collection_code varchar,
-    collection_name varchar,
-    collection_is_public boolean not null default true,
-    collection_parent_ref integer default 0,
-    collection_path varchar,
-    expedition_ref integer not null default 0,
-    expedition_name varchar,
-    expedition_name_ts tsvector,
-    expedition_name_indexed varchar,
-    station_visible boolean,
-    gtu_ref integer not null default 0,
-    gtu_code varchar,
-    gtu_parent_ref integer default 0,
-    gtu_path varchar,
-    gtu_from_date_mask integer,
-    gtu_from_date timestamp,
-    gtu_to_date_mask integer,
-    gtu_to_date timestamp,
-    gtu_tag_values_indexed varchar[],
-    gtu_country_tag_value varchar,
-    gtu_country_tag_indexed varchar[],
-    gtu_location GEOGRAPHY(POLYGON,4326),
-    taxon_ref integer not null default 0,
-    taxon_name varchar,
-    taxon_name_indexed tsvector,
-    taxon_name_order_by varchar,
-    taxon_level_ref integer not null default 0,
-    taxon_level_name varchar,
-    taxon_status varchar,
-    taxon_path varchar,
-    taxon_parent_ref integer default 0,
-    taxon_extinct boolean,
-    litho_ref integer not null default 0,
-    litho_name varchar,
-    litho_name_indexed tsvector,
-    litho_name_order_by varchar,
-    litho_level_ref integer not null default 0,
-    litho_level_name varchar,
-    litho_status varchar,
-    litho_local boolean not null default false,
-    litho_color varchar,
-    litho_path varchar,
-    litho_parent_ref integer default 0,
-    chrono_ref integer not null default 0,
-    chrono_name varchar,
-    chrono_name_indexed tsvector,
-    chrono_name_order_by varchar,
-    chrono_level_ref integer not null default 0,
-    chrono_level_name varchar,
-    chrono_status varchar,
-    chrono_local boolean not null default false,
-    chrono_color varchar,
-    chrono_path varchar,
-    chrono_parent_ref integer default 0,
-    lithology_ref integer not null default 0,
-    lithology_name varchar,
-    lithology_name_indexed tsvector,
-    lithology_name_order_by varchar,
-    lithology_level_ref integer not null default 0,
-    lithology_level_name varchar,
-    lithology_status varchar,
-    lithology_local boolean not null default false,
-    lithology_color varchar,
-    lithology_path varchar,
-    lithology_parent_ref integer default 0,
-    mineral_ref integer not null default 0,
-    mineral_name varchar,
-    mineral_name_indexed tsvector,
-    mineral_name_order_by varchar,
-    mineral_level_ref integer not null default 0,
-    mineral_level_name varchar,
-    mineral_status varchar,
-    mineral_local boolean not null default false,
-    mineral_color varchar,
-    mineral_path varchar,
-    mineral_parent_ref integer default 0,
-    host_taxon_ref integer not null default 0,
-    host_relationship varchar,
-    host_taxon_name varchar,
-    host_taxon_name_indexed tsvector,
-    host_taxon_name_order_by varchar,
-    host_taxon_level_ref integer not null default 0,
-    host_taxon_level_name varchar,
-    host_taxon_status varchar,
-    host_taxon_path varchar,
-    host_taxon_parent_ref integer default 0,
-    host_taxon_extinct boolean,
-    host_specimen_ref integer,
-    ig_ref integer,
-    ig_num varchar,
-    ig_num_indexed varchar,
-    ig_date_mask integer,
-    ig_date date,
-    acquisition_category varchar,
-    acquisition_date_mask integer,
-    acquisition_date date,
-    with_types boolean not null default false,
-    with_individuals boolean not null default false,
-    individual_ref integer,
-    individual_type varchar not null default 'specimen',
-    individual_type_group varchar not null default 'specimen',
-    individual_type_search varchar not null default 'specimen',
-    individual_sex  varchar not null default 'undefined',
-    individual_state varchar not null default 'not applicable',
-    individual_stage varchar not null default 'undefined',
-    individual_social_status varchar not null default 'not applicable',
-    individual_rock_form varchar not null default 'not applicable',
-    individual_count_min integer,
-    individual_count_max integer,
-    with_parts boolean not null default false,
-    part_ref integer,
-    part varchar,
-    part_status varchar,
-    institution_ref integer,
-    building varchar,
-    floor varchar,
-    room varchar,
-    row varchar,
-    shelf varchar,
-    container_type varchar,
-    container_storage varchar,
-    container varchar,
-    sub_container_type varchar,
-    sub_container_storage varchar,
-    sub_container varchar,
-    part_count_min integer,
-    part_count_max integer,
-    specimen_status varchar,
-    complete boolean,
-    surnumerary boolean,
-    spec_ident_ids integer[],
-    ind_ident_ids integer[],
-    spec_coll_ids integer[],
-    spec_don_sel_ids integer[],
-    CONSTRAINT pk_darwin_flat PRIMARY KEY (id),
-    CONSTRAINT fk_darwin_flat_spec_ref FOREIGN KEY (spec_ref) REFERENCES specimens (id) ON DELETE CASCADE,
-    CONSTRAINT fk_darwin_flat_host_specimen_ref FOREIGN KEY (host_specimen_ref) REFERENCES specimens (id) ON DELETE SET DEFAULT
-  );
---SELECT substring(AddGeometryColumn('darwin_flat', 'gtu_location', 4326, 'POLYGON', 2) for 0);
-
-comment on table darwin_flat is 'Flat table compiling all specimens data (catalogues data included - used for search purposes';
-comment on column darwin_flat.id is 'Unique identifier of a darwin flat entry';
-comment on column darwin_flat.spec_ref is 'Reference of specimen concerned';
-comment on column darwin_flat.category is 'Specimen concerned category: physical, observation,...';
-comment on column darwin_flat.collection_ref is 'Reference of collection the specimen concerned belongs to';
-comment on column darwin_flat.collection_code is 'Collection code';
-comment on column darwin_flat.collection_name is 'Collection name - i.e.: Vertebrates,...';
-comment on column darwin_flat.collection_is_public is 'Flag telling if collection is public or not';
-comment on column darwin_flat.collection_parent_ref is 'Reference of parent collection';
-comment on column darwin_flat.collection_path is 'Hierarchical path of current collection';
-comment on column darwin_flat.expedition_ref is 'Reference of expedition the current specimen was collected in';
-comment on column darwin_flat.expedition_name is 'Name of the expedition';
-comment on column darwin_flat.expedition_name_ts is 'Name of the expedition - ts vector form - for searches purposes';
-comment on column darwin_flat.expedition_name_indexed is 'Name of the expedition - indexed form with fullToIndex - for ordering purposes';
-comment on column darwin_flat.station_visible is 'Flag telling if the sampling location can be publically visible or not';
-comment on column darwin_flat.gtu_ref is 'Sampling location referenced';
-comment on column darwin_flat.gtu_code is 'Sampling location referenced code';
-comment on column darwin_flat.gtu_parent_ref is 'Sampling location referenced parent';
-comment on column darwin_flat.gtu_path is 'Sampling location hierarchical path';
-comment on column darwin_flat.gtu_from_date_mask is 'Sampling location from date mask';
-comment on column darwin_flat.gtu_from_date is 'Sampling location from date';
-comment on column darwin_flat.gtu_to_date_mask is 'Sampling location to date mask';
-comment on column darwin_flat.gtu_to_date is 'Sampling location to date';
-comment on column darwin_flat.gtu_tag_values_indexed is 'Array of all the tags entered for this gtu - all the tags are of the indexed form with fullToIndex function';
-comment on column darwin_flat.gtu_country_tag_value is 'List of "Administrative area-Country" tags associated to the sampling location referenced';
-comment on column darwin_flat.gtu_country_tag_indexed is 'List of "Administrative area-Country" tags associated to the sampling location referenced  all the tags are of the indexed form with fullToIndex function';
-comment on column darwin_flat.taxon_ref is 'Taxon unit referenced';
-comment on column darwin_flat.taxon_name is 'Taxon unit referenced name';
-comment on column darwin_flat.taxon_name_indexed is 'Taxon unit referenced name - ts vector form - used for searches purposes';
-comment on column darwin_flat.taxon_name_order_by is 'Taxon unit referenced name - indexed form with fullToIndex - used for ordering purposes';
-comment on column darwin_flat.taxon_level_ref is 'Taxon unit referenced level';
-comment on column darwin_flat.taxon_level_name is 'Taxon unit referenced level name';
-comment on column darwin_flat.taxon_status is 'Taxon unit referenced status: valid, invalid,...';
-comment on column darwin_flat.taxon_path is 'Taxon unit referenced hierarchical path';
-comment on column darwin_flat.taxon_parent_ref is 'Taxon unit referenced parenty';
-comment on column darwin_flat.taxon_extinct is 'Taxon unit referenced flag telling if the unit is extinct or not';
-comment on column darwin_flat.chrono_ref is 'Chrono unit referenced';
-comment on column darwin_flat.chrono_name is 'Chrono unit referenced name';
-comment on column darwin_flat.chrono_name_indexed is 'Chrono unit referenced name - ts vector form - used for searches purposes';
-comment on column darwin_flat.chrono_name_order_by is 'Chrono unit referenced name - indexed form with fullToIndex - used for ordering purposes';
-comment on column darwin_flat.chrono_level_ref is 'Chrono unit referenced level';
-comment on column darwin_flat.chrono_level_name is 'Chrono unit referenced level name';
-comment on column darwin_flat.chrono_status is 'Chrono unit referenced status: valid, invalid,...';
-comment on column darwin_flat.chrono_local is 'Flag telling if the chrono unit name is a local appelation or not';
-comment on column darwin_flat.chrono_color is 'Hexadecimal value of color associated to the chrono unit';
-comment on column darwin_flat.chrono_path is 'Chrono unit referenced hierarchical path';
-comment on column darwin_flat.chrono_parent_ref is 'Chrono unit referenced parenty';
-comment on column darwin_flat.litho_ref is 'Litho unit referenced';
-comment on column darwin_flat.litho_name is 'Litho unit referenced name';
-comment on column darwin_flat.litho_name_indexed is 'Litho unit referenced name - ts vector form - used for searches purposes';
-comment on column darwin_flat.litho_name_order_by is 'Litho unit referenced name - indexed form with fullToIndex - used for ordering purposes';
-comment on column darwin_flat.litho_level_ref is 'Litho unit referenced level';
-comment on column darwin_flat.litho_level_name is 'Litho unit referenced level name';
-comment on column darwin_flat.litho_status is 'Litho unit referenced status: valid, invalid,...';
-comment on column darwin_flat.chrono_local is 'Flag telling if the litho unit name is a local appelation or not';
-comment on column darwin_flat.chrono_color is 'Hexadecimal value of color associated to the litho unit';
-comment on column darwin_flat.litho_path is 'Litho unit referenced hierarchical path';
-comment on column darwin_flat.litho_parent_ref is 'Litho unit referenced parenty';
-comment on column darwin_flat.lithology_ref is 'Lithology unit referenced';
-comment on column darwin_flat.lithology_name is 'Lithology unit referenced name';
-comment on column darwin_flat.lithology_name_indexed is 'Lithology unit referenced name - ts vector form - used for searches purposes';
-comment on column darwin_flat.lithology_name_order_by is 'Lithology unit referenced name - indexed form with fullToIndex - used for ordering purposes';
-comment on column darwin_flat.lithology_level_ref is 'Lithology unit referenced level';
-comment on column darwin_flat.lithology_level_name is 'Lithology unit referenced level name';
-comment on column darwin_flat.lithology_status is 'Lithology unit referenced status: valid, invalid,...';
-comment on column darwin_flat.chrono_local is 'Flag telling if the lithology unit name is a local appelation or not';
-comment on column darwin_flat.chrono_color is 'Hexadecimal value of color associated to the lithology unit';
-comment on column darwin_flat.lithology_path is 'Lithology unit referenced hierarchical path';
-comment on column darwin_flat.lithology_parent_ref is 'Lithology unit referenced parenty';
-comment on column darwin_flat.mineral_ref is 'Mineral unit referenced';
-comment on column darwin_flat.mineral_name is 'Mineral unit referenced name';
-comment on column darwin_flat.mineral_name_indexed is 'Mineral unit referenced name - ts vector form - used for searches purposes';
-comment on column darwin_flat.mineral_name_order_by is 'Mineral unit referenced name - indexed form with fullToIndex - used for ordering purposes';
-comment on column darwin_flat.mineral_level_ref is 'Mineral unit referenced level';
-comment on column darwin_flat.mineral_level_name is 'Mineral unit referenced level name';
-comment on column darwin_flat.mineral_status is 'Mineral unit referenced status: valid, invalid,...';
-comment on column darwin_flat.chrono_local is 'Flag telling if the mineral unit name is a local appelation or not';
-comment on column darwin_flat.chrono_color is 'Hexadecimal value of color associated to the mineral unit';
-comment on column darwin_flat.mineral_path is 'Mineral unit referenced hierarchical path';
-comment on column darwin_flat.mineral_parent_ref is 'Mineral unit referenced parenty';
-comment on column darwin_flat.host_taxon_ref is 'Host Taxon unit referenced';
-comment on column darwin_flat.host_taxon_name is 'Host Taxon unit referenced name';
-comment on column darwin_flat.host_taxon_name_indexed is 'Host Taxon unit referenced name - ts vector form - used for searches purposes';
-comment on column darwin_flat.host_taxon_name_order_by is 'Host Taxon unit referenced name - indexed form with fullToIndex - used for ordering purposes';
-comment on column darwin_flat.host_taxon_level_ref is 'Host Taxon unit referenced level';
-comment on column darwin_flat.host_taxon_level_name is 'Host Taxon unit referenced level name';
-comment on column darwin_flat.host_taxon_status is 'Host Taxon unit referenced status: valid, invalid,...';
-comment on column darwin_flat.host_taxon_path is 'Host Taxon unit referenced hierarchical path';
-comment on column darwin_flat.host_taxon_parent_ref is 'Host Taxon unit referenced parenty';
-comment on column darwin_flat.host_taxon_extinct is 'Host Taxon unit referenced flag telling if the unit is extinct or not';
-comment on column darwin_flat.ig_ref is 'General Inventory number (I.G. Num) referenced';
-comment on column darwin_flat.ig_num is 'General Inventory number (I.G. Num) referenced - The number concerned';
-comment on column darwin_flat.ig_num_indexed is 'General Inventory number (I.G. Num) referenced - The number concerned - indexed form composed with fullToIndex';
-comment on column darwin_flat.ig_date_mask is 'General Inventory number (I.G. Num) referenced - Date of attribution mask';
-comment on column darwin_flat.ig_date is 'General Inventory number (I.G. Num) referenced - Date of attribution';
-comment on column darwin_flat.acquisition_category is 'Specimen acquisition category';
-comment on column darwin_flat.acquisition_date_mask is 'Specimen acquisition date mask';
-comment on column darwin_flat.acquisition_date is 'Specimen acquisition date';
-comment on column darwin_flat.with_types is 'Flag telling if there are types for current specimen';
-comment on column darwin_flat.with_individuals is 'Flag telling if there are individuals for current specimen';
-comment on column darwin_flat.individual_ref is 'Reference of specimen individual - references to id of individual in specimen_individuals table - Null if nothing referenced';
-comment on column darwin_flat.individual_type is 'Type';
-comment on column darwin_flat.individual_type_group is 'Type group - Grouping of types appelations used for internal search';
-comment on column darwin_flat.individual_type_search is 'Type search - Grouping of types appelations used for external searches';
-comment on column darwin_flat.individual_sex  is 'Sex: Male, Female, Hermaphrodit,...';
-comment on column darwin_flat.individual_state is 'Sex state if applicable: Ovigerous, Pregnant,...';
-comment on column darwin_flat.individual_stage is 'Stage: Adult, Nymph, Larvae,...';
-comment on column darwin_flat.individual_social_status is 'Social status if applicable: Worker, Queen, King, Fighter,...';
-comment on column darwin_flat.individual_rock_form is 'Rock form if applicable: Cubic, Orthorhombic,...';
-comment on column darwin_flat.individual_count_min is 'Minimum number of individuals';
-comment on column darwin_flat.individual_count_max is 'Maximum number of individuals';
-comment on column darwin_flat.with_parts is 'Flag telling if they are parts for the current individual';
-comment on column darwin_flat.part_ref is 'Reference of part - coming from specimen_parts table (id field) - set to null if no references';
-comment on column darwin_flat.part is 'Part name: wing, tail, toes,...';
-comment on column darwin_flat.part_status is 'Part status: intact, lost, stolen,...';
-comment on column darwin_flat.institution_ref is 'Institution (people) where the current part is stored';
-comment on column darwin_flat.building is 'Building where the current part is stored';
-comment on column darwin_flat.floor is 'Floor where the current part is stored';
-comment on column darwin_flat.room is 'Room where the current part is stored';
-comment on column darwin_flat.row is 'Row of the conservatory where the current part is stored';
-comment on column darwin_flat.shelf is 'Shelf where the current part is stored';
-comment on column darwin_flat.container_type is 'Container type: box, slide,...';
-comment on column darwin_flat.container_storage is 'Container storage: dry, alcohool, formol,...';
-comment on column darwin_flat.container is 'Container code';
-comment on column darwin_flat.sub_container_type is 'Sub-Container type: box, slide,...';
-comment on column darwin_flat.sub_container_storage is 'Sub-Container storage: dry, alcohool, formol,...';
-comment on column darwin_flat.sub_container is 'Sub container code';
-comment on column darwin_flat.part_count_min is 'Minimum number of parts stored';
-comment on column darwin_flat.part_count_max is 'Maximum number of parts stored';
-comment on column darwin_flat.specimen_status is 'Tells the status of part concerned: lost, damaged, good shape,...';
-comment on column darwin_flat.complete is 'Flag telling if the specimen is complete or not';
-comment on column darwin_flat.surnumerary is 'Tells if this part/individual has been added after first inventory';
-comment on column darwin_flat.spec_ident_ids is 'Array of identifiers referenced in this specimen';
-comment on column darwin_flat.ind_ident_ids is 'Array of identifiers referenced in this individual';
-comment on column darwin_flat.spec_coll_ids is 'Array of collectors referenced in this specimen';
-comment on column darwin_flat.spec_don_sel_ids is 'Array of donators or sellers referenced in this specimen';
-
 
 create table flat_dict
 (
@@ -1876,6 +1590,7 @@ comment on column staging_people.people_ref is 'Reference of person concerned - 
 comment on column staging_people.order_by is 'Integer used to order the persons in a list';
 comment on column staging_people.formated_name is 'full name of the people';
 
+
 create table loans
     (
       id serial,
@@ -1965,6 +1680,293 @@ comment on column loan_status.status is 'Current status of the loan in a list (n
 comment on column loan_status.modification_date_time is 'date of the modification';
 comment on column loan_status.comment is 'comment of the status modification';
 comment on column loan_status.is_last is 'flag telling which line is the current line';
+
+CREATE TABLE specimens_flat (
+    specimen_ref integer not null,
+
+    category varchar not null,
+    collection_ref integer not null,
+    expedition_ref integer,
+    gtu_ref integer,
+    taxon_ref integer,
+    litho_ref integer,
+    chrono_ref integer,
+    lithology_ref integer,
+    mineral_ref integer,
+    host_taxon_ref integer,
+    host_specimen_ref integer,
+    host_relationship varchar,
+    acquisition_category varchar not null,
+    acquisition_date_mask integer not null,
+    acquisition_date date not null,
+    station_visible boolean not null,
+    ig_ref integer,
+
+    spec_ident_ids integer[] not null default '{}',
+    spec_coll_ids integer[] not null default '{}',
+    spec_don_sel_ids integer[] not null default '{}',
+    with_types boolean  not null default false,
+    with_individuals boolean not null default false,
+    collection_type varchar,
+    collection_code varchar,
+    collection_name varchar,
+    collection_is_public boolean,
+    collection_parent_ref integer,
+    collection_path varchar,
+    expedition_name varchar,
+    expedition_name_ts tsvector,
+    expedition_name_indexed varchar,
+
+    gtu_code varchar,
+    gtu_parent_ref integer,
+    gtu_path varchar,
+    gtu_from_date_mask integer,
+    gtu_from_date timestamp,
+    gtu_to_date_mask integer,
+    gtu_to_date timestamp,
+    gtu_tag_values_indexed varchar[],
+    gtu_country_tag_value varchar,
+    gtu_country_tag_indexed varchar[],
+    gtu_location GEOGRAPHY(POLYGON,4326),
+
+    taxon_name varchar,
+    taxon_name_indexed tsvector,
+    taxon_name_order_by varchar,
+    taxon_level_ref integer,
+    taxon_level_name varchar,
+    taxon_status varchar,
+    taxon_path varchar,
+    taxon_parent_ref integer,
+    taxon_extinct boolean,
+
+    litho_name varchar,
+    litho_name_indexed tsvector,
+    litho_name_order_by varchar,
+    litho_level_ref integer,
+    litho_level_name varchar,
+    litho_status varchar,
+    litho_local boolean,
+    litho_color varchar,
+    litho_path varchar,
+    litho_parent_ref integer,
+
+    chrono_name varchar,
+    chrono_name_indexed tsvector,
+    chrono_name_order_by varchar,
+    chrono_level_ref integer,
+    chrono_level_name varchar,
+    chrono_status varchar,
+    chrono_local boolean,
+    chrono_color varchar,
+    chrono_path varchar,
+    chrono_parent_ref integer,
+
+    lithology_name varchar,
+    lithology_name_indexed tsvector,
+    lithology_name_order_by varchar,
+    lithology_level_ref integer,
+    lithology_level_name varchar,
+    lithology_status varchar,
+    lithology_local boolean,
+    lithology_color varchar,
+    lithology_path varchar,
+    lithology_parent_ref integer,
+
+    mineral_name varchar,
+    mineral_name_indexed tsvector,
+    mineral_name_order_by varchar,
+    mineral_level_ref integer,
+    mineral_level_name varchar,
+    mineral_status varchar,
+    mineral_local boolean,
+    mineral_color varchar,
+    mineral_path varchar,
+    mineral_parent_ref integer,
+
+    host_taxon_name varchar,
+    host_taxon_name_indexed tsvector,
+    host_taxon_name_order_by varchar,
+    host_taxon_level_ref integer,
+    host_taxon_level_name varchar,
+    host_taxon_status varchar,
+    host_taxon_path varchar,
+    host_taxon_parent_ref integer,
+    host_taxon_extinct boolean,
+
+    ig_num varchar,
+    ig_num_indexed varchar,
+    ig_date_mask integer,
+    ig_date date,
+    constraint pk_specimens_flat primary key (specimen_ref),
+    constraint fk_specimens_flat_specimen_ref foreign key (specimen_ref) references specimens(id) on delete cascade
+);
+
+
+
+create view darwin_flat as 
+  select
+
+ row_number() OVER (ORDER BY s.id) AS id, 
+
+  s.category,
+  s.collection_ref,
+  s.expedition_ref,
+  s.gtu_ref,
+  s.taxon_ref,
+  s.litho_ref,
+  s.chrono_ref,
+  s.lithology_ref,
+  s.mineral_ref,
+  s.host_taxon_ref,
+  s.host_specimen_ref,
+  s.host_relationship,
+  s.acquisition_category,
+  s.acquisition_date_mask,
+  s.acquisition_date,
+  s.station_visible,
+  s.ig_ref,
+
+
+  f.collection_type,
+  f.collection_code,
+  f.collection_name,
+  f.collection_is_public,
+  f.collection_parent_ref,
+  f.collection_path,
+  f.expedition_name,
+  f.expedition_name_ts,
+  f.expedition_name_indexed,
+
+  f.gtu_code,
+  f.gtu_parent_ref,
+  f.gtu_path,
+  f.gtu_from_date_mask,
+  f.gtu_from_date,
+  f.gtu_to_date_mask,
+  f.gtu_to_date,
+  f.gtu_tag_values_indexed,
+  f.gtu_country_tag_value,
+  f.gtu_country_tag_indexed,
+  f.gtu_location,
+
+  f.taxon_name,
+  f.taxon_name_indexed,
+  f.taxon_name_order_by,
+  f.taxon_level_ref,
+  f.taxon_level_name,
+  f.taxon_status,
+  f.taxon_path,
+  f.taxon_parent_ref,
+  f.taxon_extinct,
+
+  f.litho_name,
+  f.litho_name_indexed,
+  f.litho_name_order_by,
+  f.litho_level_ref,
+  f.litho_level_name,
+  f.litho_status,
+  f.litho_local,
+  f.litho_color,
+  f.litho_path,
+  f.litho_parent_ref,
+
+  f.chrono_name,
+  f.chrono_name_indexed,
+  f.chrono_name_order_by,
+  f.chrono_level_ref,
+  f.chrono_level_name,
+  f.chrono_status,
+  f.chrono_local,
+  f.chrono_color,
+  f.chrono_path,
+  f.chrono_parent_ref,
+
+  f.lithology_name,
+  f.lithology_name_indexed,
+  f.lithology_name_order_by,
+  f.lithology_level_ref,
+  f.lithology_level_name,
+  f.lithology_status,
+  f.lithology_local,
+  f.lithology_color,
+  f.lithology_path,
+  f.lithology_parent_ref,
+
+  f.mineral_name,
+  f.mineral_name_indexed,
+  f.mineral_name_order_by,
+  f.mineral_level_ref,
+  f.mineral_level_name,
+  f.mineral_status,
+  f.mineral_local,
+  f.mineral_color,
+  f.mineral_path,
+  f.mineral_parent_ref,
+
+  f.host_taxon_name,
+  f.host_taxon_name_indexed,
+  f.host_taxon_name_order_by,
+  f.host_taxon_level_ref,
+  f.host_taxon_level_name,
+  f.host_taxon_status,
+  f.host_taxon_path,
+  f.host_taxon_parent_ref,
+  f.host_taxon_extinct,
+
+  f.ig_num,
+  f.ig_num_indexed,
+  f.ig_date_mask,
+  f.ig_date,
+
+  s.id as spec_ref,
+
+  spec_ident_ids,
+  spec_coll_ids,
+  spec_don_sel_ids,
+  ind_ident_ids,
+
+  f.with_types,
+  f.with_individuals,
+  COALESCE(i.with_parts,false) as with_parts,
+
+  i.id as individual_ref,
+  coalesce(i.type, 'specimen') as individual_type,
+  coalesce(i.type_group, 'specimen') as individual_type_group,
+  coalesce(i.type_search, 'specimen') as individual_type_search,
+  coalesce(i.sex, 'undefined') as individual_sex,
+  coalesce(i.state, 'not applicable') as individual_state,
+  coalesce(i.stage, 'undefined') as individual_stage,
+  coalesce(i.social_status, 'not applicable') as individual_social_status,
+  coalesce(i.rock_form, 'not applicable') as individual_rock_form,
+  coalesce(i.specimen_individuals_count_min, 1) as individual_count_min,
+  coalesce(i.specimen_individuals_count_max, 1) as individual_count_max,
+  p.id as part_ref,
+  p.specimen_part as part,
+  p.specimen_status as part_status,
+  p.institution_ref,
+  p.building,
+  p.floor ,
+  p.room ,
+  p.row  ,
+  p.shelf ,
+  p.container ,
+  p.sub_container ,
+  p.container_type ,
+  p.sub_container_type ,
+  p.container_storage ,
+  p.sub_container_storage ,
+  p.specimen_part_count_min as part_count_min,
+  p.specimen_part_count_max as part_count_max,
+  p.specimen_status,
+  p.complete,
+  p.surnumerary
+
+
+  from specimens s
+  INNER JOIN specimens_flat f on f.specimen_ref = s.id
+  LEFT JOIN specimen_individuals  i ON s.id = i.specimen_ref 
+  LEFT JOIN specimen_parts p ON i.id = p.specimen_individual_ref
+;
 
 create table loan_history (
   id serial,

@@ -16,4 +16,17 @@ class IgsTable extends DarwinTable
     return $q->execute();
   }
 
+  public function findIgByPartRef($id)
+  {
+    $conn_MGR = Doctrine_Manager::connection();
+    $q = Doctrine_Query::create()
+         ->from('Igs i')
+         ->where("exists ( select 1 FROM specimens s2
+  INNER JOIN specimen_individuals  i1 ON s2.id = i1.specimen_ref 
+  INNER JOIN specimen_parts p3 ON i1.id = p3.specimen_individual_ref
+  WHERE p3.id = ? and s2.ig_ref = i.id
+  )", $id);
+    return $q->fetchOne();
+  }
+
 }

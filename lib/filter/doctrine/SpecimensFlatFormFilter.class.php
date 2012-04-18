@@ -1,20 +1,22 @@
 <?php
 
 /**
- * SpecimenSearch filter form.
+ * SpecimensFlat filter form.
  *
  * @package    darwin
  * @subpackage filter
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
+class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
 {
+  const SC_SPEC = 'specimen';
+  const SC_IND = 'individual';
+  const SC_PART = 'part';
+
   public function configure()
   {
-
-
-      $this->useFields(array('building','floor','room','row','shelf','gtu_code','gtu_from_date','gtu_to_date', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'litho_level_name', 'chrono_name', 'chrono_level_ref',
+    $this->useFields(array('gtu_code','gtu_from_date','gtu_to_date', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'litho_level_name', 'chrono_name', 'chrono_level_ref',
         'chrono_level_name', 'lithology_name', 'lithology_level_ref', 'lithology_level_name', 'mineral_name', 'mineral_level_ref',
         'mineral_level_name','ig_num','acquisition_category','acquisition_date'));
 
@@ -32,7 +34,6 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
     $rel = array('child'=>'Is a Child Of','direct_child'=>'Is a Direct Child','synonym'=> 'Is a Synonym Of', 'equal' => 'Is strictly equal to');
     
     $this->widgetSchema['taxon_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
-    //$this->widgetSchema->setHelp('taxon_relation','This line allow you to look for synonym or child of the selected item (ex : look for all item X children)');
     $this->widgetSchema['taxon_item_ref'] = new widgetFormButtonRef(array(
        'model' => 'Taxonomy',
        'link_url' => 'taxonomy/choose',
@@ -50,7 +51,6 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
 
 
     $this->widgetSchema['lithology_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
-    //$this->widgetSchema->setHelp('taxon_relation','This line allow you to look for synonym or child of the selected item (ex : look for all item X children)');
     $this->widgetSchema['lithology_item_ref'] = new widgetFormButtonRef(array(
        'model' => 'Lithology',
        'link_url' => 'lithology/choose',
@@ -82,7 +82,6 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
       ));
 
     $this->widgetSchema['litho_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
-    /* Lithology Reference */
     $this->widgetSchema['litho_item_ref'] = new widgetFormButtonRef(array(
        'model' => 'Lithostratigraphy',
        'link_url' => 'lithostratigraphy/choose',
@@ -106,7 +105,6 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
       ));
 
     $this->widgetSchema['chrono_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
-    /* Lithology Reference */
     $this->widgetSchema['chrono_item_ref'] = new widgetFormButtonRef(array(
        'model' => 'Chronostratigraphy',
        'link_url' => 'chronostratigraphy/choose',
@@ -130,7 +128,6 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
         'add_empty' => $this->getI18N()->__('All')
       ));
 
-    /* Mineralogy Reference */
     $this->widgetSchema['mineral_item_ref'] = new widgetFormButtonRef(array(
        'model' => 'Mineralogy',
        'link_url' => 'mineralogy/choose',
@@ -292,14 +289,14 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
 
 
     /* Define list of options available for different type of searches to provide */
-    $what_searched = array('specimen'=>$this->getI18N()->__('Specimens'), 
-                           'individual'=>$this->getI18N()->__('Individuals'), 
-                           'part'=>$this->getI18N()->__('Parts'));
+    $what_searched = array(self::SC_SPEC=>$this->getI18N()->__('Specimens'), 
+                           self::SC_IND=>$this->getI18N()->__('Individuals'), 
+                           self::SC_PART=>$this->getI18N()->__('Parts'));
     $this->widgetSchema['what_searched'] = new sfWidgetFormChoice(array(
         'choices' => $what_searched,
     ));
 
-    $this->validatorSchema['what_searched'] = new sfValidatorChoice(array('choices'=>array_keys($what_searched), 'required'=>false,'empty_value'=>'specimen'));
+    $this->validatorSchema['what_searched'] = new sfValidatorChoice(array('choices'=>array_keys($what_searched), 'required'=>false,'empty_value'=>self::SC_SPEC));
 
     //people widget
     $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
@@ -323,7 +320,7 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
       ));
     $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
     $this->validatorSchema['role_ref'] = new sfValidatorChoice(array('choices'=>array_keys($fields_to_search), 'required'=>false)) ;
-$this->validatorSchema['role_ref'] = new sfValidatorPass() ;    
+    $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     /* Labels */
     $this->widgetSchema->setLabels(array('gtu_code' => 'Sampling Location code',
                                          'taxon_name' => 'Taxon text search',
@@ -524,8 +521,17 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     $this->validatorSchema['lon_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
 
     sfWidgetFormSchema::setDefaultFormFormatterName('list');
+    $this->widgetSchema->setNameFormat('specimen_search_filters[%s]');
+
   }
 
+  public function addGtuTagValue($num)
+  {
+      $form = new TagLineForm(null,array('num'=>$num));
+      $this->embeddedForms['Tags']->embedForm($num, $form);
+      $this->embedForm('Tags', $this->embeddedForms['Tags']);
+  }
+  
 
   public function addCodeValue($num)
   {
@@ -551,8 +557,144 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     return $query;
   }
 
+  public function addToolsColumnQuery($query, $field, $val)
+  {
+    if($val != '' && is_array($val) && !empty($val))
+    {
+      $query->andWhere('s.specimen_ref in (select fct_search_tools (?))',implode(',', $val));
+    }
+    return $query ;
+  }
+
+  public function addMethodsColumnQuery($query, $field, $val)
+  {
+    if($val != '' && is_array($val) && !empty($val))
+    {
+      $query->andWhere('s.specimen_ref in (select fct_search_methods (?))',implode(',', $val));
+    }
+    return $query ;
+  }
+
+
+  public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
+  {
+     if ($values != "")
+     {
+       $conn_MGR = Doctrine_Manager::connection();
+       $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
+     }
+     return $query;
+  } 
+
+  public function addSexColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.sex in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('i.sex in ('.implode(',',$val).')');
+    return $query ;
+  }
+
+  public function addTypeColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.type_search in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('i.type_search in ('.implode(',',$val).')');
+    return $query ;
+  }
+
+  public function addStageColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.stage in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('i.stage in ('.implode(',',$val).')');
+
+    return $query ;
+  }
+
+  public function addStatusColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.state in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('i.state in ('.implode(',',$val).')');
+    return $query ;
+  }
+
+  public function addSocialColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.social_status in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('i.social_status in ('.implode(',',$val).')');
+    return $query ;
+  }
+
+  public function addRockformColumnQuery($query, $field, $val)
+  {
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope == self::SC_SPEC)
+      $this->exists_qry_ind[] = ' i1.rock_form in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('i.rock_form in ('.implode(',',$val).')');
+
+    return $query ;
+  }
+
+  public function addInstitutionRefColumnQuery($query, $field, $val)
+  {
+    if($val == '' &&  ! ctype_digit($val)) return ;
+    $conn_MGR = Doctrine_Manager::connection();
+    $val = $conn_MGR->quote($val, 'integer');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.institution_ref =  '. $val;
+    else
+      $query->andWhere(' p1.institution_ref =  '.$val);
+
+    return $query ;
+  }
+
   public function addContainerColumnQuery($query, $field, $val)
   {
+
     if(trim($val) != '')
     {
       $values = explode(' ',$val);
@@ -562,12 +704,31 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
         if(trim($value) != '')
           $query_value[] = '%'.strtolower($value).'%';
       }
-      $query_array = array_fill(0,count($query_value),'lower(container) like ?');
-      $query->andWhere( implode(' or ',$query_array) ,$query_value);
+   
+
+      if($this->scope != self::SC_PART)
+      {
+        if(! empty($query_value))
+        {
+          $conn_MGR = Doctrine_Manager::connection();
+          $exist_qry ='';
+          foreach($query_value as $k=>$param)
+          {
+            if($k != 0)
+              $exist_qry .= ' or ';
+            $exist_qry .= 'lower(p1.container) like '. $conn_MGR->quote($param, 'string') ;
+          }
+          $this->exists_qry_part[] = $exist_qry;
+        }
+      }
+      else
+      {
+        $query_array = array_fill(0,count($query_value),'lower(p.container) like ?');
+        $query->andWhere( implode(' or ',$query_array) ,$query_value);
+      }
     }
     return $query ;
   }
-
   public function addSubContainerColumnQuery($query, $field, $val)
   {
     if(trim($val) != '')
@@ -579,178 +740,109 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
         if(trim($value) != '')
           $query_value[] = '%'.strtolower($value).'%';
       }
-      $query_array = array_fill(0,count($query_value),'lower(sub_container) like ?');
-      $query->andWhere( implode(' or ',$query_array) ,$query_value);
-    }
-    return $query ;
-  }
+   
 
-  public function addToolsColumnQuery($query, $field, $val)
-  {
-    if($val != '' && is_array($val) && !empty($val))
-    {
-      $query->andWhere('spec_ref in (select fct_search_tools (?))',implode(',', $val));
-    }
-    return $query ;
-  }
-
-  public function addMethodsColumnQuery($query, $field, $val)
-  {
-    if($val != '' && is_array($val) && !empty($val))
-    {
-      $query->andWhere('spec_ref in (select fct_search_methods (?))',implode(',', $val));
-    }
-    return $query ;
-  }
-
-  public function addSexColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_sex',$val);
+      if($this->scope != self::SC_PART)
+      {
+        if(! empty($query_value))
+        {
+          $conn_MGR = Doctrine_Manager::connection();
+          $exist_qry ='';
+          foreach($query_value as $k=>$param)
+          {
+            if($k != 0)
+              $exist_qry .= ' or ';
+            $exist_qry .= 'lower(p1.sub_container) like '. $conn_MGR->quote($param, 'string') ;
+          }
+          $this->exists_qry_part[] = $exist_qry;
+        }
+      }
       else
-        $query->andWhere('individual_sex = ?',$val);
-    }
-    return $query ;
-  }
-
-  public function addTypeColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_type_search',$val);
-      else
-        $query->andWhere('individual_type_search = ?',$val);
-    }
-    return $query ;
-  }
-  
-  public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
-  {
-     if ($values != "")
-     {
-       $conn_MGR = Doctrine_Manager::connection();
-       $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
-     }
-     return $query;
-  }  
-
-  public function addStageColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_stage',$val);
-      else
-        $query->andWhere('individual_stage = ?',$val);
-    }
-    return $query ;
-  }
-
-  public function addStatusColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_state',$val);
-      else
-        $query->andWhere('individual_state = ?',$val);
-    }
-    return $query ;
-  }
-
-  public function addSocialColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_social_status',$val);
-      else
-        $query->andWhere('individual_social_status = ?',$val);
-    }
-    return $query ;
-  }
-
-  public function addRockformColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('individual_rock_form',$val);
-      else
-        $query->andWhere('individual_rock_form = ?',$val);
-    }
-    return $query ;
-  }
-
-  public function addInstitutionRefColumnQuery($query, $field, $val)
-  {
-    if($val != '')
-    {
-      $query->andWhere('institution_ref = ?',$val);
+      {
+        $query_array = array_fill(0,count($query_value),'lower(p.sub_container) like ?');
+        $query->andWhere( implode(' or ',$query_array) ,$query_value);
+      }
     }
     return $query ;
   }
 
   public function addBuildingColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('building',$val);
-      else
-        $query->andWhere('building = ?',$val);
-    }
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.building in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('p.building in ('.implode(',',$val).')');
+
     return $query ;
   }
 
   public function addFloorColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('floor',$val);
-      else
-        $query->andWhere('floor = ?',$val);
-    }
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.floor in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('p.floor in ('.implode(',',$val).')');
+
     return $query ;
   }
 
   public function addRoomColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('room',$val);
-      else
-        $query->andWhere('room = ?',$val);
-    }
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.room in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('p.room in ('.implode(',',$val).')');
+
     return $query ;
   }
 
   public function addRowColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('row',$val);
-      else
-        $query->andWhere('row = ?',$val);
-    }
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.row in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('p.row in ('.implode(',',$val).')');
+
     return $query ;
   }
 
   public function addShelfColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
-      if(is_array($val))
-        $query->andWhereIn('shelf',$val);
-      else
-        $query->andWhere('shelf = ?',$val);
-    }
+    if($val == '') return ;
+    if(! is_array($val)) $val = array($val);
+    $conn_MGR = Doctrine_Manager::connection();
+    foreach($val as $k => $v)
+      $val[$k] = $conn_MGR->quote($v, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.shelf in ('.implode(',',$val).') ';
+    else
+      $query->andWhere('p.shelf in ('.implode(',',$val).')');
+
     return $query ;
   }
 
@@ -821,12 +913,20 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     }
     if(! empty($params)) 
     {
-      $query->addWhere("spec_ref in (select fct_searchCodes($str_params) )", $params);      
+      $query->addWhere("s.specimen_ref in (select fct_searchCodes($str_params) )", $params);
     }
     if(! empty($params_part)) 
     {
-      $query->addWhere("part_ref in (select fct_searchCodes($str_params_part) )", $params_part);      
-    }    
+      if($this->scope == self::SC_SPEC)
+        $query->addWhere("exists (select 1 from specimen_individuals i inner join specimen_parts p on p.specimen_individual_ref = i.id 
+          inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.specimen_ref  )", $params_part);
+      elseif($this->scope == self::SC_IND)
+        $query->addWhere("exists (select 1 from specimen_parts p on p.specimen_individual_ref = i.id 
+          inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.specimen_ref  )", $params_part);
+      elseif($this->scope == self::SC_PART)
+        $query->addWhere("p.id in (select fct_searchCodes($str_params_part) )", $params_part);
+
+    }
     return $query ;
   }
 
@@ -844,13 +944,72 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     return $query ;  
   }
 
-  public function addGtuTagValue($num)
+  public function addSpecIdsColumnQuery($query, $field, $val)
   {
-      $form = new TagLineForm(null,array('num'=>$num));
-      $this->embeddedForms['Tags']->embedForm($num, $form);
-      $this->embedForm('Tags', $this->embeddedForms['Tags']);
+    $ids = explode(',', $val);
+    $clean_ids =array();
+    foreach($ids as $id)
+    {
+      if(ctype_digit($id))
+        $clean_ids[] = $id;
+    }
+
+    if(! empty($clean_ids))
+    {
+      if($this->scope == self::SC_SPEC)
+        $query->andWhereIn("s.specimen_ref", $clean_ids);
+      elseif($this->scope == self::SC_IND)
+        $query->andWhereIn("i.id", $clean_ids);
+      else
+        $query->andWhereIn("p.id", $clean_ids);
+    }
+    return $query ;
   }
-  
+
+  public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
+  {
+    $build_query = ''; 
+    if(count($field_to_use) < 1)
+      $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
+
+    foreach($field_to_use as $field)
+    {
+      if($field == 'ident_ids')
+      {
+        $build_query .= "(s.spec_ident_ids @> ARRAY[$people_id]::int[] OR ";
+        if($this->scope == self::SC_SPEC)
+        {
+          $build_query .= " exists ( select 1 from specimen_individuals i1
+          INNER JOIN specimen_parts p1 on i1.id = p1.specimen_individual_ref
+          where i1.specimen_ref= s.specimen_ref AND  i1.ind_ident_ids @> ARRAY[$people_id]::int[] ) ";
+        }
+        else
+        {
+          $build_query .= " i.ind_ident_ids @> ARRAY[$people_id]::int[] ";
+        }
+        $build_query .= ") OR " ;
+      }
+      elseif($field == 'spec_coll_ids')
+      {
+        $build_query .= "s.spec_coll_ids @> ARRAY[$people_id]::int[] OR " ;
+      }
+      else
+      {
+        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;    
+      }
+    }
+    // I remove the last 'OR ' at the end of the string
+    $build_query = substr($build_query,0,strlen($build_query) -3) ;
+    $query->andWhere($build_query) ;
+    return $query ;
+  }
+
+  public function addCollectionRefColumnQuery($query, $field, $val)
+  {
+    //Do Nothing here, the job is done in the doBuildQuery with check collection rights
+    return $query;
+  }
+
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes']))
@@ -891,98 +1050,69 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     }
     parent::bind($taintedValues, $taintedFiles);
   }
-  
-  public function addSpecIdsColumnQuery($query, $field, $val)
-  {
-    $ids = explode(',', $val);
-    $clean_ids =array();
-    foreach($ids as $id)
-    {
-      if(ctype_digit($id))
-        $clean_ids[] = $id;
-    }
-    
-    if(! empty($clean_ids))
-    {
-      if($this->getValue('what_searched') == 'specimen')
-        $query->andWhereIn("spec_ref", $clean_ids);
-      elseif($this->getValue('what_searched') == 'individual')
-        $query->andWhereIn("individual_ref", $clean_ids);
-      else
-        $query->andWhereIn("part_ref", $clean_ids);
-    }
-    return $query ;
-  }
-
-  public function addCollectionRefColumnQuery($query, $field, $val)
-  {
-    //Do Nothing here, the job is done in the doBuildQuery with check collection rights
-
-    return $query;
-  }
 
   public function doBuildQuery(array $values)
   {
-    $fields = SpecimenSearchTable::getFieldsByType($this->options['user']->getDbUserType());
+    $this->exists_qry_ind = array();
+    $this->exists_qry_part = array();
+    $this->scope = $values['what_searched'];
+
+    if($this->scope == self::SC_SPEC)
+    {
+      $query = DQ::create()
+        ->select('s.*')
+        ->from('SpecimensFlat s');
+    }
+    elseif($this->scope == self::SC_IND)
+    {
+      $query = DQ::create()
+        ->select('s.*, i.*, p.*')
+        ->from('SpecimenIndividuals i')
+        ->innerJoin('i.SpecimensFlat s');
+    }
+    elseif($this->scope == self::SC_PART)
+    {
+      $query = DQ::create()
+        ->select('s.*, i.*, p.*')
+        ->from('SpecimenParts p')
+        ->innerJoin('p.Individual i')
+        ->innerJoin('i.SpecimensFlat s');
+    }
+
+    $this->options['query'] = $query;
+
 
     $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
-    $this->cols = $this->getCollectionWithRights($this->options['user']);
 
+    $query = parent::doBuildQuery($values);
+
+    /** ADD exists to the query **/
+    $where_exist = '';
+    if($this->scope == self::SC_SPEC && ! empty($this->exists_qry_part))
+    {
+       $query->where('exists ( select 1 from specimen_individuals i1
+          INNER JOIN specimen_parts p1 on i1.id = p1.specimen_individual_ref
+          where i1.specimen_ref= s.specimen_ref AND '. implode(' AND ', array_merge($this->exists_qry_ind,$this->exists_qry_part)). ')');
+    }
+    elseif(! empty($this->exists_qry_ind)) // When scope = spec and look on ind only
+    {
+        $query->where('exists ( select 1 from specimen_individuals i1
+          where i1.specimen_ref= s.specimen_ref AND '. implode(' AND ', $this->exists_qry_ind). ')');
+    }
+    elseif(! empty($this->exists_qry_part)) // When scope = ind and look on part
+    {
+        $alias = $query->getRootAlias();
+        $query->where('exists ( select 1 from specimen_parts p1
+          where p1.specimen_individual_ref= s.specimen_ref AND '. implode(' AND ', $this->exists_qry_part). ')');
+    }
+
+    $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
+
+    $this->cols = $this->getCollectionWithRights($this->options['user']);
     if(!empty($values['collection_ref']))
     {
       $this->cols = array_intersect($values['collection_ref'], $this->cols);
     }
-
-    if($values['what_searched'] == 'specimen')
-    {
-      $str = '';
-      foreach($fields['specimens'] as $fld)
-      {
-        $str .= ' dummy_first( '. $fld .' ) as '.$fld.' ,' ;
-      }
-      $query = DQ::create()
-        ->from('SpecimenSearch s')
-        ->groupBy('spec_ref')
-        ->select($str . ' MIN(id) as id');
-
-    }
-    elseif($values['what_searched'] == 'individual')
-    {
-      $str = '';
-      $array_fld = array_merge($fields['specimens'],$fields['individuals']);
-      foreach($array_fld as $fld)
-      {
-        $str .= ' dummy_first( '. $fld .' ) as '.$fld.' ,' ;
-      }
-
-      $query = DQ::create()
-        ->from('IndividualSearch s')
-        ->select($str .' MIN(id) as id,  false as with_types')
-        ->andWhere('individual_ref is not null ')
-        ->groupBy('individual_ref');
-    }
-    else
-    {
-      $array_fld = array_merge($fields['specimens'],$fields['individuals']);
-      $array_fld = array_merge($array_fld,$fields['parts']);
-      $str = implode(', ',$array_fld);
-      $query = DQ::create()
-        ->select($str.' , false as with_types,id')
-        ->andWhere('part_ref is not null ')
-        ->from('PartSearch s');
-    }
-    if($values['what_searched'] != 'part')
-      $query->addSelect('dummy_first(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
-    else
-      $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
-
-
-
-
-    $this->options['query'] = $query;
-
-    $query = parent::doBuildQuery($values);
-
     $query->andwhere('collection_ref in ( '.implode(',',$this->cols). ') ');
 
     if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
@@ -993,13 +1123,14 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     if ($values['lithology_level_ref'] != '') $query->andWhere('lithology_level_ref = ?', intval($values['lithology_level_ref']));
     if ($values['mineral_level_ref'] != '') $query->andWhere('mineral_level_ref = ?', intval($values['mineral_level_ref']));
     $this->addLatLonColumnQuery($query, $values);
-    $this->addNamingColumnQuery($query, 'taxonomy', 'name_indexed', $values['taxon_name'],null,'taxon_name_indexed');
-    $this->addNamingColumnQuery($query, 'expeditions', 'name_ts', $values['expedition_name'],null,'expedition_name_ts');
+    $this->addNamingColumnQuery($query, 'expeditions', 's.name_ts', $values['expedition_name'],'s','expedition_name_ts');
 
-    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'name_indexed', $values['chrono_name'],null,'chrono_name_indexed');
-    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_indexed', $values['litho_name'],null,'litho_name_indexed');
-    $this->addNamingColumnQuery($query, 'lithology', 'name_indexed', $values['lithology_name'],null,'lithology_name_indexed');
-    $this->addNamingColumnQuery($query, 'mineralogy', 'name_indexed', $values['mineral_name'],null,'mineral_name_indexed');
+    $this->addNamingColumnQuery($query, 'taxonomy', 'name_indexed', $values['taxon_name'],'s','taxon_name_indexed');
+    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'name_indexed', $values['chrono_name'],'s','chrono_name_indexed');
+    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_indexed', $values['litho_name'],'s','litho_name_indexed');
+    $this->addNamingColumnQuery($query, 'lithology', 'name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
+    $this->addNamingColumnQuery($query, 'mineralogy', 'name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
+
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
     $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);    
@@ -1012,8 +1143,7 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
     $this->addCatalogueRelationColumnQuery($query, $values['mineral_item_ref'], $values['mineral_relation'],'mineralogy','mineral');
 
     $query->limit($this->getCatalogueRecLimits());
-//     print $query->getSqlQuery();
-//     die();
+
     return $query;
   }
 

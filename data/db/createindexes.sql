@@ -114,6 +114,7 @@ CREATE INDEX CONCURRENTLY idx_mineralogy_name_order_by on mineralogy(name_order_
 CREATE INDEX CONCURRENTLY idx_mineralogy_name_order_by_txt_op on mineralogy USING btree ( name_order_by text_pattern_ops);
 
 CREATE INDEX CONCURRENTLY idx_mineralogy_cristal_system on mineralogy(cristal_system) WHERE cristal_system <> '';
+
 CREATE INDEX CONCURRENTLY idx_my_widgets_user_category on my_widgets(user_ref, category, group_name);
 CREATE INDEX CONCURRENTLY idx_people_sub_type on people(sub_type) WHERE NOT sub_type IS NULL;
 CREATE INDEX CONCURRENTLY idx_people_family_name on people(family_name);

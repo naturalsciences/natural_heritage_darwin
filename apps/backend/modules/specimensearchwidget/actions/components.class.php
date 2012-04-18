@@ -14,7 +14,7 @@ class specimensearchwidgetComponents extends sfComponents
   {
     if(!$this->form)
     {
-     $this->form = new SpecimenSearchFormFilter() ;
+     $this->form = new SpecimensFlatFormFilter() ;
     }
   }
   
@@ -130,15 +130,15 @@ class specimensearchwidgetComponents extends sfComponents
   
   public function executeLatlong()
   {
-     if(!$this->form) $this->form = new SpecimenSearchFormFilter() ;
+    $this->defineForm();
   }
 
   public function executeExpedition()
   {
-     if(!$this->form) $this->form = new SpecimenSearchFormFilter() ;
+    $this->defineForm();
   }
   public function executePeople_role()
   {
-     if(!$this->form) $this->form = new SpecimenSearchFormFilter() ;
-  }  
+    $this->defineForm();
+  }
 }

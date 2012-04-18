@@ -17,7 +17,7 @@ abstract class BaseGtuForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'                 => new sfWidgetFormInputHidden(),
       'code'               => new sfWidgetFormTextarea(),
-      'parent_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => false)),
+      'parent_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
       'gtu_from_date_mask' => new sfWidgetFormInputText(),
       'gtu_from_date'      => new sfWidgetFormTextarea(),
       'gtu_to_date_mask'   => new sfWidgetFormInputText(),

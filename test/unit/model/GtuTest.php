@@ -1,6 +1,6 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
-$t = new lime_test(14, new lime_output_color());
+$t = new lime_test(13, new lime_output_color());
 
 $fromDate = new FuzzyDateTime('1975/01/01', 32);
 $toDate = new FuzzyDateTime('2009/12/31', 32);
@@ -22,5 +22,3 @@ $t->is( $gtu-> getGtuToDateMasked() , '31/12/2009 <em>00:00:00</em>', 'Correct t
 $t->is( $gtu-> getGtuFromDate() , array('year'=>1975, 'month'=>01, 'day'=>01, 'hour'=>'', 'minute'=>'', 'second'=>''), 'Correct from date masked as array this gtu');
 $t->is( $gtu-> getGtuToDate() , array('year'=>2009, 'month'=>12, 'day'=>31, 'hour'=>'', 'minute'=>'', 'second'=>''), 'Correct to date masked as array this gtu');
 $t->is( $gtu->getCode(), 'Antarctica', 'Correct return of getName() method');
-$gtu = Doctrine::getTable('Gtu')->findOneById(0);
-$t->is( $gtu->getCode(), '-', 'For gtu "0" the code returned by getCode() method is well "-"');

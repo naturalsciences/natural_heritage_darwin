@@ -49,56 +49,71 @@ Sub Container Storage<?php echo $sep;?>
 Part Codes<?php echo $sep;?>
 <?php endif;?>
 <?php endif;?>
-
-<?php foreach($specimensearch as $item):?>
-<?php $item = $item->getRawValue();?>
-<?php echo $item->getCategory().$sep;?>
-<?php echo $item->getCollectionRef().$sep;?>
-<?php echo $item->getCollectionName().$sep;?>
-<?php echo $item->getTaxonRef().$sep;?>
-<?php echo $item->getTaxonName().$sep;?>
-<?php echo ($item->getWithTypes()? 'yes':'no').$sep;?>
-<?php echo $item->getGtuRef().$sep;?>
-<?php echo $item->getGtuCode().$sep;?>
-<?php echo str_replace(';', ',', $item->getGtuCountryTagValue('')).$sep; ?>
-<?php if(isset($codes[$item->getSpecRef()])) foreach($codes[$item->getSpecRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
-<?php echo $item->getChronoRef().$sep;?>
-<?php echo $item->getChronoName().$sep;?>
-<?php echo $item->getIgRef().$sep;?>
-<?php echo $item->getIgNum().$sep;?>
-<?php echo $item->getLithoRef().$sep;?>
-<?php echo $item->getLithoName().$sep;?>
-<?php echo $item->getLithologyRef().$sep;?>
-<?php echo $item->getLithologyName().$sep;?>
-<?php echo $item->getMineralRef().$sep;?>
-<?php echo $item->getMineralName().$sep;?>
-<?php echo $item->getExpeditionRef().$sep;?>
-<?php echo $item->getExpeditionName().$sep;?>
-<?php echo $item->getAcquisitionCategory().$sep;?>
+<?php foreach($specimensearch as $unit):?>
+<?php
+  $unit = $unit->getRawValue();
+  if($source=="specimen") {
+    $specimen = $unit;
+  }
+  elseif($source=="individual")
+  {
+    $individual = $unit;
+    $specimen = $individual->SpecimensFlat;
+  }
+  elseif($source=="part")
+  {
+    $part = $unit;
+    $individual = $unit->Individual;
+    $specimen = $individual->SpecimensFlat;
+  }
+?>
+<?php echo $specimen->getCategory().$sep;?>
+<?php echo $specimen->getCollectionRef().$sep;?>
+<?php echo $specimen->getCollectionName().$sep;?>
+<?php echo $specimen->getTaxonRef().$sep;?>
+<?php echo $specimen->getTaxonName().$sep;?>
+<?php echo ($specimen->getWithTypes()? 'yes':'no').$sep;?>
+<?php echo $specimen->getGtuRef().$sep;?>
+<?php echo $specimen->getGtuCode().$sep;?>
+<?php echo str_replace(';', ',', $specimen->getGtuCountryTagValue('')).$sep; ?>
+<?php if(isset($codes[$specimen->getSpecRef()])) foreach($codes[$specimen->getSpecRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
+<?php echo $specimen->getChronoRef().$sep;?>
+<?php echo $specimen->getChronoName().$sep;?>
+<?php echo $specimen->getIgRef().$sep;?>
+<?php echo $specimen->getIgNum().$sep;?>
+<?php echo $specimen->getLithoRef().$sep;?>
+<?php echo $specimen->getLithoName().$sep;?>
+<?php echo $specimen->getLithologyRef().$sep;?>
+<?php echo $specimen->getLithologyName().$sep;?>
+<?php echo $specimen->getMineralRef().$sep;?>
+<?php echo $specimen->getMineralName().$sep;?>
+<?php echo $specimen->getExpeditionRef().$sep;?>
+<?php echo $specimen->getExpeditionName().$sep;?>
+<?php echo $specimen->getAcquisitionCategory().$sep;?>
 <?php if($source != 'specimen'):?>
-<?php echo $item->getIndividualTypeGroup().$sep;;?>
-<?php echo $item->getIndividualSex().$sep;?>
-<?php echo $item->getIndividualState().$sep;?>
-<?php echo $item->getIndividualStage().$sep;?>
-<?php echo $item->getIndividualSocialStatus().$sep;?>
-<?php echo $item->getIndividualRockForm().$sep;?>
-<?php echo $item->getIndividualCountMin().$sep;?>
-<?php echo $item->getIndividualCountMax().$sep;?>
+<?php echo $individual->getTypeGroup().$sep;;?>
+<?php echo $individual->getSex().$sep;?>
+<?php echo $individual->getState().$sep;?>
+<?php echo $individual->getStage().$sep;?>
+<?php echo $individual->getSocialStatus().$sep;?>
+<?php echo $individual->getRockForm().$sep;?>
+<?php echo $individual->getSpecimenIndividualsCountMin().$sep;?>
+<?php echo $individual->getSpecimenIndividualsCountMax().$sep;?>
 <?php elseif($source =='part'):?>
-<?php echo $specimen->getPart();?>
-<?php echo $specimen->getPartStatus();?>
+<?php echo $part->getSpecimenPart();?>
+<?php echo $part->getSpecimenStatus();?>
 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-<?php echo $specimen->getBuilding();?>
-<?php echo $specimen->getFloor();?>
-<?php echo $specimen->getRoom();?>
-<?php echo $specimen->getRow();?>
-<?php echo $specimen->getShelf();?>
-<?php echo $specimen->getContainer();?>
-<?php echo $specimen->getContainerType();?>
-<?php echo $specimen->getContainerStorage();?>
-<?php echo $specimen->getSubContainer();?>
-<?php echo $specimen->getSubContainerType();?>
-<?php echo $specimen->getSubContainerStorage();?>
+<?php echo $part->getBuilding();?>
+<?php echo $part->getFloor();?>
+<?php echo $part->getRoom();?>
+<?php echo $part->getRow();?>
+<?php echo $part->getShelf();?>
+<?php echo $part->getContainer();?>
+<?php echo $part->getContainerType();?>
+<?php echo $part->getContainerStorage();?>
+<?php echo $part->getSubContainer();?>
+<?php echo $part->getSubContainerType();?>
+<?php echo $part->getSubContainerStorage();?>
 <?php if(isset($part_codes[$item->getSpecRef()])) foreach($part_codes[$item->getSpecRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
 <?php endif;?>
 <?php endif;?>

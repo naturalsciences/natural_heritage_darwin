@@ -624,63 +624,57 @@ CREATE TRIGGER trg_cpy_updateSpecHostImpact BEFORE UPDATE
 
 CREATE TRIGGER trg_update_expeditions_darwin_flat AFTER UPDATE
         ON expeditions FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimens_flat_related();
 
 CREATE TRIGGER trg_update_collections_darwin_flat AFTER UPDATE
         ON collections FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimens_flat_related();
 
 CREATE TRIGGER trg_update_gtu_darwin_flat AFTER UPDATE
         ON gtu FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimens_flat_related();
 
 CREATE TRIGGER trg_update_tag_groups_darwin_flat AFTER INSERT OR UPDATE OR DELETE
         ON tag_groups FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimens_flat_related();
 
 CREATE TRIGGER trg_update_igs_darwin_flat AFTER UPDATE
         ON igs FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimens_flat_related();
 
 CREATE TRIGGER trg_update_taxonomy_darwin_flat AFTER UPDATE
         ON taxonomy FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimens_flat_related();
 
 CREATE TRIGGER trg_update_chronostratigraphy_darwin_flat AFTER UPDATE
         ON chronostratigraphy FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimens_flat_related();
 
 CREATE TRIGGER trg_update_lithostratigraphy_darwin_flat AFTER UPDATE
         ON lithostratigraphy FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimens_flat_related();
 
 CREATE TRIGGER trg_update_lithology_darwin_flat AFTER UPDATE
         ON lithology FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimens_flat_related();
 
 CREATE TRIGGER trg_update_mineralogy_darwin_flat AFTER UPDATE
         ON mineralogy FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimens_flat_related();
+
 
 CREATE TRIGGER trg_update_specimens_darwin_flat AFTER INSERT OR UPDATE
         ON specimens FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_update_specimen_flat();
 
-CREATE TRIGGER trg_update_specimen_individuals_darwin_flat AFTER INSERT OR UPDATE
+CREATE TRIGGER trg_fct_count_units_individuals AFTER INSERT OR UPDATE OR DELETE
         ON specimen_individuals FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_count_units();
 
-CREATE TRIGGER trg_delete_specimen_individuals_darwin_flat AFTER DELETE
-        ON specimen_individuals FOR EACH ROW
-        EXECUTE PROCEDURE fct_delete_darwin_flat_ind_part();
-
-CREATE TRIGGER trg_update_specimen_parts_darwin_flat AFTER INSERT OR UPDATE
+CREATE TRIGGER trg_fct_count_units_parts AFTER INSERT OR DELETE
         ON specimen_parts FOR EACH ROW
-        EXECUTE PROCEDURE fct_update_darwin_flat();
+        EXECUTE PROCEDURE fct_count_units();
 
-CREATE TRIGGER trg_delete_specimen_parts_darwin_flat AFTER DELETE
-        ON specimen_parts FOR EACH ROW
-        EXECUTE PROCEDURE fct_delete_darwin_flat_ind_part();
 
 CREATE TRIGGER trg_unpromotion_remove_cols AFTER UPDATE
         ON users FOR EACH ROW

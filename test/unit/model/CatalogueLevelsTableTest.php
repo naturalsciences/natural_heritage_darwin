@@ -1,12 +1,11 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
-$t = new lime_test(24, new lime_output_color());
+$t = new lime_test(23, new lime_output_color());
 
 $t->info('Get all levels');
 $levels = Doctrine::getTable('CatalogueLevels')->getLevelsByTypes(array());
-$t->is($levels->count(),79,'There are "79" levels in total');
-$t->is($levels[0]->getLevelName(),'-','Name of level 0 is well "-"');
-$t->is($levels[78]->getLevelName(),'rock','Name of last level is well "rock"');
+$t->is($levels->count(),78,'There are "78" levels in total');
+$t->is($levels[77]->getLevelName(),'rock','Name of last level is well "rock"');
 $t->info('Get levels for Taxonomy');
 $levels = Doctrine::getTable('CatalogueLevels')->getLevelsByTypes(array('table'=>'taxonomy'));
 $t->is($levels->count(),54,'There are "54" results in taxonomy');

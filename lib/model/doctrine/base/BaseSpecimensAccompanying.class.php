@@ -58,13 +58,9 @@ abstract class BaseSpecimensAccompanying extends sfDoctrineRecord
              ));
         $this->hasColumn('taxon_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('mineral_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
-             'default' => 0,
              ));
         $this->hasColumn('form', 'string', null, array(
              'type' => 'string',

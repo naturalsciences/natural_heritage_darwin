@@ -153,6 +153,45 @@ class DarwinTable extends Doctrine_Table
 		return $q->execute() ; 
   }
 
+  public function hasRights($field_name, $unit_id, $user_id)
+  {
+    //TEST the rights in the given collection 
+    if($field_name =='spec_ref')
+    {
+      $q = Doctrine_Query::create()
+        ->select('id')
+        ->from('Specimens s')
+        ->andWhere('s.id = ?', $unit_id)
+        ->andWhere('s.collection_ref in (select fct_search_authorized_encoding_collections(?))',$user_id);
+      $r = $q->execute();
+      return $r->count();
+    }
+    elseif($field_name =='individual_ref')
+    {
+      $q = Doctrine_Query::create()
+        ->select('id')
+        ->from('SpecimenIndividuals i')
+        ->InnerJoin('i.Specimens s')
+        ->andWhere('i.id = ?', $unit_id)
+        ->andWhere('s.collection_ref in (select fct_search_authorized_encoding_collections(?))',$user_id);
+      $r = $q->execute();
+      return $r->count();
+    }
+    if($field_name =='part_ref')
+    {
+      $q = Doctrine_Query::create()
+        ->select('id')
+        ->from('SpecimenParts p')
+        ->InnerJoin('p.Individual i')
+        ->InnerJoin('i.Specimens s')
+        ->andWhere('p.id = ?', $unit_id)
+        ->andWhere('s.collection_ref in (select fct_search_authorized_encoding_collections(?))',$user_id);
+      $r = $q->execute();
+      return $r->count();
+    }
+    return false;
+  }
+
   /** Search in flat specimens with a given value ($unit_id) for a field (field_name)
    * if a there is at least on collections matching criterias where you don't have rights to encod, 
    * return collections ids
@@ -163,16 +202,22 @@ class DarwinTable extends Doctrine_Table
   **/
   public function testNoRightsCollections($field_name, $unit_id, $user_id)
   {
-    $q = Doctrine_Query::create()
-      ->select('distinct(collection_ref) as collection_ref')
-      ->from('SpecimenSearch s')
-			->where("s.$field_name = ". ( (int)$unit_id) );
-    $collections = $q->execute();
-    $ids = array();
-    foreach($collections as $col)
+    if(in_array($field_name,array('chrono_ref','litho_ref','lithology_ref','mineral_ref','taxon_ref','gtu_ref')))
     {
-      $ids[] = $col->getCollectionRef();
+      $q = Doctrine_Query::create()
+        ->select('distinct(collection_ref) as collection_ref')
+        ->from('specimens s')
+        ->where("s.$field_name = ". ( (int)$unit_id) );
+      $collections = $q->execute();
+      $ids = array();
+      foreach($collections as $col)
+      {
+        $ids[] = $col->getCollectionRef();
+      }
     }
+    else
+      $ids=array();
+
     if(empty($ids)) return array(); // If not referenced... you have rights !
 
     $q = Doctrine_Query::create()

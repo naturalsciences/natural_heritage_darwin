@@ -110,11 +110,9 @@ class catalogueActions extends DarwinActions
     {
       if(in_array($request->getParameter('table'),array('comments','catalogue_properties','ext_links')) && in_array($r->getReferencedRelation(),$this->ref_id))
       {
-        $spec = Doctrine::getTable('specimenSearch')->getRecordByRef($this->ref_id[$r->getReferencedRelation()],$r->getRecordId());
-        if(in_array($spec->getCollectionRef(),Doctrine::getTable('Specimens')->testNoRightsCollections($this->ref_id[$r->getReferencedRelation()],
-                                                                                                        $r->getRecordId(), 
-                                                                                                        $this->getUser()->getId())))    
-          $this->forwardToSecureAction();    
+
+      if(! Doctrine::getTable('Specimens')->hasRights($this->ref_id[$r->getReferencedRelation()], $r->getRecordId(), $this->getUser()->getId()))
+            $this->forwardToSecureAction();    
       } 
     }
 

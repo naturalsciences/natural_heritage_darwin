@@ -18,12 +18,10 @@
  * @property integer $specimen_individuals_count_min
  * @property integer $specimen_individuals_count_max
  * @property boolean $with_parts
+ * @property string $ind_ident_ids
  * @property Specimens $Specimens
+ * @property SpecimensFlat $SpecimensFlat
  * @property Doctrine_Collection $SpecimenParts
- * @property Doctrine_Collection $SpecimenSearch
- * @property Doctrine_Collection $IndividualSearch
- * @property Doctrine_Collection $PartSearch
- * @property Doctrine_Collection $IgsSearch
  * 
  * @method integer             getId()                             Returns the current record's "id" value
  * @method integer             getSpecimenRef()                    Returns the current record's "specimen_ref" value
@@ -38,12 +36,10 @@
  * @method integer             getSpecimenIndividualsCountMin()    Returns the current record's "specimen_individuals_count_min" value
  * @method integer             getSpecimenIndividualsCountMax()    Returns the current record's "specimen_individuals_count_max" value
  * @method boolean             getWithParts()                      Returns the current record's "with_parts" value
+ * @method string              getIndIdentIds()                    Returns the current record's "ind_ident_ids" value
  * @method Specimens           getSpecimens()                      Returns the current record's "Specimens" value
+ * @method SpecimensFlat       getSpecimensFlat()                  Returns the current record's "SpecimensFlat" value
  * @method Doctrine_Collection getSpecimenParts()                  Returns the current record's "SpecimenParts" collection
- * @method Doctrine_Collection getSpecimenSearch()                 Returns the current record's "SpecimenSearch" collection
- * @method Doctrine_Collection getIndividualSearch()               Returns the current record's "IndividualSearch" collection
- * @method Doctrine_Collection getPartSearch()                     Returns the current record's "PartSearch" collection
- * @method Doctrine_Collection getIgsSearch()                      Returns the current record's "IgsSearch" collection
  * @method SpecimenIndividuals setId()                             Sets the current record's "id" value
  * @method SpecimenIndividuals setSpecimenRef()                    Sets the current record's "specimen_ref" value
  * @method SpecimenIndividuals setType()                           Sets the current record's "type" value
@@ -57,12 +53,10 @@
  * @method SpecimenIndividuals setSpecimenIndividualsCountMin()    Sets the current record's "specimen_individuals_count_min" value
  * @method SpecimenIndividuals setSpecimenIndividualsCountMax()    Sets the current record's "specimen_individuals_count_max" value
  * @method SpecimenIndividuals setWithParts()                      Sets the current record's "with_parts" value
+ * @method SpecimenIndividuals setIndIdentIds()                    Sets the current record's "ind_ident_ids" value
  * @method SpecimenIndividuals setSpecimens()                      Sets the current record's "Specimens" value
+ * @method SpecimenIndividuals setSpecimensFlat()                  Sets the current record's "SpecimensFlat" value
  * @method SpecimenIndividuals setSpecimenParts()                  Sets the current record's "SpecimenParts" collection
- * @method SpecimenIndividuals setSpecimenSearch()                 Sets the current record's "SpecimenSearch" collection
- * @method SpecimenIndividuals setIndividualSearch()               Sets the current record's "IndividualSearch" collection
- * @method SpecimenIndividuals setPartSearch()                     Sets the current record's "PartSearch" collection
- * @method SpecimenIndividuals setIgsSearch()                      Sets the current record's "IgsSearch" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -136,6 +130,9 @@ abstract class BaseSpecimenIndividuals extends sfDoctrineRecord
         $this->hasColumn('with_parts', 'boolean', null, array(
              'type' => 'boolean',
              ));
+        $this->hasColumn('ind_ident_ids', 'string', null, array(
+             'type' => 'string',
+             ));
     }
 
     public function setUp()
@@ -145,24 +142,12 @@ abstract class BaseSpecimenIndividuals extends sfDoctrineRecord
              'local' => 'specimen_ref',
              'foreign' => 'id'));
 
+        $this->hasOne('SpecimensFlat', array(
+             'local' => 'specimen_ref',
+             'foreign' => 'specimen_ref'));
+
         $this->hasMany('SpecimenParts', array(
              'local' => 'id',
              'foreign' => 'specimen_individual_ref'));
-
-        $this->hasMany('SpecimenSearch', array(
-             'local' => 'id',
-             'foreign' => 'individual_ref'));
-
-        $this->hasMany('IndividualSearch', array(
-             'local' => 'id',
-             'foreign' => 'individual_ref'));
-
-        $this->hasMany('PartSearch', array(
-             'local' => 'id',
-             'foreign' => 'individual_ref'));
-
-        $this->hasMany('IgsSearch', array(
-             'local' => 'id',
-             'foreign' => 'individual_ref'));
     }
 }

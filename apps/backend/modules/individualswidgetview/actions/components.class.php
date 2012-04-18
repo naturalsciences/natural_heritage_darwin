@@ -13,7 +13,7 @@ class individualswidgetViewComponents extends sfComponents
 
   protected function defineForm()
   {
-    $this->indiv = Doctrine::getTable('SpecimenSearch')->findOneByIndividualRef($this->eid);
+    $this->indiv = Doctrine::getTable('SpecimenIndividuals')->find($this->eid);
   }
 
   public function executeType()
@@ -44,7 +44,7 @@ class individualswidgetViewComponents extends sfComponents
   public function executeSpecimenIndividualCount()
   {
     $this->defineForm();
-    if ($this->indiv->getIndividualCountMin() === $this->indiv->getIndividualCountMax()) $this->accuracy = "Exact" ;
+    if ($this->indiv->getSpecimenIndividualsCountMin() === $this->indiv->getSpecimenIndividualsCountMax()) $this->accuracy = "Exact" ;
     else $this->accuracy = "Imprecise" ;
   }
 
