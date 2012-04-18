@@ -69,6 +69,8 @@ UPDATE collecting_methods SET
 UPDATE collecting_tools SET 
                 tool_indexed = fullToIndex(tool);
 
+UPDATE tags set tag_indexed = fullToIndex(tag);
+
 UPDATE gtu g1
     SET tag_values_indexed = (SELECT array_agg(tags_list)
                               FROM (SELECT lineToTagRows(tag_agg) AS tags_list
