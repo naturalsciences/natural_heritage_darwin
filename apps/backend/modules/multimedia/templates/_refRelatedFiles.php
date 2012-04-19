@@ -27,12 +27,12 @@
   </thead>
   <tbody id="file_body">
     <?php $retainedKey = 0;?>
-    <?php foreach($form['RelatedFiles'] as $form_value):?>
-      <?php include_partial('multimedia/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'edit' => true, 'table' => $table));?>
+    <?php foreach($form['RelatedFiles'] as $f_key => $form_value):?>
+      <?php include_partial('multimedia/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'edit' => true, 'table' => $table,'object'=>$form->getEmbeddedForm("RelatedFiles")->getEmbeddedForm($f_key)->getObject()));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
     <?php foreach($form['newRelatedFiles'] as $form_value):?>
-      <?php include_partial('multimedia/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'table' => $table));?>
+      <?php include_partial('multimedia/multimedia', array('form' => $form_value, 'row_num'=>$retainedKey, 'table' => $table, 'object'=>$form->getEmbeddedForm("newRelatedFiles")->getEmbeddedForm($f_key)->getObject()));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
   </tbody>
