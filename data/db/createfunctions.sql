@@ -1756,12 +1756,7 @@ DECLARE
   partCount INTEGER := 0;
   indType BOOLEAN := false;
 BEGIN
-  IF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'specimens' THEN
-      UPDATE specimens_flat f
-      SET (collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref, host_taxon_ref, host_specimen_ref, ig_ref) =
-          (NEW.collection_ref, NEW.expedition_ref, NEW.gtu_ref, NEW.taxon_ref, NEW.litho_ref, NEW.chrono_ref, NEW.lithology_ref, NEW.mineral_ref, NEW.host_taxon_ref, NEW.host_specimen_ref, NEW.ig_ref)
-      WHERE specimen_ref = NEW.id;
-  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'expeditions' THEN
+  IF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'expeditions' THEN
     IF NEW.name_indexed IS DISTINCT FROM OLD.name_indexed THEN
       UPDATE specimens_flat
       SET (expedition_name, expedition_name_ts, expedition_name_indexed) =
@@ -1787,10 +1782,12 @@ BEGIN
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'gtu' THEN
     UPDATE specimens_flat
     SET (gtu_code, gtu_parent_ref, gtu_path, gtu_from_date, gtu_from_date_mask,
-        gtu_to_date, gtu_to_date_mask, gtu_tag_values_indexed, gtu_location
+         gtu_latitude, gtu_longitude, gtu_lat_long_accuracy, gtu_elevation, gtu_elevation_accuracy,
+         gtu_to_date, gtu_to_date_mask, gtu_tag_values_indexed, gtu_location
         ) =
         (NEW.code, NEW.parent_ref, NEW.path, NEW.gtu_from_date, NEW.gtu_from_date_mask,
-        NEW.gtu_to_date, NEW.gtu_to_date_mask, NEW.tag_values_indexed, new.location
+         NEW.latitude, NEW.longitude, NEW.lat_long_accuracy, NEW.elevation, NEW.elevation_accuracy,
+         NEW.gtu_to_date, NEW.gtu_to_date_mask, NEW.tag_values_indexed, new.location
         )
     WHERE gtu_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'igs' THEN
@@ -1917,27 +1914,65 @@ BEGIN
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
         UPDATE specimens_flat
         SET gtu_country_tag_value = NEW.tag_value,
-        gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
+            gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
+        WHERE gtu_ref = NEW.gtu_ref;
+      ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
+        UPDATE specimens_flat
+        SET gtu_province_tag_value = NEW.tag_value,
+            gtu_province_tag_indexed = lineToTagArray(NEW.tag_value)
+        WHERE gtu_ref = NEW.gtu_ref;
+      ELSIF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
+      /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
+        UPDATE specimens_flat
+        SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
+            gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')))
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
     ELSIF TG_OP = 'UPDATE' THEN
+      IF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' AND NEW.sub_group_name_indexed != 'country' THEN
+        UPDATE specimens_flat
+        SET gtu_country_tag_value = NULL,
+            gtu_country_tag_indexed = NULL
+        WHERE gtu_ref = NEW.gtu_ref;
+      ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'province' AND NEW.sub_group_name_indexed != 'province' THEN
+        UPDATE specimens_flat
+        SET gtu_province_tag_value = NULL,
+            gtu_province_tag_indexed = NULL
+        WHERE gtu_ref = NEW.gtu_ref;
+      END IF;
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
         UPDATE specimens_flat
         SET gtu_country_tag_value = NEW.tag_value,
-        gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
+            gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
-
-      ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' THEN
+      ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
         UPDATE specimens_flat
-        SET gtu_country_tag_value = NULL,
-        gtu_country_tag_indexed = NULL
+        SET gtu_province_tag_value = NEW.tag_value,
+            gtu_province_tag_indexed = lineToTagArray(NEW.tag_value)
+        WHERE gtu_ref = NEW.gtu_ref;
+      END IF;
+      IF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
+      /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
+        UPDATE specimens_flat
+        SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
+            gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')))
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
     ELSIF TG_OP = 'DELETE' THEN
       IF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' THEN
         UPDATE specimens_flat
         SET gtu_country_tag_value = NULL,
-        gtu_country_tag_indexed = NULL
+            gtu_country_tag_indexed = NULL
+        WHERE gtu_ref = OLD.gtu_ref;
+      ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'province' THEN
+        UPDATE specimens_flat
+        SET gtu_province_tag_value = NULL,
+            gtu_province_tag_indexed = NULL
+        WHERE gtu_ref = OLD.gtu_ref;
+      ELSE
+        UPDATE specimens_flat
+        SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = OLD.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
+            gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = OLD.gtu_ref and sub_group_type not in ('country', 'province')))
         WHERE gtu_ref = OLD.gtu_ref;
       END IF;
     END IF;
@@ -1962,7 +1997,8 @@ BEGIN
      expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
      gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
      gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-     gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,
+     gtu_latitude, gtu_longitude, gtu_lat_long_accuracy, gtu_elevation, gtu_elevation_accuracy,
+     gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
      taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
      taxon_path,taxon_parent_ref,taxon_extinct,
      chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -1987,7 +2023,12 @@ BEGIN
             NEW.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
             NEW.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
             gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-            gtu.tag_values_indexed, taggr.tag_value,  lineToTagArray(taggr.tag_value),
+            gtu.latitude, gtu.longitude, gtu.lat_long_accuracy, gtu.elevation, gtu.elevation_accuracy,
+            gtu.tag_values_indexed,
+            taggr_countries.tag_value, lineToTagArray(taggr_countries.tag_value),
+            taggr_provinces.tag_value, lineToTagArray(taggr_provinces.tag_value),
+            (select array_to_string(array(select tag from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province')), ';')) as other_gtu_values,
+            (select array(select distinct fullToIndex(tag) from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province'))) as other_gtu_values_array,
             NEW.taxon_ref, taxon.name, taxon.name_indexed, taxon.name_order_by, taxon.level_ref, taxon_level.level_name, taxon.status,
             taxon.path, taxon.parent_ref, taxon.extinct,
             NEW.chrono_ref, chrono.name, chrono.name_indexed, chrono.name_order_by, chrono.level_ref, chrono_level.level_name, chrono.status,
@@ -2011,7 +2052,9 @@ BEGIN
       LEFT JOIN
       	expeditions expe ON expe.id = NEW.expedition_ref
       LEFT JOIN
-      	(gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country')
+        (gtu LEFT JOIN tag_groups taggr_countries ON gtu.id = taggr_countries.gtu_ref AND taggr_countries.group_name_indexed = 'administrativearea' AND taggr_countries.sub_group_name_indexed = 'country'
+             LEFT JOIN tag_groups taggr_provinces ON gtu.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
+        )
       	ON gtu.id = NEW.gtu_ref
       LEFT JOIN 
         (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id)
@@ -2045,7 +2088,8 @@ BEGIN
          expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
          gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
          gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
+         gtu_latitude, gtu_longitude, gtu_lat_long_accuracy, gtu_elevation, gtu_elevation_accuracy,
+         gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
          taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
          taxon_path,taxon_parent_ref,taxon_extinct,
          chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2073,7 +2117,11 @@ BEGIN
          NEW.expedition_ref, subq.expe_name, subq.expe_name_ts, subq.expe_name_indexed,
          NEW.gtu_ref, subq.gtu_code, subq.gtu_parent_ref, subq.gtu_path, subq.gtu_location,
          subq.gtu_from_date_mask, subq.gtu_from_date, subq.gtu_to_date_mask, subq.gtu_to_date,
-         subq.gtu_tag_values_indexed, subq.taggr_tag_value, lineToTagArray(subq.taggr_tag_value),
+         subq.gtu_latitude, subq.gtu_longitude, subq.gtu_lat_long_accuracy, subq.gtu_elevation, subq.gtu_elevation_accuracy,
+         subq.gtu_tag_values_indexed,
+         subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
+         subq.gtu_province_tag_value, subq.gtu_province_tag_indexed,
+         subq.gtu_others_tag_value, subq.gtu_others_tag_indexed,
          NEW.taxon_ref, subq.taxon_name, subq.taxon_name_indexed, subq.taxon_name_order_by,
          subq.taxon_level_ref, subq.taxon_level_level_name, subq.taxon_status,
          subq.taxon_path, subq.taxon_parent_ref, subq.taxon_extinct,
@@ -2103,7 +2151,12 @@ BEGIN
                 expe.name expe_name, expe.name_ts expe_name_ts, expe.name_indexed expe_name_indexed,
                 gtu.code gtu_code, gtu.parent_ref gtu_parent_ref, gtu.path gtu_path,gtu.location gtu_location,
                 gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-                gtu.tag_values_indexed gtu_tag_values_indexed, taggr.tag_value taggr_tag_value, 
+                gtu.latitude as gtu_latitude, gtu.longitude as gtu_longitude, gtu.lat_long_accuracy as gtu_lat_long_accuracy, gtu.elevation as gtu_elevation, gtu.elevation_accuracy as gtu_elevation_accuracy,
+                gtu.tag_values_indexed as gtu_tag_values_indexed,
+                taggr_countries.tag_value as gtu_country_tag_value, lineToTagArray(taggr_countries.tag_value) as gtu_country_tag_indexed,
+                taggr_provinces.tag_value as gtu_province_tag_value, lineToTagArray(taggr_provinces.tag_value) as gtu_province_tag_indexed,
+                (select array_to_string(array(select tag from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province')), ';')) as gtu_others_tag_value,
+                (select array(select distinct fullToIndex(tag) from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province'))) as gtu_others_tag_indexed,
                 taxon.name taxon_name, taxon.name_indexed taxon_name_indexed, taxon.name_order_by taxon_name_order_by,
                 taxon.level_ref taxon_level_ref, taxon_level.level_name taxon_level_level_name, taxon.status taxon_status,
                 taxon.path taxon_path, taxon.parent_ref taxon_parent_ref, taxon.extinct taxon_extinct,
@@ -2133,7 +2186,9 @@ BEGIN
         LEFT JOIN
           igs ON igs.id = NEW.ig_ref
         LEFT JOIN
-          (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country')
+          (gtu LEFT JOIN tag_groups taggr_countries ON gtu.id = taggr_countries.gtu_ref AND taggr_countries.group_name_indexed = 'administrativearea' AND taggr_countries.sub_group_name_indexed = 'country'
+               LEFT JOIN tag_groups taggr_provinces ON gtu.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
+          )
           ON gtu.id = NEW.gtu_ref
         LEFT JOIN 
           (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id)

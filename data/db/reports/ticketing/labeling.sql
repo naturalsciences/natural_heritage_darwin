@@ -1,8 +1,11 @@
 SET search_path = darwin2, public;
 
 DROP FUNCTION if exists lineToTagRowsFormatConserved(text) CASCADE;
+drop function if exists labeling_country_for_indexation(gtu.id%TYPE) CASCADE;
 drop function if exists labeling_country_for_indexation_array(gtu.id%TYPE) CASCADE;
+drop function if exists labeling_province_for_indexation(gtu.id%TYPE) CASCADE;
 drop function if exists labeling_province_for_indexation_array(gtu.id%TYPE) CASCADE;
+drop function if exists labeling_other_gtu_for_indexation(gtu.id%TYPE) CASCADE;
 drop function if exists labeling_other_gtu_for_indexation_array(gtu.id%TYPE) CASCADE;
 DROP FUNCTION IF EXISTS labeling_code_num_for_indexation(specimen_parts.id%TYPE) CASCADE;
 drop function if exists labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) CASCADE;
@@ -45,51 +48,51 @@ DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
 -- 
 -- CREATE INDEX idx_labeling_country ON darwin_flat USING gin (labeling_country_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
 
-create or replace function labeling_province_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
-$$
-select array_agg(tag_indexed)
-from tags where tags.gtu_ref = $1 and sub_group_type = 'province';
-$$;
+-- create or replace function labeling_province_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
+-- $$
+-- select array_agg(tag_indexed)
+-- from tags where tags.gtu_ref = $1 and sub_group_type = 'province';
+-- $$;
+-- 
+-- create or replace function labeling_province_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
+-- $$
+-- select array_to_string(x.tags_list,';')
+-- from (select array_agg(tag) as tags_list
+--       from tags where tags.gtu_ref = $1 and sub_group_type = 'province'
+--      ) as x;
+-- $$;
+-- 
+-- GRANT EXECUTE ON FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) TO d2viewer;
+-- GRANT ALL ON FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
+-- ALTER FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
+-- GRANT EXECUTE ON FUNCTION labeling_province_for_indexation(gtu.id%TYPE) TO d2viewer;
+-- GRANT ALL ON FUNCTION labeling_province_for_indexation(gtu.id%TYPE) TO cebmpad, darwin2;
+-- ALTER FUNCTION labeling_province_for_indexation(gtu.id%TYPE) OWNER TO darwin2;
 
-create or replace function labeling_province_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
-$$
-select array_to_string(x.tags_list,';')
-from (select array_agg(tag) as tags_list
-      from tags where tags.gtu_ref = $1 and sub_group_type = 'province'
-     ) as x;
-$$;
+CREATE INDEX idx_labeling_province ON specimens_flat USING gin (gtu_province_tag_indexed);
 
-GRANT EXECUTE ON FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) TO d2viewer;
-GRANT ALL ON FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
-ALTER FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
-GRANT EXECUTE ON FUNCTION labeling_province_for_indexation(gtu.id%TYPE) TO d2viewer;
-GRANT ALL ON FUNCTION labeling_province_for_indexation(gtu.id%TYPE) TO cebmpad, darwin2;
-ALTER FUNCTION labeling_province_for_indexation(gtu.id%TYPE) OWNER TO darwin2;
+-- create or replace function labeling_other_gtu_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
+-- $$
+-- select array_agg(tag_indexed)
+-- from tags where tags.gtu_ref = $1 and sub_group_type not in ('country', 'province');
+-- $$;
+-- 
+-- create or replace function labeling_other_gtu_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
+-- $$
+-- select array_to_string(x.tags_list,';')
+-- from (select array_agg(tag) as tags_list
+--       from tags where tags.gtu_ref = $1 and sub_group_type not in ('province', 'country')
+--      ) as x;
+-- $$;
+-- 
+-- GRANT EXECUTE ON FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) TO d2viewer;
+-- GRANT ALL ON FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
+-- ALTER FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
+-- GRANT EXECUTE ON FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) TO d2viewer;
+-- GRANT ALL ON FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) TO cebmpad, darwin2;
+-- ALTER FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) OWNER TO darwin2;
 
-CREATE INDEX idx_labeling_province ON darwin_flat USING gin (labeling_province_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
-
-create or replace function labeling_other_gtu_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
-$$
-select array_agg(tag_indexed)
-from tags where tags.gtu_ref = $1 and sub_group_type not in ('country', 'province');
-$$;
-
-create or replace function labeling_other_gtu_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
-$$
-select array_to_string(x.tags_list,';')
-from (select array_agg(tag) as tags_list
-      from tags where tags.gtu_ref = $1 and sub_group_type not in ('province', 'country')
-     ) as x;
-$$;
-
-GRANT EXECUTE ON FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) TO d2viewer;
-GRANT ALL ON FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
-ALTER FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
-GRANT EXECUTE ON FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) TO d2viewer;
-GRANT ALL ON FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) TO cebmpad, darwin2;
-ALTER FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) OWNER TO darwin2;
-
-CREATE INDEX idx_labeling_other_gtu ON darwin_flat USING gin (labeling_other_gtu_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
+CREATE INDEX idx_labeling_other_gtu ON specimens_flat USING gin (gtu_others_tag_indexed);
 
 create or replace function labeling_code_for_indexation(in part_ref specimen_parts.id%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
@@ -121,7 +124,7 @@ ALTER FUNCTION labeling_code_for_indexation(specimen_parts.id%TYPE) OWNER TO dar
 -- GRANT ALL ON FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) TO cebmpad, darwin2;
 -- ALTER FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) OWNER TO darwin2;
 
-CREATE INDEX idx_labeling_code ON darwin_flat USING gin (labeling_code_for_indexation(part_ref)) WHERE part_ref IS NOT NULL;
+CREATE INDEX idx_labeling_code ON specimen_parts USING gin (labeling_code_for_indexation(id));
 -- CREATE INDEX idx_labeling_code_varchar ON darwin_flat (CAST(array_to_string(labeling_code_for_indexation(part_ref), ';') AS varchar)) WHERE part_ref IS NOT NULL;
 -- CREATE INDEX idx_labeling_code_numeric ON darwin_flat (labeling_code_num_for_indexation(part_ref)) WHERE part_ref IS NOT NULL;
 
@@ -158,15 +161,11 @@ GRANT EXECUTE ON FUNCTION labeling_part_for_indexation(specimen_parts.specimen_p
 GRANT ALL ON FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) OWNER TO darwin2;
 
-CREATE INDEX idx_labeling_individual_type ON darwin_flat using gin (labeling_individual_type_for_indexation(individual_type));
-CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_sex ON darwin_flat using btree (individual_sex text_pattern_ops) where individual_sex not in ('undefined', 'unknown');
--- CREATE INDEX idx_labeling_individual_sex ON darwin_flat using btree (fullToIndex(individual_sex) text_pattern_ops);
-CREATE INDEX CONCURRENTLY idx_darwin_flat_individual_stage ON darwin_flat using btree (individual_stage text_pattern_ops) where individual_stage not in ('undefined', 'unknown');
--- CREATE INDEX idx_labeling_individual_stage ON darwin_flat using btree (fullToIndex(individual_sex) text_pattern_ops);
-CREATE INDEX idx_labeling_part ON darwin_flat using gin (labeling_part_for_indexation(part));
+CREATE INDEX idx_labeling_individual_type ON specimen_individuals using gin (labeling_individual_type_for_indexation("type"));
+CREATE INDEX idx_labeling_part ON specimen_parts using gin (labeling_part_for_indexation(specimen_part));
 
 -- CREATE INDEX idx_labeling_ig_num_coalesced ON darwin_flat(coalesce(ig_num, '-')) where part_ref is not null;
-CREATE INDEX idx_labeling_ig_num_numeric ON darwin_flat(convert_to_integer(coalesce(ig_num, '-'))) where part_ref is not null;
+CREATE INDEX idx_labeling_ig_num_numeric ON specimens_flat(convert_to_integer(coalesce(ig_num, '-')));
 
 drop view "public"."labeling";
 
@@ -248,14 +247,18 @@ select df.part_ref as unique_id,
        df.gtu_ref as gtu_ref,
        df.gtu_country_tag_value::varchar as countries,
        df.gtu_country_tag_indexed as countries_array,
-       labeling_province_for_indexation(df.gtu_ref) as provinces,
-       labeling_province_for_indexation_array(df.gtu_ref) as provinces_array,
-       labeling_other_gtu_for_indexation(df.gtu_ref) as location,
-       labeling_other_gtu_for_indexation_array(df.gtu_ref) as location_array,
-       case when trim(gtu.code) in ('', '/', '0', '0/') then '' else 'Code: ' || trim(gtu.code) end as location_code,
-       case when gtu.gtu_from_date_mask >= 32 then 'Sampling dates: ' || to_char(gtu.gtu_from_date, 'DD/MM/YYYY') else '' end || case when gtu.gtu_to_date_mask >= 32 then ' - ' || to_char(gtu.gtu_to_date, 'DD/MM/YYYY') else '' end as gtu_date,
-       case when gtu.latitude is not null and gtu.longitude is not null then 'Lat./Long.: ' || trunc(gtu.latitude::numeric,6) || '/' || trunc(gtu.longitude::numeric,6) || case when gtu.lat_long_accuracy is not null then ' +- ' || trunc(gtu.lat_long_accuracy::numeric,2) || 'm' else '' end else '' end as lat_long,
-       case when gtu.elevation is not null then 'Elevation: ' || trunc(gtu.elevation::numeric,2) || 'm' || case when gtu.elevation_accuracy is not null then ' +- ' || trunc(gtu.elevation_accuracy::numeric,2) || 'm' else '' end else '' end as elevation,
+       df.gtu_province_tag_value::varchar as provinces,
+       df.gtu_province_tag_indexed as provinces_array,
+       df.gtu_others_tag_value::varchar as other_gtus,
+       df.gtu_others_tag_indexed as other_gtus_array,
+--        labeling_province_for_indexation(df.gtu_ref) as provinces,
+--        labeling_province_for_indexation_array(df.gtu_ref) as provinces_array,
+--        labeling_other_gtu_for_indexation(df.gtu_ref) as location,
+--        labeling_other_gtu_for_indexation_array(df.gtu_ref) as location_array,
+       case when trim(df.gtu_code) in ('', '/', '0', '0/') then '' else 'Code: ' || trim(df.gtu_code) end as location_code,
+       case when df.gtu_from_date_mask >= 32 then 'Sampling dates: ' || to_char(df.gtu_from_date, 'DD/MM/YYYY') else '' end || case when df.gtu_to_date_mask >= 32 then ' - ' || to_char(df.gtu_to_date, 'DD/MM/YYYY') else '' end as gtu_date,
+       case when df.gtu_latitude is not null and df.gtu_longitude is not null then 'Lat./Long.: ' || trunc(df.gtu_latitude::numeric,6) || '/' || trunc(df.gtu_longitude::numeric,6) || case when df.gtu_lat_long_accuracy is not null then ' +- ' || trunc(df.gtu_lat_long_accuracy::numeric,2) || 'm' else '' end else '' end as lat_long,
+       case when df.gtu_elevation is not null then 'Elevation: ' || trunc(df.gtu_elevation::numeric,2) || 'm' || case when df.gtu_elevation_accuracy is not null then ' +- ' || trunc(df.gtu_elevation_accuracy::numeric,2) || 'm' else '' end else '' end as elevation,
        (select 'Coll.: ' || array_to_string(array_agg(people_list), ' - ') 
         from (select trim(formated_name) as people_list 
               from catalogue_people as cp inner join people as peo on cp.people_ref = peo.id 
@@ -279,7 +282,7 @@ select df.part_ref as unique_id,
        convert_to_integer(coalesce(ig_num, '-')) as ig_numeric,
        case when df.part_count_min <> df.part_count_max and df.part_count_min is not null and df.part_count_max is not null then 'Count: ' || df.part_count_min || ' - ' || df.part_count_max else case when df.part_count_min is not null then 'Count: ' || df.part_count_min else '' end end as specimen_number,
        case when exists(select 1 from comments where (referenced_relation = 'specimens' and record_id = df.spec_ref) or (referenced_relation = 'specimen_parts' and record_id = df.part_ref)) then 'Comm.?: Y' else 'Comm.?: N' end as comments
-from darwin_flat as df inner join gtu on df.gtu_ref = gtu.id
+from darwin_flat as df
 where part_ref is not null;
 
 ALTER VIEW "public"."labeling" OWNER TO darwin2;
@@ -287,6 +290,6 @@ GRANT SELECT ON "public"."labeling" TO d2viewer;
 
 DROP INDEX IF EXISTS idx_specimen_individuals_sex;
 DROP INDEX IF EXISTS idx_specimen_individuals_stage;
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_sex on specimen_individuals(sex) where sex not in ('undefined', 'unknown');
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals(stage) WHERE stage not in ('undefined', 'unknown');
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_sex on specimen_individuals using btree (sex text_pattern_ops) where sex not in ('undefined', 'unknown');
+CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals using btree (stage text_pattern_ops) where stage not in ('undefined', 'unknown');
 
