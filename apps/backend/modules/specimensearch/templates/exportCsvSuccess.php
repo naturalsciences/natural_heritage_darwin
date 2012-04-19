@@ -31,7 +31,7 @@ SocialStatus<?php echo $sep;?>
 RockForm<?php echo $sep;?>
 Ind Count Min<?php echo $sep;?>
 Ind Count Max<?php echo $sep;?>
-<?php elseif($source =='part'):?>
+<?php if($source =='part'):?>
 Part<?php echo $sep;?>
 Part Status<?php echo $sep;?>
 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
@@ -47,6 +47,7 @@ Sub Container<?php echo $sep;?>
 Sub Container Type<?php echo $sep;?>
 Sub Container Storage<?php echo $sep;?>
 Part Codes<?php echo $sep;?>
+<?php endif;?>
 <?php endif;?>
 <?php endif;?>
 
@@ -84,22 +85,23 @@ Part Codes<?php echo $sep;?>
 <?php echo $item->getIndividualRockForm().$sep;?>
 <?php echo $item->getIndividualCountMin().$sep;?>
 <?php echo $item->getIndividualCountMax().$sep;?>
-<?php elseif($source =='part'):?>
-<?php echo $specimen->getPart();?>
-<?php echo $specimen->getPartStatus();?>
+<?php if($source =='part'):?>
+<?php echo $item->getPart().$sep;?>
+<?php echo $item->getPartStatus().$sep;?>
 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-<?php echo $specimen->getBuilding();?>
-<?php echo $specimen->getFloor();?>
-<?php echo $specimen->getRoom();?>
-<?php echo $specimen->getRow();?>
-<?php echo $specimen->getShelf();?>
-<?php echo $specimen->getContainer();?>
-<?php echo $specimen->getContainerType();?>
-<?php echo $specimen->getContainerStorage();?>
-<?php echo $specimen->getSubContainer();?>
-<?php echo $specimen->getSubContainerType();?>
-<?php echo $specimen->getSubContainerStorage();?>
+<?php echo $item->getBuilding().$sep;?>
+<?php echo $item->getFloor().$sep;?>
+<?php echo $item->getRoom().$sep;?>
+<?php echo $item->getRow().$sep;?>
+<?php echo $item->getShelf().$sep;?>
+<?php echo $item->getContainer().$sep;?>
+<?php echo $item->getContainerType().$sep;?>
+<?php echo $item->getContainerStorage().$sep;?>
+<?php echo $item->getSubContainer().$sep;?>
+<?php echo $item->getSubContainerType().$sep;?>
+<?php echo $item->getSubContainerStorage().$sep;?>
 <?php if(isset($part_codes[$item->getSpecRef()])) foreach($part_codes[$item->getSpecRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
+<?php endif;?>
 <?php endif;?>
 <?php endif;?>
 
