@@ -10,11 +10,15 @@
 <script  type="text/javascript">
   $('#specimen_taxon_ref').bind('change',function()
   {
-    
-    $.getJSON('<?php echo url_for('catalogue/getCurrent?table=taxonomy');?>/id/'+$('#specimen_taxon_ref').val(), function(data) {
-      $('#taxon_orig span').text(data.name).attr('r_id', data.id);
-      $('#taxon_orig').removeClass('hidden');
-    });
+    if($('#specimen_taxon_ref').val() != '') {
+      // Fetch the current name of the taxa
+      $.getJSON('<?php echo url_for('catalogue/getCurrent?table=taxonomy');?>/id/' + $('#specimen_taxon_ref').val(), function(data) {
+        if(data.id) {
+          $('#taxon_orig span').text(data.name).attr('r_id', data.id);
+          $('#taxon_orig').removeClass('hidden');
+        }
+      });
+    }
   });
   $('#taxon_orig span').click(function()
   {
