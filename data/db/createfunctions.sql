@@ -1970,6 +1970,7 @@ BEGIN
             gtu_province_tag_indexed = NULL
         WHERE gtu_ref = OLD.gtu_ref;
       ELSE
+        /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
         UPDATE specimens_flat
         SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = OLD.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
             gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = OLD.gtu_ref and sub_group_type not in ('country', 'province')))
