@@ -26,71 +26,7 @@ DROP INDEX IF EXISTS idx_labeling_part;
 DROP INDEX IF EXISTS idx_labeling_ig_num_numeric;
 DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
 
--- CREATE OR REPLACE FUNCTION lineToTagRowsFormatConserved(IN line text) RETURNS SETOF varchar AS
--- $$
--- SELECT distinct on (fulltoIndex(tags)) tags FROM regexp_split_to_table($1, ';') as tags WHERE fulltoIndex(tags) != '' ;
--- $$
--- LANGUAGE 'sql' IMMUTABLE STRICT;
--- 
--- GRANT EXECUTE ON FUNCTION lineToTagRowsFormatConserved(text) TO d2viewer;
--- GRANT ALL ON FUNCTION lineToTagRowsFormatConserved(text) TO cebmpad, darwin2;
--- ALTER FUNCTION lineToTagRowsFormatConserved(text) OWNER TO darwin2;
-
--- create or replace function labeling_country_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
--- $$
--- select array_agg(fullToIndex(tag))
--- from tags where tags.gtu_ref = $1 and sub_group_type = 'country';
--- $$;
--- 
--- GRANT EXECUTE ON FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) TO d2viewer;
--- GRANT ALL ON FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
--- ALTER FUNCTION labeling_country_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
--- 
--- CREATE INDEX idx_labeling_country ON darwin_flat USING gin (labeling_country_for_indexation_array(gtu_ref)) WHERE part_ref IS NOT NULL;
-
--- create or replace function labeling_province_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
--- $$
--- select array_agg(tag_indexed)
--- from tags where tags.gtu_ref = $1 and sub_group_type = 'province';
--- $$;
--- 
--- create or replace function labeling_province_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
--- $$
--- select array_to_string(x.tags_list,';')
--- from (select array_agg(tag) as tags_list
---       from tags where tags.gtu_ref = $1 and sub_group_type = 'province'
---      ) as x;
--- $$;
--- 
--- GRANT EXECUTE ON FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) TO d2viewer;
--- GRANT ALL ON FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
--- ALTER FUNCTION labeling_province_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
--- GRANT EXECUTE ON FUNCTION labeling_province_for_indexation(gtu.id%TYPE) TO d2viewer;
--- GRANT ALL ON FUNCTION labeling_province_for_indexation(gtu.id%TYPE) TO cebmpad, darwin2;
--- ALTER FUNCTION labeling_province_for_indexation(gtu.id%TYPE) OWNER TO darwin2;
-
 CREATE INDEX idx_labeling_province ON specimens_flat USING gin (gtu_province_tag_indexed);
-
--- create or replace function labeling_other_gtu_for_indexation_array(in gtu_ref gtu.id%TYPE) returns varchar[] language SQL IMMUTABLE as
--- $$
--- select array_agg(tag_indexed)
--- from tags where tags.gtu_ref = $1 and sub_group_type not in ('country', 'province');
--- $$;
--- 
--- create or replace function labeling_other_gtu_for_indexation(in gtu_ref gtu.id%TYPE) returns varchar language SQL IMMUTABLE as
--- $$
--- select array_to_string(x.tags_list,';')
--- from (select array_agg(tag) as tags_list
---       from tags where tags.gtu_ref = $1 and sub_group_type not in ('province', 'country')
---      ) as x;
--- $$;
--- 
--- GRANT EXECUTE ON FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) TO d2viewer;
--- GRANT ALL ON FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) TO cebmpad, darwin2;
--- ALTER FUNCTION labeling_other_gtu_for_indexation_array(gtu.id%TYPE) OWNER TO darwin2;
--- GRANT EXECUTE ON FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) TO d2viewer;
--- GRANT ALL ON FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) TO cebmpad, darwin2;
--- ALTER FUNCTION labeling_other_gtu_for_indexation(gtu.id%TYPE) OWNER TO darwin2;
 
 CREATE INDEX idx_labeling_other_gtu ON specimens_flat USING gin (gtu_others_tag_indexed);
 
@@ -106,42 +42,16 @@ from (select trim(coalesce(code_prefix, '') || coalesce(code_prefix_separator, '
      ) as x;
 $$;
 
--- create or replace function labeling_code_num_for_indexation(in part_ref specimen_parts.id%TYPE) returns codes.code_num%TYPE language SQL IMMUTABLE as
--- $$
--- select code_num
--- from codes
--- where referenced_relation = 'specimen_parts'
---   and record_id = $1
---   and code_category = 'main'
---   and code_prefix != 'RBINS'
--- limit 1;
--- $$;
-
 GRANT EXECUTE ON FUNCTION labeling_code_for_indexation(specimen_parts.id%TYPE) TO d2viewer;
 GRANT ALL ON FUNCTION labeling_code_for_indexation(specimen_parts.id%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_code_for_indexation(specimen_parts.id%TYPE) OWNER TO darwin2;
--- GRANT EXECUTE ON FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) TO d2viewer;
--- GRANT ALL ON FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) TO cebmpad, darwin2;
--- ALTER FUNCTION labeling_code_num_for_indexation(specimen_parts.id%TYPE) OWNER TO darwin2;
 
 CREATE INDEX idx_labeling_code ON specimen_parts USING gin (labeling_code_for_indexation(id));
--- CREATE INDEX idx_labeling_code_varchar ON darwin_flat (CAST(array_to_string(labeling_code_for_indexation(part_ref), ';') AS varchar)) WHERE part_ref IS NOT NULL;
--- CREATE INDEX idx_labeling_code_numeric ON darwin_flat (labeling_code_num_for_indexation(part_ref)) WHERE part_ref IS NOT NULL;
 
 create or replace function labeling_individual_type_for_indexation(in individual_type specimen_individuals.type%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
 SELECT array[coalesce(fullToIndex($1),'-')];
 $$;
-
--- create or replace function labeling_individual_sex_for_indexation(in individual_sex specimen_individuals.sex%TYPE) returns varchar[] language SQL IMMUTABLE as
--- $$
--- SELECT case when fullToIndex($1) in ('undefined', 'unknown', 'notstated', 'nonapplicable') then array['-'] else array[coalesce(fullToIndex($1),'/')] end;
--- $$;
-
--- create or replace function labeling_individual_stage_for_indexation(in individual_stage specimen_individuals.stage%TYPE) returns varchar[] language SQL IMMUTABLE as
--- $$
--- SELECT case when fullToIndex($1) in ('undefined', 'unknown', 'notstated', 'nonapplicable') then array['-'] else array[coalesce(fullToIndex($1),'/')] end;
--- $$;
 
 create or replace function labeling_part_for_indexation(in part specimen_parts.specimen_part%TYPE) returns varchar[] language SQL IMMUTABLE as
 $$
@@ -151,12 +61,6 @@ $$;
 GRANT EXECUTE ON FUNCTION labeling_individual_type_for_indexation(specimen_individuals.type%TYPE) TO d2viewer;
 GRANT ALL ON FUNCTION labeling_individual_type_for_indexation(specimen_individuals.type%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_individual_type_for_indexation(specimen_individuals.type%TYPE) OWNER TO darwin2;
--- GRANT EXECUTE ON FUNCTION labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) TO d2viewer;
--- GRANT ALL ON FUNCTION labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) TO cebmpad, darwin2;
--- ALTER FUNCTION labeling_individual_sex_for_indexation(specimen_individuals.sex%TYPE) OWNER TO darwin2;
--- GRANT EXECUTE ON FUNCTION labeling_individual_stage_for_indexation(specimen_individuals.stage%TYPE) TO d2viewer;
--- GRANT ALL ON FUNCTION labeling_individual_stage_for_indexation(specimen_individuals.stage%TYPE) TO cebmpad, darwin2;
--- ALTER FUNCTION labeling_individual_stage_for_indexation(specimen_individuals.stage%TYPE) OWNER TO darwin2;
 GRANT EXECUTE ON FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) TO d2viewer;
 GRANT ALL ON FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) OWNER TO darwin2;
@@ -288,4 +192,3 @@ DROP INDEX IF EXISTS idx_specimen_individuals_sex;
 DROP INDEX IF EXISTS idx_specimen_individuals_stage;
 CREATE INDEX CONCURRENTLY idx_specimen_individuals_sex on specimen_individuals using btree (sex text_pattern_ops) where sex not in ('undefined', 'unknown');
 CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals using btree (stage text_pattern_ops) where stage not in ('undefined', 'unknown');
-
