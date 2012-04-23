@@ -62,7 +62,7 @@
       <?php echo $form['filename']->getValue(); ?>
     <?php endif ; ?>
   </td>
-  <td colspan="4"><?php echo $form['mime_type']->getValue() ; ?></td>
+  <td colspan="4"><?php echo $form['mime_type']->getValue() ; ?> (<?php echo $object->getHumanSize();?>)</td>
 </tr>
 <script type="text/javascript">
   $("tr.row_num_<?php echo $row_num;?>").hover(function(){

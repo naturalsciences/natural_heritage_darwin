@@ -38,6 +38,7 @@
         <?php else:?>
           <?php echo link_to($file->getFileName()." ".image_tag('criteria.png'),'multimedia/downloadFile?id='.$file->getId()) ; ?>
         <?php endif;?>
+        (<?php echo $file->getHumanSize();?>)
       </td>
       <td><?php echo $file->getMimeType(); ?></td>
       <td><?php $date = new DateTime($file->getCreationDate());

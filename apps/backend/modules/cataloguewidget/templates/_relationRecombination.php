@@ -19,7 +19,7 @@
          item_row = $(this).closest('td') ;
          if(item_row.find('.tree').is(":hidden"))
          {
-           $.get('<?php echo url_for('catalogue/tree?table=taxonomy&id='.$renamed['record_id_2']) ; ?>',function (html){
+           $.get('<?php echo url_for('catalogue/tree?table='.$table.'&id='.$renamed['record_id_2']) ; ?>',function (html){
              item_row.find('.tree').html(html).slideDown();
              });
          }
