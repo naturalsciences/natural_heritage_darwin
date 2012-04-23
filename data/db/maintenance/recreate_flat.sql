@@ -33,9 +33,15 @@ CREATE TABLE darwin_flat
   gtu_from_date timestamp without time zone, -- Sampling location from date
   gtu_to_date_mask integer, -- Sampling location to date mask
   gtu_to_date timestamp without time zone, -- Sampling location to date
+  gtu_elevation double precision, -- Sampling location elevation
+  gtu_elevation_accuracy double precision, -- Sampling location elevation accuracy
   gtu_tag_values_indexed character varying[], -- Array of all the tags entered for this gtu - all the tags are of the indexed form with fullToIndex function
   gtu_country_tag_value character varying, -- List of "Administrative area-Country" tags associated to the sampling location referenced
   gtu_country_tag_indexed character varying[], -- List of "Administrative area-Country" tags associated to the sampling location referenced  all the tags are of the indexed form with fullToIndex function
+  gtu_province_tag_value varchar,
+  gtu_province_tag_indexed varchar[],
+  gtu_others_tag_value varchar,
+  gtu_others_tag_indexed varchar[],
   gtu_location geography(Polygon,4326), -- GTU location - postgis geography object
   taxon_ref integer NOT NULL DEFAULT 0, -- Taxon unit referenced
   taxon_name character varying, -- Taxon unit referenced name
@@ -317,9 +323,15 @@ INSERT INTO darwin_flat
     gtu_from_date,
     gtu_to_date_mask,
     gtu_to_date,
+    gtu_elevation,
+    gtu_elevation_accuracy,
     gtu_tag_values_indexed,
     gtu_country_tag_value,
     gtu_country_tag_indexed,
+    gtu_province_tag_value,
+    gtu_province_tag_indexed,
+    gtu_others_tag_value,
+    gtu_others_tag_indexed,
     gtu_location,
     spec_ident_ids,
     ind_ident_ids,
@@ -454,9 +466,13 @@ INSERT INTO darwin_flat
   gtu.gtu_from_date,
   gtu.gtu_to_date_mask,
   gtu.gtu_to_date,
+  gtu.gtu_elevation,
+  gtu.gtu_elevation_accuracy,
   gtu.tag_values_indexed,
-  taggr.tag_value,
-  (select lineToTagArray(tag_value) FROM tag_groups taggr WHERE gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'),
+  taggr_countries.tag_value,  lineToTagArray(taggr_countries.tag_value),
+  taggr_provinces.tag_value,  lineToTagArray(taggr_provinces.tag_value),
+  (select array_to_string(array(select tag from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province')), ';')) as other_gtu_values,
+  (select array(select distinct fullToIndex(tag) from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province'))) as other_gtu_values_array,
   gtu.location,
   ( select array_accum(DISTINCT people_ref) from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications' where i.referenced_relation='specimens' and p.people_type='identifier' and i.record_id = spec.id ),
   ( select array_accum(DISTINCT people_ref) from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications' where i.referenced_relation='specimen_individuals' and p.people_type='identifier' and i.record_id = sInd.id ),
@@ -571,10 +587,11 @@ FROM specimens spec
      LEFT JOIN igs ON spec.ig_ref = igs.id
      INNER JOIN collections coll ON spec.collection_ref = coll.id
      INNER JOIN expeditions exp ON spec.expedition_ref = exp.id
-     INNER JOIN (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref 
-                                                AND taggr.group_name_indexed = 'administrativearea' 
-                                                AND sub_group_name_indexed = 'country'
-                ) ON spec.gtu_ref = gtu.id
+     INNER JOIN
+        (gtu LEFT JOIN tag_groups taggr_countries ON gtu.id = taggr_countries.gtu_ref AND taggr_countries.group_name_indexed = 'administrativearea' AND taggr_countries.sub_group_name_indexed = 'country'
+             LEFT JOIN tag_groups taggr_provinces ON gtu.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
+        )
+        ON gtu.id = spec.gtu_ref
      INNER JOIN (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id
                 ) ON spec.taxon_ref = taxon.id
      INNER JOIN (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id
