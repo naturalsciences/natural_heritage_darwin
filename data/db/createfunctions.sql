@@ -1782,12 +1782,14 @@ BEGIN
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'gtu' THEN
     UPDATE specimens_flat
     SET (gtu_code, gtu_parent_ref, gtu_path, gtu_from_date, gtu_from_date_mask,
-         gtu_latitude, gtu_longitude, gtu_lat_long_accuracy, gtu_elevation, gtu_elevation_accuracy,
-         gtu_to_date, gtu_to_date_mask, gtu_tag_values_indexed, gtu_location
+         gtu_to_date, gtu_to_date_mask,
+         gtu_elevation, gtu_elevation_accuracy,
+         gtu_tag_values_indexed, gtu_location
         ) =
         (NEW.code, NEW.parent_ref, NEW.path, NEW.gtu_from_date, NEW.gtu_from_date_mask,
-         NEW.latitude, NEW.longitude, NEW.lat_long_accuracy, NEW.elevation, NEW.elevation_accuracy,
-         NEW.gtu_to_date, NEW.gtu_to_date_mask, NEW.tag_values_indexed, new.location
+         NEW.gtu_to_date, NEW.gtu_to_date_mask,
+         NEW.gtu_elevation, NEW.gtu_elevation_accuracy,
+         NEW.tag_values_indexed, new.location
         )
     WHERE gtu_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'igs' THEN
@@ -1998,7 +2000,7 @@ BEGIN
      expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
      gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
      gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-     gtu_latitude, gtu_longitude, gtu_lat_long_accuracy, gtu_elevation, gtu_elevation_accuracy,
+     gtu_elevation, gtu_elevation_accuracy,
      gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
      taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
      taxon_path,taxon_parent_ref,taxon_extinct,
@@ -2024,7 +2026,7 @@ BEGIN
             NEW.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
             NEW.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
             gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-            gtu.latitude, gtu.longitude, gtu.lat_long_accuracy, gtu.elevation, gtu.elevation_accuracy,
+            gtu.gtu_elevation, gtu.gtu_elevation_accuracy,
             gtu.tag_values_indexed,
             taggr_countries.tag_value, lineToTagArray(taggr_countries.tag_value),
             taggr_provinces.tag_value, lineToTagArray(taggr_provinces.tag_value),
@@ -2089,7 +2091,7 @@ BEGIN
          expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
          gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
          gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_latitude, gtu_longitude, gtu_lat_long_accuracy, gtu_elevation, gtu_elevation_accuracy,
+         gtu_elevation, gtu_elevation_accuracy,
          gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
          taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
          taxon_path,taxon_parent_ref,taxon_extinct,
@@ -2118,7 +2120,7 @@ BEGIN
          NEW.expedition_ref, subq.expe_name, subq.expe_name_ts, subq.expe_name_indexed,
          NEW.gtu_ref, subq.gtu_code, subq.gtu_parent_ref, subq.gtu_path, subq.gtu_location,
          subq.gtu_from_date_mask, subq.gtu_from_date, subq.gtu_to_date_mask, subq.gtu_to_date,
-         subq.gtu_latitude, subq.gtu_longitude, subq.gtu_lat_long_accuracy, subq.gtu_elevation, subq.gtu_elevation_accuracy,
+         subq.gtu_elevation, subq.gtu_elevation_accuracy,
          subq.gtu_tag_values_indexed,
          subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
          subq.gtu_province_tag_value, subq.gtu_province_tag_indexed,
@@ -2152,7 +2154,7 @@ BEGIN
                 expe.name expe_name, expe.name_ts expe_name_ts, expe.name_indexed expe_name_indexed,
                 gtu.code gtu_code, gtu.parent_ref gtu_parent_ref, gtu.path gtu_path,gtu.location gtu_location,
                 gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-                gtu.latitude as gtu_latitude, gtu.longitude as gtu_longitude, gtu.lat_long_accuracy as gtu_lat_long_accuracy, gtu.elevation as gtu_elevation, gtu.elevation_accuracy as gtu_elevation_accuracy,
+                gtu.gtu_elevation, gtu.gtu_elevation_accuracy,
                 gtu.tag_values_indexed as gtu_tag_values_indexed,
                 taggr_countries.tag_value as gtu_country_tag_value, lineToTagArray(taggr_countries.tag_value) as gtu_country_tag_indexed,
                 taggr_provinces.tag_value as gtu_province_tag_value, lineToTagArray(taggr_provinces.tag_value) as gtu_province_tag_indexed,

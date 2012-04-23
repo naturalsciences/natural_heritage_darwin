@@ -48,9 +48,6 @@ CREATE TABLE specimens_flat (
     gtu_from_date timestamp,
     gtu_to_date_mask integer,
     gtu_to_date timestamp,
-    gtu_latitude double precision,
-    gtu_longitude double precision,
-    gtu_lat_long_accuracy double precision,
     gtu_elevation double precision,
     gtu_elevation_accuracy double precision,
     gtu_tag_values_indexed varchar[],
@@ -143,7 +140,7 @@ CREATE TABLE specimens_flat (
      expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
      gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
      gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-     gtu_latitude, gtu_longitude, gtu_lat_long_accuracy, gtu_elevation, gtu_elevation_accuracy,
+     gtu_elevation, gtu_elevation_accuracy,
      gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
      taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
      taxon_path,taxon_parent_ref,taxon_extinct,
@@ -169,7 +166,7 @@ CREATE TABLE specimens_flat (
             spec.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
             spec.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
             gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-            gtu.latitude, gtu.longitude, gtu.lat_long_accuracy, gtu.elevation, gtu.elevation_accuracy,
+            gtu.gtu_elevation, gtu.gtu_elevation_accuracy,
             gtu.tag_values_indexed,
             taggr_countries.tag_value,  lineToTagArray(taggr_countries.tag_value),
             taggr_provinces.tag_value,  lineToTagArray(taggr_provinces.tag_value),
@@ -286,9 +283,6 @@ create view darwin_flat as
   f.gtu_from_date,
   f.gtu_to_date_mask,
   f.gtu_to_date,
-  f.gtu_latitude,
-  f.gtu_longitude,
-  f.gtu_lat_long_accuracy,
   f.gtu_elevation,
   f.gtu_elevation_accuracy,
   f.gtu_tag_values_indexed,
@@ -418,4 +412,3 @@ create view darwin_flat as
   LEFT JOIN specimen_individuals  i ON s.id = i.specimen_ref 
   LEFT JOIN specimen_parts p ON i.id = p.specimen_individual_ref
 ;
-
