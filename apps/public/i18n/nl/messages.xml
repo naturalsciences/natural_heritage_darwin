@@ -584,27 +584,31 @@
       </trans-unit>
           <trans-unit id="1483">
         <source>Your Name</source>
-        <target></target>
+        <target>Uw naam</target>
       </trans-unit>
           <trans-unit id="1484">
         <source>anonymous</source>
-        <target></target>
+        <target>Anonieme gebruiker</target>
       </trans-unit>
           <trans-unit id="1485">
         <source>You think there&#039;s a mistake ? please suggest us a correction</source>
-        <target></target>
+        <target>Denkt u een fout te hebben gevonden? Gelieve ons een suggestie te sturen ter correctie.</target>
       </trans-unit>
           <trans-unit id="1486">
         <source>Submit</source>
-        <target></target>
+        <target>Versturen</target>
       </trans-unit>
           <trans-unit id="1487">
         <source>Comment</source>
-        <target></target>
+        <target>Commentaar</target>
       </trans-unit>
           <trans-unit id="1488">
         <source>Thank you for your help</source>
-        <target></target>
+        <target>Dank voor uw hulp</target>
+      </trans-unit>
+          <trans-unit id="1613">
+        <source>Did you follow a link from another site?</source>
+        <target>Heeft u een link gevolgd van op een andere website?</target>
       </trans-unit>
           <trans-unit id="1268">
         <source>Between </source>
@@ -650,49 +654,45 @@
      Werkt u op een reeks stalen? Wenst u vaak voorkomende zoekcriteria op te slaan voor later gebruik? Weet u graag wie welke info heeft gewijzigd?&lt;br/&gt;
      &lt;strong&gt;DaRWIN kan u daar goed bij helpen!&lt;/strong&gt;</target>
       </trans-unit>
-          <trans-unit id="1606">
-        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1607">
-        <source>Oops! Page Not Found</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1608">
-        <source>The server returned a 404 response.</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1609">
-        <source>Did you type the URL?</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1610">
-        <source>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1611">
-        <source>Did you follow a link from somewhere else at this site?</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1612">
-        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
-        <target></target>
-      </trans-unit>
-          <trans-unit id="1613">
-        <source>Did you follow a link from another site?</source>
-        <target></target>
-      </trans-unit>
           <trans-unit id="1614">
         <source>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</source>
-        <target></target>
+        <target>Links van op andere websites kunnen soms verouderd zijn of een foute spelwijze bevatten. Gelieve ons te contacteren op &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; zodat wij kunnen trachten om contact op te nemen met de andere site om deze fout te corrigeren.</target>
       </trans-unit>
           <trans-unit id="1615">
         <source>What&#039;s next</source>
-        <target></target>
+        <target>Wat nu</target>
       </trans-unit>
           <trans-unit id="1616">
         <source>Back to previous page</source>
-        <target></target>
+        <target>Terug naar vorige pagina</target>
+      </trans-unit>
+          <trans-unit id="1606">
+        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
+        <target>Indien u een probleem heeft met de applicatie, of indien u hulp wenst : gelieve een bericht te sturen naar &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</target>
+      </trans-unit>
+          <trans-unit id="1607">
+        <source>Oops! Page Not Found</source>
+        <target>Oops! Pagina Niet Gevonden</target>
+      </trans-unit>
+          <trans-unit id="1608">
+        <source>The server returned a 404 response.</source>
+        <target>De server heeft een 404 antwoord</target>
+      </trans-unit>
+          <trans-unit id="1609">
+        <source>Did you type the URL?</source>
+        <target>Heeft u de URL manueel ingegeven?</target>
+      </trans-unit>
+          <trans-unit id="1610">
+        <source>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</source>
+        <target>U heeft misschien het adres (URL) fout ingegeven. Gelieve na te gaan of de spelling correct is, de hoofdlettergevoeligheid werd gerespecteerd, etc.</target>
+      </trans-unit>
+          <trans-unit id="1611">
+        <source>Did you follow a link from somewhere else at this site?</source>
+        <target>Heeft u een link gevolgd van op een andere pagina in deze site?</target>
+      </trans-unit>
+          <trans-unit id="1612">
+        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
+        <target>Indien u deze pagina ziet, dan werd u fout doorgestuurd van op onze site. Gelieve ons hiervan op de hoogte te brengen via &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; zodat wij dit kunnen corrigeren.</target>
       </trans-unit>
           <trans-unit id="1368">
         <source>DaRWIN 2 registration</source>
@@ -701,6 +701,14 @@
           <trans-unit id="1369">
         <source>DaRWIN 2 team</source>
         <target>het DaRWIN 2 team</target>
+      </trans-unit>
+          <trans-unit id="1706">
+        <source>Related Files</source>
+        <target>Gerelateerde bestanden</target>
+      </trans-unit>
+          <trans-unit id="1707">
+        <source>Download</source>
+        <target>Download</target>
       </trans-unit>
         </body>
   </file>

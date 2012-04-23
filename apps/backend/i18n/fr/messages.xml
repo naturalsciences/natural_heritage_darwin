@@ -2511,10 +2511,6 @@
         <source>Activity date from</source>
         <target>Date d&#039;activité de</target>
       </trans-unit>
-          <trans-unit id="654">
-        <source>Activity date to</source>
-        <target>Date d&#039;activé à</target>
-      </trans-unit>
           <trans-unit id="655">
         <source>Add Link</source>
         <target>Ajouter un lien</target>
@@ -4536,6 +4532,10 @@
         <source>Darwin users added here will have either read or write rights on this loan and its related items. Needless to add yourself when you are the one creating the loan</source>
         <target>Les utilisateurs Darwin ajoutés ici auront des droits en lecture ou en écriture sur le prêt ou sur les objets associés. Inutile de vous ajouter lorsque c&#039;est vous qui créez le prêt</target>
       </trans-unit>
+          <trans-unit id="654">
+        <source>Activity date to</source>
+        <target>à</target>
+      </trans-unit>
           <trans-unit id="1381">
         <source>Dear %title% %name%,</source>
         <target>Cher %title% %name%,</target>
@@ -4833,19 +4833,19 @@
         <target>Veuillez sauver votre échantillon afin d&#039;ajouter un workflow</target>
       </trans-unit>
           <trans-unit id="1500">
-        <source>This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <source>This widget allows you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, a explanation when a modification is added. The number of options in the status field depends on your privileges</source>
         <target>Cette widget vous permet d&#039;ajouter une note pour un individu spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges utilisateur</target>
       </trans-unit>
           <trans-unit id="1501">
-        <source>This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <source>This widget allows you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depends on your privileges</source>
         <target>Cette widget vous permet d&#039;ajouter une note pour un catalogue spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges</target>
       </trans-unit>
           <trans-unit id="1503">
-        <source>This widget allow you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <source>This widget allows you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges</source>
         <target>Cette widget vous permet d&#039;ajouter une note pour une personne spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges</target>
       </trans-unit>
           <trans-unit id="1504">
-        <source>This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <source>This widget allows you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges</source>
         <target>Cette widget vous permet d&#039;ajouter une note pour un échantillon spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges</target>
       </trans-unit>
           <trans-unit id="1511">
@@ -4889,7 +4889,7 @@
         <target>Voir tous les workflows</target>
       </trans-unit>
           <trans-unit id="1502">
-        <source>This widget allow you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
+        <source>This widget allows you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, a explanation when a modification is added. The number of options in the status field depends on your privileges</source>
         <target>Cette widget vous permet d&#039;ajouter une note pour une partie spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges</target>
       </trans-unit>
           <trans-unit id="1601">
@@ -5277,7 +5277,7 @@
         <target>Veuillez sauvegarder votre prêt afin d&#039;ajouter des status</target>
       </trans-unit>
           <trans-unit id="1703">
-        <source>This widget allow you to add a bibliographic reference of the item</source>
+        <source>This widget allows you to add a bibliographic reference of the item</source>
         <target>Cette widget vous permet d&#039;ajouter une référence bibliographique à l&#039;élément</target>
       </trans-unit>
           <trans-unit id="1186">
@@ -5345,7 +5345,7 @@
         <target>Aperçu</target>
       </trans-unit>
           <trans-unit id="1704">
-        <source>This widget allow you to add a file related to the item - This can either be a document describing the item or an illustration of it.</source>
+        <source>This widget allows you to add a file related to the item - This can either be a document describing the item or an illustration of it.</source>
         <target>Cette widget vous permet d&#039;ajouter un fichier lié à l&#039;élément - Cela peut aussi bien être un document décrivant l&#039;élément qu&#039;être une illustration de celui-ci.</target>
       </trans-unit>
           <trans-unit id="1443">
