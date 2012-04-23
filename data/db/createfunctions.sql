@@ -1783,10 +1783,14 @@ BEGIN
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'gtu' THEN
     UPDATE darwin_flat
     SET (gtu_code, gtu_parent_ref, gtu_path, gtu_from_date, gtu_from_date_mask,
-        gtu_to_date, gtu_to_date_mask, gtu_tag_values_indexed, gtu_location
+         gtu_to_date, gtu_to_date_mask,
+         gtu_elevation, gtu_elevation_accuracy,
+         gtu_tag_values_indexed, gtu_location
         ) =
         (NEW.code, NEW.parent_ref, NEW.path, NEW.gtu_from_date, NEW.gtu_from_date_mask,
-        NEW.gtu_to_date, NEW.gtu_to_date_mask, NEW.tag_values_indexed, new.location
+         NEW.gtu_to_date, NEW.gtu_to_date_mask,
+         NEW.gtu_elevation, NEW.gtu_elevation_accuracy,
+         NEW.tag_values_indexed, NEW.location
         )
     WHERE gtu_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'igs' THEN
@@ -1915,7 +1919,10 @@ BEGIN
          expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
          station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
          gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
+         gtu_elevation, gtu_elevation_accuracy,
+         gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+         gtu_province_tag_value, gtu_province_tag_indexed,
+         gtu_others_tag_value, gtu_others_tag_indexed,
          taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
          taxon_path,taxon_parent_ref,taxon_extinct,
          chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -1941,7 +1948,10 @@ BEGIN
          NEW.expedition_ref, subq.expe_name, subq.expe_name_ts, subq.expe_name_indexed,
          NEW.station_visible, NEW.gtu_ref, subq.gtu_code, subq.gtu_parent_ref, subq.gtu_path, subq.gtu_location,
          subq.gtu_from_date_mask, subq.gtu_from_date, subq.gtu_to_date_mask, subq.gtu_to_date,
-         subq.gtu_tag_values_indexed, subq.taggr_tag_value, lineToTagArray(subq.taggr_tag_value),
+         subq.gtu_elevation, subq.gtu_elevation_accuracy,
+         subq.gtu_tag_values_indexed, subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
+         subq.gtu_province_tag_value, subq.gtu_province_tag_indexed,
+         subq.gtu_others_tag_value, subq.gtu_others_tag_indexed,
          NEW.taxon_ref, subq.taxon_name, subq.taxon_name_indexed, subq.taxon_name_order_by,
          subq.taxon_level_ref, subq.taxon_level_level_name, subq.taxon_status,
          subq.taxon_path, subq.taxon_parent_ref, subq.taxon_extinct,
@@ -1973,7 +1983,12 @@ BEGIN
                 expe.name expe_name, expe.name_ts expe_name_ts, expe.name_indexed expe_name_indexed,
                 gtu.code gtu_code, gtu.parent_ref gtu_parent_ref, gtu.path gtu_path,gtu.location gtu_location,
                 gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-                gtu.tag_values_indexed gtu_tag_values_indexed, taggr.tag_value taggr_tag_value, 
+                gtu.gtu_elevation, gtu.gtu_elevation_accuracy,
+                gtu.tag_values_indexed gtu_tag_values_indexed,
+                taggr_countries.tag_value gtu_country_tag_value, lineToTagArray(taggr_countries.tag_value) gtu_country_tag_indexed,
+                taggr_provinces.tag_value gtu_province_tag_value, lineToTagArray(taggr_provinces.tag_value) gtu_province_tag_indexed,
+                (select array_to_string(array(select tag from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province')), ';')) as gtu_others_tag_value,
+                (select array(select distinct fullToIndex(tag) from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province'))) as gtu_others_tag_indexed,
                 taxon.name taxon_name, taxon.name_indexed taxon_name_indexed, taxon.name_order_by taxon_name_order_by,
                 taxon.level_ref taxon_level_ref, taxon_level.level_name taxon_level_level_name, taxon.status taxon_status,
                 taxon.path taxon_path, taxon.parent_ref taxon_parent_ref, taxon.extinct taxon_extinct,
@@ -1998,7 +2013,9 @@ BEGIN
                 host_taxon.path host_taxon_path, host_taxon.parent_ref host_taxon_parent_ref, host_taxon.extinct host_taxon_extinct
          FROM collections coll,
               expeditions expe,
-              (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'),
+              (gtu LEFT JOIN tag_groups taggr_countries ON gtu.id = taggr_countries.gtu_ref AND taggr_countries.group_name_indexed = 'administrativearea' AND taggr_countries.sub_group_name_indexed = 'country'
+                   LEFT JOIN tag_groups taggr_provinces ON gtu.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
+              ),
               (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id),
               (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id),
               (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id),
@@ -2025,7 +2042,10 @@ BEGIN
      expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
      station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
      gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-     gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,
+     gtu_elevation, gtu_elevation_accuracy,
+     gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+     gtu_province_tag_value, gtu_province_tag_indexed,
+     gtu_others_tag_value, gtu_others_tag_indexed,
      taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
      taxon_path,taxon_parent_ref,taxon_extinct,
      chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2051,7 +2071,12 @@ BEGIN
             NEW.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
             NEW.station_visible, NEW.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
             gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-            gtu.tag_values_indexed, taggr.tag_value,  lineToTagArray(taggr.tag_value),
+            gtu.gtu_elevation gtu_elevation, gtu.gtu_elevation_accuracy gtu_elevation_accuracy,
+            gtu.tag_values_indexed gtu_tag_values_indexed,
+            taggr_countries.tag_value gtu_country_tag_value, lineToTagArray(taggr_countries.tag_value) gtu_country_tag_indexed,
+            taggr_provinces.tag_value gtu_province_tag_value, lineToTagArray(taggr_provinces.tag_value) gtu_province_tag_indexed,
+            (select array_to_string(array(select tag from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province')), ';')) as gtu_others_tag_value,
+            (select array(select distinct fullToIndex(tag) from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province'))) as gtu_others_tag_indexed,
             NEW.taxon_ref, taxon.name, taxon.name_indexed, taxon.name_order_by, taxon.level_ref, taxon_level.level_name, taxon.status,
             taxon.path, taxon.parent_ref, taxon.extinct,
             NEW.chrono_ref, chrono.name, chrono.name_indexed, chrono.name_order_by, chrono.level_ref, chrono_level.level_name, chrono.status,
@@ -2072,7 +2097,9 @@ BEGIN
             NEW.acquisition_category, NEW.acquisition_date_mask, NEW.acquisition_date
      FROM collections coll,
           expeditions expe,
-          (gtu LEFT JOIN tag_groups taggr ON gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country'),
+          (gtu LEFT JOIN tag_groups taggr_countries ON gtu.id = taggr_countries.gtu_ref AND taggr_countries.group_name_indexed = 'administrativearea' AND taggr_countries.sub_group_name_indexed = 'country'
+               LEFT JOIN tag_groups taggr_provinces ON gtu.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
+          ),
           (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id),
           (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id),
           (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id),
@@ -2096,27 +2123,66 @@ BEGIN
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
         UPDATE darwin_flat
         SET gtu_country_tag_value = NEW.tag_value,
-        gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
+            gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
+        WHERE gtu_ref = NEW.gtu_ref;
+      ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
+        UPDATE darwin_flat
+        SET gtu_province_tag_value = NEW.tag_value,
+            gtu_province_tag_indexed = lineToTagArray(NEW.tag_value)
+        WHERE gtu_ref = NEW.gtu_ref;
+      ELSIF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
+      /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
+        UPDATE darwin_flat
+        SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
+            gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')))
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
     ELSIF TG_OP = 'UPDATE' THEN
+      IF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' AND NEW.sub_group_name_indexed != 'country' THEN
+        UPDATE darwin_flat
+        SET gtu_country_tag_value = NULL,
+            gtu_country_tag_indexed = NULL
+        WHERE gtu_ref = NEW.gtu_ref;
+      ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'province' AND NEW.sub_group_name_indexed != 'province' THEN
+        UPDATE darwin_flat
+        SET gtu_province_tag_value = NULL,
+            gtu_province_tag_indexed = NULL
+        WHERE gtu_ref = NEW.gtu_ref;
+      END IF;
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
         UPDATE darwin_flat
         SET gtu_country_tag_value = NEW.tag_value,
-        gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
+            gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
-
-      ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' THEN
+      ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
         UPDATE darwin_flat
-        SET gtu_country_tag_value = NULL,
-        gtu_country_tag_indexed = NULL
+        SET gtu_province_tag_value = NEW.tag_value,
+            gtu_province_tag_indexed = lineToTagArray(NEW.tag_value)
+        WHERE gtu_ref = NEW.gtu_ref;
+      END IF;
+      IF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
+      /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
+        UPDATE darwin_flat
+        SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
+            gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')))
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
     ELSIF TG_OP = 'DELETE' THEN
       IF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' THEN
         UPDATE darwin_flat
         SET gtu_country_tag_value = NULL,
-        gtu_country_tag_indexed = NULL
+            gtu_country_tag_indexed = NULL
+        WHERE gtu_ref = OLD.gtu_ref;
+      ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'province' THEN
+        UPDATE darwin_flat
+        SET gtu_province_tag_value = NULL,
+            gtu_province_tag_indexed = NULL
+        WHERE gtu_ref = OLD.gtu_ref;
+      ELSE
+        /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
+        UPDATE darwin_flat
+        SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = OLD.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
+            gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = OLD.gtu_ref and sub_group_type not in ('country', 'province')))
         WHERE gtu_ref = OLD.gtu_ref;
       END IF;
     END IF;
@@ -2159,7 +2225,10 @@ BEGIN
          expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
          station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
          gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
+         gtu_elevation, gtu_elevation_accuracy,
+         gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+         gtu_province_tag_value, gtu_province_tag_indexed,
+         gtu_others_tag_value, gtu_others_tag_indexed,
          taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
          taxon_path,taxon_parent_ref,taxon_extinct,
          chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2193,7 +2262,10 @@ BEGIN
          expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
          station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
          gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
+         gtu_elevation, gtu_elevation_accuracy,
+         gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+         gtu_province_tag_value, gtu_province_tag_indexed,
+         gtu_others_tag_value, gtu_others_tag_indexed,
          taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
          taxon_path,taxon_parent_ref,taxon_extinct,
          chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2255,7 +2327,10 @@ BEGIN
             expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
             station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
             gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
+            gtu_elevation, gtu_elevation_accuracy,
             gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+            gtu_province_tag_value, gtu_province_tag_indexed,
+            gtu_others_tag_value, gtu_others_tag_indexed,
             taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
             taxon_path,taxon_parent_ref,taxon_extinct,
             chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2283,7 +2358,10 @@ BEGIN
             expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
             station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
             gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
+            gtu_elevation, gtu_elevation_accuracy,
+            gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+            gtu_province_tag_value, gtu_province_tag_indexed,
+            gtu_others_tag_value, gtu_others_tag_indexed,
             taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
             taxon_path,taxon_parent_ref,taxon_extinct,
             chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2316,7 +2394,10 @@ BEGIN
               expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
               station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
               gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-              gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
+              gtu_elevation, gtu_elevation_accuracy,
+              gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+              gtu_province_tag_value, gtu_province_tag_indexed,
+              gtu_others_tag_value, gtu_others_tag_indexed,
               taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
               taxon_path,taxon_parent_ref,taxon_extinct,
               chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2343,7 +2424,10 @@ BEGIN
               subq.expedition_ref,subq.expedition_name,subq.expedition_name_ts,subq.expedition_name_indexed,
               subq.station_visible,subq.gtu_ref,subq.gtu_code,subq.gtu_parent_ref,subq.gtu_path,subq.gtu_location,
               subq.gtu_from_date_mask,subq.gtu_from_date,subq.gtu_to_date_mask,subq.gtu_to_date,
-              subq.gtu_tag_values_indexed,subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
+              subq.gtu_elevation, subq.gtu_elevation_accuracy,
+              subq.gtu_tag_values_indexed, subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
+              subq.gtu_province_tag_value, subq.gtu_province_tag_indexed,
+              subq.gtu_others_tag_value, subq.gtu_others_tag_indexed,
               subq.taxon_ref,subq.taxon_name,subq.taxon_name_indexed,subq.taxon_name_order_by,subq.taxon_level_ref,subq.taxon_level_name,subq.taxon_status,
               subq.taxon_path,subq.taxon_parent_ref,subq.taxon_extinct,
               subq.chrono_ref,subq.chrono_name,subq.chrono_name_indexed,subq.chrono_name_order_by,subq.chrono_level_ref,subq.chrono_level_name,subq.chrono_status,
@@ -2372,7 +2456,10 @@ BEGIN
             expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
             station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
             gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
+            gtu_elevation, gtu_elevation_accuracy,
+            gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+            gtu_province_tag_value, gtu_province_tag_indexed,
+            gtu_others_tag_value, gtu_others_tag_indexed,
             taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
             taxon_path,taxon_parent_ref,taxon_extinct,
             chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2457,7 +2544,10 @@ BEGIN
          expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
          station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
          gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
+         gtu_elevation, gtu_elevation_accuracy,
+         gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+         gtu_province_tag_value, gtu_province_tag_indexed,
+         gtu_others_tag_value, gtu_others_tag_indexed,
          taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
          taxon_path,taxon_parent_ref,taxon_extinct,
          chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2498,7 +2588,10 @@ BEGIN
          expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
          station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
          gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
+         gtu_elevation, gtu_elevation_accuracy,
+         gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+         gtu_province_tag_value, gtu_province_tag_indexed,
+         gtu_others_tag_value, gtu_others_tag_indexed,
          taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
          taxon_path,taxon_parent_ref,taxon_extinct,
          chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2568,7 +2661,10 @@ BEGIN
             expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
             station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
             gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
+            gtu_elevation, gtu_elevation_accuracy,
+            gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+            gtu_province_tag_value, gtu_province_tag_indexed,
+            gtu_others_tag_value, gtu_others_tag_indexed,
             taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
             taxon_path,taxon_parent_ref,taxon_extinct,
             chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2602,7 +2698,10 @@ BEGIN
             expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
             station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
             gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
+            gtu_elevation, gtu_elevation_accuracy,
+            gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+            gtu_province_tag_value, gtu_province_tag_indexed,
+            gtu_others_tag_value, gtu_others_tag_indexed,
             taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
             taxon_path,taxon_parent_ref,taxon_extinct,
             chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2641,7 +2740,10 @@ BEGIN
               expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
               station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
               gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-              gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed,
+              gtu_elevation, gtu_elevation_accuracy,
+              gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+              gtu_province_tag_value, gtu_province_tag_indexed,
+              gtu_others_tag_value, gtu_others_tag_indexed,
               taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
               taxon_path,taxon_parent_ref,taxon_extinct,
               chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
@@ -2674,7 +2776,10 @@ BEGIN
               subq.expedition_ref,subq.expedition_name,subq.expedition_name_ts,subq.expedition_name_indexed,
               subq.station_visible,subq.gtu_ref,subq.gtu_code,subq.gtu_parent_ref,subq.gtu_path,subq.gtu_location,
               subq.gtu_from_date_mask,subq.gtu_from_date,subq.gtu_to_date_mask,subq.gtu_to_date,
-              subq.gtu_tag_values_indexed,subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
+              subq.gtu_elevation, subq.gtu_elevation_accuracy,
+              subq.gtu_tag_values_indexed, subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
+              subq.gtu_province_tag_value, subq.gtu_province_tag_indexed,
+              subq.gtu_others_tag_value, subq.gtu_others_tag_indexed,
               subq.taxon_ref,subq.taxon_name,subq.taxon_name_indexed,subq.taxon_name_order_by,subq.taxon_level_ref,subq.taxon_level_name,subq.taxon_status,
               subq.taxon_path,subq.taxon_parent_ref,subq.taxon_extinct,
               subq.chrono_ref,subq.chrono_name,subq.chrono_name_indexed,subq.chrono_name_order_by,subq.chrono_level_ref,subq.chrono_level_name,subq.chrono_status,
@@ -2709,7 +2814,10 @@ BEGIN
             expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
             station_visible,gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
             gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-            gtu_tag_values_indexed,gtu_country_tag_value, gtu_country_tag_indexed, 
+            gtu_elevation, gtu_elevation_accuracy,
+            gtu_tag_values_indexed, gtu_country_tag_value, gtu_country_tag_indexed,
+            gtu_province_tag_value, gtu_province_tag_indexed,
+            gtu_others_tag_value, gtu_others_tag_indexed,
             taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
             taxon_path,taxon_parent_ref,taxon_extinct,
             chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
