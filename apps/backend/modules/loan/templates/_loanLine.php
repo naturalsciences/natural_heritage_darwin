@@ -36,7 +36,7 @@
       <?php echo $form['to_date'];?><br />
     </div>
   </td>
-  <td>
+  <td class="loan_actions_button">
     <?php echo $form['item_visible'];?>
     <?php if(! $lineObj->isNew()):?>
       <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loanitem/view?id='.$lineObj->getId());?>
@@ -44,7 +44,7 @@
     <?php endif;?>
   </td>
 
-  <td> <!--class="widget_row_delete">-->
+  <td class="item_row_delete">
       <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_code_'.($lineObj->isNew() ? 'n_' : 'o_').$form->getName()); ?>
 
 <script type="text/javascript">
