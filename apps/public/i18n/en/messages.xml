@@ -703,6 +703,14 @@
         <source>Back to previous page</source>
         <target>Back to previous page</target>
       </trans-unit>
+          <trans-unit id="1706">
+        <source>Related Files</source>
+        <target>Related Files</target>
+      </trans-unit>
+          <trans-unit id="1707">
+        <source>Download</source>
+        <target>Download</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

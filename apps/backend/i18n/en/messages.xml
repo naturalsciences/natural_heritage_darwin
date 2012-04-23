@@ -4995,26 +4995,6 @@
         <source>Please save your specimen in order to add workflows</source>
         <target>Please save your specimen in order to add workflows</target>
       </trans-unit>
-          <trans-unit id="1500">
-        <source>This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target>This widget allow you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</target>
-      </trans-unit>
-          <trans-unit id="1501">
-        <source>This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target>This widget allow you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depend on your privileges</target>
-      </trans-unit>
-          <trans-unit id="1502">
-        <source>This widget allow you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target>This widget allow you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, a explanation when a modification is added. The number of options in the status field depend on your privileges</target>
-      </trans-unit>
-          <trans-unit id="1503">
-        <source>This widget allow you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target>This widget allow you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</target>
-      </trans-unit>
-          <trans-unit id="1504">
-        <source>This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</source>
-        <target>This widget allow you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind something to do, an explanation when a modification is added. The number of options in the status field depend on your privileges</target>
-      </trans-unit>
           <trans-unit id="1505">
         <source>Choose contact</source>
         <target>Choose contact</target>
@@ -5151,10 +5131,6 @@
         <source>Checker</source>
         <target>Checker</target>
       </trans-unit>
-          <trans-unit id="1548">
-        <source>Accompanist</source>
-        <target>Accompanist</target>
-      </trans-unit>
           <trans-unit id="1549">
         <source>Transporter</source>
         <target>Transporter</target>
@@ -5230,6 +5206,14 @@
           <trans-unit id="1570">
         <source>Created At</source>
         <target>Created At</target>
+      </trans-unit>
+          <trans-unit id="1500">
+        <source>This widget allows you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, a explanation when a modification is added. The number of options in the status field depends on your privileges</source>
+        <target>This widget allows you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, a explanation when a modification is added. The number of options in the status field depends on your privileges</target>
+      </trans-unit>
+          <trans-unit id="1548">
+        <source>Attendant</source>
+        <target>Attendant</target>
       </trans-unit>
           <trans-unit id="1573">
         <source>Related Files</source>
@@ -5463,10 +5447,6 @@
         <source>Add multiple items</source>
         <target>Add multiple items</target>
       </trans-unit>
-          <trans-unit id="1648">
-        <source>Are you sure you want to do an archive of your loan ?</source>
-        <target>Are you sure you want to do an archive of your loan ?</target>
-      </trans-unit>
           <trans-unit id="1650">
         <source>Never synchronized</source>
         <target>Never synchronized</target>
@@ -5487,6 +5467,10 @@
         <source>In this widget you can preview all maintenances done on this loan or the related items</source>
         <target>In this widget you can preview all maintenances done on this loan or the related items</target>
       </trans-unit>
+          <trans-unit id="1648">
+        <source>Are you sure you want to archive your loan ?</source>
+        <target>Are you sure you want to archive your loan ?</target>
+      </trans-unit>
           <trans-unit id="1662">
         <source>You can associate files to this loan or to the related items. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</source>
         <target>You can associate files to this loan or to the related items. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</target>
@@ -5502,10 +5486,6 @@
           <trans-unit id="1665">
         <source>Darwin users added here will have either read or write rights on this loan and its related items. Needless to add yourself when you are the one creating the loan</source>
         <target>Darwin users added here will have either read or write rights on this loan and its related items. Needless to add yourself when you are the one creating the loan</target>
-      </trans-unit>
-          <trans-unit id="1666">
-        <source>Insert the name of the loan here, You can also set a description, the begining and the end date of the loan</source>
-        <target>Insert the name of the loan here, You can also set a description, the begining and the end date of the loan</target>
       </trans-unit>
           <trans-unit id="1667">
         <source>Here you can define all people involved during the loan process. The sender side being the lenders and the receiver side being the borrowers</source>
@@ -5630,6 +5610,38 @@
           <trans-unit id="1701">
         <source>Choose a bibliography</source>
         <target>Choose a bibliography</target>
+      </trans-unit>
+          <trans-unit id="1705">
+        <source>Suggestions / Report problem</source>
+        <target>Suggestions / Report problem</target>
+      </trans-unit>
+          <trans-unit id="1703">
+        <source>This widget allows you to add a bibliographic reference of the item</source>
+        <target>This widget allows you to add a bibliographic reference of the item</target>
+      </trans-unit>
+          <trans-unit id="1704">
+        <source>This widget allows you to add a file related to the item - This can either be a document describing the item or an illustration of it.</source>
+        <target>This widget allows you to add a file related to the item - This can either be a document describing the item or an illustration of it.</target>
+      </trans-unit>
+          <trans-unit id="1501">
+        <source>This widget allows you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depends on your privileges</source>
+        <target>This widget allows you to add a note for this specific catalogue, this note can be a modification suggestion, an asking for checking to managers, a checking, a explanation when a modification is added. The number of options in the status field depends on your privileges</target>
+      </trans-unit>
+          <trans-unit id="1502">
+        <source>This widget allows you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, a explanation when a modification is added. The number of options in the status field depends on your privileges</source>
+        <target>This widget allows you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, a explanation when a modification is added. The number of options in the status field depends on your privileges</target>
+      </trans-unit>
+          <trans-unit id="1503">
+        <source>This widget allows you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges</source>
+        <target>This widget allows you to add a note for this specific people, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges</target>
+      </trans-unit>
+          <trans-unit id="1666">
+        <source>Insert the name of the loan here, You can also set a description, the beginning and the end date of the loan</source>
+        <target>Insert the name of the loan here, You can also set a description, the beginning and the end date of the loan</target>
+      </trans-unit>
+          <trans-unit id="1504">
+        <source>This widget allows you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges</source>
+        <target>This widget allows you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges</target>
       </trans-unit>
         </body>
   </file>

@@ -66,7 +66,7 @@
             {
               event.preventDefault();
               el = $(this);
-              var answer = confirm('<?php echo __('Are you sure you want to do an archive of your loan ?');?>');
+              var answer = confirm('<?php echo __('Are you sure you want to archive your loan ?');?>');
               if(answer) {
                 should_rotate = true;
                 rotate();

@@ -3312,7 +3312,7 @@
         <target>Cet utilisateur existe déjà</target>
       </trans-unit>
           <trans-unit id="1548">
-        <source>Accompanist</source>
+        <source>Attendant</source>
         <target>Accompagnateur</target>
       </trans-unit>
           <trans-unit id="1546">
@@ -4665,7 +4665,7 @@
         <target>Commence le</target>
       </trans-unit>
           <trans-unit id="1666">
-        <source>Insert the name of the loan here, You can also set a description, the begining and the end date of the loan</source>
+        <source>Insert the name of the loan here, You can also set a description, the beginning and the end date of the loan</source>
         <target>Insérez le nom du prêt ici, vous pouvez également ajouter une description une date de début et de fin de prêt</target>
       </trans-unit>
           <trans-unit id="1463">
@@ -5413,7 +5413,7 @@
         <target>Maintenances</target>
       </trans-unit>
           <trans-unit id="1648">
-        <source>Are you sure you want to do an archive of your loan ?</source>
+        <source>Are you sure you want to archive your loan ?</source>
         <target>Etes vous sûr de vouloir archiver votre prêt ?</target>
       </trans-unit>
           <trans-unit id="1650">

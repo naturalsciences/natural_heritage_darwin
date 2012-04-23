@@ -10,7 +10,7 @@
       <th><?php echo __("Contact") ; ?></th>
       <th><?php echo __("Checker") ; ?></th>
       <th><?php echo __("Preparator") ; ?></th>
-      <th><?php echo __("Accompanist") ; ?></th>
+      <th><?php echo __("Attendant") ; ?></th>
       <th><?php echo __("Transporter") ; ?></th>
       <th><?php echo __("Other") ; ?></th>
       <th><?php echo $form['sender'];?></th>
@@ -49,7 +49,7 @@
       <th><?php echo __("Contact") ; ?></th>
       <th><?php echo __("Checker") ; ?></th>
       <th><?php echo __("Preparator") ; ?></th>
-      <th><?php echo __("Accompanist") ; ?></th>
+      <th><?php echo __("Attendant") ; ?></th>
       <th><?php echo __("Transporter") ; ?></th>
       <th><?php echo __("Other") ; ?></th>
       <th><?php echo $form['receiver'];?></th>

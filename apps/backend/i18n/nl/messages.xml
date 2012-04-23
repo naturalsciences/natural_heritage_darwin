@@ -100,7 +100,7 @@
         <target>Iemand die nakijkt</target>
       </trans-unit>
           <trans-unit id="1548">
-        <source>Accompanist</source>
+        <source>Attendant</source>
         <target>Begeleider</target>
       </trans-unit>
           <trans-unit id="1549">
@@ -296,7 +296,7 @@
         <target>Afgebroken</target>
       </trans-unit>
           <trans-unit id="1666">
-        <source>Insert the name of the loan here, You can also set a description, the begining and the end date of the loan</source>
+        <source>Insert the name of the loan here, You can also set a description, the beginning and the end date of the loan</source>
         <target>Voeg hier de naam van de ontlening in. U kunt eveneens een beschrijving invoeren en een begin- en einddatum.</target>
       </trans-unit>
           <trans-unit id="1667">
@@ -2592,7 +2592,7 @@
         <target>Heeft u de URL ingetikt?</target>
       </trans-unit>
           <trans-unit id="1648">
-        <source>Are you sure you want to do an archive of your loan ?</source>
+        <source>Are you sure you want to archive your loan ?</source>
         <target>Bent u zeker dat u uw ontlening wenst te archiveren?</target>
       </trans-unit>
           <trans-unit id="1650">
