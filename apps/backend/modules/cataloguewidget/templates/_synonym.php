@@ -36,7 +36,7 @@
                 <?php if($synonym['record_id'] == $eid):?>
                   <strong><?php echo $synonym['ref_item']->getNameWithFormat(ESC_RAW);?></strong>
                 <?php else:?>
-                  <a class="link_catalogue" title="<?php echo __('Synonym');?>" href="<?php echo url_for($table.'/edit?id='.$synonym['record_id']) ?>">
+                  <a title="<?php echo __('Synonym');?>" href="<?php echo url_for($table.'/edit?id='.$synonym['record_id']) ?>">
                     <?php echo $synonym['ref_item']->getNameWithFormat(ESC_RAW);?>
                   </a>
                 <?php endif;?>
