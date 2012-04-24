@@ -127,7 +127,7 @@ create-db:
 ifeq ($(PG_VER),'8.4')
 	-createlang -d template1 plpgsql
 endif
-	$(PRIV_PSQL) -c "create database '$(DB_NAME)' ENCODING 'UNICODE';"
+	$(PRIV_PSQL) -c "create database $(DB_NAME) ENCODING 'UNICODE';"
 
 install-lib:
 ifeq ($(PG_VER),'9.1')
