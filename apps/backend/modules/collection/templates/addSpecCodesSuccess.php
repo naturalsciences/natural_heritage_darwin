@@ -50,6 +50,13 @@
         <?php echo $form['code_part_code_auto_copy'];?>
       </td>
     </tr>
+    <tr>
+      <th><?php echo $form['code_specimen_duplicate']->renderLabel();?></th>
+      <td>
+        <?php echo $form['code_specimen_duplicate']->renderError(); ?>
+        <?php echo $form['code_specimen_duplicate'];?>
+      </td>
+    </tr>
   </tbody>
   <tfoot>
       <tr>
