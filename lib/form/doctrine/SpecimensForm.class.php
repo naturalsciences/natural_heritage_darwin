@@ -663,6 +663,20 @@ class SpecimensForm extends BaseSpecimensForm
       }
     }
 
+    //Assume the collection_ref is set
+    $collection  = Doctrine::getTable('Collections')->find($this->getObject()->getCollectionRef());
+    if( $collection->getCodeSpecimenDuplicate())
+    {
+      $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$id) ;
+      foreach ($Codes as $key=> $code)
+      {
+        $newCode = new Codes();
+        $newCode->fromArray($code->toArray());
+        $form = new CodesForm($newCode);
+        $this->attachEmbedRecord('Codes', $form, $key);
+      }
+    }
+
     //reembed biblio
     $bib =  $this->getEmbedRecords('Biblio', $id);
     foreach($bib as $key=>$vals) {
