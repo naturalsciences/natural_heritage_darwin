@@ -67,13 +67,16 @@ $(document).ready(function ()
 
   $('.workflow_delete').click(function(event)
   {
-    el = $(this);
     event.preventDefault();
-    row = $(this).closest('tr');
-    $.get($(this).attr('href'), function() {
-      row.hide();
-       $('body').data('widgets_screen').refreshWidget(event, el);
-    });
+    var answer = confirm('<?php echo addslashes(__('Are you sure ?'));?>');
+    if(answer) {
+      el = $(this);
+      row = $(this).closest('tr');
+      $.get($(this).attr('href'), function() {
+        row.hide();
+        $('body').data('widgets_screen').refreshWidget(event, el);
+      });
+    }
   });
 
 });
