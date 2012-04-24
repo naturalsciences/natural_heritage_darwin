@@ -124,8 +124,10 @@ grant-d2-to-read-user:
 	$(PRIV_PSQL_DB) -f grant_d2_to_read_user.sql
 
 create-db:
+ifeq ($(PG_VER),'8.4')
 	-createlang -d template1 plpgsql
-	$(PRIV_PSQL) -f createdb.sql
+endif
+	$(PRIV_PSQL) -c "create database '$(DB_NAME)' ENCODING 'UNICODE';"
 
 install-lib:
 	#Make this more dynamical
