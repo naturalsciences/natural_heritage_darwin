@@ -58,11 +58,14 @@ $(document).ready(function()
   $('.workflow_delete').click(function(event)
   {
     event.preventDefault();
-    row = $(this).closest('tr');
-    $.get($(this).attr('href'), function() {
-      row.hide();
-      $('#workflow_filter').submit();
-    });
+    var answer = confirm('<?php echo addslashes(__('Are you sure ?'));?>');
+    if(answer) {
+      row = $(this).closest('tr');
+      $.get($(this).attr('href'), function() {
+        row.hide();
+        $('#workflow_filter').submit();
+      });
+    }
   });
   $('#workflowsSummary .pager_nav a').click(function(event)
   {
