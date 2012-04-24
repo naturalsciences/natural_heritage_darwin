@@ -123,6 +123,7 @@
     $(document).ready(function () {
       $('a.search_related').click(function(event)
       {
+        $(this).closest('form')[0].reset();
         event.preventDefault();
         row = $(this).closest('tr');
         iname = row.find('.item_name');

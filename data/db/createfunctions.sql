@@ -4614,6 +4614,22 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE function fct_informative_reset_last_flag() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+BEGIN
+    UPDATE informative_workflow
+    SET is_last = true
+    WHERE referenced_relation = OLD.referenced_relation
+      AND record_id = OLD.record_id
+      AND id = (select id from informative_workflow 
+        WHERE referenced_relation = OLD.referenced_relation AND record_id = OLD.record_id ORDER BY modification_date_time desc LIMIT 1)
+    ;
+  RETURN NEW;
+END;
+$$;
+
 CREATE OR REPLACE function fct_remove_last_flag_loan() RETURNS TRIGGER
 language plpgsql
 AS

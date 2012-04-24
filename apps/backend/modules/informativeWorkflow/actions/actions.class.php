@@ -35,11 +35,19 @@ class informativeWorkflowActions extends DarwinActions
   }
 
   public function executeViewAll(sfWebRequest $request)
-  {    
+  {
     $this->informativeWorkflow = Doctrine::getTable('InformativeWorkflow')->findAllForTable($request->getParameter('table'), $request->getParameter('id'));
-
   }
-  
+
+  public function executeDelete(sfWebRequest $request)
+  {
+    if(! $this->getUser()->isAtLeast(Users::MANAGER)) $this->forwardToSecureAction();
+
+    Doctrine::getTable('InformativeWorkflow')->deleteRow($request->getParameter('id'), $this->getUser());
+
+    return $this->renderText('ok');
+  }
+
   public function executeSearch(sfWebRequest $request)
   {
     $this->form = new InformativeWorkflowFormFilter();
