@@ -223,9 +223,10 @@ CREATE TABLE specimens_flat (
 
 
 ALTER TABLE specimens_flat OWNER TO darwin2;
+ALTER TABLE specimens_flat_id_seq OWNER TO darwin2;
 
-GRANT ALL ON TABLE specimens_flat TO darwin2;
-GRANT SELECT ON TABLE specimens_flat TO d2viewer;
+GRANT ALL ON specimens_flat TO darwin2;
+GRANT SELECT ON specimens_flat TO d2viewer;
 
 commit;
 
@@ -234,13 +235,7 @@ commit;
 \i ../reports/ticketing/labeling.sql
 
 
-
-
-
-
-
 /********** RESET VIEW *************/
-
 
 create view darwin_flat as 
   select
@@ -412,3 +407,9 @@ create view darwin_flat as
   LEFT JOIN specimen_individuals  i ON s.id = i.specimen_ref 
   LEFT JOIN specimen_parts p ON i.id = p.specimen_individual_ref
 ;
+
+ALTER VIEW darwin_flat OWNER TO darwin2;
+
+GRANT ALL ON darwin_flat TO darwin2;
+GRANT SELECT ON darwin_flat TO d2viewer;
+
