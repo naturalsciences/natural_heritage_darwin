@@ -67,11 +67,12 @@ $(document).ready(function ()
 
   $('.workflow_delete').click(function(event)
   {
+    el = $(this);
     event.preventDefault();
     row = $(this).closest('tr');
     $.get($(this).attr('href'), function() {
       row.hide();
-       $('body').data('widgets_screen').refreshWidget(event, $(this));
+       $('body').data('widgets_screen').refreshWidget(event, el);
     });
   });
 
