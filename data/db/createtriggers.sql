@@ -715,6 +715,10 @@ CREATE trigger trg_chk_is_last_informative_workflow BEFORE INSERT
 	ON informative_workflow FOR EACH ROW
 	EXECUTE PROCEDURE fct_remove_last_flag();
 
+CREATE trigger trg_reset_last_flag_informative_workflow AFTER DELETE
+        ON informative_workflow FOR EACH ROW
+        EXECUTE PROCEDURE fct_informative_reset_last_flag();
+
 CREATE TRIGGER trg_chk_ref_record_collection_maintenance AFTER INSERT OR UPDATE
         ON collection_maintenance FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();

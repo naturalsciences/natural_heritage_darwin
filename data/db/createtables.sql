@@ -699,6 +699,7 @@ create table collections
         code_suffix varchar,
         code_suffix_separator varchar,
         code_part_code_auto_copy boolean not null default false,
+        code_specimen_duplicate boolean not null default false,
         is_public boolean not null default true,
         constraint pk_collections primary key (id),
         constraint fk_collections_institutions foreign key (institution_ref) references people(id),
@@ -724,6 +725,7 @@ comment on column collections.code_prefix_separator is 'Character chain used to 
 comment on column collections.code_suffix is 'Default code suffix to be used for specimens encoded in this collection';
 comment on column collections.code_suffix_separator is 'Character chain used to separate code suffix from code core';
 comment on column collections.code_part_code_auto_copy is 'Flag telling if the whole specimen code has to be copied for a part, when inserting a new one';
+comment on column collections.code_specimen_duplicate is 'Flag telling if the whole specimen code has to be copied when you do a duplicate';
 comment on column collections.is_public is 'Flag telling if the collection can be found in the public search';
 
 create table template_collections_users

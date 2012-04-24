@@ -10,7 +10,7 @@
       <th><?php echo __("Contact") ; ?></th>
       <th><?php echo __("Checker") ; ?></th>
       <th><?php echo __("Preparator") ; ?></th>
-      <th><?php echo __("Accompanist") ; ?></th>
+      <th><?php echo __("Attendant") ; ?></th>
       <th><?php echo __("Transporter") ; ?></th>
       <th><?php echo __("Other") ; ?></th>
     </tr>
@@ -23,7 +23,7 @@
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Contact') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Checker') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Preparator') ? 'on':'off'; ?>" /></td>
-      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Accompanist') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Attendant') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Transporter') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Other') ? 'on':'off'; ?>" /></td>
       </tr>
@@ -44,7 +44,7 @@
       <th><?php echo __("Contact") ; ?></th>
       <th><?php echo __("Checker") ; ?></th>
       <th><?php echo __("Preparator") ; ?></th>
-      <th><?php echo __("Accompanist") ; ?></th>
+      <th><?php echo __("Attendant") ; ?></th>
       <th><?php echo __("Transporter") ; ?></th>
       <th><?php echo __("Other") ; ?></th>
     </tr>
@@ -57,7 +57,8 @@
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Contact') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Checker') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Preparator') ? 'on':'off'; ?>" /></td>
-      <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Accompanist') ? 'on':'off'; ?>" /></td>
+      <td><span class="spr_checkbox_<?php echo
+$actor->getIsARole('Attendant') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Transporter') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Other') ? 'on':'off'; ?>" /></td>
      </tr>

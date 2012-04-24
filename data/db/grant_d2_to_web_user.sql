@@ -1,6 +1,6 @@
  GRANT USAGE ON SCHEMA darwin2 TO cebmpad;
 
-  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_table_record_ref TO cebmpad;
+ GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_table_record_ref TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.associated_multimedia TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_levels TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_properties TO cebmpad;
@@ -82,7 +82,11 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_history TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_bibliography TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.bibliography TO cebmpad;
+<<<<<<< HEAD
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens_flat TO cebmpad;
+=======
+ GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.darwin_flat TO cebmpad;
+>>>>>>> master
 
  GRANT USAGE, SELECT ON SEQUENCE darwin2.staging_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.associated_multimedia_id_seq TO cebmpad;

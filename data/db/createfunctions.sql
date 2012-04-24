@@ -1789,7 +1789,7 @@ BEGIN
         (NEW.code, NEW.parent_ref, NEW.path, NEW.gtu_from_date, NEW.gtu_from_date_mask,
          NEW.gtu_to_date, NEW.gtu_to_date_mask,
          NEW.elevation, NEW.elevation_accuracy,
-         NEW.tag_values_indexed, new.location
+         NEW.tag_values_indexed, NEW.location
         )
     WHERE gtu_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'igs' THEN
@@ -3933,6 +3933,22 @@ BEGIN
     SET is_last = false
     WHERE referenced_relation = NEW.referenced_relation
       AND record_id = NEW.record_id;
+  RETURN NEW;
+END;
+$$;
+
+CREATE OR REPLACE function fct_informative_reset_last_flag() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+BEGIN
+    UPDATE informative_workflow
+    SET is_last = true
+    WHERE referenced_relation = OLD.referenced_relation
+      AND record_id = OLD.record_id
+      AND id = (select id from informative_workflow 
+        WHERE referenced_relation = OLD.referenced_relation AND record_id = OLD.record_id ORDER BY modification_date_time desc LIMIT 1)
+    ;
   RETURN NEW;
 END;
 $$;

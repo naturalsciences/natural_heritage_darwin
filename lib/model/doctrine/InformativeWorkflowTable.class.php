@@ -44,35 +44,54 @@ class InformativeWorkflowTable extends DarwinTable
   {
     $q = self::prepareQuery($table_name, $record_id);    
     return $q->execute() ;
-  }  
-  
+  }
+
+  public function deleteRow($id, $user)
+  {
+    $q = Doctrine_Query::create()
+    ->delete('InformativeWorkflow i')
+    ->where('i.id = ?',$id);
+    $this->addRightsCheck($user, $q, true);
+    $q->execute();
+  }
+
   public function getAllLatestWorkflow($user,$status)
   {
     $q = Doctrine_Query::create()
       ->from('InformativeWorkflow i')
       ->where('is_last=?',true) ;
-    if($status != 'all') $q->addWhere('status=?',$status) ;      
-    if($user->isA(Users::ADMIN))
-    {      
-	    $q->AndWhereIn('referenced_relation',array('specimens','specimen_individuals','specimen_parts'))   ;
-	    return $q ;	 
+    if($status != 'all') $q->addWhere('status=?',$status) ;
+    $this->addRightsCheck($user, $q);
+    return $q ;
+  }
+
+  protected function addRightsCheck($user, $q, $with_calatogues = false)
+  {
+    if($user->isA(Users::ADMIN) && ! $with_calatogues)
+    {
+      $q->AndWhereIn('referenced_relation',array('specimens','specimen_individuals','specimen_parts'))   ;
+      return $q ;
     }
     $col_refs = Doctrine::getTable('CollectionsRights')->getCollectionsByRight($user->getId());
     $col_refs = implode(',', $col_refs);
     if($col_refs == '')
       return $q->andWhere('false');
-    $q->AddWhere(" (i.referenced_relation = 'specimens' AND exists( select 1 from specimens where id = i.record_id  and collection_ref IN 
+
+    $where_str = " (referenced_relation = 'specimens' AND exists( select 1 from darwin_flat where spec_ref = record_id  and collection_ref IN 
 ($col_refs))
 ) OR
 
- (i.referenced_relation = 'specimen_individuals' AND exists( select 1 from darwin_flat where individual_ref = i.record_id  and collection_ref IN 
+ (referenced_relation = 'specimen_individuals' AND exists( select 1 from darwin_flat where individual_ref = record_id  and collection_ref IN 
 ($col_refs))
 ) OR
 
- (i.referenced_relation = 'specimens' AND exists( select 1 from darwin_flat where part_ref = i.record_id  and collection_ref IN 
+ ( referenced_relation = 'specimen_parts' AND exists( select 1 from darwin_flat where part_ref = record_id  and collection_ref IN 
   ($col_refs))
-)");
-    
-    return $q ; 
+)";
+    if($with_calatogues) {
+      $where_str .= " OR referenced_relation not in ('specimens', 'specimen_individuals', 'specimen_parts') ";
+    }
+    $q->andWhere($where_str);
+    return $q;
   }
 }

@@ -21,6 +21,7 @@
  * @property string $code_suffix
  * @property string $code_suffix_separator
  * @property boolean $code_part_code_auto_copy
+ * @property boolean $code_specimen_duplicate
  * @property boolean $is_public
  * @property People $Institution
  * @property Users $Manager
@@ -47,6 +48,7 @@
  * @method string              getCodeSuffix()               Returns the current record's "code_suffix" value
  * @method string              getCodeSuffixSeparator()      Returns the current record's "code_suffix_separator" value
  * @method boolean             getCodePartCodeAutoCopy()     Returns the current record's "code_part_code_auto_copy" value
+ * @method boolean             getCodeSpecimenDuplicate()    Returns the current record's "code_specimen_duplicate" value
  * @method boolean             getIsPublic()                 Returns the current record's "is_public" value
  * @method People              getInstitution()              Returns the current record's "Institution" value
  * @method Users               getManager()                  Returns the current record's "Manager" value
@@ -72,6 +74,7 @@
  * @method Collections         setCodeSuffix()               Sets the current record's "code_suffix" value
  * @method Collections         setCodeSuffixSeparator()      Sets the current record's "code_suffix_separator" value
  * @method Collections         setCodePartCodeAutoCopy()     Sets the current record's "code_part_code_auto_copy" value
+ * @method Collections         setCodeSpecimenDuplicate()    Sets the current record's "code_specimen_duplicate" value
  * @method Collections         setIsPublic()                 Sets the current record's "is_public" value
  * @method Collections         setInstitution()              Sets the current record's "Institution" value
  * @method Collections         setManager()                  Sets the current record's "Manager" value
@@ -158,6 +161,11 @@ abstract class BaseCollections extends sfDoctrineRecord
              'type' => 'string',
              ));
         $this->hasColumn('code_part_code_auto_copy', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => false,
+             ));
+        $this->hasColumn('code_specimen_duplicate', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
              'default' => false,

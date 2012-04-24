@@ -11,7 +11,7 @@ class CollectionsCodesForm extends BaseCollectionsForm
 {
   public function configure()
   {
-    $this->useFields(array('id', 'code_auto_increment','code_prefix','code_prefix_separator','code_suffix','code_suffix_separator','code_part_code_auto_copy'));
+    $this->useFields(array('id', 'code_specimen_duplicate', 'code_auto_increment','code_prefix','code_prefix_separator','code_suffix','code_suffix_separator','code_part_code_auto_copy'));
     
     $this->widgetSchema['code_prefix'] = new sfWidgetFormInputText();
     $this->widgetSchema['code_prefix_separator'] = new sfWidgetFormInputText();
@@ -34,6 +34,7 @@ class CollectionsCodesForm extends BaseCollectionsForm
     $this->validatorSchema['code_prefix_separator'] = new sfValidatorString(array('required' => false, 'trim'=>true));
     $this->validatorSchema['code_suffix'] = new sfValidatorString(array('required' => false, 'trim'=>true));
     $this->validatorSchema['code_suffix_separator'] = new sfValidatorString(array('required' => false, 'trim'=>true));
+    $this->widgetSchema['code_specimen_duplicate']->setLabel('Duplicate specimen codes');
 
   }
 }

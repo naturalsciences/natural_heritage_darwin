@@ -1,3 +1,4 @@
+<?php use_helper('Text');?>
 <table class="catalogue_table_view">
   <thead>
     <tr>
@@ -10,13 +11,12 @@
   <?php foreach($links as $link):?>
   <tr>
     <td>
-      <?php echo $link->getUrl();?>
       <a href="<?php echo $link->getUrl();?>" target="_pop" class='complete_widget'>
-      <?php echo image_tag('next.png',array('title'=>__('Go to this link'))) ; ?>
-      </a>        
+        <?php echo truncate_text($link->getUrl(), 40);?>
+      </a>
     </td>
     <td>
-      <?php echo $link->getComment();?>
+      <div title="<?php echo $link->getComment();?>"><?php echo truncate_text($link->getComment(), 50);?></div>
     </td>
   </tr>
   <?php endforeach;?>

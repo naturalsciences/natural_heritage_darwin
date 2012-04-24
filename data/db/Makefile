@@ -124,33 +124,35 @@ grant-d2-to-read-user:
 	$(PRIV_PSQL_DB) -f grant_d2_to_read_user.sql
 
 create-db:
+ifeq ($(PG_VER),'8.4')
 	-createlang -d template1 plpgsql
-	$(PRIV_PSQL) -f createdb.sql
+endif
+	$(PRIV_PSQL) -c "create database '$(DB_NAME)' ENCODING 'UNICODE';"
 
 install-lib:
-	#Make this more dynamical
+ifeq ($(PG_VER),'9.1')
+	$(PRIV_PSQL_DB) -c "create extension pgcrypto; create extension pg_trgm; create extension hstore;"
+	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/postgis.sql;
+	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/spatial_ref_sys.sql;
+endif
+ifeq ($(PG_VER),'9.0')
 	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pg_trgm.sql
 	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pgcrypto.sql
-	#Test version and launch hstore scripts from adapted place
-	if [ "$(PG_VER)" = "9.0" ] ; then \
-		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/hstore.sql ; \
-	else \
-		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/hstore-new.sql ; \
-	fi
-
-	if [ -f /usr/share/postgresql/$(PG_VER)/contrib/postgis.sql ] ; then \
-		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis.sql; \
-	else \
-		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/postgis.sql; \
-	fi
-
-	if [ -f /usr/share/postgresql/$(PG_VER)/contrib/spatial_ref_sys.sql ] ; then \
-		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/spatial_ref_sys.sql; \
-	else \
-		$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/spatial_ref_sys.sql; \
-	fi
+	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/hstore.sql
+	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/postgis.sql
+	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/spatial_ref_sys.sql
 
 	$(PRIV_PSQL_DB) -f postgisgrant.sql -v dbuser=$(DB_USER)
+endif
+ifeq ($(PG_VER),'8.4')
+	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pg_trgm.sql
+	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pgcrypto.sql
+	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/hstore-new.sql
+	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/postgis.sql
+	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/spatial_ref_sys.sql
+	
+	$(PRIV_PSQL_DB) -f postgisgrant.sql -v dbuser=$(DB_USER)
+endif
 
 create-user-web:
 	-createuser -l -i -S -R -D -P -E $(DB_WEB_USER)

@@ -2955,6 +2955,17 @@ input.complete_missing {
   vertical-align:top;
 }
 
+#items_table {
+  width: 100%;
+}
+
+#items_table .item_row_delete {
+  width: 20px;
+}
+#items_table .loan_actions_button {
+  padding-left: 4em;
+  text-align:right;
+}
 #maintenances .buttons 
 {
   text-align:right;
@@ -2976,3 +2987,4 @@ span.label {
 .middle_aligned {
   vertical-align:middle !important;
 }
+

@@ -598,13 +598,15 @@ class SpecimensForm extends BaseSpecimensForm
     else
       $col = $this->getObject()->getCollectionRef();
 
-    $collection = Doctrine::getTable('Collections')->find($col);
-    if($collection)
-    {
-      $options['code_prefix'] = $collection->getCodePrefix();
-      $options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
-      $options['code_suffix'] = $collection->getCodeSuffix();
-      $options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
+    if($col != '') {
+      $collection = Doctrine::getTable('Collections')->find($col);
+      if($collection)
+      {
+        $options['code_prefix'] = $collection->getCodePrefix();
+        $options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
+        $options['code_suffix'] = $collection->getCodeSuffix();
+        $options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
+      }
     }
     $this->attachEmbedRecord('Codes', new CodesForm(DarwinTable::newObjectFromArray('Codes',$options)), $num);
   }
@@ -668,6 +670,20 @@ class SpecimensForm extends BaseSpecimensForm
     if(isset($Catalogue['donator'])) {
       foreach ($Catalogue['donator'] as $key=>$val) {
         $this->addDonators($key, array('people_ref' => $val->getPeopleRef()),$val->getOrderBy());
+      }
+    }
+
+    //Assume the collection_ref is set
+    $collection  = Doctrine::getTable('Collections')->find($this->getObject()->getCollectionRef());
+    if( $collection->getCodeSpecimenDuplicate())
+    {
+      $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$id) ;
+      foreach ($Codes as $key=> $code)
+      {
+        $newCode = new Codes();
+        $newCode->fromArray($code->toArray());
+        $form = new CodesForm($newCode);
+        $this->attachEmbedRecord('Codes', $form, $key);
       }
     }
 

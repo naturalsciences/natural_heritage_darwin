@@ -32,7 +32,7 @@ class MyWidgets extends BaseMyWidgets
       if ($this->getOpened()) return('opened') ;
       else return('visible') ;
     }
-    else return('is_available') ;   
+    else return('is_available') ;
   }
 
   public function getWidgetChoice()
@@ -77,7 +77,7 @@ class MyWidgets extends BaseMyWidgets
       return $cat_array[1];
     return null;
   }
-  
+
   public static function getHelpIcon($category,$groupname)
   {
     $array = sfConfig::get('widget_'.$category) ;  
@@ -93,5 +93,5 @@ class MyWidgets extends BaseMyWidgets
         return $array[$groupname];
     }
     return $i18n_object->__($array[$groupname]);    
-  }    
+  }
 }

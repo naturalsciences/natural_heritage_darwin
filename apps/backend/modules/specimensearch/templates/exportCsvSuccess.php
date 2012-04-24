@@ -31,7 +31,7 @@ SocialStatus<?php echo $sep;?>
 RockForm<?php echo $sep;?>
 Ind Count Min<?php echo $sep;?>
 Ind Count Max<?php echo $sep;?>
-<?php elseif($source =='part'):?>
+<?php if($source =='part'):?>
 Part<?php echo $sep;?>
 Part Status<?php echo $sep;?>
 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
@@ -49,6 +49,7 @@ Sub Container Storage<?php echo $sep;?>
 Part Codes<?php echo $sep;?>
 <?php endif;?>
 <?php endif;?>
+<<<<<<< HEAD
 <?php foreach($specimensearch as $unit):?>
 <?php
   $unit = $unit->getRawValue();
@@ -114,7 +115,61 @@ Part Codes<?php echo $sep;?>
 <?php echo $part->getSubContainer();?>
 <?php echo $part->getSubContainerType();?>
 <?php echo $part->getSubContainerStorage();?>
+=======
+<?php endif;?>
+
+<?php foreach($specimensearch as $item):?>
+<?php $item = $item->getRawValue();?>
+<?php echo $item->getCategory().$sep;?>
+<?php echo $item->getCollectionRef().$sep;?>
+<?php echo $item->getCollectionName().$sep;?>
+<?php echo $item->getTaxonRef().$sep;?>
+<?php echo $item->getTaxonName().$sep;?>
+<?php echo ($item->getWithTypes()? 'yes':'no').$sep;?>
+<?php echo $item->getGtuRef().$sep;?>
+<?php echo $item->getGtuCode().$sep;?>
+<?php echo str_replace(';', ',', $item->getGtuCountryTagValue('')).$sep; ?>
+<?php if(isset($codes[$item->getSpecRef()])) foreach($codes[$item->getSpecRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
+<?php echo $item->getChronoRef().$sep;?>
+<?php echo $item->getChronoName().$sep;?>
+<?php echo $item->getIgRef().$sep;?>
+<?php echo $item->getIgNum().$sep;?>
+<?php echo $item->getLithoRef().$sep;?>
+<?php echo $item->getLithoName().$sep;?>
+<?php echo $item->getLithologyRef().$sep;?>
+<?php echo $item->getLithologyName().$sep;?>
+<?php echo $item->getMineralRef().$sep;?>
+<?php echo $item->getMineralName().$sep;?>
+<?php echo $item->getExpeditionRef().$sep;?>
+<?php echo $item->getExpeditionName().$sep;?>
+<?php echo $item->getAcquisitionCategory().$sep;?>
+<?php if($source != 'specimen'):?>
+<?php echo $item->getIndividualTypeGroup().$sep;;?>
+<?php echo $item->getIndividualSex().$sep;?>
+<?php echo $item->getIndividualState().$sep;?>
+<?php echo $item->getIndividualStage().$sep;?>
+<?php echo $item->getIndividualSocialStatus().$sep;?>
+<?php echo $item->getIndividualRockForm().$sep;?>
+<?php echo $item->getIndividualCountMin().$sep;?>
+<?php echo $item->getIndividualCountMax().$sep;?>
+<?php if($source =='part'):?>
+<?php echo $item->getPart().$sep;?>
+<?php echo $item->getPartStatus().$sep;?>
+<?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
+<?php echo $item->getBuilding().$sep;?>
+<?php echo $item->getFloor().$sep;?>
+<?php echo $item->getRoom().$sep;?>
+<?php echo $item->getRow().$sep;?>
+<?php echo $item->getShelf().$sep;?>
+<?php echo $item->getContainer().$sep;?>
+<?php echo $item->getContainerType().$sep;?>
+<?php echo $item->getContainerStorage().$sep;?>
+<?php echo $item->getSubContainer().$sep;?>
+<?php echo $item->getSubContainerType().$sep;?>
+<?php echo $item->getSubContainerStorage().$sep;?>
+>>>>>>> master
 <?php if(isset($part_codes[$item->getSpecRef()])) foreach($part_codes[$item->getSpecRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
+<?php endif;?>
 <?php endif;?>
 <?php endif;?>
 

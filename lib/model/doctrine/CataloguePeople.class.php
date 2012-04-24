@@ -19,7 +19,7 @@ class CataloguePeople extends BaseCataloguePeople
     4 => 'Contact',
     8 => 'Checker',
     16 => 'Preparator',
-    32 => 'Accompanist',
+    32 => 'Attendant',
     64 => 'Transporter',
     128 => 'Other'
   ) ;

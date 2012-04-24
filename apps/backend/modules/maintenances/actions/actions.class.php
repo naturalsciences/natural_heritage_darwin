@@ -103,7 +103,7 @@ class maintenancesActions extends DarwinActions
     if(!$request->isMethod('post')) $this->forwardTosecureAction();
     $this->form = $this->getMaintenancesForm($request); 
     $this->processForm($request, $this->form);
-    $this->setTemplate('edit');       
+    $this->setTemplate('edit');    
   }  
   
   

@@ -703,6 +703,14 @@
         <source>DaRWIN 2 registration</source>
         <target>Inscription DARWIN 2</target>
       </trans-unit>
+          <trans-unit id="1706">
+        <source>Related Files</source>
+        <target>Fichiers liés</target>
+      </trans-unit>
+          <trans-unit id="1707">
+        <source>Download</source>
+        <target>Télécharger</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

@@ -7,6 +7,7 @@
       <th><?php echo __('Code suffix');?></th>
       <th class="centered"><?php echo __('Auto incremented ?');?></th>
       <th class="centered"><?php echo __('Same for parts ?');?></th>
+      <th class="centered"><?php echo __('Duplicate specimen codes');?></th>
       <th></th>
       <th></th>
     </tr>
@@ -30,6 +31,9 @@
       </td>
       <td class="centered">
         <?php echo ($collCodes->getCodePartCodeAutoCopy())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
+      </td>
+      <td class="centered">
+        <?php echo ($collCodes->getCodeSpecimenDuplicate())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
       </td>
       <td class="widget_row_delete">    
         <a class="link_catalogue" title="<?php echo __('Edit default specimen codes prefix and suffix');?>" href="<?php echo url_for('collection/addSpecCodes?id='.$eid); ?>">

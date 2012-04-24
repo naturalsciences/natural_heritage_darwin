@@ -170,6 +170,21 @@ class Multimedia extends BaseMultimedia
     }
   }
 
+  public function getHumanSize()
+  {
+
+    return $this->HumanReadableFilesize($this->getSize());
+  }
+
+  public static function HumanReadableFilesize($size) {
+    $mod = 1024;
+    $units = explode(' ','B KB MB GB TB PB');
+    for ($i = 0; $size > $mod; $i++) {
+        $size /= $mod;
+    }
+    return round($size, 2) . ' ' . $units[$i];
+  }
+
   public function save(Doctrine_Connection $conn = null)
   {
     if($this->isNew())
