@@ -190,7 +190,7 @@ CREATE INDEX CONCURRENTLY idx_method_trgm ON collecting_methods USING gin(method
 CREATE INDEX CONCURRENTLY idx_igs_ig_date on igs(ig_date, ig_date_mask);
 CREATE INDEX CONCURRENTLY idx_expeditions_expedition_from_date on expeditions(expedition_from_date, expedition_from_date_mask);
 CREATE INDEX CONCURRENTLY idx_expeditions_expedition_to_date on expeditions(expedition_to_date, expedition_to_date_mask);
-CREATE INDEX CONCURRENTLY idx_users_tracking_modification_date_time on users_tracking(modification_date_time);
+CREATE INDEX CONCURRENTLY idx_users_tracking_modification_date_time on users_tracking(modification_date_time DESC);
 
 
 /** LOANS **/
@@ -206,5 +206,3 @@ CREATE INDEX CONCURRENTLY idx_loan_rights_part_ref on loan_rights(user_ref);
 CREATE INDEX CONCURRENTLY idx_loan_status_user_ref on loan_status(user_ref);
 CREATE INDEX CONCURRENTLY idx_loan_status_loan_ref on loan_status(loan_ref);
 CREATE INDEX CONCURRENTLY idx_loan_status_loan_ref_is_last on loan_status(loan_ref,is_last);
-
-
