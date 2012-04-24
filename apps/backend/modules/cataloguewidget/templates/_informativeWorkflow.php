@@ -21,6 +21,7 @@
       <th><?php echo __('Status');?></th>
       <th><?php echo __('Comments');?></th>
       <th><?php echo __('By');?></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -30,7 +31,12 @@
       		echo $date->format('d/m/Y H:i:s'); ?></td>
       <td><?php echo $info->getFormattedStatus();?></td>
       <td><?php echo $info->getComment();?></td>
-      <td><?php echo $info->getUserRef()?$info->Users->__toString():$info->getFormatedName() ;?></td>      
+      <td><?php echo $info->getUserRef()?$info->Users->__toString():$info->getFormatedName() ;?></td>
+      <td>
+        <?php if($sf_user->isAtLeast(Users::MANAGER)):?>
+          <?php echo link_to(image_tag('remove.png'), 'informativeWorkflow/delete?id='.$info->getId(),'class=workflow_delete');?>
+        <?php endif;?>
+      </td>
     </tr>
     <?php endforeach ; ?>
     <?php if ($informativeWorkflow->count() == 5 ) : ?>
@@ -40,8 +46,8 @@
         <a class="link_catalogue" information="true" title="<?php echo __('view all workflows');?>" href="<?php echo url_for('informativeWorkflow/viewAll?table='.$table.'&id='.$eid); ?>">
         <?php echo __('Browse entire history');?></a>
       </td>
-    </tr>   
-    <?php endif ; ?>   
+    </tr>
+    <?php endif ; ?>
   </tbody>
 </table>
 <?php endif ; ?>
@@ -49,7 +55,6 @@
 <script type="text/javascript">
 $(document).ready(function () 
 {
-  
   $('#add_workflow').click(function(event) {   
    event.preventDefault();
    if($('#informative_workflow_status').val() && $('#informative_workflow_comment').val())
@@ -59,5 +64,16 @@ $(document).ready(function ()
      });
    }
   });
+
+  $('.workflow_delete').click(function(event)
+  {
+    event.preventDefault();
+    row = $(this).closest('tr');
+    $.get($(this).attr('href'), function() {
+      row.hide();
+       $('body').data('widgets_screen').refreshWidget(event, $(this));
+    });
+  });
+
 });
 </script>

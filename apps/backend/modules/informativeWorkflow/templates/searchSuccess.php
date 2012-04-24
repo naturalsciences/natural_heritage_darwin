@@ -5,7 +5,7 @@
       else
         $orderSign = '<span class="order_sign_up">&nbsp;&#9650;</span>';
     ?>
-<?php use_helper('Text');?>    
+<?php use_helper('Text');?>
 <table class="catalogue_table_view">
   <thead class="workflow">
     <tr><th colspan=4><?php echo __("Latest Status") ; ?></th></tr>
@@ -14,7 +14,7 @@
       <th><?php echo __("Relation");?></th>
       <th><?php echo __('Status');?></th>
       <th><?php echo __('Comments');?></th>
-      <th></th>      
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -28,10 +28,13 @@
       <td>
         <?php echo image_tag('info.png', 'class=more_comment');?>
         <ul class="field_change">
-            <?php echo $info['comment'];?>     
+            <?php echo $info['comment'];?>
         </ul>
         <?php echo link_to(image_tag('blue_eyel.png'), $info->getLink('view'));?>
-        <?php echo link_to(image_tag('edit.png'), $info->getLink('edit'));?>        
+        <?php echo link_to(image_tag('edit.png'), $info->getLink('edit'));?>
+        <?php if($sf_user->isAtLeast(Users::MANAGER)):?>
+          <?php echo link_to(image_tag('remove.png'), 'informativeWorkflow/delete?id='.$info->getId(),'class=workflow_delete');?>
+        <?php endif;?>
       </td>
     </tr>
     <?php endforeach ; ?>   
@@ -52,18 +55,25 @@ $(document).ready(function()
     });
   });
  
-   $(function () {
-     $('#workflowsSummary .pager_nav a').click(function(event)
-     {
-	event.preventDefault();
-	$.ajax({
-	  url: $(this).attr('href')+'/status/<?php echo $form["status"]->getValue() ; ?>',
-          success: function(html) {
-	    $('#workflowsSummary .search_results_content').html(html);
-	  }
-	});
-     });
-  });  
+  $('.workflow_delete').click(function(event)
+  {
+    event.preventDefault();
+    row = $(this).closest('tr');
+    $.get($(this).attr('href'), function() {
+      row.hide();
+      $('#workflow_filter').submit();
+    });
+  });
+  $('#workflowsSummary .pager_nav a').click(function(event)
+  {
+    event.preventDefault();
+    $.ajax({
+      url: $(this).attr('href')+'/status/<?php echo $form["status"]->getValue() ; ?>',
+      success: function(html) {
+        $('#workflowsSummary .search_results_content').html(html);
+      }
+    });
+  });
 });
 </script>
 <?php else :?>

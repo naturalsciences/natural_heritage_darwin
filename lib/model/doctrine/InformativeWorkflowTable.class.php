@@ -44,23 +44,40 @@ class InformativeWorkflowTable extends DarwinTable
   {
     $q = self::prepareQuery($table_name, $record_id);    
     return $q->execute() ;
-  }  
-  
+  }
+
+  public function deleteRow($id, $user)
+  {
+    $row = Doctrine::getTable('InformativeWorkflow')->find($id);
+    $q = Doctrine_Query::create()
+    ->Delete('InformativeWorkflow i')
+    ->where('id = ?',$id);
+    $this->addRightsCheck($user, $q);
+    $q->execute();
+  }
+
   public function getAllLatestWorkflow($user,$status)
   {
     $q = Doctrine_Query::create()
       ->from('InformativeWorkflow i')
       ->where('is_last=?',true) ;
     if($status != 'all') $q->addWhere('status=?',$status) ;      
+    $this->addRightsCheck($user, $q);
+    return $q ;
+  }
+
+  protected function addRightsCheck($user, $q)
+  {
     if($user->isA(Users::ADMIN))
-    {      
-	    $q->AndWhereIn('referenced_relation',array('specimens','specimen_individuals','specimen_parts'))   ;
-	    return $q ;	 
+    {
+      $q->AndWhereIn('referenced_relation',array('specimens','specimen_individuals','specimen_parts'))   ;
+      return $q ;
     }
     $col_refs = Doctrine::getTable('CollectionsRights')->getCollectionsByRight($user->getId());
     $col_refs = implode(',', $col_refs);
     if($col_refs == '')
       return $q->andWhere('false');
+
     $q->AddWhere(" (i.referenced_relation = 'specimens' AND exists( select 1 from specimens where id = i.record_id  and collection_ref IN 
 ($col_refs))
 ) OR
@@ -72,7 +89,6 @@ class InformativeWorkflowTable extends DarwinTable
  (i.referenced_relation = 'specimens' AND exists( select 1 from darwin_flat where part_ref = i.record_id  and collection_ref IN 
   ($col_refs))
 )");
-    
-    return $q ; 
+    return $q;
   }
 }
