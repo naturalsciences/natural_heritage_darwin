@@ -1789,7 +1789,7 @@ BEGIN
         ) =
         (NEW.code, NEW.parent_ref, NEW.path, NEW.gtu_from_date, NEW.gtu_from_date_mask,
          NEW.gtu_to_date, NEW.gtu_to_date_mask,
-         NEW.gtu_elevation, NEW.gtu_elevation_accuracy,
+         NEW.elevation, NEW.elevation_accuracy,
          NEW.tag_values_indexed, NEW.location
         )
     WHERE gtu_ref = NEW.id;
@@ -1983,7 +1983,7 @@ BEGIN
                 expe.name expe_name, expe.name_ts expe_name_ts, expe.name_indexed expe_name_indexed,
                 gtu.code gtu_code, gtu.parent_ref gtu_parent_ref, gtu.path gtu_path,gtu.location gtu_location,
                 gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-                gtu.gtu_elevation, gtu.gtu_elevation_accuracy,
+                gtu.elevation as gtu_elevation, gtu.elevation_accuracy as gtu_elevation_accuracy,
                 gtu.tag_values_indexed gtu_tag_values_indexed,
                 taggr_countries.tag_value gtu_country_tag_value, lineToTagArray(taggr_countries.tag_value) gtu_country_tag_indexed,
                 taggr_provinces.tag_value gtu_province_tag_value, lineToTagArray(taggr_provinces.tag_value) gtu_province_tag_indexed,
@@ -2071,7 +2071,7 @@ BEGIN
             NEW.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
             NEW.station_visible, NEW.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
             gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-            gtu.gtu_elevation gtu_elevation, gtu.gtu_elevation_accuracy gtu_elevation_accuracy,
+            gtu.elevation as gtu_elevation, gtu.elevation_accuracy as gtu_elevation_accuracy,
             gtu.tag_values_indexed gtu_tag_values_indexed,
             taggr_countries.tag_value gtu_country_tag_value, lineToTagArray(taggr_countries.tag_value) gtu_country_tag_indexed,
             taggr_provinces.tag_value gtu_province_tag_value, lineToTagArray(taggr_provinces.tag_value) gtu_province_tag_indexed,
