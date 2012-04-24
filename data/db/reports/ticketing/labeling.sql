@@ -68,7 +68,6 @@ ALTER FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) O
 CREATE INDEX idx_labeling_individual_type ON specimen_individuals using gin (labeling_individual_type_for_indexation("type"));
 CREATE INDEX idx_labeling_part ON specimen_parts using gin (labeling_part_for_indexation(specimen_part));
 
--- CREATE INDEX idx_labeling_ig_num_coalesced ON darwin_flat(coalesce(ig_num, '-')) where part_ref is not null;
 CREATE INDEX idx_labeling_ig_num_numeric ON specimens_flat(convert_to_integer(coalesce(ig_num, '-')));
 
 drop view "public"."labeling";
@@ -157,8 +156,8 @@ select df.part_ref as unique_id,
        df.gtu_others_tag_indexed as other_gtus_array,
        case when trim(df.gtu_code) in ('', '/', '0', '0/') then '' else 'Code: ' || trim(df.gtu_code) end as location_code,
        case when df.gtu_from_date_mask >= 32 then 'Sampling dates: ' || to_char(df.gtu_from_date, 'DD/MM/YYYY') else '' end || case when df.gtu_to_date_mask >= 32 then ' - ' || to_char(df.gtu_to_date, 'DD/MM/YYYY') else '' end as gtu_date,
-       case when df.gtu_location is not null then 'Lat.Long.: ' || trunc((ST_Y(ST_Centroid(geometry(location))))::numeric, 6) || '/' || trunc((ST_X(ST_Centroid(geometry(location))))::numeric, 6),
-       case when df.gtu_elevation is not null then 'Elevation: ' || trunc(df.gtu_elevation::numeric,2) || 'm' || case when df.gtu_elevation_accuracy is not null then ' +- ' || trunc(df.gtu_elevation_accuracy::numeric,2) || 'm' else '' end else '' end as elevation,
+       case when df.gtu_location is not null then 'Lat.Long.: ' || trunc((ST_Y(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) || '/' || trunc((ST_X(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) else '' end as gtu_lat_long,
+       case when df.gtu_elevation is not null then 'Elevation: ' || trunc(df.gtu_elevation::numeric,2) || 'm' || case when df.gtu_elevation_accuracy is not null then ' +- ' || trunc(df.gtu_elevation_accuracy::numeric,2) || 'm' else '' end else '' end as gtu_elevation,
        (select 'Coll.: ' || array_to_string(array_agg(people_list), ' - ') 
         from (select trim(formated_name) as people_list 
               from catalogue_people as cp inner join people as peo on cp.people_ref = peo.id 
