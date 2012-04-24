@@ -166,7 +166,7 @@ CREATE TABLE specimens_flat (
             spec.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
             spec.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
             gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-            gtu.gtu_elevation, gtu.gtu_elevation_accuracy,
+            gtu.elevation, gtu.elevation_accuracy,
             gtu.tag_values_indexed,
             taggr_countries.tag_value,  lineToTagArray(taggr_countries.tag_value),
             taggr_provinces.tag_value,  lineToTagArray(taggr_provinces.tag_value),
