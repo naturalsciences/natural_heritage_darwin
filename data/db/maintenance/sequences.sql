@@ -63,5 +63,5 @@
  select setval('collection_maintenance_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.collection_maintenance));
  select setval('people_languages_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.people_languages));
  select setval('specimen_parts_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.specimen_parts));
- select setval('darwin_flat_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.darwin_flat));
+ select setval('specimens_flat_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.specimens_flat));
 
