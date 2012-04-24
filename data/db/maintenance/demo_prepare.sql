@@ -1,5 +1,5 @@
 ﻿drop schema if exists darwin1 cascade;
-truncate table darwin_flat cascade;
+truncate table specimens_flat cascade;
 truncate table specimen_parts cascade;
 truncate table specimen_individuals cascade;
 truncate table specimens cascade;
@@ -58,7 +58,7 @@ insert into users_login_infos (user_ref, user_name, password) values (3, 'demo_r
 insert into collections (id, code, name, institution_ref, main_manager_ref) values (1, 'demo', 'demo', 47859, 1);
 insert into collections_rights (collection_ref, user_ref, db_user_type) values (1, 2, 2);
 insert into collections_rights (collection_ref, user_ref, db_user_type) values (1, 3, 1);
-reindex table darwin_flat;
+reindex table specimens_flat;
 reindex table specimen_parts;
 reindex table specimen_individuals;
 reindex table specimen_parts;
