@@ -4,13 +4,9 @@ BEGIN;
 
 DROP TABLE IF EXISTS darwin_flat CASCADE;
 
-DROP SEQUENCE IF EXISTS darwin_flat_id_seq;
-
-CREATE SEQUENCE darwin_flat_id_seq;
-
 CREATE TABLE darwin_flat
 (
-  id bigint NOT NULL DEFAULT nextval('darwin_flat_id_seq'), -- Unique identifier of a darwin flat entry
+  id serial, -- Unique identifier of a darwin flat entry
   spec_ref integer NOT NULL, -- Reference of specimen concerned
   category character varying, -- Specimen concerned category: physical, observation,...
   collection_ref integer NOT NULL DEFAULT 0, -- Reference of collection the specimen concerned belongs to
