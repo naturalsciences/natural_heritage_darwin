@@ -242,9 +242,7 @@ ul.spec_error_list, ul.error_list
 
 .but_text
 {
-  background-image: url(/images/button_grey_center.png);
-  background-repeat:repeat-x;
-  vertical-align:middle;
+  background-color:#A9ABAA;
   float:left;
   display:block;
   height:24px;
@@ -259,12 +257,6 @@ a.but_text
 {
   text-decoration:none;
   color:black;
-}
-
-/*TODO Check if this still have to exist or if it can be deleted*/
-.right_part, .left_part
-{
-  float:left;
 }
 
 .inline, .inline a
