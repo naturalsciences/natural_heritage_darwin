@@ -21,7 +21,7 @@ $(function () {
 										  case 'month': echo 'day';break;
 										  default: echo 'day';break;
 										}
-					  ;?>"],
+					  ;?>"]
             },
 			grid: { hoverable: true, clickable: true },
     		points: { show: true },
