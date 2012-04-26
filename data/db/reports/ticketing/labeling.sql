@@ -139,10 +139,10 @@ select df.part_ref as unique_id,
              ) as y
              inner join taxonomy as fam on y.id = fam.id and fam.level_ref = 34
        )::varchar as family,
-       (select ct.name 
+       (select array_to_string(array_agg(ct.name), ' - ')
         from taxonomy as ct inner join classification_synonymies as cs on cs.referenced_relation = 'taxonomy' and cs.record_id = ct.id and is_basionym = true
-        where group_id = (select group_id 
-                          from classification_synonymies 
+        where group_id = (select group_id
+                          from classification_synonymies
                           where referenced_relation = 'taxonomy' and record_id = df.taxon_ref and group_name = 'rename'
                          )
        )::varchar as current_name,
@@ -152,12 +152,12 @@ select df.part_ref as unique_id,
        df.gtu_country_tag_indexed as countries_array,
        df.gtu_province_tag_value::varchar as provinces,
        df.gtu_province_tag_indexed as provinces_array,
-       df.gtu_others_tag_value::varchar as other_gtus,
-       df.gtu_others_tag_indexed as other_gtus_array,
+       df.gtu_others_tag_value::varchar as location,
+       df.gtu_others_tag_indexed as location_array,
        case when trim(df.gtu_code) in ('', '/', '0', '0/') then '' else 'Code: ' || trim(df.gtu_code) end as location_code,
        case when df.gtu_from_date_mask >= 32 then 'Sampling dates: ' || to_char(df.gtu_from_date, 'DD/MM/YYYY') else '' end || case when df.gtu_to_date_mask >= 32 then ' - ' || to_char(df.gtu_to_date, 'DD/MM/YYYY') else '' end as gtu_date,
-       case when df.gtu_location is not null then 'Lat.Long.: ' || trunc((ST_Y(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) || '/' || trunc((ST_X(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) else '' end as gtu_lat_long,
-       case when df.gtu_elevation is not null then 'Elevation: ' || trunc(df.gtu_elevation::numeric,2) || 'm' || case when df.gtu_elevation_accuracy is not null then ' +- ' || trunc(df.gtu_elevation_accuracy::numeric,2) || 'm' else '' end else '' end as gtu_elevation,
+       case when df.gtu_location is not null then 'Lat.Long.: ' || trunc((ST_Y(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) || '/' || trunc((ST_X(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) else '' end as lat_long,
+       case when df.gtu_elevation is not null then 'Elevation: ' || trunc(df.gtu_elevation::numeric,2) || 'm' || case when df.gtu_elevation_accuracy is not null then ' +- ' || trunc(df.gtu_elevation_accuracy::numeric,2) || 'm' else '' end else '' end as elevation,
        (select 'Coll.: ' || array_to_string(array_agg(people_list), ' - ') 
         from (select trim(formated_name) as people_list 
               from catalogue_people as cp inner join people as peo on cp.people_ref = peo.id 
