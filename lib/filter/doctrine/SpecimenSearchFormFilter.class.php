@@ -323,7 +323,7 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
       ));
     $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
     $this->validatorSchema['role_ref'] = new sfValidatorChoice(array('choices'=>array_keys($fields_to_search), 'required'=>false)) ;
-$this->validatorSchema['role_ref'] = new sfValidatorPass() ;    
+    $this->validatorSchema['role_ref'] = new sfValidatorPass() ;    
     /* Labels */
     $this->widgetSchema->setLabels(array('gtu_code' => 'Sampling Location code',
                                          'taxon_name' => 'Taxon text search',
@@ -942,8 +942,8 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
       }
       $query = DQ::create()
         ->from('SpecimenSearch s')
-        ->groupBy('spec_ref')
-        ->select($str . ' MIN(id) as id');
+        ->select($str .' MIN(id) as id, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as latitude, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as longitude ')
+        ->groupBy('spec_ref');
 
     }
     elseif($values['what_searched'] == 'individual')
@@ -957,7 +957,7 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
 
       $query = DQ::create()
         ->from('IndividualSearch s')
-        ->select($str .' MIN(id) as id,  false as with_types')
+        ->select($str .' MIN(id) as id,  false as with_types, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as latitude, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as longitude ')
         ->andWhere('individual_ref is not null ')
         ->groupBy('individual_ref');
     }
@@ -967,7 +967,7 @@ $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
       $array_fld = array_merge($array_fld,$fields['parts']);
       $str = implode(', ',$array_fld);
       $query = DQ::create()
-        ->select($str.' , false as with_types,id')
+        ->select($str.' , false as with_types, id, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as latitude, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as longitude ')
         ->andWhere('part_ref is not null ')
         ->from('PartSearch s');
     }
