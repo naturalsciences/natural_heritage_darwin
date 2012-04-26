@@ -66,10 +66,10 @@ Part Codes<?php echo $sep;?>
 <?php echo $item->getGtuRef().$sep;?>
 <?php echo $item->getGtuCode().$sep;?>
 <?php echo str_replace(';', ',', $item->getGtuCountryTagValue('')).$sep; ?>
-<?php echo (($item->getStationVisible() || $sf_user->isAtLeast(Users::ENCODER))?$item->getLatitude():'').$sep;?>
-<?php echo (($item->getStationVisible() || $sf_user->isAtLeast(Users::ENCODER))?$item->getLongitude():'').$sep;?>
-<?php echo ((($item->getStationVisible() || $sf_user->isAtLeast(Users::ENCODER)) && $item->getGtuElevation())?$item->getGtuElevation():'').$sep;?>
-<?php echo ((($item->getStationVisible() || $sf_user->isAtLeast(Users::ENCODER)) && $item->getGtuElevation())?$item->getGtuElevationAccuracy():'').$sep;?>
+<?php echo (($item->getStationVisible() || $item->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$item->getLatitude():'').$sep;?>
+<?php echo (($item->getStationVisible() || $item->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$item->getLongitude():'').$sep;?>
+<?php echo ((($item->getStationVisible() || $item->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $item->getGtuElevation())?$item->getGtuElevation():'').$sep;?>
+<?php echo ((($item->getStationVisible() || $item->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $item->getGtuElevation())?$item->getGtuElevationAccuracy():'').$sep;?>
 <?php if(isset($codes[$item->getSpecRef()])) foreach($codes[$item->getSpecRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
 <?php echo $item->getChronoRef().$sep;?>
 <?php echo $item->getChronoName().$sep;?>

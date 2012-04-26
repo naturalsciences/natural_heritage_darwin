@@ -942,7 +942,7 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
       }
       $query = DQ::create()
         ->from('SpecimenSearch s')
-        ->select($str .' MIN(id) as id, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as latitude, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as longitude ')
+        ->select($str .' MIN(id) as id, dummy_first(trunc(cast((ST_Y(ST_Centroid(geometry(gtu_location)))) as numeric),6)) as latitude, dummy_first(trunc(cast((ST_X(ST_Centroid(geometry(gtu_location)))) as numeric),6)) as longitude ')
         ->groupBy('spec_ref');
 
     }
@@ -957,7 +957,7 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
 
       $query = DQ::create()
         ->from('IndividualSearch s')
-        ->select($str .' MIN(id) as id,  false as with_types, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as latitude, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as longitude ')
+        ->select($str .' MIN(id) as id,  false as with_types, dummy_first(trunc(cast((ST_Y(ST_Centroid(geometry(gtu_location)))) as numeric),6)) as latitude, dummy_first(trunc(cast((ST_X(ST_Centroid(geometry(gtu_location)))) as numeric),6)) as longitude ')
         ->andWhere('individual_ref is not null ')
         ->groupBy('individual_ref');
     }
@@ -967,7 +967,7 @@ class SpecimenSearchFormFilter extends BaseSpecimenSearchFormFilter
       $array_fld = array_merge($array_fld,$fields['parts']);
       $str = implode(', ',$array_fld);
       $query = DQ::create()
-        ->select($str.' , false as with_types, id, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as latitude, dummy_first(ST_Y(ST_Centroid(geometry(gtu_location)))) as longitude ')
+        ->select($str.' , false as with_types, id, trunc(cast((ST_Y(ST_Centroid(geometry(gtu_location)))) as numeric),6) as latitude, trunc(cast((ST_X(ST_Centroid(geometry(gtu_location)))) as numeric),6) as longitude ')
         ->andWhere('part_ref is not null ')
         ->from('PartSearch s');
     }
