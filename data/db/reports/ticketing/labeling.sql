@@ -137,7 +137,7 @@ select df.part_ref as unique_id,
              ) as y
              inner join taxonomy as fam on y.id = fam.id and fam.level_ref = 34
        )::varchar as family,
-       (select ct.name 
+       (select array_to_string(array_agg(ct.name), ' - ')
         from taxonomy as ct inner join classification_synonymies as cs on cs.referenced_relation = 'taxonomy' and cs.record_id = ct.id and is_basionym = true
         where group_id = (select group_id 
                           from classification_synonymies 
