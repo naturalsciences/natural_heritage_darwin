@@ -19,9 +19,7 @@ DROP INDEX IF EXISTS idx_labeling_code_varchar;
 DROP INDEX IF EXISTS idx_labeling_code_numeric;
 DROP INDEX IF EXISTS idx_labeling_individual_type;
 DROP INDEX IF EXISTS idx_labeling_individual_sex;
-DROP INDEX IF EXISTS idx_darwin_flat_individual_sex;
 DROP INDEX IF EXISTS idx_labeling_individual_stage;
-DROP INDEX IF EXISTS idx_darwin_flat_individual_stage;
 DROP INDEX IF EXISTS idx_labeling_part;
 DROP INDEX IF EXISTS idx_labeling_ig_num_numeric;
 DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
@@ -65,8 +63,13 @@ GRANT EXECUTE ON FUNCTION labeling_part_for_indexation(specimen_parts.specimen_p
 GRANT ALL ON FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) TO cebmpad, darwin2;
 ALTER FUNCTION labeling_part_for_indexation(specimen_parts.specimen_part%TYPE) OWNER TO darwin2;
 
+<<<<<<< HEAD
 CREATE INDEX idx_labeling_individual_type ON specimen_individuals using gin (labeling_individual_type_for_indexation("type"));
 CREATE INDEX idx_labeling_part ON specimen_parts using gin (labeling_part_for_indexation(specimen_part));
+=======
+CREATE INDEX idx_labeling_individual_type ON darwin_flat using gin (labeling_individual_type_for_indexation(individual_type)) where part_ref is not null;
+CREATE INDEX idx_labeling_part ON darwin_flat using gin (labeling_part_for_indexation(part)) where part_ref is not null;
+>>>>>>> master
 
 CREATE INDEX idx_labeling_ig_num_numeric ON darwin_flat(convert_to_integer(coalesce(ig_num, '-'))) where part_ref is not null;
 
@@ -139,7 +142,7 @@ select df.part_ref as unique_id,
              ) as y
              inner join taxonomy as fam on y.id = fam.id and fam.level_ref = 34
        )::varchar as family,
-       (select ct.name 
+       (select array_to_string(array_agg(ct.name), ' - ')
         from taxonomy as ct inner join classification_synonymies as cs on cs.referenced_relation = 'taxonomy' and cs.record_id = ct.id and is_basionym = true
         where group_id = (select group_id 
                           from classification_synonymies 
@@ -152,12 +155,12 @@ select df.part_ref as unique_id,
        df.gtu_country_tag_indexed as countries_array,
        df.gtu_province_tag_value::varchar as provinces,
        df.gtu_province_tag_indexed as provinces_array,
-       df.gtu_others_tag_value::varchar as other_gtus,
-       df.gtu_others_tag_indexed as other_gtus_array,
+       df.gtu_others_tag_value::varchar as location,
+       df.gtu_others_tag_indexed as location_array,
        case when trim(df.gtu_code) in ('', '/', '0', '0/') then '' else 'Code: ' || trim(df.gtu_code) end as location_code,
        case when df.gtu_from_date_mask >= 32 then 'Sampling dates: ' || to_char(df.gtu_from_date, 'DD/MM/YYYY') else '' end || case when df.gtu_to_date_mask >= 32 then ' - ' || to_char(df.gtu_to_date, 'DD/MM/YYYY') else '' end as gtu_date,
-       case when df.gtu_location is not null then 'Lat.Long.: ' || trunc((ST_Y(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) || '/' || trunc((ST_X(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) else '' end as gtu_lat_long,
-       case when df.gtu_elevation is not null then 'Elevation: ' || trunc(df.gtu_elevation::numeric,2) || 'm' || case when df.gtu_elevation_accuracy is not null then ' +- ' || trunc(df.gtu_elevation_accuracy::numeric,2) || 'm' else '' end else '' end as gtu_elevation,
+       case when df.gtu_location is not null then 'Lat.Long.: ' || trunc((ST_Y(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) || '/' || trunc((ST_X(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) else '' end as lat_long,
+       case when df.gtu_elevation is not null then 'Elevation: ' || trunc(df.gtu_elevation::numeric,2) || 'm' || case when df.gtu_elevation_accuracy is not null then ' +- ' || trunc(df.gtu_elevation_accuracy::numeric,2) || 'm' else '' end else '' end as elevation,
        (select 'Coll.: ' || array_to_string(array_agg(people_list), ' - ') 
         from (select trim(formated_name) as people_list 
               from catalogue_people as cp inner join people as peo on cp.people_ref = peo.id 
@@ -186,9 +189,3 @@ where part_ref is not null;
 
 ALTER VIEW "public"."labeling" OWNER TO darwin2;
 GRANT SELECT ON "public"."labeling" TO d2viewer;
-
-DROP INDEX IF EXISTS idx_specimen_individuals_sex;
-DROP INDEX IF EXISTS idx_specimen_individuals_stage;
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_sex on specimen_individuals(sex) where sex not in ('undefined', 'unknown');
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals(stage) WHERE stage not in ('undefined', 'unknown');
-

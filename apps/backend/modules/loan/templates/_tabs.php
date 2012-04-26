@@ -80,16 +80,16 @@ $(document).ready(function()
       self.qtip({
          overwrite: false, // Make sure we only render one tooltip
          content: self.next('.encod_tip'), // Use the submenu as the qTip content
-         position: position /*$.extend(true, position, {
+         position: position, /*$.extend(true, position, {
             // Append the nav tooltips to the #navigation element (see show.solo below)
           //  container: container,
 
             // We'll make sure the menus stay visible by shifting/flipping them back into the viewport
             //viewport: $(window), adjust: { method: 'shift flip' }
-         })*/,
+         })*/
          show: {
             event: event.type, // Make sure to sue the same event as above
-            ready: true, // Make sure it shows on first mouseover
+            ready: true // Make sure it shows on first mouseover
 
             /*
              * If it's a top level menu, make sure only one is shown at a time!
