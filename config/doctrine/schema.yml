@@ -956,6 +956,8 @@ SpecimenSearch:
         gtu_tag_values_indexed: { type: string}
         gtu_country_tag_indexed: { type: string}
         gtu_country_tag_value: { type: string}
+        gtu_elevation: { type: float }
+        gtu_elevation_accuracy: { type: float }
         gtu_location: { type: string}
         taxon_ref: { type: integer, notnull: true, default:0}
         taxon_name:  { type: string}
@@ -1206,6 +1208,8 @@ IndividualSearch:
         gtu_tag_values_indexed: { type: string}
         gtu_country_tag_value: { type: string}
         gtu_country_tag_indexed: { type: string}
+        gtu_elevation: { type: float }
+        gtu_elevation_accuracy: { type: float }
         gtu_location: { type: string}
         taxon_ref: { type: integer, notnull: true, default:0}
         taxon_name:  { type: string}
@@ -1457,6 +1461,8 @@ PartSearch:
         gtu_tag_values_indexed: { type: string}
         gtu_country_tag_indexed: { type: string}
         gtu_country_tag_value: { type: string}
+        gtu_elevation: { type: float }
+        gtu_elevation_accuracy: { type: float }
         gtu_location: { type: string}
         taxon_ref: { type: integer, notnull: true, default:0}
         taxon_name:  { type: string}
@@ -1708,6 +1714,8 @@ IgsSearch:
         gtu_tag_values_indexed: { type: string}
         gtu_country_tag_indexed: { type: string}
         gtu_country_tag_value: { type: string}
+        gtu_elevation: { type: float }
+        gtu_elevation_accuracy: { type: float }
         gtu_location: { type: string}
         taxon_ref: { type: integer, notnull: true, default:0}
         taxon_name:  { type: string}

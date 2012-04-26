@@ -282,8 +282,10 @@ class gtuActions extends DarwinActions
       $str .= '</ul><div class="clear" />';
     }
     if($gtu->getLocation()){
-      $str .= '<li><label>Latitude: '.$gtu->getLatitude().'</label></li>';
-      $str .= '<li><label>Longitude: '.$gtu->getLongitude().'</label></li>';
+      $str .= '<li><label>Lat./Long.: '.$gtu->getLatitude().'/'.$gtu->getLongitude().'</label></li>';
+    }
+    if ($gtu->getElevation()){
+      $str .= '<li><label>Alt.: '.$gtu->getElevation().' +- '.$gtu->getElevationAccuracy().'</label><strong> m</strong></li>';
     }
     $str .= '</ul><div class="clear" />';
     return $this->renderText($str); 
