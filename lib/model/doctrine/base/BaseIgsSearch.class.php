@@ -30,6 +30,8 @@
  * @property string $gtu_tag_values_indexed
  * @property string $gtu_country_tag_indexed
  * @property string $gtu_country_tag_value
+ * @property float $gtu_elevation
+ * @property float $gtu_elevation_accuracy
  * @property string $gtu_location
  * @property integer $taxon_ref
  * @property string $taxon_name
@@ -193,6 +195,8 @@
  * @method string              getGtuTagValuesIndexed()      Returns the current record's "gtu_tag_values_indexed" value
  * @method string              getGtuCountryTagIndexed()     Returns the current record's "gtu_country_tag_indexed" value
  * @method string              getGtuCountryTagValue()       Returns the current record's "gtu_country_tag_value" value
+ * @method float               getGtuElevation()             Returns the current record's "gtu_elevation" value
+ * @method float               getGtuElevationAccuracy()     Returns the current record's "gtu_elevation_accuracy" value
  * @method string              getGtuLocation()              Returns the current record's "gtu_location" value
  * @method integer             getTaxonRef()                 Returns the current record's "taxon_ref" value
  * @method string              getTaxonName()                Returns the current record's "taxon_name" value
@@ -355,6 +359,8 @@
  * @method IgsSearch           setGtuTagValuesIndexed()      Sets the current record's "gtu_tag_values_indexed" value
  * @method IgsSearch           setGtuCountryTagIndexed()     Sets the current record's "gtu_country_tag_indexed" value
  * @method IgsSearch           setGtuCountryTagValue()       Sets the current record's "gtu_country_tag_value" value
+ * @method IgsSearch           setGtuElevation()             Sets the current record's "gtu_elevation" value
+ * @method IgsSearch           setGtuElevationAccuracy()     Sets the current record's "gtu_elevation_accuracy" value
  * @method IgsSearch           setGtuLocation()              Sets the current record's "gtu_location" value
  * @method IgsSearch           setTaxonRef()                 Sets the current record's "taxon_ref" value
  * @method IgsSearch           setTaxonName()                Sets the current record's "taxon_name" value
@@ -587,6 +593,12 @@ abstract class BaseIgsSearch extends sfDoctrineRecord
              ));
         $this->hasColumn('gtu_country_tag_value', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('gtu_elevation', 'float', null, array(
+             'type' => 'float',
+             ));
+        $this->hasColumn('gtu_elevation_accuracy', 'float', null, array(
+             'type' => 'float',
              ));
         $this->hasColumn('gtu_location', 'string', null, array(
              'type' => 'string',

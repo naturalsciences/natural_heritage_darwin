@@ -152,6 +152,8 @@ class SpecimenSearchTable extends Doctrine_Table
 //           'gtu_to_date',
           'gtu_tag_values_indexed',
           'gtu_country_tag_value',
+          'gtu_elevation',
+          'gtu_elevation_accuracy',
           'taxon_ref',
           'taxon_name',
 //           'taxon_name_indexed',
