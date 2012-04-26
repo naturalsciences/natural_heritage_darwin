@@ -113,7 +113,6 @@ class partsActions extends DarwinActions
   {
     $this->individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id'));
     $this->forward404Unless($this->individual);
-
     $this->specimen = Doctrine::getTable('Specimens')->findExcept($this->individual->getSpecimenRef());
     $this->forward404Unless($this->specimen);
 
