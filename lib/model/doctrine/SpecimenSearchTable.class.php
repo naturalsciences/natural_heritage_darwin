@@ -289,4 +289,14 @@ class SpecimenSearchTable extends Doctrine_Table
       return $result;
     }
 
+    public function findForView($field, $id, $user)
+    {
+
+      $q = Doctrine_Query::create()
+        ->from('SpecimenSearch s')
+        ->where("s.$field = ?", $id)
+        ->andWhere('collection_ref in (select fct_search_authorized_view_collections('.$user->getId().'))');
+      return $q->fetchOne();
+    }
+
 }

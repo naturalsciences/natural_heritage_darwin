@@ -243,7 +243,7 @@ class individualsActions extends DarwinActions
   
   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimenSearch')->findOneByIndividualRef($request->getParameter('id')),'Individual does not exist');  
+    $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimenSearch')->findForView('individual_ref',$request->getParameter('id'), $this->getUser()),'Individual does not exist');  
     $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
   }
 
