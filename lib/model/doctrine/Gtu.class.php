@@ -59,7 +59,7 @@ class Gtu extends BaseGtu
     }
   }
 
-  public function getName($view = null)
+  public function getName($view = null, $countriesOnly = false)
   {
     if($this->_get('id')==0) return '-';
     $nbr = count($this->TagGroups);
@@ -67,12 +67,16 @@ class Gtu extends BaseGtu
     $str = '<ul  class="search_tags">';
     foreach($this->TagGroups as $group)
     {
-      $str .= '<li><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label><ul class="name_tags'.($view!=null?"_view":"").'">';
-      $tags = explode(";",$group->getTagValue());
-      foreach($tags as $value)
-        if (strlen($value))
-          $str .=  '<li>' . trim($value).'</li>';
-      $str .= '</ul><div class="clear"></div>';
+      if(!$countriesOnly || ($countriesOnly && $group->getSubGroupName()=='country')) {
+        $str .= '<li><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label><ul class="name_tags'.($view!=null?"_view":"").'">';
+        $tags = explode(";",$group->getTagValue());
+        foreach($tags as $value)
+          if (strlen($value))
+            $str .=  '<li>' . trim($value).'</li>';
+        $str .= '</ul><div class="clear"></div>';
+        if($countriesOnly)
+          break;
+      }
     }
     $str .= '</ul>';
     return $str;
@@ -103,5 +107,13 @@ class Gtu extends BaseGtu
     if(! $this->isNew() && $this->_get('id')==0)
       return '-';
     return $this->_get('code');
+  }
+
+  public function hasCountries()
+  {
+    $q = Doctrine_Query::create()
+         ->from('TagGroups tg')
+         ->where('tg.gtu_ref = ? and tg.sub_group_name_indexed = ?', array($this->_get('id'), 'country'));
+    return (count($q->execute()));
   }
 }
