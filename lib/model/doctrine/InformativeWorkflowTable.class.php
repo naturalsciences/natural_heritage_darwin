@@ -72,25 +72,15 @@ class InformativeWorkflowTable extends DarwinTable
       $q->AndWhereIn('referenced_relation',array('specimens','specimen_individuals','specimen_parts'))   ;
       return $q ;
     }
-    $col_refs = Doctrine::getTable('CollectionsRights')->getCollectionsByRight($user->getId());
-    $col_refs = implode(',', $col_refs);
-    if($col_refs == '')
-      return $q->andWhere('false');
 
-    $where_str = " (referenced_relation = 'specimens' AND exists( select 1 from darwin_flat where spec_ref = record_id  and collection_ref IN 
-($col_refs))
-) OR
+    $where_str = "( referenced_relation = 'specimens' AND exists ( select fct_filter_encodable_row(record_id::varchar , 'spec_ref',".$user->getId().")) ) OR
+ ( referenced_relation = 'specimen_individuals' AND exists ( select fct_filter_encodable_row(record_id::varchar , 'individual_ref',".$user->getId().")) ) OR
+ ( referenced_relation = 'specimen_parts' AND exists ( select fct_filter_encodable_row(record_id::varchar , 'part_ref',".$user->getId().")) ) ";
 
- (referenced_relation = 'specimen_individuals' AND exists( select 1 from darwin_flat where individual_ref = record_id  and collection_ref IN 
-($col_refs))
-) OR
-
- ( referenced_relation = 'specimen_parts' AND exists( select 1 from darwin_flat where part_ref = record_id  and collection_ref IN 
-  ($col_refs))
-)";
     if($with_calatogues) {
       $where_str .= " OR referenced_relation not in ('specimens', 'specimen_individuals', 'specimen_parts') ";
     }
+
     $q->andWhere($where_str);
     return $q;
   }
