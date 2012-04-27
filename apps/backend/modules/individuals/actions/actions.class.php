@@ -124,7 +124,7 @@ class individualsActions extends DarwinActions
 
   public function executeOverview(sfWebRequest $request)
   {  
-    $this->specimen = Doctrine::getTable('Specimens')->findExcept($request->getParameter('spec_id',0));
+    $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($request->getParameter('spec_id',0), $this->getUser());
     $this->forward404Unless($this->specimen, sprintf('Specimen does not exist (%s).', $request->getParameter('spec_id',0)));
     $this->individuals = Doctrine::getTable('SpecimenIndividuals')->findBySpecimenRef($this->specimen->getId());
     $this->view_only = false ;    
