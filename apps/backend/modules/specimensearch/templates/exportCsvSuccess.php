@@ -8,6 +8,10 @@ With Types<?php echo $sep;?>
 Sampling Location ID<?php echo $sep;?>
 Sampling Location Code<?php echo $sep;?>
 Country<?php echo $sep;?>
+Latitude<?php echo $sep;?>
+Longitude<?php echo $sep;?>
+Altitude (m.)<?php echo $sep;?>
+Altitude accuracy (m.)<?php echo $sep;?>
 Specimens Codes<?php echo $sep;?>
 Chronostratigraphy ID<?php echo $sep;?>
 Chronostratigraphy Name<?php echo $sep;?>
@@ -129,6 +133,10 @@ Part Codes<?php echo $sep;?>
 <?php echo $item->getGtuRef().$sep;?>
 <?php echo $item->getGtuCode().$sep;?>
 <?php echo str_replace(';', ',', $item->getGtuCountryTagValue('')).$sep; ?>
+<?php echo (($item->getStationVisible() || $item->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$item->getLatitude():'').$sep;?>
+<?php echo (($item->getStationVisible() || $item->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$item->getLongitude():'').$sep;?>
+<?php echo ((($item->getStationVisible() || $item->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $item->getGtuElevation())?$item->getGtuElevation():'').$sep;?>
+<?php echo ((($item->getStationVisible() || $item->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $item->getGtuElevation())?$item->getGtuElevationAccuracy():'').$sep;?>
 <?php if(isset($codes[$item->getSpecRef()])) foreach($codes[$item->getSpecRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
 <?php echo $item->getChronoRef().$sep;?>
 <?php echo $item->getChronoName().$sep;?>

@@ -111,8 +111,7 @@ class partsActions extends DarwinActions
   {
     $this->individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id'));
     $this->forward404Unless($this->individual);
-
-    $this->specimen = Doctrine::getTable('Specimens')->findExcept($this->individual->getSpecimenRef());
+    $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($this->individual->getSpecimenRef(), $this->getUser());
     $this->forward404Unless($this->specimen);
 
     $this->parts = Doctrine::getTable('SpecimenParts')->findForIndividual($this->individual->getId());
@@ -256,6 +255,10 @@ class partsActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     $this->part = Doctrine::getTable('SpecimenParts')->find($request->getParameter('id'));
+    $this->individual = $this->part->Individual;
+    $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($this->individual->getSpecimenRef(), $this->getUser());
+    if(! $this->specimen) $this->forwardToSecureAction();
+
     $this->forward404Unless($this->part,'Part does not exist');  
     $this->loadWidgets(null,$this->part->Individual->Specimens->getCollectionRef()); 
   }   

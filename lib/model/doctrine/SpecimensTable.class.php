@@ -124,9 +124,10 @@ class SpecimensTable extends DarwinTable
     $q = Doctrine_Query::create()
       ->select('s.*, collection_ref in (select fct_search_authorized_encoding_collections('.$user->getId().')) as has_encoding_rights')
       ->from('specimens s')
-      ->where('id = ?',$id)
-      ->andWhere('collection_ref in (select fct_search_authorized_view_collections('.$user->getId().'))');
-
+      ->where('id = ?',$id);
+    if (!$user->isA(Users::ADMIN)){
+      $q->andWhere('collection_ref in (select fct_search_authorized_view_collections('.$user->getId().'))');
+    }
     return $q->fetchOne();
   }
 

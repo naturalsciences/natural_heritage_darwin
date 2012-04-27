@@ -19,9 +19,7 @@ DROP INDEX IF EXISTS idx_labeling_code_varchar;
 DROP INDEX IF EXISTS idx_labeling_code_numeric;
 DROP INDEX IF EXISTS idx_labeling_individual_type;
 DROP INDEX IF EXISTS idx_labeling_individual_sex;
-DROP INDEX IF EXISTS idx_darwin_flat_individual_sex;
 DROP INDEX IF EXISTS idx_labeling_individual_stage;
-DROP INDEX IF EXISTS idx_darwin_flat_individual_stage;
 DROP INDEX IF EXISTS idx_labeling_part;
 DROP INDEX IF EXISTS idx_labeling_ig_num_numeric;
 DROP INDEX IF EXISTS idx_labeling_ig_num_coalesced;
@@ -186,8 +184,3 @@ where part_ref is not null;
 
 ALTER VIEW "public"."labeling" OWNER TO darwin2;
 GRANT SELECT ON "public"."labeling" TO d2viewer;
-
-DROP INDEX IF EXISTS idx_specimen_individuals_sex;
-DROP INDEX IF EXISTS idx_specimen_individuals_stage;
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_sex on specimen_individuals using btree (sex text_pattern_ops) where sex not in ('undefined', 'unknown');
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals using btree (stage text_pattern_ops) where stage not in ('undefined', 'unknown');

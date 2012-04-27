@@ -1060,20 +1060,20 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     if($this->scope == self::SC_SPEC)
     {
       $query = DQ::create()
-        ->select('s.*')
+        ->select('s.*, ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude, ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude')
         ->from('SpecimensFlat s');
     }
     elseif($this->scope == self::SC_IND)
     {
       $query = DQ::create()
-        ->select('s.*, i.*, p.*')
+        ->select('s.*, i.*, p.*, ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude, ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude')
         ->from('SpecimenIndividuals i')
         ->innerJoin('i.SpecimensFlat s');
     }
     elseif($this->scope == self::SC_PART)
     {
       $query = DQ::create()
-        ->select('s.*, i.*, p.*')
+        ->select('s.*, i.*, p.*, ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude, ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude')
         ->from('SpecimenParts p')
         ->innerJoin('p.Individual i')
         ->innerJoin('i.SpecimensFlat s');

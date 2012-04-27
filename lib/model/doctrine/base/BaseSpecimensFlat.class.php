@@ -48,6 +48,8 @@
  * @property string $gtu_country_tag_indexed
  * @property string $gtu_country_tag_value
  * @property string $gtu_location
+ * @property float $gtu_elevation
+ * @property float $gtu_elevation_accuracy
  * @property string $taxon_name
  * @property string $taxon_name_indexed
  * @property string $taxon_name_order_by
@@ -165,6 +167,8 @@
  * @method string              getGtuCountryTagIndexed()     Returns the current record's "gtu_country_tag_indexed" value
  * @method string              getGtuCountryTagValue()       Returns the current record's "gtu_country_tag_value" value
  * @method string              getGtuLocation()              Returns the current record's "gtu_location" value
+ * @method float               getGtuElevation()             Returns the current record's "gtu_elevation" value
+ * @method float               getGtuElevationAccuracy()     Returns the current record's "gtu_elevation_accuracy" value
  * @method string              getTaxonName()                Returns the current record's "taxon_name" value
  * @method string              getTaxonNameIndexed()         Returns the current record's "taxon_name_indexed" value
  * @method string              getTaxonNameOrderBy()         Returns the current record's "taxon_name_order_by" value
@@ -281,6 +285,8 @@
  * @method SpecimensFlat       setGtuCountryTagIndexed()     Sets the current record's "gtu_country_tag_indexed" value
  * @method SpecimensFlat       setGtuCountryTagValue()       Sets the current record's "gtu_country_tag_value" value
  * @method SpecimensFlat       setGtuLocation()              Sets the current record's "gtu_location" value
+ * @method SpecimensFlat       setGtuElevation()             Sets the current record's "gtu_elevation" value
+ * @method SpecimensFlat       setGtuElevationAccuracy()     Sets the current record's "gtu_elevation_accuracy" value
  * @method SpecimensFlat       setTaxonName()                Sets the current record's "taxon_name" value
  * @method SpecimensFlat       setTaxonNameIndexed()         Sets the current record's "taxon_name_indexed" value
  * @method SpecimensFlat       setTaxonNameOrderBy()         Sets the current record's "taxon_name_order_by" value
@@ -502,6 +508,12 @@ abstract class BaseSpecimensFlat extends sfDoctrineRecord
              ));
         $this->hasColumn('gtu_location', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('gtu_elevation', 'float', null, array(
+             'type' => 'float',
+             ));
+        $this->hasColumn('gtu_elevation_accuracy', 'float', null, array(
+             'type' => 'float',
              ));
         $this->hasColumn('taxon_name', 'string', null, array(
              'type' => 'string',

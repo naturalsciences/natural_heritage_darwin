@@ -772,6 +772,8 @@ SpecimensFlat:
         gtu_country_tag_indexed: { type: string}
         gtu_country_tag_value: { type: string}
         gtu_location: { type: string}
+        gtu_elevation: { type: float }
+        gtu_elevation_accuracy: { type: float }
         taxon_name:  { type: string}
         taxon_name_indexed: { type: string}
         taxon_name_order_by: { type: string}
