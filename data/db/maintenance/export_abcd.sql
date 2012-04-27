@@ -151,8 +151,12 @@ CREATE TABLE public.flat_abcd as
   CASE WHEN individual_type = 'specimen' THEN null ELSE individual_type END as individual_simple_type,
 
   i_col.formated_name as collection_institution_name,
-  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country FROM darwin2.people_addresses where person_user_ref = coll.institution_ref ORDER BY tag like '%pref%'LIMIT 1) as collection_institution_address,
-  ( SELECT entry FROM darwin2.people_comm where person_user_ref = coll.institution_ref and comm_type='e-mail' ORDER BY tag like '%pref%' LIMIT 1) as collection_institution_email,
+  ( SELECT entry || ' ' || zip_code  || ' ' || locality  || ' ' || country 
+    FROM darwin2.people_addresses 
+    where person_user_ref = coll.institution_ref ORDER BY tag like '%pref%'LIMIT 1) as collection_institution_address,
+  ( SELECT entry 
+    FROM darwin2.people_comm 
+    where person_user_ref = coll.institution_ref and comm_type='e-mail' ORDER BY tag like '%pref%' LIMIT 1) as collection_institution_email,
   p_col.formated_name as collection_main_manager_name,
   p_col.formated_name_indexed as collection_main_manager_sort_name,
   p_col.family_name as collection_main_manager_inherited_name,
@@ -169,16 +173,22 @@ CREATE TABLE public.flat_abcd as
   CASE WHEN gtu.gtu_from_date_mask = 0 THEN null::timestamp ELSE gtu.gtu_from_date END as gtu_from_date,
   CASE WHEN gtu.gtu_to_date_mask = 0 THEN null::timestamp ELSE gtu.gtu_to_date END as gtu_to_date,
 
-  (select lineToTagRows(tag_value) FROM darwin2.tag_groups taggr WHERE gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country' limit 1) AS gtu_country,
+  (select lineToTagRows(tag_value) 
+   FROM darwin2.tag_groups taggr 
+   WHERE gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country' limit 1) AS gtu_country,
   --(select  * FROM tag_groups taggr WHERE gtu.id = taggr.gtu_ref AND taggr.group_name_indexed = 'administrativearea' AND taggr.sub_group_name_indexed = 'country' limit 1) AS gtu_country,
   (select method from darwin2.specimen_collecting_methods sm 
         INNER JOIN darwin2.collecting_methods cm on sm.collecting_method_ref = cm.id  
         WHERE sm.specimen_ref = f.spec_ref limit 1) AS gtu_method,
 
-
   ( CASE WHEN cp1.date_to_mask = 0 THEN null::timestamp ELSE cp1.date_to END - CASE WHEN cp1.date_from_mask = 0 THEN NULL::timestamp ELSE cp1.date_from END ) as depth_duration,
   CASE WHEN station_visible = true THEN ( select min(property_value)::text from darwin2.properties_values where property_ref = cp1.id) ELSE null::text END as depth_lowervalue,
-  CASE WHEN station_visible = true THEN ( select case when max(property_value)::text = min(property_value)::text then null::text else max(property_value)::text end from darwin2.properties_values where property_ref = cp1.id) ELSE null::text END as depth_uppervalue, /*** only if 1? **/
+  CASE WHEN station_visible = true THEN ( select case when max(property_value)::text = min(property_value)::text then null::text 
+                                                      else max(property_value)::text end 
+                                          from darwin2.properties_values 
+                                          where property_ref = cp1.id
+                                        ) 
+       ELSE null::text END as depth_uppervalue, /*** only if 1? **/
   CASE WHEN station_visible = true THEN ( select avg(property_accuracy)::real from darwin2.properties_values where property_ref = cp1.id) ELSE null::real END as depth_accuracy,
   cp1.property_method as depth_method,
   cp1.property_unit as depth_unit,
@@ -186,7 +196,12 @@ CREATE TABLE public.flat_abcd as
 
   ( CASE WHEN cp2.date_to_mask = 0 THEN null::timestamp ELSE cp2.date_to END - CASE WHEN cp2.date_from_mask = 0 THEN NULL::timestamp ELSE cp2.date_from END ) as height_duration,
   CASE WHEN station_visible = true THEN ( select min(property_value)::text from darwin2.properties_values where property_ref = cp2.id) ELSE null::text END as height_lowervalue,
-  CASE WHEN station_visible = true THEN ( select case when max(property_value)::text = min(property_value)::text then null::text else max(property_value)::text end from darwin2.properties_values where property_ref = cp2.id) ELSE null::text END as height_uppervalue, /*** only if 1? **/
+  CASE WHEN station_visible = true THEN ( select case when max(property_value)::text = min(property_value)::text then null::text 
+                                                      else max(property_value)::text end 
+                                          from darwin2.properties_values 
+                                          where property_ref = cp2.id
+                                        ) 
+       ELSE null::text END as height_uppervalue, /*** only if 1? **/
   CASE WHEN station_visible = true THEN ( select avg(property_accuracy)::real from darwin2.properties_values where property_ref = cp2.id) ELSE null::real END as height_accuracy,
   cp2.property_method as height_method,
   cp2.property_unit as height_unit,
@@ -1038,7 +1053,24 @@ CREATE TABLE public.darwin_metadata AS
     'RBINS contact'::text as content_contact_name,
     'EN'::text as metadata_representation_language,
     'RBINS collections'::text as metadata_representation_title,
-    E'The Royal Belgian Institute of Natural Sciences houses a precious collection of zoological, anthropological, paleontological, mineralogical and geological materials and data. The renowned Iguanodons from Bernissart, ambassadors of the Belgian science institute in Brussels, represent a natural history collection currently estimated to hold over 37 million specimens.\r\nThe roots of the present day collection reach far back in history. It evolved from the Natural History collection of Karel of Lotharingen, governor of The Netherlands (1712-1780) and was part of didactic materials owned by the Central School of the City of Brussels. After the independence of Belgium, the City of Brussels donated the collection to the Belgian Government and became part of the autonomous Royal Natural History Museum in 1846, known as the Royal Belgian Institute of Natural Sciences since 1948. Fieldwork by researchers and collaborators, in Belgium and abroad, donations and purchases have been expanding the assets ever since.\r\nData presented here are coming from the darwin database, the collection management tool of the RBINS. Today, the darwin database manages information on about 350.000 specimens stored in the institute\'s depositories. This number rises on a daily basis thanks to the continued efforts of curators and their adjuncts that are responsible for maintaining the stored specimens and information. Our online database provides information about the collections of the Vertebrates, Invertebrates, Entomology and Paleobotany. The application will soon be expanded with paleontozoological data.\r\nThe Department of Geology and the Department of Marine Ecosystems provide information on different systems. More information on these departments can be found on www.sciencesnaturelles.be/institute/structure/geology/gsb_website And www.mumm.ac.be\r\nThe corner stone of the darwin database is the specimen and the information about its origin and its status. Although the status of the specimens follow the current regulations of the International Code on Zoological Nomenclature other status specifications not treated by the ICZN regulations (eg. topotype) have been maintained as supplementary information about the specimen(s) in question.\r\nEnjoy your virtual visit through our collections!'::text as metadata_representation_details,
+    E'The Royal Belgian Institute of Natural Sciences houses a precious collection of zoological, anthropological, paleontological, mineralogical and geological materials and data. 
+      The renowned Iguanodons from Bernissart, ambassadors of the Belgian science institute in Brussels, represent a natural history collection currently estimated to hold over 37 million specimens.\r\n
+      The roots of the present day collection reach far back in history. 
+      It evolved from the Natural History collection of Karel of Lotharingen, governor of The Netherlands (1712-1780) and was part of didactic materials owned by the Central School of the City of Brussels. 
+      After the independence of Belgium, the City of Brussels donated the collection to the Belgian Government and became part of the autonomous Royal Natural History Museum in 1846, 
+      known as the Royal Belgian Institute of Natural Sciences since 1948. 
+      Fieldwork by researchers and collaborators, in Belgium and abroad, donations and purchases have been expanding the assets ever since.\r\n
+      Data presented here are coming from the darwin database, the collection management tool of the RBINS. 
+      Today, the darwin database manages information on about 350.000 specimens stored in the institute\'s depositories. 
+      This number rises on a daily basis thanks to the continued efforts of curators and their adjuncts that are responsible for maintaining the stored specimens and information. 
+      Our online database provides information about the collections of the Vertebrates, Invertebrates, Entomology and Paleobotany. 
+      The application will soon be expanded with paleontozoological data.\r\n
+      The Department of Geology and the Department of Marine Ecosystems provide information on different systems. 
+      More information on these departments can be found on www.sciencesnaturelles.be/institute/structure/geology/gsb_website and www.mumm.ac.be\r\n
+      The corner stone of the darwin database is the specimen and the information about its origin and its status. 
+      Although the status of the specimens follow the current regulations of the International Code on Zoological Nomenclature other status specifications not treated by the ICZN regulations 
+      (eg. topotype) have been maintained as supplementary information about the specimen(s) in question.\r\n
+      Enjoy your virtual visit through our collections!'::text as metadata_representation_details,
     current_timestamp as metadata_revision_date,
     'Rue Vautier straat, 29 - 1000 Bruxelles/Brussels - Belgique/Belgïe'::text as content_technical_contact_address,
     'darwin-ict@naturalsciences.be'::text as content_technical_contact_email,
