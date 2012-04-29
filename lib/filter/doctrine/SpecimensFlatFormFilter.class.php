@@ -935,10 +935,10 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     if($val != '')
     {
       $query->andWhere("
-        (station_visible = true AND  LOWER(gtu_code) like ? )
+        (station_visible = true AND  gtu_code ilike ? )
         OR
         (station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
-          AND LOWER(gtu_code) like ? )", array(strtolower('%'.$val.'%'),strtolower('%'.$val.'%')));
+          AND gtu_code ilike ? )", array('%'.$val.'%','%'.$val.'%'));
       $query->whereParenWrap();
     }
     return $query ;  
