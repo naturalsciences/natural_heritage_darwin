@@ -1,16 +1,14 @@
+SET search_path=darwin2, public;
+
 DROP TRIGGER trg_update_specimens_darwin_flat ON specimens;
 DROP TRIGGER trg_update_specimen_individuals_darwin_flat ON specimen_individuals;
 DROP TRIGGER trg_delete_specimen_individuals_darwin_flat ON specimen_individuals;
 DROP TRIGGER trg_update_specimen_parts_darwin_flat ON specimen_parts;
 DROP TRIGGER trg_delete_specimen_parts_darwin_flat ON specimen_parts;
 
-
 \i  ../createfunctions.sql
 
-
 DROP FUNCTION fct_delete_darwin_flat_ind_part() ;
-
-
 
 ALTER TABLE specimens DROP CONSTRAINT fk_specimens_expeditions;
 ALTER TABLE specimens DROP CONSTRAINT fk_specimens_gtu;
@@ -24,15 +22,14 @@ ALTER TABLE specimens DROP CONSTRAINT fk_specimens_host_taxonomy;
 ALTER TABLE specimens DROP CONSTRAINT fk_specimens_host_specimen;
 ALTER TABLE specimens DROP CONSTRAINT fk_specimens_igs;
 
-ALTER TABLE specimens DROP CONSTRAINT unq_specimens;
-
+DROP INDEX IF EXISTS unq_specimens;
 
 ALTER TABLE specimen_collecting_methods DROP CONSTRAINT fk_specimen_collecting_methods_specimen;
 ALTER TABLE specimen_collecting_tools DROP CONSTRAINT fk_specimen_collecting_tools_specimen;
 ALTER TABLE specimen_individuals DROP CONSTRAINT fk_specimen_individuals_specimens;
 ALTER TABLE specimens_accompanying DROP CONSTRAINT fk_specimens_accompanying_specimens;
 
-DROP TABLE darwin_flat;
+DROP TABLE darwin_flat CASCADE;
 
 CREATE UNIQUE INDEX unq_specimens ON specimens (collection_ref, COALESCE(expedition_ref,0), COALESCE(gtu_ref,0), COALESCE(taxon_ref,0), COALESCE(litho_ref,0), COALESCE(chrono_ref,0), COALESCE(lithology_ref,0), COALESCE(mineral_ref,0), COALESCE(host_taxon_ref,0), acquisition_category, acquisition_date, COALESCE(ig_ref,0));
 
@@ -49,17 +46,15 @@ CREATE TRIGGER trg_fct_count_units_parts AFTER INSERT OR DELETE
          ON specimen_parts FOR EACH ROW
          EXECUTE PROCEDURE fct_count_units();
 
-
-\i ../maintenance/recreate_flat.sql
-
-
 ALTER TABLE specimen_individuals ADD COLUMN ind_ident_ids integer[] not null default '{}';
-
 
 UPDATE specimen_individuals ind SET
       with_parts = exists (select 1 from specimen_parts p WHERE p.specimen_individual_ref = ind.id ),
-      ind_ident_ids = (SELECT array_accum(people_ref) FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' 
+      ind_ident_ids = (SELECT array_accum(people_ref) FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications'
                 WHERE i.record_id = ind.id AND i.referenced_relation = 'specimen_individuals');
+
+\i ../maintenance/recreate_flat.sql
+
 
 /*****************
  * REMOVE ZERO REFS

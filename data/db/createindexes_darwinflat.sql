@@ -6,9 +6,6 @@ CREATE INDEX CONCURRENTLY idx_specimens_flat_expedition_ref on specimens_flat(ex
 CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_ref on specimens_flat(gtu_ref);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_taxon_ref on specimens_flat(taxon_ref);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_ig_ref on specimens_flat(ig_ref);
-CREATE INDEX CONCURRENTLY idx_specimens_flat_individual_ref on specimens_flat(individual_ref);
-CREATE INDEX CONCURRENTLY idx_specimens_flat_part_ref on specimens_flat(part_ref);
-
 
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_expedition_name_ts on specimens_flat using gin(expedition_name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_taxon_name_indexed on specimens_flat using gin(taxon_name_indexed);
@@ -32,17 +29,11 @@ CREATE INDEX CONCURRENTLY idx_specimens_flat_taxon_name_order_by on specimens_fl
 
 CREATE INDEX CONCURRENTLY idx_specimens_flat_ig_num on specimens_flat(ig_num_indexed text_pattern_ops);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_collection_is_public on specimens_flat(collection_is_public);
-CREATE INDEX CONCURRENTLY idx_specimens_flat_collection_name on specimens_flat(collection_name, spec_ref);
+CREATE INDEX CONCURRENTLY idx_specimens_flat_collection_name on specimens_flat(collection_name, specimen_ref);
 
 /*CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_collection_institution_formated_name_ts on specimens_flat using gin(collection_institution_formated_name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_collection_main_manager_formated_name_ts on specimens_flat using gin(collection_main_manager_formated_name_ts);*/
-CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_expedition_name_ts on specimens_flat using gin(expedition_name_ts);
-CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_taxon_name_indexed on specimens_flat using gin(taxon_name_indexed);
-CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_gtu_tag_values_indexed on specimens_flat using gin(gtu_tag_values_indexed);
-CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_gtu_country_tag_indexed_indexed on specimens_flat using gin(gtu_country_tag_indexed);
-CREATE INDEX CONCURRENTLY idx_gist_specimens_flat_gtu_location ON specimens_flat USING GIST ( gtu_location );
 
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_spec_ident_ids on specimens_flat using gin(spec_ident_ids);
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_spec_coll_ids on specimens_flat using gin(spec_coll_ids);
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_spec_don_sel_ids on specimens_flat using gin(spec_don_sel_ids);
-CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_ind_ident_ids on specimens_flat using gin(ind_ident_ids);

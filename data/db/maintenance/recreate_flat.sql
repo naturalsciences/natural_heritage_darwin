@@ -4,7 +4,6 @@ BEGIN;
 
 DROP TABLE IF EXISTS specimens_flat CASCADE;
 
-
 CREATE TABLE specimens_flat (
     specimen_ref integer not null,
 
@@ -132,6 +131,12 @@ CREATE TABLE specimens_flat (
 );
 
 
+ALTER TABLE specimens_flat OWNER TO darwin2;
+
+GRANT ALL ON specimens_flat TO darwin2;
+GRANT INSERT, UPDATE, DELETE, SELECT ON specimens_flat TO cebmpad;
+GRANT SELECT ON specimens_flat TO d2viewer;
+
     INSERT INTO specimens_flat
     (specimen_ref,category, host_relationship, acquisition_category, acquisition_date_mask,
      acquisition_date, station_visible,
@@ -225,18 +230,9 @@ CREATE TABLE specimens_flat (
         ON mineral.id=spec.mineral_ref
     );
 
-
-ALTER TABLE specimens_flat OWNER TO darwin2;
-ALTER TABLE specimens_flat_id_seq OWNER TO darwin2;
-
-GRANT ALL ON specimens_flat TO darwin2;
-GRANT SELECT ON specimens_flat TO d2viewer;
-
 commit;
 
 \i ../createindexes_darwinflat.sql
-
-\i ../reports/ticketing/labeling.sql
 
 
 /********** RESET VIEW *************/
@@ -367,7 +363,7 @@ create view darwin_flat as
   spec_ident_ids,
   spec_coll_ids,
   spec_don_sel_ids,
-  ind_ident_ids,
+  i.ind_ident_ids as ind_ident_ids,
 
   f.with_types,
   f.with_individuals,
@@ -417,3 +413,4 @@ ALTER VIEW darwin_flat OWNER TO darwin2;
 GRANT ALL ON darwin_flat TO darwin2;
 GRANT SELECT ON darwin_flat TO d2viewer;
 
+\i ../reports/ticketing/labeling.sql

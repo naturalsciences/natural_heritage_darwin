@@ -1,7 +1,6 @@
  GRANT USAGE ON SCHEMA darwin2 TO cebmpad;
 
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_table_record_ref TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.associated_multimedia TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_levels TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_properties TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_classifications TO cebmpad;
@@ -24,34 +23,28 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.insurances TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.lithology TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.imports TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.multimedia_keywords TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.migrated_parts TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.people_addresses TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_people TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.people_comm TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.my_saved_searches TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_people_users_addr_common TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.my_widgets TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_people_users_comm_common TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_people_languages TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_people_users_multimedia TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_people_users_rel_common TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimen_collecting_methods TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.people_languages TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens_accompanying TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.possible_upper_levels TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.people_relationships TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.soortenregister TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimen_individuals TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.properties_values TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.preferences TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.people_multimedia TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.staging_tag_groups TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_comm TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.tags TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_languages TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_login_infos TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_multimedia TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_addresses TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.staging_people TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_tracking TO cebmpad;
@@ -60,7 +53,6 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.lithostratigraphy TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.staging TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.mineralogy TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.habitats TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.tag_groups TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.chronostratigraphy TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_people TO cebmpad;
@@ -85,7 +77,6 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens_flat TO cebmpad;
 
  GRANT USAGE, SELECT ON SEQUENCE darwin2.staging_id_seq TO cebmpad;
- GRANT USAGE, SELECT ON SEQUENCE darwin2.associated_multimedia_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.catalogue_levels_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.catalogue_people_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.catalogue_properties_id_seq TO cebmpad;
@@ -105,7 +96,6 @@
  GRANT USAGE, SELECT ON SEQUENCE darwin2.expeditions_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.ext_links_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.flat_dict_id_seq TO cebmpad;
- GRANT USAGE, SELECT ON SEQUENCE darwin2.habitats_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.gtu_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.identifications_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.igs_id_seq TO cebmpad;
@@ -141,7 +131,6 @@
  GRANT USAGE, SELECT ON SEQUENCE darwin2.users_tracking_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.informative_workflow_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.vernacular_names_id_seq TO cebmpad;
- GRANT USAGE, SELECT ON SEQUENCE darwin2.seq_specgrp TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.users_login_info_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.loans_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.loan_items_id_seq TO cebmpad;
