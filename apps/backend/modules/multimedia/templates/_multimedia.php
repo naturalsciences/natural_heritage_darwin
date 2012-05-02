@@ -63,7 +63,7 @@
     <?php endif ; ?>
   </td>
   <td colspan="4"><?php echo $form['mime_type']->getValue() ; ?>
-   <?php if($object):?> (<?php echo $object->getHumanSize();?>)<?php endif; ?>
+   <?php if(isset($object) && $object):?> (<?php echo $object->getHumanSize();?>)<?php endif; ?>
    </td>
 </tr>
 <script type="text/javascript">
