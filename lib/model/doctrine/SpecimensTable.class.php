@@ -21,11 +21,11 @@ class SpecimensTable extends DarwinTable
 
   protected static $widget_array = array(
     'collection_ref' => 'refCollection' ,
-    'category' => 'refCollection' ,      
+    'category' => 'refCollection' ,
     'gtu_ref' => 'refGtu' ,
     'station_visible' => 'refGtu' ,
     'taxon_ref' => 'refTaxon' ,
-    'host_taxon_ref' => 'refHosts' ,            
+    'host_taxon_ref' => 'refHosts' ,
     'host_specimen_ref' => 'refHosts' ,
     'host_relationship' => 'refHost' ,
     'litho_ref' => 'refLitho' ,
@@ -47,15 +47,15 @@ class SpecimensTable extends DarwinTable
     $q = Doctrine_Query::create()
       ->from('Specimens s')
       ->where('s.collection_ref = ?', $object->getCollectionRef())
-      ->andwhere('s.expedition_ref = ?', $object->getExpeditionRef())
-      ->andwhere('s.gtu_ref = ?', $object->getGtuRef())
-      ->andwhere('s.taxon_ref = ?', $object->getTaxonRef())
-      ->andwhere('s.litho_ref = ?', $object->getLithoRef())
-      ->andwhere('s.chrono_ref = ?', $object->getChronoRef())
-      ->andwhere('s.lithology_ref = ?', $object->getLithologyRef())
-      ->andwhere('s.mineral_ref = ?', $object->getMineralRef())
-      ->andwhere('s.host_taxon_ref = ?', $object->getHostTaxonRef())
-      ->andwhere('COALESCE(s.ig_ref,0) is not distinct from COALESCE(?,0)', $object->getIgRef())
+      ->andwhere('s.expedition_ref is not distinct from ?', $object->getExpeditionRef())
+      ->andwhere('s.gtu_ref is not distinct from ?', $object->getGtuRef())
+      ->andwhere('s.taxon_ref is not distinct from ?', $object->getTaxonRef())
+      ->andwhere('s.litho_ref is not distinct froms ?', $object->getLithoRef())
+      ->andwhere('s.chrono_ref is not distinct from ?', $object->getChronoRef())
+      ->andwhere('s.lithology_ref is not distinct from ?', $object->getLithologyRef())
+      ->andwhere('s.mineral_ref is not distinct from ?', $object->getMineralRef())
+      ->andwhere('s.host_taxon_ref is not distinct from ?', $object->getHostTaxonRef())
+      ->andwhere('s.ig_ref is not distinct from ?', $object->getIgRef())
       ->andwhere('s.acquisition_category = ?', $object->getAcquisitionCategory())
       ->andwhere('s.acquisition_date = ?', $object->getRawAcquisitionDate());
     return $q->fetchOne(); 
