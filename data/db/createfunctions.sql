@@ -2418,7 +2418,7 @@ BEGIN
           INNER JOIN specimen_individuals i on s.id = i.specimen_ref
           INNER JOIN fct_search_authorized_encoding_collections (user_id) as r
             ON s.collection_ref = r
-            WHERE i.id = NEW.specimen_individual_ref) THEN
+            WHERE i.id = OLD.specimen_individual_ref) THEN
           RAISE EXCEPTION 'You don''t have the rights to delete a part from this collection';
         END IF;
       END IF;
