@@ -232,6 +232,8 @@ GRANT SELECT ON specimens_flat TO d2viewer;
 
 commit;
 
+ANALYZE specimens_flat;
+
 \i ../createindexes_darwinflat.sql
 
 

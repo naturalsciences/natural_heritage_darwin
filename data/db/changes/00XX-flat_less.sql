@@ -179,5 +179,3 @@ ALTER TABLE specimen_individuals ADD CONSTRAINT fk_specimen_individuals_specimen
 ALTER TABLE specimens_accompanying ADD CONSTRAINT fk_specimens_accompanying_specimens FOREIGN KEY (specimen_ref) REFERENCES specimens(id);
 
 /**** FINISH ****/
-
-
