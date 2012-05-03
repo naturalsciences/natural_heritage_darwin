@@ -5,6 +5,7 @@ DROP TRIGGER trg_update_specimen_individuals_darwin_flat ON specimen_individuals
 DROP TRIGGER trg_delete_specimen_individuals_darwin_flat ON specimen_individuals;
 DROP TRIGGER trg_update_specimen_parts_darwin_flat ON specimen_parts;
 DROP TRIGGER trg_delete_specimen_parts_darwin_flat ON specimen_parts;
+DROP FUNCTION IF EXISTS fct_update_darwin_flat() CASCADE;
 
 \i  ../createfunctions.sql
 
@@ -157,6 +158,18 @@ DELETE FROM taxonomy where id = 0;
 DELETE FROM users where id = 0;
 DELETE FROM people  where id = 0;
 
+/*** Reset catalogues triggers ***/
+
+create trigger trg_update_chronostratigraphy_darwin_flat after update on chronostratigraphy for each row execute procedure fct_update_specimen_flat();
+create trigger trg_update_collections_darwin_flat after update on collections for each row execute procedure fct_update_specimen_flat();
+create trigger trg_update_expeditions_darwin_flat after update on expeditions for each row execute procedure fct_update_specimen_flat();
+create trigger trg_update_gtu_darwin_flat after update on gtu for each row execute procedure fct_update_specimen_flat();
+create trigger trg_update_igs_darwin_flat after update on igs for each row execute procedure fct_update_specimen_flat();
+create trigger trg_update_lithology_darwin_flat after update on lithology for each row execute procedure fct_update_specimen_flat();
+create trigger trg_update_lithostratigraphy_darwin_flat after update on lithostratigraphy for each row execute procedure fct_update_specimen_flat();
+create trigger trg_update_mineralogy_darwin_flat after update on mineralogy for each row execute procedure fct_update_specimen_flat();
+create trigger trg_update_tag_groups_darwin_flat after update on tag_groups for each row execute procedure fct_update_specimen_flat();
+create trigger trg_update_taxonomy_darwin_flat after update on taxonomy for each row execute procedure fct_update_specimen_flat();
 
 /*** RESET CONSTRAINTS ***/
 
