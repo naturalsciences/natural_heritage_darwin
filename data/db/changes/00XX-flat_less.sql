@@ -31,6 +31,57 @@ ALTER TABLE specimens_accompanying DROP CONSTRAINT fk_specimens_accompanying_spe
 
 DROP TABLE darwin_flat CASCADE;
 
+ALTER TABLE specimens
+ALTER COLUMN expedition_ref DROP NOT NULL,
+ALTER COLUMN expedition_ref SET DEFAULT NULL,
+ALTER COLUMN gtu_ref DROP NOT NULL,
+ALTER COLUMN gtu_ref SET DEFAULT NULL,
+ALTER COLUMN chrono_ref DROP NOT NULL,
+ALTER COLUMN chrono_ref SET DEFAULT NULL,
+ALTER COLUMN litho_ref DROP NOT NULL,
+ALTER COLUMN litho_ref SET DEFAULT NULL,
+ALTER COLUMN lithology_ref DROP NOT NULL,
+ALTER COLUMN lithology_ref SET DEFAULT NULL,
+ALTER COLUMN mineral_ref DROP NOT NULL,
+ALTER COLUMN mineral_ref SET DEFAULT NULL,
+ALTER COLUMN taxon_ref DROP NOT NULL,
+ALTER COLUMN taxon_ref SET DEFAULT NULL,
+ALTER COLUMN host_taxon_ref DROP NOT NULL,
+ALTER COLUMN host_taxon_ref SET DEFAULT NULL
+;
+
+UPDATE specimens
+SET expedition_ref = DEFAULT
+WHERE expedition_ref = 0;
+
+UPDATE specimens
+SET gtu_ref = DEFAULT
+WHERE gtu_ref = 0;
+
+UPDATE specimens
+SET taxon_ref = DEFAULT
+WHERE taxon_ref = 0;
+
+UPDATE specimens
+SET host_taxon_ref = DEFAULT
+WHERE host_taxon_ref = 0;
+
+UPDATE specimens
+SET chrono_ref = DEFAULT
+WHERE chrono_ref = 0;
+
+UPDATE specimens
+SET litho_ref = DEFAULT
+WHERE litho_ref = 0;
+
+UPDATE specimens
+SET lithology_ref = DEFAULT
+WHERE lithology_ref = 0;
+
+UPDATE specimens
+SET mineral_ref = DEFAULT
+WHERE mineral_ref = 0;
+
 CREATE UNIQUE INDEX unq_specimens ON specimens (collection_ref, COALESCE(expedition_ref,0), COALESCE(gtu_ref,0), COALESCE(taxon_ref,0), COALESCE(litho_ref,0), COALESCE(chrono_ref,0), COALESCE(lithology_ref,0), COALESCE(mineral_ref,0), COALESCE(host_taxon_ref,0), acquisition_category, acquisition_date, COALESCE(ig_ref,0));
 
 
