@@ -91,7 +91,25 @@ class loanitemActions extends DarwinActions
       $this->setTemplate('edit');
     }
   }
-
+  public function executeDeleteChecked(sfWebRequest $request)
+  {
+    // Forward to a 404 page if the requested expedition id is not found
+    $this->forward404Unless($items = explode(',',$request->getParameter('ids')) );
+    if(!$id = doctrine::getTable('loanItems')->getLoanRef($items)) $this->forwardToSecureAction();
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$id) !== true)
+      $this->forwardToSecureAction();
+    if($request->isXmlHttpRequest()) 
+    {
+      try
+      {
+        doctrine::getTable('loanItems')->deleteChecked($items) ;        
+        return $this->renderText('ok');
+      }
+      catch(Doctrine_Exception $ne)
+      {      }      
+    }    
+  }
+  
   public function executeMaintenances(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested expedition id is not found

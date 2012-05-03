@@ -16,6 +16,14 @@ class LoanItemsTable extends DarwinTable
     return $q->execute();
   }
 
+  public function deleteChecked($ids)
+  {
+    $q = Doctrine_Query::create()
+      ->delete('LoanItems i')
+      ->andwhereIn('i.id', $ids)
+      ->execute();        
+  }
+
   public function getLoanRef($ids)
   {
     $loan_ref = null;

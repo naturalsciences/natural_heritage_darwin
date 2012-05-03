@@ -39,7 +39,10 @@
           <?php echo __('There is currently no items in your loan. Do not forget to add them.');?></div>
   
         <div class="form_buttons">
-          <input type="button" id="add_maint_items" value="<?php echo __('Add Maintenance for checked');?>" />
+          <div id="checking" class="hidden">
+            <input type="button" id="add_maint_items" value="<?php echo __('Add Maintenance for checked');?>" />
+            <input type="button" id="del_checked_items" value="<?php echo __('Delete checked items');?>" />
+          </div>
           <a href="<?php echo url_for('loan/addLoanItem?id='.$loan->getId()) ?>" id="add_item"><?php echo __('Add item');?></a>
           &nbsp;
           <a href="<?php echo url_for('parts/choosePinned') ?>" id="add_multiple_pin"><?php echo __('Add multiple items');?></a>
@@ -55,6 +58,12 @@
 
 <script  type="text/javascript">
 $(document).ready(function () {
+    $('.select_chk_box').click( function(event)
+    {      
+      if ($('.select_chk_box:checked').length > 0) $("#checking").show() ;
+      else $("#checking").hide() ;
+    });
+    
     $('#add_item').click( function(event)
     {
         event.preventDefault();
@@ -78,7 +87,29 @@ $(document).ready(function () {
         });
         return false;
     }); 
-
+    $('#del_checked_items').click(function (event) {
+      event.preventDefault();
+      var ids = [];
+      $('.select_chk_box:checked').each(function (i) {
+        ids.push($(this).val());
+      });      
+      $.ajax(
+      {
+        type: "GET",
+        url: '<?php echo url_for("loanitem/deleteChecked");?>/ids/'  + ids,
+        success: function(html)
+        {
+          $('.select_chk_box:checked').each(function (i) {
+            parent_el = $(this).closest('tr');
+            parent_el.hide();
+            parent_el.next().hide();
+            parent_el.next().next().hide();
+          });
+          $("#checking").hide() ;          
+        }    
+      });
+    });
+      
     $('#add_maint_items').click(function (event) {
       event.preventDefault();
       var ids = [];

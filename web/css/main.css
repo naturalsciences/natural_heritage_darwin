@@ -1598,7 +1598,7 @@ th .error_list
   width:50%
 }
 
-#catalogue_keywords 
+#catalogue_keywords
 {
   border: 1px solid #E3E3E3;
   padding-left: 1em;
@@ -2060,7 +2060,7 @@ tr.tag_line input
   text-decoration: none;
 }
 
-ul.graph_range
+ul.graph_range, #checking
 {
 	padding-bottom:1em;
 /* 	text-align:center; */
