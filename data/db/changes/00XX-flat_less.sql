@@ -160,16 +160,16 @@ DELETE FROM people  where id = 0;
 
 /*** Reset catalogues triggers ***/
 
-create trigger trg_update_chronostratigraphy_darwin_flat after update on chronostratigraphy for each row execute procedure fct_update_specimen_flat();
-create trigger trg_update_collections_darwin_flat after update on collections for each row execute procedure fct_update_specimen_flat();
-create trigger trg_update_expeditions_darwin_flat after update on expeditions for each row execute procedure fct_update_specimen_flat();
-create trigger trg_update_gtu_darwin_flat after update on gtu for each row execute procedure fct_update_specimen_flat();
-create trigger trg_update_igs_darwin_flat after update on igs for each row execute procedure fct_update_specimen_flat();
-create trigger trg_update_lithology_darwin_flat after update on lithology for each row execute procedure fct_update_specimen_flat();
-create trigger trg_update_lithostratigraphy_darwin_flat after update on lithostratigraphy for each row execute procedure fct_update_specimen_flat();
-create trigger trg_update_mineralogy_darwin_flat after update on mineralogy for each row execute procedure fct_update_specimen_flat();
-create trigger trg_update_tag_groups_darwin_flat after update on tag_groups for each row execute procedure fct_update_specimen_flat();
-create trigger trg_update_taxonomy_darwin_flat after update on taxonomy for each row execute procedure fct_update_specimen_flat();
+create trigger trg_update_chronostratigraphy_darwin_flat after update on chronostratigraphy for each row execute procedure fct_update_specimens_flat_related();
+create trigger trg_update_collections_darwin_flat after update on collections for each row execute procedure fct_update_specimens_flat_related();
+create trigger trg_update_expeditions_darwin_flat after update on expeditions for each row execute procedure fct_update_specimens_flat_related();
+create trigger trg_update_gtu_darwin_flat after update on gtu for each row execute procedure fct_update_specimens_flat_related();
+create trigger trg_update_igs_darwin_flat after update on igs for each row execute procedure fct_update_specimens_flat_related();
+create trigger trg_update_lithology_darwin_flat after update on lithology for each row execute procedure fct_update_specimens_flat_related();
+create trigger trg_update_lithostratigraphy_darwin_flat after update on lithostratigraphy for each row execute procedure fct_update_specimens_flat_related();
+create trigger trg_update_mineralogy_darwin_flat after update on mineralogy for each row execute procedure fct_update_specimens_flat_related();
+create trigger trg_update_tag_groups_darwin_flat after update on tag_groups for each row execute procedure fct_update_specimens_flat_related();
+create trigger trg_update_taxonomy_darwin_flat after update on taxonomy for each row execute procedure fct_update_specimens_flat_related();
 
 /*** RESET CONSTRAINTS ***/
 
