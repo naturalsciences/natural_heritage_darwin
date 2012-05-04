@@ -401,7 +401,7 @@ class specimenActions extends DarwinActions
   
   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this-getUser()),'Specimen does not exist');  
+    $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimensFlat')->fetchOneWithRights($request->getParameter('id'), $this->getUser()),'Specimen does not exist');  
 
     $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
   }  

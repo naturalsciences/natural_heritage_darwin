@@ -16,4 +16,15 @@ class SpecimensFlatTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('SpecimensFlat');
     }
+    public function fetchOneWithRights($id, $user)
+    {
+      $q = Doctrine_Query::create()
+        ->select('s.*, collection_ref in (select fct_search_authorized_encoding_collections('.$user->getId().')) as has_encoding_rights')
+        ->from('SpecimensFlat s')
+        ->where('specimen_ref = ?',$id);
+      if (!$user->isA(Users::ADMIN)){
+        $q->andWhere('collection_ref in (select fct_search_authorized_view_collections('.$user->getId().'))');
+      }
+      return $q->fetchOne();
+    }    
 }
