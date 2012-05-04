@@ -164,7 +164,7 @@ GRANT SELECT ON specimens_flat TO d2viewer;
      mineral_path,mineral_parent_ref,
      host_taxon_ref,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
      host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-     host_specimen_ref,ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date )
+     host_specimen_ref,ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date, with_types, with_individuals )
     (SELECT spec.id,  spec.category,  spec.host_relationship,  spec.acquisition_category,  spec.acquisition_date_mask,
             spec.acquisition_date,  spec.station_visible,
             spec.collection_ref, coll.collection_type, coll.code, coll.name, coll.is_public,
@@ -197,7 +197,7 @@ GRANT SELECT ON specimens_flat TO d2viewer;
             mineral.path, mineral.parent_ref,
             spec.host_taxon_ref, host_taxon.name, host_taxon.name_indexed, host_taxon.name_order_by, host_taxon.level_ref, host_taxon_level.level_name, host_taxon.status,
             host_taxon.path, host_taxon.parent_ref, host_taxon.extinct,
-            spec.host_specimen_ref, spec.ig_ref, igs.ig_num, igs.ig_num_indexed, igs.ig_date_mask, igs.ig_date
+            spec.host_specimen_ref, spec.ig_ref, igs.ig_num, igs.ig_num_indexed, igs.ig_date_mask, igs.ig_date, exists(select 1 from specimen_individuals where specimen_ref = spec.id and type_group != 'specimen'), exists(select 1 from specimen_individuals where specimen_ref = spec.id)
      FROM specimens spec 
       INNER JOIN
           collections coll ON spec.collection_ref = coll.id
