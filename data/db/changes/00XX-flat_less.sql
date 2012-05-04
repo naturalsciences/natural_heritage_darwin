@@ -168,7 +168,7 @@ create trigger trg_update_igs_darwin_flat after update on igs for each row execu
 create trigger trg_update_lithology_darwin_flat after update on lithology for each row execute procedure fct_update_specimens_flat_related();
 create trigger trg_update_lithostratigraphy_darwin_flat after update on lithostratigraphy for each row execute procedure fct_update_specimens_flat_related();
 create trigger trg_update_mineralogy_darwin_flat after update on mineralogy for each row execute procedure fct_update_specimens_flat_related();
-create trigger trg_update_tag_groups_darwin_flat after update on tag_groups for each row execute procedure fct_update_specimens_flat_related();
+create trigger trg_update_tag_groups_darwin_flat after insert or update or delete on tag_groups for each row execute procedure fct_update_specimens_flat_related();
 create trigger trg_update_taxonomy_darwin_flat after update on taxonomy for each row execute procedure fct_update_specimens_flat_related();
 
 /*** RESET CONSTRAINTS ***/
