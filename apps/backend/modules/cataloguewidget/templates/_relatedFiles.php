@@ -20,7 +20,7 @@
         <?php echo image_tag('blue_eyel.png', array("title" => __('Visible ?'), "alt" => __('Publicly display this file ?')));?>
       </th>
       <th>
-        <?php echo image_tag('book.png', array("title" => __('Publishable?'), "alt" => __('Select this file as a publishable file ?')));?>
+        <?php echo image_tag('book.png', array("title" => __('Publishable ?'), "alt" => __('Select this file as a publishable file ?')));?>
       </th>
       <th></th>
     </tr>

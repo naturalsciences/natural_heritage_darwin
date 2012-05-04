@@ -22,7 +22,8 @@ class InformativeWorkflow extends BaseInformativeWorkflow
     
   public function getFormattedStatus()
   {
-    return self::$status['all'][$this->getStatus()] ;
+    $status= self::getAvailableStatus('all');
+    return $status[$this->getStatus()];
   }
  
   /* if $user _right = all then we want all the status for the filter */

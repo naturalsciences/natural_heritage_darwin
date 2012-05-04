@@ -4708,6 +4708,10 @@
         <source>This gtu is linked with one or more specimens</source>
         <target>Ce GTU est lié avec un ou plusieurs échantillons</target>
       </trans-unit>
+          <trans-unit id="1708">
+        <source>Duplicate specimen codes</source>
+        <target>Dupliquer les codes échantillon</target>
+      </trans-unit>
           <trans-unit id="1509">
         <source>Contains Darwin items</source>
         <target>Contient des objets Darwin</target>
@@ -4735,6 +4739,10 @@
           <trans-unit id="1667">
         <source>Here you can define all people involved during the loan process. The sender side being the lenders and the receiver side being the borrowers</source>
         <target>Vous pouvez définir ici toutes les personnes impliquées dans le processus de prêt. Le côté expédition concerne les expéditeurs et le coté destinataire concerne les emprunteurs</target>
+      </trans-unit>
+          <trans-unit id="1709">
+        <source>Publishable ?</source>
+        <target>Publiable ?</target>
       </trans-unit>
           <trans-unit id="1510">
         <source>Person</source>

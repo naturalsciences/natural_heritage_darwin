@@ -215,6 +215,10 @@
         <source>Darwin users added here will have either read or write rights on this loan and its related items. Needless to add yourself when you are the one creating the loan</source>
         <target>De DaRWIN gebruikers zullen hier ofwel lees- of schrijfrechten krijgen op de ontlening en de gerelateerde items. U hoeft uzelf niet toe te voegen indien u degene bent die de ontlening aanmaakt.</target>
       </trans-unit>
+          <trans-unit id="1708">
+        <source>Duplicate specimen codes</source>
+        <target>specimen codes dupliceren</target>
+      </trans-unit>
           <trans-unit id="1459">
         <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
         <target>De taxon die u koos, werd aangeduid als &quot;hernoemd&quot;.</target>
@@ -302,6 +306,10 @@
           <trans-unit id="1667">
         <source>Here you can define all people involved during the loan process. The sender side being the lenders and the receiver side being the borrowers</source>
         <target>Hier kunt u alle bettrokkenen bij het uitleenproces vermelden. De verzender zijde is de lener en de ontvanger zijde is de uitlener.</target>
+      </trans-unit>
+          <trans-unit id="1709">
+        <source>Publishable ?</source>
+        <target>Publiceerbaar ?</target>
       </trans-unit>
           <trans-unit id="1587">
         <source>Back to Loan</source>
