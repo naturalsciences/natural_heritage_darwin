@@ -19,8 +19,8 @@ CREATE INDEX CONCURRENTLY idx_specimens_flat_category on specimens_flat(category
 
 /*** BTree indexes for search purposes in Darwin flat table ***/
 CREATE INDEX CONCURRENTLY idx_specimens_flat_station_visible on specimens_flat(station_visible);
-CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_code on specimens_flat(gtu_code);
-
+CREATE INDEX CONCURRENTLY idx_darwin_flat_gtu_code ON specimens_flat USING gin
+  (gtu_code gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_from_date_mask on specimens_flat(gtu_from_date_mask);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_to_date_mask on specimens_flat(gtu_to_date_mask);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_to_date on specimens_flat(gtu_to_date);
