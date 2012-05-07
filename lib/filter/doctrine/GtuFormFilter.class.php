@@ -20,6 +20,7 @@ class GtuFormFilter extends BaseGtuFormFilter
     $maxDate->setStart(false);
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
+    $this->widgetSchema['code'] = new sfWidgetFormInputText();
     $this->widgetSchema['tags'] = new sfWidgetFormInputText();
     $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
                                                                                 array('class' => 'from_date')
@@ -32,6 +33,7 @@ class GtuFormFilter extends BaseGtuFormFilter
                                         )
                                   );
     $this->validatorSchema['tags'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->validatorSchema['code'] = new sfValidatorString(array('required' => false, 'trim' => true));
     $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array('required' => false,
                                                                                   'from_date' => true,
                                                                                   'min' => $minDate,
@@ -69,6 +71,12 @@ class GtuFormFilter extends BaseGtuFormFilter
                                             );
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
+  }
+
+  public function addCodeColumnQuery($query, $field, $val)
+  {
+    if($val == '') return $query;
+    $query->andWhere("code ilike ? ", "%" . $val . "%");
   }
 
   public function addTagsColumnQuery($query, $field, $val)

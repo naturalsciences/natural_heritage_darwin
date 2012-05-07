@@ -259,6 +259,14 @@ function addMarkersFromFeatures()
     });
   }
 }
+  $(".new_link").click( function()
+  {
+   url = $(this).find('a').attr('href'),
+   data= $('.search_form').serialize(),
+   reg=new RegExp("(<?php echo $form->getName() ; ?>)", "g");   
+   open(url+'?'+data.replace(reg,'gtu'));
+    return false;  
+  });
 
 
       var num_fld = 1;
@@ -275,6 +283,7 @@ function addMarkersFromFeatures()
             }
         });
         return false;
+
       });
     </script>
     <div class="search_results">
