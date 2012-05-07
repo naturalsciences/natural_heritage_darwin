@@ -39,7 +39,8 @@ class Gtu extends BaseGtu
     else
     {
       $dateTime = new FuzzyDateTime($fd, 56, true,true);
-      $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd));
+      if(is_array($fd))
+        $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd));
       $this->_set('gtu_from_date', $dateTime->format('Y/m/d H:i:s'));
       $this->_set('gtu_from_date_mask', $dateTime->getMask());
     }
@@ -55,7 +56,8 @@ class Gtu extends BaseGtu
     else
     {
       $dateTime = new FuzzyDateTime($fd, 56, false,true);
-      $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd));
+      if(is_array($fd))
+        $dateTime->setMask(FuzzyDateTime::getMaskFromDate($fd));
       $this->_set('gtu_to_date', $dateTime->format('Y/m/d H:i:s'));
       $this->_set('gtu_to_date_mask', $dateTime->getMask());
     }

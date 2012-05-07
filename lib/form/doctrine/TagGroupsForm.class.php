@@ -18,8 +18,12 @@ class TagGroupsForm extends BaseTagGroupsForm
       $this['color']
      );
     $this->validatorSchema['group_name']->setOption('required', false);
+    $this->validatorSchema['group_name']->setOption('trim', true);
     $this->validatorSchema['sub_group_name']->setOption('required', false);
+    $this->validatorSchema['sub_group_name']->setOption('trim', true);
     $this->validatorSchema['tag_value']->setOption('required', false);
+    $this->validatorSchema['tag_value']->setOption('trim', true);
+
 
     $this->widgetSchema['group_name'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['group_name']->setDefault('administrative');
