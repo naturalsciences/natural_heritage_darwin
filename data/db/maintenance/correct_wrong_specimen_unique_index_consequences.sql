@@ -9,16 +9,16 @@ create temporary table spec_ind_dupli as
 select specimen_ids, 
        specimen_merge_into, 
        array_agg(ind.id) as individual_ids, 
-       dummy_first(ind.id) as individual_merge_into
+       min(ind.id) as individual_merge_into
  from specimen_individuals as ind, 
-     (select array_agg(id) as specimen_ids, dummy_first(id) as specimen_merge_into
+     (select array_agg(id) as specimen_ids, min(id) as specimen_merge_into
       from specimens 
       group by collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref, host_taxon_ref, acquisition_category, acquisition_date, coalesce(ig_ref,0)
       having count(*) != 1
      ) as sp
 where array[specimen_ref] && specimen_ids
 group by specimen_ids, specimen_merge_into, type, sex, state, stage, social_status, rock_form
-order by specimen_ids, specimen_merge_into, dummy_first(ind.id) 
+order by specimen_ids, specimen_merge_into, min(ind.id) 
 );
 
 

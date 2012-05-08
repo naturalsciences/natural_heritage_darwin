@@ -2303,19 +2303,6 @@ $$
     select distinct(specimen_ref) from specimen_collecting_methods where collecting_method_ref in (select X::int from regexp_split_to_table($1,',') as X);
 $$;
 
-CREATE OR REPLACE FUNCTION dummy( in anyelement, inout anyelement )
-AS $$
-  select $2;
-$$LANGUAGE 'sql' STABLE RETURNS NULL ON NULL INPUT;
-
-CREATE AGGREGATE dummy_first (anyelement)
-(
-  sfunc = dummy,
-  stype = anyelement
-);
-
-
-
 CREATE OR REPLACE FUNCTION fct_search_authorized_encoding_collections (user_id integer) RETURNS SETOF integer
 language SQL STABLE
 AS

@@ -222,4 +222,14 @@ alter table loan_status alter column modification_date_time set not null;
 alter table loan_history alter column modification_date_time type timestamp;
 alter table loan_history alter column modification_date_time set default now();
 alter table loan_history alter column modification_date_time set not null;
+
+
+
+
+/*** Cleanup ***/
+
+DROP AGGREGATE array_accum(anyelement);
+DROP AGGREGATE dummy_first(anyelement);
+DROP FUNCTION dummy( in anyelement, inout anyelement );
+
 /**** FINISH ****/
