@@ -1,12 +1,3 @@
-
-CREATE AGGREGATE array_accum (anyelement)
-(
-  sfunc = array_append,
-  stype = anyarray,
-  initcond = '{}'
-);
-
-
 /***
 * Trigger Function fct_cpy_specimensMainCode
 * Automaticaly copy the "main" code from the specimen to the specimen parts
@@ -3079,7 +3070,7 @@ BEGIN
         -- There's some identifier associated to this identification'
         UPDATE specimen_individuals SET ind_ident_ids = fct_remove_array_elem(ind_ident_ids, 
           (
-            select array_accum(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
+            select array_agg(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
             AND people_ref NOT in
               (
                 SELECT people_ref from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications'
@@ -3093,7 +3084,7 @@ BEGIN
         -- There's NO identifier associated to this identification'
         UPDATE specimens_flat SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids, 
           (
-            select array_accum(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
+            select array_agg(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
             AND people_ref NOT in
               (
                 SELECT people_ref from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications'

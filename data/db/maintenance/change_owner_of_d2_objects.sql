@@ -12,7 +12,7 @@ from
       from information_schema.domains 
       where domain_schema = :schemaname
       UNION
-      select DISTINCT 'ALTER FUNCTION ' || :schemaname || '.' || x.proname || ' (' || array_to_string(:scheman.array_accum(y.typname), ',') || ') OWNER TO ' || :ownername || ';' as sqlcmd, 
+      select DISTINCT 'ALTER FUNCTION ' || :schemaname || '.' || x.proname || ' (' || array_to_string(:scheman.array_agg(y.typname), ',') || ') OWNER TO ' || :ownername || ';' as sqlcmd, 
             2 as orderby 
       from (select oid as prooid, proname, unnest(proargtypes) as datatype from pg_proc 
             where pronamespace = (select oid from pg_namespace where nspname = :schemaname)
@@ -20,7 +20,7 @@ from
           left join 
           (select oid as typoid, case when typname = 'staging' then :schemaname || '.staging' else typname end from pg_type
           ) as y on x.datatype = y.typoid 
-      where proname not in ('dummy_first', 'array_accum')
+      where proname not in ('dummy_first')
       group by x.prooid, x.proname
       UNION 
       select 'ALTER TABLE ' || :schemaname || '.' || tablename || ' OWNER TO ' || :ownername || ';' as sqlcmd, 

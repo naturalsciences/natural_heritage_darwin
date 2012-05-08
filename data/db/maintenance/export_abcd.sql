@@ -53,7 +53,6 @@ DROP SEQUENCE IF EXISTS public.catalogue_levels_id_seq;
 DROP SEQUENCE IF EXISTS public.mineralogy_id_seq;
 
 DROP FUNCTION IF EXISTS public.gettagsindexedasarray(character varying);
-DROP AGGREGATE IF EXISTS public.array_accum(anyelement);
 DROP FUNCTION IF EXISTS public.linetotagarray(text);
 DROP FUNCTION IF EXISTS public.linetotagrows(text);
 DROP FUNCTION IF EXISTS public.fct_remove_array_elem(anyarray,anyelement);
@@ -1110,7 +1109,6 @@ CREATE INDEX idx_darwin_flat_chrono_ref ON public.darwin_flat (chrono_ref);
 CREATE INDEX idx_darwin_flat_litho_ref ON public.darwin_flat (litho_ref);
 
 ALTER FUNCTION darwin2.gettagsindexedasarray(character varying) SET SCHEMA public;
-ALTER AGGREGATE darwin2.array_accum(anyelement) SET SCHEMA public;
 ALTER FUNCTION darwin2.linetotagarray(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.linetotagrows(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyelement) SET SCHEMA public;
@@ -1119,7 +1117,6 @@ ALTER FUNCTION darwin2.fulltoindex(character varying) SET SCHEMA public;
 ALTER SEQUENCE darwin2.darwin_flat_id_seq SET SCHEMA public;
 
 ALTER FUNCTION public.gettagsindexedasarray(character varying) OWNER TO postgres;
-ALTER AGGREGATE public.array_accum(anyelement) OWNER TO postgres;
 ALTER FUNCTION public.linetotagarray(text) OWNER TO postgres;
 ALTER FUNCTION public.linetotagrows(text) OWNER TO postgres;
 ALTER FUNCTION public.fct_remove_array_elem(anyarray,anyelement) OWNER TO postgres;

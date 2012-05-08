@@ -102,7 +102,7 @@ ALTER TABLE specimen_individuals ADD COLUMN ind_ident_ids integer[] not null def
 
 UPDATE specimen_individuals ind SET
       with_parts = exists (select 1 from specimen_parts p WHERE p.specimen_individual_ref = ind.id ),
-      ind_ident_ids = (SELECT array_accum(people_ref) FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications'
+      ind_ident_ids = (SELECT array_agg(DISTINCT people_ref) FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications'
                 WHERE i.record_id = ind.id AND i.referenced_relation = 'specimen_individuals');
 
 \i ../maintenance/recreate_flat.sql
