@@ -115,7 +115,7 @@ class TagGroupsTable extends DarwinTable
   public function fetchTag($ids)
   {
     $q = Doctrine_Query::create()
-         ->from('TagGroups g')s
+         ->from('TagGroups g')
          ->innerJoin('g.Tags t')
          ->andWherein('g.gtu_ref', $ids);
     $r = $q->execute();
