@@ -156,7 +156,6 @@ create table comments
         notion_concerned varchar not null,
         comment text not null,
         comment_ts tsvector not null,
-        comment_language_full_text full_text_language,
         constraint pk_comments primary key (id)
        )
        inherits (template_table_record_ref);
@@ -167,7 +166,6 @@ comment on column comments.record_id is 'Identifier of the record concerned';
 comment on column comments.notion_concerned is 'Notion concerned by comment';
 comment on column comments.comment is 'Comment';
 comment on column comments.comment_ts is 'tsvector form of comment field';
-comment on column comments.comment_language_full_text is 'Corresponding language to the language/country reference recognized by full text search to_tsvector function';
 
 create table ext_links
        (
@@ -175,7 +173,6 @@ create table ext_links
         url varchar not null,
         comment text not null,
         comment_ts tsvector not null,
-        comment_language_full_text full_text_language,
         constraint pk_ext_links primary key (id),
         constraint unq_ext_links unique (referenced_relation, record_id, url)
        )
@@ -187,7 +184,6 @@ comment on column ext_links.record_id is 'Identifier of the record concerned';
 comment on column ext_links.url is 'External URL';
 comment on column ext_links.comment is 'Comment';
 comment on column ext_links.comment_ts is 'tsvector form of comment field';
-comment on column ext_links.comment_language_full_text is 'Corresponding language to the language/country reference recognized by full text search to_tsvector function';
 
 create table gtu
        (
@@ -396,7 +392,6 @@ create table expeditions
         name varchar not null,
         name_ts tsvector not null,
         name_indexed varchar not null,
-        name_language_full_text full_text_language,
         expedition_from_date_mask integer not null default 0,
         expedition_from_date date not null default '01/01/0001',
         expedition_to_date_mask integer not null default 0,
@@ -409,7 +404,6 @@ comment on column expeditions.id is 'Unique identifier of an expedition';
 comment on column expeditions.name is 'Expedition name';
 comment on column expeditions.name_ts is 'tsvector version of name field';
 comment on column expeditions.name_indexed is 'Indexed form of expedition name';
-comment on column expeditions.name_language_full_text is 'Language associated to language/country reference used by full text search to_tsvector function';
 comment on column expeditions.expedition_from_date_mask is 'Contains the Mask flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 comment on column expeditions.expedition_from_date is 'Start date of the expedition';
 comment on column expeditions.expedition_to_date is 'End date of the expedition';
@@ -759,7 +753,7 @@ create table informative_workflow
         user_ref integer,
         formated_name varchar not null default 'anonymous',
         status varchar not null default 'suggestion',
-        modification_date_time update_date_time,
+        modification_date_time timestamp default now() not null,
         is_last boolean not null default true,        
         comment varchar not null ,
         constraint pk_informative_workflow primary key (id),
@@ -785,7 +779,7 @@ create table users_tracking
         action varchar not null default 'insert',
         old_value hstore,
         new_value hstore,
-        modification_date_time update_date_time,
+        modification_date_time timestamp default now() not null,
         constraint pk_users_tracking_pk primary key (id),
         constraint fk_users_tracking_users foreign key (user_ref) references users(id)
        );
@@ -805,7 +799,7 @@ create table collection_maintenance
         action_observation varchar not null,
         description varchar,
         description_ts tsvector,
-        modification_date_time update_date_time,
+        modification_date_time timestamp default now() not null,
         modification_date_mask int not null default '0',
         constraint pk_collection_maintenance primary key (id),
         constraint fk_collection_maintenance_users foreign key (people_ref) references people(id)
@@ -829,7 +823,7 @@ create table my_saved_searches
         name varchar not null default 'default',
         search_criterias varchar not null,
         favorite boolean not null default false,
-        modification_date_time update_date_time,
+        modification_date_time timestamp default now() not null,
         visible_fields_in_result varchar not null,
         is_only_id boolean not null default false,
         subject varchar not null default 'specimen',
@@ -1664,7 +1658,7 @@ create table loan_status (
   loan_ref integer not null,
   user_ref integer not null,
   status varchar not null default 'new',
-  modification_date_time update_date_time,
+  modification_date_time timestamp default now() not null,
   comment varchar not null default '',
   is_last boolean not null default true,
   constraint pk_loan_status primary key (id),
@@ -1986,7 +1980,7 @@ create table loan_history (
   id serial,
   loan_ref integer not null,
   referenced_table text not null,
-  modification_date_time update_date_time,
+  modification_date_time timestamp default now() not null,
   record_line hstore,
   constraint pk_loan_history primary key (id),
   constraint fk_loan_history_loan_ref foreign key (loan_ref) references loans(id) on delete cascade

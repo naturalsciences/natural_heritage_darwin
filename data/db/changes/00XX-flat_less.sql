@@ -191,4 +191,35 @@ ALTER TABLE specimen_collecting_tools ADD CONSTRAINT fk_specimen_collecting_tool
 ALTER TABLE specimen_individuals ADD CONSTRAINT fk_specimen_individuals_specimens FOREIGN KEY (specimen_ref) REFERENCES specimens(id);
 ALTER TABLE specimens_accompanying ADD CONSTRAINT fk_specimens_accompanying_specimens FOREIGN KEY (specimen_ref) REFERENCES specimens(id);
 
+/*** REMOVE domains ****/
+
+ALTER TABLE comments drop column comment_language_full_text;
+ALTER TABLE ext_links drop column comment_language_full_text;
+ALTER TABLE expeditions drop column name_language_full_text;
+
+
+
+alter table informative_workflow alter column modification_date_time type timestamp;
+alter table informative_workflow alter column modification_date_time set default now();
+alter table informative_workflow alter column modification_date_time set not null;
+
+alter table users_tracking alter column modification_date_time type timestamp;
+alter table users_tracking alter column modification_date_time set default now();
+alter table users_tracking alter column modification_date_time set not null;
+
+alter table collection_maintenance alter column modification_date_time type timestamp;
+alter table collection_maintenance alter column modification_date_time set default now();
+alter table collection_maintenance alter column modification_date_time set not null;
+
+alter table my_saved_searches alter column modification_date_time type timestamp;
+alter table my_saved_searches alter column modification_date_time set default now();
+alter table my_saved_searches alter column modification_date_time set not null;
+
+alter table loan_status alter column modification_date_time type timestamp;
+alter table loan_status alter column modification_date_time set default now();
+alter table loan_status alter column modification_date_time set not null;
+
+alter table loan_history alter column modification_date_time type timestamp;
+alter table loan_history alter column modification_date_time set default now();
+alter table loan_history alter column modification_date_time set not null;
 /**** FINISH ****/

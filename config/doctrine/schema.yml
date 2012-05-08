@@ -85,7 +85,6 @@ Comments:
         notion_concerned: { type: string, notnull: true}
         comment: { type: string, notnull: true}
         comment_ts: { type: string}
-        comment_language_full_text: { type: string}
 
 ExtLinks:
     columns:
@@ -95,8 +94,6 @@ ExtLinks:
         url: { type: string, notnull: true}
         comment: { type: string, notnull: true}
         comment_ts: { type: string}
-        comment_language_full_text: { type: string}
-
 
 TagGroups:
     columns:
@@ -222,7 +219,6 @@ Expeditions:
         name:  { type: string, notnull: true}
         name_ts:  { type: string}
         name_indexed:  { type: string}
-        name_language_full_text:  { type: string}
         expedition_from_date_mask: { type: integer, notnull: true, default:0}
         expedition_from_date: { type: string, default:'0001-01-01'}
         expedition_to_date_mask: { type: integer, notnull: true, default:0}

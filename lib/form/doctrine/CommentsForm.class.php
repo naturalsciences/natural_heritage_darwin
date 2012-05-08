@@ -15,7 +15,6 @@ class CommentsForm extends BaseCommentsForm
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();
     unset($this['comment_ts']);
-    unset($this['comment_language_full_text']); // @TODO : check this!
     $this->widgetSchema['notion_concerned'] =  new sfWidgetFormChoice(array(
       'choices' =>  $choices,  
     ));

@@ -93,7 +93,6 @@ else ifeq ($(TEST_CMD),psql)
 endif
 
 install-db:
-	$(PARAM_PSQL) -f createdomains.sql
 	$(PARAM_PSQL) -f createtables.sql
 	$(PARAM_PSQL) -f initiate_data.sql
 	$(PARAM_PSQL) -f createfunctions.sql
@@ -109,13 +108,12 @@ uninstall-db:
 	$(PARAM_PSQL) -f dropfunctions.sql
 	$(PARAM_PSQL) -f dropindexes.sql
 	$(PARAM_PSQL) -f droptables.sql
-	$(PARAM_PSQL) -f dropdomains.sql
 
 create-schema:
 	$(PRIV_PSQL_DB) -f createschema.sql
 
 create-test-schema:
-	$(PRIV_PSQL_DB) -f create_testschema.sql
+	$(PRIV_PSQL_DB) -c "create schema unittest authorization $(DB_USER) ;"
 
 grant-d2-to-web:
 	$(PRIV_PSQL_DB) -f grant_d2_to_web_user.sql

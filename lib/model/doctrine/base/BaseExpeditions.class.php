@@ -9,7 +9,6 @@
  * @property string $name
  * @property string $name_ts
  * @property string $name_indexed
- * @property string $name_language_full_text
  * @property integer $expedition_from_date_mask
  * @property string $expedition_from_date
  * @property integer $expedition_to_date_mask
@@ -21,7 +20,6 @@
  * @method string              getName()                      Returns the current record's "name" value
  * @method string              getNameTs()                    Returns the current record's "name_ts" value
  * @method string              getNameIndexed()               Returns the current record's "name_indexed" value
- * @method string              getNameLanguageFullText()      Returns the current record's "name_language_full_text" value
  * @method integer             getExpeditionFromDateMask()    Returns the current record's "expedition_from_date_mask" value
  * @method string              getExpeditionFromDate()        Returns the current record's "expedition_from_date" value
  * @method integer             getExpeditionToDateMask()      Returns the current record's "expedition_to_date_mask" value
@@ -32,7 +30,6 @@
  * @method Expeditions         setName()                      Sets the current record's "name" value
  * @method Expeditions         setNameTs()                    Sets the current record's "name_ts" value
  * @method Expeditions         setNameIndexed()               Sets the current record's "name_indexed" value
- * @method Expeditions         setNameLanguageFullText()      Sets the current record's "name_language_full_text" value
  * @method Expeditions         setExpeditionFromDateMask()    Sets the current record's "expedition_from_date_mask" value
  * @method Expeditions         setExpeditionFromDate()        Sets the current record's "expedition_from_date" value
  * @method Expeditions         setExpeditionToDateMask()      Sets the current record's "expedition_to_date_mask" value
@@ -63,9 +60,6 @@ abstract class BaseExpeditions extends sfDoctrineRecord
              'type' => 'string',
              ));
         $this->hasColumn('name_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('name_language_full_text', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('expedition_from_date_mask', 'integer', null, array(
