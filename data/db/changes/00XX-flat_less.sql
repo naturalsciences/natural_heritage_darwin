@@ -225,6 +225,7 @@ alter table loan_history alter column modification_date_time set not null;
 
 
 
+CREATE INDEX CONCURRENTLY idx_specimen_parts_specimen_part_institution_ref on specimen_parts(institution_ref);
 
 /*** Cleanup ***/
 
