@@ -20,7 +20,6 @@ SET client_min_messages TO warning; -- notice;
 -- Load test functions
 \i lib/pgtap.sql
 -- Load type,tables, functions and triggers
-\i createdomains.sql
 \i createtables.sql
 \i initiate_data.sql
 \i createfunctions.sql
