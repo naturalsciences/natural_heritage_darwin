@@ -121,6 +121,8 @@ ALTER TABLE specimens_accompanying ALTER COLUMN mineral_ref DROP NOT NULL;
 
 update possible_upper_levels SET level_upper_ref = null where level_upper_ref = 0;
 
+insert into possible_upper_levels (select 65, null where not exists (select 1 from possible_upper_levels where level_ref = 65));
+
 ALTER TABLE taxonomy DISABLE TRIGGER USER;
 update taxonomy SET parent_ref = null where parent_ref = 0;
 ALTER TABLE taxonomy ENABLE TRIGGER USER;
