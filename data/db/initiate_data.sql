@@ -82,6 +82,7 @@ insert into possible_upper_levels (level_ref, level_upper_ref) values (55, null)
 insert into possible_upper_levels (level_ref, level_upper_ref) values (64, null);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (70, null);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (75, null);
+insert into possible_upper_levels (level_ref, level_upper_ref) values (65, null);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (2, 1);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (3, 2);
 insert into possible_upper_levels (level_ref, level_upper_ref) values (4, 2);

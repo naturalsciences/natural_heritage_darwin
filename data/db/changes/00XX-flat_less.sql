@@ -114,7 +114,8 @@ UPDATE specimen_individuals ind SET
  ******************/
 
 ALTER TABLE possible_upper_levels ALTER COLUMN level_upper_ref DROP NOT NULL;
-ALTER TABLE template_classifications ALTER COLUMN parent_ref DROP NOT NULL;
+ALTER TABLE template_classifications ALTER COLUMN parent_ref DROP NOT NULL,
+                                     ALTER COLUMN parent_ref SET DEFAULT NULL;
 ALTER TABLE specimens_accompanying ALTER COLUMN taxon_ref DROP NOT NULL;
 ALTER TABLE specimens_accompanying ALTER COLUMN mineral_ref DROP NOT NULL;
 

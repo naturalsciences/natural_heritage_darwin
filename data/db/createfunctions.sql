@@ -449,19 +449,16 @@ AS $$
 DECLARE
 response boolean;
 BEGIN
-  IF new_id = 0 OR (new_parent_ref IS NULL AND new_level_ref IN (1, 55, 64, 70, 75)) THEN
-    RETURN TRUE;
+  EXECUTE 'SELECT true WHERE EXISTS( SELECT * ' ||
+          'from possible_upper_levels ' ||
+          'where level_ref = ' || quote_literal(new_level_ref) ||
+          '  and coalesce(level_upper_ref,0) = case when ' || quote_literal(coalesce(new_parent_ref,0)) || ' != '|| quote_literal(0) || ' then (select level_ref from ' || quote_ident(referenced_relation) || ' where id = ' || quote_literal(coalesce(new_parent_ref,0)) || ') else ' || quote_literal(coalesce(new_parent_ref,0)) || ' end' ||
+          '                              )'
+    INTO response;
+  IF response IS NULL THEN
+    RETURN FALSE;
   ELSE
-    EXECUTE 'SELECT true WHERE EXISTS( SELECT * ' ||
-      'from possible_upper_levels ' ||
-      'where level_ref = ' || quote_literal(new_level_ref) ||
-      '  and level_upper_ref = (select level_ref from ' || quote_ident(referenced_relation) || ' where id = ' || quote_literal(new_parent_ref) || '))'
-      INTO response;
-    IF response IS NULL THEN 
-      RETURN FALSE;
-    ELSE 
-      RETURN TRUE;
-    END IF;
+    RETURN TRUE;
   END IF;
 
   RETURN FALSE;
