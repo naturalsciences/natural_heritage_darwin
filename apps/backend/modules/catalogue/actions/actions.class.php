@@ -180,19 +180,21 @@ class catalogueActions extends DarwinActions
     $response = 'ok';
     if($request->hasParameter('level_id') && $request->hasParameter('parent_id') && $request->hasParameter('table'))
     {
-      $parent_level = Doctrine::getTable($request->getParameter('table'))->find($request->getParameter('parent_id'))->getLevelRef();
+      $parent_level = null;
+      if ($request->getParameter('parent_id'))
+        $parent_level = Doctrine::getTable($request->getParameter('table'))->find($request->getParameter('parent_id'))->getLevelRef();
       $possible_upper_levels = Doctrine::getTable('PossibleUpperLevels')->findByLevelRef($request->getParameter('level_id'));
       if($possible_upper_levels)
       {
         $response = 'not ok';
         foreach($possible_upper_levels as $val)
         {
-          if($val->getLevelUpperRef() == 0)
+          if($val->getLevelUpperRef() === null && $possible_upper_levels->count() == 1)
           {
             $response = 'top';
             break;
           }
-          elseif ($val->getLevelUpperRef() == $parent_level)
+          elseif ($val->getLevelUpperRef() === $parent_level)
           {
             $response = 'ok';
             break;
