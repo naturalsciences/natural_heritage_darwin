@@ -226,7 +226,7 @@ alter table loan_history alter column modification_date_time set not null;
 
 
 CREATE INDEX CONCURRENTLY idx_specimen_parts_specimen_part_institution_ref on specimen_parts(institution_ref);
-
+alter table specimen_parts add constraint fk_specimen_parts_institutions foreign key (institution_ref) references people(id) ON DELETE no action;
 /*** Cleanup ***/
 
 DROP AGGREGATE array_accum(anyelement);
