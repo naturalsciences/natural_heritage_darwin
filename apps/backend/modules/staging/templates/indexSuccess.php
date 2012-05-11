@@ -14,7 +14,7 @@
     <div class="search_results">
       <div class="search_results_content">
 
-      </div>      
+      </div>
     </div>
   </div>
   </form>

@@ -19,7 +19,7 @@
   <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>  
 
   <div class="edition">
-  <table class="staging_table results ">
+  <table class="staging_table results_container results">
     <thead>
      <th><?php echo __('Codes');?></th>
     <?php foreach($fields as $name=>$title):?>
