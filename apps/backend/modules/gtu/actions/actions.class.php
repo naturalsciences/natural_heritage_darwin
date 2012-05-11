@@ -54,12 +54,12 @@ class gtuActions extends DarwinActions
         {
           $query->orderBy($this->orderBy .' '.$this->orderDir)
             ->andWhere('latitude is not null');
-
+          /** WARNING Limit select of accuracy point to let the map be browsable **/
+          $query->andWhere('lat_long_accuracy < 30000');
           $this->setLayout(false);
           if($request->getParameter('format') == 'xml')
           {
             $query->Limit($this->form->getValue('rec_per_page'));
-
             $this->getResponse()->setContentType('application/xml');
             $this->items = $query->execute();
             $this->setTemplate('georss');
