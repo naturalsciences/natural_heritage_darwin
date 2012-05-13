@@ -85,6 +85,12 @@ WHERE mineral_ref = 0;
 
 CREATE UNIQUE INDEX unq_specimens ON specimens (collection_ref, COALESCE(expedition_ref,0), COALESCE(gtu_ref,0), COALESCE(taxon_ref,0), COALESCE(litho_ref,0), COALESCE(chrono_ref,0), COALESCE(lithology_ref,0), COALESCE(mineral_ref,0), COALESCE(host_taxon_ref,0), acquisition_category, acquisition_date, COALESCE(ig_ref,0));
 
+ALTER TABLE specimen_individuals ADD COLUMN ind_ident_ids integer[] not null default '{}'::integer[];
+
+UPDATE specimen_individuals ind SET
+      with_parts = exists (select 1 from specimen_parts p WHERE p.specimen_individual_ref = ind.id ),
+      ind_ident_ids = coalesce((SELECT array_agg(DISTINCT people_ref) FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications'
+                WHERE i.record_id = ind.id AND i.referenced_relation = 'specimen_individuals'), '{}'::integer[]);
 
 CREATE TRIGGER trg_update_specimens_darwin_flat BEFORE INSERT OR UPDATE
         ON specimens FOR EACH ROW
@@ -97,13 +103,6 @@ CREATE TRIGGER trg_fct_count_units_individuals AFTER INSERT OR UPDATE OR DELETE
 CREATE TRIGGER trg_fct_count_units_parts AFTER INSERT OR DELETE
          ON specimen_parts FOR EACH ROW
          EXECUTE PROCEDURE fct_count_units();
-
-ALTER TABLE specimen_individuals ADD COLUMN ind_ident_ids integer[] not null default '{}';
-
-UPDATE specimen_individuals ind SET
-      with_parts = exists (select 1 from specimen_parts p WHERE p.specimen_individual_ref = ind.id ),
-      ind_ident_ids = (SELECT array_agg(DISTINCT people_ref) FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications'
-                WHERE i.record_id = ind.id AND i.referenced_relation = 'specimen_individuals');
 
 \i ../maintenance/recreate_flat.sql
 
