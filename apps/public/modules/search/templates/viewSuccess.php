@@ -298,7 +298,7 @@
 
     <h2 class="title"><?php echo __("You think there's a mistake ? please suggest us a correction") ?></h2>  
     <div class="suggestion_zone">
-      <?php include_partial('suggestion', array('form' => $form)) ; ?>    
+      <?php include_partial('suggestion', array('form' => $form,'id'=> $individual->getId())) ; ?>
     </div>
       
   <div class="check_right"> 

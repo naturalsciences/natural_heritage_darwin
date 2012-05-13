@@ -1,7 +1,7 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-<?php echo form_tag('search/view', array('id'=>'send_suggestion'));?> 
-  <div class="borded right_padded">        
+<?php echo form_tag('search/view?id='.$id, array('id'=>'send_suggestion'));?> 
+  <div class="borded right_padded">
     <table>
       <tr>
         <td colspan="4">
@@ -31,7 +31,7 @@
   </div>   
   <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
   <script type="text/javascript">
-  $(document).ready(function() {           
+  $(document).ready(function() {
     $('.search_submit').click(function(event) {
       event.preventDefault() ;
       $.ajax({

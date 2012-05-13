@@ -99,7 +99,7 @@ class searchActions extends DarwinActions
     $ajax = false ;
     if($request->isXmlHttpRequest()) 
     {
-      $suggestion = $request->getParameter('suggestion') ;    
+      $suggestion = $request->getParameter('suggestion') ;
       $captcha = array(
         'recaptcha_challenge_field' => $request->getParameter('recaptcha_challenge_field'),
         'recaptcha_response_field'  => $request->getParameter('recaptcha_response_field'),
@@ -115,7 +115,7 @@ class searchActions extends DarwinActions
     
     $collection = Doctrine::getTable('Collections')->findOneById($this->individual->SpecimensFlat->getCollectionRef());
     $this->institute = Doctrine::getTable('People')->findOneById($collection->getInstitutionRef()) ;
-    $this->files = Doctrine::getTable('Multimedia')->findForPublic(array($this->specimen->getSpecRef(), $id, $id, $this->specimen->getTaxonRef(), $this->specimen->getChronoRef(), $this->specimen->getLithoRef(), $this->specimen->getLithologyRef(), $this->specimen->getMineralRef()));
+    $this->files = Doctrine::getTable('Multimedia')->findForPublic(array($this->individual->SpecimensFlat->getSpecimenRef(), $id, $id, $this->individual->SpecimensFlat->getTaxonRef(), $this->individual->SpecimensFlat->getChronoRef(), $this->individual->SpecimensFlat->getLithoRef(), $this->individual->SpecimensFlat->getLithologyRef(), $this->individual->SpecimensFlat->getMineralRef()));
     $this->specFilesCount = $this->taxFilesCount = $this->chronoFilesCount = $this->lithoFilesCount = $this->lithologyFilesCount = $this->mineraloFilesCount = 0;
     foreach($this->files as $file) {
       switch ($file->getReferencedRelation()){
@@ -167,7 +167,7 @@ class searchActions extends DarwinActions
         $workflow->save() ;
         return $this->renderPartial("info_msg") ;
       }
-      return $this->renderPartial("suggestion", array('form' => $this->form)) ;
+      return $this->renderPartial("suggestion", array('form' => $this->form,'id'=> $id)) ;
     }
   }
     
