@@ -92,7 +92,7 @@ UPDATE specimen_individuals ind SET
       ind_ident_ids = coalesce((SELECT array_agg(DISTINCT people_ref) FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications'
                 WHERE i.record_id = ind.id AND i.referenced_relation = 'specimen_individuals'), '{}'::integer[]);
 
-CREATE TRIGGER trg_update_specimens_darwin_flat BEFORE INSERT OR UPDATE
+CREATE TRIGGER trg_update_specimens_darwin_flat AFTER INSERT OR UPDATE
         ON specimens FOR EACH ROW
         EXECUTE PROCEDURE fct_update_specimen_flat();
  
