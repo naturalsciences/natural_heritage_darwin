@@ -563,58 +563,58 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_cpy_path() RETURNS TRIGGER
 AS $$
 BEGIN
-    IF TG_OP = 'INSERT' THEN
-        IF( TG_TABLE_NAME::text = 'collections' OR
-          TG_TABLE_NAME::text = 'gtu' OR
-          TG_TABLE_NAME::text = 'specimen_parts' OR
-          TG_TABLE_NAME::text = 'staging') THEN
+  IF TG_OP = 'INSERT' THEN
+      IF( TG_TABLE_NAME::text = 'collections' OR
+        TG_TABLE_NAME::text = 'gtu' OR
+        TG_TABLE_NAME::text = 'specimen_parts' OR
+        TG_TABLE_NAME::text = 'staging') THEN
 
-          IF NEW.id = 0 THEN
-            NEW.parent_ref := null;
-          END IF;
+        IF NEW.id = 0 THEN
+          NEW.parent_ref := null;
+        END IF;
+        IF NEW.parent_ref IS NULL THEN
+          NEW.path :='/';
+        ELSE
+          EXECUTE 'SELECT path || id || ' || quote_literal('/') ||' FROM ' || quote_ident(TG_TABLE_NAME::text) || ' WHERE id=' || quote_literal(NEW.parent_ref) INTO STRICT NEW.path;
+        END IF;
+      ELSIF TG_TABLE_NAME::text = 'people_relationships' THEN
+        SELECT path || NEW.person_1_ref || '/' INTO NEW.path
+          FROM people_relationships
+          WHERE person_2_ref=NEW.person_1_ref;
+        IF NEW.path is NULL THEN
+          NEW.path := '/' || NEW.person_1_ref || '/';
+        END IF;
+      END IF;
+    ELSIF TG_OP = 'UPDATE' THEN
+      IF(TG_TABLE_NAME::text = 'collections' OR
+        TG_TABLE_NAME::text = 'gtu' OR
+        TG_TABLE_NAME::text = 'specimen_parts' OR
+        TG_TABLE_NAME::text = 'staging') THEN
+
+        IF NEW.parent_ref IS DISTINCT FROM OLD.parent_ref THEN
           IF NEW.parent_ref IS NULL THEN
-            NEW.path :='/';
+            NEW.path := '/';
+          ELSIF COALESCE(OLD.parent_ref,0) = COALESCE(NEW.parent_ref,0) THEN
+            RETURN NEW;
           ELSE
             EXECUTE 'SELECT path || id || ' || quote_literal('/') ||' FROM ' || quote_ident(TG_TABLE_NAME::text) || ' WHERE id=' || quote_literal(NEW.parent_ref) INTO STRICT NEW.path;
           END IF;
-        ELSIF TG_TABLE_NAME::text = 'people_relationships' THEN
-          SELECT path || NEW.person_1_ref || '/' INTO NEW.path
-            FROM people_relationships
-            WHERE person_2_ref=NEW.person_1_ref;
-          IF NEW.path is NULL THEN
-            NEW.path := '/' || NEW.person_1_ref || '/';
-          END IF;
+
+          EXECUTE 'UPDATE ' || quote_ident(TG_TABLE_NAME::text) || ' SET path=replace(path, ' ||  quote_literal(OLD.path || OLD.id || '/') ||' , ' || quote_literal( NEW.path || OLD.id || '/') || ') ' ||
+            ' WHERE path like ' || quote_literal(OLD.path || OLD.id || '/%');
         END IF;
-      ELSIF TG_OP = 'UPDATE' THEN
-        IF(TG_TABLE_NAME::text = 'collections' OR
-          TG_TABLE_NAME::text = 'gtu' OR
-          TG_TABLE_NAME::text = 'specimen_parts' OR
-          TG_TABLE_NAME::text = 'staging') THEN
+      ELSE
+        IF NEW.person_1_ref IS DISTINCT FROM OLD.person_1_ref OR NEW.person_2_ref IS DISTINCT FROM OLD.person_2_ref THEN
+          SELECT path ||  NEW.person_1_ref || '/' INTO NEW.path FROM people_relationships WHERE person_2_ref=NEW.person_1_ref;
 
-          IF NEW.parent_ref IS DISTINCT FROM OLD.parent_ref THEN
-            IF NEW.parent_ref IS NULL THEN
-              NEW.path := '/';
-            ELSIF COALESCE(OLD.parent_ref,0) = COALESCE(NEW.parent_ref,0) THEN
-              RETURN NEW;
-            ELSE
-              EXECUTE 'SELECT path || id || ' || quote_literal('/') ||' FROM ' || quote_ident(TG_TABLE_NAME::text) || ' WHERE id=' || quote_literal(NEW.parent_ref) INTO STRICT NEW.path;
+            IF NEW.path is NULL THEN
+              NEW.path := '/' || NEW.person_1_ref || '/';
             END IF;
-
-            EXECUTE 'UPDATE ' || quote_ident(TG_TABLE_NAME::text) || ' SET path=replace(path, ' ||  quote_literal(OLD.path || OLD.id || '/') ||' , ' || quote_literal( NEW.path || OLD.id || '/') || ') ' ||
-              ' WHERE path like ' || quote_literal(OLD.path || OLD.id || '/%');
-          END IF;
-        ELSE
-          IF NEW.person_1_ref IS DISTINCT FROM OLD.person_1_ref OR NEW.person_2_ref IS DISTINCT FROM OLD.person_2_ref THEN
-            SELECT path ||  NEW.person_1_ref || '/' INTO NEW.path FROM people_relationships WHERE person_2_ref=NEW.person_1_ref;
-
-              IF NEW.path is NULL THEN
-                NEW.path := '/' || NEW.person_1_ref || '/';
-              END IF;
-              -- AND UPDATE CHILDRENS
-              UPDATE people_relationships SET path=replace(path, OLD.path, NEW.path) WHERE person_1_ref=OLD.person_2_ref;
-          END IF;
+            -- AND UPDATE CHILDRENS
+            UPDATE people_relationships SET path=replace(path, OLD.path, NEW.path) WHERE person_1_ref=OLD.person_2_ref;
         END IF;
       END IF;
+    END IF;
   RETURN NEW;
 END;
 $$
@@ -737,100 +737,100 @@ CREATE OR REPLACE FUNCTION fct_cpy_length_conversion (IN property real, IN prope
 language SQL STABLE
 AS
 $$
-	SELECT  CASE
-			WHEN $2 = 'dm' THEN
-				($1)*10^(-1)
-			WHEN $2 = 'ft' THEN
-				($1)*3.048*10^(-1)
-			WHEN $2 = 'P' THEN
-				($1)*3.24839385*10^(-1)
-			WHEN $2 = 'yd' THEN
-				($1)*9.144*10^(-1)
-			WHEN $2 = 'cm' THEN
-				($1)*10^(-2)
-			WHEN $2 = 'in' THEN
-				($1)*2.54*10^(-2)
-			WHEN $2 = 'mm' THEN
-				($1)*10^(-3)
-			WHEN $2 = 'pica' THEN
-				($1)*4.233333*10^(-3)
-			WHEN $2 = 'p' THEN
-				($1)*27.069949*10^(-3)
-			WHEN $2 = 'mom' THEN
-				($1)*10^(-4)
-			WHEN $2 IN ('pt', 'point') THEN
-				($1)*3.527778*10^(-4)
-			WHEN $2 = 'mil' THEN
-				($1)*2.54*10^(-5)
-			WHEN $2 IN ('µm', 'µ') THEN
-				($1)*10^(-6)
-			WHEN $2 = 'twp' THEN
-				($1)*17.639*10^(-6)
-			WHEN $2 = 'cal' THEN
-				($1)*254*10^(-6)
-			WHEN $2 = 'nm' THEN
-				($1)*10^(-9)
-			WHEN $2 = 'Å' THEN
-				($1)*10^(-10)
-			WHEN $2 = 'pm' THEN
-				($1)*10^(-12)
-			WHEN $2 IN ('fm', 'fermi') THEN
-				($1)*10^(-15)
-			WHEN $2 = 'am' THEN
-				($1)*10^(-18)
-			WHEN $2 = 'zm' THEN
-				($1)*10^(-21)
-			WHEN $2 = 'ym' THEN
-				($1)*10^(-24)
-			WHEN $2 IN ('brasse', 'vadem') THEN
-				($1)*1.8288
-			WHEN $2 = 'fathom' THEN
-				($1)*1.828804
-			WHEN $2 = 'rd' THEN
-				($1)*5.02921
-			WHEN $2 = 'dam' THEN
-				($1)*10
-			WHEN $2 = 'ch' THEN
-				($1)*20.11684
-			WHEN $2 = 'arp' THEN
-				($1)*58.471089295
-			WHEN $2 IN ('hm', 'K') THEN
-				($1)*10^2
-			WHEN $2 = 'fur' THEN
-				($1)*201.168
-			WHEN $2 = 'km' THEN
-				($1)*10^3
-			WHEN $2 = 'mi' THEN
-				($1)*1.609344*10^3
-			WHEN $2 = 'nautical mi' THEN
-				($1)*1.852*10^3
-			WHEN $2 IN ('lieue', 'league') THEN
-				($1)*4.828032*10^3
-			WHEN $2 = 'mam' THEN
-				($1)*10^4
-			WHEN $2 = 'Mm' THEN
-				($1)*10^6
-			WHEN $2 = 'Gm' THEN
-				($1)*10^9
-			WHEN $2 = 'ua' THEN
-				($1)*1.495979*10^11
-			WHEN $2 = 'Tm' THEN
-				($1)*10^12
-			WHEN $2 = 'Pm' THEN
-				($1)*10^15
-			WHEN $2 = 'pc' THEN
-				($1)*3.085678*10^16
-			WHEN $2 IN ('ly', 'l.y.') THEN
-				($1)*9.4607304725808*10^15
-			WHEN $2 = 'Em' THEN
-				($1)*10^18
-			WHEN $2 = 'Zm' THEN
-				($1)*10^21
-			WHEN $2 = 'Ym' THEN
-				($1)*10^24
-			ELSE
-				$1
-		END::real;
+  SELECT  CASE
+      WHEN $2 = 'dm' THEN
+        ($1)*10^(-1)
+      WHEN $2 = 'ft' THEN
+        ($1)*3.048*10^(-1)
+      WHEN $2 = 'P' THEN
+        ($1)*3.24839385*10^(-1)
+      WHEN $2 = 'yd' THEN
+        ($1)*9.144*10^(-1)
+      WHEN $2 = 'cm' THEN
+        ($1)*10^(-2)
+      WHEN $2 = 'in' THEN
+        ($1)*2.54*10^(-2)
+      WHEN $2 = 'mm' THEN
+        ($1)*10^(-3)
+      WHEN $2 = 'pica' THEN
+        ($1)*4.233333*10^(-3)
+      WHEN $2 = 'p' THEN
+        ($1)*27.069949*10^(-3)
+      WHEN $2 = 'mom' THEN
+        ($1)*10^(-4)
+      WHEN $2 IN ('pt', 'point') THEN
+        ($1)*3.527778*10^(-4)
+      WHEN $2 = 'mil' THEN
+        ($1)*2.54*10^(-5)
+      WHEN $2 IN ('µm', 'µ') THEN
+        ($1)*10^(-6)
+      WHEN $2 = 'twp' THEN
+        ($1)*17.639*10^(-6)
+      WHEN $2 = 'cal' THEN
+        ($1)*254*10^(-6)
+      WHEN $2 = 'nm' THEN
+        ($1)*10^(-9)
+      WHEN $2 = 'Å' THEN
+        ($1)*10^(-10)
+      WHEN $2 = 'pm' THEN
+        ($1)*10^(-12)
+      WHEN $2 IN ('fm', 'fermi') THEN
+        ($1)*10^(-15)
+      WHEN $2 = 'am' THEN
+        ($1)*10^(-18)
+      WHEN $2 = 'zm' THEN
+        ($1)*10^(-21)
+      WHEN $2 = 'ym' THEN
+        ($1)*10^(-24)
+      WHEN $2 IN ('brasse', 'vadem') THEN
+        ($1)*1.8288
+      WHEN $2 = 'fathom' THEN
+        ($1)*1.828804
+      WHEN $2 = 'rd' THEN
+        ($1)*5.02921
+      WHEN $2 = 'dam' THEN
+        ($1)*10
+      WHEN $2 = 'ch' THEN
+        ($1)*20.11684
+      WHEN $2 = 'arp' THEN
+        ($1)*58.471089295
+      WHEN $2 IN ('hm', 'K') THEN
+        ($1)*10^2
+      WHEN $2 = 'fur' THEN
+        ($1)*201.168
+      WHEN $2 = 'km' THEN
+        ($1)*10^3
+      WHEN $2 = 'mi' THEN
+        ($1)*1.609344*10^3
+      WHEN $2 = 'nautical mi' THEN
+        ($1)*1.852*10^3
+      WHEN $2 IN ('lieue', 'league') THEN
+        ($1)*4.828032*10^3
+      WHEN $2 = 'mam' THEN
+        ($1)*10^4
+      WHEN $2 = 'Mm' THEN
+        ($1)*10^6
+      WHEN $2 = 'Gm' THEN
+        ($1)*10^9
+      WHEN $2 = 'ua' THEN
+        ($1)*1.495979*10^11
+      WHEN $2 = 'Tm' THEN
+        ($1)*10^12
+      WHEN $2 = 'Pm' THEN
+        ($1)*10^15
+      WHEN $2 = 'pc' THEN
+        ($1)*3.085678*10^16
+      WHEN $2 IN ('ly', 'l.y.') THEN
+        ($1)*9.4607304725808*10^15
+      WHEN $2 = 'Em' THEN
+        ($1)*10^18
+      WHEN $2 = 'Zm' THEN
+        ($1)*10^21
+      WHEN $2 = 'Ym' THEN
+        ($1)*10^24
+      ELSE
+        $1
+    END::real;
 $$;
 /*
 ** fct_cpy_temperature_conversion
@@ -840,24 +840,24 @@ CREATE OR REPLACE FUNCTION fct_cpy_temperature_conversion (IN property real, IN 
 language SQL STABLE
 AS
 $$
-	SELECT  CASE
-			WHEN $2 = '°C' THEN
-				($1)+273.15
-			WHEN $2 = '°F' THEN
-				(($1)+459.67)/1.8
-			WHEN $2 = '°Ra' THEN
-				($1)/1.8
-			WHEN $2 in ('°Ré', '°r') THEN
-				(($1)*5/4)+273.15
-			WHEN $2 = '°N' THEN
-				(($1)+273.15)*0.33
-			WHEN $2 = '°Rø' THEN
-				(((($1)-7.5)*40)/21)+273.15
-			WHEN $2 = '°De' THEN
-				373.15-(($1)*2/3)
-			ELSE
-				$1
-		END::real;
+  SELECT  CASE
+      WHEN $2 = '°C' THEN
+        ($1)+273.15
+      WHEN $2 = '°F' THEN
+        (($1)+459.67)/1.8
+      WHEN $2 = '°Ra' THEN
+        ($1)/1.8
+      WHEN $2 in ('°Ré', '°r') THEN
+        (($1)*5/4)+273.15
+      WHEN $2 = '°N' THEN
+        (($1)+273.15)*0.33
+      WHEN $2 = '°Rø' THEN
+        (((($1)-7.5)*40)/21)+273.15
+      WHEN $2 = '°De' THEN
+        373.15-(($1)*2/3)
+      ELSE
+        $1
+    END::real;
 $$;
 
 /*
@@ -868,32 +868,32 @@ CREATE OR REPLACE FUNCTION fct_cpy_time_conversion (IN property real, IN propert
 language SQL STABLE
 AS
 $$
-	SELECT  CASE
-			WHEN $2 = 'ns' THEN
-				($1)*10^(-9)
-			WHEN $2 = 'shake' THEN
-				($1)*10^(-8)
-			WHEN $2 = 'µs' THEN
-				($1)*10^(-6)
-			WHEN $2 = 'ms' THEN
-				($1)*10^(-3)
-			WHEN $2 = 'cs' THEN
-				($1)*10^(-2)
-			WHEN $2 = 't' THEN
-				($1)/60
-			WHEN $2 = 'ds' THEN
-				($1)*10^(-1)
-			WHEN $2 = 'min' THEN
-				60*($1)
-			WHEN $2 = 'h' THEN
-				3600*($1)
-			WHEN $2 IN ('d', 'j') THEN
-				86400*($1)
-			WHEN $2 IN ('y', 'year') THEN
-				($1)*3.1536*10^7
-			ELSE
-				$1
-		END::real;
+  SELECT  CASE
+      WHEN $2 = 'ns' THEN
+        ($1)*10^(-9)
+      WHEN $2 = 'shake' THEN
+        ($1)*10^(-8)
+      WHEN $2 = 'µs' THEN
+        ($1)*10^(-6)
+      WHEN $2 = 'ms' THEN
+        ($1)*10^(-3)
+      WHEN $2 = 'cs' THEN
+        ($1)*10^(-2)
+      WHEN $2 = 't' THEN
+        ($1)/60
+      WHEN $2 = 'ds' THEN
+        ($1)*10^(-1)
+      WHEN $2 = 'min' THEN
+        60*($1)
+      WHEN $2 = 'h' THEN
+        3600*($1)
+      WHEN $2 IN ('d', 'j') THEN
+        86400*($1)
+      WHEN $2 IN ('y', 'year') THEN
+        ($1)*3.1536*10^7
+      ELSE
+        $1
+    END::real;
 $$;
 
 /*
@@ -906,46 +906,46 @@ CREATE OR REPLACE FUNCTION fct_cpy_speed_conversion (IN property real, IN proper
 language SQL STABLE
 AS
 $$
-	SELECT  CASE
-			WHEN $2 = 'Kt' THEN
-				($1)*0.51444444444444
-			WHEN $2 = 'Beaufort' THEN
-				CASE
-					WHEN $1 = 0 THEN
-						0.13888888888888
-					WHEN $1 = 1 THEN
-						3*0.27777777777778
-					WHEN $1 = 2 THEN
-						8*0.27777777777778
-					WHEN $1 = 3 THEN
-						15*0.27777777777778
-					WHEN $1 = 4 THEN
-						23.5*0.27777777777778
-					WHEN $1 = 5 THEN
-						33*0.27777777777778
-					WHEN $1 = 6 THEN
-						44*0.27777777777778
-					WHEN $1 = 7 THEN
-						55.5*0.27777777777778
-					WHEN $1 = 8 THEN
-						68*0.27777777777778
-					WHEN $1 = 9 THEN
-						81.5*0.27777777777778
-					WHEN $1 = 10 THEN
-						95.5*0.27777777777778
-					WHEN $1 = 11 THEN
-						110*0.27777777777778
-					ELSE
-						120*0.27777777777778
-				END
-			ELSE
-				CASE
-					WHEN strpos($2, '/') > 0 THEN
-						fct_cpy_length_conversion($1, substr($2, 0, strpos($2, '/')))/fct_cpy_time_conversion(1, substr($2, strpos($2, '/')+1))
-					ELSE
-						$1
-				END
-		END::real;
+  SELECT  CASE
+      WHEN $2 = 'Kt' THEN
+        ($1)*0.51444444444444
+      WHEN $2 = 'Beaufort' THEN
+        CASE
+          WHEN $1 = 0 THEN
+            0.13888888888888
+          WHEN $1 = 1 THEN
+            3*0.27777777777778
+          WHEN $1 = 2 THEN
+            8*0.27777777777778
+          WHEN $1 = 3 THEN
+            15*0.27777777777778
+          WHEN $1 = 4 THEN
+            23.5*0.27777777777778
+          WHEN $1 = 5 THEN
+            33*0.27777777777778
+          WHEN $1 = 6 THEN
+            44*0.27777777777778
+          WHEN $1 = 7 THEN
+            55.5*0.27777777777778
+          WHEN $1 = 8 THEN
+            68*0.27777777777778
+          WHEN $1 = 9 THEN
+            81.5*0.27777777777778
+          WHEN $1 = 10 THEN
+            95.5*0.27777777777778
+          WHEN $1 = 11 THEN
+            110*0.27777777777778
+          ELSE
+            120*0.27777777777778
+        END
+      ELSE
+        CASE
+          WHEN strpos($2, '/') > 0 THEN
+            fct_cpy_length_conversion($1, substr($2, 0, strpos($2, '/')))/fct_cpy_time_conversion(1, substr($2, strpos($2, '/')+1))
+          ELSE
+            $1
+        END
+    END::real;
 $$;
 
 /*
@@ -1064,7 +1064,7 @@ AS
 
 $$
 DECLARE
-	property_line catalogue_properties%ROWTYPE;
+  property_line catalogue_properties%ROWTYPE;
 BEGIN
     IF TG_TABLE_NAME ='properties_values' THEN
         SELECT * INTO property_line FROM  catalogue_properties WHERE id=NEW.property_ref;
@@ -1081,7 +1081,7 @@ BEGIN
             WHERE property_ref = NEW.id;
       END IF;
     END IF;
-	RETURN NEW;
+  RETURN NEW;
 END;
 $$;
 
