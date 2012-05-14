@@ -158,14 +158,13 @@ DECLARE
 BEGIN
     -- Investigate https://launchpad.net/postgresql-unaccent
     temp_string := to_indexed;
-    temp_string := TRANSLATE(temp_string, E'  ¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿×&|@"\'#(§^!{})°$*][£µ`%+=~/.,?;:\\<>ł€¶ŧ←↓→«»¢“”_-',
-      '');
-      
-        --Remove ALL none alphanumerical char
+    temp_string := TRANSLATE(temp_string, E'  ¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿×&|@"\'#(§^!{})°$*][£µ`%+=~/.,?;:\\<>ł€¶ŧ←↓→«»¢“”_-','');
+     --Remove ALL none alphanumerical char like # or '
     temp_string := lower(temp_string);
     return substring(temp_string from 0 for 40);
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
+
 /***
 * Trigger function fct_cpy_fullToIndex
 * Call the fulltoIndex function for different tables
@@ -251,79 +250,79 @@ DECLARE
   newType varchar := fullToIndex(NEW.type);
 BEGIN
 
-	-- IF Type not changed
-	IF TG_OP = 'UPDATE' THEN
-		IF fullToIndex(OLD.type) = newType THEN
-			RETURN NEW;
-		END IF;
-	END IF;
+  -- IF Type not changed
+  IF TG_OP = 'UPDATE' THEN
+    IF fullToIndex(OLD.type) = newType THEN
+      RETURN NEW;
+    END IF;
+  END IF;
 
-	IF newType= 'specimen' THEN
-		NEW.type_search := 'specimen';
-		NEW.type_group := 'specimen';
-	ELSIF newType= 'type' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'type';
-	ELSIF newType= 'subtype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'type';
-	ELSIF newType= 'allotype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'allotype';
-	ELSIF newType= 'cotype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'syntype';
-	ELSIF newType= 'genotype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'type';
-	ELSIF newType= 'holotype' THEN
-		NEW.type_search := 'holotype';
-		NEW.type_group := 'holotype';
-	ELSIF newType= 'hypotype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'hypotype';
-	ELSIF newType= 'lectotype' THEN
-		NEW.type_search := 'lectotype';
-		NEW.type_group := 'lectotype';
-	ELSIF newType= 'locotype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'locotype';
-	ELSIF newType= 'neallotype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'type';
-	ELSIF newType= 'neotype' THEN
-		NEW.type_search := 'neotype';
-		NEW.type_group := 'neotype';
-	ELSIF newType= 'paralectotype' THEN
-		NEW.type_search := 'paralectotype';
-		NEW.type_group := 'paralectotype';
-	ELSIF newType= 'paratype' THEN
-		NEW.type_search := 'paratype';
-		NEW.type_group := 'paratype';
-	ELSIF newType= 'plastotype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'plastotype';
-	ELSIF newType= 'plesiotype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'plesiotype';
-	ELSIF newType= 'syntype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'syntype';
-	ELSIF newType= 'topotype' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'topotype';
-	ELSIF newType= 'typeinlitteris' THEN
-		NEW.type_search := 'type';
-		NEW.type_group := 'type in litteris';
-	ELSE
+  IF newType = 'specimen' THEN
+    NEW.type_search := 'specimen';
+    NEW.type_group := 'specimen';
+  ELSIF newType = 'type' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'type';
+  ELSIF newType = 'subtype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'type';
+  ELSIF newType = 'allotype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'allotype';
+  ELSIF newType = 'cotype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'syntype';
+  ELSIF newType = 'genotype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'type';
+  ELSIF newType = 'holotype' THEN
+    NEW.type_search := 'holotype';
+    NEW.type_group := 'holotype';
+  ELSIF newType = 'hypotype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'hypotype';
+  ELSIF newType = 'lectotype' THEN
+    NEW.type_search := 'lectotype';
+    NEW.type_group := 'lectotype';
+  ELSIF newType = 'locotype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'locotype';
+  ELSIF newType = 'neallotype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'type';
+  ELSIF newType = 'neotype' THEN
+    NEW.type_search := 'neotype';
+    NEW.type_group := 'neotype';
+  ELSIF newType = 'paralectotype' THEN
+    NEW.type_search := 'paralectotype';
+    NEW.type_group := 'paralectotype';
+  ELSIF newType = 'paratype' THEN
+    NEW.type_search := 'paratype';
+    NEW.type_group := 'paratype';
+  ELSIF newType = 'plastotype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'plastotype';
+  ELSIF newType = 'plesiotype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'plesiotype';
+  ELSIF newType = 'syntype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'syntype';
+  ELSIF newType = 'topotype' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'topotype';
+  ELSIF newTyp e= 'typeinlitteris' THEN
+    NEW.type_search := 'type';
+    NEW.type_group := 'type in litteris';
+  ELSE
     NEW.type_search := 'type';
     NEW.type_group := 'type';
   END IF;
 
-	RETURN NEW;
+  RETURN NEW;
 EXCEPTION
-	WHEN RAISE_EXCEPTION THEN
-		return NULL;
+  WHEN RAISE_EXCEPTION THEN
+    return NULL;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -336,55 +335,55 @@ Compose A timestamp with default value
 CREATE OR REPLACE FUNCTION fct_compose_timestamp(day integer, month integer, year integer, hour integer, minute integer, second integer) RETURNS timestamp
 AS $$
 DECLARE
-	nday integer;
-	nmonth integer;
-	nyear integer;
-	nhour integer;
-	nminute integer;
-	nsecond integer;
-	stamp_string varchar default '';
-BEGIN
+  nday integer;
+  nmonth integer;
+  nyear integer;
+  nhour integer;
+  nminute integer;
+  nsecond integer;
+  stamp_string varchar default '';
+  BEGIN
 
-	IF day = 0 OR day IS NULL THEN
-		nday := 1;
-	ELSE
-		nday := day;
-	END IF;
+  IF day = 0 OR day IS NULL THEN
+    nday := 1;
+  ELSE
+    nday := day;
+  END IF;
 
-	IF month = 0 OR month IS NULL THEN
-		nmonth := 1;
-	ELSE
-		nmonth := month;
-	END IF;
+  IF month = 0 OR month IS NULL THEN
+    nmonth := 1;
+  ELSE
+    nmonth := month;
+  END IF;
 
-	IF year = 0 OR year IS NULL THEN
-		nyear := 1;
-	ELSE
-		nyear := year;
-	END IF;
+  IF year = 0 OR year IS NULL THEN
+    nyear := 1;
+  ELSE
+    nyear := year;
+  END IF;
 
-	IF hour = -1 OR hour IS NULL THEN
-		nhour := 0;
-	ELSE
-		nhour := hour;
-	END IF;
+  IF hour = -1 OR hour IS NULL THEN
+    nhour := 0;
+  ELSE
+    nhour := hour;
+  END IF;
 
-	IF minute = -1 OR minute IS NULL THEN
-		nminute := 0;
-	ELSE
-		nminute := day;
-	END IF;
+  IF minute = -1 OR minute IS NULL THEN
+    nminute := 0;
+  ELSE
+    nminute := day;
+  END IF;
 
-	IF second = -1 OR second IS NULL THEN
-		nsecond := 0;
-	ELSE
-		nsecond := second;
-	END IF;
+  IF second = -1 OR second IS NULL THEN
+    nsecond := 0;
+  ELSE
+    nsecond := second;
+  END IF;
 
-	stamp_string := ''|| to_char(nyear,'0000') ||'-'|| nmonth ||'-'|| nday || ' ' ||
-			to_char(nhour,'FM00') ||':'|| to_char(nminute,'FM00') ||':'|| to_char(nsecond,'FM00');
+  stamp_string := ''|| to_char(nyear,'0000') ||'-'|| nmonth ||'-'|| nday || ' ' ||
+    to_char(nhour,'FM00') ||':'|| to_char(nminute,'FM00') ||':'|| to_char(nsecond,'FM00');
 
-	RETURN stamp_string::TIMESTAMP;
+  RETURN stamp_string::TIMESTAMP;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -483,8 +482,11 @@ DECLARE
   rec_exists integer;
 BEGIN
 
-  EXECUTE 'SELECT count(id)  FROM ' || quote_ident(TG_TABLE_NAME::text) || ' WHERE parent_ref=' || quote_literal(NEW.id) || ' AND fct_chk_possible_upper_level('|| quote_literal(TG_TABLE_NAME::text) ||', parent_ref, level_ref, id) = false ' INTO rec_exists;
-  
+  EXECUTE 'SELECT count(id)  FROM ' || quote_ident(TG_TABLE_NAME::text) ||
+    ' WHERE parent_ref=' || quote_literal(NEW.id) || 
+    ' AND fct_chk_possible_upper_level('|| quote_literal(TG_TABLE_NAME::text) || 
+    ', parent_ref, level_ref, id) = false ' INTO rec_exists;
+
   IF rec_exists > 0 THEN
     RAISE EXCEPTION 'Children of this record does not follow the level hierarchy';
   END IF;
@@ -533,25 +535,27 @@ language plpgsql;
 CREATE OR REPLACE FUNCTION fct_cpy_FormattedName() RETURNS TRIGGER
 AS $$
 BEGIN
-	IF TG_OP ='UPDATE' THEN
-		IF NEW.family_name = OLD.family_name AND NEW.given_name = OLD.given_name AND NEW.title = OLD.title THEN
-			RETURN NEW;
-		END IF;
-	END IF;
+  IF TG_OP ='UPDATE' THEN
+    IF NEW.family_name = OLD.family_name AND NEW.given_name = OLD.given_name AND NEW.title = OLD.title THEN
+      RETURN NEW;
+    END IF;
+  END IF;
 
-	IF NEW.is_physical THEN
+  IF NEW.is_physical THEN
     IF COALESCE(NEW.title, '') = '' THEN
       NEW.formated_name := COALESCE(NEW.family_name,'') || ' ' || COALESCE(NEW.given_name,'');
-		ELSE
-		  NEW.formated_name := COALESCE(NEW.family_name,'') || ' ' || COALESCE(NEW.given_name,'') || ' (' || NEW.title || ')';
+    ELSE
+      NEW.formated_name := COALESCE(NEW.family_name,'') || ' ' || COALESCE(NEW.given_name,'') || ' (' || NEW.title || ')';
     END IF;
-	ELSE
-		NEW.formated_name := NEW.family_name;
-	END IF;
-	NEW.formated_name_indexed := fullToIndex(NEW.formated_name);
-        NEW.formated_name_unique := toUniqueStr(NEW.formated_name);
-	NEW.formated_name_ts := to_tsvector('simple', NEW.formated_name);
-	RETURN NEW;
+  ELSE
+    NEW.formated_name := NEW.family_name;
+  END IF;
+
+  NEW.formated_name_indexed := fullToIndex(NEW.formated_name);
+  NEW.formated_name_unique := toUniqueStr(NEW.formated_name);
+  NEW.formated_name_ts := to_tsvector('simple', NEW.formated_name);
+
+  RETURN NEW;
 END;
 $$
 LANGUAGE plpgsql;
