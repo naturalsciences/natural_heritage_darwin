@@ -209,3 +209,15 @@ CREATE INDEX CONCURRENTLY idx_loan_rights_part_ref on loan_rights(user_ref);
 CREATE INDEX CONCURRENTLY idx_loan_status_user_ref on loan_status(user_ref);
 CREATE INDEX CONCURRENTLY idx_loan_status_loan_ref on loan_status(loan_ref);
 CREATE INDEX CONCURRENTLY idx_loan_status_loan_ref_is_last on loan_status(loan_ref,is_last);
+
+
+CREATE INDEX CONCURRENTLY idx_ext_links_referenced_record on ext_links(referenced_relation, record_id);
+CREATE INDEX CONCURRENTLY idx_informative_workflow_referenced_record on informative_workflow(referenced_relation, record_id);
+CREATE INDEX CONCURRENTLY idx_multimedia_referenced_record on multimedia(referenced_relation, record_id);
+
+
+/** Biblio **/
+
+CREATE INDEX CONCURRENTLY idx_catalogue_bibliography_referenced_record on catalogue_bibliography(referenced_relation, record_id);
+CREATE INDEX CONCURRENTLY idx_gin_bibliography_title_ts on bibliography using gin(title_ts);
+CREATE INDEX CONCURRENTLY idx_bibliography_type on bibliography(type);
