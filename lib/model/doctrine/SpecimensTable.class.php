@@ -50,7 +50,7 @@ class SpecimensTable extends DarwinTable
       ->andwhere('s.expedition_ref is not distinct from ?', $object->getExpeditionRef())
       ->andwhere('s.gtu_ref is not distinct from ?', $object->getGtuRef())
       ->andwhere('s.taxon_ref is not distinct from ?', $object->getTaxonRef())
-      ->andwhere('s.litho_ref is not distinct froms ?', $object->getLithoRef())
+      ->andwhere('s.litho_ref is not distinct from ?', $object->getLithoRef())
       ->andwhere('s.chrono_ref is not distinct from ?', $object->getChronoRef())
       ->andwhere('s.lithology_ref is not distinct from ?', $object->getLithologyRef())
       ->andwhere('s.mineral_ref is not distinct from ?', $object->getMineralRef())
