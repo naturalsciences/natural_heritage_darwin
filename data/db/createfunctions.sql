@@ -311,7 +311,7 @@ BEGIN
   ELSIF newType = 'topotype' THEN
     NEW.type_search := 'type';
     NEW.type_group := 'topotype';
-  ELSIF newTyp e= 'typeinlitteris' THEN
+  ELSIF newType = 'typeinlitteris' THEN
     NEW.type_search := 'type';
     NEW.type_group := 'type in litteris';
   ELSE
