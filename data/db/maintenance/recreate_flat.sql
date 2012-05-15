@@ -274,8 +274,6 @@ create view darwin_flat as
   f.expedition_name_indexed,
 
   f.gtu_code,
-  f.gtu_parent_ref,
-  f.gtu_path,
   f.gtu_from_date_mask,
   f.gtu_from_date,
   f.gtu_to_date_mask,

@@ -32,24 +32,18 @@ DROP FUNCTION IF EXISTS fct_array_find(IN in_array anyarray, IN elem anyelement,
 DROP FUNCTION IF EXISTS fct_explode_array(in_array anyarray) CASCADE;
 DROP FUNCTION IF EXISTS fct_remove_array_elem(IN in_array anyarray, IN elem anyelement,OUT out_array anyarray) CASCADE;
 DROP FUNCTION IF EXISTS fct_clear_referencedRecord() CASCADE;
-DROP FUNCTION IF EXISTS fct_compose_date(day integer, month integer, year integer) CASCADE;
-DROP FUNCTION IF EXISTS fct_compose_timestamp(day integer, month integer, year integer, hour integer, minute integer, second integer) CASCADE;
 DROP FUNCTION IF EXISTS fct_clr_specialstatus() CASCADE;
 DROP FUNCTION IF EXISTS fct_cpy_fullToIndex() CASCADE;
 DROP FUNCTION IF EXISTS fullToIndex(to_indexed varchar) CASCADE;
-DROP FUNCTION IF EXISTS fct_cpy_idToCode() CASCADE;
 DROP FUNCTION IF EXISTS fct_cpy_specimensMainCode() CASCADE;
 DROP FUNCTION IF EXISTS fct_trg_word() CASCADE;
-DROP FUNCTION IF EXISTS search_words_to_query(tbl_name words.referenced_relation%TYPE, fld_name words.field_name%TYPE, value varchar, op varchar) CASCADE;
 DROP FUNCTION IF EXISTS fct_nbr_in_synonym() CASCADE;
 DROP FUNCTION IF EXISTS fct_nbr_in_relation() CASCADE;
-DROP FUNCTION IF EXISTS datesOverlaps(start1 date, end1 date, start2 date, end2 date) CASCADE;
 DROP FUNCTION IF EXISTS fct_chk_onceinpath(path varchar) CASCADE;
 DROP FUNCTION IF EXISTS fct_cpy_word(tbl_name character varying, fld_name character varying, word_ts tsvector) CASCADE;
 DROP FUNCTION IF EXISTS fct_cpy_updateHosts() CASCADE;
 DROP FUNCTION IF EXISTS fct_cpy_updateSpecHostImpact() CASCADE;
-DROP FUNCTION IF EXISTS concat(text, text) CASCADE;
-DROP FUNCTION IF EXISTS concat(text, text, text) CASCADE;
+DROP FUNCTION IF EXISTS concat(VARIADIC text[]) CASCADE;
 DROP FUNCTION IF EXISTS ts_stat(tsvector, OUT word text, OUT ndoc integer, OUT nentry integer) CASCADE;
 DROP FUNCTION IF EXISTS sha1(bytea) CASCADE;
 DROP FUNCTION IF EXISTS get_setting(text, OUT value text) CASCADE;
@@ -84,7 +78,6 @@ DROP FUNCTION IF EXISTS fct_filter_encodable_row(ids varchar, col_name varchar, 
 DROP FUNCTION IF EXISTS fct_remove_last_flag();
 
 DROP FUNCTION IF EXISTS fct_chk_PeopleIsMoral() CASCADE;
-DROP FUNCTION IF EXISTS fct_chk_one_pref_language() CASCADE;
 DROP FUNCTION IF EXISTS fct_trg_chk_possible_upper_level () CASCADE;
 DROP FUNCTION IF EXISTS fct_chk_possible_upper_level () CASCADE;
 DROP FUNCTION IF EXISTS fct_chk_upper_level_for_childrens() CASCADE;

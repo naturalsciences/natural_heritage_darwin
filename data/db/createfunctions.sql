@@ -31,21 +31,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-/***
-* Trigger Function fct_cpy_idToCode
-* Automaticaly copy the code form the id if the code is null
-*/
-CREATE OR REPLACE FUNCTION fct_cpy_idToCode() RETURNS trigger
-AS $$
-BEGIN
-	IF NEW.code is null THEN
-		NEW.code := NEW.id;
-	END IF;
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-
 
 /***
 * function fct_chk_collectionsInstitutionIsMoral
@@ -66,39 +51,6 @@ BEGIN
 END;
 $$
 language plpgsql;
-
-
-/***
-* Function fct_chk_one_pref_language
-* Check if there is only ONE preferred language for a user
-* Return an error if there is already a preferred language true otherwise
-*/
-CREATE OR REPLACE FUNCTION fct_chk_one_pref_language() RETURNS TRIGGER
-AS $$
-DECLARE
-  rec_exists integer;
-BEGIN
-    IF NEW.preferred_language = TRUE THEN
-      rec_exists := 0;
-      IF TG_TABLE_NAME = 'people_languages' THEN
-        SELECT 1 INTO rec_exists WHERE EXISTS(
-          SELECT id FROM people_languages WHERE people_ref = NEW.people_ref and preferred_language = NEW.preferred_language and id <> NEW.id
-        );
-      ELSIF TG_TABLE_NAME = 'users_languages' THEN
-        SELECT 1 INTO rec_exists WHERE EXISTS(
-         SELECT id FROM users_languages WHERE users_ref = NEW.users_ref and preferred_language = NEW.preferred_language and id <> NEW.id
-        );
-      END IF;
-      IF rec_exists = 1 THEN
-          RAISE EXCEPTION 'You cannot have more than 1 preferred language';
-      END IF;
-    END IF;
-
-    RETURN NEW;
-END;
-$$
-language plpgsql;
-
 
 /***
 * Function fullToIndex
@@ -327,79 +279,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 /**
-fct_compose_timestamp
-Compose A timestamp with default value
--1 or null for hour, minute or second will take 0
-0 or null for day, month or year will take 1
-*/
-CREATE OR REPLACE FUNCTION fct_compose_timestamp(day integer, month integer, year integer, hour integer, minute integer, second integer) RETURNS timestamp
-AS $$
-DECLARE
-  nday integer;
-  nmonth integer;
-  nyear integer;
-  nhour integer;
-  nminute integer;
-  nsecond integer;
-  stamp_string varchar default '';
-  BEGIN
-
-  IF day = 0 OR day IS NULL THEN
-    nday := 1;
-  ELSE
-    nday := day;
-  END IF;
-
-  IF month = 0 OR month IS NULL THEN
-    nmonth := 1;
-  ELSE
-    nmonth := month;
-  END IF;
-
-  IF year = 0 OR year IS NULL THEN
-    nyear := 1;
-  ELSE
-    nyear := year;
-  END IF;
-
-  IF hour = -1 OR hour IS NULL THEN
-    nhour := 0;
-  ELSE
-    nhour := hour;
-  END IF;
-
-  IF minute = -1 OR minute IS NULL THEN
-    nminute := 0;
-  ELSE
-    nminute := day;
-  END IF;
-
-  IF second = -1 OR second IS NULL THEN
-    nsecond := 0;
-  ELSE
-    nsecond := second;
-  END IF;
-
-  stamp_string := ''|| to_char(nyear,'0000') ||'-'|| nmonth ||'-'|| nday || ' ' ||
-    to_char(nhour,'FM00') ||':'|| to_char(nminute,'FM00') ||':'|| to_char(nsecond,'FM00');
-
-  RETURN stamp_string::TIMESTAMP;
-END;
-$$ LANGUAGE plpgsql;
-
-
-/*
-fct_compose_date
-Compose a date with default value call compose_timestamp
-*/
-CREATE OR REPLACE FUNCTION fct_compose_date(day integer, month integer, year integer) RETURNS date
-AS $$
-BEGIN
-	RETURN fct_compose_timestamp(day, month, year, null, null, null)::date;
-END;
-$$ LANGUAGE plpgsql;
-
-/**
 * fct_clear_referencedRecord
 * Clear referenced record id for a table on delete record
 */
@@ -565,7 +444,6 @@ AS $$
 BEGIN
   IF TG_OP = 'INSERT' THEN
       IF( TG_TABLE_NAME::text = 'collections' OR
-        TG_TABLE_NAME::text = 'gtu' OR
         TG_TABLE_NAME::text = 'specimen_parts' OR
         TG_TABLE_NAME::text = 'staging') THEN
 
@@ -587,7 +465,6 @@ BEGIN
       END IF;
     ELSIF TG_OP = 'UPDATE' THEN
       IF(TG_TABLE_NAME::text = 'collections' OR
-        TG_TABLE_NAME::text = 'gtu' OR
         TG_TABLE_NAME::text = 'specimen_parts' OR
         TG_TABLE_NAME::text = 'staging') THEN
 
@@ -632,7 +509,6 @@ BEGIN
           IF NEW.parent_ref IS NULL THEN
             NEW.path ='/';
           ELSE
-            
             EXECUTE 'SELECT path || id || ''/'' FROM ' || quote_ident(TG_TABLE_NAME::text) || ' WHERE id=' || quote_literal(NEW.parent_ref) INTO STRICT NEW.path;
           END IF;
     ELSIF TG_OP = 'UPDATE' AND (TG_TABLE_NAME::text = 'taxonomy' OR
@@ -1102,17 +978,14 @@ END;
 $$;
 
 
+
+
 /**
-* Bloody mysql!
+* Only for postgresql < 9.1
 */
-CREATE OR REPLACE FUNCTION concat(text, text) RETURNS text AS $$
-    SELECT $1 || $2;
-$$ LANGUAGE 'sql';
-
-
-CREATE OR REPLACE FUNCTION concat(text, text, text) RETURNS text AS $$
-    SELECT $1 || $2 || $3;
-$$ LANGUAGE 'sql';
+CREATE OR REPLACE FUNCTION concat(VARIADIC text[]) RETURNS text AS $$
+    SELECT array_to_string($1,'');
+$$ LANGUAGE SQL;
 
 /*
 ** Function used for encrypting passwords using pgcrypto function
@@ -1319,24 +1192,6 @@ $$
 LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION search_words_to_query(tbl_name words.referenced_relation%TYPE, fld_name words.field_name%TYPE, value varchar, op varchar) RETURNS tsquery AS
-$$
-
-  SELECT to_tsquery('simple',array_to_string( array(SELECT word FROM words
-      WHERE referenced_relation = $1
-	AND field_name = $2
-	AND word % $3
-        AND to_tsvector($3) <> to_tsvector('')
-	AND word ilike
-	  CASE WHEN $4 = 'begin' THEN $3 || '%'
-	      WHEN $4 = 'end' THEN '%' || $3
-	      WHEN $4 = 'contains' THEN '%' || $3 || '%'
-	      ELSE word
-	  END),
-   ' | '));
-$$
-LANGUAGE SQL IMMUTABLE;
-
 CREATE OR REPLACE FUNCTION fct_nbr_in_relation() RETURNS TRIGGER
 AS
 $$
@@ -1402,21 +1257,6 @@ END;
 $$
 LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION datesOverlaps(start1 date, end1 date, start2 date, end2 date) RETURNS boolean LANGUAGE plpgsql
-AS
-$$
-DECLARE
-  response boolean := true;
-BEGIN
-  SELECT (start1, end1) OVERLAPS (start2, end2) INTO response;
-  return response;
-EXCEPTION
-  WHEN OTHERS THEN
-    response := false;
-    RAISE NOTICE 'Error in datesOverlaps function: %', SQLERRM;
-    return response;
-END;
-$$;
 
 CREATE OR REPLACE FUNCTION lineToTagRows(IN line text) RETURNS SETOF varchar AS
 $$
@@ -1773,12 +1613,12 @@ BEGIN
     END IF;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'gtu' THEN
     UPDATE specimens_flat
-    SET (gtu_code, gtu_parent_ref, gtu_path, gtu_from_date, gtu_from_date_mask,
+    SET (gtu_code, gtu_from_date, gtu_from_date_mask,
          gtu_to_date, gtu_to_date_mask,
          gtu_elevation, gtu_elevation_accuracy,
          gtu_tag_values_indexed, gtu_location
         ) =
-        (NEW.code, NEW.parent_ref, NEW.path, NEW.gtu_from_date, NEW.gtu_from_date_mask,
+        (NEW.code, NEW.gtu_from_date, NEW.gtu_from_date_mask,
          NEW.gtu_to_date, NEW.gtu_to_date_mask,
          NEW.elevation, NEW.elevation_accuracy,
          NEW.tag_values_indexed, NEW.location
@@ -1990,7 +1830,7 @@ BEGIN
      collection_ref,collection_type,collection_code,collection_name, collection_is_public,
      collection_parent_ref,collection_path,
      expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-     gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
+     gtu_ref,gtu_code,gtu_location,
      gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
      gtu_elevation, gtu_elevation_accuracy,
      gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
@@ -2016,7 +1856,7 @@ BEGIN
             NEW.collection_ref, coll.collection_type, coll.code, coll.name, coll.is_public,
             coll.parent_ref, coll.path,
             NEW.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
-            NEW.gtu_ref, gtu.code, gtu.parent_ref, gtu.path, gtu.location,
+            NEW.gtu_ref, gtu.code, gtu.location,
             gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
             gtu.elevation, gtu.elevation_accuracy,
             gtu.tag_values_indexed,
@@ -2081,7 +1921,7 @@ BEGIN
          collection_ref,collection_type,collection_code,collection_name, collection_is_public,
          collection_parent_ref,collection_path,
          expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
-         gtu_ref,gtu_code,gtu_parent_ref,gtu_path,gtu_location,
+         gtu_ref,gtu_code,gtu_location,
          gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
          gtu_elevation, gtu_elevation_accuracy,
          gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
@@ -2110,7 +1950,7 @@ BEGIN
          NEW.collection_ref, subq.coll_collection_type, subq.coll_code, subq.coll_name, subq.coll_is_public,
          subq.coll_parent_ref, subq.coll_path,
          NEW.expedition_ref, subq.expe_name, subq.expe_name_ts, subq.expe_name_indexed,
-         NEW.gtu_ref, subq.gtu_code, subq.gtu_parent_ref, subq.gtu_path, subq.gtu_location,
+         NEW.gtu_ref, subq.gtu_code, subq.gtu_location,
          subq.gtu_from_date_mask, subq.gtu_from_date, subq.gtu_to_date_mask, subq.gtu_to_date,
          subq.gtu_elevation, subq.gtu_elevation_accuracy,
          subq.gtu_tag_values_indexed,
@@ -2144,7 +1984,7 @@ BEGIN
         (SELECT coll.collection_type coll_collection_type, coll.code coll_code, coll.name coll_name, coll.is_public coll_is_public,
                 coll.parent_ref coll_parent_ref, coll.path coll_path,
                 expe.name expe_name, expe.name_ts expe_name_ts, expe.name_indexed expe_name_indexed,
-                gtu.code gtu_code, gtu.parent_ref gtu_parent_ref, gtu.path gtu_path,gtu.location gtu_location,
+                gtu.code gtu_code, gtu.location gtu_location,
                 gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
                 gtu.elevation as gtu_elevation, gtu.elevation_accuracy as gtu_elevation_accuracy,
                 gtu.tag_values_indexed as gtu_tag_values_indexed,

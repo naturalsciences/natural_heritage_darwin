@@ -18,8 +18,8 @@ INSERT INTO collections(id, code, name, institution_ref, main_manager_ref, paren
 INSERT INTO expeditions(id, name) VALUES (100000, 'Atlantic city 2010');
 INSERT INTO expeditions(id, name) VALUES (100001, 'Bruxelles-Brussels');
 INSERT INTO gtu(id, code) VALUES (100000, 'BELGO');
-INSERT INTO gtu(id, code, parent_ref) VALUES (100001, 'Bxl', 100000);
-INSERT INTO gtu(id, code, parent_ref) VALUES (100002, 'Brugge', 100000);
+INSERT INTO gtu(id, code) VALUES (100001, 'Bxl');
+INSERT INTO gtu(id, code) VALUES (100002, 'Brugge');
 INSERT INTO tag_groups(id, gtu_ref, group_name, sub_group_name, tag_value) VALUES (100000, 100000, 'Administrative area', 'Country', 'Belgique;Belgium;Belgïe');
 INSERT INTO tag_groups(id, gtu_ref, group_name, sub_group_name, tag_value) VALUES (100001, 100001, 'Administrative area', 'Country', 'Belgique;Belgium;Belgïe');
 INSERT INTO tag_groups(id, gtu_ref, group_name, sub_group_name, tag_value) VALUES (100002, 100001, 'Administrative area', 'City', 'Bruxelles;Brussel;Brussels;Brüsel');

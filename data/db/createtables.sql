@@ -188,13 +188,11 @@ comment on column ext_links.comment_ts is 'tsvector form of comment field';
 create table gtu
        (
         id serial,
-        code varchar not null,
-        parent_ref integer,
+        code varchar not null default '',
         gtu_from_date_mask integer not null default 0,
         gtu_from_date timestamp not null default '01/01/0001 00:00:00',
         gtu_to_date_mask integer not null default 0,
         gtu_to_date timestamp not null default '31/12/2038 00:00:00',
-        path varchar not null default '/',
         tag_values_indexed varchar[],
         latitude float,
         longitude float,
@@ -202,18 +200,15 @@ create table gtu
         location GEOGRAPHY(POLYGON,4326),
         elevation float,
         elevation_accuracy float,
-        constraint pk_gtu primary key (id),
-        constraint fk_gtu_gtu foreign key (parent_ref) references gtu(id) on delete cascade
+        constraint pk_gtu primary key (id)
        );
 comment on table gtu is 'Location or sampling units - GeoTemporalUnits';
 comment on column gtu.id is 'Unique identifier of a location or sampling unit';
 comment on column gtu.code is 'Code given - for sampling units - takes id if none defined';
-comment on column gtu.parent_ref is 'Recursive reference to a parent location-sampling unit - id field of gtu table itself';
 comment on column gtu.gtu_from_date is 'composed from date of the GTU';
 comment on column gtu.gtu_from_date_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
 comment on column gtu.gtu_to_date_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
 comment on column gtu.gtu_to_date is 'composed to date of the GTU';
-comment on column gtu.path is 'When gtus are hierarchicaly ordered, give the parenty path';
 comment on column gtu.tag_values_indexed is 'Array of all tags associated to gtu (indexed form)';
 comment on column gtu.latitude is 'Latitude of the gtu';
 comment on column gtu.longitude is 'longitude of the gtu';
@@ -1714,8 +1709,6 @@ CREATE TABLE specimens_flat (
     expedition_name_indexed varchar,
 
     gtu_code varchar,
-    gtu_parent_ref integer,
-    gtu_path varchar,
     gtu_from_date_mask integer,
     gtu_from_date timestamp,
     gtu_to_date_mask integer,
@@ -1840,8 +1833,6 @@ create view darwin_flat as
   f.expedition_name_indexed,
 
   f.gtu_code,
-  f.gtu_parent_ref,
-  f.gtu_path,
   f.gtu_from_date_mask,
   f.gtu_from_date,
   f.gtu_to_date_mask,

@@ -2,10 +2,6 @@ CREATE TRIGGER trg_cpy_specimensMainCode_specimenPartCode AFTER INSERT
 	ON specimen_parts FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_specimensMainCode();
 
-CREATE TRIGGER trg_cpy_idToCode_gtu BEFORE INSERT OR UPDATE
-	ON gtu FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_idToCode();
-
 -- BEGIN FULLTOINDEX
 CREATE TRIGGER trg_cpy_fullToIndex_catalogueproperties BEFORE INSERT OR UPDATE
 	ON catalogue_properties FOR EACH ROW
@@ -298,10 +294,6 @@ CREATE TRIGGER trg_cpy_path_collections BEFORE INSERT OR UPDATE
 
 CREATE TRIGGER trg_cpy_path_peopleRelationships BEFORE INSERT OR UPDATE
 	ON people_relationships FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_path();
-
-CREATE TRIGGER trg_cpy_path_gtu BEFORE INSERT OR UPDATE
-	ON gtu FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_path();
 
 CREATE TRIGGER trg_cpy_path_specimen_parts BEFORE INSERT OR UPDATE
@@ -766,17 +758,6 @@ CREATE TRIGGER trg_chk_possible_upper_level_lithology AFTER INSERT OR UPDATE
 CREATE TRIGGER trg_chk_possible_upper_level_taxonomy AFTER INSERT OR UPDATE
         ON taxonomy FOR EACH ROW
         EXECUTE PROCEDURE fct_trg_chk_possible_upper_level();
-
-/************ CHk Only One Lang ***************/
-
-CREATE TRIGGER fct_chk_upper_level_for_childrens_people AFTER INSERT OR UPDATE
-        ON people_languages FOR EACH ROW
-        EXECUTE PROCEDURE fct_chk_one_pref_language();
-
-CREATE TRIGGER fct_chk_upper_level_for_childrens_users AFTER INSERT OR UPDATE
-        ON users_languages FOR EACH ROW
-        EXECUTE PROCEDURE fct_chk_one_pref_language();
-
 
 /************* Check If Institution is a Moral Person ***********/
 

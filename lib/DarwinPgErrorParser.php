@@ -16,7 +16,6 @@ class DarwinPgErrorParser
     '/Maximum number of renamed item reach/i' => 'Maximum number of "current names" reached',
     '/Maximum number of recombined item reach/i' => 'Maximum number of "recombination" reached',
     '/set this synonym twice/i' => 'You can\'t attach a synonym twice',
-    '/Error in datesOverlaps function/i' => 'Error in dates overlapping',
     '/\bunq_comments\b/' => 'You cannot add a particular comment notion twice',
     '/duplicate key value violates unique constraint "unq_specimens"/i' => 'This specimen already exists',
     '/duplicate key value violates unique constraint "unq_specimen_individuals"/i' => 'This individual already exists for this specimen',
