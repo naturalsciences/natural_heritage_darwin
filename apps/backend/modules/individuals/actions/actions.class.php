@@ -138,7 +138,7 @@ class individualsActions extends DarwinActions
   public function executeAddIdentification(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
+    if(! Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('spec_id'), $this->getUser()->getId()))
 
       $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
@@ -159,7 +159,7 @@ class individualsActions extends DarwinActions
   public function executeAddIdentifier(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
-    if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
+    if(! Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('spec_id'), $this->getUser()->getId()))
 
       $this->forwardToSecureAction();
 
