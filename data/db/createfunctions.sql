@@ -2272,7 +2272,7 @@ DECLARE
   rec_id integer;
 BEGIN
     IF col_name = 'spec_ref' THEN    
-      FOR rec_id IN SELECT id FROM specimens WHERE id in (select X::int from regexp_split_to_table(ids, '','' ) as X)
+      FOR rec_id IN SELECT id FROM specimens WHERE id in (select X::int from regexp_split_to_table(ids, ',' ) as X)
             AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
       LOOP
         return next rec_id;
@@ -2280,7 +2280,7 @@ BEGIN
 
     ELSIF col_name = 'individual_ref' THEN
       FOR rec_id IN SELECT i.id FROM specimens s INNER JOIN specimen_individuals i ON s.id = i.specimen_ref
-            WHERE i.id in (select X::int from regexp_split_to_table(ids, '','' ) as X)
+            WHERE i.id in (select X::int from regexp_split_to_table(ids, ',' ) as X)
             AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
       LOOP
         return next rec_id;
@@ -2289,7 +2289,7 @@ BEGIN
     ELSIF col_name = 'part_ref' THEN
       FOR rec_id IN SELECT p.id FROM specimens s INNER JOIN specimen_individuals i ON s.id = i.specimen_ref
             INNER JOIN specimen_parts p ON i.id = p.specimen_individual_ref
-            WHERE p.id in (select X::int from regexp_split_to_table(ids, '','' ) as X)
+            WHERE p.id in (select X::int from regexp_split_to_table(ids, ',' ) as X)
             AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
       LOOP
         return next rec_id;
