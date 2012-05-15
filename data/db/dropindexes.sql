@@ -43,7 +43,6 @@
  DROP INDEX IF EXISTS idx_possible_upper_levels_level_upper_ref;
  DROP INDEX IF EXISTS idx_record_visibilities;
  DROP INDEX IF EXISTS idx_tag_groups_gtu_ref;
- DROP INDEX IF EXISTS idx_gtu_parent_ref;
  DROP INDEX IF EXISTS idx_people_languages_people_ref;
  DROP INDEX IF EXISTS idx_users_languages_users_ref;
  DROP INDEX IF EXISTS idx_collections_institution_ref;
@@ -221,7 +220,6 @@
   DROP INDEX IF EXISTS idx_darwin_flat_collection_path;
   DROP INDEX IF EXISTS idx_darwin_flat_station_visible;
   DROP INDEX IF EXISTS idx_darwin_flat_gtu_code;
-  DROP INDEX IF EXISTS idx_darwin_flat_gtu_path;
   DROP INDEX IF EXISTS idx_darwin_flat_gtu_from_date_mask;
   DROP INDEX IF EXISTS idx_darwin_flat_gtu_to_date_mask;
   DROP INDEX IF EXISTS idx_darwin_flat_gtu_to_date;
@@ -249,7 +247,6 @@
   DROP INDEX IF EXISTS idx_darwin_flat_collection_parent_ref;
   DROP INDEX IF EXISTS idx_darwin_flat_expedition_ref;
   DROP INDEX IF EXISTS idx_darwin_flat_gtu_ref;
-  DROP INDEX IF EXISTS idx_darwin_flat_gtu_parent_ref;
   DROP INDEX IF EXISTS idx_darwin_flat_taxon_ref;
   DROP INDEX IF EXISTS idx_darwin_flat_taxon_parent_ref;
   DROP INDEX IF EXISTS idx_darwin_flat_taxon_level_ref;

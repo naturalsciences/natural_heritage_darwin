@@ -37,13 +37,6 @@ $(document).ready(function ()
           <?php echo $form['gtu_to_date'] ?>
         </td>
       </tr>
-      <tr>
-        <th class="top_aligned"><?php echo $form['parent_ref']->renderLabel() ?></th>
-        <td>
-          <?php echo $form['parent_ref']->renderError() ?>
-          <?php echo $form['parent_ref'] ?>
-        </td>
-      </tr>
     </tbody>
 </table>
 
@@ -201,12 +194,6 @@ $(document).ready(function () {
 
 <script  type="text/javascript">
 $(document).ready(function () {
-    $('#gtu_parent_ref').change(function()
-    {
-      $("#gtu_parent_ref_name").html(trim(ref_element_name));
-    });
-
-
     $('.tag_parts_screen .clear_prop').live('click', function()
     {
       parent_el = $(this).closest('li');

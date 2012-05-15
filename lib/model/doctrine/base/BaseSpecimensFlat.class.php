@@ -38,8 +38,6 @@
  * @property string $expedition_name_ts
  * @property string $expedition_name_indexed
  * @property string $gtu_code
- * @property integer $gtu_parent_ref
- * @property string $gtu_path
  * @property integer $gtu_from_date_mask
  * @property string $gtu_from_date
  * @property integer $gtu_to_date_mask
@@ -157,8 +155,6 @@
  * @method string              getExpeditionNameTs()         Returns the current record's "expedition_name_ts" value
  * @method string              getExpeditionNameIndexed()    Returns the current record's "expedition_name_indexed" value
  * @method string              getGtuCode()                  Returns the current record's "gtu_code" value
- * @method integer             getGtuParentRef()             Returns the current record's "gtu_parent_ref" value
- * @method string              getGtuPath()                  Returns the current record's "gtu_path" value
  * @method integer             getGtuFromDateMask()          Returns the current record's "gtu_from_date_mask" value
  * @method string              getGtuFromDate()              Returns the current record's "gtu_from_date" value
  * @method integer             getGtuToDateMask()            Returns the current record's "gtu_to_date_mask" value
@@ -275,8 +271,6 @@
  * @method SpecimensFlat       setExpeditionNameTs()         Sets the current record's "expedition_name_ts" value
  * @method SpecimensFlat       setExpeditionNameIndexed()    Sets the current record's "expedition_name_indexed" value
  * @method SpecimensFlat       setGtuCode()                  Sets the current record's "gtu_code" value
- * @method SpecimensFlat       setGtuParentRef()             Sets the current record's "gtu_parent_ref" value
- * @method SpecimensFlat       setGtuPath()                  Sets the current record's "gtu_path" value
  * @method SpecimensFlat       setGtuFromDateMask()          Sets the current record's "gtu_from_date_mask" value
  * @method SpecimensFlat       setGtuFromDate()              Sets the current record's "gtu_from_date" value
  * @method SpecimensFlat       setGtuToDateMask()            Sets the current record's "gtu_to_date_mask" value
@@ -477,12 +471,6 @@ abstract class BaseSpecimensFlat extends sfDoctrineRecord
              'type' => 'string',
              ));
         $this->hasColumn('gtu_code', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('gtu_parent_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('gtu_path', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('gtu_from_date_mask', 'integer', null, array(

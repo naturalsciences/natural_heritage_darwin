@@ -129,7 +129,6 @@ Gtu:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
         code: {type: string, notnull: true}
-        parent_ref:  {type: integer}
         gtu_from_date_mask: { type: integer, notnull: true, default:0}
         gtu_from_date: { type: string, notnull: true, default: '0001-01-01'}
         gtu_to_date_mask: { type: integer, notnull: true, default:0}
@@ -140,11 +139,6 @@ Gtu:
         lat_long_accuracy: {type: float}
         elevation: {type: float}
         elevation_accuracy: {type: float}
-    relations:
-        Parent:
-            class: Gtu
-            local: parent_ref
-            foreign: id
 
 CatalogueProperties:
     columns:
@@ -758,8 +752,6 @@ SpecimensFlat:
         station_visible: { type: boolean}
         gtu_ref: { type: integer, notnull: true}
         gtu_code: { type: string}
-        gtu_parent_ref: { type: integer}
-        gtu_path: { type: string}
         gtu_from_date_mask: { type: integer }
         gtu_from_date: { type: string}
         gtu_to_date_mask: { type: integer }

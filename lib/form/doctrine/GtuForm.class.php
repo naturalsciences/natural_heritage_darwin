@@ -11,18 +11,9 @@ class GtuForm extends BaseGtuForm
 {
   public function configure()
   {
-    unset($this['gtu_from_date_mask'], 
-          $this['gtu_to_date_mask'],
-          $this['location']
-         );
+    $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date', 'latitude', 'longitude',
+      'lat_long_accuracy', 'elevation', 'elevation_accuracy'));
 
-    $this->widgetSchema['parent_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Gtu',
-       'method' => 'getName',
-       'link_url' => 'gtu/choose',
-       'box_title' => $this->getI18N()->__('Choose Parent'),
-       'nullable' => true,
-     ));
     $this->widgetSchema['code'] = new sfWidgetFormInput();
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
@@ -52,7 +43,6 @@ class GtuForm extends BaseGtuForm
                                                                                    ),
                                                                               array('class' => 'to_date')
                                                                              );
-    $this->widgetSchema->setLabels(array('parent_ref' => 'Parent'));
     $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array('required' => false,
                                                                                   'from_date' => true,
                                                                                   'min' => $minDate,
