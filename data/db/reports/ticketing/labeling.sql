@@ -68,7 +68,7 @@ CREATE INDEX idx_labeling_part ON specimen_parts using gin (labeling_part_for_in
 
 CREATE INDEX idx_labeling_ig_num_numeric ON specimens_flat(convert_to_integer(coalesce(ig_num, '-')));
 
-drop view "public"."labeling";
+drop view if exists "public"."labeling";
 
 create or replace view "public"."labeling" as
 select df.part_ref as unique_id,

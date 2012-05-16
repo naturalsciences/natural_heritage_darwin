@@ -8,7 +8,7 @@ alter table gtu drop column path;
 alter table gtu drop column parent_ref;
 ALTER TABLE gtu alter column code set default '';
 
-drop view darwin_flat;
+drop view darwin_flat cascade;
 alter table specimens_flat drop column gtu_parent_ref;
 alter table specimens_flat drop column gtu_path;
 
@@ -207,3 +207,5 @@ drop function search_words_to_query(tbl_name words.referenced_relation%TYPE, fld
 drop function datesOverlaps(start1 date, end1 date, start2 date, end2 date);
 
 \i  ../createfunctions.sql
+
+\i ../reports/ticketing/labeling.sql
