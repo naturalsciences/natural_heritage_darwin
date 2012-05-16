@@ -132,8 +132,8 @@
 
                 <?php switch($source){
                   case 'specimen':   $v_link = 'specimen/view?id='.$specimen->getSpecimenRef();break;
-                  case 'individual': $v_link = 'individuals/view?id='.$specimen->getIndividualRef();break;
-                  default:           $v_link = 'parts/view?id='.$specimen->getPartRef();break;
+                  case 'individual': $v_link = 'individuals/view?id='.$individual->getId();break;
+                  default:           $v_link = 'parts/view?id='.$part->getId();break;
                   };?>
               <?php endif ; ?>
               <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),$v_link,array('target' => 'pop'));?>
