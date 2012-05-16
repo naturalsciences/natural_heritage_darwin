@@ -52,7 +52,7 @@
         <?php echo $gtu->getMap(ESC_RAW);?>
       </td>
     </tr>
-    <?php elseif($gtu->hasCountries()):?>
+    <?php elseif(isset($gtu) && $gtu->hasCountries()):?>
       <tr>
         <th class="top_aligned">
           <?php echo __("Sampling location countries") ?>
