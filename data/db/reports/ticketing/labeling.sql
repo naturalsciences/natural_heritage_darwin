@@ -76,22 +76,11 @@ select df.part_ref as unique_id,
        df.collection_name as collection_name,
        df.collection_path as collection_path,
        case when coalesce(df.part,'') in ('specimen', 'animal', 'undefined', 'unknown', '') then '' else df.part end as part_item,
-       case when df.individual_sex in ('undefined', 'unknown', 'not stated', 'non applicable') then '' else df.individual_sex || case when df.individual_state = 'not applicable' then '' else df.individual_state end end as part_sex_state,
+       case when df.individual_sex in ('undefined', 'unknown', 'not stated', 'non applicable') then '' else df.individual_sex || case when df.individual_state = 'not applicable' then '' else ' ' || df.individual_state end end as part_sex_state,
        case when df.individual_type = 'specimen' then '' else df.individual_type end as part_type,
        case when df.individual_stage in ('undefined', 'unknown', 'not stated') then '' else df.individual_stage end as part_stage,
-       case when df.container is not null then case when coalesce(df.container_storage, '') in ('unknown', '/', '') then '' else df.container_storage end else '' end as part_container_storage,
-       case when df.sub_container is not null then case when coalesce(df.sub_container_storage, '') in ('unknown', '/', '') then '' else df.sub_container_storage end else '' end as part_sub_container_storage,
-/*       trim(both ',' from
-        trim(case when coalesce(df.part,'') in ('specimen', 'animal', 'undefined', 'unknown', '') then '' else df.part end 
-              || 
-              case when df.individual_sex in ('undefined', 'unknown', 'not stated', 'non applicable') then '' else ', ' || df.individual_sex || case when df.individual_state = 'not applicable' then '' else df.individual_state end end 
-              || 
-              case when df.individual_type = 'specimen' then '' else ', ' || df.individual_type end 
-              || 
-              case when df.individual_stage in ('undefined', 'unknown', 'not stated') then '' else ', ' || df.individual_stage end 
-              || 
-              case when coalesce(df.container_storage, '') in ('unknown', '/', '') then '' || case when coalesce(df.sub_container_storage, '') in ('unknown', '/', '')  then '' else ', ' || df.sub_container_storage end else ', ' || df.container_storage || case when coalesce(df.sub_container_storage, '') in ('unknown', '/', '') or df.sub_container_storage = df.container_storage then '' else ' - ' || df.sub_container_storage end end
-            )) as item,*/
+       case when df.sub_container is null then case when coalesce(df.container_storage, '') in ('unknown', '/', '') then '' else df.container_storage end else '' end as part_container_storage,
+       case when coalesce(df.sub_container_storage, '') in ('unknown', '/', '') then '' else coalesce(df.sub_container_storage, '') end as part_sub_container_storage,
        array[fullToIndex(df.part)] as part,
        array[fullToIndex(df.individual_type)] as type,
        df.individual_sex as sex,
@@ -238,6 +227,7 @@ select df.part_ref as unique_id,
        df.ig_num_indexed as ig_num_indexed,
        convert_to_integer(coalesce(ig_num, '-')) as ig_numeric,
        case when df.part_count_min <> df.part_count_max and df.part_count_min is not null and df.part_count_max is not null then df.part_count_min || ' - ' || df.part_count_max else case when df.part_count_min is not null then df.part_count_min::text else '' end end as specimen_number,
+       df.part_count_max as specimen_number_max,
        df.room as part_room,
        df.row as part_row,
        df.shelf as part_shelf,

@@ -20,7 +20,7 @@ class RegisterCommForm extends BaseUsersCommForm
     $this->widgetSchema['entry']->setLabel('e-mail');
     $this->widgetSchema['entry']->setAttributes(array('class'=>'medium_size required_field'));
     $this->validatorSchema['person_user_ref'] = new sfValidatorInteger(array('required'=>false));
-    $this->validatorSchema['entry'] = new sfValidatorEmail(array('required'=> true),
+    $this->validatorSchema['entry'] = new sfValidatorEmail(array('required'=> true, 'trim'=>true),
                                                            array('required'=>'E-mail is required',
                                                                  'invalid' => 'E-mail is not of a valid form'
                                                                 )
