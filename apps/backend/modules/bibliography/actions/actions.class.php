@@ -88,7 +88,7 @@ class bibliographyActions extends DarwinActions
   public function executeEdit(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested bibliography id is not found
-    $this->forward404Unless($bibliography = Doctrine::getTable('Bibliography')->findExcept($request->getParameter('id')), sprintf('Object bibliography does not exist (%s).', array($request->getParameter('id'))));
+    $this->forward404Unless($bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id')), sprintf('Object bibliography does not exist (%s).', array($request->getParameter('id'))));
     // Otherwise initialize the bibliography encoding form
     $this->no_right_col = Doctrine::getTable('Bibliography')->testNoRightsCollections('bibliography_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new BibliographyForm($bibliography);
@@ -105,7 +105,7 @@ class bibliographyActions extends DarwinActions
     $request->checkCSRFProtection();
     // If method is <> from post or put and if the id edited and to be saved doesn't exist anymore... forward to a 404 page
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
-    $this->forward404Unless($bibliography = Doctrine::getTable('Bibliography')->findExcept($request->getParameter('id')), sprintf('Object bibliography does not exist (%s).', array($request->getParameter('id'))));
+    $this->forward404Unless($bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id')), sprintf('Object bibliography does not exist (%s).', array($request->getParameter('id'))));
     $this->no_right_col = Doctrine::getTable('Bibliography')->testNoRightsCollections('bibliography_ref',$request->getParameter('id'), $this->getUser()->getId());    
     // Instantiate a new bibliography form
     $this->form = new BibliographyForm($bibliography);
@@ -229,7 +229,7 @@ class bibliographyActions extends DarwinActions
   }
   public function executeView(sfWebRequest $request)
   {
-    $this->bibliography = Doctrine::getTable('Bibliography')->findExcept($request->getParameter('id'));
+    $this->bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id'));
     $this->forward404Unless($this->bibliography,'Bibliography not Found');
     $this->form = new BibliographyForm($this->bibliography);
     $this->loadWidgets();

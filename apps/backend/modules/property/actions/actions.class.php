@@ -16,7 +16,7 @@ class propertyActions extends DarwinActions
     {
       if($request->getParameter('table') == 'loans' || $request->getParameter('table') == 'loan_items')
       {
-        $loan = Doctrine::getTable($request->getParameter('table')=='loans'?'Loans':'LoanItems')->findExcept($request->getParameter('id')) ;
+        $loan = Doctrine::getTable($request->getParameter('table')=='loans'?'Loans':'LoanItems')->find($request->getParameter('id')) ;
         if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$request->getParameter('table')=='loans'?$loan->getId():$loan->getLoanRef()))
           $this->forwardToSecureAction();
       }
@@ -40,7 +40,7 @@ class propertyActions extends DarwinActions
     $this->property = null;
     if($request->hasParameter('rid'))
     {
-      $this->property = Doctrine::getTable('CatalogueProperties')->findExcept($request->getParameter('rid'));
+      $this->property = Doctrine::getTable('CatalogueProperties')->find($request->getParameter('rid'));
     }
 
     if(! $this->property)
@@ -96,7 +96,7 @@ class propertyActions extends DarwinActions
     $prop = null;
 
     if($request->hasParameter('id') && $request->getParameter('id'))
-      $prop = Doctrine::getTable('CatalogueProperties')->findExcept($request->getParameter('id') );
+      $prop = Doctrine::getTable('CatalogueProperties')->find($request->getParameter('id') );
 
     $form = new CataloguePropertiesForm($prop, array('ref_relation' => $request->getParameter('table')));
     $form->addValue($number);

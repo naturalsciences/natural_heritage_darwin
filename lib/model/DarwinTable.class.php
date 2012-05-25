@@ -27,24 +27,6 @@ class DarwinTable extends Doctrine_Table
     return sfInflector::camelize($table);
   }
 
-  /**
-    * Finds a record by its identifier if the id is greater than 0
-    *
-    * @param integer $rowId          Database Row ID
-    * @return Doctrine_Record or false if no result
-    */
-  public function findExcept($rowId)
-  {
-      if ($rowId != 0)
-      { 
-        return parent::find($rowId);
-      }
-      else
-      {
-        return false;
-      }
-  }
-
   public function hasChildrens($table, $id)
   {
     $q =  Doctrine_Query::create()

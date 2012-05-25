@@ -28,12 +28,12 @@ class individualsActions extends DarwinActions
     }
     else
     {
-      $this->spec_individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id'));
+      $this->spec_individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('id'));
       $this->forward404Unless($this->spec_individual);
     }
     if($this->spec_individual->isNew())
     {
-      $this->specimen = Doctrine::getTable('Specimens')->findExcept($request->getParameter('spec_id'));
+      $this->specimen = Doctrine::getTable('Specimens')->find($request->getParameter('spec_id'));
 
       $this->forward404Unless($this->specimen);
 
@@ -42,7 +42,7 @@ class individualsActions extends DarwinActions
     }
     else
     {
-      $this->specimen = Doctrine::getTable('Specimens')->findExcept($this->spec_individual->getSpecimenRef());
+      $this->specimen = Doctrine::getTable('Specimens')->find($this->spec_individual->getSpecimenRef());
     }
 
     $individual = new SpecimenIndividualsForm($this->spec_individual);
@@ -163,7 +163,7 @@ class individualsActions extends DarwinActions
 
       $this->forwardToSecureAction();
 
-    $this->spec_individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('individual_id'));
+    $this->spec_individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('individual_id'));
     $individual_form = new SpecimenIndividualsForm($this->spec_individual);
 
     $individual_form->loadEmbedIndentifications();
@@ -218,7 +218,7 @@ class individualsActions extends DarwinActions
       if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
         $this->forwardToSecureAction();
     }
-    $ind = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id'));
+    $ind = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('id'));
     $this->forward404Unless($ind, 'Individual does not exist');
     try
     {
@@ -239,7 +239,7 @@ class individualsActions extends DarwinActions
   
   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id')),'Individual does not exist');
+    $this->forward404Unless($this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('id')),'Individual does not exist');
     $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($this->individual->getSpecimenRef(), $this->getUser());
     if(! $this->specimen) $this->forwardToSecureAction();
     $this->loadWidgets(null,$this->individual->Specimens->getCollectionRef()); 

@@ -15,7 +15,7 @@ class loanActions extends DarwinActions
   protected function checkRight($loan_id)
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($loan_id), sprintf('Object loan does not exist (%s).', array($loan_id)));
+    $this->forward404Unless($loan = Doctrine::getTable('Loans')->find($loan_id), sprintf('Object loan does not exist (%s).', array($loan_id)));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;
     $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
     if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
@@ -30,18 +30,18 @@ class loanActions extends DarwinActions
     $loan = null;
     
     if ($fwd404)
-      return $this->forward404Unless($loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter,0)));
+      return $this->forward404Unless($loan = Doctrine::getTable('Loans')->find($request->getParameter($parameter,0)));
 
     if($request->getParameter('table','loans')== 'loans')
     {
       if($request->hasParameter($parameter))
-        $loan = Doctrine::getTable('Loans')->findExcept($request->getParameter($parameter) );      
+        $loan = Doctrine::getTable('Loans')->find($request->getParameter($parameter) );      
       $form = new LoansForm($loan,$options);
     }
     else
     {
       if($request->hasParameter($parameter))    
-        $loan = Doctrine::getTable('LoanItems')->findExcept($request->getParameter($parameter) );
+        $loan = Doctrine::getTable('LoanItems')->find($request->getParameter($parameter) );
       $form = new LoanItemWidgetForm($loan,$options);
     }
     return $form;
@@ -132,7 +132,7 @@ class loanActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested loan id is not found
-    $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
+    $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->find($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
     if(!$this->getUser()->isAtLeast(Users::MANAGER))    
       if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId()))
         $this->forwardToSecureAction();
@@ -249,7 +249,7 @@ class loanActions extends DarwinActions
   }
 
   public function executeOverviewView(sfWebRequest $request) {
-    $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->findExcept($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
+    $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->find($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
     $this->items = Doctrine::getTable('LoanItems')->findForLoan($this->loan->getId());
   }
 

@@ -141,8 +141,6 @@ class catalogueActions extends DarwinActions
         $query = $form
                  ->getQuery()
                  ->orderBy($this->orderBy .' '.$this->orderDir);
-        if($this->is_choose == 0)
-          $query->andWhere('id > 0');
 
         $pager = new DarwinPager($query,
           $this->currentPage,

@@ -33,7 +33,7 @@ class mineralogyActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   { 
     $this->forward404Unless(
-      $unit = Doctrine::getTable('Mineralogy')->findExcept($request->getParameter('id')),
+      $unit = Doctrine::getTable('Mineralogy')->find($request->getParameter('id')),
       sprintf('Object mineralogy does not exist (%s).', array($request->getParameter('id')))
     );
 
@@ -83,7 +83,7 @@ class mineralogyActions extends DarwinActions
     
   public function executeEdit(sfWebRequest $request)
   {
-    $unit = Doctrine::getTable('Mineralogy')->findExcept($request->getParameter('id'));
+    $unit = Doctrine::getTable('Mineralogy')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
     $this->no_right_col = Doctrine::getTable('Mineralogy')->testNoRightsCollections('mineral_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new MineralogyForm($unit);
@@ -169,7 +169,7 @@ class mineralogyActions extends DarwinActions
   }
   public function executeView(sfWebRequest $request)
   {
-    $this->mineral = Doctrine::getTable('Mineralogy')->findExcept($request->getParameter('id'));
+    $this->mineral = Doctrine::getTable('Mineralogy')->find($request->getParameter('id'));
     $this->forward404Unless($this->mineral,'Mineralogic unit not Found');
     $this->form = new MineralogyForm($this->mineral);    
     $this->loadWidgets();

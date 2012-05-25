@@ -124,7 +124,7 @@ class multimediaActions extends DarwinActions
 
     if($request->hasParameter('rid'))
     {
-      $file_record = Doctrine::getTable('Multimedia')->findExcept($request->getParameter('rid'));
+      $file_record = Doctrine::getTable('Multimedia')->find($request->getParameter('rid'));
     }
 
     if(! $file_record)

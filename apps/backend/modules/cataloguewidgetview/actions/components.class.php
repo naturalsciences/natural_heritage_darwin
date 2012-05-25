@@ -53,7 +53,7 @@ class cataloguewidgetViewComponents extends sfComponents
 
   public function executeCollectionsCodes()
   {
-    $this->collCodes = Doctrine::getTable('Collections')->findExcept($this->eid);
+    $this->collCodes = Doctrine::getTable('Collections')->find($this->eid);
   }
 
   public function executeKeywords()

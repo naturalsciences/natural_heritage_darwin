@@ -50,8 +50,7 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     $query = parent::doBuildQuery($values);
     $this->addNamingColumnQuery($query, 'taxonomy', 'name_indexed', $values['name']);
     $this->addRelationItemColumnQuery($query, $values);
-    $query->andWhere("id > 0 ")
-	  ->innerJoin($query->getRootAlias().".Level")
+    $query->innerJoin($query->getRootAlias().".Level")
           ->limit($this->getCatalogueRecLimits());
     return $query;
   }

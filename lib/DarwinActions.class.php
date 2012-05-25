@@ -18,7 +18,7 @@ class DarwinActions extends sfActions
     $this->forward404Unless($request->hasParameter('table') && array_key_exists ($request->getParameter('table',''),self::$correspondingTable));
 
     if($request->hasParameter('id'))
-      $tableRecord = Doctrine::getTable(self::$correspondingTable[$request->getParameter('table')])->findExcept($request->getParameter('id',0));
+      $tableRecord = Doctrine::getTable(self::$correspondingTable[$request->getParameter('table')])->find($request->getParameter('id',0));
 
     if($request->getParameter('table','')== 'loans')
     {
@@ -114,7 +114,7 @@ class DarwinActions extends sfActions
   {
     if ($id)
     {
-      $check = $obj->getTable()->findExcept($id);
+      $check = $obj->getTable()->find($id);
       if(!$check) return $obj ;
       if($is_spec)
       {

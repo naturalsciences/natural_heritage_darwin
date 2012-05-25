@@ -28,7 +28,7 @@ class commentActions extends DarwinActions
       }
     } 
     if($request->hasParameter('cid'))
-      $this->comment =  Doctrine::getTable('Comments')->findExcept($request->getParameter('cid'));
+      $this->comment =  Doctrine::getTable('Comments')->find($request->getParameter('cid'));
     else
     {
      $this->comment = new Comments();

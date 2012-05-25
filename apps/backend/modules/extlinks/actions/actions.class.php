@@ -25,7 +25,7 @@ class extLinksActions extends DarwinActions
       }
     } 
     if($request->hasParameter('cid'))
-      $this->links =  Doctrine::getTable('ExtLinks')->findExcept($request->getParameter('cid'));
+      $this->links =  Doctrine::getTable('ExtLinks')->find($request->getParameter('cid'));
     else
     {
      $this->links = new ExtLinks();
