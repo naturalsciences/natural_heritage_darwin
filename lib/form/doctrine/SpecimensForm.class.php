@@ -23,7 +23,6 @@ class SpecimensForm extends BaseSpecimensForm
         'host_specimen_ref',
         'host_relationship',
         'acquisition_category',
-        'acquisition_date_mask',
         'acquisition_date',
         'station_visible',
         'ig_ref'));
