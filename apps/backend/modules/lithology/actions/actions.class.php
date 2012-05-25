@@ -34,7 +34,7 @@ class lithologyActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   { 
     $this->forward404Unless(
-      $unit = Doctrine::getTable('Lithology')->findExcept($request->getParameter('id')),
+      $unit = Doctrine::getTable('Lithology')->find($request->getParameter('id')),
       sprintf('Object lithology does not exist (%s).', array($request->getParameter('id')))
     );
     if(! $request->hasParameter('confirm'))
@@ -83,7 +83,7 @@ class lithologyActions extends DarwinActions
     
   public function executeEdit(sfWebRequest $request)
   {
-    $unit = Doctrine::getTable('Lithology')->findExcept($request->getParameter('id'));
+    $unit = Doctrine::getTable('Lithology')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
     $this->no_right_col = Doctrine::getTable('Lithology')->testNoRightsCollections('lithology_ref',$request->getParameter('id'), $this->getUser()->getId());
 
@@ -130,7 +130,7 @@ class lithologyActions extends DarwinActions
   }
   public function executeView(sfWebRequest $request)
   {
-    $this->litho = Doctrine::getTable('Lithology')->findExcept($request->getParameter('id'));
+    $this->litho = Doctrine::getTable('Lithology')->find($request->getParameter('id'));
     $this->forward404Unless($this->litho,'Lithologic unit not Found');
     $this->form = new LithologyForm($this->litho);    
     $this->loadWidgets();

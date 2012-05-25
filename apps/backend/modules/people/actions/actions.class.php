@@ -154,7 +154,7 @@ class peopleActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
     if($request->hasParameter('id'))
-      $this->address =  Doctrine::getTable('PeopleAddresses')->findExcept($request->getParameter('id'));
+      $this->address =  Doctrine::getTable('PeopleAddresses')->find($request->getParameter('id'));
     else
     {
      $this->address = new PeopleAddresses();
@@ -258,13 +258,13 @@ class peopleActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
     if($request->hasParameter('id')) {
       $this->relation =  Doctrine::getTable('PeopleRelationships')->find($request->getParameter('id'));
-      $this->is_physical = Doctrine::getTable('People')->findExcept($request->getParameter('ref_id'))->getIsPhysical();
+      $this->is_physical = Doctrine::getTable('People')->find($request->getParameter('ref_id'))->getIsPhysical();
     }
     else
     {
      $this->relation = new PeopleRelationships();
      $this->relation->setPerson_2Ref($request->getParameter('ref_id'));
-     $this->is_physical = Doctrine::getTable('People')->findExcept($request->getParameter('ref_id'))->getIsPhysical();
+     $this->is_physical = Doctrine::getTable('People')->find($request->getParameter('ref_id'))->getIsPhysical();
     }
 
     $this->form = new PeopleRelationshipsForm($this->relation);
@@ -298,7 +298,7 @@ class peopleActions extends DarwinActions
   
   public function executeView(sfWebRequest $request)
   {
-    $this->people = Doctrine::getTable('People')->findExcept($request->getParameter('id'));
+    $this->people = Doctrine::getTable('People')->find($request->getParameter('id'));
     $this->forward404Unless($this->people,'People not Found');
     $this->form = new PeopleForm($this->people);
     $this->types = People::getTypes() ;

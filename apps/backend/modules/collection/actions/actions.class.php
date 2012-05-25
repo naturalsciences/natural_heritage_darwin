@@ -20,7 +20,7 @@ class collectionActions extends DarwinActions
     if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId())) 
       $this->forwardToSecureAction();
 
-    $this->collCodes = Doctrine::getTable('Collections')->findExcept($request->getParameter('id'));
+    $this->collCodes = Doctrine::getTable('Collections')->find($request->getParameter('id'));
     $this->form = new CollectionsCodesForm($this->collCodes);
 
     if($request->isMethod('post'))
@@ -58,7 +58,7 @@ class collectionActions extends DarwinActions
     if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId())) 
       $this->forwardToSecureAction();
 
-    $item = Doctrine::getTable('Collections')->findExcept($request->getParameter('id'));
+    $item = Doctrine::getTable('Collections')->find($request->getParameter('id'));
     $this->forward404Unless($item,'No such item');
     try
     {
@@ -144,7 +144,7 @@ class collectionActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
     if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId())) 
       $this->forwardToSecureAction();
-    $collection = Doctrine::getTable('Collections')->findExcept($request->getParameter('id'));
+    $collection = Doctrine::getTable('Collections')->find($request->getParameter('id'));
     $this->forward404Unless($collection, 'collections does not exist');
     $this->level = $this->getUser()->getDbUserType() ;      
     $this->form = new CollectionsForm($collection);
@@ -161,7 +161,7 @@ class collectionActions extends DarwinActions
     if($request->hasParameter('id'))
     {
       $this->ref_id = $request->getParameter('id') ;
-	    $collection = Doctrine::getTable('Collections')->findExcept($this->ref_id) ;
+	    $collection = Doctrine::getTable('Collections')->find($this->ref_id) ;
       $form = new CollectionsForm($collection);
     }
     else $form = new CollectionsForm();
@@ -175,7 +175,7 @@ class collectionActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
     $this->level = $this->getUser()->getDbUserType() ;    
-    $collection = Doctrine::getTable('Collections')->findExcept($request->getParameter('id'));
+    $collection = Doctrine::getTable('Collections')->find($request->getParameter('id'));
     $this->forward404Unless($collection, 'collections does not exist');
     $this->form = new CollectionsForm($collection);
 
@@ -194,7 +194,7 @@ class collectionActions extends DarwinActions
     if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId())) 
       $this->forwardToSecureAction();
     $request->checkCSRFProtection();
-    $collection = Doctrine::getTable('Collections')->findExcept($request->getParameter('id'));
+    $collection = Doctrine::getTable('Collections')->find($request->getParameter('id'));
 
     $this->forward404Unless($collection, 'collections does not exist');
 

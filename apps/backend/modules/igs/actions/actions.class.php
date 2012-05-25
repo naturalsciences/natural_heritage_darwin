@@ -210,7 +210,7 @@ class igsActions extends DarwinActions
   }
   public function executeView(sfWebRequest $request)
   {
-    $this->igs = Doctrine::getTable('igs')->findExcept($request->getParameter('id'));
+    $this->igs = Doctrine::getTable('igs')->find($request->getParameter('id'));
     $this->forward404Unless($this->igs,'Ig not Found');
     $this->form = new igsForm($this->igs);    
     $this->loadWidgets();

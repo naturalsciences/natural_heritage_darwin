@@ -21,7 +21,7 @@ class userActions extends DarwinActions
   
   public function executeEdit(sfWebRequest $request)
   {
-    $this->user = Doctrine::getTable('Users')->findExcept( $request->getparameter('id') );
+    $this->user = Doctrine::getTable('Users')->find( $request->getparameter('id') );
     $this->forward404Unless($this->user, sprintf('User does not exist (%s).', $request->getParameter('id')));
     if($this->getUser()->getId() == $this->user->getId() && !$request->isMethod('post')) 
       $this->redirect('user/profile'); 
@@ -54,7 +54,7 @@ class userActions extends DarwinActions
   
   public function executeProfile(sfWebRequest $request)
   { 
-    $this->user =  Doctrine::getTable('Users')->findExcept( $this->getUser()->getId() );
+    $this->user =  Doctrine::getTable('Users')->find( $this->getUser()->getId() );
     $this->forward404Unless($this->user);
     $this->mode = 'profile' ;
     $this->form = new UsersForm($this->user,array("db_user_type" => $this->getUser()->getDbUserType(),'mode' => $this->mode,'is_physical'=>$this->user->getIsPhysical()));
@@ -161,7 +161,7 @@ class userActions extends DarwinActions
     else
     { 
       if($this->getUser()->getDbUserType() < Users::MANAGER) $this->forwardToSecureAction();
-        $this->forward404Unless($user = Doctrine::getTable('Users')->findExcept($id), sprintf('User does not exist (%s).', $id));
+        $this->forward404Unless($user = Doctrine::getTable('Users')->find($id), sprintf('User does not exist (%s).', $id));
       if($user->getDbUserType() == Users::REGISTERED_USER) $is_reg_user = true ;
     }
     $widget = Doctrine::getTable('MyWidgets')->setUserRef($id)->getWidgetsList($this->getUser()->getDbUserType(), $is_reg_user) ;
@@ -194,7 +194,7 @@ class userActions extends DarwinActions
       if($this->getUser()->getId() != $request->getParameter('ref_id')) $this->forwardToSecureAction();   
     if($request->hasParameter('id'))
     { 
-      $this->address =  Doctrine::getTable('UsersAddresses')->findExcept($request->getParameter('id'));
+      $this->address =  Doctrine::getTable('UsersAddresses')->find($request->getParameter('id'));
     }
     else
     {
@@ -236,7 +236,7 @@ class userActions extends DarwinActions
       if($this->getUser()->getId() != $request->getParameter('ref_id')) $this->forwardToSecureAction(); 
     if($request->hasParameter('id'))
     { 
-      $this->comm =  Doctrine::getTable('UsersComm')->findExcept($request->getParameter('id'));
+      $this->comm =  Doctrine::getTable('UsersComm')->find($request->getParameter('id'));
     }
     else
     {
@@ -295,8 +295,8 @@ class userActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::MANAGER))
       if($this->getUser()->getId() != $request->getParameter('user_ref'))
         $this->forwardToSecureAction();
-    $this->forward404Unless($this->user = Doctrine::getTable('Users')->findExcept($request->getparameter('user_ref')), sprintf('User does not exist (%s).', $request->getParameter('user_ref')));
-    $this->loginInfo = Doctrine::getTable('UsersLoginInfos')->findExcept($request->getParameter('id'));
+    $this->forward404Unless($this->user = Doctrine::getTable('Users')->find($request->getparameter('user_ref')), sprintf('User does not exist (%s).', $request->getParameter('user_ref')));
+    $this->loginInfo = Doctrine::getTable('UsersLoginInfos')->find($request->getParameter('id'));
     if( ! $this->loginInfo )
     {
       $this->loginInfo = new UsersLoginInfos() ;
@@ -327,7 +327,7 @@ class userActions extends DarwinActions
       if($this->getUser()->getId() != $request->getParameter('ref_id')) $this->forwardToSecureAction();  
     if($request->hasParameter('id'))
     {  
-      $this->lang =  Doctrine::getTable('UsersLanguages')->findExcept($request->getParameter('id'));
+      $this->lang =  Doctrine::getTable('UsersLanguages')->find($request->getParameter('id'));
     }
     else
     {

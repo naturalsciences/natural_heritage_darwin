@@ -15,7 +15,7 @@ class loanitemActions extends DarwinActions
   protected function checkRight($loan_item_id)  
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $this->forward404Unless($loanitem = Doctrine::getTable('LoanItems')->findExcept($loan_item_id), sprintf('Object loanitem does not exist (%s).', array($loan_item_id)));
+    $this->forward404Unless($loanitem = Doctrine::getTable('LoanItems')->find($loan_item_id), sprintf('Object loanitem does not exist (%s).', array($loan_item_id)));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loanitem ;
     $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef());
     if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
@@ -150,7 +150,7 @@ class loanitemActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $this->forward404Unless($this->loan_item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+    $this->forward404Unless($this->loan_item = Doctrine::getTable('LoanItems')->find($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
 
     if(!$this->getUser()->isAtLeast(Users::MANAGER) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
       $this->forwardToSecureAction();
@@ -159,7 +159,7 @@ class loanitemActions extends DarwinActions
 
   public function executeShowmaintenances(sfWebRequest $request)
   {
-    $this->forward404Unless($this->loan_item = Doctrine::getTable('LoanItems')->findExcept($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+    $this->forward404Unless($this->loan_item = Doctrine::getTable('LoanItems')->find($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
 
     if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
       $this->forwardToSecureAction();

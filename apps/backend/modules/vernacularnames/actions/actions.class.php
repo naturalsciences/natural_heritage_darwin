@@ -15,7 +15,7 @@ class vernacularnamesActions extends DarwinActions
     $this->vernacularnames = null;
     if($request->hasParameter('rid'))
     {
-      $this->vernacularnames = Doctrine::getTable('ClassVernacularNames')->findExcept($request->getParameter('rid'));
+      $this->vernacularnames = Doctrine::getTable('ClassVernacularNames')->find($request->getParameter('rid'));
     }
 
     if(! $this->vernacularnames)
@@ -54,7 +54,7 @@ class vernacularnamesActions extends DarwinActions
     $vern = null;
 
     if($request->hasParameter('id') && $request->getParameter('id'))
-      $vern = Doctrine::getTable('ClassVernacularNames')->findExcept($request->getParameter('id') );
+      $vern = Doctrine::getTable('ClassVernacularNames')->find($request->getParameter('id') );
 
     $form = new ClassVernacularNamesForm($vern);
     $form->addValue($number);

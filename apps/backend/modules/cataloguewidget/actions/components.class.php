@@ -57,7 +57,7 @@ class cataloguewidgetComponents extends sfComponents
 
   public function executeCollectionsCodes()
   {
-    $this->collCodes = Doctrine::getTable('Collections')->findExcept($this->eid);
+    $this->collCodes = Doctrine::getTable('Collections')->find($this->eid);
   }
 
   public function executeKeywords()
@@ -66,7 +66,7 @@ class cataloguewidgetComponents extends sfComponents
     $this->kingdom = '' ;
     if($this->table == 'taxonomy')
     {
-      $taxon = Doctrine::getTable('Taxonomy')->findExcept($this->eid);  
+      $taxon = Doctrine::getTable('Taxonomy')->find($this->eid);  
       if(substr($taxon->getPath(),0,4) == '/-4/' || $taxon->getId() == '-4') $this->kingdom = 'virus' ;
       if(substr($taxon->getPath(),0,4) == '/-3/' || $taxon->getId() == '-3') $this->kingdom = 'bacteriology' ;
       if(substr($taxon->getPath(),0,4) == '/-2/' || $taxon->getId() == '-2') $this->kingdom = 'bacteriology' ;

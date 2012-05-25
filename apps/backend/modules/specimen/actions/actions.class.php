@@ -19,9 +19,9 @@ class specimenActions extends DarwinActions
     $spec = null;
 
     if ($fwd404)
-      $this->forward404Unless($spec = Doctrine::getTable('Specimens')->findExcept($request->getParameter($parameter,0)));
+      $this->forward404Unless($spec = Doctrine::getTable('Specimens')->find($request->getParameter($parameter,0)));
     elseif($request->hasParameter($parameter) && $request->getParameter($parameter))
-      $spec = Doctrine::getTable('Specimens')->findExcept($request->getParameter($parameter) );
+      $spec = Doctrine::getTable('Specimens')->find($request->getParameter($parameter) );
 
     $form = new SpecimensForm($spec);
     return $form;
@@ -376,7 +376,7 @@ class specimenActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();  
-    $spec = Doctrine::getTable('Specimens')->findExcept($request->getParameter('id'));
+    $spec = Doctrine::getTable('Specimens')->find($request->getParameter('id'));
     $this->forward404Unless($spec, 'Specimen does not exist');
     if(!$this->getUser()->isA(Users::ADMIN))
     {

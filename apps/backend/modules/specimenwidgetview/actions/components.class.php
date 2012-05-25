@@ -88,7 +88,7 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeRefHosts()
   {
-    $this->spec = Doctrine::getTable('Specimens')->findExcept($this->eid);
+    $this->spec = Doctrine::getTable('Specimens')->find($this->eid);
   }
 
   public function executeRefCodes()

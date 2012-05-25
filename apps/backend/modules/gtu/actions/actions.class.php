@@ -152,7 +152,7 @@ class gtuActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {  
-    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->findExcept($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->form = new GtuForm($gtu);
@@ -162,7 +162,7 @@ class gtuActions extends DarwinActions
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->findExcept($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());    
     $this->form = new GtuForm($gtu);
 
@@ -177,7 +177,7 @@ class gtuActions extends DarwinActions
   {
     $request->checkCSRFProtection();
 
-    $this->forward404Unless($unit = Doctrine::getTable('Gtu')->findExcept($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($unit = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
 
     if(! $request->hasParameter('confirm'))
     {
@@ -238,7 +238,7 @@ class gtuActions extends DarwinActions
     $gtu = null;
 
     if($request->hasParameter('id') && $request->getParameter('id'))
-      $gtu = Doctrine::getTable('Gtu')->findExcept($request->getParameter('id') );
+      $gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id') );
 
     $form = new GtuForm($gtu);
     $form->addValue($number, $request->getParameter('group'));
@@ -264,7 +264,7 @@ class gtuActions extends DarwinActions
     {
       $spec = Doctrine::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this->getUser());
       if($spec->getHasEncodingRights() || $this->getUser()->isAtLeast(Users::ADMIN))
-        $gtu = Doctrine::getTable('Gtu')->findExcept($spec->getGtuRef() );
+        $gtu = Doctrine::getTable('Gtu')->find($spec->getGtuRef() );
       else
         $this->forwardToSecureAction();
     }

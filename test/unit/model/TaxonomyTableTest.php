@@ -20,8 +20,8 @@ $t->is(DarwinTable::getFilterForTable('classification_syonymies'),"Classificatio
 $t->is(DarwinTable::getFormForTable('classification_syonymies'),"ClassificationSyonymiesForm",'Form Name');
 $t->is(DarwinTable::getModelForTable('classification_syonymies'),"ClassificationSyonymies",'Model Name');
 
-$t->is(Doctrine::getTable('Taxonomy')->findExcept(4)->toArray(),true,'We got the record with findExcept');
-$t->is(Doctrine::getTable('Taxonomy')->findExcept(-1)->toArray(),true,'Record bellow 0 are found  with findExcept');
+$t->is(Doctrine::getTable('Taxonomy')->find(4)->toArray(),true,'We got the record with find');
+$t->is(Doctrine::getTable('Taxonomy')->find(-1)->toArray(),true,'Record bellow 0 are found  with find');
 
 $keywords = Doctrine::getTable('ClassificationKeywords')->findForTable('taxonomy', 4);
 $t->is(count($keywords),0,'No KW per default');

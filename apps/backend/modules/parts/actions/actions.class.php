@@ -21,15 +21,15 @@ class partsActions extends DarwinActions
         $this->redirect("parts/view?id=".$request->getParameter('id')) ;    
 
     }
-    $this->part = Doctrine::getTable('SpecimenParts')->findExcept($request->getParameter('id'));
+    $this->part = Doctrine::getTable('SpecimenParts')->find($request->getParameter('id'));
     if($this->part)
     {
-      $this->individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($this->part->getSpecimenIndividualRef());
+      $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($this->part->getSpecimenIndividualRef());
     }
     else
     {
       $this->part= new SpecimenParts();
-      $this->individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('indid'));
+      $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('indid'));
       $this->forward404Unless($this->individual);
       $this->part->Individual = $this->individual;
       $duplic = $request->getParameter('duplicate_id') ;
@@ -43,7 +43,7 @@ class partsActions extends DarwinActions
       }      
     }
 
-    $this->specimen = Doctrine::getTable('Specimens')->findExcept($this->individual->getSpecimenRef());
+    $this->specimen = Doctrine::getTable('Specimens')->find($this->individual->getSpecimenRef());
     $this->form = new SpecimenPartsForm($this->part, array( 'collection'=>$this->specimen->getCollectionRef(),'individual'=>$this->individual->getId()));
 
     if($this->form->getObject()->isNew())
@@ -76,7 +76,7 @@ class partsActions extends DarwinActions
 
   public function executeChoose(sfWebRequest $request)
   {
-    $this->individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id'));
+    $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('id'));
     $this->forward404Unless($this->individual);
     $this->parts = Doctrine::getTable('SpecimenParts')->findForIndividual($this->individual->getId());
     $parts_ids = array();
@@ -95,7 +95,7 @@ class partsActions extends DarwinActions
 
   public function executeExtendedInfo(sfWebRequest $request)
   {
-    $this->part = Doctrine::getTable('SpecimenParts')->findExcept($request->getParameter('id'));
+    $this->part = Doctrine::getTable('SpecimenParts')->find($request->getParameter('id'));
     $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('part', $request->getParameter('id'));
     $this->codes = array();
     foreach($codes_collection as $code)
@@ -109,7 +109,7 @@ class partsActions extends DarwinActions
   
   public function executeOverview(sfWebRequest $request)
   {
-    $this->individual = Doctrine::getTable('SpecimenIndividuals')->findExcept($request->getParameter('id'));
+    $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('id'));
     $this->forward404Unless($this->individual);
     $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($this->individual->getSpecimenRef(), $this->getUser());
     $this->forward404Unless($this->specimen);
@@ -153,9 +153,9 @@ class partsActions extends DarwinActions
     $collectionId = $request->getParameter('collection_id', null);
 
     if ($fwd404)
-      $this->forward404Unless($part = Doctrine::getTable('SpecimenParts')->findExcept($request->getParameter($parameter,0)), $this->getI18N('Specimen not found'));
+      $this->forward404Unless($part = Doctrine::getTable('SpecimenParts')->find($request->getParameter($parameter,0)), $this->getI18N('Specimen not found'));
     elseif($request->hasParameter($parameter) && $request->getParameter($parameter))
-      $part = Doctrine::getTable('SpecimenParts')->findExcept($request->getParameter($parameter));
+      $part = Doctrine::getTable('SpecimenParts')->find($request->getParameter($parameter));
     
     $form = new SpecimenPartsForm($part, array('collection'=>$collectionId));
     return $form;
@@ -233,7 +233,7 @@ class partsActions extends DarwinActions
       if(! Doctrine::getTable('Specimens')->hasRights('part_ref',$request->getParameter('id'), $this->getUser()->getId()))
         $this->forwardToSecureAction();
     }
-    $part = Doctrine::getTable('SpecimenParts')->findExcept($request->getParameter('id'));    
+    $part = Doctrine::getTable('SpecimenParts')->find($request->getParameter('id'));    
     $this->forward404Unless($part, 'Part does not exist');
     try
     {
