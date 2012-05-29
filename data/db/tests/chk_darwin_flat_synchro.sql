@@ -25,8 +25,8 @@ INSERT INTO tag_groups(id, gtu_ref, group_name, sub_group_name, tag_value) VALUE
 INSERT INTO tag_groups(id, gtu_ref, group_name, sub_group_name, tag_value) VALUES (100002, 100001, 'Administrative area', 'City', 'Bruxelles;Brussel;Brussels;Brüsel');
 INSERT INTO tag_groups(id, gtu_ref, group_name, sub_group_name, tag_value) VALUES (100003, 100002, 'Administrative area', 'Country', 'Belgique;Belgium;Belgïe');
 INSERT INTO tag_groups(id, gtu_ref, group_name, sub_group_name, tag_value) VALUES (100004, 100002, 'Administrative area', 'City', 'Brugge;Bruge');
-INSERT INTO taxonomy(id, name, level_ref, parent_ref) VALUES (100000, 'Anicracra', 2, -1);
-INSERT INTO taxonomy(id, name, level_ref, parent_ref) VALUES (100001, 'Aniblabla', 2, -1);
+INSERT INTO taxonomy(id, name, level_ref, parent_ref) (select 100000, 'Anicracra', 2, id from taxonomy where name = 'Eucaryota');
+INSERT INTO taxonomy(id, name, level_ref, parent_ref) (select 100001, 'Aniblabla', 2, id from taxonomy where name = 'Eucaryota');
 INSERT INTO chronostratigraphy(id, name, level_ref) VALUES (100000, 'Devotien', 55);
 INSERT INTO chronostratigraphy(id, name, level_ref) VALUES (100001, 'Chronocouche', 55);
 INSERT INTO lithostratigraphy(id, name, level_ref) VALUES (100000, 'Croute basse', 64);

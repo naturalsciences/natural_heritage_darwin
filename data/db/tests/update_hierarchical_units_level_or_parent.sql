@@ -94,92 +94,91 @@ SELECT throws_ok('UPDATE mineralogy SET level_ref = 71, parent_ref = 1 WHERE id 
 
 SELECT diag('Taxonomy level/parent update tests');
 
-INSERT INTO taxonomy (id, name, level_ref) VALUES (1, 'TOP', 1);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (2, 'A', 2, 1);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (3, 'AA', 4, 2);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (4, 'AAA', 12, 3);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (5, 'AAAA', 28, 4);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (6, 'AAAAA', 34, 5);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (7, 'AAAAAA', 41, 6);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (8, 'AAAAAAA', 42, 7);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (9, 'AAAAAAAA', 48, 8);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (10, 'AAAAAAAAA', 49, 9);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (11, 'B', 2, 1);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (12, 'C', 2, 1);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (13, 'CA', 4, 12);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (14, 'D', 2, 1);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (15, 'DA', 4, 14);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (16, 'DAA', 12, 15);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (17, 'E', 2, 1);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (18, 'EA', 4, 17);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (19, 'EAA', 12, 18);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (20, 'EAAA', 28, 19);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (21, 'KINGDOM', 2, 1);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (22, 'PHYLUM', 4, 21);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (23, 'CLASS', 12, 22);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (24, 'ORDER', 28, 23);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (25, 'FAMILY', 34, 24);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (26, 'GENUS', 41, 25);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (27, 'SUBGENUS', 42, 26);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (28, 'SECTIONBOTA', 43, 27);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (29, 'SUBSECTIONBOTA', 44, 28);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (30, 'SERIE', 45, 29);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (31, 'SUPERSPECIES', 47, 30);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (32, 'SPECIES', 48, 31);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (33, 'GENUSDUB', 41, 25);
+INSERT INTO taxonomy (id, name, level_ref) VALUES (10, 'TOP', 1);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (20, 'A', 2, 10);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (30, 'AA', 4, 20);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (40, 'AAA', 12, 30);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (50, 'AAAA', 28, 40);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (60, 'AAAAA', 34, 50);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (70, 'AAAAAA', 41, 60);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (80, 'AAAAAAA', 42, 70);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (90, 'AAAAAAAA', 48, 80);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (100, 'AAAAAAAAA', 49, 90);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (110, 'B', 2, 10);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (120, 'C', 2, 10);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (130, 'CA', 4, 120);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (140, 'D', 2, 10);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (150, 'DA', 4, 140);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (160, 'DAA', 12, 150);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (170, 'E', 2, 10);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (180, 'EA', 4, 170);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (190, 'EAA', 12, 180);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (200, 'EAAA', 28, 190);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (210, 'KINGDOM', 2, 10);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (220, 'PHYLUM', 4, 210);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (230, 'CLASS', 12, 220);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (240, 'ORDER', 28, 230);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (250, 'FAMILY', 34, 240);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (260, 'GENUS', 41, 250);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (270, 'SUBGENUS', 42, 260);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (280, 'SECTIONBOTA', 43, 270);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (290, 'SUBSECTIONBOTA', 44, 280);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (300, 'SERIE', 45, 290);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (310, 'SUPERSPECIES', 47, 300);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (320, 'SPECIES', 48, 310);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (330, 'GENUSDUB', 41, 250);
 
-SELECT ok('/' = (SELECT path FROM taxonomy WHERE id = 1), 'Path of unit 1: /');
-SELECT ok('/1/' = (SELECT path FROM taxonomy WHERE id = 2), 'Path of unit 2: /1/');
-SELECT ok('/1/2/' = (SELECT path FROM taxonomy WHERE id = 3), 'Path of unit 3: /1/2/');
-SELECT ok('/1/2/3/' = (SELECT path FROM taxonomy WHERE id = 4), 'Path of unit 4: /1/2/3/');
-SELECT ok('/1/2/3/4/' = (SELECT path FROM taxonomy WHERE id = 5), 'Path of unit 5: /1/2/3/4/');
-SELECT ok('/1/2/3/4/5/' = (SELECT path FROM taxonomy WHERE id = 6), 'Path of unit 6: /1/2/3/4/5/');
-SELECT ok('/1/2/3/4/5/6/' = (SELECT path FROM taxonomy WHERE id = 7), 'Path of unit 7: /1/2/3/4/5/6/');
-SELECT ok('/1/2/3/4/5/6/7/' = (SELECT path FROM taxonomy WHERE id = 8), 'Path of unit 8: /1/2/3/4/5/6/7/');
-SELECT ok('/1/2/3/4/5/6/7/8/' = (SELECT path FROM taxonomy WHERE id = 9), 'Path of unit 9: /1/2/3/4/5/6/7/8/');
-SELECT ok('/1/2/3/4/5/6/7/8/9/' = (SELECT path FROM taxonomy WHERE id = 10), 'Path of unit 10: /1/2/3/4/5/6/7/8/9/');
+SELECT ok('/' = (SELECT path FROM taxonomy WHERE id = 10), 'Path of unit 10: /');
+SELECT ok('/10/' = (SELECT path FROM taxonomy WHERE id = 20), 'Path of unit 20: /10/');
+SELECT ok('/10/20/' = (SELECT path FROM taxonomy WHERE id = 30), 'Path of unit 30: /10/20/');
+SELECT ok('/10/20/30/' = (SELECT path FROM taxonomy WHERE id = 40), 'Path of unit 40: /10/20/30/');
+SELECT ok('/10/20/30/40/' = (SELECT path FROM taxonomy WHERE id = 50), 'Path of unit 50: /10/20/30/40/');
+SELECT ok('/10/20/30/40/50/' = (SELECT path FROM taxonomy WHERE id = 60), 'Path of unit 60: /10/20/30/40/50/');
+SELECT ok('/10/20/30/40/50/60/' = (SELECT path FROM taxonomy WHERE id = 70), 'Path of unit 70: /10/20/30/40/50/60/');
+SELECT ok('/10/20/30/40/50/60/70/' = (SELECT path FROM taxonomy WHERE id = 80), 'Path of unit 80: /10/20/30/40/50/60/70/');
+SELECT ok('/10/20/30/40/50/60/70/80/' = (SELECT path FROM taxonomy WHERE id = 90), 'Path of unit 90: /10/20/30/40/50/60/70/80/');
+SELECT ok('/10/20/30/40/50/60/70/80/90/' = (SELECT path FROM taxonomy WHERE id = 100), 'Path of unit 10: /10/20/30/40/50/60/70/80/90/');
 
-SELECT lives_ok('UPDATE taxonomy SET parent_ref = 11 WHERE id = 3', 'Unit 3 (phylum) moved from parent unit 2 to parent unit 11');
+SELECT lives_ok('UPDATE taxonomy SET parent_ref = 110 WHERE id = 30', 'Unit 30 (phylum) moved from parent unit 20 to parent unit 110');
 
-SELECT ok('/1/' = (SELECT path FROM taxonomy WHERE id = 11), 'Path of unit 11: /1/');
-SELECT ok('/1/11/' = (SELECT path FROM taxonomy WHERE id = 3), 'Path of unit 3: /1/11/');
-SELECT ok('/1/11/3/' = (SELECT path FROM taxonomy WHERE id = 4), 'Path of unit 4: /1/11/3/');
-SELECT ok('/1/11/3/4/' = (SELECT path FROM taxonomy WHERE id = 5), 'Path of unit 5: /1/11/3/4/');
-SELECT ok('/1/11/3/4/5/' = (SELECT path FROM taxonomy WHERE id = 6), 'Path of unit 6: /1/11/3/4/5/');
-SELECT ok('/1/11/3/4/5/6/' = (SELECT path FROM taxonomy WHERE id = 7), 'Path of unit 7: /1/11/3/4/5/6/');
-SELECT ok('/1/11/3/4/5/6/7/' = (SELECT path FROM taxonomy WHERE id = 8), 'Path of unit 8: /1/11/3/4/5/6/7/');
-SELECT ok('/1/11/3/4/5/6/7/8/' = (SELECT path FROM taxonomy WHERE id = 9), 'Path of unit 9: /1/11/3/4/5/6/7/8/');
-SELECT ok('/1/11/3/4/5/6/7/8/9/' = (SELECT path FROM taxonomy WHERE id = 10), 'Path of unit 10: /1/11/3/4/5/6/7/8/9/');
+SELECT ok('/10/' = (SELECT path FROM taxonomy WHERE id = 110), 'Path of unit 110: /10/');
+SELECT ok('/10/110/' = (SELECT path FROM taxonomy WHERE id = 30), 'Path of unit 30: /10/110/');
+SELECT ok('/10/110/30/' = (SELECT path FROM taxonomy WHERE id = 40), 'Path of unit 40: /10/110/30/');
+SELECT ok('/10/110/30/40/' = (SELECT path FROM taxonomy WHERE id = 50), 'Path of unit 50: /10/110/30/40/');
+SELECT ok('/10/110/30/40/50/' = (SELECT path FROM taxonomy WHERE id = 60), 'Path of unit 60: /10/110/30/40/50/');
+SELECT ok('/10/110/30/40/50/60/' = (SELECT path FROM taxonomy WHERE id = 70), 'Path of unit 70: /10/110/30/40/50/60/');
+SELECT ok('/10/110/30/40/50/60/70/' = (SELECT path FROM taxonomy WHERE id = 80), 'Path of unit 80: /10/110/30/40/50/60/70/');
+SELECT ok('/10/110/30/40/50/60/70/80/' = (SELECT path FROM taxonomy WHERE id = 90), 'Path of unit 90: /10/110/30/40/50/60/70/80/');
+SELECT ok('/10/110/30/40/50/60/70/80/90/' = (SELECT path FROM taxonomy WHERE id = 100), 'Path of unit 100: /10/110/30/40/50/60/70/80/90/');
 
-SELECT lives_ok('UPDATE taxonomy SET parent_ref = 13 WHERE id = 4', 'Unit 4 (class) moved from parent unit 3 to parent unit 13');
+SELECT lives_ok('UPDATE taxonomy SET parent_ref = 130 WHERE id = 40', 'Unit 40 (class) moved from parent unit 30 to parent unit 130');
 
+SELECT lives_ok('UPDATE taxonomy SET parent_ref = 160 WHERE id = 50', 'Unit 50 moved from parent unit 40 to parent unit 160');
 
-SELECT lives_ok('UPDATE taxonomy SET parent_ref = 16 WHERE id = 5', 'Unit 5 moved from parent unit 4 to parent unit 16');
+SELECT lives_ok('UPDATE taxonomy SET parent_ref = 200 WHERE id = 60', 'Unit 60 moved from parent unit 50 to parent unit 200');
 
-SELECT lives_ok('UPDATE taxonomy SET parent_ref = 20 WHERE id = 6', 'Unit 6 moved from parent unit 5 to parent unit 20');
+SELECT lives_ok('UPDATE taxonomy SET level_ref = 41, parent_ref = 60 WHERE id = 80', 'Unit 80 moved from parent unit 70 to parent unit 60 and changed from level 42 (sub_genus) to level 41 (genus)');
 
-SELECT lives_ok('UPDATE taxonomy SET level_ref = 41, parent_ref = 6 WHERE id = 8', 'Unit 8 moved from parent unit 7 to parent unit 6 and changed from level 42 (sub_genus) to level 41 (genus)');
+SELECT lives_ok('UPDATE taxonomy SET name = ''NEOSUBGENUS'', level_ref = 42, parent_ref = 330 WHERE id = 290', 'Unit 290 moved from parent unit 280 to parent unit 330 and changed from level 44 (sub_section_botany) to level 42 (sub_genus)');
 
-SELECT lives_ok('UPDATE taxonomy SET name = ''NEOSUBGENUS'', level_ref = 42, parent_ref = 33 WHERE id = 29', 'Unit 29 moved from parent unit 28 to parent unit 33 and changed from level 44 (sub_section_botany) to level 42 (sub_genus)');
+SELECT ok('/10/210/220/230/240/250/' = (SELECT path FROm taxonomy WHERE id = 330), 'Path of unit 33: /10/210/220/230/240/250/');
+SELECT ok('/10/210/220/230/240/250/330/' = (SELECT path from taxonomy WHERE id = 290), 'Path of unit 29: /10/210/220/230/240/250/330/');
+SELECT ok('/10/210/220/230/240/250/330/290/' = (SELECT path from taxonomy WHERE id = 300), 'Path of unit 30: /10/210/220/230/240/250/330/290/');
+SELECT ok('/10/210/220/230/240/250/330/290/300/' = (SELECT path from taxonomy WHERE id = 310), 'Path of unit 31: /10/210/220/230/240/250/330/290/300/');
+SELECT ok('/10/210/220/230/240/250/330/290/300/310/' = (SELECT path from taxonomy WHERE id = 320), 'Path of unit 32: /10/210/220/230/240/250/330/290/300/310/');
 
-SELECT ok('/1/21/22/23/24/25/' = (SELECT path FROm taxonomy WHERE id = 33), 'Path of unit 33: /1/21/22/23/24/25/');
-SELECT ok('/1/21/22/23/24/25/33/' = (SELECT path from taxonomy WHERE id = 29), 'Path of unit 29: /1/21/22/23/24/25/33/');
-SELECT ok('/1/21/22/23/24/25/33/29/' = (SELECT path from taxonomy WHERE id = 30), 'Path of unit 30: /1/21/22/23/24/25/33/29/');
-SELECT ok('/1/21/22/23/24/25/33/29/30/' = (SELECT path from taxonomy WHERE id = 31), 'Path of unit 31: /1/21/22/23/24/25/33/29/30/');
-SELECT ok('/1/21/22/23/24/25/33/29/30/31/' = (SELECT path from taxonomy WHERE id = 32), 'Path of unit 32: /1/21/22/23/24/25/33/29/30/31/');
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (340, 'THEDOMAIN', 1, null);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (350, 'THEKINGDOM', 2, 340);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (360, 'THESUPERPHYL', 3, 350);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (370, 'THEPHYLUM', 4, 360);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (380, 'THESUBPHYLUM', 5, 370);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (390, 'THECOHORTBOTANY', 8, 380);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (400, 'THESUBCOHORTBOTANY', 9, 390);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (410, 'THESUPERCLASS', 11, 400);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (420, 'THECLASS', 12, 410);
+INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (430, 'THESECPHYLUM', 4, 360);
 
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (34, 'THEDOMAIN', 1, null);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (35, 'THEKINGDOM', 2, 34);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (36, 'THESUPERPHYL', 3, 35);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (37, 'THEPHYLUM', 4, 36);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (38, 'THESUBPHYLUM', 5, 37);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (39, 'THECOHORTBOTANY', 8, 38);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (40, 'THESUBCOHORTBOTANY', 9, 39);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (41, 'THESUPERCLASS', 11, 40);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (42, 'THECLASS', 12, 41);
-INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (43, 'THESECPHYLUM', 4, 36);
-
-SELECT lives_ok('UPDATE taxonomy SET level_ref = 5, parent_ref = 43 WHERE id = 40', 'Unit 40 moved from parent unit 39 to parent unit 43 and changed from level 9 (sub_cohort_botany) to level 5 (sub_phylum)');
+SELECT lives_ok('UPDATE taxonomy SET level_ref = 5, parent_ref = 430 WHERE id = 400', 'Unit 400 moved from parent unit 390 to parent unit 430 and changed from level 9 (sub_cohort_botany) to level 5 (sub_phylum)');
 
 
 SELECT diag('Update people_relationships path');

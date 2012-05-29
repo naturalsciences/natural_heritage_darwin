@@ -66,15 +66,15 @@ INSERT INTO  gtu (id, parent_ref, code) VALUES (1,10,'bru66');
 INSERT INTO tag_groups (id, gtu_ref,group_name,sub_group_name,tag_value) VALUES (1, 1, 'Rév#ers','','La ''mèr'' Nwàre');
 SELECT ok( 'revers' = (SELECT group_name_indexed FROM tag_groups WHERE id=1),'FulltoIndex on tags_groups');
 
-INSERT INTO taxonomy (id, name, level_ref) VALUES (1, 'Méàleis Gùbularis&', 1);
-SELECT ok( to_tsvector('simple', 'Méàleis Gùbularis&') = (SELECT name_indexed FROM taxonomy WHERE id=1),'FulltoIndex on taxonomy name');
+INSERT INTO taxonomy (id, name, level_ref) VALUES (11, 'Méàleis Gùbularis&', 1);
+SELECT ok( to_tsvector('simple', 'Méàleis Gùbularis&') = (SELECT name_indexed FROM taxonomy WHERE id=11),'FulltoIndex on taxonomy name');
 
 insert into users (id, is_physical, family_name, given_name, birth_date, gender) VALUES (3, true, 'Maréchal', 'Bill', NOW(), 'M');
 insert into people (id, is_physical, family_name, given_name, birth_date, gender) VALUES (4, true, 'Maréchal', 'Bill', NOW(), 'M');
 insert into people (id, is_physical, family_name, given_name, birth_date, gender) VALUES (5, true, 'Marechal', 'Bill', NOW(), 'M');
 
 
-INSERT INTO class_vernacular_names (referenced_relation, record_id, id, community) VALUES ('taxonomy',10,1,'testlang');
+INSERT INTO class_vernacular_names (referenced_relation, record_id, id, community) VALUES ('taxonomy',11,1,'testlang');
 INSERT INTO vernacular_names (vernacular_class_ref, name) VALUES (1,'Éléphant!');
 SELECT ok( 'elephant' = (SELECT name_indexed FROM vernacular_names WHERE vernacular_class_ref=1),'FulltoIndex on vernacular_names');
 SELECT ok ( to_tsvector('simple', 'Éléphant') = (SELECT name_ts FROM vernacular_names WHERE vernacular_class_ref=1),'Full TEXT on vernacular_names');
