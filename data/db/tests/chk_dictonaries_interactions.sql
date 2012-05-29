@@ -28,7 +28,7 @@ SELECT lives_ok('delete from collection_maintenance where referenced_relation = 
 SELECT is(0 , (SELECT COUNT(*)::int FROM flat_dict WHERE referenced_relation = 'collection_maintenance'), 'No more entries in dictionnary for collection_maintenance');
 
 SELECT diag('Specimens');
-SELECT lives_ok('INSERT INTO specimens (id, collection_ref, taxon_ref) VALUES (10000,1,-1)', 'Specimen well inserted');
+SELECT lives_ok('INSERT INTO specimens (id, collection_ref, taxon_ref) (select 10000,1, id from taxonomy where name = ' || chr(39) || 'Eucaryota' || chr(39) || ')', 'Specimen well inserted');
 SELECT lives_ok('INSERT INTO specimen_individuals (specimen_ref, type, sex, stage, state, social_status, rock_form) VALUES (10000, ''Holotype'', ''Male'', ''Adult'', DEFAULT, DEFAULT, DEFAULT)', 'Individual well inserted');
 SELECT is('Holotype' , (SELECT dict_value FROM flat_dict WHERE referenced_relation = 'specimen_individuals' AND dict_field = 'type'), 'Type field well inserted into dictionnary');
 SELECT is('Male' , (SELECT dict_value FROM flat_dict WHERE referenced_relation = 'specimen_individuals' AND dict_field = 'sex'), 'Sex field well inserted into dictionnary');
