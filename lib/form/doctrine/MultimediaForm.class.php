@@ -17,17 +17,17 @@ class MultimediaForm extends BaseMultimediaForm
     $this->widgetSchema['title'] = new sfWidgetFormInput();
     $this->widgetSchema['title']->setAttributes(array('class'=>'medium_small_size'));
     $this->validatorSchema['title'] = new sfValidatorString(array('required'=>false,'trim'=>true));
-    
+
     if($this->getObject()->isNew())
     {
       $this->widgetSchema['uri'] = new sfWidgetFormInputHidden();
-      $this->validatorSchema['uri'] = new sfValidatorString();
+      $this->validatorSchema['uri'] = new sfValidatorString(array('required' => false));
     }
     else unset($this['uri']) ;
-      
+
     $this->widgetSchema['description'] = new sfWidgetFormInput();    
     $this->widgetSchema['description']->setAttributes(array('class'=>'medium_small_size'));
-    $this->validatorSchema['description'] = new sfValidatorString(array('required'=>false)); 
+    $this->validatorSchema['description'] = new sfValidatorString(array('required' => false)); 
 
     $this->widgetSchema['filename'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['filename'] = new sfValidatorPass();  
