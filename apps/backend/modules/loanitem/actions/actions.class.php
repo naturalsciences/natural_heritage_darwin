@@ -20,7 +20,7 @@ class loanitemActions extends DarwinActions
     $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef());
     if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
       $this->forwardToSecureAction();
-    if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER))
+    if($right==="view")
       $this->redirect('loanitem/view?id='.$loanitem->getId());      
     return $loanitem ;
   }  
