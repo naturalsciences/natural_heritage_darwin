@@ -20,8 +20,8 @@ class loanActions extends DarwinActions
     $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
     if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
       $this->forwardToSecureAction();
-    if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER)) 
-      $this->redirect('loan/view?id='.$loan->getId());      
+    if($right==="view") // || $this->getUser()->isAtLeast(Users::MANAGER) The test is not right
+      $this->redirect('loan/view?id='.$loan->getId());
     return $loan ;
   }
   
