@@ -18,9 +18,12 @@ class loanActions extends DarwinActions
     $this->forward404Unless($loan = Doctrine::getTable('Loans')->find($loan_id), sprintf('Object loan does not exist (%s).', array($loan_id)));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;
     $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
-    if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
-      $this->forwardToSecureAction();
-    if($right==="view") // || $this->getUser()->isAtLeast(Users::MANAGER) The test is not right
+    if(!$right)
+    {
+      if ($this->getUser()->isAtLeast(Users::MANAGER)) $this->redirect('loan/view?id='.$loan->getId());          
+      else $this->forwardToSecureAction();
+    }
+    if($right==="view")
       $this->redirect('loan/view?id='.$loan->getId());
     return $loan ;
   }
