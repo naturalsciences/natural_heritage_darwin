@@ -50,6 +50,9 @@ help-target:
 	@echo "create-user"
 	@echo "   create a default user to access only the darwin schema and db"
 	@echo ""
+	@echo "upgrade"
+	@echo "   tries to update the current db to the new version"
+	@echo ""
 	@echo "uninstall-db"
 	@echo "   remove the tables,function... from darwin. WARNING! This action can remove ALL your data"
 	@echo ""
@@ -167,6 +170,13 @@ else
 	$(PRIV_PSQL_DB) -c "CREATE ROLE $(DB_READ_USER) ENCRYPTED PASSWORD '$(PASSWD)' NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
 endif
 
+upgrade: 
+	@for n in `ls changes/*.sql | sort -n | grep -A 100000 \`$(PRIV_PSQL_DB) -c "select id from darwin2.db_version order by update_at DESC LIMIT 1;" -t -A\` | tail -n +2`; do\
+		echo "Upgrade to $$n"; \
+		$(PRIV_PSQL_DB) -f $$n; \
+		$(PRIV_PSQL_DB) -c "update darwin2.db_version set id=`echo $$n| sed 's/-.*//' | xargs  basename` , update_at=now();"; \
+	done
+	
 drop-db:
 	$(PRIV_PSQL_DB) -f dropdb.sql
 
@@ -176,3 +186,4 @@ love:
 	@echo "   DBTeam - Service ICT"
 	@echo "   29 Rue Vautier,"
 	@echo "   1000 Brussels Belgium"
+

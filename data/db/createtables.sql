@@ -2031,3 +2031,13 @@ comment on column catalogue_bibliography.id is 'Unique identifier of record';
 comment on column catalogue_bibliography.referenced_relation is 'Identifier-Name of table the units come from';
 comment on column catalogue_bibliography.record_id is 'Identifier of record concerned in table concerned';
 comment on column catalogue_bibliography.bibliography_ref is 'Reference of the biblio concerned - id field of people table';
+
+
+
+create table db_version (
+ id integer not null,
+ update_at timestamp default now()
+ 
+);
+
+comment on table db_version is 'Table holding the database version and update date';
