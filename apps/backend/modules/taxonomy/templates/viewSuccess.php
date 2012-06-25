@@ -13,7 +13,7 @@ $(document).ready(function ()
    });
 });
 </script>
-<?php include_partial('catalogue/commonJs');?>
+
 <?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'catalogue_taxonomy','eid'=> $form->getObject()->getId(), 'view' => true)); ?>
 <?php slot('title', __('View Taxonomic unit'));  ?>
 <div class="page">
