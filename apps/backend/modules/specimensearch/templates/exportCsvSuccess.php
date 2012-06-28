@@ -82,10 +82,10 @@ Part Codes<?php echo $sep;?>
 <?php echo $specimen->getGtuRef().$sep;?>
 <?php echo $specimen->getGtuCode().$sep;?>
 <?php echo str_replace(';', ',', $specimen->getGtuCountryTagValue('')).$sep; ?>
-<?php echo (($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$specimen->getLatitude():'').$sep;?>
-<?php echo (($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$specimen->getLongitude():'').$sep;?>
-<?php echo ((($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation())?$specimen->getGtuElevation():'').$sep;?>
-<?php echo ((($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation())?$specimen->getGtuElevationAccuracy():'').$sep;?>
+<?php echo (($specimen->getStationVisible() || $unit->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$specimen->getLatitude():'').$sep;?>
+<?php echo (($specimen->getStationVisible() || $unit->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$specimen->getLongitude():'').$sep;?>
+<?php echo ((($specimen->getStationVisible() || $unit->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation())?$specimen->getGtuElevation():'').$sep;?>
+<?php echo ((($specimen->getStationVisible() || $unit->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation())?$specimen->getGtuElevationAccuracy():'').$sep;?>
 <?php if(isset($codes[$specimen->getSpecimenRef()])) foreach($codes[$specimen->getSpecimenRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
 <?php echo $specimen->getChronoRef().$sep;?>
 <?php echo $specimen->getChronoName().$sep;?>
