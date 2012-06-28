@@ -109,7 +109,7 @@ Part Codes<?php echo $sep;?>
 <?php echo $individual->getRockForm().$sep;?>
 <?php echo $individual->getSpecimenIndividualsCountMin().$sep;?>
 <?php echo $individual->getSpecimenIndividualsCountMax().$sep;?>
-<?php elseif($source =='part'):?>
+<?php if($source =='part'):?>
 <?php echo $part->getSpecimenPart();?>
 <?php echo $part->getSpecimenStatus();?>
 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
@@ -125,6 +125,7 @@ Part Codes<?php echo $sep;?>
 <?php echo $part->getSubContainerType();?>
 <?php echo $part->getSubContainerStorage();?>
 <?php if(isset($part_codes[$item->getSpecimenRef()])) foreach($part_codes[$item->getSpecimenRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
+<?php endif;?>
 <?php endif;?>
 <?php endif;?>
 
