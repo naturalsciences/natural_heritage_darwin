@@ -1,3 +1,4 @@
+<?php use_helper('Text');?>  
 <table class="catalogue_table">
   <thead>
     <tr>
