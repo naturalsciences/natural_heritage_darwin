@@ -1,7 +1,7 @@
 prod:
   .settings:
     no_script_name:         false
-    logging_enabled:        true
+    logging_enabled:        on
     cache:                  on
 dev:
   .settings:
