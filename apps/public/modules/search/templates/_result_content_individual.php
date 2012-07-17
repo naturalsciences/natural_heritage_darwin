@@ -7,7 +7,7 @@
   <?php echo ($specimen->getSex()=="undefined")?"":ucfirst($specimen->getSex()) ; ?>
 </td>
 <td class="col_state">
-  <?php echo ($specimen->getState()=="not applicable")?"":ucfirst($specimenSpecimenIndividuals[0]->getState());?>
+  <?php echo ($specimen->getState()=="not applicable")?"":ucfirst($specimen->getState());?>
 </td> 
 <td class="col_stage">
   <?php echo ($specimen->getStage()=="undefined")?"":ucfirst($specimen->getStage()) ; ?>
