@@ -40,7 +40,6 @@
  * @property Doctrine_Collection $SpecimensFlat
  * @property Doctrine_Collection $SpecimenIndividuals
  * @property Doctrine_Collection $SpecimensAccompanying
- * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
  * @property Doctrine_Collection $SpecimensTools
  * 
@@ -79,7 +78,6 @@
  * @method Doctrine_Collection getSpecimensFlat()         Returns the current record's "SpecimensFlat" collection
  * @method Doctrine_Collection getSpecimenIndividuals()   Returns the current record's "SpecimenIndividuals" collection
  * @method Doctrine_Collection getSpecimensAccompanying() Returns the current record's "SpecimensAccompanying" collection
- * @method Doctrine_Collection getSpecimensCodes()        Returns the current record's "SpecimensCodes" collection
  * @method Doctrine_Collection getSpecimensMethods()      Returns the current record's "SpecimensMethods" collection
  * @method Doctrine_Collection getSpecimensTools()        Returns the current record's "SpecimensTools" collection
  * @method Specimens           setId()                    Sets the current record's "id" value
@@ -117,7 +115,6 @@
  * @method Specimens           setSpecimensFlat()         Sets the current record's "SpecimensFlat" collection
  * @method Specimens           setSpecimenIndividuals()   Sets the current record's "SpecimenIndividuals" collection
  * @method Specimens           setSpecimensAccompanying() Sets the current record's "SpecimensAccompanying" collection
- * @method Specimens           setSpecimensCodes()        Sets the current record's "SpecimensCodes" collection
  * @method Specimens           setSpecimensMethods()      Sets the current record's "SpecimensMethods" collection
  * @method Specimens           setSpecimensTools()        Sets the current record's "SpecimensTools" collection
  * 
@@ -269,10 +266,6 @@ abstract class BaseSpecimens extends sfDoctrineRecord
         $this->hasMany('SpecimensAccompanying', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
-
-        $this->hasMany('SpecimensCodes', array(
-             'local' => 'id',
-             'foreign' => 'record_id'));
 
         $this->hasMany('SpecimensMethods', array(
              'local' => 'id',
