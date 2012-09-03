@@ -125,3 +125,31 @@ WHERE subqry.new_species != 0
 $$;
 
 alter function stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) owner to darwin2;
+
+
+/*
+SELECT *
+FROM
+(
+  SELECT formated_name,
+       (select count(sp.id)
+        from users_tracking as ut inner join
+          (specimen_parts as sp
+            inner join
+            (specimen_individuals as si
+            inner join
+              (specimens as s
+               inner join collections_rights as cr on cr.collection_ref = s.collection_ref and user_ref = users.id
+              ) on s.id = si.specimen_ref
+            ) on si.id = sp.specimen_individual_ref
+          )
+        on ut.referenced_relation = 'specimen_parts'
+        and ut.action = 'insert'
+        and ut.record_id = sp.id
+        and modification_date_time between '2012-06-15' and '2012-09-15'
+        ) as new_items
+  FROM users
+  WHERE id in (42349)
+) as subqry
+order by formated_name
+*/
