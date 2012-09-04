@@ -126,8 +126,7 @@ $$;
 
 alter function stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) owner to darwin2;
 
-
-/*
+create or replace function stats_encoders_encoding (collections.id%TYPE, users.id%TYPE, timestamp, timestamp) returns setof stats_collections language sql immutable as $$
 SELECT *
 FROM
 (
@@ -136,20 +135,92 @@ FROM
         from users_tracking as ut inner join
           (specimen_parts as sp
             inner join
-            (specimen_individuals as si
-            inner join
-              (specimens as s
-               inner join collections_rights as cr on cr.collection_ref = s.collection_ref and user_ref = users.id
-              ) on s.id = si.specimen_ref
-            ) on si.id = sp.specimen_individual_ref
+            (specimen_individuals as si inner join specimens as s on s.id = si.specimen_ref and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')) on si.id = sp.specimen_individual_ref
           )
         on ut.referenced_relation = 'specimen_parts'
         and ut.action = 'insert'
         and ut.record_id = sp.id
-        and modification_date_time between '2012-06-15' and '2012-09-15'
-        ) as new_items
+        and ut.user_ref = users.id
+        and modification_date_time between $3 and $4
+        ) as new_items,
+       (select count(distinct sp.id)
+        from users_tracking as ut inner join
+          (specimen_parts as sp
+            inner join
+            (specimen_individuals as si inner join specimens as s on s.id = si.specimen_ref and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')) on si.id = sp.specimen_individual_ref
+          )
+        on ut.referenced_relation = 'specimen_parts'
+        and ut.action = 'update'
+        and ut.record_id = sp.id
+        and ut.user_ref = users.id
+        and modification_date_time between $3 and $4
+        ) as updated_items,
+        (select count(si.id)
+         from users_tracking as ut inner join
+          (specimen_individuals as si
+           inner join specimens as s on s.id = si.specimen_ref
+                                     and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')
+                                     and si.type != 'specimen'
+          )
+         on ut.referenced_relation = 'specimen_individuals'
+         and ut.action = 'insert'
+         and ut.record_id = si.id
+         and ut.user_ref = users.id
+         and modification_date_time between $3 and $4
+        ) as new_types,
+        (select count(si.id)
+         from users_tracking as ut inner join
+          (specimen_individuals as si
+           inner join specimens as s on s.id = si.specimen_ref
+                                     and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')
+                                     and si.type != 'specimen'
+          )
+         on ut.referenced_relation = 'specimen_individuals'
+         and ut.action = 'update'
+         and ut.record_id = si.id
+         and ut.user_ref = users.id
+         and modification_date_time between $3 and $4
+        ) as updated_types,
+        (select count(s.id)
+         from users_tracking as ut inner join specimens as s
+         on ut.referenced_relation = 'specimens'
+         and ut.action = 'insert'
+         and ut.record_id = s.id
+         and ut.user_ref = users.id
+         and modification_date_time between $3 and $4
+        ) as new_specimens,
+        (select count(s.id)
+         from users_tracking as ut inner join specimens as s
+         on ut.referenced_relation = 'specimens'
+         and ut.action = 'update'
+         and ut.record_id = s.id
+         and ut.user_ref = users.id
+         and modification_date_time between $3 and $4
+         and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')
+        ) as updated_specimens,
+        (select count(distinct tax.id)
+        from
+        (users_tracking as ut inner join taxonomy as tax
+          on ut.referenced_relation = 'taxonomy'
+          and ut.action = 'insert'
+          and ut.record_id = tax.id
+          and tax.level_ref > 47
+          and ut.user_ref = users.id
+          and ut.modification_date_time between $3 and $4
+        )
+        inner join specimens as s on s.taxon_ref = tax.id
+                                  and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')
+        inner join users_tracking as ust
+          on ust.referenced_relation = 'specimens'
+          and ust.action = 'insert'
+          and ust.record_id = s.id
+          and ust.user_ref = users.id
+          and ust.modification_date_time between $3 and $4
+        ) as new_species
   FROM users
-  WHERE id in (42349)
+  WHERE id = $2
 ) as subqry
 order by formated_name
-*/
+$$;
+
+alter function stats_encoders_encoding (collections.id%TYPE, users.id%TYPE, timestamp, timestamp) owner to darwin2;
