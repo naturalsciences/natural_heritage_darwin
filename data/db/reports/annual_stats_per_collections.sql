@@ -224,3 +224,6 @@ order by formated_name
 $$;
 
 alter function stats_encoders_encoding (collections.id%TYPE, users.id%TYPE, timestamp, timestamp) owner to darwin2;
+
+grant execute on function stats_encoders_encoding (collections.id%TYPE, users.id%TYPE, timestamp, timestamp) to d2viewer;
+grant execute on function stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) to d2viewer;
