@@ -17,7 +17,7 @@
                 <?php echo __('Collection');?>
                 <?php if($orderBy=='collection_name') echo $orderSign ?>
               </a>
-            </th>          
+            </th>
             <th>
               <?php echo __('Code(s)');?>
             </th>
@@ -35,7 +35,7 @@
             </th>
             <th>
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=ig_num'.( ($orderBy=='ig_num' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
-                <?php echo __('Ig num');?>
+                <?php echo __('IG num');?>
                 <?php if($orderBy=='ig_num') echo $orderSign ?>
               </a>
             </th>            
@@ -45,7 +45,7 @@
         <tbody>
           <?php foreach($specimens as $specimen):?>
             <tr class="rid_<?php echo $specimen->getSpecimenRef(); ?>">
-              <td class="top_aligned"><?php echo $specimen->getCollectionName();?></td>            
+              <td class="top_aligned"><?php echo $specimen->getCollectionName();?></td>
               <td>
                 <ul>
                   <?php if (!isset($codes[$specimen->getSpecimenRef()])): ?>
@@ -53,12 +53,12 @@
                       <?php echo '-';?>
                     </li>
                   <?php else:?>
-					<?php foreach($codes[$specimen->getSpecimenRef()] as $code):?>
-					  <li style="font-weight:<?php echo ($code->getCodeCategory()=='main')?'bold':'normal';?>">
-						<?php echo $code->getCodeFormated(); ?>
-					  </li>
-					<?php endforeach;?>
-				  <?php endif;?>
+                    <?php foreach($codes[$specimen->getSpecimenRef()] as $code):?>
+                      <li style="font-weight:<?php echo ($code->getCodeCategory()=='main')?'bold':'normal';?>">
+                            <?php echo $code->getCodeFormated(); ?>
+                      </li>
+                    <?php endforeach;?>
+                  <?php endif;?>
                 </ul>
               </td>
               <td class="top_aligned"><?php echo $specimen->getTaxonName();?></td>
