@@ -80,7 +80,7 @@ $(document).ready(function () {
   $('#submit_spec_f1').click(function(event){
     if($('#specimen_ig_ref_check').val() == 0 && $('#specimen_ig_ref').val() == "" && $('#specimen_ig_ref_name').val() != "")
     {
-      if(!window.confirm('<?php echo __("Your IG number will be lost ! are you sure you want continue ?") ; ?>'))
+      if(!window.confirm('<?php echo __("Your I.G. number will be lost ! are you sure you want continue ?") ; ?>'))
         event.preventDefault();
     }
   }) ;

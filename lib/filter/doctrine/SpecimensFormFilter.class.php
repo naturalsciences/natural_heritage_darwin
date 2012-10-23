@@ -23,7 +23,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
                                          'taxon_name' => 'Taxon',
                                          'taxon_level' => 'Level',
                                          'collection_name' => 'Collections',
-                                         'ig_num' => 'Ig unit'
+                                         'ig_num' => 'I.G. unit'
                                         )
                                   );
     $this->widgetSchema['taxon_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(

@@ -18,7 +18,7 @@
                 <?php if($orderBy=='ig_num') echo $orderSign ?>
               </a>
             </th>
-            <th>&nbsp;</th>            
+            <th>&nbsp;</th>
             <th class="expedition_name">
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=expedition_name'.( ($orderBy=='expedition_name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __('Expeditions');?>
@@ -54,7 +54,7 @@
     </div>
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
   <?php else:?>
-    <?php echo __('No Expedition or Igs Matching');?>
+    <?php echo __('No Expedition or I.G. Matching');?>
   <?php endif;?>
 <?php else:?>
   <div class="error">
