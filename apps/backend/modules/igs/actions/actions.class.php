@@ -64,7 +64,7 @@ class igsActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $this->forward404Unless($igs = Doctrine::getTable('Igs')->find(array($request->getParameter('id'))), sprintf('Object igs does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($igs = Doctrine::getTable('Igs')->find(array($request->getParameter('id'))), sprintf('Object IG does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new igsForm($igs);
     $this->loadWidgets();
@@ -73,7 +73,7 @@ class igsActions extends DarwinActions
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($igs = Doctrine::getTable('igs')->find(array($request->getParameter('id'))), sprintf('Object igs does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($igs = Doctrine::getTable('igs')->find(array($request->getParameter('id'))), sprintf('Object IG does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());    
     $this->form = new igsForm($igs);
 
@@ -85,7 +85,7 @@ class igsActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     $request->checkCSRFProtection();
-    $this->forward404Unless($igs = Doctrine::getTable('igs')->find(array($request->getParameter('id'))), sprintf('Object igs does not exist (%s).', $request->getParameter('id')));
+    $this->forward404Unless($igs = Doctrine::getTable('igs')->find(array($request->getParameter('id'))), sprintf('Object IG does not exist (%s).', $request->getParameter('id')));
     try
     {
       $igs->delete();
@@ -124,7 +124,7 @@ class igsActions extends DarwinActions
         return $this->renderText($igId->getId());
       else
         return $this->renderText('not found');
-    }  
+    }
     return $this->renderText('');
   }
 
@@ -197,25 +197,25 @@ class igsActions extends DarwinActions
     {
       try
       {
-	$igs = $form->save();
-	$this->redirect('igs/edit?id='.$igs->getId());
+        $igs = $form->save();
+        $this->redirect('igs/edit?id='.$igs->getId());
       }
       catch(Doctrine_Exception $ne)
       {
-	$e = new DarwinPgErrorParser($ne);
-	$error = new sfValidatorError(new savedValidator(),$e->getMessage());
-	$form->getErrorSchema()->addError($error); 
+        $e = new DarwinPgErrorParser($ne);
+        $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+        $form->getErrorSchema()->addError($error);
       }
     }
   }
   public function executeView(sfWebRequest $request)
   {
     $this->igs = Doctrine::getTable('igs')->find($request->getParameter('id'));
-    $this->forward404Unless($this->igs,'Ig not Found');
-    $this->form = new igsForm($this->igs);    
+    $this->forward404Unless($this->igs,'IG not Found');
+    $this->form = new igsForm($this->igs);
     $this->loadWidgets();
   }
-  
+
   public function executeAddNew(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
@@ -225,15 +225,15 @@ class igsActions extends DarwinActions
       $igs->setIgNum($request->getParameter('num')) ;
       try
       {
-	      $igs->save();
-	      return $this->renderText($igs->getId());
+        $igs->save();
+        return $this->renderText($igs->getId());
       }
       catch(Doctrine_Exception $ne)
       {
-	      $e = new DarwinPgErrorParser($ne);
-	      $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-	      return($error); 
-      }          
+        $e = new DarwinPgErrorParser($ne);
+        $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+        return($error);
+      }
     }
   }
 }

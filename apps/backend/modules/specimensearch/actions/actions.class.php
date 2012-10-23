@@ -28,7 +28,7 @@ class specimensearchActions extends DarwinActions
       Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
       $this->form->bind($criterias['specimen_search_filters']) ;
     }
-    else $this->form->addGtuTagValue(0);    
+    else $this->form->addGtuTagValue(0);
     //loadwidget at the end because we possibliy need to update some widget visibility before showing it
     $this->loadWidgets();
   }
@@ -352,7 +352,7 @@ class specimensearchActions extends DarwinActions
         $this->getI18N()->__('Chronostratigraphic unit'),),
       'ig' => array(
         'ig_num_indexed',
-        $this->getI18N()->__('Ig unit'),),
+        $this->getI18N()->__('IG unit'),),
       'litho' => array(
         'litho_name_order_by',
         $this->getI18N()->__('Lithostratigraphic unit'),),

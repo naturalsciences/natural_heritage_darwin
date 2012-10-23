@@ -6,11 +6,11 @@ $(document).ready(function ()
     check_screen_size() ;
     $(window).resize(function(){
       check_screen_size();
-    });    
+    });
     $('.widget .widget_content:hidden .error_list:has(li)').each(function(){
         $(this).closest('.widget').find('.widget_bottom_button').click();
     });
-    
+
     $('.spec_error_list li.hidden').each(function(){
         field = getElInClasses($(this),'error_fld_');
         if( $('#specimen_'+field).length == 0 )
@@ -80,7 +80,7 @@ $(document).ready(function () {
   $('#submit_spec_f1').click(function(event){
     if($('#specimen_ig_ref_check').val() == 0 && $('#specimen_ig_ref').val() == "" && $('#specimen_ig_ref_name').val() != "")
     {
-      if(!window.confirm('<?php echo __("Your Ig number will be lost ! are you sure you want continue ?") ; ?>'))
+      if(!window.confirm('<?php echo __("Your IG number will be lost ! are you sure you want continue ?") ; ?>'))
         event.preventDefault();
     }
   }) ;
