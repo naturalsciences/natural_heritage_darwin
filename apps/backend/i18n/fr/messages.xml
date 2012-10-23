@@ -5336,6 +5336,10 @@
         <source>This widget allows you to add a bibliographic reference of the item</source>
         <target>Cette widget vous permet d&#039;ajouter une référence bibliographique à l&#039;élément</target>
       </trans-unit>
+          <trans-unit id="1729">
+        <source>Ig num</source>
+        <target>I.G.</target>
+      </trans-unit>
           <trans-unit id="1186">
         <source>Donator or seller</source>
         <target>Donnateur ou vendeur</target>

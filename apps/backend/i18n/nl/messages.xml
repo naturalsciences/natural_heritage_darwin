@@ -2203,6 +2203,10 @@
         <source>Please save your loan in order to add properties</source>
         <target>Gelieve uw ontlening te bewaren alvorens er eigenschappen aan toe te voegen.</target>
       </trans-unit>
+          <trans-unit id="1729">
+        <source>Ig num</source>
+        <target>I.G.</target>
+      </trans-unit>
           <trans-unit id="262">
         <source>no</source>
         <target>Neen</target>
