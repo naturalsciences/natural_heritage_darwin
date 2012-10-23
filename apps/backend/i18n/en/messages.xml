@@ -5643,6 +5643,62 @@
         <source>This widget allows you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges</source>
         <target>This widget allows you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges</target>
       </trans-unit>
+          <trans-unit id="1708">
+        <source>Duplicate specimen codes</source>
+        <target>Duplicate specimen codes</target>
+      </trans-unit>
+          <trans-unit id="1709">
+        <source>Publishable ?</source>
+        <target>Publishable ?</target>
+      </trans-unit>
+          <trans-unit id="1710">
+        <source>View I.G.</source>
+        <target>View I.G.</target>
+      </trans-unit>
+          <trans-unit id="1715">
+        <source>Search I.G. Number</source>
+        <target>Search I.G. Number</target>
+      </trans-unit>
+          <trans-unit id="1716">
+        <source>No Expedition or I.G. Matching</source>
+        <target>No Expedition or I.G. Matching</target>
+      </trans-unit>
+          <trans-unit id="1717">
+        <source>Expedition and I.G. Search</source>
+        <target>Expedition and I.G. Search</target>
+      </trans-unit>
+          <trans-unit id="1718">
+        <source>I.G. unit</source>
+        <target>I.G. unit</target>
+      </trans-unit>
+          <trans-unit id="1719">
+        <source>This I.G. already exists</source>
+        <target>This I.G. already exists</target>
+      </trans-unit>
+          <trans-unit id="1722">
+        <source>Expeditions and I.G.</source>
+        <target>Expeditions and I.G.</target>
+      </trans-unit>
+          <trans-unit id="1724">
+        <source>Expedition and Igs Search</source>
+        <target>Expedition and Igs Search</target>
+      </trans-unit>
+          <trans-unit id="1725">
+        <source>Ig ref</source>
+        <target>Ig ref</target>
+      </trans-unit>
+          <trans-unit id="1726">
+        <source>Expedition name</source>
+        <target>Expedition name</target>
+      </trans-unit>
+          <trans-unit id="1727">
+        <source>ig_num</source>
+        <target>ig_num</target>
+      </trans-unit>
+          <trans-unit id="1728">
+        <source>ig_ref</source>
+        <target>ig_ref</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

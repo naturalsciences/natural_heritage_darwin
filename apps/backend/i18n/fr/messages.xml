@@ -627,10 +627,6 @@
         <source>Chronostratigraphic unit</source>
         <target>unité chronostratigraphique</target>
       </trans-unit>
-          <trans-unit id="170">
-        <source>Ig unit</source>
-        <target>Unité Ig</target>
-      </trans-unit>
           <trans-unit id="171">
         <source>Lithostratigraphic unit</source>
         <target>Unité lithostratigraphique</target>
@@ -894,6 +890,10 @@
           <trans-unit id="243">
         <source>Search Collecting Tools</source>
         <target>Rechercher outils de collecte</target>
+      </trans-unit>
+          <trans-unit id="170">
+        <source>Ig unit</source>
+        <target>Unité I.G.</target>
       </trans-unit>
           <trans-unit id="244">
         <source>Collecting Tools Search</source>
@@ -1371,10 +1371,6 @@
         <source>Choose a Lithostratigraphic unit</source>
         <target>Choisir unité lithostratigraphique</target>
       </trans-unit>
-          <trans-unit id="365">
-        <source>View Igs</source>
-        <target>Voir Igs</target>
-      </trans-unit>
           <trans-unit id="366">
         <source>Add an I.G. number</source>
         <target>Ajouter un numéro I.G.</target>
@@ -1406,10 +1402,6 @@
           <trans-unit id="373">
         <source>Duplicate I.G.</source>
         <target>Dupliquer I.G.</target>
-      </trans-unit>
-          <trans-unit id="374">
-        <source>Search IG Number</source>
-        <target>Rechercher numéro I.G.</target>
       </trans-unit>
           <trans-unit id="375">
         <source>General Inventory Numbers Search</source>
@@ -1522,6 +1514,14 @@
           <trans-unit id="403">
         <source>Code suffix sep.</source>
         <target>sep code suffixe </target>
+      </trans-unit>
+          <trans-unit id="365">
+        <source>View Igs</source>
+        <target>Voir I.G.</target>
+      </trans-unit>
+          <trans-unit id="374">
+        <source>Search IG Number</source>
+        <target>Rechercher numéro I.G.</target>
       </trans-unit>
           <trans-unit id="404">
         <source>Code suffix</source>
@@ -2323,10 +2323,6 @@
         <source>Extinct</source>
         <target>Eteinte</target>
       </trans-unit>
-          <trans-unit id="606">
-        <source>Synonymies</source>
-        <target>Synomymes</target>
-      </trans-unit>
           <trans-unit id="607">
         <source>External Url</source>
         <target>Lien externe</target>
@@ -3003,10 +2999,6 @@
         <source>Record</source>
         <target>Enregistrement</target>
       </trans-unit>
-          <trans-unit id="783">
-        <source>Your Ig number will be lost ! are you sure you want continue ?</source>
-        <target>Votre numéro Ig va être perdu ! êtes vous sur de vouloir continuer ?</target>
-      </trans-unit>
           <trans-unit id="784">
         <source>Required.</source>
         <target>Requis.</target>
@@ -3054,6 +3046,10 @@
           <trans-unit id="769">
         <source>Add another building</source>
         <target>Ajouter un nouveau bâtiment</target>
+      </trans-unit>
+          <trans-unit id="783">
+        <source>Your Ig number will be lost ! are you sure you want continue ?</source>
+        <target>Votre numéro I.G. va être perdu ! êtes vous sur de vouloir continuer ?</target>
       </trans-unit>
           <trans-unit id="796">
         <source>This property already exists</source>
@@ -3187,10 +3183,6 @@
         <source>catalogue_gtu_widget</source>
         <target>Widgets Point d&#039;échantillonage (GTU)</target>
       </trans-unit>
-          <trans-unit id="836">
-        <source>catalogue_igs_widget</source>
-        <target>Widgets numéro d&#039;Ig</target>
-      </trans-unit>
           <trans-unit id="837">
         <source>catalogue_lithology_widget</source>
         <target>Widgets Lithologie</target>
@@ -3314,6 +3306,10 @@
           <trans-unit id="1548">
         <source>Attendant</source>
         <target>Accompagnateur</target>
+      </trans-unit>
+          <trans-unit id="836">
+        <source>catalogue_igs_widget</source>
+        <target>Widgets numéro d&#039;I.G.</target>
       </trans-unit>
           <trans-unit id="1546">
         <source>Checker</source>
@@ -3755,13 +3751,13 @@
         <source>This widget allows you to preset the default prefix and/or separator and/or code and/or separator and/or suffix of the main code that will be used when choosing this collection in the specimen screen</source>
         <target>cette widget vous permet définir le préfixe et/ou le séparateur et/ou le code et/ou le suffixe par défaut du code principal qui sera utilisé quand cette collection sera choisie dans l&#039;écran des échantillons.</target>
       </trans-unit>
-          <trans-unit id="979">
-        <source>In this widget you can specify one or more values of the whole collection belonging to the same IG number as estimated by a particular insurance institution and /or on a particular date</source>
-        <target>Dans cette widget vous pouvez spécifier une ou plusieur valeurs de la globalité de la collection appartenant au même numéro Ig comme estimé par une institution assurance particulière et/ou à une date définie</target>
-      </trans-unit>
           <trans-unit id="980">
         <source>This widget allows you to add some information regarding the determination of either the type, sex, stage, social status and/or rock formation. You can potentially add the date on which the determination was made, what value was given as well as the determinators&#039; names.</source>
         <target>Ce widget vous permet d&#039;ajouter des informations précisant la détermination, tels que le type, le sexe, le stade de développement, la position sociale (insectes sociaux) et/ou la formation rocheuse. Vous pouvez égallement complèter l&#039;historique de détermination du spécimen (date, dénomination et déterminateur)</target>
+      </trans-unit>
+          <trans-unit id="979">
+        <source>In this widget you can specify one or more values of the whole collection belonging to the same IG number as estimated by a particular insurance institution and /or on a particular date</source>
+        <target>Dans cette widget vous pouvez spécifier une ou plusieur valeurs de la globalité de la collection appartenant au même numéro I.G. comme estimé par une institution assurance particulière et/ou à une date définie</target>
       </trans-unit>
           <trans-unit id="981">
         <source>This widget is mainly used for entering the social class of an animal living in a social group. e.g. to indicate that an individual is a workerbee</source>
@@ -4104,10 +4100,6 @@
         <source>You cannot set the same identification twice</source>
         <target>vous ne pouvez pas définir la même identification deux fois</target>
       </trans-unit>
-          <trans-unit id="1076">
-        <source>This Ig already exists</source>
-        <target>Cet Ig existe déjà</target>
-      </trans-unit>
           <trans-unit id="1072">
         <source>This code already exists</source>
         <target>Ce code existe déjà</target>
@@ -4188,17 +4180,9 @@
         <source>This word already exists</source>
         <target>Ce mot existe déjà</target>
       </trans-unit>
-          <trans-unit id="1105">
-        <source>No Expedition or Igs Matching</source>
-        <target>Aucune expeditions ou numéro d&#039;IG correspondant</target>
-      </trans-unit>
           <trans-unit id="1106">
         <source>Use this search if you look for an I.G Number via an Expedition, or if you look for an expedition via an I.G Number</source>
         <target>Utilisez ce menu si vous recherchez un numéro I.G via une expédition, ou si vous recherchez une expédition via un numéro I.G</target>
-      </trans-unit>
-          <trans-unit id="1107">
-        <source>Expeditions and Igs</source>
-        <target>Expéditions et Igs</target>
       </trans-unit>
           <trans-unit id="1108">
         <source>Forms</source>
@@ -4207,6 +4191,18 @@
           <trans-unit id="1109">
         <source>Display help icons</source>
         <target>Afficher les icônes d&#039;aide</target>
+      </trans-unit>
+          <trans-unit id="1076">
+        <source>This Ig already exists</source>
+        <target>Cet I.G. existe déjà</target>
+      </trans-unit>
+          <trans-unit id="1105">
+        <source>No Expedition or Igs Matching</source>
+        <target>Aucune expeditions ou numéro d&#039;I.G. correspondant</target>
+      </trans-unit>
+          <trans-unit id="1107">
+        <source>Expeditions and Igs</source>
+        <target>Expéditions et I.G.</target>
       </trans-unit>
           <trans-unit id="1110">
         <source>Is a Child Of</source>
@@ -4588,6 +4584,14 @@
         <source>This persons record still has links with others</source>
         <target>Cette personne est toujours liée à une autre</target>
       </trans-unit>
+          <trans-unit id="606">
+        <source>Synonymies</source>
+        <target>Synonymes</target>
+      </trans-unit>
+          <trans-unit id="1719">
+        <source>This I.G. already exists</source>
+        <target>Cet I.G. existe déjà</target>
+      </trans-unit>
           <trans-unit id="1507">
         <source>Search Loans</source>
         <target>Recherche de prêts</target>
@@ -4611,6 +4615,26 @@
           <trans-unit id="1631">
         <source>Use Loan dates</source>
         <target>Utiliser les dates du prêt</target>
+      </trans-unit>
+          <trans-unit id="1710">
+        <source>View I.G.</source>
+        <target>Visualisez l&#039;I.G.</target>
+      </trans-unit>
+          <trans-unit id="1715">
+        <source>Search I.G. Number</source>
+        <target>Cherchez un numéro I.G.</target>
+      </trans-unit>
+          <trans-unit id="1716">
+        <source>No Expedition or I.G. Matching</source>
+        <target>Aucune expédition ou I.G. correspondant</target>
+      </trans-unit>
+          <trans-unit id="1717">
+        <source>Expedition and I.G. Search</source>
+        <target>Recherche Expédition et I.G.</target>
+      </trans-unit>
+          <trans-unit id="1718">
+        <source>I.G. unit</source>
+        <target>I.G.</target>
       </trans-unit>
           <trans-unit id="1473">
         <source>This collection is linked with one or more specimens</source>
@@ -4742,7 +4766,11 @@
       </trans-unit>
           <trans-unit id="1709">
         <source>Publishable ?</source>
-        <target>Publiable ?</target>
+        <target>Editable ?</target>
+      </trans-unit>
+          <trans-unit id="1722">
+        <source>Expeditions and I.G.</source>
+        <target>Expédition et I.G.</target>
       </trans-unit>
           <trans-unit id="1510">
         <source>Person</source>
@@ -4872,6 +4900,14 @@
         <source>Return date</source>
         <target>Date de retour</target>
       </trans-unit>
+          <trans-unit id="1725">
+        <source>Ig ref</source>
+        <target>I.G.</target>
+      </trans-unit>
+          <trans-unit id="1726">
+        <source>Expedition name</source>
+        <target>Nom d&#039;expédition</target>
+      </trans-unit>
           <trans-unit id="1489">
         <source>Checked</source>
         <target>Vérifié</target>
@@ -4899,6 +4935,10 @@
           <trans-unit id="1502">
         <source>This widget allows you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, a explanation when a modification is added. The number of options in the status field depends on your privileges</source>
         <target>Cette widget vous permet d&#039;ajouter une note pour une partie spécifique, cette note peut être une modification, une question destinée aux gestionnaires, une note de rappel personnelle, une explication lorsqu&#039;une modification est ajoutée. Le nombre d&#039;options dans le champ &quot;Status&quot; dépend de vos privilèges</target>
+      </trans-unit>
+          <trans-unit id="1724">
+        <source>Expedition and Igs Search</source>
+        <target>Recherche Expédition et I.G.</target>
       </trans-unit>
           <trans-unit id="1601">
         <source>Returned</source>
@@ -5028,9 +5068,13 @@
         <source>Which role</source>
         <target>Quel rôle</target>
       </trans-unit>
-          <trans-unit id="1690">
-        <source>InProceedings</source>
-        <target>InProceedings</target>
+          <trans-unit id="1688">
+        <source>InBook</source>
+        <target>En livre</target>
+      </trans-unit>
+          <trans-unit id="1689">
+        <source>InCollection</source>
+        <target>En collection</target>
       </trans-unit>
           <trans-unit id="1516">
         <source>Add loan</source>
@@ -5076,21 +5120,17 @@
         <source>Unpublished</source>
         <target>Non publié</target>
       </trans-unit>
+          <trans-unit id="1690">
+        <source>InProceedings</source>
+        <target>Dans les Actes</target>
+      </trans-unit>
           <trans-unit id="1692">
         <source>Masters Thesis</source>
         <target>Mémoire de maîtrise</target>
       </trans-unit>
           <trans-unit id="1694">
         <source>Proceedings</source>
-        <target>Procédure</target>
-      </trans-unit>
-          <trans-unit id="1688">
-        <source>InBook</source>
-        <target>InBook</target>
-      </trans-unit>
-          <trans-unit id="1689">
-        <source>InCollection</source>
-        <target>InCollection</target>
+        <target>Actes</target>
       </trans-unit>
           <trans-unit id="1676">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; This unit might be used in items where you do no have encoding rights.&lt;br/&gt;Be sure of what you do!</source>
@@ -5148,6 +5188,10 @@
         <source>Book</source>
         <target>Livre</target>
       </trans-unit>
+          <trans-unit id="1727">
+        <source>ig_num</source>
+        <target>Numéro I.G.</target>
+      </trans-unit>
           <trans-unit id="1362">
         <source>This widget allows you to add people that can have different roles. e.g. an author, a reviewer, an expert in a certain domain, etc.</source>
         <target>Ce widget vous permet d&#039;ajouter des personnes qui peuvent avoir des rôles différents. par exemple, un auteur, un réviseur, un expert dans un domaine particulier, etc.</target>
@@ -5155,6 +5199,10 @@
           <trans-unit id="1184">
         <source>People role</source>
         <target>Rôle d&#039;une personne</target>
+      </trans-unit>
+          <trans-unit id="1728">
+        <source>ig_ref</source>
+        <target>I.G.</target>
       </trans-unit>
           <trans-unit id="1505">
         <source>Choose contact</source>

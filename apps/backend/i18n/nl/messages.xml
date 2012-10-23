@@ -223,6 +223,10 @@
         <source>The taxon you chose, was marked as &quot;renamed&quot;.</source>
         <target>De taxon die u koos, werd aangeduid als &quot;hernoemd&quot;.</target>
       </trans-unit>
+          <trans-unit id="1719">
+        <source>This I.G. already exists</source>
+        <target>Deze I.G. al bestaat</target>
+      </trans-unit>
           <trans-unit id="1553">
         <source>Edit loan item</source>
         <target>Wijzig item van de ontlening</target>
@@ -250,6 +254,26 @@
           <trans-unit id="1461">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;Actually this import module is reserved for the DNA department</source>
         <target>&lt;strong&gt;Pas op!&lt;/strong&gt;Deze import module is bestemd voor het departement DNA</target>
+      </trans-unit>
+          <trans-unit id="1716">
+        <source>No Expedition or I.G. Matching</source>
+        <target>Geen Expeditie of I.G. wedstrijd</target>
+      </trans-unit>
+          <trans-unit id="1710">
+        <source>View I.G.</source>
+        <target>I.G. bekijken</target>
+      </trans-unit>
+          <trans-unit id="1715">
+        <source>Search I.G. Number</source>
+        <target>Zoek I.G. nummer</target>
+      </trans-unit>
+          <trans-unit id="1718">
+        <source>I.G. unit</source>
+        <target>Ig eenheid</target>
+      </trans-unit>
+          <trans-unit id="1717">
+        <source>Expedition and I.G. Search</source>
+        <target>Expeditie en I.G. nummer zoeken</target>
       </trans-unit>
           <trans-unit id="1509">
         <source>Contains Darwin items</source>
@@ -310,6 +334,10 @@
           <trans-unit id="1709">
         <source>Publishable ?</source>
         <target>Publiceerbaar ?</target>
+      </trans-unit>
+          <trans-unit id="1722">
+        <source>Expeditions and I.G.</source>
+        <target>Expeditie en I.G.</target>
       </trans-unit>
           <trans-unit id="1587">
         <source>Back to Loan</source>
@@ -531,6 +559,18 @@
         <source>Duplicate loan</source>
         <target>Ontlening dupliceren</target>
       </trans-unit>
+          <trans-unit id="1724">
+        <source>Expedition and Igs Search</source>
+        <target>Expeditie en I.G. zoeken</target>
+      </trans-unit>
+          <trans-unit id="1725">
+        <source>Ig ref</source>
+        <target>I.G.</target>
+      </trans-unit>
+          <trans-unit id="1726">
+        <source>Expedition name</source>
+        <target>Expeditie naam</target>
+      </trans-unit>
           <trans-unit id="1353">
         <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;</source>
         <target>Aangezien DaRWIN volledig gebaseerd is op open source software, zouden we ons verheugen mocht u wensen bij te dragen tot ons project.&lt;br /&gt; Suggesties, Patches, het doorgeven van Foutmeldingen of code sponsering zijn welkom op onze trac : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;;</target>
@@ -562,6 +602,10 @@
           <trans-unit id="1669">
         <source>Main informations about the loan item</source>
         <target>Algemene informaatie betreffende het geleende item</target>
+      </trans-unit>
+          <trans-unit id="365">
+        <source>View Igs</source>
+        <target>I.G. bekijken</target>
       </trans-unit>
           <trans-unit id="1602">
         <source>Extended</source>
@@ -822,6 +866,14 @@
           <trans-unit id="1691">
         <source>Manual</source>
         <target>Handleiding</target>
+      </trans-unit>
+          <trans-unit id="1727">
+        <source>ig_num</source>
+        <target>I.G. nummer</target>
+      </trans-unit>
+          <trans-unit id="1728">
+        <source>ig_ref</source>
+        <target>I.G.</target>
       </trans-unit>
           <trans-unit id="1358">
         <source>As a reminder, here is your username: %username%</source>
@@ -1807,10 +1859,6 @@
         <source>Chronostratigraphic unit</source>
         <target>Chronostratigrafische eenheid</target>
       </trans-unit>
-          <trans-unit id="170">
-        <source>Ig unit</source>
-        <target>Ig eenheid</target>
-      </trans-unit>
           <trans-unit id="171">
         <source>Lithostratigraphic unit</source>
         <target>Lithostratigrafische eenheid</target>
@@ -2078,6 +2126,10 @@
           <trans-unit id="245">
         <source>You need to specify if you wish to work on tools or methods</source>
         <target>U dient aan te duiden of u wenst te werken op de werktuigen of de methodes</target>
+      </trans-unit>
+          <trans-unit id="170">
+        <source>Ig unit</source>
+        <target>I.G. eenheid</target>
       </trans-unit>
           <trans-unit id="208">
         <source>Duplicate</source>
@@ -2723,6 +2775,10 @@
         <source>You can associate files to this loan or to the related items. These can be photos, documents or any other files you esteem necessary. A thumbnail is displayed when your file is an image</source>
         <target>U kunt bestanden toevoegen aan uw ontlening of de gerelateerde items. Dit kunnen fotos, documenten of andere bestanden zijn die u noodzakelijk acht. Een miniatuur wordt getoond indien het bestand een afbeelding is.</target>
       </trans-unit>
+          <trans-unit id="374">
+        <source>Search IG Number</source>
+        <target>I.G. nummer zoeken</target>
+      </trans-unit>
           <trans-unit id="333">
         <source>Add Chronostratigraphic unit</source>
         <target>Chronostratigrafische eenheid toevoegen</target>
@@ -2851,10 +2907,6 @@
         <source>Choose a Lithostratigraphic unit</source>
         <target>Lithostratigrafische eenheid kiezen</target>
       </trans-unit>
-          <trans-unit id="365">
-        <source>View Igs</source>
-        <target>Igs bekijken</target>
-      </trans-unit>
           <trans-unit id="366">
         <source>Add an I.G. number</source>
         <target>I.G. nummer toevoegen</target>
@@ -2886,10 +2938,6 @@
           <trans-unit id="373">
         <source>Duplicate I.G.</source>
         <target>I.G. kopiëren</target>
-      </trans-unit>
-          <trans-unit id="374">
-        <source>Search IG Number</source>
-        <target>I.G. nummer zoeken</target>
       </trans-unit>
           <trans-unit id="375">
         <source>General Inventory Numbers Search</source>
@@ -4123,10 +4171,6 @@
         <source>Record</source>
         <target>Record</target>
       </trans-unit>
-          <trans-unit id="783">
-        <source>Your Ig number will be lost ! are you sure you want continue ?</source>
-        <target>U Ig nummer zal niet bewaard worden ! Bent u zeker dat u verder wenst te gaan ?</target>
-      </trans-unit>
           <trans-unit id="784">
         <source>Required.</source>
         <target>Verplicht.</target>
@@ -4258,6 +4302,10 @@
           <trans-unit id="1456">
         <source>Show only row with errors</source>
         <target>Toon enkel de rijen met fouten</target>
+      </trans-unit>
+          <trans-unit id="783">
+        <source>Your Ig number will be lost ! are you sure you want continue ?</source>
+        <target>Uw I.G. nummer zal niet bewaard worden ! Bent u zeker dat u verder wenst te gaan ?</target>
       </trans-unit>
           <trans-unit id="826">
         <source>must be at least 4 characters.</source>
@@ -4843,10 +4891,6 @@
         <source>This widget allows you to preset the default prefix and/or separator and/or code and/or separator and/or suffix of the main code that will be used when choosing this collection in the specimen screen</source>
         <target>Via deze widget kunt u reeds de standaard prefix en/of een scheidingsteken en/of de code en/of een scheidingsteken en/of de suffix bepalen van de algemene code die gebruikt zal worden voor elk specimen binnen deze collectie en dit op het specimen invoer scherm.</target>
       </trans-unit>
-          <trans-unit id="979">
-        <source>In this widget you can specify one or more values of the whole collection belonging to the same IG number as estimated by a particular insurance institution and /or on a particular date</source>
-        <target>Via deze widget kunt u één of meerdere verzekeringswaarden invoeren met betrekking tot een geheel van collecties die onder een bepaald IG nummer vallen en die door een bepaalde verzekeringsinstelling op een bepaalde datum werden bepaald.</target>
-      </trans-unit>
           <trans-unit id="980">
         <source>This widget allows you to add some information regarding the determination of either the type, sex, stage, social status and/or rock formation. You can potentially add the date on which the determination was made, what value was given as well as the determinators&#039; names.</source>
         <target>Via deze widget kun je informatie toevoegen met betrekking tot de determinatie van de type status, het geslacht, het stadium, de sociale status en/of de rotsformatie. U kunt eventueel de datum van de determinatie toevoegen, evenals de waarde ervan en de namen van de determinatoren. </target>
@@ -4934,6 +4978,10 @@
           <trans-unit id="1110">
         <source>Is a Child Of</source>
         <target>Is een Kind van</target>
+      </trans-unit>
+          <trans-unit id="979">
+        <source>In this widget you can specify one or more values of the whole collection belonging to the same IG number as estimated by a particular insurance institution and /or on a particular date</source>
+        <target>Via deze widget kunt u één of meerdere verzekeringswaarden invoeren met betrekking tot een geheel van collecties die onder een bepaald I.G. nummer vallen en die door een bepaalde verzekeringsinstelling op een bepaalde datum werden bepaald.</target>
       </trans-unit>
           <trans-unit id="1006">
         <source>Via this widget you can search all records that refer to a particular taxonomic unit.</source>
@@ -5187,10 +5235,6 @@
         <source>You cannot set the same identification twice</source>
         <target>U kunt dezelfde determinatie niet opnieuw invoeren</target>
       </trans-unit>
-          <trans-unit id="1076">
-        <source>This Ig already exists</source>
-        <target>Dit IG nummer bestaat reeds</target>
-      </trans-unit>
           <trans-unit id="1072">
         <source>This code already exists</source>
         <target>Deze code bestaat reeds</target>
@@ -5271,17 +5315,9 @@
         <source>This word already exists</source>
         <target>Dit woord bestaat reeds</target>
       </trans-unit>
-          <trans-unit id="1105">
-        <source>No Expedition or Igs Matching</source>
-        <target>Geen Expedities of Igs gevonden</target>
-      </trans-unit>
           <trans-unit id="1106">
         <source>Use this search if you look for an I.G Number via an Expedition, or if you look for an expedition via an I.G Number</source>
         <target>Gebruik deze opzoeking indien je een IG nummer via een Expeditie zoekt, of een Expeditie via een IG nummer</target>
-      </trans-unit>
-          <trans-unit id="1107">
-        <source>Expeditions and Igs</source>
-        <target>Expedities en Igs</target>
       </trans-unit>
           <trans-unit id="1108">
         <source>Forms</source>
@@ -5306,6 +5342,18 @@
           <trans-unit id="1535">
         <source>Return</source>
         <target>Terugbrengen</target>
+      </trans-unit>
+          <trans-unit id="1107">
+        <source>Expeditions and Igs</source>
+        <target>Expedities en I.G.</target>
+      </trans-unit>
+          <trans-unit id="1076">
+        <source>This Ig already exists</source>
+        <target>Dit I.G. nummer bestaat reeds</target>
+      </trans-unit>
+          <trans-unit id="1105">
+        <source>No Expedition or Igs Matching</source>
+        <target>Geen Expedities of I.G. gevonden</target>
       </trans-unit>
           <trans-unit id="1114">
         <source>Author name and year, used in mineralogy or bacterology</source>

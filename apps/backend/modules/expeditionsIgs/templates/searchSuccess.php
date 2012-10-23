@@ -33,15 +33,15 @@
             <tr class="rid_<?php echo $expedition->getIgNum(); ?>">
               <td><?php echo $expedition->getIgNum();?></td>
               <td class="edit>">
-                <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>                  
+                <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>'Edit I.G.')),'igs/edit?id='.$expedition->getIgRef());?>
                   <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate I.G.')),'igs/new?duplicate_id='.$expedition->getIgRef());?>
                 <?php endif ; ?>
                 <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'igs/view?id='.$expedition->getIgRef());?>               
-              </td>              
+              </td>
               <td class="datesNum"><?php echo $expedition->getExpeditionName();?></td>
               <td class="edit>">
-                <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>                  
+                <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>'Edit expedition')),'expedition/edit?id='.$expedition->getExpeditionRef());?>
                   <?php echo link_to(image_tag('duplicate.png',array('title'=>'Duplicate expedition')),'expedition/new?duplicate_id='.$expedition->getExpeditionRef());?>
                 <?php endif ; ?>
