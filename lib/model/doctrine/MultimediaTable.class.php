@@ -37,7 +37,7 @@ class MultimediaTable extends DarwinTable
                       OR
                      (m.referenced_relation = 'specimen_individuals' AND record_id = ?)
                       OR
-                     (m.referenced_relation = 'specimen_parts' AND record_id IN (SELECT part_ref FROM darwin_flat WHERE individual_ref = ?))
+                     (m.referenced_relation = 'specimen_parts' AND record_id IN (SELECT id FROM specimen_parts WHERE specimen_individual_ref = ?))
                       OR
                      (m.referenced_relation = 'taxonomy' AND record_id = ?)
                       OR
