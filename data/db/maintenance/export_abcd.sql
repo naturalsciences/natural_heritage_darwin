@@ -129,9 +129,12 @@ CREATE INDEX idx_df_individual_sex ON public.darwin_flat_bis(individual_sex);
 CREATE INDEX idx_df_individual_stage ON public.darwin_flat_bis(individual_stage);
 CREATE INDEX idx_df_individual_rock_form ON public.darwin_flat_bis(individual_rock_form);
 
+--drop view darwin_flat cascade;
+--ALTER TABLE darwin_flat_bis RENAME TO darwin2.darwin_flat;
+DELETE From darwin2.specimens where collection_ref in (select id from darwin2.collections where is_public = false);
 
-DELETE FROM darwin2.darwin_flat where collection_is_public = false;
-DELETE FROM darwin2.darwin_flat where part_ref is null;
+--DELETE FROM darwin2.darwin_flat where collection_is_public = false;
+--DELETE FROM darwin2.darwin_flat where part_ref is null;
 
 create sequence public.flat_abcd_id_seq;
 
@@ -629,7 +632,7 @@ insert into public.identifications_abdc
       AND f.taxon_ref is not null
       AND f.taxon_ref != 0
 );
-
+/*
 insert into public.taxon_identified
 (
     id,
@@ -784,7 +787,7 @@ insert into public.taxon_identified
     WHERE i.is_current = true
       AND i.notion_concerned = 'taxonomy'
 );
-
+*/
 CREATE INDEX idx_taxon_identified_identification_ref ON public.taxon_identified (identification_ref);
 CREATE INDEX idx_taxon_identified_taxon_ref ON public.taxon_identified (taxon_ref);
 CREATE INDEX idx_taxon_identified_taxon_parent_ref ON public.taxon_identified (taxon_parent_ref);
