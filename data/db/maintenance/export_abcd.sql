@@ -1051,7 +1051,7 @@ CREATE TABLE public.darwin_metadata AS
     'http://darwin.naturalsciences.be'::text as metadata_owner_url,
     'http://www.naturalsciences.be/layout_images/logo'::text as metadata_owner_logo_uri,
     'Rue Vautier straat, 29 - 1000 Bruxelles/Brussels - Belgique/Belgïe'::text as content_contact_address,
-    'darwin-ict@naturalsciences.be'::text as content_contact_email,
+    'collections@naturalsciences.be'::text as content_contact_email,
     'RBINS contact'::text as content_contact_name,
     'EN'::text as metadata_representation_language,
     'RBINS collections'::text as metadata_representation_title,
