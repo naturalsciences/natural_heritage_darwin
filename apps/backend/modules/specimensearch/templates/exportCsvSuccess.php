@@ -124,7 +124,7 @@ Part Codes<?php echo $sep;?>
 <?php echo $part->getSubContainer().$sep;?>
 <?php echo $part->getSubContainerType().$sep;?>
 <?php echo $part->getSubContainerStorage().$sep;?>
-<?php if(isset($part_codes[$specimen->getSpecimenRef()])) foreach($part_codes[$specimen->getSpecimenRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
+<?php if(isset($part_codes[$part->getId()])) foreach($part_codes[$part->getId()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
 <?php endif;?>
 <?php endif;?>
 <?php endif;?>
