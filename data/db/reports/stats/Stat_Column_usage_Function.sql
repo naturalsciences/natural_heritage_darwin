@@ -18,17 +18,14 @@ create temporary table if not exists zzz_top_collections (id integer, name varch
 create or replace function stat_columns_usage() returns boolean language plpgsql as $$
 declare
   table_columns RECORD;
-  topCollectionsGrouping RECORD;
   previousTableName varchar := '';
   tableName varchar;
-  columnName varchar;
-  collectionName varchar;
-  rowCount integer;
-  rowCountCopy integer;
-  rowDefaultCount integer;
-  rowNullCount integer;
-  rowEmptyCount integer;
-  rowOthersCount integer;
+  rowCount numeric;
+  rowCountCopy numeric;
+  rowDefaultCount numeric;
+  rowNullCount numeric;
+  rowEmptyCount numeric;
+  rowOthersCount numeric;
 begin
   TRUNCATE TABLE zzz_col_stats;
   TRUNCATE TABLE zzz_top_collections;
@@ -45,56 +42,27 @@ begin
                         order by table_name, ordinal_position)
   LOOP
     IF table_columns.table_name != previousTableName THEN
-/*      CASE table_columns.table_name
-        WHEN 'codes' THEN
-          EXECUTE 'SELECT COUNT(*) from ' || table_columns.table_name || ' WHERE referenced_relation = $1' INTO rowCount USING 'specimen_parts';*/
-/*          INSERT INTO zzz_col_stats (table_name, row_count, general_description) VALUES (table_columns.table_name, rowCount, 'Parts ' || table_columns.table_name || ' counts.');*/
-/*        ELSE*/
-          EXECUTE 'SELECT COUNT(*) from ' || table_columns.table_name INTO rowCount USING table_columns.table_name;
-/*          INSERT INTO zzz_col_stats (table_name, row_count) VALUES (table_columns.table_name, rowCount);*/
-/*      END CASE;*/
-/*      CASE table_columns.table_name
-        WHEN 'codes' THEN
-         FOR topCollectionsGrouping IN 
-          (
-            SELECT * FROM zzz_top_collections
-          )
-          LOOP
-            INSERT INTO zzz_col_stats (table_name, collection, row_count, general_description)
-            (
-              SELECT table_columns.table_name, topCollectionsGrouping.name, COUNT(codes.*), 'Parts ' || topCollectionsGrouping.name || ' counts.'
-              FROM collections inner join specimens ON collections.id = specimens.collection_ref
-                               inner join specimen_individuals as si ON specimens.id = si.specimen_ref
-                               inner join specimen_parts as sp ON si.id = sp.specimen_individual_ref
-                               inner join codes ON sp.id = codes.record_id and codes.referenced_relation = 'specimen_parts'
-              WHERE collections.id = topCollectionsGrouping.id OR collections.path Like '/' || topCollectionsGrouping.id || '/%'
-            );
-          END LOOP;
-        ELSE
-      END CASE;*/
+      EXECUTE 'SELECT COUNT(*) from ' || table_columns.table_name INTO rowCount USING table_columns.table_name;
     END IF;
-    IF table_columns.column_default IS NOT NULL AND table_columns.column_default != '' THEN
+    IF COALESCE(table_columns.column_default, '') != '' THEN
       EXECUTE 'SELECT Count(*) FROM ' || table_columns.table_name || ' WHERE Trim(' || table_columns.column_name || '::varchar) = $1' INTO rowDefaultCount USING table_columns.column_default;
-/*      INSERT INTO zzz_col_stats (table_name, column_name, row_count, column_value_description, column_value_count)
-      VALUES (table_columns.table_name, table_columns.column_name, rowCount, table_columns.column_name || ' column count of default values.', rowColumnCount);*/
+      EXECUTE 'SELECT Count(*) FROM ' || table_columns.table_name || ' WHERE ' || table_columns.column_name || '::varchar IS NOT NULL AND Trim(Coalesce(' || table_columns.column_name || '::varchar,' || CHR(39) || CHR(39) || ')) != ' || CHR(39) || CHR(39) || ' AND Trim(Coalesce(' || table_columns.column_name || '::varchar,' || CHR(39) || CHR(39) || ')) != $1' INTO rowOthersCount USING table_columns.column_default;
+    ELSE
+      rowDefaultCount := 0;
+      EXECUTE 'SELECT Count(*) FROM ' || table_columns.table_name || ' WHERE ' || table_columns.column_name || '::varchar IS NOT NULL AND Trim(Coalesce(' || table_columns.column_name || '::varchar,' || CHR(39) || CHR(39) || ')) != ' || CHR(39) || CHR(39) INTO rowOthersCount USING table_columns.column_default;
     END IF;
     EXECUTE 'SELECT Count(*) FROM ' || table_columns.table_name || ' WHERE Trim(' || table_columns.column_name || '::varchar) = ' || CHR(39) || CHR(39) INTO rowEmptyCount;
-/*    INSERT INTO zzz_col_stats (table_name, column_name, row_count, column_value_description, column_value_count)
-    VALUES (table_columns.table_name, table_columns.column_name, rowCount, table_columns.column_name || ' column count of empty values.', rowColumnCount);*/
-/*    IF table_columns.is_nullable = 'YES' THEN*/
-      EXECUTE 'SELECT Count(*) FROM ' || table_columns.table_name || ' WHERE ' || table_columns.column_name || '::varchar IS NULL' INTO rowNullCount;
-/*      INSERT INTO zzz_col_stats (table_name, column_name, row_count, column_value_description, column_value_count)
-      VALUES (table_columns.table_name, table_columns.column_name, rowCount, table_columns.column_name || ' column count of NULL values.', rowColumnCount);*/
-/*    END IF;*/
-    EXECUTE 'SELECT Count(*) FROM ' || table_columns.table_name || ' WHERE ' || table_columns.column_name || '::varchar IS NOT NULL AND Trim(' || table_columns.column_name || '::varchar) != ' || CHR(39) || CHR(39) || ' AND Trim(' || table_columns.column_name || '::varchar) != COALESCE($1 ,' || CHR(39) || CHR(39) || ')' INTO rowOthersCount USING table_columns.column_default;
+    EXECUTE 'SELECT Count(*) FROM ' || table_columns.table_name || ' WHERE ' || table_columns.column_name || '::varchar IS NULL' INTO rowNullCount;
     rowCountCopy := rowCount;
     IF rowCount = 0 THEN
       rowCountCopy := 1;
     END IF;
-    RAISE NOTICE 'RowCount: %', rowCount;
-    RAISE NOTICE 'RowCountCopy: %', rowCountCopy;
     INSERT INTO zzz_col_stats (table_name, column_name, row_count, default_values_count, default_values_percentage, null_values_count, null_values_percentage, empty_values_count, empty_values_percentage, other_values_count, other_values_percentage)
-    VALUES (table_columns.table_name, table_columns.column_name, rowCount, rowDefaultCount, (rowDefaultCount/rowCountCopy)::float, rowNullCount, (rowNullCount/rowCountCopy)::float, rowEmptyCount, (rowEmptyCount/rowCountCopy)::float, rowOthersCount, (rowOthersCount/rowCountCopy)::float);
+    VALUES (table_columns.table_name, table_columns.column_name, rowCount, rowDefaultCount, Round(rowDefaultCount/rowCountCopy,2), rowNullCount, Round(rowNullCount/rowCountCopy,2), rowEmptyCount, Round(rowEmptyCount/rowCountCopy,2), rowOthersCount, Round(rowOthersCount/rowCountCopy,2));
+    rowDefaultCount := 0;
+    rowNullCount := 0;
+    rowEmptyCount := 0;
+    rowOthersCount := 0;
     previousTableName = table_columns.table_name;
   END LOOP;
   RETURN TRUE;
