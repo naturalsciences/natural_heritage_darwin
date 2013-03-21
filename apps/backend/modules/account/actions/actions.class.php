@@ -95,12 +95,13 @@ class accountActions extends DarwinActions
           $user = Doctrine::getTable('Users')->getUserByLoginAndEMail($this->form->getValue('user_name'), 
                                                                       $this->form->getValue('user_email')
                                                                     );
-          $this->getUser()->setCulture($user->getSelectedLang());
 
           if(! $user)
           {
             $user = Doctrine::getTable('Users')->getUserByLoginOnly($this->form->getValue('user_name'));
           }
+
+	  $this->getUser()->setCulture($user->getSelectedLang());
 
           $renewHash = sha1(sfConfig::get('dw_salt').$user->UsersLoginInfos[0]->getUserName().mt_rand());
           $user->UsersLoginInfos[0]->setRenewHash($renewHash);
