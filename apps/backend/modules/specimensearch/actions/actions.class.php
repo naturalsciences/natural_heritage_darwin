@@ -352,12 +352,12 @@ class specimensearchActions extends DarwinActions
         $this->getI18N()->__('Chronostratigraphic unit'),),
       'ig' => array(
         'ig_num_indexed',
-        $this->getI18N()->__('IG unit'),),
+        $this->getI18N()->__('I.G. unit'),),
       'litho' => array(
         'litho_name_order_by',
         $this->getI18N()->__('Lithostratigraphic unit'),),
       'lithologic' => array(
-        'lithologic_name_order_by',
+        'lithology_name_order_by',
         $this->getI18N()->__('Lithologic unit'),),
       'mineral' => array(
         'mineral_name_order_by',

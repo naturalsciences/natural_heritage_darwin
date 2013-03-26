@@ -159,6 +159,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
                                                                   );
     $this->widgetSchema->setLabels(array('ig_from_date' => 'Between',
                                          'ig_to_date' => 'and',
+                                         'ig_num' => 'I.G. unit',
                                         )
                                   );
     $this->widgetSchema['ig_num']->setAttributes(array('class'=>'small_size'));

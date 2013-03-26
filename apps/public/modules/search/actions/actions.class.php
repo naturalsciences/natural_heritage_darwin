@@ -190,7 +190,7 @@ class searchActions extends DarwinActions
       if($form->getValue('taxon_common_name') != '' || $form->getValue('taxon_name') != '') $req_fields .= '|taxon|taxon_common_name';
       if($form->getValue('chrono_common_name') != '' || $form->getValue('chrono_name') != '') $req_fields .= '|chrono|chrono_common_name';      
       if($form->getValue('litho_common_name') != '' || $form->getValue('litho_name') != '') $req_fields .= '|litho|litho_common_name';
-      if($form->getValue('lithologic_common_name') != '' || $form->getValue('lithologic_name') != '') $req_fields .= '|lithologic|lithologic_common_name'; 
+      if($form->getValue('lithology_common_name') != '' || $form->getValue('lithology_name') != '') $req_fields .= '|lithologic|lithology_common_name'; 
       if($form->getValue('mineral_common_name') != '' || $form->getValue('mineral_name') != '') $req_fields .= '|mineral|mineral_common_name';    
       if(!strpos($req_fields,'common_name')) $req_fields .= '|taxon|taxon_common_name'; // add taxon by default if there is not other catalogue 
       $req_fields_array = explode('|',$req_fields);
@@ -230,7 +230,7 @@ class searchActions extends DarwinActions
         'litho_name_order_by',
         $this->getI18N()->__('Lithostratigraphic unit'),),
       'lithologic' => array(
-        'lithologic_name_order_by',
+        'lithology_name_order_by',
         $this->getI18N()->__('Lithologic unit'),),
       'mineral' => array(
         'mineral_name_order_by',

@@ -138,7 +138,7 @@ class CollectionsForm extends BaseCollectionsForm
 	    $value = $this->getValue('newVal');
 	    foreach($this->embeddedForms['newVal']->getEmbeddedForms() as $name => $form)
     	{
-    	  if (!isset($value[$name]['user_ref']))
+    	  if (!isset($value[$name]['user_ref']) || $value[$name]['user_ref'] == sfContext::getInstance()->getUser()->getId())
     	  {
 	        unset($this->embeddedForms['newVal'][$name]);
 	      }

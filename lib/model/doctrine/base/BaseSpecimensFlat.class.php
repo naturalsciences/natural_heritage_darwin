@@ -121,6 +121,7 @@
  * @property Taxonomy $HostTaxon
  * @property Specimens $HostSpecimen
  * @property Doctrine_Collection $SpecimenIndividuals
+ * @property Doctrine_Collection $SpecimensCodes
  * 
  * @method integer             getSpecimenRef()              Returns the current record's "specimen_ref" value
  * @method string              getCategory()                 Returns the current record's "category" value
@@ -238,6 +239,7 @@
  * @method Taxonomy            getHostTaxon()                Returns the current record's "HostTaxon" value
  * @method Specimens           getHostSpecimen()             Returns the current record's "HostSpecimen" value
  * @method Doctrine_Collection getSpecimenIndividuals()      Returns the current record's "SpecimenIndividuals" collection
+ * @method Doctrine_Collection getSpecimensCodes()           Returns the current record's "SpecimensCodes" collection
  * @method SpecimensFlat       setSpecimenRef()              Sets the current record's "specimen_ref" value
  * @method SpecimensFlat       setCategory()                 Sets the current record's "category" value
  * @method SpecimensFlat       setCollectionRef()            Sets the current record's "collection_ref" value
@@ -354,6 +356,7 @@
  * @method SpecimensFlat       setHostTaxon()                Sets the current record's "HostTaxon" value
  * @method SpecimensFlat       setHostSpecimen()             Sets the current record's "HostSpecimen" value
  * @method SpecimensFlat       setSpecimenIndividuals()      Sets the current record's "SpecimenIndividuals" collection
+ * @method SpecimensFlat       setSpecimensCodes()           Sets the current record's "SpecimensCodes" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -738,5 +741,9 @@ abstract class BaseSpecimensFlat extends sfDoctrineRecord
         $this->hasMany('SpecimenIndividuals', array(
              'local' => 'specimen_ref',
              'foreign' => 'specimen_ref'));
+
+        $this->hasMany('SpecimensCodes', array(
+             'local' => 'specimen_ref',
+             'foreign' => 'record_id'));
     }
 }

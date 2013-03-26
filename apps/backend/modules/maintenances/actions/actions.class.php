@@ -24,14 +24,14 @@ class maintenancesActions extends DarwinActions
     else
     {
       $table = $request->getParameter('table') ;
-      $record_id = $request->getParameter('record_id') ;      
+      $record_id = $request->getParameter('record_id') ;
     }
     if($table == 'loans')
     {
       $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$record_id) ;
       if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
         $this->forwardToSecureAction();
-      if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER)) 
+      if($right==="view") 
         return 'view' ;
       else return true ;   
     }
@@ -41,7 +41,7 @@ class maintenancesActions extends DarwinActions
       $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef()) ;
       if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
         $this->forwardToSecureAction();
-      if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER)) 
+      if($right==="view")
         return 'view' ;
       else return true ;      
     }

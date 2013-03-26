@@ -4,7 +4,7 @@
   <div class="widget_top_button" <?php if(! $is_opened):?> style="display:block"<?php endif;?>>
         <?php if($category=='boardwidget'||$category=='specimensearchwidget'|| $read_only):?>
             <?php echo image_tag('widget_box_expand_button.png', 'alt=Close');?>
-        <?php else:?>            
+        <?php else:?>
             <?php echo image_tag('widget_box_expand_green_button.png', 'alt=Close');?>
         <?php endif;?>
   </div>

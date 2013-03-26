@@ -304,8 +304,8 @@ sps20:
    order_by: 10
    opened: true
    visible: true
-   title_perso: Igs  
-   all_public: true  
+   title_perso: I.G.
+   all_public: true
 
 sps21:
    col_num: 1

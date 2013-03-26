@@ -18,9 +18,12 @@ class loanitemActions extends DarwinActions
     $this->forward404Unless($loanitem = Doctrine::getTable('LoanItems')->find($loan_item_id), sprintf('Object loanitem does not exist (%s).', array($loan_item_id)));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loanitem ;
     $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loanitem->getLoanRef());
-    if(!$right && !$this->getUser()->isAtLeast(Users::MANAGER))
-      $this->forwardToSecureAction();
-    if($right==="view" || $this->getUser()->isAtLeast(Users::MANAGER))
+    if(!$right)
+    {
+      if ($this->getUser()->isAtLeast(Users::MANAGER)) $this->redirect('loan/view?id='.$loan->getId());          
+      else $this->forwardToSecureAction();
+    }
+    if($right==="view")
       $this->redirect('loanitem/view?id='.$loanitem->getId());      
     return $loanitem ;
   }  

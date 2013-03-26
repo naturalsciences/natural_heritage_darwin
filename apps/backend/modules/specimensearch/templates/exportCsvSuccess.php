@@ -82,10 +82,10 @@ Part Codes<?php echo $sep;?>
 <?php echo $specimen->getGtuRef().$sep;?>
 <?php echo $specimen->getGtuCode().$sep;?>
 <?php echo str_replace(';', ',', $specimen->getGtuCountryTagValue('')).$sep; ?>
-<?php echo (($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$specimen->getLatitude():'').$sep;?>
-<?php echo (($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$specimen->getLongitude():'').$sep;?>
-<?php echo ((($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation())?$specimen->getGtuElevation():'').$sep;?>
-<?php echo ((($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation())?$specimen->getGtuElevationAccuracy():'').$sep;?>
+<?php echo (($specimen->getStationVisible() || $unit->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$specimen->getLatitude():'').$sep;?>
+<?php echo (($specimen->getStationVisible() || $unit->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$specimen->getLongitude():'').$sep;?>
+<?php echo ((($specimen->getStationVisible() || $unit->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation())?$specimen->getGtuElevation():'').$sep;?>
+<?php echo ((($specimen->getStationVisible() || $unit->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation())?$specimen->getGtuElevationAccuracy():'').$sep;?>
 <?php if(isset($codes[$specimen->getSpecimenRef()])) foreach($codes[$specimen->getSpecimenRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
 <?php echo $specimen->getChronoRef().$sep;?>
 <?php echo $specimen->getChronoName().$sep;?>
@@ -109,22 +109,23 @@ Part Codes<?php echo $sep;?>
 <?php echo $individual->getRockForm().$sep;?>
 <?php echo $individual->getSpecimenIndividualsCountMin().$sep;?>
 <?php echo $individual->getSpecimenIndividualsCountMax().$sep;?>
-<?php elseif($source =='part'):?>
-<?php echo $part->getSpecimenPart();?>
-<?php echo $part->getSpecimenStatus();?>
+<?php if($source =='part'):?>
+<?php echo $part->getSpecimenPart().$sep;?>
+<?php echo $part->getSpecimenStatus().$sep;?>
 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-<?php echo $part->getBuilding();?>
-<?php echo $part->getFloor();?>
-<?php echo $part->getRoom();?>
-<?php echo $part->getRow();?>
-<?php echo $part->getShelf();?>
-<?php echo $part->getContainer();?>
-<?php echo $part->getContainerType();?>
-<?php echo $part->getContainerStorage();?>
-<?php echo $part->getSubContainer();?>
-<?php echo $part->getSubContainerType();?>
-<?php echo $part->getSubContainerStorage();?>
-<?php if(isset($part_codes[$item->getSpecimenRef()])) foreach($part_codes[$item->getSpecimenRef()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
+<?php echo $part->getBuilding().$sep;?>
+<?php echo $part->getFloor().$sep;?>
+<?php echo $part->getRoom().$sep;?>
+<?php echo $part->getRow().$sep;?>
+<?php echo $part->getShelf().$sep;?>
+<?php echo $part->getContainer().$sep;?>
+<?php echo $part->getContainerType().$sep;?>
+<?php echo $part->getContainerStorage().$sep;?>
+<?php echo $part->getSubContainer().$sep;?>
+<?php echo $part->getSubContainerType().$sep;?>
+<?php echo $part->getSubContainerStorage().$sep;?>
+<?php if(isset($part_codes[$part->getId()])) foreach($part_codes[$part->getId()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
+<?php endif;?>
 <?php endif;?>
 <?php endif;?>
 

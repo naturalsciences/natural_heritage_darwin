@@ -1047,9 +1047,9 @@ SpecimensCodes:
         code_date: { type: string}
         code_date_mask: { type: integer, notnull: true, default:0}
     relations:
-        Specimens:
+        SpecimensFlat:
             local: record_id
-            foreign: id
+            foreign: specimen_ref
 
 SpecimensMethods:
     tableName: specimen_collecting_methods

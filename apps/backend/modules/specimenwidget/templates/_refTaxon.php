@@ -8,8 +8,7 @@
 <?php echo $form['taxon_ref']->render() ?>
 
 <script  type="text/javascript">
-  $('#specimen_taxon_ref').bind('change',function()
-  {
+  function loadCurrent() {
     if($('#specimen_taxon_ref').val() != '') {
       // Fetch the current name of the taxa
       $.getJSON('<?php echo url_for('catalogue/getCurrent?table=taxonomy');?>/id/' + $('#specimen_taxon_ref').val(), function(data) {
@@ -19,7 +18,9 @@
         }
       });
     }
-  });
+  }
+  loadCurrent();
+  $('#specimen_taxon_ref').bind('change',loadCurrent);
   $('#taxon_orig span').click(function()
   {
     $('#specimen_taxon_ref_name').text($('#taxon_orig span').text());

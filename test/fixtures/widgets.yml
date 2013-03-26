@@ -304,6 +304,19 @@ MyWidgets:
         visible: true
         is_available: true
         title_perso: Bibliography
+    u1ws24:
+        col_num: 1
+        User: u1
+        category: specimen_widget
+        group_name: refRelatedFiles
+        mandatory: false
+        order_by: 11
+        opened: false
+        visible: false
+        is_available: true
+        title_perso: Related Files
+        all_public: true
+
 
     u1wtax0:
         User: u1

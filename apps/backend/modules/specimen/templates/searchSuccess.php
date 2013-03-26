@@ -35,7 +35,7 @@
             </th>
             <th>
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=ig_num'.( ($orderBy=='ig_num' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
-                <?php echo __('IG num');?>
+                <?php echo __('I.G. num');?>
                 <?php if($orderBy=='ig_num') echo $orderSign ?>
               </a>
             </th>            

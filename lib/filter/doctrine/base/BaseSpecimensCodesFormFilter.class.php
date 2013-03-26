@@ -14,7 +14,7 @@ abstract class BaseSpecimensCodesFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'referenced_relation'   => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'record_id'             => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true)),
+      'record_id'             => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SpecimensFlat'), 'add_empty' => true)),
       'code_category'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'code_prefix'           => new sfWidgetFormFilterInput(),
       'code_prefix_separator' => new sfWidgetFormFilterInput(),
@@ -29,7 +29,7 @@ abstract class BaseSpecimensCodesFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'referenced_relation'   => new sfValidatorPass(array('required' => false)),
-      'record_id'             => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id')),
+      'record_id'             => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SpecimensFlat'), 'column' => 'specimen_ref')),
       'code_category'         => new sfValidatorPass(array('required' => false)),
       'code_prefix'           => new sfValidatorPass(array('required' => false)),
       'code_prefix_separator' => new sfValidatorPass(array('required' => false)),
