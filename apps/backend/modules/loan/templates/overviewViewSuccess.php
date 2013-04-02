@@ -33,7 +33,7 @@
           <?php endforeach;?>
         </tbody>
        </table>
-       <?php if(! count($item)):?>
+       <?php if( (! isset($item) ) || isset($item) && count($item) == 0):?>
         <div class="warn_message"><?php echo __('There is currently no items in the loan.');?></div>
        <?php endif;?>
   <br />
