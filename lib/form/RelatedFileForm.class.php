@@ -9,9 +9,14 @@ class RelatedFileForm extends BaseForm
     $this->validatorSchema['filenames'] = new sfValidatorFile(
       array(
           'required' => false,
-          'mime_type_guessers' => array('guessFromFileinfo'),
+          //'mime_type_guessers' => array('guessFromFileinfo'),
           'validated_file_class' => 'myValidatedFile'
-      ));    
+      ));
+    $this->validatorSchema['filenames']->setOption('mime_type_guessers', array(
+    array($this->validatorSchema['filenames'], 'guessFromFileinfo'),
+    array($this->validatorSchema['filenames'], 'guessFromFileBinary'),
+    array($this->validatorSchema['filenames'], 'guessFromMimeContentType')
+  ));
   }
   
 }
