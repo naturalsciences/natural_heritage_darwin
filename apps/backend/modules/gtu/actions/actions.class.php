@@ -179,18 +179,6 @@ class gtuActions extends DarwinActions
 
     $this->forward404Unless($unit = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
 
-    if(! $request->hasParameter('confirm'))
-    {
-      $this->number_child = Doctrine::getTable('Gtu')->hasChildrens('Gtu',$unit->getId());
-      if($this->number_child)
-      {
-        $this->link_delete = 'gtu/delete?confirm=1&id='.$unit->getId();
-        $this->link_cancel = 'gtu/edit?id='.$unit->getId();
-        $this->setTemplate('warndelete', 'catalogue');
-        return;
-      }
-    }
-
     try
     {
         $unit->delete();
