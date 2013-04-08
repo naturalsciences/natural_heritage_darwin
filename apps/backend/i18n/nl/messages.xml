@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?><!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<?xml version="0.0" encoding="utf-8" ?><!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
 <xliff version="1.0">
   <file source-language="en" target-language="nl" datatype="plaintext" original="en">
     <header/>
@@ -5333,7 +5333,7 @@
       </trans-unit>
           <trans-unit id="9">
         <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</source>
-        <target>[0]Geen resultaat|[1]Uw opzoeking levert 1 record op(1,+Inf]Uw opzoeking levert %1% records op</target>
+        <target>[0]Geen resultaat|[1]Uw opzoeking levert 1 record op|(1,+Inf]Uw opzoeking levert %1% records op</target>
       </trans-unit>
           <trans-unit id="1081">
         <source>This accompanying element already exists</source>
