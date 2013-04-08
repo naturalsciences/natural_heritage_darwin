@@ -15,7 +15,7 @@ $code->setCodeSuffix('AFTER');
 $code->setCodeSuffixSeparator('/');
 $code->save();
 
-$specCodes = Doctrine::getTable('Codes')->getCodesRelated('specimens', $specimen->getId());
+$specCodes = Doctrine::getTable('Codes')->getCodesRelated('specimens', $specimen->getSpecimenRef());
 $specimen->SpecimensCodes = $specCodes;
 
 $t->is(count($specimen->SpecimensCodes), 4, '"4" codes available for specimen "'.$specimen->getId().'"');
