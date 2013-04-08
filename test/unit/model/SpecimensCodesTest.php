@@ -7,7 +7,7 @@ $specimen = Doctrine::getTable('SpecimensFlat')->findOneByTaxonRef($taxon->getId
 
 $code = new Codes;
 $code->setReferencedRelation('specimens');
-$code->setRecordId($specimen->getId());
+$code->setRecordId($specimen->getSpecimenRef());
 $code->setCodeCategory('Temporary');
 $code->setCodePrefix('VERT.');
 $code->setCodePrefixSeparator('/');
