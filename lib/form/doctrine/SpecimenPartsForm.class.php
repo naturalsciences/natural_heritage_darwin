@@ -25,8 +25,10 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     ));
 
     $this->collection = null;
-    if($this->getOption('collection', '') != '')
-      $this->collection = $this->getOption('collection');
+    if($this->getOption('collection', '') != '') {
+      $this->collection = Doctrine::getTable('Collections')
+      ->find($this->getOption('collection'));
+    }
 
     $this->widgetSchema['specimen_part'] = new widgetFormSelectComplete(array(
       'model' => 'SpecimenParts',
@@ -46,6 +48,9 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
        'nullable' => true,
      ));
     $this->widgetSchema['institution_ref']->setLabel('Institution');
+    if($this->collection) {
+      $this->setDefault('institution_ref', $this->collection->getInstitutionRef());
+    }
 
     $this->widgetSchema['building'] = new widgetFormSelectComplete(array(
       'model' => 'SpecimenParts',

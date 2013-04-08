@@ -95,7 +95,7 @@ class MySavedSearchesTable extends DarwinTable
         $part_col = array(
           'part' => 'Part',
           'part_status'=>'Part Status',
-          'part_code'=>'Part Code',
+          'part_codes'=>'Part Code',
           'part_count'=>'Part Count',
         );      
       }
@@ -115,7 +115,7 @@ class MySavedSearchesTable extends DarwinTable
           'sub_container'=>'Sub Container',
           'sub_container_type'=>'Sub Container Type',
           'sub_container_storage'=>'Sub Container Storage',
-          'part_code'=>'Part Code',
+          'part_codes'=>'Part Code',
           'part_count'=>'Part Count',
         );
       }

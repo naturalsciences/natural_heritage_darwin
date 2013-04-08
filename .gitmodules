@@ -1,9 +1,9 @@
-[submodule "lib/vendor/symfony"]
-	path = lib/vendor/symfony
-	url = http://github.com/eMerzh/symfony-1.4.git
 [submodule "web/openlayers"]
 	path = web/openlayers
 	url = http://github.com/openlayers/openlayers.git
 [submodule "web/qtip2"]
 	path = web/qtip2
 	url = http://github.com/Craga89/qTip2.git
+[submodule "lib/vendor/symfony"]
+	path = lib/vendor/symfony
+	url = https://github.com/symfony/symfony1.git
