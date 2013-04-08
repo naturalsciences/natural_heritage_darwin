@@ -210,7 +210,7 @@ class specimenActions extends DarwinActions
     $this->form = $this->getSpecimenForm($request, true);
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($this->form->getObject()->getCollectionRef(),Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId())))
+      if(! Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
         $this->redirect("specimen/view?id=".$request->getParameter('id')) ;
     }
     $this->loadWidgets();
