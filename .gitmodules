@@ -1,6 +1,3 @@
-[submodule "lib/vendor/symfony"]
-	path = lib/vendor/symfony
-	url = http://github.com/eMerzh/symfony-1.4.git
 [submodule "web/openlayers"]
 	path = web/openlayers
 	url = http://github.com/openlayers/openlayers.git
