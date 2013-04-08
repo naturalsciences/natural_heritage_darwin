@@ -296,9 +296,10 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $this->widgetSchema['what_searched'] = new sfWidgetFormChoice(array(
         'choices' => $what_searched,
     ));
+    $this->widgetSchema['with_multimedia'] = new sfWidgetFormInputCheckbox();
 
     $this->validatorSchema['what_searched'] = new sfValidatorChoice(array('choices'=>array_keys($what_searched), 'required'=>false,'empty_value'=>self::SC_SPEC));
-
+    $this->validatorSchema['with_multimedia'] = new sfValidatorPass();
     //people widget
     $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
        'model' => 'People',
@@ -333,7 +334,8 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
                                          'what_searched' => 'What would you like to search ?',
                                          'code_ref_relation' => 'Code of',
                                          'people_ref' => 'Whom are you looking for',
-                                         'role_ref' => 'Which role'
+                                         'role_ref' => 'Which role',
+                                         'with_multimedia' => 'Search Only objects with multimedia files',
                                         )
                                   );
     /* Acquisition categories */
@@ -1063,6 +1065,8 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
       $query = DQ::create()
         ->select('s.*, ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude, ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude')
         ->from('SpecimensFlat s');
+      if($values['with_multimedia'])
+        $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.specimen_ref)") ;
     }
     elseif($this->scope == self::SC_IND)
     {
@@ -1070,6 +1074,8 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
         ->select('s.*, i.*, p.*, ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude, ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude')
         ->from('SpecimenIndividuals i')
         ->innerJoin('i.SpecimensFlat s');
+      if($values['with_multimedia'])
+        $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimen_individuals' AND m.record_id = i.id)") ;
     }
     elseif($this->scope == self::SC_PART)
     {
@@ -1078,6 +1084,8 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
         ->from('SpecimenParts p')
         ->innerJoin('p.Individual i')
         ->innerJoin('i.SpecimensFlat s');
+      if($values['with_multimedia'])
+        $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimen_parts' AND m.record_id = p.id)") ;
     }
 
     $this->options['query'] = $query;
@@ -1091,19 +1099,21 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $where_exist = '';
     if($this->scope == self::SC_SPEC && ! empty($this->exists_qry_part))
     {
-       $query->where('exists ( select 1 from specimen_individuals i1
+       $query->andWhere('exists ( select 1 from specimen_individuals i1
           INNER JOIN specimen_parts p1 on i1.id = p1.specimen_individual_ref
           where i1.specimen_ref= s.specimen_ref AND '. implode(' AND ', array_merge($this->exists_qry_ind,$this->exists_qry_part)). ')');
+
     }
     elseif(! empty($this->exists_qry_ind)) // When scope = spec and look on ind only
     {
-        $query->where('exists ( select 1 from specimen_individuals i1
+        $query->andWhere('exists ( select 1 from specimen_individuals i1
           where i1.specimen_ref= s.specimen_ref AND '. implode(' AND ', $this->exists_qry_ind). ')');
+
     }
     elseif(! empty($this->exists_qry_part)) // When scope = ind and look on part
     {
         $alias = $query->getRootAlias();
-        $query->where('exists ( select 1 from specimen_parts p1
+        $query->andWhere('exists ( select 1 from specimen_parts p1
           where p1.specimen_individual_ref= s.specimen_ref AND '. implode(' AND ', $this->exists_qry_part). ')');
     }
 
