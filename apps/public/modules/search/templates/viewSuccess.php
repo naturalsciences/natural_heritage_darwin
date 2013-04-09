@@ -1,7 +1,7 @@
 <?php slot('title', __('View Specimens') .  ( $individual->SpecimensFlat->getTaxonRef()  ? " : ".$individual->SpecimensFlat->getTaxonName() : ""));  ?>  
 
 <div class="page viewer">
-  <h1><?php echo __("Specimen Record");?></h1>
+  <h1><?php echo __("Specimen Record");?><?php echo (": i".$individual->getId());?></h1>
     <h2 class="title"><?php echo __("Collection") ?></h2>  
     <div class="borded right_padded">
       <table>

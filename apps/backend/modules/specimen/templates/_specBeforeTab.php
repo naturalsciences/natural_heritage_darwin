@@ -73,7 +73,7 @@ $(document).ready(function()
 
 </script>
 <?php $specimen_id = ($specimen->isNew())?'':$specimen->getId();?>
-<?php $specimen_name = ($specimen->isNew())?'': sprintf(__('Specimen %d'),$specimen->getId());?>
+<?php $specimen_name = ($specimen->isNew())?'': sprintf(__('Specimen s%d'),$specimen->getId());?>
 <?php $individual_id = '';?>
 <?php $individual_name = '';?>
 <?php $part_tab_class = 'disabled';?>
@@ -82,7 +82,7 @@ $(document).ready(function()
 <?php if(isset($individual)):?>
   <?php $part_num = '<span class="tab_item_count"> #'.$individual->getNbrPart().'</span>';?>
   <?php $individual_id = ($individual->isNew())?'':$individual->getId();?>
-  <?php $individual_name = ($individual->isNew())?__('New Individual'):__('Individual ').$individual_id;?>
+  <?php $individual_name = ($individual->isNew())?__('New Individual'):__('Individual i').$individual_id;?>
   <?php $part_tab_class = ($individual_id == '')?'disabled':'enabled';?>
 <?php endif;?>
 

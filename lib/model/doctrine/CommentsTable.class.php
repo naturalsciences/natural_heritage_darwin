@@ -75,6 +75,21 @@ class CommentsTable extends DarwinTable
       ->orderby('notion_concerned asc');
     return $q->execute();
   }
+  
+  /**
+  * Find related comments for a table name a an array of id
+  * @param string $table_name the table to look for
+  * @param array record_ids an array of record id
+  * @return Doctrine_Collection Collection of Doctrine records
+  */
+  public function getRelatedComment($table_name, $record_ids)
+  {
+     $q = Doctrine_Query::create()
+        ->from('Comments')
+        ->where('referenced_relation=?', $table_name)
+        ->andWherein('record_id', $record_ids);
+    return $q->execute() ;
+  }
 
   /**
   * Get commentable notions for a given table as an array

@@ -179,7 +179,18 @@ class igsActions extends DarwinActions
         // Sets the Pager Layout templates
         $this->setDefaultPaggingLayout($this->pagerLayout);
         // If pager not yet executed, this means the query has to be executed for data loading
-        if (! $this->pagerLayout->getPager()->getExecuted()) $this->igss = $this->pagerLayout->execute();         
+        if (! $this->pagerLayout->getPager()->getExecuted()) $this->igss = $this->pagerLayout->execute();
+        $comment_ids = array();
+        $this->comments = array() ;
+        foreach($this->igss as $i)
+          $comment_ids[] = $i->getId();
+        $comments_groups  = Doctrine::getTable('Comments')->getRelatedComment('igs',$comment_ids);
+        foreach($comments_groups as $comment)
+        {
+          if(isset($this->comments[$comment->getRecordId()])) $this->comments[$comment->getRecordId()] .= '/'.$comment->getComment() ;
+          else $this->comments[$comment->getRecordId()] = $comment->getComment() ;
+        }
+        print_r($this->comments) ;
       }
     }
   }
