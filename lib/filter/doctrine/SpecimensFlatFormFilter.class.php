@@ -1015,7 +1015,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
-    //die(print_r($taintedValues));
+    // the line below is used to avoid with_multimedia checkbox to remains checked when we click to back to criteria
     if(!isset($taintedValues['with_multimedia'])) $taintedValues['with_multimedia'] = false ;
     if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes']))
     {
