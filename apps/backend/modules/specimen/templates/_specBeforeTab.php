@@ -169,7 +169,7 @@ $(document).ready(function()
               &lt; <?php if($part->isNew()):?>
               <?php echo __('New Part'); ?>
               <?php else:?>
-              <?php echo __('Edit Part'); ?>
+              <?php echo __('Edit Part');echo (' p'.$part->getId()) ; ?>
               <?php endif;?> &gt; 
             </a>
             <?php if(!$part->isNew()):?>

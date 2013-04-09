@@ -5,7 +5,7 @@
 <?php use_javascript('button_ref.js') ?>
 <div class="page">
   <div class="tabs_view">
-    <a class="enabled selected" id="tab_0"> &lt; <?php echo sprintf(__('Specimen %d'),$specimen->getSpecimenRef());?> &gt; </a>
+    <a class="enabled selected" id="tab_0"> &lt; <?php echo sprintf(__('Specimen s%d'),$specimen->getSpecimenRef());?> &gt; </a>
 		<?php echo link_to(__('Individuals overview'), 'individuals/overview?spec_id='.$specimen->getSpecimenRef()."&view=true", array('class'=>'enabled', 'id' => 'tab_1'));?>
 			<a class="disabled" id="tab_3"><?php echo __('Parts overview');?></a>
   </div>

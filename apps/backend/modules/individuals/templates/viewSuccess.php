@@ -7,7 +7,7 @@
   <div class="tabs_view">
 		<?php echo link_to(__('View Specimen'), 'specimen/view?id='.$individual->getSpecimenRef(), array('class'=>'enabled', 'id' => 'tab_0'));?>  
     <?php echo link_to(__('Individual overview'), 'individuals/overview?spec_id='.$individual->getSpecimenRef().'&view=true', array('id'=>'tab_1', 'class'=> 'enabled')); ?>
-    <a class="enabled selected" id="tab_2"> &lt; <?php echo sprintf(__('Individual %d'),$individual->getId());?> &gt; </a>
+    <a class="enabled selected" id="tab_2"> &lt; <?php echo sprintf(__('Individual i%d'),$individual->getId());?> &gt; </a>
     <?php echo link_to(__('Parts overview'), 'parts/overview?id='.$individual->getId().'&view=true', array('id'=>'tab_3', 'class'=> 'enabled')); ?>
   </div>
 
