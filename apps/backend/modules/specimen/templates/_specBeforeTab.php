@@ -130,7 +130,7 @@ $(document).ready(function()
           <?php include_partial('specimen/itemactions', array('source' => 'specimen','id'=>$specimen_id)); ?>
           <?php echo link_to(__('Individuals overview').$ind_num, 'individuals/overview?spec_id='.$specimen_id, array('class'=>'enabled', 'id' => 'tab_1'));?>
           <a class="enabled selected with_actions" id="tab_2"> &lt; <?php echo $individual_name;?> &gt; </a>
-          <?php include_partial('specimen/itemactions', array('source' => 'individual','id'=>$individual_id)); ?>
+          <?php if($individual_id):?><?php include_partial('specimen/itemactions', array('source' => 'individual','id'=>$individual_id)); ?><?php endif;?>
           <?php echo link_to(__('Parts overview').$part_num, ($individual_id=='')?'individuals/edit?spec_id='.$specimen_id:'parts/overview?id='.$individual_id, array('id'=>'tab_3', 'class'=>$part_tab_class)); ?>
           <?php echo link_to(__('New Part'), ($individual_id=='')?'individuals/edit?spec_id='.$specimen_id:'parts/edit?indid='.$individual_id, array('id'=>'tab_4', 'class'=>$part_tab_class)); ?>
 
