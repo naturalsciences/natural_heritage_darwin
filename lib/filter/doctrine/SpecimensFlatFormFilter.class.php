@@ -1015,6 +1015,8 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
+    //die(print_r($taintedValues));
+    if(!isset($taintedValues['with_multimedia'])) $taintedValues['with_multimedia'] = false ;
     if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes']))
     {
 
