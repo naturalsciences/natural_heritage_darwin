@@ -5,8 +5,14 @@
 
 .widget .widget_top_button, .widget .widget_bottom_button
 {
-	margin-left: 15px;
-	line-height:0;
+        width: 40px;
+        float:left;
+        height: 22px;
+        padding-top: 6px;
+        border-right: 2px solid white;
+        vertical-align:center;
+        text-align:center;
+        margin-right: 2em;
 }
 
 .widget_top_bar_button
@@ -19,14 +25,15 @@
 {
 	background-color:#5baabd;
 	height:28px;
-	padding-left: 2em;
+        vertical-align:center;
 	color:white;
-	cursor:move;
 	
 }
 .widget .widget_top_bar span
 {
+        cursor:move;
 	padding-top: 8px;
+        margin-left: 40px;
 	display:block;
 	text-shadow: 1px 1px 1px #787878;
 	font-weight:bold;
@@ -41,12 +48,21 @@
 }
 
 
-.widget_top_button
-{
-	display:none;
+.widget .widget_top_button, .widget .widget_bottom_button {
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size: 15px 7px;
+  background-image: url(/images/expand_white.png);
+}
+.widget .widget_bottom_button {
+    background-image: url(/images/collapse_white.png);
 }
 
-
+ .widget .widget_top_button img , .widget .widget_bottom_button img
+{
+  width: 15px;
+  display: none;
+}
 /******* Multi COL ***********/
 
 .board
@@ -80,7 +96,7 @@
 }
 .board_col > li
 {
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 
 

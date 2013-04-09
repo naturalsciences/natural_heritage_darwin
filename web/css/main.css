@@ -2273,6 +2273,8 @@ a.and_search_code
   height: 16px;
   background-image: url('/images/help_icon_green.png');
   display:inline-block;
+  *display: inline; /*IE HACK*/
+  zoom: 1;  /*IE HACK*/
 }
 
 .help_ico
@@ -2281,6 +2283,8 @@ a.and_search_code
   height: 16px;
   background-image: url('/images/help_icon_grey.png');
   display:inline-block;
+  *display: inline; /*IE HACK*/
+  zoom: 1;  /*IE HACK*/
 }
 
 .help_ico>span

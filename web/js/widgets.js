@@ -17,26 +17,32 @@
       $('.board_col').sortable({
         helper: 'clone',
         connectWith: ['.board_col'],
-        handle: '.widget_top_bar',
+        handle: '.widget_top_bar span',
         update: base.changeOrder,
         create: base.onInitialize
       });
-      
+
+      $('.widget_top_bar').live('dblclick', base.toggleWidget);
       $('.widget_refresh').live('click', base.refreshWidget);
       $('.widget_close').live('click', base.closeWidget);
       $('.widget_collection_button a').click(base.showWidgetCollection);
       $('.widget_collection_container a').click(base.addWidget);
-      $('.widget_top_button img').live('click', base.showWidgetContent);
-      $('.widget_bottom_button img').live('click',base.hideWidgetContent);
+      $('.widget_top_button').live('click', base.showWidgetContent);
+      $('.widget_bottom_button').live('click',base.hideWidgetContent);
     };
 
+    base.toggleWidget = function()
+    {
+      $(this).find('.widget_bottom_button:visible, .widget_top_button:visible').click();
+    };
+    
     base.showWidgetContent = function()
     {
       elem = $(this).closest('.widget');
       base.changeStatus(elem.attr('id'), 'open');
       elem.find('.widget_content').slideDown();
-      elem.find('.widget_bottom_button').slideDown();
-      elem.find('.widget_top_button').slideUp();
+      elem.find('.widget_bottom_button').show();
+      elem.find('.widget_top_button').hide();
     };
 
     base.hideWidgetContent = function()
@@ -44,8 +50,8 @@
       elem = $(this).closest('.widget');
       base.changeStatus(elem.attr('id'), 'close');
       elem.find('.widget_content').slideUp();
-      elem.find('.widget_bottom_button').slideUp();
-      elem.find('.widget_top_button').slideDown();
+      elem.find('.widget_bottom_button').hide();
+      elem.find('.widget_top_button').show();
     };
     
     var last_notified = {};
