@@ -18,7 +18,7 @@ $code->save();
 $specCodes = Doctrine::getTable('Codes')->getCodesRelated('specimens', $specimen->getSpecimenRef());
 $specimen->SpecimensCodes = $specCodes;
 
-$t->is(count($specimen->SpecimensCodes), 4, '"4" codes available for specimen "'.$specimen->getId().'"');
+$t->is(count($specimen->SpecimensCodes), 4, '"4" codes available for specimen "'.$specimen->getSpecimenRef().'"');
 $t->is($specimen->SpecimensCodes[0]->getCodeFormated(), 'VERT. 12456', 'The Code is well "VERT. 12456"');
 $t->is($specimen->SpecimensCodes[1]->getCodeFormated(), 'VERT./1548548 Abou', 'The Code is well "VERT./1548548 Abou"');
 $t->is($specimen->SpecimensCodes[2]->getCodeFormated(), 'VERT./85486846', 'The Code is well "VERT./85486846"');
