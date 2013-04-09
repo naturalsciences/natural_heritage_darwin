@@ -5,9 +5,9 @@
 <?php use_javascript('button_ref.js') ?>
 <div class="page">
   <div class="tabs_view">
-    <?php echo link_to(__('View Specimen'), 'specimen/view?id='.$part->Individual->Specimens->getId(), array('class'=>'enabled', 'id' => 'tab_0'));?>  
+    <?php echo link_to(__('Specimen s'.$part->Individual->Specimens->getId()), 'specimen/view?id='.$part->Individual->Specimens->getId(), array('class'=>'enabled', 'id' => 'tab_0'));?>  
     <?php echo link_to(__('Individual overview'), 'individuals/overview?spec_id='.$part->Individual->Specimens->getId().'&view=true', array('id'=>'tab_1', 'class'=> 'enabled')); ?>
-    <?php echo link_to(__('Individual'.$part->Individual->getId()), 'individuals/view?id='.$part->Individual->getId(), array('id'=>'tab_2', 'class'=> 'enabled')); ?>
+    <?php echo link_to(__('Individual i'.$part->Individual->getId()), 'individuals/view?id='.$part->Individual->getId(), array('id'=>'tab_2', 'class'=> 'enabled')); ?>
     <?php echo link_to(__('Part overview'), 'parts/overview?id='.$part->Individual->getId()."&view=true", array('class'=>'enabled', 'id' => 'tab_3'));?>
     <a class="enabled selected" id="tab_4"> &lt; <?php echo sprintf(__('Part p%d'), $part->getId());?> &gt; </a>		
   </div>
