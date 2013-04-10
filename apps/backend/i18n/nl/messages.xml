@@ -5703,6 +5703,10 @@
         <source>This widget allows you to add a bibliographic reference of the item</source>
         <target>Deze widget laat u toe een bibliografische referentie toe te voegen aan een item</target>
       </trans-unit>
+      <trans-unit id="1730">
+        <source>Change Ig num</source>
+        <target>I.G. num wijzigen</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

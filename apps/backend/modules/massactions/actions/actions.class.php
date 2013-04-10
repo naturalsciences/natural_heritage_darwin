@@ -31,7 +31,6 @@ class massactionsActions extends DarwinActions
         $nb_item = count($this->form->getValue('item_list'));
         $this->redirect('massactions/status?nb_item='.$nb_item);
       }
-
       $items_ids = $actions['item_list'];
       $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids,$actions['source'], $this->getUser()->getId());
 
