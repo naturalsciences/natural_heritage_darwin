@@ -33,9 +33,9 @@
             </td>
             <td>
               <div class="tree_view">
-                <span class="line">
-                <span class="pager_nav"><?php echo __("Conservator") ; ?>: </span><span><?php echo $col_manager->getFormatedName() ; ?></span>
-                </span>
+                <div class="line">
+                  <span class="pager_nav"><?php echo __("Conservator") ; ?>: </span><span><?php echo $col_manager->getFormatedName() ; ?></span>
+                </div>
                 <?php foreach($manager as $info) : ?>
                   <?php if($img = $info->getDisplayImage(1)) : ?>
                     <span class="line">
@@ -44,6 +44,11 @@
                     </span>
                  <?php endif ; ?>
                 <?php endforeach ; ?>
+                <?php if(isset($col_staff) && $col_staff):?>
+                  <div class="line">
+                    <span class="pager_nav"><?php echo __("Staff Member") ; ?>: </span><span><?php echo $col_staff->getFormatedName() ; ?></span>
+                  </div>
+                <?php endif;?>
               </div>
             </td>
           </tr>

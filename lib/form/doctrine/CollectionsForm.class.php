@@ -41,6 +41,17 @@ class CollectionsForm extends BaseCollectionsForm
        'method' => 'getFormatedName',
        'box_title' => $this->getI18N()->__('Choose Manager'),
      ));
+     
+    $this->widgetSchema['staff_ref'] = new widgetFormButtonRef(array(
+       'model' => 'Users',
+       'link_url' => 'user/choose',
+       'method' => 'getFormatedName',
+        'nullable' => true,
+       'box_title' => $this->getI18N()->__('Choose Staff Member'),
+     ));
+    $this->widgetSchema['staff_ref']->setLabel('Staff Member');
+//      $this->validatorSchema['staff_ref'] = new sfValidatorInteger(array('required' => false)) ;     
+    
     $this->widgetSchema['main_manager_ref']->setLabel('Conservator');
 
     $this->widgetSchema['parent_ref'] = new sfWidgetFormChoice(array(

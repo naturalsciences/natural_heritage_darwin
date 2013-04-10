@@ -140,6 +140,7 @@ class searchActions extends DarwinActions
       }
     }
     $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef());
+    $this->col_staff = Doctrine::getTable('Users')->find($collection->getStaffRef());
     $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());      
 
     $ids = $this->FecthIdForCommonNames() ;

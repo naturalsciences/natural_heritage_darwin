@@ -20,4 +20,14 @@
   </dl>
 </p>
 <?php endif;?>
+
+<?php if(isset($staff) && $staff):?>
+  <h2><?php echo __('Staff Member');?> :</h2>
+  <p>
+  <dl>
+    <dt><?php echo __('Name')?><dt>
+    <dd><?php echo $staff->getFormatedName();?></dd>
+  </dl>
+  </p>
+<?php endif;?>
 </div>
