@@ -5704,6 +5704,10 @@
         <source>Add Status</source>
         <target>Ajouter un état</target>
       </trans-unit>
+      <trans-unit id="1730">
+        <source>Change Ig num</source>
+        <target>Change num I.G.</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>
