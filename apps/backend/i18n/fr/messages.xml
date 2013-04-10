@@ -1593,7 +1593,7 @@
       </trans-unit>
           <trans-unit id="421">
         <source>[1]Show 1 Value|(1,+Inf]Show %1% Values</source>
-        <target>[1]Afficher 1 Valeur(1,+Inf]Afficher %1% Valeurs</target>
+        <target>[1]Afficher 1 Valeur|(1,+Inf]Afficher %1% Valeurs</target>
       </trans-unit>
           <trans-unit id="422">
         <source>Hide Values</source>

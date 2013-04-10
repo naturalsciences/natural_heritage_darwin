@@ -3121,7 +3121,7 @@
       </trans-unit>
           <trans-unit id="421">
         <source>[1]Show 1 Value|(1,+Inf]Show %1% Values</source>
-        <target>[1]1 waarde tonen(1,+Inf] %1% waarden tonen</target>
+        <target>[1]1 waarde tonen|(1,+Inf] %1% waarden tonen</target>
       </trans-unit>
           <trans-unit id="422">
         <source>Hide Values</source>
@@ -3149,7 +3149,7 @@
       </trans-unit>
           <trans-unit id="428">
         <source>[1]Show 1 Name|(1,+Inf]Show %1% Names</source>
-        <target>[1]1 naam tonen(1,+Inf] %1% namen tonen</target>
+        <target>[1]1 naam tonen|(1,+Inf] %1% namen tonen</target>
       </trans-unit>
           <trans-unit id="429">
         <source>Hide Names</source>
