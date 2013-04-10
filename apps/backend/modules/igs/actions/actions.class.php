@@ -190,7 +190,6 @@ class igsActions extends DarwinActions
           if(isset($this->comments[$comment->getRecordId()])) $this->comments[$comment->getRecordId()] .= '/'.$comment->getComment() ;
           else $this->comments[$comment->getRecordId()] = $comment->getComment() ;
         }
-        print_r($this->comments) ;
       }
     }
   }
