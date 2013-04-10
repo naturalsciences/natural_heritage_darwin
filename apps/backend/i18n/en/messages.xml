@@ -1784,8 +1784,8 @@
         <target>Manage widgets</target>
       </trans-unit>
           <trans-unit id="461">
-        <source>Manager</source>
-        <target>Manager</target>
+        <source>Conservator</source>
+        <target>Conservator</target>
       </trans-unit>
           <trans-unit id="462">
         <source>Contacts</source>
@@ -2584,8 +2584,8 @@
         <target>Administrator</target>
       </trans-unit>
           <trans-unit id="663">
-        <source>Collection manager</source>
-        <target>Collection manager</target>
+        <source>Conservator</source>
+        <target>Conservator</target>
       </trans-unit>
           <trans-unit id="664">
         <source>Encoder</source>

@@ -1,7 +1,7 @@
 <?php use_helper('Text');?>
 
 <div class="col_extd_info">
-<h2><?php echo __('Manager');?> :</h2>
+<h2><?php echo __('Conservator');?> :</h2>
 <p>
 <dl>
   <dt><?php echo __('Name')?><dt>

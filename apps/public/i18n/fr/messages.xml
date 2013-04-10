@@ -276,8 +276,8 @@
         <target>Enregistrement d&#039;échantillon</target>
       </trans-unit>
           <trans-unit id="1258">
-        <source>Collection manager</source>
-        <target>Gestionaire de collection</target>
+        <source>Conservator</source>
+        <target>Conservateur</target>
       </trans-unit>
           <trans-unit id="1259">
         <source>Common Names</source>

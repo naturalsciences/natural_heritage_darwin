@@ -3280,8 +3280,8 @@
         <target>Widgets beheren</target>
       </trans-unit>
           <trans-unit id="461">
-        <source>Manager</source>
-        <target>Collectiebeheerder</target>
+        <source>Conservator</source>
+        <target>Conservator</target>
       </trans-unit>
           <trans-unit id="463">
         <source>Choose a collection</source>
@@ -3720,8 +3720,8 @@
         <target>Administrator</target>
       </trans-unit>
           <trans-unit id="663">
-        <source>Collection manager</source>
-        <target>Collectiebeheerder</target>
+        <source>Conservator</source>
+        <target>Conservator</target>
       </trans-unit>
           <trans-unit id="664">
         <source>Encoder</source>

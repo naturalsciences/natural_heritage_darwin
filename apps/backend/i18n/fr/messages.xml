@@ -1752,8 +1752,8 @@
         <target>Gérer widgets</target>
       </trans-unit>
           <trans-unit id="461">
-        <source>Manager</source>
-        <target>Gestionnaire</target>
+        <source>Conservator</source>
+        <target>Conservateur</target>
       </trans-unit>
           <trans-unit id="463">
         <source>Choose a collection</source>
@@ -2540,8 +2540,8 @@
         <target>Administrateur</target>
       </trans-unit>
           <trans-unit id="663">
-        <source>Collection manager</source>
-        <target>Gestionnaire de collection</target>
+        <source>Conservator</source>
+        <target>Conservateur</target>
       </trans-unit>
           <trans-unit id="664">
         <source>Encoder</source>

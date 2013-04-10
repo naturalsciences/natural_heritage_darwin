@@ -304,8 +304,8 @@
         <target>Specimen Record</target>
       </trans-unit>
           <trans-unit id="1258">
-        <source>Collection manager</source>
-        <target>Collection manager</target>
+        <source>Conservator</source>
+        <target>Conservator</target>
       </trans-unit>
           <trans-unit id="1259">
         <source>Common Names</source>

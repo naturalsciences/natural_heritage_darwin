@@ -41,7 +41,7 @@ class CollectionsForm extends BaseCollectionsForm
        'method' => 'getFormatedName',
        'box_title' => $this->getI18N()->__('Choose Manager'),
      ));
-    $this->widgetSchema['main_manager_ref']->setLabel('Main manager');
+    $this->widgetSchema['main_manager_ref']->setLabel('Conservator');
 
     $this->widgetSchema['parent_ref'] = new sfWidgetFormChoice(array(
       'choices' =>  array(),

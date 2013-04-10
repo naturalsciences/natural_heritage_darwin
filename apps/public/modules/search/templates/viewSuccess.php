@@ -34,7 +34,7 @@
             <td>
               <div class="tree_view">
                 <span class="line">
-                <span class="pager_nav"><?php echo __("Collection manager") ; ?>: </span><span><?php echo $col_manager->getFormatedName() ; ?></span>
+                <span class="pager_nav"><?php echo __("Conservator") ; ?>: </span><span><?php echo $col_manager->getFormatedName() ; ?></span>
                 </span>
                 <?php foreach($manager as $info) : ?>
                   <?php if($img = $info->getDisplayImage(1)) : ?>
