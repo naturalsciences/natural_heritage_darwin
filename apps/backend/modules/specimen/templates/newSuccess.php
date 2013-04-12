@@ -19,7 +19,7 @@ $(document).ready(function ()
 });
 </script>
 
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'specimen','eid'=> (! $form->getObject()->isNew() ? $form->getObject()->getId() : null ))); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'specimen','eid'=> (! $form->getObject()->isNew() ? $form->getObject()->getId() : null ))); ?>
 
 <?php include_partial('specBeforeTab', array('specimen' => $form->getObject(),'form'=> $form, 'mode'=>'specimen_edit') );?>
   <?php include_stylesheets_for_form($form) ?>

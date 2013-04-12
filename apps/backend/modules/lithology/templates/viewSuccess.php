@@ -14,7 +14,7 @@ $(document).ready(function ()
 });
 </script>
 
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'catalogue_lithology','eid'=> $form->getObject()->getId(), 'view' => true)); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'catalogue_lithology','eid'=> $form->getObject()->getId(), 'view' => true)); ?>
 <?php slot('title', __('View Lithologic unit'));  ?>
 <div class="page">
     <h1><?php echo __('View Lithologic unit');?></h1>

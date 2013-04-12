@@ -1,4 +1,4 @@
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'catalogue_igs','eid'=> $form->getObject()->getId())); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'catalogue_igs','eid'=> $form->getObject()->getId())); ?>
 <?php slot('title', __('Edit I.G. number'));  ?>
 <div class="page">
     <h1 class="edit_mode"><?php echo __('Edit I.G.');?></h1>

@@ -1,4 +1,4 @@
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'maintenances','eid'=> null )); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'maintenances','eid'=> null )); ?>
 <?php $action = 'maintenances/create?table='.$sf_request->getParameter('table').'&record_id='.$sf_request->getParameter('record_id') ;?>
 <?php slot('title', __('New Maintenance'));  ?>
 <div class="page">

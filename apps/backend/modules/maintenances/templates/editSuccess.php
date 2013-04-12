@@ -1,4 +1,4 @@
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'maintenances','eid'=> $form->getObject()->getId() )); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'maintenances','eid'=> $form->getObject()->getId() )); ?>
 <?php $action = 'maintenances/update?id='.$form->getObject()->getId() ;?>
 <?php slot('title', __('Edit Maintenance'));  ?>
 <div class="page">

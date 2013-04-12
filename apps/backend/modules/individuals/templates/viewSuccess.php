@@ -1,5 +1,5 @@
 <?php slot('title', __('View specimen individual'));  ?>
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'individuals', 'table' => 'specimen_individuals','eid'=> $individual->getId(),'view' => true)); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'individuals', 'table' => 'specimen_individuals','eid'=> $individual->getId(),'view' => true)); ?>
 <?php use_stylesheet('widgets.css') ?>
 <?php use_javascript('widgets.js') ?>
 <?php use_javascript('button_ref.js') ?>

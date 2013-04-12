@@ -1,5 +1,5 @@
 <?php slot('title', __('View Loan'));  ?>
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'loan','eid'=> $loan->getid(),'view' => true)); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'loan','eid'=> $loan->getid(),'view' => true)); ?>
 <?php use_stylesheet('widgets.css') ?>
 <?php use_javascript('widgets.js') ?>
 <?php use_javascript('button_ref.js') ?>
