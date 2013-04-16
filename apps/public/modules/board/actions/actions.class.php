@@ -17,8 +17,13 @@ class boardActions extends DarwinActions
   public function executeTour(sfWebRequest $request)
   {  }
 
+  public function executeAbout(sfWebRequest $request)
+  {
+    $this->forward('board', 'contact');
+  }
+
   public function executeContact(sfWebRequest $request)
-  {  
+  {
     if($this->getUser()->getCulture() == "nl")
     {
       $this->file1 = "http://projects.naturalsciences.be/attachments/226/Bijlage_2_N_v1_2010.pdf" ;      
@@ -38,9 +43,6 @@ class boardActions extends DarwinActions
         "mail" => sfConfig::get('dw_contactMail'),
     );
   }
-
-  public function executeAbout(sfWebRequest $request)
-  {  }
 
   public function executeTermOfUse(sfWebRequest $request)
   {  }

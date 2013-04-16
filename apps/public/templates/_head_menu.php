@@ -17,7 +17,6 @@
             <li><?php echo link_to(__('Geo/Paleo Search'),'@geoSearch');?></li>
             <li><?php echo link_to(__('Take a tour'),'@tour');?></li>
             <li><?php echo link_to(__('Contacts'),'@contact');?></li>
-            <li><?php echo link_to(__('About'),'@about');?></li>
           </ul>
         </td>
       </tr>

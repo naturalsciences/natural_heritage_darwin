@@ -17,7 +17,6 @@
             <li><?php echo link_to(__('Geo/Paleo Search'),$sf_context->getConfiguration()->generatePublicUrl('geoSearch', array(), $sf_request));?></li>
             <li><?php echo link_to(__('Take a tour'),$sf_context->getConfiguration()->generatePublicUrl('tour', array(), $sf_request));?></li>
             <li><?php echo link_to(__('Contacts'),$sf_context->getConfiguration()->generatePublicUrl('contact', array(), $sf_request));?></li>
-            <li><?php echo link_to(__('About'),$sf_context->getConfiguration()->generatePublicUrl('about', array(), $sf_request));?></li>
           </ul>
         </td>
       </tr>
