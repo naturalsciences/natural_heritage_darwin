@@ -48,6 +48,7 @@ class igsActions extends DarwinActions
   { 
     $igs = new igs() ;
     $igs = $this->getRecordIfDuplicate($request->getParameter('duplicate_id','0'), $igs);
+    if($request->hasParameter('searchIg')) $igs->fromArray($request->getParameter('searchIg'));
     $this->form = new igsForm($igs);
   }
 
