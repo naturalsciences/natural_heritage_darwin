@@ -715,6 +715,14 @@
         <source>Staff Member</source>
         <target>Membre de l'équipe</target>
       </trans-unit>
+      <trans-unit id="1709">
+        <source>Zoological Search</source>
+        <target>Recherche Zoologique</target>
+      </trans-unit>
+      <trans-unit id="1710">
+        <source>Geo/Paleo Search</source>
+        <target>Recherche Geo/Paleo</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

@@ -13,8 +13,8 @@
       <tr>
         <td colspan="2">
           <ul class="menu_link">
-            <li><?php echo link_to(__('Our collections'),$sf_context->getConfiguration()->generatePublicUrl('homepage', array(), $sf_request));?></li>
-            <li><?php echo link_to(__('Search'),$sf_context->getConfiguration()->generatePublicUrl('search', array(), $sf_request));?></li>
+            <li><?php echo link_to(__('Zoological Search'),$sf_context->getConfiguration()->generatePublicUrl('search', array(), $sf_request));?></li>
+            <li><?php echo link_to(__('Geo/Paleo Search'),$sf_context->getConfiguration()->generatePublicUrl('geoSearch', array(), $sf_request));?></li>
             <li><?php echo link_to(__('Take a tour'),$sf_context->getConfiguration()->generatePublicUrl('tour', array(), $sf_request));?></li>
             <li><?php echo link_to(__('Contacts'),$sf_context->getConfiguration()->generatePublicUrl('contact', array(), $sf_request));?></li>
             <li><?php echo link_to(__('About'),$sf_context->getConfiguration()->generatePublicUrl('about', array(), $sf_request));?></li>

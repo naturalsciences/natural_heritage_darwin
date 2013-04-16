@@ -13,8 +13,8 @@
       <tr>
         <td colspan="2">
           <ul class="menu_link">
-            <li><?php echo link_to(__('Our Collections'),'@homepage');?></li>
-            <li><?php echo link_to(__('Search'),'@search');?></li>
+            <li><?php echo link_to(__('Zoological Search'),'@search');?></li>
+            <li><?php echo link_to(__('Geo/Paleo Search'),'@geoSearch');?></li>
             <li><?php echo link_to(__('Take a tour'),'@tour');?></li>
             <li><?php echo link_to(__('Contacts'),'@contact');?></li>
             <li><?php echo link_to(__('About'),'@about');?></li>
@@ -30,7 +30,7 @@
           <li><?php echo link_to('Nl','board/lang?lang=nl');?></li>
         </ul></td>
       </tr>
-    </table>    
+    </table>
   </div>
 
   <?php include_component('login','MenuLogin') ; ?> 
