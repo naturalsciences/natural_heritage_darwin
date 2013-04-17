@@ -30,6 +30,12 @@
     <br />
     <ul>
       <li>
+        <a href="http://naturalsciences.github.io/Darwin/">
+          <?php echo image_tag('public/logo_small.png',"width=100");?>
+          <span>DaRWIN project</span>
+        </a>
+      </li>
+      <li>
         <a href="<?php echo __('http://www.naturalsciences.be');?>">
           <?php echo image_tag('public/rbins_logo.png');?>
           <span><?php echo __('Royal Belgian Institute of Natural Sciences');?></span>
