@@ -29,4 +29,11 @@ class IgsTable extends DarwinTable
     return $q->fetchOne();
   }
 
+  public function findDuplicate($object)
+  {
+    $q = Doctrine_Query::create()
+      ->from('Igs i')
+      ->where('i.ig_num = ?', $object->getIgNum());
+    return $q->fetchOne(); 
+  }
 }

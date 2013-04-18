@@ -214,8 +214,20 @@ class igsActions extends DarwinActions
       catch(Doctrine_Exception $ne)
       {
         $e = new DarwinPgErrorParser($ne);
-        $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-        $form->getErrorSchema()->addError($error);
+        $extd_message = '';
+        if(preg_match('/unique constraint "unq_igs"/i',$ne->getMessage())) {
+          $dup_igs = Doctrine::getTable('Igs')->findDuplicate($form->getObject());
+          if(!$dup_igs) {
+            $this->logMessage('Duplicate Igs not found: '. json_encode($form->getObject()->toArray()), 'err');
+          }
+          else {
+            $extd_message = '<br /><a href="'.$this->getController()->genUrl( 'igs/edit?id='.$dup_igs->getId() ).'">'.
+              $this->getI18N()->__('Go the the original record')
+              .'</a>';
+          }
+          $error = new sfValidatorError(new savedValidator(),$e->getMessage().$extd_message);
+          $form->getErrorSchema()->addError($error);
+        }
       }
     }
   }
