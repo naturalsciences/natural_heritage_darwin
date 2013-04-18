@@ -48,7 +48,7 @@ $browser->
                                       'people_sub_type' => array(2,4,8),
                                       'order_by' => 1
                                               )
-                                      ),              
+                                      ),
              'newUsers' => array(
                               0 => array(
                                 'user_ref' => $reguser,
@@ -57,7 +57,7 @@ $browser->
                                 'user_ref' => $encoder,
                                 'has_encoding_right' => 'on'
                                         ),
-                                )                                      
+                                )
             	)
         )
        )->

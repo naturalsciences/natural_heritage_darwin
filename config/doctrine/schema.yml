@@ -253,19 +253,6 @@ PeopleLanguages:
             local: people_ref
             foreign: id
 
-UsersLanguages:
-    columns:
-        id: { type: integer, primary: true, autoincrement: true}
-        users_ref: { type: integer, notnull: true}
-        language_country: { type: string, notnull: true, default: en}
-        mother: { type: boolean, notnull: true, default: true}
-        preferred_language: { type: boolean, notnull: true, default: false}
-    relations:
-        User:
-            class: Users
-            local: users_ref
-            foreign: id
-
 PeopleRelationships:
     columns:
         id: { type: integer, primary: true, autoincrement: true }

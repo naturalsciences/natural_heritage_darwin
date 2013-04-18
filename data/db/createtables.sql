@@ -450,21 +450,6 @@ comment on column people_languages.language_country is 'Reference of Language - 
 comment on column people_languages.mother is 'Flag telling if its mother language or not';
 comment on column people_languages.preferred_language is 'Flag telling which language is preferred in communications';
 
-create table users_languages
-       (
-        id serial,
-        users_ref integer not null,
-        constraint pk_users_languages primary key (id),
-        constraint unq_users_languages unique (users_ref, language_country),
-        constraint fk_users_languages_people foreign key (users_ref) references users(id) on delete cascade
-       )
-inherits (template_people_languages);
-comment on table users_languages is 'Languages spoken by a given user';
-comment on column users_languages.users_ref is 'Reference of user - id field of users table';
-comment on column users_languages.language_country is 'Reference of Language - language_country field of languages_countries table';
-comment on column users_languages.mother is 'Flag telling if its mother language or not';
-comment on column users_languages.preferred_language is 'Flag telling which language is preferred in communications';
-
 create table multimedia
        (
         id serial,

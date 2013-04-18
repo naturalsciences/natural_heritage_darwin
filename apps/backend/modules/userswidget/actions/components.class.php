@@ -12,11 +12,6 @@ class userswidgetComponents extends sfComponents
     $this->comms =  Doctrine::getTable('UsersComm')->fetchByUser($this->eid);
   }
   
-  public function executeLang()
-  {
-    $this->langs =  Doctrine::getTable('UsersLanguages')->getLangByUser($this->eid);
-  }
-  
   public function executeInfo()
   {
      $this->login_info =  Doctrine::getTable('UsersLoginInfos')->getInfoForUser($this->eid);

@@ -8,8 +8,6 @@ $t->is(Doctrine::getTable('Users')->getUserByPassword("root","evil")->getFamilyN
 $t->is(''.Doctrine::getTable('Users')->getUserByPassword("root","evil"),"Evil Root (Mr)",'Test the local login with a good password');
 $u = Doctrine::getTable('Users')->getUserByPassword("root","evil");
 
-$t->is(Doctrine::getTable('UsersLanguages')->getPreferredLanguage($u->getId())->getLanguageCountry(),'en','En is the preferred lang');
-
 $nu = new Users() ;
 $nu->setFamilyName('Chambert') ;
 $nu->setGivenName('Yann') ;

@@ -57,17 +57,6 @@ usr0:
 usr1:
    col_num: 1
    category: users_widget
-   group_name: lang
-   mandatory: false
-   order_by: 2
-   opened: true
-   visible: true
-   title_perso: Languages
-   all_public: true
-
-usr2:
-   col_num: 1
-   category: users_widget
    group_name: comm
    mandatory: false
    order_by: 3
@@ -76,7 +65,7 @@ usr2:
    title_perso: Communications
    all_public: true
 
-usr3:
+usr2:
    col_num: 1
    category: users_widget
    group_name: address

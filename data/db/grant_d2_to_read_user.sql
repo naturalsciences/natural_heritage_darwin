@@ -44,8 +44,7 @@
  GRANT SELECT ON darwin2.staging_tag_groups TO d2viewer;
  GRANT SELECT ON darwin2.users_comm TO d2viewer;
  GRANT SELECT ON darwin2.tags TO d2viewer;
- GRANT SELECT ON darwin2.users_languages TO d2viewer;
- GRANT SELECT ON darwin2.users_login_infos TO d2viewer;
+  GRANT SELECT ON darwin2.users_login_infos TO d2viewer;
  GRANT SELECT ON darwin2.users_addresses TO d2viewer;
  GRANT SELECT ON darwin2.staging_people TO d2viewer;
  GRANT SELECT ON darwin2.users_tracking TO d2viewer;
