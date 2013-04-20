@@ -9,6 +9,12 @@ class timeoutFilter extends sfFilter
       $conn = Doctrine_Manager::connection();
       $conn->exec("SET statement_timeout = ".$time.";");
     }
+
+    $version = $conn->getAttribute(PDO::ATTR_SERVER_VERSION);
+    if(strpos($version,'8.') !== 0) {
+      $conn->exec("SET application_name = 'darwin';");
+    }
+
     $filterChain->execute();
   }
 }
