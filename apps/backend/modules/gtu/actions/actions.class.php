@@ -145,7 +145,7 @@ class gtuActions extends DarwinActions
 
     $this->form = new GtuForm();
 
-    $this->processForm($request, $this->form);
+    $this->processForm($request, $this->form, 'create');
 
     $this->setTemplate('new');
   }
@@ -166,7 +166,7 @@ class gtuActions extends DarwinActions
     $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());    
     $this->form = new GtuForm($gtu);
 
-    $this->processForm($request, $this->form);
+    $this->processForm($request, $this->form, 'update');
     $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
 
     $this->loadWidgets();
@@ -196,7 +196,7 @@ class gtuActions extends DarwinActions
     }
   }
 
-  protected function processForm(sfWebRequest $request, sfForm $form)
+  protected function processForm(sfWebRequest $request, sfForm $form, $action = 'create')
   {
     $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
     if ($form->isValid())
@@ -208,6 +208,10 @@ class gtuActions extends DarwinActions
       }
       catch(Doctrine_Exception $ne)
       {
+        if($action == 'create') {
+          //If Problem in saving embed forms set dirty state
+          $form->getObject()->state('TDIRTY');
+        }
         $e = new DarwinPgErrorParser($ne);
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
         $form->getErrorSchema()->addError($error); 
