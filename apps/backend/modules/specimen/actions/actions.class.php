@@ -198,7 +198,7 @@ class specimenActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $this->forward404Unless($request->isMethod('post'),'You must submit your data with Post Method');
     $this->form = new SpecimensForm();
-    $this->processForm($request, $this->form);
+    $this->processForm($request, $this->form,'create');
     $this->loadWidgets();
 
     $this->setTemplate('new');
@@ -224,12 +224,12 @@ class specimenActions extends DarwinActions
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
     $this->form = $this->getSpecimenForm($request,true);
 
-    $this->processForm($request, $this->form);
+    $this->processForm($request, $this->form, 'update');
 
     $this->setTemplate('new');
   }
 
-  protected function processForm(sfWebRequest $request, sfForm $form)
+  protected function processForm(sfWebRequest $request, sfForm $form, $action = 'create' )
   {
     $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
     if ($form->isValid())
@@ -241,6 +241,10 @@ class specimenActions extends DarwinActions
       }
       catch(Doctrine_Exception $ne)
       {
+        if($action == 'create') {
+          //If Problem in saving embed forms set dirty state
+          $form->getObject()->state('TDIRTY');
+        }
         $e = new DarwinPgErrorParser($ne);
         $extd_message = '';
         if(preg_match('/unique constraint "unq_specimens"/i',$ne->getMessage()))
