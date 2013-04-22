@@ -60,8 +60,11 @@ class individualsActions extends DarwinActions
     }
     $this->individual = $this->getSpecimenIndividualsForm($request);  
 
+    $action = 'update';
+
     if($this->individual->getObject()->isNew())
     {
+      $action = 'create';
       $duplic = $request->getParameter('duplicate_id') ;
       if($duplic)
       {
@@ -95,6 +98,11 @@ class individualsActions extends DarwinActions
         }
         catch(Doctrine_Exception $ne)
         {
+          if($action == 'create') {
+            //If Problem in saving embed forms set dirty state
+            $this->individual->getObject()->state('TDIRTY');
+          }
+
           $e = new DarwinPgErrorParser($ne);
           $extd_message = '';
           if(preg_match('/unique constraint "unq_specimen_individuals"/i',$ne->getMessage()))
