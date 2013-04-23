@@ -32,6 +32,11 @@ class trackingFilter extends sfFilter
         $conn = Doctrine_Manager::connection();
         $conn->exec("select fct_set_user(".$user->getId().");");
       }
+      
+      if($user->isAuthenticated() && function_exists('apache_note')) {
+        apache_note('username', $user->getId() );
+        apache_note('sessionID', session_id());
+      }
     }
 
     $filterChain->execute();
