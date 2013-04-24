@@ -71,6 +71,7 @@
       form.attr('action', recoverAction);
       form.removeAttr('target');
       hideForRefresh('#refRelatedFiles');
+      $('.Add_related_file').val('');
       return false;
     });
   });
