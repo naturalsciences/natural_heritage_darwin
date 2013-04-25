@@ -154,8 +154,6 @@ CREATE INDEX CONCURRENTLY idx_tags_group_type on tags(group_type);
 CREATE INDEX CONCURRENTLY idx_tags_sub_group_type on tags(sub_group_type);
 CREATE INDEX CONCURRENTLY idx_users_addresses_country on users_addresses(country);
 CREATE INDEX CONCURRENTLY idx_users_comm_comm_type on users_comm(comm_type);
-CREATE INDEX CONCURRENTLY idx_users_languages_language_country on users_languages(language_country);
-CREATE INDEX CONCURRENTLY idx_users_languages_preferred_language on users_languages(preferred_language);
 
 CREATE INDEX CONCURRENTLY idx_informative_workflow_user_status on informative_workflow(user_ref, status);
 CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
