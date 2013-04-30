@@ -301,12 +301,6 @@ class specimensearchActions extends DarwinActions
     }
   }
 
-  public function executeGtuTree(sfWebRequest $request)
-  {
-    $this->items = Doctrine::getTable('gtu')
-      ->findWithParents($request->getParameter('id'));
-  }  
-
   public function executeAndSearch(sfWebRequest $request)
   {
     $number = intval($request->getParameter('num'));
