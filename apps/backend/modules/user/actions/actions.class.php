@@ -103,7 +103,9 @@ class userActions extends DarwinActions
       if ($this->form->isValid())
       {
         $order = $this->orderDir;
-        $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$order);
+        if($order == 'asc') $nulls = ' NULLS first ';
+        else $nulls = ' NULLS last ';
+        $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$order. ' '. $nulls);
         // if this is not an admin, make sure no admin and collection manager are visible in the search form
         $this->pagerLayout = new PagerLayoutWithArrows(
           new DarwinPager(
