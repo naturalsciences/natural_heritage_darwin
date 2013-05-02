@@ -1,4 +1,4 @@
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'maintenances','eid'=> $maintenance->getId() , 'view' => true)); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'maintenances','eid'=> $maintenance->getId() , 'view' => true)); ?>
 <?php slot('title', __('View Maintenance'));  ?>
 <div class="page">
   <h1><?php echo __('View Maintenance');?></h1>

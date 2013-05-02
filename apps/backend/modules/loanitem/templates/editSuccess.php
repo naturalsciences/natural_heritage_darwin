@@ -1,4 +1,4 @@
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'loanitem','eid'=> $form->getObject()->getId() )); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'loanitem','eid'=> $form->getObject()->getId() )); ?>
 <?php slot('title', __('Edit loan item'));  ?>
 <?php $action = 'loanitem/update?id='.$form->getObject()->getId() ;?>
 <?php include_stylesheets_for_form($form) ?>

@@ -4,9 +4,7 @@
  DROP INDEX IF EXISTS idx_users_login_infos_login_type;
  DROP INDEX IF EXISTS idx_users_addresses_country;
  DROP INDEX IF EXISTS idx_users_comm_comm_type;
- DROP INDEX IF EXISTS idx_users_languages_language_country;
  DROP INDEX IF EXISTS idx_users_login_infos_user_name;
- DROP INDEX IF EXISTS idx_users_languages_preferred_language;
  DROP INDEX IF EXISTS idx_users_login_infos_login_system;
  DROP INDEX IF EXISTS idx_gin_chronostratigraphy_naming;
  DROP INDEX IF EXISTS idx_informative_workflow_user_status;
@@ -44,7 +42,6 @@
  DROP INDEX IF EXISTS idx_record_visibilities;
  DROP INDEX IF EXISTS idx_tag_groups_gtu_ref;
  DROP INDEX IF EXISTS idx_people_languages_people_ref;
- DROP INDEX IF EXISTS idx_users_languages_users_ref;
  DROP INDEX IF EXISTS idx_collections_institution_ref;
  DROP INDEX IF EXISTS idx_people_relationships_person_1_ref;
  DROP INDEX IF EXISTS idx_people_relationships_person_2_ref;

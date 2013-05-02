@@ -73,6 +73,16 @@ $(document).ready(function ()
         </td>
       </tr>
       <tr>
+        <th>
+          <?php echo $form['staff_ref']->renderLabel() ?>
+        </th>
+        <td>
+          <?php echo $form['staff_ref']->renderError() ?>
+          <?php echo $form['staff_ref'] ?>
+        </td>
+      </tr>
+      
+      <tr>
         <th><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>
           <?php echo $form['parent_ref']->renderError() ?>

@@ -12,9 +12,15 @@ class searchActions extends DarwinActions
 {
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new PublicSearchFormFilter();   
+    $this->form = new PublicSearchFormFilter();
+    $this->form->setDefault('search_type','zoo') ;
+
   }
-  
+
+  public function executeSearchGeo(sfWebRequest $request) {
+    $this->form = new PublicSearchFormFilter();
+    $this->form->setDefault('search_type','geo') ;
+  }
   public function executePurposeTag(sfWebRequest $request)
   {
     $this->tags = Doctrine::getTable('TagGroups')->getPropositions($request->getParameter('value'), 'administrative area', 'country');
@@ -83,7 +89,10 @@ class searchActions extends DarwinActions
                                     'lithology' => array(),'mineralogy' => array()) ;
       return;
     }
-    $this->setTemplate('index'); 
+    if($this->form->isBound() &&  $this->form->getValue('search_type','zoo') != 'zoo')
+      $this->setTemplate('searchGeo');
+    else
+    $this->setTemplate('index');
   }   
   
   public function executeSearchResult(sfWebRequest $request)
@@ -112,7 +121,7 @@ class searchActions extends DarwinActions
     $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('id'));   
     $this->forward404Unless($this->individual);
     if(!$this->individual->SpecimensFlat->getCollectionIsPublic()) $this->forwardToSecureAction();
-    
+
     $collection = Doctrine::getTable('Collections')->findOneById($this->individual->SpecimensFlat->getCollectionRef());
     $this->institute = Doctrine::getTable('People')->findOneById($collection->getInstitutionRef()) ;
     $this->files = Doctrine::getTable('Multimedia')->findForPublic(array($this->individual->SpecimensFlat->getSpecimenRef(), $id, $id, $this->individual->SpecimensFlat->getTaxonRef(), $this->individual->SpecimensFlat->getChronoRef(), $this->individual->SpecimensFlat->getLithoRef(), $this->individual->SpecimensFlat->getLithologyRef(), $this->individual->SpecimensFlat->getMineralRef()));
@@ -140,6 +149,7 @@ class searchActions extends DarwinActions
       }
     }
     $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef());
+    $this->col_staff = Doctrine::getTable('Users')->find($collection->getStaffRef());
     $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());      
 
     $ids = $this->FecthIdForCommonNames() ;
@@ -160,8 +170,8 @@ class searchActions extends DarwinActions
             'record_id' => $suggestion['id'],
             'status' => 'suggestion',   
             'comment' => $comment,    
-            'formated_name' => $suggestion['formated_name']!=''?$suggestion['formated_name']:'anonymous') ;    
-            
+            'formated_name' => $suggestion['formated_name']!=''?$suggestion['formated_name']:'anonymous'
+        );
         $workflow = new InformativeWorkflow() ;
         $workflow->fromArray($data) ;
         $workflow->save() ;
@@ -188,11 +198,19 @@ class searchActions extends DarwinActions
     {
       $req_fields = $form->getValue('col_fields');
       if($form->getValue('taxon_common_name') != '' || $form->getValue('taxon_name') != '') $req_fields .= '|taxon|taxon_common_name';
-      if($form->getValue('chrono_common_name') != '' || $form->getValue('chrono_name') != '') $req_fields .= '|chrono|chrono_common_name';      
+      if($form->getValue('chrono_common_name') != '' || $form->getValue('chrono_name') != '') $req_fields .= '|chrono|chrono_common_name';
       if($form->getValue('litho_common_name') != '' || $form->getValue('litho_name') != '') $req_fields .= '|litho|litho_common_name';
       if($form->getValue('lithology_common_name') != '' || $form->getValue('lithology_name') != '') $req_fields .= '|lithologic|lithology_common_name'; 
-      if($form->getValue('mineral_common_name') != '' || $form->getValue('mineral_name') != '') $req_fields .= '|mineral|mineral_common_name';    
-      if(!strpos($req_fields,'common_name')) $req_fields .= '|taxon|taxon_common_name'; // add taxon by default if there is not other catalogue 
+      if($form->getValue('mineral_common_name') != '' || $form->getValue('mineral_name') != '') $req_fields .= '|mineral|mineral_common_name';
+
+      if($form->getValue('search_type','zoo') == 'zoo') {
+        if(!strpos($req_fields,'common_name')) {
+          $req_fields .= '|taxon|taxon_common_name'; // add taxon by default if there is not other catalogue 
+        }
+      }
+      else {
+        if(!strpos($req_fields,'common_name')) $req_fields .= '|chrono|litho|lithologic|mineral'; // add cols by default if there is not other catalogue 
+      }
       $req_fields_array = explode('|',$req_fields);
 
     }

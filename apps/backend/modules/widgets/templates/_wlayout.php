@@ -1,21 +1,18 @@
 <?php $read_only = (isset($options['view']) && $options['view'])?true:false ; ?>
 <?php $widget_content = get_component($category, $widget, $sf_data->getRaw('options')); ?>
 <li class="widget" id="<?php echo $widget;?>" <?php if(isset($col_num)):?> col-ref="<?php echo $col_num;?>" <?php endif;?>>
-  <div class="widget_top_button" <?php if(! $is_opened):?> style="display:block"<?php endif;?>>
-        <?php if($category=='boardwidget'||$category=='specimensearchwidget'|| $read_only):?>
-            <?php echo image_tag('widget_box_expand_button.png', 'alt=Close');?>
-        <?php else:?>
-            <?php echo image_tag('widget_box_expand_green_button.png', 'alt=Close');?>
-        <?php endif;?>
-  </div>
+
   <div class="widget_top_bar">
+    <div class="widget_top_button <?php if($is_opened):?> hidden<?php endif;?>"></div>
+    <div class="widget_bottom_button <?php if(! $is_opened):?> hidden<?php endif;?> "></div>
+    
     <div class="widget_top_bar_button">
-            <?php if($category=='boardwidget'):?>
-                <a href="#" class="widget_refresh" ><?php echo image_tag('widget_refresh.png', 'alt=Refresh');?></a>
-            <?php endif;?>
-            <?php if(! $is_mandatory):?>
-                <a href="#" class="widget_close" ><?php echo image_tag('widget_close.png', 'alt=Close');?></a>
-            <?php endif;?>
+      <?php if($category=='boardwidget'):?>
+          <a href="#" class="widget_refresh" ><?php echo image_tag('widget_refresh.png', 'alt=Refresh');?></a>
+      <?php endif;?>
+      <?php if(! $is_mandatory):?>
+          <a href="#" class="widget_close" ><?php echo image_tag('widget_close.png', 'alt=Close');?></a>
+      <?php endif;?>
     </div>
     <span>
       <?php if($category!='boardwidget' && !$read_only) : ?>          
@@ -28,11 +25,5 @@
 
         <?php echo $widget_content; ?>
   </div>
-    <div class="widget_bottom_button" <?php if(! $is_opened):?> style="display:none"<?php endif;?>>
-        <?php if($category=='boardwidget'||$category=='specimensearchwidget'|| $read_only):?>
-            <?php echo image_tag('widget_box_expand_up_button.png', 'alt=Collapse');?>
-        <?php else:?>
-            <?php echo image_tag('widget_box_expand_up_green_button.png', 'alt=Collapse');?>
-        <?php endif;?>
-    </div>
+
 </li>

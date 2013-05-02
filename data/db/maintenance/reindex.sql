@@ -47,7 +47,6 @@
  REINDEX TABLE specimen_parts;
  REINDEX TABLE specimen_collecting_methods;
  REINDEX TABLE users;
- REINDEX TABLE users_languages;
  REINDEX TABLE users_comm;
  REINDEX TABLE users_addresses;
  REINDEX TABLE users_login_infos;

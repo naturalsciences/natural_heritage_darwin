@@ -1,6 +1,6 @@
 <?php slot('title', __( $form->isNew() ? 'Add Part' : 'Edit part'));  ?>
 
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'part','eid'=> $part->getId(), 'table' => 'specimen_parts','query_options'=> array('col_ref'=> $specimen->getCollectionRef()))); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'part','eid'=> $part->getId(), 'table' => 'specimen_parts','query_options'=> array('col_ref'=> $specimen->getCollectionRef()))); ?>
 <?php include_partial('specimen/specBeforeTab', array('specimen' => $specimen, 'individual'=> $individual, 'part'=> $part ,'mode' => 'parts_edit') );?>
 
   <?php include_stylesheets_for_form($form) ?>

@@ -253,19 +253,6 @@ PeopleLanguages:
             local: people_ref
             foreign: id
 
-UsersLanguages:
-    columns:
-        id: { type: integer, primary: true, autoincrement: true}
-        users_ref: { type: integer, notnull: true}
-        language_country: { type: string, notnull: true, default: en}
-        mother: { type: boolean, notnull: true, default: true}
-        preferred_language: { type: boolean, notnull: true, default: false}
-    relations:
-        User:
-            class: Users
-            local: users_ref
-            foreign: id
-
 PeopleRelationships:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -375,6 +362,7 @@ Collections:
         name_indexed: { type: string}
         institution_ref: { type: integer, notnull: true}
         main_manager_ref: { type: integer, notnull: true}
+        staff_ref: { type: integer}
         parent_ref: { type: integer}
         path: { type: string, notnull: true, default: '/'}
         code_auto_increment: { type: boolean, notnull: true, default: false}
@@ -394,6 +382,10 @@ Collections:
         Manager:
             class: Users
             local: main_manager_ref
+            foreign: id
+        Staff:
+            class: Users
+            local: staff_ref
             foreign: id
         Parent:
             class: Collections

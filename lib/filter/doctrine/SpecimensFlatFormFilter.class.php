@@ -953,8 +953,11 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $clean_ids =array();
     foreach($ids as $id)
     {
+      $id=trim($id);
       if(ctype_digit($id))
         $clean_ids[] = $id;
+      elseif(ctype_digit(substr($id,1, strlen($id))))
+        $clean_ids[] = substr($id,1, strlen($id));
     }
 
     if(! empty($clean_ids))

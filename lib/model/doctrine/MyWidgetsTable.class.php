@@ -5,6 +5,14 @@
 class MyWidgetsTable extends DarwinTable
 {
   
+  public function sortWidgets($widget_list, $translator) {
+    $widgets = array();
+    foreach($widget_list as $w) {
+      $widgets[$translator->__($w->getTitlePerso())] = $w;
+    }
+    ksort($widgets);
+    return $widgets;
+  }
   public function getWidget($userId, $widget, $category)
   {
     $q = Doctrine_Query::create()
@@ -20,7 +28,7 @@ class MyWidgetsTable extends DarwinTable
   {
       $q = Doctrine_Query::create()
             ->from('MyWidgets p INDEXBY p.group_name')
-            ->orderBy('p.col_num ASC, p.order_by ASC, p.group_name ASC');                
+            ->orderBy('p.col_num ASC, p.order_by ASC, p.group_name ASC');
     return $this->addCategoryUser($q,$category,$collection)->execute();
   }
   

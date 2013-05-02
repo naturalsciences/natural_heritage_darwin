@@ -69,14 +69,16 @@ class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
                                         )
                                   );  
     $this->widgetSchema['col_fields'] = new sfWidgetFormInputHidden();
-    $this->setDefault('col_fields','collection|gtu|sex|stage|type');                                    
+    $this->widgetSchema['search_type'] = new sfWidgetFormInputHidden();
+//     $this->setDefault('col_fields','collection|gtu|sex|stage|type');
     $this->widgetSchema['collection_ref'] = new sfWidgetCollectionList(array('choices' => array()));
     $this->widgetSchema['collection_ref']->addOption('public_only',true);
-    $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query                                  
+    $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
 
     $this->validatorSchema['col_fields'] = new sfValidatorString(array('required' => false,
                                                                  'trim' => true
                                                                 ));
+    $this->validatorSchema['search_type'] = new sfValidatorString(array('required' => false));
      $this->validatorSchema['gtu_code'] = new sfValidatorString(array('required' => false,
                                                                  'trim' => true
                                                                 )
@@ -224,13 +226,25 @@ class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
   {  
     $query->andWhere($field.' IN ('.$this->ListIdByWord($relation,$val).')');
     return $query;
-  }     
+  }
+  public function bind(array $taintedValues = null, array $taintedFiles = null) {
+    if(!isset($taintedValues['search_type']) ||  $taintedValues['search_type'] == '')
+      $taintedValues['search_type'] = 'zoo';
+    if(!isset($taintedValues['col_fields']) || $taintedValues['col_fields'] == '' ) {
+      if($taintedValues['search_type'] == 'zoo')
+       $taintedValues['col_fields']  = 'collection|gtu|sex|stage|type';
+      else
+       $taintedValues['col_fields']  = 'collection|gtu';
+    }
+    parent::bind($taintedValues, $taintedFiles);
+  }
+  
   public function doBuildQuery(array $values)
   {
     $query = Doctrine_Query::create()
       ->from('SpecimenIndividuals i')
       ->innerJoin('i.SpecimensFlat s');
-    $this->options['query'] = $query;       
+    $this->options['query'] = $query;
     $query = parent::doBuildQuery($values);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));
     if ($values['chrono_level_ref'] != '') $query->andWhere('chrono_level_ref = ?', intval($values['chrono_level_ref']));

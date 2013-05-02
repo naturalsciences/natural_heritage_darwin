@@ -52,7 +52,7 @@
 <tr class="row_num_<?php echo $row_num;?>">
   <td>
     <?php if(isset($edit)) : ?>
-      <?php  /*If image => preview*/ if(in_array($form['mime_type']->getValue() ,array('png' => 'image/png', 'jpg' => 'image/jpeg') ) ):?>
+      <?php if(Multimedia::canBePreviewed($form['mime_type']->getValue()) ):?>
         <a href="<?php echo url_for( 'multimedia/downloadFile?id='.$form['id']->getValue());?>"><img src="<?php echo url_for('multimedia/preview?id='.$form['id']->getValue());?>" width="100" /></a>
       <?php else:?>
         <?php echo link_to($form['filename']->getValue()." ".image_tag('criteria.png'),

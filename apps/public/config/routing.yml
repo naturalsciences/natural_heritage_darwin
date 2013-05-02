@@ -16,6 +16,10 @@ search:
   url:   /search/search
   param: { module: search, action: search }
 
+geoSearch:
+  url:   /search/geoSearch
+  param: { module: search, action: searchGeo }
+
 register:
   url:   /register
   param: { module: register, action: index }

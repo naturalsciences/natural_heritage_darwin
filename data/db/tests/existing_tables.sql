@@ -22,7 +22,6 @@ SELECT has_table('template_people_languages','template_people_languages exists')
 SELECT has_table('people','people exists');
 SELECT has_table('users','users exists');
 SELECT has_table('people_languages','people_languages exists');
-SELECT has_table('users_languages','users_languages exists');
 SELECT has_table('multimedia','multimedia exists');
 SELECT has_table('template_people_users_comm_common','template_people_users_comm_common exists');
 SELECT has_table('template_people_users_rel_common','template_people_users_rel_common exists');

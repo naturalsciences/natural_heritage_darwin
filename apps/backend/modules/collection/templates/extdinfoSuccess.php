@@ -1,7 +1,7 @@
 <?php use_helper('Text');?>
 
 <div class="col_extd_info">
-<h2><?php echo __('Manager');?> :</h2>
+<h2><?php echo __('Conservator');?> :</h2>
 <p>
 <dl>
   <dt><?php echo __('Name')?><dt>
@@ -19,5 +19,15 @@
     <?php endforeach;?>
   </dl>
 </p>
+<?php endif;?>
+
+<?php if(isset($staff) && $staff):?>
+  <h2><?php echo __('Staff Member');?> :</h2>
+  <p>
+  <dl>
+    <dt><?php echo __('Name')?><dt>
+    <dd><?php echo $staff->getFormatedName();?></dd>
+  </dl>
+  </p>
 <?php endif;?>
 </div>

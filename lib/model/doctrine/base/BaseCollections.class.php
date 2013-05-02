@@ -12,6 +12,7 @@
  * @property string $name_indexed
  * @property integer $institution_ref
  * @property integer $main_manager_ref
+ * @property integer $staff_ref
  * @property integer $parent_ref
  * @property string $path
  * @property boolean $code_auto_increment
@@ -25,6 +26,7 @@
  * @property boolean $is_public
  * @property People $Institution
  * @property Users $Manager
+ * @property Users $Staff
  * @property Collections $Parent
  * @property Doctrine_Collection $Collections
  * @property Doctrine_Collection $CollectionsRights
@@ -39,6 +41,7 @@
  * @method string              getNameIndexed()              Returns the current record's "name_indexed" value
  * @method integer             getInstitutionRef()           Returns the current record's "institution_ref" value
  * @method integer             getMainManagerRef()           Returns the current record's "main_manager_ref" value
+ * @method integer             getStaffRef()                 Returns the current record's "staff_ref" value
  * @method integer             getParentRef()                Returns the current record's "parent_ref" value
  * @method string              getPath()                     Returns the current record's "path" value
  * @method boolean             getCodeAutoIncrement()        Returns the current record's "code_auto_increment" value
@@ -52,6 +55,7 @@
  * @method boolean             getIsPublic()                 Returns the current record's "is_public" value
  * @method People              getInstitution()              Returns the current record's "Institution" value
  * @method Users               getManager()                  Returns the current record's "Manager" value
+ * @method Users               getStaff()                    Returns the current record's "Staff" value
  * @method Collections         getParent()                   Returns the current record's "Parent" value
  * @method Doctrine_Collection getCollections()              Returns the current record's "Collections" collection
  * @method Doctrine_Collection getCollectionsRights()        Returns the current record's "CollectionsRights" collection
@@ -65,6 +69,7 @@
  * @method Collections         setNameIndexed()              Sets the current record's "name_indexed" value
  * @method Collections         setInstitutionRef()           Sets the current record's "institution_ref" value
  * @method Collections         setMainManagerRef()           Sets the current record's "main_manager_ref" value
+ * @method Collections         setStaffRef()                 Sets the current record's "staff_ref" value
  * @method Collections         setParentRef()                Sets the current record's "parent_ref" value
  * @method Collections         setPath()                     Sets the current record's "path" value
  * @method Collections         setCodeAutoIncrement()        Sets the current record's "code_auto_increment" value
@@ -78,6 +83,7 @@
  * @method Collections         setIsPublic()                 Sets the current record's "is_public" value
  * @method Collections         setInstitution()              Sets the current record's "Institution" value
  * @method Collections         setManager()                  Sets the current record's "Manager" value
+ * @method Collections         setStaff()                    Sets the current record's "Staff" value
  * @method Collections         setParent()                   Sets the current record's "Parent" value
  * @method Collections         setCollections()              Sets the current record's "Collections" collection
  * @method Collections         setCollectionsRights()        Sets the current record's "CollectionsRights" collection
@@ -129,6 +135,9 @@ abstract class BaseCollections extends sfDoctrineRecord
         $this->hasColumn('main_manager_ref', 'integer', null, array(
              'type' => 'integer',
              'notnull' => true,
+             ));
+        $this->hasColumn('staff_ref', 'integer', null, array(
+             'type' => 'integer',
              ));
         $this->hasColumn('parent_ref', 'integer', null, array(
              'type' => 'integer',
@@ -186,6 +195,10 @@ abstract class BaseCollections extends sfDoctrineRecord
 
         $this->hasOne('Users as Manager', array(
              'local' => 'main_manager_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('Users as Staff', array(
+             'local' => 'staff_ref',
              'foreign' => 'id'));
 
         $this->hasOne('Collections as Parent', array(

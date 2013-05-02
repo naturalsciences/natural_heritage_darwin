@@ -1,6 +1,6 @@
 <?php slot('title', __('Dashboard'));  ?>
 
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'board')) ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'board')) ?>
 <div class="page">
 <div class="board">
 

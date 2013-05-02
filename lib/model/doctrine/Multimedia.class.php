@@ -135,38 +135,29 @@ class Multimedia extends BaseMultimedia
 
   public function hasPreview()
   {
-    if(in_array($this->getMimeType() ,array('image/png', 'image/jpeg') ) )
-      return true;
+    return self::canBePreviewed($this->getMimeType());
   }
+
+  public static function canBePreviewed($mime) {
+    if(in_array($mime ,array('image/png', 'image/jpeg', 'application/pdf') ) )
+      return true;
+    return false;
+  }
+
   public function getPreview($new_w = 200, $new_h = 200)
   {
     if($this->hasPreview())
     {
-      $src_img = '';
-      if($this->getMimeType() == 'image/png') {
-        $src_img=imagecreatefrompng($this->getFullURI());
+      $image = new Imagick($this->getFullURI());
+      if($this->getMimeType() == 'application/pdf') {
+        // Display page 1 of pdfs 
+        $image->setIteratorIndex(0);
       }
-      if($this->getMimeType() == 'image/jpeg') {
-        $src_img=imagecreatefromjpeg($this->getFullURI());
-      }
-      $old_x=imageSX($src_img);
-      $old_y=imageSY($src_img);
-      if ($old_x > $old_y) {
-        $thumb_w=$new_w;
-        $thumb_h=$old_y*($new_h/$old_x);
-      }
-      if ($old_x < $old_y) {
-        $thumb_w=$old_x*($new_w/$old_y);
-        $thumb_h=$new_h;
-      }
-      if ($old_x == $old_y) {
-        $thumb_w=$new_w;
-        $thumb_h=$new_h;
-      }
-      $dst_img=ImageCreateTrueColor($thumb_w,$thumb_h);
-      imagecopyresampled($dst_img,$src_img,0,0,0,0,$thumb_w,$thumb_h,$old_x,$old_y);
-      imagedestroy($src_img);
-      return $dst_img;
+      $image->thumbnailImage( $new_w, $new_h, true );
+      $image->setImageFormat( "png" );
+      $image->setCompression(Imagick::COMPRESSION_LZW);
+      $image->setCompressionQuality(90);
+      return $image->getImageBlob();
     }
   }
 

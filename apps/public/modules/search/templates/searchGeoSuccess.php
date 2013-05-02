@@ -2,27 +2,52 @@
 <div class="page">
 <h1><?php echo __("Specimen search criteria");?></h1>
 <?php echo form_tag('search/search', array('class'=>'publicsearch_form'));?>
-  <h2 class="title"><?php echo __("Taxonomy") ?></h2>
+  <h2 class="title"><?php echo __("Classifications") ?></h2>
   <?php echo $form->renderGlobalErrors(); ?>
   <div class="borded">
     <?php echo $form->renderHiddenFields(); ?>
     <table id="classifications">
       <thead>
         <tr>
-          <th><?php echo __("Scientific Name") ?></th>
-          <th><?php echo __("Common Name") ?></th>
-          <th><?php echo __("Level") ?></th>
+          <th></th>
+          <th><?php echo __("Scientific Name") ?></th>  
+          <th><?php echo __("Common Name") ?></th>  
+          <th><?php echo __("Level") ?></th>  
         </tr>
       </thead>
       <tbody>
         <tr>
+          <td><?php echo $form['taxon_name']->renderLabel();?> :</td>
           <td><?php echo $form['taxon_name'];?></td>
           <td><?php echo $form['taxon_common_name'];?></td>
           <td><?php echo $form['taxon_level_ref'];?></td>
         </tr>
+        <tr>
+          <td><?php echo $form['chrono_name']->renderLabel();?> :</td>
+          <td><?php echo $form['chrono_name'];?></td>  
+          <td><?php echo $form['chrono_common_name'];?></td>  
+          <td><?php echo $form['chrono_level_ref'];?></td>     
+        </tr>
+        <tr>
+          <td><?php echo $form['litho_name']->renderLabel();?> :</td>
+          <td><?php echo $form['litho_name'];?></td>  
+          <td><?php echo $form['litho_common_name'];?></td>  
+          <td><?php echo $form['litho_level_ref'];?></td>     
+        </tr> 
+        <tr>
+          <td><?php echo $form['lithology_name']->renderLabel();?> :</td>
+          <td><?php echo $form['lithology_name'];?></td>  
+          <td><?php echo $form['lithology_common_name'];?></td>  
+          <td><?php echo $form['lithology_level_ref'];?></td>     
+        </tr> 
+        <tr>
+          <td><?php echo $form['mineral_name']->renderLabel();?> :</td>
+          <td><?php echo $form['mineral_name'];?></td>  
+          <td><?php echo $form['mineral_common_name'];?></td>  
+          <td><?php echo $form['mineral_level_ref'];?></td>     
+        </tr>                          
       </tbody>
     </table>
-    <br />
   </div>
   <table id="coll_and_countries">
     <tbody>
@@ -36,14 +61,14 @@
                 <tr>
                   <td>
                     <div class="treelist">
-		                  <?php echo $form['collection_ref'] ; ?>        
+                                  <?php echo $form['collection_ref'] ; ?>        
                     </div>
                     <div class="check_right">
                       <input type="button" class="result" value="<?php echo __('Clear') ; ?>" id="clear_collections">
                     </div>
-	                </td>
-	              </tr>
-	            </tbody>
+                        </td>
+                      </tr>
+                    </tbody>
             </table>
           </div>
         </td>
@@ -111,39 +136,8 @@
       </tr>
     </tbody>
   </table>
-  
-  <table>
-    <tbody>
-      <tr>
-        <td>
-          <div class="space_right">
-            <h2 class="title"><?php echo __("Types") ?></h2>
-            <div class="borded framed" class='triple_table'>
-              <?php echo $form['type'] ; ?>
-            </div>
-          </div>
-        </td>
-
-        <td>
-          <div class="space_right">
-          <h2 class="title"><?php echo __("Sexes") ?></h2>
-            <div class="borded framed" class='triple_table'>
-              <?php echo $form['sex'] ; ?>
-            </div>
-          </div>
-        </td>
-
-        <td>
-          <h2 class="title"><?php echo __("Stages") ?></h2>
-          <div class="borded framed" class='triple_table'>
-            <?php echo $form['stage'] ; ?>
-          </div>
-        </td>          
-      </tr>
-    </tbody>
-  </table>  
   <div style="text-align:right">
-    <?php echo link_to(__('Clear'),'@search');?>
+    <?php echo link_to(__('Clear'),'@geoSearch');?>
     <input type="submit" name="submit" id="submit" value="<?php echo __('Search'); ?>" class="search_submit">
   </div>
 </div>  
@@ -174,7 +168,7 @@ $(document).ready(function () {
     });
     $('#clear_collections').click(function()
     {
-  	  $('table.collections').find(':checkbox').removeAttr('checked');    
+          $('table.collections').find(':checkbox').removeAttr('checked');    
     });   
   var num_fld = 1;
   $('.and_tag').click(function()

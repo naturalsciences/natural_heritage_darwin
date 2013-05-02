@@ -1,4 +1,4 @@
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'catalogue_chronostratigraphy','eid'=> $form->getObject()->getId())); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'catalogue_chronostratigraphy','eid'=> $form->getObject()->getId())); ?>
 <?php slot('title', __('Edit Chronostratigraphic unit'));  ?>
 <div class="page">
     <h1 class="edit_mode"><?php echo __('Edit Chronostratigraphic unit');?></h1>

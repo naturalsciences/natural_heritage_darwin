@@ -884,16 +884,6 @@ MyWidgets:
         visible: false
         is_available: true
         title_perso: External Url
-    u1wuse1:
-        User: u1
-        col_num: 1
-        category: users_widget
-        group_name: lang
-        order_by: 1
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Languages
     u1wuse2:
         User: u1
         col_num: 1

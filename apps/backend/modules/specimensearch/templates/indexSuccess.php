@@ -1,6 +1,6 @@
 <?php slot('title', __('Search Specimens'));  ?>  
 
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'specimensearch')); ?>      
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'specimensearch')); ?>      
 <?php use_javascript('double_list.js');?>
 <div class="encoding">
 <?php include_stylesheets_for_form($form) ?>

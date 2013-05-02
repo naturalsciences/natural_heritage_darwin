@@ -1,5 +1,5 @@
 <?php slot('title', __('Edit Profile'));  ?>        
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'users','eid'=> $user->getId())); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'users','eid'=> $user->getId())); ?>
 <div class="page">
   <h1 class="edit_mode"><?php echo sprintf(__("Profile for %s"), $user->getFormatedName() ) ; ?></h1>
   <?php include_partial('form', array('form' => $form, 'mode' => $mode, 'user' => $user)) ?> 

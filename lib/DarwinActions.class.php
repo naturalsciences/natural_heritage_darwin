@@ -87,6 +87,7 @@ class DarwinActions extends sfActions
       ->setUserRef($this->getUser()->getId())
       ->setDbUserType($this->getUser()->getDbUserType())
       ->getWidgets($this->widgetCategory, $collection);
+    $this->widget_list = Doctrine::getTable('MyWidgets')->sortWidgets($this->widgets, $this->getI18N());
     if(! $this->widgets) $this->widgets=array();   
   }
 
