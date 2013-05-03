@@ -6,11 +6,11 @@ class SpecimenIndividualsTable extends DarwinTable
 {
     protected static $widget_array = array(
       'type' => 'type' ,
-      'type_group' => 'type' ,      
+      'type_group' => 'type' ,
       'type_search' => 'type' ,
       'sex' => 'sex' ,
       'state' => 'sex' ,
-      'stage' => 'stage' ,            
+      'stage' => 'stage' ,
       'social_status' => 'socialStatus' ,
       'rock_form' => 'rockForm' ,
       'specimen_individuals_count_min' => 'specimenIndividualCount' ,
@@ -126,7 +126,7 @@ class SpecimenIndividualsTable extends DarwinTable
         ->from('SpecimenIndividuals s');
       $alias = $q->getRootAlias() ;
       $q->andWhere($alias . '.specimen_ref = ?', $id);
-      return $q->execute() ;      
+      return $q->execute() ;
     }
 
     public function getSpecimenByIndividual($id)
@@ -140,8 +140,22 @@ class SpecimenIndividualsTable extends DarwinTable
       if($r->count())
         return $r[0]->getSpecimenRef();
       return null;
-    }    
-    
+    }
+
+    public function getRandomPublicSpec($number)
+    {
+      $q = Doctrine_Query::create()
+        ->from('SpecimenIndividuals i')
+        ->innerJoin('i.SpecimensFlat s')
+        ->where('s.collection_is_public = true')
+        ->orderBy('random()')
+        ->limit($number)
+        ->useResultCache(new Doctrine_Cache_Apc() )
+        ->setResultCacheLifeSpan( 60 * 30 ) // 30 min
+        ;
+      return $q->execute();
+    }
+
     /**
     * Set required widget visible and opened 
     */   
