@@ -1,3 +1,13 @@
+.rand_spec li{
+  list-style-type: circle;
+}
+.rand_spec {
+  padding-left: 40px;
+}
+.rand_spec a[href] {
+  color:rgb(51, 144, 161);
+}
+
 .lang_picker, .browser_img 
 {
   color:white;

@@ -39,6 +39,17 @@ vous y trouverez tout autre statut non reconnu par le CINZ (par exemple topotype
 <br />
 <p>Nous vous souhaitons une agréable visite virtuelle parmi nos collections!</p>
 <br />
+
+<h2>Découvrez quelques spécimens au hasard :</h2>
+<p>
+  <ul class="rand_spec">
+    <?php foreach($individuals as $ind):?>
+      <li><?php echo link_to($ind->getSpecimensFlat()->getAggregatedName(),'search/view?id='.$ind->getId());?></li>
+    <?php endforeach;?>
+  </ul>
+</p>
+
+
 <p>
   <a href="<?php echo __('http://www.sciencesnaturelles.be');?>">
             <?php echo image_tag('public/rbins_logo.png', 'class=logo_center_align');?><br />
