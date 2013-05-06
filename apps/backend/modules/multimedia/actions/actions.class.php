@@ -86,7 +86,7 @@ class multimediaActions extends DarwinActions
     if($form->isValid())
     {
       if(!Multimedia::CheckMimeType($file->getType()))
-        return $this->renderText('<script type="text/javascript">parent.displayFileError(\'This type of file is not allowed\')</script>') ;
+        return $this->renderText('<script type="text/javascript">parent.displayFileError(\'This type of file is not allowed('.$file->getType().')\')</script>') ;
       // first save the file
       $filename = sha1($file->getOriginalName().rand());
       while(file_exists(sfConfig::get('sf_upload_dir').'/multimedia/temp/'.$filename))

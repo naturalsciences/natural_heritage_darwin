@@ -107,12 +107,6 @@ class registerActions extends DarwinActions
         sfContext::getInstance()->getLogger()->debug('LOGIN: '.$this->form->getValue('username').' '.$this->form->user->getId() );
         $this->getUser()->setAttribute('db_user_id',$this->form->user->getId());
         $this->getUser()->setAttribute('db_user_type',$this->form->user->getDbUserType());
-        if($lang) //prevent from crashing if lang is set
-        {
-            $this->getUser()->setCulture($lang->getLanguageCountry());
-        }
-        else
-          $this->getUser()->setCulture('en') ;
       }
       else
       {
