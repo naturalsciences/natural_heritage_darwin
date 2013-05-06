@@ -1,4 +1,4 @@
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'people','eid'=> $form->getObject()->getId(), 'view' => true)); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'people','eid'=> $form->getObject()->getId(), 'view' => true)); ?>
 <?php slot('title', __('View People'));  ?>
 <div class="page">
     <h1><?php echo __('View People');?></h1>

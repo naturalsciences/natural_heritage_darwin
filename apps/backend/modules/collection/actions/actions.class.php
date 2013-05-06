@@ -48,6 +48,8 @@ class collectionActions extends DarwinActions
     $this->forward404Unless($this->manager,'No such item');
 
     $this->coms = Doctrine::getTable('UsersComm')->fetchByUser($this->manager->getId());
+    if(ctype_digit($request->getParameter('staffid')))
+      $this->staff = Doctrine::getTable('Users')->find($request->getParameter('staffid'));
   }
 
   public function executeDeleteSpecCodes(sfWebRequest $request)

@@ -1,5 +1,5 @@
 <?php slot('title', __('Edit Institution'));  ?>        
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'people_institution','eid'=> $form->getObject()->getId())); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'people_institution','eid'=> $form->getObject()->getId())); ?>
                                                                                                
 <div class="page">
   <h1 class="edit_mode"><?php echo __("Edit Institution");?></h1>

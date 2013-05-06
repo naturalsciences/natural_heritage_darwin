@@ -66,7 +66,7 @@ class Users extends BaseUsers
     {
       case self::REGISTERED_USER : $type = 'Registered user'; break ;
       case self::ENCODER : $type = 'Encoder'; break ;
-      case self::MANAGER : $type = 'Collection manager'; break ;
+      case self::MANAGER : $type = 'Conservator'; break ;
       case self::ADMIN : $type = 'Administrator'; break ;  
     }
     try{

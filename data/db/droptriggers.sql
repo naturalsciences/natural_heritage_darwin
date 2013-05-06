@@ -409,8 +409,6 @@ DROP TRIGGER trg_chk_possible_upper_level_taxonomy ON taxonomy;
 
 DROP TRIGGER fct_chk_upper_level_for_childrens_people ON people_languages;
 
-DROP TRIGGER fct_chk_upper_level_for_childrens_users ON users_languages;
-
 
 /************* Check If Institution is a Moral Person ***********/
 

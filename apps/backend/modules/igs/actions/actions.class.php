@@ -48,6 +48,7 @@ class igsActions extends DarwinActions
   { 
     $igs = new igs() ;
     $igs = $this->getRecordIfDuplicate($request->getParameter('duplicate_id','0'), $igs);
+    if($request->hasParameter('searchIg')) $igs->fromArray($request->getParameter('searchIg'));
     $this->form = new igsForm($igs);
   }
 
@@ -179,7 +180,17 @@ class igsActions extends DarwinActions
         // Sets the Pager Layout templates
         $this->setDefaultPaggingLayout($this->pagerLayout);
         // If pager not yet executed, this means the query has to be executed for data loading
-        if (! $this->pagerLayout->getPager()->getExecuted()) $this->igss = $this->pagerLayout->execute();         
+        if (! $this->pagerLayout->getPager()->getExecuted()) $this->igss = $this->pagerLayout->execute();
+        $comment_ids = array();
+        $this->comments = array() ;
+        foreach($this->igss as $i)
+          $comment_ids[] = $i->getId();
+        $comments_groups  = Doctrine::getTable('Comments')->getRelatedComment('igs',$comment_ids);
+        foreach($comments_groups as $comment)
+        {
+          if(isset($this->comments[$comment->getRecordId()])) $this->comments[$comment->getRecordId()] .= '/'.$comment->getComment() ;
+          else $this->comments[$comment->getRecordId()] = $comment->getComment() ;
+        }
       }
     }
   }
@@ -203,8 +214,20 @@ class igsActions extends DarwinActions
       catch(Doctrine_Exception $ne)
       {
         $e = new DarwinPgErrorParser($ne);
-        $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-        $form->getErrorSchema()->addError($error);
+        $extd_message = '';
+        if(preg_match('/unique constraint "unq_igs"/i',$ne->getMessage())) {
+          $dup_igs = Doctrine::getTable('Igs')->findDuplicate($form->getObject());
+          if(!$dup_igs) {
+            $this->logMessage('Duplicate Igs not found: '. json_encode($form->getObject()->toArray()), 'err');
+          }
+          else {
+            $extd_message = '<br /><a href="'.$this->getController()->genUrl( 'igs/edit?id='.$dup_igs->getId() ).'">'.
+              $this->getI18N()->__('Go the the original record')
+              .'</a>';
+          }
+          $error = new sfValidatorError(new savedValidator(),$e->getMessage().$extd_message);
+          $form->getErrorSchema()->addError($error);
+        }
       }
     }
   }

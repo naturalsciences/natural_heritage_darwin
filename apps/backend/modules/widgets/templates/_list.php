@@ -45,7 +45,7 @@ else{e.value="no";location.reload();}
 	    <?php if(! $widget->getVisible()) $has_one_visible = true;?>
             <div class="widget_preview <?php if($widget->getVisible()) echo 'hidden';?>" id="boardprev_<?php echo $widget->getGroupName();?>">
               <a href="<?php echo url_for('widgets/addWidget?widget='.$widget->getGroupName()."&category=".$category.$record_ref.$table.$other_query.$read_only);?>">
-                <span class="widget_prev_title"><?php echo __($widget->getTitlePerso());?></span>
+                <?php echo __($widget->getTitlePerso());?>
               </a>
             </div>
   

@@ -67,7 +67,7 @@ class userActions extends DarwinActions
 		    return $this->redirect('user/profile');
       }
     }*/
-    $this->loadWidgets();    
+    $this->loadWidgets();
   }
 
   /**
@@ -103,7 +103,9 @@ class userActions extends DarwinActions
       if ($this->form->isValid())
       {
         $order = $this->orderDir;
-        $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$order);
+        if($order == 'asc') $nulls = ' NULLS first ';
+        else $nulls = ' NULLS last ';
+        $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$order. ' '. $nulls);
         // if this is not an admin, make sure no admin and collection manager are visible in the search form
         $this->pagerLayout = new PagerLayoutWithArrows(
           new DarwinPager(
@@ -306,7 +308,7 @@ class userActions extends DarwinActions
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('users_login_infos'));
-      if($request->getParameter('user_ref') != $this->form->getValue('user_ref')) $this->forwardToSecureAction();
+      if($request->getParameter('user_ref') != $this->form->getValue('user_ref') && !$this->getUser()->isA(Users::ADMIN)) $this->forwardToSecureAction();
       if($this->form->isValid())
       {
         try{
@@ -317,47 +319,6 @@ class userActions extends DarwinActions
           return $this->renderText($e->getMessage());
         }
         return $this->renderText('ok');
-      }
-    }
-  }
-
-  public function executeLang(sfWebRequest $request)
-  {
-    if($this->getUser()->getDbUserType() < Users::MANAGER) 
-      if($this->getUser()->getId() != $request->getParameter('ref_id')) $this->forwardToSecureAction();  
-    if($request->hasParameter('id'))
-    {  
-      $this->lang =  Doctrine::getTable('UsersLanguages')->find($request->getParameter('id'));
-    }
-    else
-    {
-     $this->lang = new UsersLanguages();
-     $this->lang->setUsersRef($request->getParameter('ref_id'));
-    }
-     
-    $this->form = new UsersLanguagesForm($this->lang);
-    
-    if($request->isMethod('post'))
-    {
-      $this->form->bind($request->getParameter('users_languages'));
-      if($request->getParameter('ref_id') != $this->form->getValue('users_ref')) $this->forwardToSecureAction();      
-      if($this->form->isValid())
-      {
-        try
-        {
-          if($this->form->getValue('preferred_language') && ! $this->lang->getPreferredLanguage() )
-          {
-            Doctrine::getTable('UsersLanguages')->removeOldPreferredLang($this->lang->getUsersRef());
-          }
-
-          $this->form->save();
-          return $this->renderText('ok');
-        }
-        catch(Doctrine_Exception $e)
-        {
-          $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-          $this->form->getErrorSchema()->addError($error); 
-        }
       }
     }
   }

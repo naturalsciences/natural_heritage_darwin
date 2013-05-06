@@ -167,51 +167,13 @@ $browser->
 
   $browser->test()->like($browser->getResponse()->getContent(),'/ok/','Content is ok');
 
-
-
-$browser->
-  info('Lang')->
-
-  get('/user/profile')->
-
-
-  with('response')->begin()->
-    isStatusCode(200)->
-    checkElement('#lang tbody tr',2)->
-    checkElement('#lang tbody','/Preferred/')->
-  end()->
-  
-  click('#lang .widget_content > a.link_catalogue')->
-
-  click('#submit', array('users_languages' => array(
-    'language_country'  => 'fr',
-    'mother' => '',
-    'preferred_language' => 'yes'
-  )))->
-
-  with('response')->begin()->
-    isStatusCode(200)->
-  end();
-
-  $browser->test()->like($browser->getResponse()->getContent(),'/ok/','Content is ok');
-
 $browser->
   get('/user/profile')->
 
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('#lang tbody tr',3)->
-    checkElement('#lang tbody tr:first td:first', '/French/')->
-    checkElement('#lang tbody tr:first td:first', '/Preferred/')->
-    checkElement('#lang tbody tr:last td:first', '!/Preferred/')->
-  end()->
-
-  click('#lang tbody tr:first a.widget_row_delete')->
-   with('response')->begin()->
-    isStatusCode(200)->
   end();
 
-$browser->test()->like($browser->getResponse()->getContent(),'/ok/','Content is ok');
 $browser->addCustomUserAndLogin('ychambert','toto');	
 $browser->addCustomUserAndLogin('encoder','evil');
 $browser->addCustomUserAndLogin('manager','evil');	

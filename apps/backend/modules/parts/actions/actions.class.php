@@ -22,12 +22,15 @@ class partsActions extends DarwinActions
 
     }
     $this->part = Doctrine::getTable('SpecimenParts')->find($request->getParameter('id'));
+    $action = 'update';
+
     if($this->part)
     {
       $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($this->part->getSpecimenIndividualRef());
     }
     else
     {
+      $action = 'create';
       $this->part= new SpecimenParts();
       $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('indid'));
       $this->forward404Unless($this->individual);
@@ -39,8 +42,8 @@ class partsActions extends DarwinActions
         // set all necessary widgets to visible 
         if($request->hasParameter('all_duplicate'))        
           Doctrine::getTable('SpecimenParts')->getRequiredWidget($this->part, $this->getUser()->getId(), 'part_widget',1);      
-        
-      }      
+
+      }
     }
 
     $this->specimen = Doctrine::getTable('Specimens')->find($this->individual->getSpecimenRef());
@@ -65,6 +68,10 @@ class partsActions extends DarwinActions
         }
         catch(Doctrine_Exception $ne)
         {
+          if($action == 'create') {
+            //If Problem in saving embed forms set dirty state
+            $this->form->getObject()->state('TDIRTY');
+          }
           $e = new DarwinPgErrorParser($ne);
           $error = new sfValidatorError(new savedValidator(),$e->getMessage());
           $this->form->getErrorSchema()->addError($error, 'Darwin2 :');

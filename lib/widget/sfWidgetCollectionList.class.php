@@ -120,7 +120,7 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
         {
           if(! $this->getOption('is_choose') )
           {
-            $html .= ' '.image_tag('info.png',array('title'=>'info','class'=>'extd_info','data-manid'=> $child->getMainManagerRef()));
+            $html .= ' '.image_tag('info.png',array('title'=>'info','class'=>'extd_info','data-manid'=> $child->getMainManagerRef(), 'data-staffid'=> $child->getStaffRef()));
             if($user->isA(Users::ADMIN) || ( $user->isAtLeast(Users::MANAGER) && $child->getTypeInCol() >= Users::MANAGER  ) )
             {
              $html .= link_to(image_tag('edit.png',array('title'=>'Edit Collection','class' => 'collection_edit')),'collection/edit?id='.$child->getId());

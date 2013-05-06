@@ -450,21 +450,6 @@ comment on column people_languages.language_country is 'Reference of Language - 
 comment on column people_languages.mother is 'Flag telling if its mother language or not';
 comment on column people_languages.preferred_language is 'Flag telling which language is preferred in communications';
 
-create table users_languages
-       (
-        id serial,
-        users_ref integer not null,
-        constraint pk_users_languages primary key (id),
-        constraint unq_users_languages unique (users_ref, language_country),
-        constraint fk_users_languages_people foreign key (users_ref) references users(id) on delete cascade
-       )
-inherits (template_people_languages);
-comment on table users_languages is 'Languages spoken by a given user';
-comment on column users_languages.users_ref is 'Reference of user - id field of users table';
-comment on column users_languages.language_country is 'Reference of Language - language_country field of languages_countries table';
-comment on column users_languages.mother is 'Flag telling if its mother language or not';
-comment on column users_languages.preferred_language is 'Flag telling which language is preferred in communications';
-
 create table multimedia
        (
         id serial,
@@ -679,6 +664,7 @@ create table collections
         name_indexed varchar not null,
         institution_ref integer not null,
         main_manager_ref integer not null,
+        staff_ref integer,
         parent_ref integer,
         path varchar not null,
         code_auto_increment boolean not null default false,
@@ -694,6 +680,7 @@ create table collections
         constraint fk_collections_institutions foreign key (institution_ref) references people(id),
         constraint fk_collections_collections foreign key (parent_ref) references collections(id) on delete cascade,
         constraint fk_collections_users foreign key (main_manager_ref) references users(id),
+        constraint fk_collections_staff foreign key (staff_ref) references users(id) on delete set null,
         constraint chk_main_manager_ref check (main_manager_ref > 0),
         constraint unq_collections unique (institution_ref, path, code)
        );
@@ -707,6 +694,7 @@ comment on column collections.institution_ref is 'Reference of institution curre
 comment on column collections.parent_ref is 'Recursive reference to collection table itself to represent collection parenty/hierarchy';
 comment on column collections.path is 'Descriptive path for collection hierarchy, each level separated by a /';
 comment on column collections.main_manager_ref is 'Reference of collection main manager - id field of users table';
+comment on column collections.staff_ref is 'Reference of staff member, scientist responsible - id field of users table';
 comment on column collections.code_auto_increment is 'Flag telling if the numerical part of a code has to be incremented or not';
 comment on column collections.code_last_value is 'Value of the last numeric code given in this collection when auto increment is/was activated';
 comment on column collections.code_prefix is 'Default code prefix to be used for specimens encoded in this collection';

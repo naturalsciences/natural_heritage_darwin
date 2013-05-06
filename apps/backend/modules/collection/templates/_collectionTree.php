@@ -27,7 +27,7 @@ $(document).ready(function () {
           ajax: {
             url: '<?php echo url_for('collection/extdinfo');?>',
             type: 'GET',
-            data: { id: $(this).attr('data-manid') }
+            data: { id: $(this).attr('data-manid'), staffid: $(this).attr('data-staffid')}
           }
         }
       });

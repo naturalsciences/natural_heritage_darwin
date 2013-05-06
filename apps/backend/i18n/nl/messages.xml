@@ -3280,8 +3280,8 @@
         <target>Widgets beheren</target>
       </trans-unit>
           <trans-unit id="461">
-        <source>Manager</source>
-        <target>Collectiebeheerder</target>
+        <source>Conservator</source>
+        <target>Conservator</target>
       </trans-unit>
           <trans-unit id="463">
         <source>Choose a collection</source>
@@ -3720,8 +3720,8 @@
         <target>Administrator</target>
       </trans-unit>
           <trans-unit id="663">
-        <source>Collection manager</source>
-        <target>Collectiebeheerder</target>
+        <source>Conservator</source>
+        <target>Conservator</target>
       </trans-unit>
           <trans-unit id="664">
         <source>Encoder</source>
@@ -5165,7 +5165,7 @@
       </trans-unit>
           <trans-unit id="1050">
         <source>About</source>
-        <target>Over ons</target>
+        <target>Over</target>
       </trans-unit>
           <trans-unit id="39">
         <source>Search</source>
@@ -5702,6 +5702,22 @@
           <trans-unit id="1703">
         <source>This widget allows you to add a bibliographic reference of the item</source>
         <target>Deze widget laat u toe een bibliografische referentie toe te voegen aan een item</target>
+      </trans-unit>
+      <trans-unit id="1730">
+        <source>Change Ig num</source>
+        <target>I.G. num wijzigen</target>
+      </trans-unit>
+      <trans-unit id="1731">
+        <source>Staff Member</source>
+        <target>Staff Member</target>
+      </trans-unit>
+      <trans-unit id="1732">
+        <source>Zoological Search</source>
+        <target>Zoölogische opzoeking</target>
+      </trans-unit>
+      <trans-unit id="1733">
+        <source>Geo/Paleo Search</source>
+        <target>Geo/Paleo opzoeking</target>
       </trans-unit>
         </body>
   </file>

@@ -1,3 +1,13 @@
+.rand_spec li{
+  list-style-type: circle;
+}
+.rand_spec {
+  padding-left: 40px;
+}
+.rand_spec a[href] {
+  color:rgb(51, 144, 161);
+}
+
 .lang_picker, .browser_img 
 {
   color:white;
@@ -79,13 +89,13 @@
 
 .menu_top table
 {
-  width:720px;
+  width:760px;
   font-size: 12pt ;
   margin-left:auto;
   margin-right: auto;  
 }
 
-.menu_top table td
+.menu_top table td.lang_picker
 {
   vertical-align: bottom ; 
   float: right ;
@@ -99,7 +109,7 @@
   cursor: pointer;
   float:left;
   padding:0.2em;
-  margin:0.7em;
+  margin:0.3em;
 }
 
 .menu_link > li > a
@@ -107,6 +117,8 @@
   text-decoration: none ; 
   text-transform : uppercase;
   color: #d8d5d5 ;  
+  text-decoration: underline ;  
+
 } 
 
 .menu_link > li > a:hover

@@ -2,7 +2,7 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
 <?php $action = 'loan/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()) ;?>
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'loan','eid'=> (! $form->getObject()->isNew() ? $form->getObject()->getId() : null ))); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'loan','eid'=> (! $form->getObject()->isNew() ? $form->getObject()->getId() : null ))); ?>
 <div class="page">
     <?php include_partial('tabs', array('loan'=> $form->getObject())); ?>
     <div class="tab_content">

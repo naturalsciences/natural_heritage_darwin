@@ -25,6 +25,16 @@ The corner stone of the darwin database is the specimen and the information abou
 <br />
 <p>Enjoy your virtual visit through our collections!</p>
 <br />
+
+<h2>Discover some random specimens :</h2>
+<p>
+  <ul class="rand_spec">
+    <?php foreach($individuals as $ind):?>
+      <li><?php echo link_to($ind->getSpecimensFlat()->getAggregatedName(),'search/view?id='.$ind->getId());?></li>
+    <?php endforeach;?>
+  </ul>
+</p>
+
 <p>
   <a href="<?php echo __('http://www.naturalsciences.be');?>">
             <?php echo image_tag('public/rbins_logo.png', 'class=logo_center_align');?><br />

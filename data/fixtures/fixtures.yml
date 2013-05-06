@@ -147,19 +147,6 @@ UsersLoginInfos:
         user_name: root
         password: "<?php echo sha1(sfConfig::get('dw_salt').'evil');?>"
 
-UsersLanguages:
-    ul1:
-        User: u1
-        language_country: en
-        mother: true
-        preferred_language: true
-
-    ul2:
-        User: u1
-        language_country: fr
-        mother: false
-        preferred_language: false
-
 MySavedSearches:
     ss1_1:
         User: u1

@@ -276,8 +276,8 @@
         <target>Enregistrement d&#039;échantillon</target>
       </trans-unit>
           <trans-unit id="1258">
-        <source>Collection manager</source>
-        <target>Gestionaire de collection</target>
+        <source>Conservator</source>
+        <target>Conservateur</target>
       </trans-unit>
           <trans-unit id="1259">
         <source>Common Names</source>
@@ -710,6 +710,18 @@
           <trans-unit id="1707">
         <source>Download</source>
         <target>Télécharger</target>
+      </trans-unit>
+      <trans-unit id="1708">
+        <source>Staff Member</source>
+        <target>Membre de l'équipe</target>
+      </trans-unit>
+      <trans-unit id="1709">
+        <source>Zoological Search</source>
+        <target>Recherche Zoologique</target>
+      </trans-unit>
+      <trans-unit id="1710">
+        <source>Geo/Paleo Search</source>
+        <target>Recherche Geo/Paleo</target>
       </trans-unit>
         </body>
   </file>

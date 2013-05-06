@@ -33,5 +33,13 @@
 <script type="text/javascript">
  $(document).ready(function () {
   $('.catalogue_ig').choose_form({});
+  
+  $(".new_link").click( function()
+  {
+   url = $(this).find('a').attr('href');
+   data= $('.search_form').serialize();
+   open(url+'?'+data);
+    return false;
+  });
 });
 </script>

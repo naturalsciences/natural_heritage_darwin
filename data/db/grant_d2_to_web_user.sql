@@ -43,7 +43,6 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.staging_tag_groups TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_comm TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.tags TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_languages TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_login_infos TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_addresses TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.staging_people TO cebmpad;
@@ -127,7 +126,6 @@
  GRANT USAGE, SELECT ON SEQUENCE darwin2.tag_groups_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.taxonomy_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.users_comm_id_seq TO cebmpad;
- GRANT USAGE, SELECT ON SEQUENCE darwin2.users_languages_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.users_tracking_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.informative_workflow_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.vernacular_names_id_seq TO cebmpad;

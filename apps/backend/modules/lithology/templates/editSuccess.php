@@ -1,4 +1,4 @@
-<?php include_partial('widgets/list', array('widgets' => $widgets, 'category' => 'catalogue_lithology','eid'=> $form->getObject()->getId())); ?>
+<?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'catalogue_lithology','eid'=> $form->getObject()->getId())); ?>
 <?php slot('title', __('Edit Lithologic unit'));  ?>
 <div class="page">
     <h1 class="edit_mode"><?php echo __('Edit Lithologic unit');?></h1>

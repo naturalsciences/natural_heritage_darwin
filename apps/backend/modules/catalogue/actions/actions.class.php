@@ -76,15 +76,15 @@ class catalogueActions extends DarwinActions
 
   public function executeDeleteRelated(sfWebRequest $request)
   {
-    if(in_array($request->getParameter('table'), array('users_languages','users_comm','users_addresses')))
+    if(in_array($request->getParameter('table'), array('users_comm','users_addresses','users_login_infos')))
     {
       $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
       $this->forward404Unless($r,'No such item');
 
       if((in_array($request->getParameter('table'), array('users_comm','users_addresses'))
           && ($r->getPersonUserRef() == $this->getUser()->getId() || $this->getUser()->isAtLeast(Users::MANAGER)))
-        || (in_array($request->getParameter('table'), array('users_languages'))
-          && ($r->getUsersRef() == $this->getUser()->getId() || $this->getUser()->isAtLeast(Users::MANAGER)) ))
+        || (in_array($request->getParameter('table'), array('users_login_infos'))
+          && ($r->getUserRef() == $this->getUser()->getId() || $this->getUser()->isAtLeast(Users::MANAGER)) ))
       {
         try
         {

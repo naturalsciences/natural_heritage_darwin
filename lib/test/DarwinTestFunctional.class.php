@@ -76,7 +76,7 @@ class DarwinTestFunctional extends sfTestFunctional
     	  get('user/new')->
     	  with('response')->begin()->
     	  checkelement('#submit',1)->
-  	  click('#submit', array('users' => array('family_name' => $name)))->end()->	    					   
+  	  click('#submit', array('users' => array('family_name' => $name)))->end()->
        followRedirect()->
          info('** add login info for this user **')->
          click('#add_info')->

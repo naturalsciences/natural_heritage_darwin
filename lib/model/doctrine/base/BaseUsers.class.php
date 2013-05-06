@@ -22,7 +22,6 @@
  * @property integer $people_id
  * @property string $selected_lang
  * @property People $People
- * @property Doctrine_Collection $UsersLanguages
  * @property Doctrine_Collection $UsersComm
  * @property Doctrine_Collection $UsersAddresses
  * @property Doctrine_Collection $UsersLoginInfos
@@ -53,7 +52,6 @@
  * @method integer             getPeopleId()              Returns the current record's "people_id" value
  * @method string              getSelectedLang()          Returns the current record's "selected_lang" value
  * @method People              getPeople()                Returns the current record's "People" value
- * @method Doctrine_Collection getUsersLanguages()        Returns the current record's "UsersLanguages" collection
  * @method Doctrine_Collection getUsersComm()             Returns the current record's "UsersComm" collection
  * @method Doctrine_Collection getUsersAddresses()        Returns the current record's "UsersAddresses" collection
  * @method Doctrine_Collection getUsersLoginInfos()       Returns the current record's "UsersLoginInfos" collection
@@ -83,7 +81,6 @@
  * @method Users               setPeopleId()              Sets the current record's "people_id" value
  * @method Users               setSelectedLang()          Sets the current record's "selected_lang" value
  * @method Users               setPeople()                Sets the current record's "People" value
- * @method Users               setUsersLanguages()        Sets the current record's "UsersLanguages" collection
  * @method Users               setUsersComm()             Sets the current record's "UsersComm" collection
  * @method Users               setUsersAddresses()        Sets the current record's "UsersAddresses" collection
  * @method Users               setUsersLoginInfos()       Sets the current record's "UsersLoginInfos" collection
@@ -180,10 +177,6 @@ abstract class BaseUsers extends sfDoctrineRecord
         $this->hasOne('People', array(
              'local' => 'people_id',
              'foreign' => 'id'));
-
-        $this->hasMany('UsersLanguages', array(
-             'local' => 'id',
-             'foreign' => 'users_ref'));
 
         $this->hasMany('UsersComm', array(
              'local' => 'id',

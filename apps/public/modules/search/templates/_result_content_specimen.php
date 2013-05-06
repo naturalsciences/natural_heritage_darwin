@@ -122,7 +122,7 @@
     </td>
     <td class="col_mineral">
       <?php if($specimen->getMineralRef() > 0) : ?>
-        <?php echo image_tag('info.png',"title=info class=info id=mineral_".$id."_info");?>                
+        <?php echo image_tag('info.png',"title=info class=info id=mineral_".$id."_info");?>
         <?php echo $specimen->getMineralName();?>
         <div id="mineral_<?php echo $id;?>_tree" class="tree"></div>
         <script type="text/javascript">
