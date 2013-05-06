@@ -9,9 +9,9 @@ PSQL = /usr/bin/psql
 PARAM_PSQL = $(PSQL) -q -h $(HOST) -U $(DB_USER) -d $(DB_NAME)
 PRIV_PSQL = $(PSQL) -q -v dbname=$(DB_NAME) -v importuser=$(DB_IMPORT_USER)
 PRIV_PSQL_DB = $(PRIV_PSQL) -d $(DB_NAME)
-PG_VER = 8.4
+PG_VER = 9.1
 
-PG_PROVE = /usr/local/bin/pg_prove
+PG_PROVE = /usr/bin/pg_prove
 PASSWD = ''
 
 help: help-target help-param
@@ -31,9 +31,6 @@ help-target:
 	@echo ""
 	@echo "install-db"
 	@echo "   install the darwin db into the $db_user schema : create types, tables, functions and indexes"
-	@echo ""
-	@echo "create-test-schema"
-	@echo "    Create the schema for the unit tests"
 	@echo ""
 	@echo "test"
 	@echo "   Unit test the database installation in a schema 'unittest'"
@@ -82,6 +79,9 @@ help-param:
 	@echo "PORT (Default: 5432)"
 	@echo "   Port for the connection to the database"
 	@echo ""
+	@echo "PG_VER (Default: 9.1)"
+	@echo "   Version of the postgresql database"
+	@echo ""
 	@echo "Other advanced parameters are available in the makefile"
 	@echo ""
 
@@ -114,10 +114,7 @@ uninstall-db:
 	$(PARAM_PSQL) -f droptables.sql
 
 create-schema:
-	$(PRIV_PSQL_DB) -f createschema.sql
-
-create-test-schema:
-	$(PRIV_PSQL_DB) -c "create schema unittest authorization $(DB_USER) ;"
+	$(PRIV_PSQL_DB) -c "create schema $(DB_NAME) authorization $(DB_USER);"
 
 grant-d2-to-web:
 	$(PRIV_PSQL_DB) -f grant_d2_to_web_user.sql
@@ -126,9 +123,6 @@ grant-d2-to-read-user:
 	$(PRIV_PSQL_DB) -f grant_d2_to_read_user.sql
 
 create-db:
-ifeq ('$(PG_VER)','8.4')
-	-createlang -d template1 plpgsql
-endif
 	$(PRIV_PSQL) -c "create database $(DB_NAME) ENCODING 'UNICODE';"
 
 install-lib:
@@ -136,24 +130,6 @@ ifeq ('$(PG_VER)','9.1')
 	$(PRIV_PSQL_DB) -c "create extension pgcrypto; create extension pg_trgm; create extension hstore;"
 	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/postgis.sql;
 	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/spatial_ref_sys.sql;
-endif
-ifeq ('$(PG_VER)','9.0')
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pg_trgm.sql
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pgcrypto.sql
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/hstore.sql
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/postgis.sql
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/spatial_ref_sys.sql
-
-	$(PRIV_PSQL_DB) -f postgisgrant.sql -v dbuser=$(DB_USER)
-endif
-ifeq ('$(PG_VER)','8.4')
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pg_trgm.sql
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/pgcrypto.sql
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/hstore-new.sql
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/postgis.sql
-	$(PRIV_PSQL_DB) -f /usr/share/postgresql/$(PG_VER)/contrib/postgis-1.5/spatial_ref_sys.sql
-	
-	$(PRIV_PSQL_DB) -f postgisgrant.sql -v dbuser=$(DB_USER)
 endif
 
 create-user-web:
