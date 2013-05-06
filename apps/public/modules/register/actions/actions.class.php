@@ -64,7 +64,7 @@ class registerActions extends DarwinActions
                                 'username' => $username
                                );
           // send an email to the registered user
-            $this->getUser()->setCulture($this->form->getValue('selected_lang'));
+          $this->getUser()->setCulture($this->form->getValue('selected_lang'));
           $this->sendConfirmationMail(array_merge($base_params,$suppl_params));
           $this->redirect('register/succeeded?'.http_build_query($base_params));
         }
@@ -107,6 +107,11 @@ class registerActions extends DarwinActions
         sfContext::getInstance()->getLogger()->debug('LOGIN: '.$this->form->getValue('username').' '.$this->form->user->getId() );
         $this->getUser()->setAttribute('db_user_id',$this->form->user->getId());
         $this->getUser()->setAttribute('db_user_type',$this->form->user->getDbUserType());
+        $this->getUser()->setCulture($lang->getLanguageCountry());
+        if(in_array($this->form->user->getSelectedLang(),array('en','fr','nl'))) //Prevent errors
+        {
+          $this->getUser()->setCulture($this->form->user->getSelectedLang());
+        }
       }
       else
       {
