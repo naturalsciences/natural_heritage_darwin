@@ -61,7 +61,7 @@ class ExpeditionsFormFilter extends BaseExpeditionsFormFilter
   {
     $query = parent::doBuildQuery($values);
     $fields = array('expedition_from_date', 'expedition_to_date');
-    $this->addNamingColumnQuery($query, 'expeditions', 'name_ts', $values['name']);
+    $this->addNamingColumnQuery($query, 'expeditions', 'name_indexed', $values['name']);
     $this->addDateFromToColumnQuery($query, $fields, $values['expedition_from_date'], $values['expedition_to_date']);
     $query->andWhere("id > 0 ");
     return $query;

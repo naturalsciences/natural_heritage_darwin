@@ -48,7 +48,7 @@ class LithostratigraphyFormFilter extends BaseLithostratigraphyFormFilter
   {
     $query = parent::doBuildQuery($values);
     $this->addRelationItemColumnQuery($query, $values);
-    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_indexed', $values['name']);
+    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_order_by', $values['name']);
     $query->andWhere("id != 0 ")
 	  ->innerJoin($query->getRootAlias().".Level")
           ->limit($this->getCatalogueRecLimits());

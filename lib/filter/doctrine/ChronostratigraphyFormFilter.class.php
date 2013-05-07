@@ -70,7 +70,7 @@ class ChronostratigraphyFormFilter extends BaseChronostratigraphyFormFilter
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
-    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'name_indexed', $values['name']);
+    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'name_order_by', $values['name']);
     $this->addRelationItemColumnQuery($query, $values);
     $this->addBoundRangeColumnQuery($query, $values['lower_bound'], $values['upper_bound']);
     $query->andWhere("id != 0 ")

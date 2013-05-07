@@ -159,23 +159,38 @@ CREATE INDEX CONCURRENTLY idx_informative_workflow_user_status on informative_wo
 CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
 
 /*** GiST and eventual GIN Indexes for ts_vector fields ***/
-
+/**@TODO: IDX TO REMOVE OLD Text search INDEXES*/
 CREATE INDEX CONCURRENTLY idx_gist_comments_comment_ts on comments using gist(comment_ts);
 CREATE INDEX CONCURRENTLY idx_gist_vernacular_names_name_ts on vernacular_names using gist(name_ts);
 CREATE INDEX CONCURRENTLY idx_gist_expeditions_name_ts on expeditions using gist(name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_people_formated_name_ts on people using gin(formated_name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_users_formated_name_ts on users using gin(formated_name_ts);
-CREATE INDEX CONCURRENTLY idx_gist_multimedia_description_ts on multimedia using gist(search_ts);
 CREATE INDEX CONCURRENTLY idx_gin_people_addresses_address_parts_ts on people_addresses using gin(address_parts_ts);
 CREATE INDEX CONCURRENTLY idx_gin_users_addresses_address_parts_ts on users_addresses using gin(address_parts_ts);
-/*CREATE INDEX CONCURRENTLY idx_gist_collection_maintenance_description_ts on collection_maintenance using gist(description_ts);*/
 CREATE INDEX CONCURRENTLY idx_gin_taxonomy_naming on taxonomy using gin(name_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_chronostratigraphy_naming on chronostratigraphy using gin(name_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_lithostratigraphy_naming on lithostratigraphy using gin(name_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_mineralogy_naming on mineralogy using gin(name_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_lithology_naming on lithology using gin(name_indexed);
-CREATE INDEX CONCURRENTLY idx_gin_gtu_tags_values on gtu using gin(tag_values_indexed);
+/*******END @TODO*/
 
+/** NEW TS IDX **/
+CREATE INDEX CONCURRENTLY idx_gin_trgm_comments_comment on comments  using gin ("comment" gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_vernacular_names_name on vernacular_names using gin(name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_expeditions_name on expeditions using gin(name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_people_formated_name on people using gin(formated_name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_users_formated_name on users using gin(formated_name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_taxonomy_naming on taxonomy using gin(name_order_by gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_chronostratigraphy_naming on chronostratigraphy using gin(name_order_by gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_lithostratigraphy_naming on lithostratigraphy using gin(name_order_by gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_mineralogy_naming on mineralogy using gin(name_order_by gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_lithology_naming on lithology using gin(name_order_by gin_trgm_ops);
+/*** END NEW IDX*/
+
+CREATE INDEX CONCURRENTLY idx_gin_trgm_bibliography_title on bibliography using gist(title_indexed gist_trgm_ops);
+/*CREATE INDEX CONCURRENTLY idx_gist_collection_maintenance_description_ts on collection_maintenance using gist(description_ts);*/
+CREATE INDEX CONCURRENTLY idx_gist_multimedia_description_ts on multimedia using gist(search_ts);
+CREATE INDEX CONCURRENTLY idx_gin_gtu_tags_values on gtu using gin(tag_values_indexed);
 
 /*** @TODO:Additional BTree Indexes created to fasten application ***/
 
@@ -216,5 +231,4 @@ CREATE INDEX CONCURRENTLY idx_multimedia_referenced_record on multimedia(referen
 /** Biblio **/
 
 CREATE INDEX CONCURRENTLY idx_catalogue_bibliography_referenced_record on catalogue_bibliography(referenced_relation, record_id);
-CREATE INDEX CONCURRENTLY idx_gin_bibliography_title_ts on bibliography using gin(title_ts);
 CREATE INDEX CONCURRENTLY idx_bibliography_type on bibliography(type);

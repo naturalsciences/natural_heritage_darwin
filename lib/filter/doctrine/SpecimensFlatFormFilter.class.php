@@ -1141,11 +1141,11 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $this->addLatLonColumnQuery($query, $values);
     $this->addNamingColumnQuery($query, 'expeditions', 's.name_ts', $values['expedition_name'],'s','expedition_name_ts');
 
-    $this->addNamingColumnQuery($query, 'taxonomy', 'name_indexed', $values['taxon_name'],'s','taxon_name_indexed');
-    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'name_indexed', $values['chrono_name'],'s','chrono_name_indexed');
-    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_indexed', $values['litho_name'],'s','litho_name_indexed');
-    $this->addNamingColumnQuery($query, 'lithology', 'name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
-    $this->addNamingColumnQuery($query, 'mineralogy', 'name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
+    $this->addNamingColumnQuery($query, 'taxonomy', 'taxon_name_order_by', $values['taxon_name'],'s','taxon_name_order_by');
+    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'chrono_name_order_by', $values['chrono_name'],'s','chrono_name_order_by');
+    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'litho_name_order_by', $values['litho_name'],'s','litho_name_order_by');
+    $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_order_by', $values['lithology_name'],'s','lithology_name_order_by');
+    $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_order_by', $values['mineral_name'],'s','mineral_name_order_by');
 
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);

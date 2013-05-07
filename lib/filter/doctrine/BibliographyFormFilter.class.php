@@ -27,7 +27,7 @@ class BibliographyFormFilter extends BaseBibliographyFormFilter
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
-    $this->addNamingColumnQuery($query, 'bibliography', 'title_ts', $values['title']);
+    $this->addNamingColumnQuery($query, 'bibliography', 'title_indexed', $values['title']);
     $query->andWhere("id > 0 ");
     return $query;
   }

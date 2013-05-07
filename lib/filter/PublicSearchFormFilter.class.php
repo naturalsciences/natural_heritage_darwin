@@ -256,11 +256,11 @@ class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
     if ($values['litho_common_name'] != '') $this->addCommonNamesColumnQuery($query,'lithostratigraphy', 'litho_ref', $values['litho_common_name']);    
     if ($values['lithology_common_name'] != '') $this->addCommonNamesColumnQuery($query,'lithology', 'lithology_ref', $values['lithology_common_name']);        
     if ($values['mineral_common_name'] != '') $this->addCommonNamesColumnQuery($query,'mineralogy', 'mineral_ref', $values['mineral_common_name']);        
-    $this->addNamingColumnQuery($query, 'taxonomy', 'name_indexed', $values['taxon_name'],'s','taxon_name_indexed');
-    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'name_indexed', $values['chrono_name'],'s','chrono_name_indexed');
-    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_indexed', $values['litho_name'],'s','litho_name_indexed');
-    $this->addNamingColumnQuery($query, 'lithology', 'name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
-    $this->addNamingColumnQuery($query, 'mineralogy', 'name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
+    $this->addNamingColumnQuery($query, 'taxonomy', 'name_order_by', $values['taxon_name'],'s','taxon_name_indexed');
+    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'name_order_by', $values['chrono_name'],'s','chrono_name_indexed');
+    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'name_order_by', $values['litho_name'],'s','litho_name_indexed');
+    $this->addNamingColumnQuery($query, 'lithology', 'name_order_by', $values['lithology_name'],'s','lithology_name_indexed');
+    $this->addNamingColumnQuery($query, 'mineralogy', 'name_order_by', $values['mineral_name'],'s','mineral_name_indexed');
     $query->andWhere('collection_is_public = true') ;
     if($values['tags'] != '') $query->andWhere("gtu_country_tag_indexed && getTagsIndexedAsArray(?)",$values['tags']);
     $query->limit($this->getCatalogueRecLimits());

@@ -94,7 +94,7 @@ class MineralogyFormFilter extends BaseMineralogyFormFilter
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
-    $this->addNamingColumnQuery($query, 'mineralogy', 'name_indexed', $values['name']);
+    $this->addNamingColumnQuery($query, 'mineralogy', 'name_order_by', $values['name']);
     $this->addRelationItemColumnQuery($query, $values);
     $query->andWhere("id != 0 ")
 	  ->innerJoin($query->getRootAlias().".Level")

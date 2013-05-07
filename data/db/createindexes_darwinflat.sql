@@ -33,6 +33,13 @@ CREATE INDEX CONCURRENTLY idx_specimens_flat_ig_num on specimens_flat(ig_num_ind
 CREATE INDEX CONCURRENTLY idx_specimens_flat_collection_is_public on specimens_flat(collection_is_public);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_collection_name on specimens_flat(collection_name, specimen_ref);
 
+/*** NEW IDX FOR WORDS ***/
+CREATE INDEX CONCURRENTLY idx_gin_trgm_specimens_flat_expedition_name_ts on specimens_flat using gin(expedition_name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_specimens_flat_taxon_name_indexed on specimens_flat using gin(taxon_name_order_by gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_specimens_flat_taxon_path on specimens_flat using gin(taxon_path gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_specimens_flat_ig_num ON specimens_flat USING gin (ig_num_indexed gin_trgm_ops);
+
+
 /*CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_collection_institution_formated_name_ts on specimens_flat using gin(collection_institution_formated_name_ts);
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_collection_main_manager_formated_name_ts on specimens_flat using gin(collection_main_manager_formated_name_ts);*/
 
