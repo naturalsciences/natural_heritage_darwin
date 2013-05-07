@@ -1,13 +1,14 @@
 TESTS = $(wildcard tests/*.sql)
 HOST = 127.0.0.1
+PORT = 5432
 DB_USER = darwin2
 DB_WEB_USER = cebmpad
 DB_READ_USER = d2viewer
 DB_NAME = darwin2
 TEST_CMD = pg_prove
 PSQL = /usr/bin/psql
-PARAM_PSQL = $(PSQL) -q -h $(HOST) -U $(DB_USER) -d $(DB_NAME)
-PRIV_PSQL = $(PSQL) -q -v dbname=$(DB_NAME) -v importuser=$(DB_IMPORT_USER)
+PARAM_PSQL = $(PSQL) -q -h $(HOST) -U $(DB_USER) -d $(DB_NAME) -p $(PORT)
+PRIV_PSQL = $(PSQL) -q -v dbname=$(DB_NAME) -p $(PORT)
 PRIV_PSQL_DB = $(PRIV_PSQL) -d $(DB_NAME)
 PG_VER = 9.1
 
@@ -115,6 +116,7 @@ uninstall-db:
 
 create-schema:
 	$(PRIV_PSQL_DB) -c "create schema $(DB_NAME) authorization $(DB_USER);"
+	$(PRIV_PSQL_DB) -c "ALTER USER $(DB_USER) SET search_path TO $(DB_NAME), public;"
 
 grant-d2-to-web:
 	$(PRIV_PSQL_DB) -f grant_d2_to_web_user.sql
