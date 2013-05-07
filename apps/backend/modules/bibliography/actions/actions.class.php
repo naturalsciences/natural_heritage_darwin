@@ -87,8 +87,9 @@ class bibliographyActions extends DarwinActions
     */ 
   public function executeEdit(sfWebRequest $request)
   {
+    $bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id'));
     // Forward to a 404 page if the requested bibliography id is not found
-    $this->forward404Unless($bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id')), sprintf('Object bibliography does not exist (%s).', array($request->getParameter('id'))));
+    $this->forward404Unless($bibliography, sprintf('Object bibliography does not exist (%s).', $request->getParameter('id')));
     // Otherwise initialize the bibliography encoding form
     $this->no_right_col = Doctrine::getTable('Bibliography')->testNoRightsCollections('bibliography_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new BibliographyForm($bibliography);
