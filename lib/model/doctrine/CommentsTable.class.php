@@ -84,6 +84,7 @@ class CommentsTable extends DarwinTable
   */
   public function getRelatedComment($table_name, $record_ids)
   {
+     if(empty($record_ids)) return array() ;
      $q = Doctrine_Query::create()
         ->from('Comments')
         ->where('referenced_relation=?', $table_name)
