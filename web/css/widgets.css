@@ -240,3 +240,7 @@ ul.saved_search_widget span
 	background-image:url(/images/widget_button.png);
 	float:right;
 }
+
+.search_columns .widget_collection_container {
+  height: 400px;
+}
