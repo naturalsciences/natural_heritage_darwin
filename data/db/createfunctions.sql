@@ -124,69 +124,66 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION fct_cpy_fullToIndex() RETURNS trigger
 AS $$
 BEGIN
-	IF TG_TABLE_NAME = 'catalogue_properties' THEN
-		NEW.property_tool_indexed := COALESCE(fullToIndex(NEW.property_tool),'');
-		NEW.property_sub_type_indexed := COALESCE(fullToIndex(NEW.property_sub_type),'');
-		NEW.property_method_indexed := COALESCE(fullToIndex(NEW.property_method),'');
-		NEW.property_qualifier_indexed := COALESCE(fullToIndex(NEW.property_qualifier),'');
-	ELSIF TG_TABLE_NAME = 'chronostratigraphy' THEN
-		NEW.name_indexed := to_tsvector('simple', NEW.name);
-		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'collections' THEN
-		NEW.name_indexed := fullToIndex(NEW.name);		
-	ELSIF TG_TABLE_NAME = 'expeditions' THEN
-		NEW.name_indexed := fullToIndex(NEW.name);
+        IF TG_TABLE_NAME = 'catalogue_properties' THEN
+                NEW.property_tool_indexed := COALESCE(fullToIndex(NEW.property_tool),'');
+                NEW.property_sub_type_indexed := COALESCE(fullToIndex(NEW.property_sub_type),'');
+                NEW.property_method_indexed := COALESCE(fullToIndex(NEW.property_method),'');
+                NEW.property_qualifier_indexed := COALESCE(fullToIndex(NEW.property_qualifier),'');
+        ELSIF TG_TABLE_NAME = 'chronostratigraphy' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'collections' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);		
+        ELSIF TG_TABLE_NAME = 'expeditions' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
         ELSIF TG_TABLE_NAME = 'bibliography' THEN
                 NEW.title_indexed := fullToIndex(NEW.title);
-	ELSIF TG_TABLE_NAME = 'identifications' THEN
-		NEW.value_defined_indexed := COALESCE(fullToIndex(NEW.value_defined),'');
-	ELSIF TG_TABLE_NAME = 'lithology' THEN
-		NEW.name_indexed := to_tsvector('simple', NEW.name);
-		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'lithostratigraphy' THEN
-		NEW.name_indexed := to_tsvector('simple', NEW.name);
-		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'mineralogy' THEN
-		NEW.name_indexed := to_tsvector('simple', NEW.name);
-		NEW.name_order_by := fullToIndex(NEW.name);
-		NEW.formule_indexed := fullToIndex(NEW.formule);
-	ELSIF TG_TABLE_NAME = 'people' THEN
-		NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
+        ELSIF TG_TABLE_NAME = 'identifications' THEN
+                NEW.value_defined_indexed := COALESCE(fullToIndex(NEW.value_defined),'');
+        ELSIF TG_TABLE_NAME = 'lithology' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'lithostratigraphy' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'mineralogy' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+                NEW.formule_indexed := fullToIndex(NEW.formule);
+        ELSIF TG_TABLE_NAME = 'people' THEN
+                NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
                 NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
                 NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
-	ELSIF TG_TABLE_NAME = 'codes' THEN
-		IF NEW.code ~ '^[0-9]+$' THEN
-		   NEW.code_num := NEW.code;
-		ELSE
-    		   NEW.code_num := null;
-		END IF;
-                NEW.full_code_indexed := to_tsvector('simple', COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,''));
-		NEW.full_code_order_by := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
-	ELSIF TG_TABLE_NAME = 'tag_groups' THEN
-		NEW.group_name_indexed := fullToIndex(NEW.group_name);
-		NEW.sub_group_name_indexed := fullToIndex(NEW.sub_group_name);
-	ELSIF TG_TABLE_NAME = 'taxonomy' THEN
-		NEW.name_indexed := to_tsvector('simple', NEW.name);
-		NEW.name_order_by := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'classification_keywords' THEN
-		NEW.keyword_indexed := fullToIndex(NEW.keyword);
-	ELSIF TG_TABLE_NAME = 'users' THEN
-		NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
+        ELSIF TG_TABLE_NAME = 'codes' THEN
+                IF NEW.code ~ '^[0-9]+$' THEN
+                    NEW.code_num := NEW.code;
+                ELSE
+                    NEW.code_num := null;
+                END IF;
+                NEW.full_code_indexed := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
+        ELSIF TG_TABLE_NAME = 'tag_groups' THEN
+                NEW.group_name_indexed := fullToIndex(NEW.group_name);
+                NEW.sub_group_name_indexed := fullToIndex(NEW.sub_group_name);
+        ELSIF TG_TABLE_NAME = 'taxonomy' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'classification_keywords' THEN
+                NEW.keyword_indexed := fullToIndex(NEW.keyword);
+        ELSIF TG_TABLE_NAME = 'users' THEN
+                NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
                 NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
-	ELSIF TG_TABLE_NAME = 'class_vernacular_names' THEN
-		NEW.community_indexed := fullToIndex(NEW.community);
-	ELSIF TG_TABLE_NAME = 'vernacular_names' THEN
-		NEW.name_indexed := fullToIndex(NEW.name);
-	ELSIF TG_TABLE_NAME = 'igs' THEN
-		NEW.ig_num_indexed := fullToIndex(NEW.ig_num);
-       ELSIF TG_TABLE_NAME = 'collecting_methods' THEN
+        ELSIF TG_TABLE_NAME = 'class_vernacular_names' THEN
+                NEW.community_indexed := fullToIndex(NEW.community);
+        ELSIF TG_TABLE_NAME = 'vernacular_names' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'igs' THEN
+                NEW.ig_num_indexed := fullToIndex(NEW.ig_num);
+        ELSIF TG_TABLE_NAME = 'collecting_methods' THEN
                 NEW.method_indexed := fullToIndex(NEW.method);
-       ELSIF TG_TABLE_NAME = 'collecting_tools' THEN
+        ELSIF TG_TABLE_NAME = 'collecting_tools' THEN
                 NEW.tool_indexed := fullToIndex(NEW.tool);
         ELSIF TG_TABLE_NAME = 'loans' THEN
                 NEW.search_indexed := fullToIndex(COALESCE(NEW.name,'') || COALESCE(NEW.description,''));
-                NEW.description_ts := to_tsvector('simple', COALESCE(NEW.name,'') || COALESCE(NEW.description,'') );
-	END IF;
+        ELSIF TG_TABLE_NAME = 'multimedia' THEN
+                NEW.search_indexed := fullToIndex ( COALESCE(title,'') ||  COALESCE(NEW.description,'') ) ;
+        ELSIF TG_TABLE_NAME = 'comments' THEN
+                NEW.comment_indexed := fullToIndex(NEW.comment);
+        END IF;
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -433,8 +430,6 @@ BEGIN
 
   NEW.formated_name_indexed := fullToIndex(NEW.formated_name);
   NEW.formated_name_unique := toUniqueStr(NEW.formated_name);
-  NEW.formated_name_ts := to_tsvector('simple', NEW.formated_name);
-
   RETURN NEW;
 END;
 $$
@@ -999,200 +994,6 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION ts_stat(tsvector, OUT word text, OUT ndoc integer, OUT nentry integer) RETURNS SETOF record AS
-$$
-    SELECT ts_stat('SELECT ' || quote_literal( $1::text ) || '::tsvector') WHERE $1 != to_tsvector('');
-$$ LANGUAGE SQL RETURNS NULL ON NULL INPUT IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION fct_trg_word() RETURNS TRIGGER
-AS
-$$
-BEGIN
-/*
-   IF TG_TABLE_NAME ='collection_maintenance' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.description_ts IS DISTINCT FROM NEW.description_ts THEN
-          PERFORM fct_cpy_word('collection_maintenance','description_ts', NEW.description_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('collection_maintenance','description_ts', NEW.description_ts);
-      END IF;
-
-   ELSIF TG_TABLE_NAME ='comments' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.comment_ts IS DISTINCT FROM NEW.comment_ts THEN
-          PERFORM fct_cpy_word('comments','comment_ts', NEW.comment_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('comments','comment_ts', NEW.comment_ts);
-      END IF;
-*/
-   IF TG_TABLE_NAME ='vernacular_names' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.name_ts IS DISTINCT FROM NEW.name_ts THEN
-          PERFORM fct_cpy_word('vernacular_names','name_ts', NEW.name_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('vernacular_names','name_ts', NEW.name_ts);
-      END IF;
-/*
-   ELSIF TG_TABLE_NAME ='identifications' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.value_defined_ts IS DISTINCT FROM NEW.value_defined_ts THEN
-          PERFORM fct_cpy_word('identifications','value_defined_ts', NEW.value_defined_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('identifications','value_defined_ts', NEW.value_defined_ts);
-      END IF;
-*/
-   ELSIF TG_TABLE_NAME ='multimedia' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.search_ts IS DISTINCT FROM NEW.search_ts THEN
-          PERFORM fct_cpy_word('multimedia','search_ts', NEW.search_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('multimedia','search_ts', NEW.search_ts);
-      END IF;
-
-   ELSIF TG_TABLE_NAME ='people' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.formated_name_ts IS DISTINCT FROM NEW.formated_name_ts THEN
-          PERFORM fct_cpy_word('people','formated_name_ts', NEW.formated_name_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('people','formated_name_ts', NEW.formated_name_ts);
-      END IF;
-
-   ELSIF TG_TABLE_NAME ='users' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.formated_name_ts IS DISTINCT FROM NEW.formated_name_ts THEN
-          PERFORM fct_cpy_word('users','formated_name_ts', NEW.formated_name_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('users','formated_name_ts', NEW.formated_name_ts);
-      END IF;
-
-   ELSIF TG_TABLE_NAME ='expeditions' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.name_ts IS DISTINCT FROM NEW.name_ts THEN
-          PERFORM fct_cpy_word('expeditions','name_ts', NEW.name_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('expeditions','name_ts', NEW.name_ts);
-      END IF;
-
-   ELSIF TG_TABLE_NAME ='bibliography' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.title_ts IS DISTINCT FROM NEW.title_ts THEN
-          PERFORM fct_cpy_word('bibliography','NEW.title_ts', NEW.title_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('bibliography','title_ts', NEW.title_ts);
-      END IF;
-   ELSIF TG_TABLE_NAME ='mineralogy' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.name_indexed IS DISTINCT FROM NEW.name_indexed THEN
-          PERFORM fct_cpy_word('mineralogy','name_indexed', NEW.name_indexed);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('mineralogy','name_indexed', NEW.name_indexed);
-      END IF;
-
-   ELSIF TG_TABLE_NAME ='chronostratigraphy' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.name_indexed IS DISTINCT FROM NEW.name_indexed THEN
-          PERFORM fct_cpy_word('chronostratigraphy','name_indexed', NEW.name_indexed);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('chronostratigraphy','name_indexed', NEW.name_indexed);
-      END IF;
-
-   ELSIF TG_TABLE_NAME ='lithostratigraphy' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.name_indexed IS DISTINCT FROM NEW.name_indexed THEN
-          PERFORM fct_cpy_word('lithostratigraphy','name_indexed', NEW.name_indexed);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('lithostratigraphy','name_indexed', NEW.name_indexed);
-      END IF;
-
-   ELSIF TG_TABLE_NAME ='lithology' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.name_indexed IS DISTINCT FROM NEW.name_indexed THEN
-          PERFORM fct_cpy_word('lithology','name_indexed', NEW.name_indexed);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('lithology','name_indexed', NEW.name_indexed);
-      END IF;
-
-   ELSIF TG_TABLE_NAME ='taxonomy' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.name_indexed IS DISTINCT FROM NEW.name_indexed THEN
-          PERFORM fct_cpy_word('taxonomy','name_indexed', NEW.name_indexed);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('taxonomy','name_indexed', NEW.name_indexed);
-      END IF;
-   ELSIF TG_TABLE_NAME ='loans' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.description_ts IS DISTINCT FROM NEW.description_ts THEN
-          PERFORM fct_cpy_word('loans','description_ts', NEW.description_ts);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('loans','description_ts', NEW.description_ts);
-      END IF;
-/*
-   ELSIF TG_TABLE_NAME ='codes' THEN
-
-      IF TG_OP = 'UPDATE' THEN
-        IF OLD.full_code_indexed IS DISTINCT FROM NEW.full_code_indexed THEN
-          PERFORM fct_cpy_word('codes','full_code_indexed', NEW.full_code_indexed);
-        END IF;
-      ELSE
-        PERFORM fct_cpy_word('codes','full_code_indexed', NEW.full_code_indexed);
-      END IF;
-*/
-   END IF;
-
-   RETURN NEW;
-END;
-$$
-LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION fct_cpy_word(tbl_name words.referenced_relation%TYPE, fld_name words.field_name%TYPE, word_ts tsvector) RETURNS boolean
-AS
-$$
-DECLARE
-  item varchar;
-BEGIN
-    FOR item IN SELECT word FROM ts_stat(word_ts) LOOP
-      BEGIN
-	INSERT INTO words (referenced_relation, field_name, word) VALUES (tbl_name, fld_name, item);
-      EXCEPTION WHEN unique_violation THEN
-	    -- Just Sleep and insert the next one
-      END;
-    END LOOP;
-    RETURN true;
-END;
-$$
-LANGUAGE plpgsql;
-
-
 CREATE OR REPLACE FUNCTION fct_nbr_in_relation() RETURNS TRIGGER
 AS
 $$
@@ -1592,8 +1393,8 @@ BEGIN
   IF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'expeditions' THEN
     IF NEW.name_indexed IS DISTINCT FROM OLD.name_indexed THEN
       UPDATE specimens_flat
-      SET (expedition_name, expedition_name_ts, expedition_name_indexed) =
-          (NEW.name, NEW.name_ts, NEW.name_indexed)
+      SET (expedition_name, expedition_name_indexed) =
+          (NEW.name, NEW.name_indexed)
       WHERE expedition_ref = NEW.id;
     END IF;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'collections' THEN
@@ -1634,11 +1435,11 @@ BEGIN
     END IF;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'taxonomy' THEN
     UPDATE specimens_flat
-    SET (taxon_name, taxon_name_indexed, taxon_name_order_by,
+    SET (taxon_name, taxon_name_indexed,
          taxon_level_ref, taxon_level_name,
          taxon_status, taxon_path, taxon_parent_ref, taxon_extinct
         ) =
-        (NEW.name, NEW.name_indexed, NEW.name_order_by,
+        (NEW.name, NEW.name_indexed,
          NEW.level_ref, subq.level_name,
          NEW.status, NEW.path, NEW.parent_ref, NEW.extinct
         )
@@ -1649,11 +1450,11 @@ BEGIN
         ) subq
     WHERE taxon_ref = NEW.id;
     UPDATE specimens_flat
-    SET (host_taxon_name, host_taxon_name_indexed, host_taxon_name_order_by,
+    SET (host_taxon_name, host_taxon_name_indexed, 
          host_taxon_level_ref, host_taxon_level_name,
          host_taxon_status, host_taxon_path, host_taxon_parent_ref, host_taxon_extinct
         ) =
-        (NEW.name, NEW.name_indexed, NEW.name_order_by,
+        (NEW.name, NEW.name_indexed,
          NEW.level_ref, subq.level_name,
          NEW.status, NEW.path, NEW.parent_ref, NEW.extinct
         )
@@ -1665,13 +1466,13 @@ BEGIN
     WHERE host_taxon_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'chronostratigraphy' THEN
     UPDATE specimens_flat
-    SET (chrono_name, chrono_name_indexed, chrono_name_order_by,
+    SET (chrono_name, chrono_name_indexed,
          chrono_level_ref, chrono_level_name,
          chrono_status, 
          chrono_local, chrono_color,
          chrono_path, chrono_parent_ref
         ) =
-        (NEW.name, NEW.name_indexed, NEW.name_order_by,
+        (NEW.name, NEW.name_indexed,
          NEW.level_ref, subq.level_name,
          NEW.status, 
          NEW.local_naming, NEW.color,
@@ -1685,13 +1486,13 @@ BEGIN
     WHERE chrono_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'lithostratigraphy' THEN
     UPDATE specimens_flat
-    SET (litho_name, litho_name_indexed, litho_name_order_by,
+    SET (litho_name, litho_name_indexed,
          litho_level_ref, litho_level_name,
          litho_status, 
          litho_local, litho_color,
          litho_path, litho_parent_ref
         ) =
-        (NEW.name, NEW.name_indexed, NEW.name_order_by,
+        (NEW.name, NEW.name_indexed,
          NEW.level_ref, subq.level_name,
          NEW.status, 
          NEW.local_naming, NEW.color,
@@ -1705,13 +1506,13 @@ BEGIN
     WHERE litho_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'lithology' THEN
     UPDATE specimens_flat
-    SET (lithology_name, lithology_name_indexed, lithology_name_order_by,
+    SET (lithology_name, lithology_name_indexed,
          lithology_level_ref, lithology_level_name,
          lithology_status, 
          lithology_local, lithology_color,
          lithology_path, lithology_parent_ref
         ) =
-        (NEW.name, NEW.name_indexed, NEW.name_order_by,
+        (NEW.name, NEW.name_indexed,
          NEW.level_ref, subq.level_name,
          NEW.status, 
          NEW.local_naming, NEW.color,
@@ -1725,13 +1526,13 @@ BEGIN
     WHERE lithology_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'mineralogy' THEN
     UPDATE specimens_flat
-    SET (mineral_name, mineral_name_indexed, mineral_name_order_by,
+    SET (mineral_name, mineral_name_indexed,
          mineral_level_ref, mineral_level_name,
          mineral_status, 
          mineral_local, mineral_color,
          mineral_path, mineral_parent_ref
         ) =
-        (NEW.name, NEW.name_indexed, NEW.name_order_by,
+        (NEW.name, NEW.name_indexed,
          NEW.level_ref, subq.level_name,
          NEW.status, 
          NEW.local_naming, NEW.color,
@@ -1830,33 +1631,33 @@ BEGIN
      acquisition_date, station_visible,
      collection_ref,collection_type,collection_code,collection_name, collection_is_public,
      collection_parent_ref,collection_path,
-     expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
+     expedition_ref,expedition_name,expedition_name_indexed,
      gtu_ref,gtu_code,gtu_location,
      gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
      gtu_elevation, gtu_elevation_accuracy,
      gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
-     taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
+     taxon_ref,taxon_name,taxon_name_indexed,taxon_level_ref,taxon_level_name,taxon_status,
      taxon_path,taxon_parent_ref,taxon_extinct,
-     chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
+     chrono_ref,chrono_name,chrono_name_indexed,chrono_level_ref,chrono_level_name,chrono_status,
      chrono_local,chrono_color,
      chrono_path,chrono_parent_ref,
-     litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
+     litho_ref,litho_name,litho_name_indexed,litho_level_ref,litho_level_name,litho_status,
      litho_local,litho_color,
      litho_path,litho_parent_ref,
-     lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
+     lithology_ref,lithology_name,lithology_name_indexed,lithology_level_ref,lithology_level_name,lithology_status,
      lithology_local,lithology_color,
      lithology_path,lithology_parent_ref,
-     mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
+     mineral_ref,mineral_name,mineral_name_indexed,mineral_level_ref,mineral_level_name,mineral_status,
      mineral_local,mineral_color,
      mineral_path,mineral_parent_ref,
-     host_taxon_ref,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
+     host_taxon_ref,host_taxon_name,host_taxon_name_indexed,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
      host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
      host_specimen_ref,ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date )
     (SELECT NEW.id,  NEW.category,  NEW.host_relationship,  NEW.acquisition_category,  NEW.acquisition_date_mask,
             NEW.acquisition_date,  NEW.station_visible,
             NEW.collection_ref, coll.collection_type, coll.code, coll.name, coll.is_public,
             coll.parent_ref, coll.path,
-            NEW.expedition_ref, expe.name, expe.name_ts, expe.name_indexed,
+            NEW.expedition_ref, expe.name, expe.name_indexed,
             NEW.gtu_ref, gtu.code, gtu.location,
             gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
             gtu.elevation, gtu.elevation_accuracy,
@@ -1865,21 +1666,21 @@ BEGIN
             taggr_provinces.tag_value, lineToTagArray(taggr_provinces.tag_value),
             (select array_to_string(array(select tag from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province')), ';')) as other_gtu_values,
             (select array(select distinct fullToIndex(tag) from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province'))) as other_gtu_values_array,
-            NEW.taxon_ref, taxon.name, taxon.name_indexed, taxon.name_order_by, taxon.level_ref, taxon_level.level_name, taxon.status,
+            NEW.taxon_ref, taxon.name, taxon.name_indexed, taxon.level_ref, taxon_level.level_name, taxon.status,
             taxon.path, taxon.parent_ref, taxon.extinct,
-            NEW.chrono_ref, chrono.name, chrono.name_indexed, chrono.name_order_by, chrono.level_ref, chrono_level.level_name, chrono.status,
+            NEW.chrono_ref, chrono.name, chrono.name_indexed, chrono.level_ref, chrono_level.level_name, chrono.status,
             chrono.local_naming, chrono.color,
             chrono.path, chrono.parent_ref,
-            NEW.litho_ref, litho.name, litho.name_indexed, litho.name_order_by, litho.level_ref, litho_level.level_name, litho.status,
+            NEW.litho_ref, litho.name, litho.name_indexed, litho.level_ref, litho_level.level_name, litho.status,
             litho.local_naming,litho.color,
             litho.path, litho.parent_ref,
-            NEW.lithology_ref, lithology.name, lithology.name_indexed, lithology.name_order_by, lithology.level_ref, lithology_level.level_name, lithology.status,
+            NEW.lithology_ref, lithology.name, lithology.name_indexed, lithology.level_ref, lithology_level.level_name, lithology.status,
             lithology.local_naming,lithology.color,
             lithology.path, lithology.parent_ref,
-            NEW.mineral_ref, mineral.name, mineral.name_indexed, mineral.name_order_by, mineral.level_ref, mineral_level.level_name, mineral.status,
+            NEW.mineral_ref, mineral.name, mineral.name_indexed, mineral.level_ref, mineral_level.level_name, mineral.status,
             mineral.local_naming,mineral.color,
             mineral.path, mineral.parent_ref,
-            NEW.host_taxon_ref, host_taxon.name, host_taxon.name_indexed, host_taxon.name_order_by, host_taxon.level_ref, host_taxon_level.level_name, host_taxon.status,
+            NEW.host_taxon_ref, host_taxon.name, host_taxon.name_indexed, host_taxon.level_ref, host_taxon_level.level_name, host_taxon.status,
             host_taxon.path, host_taxon.parent_ref, host_taxon.extinct,
             NEW.host_specimen_ref, NEW.ig_ref, igs.ig_num, igs.ig_num_indexed, igs.ig_date_mask, igs.ig_date
      FROM collections coll
@@ -1921,26 +1722,26 @@ BEGIN
          acquisition_date, station_visible,
          collection_ref,collection_type,collection_code,collection_name, collection_is_public,
          collection_parent_ref,collection_path,
-         expedition_ref,expedition_name,expedition_name_ts,expedition_name_indexed,
+         expedition_ref,expedition_name,expedition_name_indexed,
          gtu_ref,gtu_code,gtu_location,
          gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
          gtu_elevation, gtu_elevation_accuracy,
          gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
-         taxon_ref,taxon_name,taxon_name_indexed,taxon_name_order_by,taxon_level_ref,taxon_level_name,taxon_status,
+         taxon_ref,taxon_name,taxon_name_indexed,taxon_level_ref,taxon_level_name,taxon_status,
          taxon_path,taxon_parent_ref,taxon_extinct,
-         chrono_ref,chrono_name,chrono_name_indexed,chrono_name_order_by,chrono_level_ref,chrono_level_name,chrono_status,
+         chrono_ref,chrono_name,chrono_name_indexed,chrono_level_ref,chrono_level_name,chrono_status,
          chrono_local, chrono_color,
          chrono_path,chrono_parent_ref,
-         litho_ref,litho_name,litho_name_indexed,litho_name_order_by,litho_level_ref,litho_level_name,litho_status,
+         litho_ref,litho_name,litho_name_indexed,litho_level_ref,litho_level_name,litho_status,
          litho_local, litho_color,
          litho_path,litho_parent_ref,
-         lithology_ref,lithology_name,lithology_name_indexed,lithology_name_order_by,lithology_level_ref,lithology_level_name,lithology_status,
+         lithology_ref,lithology_name,lithology_name_indexed,lithology_level_ref,lithology_level_name,lithology_status,
          lithology_local, lithology_color,
          lithology_path,lithology_parent_ref,
-         mineral_ref,mineral_name,mineral_name_indexed,mineral_name_order_by,mineral_level_ref,mineral_level_name,mineral_status,
+         mineral_ref,mineral_name,mineral_name_indexed,mineral_level_ref,mineral_level_name,mineral_status,
          mineral_local, mineral_color,
          mineral_path,mineral_parent_ref,
-         host_taxon_ref,host_taxon_name,host_taxon_name_indexed,host_taxon_name_order_by,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
+         host_taxon_ref,host_taxon_name,host_taxon_name_indexed,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
          host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
          host_specimen_ref,ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date)
          
@@ -1950,7 +1751,7 @@ BEGIN
          NEW.acquisition_date, NEW.station_visible,
          NEW.collection_ref, subq.coll_collection_type, subq.coll_code, subq.coll_name, subq.coll_is_public,
          subq.coll_parent_ref, subq.coll_path,
-         NEW.expedition_ref, subq.expe_name, subq.expe_name_ts, subq.expe_name_indexed,
+         NEW.expedition_ref, subq.expe_name, subq.expe_name_indexed,
          NEW.gtu_ref, subq.gtu_code, subq.gtu_location,
          subq.gtu_from_date_mask, subq.gtu_from_date, subq.gtu_to_date_mask, subq.gtu_to_date,
          subq.gtu_elevation, subq.gtu_elevation_accuracy,
@@ -1958,33 +1759,33 @@ BEGIN
          subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
          subq.gtu_province_tag_value, subq.gtu_province_tag_indexed,
          subq.gtu_others_tag_value, subq.gtu_others_tag_indexed,
-         NEW.taxon_ref, subq.taxon_name, subq.taxon_name_indexed, subq.taxon_name_order_by,
+         NEW.taxon_ref, subq.taxon_name, subq.taxon_name_indexed,
          subq.taxon_level_ref, subq.taxon_level_level_name, subq.taxon_status,
          subq.taxon_path, subq.taxon_parent_ref, subq.taxon_extinct,
-         NEW.chrono_ref, subq.chrono_name, subq.chrono_name_indexed, subq.chrono_name_order_by,
+         NEW.chrono_ref, subq.chrono_name, subq.chrono_name_indexed,
          subq.chrono_level_ref, subq.chrono_level_level_name, subq.chrono_status,
          subq.chrono_local, subq.chrono_color,
          subq.chrono_path, subq.chrono_parent_ref,
-         NEW.litho_ref, subq.litho_name, subq.litho_name_indexed, subq.litho_name_order_by,
+         NEW.litho_ref, subq.litho_name, subq.litho_name_indexed,
          subq.litho_level_ref, subq.litho_level_level_name, subq.litho_status,
          subq.litho_local, subq.litho_color,
          subq.litho_path, subq.litho_parent_ref,
-         NEW.lithology_ref, subq.lithology_name, subq.lithology_name_indexed, subq.lithology_name_order_by,
+         NEW.lithology_ref, subq.lithology_name, subq.lithology_name_indexed,
          subq.lithology_level_ref, subq.lithology_level_level_name, subq.lithology_status,
          subq.lithology_local, subq.lithology_color,
          subq.lithology_path, subq.lithology_parent_ref,
-         NEW.mineral_ref, subq.mineral_name, subq.mineral_name_indexed, subq.mineral_name_order_by,
+         NEW.mineral_ref, subq.mineral_name, subq.mineral_name_indexed,
          subq.mineral_level_ref, subq.mineral_level_level_name, subq.mineral_status,
          subq.mineral_local, subq.mineral_color,
          subq.mineral_path, subq.mineral_parent_ref,
-         NEW.host_taxon_ref, subq.host_taxon_name, subq.host_taxon_name_indexed, subq.host_taxon_name_order_by,
+         NEW.host_taxon_ref, subq.host_taxon_name, subq.host_taxon_name_indexed,
          subq.host_taxon_level_ref, subq.host_taxon_level_level_name, subq.host_taxon_status,
          subq.host_taxon_path, subq.host_taxon_parent_ref, subq.host_taxon_extinct,
          NEW.host_specimen_ref,NEW.ig_ref, subq.ig_num, subq.ig_num_indexed, subq.ig_date_mask, subq.ig_date)
         FROM
         (SELECT coll.collection_type coll_collection_type, coll.code coll_code, coll.name coll_name, coll.is_public coll_is_public,
                 coll.parent_ref coll_parent_ref, coll.path coll_path,
-                expe.name expe_name, expe.name_ts expe_name_ts, expe.name_indexed expe_name_indexed,
+                expe.name expe_name, expe.name_indexed expe_name_indexed,
                 gtu.code gtu_code, gtu.location gtu_location,
                 gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
                 gtu.elevation as gtu_elevation, gtu.elevation_accuracy as gtu_elevation_accuracy,
@@ -1993,26 +1794,26 @@ BEGIN
                 taggr_provinces.tag_value as gtu_province_tag_value, lineToTagArray(taggr_provinces.tag_value) as gtu_province_tag_indexed,
                 (select array_to_string(array(select tag from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province')), ';')) as gtu_others_tag_value,
                 (select array(select distinct fullToIndex(tag) from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province'))) as gtu_others_tag_indexed,
-                taxon.name taxon_name, taxon.name_indexed taxon_name_indexed, taxon.name_order_by taxon_name_order_by,
+                taxon.name taxon_name, taxon.name_indexed taxon_name_indexed,
                 taxon.level_ref taxon_level_ref, taxon_level.level_name taxon_level_level_name, taxon.status taxon_status,
                 taxon.path taxon_path, taxon.parent_ref taxon_parent_ref, taxon.extinct taxon_extinct,
-                chrono.name chrono_name, chrono.name_indexed chrono_name_indexed, chrono.name_order_by chrono_name_order_by,
+                chrono.name chrono_name, chrono.name_indexed chrono_name_indexed,
                 chrono.level_ref chrono_level_ref, chrono_level.level_name chrono_level_level_name, chrono.status chrono_status,
                 chrono.local_naming chrono_local, chrono.color chrono_color,
                 chrono.path chrono_path, chrono.parent_ref chrono_parent_ref,
-                litho.name litho_name, litho.name_indexed litho_name_indexed, litho.name_order_by litho_name_order_by,
+                litho.name litho_name, litho.name_indexed litho_name_indexed, 
                 litho.level_ref litho_level_ref, litho_level.level_name litho_level_level_name, litho.status litho_status,
                 litho.local_naming litho_local, litho.color litho_color,
                 litho.path litho_path, litho.parent_ref litho_parent_ref,
-                lithology.name lithology_name, lithology.name_indexed lithology_name_indexed, lithology.name_order_by lithology_name_order_by,
+                lithology.name lithology_name, lithology.name_indexed lithology_name_indexed,
                 lithology.level_ref lithology_level_ref, lithology_level.level_name lithology_level_level_name, lithology.status lithology_status,
                 lithology.local_naming lithology_local, lithology.color lithology_color,
                 lithology.path lithology_path, lithology.parent_ref lithology_parent_ref,
-                mineral.name mineral_name, mineral.name_indexed mineral_name_indexed, mineral.name_order_by mineral_name_order_by,
+                mineral.name mineral_name, mineral.name_indexed mineral_name_indexed,
                 mineral.level_ref mineral_level_ref, mineral_level.level_name mineral_level_level_name, mineral.status mineral_status,
                 mineral.local_naming mineral_local, mineral.color mineral_color,
                 mineral.path mineral_path, mineral.parent_ref mineral_parent_ref,
-                host_taxon.name host_taxon_name, host_taxon.name_indexed host_taxon_name_indexed, host_taxon.name_order_by host_taxon_name_order_by,
+                host_taxon.name host_taxon_name, host_taxon.name_indexed host_taxon_name_indexed,
                 host_taxon.level_ref host_taxon_level_ref, host_taxon_level.level_name host_taxon_level_level_name, host_taxon.status host_taxon_status,
                 host_taxon.path host_taxon_path, host_taxon.parent_ref host_taxon_parent_ref, host_taxon.extinct host_taxon_extinct,
                 NEW.ig_ref, igs.ig_num, igs.ig_num_indexed, igs.ig_date_mask, igs.ig_date
@@ -2115,7 +1916,7 @@ BEGIN
     IF code_part != '' THEN
       sqlWhere := sqlWhere || ' AND (';
       FOR word IN (SELECT words FROM regexp_split_to_table(code_part, E'\\s+') as words) LOOP
-        sqlWhere := sqlWhere || E' full_code_order_by like \'%\' || fullToIndex(' || quote_literal(word) || E') || \'%\' OR';
+        sqlWhere := sqlWhere || E' full_code_indexed like \'%\' || fullToIndex(' || quote_literal(word) || E') || \'%\' OR';
       END LOOP;
       sqlWhere := substr(sqlWhere,0,length(sqlWhere)-2) || ')';
     END IF;
@@ -2994,7 +2795,7 @@ BEGIN
   result_nbr := 0;
     OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t 
     INNER JOIN catalogue_levels c on t.level_ref = c.id 
-    WHERE name_order_by like fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END 
+    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END 
     LIMIT 2';
     LOOP
       FETCH ref INTO ref_record;
@@ -3084,7 +2885,7 @@ BEGIN
       EXECUTE 'SELECT count(*) from ' || quote_ident(catalogue_table) || ' t
         INNER JOIN catalogue_levels c on t.level_ref = c.id
         WHERE level_sys_name = ' || quote_literal(lvl_name) || ' AND 
-          name_order_by like fullToIndex( ' || quote_literal(lvl_value) || '  ) || ''%''
+          name_indexed like fullToIndex( ' || quote_literal(lvl_value) || '  ) || ''%''
           AND ' || quote_literal(row_record.path) || 'like t.path || t.id || ''/%'' ' INTO result_nbr;
       IF result_nbr = 0 THEN
         EXECUTE 'UPDATE staging SET status = (status || ('|| quote_literal(prefix) || ' => ''bad_hierarchy'')), ' || prefix || '_ref = null where id=' || line.id;

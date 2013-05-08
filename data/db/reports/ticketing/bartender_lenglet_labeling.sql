@@ -52,7 +52,7 @@ where (collection = 1 or collection_path like '/1/%')
       else labeling.taxon_path like (select path || id || '%' from taxonomy where name = '?InviteHigherTaxa')
       end
   and case when trim(translate(coalesce('?InviteTaxa', ''), E'.,;&|\\/#()', '          ')) = '' then true
-      else labeling.taxon_name_indexed @@ to_tsquery('simple', translate('?InviteTaxa', E'.,;&|\\/#() ', '  |&||||  &'))
+      else labeling.taxon_name_indexed like '%' || fullToIndex('?InviteTaxa') || '%'
       end
   limit convert_to_integer('?InviteLimit')
 ;
