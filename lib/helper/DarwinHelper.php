@@ -9,14 +9,15 @@ function word2color($w){
   $plus_green=0;
   $plus_blue=0;
   $r='';
-  for ($i=0; $i<6; $i++) {
+  for ($i=1; $i<6; $i++) {
       #$r.= '">';// this is a depug mode, to see the color written
       $plus=0;
       if ($plus_red<>0 and $i==0) $plus=$plus_red;
       if ($plus_green<>0 and $i==2) $plus=$plus_green;
       if ($plus_blue<>0 and $i==4) $plus=$plus_blue;
 
-      $c=$w[round(strlen($w)/6*$i)];
+      $offset = round(strlen($w)/6*$i);
+      $c= substr ($w, $offset, 1);
       $dec=ord($c)%($max_brightness+$plus-$minbrightness) +$minbrightness+$plus;
       if ($dec>$max_brightness-$minbrightness) $dec=$max_brightness-$minbrightness;
       $r.= strtoupper( dechex($dec) );
