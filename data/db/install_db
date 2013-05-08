@@ -1,14 +1,14 @@
 #!/bin/bash
 
-export pg_version="9.1"
-export dbname="darwin2"
-export dbport="5432"
-export hostname="127.0.0.1"
-export schema="darwin2"
-export unifiedpasswd=""
+pg_version="9.1"
+dbname="darwin2"
+dbport="5432"
+hostname="127.0.0.1"
+schema="darwin2"
+unifiedpasswd=""
 
 usage(){
-  echo -e "\n \033[1m$nom allow you to install DARWIN Database\033[0m : "
+  echo -e "\n \033[1m$(basename $0) allow you to install DARWIN Database\033[0m : "
   echo -e "\n Usage\033[0m : install_db [options] [action]\n"
   echo -e "\n \033[1mAvailable [actions] :\033[0m \n"
   echo -e "\t \033[1mhelp\033[0m"
@@ -62,7 +62,7 @@ usage(){
   echo -e "\t   Version of the postgresql database"
   echo -e "\t"  
   echo -e "\t-O unified password"
-  echo -e "\t Used if you what to temporary set darwin2,cebmpad and d2viewer password to the same"
+  echo -e "\t Used if you want to temporary set darwin2,cebmpad and d2viewer password to the same"
   exit 1
 }
 
@@ -144,9 +144,9 @@ if [[ $# -gt 1 ]] ; then
   usage
   exit 1
 fi
-export psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
-export basepsql="/usr/bin/psql -U postgres -p $dbport -v dbname=$dbname"
-export admpsql="$basepsql -q -d $dbname"
+psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
+basepsql="/usr/bin/psql -U postgres -p $dbport -v dbname=$dbname"
+admpsql="$basepsql -q -d $dbname"
 case "$@" in 
   "install-all")
     Areyoupowerfullenough
