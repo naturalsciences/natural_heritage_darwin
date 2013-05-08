@@ -1,0 +1,221 @@
+#!/bin/bash
+
+export pg_version="9.1"
+export dbname="darwin2"
+export dbport="5432"
+export hostname="127.0.0.1"
+export schema="darwin2"
+export unifiedpasswd=""
+
+usage(){
+  echo -e "\n \033[1m$nom allow you to install DARWIN Database\033[0m : "
+  echo -e "\n Usage\033[0m : install_db [options] [action]\n"
+  echo -e "\n \033[1mAvailable [actions] :\033[0m \n"
+  echo -e "\t \033[1mhelp\033[0m"
+  echo -e "\t   Display this help message"
+  echo -e "\t"
+  echo -e "\t \033[1minstall-all\033[0m"
+  echo -e "\t   install all the database.(must be run in privileged account) Execute targets  create-db, create-user, create-schema, install-lib, install-db"
+  echo -e "\t"
+  echo -e "\t \033[1minstall-db\033[0m"
+  echo -e "\t   install the darwin db into the \$db_user schema : create types, tables, functions and indexes"
+  echo -e "\t"
+  echo -e "\t \033[1mtest\033[0m"
+  echo -e "\t   Unit test the database installation in a schema 'unittest'"
+  echo -e "\t"
+  echo -e "\t \033[1mcreate-schema\033[0m"
+  echo -e "\t   Create the schema for the install of the db "
+  echo -e "\t"
+  echo -e "\t \033[1mcreate-db\033[0m"
+  echo -e "\t   create an new postgresql db and the tablespace associated for darwin"
+  echo -e "\t"
+  echo -e "\t \033[1minstall-lib\033[0m"
+  echo -e "\t   install library used by darwin"
+  echo -e "\t"
+  echo -e "\t \033[1mcreate-user\033[0m"
+  echo -e "\t   create a default user to access only the darwin schema and db"
+  echo -e "\t"
+  echo -e "\t \033[1mupgrade\033[0m"
+  echo -e "\t   tries to update the current db to the new version"
+  echo -e "\t"
+  echo -e "\t \033[1muninstall-db\033[0m"
+  echo -e "\t   remove the tables,function... from darwin. WARNING! This action can remove ALL your data"
+  echo -e "\t"
+  echo -e "\t \033[1mdrop-db\033[0m"
+  echo -e "\t   remove the darwin database. WARNING! This action can remove ALL your data"
+  echo -e "\n"
+
+  echo -e "\n \033[1mAvailable [option] :\033[0m \n"
+  echo -e "\t-h hostname (Default: 127.0.0.1)"
+  echo -e "\t   host for the connection to the database"
+  echo -e "\t"
+  echo -e "\t-d dbname (Default: darwin2)"
+  echo -e "\t   database name to be created or to be used (depends of the target)"
+  echo -e "\t"
+  echo -e "\t-p port (Default: 5432)"
+  echo -e "\t   Port for the connection to the database"
+  echo -e "\t"
+  echo -e "\t-s schema (Default: darwin2)"
+  echo -e "\t   schema used in the database"
+  echo -e "\t"
+  echo -e "\t-V db version (Default: 9.1)"
+  echo -e "\t   Version of the postgresql database"
+  echo -e "\t"  
+  echo -e "\t-O unified password"
+  echo -e "\t Used if you what to temporary set darwin2,cebmpad and d2viewer password to the same"
+  exit 1
+}
+
+Areyoupowerfullenough() {
+  [[ $(whoami) = 'root' ]]||[[ $(whoami) = 'postgres' ]] &&  return 0
+  echo -e "You must be root or postgres to execute this action" ;
+  exit
+}
+installdb() {
+  echo $($psql -f createtables.sql)
+  echo $($psql -f initiate_data.sql)
+  echo $($psql -f createfunctions.sql)
+  echo $($psql -f createtriggers.sql)
+  echo $($psql -f addchecks.sql)
+  echo $($psql -f createindexes.sql)
+  echo $($psql -f createindexes_darwinflat.sql)
+  echo $($admpsql -f grant_d2_to_read_user.sql)
+}
+
+[[ $# -eq 0 ]] && usage
+while getopts ":O:h:p:d:V:s:" opt ; do
+  case $opt in
+    h)
+      if [[ $OPTARG = -* ]]; then
+        echo "invalid argument for option -h, -h ignored"
+        ((OPTIND--))
+        continue
+      fi
+      hostname=$OPTARG
+    ;;
+    p)
+      if [[ $OPTARG = -* ]]; then
+        echo "invalid argument for option -p, -p ignored"
+        ((OPTIND--))
+        continue
+      fi
+      dbport=$OPTARG
+    ;;
+    O)
+      if [[ $OPTARG = -* ]]; then
+        echo "invalid argument for option -O, -O ignored"
+        ((OPTIND--))
+        continue
+      fi
+      unifiedpasswd="ENCRYPTED PASSWORD '$OPTARG'"
+    ;;
+    s)
+      if [[ $OPTARG = -* ]]; then
+        echo "invalid argument for option -s, -s ignored"
+        ((OPTIND--))
+        continue
+      fi
+      schema=$OPTARG
+    ;;
+    d)
+      if [[ $OPTARG = -* ]]; then
+        echo "invalid argument for option -d, -d ignored"
+        ((OPTIND--))
+        continue
+      fi
+      dbname=$OPTARG
+    ;;
+    V)
+      if [[ $OPTARG = -* ]]; then
+        echo "invalid argument for option -V, -V ignored"
+        ((OPTIND--))
+        continue
+      fi
+      pg_version=$OPTARG
+    ;;
+    \?)
+      echo -e "\033[31;1mInvalid option -$OPTARG\033[0m"
+    ;;
+  esac
+done
+shift $((OPTIND-1))
+if [[ $# -gt 1 ]] ; then
+  echo -e "\033[1;31mJust one action is allowed\033[0m" ;
+  usage
+  exit 1
+fi
+export psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
+export basepsql="/usr/bin/psql -U postgres -p $dbport -v dbname=$dbname"
+export admpsql="$basepsql -q -d $dbname"
+case "$@" in 
+  "install-all")
+    Areyoupowerfullenough
+    echo $($basepsql -c "create database $dbname ENCODING 'UNICODE';")
+    echo $($admpsql -c "CREATE ROLE darwin2 $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;")
+    echo $($admpsql -c "CREATE ROLE cebmpad $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;")
+    echo $($admpsql -c "CREATE ROLE d2viewer $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;")
+    echo $($admpsql -c "create schema $schema authorization darwin2;")
+    echo $($admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;")
+    if [ "$pg_version"="9.1" ] ; then
+      echo $($admpsql  -c "create extension pgcrypto; create extension pg_trgm; create extension hstore;")
+      echo $($admpsql  -f /usr/share/postgresql/$pg_version/contrib/postgis-1.5/postgis.sql;)
+      echo $($admpsql  -f  /usr/share/postgresql/$pg_version/contrib/postgis-1.5/spatial_ref_sys.sql;)
+    fi
+    installdb
+  ;;
+  "install-db")
+    installdb
+  ;;
+  "test")
+    echo "ok pour test"
+    #@TODO
+  ;;
+  "create-schema")
+    Areyoupowerfullenough
+    echo $($admpsql -c "create schema $schema authorization darwin2;")
+    echo $($admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;")
+  ;;
+  "create-db")
+    Areyoupowerfullenough
+    echo $($basepsql -c "create database $dbname ENCODING 'UNICODE';")
+  ;;
+  "install-lib")
+    Areyoupowerfullenough
+    if [ "$pg_version"="9.1" ] ; then
+      echo $($admpsql  -c "create extension pgcrypto; create extension pg_trgm; create extension hstore;")
+      echo $($admpsql  -f /usr/share/postgresql/$pg_version/contrib/postgis-1.5/postgis.sql;)
+      echo $($admpsql  -f  /usr/share/postgresql/$pg_version/contrib/postgis-1.5/spatial_ref_sys.sql;)
+    fi
+  ;;
+  "create-user")
+    Areyoupowerfullenough
+    echo $($admpsql -c "CREATE ROLE darwin2 $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;")
+    echo $($admpsql -c "CREATE ROLE cebmpad $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;")
+    echo $($admpsql -c "CREATE ROLE d2viewer $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;")
+  ;;
+  "upgrade")
+    #for file in $(ls changes/*.sql | sort -n | grep -A 100000 )
+    #do
+    echo "TODO"
+    #done
+  ;;
+  "uninstall-db")
+    echo $($psql -f droptriggers.sql)
+    echo $($psql -f dropfunctions.sql)
+    echo $($psql -f dropindexes.sql)
+    echo $($psql -f droptables.sql)
+  ;;
+  "drop-db")
+    Areyoupowerfullenough
+    echo $($basepsql -f dropdb.sql)
+  ;;
+  "help")
+    usage
+  ;;
+  *)
+    echo -e "\033[1;31mUnknow action $@\033[0m"
+    exit 1
+  ;;
+esac
+
+echo "\nDone\n"
