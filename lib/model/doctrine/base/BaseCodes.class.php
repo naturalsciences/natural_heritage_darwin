@@ -15,7 +15,6 @@
  * @property string $code_suffix
  * @property string $code_suffix_separator
  * @property string $full_code_indexed
- * @property string $full_code_order_by
  * @property string $code_date
  * @property integer $code_date_mask
  * 
@@ -29,7 +28,6 @@
  * @method string  getCodeSuffix()            Returns the current record's "code_suffix" value
  * @method string  getCodeSuffixSeparator()   Returns the current record's "code_suffix_separator" value
  * @method string  getFullCodeIndexed()       Returns the current record's "full_code_indexed" value
- * @method string  getFullCodeOrderBy()       Returns the current record's "full_code_order_by" value
  * @method string  getCodeDate()              Returns the current record's "code_date" value
  * @method integer getCodeDateMask()          Returns the current record's "code_date_mask" value
  * @method Codes   setId()                    Sets the current record's "id" value
@@ -42,7 +40,6 @@
  * @method Codes   setCodeSuffix()            Sets the current record's "code_suffix" value
  * @method Codes   setCodeSuffixSeparator()   Sets the current record's "code_suffix_separator" value
  * @method Codes   setFullCodeIndexed()       Sets the current record's "full_code_indexed" value
- * @method Codes   setFullCodeOrderBy()       Sets the current record's "full_code_order_by" value
  * @method Codes   setCodeDate()              Sets the current record's "code_date" value
  * @method Codes   setCodeDateMask()          Sets the current record's "code_date_mask" value
  * 
@@ -90,9 +87,6 @@ abstract class BaseCodes extends sfDoctrineRecord
              'type' => 'string',
              ));
         $this->hasColumn('full_code_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('full_code_order_by', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('code_date', 'string', null, array(

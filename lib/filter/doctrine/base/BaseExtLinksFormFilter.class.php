@@ -17,7 +17,7 @@ abstract class BaseExtLinksFormFilter extends BaseFormFilterDoctrine
       'record_id'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'url'                 => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'comment'             => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'comment_ts'          => new sfWidgetFormFilterInput(),
+      'comment_indexed'     => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -25,7 +25,7 @@ abstract class BaseExtLinksFormFilter extends BaseFormFilterDoctrine
       'record_id'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'url'                 => new sfValidatorPass(array('required' => false)),
       'comment'             => new sfValidatorPass(array('required' => false)),
-      'comment_ts'          => new sfValidatorPass(array('required' => false)),
+      'comment_indexed'     => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('ext_links_filters[%s]');
@@ -50,7 +50,7 @@ abstract class BaseExtLinksFormFilter extends BaseFormFilterDoctrine
       'record_id'           => 'Number',
       'url'                 => 'Text',
       'comment'             => 'Text',
-      'comment_ts'          => 'Text',
+      'comment_indexed'     => 'Text',
     );
   }
 }

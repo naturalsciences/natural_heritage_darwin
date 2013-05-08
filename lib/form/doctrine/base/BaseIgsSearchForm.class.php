@@ -20,7 +20,6 @@ abstract class BaseIgsSearchForm extends BaseFormDoctrine
       'ig_date_mask'            => new sfWidgetFormInputText(),
       'ig_ref'                  => new sfWidgetFormInputHidden(),
       'expedition_name'         => new sfWidgetFormTextarea(),
-      'expedition_name_ts'      => new sfWidgetFormTextarea(),
       'expedition_name_indexed' => new sfWidgetFormTextarea(),
       'expedition_ref'          => new sfWidgetFormInputText(),
     ));
@@ -31,7 +30,6 @@ abstract class BaseIgsSearchForm extends BaseFormDoctrine
       'ig_date_mask'            => new sfValidatorInteger(array('required' => false)),
       'ig_ref'                  => new sfValidatorChoice(array('choices' => array($this->getObject()->get('ig_ref')), 'empty_value' => $this->getObject()->get('ig_ref'), 'required' => false)),
       'expedition_name'         => new sfValidatorString(array('required' => false)),
-      'expedition_name_ts'      => new sfValidatorString(array('required' => false)),
       'expedition_name_indexed' => new sfValidatorString(array('required' => false)),
       'expedition_ref'          => new sfValidatorInteger(array('required' => false)),
     ));

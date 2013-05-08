@@ -14,7 +14,6 @@ class PeopleForm extends BasePeopleForm
     unset(
       $this['is_physical'],
       $this['formated_name_indexed'],
-      $this['formated_name_ts'],
       $this['sub_type'],
       $this['formated_name'],
       $this['birth_date_mask'], 

@@ -1139,13 +1139,13 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     if ($values['lithology_level_ref'] != '') $query->andWhere('lithology_level_ref = ?', intval($values['lithology_level_ref']));
     if ($values['mineral_level_ref'] != '') $query->andWhere('mineral_level_ref = ?', intval($values['mineral_level_ref']));
     $this->addLatLonColumnQuery($query, $values);
-    $this->addNamingColumnQuery($query, 'expeditions', 's.name_ts', $values['expedition_name'],'s','expedition_name_ts');
+    $this->addNamingColumnQuery($query, 'expeditions', 's.name_indexed', $values['expedition_name'],'s','expedition_name_indexed');
 
-    $this->addNamingColumnQuery($query, 'taxonomy', 'taxon_name_order_by', $values['taxon_name'],'s','taxon_name_order_by');
-    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'chrono_name_order_by', $values['chrono_name'],'s','chrono_name_order_by');
-    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'litho_name_order_by', $values['litho_name'],'s','litho_name_order_by');
-    $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_order_by', $values['lithology_name'],'s','lithology_name_order_by');
-    $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_order_by', $values['mineral_name'],'s','mineral_name_order_by');
+    $this->addNamingColumnQuery($query, 'taxonomy', 'taxon_name_indexed', $values['taxon_name'],'s','taxon_name_indexed');
+    $this->addNamingColumnQuery($query, 'chronostratigraphy', 'chrono_name_indexed', $values['chrono_name'],'s','chrono_name_indexed');
+    $this->addNamingColumnQuery($query, 'lithostratigraphy', 'litho_name_indexed', $values['litho_name'],'s','litho_name_indexed');
+    $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
+    $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
 
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);

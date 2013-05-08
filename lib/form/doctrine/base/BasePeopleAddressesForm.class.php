@@ -25,7 +25,6 @@ abstract class BasePeopleAddressesForm extends BaseFormDoctrine
       'region'           => new sfWidgetFormTextarea(),
       'zip_code'         => new sfWidgetFormTextarea(),
       'country'          => new sfWidgetFormTextarea(),
-      'address_parts_ts' => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -39,7 +38,6 @@ abstract class BasePeopleAddressesForm extends BaseFormDoctrine
       'region'           => new sfValidatorString(array('required' => false)),
       'zip_code'         => new sfValidatorString(array('required' => false)),
       'country'          => new sfValidatorString(),
-      'address_parts_ts' => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('people_addresses[%s]');

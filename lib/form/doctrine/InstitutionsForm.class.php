@@ -12,7 +12,7 @@ class InstitutionsForm extends BaseInstitutionsForm
 {
   public function configure()
   {
-    unset($this['formated_name_indexed'], $this['formated_name_ts']);
+    unset($this['formated_name_indexed']);
     $this->widgetSchema['is_physical'] = new sfWidgetFormInputHidden();
     $this->setDefault('is_physical', 'off');
     $this->widgetSchema['additional_names'] = new sfWidgetFormInput();

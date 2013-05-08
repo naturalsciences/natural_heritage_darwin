@@ -51,13 +51,13 @@ class IgsSearchFormFilter extends BaseIgsSearchFormFilter
     if($values['ig_ref'])
     {
       $query->addWhere('ig_ref = ?', $values['ig_ref']) ;
-      if($values['expedition_name']) $this->addNamingColumnQuery($query, 'expeditions', 'expedition_name_indexed', $values['expedition_name'],null,'expedition_name_ts');
+      if($values['expedition_name']) $this->addNamingColumnQuery($query, 'expeditions', 'expedition_name_indexed', $values['expedition_name'],null,'expedition_name_indexed');
     
     }
     else
     {
       if(!$values['expedition_name']) $query->addWhere('ig_ref = ?', $values['ig_ref']) ;
-      else $this->addNamingColumnQuery($query, 'expeditions', 'expedition_name_indexed', $values['expedition_name'],null,'expedition_name_ts');
+      else $this->addNamingColumnQuery($query, 'expeditions', 'expedition_name_indexed', $values['expedition_name'],null,'expedition_name_indexed');
     }
     return $query;
 

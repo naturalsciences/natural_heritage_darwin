@@ -8,7 +8,6 @@
  * @property integer $id
  * @property string $name
  * @property string $description
- * @property string $description_ts
  * @property string $search_indexed
  * @property string $from_date
  * @property string $to_date
@@ -20,7 +19,6 @@
  * @method integer             getId()               Returns the current record's "id" value
  * @method string              getName()             Returns the current record's "name" value
  * @method string              getDescription()      Returns the current record's "description" value
- * @method string              getDescriptionTs()    Returns the current record's "description_ts" value
  * @method string              getSearchIndexed()    Returns the current record's "search_indexed" value
  * @method string              getFromDate()         Returns the current record's "from_date" value
  * @method string              getToDate()           Returns the current record's "to_date" value
@@ -31,7 +29,6 @@
  * @method Loans               setId()               Sets the current record's "id" value
  * @method Loans               setName()             Sets the current record's "name" value
  * @method Loans               setDescription()      Sets the current record's "description" value
- * @method Loans               setDescriptionTs()    Sets the current record's "description_ts" value
  * @method Loans               setSearchIndexed()    Sets the current record's "search_indexed" value
  * @method Loans               setFromDate()         Sets the current record's "from_date" value
  * @method Loans               setToDate()           Sets the current record's "to_date" value
@@ -64,9 +61,6 @@ abstract class BaseLoans extends sfDoctrineRecord
              'type' => 'string',
              'notnull' => true,
              'default' => '',
-             ));
-        $this->hasColumn('description_ts', 'string', null, array(
-             'type' => 'string',
              ));
         $this->hasColumn('search_indexed', 'string', null, array(
              'type' => 'string',

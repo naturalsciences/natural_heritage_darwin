@@ -22,7 +22,6 @@ abstract class BaseSpecimensCodesFormFilter extends BaseFormFilterDoctrine
       'code_suffix'           => new sfWidgetFormFilterInput(),
       'code_suffix_separator' => new sfWidgetFormFilterInput(),
       'full_code_indexed'     => new sfWidgetFormFilterInput(),
-      'full_code_order_by'    => new sfWidgetFormFilterInput(),
       'code_date'             => new sfWidgetFormFilterInput(),
       'code_date_mask'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
@@ -37,7 +36,6 @@ abstract class BaseSpecimensCodesFormFilter extends BaseFormFilterDoctrine
       'code_suffix'           => new sfValidatorPass(array('required' => false)),
       'code_suffix_separator' => new sfValidatorPass(array('required' => false)),
       'full_code_indexed'     => new sfValidatorPass(array('required' => false)),
-      'full_code_order_by'    => new sfValidatorPass(array('required' => false)),
       'code_date'             => new sfValidatorPass(array('required' => false)),
       'code_date_mask'        => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
@@ -69,7 +67,6 @@ abstract class BaseSpecimensCodesFormFilter extends BaseFormFilterDoctrine
       'code_suffix'           => 'Text',
       'code_suffix_separator' => 'Text',
       'full_code_indexed'     => 'Text',
-      'full_code_order_by'    => 'Text',
       'code_date'             => 'Text',
       'code_date_mask'        => 'Number',
     );

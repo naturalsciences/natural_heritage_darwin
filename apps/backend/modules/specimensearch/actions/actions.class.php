@@ -330,7 +330,7 @@ class specimensearchActions extends DarwinActions
         'collection_name',
         $this->getI18N()->__('Collection'),),
       'taxon' => array(
-        'taxon_name_order_by',
+        'taxon_name_indexed',
         $this->getI18N()->__('Taxon'),),
       'type' => array(
         'with_types',
@@ -342,19 +342,19 @@ class specimensearchActions extends DarwinActions
         false,
         $this->getI18N()->__('Codes'),),
       'chrono' => array(
-        'chrono_name_order_by',
+        'chrono_name_indexed',
         $this->getI18N()->__('Chronostratigraphic unit'),),
       'ig' => array(
         'ig_num_indexed',
         $this->getI18N()->__('I.G. unit'),),
       'litho' => array(
-        'litho_name_order_by',
+        'litho_name_indexed',
         $this->getI18N()->__('Lithostratigraphic unit'),),
       'lithologic' => array(
-        'lithology_name_order_by',
+        'lithology_name_indexed',
         $this->getI18N()->__('Lithologic unit'),),
       'mineral' => array(
-        'mineral_name_order_by',
+        'mineral_name_indexed',
         $this->getI18N()->__('Mineralogic unit'),),
       'expedition' => array(
         'expedition_name_indexed',

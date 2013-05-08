@@ -48,7 +48,7 @@ class LithologyFormFilter extends BaseLithologyFormFilter
   {
     $query = parent::doBuildQuery($values);
     $this->addRelationItemColumnQuery($query, $values);
-    $this->addNamingColumnQuery($query, 'lithology', 'name_order_by', $values['name']);
+    $this->addNamingColumnQuery($query, 'lithology', 'name_indexed', $values['name']);
     $query->andWhere("id != 0 ")
 	  ->innerJoin($query->getRootAlias().".Level")
           ->limit($this->getCatalogueRecLimits());

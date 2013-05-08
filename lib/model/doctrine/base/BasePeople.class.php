@@ -10,7 +10,6 @@
  * @property string $sub_type
  * @property string $formated_name
  * @property string $formated_name_indexed
- * @property string $formated_name_ts
  * @property string $title
  * @property string $family_name
  * @property string $given_name
@@ -40,7 +39,6 @@
  * @method string              getSubType()                 Returns the current record's "sub_type" value
  * @method string              getFormatedName()            Returns the current record's "formated_name" value
  * @method string              getFormatedNameIndexed()     Returns the current record's "formated_name_indexed" value
- * @method string              getFormatedNameTs()          Returns the current record's "formated_name_ts" value
  * @method string              getTitle()                   Returns the current record's "title" value
  * @method string              getFamilyName()              Returns the current record's "family_name" value
  * @method string              getGivenName()               Returns the current record's "given_name" value
@@ -69,7 +67,6 @@
  * @method People              setSubType()                 Sets the current record's "sub_type" value
  * @method People              setFormatedName()            Sets the current record's "formated_name" value
  * @method People              setFormatedNameIndexed()     Sets the current record's "formated_name_indexed" value
- * @method People              setFormatedNameTs()          Sets the current record's "formated_name_ts" value
  * @method People              setTitle()                   Sets the current record's "title" value
  * @method People              setFamilyName()              Sets the current record's "family_name" value
  * @method People              setGivenName()               Sets the current record's "given_name" value
@@ -120,9 +117,6 @@ abstract class BasePeople extends sfDoctrineRecord
              'type' => 'string',
              ));
         $this->hasColumn('formated_name_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('formated_name_ts', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('title', 'string', null, array(
