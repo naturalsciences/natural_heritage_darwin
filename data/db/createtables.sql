@@ -473,7 +473,7 @@ comment on column multimedia.uri is 'URI of object if digital';
 comment on column multimedia.filename is 'The original name of the saved file';
 comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
-comment on column multimedia.search_indexed is 'tsvector form of title and description fields together';
+comment on column multimedia.search_indexed is 'indexed form of title and description fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
 comment on column multimedia.visible is 'Flag telling if the related file has been chosen to be publically visible or not';
 comment on column multimedia.publishable is 'Flag telling if the related file has been chosen as a prefered item for publication - Would be for example used for preselection of media published for Open Up project';
@@ -767,7 +767,7 @@ create table collection_maintenance
         category varchar not null default 'action',
         action_observation varchar not null,
         description varchar,
-        description_indexed tsvector,
+        description_indexed text,
         modification_date_time timestamp default now() not null,
         modification_date_mask int not null default '0',
         constraint pk_collection_maintenance primary key (id),
