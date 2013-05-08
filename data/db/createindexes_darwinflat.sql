@@ -24,7 +24,7 @@ CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_from_date_mask on specimens_fla
 CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_to_date_mask on specimens_flat(gtu_to_date_mask);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_to_date on specimens_flat(gtu_to_date);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_gtu_from_date on specimens_flat(gtu_from_date);
-CREATE INDEX CONCURRENTLY idx_specimens_flat_taxon_name_order_by on specimens_flat(taxon_name_order_by);
+CREATE INDEX CONCURRENTLY idx_specimens_flat_taxon_name_indexed on specimens_flat(taxon_name_indexed);
 
 CREATE INDEX CONCURRENTLY idx_specimens_flat_collection_is_public on specimens_flat(collection_is_public);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_collection_name on specimens_flat(collection_name, specimen_ref);

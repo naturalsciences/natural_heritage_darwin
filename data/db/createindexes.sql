@@ -164,13 +164,12 @@ CREATE INDEX CONCURRENTLY idx_gin_trgm_lithology_naming on lithology using gin(n
 /*** END NEW IDX*/
 
 CREATE INDEX CONCURRENTLY idx_gin_trgm_bibliography_title on bibliography using gist(title_indexed gist_trgm_ops);
-CREATE INDEX CONCURRENTLY idx_gin_multimedia_description_indexed on multimedia using gin(search gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_multimedia_search_indexed on multimedia using gin(search_indexed gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_gin_gtu_tags_values on gtu using gin(tag_values_indexed);
 
 /*** @TODO:Additional BTree Indexes created to fasten application ***/
 
 /*** FullText ***/
-CREATE INDEX CONCURRENTLY idx_words_trgm ON words USING gin(word gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_tags_trgm ON tags USING gin(tag gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_tool_trgm ON collecting_tools USING gin(tool gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_method_trgm ON collecting_methods USING gin(method gin_trgm_ops);
