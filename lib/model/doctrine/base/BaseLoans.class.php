@@ -9,6 +9,7 @@
  * @property string $name
  * @property string $description
  * @property string $description_ts
+ * @property string $search_indexed
  * @property string $from_date
  * @property string $to_date
  * @property string $extended_to_date
@@ -20,6 +21,7 @@
  * @method string              getName()             Returns the current record's "name" value
  * @method string              getDescription()      Returns the current record's "description" value
  * @method string              getDescriptionTs()    Returns the current record's "description_ts" value
+ * @method string              getSearchIndexed()    Returns the current record's "search_indexed" value
  * @method string              getFromDate()         Returns the current record's "from_date" value
  * @method string              getToDate()           Returns the current record's "to_date" value
  * @method string              getExtendedToDate()   Returns the current record's "extended_to_date" value
@@ -30,6 +32,7 @@
  * @method Loans               setName()             Sets the current record's "name" value
  * @method Loans               setDescription()      Sets the current record's "description" value
  * @method Loans               setDescriptionTs()    Sets the current record's "description_ts" value
+ * @method Loans               setSearchIndexed()    Sets the current record's "search_indexed" value
  * @method Loans               setFromDate()         Sets the current record's "from_date" value
  * @method Loans               setToDate()           Sets the current record's "to_date" value
  * @method Loans               setExtendedToDate()   Sets the current record's "extended_to_date" value
@@ -63,6 +66,9 @@ abstract class BaseLoans extends sfDoctrineRecord
              'default' => '',
              ));
         $this->hasColumn('description_ts', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('search_indexed', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('from_date', 'string', null, array(

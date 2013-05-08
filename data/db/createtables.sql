@@ -1576,6 +1576,7 @@ create table loans
       name varchar not null default '',
       description varchar not null default '',
       description_ts tsvector not null,
+      search_indexed text not null,
       from_date date,
       to_date date,
       extended_to_date date,

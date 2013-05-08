@@ -184,6 +184,7 @@ BEGIN
        ELSIF TG_TABLE_NAME = 'collecting_tools' THEN
                 NEW.tool_indexed := fullToIndex(NEW.tool);
         ELSIF TG_TABLE_NAME = 'loans' THEN
+                NEW.search_indexed := fullToIndex(COALESCE(NEW.name,'') || COALESCE(NEW.description,''));
                 NEW.description_ts := to_tsvector('simple', COALESCE(NEW.name,'') || COALESCE(NEW.description,'') );
 	END IF;
 	RETURN NEW;

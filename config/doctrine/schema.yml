@@ -1269,6 +1269,7 @@ Loans:
         name: { type: string, notnull: true, default:''}
         description: { type: string, notnull: true, default:''}
         description_ts: { type: string}
+        search_indexed: { type: string}
         from_date: { type: string}
         to_date: { type: string}
         extended_to_date: { type: string}
