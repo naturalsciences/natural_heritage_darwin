@@ -439,7 +439,7 @@ CollectionMaintenance:
         category: { type: string, notnull: true, default: action}
         action_observation: { type: string, notnull: true}
         description: { type: string }
-        search_indexed: { type: string }
+        description_indexed: { type: string }
         modification_date_time: { type: string, notnull: true }
         modification_date_mask : { type: integer, notnull: true, default: 0}
     relations:

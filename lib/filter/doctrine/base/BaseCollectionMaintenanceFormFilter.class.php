@@ -19,7 +19,7 @@ abstract class BaseCollectionMaintenanceFormFilter extends BaseFormFilterDoctrin
       'category'               => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'action_observation'     => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'description'            => new sfWidgetFormFilterInput(),
-      'search_indexed'         => new sfWidgetFormFilterInput(),
+      'description_indexed'    => new sfWidgetFormFilterInput(),
       'modification_date_time' => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'modification_date_mask' => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
@@ -31,7 +31,7 @@ abstract class BaseCollectionMaintenanceFormFilter extends BaseFormFilterDoctrin
       'category'               => new sfValidatorPass(array('required' => false)),
       'action_observation'     => new sfValidatorPass(array('required' => false)),
       'description'            => new sfValidatorPass(array('required' => false)),
-      'search_indexed'         => new sfValidatorPass(array('required' => false)),
+      'description_indexed'    => new sfValidatorPass(array('required' => false)),
       'modification_date_time' => new sfValidatorPass(array('required' => false)),
       'modification_date_mask' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
@@ -60,7 +60,7 @@ abstract class BaseCollectionMaintenanceFormFilter extends BaseFormFilterDoctrin
       'category'               => 'Text',
       'action_observation'     => 'Text',
       'description'            => 'Text',
-      'search_indexed'         => 'Text',
+      'description_indexed'    => 'Text',
       'modification_date_time' => 'Text',
       'modification_date_mask' => 'Number',
     );
