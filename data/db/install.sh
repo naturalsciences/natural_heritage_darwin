@@ -42,7 +42,7 @@ usage(){
   command_name "install-all"
   command_desc "install all the database.(must be run in privileged account) Execute targets  create-db, create-user, create-schema, install-lib, install-db"
 
-  command_name "minstall-db"
+  command_name "install-db"
   command_desc "install the darwin db into the \$db_user schema : create types, tables, functions and indexes"
 
   command_name "test"
