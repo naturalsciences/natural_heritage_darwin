@@ -12,6 +12,7 @@
 {
   color:white;
   font-size:small;
+  text-align: center;
 }
 
 .lang_picker li
@@ -267,8 +268,9 @@ input.small
 .menu_bottom div
 {
   color : #d8d5d5 ;
-  text-decoration: none ;   
-  margin-right : 1em ;
+  text-decoration: none ;
+/*   margin-right : 1em ; */
+  width: 50%;
 }
 
 .dw_logo
