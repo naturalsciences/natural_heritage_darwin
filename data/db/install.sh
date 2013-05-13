@@ -165,13 +165,21 @@ function Areyoupowerfullenough() {
 
 function install_db() {
   $psql -f createtables.sql
+  echo -e '- Tables created'
   $psql -f initiate_data.sql
+  echo -e '- Datas insered'
   $psql -f createfunctions.sql
+  echo -e '- Functions created'
   $psql -f createtriggers.sql
+  echo -e '- Trigger created'
   $psql -f addchecks.sql
   $psql -f createindexes.sql
+  echo -e '- Indexes created'
   $psql -f createindexes_darwinflat.sql
   $admpsql -f grant_d2_to_read_user.sql
+  echo -e '- Grant done'
+  $psql -c "INSERT into darwin2.db_version VALUES(`ls changes/*.sql | sort -nr | head -n1 | sed 's/-.*//' | xargs  basename`::integer,now())"
+  echo -e '- Db version set to '
 }
 
 function insall_lib() {
@@ -183,12 +191,12 @@ function insall_lib() {
 }
 
 psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
-basepsql="/usr/bin/psql -U postgres -p $dbport -v dbname=$dbname"
+basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname"
 admpsql="$basepsql -q -d $dbname"
 case "$@" in 
   "install-all")
     Areyoupowerfullenough
-    $basepsql -c "create database $dbname ENCODING 'UNICODE';")
+    $basepsql -c "create database $dbname ENCODING 'UNICODE';"
     $admpsql -c "CREATE ROLE darwin2 $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
     $admpsql -c "CREATE ROLE cebmpad $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
     $admpsql -c "CREATE ROLE d2viewer $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
