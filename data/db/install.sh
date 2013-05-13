@@ -160,7 +160,7 @@ function install_db() {
   $psql -f createtables.sql
   echo -e '- Tables created'
   $psql -f initiate_data.sql
-  echo -e '- Datas insered'
+  echo -e '- Datas inserted'
   $psql -f createfunctions.sql
   echo -e '- Functions created'
   $psql -f createtriggers.sql
