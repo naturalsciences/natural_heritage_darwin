@@ -14,10 +14,19 @@ class PeopleAssociationsForm extends BaseCataloguePeopleForm
   {
     unset($this['record_id']);
     $this->widgetSchema['people_type'] = new sfWidgetFormInputHidden(array('default'=>'collector'));
-    $people_id= $this->getObject()->getPeopleRef() ;
     $this->widgetSchema['people_ref'] = new sfWidgetFormInputHidden();
-    if($people_id) $this->widgetSchema['people_ref']->setLabel(Doctrine::getTable('People')->find($people_id)->getFormatedName()) ;
-    else $this->widgetSchema['people_ref']->setAttribute('class','hidden_record');   
+
+    $person = null;
+    $people_id= $this->getObject()->getPeopleRef() ;
+
+    if($people_id) {
+      $person = Doctrine::getTable('People')->find($people_id);
+    } else {
+      $this->widgetSchema['people_ref']->setAttribute('class','hidden_record');
+    }
+    if($person) {
+      $this->widgetSchema['people_ref']->setLabel($person->getFormatedName()) ;
+    }
 
     $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
