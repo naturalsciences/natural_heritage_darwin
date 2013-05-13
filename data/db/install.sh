@@ -183,15 +183,19 @@ function install_lib() {
   fi
 }
 
+function install_role() {
+  $admpsql -c "CREATE ROLE darwin2 $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+  $admpsql -c "CREATE ROLE cebmpad $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+  $admpsql -c "CREATE ROLE d2viewer $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+}
+
 psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
 basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname"
 admpsql="$basepsql -q -d $dbname"
 case "$@" in 
   "install-all")
     $basepsql -c "create database $dbname ENCODING 'UNICODE';"
-    $admpsql -c "CREATE ROLE darwin2 $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
-    $admpsql -c "CREATE ROLE cebmpad $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
-    $admpsql -c "CREATE ROLE d2viewer $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+    install_role
     $admpsql -c "create schema $schema authorization darwin2;"
     $admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;"
     install_lib
@@ -215,9 +219,7 @@ case "$@" in
     install_lib
   ;;
   "create-user")
-    $admpsql -c "CREATE ROLE darwin2 $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
-    $admpsql -c "CREATE ROLE cebmpad $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
-    $admpsql -c "CREATE ROLE d2viewer $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+    install_role
   ;;
   "upgrade")
     error_msg "TODO"
