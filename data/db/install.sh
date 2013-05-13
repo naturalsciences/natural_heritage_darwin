@@ -6,6 +6,7 @@ dbport="5432"
 hostname="127.0.0.1"
 schema="darwin2"
 unifiedpasswd=""
+darwin_version=`ls changes/*.sql | sort -nr | head -n1 | sed 's/-.*//' | xargs  basename`
 export PGOPTIONS='-c client_min_messages=WARNING'
 
 function title() {
@@ -155,14 +156,6 @@ if [[ $# -gt 1 ]] ; then
   exit 1
 fi
 
-
-
-function Areyoupowerfullenough() {
-  [[ $(whoami) = 'root' ]]||[[ $(whoami) = 'postgres' ]] &&  return 0
-  error_msg "You must be root or postgres to execute this action" ;
-  exit
-}
-
 function install_db() {
   $psql -f createtables.sql
   echo -e '- Tables created'
@@ -178,11 +171,11 @@ function install_db() {
   $psql -f createindexes_darwinflat.sql
   $admpsql -f grant_d2_to_read_user.sql
   echo -e '- Grant done'
-  $psql -c "INSERT into darwin2.db_version VALUES(`ls changes/*.sql | sort -nr | head -n1 | sed 's/-.*//' | xargs  basename`::integer,now())"
-  echo -e '- Db version set to '
+  $psql -c "INSERT into darwin2.db_version VALUES($darwin_version::integer,now())"
+  echo -e "- Db version set to $darwin_version"
 }
 
-function insall_lib() {
+function install_lib() {
   if [ "$pg_version"="9.1" ] ; then
     $admpsql  -c "create extension pgcrypto; create extension pg_trgm; create extension hstore;"
     $admpsql  -f /usr/share/postgresql/$pg_version/contrib/postgis-1.5/postgis.sql
@@ -195,14 +188,13 @@ basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname"
 admpsql="$basepsql -q -d $dbname"
 case "$@" in 
   "install-all")
-    Areyoupowerfullenough
     $basepsql -c "create database $dbname ENCODING 'UNICODE';"
     $admpsql -c "CREATE ROLE darwin2 $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
     $admpsql -c "CREATE ROLE cebmpad $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
     $admpsql -c "CREATE ROLE d2viewer $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
     $admpsql -c "create schema $schema authorization darwin2;"
     $admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;"
-    insall_lib
+    install_lib
     install_db
   ;;
   "install-db")
@@ -213,27 +205,21 @@ case "$@" in
     #@TODO
   ;;
   "create-schema")
-    Areyoupowerfullenough
     $admpsql -c "create schema $schema authorization darwin2;"
     $admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;"
   ;;
   "create-db")
-    Areyoupowerfullenough
     $basepsql -c "create database $dbname ENCODING 'UNICODE';"
   ;;
   "install-lib")
-    Areyoupowerfullenough
-    insall_lib
+    install_lib
   ;;
   "create-user")
-    Areyoupowerfullenough
     $admpsql -c "CREATE ROLE darwin2 $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
     $admpsql -c "CREATE ROLE cebmpad $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
     $admpsql -c "CREATE ROLE d2viewer $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
   ;;
   "upgrade")
-    #for file in $(ls changes/*.sql | sort -n | grep -A 100000 )
-    #do
     error_msg "TODO"
     exit
     #done
@@ -245,7 +231,6 @@ case "$@" in
     $psql -f droptables.sql
   ;;
   "drop-db")
-    Areyoupowerfullenough
     $basepsql -f dropdb.sql
   ;;
   "help")

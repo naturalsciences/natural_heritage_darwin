@@ -67,8 +67,8 @@ DROP FUNCTION IF EXISTS fct_cpy_updateCollInstitutionCascade() CASCADE;
 DROP FUNCTION IF EXISTS fct_unpromotion_impact_prefs() CASCADE;
 DROP FUNCTION IF EXISTS fct_chk_canUpdateCollectionsRights() CASCADE;
 
-DROP AGGREGATE array_accum (anyelement);
-DROP AGGREGATE dummy_first(anyelement);
+DROP AGGREGATE IF EXISTS array_accum (anyelement);
+DROP AGGREGATE IF EXISTS dummy_first(anyelement);
 DROP FUNCTION IF EXISTS dummy( in anyelement, inout anyelement ) CASCADE;
 DROP FUNCTION IF EXISTS convert_to_integer(v_input varchar) CASCADE;
 
@@ -89,8 +89,6 @@ DROP FUNCTION IF EXISTS fct_set_user(user_id integer) ;
 DROP FUNCTION IF EXISTS fct_upd_staging_fields() CASCADE;
 DROP FUNCTION IF EXISTS fct_importer_dna();
 DROP FUNCTION IF EXISTS fct_upd_people_staging_fields();
-DROP FUNCTION IF EXISTS fct_add_in_dict(ref_table, ref_field, old_value, dict_value) CASCADE;
-DROP FUNCTION IF EXISTS fct_del_in_dict(ref_table, ref_field, dict_value, old_value) CASCADE;
 DROP FUNCTION IF EXISTS trg_ins_update_dict() CASCADE;
 DROP FUNCTION IF EXISTS trg_del_dict() CASCADE;
 
@@ -129,11 +127,11 @@ DROP FUNCTION IF EXISTS getspecificparentforlevel(character varying, character v
 DROP FUNCTION IF EXISTS linetotagrowsformatconserved(text);
 DROP FUNCTION IF EXISTS touniquestr(character varying);
 
-DROP FUNCTION IF EXISTS chk_part_not_loaned();
-DROP FUNCTION IF EXISTS fct_clear_identifiers_in_flat();
-DROP FUNCTION IF EXISTS fct_count_units();
+DROP FUNCTION IF EXISTS chk_part_not_loaned() CASCADE;
+DROP FUNCTION IF EXISTS fct_clear_identifiers_in_flat() CASCADE;
+DROP FUNCTION IF EXISTS fct_count_units() CASCADE;
 DROP FUNCTION IF EXISTS fct_cpy_deleted_file();
-DROP FUNCTION IF EXISTS fct_cpy_ig_to_loan_items();
+DROP FUNCTION IF EXISTS fct_cpy_ig_to_loan_items() CASCADE;
 DROP FUNCTION IF EXISTS fct_informative_reset_last_flag();
 DROP FUNCTION IF EXISTS fct_update_specimen_flat();
 DROP FUNCTION IF EXISTS fct_update_specimens_flat_related();
