@@ -26,7 +26,25 @@ DROP INDEX IF EXISTS idx_gin_specimens_flat_taxon_name_indexed;
 DROP INDEX IF EXISTS idx_specimens_flat_taxon_path;
 DROP INDEX IF EXISTS idx_specimens_flat_ig_num;
 
+DROP VIEW if exists "public"."labeling";
 DROP VIEW darwin_flat;
+
+DROP TRIGGER trg_cpy_tofulltext_bibliography ON bibliography;
+DROP TRIGGER trg_cpy_tofulltext_collectionmaintenance ON collection_maintenance;
+DROP TRIGGER trg_cpy_tofulltext_comments ON comments;
+DROP TRIGGER trg_cpy_tofulltext_expeditions ON expeditions;
+DROP TRIGGER trg_cpy_tofulltext_ext_links ON ext_links;
+DROP TRIGGER trg_cpy_tofulltext_identifications ON identifications;
+DROP TRIGGER trg_cpy_tofulltext_multimedia ON multimedia;
+DROP TRIGGER trg_cpy_tofulltext_peopleaddresses ON people_addresses;
+DROP TRIGGER trg_cpy_tofulltext_usersaddresses ON users_addresses;
+DROP TRIGGER trg_cpy_tofulltext_vernacularnames ON vernacular_names;
+
+
+DROP FUNCTION darwin2.fct_cpy_word(character varying, character varying, tsvector);
+DROP FUNCTION fct_trg_word() CASCADE;
+DROP FUNCTION ts_stat(tsvector, OUT word text, OUT ndoc integer, OUT nentry integer);
+DROP TABLE words;
 
 ALTER TABLE template_people DROP COLUMN formated_name_ts;
 ALTER TABLE template_classifications DROP COLUMN name_indexed;
@@ -85,11 +103,11 @@ ALTER TABLE ext_links ALTER COLUMN comment_indexed SET NOT NULL;
 
 
 
-ALTER TABLE bibliography ADD constraint unq_bibliography unique (title_indexed, type);
+-- ALTER TABLE bibliography ADD constraint unq_bibliography unique (title_indexed, type);
 ALTER TABLE taxonomy ADD constraint unq_taxonomy unique (path, name_indexed, level_ref);
 ALTER TABLE chronostratigraphy ADD constraint unq_chronostratigraphy unique (path, name_indexed, level_ref);
 ALTER TABLE lithostratigraphy ADD constraint unq_lithostratigraphy unique (path, name_indexed, level_ref);
-ALTER TABLE mineralogy ADD constraint unq_mineralogy unique (path, name_indexed, level_ref);
+ALTER TABLE mineralogy ADD constraint unq_mineralogy unique (path, name_indexed, level_ref, code);
 ALTER TABLE lithology ADD constraint unq_lithology unique (path, name_indexed, level_ref);
 
 
@@ -116,24 +134,9 @@ ALTER INDEX idx_specimens_flat_taxon_name_order_by RENAME TO idx_specimens_flat_
 
 ALTER INDEX idx_taxonomy_name_order_by_txt_op RENAME TO idx_gin_trgm_taxonomy_name_indexed;
 
-DROP TRIGGER trg_cpy_tofulltext_bibliography ON bibliography;
-DROP TRIGGER trg_cpy_tofulltext_collectionmaintenance ON collection_maintenance;
-DROP TRIGGER trg_cpy_tofulltext_comments ON comments;
-DROP TRIGGER trg_cpy_tofulltext_expeditions ON expeditions;
-DROP TRIGGER trg_cpy_tofulltext_ext_links ON ext_links;
-DROP TRIGGER trg_cpy_tofulltext_identifications ON identifications;
-DROP TRIGGER trg_cpy_tofulltext_multimedia ON multimedia;
-DROP TRIGGER trg_cpy_tofulltext_peopleaddresses ON people_addresses;
-DROP TRIGGER trg_cpy_tofulltext_usersaddresses ON users_addresses;
-DROP TRIGGER trg_cpy_tofulltext_vernacularnames ON vernacular_names;
-
-
-DROP FUNCTION darwin2.fct_cpy_word(character varying, character varying, tsvector);
-DROP FUNCTION fct_trg_word() CASCADE;
-DROP FUNCTION ts_stat(tsvector, OUT word text, OUT ndoc integer, OUT nentry integer);
-DROP TABLE words;
 
 \i maintenance/recreate_flat_view.sql 
+\i reports/ticketing/create_labeling_view.sql
 
 CREATE INDEX idx_gin_multimedia_search_indexed ON multimedia USING gin (search_indexed public.gin_trgm_ops);
 CREATE INDEX  idx_gin_trgm_comments_comment_indexed on comments  using gin ("comment_indexed" gin_trgm_ops);

@@ -975,7 +975,7 @@ create table mineralogy
         formule_indexed varchar,
         cristal_system varchar,
         constraint pk_mineralogy primary key (id),
-        constraint unq_mineralogy unique (path, name_indexed, level_ref),
+        constraint unq_mineralogy unique (path, name_indexed, level_ref, code),
         constraint fk_mineralogy_catalogue_levels foreign key (level_ref) references catalogue_levels(id),
         constraint fk_mineralogy_parent_ref_mineralogy foreign key (parent_ref) references mineralogy(id) on delete cascade
        )
