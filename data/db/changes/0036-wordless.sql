@@ -1,5 +1,7 @@
 begin;
-set search_path=darwin2;
+set search_path=darwin2,public;
+
+\i  createfunctions.sql
 
 /***
 * INDEXES
@@ -24,13 +26,15 @@ DROP INDEX IF EXISTS idx_gin_specimens_flat_taxon_name_indexed;
 DROP INDEX IF EXISTS idx_specimens_flat_taxon_path;
 DROP INDEX IF EXISTS idx_specimens_flat_ig_num;
 
+DROP VIEW darwin_flat;
 
 ALTER TABLE template_people DROP COLUMN formated_name_ts;
 ALTER TABLE template_classifications DROP COLUMN name_indexed;
 ALTER TABLE template_classifications RENAME COLUMN  name_order_by TO name_indexed;
 
-ALTER TABLE code DROP COLUMN full_code_indexed;
-ALTER TABLE code RENAME COLUMN  full_code_order_by TO full_code_indexed;
+
+ALTER TABLE codes DROP COLUMN full_code_indexed;
+ALTER TABLE codes RENAME COLUMN  full_code_order_by TO full_code_indexed;
 
 ALTER TABLE identifications DROP COLUMN  value_defined_ts;
 ALTER TABLE loans DROP COLUMN  description_ts;
@@ -53,10 +57,6 @@ ALTER TABLE specimens_flat RENAME COLUMN mineral_name_order_by TO mineral_name_i
 ALTER TABLE specimens_flat RENAME COLUMN host_taxon_name_order_by TO host_taxon_name_indexed;
 
 ALTER TABLE bibliography DROP COLUMN title_ts;
-ALTER TABLE ONLY bibliography
-    DROP CONSTRAINT unq_bibliography;
-ALTER TABLE ONLY bibliography
-    ADD CONSTRAINT unq_bibliography UNIQUE (title_indexed, type);
 
 ALTER TABLE collection_maintenance DROP COLUMN description_ts;
 ALTER TABLE collection_maintenance ADD COLUMN description_indexed text;
@@ -69,25 +69,74 @@ ALTER TABLE comments ALTER COLUMN comment_indexed SET NOT NULL;
 CREATE TRIGGER trg_cpy_fulltoindex_comments BEFORE INSERT OR UPDATE ON comments FOR EACH ROW EXECUTE PROCEDURE fct_cpy_fulltoindex();
 
 
-ALTER TABLE multimedia DROP COLUMN comment_ts;
-ALTER TABLE multimedia ADD COLUMN comment_indexed text;
-UPDATE multimedia SET comment_indexed = fullToIndex ( COALESCE(title,'') ||  COALESCE(NEW.description,'') );
-ALTER TABLE multimedia ALTER COLUMN comment_indexed SET NOT NULL;
+ALTER TABLE multimedia DROP COLUMN search_ts;
+ALTER TABLE multimedia ADD COLUMN search_indexed text;
+UPDATE multimedia SET search_indexed = fullToIndex ( COALESCE(title,'') ||  COALESCE(description,'') );
+ALTER TABLE multimedia ALTER COLUMN search_indexed SET NOT NULL;
 
-ALTER TABLE expedition DROP COLUMN name_ts;
-ALTER TABLE expedition ADD COLUMN name_indexed text;
-UPDATE expedition SET name_indexed = fulltoindex(name);
-ALTER TABLE expedition ALTER COLUMN name_indexed SET NOT NULL;
+ALTER TABLE expeditions DROP COLUMN name_ts;
+
 
 ALTER TABLE ext_links DROP COLUMN comment_ts;
 ALTER TABLE ext_links ADD COLUMN comment_indexed text;
 UPDATE ext_links SET comment_indexed = fulltoindex(comment);
 ALTER TABLE ext_links ALTER COLUMN comment_indexed SET NOT NULL;
 
+
+
+
+ALTER TABLE bibliography ADD constraint unq_bibliography unique (title_indexed, type);
+ALTER TABLE taxonomy ADD constraint unq_taxonomy unique (path, name_indexed, level_ref);
+ALTER TABLE chronostratigraphy ADD constraint unq_chronostratigraphy unique (path, name_indexed, level_ref);
+ALTER TABLE lithostratigraphy ADD constraint unq_lithostratigraphy unique (path, name_indexed, level_ref);
+ALTER TABLE mineralogy ADD constraint unq_mineralogy unique (path, name_indexed, level_ref);
+ALTER TABLE lithology ADD constraint unq_lithology unique (path, name_indexed, level_ref);
+
+
+COMMENT ON COLUMN collection_maintenance.description_indexed IS 'indexed form of description field';
+COMMENT ON COLUMN chronostratigraphy.name_indexed IS 'Indexed form of name field';
+COMMENT ON COLUMN comments.comment_indexed IS 'indexed form of comment field';
+COMMENT ON COLUMN ext_links.comment_indexed IS 'indexed form of comment field';
+COMMENT ON COLUMN lithology.name_indexed IS 'Indexed form of name field';
+COMMENT ON COLUMN lithostratigraphy.name_indexed IS 'Indexed form of name field';
+COMMENT ON COLUMN loans.search_indexed IS 'indexed getting Description and title of the loan';
+COMMENT ON COLUMN mineralogy.name_indexed IS 'Indexed form of name field';
+COMMENT ON COLUMN multimedia.search_indexed IS 'indexed form of title and description fields together';
+COMMENT ON COLUMN taxonomy.name_indexed IS 'Indexed form of name field';
+
+
+ALTER INDEX idx_chronostratigraphy_name_order_by RENAME TO idx_gin_trgm_chronostratigraphy_name_indexed;
+ALTER INDEX idx_gin_trgm_specimens_flat_expedition_name_ts RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
+
+ALTER INDEX idx_lithology_name_order_by RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
+ALTER INDEX idx_lithostratigraphy_name_order_by RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
+
+ALTER INDEX idx_mineralogy_name_order_by RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
+ALTER INDEX idx_specimens_flat_taxon_name_order_by RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
+
+ALTER INDEX idx_taxonomy_name_order_by_txt_op RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
+
+DROP TRIGGER trg_cpy_tofulltext_bibliography;
+DROP TRIGGER trg_cpy_tofulltext_collectionmaintenance;
+DROP TRIGGER trg_cpy_tofulltext_comments;
+DROP TRIGGER trg_cpy_tofulltext_expeditions;
+DROP TRIGGER trg_cpy_tofulltext_ext_links;
+DROP TRIGGER trg_cpy_tofulltext_identifications;
+DROP TRIGGER trg_cpy_tofulltext_multimedia;
+DROP TRIGGER trg_cpy_tofulltext_peopleaddresses;
+DROP TRIGGER trg_cpy_tofulltext_usersaddresses;
+DROP TRIGGER trg_cpy_tofulltext_vernacularnames;
+
+
 DROP FUNCTION darwin2.fct_cpy_word(character varying, character varying, tsvector);
-DROP FUNCTION fct_trg_word();
+DROP FUNCTION fct_trg_word() CASCADE;
 DROP FUNCTION ts_stat(tsvector, OUT word text, OUT ndoc integer, OUT nentry integer);
 DROP TABLE words;
 
+\i maintenance/recreate_flat_view.sql 
 
-commit;
+CREATE INDEX idx_gin_multimedia_search_indexed ON multimedia USING gin (search_indexed public.gin_trgm_ops);
+CREATE INDEX  idx_gin_trgm_comments_comment_indexed on comments  using gin ("comment_indexed" gin_trgm_ops);
+
+COMMIT;
+--rollback;
