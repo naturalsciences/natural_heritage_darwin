@@ -7,6 +7,7 @@ hostname="127.0.0.1"
 schema="darwin2"
 unifiedpasswd=""
 darwin_version=`ls changes/*.sql | sort -nr | head -n1 | sed 's/-.*//' | xargs  basename`
+
 export PGOPTIONS='-c client_min_messages=WARNING'
 
 function title() {
@@ -171,7 +172,7 @@ function install_db() {
   $psql -f createindexes_darwinflat.sql
   $admpsql -f grant_d2_to_read_user.sql
   echo -e '- Grant done'
-  $psql -c "INSERT into darwin2.db_version VALUES($darwin_version::integer,now())"
+  $psql -c "INSERT into $schema.db_version VALUES($darwin_version::integer,now())"
   echo -e "- Db version set to $darwin_version"
 }
 
@@ -192,6 +193,7 @@ function install_role() {
 psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
 basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname"
 admpsql="$basepsql -q -d $dbname"
+dw_version=`$psql -c "select id from $schema.db_version order by update_at DESC LIMIT 1;" -t -A`
 case "$@" in 
   "install-all")
     $basepsql -c "create database $dbname ENCODING 'UNICODE';"
@@ -205,8 +207,10 @@ case "$@" in
     install_db
   ;;
   "test")
-    echo "ok pour test"
-    #@TODO
+    for sqlfiles in $(ls tests/*.sql)
+    do
+      $psql -f $sqlfiles
+    done
   ;;
   "create-schema")
     $admpsql -c "create schema $schema authorization darwin2;"
@@ -222,9 +226,24 @@ case "$@" in
     install_role
   ;;
   "upgrade")
-    error_msg "TODO"
-    exit
-    #done
+    test=0
+    dw_version=$(( $dw_version + 1)) 
+    if [ "$(echo $dw_version | grep "^[[:digit:]]*$")" ] 
+    then
+      upd_file=$(ls changes/*.sql | sort -n | grep $dw_version)
+      [ ! $upd_file ] && echo -e "\n\t- Everything is up to date -"
+      while [ $upd_file ]
+      do
+        $admpsql -f $upd_file
+        $admpsql -c "update $schema.db_version set id=$dw_version , update_at=now();"
+        echo -e "- $upd_file processed, Darwin database version is now \033[1;32m$dw_version\033[0;0m"
+        dw_version=$(( $dw_version + 1))
+        upd_file=$(ls changes/*.sql | sort -n | grep $dw_version)
+      done
+    else
+      echo "Db version not set"
+      exit;
+    fi
   ;;
   "uninstall-db")
     $psql -f droptriggers.sql
@@ -244,4 +263,4 @@ case "$@" in
   ;;
 esac
 
-echo -e "\nDone\n"
+echo -e "\nHave a nice day !\n"
