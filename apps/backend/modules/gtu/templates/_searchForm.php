@@ -1,5 +1,9 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
+<!--[if lte IE 8]>
+    <link rel="stylesheet" href="/leaflet/leaflet.ie.css" />
+<![endif]-->
+
 <div class="catalogue_gtu">
 <?php echo form_tag('gtu/search'.( isset($is_choose) && $is_choose  ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'gtu_filter'));?>
   <div class="container">
@@ -62,7 +66,7 @@
           </table>
           <div id="map_search_form" style="display:none">
             <?php echo __('Show accuracy of each point');?> <input type="checkbox" id="show_accuracy" checked="checked" /><br /><br />
-            <div style="width:100%; height:400px;" id="smap"></div>
+            <div style="height:400px;width:100%" id="smap"></div>
 
  <div class="pager paging_info hidden">
    <?php echo image_tag('info2.png');?>
@@ -76,197 +80,20 @@
       <input class="search_submit" type="submit" name="search" value="<?php echo __('Search'); ?>" />
     </div>
 <div class="clear"></div>
-
     <script  type="text/javascript">
-    var results;
-    var selectControl=0;
-    $(document).ready(function()
-    {
+    initSearchMap();
+
+    $(document).ready(function () {
+
       $('.catalogue_gtu').choose_form({});
 
-       $('#show_accuracy').change(function(){
-          if(results)
-          results.setVisibility($('#show_accuracy').is(':checked'));
-        });
-       $('#show_as_map').click(function(){
-
-          if($(this).is(':checked'))
-          {
-            $('#map_search_form').show();
-            if($('#gtu_filters_lat_from').val() != '' &&  $('#gtu_filters_lat_to').val() != '' && 
-              $('#gtu_filters_lon_from').val() != '' &&  $('#gtu_filters_lon_to').val() != '')
-            {
-                try{
-                  lat_from = parseFloat($('#gtu_filters_lat_from').val());
-                  lat_to = parseFloat($('#gtu_filters_lat_to').val());
-                  lon_from = parseFloat($('#gtu_filters_lon_from').val());
-                  lon_to = parseFloat($('#gtu_filters_lon_to').val());
-                  var bounds = new OpenLayers.Bounds();
-                  bounds.extend(new OpenLayers.LonLat(lon_from, lat_from));
-                  bounds.extend(new OpenLayers.LonLat(lon_to,lat_to));
-                  bounds.transform(epsg4326, map.getProjectionObject());
-                  map.zoomToExtent(bounds);
-                  map.setCenter(bounds.getCenterLonLat());
-                }
-                catch (e)
-                {
-                  setMapCenter(new OpenLayers.LonLat(0,0), 2);
-                }
-            }
-            else
-            {
-              setMapCenter(new OpenLayers.LonLat(0,0), 2);
-            }
-            //$(this).closest('form').removeClass('search_form');
-            $('#gtu_filter').unbind('submit.sform');
-            $('#gtu_filter').bind('submit.map_form',map_submit);
-            $('.search_results_content').html('');
-            $('#lat_long_set table').hide();
-          }
-          else
-          {
-             //$(this).closest('form').addClass('search_form');
-            $('#gtu_filter').unbind('submit.map_form');
-            $('#gtu_filter').bind('submit.sform',$('.catalogue_gtu').data('choose_form').search_form_submit);
-            $('#lat_long_set table').show();
-            $('#map_search_form').hide();
-          }
-       });
-       initMap("smap");
-       map.events.register("moveend", map, updateLatLong);
-       $('#lat_long_set .clear_prop').click(function(event)
-        {
-          event.preventDefault();
-          $(this).closest('tr').find('input').val('');
-        });
-
-    });
-
-    function updateLatLong()
-    {
-      bounds = map.getExtent();
-      p1 = new OpenLayers.LonLat( bounds.right,bounds.bottom);
-      p2 = new OpenLayers.LonLat( bounds.left, bounds.top);
-    
-      p1.transform(map.getProjectionObject(), epsg4326).wrapDateLine();
-      p2.transform(map.getProjectionObject(), epsg4326).wrapDateLine();
-      $('#gtu_filters_lat_from').val(p1.lat);
-      $('#gtu_filters_lon_from').val(p1.lon);
-      
-      $('#gtu_filters_lat_to').val(p2.lat);
-      $('#gtu_filters_lon_to').val(p2.lon);
-    }
-
-    function map_submit(event)
-    {
-      event.preventDefault();
-      if(results)
-      {
-        map.removeLayer(results);
-        markers.clearMarkers();
-      }
-      updateLatLong()
-      removeAllPopups();
-      $('.paging_info').hide();
-      results = new OpenLayers.Layer.Vector("Results", {
-        units: "m", 
-        strategies: [new OpenLayers.Strategy.Fixed()],
-        protocol: new OpenLayers.Protocol.HTTP({
-          url: $('#gtu_filter').attr('action')+'/format/xml?gtu_filters%5Brec_per_page%5D=50&'+ $('#gtu_filter').serialize(),
-          format: new OpenLayers.Format.KML()
-        })
+      $(".new_link").click( function() {
+        url = $(this).find('a').attr('href'),
+        data= $('.search_form').serialize(),
+        reg=new RegExp("(<?php echo $form->getName() ; ?>)", "g");   
+        open(url+'?'+data.replace(reg,'gtu'));
+        return false;  
       });
-
-      
-      map.addLayer(results);
-      results.events.register("loadend", results, addMarkersFromFeatures);
-      $.ajax(
-      {
-        url: $('#gtu_filter').attr('action')+'/format/text/extd/count?gtu_filters%5Brec_per_page%5D=50&'+ $('#gtu_filter').serialize(),
-        success: function(html) {
-         $('.paging_info .inner_text').html(html);
-        }
-       }
-      );
-
-      results.setVisibility($('#show_accuracy').is(':checked'));
-
-      selectControl = new OpenLayers.Control.SelectFeature(results, {onSelect: onFeatureSelect, onUnselect: onFeatureUnselect});
-      map.addControl(selectControl);
-
-      /**** HACK FOR DRAGGING ON FEATURES ****/
-      if (typeof(selectControl.handlers) != "undefined") { // OL 2.7 
-                      selectControl.handlers.feature.stopDown = false; 
-                  } else if (typeof(selectControl.handler) != "undefined") { // OL < 2.7 
-                      selectControl.handler.stopDown = false;  
-                      selectControl.handler.stopUp = false;  
-      }
-      /*** END OF HACK ***/
-      selectControl.activate();  
-      return false;
-    }
-function removeAllPopups()
-{
-  if(selectControl != 0)
-    selectControl.unselectAll();
-  for( var i = 0; i < map.popups.length; i++ )
-  {
-    map.removePopup(map.popups[i]);
-  }
-}
-
-function onFeatureSelect(feature) {
-  removeAllPopups()
-  selectedFeature = feature;
-  popup = new OpenLayers.Popup.FramedCloud("chicken", 
-    feature.geometry.getBounds().getCenterLonLat(),
-    new OpenLayers.Size(100,100),
-      "<div><strong>"+feature.attributes.name+"</strong><br/>"+feature.attributes.description+"</div>",
-      null, true, onPopupClose);
-  feature.popup = popup;
-  map.addPopup(popup);
-}
-
-function onPopupClose(evt) {
-//  selectControl.unselect(selectedFeature);
-  onFeatureUnselect(selectedFeature);
-}
-
-function onFeatureUnselect(feature) {
-if (feature.popup) {
-    map.removePopup(feature.popup);
-    feature.popup.destroy();
-    feature.popup = null;
-  }
-}
-function addMarkersFromFeatures()
-{
-  $('.paging_info').show();
-  markers.setZIndex(2300);
-
-  for( var i = 0; i < results.features.length; i++ )
-  {
-    m = new OpenLayers.Marker(results.features[i].geometry.getBounds().getCenterLonLat());
-    markers.addMarker(m,results.features[i].attributes.description);
-
-    m.events.register("mousedown", m, function()
-    {
-      for( var i = 0; i < results.features.length; i++ )
-      {
-        if(results.features[i].geometry.getBounds().getCenterLonLat() == this.lonlat)
-          onFeatureSelect(results.features[i]);
-      }
-    });
-  }
-}
-  $(".new_link").click( function()
-  {
-   url = $(this).find('a').attr('href'),
-   data= $('.search_form').serialize(),
-   reg=new RegExp("(<?php echo $form->getName() ; ?>)", "g");   
-   open(url+'?'+data.replace(reg,'gtu'));
-    return false;  
-  });
 
 
       var num_fld = 1;
@@ -285,6 +112,7 @@ function addMarkersFromFeatures()
         return false;
 
       });
+    });
     </script>
     <div class="search_results">
       <div class="search_results_content"> 

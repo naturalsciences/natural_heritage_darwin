@@ -143,7 +143,6 @@ class GtuFormFilter extends BaseGtuFormFilter
 
     $alias = $query->getRootAlias();
 
-    $query->addSelect('*,ST_AsKML(location) as kml');
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
     $query->andWhere("id > 0 ");
@@ -152,8 +151,15 @@ class GtuFormFilter extends BaseGtuFormFilter
   public function getJavaScripts()
   {
     $javascripts=parent::getJavascripts();
-    $javascripts[]='/js/OpenLayers.js';
+    $javascripts[]='/leaflet/leaflet.js';
     $javascripts[]='/js/map.js';
     return $javascripts;
   }
+
+  public function getStylesheets() {
+    $items=parent::getStylesheets();
+    $items['/leaflet/leaflet.css']='all';
+    return $items;
+  }
+
 }

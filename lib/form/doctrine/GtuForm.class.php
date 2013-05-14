@@ -182,9 +182,14 @@ class GtuForm extends BaseGtuForm
   public function getJavaScripts()
   {
     $javascripts=parent::getJavascripts();
-    $javascripts[]='/js/OpenLayers.js';
+    $javascripts[]='/leaflet/leaflet.js';
     $javascripts[]='/js/map.js';
     return $javascripts;
   }
 
+  public function getStylesheets() {
+    $items=parent::getStylesheets();
+    $items['/leaflet/leaflet.css']='all';
+    return $items;
+  }
 }

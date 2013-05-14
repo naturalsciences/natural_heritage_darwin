@@ -50,17 +50,17 @@ class gtuActions extends DarwinActions
       {
         //@TODO: We need to refactor and avoid doing too much queries when format is xml
         $query = $this->form->getQuery();
-        if($request->getParameter('format') == 'xml' || $request->getParameter('format') == 'text')
+        if($request->getParameter('format') == 'json' || $request->getParameter('format') == 'text')
         {
           $query->orderBy($this->orderBy .' '.$this->orderDir)
             ->andWhere('latitude is not null');
           /** WARNING Limit select of accuracy point to let the map be browsable **/
           $query->andWhere('lat_long_accuracy < 30000');
           $this->setLayout(false);
-          if($request->getParameter('format') == 'xml')
+          if($request->getParameter('format') == 'json')
           {
             $query->Limit($this->form->getValue('rec_per_page'));
-            $this->getResponse()->setContentType('application/xml');
+            $this->getResponse()->setContentType('application/json');
             $this->items = $query->execute();
             $this->setTemplate('georss');
             return;
