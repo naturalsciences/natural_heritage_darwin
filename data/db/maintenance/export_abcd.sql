@@ -129,6 +129,17 @@ CREATE INDEX idx_df_individual_sex ON public.darwin_flat_bis(individual_sex);
 CREATE INDEX idx_df_individual_stage ON public.darwin_flat_bis(individual_stage);
 CREATE INDEX idx_df_individual_rock_form ON public.darwin_flat_bis(individual_rock_form);
 
+
+alter table specimen_collecting_methods 
+  drop CONSTRAINT fk_specimen_collecting_methods_specimen, 
+  add constraint fk_specimen_collecting_methods_specimen foreign key (specimen_ref) references specimens (id) on delete cascade;
+
+ALTER TABLE specimen_individuals
+  drop CONSTRAINT fk_specimen_individuals_specimens, 
+  ADD CONSTRAINT fk_specimen_individuals_specimens FOREIGN KEY (specimen_ref)
+      REFERENCES specimens (id)
+      ON DELETE cascade;
+
 --drop view darwin_flat cascade;
 --ALTER TABLE darwin_flat_bis RENAME TO darwin2.darwin_flat;
 DELETE From darwin2.specimens where collection_ref in (select id from darwin2.collections where is_public = false);
@@ -852,15 +863,6 @@ CREATE INDEX idx_mineral_identified_mineral_name ON public.mineral_identified (m
 CREATE INDEX idx_identifications_abdc_flat_id ON public.identifications_abdc (flat_id);
 
 ALTER TABLE darwin2.taxonomy ALTER COLUMN parent_ref DROP NOT NULL;
-ALTER TABLE darwin2.darwin_flat ALTER COLUMN taxon_parent_ref DROP NOT NULL;
-ALTER TABLE darwin2.darwin_flat ALTER COLUMN host_taxon_parent_ref DROP NOT NULL;
-
-SET SESSION session_replication_role = replica;  
-
-UPDATE darwin2.taxonomy SET parent_ref = NULL WHERE parent_ref = 0;
-UPDATE darwin2.darwin_flat SET taxon_parent_ref = NULL WHERE taxon_parent_ref = 0;
-
-SET SESSION session_replication_role = origin;  
 
 CREATE SEQUENCE public.identifier_abcd_id_seq;
 
