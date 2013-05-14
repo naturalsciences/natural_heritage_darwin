@@ -181,6 +181,7 @@ function install_lib() {
     $admpsql  -c "create extension pgcrypto; create extension pg_trgm; create extension hstore;"
     $admpsql  -f /usr/share/postgresql/$pg_version/contrib/postgis-1.5/postgis.sql
     $admpsql  -f  /usr/share/postgresql/$pg_version/contrib/postgis-1.5/spatial_ref_sys.sql
+    $admpsql  -f f postgisgrant.sql -v dbuser=darwin2
   fi
 }
 
@@ -247,7 +248,7 @@ case "$@" in
   ;;
   "uninstall-db")
     $psql -f droptriggers.sql
-    $psql -f dropfunctions.sql
+    $psql -f dropfunctions.sqlgit commit
     $psql -f dropindexes.sql
     $psql -f droptables.sql
   ;;
