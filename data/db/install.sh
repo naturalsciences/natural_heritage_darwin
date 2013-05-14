@@ -248,7 +248,7 @@ case "$@" in
   ;;
   "uninstall-db")
     $psql -f droptriggers.sql
-    $psql -f dropfunctions.sqlgit commit
+    $psql -f dropfunctions.sql
     $psql -f dropindexes.sql
     $psql -f droptables.sql
   ;;
