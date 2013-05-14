@@ -1,0 +1,247 @@
+#!/bin/bash
+
+pg_version="9.1"
+dbname="darwin2"
+dbport="5432"
+hostname="127.0.0.1"
+schema="darwin2"
+unifiedpasswd=""
+darwin_version=`ls changes/*.sql | sort -nr | head -n1 | sed 's/-.*//' | xargs  basename`
+export PGOPTIONS='-c client_min_messages=WARNING'
+
+function title() {
+  echo -e "\n \033[1m${@}\033[0m :"
+}
+function command_name() {
+  echo -e "\n \033[1m\t${@}\033[0m"
+}
+function command_desc() {
+  echo -e "\t   ${@}"
+}
+function option_desc() {
+  echo -e "\n\t${@}"
+}
+function error_msg() {
+  echo -e "\033[1;31m${@}\033[0;0m"
+}
+function warn_msg() {
+  echo -e "\033[1;33m${@}\033[0;0m"
+}
+function info() {
+  echo -e "${@}"
+}
+
+usage(){
+  title "$(basename $0) allow you to install DARWIN Database"
+  option_desc "Usage : install_db [options] [action]"
+
+  title "Available [actions]"
+  command_name "help"
+  command_desc "Display this help message"
+
+  command_name "install-all"
+  command_desc "install all the database.(must be run in privileged account) Execute targets  create-db, create-user, create-schema, install-lib, install-db"
+
+  command_name "install-db"
+  command_desc "install the darwin db into the \$db_user schema : create types, tables, functions and indexes"
+
+  command_name "test"
+  command_desc "Unit test the database installation in a schema 'unittest'"
+
+  command_name "create-schema"
+  command_desc "Create the schema for the install of the db "
+
+  command_name "create-db"
+  command_desc "create an new postgresql db and the tablespace associated for darwin"
+
+  command_name "install-lib"
+  command_desc "install library used by darwin"
+
+  command_name "create-user"
+  command_desc "create a default user to access only the darwin schema and db"
+
+  command_name "upgrade"
+  command_desc "tries to update the current db to the new version"
+
+  command_name "uninstall-db"
+  command_desc "remove the tables,function... from darwin. WARNING! This action can remove ALL your data"
+
+  command_name "drop-db"
+  command_desc "remove the darwin database. WARNING! This action can remove ALL your data"
+
+  title "Available [option] :"
+  
+  option_desc "-h hostname (Default: $hostname)"
+  command_desc "host for the connection to the database"
+
+  option_desc "-d dbname (Default: $dbname)"
+  command_desc "database name to be created or to be used (depends of the target)"
+
+  option_desc "-p port (Default: $dbport)"
+  command_desc "Port for the connection to the database"
+
+  option_desc "-s schema (Default: $schema)"
+  command_desc "schema used in the database"
+
+  option_desc "-V db version (Default: $pg_version)"
+  command_desc "Version of the postgresql database"
+
+  option_desc "-O unified_password"
+  command_desc "Used if you want to set the password of darwin2, cebmpad and d2viewer to the same value (unified_password)"
+
+  option_desc #emtpyline
+  exit 1
+}
+
+[[ $# -eq 0 ]] && usage
+while getopts ":O:h:p:d:V:s:" opt ; do
+  case $opt in
+    h)
+      if [[ $OPTARG = -* ]]; then
+        warn_msg "invalid argument for option -h, -h ignored"
+        ((OPTIND--))
+        continue
+      fi
+      hostname=$OPTARG
+    ;;
+    p)
+      if [[ $OPTARG = -* ]]; then
+        warn_msg "invalid argument for option -p, -p ignored"
+        ((OPTIND--))
+        continue
+      fi
+      dbport=$OPTARG
+    ;;
+    O)
+      if [[ $OPTARG = -* ]]; then
+        warn_msg "invalid argument for option -O, -O ignored"
+        ((OPTIND--))
+        continue
+      fi
+      unifiedpasswd="ENCRYPTED PASSWORD '$OPTARG'"
+    ;;
+    s)
+      if [[ $OPTARG = -* ]]; then
+        warn_msg "invalid argument for option -s, -s ignored"
+        ((OPTIND--))
+        continue
+      fi
+      schema=$OPTARG
+    ;;
+    d)
+      if [[ $OPTARG = -* ]]; then
+        warn_msg "invalid argument for option -d, -d ignored"
+        ((OPTIND--))
+        continue
+      fi
+      dbname=$OPTARG
+    ;;
+    V)
+      if [[ $OPTARG = -* ]]; then
+        warn_msg "invalid argument for option -V, -V ignored"
+        ((OPTIND--))
+        continue
+      fi
+      pg_version=$OPTARG
+    ;;
+    \?)
+      error_msg "Invalid option -$OPTARG"
+    ;;
+  esac
+done
+shift $((OPTIND-1))
+if [[ $# -gt 1 ]] ; then
+  error_msg "Just one action is allowed"
+  usage
+  exit 1
+fi
+
+function install_db() {
+  $psql -f createtables.sql
+  echo -e '- Tables created'
+  $psql -f initiate_data.sql
+  echo -e '- Datas inserted'
+  $psql -f createfunctions.sql
+  echo -e '- Functions created'
+  $psql -f createtriggers.sql
+  echo -e '- Trigger created'
+  $psql -f addchecks.sql
+  $psql -f createindexes.sql
+  echo -e '- Indexes created'
+  $psql -f createindexes_darwinflat.sql
+  $admpsql -f grant_d2_to_read_user.sql
+  echo -e '- Grant done'
+  $psql -c "INSERT into darwin2.db_version VALUES($darwin_version::integer,now())"
+  echo -e "- Db version set to $darwin_version"
+}
+
+function install_lib() {
+  if [ "$pg_version"="9.1" ] ; then
+    $admpsql  -c "create extension pgcrypto; create extension pg_trgm; create extension hstore;"
+    $admpsql  -f /usr/share/postgresql/$pg_version/contrib/postgis-1.5/postgis.sql
+    $admpsql  -f  /usr/share/postgresql/$pg_version/contrib/postgis-1.5/spatial_ref_sys.sql
+  fi
+}
+
+function install_role() {
+  $admpsql -c "CREATE ROLE darwin2 $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+  $admpsql -c "CREATE ROLE cebmpad $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+  $admpsql -c "CREATE ROLE d2viewer $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+}
+
+psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
+basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname"
+admpsql="$basepsql -q -d $dbname"
+case "$@" in 
+  "install-all")
+    $basepsql -c "create database $dbname ENCODING 'UNICODE';"
+    install_role
+    $admpsql -c "create schema $schema authorization darwin2;"
+    $admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;"
+    install_lib
+    install_db
+  ;;
+  "install-db")
+    install_db
+  ;;
+  "test")
+    echo "ok pour test"
+    #@TODO
+  ;;
+  "create-schema")
+    $admpsql -c "create schema $schema authorization darwin2;"
+    $admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;"
+  ;;
+  "create-db")
+    $basepsql -c "create database $dbname ENCODING 'UNICODE';"
+  ;;
+  "install-lib")
+    install_lib
+  ;;
+  "create-user")
+    install_role
+  ;;
+  "upgrade")
+    error_msg "TODO"
+    exit
+    #done
+  ;;
+  "uninstall-db")
+    $psql -f droptriggers.sql
+    $psql -f dropfunctions.sql
+    $psql -f dropindexes.sql
+    $psql -f droptables.sql
+  ;;
+  "drop-db")
+    $basepsql -f dropdb.sql
+  ;;
+  "help")
+    usage
+  ;;
+  *)
+    error_msg "Unknow action $@"
+    exit 1
+  ;;
+esac
+
+echo -e "\nDone\n"
