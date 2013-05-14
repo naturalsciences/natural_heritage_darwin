@@ -194,7 +194,6 @@ function install_role() {
 psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
 basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname"
 admpsql="$basepsql -q -d $dbname"
-dw_version=`$psql -c "select id from $schema.db_version order by update_at DESC LIMIT 1;" -t -A`
 case "$@" in 
   "install-all")
     $basepsql -c "create database $dbname ENCODING 'UNICODE';"
@@ -228,6 +227,7 @@ case "$@" in
   ;;
   "upgrade")
     test=0
+    dw_version=`$psql -c "select id from $schema.db_version order by update_at DESC LIMIT 1;" -t -A`
     dw_version=$(( $dw_version + 1)) 
     if [ "$(echo $dw_version | grep "^[[:digit:]]*$")" ] 
     then
