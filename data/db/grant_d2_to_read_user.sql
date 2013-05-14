@@ -49,7 +49,6 @@
  GRANT SELECT ON staging_people TO d2viewer;
  GRANT SELECT ON users_tracking TO d2viewer;
  GRANT SELECT ON taxonomy TO d2viewer;
- GRANT SELECT ON words TO d2viewer;
  GRANT SELECT ON lithostratigraphy TO d2viewer;
  GRANT SELECT ON staging TO d2viewer;
  GRANT SELECT ON mineralogy TO d2viewer;
@@ -85,7 +84,6 @@
  GRANT USAGE ON my_widgets_id_seq TO d2viewer;
  GRANT SELECT, INSERT ON users TO d2viewer;
  GRANT USAGE ON users_id_seq TO d2viewer;
- GRANT SELECT, INSERT ON words TO d2viewer;
  GRANT SELECT, INSERT ON flat_dict TO d2viewer;
  GRANT USAGE ON flat_dict_id_seq TO d2viewer;
  GRANT SELECT, INSERT ON preferences TO d2viewer;
