@@ -108,24 +108,24 @@ COMMENT ON COLUMN taxonomy.name_indexed IS 'Indexed form of name field';
 ALTER INDEX idx_chronostratigraphy_name_order_by RENAME TO idx_gin_trgm_chronostratigraphy_name_indexed;
 ALTER INDEX idx_gin_trgm_specimens_flat_expedition_name_ts RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
 
-ALTER INDEX idx_lithology_name_order_by RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
-ALTER INDEX idx_lithostratigraphy_name_order_by RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
+ALTER INDEX idx_lithology_name_order_by RENAME TO idx_gin_trgm_lithology_name_indexed;
+ALTER INDEX idx_lithostratigraphy_name_order_by RENAME TO idx_gin_trgm_lithostratigraphy_name_indexed;
 
-ALTER INDEX idx_mineralogy_name_order_by RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
-ALTER INDEX idx_specimens_flat_taxon_name_order_by RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
+ALTER INDEX idx_mineralogy_name_order_by RENAME TO idx_gin_trgm_mineralogy_name_indexed;
+ALTER INDEX idx_specimens_flat_taxon_name_order_by RENAME TO idx_specimens_flat_name_indexed;
 
-ALTER INDEX idx_taxonomy_name_order_by_txt_op RENAME TO idx_gin_trgm_specimens_flat_expedition_name_indexed;
+ALTER INDEX idx_taxonomy_name_order_by_txt_op RENAME TO idx_gin_trgm_taxonomy_name_indexed;
 
-DROP TRIGGER trg_cpy_tofulltext_bibliography;
-DROP TRIGGER trg_cpy_tofulltext_collectionmaintenance;
-DROP TRIGGER trg_cpy_tofulltext_comments;
-DROP TRIGGER trg_cpy_tofulltext_expeditions;
-DROP TRIGGER trg_cpy_tofulltext_ext_links;
-DROP TRIGGER trg_cpy_tofulltext_identifications;
-DROP TRIGGER trg_cpy_tofulltext_multimedia;
-DROP TRIGGER trg_cpy_tofulltext_peopleaddresses;
-DROP TRIGGER trg_cpy_tofulltext_usersaddresses;
-DROP TRIGGER trg_cpy_tofulltext_vernacularnames;
+DROP TRIGGER trg_cpy_tofulltext_bibliography ON bibliography;
+DROP TRIGGER trg_cpy_tofulltext_collectionmaintenance ON collection_maintenance;
+DROP TRIGGER trg_cpy_tofulltext_comments ON comments;
+DROP TRIGGER trg_cpy_tofulltext_expeditions ON expeditions;
+DROP TRIGGER trg_cpy_tofulltext_ext_links ON ext_links;
+DROP TRIGGER trg_cpy_tofulltext_identifications ON identifications;
+DROP TRIGGER trg_cpy_tofulltext_multimedia ON multimedia;
+DROP TRIGGER trg_cpy_tofulltext_peopleaddresses ON people_addresses;
+DROP TRIGGER trg_cpy_tofulltext_usersaddresses ON users_addresses;
+DROP TRIGGER trg_cpy_tofulltext_vernacularnames ON vernacular_names;
 
 
 DROP FUNCTION darwin2.fct_cpy_word(character varying, character varying, tsvector);

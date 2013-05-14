@@ -206,3 +206,11 @@ CREATE INDEX CONCURRENTLY idx_multimedia_referenced_record on multimedia(referen
 
 CREATE INDEX CONCURRENTLY idx_catalogue_bibliography_referenced_record on catalogue_bibliography(referenced_relation, record_id);
 CREATE INDEX CONCURRENTLY idx_bibliography_type on bibliography(type);
+
+
+CREATE INDEX idx_gin_trgm_comments_comment_indexed ON comments USING gin (comment_indexed public.gin_trgm_ops);
+CREATE INDEX idx_gin_trgm_lithology_name_indexed ON lithology USING btree (name_indexed);
+CREATE INDEX idx_gin_trgm_taxonomy_name_indexed ON taxonomy USING btree (name_indexed text_pattern_ops);
+CREATE INDEX idx_lithology_name_order_by_txt_op ON lithology USING btree (name_indexed text_pattern_ops);
+CREATE INDEX idx_lithostratigraphy_name_order_by_txt_op ON lithostratigraphy USING btree (name_indexed text_pattern_ops);
+CREATE INDEX idx_mineralogy_name_order_by_txt_op ON mineralogy USING btree (name_indexed text_pattern_ops);
