@@ -106,7 +106,7 @@ class GtuFormFilter extends BaseGtuFormFilter
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
-      $query->andWhere('location && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
+      $query->andWhere('location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
         ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326)');
       $query->andWhere('location is not null');
     }

@@ -11,6 +11,8 @@ CREATE INDEX CONCURRENTLY idx_specimens_flat_ig_ref on specimens_flat(ig_ref);
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_gtu_tag_values_indexed on specimens_flat using gin(gtu_tag_values_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_specimens_flat_gtu_country_tag_indexed_indexed on specimens_flat using gin(gtu_country_tag_indexed);
 CREATE INDEX CONCURRENTLY idx_gist_specimens_flat_gtu_location ON specimens_flat USING GIST ( gtu_location );
+CREATE INDEX CONCURRENTLY idx_gist_specimens_flat_gtu_location_geom ON specimens_flat USING GIST ( (gtu_location::geometry) );
+
 CREATE INDEX CONCURRENTLY idx_specimens_flat_host_specimen_ref on specimens_flat(host_specimen_ref);
 CREATE INDEX CONCURRENTLY idx_specimens_flat_host_taxon_ref on specimens_flat(host_taxon_ref);
 
