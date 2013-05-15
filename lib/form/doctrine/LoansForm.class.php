@@ -12,7 +12,7 @@ class LoansForm extends BaseLoansForm
 {
   public function configure()
   {
-    unset($this['description_ts']);
+    unset($this['search_indexed']);
     $yearsKeyVal = range(1970, intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');

@@ -20,7 +20,6 @@ abstract class BaseIdentificationsFormFilter extends BaseFormFilterDoctrine
       'notion_date_mask'      => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'value_defined'         => new sfWidgetFormFilterInput(),
       'value_defined_indexed' => new sfWidgetFormFilterInput(),
-      'value_defined_ts'      => new sfWidgetFormFilterInput(),
       'determination_status'  => new sfWidgetFormFilterInput(),
       'order_by'              => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
@@ -33,7 +32,6 @@ abstract class BaseIdentificationsFormFilter extends BaseFormFilterDoctrine
       'notion_date_mask'      => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'value_defined'         => new sfValidatorPass(array('required' => false)),
       'value_defined_indexed' => new sfValidatorPass(array('required' => false)),
-      'value_defined_ts'      => new sfValidatorPass(array('required' => false)),
       'determination_status'  => new sfValidatorPass(array('required' => false)),
       'order_by'              => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
@@ -63,7 +61,6 @@ abstract class BaseIdentificationsFormFilter extends BaseFormFilterDoctrine
       'notion_date_mask'      => 'Number',
       'value_defined'         => 'Text',
       'value_defined_indexed' => 'Text',
-      'value_defined_ts'      => 'Text',
       'determination_status'  => 'Text',
       'order_by'              => 'Number',
     );

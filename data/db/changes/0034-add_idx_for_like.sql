@@ -1,5 +1,5 @@
 begin;
-set search_path=darwin2;
+set search_path=darwin2,public;
 
 CREATE INDEX  idx_gin_trgm_comments_comment on comments  using gin ("comment" gin_trgm_ops);
 CREATE INDEX  idx_gin_trgm_vernacular_names_name on vernacular_names using gin(name_indexed gin_trgm_ops);

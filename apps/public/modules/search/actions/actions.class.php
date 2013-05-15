@@ -236,22 +236,22 @@ class searchActions extends DarwinActions
         'collection_name',
         $this->getI18N()->__('Collection'),),
       'taxon' => array(
-        'taxon_name_order_by',
+        'taxon_name_indexed',
         $this->getI18N()->__('Taxon'),),
       'gtu' => array( ///
         false,
         $this->getI18N()->__('Country'),),
       'chrono' => array(
-        'chrono_name_order_by',
+        'chrono_name_indexed',
         $this->getI18N()->__('Chronostratigraphic unit'),),
       'litho' => array(
-        'litho_name_order_by',
+        'litho_name_indexed',
         $this->getI18N()->__('Lithostratigraphic unit'),),
       'lithologic' => array(
-        'lithology_name_order_by',
+        'lithology_name_indexed',
         $this->getI18N()->__('Lithologic unit'),),
       'mineral' => array(
-        'mineral_name_order_by',
+        'mineral_name_indexed',
         $this->getI18N()->__('Mineralogic unit'),),
       'expedition' => array(
         'expedition_name_indexed',
@@ -261,7 +261,7 @@ class searchActions extends DarwinActions
     $this->columns['common_name'] = array(
       'taxon_common_name' => array(
         false,
-        $this->getI18N()->__('Taxon common name'),),      
+        $this->getI18N()->__('Taxon common name'),),
       'chrono_common_name' => array(
         false,
         $this->getI18N()->__('Chrono common name'),),

@@ -14,7 +14,6 @@ abstract class BaseExpeditionsFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'name'                      => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'name_ts'                   => new sfWidgetFormFilterInput(),
       'name_indexed'              => new sfWidgetFormFilterInput(),
       'expedition_from_date_mask' => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'expedition_from_date'      => new sfWidgetFormFilterInput(),
@@ -24,7 +23,6 @@ abstract class BaseExpeditionsFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'name'                      => new sfValidatorPass(array('required' => false)),
-      'name_ts'                   => new sfValidatorPass(array('required' => false)),
       'name_indexed'              => new sfValidatorPass(array('required' => false)),
       'expedition_from_date_mask' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'expedition_from_date'      => new sfValidatorPass(array('required' => false)),
@@ -51,7 +49,6 @@ abstract class BaseExpeditionsFormFilter extends BaseFormFilterDoctrine
     return array(
       'id'                        => 'Number',
       'name'                      => 'Text',
-      'name_ts'                   => 'Text',
       'name_indexed'              => 'Text',
       'expedition_from_date_mask' => 'Number',
       'expedition_from_date'      => 'Text',

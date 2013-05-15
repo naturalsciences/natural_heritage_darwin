@@ -17,7 +17,6 @@ abstract class BaseIgsSearchFormFilter extends BaseFormFilterDoctrine
       'ig_num_indexed'          => new sfWidgetFormFilterInput(),
       'ig_date_mask'            => new sfWidgetFormFilterInput(),
       'expedition_name'         => new sfWidgetFormFilterInput(),
-      'expedition_name_ts'      => new sfWidgetFormFilterInput(),
       'expedition_name_indexed' => new sfWidgetFormFilterInput(),
       'expedition_ref'          => new sfWidgetFormFilterInput(),
     ));
@@ -27,7 +26,6 @@ abstract class BaseIgsSearchFormFilter extends BaseFormFilterDoctrine
       'ig_num_indexed'          => new sfValidatorPass(array('required' => false)),
       'ig_date_mask'            => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'expedition_name'         => new sfValidatorPass(array('required' => false)),
-      'expedition_name_ts'      => new sfValidatorPass(array('required' => false)),
       'expedition_name_indexed' => new sfValidatorPass(array('required' => false)),
       'expedition_ref'          => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
@@ -54,7 +52,6 @@ abstract class BaseIgsSearchFormFilter extends BaseFormFilterDoctrine
       'ig_date_mask'            => 'Number',
       'ig_ref'                  => 'Number',
       'expedition_name'         => 'Text',
-      'expedition_name_ts'      => 'Text',
       'expedition_name_indexed' => 'Text',
       'expedition_ref'          => 'Number',
     );

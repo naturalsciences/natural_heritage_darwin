@@ -222,13 +222,13 @@ class DarwinTable extends Doctrine_Table
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
          ->from($this->getTableName())
-         ->andWhere("name_order_by like concat(fulltoindex(".$conn_MGR->quote($name, 'string')."),'%') ")
+         ->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($name, 'string')."),'%') ")
          ->orderBy('path ASC')
          ->limit($limit);
     $q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
-      $result[] = array('name' => $item->getName(), 'name_order_by'=> $item->getNameOrderBy(), 'id'=> $item->getId() );
+      $result[] = array('name' => $item->getName(), 'name_indexed'=> $item->getNameIndexed(), 'id'=> $item->getId() );
     }
     return $result;
   }

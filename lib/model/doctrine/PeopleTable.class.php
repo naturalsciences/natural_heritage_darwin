@@ -25,7 +25,7 @@ class PeopleTable extends DarwinTable
       ->from('People p')
       ->andWhere('p.is_physical = ?', true)
       ->andWhere('p.id != 0')
-      ->andWhere('p.formated_name_ts @@ to_tsquery(\'simple\',?)',$name);
+      ->andWhere('p.formated_name_indexed like concat(\'%\', fulltoindex(?), \'%\' )',$name);
     return $q->execute();
   }
 

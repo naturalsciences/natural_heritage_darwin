@@ -12,7 +12,7 @@
  * @property string $category
  * @property string $action_observation
  * @property string $description
- * @property string $description_ts
+ * @property string $description_indexed
  * @property string $modification_date_time
  * @property integer $modification_date_mask
  * @property People $People
@@ -24,7 +24,7 @@
  * @method string                getCategory()               Returns the current record's "category" value
  * @method string                getActionObservation()      Returns the current record's "action_observation" value
  * @method string                getDescription()            Returns the current record's "description" value
- * @method string                getDescriptionTs()          Returns the current record's "description_ts" value
+ * @method string                getDescriptionIndexed()     Returns the current record's "description_indexed" value
  * @method string                getModificationDateTime()   Returns the current record's "modification_date_time" value
  * @method integer               getModificationDateMask()   Returns the current record's "modification_date_mask" value
  * @method People                getPeople()                 Returns the current record's "People" value
@@ -35,7 +35,7 @@
  * @method CollectionMaintenance setCategory()               Sets the current record's "category" value
  * @method CollectionMaintenance setActionObservation()      Sets the current record's "action_observation" value
  * @method CollectionMaintenance setDescription()            Sets the current record's "description" value
- * @method CollectionMaintenance setDescriptionTs()          Sets the current record's "description_ts" value
+ * @method CollectionMaintenance setDescriptionIndexed()     Sets the current record's "description_indexed" value
  * @method CollectionMaintenance setModificationDateTime()   Sets the current record's "modification_date_time" value
  * @method CollectionMaintenance setModificationDateMask()   Sets the current record's "modification_date_mask" value
  * @method CollectionMaintenance setPeople()                 Sets the current record's "People" value
@@ -79,7 +79,7 @@ abstract class BaseCollectionMaintenance extends sfDoctrineRecord
         $this->hasColumn('description', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('description_ts', 'string', null, array(
+        $this->hasColumn('description_indexed', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('modification_date_time', 'string', null, array(

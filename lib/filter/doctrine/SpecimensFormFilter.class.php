@@ -61,7 +61,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
       $query->leftJoin($alias.'.SpecimensCodes cod')
           ->andWhere("cod.referenced_relation = ?", array('specimens'))
           ->andWhere("cod.record_id = $alias.specimen_ref")
-          ->andWhere("cod.full_code_order_by = fullToIndex(".$conn_MGR->quote($values, 'string').") ");
+          ->andWhere("cod.full_code_indexed = fullToIndex(".$conn_MGR->quote($values, 'string').") ");
     }
     return $query;
   }

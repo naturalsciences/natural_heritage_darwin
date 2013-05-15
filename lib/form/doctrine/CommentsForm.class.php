@@ -11,10 +11,11 @@ class CommentsForm extends BaseCommentsForm
 {
   public function configure()
   {
+    unset($this['comment_indexed']);
+
     $choices = CommentsTable::getNotionsFor($this->options['table']);
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();
-    unset($this['comment_ts']);
     $this->widgetSchema['notion_concerned'] =  new sfWidgetFormChoice(array(
       'choices' =>  $choices,  
     ));

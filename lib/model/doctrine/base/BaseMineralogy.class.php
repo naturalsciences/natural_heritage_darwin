@@ -8,7 +8,6 @@
  * @property integer $id
  * @property string $name
  * @property string $name_indexed
- * @property string $name_order_by
  * @property integer $level_ref
  * @property string $status
  * @property boolean $local_naming
@@ -30,7 +29,6 @@
  * @method integer             getId()                    Returns the current record's "id" value
  * @method string              getName()                  Returns the current record's "name" value
  * @method string              getNameIndexed()           Returns the current record's "name_indexed" value
- * @method string              getNameOrderBy()           Returns the current record's "name_order_by" value
  * @method integer             getLevelRef()              Returns the current record's "level_ref" value
  * @method string              getStatus()                Returns the current record's "status" value
  * @method boolean             getLocalNaming()           Returns the current record's "local_naming" value
@@ -51,7 +49,6 @@
  * @method Mineralogy          setId()                    Sets the current record's "id" value
  * @method Mineralogy          setName()                  Sets the current record's "name" value
  * @method Mineralogy          setNameIndexed()           Sets the current record's "name_indexed" value
- * @method Mineralogy          setNameOrderBy()           Sets the current record's "name_order_by" value
  * @method Mineralogy          setLevelRef()              Sets the current record's "level_ref" value
  * @method Mineralogy          setStatus()                Sets the current record's "status" value
  * @method Mineralogy          setLocalNaming()           Sets the current record's "local_naming" value
@@ -90,9 +87,6 @@ abstract class BaseMineralogy extends sfDoctrineRecord
              'notnull' => true,
              ));
         $this->hasColumn('name_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('name_order_by', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('level_ref', 'integer', null, array(

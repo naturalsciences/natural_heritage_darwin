@@ -15,7 +15,6 @@
  * @property string $region
  * @property string $zip_code
  * @property string $country
- * @property string $address_parts_ts
  * @property People $People
  * 
  * @method integer         getId()               Returns the current record's "id" value
@@ -28,7 +27,6 @@
  * @method string          getRegion()           Returns the current record's "region" value
  * @method string          getZipCode()          Returns the current record's "zip_code" value
  * @method string          getCountry()          Returns the current record's "country" value
- * @method string          getAddressPartsTs()   Returns the current record's "address_parts_ts" value
  * @method People          getPeople()           Returns the current record's "People" value
  * @method PeopleAddresses setId()               Sets the current record's "id" value
  * @method PeopleAddresses setPersonUserRef()    Sets the current record's "person_user_ref" value
@@ -40,7 +38,6 @@
  * @method PeopleAddresses setRegion()           Sets the current record's "region" value
  * @method PeopleAddresses setZipCode()          Sets the current record's "zip_code" value
  * @method PeopleAddresses setCountry()          Sets the current record's "country" value
- * @method PeopleAddresses setAddressPartsTs()   Sets the current record's "address_parts_ts" value
  * @method PeopleAddresses setPeople()           Sets the current record's "People" value
  * 
  * @package    darwin
@@ -89,9 +86,6 @@ abstract class BasePeopleAddresses extends sfDoctrineRecord
         $this->hasColumn('country', 'string', null, array(
              'type' => 'string',
              'notnull' => true,
-             ));
-        $this->hasColumn('address_parts_ts', 'string', null, array(
-             'type' => 'string',
              ));
     }
 

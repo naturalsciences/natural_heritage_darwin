@@ -17,7 +17,6 @@ abstract class BaseBibliographyForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'            => new sfWidgetFormInputHidden(),
       'title'         => new sfWidgetFormTextarea(),
-      'title_ts'      => new sfWidgetFormTextarea(),
       'title_indexed' => new sfWidgetFormTextarea(),
       'type'          => new sfWidgetFormTextarea(),
       'abstract'      => new sfWidgetFormTextarea(),
@@ -27,7 +26,6 @@ abstract class BaseBibliographyForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'            => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'title'         => new sfValidatorString(),
-      'title_ts'      => new sfValidatorString(array('required' => false)),
       'title_indexed' => new sfValidatorString(array('required' => false)),
       'type'          => new sfValidatorString(),
       'abstract'      => new sfValidatorString(array('required' => false)),

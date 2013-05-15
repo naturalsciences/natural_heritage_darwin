@@ -17,7 +17,7 @@ abstract class BaseCommentsFormFilter extends BaseFormFilterDoctrine
       'record_id'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'notion_concerned'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'comment'             => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'comment_ts'          => new sfWidgetFormFilterInput(),
+      'comment_indexed'     => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -25,7 +25,7 @@ abstract class BaseCommentsFormFilter extends BaseFormFilterDoctrine
       'record_id'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'notion_concerned'    => new sfValidatorPass(array('required' => false)),
       'comment'             => new sfValidatorPass(array('required' => false)),
-      'comment_ts'          => new sfValidatorPass(array('required' => false)),
+      'comment_indexed'     => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('comments_filters[%s]');
@@ -50,7 +50,7 @@ abstract class BaseCommentsFormFilter extends BaseFormFilterDoctrine
       'record_id'           => 'Number',
       'notion_concerned'    => 'Text',
       'comment'             => 'Text',
-      'comment_ts'          => 'Text',
+      'comment_indexed'     => 'Text',
     );
   }
 }

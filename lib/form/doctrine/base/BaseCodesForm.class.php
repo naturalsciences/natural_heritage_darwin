@@ -25,7 +25,6 @@ abstract class BaseCodesForm extends BaseFormDoctrine
       'code_suffix'           => new sfWidgetFormTextarea(),
       'code_suffix_separator' => new sfWidgetFormTextarea(),
       'full_code_indexed'     => new sfWidgetFormTextarea(),
-      'full_code_order_by'    => new sfWidgetFormTextarea(),
       'code_date'             => new sfWidgetFormTextarea(),
       'code_date_mask'        => new sfWidgetFormInputText(),
     ));
@@ -41,7 +40,6 @@ abstract class BaseCodesForm extends BaseFormDoctrine
       'code_suffix'           => new sfValidatorString(array('required' => false)),
       'code_suffix_separator' => new sfValidatorString(array('required' => false)),
       'full_code_indexed'     => new sfValidatorString(array('required' => false)),
-      'full_code_order_by'    => new sfValidatorString(array('required' => false)),
       'code_date'             => new sfValidatorString(array('required' => false)),
       'code_date_mask'        => new sfValidatorInteger(array('required' => false)),
     ));

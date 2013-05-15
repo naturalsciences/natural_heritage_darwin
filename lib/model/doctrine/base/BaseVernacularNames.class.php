@@ -9,20 +9,17 @@
  * @property integer $vernacular_class_ref
  * @property string $name
  * @property string $name_indexed
- * @property string $name_ts
  * @property ClassVernacularNames $ClassVernacularNames
  * 
  * @method integer              getId()                   Returns the current record's "id" value
  * @method integer              getVernacularClassRef()   Returns the current record's "vernacular_class_ref" value
  * @method string               getName()                 Returns the current record's "name" value
  * @method string               getNameIndexed()          Returns the current record's "name_indexed" value
- * @method string               getNameTs()               Returns the current record's "name_ts" value
  * @method ClassVernacularNames getClassVernacularNames() Returns the current record's "ClassVernacularNames" value
  * @method VernacularNames      setId()                   Sets the current record's "id" value
  * @method VernacularNames      setVernacularClassRef()   Sets the current record's "vernacular_class_ref" value
  * @method VernacularNames      setName()                 Sets the current record's "name" value
  * @method VernacularNames      setNameIndexed()          Sets the current record's "name_indexed" value
- * @method VernacularNames      setNameTs()               Sets the current record's "name_ts" value
  * @method VernacularNames      setClassVernacularNames() Sets the current record's "ClassVernacularNames" value
  * 
  * @package    darwin
@@ -48,9 +45,6 @@ abstract class BaseVernacularNames extends sfDoctrineRecord
              'notnull' => true,
              ));
         $this->hasColumn('name_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('name_ts', 'string', null, array(
              'type' => 'string',
              ));
     }

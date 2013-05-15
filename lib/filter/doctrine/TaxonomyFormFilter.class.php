@@ -48,7 +48,7 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
-    $this->addNamingColumnQuery($query, 'taxonomy', 'name_order_by', $values['name']);
+    $this->addNamingColumnQuery($query, 'taxonomy', 'name_indexed', $values['name']);
     $this->addRelationItemColumnQuery($query, $values);
     $query->innerJoin($query->getRootAlias().".Level")
           ->limit($this->getCatalogueRecLimits());

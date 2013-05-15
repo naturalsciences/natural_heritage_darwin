@@ -14,7 +14,6 @@ abstract class BaseBibliographyFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'title'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'title_ts'      => new sfWidgetFormFilterInput(),
       'title_indexed' => new sfWidgetFormFilterInput(),
       'type'          => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'abstract'      => new sfWidgetFormFilterInput(),
@@ -23,7 +22,6 @@ abstract class BaseBibliographyFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'title'         => new sfValidatorPass(array('required' => false)),
-      'title_ts'      => new sfValidatorPass(array('required' => false)),
       'title_indexed' => new sfValidatorPass(array('required' => false)),
       'type'          => new sfValidatorPass(array('required' => false)),
       'abstract'      => new sfValidatorPass(array('required' => false)),
@@ -49,7 +47,6 @@ abstract class BaseBibliographyFormFilter extends BaseFormFilterDoctrine
     return array(
       'id'            => 'Number',
       'title'         => 'Text',
-      'title_ts'      => 'Text',
       'title_indexed' => 'Text',
       'type'          => 'Text',
       'abstract'      => 'Text',

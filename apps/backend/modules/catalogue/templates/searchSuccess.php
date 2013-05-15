@@ -29,9 +29,9 @@
           </th>
         <?php endif;?>
         <th>
-          <a class="sort" href="<?php echo url_for($s_url.'&orderby=name_order_by'.( ($orderBy=='name_order_by' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+          <a class="sort" href="<?php echo url_for($s_url.'&orderby=name_indexed'.( ($orderBy=='name_indexed' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
             <?php echo __('Name');?>
-            <?php if($orderBy=='name_order_by') echo $orderSign ?>
+            <?php if($orderBy=='name_indexed') echo $orderSign ?>
           </a>
         </th>
         <th>

@@ -8,7 +8,6 @@
  * @property integer $id
  * @property string $name
  * @property string $name_indexed
- * @property string $name_order_by
  * @property integer $level_ref
  * @property string $status
  * @property boolean $local_naming
@@ -24,7 +23,6 @@
  * @method integer             getId()                Returns the current record's "id" value
  * @method string              getName()              Returns the current record's "name" value
  * @method string              getNameIndexed()       Returns the current record's "name_indexed" value
- * @method string              getNameOrderBy()       Returns the current record's "name_order_by" value
  * @method integer             getLevelRef()          Returns the current record's "level_ref" value
  * @method string              getStatus()            Returns the current record's "status" value
  * @method boolean             getLocalNaming()       Returns the current record's "local_naming" value
@@ -39,7 +37,6 @@
  * @method Lithostratigraphy   setId()                Sets the current record's "id" value
  * @method Lithostratigraphy   setName()              Sets the current record's "name" value
  * @method Lithostratigraphy   setNameIndexed()       Sets the current record's "name_indexed" value
- * @method Lithostratigraphy   setNameOrderBy()       Sets the current record's "name_order_by" value
  * @method Lithostratigraphy   setLevelRef()          Sets the current record's "level_ref" value
  * @method Lithostratigraphy   setStatus()            Sets the current record's "status" value
  * @method Lithostratigraphy   setLocalNaming()       Sets the current record's "local_naming" value
@@ -72,9 +69,6 @@ abstract class BaseLithostratigraphy extends sfDoctrineRecord
              'notnull' => true,
              ));
         $this->hasColumn('name_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('name_order_by', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('level_ref', 'integer', null, array(

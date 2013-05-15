@@ -16,14 +16,12 @@ abstract class BaseVernacularNamesFormFilter extends BaseFormFilterDoctrine
       'vernacular_class_ref' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('ClassVernacularNames'), 'add_empty' => true)),
       'name'                 => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'name_indexed'         => new sfWidgetFormFilterInput(),
-      'name_ts'              => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
       'vernacular_class_ref' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('ClassVernacularNames'), 'column' => 'id')),
       'name'                 => new sfValidatorPass(array('required' => false)),
       'name_indexed'         => new sfValidatorPass(array('required' => false)),
-      'name_ts'              => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('vernacular_names_filters[%s]');
@@ -47,7 +45,6 @@ abstract class BaseVernacularNamesFormFilter extends BaseFormFilterDoctrine
       'vernacular_class_ref' => 'ForeignKey',
       'name'                 => 'Text',
       'name_indexed'         => 'Text',
-      'name_ts'              => 'Text',
     );
   }
 }

@@ -23,7 +23,6 @@ abstract class BaseIdentificationsForm extends BaseFormDoctrine
       'notion_date_mask'      => new sfWidgetFormInputText(),
       'value_defined'         => new sfWidgetFormTextarea(),
       'value_defined_indexed' => new sfWidgetFormTextarea(),
-      'value_defined_ts'      => new sfWidgetFormTextarea(),
       'determination_status'  => new sfWidgetFormTextarea(),
       'order_by'              => new sfWidgetFormInputText(),
     ));
@@ -37,7 +36,6 @@ abstract class BaseIdentificationsForm extends BaseFormDoctrine
       'notion_date_mask'      => new sfValidatorInteger(array('required' => false)),
       'value_defined'         => new sfValidatorString(array('required' => false)),
       'value_defined_indexed' => new sfValidatorString(array('required' => false)),
-      'value_defined_ts'      => new sfValidatorString(array('required' => false)),
       'determination_status'  => new sfValidatorString(array('required' => false)),
       'order_by'              => new sfValidatorInteger(array('required' => false)),
     ));
