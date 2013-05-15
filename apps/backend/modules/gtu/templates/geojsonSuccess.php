@@ -1,7 +1,9 @@
 <?php
 $result = array();
 foreach($items as $item) {
-  $content = '<div class="map_result_id_'. $item->getId() .'">
+  $content = '
+    <strong>'. $item->getCode() .'</strong>
+    <div class="map_result_id_'. $item->getId() .'">
     <div class="item_name hidden">'. $item->getTagsWithCode(ESC_RAW) .'</div>
     <div class="">'. $item->getName(ESC_RAW) .'</div>';
   if(! $is_choose) {

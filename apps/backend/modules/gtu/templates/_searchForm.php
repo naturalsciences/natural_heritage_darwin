@@ -3,7 +3,6 @@
 <!--[if lte IE 8]>
     <link rel="stylesheet" href="/leaflet/leaflet.ie.css" />
 <![endif]-->
-
 <div class="catalogue_gtu">
 <?php echo form_tag('gtu/search'.( isset($is_choose) && $is_choose  ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'gtu_filter'));?>
   <div class="container">
@@ -65,7 +64,7 @@
             </tr>
           </table>
           <div id="map_search_form" style="display:none">
-            <?php echo __('Show accuracy of each point');?> <input type="checkbox" id="show_accuracy" checked="checked" /><br /><br />
+            <?php echo __('Show accuracy of each point');?> <input type="checkbox" id="show_accuracy" /><br /><br />
             <div style="height:400px;width:100%" id="smap"></div>
 
  <div class="pager paging_info hidden">

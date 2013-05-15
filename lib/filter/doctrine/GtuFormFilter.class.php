@@ -152,6 +152,7 @@ class GtuFormFilter extends BaseGtuFormFilter
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/leaflet/leaflet.js';
+    $javascripts[]='/leaflet/leaflet.markercluster-src.js';
     $javascripts[]='/js/map.js';
     return $javascripts;
   }
@@ -159,6 +160,7 @@ class GtuFormFilter extends BaseGtuFormFilter
   public function getStylesheets() {
     $items=parent::getStylesheets();
     $items['/leaflet/leaflet.css']='all';
+    $items['leaflet/MarkerCluster.css']='all';
     return $items;
   }
 

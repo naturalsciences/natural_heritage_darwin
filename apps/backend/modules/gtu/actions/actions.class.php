@@ -69,7 +69,10 @@ class gtuActions extends DarwinActions
           {
             //return $this->renderText($this->form->getValue('rec_per_page').'/'.$query->count());
             sfContext::getInstance()->getConfiguration()->loadHelpers('I18N');
-            $str = format_number_choice('[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records', array('%1%' =>  $query->count()),  $query->count());
+            $str = format_number_choice('[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%',
+              array('%1%' => min($query->count(), $this->form->getValue('rec_per_page')), '%2%' =>  $query->count()),
+              $query->count()
+            );
             return $this->renderText($str);
           }
           

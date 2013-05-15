@@ -112,7 +112,8 @@ function fetchPositions(lonlat, zoom) {
 /*************************** For Search Form *************************/
 var results_layer;
 var accuracy_layer;
-
+var number_to_fetch = 100;
+var mg;
 function initSearchMap() {
   $('#show_accuracy').change(function(){
     if(results_layer) {
@@ -167,8 +168,9 @@ function initSearchMap() {
   });
 
   map = L.map('smap').setView([0,0], 2);
-  accuracy_layer = L.layerGroup([])
-    .addTo(map);
+  accuracy_layer = L.layerGroup([]);
+  if($('#show_accuracy').is(':checked'))
+    accuracy_layer.addTo(map);
   // add an OpenStreetMap tile layer
   L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -176,6 +178,12 @@ function initSearchMap() {
 
   map.on('move', updateLatLong);
 
+  //Custom radius and icon create function
+  mg = new L.MarkerClusterGroup({
+          maxClusterRadius: 50,
+          spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: true
+  });
+  map.addLayer(mg);
 }
 
 function updateLatLong() {
@@ -205,6 +213,7 @@ function map_submit(event) {
   $('.paging_info').hide();
   if(results_layer) {
     // Clear previous search
+    mg.clearLayers();
     results_layer.clearLayers();
     accuracy_layer.clearLayers();
   }
@@ -212,7 +221,7 @@ function map_submit(event) {
   //Load results
   $.ajax({
     type: "POST",
-    url: $('#gtu_filter').attr('action')+'/format/json?gtu_filters%5Brec_per_page%5D=50&'+ $('#gtu_filter').serialize(),
+    url: $('#gtu_filter').attr('action')+'/format/json?gtu_filters%5Brec_per_page%5D=' + number_to_fetch +'&'+ $('#gtu_filter').serialize(),
     dataType: 'json',
     success: function (response) {
       results_layer = L.geoJson(response, {
@@ -225,13 +234,13 @@ function map_submit(event) {
             .addTo(accuracy_layer);
           return fg;
         }
-      }).addTo(map);
+      }).addTo(mg);
     }
   });
   
   //Load Page counts
   $.ajax({
-    url: $('#gtu_filter').attr('action')+'/format/text/extd/count?gtu_filters%5Brec_per_page%5D=50&'+ $('#gtu_filter').serialize(),
+    url: $('#gtu_filter').attr('action')+'/format/text/extd/count?gtu_filters%5Brec_per_page%5D=' + number_to_fetch +'&'+ $('#gtu_filter').serialize(),
     success: function(html) {
       $('.paging_info .inner_text').html(html);
       $('.paging_info').show();
