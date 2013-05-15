@@ -40,7 +40,7 @@
       </table>
 
       <fieldset id="lat_long_set">
-        <legend><?php echo __('Show Result as map');?> <input type="checkbox" id="show_as_map"></legend>
+        <legend><?php echo __('Show Result as map');?> <input type="checkbox" id="show_as_map" autocomplete="off"></legend>
           <table>
             <tr>
               <td>

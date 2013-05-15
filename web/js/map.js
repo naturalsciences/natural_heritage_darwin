@@ -180,7 +180,7 @@ function initSearchMap() {
 
   //Custom radius and icon create function
   mg = new L.MarkerClusterGroup({
-          maxClusterRadius: 50,
+          maxClusterRadius: 25,
           spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: true
   });
   map.addLayer(mg);
