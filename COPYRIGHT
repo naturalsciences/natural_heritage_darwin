@@ -46,11 +46,11 @@ Url: http://jqueryui.com/
 Copyright: Copyright (c) 2011 jQuery UI Authors (see http://jqueryui.com/about)
 License: Dual licensed under the MIT and GPL version 2 licenses (see http://jqueryui.com/about)
 
-OpenLayers
+Leaflet
 ---------------
-Url: http://openlayers.org/
-Copyright: Copyright (c) 2005-2011 OpenLayers Contributors.
-License: Clear BSD ( see http://svn.openlayers.org/trunk/openlayers/license.txt)
+Url: http://leafletjs.com/
+Copyright: Copyright (c) 2010-2011, CloudMade Copyright (c) 2010-2013, Vladimir Agafonkin
+License: BSD ( see https://github.com/Leaflet/Leaflet/blob/master/LICENSE)
 
 flot
 ---------------
