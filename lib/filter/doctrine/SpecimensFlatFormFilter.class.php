@@ -548,11 +548,11 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
       $query->andWhere('
-        ( station_visible = true AND gtu_location && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
+        ( station_visible = true AND gtu_location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
         ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326) )
        OR 
         ( station_visible = false AND collection_ref in ('.implode(',',$this->encoding_collection).') 
-        AND gtu_location && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
+        AND gtu_location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
         ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326) )
       ');
       $query->whereParenWrap();
