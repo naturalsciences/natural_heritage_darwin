@@ -62,7 +62,7 @@ class gtuActions extends DarwinActions
             $query->Limit($this->form->getValue('rec_per_page'));
             $this->getResponse()->setContentType('application/json');
             $this->items = $query->execute();
-            $this->setTemplate('georss');
+            $this->setTemplate('geojson');
             return;
           }
           else

@@ -59,6 +59,7 @@ function setPointFromEvent( e ) {
   }else { //Drag end events
     pt = e.target.getLatLng();
   }
+  pt = pt.wrap();
   
   $('#gtu_latitude').val(pt.lat)
   $('#gtu_longitude').val(pt.lng)
@@ -181,17 +182,17 @@ function updateLatLong() {
   bounds = map.getBounds();
   if($('#show_as_map').is(':checked')) {
     if($('#gtu_filters_lat_from').length) {
-      $('#gtu_filters_lat_from').val(bounds.getNorthWest().lat );
-      $('#gtu_filters_lon_from').val(bounds.getNorthWest().lng);
+      $('#gtu_filters_lat_from').val(bounds.getNorthWest().wrap().lat );
+      $('#gtu_filters_lon_from').val(bounds.getNorthWest().wrap().lng);
   
-      $('#gtu_filters_lat_to').val(bounds.getSouthEast().lat);
-      $('#gtu_filters_lon_to').val(bounds.getSouthEast().lng);
+      $('#gtu_filters_lat_to').val(bounds.getSouthEast().wrap().lat);
+      $('#gtu_filters_lon_to').val(bounds.getSouthEast().wrap().lng);
     }else if($('#specimen_search_filters_lat_from').length) {
-      $('#specimen_search_filters_lat_from').val(bounds.getNorthWest().lat );
+      $('#specimen_search_filters_lat_from').val(bounds.getNorthWest().wrap().lat );
       $('#specimen_search_filters_lon_from').val(bounds.getNorthWest().lng);
   
-      $('#specimen_search_filters_lat_to').val(bounds.getSouthEast().lat);
-      $('#specimen_search_filters_lon_to').val(bounds.getSouthEast().lng);
+      $('#specimen_search_filters_lat_to').val(bounds.getSouthEast().wrap().lat);
+      $('#specimen_search_filters_lon_to').val(bounds.getSouthEast().wrap().lng);
       
     }
     
