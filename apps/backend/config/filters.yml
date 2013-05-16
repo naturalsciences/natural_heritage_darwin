@@ -2,11 +2,11 @@ rendering: ~
 security:  ~
 
 # insert your own filters here
-tracking:
-  class: trackingFilter
-
 timeout:
   class: timeoutFilter
+
+tracking:
+  class: trackingFilter
 
 cache:     ~
 common:
