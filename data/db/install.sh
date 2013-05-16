@@ -206,11 +206,14 @@ case "$@" in
   "install-db")
     install_db
   ;;
-  "test")
+  "test-psql")
     for sqlfiles in $(ls tests/*.sql)
     do
       $psql -f $sqlfiles
     done
+  ;;
+  "test")
+    pg_prove -h $hostname -U darwin2 -d $dbname -p $dbport $(ls tests/*.sql)
   ;;
   "create-schema")
     $admpsql -c "create schema $schema authorization darwin2;"
