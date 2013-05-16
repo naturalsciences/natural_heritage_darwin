@@ -555,6 +555,10 @@ CREATE OR REPLACE FUNCTION fct_set_user(userid integer) RETURNS void
 language SQL AS
 $$
   select set_config('darwin.userid', $1::varchar, false) ;
+  select CASE WHEN get_setting('application_name') ~ ' uid:\d+'
+    THEN set_config('application_name', regexp_replace(get_setting('application_name') ,'uid:\d+',  'uid:' || $1::varchar), false)
+    ELSE set_config('application_name', get_setting('application_name')  || ' uid:' || $1::varchar, false)
+    END;
   update users_login_infos set last_seen = now() where user_ref = $1  and login_type='local';
 $$;
 
