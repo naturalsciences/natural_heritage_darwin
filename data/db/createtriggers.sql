@@ -99,11 +99,11 @@ CREATE TRIGGER trg_cpy_gtuTags_TagGroups AFTER INSERT OR UPDATE OR DELETE
 **
 **
 *****************************************/
-CREATE TRIGGER trg_clr_referenceRecord_staging AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_staging AFTER DELETE OR UPDATE
 	ON staging FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_gtu AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_gtu AFTER DELETE OR UPDATE
 	ON gtu FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
@@ -111,94 +111,100 @@ CREATE TRIGGER trg_clr_identifiers_in_flat BEFORE DELETE
 	ON identifications FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_identifiers_in_flat();
 
-CREATE TRIGGER trg_clr_referenceRecord_identifications AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_identifications AFTER DELETE OR UPDATE
 	ON identifications FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_insurances AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_insurances AFTER DELETE OR UPDATE
  	ON insurances FOR EACH ROW
  	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_vernacularnames AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_vernacularnames AFTER DELETE OR UPDATE
 	ON vernacular_names FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_expeditions AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_expeditions AFTER DELETE OR UPDATE
 	ON expeditions FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_people AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_people AFTER DELETE OR UPDATE
 	ON people FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_users AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_users AFTER DELETE OR UPDATE
 	ON users FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_multimedia AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_multimedia AFTER DELETE OR UPDATE
 	ON multimedia FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
+CREATE TRIGGER trg_clr_referenceRecord_igs AFTER DELETE OR UPDATE
+        ON igs FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_collections AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_collections AFTER DELETE OR UPDATE
 	ON collections FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_bibliography AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_bibliography AFTER DELETE OR UPDATE
         ON bibliography FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-/*CREATE TRIGGER trg_clr_referenceRecord_userscollrightsasked AFTER DELETE
+/*CREATE TRIGGER trg_clr_referenceRecord_userscollrightsasked AFTER DELETE OR UPDATE
 	ON users_coll_rights_asked FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 */
-CREATE TRIGGER trg_clr_referenceRecord_mysavedsearches AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_mysavedsearches AFTER DELETE OR UPDATE
 	ON collection_maintenance FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_taxa AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_taxa AFTER DELETE OR UPDATE
 	ON taxonomy FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_chronostratigraphy AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_chronostratigraphy AFTER DELETE OR UPDATE
 	ON chronostratigraphy FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_lithostratigraphy AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_lithostratigraphy AFTER DELETE OR UPDATE
 	ON lithostratigraphy FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_mineralogy AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_mineralogy AFTER DELETE OR UPDATE
 	ON mineralogy FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_lithology AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_lithology AFTER DELETE OR UPDATE
 	ON lithology FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_specimens AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_specimens AFTER DELETE OR UPDATE
 	ON specimens FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_specimenindividuals AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_specimenindividuals AFTER DELETE OR UPDATE
 	ON specimen_individuals FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_specimenparts AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_specimenparts AFTER DELETE OR UPDATE
 	ON specimen_parts FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_specimensaccompanying AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_specimensaccompanying AFTER DELETE OR UPDATE
 	ON specimens_accompanying FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_loans AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_loans AFTER DELETE OR UPDATE
         ON loans FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE OR UPDATE
         ON loan_items FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+
+/****************************/
 
 CREATE TRIGGER trg_cpy_updateCollectionRights AFTER INSERT OR UPDATE
 	ON collections FOR EACH ROW
@@ -591,18 +597,6 @@ CREATE TRIGGER trg_chk_ref_record_class_vernacular_names AFTER INSERT OR UPDATE
         ON class_vernacular_names FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
 
-CREATE TRIGGER trg_chk_ref_record_informative_workflow AFTER INSERT OR UPDATE
-        ON informative_workflow FOR EACH ROW
-        EXECUTE PROCEDURE fct_chk_ReferencedRecord();
-
-CREATE trigger trg_chk_is_last_informative_workflow BEFORE INSERT
-	ON informative_workflow FOR EACH ROW
-	EXECUTE PROCEDURE fct_remove_last_flag();
-
-CREATE trigger trg_reset_last_flag_informative_workflow AFTER DELETE
-        ON informative_workflow FOR EACH ROW
-        EXECUTE PROCEDURE fct_informative_reset_last_flag();
-
 CREATE TRIGGER trg_chk_ref_record_collection_maintenance AFTER INSERT OR UPDATE
         ON collection_maintenance FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
@@ -628,6 +622,19 @@ CREATE TRIGGER trg_chk_ref_record_relationship_catalogue_relationships AFTER INS
         ON catalogue_relationships FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecordRelationShip();
 
+        
+/*** Informativ Workflow ****/
+CREATE TRIGGER trg_chk_ref_record_informative_workflow AFTER INSERT OR UPDATE
+        ON informative_workflow FOR EACH ROW
+        EXECUTE PROCEDURE fct_chk_ReferencedRecord();
+
+CREATE trigger trg_chk_is_last_informative_workflow BEFORE INSERT
+        ON informative_workflow FOR EACH ROW
+        EXECUTE PROCEDURE fct_remove_last_flag();
+
+CREATE trigger trg_reset_last_flag_informative_workflow AFTER DELETE
+        ON informative_workflow FOR EACH ROW
+        EXECUTE PROCEDURE fct_informative_reset_last_flag();
 
 /************* Possible upper level Check ***********/
 

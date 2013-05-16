@@ -283,8 +283,13 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_clear_referencedRecord() RETURNS TRIGGER
 AS $$
 BEGIN
-
-  DELETE FROM template_table_record_ref where referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+  IF TG_OP ='UPDATE' THEN
+    IF NEW.id != OLD.id THEN
+      UPDATE template_table_record_ref SET record_id = NEW.id WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+    END IF;
+  ELSE
+    DELETE FROM template_table_record_ref where referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+  END IF;
   RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
