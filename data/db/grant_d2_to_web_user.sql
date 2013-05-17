@@ -6,7 +6,6 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_classifications TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.collection_maintenance TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_relationships TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.class_vernacular_names TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.classification_keywords TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.collections TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.collections_rights TO cebmpad;
@@ -82,7 +81,6 @@
  GRANT USAGE, SELECT ON SEQUENCE darwin2.catalogue_relationships_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.chronostratigraphy_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.classification_synonymies_group_id_seq TO cebmpad;
- GRANT USAGE, SELECT ON SEQUENCE darwin2.class_vernacular_names_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.codes_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.classification_keywords_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.classification_synonymies_id_seq TO cebmpad;

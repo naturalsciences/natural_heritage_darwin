@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(25);
+SELECT plan(26);
 
 SELECT diag('FulltoIndex Function');
 SELECT ok('msdfnjrt' = fullToIndex('MsdfnJrt'),'With Majuscule and minuscule');
@@ -73,10 +73,11 @@ insert into people (id, is_physical, family_name, given_name, birth_date, gender
 insert into people (id, is_physical, family_name, given_name, birth_date, gender) VALUES (5, true, 'Marechal', 'Bill', NOW(), 'M');
 
 
-INSERT INTO class_vernacular_names (referenced_relation, record_id, id, community) VALUES ('taxonomy',11,1,'testlang');
-INSERT INTO vernacular_names (vernacular_class_ref, name) VALUES (1,'Éléphant!');
-SELECT ok( 'elephant' = (SELECT name_indexed FROM vernacular_names WHERE vernacular_class_ref=1),'FulltoIndex on vernacular_names');
-SELECT ok ( fullToIndex('Éléphant') = (SELECT name_indexed FROM vernacular_names WHERE vernacular_class_ref=1),'Full TEXT on vernacular_names');
+INSERT INTO vernacular_names (referenced_relation, record_id, community, name) VALUES ('taxonomy',11, 'tést','Éléphant!');
+
+SELECT ok( 'elephant' = (SELECT name_indexed FROM vernacular_names WHERE record_id = 11),'FulltoIndex on vernacular_names');
+SELECT ok ( fullToIndex('Éléphant') = (SELECT name_indexed FROM vernacular_names WHERE record_id = 11),'Full TEXT on vernacular_names');
+SELECT ok( 'test' = (SELECT community_indexed FROM vernacular_names WHERE record_id = 11),'FulltoIndex on vernacular_names');
 
 SELECT * FROM finish();
 ROLLBACK;

@@ -1,4 +1,10 @@
   <tr>
+    <td>
+      <?php echo $form['community']->renderError(); ?>
+      <?php echo $form['community'];?>
+      <?php echo $form['referenced_relation'];?>
+      <?php echo $form['record_id'];?>
+    </td>
     <td><?php echo $form['id'];?>
       <?php echo $form['name']->renderError(); ?>
       <?php echo $form['name'];?>

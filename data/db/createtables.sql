@@ -344,35 +344,26 @@ comment on column identifications.value_defined_indexed is 'Indexed form of valu
 comment on column identifications.determination_status is 'Status of identification - can either be a percentage of certainty or a code describing the identification step in the process';
 comment on column identifications.order_by is 'Integer used to order the identifications when no date entered';
 
-create table class_vernacular_names
+create table vernacular_names
        (
         id serial,
         community varchar not null,
         community_indexed varchar not null,
-        constraint pk_class_vernacular_names primary key (id),
-        constraint unq_class_vernacular_names unique (referenced_relation, record_id, community_indexed)
-       )
-inherits (template_table_record_ref);
-comment on table class_vernacular_names is 'Contains the language communities a unit name translation is available for';
-comment on column class_vernacular_names.id is 'Unique identifier of a language community vernacular name';
-comment on column class_vernacular_names.referenced_relation is 'Reference of the unit table a vernacular name for a language community has to be defined - id field of table_list table';
-comment on column class_vernacular_names.record_id is 'Identifier of record a vernacular name for a language community has to be defined';
-comment on column class_vernacular_names.community is 'Language community, a unit translation is available for';
-
-create table vernacular_names
-       (
-        id serial,
-        vernacular_class_ref integer not null,
         name varchar not null,
         name_indexed varchar not null,
-        constraint unq_vernacular_names unique (vernacular_class_ref, name_indexed),
-        constraint pk_vernacular_names primary key (id),
-        constraint fk_vernacular_class_class_vernacular_names foreign key (vernacular_class_ref) references class_vernacular_names(id) on delete cascade
-       );
+        constraint unq_vernacular_names unique (referenced_relation, record_id, community_indexed, name_indexed),
+        constraint pk_vernacular_names primary key (id)
+       )
+inherits (template_table_record_ref);
+       
 comment on table vernacular_names is 'List of vernacular names for a given unit and a given language community';
-comment on column vernacular_names.vernacular_class_ref is 'Identifier of a unit/language community entry - id field of class_vernacular_names table';
+comment on column vernacular_names.community is 'Language community, a unit translation is available for';
+comment on column vernacular_names.community_indexed is 'indexed version of the language community';
 comment on column vernacular_names.name is 'Vernacular name';
 comment on column vernacular_names.name_indexed is 'Indexed form of vernacular name';
+comment on column vernacular_names.referenced_relation is 'Reference of the unit table a vernacular name for a language community has to be defined - id field of table_list table';
+comment on column vernacular_names.record_id is 'Identifier of record a vernacular name for a language community has to be defined';
+
 
 create table expeditions
        (

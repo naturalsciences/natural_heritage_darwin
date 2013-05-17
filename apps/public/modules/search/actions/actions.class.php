@@ -83,7 +83,7 @@ class searchActions extends DarwinActions
       $this->field_to_show = $this->getVisibleColumns($this->form);
       $this->defineFields();
       $ids = $this->FecthIdForCommonNames() ;
-      $this->common_names = Doctrine::getTable('ClassVernacularNames')->findAllCommonNames($ids) ;
+      $this->common_names = Doctrine::getTable('VernacularNames')->findAllCommonNames($ids) ;
       if(!count($this->common_names))
         $this->common_names = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(), 
                                     'lithology' => array(),'mineralogy' => array()) ;
@@ -150,10 +150,10 @@ class searchActions extends DarwinActions
     }
     $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef());
     $this->col_staff = Doctrine::getTable('Users')->find($collection->getStaffRef());
-    $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());      
+    $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());
 
     $ids = $this->FecthIdForCommonNames() ;
-    $this->common_names = Doctrine::getTable('ClassVernacularNames')->findAllCommonNames($ids) ;    
+    $this->common_names = Doctrine::getTable('VernacularNames')->findAllCommonNames($ids) ;
     
     if ($tag = $this->individual->SpecimensFlat->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ; 
     else $this->tags = false ;

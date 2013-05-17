@@ -7,7 +7,6 @@
  GRANT SELECT ON template_classifications TO d2viewer;
  GRANT SELECT ON collection_maintenance TO d2viewer;
  GRANT SELECT ON catalogue_relationships TO d2viewer;
- GRANT SELECT ON class_vernacular_names TO d2viewer;
  GRANT SELECT ON classification_keywords TO d2viewer;
  GRANT SELECT ON collections TO d2viewer;
  GRANT SELECT ON collections_rights TO d2viewer;

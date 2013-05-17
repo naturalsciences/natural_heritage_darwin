@@ -185,23 +185,14 @@ Identifications:
         determination_status: { type: string}
         order_by: { type: integer, notnull: true, default: 1}
 
-ClassVernacularNames:
+VernacularNames:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
         referenced_relation: { type: string, notnull: true}
         record_id: { type: integer, notnull: true}
         community: { type: string, notnull: true}
-
-VernacularNames:
-    columns:
-        id: { type: integer, primary: true, autoincrement: true }
-        vernacular_class_ref: { type: integer}
         name:  { type: string, notnull: true}
         name_indexed:  { type: string}
-    relations:
-        ClassVernacularNames:
-            local: vernacular_class_ref
-            foreign: id
 
 Expeditions:
     columns:

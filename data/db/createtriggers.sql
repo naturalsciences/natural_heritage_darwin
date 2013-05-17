@@ -59,10 +59,6 @@ CREATE TRIGGER trg_cpy_fullToIndex_classification_keywords BEFORE INSERT OR UPDA
         ON classification_keywords FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
-CREATE TRIGGER trg_cpy_fullToIndex_classvernacularnames BEFORE INSERT OR UPDATE
-	ON class_vernacular_names FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_fullToIndex();
-
 CREATE TRIGGER trg_cpy_fullToIndex_vernacularnames BEFORE INSERT OR UPDATE
 	ON vernacular_names FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
@@ -346,10 +342,6 @@ CREATE TRIGGER trg_trk_log_table_identifications AFTER INSERT OR UPDATE OR DELET
         ON identifications FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
-CREATE TRIGGER trg_trk_log_table_class_vernacular_names AFTER INSERT OR UPDATE OR DELETE
-        ON class_vernacular_names FOR EACH ROW
-        EXECUTE PROCEDURE fct_trk_log_table();
-
 CREATE TRIGGER trg_trk_log_table_vernacular_names AFTER INSERT OR UPDATE OR DELETE
         ON vernacular_names FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
@@ -593,8 +585,8 @@ CREATE TRIGGER trg_chk_ref_record_identifications AFTER INSERT OR UPDATE
         ON identifications FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
 
-CREATE TRIGGER trg_chk_ref_record_class_vernacular_names AFTER INSERT OR UPDATE
-        ON class_vernacular_names FOR EACH ROW
+CREATE TRIGGER trg_chk_ref_record_vernacular_names AFTER INSERT OR UPDATE
+        ON vernacular_names FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
 
 CREATE TRIGGER trg_chk_ref_record_collection_maintenance AFTER INSERT OR UPDATE

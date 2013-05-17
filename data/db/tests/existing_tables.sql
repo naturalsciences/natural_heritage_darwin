@@ -14,7 +14,6 @@ SELECT has_table('tag_groups','tag_groups exists');
 SELECT has_table('gtu','gtu exists');
 SELECT has_table('catalogue_properties','catalogue_properties exists');
 SELECT has_table('identifications','identifications exists');
-SELECT has_table('class_vernacular_names','class_vernacular_names exists');
 SELECT has_table('vernacular_names','vernacular_names exists');
 SELECT has_table('expeditions','expeditions exists');
 SELECT has_table('template_people','template_people exists');

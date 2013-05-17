@@ -84,10 +84,10 @@ CREATE INDEX CONCURRENTLY idx_classification_keywords_referenced_record on class
 CREATE INDEX CONCURRENTLY idx_classification_synonymies_grouping on classification_synonymies(group_id, is_basionym);
 CREATE INDEX CONCURRENTLY idx_classification_synonymies_order_by on classification_synonymies(group_name, order_by);
 CREATE INDEX CONCURRENTLY idx_classification_synonymies_referenced_record on classification_synonymies(referenced_relation, record_id, group_id);
-CREATE INDEX CONCURRENTLY idx_class_vernacular_names_community on class_vernacular_names(community);
-CREATE INDEX CONCURRENTLY idx_class_vernacular_names_community_indexed on class_vernacular_names (community_indexed);
+CREATE INDEX CONCURRENTLY idx_vernacular_names_community_indexed on vernacular_names (community_indexed);
+CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
+CREATE INDEX CONCURRENTLY idx_vernacular_names_referenced_record on vernacular_names(referenced_relation, record_id);
 
-CREATE INDEX CONCURRENTLY idx_vernacular_names_vernacular_class_ref on vernacular_names (vernacular_class_ref);
 
 CREATE INDEX CONCURRENTLY idx_codes_code_num on codes(code_num) WHERE NOT code_num IS NULL;
 CREATE INDEX CONCURRENTLY idx_collecting_methods_method_indexed on collecting_methods(method_indexed);
@@ -147,13 +147,11 @@ CREATE INDEX CONCURRENTLY idx_users_addresses_country on users_addresses(country
 CREATE INDEX CONCURRENTLY idx_users_comm_comm_type on users_comm(comm_type);
 
 CREATE INDEX CONCURRENTLY idx_informative_workflow_user_status on informative_workflow(user_ref, status);
-CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
 
 /***Indx for text fields ***/
 
 /** NEW TS IDX **/
 CREATE INDEX CONCURRENTLY idx_gin_trgm_comments_comment on comments  using gin ("comment" gin_trgm_ops);
-CREATE INDEX CONCURRENTLY idx_gin_trgm_vernacular_names_name on vernacular_names using gin(name_indexed gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_gin_trgm_expeditions_name on expeditions using gin(name_indexed gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_gin_trgm_people_formated_name on people using gin(formated_name_indexed gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_gin_trgm_users_formated_name on users using gin(formated_name_indexed gin_trgm_ops);

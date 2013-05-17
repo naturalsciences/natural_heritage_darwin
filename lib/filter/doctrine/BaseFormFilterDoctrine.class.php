@@ -300,16 +300,18 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   protected function ListIdByWord($relation,$val)
   {
     $q = Doctrine_Query::create()
-	    ->select('cvn.record_id')
-	    ->from('ClassVernacularNames cvn')
-	    ->leftJoin('cvn.VernacularNames tvn')  
-      ->andWhere('cvn.referenced_relation = ?', $relation);      
-	  $this->addNamingColumnQuery($q, 'vernacular_names', 'name_indexed', $val, 'tvn');
+      ->select('v.record_id')
+      ->from('VernacularNames v')
+      ->andWhere('v.referenced_relation = ?', $relation);
+
+    $this->addNamingColumnQuery($q, 'vernacular_names', 'name_indexed', $val, 'v');
     $results = $q->execute(); 
-	  $list = "" ;
+    $list = "" ;
+
     foreach($results as $key=>$result) 
       $list .= $result->getRecordId()."," ;
-    if($list == "") return (-1) ;      
+
+    if($list == "") return (-1) ;
     return (substr($list,0,strlen($list)-1)) ; //return list of id without the last ','
   }
 
