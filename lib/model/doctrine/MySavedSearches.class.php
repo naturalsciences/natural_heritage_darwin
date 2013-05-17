@@ -41,9 +41,15 @@ class MySavedSearches extends BaseMySavedSearches
   }
 
   // Returns an array from the serialized string stored in search_criterias field
-  public function getRequest()
-  {
+  public function getUnserialRequest() {
     return unserialize($this->getSearchCriterias());
+  }
+  
+  /*
+  * set the serialized string stored in search_criterias field
+  */
+  public function setUnserialRequest($req) {
+    return $this->setSearchCriterias(serialize($req));
   }
   
   // Returns the searched ID from the serialized string stored in search_criterias field

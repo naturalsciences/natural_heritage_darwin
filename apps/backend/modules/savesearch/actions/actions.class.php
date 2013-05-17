@@ -17,7 +17,7 @@ class savesearchActions extends sfActions
       $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search'), $this->getUser()->getId());
       $this->forward404Unless($saved_search);
 
-      $prev_req = unserialize( $saved_search->getSearchCriterias() );
+      $prev_req = $saved_search->getUnserialRequest();
       $old_ids = $saved_search->getAllSearchedId();
 
       $remove_ids = explode(',',$request->getParameter('ids'));
@@ -26,7 +26,7 @@ class savesearchActions extends sfActions
 
       $old_ids = array_unique($old_ids);
       $prev_req['specimen_search_filters']['spec_ids'] = implode(',',$old_ids);
-      $saved_search->setSearchCriterias( serialize($prev_req));
+      $saved_search->setUnserialRequest($prev_req);
       $saved_search->save();
       return $this->renderText('ok');  
     } 
@@ -115,29 +115,29 @@ class savesearchActions extends sfActions
         {
           $ids=implode(',',$this->getUser()->getAllPinned($saved_search->getSubject()) );
           if($ids=="") return $this->renderText('<ul class="error_list"><li>'.$this->getContext()->getI18N()->__('You must select a least 1 specimen').'</li></ul>');
-          $criterias = serialize( array('specimen_search_filters'=> array('spec_ids' => $ids)) );
+          $criterias = array('specimen_search_filters'=> array('spec_ids' => $ids));
           $saved_search->setIsOnlyId(true);
         }
         else
         {
           $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('list_nr'), $this->getUser()->getId());
 
-          $prev_req = unserialize( $saved_search->getSearchCriterias() );
+          $prev_req = $saved_search->getUnserialRequest();
           $old_ids = $saved_search->getAllSearchedId();
 
           $new_ids = array_merge($old_ids, $this->getUser()->getAllPinned($saved_search->getSubject()) ); 
           $new_ids = array_unique($new_ids);
           $prev_req['specimen_search_filters']['spec_ids'] = implode(',',$new_ids);
-          $criterias = serialize($prev_req);
+          $criterias = $prev_req;
         }
       } 
       else
       {
-        $criterias = serialize($request->getPostParameters());
+        $criterias = $request->getPostParameters();
         $saved_search->setIsOnlyId(false);
         $saved_search->setSubject($source);
       }
-      $saved_search->setSearchCriterias($criterias) ;
+      $saved_search->setUnserialRequest($criterias) ;
     }
 
     $saved_search->setUserRef($this->getUser()->getId()) ;
