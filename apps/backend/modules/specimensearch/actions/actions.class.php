@@ -93,7 +93,7 @@ class specimensearchActions extends DarwinActions
       if($saved_search->getIsOnlyId())
         $this->is_specimen_search = $saved_search->getId();
       // Get all search criterias from DB
-    $criterias = 1ialize($saved_search->getSearchCriterias());
+      $criterias = $saved_search->getUnserialRequest();
       // Transform all visible fields stored as a string with | as separator and store it into col_fields field
       $criterias['specimen_search_filters']['col_fields'] = implode('|',$saved_search->getVisibleFieldsInResult()) ;
       $criterias['specimen_search_filters']['what_searched'] = $saved_search->getSubject();
