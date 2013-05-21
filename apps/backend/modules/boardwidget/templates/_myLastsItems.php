@@ -1,5 +1,6 @@
 <?php slot('widget_title',__('My Lasts Items'));  ?>
-
+<?php include_stylesheets_for_form($form) ?>
+<?php include_javascripts_for_form($form) ?>
 <?php if(count($items)):?>
 <table class="show_table">
         <thead>
