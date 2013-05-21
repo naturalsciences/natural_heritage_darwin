@@ -15,17 +15,18 @@ class xmlFileValidator extends sfValidatorFile
     libxml_use_internal_errors(true) ;
     $xml = new DOMDocument();
     $errorSchema = new sfValidatorErrorSchema($this);
-    $errorSchemaLocal = new sfValidatorErrorSchema($this);    
+    $errorSchemaLocal = new sfValidatorErrorSchema($this);
+    $xml_file = file_get_contents($value['tmp_name']) ;
     if(!$xml->load($value['tmp_name']))
-      throw new sfValidatorError($this, 'unreadable_file');                
-    if(!$xml->schemaValidate(sfConfig::get('sf_data_dir').'/import/import.xsd'))
+      throw new sfValidatorError($this, 'unreadable_file');
+    if(!$xml->schemaValidate(sfConfig::get('sf_data_dir').'/import/ABCD_2.06.xsd'))
     {
-      $errorSchemaLocal->addError(new sfValidatorError($this, 'invalid_format'), 'invalid_format');      
+      $errorSchemaLocal->addError(new sfValidatorError($this, 'invalid_format'), 'invalid_format_ABCD');
       $errors = libxml_get_errors();
 
       foreach ($errors as $error) {
           $error_msg = $this->display_xml_error($error);
-          $errorSchemaLocal->addError(new sfValidatorError($this, $error_msg), 'invalid_line'); 
+          $errorSchemaLocal->addError(new sfValidatorError($this, $error_msg), 'invalid_line');
       }
       libxml_clear_errors();
       if (count($errorSchemaLocal))
@@ -36,8 +37,54 @@ class xmlFileValidator extends sfValidatorFile
       if (count($errorSchema))
       {
         throw new sfValidatorErrorSchema($this, $errorSchema);
-      }     
+      }
     }
+    /*if(strpos($xml_file, "DNASample")) 
+    {
+      if(!$xml->schemaValidate(sfConfig::get('sf_data_dir').'/import/ABCDDNA.xsd'))
+      {
+        $errorSchemaLocal->addError(new sfValidatorError($this, 'invalid_format'), 'invalid_format_DNA');
+        $errors = libxml_get_errors();
+
+        foreach ($errors as $error) {
+            $error_msg = $this->display_xml_error($error);
+            $errorSchemaLocal->addError(new sfValidatorError($this, $error_msg), 'invalid_line');
+        }
+        libxml_clear_errors();
+        if (count($errorSchemaLocal))
+        {
+          $errorSchema->addError($errorSchemaLocal);
+        }
+
+        if (count($errorSchema))
+        {
+          throw new sfValidatorErrorSchema($this, $errorSchema);
+        }
+      }
+    }
+    if(strpos($xml_file, "EarthScienceSpecimenType")) 
+    {
+      if(!$xml->schemaValidate(sfConfig::get('sf_data_dir').'/import/ABCDEFG.xsd'))
+      {
+        $errorSchemaLocal->addError(new sfValidatorError($this, 'invalid_format'), 'invalid_format_EFG');
+        $errors = libxml_get_errors();
+
+        foreach ($errors as $error) {
+            $error_msg = $this->display_xml_error($error);
+            $errorSchemaLocal->addError(new sfValidatorError($this, $error_msg), 'invalid_line');
+        }
+        libxml_clear_errors();
+        if (count($errorSchemaLocal))
+        {
+          $errorSchema->addError($errorSchemaLocal);
+        }
+
+        if (count($errorSchema))
+        {
+          throw new sfValidatorErrorSchema($this, $errorSchema);
+        }
+      }
+    }*/
     $class = $this->getOption('validated_file_class');    
     return new $class($value['name'], 'text/xml', $value['tmp_name'], $value['size'], $this->getOption('path'));
   }

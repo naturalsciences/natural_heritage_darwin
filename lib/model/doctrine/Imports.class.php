@@ -35,7 +35,7 @@ class Imports extends BaseImports
     'aborted' => 'This file has been aborted. This line will remain for a limited time in the summary list just for information purposes only.',    
   );  
 
-  public static $formatArray = array('dna' => 'DNA') ;
+  public static $formatArray = array('abcd' => 'ABCD', 'dna' => 'DNA') ;
   
   public function setCurrentLineNum($nbr)
   {
