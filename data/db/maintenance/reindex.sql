@@ -12,7 +12,6 @@
  REINDEX TABLE multimedia;
  REINDEX TABLE vernacular_names;
  REINDEX TABLE expeditions;
- REINDEX TABLE template_people_users_rel_common;
  REINDEX TABLE people_languages;
  REINDEX TABLE template_people_users_comm_common;
  REINDEX TABLE people_relationships;

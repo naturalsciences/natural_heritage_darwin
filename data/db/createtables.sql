@@ -478,13 +478,6 @@ comment on table template_people_users_comm_common is 'Template table used to co
 comment on column template_people_users_comm_common.person_user_ref is 'Reference of person/user - id field of people/users table';
 comment on column template_people_users_comm_common.entry is 'Communication entry';
 
-create table template_people_users_rel_common
-       (
-        person_user_role varchar
-       );
-comment on table template_people_users_rel_common is 'Template table used to propagate three field in different tables depending it''s people or user dedicated';
-comment on column template_people_users_rel_common.person_user_role is 'Role the person/user have in the moral person he depends of';
-
 create table template_people_users_addr_common
        (
         po_box varchar,
@@ -505,6 +498,7 @@ comment on column template_people_users_addr_common.country is 'Country';
 create table people_relationships
        (
         id serial,
+        person_user_role varchar,
         relationship_type varchar not null default 'belongs to',
         person_1_ref integer not null,
         person_2_ref integer not null,
@@ -516,9 +510,7 @@ create table people_relationships
         constraint pk_people_relationships primary key (id),
         constraint fk_people_relationships_people_01 foreign key (person_1_ref) references people(id) on delete cascade,
         constraint fk_people_relationships_people_02 foreign key (person_2_ref) references people(id)
-       )
-
-inherits (template_people_users_rel_common);
+       );
 comment on table people_relationships is 'Relationships between people - mainly between physical person and moral person: relationship of dependancy';
 comment on column people_relationships.relationship_type is 'Type of relationship between two persons: belongs to, is department of, is section of, works for,...';
 comment on column people_relationships.person_1_ref is 'Reference of person to be puted in relationship with an other - id field of people table';
@@ -587,12 +579,13 @@ comment on column users_comm.tag is 'List of descriptive tags: internet, tel, fa
 create table users_addresses
        (
         id serial,
+        person_user_role varchar
         organization_unit varchar,
         tag varchar not null default '',
         constraint pk_users_addresses primary key (id),
         constraint fk_users_addresses_users foreign key (person_user_ref) references users(id) on delete cascade
        )
-inherits (template_people_users_rel_common, template_people_users_comm_common, template_people_users_addr_common);
+inherits (template_people_users_comm_common, template_people_users_addr_common);
 comment on table users_addresses is 'Users addresses';
 comment on column users_addresses.id is 'Unique identifier of a user address';
 comment on column users_addresses.person_user_ref is 'Reference of the user concerned - id field of users table';
