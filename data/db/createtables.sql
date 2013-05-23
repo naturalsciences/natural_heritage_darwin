@@ -672,7 +672,7 @@ create table collections_rights
         id serial,
         db_user_type smallint not null default 1,
         collection_ref integer not null default 0,
-        user_ref integer not null default 0
+        user_ref integer not null default 0,
         constraint pk_collections_right primary key (id),
         constraint fk_collections_rights_users foreign key (user_ref) references users(id) on delete cascade,
         constraint fk_collections_rights_collections foreign key (collection_ref) references collections(id) on delete cascade,
