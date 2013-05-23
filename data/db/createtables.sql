@@ -571,7 +571,7 @@ comment on column users_comm.tag is 'List of descriptive tags: internet, tel, fa
 create table users_addresses
        (
         id serial,
-        person_user_role varchar
+        person_user_role varchar,
         organization_unit varchar,
         tag varchar not null default '',
         constraint pk_users_addresses primary key (id),
