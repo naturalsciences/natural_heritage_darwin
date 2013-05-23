@@ -66,6 +66,8 @@ class accountActions extends DarwinActions
           $this->redirect( $request->getReferer() );
         else
           $this->redirect('@homepage');
+      } else {
+        sfContext::getInstance()->getLogger()->notice('Bad username or password');
       }
     }
   }
