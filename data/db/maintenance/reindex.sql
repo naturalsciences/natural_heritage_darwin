@@ -17,7 +17,6 @@
  REINDEX TABLE people_relationships;
  REINDEX TABLE template_people_users_addr_common;
  REINDEX TABLE people_comm;
- REINDEX TABLE template_collections_users;
  REINDEX TABLE people;
  REINDEX TABLE collection_maintenance;
  REINDEX TABLE template_classifications;

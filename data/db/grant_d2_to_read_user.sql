@@ -53,7 +53,6 @@
  GRANT SELECT ON tag_groups TO d2viewer;
  GRANT SELECT ON chronostratigraphy TO d2viewer;
  GRANT SELECT ON catalogue_people TO d2viewer;
- GRANT SELECT ON template_collections_users TO d2viewer;
  GRANT SELECT ON gtu TO d2viewer;
  GRANT SELECT ON vernacular_names TO d2viewer;
  GRANT SELECT ON specimen_collecting_tools TO d2viewer;

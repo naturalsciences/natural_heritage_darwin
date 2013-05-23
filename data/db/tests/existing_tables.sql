@@ -31,7 +31,6 @@ SELECT has_table('users_comm','users_comm exists');
 SELECT has_table('users_addresses','users_addresses exists');
 SELECT has_table('users_login_infos','users_login_infos exists');
 SELECT has_table('collections','collections exists');
-SELECT has_table('template_collections_users','template_collections_users exists');
 SELECT has_table('collections_rights','collections_rights exists');
 SELECT has_table('informative_workflow','informative_workflow exists');
 SELECT has_table('users_tracking','users_tracking exists');

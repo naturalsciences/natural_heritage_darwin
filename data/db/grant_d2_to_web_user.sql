@@ -53,7 +53,6 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.tag_groups TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.chronostratigraphy TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_people TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_collections_users TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.gtu TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.vernacular_names TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimen_collecting_tools TO cebmpad;

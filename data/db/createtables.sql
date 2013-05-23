@@ -675,25 +675,18 @@ comment on column collections.code_part_code_auto_copy is 'Flag telling if the w
 comment on column collections.code_specimen_duplicate is 'Flag telling if the whole specimen code has to be copied when you do a duplicate';
 comment on column collections.is_public is 'Flag telling if the collection can be found in the public search';
 
-create table template_collections_users
-       (
-        collection_ref integer not null default 0,
-        user_ref integer not null default 0
-       );
-comment on table template_collections_users is 'Template table used to construct collections rights tables';
-comment on column template_collections_users.collection_ref is 'Reference of collection concerned - id field of collections table';
-comment on column template_collections_users.user_ref is 'Reference of user - id field of users table';
-
 create table collections_rights
        (
         id serial,
         db_user_type smallint not null default 1,
+        collection_ref integer not null default 0,
+        user_ref integer not null default 0
         constraint pk_collections_right primary key (id),
         constraint fk_collections_rights_users foreign key (user_ref) references users(id) on delete cascade,
         constraint fk_collections_rights_collections foreign key (collection_ref) references collections(id) on delete cascade,
         constraint unq_collections_rights unique (collection_ref, user_ref)
-       )
-inherits (template_collections_users);
+       );
+
 comment on table collections_rights is 'List of rights of given users on given collections';
 comment on column collections_rights.id is 'Unique identifier for collection rights';
 comment on column collections_rights.collection_ref is 'Reference of collection concerned - id field of collections table';
