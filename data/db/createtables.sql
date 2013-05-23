@@ -411,7 +411,7 @@ create table people_languages
         id serial,
         language_country varchar not null default 'en',
         mother boolean not null default true,
-        preferred_language boolean not null default false
+        preferred_language boolean not null default false,
         people_ref integer not null,
         constraint pk_people_languages primary key (id),
         constraint unq_people_languages unique (people_ref, language_country),
