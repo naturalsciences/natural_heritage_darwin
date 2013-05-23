@@ -28,16 +28,6 @@ comment on column template_people.additional_names is 'Any additional names give
 comment on column template_people.birth_date_mask is 'Contains the Mask flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 comment on column template_people.birth_date is 'Birth/Creation date composed';
 comment on column template_people.gender is 'For physical user/persons give the gender: M or F';
-create table template_people_languages
-       (
-        language_country varchar not null default 'en',
-        mother boolean not null default true,
-        preferred_language boolean not null default false
-       );
-comment on table template_people_languages is 'Template supporting users/people languages table definition';
-comment on column template_people_languages.language_country is 'Reference of Language - language_country field of languages_countries table';
-comment on column template_people_languages.mother is 'Flag telling if its mother language or not';
-comment on column template_people_languages.preferred_language is 'Flag telling which language is preferred in communications';
 
 create table people
        (
@@ -419,12 +409,14 @@ comment on column users.selected_lang is 'Lang of the interface for the user en,
 create table people_languages
        (
         id serial,
+        language_country varchar not null default 'en',
+        mother boolean not null default true,
+        preferred_language boolean not null default false
         people_ref integer not null,
         constraint pk_people_languages primary key (id),
         constraint unq_people_languages unique (people_ref, language_country),
         constraint fk_people_languages_people foreign key (people_ref) references people(id) on delete cascade
-       )
-inherits (template_people_languages);
+       );
 comment on table people_languages is 'Languages spoken by a given person';
 comment on column people_languages.people_ref is 'Reference of person - id field of people table';
 comment on column people_languages.language_country is 'Reference of Language - language_country field of languages_countries table';

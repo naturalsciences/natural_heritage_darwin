@@ -29,7 +29,6 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.my_saved_searches TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.my_widgets TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_people_users_comm_common TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_people_languages TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimen_collecting_methods TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.people_languages TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens_accompanying TO cebmpad;

@@ -17,7 +17,6 @@ SELECT has_table('identifications','identifications exists');
 SELECT has_table('vernacular_names','vernacular_names exists');
 SELECT has_table('expeditions','expeditions exists');
 SELECT has_table('template_people','template_people exists');
-SELECT has_table('template_people_languages','template_people_languages exists');
 SELECT has_table('people','people exists');
 SELECT has_table('users','users exists');
 SELECT has_table('people_languages','people_languages exists');

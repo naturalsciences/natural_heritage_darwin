@@ -8,7 +8,6 @@
  REINDEX TABLE properties_values;
  REINDEX TABLE catalogue_properties;
  REINDEX TABLE gtu;
- REINDEX TABLE template_people_languages;
  REINDEX TABLE multimedia;
  REINDEX TABLE vernacular_names;
  REINDEX TABLE expeditions;

@@ -11,4 +11,9 @@ alter table collections_rights NO INHERIT template_collections_users;
 
 drop table template_collections_users;
 
+
+alter table people_languages NO INHERIT template_people_languages;
+
+drop table template_people_languages;
+
 COMMIT;

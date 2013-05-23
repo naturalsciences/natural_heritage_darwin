@@ -30,7 +30,6 @@
  GRANT SELECT ON template_people_users_addr_common TO d2viewer;
  GRANT SELECT ON my_widgets TO d2viewer;
  GRANT SELECT ON template_people_users_comm_common TO d2viewer;
- GRANT SELECT ON template_people_languages TO d2viewer;
  GRANT SELECT ON specimen_collecting_methods TO d2viewer;
  GRANT SELECT ON people_languages TO d2viewer;
  GRANT SELECT ON specimens_accompanying TO d2viewer;
