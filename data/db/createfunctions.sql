@@ -1,36 +1,3 @@
-/***
-* Trigger Function fct_cpy_specimensMainCode
-* Automaticaly copy the "main" code from the specimen to the specimen parts
-* When the collection of the specimen has the flag code_part_code_auto_copy
-*/
-CREATE OR REPLACE FUNCTION fct_cpy_specimensMainCode() RETURNS trigger
-as $$
-DECLARE
-	spec_code codes%ROWTYPE;
-	must_be_copied collections.code_part_code_auto_copy%TYPE;
-BEGIN
-	SELECT collections.code_part_code_auto_copy INTO must_be_copied FROM collections
-			INNER JOIN specimens ON collections.id = specimens.collection_ref
-			INNER JOIN specimen_individuals ON specimen_individuals.specimen_ref=specimens.id
-				WHERE specimen_individuals.id = NEW.specimen_individual_ref;
-
-	IF must_be_copied = true THEN
-
-		INSERT INTO codes (referenced_relation, record_id, code_category, code_prefix, code_prefix_separator,  code_suffix_separator, code, code_suffix)
-		(
-			SELECT 'specimen_parts',NEW.id, code_category, code_prefix, code_prefix_separator, code_suffix_separator, code, code_suffix
-                               FROM codes
-        	               INNER JOIN specimens ON record_id = specimens.id
-                	       INNER JOIN specimen_individuals ON specimen_individuals.specimen_ref=specimens.id
-                        	WHERE referenced_relation = 'specimens'
-		                  AND  specimen_individuals.id = NEW.specimen_individual_ref
-                                  AND code_category = 'main'
-		);
-	END IF;
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
 
 /***
 * function fct_chk_collectionsInstitutionIsMoral
@@ -190,7 +157,7 @@ $$ LANGUAGE plpgsql;
 
 /***
 * fct_clr_specialstatus
-* Check the type(special status) on specimen_individuals and update the search and group type
+* Check the type(special status) on specimens and update the search and group type
 * to be conform to the std
 */
 CREATE OR REPLACE FUNCTION fct_clr_specialstatus() RETURNS TRIGGER
@@ -444,7 +411,6 @@ AS $$
 BEGIN
   IF TG_OP = 'INSERT' THEN
       IF( TG_TABLE_NAME::text = 'collections' OR
-        TG_TABLE_NAME::text = 'specimen_parts' OR
         TG_TABLE_NAME::text = 'staging') THEN
 
         IF NEW.id = 0 THEN
@@ -465,7 +431,6 @@ BEGIN
       END IF;
     ELSIF TG_OP = 'UPDATE' THEN
       IF(TG_TABLE_NAME::text = 'collections' OR
-        TG_TABLE_NAME::text = 'specimen_parts' OR
         TG_TABLE_NAME::text = 'staging') THEN
 
         IF NEW.parent_ref IS DISTINCT FROM OLD.parent_ref THEN
@@ -576,7 +541,7 @@ BEGIN
   IF track_level = 0 THEN --NO Tracking
     RETURN NEW;
   ELSIF track_level = 1 THEN -- Track Only Main tables
-    IF TG_TABLE_NAME::text NOT IN ('specimens', 'specimen_individuals', 'specimen_parts', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
+    IF TG_TABLE_NAME::text NOT IN ('specimens', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
       'mineralogy', 'lithology', 'people') THEN
       RETURN NEW;
     END IF;
@@ -1395,7 +1360,6 @@ AS
 $$
 DECLARE
   indCount INTEGER := 0;
-  partCount INTEGER := 0;
   indType BOOLEAN := false;
 BEGIN
   IF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'expeditions' THEN
@@ -2013,45 +1977,6 @@ BEGIN
         RAISE EXCEPTION 'You don''t have the rights to delete a specimen from this collection';
       END IF;
     END IF;
-  ELSIF TG_TABLE_NAME = 'specimen_individuals' THEN
-    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-      IF NOT EXISTS(SELECT 1 from  specimens s
-          INNER JOIN fct_search_authorized_encoding_collections (user_id) as r
-            ON s.collection_ref = r
-            WHERE s.id = NEW.specimen_ref) THEN
-        RAISE EXCEPTION 'You don''t have the rights to insert into or update an individual in this collection';
-      END IF;
-    ELSE /*Delete*/
-      IF EXISTS(SELECT 1 FROM specimens where id = OLD.specimen_ref) THEN
-        IF NOT EXISTS(SELECT 1 from  specimens s
-          INNER JOIN fct_search_authorized_encoding_collections (user_id) as r
-            ON s.collection_ref = r
-            WHERE s.id = OLD.specimen_ref) THEN
-          RAISE EXCEPTION 'You don''t have the rights to delete an individual from this collection';
-        END IF;
-      END IF;
-    END IF;
-  ELSIF TG_TABLE_NAME = 'specimen_parts' THEN
-    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-      IF NOT EXISTS(SELECT 1 from  specimens s
-          INNER JOIN specimen_individuals i on s.id = i.specimen_ref
-          INNER JOIN fct_search_authorized_encoding_collections (user_id) as r
-            ON s.collection_ref = r
-            WHERE i.id = NEW.specimen_individual_ref) THEN
-
-        RAISE EXCEPTION 'You don''t have the rights to insert into or update a part in this collection';
-      END IF;
-    ELSE /*Delete*/
-      IF EXISTS(SELECT 1 FROM specimen_individuals where id = OLD.specimen_individual_ref) THEN
-        IF NOT EXISTS(SELECT 1 from  specimens s
-          INNER JOIN specimen_individuals i on s.id = i.specimen_ref
-          INNER JOIN fct_search_authorized_encoding_collections (user_id) as r
-            ON s.collection_ref = r
-            WHERE i.id = OLD.specimen_individual_ref) THEN
-          RAISE EXCEPTION 'You don''t have the rights to delete a part from this collection';
-        END IF;
-      END IF;
-    END IF;
   END IF;
   IF TG_OP = 'DELETE' THEN
     RETURN OLD;
@@ -2083,23 +2008,6 @@ DECLARE
 BEGIN
     IF col_name = 'spec_ref' THEN    
       FOR rec_id IN SELECT id FROM specimens WHERE id in (select X::int from regexp_split_to_table(ids, ',' ) as X)
-            AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
-      LOOP
-        return next rec_id;
-      END LOOP;
-
-    ELSIF col_name = 'individual_ref' THEN
-      FOR rec_id IN SELECT i.id FROM specimens s INNER JOIN specimen_individuals i ON s.id = i.specimen_ref
-            WHERE i.id in (select X::int from regexp_split_to_table(ids, ',' ) as X)
-            AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
-      LOOP
-        return next rec_id;
-      END LOOP;
-
-    ELSIF col_name = 'part_ref' THEN
-      FOR rec_id IN SELECT p.id FROM specimens s INNER JOIN specimen_individuals i ON s.id = i.specimen_ref
-            INNER JOIN specimen_parts p ON i.id = p.specimen_individual_ref
-            WHERE p.id in (select X::int from regexp_split_to_table(ids, ',' ) as X)
             AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
       LOOP
         return next rec_id;
@@ -2209,7 +2117,7 @@ BEGIN
          ) subq
     WHERE user_ref = NEW.id
       AND pref_key = 'search_cols_part';
-    FOR saved_search_row IN SELECT id, visible_fields_in_result FROM my_saved_searches WHERE user_ref = NEW.id AND subject = 'part' LOOP
+    FOR saved_search_row IN SELECT id, visible_fields_in_result FROM my_saved_searches WHERE user_ref = NEW.id LOOP
       UPDATE my_saved_searches
       SET visible_fields_in_result = subq.fields_available
       FROM (select array_to_string(array(select fields_list
@@ -2388,17 +2296,33 @@ BEGIN
       PERFORM fct_del_in_dict('insurances','insurance_currency', oldfield.insurance_currency, newfield.insurance_currency);
     ELSIF TG_TABLE_NAME = 'mineralogy' THEN
       PERFORM fct_del_in_dict('mineralogy','cristal_system', oldfield.cristal_system, newfield.cristal_system);
-    ELSIF TG_TABLE_NAME = 'specimen_individuals' THEN
-      PERFORM fct_del_in_dict('specimen_individuals','type', oldfield.type, newfield.type);
-      PERFORM fct_del_in_dict('specimen_individuals','type_group', oldfield.type_group, newfield.type_group);
-      PERFORM fct_del_in_dict('specimen_individuals','type_search', oldfield.type_search, newfield.type_search);
-      PERFORM fct_del_in_dict('specimen_individuals','sex', oldfield.sex, newfield.sex);
-      PERFORM fct_del_in_dict('specimen_individuals','state', oldfield.state, newfield.state);
-      PERFORM fct_del_in_dict('specimen_individuals','stage', oldfield.stage, newfield.stage);
-      PERFORM fct_del_in_dict('specimen_individuals','social_status', oldfield.social_status, newfield.social_status);
-      PERFORM fct_del_in_dict('specimen_individuals','rock_form', oldfield.rock_form, newfield.rock_form);
     ELSIF TG_TABLE_NAME = 'specimens' THEN
       PERFORM fct_del_in_dict('specimens','host_relationship', oldfield.host_relationship, newfield.host_relationship);
+      PERFORM fct_del_in_dict('specimens','type', oldfield.type, newfield.type);
+      PERFORM fct_del_in_dict('specimens','type_group', oldfield.type_group, newfield.type_group);
+      PERFORM fct_del_in_dict('specimens','type_search', oldfield.type_search, newfield.type_search);
+      PERFORM fct_del_in_dict('specimens','sex', oldfield.sex, newfield.sex);
+      PERFORM fct_del_in_dict('specimens','state', oldfield.state, newfield.state);
+      PERFORM fct_del_in_dict('specimens','stage', oldfield.stage, newfield.stage);
+      PERFORM fct_del_in_dict('specimens','social_status', oldfield.social_status, newfield.social_status);
+      PERFORM fct_del_in_dict('specimens','rock_form', oldfield.rock_form, newfield.rock_form);
+
+      PERFORM fct_del_in_dict('specimens','container_type', oldfield.container_type, newfield.container_type);
+      PERFORM fct_del_in_dict('specimens','sub_container_type', oldfield.sub_container_type, newfield.sub_container_type);
+      PERFORM fct_del_in_dict('specimens','specimen_part', oldfield.specimen_part, newfield.specimen_part);
+      PERFORM fct_del_in_dict('specimens','specimen_status', oldfield.specimen_status, newfield.specimen_status);
+
+      PERFORM fct_del_in_dict('specimens','shelf', oldfield.shelf, newfield.shelf);
+      PERFORM fct_del_in_dict('specimens','row', oldfield.row, newfield.row);
+      PERFORM fct_del_in_dict('specimens','room', oldfield.room, newfield.room);
+      PERFORM fct_del_in_dict('specimens','floor', oldfield.floor, newfield.floor);
+      PERFORM fct_del_in_dict('specimens','building', oldfield.building, newfield.building);
+
+      PERFORM fct_del_in_dict_dept('specimens','container_storage', oldfield.container_storage, newfield.container_storage,
+        oldfield.container_type, newfield.container_type, 'container_type' );
+      PERFORM fct_del_in_dict_dept('specimens','sub_container_storage', oldfield.sub_container_storage, newfield.sub_container_storage,
+        oldfield.sub_container_type, newfield.sub_container_type, 'sub_container_type' );
+
     ELSIF TG_TABLE_NAME = 'specimens_accompanying' THEN
       PERFORM fct_del_in_dict('specimens_accompanying','form', oldfield.form, newfield.form);
     ELSIF TG_TABLE_NAME = 'users' THEN
@@ -2406,22 +2330,6 @@ BEGIN
       PERFORM fct_del_in_dict('users','sub_type', oldfield.sub_type, newfield.sub_type);
     ELSIF TG_TABLE_NAME = 'users_addresses' THEN
       PERFORM fct_del_in_dict('users_addresses','country', oldfield.country, newfield.country);
-    ELSIF TG_TABLE_NAME = 'specimen_parts' THEN
-      PERFORM fct_del_in_dict('specimen_parts','container_type', oldfield.container_type, newfield.container_type);
-      PERFORM fct_del_in_dict('specimen_parts','sub_container_type', oldfield.sub_container_type, newfield.sub_container_type);
-      PERFORM fct_del_in_dict('specimen_parts','specimen_part', oldfield.specimen_part, newfield.specimen_part);
-      PERFORM fct_del_in_dict('specimen_parts','specimen_status', oldfield.specimen_status, newfield.specimen_status);
-
-      PERFORM fct_del_in_dict('specimen_parts','shelf', oldfield.shelf, newfield.shelf);
-      PERFORM fct_del_in_dict('specimen_parts','row', oldfield.row, newfield.row);
-      PERFORM fct_del_in_dict('specimen_parts','room', oldfield.room, newfield.room);
-      PERFORM fct_del_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
-      PERFORM fct_del_in_dict('specimen_parts','building', oldfield.building, newfield.building);
-
-      PERFORM fct_del_in_dict_dept('specimen_parts','container_storage', oldfield.container_storage, newfield.container_storage,
-        oldfield.container_type, newfield.container_type, 'container_type' );
-      PERFORM fct_del_in_dict_dept('specimen_parts','sub_container_storage', oldfield.sub_container_storage, newfield.sub_container_storage,
-        oldfield.sub_container_type, newfield.sub_container_type, 'sub_container_type' );
 
     ELSIF TG_TABLE_NAME = 'loan_status' THEN
       PERFORM fct_del_in_dict('loan_status','status', oldfield.status, newfield.status);
@@ -2478,17 +2386,33 @@ BEGIN
       PERFORM fct_add_in_dict('insurances','insurance_currency', oldfield.insurance_currency, newfield.insurance_currency);
     ELSIF TG_TABLE_NAME = 'mineralogy' THEN
       PERFORM fct_add_in_dict('mineralogy','cristal_system', oldfield.cristal_system, newfield.cristal_system);
-    ELSIF TG_TABLE_NAME = 'specimen_individuals' THEN
-      PERFORM fct_add_in_dict('specimen_individuals','type', oldfield.type, newfield.type);
-      PERFORM fct_add_in_dict('specimen_individuals','type_group', oldfield.type_group, newfield.type_group);
-      PERFORM fct_add_in_dict('specimen_individuals','type_search', oldfield.type_search, newfield.type_search);
-      PERFORM fct_add_in_dict('specimen_individuals','sex', oldfield.sex, newfield.sex);
-      PERFORM fct_add_in_dict('specimen_individuals','state', oldfield.state, newfield.state);
-      PERFORM fct_add_in_dict('specimen_individuals','stage', oldfield.stage, newfield.stage);
-      PERFORM fct_add_in_dict('specimen_individuals','social_status', oldfield.social_status, newfield.social_status);
-      PERFORM fct_add_in_dict('specimen_individuals','rock_form', oldfield.rock_form, newfield.rock_form);
     ELSIF TG_TABLE_NAME = 'specimens' THEN
       PERFORM fct_add_in_dict('specimens','host_relationship', oldfield.host_relationship, newfield.host_relationship);
+      PERFORM fct_add_in_dict('specimens','type', oldfield.type, newfield.type);
+      PERFORM fct_add_in_dict('specimens','type_group', oldfield.type_group, newfield.type_group);
+      PERFORM fct_add_in_dict('specimens','type_search', oldfield.type_search, newfield.type_search);
+      PERFORM fct_add_in_dict('specimens','sex', oldfield.sex, newfield.sex);
+      PERFORM fct_add_in_dict('specimens','state', oldfield.state, newfield.state);
+      PERFORM fct_add_in_dict('specimens','stage', oldfield.stage, newfield.stage);
+      PERFORM fct_add_in_dict('specimens','social_status', oldfield.social_status, newfield.social_status);
+      PERFORM fct_add_in_dict('specimens','rock_form', oldfield.rock_form, newfield.rock_form);
+
+      PERFORM fct_add_in_dict('specimens','container_type', oldfield.container_type, newfield.container_type);
+      PERFORM fct_add_in_dict('specimens','sub_container_type', oldfield.sub_container_type, newfield.sub_container_type);
+      PERFORM fct_add_in_dict('specimens','specimen_part', oldfield.specimen_part, newfield.specimen_part);
+      PERFORM fct_add_in_dict('specimens','specimen_status', oldfield.specimen_status, newfield.specimen_status);
+
+      PERFORM fct_add_in_dict('specimens','shelf', oldfield.shelf, newfield.shelf);
+      PERFORM fct_add_in_dict('specimens','row', oldfield.row, newfield.row);
+      PERFORM fct_add_in_dict('specimens','room', oldfield.room, newfield.room);
+      PERFORM fct_add_in_dict('specimens','floor', oldfield.floor, newfield.floor);
+      PERFORM fct_add_in_dict('specimens','building', oldfield.building, newfield.building);
+
+      PERFORM fct_add_in_dict_dept('specimens','container_storage', oldfield.container_storage, newfield.container_storage,
+        oldfield.container_type, newfield.container_type);
+      PERFORM fct_add_in_dict_dept('specimens','sub_container_storage', oldfield.sub_container_storage, newfield.sub_container_storage,
+        oldfield.sub_container_type, newfield.sub_container_type);
+        
     ELSIF TG_TABLE_NAME = 'specimens_accompanying' THEN
       PERFORM fct_add_in_dict('specimens_accompanying','form', oldfield.form, newfield.form);
     ELSIF TG_TABLE_NAME = 'users' THEN
@@ -2496,22 +2420,6 @@ BEGIN
       PERFORM fct_add_in_dict('users','sub_type', oldfield.sub_type, newfield.sub_type);
     ELSIF TG_TABLE_NAME = 'users_addresses' THEN
       PERFORM fct_add_in_dict('users_addresses','country', oldfield.country, newfield.country);
-    ELSIF TG_TABLE_NAME = 'specimen_parts' THEN
-      PERFORM fct_add_in_dict('specimen_parts','container_type', oldfield.container_type, newfield.container_type);
-      PERFORM fct_add_in_dict('specimen_parts','sub_container_type', oldfield.sub_container_type, newfield.sub_container_type);
-      PERFORM fct_add_in_dict('specimen_parts','specimen_part', oldfield.specimen_part, newfield.specimen_part);
-      PERFORM fct_add_in_dict('specimen_parts','specimen_status', oldfield.specimen_status, newfield.specimen_status);
-
-      PERFORM fct_add_in_dict('specimen_parts','shelf', oldfield.shelf, newfield.shelf);
-      PERFORM fct_add_in_dict('specimen_parts','row', oldfield.row, newfield.row);
-      PERFORM fct_add_in_dict('specimen_parts','room', oldfield.room, newfield.room);
-      PERFORM fct_add_in_dict('specimen_parts','floor', oldfield.floor, newfield.floor);
-      PERFORM fct_add_in_dict('specimen_parts','building', oldfield.building, newfield.building);
-
-      PERFORM fct_add_in_dict_dept('specimen_parts','container_storage', oldfield.container_storage, newfield.container_storage,
-        oldfield.container_type, newfield.container_type);
-      PERFORM fct_add_in_dict_dept('specimen_parts','sub_container_storage', oldfield.sub_container_storage, newfield.sub_container_storage,
-        oldfield.sub_container_type, newfield.sub_container_type);
 
     ELSIF TG_TABLE_NAME = 'loan_status' THEN
       PERFORM fct_add_in_dict('loan_status','status', oldfield.status, newfield.status);
@@ -2540,59 +2448,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION fct_count_units()
-RETURNS TRIGGER
-AS
-$$
-DECLARE
-  rid integer;
-  do_with_type boolean default true;
-BEGIN
-
-  IF TG_TABLE_NAME = 'specimen_individuals' THEN
-    IF TG_OP = 'INSERT' THEN
-      rid := NEW.specimen_ref;
-    ELSIF TG_OP = 'UPDATE' THEN
-      rid := OLD.specimen_ref;
-      IF OLD.type_group IS NOT DISTINCT FROM NEW.type_group THEN
-        do_with_type := false;
-      END IF;
-    ELSE
-      rid := OLD.specimen_ref;
-    END IF;
-
-    IF do_with_type THEN
-      UPDATE specimens_flat s set 
-        with_types = exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.specimen_ref AND  i2.type_group <> 'specimen')
-      WHERE
-         s.specimen_ref = rid
-        AND with_types != exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.specimen_ref AND  i2.type_group <> 'specimen');
-    END IF;
-
-    UPDATE specimens_flat s set 
-      with_individuals = exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.specimen_ref)
-      WHERE
-        s.specimen_ref = rid
-      AND with_individuals != exists (select 1 from  specimen_individuals  i2 WHERE i2.specimen_ref = s.specimen_ref);
-
-  ELSIF TG_TABLE_NAME = 'specimen_parts' THEN
-
-    IF TG_OP = 'INSERT' THEN
-      rid = NEW.specimen_individual_ref;
-    ELSE
-      rid = OLD.specimen_individual_ref;
-    END IF;
-
-      UPDATE specimen_individuals i SET
-      with_parts = exists (select 1 from specimen_parts p WHERE p.specimen_individual_ref = i.id )
-      WHERE i.id = rid
-      AND with_parts != exists (select 1 from specimen_parts p WHERE p.specimen_individual_ref = i.id );
-  END IF;
-
-  RETURN NEW;
-END;
-$$ language plpgsql;
-
 CREATE OR REPLACE FUNCTION fct_upd_people_in_flat() RETURNS TRIGGER
 AS
 $$
@@ -2612,21 +2467,14 @@ BEGIN
       SELECT * into ident FROM identifications where id = OLD.record_id;
       IF NOT FOUND Then
         RETURN OLD;
-      ELSIF ident.referenced_relation =  'specimens' THEN
-        UPDATE specimens_flat s SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,ARRAY[OLD.people_ref])
-          WHERE specimen_ref  = ident.record_id 
+      END IF;
+
+      UPDATE specimens_flat s SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,ARRAY[OLD.people_ref])
+        WHERE specimen_ref  = ident.record_id 
             AND NOT exists (
               SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' 
                 WHERE i.record_id = ident.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens'
             );
-      ELSE -- 'specimen_individuals'
-        UPDATE specimen_individuals SET ind_ident_ids = fct_remove_array_elem(ind_ident_ids,ARRAY[OLD.people_ref])
-          WHERE id  = ident.record_id 
-            AND NOT exists (
-              SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' 
-                WHERE i.record_id = ident.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimen_individuals'
-            );
-      END IF;
     END IF;
 
   ELSIF TG_OP = 'INSERT' THEN --- INSERT
@@ -2639,13 +2487,9 @@ BEGIN
         WHERE specimen_ref  = NEW.record_id  and NOT (spec_don_sel_ids && ARRAY[ NEW.people_ref::integer ]);
     ELSIF NEW.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = NEW.record_id;
-      IF ident.referenced_relation =  'specimens' THEN
-        UPDATE specimens_flat s SET spec_ident_ids = array_append(spec_ident_ids,NEW.people_ref)
+
+      UPDATE specimens_flat s SET spec_ident_ids = array_append(spec_ident_ids,NEW.people_ref)
           WHERE specimen_ref  = ident.record_id and NOT (spec_ident_ids && ARRAY[ NEW.people_ref::integer ]);
-      ELSE --spec_individuals
-        UPDATE specimen_individuals s SET ind_ident_ids = array_append(ind_ident_ids,NEW.people_ref)
-          WHERE id  = ident.record_id and NOT (ind_ident_ids && ARRAY[ NEW.people_ref::integer ]);
-      END IF;
     END IF;
 
   ELSIF OLD.people_ref != NEW.people_ref THEN --UPDATE
@@ -2660,9 +2504,6 @@ BEGIN
     ELSIF NEW.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = NEW.record_id;
 
-      --DETERMIN IF IDENTIFICATION IS ON SPEC OR INDIV
-
-      IF ident.referenced_relation =  'specimens' THEN
         SELECT specimen_ref, spec_ident_ids INTO spec_row FROM specimens_flat WHERE specimen_ref = ident.record_id;
 
         IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications' 
@@ -2676,22 +2517,6 @@ BEGIN
         END IF;
 
         UPDATE specimens_flat SET spec_ident_ids = spec_row.spec_ident_ids WHERE specimen_ref = spec_row.specimen_ref;
-      ELSE --spec_individuals
-
-        SELECT id, ind_ident_ids INTO spec_row FROM specimen_individuals WHERE id = ident.record_id;
-
-        IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications' 
-          WHERE i.record_id = spec_row.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimen_individuals' AND c.id != OLD.id
-        ) THEN 
-          spec_row.ind_ident_ids := fct_remove_array_elem(spec_row.ind_ident_ids ,ARRAY[OLD.people_ref]);
-        END IF;
-
-        IF NOT spec_row.ind_ident_ids && ARRAY[ NEW.people_ref::integer ] THEN 
-          spec_row.ind_ident_ids := array_append(spec_row.ind_ident_ids ,NEW.people_ref);
-        END IF;
-
-        UPDATE specimen_individuals SET ind_ident_ids = spec_row.ind_ident_ids WHERE id = spec_row.id;
-      END IF;
     END IF;
     --else  raise info 'ooh';
   END IF;
@@ -2703,36 +2528,20 @@ CREATE OR REPLACE FUNCTION fct_clear_identifiers_in_flat() RETURNS TRIGGER
 AS
 $$
 BEGIN
-    IF OLD.referenced_relation = 'specimen_individuals' THEN
-      IF EXISTS(SELECT true FROM catalogue_people cp WHERE cp.record_id = OLD.id AND cp.referenced_relation = 'identifications') THEN
-        -- There's some identifier associated to this identification'
-        UPDATE specimen_individuals SET ind_ident_ids = fct_remove_array_elem(ind_ident_ids, 
-          (
-            select array_agg(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
-            AND people_ref NOT in
-              (
-                SELECT people_ref from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications'
-                AND p.people_type='identifier' where i.record_id=OLD.record_id AND i.referenced_relation=OLD.referenced_relation AND i.id != OLD.id
-              )
-          ))
-          WHERE id = OLD.record_id;
-      END IF;
-    ELSIF OLD.referenced_relation = 'specimens' THEN
-      IF EXISTS(SELECT true FROM catalogue_people cp WHERE cp.record_id = OLD.id AND cp.referenced_relation = 'identifications') THEN
-        -- There's NO identifier associated to this identification'
-        UPDATE specimens_flat SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids, 
-          (
-            select array_agg(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
-            AND people_ref NOT in
-              (
-                SELECT people_ref from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications'
-                AND p.people_type='identifier' where i.record_id=OLD.record_id AND i.referenced_relation=OLD.referenced_relation AND i.id != OLD.id
-              )
-          ))
-          WHERE specimen_ref = OLD.record_id;
-      END IF;
-    END IF; 
 
+  IF EXISTS(SELECT true FROM catalogue_people cp WHERE cp.record_id = OLD.id AND cp.referenced_relation = 'identifications') THEN
+    -- There's NO identifier associated to this identification'
+    UPDATE specimens_flat SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids, 
+      (
+        select array_agg(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
+        AND people_ref NOT in
+          (
+            SELECT people_ref from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications'
+            AND p.people_type='identifier' where i.record_id=OLD.record_id AND i.referenced_relation=OLD.referenced_relation AND i.id != OLD.id
+          )
+      ))
+      WHERE specimen_ref = OLD.record_id;
+  END IF;
   RETURN OLD;
   
 END;
@@ -3641,10 +3450,7 @@ AS $$
 BEGIN
   IF OLD.ig_ref is distinct from NEW.ig_ref THEN
     UPDATE loan_items li SET ig_ref = NEW.ig_ref
-    WHERE part_ref in ( SELECT s.id from specimen_parts s
-      INNER JOIN specimen_individuals i on s.id=s.specimen_individual_ref
-      WHERE i.specimen_ref = NEW.ID
-      )
+    WHERE specimen_ref = NEW.ID
     AND li.ig_ref IS NOT DISTINCT FROM OLD.ig_ref;
   END IF;
   RETURN NEW;
@@ -3689,10 +3495,8 @@ BEGIN
 
     UNION
 
-    select loan_id, 'specimens_flat', hstore(sfl.*) || hstore(si.*) || hstore(sp.*) from specimens_flat sfl
-      inner join specimen_individuals si on sfl.specimen_ref = si.specimen_ref
-      inner join specimen_parts sp on si.id = sp.specimen_individual_ref
-      where sp.id in (select part_ref from loan_items l where l.loan_ref = loan_id)
+    select loan_id, 'specimens_flat', hstore(sfl.*) from specimens_flat sfl
+      where sfl.id in (select specimen_ref from loan_items l where l.loan_ref = loan_id)
   );
 
   -- BOTH

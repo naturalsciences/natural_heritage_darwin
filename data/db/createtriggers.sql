@@ -1,7 +1,3 @@
-CREATE TRIGGER trg_cpy_specimensMainCode_specimenPartCode AFTER INSERT
-	ON specimen_parts FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_specimensMainCode();
-
 -- BEGIN FULLTOINDEX
 CREATE TRIGGER trg_cpy_fullToIndex_comments BEFORE INSERT OR UPDATE
         ON comments FOR EACH ROW
@@ -83,8 +79,8 @@ CREATE TRIGGER trg_cpy_fullToIndex_bibliography BEFORE INSERT OR UPDATE
         ON bibliography FOR EACH ROW
         EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
-CREATE TRIGGER trg_clr_specialstatus_specimenindividuals BEFORE INSERT OR UPDATE
-	ON specimen_individuals FOR EACH ROW
+CREATE TRIGGER trg_clr_specialstatus_specimens BEFORE INSERT OR UPDATE
+	ON specimens FOR EACH ROW
 	EXECUTE PROCEDURE fct_clr_specialstatus();
 
 CREATE TRIGGER trg_cpy_gtuTags_TagGroups AFTER INSERT OR UPDATE OR DELETE
@@ -179,14 +175,6 @@ CREATE TRIGGER trg_clr_referenceRecord_specimens AFTER DELETE OR UPDATE
 	ON specimens FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_specimenindividuals AFTER DELETE OR UPDATE
-	ON specimen_individuals FOR EACH ROW
-	EXECUTE PROCEDURE fct_clear_referencedRecord();
-
-CREATE TRIGGER trg_clr_referenceRecord_specimenparts AFTER DELETE OR UPDATE
-	ON specimen_parts FOR EACH ROW
-	EXECUTE PROCEDURE fct_clear_referencedRecord();
-
 CREATE TRIGGER trg_clr_referenceRecord_specimensaccompanying AFTER DELETE OR UPDATE
 	ON specimens_accompanying FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
@@ -226,14 +214,6 @@ CREATE TRIGGER trg_chk_specimenCollectionAllowed BEFORE INSERT OR UPDATE OR DELE
   ON specimens FOR EACH ROW
   EXECUTE PROCEDURE fct_chk_specimenCollectionAllowed();
 
-CREATE TRIGGER trg_chk_specimenIndCollectionAllowed BEFORE INSERT OR UPDATE OR DELETE
-  ON specimen_individuals FOR EACH ROW
-  EXECUTE PROCEDURE fct_chk_specimenCollectionAllowed();
-
-CREATE TRIGGER trg_chk_specimenPartCollectionAllowed BEFORE INSERT OR UPDATE OR DELETE
-  ON specimen_parts FOR EACH ROW
-  EXECUTE PROCEDURE fct_chk_specimenCollectionAllowed();
-
 CREATE TRIGGER trg_chk_parentCollInstitution BEFORE INSERT OR UPDATE
   ON collections FOR EACH ROW
   EXECUTE PROCEDURE fct_chk_parentCollInstitution();
@@ -259,10 +239,6 @@ CREATE TRIGGER trg_cpy_path_collections BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_cpy_path_peopleRelationships BEFORE INSERT OR UPDATE
 	ON people_relationships FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_path();
-
-CREATE TRIGGER trg_cpy_path_specimen_parts BEFORE INSERT OR UPDATE
-        ON specimen_parts FOR EACH ROW
-        EXECUTE PROCEDURE fct_cpy_path();
 
 CREATE TRIGGER trg_cpy_path_staging BEFORE INSERT OR UPDATE
         ON staging FOR EACH ROW
@@ -434,14 +410,6 @@ CREATE TRIGGER trg_trk_log_table_specimens AFTER INSERT OR UPDATE OR DELETE
         ON specimens FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
-CREATE TRIGGER trg_trk_log_table_specimen_individuals AFTER INSERT OR UPDATE OR DELETE
-        ON specimen_individuals FOR EACH ROW
-        EXECUTE PROCEDURE fct_trk_log_table();
-
-CREATE TRIGGER trg_trk_log_table_specimen_parts AFTER INSERT OR UPDATE OR DELETE
-        ON specimen_parts FOR EACH ROW
-        EXECUTE PROCEDURE fct_trk_log_table();
-
 CREATE TRIGGER trg_trk_log_table_taxonomy AFTER INSERT OR UPDATE OR DELETE
         ON taxonomy FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
@@ -548,15 +516,6 @@ CREATE TRIGGER trg_update_mineralogy_darwin_flat AFTER UPDATE
 CREATE TRIGGER trg_update_specimens_darwin_flat AFTER INSERT OR UPDATE
         ON specimens FOR EACH ROW
         EXECUTE PROCEDURE fct_update_specimen_flat();
-
-CREATE TRIGGER trg_fct_count_units_individuals AFTER INSERT OR UPDATE OR DELETE
-        ON specimen_individuals FOR EACH ROW
-        EXECUTE PROCEDURE fct_count_units();
-
-CREATE TRIGGER trg_fct_count_units_parts AFTER INSERT OR DELETE
-        ON specimen_parts FOR EACH ROW
-        EXECUTE PROCEDURE fct_count_units();
-
 
 CREATE TRIGGER trg_unpromotion_remove_cols AFTER UPDATE
         ON users FOR EACH ROW
@@ -686,10 +645,6 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_mineralogy AFTER INSERT OR UPDATE
         ON mineralogy FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
-CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimen_individuals AFTER INSERT OR UPDATE
-        ON specimen_individuals FOR EACH ROW
-        EXECUTE PROCEDURE trg_ins_update_dict();
-
 CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimens AFTER INSERT OR UPDATE
         ON specimens FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
@@ -704,10 +659,6 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_users AFTER INSERT OR UPDATE
 
 CREATE TRIGGER fct_cpy_trg_ins_update_dict_users_addresses AFTER INSERT OR UPDATE
         ON users_addresses FOR EACH ROW
-        EXECUTE PROCEDURE trg_ins_update_dict();
-
-CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimen_parts AFTER INSERT OR UPDATE
-        ON specimen_parts FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
 CREATE TRIGGER fct_cpy_trg_ins_update_dict_loan_status AFTER INSERT OR UPDATE
@@ -752,10 +703,6 @@ CREATE TRIGGER fct_cpy_trg_del_dict_mineralogy AFTER DELETE  OR UPDATE
         ON mineralogy FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
 
-CREATE TRIGGER fct_cpy_trg_del_dict_specimen_individuals AFTER DELETE  OR UPDATE
-        ON specimen_individuals FOR EACH ROW
-        EXECUTE PROCEDURE trg_del_dict();
-
 CREATE TRIGGER fct_cpy_trg_del_dict_specimens AFTER DELETE  OR UPDATE
         ON specimens FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
@@ -770,10 +717,6 @@ CREATE TRIGGER fct_cpy_trg_del_dict_users AFTER DELETE  OR UPDATE
 
 CREATE TRIGGER fct_cpy_trg_del_dict_users_addresses AFTER DELETE  OR UPDATE
         ON users_addresses FOR EACH ROW
-        EXECUTE PROCEDURE trg_del_dict();
-
-CREATE TRIGGER fct_cpy_trg_del_dict_specimen_parts AFTER DELETE  OR UPDATE
-        ON specimen_parts FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
 
 CREATE TRIGGER fct_cpy_trg_del_dict_loan_status AFTER DELETE OR UPDATE
@@ -802,9 +745,9 @@ CREATE trigger trg_add_status_history after INSERT
   ON loans FOR EACH ROW
   EXECUTE PROCEDURE fct_auto_insert_status_history();
 
-CREATE TRIGGER trg_chk_part_not_loaned BEFORE DELETE
-  ON specimen_parts FOR EACH ROW
-  EXECUTE PROCEDURE chk_part_not_loaned();
+CREATE TRIGGER trg_chk_specimens_not_loaned BEFORE DELETE
+  ON specimens FOR EACH ROW
+  EXECUTE PROCEDURE chk_specimens_not_loaned();
 
 CREATE TRIGGER trg_cpy_ig_to_loan_items AFTER UPDATE
   ON specimens FOR EACH ROW
