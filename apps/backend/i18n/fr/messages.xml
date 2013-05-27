@@ -5720,6 +5720,10 @@
         <source>Geo/Paleo Search</source>
         <target>Recherche Geo/Paleo</target>
       </trans-unit>
+      <trans-unit id="1734">
+        <source>Quality assurance</source>
+        <target>Assurance qualité</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

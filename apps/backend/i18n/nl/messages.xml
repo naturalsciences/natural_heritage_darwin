@@ -5719,6 +5719,10 @@
         <source>Geo/Paleo Search</source>
         <target>Geo/Paleo opzoeking</target>
       </trans-unit>
+      <trans-unit id="1734">
+        <source>Quality assurance</source>
+        <target>Kwaliteitsborging</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>
