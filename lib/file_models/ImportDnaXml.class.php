@@ -58,7 +58,7 @@ class ImportDnaXml implements IImportModels
     'ig_date_mask' => 'ig_date_mask',
   ) ;   
   
-  public function importFile($file,$id)
+  public function parseFile($file,$id)
   {  
     $xml = new DOMDocument();
     $xml->load($file) ;     

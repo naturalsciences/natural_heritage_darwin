@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <!-- edited by Gabriele Droege (Botanic Garden and Botanical Museum Berlin-Dahlem) -->
 <xs:schema targetNamespace="http://www.tdwg.org/schemas/abcd/2.06" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dna="http://www.dnabank-network.org/schemas/ABCDDNA" xmlns="http://www.tdwg.org/schemas/abcd/2.06" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:import namespace="http://www.dnabank-network.org/schemas/ABCDDNA" schemaLocation="DNA.XSD"/>
 	<xs:element name="DataSets">
 		<xs:annotation>
 			<xs:documentation>TDWG root element: container for one or more DataSets.</xs:documentation>
