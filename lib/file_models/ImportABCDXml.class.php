@@ -1,9 +1,9 @@
 <?php 
 class ImportABCDXml implements IImportModels
 {
-  private $tag, $staging, $object, $people, $import_id, $next_id, $temp_data;
+  private $tag, $staging, $object, $people, $import_id, $next_id, $temp_data, $higher_tag;
   private $peoples = array() ;
-
+  private $objectToSave = array() ; 
   /**
   * @function parseFile() read a 'to_be_loaded' xml file and import it, if possible in staging table
   * @var $file : the xml file to parse
@@ -39,12 +39,9 @@ class ImportABCDXml implements IImportModels
       case "Unit" : 
             $this->staging = new Staging();
             $this->staging->fromArray(array("import_ref" => $this->import_id, "level" => "spec")); break ;;
-      case "Identification" : $this->identification = new parsingIdentifications() ; break ;;
-            //$this->identification->fromArray(array("referenced_relation" => "staging", "record_id"=>$this->next_id)) ;
+      case "Identification" : $this->object = new parsingIdentifications() ; break ;;
       case "Identifiers" : $this->peoples = array() ; break ;;
-//      case "TaxonIdentified" : $this->identification->type_identified = "taxon_name" ; break ;;
-//      case "MineralRockIdentified": $this->identification->type_identified = "mineral_name" ; break ;;
-      case "HigherTaxa" : $this->identification->taxon_parent = new Hstore() ;break ;;
+      case "HigherTaxa" : $this->object->taxon_parent = new Hstore() ;break ;;
       case "Gathering" : $this->object = new parsingGTU() ; break ;;
       case "NameAtomised" : $this->higher_tag = "keyword" ;
       case "PersonName" : $this->people = new People() ; break ;;
@@ -57,27 +54,28 @@ class ImportABCDXml implements IImportModels
   {
     $this->tag = "" ;
     switch ($name) {
-      case "HigherTaxa" : $this->staging["taxon_parents"] = $this->identification->getTaxonParent() ;;
-      case "Unit" : $this->staging->save() ; $this->next_id++ ;;
-      case "Identification" : $this->identification->save($this->next_id) ; break ;
-      case "NameAtomised" : $this->higher_tag = "" ;
+      case "HigherTaxa" : $this->staging["taxon_parents"] = $this->object->getTaxonParent() ;; break ;;
+      case "Unit" : $this->saveUnitAndAssociated() ; break ;;
+      case "Identification" : $this->objectToSave[] = $this->object ; break ;;
+      case "Gathering" : $this->objectToSave[] = $this->object ; break ;;
+      case "NameAtomised" : $this->higher_tag = "" ; break ;;
       case "PersonName" : $this->object->peoples[] = $this->people ; break ;;
       case "Person" : $this->object->peoples[] = $this->people ; break ;;
       case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
-      case "MineralRockIdentified" : $this->staging["mineral_name"] = $this->identification->fullname ;
-      case "ScientificName" : $this->staging["taxon_name"] = $this->identification->getTaxonName() ;
+      case "MineralRockIdentified" : $this->staging["mineral_name"] = $this->object->fullname ; break ;;
+      case "ScientificName" : $this->staging["taxon_name"] = $this->object->getTaxonName() ; break ;;
     }
   }
 
   private function characterData($parser, $data) 
   {
-    if ($data = "") return ;
-    if ($this->higher_tag == "keyword") $this->identification->handleKeyword($this->tag,$data) ;
+    if (trim($data) == "") return ;
+    if ($this->higher_tag == "keyword") $this->object->handleKeyword($this->tag,$data) ;
     switch ($this->tag) {
-      case "HigherTaxonName" : $this->temp_data = $data ;break;;
-      case "HigherTaxonRank" : $this->identification->handleTaxonParent($data,$this->temp_data) ;break;;
-      case "FullScientificNameString" : $this->identification->fullname = $data ;break;;
-      case "VerificationLevel" : $this->identification->determination_status = $data ; break ;;
+      case "HigherTaxonName" : $this->object->higher_taxon_name = $data ;break;;
+      case "HigherTaxonRank" : $this->object->handleTaxonParent($data) ;break;;
+      case "FullScientificNameString" : $this->object->fullname = $data ;break;;
+      case "VerificationLevel" : $this->object->determination_status = $data ; break ;;
       case "GivenNames" : $this->people['given_name'] = $data ; break ;;
       case "InheritedName" : $this->people['family_name'] = $data ; break ;;
       case "Prefix" : $this->people['title'] = $data ; break ;;
@@ -91,15 +89,13 @@ class ImportABCDXml implements IImportModels
       }
   }
 
-/*  private function insertPeopleInStaging($peoples, $type, $record_id)
+  private function saveUnitAndAssociated()
   {
-    foreach($peoples as $order => $people)
+    $this->staging->save() ;
+    $this->next_id++ ;;
+    foreach($this->objectToSave as $object)
     {
-      $staging = new StagingPeople() ;
-      $staging->fromArray(array('people_type' => $type, 'record_id' => $record_id, 
-                'referenced_relation' => ($type == 'identifier' ? 'identifications':'staging'),
-                'formated_name' => $people, 'order_by' => $order)) ;
-      $staging->save() ;
+      $object->save($this->staging->getId()) ;
     }
-  }*/
+  }
 }

@@ -2,7 +2,7 @@
 
 class ParsingIdentifications
 {
-  private $keywords = array("GenusOrMonomial","SpeciesEpithet","SubspeciesEpithet","Subgenus","AuthorTeamAndYear","SubgenusAuthorAndYear",
+  private $known_keywords = array("GenusOrMonomial","SpeciesEpithet","SubspeciesEpithet","Subgenus","AuthorTeamAndYear","SubgenusAuthorAndYear",
                       "AuthorTeam","AuthorTeamParenthesis","CultivarGroupName","CultivarName","FirstEpithet","InfraspecificEpithet","AuthorTeamOriginalAndYear",
                       "AuthorTeamParenthesisAndYear","Breed","CombinationAuthorTeamAndYear","NamedIndividual") ;
   private $array_level = array('regnum' => 'domain','subregnum'  => 'kingdom', 'superphylum' => 'super_phylum','genusgroup' => 'genus',
@@ -10,14 +10,15 @@ class ParsingIdentifications
             'subclassis' => 'subclassis','superordo' => 'super_order','ordo' => 'order', 'subordo' => 'sub_order',
             'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe');
   public $peoples = array(); // an array of Doctrine People class
-  public $type_identified ; $taxon_parent ; $fullname=null, $determination_status=null;
+  private $keywords = array() ; // an array of doctrine Keywords class
+  public $type_identified, $taxon_parent, $fullname=null, $determination_status=null, $higher_taxon_name;
   public $scientificName = "";
 
   // fill the Hstore taxon_parent
-  public function handleTaxonParent($level,$name)
+  public function handleTaxonParent($level)
   {
-    $this->taxon_parent[$this->array_level[$level]] = $name ;
-    $this->scientificName .= "$name " ;
+    $this->taxon_parent[$this->array_level[$level]] = $this->higher_taxon_name ;
+    $this->scientificName .= $this->higher_taxon_name." " ;
   }
 
   // Return ne scientificName in FullScientificNameString tag, otherwise return a self built name with parent and keywords
@@ -40,21 +41,21 @@ class ParsingIdentifications
     $identification->fromArray(array('record_id'=>$record_id,
                                      'referenced_relation'=>'staging',
                                      'notion_concerned' => 'taxonomy',
-                                     'determination_status'=>$this->determination_status))
+                                     'determination_status'=>$this->determination_status));
     $identification->save() ;
-    $this->insertPeopleInStaging($record_id)
+    $this->insertPeopleInStaging($identification->getId());
+    $this->insertKeywords($record_id) ;
   }
 
   // save keywords in table
   public function handleKeyword($tag,$value)
   {
-    if ($tag == "Zoological") die ("raté") ;
     // not sure if it's usefull or not, if not, simply delete the line below and $this->keyword array
-    if (!in_array($tag,$this->keywords)) return ;
+    if (!in_array($tag,$this->known_keywords)) return ;
     $keyword = new ClassificationKeywords();
-    $keyword->fromArray(array('referenced_relation' => 'staging', 'record_id' => $this->import_id,
+    $keyword->fromArray(array('referenced_relation' => 'staging',
                               'keyword_type'=> $tag, 'keyword'=> $value));
-    $keyword->save();
+    $this->keywords[] = $keyword ;
     $this->scientificName .= "$value " ;
   }
 
@@ -63,13 +64,22 @@ class ParsingIdentifications
   {
     foreach($this->peoples as $order => $people)
     {
-      if ($people->getFullName()) $name = $people->getFullName() ;
-      else $name = $people->getFamilyName()." ".$people->getGivenName().($people->getTitle()?" (".$people->getTitle().")") ;
+      if ($people->getFormatedName()) $name = $people->getFormatedName() ;
+      else $name = $people->getFamilyName()." ".$people->getGivenName().($people->getTitle()?" (".$people->getTitle().")":"") ;
       $staging = new StagingPeople() ;
       $staging->fromArray(array('people_type' => 'identifier', 'record_id' => $record_id,
-                'referenced_relation' => 'identification'),
+                'referenced_relation' => 'identification',
                 'formated_name' => $name, 'order_by' => $order)) ;
       $staging->save() ;
+    }
+  }
+
+  private function insertKeywords($record_id)
+  {
+    foreach($this->keywords as $keyword) 
+    {
+      $keyword->setRecordId($record_id) ;
+      $keyword->save() ;
     }
   }
 

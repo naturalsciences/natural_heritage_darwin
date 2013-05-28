@@ -25,18 +25,18 @@ class ParsingGTU
 
   public function save($record_id)
   {
-    $this->insertPeopleInStaging($record_id)
+    $this->insertPeopleInStaging($record_id) ;
   }
 
   private function insertPeopleInStaging($record_id)
   {
     foreach($this->peoples as $order => $people)
     {
-      if ($people->getFullName()) $name = $people->getFullName() ;
-      else $name = $people->getFamilyName()." ".$people->getGivenName().($people->getTitle()?" (".$people->getTitle().")") ;
+      if ($people->getFormatedName()) $name = $people->getFormatedName() ;
+      else $name = $people->getFamilyName()." ".$people->getGivenName().($people->getTitle()?" (".$people->getTitle().")":"") ;
       $staging = new StagingPeople() ;
       $staging->fromArray(array('people_type' => 'collector', 'record_id' => $record_id, 
-                'referenced_relation' => 'staging'),
+                'referenced_relation' => 'staging',
                 'formated_name' => $name, 'order_by' => $order)) ;
       $staging->save() ;
     }
