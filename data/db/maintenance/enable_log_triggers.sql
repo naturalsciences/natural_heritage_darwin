@@ -3,7 +3,6 @@
  ALTER TABLE darwin2.chronostratigraphy ENABLE TRIGGER trg_trk_log_table_chronostratigraphy;
  ALTER TABLE darwin2.classification_keywords ENABLE TRIGGER trg_trk_log_table_classification_keywords;
  ALTER TABLE darwin2.classification_synonymies ENABLE TRIGGER trg_trk_log_table_classification_synonymies;
- ALTER TABLE darwin2.class_vernacular_names ENABLE TRIGGER trg_trk_log_table_class_vernacular_names;
  ALTER TABLE darwin2.codes ENABLE TRIGGER trg_trk_log_table_codes;
  ALTER TABLE darwin2.collecting_methods ENABLE TRIGGER trg_trk_log_table_collecting_methods;
  ALTER TABLE darwin2.collecting_tools ENABLE TRIGGER trg_trk_log_table_collecting_tools;

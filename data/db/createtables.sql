@@ -28,16 +28,6 @@ comment on column template_people.additional_names is 'Any additional names give
 comment on column template_people.birth_date_mask is 'Contains the Mask flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 comment on column template_people.birth_date is 'Birth/Creation date composed';
 comment on column template_people.gender is 'For physical user/persons give the gender: M or F';
-create table template_people_languages
-       (
-        language_country varchar not null default 'en',
-        mother boolean not null default true,
-        preferred_language boolean not null default false
-       );
-comment on table template_people_languages is 'Template supporting users/people languages table definition';
-comment on column template_people_languages.language_country is 'Reference of Language - language_country field of languages_countries table';
-comment on column template_people_languages.mother is 'Flag telling if its mother language or not';
-comment on column template_people_languages.preferred_language is 'Flag telling which language is preferred in communications';
 
 create table people
        (
@@ -344,35 +334,26 @@ comment on column identifications.value_defined_indexed is 'Indexed form of valu
 comment on column identifications.determination_status is 'Status of identification - can either be a percentage of certainty or a code describing the identification step in the process';
 comment on column identifications.order_by is 'Integer used to order the identifications when no date entered';
 
-create table class_vernacular_names
+create table vernacular_names
        (
         id serial,
         community varchar not null,
         community_indexed varchar not null,
-        constraint pk_class_vernacular_names primary key (id),
-        constraint unq_class_vernacular_names unique (referenced_relation, record_id, community_indexed)
-       )
-inherits (template_table_record_ref);
-comment on table class_vernacular_names is 'Contains the language communities a unit name translation is available for';
-comment on column class_vernacular_names.id is 'Unique identifier of a language community vernacular name';
-comment on column class_vernacular_names.referenced_relation is 'Reference of the unit table a vernacular name for a language community has to be defined - id field of table_list table';
-comment on column class_vernacular_names.record_id is 'Identifier of record a vernacular name for a language community has to be defined';
-comment on column class_vernacular_names.community is 'Language community, a unit translation is available for';
-
-create table vernacular_names
-       (
-        id serial,
-        vernacular_class_ref integer not null,
         name varchar not null,
         name_indexed varchar not null,
-        constraint unq_vernacular_names unique (vernacular_class_ref, name_indexed),
-        constraint pk_vernacular_names primary key (id),
-        constraint fk_vernacular_class_class_vernacular_names foreign key (vernacular_class_ref) references class_vernacular_names(id) on delete cascade
-       );
+        constraint unq_vernacular_names unique (referenced_relation, record_id, community_indexed, name_indexed),
+        constraint pk_vernacular_names primary key (id)
+       )
+inherits (template_table_record_ref);
+       
 comment on table vernacular_names is 'List of vernacular names for a given unit and a given language community';
-comment on column vernacular_names.vernacular_class_ref is 'Identifier of a unit/language community entry - id field of class_vernacular_names table';
+comment on column vernacular_names.community is 'Language community, a unit translation is available for';
+comment on column vernacular_names.community_indexed is 'indexed version of the language community';
 comment on column vernacular_names.name is 'Vernacular name';
 comment on column vernacular_names.name_indexed is 'Indexed form of vernacular name';
+comment on column vernacular_names.referenced_relation is 'Reference of the unit table a vernacular name for a language community has to be defined - id field of table_list table';
+comment on column vernacular_names.record_id is 'Identifier of record a vernacular name for a language community has to be defined';
+
 
 create table expeditions
        (
@@ -428,12 +409,14 @@ comment on column users.selected_lang is 'Lang of the interface for the user en,
 create table people_languages
        (
         id serial,
+        language_country varchar not null default 'en',
+        mother boolean not null default true,
+        preferred_language boolean not null default false,
         people_ref integer not null,
         constraint pk_people_languages primary key (id),
         constraint unq_people_languages unique (people_ref, language_country),
         constraint fk_people_languages_people foreign key (people_ref) references people(id) on delete cascade
-       )
-inherits (template_people_languages);
+       );
 comment on table people_languages is 'Languages spoken by a given person';
 comment on column people_languages.people_ref is 'Reference of person - id field of people table';
 comment on column people_languages.language_country is 'Reference of Language - language_country field of languages_countries table';
@@ -487,13 +470,6 @@ comment on table template_people_users_comm_common is 'Template table used to co
 comment on column template_people_users_comm_common.person_user_ref is 'Reference of person/user - id field of people/users table';
 comment on column template_people_users_comm_common.entry is 'Communication entry';
 
-create table template_people_users_rel_common
-       (
-        person_user_role varchar
-       );
-comment on table template_people_users_rel_common is 'Template table used to propagate three field in different tables depending it''s people or user dedicated';
-comment on column template_people_users_rel_common.person_user_role is 'Role the person/user have in the moral person he depends of';
-
 create table template_people_users_addr_common
        (
         po_box varchar,
@@ -514,6 +490,7 @@ comment on column template_people_users_addr_common.country is 'Country';
 create table people_relationships
        (
         id serial,
+        person_user_role varchar,
         relationship_type varchar not null default 'belongs to',
         person_1_ref integer not null,
         person_2_ref integer not null,
@@ -525,9 +502,7 @@ create table people_relationships
         constraint pk_people_relationships primary key (id),
         constraint fk_people_relationships_people_01 foreign key (person_1_ref) references people(id) on delete cascade,
         constraint fk_people_relationships_people_02 foreign key (person_2_ref) references people(id)
-       )
-
-inherits (template_people_users_rel_common);
+       );
 comment on table people_relationships is 'Relationships between people - mainly between physical person and moral person: relationship of dependancy';
 comment on column people_relationships.relationship_type is 'Type of relationship between two persons: belongs to, is department of, is section of, works for,...';
 comment on column people_relationships.person_1_ref is 'Reference of person to be puted in relationship with an other - id field of people table';
@@ -596,12 +571,13 @@ comment on column users_comm.tag is 'List of descriptive tags: internet, tel, fa
 create table users_addresses
        (
         id serial,
+        person_user_role varchar,
         organization_unit varchar,
         tag varchar not null default '',
         constraint pk_users_addresses primary key (id),
         constraint fk_users_addresses_users foreign key (person_user_ref) references users(id) on delete cascade
        )
-inherits (template_people_users_rel_common, template_people_users_comm_common, template_people_users_addr_common);
+inherits (template_people_users_comm_common, template_people_users_addr_common);
 comment on table users_addresses is 'Users addresses';
 comment on column users_addresses.id is 'Unique identifier of a user address';
 comment on column users_addresses.person_user_ref is 'Reference of the user concerned - id field of users table';
@@ -691,25 +667,18 @@ comment on column collections.code_part_code_auto_copy is 'Flag telling if the w
 comment on column collections.code_specimen_duplicate is 'Flag telling if the whole specimen code has to be copied when you do a duplicate';
 comment on column collections.is_public is 'Flag telling if the collection can be found in the public search';
 
-create table template_collections_users
-       (
-        collection_ref integer not null default 0,
-        user_ref integer not null default 0
-       );
-comment on table template_collections_users is 'Template table used to construct collections rights tables';
-comment on column template_collections_users.collection_ref is 'Reference of collection concerned - id field of collections table';
-comment on column template_collections_users.user_ref is 'Reference of user - id field of users table';
-
 create table collections_rights
        (
         id serial,
         db_user_type smallint not null default 1,
+        collection_ref integer not null default 0,
+        user_ref integer not null default 0,
         constraint pk_collections_right primary key (id),
         constraint fk_collections_rights_users foreign key (user_ref) references users(id) on delete cascade,
         constraint fk_collections_rights_collections foreign key (collection_ref) references collections(id) on delete cascade,
         constraint unq_collections_rights unique (collection_ref, user_ref)
-       )
-inherits (template_collections_users);
+       );
+
 comment on table collections_rights is 'List of rights of given users on given collections';
 comment on column collections_rights.id is 'Unique identifier for collection rights';
 comment on column collections_rights.collection_ref is 'Reference of collection concerned - id field of collections table';

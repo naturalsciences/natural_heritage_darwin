@@ -38,7 +38,7 @@ class cataloguewidgetViewComponents extends sfComponents
 
   public function executeVernacularNames()
   {
-    $this->vernacular_names =  Doctrine::getTable('ClassVernacularNames')->findForTable($this->table, $this->eid);
+    $this->vernacular_names =  Doctrine::getTable('VernacularNames')->findForTable($this->table, $this->eid);
   }
 
   public function executeSynonym()

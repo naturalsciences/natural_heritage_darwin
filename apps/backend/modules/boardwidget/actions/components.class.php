@@ -46,24 +46,25 @@ class boardwidgetComponents extends sfComponents
   {
     $this->pagerSlidingSize = intval(sfConfig::get('dw_pagerSlidingSize'));
     $query = Doctrine::getTable('UsersTracking')->getMyItems($this->getUser()->getId());
-     $this->pagerLayout = new PagerLayoutWithArrows(
-	    new DarwinPager(
-	      $query,
-	       $this->getRequestParameter('page',1),
-	      10 /** nb p p**/
-	      ),
-	    new Doctrine_Pager_Range_Sliding(
-	      array('chunk' => $this->pagerSlidingSize)
-	      ),
-	    $this->getController()->genUrl('widgets/reloadContent?category=board&widget=myLastsItems') . '/page/{%page_number}'
-	    );
+    $this->pagerLayout = new PagerLayoutWithArrows(
+      new DarwinPager(
+        $query,
+          $this->getRequestParameter('page',1),
+        10 /** nb p p**/
+        ),
+      new Doctrine_Pager_Range_Sliding(
+        array('chunk' => $this->pagerSlidingSize)
+        ),
+      $this->getController()->genUrl('widgets/reloadContent?category=board&widget=myLastsItems') . '/page/{%page_number}'
+    );
 
+    $this->form = new UsersTrackingFormFilter() ;
     $this->pagerLayout->setTemplate('<li><a href="{%url}">{%page}</a></li>');
     $this->pagerLayout->setSelectedTemplate('<li>{%page}</li>');
     $this->pagerLayout->setSeparatorTemplate('<span class="pager_separator">::</span>');
 
     if (! $this->pagerLayout->getPager()->getExecuted())
-	    $this->items = $this->pagerLayout->execute();
+      $this->items = $this->pagerLayout->execute();
   }
 
   public function executeMyChangesPlotted()

@@ -41,21 +41,27 @@ class MySavedSearches extends BaseMySavedSearches
   }
 
   // Returns an array from the serialized string stored in search_criterias field
-  public function getRequest()
-  {
-    return unserialize($this->getSearchCriterias());
+  public function getUnserialRequest() {
+    return json_decode($this->getSearchCriterias(), true);
+  }
+  
+  /*
+  * set the serialized string stored in search_criterias field
+  */
+  public function setUnserialRequest($req) {
+    return $this->setSearchCriterias(json_encode($req));
   }
   
   // Returns the searched ID from the serialized string stored in search_criterias field
   public function getSearchedIdString()
   {
-    $prev_req = $this->getRequest();
+    $prev_req = $this->getUnserialRequest();
     return $prev_req['specimen_search_filters']['spec_ids'];
   }
 
   public function getAllSearchedId()
   {
-    $prev_req = $this->getRequest();
+    $prev_req = $this->getUnserialRequest();
     if(isset($prev_req['specimen_search_filters']['spec_ids']) && $prev_req['specimen_search_filters']['spec_ids'] != "")
       $old_ids = explode(',',$prev_req['specimen_search_filters']['spec_ids']);
     else

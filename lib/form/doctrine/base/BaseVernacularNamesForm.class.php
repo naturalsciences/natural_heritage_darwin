@@ -15,17 +15,21 @@ abstract class BaseVernacularNamesForm extends BaseFormDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'id'                   => new sfWidgetFormInputHidden(),
-      'vernacular_class_ref' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('ClassVernacularNames'), 'add_empty' => true)),
-      'name'                 => new sfWidgetFormTextarea(),
-      'name_indexed'         => new sfWidgetFormTextarea(),
+      'id'                  => new sfWidgetFormInputHidden(),
+      'referenced_relation' => new sfWidgetFormTextarea(),
+      'record_id'           => new sfWidgetFormInputText(),
+      'community'           => new sfWidgetFormTextarea(),
+      'name'                => new sfWidgetFormTextarea(),
+      'name_indexed'        => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
-      'id'                   => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'vernacular_class_ref' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('ClassVernacularNames'), 'required' => false)),
-      'name'                 => new sfValidatorString(),
-      'name_indexed'         => new sfValidatorString(array('required' => false)),
+      'id'                  => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'referenced_relation' => new sfValidatorString(),
+      'record_id'           => new sfValidatorInteger(),
+      'community'           => new sfValidatorString(),
+      'name'                => new sfValidatorString(),
+      'name_indexed'        => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('vernacular_names[%s]');

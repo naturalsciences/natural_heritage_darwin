@@ -7,7 +7,6 @@
  GRANT SELECT ON template_classifications TO d2viewer;
  GRANT SELECT ON collection_maintenance TO d2viewer;
  GRANT SELECT ON catalogue_relationships TO d2viewer;
- GRANT SELECT ON class_vernacular_names TO d2viewer;
  GRANT SELECT ON classification_keywords TO d2viewer;
  GRANT SELECT ON collections TO d2viewer;
  GRANT SELECT ON collections_rights TO d2viewer;
@@ -31,8 +30,6 @@
  GRANT SELECT ON template_people_users_addr_common TO d2viewer;
  GRANT SELECT ON my_widgets TO d2viewer;
  GRANT SELECT ON template_people_users_comm_common TO d2viewer;
- GRANT SELECT ON template_people_languages TO d2viewer;
- GRANT SELECT ON template_people_users_rel_common TO d2viewer;
  GRANT SELECT ON specimen_collecting_methods TO d2viewer;
  GRANT SELECT ON people_languages TO d2viewer;
  GRANT SELECT ON specimens_accompanying TO d2viewer;
@@ -55,7 +52,6 @@
  GRANT SELECT ON tag_groups TO d2viewer;
  GRANT SELECT ON chronostratigraphy TO d2viewer;
  GRANT SELECT ON catalogue_people TO d2viewer;
- GRANT SELECT ON template_collections_users TO d2viewer;
  GRANT SELECT ON gtu TO d2viewer;
  GRANT SELECT ON vernacular_names TO d2viewer;
  GRANT SELECT ON specimen_collecting_tools TO d2viewer;

@@ -5,13 +5,12 @@ include(dirname(__FILE__).'/../../bootstrap/functional.php');
 $browser = new DarwinTestFunctional(new sfBrowser());
 $browser->loadData($configuration)->login('root','evil');
 
-$vernacular_names = new ClassVernacularNames;
+$vernacular_names = new VernacularNames;
 
 $vernacular_names->setCommunity('French');
 $vernacular_names->setReferencedRelation('taxonomy');
 $vernacular_names->setRecordId(4);
-$vernacular_names->VernacularNames[]->name ='Faux con';
-$vernacular_names->VernacularNames[]->name ='Con de pélerin';
+$vernacular_names->name ='Faux con';
 $vernacular_names->save();
 
 $personId = Doctrine::getTable('People')->findOneByFamilyNameAndGivenName('Root', 'Evil')->getId();
@@ -70,7 +69,7 @@ $browser->
         isStatusCode(200)->
         checkElement('table tbody tr',1)->
         checkElement('table tbody tr:first td:first','/French/')->
-	checkElement('table tbody tr:first td::nth-child(2)','/Show 2 Names/')->
+	checkElement('table tbody tr:first td::nth-child(2)','/Faux con/')->
     end()->
 
     info('6 - Synonymies')->

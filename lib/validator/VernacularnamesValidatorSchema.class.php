@@ -3,7 +3,7 @@ class VernacularnamesValidatorSchema extends sfValidatorSchema
 {
   protected function configure($options = array(), $messages = array())
   {
-    $this->addMessage('name', 'The value is required.');
+    $this->addMessage('community', 'The value is required.');
   }
  
   protected function doClean($value)
@@ -11,18 +11,17 @@ class VernacularnamesValidatorSchema extends sfValidatorSchema
     $errorSchema = new sfValidatorErrorSchema($this);
     $errorSchemaLocal = new sfValidatorErrorSchema($this);
 
-    if (!$value['name'])
-    {
+    if (!$value['name']) {
       return array();
+    } elseif (!$value['community']) {
+      $errorSchemaLocal->addError(new sfValidatorError($this, 'community'));
     }
 
-    if (count($errorSchemaLocal))
-    {
-      $errorSchema->addError($errorSchemaLocal, 'name');
+    if (count($errorSchemaLocal)) {
+      $errorSchema->addError($errorSchemaLocal, 'community');
     }
 
-    if (count($errorSchema))
-    {
+    if (count($errorSchema)) {
       throw new sfValidatorErrorSchema($this, $errorSchema);
     }
  

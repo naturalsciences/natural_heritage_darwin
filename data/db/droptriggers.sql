@@ -13,7 +13,6 @@ DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_codes ON codes ;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_taggroups ON tag_groups;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_taxa ON taxonomy;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_collection ON collections;
-DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_classvernacularnames ON class_vernacular_names;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_vernacularnames ON vernacular_names;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_collecting_tools ON collecting_tools;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_collecting_methods ON collecting_methods;
@@ -132,9 +131,6 @@ DROP TRIGGER IF EXISTS trg_trk_log_table_properties_values
 
 DROP TRIGGER IF EXISTS trg_trk_log_table_identifications 
         ON identifications;
-
-DROP TRIGGER IF EXISTS trg_trk_log_table_class_vernacular_names 
-        ON class_vernacular_names;
 
 DROP TRIGGER IF EXISTS trg_trk_log_table_vernacular_names 
         ON vernacular_names;
@@ -374,7 +370,7 @@ DROP TRIGGER IF EXISTS trg_chk_ref_record_catalogue_properties ON catalogue_prop
 
 DROP TRIGGER IF EXISTS trg_chk_ref_record_identifications ON identifications;
 
-DROP TRIGGER IF EXISTS trg_chk_ref_record_class_vernacular_names ON class_vernacular_names;
+DROP TRIGGER IF EXISTS trg_chk_ref_record_vernacular_names ON vernacular_names;
 
 DROP TRIGGER IF EXISTS trg_chk_ref_record_informative_workflow ON informative_workflow;
 DROP TRIGGER IF EXISTS trg_chk_is_last_informative_workflow ON informative_workflow;

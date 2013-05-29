@@ -171,7 +171,12 @@ function install_db() {
   echo -e '- Indexes created'
   $psql -f createindexes_darwinflat.sql
   $admpsql -f grant_d2_to_read_user.sql
-  echo -e '- Grant done'
+  psql_exit_status=$?
+  if [ $psql_exit_status != 0 ]; then
+    warn_msg "Grant was not applied"
+  else
+    echo -e '- Grant done'
+  fi
   $psql -c "INSERT into $schema.db_version VALUES($darwin_version::integer,now())"
   echo -e "- Db version set to $darwin_version"
 }
@@ -206,11 +211,14 @@ case "$@" in
   "install-db")
     install_db
   ;;
-  "test")
+  "test-psql")
     for sqlfiles in $(ls tests/*.sql)
     do
       $psql -f $sqlfiles
     done
+  ;;
+  "test")
+    pg_prove -h $hostname -U darwin2 -d $dbname -p $dbport $(ls tests/*.sql)
   ;;
   "create-schema")
     $admpsql -c "create schema $schema authorization darwin2;"
