@@ -46,6 +46,9 @@ class ImportABCDXml implements IImportModels
       case "NameAtomised" : $this->higher_tag = "keyword" ;
       case "PersonName" : $this->people = new People() ; break ;;
       case "Person" : $this->people = new People() ; break ;;
+      case "Country" : $this->higher_tag = "country" ; break ;;
+      case "Depth" : $this->object = new parsingProperties() ; $this->higher_tag == "property" ; break ;;
+      case "Height" : $this->object = new parsingProperties() ; $this->higher_tag == "property" ; break ;;
 //      case "Organisation" : $this->higher_tag = "people" ;
     }
   }
@@ -66,6 +69,8 @@ class ImportABCDXml implements IImportModels
       case "ScientificName" : $this->staging["taxon_name"] = $this->object->getTaxonName() ; break ;;
       case "HigherTaxon" : $this->object->handleTaxonParent() ;break;;
       case "NamedArea" : $this->object->HandleTagGroups() ;break;;
+      case "Depth" : $this->object->save() ; break ;;
+      case "Height" : $this->object->save() ; break ;;
     }
   }
 
@@ -92,7 +97,21 @@ class ImportABCDXml implements IImportModels
       case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $data ; break ;;
       case "ProjectTitle" : $this->staging['expedition_name'] = $data ; break ;;
       case "LocalityText" : $this->staging['gtu_code'] = $data ; break ;; //@TOTO maybe find a better place for that.
+      case "Code" : $this->staging['gtu_code'] = $data ; break ;; 
       case "Notes" : $this->object->addComment($data) ; break ;;
+      case "Accuracy" : $this->staging['gtu_elevation_accuracy'] = $data ; break ;;
+      case "LowerValue" : $this->staging['gtu_elevation'] = $data ; break ;;
+      case "MeasurementDateTime" : if($this->object->getFromDate()==null) $this->staging["gtu_from_date"]=$data ; break ;;
+      case "Name" : if($this->higher_tag == "country") break ;; //@TODO
+      case "Accuracy" : break ;; //@TODO parsingProperties
+      case "Accuracy" : break ;; //@TODO parsingProperties
+      case "Accuracy" : break ;; //@TODO parsingProperties
+      case "Accuracy" : break ;; //@TODO parsingProperties
+      case "Accuracy" : break ;; //@TODO parsingProperties
+      case "Accuracy" : break ;; //@TODO parsingProperties
+      case "Accuracy" : break ;; //@TODO parsingProperties
+      
+      
   //    case "SortingName" : $this->temp_data = $data ; break ;;
   //    case "Text" : if($this->higher_tag == "people") $this->object->organisation = $data ; break ;;
       default : break ;;
