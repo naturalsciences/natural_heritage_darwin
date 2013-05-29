@@ -236,7 +236,13 @@ case "$@" in
   "upgrade")
     test=0
     dw_version=`$psql -c "select id from $schema.db_version order by update_at DESC LIMIT 1;" -t -A`
-    dw_version=$(( $dw_version + 1)) 
+    if [ $dw_version -e ]
+    then
+      error_msg "Problem fetching current version"
+      exit 1;
+    fi
+
+    dw_version=$(( $dw_version + 1))
     if [ "$(echo $dw_version | grep "^[[:digit:]]*$")" ] 
     then
       upd_file=$(ls changes/*.sql | sort -n | grep $dw_version)
