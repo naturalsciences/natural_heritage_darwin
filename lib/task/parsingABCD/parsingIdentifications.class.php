@@ -11,13 +11,13 @@ class ParsingIdentifications
             'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe');
   public $peoples = array(); // an array of Doctrine People class
   private $keywords = array() ; // an array of doctrine Keywords class
-  public $type_identified, $taxon_parent, $fullname=null, $determination_status=null, $higher_taxon_name;
+  public $type_identified, $taxon_parent, $fullname=null, $determination_status=null, $higher_taxon_name,$higher_taxon_level;
   public $scientificName = "";
 
   // fill the Hstore taxon_parent
-  public function handleTaxonParent($level)
+  public function handleTaxonParent()
   {
-    $this->taxon_parent[$this->array_level[$level]] = $this->higher_taxon_name ;
+    $this->taxon_parent[$this->array_level[$this->higher_taxon_level]] = $this->higher_taxon_name ;
     $this->scientificName .= $this->higher_taxon_name." " ;
   }
 

@@ -64,6 +64,8 @@ class ImportABCDXml implements IImportModels
       case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
       case "MineralRockIdentified" : $this->staging["mineral_name"] = $this->object->fullname ; break ;;
       case "ScientificName" : $this->staging["taxon_name"] = $this->object->getTaxonName() ; break ;;
+      case "HigherTaxon" : $this->object->handleTaxonParent() ;break;;
+      case "NamedArea" : $this->object->HandleTagGroups() ;break;;
     }
   }
 
@@ -73,7 +75,7 @@ class ImportABCDXml implements IImportModels
     if ($this->higher_tag == "keyword") $this->object->handleKeyword($this->tag,$data) ;
     switch ($this->tag) {
       case "HigherTaxonName" : $this->object->higher_taxon_name = $data ;break;;
-      case "HigherTaxonRank" : $this->object->handleTaxonParent($data) ;break;;
+      case "HigherTaxonRank" : $this->object->higher_taxon_level = $data ;break;;
       case "FullScientificNameString" : $this->object->fullname = $data ;break;;
       case "VerificationLevel" : $this->object->determination_status = $data ; break ;;
       case "GivenNames" : $this->people['given_name'] = $data ; break ;;
@@ -83,6 +85,14 @@ class ImportABCDXml implements IImportModels
       case "ISODateTimeBegin" : $this->object->GTUdate['from'] = $data ; break ;;
       case "ISODateTimeEnd" : $this->object->GTUdate['to'] = $data ; break ;;
       case "DateText" : $this->object->GTUdate['time'] = $data ; break ;;
+      case "AreaClass" : $this->object->tag_value = $data ; break ;;
+      case "AreaName" : $this->object->tag_group_name = $data ; break ;;
+      case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $data ; break ;;
+      case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $data ; break ;;
+      case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $data ; break ;;
+      case "ProjectTitle" : $this->staging['expedition_name'] = $data ; break ;;
+      case "LocalityText" : $this->staging['gtu_code'] = $data ; break ;; //@TOTO maybe find a better place for that.
+      case "Notes" : $this->object->addComment($data) ; break ;;
   //    case "SortingName" : $this->temp_data = $data ; break ;;
   //    case "Text" : if($this->higher_tag == "people") $this->object->organisation = $data ; break ;;
       default : break ;;
