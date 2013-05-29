@@ -65,6 +65,11 @@ BEGIN
 
    END LOOP;
    
+   
+   --- Move suspicious Rbins Codes
+   --- Remove Code that are already once in parts
+   --- Remove ALL
+   
    RETURN TRUE;
 END;
 $$
