@@ -33,7 +33,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-abstract class BaseIgs extends sfDoctrineRecord
+abstract class BaseIgs extends DarwinModel
 {
     public function setTableDefinition()
     {

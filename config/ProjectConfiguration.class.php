@@ -15,8 +15,9 @@ class ProjectConfiguration extends sfProjectConfiguration
  /**
   * Configure the Doctrine engine
   **/
-  public function configureDoctrine(Doctrine_Manager $manager)
-  {
+  public function configureDoctrine(Doctrine_Manager $manager) {
    $manager->setAttribute(Doctrine::ATTR_QUERY_CACHE, new Doctrine_Cache_Apc());
+    $options = array('baseClassName' => 'DarwinModel');
+    sfConfig::set('doctrine_model_builder_options', $options);
   }
 }
