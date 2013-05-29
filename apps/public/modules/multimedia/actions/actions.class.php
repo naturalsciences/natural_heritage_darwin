@@ -42,6 +42,8 @@ class multimediaActions extends DarwinActions
     // Adding the file to the Response object
     $this->getResponse()->clearHttpHeaders();
 
+
+    // If image is too large , display placeholder
     if($multimedia->getSize() > (1024 * 1024 * sfConfig::get('dw_preview_max_size', '10')) )
     {
       $url = sfConfig::get('sf_web_dir').'/'.sfConfig::get('sf_web_images_dir_name', 'images').'/img_placeholder.png';
@@ -52,11 +54,11 @@ class multimediaActions extends DarwinActions
       return sfView::NONE;
     }
 
+    $preview = $multimedia->getPreview(100,100);
     $this->getResponse()->setHttpHeader('Pragma: private', true);
-    $this->getResponse()->setHttpHeader('Content-type', $multimedia->getMimeType());
+    $this->getResponse()->setHttpHeader('Content-type', 'image/png');
     $this->getResponse()->sendHttpHeaders();
-    $this->getResponse()->setContent(imagejpeg($multimedia->getPreview(100,100)));
+    $this->getResponse()->setContent($preview);
     return sfView::NONE;
   }
-
 }
