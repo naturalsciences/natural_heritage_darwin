@@ -36,19 +36,18 @@ class ImportABCDXml implements IImportModels
   {
     $this->tag = $name ;
     switch ($name) {
-      case "Unit" : 
-            $this->staging = new Staging();
-            $this->staging->fromArray(array("import_ref" => $this->import_id, "level" => "spec")); break ;;
+      case "Country" : $this->higher_tag = "country" ; break ;;
+      case "Depth" : $this->object = new parsingProperties() ; $this->higher_tag = "property" ; break ;;
+      case "Gathering" : $this->object = new parsingGTU() ; break ;;
+      case "Height" : $this->object = new parsingProperties() ; $this->higher_tag = "property" ; break ;;
+      case "HigherTaxa" : $this->object->taxon_parent = new Hstore() ;break ;;
       case "Identification" : $this->object = new parsingIdentifications() ; break ;;
       case "Identifiers" : $this->peoples = array() ; break ;;
-      case "HigherTaxa" : $this->object->taxon_parent = new Hstore() ;break ;;
-      case "Gathering" : $this->object = new parsingGTU() ; break ;;
       case "NameAtomised" : $this->higher_tag = "keyword" ;
       case "PersonName" : $this->people = new People() ; break ;;
       case "Person" : $this->people = new People() ; break ;;
-      case "Country" : $this->higher_tag = "country" ; break ;;
-      case "Depth" : $this->object = new parsingProperties() ; $this->higher_tag == "property" ; break ;;
-      case "Height" : $this->object = new parsingProperties() ; $this->higher_tag == "property" ; break ;;
+      case "SiteMeasurementOrFact" : $this->object = new parsingProperties() ; break ;;
+      case "Unit" : $this->staging = new Staging(); break ;;
 //      case "Organisation" : $this->higher_tag = "people" ;
     }
   }
@@ -57,20 +56,20 @@ class ImportABCDXml implements IImportModels
   {
     $this->tag = "" ;
     switch ($name) {
-      case "HigherTaxa" : $this->staging["taxon_parents"] = $this->object->getTaxonParent() ;; break ;;
-      case "Unit" : $this->saveUnitAndAssociated() ; break ;;
-      case "Identification" : $this->objectToSave[] = $this->object ; break ;;
+      case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
+      case "Depth" : $this->object->save() ; break ;;
       case "Gathering" : $this->objectToSave[] = $this->object ; break ;;
+      case "HigherTaxa" : $this->staging["taxon_parents"] = $this->object->getTaxonParent() ;; break ;;
+      case "HigherTaxon" : $this->object->handleTaxonParent() ;break;;
+      case "Height" : $this->object->save() ; break ;;
+      case "Identification" : $this->objectToSave[] = $this->object ; break ;;
+      case "MineralRockIdentified" : $this->staging["mineral_name"] = $this->object->fullname ; break ;;
+      case "NamedArea" : $this->object->HandleTagGroups() ;break;;
       case "NameAtomised" : $this->higher_tag = "" ; break ;;
       case "PersonName" : $this->object->peoples[] = $this->people ; break ;;
       case "Person" : $this->object->peoples[] = $this->people ; break ;;
-      case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
-      case "MineralRockIdentified" : $this->staging["mineral_name"] = $this->object->fullname ; break ;;
       case "ScientificName" : $this->staging["taxon_name"] = $this->object->getTaxonName() ; break ;;
-      case "HigherTaxon" : $this->object->handleTaxonParent() ;break;;
-      case "NamedArea" : $this->object->HandleTagGroups() ;break;;
-      case "Depth" : $this->object->save() ; break ;;
-      case "Height" : $this->object->save() ; break ;;
+      case "Unit" : $this->saveUnitAndAssociated() ; break ;;
     }
   }
 
@@ -79,39 +78,34 @@ class ImportABCDXml implements IImportModels
     if (trim($data) == "") return ;
     if ($this->higher_tag == "keyword") $this->object->handleKeyword($this->tag,$data) ;
     switch ($this->tag) {
-      case "HigherTaxonName" : $this->object->higher_taxon_name = $data ;break;;
-      case "HigherTaxonRank" : $this->object->higher_taxon_level = $data ;break;;
-      case "FullScientificNameString" : $this->object->fullname = $data ;break;;
-      case "VerificationLevel" : $this->object->determination_status = $data ; break ;;
-      case "GivenNames" : $this->people['given_name'] = $data ; break ;;
-      case "InheritedName" : $this->people['family_name'] = $data ; break ;;
-      case "Prefix" : $this->people['title'] = $data ; break ;;
-      case "FullName" : $this->people['formated_name'] = $data ; break ;;
-      case "ISODateTimeBegin" : $this->object->GTUdate['from'] = $data ; break ;;
-      case "ISODateTimeEnd" : $this->object->GTUdate['to'] = $data ; break ;;
-      case "DateText" : $this->object->GTUdate['time'] = $data ; break ;;
+      case "Accuracy" : $this->staging['gtu_elevation_accuracy'] = $data ; break ;; 
       case "AreaClass" : $this->object->tag_value = $data ; break ;;
       case "AreaName" : $this->object->tag_group_name = $data ; break ;;
-      case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $data ; break ;;
-      case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $data ; break ;;
+      case "Code" : $this->staging['gtu_code'] = $data ; break ;;
       case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $data ; break ;;
-      case "ProjectTitle" : $this->staging['expedition_name'] = $data ; break ;;
+      case "DateText" : $this->object->GTUdate['time'] = $data ; break ;;
+      case "Duration" : break ;; //@TODO parsingProperties
+      case "GivenNames" : $this->people['given_name'] = $data ; break ;;
+      case "FullName" : $this->people['formated_name'] = $data ; break ;;
+      case "FullScientificNameString" : $this->object->fullname = $data ;break;;
+      case "HigherTaxonName" : $this->object->higher_taxon_name = $data ;break;;
+      case "HigherTaxonRank" : $this->object->higher_taxon_level = $data ;break;;
+      case "InheritedName" : $this->people['family_name'] = $data ; break ;;
+      case "ISODateTimeBegin" : $this->object->GTUdate['from'] = $data ; break ;;
+      case "ISODateTimeEnd" : $this->object->GTUdate['to'] = $data ; break ;;
+      case "IsQuantitative" : break ;; //@TODO parsingProperties
+      case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $data ; break ;;
       case "LocalityText" : $this->staging['gtu_code'] = $data ; break ;; //@TOTO maybe find a better place for that.
-      case "Code" : $this->staging['gtu_code'] = $data ; break ;; 
-      case "Notes" : $this->object->addComment($data) ; break ;;
-      case "Accuracy" : $this->staging['gtu_elevation_accuracy'] = $data ; break ;;
+      case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $data ; break ;;
       case "LowerValue" : $this->staging['gtu_elevation'] = $data ; break ;;
       case "MeasurementDateTime" : if($this->object->getFromDate()==null) $this->staging["gtu_from_date"]=$data ; break ;;
+      case "Notes" : $this->object->addComment($data) ; break ;;
       case "Name" : if($this->higher_tag == "country") break ;; //@TODO
-      case "Accuracy" : break ;; //@TODO parsingProperties
-      case "Accuracy" : break ;; //@TODO parsingProperties
-      case "Accuracy" : break ;; //@TODO parsingProperties
-      case "Accuracy" : break ;; //@TODO parsingProperties
-      case "Accuracy" : break ;; //@TODO parsingProperties
-      case "Accuracy" : break ;; //@TODO parsingProperties
-      case "Accuracy" : break ;; //@TODO parsingProperties
-      
-      
+      case "Parameter" : break ;; //@TODO parsingProperties
+      case "Prefix" : $this->people['title'] = $data ; break ;;
+      case "ProjectTitle" : $this->staging['expedition_name'] = $data ; break ;;
+      case "UpperValue" : break ;; //@TODO parsingProperties
+      case "VerificationLevel" : $this->object->determination_status = $data ; break ;;
   //    case "SortingName" : $this->temp_data = $data ; break ;;
   //    case "Text" : if($this->higher_tag == "people") $this->object->organisation = $data ; break ;;
       default : break ;;
@@ -120,6 +114,7 @@ class ImportABCDXml implements IImportModels
 
   private function saveUnitAndAssociated()
   {
+    $this->staging->fromArray(array("import_ref" => $this->import_id, "level" => "spec")); 
     $this->staging->save() ;
     $this->next_id++ ;;
     foreach($this->objectToSave as $object)
