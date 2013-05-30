@@ -5723,6 +5723,10 @@
         <source>Quality assurance</source>
         <target>Kwaliteitsborging</target>
       </trans-unit>
+      <trans-unit id="1735">
+        <source>Object name</source>
+        <target>Naam van de object</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

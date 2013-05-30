@@ -5724,6 +5724,11 @@
         <source>Quality assurance</source>
         <target>Assurance qualité</target>
       </trans-unit>
+      <trans-unit id="1735">
+        <source>Object name</source>
+        <target>Nom de l'objet</target>
+      </trans-unit>
+      
         </body>
   </file>
 </xliff>

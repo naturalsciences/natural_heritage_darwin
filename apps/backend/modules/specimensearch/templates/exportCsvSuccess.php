@@ -112,6 +112,7 @@ Part Codes<?php echo $sep;?>
 <?php if($source =='part'):?>
 <?php echo $part->getSpecimenPart().$sep;?>
 <?php echo $part->getSpecimenStatus().$sep;?>
+<?php echo $part->getObjectName().$sep;?>
 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
 <?php echo $part->getBuilding().$sep;?>
 <?php echo $part->getFloor().$sep;?>
