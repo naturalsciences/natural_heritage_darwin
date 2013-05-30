@@ -326,8 +326,19 @@ sps23:
    order_by: 11
    opened: true
    visible: false
-   title_perso: People role  
-   all_public: true  
+   title_perso: People role
+   all_public: true
+
+sps24:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: part
+   mandatory: false
+   order_by: 12
+   opened: true
+   visible: false
+   title_perso: Part
+   all_public: true 
 
 sw1:
    col_num: 1
