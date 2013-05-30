@@ -248,7 +248,7 @@ case "$@" in
   "upgrade")
     test=0
     dw_version=`$psql -c "select id from $schema.db_version order by update_at DESC LIMIT 1;" -t -A`
-    if [ $dw_version -e ]
+    if [ "$dw_version" = "" ]
     then
       error_msg "Problem fetching current version"
       exit 1;
