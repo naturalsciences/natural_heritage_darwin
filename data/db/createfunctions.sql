@@ -183,7 +183,7 @@ BEGIN
         ELSIF TG_TABLE_NAME = 'comments' THEN
                 NEW.comment_indexed := fullToIndex(NEW.comment);
         ELSIF TG_TABLE_NAME = 'specimen_parts' THEN
-                NEW.name_indexed := fullToIndex(COALESCE(NEW.name,'') );
+                NEW.object_name_indexed := fullToIndex(COALESCE(NEW.object_name,'') );
         END IF;
 	RETURN NEW;
 END;

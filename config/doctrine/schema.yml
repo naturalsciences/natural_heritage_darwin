@@ -927,6 +927,8 @@ SpecimenParts:
         specimen_status: { type: string, notnull: true, default: 'good state'}
         specimen_part_count_min: { type: integer, notnull: true, default:1}
         specimen_part_count_max: { type: integer, notnull: true, default:1}
+        object_name: { type: string}
+        object_name_indexed: { type: string}
     relations:
         Individual:
             class: SpecimenIndividuals
@@ -1170,6 +1172,7 @@ Staging:
         sub_container: {type: string }
         part_count_min: {type: integer }
         part_count_max: {type:integer}
+        object_name:  { type: string}
         specimen_status: {type: string}
         status: {type: string}
         complete: {type: boolean}

@@ -27,6 +27,8 @@
  * @property string $specimen_status
  * @property integer $specimen_part_count_min
  * @property integer $specimen_part_count_max
+ * @property string $object_name
+ * @property string $object_name_indexed
  * @property SpecimenIndividuals $Individual
  * @property SpecimenParts $Parent
  * @property Doctrine_Collection $SpecimenParts
@@ -54,6 +56,8 @@
  * @method string              getSpecimenStatus()          Returns the current record's "specimen_status" value
  * @method integer             getSpecimenPartCountMin()    Returns the current record's "specimen_part_count_min" value
  * @method integer             getSpecimenPartCountMax()    Returns the current record's "specimen_part_count_max" value
+ * @method string              getObjectName()              Returns the current record's "object_name" value
+ * @method string              getObjectNameIndexed()       Returns the current record's "object_name_indexed" value
  * @method SpecimenIndividuals getIndividual()              Returns the current record's "Individual" value
  * @method SpecimenParts       getParent()                  Returns the current record's "Parent" value
  * @method Doctrine_Collection getSpecimenParts()           Returns the current record's "SpecimenParts" collection
@@ -80,6 +84,8 @@
  * @method SpecimenParts       setSpecimenStatus()          Sets the current record's "specimen_status" value
  * @method SpecimenParts       setSpecimenPartCountMin()    Sets the current record's "specimen_part_count_min" value
  * @method SpecimenParts       setSpecimenPartCountMax()    Sets the current record's "specimen_part_count_max" value
+ * @method SpecimenParts       setObjectName()              Sets the current record's "object_name" value
+ * @method SpecimenParts       setObjectNameIndexed()       Sets the current record's "object_name_indexed" value
  * @method SpecimenParts       setIndividual()              Sets the current record's "Individual" value
  * @method SpecimenParts       setParent()                  Sets the current record's "Parent" value
  * @method SpecimenParts       setSpecimenParts()           Sets the current record's "SpecimenParts" collection
@@ -185,6 +191,12 @@ abstract class BaseSpecimenParts extends DarwinModel
              'type' => 'integer',
              'notnull' => true,
              'default' => 1,
+             ));
+        $this->hasColumn('object_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('object_name_indexed', 'string', null, array(
+             'type' => 'string',
              ));
     }
 
