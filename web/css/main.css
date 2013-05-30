@@ -3029,3 +3029,13 @@ span.label {
 .marker-cluster span {
   line-height: 30px;
 }
+
+/***
+ * QA style
+ ****/
+.qa_table {
+  width: 800px;
+}
+.qa_table > tbody > tr:nth-child(odd) {background: #E9F2F7}
+.qa_table form  tbody > tr:nth-child(odd) {background: #a9d4db}
+

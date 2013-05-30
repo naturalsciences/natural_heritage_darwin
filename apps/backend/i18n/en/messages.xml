@@ -5723,6 +5723,10 @@
         <source>Geo/Paleo Search</source>
         <target>Geo/Paleo Search</target>
       </trans-unit>
+      <trans-unit id="1734">
+        <source>Quality assurance</source>
+        <target>Quality assurance</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
