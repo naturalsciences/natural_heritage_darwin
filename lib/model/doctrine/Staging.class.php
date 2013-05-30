@@ -30,7 +30,7 @@ class Staging extends BaseStaging
   {
     return $this->_get('gtu_code');
   }
-  
+
   public function getTaxon()
   {
     return $this->_get('taxon_name');
@@ -63,12 +63,12 @@ class Staging extends BaseStaging
   {
     return $this->_get('ig_num');
   }
-  
+
   public function getExpedition()
   {
     return $this->_get('expedition_name');
   }
-  
+
   public function getAcquisition()
   {
     return $this->_get('acquisition_category');
@@ -131,7 +131,7 @@ class Staging extends BaseStaging
         return $tb_ok;
     }
   }
-  
+
   public function getIdentifier()
   {
     $q = Doctrine_Query::create()
@@ -142,7 +142,7 @@ class Staging extends BaseStaging
     $identifiers = $q->fetchOne();  
     return $this->getPeopleInError('identifiers',$identifiers) ;
   }
-  
+
   public function getIndividualCount()
   {
     if($this->_get('individual_count_min') == $this->_get('individual_count_max'))
@@ -163,9 +163,9 @@ class Staging extends BaseStaging
     $hstore->import($this->_get('status')) ;
     return $hstore ;
   }
-  
+
   public function getCodes()
-  { 
+  {
     return $this->codes;
   }
 
@@ -181,15 +181,15 @@ class Staging extends BaseStaging
     return 0;
   }
   public function setStatus($value)
-  {    
+  {
     $status = '' ;
     foreach($value as $field => $error)
     {
       if($error != 'done') $status .= '"'.$field.'"=>"'.$error.'",' ;
     }
     $this->_set('status', substr($status,0,strlen($status)-1));
-  }  
-  
+  }
+
   // if tosave is set so it the save of the stagingForm wicht this function, I only return the list a fields in error
   public function getFields($tosave = null)
   {
@@ -204,14 +204,14 @@ class Staging extends BaseStaging
         if($value!='people') $fieldsToShow[$key] = $value ;
       }
       else  $fieldsToShow[$key] = array(
-                                    'embedded_field' => $this->getFieldsToUseFor($key).'_'.$value, // to TEST 
-                                    'display_error' => self::$errors[($key=='duplicate'?$key:$value)], 
+                                    'embedded_field' => $this->getFieldsToUseFor($key).'_'.$value, // to TEST
+                                    'display_error' => self::$errors[($key=='duplicate'?$key:$value)],
                                     'fields' => $this->getFieldsToUseFor($key));
       if($key == 'duplicate') $fieldsToShow[$key]['duplicate_record'] = $value ;
-    }                                   
+    }
     return($fieldsToShow) ;
   }
-  
+
   private function getErrorToDisplay($error_type)
   {
     try{
@@ -222,8 +222,8 @@ class Staging extends BaseStaging
         return self::$errors[$error_type];
     }
     return array_map(array($i18n_object, '__'), self::$errors[$error_type]);
-  }  
-  
+  }
+
   private function getFieldsToUseFor($field)
   {
     if($field == 'taxon') return('taxon_ref') ;

@@ -1182,7 +1182,17 @@ Staging:
         Parent:
             class: Staging
             local: parent_ref
-            foreign: id      
+            foreign: id
+StagingInfo:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        staging_ref: { type: integer, notnull: true}
+        referenced_relation : {type: string, notnull: true}
+    relations:
+        Staging:
+            local: staging_ref
+            foreign: id
+            class: Staging
 
 StagingTagGroups:
     columns:
@@ -1195,7 +1205,7 @@ StagingTagGroups:
         Staging:
             local: staging_ref
             foreign: id
-            class: Staging          
+            class: Staging
 
 StagingPeople:
     columns:

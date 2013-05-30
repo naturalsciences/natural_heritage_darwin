@@ -10,10 +10,14 @@ class ParsingIdentifications
             'subclassis' => 'subclassis','superordo' => 'super_order','ordo' => 'order', 'subordo' => 'sub_order',
             'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe');
   public $peoples = array(); // an array of Doctrine People class
-  private $keywords = array() ; // an array of doctrine Keywords class
+  public $keyword; // an array of doctrine Keywords class
   public $type_identified, $taxon_parent, $fullname=null, $determination_status=null, $higher_taxon_name,$higher_taxon_level;
   public $scientificName = "";
 
+  public function __construct()
+  {
+    $this->identification = new Identifications() ;
+  }
   // fill the Hstore taxon_parent
   public function handleTaxonParent()
   {
@@ -33,52 +37,45 @@ class ParsingIdentifications
   {
     return $this->taxon_parent->export() ;
   }
-
-  // save the identification and the associated identifiers
-  public function save($record_id)
+  public function setRecordId($id)
   {
-    $identification = new Identifications() ;
-    $identification->fromArray(array('record_id'=>$record_id,
-                                     'referenced_relation'=>'staging',
-                                     'notion_concerned' => 'taxonomy',
-                                     'determination_status'=>$this->determination_status));
-    $identification->save() ;
-    $this->insertPeopleInStaging($identification->getId());
-    $this->insertKeywords($record_id) ;
+    $this->record_id = $id ;
+
+  }
+  public function setReferencedRelation($ref)
+  {
+    $this->referenced_relation = $ref ;
+
+  }
+  // save the identification and the associated identifiers
+  public function save()
+  {
+    $this->identification->fromArray(array('notion_concerned' => 'taxonomy','determination_status'=>$this->determination_status));
+    //$this->insertPeopleInStaging($identification->getId());
+    $this->insertKeywords() ;
   }
 
   // save keywords in table
-  public function handleKeyword($tag,$value)
+  public function handleKeyword($tag,$value,$staging)
   {
     // not sure if it's usefull or not, if not, simply delete the line below and $this->keyword array
     if (!in_array($tag,$this->known_keywords)) return ;
     $keyword = new ClassificationKeywords();
-    $keyword->fromArray(array('referenced_relation' => 'staging',
-                              'keyword_type'=> $tag, 'keyword'=> $value));
-    $this->keywords[] = $keyword ;
+    $keyword->fromArray(array('keyword_type'=> $tag, 'keyword'=> $value));
     $this->scientificName .= "$value " ;
+    $staging->addRelated($keyword) ;
   }
-
-  // save identifiers found in the identification
-  private function insertPeopleInStaging($record_id)
+  public function handlePeople($people)
   {
-    foreach($this->peoples as $order => $people)
-    {
-      if ($people->getFormatedName()) $name = $people->getFormatedName() ;
-      else $name = $people->getFamilyName()." ".$people->getGivenName().($people->getTitle()?" (".$people->getTitle().")":"") ;
-      $staging = new StagingPeople() ;
-      $staging->fromArray(array('people_type' => 'identifier', 'record_id' => $record_id,
-                'referenced_relation' => 'identification',
-                'formated_name' => $name, 'order_by' => $order)) ;
-      $staging->save() ;
-    }
+    $people->setPeopleType('identifier') ;
+    $this->identification->addRelated($people) ;
   }
 
-  private function insertKeywords($record_id)
+  private function insertKeywords()
   {
     foreach($this->keywords as $keyword) 
     {
-      $keyword->setRecordId($record_id) ;
+      $keyword->setRecordId($this->record_id) ;
       $keyword->save() ;
     }
   }

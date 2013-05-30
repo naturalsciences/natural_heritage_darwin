@@ -116,6 +116,7 @@
  * @property Imports $Import
  * @property Staging $Parent
  * @property Doctrine_Collection $Staging
+ * @property Doctrine_Collection $StagingInfo
  * @property Doctrine_Collection $StagingTagGroups
  * 
  * @method integer             getId()                        Returns the current record's "id" value
@@ -229,6 +230,7 @@
  * @method Imports             getImport()                    Returns the current record's "Import" value
  * @method Staging             getParent()                    Returns the current record's "Parent" value
  * @method Doctrine_Collection getStaging()                   Returns the current record's "Staging" collection
+ * @method Doctrine_Collection getStagingInfo()               Returns the current record's "StagingInfo" collection
  * @method Doctrine_Collection getStagingTagGroups()          Returns the current record's "StagingTagGroups" collection
  * @method Staging             setId()                        Sets the current record's "id" value
  * @method Staging             setImportRef()                 Sets the current record's "import_ref" value
@@ -341,6 +343,7 @@
  * @method Staging             setImport()                    Sets the current record's "Import" value
  * @method Staging             setParent()                    Sets the current record's "Parent" value
  * @method Staging             setStaging()                   Sets the current record's "Staging" collection
+ * @method Staging             setStagingInfo()               Sets the current record's "StagingInfo" collection
  * @method Staging             setStagingTagGroups()          Sets the current record's "StagingTagGroups" collection
  * 
  * @package    darwin
@@ -702,6 +705,10 @@ abstract class BaseStaging extends DarwinModel
         $this->hasMany('Staging', array(
              'local' => 'id',
              'foreign' => 'parent_ref'));
+
+        $this->hasMany('StagingInfo', array(
+             'local' => 'id',
+             'foreign' => 'staging_ref'));
 
         $this->hasMany('StagingTagGroups', array(
              'local' => 'id',
