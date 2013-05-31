@@ -1314,7 +1314,7 @@ a.widget_row_delete
 
 .spec_individuals a.row_delete
 {
-  padding-right:30px;
+  margin-right:30px;
 }
 
 table.encoding tbody .widget_row_delete
