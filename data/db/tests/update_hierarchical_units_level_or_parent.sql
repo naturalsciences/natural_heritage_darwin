@@ -192,15 +192,15 @@ INSERT INTO people_relationships (person_1_ref, person_2_ref) VALUES (1,2);
 
 SELECT ok('/1/' = (SELECT path FROM people_relationships where person_1_ref = 1 AND person_2_ref = 2 ));
 
-insert into people (id, is_physical, formated_name, formated_name_indexed, formated_name_ts, family_name, given_name, birth_date, gender, end_date)
-VALUES (3, true, 'sdf', 'doesfdjohn', to_tsvector('simple', 'sd'), 'qsd', 'qsd', DATE 'June 20, 1989', 'M',DEFAULT);
+insert into people (id, is_physical, formated_name, formated_name_indexed, family_name, given_name, birth_date, gender, end_date)
+VALUES (3, true, 'sdf', 'doesfdjohn', 'qsd', 'qsd', DATE 'June 20, 1989', 'M',DEFAULT);
 
 INSERT INTO people_relationships (person_1_ref, person_2_ref) VALUES (2,3);
 
 SELECT ok('/1/2/' = (SELECT path FROM people_relationships where person_1_ref = 2 AND person_2_ref = 3 ));
 
-insert into people (id, is_physical, formated_name, formated_name_indexed, formated_name_ts, family_name, given_name, birth_date, gender, end_date) 
-VALUES (4, true, 'Doe Jsssohn', 'sssss', to_tsvector('simple', 'Doe qsdqsd'), 'Dssoe', 'Johdn', DATE 'June 20, 1979', 'M', DEFAULT);
+insert into people (id, is_physical, formated_name, formated_name_indexed, family_name, given_name, birth_date, gender, end_date) 
+VALUES (4, true, 'Doe Jsssohn', 'sssss', 'Dssoe', 'Johdn', DATE 'June 20, 1979', 'M', DEFAULT);
 --, (id, is_physical, formated_name, family_name, given_name, birth_date, gender) VALUES (5,6, true, 'd f', 'sssvfddss', 'f', DATE 'June 20, 1979', 'M');
 
 UPDATE people_relationships SET person_1_ref = 4 WHERE person_1_ref = 1 AND person_2_ref = 2;

@@ -3,6 +3,10 @@ CREATE TRIGGER trg_cpy_specimensMainCode_specimenPartCode AFTER INSERT
 	EXECUTE PROCEDURE fct_cpy_specimensMainCode();
 
 -- BEGIN FULLTOINDEX
+CREATE TRIGGER trg_cpy_fullToIndex_comments BEFORE INSERT OR UPDATE
+        ON comments FOR EACH ROW
+        EXECUTE PROCEDURE fct_cpy_fullToIndex();
+        
 CREATE TRIGGER trg_cpy_fullToIndex_catalogueproperties BEFORE INSERT OR UPDATE
 	ON catalogue_properties FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
@@ -55,10 +59,6 @@ CREATE TRIGGER trg_cpy_fullToIndex_classification_keywords BEFORE INSERT OR UPDA
         ON classification_keywords FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
-CREATE TRIGGER trg_cpy_fullToIndex_classvernacularnames BEFORE INSERT OR UPDATE
-	ON class_vernacular_names FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_fullToIndex();
-
 CREATE TRIGGER trg_cpy_fullToIndex_vernacularnames BEFORE INSERT OR UPDATE
 	ON vernacular_names FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
@@ -67,6 +67,10 @@ CREATE TRIGGER trg_cpy_fullToIndex_igs BEFORE INSERT OR UPDATE
 	ON igs FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
+CREATE TRIGGER trg_cpy_fullToIndex_specimen_parts BEFORE INSERT OR UPDATE
+        ON specimen_parts FOR EACH ROW
+        EXECUTE PROCEDURE fct_cpy_fullToIndex();
+        
 CREATE TRIGGER trg_cpy_fullToIndex_collecting_methods BEFORE INSERT OR UPDATE
   ON collecting_methods FOR EACH ROW
   EXECUTE PROCEDURE fct_cpy_fullToIndex();
@@ -95,11 +99,11 @@ CREATE TRIGGER trg_cpy_gtuTags_TagGroups AFTER INSERT OR UPDATE OR DELETE
 **
 **
 *****************************************/
-CREATE TRIGGER trg_clr_referenceRecord_staging AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_staging AFTER DELETE OR UPDATE
 	ON staging FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_gtu AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_gtu AFTER DELETE OR UPDATE
 	ON gtu FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
@@ -107,136 +111,100 @@ CREATE TRIGGER trg_clr_identifiers_in_flat BEFORE DELETE
 	ON identifications FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_identifiers_in_flat();
 
-CREATE TRIGGER trg_clr_referenceRecord_identifications AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_identifications AFTER DELETE OR UPDATE
 	ON identifications FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_insurances AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_insurances AFTER DELETE OR UPDATE
  	ON insurances FOR EACH ROW
  	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_vernacularnames AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_vernacularnames AFTER DELETE OR UPDATE
 	ON vernacular_names FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_expeditions AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_expeditions AFTER DELETE OR UPDATE
 	ON expeditions FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_people AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_people AFTER DELETE OR UPDATE
 	ON people FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_users AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_users AFTER DELETE OR UPDATE
 	ON users FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_multimedia AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_multimedia AFTER DELETE OR UPDATE
 	ON multimedia FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
+CREATE TRIGGER trg_clr_referenceRecord_igs AFTER DELETE OR UPDATE
+        ON igs FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_collections AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_collections AFTER DELETE OR UPDATE
 	ON collections FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_bibliography AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_bibliography AFTER DELETE OR UPDATE
         ON bibliography FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-/*CREATE TRIGGER trg_clr_referenceRecord_userscollrightsasked AFTER DELETE
+/*CREATE TRIGGER trg_clr_referenceRecord_userscollrightsasked AFTER DELETE OR UPDATE
 	ON users_coll_rights_asked FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 */
-CREATE TRIGGER trg_clr_referenceRecord_mysavedsearches AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_mysavedsearches AFTER DELETE OR UPDATE
 	ON collection_maintenance FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_taxa AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_taxa AFTER DELETE OR UPDATE
 	ON taxonomy FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_chronostratigraphy AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_chronostratigraphy AFTER DELETE OR UPDATE
 	ON chronostratigraphy FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_lithostratigraphy AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_lithostratigraphy AFTER DELETE OR UPDATE
 	ON lithostratigraphy FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_mineralogy AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_mineralogy AFTER DELETE OR UPDATE
 	ON mineralogy FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_lithology AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_lithology AFTER DELETE OR UPDATE
 	ON lithology FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_specimens AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_specimens AFTER DELETE OR UPDATE
 	ON specimens FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_specimenindividuals AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_specimenindividuals AFTER DELETE OR UPDATE
 	ON specimen_individuals FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_specimenparts AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_specimenparts AFTER DELETE OR UPDATE
 	ON specimen_parts FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_specimensaccompanying AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_specimensaccompanying AFTER DELETE OR UPDATE
 	ON specimens_accompanying FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_loans AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_loans AFTER DELETE OR UPDATE
         ON loans FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE
+CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE OR UPDATE
         ON loan_items FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-/**** BEGIN _TS *****/
 
-CREATE TRIGGER trg_cpy_toFullText_collectionmaintenance BEFORE INSERT OR UPDATE
-  ON collection_maintenance FOR EACH ROW
-  EXECUTE PROCEDURE tsvector_update_trigger(description_ts, 'pg_catalog.simple', description);
-
-CREATE TRIGGER trg_cpy_toFullText_comments BEFORE INSERT OR UPDATE
-	ON comments FOR EACH ROW
-	EXECUTE PROCEDURE tsvector_update_trigger(comment_ts, 'pg_catalog.simple', comment);
-
-CREATE TRIGGER trg_cpy_toFullText_expeditions BEFORE INSERT OR UPDATE
-  ON expeditions FOR EACH ROW
-  EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
-
-CREATE TRIGGER trg_cpy_toFullText_bibliography BEFORE INSERT OR UPDATE
-  ON bibliography FOR EACH ROW
-  EXECUTE PROCEDURE tsvector_update_trigger(title_ts, 'pg_catalog.simple', title);
-
-CREATE TRIGGER trg_cpy_toFullText_ext_links BEFORE INSERT OR UPDATE
-	ON ext_links FOR EACH ROW
-	EXECUTE PROCEDURE tsvector_update_trigger(comment_ts, 'pg_catalog.simple', comment);
-
-CREATE TRIGGER trg_cpy_toFullText_identifications BEFORE INSERT OR UPDATE
-	ON identifications FOR EACH ROW
-	EXECUTE PROCEDURE tsvector_update_trigger(value_defined_ts, 'pg_catalog.simple', value_defined);
-
-CREATE TRIGGER trg_cpy_toFullText_multimedia BEFORE INSERT OR UPDATE
-  ON multimedia FOR EACH ROW
-  EXECUTE PROCEDURE tsvector_update_trigger(search_ts, 'pg_catalog.simple', title, description);
-
-CREATE TRIGGER trg_cpy_toFullText_peopleaddresses BEFORE INSERT OR UPDATE
-	ON people_addresses FOR EACH ROW
-	EXECUTE PROCEDURE tsvector_update_trigger(address_parts_ts, 'pg_catalog.simple', entry, po_box, extended_address, locality, region, zip_code, country);
-
-CREATE TRIGGER trg_cpy_toFullText_usersaddresses BEFORE INSERT OR UPDATE
-	ON users_addresses FOR EACH ROW
-	EXECUTE PROCEDURE tsvector_update_trigger(address_parts_ts, 'pg_catalog.simple', entry, po_box, extended_address, locality, region, zip_code, country);
-
-CREATE TRIGGER trg_cpy_toFullText_vernacularnames BEFORE INSERT OR UPDATE
-  ON vernacular_names FOR EACH ROW
-  EXECUTE PROCEDURE tsvector_update_trigger(name_ts, 'pg_catalog.simple', name);
+/****************************/
 
 CREATE TRIGGER trg_cpy_updateCollectionRights AFTER INSERT OR UPDATE
 	ON collections FOR EACH ROW
@@ -376,10 +344,6 @@ CREATE TRIGGER trg_trk_log_table_properties_values AFTER INSERT OR UPDATE OR DEL
 
 CREATE TRIGGER trg_trk_log_table_identifications AFTER INSERT OR UPDATE OR DELETE
         ON identifications FOR EACH ROW
-        EXECUTE PROCEDURE fct_trk_log_table();
-
-CREATE TRIGGER trg_trk_log_table_class_vernacular_names AFTER INSERT OR UPDATE OR DELETE
-        ON class_vernacular_names FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
 CREATE TRIGGER trg_trk_log_table_vernacular_names AFTER INSERT OR UPDATE OR DELETE
@@ -523,76 +487,6 @@ CREATE TRIGGER trg_cpy_location BEFORE INSERT OR UPDATE
         ON gtu FOR EACH ROW
         EXECUTE PROCEDURE fct_cpy_location() ;
 
-/**** ADDing TS words Trigger ***/
-/*
-CREATE TRIGGER trg_words_ts_cpy_collection_maintenance BEFORE INSERT OR UPDATE
-	ON collection_maintenance FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_comments BEFORE INSERT OR UPDATE
-	ON comments FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-	
-CREATE TRIGGER trg_words_ts_cpy_ext_links BEFORE INSERT OR UPDATE
-	ON ext_links FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();*/
-
-CREATE TRIGGER trg_words_ts_cpy_vernacular_names BEFORE INSERT OR UPDATE
-	ON vernacular_names FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-/*
-CREATE TRIGGER trg_words_ts_cpy_identification BEFORE INSERT OR UPDATE
-	ON identifications FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_multimedia BEFORE INSERT OR UPDATE
-	ON multimedia FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();*/
-
-CREATE TRIGGER trg_words_ts_cpy_people BEFORE INSERT OR UPDATE
-	ON people FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_users BEFORE INSERT OR UPDATE
-	ON users FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_expeditions BEFORE INSERT OR UPDATE
-	ON expeditions FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_bibliography BEFORE INSERT OR UPDATE
-        ON bibliography FOR EACH ROW
-        EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_mineralogy BEFORE INSERT OR UPDATE
-	ON mineralogy FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_chronostratigraphy BEFORE INSERT OR UPDATE
-	ON chronostratigraphy FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_lithostratigraphy BEFORE INSERT OR UPDATE
-	ON lithostratigraphy FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_lithology BEFORE INSERT OR UPDATE
-	ON lithology FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_taxonomy BEFORE INSERT OR UPDATE
-	ON taxonomy FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();
-
-CREATE TRIGGER trg_words_ts_cpy_loans BEFORE INSERT OR UPDATE
-        ON loans FOR EACH ROW
-        EXECUTE PROCEDURE fct_trg_word();
-/*
-CREATE TRIGGER trg_words_ts_cpy_codes BEFORE INSERT OR UPDATE
-	ON codes FOR EACH ROW
-	EXECUTE PROCEDURE fct_trg_word();*/
-
 CREATE TRIGGER trg_nbr_in_relation  BEFORE INSERT OR UPDATE
    	ON catalogue_relationships FOR EACH ROW
 	EXECUTE PROCEDURE fct_nbr_in_relation();
@@ -695,21 +589,9 @@ CREATE TRIGGER trg_chk_ref_record_identifications AFTER INSERT OR UPDATE
         ON identifications FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
 
-CREATE TRIGGER trg_chk_ref_record_class_vernacular_names AFTER INSERT OR UPDATE
-        ON class_vernacular_names FOR EACH ROW
+CREATE TRIGGER trg_chk_ref_record_vernacular_names AFTER INSERT OR UPDATE
+        ON vernacular_names FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
-
-CREATE TRIGGER trg_chk_ref_record_informative_workflow AFTER INSERT OR UPDATE
-        ON informative_workflow FOR EACH ROW
-        EXECUTE PROCEDURE fct_chk_ReferencedRecord();
-
-CREATE trigger trg_chk_is_last_informative_workflow BEFORE INSERT
-	ON informative_workflow FOR EACH ROW
-	EXECUTE PROCEDURE fct_remove_last_flag();
-
-CREATE trigger trg_reset_last_flag_informative_workflow AFTER DELETE
-        ON informative_workflow FOR EACH ROW
-        EXECUTE PROCEDURE fct_informative_reset_last_flag();
 
 CREATE TRIGGER trg_chk_ref_record_collection_maintenance AFTER INSERT OR UPDATE
         ON collection_maintenance FOR EACH ROW
@@ -736,6 +618,19 @@ CREATE TRIGGER trg_chk_ref_record_relationship_catalogue_relationships AFTER INS
         ON catalogue_relationships FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecordRelationShip();
 
+        
+/*** Informativ Workflow ****/
+CREATE TRIGGER trg_chk_ref_record_informative_workflow AFTER INSERT OR UPDATE
+        ON informative_workflow FOR EACH ROW
+        EXECUTE PROCEDURE fct_chk_ReferencedRecord();
+
+CREATE trigger trg_chk_is_last_informative_workflow BEFORE INSERT
+        ON informative_workflow FOR EACH ROW
+        EXECUTE PROCEDURE fct_remove_last_flag();
+
+CREATE trigger trg_reset_last_flag_informative_workflow AFTER DELETE
+        ON informative_workflow FOR EACH ROW
+        EXECUTE PROCEDURE fct_informative_reset_last_flag();
 
 /************* Possible upper level Check ***********/
 

@@ -94,6 +94,7 @@ class MySavedSearchesTable extends DarwinTable
       {
         $part_col = array(
           'part' => 'Part',
+          'object_name' => 'Object name',
           'part_status'=>'Part Status',
           'part_codes'=>'Part Code',
           'part_count'=>'Part Count',
@@ -104,6 +105,7 @@ class MySavedSearchesTable extends DarwinTable
         $part_col = array(
           'part'=>'Part',
           'part_status'=>'Part Status',
+          'object_name' => 'Object name',
           'building'=>'Building',
           'floor'=>'Floor',
           'room'=>'Room',

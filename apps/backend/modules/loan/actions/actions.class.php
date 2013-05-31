@@ -15,12 +15,12 @@ class loanActions extends DarwinActions
   protected function checkRight($loan_id)
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $this->forward404Unless($loan = Doctrine::getTable('Loans')->find($loan_id), sprintf('Object loan does not exist (%s).', array($loan_id)));
+    $this->forward404Unless($loan = Doctrine::getTable('Loans')->find($loan_id), sprintf('Object loan does not exist (%s).', $loan_id));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;
     $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
     if(!$right)
     {
-      if ($this->getUser()->isAtLeast(Users::MANAGER)) $this->redirect('loan/view?id='.$loan->getId());          
+      if ($this->getUser()->isAtLeast(Users::MANAGER)) $this->redirect('loan/view?id='.$loan->getId());
       else $this->forwardToSecureAction();
     }
     if($right==="view")

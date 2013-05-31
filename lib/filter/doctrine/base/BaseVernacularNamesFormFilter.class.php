@@ -13,17 +13,19 @@ abstract class BaseVernacularNamesFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'vernacular_class_ref' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('ClassVernacularNames'), 'add_empty' => true)),
-      'name'                 => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'name_indexed'         => new sfWidgetFormFilterInput(),
-      'name_ts'              => new sfWidgetFormFilterInput(),
+      'referenced_relation' => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'record_id'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'community'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'name'                => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'name_indexed'        => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
-      'vernacular_class_ref' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('ClassVernacularNames'), 'column' => 'id')),
-      'name'                 => new sfValidatorPass(array('required' => false)),
-      'name_indexed'         => new sfValidatorPass(array('required' => false)),
-      'name_ts'              => new sfValidatorPass(array('required' => false)),
+      'referenced_relation' => new sfValidatorPass(array('required' => false)),
+      'record_id'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'community'           => new sfValidatorPass(array('required' => false)),
+      'name'                => new sfValidatorPass(array('required' => false)),
+      'name_indexed'        => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('vernacular_names_filters[%s]');
@@ -43,11 +45,12 @@ abstract class BaseVernacularNamesFormFilter extends BaseFormFilterDoctrine
   public function getFields()
   {
     return array(
-      'id'                   => 'Number',
-      'vernacular_class_ref' => 'ForeignKey',
-      'name'                 => 'Text',
-      'name_indexed'         => 'Text',
-      'name_ts'              => 'Text',
+      'id'                  => 'Number',
+      'referenced_relation' => 'Text',
+      'record_id'           => 'Number',
+      'community'           => 'Text',
+      'name'                => 'Text',
+      'name_indexed'        => 'Text',
     );
   }
 }

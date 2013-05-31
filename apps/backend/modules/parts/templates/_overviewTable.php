@@ -74,7 +74,9 @@
         <?php echo link_to(image_tag('duplicate.png',array('title'=>__('Duplicate this part'))), 'parts/edit?indid='.$individual->getId().'&duplicate_id='.$part->getId(),array('class' => 'duplicate_link')) ?>
       </td>      
       <td>
-        <a class="row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=specimen_parts&id='.$part->getId());?>" title="<?php echo __('Delete this part') ?>"><?php echo image_tag('remove.png'); ?>
+        <a class="row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=specimen_parts&id='.$part->getId());?>" title="<?php echo __('Delete this part') ?>">
+          <?php echo image_tag('remove.png'); ?>
+        </a>
       </td>
       <?php else : ?>
         <td colspan="3">&nbsp;</td>

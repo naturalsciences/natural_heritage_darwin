@@ -8,7 +8,6 @@
  * @property integer $id
  * @property string $name
  * @property string $name_indexed
- * @property string $name_order_by
  * @property integer $level_ref
  * @property string $status
  * @property boolean $local_naming
@@ -26,7 +25,6 @@
  * @method integer             getId()                 Returns the current record's "id" value
  * @method string              getName()               Returns the current record's "name" value
  * @method string              getNameIndexed()        Returns the current record's "name_indexed" value
- * @method string              getNameOrderBy()        Returns the current record's "name_order_by" value
  * @method integer             getLevelRef()           Returns the current record's "level_ref" value
  * @method string              getStatus()             Returns the current record's "status" value
  * @method boolean             getLocalNaming()        Returns the current record's "local_naming" value
@@ -43,7 +41,6 @@
  * @method Chronostratigraphy  setId()                 Sets the current record's "id" value
  * @method Chronostratigraphy  setName()               Sets the current record's "name" value
  * @method Chronostratigraphy  setNameIndexed()        Sets the current record's "name_indexed" value
- * @method Chronostratigraphy  setNameOrderBy()        Sets the current record's "name_order_by" value
  * @method Chronostratigraphy  setLevelRef()           Sets the current record's "level_ref" value
  * @method Chronostratigraphy  setStatus()             Sets the current record's "status" value
  * @method Chronostratigraphy  setLocalNaming()        Sets the current record's "local_naming" value
@@ -63,7 +60,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-abstract class BaseChronostratigraphy extends sfDoctrineRecord
+abstract class BaseChronostratigraphy extends DarwinModel
 {
     public function setTableDefinition()
     {
@@ -78,9 +75,6 @@ abstract class BaseChronostratigraphy extends sfDoctrineRecord
              'notnull' => true,
              ));
         $this->hasColumn('name_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('name_order_by', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('level_ref', 'integer', null, array(

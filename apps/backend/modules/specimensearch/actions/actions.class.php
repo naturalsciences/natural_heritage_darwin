@@ -22,7 +22,7 @@ class specimensearchActions extends DarwinActions
     if ($request->getParameter('search_id','') != '')
     {
       $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($request->getParameter('search_id'), $this->getUser()->getId()) ;
-      $criterias = unserialize($saved_search->getSearchCriterias());
+      $criterias = $saved_search->getUnserialRequest();
 
       $this->fields = $saved_search->getVisibleFieldsInResultStr();
       Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
@@ -93,7 +93,7 @@ class specimensearchActions extends DarwinActions
       if($saved_search->getIsOnlyId())
         $this->is_specimen_search = $saved_search->getId();
       // Get all search criterias from DB
-      $criterias = unserialize($saved_search->getSearchCriterias());
+      $criterias = $saved_search->getUnserialRequest();
       // Transform all visible fields stored as a string with | as separator and store it into col_fields field
       $criterias['specimen_search_filters']['col_fields'] = implode('|',$saved_search->getVisibleFieldsInResult()) ;
       $criterias['specimen_search_filters']['what_searched'] = $saved_search->getSubject();
@@ -234,7 +234,7 @@ class specimensearchActions extends DarwinActions
   {
     $flds = array('category','collection','taxon','type','gtu','codes','chrono','ig','acquisition_category',
               'litho','lithologic','mineral','expedition','type', 'individual_type','sex','state','stage','social_status','rock_form','individual_count',
-              'part','part_status', 'building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
+              'part', 'object_name', 'part_status', 'building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
               'sub_container_type' , 'sub_container_storage', 'part_count','part_codes');
 
 
@@ -330,7 +330,7 @@ class specimensearchActions extends DarwinActions
         'collection_name',
         $this->getI18N()->__('Collection'),),
       'taxon' => array(
-        'taxon_name_order_by',
+        'taxon_name_indexed',
         $this->getI18N()->__('Taxon'),),
       'type' => array(
         'with_types',
@@ -342,19 +342,19 @@ class specimensearchActions extends DarwinActions
         false,
         $this->getI18N()->__('Codes'),),
       'chrono' => array(
-        'chrono_name_order_by',
+        'chrono_name_indexed',
         $this->getI18N()->__('Chronostratigraphic unit'),),
       'ig' => array(
         'ig_num_indexed',
         $this->getI18N()->__('I.G. unit'),),
       'litho' => array(
-        'litho_name_order_by',
+        'litho_name_indexed',
         $this->getI18N()->__('Lithostratigraphic unit'),),
       'lithologic' => array(
-        'lithology_name_order_by',
+        'lithology_name_indexed',
         $this->getI18N()->__('Lithologic unit'),),
       'mineral' => array(
-        'mineral_name_order_by',
+        'mineral_name_indexed',
         $this->getI18N()->__('Mineralogic unit'),),
       'expedition' => array(
         'expedition_name_indexed',
@@ -400,6 +400,9 @@ class specimensearchActions extends DarwinActions
           'part' => array(
             'specimen_part',
             $this->getI18N()->__('Part'),),
+          'object_name' => array(
+            'object_name',
+            $this->getI18N()->__('Object name'),),
           'part_status' => array(
             'specimen_status',
             $this->getI18N()->__('Part Status'),),
@@ -417,6 +420,9 @@ class specimensearchActions extends DarwinActions
           'part' => array(
             'specimen_part',
             $this->getI18N()->__('Part'),),
+          'object_name' => array(
+            'object_name',
+            $this->getI18N()->__('Object name'),),
           'part_status' => array(
             'specimen_status',
             $this->getI18N()->__('Part Status'),),

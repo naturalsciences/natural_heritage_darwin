@@ -11,7 +11,7 @@ class TaxonomyForm extends BaseTaxonomyForm
 {
   public function configure()
   {
-    unset($this['path'],$this['name_indexed'],$this['name_order_by']);
+    unset($this['path'],$this['name_indexed'],$this['name_indexed']);
     $this->widgetSchema['table'] = new sfWidgetFormInputHidden(array('default'=>'taxonomy'));
     $this->widgetSchema['name'] = new sfWidgetFormInput();
     $this->widgetSchema['name']->setAttributes(array('class'=>'large_size'));

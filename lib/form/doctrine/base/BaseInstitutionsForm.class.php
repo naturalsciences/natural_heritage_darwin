@@ -20,7 +20,6 @@ abstract class BaseInstitutionsForm extends BaseFormDoctrine
       'sub_type'              => new sfWidgetFormTextarea(),
       'formated_name'         => new sfWidgetFormTextarea(),
       'formated_name_indexed' => new sfWidgetFormTextarea(),
-      'formated_name_ts'      => new sfWidgetFormTextarea(),
       'family_name'           => new sfWidgetFormTextarea(),
       'additional_names'      => new sfWidgetFormTextarea(),
     ));
@@ -31,7 +30,6 @@ abstract class BaseInstitutionsForm extends BaseFormDoctrine
       'sub_type'              => new sfValidatorString(array('required' => false)),
       'formated_name'         => new sfValidatorString(array('required' => false)),
       'formated_name_indexed' => new sfValidatorString(array('required' => false)),
-      'formated_name_ts'      => new sfValidatorString(array('required' => false)),
       'family_name'           => new sfValidatorString(),
       'additional_names'      => new sfValidatorString(array('required' => false)),
     ));

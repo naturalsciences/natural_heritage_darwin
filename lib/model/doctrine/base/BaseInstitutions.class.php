@@ -10,7 +10,6 @@
  * @property string $sub_type
  * @property string $formated_name
  * @property string $formated_name_indexed
- * @property string $formated_name_ts
  * @property string $family_name
  * @property string $additional_names
  * @property Doctrine_Collection $PeopleRelationships
@@ -20,7 +19,6 @@
  * @method string              getSubType()               Returns the current record's "sub_type" value
  * @method string              getFormatedName()          Returns the current record's "formated_name" value
  * @method string              getFormatedNameIndexed()   Returns the current record's "formated_name_indexed" value
- * @method string              getFormatedNameTs()        Returns the current record's "formated_name_ts" value
  * @method string              getFamilyName()            Returns the current record's "family_name" value
  * @method string              getAdditionalNames()       Returns the current record's "additional_names" value
  * @method Doctrine_Collection getPeopleRelationships()   Returns the current record's "PeopleRelationships" collection
@@ -29,7 +27,6 @@
  * @method Institutions        setSubType()               Sets the current record's "sub_type" value
  * @method Institutions        setFormatedName()          Sets the current record's "formated_name" value
  * @method Institutions        setFormatedNameIndexed()   Sets the current record's "formated_name_indexed" value
- * @method Institutions        setFormatedNameTs()        Sets the current record's "formated_name_ts" value
  * @method Institutions        setFamilyName()            Sets the current record's "family_name" value
  * @method Institutions        setAdditionalNames()       Sets the current record's "additional_names" value
  * @method Institutions        setPeopleRelationships()   Sets the current record's "PeopleRelationships" collection
@@ -39,7 +36,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-abstract class BaseInstitutions extends sfDoctrineRecord
+abstract class BaseInstitutions extends DarwinModel
 {
     public function setTableDefinition()
     {
@@ -60,9 +57,6 @@ abstract class BaseInstitutions extends sfDoctrineRecord
              'type' => 'string',
              ));
         $this->hasColumn('formated_name_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('formated_name_ts', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('family_name', 'string', null, array(

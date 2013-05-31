@@ -15,7 +15,7 @@
  * @property string $description
  * @property string $uri
  * @property : { type: string } $filename
- * @property string $search_ts
+ * @property string $search_indexed
  * @property string $creation_date
  * @property integer $creation_date_mask
  * @property string $mime_type
@@ -31,7 +31,7 @@
  * @method string     getTitle()               Returns the current record's "title" value
  * @method string     getDescription()         Returns the current record's "description" value
  * @method string     getUri()                 Returns the current record's "uri" value
- * @method string     getSearchTs()            Returns the current record's "search_ts" value
+ * @method string     getSearchIndexed()       Returns the current record's "search_indexed" value
  * @method string     getCreationDate()        Returns the current record's "creation_date" value
  * @method integer    getCreationDateMask()    Returns the current record's "creation_date_mask" value
  * @method string     getMimeType()            Returns the current record's "mime_type" value
@@ -46,7 +46,7 @@
  * @method Multimedia setTitle()               Sets the current record's "title" value
  * @method Multimedia setDescription()         Sets the current record's "description" value
  * @method Multimedia setUri()                 Sets the current record's "uri" value
- * @method Multimedia setSearchTs()            Sets the current record's "search_ts" value
+ * @method Multimedia setSearchIndexed()       Sets the current record's "search_indexed" value
  * @method Multimedia setCreationDate()        Sets the current record's "creation_date" value
  * @method Multimedia setCreationDateMask()    Sets the current record's "creation_date_mask" value
  * @method Multimedia setMimeType()            Sets the current record's "mime_type" value
@@ -58,7 +58,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-abstract class BaseMultimedia extends sfDoctrineRecord
+abstract class BaseMultimedia extends DarwinModel
 {
     public function setTableDefinition()
     {
@@ -103,7 +103,7 @@ abstract class BaseMultimedia extends sfDoctrineRecord
         $this->hasColumn('filename', ': { type: string }', null, array(
              'type' => ': { type: string }',
              ));
-        $this->hasColumn('search_ts', 'string', null, array(
+        $this->hasColumn('search_indexed', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('creation_date', 'string', null, array(

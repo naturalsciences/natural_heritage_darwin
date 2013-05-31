@@ -1,5 +1,8 @@
 <?php use_stylesheets_for_form($form) ?>
 <?php use_javascripts_for_form($form) ?>
+<!--[if lte IE 8]>
+    <link rel="stylesheet" href="/leaflet/leaflet.ie.css" />
+<![endif]-->
 
 <script type="text/javascript">
 $(document).ready(function () 
@@ -122,45 +125,13 @@ foreach($form['newVal'] as $group)
 <script type="text/javascript">
 $(document).ready(function () {
 
-  initMap("map");
+  initEditMap("map");
 
   <?php if($form->getObject()->getLongitude() != ''):?>
-    centre = new OpenLayers.LonLat(<?php echo $form->getObject()->getLongitude();?>, <?php echo $form->getObject()->getLatitude();?>);
-    zoom = 13;
-    setMapCenter(centre, zoom);
+    map.setView([<?php echo $form->getObject()->getLatitude();?>,<?php echo $form->getObject()->getLongitude();?>], 2);
   <?php else:?>
-    setMapCenter(new OpenLayers.LonLat(0,0), 2);
+    map.setView([0,0], 2);
   <?php endif;?>
-
-  drawLatLong();
-  drawAccuracy();
-
-  map.events.register("click", map, setPoint);
-  map.events.register("zoomend", map, setZoom);
-
-  $('#gtu_lat_long_accuracy').change(drawAccuracy);
-  $('#gtu_longitude').change(drawLatLong);
-  $('#gtu_latitude').change(drawLatLong);
-
-  if(pointFeature)
-  {
-    if(getAccuracySize() *2  > $('#map').width()) //Recenter if accuracy is too large
-    {
-      for( var i = map.getZoom(); i > 0; i-- )
-      {
-        if(getAccuracySize(i) *2  < $('#map').width())
-        {
-          setMapCenter(centre, i); break;
-        }
-      }
-    }
-  }
-  $('#location .clear_prop').click(function()
-  {
-    $(this).closest('tr').find('input').val('');
-    drawLatLong();
-  });
-
 });
 </script>
 </td>

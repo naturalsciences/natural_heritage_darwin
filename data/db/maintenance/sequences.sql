@@ -3,7 +3,6 @@
  select setval('catalogue_people_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.catalogue_people));
  select setval('catalogue_relationships_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.catalogue_relationships));
  select setval('associated_multimedia_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.associated_multimedia));
- select setval('class_vernacular_names_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.class_vernacular_names));
  select setval('classification_keywords_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.classification_keywords));
  select setval('classification_synonymies_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.classification_synonymies));
  select setval('collecting_methods_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.collecting_methods));

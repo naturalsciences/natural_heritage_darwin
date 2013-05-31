@@ -1,4 +1,5 @@
 <td class="col_part"><?php echo $part->getSpecimenPart();?></td>
+<td class="col_object_name"><?php echo $part->getObjectName();?></td>
 <td class="col_part_status"><?php echo $part->getSpecimenStatus();?></td> 
 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
   <td class="col_building"><?php echo $part->getBuilding();?></td> 

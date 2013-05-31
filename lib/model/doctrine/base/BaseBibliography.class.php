@@ -7,7 +7,6 @@
  * 
  * @property integer $id
  * @property string $title
- * @property string $title_ts
  * @property string $title_indexed
  * @property string $type
  * @property string $abstract
@@ -16,7 +15,6 @@
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method string              getTitle()                 Returns the current record's "title" value
- * @method string              getTitleTs()               Returns the current record's "title_ts" value
  * @method string              getTitleIndexed()          Returns the current record's "title_indexed" value
  * @method string              getType()                  Returns the current record's "type" value
  * @method string              getAbstract()              Returns the current record's "abstract" value
@@ -24,7 +22,6 @@
  * @method Doctrine_Collection getCatalogueBibliography() Returns the current record's "CatalogueBibliography" collection
  * @method Bibliography        setId()                    Sets the current record's "id" value
  * @method Bibliography        setTitle()                 Sets the current record's "title" value
- * @method Bibliography        setTitleTs()               Sets the current record's "title_ts" value
  * @method Bibliography        setTitleIndexed()          Sets the current record's "title_indexed" value
  * @method Bibliography        setType()                  Sets the current record's "type" value
  * @method Bibliography        setAbstract()              Sets the current record's "abstract" value
@@ -36,7 +33,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-abstract class BaseBibliography extends sfDoctrineRecord
+abstract class BaseBibliography extends DarwinModel
 {
     public function setTableDefinition()
     {
@@ -49,9 +46,6 @@ abstract class BaseBibliography extends sfDoctrineRecord
         $this->hasColumn('title', 'string', null, array(
              'type' => 'string',
              'notnull' => true,
-             ));
-        $this->hasColumn('title_ts', 'string', null, array(
-             'type' => 'string',
              ));
         $this->hasColumn('title_indexed', 'string', null, array(
              'type' => 'string',

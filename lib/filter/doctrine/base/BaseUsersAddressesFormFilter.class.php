@@ -24,7 +24,6 @@ abstract class BaseUsersAddressesFormFilter extends BaseFormFilterDoctrine
       'region'            => new sfWidgetFormFilterInput(),
       'zip_code'          => new sfWidgetFormFilterInput(),
       'country'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'address_parts_ts'  => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -39,7 +38,6 @@ abstract class BaseUsersAddressesFormFilter extends BaseFormFilterDoctrine
       'region'            => new sfValidatorPass(array('required' => false)),
       'zip_code'          => new sfValidatorPass(array('required' => false)),
       'country'           => new sfValidatorPass(array('required' => false)),
-      'address_parts_ts'  => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('users_addresses_filters[%s]');
@@ -71,7 +69,6 @@ abstract class BaseUsersAddressesFormFilter extends BaseFormFilterDoctrine
       'region'            => 'Text',
       'zip_code'          => 'Text',
       'country'           => 'Text',
-      'address_parts_ts'  => 'Text',
     );
   }
 }

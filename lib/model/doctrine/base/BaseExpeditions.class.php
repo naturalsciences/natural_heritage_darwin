@@ -7,7 +7,6 @@
  * 
  * @property integer $id
  * @property string $name
- * @property string $name_ts
  * @property string $name_indexed
  * @property integer $expedition_from_date_mask
  * @property string $expedition_from_date
@@ -18,7 +17,6 @@
  * 
  * @method integer             getId()                        Returns the current record's "id" value
  * @method string              getName()                      Returns the current record's "name" value
- * @method string              getNameTs()                    Returns the current record's "name_ts" value
  * @method string              getNameIndexed()               Returns the current record's "name_indexed" value
  * @method integer             getExpeditionFromDateMask()    Returns the current record's "expedition_from_date_mask" value
  * @method string              getExpeditionFromDate()        Returns the current record's "expedition_from_date" value
@@ -28,7 +26,6 @@
  * @method Doctrine_Collection getSpecimensFlat()             Returns the current record's "SpecimensFlat" collection
  * @method Expeditions         setId()                        Sets the current record's "id" value
  * @method Expeditions         setName()                      Sets the current record's "name" value
- * @method Expeditions         setNameTs()                    Sets the current record's "name_ts" value
  * @method Expeditions         setNameIndexed()               Sets the current record's "name_indexed" value
  * @method Expeditions         setExpeditionFromDateMask()    Sets the current record's "expedition_from_date_mask" value
  * @method Expeditions         setExpeditionFromDate()        Sets the current record's "expedition_from_date" value
@@ -42,7 +39,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-abstract class BaseExpeditions extends sfDoctrineRecord
+abstract class BaseExpeditions extends DarwinModel
 {
     public function setTableDefinition()
     {
@@ -55,9 +52,6 @@ abstract class BaseExpeditions extends sfDoctrineRecord
         $this->hasColumn('name', 'string', null, array(
              'type' => 'string',
              'notnull' => true,
-             ));
-        $this->hasColumn('name_ts', 'string', null, array(
-             'type' => 'string',
              ));
         $this->hasColumn('name_indexed', 'string', null, array(
              'type' => 'string',

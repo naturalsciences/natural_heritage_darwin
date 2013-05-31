@@ -76,7 +76,7 @@ DROP TABLE  IF EXISTS loan_status CASCADE;
 DROP TABLE  IF EXISTS loan_history CASCADE;
 DROP TABLE  IF EXISTS bibliography CASCADE;
 DROP TABLE  IF EXISTS multimedia_todelete CASCADE;
-
+DROP TABLE  IF EXISTS db_version CASCADE;
 
 DROP SEQUENCE IF EXISTS people_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS catalogue_relationships_id_seq  CASCADE;

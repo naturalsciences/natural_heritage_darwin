@@ -1,139 +1,80 @@
-  var epsg4326;
-  var markers;
-  var marker;
-  var center;
-  var zoom = 2;
-  var pointFeature;
-  var point;
-  var vectorLayer;
-  var gsat;
-  var gphy;
-  var gmap;
-  var ghyb;
-  var mapnik;
-  var style_blue;
-  var map;
-OpenLayers.ImgPath = "/images/ol_theme_dark/";
-function initMap(mapId)
-{
-  epsg4326 = new OpenLayers.Projection("EPSG:4326");
-  options = {
-//     restrictedExtent: extent,
-    controls: [
-      new OpenLayers.Control.Navigation(), 
-      new OpenLayers.Control.PanZoomBar(),
-      new OpenLayers.Control.LayerSwitcher(),
-      new OpenLayers.Control.ScaleLine() 
-    ],
-    numZoomLevels: 20,
-    displayProjection: new OpenLayers.Projection("EPSG:4326"),
-    maxExtent: new OpenLayers.Bounds(-180,-90, 180, 90),
-    maxResolution: 0.3515625,
-    units: "m",
-    theme: '/openlayers/theme/default/style.css'
-  };
-  style_blue = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
-  style_blue.strokeColor = "blue"; 
-  style_blue.fillColor = "blue"; 
-// OpenLayers.Layer.XYZ.
+L.Icon.Default.imagePath = '/leaflet/images/';
+var map;
+var marker;
+var accuracy;
+function initEditMap(mapId) {
+  map = L.map('map').setView([0,0], 2);
+  // add an OpenStreetMap tile layer
+  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
 
-   map = new OpenLayers.Map(mapId, options);
+  drawPointFromEditForm();
 
-  mapnik = new OpenLayers.Layer.OSM();
-  mapnik.addOptions({wrapDateLine:true});
-  map.addLayer(mapnik);
-  
-  vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", { displayInLayerSwitcher: false, projection: new OpenLayers.Projection("EPSG:4326")});
-  map.addLayers([vectorLayer]);
-    
-  if(with_gmap) {
-    // the SATELLITE layer has all 22 zoom level, so we add it first to
-    // become the internal base layer that determines the zoom levels of the
-    // map.
-    gsat = new OpenLayers.Layer.Google(
-        "Google Satellite",
-        {sphericalMercator: true,type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
-    );
-    gphy = new OpenLayers.Layer.Google(
-        "Google Physical",
-        {sphericalMercator: true,type: google.maps.MapTypeId.TERRAIN, visibility: false}
-    );
-    gmap = new OpenLayers.Layer.Google(
-        "Google Streets", // the default
-        {sphericalMercator: true,numZoomLevels: 20, visibility: false}
-    );
-    ghyb = new OpenLayers.Layer.Google(
-        "Google Hybrid",
-        {sphericalMercator: true,type: google.maps.MapTypeId.HYBRID, numZoomLevels: 22, visibility: false}
-    );
-    map.addLayers([gsat, gphy, gmap, ghyb]);
-  }
-  
+  map.on('click', setPointFromEvent);
 
-  markers = new OpenLayers.Layer.Markers("Markers", {
-    displayInLayerSwitcher: false,
-    units: "m",
-    projection: "EPSG:900913"
-   });
-  map.addLayer(markers);
+  $('#gtu_lat_long_accuracy').change(drawPointFromEditForm);
+  $('#gtu_longitude').change(drawPointFromEditForm);
+  $('#gtu_latitude').change(drawPointFromEditForm);
 
-  map.zoomToMaxExtent();
-  map.events.on({
-    "changebaselayer": function(e) {
-        if(e.object.baseLayer.name != "OpenStreetMap")
-          $.get('/robots.txt?use_gmap');
-      }
-  
-  }); 
+  $('#location .clear_prop').click(function() {
+    $(this).closest('tr').find('input').val('');
+    drawPointFromEditForm();
+  });
 }
-  
-function setZoom(e)
-{
-  if(pointFeature)
-  {
-    drawAccuracy()
+
+function drawPointFromEditForm() {
+  try{
+    var point = new L.LatLng($('#gtu_latitude').val(), $('#gtu_longitude').val());
+  }
+  catch(e){
+    return;
+  }
+  drawPoint(point, $('#gtu_lat_long_accuracy').val());
+
+  if(accuracy) { //If we have a marker accuracy, zoom on it
+    map.fitBounds(accuracy.getBounds());
   }
 }
 
-function getAccuracySize(z)
-{
-  if(! z)
-    zoom = map.getZoom();
-  else
-    zoom = z;
-  resolution = map.getResolutionForZoom(zoom);
-  return $('#gtu_lat_long_accuracy').val() / resolution;
-}
-
-function drawAccuracy()
-{
-  if(marker)
-  {
-    vectorLayer.removeAllFeatures();
-    point = new OpenLayers.Geometry.Point(marker.lonlat.lon, marker.lonlat.lat);
-    style_blue.pointRadius = getAccuracySize();
-    pointFeature = new OpenLayers.Feature.Vector(point, null, style_blue);
-    vectorLayer.addFeatures([pointFeature]);
-    vectorLayer.redraw();
+function drawPoint(latlng, acc){
+  if(marker) {
+    marker.setLatLng(latlng);
+  } else {
+    marker = L.marker(latlng, {draggable:true}).addTo(map);
+    marker.on('dragend', setPointFromEvent);
+  }
+  if(! accuracy) {
+    accuracy = L.circle(marker.getLatLng(), acc).addTo(map);
+  }
+  else {
+    accuracy.setRadius(acc).setLatLng(marker.getLatLng());
   }
 }
 
-function drawLatLong()
-{
-  if (marker) {
-    removeMarkerFromMap(marker);
+function setPointFromEvent( e ) {
+  var pt ;
+  if(e.latlng){ //Click events
+    pt = e.latlng
+  }else { //Drag end events
+    pt = e.target.getLatLng();
   }
-  lonlat = new OpenLayers.LonLat($('#gtu_longitude').val(), $('#gtu_latitude').val())
-  marker = addMarkerToMap(lonlat, null);
-  drawAccuracy();
+  pt = pt.wrap();
+  
+  $('#gtu_latitude').val(pt.lat)
+  $('#gtu_longitude').val(pt.lng)
+
+  drawPoint(pt, $('#gtu_lat_long_accuracy').val());
+  fetchElevation(pt);
 }
-function fetchElevation(lonlat)
-{
+
+function fetchElevation(lonlat) {
   $.ajax({
     type: "GET",
     dataType: 'JSONP',
-    url: 'http://open.mapquestapi.com/elevation/v1/getElevationProfile',
-    data : {inFormat:'kvp', outFormat: 'json', latLngCollection: lonlat.lat+','+lonlat.lon, unit:'m', shapeFormat: 'raw'},
+    key: 'Fmjtd%7Cluub2durn1%2Cbx%3Do5-9u2x14',
+    url: 'http://open.mapquestapi.com/elevation/v1/profile',
+    data : {inFormat:'kvp', outFormat: 'json', latLngCollection: lonlat.lat+','+lonlat.lng, unit:'m', shapeFormat: 'raw'},
     success: function(data){
       if(data.elevationProfile[0])
         $('#gtu_elevation').val(data.elevationProfile[0].height);
@@ -143,75 +84,167 @@ function fetchElevation(lonlat)
   });
 }
 
-
-function onReverseTagClick(event)
-{
-  event.preventDefault();
-  addTagToGroup($(this).attr('data-group'),$(this).attr('data-subgroup'),$(this).text());
-}
-
 //Reverse GeoCoding using OSM nominatim
-function fetchPositions(lonlat, zoom)
-{
+/*
+function fetchPositions(lonlat, zoom) {
   $.ajax({
-  url: 'http://nominatim.openstreetmap.org/reverse',
-  dataType: 'json',
-  data: { lat: lonlat.lat, lon: lonlat.lon, zoom: zoom, addressdetails:1, format: 'json'  },
-  success: function(data) {
-     container = $('#reverse_tags ul');
-     container.html('');
-     container.append($('<li></li>').text(data.address.country).attr({ 'data-group': 'administrative area', 'data-subgroup': 'country' }));
+    url: 'http://nominatim.openstreetmap.org/reverse',
+    dataType: 'json',
+    data: { lat: lonlat.lat, lon: lonlat.lon, zoom: zoom, addressdetails:1, format: 'json'  },
+    success: function(data) {
+      container = $('#reverse_tags ul');
+      container.html('');
+      container.append($('<li></li>').text(data.address.country).attr({ 'data-group': 'administrative area', 'data-subgroup': 'country' }));
 
-     if( data.address.state != undefined )
-      container.append($('<li></li>').text(data.address.state).attr({ 'data-group': 'administrative area', 'data-subgroup': 'state' }));
+      if( data.address.state != undefined )
+        container.append($('<li></li>').text(data.address.state).attr({ 'data-group': 'administrative area', 'data-subgroup': 'state' }));
 
-     if( data.address.city != undefined )
-      container.append($('<li></li>').text(data.address.city).attr({ 'data-group': 'administrative area', 'data-subgroup': 'city' }));
-     
-     container.find('>li').click(onReverseTagClick);
-    $('#reverse_tags').show();
-  }
-});
+      if( data.address.city != undefined )
+        container.append($('<li></li>').text(data.address.city).attr({ 'data-group': 'administrative area', 'data-subgroup': 'city' }));
+      
+      container.find('>li').click(onReverseTagClick);
+      $('#reverse_tags').show();
+    }
+  });
+}
+*/
 
+/*************************** For Search Form *************************/
+var results_layer;
+var accuracy_layer;
+var number_to_fetch = 100;
+var mg;
+function initSearchMap() {
+  $('#show_accuracy').change(function(){
+    if(results_layer) {
+      if($('#show_accuracy').is(':checked')) {
+        map.addLayer(accuracy_layer);
+      } else {
+        map.removeLayer(accuracy_layer);
+      }
+    }
+  });
+
+  $('#show_as_map').click(function(){
+    if($(this).is(':checked')) {
+      $('#map_search_form').show();
+      map.invalidateSize();
+      if($('#gtu_filters_lat_from').val() != '' &&  $('#gtu_filters_lat_to').val() != '' && 
+        $('#gtu_filters_lon_from').val() != '' &&   $('#gtu_filters_lat_to').val() != '')
+      {
+          try{
+            map.fitBounds([
+              [ $('#gtu_filters_lat_from').val(), $('#gtu_filters_lon_from').val()],
+              [ $('#gtu_filters_lat_to').val(),  $('#gtu_filters_lon_to').val()]
+            ]);
+          }
+          catch (e) {
+            map.setView([0,0], 2);
+          }
+      } else {
+        map.setView([0,0], 2);
+      }
+      if($('#gtu_filter').length) {
+        //$(this).closest('form').removeClass('search_form');
+        $('#gtu_filter').unbind('submit.sform');
+        $('#gtu_filter').bind('submit.map_form',map_submit);
+        $('.search_results_content').html('');
+      }
+      $('#lat_long_set table').hide();
+    } else {
+      if($('#gtu_filter').length) {
+        //$(this).closest('form').addClass('search_form');
+        $('#gtu_filter').unbind('submit.map_form');
+        $('#gtu_filter').bind('submit.sform',$('.catalogue_gtu').data('choose_form').search_form_submit);
+      }
+      $('#lat_long_set table').show();
+      $('#map_search_form').hide();
+    }
+  });
+
+  $('#lat_long_set .clear_prop').click(function(event) {
+    event.preventDefault();
+    $(this).closest('tr').find('input').val('');
+  });
+
+  map = L.map('smap').setView([0,0], 2);
+  accuracy_layer = L.layerGroup([]);
+  if($('#show_accuracy').is(':checked'))
+    accuracy_layer.addTo(map);
+  // add an OpenStreetMap tile layer
+  L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  map.on('move', updateLatLong);
+
+  //Custom radius and icon create function
+  mg = new L.MarkerClusterGroup({
+          maxClusterRadius: 25,
+          spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: true
+  });
+  map.addLayer(mg);
 }
 
-function setPoint( e )
-{
-  lonlat = getEventPosition(e).wrapDateLine();
-  $('#gtu_latitude').val(lonlat.lat);
-  $('#gtu_longitude').val(lonlat.lon);
-  fetchElevation(lonlat);
-  //fetchPositions(lonlat,map.getZoom());
-  drawLatLong();
-  drawAccuracy();
-}
-
-function addMarkerToMap(position, icon)
-{
-  var marker = new OpenLayers.Marker(position.clone().transform(epsg4326, map.getProjectionObject()), icon);
-  markers.addMarker(marker);
-
-  // create a point feature
-  drawAccuracy();
-  return marker;
-}
-
-function removeMarkerFromMap(marker)
-{
-   markers.removeMarker(marker);
-}
-
-function getEventPosition(event)
-{
-  return map.getLonLatFromViewPortPx(event.xy).clone().transform(map.getProjectionObject(), epsg4326);
-}
-
-function setMapCenter(center, zoom)
-{
-  zoom = parseInt(zoom);
-  var numzoom = map.getNumZoomLevels();
-  if (zoom >= numzoom) zoom = numzoom - 1;
-  map.setCenter(center.clone().transform(epsg4326, map.getProjectionObject()), zoom);
-}
-
+function updateLatLong() {
+  bounds = map.getBounds();
+  if($('#show_as_map').is(':checked')) {
+    if($('#gtu_filters_lat_from').length) {
+      $('#gtu_filters_lat_from').val(bounds.getNorthWest().wrap().lat );
+      $('#gtu_filters_lon_from').val(bounds.getNorthWest().wrap().lng);
   
+      $('#gtu_filters_lat_to').val(bounds.getSouthEast().wrap().lat);
+      $('#gtu_filters_lon_to').val(bounds.getSouthEast().wrap().lng);
+    }else if($('#specimen_search_filters_lat_from').length) {
+      $('#specimen_search_filters_lat_from').val(bounds.getNorthWest().wrap().lat );
+      $('#specimen_search_filters_lon_from').val(bounds.getNorthWest().lng);
+  
+      $('#specimen_search_filters_lat_to').val(bounds.getSouthEast().wrap().lat);
+      $('#specimen_search_filters_lon_to').val(bounds.getSouthEast().wrap().lng);
+      
+    }
+    
+  }
+}
+
+function map_submit(event) {
+  event.preventDefault();
+
+  $('.paging_info').hide();
+  if(results_layer) {
+    // Clear previous search
+    mg.clearLayers();
+    results_layer.clearLayers();
+    accuracy_layer.clearLayers();
+  }
+
+  //Load results
+  $.ajax({
+    type: "POST",
+    url: $('#gtu_filter').attr('action')+'/format/json?gtu_filters%5Brec_per_page%5D=' + number_to_fetch +'&'+ $('#gtu_filter').serialize(),
+    dataType: 'json',
+    success: function (response) {
+      results_layer = L.geoJson(response, {
+        pointToLayer: function (feature, latlng) {
+          var fg = L.marker(latlng).bindPopup(feature.properties.content);
+          L.circle(latlng, feature.properties.accuracy)
+            .on('click', function() {
+             fg.openPopup();
+            })
+            .addTo(accuracy_layer);
+          return fg;
+        }
+      }).addTo(mg);
+    }
+  });
+  
+  //Load Page counts
+  $.ajax({
+    url: $('#gtu_filter').attr('action')+'/format/text/extd/count?gtu_filters%5Brec_per_page%5D=' + number_to_fetch +'&'+ $('#gtu_filter').serialize(),
+    success: function(html) {
+      $('.paging_info .inner_text').html(html);
+      $('.paging_info').show();
+    }
+  });
+  return false;
+}

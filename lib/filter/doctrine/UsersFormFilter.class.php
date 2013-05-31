@@ -27,7 +27,7 @@ class UsersFormFilter extends BaseUsersFormFilter
 
   public function addFamilyNameColumnQuery($query, $field, $val)
   {
-    return $this->addNamingColumnQuery($query, 'users', 'formated_name_ts', $val['text']);
+    return $this->addNamingColumnQuery($query, 'users', 'formated_name_indexed', $val['text']);
   }
 
   public function addDbUserTypeColumnQuery($query, $field, $val)

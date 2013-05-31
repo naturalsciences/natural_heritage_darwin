@@ -5,6 +5,7 @@
 CREATE INDEX CONCURRENTLY idx_possible_upper_levels_level_upper_ref on possible_upper_levels(level_upper_ref);
 CREATE INDEX CONCURRENTLY idx_gtu_code on gtu(code);
 CREATE INDEX CONCURRENTLY idx_gtu_location ON gtu USING GIST ( location );
+CREATE INDEX CONCURRENTLY idx_gtu_location_geom ON gtu USING GIST ( (location::geometry) );
 CREATE INDEX CONCURRENTLY idx_people_languages_people_ref on people_languages(people_ref);
 CREATE INDEX CONCURRENTLY idx_people_relationships_person_1_ref on people_relationships(person_1_ref);
 CREATE INDEX CONCURRENTLY idx_people_relationships_person_2_ref on people_relationships(person_2_ref);
@@ -78,17 +79,17 @@ CREATE INDEX CONCURRENTLY idx_catalogue_relationships_relations on catalogue_rel
 CREATE INDEX CONCURRENTLY idx_properties_values_property_ref ON properties_values (property_ref);
 CREATE INDEX CONCURRENTLY idx_chronostratigraphy_lower_bound on chronostratigraphy(coalesce(lower_bound, -4600));
 CREATE INDEX CONCURRENTLY idx_chronostratigraphy_upper_bound on chronostratigraphy(coalesce(upper_bound, 1));
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_name_order_by on chronostratigraphy(name_order_by);
-CREATE INDEX CONCURRENTLY idx_chronostratigraphy_name_order_by_txt_op on chronostratigraphy USING btree ( name_order_by text_pattern_ops);
 
 CREATE INDEX CONCURRENTLY idx_classification_keywords_referenced_record on classification_keywords(referenced_relation, record_id);
 CREATE INDEX CONCURRENTLY idx_classification_synonymies_grouping on classification_synonymies(group_id, is_basionym);
 CREATE INDEX CONCURRENTLY idx_classification_synonymies_order_by on classification_synonymies(group_name, order_by);
 CREATE INDEX CONCURRENTLY idx_classification_synonymies_referenced_record on classification_synonymies(referenced_relation, record_id, group_id);
-CREATE INDEX CONCURRENTLY idx_class_vernacular_names_community on class_vernacular_names(community);
-CREATE INDEX CONCURRENTLY idx_class_vernacular_names_community_indexed on class_vernacular_names (community_indexed);
+CREATE INDEX CONCURRENTLY idx_vernacular_names_community_indexed on vernacular_names (community_indexed);
+CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
+CREATE INDEX CONCURRENTLY idx_vernacular_names_referenced_record on vernacular_names(referenced_relation, record_id);
 
-CREATE INDEX CONCURRENTLY idx_vernacular_names_vernacular_class_ref on vernacular_names (vernacular_class_ref);
+CREATE INDEX CONCURRENTLY idx_specimen_parts_object_name_indexed on specimen_parts (object_name_indexed);
+
 
 CREATE INDEX CONCURRENTLY idx_codes_code_num on codes(code_num) WHERE NOT code_num IS NULL;
 CREATE INDEX CONCURRENTLY idx_collecting_methods_method_indexed on collecting_methods(method_indexed);
@@ -104,15 +105,8 @@ CREATE INDEX CONCURRENTLY idx_identifications_order_by on identifications(order_
 CREATE INDEX CONCURRENTLY idx_identifications_determination_status on identifications(determination_status) WHERE determination_status <> '';
 CREATE INDEX CONCURRENTLY idx_igs_ig_num_indexed ON igs(ig_num_indexed text_pattern_ops);
 CREATE INDEX CONCURRENTLY idx_insurances_insurance_currency on insurances(insurance_currency);
-CREATE INDEX CONCURRENTLY idx_lithostratigraphy_name_order_by on lithostratigraphy(name_order_by);
-CREATE INDEX CONCURRENTLY idx_lithostratigraphy_name_order_by_txt_op on lithostratigraphy USING btree ( name_order_by text_pattern_ops);
-
-CREATE INDEX CONCURRENTLY idx_lithology_name_order_by on lithology(name_order_by);
-CREATE INDEX CONCURRENTLY idx_lithology_name_order_by_txt_op on lithology USING btree ( name_order_by text_pattern_ops);
 
 CREATE INDEX CONCURRENTLY idx_mineralogy_code on mineralogy(upper(code));
-CREATE INDEX CONCURRENTLY idx_mineralogy_name_order_by on mineralogy(name_order_by);
-CREATE INDEX CONCURRENTLY idx_mineralogy_name_order_by_txt_op on mineralogy USING btree ( name_order_by text_pattern_ops);
 
 CREATE INDEX CONCURRENTLY idx_mineralogy_cristal_system on mineralogy(cristal_system) WHERE cristal_system <> '';
 
@@ -143,7 +137,6 @@ CREATE INDEX CONCURRENTLY idx_specimen_parts_container_type on specimen_parts(co
 CREATE INDEX CONCURRENTLY idx_specimen_parts_sub_container_type on specimen_parts(sub_container_type);
 CREATE INDEX CONCURRENTLY idx_specimen_parts_container_storage on specimen_parts(container_storage);
 CREATE INDEX CONCURRENTLY idx_specimen_parts_sub_container_storage on specimen_parts(sub_container_storage);
-CREATE INDEX CONCURRENTLY idx_taxonomy_name_order_by_txt_op on taxonomy USING btree ( name_order_by text_pattern_ops);
 
 CREATE INDEX CONCURRENTLY idx_taxonomy_path on taxonomy(path text_pattern_ops);
 CREATE INDEX CONCURRENTLY idx_tag_groups_group_name_indexed on tag_groups(group_name_indexed);
@@ -156,31 +149,28 @@ CREATE INDEX CONCURRENTLY idx_users_addresses_country on users_addresses(country
 CREATE INDEX CONCURRENTLY idx_users_comm_comm_type on users_comm(comm_type);
 
 CREATE INDEX CONCURRENTLY idx_informative_workflow_user_status on informative_workflow(user_ref, status);
-CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
 
-/*** GiST and eventual GIN Indexes for ts_vector fields ***/
+/***Indx for text fields ***/
 
-CREATE INDEX CONCURRENTLY idx_gist_comments_comment_ts on comments using gist(comment_ts);
-CREATE INDEX CONCURRENTLY idx_gist_vernacular_names_name_ts on vernacular_names using gist(name_ts);
-CREATE INDEX CONCURRENTLY idx_gist_expeditions_name_ts on expeditions using gist(name_ts);
-CREATE INDEX CONCURRENTLY idx_gin_people_formated_name_ts on people using gin(formated_name_ts);
-CREATE INDEX CONCURRENTLY idx_gin_users_formated_name_ts on users using gin(formated_name_ts);
-CREATE INDEX CONCURRENTLY idx_gist_multimedia_description_ts on multimedia using gist(search_ts);
-CREATE INDEX CONCURRENTLY idx_gin_people_addresses_address_parts_ts on people_addresses using gin(address_parts_ts);
-CREATE INDEX CONCURRENTLY idx_gin_users_addresses_address_parts_ts on users_addresses using gin(address_parts_ts);
-/*CREATE INDEX CONCURRENTLY idx_gist_collection_maintenance_description_ts on collection_maintenance using gist(description_ts);*/
-CREATE INDEX CONCURRENTLY idx_gin_taxonomy_naming on taxonomy using gin(name_indexed);
-CREATE INDEX CONCURRENTLY idx_gin_chronostratigraphy_naming on chronostratigraphy using gin(name_indexed);
-CREATE INDEX CONCURRENTLY idx_gin_lithostratigraphy_naming on lithostratigraphy using gin(name_indexed);
-CREATE INDEX CONCURRENTLY idx_gin_mineralogy_naming on mineralogy using gin(name_indexed);
-CREATE INDEX CONCURRENTLY idx_gin_lithology_naming on lithology using gin(name_indexed);
+/** NEW TS IDX **/
+CREATE INDEX CONCURRENTLY idx_gin_trgm_comments_comment on comments  using gin ("comment" gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_expeditions_name on expeditions using gin(name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_people_formated_name on people using gin(formated_name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_users_formated_name on users using gin(formated_name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_taxonomy_naming on taxonomy using gin(name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_chronostratigraphy_naming on chronostratigraphy using gin(name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_lithostratigraphy_naming on lithostratigraphy using gin(name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_mineralogy_naming on mineralogy using gin(name_indexed gin_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_trgm_lithology_naming on lithology using gin(name_indexed gin_trgm_ops);
+/*** END NEW IDX*/
+
+CREATE INDEX CONCURRENTLY idx_gin_trgm_bibliography_title on bibliography using gist(title_indexed gist_trgm_ops);
+CREATE INDEX CONCURRENTLY idx_gin_multimedia_search_indexed on multimedia using gin(search_indexed gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_gin_gtu_tags_values on gtu using gin(tag_values_indexed);
-
 
 /*** @TODO:Additional BTree Indexes created to fasten application ***/
 
 /*** FullText ***/
-CREATE INDEX CONCURRENTLY idx_words_trgm ON words USING gin(word gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_tags_trgm ON tags USING gin(tag gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_tool_trgm ON collecting_tools USING gin(tool gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_method_trgm ON collecting_methods USING gin(method gin_trgm_ops);
@@ -216,5 +206,12 @@ CREATE INDEX CONCURRENTLY idx_multimedia_referenced_record on multimedia(referen
 /** Biblio **/
 
 CREATE INDEX CONCURRENTLY idx_catalogue_bibliography_referenced_record on catalogue_bibliography(referenced_relation, record_id);
-CREATE INDEX CONCURRENTLY idx_gin_bibliography_title_ts on bibliography using gin(title_ts);
 CREATE INDEX CONCURRENTLY idx_bibliography_type on bibliography(type);
+
+
+CREATE INDEX idx_gin_trgm_comments_comment_indexed ON comments USING gin (comment_indexed public.gin_trgm_ops);
+CREATE INDEX idx_gin_trgm_lithology_name_indexed ON lithology USING btree (name_indexed);
+CREATE INDEX idx_gin_trgm_taxonomy_name_indexed ON taxonomy USING btree (name_indexed text_pattern_ops);
+CREATE INDEX idx_lithology_name_order_by_txt_op ON lithology USING btree (name_indexed text_pattern_ops);
+CREATE INDEX idx_lithostratigraphy_name_order_by_txt_op ON lithostratigraphy USING btree (name_indexed text_pattern_ops);
+CREATE INDEX idx_mineralogy_name_order_by_txt_op ON mineralogy USING btree (name_indexed text_pattern_ops);

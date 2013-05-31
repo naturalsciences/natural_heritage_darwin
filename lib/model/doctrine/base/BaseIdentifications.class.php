@@ -13,7 +13,6 @@
  * @property integer $notion_date_mask
  * @property string $value_defined
  * @property string $value_defined_indexed
- * @property string $value_defined_ts
  * @property string $determination_status
  * @property integer $order_by
  * 
@@ -25,7 +24,6 @@
  * @method integer         getNotionDateMask()        Returns the current record's "notion_date_mask" value
  * @method string          getValueDefined()          Returns the current record's "value_defined" value
  * @method string          getValueDefinedIndexed()   Returns the current record's "value_defined_indexed" value
- * @method string          getValueDefinedTs()        Returns the current record's "value_defined_ts" value
  * @method string          getDeterminationStatus()   Returns the current record's "determination_status" value
  * @method integer         getOrderBy()               Returns the current record's "order_by" value
  * @method Identifications setId()                    Sets the current record's "id" value
@@ -36,7 +34,6 @@
  * @method Identifications setNotionDateMask()        Sets the current record's "notion_date_mask" value
  * @method Identifications setValueDefined()          Sets the current record's "value_defined" value
  * @method Identifications setValueDefinedIndexed()   Sets the current record's "value_defined_indexed" value
- * @method Identifications setValueDefinedTs()        Sets the current record's "value_defined_ts" value
  * @method Identifications setDeterminationStatus()   Sets the current record's "determination_status" value
  * @method Identifications setOrderBy()               Sets the current record's "order_by" value
  * 
@@ -45,7 +42,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-abstract class BaseIdentifications extends sfDoctrineRecord
+abstract class BaseIdentifications extends DarwinModel
 {
     public function setTableDefinition()
     {
@@ -82,9 +79,6 @@ abstract class BaseIdentifications extends sfDoctrineRecord
              'type' => 'string',
              ));
         $this->hasColumn('value_defined_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('value_defined_ts', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('determination_status', 'string', null, array(

@@ -50,26 +50,30 @@ class gtuActions extends DarwinActions
       {
         //@TODO: We need to refactor and avoid doing too much queries when format is xml
         $query = $this->form->getQuery();
-        if($request->getParameter('format') == 'xml' || $request->getParameter('format') == 'text')
+        if($request->getParameter('format') == 'json' || $request->getParameter('format') == 'text')
         {
           $query->orderBy($this->orderBy .' '.$this->orderDir)
             ->andWhere('latitude is not null');
           /** WARNING Limit select of accuracy point to let the map be browsable **/
           $query->andWhere('lat_long_accuracy < 30000');
           $this->setLayout(false);
-          if($request->getParameter('format') == 'xml')
+          if($request->getParameter('format') == 'json')
           {
             $query->Limit($this->form->getValue('rec_per_page'));
-            $this->getResponse()->setContentType('application/xml');
+            $this->getResponse()->setContentType('application/json');
             $this->items = $query->execute();
-            $this->setTemplate('georss');
+            $this->setTemplate('geojson');
             return;
           }
           else
           {
-            //return $this->renderText($this->form->getValue('rec_per_page').'/'.$query->count());
+            $nbr_records = $query->count();
+
             sfContext::getInstance()->getConfiguration()->loadHelpers('I18N');
-            $str = format_number_choice('[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records', array('%1%' =>  $query->count()),  $query->count());
+            $str = format_number_choice('[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%',
+              array('%1%' => min($nbr_records, $this->form->getValue('rec_per_page')), '%2%' =>  $nbr_records),
+              $nbr_records
+            );
             return $this->renderText($str);
           }
           

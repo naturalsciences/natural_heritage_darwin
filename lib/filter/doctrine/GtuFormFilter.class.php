@@ -106,7 +106,7 @@ class GtuFormFilter extends BaseGtuFormFilter
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
-      $query->andWhere('location && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
+      $query->andWhere('location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
         ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326)');
       $query->andWhere('location is not null');
     }
@@ -143,7 +143,6 @@ class GtuFormFilter extends BaseGtuFormFilter
 
     $alias = $query->getRootAlias();
 
-    $query->addSelect('*,ST_AsKML(location) as kml');
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
     $query->andWhere("id > 0 ");
@@ -152,8 +151,17 @@ class GtuFormFilter extends BaseGtuFormFilter
   public function getJavaScripts()
   {
     $javascripts=parent::getJavascripts();
-    $javascripts[]='/js/OpenLayers.js';
+    $javascripts[]='/leaflet/leaflet.js';
+    $javascripts[]='/leaflet/leaflet.markercluster-src.js';
     $javascripts[]='/js/map.js';
     return $javascripts;
   }
+
+  public function getStylesheets() {
+    $items=parent::getStylesheets();
+    $items['/leaflet/leaflet.css']='all';
+    $items['leaflet/MarkerCluster.css']='all';
+    return $items;
+  }
+
 }

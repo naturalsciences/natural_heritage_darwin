@@ -1,6 +1,6 @@
 -- ON SERV RUN:
 -- AFTER MAKE INSTALL
---sudo -u postgres pg_dump darwin2 -h tyro -U cebmpad -t possible_upper_levels -t catalogue_relationships -t comments -t ext_links -t catalogue_properties -t properties_values -t class_vernacular_names -t vernacular_names -t expeditions -t classification_keywords -t classification_synonymies -t taxonomy  -t collecting_tools -t collecting_methods -t words --disable-triggers > demo.out
+--sudo -u postgres pg_dump darwin2 -h tyro -U cebmpad -t possible_upper_levels -t catalogue_relationships -t comments -t ext_links -t catalogue_properties -t properties_values -t vernacular_names -t expeditions -t classification_keywords -t classification_synonymies -t taxonomy  -t collecting_tools -t collecting_methods -t words --disable-triggers > demo.out
 --sudo -u postgres psql darwin2
 
 SET search_path = darwin2,public;
@@ -10,7 +10,6 @@ DELETE FROM comments;
 DELETE FROM ext_links;
 DELETE FROM catalogue_properties;
 DELETE FROM properties_values;
-DELETE FROM class_vernacular_names;
 DELETE FROM vernacular_names;
 DELETE FROM expeditions;
 DELETE FROM classification_keywords;
@@ -34,7 +33,7 @@ DELETE FROM catalogue_relationships where referenced_relation != 'taxonomy';
 DELETE FROM comments where referenced_relation != 'taxonomy';
 DELETE FROM ext_links where referenced_relation != 'taxonomy';
 DELETE FROM catalogue_properties where referenced_relation != 'taxonomy';
-DELETE FROM class_vernacular_names where referenced_relation != 'taxonomy';
+DELETE FROM vernacular_names where referenced_relation != 'taxonomy';
 DELETE FROM classification_keywords where referenced_relation != 'taxonomy';
 DELETE FROM classification_synonymies where referenced_relation != 'taxonomy';
 DELETE FROM words where referenced_relation != 'taxonomy';

@@ -11,7 +11,7 @@ class UsersAddressesForm extends BaseUsersAddressesForm
 {
   public function configure()
   {
-    unset($this['id'],$this['address_parts_ts']);
+    unset($this['id']);
     $this->widgetSchema['person_user_ref'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['tag'] = new widgetFormTagEntry(array('choices' => PeopleAddresses::getPossibleTags()));
     $this->widgetSchema['entry'] = new sfWidgetFormInput();

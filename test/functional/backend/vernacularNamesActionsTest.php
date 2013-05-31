@@ -6,31 +6,37 @@ $browser = new DarwinTestFunctional(new sfBrowser());
 $browser->loadData($configuration)->login('root','evil');
 
 $browser->
-  get('/vernacularnames/add?id=4&table=taxonomy')->
+  get('/vernacularnames/vernacularnames?id=4&table=taxonomy')->
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('#class_vernacular_names_community option',1)->
   end()->
-  
-  click('Save', array('class_vernacular_names' => array(
-    'referenced_relation' => 'taxonomy',
-    'record_id'           => '4',
-    'community'       => '',
+
+  click('Save', array('grouped_vernacular' => array(
+    'newVal' => array(
+      0 => array(
+      'referenced_relation' => 'taxonomy',
+      'record_id'           => '4',
+      'community'       => '',
+      'name'       => 'Test',
+    ))
   )))->
 
+  with('response')->begin()->
+    isStatusCode(200)->
+  end()->
   with('form')->begin()->
     hasErrors(1)->
-    isError('community', 'required')->
+    isError('newVal[0][community]', 'community')->
   end()->
 
-  click('Save', array('class_vernacular_names' => array(
+  click('Save', array('grouped_vernacular' => array(
+   'newVal' => array(
+    0 => array(
     'referenced_relation' => 'taxonomy',
     'record_id'           => '4',
     'community'       => 'Français',
-    'newVal' => array('0' => array('name' => 'Faux con',
-	                           'id' => '',
-                                  )
-                     ),
+    'name' => 'Faux con',
+    )),
   )))->
   with('response')->begin()->
     isStatusCode(200)->
@@ -41,16 +47,16 @@ $browser->
   with('response')->begin()->
     isStatusCode(200)->
     checkElement('tr',1)->
-    checkElement('tr td',2)->
+    checkElement('tr td',3)->
   end();
 
-  $r = Doctrine::getTable('ClassVernacularNames')->findForTable('taxonomy',4);
+  $r = Doctrine::getTable('VernacularNames')->findForTable('taxonomy',4);
 
   $browser->
   get('/vernacularnames/addValue?num=13&id='.$r[0]->getId() )->
   with('response')->begin()->
     isStatusCode(200)->
     checkElement('tr',1)->
-    checkElement('tr td',2)->
+    checkElement('tr td',3)->
   end()
 ;

@@ -20,7 +20,7 @@ abstract class BaseCommentsForm extends BaseFormDoctrine
       'record_id'           => new sfWidgetFormInputText(),
       'notion_concerned'    => new sfWidgetFormTextarea(),
       'comment'             => new sfWidgetFormTextarea(),
-      'comment_ts'          => new sfWidgetFormTextarea(),
+      'comment_indexed'     => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -29,7 +29,7 @@ abstract class BaseCommentsForm extends BaseFormDoctrine
       'record_id'           => new sfValidatorInteger(),
       'notion_concerned'    => new sfValidatorString(),
       'comment'             => new sfValidatorString(),
-      'comment_ts'          => new sfValidatorString(array('required' => false)),
+      'comment_indexed'     => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('comments[%s]');

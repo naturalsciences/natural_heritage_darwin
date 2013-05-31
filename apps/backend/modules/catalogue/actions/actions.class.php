@@ -11,7 +11,7 @@
 class catalogueActions extends DarwinActions
 {
   protected $catalogue = array(
-   'catalogue_relationships','catalogue_people','class_vernacular_names','catalogue_properties','comments',
+   'catalogue_relationships','catalogue_people','vernacular_names','catalogue_properties','comments',
    'specimens','specimen_individuals','specimen_parts','ext_links','collection_maintenance', 'insurances',
    'people_addresses', 'people_comm','people_languages', 'people_relationships', 'classification_keywords','catalogue_bibliography', 'multimedia');
 
@@ -65,7 +65,7 @@ class catalogueActions extends DarwinActions
 
   public function executeSearch(sfWebRequest $request)
   {
-    $this->setCommonValues('catalogue', 'name_order_by', $request);
+    $this->setCommonValues('catalogue', 'name_indexed', $request);
     $this->forward404Unless($request->hasParameter('searchCatalogue'));
     $item = $request->getParameter('searchCatalogue',array('') );
     $formFilterName = DarwinTable::getFilterForTable($item['table']);

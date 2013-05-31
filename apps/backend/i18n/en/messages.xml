@@ -3,6 +3,10 @@
   <file source-language="en" target-language="" datatype="plaintext" original="en">
     <header/>
     <body>
+                <trans-unit id="1">
+        <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%</source>
+        <target>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%</target>
+      </trans-unit>
           <trans-unit id="9">
         <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</source>
         <target>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</target>

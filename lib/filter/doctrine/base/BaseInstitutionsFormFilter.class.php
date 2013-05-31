@@ -17,7 +17,6 @@ abstract class BaseInstitutionsFormFilter extends BaseFormFilterDoctrine
       'sub_type'              => new sfWidgetFormFilterInput(),
       'formated_name'         => new sfWidgetFormFilterInput(),
       'formated_name_indexed' => new sfWidgetFormFilterInput(),
-      'formated_name_ts'      => new sfWidgetFormFilterInput(),
       'family_name'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'additional_names'      => new sfWidgetFormFilterInput(),
     ));
@@ -27,7 +26,6 @@ abstract class BaseInstitutionsFormFilter extends BaseFormFilterDoctrine
       'sub_type'              => new sfValidatorPass(array('required' => false)),
       'formated_name'         => new sfValidatorPass(array('required' => false)),
       'formated_name_indexed' => new sfValidatorPass(array('required' => false)),
-      'formated_name_ts'      => new sfValidatorPass(array('required' => false)),
       'family_name'           => new sfValidatorPass(array('required' => false)),
       'additional_names'      => new sfValidatorPass(array('required' => false)),
     ));
@@ -54,7 +52,6 @@ abstract class BaseInstitutionsFormFilter extends BaseFormFilterDoctrine
       'sub_type'              => 'Text',
       'formated_name'         => 'Text',
       'formated_name_indexed' => 'Text',
-      'formated_name_ts'      => 'Text',
       'family_name'           => 'Text',
       'additional_names'      => 'Text',
     );

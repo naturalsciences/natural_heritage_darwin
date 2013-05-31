@@ -10,7 +10,6 @@
  * @property integer $ig_date_mask
  * @property integer $ig_ref
  * @property string $expedition_name
- * @property string $expedition_name_ts
  * @property string $expedition_name_indexed
  * @property integer $expedition_ref
  * 
@@ -19,7 +18,6 @@
  * @method integer   getIgDateMask()              Returns the current record's "ig_date_mask" value
  * @method integer   getIgRef()                   Returns the current record's "ig_ref" value
  * @method string    getExpeditionName()          Returns the current record's "expedition_name" value
- * @method string    getExpeditionNameTs()        Returns the current record's "expedition_name_ts" value
  * @method string    getExpeditionNameIndexed()   Returns the current record's "expedition_name_indexed" value
  * @method integer   getExpeditionRef()           Returns the current record's "expedition_ref" value
  * @method IgsSearch setIgNum()                   Sets the current record's "ig_num" value
@@ -27,7 +25,6 @@
  * @method IgsSearch setIgDateMask()              Sets the current record's "ig_date_mask" value
  * @method IgsSearch setIgRef()                   Sets the current record's "ig_ref" value
  * @method IgsSearch setExpeditionName()          Sets the current record's "expedition_name" value
- * @method IgsSearch setExpeditionNameTs()        Sets the current record's "expedition_name_ts" value
  * @method IgsSearch setExpeditionNameIndexed()   Sets the current record's "expedition_name_indexed" value
  * @method IgsSearch setExpeditionRef()           Sets the current record's "expedition_ref" value
  * 
@@ -36,7 +33,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-abstract class BaseIgsSearch extends sfDoctrineRecord
+abstract class BaseIgsSearch extends DarwinModel
 {
     public function setTableDefinition()
     {
@@ -56,9 +53,6 @@ abstract class BaseIgsSearch extends sfDoctrineRecord
              'autoincrement' => true,
              ));
         $this->hasColumn('expedition_name', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('expedition_name_ts', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('expedition_name_indexed', 'string', null, array(

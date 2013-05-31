@@ -6,7 +6,6 @@ create table template_people
         formated_name varchar not null,
         formated_name_indexed varchar not null,
         formated_name_unique varchar not null,
-        formated_name_ts tsvector not null,
         title varchar not null default '',
         family_name varchar not null,
         given_name varchar,
@@ -20,7 +19,6 @@ comment on table template_people is 'Template table used to describe user/people
 comment on column template_people.is_physical is 'Type of user/person: physical or moral - true is physical, false is moral';
 comment on column template_people.sub_type is 'Used for moral user/persons: precise nature - public institution, asbl, sprl, sa,...';
 comment on column template_people.formated_name is 'Complete user/person formated name (with honorific mention, prefixes, suffixes,...) - By default composed with family_name and given_name fields, but can be modified by hand';
-comment on column template_people.formated_name_ts is 'tsvector form of formated_name field';
 comment on column template_people.formated_name_indexed is 'Indexed form of formated_name field';
 comment on column template_people.formated_name_unique is 'Indexed form of formated_name field (for unique index purpose)';
 comment on column template_people.family_name is 'Family name for physical user/persons and Organisation name for moral user/persons';
@@ -30,16 +28,6 @@ comment on column template_people.additional_names is 'Any additional names give
 comment on column template_people.birth_date_mask is 'Contains the Mask flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 comment on column template_people.birth_date is 'Birth/Creation date composed';
 comment on column template_people.gender is 'For physical user/persons give the gender: M or F';
-create table template_people_languages
-       (
-        language_country varchar not null default 'en',
-        mother boolean not null default true,
-        preferred_language boolean not null default false
-       );
-comment on table template_people_languages is 'Template supporting users/people languages table definition';
-comment on column template_people_languages.language_country is 'Reference of Language - language_country field of languages_countries table';
-comment on column template_people_languages.mother is 'Flag telling if its mother language or not';
-comment on column template_people_languages.preferred_language is 'Flag telling which language is preferred in communications';
 
 create table people
        (
@@ -60,7 +48,6 @@ comment on column people.id is 'Unique identifier of a person';
 comment on column people.is_physical is 'Type of person: physical or moral - true is physical, false is moral';
 comment on column people.sub_type is 'Used for moral persons: precise nature - public institution, asbl, sprl, sa,...';
 comment on column people.formated_name is 'Complete person formated name (with honorific mention, prefixes, suffixes,...) - By default composed with family_name and given_name fields, but can be modified by hand';
-comment on column people.formated_name_ts is 'tsvector form of formated_name field';
 comment on column people.formated_name_indexed is 'Indexed form of formated_name field';
 comment on column people.name_formated_indexed is 'The indexed form of given_name and family_name (the inverse of formated_name_indexed for searching)';
 comment on column people.title is 'Title of a physical user/person like Mr or Mrs or phd,...';
@@ -155,7 +142,7 @@ create table comments
         id serial,
         notion_concerned varchar not null,
         comment text not null,
-        comment_ts tsvector not null,
+        comment_indexed text not null,
         constraint pk_comments primary key (id)
        )
        inherits (template_table_record_ref);
@@ -165,14 +152,14 @@ comment on column comments.referenced_relation is 'Reference-Name of table a com
 comment on column comments.record_id is 'Identifier of the record concerned';
 comment on column comments.notion_concerned is 'Notion concerned by comment';
 comment on column comments.comment is 'Comment';
-comment on column comments.comment_ts is 'tsvector form of comment field';
+comment on column comments.comment_indexed is 'indexed form of comment field';
 
 create table ext_links
        (
         id serial,
         url varchar not null,
         comment text not null,
-        comment_ts tsvector not null,
+        comment_indexed text not null,
         constraint pk_ext_links primary key (id),
         constraint unq_ext_links unique (referenced_relation, record_id, url)
        )
@@ -183,7 +170,7 @@ comment on column ext_links.referenced_relation is 'Reference-Name of table a co
 comment on column ext_links.record_id is 'Identifier of the record concerned';
 comment on column ext_links.url is 'External URL';
 comment on column ext_links.comment is 'Comment';
-comment on column ext_links.comment_ts is 'tsvector form of comment field';
+comment on column ext_links.comment_indexed is 'indexed form of comment field';
 
 create table gtu
        (
@@ -329,7 +316,6 @@ create table identifications
         notion_date_mask integer not null default 0,
         value_defined varchar,
         value_defined_indexed varchar not null,
-        value_defined_ts tsvector,
         determination_status varchar,
         order_by integer not null default 1,
         constraint pk_identifications primary key (id),
@@ -344,48 +330,35 @@ comment on column identifications.notion_concerned is 'Type of entry: Identifica
 comment on column identifications.notion_date is 'Date of identification or preparation';
 comment on column identifications.notion_date_mask is 'Date/Time mask used for identification date fuzzyness';
 comment on column identifications.value_defined is 'When making identification, stores the value resulting of this identification';
-comment on column identifications.value_defined_ts is 'tsvector form of value_defined field';
 comment on column identifications.value_defined_indexed is 'Indexed form of value_defined field';
 comment on column identifications.determination_status is 'Status of identification - can either be a percentage of certainty or a code describing the identification step in the process';
 comment on column identifications.order_by is 'Integer used to order the identifications when no date entered';
 
-create table class_vernacular_names
+create table vernacular_names
        (
         id serial,
         community varchar not null,
         community_indexed varchar not null,
-        constraint pk_class_vernacular_names primary key (id),
-        constraint unq_class_vernacular_names unique (referenced_relation, record_id, community_indexed)
+        name varchar not null,
+        name_indexed varchar not null,
+        constraint unq_vernacular_names unique (referenced_relation, record_id, community_indexed, name_indexed),
+        constraint pk_vernacular_names primary key (id)
        )
 inherits (template_table_record_ref);
-comment on table class_vernacular_names is 'Contains the language communities a unit name translation is available for';
-comment on column class_vernacular_names.id is 'Unique identifier of a language community vernacular name';
-comment on column class_vernacular_names.referenced_relation is 'Reference of the unit table a vernacular name for a language community has to be defined - id field of table_list table';
-comment on column class_vernacular_names.record_id is 'Identifier of record a vernacular name for a language community has to be defined';
-comment on column class_vernacular_names.community is 'Language community, a unit translation is available for';
-
-create table vernacular_names
-       (
-        id serial,
-        vernacular_class_ref integer not null,
-        name varchar not null,
-        name_ts tsvector not null,
-        name_indexed varchar not null,
-        constraint unq_vernacular_names unique (vernacular_class_ref, name_indexed),
-        constraint pk_vernacular_names primary key (id),
-        constraint fk_vernacular_class_class_vernacular_names foreign key (vernacular_class_ref) references class_vernacular_names(id) on delete cascade
-       );
+       
 comment on table vernacular_names is 'List of vernacular names for a given unit and a given language community';
-comment on column vernacular_names.vernacular_class_ref is 'Identifier of a unit/language community entry - id field of class_vernacular_names table';
+comment on column vernacular_names.community is 'Language community, a unit translation is available for';
+comment on column vernacular_names.community_indexed is 'indexed version of the language community';
 comment on column vernacular_names.name is 'Vernacular name';
-comment on column vernacular_names.name_ts is 'tsvector version of name field';
 comment on column vernacular_names.name_indexed is 'Indexed form of vernacular name';
+comment on column vernacular_names.referenced_relation is 'Reference of the unit table a vernacular name for a language community has to be defined - id field of table_list table';
+comment on column vernacular_names.record_id is 'Identifier of record a vernacular name for a language community has to be defined';
+
 
 create table expeditions
        (
         id serial,
         name varchar not null,
-        name_ts tsvector not null,
         name_indexed varchar not null,
         expedition_from_date_mask integer not null default 0,
         expedition_from_date date not null default '01/01/0001',
@@ -397,7 +370,6 @@ create table expeditions
 comment on table expeditions is 'List of expeditions made to collect specimens';
 comment on column expeditions.id is 'Unique identifier of an expedition';
 comment on column expeditions.name is 'Expedition name';
-comment on column expeditions.name_ts is 'tsvector version of name field';
 comment on column expeditions.name_indexed is 'Indexed form of expedition name';
 comment on column expeditions.expedition_from_date_mask is 'Contains the Mask flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 comment on column expeditions.expedition_from_date is 'Start date of the expedition';
@@ -423,7 +395,6 @@ comment on column users.sub_type is 'Used for moral users: precise nature - publ
 comment on column users.formated_name is 'Complete user formated name (with honorific mention, prefixes, suffixes,...) - By default composed with family_name and given_name fields, but can be modified by hand';
 comment on column users.db_user_type is 'Integer is representing a role: 1 for registered user, 2 for encoder, 4 for collection manager, 8 for system admin,...';
 comment on column users.people_id is 'Reference to a people if this user is also known as a people';
-comment on column users.formated_name_ts is 'tsvector form of formated_name field';
 comment on column users.formated_name_indexed is 'Indexed form of formated_name field';
 comment on column users.formated_name_unique is 'Indexed form of formated_name field (for unique index use)';
 comment on column users.family_name is 'Family name for physical users and Organisation name for moral users';
@@ -438,12 +409,14 @@ comment on column users.selected_lang is 'Lang of the interface for the user en,
 create table people_languages
        (
         id serial,
+        language_country varchar not null default 'en',
+        mother boolean not null default true,
+        preferred_language boolean not null default false,
         people_ref integer not null,
         constraint pk_people_languages primary key (id),
         constraint unq_people_languages unique (people_ref, language_country),
         constraint fk_people_languages_people foreign key (people_ref) references people(id) on delete cascade
-       )
-inherits (template_people_languages);
+       );
 comment on table people_languages is 'Languages spoken by a given person';
 comment on column people_languages.people_ref is 'Reference of person - id field of people table';
 comment on column people_languages.language_country is 'Reference of Language - language_country field of languages_countries table';
@@ -460,7 +433,7 @@ create table multimedia
         description varchar not null default '',
         uri varchar,
         filename varchar,
-        search_ts tsvector not null,
+        search_indexed text not null,
         creation_date date not null default '0001-01-01'::date,
         creation_date_mask integer not null default 0,
         mime_type varchar not null,
@@ -483,7 +456,7 @@ comment on column multimedia.uri is 'URI of object if digital';
 comment on column multimedia.filename is 'The original name of the saved file';
 comment on column multimedia.creation_date is 'Object creation date';
 comment on column multimedia.creation_date_mask is 'Mask used for object creation date display';
-comment on column multimedia.search_ts is 'tsvector form of title and description fields together';
+comment on column multimedia.search_indexed is 'indexed form of title and description fields together';
 comment on column multimedia.mime_type is 'Mime/Type of the linked digital object';
 comment on column multimedia.visible is 'Flag telling if the related file has been chosen to be publically visible or not';
 comment on column multimedia.publishable is 'Flag telling if the related file has been chosen as a prefered item for publication - Would be for example used for preselection of media published for Open Up project';
@@ -497,13 +470,6 @@ comment on table template_people_users_comm_common is 'Template table used to co
 comment on column template_people_users_comm_common.person_user_ref is 'Reference of person/user - id field of people/users table';
 comment on column template_people_users_comm_common.entry is 'Communication entry';
 
-create table template_people_users_rel_common
-       (
-        person_user_role varchar
-       );
-comment on table template_people_users_rel_common is 'Template table used to propagate three field in different tables depending it''s people or user dedicated';
-comment on column template_people_users_rel_common.person_user_role is 'Role the person/user have in the moral person he depends of';
-
 create table template_people_users_addr_common
        (
         po_box varchar,
@@ -511,8 +477,7 @@ create table template_people_users_addr_common
         locality varchar not null,
         region varchar,
         zip_code varchar,
-        country varchar not null,
-        address_parts_ts tsvector not null
+        country varchar not null
        );
 comment on table template_people_users_addr_common is 'Template table used to construct addresses tables for people/users';
 comment on column template_people_users_addr_common.po_box is 'PO Box';
@@ -521,11 +486,11 @@ comment on column template_people_users_addr_common.locality is 'Locality';
 comment on column template_people_users_addr_common.region is 'Region';
 comment on column template_people_users_addr_common.zip_code is 'zip code';
 comment on column template_people_users_addr_common.country is 'Country';
-comment on column template_people_users_addr_common.address_parts_ts is 'tsvector field containing vectorized form of all addresses fields: country, region, locality, extended address,...';
 
 create table people_relationships
        (
         id serial,
+        person_user_role varchar,
         relationship_type varchar not null default 'belongs to',
         person_1_ref integer not null,
         person_2_ref integer not null,
@@ -537,9 +502,7 @@ create table people_relationships
         constraint pk_people_relationships primary key (id),
         constraint fk_people_relationships_people_01 foreign key (person_1_ref) references people(id) on delete cascade,
         constraint fk_people_relationships_people_02 foreign key (person_2_ref) references people(id)
-       )
-
-inherits (template_people_users_rel_common);
+       );
 comment on table people_relationships is 'Relationships between people - mainly between physical person and moral person: relationship of dependancy';
 comment on column people_relationships.relationship_type is 'Type of relationship between two persons: belongs to, is department of, is section of, works for,...';
 comment on column people_relationships.person_1_ref is 'Reference of person to be puted in relationship with an other - id field of people table';
@@ -577,7 +540,6 @@ create table people_addresses
        )
 inherits (template_people_users_comm_common, template_people_users_addr_common);
 comment on table people_addresses is 'People addresses';
-comment on column people_addresses.address_parts_ts is 'tsvector column used to search an address part';
 comment on column people_addresses.id is 'Unique identifier of a person address';
 comment on column people_addresses.person_user_ref is 'Reference of the person concerned - id field of people table';
 comment on column people_addresses.po_box is 'PO Box';
@@ -609,14 +571,14 @@ comment on column users_comm.tag is 'List of descriptive tags: internet, tel, fa
 create table users_addresses
        (
         id serial,
+        person_user_role varchar,
         organization_unit varchar,
         tag varchar not null default '',
         constraint pk_users_addresses primary key (id),
         constraint fk_users_addresses_users foreign key (person_user_ref) references users(id) on delete cascade
        )
-inherits (template_people_users_rel_common, template_people_users_comm_common, template_people_users_addr_common);
+inherits (template_people_users_comm_common, template_people_users_addr_common);
 comment on table users_addresses is 'Users addresses';
-comment on column users_addresses.address_parts_ts is 'tsvector column used to search an address part';
 comment on column users_addresses.id is 'Unique identifier of a user address';
 comment on column users_addresses.person_user_ref is 'Reference of the user concerned - id field of users table';
 comment on column users_addresses.po_box is 'PO Box';
@@ -705,25 +667,18 @@ comment on column collections.code_part_code_auto_copy is 'Flag telling if the w
 comment on column collections.code_specimen_duplicate is 'Flag telling if the whole specimen code has to be copied when you do a duplicate';
 comment on column collections.is_public is 'Flag telling if the collection can be found in the public search';
 
-create table template_collections_users
-       (
-        collection_ref integer not null default 0,
-        user_ref integer not null default 0
-       );
-comment on table template_collections_users is 'Template table used to construct collections rights tables';
-comment on column template_collections_users.collection_ref is 'Reference of collection concerned - id field of collections table';
-comment on column template_collections_users.user_ref is 'Reference of user - id field of users table';
-
 create table collections_rights
        (
         id serial,
         db_user_type smallint not null default 1,
+        collection_ref integer not null default 0,
+        user_ref integer not null default 0,
         constraint pk_collections_right primary key (id),
         constraint fk_collections_rights_users foreign key (user_ref) references users(id) on delete cascade,
         constraint fk_collections_rights_collections foreign key (collection_ref) references collections(id) on delete cascade,
         constraint unq_collections_rights unique (collection_ref, user_ref)
-       )
-inherits (template_collections_users);
+       );
+
 comment on table collections_rights is 'List of rights of given users on given collections';
 comment on column collections_rights.id is 'Unique identifier for collection rights';
 comment on column collections_rights.collection_ref is 'Reference of collection concerned - id field of collections table';
@@ -781,7 +736,7 @@ create table collection_maintenance
         category varchar not null default 'action',
         action_observation varchar not null,
         description varchar,
-        description_ts tsvector,
+        description_indexed text,
         modification_date_time timestamp default now() not null,
         modification_date_mask int not null default '0',
         constraint pk_collection_maintenance primary key (id),
@@ -796,7 +751,7 @@ comment on column collection_maintenance.people_ref is 'Reference of person havi
 comment on column collection_maintenance.category is 'Action or Observation';
 comment on column collection_maintenance.action_observation is 'Action or observation done';
 comment on column collection_maintenance.description is 'Complementary description';
-comment on column collection_maintenance.description_ts is 'tsvector form of description field';
+comment on column collection_maintenance.description_indexed is 'indexed form of description field';
 comment on column collection_maintenance.modification_date_time is 'Last update date/time';
 
 create table my_saved_searches
@@ -864,8 +819,7 @@ comment on column my_widgets.all_public is 'Set to determine if the widget avail
 create table template_classifications
        (
         name varchar not null,
-        name_indexed tsvector not null,
-        name_order_by varchar,
+        name_indexed varchar,
         level_ref integer not null,
         status varchar not null default 'valid',
         local_naming boolean not null default false,
@@ -875,8 +829,7 @@ create table template_classifications
        );
 comment on table template_classifications is 'Template table used to construct every common data in each classifications tables (taxonomy, chronostratigraphy, lithostratigraphy,...)';
 comment on column template_classifications.name is 'Classification unit name';
-comment on column template_classifications.name_indexed is 'TS Vector Indexed form of name field';
-comment on column template_classifications.name_order_by is 'Indexed form of name field for ordering';
+comment on column template_classifications.name_indexed is 'Indexed form of name field for ordering';
 comment on column template_classifications.level_ref is 'Reference of classification level the unit is encoded in';
 comment on column template_classifications.status is 'Validitiy status: valid, invalid, in discussion';
 comment on column template_classifications.local_naming is 'Flag telling the appelation is local or internationally recognized';
@@ -991,7 +944,7 @@ create table mineralogy
         formule_indexed varchar,
         cristal_system varchar,
         constraint pk_mineralogy primary key (id),
-        constraint unq_mineralogy unique (path, name_indexed, level_ref),
+        constraint unq_mineralogy unique (path, name_indexed, level_ref, code),
         constraint fk_mineralogy_catalogue_levels foreign key (level_ref) references catalogue_levels(id),
         constraint fk_mineralogy_parent_ref_mineralogy foreign key (parent_ref) references mineralogy(id) on delete cascade
        )
@@ -1111,13 +1064,12 @@ create table codes
         code varchar,
         code_suffix varchar,
         code_suffix_separator varchar,
-        full_code_indexed tsvector not null,
-        full_code_order_by varchar not null,
+        full_code_indexed varchar not null,
         code_date timestamp not null default '0001-01-01 00:00:00',
         code_date_mask integer not null default 0,
         code_num integer default 0,
         constraint pk_codes primary key (id),
-        constraint unq_codes unique (referenced_relation, record_id, full_code_order_by,code_category)
+        constraint unq_codes unique (referenced_relation, record_id, full_code_indexed,code_category)
        )
 inherits (template_table_record_ref);
 
@@ -1129,8 +1081,7 @@ comment on column codes.code_prefix_separator is 'Separtor used between code cor
 comment on column codes.code is 'Numerical part of code - but not forced: if users want to use it as alphanumerical code - possible too';
 comment on column codes.code_suffix is 'For codes made of characters and numerical parts, this field stores the last alpha part of code';
 comment on column codes.code_suffix_separator is 'Separtor used between code core and code suffix';
-comment on column codes.full_code_indexed is 'ts_vector code composition coming from all code parts - used for searching specimen codes';
-comment on column codes.full_code_order_by is 'Full code composition by code_prefix, code and code suffix concatenation and indexed for unique check purpose';
+comment on column codes.full_code_indexed is 'Full code composition by code_prefix, code and code suffix concatenation and indexed for unique check purpose';
 comment on column codes.code_date is 'Date of code creation (fuzzy date)';
 comment on column codes.code_date_mask is 'Mask used for code date';
 comment on column codes.referenced_relation is 'Reference name of table concerned';
@@ -1195,6 +1146,8 @@ create table specimen_parts
         sub_container_storage varchar not null default 'dry',
         surnumerary boolean not null default false,
         specimen_status varchar not null default 'good state',
+        object_name text,
+        object_name_indexed text not null default '',
         specimen_part_count_min integer not null default 1,
         specimen_part_count_max integer not null default 1,
         constraint pk_specimen_parts primary key (id),
@@ -1335,18 +1288,6 @@ comment on table specimen_collecting_methods is 'Association of collecting metho
 comment on column specimen_collecting_methods.id is 'Unique identifier of an association';
 comment on column specimen_collecting_methods.specimen_ref is 'Identifier of a specimen - comes from specimens table (id field)';
 comment on column specimen_collecting_methods.collecting_method_ref is 'Identifier of a collecting method - comes from collecting_methods table (id field)';
-
-create table words
-  (
-    referenced_relation varchar,
-    field_name varchar,
-    word varchar,
-    constraint uniq_words unique (referenced_relation, field_name, word)
-  );
-comment on table words is 'List all trigram used with pg_trgm to match similarities';
-comment on column words.referenced_relation is 'Reference of table concerned';
-comment on column words.field_name is 'Reference of field in the table';
-comment on column words.word is 'word founded';
 
 create table preferences
   (
@@ -1520,6 +1461,7 @@ create table staging
     surnumerary boolean,
     status hstore not null default '',
     to_import boolean default false,
+    object_name text,
     constraint pk_staging primary key (id),
     constraint fk_staging_import foreign key (import_ref) references imports(id) on delete cascade,
     constraint fk_parent_ref foreign key (parent_ref) references staging(id) on delete cascade,
@@ -1575,7 +1517,7 @@ create table loans
       id serial,
       name varchar not null default '',
       description varchar not null default '',
-      description_ts tsvector not null,
+      search_indexed text not null,
       from_date date,
       to_date date,
       extended_to_date date,
@@ -1587,7 +1529,7 @@ comment on table loans is 'Table holding an entire loan made of multiple loan it
 comment on column loans.id is 'Unique identifier of record';
 comment on column loans.name is 'Global name of the loan. May be a sort of code of other naming scheme';
 comment on column loans.description is 'Description of the meaning of the loan';
-comment on column loans.description_ts is 'tsvector getting Description and title of the loan';
+comment on column loans.search_indexed is 'indexed getting Description and title of the loan';
 comment on column loans.from_date  is 'Date of the start of the loan';
 comment on column loans.to_date  is 'Planned date of the end of the loan';
 
@@ -1693,7 +1635,6 @@ CREATE TABLE specimens_flat (
     collection_parent_ref integer,
     collection_path varchar,
     expedition_name varchar,
-    expedition_name_ts tsvector,
     expedition_name_indexed varchar,
 
     gtu_code varchar,
@@ -1713,8 +1654,7 @@ CREATE TABLE specimens_flat (
     gtu_location GEOGRAPHY(POLYGON,4326),
 
     taxon_name varchar,
-    taxon_name_indexed tsvector,
-    taxon_name_order_by varchar,
+    taxon_name_indexed varchar,
     taxon_level_ref integer,
     taxon_level_name varchar,
     taxon_status varchar,
@@ -1723,8 +1663,7 @@ CREATE TABLE specimens_flat (
     taxon_extinct boolean,
 
     litho_name varchar,
-    litho_name_indexed tsvector,
-    litho_name_order_by varchar,
+    litho_name_indexed varchar,
     litho_level_ref integer,
     litho_level_name varchar,
     litho_status varchar,
@@ -1734,8 +1673,7 @@ CREATE TABLE specimens_flat (
     litho_parent_ref integer,
 
     chrono_name varchar,
-    chrono_name_indexed tsvector,
-    chrono_name_order_by varchar,
+    chrono_name_indexed varchar,
     chrono_level_ref integer,
     chrono_level_name varchar,
     chrono_status varchar,
@@ -1745,8 +1683,7 @@ CREATE TABLE specimens_flat (
     chrono_parent_ref integer,
 
     lithology_name varchar,
-    lithology_name_indexed tsvector,
-    lithology_name_order_by varchar,
+    lithology_name_indexed varchar,
     lithology_level_ref integer,
     lithology_level_name varchar,
     lithology_status varchar,
@@ -1756,8 +1693,7 @@ CREATE TABLE specimens_flat (
     lithology_parent_ref integer,
 
     mineral_name varchar,
-    mineral_name_indexed tsvector,
-    mineral_name_order_by varchar,
+    mineral_name_indexed varchar,
     mineral_level_ref integer,
     mineral_level_name varchar,
     mineral_status varchar,
@@ -1767,8 +1703,7 @@ CREATE TABLE specimens_flat (
     mineral_parent_ref integer,
 
     host_taxon_name varchar,
-    host_taxon_name_indexed tsvector,
-    host_taxon_name_order_by varchar,
+    host_taxon_name_indexed varchar,
     host_taxon_level_ref integer,
     host_taxon_level_name varchar,
     host_taxon_status varchar,
@@ -1784,176 +1719,7 @@ CREATE TABLE specimens_flat (
     constraint fk_specimens_flat_specimen_ref foreign key (specimen_ref) references specimens(id) on delete cascade
 );
 
-
-
-create view darwin_flat as 
-  select
-
- row_number() OVER (ORDER BY s.id) AS id, 
-
-  s.category,
-  s.collection_ref,
-  s.expedition_ref,
-  s.gtu_ref,
-  s.taxon_ref,
-  s.litho_ref,
-  s.chrono_ref,
-  s.lithology_ref,
-  s.mineral_ref,
-  s.host_taxon_ref,
-  s.host_specimen_ref,
-  s.host_relationship,
-  s.acquisition_category,
-  s.acquisition_date_mask,
-  s.acquisition_date,
-  s.station_visible,
-  s.ig_ref,
-
-
-  f.collection_type,
-  f.collection_code,
-  f.collection_name,
-  f.collection_is_public,
-  f.collection_parent_ref,
-  f.collection_path,
-  f.expedition_name,
-  f.expedition_name_ts,
-  f.expedition_name_indexed,
-
-  f.gtu_code,
-  f.gtu_from_date_mask,
-  f.gtu_from_date,
-  f.gtu_to_date_mask,
-  f.gtu_to_date,
-  f.gtu_tag_values_indexed,
-  f.gtu_country_tag_value,
-  f.gtu_country_tag_indexed,
-  f.gtu_province_tag_value,
-  f.gtu_province_tag_indexed,
-  f.gtu_others_tag_value,
-  f.gtu_others_tag_indexed,
-  f.gtu_elevation,
-  f.gtu_elevation_accuracy,
-  f.gtu_location,
-
-  f.taxon_name,
-  f.taxon_name_indexed,
-  f.taxon_name_order_by,
-  f.taxon_level_ref,
-  f.taxon_level_name,
-  f.taxon_status,
-  f.taxon_path,
-  f.taxon_parent_ref,
-  f.taxon_extinct,
-
-  f.litho_name,
-  f.litho_name_indexed,
-  f.litho_name_order_by,
-  f.litho_level_ref,
-  f.litho_level_name,
-  f.litho_status,
-  f.litho_local,
-  f.litho_color,
-  f.litho_path,
-  f.litho_parent_ref,
-
-  f.chrono_name,
-  f.chrono_name_indexed,
-  f.chrono_name_order_by,
-  f.chrono_level_ref,
-  f.chrono_level_name,
-  f.chrono_status,
-  f.chrono_local,
-  f.chrono_color,
-  f.chrono_path,
-  f.chrono_parent_ref,
-
-  f.lithology_name,
-  f.lithology_name_indexed,
-  f.lithology_name_order_by,
-  f.lithology_level_ref,
-  f.lithology_level_name,
-  f.lithology_status,
-  f.lithology_local,
-  f.lithology_color,
-  f.lithology_path,
-  f.lithology_parent_ref,
-
-  f.mineral_name,
-  f.mineral_name_indexed,
-  f.mineral_name_order_by,
-  f.mineral_level_ref,
-  f.mineral_level_name,
-  f.mineral_status,
-  f.mineral_local,
-  f.mineral_color,
-  f.mineral_path,
-  f.mineral_parent_ref,
-
-  f.host_taxon_name,
-  f.host_taxon_name_indexed,
-  f.host_taxon_name_order_by,
-  f.host_taxon_level_ref,
-  f.host_taxon_level_name,
-  f.host_taxon_status,
-  f.host_taxon_path,
-  f.host_taxon_parent_ref,
-  f.host_taxon_extinct,
-
-  f.ig_num,
-  f.ig_num_indexed,
-  f.ig_date_mask,
-  f.ig_date,
-
-  s.id as spec_ref,
-
-  spec_ident_ids,
-  spec_coll_ids,
-  spec_don_sel_ids,
-  ind_ident_ids,
-
-  f.with_types,
-  f.with_individuals,
-  COALESCE(i.with_parts,false) as with_parts,
-
-  i.id as individual_ref,
-  coalesce(i.type, 'specimen') as individual_type,
-  coalesce(i.type_group, 'specimen') as individual_type_group,
-  coalesce(i.type_search, 'specimen') as individual_type_search,
-  coalesce(i.sex, 'undefined') as individual_sex,
-  coalesce(i.state, 'not applicable') as individual_state,
-  coalesce(i.stage, 'undefined') as individual_stage,
-  coalesce(i.social_status, 'not applicable') as individual_social_status,
-  coalesce(i.rock_form, 'not applicable') as individual_rock_form,
-  coalesce(i.specimen_individuals_count_min, 1) as individual_count_min,
-  coalesce(i.specimen_individuals_count_max, 1) as individual_count_max,
-  p.id as part_ref,
-  p.specimen_part as part,
-  p.specimen_status as part_status,
-  p.institution_ref,
-  p.building,
-  p.floor ,
-  p.room ,
-  p.row  ,
-  p.shelf ,
-  p.container ,
-  p.sub_container ,
-  p.container_type ,
-  p.sub_container_type ,
-  p.container_storage ,
-  p.sub_container_storage ,
-  p.specimen_part_count_min as part_count_min,
-  p.specimen_part_count_max as part_count_max,
-  p.specimen_status,
-  p.complete,
-  p.surnumerary
-
-
-  from specimens s
-  INNER JOIN specimens_flat f on f.specimen_ref = s.id
-  LEFT JOIN specimen_individuals  i ON s.id = i.specimen_ref 
-  LEFT JOIN specimen_parts p ON i.id = p.specimen_individual_ref
-;
+\i maintenance/recreate_flat_view.sql
 
 create table loan_history (
   id serial,
@@ -1985,19 +1751,17 @@ comment on column multimedia_todelete.uri is 'URI of the file to delete';
 CREATE TABLE bibliography (
   id serial,
   title varchar not null,
-  title_ts tsvector not null,
   title_indexed varchar not null,
   type varchar not null,
   abstract varchar not null default '',
   year integer,
   constraint pk_bibliography primary key (id),
-  constraint unq_bibliography unique (title_ts, type)
+  constraint unq_bibliography unique (title_indexed, type)
 
 );
 comment on table bibliography is 'List of expeditions made to collect specimens';
 comment on column bibliography.id is 'Unique identifier';
 comment on column bibliography.title is 'bibliography title';
-comment on column bibliography.title_ts is 'tsvector version of title field';
 comment on column bibliography.title_indexed is 'Indexed form of title';
 comment on column bibliography.type is 'bibliography type : article, book, booklet';
 comment on column bibliography.abstract is 'optional abstract of the bibliography';

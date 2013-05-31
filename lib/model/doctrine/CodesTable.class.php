@@ -42,7 +42,7 @@ class CodesTable extends DarwinTable
          from('Codes')->
          where('referenced_relation = ?', $table)->
          andWhereIn('record_id', $specIds)->
-         orderBy('referenced_relation, record_id, code_category ASC, code_date DESC, full_code_order_by ASC');
+         orderBy('referenced_relation, record_id, code_category ASC, code_date DESC, full_code_indexed ASC');
     return $q->execute();
   }
 
@@ -63,7 +63,7 @@ class CodesTable extends DarwinTable
       from('Codes')->
       where('referenced_relation = ?', $table)->
       andWhere('record_id = any(ARRAY['.implode(',',$itemIds).'])')->
-      orderBy('code_category ASC,  full_code_order_by ASC');
+      orderBy('code_category ASC,  full_code_indexed ASC');
     return $q->execute();
   }
 }

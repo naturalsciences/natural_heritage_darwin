@@ -8,18 +8,14 @@
  REINDEX TABLE properties_values;
  REINDEX TABLE catalogue_properties;
  REINDEX TABLE gtu;
- REINDEX TABLE template_people_languages;
- REINDEX TABLE class_vernacular_names;
  REINDEX TABLE multimedia;
  REINDEX TABLE vernacular_names;
  REINDEX TABLE expeditions;
- REINDEX TABLE template_people_users_rel_common;
  REINDEX TABLE people_languages;
  REINDEX TABLE template_people_users_comm_common;
  REINDEX TABLE people_relationships;
  REINDEX TABLE template_people_users_addr_common;
  REINDEX TABLE people_comm;
- REINDEX TABLE template_collections_users;
  REINDEX TABLE people;
  REINDEX TABLE collection_maintenance;
  REINDEX TABLE template_classifications;

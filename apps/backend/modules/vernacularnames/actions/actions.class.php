@@ -9,33 +9,25 @@
  */
 class vernacularnamesActions extends DarwinActions
 {
-  public function executeAdd(sfWebRequest $request)
+  public function executeVernacularnames(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
-    $this->vernacularnames = null;
-    if($request->hasParameter('rid'))
-    {
-      $this->vernacularnames = Doctrine::getTable('ClassVernacularNames')->find($request->getParameter('rid'));
-    }
+    if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
 
-    if(! $this->vernacularnames)
-    {
-     $this->vernacularnames = new ClassVernacularNames();
-     $this->vernacularnames->setRecordId($request->getParameter('id'));
-     $this->vernacularnames->setReferencedRelation($request->getParameter('table'));
-    }
-    $this->form = new ClassVernacularNamesForm($this->vernacularnames);
-    
+    $this->forward404Unless( $request->hasParameter('id') && $request->hasParameter('table'));
+
+    $this->ref_object = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->find($request->getParameter('id'));
+    $this->forward404Unless($this->ref_object);
+    $this->form = new  GroupedVernacularNamesForm(null,array('table' => $request->getParameter('table'), 'id' => $request->getParameter('id')));
+
     if($request->isMethod('post'))
     {
-      $this->form->bind($request->getParameter('class_vernacular_names'));
+      $this->form->bind($request->getParameter('grouped_vernacular'));
       if($this->form->isValid())
       {
         try{
           $this->form->save();
-          $this->form->getObject()->refreshRelated();
-          $this->form = new ClassVernacularNamesForm($this->form->getObject()); //Ugly refresh
           return $this->renderText('ok');
+
         }
         catch(Doctrine_Exception $ne)
         {
@@ -45,19 +37,19 @@ class vernacularnamesActions extends DarwinActions
         }
       }
     }
+
   }
   
   public function executeAddValue(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
+    if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
+
     $number = intval($request->getParameter('num'));
-    $vern = null;
 
-    if($request->hasParameter('id') && $request->getParameter('id'))
-      $vern = Doctrine::getTable('ClassVernacularNames')->find($request->getParameter('id') );
+    $form = new  GroupedVernacularNamesForm(null,array('no_load'=>true));
 
-    $form = new ClassVernacularNamesForm($vern);
-    $form->addValue($number);
+    $form->addValue($number, $request->getParameter('key'));
+
     return $this->renderPartial('vernacular_names_values',array('form' => $form['newVal'][$number]));
   }
 

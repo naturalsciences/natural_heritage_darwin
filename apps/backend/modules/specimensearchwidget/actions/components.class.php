@@ -137,7 +137,13 @@ class specimensearchwidgetComponents extends sfComponents
   {
     $this->defineForm();
   }
+
   public function executePeople_role()
+  {
+    $this->defineForm();
+  }
+
+  public function executePart()
   {
     $this->defineForm();
   }

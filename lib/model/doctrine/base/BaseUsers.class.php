@@ -10,7 +10,6 @@
  * @property string $sub_type
  * @property string $formated_name
  * @property string $formated_name_indexed
- * @property string $formated_name_ts
  * @property string $title
  * @property string $family_name
  * @property string $given_name
@@ -40,7 +39,6 @@
  * @method string              getSubType()               Returns the current record's "sub_type" value
  * @method string              getFormatedName()          Returns the current record's "formated_name" value
  * @method string              getFormatedNameIndexed()   Returns the current record's "formated_name_indexed" value
- * @method string              getFormatedNameTs()        Returns the current record's "formated_name_ts" value
  * @method string              getTitle()                 Returns the current record's "title" value
  * @method string              getFamilyName()            Returns the current record's "family_name" value
  * @method string              getGivenName()             Returns the current record's "given_name" value
@@ -69,7 +67,6 @@
  * @method Users               setSubType()               Sets the current record's "sub_type" value
  * @method Users               setFormatedName()          Sets the current record's "formated_name" value
  * @method Users               setFormatedNameIndexed()   Sets the current record's "formated_name_indexed" value
- * @method Users               setFormatedNameTs()        Sets the current record's "formated_name_ts" value
  * @method Users               setTitle()                 Sets the current record's "title" value
  * @method Users               setFamilyName()            Sets the current record's "family_name" value
  * @method Users               setGivenName()             Sets the current record's "given_name" value
@@ -99,7 +96,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-abstract class BaseUsers extends sfDoctrineRecord
+abstract class BaseUsers extends DarwinModel
 {
     public function setTableDefinition()
     {
@@ -120,9 +117,6 @@ abstract class BaseUsers extends sfDoctrineRecord
              'type' => 'string',
              ));
         $this->hasColumn('formated_name_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('formated_name_ts', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('title', 'string', null, array(

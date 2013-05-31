@@ -101,7 +101,7 @@ class PeopleFormFilter extends BasePeopleFormFilter
 
   public function addFamilyNameColumnQuery($query, $field, $val)
   {
-    return $this->addNamingColumnQuery($query, 'people', 'formated_name_ts', $val);
+    return $this->addNamingColumnQuery($query, 'people', 'formated_name_indexed', $val);
   }
 
 }

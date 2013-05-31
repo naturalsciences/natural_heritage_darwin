@@ -17,7 +17,6 @@ abstract class BaseExpeditionsForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'                        => new sfWidgetFormInputHidden(),
       'name'                      => new sfWidgetFormTextarea(),
-      'name_ts'                   => new sfWidgetFormTextarea(),
       'name_indexed'              => new sfWidgetFormTextarea(),
       'expedition_from_date_mask' => new sfWidgetFormInputText(),
       'expedition_from_date'      => new sfWidgetFormTextarea(),
@@ -28,7 +27,6 @@ abstract class BaseExpeditionsForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'                        => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'name'                      => new sfValidatorString(),
-      'name_ts'                   => new sfValidatorString(array('required' => false)),
       'name_indexed'              => new sfValidatorString(array('required' => false)),
       'expedition_from_date_mask' => new sfValidatorInteger(array('required' => false)),
       'expedition_from_date'      => new sfValidatorString(array('required' => false)),

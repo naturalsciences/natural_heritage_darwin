@@ -67,62 +67,24 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   */
   public function addNamingColumnQuery(Doctrine_Query $query, $table, $field, $values, $alias = null, $flat_field = null)
   {
-    if ($values != "" && $table != "" && $field != "")
-    {
-      $values = trim(str_replace('&',' ',$values));
-      $values = trim(str_replace('|',' ',$values));
-      $values = trim(str_replace('(',' ',$values));
-      $values = trim(str_replace(')',' ',$values));
-      if(! $alias)
-            $alias = $query->getRootAlias();
-      $search = self::splitNameQuery($values);
-      $terms = self::getAllTerms($search);
-      if(empty($terms)) return $query;
-      
-      $conn_MGR = Doctrine_Manager::connection();
-      $conn = $conn_MGR->getDbh();
-      $conn->exec('SELECT set_limit(0.1)');
-      $sql_search = array();
-      foreach($terms as $term) {
-        $word_quoted = $conn_MGR->quote($term, 'string');
-        $sql_search[] = "SELECT $word_quoted as search, word from words where word % fulltoindex($word_quoted)
-          AND fulltoindex(word) like '%' || fulltoindex($word_quoted) || '%'
-          AND referenced_relation = :table AND field_name = :field ";
+    $search = self::splitNameQuery($values);
+    $terms = self::getAllTerms($search);
+    foreach ($search['with'] as $search_term) {
+      if(strpos($search_term, '^') === 0) {
+        $query->andWhere($alias.'.'.$field." like fulltoindex(?) || '%' ", $search_term);
       }
-      $statement = $conn->prepare(implode(' UNION ',  $sql_search));
-      $statement->execute(array(':table' => $table, ':field' => $field));
-      $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+      $query->andWhere($alias.'.'.$field." like '%' || fulltoindex(?) || '%' ", $search_term);
+    }
+    unset($search['with']);
+    foreach($search as $item) {
+      foreach ($item as $search_term) {
+        if(strpos($search_term, '^') === 0) {
+          $query->andWhere($alias.'.'.$field." not like fulltoindex(?) || '%' ", $search_term);
+        }
+        $query->andWhere($alias.'.'.$field." not like '%' || fulltoindex(?) || '%' ", $search_term);
+      }
+    }
 
-      //if $flat_field is not null then we want to use the flat table, change the $field value by $flat_field 
-      if ($flat_field != null) $field = $flat_field ;
-      //print_r($results);
-      if(count($results) == 0)
-      {
-            $values = str_replace(' ',' & ',$values);
-            $query->andWhere($alias.'.'.$field." @@ to_tsquery('simple',?) ",$values);
-            return $query;
-      }
-
-      foreach ($search['with'] as $search_term)
-      {
-            $tsquery =  self::getWordsForTerms($search_term, $results);
-            $query->andWhere($alias.'.'.$field." @@ to_tsquery('simple',?) ",$tsquery);
-      }
-
-      unset($search['with']);
-      foreach($search as $search_group)
-      {
-              $tsquery_arr = array();
-              foreach($search_group as $search_term)
-              {
-                $tsquery_arr[] =  self::getWordsForTerms($search_term, $results);
-              }
-              $tsquery = implode(' & ',$tsquery_arr);
-              $tsquery = $conn_MGR->quote($tsquery,'string');
-              $query->andWhere('not '.$alias.'.'.$field." @@ to_tsquery('simple',".$tsquery.") ");
-      }
-    }	
-    return $query;
   }
 
   /**
@@ -343,16 +305,18 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   protected function ListIdByWord($relation,$val)
   {
     $q = Doctrine_Query::create()
-	    ->select('cvn.record_id')
-	    ->from('ClassVernacularNames cvn')
-	    ->leftJoin('cvn.VernacularNames tvn')  
-      ->andWhere('cvn.referenced_relation = ?', $relation);      
-	  $this->addNamingColumnQuery($q, 'vernacular_names', 'name_ts', $val, 'tvn');
+      ->select('v.record_id')
+      ->from('VernacularNames v')
+      ->andWhere('v.referenced_relation = ?', $relation);
+
+    $this->addNamingColumnQuery($q, 'vernacular_names', 'name_indexed', $val, 'v');
     $results = $q->execute(); 
-	  $list = "" ;
+    $list = "" ;
+
     foreach($results as $key=>$result) 
       $list .= $result->getRecordId()."," ;
-    if($list == "") return (-1) ;      
+
+    if($list == "") return (-1) ;
     return (substr($list,0,strlen($list)-1)) ; //return list of id without the last ','
   }
 

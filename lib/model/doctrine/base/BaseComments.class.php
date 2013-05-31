@@ -10,27 +10,27 @@
  * @property integer $record_id
  * @property string $notion_concerned
  * @property string $comment
- * @property string $comment_ts
+ * @property string $comment_indexed
  * 
  * @method integer  getId()                  Returns the current record's "id" value
  * @method string   getReferencedRelation()  Returns the current record's "referenced_relation" value
  * @method integer  getRecordId()            Returns the current record's "record_id" value
  * @method string   getNotionConcerned()     Returns the current record's "notion_concerned" value
  * @method string   getComment()             Returns the current record's "comment" value
- * @method string   getCommentTs()           Returns the current record's "comment_ts" value
+ * @method string   getCommentIndexed()      Returns the current record's "comment_indexed" value
  * @method Comments setId()                  Sets the current record's "id" value
  * @method Comments setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method Comments setRecordId()            Sets the current record's "record_id" value
  * @method Comments setNotionConcerned()     Sets the current record's "notion_concerned" value
  * @method Comments setComment()             Sets the current record's "comment" value
- * @method Comments setCommentTs()           Sets the current record's "comment_ts" value
+ * @method Comments setCommentIndexed()      Sets the current record's "comment_indexed" value
  * 
  * @package    darwin
  * @subpackage model
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-abstract class BaseComments extends sfDoctrineRecord
+abstract class BaseComments extends DarwinModel
 {
     public function setTableDefinition()
     {
@@ -56,7 +56,7 @@ abstract class BaseComments extends sfDoctrineRecord
              'type' => 'string',
              'notnull' => true,
              ));
-        $this->hasColumn('comment_ts', 'string', null, array(
+        $this->hasColumn('comment_indexed', 'string', null, array(
              'type' => 'string',
              ));
     }
