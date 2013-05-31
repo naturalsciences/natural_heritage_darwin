@@ -2,6 +2,14 @@ begin;
 set search_path=darwin2,public;
 
 \i  createfunctions.sql
+SET SESSION session_replication_role = replica;
+
+UPDATE template_table_record_ref r set referenced_relation = 'old_multimedia' where referenced_relation='multimedia' and not exists (select 1 from multimedia t where t.id = r.record_id);
+SET SESSION session_replication_role = origin;
+
+
+delete from template_table_record_ref r where referenced_relation = 'staging' AND not exists (select 1 from staging t where t.id = r.record_id);
+
 
 /***
 * INDEXES
@@ -82,7 +90,12 @@ ALTER TABLE collection_maintenance ADD COLUMN description_indexed text;
 
 ALTER TABLE comments DROP COLUMN comment_ts;
 ALTER TABLE comments ADD COLUMN comment_indexed text;
+
+SET SESSION session_replication_role = replica;
 UPDATE comments SET comment_indexed = fulltoindex(comment);
+SET SESSION session_replication_role = origin;
+
+
 ALTER TABLE comments ALTER COLUMN comment_indexed SET NOT NULL;
 CREATE TRIGGER trg_cpy_fulltoindex_comments BEFORE INSERT OR UPDATE ON comments FOR EACH ROW EXECUTE PROCEDURE fct_cpy_fulltoindex();
 

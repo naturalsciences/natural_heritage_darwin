@@ -119,7 +119,7 @@ while getopts ":O:h:p:d:V:s:" opt ; do
         ((OPTIND--))
         continue
       fi
-      unifiedpasswd="ENCRYPTED PASSWORD '$OPTARG'"
+      unifiedpasswd="PASSWORD '$OPTARG'"
     ;;
     s)
       if [[ $OPTARG = -* ]]; then
@@ -186,14 +186,26 @@ function install_lib() {
     $admpsql  -c "create extension pgcrypto; create extension pg_trgm; create extension hstore;"
     $admpsql  -f /usr/share/postgresql/$pg_version/contrib/postgis-1.5/postgis.sql
     $admpsql  -f  /usr/share/postgresql/$pg_version/contrib/postgis-1.5/spatial_ref_sys.sql
-    $admpsql  -f f postgisgrant.sql -v dbuser=darwin2
+    $admpsql  -f postgisgrant.sql -v dbuser=darwin2
   fi
 }
 
+function add_user() {
+  username=$1
+  if [ "$unifiedpasswd" = "" ]; then
+    read -s -p "password for $username :" password
+    pwd_str="PASSWORD '$password'"
+  else
+    pwd_str=$unifiedpasswd
+  fi
+  echo -e "\n"
+  $admpsql -c "CREATE ROLE $username $pwd_str NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+}
+
 function install_role() {
-  $admpsql -c "CREATE ROLE darwin2 $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
-  $admpsql -c "CREATE ROLE cebmpad $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
-  $admpsql -c "CREATE ROLE d2viewer $unifiedpasswd NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT LOGIN;"
+  add_user "darwin2"
+  add_user "cebmpad"
+  add_user "d2viewer"
 }
 
 psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
@@ -236,7 +248,13 @@ case "$@" in
   "upgrade")
     test=0
     dw_version=`$psql -c "select id from $schema.db_version order by update_at DESC LIMIT 1;" -t -A`
-    dw_version=$(( $dw_version + 1)) 
+    if [ "$dw_version" = "" ]
+    then
+      error_msg "Problem fetching current version"
+      exit 1;
+    fi
+
+    dw_version=$(( $dw_version + 1))
     if [ "$(echo $dw_version | grep "^[[:digit:]]*$")" ] 
     then
       upd_file=$(ls changes/*.sql | sort -n | grep $dw_version)

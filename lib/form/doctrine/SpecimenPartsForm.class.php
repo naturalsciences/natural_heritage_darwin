@@ -13,7 +13,8 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
   {
     $this->useFields(array('parent_ref', 'specimen_part', 'complete', 'institution_ref', 'building', 'floor', 'room',
       'row', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
-      'container_storage', 'sub_container_storage', 'surnumerary', 'specimen_status', 'specimen_part_count_min', 'specimen_part_count_max',));
+      'container_storage', 'sub_container_storage', 'surnumerary', 'specimen_status', 
+      'specimen_part_count_min', 'specimen_part_count_max','object_name'));
 
     $individual = $this->getOption('individual', '');
     $this->widgetSchema['parent_ref'] = new widgetFormButtonRef(array(
@@ -134,7 +135,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
 
     $this->widgetSchema['container'] = new sfWidgetFormInput();
     $this->widgetSchema['sub_container'] = new sfWidgetFormInput();
-
+    $this->widgetSchema['object_name'] = new sfWidgetFormInput();
 
     $this->widgetSchema['container_storage'] = new widgetFormSelectComplete(array(
       'model' => 'SpecimenParts',
@@ -197,6 +198,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->widgetSchema['filenames']->setLabel('Add File');
 
     $this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false, 'trim' => true));
 
     $this->widgetSchema['surnumerary']->setLabel('supernumerary');
 

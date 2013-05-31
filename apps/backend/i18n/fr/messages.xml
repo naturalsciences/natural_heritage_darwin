@@ -5720,10 +5720,15 @@
         <source>Geo/Paleo Search</source>
         <target>Recherche Geo/Paleo</target>
       </trans-unit>
-      <trans-unit id="1">
-        <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%</source>
-        <target>[0]Aucun résultat |[1]Votre requête a trouvé 1 enregistrement|(1,+Inf]Votre requête a trouvé %1% enregistrements sur %2%</target>
+      <trans-unit id="1734">
+        <source>Quality assurance</source>
+        <target>Assurance qualité</target>
       </trans-unit>
+      <trans-unit id="1735">
+        <source>Object name</source>
+        <target>Nom de l'objet</target>
+      </trans-unit>
+      
         </body>
   </file>
 </xliff>

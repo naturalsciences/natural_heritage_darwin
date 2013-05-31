@@ -445,6 +445,20 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['sub_container'] = new sfValidatorString(array('required' => false));
 
 
+    $this->validatorSchema['part'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema['part'] = new sfWidgetFormDoctrineChoice(array(
+      'model' => 'SpecimenParts',
+      'table_method' => 'getDistinctParts',
+      'method' => 'getSpecimenPart',
+      'key_method' => 'getSpecimenPart',
+      'add_empty' => true,
+    ));
+
+    $this->widgetSchema['object_name'] = new sfWidgetFormInput();
+    $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false));
+    
+    $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['institution_ref'] = new widgetFormButtonRef(array(
        'model' => 'Institutions',
@@ -732,6 +746,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     }
     return $query ;
   }
+  
   public function addSubContainerColumnQuery($query, $field, $val)
   {
     if(trim($val) != '')
@@ -849,6 +864,19 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     return $query ;
   }
 
+  public function addPartColumnQuery($query, $field, $val)
+  {
+    $conn_MGR = Doctrine_Manager::connection();
+    $val = $conn_MGR->quote($val, 'string');
+
+    if($this->scope != self::SC_PART)
+      $this->exists_qry_part[] = ' p1.specimen_part = '.$val;
+    else
+      $query->andWhere('p.specimen_part  = '.$val);
+
+    return $query ;
+  }
+  
   public function addTagsColumnQuery($query, $field, $val)
   {
     $alias = $query->getRootAlias();
@@ -1009,6 +1037,36 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $query->andWhere($build_query) ;
     return $query ;
   }
+  
+  public function addObjectNameColumnQuery($query, $field, $val) {
+    if(trim($val) != '') {
+      $values = explode(' ',$val);
+      $query_value = array();
+      $conn_MGR = Doctrine_Manager::connection();
+
+      foreach($values as $value) {
+        if(trim($value) != '')
+          $query_value[] = strtolower($value);
+      }
+
+      if($this->scope != self::SC_PART) {
+        if(! empty($query_value)) {
+          $exist_qry ='';
+          foreach($query_value as $k=>$param) {
+            if($k != 0)
+              $exist_qry .= ' and ';
+            $exist_qry .= " p1.object_name_indexed like '%' || fulltoindex(".$conn_MGR->quote($param, 'string').") || '%'" ;
+          }
+          $this->exists_qry_part[] = $exist_qry;
+        }
+      }
+      else {
+        $query_array = array_fill(0,count($query_value)," p.object_name_indexed like '%' || fulltoindex(?) || '%'");
+        $query->andWhere( implode(' AND ',$query_array) ,$query_value);
+      }
+    }
+    return $query ;
+  }
 
   public function addCollectionRefColumnQuery($query, $field, $val)
   {
@@ -1147,6 +1205,9 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
     $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
 
+//     $this->addNamingColumnQuery($query, 'specimen_parts', 'p.object_name_indexed', $values['object_name'],'p','object_name_indexed');
+
+        
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
     $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);    

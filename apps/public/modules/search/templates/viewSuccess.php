@@ -73,8 +73,8 @@
     </div>
     <?php endif ; ?>
     <?php if($individual->SpecimensFlat->getTaxonRef() || $individual->SpecimensFlat->getChronoRef() || $individual->SpecimensFlat->getLithoRef() || $individual->SpecimensFlat->getMineralRef() || $individual->SpecimensFlat->getLithologyRef()):?>
-    <h2 class="title"><?php echo __("Classifications") ?></h2>  
-    <div class="borded right_padded">        
+    <h2 class="title"><?php echo __("Classifications") ?></h2>
+    <div class="borded right_padded">
       <table>
         <thead>
           <tr>
@@ -123,7 +123,7 @@
               <?php echo image_tag('info.png',"title=info class=info id=chrono_info");?>
             </td>
             <td>
-              <span><?php echo $individual->SpecimensFlat->getChronoLevelRef() ; ?></span>
+              <span><?php echo $individual->SpecimensFlat->getChronoLevelName() ; ?></span>
             </td>
           </tr>
           <tr>
@@ -155,7 +155,7 @@
               <?php echo image_tag('info.png',"title=info class=info id=litho_info");?>
             </td>
             <td>
-              <span><?php echo $individual->SpecimensFlat->getLithoLevelRef() ; ?></span>
+              <span><?php echo $individual->SpecimensFlat->getLithoLevelName() ; ?></span>
             </td>
           </tr>
           <tr>
@@ -187,7 +187,7 @@
               <?php echo image_tag('info.png',"title=info class=info id=lithology_info");?>
             </td>
             <td>
-              <span><?php echo $individual->SpecimensFlat->getLithologyLevelRef() ; ?></span>
+              <span><?php echo $individual->SpecimensFlat->getLithologyLevelName() ; ?></span>
             </td>
           </tr>
           <tr>
@@ -219,7 +219,7 @@
               <?php echo image_tag('info.png',"title=info class=info id=mineral_info");?>
             </td>
             <td>
-              <span><?php echo $individual->SpecimensFlat->getMineralLevelRef() ; ?></span>
+              <span><?php echo $individual->SpecimensFlat->getMineralLevelName() ; ?></span>
             </td>
           </tr>
           <tr>

@@ -63,6 +63,10 @@ CREATE TRIGGER trg_cpy_fullToIndex_igs BEFORE INSERT OR UPDATE
 	ON igs FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
+CREATE TRIGGER trg_cpy_fullToIndex_specimen_parts BEFORE INSERT OR UPDATE
+        ON specimen_parts FOR EACH ROW
+        EXECUTE PROCEDURE fct_cpy_fullToIndex();
+        
 CREATE TRIGGER trg_cpy_fullToIndex_collecting_methods BEFORE INSERT OR UPDATE
   ON collecting_methods FOR EACH ROW
   EXECUTE PROCEDURE fct_cpy_fullToIndex();

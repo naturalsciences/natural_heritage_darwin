@@ -234,7 +234,7 @@ class specimensearchActions extends DarwinActions
   {
     $flds = array('category','collection','taxon','type','gtu','codes','chrono','ig','acquisition_category',
               'litho','lithologic','mineral','expedition','type', 'individual_type','sex','state','stage','social_status','rock_form','individual_count',
-              'part','part_status', 'building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
+              'part', 'object_name', 'part_status', 'building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
               'sub_container_type' , 'sub_container_storage', 'part_count','part_codes');
 
 
@@ -400,6 +400,9 @@ class specimensearchActions extends DarwinActions
           'part' => array(
             'specimen_part',
             $this->getI18N()->__('Part'),),
+          'object_name' => array(
+            'object_name',
+            $this->getI18N()->__('Object name'),),
           'part_status' => array(
             'specimen_status',
             $this->getI18N()->__('Part Status'),),
@@ -417,6 +420,9 @@ class specimensearchActions extends DarwinActions
           'part' => array(
             'specimen_part',
             $this->getI18N()->__('Part'),),
+          'object_name' => array(
+            'object_name',
+            $this->getI18N()->__('Object name'),),
           'part_status' => array(
             'specimen_status',
             $this->getI18N()->__('Part Status'),),

@@ -1047,7 +1047,9 @@ create table specimens
         specimen_status varchar not null default 'good state',
         specimen_part_count_min integer not null default 1,
         specimen_part_count_max integer not null default 1,
-        
+        object_name text,
+        object_name_indexed text not null default '',
+
         constraint pk_specimens primary key (id),
         constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
         constraint fk_specimens_gtu foreign key (gtu_ref) references gtu(id),
@@ -1430,6 +1432,7 @@ create table staging
     surnumerary boolean,
     status hstore not null default '',
     to_import boolean default false,
+    object_name text,
     constraint pk_staging primary key (id),
     constraint fk_staging_import foreign key (import_ref) references imports(id) on delete cascade,
     constraint fk_parent_ref foreign key (parent_ref) references staging(id) on delete cascade,

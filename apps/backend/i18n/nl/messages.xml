@@ -5719,9 +5719,13 @@
         <source>Geo/Paleo Search</source>
         <target>Geo/Paleo opzoeking</target>
       </trans-unit>
-      <trans-unit id="1">
-        <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%</source>
-        <target>[0]Geen resultaat|[1]Uw opzoeking levert 1 record op|(1,+Inf]Uw opzoeking leverde %1% records uit %2% records op</target>
+      <trans-unit id="1734">
+        <source>Quality assurance</source>
+        <target>Kwaliteitsborging</target>
+      </trans-unit>
+      <trans-unit id="1735">
+        <source>Object name</source>
+        <target>Naam van de object</target>
       </trans-unit>
         </body>
   </file>

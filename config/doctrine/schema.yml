@@ -927,6 +927,8 @@ SpecimenParts:
         specimen_status: { type: string, notnull: true, default: 'good state'}
         specimen_part_count_min: { type: integer, notnull: true, default:1}
         specimen_part_count_max: { type: integer, notnull: true, default:1}
+        object_name: { type: string}
+        object_name_indexed: { type: string}
     relations:
         Individual:
             class: SpecimenIndividuals
@@ -1170,6 +1172,7 @@ Staging:
         sub_container: {type: string }
         part_count_min: {type: integer }
         part_count_max: {type:integer}
+        object_name:  { type: string}
         specimen_status: {type: string}
         status: {type: string}
         complete: {type: boolean}
@@ -1322,3 +1325,22 @@ MultimediaTodelete:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
         uri: { type: string, notnull: true}
+
+CodeToCorrect:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        referenced_relation : { type: string, notnull: true}
+        record_id: { type: integer, notnull: true}
+        collection_ref: { type: integer, notnull: true}
+        code_category: { type: string, notnull: true, default: main}
+        code_prefix: { type: string}
+        code_prefix_separator: { type: string}
+        code: { type: string}
+        code_suffix: { type: string}
+        code_suffix_separator: { type: string}
+        full_code_indexed: { type: string}
+        full_code_order_by: { type: string}
+    relations:
+        Collections:
+            local: collection_ref
+            foreign: id
