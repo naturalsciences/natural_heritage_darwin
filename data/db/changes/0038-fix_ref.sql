@@ -24,29 +24,29 @@ BEGIN
  END;
  $$ LANGUAGE plpgsql;
 
-DROP TRIGGER trg_clr_referenceRecord_staging on staging;
-DROP TRIGGER trg_clr_referenceRecord_gtu on gtu;
-DROP TRIGGER trg_clr_referenceRecord_identifications on identifications;
-DROP TRIGGER trg_clr_referenceRecord_insurances on insurances;
-DROP TRIGGER trg_clr_referenceRecord_vernacularnames on vernacular_names;
-DROP TRIGGER trg_clr_referenceRecord_expeditions on expeditions;
-DROP TRIGGER trg_clr_referenceRecord_people on people;
-DROP TRIGGER trg_clr_referenceRecord_users on users;
-DROP TRIGGER trg_clr_referenceRecord_multimedia on multimedia;
-DROP TRIGGER trg_clr_referenceRecord_collections on collections;
-DROP TRIGGER trg_clr_referenceRecord_bibliography on bibliography;
-DROP TRIGGER trg_clr_referenceRecord_mysavedsearches on collection_maintenance;
-DROP TRIGGER trg_clr_referenceRecord_taxa on taxonomy;
-DROP TRIGGER trg_clr_referenceRecord_chronostratigraphy on chronostratigraphy;
-DROP TRIGGER trg_clr_referenceRecord_lithostratigraphy on lithostratigraphy;
-DROP TRIGGER trg_clr_referenceRecord_mineralogy on mineralogy;
-DROP TRIGGER trg_clr_referenceRecord_lithology on lithology;
-DROP TRIGGER trg_clr_referenceRecord_specimens on specimens;
-DROP TRIGGER trg_clr_referenceRecord_specimenindividuals on specimen_individuals;
-DROP TRIGGER trg_clr_referenceRecord_specimenparts on specimen_parts;
-DROP TRIGGER trg_clr_referenceRecord_specimensaccompanying on specimens_accompanying;
-DROP TRIGGER trg_clr_referenceRecord_loans on loans;
-DROP TRIGGER trg_clr_referenceRecord_loan_items on loan_items;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_staging on staging;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_gtu on gtu;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_identifications on identifications;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_insurances on insurances;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_vernacularnames on vernacular_names;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_expeditions on expeditions;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_people on people;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_users on users;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_multimedia on multimedia;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_collections on collections;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_bibliography on bibliography;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_mysavedsearches on collection_maintenance;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_taxa on taxonomy;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_chronostratigraphy on chronostratigraphy;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_lithostratigraphy on lithostratigraphy;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_mineralogy on mineralogy;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_lithology on lithology;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimens on specimens;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimenindividuals on specimen_individuals;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimenparts on specimen_parts;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimensaccompanying on specimens_accompanying;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_loans on loans;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_loan_items on loan_items;
 
 
 CREATE TRIGGER trg_clr_referenceRecord_staging AFTER DELETE OR UPDATE
