@@ -1197,7 +1197,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     if ($values['lithology_level_ref'] != '') $query->andWhere('lithology_level_ref = ?', intval($values['lithology_level_ref']));
     if ($values['mineral_level_ref'] != '') $query->andWhere('mineral_level_ref = ?', intval($values['mineral_level_ref']));
     $this->addLatLonColumnQuery($query, $values);
-    $this->addNamingColumnQuery($query, 'expeditions', 's.name_indexed', $values['expedition_name'],'s','expedition_name_indexed');
+    $this->addNamingColumnQuery($query, 'expeditions', 'expedition_name_indexed', $values['expedition_name'],'s','expedition_name_indexed');
 
     $this->addNamingColumnQuery($query, 'taxonomy', 'taxon_name_indexed', $values['taxon_name'],'s','taxon_name_indexed');
     $this->addNamingColumnQuery($query, 'chronostratigraphy', 'chrono_name_indexed', $values['chrono_name'],'s','chrono_name_indexed');
