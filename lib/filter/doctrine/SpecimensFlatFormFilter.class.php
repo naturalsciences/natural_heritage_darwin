@@ -1003,7 +1003,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
   public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
   {
     $build_query = ''; 
-    if(count($field_to_use) < 1)
+    if(! is_array($field_to_use) || count($field_to_use) < 1)
       $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
 
     foreach($field_to_use as $field)
