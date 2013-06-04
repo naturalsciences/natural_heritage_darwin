@@ -86,6 +86,7 @@ all:
       acquisitions: Via this widget you can either look up by type of acquisition or by looking up in a range acquisition dates.
       people_role: Via this widget you can perform a search in order to find all records where a specific person (or institution) appears. You can also choose one or more roles for this person (such as collector, identifier and/or donator/seller)
       informativeWorkflow: Help to be written
+      part: Search over part type and name of a part
 
     specimenwidget: 
       refChrono: This widget allows you to add the reference to a chonostratigraphic unit.
