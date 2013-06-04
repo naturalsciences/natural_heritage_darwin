@@ -99,7 +99,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
   {  
     $query = parent::doBuildQuery($values);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));    
-    $this->addNamingColumnQuery($query, 'taxonomy', 'name_indexed', $values['taxon_name'],null,'taxon_name_indexed');
+    $this->addNamingColumnQuery($query, 'taxonomy', 'taxon_name_indexed', $values['taxon_name'],null,'taxon_name_indexed');
     $query->limit($this->getCatalogueRecLimits());
     return $query;
   } 
