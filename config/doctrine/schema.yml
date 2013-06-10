@@ -1194,6 +1194,14 @@ StagingInfo:
             foreign: id
             class: Staging
 
+StagingRelationship:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        record_id : { type: integer, notnull: true}
+        referenced_relation : {type: string, notnull: true}
+        relationship_type : {type: string}
+        ref_id : { type: integer, notnull: true}
+
 StagingTagGroups:
     columns:
         id: { type: integer, primary: true, autoincrement: true }

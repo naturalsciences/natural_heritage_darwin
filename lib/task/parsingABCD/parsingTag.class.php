@@ -1,6 +1,6 @@
 <?php
 
-class ParsingGTU
+class ParsingTag
 {
   public $GTUDate = array('from'=>null,'to'=>null,'time'=>null) ;
 //  public $peoples = array();
@@ -9,6 +9,14 @@ class ParsingGTU
   public $tag_group_name, $tag_value ;
   private $array_object = array() ;
 
+  public function __construct($tagtype=null)
+  {
+    switch($tagtype)
+    {
+      case "gtu" : $this->people_type = "collector" ; break ;;
+      case "unit" : $this->people_type = "donator" ; break ;;
+    }
+  }
   public function addRelated($object)
   {
     $this->array_object[] = $object ;
@@ -50,10 +58,13 @@ class ParsingGTU
     $info->addRelated($object) ;
     $info->save() ;
   }
-  public function handlePeople($people,$staging)
+  public function handlePeople($people,$staging,$is_maintenance=false)
   {
-    $people->setPeopleType('collector');
-    $staging->addRelated($people) ;
+    if(!$is_maintenance)
+    {
+      $people->setPeopleType($this->people_type);
+      $staging->addRelated($people) ;
+    }
   }
 
   public function insertTags()

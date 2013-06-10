@@ -13,7 +13,29 @@ CREATE TABLE staging_info
 );
 ALTER TABLE staging_info
   OWNER TO darwin2;
-GRANT ALL ON TABLE staging TO darwin2;
-GRANT SELECT ON TABLE staging TO d2viewer;
+GRANT ALL ON TABLE staging_info TO darwin2;
+GRANT SELECT ON TABLE staging_info TO d2viewer;
+
+CREATE TABLE staging_relationship
+(
+  id serial NOT NULL,
+  record_id integer NOT NULL,
+  referenced_relation character varying NOT NULL,
+  relationship_type character varying,
+  ref_id integer NOT NULL,
+
+  CONSTRAINT pk_staging_relationship PRIMARY KEY (id)
+);
+COMMENT ON COLUMN staging_relationship.record_id IS 'id of the orignial record';
+COMMENT ON COLUMN staging_relationship.referenced_relation IS 'where to find the record_id';
+COMMENT ON COLUMN staging_relationship.relationship_type IS 'relation type (eg. host, parent, part of)';
+COMMENT ON COLUMN staging_relationship.ref_id IS 'the record id associated';
+ALTER TABLE staging_relationship
+  OWNER TO darwin2;
+GRANT ALL ON TABLE staging_relationship TO darwin2;
+GRANT SELECT ON TABLE staging_relationship TO d2viewer;
+
+ALTER TABLE staging DROP COLUMN part_status ;
+
 COMMIT;
 
