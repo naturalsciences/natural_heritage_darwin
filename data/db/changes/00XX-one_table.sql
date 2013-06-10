@@ -12,6 +12,19 @@ DECLARE
   tmp2 RECORD;
   source_ref INTEGER;
 BEGIN
+   RAISE INFO 'Insert missing indiv';
+    INSERT INTO specimen_individuals(specimen_ref)
+    (
+      SELECT id from specimens s
+        where not exists( select 1 from specimen_individuals i where i.specimen_ref = s.id)
+    );
+
+    RAISE INFO 'Insert missing parts';
+    INSERT INTO specimen_parts(specimen_individual_ref)
+    (
+      SELECT id from specimen_individuals i
+      where not exists( select 1 from specimen_parts p where i.id = p.specimen_individual_ref)
+    );
 
    RAISE INFO 'Start moving template_ref from spec with 1 part';
    FOR tmp IN SELECT *, p.id as part_id, s.id as spec_id from 
@@ -91,7 +104,7 @@ BEGIN
 
 
    source_ref := -1;
-   RAISE INFO 'Start moving template_ref from Individuals ';
+   RAISE INFO 'Start moving template_ref from spec ';
    FOR tmp IN SELECT s.id as source_ref, p.id as p_id from specimens s
      INNER JOIN specimen_individuals i on s.id = i.specimen_ref
      INNER JOIN specimen_parts p on i.id = p.specimen_individual_ref
@@ -110,13 +123,6 @@ BEGIN
              ) 
          );
 
-      INSERT INTO ext_links(referenced_relation, record_id, url, comment, comment_indexed) 
-        (SELECT 'specimen_parts', tmp.p_id, url, comment, comment_indexed
-          FROM ext_links c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref
-            WHERE not exists( 
-              select 1 from ext_links c2 where  referenced_relation='specimens' and record_id=tmp.source_ref and c2.url=c.url
-             ) 
-         );
          
    FOR tmp2 IN SELECT * from catalogue_properties c where referenced_relation='specimens' and record_id=tmp.source_ref
    
@@ -146,11 +152,65 @@ BEGIN
 
   RAISE INFO 'Delete spec comments';
   DELETE FROM comments where referenced_relation='specimens';
+  RAISE INFO 'Delete spec ext_links';
+  DELETE FROM ext_links where referenced_relation='specimens';
   RAISE INFO 'Delete spec properties';
   DELETE FROM catalogue_properties where referenced_relation='specimens';
 
 
-    
+
+   source_ref := -1;
+   RAISE INFO 'Start moving template_ref from indiv ';
+   FOR tmp IN SELECT i.id as source_ref, p.id as p_id from specimen_individuals
+    INNER JOIN specimen_parts p on i.id = p.specimen_individual_ref
+    LOOP
+
+      INSERT INTO comments(referenced_relation, record_id, notion_concerned, code_prefix, comment_indexed) 
+        (SELECT 'specimen_parts', tmp.p_id, notion_concerned, comment, comment_indexed
+          FROM comments c WHERE c.referenced_relation='specimen_individuals' and record_id=tmp.source_ref  );
+
+
+      INSERT INTO ext_links(referenced_relation, record_id, url, comment, comment_indexed) 
+        (SELECT 'specimen_parts', tmp.p_id, url, comment, comment_indexed
+          FROM ext_links c WHERE c.referenced_relation='specimen_individuals' and record_id=tmp.source_ref
+            WHERE not exists( 
+              select 1 from ext_links c2 where  referenced_relation='specimen_individuals' and record_id=tmp.source_ref and c2.url=c.url
+             ) 
+         );
+
+         
+   FOR tmp2 IN SELECT * from catalogue_properties c where referenced_relation='specimen_individuals' and record_id=tmp.source_ref
+   
+      INSERT INTO catalogue_properties(referenced_relation, record_id, 
+        property_type, property_sub_type, 
+        property_sub_type_indexed, property_qualifier, property_qualifier_indexed, 
+        date_from_mask, date_from, date_to_mask, date_to, property_unit, 
+        property_accuracy_unit, property_method, property_method_indexed, 
+        property_tool, property_tool_indexed
+      ) 
+        VALUES ('specimen_parts', tmp.p_id,
+          tmp2.property_type, tmp2.property_sub_type,
+          tmp2.property_sub_type_indexed, tmp2.property_qualifier, tmp2.property_qualifier_indexed, 
+          tmp2.date_from_mask, tmp2.date_from, tmp2.date_to_mask, tmp2.date_to, tmp2.property_unit, 
+          tmp2.property_accuracy_unit, tmp2.property_method, tmp2.property_method_indexed, 
+          tmp2.property_tool, tmp2.property_tool_indexed
+         );
+      
+        INSERT INTO properties_values(
+            property_ref, property_value, property_value_unified, property_accuracy, 
+            property_accuracy_unified)
+        SELECT currval('catalogue_properties_id_seq'), property_value, property_value_unified, property_accuracy, 
+            property_accuracy_unified from properties_values where property_ref = tmp2.id
+            
+      END LOOP;
+   END LOOP;
+
+  RAISE INFO 'Delete spec comments';
+  DELETE FROM comments where referenced_relation='specimen_individuals';
+  RAISE INFO 'Delete spec ext_links';
+  DELETE FROM ext_links where referenced_relation='specimen_individuals';
+  RAISE INFO 'Delete spec properties';
+  DELETE FROM catalogue_properties where referenced_relation='specimen_individuals';
 /*****/
 
 
