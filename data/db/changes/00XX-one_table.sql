@@ -11,6 +11,7 @@ DECLARE
   tmp RECORD;
   tmp2 RECORD;
   source_ref INTEGER;
+  cnt INTEGER;
 BEGIN
    RAISE INFO 'Insert missing indiv';
     INSERT INTO specimen_individuals(specimen_ref)
@@ -51,12 +52,12 @@ BEGIN
     specimen_individuals i
     INNER JOIN specimen_parts p on i.id = p.specimen_individual_ref
 
-    where  (select count(*) from specimen_parts p
-      where i.specimen_ref = s.id) = 1
+    where  (select count(*) from specimen_parts p2
+      where p2.specimen_individual_ref = i.id) = 1
     LOOP
       BEGIN
         UPDATE template_table_record_ref set referenced_relation='specimen_parts', record_id = tmp.part_id
-          WHERE  referenced_relation ='specimen_individuals' AND record_id=tmp.spec_id;
+          WHERE  referenced_relation ='specimen_individuals' AND record_id=tmp.ind_id;
       EXCEPTION
         when unique_violation then
          --IIIK Nothing
@@ -64,6 +65,7 @@ BEGIN
    END LOOP;
 
 
+   cnt := 0;
    RAISE INFO 'Start moving Code from spec with 1 code';
    -- Move Codes in spec that have 1 code
    FOR tmp IN SELECT c1.*, p.id as p_id  FROM codes  c1
@@ -74,7 +76,7 @@ BEGIN
     where  (select count(*) from codes c2 where s.id = c2.record_id and c1.referenced_relation ='specimens') = 1
       LOOP
       BEGIN
-      
+      cnt := cnt + 1;
       INSERT INTO codes(
             referenced_relation, record_id, code_category, code_prefix, 
             code_prefix_separator, code, code_suffix, code_suffix_separator, 
@@ -84,7 +86,9 @@ BEGIN
             tmp.code_prefix_separator, tmp.code, tmp.code_suffix, tmp.code_suffix_separator, 
             tmp.full_code_indexed, tmp.full_code_order_by, tmp.code_date, tmp.code_date_mask, 
             tmp.code_num);
-
+      IF cnt % 50000 = 0 THEN
+        RAISE INFO 'CTN % ' , cnt ;
+      END IF;
       EXCEPTION
         when unique_violation then
 --          DELETE FROM codes  where id = tmp.code_id;
@@ -104,11 +108,13 @@ BEGIN
 
 
    source_ref := -1;
+   cnt := 0;
    RAISE INFO 'Start moving template_ref from spec ';
    FOR tmp IN SELECT s.id as source_ref, p.id as p_id from specimens s
      INNER JOIN specimen_individuals i on s.id = i.specimen_ref
      INNER JOIN specimen_parts p on i.id = p.specimen_individual_ref
     LOOP
+      cnt := cnt + 1;
 
       INSERT INTO comments(referenced_relation, record_id, notion_concerned, code_prefix, comment_indexed) 
         (SELECT 'specimen_parts', tmp.p_id, notion_concerned, comment, comment_indexed
@@ -123,7 +129,15 @@ BEGIN
              ) 
          );
 
-         
+      INSERT INTO catalogue_bibliography(referenced_relation, record_id, bibliography_ref) 
+        (SELECT 'specimen_parts', tmp.p_id, bibliography_ref
+          FROM catalogue_bibliography c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref  ); 
+
+      INSERT INTO catalogue_people(
+            referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
+        ( SELECT 'specimen_parts', tmp.p_id, people_type, people_sub_type, order_by, people_ref
+         FROM catalogue_people c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref  ); 
+
    FOR tmp2 IN SELECT * from catalogue_properties c where referenced_relation='specimens' and record_id=tmp.source_ref
    LOOP
    
@@ -176,6 +190,9 @@ BEGIN
           );
             
    END LOOP;
+      IF ctn % 50000 = 0 THEN
+        RAISE INFO 'CTN %', ctn ;
+      END IF;
  END LOOP;
 
   RAISE INFO 'Delete spec comments';
@@ -186,8 +203,12 @@ BEGIN
   DELETE FROM catalogue_properties where referenced_relation='specimens';
   RAISE INFO 'Delete spec ident';
   DELETE FROM identifications where referenced_relation='specimens';
+  DELETE FROM catalogue_people where referenced_relation='specimens';
+  DELETE FROM catalogue_bibliography where referenced_relation='specimens';
 
-
+  /*******
+  * End of SPEC START OF INDIV
+  *****/
 
 
    source_ref := -1;
@@ -286,30 +307,21 @@ select move_refs();
 
 SET SESSION session_replication_role = origin;
 
-
---- Move Comments (Indiv + spec) ==> part?
---- Move Ext links  (Indiv + spec) => part
---- Move Properties  (Indiv + spec)
---- Merge Then move Indentifications (Indiv => Part)
-
+ALTER TABLE collections DROP COLUMN code_part_code_auto_copy;
 
 --- Move Files
-
---- REwrite ident to simple REF ?
---- REwrite code to simple REF ?
-
---- Cleanup Part auto copy in Collections
 --- Move My saved Searches ==> chg subject
 --- Move  my_widgets
 --- Move Prefs
 --- Move Flat Dict 
---- Watchout Biblio
---- Watchout catalogue people
+
+
+--- Watchout Tools
+--- Watchout method
 --- Watchout Spec Host
 --- Watchout Spec Accomp
---- Watchout Tools Method
---- Watchout Loans (should be ok)
 
+--- Watchout Loans (should be ok)
 
 /** Cleanup migration scripts ****/
 drop function move_refs();

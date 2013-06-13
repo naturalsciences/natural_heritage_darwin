@@ -91,6 +91,9 @@ CREATE INDEX CONCURRENTLY idx_specimen_parts_object_name_indexed on specimen_par
 
 
 CREATE INDEX CONCURRENTLY idx_codes_code_num on codes(code_num) WHERE NOT code_num IS NULL;
+CREATE INDEX idx_codes_full_code_indexed_btree ON codes USING btree (full_code_indexed);
+CREATE INDEX CONCURRENTLY idx_codes_referenced_record on codes(referenced_relation, record_id);
+
 CREATE INDEX CONCURRENTLY idx_collecting_methods_method_indexed on collecting_methods(method_indexed);
 CREATE INDEX CONCURRENTLY idx_collecting_tools_tool_indexed on collecting_tools(tool_indexed);
 CREATE INDEX CONCURRENTLY idx_collection_maintenance_action on collection_maintenance(action_observation);
