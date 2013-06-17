@@ -6,7 +6,7 @@ class ParsingTag
 //  public $peoples = array();
 //  public $comments = array() ;
   public $tags = array() ;
-  public $tag_group_name, $tag_value ;
+  public $tag_group_name, $tag_value, $people_order_by=null ;
   private $array_object = array() ;
 
   public function __construct($tagtype=null)
@@ -63,6 +63,11 @@ class ParsingTag
     if(!$is_maintenance)
     {
       $people->setPeopleType($this->people_type);
+      if($this->people_order_by)
+      {
+        $people->setOrderBy($this->people_order_by) ;
+        $this->people_order_by = null ;
+      }
       $staging->addRelated($people) ;
     }
   }

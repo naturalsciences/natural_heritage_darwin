@@ -40,7 +40,7 @@ class ImportABCDXml implements IImportModels
     $this->temp_data = '' ;
     switch ($name) {
       case "Altitude" : $this->higher_tag = "altitude" ; break ;;
-      case "Country" : $this->higher_tag = "country" ; break ;;
+      case "Country" : $this->higher_tag = "country" ; $this->object->tag_group_name="country" ; break ;;
       //case "Depth" : $this->object = new parsingProperties() ; $this->higher_tag = "property" ; break ;;
       case "dna:DNASample" : $this->object = new parsingDNA() ; break ;;
       case "Gathering" : $this->object = new parsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break ;;
@@ -68,6 +68,7 @@ class ImportABCDXml implements IImportModels
     $this->tag = "" ;
     switch ($name) {
       case "Comment" : $this->object->multimedia_data['description'] = $this->temp_data ; break ;;
+      case "Country" : $this->object->addTagGroups() ;break;;
       case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
       //case "Depth" : $this->object->save() ; break ;;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging, $this->people) ; break ;;
@@ -138,11 +139,12 @@ class ImportABCDXml implements IImportModels
       case "LowerValue" : $this->higher_tag=='altitude'?$this->staging['gtu_elevation']=$data:'' ; break ;;
       case "MeasurementDateTime" : if($this->object->getFromDate()==null) $this->staging["gtu_from_date"]=$data ; break ;;
       case "Notes" : $this->temp_data.="$data." ; break ;;
-      case "Name" : if($this->higher_tag == "country") break ;; //@TODO
+      case "Name" : if($this->higher_tag == "country") $this->object->tag_value=$data ; break ;; //@TODO
       case "Parameter" : break ;; //@TODO parsingProperties
       case "Prefix" : $this->people['title'] = $data ; break ;;
       case "PreparationMaterials" : $this->staging['container_storage'] = $data ; break ;;
       case "ProjectTitle" : $this->staging['expedition_name'] = $data ; break ;;
+      case "SortingName" : $this->object->people_order_by = $data ; break ;;
       case "UnitID" : $this->code['code'] = $data ; $this->name = $data ; break ;;
       case "UpperValue" : break ;; //@TODO parsingProperties
       case "VerificationLevel" : $this->object->determination_status = $data ; break ;;

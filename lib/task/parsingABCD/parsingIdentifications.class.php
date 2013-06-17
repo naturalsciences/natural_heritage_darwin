@@ -12,7 +12,7 @@ class ParsingIdentifications
   public $peoples = array(); // an array of Doctrine People class
   public $keyword; // an array of doctrine Keywords class
   public $type_identified, $taxon_parent, $fullname=null, $determination_status=null, $higher_taxon_name,$higher_taxon_level;
-  public $scientificName = "";
+  public $scientificName = "",$people_order_by=null;
 
   public function __construct()
   {
@@ -68,6 +68,11 @@ class ParsingIdentifications
   public function handlePeople($people)
   {
     $people->setPeopleType('identifier') ;
+    if($this->people_order_by)
+    {
+      $people->setOrderBy($this->people_order_by) ;
+      $this->people_order_by = null ;
+    }
     $this->identification->addRelated($people) ;
   }
 
