@@ -37,8 +37,9 @@ class ImportABCDXml implements IImportModels
   {
     $this->tag = $name ;
     $this->depth++;
+    $this->temp_data = '' ;
     switch ($name) {
-      case "UnitAssociation" : $this->object = new stagingRelationship() ; break ;;
+      case "Altitude" : $this->higher_tag = "altitude" ; break ;;
       case "Country" : $this->higher_tag = "country" ; break ;;
       //case "Depth" : $this->object = new parsingProperties() ; $this->higher_tag = "property" ; break ;;
       case "dna:DNASample" : $this->object = new parsingDNA() ; break ;;
@@ -47,14 +48,16 @@ class ImportABCDXml implements IImportModels
       case "HigherTaxa" : $this->object->taxon_parent = new Hstore() ;break ;;
       case "Identification" : $this->object = new parsingIdentifications() ; break ;;
       //case "Identifiers" : $this->peoples = array() ; break ;;
+      case "MultiMediaObject" : $this->object = new parsingMultimedia() ; break ;;
       case "NameAtomised" : $this->higher_tag = "keyword" ;
-      case "Notes" : $this->temp_data = '' ; break ;;
+      //case "Notes" :  break ;;
       case "PersonName" : $this->people = new StagingPeople() ; break ;;
       case "Person" : $this->people = new StagingPeople() ; break ;;
       case "Sequence" : $this->object = new parsingProperties() ; break ;;
       //case "SiteMeasurementOrFact" : $this->object = new parsingProperties() ; break ;;
       case "SpecimenUnit" : $this->object = new parsingTag("unit") ; break ;;
       case "Unit" : $this->staging = new Staging(); $this->depth=0 ; $this->name = "" ; break ;;
+      case "UnitAssociation" : $this->object = new stagingRelationship() ; break ;;
       case "UnitID" : $this->code = new Codes() ; break ;;
 //      case "Organisation" : $this->higher_tag = "people" ;
     }
@@ -64,15 +67,18 @@ class ImportABCDXml implements IImportModels
   {
     $this->tag = "" ;
     switch ($name) {
+      case "Comment" : $this->object->multimedia_data['description'] = $this->temp_data ; break ;;
       case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
       //case "Depth" : $this->object->save() ; break ;;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging, $this->people) ; break ;;
+      case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->temp_data) ; break ;;
       case "Gathering" : $this->object->insertTags($this->next_id)  ; break ;;
       case "HigherTaxa" : $this->staging["taxon_parents"] = $this->object->getTaxonParent() ;; break ;;
       case "HigherTaxon" : $this->object->handleTaxonParent() ;break;;
       case "Height" : $this->object->save() ; break ;;
       case "Identification" : $this->staging->addRelated($this->object->identification) ; break ;;
       case "MineralRockIdentified" : $this->staging["mineral_name"] = $this->object->fullname ; break ;;
+      case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; break ;;
       case "NamedArea" : $this->object->addTagGroups() ;break;;
       case "NameAtomised" : $this->higher_tag = "" ; break ;;
       case "Notes" : $this->addComment($this->temp_data) ; break ;
@@ -103,15 +109,20 @@ class ImportABCDXml implements IImportModels
       case "AssociatedUnitID" : if(in_array($data, array_keys($this->unit_id_ref))) $this->object->setRefId($this->unit_id_ref[$data]) ; break ;;
       case "AssociationType" : $this->object->setRelationshipType($data) ; break ;;
       case "Code" : $this->staging['gtu_code'] = $data ; break ;;
+      case "Comment" : $this->temp_data.="$data " ; break ;;
       case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $data ; break ;;
+      case "Context" : $this->object->multimedia_data['sub_type'] = $data ; break ;;
+      case "CreatedDate" : $this->object->multimedia_data['creation_date'] = $data ; break ;; 
       case "DateText" : $this->object->GTUdate['time'] = $data ; break ;;
       case "dna:Concentration" : /* this->object->properties */ break ;;
       case "dna:ExtractionDate" : $this->object->maintenance->setModificationDateTime($data) ; break ;;
-      case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($data) ; break ;;
+      case "dna:ExtractionMethod" : $this->temp_data.="$data " ; break ;;
       case "dna:RatioOfAbsorbance260_280" : /* this->object->properties */ break ;;
       case "dna:Tissu" : $this->object->maintenance->setActionObservation($data) ; break ;;
       case "Duration" : break ;; //@TODO parsingProperties
       case "GivenNames" : $this->people['given_name'] = $data ; break ;;
+      case "FileURI" : $this->object->getFile($data) ; break ;;
+      case "Format" : $this->object->multimedia_data['type'] = $data ; break ;;
       case "FullName" : $this->people['formated_name'] = $data ; break ;;
       case "FullScientificNameString" : $this->object->fullname = $data ;break;;
       case "HigherTaxonName" : $this->object->higher_taxon_name = $data ;break;;
@@ -124,7 +135,7 @@ class ImportABCDXml implements IImportModels
       case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $data ; break ;;
       case "LocalityText" : $this->staging['gtu_code'] = $data ; break ;; //@TOTO maybe find a better place for that.
       case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $data ; break ;;
-      case "LowerValue" : $this->staging['gtu_elevation'] = $data ; break ;;
+      case "LowerValue" : $this->higher_tag=='altitude'?$this->staging['gtu_elevation']=$data:'' ; break ;;
       case "MeasurementDateTime" : if($this->object->getFromDate()==null) $this->staging["gtu_from_date"]=$data ; break ;;
       case "Notes" : $this->temp_data.="$data." ; break ;;
       case "Name" : if($this->higher_tag == "country") break ;; //@TODO

@@ -25,9 +25,12 @@ CREATE TABLE staging_relationship
   ref_id integer NOT NULL,
 
   CONSTRAINT pk_staging_relationship PRIMARY KEY (id)
+  CONSTRAINT fk_record_id FOREIGN KEY (record_id)
+      REFERENCES staging (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
 );
 COMMENT ON COLUMN staging_relationship.record_id IS 'id of the orignial record';
-COMMENT ON COLUMN staging_relationship.referenced_relation IS 'where to find the record_id';
+COMMENT ON COLUMN staging_relationship.referenced_relation IS 'where to find the record_id, referenced_relation is always staging but this field uis mandatory for addRelated php function';
 COMMENT ON COLUMN staging_relationship.relationship_type IS 'relation type (eg. host, parent, part of)';
 COMMENT ON COLUMN staging_relationship.ref_id IS 'the record id associated';
 ALTER TABLE staging_relationship

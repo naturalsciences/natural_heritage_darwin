@@ -45,12 +45,12 @@ EOF;
           {
             echo $e->getMessage()."\n";break;
           }
-    /*      Doctrine_Query::create()
+          Doctrine_Query::create()
             ->update('imports p')
             ->set('p.state','?','loaded')
             ->set('p.initial_count','(select count(*) from staging where import_ref = ? )',$id)
             ->where('p.id = ?', $id)
-            ->execute();*/
+            ->execute();
         }
     }
     $conn->getDbh()->exec('COMMIT;');

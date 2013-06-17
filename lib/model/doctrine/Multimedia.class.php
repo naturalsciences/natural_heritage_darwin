@@ -12,7 +12,7 @@
  */
 class Multimedia extends BaseMultimedia
 {
-  private static $allowed_mime_type = array(
+  public static $allowed_mime_type = array(
     'csv' => 'text/csv',
     'txt' => 'text/plain',
 //   'htm' => 'text/html',
