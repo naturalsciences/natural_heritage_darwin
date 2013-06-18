@@ -153,7 +153,8 @@ class loanitemActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested expedition id is not found
-    $this->forward404Unless($this->loan_item = Doctrine::getTable('LoanItems')->find($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+    $this->loan_item = Doctrine::getTable('LoanItems')->find($request->getParameter('id'));
+    $this->forward404Unless($this->loan_item, sprintf('Object loan item does not exist (%s).', $request->getParameter('id')));
 
     if(!$this->getUser()->isAtLeast(Users::MANAGER) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
       $this->forwardToSecureAction();
@@ -162,7 +163,8 @@ class loanitemActions extends DarwinActions
 
   public function executeShowmaintenances(sfWebRequest $request)
   {
-    $this->forward404Unless($this->loan_item = Doctrine::getTable('LoanItems')->find($request->getParameter('id')), sprintf('Object loan item does not exist (%s).', array($request->getParameter('id'))));
+    $this->loan_item = Doctrine::getTable('LoanItems')->find($request->getParameter('id'));
+    $this->forward404Unless($this->loan_item, sprintf('Object loan item does not exist (%s).', $request->getParameter('id')));
 
     if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan_item->getLoanRef() ))
       $this->forwardToSecureAction();
@@ -176,7 +178,7 @@ class loanitemActions extends DarwinActions
     $this->getResponse()->setHttpHeader('Content-type', 'application/json');
     if($ig)
       return $this->renderText( json_encode(array('ig_num'=>$ig->getIgNum(), 'ig_ref'=>$ig->getId())));
-    return $this->renderText( json_encode(array('ig_num'=> 0, 'ig_ref'=>'')));
+    return $this->renderText( json_encode(array('ig_num'=> '', 'ig_ref'=>'')));
   }
 
   public function executeAddInsurance(sfWebRequest $request)
