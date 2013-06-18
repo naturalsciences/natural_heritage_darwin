@@ -5,6 +5,11 @@
 
   <?php include_stylesheets_for_form($form) ?>
   <?php include_javascripts_for_form($form) ?>
+  <?php if(isset($loan) && count($loan) > 0):?>
+    <div class="warn_message">
+      <?php echo link_to(__('This part is currently loaned'), 'loan/view?id='.$loan[0]->getId());?>
+    </div>
+  <?php endif;?>
 
   <div>
     <ul id="error_list" class="error_list" style="display:none">

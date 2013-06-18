@@ -5727,6 +5727,10 @@
         <source>Object name</source>
         <target>Naam van de object</target>
       </trans-unit>
+      <trans-unit id="1736">
+        <source>This part is currently loaned</source>
+        <target>Dit object is momenteel uitgeleend</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

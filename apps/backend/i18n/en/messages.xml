@@ -5727,6 +5727,14 @@
         <source>Quality assurance</source>
         <target>Quality assurance</target>
       </trans-unit>
+      <trans-unit id="1735">
+        <source>Object name</source>
+        <target>Object name</target>
+      </trans-unit>
+      <trans-unit id="1736">
+        <source>This part is currently loaned</source>
+        <target>This part is currently loaned</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

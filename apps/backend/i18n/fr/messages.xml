@@ -5728,7 +5728,10 @@
         <source>Object name</source>
         <target>Nom de l'objet</target>
       </trans-unit>
-      
+      <trans-unit id="1736">
+        <source>This part is currently loaned</source>
+        <target>Cette partie est en prêt</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>
