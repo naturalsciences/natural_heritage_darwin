@@ -61,4 +61,12 @@ class LoansTable extends DarwinTable
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     return $results;
   }
+
+  public function findLoaned($part_id) {
+    $q = Doctrine_Query::create()
+      ->from('Loans l')
+      ->andWhere("EXISTS (SELECT ls.id FROM LoanStatus ls WHERE loan_ref = l.id AND ls.status IN ('running', 'extended') AND is_last = TRUE )")
+      ->andWhere('EXISTS (SELECT li.id FROM LoanItems li WHERE li.loan_ref = l.id AND li.part_ref = ? )', $part_id);
+    return $q->execute();
+  }
 }

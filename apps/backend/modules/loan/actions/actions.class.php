@@ -135,10 +135,12 @@ class loanActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     // Forward to a 404 page if the requested loan id is not found
-    $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->find($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
-    if(!$this->getUser()->isAtLeast(Users::MANAGER))    
+    $this->loan = Doctrine::getTable('Loans')->find($request->getParameter('id'));
+    $this->forward404Unless($this->loan, sprintf('Object loan does not exist (%s).', $request->getParameter('id')));
+    if(!$this->getUser()->isAtLeast(Users::MANAGER)) {
       if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId()))
         $this->forwardToSecureAction();
+    }
     $this->loadWidgets();
   }
 
@@ -147,13 +149,11 @@ class loanActions extends DarwinActions
     $form->bind($request->getParameter($form->getName()),$request->getFiles($form->getName()));
     if ($form->isValid())
     {
-      try
-      {        
+      try {
         $item = $form->save();
         $this->redirect('loan/edit?id='.$item->getId());
       }
-      catch(Doctrine_Exception $ne)
-      {
+      catch(Doctrine_Exception $ne) {
         $e = new DarwinPgErrorParser($ne);
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
         $form->getErrorSchema()->addError($error); 
