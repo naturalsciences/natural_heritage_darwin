@@ -140,7 +140,7 @@ class CataloguePropertiesForm extends BaseCataloguePropertiesForm
   
   public function addValue($num)
   {
-      $val = new PropertiesValues();g
+      $val = new PropertiesValues();
       $val->CatalogueProperties = $this->getObject();
       $form = new PropertiesValuesForm($val);
   
