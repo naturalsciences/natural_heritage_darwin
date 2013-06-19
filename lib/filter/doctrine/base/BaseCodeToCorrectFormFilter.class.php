@@ -23,7 +23,6 @@ abstract class BaseCodeToCorrectFormFilter extends BaseFormFilterDoctrine
       'code_suffix'           => new sfWidgetFormFilterInput(),
       'code_suffix_separator' => new sfWidgetFormFilterInput(),
       'full_code_indexed'     => new sfWidgetFormFilterInput(),
-      'full_code_order_by'    => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -37,7 +36,6 @@ abstract class BaseCodeToCorrectFormFilter extends BaseFormFilterDoctrine
       'code_suffix'           => new sfValidatorPass(array('required' => false)),
       'code_suffix_separator' => new sfValidatorPass(array('required' => false)),
       'full_code_indexed'     => new sfValidatorPass(array('required' => false)),
-      'full_code_order_by'    => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('code_to_correct_filters[%s]');
@@ -68,7 +66,6 @@ abstract class BaseCodeToCorrectFormFilter extends BaseFormFilterDoctrine
       'code_suffix'           => 'Text',
       'code_suffix_separator' => 'Text',
       'full_code_indexed'     => 'Text',
-      'full_code_order_by'    => 'Text',
     );
   }
 }
