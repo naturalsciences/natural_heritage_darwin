@@ -102,7 +102,7 @@ p.id as part_id
       if( !isset($result[$row['s_record_id']]['parts'][$row['part_id']]) )
         $result[$row['s_record_id']]['parts'][$row['part_id']] = array();
 
-      if( !isset($result[$row['s_record_id']]['parts'][$row['part_id']][$row['p_id']]) )
+      if( $row['p_id'] != '' && !isset($result[$row['s_record_id']]['parts'][$row['part_id']][$row['p_id']]) )
         $result[$row['s_record_id']]['parts'][$row['part_id']][$row['p_id']] = $row;
     }
     
