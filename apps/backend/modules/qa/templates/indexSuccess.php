@@ -39,6 +39,7 @@
                 <tr>
                   <td>P_ID # <?php echo link_to($p_id,'parts/edit?id='.$p_id) ;?></td>
                   <td>
+                    <?php if( count($part) != 0): ;?>
                     <ul>
                     <?php foreach($part as $pcode):?>
                       <li>(<?php echo $pcode['p_code_category'];?>)
@@ -47,6 +48,8 @@
                       </li>
                     <?php endforeach;?>
                     </ul>
+                    <?php else:?>-
+                    <?php endif;?>
                   </td>
                   <td><input type="checkbox" class="add_to" name="add_to" value="<?php echo $p_id;?>" /></td>
                 </tr>

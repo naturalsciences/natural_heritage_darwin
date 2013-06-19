@@ -13,9 +13,6 @@ class CodeToCorrectTable extends DarwinTable
   }
 
   public function move($uid, $from, $to) {
-  
-//     $cols = BaseFormFilterDoctrine::getCollectionWithRights($uid, true);
-
     $from_fix = Doctrine_Core::getTable('CodeToCorrect')->find($from);
     $from = Doctrine_Core::getTable('Codes')->find($from);
     if( ! $from){
