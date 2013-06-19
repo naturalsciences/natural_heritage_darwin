@@ -19,8 +19,9 @@ $(document).ready(function () {
               <div class="cols_title"><?php echo __('Specimen');?></div>
               <ul id="specimen_cols">
                 <?php foreach($columns['specimen'] as $col_name => $col):?>
-                  <li class="<?php echo $field_to_show[$col_name]; ?>" id="li_<?php echo $col_name;?>">
-                    <span class="<?php echo($field_to_show[$col_name]=='uncheck'?'hidden':''); ?>">&#10003;</span><span class="<?php echo($field_to_show[$col_name]=='uncheck'?'':'hidden'); ?>">&#10007;</span>
+                  <li class="col_switcher <?php echo $field_to_show[$col_name]; ?>" id="li_<?php echo $col_name;?>">
+                    <span class="check_mark">&#10003;</span>
+                    <span class="uncheck_mark">&#10007;</span>
                     &nbsp;<?php echo $col[1];?>
                   </li>
                 <?php endforeach;?>
@@ -31,8 +32,9 @@ $(document).ready(function () {
               <div class="cols_title"><?php echo __('Individual');?></div>
               <ul id="specimen_cols">
                 <?php foreach($columns['individual'] as $col_name => $col):?>
-                  <li class="<?php echo $field_to_show[$col_name]; ?>" id="li_<?php echo $col_name;?>">
-                    <span class="<?php echo($field_to_show[$col_name]=='uncheck'?'hidden':''); ?>">&#10003;</span><span class="<?php echo($field_to_show[$col_name]=='uncheck'?'':'hidden'); ?>">&#10007;</span>
+                  <li class="col_switcher <?php echo $field_to_show[$col_name]; ?>" id="li_<?php echo $col_name;?>">
+                    <span class="check_mark">&#10003;</span>
+                    <span class="uncheck_mark">&#10007;</span>
                     &nbsp;<?php echo $col[1];?>
                   </li>
                 <?php endforeach;?>
@@ -45,8 +47,9 @@ $(document).ready(function () {
               <div class="cols_title"><?php echo __('Part');?></div>
               <ul id="specimen_cols">
                 <?php foreach($columns['part'] as $col_name => $col):?>
-                  <li class="<?php echo $field_to_show[$col_name]; ?>" id="li_<?php echo $col_name;?>">
-                    <span class="<?php echo($field_to_show[$col_name]=='uncheck'?'hidden':''); ?>">&#10003;</span><span class="<?php echo($field_to_show[$col_name]=='uncheck'?'':'hidden'); ?>">&#10007;</span>
+                  <li class="col_switcher <?php echo $field_to_show[$col_name]; ?>" id="li_<?php echo $col_name;?>">
+                    <span class="check_mark">&#10003;</span>
+                    <span class="uncheck_mark">&#10007;</span>
                     &nbsp;<?php echo $col[1];?>
                   </li>
                 <?php endforeach;?>

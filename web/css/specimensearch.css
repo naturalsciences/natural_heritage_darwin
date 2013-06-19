@@ -132,7 +132,7 @@ ul.column_menu > li
 {
   width:300px;
 /*   border:2px solid red; */
-  float:left;
+/*   float:left; */
   padding: 0.5em;
 }
 
@@ -164,6 +164,19 @@ li.check span
   color: green;
   font-family:Arial Unicode MS,sans-serif;
 
+}
+li.check .uncheck_mark {
+  display:none;
+}
+li.check .check_mark {
+  display:inline;
+}
+
+li.uncheck .uncheck_mark {
+  display:inline;
+}
+li.uncheck .check_mark {
+  display:none;
 }
 
 li.uncheck span
