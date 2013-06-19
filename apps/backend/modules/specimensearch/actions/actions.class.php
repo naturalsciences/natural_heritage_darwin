@@ -128,8 +128,13 @@ class specimensearchActions extends DarwinActions
 
           $this->spec_lists = Doctrine::getTable('MySavedSearches')
             ->getListFor($this->getUser()->getId(), $this->form->getValue('what_searched'));
-
-          $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir);
+          if($this->form->getValue('what_searched') == SpecimensFlatFormFilter::SC_PART)
+            $fallback_order = 'p.id';
+          elseif($this->form->getValue('what_searched') == SpecimensFlatFormFilter::SC_IND)
+            $fallback_order = 'i.id';
+          else // Spec
+            $fallback_order = 's.specimen_ref';
+          $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir. ', '.$fallback_order);
           //If export is defined export it!
           
           if($request->getParameter('export','') != '')
