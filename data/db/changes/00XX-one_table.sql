@@ -26,7 +26,7 @@ BEGIN
       SELECT id from specimen_individuals i
       where not exists( select 1 from specimen_parts p where i.id = p.specimen_individual_ref)
     );
- /*
+ 
    RAISE INFO 'Start moving template_ref from spec with 1 part';
    FOR tmp IN SELECT *, p.id as part_id, s.id as spec_id from 
     specimens s
@@ -60,7 +60,7 @@ BEGIN
          --IIIK Nothing
       END;
    END LOOP;
-   */
+   
 
 
    cnt := 0;
@@ -302,7 +302,7 @@ language plpgsql;
 
 SET SESSION session_replication_role = replica;
 
-select move_refs();
+--select move_refs();
 
 SET SESSION session_replication_role = origin;
 
@@ -383,6 +383,101 @@ create table new_specimens
         specimen_part_count_max integer not null default 1,
         object_name text,
         object_name_indexed text not null default '',
+
+
+    spec_ident_ids integer[] not null default '{}',
+    spec_coll_ids integer[] not null default '{}',
+    spec_don_sel_ids integer[] not null default '{}',
+    
+    collection_type varchar,
+    collection_code varchar,
+    collection_name varchar,
+    collection_is_public boolean,
+    collection_parent_ref integer,
+    collection_path varchar,
+    expedition_name varchar,
+    expedition_name_indexed varchar,
+
+    gtu_code varchar,
+    gtu_from_date_mask integer,
+    gtu_from_date timestamp,
+    gtu_to_date_mask integer,
+    gtu_to_date timestamp,
+    gtu_tag_values_indexed varchar[],
+    gtu_country_tag_value varchar,
+    gtu_country_tag_indexed varchar[],
+    gtu_province_tag_value varchar,
+    gtu_province_tag_indexed varchar[],
+    gtu_others_tag_value varchar,
+    gtu_others_tag_indexed varchar[],
+    gtu_elevation double precision,
+    gtu_elevation_accuracy double precision,
+    gtu_location GEOGRAPHY(POLYGON,4326),
+
+    taxon_name varchar,
+    taxon_name_indexed varchar,
+    taxon_level_ref integer,
+    taxon_level_name varchar,
+    taxon_status varchar,
+    taxon_path varchar,
+    taxon_parent_ref integer,
+    taxon_extinct boolean,
+
+    litho_name varchar,
+    litho_name_indexed varchar,
+    litho_level_ref integer,
+    litho_level_name varchar,
+    litho_status varchar,
+    litho_local boolean,
+    litho_color varchar,
+    litho_path varchar,
+    litho_parent_ref integer,
+
+    chrono_name varchar,
+    chrono_name_indexed varchar,
+    chrono_level_ref integer,
+    chrono_level_name varchar,
+    chrono_status varchar,
+    chrono_local boolean,
+    chrono_color varchar,
+    chrono_path varchar,
+    chrono_parent_ref integer,
+
+    lithology_name varchar,
+    lithology_name_indexed varchar,
+    lithology_level_ref integer,
+    lithology_level_name varchar,
+    lithology_status varchar,
+    lithology_local boolean,
+    lithology_color varchar,
+    lithology_path varchar,
+    lithology_parent_ref integer,
+
+    mineral_name varchar,
+    mineral_name_indexed varchar,
+    mineral_level_ref integer,
+    mineral_level_name varchar,
+    mineral_status varchar,
+    mineral_local boolean,
+    mineral_color varchar,
+    mineral_path varchar,
+    mineral_parent_ref integer,
+
+    host_taxon_name varchar,
+    host_taxon_name_indexed varchar,
+    host_taxon_level_ref integer,
+    host_taxon_level_name varchar,
+    host_taxon_status varchar,
+    host_taxon_path varchar,
+    host_taxon_parent_ref integer,
+    host_taxon_extinct boolean,
+
+    ig_num varchar,
+    ig_num_indexed varchar,
+    ig_date_mask integer,
+    ig_date date,
+    spec_id integer,
+    ind_id integer,
 
         constraint pk_specimens primary key (id),
         constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
@@ -594,6 +689,8 @@ INSERT INTO new_specimens (
     ig_num_indexed,
     ig_date_mask,
     ig_date,
+    spec_id,
+    ind_id
 )
 (
 SELECT 
@@ -730,13 +827,25 @@ SELECT
   f.ig_num,
   f.ig_num_indexed,
   f.ig_date_mask,
-  f.ig_date
+  f.ig_date,
+  s.id, 
+  i.id
 
 
 FROM
 darwin_flat
 );
 
+
+
+alter table new_specimens drop column spec_id;
+alter table new_specimens drop column ind_id;
+
+drop table specimen_parts;
+drop table specimen_individuals;
+drop table specimen;
+
+alter table new_specimens rename to specimen;
 
 
 rollback;
