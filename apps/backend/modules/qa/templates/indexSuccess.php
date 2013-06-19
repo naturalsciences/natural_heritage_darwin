@@ -108,6 +108,9 @@ $(document).ready(function () {
     });
 
     parent.closest('tr').hide();
+    if(parent.closest('tr').parent().find('tr:visible').length == 0) {
+      location.reload();
+    }
   });
 });
 </script>
