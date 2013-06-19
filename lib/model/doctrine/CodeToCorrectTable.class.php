@@ -73,7 +73,7 @@ c2.code as p_code,
 c2.code_suffix as p_code_suffix,
 c2.code_suffix_separator as p_code_suffix_separator,
 
-part_id
+p.id as part_id
 
       from code_to_correct c
       inner join specimen_individuals i on c.record_id = i.specimen_ref
