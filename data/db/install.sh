@@ -70,6 +70,9 @@ usage(){
   command_name "drop-db"
   command_desc "remove the darwin database. WARNING! This action can remove ALL your data"
 
+  command_name "test-adm"
+  command_desc "Test your administrative connection. Open a command to your db"
+
   title "Available [option] :"
   
   option_desc "-h hostname (Default: $hostname)"
@@ -211,7 +214,11 @@ function install_role() {
 psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
 basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname"
 admpsql="$basepsql -q -d $dbname"
-case "$@" in 
+case "$@" in
+  "test-adm")
+    echo "Trying to Connect to DB"
+    $admpsql
+  ;;
   "install-all")
     $basepsql -c "create database $dbname ENCODING 'UNICODE';"
     install_role

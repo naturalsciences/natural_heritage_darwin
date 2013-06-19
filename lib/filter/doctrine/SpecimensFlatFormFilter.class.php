@@ -1003,7 +1003,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
   public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
   {
     $build_query = ''; 
-    if(count($field_to_use) < 1)
+    if(! is_array($field_to_use) || count($field_to_use) < 1)
       $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
 
     foreach($field_to_use as $field)
@@ -1197,7 +1197,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     if ($values['lithology_level_ref'] != '') $query->andWhere('lithology_level_ref = ?', intval($values['lithology_level_ref']));
     if ($values['mineral_level_ref'] != '') $query->andWhere('mineral_level_ref = ?', intval($values['mineral_level_ref']));
     $this->addLatLonColumnQuery($query, $values);
-    $this->addNamingColumnQuery($query, 'expeditions', 's.name_indexed', $values['expedition_name'],'s','expedition_name_indexed');
+    $this->addNamingColumnQuery($query, 'expeditions', 'expedition_name_indexed', $values['expedition_name'],'s','expedition_name_indexed');
 
     $this->addNamingColumnQuery($query, 'taxonomy', 'taxon_name_indexed', $values['taxon_name'],'s','taxon_name_indexed');
     $this->addNamingColumnQuery($query, 'chronostratigraphy', 'chrono_name_indexed', $values['chrono_name'],'s','chrono_name_indexed');

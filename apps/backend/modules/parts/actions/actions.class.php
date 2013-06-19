@@ -15,32 +15,29 @@ class partsActions extends DarwinActions
   public function executeEdit(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    if($request->hasParameter('id') && !$this->getUser()->isA(Users::ADMIN))
-    {  
-      if(! Doctrine::getTable('Specimens')->hasRights('part_ref',$request->getParameter('id'), $this->getUser()->getId()))
-        $this->redirect("parts/view?id=".$request->getParameter('id')) ;    
-
+    if($request->hasParameter('id') && !$this->getUser()->isA(Users::ADMIN)) {
+      if(! Doctrine::getTable('Specimens')->hasRights('part_ref',$request->getParameter('id'), $this->getUser()->getId())) {
+        $this->redirect("parts/view?id=".$request->getParameter('id')) ;
+      }
     }
     $this->part = Doctrine::getTable('SpecimenParts')->find($request->getParameter('id'));
     $action = 'update';
 
-    if($this->part)
-    {
+    if($this->part) {
       $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($this->part->getSpecimenIndividualRef());
+      $this->loan = Doctrine::getTable('Loans')->findLoaned($this->part->getId());
     }
-    else
-    {
+    else {
       $action = 'create';
       $this->part= new SpecimenParts();
       $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('indid'));
       $this->forward404Unless($this->individual);
       $this->part->Individual = $this->individual;
       $duplic = $request->getParameter('duplicate_id') ;
-      if ($duplic) // then it's a duplicate part
-      {
+      if ($duplic) { // then it's a duplicate part
         $this->part = $this->getRecordIfDuplicate($duplic, $this->part);
         // set all necessary widgets to visible 
-        if($request->hasParameter('all_duplicate'))        
+        if($request->hasParameter('all_duplicate'))
           Doctrine::getTable('SpecimenParts')->getRequiredWidget($this->part, $this->getUser()->getId(), 'part_widget',1);      
 
       }
@@ -49,10 +46,8 @@ class partsActions extends DarwinActions
     $this->specimen = Doctrine::getTable('Specimens')->find($this->individual->getSpecimenRef());
     $this->form = new SpecimenPartsForm($this->part, array( 'collection'=>$this->specimen->getCollectionRef(),'individual'=>$this->individual->getId()));
 
-    if($this->form->getObject()->isNew())
-    {
-      if($duplic)
-      {
+    if($this->form->getObject()->isNew()) {
+      if($duplic) {
         $this->form->duplicate($duplic);
       }
     }

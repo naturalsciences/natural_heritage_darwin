@@ -14,7 +14,7 @@ class CodeToCorrectTable extends DarwinTable
 
   public function move($uid, $from, $to) {
   
-//     $cols = BaseFormFilterDoctrine::getCollectionWithRights($uid);
+//     $cols = BaseFormFilterDoctrine::getCollectionWithRights($uid, true);
 
     $from_fix = Doctrine_Core::getTable('CodeToCorrect')->find($from);
     $from = Doctrine_Core::getTable('Codes')->find($from);
@@ -41,7 +41,7 @@ class CodeToCorrectTable extends DarwinTable
   }
 
   public function getForUserCount($uid) {
-    $cols = BaseFormFilterDoctrine::getCollectionWithRights($uid);
+    $cols = BaseFormFilterDoctrine::getCollectionWithRights($uid, true);
     $q = Doctrine_Query::create()->
       select('COUNT(*) AS cnt')->
       from('CodeToCorrect c')->
@@ -49,8 +49,8 @@ class CodeToCorrectTable extends DarwinTable
     return $q->execute(array(), Doctrine_Core::HYDRATE_SINGLE_SCALAR);
   }
 
-  public function getForUser($uid, $offset=0, $limit= 100) {
-    $cols = BaseFormFilterDoctrine::getCollectionWithRights($uid);
+  public function getForUser($uid, $offset=0, $limit= 50) {
+    $cols = BaseFormFilterDoctrine::getCollectionWithRights($uid, true);
 
     $conn_MGR = Doctrine_Manager::connection();
     $conn = $conn_MGR->getDbh();
