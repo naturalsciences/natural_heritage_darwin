@@ -129,7 +129,7 @@ class specimensearchActions extends DarwinActions
           $this->spec_lists = Doctrine::getTable('MySavedSearches')
             ->getListFor($this->getUser()->getId(), $this->form->getValue('what_searched'));
 
-          $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir);
+          $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir .', id');
           //If export is defined export it!
           
           if($request->getParameter('export','') != '')
