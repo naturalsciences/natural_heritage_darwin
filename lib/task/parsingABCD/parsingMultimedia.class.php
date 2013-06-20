@@ -45,7 +45,7 @@ class parsingMultimedia
   {
     $smb = new smb_stream_wrapper() ;
     if(!$smb->stream_open ($file, 'r', false,$this->getContext())) return false ;
-    $this->saveFile($smb->stream) ;
+    $this->saveFile($smb->stream,$file) ;
     $smb->stream_close() ;
   }
 
@@ -56,11 +56,11 @@ class parsingMultimedia
     else
       $src = fopen($file,'r',false, $this->getContext()) ;
     if(!$src) return false ;
-    $this->saveFile($src) ;
+    $this->saveFile($src,$file) ;
     fclose($src) ;
   }
   
-  private function saveFile($src)
+  private function saveFile($src,$file)
   {
     $dest = fopen('/tmp/temp_file','a') ;
     if(stream_copy_to_stream($src,$dest))

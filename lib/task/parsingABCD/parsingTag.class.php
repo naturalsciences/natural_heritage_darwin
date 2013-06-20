@@ -56,7 +56,7 @@ class ParsingTag
     $info->setStagingRef($id) ;
     $info->setReferencedRelation('gtu') ;
     $info->addRelated($object) ;
-    $info->save() ;
+    return $info ;
   }
   public function handlePeople($people,$staging,$is_maintenance=false)
   {
