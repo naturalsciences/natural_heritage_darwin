@@ -493,8 +493,8 @@ create table new_specimens
         constraint fk_specimens_igs foreign key (ig_ref) references igs(id),
 
         constraint fk_specimen_institutions foreign key (institution_ref) references people(id) ON DELETE no action,
-        constraint chk_chk_specimen_parts_minmax check (specimen_part_count_min <= specimen_part_count_max),
-        constraint chk_chk_specimen_part_min check (specimen_part_count_min >= 0)
+        constraint chk_chk_specimens_minmax check (specimen_part_count_min <= specimen_part_count_max),
+        constraint chk_chk_specimens_min check (specimen_part_count_min >= 0)
        );
 
 
@@ -841,11 +841,207 @@ darwin_flat
 alter table new_specimens drop column spec_id;
 alter table new_specimens drop column ind_id;
 
+ALTER TABLE specimen_parts DROP CONSTRAINT fk_specimen_parts_parent_ref;
+ALTER TABLE loan_items DROP CONSTRAINT fk_loan_items_part_ref;
+
+ALTER TABLE loan_items RENAME COLUMN part_ref TO specimen_ref;
+ALTER TABLE loan_items
+  ADD CONSTRAINT fk_loan_items_specimen_ref FOREIGN KEY (specimen_ref)
+      REFERENCES specimens (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE SET NULL;
+
+ALTER TABLE specimen_collecting_methods DROP CONSTRAINT fk_specimen_collecting_methods_specimen;
+ALTER TABLE specimen_collecting_tools DROP CONSTRAINT fk_specimen_collecting_tools_specimen;
+ALTER TABLE specimens_accompanying DROP CONSTRAINT fk_specimens_accompanying_specimens;
+
+
+
+drop view darwin_flat;
 drop table specimen_parts;
 drop table specimen_individuals;
 drop table specimen;
 
 alter table new_specimens rename to specimen;
 
+
+CREATE INDEX  idx_gin_specimens_gtu_tag_values_indexed on specimens using gin(gtu_tag_values_indexed);
+CREATE INDEX  idx_gin_specimens_gtu_country_tag_indexed_indexed on specimens using gin(gtu_country_tag_indexed);
+CREATE INDEX  idx_gist_specimens_gtu_location ON specimens USING GIST ( gtu_location );
+CREATE INDEX  idx_gist_specimens_gtu_location_geom ON specimens USING GIST ( (gtu_location::geometry) );
+
+CREATE INDEX  idx_specimens_host_specimen_ref on specimens(host_specimen_ref);
+CREATE INDEX  idx_specimens_host_taxon_ref on specimens(host_taxon_ref);
+
+CREATE INDEX  idx_specimens_category on specimens(category);
+
+/*** BTree indexes for search purposes in Darwin flat table ***/
+CREATE INDEX  idx_specimens_station_visible on specimens(station_visible);
+CREATE INDEX  idx_darwin_flat_gtu_code ON specimens USING gin
+  (gtu_code gin_trgm_ops);
+CREATE INDEX  idx_specimens_gtu_from_date_mask on specimens(gtu_from_date_mask);
+CREATE INDEX  idx_specimens_gtu_to_date_mask on specimens(gtu_to_date_mask);
+CREATE INDEX  idx_specimens_gtu_to_date on specimens(gtu_to_date);
+CREATE INDEX  idx_specimens_gtu_from_date on specimens(gtu_from_date);
+CREATE INDEX  idx_specimens_taxon_name_indexed on specimens(taxon_name_indexed);
+
+CREATE INDEX  idx_specimens_collection_is_public on specimens(collection_is_public);
+CREATE INDEX  idx_specimens_collection_name on specimens(collection_name, specimen_ref);
+
+CREATE INDEX  idx_gin_trgm_specimens_expedition_name_indexed on specimens using gin(expedition_name_indexed gin_trgm_ops);
+CREATE INDEX  idx_gin_trgm_specimens_taxon_name_indexed on specimens using gin(taxon_name_indexed gin_trgm_ops);
+CREATE INDEX  idx_gin_trgm_specimens_taxon_path on specimens using gin(taxon_path gin_trgm_ops);
+CREATE INDEX  idx_gin_trgm_specimens_ig_num ON specimens USING gin (ig_num_indexed gin_trgm_ops);
+
+CREATE INDEX  idx_gin_specimens_spec_ident_ids on specimens using gin(spec_ident_ids);
+CREATE INDEX  idx_gin_specimens_spec_coll_ids on specimens using gin(spec_coll_ids);
+CREATE INDEX  idx_gin_specimens_spec_don_sel_ids on specimens using gin(spec_don_sel_ids);
+
+
+
+CREATE INDEX idx_specimens_chrono_ref ON specimens  (chrono_ref)  WHERE chrono_ref <> 0;
+CREATE INDEX idx_specimens_expedition_ref ON specimens  (expedition_ref) WHERE expedition_ref <> 0;
+CREATE INDEX idx_specimens_gtu_ref ON specimens  (gtu_ref) WHERE gtu_ref <> 0;
+CREATE INDEX idx_specimens_host_specimen_ref ON specimens  (host_specimen_ref) WHERE host_specimen_ref IS NOT NULL;
+CREATE INDEX idx_specimens_host_taxon_ref ON specimens  (host_taxon_ref) WHERE host_taxon_ref <> 0;
+CREATE INDEX idx_specimens_ig_ref ON specimens  (ig_ref);
+CREATE INDEX idx_specimens_litho_ref ON specimens  (litho_ref) WHERE litho_ref <> 0;
+CREATE INDEX idx_specimens_lithology_ref ON specimens  (lithology_ref) WHERE lithology_ref <> 0;
+CREATE INDEX idx_specimens_mineral_ref ON specimens  (mineral_ref) WHERE mineral_ref <> 0;
+CREATE INDEX idx_specimens_taxon_ref ON specimens  (taxon_ref) WHERE taxon_ref <> 0;
+
+CREATE TRIGGER fct_cpy_trg_del_dict_specimens AFTER UPDATE OR DELETE
+  ON specimens FOR EACH ROW EXECUTE PROCEDURE trg_del_dict();
+  
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimens AFTER INSERT OR UPDATE
+  ON specimens FOR EACH ROW EXECUTE PROCEDURE trg_ins_update_dict();
+
+CREATE TRIGGER trg_chk_specimencollectionallowed BEFORE INSERT OR UPDATE OR DELETE
+  ON specimens FOR EACH ROW EXECUTE PROCEDURE fct_chk_specimencollectionallowed();
+
+CREATE TRIGGER trg_clr_referencerecord_specimens AFTER DELETE
+  ON specimens FOR EACH ROW EXECUTE PROCEDURE fct_clear_referencedrecord();
+
+CREATE TRIGGER trg_cpy_ig_to_loan_items AFTER UPDATE
+  ON specimens FOR EACH ROW EXECUTE PROCEDURE fct_cpy_ig_to_loan_items();
+
+CREATE TRIGGER trg_cpy_updatehosts AFTER UPDATE ON specimens
+  FOR EACH ROW EXECUTE PROCEDURE fct_cpy_updatehosts();
+
+CREATE TRIGGER trg_cpy_updatespechostimpact  BEFORE UPDATE
+  ON specimens FOR EACH ROW EXECUTE PROCEDURE fct_cpy_updatespechostimpact();
+
+CREATE TRIGGER trg_trk_log_table_specimens AFTER INSERT OR UPDATE OR DELETE
+  ON specimens FOR EACH ROW EXECUTE PROCEDURE fct_trk_log_table();
+
+CREATE TRIGGER trg_cpy_fulltoindex_s  BEFORE INSERT OR UPDATE
+  ON specimens FOR EACH ROW EXECUTE PROCEDURE fct_cpy_fulltoindex();
+
+
+
+CREATE INDEX idx_labeling_specimens_type ON specimens
+  USING gin (labeling_individual_type_for_indexation(type));
+
+CREATE INDEX idx_specimen_rock_form ON specimens (rock_form);
+
+CREATE INDEX idx_specimens_sex ON specimens (sex)
+  WHERE sex::text <> ALL (ARRAY['undefined', 'unknown']::text[]);
+  
+CREATE INDEX idx_specimens_social_status ON specimens (social_status)
+  WHERE social_status::text <> 'not applicable'::text;
+
+CREATE INDEX idx_specimens_stage ON specimens  (stage)
+  WHERE stage::text <> ALL (ARRAY['undefined', 'unknown']::text[]);
+  
+CREATE INDEX idx_specimens_state ON specimens (state)
+  WHERE state::text <> 'not applicable'::text;
+
+CREATE INDEX idx_specimens_type_search ON specimens (type_search)
+  WHERE type_search::text <> 'specimen'::text;
+
+
+
+CREATE INDEX idx_labeling_code ON specimens USING gin labeling_code_for_indexation(id) );
+CREATE INDEX idx_labeling_part ON specimens USING gin (labeling_part_for_indexation(specimen_part) );
+CREATE INDEX idx_specimens_container ON specimens (container ) WHERE NOT container IS NULL;
+CREATE INDEX idx_specimens_container_storage ON specimens (container_storage );
+CREATE INDEX idx_specimens_container_type ON specimens (container_type );
+CREATE INDEX idx_specimens_object_name_indexed ON specimens (object_name_indexed );
+CREATE INDEX idx_specimens_parent_ref ON specimens (parent_ref);
+CREATE INDEX idx_specimens_room ON specimens(room ) WHERE NOT room IS NULL;
+CREATE INDEX idx_specimens_row ON specimens("row" ) WHERE NOT "row" IS NULL;
+CREATE INDEX idx_specimens_shelf ON specimens (shelf ) WHERE NOT shelf IS NULL;
+CREATE INDEX idx_specimens_ ON specimens (specimen_part);
+CREATE INDEX idx_specimens_institution_ref ON specimens (institution_ref);
+CREATE INDEX idx_specimens_sub_container ON specimens (sub_container) WHERE NOT sub_container IS NULL;
+CREATE INDEX idx_specimens_sub_container_storage ON specimens (sub_container_storage );
+CREATE INDEX idx_specimens_sub_container_type ON specimens (sub_container_type );
+
+/******* End of creation of spec **********/
+CREATE INDEX  idx_specimens_spec_id on specimens(spec_id);
+
+
+update my_saved_searches set subject='specimens';
+delete from prefences where pref_key in('search_cols_specimen', 'search_cols_individual', 'gtu_google_activated') ;
+update prefences set pref_key='search_cols_specimen' where pref_key='search_cols_part';
+update flat_dict set referenced_relation='specimens' where referenced_relation in ('specimen_individuals', 'specimen_part');
+
+
+alter table specimen_collecting_methods add column old_id integer;
+ALTER TABLE specimen_collecting_tools add column old_id integer;
+ALTER TABLE specimens_accompanying add column old_id integer;
+
+update specimen_collecting_methods set old_id = specimen_ref;
+update specimen_collecting_tools set old_id = specimen_ref;
+update specimens_accompanying set old_id = specimen_ref;
+
+insert into specimen_collecting_methods (specimen_ref, collecting_method_ref)
+( select s.id , m.collecting_method_ref
+  from specimens s 
+  inner join specimen_collecting_methods m on m.old_id = s.spec_id );
+
+insert into specimen_collecting_tools (specimen_ref, collecting_tool_ref)
+( select s.id , m.collecting_tool_ref 
+  from specimens s 
+  inner join specimen_collecting_tools m on m.old_id = s.spec_id );
+  
+insert into specimens_accompanying (specimen_ref, accompanying_type, taxon_ref, mineral_ref, form, quantity, unit)
+( select s.id , a.accompanying_type, a.taxon_ref, a.mineral_ref, a.form, a.quantity, a.unit
+  from specimens s 
+  inner join specimens_accompanying a on a.old_id = s.spec_id );
+  
+delete from specimen_collecting_methods where old_id is not null;
+delete from specimen_collecting_tools where old_id is not null;
+delete from specimens_accompanying where old_id is not null;
+
+alter table specimen_collecting_methods drop column old_id;
+alter table specimen_collecting_tools drop column old_id;
+alter table specimens_accompanying drop column old_id;
+
+ALTER TABLE specimen_collecting_methods
+  ADD CONSTRAINT fk_specimen_collecting_methods_specimen FOREIGN KEY (specimen_ref)
+      REFERENCES specimens (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION;
+      
+ALTER TABLE specimen_collecting_tools
+  ADD CONSTRAINT fk_specimen_collecting_tools_specimen FOREIGN KEY (specimen_ref)
+      REFERENCES specimens (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+ALTER TABLE specimens_accompanying
+  ADD CONSTRAINT fk_specimens_accompanying_specimens FOREIGN KEY (specimen_ref)
+      REFERENCES specimens (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
+update specimens s1 set host_specimen_ref = (select id from specimens s2 where s2.spec_id = s1.host_specimen_ref )
+  where host_specimen_ref is not null;
+
+--- Move Files
+--- Move  my_widgets
+
+
+DROP CREATE idx_specimens_spec_id;
+alter table specimens drop column ind_id;
+alter table specimens drop column spec_id;
+\i  createfunctions.sql
 
 rollback;
