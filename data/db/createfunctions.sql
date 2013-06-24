@@ -149,7 +149,7 @@ BEGIN
                 NEW.search_indexed := fullToIndex ( COALESCE(NEW.title,'') ||  COALESCE(NEW.description,'') ) ;
         ELSIF TG_TABLE_NAME = 'comments' THEN
                 NEW.comment_indexed := fullToIndex(NEW.comment);
-        ELSIF TG_TABLE_NAME = 'specimen_parts' THEN
+        ELSIF TG_TABLE_NAME = 'specimens' THEN
                 NEW.object_name_indexed := fullToIndex(COALESCE(NEW.object_name,'') );
         END IF;
 	RETURN NEW;
@@ -1366,7 +1366,7 @@ DECLARE
 BEGIN
   IF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'expeditions' THEN
     IF NEW.name_indexed IS DISTINCT FROM OLD.name_indexed THEN
-      UPDATE specimens_flat
+      UPDATE specimens
       SET (expedition_name, expedition_name_indexed) =
           (NEW.name, NEW.name_indexed)
       WHERE expedition_ref = NEW.id;
@@ -1378,7 +1378,7 @@ BEGIN
     OR OLD.is_public IS DISTINCT FROM NEW.is_public
     OR OLD.path IS DISTINCT FROM NEW.path
     THEN
-      UPDATE specimens_flat
+      UPDATE specimens
       SET (collection_type, collection_code, collection_name, collection_is_public,
           collection_parent_ref, collection_path
           ) =
@@ -1388,7 +1388,7 @@ BEGIN
       WHERE collection_ref = NEW.id;
     END IF;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'gtu' THEN
-    UPDATE specimens_flat
+    UPDATE specimens
     SET (gtu_code, gtu_from_date, gtu_from_date_mask,
          gtu_to_date, gtu_to_date_mask,
          gtu_elevation, gtu_elevation_accuracy,
@@ -1402,13 +1402,13 @@ BEGIN
     WHERE gtu_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'igs' THEN
     IF NEW.ig_num_indexed IS DISTINCT FROM OLD.ig_num_indexed OR NEW.ig_date IS DISTINCT FROM OLD.ig_date THEN
-      UPDATE specimens_flat
+      UPDATE specimens
       SET (ig_num, ig_num_indexed, ig_date, ig_date_mask) =
           (NEW.ig_num, NEW.ig_num_indexed, NEW.ig_date, NEW.ig_date_mask)
       WHERE ig_ref = NEW.id;
     END IF;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'taxonomy' THEN
-    UPDATE specimens_flat
+    UPDATE specimens
     SET (taxon_name, taxon_name_indexed,
          taxon_level_ref, taxon_level_name,
          taxon_status, taxon_path, taxon_parent_ref, taxon_extinct
@@ -1423,7 +1423,7 @@ BEGIN
          WHERE id = NEW.level_ref
         ) subq
     WHERE taxon_ref = NEW.id;
-    UPDATE specimens_flat
+    UPDATE specimens
     SET (host_taxon_name, host_taxon_name_indexed, 
          host_taxon_level_ref, host_taxon_level_name,
          host_taxon_status, host_taxon_path, host_taxon_parent_ref, host_taxon_extinct
@@ -1439,7 +1439,7 @@ BEGIN
         ) subq
     WHERE host_taxon_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'chronostratigraphy' THEN
-    UPDATE specimens_flat
+    UPDATE specimens
     SET (chrono_name, chrono_name_indexed,
          chrono_level_ref, chrono_level_name,
          chrono_status, 
@@ -1459,7 +1459,7 @@ BEGIN
         ) subq
     WHERE chrono_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'lithostratigraphy' THEN
-    UPDATE specimens_flat
+    UPDATE specimens
     SET (litho_name, litho_name_indexed,
          litho_level_ref, litho_level_name,
          litho_status, 
@@ -1479,7 +1479,7 @@ BEGIN
         ) subq
     WHERE litho_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'lithology' THEN
-    UPDATE specimens_flat
+    UPDATE specimens
     SET (lithology_name, lithology_name_indexed,
          lithology_level_ref, lithology_level_name,
          lithology_status, 
@@ -1499,7 +1499,7 @@ BEGIN
         ) subq
     WHERE lithology_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'mineralogy' THEN
-    UPDATE specimens_flat
+    UPDATE specimens
     SET (mineral_name, mineral_name_indexed,
          mineral_level_ref, mineral_level_name,
          mineral_status, 
@@ -1522,66 +1522,66 @@ BEGIN
   ELSIF TG_TABLE_NAME = 'tag_groups' THEN
     IF TG_OP = 'INSERT' THEN
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_country_tag_value = NEW.tag_value,
             gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_province_tag_value = NEW.tag_value,
             gtu_province_tag_indexed = lineToTagArray(NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       ELSIF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
       /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
             gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')))
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
     ELSIF TG_OP = 'UPDATE' THEN
       IF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' AND NEW.sub_group_name_indexed != 'country' THEN
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_country_tag_value = NULL,
             gtu_country_tag_indexed = NULL
         WHERE gtu_ref = NEW.gtu_ref;
       ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'province' AND NEW.sub_group_name_indexed != 'province' THEN
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_province_tag_value = NULL,
             gtu_province_tag_indexed = NULL
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_country_tag_value = NEW.tag_value,
             gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_province_tag_value = NEW.tag_value,
             gtu_province_tag_indexed = lineToTagArray(NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
       IF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
       /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
             gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')))
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
     ELSIF TG_OP = 'DELETE' THEN
       IF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' THEN
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_country_tag_value = NULL,
             gtu_country_tag_indexed = NULL
         WHERE gtu_ref = OLD.gtu_ref;
       ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'province' THEN
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_province_tag_value = NULL,
             gtu_province_tag_indexed = NULL
         WHERE gtu_ref = OLD.gtu_ref;
       ELSE
         /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
-        UPDATE specimens_flat
+        UPDATE specimens
         SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = OLD.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
             gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = OLD.gtu_ref and sub_group_type not in ('country', 'province')))
         WHERE gtu_ref = OLD.gtu_ref;
@@ -1596,234 +1596,117 @@ $$;
 
 CREATE OR REPLACE FUNCTION fct_update_specimen_flat() RETURNS TRIGGER
 AS $$
-DECLARE cnt integer;
+DECLARE
+  cnt integer;
+  old_val specimens%TYPE;
+  new_val specimens%TYPE;
 BEGIN
- IF TG_OP = 'INSERT' THEN
 
-    INSERT INTO specimens_flat
-    (specimen_ref,category, host_relationship, acquisition_category, acquisition_date_mask,
-     acquisition_date, station_visible,
-     collection_ref,collection_type,collection_code,collection_name, collection_is_public,
-     collection_parent_ref,collection_path,
-     expedition_ref,expedition_name,expedition_name_indexed,
-     gtu_ref,gtu_code,gtu_location,
-     gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-     gtu_elevation, gtu_elevation_accuracy,
-     gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
-     taxon_ref,taxon_name,taxon_name_indexed,taxon_level_ref,taxon_level_name,taxon_status,
-     taxon_path,taxon_parent_ref,taxon_extinct,
-     chrono_ref,chrono_name,chrono_name_indexed,chrono_level_ref,chrono_level_name,chrono_status,
-     chrono_local,chrono_color,
-     chrono_path,chrono_parent_ref,
-     litho_ref,litho_name,litho_name_indexed,litho_level_ref,litho_level_name,litho_status,
-     litho_local,litho_color,
-     litho_path,litho_parent_ref,
-     lithology_ref,lithology_name,lithology_name_indexed,lithology_level_ref,lithology_level_name,lithology_status,
-     lithology_local,lithology_color,
-     lithology_path,lithology_parent_ref,
-     mineral_ref,mineral_name,mineral_name_indexed,mineral_level_ref,mineral_level_name,mineral_status,
-     mineral_local,mineral_color,
-     mineral_path,mineral_parent_ref,
-     host_taxon_ref,host_taxon_name,host_taxon_name_indexed,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-     host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-     host_specimen_ref,ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date )
-    (SELECT NEW.id,  NEW.category,  NEW.host_relationship,  NEW.acquisition_category,  NEW.acquisition_date_mask,
-            NEW.acquisition_date,  NEW.station_visible,
-            NEW.collection_ref, coll.collection_type, coll.code, coll.name, coll.is_public,
-            coll.parent_ref, coll.path,
-            NEW.expedition_ref, expe.name, expe.name_indexed,
-            NEW.gtu_ref, gtu.code, gtu.location,
-            gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-            gtu.elevation, gtu.elevation_accuracy,
-            gtu.tag_values_indexed,
-            taggr_countries.tag_value, lineToTagArray(taggr_countries.tag_value),
-            taggr_provinces.tag_value, lineToTagArray(taggr_provinces.tag_value),
-            (select array_to_string(array(select tag from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province')), ';')) as other_gtu_values,
-            (select array(select distinct fullToIndex(tag) from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province'))) as other_gtu_values_array,
-            NEW.taxon_ref, taxon.name, taxon.name_indexed, taxon.level_ref, taxon_level.level_name, taxon.status,
-            taxon.path, taxon.parent_ref, taxon.extinct,
-            NEW.chrono_ref, chrono.name, chrono.name_indexed, chrono.level_ref, chrono_level.level_name, chrono.status,
-            chrono.local_naming, chrono.color,
-            chrono.path, chrono.parent_ref,
-            NEW.litho_ref, litho.name, litho.name_indexed, litho.level_ref, litho_level.level_name, litho.status,
-            litho.local_naming,litho.color,
-            litho.path, litho.parent_ref,
-            NEW.lithology_ref, lithology.name, lithology.name_indexed, lithology.level_ref, lithology_level.level_name, lithology.status,
-            lithology.local_naming,lithology.color,
-            lithology.path, lithology.parent_ref,
-            NEW.mineral_ref, mineral.name, mineral.name_indexed, mineral.level_ref, mineral_level.level_name, mineral.status,
-            mineral.local_naming,mineral.color,
-            mineral.path, mineral.parent_ref,
-            NEW.host_taxon_ref, host_taxon.name, host_taxon.name_indexed, host_taxon.level_ref, host_taxon_level.level_name, host_taxon.status,
-            host_taxon.path, host_taxon.parent_ref, host_taxon.extinct,
-            NEW.host_specimen_ref, NEW.ig_ref, igs.ig_num, igs.ig_num_indexed, igs.ig_date_mask, igs.ig_date
-     FROM collections coll
-      LEFT JOIN
-          igs ON igs.id = NEW.ig_ref
-      LEFT JOIN
-      	expeditions expe ON expe.id = NEW.expedition_ref
-      LEFT JOIN
-        (gtu LEFT JOIN tag_groups taggr_countries ON gtu.id = taggr_countries.gtu_ref AND taggr_countries.group_name_indexed = 'administrativearea' AND taggr_countries.sub_group_name_indexed = 'country'
-             LEFT JOIN tag_groups taggr_provinces ON gtu.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
-        )
-      	ON gtu.id = NEW.gtu_ref
-      LEFT JOIN 
-        (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id)
-      	ON taxon.id=NEW.taxon_ref
-      LEFT JOIN 
-        (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id)
-      	ON host_taxon.id=NEW.host_taxon_ref
-      LEFT JOIN 
-        (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id)
-      	ON chrono.id=NEW.chrono_ref
-      LEFT JOIN 
-        (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id)
-      	ON litho.id=NEW.litho_ref
-      LEFT JOIN 
-        (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id)
-      	ON lithology.id=NEW.lithology_ref
-      LEFT JOIN 
-        (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
-        ON mineral.id=NEW.mineral_ref
-      
-      WHERE coll.id = NEW.collection_ref
-      LIMIT 1
-    );
- 
- ELSIF TG_OP = 'UPDATE' THEN
-    UPDATE specimens_flat
-    SET (category, host_relationship, acquisition_category, acquisition_date_mask,
-         acquisition_date, station_visible,
-         collection_ref,collection_type,collection_code,collection_name, collection_is_public,
-         collection_parent_ref,collection_path,
-         expedition_ref,expedition_name,expedition_name_indexed,
-         gtu_ref,gtu_code,gtu_location,
-         gtu_from_date_mask,gtu_from_date,gtu_to_date_mask,gtu_to_date,
-         gtu_elevation, gtu_elevation_accuracy,
-         gtu_tag_values_indexed,gtu_country_tag_value,gtu_country_tag_indexed,gtu_province_tag_value,gtu_province_tag_indexed,gtu_others_tag_value,gtu_others_tag_indexed,
-         taxon_ref,taxon_name,taxon_name_indexed,taxon_level_ref,taxon_level_name,taxon_status,
-         taxon_path,taxon_parent_ref,taxon_extinct,
-         chrono_ref,chrono_name,chrono_name_indexed,chrono_level_ref,chrono_level_name,chrono_status,
-         chrono_local, chrono_color,
-         chrono_path,chrono_parent_ref,
-         litho_ref,litho_name,litho_name_indexed,litho_level_ref,litho_level_name,litho_status,
-         litho_local, litho_color,
-         litho_path,litho_parent_ref,
-         lithology_ref,lithology_name,lithology_name_indexed,lithology_level_ref,lithology_level_name,lithology_status,
-         lithology_local, lithology_color,
-         lithology_path,lithology_parent_ref,
-         mineral_ref,mineral_name,mineral_name_indexed,mineral_level_ref,mineral_level_name,mineral_status,
-         mineral_local, mineral_color,
-         mineral_path,mineral_parent_ref,
-         host_taxon_ref,host_taxon_name,host_taxon_name_indexed,host_taxon_level_ref,host_taxon_level_name,host_taxon_status,
-         host_taxon_path,host_taxon_parent_ref,host_taxon_extinct,
-         host_specimen_ref,ig_ref, ig_num, ig_num_indexed, ig_date_mask, ig_date)
-         
-         =
-         
-        (NEW.category, NEW.host_relationship, NEW.acquisition_category, NEW.acquisition_date_mask,
-         NEW.acquisition_date, NEW.station_visible,
-         NEW.collection_ref, subq.coll_collection_type, subq.coll_code, subq.coll_name, subq.coll_is_public,
-         subq.coll_parent_ref, subq.coll_path,
-         NEW.expedition_ref, subq.expe_name, subq.expe_name_indexed,
-         NEW.gtu_ref, subq.gtu_code, subq.gtu_location,
-         subq.gtu_from_date_mask, subq.gtu_from_date, subq.gtu_to_date_mask, subq.gtu_to_date,
-         subq.gtu_elevation, subq.gtu_elevation_accuracy,
-         subq.gtu_tag_values_indexed,
-         subq.gtu_country_tag_value, subq.gtu_country_tag_indexed,
-         subq.gtu_province_tag_value, subq.gtu_province_tag_indexed,
-         subq.gtu_others_tag_value, subq.gtu_others_tag_indexed,
-         NEW.taxon_ref, subq.taxon_name, subq.taxon_name_indexed,
-         subq.taxon_level_ref, subq.taxon_level_level_name, subq.taxon_status,
-         subq.taxon_path, subq.taxon_parent_ref, subq.taxon_extinct,
-         NEW.chrono_ref, subq.chrono_name, subq.chrono_name_indexed,
-         subq.chrono_level_ref, subq.chrono_level_level_name, subq.chrono_status,
-         subq.chrono_local, subq.chrono_color,
-         subq.chrono_path, subq.chrono_parent_ref,
-         NEW.litho_ref, subq.litho_name, subq.litho_name_indexed,
-         subq.litho_level_ref, subq.litho_level_level_name, subq.litho_status,
-         subq.litho_local, subq.litho_color,
-         subq.litho_path, subq.litho_parent_ref,
-         NEW.lithology_ref, subq.lithology_name, subq.lithology_name_indexed,
-         subq.lithology_level_ref, subq.lithology_level_level_name, subq.lithology_status,
-         subq.lithology_local, subq.lithology_color,
-         subq.lithology_path, subq.lithology_parent_ref,
-         NEW.mineral_ref, subq.mineral_name, subq.mineral_name_indexed,
-         subq.mineral_level_ref, subq.mineral_level_level_name, subq.mineral_status,
-         subq.mineral_local, subq.mineral_color,
-         subq.mineral_path, subq.mineral_parent_ref,
-         NEW.host_taxon_ref, subq.host_taxon_name, subq.host_taxon_name_indexed,
-         subq.host_taxon_level_ref, subq.host_taxon_level_level_name, subq.host_taxon_status,
-         subq.host_taxon_path, subq.host_taxon_parent_ref, subq.host_taxon_extinct,
-         NEW.host_specimen_ref,NEW.ig_ref, subq.ig_num, subq.ig_num_indexed, subq.ig_date_mask, subq.ig_date)
-        FROM
-        (SELECT coll.collection_type coll_collection_type, coll.code coll_code, coll.name coll_name, coll.is_public coll_is_public,
-                coll.parent_ref coll_parent_ref, coll.path coll_path,
-                expe.name expe_name, expe.name_indexed expe_name_indexed,
-                gtu.code gtu_code, gtu.location gtu_location,
-                gtu.gtu_from_date_mask, gtu.gtu_from_date, gtu.gtu_to_date_mask, gtu.gtu_to_date,
-                gtu.elevation as gtu_elevation, gtu.elevation_accuracy as gtu_elevation_accuracy,
-                gtu.tag_values_indexed as gtu_tag_values_indexed,
-                taggr_countries.tag_value as gtu_country_tag_value, lineToTagArray(taggr_countries.tag_value) as gtu_country_tag_indexed,
-                taggr_provinces.tag_value as gtu_province_tag_value, lineToTagArray(taggr_provinces.tag_value) as gtu_province_tag_indexed,
-                (select array_to_string(array(select tag from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province')), ';')) as gtu_others_tag_value,
-                (select array(select distinct fullToIndex(tag) from tags where gtu_ref = gtu.id and sub_group_type not in ('country', 'province'))) as gtu_others_tag_indexed,
-                taxon.name taxon_name, taxon.name_indexed taxon_name_indexed,
-                taxon.level_ref taxon_level_ref, taxon_level.level_name taxon_level_level_name, taxon.status taxon_status,
-                taxon.path taxon_path, taxon.parent_ref taxon_parent_ref, taxon.extinct taxon_extinct,
-                chrono.name chrono_name, chrono.name_indexed chrono_name_indexed,
-                chrono.level_ref chrono_level_ref, chrono_level.level_name chrono_level_level_name, chrono.status chrono_status,
-                chrono.local_naming chrono_local, chrono.color chrono_color,
-                chrono.path chrono_path, chrono.parent_ref chrono_parent_ref,
-                litho.name litho_name, litho.name_indexed litho_name_indexed, 
-                litho.level_ref litho_level_ref, litho_level.level_name litho_level_level_name, litho.status litho_status,
-                litho.local_naming litho_local, litho.color litho_color,
-                litho.path litho_path, litho.parent_ref litho_parent_ref,
-                lithology.name lithology_name, lithology.name_indexed lithology_name_indexed,
-                lithology.level_ref lithology_level_ref, lithology_level.level_name lithology_level_level_name, lithology.status lithology_status,
-                lithology.local_naming lithology_local, lithology.color lithology_color,
-                lithology.path lithology_path, lithology.parent_ref lithology_parent_ref,
-                mineral.name mineral_name, mineral.name_indexed mineral_name_indexed,
-                mineral.level_ref mineral_level_ref, mineral_level.level_name mineral_level_level_name, mineral.status mineral_status,
-                mineral.local_naming mineral_local, mineral.color mineral_color,
-                mineral.path mineral_path, mineral.parent_ref mineral_parent_ref,
-                host_taxon.name host_taxon_name, host_taxon.name_indexed host_taxon_name_indexed,
-                host_taxon.level_ref host_taxon_level_ref, host_taxon_level.level_name host_taxon_level_level_name, host_taxon.status host_taxon_status,
-                host_taxon.path host_taxon_path, host_taxon.parent_ref host_taxon_parent_ref, host_taxon.extinct host_taxon_extinct,
-                NEW.ig_ref, igs.ig_num, igs.ig_num_indexed, igs.ig_date_mask, igs.ig_date
-       FROM collections coll
-        LEFT JOIN
-          expeditions expe ON expe.id = NEW.expedition_ref
-        LEFT JOIN
-          igs ON igs.id = NEW.ig_ref
-        LEFT JOIN
-          (gtu LEFT JOIN tag_groups taggr_countries ON gtu.id = taggr_countries.gtu_ref AND taggr_countries.group_name_indexed = 'administrativearea' AND taggr_countries.sub_group_name_indexed = 'country'
-               LEFT JOIN tag_groups taggr_provinces ON gtu.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
-          )
-          ON gtu.id = NEW.gtu_ref
-        LEFT JOIN 
-          (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id)
-          ON taxon.id=NEW.taxon_ref
-        LEFT JOIN 
-          (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id)
-          ON host_taxon.id=NEW.host_taxon_ref
-        LEFT JOIN 
-          (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id)
-          ON chrono.id=NEW.chrono_ref
-        LEFT JOIN 
-          (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id)
-          ON litho.id=NEW.litho_ref
-        LEFT JOIN 
-          (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id)
-          ON lithology.id=NEW.lithology_ref
-        LEFT JOIN 
-          (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
-          ON mineral.id=NEW.mineral_ref
-        WHERE coll.id = NEW.collection_ref
-        LIMIT 1
-      ) subq
-    WHERE specimen_ref = NEW.id;
-  END IF;
+    IF TG_OP = 'UPDATE' THEN
+      old_val = OLD;
+      new_val = NEW;
+    ELSE --INSERT
+      new_val = NEW;
+    END IF;
+
+    IF old_val.taxon_ref IS DISTINCT FROM new_val.taxon_ref THEN
+      SELECT  name, name_indexed, level_ref, level_name, status, path, parent_ref, extinct
+        INTO NEW.taxon_ref, NEW.taxon_name, NEW.taxon_name_indexed, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status,
+          NEW.taxon_path, NEW.taxon_parent_ref, NEW.taxon_extinct
+        FROM taxonomy c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id;
+        WHERE id = new_val.taxon_ref;
+    END IF;
+
+    IF old_val.chrono_ref IS DISTINCT FROM new_val.chrono_ref THEN
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref, extinct
+        INTO NEW.chrono_name, NEW.chrono_name_indexed, NEW.chrono_level_ref, NEW.chrono_level_name, NEW.chrono_status,
+          NEW.chrono_local, NEW.chrono_color, NEW.chrono_path, NEW.chrono_parent_ref
+        FROM chronostratigraphy c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id;
+        WHERE id = new_val.chrono_ref;
+    END IF;
+
+    IF old_val.litho_ref IS DISTINCT FROM new_val.litho_ref THEN
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref, extinct
+        INTO NEW.litho_name, NEW.litho_name_indexed, NEW.litho_level_ref, NEW.litho_level_name, NEW.litho_status,
+          NEW.litho_local, NEW.litho_color, NEW.litho_path, NEW.litho_parent_ref
+        FROM lithostratigraphy c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id;
+        WHERE id = new_val.litho_ref;
+    END IF;
+
+    IF old_val.lithology_ref IS DISTINCT FROM new_val.lithology_ref THEN
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref, extinct
+        INTO NEW.lithology_name, NEW.lithology_name_indexed, NEW.lithology_level_ref, NEW.lithology_level_name, NEW.lithology_status,
+          NEW.lithology_local, NEW.lithology_color, NEW.lithology_path, NEW.lithology_parent_ref
+        FROM lithology c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id;
+        WHERE id = new_val.lithology_ref;
+    END IF;
+
+    IF old_val.mineral_ref IS DISTINCT FROM new_val.mineral_ref THEN
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref, extinct
+        INTO NEW.mineral_name, NEW.mineral_name_indexed, NEW.mineral_level_ref, NEW.mineral_level_name, NEW.mineral_status,
+          NEW.mineral_local, NEW.mineral_color, NEW.mineral_path, NEW.mineral_parent_ref
+        FROM mineralogy c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id;
+        WHERE id = new_val.mineral_ref;
+    END IF;
+
+
+    IF old_val.expedition_ref IS DISTINCT FROM new_val.expedition_ref THEN
+      SELECT  name, name_indexed
+        INTO NEW.expedition_name, NEW.expedition_name_indexed
+        FROM expeditions c
+        WHERE id = new_val.expedition_ref;
+    END IF;
+
+    IF old_val.collection_ref IS DISTINCT FROM new_val.collection_ref THEN
+      SELECT collection_type, code, name, is_public, parent_ref, path
+        INTO NEW.collection_type, NEW.collection_code, NEW.collection_name, NEW.collection_is_public,
+          NEW.collection_parent_ref, NEW.collection_path
+        FROM collections c
+        WHERE id = new_val.collection_ref;
+    END IF;
+
+    IF old_val.ig_ref IS DISTINCT FROM new_val.ig_ref THEN
+      SELECT  ig_num, ig_num_indexed, ig_date, ig_date_mask
+        INTO NEW.ig_num, NEW.ig_num_indexed, NEW.ig_date, NEW.ig_date_mask
+        FROM igs c
+        WHERE id = new_val.ig_ref;
+    END IF;
+
+    IF old_val.gtu_ref IS DISTINCT FROM new_val.gtu_ref THEN
+      SELECT  code, gtu_from_date, gtu_from_date_mask,
+         gtu_to_date, gtu_to_date_mask,
+         elevation, elevation_accuracy,
+         tag_values_indexed, location,
+
+         taggr_countries.tag_value, lineToTagArray(taggr_countries.tag_value),
+         taggr_provinces.tag_value, lineToTagArray(taggr_provinces.tag_value),
+         (select array_to_string(array(select tag from tags where gtu_ref = c.id and sub_group_type not in ('country', 'province')), ';')) as other_gtu_values,
+         (select array(select distinct fullToIndex(tag) from tags where gtu_ref = c.id and sub_group_type not in ('country', 'province'))) as other_gtu_values_array
+
+        INTO NEW.gtu_code, NEW.gtu_from_date, NEW.gtu_from_date_mask, NEW.gtu_to_date, NEW.gtu_to_date_mask,
+         NEW.gtu_elevation, NEW.gtu_elevation_accuracy, NEW.gtu_tag_values_indexed, NEW.gtu_location
+
+        NEW.gtu_country_tag_value, NEW.gtu_country_tag_indexed, NEW.gtu_province_tag_value,
+        NEW.gtu_province_tag_indexed, NEW.gtu_others_tag_value, NEW.gtu_others_tag_indexed
+        FROM gtu c
+          LEFT JOIN tag_groups taggr_countries ON c.id = taggr_countries.gtu_ref AND taggr_countries.group_name_indexed = 'administrativearea' AND taggr_countries.sub_group_name_indexed = 'country'
+          LEFT JOIN tag_groups taggr_provinces ON c.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
+        WHERE id = new_val.gtu_ref;
+    END IF;
+
+    IF old_val.host_taxon_ref IS DISTINCT FROM new_val.host_taxon_ref THEN
+      SELECT name, name_indexed, level_ref, level_name, status, path, parent_ref, extinct
+        INTO NEW.host_taxon_name, NEW.host_taxon_name_indexed, NEW.host_taxon_level_ref,
+         NEW.host_taxon_level_name, NEW.host_taxon_status, NEW.host_taxon_path, NEW.host_taxon_parent_ref, 
+         NEW.host_taxon_extinct
+        FROM taxonomy c
+        WHERE id = new_val.host_taxon_ref;
+    END IF;
   RETURN NEW;
 END;
 $$
