@@ -6,7 +6,7 @@ class ParsingTag
 //  public $peoples = array();
 //  public $comments = array() ;
   public $tags = array() ;
-  public $tag_group_name, $tag_value, $people_order_by=null ;
+  public $tag_group_name, $tag_value, $people_order_by=null, $accession, $accession_num, $accession_date ;
   private $array_object = array() ;
 
   public function __construct($tagtype=null)
@@ -58,6 +58,56 @@ class ParsingTag
     $info->addRelated($object) ;
     return $info ;
   }
+  public function InitAccessionVar($date)
+  {
+    $this->accession_date = $date!= ''?$date:null ;
+    $this->accession_num = null ;
+  }
+  public function addAccession($catalogue)
+  {
+    switch(strtolower($catalogue))
+    {
+      case "code" : $this->accession = "code" ; break ;;
+      case "ig number" : $this->accession = "igs" ; break ;;
+      default : $this->accession = null ; break ;;
+    }
+  }
+  
+  public function HandleAccession($staging)
+  {
+    if(!$this->accession_num) return null ;
+    switch($this->accession)
+    {
+      case 'code' :
+        $object = new Codes() ;
+        $object->fromArray(array('code_date' => strtotime($this->accession_date), 'code' => $this->accession_num)) ;
+        $staging->addRelated($object) ;
+        break ;;
+      case "igs" : 
+        $object = new Codes() ;
+        $object->fromArray(array('ig_date' => $this->accession_date, 'ig_num' => $this->accession_num)) ;
+        $staging->addRelated($object) ;
+        break ;;
+      default :
+        return null ;
+    }
+  }
+  public function addMethod($data,$staging_id)
+  {
+    $method = Doctrine::getTable('CollectingMethods')->findOneByMethod($data);
+    if($method) $ref = $method->getId() ;
+    else
+    {
+      $object = new CollectingMethods() ;
+      $object->setMethod($data) ;
+      $object->save() ;
+      $ref = $object->getId() ;
+    }
+    $object = new SpecimenCollectingMethods() ;
+    $object->fromArray(array("specimen_ref" => $staging_id, "collecting_method_ref" => $ref)) ;
+    return $object ;
+  }
+  
   public function handlePeople($people,$staging)
   {
     $people->setPeopleType($this->people_type);
