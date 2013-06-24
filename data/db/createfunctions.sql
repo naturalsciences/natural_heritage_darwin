@@ -1993,7 +1993,7 @@ BEGIN
                                        from regexp_split_to_table((SELECT pref_value 
                                                                    FROM preferences 
                                                                    WHERE user_ref = NEW.id 
-                                                                     AND pref_key = 'search_cols_part' 
+                                                                     AND pref_key = 'search_cols_specimen' 
                                                                    LIMIT 1
                                                                   ), E'\\|') as fields_list
                                        where fields_list not in ('institution_ref', 'building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type', 'container_storage', 'sub_container', 'sub_container_type', 'sub_container_storage')
@@ -2001,7 +2001,7 @@ BEGIN
                                 ) as fields_available
          ) subq
     WHERE user_ref = NEW.id
-      AND pref_key = 'search_cols_part';
+      AND pref_key = 'search_cols_specimen';
     FOR saved_search_row IN SELECT id, visible_fields_in_result FROM my_saved_searches WHERE user_ref = NEW.id LOOP
       UPDATE my_saved_searches
       SET visible_fields_in_result = subq.fields_available
@@ -2343,10 +2343,10 @@ BEGIN
 
   IF TG_OP = 'DELETE' THEN
     IF OLD.people_type = 'collector' THEN
-      UPDATE specimens_flat s SET spec_coll_ids = fct_remove_array_elem(spec_coll_ids,ARRAY[OLD.people_ref])
+      UPDATE specimens s SET spec_coll_ids = fct_remove_array_elem(spec_coll_ids,ARRAY[OLD.people_ref])
         WHERE specimen_ref  = OLD.record_id;
     ELSIF OLD.people_type = 'donator' THEN
-      UPDATE specimens_flat s SET spec_don_sel_ids = fct_remove_array_elem(spec_don_sel_ids,ARRAY[OLD.people_ref])
+      UPDATE specimens s SET spec_don_sel_ids = fct_remove_array_elem(spec_don_sel_ids,ARRAY[OLD.people_ref])
         WHERE specimen_ref  = OLD.record_id;
     ELSIF OLD.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = OLD.record_id;
@@ -2354,7 +2354,7 @@ BEGIN
         RETURN OLD;
       END IF;
 
-      UPDATE specimens_flat s SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,ARRAY[OLD.people_ref])
+      UPDATE specimens s SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,ARRAY[OLD.people_ref])
         WHERE specimen_ref  = ident.record_id 
             AND NOT exists (
               SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' 
@@ -2365,31 +2365,31 @@ BEGIN
   ELSIF TG_OP = 'INSERT' THEN --- INSERT
 
     IF NEW.people_type = 'collector' THEN
-      UPDATE specimens_flat s SET spec_coll_ids = array_append(spec_coll_ids,NEW.people_ref)
+      UPDATE specimens s SET spec_coll_ids = array_append(spec_coll_ids,NEW.people_ref)
         WHERE specimen_ref  = NEW.record_id and NOT (spec_coll_ids && ARRAY[ NEW.people_ref::integer ]);
     ELSIF NEW.people_type = 'donator' THEN
-      UPDATE specimens_flat s SET spec_don_sel_ids = array_append(spec_don_sel_ids,NEW.people_ref)
+      UPDATE specimens s SET spec_don_sel_ids = array_append(spec_don_sel_ids,NEW.people_ref)
         WHERE specimen_ref  = NEW.record_id  and NOT (spec_don_sel_ids && ARRAY[ NEW.people_ref::integer ]);
     ELSIF NEW.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = NEW.record_id;
 
-      UPDATE specimens_flat s SET spec_ident_ids = array_append(spec_ident_ids,NEW.people_ref)
+      UPDATE specimens s SET spec_ident_ids = array_append(spec_ident_ids,NEW.people_ref)
           WHERE specimen_ref  = ident.record_id and NOT (spec_ident_ids && ARRAY[ NEW.people_ref::integer ]);
     END IF;
 
   ELSIF OLD.people_ref != NEW.people_ref THEN --UPDATE
 
     IF NEW.people_type = 'collector' THEN
-      UPDATE specimens_flat s SET spec_coll_ids = array_append(fct_remove_array_elem(spec_coll_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
+      UPDATE specimens s SET spec_coll_ids = array_append(fct_remove_array_elem(spec_coll_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
         WHERE specimen_ref  = NEW.record_id;
     ELSIF NEW.people_type = 'donator' THEN
-      UPDATE specimens_flat s SET spec_don_sel_ids = array_append(fct_remove_array_elem(spec_don_sel_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
+      UPDATE specimens s SET spec_don_sel_ids = array_append(fct_remove_array_elem(spec_don_sel_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
         WHERE specimen_ref  = NEW.record_id;
 
     ELSIF NEW.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = NEW.record_id;
 
-        SELECT specimen_ref, spec_ident_ids INTO spec_row FROM specimens_flat WHERE specimen_ref = ident.record_id;
+        SELECT specimen_ref, spec_ident_ids INTO spec_row FROM specimens WHERE specimen_ref = ident.record_id;
 
         IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications' 
           WHERE i.record_id = spec_row.specimen_ref AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens' AND c.id != OLD.id
@@ -2401,7 +2401,7 @@ BEGIN
           spec_row.spec_ident_ids := array_append(spec_row.spec_ident_ids ,NEW.people_ref);
         END IF;
 
-        UPDATE specimens_flat SET spec_ident_ids = spec_row.spec_ident_ids WHERE specimen_ref = spec_row.specimen_ref;
+        UPDATE specimens SET spec_ident_ids = spec_row.spec_ident_ids WHERE specimen_ref = spec_row.specimen_ref;
     END IF;
     --else  raise info 'ooh';
   END IF;
@@ -2416,7 +2416,7 @@ BEGIN
 
   IF EXISTS(SELECT true FROM catalogue_people cp WHERE cp.record_id = OLD.id AND cp.referenced_relation = 'identifications') THEN
     -- There's NO identifier associated to this identification'
-    UPDATE specimens_flat SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids, 
+    UPDATE specimens SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids, 
       (
         select array_agg(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
         AND people_ref NOT in
@@ -3186,67 +3186,6 @@ $$
 LANGUAGE sql immutable;
 
 
-create or replace function upsert (tableName in varchar, keyValues in hstore) returns text language plpgsql as
-$$
-declare
-  insert_stmt varchar := 'insert into ' || quote_ident(tableName) || ' (';
-  update_stmt varchar := 'update ' || quote_ident(tableName) || ' SET (';
-  where_stmt varchar := ' WHERE ';
-  iloop integer := 0;
-  recUnqFields RECORD;
-  newhst RECORD;
-  lowerKeyValues hstore;
-begin
-  for newhst in (select * from each(keyValues)) loop
-    if iloop = 0 then
-      lowerKeyValues := hstore(lower(newhst.key), newhst.value);
-    else
-      lowerKeyValues := lowerKeyValues || hstore(lower(newhst.key), newhst.value);
-    end if;
-    iloop := iloop +1;
-  end loop;
-  iloop := 0;
-  insert_stmt := insert_stmt || array_to_string(akeys(lowerKeyValues), ',') || ') VALUES (' || chr(39) || array_to_string(avals(lowerKeyValues), (chr(39) || ',' || chr(39))::text) || chr(39) ||')';
-  begin
-    execute insert_stmt;
-  exception
-    when unique_violation then
-      begin
-        for recUnqFields IN (select x.vals as field, column_default as defaultVal 
-                             from (select regexp_split_to_table(trim(substr(indexdef,strpos(indexdef, '(')+1),')'),', ') as vals 
-                                   from pg_indexes 
-                                   where tablename = tableName 
-                                     and strpos(indexdef, 'UNIQUE') > 0 
-                                     and indexname = (select conname 
-                                                      from pg_class inner join pg_constraint on pg_class.oid = pg_constraint.conrelid and relname = tableName and contype = 'p'
-                                                     )
-                                  ) as x 
-                             inner join 
-                             information_schema.columns on x.vals = column_name and table_name = tableName) loop
-          if iloop > 0 then
-            where_stmt := where_stmt || ' AND ';
-          end if;
-          iloop := iloop + 1;
-          if lowerKeyValues ? recUnqFields.field then
-            where_stmt := where_stmt || quote_ident(recUnqFields.field) || ' = ' || quote_literal(lowerKeyValues -> recUnqFields.field);
-          else
-            where_stmt := where_stmt || quote_ident(recUnqFields.field) || ' = ' || quote_literal(coalesce(recUnqFields.defaultVal,''));
-          end if;
-        end loop;
-        update_stmt := update_stmt || array_to_string(akeys(lowerKeyValues), ',') || ') = (' || chr(39) || array_to_string(avals(lowerKeyValues), (chr(39) || ',' || chr(39))::text) || chr(39) ||')' || where_stmt;
-        execute update_stmt;
-        return 'updated';
-      exception
-        when others then
-          return 'SQL error is: '::text || SQLERRM;
-      end;
-      return 'SQL error is: '::text || SQLERRM;
-  end;
-  return 'inserted';
-end;
-$$;
-
-
 CREATE OR REPLACE function fct_remove_last_flag() RETURNS TRIGGER
 language plpgsql
 AS
@@ -3296,7 +3235,7 @@ $$
 BEGIN
 
     IF exists( SELECT 1 FROM loan_items i INNER JOIN loan_status s on i.loan_ref = s.loan_ref
-        WHERE s.is_last= true AND s.status != 'closed' AND i.part_ref = OLD.id ) THEN
+        WHERE s.is_last= true AND s.status != 'closed' AND i.specimen_ref = OLD.id ) THEN
       RAISE EXCEPTION 'The Part is currently used in an ongoing loan';
     END IF;
     RETURN OLD;
@@ -3380,7 +3319,7 @@ BEGIN
 
     UNION
 
-    select loan_id, 'specimens_flat', hstore(sfl.*) from specimens_flat sfl
+    select loan_id, 'specimens', hstore(sfl.*) from specimens sfl
       where sfl.id in (select specimen_ref from loan_items l where l.loan_ref = loan_id)
   );
 
