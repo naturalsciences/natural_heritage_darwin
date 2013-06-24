@@ -58,18 +58,15 @@ class ParsingTag
     $info->addRelated($object) ;
     return $info ;
   }
-  public function handlePeople($people,$staging,$is_maintenance=false)
+  public function handlePeople($people,$staging)
   {
-    if(!$is_maintenance)
+    $people->setPeopleType($this->people_type);
+    if($this->people_order_by)
     {
-      $people->setPeopleType($this->people_type);
-      if($this->people_order_by)
-      {
-        $people->setOrderBy($this->people_order_by) ;
-        $this->people_order_by = null ;
-      }
-      $staging->addRelated($people) ;
+      $people->setOrderBy($this->people_order_by) ;
+      $this->people_order_by = null ;
     }
+    $staging->addRelated($people) ;
   }
 
   public function insertTags()

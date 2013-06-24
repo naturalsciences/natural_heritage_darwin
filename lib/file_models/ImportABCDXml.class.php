@@ -41,7 +41,7 @@ class ImportABCDXml implements IImportModels
       case "Altitude" : $this->higher_tag = "altitude" ; break ;;
       case "Country" : $this->higher_tag = "country" ; $this->object->tag_group_name="country" ; break ;;
       case "Depth" : $this->higher_tag = "depth" ; break ;;
-      case "dna:DNASample" : $this->object = new parsingDNA() ; break ;;
+      case "dna:DNASample" : $this->object = new ParsingMaintenance('Dna extraction') ; break ;;
       case "Gathering" : $this->object = new parsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break ;;
       case "Height" : $this->higher_tag = "height" ; break ;;
       case "HigherTaxa" : $this->object->taxon_parent = new Hstore() ;break ;;
@@ -54,7 +54,7 @@ class ImportABCDXml implements IImportModels
       //case "Notes" :  break ;;
       case "PersonName" : $this->people = new StagingPeople() ; break ;;
       case "Person" : $this->people = new StagingPeople() ; break ;;
-      case "Sequence" : $this->object = new parsingProperties("sequence") ; break ;;
+      case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break ;;
       case "SiteMeasurementOrFact" : $this->higher_tag = "SiteMeasurementOrFact" ; break ;;
       case "SpecimenUnit" : $this->object = new parsingTag("unit") ; break ;;
       case "Unit" : $this->staging = new Staging(); $this->depth=0 ; $this->name = "" ; break ;;
@@ -72,7 +72,7 @@ class ImportABCDXml implements IImportModels
       case "Country" : $this->object->addTagGroups() ;break;;
       case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
       //case "Depth" : $this->object->save() ; break ;;
-      case "dna:DNASample" : $this->object->addMaintenance($this->staging, $this->people) ; break ;;
+      case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break ;;
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->temp_data) ; break ;;
       case "Gathering" : $this->object->insertTags($this->next_id)  ; break ;;
       case "HigherTaxa" : $this->staging["taxon_parents"] = $this->object->getTaxonParent() ;; break ;;
@@ -88,7 +88,7 @@ class ImportABCDXml implements IImportModels
       case "PersonName" : $this->object->handlePeople($this->people) ; break ;;
       case "Person" : $this->object->handlePeople($this->people,$this->staging,true) ; break ;;
       case "ScientificName" : $this->staging["taxon_name"] = $this->object->getTaxonName() ; break ;;
-      case "Sequence" : /* @TODO save property */ break ;;
+      case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break ;;
       case "Unit" : $this->staging->fromArray(array("import_ref" => $this->import_id, "level" => "spec"));
                     $this->staging->save() ; $this->next_id++; $this->saveObjects() ;
                     $this->unit_id_ref[$this->name] = $this->staging->getId() ; break ;;
@@ -116,6 +116,7 @@ class ImportABCDXml implements IImportModels
       case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $data ; break ;;
       case "Context" : $this->object->multimedia_data['sub_type'] = $data ; break ;;
       case "CreatedDate" : $this->object->multimedia_data['creation_date'] = $data ; break ;; 
+      case "Database" : $this->object->desc .= "Database ref : $data ;" ; break ;;
       case "DateText" : $this->object->GTUdate['time'] = $data ; break ;;
       case "dna:Concentration" : /* this->object->properties */ break ;;
       case "dna:ExtractionDate" : $this->object->maintenance->setModificationDateTime($data) ; break ;;
@@ -130,12 +131,14 @@ class ImportABCDXml implements IImportModels
       case "FullScientificNameString" : $this->object->fullname = $data ;break;;
       case "HigherTaxonName" : $this->object->higher_taxon_name = $data ;break;;
       case "HigherTaxonRank" : $this->object->higher_taxon_level = $data ;break;;
+      case "ID-in-Database" : $this->object->desc .= "id in database : $data ;" ; break ;;
       case "InheritedName" : $this->people['family_name'] = $data ; break ;;
       case "ISODateTimeBegin" : $this->object->GTUdate['from'] = $data ; break ;;
       case "ISODateTimeEnd" : $this->object->GTUdate['to'] = $data ; break ;;
       case "IsQuantitative" : break ;; //@TODO parsingProperties
       case "KindOfUnit" : $this->staging['part'] = $data ; break ;;
       case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $data ; break ;;
+      case "Length" : $this->object->desc .= "Length : $data ;" ; break ;;
       case "LocalityText" : $this->staging['gtu_code'] = $data ; break ;; //@TOTO maybe find a better place for that.
       case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $data ; break ;;
       case "LowerValue" : $this->property->getLowerValue($data, $this->higher_tag,$this->staging) ; break ;;

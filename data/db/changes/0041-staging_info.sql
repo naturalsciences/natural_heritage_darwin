@@ -39,6 +39,8 @@ GRANT ALL ON TABLE staging_relationship TO darwin2;
 GRANT SELECT ON TABLE staging_relationship TO d2viewer;
 
 ALTER TABLE staging DROP COLUMN part_status ;
+alter table collection_maintenance alter column people_ref drop not null ;
+
 
 CREATE TRIGGER trg_clr_referenceRecord_staging_info AFTER DELETE OR UPDATE
   ON staging_info FOR EACH ROW
