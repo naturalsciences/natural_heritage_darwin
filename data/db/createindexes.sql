@@ -87,7 +87,7 @@ CREATE INDEX CONCURRENTLY idx_vernacular_names_community_indexed on vernacular_n
 CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
 CREATE INDEX CONCURRENTLY idx_vernacular_names_referenced_record on vernacular_names(referenced_relation, record_id);
 
-CREATE INDEX CONCURRENTLY idx_specimen_parts_object_name_indexed on specimen_parts (object_name_indexed);
+CREATE INDEX CONCURRENTLY idx_specimens_object_name_indexed on specimens (object_name_indexed);
 
 
 CREATE INDEX CONCURRENTLY idx_codes_code_num on codes(code_num) WHERE NOT code_num IS NULL;

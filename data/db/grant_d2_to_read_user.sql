@@ -35,7 +35,6 @@
  GRANT SELECT ON specimens_accompanying TO d2viewer;
  GRANT SELECT ON possible_upper_levels TO d2viewer;
  GRANT SELECT ON people_relationships TO d2viewer;
- GRANT SELECT ON specimen_individuals TO d2viewer;
  GRANT SELECT ON properties_values TO d2viewer;
  GRANT SELECT ON preferences TO d2viewer;
  GRANT SELECT ON staging_tag_groups TO d2viewer;
@@ -58,7 +57,6 @@
  GRANT SELECT ON specimens TO d2viewer;
  GRANT SELECT ON people TO d2viewer;
  GRANT SELECT ON multimedia TO d2viewer;
- GRANT SELECT ON specimen_parts TO d2viewer;
  GRANT SELECT ON loan_items TO d2viewer;
  GRANT SELECT ON loan_rights TO d2viewer;
  GRANT SELECT ON loan_status TO d2viewer;
@@ -68,7 +66,6 @@
  GRANT SELECT ON loan_history TO d2viewer;
  GRANT SELECT ON catalogue_bibliography TO d2viewer;
  GRANT SELECT ON bibliography TO d2viewer;
- GRANT SELECT ON specimens_flat TO d2viewer;
 
  GRANT SELECT, INSERT ON users_comm TO d2viewer;
  GRANT USAGE ON users_comm_id_seq to d2viewer;
