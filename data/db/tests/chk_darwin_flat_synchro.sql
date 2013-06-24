@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(101);
+SELECT plan(47);
 
 SELECT diag('Darwin flat synchro tests');
 
@@ -39,43 +39,41 @@ INSERT INTO igs(id, ig_num) VALUES (100000, '240275');
 INSERT INTO igs(id, ig_num) VALUES (100001, '240276');
 -- Insertion of specimens using these data
 INSERT INTO specimens (id, collection_ref, expedition_ref, gtu_ref, taxon_ref, chrono_ref, litho_ref, lithology_ref, mineral_ref)
-       VALUES (100000,100001,100000,100001,100000,100000,100000,100000,100000);
+       VALUES (1,100001,100000,100001,100000,100000,100000,100000,100000);
 INSERT INTO specimens (id, collection_ref, expedition_ref, gtu_ref, taxon_ref, chrono_ref, litho_ref, lithology_ref, mineral_ref, ig_ref, host_relationship, host_taxon_ref)
-       VALUES (100001,100005,100001,100002,100001,100001,100001,100001,100001,100001,'Parasit',100000);
+       VALUES (2,100005,100001,100002,100001,100001,100001,100001,100001,100001,'Parasit',100000);
 
-SELECT is(100000, (SELECT spec_ref FROM darwin_flat WHERE id = 1), 'First specimen inserted is well the specimen "100000".');
-SELECT is('physical' , (SELECT category FROM darwin_flat WHERE id = 1), 'It''s well a "physical" specimen.');
-SELECT is(100001 , (SELECT collection_ref FROM darwin_flat WHERE id = 1), 'Collection referenced is well "100001".');
-SELECT is('mix' , (SELECT collection_type FROM darwin_flat WHERE id = 1), 'Collection referenced type is well "mix".');
-SELECT is('Bulots Af.' , (SELECT collection_code FROM darwin_flat WHERE id = 1), 'Collection referenced code is well "Bulots Af.".');
-SELECT is('Atlantic city 2010' , (SELECT expedition_name FROM darwin_flat WHERE id = 1), 'Expedition is well "Atlantic city 2010".');
-SELECT is(ARRAY['belgium','belgie','belgique','brussel','bruxelles','brussels','brusel']::varchar[] , (SELECT gtu_tag_values_indexed FROM darwin_flat WHERE id = 1), 'Tag list is correct');
-SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM darwin_flat WHERE id = 1), 'Country Tag value is correct');
-SELECT is('Anicracra' , (SELECT taxon_name FROM darwin_flat WHERE id = 1), 'Taxon is well "Anicracra".');
-SELECT is('Devotien' , (SELECT chrono_name FROM darwin_flat WHERE id = 1), 'Chrono unit is well "Devotien".');
-SELECT is('Croute basse' , (SELECT litho_name FROM darwin_flat WHERE id = 1), 'Litho unit is well "Croute basse".');
-SELECT is('Petits cailloux' , (SELECT lithology_name FROM darwin_flat WHERE id = 1), 'Lithology unit is well "Petits cailloux".');
-SELECT is('Camion' , (SELECT mineral_name FROM darwin_flat WHERE id = 1), 'Mineral unit is well "Camion".');
-SELECT is('0' , (SELECT coalesce(ig_num,'0') FROM darwin_flat WHERE id = 1), 'No ig num for specimen 1.');
-SELECT is(100001 , (SELECT spec_ref FROM darwin_flat WHERE id = 2), 'Second specimen inserted is well the specimen "100001".');
-SELECT is('physical' , (SELECT category FROM darwin_flat WHERE id = 2), 'It''s well a "physical" specimen.');
-SELECT is(100005 , (SELECT collection_ref FROM darwin_flat WHERE id = 2), 'Collection referenced is well "100002".');
-SELECT is('mix' , (SELECT collection_type FROM darwin_flat WHERE id = 2), 'Collection referenced type is well "mix".');
-SELECT is('Crétins EU' , (SELECT collection_code FROM darwin_flat WHERE id = 2), 'Collection referenced code is well "Crétins EU".');
-SELECT is('Bruxelles-Brussels' , (SELECT expedition_name FROM darwin_flat WHERE id = 2), 'Expedition is well "Bruxelles-Brussels".');
-SELECT is(ARRAY['belgium','belgie','belgique','brugge','bruge']::varchar[] , (SELECT gtu_tag_values_indexed FROM darwin_flat WHERE id = 2), 'Tag list is correct');
-SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM darwin_flat WHERE id = 2), 'Country Tag value is correct');
-SELECT is('Aniblabla' , (SELECT taxon_name FROM darwin_flat WHERE id = 2), 'Taxon is well "Aniblabla".');
-SELECT is('Chronocouche' , (SELECT chrono_name FROM darwin_flat WHERE id = 2), 'Crhono unit is well "Chronocouche".');
-SELECT is('Lithocroute' , (SELECT litho_name FROM darwin_flat WHERE id = 2), 'Litho unit is well "Lithocroute".');
-SELECT is('Gros rochers' , (SELECT lithology_name FROM darwin_flat WHERE id = 2), 'Lithology unit is well "Petits cailloux".');
-SELECT is('Onion' , (SELECT mineral_name FROM darwin_flat WHERE id = 2), 'Mineral unit is well "Onion".');
-SELECT is('240276' , (SELECT ig_num FROM darwin_flat WHERE id = 2), 'ig num "240276" for specimen 2.');
+SELECT is('physical' , (SELECT category FROM specimens WHERE id = 1), 'It''s well a "physical" specimen.');
+SELECT is('mix' , (SELECT collection_type FROM specimens WHERE id = 1), 'Collection referenced type is well "mix".');
+SELECT is('Bulots Af.' , (SELECT collection_code FROM specimens WHERE id = 1), 'Collection referenced code is well "Bulots Af.".');
+SELECT is('Atlantic city 2010' , (SELECT expedition_name FROM specimens WHERE id = 1), 'Expedition is well "Atlantic city 2010".');
+SELECT is(ARRAY['belgium','belgie','belgique','brussel','bruxelles','brussels','brusel']::varchar[] , (SELECT gtu_tag_values_indexed FROM specimens WHERE id = 1), 'Tag list is correct');
+SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM specimens WHERE id = 1), 'Country Tag value is correct');
+SELECT is('Anicracra' , (SELECT taxon_name FROM specimens WHERE id = 1), 'Taxon is well "Anicracra".');
+SELECT is('Devotien' , (SELECT chrono_name FROM specimens WHERE id = 1), 'Chrono unit is well "Devotien".');
+SELECT is('Croute basse' , (SELECT litho_name FROM specimens WHERE id = 1), 'Litho unit is well "Croute basse".');
+SELECT is('Petits cailloux' , (SELECT lithology_name FROM specimens WHERE id = 1), 'Lithology unit is well "Petits cailloux".');
+SELECT is('Camion' , (SELECT mineral_name FROM specimens WHERE id = 1), 'Mineral unit is well "Camion".');
+SELECT is('0' , (SELECT coalesce(ig_num,'0') FROM specimens WHERE id = 1), 'No ig num for specimen 1.');
+
+SELECT is('physical' , (SELECT category FROM specimens WHERE id = 2), 'It''s well a "physical" specimen.');
+SELECT is(100005 , (SELECT collection_ref FROM specimens WHERE id = 2), 'Collection referenced is well "100002".');
+SELECT is('mix' , (SELECT collection_type FROM specimens WHERE id = 2), 'Collection referenced type is well "mix".');
+SELECT is('Crétins EU' , (SELECT collection_code FROM specimens WHERE id = 2), 'Collection referenced code is well "Crétins EU".');
+SELECT is('Bruxelles-Brussels' , (SELECT expedition_name FROM specimens WHERE id = 2), 'Expedition is well "Bruxelles-Brussels".');
+SELECT is(ARRAY['belgium','belgie','belgique','brugge','bruge']::varchar[] , (SELECT gtu_tag_values_indexed FROM specimens WHERE id = 2), 'Tag list is correct');
+SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM specimens WHERE id = 2), 'Country Tag value is correct');
+SELECT is('Aniblabla' , (SELECT taxon_name FROM specimens WHERE id = 2), 'Taxon is well "Aniblabla".');
+SELECT is('Chronocouche' , (SELECT chrono_name FROM specimens WHERE id = 2), 'Crhono unit is well "Chronocouche".');
+SELECT is('Lithocroute' , (SELECT litho_name FROM specimens WHERE id = 2), 'Litho unit is well "Lithocroute".');
+SELECT is('Gros rochers' , (SELECT lithology_name FROM specimens WHERE id = 2), 'Lithology unit is well "Petits cailloux".');
+SELECT is('Onion' , (SELECT mineral_name FROM specimens WHERE id = 2), 'Mineral unit is well "Onion".');
+SELECT is('240276' , (SELECT ig_num FROM specimens WHERE id = 2), 'ig num "240276" for specimen 2.');
 
 -- UPDATE of collection manager data -> for users trigger check
 
-UPDATE users SET family_name = 'Jojoba', formated_name = 'Jojoba' WHERE id = 100000;
-UPDATE users SET family_name = 'Caloulou', formated_name = 'Caloulou' WHERE id = 100001;
+UPDATE users SET family_name = 'Jojoba', formated_name = 'Jojoba' WHERE id = 1;
+UPDATE users SET family_name = 'Caloulou', formated_name = 'Caloulou' WHERE id = 2;
 
 
 -- UPDATE of collection institution data -> for people trigger check
@@ -85,157 +83,70 @@ UPDATE people SET family_name = 'ECOLO', formated_name = 'ECOLO' WHERE id = 1000
 
 -- UPDATE of 3 collections institution and main manager reference data -> for collections trigger check
 
-UPDATE collections SET institution_ref = 100003, main_manager_ref = 100001 WHERE id = 100000;
+UPDATE collections SET institution_ref = 100003, main_manager_ref = 100001 WHERE id = 1;
 
 -- UPDATE of tag_value of cities for gtu 100001 -> should have no impact on gtu_country_tag_value but well on gtu_tag_values_indexed
 
 UPDATE tag_groups SET tag_value = 'Liège;Luik;Lutig' WHERE gtu_ref = 100001 AND group_name_indexed = 'administrativearea' AND sub_group_name_indexed = 'city';
 
-SELECT is(ARRAY['belgium','belgie','belgique','liege','lutig','luik']::varchar[] , (SELECT gtu_tag_values_indexed FROM darwin_flat WHERE id = 1), 'Tag list is correct');
-SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM darwin_flat WHERE id = 1), 'Country Tag value is correct');
-SELECT is(ARRAY['belgium','belgie','belgique','brugge','bruge']::varchar[] , (SELECT gtu_tag_values_indexed FROM darwin_flat WHERE id = 2), 'Tag list is correct');
-SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM darwin_flat WHERE id = 2), 'Country Tag value is correct');
+SELECT is(ARRAY['belgium','belgie','belgique','liege','lutig','luik']::varchar[] , (SELECT gtu_tag_values_indexed FROM specimens WHERE id = 1), 'Tag list is correct');
+SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM specimens WHERE id = 1), 'Country Tag value is correct');
+SELECT is(ARRAY['belgium','belgie','belgique','brugge','bruge']::varchar[] , (SELECT gtu_tag_values_indexed FROM specimens WHERE id = 2), 'Tag list is correct');
+SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM specimens WHERE id = 2), 'Country Tag value is correct');
 
 -- UPDATE of tag_value of country for gtu 100001 -> should have impact either on gtu_country_tag_value but well on gtu_tag_values_indexed too
 
 UPDATE tag_groups SET tag_value = 'Belgique;Belgium;Belgïe;Belgo' WHERE gtu_ref = 100001 AND group_name_indexed = 'administrativearea' AND sub_group_name_indexed = 'country';
 
-SELECT is(ARRAY['liege','lutig','luik','belgium','belgo','belgie','belgique']::varchar[] , (SELECT gtu_tag_values_indexed FROM darwin_flat WHERE id = 1), 'Tag list is correct');
-SELECT is('Belgique;Belgium;Belgïe;Belgo' , (SELECT gtu_country_tag_value FROM darwin_flat WHERE id = 1), 'Country Tag value is correct');
-SELECT is(ARRAY['belgium','belgie','belgique','brugge','bruge']::varchar[] , (SELECT gtu_tag_values_indexed FROM darwin_flat WHERE id = 2), 'Tag list is correct');
-SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM darwin_flat WHERE id = 2), 'Country Tag value is correct');
+SELECT is(ARRAY['liege','lutig','luik','belgium','belgo','belgie','belgique']::varchar[] , (SELECT gtu_tag_values_indexed FROM specimens WHERE id = 1), 'Tag list is correct');
+SELECT is('Belgique;Belgium;Belgïe;Belgo' , (SELECT gtu_country_tag_value FROM specimens WHERE id = 1), 'Country Tag value is correct');
+SELECT is(ARRAY['belgium','belgie','belgique','brugge','bruge']::varchar[] , (SELECT gtu_tag_values_indexed FROM specimens WHERE id = 2), 'Tag list is correct');
+SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM specimens WHERE id = 2), 'Country Tag value is correct');
 
 -- Delete the country tag group for gtu 100001
 
 DELETE FROM tag_groups WHERE gtu_ref = 100001 AND group_name_indexed = 'administrativearea' AND sub_group_name_indexed = 'country';
 
-SELECT is(ARRAY['liege','lutig','luik']::varchar[] , (SELECT gtu_tag_values_indexed FROM darwin_flat WHERE id = 1), 'Tag list correctly updated');
-SELECT is('0' , (SELECT coalesce(gtu_country_tag_value,'0') FROM darwin_flat WHERE id = 1), 'Country Tag value correctly updated');
+SELECT is(ARRAY['liege','lutig','luik']::varchar[] , (SELECT gtu_tag_values_indexed FROM specimens WHERE id = 1), 'Tag list correctly updated');
+SELECT is('0' , (SELECT coalesce(gtu_country_tag_value,'0') FROM specimens WHERE id = 1), 'Country Tag value correctly updated');
 
 -- Reset country sub group of gtu 100001 to Belgique;Belgïe;Belgium
 
 INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value) VALUES (100001, 'Administrative area', 'Country', 'Belgique;Belgium;Belgïe');
 
-SELECT is(ARRAY['belgium','belgie','belgique','liege','lutig','luik']::varchar[] , (SELECT gtu_tag_values_indexed FROM darwin_flat WHERE id = 1), 'Tag list is correct');
-SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM darwin_flat WHERE id = 1), 'Country Tag value is correct');
+SELECT is(ARRAY['belgium','belgie','belgique','liege','lutig','luik']::varchar[] , (SELECT gtu_tag_values_indexed FROM specimens WHERE id = 1), 'Tag list is correct');
+SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM specimens WHERE id = 1), 'Country Tag value is correct');
 
 -- Redelete the country tag group for gtu 100001 by updating the sub group value to an idot one
 
 -- UPDATE tag_groups SET group_name = 'Topographic', sub_group_name = 'Landscape' WHERE gtu_ref = 100001 AND group_name_indexed = 'administrativearea' AND sub_group_name_indexed = 'country';
 --
--- SELECT is(ARRAY['belgium','belgie','belgique','liege','lutig','luik']::varchar[] = (SELECT gtu_tag_values_indexed FROM darwin_flat WHERE id = 1), 'Tag list correctly updated');
--- SELECT is('0' = (SELECT coalesce(gtu_country_tag_value,'0') FROM darwin_flat WHERE id = 1), 'Country Tag value correctly updated');
+-- SELECT is(ARRAY['belgium','belgie','belgique','liege','lutig','luik']::varchar[] = (SELECT gtu_tag_values_indexed FROM specimens WHERE id = 1), 'Tag list correctly updated');
+-- SELECT is('0' = (SELECT coalesce(gtu_country_tag_value,'0') FROM specimens WHERE id = 1), 'Country Tag value correctly updated');
 
 -- UPDATE of taxon name and extinct of taxon 100001
 
-UPDATE taxonomy SET name = 'Gloubiboulga', extinct = true where id = 100001;
+UPDATE taxonomy SET name = 'Gloubiboulga', extinct = true where id = 100000;
 
-SELECT is(true , (SELECT taxon_extinct FROM darwin_flat WHERE id = 2), 'Taxon of specimen 2 is now extinct');
-SELECT is('Gloubiboulga' , (SELECT taxon_name FROM darwin_flat WHERE id = 2), 'And its name is correct');
+SELECT is(true , (SELECT taxon_extinct FROM specimens WHERE id = 1), 'Taxon of specimen 2 is now extinct');
+SELECT is('Gloubiboulga' , (SELECT taxon_name FROM specimens WHERE id = 1), 'And its name is correct');
 
 -- UPDATE of collection_ref, IG num, taxon_ref and gtu_ref of specimen 2
 
-UPDATE specimens SET collection_ref = 100006, gtu_ref = 100000, taxon_ref = 100000, ig_ref = 100000 where id = 100001;
+UPDATE specimens SET collection_ref = 100006, gtu_ref = 100000, taxon_ref = 100000, ig_ref = 100000 where id = 2;
 
-SELECT is('Crétins US.' , (SELECT collection_code FROM darwin_flat WHERE id = 2), 'Collection referenced code is well "Crétins US".');
-SELECT is('Crétins américains' , (SELECT collection_name FROM darwin_flat WHERE id = 2), 'Collection referenced name is well "Crétins américains".');
-SELECT is(ARRAY['belgium','belgie','belgique']::varchar[] , (SELECT gtu_tag_values_indexed FROM darwin_flat WHERE id = 2), 'Tag list is correct');
-SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM darwin_flat WHERE id = 2), 'Country Tag value is correct');
-SELECT is('BELGO' , (SELECT gtu_code FROM darwin_flat WHERE id = 2), 'The gtu has been well updated ;)');
-SELECT is('Anicracra' , (SELECT taxon_name FROM darwin_flat WHERE id = 2), 'Taxon is well "Anicracra".');
-SELECT is('240275' , (SELECT ig_num FROM darwin_flat WHERE id = 2), 'ig num "240275" for specimen 2.');
+SELECT is('Crétins US.' , (SELECT collection_code FROM specimens WHERE id = 2), 'Collection referenced code is well "Crétins US".');
+SELECT is('Crétins américains' , (SELECT collection_name FROM specimens WHERE id = 2), 'Collection referenced name is well "Crétins américains".');
+SELECT is(ARRAY['belgium','belgie','belgique']::varchar[] , (SELECT gtu_tag_values_indexed FROM specimens WHERE id = 2), 'Tag list is correct');
+SELECT is('Belgique;Belgium;Belgïe' , (SELECT gtu_country_tag_value FROM specimens WHERE id = 2), 'Country Tag value is correct');
+SELECT is('BELGO' , (SELECT gtu_code FROM specimens WHERE id = 2), 'The gtu has been well updated ;)');
+SELECT is('Gloubiboulga' , (SELECT taxon_name FROM specimens WHERE id = 2), 'Taxon is well "Anicracra".');
+SELECT is('240275' , (SELECT ig_num FROM specimens WHERE id = 2), 'ig num "240275" for specimen 2.');
 
--- Test delete of ig num -> set to null value in darwin_flat
+-- Test delete of ig num -> set to null value in specimens
 
 SELECT throws_ok('DELETE FROM igs where ig_num = ''240275''');
 
-
--- Tests individuals interactions
-
-SELECT is(false , (SELECT with_individuals FROM darwin_flat WHERE spec_ref = 100001), 'With individuals value well false for specimen 100001');
-
-INSERT INTO specimen_individuals (id, specimen_ref, type) VALUES (240275, 100001, 'holotype');
-
-SELECT is(240275 , (SELECT individual_ref FROM darwin_flat WHERE spec_ref = 100001), 'Individual well inserted in flat');
-SELECT is(true , (SELECT with_individuals FROM darwin_flat WHERE spec_ref = 100001), 'and with individuals well set to true');
-SELECT lives_ok('INSERT INTO specimen_individuals (id, specimen_ref, type) VALUES (240276, 100001, ''paratype'')', 'Insertion of a new individual for specimen 100001');
-SELECT is(2::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND with_individuals = true), 'Creates well a new line');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND individual_ref = 240276), '... and with good values');
-
--- Test parts interactions
-
-INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (240275, 240276, 'specimen');
-
-SELECT is(240275 , (SELECT part_ref FROM darwin_flat WHERE individual_ref = 240276), 'New part data well updated in darwin flat');
-SELECT is(true , (SELECT with_parts FROM darwin_flat WHERE individual_ref = 240276), 'and with with_parts field well updated');
-SELECT lives_ok('INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (240276, 240276, ''leg'')', 'Insertion of a new part for the same individual');
-SELECT is(2::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND individual_ref = 240276 AND with_parts = true), 'Creates well a new line');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND part_ref = 240276), '... and with good values');
-
--- Test removing parts interactions
-
-SELECT lives_ok('DELETE FROM specimen_parts WHERE specimen_individual_ref = 240276', 'Parts well deleted for individual 240276');
-SELECT is(0::bigint , (SELECT COUNT(*) FROM specimen_parts WHERE specimen_individual_ref = 240276), 'No more parts for individual 240276');
-SELECT is(false , (SELECT with_parts FROM specimen_individuals WHERE id = 240276), 'With parts field well updated in specimen_individuals');
-SELECT is(1::bigint , (SELECT COUNT(*) from darwin_flat WHERE individual_ref = 240276), 'Nbr of corresponding records well updated in darwin_flat');
-SELECT is(false , (SELECT with_parts FROM darwin_flat WHERE individual_ref = 240276), 'With parts field well updated in darwin_flat');
-SELECT is(0 , (SELECT COALESCE(part_ref,0) FROM darwin_flat WHERE individual_ref = 240276), 'Part ref well removed');
-
--- Testing removing individuals with two parts linked deleted with cascade delete
-INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (240275, 240276, 'specimen');
-INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (240276, 240276, 'leg');
-SELECT is(2::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND individual_ref = 240276 AND with_parts = true), 'Creates well a new line');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND part_ref = 240276), '... and with good values');
-SELECT lives_ok('DELETE FROM specimen_individuals WHERE id = 240276', 'Deleting individual 240276');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND with_individuals = true), 'One line remains');
-SELECT is(0::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND individual_ref = 240276), 'No more individual 240276');
-SELECT is(false , (SELECT DISTINCT with_parts FROM darwin_flat WHERE spec_ref = 100001), 'with parts set to false for specimen 100001');
-INSERT INTO specimen_individuals (id, specimen_ref, type) VALUES (240276, 100001, 'paratype');
-INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (240275, 240276, 'specimen');
-INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (240276, 240276, 'leg');
-SELECT lives_ok('DELETE FROM specimen_individuals', 'Deleting all individuals');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001), 'Spec 100001 remaining in flat');
-SELECT is(false , (SELECT with_individuals FROM darwin_flat WHERE spec_ref = 100001), 'Deleting all individuals set well with_individuals to false');
-SELECT is(false , (SELECT with_parts FROM darwin_flat WHERE spec_ref = 100001), '...with_parts well set to false');
-SELECT is(0 , (SELECT COALESCE(part_ref,0) FROM darwin_flat WHERE spec_ref = 100001), '... and no more part_ref');
-
-SELECT diag('Test now how db reacts by moving a part from one individual to an other');
-
-INSERT INTO specimen_individuals (id, specimen_ref, type) VALUES (240275, 100001, 'holotype');
-INSERT INTO specimen_individuals (id, specimen_ref, type) VALUES (240276, 100001, 'paratype');
-INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (240275, 240276, 'specimen');
-INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (240276, 240276, 'leg');
-
-SELECT is(3::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001), 'We''ve got well 3 lines for specimen 100001');
-SELECT lives_ok('UPDATE specimen_parts SET specimen_individual_ref = 240275, specimen_part = ''wing'' WHERE id = 240275', 'Move well part 240275 from individual 240276 to individual 240275');
-SELECT is(2::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001), 'We''ve got now 2 lines for specimen 100001');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND individual_ref = 240275 AND part_ref = 240275), 'Only one with individual 240275');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND individual_ref = 240276 AND part_ref = 240276), 'and only one with individual 240276');
-
-SELECT lives_ok('UPDATE specimen_parts SET specimen_individual_ref = 240275, specimen_part = ''foot'' WHERE id = 240276', 'Move well part 240276 from individual 240276 to individual 240275');
-SELECT is(3::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001), 'We''ve got now 3 lines for specimen 100001');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND individual_ref = 240275 AND part_ref = 240275), 'Part 240275 is with individual 240275');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND individual_ref = 240275 AND part_ref = 240276), 'Part 240276 is with individual 240275');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001 AND individual_ref = 240276 AND part_ref IS NULL), 'Individual 240276 has no parts');
-
-
-SELECT lives_ok('UPDATE specimen_individuals SET specimen_ref = 100000, type = ''lectotype'' WHERE id = 240275', 'Move well individual 240275 from specimen 100001 to specimen 100000');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001), 'We''ve got now 1 line for specimen 100001');
-SELECT is(2::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100000), 'and 2 lines for specimen 100000');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100000 AND individual_ref = 240275 AND part_ref = 240275), 'One per part');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100000 AND individual_ref = 240275 AND part_ref = 240276), 'One per part');
-
-SELECT lives_ok('UPDATE specimen_individuals SET specimen_ref = 100000, type = ''paralectotype'' WHERE id = 240276', 'Move well individual 240276 from specimen 100001 to specimen 100000');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100001), 'We''ve got now 1 line for specimen 100001');
-SELECT is(3::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100000), 'and 3 lines for specimen 100000');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100000 AND individual_ref = 240275 AND part_ref = 240275), 'One per part');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100000 AND individual_ref = 240275 AND part_ref = 240276), 'One per part');
-SELECT is(1::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100000 AND individual_ref = 240276 AND part_ref IS NULL), 'One with part null');
-
-SELECT diag('Test cascade delete of a specimen');
-
-SELECT lives_ok('DELETE FROM specimens WHERE id = 100000', 'Delete seems to work');
-SELECT is(0::bigint , (SELECT COUNT(*) FROM darwin_flat WHERE spec_ref = 100000), 'Effectively deleted');
 
 SELECT * FROM finish();
 ROLLBACK;

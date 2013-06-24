@@ -935,7 +935,8 @@ CREATE TRIGGER trg_trk_log_table_specimens AFTER INSERT OR UPDATE OR DELETE
 CREATE TRIGGER trg_cpy_fulltoindex_s  BEFORE INSERT OR UPDATE
   ON specimens FOR EACH ROW EXECUTE PROCEDURE fct_cpy_fulltoindex();
 
-
+CREATE TRIGGER trg_update_specimens_darwin_flat BEFORE INSERT OR UPDATE
+        ON specimens FOR EACH ROW EXECUTE PROCEDURE fct_update_specimen_flat();
 
 CREATE INDEX idx_labeling_specimens_type ON specimens
   USING gin (labeling_individual_type_for_indexation(type));
@@ -1042,6 +1043,9 @@ update specimens s1 set host_specimen_ref = (select id from specimens s2 where s
 DROP CREATE idx_specimens_spec_id;
 alter table specimens drop column ind_id;
 alter table specimens drop column spec_id;
+drop function chk_specimens_not_loaned;
+
 \i  createfunctions.sql
+
 
 rollback;

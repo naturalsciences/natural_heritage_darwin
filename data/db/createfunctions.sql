@@ -1423,6 +1423,7 @@ BEGIN
          WHERE id = NEW.level_ref
         ) subq
     WHERE taxon_ref = NEW.id;
+
     UPDATE specimens
     SET (host_taxon_name, host_taxon_name_indexed, 
          host_taxon_level_ref, host_taxon_level_name,
@@ -1598,8 +1599,8 @@ CREATE OR REPLACE FUNCTION fct_update_specimen_flat() RETURNS TRIGGER
 AS $$
 DECLARE
   cnt integer;
-  old_val specimens%TYPE;
-  new_val specimens%TYPE;
+  old_val specimens%ROWTYPE;
+  new_val specimens%ROWTYPE;
 BEGIN
 
     IF TG_OP = 'UPDATE' THEN
@@ -1611,47 +1612,47 @@ BEGIN
 
     IF old_val.taxon_ref IS DISTINCT FROM new_val.taxon_ref THEN
       SELECT  name, name_indexed, level_ref, level_name, status, path, parent_ref, extinct
-        INTO NEW.taxon_ref, NEW.taxon_name, NEW.taxon_name_indexed, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status,
+        INTO NEW.taxon_name, NEW.taxon_name_indexed, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status,
           NEW.taxon_path, NEW.taxon_parent_ref, NEW.taxon_extinct
         FROM taxonomy c
-        INNER JOIN catalogue_levels l on c.level_ref = l.id;
-        WHERE id = new_val.taxon_ref;
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.taxon_ref;
     END IF;
 
     IF old_val.chrono_ref IS DISTINCT FROM new_val.chrono_ref THEN
-      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref, extinct
-        INTO NEW.chrono_name, NEW.chrono_name_indexed, NEW.chrono_level_ref, NEW.chrono_level_name, NEW.chrono_status,
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref
+      INTO NEW.chrono_name, NEW.chrono_name_indexed, NEW.chrono_level_ref, NEW.chrono_level_name, NEW.chrono_status,
           NEW.chrono_local, NEW.chrono_color, NEW.chrono_path, NEW.chrono_parent_ref
         FROM chronostratigraphy c
-        INNER JOIN catalogue_levels l on c.level_ref = l.id;
-        WHERE id = new_val.chrono_ref;
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.chrono_ref;
     END IF;
 
     IF old_val.litho_ref IS DISTINCT FROM new_val.litho_ref THEN
-      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref, extinct
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref
         INTO NEW.litho_name, NEW.litho_name_indexed, NEW.litho_level_ref, NEW.litho_level_name, NEW.litho_status,
           NEW.litho_local, NEW.litho_color, NEW.litho_path, NEW.litho_parent_ref
         FROM lithostratigraphy c
-        INNER JOIN catalogue_levels l on c.level_ref = l.id;
-        WHERE id = new_val.litho_ref;
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.litho_ref;
     END IF;
 
     IF old_val.lithology_ref IS DISTINCT FROM new_val.lithology_ref THEN
-      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref, extinct
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref
         INTO NEW.lithology_name, NEW.lithology_name_indexed, NEW.lithology_level_ref, NEW.lithology_level_name, NEW.lithology_status,
           NEW.lithology_local, NEW.lithology_color, NEW.lithology_path, NEW.lithology_parent_ref
         FROM lithology c
-        INNER JOIN catalogue_levels l on c.level_ref = l.id;
-        WHERE id = new_val.lithology_ref;
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.lithology_ref;
     END IF;
 
     IF old_val.mineral_ref IS DISTINCT FROM new_val.mineral_ref THEN
-      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref, extinct
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref
         INTO NEW.mineral_name, NEW.mineral_name_indexed, NEW.mineral_level_ref, NEW.mineral_level_name, NEW.mineral_status,
           NEW.mineral_local, NEW.mineral_color, NEW.mineral_path, NEW.mineral_parent_ref
         FROM mineralogy c
-        INNER JOIN catalogue_levels l on c.level_ref = l.id;
-        WHERE id = new_val.mineral_ref;
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.mineral_ref;
     END IF;
 
 
@@ -1659,7 +1660,7 @@ BEGIN
       SELECT  name, name_indexed
         INTO NEW.expedition_name, NEW.expedition_name_indexed
         FROM expeditions c
-        WHERE id = new_val.expedition_ref;
+        WHERE c.id = new_val.expedition_ref;
     END IF;
 
     IF old_val.collection_ref IS DISTINCT FROM new_val.collection_ref THEN
@@ -1667,14 +1668,14 @@ BEGIN
         INTO NEW.collection_type, NEW.collection_code, NEW.collection_name, NEW.collection_is_public,
           NEW.collection_parent_ref, NEW.collection_path
         FROM collections c
-        WHERE id = new_val.collection_ref;
+        WHERE c.id = new_val.collection_ref;
     END IF;
 
     IF old_val.ig_ref IS DISTINCT FROM new_val.ig_ref THEN
       SELECT  ig_num, ig_num_indexed, ig_date, ig_date_mask
         INTO NEW.ig_num, NEW.ig_num_indexed, NEW.ig_date, NEW.ig_date_mask
         FROM igs c
-        WHERE id = new_val.ig_ref;
+        WHERE c.id = new_val.ig_ref;
     END IF;
 
     IF old_val.gtu_ref IS DISTINCT FROM new_val.gtu_ref THEN
@@ -1689,14 +1690,13 @@ BEGIN
          (select array(select distinct fullToIndex(tag) from tags where gtu_ref = c.id and sub_group_type not in ('country', 'province'))) as other_gtu_values_array
 
         INTO NEW.gtu_code, NEW.gtu_from_date, NEW.gtu_from_date_mask, NEW.gtu_to_date, NEW.gtu_to_date_mask,
-         NEW.gtu_elevation, NEW.gtu_elevation_accuracy, NEW.gtu_tag_values_indexed, NEW.gtu_location
-
-        NEW.gtu_country_tag_value, NEW.gtu_country_tag_indexed, NEW.gtu_province_tag_value,
-        NEW.gtu_province_tag_indexed, NEW.gtu_others_tag_value, NEW.gtu_others_tag_indexed
+         NEW.gtu_elevation, NEW.gtu_elevation_accuracy, NEW.gtu_tag_values_indexed, NEW.gtu_location,
+         NEW.gtu_country_tag_value, NEW.gtu_country_tag_indexed, NEW.gtu_province_tag_value,
+         NEW.gtu_province_tag_indexed, NEW.gtu_others_tag_value, NEW.gtu_others_tag_indexed
         FROM gtu c
           LEFT JOIN tag_groups taggr_countries ON c.id = taggr_countries.gtu_ref AND taggr_countries.group_name_indexed = 'administrativearea' AND taggr_countries.sub_group_name_indexed = 'country'
           LEFT JOIN tag_groups taggr_provinces ON c.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
-        WHERE id = new_val.gtu_ref;
+        WHERE c.id = new_val.gtu_ref;
     END IF;
 
     IF old_val.host_taxon_ref IS DISTINCT FROM new_val.host_taxon_ref THEN
@@ -1705,7 +1705,8 @@ BEGIN
          NEW.host_taxon_level_name, NEW.host_taxon_status, NEW.host_taxon_path, NEW.host_taxon_parent_ref, 
          NEW.host_taxon_extinct
         FROM taxonomy c
-        WHERE id = new_val.host_taxon_ref;
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.host_taxon_ref;
     END IF;
   RETURN NEW;
 END;
@@ -3228,7 +3229,7 @@ END;
 $$;
 
 
-CREATE OR REPLACE function chk_part_not_loaned() RETURNS TRIGGER
+CREATE OR REPLACE function chk_specimens_not_loaned() RETURNS TRIGGER
 language plpgsql
 AS
 $$

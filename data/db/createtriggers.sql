@@ -62,10 +62,6 @@ CREATE TRIGGER trg_cpy_fullToIndex_vernacularnames BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_cpy_fullToIndex_igs BEFORE INSERT OR UPDATE
 	ON igs FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
-
-CREATE TRIGGER trg_cpy_fullToIndex_specimen_parts BEFORE INSERT OR UPDATE
-        ON specimen_parts FOR EACH ROW
-        EXECUTE PROCEDURE fct_cpy_fullToIndex();
         
 CREATE TRIGGER trg_cpy_fullToIndex_collecting_methods BEFORE INSERT OR UPDATE
   ON collecting_methods FOR EACH ROW
@@ -517,7 +513,7 @@ CREATE TRIGGER trg_update_mineralogy_darwin_flat AFTER UPDATE
         EXECUTE PROCEDURE fct_update_specimens_flat_related();
 
 
-CREATE TRIGGER trg_update_specimens_darwin_flat AFTER INSERT OR UPDATE
+CREATE TRIGGER trg_update_specimens_darwin_flat BEFORE INSERT OR UPDATE
         ON specimens FOR EACH ROW
         EXECUTE PROCEDURE fct_update_specimen_flat();
 
