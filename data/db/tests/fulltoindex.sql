@@ -53,11 +53,7 @@ SELECT ok( '12emol73856847' = (SELECT full_code_indexed FROM codes WHERE record_
 insert into people (id, is_physical, formated_name, formated_name_indexed, family_name, birth_date, end_date ) VALUES
 (3, true, 'The Expert', 'theexpert', 'The Expert', '0001-01-01', DATE '0001-01-01');
 
-INSERT INTO specimens (id, collection_ref) VALUES (1,1);
-
-
-INSERT INTO specimen_individuals (id, specimen_ref, type) VALUES (1,1,'holotype');
-INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (1, 1, 'head');
+INSERT INTO specimens (id, collection_ref, type, specimen_part) VALUES (1,1, 'holotype', 'head');
 
 INSERT INTO  gtu (id, code) VALUES (10,'bru12');
 INSERT INTO  gtu (id, code) VALUES (1,'bru66');

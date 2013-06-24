@@ -1,7 +1,7 @@
 \unset ECHO
 \i unit_launch.sql
 -- Plan the tests.
-SELECT plan(48);
+SELECT plan(42);
 
 -- Run the tests.
 SELECT has_table('catalogue_relationships','catalogue_relationships exists');
@@ -44,8 +44,6 @@ SELECT has_table('mineralogy','mineralogy exists');
 SELECT has_table('lithology','lithology exists');
 SELECT has_table('specimens','specimens exists');
 SELECT has_table('codes','codes exists');
-SELECT has_table('specimen_individuals','specimen_individuals exists');
-SELECT has_table('specimen_parts','specimen_parts exists');
 SELECT has_table('insurances', 'insurances exists');
 /*SELECT has_table('igs', 'igs exists');*/
 SELECT has_table('specimens_accompanying','specimens_accompanying exists');

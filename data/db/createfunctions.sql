@@ -2345,10 +2345,10 @@ BEGIN
   IF TG_OP = 'DELETE' THEN
     IF OLD.people_type = 'collector' THEN
       UPDATE specimens s SET spec_coll_ids = fct_remove_array_elem(spec_coll_ids,ARRAY[OLD.people_ref])
-        WHERE specimen_ref  = OLD.record_id;
+        WHERE id  = OLD.record_id;
     ELSIF OLD.people_type = 'donator' THEN
       UPDATE specimens s SET spec_don_sel_ids = fct_remove_array_elem(spec_don_sel_ids,ARRAY[OLD.people_ref])
-        WHERE specimen_ref  = OLD.record_id;
+        WHERE id  = OLD.record_id;
     ELSIF OLD.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = OLD.record_id;
       IF NOT FOUND Then
@@ -2356,7 +2356,7 @@ BEGIN
       END IF;
 
       UPDATE specimens s SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,ARRAY[OLD.people_ref])
-        WHERE specimen_ref  = ident.record_id 
+        WHERE id  = ident.record_id 
             AND NOT exists (
               SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' 
                 WHERE i.record_id = ident.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens'
@@ -2367,33 +2367,33 @@ BEGIN
 
     IF NEW.people_type = 'collector' THEN
       UPDATE specimens s SET spec_coll_ids = array_append(spec_coll_ids,NEW.people_ref)
-        WHERE specimen_ref  = NEW.record_id and NOT (spec_coll_ids && ARRAY[ NEW.people_ref::integer ]);
+        WHERE id  = NEW.record_id and NOT (spec_coll_ids && ARRAY[ NEW.people_ref::integer ]);
     ELSIF NEW.people_type = 'donator' THEN
       UPDATE specimens s SET spec_don_sel_ids = array_append(spec_don_sel_ids,NEW.people_ref)
-        WHERE specimen_ref  = NEW.record_id  and NOT (spec_don_sel_ids && ARRAY[ NEW.people_ref::integer ]);
+        WHERE id  = NEW.record_id  and NOT (spec_don_sel_ids && ARRAY[ NEW.people_ref::integer ]);
     ELSIF NEW.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = NEW.record_id;
 
       UPDATE specimens s SET spec_ident_ids = array_append(spec_ident_ids,NEW.people_ref)
-          WHERE specimen_ref  = ident.record_id and NOT (spec_ident_ids && ARRAY[ NEW.people_ref::integer ]);
+          WHERE id  = ident.record_id and NOT (spec_ident_ids && ARRAY[ NEW.people_ref::integer ]);
     END IF;
 
   ELSIF OLD.people_ref != NEW.people_ref THEN --UPDATE
 
     IF NEW.people_type = 'collector' THEN
       UPDATE specimens s SET spec_coll_ids = array_append(fct_remove_array_elem(spec_coll_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
-        WHERE specimen_ref  = NEW.record_id;
+        WHERE id  = NEW.record_id;
     ELSIF NEW.people_type = 'donator' THEN
       UPDATE specimens s SET spec_don_sel_ids = array_append(fct_remove_array_elem(spec_don_sel_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
-        WHERE specimen_ref  = NEW.record_id;
+        WHERE id  = NEW.record_id;
 
     ELSIF NEW.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = NEW.record_id;
 
-        SELECT specimen_ref, spec_ident_ids INTO spec_row FROM specimens WHERE specimen_ref = ident.record_id;
+        SELECT id, spec_ident_ids INTO spec_row FROM specimens WHERE id = ident.record_id;
 
         IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications' 
-          WHERE i.record_id = spec_row.specimen_ref AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens' AND c.id != OLD.id
+          WHERE i.record_id = spec_row.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens' AND c.id != OLD.id
         ) THEN 
           spec_row.spec_ident_ids := fct_remove_array_elem(spec_row.spec_ident_ids ,ARRAY[OLD.people_ref]);
         END IF;
@@ -2402,7 +2402,7 @@ BEGIN
           spec_row.spec_ident_ids := array_append(spec_row.spec_ident_ids ,NEW.people_ref);
         END IF;
 
-        UPDATE specimens SET spec_ident_ids = spec_row.spec_ident_ids WHERE specimen_ref = spec_row.specimen_ref;
+        UPDATE specimens SET spec_ident_ids = spec_row.spec_ident_ids WHERE id = spec_row.id;
     END IF;
     --else  raise info 'ooh';
   END IF;
@@ -2426,7 +2426,7 @@ BEGIN
             AND p.people_type='identifier' where i.record_id=OLD.record_id AND i.referenced_relation=OLD.referenced_relation AND i.id != OLD.id
           )
       ))
-      WHERE specimen_ref = OLD.record_id;
+      WHERE id = OLD.record_id;
   END IF;
   RETURN OLD;
   
