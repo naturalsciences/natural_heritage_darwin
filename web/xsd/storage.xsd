@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2013 sp1 (http://www.altova.com) by Marie-Solange Mukarwema (Museum of Natural Sciences) -->
-<xs:schema xmlns:storage="http://www.dnabank-network.org/schemas/ABCDDNA" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.dnabank-network.org/schemas/ABCDDNA" targetNamespace="http://www.dnabank-network.org/schemas/ABCDDNA" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+<xs:schema xmlns:storage="http://darwin.naturalsciences.be/xsd/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://darwin.naturalsciences.be/xsd/" targetNamespace="http://darwin.naturalsciences.be/xsd/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
 	<xs:element name="Storage">
 		<xs:complexType>
 			<xs:sequence>
