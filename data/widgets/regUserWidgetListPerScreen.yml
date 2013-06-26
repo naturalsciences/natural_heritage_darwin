@@ -551,9 +551,9 @@ sw24:
    title_perso: Bibliography
    all_public: true
 
-spi1:
+sw25:
    col_num: 1
-   category: individuals_widget
+   category: specimen_widget
    group_name: type
    mandatory: true
    order_by: 1
@@ -562,9 +562,9 @@ spi1:
    title_perso: Type
    all_public: true
 
-spi2:
+sw26:
   col_num: 1
-  category: individuals_widget
+  category: specimen_widget
   group_name: sex
   mandatory: false
   order_by: 2
@@ -573,9 +573,9 @@ spi2:
   title_perso: Sex
   all_public: true
 
-spi3:
+sw27:
   col_num: 1
-  category: individuals_widget
+  category: specimen_widget
   group_name: stage
   mandatory: false
   order_by: 3
@@ -584,9 +584,9 @@ spi3:
   title_perso: Stage
   all_public: true
 
-spi4:
+sw28:
   col_num: 1
-  category: individuals_widget
+  category: specimen_widget
   group_name: socialStatus
   mandatory: false
   order_by: 4
@@ -595,9 +595,9 @@ spi4:
   title_perso: Social Status
   all_public: true
 
-spi5:
+sw29:
   col_num: 1
-  category: individuals_widget
+  category: specimen_widget
   group_name: rockForm
   mandatory: false
   order_by: 5
@@ -606,88 +606,9 @@ spi5:
   title_perso: Rock form
   all_public: true
 
-spi6:
-  col_num: 2
-  category: individuals_widget
-  group_name: specimenIndividualCount
-  mandatory: false
-  order_by: 1
-  opened: true
-  visible: true
-  title_perso: Count
-  all_public: true
-
-spi7:
-   col_num: 2
-   category: individuals_widget
-   group_name: refProperties
-   mandatory: false
-   order_by: 2
-   opened: false
-   visible: false
-   title_perso: Properties
-   all_public: true
-
-spi9:
-   col_num: 2
-   category: individuals_widget
-   group_name: comments
-   mandatory: false
-   order_by: 4
-   opened: true
-   visible: true
-   title_perso: Comments
-   all_public: true
-
-spi10:
-   col_num: 2
-   category: individuals_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 5
-   opened: true
-   visible: true
-   title_perso: External Links
-   all_public: true
-
-spi11:
-   col_num: 2
-   category: individuals_widget
-   group_name: informativeWorkflow
-   mandatory: false
-   order_by: 2
-   opened: true
-   visible: true
-   title_perso: Suggestions / Report problem
-   all_public: true
-
-spi12:
-   col_num: 2
-   category: individuals_widget
-   group_name: refRelatedFiles
-   mandatory: false
-   order_by: 3
-   opened: true
-   visible: true
-   is_available: true
-   title_perso: Related Files
-   all_public: true
-
-spi13:
-   col_num: 2
-   category: individuals_widget
-   group_name: biblio
-   mandatory: false
-   order_by: 4
-   opened: false
-   visible: false
-   is_available: true
-   title_perso: Bibliography
-   all_public: true
-
-sp1:
+sw30:
    col_num: 1
-   category: part_widget
+   category: specimen_widget
    group_name: specPart
    mandatory: true
    order_by: 1
@@ -696,10 +617,10 @@ sp1:
    title_perso: Part
    all_public: true
 
-sp2:
+sw31:
    col_num: 1
-   category: part_widget
-   group_name: partCount
+   category: specimen_widget
+   group_name: specimenCount
    mandatory: false
    order_by: 2
    opened: true
@@ -707,84 +628,6 @@ sp2:
    title_perso: Count
    all_public: true
 
-sp6:
-   col_num: 2
-   category: part_widget
-   group_name: refProperties
-   mandatory: false
-   order_by: 3
-   opened: true
-   visible: true
-   title_perso: Properties
-   all_public: true
-
-sp9:
-   col_num: 2
-   category: part_widget
-   group_name: comments
-   mandatory: false
-   order_by: 4
-   opened: true
-   visible: true
-   title_perso: Comments
-   all_public: true
-
-sp11:
-   col_num: 2
-   category: part_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 11
-   opened: true
-   visible: true
-   title_perso: External Links
-   all_public: true
-
-sp12:
-   col_num: 1
-   category: part_widget
-   group_name: refCodes
-   mandatory: false
-   order_by: 4
-   opened: true
-   visible: true
-   title_perso: Codes
-   all_public: true
-
-sp13:
-   col_num: 2
-   category: part_widget
-   group_name: informativeWorkflow
-   mandatory: false
-   order_by: 6
-   opened: true
-   visible: true
-   title_perso: Suggestions / Report problem
-   all_public: true
-
-sp14:
-   col_num: 2
-   category: part_widget
-   group_name: refRelatedFiles
-   mandatory: false
-   order_by: 7
-   opened: true
-   visible: true
-   is_available: true
-   title_perso: Related Files
-   all_public: true
-
-sp15:
-   col_num: 2
-   category: part_widget
-   group_name: biblio
-   mandatory: false
-   order_by: 8
-   opened: false
-   visible: false
-   is_available: true
-   title_perso: Bibliography
-   all_public: true
 
 tw1:
    col_num: 1

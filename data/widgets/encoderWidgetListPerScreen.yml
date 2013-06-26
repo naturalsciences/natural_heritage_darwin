@@ -99,7 +99,7 @@ sw11:
    col_num: 2
    category: specimen_widget
    group_name: acquisitionCategory
-   mandatory: false    
+   mandatory: false
    order_by: 1
    opened: true
    visible: true
@@ -125,72 +125,62 @@ sw20:
    visible: true
    title_perso: Accompanying elements
 
-spi8:
-  col_num: 2
-  category: individuals_widget
-  group_name: refIdentifications
-  mandatory: false
-  order_by: 3
-  opened: true
-  visible: true
-  title_perso: Identifications  
-
-sp3:
+sw21:
    col_num: 2
-   category: part_widget
+   category: specimen_widget
    group_name: complete
    mandatory: false
-   order_by: 1
+   order_by: 11
    opened: true
    visible: true
    title_perso: Complete
 
-sp4:
+sw22:
    col_num: 2
-   category: part_widget
+   category: specimen_widget
    group_name: localisation
    mandatory: false
-   order_by: 2
+   order_by: 12
    opened: true
    visible: true
    title_perso: Localisation
 
-sp5:
+sw23:
    col_num: 1
-   category: part_widget
+   category: specimen_widget
    group_name: container
    mandatory: false
-   order_by: 3
+   order_by: 10
    opened: true
    visible: true
    title_perso: Container
  
-sp7:
+sw24:
    col_num: 2
-   category: part_widget
+   category: specimen_widget
    group_name: refInsurances
    mandatory: false
-   order_by: 4
+   order_by: 13
    opened: true
    visible: true
    title_perso: Insurances
    
-sp8:
+sw26:
    col_num: 2
-   category: part_widget
+   category: specimen_widget
    group_name: maintenance
-   mandatory: false   
-   order_by: 3
+   mandatory: false
+   order_by: 14
    opened: true
    visible: true
-   title_perso: Maintenance   
+   title_perso: Maintenance
 
-sp10:
+sw27:
    col_num: 2
-   category: part_widget
+   category: specimen_widget
    group_name: parent
-   mandatory: false   
-   order_by: 5
+   mandatory: false
+   order_by: 15
    opened: true
    visible: true
    title_perso: Parent 

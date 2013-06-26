@@ -37,7 +37,7 @@ abstract class BaseIgsSearch extends DarwinModel
 {
     public function setTableDefinition()
     {
-        $this->setTableName('specimens_flat');
+        $this->setTableName('specimens');
         $this->hasColumn('ig_num', 'string', null, array(
              'type' => 'string',
              ));

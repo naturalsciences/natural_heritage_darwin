@@ -318,23 +318,6 @@ drop function move_refs();
 
 alter INDEX pk_specimens rename to pk_old_specimens;
 
-/*
-        constraint pk_specimens primary key (id),
-        constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
-        constraint fk_specimens_gtu foreign key (gtu_ref) references gtu(id),
-        constraint fk_specimens_collections foreign key (collection_ref) references collections(id),
-        constraint fk_specimens_taxonomy foreign key (taxon_ref) references taxonomy(id),
-        constraint fk_specimens_lithostratigraphy foreign key (litho_ref) references lithostratigraphy(id),
-        constraint fk_specimens_lithology foreign key (lithology_ref) references lithology(id),
-        constraint fk_specimens_mineralogy foreign key (mineral_ref) references mineralogy(id),
-        constraint fk_specimens_chronostratigraphy foreign key (chrono_ref) references chronostratigraphy(id),
-        constraint fk_specimens_host_taxonomy foreign key (host_taxon_ref) references taxonomy(id),
-        constraint fk_specimens_host_specimen foreign key (host_specimen_ref) references specimens(id) on delete set null,
-        constraint fk_specimens_igs foreign key (ig_ref) references igs(id),
-
-        constraint fk_specimen_institutions foreign key (institution_ref) references people(id) ON DELETE no action,
-        constraint chk_chk_specimens_minmax check (specimen_part_count_min <= specimen_part_count_max),
-        constraint chk_chk_specimens_min check (specimen_part_count_min >= 0)*/
 
 
 create table new_specimens
@@ -384,8 +367,8 @@ create table new_specimens
         sub_container_storage varchar not null default 'dry',
         surnumerary boolean not null default false,
         specimen_status varchar not null default 'good state',
-        specimen_part_count_min integer not null default 1,
-        specimen_part_count_max integer not null default 1,
+        specimen_count_min integer not null default 1,
+        specimen_count_max integer not null default 1,
         object_name text,
         object_name_indexed text not null default '',
 
@@ -497,8 +480,8 @@ create table new_specimens
         constraint fk_specimens_igs foreign key (ig_ref) references igs(id),
 
         constraint fk_specimen_institutions foreign key (institution_ref) references people(id) ON DELETE no action,
-        constraint chk_chk_specimens_minmax check (specimen_part_count_min <= specimen_part_count_max),
-        constraint chk_chk_specimens_min check (specimen_part_count_min >= 0)
+        constraint chk_chk_specimens_minmax check (specimen_count_min <= specimen_count_max),
+        constraint chk_chk_specimens_min check (specimen_count_min >= 0)
        );
 
 
@@ -546,8 +529,8 @@ comment on column new_specimens.container_storage is 'Conservative medium used: 
 comment on column new_specimens.sub_container_storage is 'Conservative medium used: formol, alcohool, dry,...';
 comment on column new_specimens.surnumerary is 'Tells if this specimen has been added after first inventory';
 comment on column new_specimens.specimen_status is 'Specimen status: good state, lost, damaged,...';
-comment on column new_specimens.specimen_part_count_min is 'Minimum number of specimens';
-comment on column new_specimens.specimen_part_count_max is 'Maximum number of specimens';
+comment on column new_specimens.specimen_count_min is 'Minimum number of specimens';
+comment on column new_specimens.specimen_count_max is 'Maximum number of specimens';
 comment on column new_specimens.complete is 'Flag telling if specimen is complete or not';
 
 
@@ -595,8 +578,8 @@ INSERT INTO new_specimens (
         container_storage,
         sub_container_storage,
         surnumerary,
-        specimen_part_count_min,
-        specimen_part_count_max,
+        specimen_count_min,
+        specimen_count_max,
         object_name,
         object_name_indexed,
         complete,

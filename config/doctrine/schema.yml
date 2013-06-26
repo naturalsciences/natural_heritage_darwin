@@ -618,76 +618,8 @@ Igs:
 
 Specimens:
     columns:
-        id: { type: integer, primary: true, autoincrement: true },
-        category: { type: string, notnull: true, default: physical },
-        collection_ref: { type: integer, notnull: true }
-        expedition_ref: { type: integer}
-        gtu_ref: { type: integer}
-        taxon_ref: { type: integer}
-        litho_ref: { type: integer}
-        chrono_ref: { type: integer}
-        lithology_ref: { type: integer}
-        mineral_ref: { type: integer}
-        host_taxon_ref: { type: integer}
-        host_specimen_ref: { type: integer}
-        host_relationship: { type: string}
-        acquisition_category: { type: string, default: expedition}
-        acquisition_date_mask: { type: integer, notnull: true, default:0}
-        acquisition_date: { type: string, default: '0001-01-01'}
-        station_visible: { type: boolean, default: true}
-        ig_ref: { type: integer}
-    relations:
-        Collections:
-            local: collection_ref
-            foreign: id
-        Expeditions:
-            local: expedition_ref
-            foreign: id
-        Gtu:
-            local: gtu_ref
-            foreign: id
-        Taxonomy:
-            local: taxon_ref
-            foreign: id
-        Lithostratigraphy:
-            local: litho_ref
-            foreign: id
-        Chronostratigraphy:
-            local: chrono_ref
-            foreign: id
-        Lithology:
-            local: lithology_ref
-            foreign: id
-        Mineralogy:
-            local: mineral_ref
-            foreign: id
-        HostTaxon:
-            class: Taxonomy
-            local: host_taxon_ref
-            foreign: id
-        HostSpecimen:
-            class: Specimens
-            local: host_specimen_ref
-            foreign: id
-        Igs:
-            class: Igs
-            local: ig_ref
-            foreign: id
-        CollectingMethods:
-            class: CollectingMethods
-            refClass: SpecimensMethods
-            local: specimen_ref
-            foreign: collecting_method_ref
-        CollectingTools:
-            class: CollectingTools
-            refClass: SpecimensTools
-            local: specimen_ref
-            foreign: collecting_tool_ref
-
-SpecimensFlat:
-    columns:
-        specimen_ref: { type: integer, primary: true},
-        category: { type: string, notnull: true, default: physical },
+        id: { type: integer, primary: true, autoincrement: true }
+        category: { type: string, notnull: true, default: physical }
         collection_ref: { type: integer, notnull: true }
         expedition_ref: { type: integer}
         gtu_ref: { type: integer}
@@ -708,8 +640,7 @@ SpecimensFlat:
         spec_coll_ids: { type:string}
         spec_ident_ids: { type:string}
         spec_don_sel_ids: { type:string}
-        with_individuals: {type: boolean}
-        with_types: {type: boolean}
+
         collection_type: { type: string}
         collection_code: { type: string}
         collection_name: { type: string}
@@ -787,11 +718,37 @@ SpecimensFlat:
         ig_num_indexed: { type: string}
         ig_date_mask: { type: integer }
 
+        type: { type: string, notnull: true, default: specimen}
+        type_group: { type: string, notnull: true, default: specimen}
+        type_search: { type: string, notnull: true, default: specimen}
+        sex: { type: string, notnull: true, default: undefined}
+        stage: { type: string, notnull: true, default: undefined}
+        state: { type: string, notnull: true, default: 'not applicable'}
+        social_status: { type: string, notnull: true, default: 'not applicable'}
+        rock_form: { type: string, notnull: true, default: 'not applicable'}
+
+        specimen_part: { type: string, notnull: true, default: specimen}
+        complete: { type: boolean, notnull: true, default: true}
+        institution_ref: {type: integer}
+        building: { type: string}
+        floor: { type: string}
+        room: { type: string}
+        row: { type: string}
+        shelf: { type: string}
+        container: { type: string}
+        sub_container: { type: string}
+        container_type: { type: string, notnull: true, default: container}
+        sub_container_type: { type: string, notnull: true, default: container}
+        container_storage: { type: string, notnull: true, default: dry}
+        sub_container_storage: { type: string, notnull: true, default: dry}
+        surnumerary: { type: boolean, notnull: true, default: false}
+        specimen_status: { type: string, notnull: true, default: 'good state'}
+        specimen_count_min: { type: integer, notnull: true, default:1}
+        specimen_count_max: { type: integer, notnull: true, default:1}
+        object_name: { type: string}
+        object_name_indexed: { type: string}
+        
     relations:
-        Specimen:
-            class: Specimens
-            local: specimen_ref
-            foreign: id
         Collections:
             local: collection_ref
             foreign: id
@@ -824,10 +781,24 @@ SpecimensFlat:
             class: Specimens
             local: host_specimen_ref
             foreign: id
+        Igs:
+            class: Igs
+            local: ig_ref
+            foreign: id
+        CollectingMethods:
+            class: CollectingMethods
+            refClass: SpecimensMethods
+            local: specimen_ref
+            foreign: collecting_method_ref
+        CollectingTools:
+            class: CollectingTools
+            refClass: SpecimensTools
+            local: specimen_ref
+            foreign: collecting_tool_ref
 
 
 IgsSearch:
-    tableName: specimens_flat
+    tableName: specimens
     columns:
         ig_num: { type: string}
         ig_num_indexed: { type: string}
@@ -877,67 +848,6 @@ Codes:
         full_code_indexed: { type: string}
         code_date: { type: string}
         code_date_mask: { type: integer, notnull: true, default:0}
-
-SpecimenIndividuals:
-    columns:
-        id: { type: integer, primary: true, autoincrement: true },
-        specimen_ref: { type: integer, notnull: true }
-        type: { type: string, notnull: true, default: specimen}
-        type_group: { type: string, notnull: true, default: specimen}
-        type_search: { type: string, notnull: true, default: specimen}
-        sex: { type: string, notnull: true, default: undefined}
-        stage: { type: string, notnull: true, default: undefined}
-        state: { type: string, notnull: true, default: 'not applicable'}
-        social_status: { type: string, notnull: true, default: 'not applicable'}
-        rock_form: { type: string, notnull: true, default: 'not applicable'}
-        specimen_individuals_count_min: { type: integer, notnull: true, default:1}
-        specimen_individuals_count_max: { type: integer, notnull: true, default:1}
-        with_parts: {type: boolean}
-        ind_ident_ids: { type:string}
-    relations:
-        Specimens:
-            local: specimen_ref
-            foreign: id
-        SpecimensFlat:
-            local: specimen_ref
-            foreign: specimen_ref
-
-
-SpecimenParts:
-    columns:
-        id: { type: integer, primary: true, autoincrement: true }
-        path: { type: string, notnull: true, default: '/'}
-        parent_ref:  {type: integer, default:null}
-        specimen_individual_ref: { type: integer, notnull: true }
-        specimen_part: { type: string, notnull: true, default: specimen}
-        complete: { type: boolean, notnull: true, default: true}
-        institution_ref: {type: integer}
-        building: { type: string}
-        floor: { type: string}
-        room: { type: string}
-        row: { type: string}
-        shelf: { type: string}
-        container: { type: string}
-        sub_container: { type: string}
-        container_type: { type: string, notnull: true, default: container}
-        sub_container_type: { type: string, notnull: true, default: container}
-        container_storage: { type: string, notnull: true, default: dry}
-        sub_container_storage: { type: string, notnull: true, default: dry}
-        surnumerary: { type: boolean, notnull: true, default: false}
-        specimen_status: { type: string, notnull: true, default: 'good state'}
-        specimen_part_count_min: { type: integer, notnull: true, default:1}
-        specimen_part_count_max: { type: integer, notnull: true, default:1}
-        object_name: { type: string}
-        object_name_indexed: { type: string}
-    relations:
-        Individual:
-            class: SpecimenIndividuals
-            local: specimen_individual_ref
-            foreign: id
-        Parent:
-            class: SpecimenParts
-            local: parent_ref
-            foreign: id
 
 Preferences:
     columns:
@@ -1009,9 +919,9 @@ SpecimensCodes:
         code_date: { type: string}
         code_date_mask: { type: integer, notnull: true, default:0}
     relations:
-        SpecimensFlat:
+        Specimens:
             local: record_id
-            foreign: specimen_ref
+            foreign: id
 
 SpecimensMethods:
     tableName: specimen_collecting_methods
@@ -1251,7 +1161,7 @@ LoanItems:
         ig_ref: { type: integer}
         from_date: { type: string}
         to_date: { type: string}
-        part_ref: { type: integer}
+        specimen_ref: { type: integer}
         details: { type: string, notnull: true, default:''}
     relations:
         Loan:
@@ -1263,9 +1173,9 @@ LoanItems:
             foreign: id
             class: Igs 
         DarwinParts:
-            local: part_ref
+            local: specimen_ref
             foreign: id
-            class: SpecimenParts 
+            class: Specimens 
 
 LoanRights:
     columns:

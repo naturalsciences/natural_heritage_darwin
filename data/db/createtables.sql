@@ -1045,8 +1045,8 @@ create table specimens
         sub_container_storage varchar not null default 'dry',
         surnumerary boolean not null default false,
         specimen_status varchar not null default 'good state',
-        specimen_part_count_min integer not null default 1,
-        specimen_part_count_max integer not null default 1,
+        specimen_count_min integer not null default 1,
+        specimen_count_max integer not null default 1,
         object_name text,
         object_name_indexed text not null default '',
 
@@ -1156,8 +1156,8 @@ create table specimens
         constraint fk_specimens_igs foreign key (ig_ref) references igs(id),
 
         constraint fk_specimen_institutions foreign key (institution_ref) references people(id) ON DELETE no action,
-        constraint chk_chk_specimen_parts_minmax check (specimen_part_count_min <= specimen_part_count_max),
-        constraint chk_chk_specimen_part_min check (specimen_part_count_min >= 0)
+        constraint chk_chk_specimen_parts_minmax check (specimen_count_min <= specimen_count_max),
+        constraint chk_chk_specimen_part_min check (specimen_count_min >= 0)
        );
 
 

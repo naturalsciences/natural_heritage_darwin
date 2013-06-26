@@ -12,20 +12,27 @@ class SpecimensForm extends BaseSpecimensForm
   public function configure()
   {
     $this->useFields(array('category','collection_ref',
-        'expedition_ref',
-        'gtu_ref',
-        'taxon_ref',
-        'litho_ref',
-        'chrono_ref',
-        'lithology_ref',
-        'mineral_ref',
-        'host_taxon_ref',
-        'host_specimen_ref',
-        'host_relationship',
-        'acquisition_category',
-        'acquisition_date',
-        'station_visible',
-        'ig_ref'));
+      'expedition_ref',
+      'gtu_ref',
+      'taxon_ref',
+      'litho_ref',
+      'chrono_ref',
+      'lithology_ref',
+      'mineral_ref',
+      'host_taxon_ref',
+      'host_specimen_ref',
+      'host_relationship',
+      'acquisition_category',
+      'acquisition_date',
+      'station_visible',
+      'ig_ref',
+
+      'type', 'sex', 'state','stage','social_status','rock_form',
+      'specimen_part', 'complete', 'institution_ref', 'building', 'floor', 'room',
+      'row', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
+      'container_storage', 'sub_container_storage', 'surnumerary', 'specimen_status', 
+      'specimen_count_min', 'specimen_count_max','object_name'
+        ));
 
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
@@ -225,17 +232,210 @@ class SpecimensForm extends BaseSpecimensForm
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));
 
+
+    $this->widgetSchema['type'] = new widgetFormSelectComplete(array(
+        'model' => 'SpecimenIndividuals',
+        'table_method' => 'getDistinctTypes',
+        'method' => 'getType',
+        'key_method' => 'getType',
+        'add_empty' => false,
+        'change_label' => 'Pick a type in the list',
+        'add_label' => 'Add an other type',
+    ));
+    $this->widgetSchema['sex'] = new widgetFormSelectComplete(array(
+        'model' => 'SpecimenIndividuals',
+        'table_method' => 'getDistinctSexes',
+        'method' => 'getSex',
+        'key_method' => 'getSex',
+        'add_empty' => false,
+        'change_label' => 'Pick a sex in the list',
+        'add_label' => 'Add an other sex',
+    ));
+    $this->widgetSchema['state'] = new widgetFormSelectComplete(array(
+        'model' => 'SpecimenIndividuals',
+        'table_method' => 'getDistinctStates',
+        'method' => 'getState',
+        'key_method' => 'getState',
+        'add_empty' => false,
+        'change_label' => 'Pick a "sexual" state in the list',
+        'add_label' => 'Add an other "sexual" state',
+    ));
+    $this->widgetSchema['stage'] = new widgetFormSelectComplete(array(
+        'model' => 'SpecimenIndividuals',
+        'table_method' => 'getDistinctStages',
+        'method' => 'getStage',
+        'key_method' => 'getStage',
+        'add_empty' => false,
+        'change_label' => 'Pick a stage in the list',
+        'add_label' => 'Add an other stage',
+    ));
+    $this->widgetSchema['social_status'] = new widgetFormSelectComplete(array(
+        'model' => 'SpecimenIndividuals',
+        'table_method' => 'getDistinctSocialStatuses',
+        'method' => 'getSocialStatus',
+        'key_method' => 'getSocialStatus',
+        'add_empty' => false,
+        'change_label' => 'Pick a social status in the list',
+        'add_label' => 'Add an other social status',
+    ));
+    $this->widgetSchema['rock_form'] = new widgetFormSelectComplete(array(
+        'model' => 'SpecimenIndividuals',
+        'table_method' => 'getDistinctRockForms',
+        'method' => 'getRockForm',
+        'key_method' => 'getRockForm',
+        'add_empty' => false,
+        'change_label' => 'Pick a rock form in the list',
+        'add_label' => 'Add another rock form',
+    ));
+
+
+    $this->widgetSchema['specimen_part'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'table_method' => 'getDistinctParts',
+      'method' => 'getSpecimenPart',
+      'key_method' => 'getSpecimenPart',
+      'add_empty' => false,
+      'change_label' => 'Pick parts in the list',
+      'add_label' => 'Add another part',
+      ));
+
+    $this->widgetSchema['institution_ref'] = new widgetFormButtonRef(array(
+       'model' => 'Institutions',
+       'link_url' => 'institution/choose?with_js=1',
+       'method' => 'getFamilyName',
+       'box_title' => $this->getI18N()->__('Choose Institution'),
+       'nullable' => true,
+     ));
+//     if($this->collection) {
+//       $this->setDefault('institution_ref', $this->collection->getInstitutionRef());
+//     }
+
+    $this->widgetSchema['building'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'table_method' => 'getDistinctBuildings',
+      'method' => 'getBuildings',
+      'key_method' => 'getBuildings',
+      'add_empty' => true,
+      'change_label' => 'Pick a building in the list',
+      'add_label' => 'Add another building',
+      ));
+
+    $this->widgetSchema['floor'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'table_method' => 'getDistinctFloors',
+      'method' => 'getFloors',
+      'key_method' => 'getFloors',
+      'add_empty' => true,
+      'change_label' => 'Pick a floor in the list',
+      'add_label' => 'Add another floor',
+      ));
+
+    $this->widgetSchema['row'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'table_method' => 'getDistinctRows',
+      'method' => 'getRows',
+      'key_method' => 'getRows',
+      'add_empty' => true,
+      'change_label' => 'Pick a row in the list',
+      'add_label' => 'Add another row',
+      ));
+
+    $this->widgetSchema['room'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'table_method' => 'getDistinctRooms',
+      'method' => 'getRooms',
+      'key_method' => 'getRooms',
+      'add_empty' => true,
+      'change_label' => 'Pick a room in the list',
+      'add_label' => 'Add another room',
+      ));
+
+    $this->widgetSchema['shelf'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'table_method' => 'getDistinctShelfs',
+      'method' => 'getShelfs',
+      'key_method' => 'getShelfs',
+      'add_empty' => true,
+      'change_label' => 'Pick a shelf in the list',
+      'add_label' => 'Add another shelf',
+      ));
+
+    $this->widgetSchema['container_type'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'table_method' => 'getDistinctContainerTypes',
+      'method' => 'getContainerType',
+      'key_method' => 'getContainerType',
+      'add_empty' => true,
+      'change_label' => 'Pick a container in the list',
+      'add_label' => 'Add another container',
+      ));
+
+    $this->widgetSchema['sub_container_type'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'table_method' => 'getDistinctSubContainerTypes',
+      'method' => 'getSubContainerType',
+      'key_method' => 'getSubContainerType',
+      'add_empty' => true,
+      'change_label' => 'Pick a sub container type in the list',
+      'add_label' => 'Add another sub container type',
+      ));
+
+    $this->widgetSchema['specimen_status'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'table_method' => 'getDistinctStatus',
+      'method' => 'getSpecimenStatus',
+      'key_method' => 'getSpecimenStatus',
+      'add_empty' => true,
+      'change_label' => 'Pick a status in the list',
+      'add_label' => 'Add another status',
+      ));
+
+    $this->widgetSchema['container'] = new sfWidgetFormInput();
+    $this->widgetSchema['sub_container'] = new sfWidgetFormInput();
+    $this->widgetSchema['object_name'] = new sfWidgetFormInput();
+
+    $this->widgetSchema['container_storage'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'change_label' => 'Pick a container storage in the list',
+      'add_label' => 'Add another container storage',
+      ));
+
+    $this->widgetSchema['sub_container_storage'] = new widgetFormSelectComplete(array(
+      'model' => 'SpecimenParts',
+      'change_label' => 'Pick a sub container storage in the list',
+      'add_label' => 'Add another sub container storage',
+      ));
+
+    $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
+      'choices' => SpecimenParts::getCategories(),
+    ));
+
+    $this->validatorSchema['category'] = new sfValidatorChoice(array('choices'=>array_keys(SpecimenParts::getCategories())));
+
+    $this->widgetSchema['accuracy'] = new sfWidgetFormChoice(array(
+        'choices'  => array($this->getI18N()->__('exact'), $this->getI18N()->__('imprecise')),
+        'expanded' => true,
+    ));
+    $this->setDefault('accuracy', 1);
+    $this->validatorSchema['accuracy'] = new sfValidatorPass();
+
     /* Labels */
-    $this->widgetSchema->setLabels(array('host_specimen_ref' => 'Host specimen',
-                                         'host_relationship' => 'Relationship',
-                                         'host_taxon_ref' => 'Host Taxon',
-                                         'gtu_ref' => 'Sampling location Tags',
-                                         'station_visible' => 'Public sampling location ?',
-                                         'filenames' => 'Add File',
-                                        )
-                                  );
+    $this->widgetSchema->setLabels(array(
+      'host_specimen_ref' => 'Host specimen',
+      'host_relationship' => 'Relationship',
+      'host_taxon_ref' => 'Host Taxon',
+      'gtu_ref' => 'Sampling location Tags',
+      'station_visible' => 'Public sampling location ?',
+      'filenames' => 'Add File',
+      'institution_ref' => 'Institution',
+      'accuracy' => 'Accuracy',
+      'surnumerary' => 'supernumerary',
+    ));
 
     /* Validators */
+    $this->validatorSchema['specimen_part'] = new sfValidatorString(array('required' => false, 'trim' => true));
+    $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false, 'trim' => true));
+
     $this->validatorSchema['extlink'] = new sfValidatorPass();
 
     $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
@@ -258,6 +458,14 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->validatorSchema['host_taxon_ref'] = new sfValidatorInteger(array('required'=>false));
 
+    $this->validatorSchema['type'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('type')));
+    $this->validatorSchema['sex'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('sex')));
+    $this->validatorSchema['stage'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('stage')));
+    $this->validatorSchema['state'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('state')));
+    $this->validatorSchema['social_status'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('social_status')));
+    $this->validatorSchema['rock_form'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('rock_form')));
+
+    
     $this->validatorSchema['acquisition_category'] = new sfValidatorChoice(array(
         'choices' => array_keys(SpecimensTable::getDistinctCategories()),
         'required' => false,
@@ -333,6 +541,25 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->validatorSchema['SpecimensAccompanying_holder'] = new sfValidatorPass();
     $this->widgetSchema['SpecimensAccompanying_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+
+    $this->widgetSchema['Insurances_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->validatorSchema['Insurances_holder'] = new sfValidatorPass();
+
+    $this->mergePostValidator(new sfValidatorSchemaCompare('specimen_count_min', '<=', 'specimen_count_max',
+      array(),
+      array('invalid' => 'The min number ("%left_field%") must be lower or equal the max number ("%right_field%")' )
+    ));
+  }
+
+  public function forceContainerChoices()
+  {
+    $this->widgetSchema['container_storage']->setOption('forced_choices',
+      Doctrine::getTable('SpecimenParts')->getDistinctContainerStorages($this->getObject()->getContainerType())
+    );
+
+    $this->widgetSchema['sub_container_storage']->setOption('forced_choices',
+      Doctrine::getTable('SpecimenParts')->getDistinctSubContainerStorages($this->getObject()->getSubContainerType())
+    );
   }
 
   public function addIdentifications($num, $order_by=0, $obj=null)
@@ -348,7 +575,14 @@ class SpecimensForm extends BaseSpecimensForm
       //Re-embedding the container
       $this->embedForm('newIdentification', $this->embeddedForms['newIdentification']);
   }
-
+  
+  public function addInsurances($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
+    $this->attachEmbedRecord('Insurances', new InsurancesSubForm(DarwinTable::newObjectFromArray('Insurances',$options)), $num);
+  }
+  
   public function reembedIdentifications ($identification, $identification_number)
   {
       $this->getEmbeddedForm('Identifications')->embedForm($identification_number, $identification);
@@ -391,6 +625,38 @@ class SpecimensForm extends BaseSpecimensForm
       ),
       'Tool' => array('collecting_tools_list'),
       'Method' => array('collecting_methods_list'),
+
+      'Part' => array('specimen_part'),
+      'Complete' => array(
+      'specimen_status',
+        'complete',
+       ),
+      'Localisation' => array(
+        'building',
+        'floor',
+        'room',
+        'row',
+        'shelf',
+      ),
+      'Container' => array(
+        'surnumerary',
+        'container',
+        'container_type',
+        'container_storage',
+        'sub_container',
+        'sub_container_type',
+        'sub_container_storage',
+      ),
+      'Count' => array(
+        'accuracy',
+        'specimen_count_min',
+        'specimen_count_max',
+      ),
+      'Type' => array('type'),
+      'Sex' => array('sex', 'state'),
+      'Stage' => array('stage'),
+      'Social' => array('social_status'),
+      'Rock' => array('rock_form'),
     );
   }
   
@@ -545,6 +811,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->bindEmbed('ExtLinks', 'addExtLinks' , $taintedValues);
     $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
     $this->bindEmbed('SpecimensAccompanying', 'addSpecimensAccompanying' , $taintedValues);
+    $this->bindEmbed('Insurances', 'addInsurances' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -618,6 +885,7 @@ class SpecimensForm extends BaseSpecimensForm
 
   public function getEmbedRecords($emFieldName, $record_id = false)
   {
+
     if($record_id === false)
       $record_id = $this->getObject()->getId();
     if( $emFieldName =='Biblio' )
@@ -636,6 +904,8 @@ class SpecimensForm extends BaseSpecimensForm
       return Doctrine::getTable('Multimedia')->findForTable('specimens', $record_id);
     if( $emFieldName =='SpecimensAccompanying' )
       return Doctrine::getTable('SpecimensAccompanying')->findBySpecimenRef($record_id);
+    if( $emFieldName =='Insurances' )
+      return Doctrine::getTable('Insurances')->findForTable('specimens', $record_id);
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -654,6 +924,8 @@ class SpecimensForm extends BaseSpecimensForm
       return new MultimediaForm($values);
     if( $emFieldName =='SpecimensAccompanying' )
       return new SpecimensAccompanyingForm($values);
+    if( $emFieldName =='Insurances' )
+      return new InsurancesSubForm($values);
   }
 
   public function duplicate($id)
@@ -721,7 +993,16 @@ class SpecimensForm extends BaseSpecimensForm
       $form = new SpecimensAccompanyingForm($spec);
       $this->attachEmbedRecord('SpecimensAccompanying', $key, $spec) ;
     }
-
+    
+    // reembed duplicated insurances
+    $Insurances = Doctrine::getTable('Insurances')->findForTable('specimens',$id) ;
+    foreach ($Insurances as $key=>$val)
+    {
+      $insurance = new Insurances() ;
+      $insurance->fromArray($val->toArray());
+      $form = new InsurancesSubForm($insurance);
+      $this->attachEmbedRecord('Insurances', $form, $key);
+    }
   }
 
   public function saveEmbeddedForms($con = null, $forms = null)
@@ -734,6 +1015,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('SpecimensAccompanying', 'taxon_ref' ,$forms, array('specimen_ref' => $this->getObject()->getId()));
+    $this->saveEmbed('Insurances', 'insurance_value' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('ident'))
     {

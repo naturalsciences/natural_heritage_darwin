@@ -408,5 +408,41 @@ class specimenActions extends DarwinActions
     $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimensFlat')->fetchOneWithRights($request->getParameter('id'), $this->getUser()),'Specimen does not exist');  
 
     $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
-  }  
+  }
+
+  public function executeAddInsurance(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $form = new SpecimensForm();
+    $form->addInsurances($number, array());
+    return $this->renderPartial('specimen/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
+  }
+
+  public function executeEditMaintenance(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $main = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id'));
+    $this->forward404unless($main);
+    $this->form = new CollectionMaintenanceForm($main);
+    if($request->isMethod('post'))
+    {
+      $this->form->bind($request->getParameter('collection_maintenance'));
+
+      if($this->form->isValid())
+      {
+        try
+        {
+          $this->form->save();
+          return $this->renderText('ok');
+        }
+        catch(Doctrine_Exception $ne)
+        {
+          $e = new DarwinPgErrorParser($ne);
+          $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+          $this->form->getErrorSchema()->addError($error); 
+        }
+      }
+    }
+  }
 }

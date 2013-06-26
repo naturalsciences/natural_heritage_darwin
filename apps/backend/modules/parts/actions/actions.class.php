@@ -172,15 +172,6 @@ class partsActions extends DarwinActions
     return $this->renderPartial('specimen/spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number));
   }
 
-  public function executeAddInsurance(sfWebRequest $request)
-  {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
-    $number = intval($request->getParameter('num'));
-    $form = new SpecimenPartsForm();
-    $form->addInsurances($number, array());
-    return $this->renderPartial('parts/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
-  }
-
   public function executeAddExtLinks(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
@@ -199,6 +190,14 @@ class partsActions extends DarwinActions
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
 
+  public function executeAddInsurance(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $number = intval($request->getParameter('num'));
+    $form = new SpecimenPartsForm();
+    $form->addInsurances($number, array());
+    return $this->renderPartial('parts/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
+  }
 
   public function executeEditMaintenance(sfWebRequest $request)
   {

@@ -987,10 +987,6 @@ TagGroups:
         sub_group_name:  mountain
         tag_value: Big White Mountain; Brussels
 
-SpecimenIndividuals:
-    spi1:
-        Specimens: sp4
-
 InformativeWorkflow:
     iw1:
         referenced_relation: taxonomy

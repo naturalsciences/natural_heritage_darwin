@@ -20,7 +20,6 @@
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Tags
  * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimensFlat
  * 
  * @method integer             getId()                 Returns the current record's "id" value
  * @method string              getCode()               Returns the current record's "code" value
@@ -37,7 +36,6 @@
  * @method Doctrine_Collection getTagGroups()          Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection getTags()               Returns the current record's "Tags" collection
  * @method Doctrine_Collection getSpecimens()          Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimensFlat()      Returns the current record's "SpecimensFlat" collection
  * @method Gtu                 setId()                 Sets the current record's "id" value
  * @method Gtu                 setCode()               Sets the current record's "code" value
  * @method Gtu                 setGtuFromDateMask()    Sets the current record's "gtu_from_date_mask" value
@@ -53,7 +51,6 @@
  * @method Gtu                 setTagGroups()          Sets the current record's "TagGroups" collection
  * @method Gtu                 setTags()               Sets the current record's "Tags" collection
  * @method Gtu                 setSpecimens()          Sets the current record's "Specimens" collection
- * @method Gtu                 setSpecimensFlat()      Sets the current record's "SpecimensFlat" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -126,10 +123,6 @@ abstract class BaseGtu extends DarwinModel
              'foreign' => 'gtu_ref'));
 
         $this->hasMany('Specimens', array(
-             'local' => 'id',
-             'foreign' => 'gtu_ref'));
-
-        $this->hasMany('SpecimensFlat', array(
              'local' => 'id',
              'foreign' => 'gtu_ref'));
     }
