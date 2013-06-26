@@ -40,6 +40,7 @@ GRANT SELECT ON TABLE staging_relationship TO d2viewer;
 
 ALTER TABLE staging DROP COLUMN part_status ;
 alter table collection_maintenance alter column people_ref drop not null ;
+ALTER TABLE imports add column errors_in_import text ;
 
 
 CREATE TRIGGER trg_clr_referenceRecord_staging_info AFTER DELETE OR UPDATE

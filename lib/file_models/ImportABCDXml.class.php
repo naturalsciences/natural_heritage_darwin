@@ -1,7 +1,7 @@
 <?php 
 class ImportABCDXml implements IImportModels
 {
-  private $tag, $staging, $object, $people,$next_id, $import_id, $temp_data, $higher_tag, $depth, $name;
+  private $tag, $staging, $object, $people,$next_id, $import_id, $temp_data, $higher_tag, $depth, $name, $errors_reported='';
   private $unit_id_ref = array() ; // to keep the original unid_id per staging for Associations
   private $object_to_save = array() ;
   /**
@@ -20,16 +20,17 @@ class ImportABCDXml implements IImportModels
     xml_set_element_handler($xml_parser, "startElement", "endElement");
     xml_set_character_data_handler($xml_parser, "characterData");
     if (!($fp = fopen($file, "r"))) {
-        die("could not open XML input");
+        return("could not open XML input");
     }
     while ($data = fread($fp, 4096)) {
         if (!xml_parse($xml_parser, $data, feof($fp))) {
-            die(sprintf("XML error: %s at line %d",
+            return (sprintf("XML error: %s at line %d",
                         xml_error_string(xml_get_error_code($xml_parser)),
                         xml_get_current_line_number($xml_parser)));
         }
     }
     xml_parser_free($xml_parser);
+    return $this->errors_reported ;
   }
 
   private function startElement($parser, $name, $attrs) 
@@ -40,6 +41,7 @@ class ImportABCDXml implements IImportModels
     switch ($name) {
       case "Altitude" : $this->higher_tag = "altitude" ; break ;;
       case "Accessions" : $this->object = new parsingTag() ; break ;;
+      case "Biotope" : /*@TODO ;*/ break ;;
       case "Country" : $this->higher_tag = "country" ; $this->object->tag_group_name="country" ; break ;;
       case "Depth" : $this->higher_tag = "depth" ; break ;;
       case "dna:DNASample" : $this->object = new ParsingMaintenance('Dna extraction') ; break ;;
@@ -78,7 +80,7 @@ class ImportABCDXml implements IImportModels
       case "Gathering" : $this->object->insertTags($this->next_id)  ; break ;;
       case "HigherTaxa" : $this->staging["taxon_parents"] = $this->object->getTaxonParent() ;; break ;;
       case "HigherTaxon" : $this->object->handleTaxonParent() ;break;;
-      case "Height" : $this->object->save() ; break ;;
+      //case "Height" : $this->object->save() ; break ;;
       case "Identification" : $this->staging->addRelated($this->object->identification) ; break ;;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break ;;
       case "MineralRockIdentified" : $this->staging["mineral_name"] = $this->object->fullname ; break ;;
@@ -90,10 +92,8 @@ class ImportABCDXml implements IImportModels
       case "Person" : $this->object->handlePeople($this->people,$this->staging,true) ; break ;;
       case "ScientificName" : $this->staging["taxon_name"] = $this->object->getTaxonName() ; break ;;
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break ;;
-      case "TitleCitation" : $this->addComment($this->temp_data,'general') ; break ;
-      case "Unit" : $this->staging->fromArray(array("import_ref" => $this->import_id, "level" => "spec"));
-                    $this->staging->save() ; $this->next_id++; $this->saveObjects() ;
-                    $this->unit_id_ref[$this->name] = $this->staging->getId() ; break ;;
+      case "TitleCitation" : $this->addComment($this->temp_data,'general',true) ; break ;
+      case "Unit" : $this->saveUnit(); break ;;
       case "UnitAssociation" : if($this->object->getRefId()) $this->staging->addRelated($this->object) ; break ;;
       case "UnitID" : $this->staging->addRelated($this->code) ; break ;;
     }
@@ -108,8 +108,8 @@ class ImportABCDXml implements IImportModels
     switch ($this->tag) {
       case "AccessionCatalogue" : $this->object->addAccession($data) ; break ;;
       case "AccessionDate" : $this->object->InitAccessionVar($data) ; break ;;
-      case "AccessionNumber" : $this->object->accession_num($data) ; break ;;
-      case "Accuracy" : $this->higher_tag=='altitude'?$this->staging['gtu_elevation_accuracy']=$data:$this->property->accuracy=$data ; break ;; 
+      case "AccessionNumber" : $this->object->accession_num = $data ; break ;;
+      case "Accuracy" : $this->higher_tag=='altitude'?$this->staging['gtu_elevation_accuracy']=$data:$this->property->accuracy=$data ; break ;;
       case "AcquisitionDate" : $this->staging['acquisition_date'] = $data ; break ;;
       case "AcquisitionType" : $this->staging['acquisition_category'] = $data ; break ;;
       case "AreaClass" : $this->object->tag_value = $data ; break ;;
@@ -167,12 +167,12 @@ class ImportABCDXml implements IImportModels
       }
   }
 
-  private function addComment($data,$notion)
+  private function addComment($data,$notion, $is_staging = false)
   {
     $comment = new Comments() ;
     $comment->setNotionConcerned($notion) ;
     $comment->setComment($data) ;
-    if($this->depth==1) $this->staging->addRelated($comment) ;
+    if($this->depth==1 || $is_staging) $this->staging->addRelated($comment) ;
     else  $this->object_to_save[] = $this->object->addStagingInfo($comment,$this->next_id);
   }
 
@@ -184,7 +184,32 @@ class ImportABCDXml implements IImportModels
 
   private function saveObjects()
   {
-    foreach($this->object_to_save as $object) $object->save() ;
+    foreach($this->object_to_save as $object) 
+    {
+      try { $object->save() ; }
+      catch(Doctrine_Exception $ne)
+      {
+        $e = new DarwinPgErrorParser($ne);
+        $this->errors_reported .= $object->getTable()->getTableName()." were not saved".$e->getMessage().";";
+      }
+    }
     $this->object_to_save = array() ;
+  }
+  
+  private function saveUnit()
+  {
+    $this->staging->fromArray(array("import_ref" => $this->import_id, "level" => "spec"));
+    try 
+    {
+      $this->staging->save() ; 
+      $this->next_id++; 
+      $this->saveObjects() ;
+      $this->unit_id_ref[$this->name] = $this->staging->getId()  ;
+    }
+    catch(Doctrine_Exception $ne)
+    {
+      $e = new DarwinPgErrorParser($ne);
+      $this->errors_reported .= "Unit or associated object were not saved:".$e->getMessage().";";
+    }
   }
 }

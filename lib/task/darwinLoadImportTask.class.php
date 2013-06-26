@@ -21,6 +21,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
      // initialize the database connection
+    $result = null ;
     $databaseManager = new sfDatabaseManager($this->configuration);
     $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env']; 
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
@@ -39,7 +40,7 @@ EOF;
           try{
             if($q->getFormat() == 'abcd') $import = new importABCDXml() ;
             else $import = new importDnaXml() ;
-            $import->parseFile($file,$id, $staging_id) ;
+            $result = $import->parseFile($file,$id, $staging_id) ;
           }
           catch(Exception $e)
           {
@@ -49,6 +50,7 @@ EOF;
             ->update('imports p')
             ->set('p.state','?','loaded')
             ->set('p.initial_count','(select count(*) from staging where import_ref = ? )',$id)
+            ->set('p.errors_in_import','?',$result)
             ->where('p.id = ?', $id)
             ->execute();
         }

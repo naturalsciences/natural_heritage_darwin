@@ -1059,6 +1059,7 @@ Imports:
         updated_at: { type: string, notnull: true}
         initial_count: {type:integer, notnull: true}
         is_finished: {type:boolean, notnull: true,default:false}
+        errors_in_import: {type: string}
     relations:
         Collections:
             local: collection_ref

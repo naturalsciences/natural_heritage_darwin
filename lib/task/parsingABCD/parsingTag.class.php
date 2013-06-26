@@ -68,11 +68,11 @@ class ParsingTag
     switch(strtolower($catalogue))
     {
       case "code" : $this->accession = "code" ; break ;;
+      case "ig" :
       case "ig number" : $this->accession = "igs" ; break ;;
       default : $this->accession = null ; break ;;
     }
   }
-  
   public function HandleAccession($staging)
   {
     if(!$this->accession_num) return null ;
@@ -80,7 +80,7 @@ class ParsingTag
     {
       case 'code' :
         $object = new Codes() ;
-        $object->fromArray(array('code_date' => strtotime($this->accession_date), 'code' => $this->accession_num)) ;
+        $object->fromArray(array('code_date' => $this->accession_date?strtotime($this->accession_date):null, 'code' => $this->accession_num)) ;
         $staging->addRelated($object) ;
         break ;;
       case "igs" : 
@@ -103,7 +103,7 @@ class ParsingTag
       $object->save() ;
       $ref = $object->getId() ;
     }
-    $object = new SpecimenCollectingMethods() ;
+    $object = new SpecimensMethods() ;
     $object->fromArray(array("specimen_ref" => $staging_id, "collecting_method_ref" => $ref)) ;
     return $object ;
   }
