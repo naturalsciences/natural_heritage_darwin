@@ -275,7 +275,7 @@ class specimenActions extends DarwinActions
   {
     $this->setLevelAndCaller($request);
     // Initialization of the Search expedition form
-    $this->form = new SpecimensFormFilter(array('caller_id'=>$this->caller_id));
+    $this->form = new SpecimensSelfFormFilter(array('caller_id'=>$this->caller_id));
     // Remove surrounding layout
     $this->setLayout(false);
   }
@@ -284,7 +284,7 @@ class specimenActions extends DarwinActions
   {
     $this->setLevelAndCaller($request);
     // Initialization of the Search expedition form
-    $this->form = new SpecimensFormFilter(array('caller_id'=> $this->caller_id));
+    $this->form = new SpecimensSelfFormFilter(array('caller_id'=> $this->caller_id));
   }
 
   /**
@@ -298,7 +298,7 @@ class specimenActions extends DarwinActions
     $this->setCommonValues('specimen', 'collection_name', $request);
     $item = $request->getParameter('searchSpecimen',array(''));
     // Instantiate a new specimen form
-    $this->form = new SpecimensFormFilter(array('caller_id'=>$item['caller_id']));
+    $this->form = new SpecimensSelfFormFilter(array('caller_id'=>$item['caller_id']));
     // Triggers the search result function
     $this->searchResults($this->form, $request);
   }
@@ -309,7 +309,7 @@ class specimenActions extends DarwinActions
     * @param sfWebRequest         $request Request coming from browser
     * @var   int                  $pagerSlidingSize: Get the config value to define the range size of pager to be displayed in numbers (i.e.: with a value of 5, it will give this: << < 1 2 3 4 5 > >>)
     */
-  protected function searchResults(SpecimensFormFilter $form, sfWebRequest $request)
+  protected function searchResults(SpecimensSelfFormFilter $form, sfWebRequest $request)
   {
     if($request->getParameter('searchSpecimen','') !== '')
     {
@@ -341,7 +341,7 @@ class specimenActions extends DarwinActions
         $specs = array();
         foreach($this->specimens as $specimen)
         {
-          $specs[$specimen->getSpecimenRef()] = $specimen->getSpecimenRef();
+          $specs[$specimen->getId()] = $specimen->getId();
         }
         $specCodes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens', $specs);
         $this->codes = array();
