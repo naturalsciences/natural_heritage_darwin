@@ -977,7 +977,7 @@ CREATE INDEX idx_specimens_sub_container_type ON specimens (sub_container_type )
 CREATE INDEX  idx_specimens_spec_id on specimens(spec_id);
 
 
-update my_saved_searches set subject='specimens';
+update my_saved_searches set subject='specimen';
 delete from preferences where pref_key in('search_cols_specimen', 'search_cols_individual', 'gtu_google_activated') ;
 update preferences set pref_key='search_cols_specimen' where pref_key='search_cols_part';
 update flat_dict set referenced_relation='specimens' where referenced_relation in ('specimen_individuals', 'specimen_part');

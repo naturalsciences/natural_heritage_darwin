@@ -14,9 +14,33 @@ class specimenwidgetviewComponents extends sfComponents
   protected function defineObject()
   {
     if(! isset($this->spec) )
-      $this->spec = Doctrine::getTable('SpecimensFlat')->find($this->eid);
+      $this->spec = Doctrine::getTable('Specimens')->find($this->eid);
+  }
+  public function executeType()
+  {
+    $this->defineObject();
   }
 
+  public function executeSex()
+  {
+    $this->defineObject();
+  }
+
+  public function executeStage()
+  {
+    $this->defineObject();
+  }
+
+  public function executeSocialStatus()
+  {
+    $this->defineObject();
+  }
+
+  public function executeRockForm()
+  {
+    $this->defineObject();
+  }
+  
   public function executeRefCollection()
   {
     $this->defineObject();
@@ -151,5 +175,45 @@ class specimenwidgetviewComponents extends sfComponents
   public function executeBiblio()
   {
     $this->Biblios = Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $this->eid);
+  }
+
+
+  public function executeSpecimenCount()
+  {
+    $this->defineObject();
+    if ($this->spec->getSpecimenCountMin() === $this->spec->getSpecimenCountMax())
+      $this->accuracy = "Exact" ;
+    else
+      $this->accuracy = "Imprecise" ;
+  }
+
+  public function executeSpecPart()
+  {
+    $this->defineObject();
+  }
+
+  public function executeComplete()
+  {
+    $this->defineObject();
+  }
+
+  public function executeLocalisation()
+  {
+    $this->defineObject();
+  }
+
+  public function executeContainer()
+  {
+    $this->defineObject();
+  }
+
+  public function executeRefInsurances()
+  {
+    $this->Insurances = Doctrine::getTable('Insurances')->findForTable('specimens',$this->eid) ;   
+  }
+
+  public function executeMaintenance()
+  {
+    $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimens', array($this->eid));
   }
 }

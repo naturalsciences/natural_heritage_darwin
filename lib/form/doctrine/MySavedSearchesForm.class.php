@@ -40,7 +40,7 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
 
     $this->validatorSchema['visible_fields_in_result'] = new sfValidatorChoice(array('choices' => $choices,'multiple' => true));
 
-    $this->validatorSchema['subject'] = new sfValidatorChoice(array('choices' => array('specimen','individual','part'), 'required'=>true,'empty_value'=>'specimen'));
+    $this->validatorSchema['subject'] = new sfValidatorChoice(array('choices' => array('specimen'), 'required'=>true,'empty_value'=>'specimen'));
 
     $this->validatorSchema['name'] = new sfValidatorString() ;
     $this->validatorSchema['modification_date_time'] = new sfValidatorString(array('required' => false)) ;
@@ -63,7 +63,7 @@ class MySavedSearchesForm extends BaseMySavedSearchesForm
   
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
-    if(isset($taintedValues['subject']) && in_array($taintedValues['subject'], array('specimen','individual','part')))
+    if(isset($taintedValues['subject']) && in_array($taintedValues['subject'], array('specimen')))
     {
       $choices = Doctrine::getTable('MySavedSearches')->getAllFields($taintedValues['subject']) ;
       $choices = array_keys($choices);

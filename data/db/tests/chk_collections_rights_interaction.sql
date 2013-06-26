@@ -90,8 +90,8 @@ SELECT ok(1 = (SELECT COUNT(*) FROM collections_rights WHERE collection_ref = 10
 
 SELECT diag('Add preference and a fake parts saved search for Francka');
 SELECT lives_ok('INSERT INTO preferences (user_ref, pref_key, pref_value) VALUES (100003, ''search_cols_specimen'', ''taxon|part|building|room|container_type'')', 'Insertion in preferences ok');
-SELECT lives_ok('INSERT INTO my_saved_searches (user_ref, name, search_criterias, visible_fields_in_result, subject) VALUES (100003, ''spec search'', '''', ''taxon|part|building|room|container_type'', ''specimens'')', 'Insertion in my_saved_searches ok');
-SELECT lives_ok('INSERT INTO my_saved_searches (user_ref, name, search_criterias, visible_fields_in_result, subject) VALUES (100003, ''spec search 2'', ''{s1:a11}'', ''taxon|floor|part|building|room|container|container_type'', ''specimens'')', 'Second insertion in my_saved_searches ok');
+SELECT lives_ok('INSERT INTO my_saved_searches (user_ref, name, search_criterias, visible_fields_in_result, subject) VALUES (100003, ''spec search'', '''', ''taxon|part|building|room|container_type'', ''specimen'')', 'Insertion in my_saved_searches ok');
+SELECT lives_ok('INSERT INTO my_saved_searches (user_ref, name, search_criterias, visible_fields_in_result, subject) VALUES (100003, ''spec search 2'', ''{s1:a11}'', ''taxon|floor|part|building|room|container|container_type'', ''specimen'')', 'Second insertion in my_saved_searches ok');
 
 SELECT diag('Check cascade delete of collection well occurs and do the unpromotion job');
 SELECT lives_ok('DELETE FROM collections WHERE id = 100001');
