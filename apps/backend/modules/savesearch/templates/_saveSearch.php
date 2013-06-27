@@ -5,7 +5,6 @@ $(document).ready(function () {
 
   $("#save_search").click(function(event){
     event.preventDefault();
-    source = '<?php if(isset($source)) echo $source;?>';
     column_str = ' ';
     if($('.column_menu ul > li.check').length)
     {
@@ -19,19 +18,17 @@ $(document).ready(function () {
     {
       column_str = $('#specimen_search_filters_col_fields').val();
     }
-    var last_position = $('body').scrollTop() ;              
+    var last_position = $('body').scrollTop() ;
     scroll(0,0) ;
 
     $('form.specimensearch_form select.double_list_select-selected option').attr('selected', 'selected');
-    if(source == '')
-      source = $('#specimen_search_filters_what_searched').val();
     $("#save_search").qtip({
         id: 'modal',
         content: {
           text: '<img src="/images/loader.gif" alt="loading"> loading ...',
           title: { button: true, text: '<?php echo __('Save your search')?>' },
           ajax: {
-            url: '<?php echo url_for("savesearch/saveSearch");?>/source/' + source + '/cols/' + encodeURI(column_str),
+            url: '<?php echo url_for("savesearch/saveSearch");?>/source/specimen/cols/' + encodeURI(column_str),
             type: 'POST',
             data: $('form.specimensearch_form').serialize()
           }

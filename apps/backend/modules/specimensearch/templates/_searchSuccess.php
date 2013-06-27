@@ -94,10 +94,9 @@ $(document).ready(function () {
     check_screen_size();
   }); 
 /****COL MANAGEMENT ***/
-  $('ul.column_menu > li > ul > li').each(function(){
+  $('ul.column_menu > li').each(function(){
     hide_or_show($(this));
   });
-  initIndividualColspan() ;
 /****END COL MANAGEMENT ***/
 
   /**PIN management **/
@@ -115,7 +114,7 @@ $(document).ready(function () {
       pin_status = 1;
     }
     rid = getIdInClasses($(this).closest('tr'));
-    $.get('<?php echo url_for('savesearch/pin?source='.$source);?>/id/' + rid + '/status/' + pin_status,function (html){});
+    $.get('<?php echo url_for('savesearch/pin?source=specimen');?>/id/' + rid + '/status/' + pin_status,function (html){});
   });
 
   if($('.spec_results tbody .pin_on').not('.hidden').length == $('.spec_results tbody .pin_on').length)
@@ -162,7 +161,7 @@ $(document).ready(function () {
         $('.spec_results tbody tr .pin_off').addClass('hidden');
         $('.spec_results tbody tr .pin_on').removeClass('hidden') ;
     }
-    $.get('<?php echo url_for('savesearch/pin?source='.$source);?>/mid/' + pins + '/status/' + pin_status,function (html){});
+    $.get('<?php echo url_for('savesearch/pin?source=specimen');?>/mid/' + pins + '/status/' + pin_status,function (html){});
   }); 
 
   /*Remove management*/

@@ -253,21 +253,6 @@ function getColVisible()
   }
   return column_str;
 }
-/**
-* set the individual colspan depending on how many fields are visible
-*/
-function initIndividualColspan()
-{
-  cpt = 1 ;
-  $('ul.column_menu > li > ul').find('>li').each(function() {
-    if( $(this).hasClass('check'))
-    {
-      cpt++ ;
-    }
-   });  
-  $('table.spec_results tbody tr.sub_row').find('td:first').attr('colspan', cpt);
-  $('#specimen_search_filters_col_fields').val(getColVisible());
-}
 
 /***
  * Hide or show table column when a column is checked as visible
@@ -287,6 +272,5 @@ function hide_or_show(li)
     $('table.spec_results tbody tr td.col_'+column).show();
     //this line below is neccessary to avoid table border to be cut    
   }
-  initIndividualColspan();
 }
 

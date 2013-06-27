@@ -994,7 +994,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/leaflet/leaflet.js';
-    $javascripts[]='/js/mas.js';
+    $javascripts[]='/js/map.js';
     return $javascripts;
   }
 

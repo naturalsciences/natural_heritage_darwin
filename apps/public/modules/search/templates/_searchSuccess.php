@@ -60,6 +60,5 @@ $(document).ready(function () {
   $('ul.column_menu > li > ul > li').each(function(){
     hide_or_show($(this));
   });
-  initIndividualColspan() ;
 });
 </script>
