@@ -13,9 +13,6 @@ class CodeToCorrectTable extends DarwinTable
   }
 
   public function move($uid, $from, $to) {
-  
-//     $cols = BaseFormFilterDoctrine::getCollectionWithRights($uid, true);
-
     $from_fix = Doctrine_Core::getTable('CodeToCorrect')->find($from);
     $from = Doctrine_Core::getTable('Codes')->find($from);
     if( ! $from){
@@ -74,7 +71,9 @@ c2.code_prefix as p_code_prefix,
 c2.code_prefix_separator as p_code_prefix_separator,
 c2.code as p_code,
 c2.code_suffix as p_code_suffix,
-c2.code_suffix_separator as p_code_suffix_separator
+c2.code_suffix_separator as p_code_suffix_separator,
+
+p.id as part_id
 
       from code_to_correct c
       inner join specimen_individuals i on c.record_id = i.specimen_ref
@@ -82,7 +81,7 @@ c2.code_suffix_separator as p_code_suffix_separator
       LEFT join codes c2 on c2.referenced_relation ='specimen_parts'  and c2.record_id = p.id
       where collection_ref in ( ".implode(',',$cols). ") 
       
-      order by s_record_id, s_id , p_record_id
+      order by s_record_id, s_id , part_id
       
       limit ".$limit." offset ".$offset ;
   
@@ -100,11 +99,11 @@ c2.code_suffix_separator as p_code_suffix_separator
       if( !isset($result[$row['s_record_id']]['codes'][$row['s_id']]) )
         $result[$row['s_record_id']]['codes'][$row['s_id']] = $row;
         
-      if( !isset($result[$row['s_record_id']]['parts'][$row['p_record_id']]) )
-        $result[$row['s_record_id']]['parts'][$row['p_record_id']] = array();
+      if( !isset($result[$row['s_record_id']]['parts'][$row['part_id']]) )
+        $result[$row['s_record_id']]['parts'][$row['part_id']] = array();
 
-      if( !isset($result[$row['s_record_id']]['parts'][$row['p_record_id']][$row['p_id']]) )
-        $result[$row['s_record_id']]['parts'][$row['p_record_id']][$row['p_id']] = $row;
+      if( $row['p_id'] != '' && !isset($result[$row['s_record_id']]['parts'][$row['part_id']][$row['p_id']]) )
+        $result[$row['s_record_id']]['parts'][$row['part_id']][$row['p_id']] = $row;
     }
     
     if($number_of_result == 100) {

@@ -1249,7 +1249,6 @@ CodeToCorrect:
         code_suffix: { type: string}
         code_suffix_separator: { type: string}
         full_code_indexed: { type: string}
-        full_code_order_by: { type: string}
     relations:
         Collections:
             local: collection_ref

@@ -26,7 +26,6 @@ abstract class BaseCodeToCorrectForm extends BaseFormDoctrine
       'code_suffix'           => new sfWidgetFormTextarea(),
       'code_suffix_separator' => new sfWidgetFormTextarea(),
       'full_code_indexed'     => new sfWidgetFormTextarea(),
-      'full_code_order_by'    => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -41,7 +40,6 @@ abstract class BaseCodeToCorrectForm extends BaseFormDoctrine
       'code_suffix'           => new sfValidatorString(array('required' => false)),
       'code_suffix_separator' => new sfValidatorString(array('required' => false)),
       'full_code_indexed'     => new sfValidatorString(array('required' => false)),
-      'full_code_order_by'    => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('code_to_correct[%s]');

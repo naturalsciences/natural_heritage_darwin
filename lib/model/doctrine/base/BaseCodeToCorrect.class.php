@@ -16,7 +16,6 @@
  * @property string $code_suffix
  * @property string $code_suffix_separator
  * @property string $full_code_indexed
- * @property string $full_code_order_by
  * @property Collections $Collections
  * 
  * @method integer       getId()                    Returns the current record's "id" value
@@ -30,7 +29,6 @@
  * @method string        getCodeSuffix()            Returns the current record's "code_suffix" value
  * @method string        getCodeSuffixSeparator()   Returns the current record's "code_suffix_separator" value
  * @method string        getFullCodeIndexed()       Returns the current record's "full_code_indexed" value
- * @method string        getFullCodeOrderBy()       Returns the current record's "full_code_order_by" value
  * @method Collections   getCollections()           Returns the current record's "Collections" value
  * @method CodeToCorrect setId()                    Sets the current record's "id" value
  * @method CodeToCorrect setReferencedRelation()    Sets the current record's "referenced_relation" value
@@ -43,7 +41,6 @@
  * @method CodeToCorrect setCodeSuffix()            Sets the current record's "code_suffix" value
  * @method CodeToCorrect setCodeSuffixSeparator()   Sets the current record's "code_suffix_separator" value
  * @method CodeToCorrect setFullCodeIndexed()       Sets the current record's "full_code_indexed" value
- * @method CodeToCorrect setFullCodeOrderBy()       Sets the current record's "full_code_order_by" value
  * @method CodeToCorrect setCollections()           Sets the current record's "Collections" value
  * 
  * @package    darwin
@@ -94,9 +91,6 @@ abstract class BaseCodeToCorrect extends DarwinModel
              'type' => 'string',
              ));
         $this->hasColumn('full_code_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('full_code_order_by', 'string', null, array(
              'type' => 'string',
              ));
     }
