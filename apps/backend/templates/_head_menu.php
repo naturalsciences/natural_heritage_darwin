@@ -36,15 +36,7 @@
                     </ul>
                 </li>
                 <li><?php echo link_to(__('Specimens'),'specimensearch/index');?></li>
-                <li>
-                  <a href="#" class="subtitle"><?php echo __('Pinned Items');?> »</a>
-                  <ul class="submenu lvl_2">
-                    <li><?php echo link_to(sprintf(__('Specimens (%d)'), count($sf_user->getAllPinned('specimen'))),'specimensearch/search?pinned=true&source=specimen');?></li>
-                    <li><?php echo link_to(sprintf(__('Individuals (%d)'), count($sf_user->getAllPinned('individual'))),'specimensearch/search?pinned=true&source=individual');?></li>
-                    <li><?php echo link_to(sprintf(__('Parts (%d)'), count($sf_user->getAllPinned('part'))),'specimensearch/search?pinned=true&source=part');?></li>
-                  </ul>
-                </li>
-
+                <li><?php echo link_to(sprintf(__('Pinned Specimens (%d)'), count($sf_user->getAllPinned('specimen'))),'specimensearch/search?pinned=true&source=specimen');?></li>
                 <li><?php echo link_to(__('Collections'),'collection/index');?></li>
                 <li><?php echo link_to(__('Loans'),'loan/index');?></li>
             </ul>
