@@ -10,7 +10,7 @@ class Specimens extends BaseSpecimens
     $dateTime = new FuzzyDateTime($this->_get('acquisition_date'), $this->_get('acquisition_date_mask'));
     return $dateTime->getDateMasked();
   }
-  
+
   public function getAcquisitionDate()
   {
     $from_date = new FuzzyDateTime($this->_get('acquisition_date'), $this->_get('acquisition_date_mask'));
@@ -21,12 +21,12 @@ class Specimens extends BaseSpecimens
   {
     return $this->_get('acquisition_date');
   }
+
   public function setAcquisitionDate($fd)
   {
     if ($fd instanceof FuzzyDateTime)
     {
-      if ($this->getAcquisitionDate() != $fd->getDateTimeMaskedAsArray())
-      {
+      if ($this->getAcquisitionDate() != $fd->getDateTimeMaskedAsArray()) {
         $this->_set('acquisition_date', $fd->format('Y/m/d'));
         $this->_set('acquisition_date_mask', $fd->getMask());
       }
@@ -34,8 +34,7 @@ class Specimens extends BaseSpecimens
     else
     {
       $dateTime = new FuzzyDateTime($fd, 56, true); 
-      if ($this->getAcquisitionDate() != $dateTime->getDateTimeMaskedAsArray())
-      {
+      if ($this->getAcquisitionDate() != $dateTime->getDateTimeMaskedAsArray()) {
         $this->_set('acquisition_date', $dateTime->format('Y/m/d'));
         $this->_set('acquisition_date_mask', $dateTime->getMask());
       }
@@ -44,16 +43,14 @@ class Specimens extends BaseSpecimens
 
   public function setHostRelationship($value)
   {
-    if($value != $this->_get('host_relationship'))
-    {
+    if($value != $this->_get('host_relationship')) {
       $this->_set('host_relationship', $value);
     }
   }
 
   public function setCategory($value)
   {
-    if($value != $this->_get('category'))
-    {
+    if($value != $this->_get('category')) {
       $this->_set('category', $value);
     }
   }
@@ -75,24 +72,47 @@ class Specimens extends BaseSpecimens
     return $name;
   }
 
-  public function getNbrIndiv()
+  public function getAggregatedName($sep = ' / ')
   {
-    if($this->isNew()) return 0;
-    $q = Doctrine_Query::create()
-                  ->select('count(id)')
-                  ->from('SpecimenIndividuals i')
-                  ->Where('i.specimen_ref = ?',$this->getId());
-        return $q->execute(array(), Doctrine::HYDRATE_SINGLE_SCALAR);
+    $items = array(
+        $this->getCollectionName(),
+        $this->getTaxonName(),
+        $this->getChronoName(),
+        $this->getLithoName(),
+        $this->getLithologyName(),
+        $this->getMineralName()
+   );
+
+    $items = array_filter($items);
+    return implode($sep, $items);
+  } 
+
+
+  public function getCountryTags($is_view = false)
+  {
+    $tags = explode(';',$this->getGtuCountryTagValue(''));
+    $nbr = count($tags);
+    if(! $nbr) return "-";
+    $str = '<ul class="name_tags_view">';
+    foreach($tags as $value)
+      if (strlen($value))
+        $str .= '<li>' . trim($value).'</li>';
+    $str .= '</ul>';
+    
+    return $str;
   }
 
-  public function getNbrPart()
+  public function getOtherGtuTags()
   {
-    if($this->isNew()) return 0;
-    $q = Doctrine_Query::create()
-                  ->select('count(p.id)')
-                  ->from('SpecimenParts p')
-                  ->innerJoin('p.Individual i')
-                  ->Where('i.specimen_ref = ?',$this->getId());
-        return $q->execute(array(), Doctrine::HYDRATE_SINGLE_SCALAR);
+    $tags = explode(';',$this->getGtuCountryTagValue(''));
+    $nbr = count($tags);
+    if(! $nbr) return "-";
+    $str = '<ul class="name_tags_view">';
+    foreach($tags as $value)
+      if (strlen($value))
+        $str .= '<li>' . trim($value).'</li>';
+    $str .= '</ul>';
+    
+    return $str;
   }
 }

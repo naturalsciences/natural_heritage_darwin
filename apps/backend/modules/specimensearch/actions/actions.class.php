@@ -14,7 +14,7 @@ class specimensearchActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new SpecimensFlatFormFilter($request->getParameter('specimen_search_filters'),array('user' => $this->getUser()));
+    $this->form = new SpecimensFormFilter($request->getParameter('specimen_search_filters'),array('user' => $this->getUser()));
 
     $this->form->setDefault('rec_per_page',$this->getUser()->fetchRecPerPage());
 
@@ -47,24 +47,23 @@ class specimensearchActions extends DarwinActions
     // Modify the s_url to call the searchResult action when on result page and playing with pager
     $this->s_url = 'specimensearch/search'.'?is_choose='.$this->is_choose;
     // Initialize filter
-    $this->form = new SpecimensFlatFormFilter(null,array('user' => $this->getUser()));
+    $this->form = new SpecimensFormFilter(null,array('user' => $this->getUser()));
     // If the search has been triggered by clicking on the search button or with pinned specimens
     if(($request->isMethod('post') && $request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
     {
       // Store all post parameters
       $criterias = $request->getPostParameters();
       // If pinned specimens called
-      if($request->hasParameter('pinned') && $request->hasParameter('source'))
+      if($request->hasParameter('pinned'))
       {
         // Get all ids pinned
-        $ids = implode(',',$this->getUser()->getAllPinned($request->getParameter('source')) );
+        $ids = implode(',',$this->getUser()->getAllPinned('specimen') );
         if($ids == '')
           $ids = '0';
         $this->is_pinned_only_search = true;
         // Set the list of ids as criteria
         $criterias['specimen_search_filters']['spec_ids'] = $ids;
 
-        $criterias['specimen_search_filters']['what_searched'] = $request->getParameter('source');
       }
       // If instead it's a call to a stored specimen search
       elseif($request->hasParameter('spec_search'))
@@ -78,7 +77,6 @@ class specimensearchActions extends DarwinActions
         if($criterias['specimen_search_filters']['spec_ids'] == '')
           $criterias['specimen_search_filters']['spec_ids'] = '0';
         $this->is_specimen_search = $saved_search->getId();
-        $criterias['specimen_search_filters']['what_searched'] = $saved_search->getSubject();
       }
       $this->form->bind($criterias['specimen_search_filters']) ;
     }
@@ -96,7 +94,6 @@ class specimensearchActions extends DarwinActions
       $criterias = $saved_search->getUnserialRequest();
       // Transform all visible fields stored as a string with | as separator and store it into col_fields field
       $criterias['specimen_search_filters']['col_fields'] = implode('|',$saved_search->getVisibleFieldsInResult()) ;
-      $criterias['specimen_search_filters']['what_searched'] = $saved_search->getSubject();
       // If data were set, in other terms specimen_search_filters array is available...
       if(isset($criterias['specimen_search_filters']))
       {
@@ -124,17 +121,9 @@ class specimensearchActions extends DarwinActions
         }
         else
         {
-          $this->source = $this->form->getValue('what_searched');
-
           $this->spec_lists = Doctrine::getTable('MySavedSearches')
-            ->getListFor($this->getUser()->getId(), $this->form->getValue('what_searched'));
-          if($this->form->getValue('what_searched') == SpecimensFlatFormFilter::SC_PART)
-            $fallback_order = 'p.id';
-          elseif($this->form->getValue('what_searched') == SpecimensFlatFormFilter::SC_IND)
-            $fallback_order = 'i.id';
-          else // Spec
-            $fallback_order = 's.specimen_ref';
-          $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir. ', '.$fallback_order);
+            ->getListFor($this->getUser()->getId(), 'specimen');
+          $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir. ', id');
           //If export is defined export it!
           
           if($request->getParameter('export','') != '')
@@ -158,7 +147,7 @@ class specimensearchActions extends DarwinActions
           // Replace the count query triggered by the Pager to get the number of records retrieved
           $count_q = clone $query;//$pager->getCountQuery();
           // Remove from query the group by and order by clauses
-          $count_q = $count_q->select('count(s.specimen_ref)')->removeDqlQueryPart('orderby')->limit(0);
+          $count_q = $count_q->select('count(s.id)')->removeDqlQueryPart('orderby')->limit(0);
 
           // Initialize an empty count query
           $counted = new DoctrineCounted();
@@ -191,42 +180,26 @@ class specimensearchActions extends DarwinActions
     $this->loadWidgets();
   }
   
-  /** Load related things for the specimens / ind or part and define a $code var for template*/
+  /** 
+  * Load related things for the specimens (code )
+  */
   protected function loadRelated()
   {
     $spec_list = array();
     $part_list = array() ;
-    foreach($this->specimensearch as $key=>$specimen)
-    {      
-      if( $this->source == 'part') {
-        $part_list[] = $specimen->getId();
-        $spec_list[] = $specimen->Individual->getSpecimenRef() ;
-      }
-      else {
-        $spec_list[] = $specimen->getSpecimenRef() ;
-      }
-
+    foreach($this->specimensearch as $key=>$specimen){
+      $spec_list[] = $specimen->getId() ;
     }
+    
     $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
     $this->codes = array();
-    foreach($codes_collection as $code)
-    {
+    foreach($codes_collection as $code) {
       if(! isset($this->codes[$code->getRecordId()]))
         $this->codes[$code->getRecordId()] = array();
       $this->codes[$code->getRecordId()][] = $code;
     }
-    $this->part_codes = array();        
-    if($this->source == 'part')
-    {
-      $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimen_parts',$part_list) ;
-      foreach($codes_collection as $code)
-      {
-        if(! isset($this->part_codes[$code->getRecordId()]))
-          $this->part_codes[$code->getRecordId()] = array();
-        $this->part_codes[$code->getRecordId()][] = $code;
-      }
-    }
   }
+
   /**
   * Compute different sources to get the columns that must be showed
   * 1) from form request 2) from session 3) from default value
@@ -253,7 +226,7 @@ class specimensearchActions extends DarwinActions
     }
     else
     {
-      $req_fields_array = $user->fetchVisibleCols($form->getValue('what_searched'));
+      $req_fields_array = $user->fetchVisibleCols();
     }
 
     if(empty($req_fields_array))
@@ -270,47 +243,11 @@ class specimensearchActions extends DarwinActions
     return $flds;
   }
 
-  public function executeIndividualTree(sfWebRequest $request)
-  {
-    if(! Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
-      $this->user_allowed = false ;  
-    else 
-      $this->user_allowed = true ;  
-    if($this->getUser()->isA(Users::ADMIN)) $this->user_allowed = true ;  
-    $this->items = Doctrine::getTable('SpecimenIndividuals')
-      ->getIndividualBySpecimen($request->getParameter('id'));
-  }
-
-  public function executePartTree(sfWebRequest $request)
-  {
-    if(! Doctrine::getTable('Specimens')->hasRights('individual_ref',$request->getParameter('id'), $this->getUser()->getId()))
-      $this->user_allowed = false ;  
-    else 
-      $this->user_allowed = true ;
- 
-    if($this->getUser()->isA(Users::ADMIN)) $this->user_allowed = true ;        
-    $this->parts = Doctrine::getTable('SpecimenParts')
-      ->findForIndividual($request->getParameter('id'));
-    $this->individual = $request->getParameter('id') ;
-    $parts_ids = array();
-    foreach($this->parts as $part)
-      $parts_ids[] = $part->getId();
-
-    $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedArray('specimen_parts', $parts_ids);
-    $this->codes = array();
-    foreach($codes_collection as $code)
-    {
-      if(! isset($this->codes[$code->getRecordId()]))
-        $this->codes[$code->getRecordId()] = array();
-      $this->codes[$code->getRecordId()][] = $code;
-    }
-  }
-
   public function executeAndSearch(sfWebRequest $request)
   {
     $number = intval($request->getParameter('num'));
 
-    $form = new SpecimensFlatFormFilter(null,array('user' => $this->getUser()));
+    $form = new SpecimensFormFilter(null,array('user' => $this->getUser()));
     $form->addGtuTagValue($number);
     return $this->renderPartial('andSearch',array('form' => $form['Tags'][$number], 'row_line'=>$number));
   }  
@@ -319,15 +256,14 @@ class specimensearchActions extends DarwinActions
   {
     $number = intval($request->getParameter('num'));
 
-    $form = new SpecimensFlatFormFilter(null,array('user' => $this->getUser()));
+    $form = new SpecimensFormFilter(null,array('user' => $this->getUser()));
     $form->addCodeValue($number);
     return $this->renderPartial('specimensearchwidget/codeline',array('code' => $form['Codes'][$number], 'row_line'=>$number));
   }
 
   protected function defineFields($source)
   {
-    $this->columns= array('individual'=>array(),'part'=>array());
-    $this->columns['specimen'] = array(
+    $this->columns = array(
       'category' => array(
         'category',
         $this->getI18N()->__('Category'),),
@@ -337,13 +273,10 @@ class specimensearchActions extends DarwinActions
       'taxon' => array(
         'taxon_name_indexed',
         $this->getI18N()->__('Taxon'),),
-      'type' => array(
-        'with_types',
-        $this->getI18N()->__('Type'),),
-      'gtu' => array( ///
+      'gtu' => array(
         false,
         $this->getI18N()->__('Sampling locations'),),
-      'codes' => array( ///
+      'codes' => array(
         false,
         $this->getI18N()->__('Codes'),),
       'chrono' => array(
@@ -366,113 +299,91 @@ class specimensearchActions extends DarwinActions
         $this->getI18N()->__('Expedition'),),
       'acquisition_category' => array(
         'acquisition_category',
-        $this->getI18N()->__('Acquisition category'),),        
-    );
+        $this->getI18N()->__('Acquisition category'),),
 
-    if($source != 'specimen')
-    {
-      unset($this->columns['specimen']['type']);
-      $this->columns['individual'] = array(
-        'individual_type' => array(
-          'type_group',
-          $this->getI18N()->__('Type'),),
-        'sex' => array(
-          'sex',
-          $this->getI18N()->__('Sex'),),
-        'state' => array(
-          'state',
-          $this->getI18N()->__('State'),),
-        'stage' => array(
-          'stage',
-          $this->getI18N()->__('Stage'),),
-        'social_status' => array(
-          'social_status',
-          $this->getI18N()->__('Social Status'),),
-        'rock_form' => array(
-          'rock_form',
-          $this->getI18N()->__('Rock Form'),),
-        'individual_count' => array(
-          'specimen_individuals_count_max',
-          $this->getI18N()->__('Individual Count'),),
+      'individual_type' => array(
+        'type_group',
+        $this->getI18N()->__('Type'),),
+      'sex' => array(
+        'sex',
+        $this->getI18N()->__('Sex'),),
+      'state' => array(
+        'state',
+        $this->getI18N()->__('State'),),
+      'stage' => array(
+        'stage',
+        $this->getI18N()->__('Stage'),),
+      'social_status' => array(
+        'social_status',
+        $this->getI18N()->__('Social Status'),),
+      'rock_form' => array(
+        'rock_form',
+        $this->getI18N()->__('Rock Form'),),
         );
-    }
+    if($this->getUser()->IsA(Users::REGISTERED_USER)){
+      $this->columns = array_merge($this->columns, array(
+        'part' => array(
+          'specimen_part',
+          $this->getI18N()->__('Part'),),
+        'object_name' => array(
+          'object_name',
+          $this->getI18N()->__('Object name'),),
+        'part_status' => array(
+          'specimen_status',
+          $this->getI18N()->__('Part Status'),),
+        'specimen_count' => array(
+          'specimen_count_max',
+          $this->getI18N()->__('Specimen Count'),),
+        ));
+    } else {
+      $this->columns = array_merge($this->columns, array(
+        'part' => array(
+          'specimen_part',
+          $this->getI18N()->__('Part'),),
+        'object_name' => array(
+          'object_name',
+          $this->getI18N()->__('Object name'),),
+        'part_status' => array(
+          'specimen_status',
+          $this->getI18N()->__('Part Status'),),
+        'building' => array(
+          'building',
+          $this->getI18N()->__('Building'),),
+        'floor' => array(
+          'floor',
+          $this->getI18N()->__('Floor'),),
+        'room' => array(
+          'room',
+          $this->getI18N()->__('Room'),),
+        'row' => array(
+          'row',
+          $this->getI18N()->__('Row'),),
+        'shelf' => array(
+          'shelf',
+          $this->getI18N()->__('Shelf'),),
 
-    if($source == 'part')
-    {
-      if($this->getUser()->IsA(Users::REGISTERED_USER))    
-      {
-        $this->columns['part'] = array(
-          'part' => array(
-            'specimen_part',
-            $this->getI18N()->__('Part'),),
-          'object_name' => array(
-            'object_name',
-            $this->getI18N()->__('Object name'),),
-          'part_status' => array(
-            'specimen_status',
-            $this->getI18N()->__('Part Status'),),
-          'part_codes' => array(
-            false,
-            $this->getI18N()->__('Part Codes'),),            
-          'part_count' => array(
-            'specimen_part_count_max',
-            $this->getI18N()->__('Part Count'),),
-          );      
+        'container' => array(
+          'container',
+          $this->getI18N()->__('Container'),),
+        'container_type' => array(
+          'container_type',
+          $this->getI18N()->__('Container Type'),),
+        'container_storage' => array(
+          'container_storage',
+          $this->getI18N()->__('Container Storage'),),
+        'sub_container' => array(
+          'sub_container',
+          $this->getI18N()->__('Sub Container'),),
+        'sub_container_type' => array(
+          'sub_container_type',
+          $this->getI18N()->__('Sub Container Type'),),
+        'sub_container_storage' => array(
+          'sub_container_storage',
+          $this->getI18N()->__('Sub Container Storage'),),
+        'specimen_count' => array(
+          'specimen_count_max',
+          $this->getI18N()->__('Specimen Count'),),
+        ));
       }
-      else
-      {
-        $this->columns['part'] = array(
-          'part' => array(
-            'specimen_part',
-            $this->getI18N()->__('Part'),),
-          'object_name' => array(
-            'object_name',
-            $this->getI18N()->__('Object name'),),
-          'part_status' => array(
-            'specimen_status',
-            $this->getI18N()->__('Part Status'),),
-          'building' => array(
-            'building',
-            $this->getI18N()->__('Building'),),
-          'floor' => array(
-            'floor',
-            $this->getI18N()->__('Floor'),),
-          'room' => array(
-            'room',
-            $this->getI18N()->__('Room'),),
-          'row' => array(
-            'row',
-            $this->getI18N()->__('Row'),),
-          'shelf' => array(
-            'shelf',
-            $this->getI18N()->__('Shelf'),),
-
-          'container' => array(
-            'container',
-            $this->getI18N()->__('Container'),),
-          'container_type' => array(
-            'container_type',
-            $this->getI18N()->__('Container Type'),),
-          'container_storage' => array(
-            'container_storage',
-            $this->getI18N()->__('Container Storage'),),
-          'sub_container' => array(
-            'sub_container',
-            $this->getI18N()->__('Sub Container'),),
-          'sub_container_type' => array(
-            'sub_container_type',
-            $this->getI18N()->__('Sub Container Type'),),
-          'sub_container_storage' => array(
-            'sub_container_storage',
-            $this->getI18N()->__('Sub Container Storage'),),
-          'part_codes' => array(
-           false,
-            $this->getI18N()->__('Part Codes'),),             
-          'part_count' => array(
-            'specimen_part_count_max',
-            $this->getI18N()->__('Part Count'),),
-          );
-        }
-    }
   }
 }

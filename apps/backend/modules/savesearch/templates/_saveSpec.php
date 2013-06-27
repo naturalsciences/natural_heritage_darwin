@@ -1,12 +1,5 @@
 <!-- <label><?php //echo format_number_choice('[1] Save my pinned specimen|(1,+Inf] Save my %1% pinned specimens', array('%1%' =>  count($sf_user->getAllPinned())), count($sf_user->getAllPinned()) );?></label> -->
-<?php
-  switch($source){
-    case 'individual': $saveText = __('Save my pinned individuals'); break;
-    case 'part': $saveText = __('Save my pinned parts'); break;
-    default: $saveText = __('Save my pinned specimens');
-  }
-?>
-<label><?php echo $saveText;?></label>
+<label><?php echo _('Save my pinned specimens');;?></label>
 <select id="save_specs_choice">
     <option value="" selected="selected"></option>
     <optgroup label="<?php echo __('New');?>">

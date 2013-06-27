@@ -8,7 +8,7 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
+class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
 {
   public function configure()
   {
@@ -48,15 +48,14 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
 
     $this->widgetSchema['lithology_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
     $this->widgetSchema['lithology_item_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Lithology',
-       'link_url' => 'lithology/choose',
-       'method' => 'getName',
-       'box_title' => $this->getI18N()->__('Choose Lithologic unit'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
+      'model' => 'Lithology',
+      'link_url' => 'lithology/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Lithologic unit'),
+      'nullable' => true,
+      'button_class'=>'',
+      ),
+      array('class'=>'inline',)
     );
 
     $this->validatorSchema['lithology_item_ref'] = new sfValidatorInteger(array('required'=>false));
@@ -65,29 +64,28 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
 
     $this->widgetSchema['lithology_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
     $this->widgetSchema['lithology_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
-        'model' => 'CatalogueLevels',
-        'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'lithology'))),
-        'add_empty' => $this->getI18N()->__('All')
-      ));
+      'model' => 'CatalogueLevels',
+      'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'lithology'))),
+      'add_empty' => $this->getI18N()->__('All')
+    ));
 
     $this->widgetSchema['litho_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
     $this->widgetSchema['litho_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
-        'model' => 'CatalogueLevels',
-        'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'lithostratigraphy'))),
-        'add_empty' => $this->getI18N()->__('All')
-      ));
+      'model' => 'CatalogueLevels',
+      'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'lithostratigraphy'))),
+      'add_empty' => $this->getI18N()->__('All')
+    ));
 
     $this->widgetSchema['litho_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
     $this->widgetSchema['litho_item_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Lithostratigraphy',
-       'link_url' => 'lithostratigraphy/choose',
-       'method' => 'getName',
-       'box_title' => $this->getI18N()->__('Choose Lithostratigraphic unit'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
+      'model' => 'Lithostratigraphy',
+      'link_url' => 'lithostratigraphy/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Lithostratigraphic unit'),
+      'nullable' => true,
+      'button_class'=>'',
+      ),
+      array('class'=>'inline',)
     );
 
     $this->validatorSchema['litho_item_ref'] = new sfValidatorInteger(array('required'=>false));
@@ -95,22 +93,21 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
 
     $this->widgetSchema['chrono_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
     $this->widgetSchema['chrono_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
-        'model' => 'CatalogueLevels',
-        'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'chronostratigraphy'))),
-        'add_empty' => $this->getI18N()->__('All')
-      ));
+      'model' => 'CatalogueLevels',
+      'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'chronostratigraphy'))),
+      'add_empty' => $this->getI18N()->__('All')
+    ));
 
     $this->widgetSchema['chrono_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
     $this->widgetSchema['chrono_item_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Chronostratigraphy',
-       'link_url' => 'chronostratigraphy/choose',
-       'method' => 'getName',
-       'box_title' => $this->getI18N()->__('Choose Chronostratigraphic unit'),
-       'nullable' => true,
-       'button_class'=>'',
+      'model' => 'Chronostratigraphy',
+      'link_url' => 'chronostratigraphy/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Chronostratigraphic unit'),
+      'nullable' => true,
+      'button_class'=>'',
      ),
-      array('class'=>'inline',
-           )
+      array('class'=>'inline',)
     );
 
     $this->validatorSchema['chrono_item_ref'] = new sfValidatorInteger(array('required'=>false));
@@ -119,22 +116,22 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
 
     $this->widgetSchema['mineral_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
     $this->widgetSchema['mineral_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
-        'model' => 'CatalogueLevels',
-        'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'mineralogy'))),
-        'add_empty' => $this->getI18N()->__('All')
-      ));
+      'model' => 'CatalogueLevels',
+      'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'mineralogy'))),
+      'add_empty' => $this->getI18N()->__('All')
+    ));
 
     $this->widgetSchema['mineral_item_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Mineralogy',
-       'link_url' => 'mineralogy/choose',
-       'method' => 'getName',
-       'box_title' => $this->getI18N()->__('Choose Mineralogic unit'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
+      'model' => 'Mineralogy',
+      'link_url' => 'mineralogy/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Mineralogic unit'),
+      'nullable' => true,
+      'button_class'=>'',
+      ),
+      array('class'=>'inline',)
     );
+
     $this->widgetSchema['mineral_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
 
     $this->validatorSchema['mineral_item_ref'] = new sfValidatorInteger(array('required'=>false));
@@ -147,42 +144,45 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $this->widgetSchema['ig_num'] = new sfWidgetFormInputText();
-    $this->widgetSchema['ig_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
-                                                                     array('class' => 'from_date')
-                                                                    );
-    $this->widgetSchema['ig_to_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
-                                                                   array('class' => 'to_date')
-                                                                  );
-    $this->widgetSchema->setLabels(array('ig_from_date' => 'Between',
-                                         'ig_to_date' => 'and',
-                                         'ig_num' => 'I.G. unit',
-                                        )
-                                  );
+    $this->widgetSchema['ig_from_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+
+    $this->widgetSchema['ig_to_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'to_date')
+    );
+
     $this->widgetSchema['ig_num']->setAttributes(array('class'=>'small_size'));
     $this->validatorSchema['ig_num'] = new sfValidatorString(array('required' => false, 'trim' => true));
-    $this->validatorSchema['ig_from_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                       'from_date' => true,
-                                                                       'min' => $minDate,
-                                                                       'max' => $maxDate, 
-                                                                       'empty_value' => $dateLowerBound,
-                                                                      ),
-                                                                 array('invalid' => 'Date provided is not valid',)
-                                                                );
-    $this->validatorSchema['ig_to_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                     'from_date' => false,
-                                                                     'min' => $minDate,
-                                                                     'max' => $maxDate,
-                                                                     'empty_value' => $dateUpperBound,
-                                                                    ),
-                                                               array('invalid' => 'Date provided is not valid',)
-                                                              );
-    $this->validatorSchema->setPostValidator(new sfValidatorSchemaCompare('ig_from_date', 
-                                                                          '<=', 
-                                                                          'ig_to_date', 
-                                                                          array('throw_global_error' => true), 
-                                                                          array('invalid'=>'The "begin" date cannot be above the "end" date.')
-                                                                         )
-                                            );
+    $this->validatorSchema['ig_from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate, 
+      'empty_value' => $dateLowerBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema['ig_to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => false,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema->setPostValidator(new sfValidatorSchemaCompare(
+      'ig_from_date', 
+      '<=', 
+      'ig_to_date', 
+      array('throw_global_error' => true), 
+      array('invalid'=>'The "begin" date cannot be above the "end" date.') 
+    ));
 
 
     $this->widgetSchema['col_fields'] = new sfWidgetFormInputHidden();
@@ -191,46 +191,69 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
     $this->widgetSchema['spec_ids'] = new sfWidgetFormTextarea(array('label'=>'#ID list'));
 
-    $this->validatorSchema['spec_ids'] = new sfValidatorString( array('required' => false,'trim' => true));
-    $this->validatorSchema['col_fields'] = new sfValidatorString(array('required' => false,
-                                                                 'trim' => true
-                                                                ));
+    $this->validatorSchema['spec_ids'] = new sfValidatorString( array(
+      'required' => false,
+      'trim' => true
+    ));
 
-    $this->validatorSchema['gtu_code'] = new sfValidatorString(array('required' => false,
-                                                                 'trim' => true
-                                                                )
-                                                          );
+    $this->validatorSchema['col_fields'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
 
-    $this->validatorSchema['expedition_name'] = new sfValidatorString(array('required' => false,
-                                                                       'trim' => true
-                                                                      )
-                                                                );
-    $this->validatorSchema['taxon_name'] = new sfValidatorString(array('required' => false,
-                                                                       'trim' => true
-                                                                      )
-                                                                );
-    $this->validatorSchema['taxon_level_ref'] = new sfValidatorInteger(array('required' => false));
-    $this->validatorSchema['chrono_name'] = new sfValidatorString(array('required' => false,
-                                                                       'trim' => true
-                                                                      )
-                                                                );
-    $this->validatorSchema['chrono_level_ref'] = new sfValidatorInteger(array('required' => false));    
-    $this->validatorSchema['litho_name'] = new sfValidatorString(array('required' => false,
-                                                                       'trim' => true
-                                                                      )
-                                                                );
-    $this->validatorSchema['litho_level_ref'] = new sfValidatorInteger(array('required' => false));  
-    $this->validatorSchema['lithology_name'] = new sfValidatorString(array('required' => false,
-                                                                       'trim' => true
-                                                                      )
-                                                                );
-    $this->validatorSchema['lithology_level_ref'] = new sfValidatorInteger(array('required' => false));  
-    $this->validatorSchema['mineral_name'] = new sfValidatorString(array('required' => false,
-                                                                       'trim' => true
-                                                                      )
-                                                                );
-    $this->validatorSchema['mineral_level_ref'] = new sfValidatorInteger(array('required' => false));
+    $this->validatorSchema['gtu_code'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
 
+    $this->validatorSchema['expedition_name'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
+    $this->validatorSchema['taxon_name'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
+
+    $this->validatorSchema['taxon_level_ref'] = new sfValidatorInteger(array(
+      'required' => false,
+    ));
+
+    $this->validatorSchema['chrono_name'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
+
+    $this->validatorSchema['chrono_level_ref'] = new sfValidatorInteger(array(
+      'required' => false,
+    ));
+
+    $this->validatorSchema['litho_name'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
+
+    $this->validatorSchema['litho_level_ref'] = new sfValidatorInteger(array(
+      'required' => false,
+    ));
+
+    $this->validatorSchema['lithology_name'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
+
+    $this->validatorSchema['lithology_level_ref'] = new sfValidatorInteger(array(
+      'required' => false,
+    ));
+
+    $this->validatorSchema['mineral_name'] = new sfValidatorString(array(
+      'required' => false,
+      'trim' => true
+    ));
+
+    $this->validatorSchema['mineral_level_ref'] = new sfValidatorInteger(array(
+      'required' => false,
+    ));
 
     $minDate = new FuzzyDateTime(strval(min(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max(range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')))).'/12/31'));
@@ -238,78 +261,76 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $this->widgetSchema['tags'] = new sfWidgetFormInputText();
-    $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
-                                                                                array('class' => 'from_date')
-                                                                               );
-    $this->widgetSchema['gtu_to_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
-                                                                              array('class' => 'to_date')
-                                                                             );
-    $this->widgetSchema->setLabels(array('gtu_from_date' => 'Between',
-                                         'gtu_to_date' => 'and',
-                                        )
-                                  );
+    $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+
+    $this->widgetSchema['gtu_to_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'to_date')
+    );
+
     $this->validatorSchema['tags'] = new sfValidatorString(array('required' => false, 'trim' => true));
-    $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                                  'from_date' => true,
-                                                                                  'min' => $minDate,
-                                                                                  'max' => $maxDate, 
-                                                                                  'empty_value' => $dateLowerBound,
-                                                                                 ),
-                                                                            array('invalid' => 'Date provided is not valid',)
-                                                                           );
-    $this->validatorSchema['gtu_to_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                                'from_date' => false,
-                                                                                'min' => $minDate,
-                                                                                'max' => $maxDate,
-                                                                                'empty_value' => $dateUpperBound,
-                                                                               ),
-                                                                          array('invalid' => 'Date provided is not valid',)
-                                                                         );
+    $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate, 
+      'empty_value' => $dateLowerBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema['gtu_to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => false,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
 
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
 
-    $this->widgetSchema['tools'] = new widgetFormSelectDoubleListFilterable(
-      array(
-            'choices' => new sfCallable(array(Doctrine::getTable('CollectingTools'),'fetchTools')),
-            'label_associated'=>$this->getI18N()->__('Selected'),
-            'label_unassociated'=>$this->getI18N()->__('Available')
-           ));
-    $this->widgetSchema['methods'] = new widgetFormSelectDoubleListFilterable(
-      array(
-            'choices' => new sfCallable(array(Doctrine::getTable('CollectingMethods'),'fetchMethods')),
-            'label_associated'=>$this->getI18N()->__('Selected'),
-            'label_unassociated'=>$this->getI18N()->__('Available')
-           ));
+    $this->widgetSchema['tools'] = new widgetFormSelectDoubleListFilterable(array(
+      'choices' => new sfCallable(array(Doctrine::getTable('CollectingTools'),'fetchTools')),
+      'label_associated'=>$this->getI18N()->__('Selected'),
+      'label_unassociated'=>$this->getI18N()->__('Available')
+    ));
+
+    $this->widgetSchema['methods'] = new widgetFormSelectDoubleListFilterable(array(
+      'choices' => new sfCallable(array(Doctrine::getTable('CollectingMethods'),'fetchMethods')),
+      'label_associated'=>$this->getI18N()->__('Selected'),
+      'label_unassociated'=>$this->getI18N()->__('Available')
+    ));
+
     $this->validatorSchema['methods'] = new sfValidatorPass();
     $this->validatorSchema['tools'] = new sfValidatorPass();
 
 
-    /* Define list of options available for different type of searches to provide */
-    $what_searched = array(self::SC_SPEC=>$this->getI18N()->__('Specimens'), 
-                           self::SC_IND=>$this->getI18N()->__('Individuals'), 
-                           self::SC_PART=>$this->getI18N()->__('Parts'));
-    $this->widgetSchema['what_searched'] = new sfWidgetFormChoice(array(
-        'choices' => $what_searched,
-    ));
+
     $this->widgetSchema['with_multimedia'] = new sfWidgetFormInputCheckbox();
 
-    $this->validatorSchema['what_searched'] = new sfValidatorChoice(array('choices'=>array_keys($what_searched), 'required'=>false,'empty_value'=>self::SC_SPEC));
     $this->validatorSchema['with_multimedia'] = new sfValidatorPass();
     //people widget
     $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
-       'model' => 'People',
-       'link_url' => 'people/searchBoth',
-       'box_title' => $this->getI18N()->__('Choose people role'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
-    );    
-    $fields_to_search = array('spec_coll_ids' => $this->getI18N()->__('Collector'),
-                              'spec_don_sel_ids' => $this->getI18N()->__('Donator or seller'),
-                              'ident_ids' => $this->getI18N()->__('Identifier')) ;
+      'model' => 'People',
+      'link_url' => 'people/searchBoth',
+      'box_title' => $this->getI18N()->__('Choose people role'),
+      'nullable' => true,
+      'button_class'=>'',
+      ),
+      array('class'=>'inline',)
+    );
+    
+    $fields_to_search = array(
+      'spec_coll_ids' => $this->getI18N()->__('Collector'),
+      'spec_don_sel_ids' => $this->getI18N()->__('Donator or seller'),
+      'ident_ids' => $this->getI18N()->__('Identifier')
+    );
 
     $this->widgetSchema['role_ref'] = new sfWidgetFormChoice(
       array('choices'=> $fields_to_search,
@@ -319,118 +340,130 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
     $this->validatorSchema['role_ref'] = new sfValidatorChoice(array('choices'=>array_keys($fields_to_search), 'required'=>false)) ;
     $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
+
     /* Labels */
-    $this->widgetSchema->setLabels(array('gtu_code' => 'Sampling Location code',
-                                         'taxon_name' => 'Taxon text search',
-                                         'litho_name' => 'Litho text search',
-                                         'lithology_name' => 'Lithology text search',
-                                         'chrono_name' => 'Chrono text search',
-                                         'mineral_name' => 'Mineralo text search',
-                                         'taxon_level_ref' => 'Level',
-                                         'what_searched' => 'What would you like to search ?',
-                                         'code_ref_relation' => 'Code of',
-                                         'people_ref' => 'Whom are you looking for',
-                                         'role_ref' => 'Which role',
-                                         'with_multimedia' => 'Search Only objects with multimedia files',
-                                        )
-                                  );
+    $this->widgetSchema->setLabels(array(
+      'gtu_code' => 'Sampling Location code',
+      'taxon_name' => 'Taxon text search',
+      'litho_name' => 'Litho text search',
+      'lithology_name' => 'Lithology text search',
+      'chrono_name' => 'Chrono text search',
+      'mineral_name' => 'Mineralo text search',
+      'taxon_level_ref' => 'Level',
+      'what_searched' => 'What would you like to search ?',
+      'code_ref_relation' => 'Code of',
+      'people_ref' => 'Whom are you looking for',
+      'role_ref' => 'Which role',
+      'with_multimedia' => 'Search Only objects with multimedia files',
+      'gtu_from_date' => 'Between',
+      'gtu_to_date' => 'and',
+      'acquisition_from_date' => 'Between',
+      'acquisition_to_date' => 'and',
+      'ig_from_date' => 'Between',
+      'ig_to_date' => 'and',
+      'ig_num' => 'I.G. unit',
+    ));
+
     /* Acquisition categories */
     $this->widgetSchema['acquisition_category'] = new sfWidgetFormChoice(array(
       'choices' =>  array_merge(array('' => ''),SpecimensTable::getDistinctCategories()),
     ));
 
-    $this->widgetSchema['acquisition_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
-                                                                                array('class' => 'from_date')
-                                                                               );
-    $this->widgetSchema['acquisition_to_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
-                                                                              array('class' => 'to_date')
-                                                                             );
-    $this->widgetSchema->setLabels(array('acquisition_from_date' => 'Between',
-                                         'acquisition_to_date' => 'and',
-                                        )
-                                  );
-    $this->validatorSchema['acquisition_from_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                                  'from_date' => true,
-                                                                                  'min' => $minDate,
-                                                                                  'max' => $maxDate, 
-                                                                                  'empty_value' => $dateLowerBound,
-                                                                                 ),
-                                                                            array('invalid' => 'Date provided is not valid',)
-                                                                           );
-    $this->validatorSchema['acquisition_to_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                                'from_date' => false,
-                                                                                'min' => $minDate,
-                                                                                'max' => $maxDate,
-                                                                                'empty_value' => $dateUpperBound,
-                                                                               ),
-                                                                          array('invalid' => 'Date provided is not valid',)
-                                                                         );
+    $this->widgetSchema['acquisition_from_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+    
+    $this->widgetSchema['acquisition_to_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'to_date')
+    );
+
+    $this->validatorSchema['acquisition_from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate, 
+      'empty_value' => $dateLowerBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema['acquisition_to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'min' => $minDate,
+      'from_date' => false,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
   /**
   * Individuals Fields
   */
     $this->widgetSchema['type'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'SpecimenIndividuals',
-        'table_method' => 'getDistinctTypeGroups',
-        'method' => 'getTypeGroupFormated',
-        'key_method' => 'getTypeGroup',
-        'multiple' => true,
-        'expanded' => true,
-        'add_empty' => false,
+      'model' => 'SpecimenIndividuals',
+      'table_method' => 'getDistinctTypeGroups',
+      'method' => 'getTypeGroupFormated',
+      'key_method' => 'getTypeGroup',
+      'multiple' => true,
+      'expanded' => true,
+      'add_empty' => false,
     ));
     $this->validatorSchema['type'] = new sfValidatorPass();
 
     $this->widgetSchema['sex'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'SpecimenIndividuals',
-        'table_method' => 'getDistinctSexes',
-        'method' => 'getSexSearchFormated',
-        'key_method' => 'getSex',
-        'multiple' => true,
-        'expanded' => true,
-        'add_empty' => false,
+      'model' => 'SpecimenIndividuals',
+      'table_method' => 'getDistinctSexes',
+      'method' => 'getSexSearchFormated',
+      'key_method' => 'getSex',
+      'multiple' => true,
+      'expanded' => true,
+      'add_empty' => false,
     ));
     $this->validatorSchema['sex'] = new sfValidatorPass();
 
     $this->widgetSchema['stage'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'SpecimenIndividuals',
-        'table_method' => 'getDistinctStages',
-        'method' => 'getStageSearchFormated',
-        'key_method' => 'getStage',
-        'multiple' => true,
-        'expanded' => true,
-        'add_empty' => false,
+      'model' => 'SpecimenIndividuals',
+      'table_method' => 'getDistinctStages',
+      'method' => 'getStageSearchFormated',
+      'key_method' => 'getStage',
+      'multiple' => true,
+      'expanded' => true,
+      'add_empty' => false,
     ));
     $this->validatorSchema['stage'] = new sfValidatorPass();
 
     $this->widgetSchema['status'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'SpecimenIndividuals',
-        'table_method' => 'getDistinctStates',
-        'method' => 'getStateSearchFormated',
-        'key_method' => 'getState',
-        'multiple' => true,
-        'expanded' => true,
-        'add_empty' => false,
+      'model' => 'SpecimenIndividuals',
+      'table_method' => 'getDistinctStates',
+      'method' => 'getStateSearchFormated',
+      'key_method' => 'getState',
+      'multiple' => true,
+      'expanded' => true,
+      'add_empty' => false,
     ));
     $this->validatorSchema['status'] = new sfValidatorPass();
 
     $this->widgetSchema['social'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'SpecimenIndividuals',
-        'table_method' => 'getDistinctSocialStatuses',
-        'method' => 'getSocialStatusSearchFormated',
-        'key_method' => 'getSocialStatus',
-        'multiple' => true,
-        'expanded' => true,
-        'add_empty' => false,
+      'model' => 'SpecimenIndividuals',
+      'table_method' => 'getDistinctSocialStatuses',
+      'method' => 'getSocialStatusSearchFormated',
+      'key_method' => 'getSocialStatus',
+      'multiple' => true,
+      'expanded' => true,
+      'add_empty' => false,
     ));
     $this->validatorSchema['social'] = new sfValidatorPass();
 
     $this->widgetSchema['rockform'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'SpecimenIndividuals',
-        'table_method' => 'getDistinctRockForms',
-        'method' => 'getRockFormSearchFormated',
-        'key_method' => 'getRockForm',
-        'multiple' => true,
-        'expanded' => true,
-        'add_empty' => false,
+      'model' => 'SpecimenIndividuals',
+      'table_method' => 'getDistinctRockForms',
+      'method' => 'getRockFormSearchFormated',
+      'key_method' => 'getRockForm',
+      'multiple' => true,
+      'expanded' => true,
+      'add_empty' => false,
     ));
     $this->validatorSchema['rockform'] = new sfValidatorPass();
 
@@ -457,11 +490,11 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['institution_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Institutions',
-       'link_url' => 'institution/choose?with_js=1',
-       'method' => 'getFamilyName',
-       'box_title' => $this->getI18N()->__('Choose Institution'),
-       'nullable' => true,
+      'model' => 'Institutions',
+      'link_url' => 'institution/choose?with_js=1',
+      'method' => 'getFamilyName',
+      'box_title' => $this->getI18N()->__('Choose Institution'),
+      'nullable' => true,
      ));
     $this->widgetSchema['institution_ref']->setLabel('Institution');
 
@@ -519,14 +552,14 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
      // LAT LON 
     $this->widgetSchema['lat_from'] = new sfWidgetForminput();
     $this->widgetSchema['lat_from']->setLabel('Latitude');
-    $this->widgetSchema['lat_from']->setAttributes(array('class'=>'medium_small_size'));    
+    $this->widgetSchema['lat_from']->setAttributes(array('class'=>'medium_small_size'));
     $this->widgetSchema['lat_to'] = new sfWidgetForminput();
-    $this->widgetSchema['lat_to']->setAttributes(array('class'=>'medium_small_size'));        
+    $this->widgetSchema['lat_to']->setAttributes(array('class'=>'medium_small_size'));
     $this->widgetSchema['lon_from'] = new sfWidgetForminput();
     $this->widgetSchema['lon_from']->setLabel('Longitude');
-    $this->widgetSchema['lon_from']->setAttributes(array('class'=>'medium_small_size'));        
+    $this->widgetSchema['lon_from']->setAttributes(array('class'=>'medium_small_size'));
     $this->widgetSchema['lon_to'] = new sfWidgetForminput();
-    $this->widgetSchema['lon_to']->setAttributes(array('class'=>'medium_small_size'));        
+    $this->widgetSchema['lon_to']->setAttributes(array('class'=>'medium_small_size'));
 
     $this->validatorSchema['lat_from'] = new sfValidatorNumber(array('required'=>false,'min' => '-90', 'max'=>'90'));
     $this->validatorSchema['lon_from'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
@@ -572,18 +605,16 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
 
   public function addToolsColumnQuery($query, $field, $val)
   {
-    if($val != '' && is_array($val) && !empty($val))
-    {
-      $query->andWhere('s.specimen_ref in (select fct_search_tools (?))',implode(',', $val));
+    if($val != '' && is_array($val) && !empty($val)) {
+      $query->andWhere('s.id in (select fct_search_tools (?))',implode(',', $val));
     }
     return $query ;
   }
 
   public function addMethodsColumnQuery($query, $field, $val)
   {
-    if($val != '' && is_array($val) && !empty($val))
-    {
-      $query->andWhere('s.specimen_ref in (select fct_search_methods (?))',implode(',', $val));
+    if($val != '' && is_array($val) && !empty($val)) {
+      $query->andWhere('s.id in (select fct_search_methods (?))',implode(',', $val));
     }
     return $query ;
   }
@@ -591,285 +622,146 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
 
   public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
   {
-     if ($values != "")
-     {
-       $conn_MGR = Doctrine_Manager::connection();
-       $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
-     }
-     return $query;
+    if ($values != "") {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
+    }
+    return $query;
   } 
 
-  public function addSexColumnQuery($query, $field, $val)
-  {
+  public function checksToQuotedValues($val) {
     if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
+    if(! is_array($val))
+      $val = array($val);
     $conn_MGR = Doctrine_Manager::connection();
     foreach($val as $k => $v)
       $val[$k] = $conn_MGR->quote($v, 'string');
+    return $val;
+  }
 
-    if($this->scope == self::SC_SPEC)
-      $this->exists_qry_ind[] = ' i1.sex in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('i.sex in ('.implode(',',$val).')');
+  public function addSexColumnQuery($query, $field, $val)
+  {
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('i.sex in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addTypeColumnQuery($query, $field, $val)
   {
-    if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
-    $conn_MGR = Doctrine_Manager::connection();
-    foreach($val as $k => $v)
-      $val[$k] = $conn_MGR->quote($v, 'string');
-
-    if($this->scope == self::SC_SPEC)
-      $this->exists_qry_ind[] = ' i1.type_search in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('i.type_search in ('.implode(',',$val).')');
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('i.type_search in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addStageColumnQuery($query, $field, $val)
   {
-    if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
-    $conn_MGR = Doctrine_Manager::connection();
-    foreach($val as $k => $v)
-      $val[$k] = $conn_MGR->quote($v, 'string');
-
-    if($this->scope == self::SC_SPEC)
-      $this->exists_qry_ind[] = ' i1.stage in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('i.stage in ('.implode(',',$val).')');
-
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('i.stage in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addStatusColumnQuery($query, $field, $val)
   {
-    if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
-    $conn_MGR = Doctrine_Manager::connection();
-    foreach($val as $k => $v)
-      $val[$k] = $conn_MGR->quote($v, 'string');
-
-    if($this->scope == self::SC_SPEC)
-      $this->exists_qry_ind[] = ' i1.state in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('i.state in ('.implode(',',$val).')');
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('i.state in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addSocialColumnQuery($query, $field, $val)
   {
-    if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
-    $conn_MGR = Doctrine_Manager::connection();
-    foreach($val as $k => $v)
-      $val[$k] = $conn_MGR->quote($v, 'string');
-
-    if($this->scope == self::SC_SPEC)
-      $this->exists_qry_ind[] = ' i1.social_status in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('i.social_status in ('.implode(',',$val).')');
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('i.social_status in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addRockformColumnQuery($query, $field, $val)
   {
-    if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
-    $conn_MGR = Doctrine_Manager::connection();
-    foreach($val as $k => $v)
-      $val[$k] = $conn_MGR->quote($v, 'string');
-
-    if($this->scope == self::SC_SPEC)
-      $this->exists_qry_ind[] = ' i1.rock_form in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('i.rock_form in ('.implode(',',$val).')');
-
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('i.rock_form in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addInstitutionRefColumnQuery($query, $field, $val)
   {
     if($val == '' &&  ! ctype_digit($val)) return ;
-    $conn_MGR = Doctrine_Manager::connection();
-    $val = $conn_MGR->quote($val, 'integer');
-
-    if($this->scope != self::SC_PART)
-      $this->exists_qry_part[] = ' p1.institution_ref =  '. $val;
-    else
-      $query->andWhere(' p1.institution_ref =  '.$val);
-
+    $query->andWhere(' p1.institution_ref =  ?', $val);
     return $query ;
   }
 
   public function addContainerColumnQuery($query, $field, $val)
   {
-
-    if(trim($val) != '')
-    {
+    if(trim($val) != '') {
       $values = explode(' ',$val);
       $query_value = array();
-      foreach($values as $value)
-      {
+      foreach($values as $value) {
         if(trim($value) != '')
           $query_value[] = '%'.strtolower($value).'%';
       }
-   
 
-      if($this->scope != self::SC_PART)
-      {
-        if(! empty($query_value))
-        {
-          $conn_MGR = Doctrine_Manager::connection();
-          $exist_qry ='';
-          foreach($query_value as $k=>$param)
-          {
-            if($k != 0)
-              $exist_qry .= ' or ';
-            $exist_qry .= 'lower(p1.container) like '. $conn_MGR->quote($param, 'string') ;
-          }
-          $this->exists_qry_part[] = $exist_qry;
-        }
-      }
-      else
-      {
-        $query_array = array_fill(0,count($query_value),'lower(p.container) like ?');
-        $query->andWhere( implode(' or ',$query_array) ,$query_value);
-      }
+      $query_array = array_fill(0,count($query_value),'lower(p.container) like ?');
+      $query->andWhere( implode(' or ',$query_array) ,$query_value);
     }
     return $query ;
   }
   
   public function addSubContainerColumnQuery($query, $field, $val)
   {
-    if(trim($val) != '')
-    {
+    if(trim($val) != '') {
       $values = explode(' ',$val);
       $query_value = array();
-      foreach($values as $value)
-      {
+      foreach($values as $value) {
         if(trim($value) != '')
           $query_value[] = '%'.strtolower($value).'%';
       }
-   
 
-      if($this->scope != self::SC_PART)
-      {
-        if(! empty($query_value))
-        {
-          $conn_MGR = Doctrine_Manager::connection();
-          $exist_qry ='';
-          foreach($query_value as $k=>$param)
-          {
-            if($k != 0)
-              $exist_qry .= ' or ';
-            $exist_qry .= 'lower(p1.sub_container) like '. $conn_MGR->quote($param, 'string') ;
-          }
-          $this->exists_qry_part[] = $exist_qry;
-        }
-      }
-      else
-      {
-        $query_array = array_fill(0,count($query_value),'lower(p.sub_container) like ?');
-        $query->andWhere( implode(' or ',$query_array) ,$query_value);
-      }
+      $query_array = array_fill(0,count($query_value),'lower(p.sub_container) like ?');
+      $query->andWhere( implode(' or ',$query_array) ,$query_value);
     }
     return $query ;
   }
 
   public function addBuildingColumnQuery($query, $field, $val)
   {
-    if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
-    $conn_MGR = Doctrine_Manager::connection();
-    foreach($val as $k => $v)
-      $val[$k] = $conn_MGR->quote($v, 'string');
-
-    if($this->scope != self::SC_PART)
-      $this->exists_qry_part[] = ' p1.building in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('p.building in ('.implode(',',$val).')');
-
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('p.building in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addFloorColumnQuery($query, $field, $val)
   {
-    if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
-    $conn_MGR = Doctrine_Manager::connection();
-    foreach($val as $k => $v)
-      $val[$k] = $conn_MGR->quote($v, 'string');
-
-    if($this->scope != self::SC_PART)
-      $this->exists_qry_part[] = ' p1.floor in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('p.floor in ('.implode(',',$val).')');
-
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('p.floor in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addRoomColumnQuery($query, $field, $val)
   {
-    if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
-    $conn_MGR = Doctrine_Manager::connection();
-    foreach($val as $k => $v)
-      $val[$k] = $conn_MGR->quote($v, 'string');
-
-    if($this->scope != self::SC_PART)
-      $this->exists_qry_part[] = ' p1.room in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('p.room in ('.implode(',',$val).')');
-
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('p.room in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addRowColumnQuery($query, $field, $val)
   {
-    if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
-    $conn_MGR = Doctrine_Manager::connection();
-    foreach($val as $k => $v)
-      $val[$k] = $conn_MGR->quote($v, 'string');
-
-    if($this->scope != self::SC_PART)
-      $this->exists_qry_part[] = ' p1.row in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('p.row in ('.implode(',',$val).')');
-
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('p.row in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addShelfColumnQuery($query, $field, $val)
   {
-    if($val == '') return ;
-    if(! is_array($val)) $val = array($val);
-    $conn_MGR = Doctrine_Manager::connection();
-    foreach($val as $k => $v)
-      $val[$k] = $conn_MGR->quote($v, 'string');
-
-    if($this->scope != self::SC_PART)
-      $this->exists_qry_part[] = ' p1.shelf in ('.implode(',',$val).') ';
-    else
-      $query->andWhere('p.shelf in ('.implode(',',$val).')');
-
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('p.shelf in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addPartColumnQuery($query, $field, $val)
   {
-    $conn_MGR = Doctrine_Manager::connection();
-    $val = $conn_MGR->quote($val, 'string');
-
-    if($this->scope != self::SC_PART)
-      $this->exists_qry_part[] = ' p1.specimen_part = '.$val;
-    else
+    if( $val != '' ) {
+      $conn_MGR = Doctrine_Manager::connection();
+      $val = $conn_MGR->quote($val, 'string');
       $query->andWhere('p.specimen_part  = '.$val);
-
+    }
     return $query ;
   }
   
@@ -905,7 +797,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
   }
 
   public function addCodesColumnQuery($query, $field, $val)
-  {   
+  {
 
     $str_params = '';
     $str_params_part = '' ;
@@ -914,46 +806,20 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     foreach($val as $i => $code)
     {
       if(empty($code)) continue;
-      if($code['referenced_relation'] == 'specimens')
-      {
-        if($str_params != '')
-          $str_params .= ',';
-        $str_params .= '?,?,?,?,?';
-        $params[] = $code['category'];
-        $params[] = $code['code_part'];
-        $params[] = $code['code_from'];
-        $params[] = $code['code_to'];
-        $params[] = $code['referenced_relation'];
-      }
-      else
-      {
-        if($str_params_part != '')
-          $str_params_part .= ',';
-        $str_params_part .= '?,?,?,?,?';
-        $params_part[] = $code['category'];
-        $params_part[] = $code['code_part'];
-        $params_part[] = $code['code_from'];
-        $params_part[] = $code['code_to'];
-        $params_part[] = $code['referenced_relation'];
-      }
-      
+
+      if($str_params != '')
+        $str_params .= ',';
+      $str_params .= '?,?,?,?,?';
+      $params[] = $code['category'];
+      $params[] = $code['code_part'];
+      $params[] = $code['code_from'];
+      $params[] = $code['code_to'];
+      $params[] = $code['referenced_relation'];
     }
-    if(! empty($params)) 
-    {
+    if(! empty($params)) {
       $query->addWhere("s.specimen_ref in (select fct_searchCodes($str_params) )", $params);
     }
-    if(! empty($params_part)) 
-    {
-      if($this->scope == self::SC_SPEC)
-        $query->addWhere("exists (select 1 from specimen_individuals i inner join specimen_parts p on p.specimen_individual_ref = i.id 
-          inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.specimen_ref  )", $params_part);
-      elseif($this->scope == self::SC_IND)
-        $query->addWhere("exists (select 1 from specimen_parts p on p.specimen_individual_ref = i.id 
-          inner join fct_searchCodes($str_params_part) c1 on c1 = p.id where i.specimen_ref=s.specimen_ref  )", $params_part);
-      elseif($this->scope == self::SC_PART)
-        $query->addWhere("p.id in (select fct_searchCodes($str_params_part) )", $params_part);
-
-    }
+ 
     return $query ;
   }
 
@@ -984,14 +850,8 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
         $clean_ids[] = substr($id,1, strlen($id));
     }
 
-    if(! empty($clean_ids))
-    {
-      if($this->scope == self::SC_SPEC)
-        $query->andWhereIn("s.specimen_ref", $clean_ids);
-      elseif($this->scope == self::SC_IND)
-        $query->andWhereIn("i.id", $clean_ids);
-      else
-        $query->andWhereIn("p.id", $clean_ids);
+    if(! empty($clean_ids)) {
+      $query->andWhereIn("s.id", $clean_ids);
     }
     return $query ;
   }
@@ -1006,18 +866,7 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     {
       if($field == 'ident_ids')
       {
-        $build_query .= "(s.spec_ident_ids @> ARRAY[$people_id]::int[] OR ";
-        if($this->scope == self::SC_SPEC)
-        {
-          $build_query .= " exists ( select 1 from specimen_individuals i1
-          INNER JOIN specimen_parts p1 on i1.id = p1.specimen_individual_ref
-          where i1.specimen_ref= s.specimen_ref AND  i1.ind_ident_ids @> ARRAY[$people_id]::int[] ) ";
-        }
-        else
-        {
-          $build_query .= " i.ind_ident_ids @> ARRAY[$people_id]::int[] ";
-        }
-        $build_query .= ") OR " ;
+        $build_query .= "s.spec_ident_ids @> ARRAY[$people_id]::int[] OR " ;
       }
       elseif($field == 'spec_coll_ids')
       {
@@ -1033,34 +882,11 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
     $query->andWhere($build_query) ;
     return $query ;
   }
-  
+
   public function addObjectNameColumnQuery($query, $field, $val) {
-    if(trim($val) != '') {
-      $values = explode(' ',$val);
-      $query_value = array();
-      $conn_MGR = Doctrine_Manager::connection();
-
-      foreach($values as $value) {
-        if(trim($value) != '')
-          $query_value[] = strtolower($value);
-      }
-
-      if($this->scope != self::SC_PART) {
-        if(! empty($query_value)) {
-          $exist_qry ='';
-          foreach($query_value as $k=>$param) {
-            if($k != 0)
-              $exist_qry .= ' and ';
-            $exist_qry .= " p1.object_name_indexed like '%' || fulltoindex(".$conn_MGR->quote($param, 'string').") || '%'" ;
-          }
-          $this->exists_qry_part[] = $exist_qry;
-        }
-      }
-      else {
-        $query_array = array_fill(0,count($query_value)," p.object_name_indexed like '%' || fulltoindex(?) || '%'");
-        $query->andWhere( implode(' AND ',$query_array) ,$query_value);
-      }
-    }
+    $val = $this->checksToQuotedValues($val);
+    $query_array = array_fill(0,count($query_value)," p.object_name_indexed like '%' || fulltoindex(?) || '%'");
+    $query->andWhere( implode(' AND ',$query_array) ,$query_value);
     return $query ;
   }
 
@@ -1074,37 +900,27 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
   {
     // the line below is used to avoid with_multimedia checkbox to remains checked when we click to back to criteria
     if(!isset($taintedValues['with_multimedia'])) $taintedValues['with_multimedia'] = false ;
-    if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes']))
-    {
 
-      foreach($taintedValues['Codes'] as $key=>$newVal)
-      {
-        if (!isset($this['Codes'][$key]))
-        {
+    if(isset($taintedValues['Codes'])&& is_array($taintedValues['Codes'])) {
+      foreach($taintedValues['Codes'] as $key=>$newVal) {
+        if (!isset($this['Codes'][$key])) {
           $this->addCodeValue($key);
         }
       }
-    }
-    else
-    {
+    } else {
       $this->offsetUnset('Codes') ;
       $subForm = new sfForm();
       $this->embedForm('Codes',$subForm);
       $taintedValues['Codes'] = array();
     }
 
-    if(isset($taintedValues['Tags'])&& is_array($taintedValues['Tags']))
-    {
-      foreach($taintedValues['Tags'] as $key=>$newVal)
-      {
-        if (!isset($this['Tags'][$key]))
-        {
+    if(isset($taintedValues['Tags'])&& is_array($taintedValues['Tags'])) {
+      foreach($taintedValues['Tags'] as $key=>$newVal) {
+        if (!isset($this['Tags'][$key])) {
           $this->addGtuTagValue($key);
         }
       }
-    }
-    else
-    {
+    } else {
       $this->offsetUnset('Tags') ;
       $subForm = new sfForm();
       $this->embedForm('Tags',$subForm);
@@ -1115,72 +931,26 @@ class SpecimensFlatFormFilter extends BaseSpecimensFlatFormFilter
 
   public function doBuildQuery(array $values)
   {
-    $this->exists_qry_ind = array();
-    $this->exists_qry_part = array();
-    $this->scope = $values['what_searched'];
+    $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
 
-    if($this->scope == self::SC_SPEC)
-    {
-      $query = DQ::create()
-        ->select('s.*, ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude, ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude')
-        ->from('SpecimensFlat s');
-      if($values['with_multimedia'])
-        $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.specimen_ref)") ;
-    }
-    elseif($this->scope == self::SC_IND)
-    {
-      $query = DQ::create()
-        ->select('s.*, i.*, p.*, ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude, ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude')
-        ->from('SpecimenIndividuals i')
-        ->innerJoin('i.SpecimensFlat s');
-      if($values['with_multimedia'])
-        $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimen_individuals' AND m.record_id = i.id)") ;
-    }
-    elseif($this->scope == self::SC_PART)
-    {
-      $query = DQ::create()
-        ->select('s.*, i.*, p.*, ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude, ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude')
-        ->from('SpecimenParts p')
-        ->innerJoin('p.Individual i')
-        ->innerJoin('i.SpecimensFlat s');
-      if($values['with_multimedia'])
-        $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimen_parts' AND m.record_id = p.id)") ;
-    }
+    $query = DQ::create()
+      ->select('s.*, 
+        ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude,
+        ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude,
+        (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights'
+      )
+      ->from('Specimens s');
+
+    if($values['with_multimedia'])
+      $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.specimen_ref)") ;
 
     $this->options['query'] = $query;
 
-
-    $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
-
     $query = parent::doBuildQuery($values);
 
-    /** ADD exists to the query **/
-    $where_exist = '';
-    if($this->scope == self::SC_SPEC && ! empty($this->exists_qry_part))
-    {
-       $query->andWhere('exists ( select 1 from specimen_individuals i1
-          INNER JOIN specimen_parts p1 on i1.id = p1.specimen_individual_ref
-          where i1.specimen_ref= s.specimen_ref AND '. implode(' AND ', array_merge($this->exists_qry_ind,$this->exists_qry_part)). ')');
-
-    }
-    elseif(! empty($this->exists_qry_ind)) // When scope = spec and look on ind only
-    {
-        $query->andWhere('exists ( select 1 from specimen_individuals i1
-          where i1.specimen_ref= s.specimen_ref AND '. implode(' AND ', $this->exists_qry_ind). ')');
-
-    }
-    elseif(! empty($this->exists_qry_part)) // When scope = ind and look on part
-    {
-        $alias = $query->getRootAlias();
-        $query->andWhere('exists ( select 1 from specimen_parts p1
-          where p1.specimen_individual_ref= s.specimen_ref AND '. implode(' AND ', $this->exists_qry_part). ')');
-    }
-
-    $query->addSelect('(collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights');
-
     $this->cols = $this->getCollectionWithRights($this->options['user']);
-    if(!empty($values['collection_ref']))
-    {
+
+    if(!empty($values['collection_ref'])) {
       $this->cols = array_intersect($values['collection_ref'], $this->cols);
     }
     $query->andwhere('collection_ref in ( '.implode(',',$this->cols). ') ');
