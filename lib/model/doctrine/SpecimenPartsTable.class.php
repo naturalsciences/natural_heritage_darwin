@@ -23,6 +23,7 @@ class SpecimenPartsTable extends DarwinTable
     'specimen_individuals_count_min' => 'partCount' ,
     'specimen_individuals_count_min' => 'partCount' 
   );
+ 
   /**
   * Get Distincts Buildings of Part
   * @return array an Array of types in keys

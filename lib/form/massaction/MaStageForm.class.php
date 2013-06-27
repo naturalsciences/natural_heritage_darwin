@@ -5,7 +5,7 @@ class MaStageForm extends BaseForm
   public function configure()
   {
     $this->widgetSchema['stage'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenIndividuals',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctStages',
       'method' => 'getStage',
       'key_method' => 'getStage',

@@ -55,6 +55,15 @@ class Specimens extends BaseSpecimens
     }
   }
 
+  public static function getCategories()
+  {
+    return array(
+      'physical' => 'Physical',
+      'observation' => 'Observation',
+      'figurate' => 'Figurate',
+    );
+  }
+
   public function getName()
   {
     $name = '-';
@@ -112,7 +121,84 @@ class Specimens extends BaseSpecimens
       if (strlen($value))
         $str .= '<li>' . trim($value).'</li>';
     $str .= '</ul>';
-    
+
     return $str;
   }
+
+  public function getTypeFormated()
+  {
+    return ucfirst($this->_get('type'));
+  }
+
+  public function getTypeSearchFormated()
+  {
+    return ucfirst($this->_get('type_search'));
+  }
+
+  public function getTypeGroupFormated()
+  {
+    return ucfirst($this->_get('type_group'));
+  }
+  
+
+  public function getSexFormated()
+  {
+    if ($this->_get('sex') == 'undefined')
+      return '-';
+    return ucfirst($this->_get('sex'));
+  }
+
+  public function getSexSearchFormated()
+  {
+    return ucfirst($this->_get('sex'));
+  }
+
+  public function getStateFormated()
+  {
+    if ($this->_get('state') == 'not applicable')
+      return '-';
+    return ucfirst($this->_get('state'));
+  }
+
+  public function getStateSearchFormated()
+  {
+    return ucfirst($this->_get('state'));
+  }
+
+  public function getStageFormated()
+  {
+    if ($this->_get('stage') == 'undefined')
+      return '-';
+    return ucfirst($this->_get('stage'));
+  }
+
+  public function getStageSearchFormated()
+  {
+    return ucfirst($this->_get('stage'));
+  }
+
+  public function getSocialStatusFormated()
+  {
+    if ($this->_get('social_status') == 'not applicable')
+      return '-';
+    return ucfirst($this->_get('social_status'));
+  }
+
+  public function getSocialStatusSearchFormated()
+  {
+    return ucfirst($this->_get('social_status'));
+  }
+
+  public function getRockFormFormated()
+  {
+    if ($this->_get('rock_form') == 'not applicable')
+      return '-';
+    return ucfirst($this->_get('rock_form'));
+  }
+
+  public function getRockFormSearchFormated()
+  {
+    return ucfirst($this->_get('rock_form'));
+  }
+
 }

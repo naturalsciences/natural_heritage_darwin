@@ -234,7 +234,7 @@ class SpecimensForm extends BaseSpecimensForm
 
 
     $this->widgetSchema['type'] = new widgetFormSelectComplete(array(
-        'model' => 'SpecimenIndividuals',
+        'model' => 'Specimens',
         'table_method' => 'getDistinctTypes',
         'method' => 'getType',
         'key_method' => 'getType',
@@ -243,7 +243,7 @@ class SpecimensForm extends BaseSpecimensForm
         'add_label' => 'Add an other type',
     ));
     $this->widgetSchema['sex'] = new widgetFormSelectComplete(array(
-        'model' => 'SpecimenIndividuals',
+        'model' => 'Specimens',
         'table_method' => 'getDistinctSexes',
         'method' => 'getSex',
         'key_method' => 'getSex',
@@ -252,7 +252,7 @@ class SpecimensForm extends BaseSpecimensForm
         'add_label' => 'Add an other sex',
     ));
     $this->widgetSchema['state'] = new widgetFormSelectComplete(array(
-        'model' => 'SpecimenIndividuals',
+        'model' => 'Specimens',
         'table_method' => 'getDistinctStates',
         'method' => 'getState',
         'key_method' => 'getState',
@@ -261,7 +261,7 @@ class SpecimensForm extends BaseSpecimensForm
         'add_label' => 'Add an other "sexual" state',
     ));
     $this->widgetSchema['stage'] = new widgetFormSelectComplete(array(
-        'model' => 'SpecimenIndividuals',
+        'model' => 'Specimens',
         'table_method' => 'getDistinctStages',
         'method' => 'getStage',
         'key_method' => 'getStage',
@@ -270,7 +270,7 @@ class SpecimensForm extends BaseSpecimensForm
         'add_label' => 'Add an other stage',
     ));
     $this->widgetSchema['social_status'] = new widgetFormSelectComplete(array(
-        'model' => 'SpecimenIndividuals',
+        'model' => 'Specimens',
         'table_method' => 'getDistinctSocialStatuses',
         'method' => 'getSocialStatus',
         'key_method' => 'getSocialStatus',
@@ -279,7 +279,7 @@ class SpecimensForm extends BaseSpecimensForm
         'add_label' => 'Add an other social status',
     ));
     $this->widgetSchema['rock_form'] = new widgetFormSelectComplete(array(
-        'model' => 'SpecimenIndividuals',
+        'model' => 'Specimens',
         'table_method' => 'getDistinctRockForms',
         'method' => 'getRockForm',
         'key_method' => 'getRockForm',
@@ -290,7 +290,7 @@ class SpecimensForm extends BaseSpecimensForm
 
 
     $this->widgetSchema['specimen_part'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctParts',
       'method' => 'getSpecimenPart',
       'key_method' => 'getSpecimenPart',
@@ -311,7 +311,7 @@ class SpecimensForm extends BaseSpecimensForm
 //     }
 
     $this->widgetSchema['building'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctBuildings',
       'method' => 'getBuildings',
       'key_method' => 'getBuildings',
@@ -321,7 +321,7 @@ class SpecimensForm extends BaseSpecimensForm
       ));
 
     $this->widgetSchema['floor'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctFloors',
       'method' => 'getFloors',
       'key_method' => 'getFloors',
@@ -331,7 +331,7 @@ class SpecimensForm extends BaseSpecimensForm
       ));
 
     $this->widgetSchema['row'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRows',
       'method' => 'getRows',
       'key_method' => 'getRows',
@@ -341,7 +341,7 @@ class SpecimensForm extends BaseSpecimensForm
       ));
 
     $this->widgetSchema['room'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRooms',
       'method' => 'getRooms',
       'key_method' => 'getRooms',
@@ -351,7 +351,7 @@ class SpecimensForm extends BaseSpecimensForm
       ));
 
     $this->widgetSchema['shelf'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctShelfs',
       'method' => 'getShelfs',
       'key_method' => 'getShelfs',
@@ -361,7 +361,7 @@ class SpecimensForm extends BaseSpecimensForm
       ));
 
     $this->widgetSchema['container_type'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctContainerTypes',
       'method' => 'getContainerType',
       'key_method' => 'getContainerType',
@@ -371,7 +371,7 @@ class SpecimensForm extends BaseSpecimensForm
       ));
 
     $this->widgetSchema['sub_container_type'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctSubContainerTypes',
       'method' => 'getSubContainerType',
       'key_method' => 'getSubContainerType',
@@ -381,7 +381,7 @@ class SpecimensForm extends BaseSpecimensForm
       ));
 
     $this->widgetSchema['specimen_status'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctStatus',
       'method' => 'getSpecimenStatus',
       'key_method' => 'getSpecimenStatus',
@@ -395,22 +395,22 @@ class SpecimensForm extends BaseSpecimensForm
     $this->widgetSchema['object_name'] = new sfWidgetFormInput();
 
     $this->widgetSchema['container_storage'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'change_label' => 'Pick a container storage in the list',
       'add_label' => 'Add another container storage',
       ));
 
     $this->widgetSchema['sub_container_storage'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'change_label' => 'Pick a sub container storage in the list',
       'add_label' => 'Add another sub container storage',
       ));
 
     $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
-      'choices' => SpecimenParts::getCategories(),
+      'choices' => Specimens::getCategories(),
     ));
 
-    $this->validatorSchema['category'] = new sfValidatorChoice(array('choices'=>array_keys(SpecimenParts::getCategories())));
+    $this->validatorSchema['category'] = new sfValidatorChoice(array('choices'=>array_keys(Specimens::getCategories())));
 
     $this->widgetSchema['accuracy'] = new sfWidgetFormChoice(array(
         'choices'  => array($this->getI18N()->__('exact'), $this->getI18N()->__('imprecise')),
@@ -554,11 +554,11 @@ class SpecimensForm extends BaseSpecimensForm
   public function forceContainerChoices()
   {
     $this->widgetSchema['container_storage']->setOption('forced_choices',
-      Doctrine::getTable('SpecimenParts')->getDistinctContainerStorages($this->getObject()->getContainerType())
+      Doctrine::getTable('Specimens')->getDistinctContainerStorages($this->getObject()->getContainerType())
     );
 
     $this->widgetSchema['sub_container_storage']->setOption('forced_choices',
-      Doctrine::getTable('SpecimenParts')->getDistinctSubContainerStorages($this->getObject()->getSubContainerType())
+      Doctrine::getTable('Specimens')->getDistinctSubContainerStorages($this->getObject()->getSubContainerType())
     );
   }
 

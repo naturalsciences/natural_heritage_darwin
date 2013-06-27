@@ -71,8 +71,8 @@ class SpecimenIndividualsTable extends DarwinTable
     */
     public function getDistinctSexes()
     {
-      $sexes = $this->createFlatDistinct('specimen_individuals', 'sex', 'sex')->execute();
-      $sexes->add(new SpecimenIndividuals);
+ //     $sexes = $this->createFlatDistinct('specimen_individuals', 'sex', 'sex')->execute();
+  //    $sexes->add(new SpecimenIndividuals);
       return $sexes;
     }
 

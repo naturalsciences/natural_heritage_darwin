@@ -59,7 +59,7 @@
                 <?php endif;?>
               </td>
               <td >
-                <?php if($sf_user->isPinned($specimen->getId(), 'specimens')):?>
+                <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>
                   <?php echo image_tag('blue_pin_on.png', array('class'=>'pin_but pin_on','alt' =>  __('Cancel this result'))) ; ?>
                   <?php echo image_tag('blue_pin_off.png', array('class'=>'pin_but pin_off hidden', 'alt' =>  __('Save this result'))) ; ?>
                 <?php else:?>

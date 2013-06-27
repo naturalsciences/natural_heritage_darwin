@@ -402,7 +402,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
   * Individuals Fields
   */
     $this->widgetSchema['type'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenIndividuals',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctTypeGroups',
       'method' => 'getTypeGroupFormated',
       'key_method' => 'getTypeGroup',
@@ -413,7 +413,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['type'] = new sfValidatorPass();
 
     $this->widgetSchema['sex'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenIndividuals',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctSexes',
       'method' => 'getSexSearchFormated',
       'key_method' => 'getSex',
@@ -424,7 +424,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['sex'] = new sfValidatorPass();
 
     $this->widgetSchema['stage'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenIndividuals',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctStages',
       'method' => 'getStageSearchFormated',
       'key_method' => 'getStage',
@@ -435,7 +435,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['stage'] = new sfValidatorPass();
 
     $this->widgetSchema['status'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenIndividuals',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctStates',
       'method' => 'getStateSearchFormated',
       'key_method' => 'getState',
@@ -446,7 +446,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['status'] = new sfValidatorPass();
 
     $this->widgetSchema['social'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenIndividuals',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctSocialStatuses',
       'method' => 'getSocialStatusSearchFormated',
       'key_method' => 'getSocialStatus',
@@ -457,7 +457,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['social'] = new sfValidatorPass();
 
     $this->widgetSchema['rockform'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenIndividuals',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRockForms',
       'method' => 'getRockFormSearchFormated',
       'key_method' => 'getRockForm',
@@ -477,7 +477,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['part'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['part'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimen',
       'table_method' => 'getDistinctParts',
       'method' => 'getSpecimenPart',
       'key_method' => 'getSpecimenPart',
@@ -501,7 +501,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required' => false));
 
     $this->widgetSchema['building'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimen',
       'table_method' => 'getDistinctBuildings',
       'method' => 'getBuildings',
       'key_method' => 'getBuildings',
@@ -511,7 +511,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['building'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['floor'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimen',
       'table_method' => 'getDistinctFloors',
       'method' => 'getFloors',
       'key_method' => 'getFloors',
@@ -520,7 +520,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['row'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimen',
       'table_method' => 'getDistinctRows',
       'method' => 'getRows',
       'key_method' => 'getRows',
@@ -529,7 +529,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['row'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['room'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimen',
       'table_method' => 'getDistinctRooms',
       'method' => 'getRooms',
       'key_method' => 'getRooms',
@@ -538,7 +538,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['room'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['shelf'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimen',
       'table_method' => 'getDistinctShelfs',
       'method' => 'getShelfs',
       'key_method' => 'getShelfs',

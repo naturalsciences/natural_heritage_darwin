@@ -86,6 +86,245 @@ class SpecimensTable extends DarwinTable
       return $this->createFlatDistinct('specimens', 'host_relationship', 'host_relationship')->execute();
   }
 
+/**
+  * Get Distincts Buildings of Part
+  * @return array an Array of types in keys
+  */
+  public function getDistinctBuildings()
+  {
+    return $this->createFlatDistinct('specimens', 'building', 'buildings')->execute();
+  }
+
+  /**
+  * Get Distincts Floor of Part
+  * @return array an Array of types in keys
+  */
+  public function getDistinctFloors($building = null)
+  {
+    if($building == null) return $this->createFlatDistinct('specimens', 'floor', 'floors')->execute();
+    $q = $this->createDistinct('Specimens', 'floor', 'floors');
+        if(! is_null($building))
+          $q->addWhere('building = ?', $building);
+        return $q->execute();
+  }
+
+  /**
+  * Get Distincts Room of Part
+  * @return array an Array of types in keys
+  */
+  public function getDistinctRooms($building = null, $floor = null)
+  {
+    if($building == null && $floor == null) return $this->createFlatDistinct('specimens', 'room', 'rooms')->execute();
+    $q = $this->createDistinct('Specimens', 'room', 'rooms');
+        if(! is_null($building))
+          $q->addWhere('building = ?', $building);
+
+        if(! is_null($floor))
+          $q->addWhere('floor = ?', $floor);
+
+        return $q->execute();
+  }
+
+  /**
+  * Get Distincts Row of Part
+  * @return array an Array of types in keys
+  */
+  public function getDistinctRows($building = null, $floor = null, $room = null)
+  {
+    if($building == null && $floor == null && $room == null) return $this->createFlatDistinct('specimens', 'row', 'rows')->execute();
+    $q = $this->createDistinct('Specimens', 'row', 'rows');
+        if(! is_null($building))
+          $q->addWhere('building = ?', $building);
+
+        if(! is_null($floor))
+          $q->addWhere('floor = ?', $floor);
+
+        if(! is_null($room))
+          $q->addWhere('room = ?', $room);
+
+        return $q->execute();
+  }
+
+  /**
+  * Get Distincts Shelve of Part
+  * @return array an Array of types in keys
+  */
+  public function getDistinctShelfs($building = null, $floor = null, $room = null, $rows = null)
+  {
+    if($building == null && $floor == null && $room == null && $rows == null) return $this->createFlatDistinct('specimens', 'shelf', 'shelfs')->execute();
+    $q = $this->createDistinct('Specimens', 'shelf', 'shelfs');
+        if(! is_null($building))
+          $q->addWhere('building = ?', $building);
+
+        if(! is_null($floor))
+          $q->addWhere('floor = ?', $floor);
+
+        if(! is_null($room))
+          $q->addWhere('room = ?', $room);
+
+        if(! is_null($rows))
+          $q->addWhere('row = ?', $rows);
+        return $q->execute();
+  }
+
+  /**
+  * Get Distincts Container of Part
+  * @return array an Array of types in keys
+  */
+  public function getDistinctContainerTypes()
+  {
+    $contTypes = $this->createFlatDistinct('specimens', 'container_type', 'container_type')->execute();
+    $contTypes->add(new Specimens);
+    return $contTypes;
+  }
+
+  /**
+  * Get Distincts Sub Container of Part
+  * @return array an Array of types in keys
+  */
+  public function getDistinctSubContainerTypes()
+  {
+    $subContTypes = $this->createFlatDistinct('specimens', 'sub_container_type', 'sub_container_type')->execute();
+    $subContTypes->add(new Specimens);
+    return $subContTypes;
+  }
+
+  /**
+  * Get Distincts Sub Container of Part
+  * @return array an Array of types in keys
+  */
+  public function getDistinctParts()
+  {
+    $parts = $this->createFlatDistinct('specimens', 'specimen_part', 'specimen_part')->execute();
+    $parts->add(new Specimens);
+    return $parts;
+  }
+
+  /**
+  * Get Distincts status of Part
+  * @return array an Array of types in keys
+  */
+  public function getDistinctStatus()
+  {
+    $statuses = $this->createFlatDistinct('specimens', 'specimen_status', 'specimen_status')->execute();
+    $statuses->add(new Specimens);
+    return $statuses;
+  }
+  /**
+  * Get Distincts Sub Container Storages of Part
+  * filter by type if one given
+  * @param string $type a type
+  * @return array an Array of types in keys
+  */
+  public function getDistinctSubContainerStorages($type)
+  {
+    $q = $this->createFlatDistinctDepend('specimens', 'sub_container_storage', $type, 'storage');
+    $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
+    return array_merge(array('dry'=>'dry'),$a);
+  }
+  
+
+  /**
+  * Get Distincts Container Storages of Part
+  * filter by type if one given
+  * @param string $type a type
+  * @return array an Array of types in keys
+  */
+  public function getDistinctContainerStorages($type)
+  {
+    $q = $this->createFlatDistinctDepend('specimens', 'container_storage', $type, 'storage');
+    $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
+    return array_merge(array('dry'=>'dry'),$a);
+  }
+
+    /**
+    * Get distinct Types
+    * @return Doctrine_collection with distinct "types" as column
+    */
+    public function getDistinctTypes()
+    {
+      $types = $this->createFlatDistinct('specimens', 'type', 'type')->execute();
+      $types->add(new Specimens);
+      return $types;
+    }
+
+    /**
+    * Get distinct Type groups
+    * @return Doctrine_collection with distinct "type groups" as column
+    */
+    public function getDistinctTypeGroups()
+    {
+      $types = $this->createFlatDistinct('specimens', 'type_group', 'type_group')->execute();
+      $types->add(new Specimens);
+      return $types;
+    }
+
+    /**
+    * Get distinct Type searches
+    * @return Doctrine_collection with distinct "type searches" as column
+    */
+    public function getDistinctTypeSearches()
+    {
+      $types = $this->createFlatDistinct('specimens', 'type_search', 'type_search')->execute();
+      $types->add(new Specimens);
+      return $types;
+    }
+
+    /**
+    * Get distinct Sexes
+    * @return Doctrine_collection with distinct "sexes" as column
+    */
+    public function getDistinctSexes()
+    {
+      $sexes = $this->createFlatDistinct('specimens', 'sex', 'sex')->execute();
+      $sexes->add(new Specimens);
+      return $sexes;
+    }
+
+    /**
+    * Get distinct States
+    * @return Doctrine_collection with distinct "states" as column
+    */
+    public function getDistinctStates()
+    {
+      $states = $this->createFlatDistinct('specimens', 'state', 'state')->execute();
+      $states->add(new Specimens);
+      return $states;
+    }
+
+    /**
+    * Get distinct Stages
+    * @return Doctrine_collection with distinct "stages" as column
+    */
+    public function getDistinctStages()
+    {
+      $stages = $this->createFlatDistinct('specimens', 'stage', 'stage')->execute();
+      $stages->add(new Specimens);
+      return $stages;
+    }
+
+    /**
+    * Get distinct Social statuses
+    * @return Doctrine_collection with distinct "social statuses" as column
+    */
+    public function getDistinctSocialStatuses()
+    {
+      $social_statuses = $this->createFlatDistinct('specimens', 'social_status', 'social_status')->execute();
+      $social_statuses->add(new Specimens);
+      return $social_statuses;
+    }
+
+    /**
+    * Get distinct Rock forms
+    * @return Doctrine_collection with distinct "rock forms" as column
+    */
+    public function getDistinctRockForms()
+    {
+      $rock_forms = $this->createFlatDistinct('specimens', 'rock_form', 'rock_form')->execute();
+      $rock_forms->add(new Specimens);
+      return $rock_forms;
+    }
+
   public function getSpecimenByRef($collection_id,$taxon_id)
   {
           $q = Doctrine_Query::create()
@@ -121,14 +360,11 @@ class SpecimensTable extends DarwinTable
 
   public function fetchOneWithRights($id, $user)
   {
-    $q = Doctrine_Query::create()
-      ->select('s.*, collection_ref in (select fct_search_authorized_encoding_collections('.$user->getId().')) as has_encoding_rights')
-      ->from('specimens s')
-      ->where('id = ?',$id);
-    if (!$user->isA(Users::ADMIN)){
-      $q->andWhere('collection_ref in (select fct_search_authorized_view_collections('.$user->getId().'))');
-    }
-    return $q->fetchOne();
+    $specimens = $this->getByMultipleIds(array($id), $user->getId(), $user->isA(Users::ADMIN));
+    if(count($specimens) == 1)
+      return $specimens[0];
+    else 
+      return null;
   }
 
 
@@ -137,44 +373,16 @@ class SpecimensTable extends DarwinTable
   * @param array $ids Ids of specimen to search
   * @return Doctrine_collection
   */
-  public function getByMultipleIds(array $ids, $type = "specimen", $user_id = -1, $is_admin = false)
+  public function getByMultipleIds(array $ids, $user_id = -1, $is_admin = false)
   {
     if( empty($ids))
       return $ids;
 
-    if($type == 'specimen')
-    {
-      /*$q = Doctrine_Query::create()
-      ->select('s.id, s.taxon_name')
+    $q = DQ::create()
       ->from('Specimens s')
       ->wherein('s.id', $ids)
-      ->orderBy('id');*/
+      ->orderBy('s.id');
 
-      $q = DQ::create()
-        ->from('SpecimensFlat s')
-        ->wherein('s.specimen_ref', $ids)
-        ->orderBy('s.specimen_ref');
-    }
-    elseif($type == 'individual')
-    {
-      $q = DQ::create()
-        ->select('s.*, i.*')
-        ->from('SpecimenIndividuals i')
-        ->innerJoin('i.SpecimensFlat s')
-        ->wherein('i.id', $ids)
-        ->orderBy('i.specimen_ref, i.id');
-    }
-    elseif($type == 'part')
-    {
-      $q = DQ::create()
-        ->select('s.*, i.*, p.*')
-        ->from('SpecimenParts p')
-        ->innerJoin('p.Individual i')
-        ->innerJoin('i.SpecimensFlat s')
-        ->wherein('p.id', $ids)
-        ->orderBy('i.specimen_ref, i.id,p.id');
-    }
-    else return array(); //Error
     if(!$is_admin)
       $q->andWhere('s.collection_ref in (select fct_search_authorized_encoding_collections(?))',$user_id);
     return $q->execute();

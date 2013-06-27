@@ -2,13 +2,7 @@
   <?php use_helper('Text');?>
   <table>
     <?php foreach($items as $item):?>
-      <?php if($source == 'specimen'):?>
-         <?php include_partial('item_specimen',array('item'=>$item) );?>
-      <?php elseif($source == 'individual'):?>
-         <?php include_partial('item_individual',array('item'=>$item) );?>
-      <?php else:?>
-          <?php include_partial('item_part',array('item'=>$item) );?>
-      <?php endif;?>
+      <?php include_partial('item_specimen',array('item'=>$item) );?>
     <?php endforeach;?>
   </table>
   <script  type="text/javascript">

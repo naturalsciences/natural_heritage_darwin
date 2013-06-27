@@ -5,7 +5,7 @@ class MaSexForm extends BaseForm
   public function configure()
   {
     $this->widgetSchema['sex'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenIndividuals',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctSexes',
       'method' => 'getSex',
       'key_method' => 'getSex',

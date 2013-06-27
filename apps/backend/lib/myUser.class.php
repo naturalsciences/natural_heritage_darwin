@@ -82,7 +82,7 @@ class myUser extends sfBasicSecurityUser
     return $this->getAttribute('spec_pinned_'.$source,array());
   }
   
-  public function isPinned($id,$source)
+  public function isPinned($id, $source)
   {
     $pins = $this->getAttribute('spec_pinned_'.$source, array());
     return (array_search($id, $pins) === false) ? false : true;
