@@ -24,6 +24,7 @@
 								<xs:element name="Floor" type="xs:string" minOccurs="0"/>
 								<xs:element name="Room" type="xs:date" minOccurs="0"/>
 								<xs:element name="Row" type="xs:date" minOccurs="0"/>
+								<xs:element name="Column"/>
 								<xs:element name="Shelf" type="xs:string" minOccurs="0"/>
 								<xs:element name="Box" type="xs:string" minOccurs="0"/>
 								<xs:element name="Rack" type="xs:string" minOccurs="0"/>
