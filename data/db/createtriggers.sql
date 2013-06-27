@@ -3,10 +3,14 @@ CREATE TRIGGER trg_cpy_specimensMainCode_specimenPartCode AFTER INSERT
 	EXECUTE PROCEDURE fct_cpy_specimensMainCode();
 
 -- BEGIN FULLTOINDEX
+CREATE TRIGGER trg_cpy_fullToIndex_ext_links BEFORE INSERT OR UPDATE
+        ON ext_links FOR EACH ROW
+        EXECUTE PROCEDURE fct_cpy_fullToIndex();
+
 CREATE TRIGGER trg_cpy_fullToIndex_comments BEFORE INSERT OR UPDATE
         ON comments FOR EACH ROW
         EXECUTE PROCEDURE fct_cpy_fullToIndex();
-        
+
 CREATE TRIGGER trg_cpy_fullToIndex_catalogueproperties BEFORE INSERT OR UPDATE
 	ON catalogue_properties FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();

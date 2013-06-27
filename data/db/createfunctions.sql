@@ -182,6 +182,8 @@ BEGIN
                 NEW.search_indexed := fullToIndex ( COALESCE(NEW.title,'') ||  COALESCE(NEW.description,'') ) ;
         ELSIF TG_TABLE_NAME = 'comments' THEN
                 NEW.comment_indexed := fullToIndex(NEW.comment);
+        ELSIF TG_TABLE_NAME = 'ext_links' THEN
+                NEW.comment_indexed := fullToIndex(NEW.comment);
         ELSIF TG_TABLE_NAME = 'specimen_parts' THEN
                 NEW.object_name_indexed := fullToIndex(COALESCE(NEW.object_name,'') );
         END IF;
