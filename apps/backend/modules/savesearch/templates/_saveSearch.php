@@ -6,9 +6,9 @@ $(document).ready(function () {
   $("#save_search").click(function(event){
     event.preventDefault();
     column_str = ' ';
-    if($('.column_menu ul > li.check').length)
+    if($('.column_menu li.check').length)
     {
-      $('.column_menu ul > li.check').each(function (index)
+      $('.column_menu  li.check').each(function (index)
       {
         if(column_str != '') column_str += '|';
         column_str += $(this).attr('id').substr(3);

@@ -19,7 +19,7 @@ $(document).ready(function () {
     event.preventDefault();
     if($('#save_specs_choice').val()=="") return;
     var column_str = ' ';
-    $('.column_menu ul > li.check').each(function (index)
+    $('.column_menu li.check').each(function (index)
       {
         if(column_str != '') column_str += '|';
         column_str += $(this).attr('id').substr(3);
