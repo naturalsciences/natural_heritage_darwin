@@ -642,49 +642,49 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
   public function addSexColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('i.sex in ('.implode(',',$val).')');
+    $query->andWhere('s.sex in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addTypeColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('i.type_search in ('.implode(',',$val).')');
+    $query->andWhere('s.type_search in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addStageColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('i.stage in ('.implode(',',$val).')');
+    $query->andWhere('s.stage in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addStatusColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('i.state in ('.implode(',',$val).')');
+    $query->andWhere('s.state in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addSocialColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('i.social_status in ('.implode(',',$val).')');
+    $query->andWhere('s.social_status in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addRockformColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('i.rock_form in ('.implode(',',$val).')');
+    $query->andWhere('s.rock_form in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addInstitutionRefColumnQuery($query, $field, $val)
   {
     if($val == '' &&  ! ctype_digit($val)) return ;
-    $query->andWhere(' p1.institution_ref =  ?', $val);
+    $query->andWhere('s.institution_ref =  ?', $val);
     return $query ;
   }
 
@@ -698,7 +698,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
           $query_value[] = '%'.strtolower($value).'%';
       }
 
-      $query_array = array_fill(0,count($query_value),'lower(p.container) like ?');
+      $query_array = array_fill(0,count($query_value),'lower(s.container) like ?');
       $query->andWhere( implode(' or ',$query_array) ,$query_value);
     }
     return $query ;
@@ -714,7 +714,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
           $query_value[] = '%'.strtolower($value).'%';
       }
 
-      $query_array = array_fill(0,count($query_value),'lower(p.sub_container) like ?');
+      $query_array = array_fill(0,count($query_value),'lower(s.sub_container) like ?');
       $query->andWhere( implode(' or ',$query_array) ,$query_value);
     }
     return $query ;
@@ -723,35 +723,35 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
   public function addBuildingColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.building in ('.implode(',',$val).')');
+    $query->andWhere('s.building in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addFloorColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.floor in ('.implode(',',$val).')');
+    $query->andWhere('s.floor in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addRoomColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.room in ('.implode(',',$val).')');
+    $query->andWhere('s.room in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addRowColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.row in ('.implode(',',$val).')');
+    $query->andWhere('s.row in ('.implode(',',$val).')');
     return $query ;
   }
 
   public function addShelfColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('p.shelf in ('.implode(',',$val).')');
+    $query->andWhere('s.shelf in ('.implode(',',$val).')');
     return $query ;
   }
 
@@ -760,7 +760,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     if( $val != '' ) {
       $conn_MGR = Doctrine_Manager::connection();
       $val = $conn_MGR->quote($val, 'string');
-      $query->andWhere('p.specimen_part  = '.$val);
+      $query->andWhere('s.specimen_part  = '.$val);
     }
     return $query ;
   }
@@ -885,7 +885,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
 
   public function addObjectNameColumnQuery($query, $field, $val) {
     $val = $this->checksToQuotedValues($val);
-    $query_array = array_fill(0,count($query_value)," p.object_name_indexed like '%' || fulltoindex(?) || '%'");
+    $query_array = array_fill(0,count($query_value)," s.object_name_indexed like '%' || fulltoindex(?) || '%'");
     $query->andWhere( implode(' AND ',$query_array) ,$query_value);
     return $query ;
   }
@@ -971,7 +971,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
     $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
     $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
 
-//     $this->addNamingColumnQuery($query, 'specimen_parts', 'p.object_name_indexed', $values['object_name'],'p','object_name_indexed');
+//     $this->addNamingColumnQuery($query, 'specimen_parts', 's.object_name_indexed', $values['object_name'],'p','object_name_indexed');
 
         
     $fields = array('gtu_from_date', 'gtu_to_date');
@@ -994,7 +994,7 @@ class SpecimensFormFilter extends BaseSpecimensFlatFormFilter
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/leaflet/leaflet.js';
-    $javascripts[]='/js/map.js';
+    $javascripts[]='/js/mas.js';
     return $javascripts;
   }
 
