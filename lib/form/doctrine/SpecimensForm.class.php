@@ -306,9 +306,9 @@ class SpecimensForm extends BaseSpecimensForm
        'box_title' => $this->getI18N()->__('Choose Institution'),
        'nullable' => true,
      ));
-//     if($this->collection) {
-//       $this->setDefault('institution_ref', $this->collection->getInstitutionRef());
-//     }
+    if(sfConfig::get('dw_defaultInstitutionRef')) {
+      $this->setDefault('institution_ref', sfConfig::get('dw_defaultInstitutionRef'));
+     }
 
     $this->widgetSchema['building'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -802,7 +802,6 @@ class SpecimensForm extends BaseSpecimensForm
     }
     else
       $this->loadEmbedMethods();
-
     $this->bindEmbed('Biblio', 'addBiblio' , $taintedValues);
     $this->bindEmbed('Collectors', 'addCollectors' , $taintedValues);
     $this->bindEmbed('Donators', 'addDonators' , $taintedValues);
@@ -812,6 +811,31 @@ class SpecimensForm extends BaseSpecimensForm
     $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
     $this->bindEmbed('SpecimensAccompanying', 'addSpecimensAccompanying' , $taintedValues);
     $this->bindEmbed('Insurances', 'addInsurances' , $taintedValues);
+
+    // Unset not used widgets
+    $fields_groups = $this->getFieldsByGroup();
+    foreach($fields_groups as $group) {
+      $cnt_unset = 0;
+      foreach($group as $field) {
+        if(!isset($taintedValues[$field])) {
+          $cnt_unset++;
+        }
+        if($cnt_unset == count($group)) {
+          foreach($group as $ufield) {
+            $this->offsetUnset($ufield);
+          }
+        }
+      }
+    }
+
+    //Little hack to make default value work if widget is not there
+    if(!isset($taintedValues['institution_ref']) && $this->object->isNew()) {
+      if(sfConfig::get('dw_defaultInstitutionRef')) {
+        $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required'=>true));
+        $taintedValues['institution_ref'] = sfConfig::get('dw_defaultInstitutionRef');
+      }
+    }
+    
     parent::bind($taintedValues, $taintedFiles);
   }
 
