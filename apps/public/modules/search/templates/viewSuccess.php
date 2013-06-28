@@ -252,7 +252,7 @@
     <div class="borded right_padded">        
       <table class="caract_table">
         <tr>
-          <td><span class="pager_nav"><?php echo __("Number of individual") ; ?> :</span></td>
+          <td><span class="pager_nav"><?php echo __("Number of items") ; ?> :</span></td>
           <td><span>
             <?php if($specimen->getSpecimenCountMin() == $specimen->getSpecimenCountMax()) 
                 echo ($specimen->getSpecimenCountMin()==""?"-":$specimen->getSpecimenCountMin()) ;
