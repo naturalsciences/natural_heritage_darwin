@@ -18,11 +18,11 @@
   </thead>
     <?php $retainedKey = 0;?>
     <?php foreach($form['Insurances'] as $form_value):?>
-      <?php include_partial('parts/insurances', array('form' => $form_value, 'rownum'=>$retainedKey));?>
+      <?php include_partial('specimen/insurances', array('form' => $form_value, 'rownum'=>$retainedKey));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
     <?php foreach($form['newInsurances'] as $form_value):?>
-      <?php include_partial('parts/insurances', array('form' => $form_value, 'rownum'=>$retainedKey));?>
+      <?php include_partial('specimen/insurances', array('form' => $form_value, 'rownum'=>$retainedKey));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
   <tfoot>
