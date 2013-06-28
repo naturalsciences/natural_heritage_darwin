@@ -1205,8 +1205,8 @@ comment on column specimens.container_storage is 'Conservative medium used: form
 comment on column specimens.sub_container_storage is 'Conservative medium used: formol, alcohool, dry,...';
 comment on column specimens.surnumerary is 'Tells if this specimen has been added after first inventory';
 comment on column specimens.specimen_status is 'Specimen status: good state, lost, damaged,...';
-comment on column specimens.specimen_part_count_min is 'Minimum number of specimens';
-comment on column specimens.specimen_part_count_max is 'Maximum number of specimens';
+comment on column specimens.specimen_count_min is 'Minimum number of specimens';
+comment on column specimens.specimen_count_max is 'Maximum number of specimens';
 comment on column specimens.complete is 'Flag telling if specimen is complete or not';
 
 
