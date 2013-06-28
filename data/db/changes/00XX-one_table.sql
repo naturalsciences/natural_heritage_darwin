@@ -683,7 +683,7 @@ INSERT INTO new_specimens (
 (
 SELECT 
   p.id,
-  f.category,
+  p.category,
   f.collection_ref,
   f.expedition_ref,
   f.gtu_ref,
