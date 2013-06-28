@@ -5,9 +5,9 @@
     <tr>
       <th><?php echo __('Part Id');?></th>
       <td>
-        <?php if($obj->getPartRef()):?>
-          <?php echo image_tag('info.png',"title=info class=extd_info data_id=".$obj->getPartRef());?>
-          <?php echo link_to('#'.$obj->getPartRef(),'parts/edit?id='.$obj->getPartRef());?>
+        <?php if($obj->getSpecimenRef()):?>
+          <?php echo image_tag('info.png',"title=info class=extd_info data_id=".$obj->getSpecimenRef());?>
+          <?php echo link_to('#'.$obj->getSpecimenRef(),'specimen/edit?id='.$obj->getSpecimenRef());?>
         <?php endif;?>
       </td>
       <th><?php echo __('Details');?></th>

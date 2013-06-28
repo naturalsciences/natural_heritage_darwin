@@ -446,4 +446,10 @@ class specimenActions extends DarwinActions
       }
     }
   }
+
+  public function executeChoosePinned(sfWebRequest $request)
+  {
+    $items_ids = $this->getUser()->getAllPinned('specimen');
+    $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
+  }  
 }

@@ -18,10 +18,11 @@ class loanActions extends DarwinActions
     $this->forward404Unless($loan = Doctrine::getTable('Loans')->find($loan_id), sprintf('Object loan does not exist (%s).', $loan_id));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;
     $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
-    if(!$right)
-    {
-      if ($this->getUser()->isAtLeast(Users::MANAGER)) $this->redirect('loan/view?id='.$loan->getId());
-      else $this->forwardToSecureAction();
+    if(!$right) {
+      if ($this->getUser()->isAtLeast(Users::MANAGER))
+        $this->redirect('loan/view?id='.$loan->getId());
+      else
+        $this->forwardToSecureAction();
     }
     if($right==="view")
       $this->redirect('loan/view?id='.$loan->getId());
@@ -113,7 +114,7 @@ class loanActions extends DarwinActions
     $loan = new Loans() ;
     $duplic = $request->getParameter('duplicate_id','0') ;
     $loan = $this->getRecordIfDuplicate($duplic, $loan);
-    if($request->hasParameter('expedition')) $expedition->fromArray($request->getParameter('expedition'));
+    if($request->hasParameter('loans')) $loan->fromArray($request->getParameter('loans'));
     // Initialization of a new encoding expedition form
     $this->form = new LoansForm($loan);
     if ($duplic)
@@ -252,7 +253,8 @@ class loanActions extends DarwinActions
   }
 
   public function executeOverviewView(sfWebRequest $request) {
-    $this->forward404Unless($this->loan = Doctrine::getTable('Loans')->find($request->getParameter('id')), sprintf('Object loan does not exist (%s).', array($request->getParameter('id'))));
+    $this->loan = Doctrine::getTable('Loans')->find($request->getParameter('id'));
+    $this->forward404Unless($this->loan, sprintf('Object loan does not exist (%s).', $request->getParameter('id')));
     $this->items = Doctrine::getTable('LoanItems')->findForLoan($this->loan->getId());
   }
 
@@ -261,16 +263,16 @@ class loanActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $this->loan = $this->checkRight($request->getParameter('id'));
     $item = new LoanItems();
-    $part_ref = $request->getParameter('part_ref',null);
+    $specimen_ref = $request->getParameter('specimen_ref',null);
     $this->form = new LoanOverviewForm(null, array('loan'=>$this->loan));
-    $this->form->addItem($number,$part_ref);
+    $this->form->addItem($number,$specimen_ref);
     return $this->renderPartial('loanLine',array('form' => $this->form['newLoanItems'][$number], 'lineObj'=> $item));
   }
 
   public function executeGetPartInfo(sfWebRequest $request)
   {
     $item = Doctrine::getTable('Specimens')->getByMultipleIds(array($request->getParameter('id')),  $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
-    $this->forward404Unless(count($item),'Part does not exist');
+    $this->forward404Unless(count($item),'Specimen does not exist');
     return $this->renderPartial('extInfo',array('item' => $item[0])); 
   }
   
@@ -310,7 +312,7 @@ class loanActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $form = new LoansForm();
     $form->addInsurances($number, array());
-    return $this->renderPartial('parts/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
+    return $this->renderPartial('specimen/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
   }
 
   public function executeAddStatus(sfWebRequest $request)

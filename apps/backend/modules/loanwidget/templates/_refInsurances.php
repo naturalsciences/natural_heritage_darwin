@@ -1,1 +1,1 @@
-<?php include_partial('partwidget/refInsurances',  array('module' => 'loans', 'form' => $form));?>
+<?php include_partial('specimenwidget/refInsurances',  array('module' => 'loans', 'form' => $form));?>

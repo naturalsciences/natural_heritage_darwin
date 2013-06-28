@@ -3,9 +3,9 @@
     <tr>
       <th><?php echo __('Part Id');?></th>
       <td>
-        <?php if($loan->getPartRef()):?>
-          <?php echo image_tag('info.png',"title=info class=extd_info data_id=".$loan->getPartRef());?>
-          <?php echo link_to('#'.$loan->getPartRef(),'parts/view?id='.$loan->getPartRef());?>
+        <?php if($loan->getSpecimenRef()):?>
+          <?php echo image_tag('info.png',"title=info class=extd_info data_id=".$loan->getSpecimenRef());?>
+          <?php echo link_to('#'.$loan->getSpecimenRef(),'specimen/view?id='.$loan->getSpecimenRef());?>
         <?php endif;?>
       </td>
       <th><?php echo __('Details');?></th>

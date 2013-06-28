@@ -25,10 +25,10 @@ class LoanOverviewForm extends sfForm
   }
 
   
-  public function addItem($num,$part_ref=null)
+  public function addItem($num,$spec_ref=null)
   {
     $item = new LoanItems() ;  
-    if($part_ref) $item->setPartRef($part_ref) ;
+    if($spec_ref) $item->setSpecimenRef($spec_ref) ;
     $form = new LoanItemsForm($item);    
     $this->embeddedForms['newLoanItems']->embedForm($num, $form);
     //Re-embedding the container
