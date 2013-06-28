@@ -7,15 +7,13 @@
         $orderSign = '<span class="order_sign_up">&nbsp;&#9650;</span>';
     ?>
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
-    <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>      
+    <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>
       <table class="spec_results">
         <thead>
           <tr>
             <th></th>
-            <?php $all_columns = $columns->getRaw('specimen') + $columns->getRaw('common_name') + $columns->getRaw('individual') ;?>
-
-            <?php foreach($all_columns as $col_name => $col):?>
-              <th class="col_<?php echo $col_name;?><?php echo ($col_name == 'individual_count')?' right_aligned':'';?>">
+            <?php foreach($columns as $col_name => $col):?>
+              <th class="col_<?php echo $col_name;?><?php echo ($col_name == 'specimen_count')?' right_aligned':'';?>">
                 <?php if($col[0] != false):?>
                   <a class="sort" href="#" alt="<?php echo $col[0];?>">
                     <?php echo $col[1];?>
@@ -29,16 +27,15 @@
           </tr>
         </thead>
         <?php $i = 0 ; ?>
-        <?php foreach($search as $individual):?>
+        <?php foreach($search as $specimen):?>
           <tbody>
             <tr>
               <td style="vertical-align:middle;">
-                  <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'search/view?id='.$individual->getId(),array('popup' => true));?>
+                  <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'search/view?id='.$specimen->getId(),array('popup' => true));?>
               </td>
-              <?php include_partial('result_content_specimen', array('specimen' => $individual->SpecimensFlat, 'id' => $i++)); ?>
-              <?php include_partial('tagCommonName',array('common_names'=>$common_names->getRawValue(), 'spec'=> $individual->SpecimensFlat)) ; ?>
-              <?php include_partial('result_content_individual', array('specimen' => $individual)); ?>                                                       
-            </tr>            
+              <?php include_partial('result_content_specimen', array('specimen' => $specimen, 'id' => $i++)); ?>
+              <?php include_partial('tagCommonName',array('common_names'=>$common_names->getRawValue(), 'spec'=> $specimen)) ; ?>
+            </tr> 
           </tbody>
         <?php endforeach;?>
       </table>
@@ -57,7 +54,7 @@
 $(document).ready(function () {
 
 /****COL MANAGEMENT ***/
-  $('ul.column_menu > li > ul > li').each(function(){
+  $('ul.column_menu > li').each(function(){
     hide_or_show($(this));
   });
 });

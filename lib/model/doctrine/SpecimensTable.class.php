@@ -61,6 +61,20 @@ class SpecimensTable extends DarwinTable
     return $q->fetchOne(); 
   }
 
+
+  public function getRandomPublicSpec($number)
+  {
+    $q = Doctrine_Query::create()
+      ->from('Specimens s')
+      ->where('s.collection_is_public = true')
+      ->orderBy('random()')
+      ->limit($number)
+      ->useResultCache(new Doctrine_Cache_Apc() )
+      ->setResultCacheLifeSpan( 60 * 30 ) // 30 min
+      ;
+    return $q->execute();
+  }
+
   /**
   * Get differents acquisition categories
   * @return array of key/value of acquisition categories

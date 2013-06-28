@@ -43,8 +43,8 @@ vous y trouverez tout autre statut non reconnu par le CINZ (par exemple topotype
 <h2>Découvrez quelques spécimens au hasard :</h2>
 <p>
   <ul class="rand_spec">
-    <?php foreach($individuals as $ind):?>
-      <li><?php echo link_to($ind->getSpecimensFlat()->getAggregatedName(),'search/view?id='.$ind->getId());?></li>
+    <?php foreach($specimens as $spec):?>
+      <li><?php echo link_to($spec->getAggregatedName(),'search/view?id='.$spec->getId());?></li>
     <?php endforeach;?>
   </ul>
 </p>

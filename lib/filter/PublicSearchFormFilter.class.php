@@ -8,15 +8,15 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormFilterTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
+class PublicSearchFormFilter extends BaseSpecimensFormFilter
 {
   public function configure()
   {
     $this->useFields(array(
         'taxon_name', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'chrono_name', 'chrono_level_ref',
-        'lithology_name', 'lithology_level_ref', 'mineral_name', 'mineral_level_ref'));  
+        'lithology_name', 'lithology_level_ref', 'mineral_name', 'mineral_level_ref'));
     $this->addPagerItems();
-    
+
     $this->widgetSchema['taxon_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
     $this->widgetSchema['taxon_common_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));   
     $this->widgetSchema['taxon_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
@@ -133,7 +133,7 @@ class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
     $this->setValidator('tags', new sfValidatorString(array('required' => false, 'trim' => true)) );
    
     $this->widgetSchema['type'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'SpecimenIndividuals',
+        'model' => 'Specimens',
         'table_method' => 'getDistinctTypeSearches',
         'method' => 'getTypeSearchFormated',
         'key_method' => 'getTypeSearch',
@@ -143,7 +143,7 @@ class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
     ));
     $this->validatorSchema['type'] = new sfValidatorPass();    
     $this->widgetSchema['sex'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'SpecimenIndividuals',
+        'model' => 'Specimens',
         'table_method' => 'getDistinctSexes',
         'method' => 'getSexSearchFormated',
         'key_method' => 'getSex',
@@ -154,7 +154,7 @@ class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
     $this->validatorSchema['sex'] = new sfValidatorPass();
 
     $this->widgetSchema['stage'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'SpecimenIndividuals',
+        'model' => 'Specimens',
         'table_method' => 'getDistinctStages',
         'method' => 'getStageSearchFormated',
         'key_method' => 'getStage',
@@ -242,8 +242,7 @@ class PublicSearchFormFilter extends BaseSpecimensFlatFormFilter
   public function doBuildQuery(array $values)
   {
     $query = Doctrine_Query::create()
-      ->from('SpecimenIndividuals i')
-      ->innerJoin('i.SpecimensFlat s');
+      ->from('Specimens s');
     $this->options['query'] = $query;
     $query = parent::doBuildQuery($values);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));
