@@ -19,8 +19,11 @@ class IgsTable extends DarwinTable
   public function findIgBySpecimenRef($id)
   {
     $spec = Doctrine::getTable('Specimens')->find($id);
-    $ig = Doctrine::getTable('igs')->find($spec->getIgRef());
-    return $ig;
+    if($spec) {
+      $ig = Doctrine::getTable('igs')->find($spec->getIgRef());
+      return $ig;
+    }
+    return null;
   }
 
   public function findDuplicate($object)

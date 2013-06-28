@@ -1043,10 +1043,15 @@ alter table specimens add constraint fk_specimens_host_specimen foreign key (hos
 DROP INDEX idx_specimens_spec_id;
 alter table specimens drop column ind_id;
 alter table specimens drop column spec_id;
+
 drop function chk_specimens_not_loaned();
+
 
 
 \i  createfunctions.sql
 
+CREATE TRIGGER trg_chk_specimens_not_loaned BEFORE DELETE
+  ON specimens FOR EACH ROW
+  EXECUTE PROCEDURE chk_specimens_not_loaned();
 
 rollback;
