@@ -910,6 +910,7 @@ SpecimenParts:
         parent_ref:  {type: integer, default:null}
         specimen_individual_ref: { type: integer, notnull: true }
         specimen_part: { type: string, notnull: true, default: specimen}
+        category: { type: string, notnull: true, default: physical },
         complete: { type: boolean, notnull: true, default: true}
         institution_ref: {type: integer}
         building: { type: string}

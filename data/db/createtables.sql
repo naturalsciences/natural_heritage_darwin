@@ -1128,6 +1128,7 @@ create table specimen_parts
        (
         id serial,
         parent_ref integer,
+        category varchar not null default 'physical',
         path varchar not null default '/',
         specimen_individual_ref integer not null,
         specimen_part varchar not null default 'specimen',

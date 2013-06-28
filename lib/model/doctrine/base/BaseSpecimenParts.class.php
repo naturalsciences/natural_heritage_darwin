@@ -10,6 +10,7 @@
  * @property integer $parent_ref
  * @property integer $specimen_individual_ref
  * @property string $specimen_part
+ * @property string $category
  * @property boolean $complete
  * @property integer $institution_ref
  * @property string $building
@@ -39,6 +40,7 @@
  * @method integer             getParentRef()               Returns the current record's "parent_ref" value
  * @method integer             getSpecimenIndividualRef()   Returns the current record's "specimen_individual_ref" value
  * @method string              getSpecimenPart()            Returns the current record's "specimen_part" value
+ * @method string              getCategory()                Returns the current record's "category" value
  * @method boolean             getComplete()                Returns the current record's "complete" value
  * @method integer             getInstitutionRef()          Returns the current record's "institution_ref" value
  * @method string              getBuilding()                Returns the current record's "building" value
@@ -67,6 +69,7 @@
  * @method SpecimenParts       setParentRef()               Sets the current record's "parent_ref" value
  * @method SpecimenParts       setSpecimenIndividualRef()   Sets the current record's "specimen_individual_ref" value
  * @method SpecimenParts       setSpecimenPart()            Sets the current record's "specimen_part" value
+ * @method SpecimenParts       setCategory()                Sets the current record's "category" value
  * @method SpecimenParts       setComplete()                Sets the current record's "complete" value
  * @method SpecimenParts       setInstitutionRef()          Sets the current record's "institution_ref" value
  * @method SpecimenParts       setBuilding()                Sets the current record's "building" value
@@ -122,6 +125,11 @@ abstract class BaseSpecimenParts extends DarwinModel
              'type' => 'string',
              'notnull' => true,
              'default' => 'specimen',
+             ));
+        $this->hasColumn('category', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'physical',
              ));
         $this->hasColumn('complete', 'boolean', null, array(
              'type' => 'boolean',

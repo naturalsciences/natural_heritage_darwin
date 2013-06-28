@@ -14,7 +14,7 @@ class SpecimenPartsForm extends BaseSpecimenPartsForm
     $this->useFields(array('parent_ref', 'specimen_part', 'complete', 'institution_ref', 'building', 'floor', 'room',
       'row', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
       'container_storage', 'sub_container_storage', 'surnumerary', 'specimen_status', 
-      'specimen_part_count_min', 'specimen_part_count_max','object_name'));
+      'specimen_part_count_min', 'specimen_part_count_max','object_name','category'));
 
     $individual = $this->getOption('individual', '');
     $this->widgetSchema['parent_ref'] = new widgetFormButtonRef(array(

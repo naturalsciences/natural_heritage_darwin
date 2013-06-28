@@ -7,7 +7,8 @@ class SpecimenPartsTable extends DarwinTable
   protected static $widget_array = array(
     'specimen_part' => 'specPart' ,
     'complete' => 'complete' ,
-    'specimen_status' => 'complete',      
+    'specimen_status' => 'complete',
+    'category' => 'specPart',
     'building' => 'localisation' ,
     'floor' => 'localisation' ,
     'room' => 'localisation' ,
