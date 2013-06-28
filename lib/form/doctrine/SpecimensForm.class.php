@@ -46,12 +46,11 @@ class SpecimensForm extends BaseSpecimensForm
     $this->widgetSchema->setNameFormat('specimen[%s]');
     /* Fields */
 
-    $categoy_values = array('observation'=>'Observation','physical'=>'Physical');
-    $this->widgetSchema['category'] = new sfWidgetFormChoice(
-      array(
-        'choices' => $categoy_values
-      )
-    );
+    $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
+      'choices' => Specimens::getCategories(),
+    ));
+
+    $this->validatorSchema['category'] = new sfValidatorChoice(array('choices'=>array_keys(Specimens::getCategories())));
 
     /* Collection Reference */
     $this->widgetSchema['collection_ref'] = new widgetFormButtonRef(
@@ -406,12 +405,6 @@ class SpecimensForm extends BaseSpecimensForm
       'add_label' => 'Add another sub container storage',
       ));
 
-    $this->widgetSchema['category'] = new sfWidgetFormChoice(array(
-      'choices' => Specimens::getCategories(),
-    ));
-
-    $this->validatorSchema['category'] = new sfValidatorChoice(array('choices'=>array_keys(Specimens::getCategories())));
-
     $this->widgetSchema['accuracy'] = new sfWidgetFormChoice(array(
         'choices'  => array($this->getI18N()->__('exact'), $this->getI18N()->__('imprecise')),
         'expanded' => true,
@@ -470,9 +463,6 @@ class SpecimensForm extends BaseSpecimensForm
         'choices' => array_keys(SpecimensTable::getDistinctCategories()),
         'required' => false,
         ));
-    $this->validatorSchema['category'] = new sfValidatorChoice(
-      array('choices'=> array_keys($categoy_values) ));
-
     $this->validatorSchema['acquisition_date'] = new fuzzyDateValidator(array('required' => false,
                                                                               'from_date' => true,
                                                                               'min' => $minDate,
