@@ -374,11 +374,14 @@ class SpecimensTable extends DarwinTable
 
   public function fetchOneWithRights($id, $user)
   {
-    $specimens = $this->getByMultipleIds(array($id), $user->getId(), $user->isA(Users::ADMIN));
-    if(count($specimens) == 1)
-      return $specimens[0];
-    else 
-      return null;
+    $q = Doctrine_Query::create()
+      ->select('s.*, collection_ref in (select fct_search_authorized_encoding_collections('.$user->getId().')) as has_encoding_rights')
+      ->from('specimens s')
+      ->where('id = ?',$id);
+    if (!$user->isA(Users::ADMIN)){
+      $q->andWhere('collection_ref in (select fct_search_authorized_view_collections('.$user->getId().'))');
+    }
+    return $q->fetchOne();
   }
 
 

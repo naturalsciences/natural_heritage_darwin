@@ -406,14 +406,14 @@ class specimenActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this->getUser());
-    $this->forward404Unless($this->specimen,'Specimen does not exist');  
+    $this->forward404Unless($this->specimen,'Specimen does not exist');
 
-    $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
+    $this->loadWidgets(null,$this->specimen->getCollectionRef());
   }
 
   public function executeAddInsurance(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
     $form = new SpecimensForm();
     $form->addInsurances($number, array());

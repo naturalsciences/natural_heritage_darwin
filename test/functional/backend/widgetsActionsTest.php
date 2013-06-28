@@ -28,8 +28,8 @@ $browser->
   info('1.2 - the other category is still not changed')->
   get('/specimen/new')->
   with('response')->begin()->
-    checkElement('.board_col:first .widget',6)->
-    checkElement('.board_col:last .widget',11)->
+    checkElement('.board_col:first .widget',11)->
+    checkElement('.board_col:last .widget',16)->
   end()->
   
   info('1.3 - add widget when the category is ok')->
