@@ -1,21 +1,21 @@
 create or replace view "public"."labeling" as
-select df.part_ref as unique_id,
+select id as unique_id,
        df.collection_ref as collection,
        df.collection_name as collection_name,
        df.collection_path as collection_path,
-       case when coalesce(df.part,'') in ('specimen', 'animal', 'undefined', 'unknown', '') then '' else df.part end as part_item,
-       case when df.individual_sex in ('undefined', 'unknown', 'not stated', 'non applicable') then '' else df.individual_sex || case when df.individual_state = 'not applicable' then '' else ' ' || df.individual_state end end as part_sex_state,
-       case when df.individual_type = 'specimen' then '' else df.individual_type end as part_type,
-       case when df.individual_stage in ('undefined', 'unknown', 'not stated') then '' else df.individual_stage end as part_stage,
+       case when coalesce(df.specimen_part,'') in ('specimen', 'animal', 'undefined', 'unknown', '') then '' else df.specimen_part end as part_item,
+       case when df.sex in ('undefined', 'unknown', 'not stated', 'non applicable') then '' else df.sex || case when df.state = 'not applicable' then '' else ' ' || df.state end end as part_sex_state,
+       case when df.type = 'specimen' then '' else df.type end as part_type,
+       case when df.stage in ('undefined', 'unknown', 'not stated') then '' else df.stage end as part_stage,
        case when df.sub_container is null then case when coalesce(df.container_storage, '') in ('unknown', '/', '') then '' else df.container_storage end else '' end as part_container_storage,
        case when coalesce(df.sub_container_storage, '') in ('unknown', '/', '') then '' else coalesce(df.sub_container_storage, '') end as part_sub_container_storage,
-       array[fullToIndex(df.part)] as part,
-       array[fullToIndex(df.individual_type)] as type,
-       df.individual_sex as sex,
-       df.individual_stage as stage,
-       CAST(array_to_string(labeling_code_for_indexation(df.part_ref), ';') AS varchar) as code,
-       (select code_num from codes where referenced_relation = 'specimen_parts' and record_id = df.part_ref and code_category = 'main' and coalesce(upper(code_prefix),'') != 'RBINS' and code_num is not null limit 1) as code_num,
-       labeling_code_for_indexation(df.part_ref) as code_array,
+       array[fullToIndex(df.specimen_part)] as part,
+       array[fullToIndex(df.type)] as type,
+       df.sex as sex,
+       df.stage as stage,
+       CAST(array_to_string(labeling_code_for_indexation(df.id), ';') AS varchar) as code,
+       (select code_num from codes where referenced_relation = 'specimens' and record_id = df.id and code_category = 'main' and coalesce(upper(code_prefix),'') != 'RBINS' and code_num is not null limit 1) as code_num,
+       labeling_code_for_indexation(df.id) as code_array,
        df.taxon_ref as taxon_ref,
        df.taxon_name as taxon_name,
        df.taxon_name_indexed as taxon_name_indexed,
@@ -89,7 +89,7 @@ select df.part_ref as unique_id,
                     from catalogue_people as cp inner join people as peo on cp.people_ref = peo.id
                     where cp.people_type = 'collector'
                       and cp.referenced_relation = 'specimens'
-                      and cp.record_id = df.spec_ref
+                      and cp.record_id = df.id
                       and peo.family_name NOT IN ('Unknown', '/')
                     order by cp.order_by
                   ) as x
@@ -104,7 +104,7 @@ select df.part_ref as unique_id,
           from (select distinct trim(family_name) as people_list, cp.order_by, case when ident.notion_date_mask != 0 then extract(year from ident.notion_date) else null::double precision end as ident_date
                 from (catalogue_people as cp inner join people as peo on cp.people_ref = peo.id) inner join identifications as ident on cp.record_id = ident.id and cp.referenced_relation = 'identifications' and cp.people_type = 'identifier'
                 where ident.referenced_relation = 'specimens'
-                  and ident.record_id = df.spec_ref
+                  and ident.record_id = df.id
                   and peo.family_name NOT IN ('Unknown', '/')
                   and ident.notion_date = (select max(notion_date)
                                           from identifications as idt
@@ -115,26 +115,7 @@ select df.part_ref as unique_id,
               ) as x
          ) as y
        )::varchar as identifiers,
-       (select case when length(regexp_replace(identi, '[^,]+', '', 'g')) > 2
-                    then substr(identi, 1, strpos(identi, ',')-1) || ' & al.'
-                    else identi
-               end || identi_year
-        from
-        (select array_to_string(array_agg(people_list), ', ') as identi, case when max(ident_date) is not null then ', ' || max(ident_date) else '' end as identi_year
-          from (select distinct trim(family_name) as people_list, cp.order_by, case when ident.notion_date_mask != 0 then extract(year from ident.notion_date) else null::double precision end as ident_date
-                from (catalogue_people as cp inner join people as peo on cp.people_ref = peo.id) inner join identifications as ident on cp.record_id = ident.id and cp.referenced_relation = 'identifications' and cp.people_type = 'identifier'
-                where ident.referenced_relation = 'specimen_parts'
-                  and ident.record_id = df.spec_ref
-                  and peo.family_name NOT IN ('Unknown', '/')
-                  and ident.notion_date = (select max(notion_date)
-                                          from identifications as idt
-                                          where idt.referenced_relation = ident.referenced_relation
-                                            and idt.record_id = ident.record_id
-                                          )
-                order by cp.order_by
-              ) as x
-         ) as y
-       )::varchar as part_identifiers,
+       ''::varchar as part_identifiers,
        (select case when length(regexp_replace(coll, '[^,]+', '', 'g')) > 2
                     then substr(coll, 1, strpos(coll, ',')-1) || ' & al.'
                     else coll
@@ -145,7 +126,7 @@ select df.part_ref as unique_id,
                     from catalogue_people as cp inner join people as peo on cp.people_ref = peo.id
                     where cp.people_type = 'donator'
                       and cp.referenced_relation = 'specimens'
-                      and cp.record_id = df.spec_ref
+                      and cp.record_id = df.id
                       and peo.family_name NOT IN ('Unknown', '/')
                     order by cp.order_by
                   ) as x
@@ -154,16 +135,16 @@ select df.part_ref as unique_id,
        coalesce(df.ig_num, '-') as ig_num,
        df.ig_num_indexed as ig_num_indexed,
        convert_to_integer(coalesce(ig_num, '-')) as ig_numeric,
-       case when df.part_count_min <> df.part_count_max and df.part_count_min is not null and df.part_count_max is not null then df.part_count_min || ' - ' || df.part_count_max else case when df.part_count_min is not null then df.part_count_min::text else '' end end as specimen_number,
-       df.part_count_max as specimen_number_max,
+       case when df.specimen_count_min <> df.specimen_count_max and df.specimen_count_min is not null and df.specimen_count_max is not null then df.specimen_count_min || ' - ' || df.specimen_count_max else case when df.specimen_count_min is not null then df.specimen_count_min::text else '' end end as specimen_number,
+       df.specimen_count_max as specimen_number_max,
        df.room as part_room,
        df.row as part_row,
        df.shelf as part_shelf,
        df.container as part_container,
        df.sub_container as part_sub_container,
-       case when exists(select 1 from comments where (referenced_relation = 'specimens' and record_id = df.spec_ref) or (referenced_relation = 'specimen_parts' and record_id = df.part_ref)) then 'Y' else 'N' end as comments
-from darwin_flat as df
-where part_ref is not null;
+       case when exists(select 1 from comments where referenced_relation = 'specimens' and record_id = df.id) then 'Y' else 'N' end as comments
+from specimens as df
+;
 
 ALTER VIEW "public"."labeling" OWNER TO darwin2;
 GRANT SELECT ON "public"."labeling" TO d2viewer;

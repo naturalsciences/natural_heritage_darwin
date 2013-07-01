@@ -1037,7 +1037,6 @@ alter table specimens add constraint fk_specimens_host_specimen foreign key (hos
 
 
 --- Move Files
--- ADD labeling back!
 -- import
 
 DROP INDEX idx_specimens_spec_id;
@@ -1049,6 +1048,7 @@ drop function chk_specimens_not_loaned();
 
 
 \i  createfunctions.sql
+\i reports/ticketing/labeling.sql
 
 CREATE TRIGGER trg_chk_specimens_not_loaned BEFORE DELETE
   ON specimens FOR EACH ROW
