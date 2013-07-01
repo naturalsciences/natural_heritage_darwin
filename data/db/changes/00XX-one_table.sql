@@ -1055,6 +1055,7 @@ CREATE TRIGGER trg_chk_specimens_not_loaned BEFORE DELETE
   EXECUTE PROCEDURE chk_specimens_not_loaned();
 
 delete from my_widgets where category in ('specimen_widget', 'individual_widget', 'part_widget');
+update my_widgets set group_name='multimedia', title_perso='Multimedia', mandatory = false where category='specimensearch_widget' and group_name = 'whatSearched';
 
 select 'Do not forget to run : symfony darwin:add-widgets --reset specimen_widget';
 

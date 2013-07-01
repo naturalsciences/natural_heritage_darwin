@@ -108,7 +108,7 @@ class specimensearchwidgetComponents extends sfComponents
     $this->defineForm();
   }
 
-  public function executeWhatSearched()
+  public function executeMultimedia()
   {
     $this->defineForm(); 
   }

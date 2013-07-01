@@ -266,8 +266,8 @@ sps17:
 sps18:
    col_num: 1
    category: specimensearch_widget
-   group_name: whatSearched
-   mandatory: true
+   group_name: multimedia
+   mandatory: false
    order_by: 9
    opened: true
    visible: true
