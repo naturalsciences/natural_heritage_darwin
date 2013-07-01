@@ -1034,9 +1034,9 @@ update specimens s1 set host_specimen_ref = (select id from specimens s2 where s
   where host_specimen_ref is not null;
 
 alter table specimens add constraint fk_specimens_host_specimen foreign key (host_specimen_ref) references specimens(id) on delete set null;
--- 
+
+
 --- Move Files
---- Move  my_widgets
 -- ADD labeling back!
 -- import
 
@@ -1053,5 +1053,9 @@ drop function chk_specimens_not_loaned();
 CREATE TRIGGER trg_chk_specimens_not_loaned BEFORE DELETE
   ON specimens FOR EACH ROW
   EXECUTE PROCEDURE chk_specimens_not_loaned();
+
+delete from my_widgets where category in ('specimen_widget', 'individual_widget', 'part_widget');
+
+select 'Do not forget to run : symfony darwin:add-widgets --reset specimen_widget';
 
 rollback;

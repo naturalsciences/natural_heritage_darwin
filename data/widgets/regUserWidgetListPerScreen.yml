@@ -555,7 +555,7 @@ sw25:
    col_num: 1
    category: specimen_widget
    group_name: type
-   mandatory: true
+   mandatory: false
    order_by: 1
    opened: true
    visible: true
@@ -610,7 +610,7 @@ sw30:
    col_num: 1
    category: specimen_widget
    group_name: specPart
-   mandatory: true
+   mandatory: false
    order_by: 1
    opened: true
    visible: true
