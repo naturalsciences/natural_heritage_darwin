@@ -1130,37 +1130,6 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION fct_cpy_updateHosts() RETURNS TRIGGER
-language plpgsql
-AS
-$$
-BEGIN
-  IF TG_OP = 'UPDATE' THEN
-    IF NEW.taxon_ref IS DISTINCT FROM OLD.taxon_ref THEN
-      UPDATE specimens SET host_taxon_ref = NEW.taxon_ref WHERE host_specimen_ref = NEW.id AND id <> NEW.id;
-    END IF;
-  END IF;
-  RETURN NEW;
-END;
-$$;
-
-
-CREATE OR REPLACE FUNCTION fct_cpy_updateSpecHostImpact() RETURNS TRIGGER
-language plpgsql
-AS
-$$
-DECLARE
-  newTaxonRef specimens.host_taxon_ref%TYPE := 0;
-BEGIN
-  IF TG_OP = 'UPDATE' THEN
-    IF NEW.host_specimen_ref IS DISTINCT FROM OLD.host_specimen_ref AND NEW.host_specimen_ref IS NOT NULL THEN
-      SELECT taxon_ref INTO STRICT NEW.host_taxon_ref FROM specimens WHERE id = NEW.host_specimen_ref;
-    END IF;
-  END IF;
-  RETURN NEW;
-END;
-$$;
-
 /**
 * When adding or changing a collection,
 * Impact changes on rights
@@ -1426,21 +1395,6 @@ BEGIN
         ) subq
     WHERE taxon_ref = NEW.id;
 
-    UPDATE specimens
-    SET (host_taxon_name, host_taxon_name_indexed, 
-         host_taxon_level_ref, host_taxon_level_name,
-         host_taxon_status, host_taxon_path, host_taxon_parent_ref, host_taxon_extinct
-        ) =
-        (NEW.name, NEW.name_indexed,
-         NEW.level_ref, subq.level_name,
-         NEW.status, NEW.path, NEW.parent_ref, NEW.extinct
-        )
-        FROM
-        (SELECT level_name
-         FROM catalogue_levels
-         WHERE id = NEW.level_ref
-        ) subq
-    WHERE host_taxon_ref = NEW.id;
   ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'chronostratigraphy' THEN
     UPDATE specimens
     SET (chrono_name, chrono_name_indexed,
@@ -1701,15 +1655,6 @@ BEGIN
         WHERE c.id = new_val.gtu_ref;
     END IF;
 
-    IF old_val.host_taxon_ref IS DISTINCT FROM new_val.host_taxon_ref THEN
-      SELECT name, name_indexed, level_ref, level_name, status, path, parent_ref, extinct
-        INTO NEW.host_taxon_name, NEW.host_taxon_name_indexed, NEW.host_taxon_level_ref,
-         NEW.host_taxon_level_name, NEW.host_taxon_status, NEW.host_taxon_path, NEW.host_taxon_parent_ref, 
-         NEW.host_taxon_extinct
-        FROM taxonomy c
-        INNER JOIN catalogue_levels l on c.level_ref = l.id
-        WHERE c.id = new_val.host_taxon_ref;
-    END IF;
   RETURN NEW;
 END;
 $$
@@ -2185,7 +2130,6 @@ BEGIN
     ELSIF TG_TABLE_NAME = 'mineralogy' THEN
       PERFORM fct_del_in_dict('mineralogy','cristal_system', oldfield.cristal_system, newfield.cristal_system);
     ELSIF TG_TABLE_NAME = 'specimens' THEN
-      PERFORM fct_del_in_dict('specimens','host_relationship', oldfield.host_relationship, newfield.host_relationship);
       PERFORM fct_del_in_dict('specimens','type', oldfield.type, newfield.type);
       PERFORM fct_del_in_dict('specimens','type_group', oldfield.type_group, newfield.type_group);
       PERFORM fct_del_in_dict('specimens','type_search', oldfield.type_search, newfield.type_search);
@@ -2211,8 +2155,8 @@ BEGIN
       PERFORM fct_del_in_dict_dept('specimens','sub_container_storage', oldfield.sub_container_storage, newfield.sub_container_storage,
         oldfield.sub_container_type, newfield.sub_container_type, 'sub_container_type' );
 
-    ELSIF TG_TABLE_NAME = 'specimens_accompanying' THEN
-      PERFORM fct_del_in_dict('specimens_accompanying','form', oldfield.form, newfield.form);
+    ELSIF TG_TABLE_NAME = 'specimens_relationships' THEN
+      PERFORM fct_del_in_dict('specimens_relationships','relationship_type', oldfield.form, newfield.form);
     ELSIF TG_TABLE_NAME = 'users' THEN
       PERFORM fct_del_in_dict('users','title', oldfield.title, newfield.title);
       PERFORM fct_del_in_dict('users','sub_type', oldfield.sub_type, newfield.sub_type);
@@ -2275,7 +2219,6 @@ BEGIN
     ELSIF TG_TABLE_NAME = 'mineralogy' THEN
       PERFORM fct_add_in_dict('mineralogy','cristal_system', oldfield.cristal_system, newfield.cristal_system);
     ELSIF TG_TABLE_NAME = 'specimens' THEN
-      PERFORM fct_add_in_dict('specimens','host_relationship', oldfield.host_relationship, newfield.host_relationship);
       PERFORM fct_add_in_dict('specimens','type', oldfield.type, newfield.type);
       PERFORM fct_add_in_dict('specimens','type_group', oldfield.type_group, newfield.type_group);
       PERFORM fct_add_in_dict('specimens','type_search', oldfield.type_search, newfield.type_search);
@@ -2301,8 +2244,8 @@ BEGIN
       PERFORM fct_add_in_dict_dept('specimens','sub_container_storage', oldfield.sub_container_storage, newfield.sub_container_storage,
         oldfield.sub_container_type, newfield.sub_container_type);
         
-    ELSIF TG_TABLE_NAME = 'specimens_accompanying' THEN
-      PERFORM fct_add_in_dict('specimens_accompanying','form', oldfield.form, newfield.form);
+    ELSIF TG_TABLE_NAME = 'specimens_relationships' THEN
+      PERFORM fct_add_in_dict('specimens_relationships','relationship_type', oldfield.form, newfield.form);
     ELSIF TG_TABLE_NAME = 'users' THEN
       PERFORM fct_add_in_dict('users','title', oldfield.title, newfield.title);
       PERFORM fct_add_in_dict('users','sub_type', oldfield.sub_type, newfield.sub_type);
@@ -2889,11 +2832,10 @@ BEGIN
 	IF line.spec_ref is NULL THEN
 	  rec_id := nextval('specimens_id_seq');
 	  INSERT INTO specimens (id, category, collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref,
-	      host_taxon_ref, host_specimen_ref, host_relationship, acquisition_category, acquisition_date_mask, acquisition_date, station_visible, ig_ref)
+	      acquisition_category, acquisition_date_mask, acquisition_date, station_visible, ig_ref)
 	  VALUES (rec_id, COALESCE(line.category,'physical') , line.collection_ref, line.expedition_ref, line.gtu_ref,
 	    line.taxon_ref, line.litho_ref, line.chrono_ref,
-	    line.lithology_ref, line.mineral_ref, line.host_taxon_ref,
-	    line.host_specimen_ref, line.host_relationship, COALESCE(line.acquisition_category,''), COALESCE(line.acquisition_date_mask,0),
+	    line.lithology_ref, line.mineral_ref, COALESCE(line.acquisition_category,''), COALESCE(line.acquisition_date_mask,0),
 	    COALESCE(line.acquisition_date,'01/01/0001'), COALESCE(line.station_visible,true),  line.ig_ref
 	  );
 	  UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
@@ -2916,9 +2858,6 @@ BEGIN
 	  AND chrono_ref = line.chrono_ref
 	  AND lithology_ref = line.lithology_ref
 	  AND mineral_ref = line.mineral_ref
-	  AND host_taxon_ref = line.host_taxon_ref
-	  AND host_specimen_ref = line.host_specimen_ref
-	  AND host_relationship = line.host_relationship
 	  AND acquisition_category = COALESCE(line.acquisition_category,'')
 	  AND acquisition_date_mask = COALESCE(line.acquisition_date_mask,0)
 	  AND acquisition_date = COALESCE(line.acquisition_date,'01/01/0001')

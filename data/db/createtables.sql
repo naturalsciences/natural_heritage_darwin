@@ -1010,9 +1010,6 @@ create table specimens
         chrono_ref integer,
         lithology_ref integer,
         mineral_ref integer,
-        host_taxon_ref integer,
-        host_specimen_ref integer,
-        host_relationship varchar,
         acquisition_category varchar not null default '',
         acquisition_date_mask integer not null default 0,
         acquisition_date date not null default '01/01/0001',
@@ -1127,16 +1124,7 @@ create table specimens
     mineral_color varchar,
     mineral_path varchar,
     mineral_parent_ref integer,
-
-    host_taxon_name varchar,
-    host_taxon_name_indexed varchar,
-    host_taxon_level_ref integer,
-    host_taxon_level_name varchar,
-    host_taxon_status varchar,
-    host_taxon_path varchar,
-    host_taxon_parent_ref integer,
-    host_taxon_extinct boolean,
-
+    
     ig_num varchar,
     ig_num_indexed varchar,
     ig_date_mask integer,
@@ -1151,8 +1139,6 @@ create table specimens
         constraint fk_specimens_lithology foreign key (lithology_ref) references lithology(id),
         constraint fk_specimens_mineralogy foreign key (mineral_ref) references mineralogy(id),
         constraint fk_specimens_chronostratigraphy foreign key (chrono_ref) references chronostratigraphy(id),
-        constraint fk_specimens_host_taxonomy foreign key (host_taxon_ref) references taxonomy(id),
-        constraint fk_specimens_host_specimen foreign key (host_specimen_ref) references specimens(id) on delete set null,
         constraint fk_specimens_igs foreign key (ig_ref) references igs(id),
 
         constraint fk_specimen_institutions foreign key (institution_ref) references people(id) ON DELETE no action,
@@ -1170,15 +1156,12 @@ comment on column specimens.gtu_ref is 'Reference of the sampling location the s
 comment on column specimens.litho_ref is 'When encoding a rock, mineral or paleontologic specimen, contains the reference of lithostratigraphic unit the specimen have been found into - id field of lithostratigraphy table';
 comment on column specimens.chrono_ref is 'When encoding a rock, mineral or paleontologic specimen, contains the reference of chronostratigraphic unit the specimen have been found into - id field of chronostratigraphy table';
 comment on column specimens.taxon_ref is 'When encoding a ''living'' specimen, contains the reference of the taxon unit defining the specimen - id field of taxonomy table';
-comment on column specimens.host_relationship is 'When current specimen encoded is in a host relationship with an other specimen or taxon, this field contains the type of relationship between them: symbiosis, parasitism, saprophytism,...';
-comment on column specimens.host_specimen_ref is 'When current specimen encoded is in a host relationship with an other specimen, this field contains reference of the host specimen - recursive reference';
 comment on column specimens.acquisition_category is 'Describe how the specimen was collected: expedition, donation,...';
 comment on column specimens.acquisition_date_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
 comment on column specimens.acquisition_date is 'Date Composed (if possible) of the acquisition';
 comment on column specimens.station_visible is 'Flag telling if the sampling location can be visible or must be hidden for the specimen encoded';
 comment on column specimens.lithology_ref is 'Reference of a rock classification unit associated to the specimen encoded - id field of lithology table';
 comment on column specimens.mineral_ref is 'Reference of a mineral classification unit associated to the specimen encoded - id field of mineralogy table';
-comment on column specimens.host_taxon_ref is 'Reference of taxon definition defining the host which holds the current specimen - id field of taxonomy table';
 comment on column specimens.ig_ref is 'Reference of ig number this specimen has been associated to';
 comment on column specimens.category is 'Type of specimen encoded: a physical object stored in collections, an observation, a figurate specimen,...';
 
@@ -1267,30 +1250,42 @@ comment on column insurances.insurance_currency is 'Currency used with insurance
 comment on column insurances.insurance_value is 'Insurance value';
 comment on column insurances.insurer_ref is 'Reference of the insurance firm an insurance have been subscripted at';
 
-create table specimens_accompanying
+create table specimens_relationships
        (
         id serial,
-        accompanying_type varchar not null default 'biological',
         specimen_ref integer not null,
+        relationship_type varchar not null default 'host',
+        unit_type varchar not null default 'specimens',
+        specimen_related_ref integer,
         taxon_ref integer,
         mineral_ref integer,
-        form varchar not null default 'isolated',
+
+        institution_ref integer,
+        source_name text,
+        source_id text,
+
         quantity numeric(16,2),
         unit varchar default '%',
-        constraint pk_specimens_accompanying primary key (id),
-        constraint unq_specimens_accompanying unique (specimen_ref, taxon_ref, mineral_ref),
-        constraint fk_specimens_accompanying_specimens foreign key (specimen_ref) references specimens(id) on delete cascade,
-        constraint fk_specimens_accompanying_mineralogy foreign key (mineral_ref) references mineralogy(id),
-        constraint fk_specimens_accompanying_taxonomy foreign key (taxon_ref) references taxonomy(id)
+        constraint pk_specimens_relationships primary key (id),
+        constraint fk_specimens_relationships_specimens foreign key (specimen_ref) references specimens(id) on delete cascade,
+        constraint fk_specimens_relationships_specimens_related foreign key (specimen_related_ref) references specimens(id) on delete cascade,
+        constraint fk_specimens_relationships_mineralogy foreign key (mineral_ref) references mineralogy(id),
+        constraint fk_specimens_relationships_taxonomy foreign key (taxon_ref) references taxonomy(id),
+        constraint fk_specimens_relationships_institution foreign key (institution_ref) references people(id)
+
        );
-comment on table specimens_accompanying is 'List all the objects/specimens accompanying the current specimen';
-comment on column specimens_accompanying.specimen_ref is 'Reference of specimen concerned - id field of specimens table';
-comment on column specimens_accompanying.mineral_ref is 'Reference of accompanying mineral (if it''s an inhert unit accompanying - id field of mineralogy table';
-comment on column specimens_accompanying.accompanying_type is 'Type of accompanying specimen: biological or mineral';
-comment on column specimens_accompanying.quantity is 'Quantity of accompanying specimens';
-comment on column specimens_accompanying.unit is 'Unit used for quantity of accompanying specimen presence';
-comment on column specimens_accompanying.taxon_ref is 'Reference of the accompanying taxon (if it''s a biological unit accompanying) - id field of taxonomy table';
-comment on column specimens_accompanying.form is 'Form of accompanying specimen presence: colony, aggregate, isolated,...';
+comment on table specimens_relationships is 'List all the objects/specimens related the current specimen';
+comment on column specimens_relationships.specimen_ref is 'Reference of specimen concerned - id field of specimens table';
+comment on column specimens_relationships.mineral_ref is 'Reference of related mineral';
+comment on column specimens_relationships.taxon_ref is 'Reference of the related taxon ';
+comment on column specimens_relationships.taxon_ref is 'Reference of the related specimen';
+
+comment on column specimens_relationships.relationship_type is 'Type of relationship: host, part of, related to, ...';
+comment on column specimens_relationships.unit_type is 'Type of the related unit : spec, taxo or mineralo';
+comment on column specimens_relationships.quantity is 'Quantity of accompanying mineral';
+comment on column specimens_relationships.institution_ref is 'External Specimen related institution';
+comment on column specimens_relationships.source_name is 'External Specimen related  source DB';
+comment on column specimens_relationships.source_id is 'External Specimen related id in the source';
 
 create table collecting_tools
        (
@@ -1480,13 +1475,7 @@ create table staging
     mineral_color varchar,
     mineral_path varchar,
     mineral_parents hstore,
-    host_taxon_ref integer,
-    host_relationship varchar,
-    host_taxon_name varchar,
-    host_taxon_level_ref integer,
-    host_taxon_level_name varchar,
-    host_taxon_status varchar,
-    host_specimen_ref integer,
+
     ig_ref integer,
     ig_num varchar,
     ig_date_mask integer,

@@ -32,7 +32,7 @@
  GRANT SELECT ON template_people_users_comm_common TO d2viewer;
  GRANT SELECT ON specimen_collecting_methods TO d2viewer;
  GRANT SELECT ON people_languages TO d2viewer;
- GRANT SELECT ON specimens_accompanying TO d2viewer;
+ GRANT SELECT ON specimens_relationships TO d2viewer;
  GRANT SELECT ON possible_upper_levels TO d2viewer;
  GRANT SELECT ON people_relationships TO d2viewer;
  GRANT SELECT ON properties_values TO d2viewer;
