@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2013 sp1 (http://www.altova.com) by Marie-Solange Mukarwema (Museum of Natural Sciences) -->
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Marie-Solange Mukarwema (Museum of Natural Sciences) -->
 <xs:schema xmlns:storage="http://darwin.naturalsciences.be/xsd/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://darwin.naturalsciences.be/xsd/" targetNamespace="http://darwin.naturalsciences.be/xsd/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
 	<xs:element name="Storage">
 		<xs:complexType>
@@ -8,9 +8,9 @@
 					<xs:element name="Loan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Loan" minOccurs="0"/>
+								<xs:element name="On_loan" minOccurs="0"/>
 								<xs:element name="Loan_from" type="xs:date" minOccurs="0"/>
-								<xs:element name="Loan_end" type="xs:date" minOccurs="0"/>
+								<xs:element name="Loan_to" type="xs:date" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
