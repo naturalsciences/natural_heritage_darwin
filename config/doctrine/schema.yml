@@ -1197,11 +1197,15 @@ StagingInfo:
 
 StagingRelationship:
     columns:
-        id: { type: integer, primary: true, autoincrement: true}
-        record_id : { type: integer, notnull: true}
-        referenced_relation : {type: string, notnull: true}
-        relationship_type : {type: string}
-        ref_id : { type: integer, notnull: true}
+        id: { type: integer, primary: true, autoincrement: true }
+        record_id : { type: integer, notnull: true }
+        referenced_relation : {type: string, notnull: true }
+        relationship_type : {type: string }
+        staging_related_ref : { type: integer }
+        institution_ref : { type:integer }
+        institution_name : { type:string }
+        source_name : { type:string }
+        source_id : { type:string }
 
 StagingTagGroups:
     columns:

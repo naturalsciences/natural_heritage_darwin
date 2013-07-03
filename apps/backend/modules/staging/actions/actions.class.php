@@ -49,7 +49,7 @@ class stagingActions extends DarwinActions
 
     $this->form = new StagingFormFilter(null, array('import' =>$this->import));
     $filters = $request->getParameter('staging_filters');
-    if(!isset($filters['slevel'])) $filters['slevel'] = 'specimen';
+    //if(!isset($filters['slevel'])) $filters['slevel'] = 'specimen';
 
     $this->form->bind($filters);
     if($this->form->isValid())
@@ -89,7 +89,7 @@ class stagingActions extends DarwinActions
       {
         $ids[] = $v->getId();
       }
-      
+
       $codes = Doctrine::getTable('Codes')->getCodesRelatedArray('staging',$ids) ;
       $linked = Doctrine::getTable('Staging')->findLinked($ids) ;
       foreach($this->search as $k=>$v)
@@ -108,9 +108,8 @@ class stagingActions extends DarwinActions
         }
       }
 
-      $this->displayModel = new DisplayImportDna();
-      
-      $this->fields = $this->displayModel->getColumnsForLevel($this->form->getValue('slevel'));
+      $this->displayModel = new DisplayImportABCD();
+      $this->fields = $this->displayModel->getColumns();
     }
 
   }
@@ -135,7 +134,7 @@ class stagingActions extends DarwinActions
        $this->forwardToSecureAction();
 
     $this->fields = $staging->getFields() ;
-    $form_fields = array() ;   
+    $form_fields = array() ;
     if($this->fields)
     {
       foreach($this->fields as $key => $values)

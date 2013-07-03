@@ -19,7 +19,11 @@ abstract class BaseStagingRelationshipForm extends BaseFormDoctrine
       'record_id'           => new sfWidgetFormInputText(),
       'referenced_relation' => new sfWidgetFormTextarea(),
       'relationship_type'   => new sfWidgetFormTextarea(),
-      'ref_id'              => new sfWidgetFormInputText(),
+      'staging_related_ref' => new sfWidgetFormInputText(),
+      'institution_ref'     => new sfWidgetFormInputText(),
+      'institution_name'    => new sfWidgetFormTextarea(),
+      'source_name'         => new sfWidgetFormTextarea(),
+      'source_id'           => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -27,7 +31,11 @@ abstract class BaseStagingRelationshipForm extends BaseFormDoctrine
       'record_id'           => new sfValidatorInteger(),
       'referenced_relation' => new sfValidatorString(),
       'relationship_type'   => new sfValidatorString(array('required' => false)),
-      'ref_id'              => new sfValidatorInteger(),
+      'staging_related_ref' => new sfValidatorInteger(array('required' => false)),
+      'institution_ref'     => new sfValidatorInteger(array('required' => false)),
+      'institution_name'    => new sfValidatorString(array('required' => false)),
+      'source_name'         => new sfValidatorString(array('required' => false)),
+      'source_id'           => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('staging_relationship[%s]');

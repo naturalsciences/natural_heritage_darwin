@@ -4,7 +4,6 @@
 <div class="page">
 
   <?php echo form_tag('staging/update?id='.$form->getObject()->getId(), array('class'=>'edition','method'=>'post'));?>  
-  <h1><?php echo __('Level')." : ".$form->getObject()->getLevel() ; ?></h1>
   <?php if($form->hasGlobalErrors()):?>
     <ul class="spec_error_list">
       <?php foreach ($form->getErrorSchema()->getErrors() as $name => $error): ?>
@@ -19,17 +18,17 @@
     </p>
   <?php else : ?> 
     <?php foreach($fields as $key => $array) : ?>
-      <?php if($key == 'duplicate') : ?>      
+      <?php if($key == 'duplicate') : ?>
       <fieldset>
         <ul class="error_list">  
           <li><?php echo __($array['display_error'],array('%here%' => link_to('here', $form->getObject()->getLevel().'/view?id='.$array['duplicate_record'],'target=blanck'))) ?></li>       
       <?php else : ?>
       <fieldset><legend><?php echo __('Field to be corrected')." : ".$key ;?></legend>
-        <ul class="error_list">          
+        <ul class="error_list">
             <li><?php echo __($array['display_error'],array('%field%' => $key)) ; ?></li>
       <?php endif ; ?>
         </ul>
-        <?php if(in_array($array['fields'],array('people','identifiers'))) : ?>
+        <?php if(in_array($array['fields'],array('people','identifiers','operator'))) : ?>
         <table class="encoding collections_rights" id="<?php echo $array['fields'] ; ?>_table">
           <thead>
             <tr>
@@ -38,7 +37,7 @@
           </thead>
           <tbody>
           <?php foreach($form['Wrong'.ucfirst($array['fields'])] as $form_value) : ?>
-           <?php $retainedKey = 0;?>          
+           <?php $retainedKey = 0;?>
            <?php include_partial('member_row', array('form' => $form_value, 'ref_id' => $form->getObject()->getId(), 'row_num'=>$retainedKey, 
                                                      'id_field'=>$array['embedded_field'])); 
            $retainedKey ++;?>

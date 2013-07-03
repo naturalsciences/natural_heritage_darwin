@@ -14,7 +14,8 @@ class StagingForm extends BaseStagingForm
   {
     $array_of_field = $this->options['fields'] ;
     if (in_array('identifiers',$array_of_field)) unset($array_of_field[array_search('identifiers', $array_of_field)]);
-    if (in_array('people',$array_of_field)) unset($array_of_field[array_search('people', $array_of_field)]);    
+    if (in_array('people',$array_of_field)) unset($array_of_field[array_search('people', $array_of_field)]);
+    if (in_array('operator',$array_of_field)) unset($array_of_field[array_search('operator', $array_of_field)]);
     $this->useFields($array_of_field) ;
     if (in_array('spec_ref',$array_of_field))
     {
@@ -28,12 +29,12 @@ class StagingForm extends BaseStagingForm
        ),
         array('class'=>'inline',
              )
-      );    
+      );
       $this->validatorSchema['spec_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
-    }      
+    }
     /* Taxonomy Reference */
     if(in_array('taxon_ref',$this->options['fields']))
-    {  
+    {
       $this->widgetSchema['taxon_ref'] = new widgetFormButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'taxonomy/choose?name='.$this->getObject()->getTaxonName(),
@@ -47,7 +48,7 @@ class StagingForm extends BaseStagingForm
              )
       );
       $this->validatorSchema['taxon_ref'] = new sfValidatorInteger(array('required'=>false));
-    }      
+    }
     /* Chronostratigraphy Reference */
     if(in_array('chrono_ref',$this->options['fields']))
     {
@@ -68,7 +69,7 @@ class StagingForm extends BaseStagingForm
 
     /* Lithostratigraphy Reference */
     if(in_array('litho_ref',$this->options['fields']) )
-    {   
+    {
       $this->widgetSchema['litho_ref'] = new widgetFormButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'lithostratigraphy/choose?name='.$this->getObject()->getLithoName(),
@@ -104,7 +105,7 @@ class StagingForm extends BaseStagingForm
 
     /* Mineralogy Reference */
     if(in_array('mineral_ref',$this->options['fields']))
-    {    
+    {
       $this->widgetSchema['mineral_ref'] = new widgetFormButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'mineralogy/choose?name='.$this->getObject()->getMineralName(),
@@ -121,7 +122,7 @@ class StagingForm extends BaseStagingForm
     }
 
     /* IG number Reference */
-    if(in_array('ig_ref',$this->options['fields']))    
+    if(in_array('ig_ref',$this->options['fields']))
       $this->widgetSchema['ig_ref'] = new widgetFormInputChecked(
         array(
           'model' => 'Igs',
@@ -130,7 +131,7 @@ class StagingForm extends BaseStagingForm
           'link_url' => 'igs/searchFor',
         )
       );
-        
+
     /* Expedition Reference */
     if(in_array('expedition_ref',$this->options['fields']) ) 
     {  
@@ -148,7 +149,7 @@ class StagingForm extends BaseStagingForm
       );
       $this->validatorSchema['expedition_ref'] = new sfValidatorInteger(array('required'=>false));
     }
-    
+
     /* Gtu Reference */
     if(in_array('gtu_ref',$this->options['fields']) )  
     { 
@@ -181,33 +182,46 @@ class StagingForm extends BaseStagingForm
              )
       );
       $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required'=>false));
-    }      
+    }
 
-    if(in_array('people',$this->options['fields']) )        
-    {    
+    if(in_array('people',$this->options['fields']) )
+    {
       $subForm = new sfForm();
-      $this->embedForm('WrongPeople',$subForm);      
-      foreach(Doctrine::getTable("stagingPeople")->getPeopleInError($this->getObject()->getId()) as $key=>$people)
-      {       
+      $this->embedForm('WrongPeople',$subForm);
+      foreach(Doctrine::getTable("stagingPeople")->getPeopleInError($this->getObject()->getId(),'people') as $key=>$people)
+      {
         $form = new PeopleInErrorForm($people);
         $this->embeddedForms['WrongPeople']->embedForm($key, $form);
       } 
       $this->embedForm('WrongPeople', $this->embeddedForms['WrongPeople']); 
     }  
-                
-    if(in_array('identifiers',$this->options['fields']) )        
-    {    
+
+    if(in_array('identifiers',$this->options['fields']) )
+    {
       // $identifications containts all indentification id of this staging id
       $identifications = Doctrine::getTable('identifications')->getStagingIds($this->getObject()->getId()) ;
       $subForm = new sfForm();
       $this->embedForm('WrongIdentifiers',$subForm);      
-      foreach(Doctrine::getTable("stagingPeople")->getPeopleInError($identifications) as $key=>$people)
+      foreach(Doctrine::getTable("stagingPeople")->getPeopleInError($identifications,'identification') as $key=>$people)
       {      
         $form = new PeopleInErrorForm($people);
         $this->embeddedForms['WrongIdentifiers']->embedForm($key, $form);      
       } 
       $this->embedForm('WrongIdentifiers', $this->embeddedForms['WrongIdentifiers']); 
-    }           
+    }
+
+    if(in_array('operator',$this->options['fields']) )
+    {
+      $maintenance = Doctrine::getTable('CollectionMaintenance')->getStagingIds($this->getObject()->getId()) ;
+      $subForm = new sfForm();
+      $this->embedForm('WrongOperator',$subForm);
+      foreach(Doctrine::getTable("stagingPeople")->getPeopleInError($maintenance,'maintenance') as $key=>$people)
+      {
+        $form = new PeopleInErrorForm($people);
+        $this->embeddedForms['WrongOperator']->embedForm($key, $form);
+      } 
+      $this->embedForm('WrongOperator', $this->embeddedForms['WrongOperator']); 
+    }
   }
   
   public function loadEmbedPeople($people)
@@ -224,15 +238,15 @@ class StagingForm extends BaseStagingForm
     }
     //Re-embedding the container
     $this->embedForm('WrongPeople', $this->embeddedForms['WrongPeople']);
-  } 
-   
+  }
+
   public function loadEmbedIdentifiers($identifier)
   {
     if($this->isBound()) return;
     $subForm = new sfForm();
     $this->embedForm('WrongIdentifiers',$subForm);
     foreach($identifier as $key=>$vals)
-    {       
+    {
       $val = new StagingPeople();
       $val->fromArray($vals);
       $form = new PeopleInErrorForm($val);
@@ -240,34 +254,51 @@ class StagingForm extends BaseStagingForm
     }
     //Re-embedding the container
     $this->embedForm('WrongIdentifiers', $this->embeddedForms['WrongIdentifiers']);
-  }   
-  
+  }
+
+  public function loadEmbedWrongOperator($people)
+  {
+    if($this->isBound()) return;
+    $subForm = new sfForm();
+    $this->embedForm('WrongOperator',$subForm);
+    foreach($people as $key=>$vals)
+    {
+      $val = new StagingPeople();
+      $val->fromArray($vals);
+      $form = new PeopleInErrorForm($val);
+      $this->embeddedForms['WrongOperator']->embedForm($key, $form);
+    }
+    //Re-embedding the container
+    $this->embedForm('WrongOperator', $this->embeddedForms['WrongOperator']);
+  }
+
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     if(isset($taintedValues['WrongPeople'])) $this->loadEmbedPeople($taintedValues['WrongPeople']); 
-    if(isset($taintedValues['WrongIdentifiers'])) $this->loadEmbedIdentifiers($taintedValues['WrongIdentifiers']);         
-    parent::bind($taintedValues, $taintedFiles);    
+    if(isset($taintedValues['WrongIdentifiers'])) $this->loadEmbedIdentifiers($taintedValues['WrongIdentifiers']);
+    if(isset($taintedValues['WrongOperator'])) $this->loadEmbedWrongOperator($taintedValues['WrongOperator']);
+    parent::bind($taintedValues, $taintedFiles); 
   }
-  
+
   public function save($con = null, $forms = null) 
   {
     $status = $this->getObject()->getFields(true) ;
-    if(is_numeric($this->getValue('taxon_ref'))) $status['taxon'] = 'done' ; 
+    if(is_numeric($this->getValue('taxon_ref'))) $status['taxon'] = 'done' ;
     else unset($this['taxon_ref']) ;
-    if(is_numeric($this->getValue('chrono_ref'))) $status['chrono'] = 'done' ;    
+    if(is_numeric($this->getValue('chrono_ref'))) $status['chrono'] = 'done' ;
     else unset($this['chrono_ref']) ;
-    if(is_numeric($this->getValue('mineral_ref'))) $status['mineral'] = 'done' ;    
-    else unset($this['mineral_ref']) ;    
-    if(is_numeric($this->getValue('litho_ref'))) $status['litho'] = 'done' ;    
-    else unset($this['litho_ref']) ;    
-    if(is_numeric($this->getValue('lithology_ref'))) $status['lithology'] = 'done' ;    
-    else unset($this['lithology_ref']) ;    
-    if(is_numeric($this->getValue('igs_ref'))) $status['igs'] = 'done' ;        
-    else unset($this['igs_ref']) ;   
-    if($this->getValue('spec_ref') != 0) $status['duplicate'] = 'done' ;        
+    if(is_numeric($this->getValue('mineral_ref'))) $status['mineral'] = 'done' ;
+    else unset($this['mineral_ref']) ;
+    if(is_numeric($this->getValue('litho_ref'))) $status['litho'] = 'done' ;
+    else unset($this['litho_ref']) ;
+    if(is_numeric($this->getValue('lithology_ref'))) $status['lithology'] = 'done' ;
+    else unset($this['lithology_ref']) ;
+    if(is_numeric($this->getValue('igs_ref'))) $status['igs'] = 'done' ;
+    else unset($this['igs_ref']) ;
+    if($this->getValue('spec_ref') != 0) $status['duplicate'] = 'done' ;
     else unset($this['spec_ref']) ;
-    if(is_numeric($this->getValue('institution_ref'))) $status['institution'] = 'done' ;        
-    else unset($this['institution_ref']) ;        
+    if(is_numeric($this->getValue('institution_ref'))) $status['institution'] = 'done' ;
+    else unset($this['institution_ref']) ;
     if($value = $this->getValue('WrongPeople')) 
     {
       unset($this['people']) ; 
@@ -286,7 +317,16 @@ class StagingForm extends BaseStagingForm
         unset($this->embeddedForms['WrongIdentifiers'][$name]);
       }
     }
-    $this->getObject()->setStatus($status) ;      
+    if($value = $this->getValue('WrongOperator')) 
+    {
+      unset($this['operator']) ;
+      foreach($this->embeddedForms['WrongOperator']->getEmbeddedForms() as $name => $form)
+      {
+        if (isset($value[$name]['people_ref']))  Doctrine::getTable('StagingPeople')->UpdatePeopleRef($value[$name]) ;
+        unset($this->embeddedForms['WrongOperator'][$name]);
+      }
+    }
+    $this->getObject()->setStatus($status) ;
     return parent::save($con, $forms);
   }
 }

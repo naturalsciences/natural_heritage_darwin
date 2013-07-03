@@ -22,7 +22,7 @@ class ParsingIdentifications
   public function handleTaxonParent()
   {
     $this->taxon_parent[$this->array_level[$this->higher_taxon_level]] = $this->higher_taxon_name ;
-    $this->scientificName .= $this->higher_taxon_name." " ;
+    //$this->scientificName .= $this->higher_taxon_name." " ;
   }
 
   // Return ne scientificName in FullScientificNameString tag, otherwise return a self built name with parent and keywords

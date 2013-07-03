@@ -68,7 +68,7 @@ EOF;
     foreach($imports as $import)
     {
       $this->logSection('Processing', sprintf('Start processing import %d',$import->getId()));
-      $sql = 'select fct_importer_dna('.$import->getId().')';
+      $sql = 'select fct_importer_abcd('.$import->getId().')';
       $conn->getDbh()->exec($sql);
     }
     $conn->getDbh()->exec('COMMIT;');

@@ -94,7 +94,7 @@ class ImportABCDXml implements IImportModels
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break ;;
       case "TitleCitation" : $this->addComment($this->temp_data,'general',true) ; break ;
       case "Unit" : $this->saveUnit(); break ;;
-      case "UnitAssociation" : if($this->object->getRefId()) $this->staging->addRelated($this->object) ; break ;;
+      case "UnitAssociation" : $this->staging->addRelated($this->object) ; break ;;
       case "UnitID" : $this->staging->addRelated($this->code) ; break ;;
     }
     $this->depth--;
@@ -114,7 +114,9 @@ class ImportABCDXml implements IImportModels
       case "AcquisitionType" : $this->staging['acquisition_category'] = $data ; break ;;
       case "AreaClass" : $this->object->tag_value = $data ; break ;;
       case "AreaName" : $this->object->tag_group_name = $data ; break ;;
-      case "AssociatedUnitID" : if(in_array($data, array_keys($this->unit_id_ref))) $this->object->setRefId($this->unit_id_ref[$data]) ; break ;;
+      case "AssociatedUnitID" : if(in_array($data, array_keys($this->unit_id_ref))) $this->object->setStagingRelatedRef($this->unit_id_ref[$data]); else $this->object->setSourceId($data) ; break ;;
+      case "AssociatedUnitSourceInstitutionCode" : $this->object->setInstitutionName($data) ; break ;;
+      case "AssociatedUnitSourceName" : $this->object->setSourceName($data) ; break ;;
       case "AssociationType" : $this->object->setRelationshipType($data) ; break ;;
       case "Code" : $this->staging['gtu_code'] = $data ; break ;;
       case "Comment" : $this->temp_data.="$data " ; break ;;
@@ -209,7 +211,7 @@ class ImportABCDXml implements IImportModels
     catch(Doctrine_Exception $ne)
     {
       $e = new DarwinPgErrorParser($ne);
-      $this->errors_reported .= "Unit or associated object were not saved:".$e->getMessage().";";
+      $this->errors_reported .= "Unit ".$this->name." or associated object were not saved:".$e->getMessage().";";
     }
   }
 }

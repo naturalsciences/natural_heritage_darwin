@@ -18,7 +18,7 @@ class ParsingMaintenance
   // $staging is useless here, but I should put it to respect cohérence for HandlePeople function in parsingTag
   public function handlePeople($people,$staging)
   {
-    $people->setPeopleType("sequencer");
+    $people->setPeopleType("operator");
     if($this->people_order_by)
     {
       $people->setOrderBy($this->people_order_by) ;

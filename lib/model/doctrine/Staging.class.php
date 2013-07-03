@@ -131,7 +131,7 @@ class Staging extends BaseStaging
         return $tb_ok;
     }
   }
-
+/*
   public function getIdentifier()
   {
     $q = Doctrine_Query::create()
@@ -142,7 +142,7 @@ class Staging extends BaseStaging
     $identifiers = $q->fetchOne();  
     return $this->getPeopleInError('identifiers',$identifiers) ;
   }
-
+*/
   public function getIndividualCount()
   {
     if($this->_get('individual_count_min') == $this->_get('individual_count_max'))
@@ -232,10 +232,12 @@ class Staging extends BaseStaging
     if($field == 'mineral') return('mineral_ref') ;
     if($field == 'lithology') return('lithology_ref') ;
     if($field == 'igs') return('ig_ref') ;
-    if($field == 'people') return('people') ;  
+    if($field == 'people') return('people') ;
     if($field == 'identifiers') return('identifiers') ;
     if($field == 'institution') return('institution_ref') ;
-    if($field == 'duplicate') return('spec_ref') ;    
+    //if($field == 'institution_relationship') return('institution_relationship') ;
+    if($field == 'duplicate') return('spec_ref') ;
+    if($field == 'operator') return('operator') ;
     return($field) ;
   }
 }

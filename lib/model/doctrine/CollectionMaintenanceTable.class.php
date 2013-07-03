@@ -94,4 +94,30 @@ class CollectionMaintenanceTable extends DarwinTable
     }
     return $array_results;
   }
+  
+  public function getStagingIds($id)
+  {
+     $q = Doctrine_Query::create()->
+         from('CollectionMaintenance')->
+         where('referenced_relation = \'staging\'')->
+         andWhere('record_id = ?', $id);
+    $result = $q->execute(); 
+    $maintenance_ids = array() ;
+    foreach($result as $maintenance) $maintenance_ids[] = $maintenance->getId() ;
+    return $maintenance_ids ;
+  }
+  
+  public function UpdatePeopleRef($people)
+  {
+      $q = Doctrine_Query::create()
+      ->update('CollectionMaintenance c')
+      ->set('c.people_ref',$people['people_ref'])
+      ->where('s.id = ?',$people['record_id']) ;
+    return $q->execute() ;
+      $q = Doctrine_Query::create()
+      ->delete('Stagin')
+      ->set('c.people_ref',$people['people_ref'])
+      ->where('s.id = ?',$people['record_id']) ;
+    return $q->execute() ;
+  }
 }

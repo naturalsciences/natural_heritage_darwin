@@ -16,14 +16,22 @@ abstract class BaseStagingRelationshipFormFilter extends BaseFormFilterDoctrine
       'record_id'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'referenced_relation' => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'relationship_type'   => new sfWidgetFormFilterInput(),
-      'ref_id'              => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'staging_related_ref' => new sfWidgetFormFilterInput(),
+      'institution_ref'     => new sfWidgetFormFilterInput(),
+      'institution_name'    => new sfWidgetFormFilterInput(),
+      'source_name'         => new sfWidgetFormFilterInput(),
+      'source_id'           => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
       'record_id'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'referenced_relation' => new sfValidatorPass(array('required' => false)),
       'relationship_type'   => new sfValidatorPass(array('required' => false)),
-      'ref_id'              => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'staging_related_ref' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'institution_ref'     => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'institution_name'    => new sfValidatorPass(array('required' => false)),
+      'source_name'         => new sfValidatorPass(array('required' => false)),
+      'source_id'           => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('staging_relationship_filters[%s]');
@@ -47,7 +55,11 @@ abstract class BaseStagingRelationshipFormFilter extends BaseFormFilterDoctrine
       'record_id'           => 'Number',
       'referenced_relation' => 'Text',
       'relationship_type'   => 'Text',
-      'ref_id'              => 'Number',
+      'staging_related_ref' => 'Number',
+      'institution_ref'     => 'Number',
+      'institution_name'    => 'Text',
+      'source_name'         => 'Text',
+      'source_id'           => 'Text',
     );
   }
 }

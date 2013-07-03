@@ -9,18 +9,30 @@
  * @property integer $record_id
  * @property string $referenced_relation
  * @property string $relationship_type
- * @property integer $ref_id
+ * @property integer $staging_related_ref
+ * @property integer $institution_ref
+ * @property string $institution_name
+ * @property string $source_name
+ * @property string $source_id
  * 
  * @method integer             getId()                  Returns the current record's "id" value
  * @method integer             getRecordId()            Returns the current record's "record_id" value
  * @method string              getReferencedRelation()  Returns the current record's "referenced_relation" value
  * @method string              getRelationshipType()    Returns the current record's "relationship_type" value
- * @method integer             getRefId()               Returns the current record's "ref_id" value
+ * @method integer             getStagingRelatedRef()   Returns the current record's "staging_related_ref" value
+ * @method integer             getInstitutionRef()      Returns the current record's "institution_ref" value
+ * @method string              getInstitutionName()     Returns the current record's "institution_name" value
+ * @method string              getSourceName()          Returns the current record's "source_name" value
+ * @method string              getSourceId()            Returns the current record's "source_id" value
  * @method StagingRelationship setId()                  Sets the current record's "id" value
  * @method StagingRelationship setRecordId()            Sets the current record's "record_id" value
  * @method StagingRelationship setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method StagingRelationship setRelationshipType()    Sets the current record's "relationship_type" value
- * @method StagingRelationship setRefId()               Sets the current record's "ref_id" value
+ * @method StagingRelationship setStagingRelatedRef()   Sets the current record's "staging_related_ref" value
+ * @method StagingRelationship setInstitutionRef()      Sets the current record's "institution_ref" value
+ * @method StagingRelationship setInstitutionName()     Sets the current record's "institution_name" value
+ * @method StagingRelationship setSourceName()          Sets the current record's "source_name" value
+ * @method StagingRelationship setSourceId()            Sets the current record's "source_id" value
  * 
  * @package    darwin
  * @subpackage model
@@ -48,9 +60,20 @@ abstract class BaseStagingRelationship extends DarwinModel
         $this->hasColumn('relationship_type', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('ref_id', 'integer', null, array(
+        $this->hasColumn('staging_related_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
+             ));
+        $this->hasColumn('institution_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('institution_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('source_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('source_id', 'string', null, array(
+             'type' => 'string',
              ));
     }
 

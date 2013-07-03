@@ -11,9 +11,9 @@
 class ImportsFormFilter extends BaseImportsFormFilter
 {
   public function configure()
-  { 
-    $this->useFields(array('collection_ref', 'state','filename')) ;  
-    $this->addPagerItems();  
+  {
+    $this->useFields(array('collection_ref', 'state','filename')) ;
+    $this->addPagerItems();
     $collection_list = Doctrine::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user_ref']) ;
     $state_list = Imports::getStateList() ;
     /* Widgets */
@@ -21,31 +21,31 @@ class ImportsFormFilter extends BaseImportsFormFilter
       array(
         'choices' => $collection_list
       )
-    );  
-    
+    );
+
     $this->widgetSchema['state'] = new sfWidgetFormChoice(
       array(
         'choices' => $state_list
       )
     ); 
     $this->widgetSchema['filename'] = new sfWidgetFormInputText() ; 
-    $this->widgetSchema['filename']->setAttributes(array('class'=>'small_size'));    
- //   $this->widgetSchema['user_ref'] = new sfWidgetFormInputHidden() ;        
+    $this->widgetSchema['filename']->setAttributes(array('class'=>'small_size'));
+ //   $this->widgetSchema['user_ref'] = new sfWidgetFormInputHidden() ;
     /* Labels */
     $this->widgetSchema->setLabels(array('collection_ref' => 'Collections',
                                          'filename' => 'Filename',
                                          'state' => 'State',
                                         )
                                   );
-                                  
-    /* validators */                    
+
+    /* validators */
     $this->validatorSchema['collection_ref'] = new sfValidatorChoice(
       array('choices'=> array_keys($collection_list)));
 
     $this->widgetSchema['show_finished']  = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['show_finished'] = new sfValidatorBoolean(array('required' => false));
   }
-  
+
   public function addShowFinishedColumnQuery(Doctrine_Query $query, $field, $value)
   {
     if ($value == "")
@@ -69,5 +69,5 @@ class ImportsFormFilter extends BaseImportsFormFilter
     );
 
     return $query ;
-  }  
+  }
 }

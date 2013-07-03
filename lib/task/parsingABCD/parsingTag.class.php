@@ -84,7 +84,7 @@ class ParsingTag
         $staging->addRelated($object) ;
         break ;;
       case "igs" : 
-        $object = new Codes() ;
+        $object = new Igs() ;
         $object->fromArray(array('ig_date' => $this->accession_date, 'ig_num' => $this->accession_num)) ;
         $staging->addRelated($object) ;
         break ;;

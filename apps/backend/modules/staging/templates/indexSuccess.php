@@ -5,12 +5,8 @@
   <?php include_javascripts_for_form($form) ?>
 
   <div class="container">
-    <?php echo $form['slevel']->renderRow();?>
-    <?php echo $form['only_errors']->renderRow();?>
-    <br />
-    <br />
-    <input type="submit" value="<?php echo __('Search');?>"/>
-
+    <?php echo $form['only_errors']->renderRow();?><input type="submit" value="<?php echo __('Search');?>"/>
+    <div class="blue_link"><?php echo link_to(__('Back to Import'), 'import/index');?></div>
     <div class="search_results">
       <div class="search_results_content">
 
