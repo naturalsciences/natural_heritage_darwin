@@ -319,17 +319,12 @@ Specimens:
         acquisition_date: '2001-02-01'
         acquisition_category: expedition
         Taxonomy: ta3
-        HostSpecimen: sp1
-        HostTaxon: ta1
         Gtu: gtu2
     sp4:
         id: 4
         Collections : c3        
         acquisition_date: '2009-02-24'
         acquisition_category: expedition
-        HostSpecimen: sp2
-        HostTaxon: ta2
-        host_relationship: Symbiosis
         Taxonomy: ta5
 
 Loans:

@@ -1,5 +1,5 @@
 <?php
-class SpecimensAccompanyingValidatorSchema extends sfValidatorSchema
+class SpecimensRelationshipsValidatorSchema extends sfValidatorSchema
 {
   protected function configure($options = array(), $messages = array())
   {
@@ -11,22 +11,24 @@ class SpecimensAccompanyingValidatorSchema extends sfValidatorSchema
     $errorSchema = new sfValidatorErrorSchema($this);
     $errorSchemaLocal = new sfValidatorErrorSchema($this);
 
-    if($value['accompanying_type']=='biological')
-    {
+    if($value['unit_type']=='specimens') {
       $value['mineral_ref'] = null;
-    }
-    else
-    {
       $value['taxon_ref'] = null;
+    } elseif($value['unit_type']=='taxonomy') {
+      $value['mineral_ref'] = null;
+      $value['specimen_related_ref'] = null;
+    } elseif($value['unit_type']=='mineral'){
+      $value['taxon_ref'] = null;
+      $value['specimen_related_ref'] = null;
     }
-    
+
     // If type is known but nothing else
-    if (!$value['taxon_ref'] && !$value['mineral_ref'] && $value['accompanying_type'])
+    if (!$value['taxon_ref'] && !$value['mineral_ref'] && !$value['specimen_related_ref'] && $value['relationship_type'])
     {
       $errorSchemaLocal->addError(new sfValidatorError($this, 'unit_ref'));
     }
 
-    if (!$value['taxon_ref'] && !$value['mineral_ref'] && !$value['accompanying_type'])
+    if (!$value['taxon_ref'] && !$value['mineral_ref'] && !$value['specimen_related_ref'] && !$value['relationship_type'])
     {
       return array();
     }

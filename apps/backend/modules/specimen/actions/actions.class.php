@@ -89,13 +89,13 @@ class specimenActions extends DarwinActions
     return $this->renderPartial('spec_links',array('form' => $form['newExtLinks'][$number], 'rownum'=>$number));
   }
   
-  public function executeAddSpecimensAccompanying(sfWebRequest $request)
+  public function executeAddSpecimensRelationships(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
-    $form->addSpecimensAccompanying($number, array());
-    return $this->renderPartial('specimens_accompanying', array('form' => $form['newSpecimensAccompanying'][$number], 'rownum'=>$number));
+    $form->addSpecimensRelationships($number, array());
+    return $this->renderPartial('specimens_relationships', array('form' => $form['newSpecimensRelationships'][$number], 'rownum'=>$number));
   }
 
   public function executeAddIdentification(sfWebRequest $request)

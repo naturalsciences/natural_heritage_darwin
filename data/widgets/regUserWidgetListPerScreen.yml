@@ -376,12 +376,12 @@ sw3:
 sw4:
    col_num: 1
    category: specimen_widget
-   group_name: refHosts
+   group_name: specimensRelationships
    mandatory: false
    order_by: 4
    opened: true
    visible: true
-   title_perso: Host
+   title_perso: Relationships
    all_public: true
 
 sw5:
