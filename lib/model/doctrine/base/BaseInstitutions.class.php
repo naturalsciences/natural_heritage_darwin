@@ -13,23 +13,26 @@
  * @property string $family_name
  * @property string $additional_names
  * @property Doctrine_Collection $PeopleRelationships
+ * @property Doctrine_Collection $SpecimensRelationships
  * 
- * @method integer             getId()                    Returns the current record's "id" value
- * @method boolean             getIsPhysical()            Returns the current record's "is_physical" value
- * @method string              getSubType()               Returns the current record's "sub_type" value
- * @method string              getFormatedName()          Returns the current record's "formated_name" value
- * @method string              getFormatedNameIndexed()   Returns the current record's "formated_name_indexed" value
- * @method string              getFamilyName()            Returns the current record's "family_name" value
- * @method string              getAdditionalNames()       Returns the current record's "additional_names" value
- * @method Doctrine_Collection getPeopleRelationships()   Returns the current record's "PeopleRelationships" collection
- * @method Institutions        setId()                    Sets the current record's "id" value
- * @method Institutions        setIsPhysical()            Sets the current record's "is_physical" value
- * @method Institutions        setSubType()               Sets the current record's "sub_type" value
- * @method Institutions        setFormatedName()          Sets the current record's "formated_name" value
- * @method Institutions        setFormatedNameIndexed()   Sets the current record's "formated_name_indexed" value
- * @method Institutions        setFamilyName()            Sets the current record's "family_name" value
- * @method Institutions        setAdditionalNames()       Sets the current record's "additional_names" value
- * @method Institutions        setPeopleRelationships()   Sets the current record's "PeopleRelationships" collection
+ * @method integer             getId()                     Returns the current record's "id" value
+ * @method boolean             getIsPhysical()             Returns the current record's "is_physical" value
+ * @method string              getSubType()                Returns the current record's "sub_type" value
+ * @method string              getFormatedName()           Returns the current record's "formated_name" value
+ * @method string              getFormatedNameIndexed()    Returns the current record's "formated_name_indexed" value
+ * @method string              getFamilyName()             Returns the current record's "family_name" value
+ * @method string              getAdditionalNames()        Returns the current record's "additional_names" value
+ * @method Doctrine_Collection getPeopleRelationships()    Returns the current record's "PeopleRelationships" collection
+ * @method Doctrine_Collection getSpecimensRelationships() Returns the current record's "SpecimensRelationships" collection
+ * @method Institutions        setId()                     Sets the current record's "id" value
+ * @method Institutions        setIsPhysical()             Sets the current record's "is_physical" value
+ * @method Institutions        setSubType()                Sets the current record's "sub_type" value
+ * @method Institutions        setFormatedName()           Sets the current record's "formated_name" value
+ * @method Institutions        setFormatedNameIndexed()    Sets the current record's "formated_name_indexed" value
+ * @method Institutions        setFamilyName()             Sets the current record's "family_name" value
+ * @method Institutions        setAdditionalNames()        Sets the current record's "additional_names" value
+ * @method Institutions        setPeopleRelationships()    Sets the current record's "PeopleRelationships" collection
+ * @method Institutions        setSpecimensRelationships() Sets the current record's "SpecimensRelationships" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -74,5 +77,9 @@ abstract class BaseInstitutions extends DarwinModel
         $this->hasMany('PeopleRelationships', array(
              'local' => 'id',
              'foreign' => 'person_1_ref'));
+
+        $this->hasMany('SpecimensRelationships', array(
+             'local' => 'id',
+             'foreign' => 'institution_ref'));
     }
 }

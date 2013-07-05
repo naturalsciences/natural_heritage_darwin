@@ -19,9 +19,6 @@ class SpecimensForm extends BaseSpecimensForm
       'chrono_ref',
       'lithology_ref',
       'mineral_ref',
-      'host_taxon_ref',
-      'host_specimen_ref',
-      'host_relationship',
       'acquisition_category',
       'acquisition_date',
       'station_visible',
@@ -169,41 +166,6 @@ class SpecimensForm extends BaseSpecimensForm
       array('class'=>'inline')
     );
 
-    /* Host Reference */
-    $this->widgetSchema['host_specimen_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Specimens',
-       'link_url' => 'specimen/choose',
-       'method' => 'getName',
-       'box_title' => $this->getI18N()->__('Choose Host specimen'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
-    );
-
-    $this->widgetSchema['host_taxon_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Taxonomy',
-       'link_url' => 'taxonomy/choose',
-       'method' => 'getNameWithFormat',
-       'box_title' => $this->getI18N()->__('Choose Host taxon'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
-    );
-
-    $this->widgetSchema['host_relationship'] = new widgetFormSelectComplete(array(
-        'model' => 'Specimens',
-        'table_method' => 'getDistinctHostRelationships',
-        'method' => 'getHostRelationship',
-        'key_method' => 'getHostRelationship',
-        'add_empty' => true,
-        'change_label' => 'Pick a relationship in the list',
-        'add_label' => 'Add another relationship',
-    ));
-
     $this->widgetSchema['coll_methods'] = new sfWidgetFormInputHidden(array('default'=>1));
 
     $this->widgetSchema['coll_tools'] = new sfWidgetFormInputHidden(array('default'=>1));
@@ -222,7 +184,7 @@ class SpecimensForm extends BaseSpecimensForm
                                                                             array('class' => 'to_date')
                                                                            );
 
-    $this->widgetSchema['accompanying'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->widgetSchema['relationship'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['ident'] = new sfWidgetFormInputHidden(array('default'=>1));
 
     $this->widgetSchema['extlink'] = new sfWidgetFormInputHidden(array('default'=>1));
@@ -414,9 +376,6 @@ class SpecimensForm extends BaseSpecimensForm
 
     /* Labels */
     $this->widgetSchema->setLabels(array(
-      'host_specimen_ref' => 'Host specimen',
-      'host_relationship' => 'Relationship',
-      'host_taxon_ref' => 'Host Taxon',
       'gtu_ref' => 'Sampling location Tags',
       'station_visible' => 'Public sampling location ?',
       'filenames' => 'Add File',
@@ -446,10 +405,6 @@ class SpecimensForm extends BaseSpecimensForm
     $this->validatorSchema['mineral_ref'] = new sfValidatorInteger(array('required'=>false));
 
     $this->validatorSchema['gtu_ref'] = new sfValidatorInteger(array('required'=>false));
-
-    $this->validatorSchema['host_specimen_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>null));
-
-    $this->validatorSchema['host_taxon_ref'] = new sfValidatorInteger(array('required'=>false));
 
     $this->validatorSchema['type'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('type')));
     $this->validatorSchema['sex'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('sex')));
@@ -500,7 +455,7 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->validatorSchema['ident'] = new sfValidatorPass();
 
-    $this->validatorSchema['accompanying'] = new sfValidatorPass();
+    $this->validatorSchema['relationships'] = new sfValidatorPass();
 
     $this->validatorSchema['coll_tools'] = new sfValidatorPass();
 
@@ -529,8 +484,8 @@ class SpecimensForm extends BaseSpecimensForm
     $this->validatorSchema['RelatedFiles_holder'] = new sfValidatorPass();
     $this->widgetSchema['RelatedFiles_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
-    $this->validatorSchema['SpecimensAccompanying_holder'] = new sfValidatorPass();
-    $this->widgetSchema['SpecimensAccompanying_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+    $this->validatorSchema['SpecimensRelationships_holder'] = new sfValidatorPass();
+    $this->widgetSchema['SpecimensRelationships_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
     $this->widgetSchema['Insurances_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['Insurances_holder'] = new sfValidatorPass();
@@ -601,11 +556,6 @@ class SpecimensForm extends BaseSpecimensForm
       'Lithostratigraphy' => array('litho_ref'),
       'Mineralogy' => array('mineral_ref'),
 
-      'Host' => array(
-        'host_relationship',
-        'host_specimen_ref',
-        'host_taxon_ref',
-      ),
       'Ig' => array(
         'ig_ref',
       ),
@@ -799,7 +749,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     $this->bindEmbed('ExtLinks', 'addExtLinks' , $taintedValues);
     $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
-    $this->bindEmbed('SpecimensAccompanying', 'addSpecimensAccompanying' , $taintedValues);
+    $this->bindEmbed('SpecimensRelationships', 'addSpecimensRelationships' , $taintedValues);
     $this->bindEmbed('Insurances', 'addInsurances' , $taintedValues);
 
     // Unset not used widgets
@@ -830,11 +780,11 @@ class SpecimensForm extends BaseSpecimensForm
   }
 
 
-  public function addSpecimensAccompanying($num, $values, $order_by=0)
+  public function addSpecimensRelationships($num, $values, $order_by=0)
   {
     $options = array('unit' => '%', 'specimen_ref' => $this->getObject()->getId());
     $options = array_merge($values, $options);
-    $this->attachEmbedRecord('SpecimensAccompanying', new SpecimensAccompanyingForm(DarwinTable::newObjectFromArray('SpecimensAccompanying',$options)), $num);
+    $this->attachEmbedRecord('SpecimensRelationships', new SpecimensRelationshipsForm(DarwinTable::newObjectFromArray('SpecimensRelationships',$options)), $num);
   }
 
   public function addRelatedFiles($num, $values, $order_by=0)
@@ -916,8 +866,8 @@ class SpecimensForm extends BaseSpecimensForm
       return Doctrine::getTable('ExtLinks')->findForTable('specimens', $record_id);
     if( $emFieldName =='RelatedFiles' )
       return Doctrine::getTable('Multimedia')->findForTable('specimens', $record_id);
-    if( $emFieldName =='SpecimensAccompanying' )
-      return Doctrine::getTable('SpecimensAccompanying')->findBySpecimenRef($record_id);
+    if( $emFieldName =='SpecimensRelationships' )
+      return Doctrine::getTable('SpecimensRelationships')->findBySpecimenRef($record_id);
     if( $emFieldName =='Insurances' )
       return Doctrine::getTable('Insurances')->findForTable('specimens', $record_id);
   }
@@ -936,8 +886,8 @@ class SpecimensForm extends BaseSpecimensForm
       return new ExtLinksForm($values);
     if( $emFieldName =='RelatedFiles' )
       return new MultimediaForm($values);
-    if( $emFieldName =='SpecimensAccompanying' )
-      return new SpecimensAccompanyingForm($values);
+    if( $emFieldName =='SpecimensRelationships' )
+      return new SpecimensRelationshipsForm($values);
     if( $emFieldName =='Insurances' )
       return new InsurancesSubForm($values);
   }
@@ -998,14 +948,14 @@ class SpecimensForm extends BaseSpecimensForm
       $this->attachEmbedRecord('ExtLinks', $form, $key);
     } 
 
-    // reembed duplicated specimen Accompanying
-    $spec_a = Doctrine::getTable('SpecimensAccompanying')->findBySpecimen($id) ;
+    // reembed duplicated specimen Relationships
+    $spec_a = Doctrine::getTable('SpecimensRelationships')->findBySpecimen($id) ;
     foreach ($spec_a as $key=>$val)
     {
-      $spec = new SpecimensAccompanying() ;
+      $spec = new SpecimensRelationships() ;
       $spec->fromArray($val->toArray());
-      $form = new SpecimensAccompanyingForm($spec);
-      $this->attachEmbedRecord('SpecimensAccompanying', $key, $spec) ;
+      $form = new SpecimensRelationshipsForm($spec);
+      $this->attachEmbedRecord('SpecimensRelationships', $key, $spec) ;
     }
     
     // reembed duplicated insurances
@@ -1028,7 +978,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('ExtLinks', 'url' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
-    $this->saveEmbed('SpecimensAccompanying', 'taxon_ref' ,$forms, array('specimen_ref' => $this->getObject()->getId()));
+    $this->saveEmbed('SpecimensRelationships', 'taxon_ref' ,$forms, array('specimen_ref' => $this->getObject()->getId()));
     $this->saveEmbed('Insurances', 'insurance_value' ,$forms, array('referenced_relation'=>'specimens', 'record_id' => $this->getObject()->getId()));
 
     if (null === $forms && $this->getValue('ident'))

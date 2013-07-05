@@ -2156,7 +2156,7 @@ BEGIN
         oldfield.sub_container_type, newfield.sub_container_type, 'sub_container_type' );
 
     ELSIF TG_TABLE_NAME = 'specimens_relationships' THEN
-      PERFORM fct_del_in_dict('specimens_relationships','relationship_type', oldfield.form, newfield.form);
+      PERFORM fct_del_in_dict('specimens_relationships','relationship_type', oldfield.relationship_type, newfield.relationship_type);
     ELSIF TG_TABLE_NAME = 'users' THEN
       PERFORM fct_del_in_dict('users','title', oldfield.title, newfield.title);
       PERFORM fct_del_in_dict('users','sub_type', oldfield.sub_type, newfield.sub_type);
@@ -2245,7 +2245,7 @@ BEGIN
         oldfield.sub_container_type, newfield.sub_container_type);
         
     ELSIF TG_TABLE_NAME = 'specimens_relationships' THEN
-      PERFORM fct_add_in_dict('specimens_relationships','relationship_type', oldfield.form, newfield.form);
+      PERFORM fct_add_in_dict('specimens_relationships','relationship_type', oldfield.relationship_type, newfield.relationship_type);
     ELSIF TG_TABLE_NAME = 'users' THEN
       PERFORM fct_add_in_dict('users','title', oldfield.title, newfield.title);
       PERFORM fct_add_in_dict('users','sub_type', oldfield.sub_type, newfield.sub_type);

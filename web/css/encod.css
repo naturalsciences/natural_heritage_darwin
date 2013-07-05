@@ -189,3 +189,10 @@ table.extended_info hr
 .loan_overview_form {
   z-index:-1;
 }
+.unit_external .button {
+  float:none;
+}
+.relationship_detail_edit{
+  background-color: rgb(233, 237, 190);
+  vertical-align:center;
+}

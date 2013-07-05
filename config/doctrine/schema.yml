@@ -628,9 +628,6 @@ Specimens:
         chrono_ref: { type: integer}
         lithology_ref: { type: integer}
         mineral_ref: { type: integer}
-        host_taxon_ref: { type: integer}
-        host_specimen_ref: { type: integer}
-        host_relationship: { type: string}
         acquisition_category: { type: string, default: expedition}
         acquisition_date_mask: { type: integer, notnull: true, default:0}
         acquisition_date: { type: string, default: '0001-01-01'}
@@ -706,14 +703,6 @@ Specimens:
         mineral_color: { type: string}
         mineral_path: { type: string}
         mineral_parent_ref: { type: integer}
-        host_taxon_name: { type: string}
-        host_taxon_name_indexed: { type: string}
-        host_taxon_level_ref: { type: integer}
-        host_taxon_level_name: { type: string}
-        host_taxon_status: { type: string}
-        host_taxon_path: { type: string}
-        host_taxon_parent_ref: { type: integer}
-        host_taxon_extinct: { type: boolean}
         ig_num: { type: string}
         ig_num_indexed: { type: string}
         ig_date_mask: { type: integer }
@@ -772,14 +761,6 @@ Specimens:
             foreign: id
         Mineralogy:
             local: mineral_ref
-            foreign: id
-        HostTaxon:
-            class: Taxonomy
-            local: host_taxon_ref
-            foreign: id
-        HostSpecimen:
-            class: Specimens
-            local: host_specimen_ref
             foreign: id
         Igs:
             class: Igs
@@ -883,18 +864,25 @@ Insurances:
             local: contact_ref
             foreign: id
 
-SpecimensAccompanying:
+SpecimensRelationships:
     columns:
-        accompanying_type: { type: string, notnull: true, default: biological}
         specimen_ref: { type: integer, notnull: true}
         taxon_ref: { type: integer}
         mineral_ref: { type: integer}
-        form: { type: string, notnull: true, default: isolated}
+        specimen_related_ref: { type: integer}
+        relationship_type: { type: string, notnull: true, default: 'host'}
+        unit_type: { type: string, notnull: true, default: 'specimens'}
         quantity: { type: decimal, length: 16, scale: 2}
         unit: { type: string, default: '%'}
+        institution_ref: { type: integer}
+        source_name: { type: string}
+        source_id: { type: string}
     relations:
-        Specimens:
+        Specimen:
             local: specimen_ref
+            foreign: id
+        SpecimenRelated:
+            local: specimen_related_ref
             foreign: id
         Taxonomy:
             local: taxon_ref
@@ -902,6 +890,10 @@ SpecimensAccompanying:
         Mineralogy:
             local: mineral_ref
             foreign: id
+        Institutions:
+            local: institution_ref
+            foreign: id
+
 
 SpecimensCodes:
     tableName: codes
@@ -1044,13 +1036,6 @@ Staging:
         mineral_local: { type: boolean}
         mineral_color: { type: string}
         mineral_parents: { type: string}
-        host_taxon_ref: { type: integer}
-        host_relationship: { type: string}
-        host_taxon_name: { type: string}
-        host_taxon_level_ref: { type: integer}
-        host_taxon_level_name: { type: string}
-        host_taxon_status: { type: string}
-        host_specimen_ref: { type: integer}
         ig_ref: { type: integer}
         ig_num: { type: string}
         ig_date_mask: { type: integer }
