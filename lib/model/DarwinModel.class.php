@@ -5,7 +5,6 @@ class DarwinModel extends sfDoctrineRecord
 
   public function addRelated($object)
   {
-    echo $object->getTable()->getTableName() ;
     $this->array_object[] = $object ;
   }
 

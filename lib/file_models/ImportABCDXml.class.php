@@ -204,7 +204,8 @@ class ImportABCDXml implements IImportModels
 
   private function addExternalLink($link)
   {
-    if(substr($link,0,strpos($link,"://")) != "html") $link = "http://".$link ;
+    $prefix = substr($link,0,strpos($link,"://")) ;
+    if($prefix != "http" && $prefix != "https") $link = "http://".$link ;
     $ext = new ExtLinks();
     $ext->setUrl($link) ;
     $ext->setComment('Record web address') ;
