@@ -13,19 +13,6 @@
       <?php endif; ?>
       </td>
     </tr>
-    <tr>
-      <td colspan="2"><?php echo $form['category']->renderError() ?><td>
-    </tr>  
-    <tr>
-      <th><?php echo $form['category']->renderLabel("Specimen category") ?></th>
-      <td>
-      <?php if(isset($view) && $view) : ?>
-       <?php echo $form->getObject()->getCategory() ; ?>
-      <?php else  : ?>
-        <?php echo $form['category']->render() ?>
-      <?php endif ; ?>
-      </td>
-    </tr>
   </tbody>
 </table>  
 

@@ -1,6 +1,6 @@
 <?php slot('title', __('Specimens search result'));  ?>
 <?php use_javascript('double_list.js');?>
-<?php include_partial('result_cols', array('source' => $source, 'columns' => $columns, 'field_to_show' => $field_to_show));?>
+<?php include_partial('result_cols', array('columns' => $columns, 'field_to_show' => $field_to_show));?>
 
 <div class="encoding">
   <?php include_stylesheets_for_form($form) ?>
@@ -26,7 +26,6 @@
           <?php include_partial('searchSuccess',
                                 array('specimensearch' => $specimensearch,
                                       'codes' => $codes,
-                                      'part_codes' => $part_codes,
                                       'form' => $form, 
                                       'orderBy' => $orderBy,
                                       's_url' => $s_url,
@@ -35,7 +34,6 @@
                                       'pagerLayout' => $pagerLayout,
                                       'is_specimen_search' => $is_specimen_search,
                                       'columns' => $columns,
-                                      'source' => $source
                                      )
                                ); ?>
         </div>
@@ -45,7 +43,7 @@
       <?php endif;?>
       <script  type="text/javascript">
         $(document).ready(function () {
-          $("ul.column_menu > li > ul > li").click(function(){
+          $(".col_switcher").click(function(){
             update_list($(this));
             hide_or_show($(this));
           });
@@ -101,10 +99,10 @@
     </form>
       <div class="check_right" id="save_button"> 
         <a href="<?php echo url_for('specimen/confirm') ; ?>" class="hidden"></a>
-        <?php include_partial('savesearch/saveSpec', array('spec_lists'=>$spec_lists,'source' => $source));?>
+        <?php include_partial('savesearch/saveSpec', array('spec_lists'=>$spec_lists));?>
 
         <?php if(! $is_specimen_search):?>
-          <?php include_partial('savesearch/saveSearch', array('source' => $source));?>
+          <?php include_partial('savesearch/saveSearch');?>
         <?php endif;?>
       </div>
       <?php if(!isset($is_pinned_only_search) && ! $is_specimen_search):?>

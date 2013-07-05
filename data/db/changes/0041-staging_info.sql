@@ -13,6 +13,7 @@ CREATE TABLE staging_info
 );
 ALTER TABLE staging_info
   OWNER TO darwin2;
+  
 GRANT ALL ON TABLE staging_info TO darwin2;
 GRANT SELECT ON TABLE staging_info TO d2viewer;
 
@@ -400,5 +401,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+GRANT ALL ON TABLE staging TO darwin2;
+GRANT SELECT ON TABLE staging TO d2viewer;
 COMMIT;
 

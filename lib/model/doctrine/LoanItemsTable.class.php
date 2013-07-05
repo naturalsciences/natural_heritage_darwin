@@ -21,7 +21,7 @@ class LoanItemsTable extends DarwinTable
     $q = Doctrine_Query::create()
       ->delete('LoanItems i')
       ->andwhereIn('i.id', $ids)
-      ->execute();        
+      ->execute();
   }
 
   public function getLoanRef($ids)
@@ -31,9 +31,9 @@ class LoanItemsTable extends DarwinTable
       ->select('i.loan_ref')
       ->From('LoanItems i')
       ->andwhereIn('i.id', $ids)
-      ->execute();    
-    foreach($q as $item)
-    {
+      ->execute();
+
+    foreach($q as $item){
       if($loan_ref == null) $loan_ref = $item->getLoanRef() ;
       if ($loan_ref != $item->getLoanRef()) return false ;
     }

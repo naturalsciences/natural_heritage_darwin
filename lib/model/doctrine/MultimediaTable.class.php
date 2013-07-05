@@ -26,40 +26,40 @@ class MultimediaTable extends DarwinTable
     if($onlyVisible)
       $q->andWhere('visible = true');
     return $q->execute();
-  }    
+  }
 
-  public function findForPublic(array $parameters)
+  public function findForPublic($specimen)
   {
     $q = Doctrine_Query::create()
-         ->from('Multimedia m')
-         ->where('m.visible = true')
-         ->andWhere("(m.referenced_relation = 'specimens' AND record_id = ?)
-                      OR
-                     (m.referenced_relation = 'specimen_individuals' AND record_id = ?)
-                      OR
-                     (m.referenced_relation = 'specimen_parts' AND record_id IN (SELECT id FROM specimen_parts WHERE specimen_individual_ref = ?))
-                      OR
-                     (m.referenced_relation = 'taxonomy' AND record_id = ?)
-                      OR
-                     (m.referenced_relation = 'chronostratigraphy' AND record_id = ?)
-                      OR
-                     (m.referenced_relation = 'lithostratigraphy' AND record_id = ?)
-                      OR
-                     (m.referenced_relation = 'lithology' AND record_id = ?)
-                      OR
-                     (m.referenced_relation = 'mineralogy' AND record_id = ?)",
-                    $parameters
-                  )
-         ->orderBy("CASE WHEN m.referenced_relation = 'specimens' THEN 1
-                         WHEN m.referenced_relation  = 'specimen_individuals' THEN 2
-                         WHEN m.referenced_relation  = 'specimen_parts' THEN 3
-                         WHEN m.referenced_relation  = 'taxonomy' THEN 4
-                         WHEN m.referenced_relation = 'chronostratigraphy' THEN 5
-                         WHEN m.referenced_relation = 'lithostratigraphy' THEN 6
-                         WHEN m.referenced_relation = 'lithology' THEN 7
-                         WHEN m.referenced_relation = 'mineralogy' THEN 8
-                     END,
-                     m.creation_date DESC");
+      ->from('Multimedia m')
+      ->where('m.visible = true')
+      ->andWhere("(m.referenced_relation = 'specimens' AND record_id = ?)
+                  OR
+                  (m.referenced_relation = 'taxonomy' AND record_id = ?)
+                  OR
+                  (m.referenced_relation = 'chronostratigraphy' AND record_id = ?)
+                  OR
+                  (m.referenced_relation = 'lithostratigraphy' AND record_id = ?)
+                  OR
+                  (m.referenced_relation = 'lithology' AND record_id = ?)
+                  OR
+                  (m.referenced_relation = 'mineralogy' AND record_id = ?)",
+                array(
+                  $specimen->getId(),
+                  $specimen->getTaxonRef(),
+                  $specimen->getChronoRef(),
+                  $specimen->getLithoRef(),
+                  $specimen->getLithologyRef(),
+                  $specimen->getMineralRef(),
+              ))
+      ->orderBy("CASE WHEN m.referenced_relation = 'specimens' THEN 1
+                      WHEN m.referenced_relation  = 'taxonomy' THEN 4
+                      WHEN m.referenced_relation = 'chronostratigraphy' THEN 5
+                      WHEN m.referenced_relation = 'lithostratigraphy' THEN 6
+                      WHEN m.referenced_relation = 'lithology' THEN 7
+                      WHEN m.referenced_relation = 'mineralogy' THEN 8
+                  END,
+                    m.creation_date DESC");
     return $q->execute();
   }
 

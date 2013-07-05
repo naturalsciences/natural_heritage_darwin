@@ -190,4 +190,71 @@ class specimenwidgetComponents extends sfComponents
     if(!isset($this->form['newBiblio']))
       $this->form->loadEmbed('Biblio');
   }
+
+  public function executeType()
+  {
+    $this->defineForm();
+  }
+
+  public function executeSex()
+  {
+    $this->defineForm();
+  }
+
+  public function executeStage()
+  {
+    $this->defineForm();
+  }
+
+  public function executeSocialStatus()
+  {
+    $this->defineForm();
+  }
+
+  public function executeRockForm()
+  {
+    $this->defineForm();
+  }
+
+  public function executeSpecimenCount()
+  {
+    $this->defineForm();
+  }
+
+
+  public function executeSpecPart()
+  {
+    $this->defineForm();
+  }
+
+  public function executeComplete()
+  {
+    $this->defineForm();
+  }
+
+  public function executeLocalisation()
+  {
+    $this->defineForm();
+  }
+
+  public function executeContainer()
+  {
+    $this->defineForm();
+    $this->form->forceContainerChoices();
+  }
+
+  public function executeRefInsurances()
+  {
+    $this->defineForm();
+    if(!isset($this->form['newInsurances']))
+      $this->form->loadEmbed('Insurances');
+  }
+
+ public function executeMaintenance()
+  {
+    $this->defineForm();
+    if($this->eid){
+      $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimen_parts', array($this->eid));
+    }
+  }
 }

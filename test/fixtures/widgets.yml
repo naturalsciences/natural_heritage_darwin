@@ -317,6 +317,146 @@ MyWidgets:
         title_perso: Related Files
         all_public: true
 
+    u1ws25:
+        User: u1
+        col_num: 2
+        category: specimen_widget
+        group_name: specimenCount
+        mandatory: false
+        order_by: 14
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Count
+    u1ws26:
+        User: u1
+        col_num: 1
+        category: specimen_widget
+        group_name: type
+        mandatory: false
+        order_by: 12
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Type
+
+    u1ws27:
+        User: u1
+        col_num: 1
+        category: specimen_widget
+        group_name: sex
+        mandatory: false
+        order_by: 13
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Sex
+
+    u1ws28:
+        User: u1
+        col_num: 1
+        category: specimen_widget
+        group_name: stage
+        mandatory: false
+        order_by: 14
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Stage
+
+    u1ws29:
+        User: u1
+        col_num: 1
+        category: specimen_widget
+        group_name: socialStatus
+        mandatory: false
+        order_by: 15
+        opened: false
+        visible: false
+        is_available: true
+        title_perso: Social Status
+
+    u1ws30:
+        User: u1
+        col_num: 1
+        category: specimen_widget
+        group_name: rockForm
+        mandatory: false
+        order_by: 16
+        opened: false
+        visible: false
+        is_available: true
+        title_perso: Rock form
+
+      
+    u1ws32:
+        User: u1
+        col_num: 2
+        category: specimen_widget
+        group_name: maintenance
+        order_by: 16
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Maintenance
+    u1ws33:
+        User: u1
+        col_num: 2
+        category: specimen_widget
+        group_name: refInsurances
+        order_by: 17
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Insurances
+    u1ws34:
+        User: u1
+        col_num: 1
+        category: specimen_widget
+        group_name: specPart
+        mandatory: true
+        order_by: 11
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Part
+
+    u1ws35:
+        User: u1
+        col_num: 2
+        category: specimen_widget
+        group_name: complete
+        mandatory: false
+        order_by: 17
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Complete
+
+    u1ws36:
+        User: u1
+        col_num: 2
+        category: specimen_widget
+        group_name: localisation
+        mandatory: false
+        order_by: 18
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Localisation
+
+    u1ws37:
+        User: u1
+        col_num: 1
+        category: specimen_widget
+        group_name: container
+        mandatory: false
+        order_by: 18
+        opened: true
+        visible: true
+        is_available: true
+        title_perso: Container
+
 
     u1wtax0:
         User: u1
@@ -1054,290 +1194,6 @@ MyWidgets:
         visible: true
         is_available: true
         title_perso: Suggestions / Report problem
-    u1sp1:
-        User: u1
-        col_num: 1
-        category: part_widget
-        group_name: partCount
-        mandatory: false
-        order_by: 2
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Count
-
-    u1sp2:
-        User: u1
-        col_num: 1
-        category: part_widget
-        group_name: specPart
-        mandatory: true
-        order_by: 1
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Part
-
-    u1sp3:
-        User: u1
-        col_num: 2
-        category: part_widget
-        group_name: complete
-        mandatory: false
-        order_by: 1
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Complete
-
-    u1sp4:
-        User: u1
-        col_num: 2
-        category: part_widget
-        group_name: localisation
-        mandatory: false
-        order_by: 2
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Localisation
-
-    u1sp5:
-        User: u1
-        col_num: 1
-        category: part_widget
-        group_name: container
-        mandatory: false
-        order_by: 3
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Container
-        
-    u1sp6:
-        User: u1
-        col_num: 2
-        category: part_widget
-        group_name: refProperties
-        order_by: 2
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Properties
-    u1sp7:
-        User: u1
-        col_num: 2
-        category: part_widget
-        group_name: refInsurances
-        order_by: 3
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Insurances
-    u1sp8:
-        User: u1
-        col_num: 2
-        category: part_widget
-        group_name: maintenance
-        order_by: 4
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Maintenance
-    u1sp9:
-        User: u1
-        col_num: 2
-        category: part_widget
-        group_name: comments
-        order_by: 5
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Comments
-    u1sp10:
-        User: u1
-        col_num: 1
-        category: part_widget
-        group_name: refCodes
-        order_by: 4
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Codes
-    u1sp11:
-        User: u1
-        col_num: 2
-        category: part_widget
-        group_name: parent
-        order_by: 5
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Parent
-    u1sp12:
-        User: u1
-        col_num: 2
-        category: part_widget
-        group_name: extLinks
-        order_by: 6
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: External Url  
-    u1sp1:
-        User: u1
-        col_num: 2
-        category: part_widget
-        group_name: biblio
-        mandatory: false
-        order_by: 7
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Bibliography
-      
-    u1spi1:
-        User: u1
-        col_num: 1
-        category: individuals_widget
-        group_name: type
-        mandatory: false
-        order_by: 1
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Type
-
-    u1spi2:
-        User: u1
-        col_num: 1
-        category: individuals_widget
-        group_name: sex
-        mandatory: false
-        order_by: 2
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Sex
-
-    u1spi3:
-        User: u1
-        col_num: 1
-        category: individuals_widget
-        group_name: stage
-        mandatory: false
-        order_by: 3
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Stage
-
-    u1spi4:
-        User: u1
-        col_num: 1
-        category: individuals_widget
-        group_name: socialStatus
-        mandatory: false
-        order_by: 4
-        opened: false
-        visible: false
-        is_available: true
-        title_perso: Social Status
-
-    u1spi5:
-        User: u1
-        col_num: 1
-        category: individuals_widget
-        group_name: rockForm
-        mandatory: false
-        order_by: 5
-        opened: false
-        visible: false
-        is_available: true
-        title_perso: Rock form
-
-    u1spi6:
-        User: u1
-        col_num: 2
-        category: individuals_widget
-        group_name: specimenIndividualCount
-        mandatory: false
-        order_by: 1
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Count
-
-    u1spi7:
-        User: u1
-        col_num: 2
-        category: individuals_widget
-        group_name: refProperties
-        mandatory: false
-        order_by: 2
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Properties
-
-    u1spi8:
-        User: u1
-        col_num: 2
-        category: individuals_widget
-        group_name: refIdentifications
-        mandatory: false
-        order_by: 3
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Identifications
-
-    u1spi9:
-        User: u1
-        col_num: 2
-        category: individuals_widget
-        group_name: comments
-        mandatory: false
-        order_by: 4
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Comments 
-
-    u1spi10:
-        User: u1
-        col_num: 2
-        category: individuals_widget
-        group_name: extLinks
-        mandatory: false
-        order_by: 5
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: External Url 
-
-    u1spi11:
-        User: u1
-        col_num: 2
-        category: individuals_widget
-        group_name: informativeWorkflow
-        order_by: 6
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Suggestions / Report problem
-
-    u1spi11:
-        User: u1
-        col_num: 2
-        category: individuals_widget
-        group_name: biblio
-        order_by: 7
-        opened: true
-        visible: true
-        is_available: true
-        title_perso: Bibliography
-                   
     u1sps0:
         User: u1
         col_num: 1

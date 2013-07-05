@@ -5,7 +5,7 @@ class MaFloorForm extends BaseForm
   public function configure()
   {
     $this->widgetSchema['floor'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctFloors',
       'method' => 'getFloors',
       'key_method' => 'getFloors',

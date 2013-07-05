@@ -5,7 +5,7 @@ class MaBuildingForm extends BaseForm
   public function configure()
   {
     $this->widgetSchema['building'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctBuildings',
       'method' => 'getBuildings',
       'key_method' => 'getBuildings',

@@ -12,8 +12,7 @@ class massactionsActions extends DarwinActions
 {
   public function preExecute()
   {
-    if(! $this->getUser()->isAtLeast(Users::ENCODER))
-    {
+    if(! $this->getUser()->isAtLeast(Users::ENCODER)) {
       $this->forwardToSecureAction();
     }
   }
@@ -31,11 +30,11 @@ class massactionsActions extends DarwinActions
         $nb_item = count($this->form->getValue('item_list'));
         $this->redirect('massactions/status?nb_item='.$nb_item);
       }
-      $items_ids = $actions['item_list'];
-      $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids,$actions['source'], $this->getUser()->getId());
-
+      $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId());
+    } else {
+      $items_ids = $this->getUser()->getAllPinned('specimen');
+      $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
     }
-
   }
 
   public function executeStatus(sfWebRequest $request)
@@ -50,12 +49,4 @@ class massactionsActions extends DarwinActions
     $this->form = new BaseMassActionForm();
     $this->form->addSubForm($this->mAction);
   }
-
-  public function executeItems(sfWebRequest $request)
-  {
-    $this->source = $request->getParameter('source','specimen');
-    $items_ids = $this->getUser()->getAllPinned($this->source);
-    $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids, $this->source, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
-  }
-  
 }

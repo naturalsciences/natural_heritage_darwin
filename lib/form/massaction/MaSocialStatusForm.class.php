@@ -5,7 +5,7 @@ class MaSocialStatusForm extends BaseForm
   public function configure()
   {
     $this->widgetSchema['social_status'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenIndividuals',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctSocialStatuses',
       'method' => 'getSocialStatus',
       'key_method' => 'getSocialStatus',

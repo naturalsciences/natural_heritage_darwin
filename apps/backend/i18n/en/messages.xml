@@ -91,21 +91,9 @@
         <source>Specimens</source>
         <target>Specimens</target>
       </trans-unit>
-          <trans-unit id="30">
-        <source>Pinned Items</source>
-        <target>Pinned Items</target>
-      </trans-unit>
           <trans-unit id="31">
-        <source>Specimens (%d)</source>
-        <target>Specimens (%d)</target>
-      </trans-unit>
-          <trans-unit id="32">
-        <source>Individuals (%d)</source>
-        <target>Individuals (%d)</target>
-      </trans-unit>
-          <trans-unit id="33">
-        <source>Parts (%d)</source>
-        <target>Parts (%d)</target>
+        <source>Pinned Specimens (%d)</source>
+        <target>Pinned Specimens (%d)</target>
       </trans-unit>
           <trans-unit id="34">
         <source>Collections</source>
@@ -5722,6 +5710,18 @@
       <trans-unit id="1733">
         <source>Geo/Paleo Search</source>
         <target>Geo/Paleo Search</target>
+      </trans-unit>
+      <trans-unit id="1734">
+        <source>Quality assurance</source>
+        <target>Quality assurance</target>
+      </trans-unit>
+      <trans-unit id="1735">
+        <source>Object name</source>
+        <target>Object name</target>
+      </trans-unit>
+      <trans-unit id="1736">
+        <source>This part is currently loaned</source>
+        <target>This part is currently loaned</target>
       </trans-unit>
     </body>
   </file>

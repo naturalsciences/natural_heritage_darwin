@@ -70,12 +70,17 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     $search = self::splitNameQuery($values);
     $terms = self::getAllTerms($search);
     foreach ($search['with'] as $search_term) {
+      if(strpos($search_term, '^') === 0) {
+        $query->andWhere($alias.'.'.$field." like fulltoindex(?) || '%' ", $search_term);
+      }
       $query->andWhere($alias.'.'.$field." like '%' || fulltoindex(?) || '%' ", $search_term);
     }
-    
     unset($search['with']);
     foreach($search as $item) {
       foreach ($item as $search_term) {
+        if(strpos($search_term, '^') === 0) {
+          $query->andWhere($alias.'.'.$field." not like fulltoindex(?) || '%' ", $search_term);
+        }
         $query->andWhere($alias.'.'.$field." not like '%' || fulltoindex(?) || '%' ", $search_term);
       }
     }

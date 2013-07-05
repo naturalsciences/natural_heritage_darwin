@@ -12,7 +12,7 @@ class boardActions extends DarwinActions
 {
   public function executeIndex(sfWebRequest $request)
   {
-    $this->individuals = Doctrine::getTable('SpecimenIndividuals')->getRandomPublicSpec(3);
+    $this->specimens = Doctrine::getTable('Specimens')->getRandomPublicSpec(3);
   }
 
   public function executeTour(sfWebRequest $request)

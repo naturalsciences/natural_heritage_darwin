@@ -23,7 +23,6 @@
  * @property CatalogueLevels $Level
  * @property Doctrine_Collection $Mineralogy
  * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimensFlat
  * @property Doctrine_Collection $SpecimensAccompanying
  * 
  * @method integer             getId()                    Returns the current record's "id" value
@@ -44,7 +43,6 @@
  * @method CatalogueLevels     getLevel()                 Returns the current record's "Level" value
  * @method Doctrine_Collection getMineralogy()            Returns the current record's "Mineralogy" collection
  * @method Doctrine_Collection getSpecimens()             Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimensFlat()         Returns the current record's "SpecimensFlat" collection
  * @method Doctrine_Collection getSpecimensAccompanying() Returns the current record's "SpecimensAccompanying" collection
  * @method Mineralogy          setId()                    Sets the current record's "id" value
  * @method Mineralogy          setName()                  Sets the current record's "name" value
@@ -64,7 +62,6 @@
  * @method Mineralogy          setLevel()                 Sets the current record's "Level" value
  * @method Mineralogy          setMineralogy()            Sets the current record's "Mineralogy" collection
  * @method Mineralogy          setSpecimens()             Sets the current record's "Specimens" collection
- * @method Mineralogy          setSpecimensFlat()         Sets the current record's "SpecimensFlat" collection
  * @method Mineralogy          setSpecimensAccompanying() Sets the current record's "SpecimensAccompanying" collection
  * 
  * @package    darwin
@@ -150,10 +147,6 @@ abstract class BaseMineralogy extends DarwinModel
              'foreign' => 'parent_ref'));
 
         $this->hasMany('Specimens', array(
-             'local' => 'id',
-             'foreign' => 'mineral_ref'));
-
-        $this->hasMany('SpecimensFlat', array(
              'local' => 'id',
              'foreign' => 'mineral_ref'));
 

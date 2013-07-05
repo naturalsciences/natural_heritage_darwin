@@ -10,9 +10,9 @@ $browser->
   with('response')->begin()->
     isStatusCode(200)->
     checkElement('#catalogue_properties_property_type option',3)->
-    checkElement('#catalogue_properties_property_sub_type option',1)->
-    checkElement('#catalogue_properties_property_accuracy_unit option',1)->
-    checkElement('#catalogue_properties_property_unit option',1)->
+    checkElement('#catalogue_properties_property_sub_type option',4)->
+    checkElement('#catalogue_properties_property_accuracy_unit option',3)->
+    checkElement('#catalogue_properties_property_unit option',3)->
   end()->
   
   click('Save', array('catalogue_properties' => array(

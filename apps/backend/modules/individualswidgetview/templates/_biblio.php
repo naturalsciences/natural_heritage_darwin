@@ -1,1 +1,0 @@
-<?php include_partial('specimenwidgetview/biblio', array('Biblios' => $Biblios));?>

@@ -1,4 +1,4 @@
-<?php slot('title',__("Dawin Help"));?>
+<?php slot('title',__("Darwin Help"));?>
 <div class="page">
   <h1><?php echo __('Darwin Guide :');?></h1>
   

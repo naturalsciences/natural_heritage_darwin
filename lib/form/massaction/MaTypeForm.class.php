@@ -5,7 +5,7 @@ class MaTypeForm extends BaseForm
   public function configure()
   {
     $this->widgetSchema['type'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenIndividuals',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctTypes',
       'method' => 'getType',
       'key_method' => 'getType',

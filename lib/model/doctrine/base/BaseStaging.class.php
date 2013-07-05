@@ -109,6 +109,7 @@
  * @property string $sub_container
  * @property integer $part_count_min
  * @property integer $part_count_max
+ * @property string $object_name
  * @property string $specimen_status
  * @property string $status
  * @property boolean $complete
@@ -223,6 +224,7 @@
  * @method string              getSubContainer()              Returns the current record's "sub_container" value
  * @method integer             getPartCountMin()              Returns the current record's "part_count_min" value
  * @method integer             getPartCountMax()              Returns the current record's "part_count_max" value
+ * @method string              getObjectName()                Returns the current record's "object_name" value
  * @method string              getSpecimenStatus()            Returns the current record's "specimen_status" value
  * @method string              getStatus()                    Returns the current record's "status" value
  * @method boolean             getComplete()                  Returns the current record's "complete" value
@@ -336,6 +338,7 @@
  * @method Staging             setSubContainer()              Sets the current record's "sub_container" value
  * @method Staging             setPartCountMin()              Sets the current record's "part_count_min" value
  * @method Staging             setPartCountMax()              Sets the current record's "part_count_max" value
+ * @method Staging             setObjectName()                Sets the current record's "object_name" value
  * @method Staging             setSpecimenStatus()            Sets the current record's "specimen_status" value
  * @method Staging             setStatus()                    Sets the current record's "status" value
  * @method Staging             setComplete()                  Sets the current record's "complete" value
@@ -676,6 +679,9 @@ abstract class BaseStaging extends DarwinModel
              ));
         $this->hasColumn('part_count_max', 'integer', null, array(
              'type' => 'integer',
+             ));
+        $this->hasColumn('object_name', 'string', null, array(
+             'type' => 'string',
              ));
         $this->hasColumn('specimen_status', 'string', null, array(
              'type' => 'string',

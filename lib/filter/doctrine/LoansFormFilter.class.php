@@ -97,18 +97,19 @@ class LoansFormFilter extends BaseLoansFormFilter
     if($val != '')
     {
       $alias = $query->getRootAlias() ;
-      if($val == 'opened')
-      $query->andWhere("EXISTS (select s.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status != ?)",'closed');      
-      else
-      $query->andWhere("EXISTS (select s.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status = ?)",$val);
+      if($val == 'opened') {
+        $query->andWhere("EXISTS (select s.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status != ?)",'closed');
+      }
+      else {
+        $query->andWhere("EXISTS (select s.id from LoanStatus s where $alias.id = s.loan_ref and is_last=true and status = ?)",$val);
+      }
     }
     return $query;
   }
 
   public function addOnlyDarwinColumnQuery($query, $field, $val)
   {
-    if($val)
-    {
+    if($val) {
       $alias = $query->getRootAlias() ;
       $query->andWhere("EXISTS (select d.id from LoanItems d where $alias.id = d.loan_ref and part_ref is not null)");
     }
@@ -117,8 +118,7 @@ class LoansFormFilter extends BaseLoansFormFilter
 
   public function addPeopleRefColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
+    if($val != '') {
       $alias = $query->getRootAlias() ;
       $query->andWhere("EXISTS (select cp.id from CataloguePeople cp where $alias.id = cp.record_id and referenced_relation='loans' and people_ref = ?)", $val);
     }
@@ -128,8 +128,7 @@ class LoansFormFilter extends BaseLoansFormFilter
 
   public function addIgRefColumnQuery($query, $field, $val)
   {
-    if($val != '')
-    {
+    if($val != '') {
       $alias = $query->getRootAlias() ;
       $query->andWhere("EXISTS (select i.id from LoanItems i where $alias.id = i.loan_ref and ig_ref = ?)", $val);
     }

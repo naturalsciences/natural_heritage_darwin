@@ -1,1 +1,1 @@
-<?php include_partial('parts/extInfo', array('item'=> $item)); ?>
+<?php include_partial('specimen/extInfo', array('item'=> $item)); ?>

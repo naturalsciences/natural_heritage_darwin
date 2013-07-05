@@ -5,7 +5,7 @@ class MaShelfForm extends BaseForm
   public function configure()
   {
     $this->widgetSchema['shelf'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctShelfs',
       'method' => 'getShelfs',
       'key_method' => 'getShelfs',

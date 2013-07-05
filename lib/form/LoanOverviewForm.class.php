@@ -25,11 +25,17 @@ class LoanOverviewForm extends sfForm
   }
 
   
-  public function addItem($num,$part_ref=null)
+  public function addItem($num,$spec_ref=null)
   {
-    $item = new LoanItems() ;  
-    if($part_ref) $item->setPartRef($part_ref) ;
-    $form = new LoanItemsForm($item);    
+    $item = new LoanItems() ;
+    if($spec_ref){
+      $spec = Doctrine::getTable('Specimens')->find($spec_ref);
+      if($spec) {
+        $item->setSpecimenRef($spec->getId()) ;
+        $item->setIgRef($spec->getIgRef()) ;
+      }
+    }
+    $form = new LoanItemsForm($item);
     $this->embeddedForms['newLoanItems']->embedForm($num, $form);
     //Re-embedding the container
     $this->embedForm('newLoanItems', $this->embeddedForms['newLoanItems']);

@@ -116,11 +116,6 @@ CREATE OR REPLACE VIEW darwin_flat as
   spec_ident_ids,
   spec_coll_ids,
   spec_don_sel_ids,
-  i.ind_ident_ids as ind_ident_ids,
-
-  f.with_types,
-  f.with_individuals,
-  COALESCE(i.with_parts,false) as with_parts,
 
   i.id as individual_ref,
   coalesce(i.type, 'specimen') as individual_type,

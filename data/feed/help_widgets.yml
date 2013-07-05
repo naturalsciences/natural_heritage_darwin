@@ -15,38 +15,6 @@ all:
       biblio : This widget allows you to add a bibliographic reference of the item
       relatedFiles : This widget allows you to add a file related to the item - This can either be a document describing the item or an illustration of it.
 
-    individualswidget:
-      refIdentifications: This widget allows you to add some information regarding the determination of either the type, sex, stage, social status and/or rock formation. You can potentially add the date on which the determination was made, what value was given as well as the determinators' names.
-      socialStatus: This widget is mainly used for entering the social class of an animal living in a social group. e.g. to indicate that an individual is a workerbee
-      rockForm: This widget allows you to add a sterioscopic form that you can find when analysing a mineral composition.
-      specimenIndividualCount: In this widget you can specify the exact number of individuals belonging to the same specimen or you can specify a lower and upperbound estimate of the number of individuals"
-      stage: This widget lets you describe the stage of the present individual e.g. a larva"
-      comments: his widget is used to add commentary. If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however
-      refProperties: This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= measurement, sub type= lenght, qualifier= wing, method= manual, tool= ruler, value units= cm, Accuracy units= mm , value= 3, accuracy=0.2
-      type: This widget allows you to add the information regarding the status of the individual e.g. holotype. You can, however, also add non conformistic nomenclatura types
-      sex: This widget allows you to enter the sex of a particular individual. You can also add a specific attribute e.g. pregnant with eggs
-      extLinks: This widget allows you to add a URL address to the record (ex : http://www.naturalsciences.be)
-      informativeWorkflow: This widget allows you to add a note for this specific individual, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges
-      biblio : This widget allows you to add a bibliographic reference of the item
-      refRelatedFiles : This widget allows you to add a file related to the item - This can either be a document describing the item or an illustration of it.
-
-    partwidget:
-      complete: This widget allows you to add information with regards to the physical state of the object. E.g. damaged. You can also indicate whether you have a complete object or a partial object by using the tickbox.
-      container: This widget allows you to add information with regards to the storage conditions in the depositaries of the institute. You can specify a container and/or sub container as well as the condition in which the object is conserved. The supernumerary option allows you to indicate that the objects should potentially be moved to a more spacious container.
-      partCount: In this widget you can specify the exact number of objects belonging to the same individual or you can specify a lower and upperbound estimate of the number of objects
-      comments: This widget is used to add commentary.If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however
-      refInsurances: In this widget you can specify one or more values with regards to the object(s) as estimated by a particular insurance institution and /or on a particular date.
-      extLinks: This widget allows you to add a URL address to the record (ex : http://www.naturalsciences.be)"
-      parent: This widget allows you to link the current object to a parent object. E.g. link a DNA sample to a Tissue sample.
-      specPart: This mandatory widget specifies the type of object in more detail.
-      localisation: This widget allows you to add information with regards to the placement in the depositories of the institute. You can specify the building, floor, room, row and/or shelf where the object(s) are stored.
-      refCodes: This widget allows you to link one or more codes to an object. You can either associate a prefix, a separator, a code, a separator and/or a suffix to each type of code (main, temporary,etc.)
-      maintenance: This widget shows you types of actions or observations with regards to the object. This can e.g. show you the date on which a person added alcohol to the container that houses the object or it could be the date on which a person observed that an object seemed to be broken. Information in this widget can, however, only be inserted by using the mass update functionality!
-      refProperties: This widget allows you to add some more structured commentary, but be sure that your information is entered consistently. You could e.g. add the following: type= measurement, sub type= weight, qualifier= shell, method= electronic, tool= scale, value units= g, value=2
-      informativeWorkflow: This widget allows you to add a note for this specific part, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges
-      biblio : This widget allows you to add a bibliographic reference of the item
-      refRelatedFiles : This widget allows you to add a file related to the item - This can either be a document describing the item or an illustration of it.
-
     peoplewidget:
       comment: This widget is used to add commentary.If you wish, You can add more than one commentary notion per record. You cannot add the same notion twice in one record, however
       comm: This widget regroups all communication information of a user, such as phone/fax number, email. You can use our tags to set the type of entry (work or home phone for instance)
@@ -86,6 +54,7 @@ all:
       acquisitions: Via this widget you can either look up by type of acquisition or by looking up in a range acquisition dates.
       people_role: Via this widget you can perform a search in order to find all records where a specific person (or institution) appears. You can also choose one or more roles for this person (such as collector, identifier and/or donator/seller)
       informativeWorkflow: Help to be written
+      part: Search over part type and name of a part
 
     specimenwidget: 
       refChrono: This widget allows you to add the reference to a chonostratigraphic unit.
@@ -112,6 +81,20 @@ all:
       informativeWorkflow: This widget allows you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges
       biblio : This widget allows you to add a bibliographic reference of the item
       refRelatedFiles : This widget allows you to add a file related to the item - This can either be a document describing the item or an illustration of it.
+
+      socialStatus: This widget is mainly used for entering the social class of an animal living in a social group. e.g. to indicate that an individual is a workerbee
+      rockForm: This widget allows you to add a sterioscopic form that you can find when analysing a mineral composition.
+      specimenCount: In this widget you can specify the exact number of individuals belonging to the same specimen or you can specify a lower and upperbound estimate of the number of individuals"
+      stage: This widget lets you describe the stage of the present individual e.g. a larva"
+      type: This widget allows you to add the information regarding the status of the individual e.g. holotype. You can, however, also add non conformistic nomenclatura types
+      sex: This widget allows you to enter the sex of a particular individual. You can also add a specific attribute e.g. pregnant with eggs
+
+      complete: This widget allows you to add information with regards to the physical state of the object. E.g. damaged. You can also indicate whether you have a complete object or a partial object by using the tickbox.
+      container: This widget allows you to add information with regards to the storage conditions in the depositaries of the institute. You can specify a container and/or sub container as well as the condition in which the object is conserved. The supernumerary option allows you to indicate that the objects should potentially be moved to a more spacious container.
+      refInsurances: In this widget you can specify one or more values with regards to the object(s) as estimated by a particular insurance institution and /or on a particular date.
+      specPart: This mandatory widget specifies the type of object in more detail.
+      localisation: This widget allows you to add information with regards to the placement in the depositories of the institute. You can specify the building, floor, room, row and/or shelf where the object(s) are stored.
+      maintenance: This widget shows you types of actions or observations with regards to the object. This can e.g. show you the date on which a person added alcohol to the container that houses the object or it could be the date on which a person observed that an object seemed to be broken. Information in this widget can, however, only be inserted by using the mass update functionality!
 
     userswidget:
       address: This widget allows you to add one or more addresses, it can be home address, work or more. The locality and the country are required fields
