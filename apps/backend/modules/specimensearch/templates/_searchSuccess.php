@@ -12,13 +12,6 @@
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
     <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container'=> '.spec_results')); ?>
 
-      <div id="source"><?php 
-        if($source=="specimen")
-          echo __('Scope : Specimens');
-        elseif($source=="individual")
-          echo __('Scope : Individuals');
-        else
-          echo __('Scope : Parts');?></div>
       <table class="spec_results">
         <thead>
           <tr>
@@ -28,12 +21,11 @@
                 <?php echo image_tag('checkbox_remove_on.png', array('class'=>'top_remove_but remove_on hidden', 'alt' =>  __('Remove all elements from list'))) ; ?>
               <?php endif;?>
             </th>
-            <th><!-- + / - buttons  --></th>
             <th><!-- Pin -->
                <?php echo image_tag('white_pin_off.png', array('class'=>'top_pin_but pin_off','alt' =>  __('Cancel this result'))) ; ?>
                <?php echo image_tag('white_pin_on.png', array('class'=>'top_pin_but pin_on', 'alt' =>  __('Save this result'))) ; ?>
             </th>
-            <?php $all_columns = $columns['specimen']->getRawValue() + $columns['individual']->getRawValue() + $columns['part']->getRawValue() ;?>
+            <?php $all_columns = $columns->getRawValue() ;?>
             <?php foreach($all_columns as $col_name => $col):?>
               <th class="col_<?php echo $col_name;?>">
                 <?php if($col[0] != false):?>
@@ -57,48 +49,17 @@
             <th><!-- actions --></th>
           </tr>
         </thead>
-        <?php 
-        foreach($specimensearch as $unit):?>
-          <?php if($source=="specimen")
-                {
-                  $specimen = $unit;
-                  $itemRef = $specimen['specimen_ref'];
-                }
-                elseif($source=="individual")
-                {
-                  $individual = $unit;
-                  $specimen = $individual->SpecimensFlat;
-                  $itemRef = $individual['id'];
-                }
-                elseif($source=="part")
-                {
-                  $part = $unit;
-                  $individual = $unit->Individual;
-                  $specimen = $individual->SpecimensFlat;
-                  $itemRef = $part['id'];
-                }?>
-          <tbody>
-            <tr class="rid_<?php echo $itemRef?>">
-
-              <td rowspan="2">
+        <tbody>
+        <?php foreach($specimensearch as $specimen):?>
+            <tr class="rid_<?php echo $specimen->getId()?>">
+              <td>
                 <?php if($is_specimen_search):?>
                   <?php echo image_tag('checkbox_remove_off.png', array('class'=>'remove_but remove_off','alt' =>  __('Keep all elements in list'))) ; ?>
                   <?php echo image_tag('checkbox_remove_on.png', array('class'=>'remove_but remove_on hidden', 'alt' =>  __('Remove all elements from list'))) ; ?>
                 <?php endif;?>
               </td>
-              <td rowspan="2">
-                <?php if($source != 'part'):?>
-                  <?php $expandable = ($source == 'specimen') ? $specimen->getWithIndividuals() : $individual->getWithParts();?>
-                  <?php if($expandable):?>
-                    <?php echo image_tag('blue_expand.png', array('alt' => '+', 'class'=> 'tree_cmd_td collapsed')); ?>
-                    <?php echo image_tag('blue_expand_up.png', array('alt' => '-', 'class'=> 'tree_cmd_td expanded')); ?>
-                  <?php else:?>
-                    <?php echo image_tag('grey_expand.png', array('alt' => '+', 'class'=> 'collapsed')); ?>
-                  <?php endif;?>
-                <?php endif;?>
-              </td>
               <td >
-                <?php if($sf_user->isPinned($itemRef, $source)):?>
+                <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>
                   <?php echo image_tag('blue_pin_on.png', array('class'=>'pin_but pin_on','alt' =>  __('Cancel this result'))) ; ?>
                   <?php echo image_tag('blue_pin_off.png', array('class'=>'pin_but pin_off hidden', 'alt' =>  __('Save this result'))) ; ?>
                 <?php else:?>
@@ -106,99 +67,21 @@
                   <?php echo image_tag('blue_pin_off.png', array('class'=>'pin_but pin_off', 'alt' =>  __('Save this result'))) ; ?>
                 <?php endif;?>
               </td>
-              <?php include_partial('result_content_specimen', array('item_ref'=>$itemRef, 'source'=>$source,'specimen' => $specimen, 'codes' => $codes,'unit'=>$unit, 'is_specimen_search' => $is_specimen_search)); ?>
-              <?php if($source != 'specimen'):?>
-                <?php include_partial('result_content_individual', array('item_ref'=>$itemRef, 'individual' => $individual, 'is_specimen_search' => $is_specimen_search,'unit'=>$unit)); ?>
-              <?php endif;?>
-              <?php if($source == 'part'):?>
-                <?php include_partial('result_content_part', array('item_ref'=>$itemRef, 'part' => $part, 'codes' => $part_codes, 'is_specimen_search' => $is_specimen_search,'unit'=>$unit)); ?>
-              <?php endif;?>
-              <td rowspan="2">
-              <?php if($sf_user->isAtLeast(Users::ADMIN) || $unit->getHasEncodingRights()) : ?>
-                <?php switch($source){
-                  case 'specimen':   $e_link = 'specimen/edit?id='.$specimen->getSpecimenRef();
-                                     $v_link = 'specimen/view?id='.$specimen->getSpecimenRef();                  
-                                     $d_link = 'specimen/new?duplicate_id='.$specimen->getSpecimenRef();break;
-                  case 'individual': $e_link = 'individuals/edit?id='.$individual->getId();
-                                     $v_link = 'individuals/view?id='.$individual->getId();
-                                     $d_link = 'individuals/edit?spec_id='.$specimen->getSpecimenRef().'&duplicate_id='.$individual->getId();break;
-                  default:           $e_link = 'parts/edit?id='.$part->getId();
-                                     $v_link = 'parts/view?id='.$part->getId();
-                                     $d_link = 'parts/edit?indid='.$individual->getId().'&duplicate_id='.$part->getId();break;              
-                  };?>
-                  <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), $e_link);?>
-                  <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))), $d_link, array('class' => 'duplicate_link'));?>
+              <?php include_partial('result_content_specimen', array( 'specimen' => $specimen, 'codes' => $codes, 'is_specimen_search' => $is_specimen_search)); ?>
+              <?php include_partial('result_content_individual', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
+              <?php include_partial('result_content_part', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
+              <td>
+              <?php if($sf_user->isAtLeast(Users::ADMIN) || $specimen->getHasEncodingRights()) : ?>
+                <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'specimen/edit?id='.$specimen->getId());?>
+                <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))), 'specimen/new?duplicate_id='.$specimen->getId(), array('class' => 'duplicate_link'));?>
               <?php else : ?>
-
-                <?php switch($source){
-                  case 'specimen':   $v_link = 'specimen/view?id='.$specimen->getSpecimenRef();break;
-                  case 'individual': $v_link = 'individuals/view?id='.$individual->getId();break;
-                  default:           $v_link = 'parts/view?id='.$part->getId();break;
-                  };?>
-              <?php endif ; ?>
-              <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),$v_link,array('target' => 'pop'));?>
+                <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$specimen->getId(), array('target' => 'pop'));?>
               </td>
+              <?php endif; ?>
             </tr>
-
-            <?php if($source == 'specimen' && $specimen->getWithIndividuals()):?>
-              <tr id="tr_individual_<?php echo $specimen->getSpecimenRef();?>" class="ind_row sub_row">
-                <td colspan="14"> 
-                  <div id="container_individual_<?php echo $specimen->getSpecimenRef();?>" class="tree"></div>
-                  <script type="text/javascript">
-                    $(document).ready(function () {
-                    $('tr.rid_<?php echo $specimen->getSpecimenRef(); ?> img.collapsed').click(function() 
-                    {
-                      $(this).hide();
-                      $(this).siblings('.expanded').show();
-                      $.get('<?php echo url_for("specimensearch/individualTree?id=".$specimen->getSpecimenRef()) ;?>',function (html){
-                              $('#container_individual_<?php echo $specimen->getSpecimenRef();?>').html(html).slideDown();
-                              });
-                    });  
-                    $('tr.rid_<?php echo $specimen->getSpecimenRef(); ?> img.expanded').click(function() 
-                    {
-                      $(this).hide();
-                      $(this).siblings('.collapsed').show();
-                      $('#container_individual_<?php echo $specimen->getSpecimenRef();?>').slideUp();
-                    });
-                  });
-                  </script>
-                </td>
-              </tr>
-            <?php elseif($source == 'specimen'):?>
-              <tr class="ind_row sub_row"><td colspan="14"></td></tr>
-            <?php elseif($source == 'individual' /** @TODO  && $specimen->getWithParts()*/):?>
-              <tr id="tr_part_<?php echo $individual->getId();?>" class="part_row sub_row">
-                <td colspan="14"> 
-                  <div id="container_part_<?php echo $individual->getId();?>" class="tree"></div>
-                  <script type="text/javascript">
-                  $(document).ready(function () {
-                    $('tr.rid_<?php echo $individual->getId(); ?> img.collapsed').click(function() 
-                    {
-                      $(this).hide();
-                      $(this).siblings('.expanded').show();
-                      $.get('<?php echo url_for("specimensearch/partTree?id=".$individual->getId()) ;?>',function (html){
-                              $('#container_part_<?php echo $individual->getId();?>').html(html).slideDown();
-                              });
-                    });  
-                    $('tr.rid_<?php echo $individual->getId(); ?> img.expanded').click(function() 
-                    {
-                      $(this).hide();
-                      $(this).siblings('.collapsed').show();
-                      $('#container_part_<?php echo $individual->getId();?>').slideUp();
-                    });
-                  });
-                  </script>
-                </td>
-              </tr>
-            <?php else: // if source = individual but with no parts ?>
-              <tr class="part_row sub_row">
-                <td colspan="14"></td>
-              </tr>
-            <?php endif;?>
-          </tbody>
         <?php endforeach;?>
+      </tbody>
       </table>
-
       <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
     <?php else:?>
       <?php echo __('No Specimen Matching');?>
@@ -211,10 +94,9 @@ $(document).ready(function () {
     check_screen_size();
   }); 
 /****COL MANAGEMENT ***/
-  $('ul.column_menu > li > ul > li').each(function(){
+  $('ul.column_menu > li').each(function(){
     hide_or_show($(this));
   });
-  initIndividualColspan() ;
 /****END COL MANAGEMENT ***/
 
   /**PIN management **/
@@ -232,7 +114,7 @@ $(document).ready(function () {
       pin_status = 1;
     }
     rid = getIdInClasses($(this).closest('tr'));
-    $.get('<?php echo url_for('savesearch/pin?source='.$source);?>/id/' + rid + '/status/' + pin_status,function (html){});
+    $.get('<?php echo url_for('savesearch/pin?source=specimen');?>/id/' + rid + '/status/' + pin_status,function (html){});
   });
 
   if($('.spec_results tbody .pin_on').not('.hidden').length == $('.spec_results tbody .pin_on').length)
@@ -279,7 +161,7 @@ $(document).ready(function () {
         $('.spec_results tbody tr .pin_off').addClass('hidden');
         $('.spec_results tbody tr .pin_on').removeClass('hidden') ;
     }
-    $.get('<?php echo url_for('savesearch/pin?source='.$source);?>/mid/' + pins + '/status/' + pin_status,function (html){});
+    $.get('<?php echo url_for('savesearch/pin?source=specimen');?>/mid/' + pins + '/status/' + pin_status,function (html){});
   }); 
 
   /*Remove management*/

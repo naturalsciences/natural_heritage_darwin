@@ -17,7 +17,7 @@
  * @property string $full_code_indexed
  * @property string $code_date
  * @property integer $code_date_mask
- * @property SpecimensFlat $SpecimensFlat
+ * @property Specimens $Specimens
  * 
  * @method integer        getId()                    Returns the current record's "id" value
  * @method string         getReferencedRelation()    Returns the current record's "referenced_relation" value
@@ -31,7 +31,7 @@
  * @method string         getFullCodeIndexed()       Returns the current record's "full_code_indexed" value
  * @method string         getCodeDate()              Returns the current record's "code_date" value
  * @method integer        getCodeDateMask()          Returns the current record's "code_date_mask" value
- * @method SpecimensFlat  getSpecimensFlat()         Returns the current record's "SpecimensFlat" value
+ * @method Specimens      getSpecimens()             Returns the current record's "Specimens" value
  * @method SpecimensCodes setId()                    Sets the current record's "id" value
  * @method SpecimensCodes setReferencedRelation()    Sets the current record's "referenced_relation" value
  * @method SpecimensCodes setRecordId()              Sets the current record's "record_id" value
@@ -44,7 +44,7 @@
  * @method SpecimensCodes setFullCodeIndexed()       Sets the current record's "full_code_indexed" value
  * @method SpecimensCodes setCodeDate()              Sets the current record's "code_date" value
  * @method SpecimensCodes setCodeDateMask()          Sets the current record's "code_date_mask" value
- * @method SpecimensCodes setSpecimensFlat()         Sets the current record's "SpecimensFlat" value
+ * @method SpecimensCodes setSpecimens()             Sets the current record's "Specimens" value
  * 
  * @package    darwin
  * @subpackage model
@@ -106,8 +106,8 @@ abstract class BaseSpecimensCodes extends DarwinModel
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('SpecimensFlat', array(
+        $this->hasOne('Specimens', array(
              'local' => 'record_id',
-             'foreign' => 'specimen_ref'));
+             'foreign' => 'id'));
     }
 }

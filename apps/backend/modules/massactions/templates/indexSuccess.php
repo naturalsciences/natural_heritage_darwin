@@ -5,14 +5,10 @@
   <table>
     <tbody>
       <tr>
-        <th><?php echo $form['source']->renderLabel();?></th>
-        <td><?php echo $form['source'];?></td>
-      </tr>
-      <tr>
         <td colspan="2">
           <div  id="item_list">
             <?php if(isset($items)):?>
-              <?php include_partial('itemlist',array('items'=>$items, 'source'=>$form['source']->getValue()));?>
+              <?php include_partial('itemlist',array('items'=>$items));?>
             <?php else:?>
               <?php echo $form['item_list'];?>
             <?php endif;?>
@@ -22,7 +18,7 @@
 
       <tr>
         <th><?php echo $form['field_action']->renderLabel();?></th>
-        <td><?php echo $form['field_action'];?></td>
+        <td class="fld_group"><?php echo $form['field_action'];?></td>
       </tr>
 
       <tr id="action_sub_form">
@@ -44,49 +40,6 @@
   </form>
 </div>
 <script type="text/javascript">
-function chooseSource(event)
-{
-  if(! event  && $('#mass_action_source').val() != '')
-  {
-    $('#mass_action .fld_group ul').hide();
-    $(".group_"+$('#mass_action_source').val()+" ul").show();
-  }
-  else
-  {
-    if($('#mass_action_source').val() == '')
-    {
-      $('#item_list').html('');
-      $('#item_list').addClass('disabled');
-      checkItem();
-    }
-    else
-    {
-      $("#item_list").html('<?php echo image_tag('loader.gif',array('class'=>'loading_img'));?>');
-        checkItem();
-      $('#item_list').load('<?php echo url_for('massactions/items');?>/source/' + $('#mass_action_source').val() , function() {
-        checkItem();
-      });
-      $('#mass_action .fld_group ul').hide();
-      $(".group_"+$('#mass_action_source').val()+" ul").show();
-      ///SHOW OR HIDE possible action  UNCHECK not possible actions
-    }
-  }
-}
-
-function checkItem()
-{
-  if( $('#item_list .item_row').length == 0)
-  {
-    $('#mass_action .fld_group ul :checkbox').removeAttr('checked');
-    $('#mass_action .fld_group ul :checkbox').attr('disabled','disabled');
-    $("#action_sub_form > td > div").html('');
-    chooseAction();
-  }
-  else
-  {
-    $(".group_"+$('#mass_action_source').val()+" ul :checkbox").removeAttr('disabled');
-  }
-}
 
 function chooseAction(event)
 {
@@ -123,8 +76,6 @@ function changeSubmit(status)
 
 $(document).ready(function () {
 
-  chooseSource();
-  $('#mass_action_source').change(chooseSource);
   $('#mass_action .fld_group ul :checkbox').change(chooseAction);
   $('#mass_submit').closest('form').submit(function (event)
   {

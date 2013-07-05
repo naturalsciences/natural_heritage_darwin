@@ -35,7 +35,7 @@ class savesearchActions extends sfActions
 
   public function executePin(sfWebRequest $request)
   {
-    if( in_array($request->getParameter('source',""), array('specimen','individual','part')))
+    if( in_array($request->getParameter('source',""), array('specimen')))
     {
       $source =  $request->getParameter('source',"");
       if($request->getParameter('id') && ctype_digit($request->getParameter('id')))
@@ -107,7 +107,7 @@ class savesearchActions extends sfActions
       $saved_search->setVisibleFieldsInResult($cols);
       if($request->getParameter('type') == 'pin')
       {
-        $this->forward404unless(in_array($source, array('specimen','individual','part')));
+        $this->forward404unless(in_array($source, array('specimen')));
         $saved_search->setSubject($source);
 
         $this->is_spec_search=true;

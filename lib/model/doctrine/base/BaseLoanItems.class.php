@@ -10,32 +10,32 @@
  * @property integer $ig_ref
  * @property string $from_date
  * @property string $to_date
- * @property integer $part_ref
+ * @property integer $specimen_ref
  * @property string $details
  * @property Loans $Loan
  * @property Igs $Ig
- * @property SpecimenParts $DarwinParts
+ * @property Specimens $DarwinParts
  * 
- * @method integer       getId()          Returns the current record's "id" value
- * @method integer       getLoanRef()     Returns the current record's "loan_ref" value
- * @method integer       getIgRef()       Returns the current record's "ig_ref" value
- * @method string        getFromDate()    Returns the current record's "from_date" value
- * @method string        getToDate()      Returns the current record's "to_date" value
- * @method integer       getPartRef()     Returns the current record's "part_ref" value
- * @method string        getDetails()     Returns the current record's "details" value
- * @method Loans         getLoan()        Returns the current record's "Loan" value
- * @method Igs           getIg()          Returns the current record's "Ig" value
- * @method SpecimenParts getDarwinParts() Returns the current record's "DarwinParts" value
- * @method LoanItems     setId()          Sets the current record's "id" value
- * @method LoanItems     setLoanRef()     Sets the current record's "loan_ref" value
- * @method LoanItems     setIgRef()       Sets the current record's "ig_ref" value
- * @method LoanItems     setFromDate()    Sets the current record's "from_date" value
- * @method LoanItems     setToDate()      Sets the current record's "to_date" value
- * @method LoanItems     setPartRef()     Sets the current record's "part_ref" value
- * @method LoanItems     setDetails()     Sets the current record's "details" value
- * @method LoanItems     setLoan()        Sets the current record's "Loan" value
- * @method LoanItems     setIg()          Sets the current record's "Ig" value
- * @method LoanItems     setDarwinParts() Sets the current record's "DarwinParts" value
+ * @method integer   getId()           Returns the current record's "id" value
+ * @method integer   getLoanRef()      Returns the current record's "loan_ref" value
+ * @method integer   getIgRef()        Returns the current record's "ig_ref" value
+ * @method string    getFromDate()     Returns the current record's "from_date" value
+ * @method string    getToDate()       Returns the current record's "to_date" value
+ * @method integer   getSpecimenRef()  Returns the current record's "specimen_ref" value
+ * @method string    getDetails()      Returns the current record's "details" value
+ * @method Loans     getLoan()         Returns the current record's "Loan" value
+ * @method Igs       getIg()           Returns the current record's "Ig" value
+ * @method Specimens getDarwinParts()  Returns the current record's "DarwinParts" value
+ * @method LoanItems setId()           Sets the current record's "id" value
+ * @method LoanItems setLoanRef()      Sets the current record's "loan_ref" value
+ * @method LoanItems setIgRef()        Sets the current record's "ig_ref" value
+ * @method LoanItems setFromDate()     Sets the current record's "from_date" value
+ * @method LoanItems setToDate()       Sets the current record's "to_date" value
+ * @method LoanItems setSpecimenRef()  Sets the current record's "specimen_ref" value
+ * @method LoanItems setDetails()      Sets the current record's "details" value
+ * @method LoanItems setLoan()         Sets the current record's "Loan" value
+ * @method LoanItems setIg()           Sets the current record's "Ig" value
+ * @method LoanItems setDarwinParts()  Sets the current record's "DarwinParts" value
  * 
  * @package    darwin
  * @subpackage model
@@ -65,7 +65,7 @@ abstract class BaseLoanItems extends DarwinModel
         $this->hasColumn('to_date', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('part_ref', 'integer', null, array(
+        $this->hasColumn('specimen_ref', 'integer', null, array(
              'type' => 'integer',
              ));
         $this->hasColumn('details', 'string', null, array(
@@ -86,8 +86,8 @@ abstract class BaseLoanItems extends DarwinModel
              'local' => 'ig_ref',
              'foreign' => 'id'));
 
-        $this->hasOne('SpecimenParts as DarwinParts', array(
-             'local' => 'part_ref',
+        $this->hasOne('Specimens as DarwinParts', array(
+             'local' => 'specimen_ref',
              'foreign' => 'id'));
     }
 }

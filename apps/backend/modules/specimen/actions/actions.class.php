@@ -275,7 +275,7 @@ class specimenActions extends DarwinActions
   {
     $this->setLevelAndCaller($request);
     // Initialization of the Search expedition form
-    $this->form = new SpecimensFormFilter(array('caller_id'=>$this->caller_id));
+    $this->form = new SpecimensSelfFormFilter(array('caller_id'=>$this->caller_id));
     // Remove surrounding layout
     $this->setLayout(false);
   }
@@ -284,7 +284,7 @@ class specimenActions extends DarwinActions
   {
     $this->setLevelAndCaller($request);
     // Initialization of the Search expedition form
-    $this->form = new SpecimensFormFilter(array('caller_id'=> $this->caller_id));
+    $this->form = new SpecimensSelfFormFilter(array('caller_id'=> $this->caller_id));
   }
 
   /**
@@ -298,7 +298,7 @@ class specimenActions extends DarwinActions
     $this->setCommonValues('specimen', 'collection_name', $request);
     $item = $request->getParameter('searchSpecimen',array(''));
     // Instantiate a new specimen form
-    $this->form = new SpecimensFormFilter(array('caller_id'=>$item['caller_id']));
+    $this->form = new SpecimensSelfFormFilter(array('caller_id'=>$item['caller_id']));
     // Triggers the search result function
     $this->searchResults($this->form, $request);
   }
@@ -309,7 +309,7 @@ class specimenActions extends DarwinActions
     * @param sfWebRequest         $request Request coming from browser
     * @var   int                  $pagerSlidingSize: Get the config value to define the range size of pager to be displayed in numbers (i.e.: with a value of 5, it will give this: << < 1 2 3 4 5 > >>)
     */
-  protected function searchResults(SpecimensFormFilter $form, sfWebRequest $request)
+  protected function searchResults(SpecimensSelfFormFilter $form, sfWebRequest $request)
   {
     if($request->getParameter('searchSpecimen','') !== '')
     {
@@ -341,7 +341,7 @@ class specimenActions extends DarwinActions
         $specs = array();
         foreach($this->specimens as $specimen)
         {
-          $specs[$specimen->getSpecimenRef()] = $specimen->getSpecimenRef();
+          $specs[$specimen->getId()] = $specimen->getId();
         }
         $specCodes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens', $specs);
         $this->codes = array();
@@ -405,8 +405,51 @@ class specimenActions extends DarwinActions
   
   public function executeView(sfWebRequest $request)
   {
-    $this->forward404Unless($this->specimen = Doctrine::getTable('SpecimensFlat')->fetchOneWithRights($request->getParameter('id'), $this->getUser()),'Specimen does not exist');  
+    $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this->getUser());
+    $this->forward404Unless($this->specimen,'Specimen does not exist');
 
-    $this->loadWidgets(null,$this->specimen->getCollectionRef()); 
+    $this->loadWidgets(null,$this->specimen->getCollectionRef());
+  }
+
+  public function executeAddInsurance(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+    $number = intval($request->getParameter('num'));
+    $form = new SpecimensForm();
+    $form->addInsurances($number, array());
+    return $this->renderPartial('specimen/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
+  }
+
+  public function executeEditMaintenance(sfWebRequest $request)
+  {
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();     
+    $main = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id'));
+    $this->forward404unless($main);
+    $this->form = new CollectionMaintenanceForm($main);
+    if($request->isMethod('post'))
+    {
+      $this->form->bind($request->getParameter('collection_maintenance'));
+
+      if($this->form->isValid())
+      {
+        try
+        {
+          $this->form->save();
+          return $this->renderText('ok');
+        }
+        catch(Doctrine_Exception $ne)
+        {
+          $e = new DarwinPgErrorParser($ne);
+          $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+          $this->form->getErrorSchema()->addError($error); 
+        }
+      }
+    }
+  }
+
+  public function executeChoosePinned(sfWebRequest $request)
+  {
+    $items_ids = $this->getUser()->getAllPinned('specimen');
+    $this->items = Doctrine::getTable('Specimens')->getByMultipleIds($items_ids, $this->getUser()->getId(), $this->getUser()->isAtLeast(Users::ADMIN));
   }  
 }

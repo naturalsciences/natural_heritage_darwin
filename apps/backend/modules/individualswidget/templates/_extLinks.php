@@ -1,1 +1,0 @@
-<?php include_partial('specimenwidget/extLinks',  array('module' => $module, 'form' => $form));?>

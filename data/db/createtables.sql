@@ -1019,6 +1019,129 @@ create table specimens
         station_visible boolean not null default true,
         ig_ref integer,
 
+        type varchar not null default 'specimen',
+        type_group varchar not null default 'specimen',
+        type_search varchar not null default 'specimen',
+        sex varchar not null default 'undefined',
+        stage varchar not null default 'undefined',
+        state varchar not null default 'not applicable',
+        social_status varchar not null default 'not applicable',
+        rock_form varchar not null default 'not applicable',
+
+
+        specimen_part varchar not null default 'specimen',
+        complete boolean not null default true,
+        institution_ref integer,
+        building varchar,
+        floor varchar,
+        room varchar,
+        row varchar,
+        shelf varchar,
+        container varchar,
+        sub_container varchar,
+        container_type varchar not null default 'container',
+        sub_container_type varchar not null default 'container',
+        container_storage varchar not null default 'dry',
+        sub_container_storage varchar not null default 'dry',
+        surnumerary boolean not null default false,
+        specimen_status varchar not null default 'good state',
+        specimen_count_min integer not null default 1,
+        specimen_count_max integer not null default 1,
+        object_name text,
+        object_name_indexed text not null default '',
+
+
+    spec_ident_ids integer[] not null default '{}',
+    spec_coll_ids integer[] not null default '{}',
+    spec_don_sel_ids integer[] not null default '{}',
+    collection_type varchar,
+    collection_code varchar,
+    collection_name varchar,
+    collection_is_public boolean,
+    collection_parent_ref integer,
+    collection_path varchar,
+    expedition_name varchar,
+    expedition_name_indexed varchar,
+
+    gtu_code varchar,
+    gtu_from_date_mask integer,
+    gtu_from_date timestamp,
+    gtu_to_date_mask integer,
+    gtu_to_date timestamp,
+    gtu_tag_values_indexed varchar[],
+    gtu_country_tag_value varchar,
+    gtu_country_tag_indexed varchar[],
+    gtu_province_tag_value varchar,
+    gtu_province_tag_indexed varchar[],
+    gtu_others_tag_value varchar,
+    gtu_others_tag_indexed varchar[],
+    gtu_elevation double precision,
+    gtu_elevation_accuracy double precision,
+    gtu_location GEOGRAPHY(POLYGON,4326),
+
+    taxon_name varchar,
+    taxon_name_indexed varchar,
+    taxon_level_ref integer,
+    taxon_level_name varchar,
+    taxon_status varchar,
+    taxon_path varchar,
+    taxon_parent_ref integer,
+    taxon_extinct boolean,
+
+    litho_name varchar,
+    litho_name_indexed varchar,
+    litho_level_ref integer,
+    litho_level_name varchar,
+    litho_status varchar,
+    litho_local boolean,
+    litho_color varchar,
+    litho_path varchar,
+    litho_parent_ref integer,
+
+    chrono_name varchar,
+    chrono_name_indexed varchar,
+    chrono_level_ref integer,
+    chrono_level_name varchar,
+    chrono_status varchar,
+    chrono_local boolean,
+    chrono_color varchar,
+    chrono_path varchar,
+    chrono_parent_ref integer,
+
+    lithology_name varchar,
+    lithology_name_indexed varchar,
+    lithology_level_ref integer,
+    lithology_level_name varchar,
+    lithology_status varchar,
+    lithology_local boolean,
+    lithology_color varchar,
+    lithology_path varchar,
+    lithology_parent_ref integer,
+
+    mineral_name varchar,
+    mineral_name_indexed varchar,
+    mineral_level_ref integer,
+    mineral_level_name varchar,
+    mineral_status varchar,
+    mineral_local boolean,
+    mineral_color varchar,
+    mineral_path varchar,
+    mineral_parent_ref integer,
+
+    host_taxon_name varchar,
+    host_taxon_name_indexed varchar,
+    host_taxon_level_ref integer,
+    host_taxon_level_name varchar,
+    host_taxon_status varchar,
+    host_taxon_path varchar,
+    host_taxon_parent_ref integer,
+    host_taxon_extinct boolean,
+
+    ig_num varchar,
+    ig_num_indexed varchar,
+    ig_date_mask integer,
+    ig_date date,
+    
         constraint pk_specimens primary key (id),
         constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
         constraint fk_specimens_gtu foreign key (gtu_ref) references gtu(id),
@@ -1030,10 +1153,14 @@ create table specimens
         constraint fk_specimens_chronostratigraphy foreign key (chrono_ref) references chronostratigraphy(id),
         constraint fk_specimens_host_taxonomy foreign key (host_taxon_ref) references taxonomy(id),
         constraint fk_specimens_host_specimen foreign key (host_specimen_ref) references specimens(id) on delete set null,
-        constraint fk_specimens_igs foreign key (ig_ref) references igs(id)
+        constraint fk_specimens_igs foreign key (ig_ref) references igs(id),
+
+        constraint fk_specimen_institutions foreign key (institution_ref) references people(id) ON DELETE no action,
+        constraint chk_chk_specimen_parts_minmax check (specimen_count_min <= specimen_count_max),
+        constraint chk_chk_specimen_part_min check (specimen_count_min >= 0)
        );
 
-/*CREATE UNIQUE INDEX unq_specimens ON specimens (collection_ref, COALESCE(expedition_ref,0), COALESCE(gtu_ref,0), COALESCE(taxon_ref,0), COALESCE(litho_ref,0), COALESCE(chrono_ref,0), COALESCE(lithology_ref,0), COALESCE(mineral_ref,0), COALESCE(host_taxon_ref,0), acquisition_category, acquisition_date, COALESCE(ig_ref,0));*/
+
 
 comment on table specimens is 'Specimens or batch of specimens stored in collection';
 comment on column specimens.id is 'Unique identifier of a specimen or batch of specimens';
@@ -1054,6 +1181,34 @@ comment on column specimens.mineral_ref is 'Reference of a mineral classificatio
 comment on column specimens.host_taxon_ref is 'Reference of taxon definition defining the host which holds the current specimen - id field of taxonomy table';
 comment on column specimens.ig_ref is 'Reference of ig number this specimen has been associated to';
 comment on column specimens.category is 'Type of specimen encoded: a physical object stored in collections, an observation, a figurate specimen,...';
+
+comment on column specimens.type is 'Special status given to specimen: holotype, paratype,...';
+comment on column specimens.type_group is 'For some special status, a common appelation is used - ie: topotype and cotype are joined into a common appelation of syntype';
+comment on column specimens.type_search is 'On the interface, the separation in all special status is not suggested for non official appelations. For instance, an unified grouping name is provided: type for non official appelation,...';
+comment on column specimens.sex is 'sex: male , female,...';
+comment on column specimens.stage is 'stage: adult, juvenile,...';
+comment on column specimens.state is 'state - a sex complement: ovigerous, pregnant,...';
+comment on column specimens.social_status is 'For social specimens, give the social status/role of the specimen in colony';
+comment on column specimens.rock_form is 'For rock specimens, a descriptive form can be given: polygonous,...';
+
+comment on column specimens.specimen_part is 'Description of the part stored in conservatory: the whole specimen or a given precise part such as skelleton, head, fur,...';
+comment on column specimens.building is 'Building the specimen is stored in';
+comment on column specimens.floor is 'Floor the specimen is stored in';
+comment on column specimens.room is 'Room the specimen is stored in';
+comment on column specimens.row is 'Row the specimen is stored in';
+comment on column specimens.shelf is 'Shelf the specimen is stored in';
+comment on column specimens.container is 'Container the specimen is stored in';
+comment on column specimens.sub_container is 'Sub-Container the specimen is stored in';
+comment on column specimens.container_type is 'Type of container: box, plateau-caisse,...';
+comment on column specimens.sub_container_type is 'Type of sub-container: slide, needle,...';
+comment on column specimens.container_storage is 'Conservative medium used: formol, alcohool, dry,...';
+comment on column specimens.sub_container_storage is 'Conservative medium used: formol, alcohool, dry,...';
+comment on column specimens.surnumerary is 'Tells if this specimen has been added after first inventory';
+comment on column specimens.specimen_status is 'Specimen status: good state, lost, damaged,...';
+comment on column specimens.specimen_count_min is 'Minimum number of specimens';
+comment on column specimens.specimen_count_max is 'Maximum number of specimens';
+comment on column specimens.complete is 'Flag telling if specimen is complete or not';
+
 
 create table codes
        (
@@ -1087,99 +1242,6 @@ comment on column codes.code_date_mask is 'Mask used for code date';
 comment on column codes.referenced_relation is 'Reference name of table concerned';
 comment on column codes.record_id is 'Identifier of record concerned';
 
-create table specimen_individuals
-       (
-        id serial,
-        specimen_ref integer not null,
-        type varchar not null default 'specimen',
-        type_group varchar not null default 'specimen',
-        type_search varchar not null default 'specimen',
-        sex varchar not null default 'undefined',
-        stage varchar not null default 'undefined',
-        state varchar not null default 'not applicable',
-        social_status varchar not null default 'not applicable',
-        rock_form varchar not null default 'not applicable',
-        specimen_individuals_count_min integer not null default 1,
-        specimen_individuals_count_max integer not null default 1,
-        with_parts boolean not null default false,
-        ind_ident_ids integer[] not null default '{}',
-        constraint pk_specimen_individuals primary key (id),
-        constraint unq_specimen_individuals unique (specimen_ref, type, sex, stage, state, social_status, rock_form),
-        constraint fk_specimen_individuals_specimens foreign key (specimen_ref) references specimens(id) on delete cascade,
-        constraint chk_chk_specimen_individuals_minmax check (specimen_individuals_count_min <= specimen_individuals_count_max),
-        constraint chk_chk_specimens_individuals_min check (specimen_individuals_count_min >= 0)
-       );
-comment on table specimen_individuals is 'Stores characterized individudals from a specimen batch';
-comment on column specimen_individuals.id is 'Unique identifier of a specimen individual';
-comment on column specimen_individuals.specimen_ref is 'Reference of a specimen batch the individual(s) is/are extracted from';
-comment on column specimen_individuals.type is 'Special status given to individual(s): holotype, paratype,...';
-comment on column specimen_individuals.type_group is 'For some special status, a common appelation is used - ie: topotype and cotype are joined into a common appelation of syntype';
-comment on column specimen_individuals.type_search is 'On the interface, the separation in all special status is not suggested for non official appelations. For instance, an unified grouping name is provided: type for non official appelation,...';
-comment on column specimen_individuals.sex is 'Individual sex: male , female,...';
-comment on column specimen_individuals.stage is 'Individual stage: adult, juvenile,...';
-comment on column specimen_individuals.state is 'Individual state - a sex complement: ovigerous, pregnant,...';
-comment on column specimen_individuals.social_status is 'For social specimens, give the social status/role of individual in colony';
-comment on column specimen_individuals.rock_form is 'For rock specimens/individuals, a descriptive form can be given: polygonous,...';
-comment on column specimen_individuals.specimen_individuals_count_min is 'Minimum number of individuals';
-comment on column specimen_individuals.specimen_individuals_count_max is 'Maximum number of individuals';
-comment on column specimen_individuals.with_parts is 'Flag telling if they are parts for current individual - Triggerly composed';
-
-create table specimen_parts
-       (
-        id serial,
-        parent_ref integer,
-        category varchar not null default 'physical',
-        path varchar not null default '/',
-        specimen_individual_ref integer not null,
-        specimen_part varchar not null default 'specimen',
-        complete boolean not null default true,
-        institution_ref integer,
-        building varchar,
-        floor varchar,
-        room varchar,
-        row varchar,
-        shelf varchar,
-        container varchar,
-        sub_container varchar,
-        container_type varchar not null default 'container',
-        sub_container_type varchar not null default 'container',
-        container_storage varchar not null default 'dry',
-        sub_container_storage varchar not null default 'dry',
-        surnumerary boolean not null default false,
-        specimen_status varchar not null default 'good state',
-        object_name text,
-        object_name_indexed text not null default '',
-        specimen_part_count_min integer not null default 1,
-        specimen_part_count_max integer not null default 1,
-        constraint pk_specimen_parts primary key (id),
-        constraint fk_specimen_parts_specimen_individuals foreign key (specimen_individual_ref) references specimen_individuals(id) on delete cascade,
-        constraint fk_specimen_parts_parent_ref foreign key (parent_ref) references specimen_parts(id) on delete cascade,
-        constraint fk_specimen_parts_institutions foreign key (institution_ref) references people(id) ON DELETE no action,
-        constraint chk_chk_specimen_parts_minmax check (specimen_part_count_min <= specimen_part_count_max),
-        constraint chk_chk_specimen_part_min check (specimen_part_count_min >= 0)
-       );
-
-comment on table specimen_parts is 'List of individuals or parts of individuals stored in conservatories';
-comment on column specimen_parts.id is 'Unique identifier of a specimen part/individual';
-comment on column specimen_parts.specimen_individual_ref is 'Reference of corresponding characterized specimen';
-comment on column specimen_parts.specimen_part is 'Description of the part stored in conservatory: the whole specimen or a given precise part such as skelleton, head, fur,...';
-comment on column specimen_parts.building is 'Building the part/individual is stored in';
-comment on column specimen_parts.floor is 'Floor the part/individual is stored in';
-comment on column specimen_parts.room is 'Room the part/individual is stored in';
-comment on column specimen_parts.row is 'Row the part/individual is stored in';
-comment on column specimen_parts.shelf is 'Shelf the part/individual is stored in';
-comment on column specimen_parts.container is 'Container the part/individual is stored in';
-comment on column specimen_parts.sub_container is 'Sub-Container the part/individual is stored in';
-comment on column specimen_parts.container_type is 'Type of container: box, plateau-caisse,...';
-comment on column specimen_parts.sub_container_type is 'Type of sub-container: slide, needle,...';
-comment on column specimen_parts.container_storage is 'Conservative medium used: formol, alcohool, dry,...';
-comment on column specimen_parts.sub_container_storage is 'Conservative medium used: formol, alcohool, dry,...';
-comment on column specimen_parts.surnumerary is 'Tells if this part/individual has been added after first inventory';
-comment on column specimen_parts.specimen_status is 'Specimen status: good state, lost, damaged,...';
-comment on column specimen_parts.specimen_part_count_min is 'Minimum number of parts/individuals';
-comment on column specimen_parts.specimen_part_count_max is 'Maximum number of parts/individuals';
-comment on column specimen_parts.complete is 'Flag telling if part/specimen is complete or not';
-
 create table insurances
        (
         id serial,
@@ -1192,13 +1254,13 @@ create table insurances
         insurer_ref integer,
         contact_ref integer,
         constraint pk_insurances primary key (id),
-        constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, date_from, date_to, insurer_ref),
-        constraint fk_specimen_parts_insurances_people foreign key (insurer_ref) references people(id) on delete set null,
-        constraint fk_specimen_parts_insurances_contact foreign key (contact_ref) references people(id) on delete set null,
-        constraint chk_chk_specimen_parts_insurances check (insurance_value > 0)
+        constraint unq_insurances unique (referenced_relation, record_id, date_from, date_to, insurer_ref),
+        constraint fk_insurances_people foreign key (insurer_ref) references people(id) on delete set null,
+        constraint fk_insurances_contact foreign key (contact_ref) references people(id) on delete set null,
+        constraint chk_chk_insurances check (insurance_value > 0)
        )
        inherits (template_table_record_ref);
-comment on table insurances is 'List of insurances values for given specimen parts/individuals';
+comment on table insurances is 'List of insurances values for given specimen or the loan';
 comment on column insurances.referenced_relation is 'Reference-Name of table concerned';
 comment on column insurances.record_id is 'Identifier of record concerned';
 comment on column insurances.insurance_currency is 'Currency used with insurance value';
@@ -1540,13 +1602,13 @@ create table loan_items (
   ig_ref integer,
   from_date date,
   to_date date,
-  part_ref integer,
+  specimen_ref integer,
   details varchar default '',  
   constraint pk_loan_items primary key (id),
   constraint fk_loan_items_ig foreign key (ig_ref) references igs(id),
   constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
-  constraint fk_loan_items_part_ref foreign key (part_ref) references specimen_parts(id) on delete set null,
-  constraint unq_loan_items unique(loan_ref, part_ref)
+  constraint fk_loan_items_specimen_ref foreign key (specimen_ref) references specimens(id) on delete set null,
+  constraint unq_loan_items unique(loan_ref, specimen_ref)
 ); 
 
 comment on table loan_items is 'Table holding an item of a loan. It may be a part from darwin or only an generic item';
@@ -1556,7 +1618,7 @@ comment on column loan_items.loan_ref is 'Mandatory Reference to a loan';
 comment on column loan_items.from_date is 'Date when the item was sended';
 comment on column loan_items.to_date is 'Date when the item was recieved back';
 comment on column loan_items.ig_ref is 'Optional ref to an IG stored in the igs table';
-comment on column loan_items.part_ref is 'Optional reference to a Darwin Part';
+comment on column loan_items.specimen_ref is 'Optional reference to a Darwin Part';
 comment on column loan_items.details is 'Textual details describing the item';
 
 create table loan_rights (
@@ -1602,125 +1664,6 @@ comment on column loan_status.status is 'Current status of the loan in a list (n
 comment on column loan_status.modification_date_time is 'date of the modification';
 comment on column loan_status.comment is 'comment of the status modification';
 comment on column loan_status.is_last is 'flag telling which line is the current line';
-
-CREATE TABLE specimens_flat (
-    specimen_ref integer not null,
-
-    category varchar not null,
-    collection_ref integer not null,
-    expedition_ref integer,
-    gtu_ref integer,
-    taxon_ref integer,
-    litho_ref integer,
-    chrono_ref integer,
-    lithology_ref integer,
-    mineral_ref integer,
-    host_taxon_ref integer,
-    host_specimen_ref integer,
-    host_relationship varchar,
-    acquisition_category varchar not null,
-    acquisition_date_mask integer not null,
-    acquisition_date date not null,
-    station_visible boolean not null,
-    ig_ref integer,
-
-    spec_ident_ids integer[] not null default '{}',
-    spec_coll_ids integer[] not null default '{}',
-    spec_don_sel_ids integer[] not null default '{}',
-    with_types boolean  not null default false,
-    with_individuals boolean not null default false,
-    collection_type varchar,
-    collection_code varchar,
-    collection_name varchar,
-    collection_is_public boolean,
-    collection_parent_ref integer,
-    collection_path varchar,
-    expedition_name varchar,
-    expedition_name_indexed varchar,
-
-    gtu_code varchar,
-    gtu_from_date_mask integer,
-    gtu_from_date timestamp,
-    gtu_to_date_mask integer,
-    gtu_to_date timestamp,
-    gtu_tag_values_indexed varchar[],
-    gtu_country_tag_value varchar,
-    gtu_country_tag_indexed varchar[],
-    gtu_province_tag_value varchar,
-    gtu_province_tag_indexed varchar[],
-    gtu_others_tag_value varchar,
-    gtu_others_tag_indexed varchar[],
-    gtu_elevation double precision,
-    gtu_elevation_accuracy double precision,
-    gtu_location GEOGRAPHY(POLYGON,4326),
-
-    taxon_name varchar,
-    taxon_name_indexed varchar,
-    taxon_level_ref integer,
-    taxon_level_name varchar,
-    taxon_status varchar,
-    taxon_path varchar,
-    taxon_parent_ref integer,
-    taxon_extinct boolean,
-
-    litho_name varchar,
-    litho_name_indexed varchar,
-    litho_level_ref integer,
-    litho_level_name varchar,
-    litho_status varchar,
-    litho_local boolean,
-    litho_color varchar,
-    litho_path varchar,
-    litho_parent_ref integer,
-
-    chrono_name varchar,
-    chrono_name_indexed varchar,
-    chrono_level_ref integer,
-    chrono_level_name varchar,
-    chrono_status varchar,
-    chrono_local boolean,
-    chrono_color varchar,
-    chrono_path varchar,
-    chrono_parent_ref integer,
-
-    lithology_name varchar,
-    lithology_name_indexed varchar,
-    lithology_level_ref integer,
-    lithology_level_name varchar,
-    lithology_status varchar,
-    lithology_local boolean,
-    lithology_color varchar,
-    lithology_path varchar,
-    lithology_parent_ref integer,
-
-    mineral_name varchar,
-    mineral_name_indexed varchar,
-    mineral_level_ref integer,
-    mineral_level_name varchar,
-    mineral_status varchar,
-    mineral_local boolean,
-    mineral_color varchar,
-    mineral_path varchar,
-    mineral_parent_ref integer,
-
-    host_taxon_name varchar,
-    host_taxon_name_indexed varchar,
-    host_taxon_level_ref integer,
-    host_taxon_level_name varchar,
-    host_taxon_status varchar,
-    host_taxon_path varchar,
-    host_taxon_parent_ref integer,
-    host_taxon_extinct boolean,
-
-    ig_num varchar,
-    ig_num_indexed varchar,
-    ig_date_mask integer,
-    ig_date date,
-    constraint pk_specimens_flat primary key (specimen_ref),
-    constraint fk_specimens_flat_specimen_ref foreign key (specimen_ref) references specimens(id) on delete cascade
-);
-
-\i maintenance/recreate_flat_view.sql
 
 create table loan_history (
   id serial,

@@ -7,7 +7,7 @@
         <table class="catalogue_table_view">
         <thead>
           <tr>
-            <th><?php echo __('Darwin Part') ;?></th>
+            <th><?php echo __('Specimen') ;?></th>
             <th><?php echo __('I.g. Num');?></th>
             <th><?php echo __('Details') ;?></th>
             <th><?php echo __('Expedition') ;?></th>
@@ -18,9 +18,9 @@
         <tbody>
           <?php foreach($items as $item):?>
             <tr>
-              <td><?php if($item->getPartRef()):?>
-                <?php echo image_tag('info.png',"title=info class=extd_info data_id=".$item->getPartRef());?>
-                <?php echo link_to('#' . $item->getPartRef(), 'parts/view?id='. $item->getPartRef());?>
+              <td><?php if($item->getSpecimenRef()):?>
+                <?php echo image_tag('info.png',"title=info class=extd_info data_id=".$item->getSpecimenRef());?>
+                <?php echo link_to('#' . $item->getSpecimenRef(), 'specimen/view?id='. $item->getSpecimenRef());?>
               <?php endif;?></td>
               <td><?php echo $item->Ig->getIgNum();?></td>
               <td><?php echo $item->getDetails();?></td>

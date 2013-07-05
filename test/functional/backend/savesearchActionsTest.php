@@ -55,7 +55,7 @@ $browser->
   with('response')->
   begin()->
     isStatusCode()->
-    checkElement('table tbody tr',4)->
+    checkElement('table tbody tr',2)->
   end()->
 
   get('/savesearch/pin?id=4&status=0&source=specimen')->
@@ -69,7 +69,7 @@ $browser->
   with('response')->
   begin()->
     isStatusCode()->
-    checkElement('table tbody tr',2)->
+    checkElement('table tbody tr',1)->
   end()->
 
   info('Save pin to new spec search')->

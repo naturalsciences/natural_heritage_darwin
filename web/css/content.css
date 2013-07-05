@@ -655,10 +655,25 @@ fieldset legend
   background: #ececec ;
 }
 
+
 li.check span
 {
-  color: green; 
+  color: green;
   font-family:Arial Unicode MS,sans-serif;
+
+}
+li.check .uncheck_mark {
+  display:none;
+}
+li.check .check_mark {
+  display:inline;
+}
+
+li.uncheck .uncheck_mark {
+  display:inline;
+}
+li.uncheck .check_mark {
+  display:none;
 }
 
 li.uncheck span

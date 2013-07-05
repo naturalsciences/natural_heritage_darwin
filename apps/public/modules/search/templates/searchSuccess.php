@@ -43,7 +43,7 @@
             $('#specimen_filter').attr('action','<?php echo url_for('search/search?criteria=1');?>').submit();
           });
 
-          $("ul.column_menu > li > ul > li").click(function(){
+          $("ul.column_menu li").click(function(){
             update_list($(this));
             hide_or_show($(this));
           });

@@ -2309,10 +2309,6 @@ dd
 {
   margin-left: 1em;
 }
-#mass_action .fld_group ul, #mass_action .fld_group > label
-{
-  display:none;
-}
 
 #mass_action .disabled th
 {

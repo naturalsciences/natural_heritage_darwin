@@ -7,21 +7,15 @@ class BaseMassActionForm extends sfFormSymfony
     return sfContext::getInstance()->getI18N();
   }
 
-  public static function getActionsSources()
-  {
-    return array('' => '', 'specimen'=>'specimen','individual'=>'individual','part'=>'part');
-  }
-
   public function getActionTitle($action)
   {
     $poss_actions = self::getPossibleActions(true);
     $poss_actions[$action];
   }
 
-  public static function getPossibleActions($merged = false)
+  public static function getPossibleActions()
   {
     $result = array(
-      'specimen' => array(
         'collection_ref' => self::getI18N()->__('Change Collection'),
         'taxon_ref' => self::getI18N()->__('Change Taxonomy'),
         'lithology_ref' => self::getI18N()->__('Change Lithology'),
@@ -30,14 +24,12 @@ class BaseMassActionForm extends sfFormSymfony
         'mineralogy_ref' => self::getI18N()->__('Change Mineralogy'),
         'station_visible' => self::getI18N()->__('Change Station visibility'),
         'ig_ref' => self::getI18N()->__('Change I.G. Num'),
-      ),
-      'individual' => array(
+        
         'type' => self::getI18N()->__('Change Individual Type'),
         'social_status' => self::getI18N()->__('Change Individual Social Status'),
         'sex' => self::getI18N()->__('Change Individual Sex'),
         'stage' => self::getI18N()->__('Change Individual Stage'),
-      ),
-      'part' => array(
+
         'maintenance' => self::getI18N()->__('Add Maintenance'),
         'building' => self::getI18N()->__('Change Building'),
         'floor' => self::getI18N()->__('Change Floor'),
@@ -46,11 +38,8 @@ class BaseMassActionForm extends sfFormSymfony
         'shelf' => self::getI18N()->__('Change Shelf'),
         'container' => self::getI18N()->__('Change Container'),
         'sub_container' => self::getI18N()->__('Change Sub Container'),
-      ),
     );
-    if(!$merged) return $result;
-
-    return $result['specimen'] + $result['individual'] + $result['part'];
+    return $result;
   }
 
   protected function getFormNameForAction($action)
@@ -114,39 +103,22 @@ class BaseMassActionForm extends sfFormSymfony
     if($this->isBound() && $this->isValid())
     {
       $actions_values = $this->getValue('MassActionForm');
-      if($this->getValue('source') == 'specimen')
-      {
-        $query = Doctrine_Query::create()->update('Specimens s');
-        if($is_admin == false)
-           $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$this->getValue('item_list')),'spec_ref', $user_id));
 
-      }
-      elseif($this->getValue('source') == 'individual')
-      {
-        $query = Doctrine_Query::create()->update('SpecimenIndividuals s');
-        if($is_admin == false)
-          $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$this->getValue('item_list')),'individual_ref', $user_id));
-
-      }
+      $query = Doctrine_Query::create()->update('Specimens s');
+      if($is_admin == false)
+        $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$this->getValue('item_list')),'spec_ref', $user_id));
       else
-      {
-        $query = Doctrine_Query::create()->update('SpecimenParts s');
-        if($is_admin == false)
-          $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array( implode(',',$this->getValue('item_list')),'part_ref', $user_id));
-      }
-
+        $query->andWhere('s.id in ('. implode(',',$this->getValue('item_list')) .')');
 
       $group_action = 0;
       foreach($this->embeddedForms['MassActionForm'] as $key=> $form)
       {
-        if (method_exists($this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key), 'doGroupedAction'))
-        {
+        if (method_exists($this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key), 'doGroupedAction')) {
           $this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doGroupedAction($query, $actions_values[$key], $this->getValue('item_list'));
           $group_action++;
         }
 
-        if (method_exists($this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key), 'doMassAction'))
-        {
+        if (method_exists($this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key), 'doMassAction')) {
           $this->getEmbeddedForm('MassActionForm')->getEmbeddedForm($key)->doMassAction($user_id, $this->getValue('item_list'), $actions_values[$key]);
         }
       }
@@ -168,22 +140,6 @@ class BaseMassActionForm extends sfFormSymfony
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
-    if(isset($taintedValues['source']) && in_array($taintedValues['source'], array('specimen','individual','part')))
-    {
-      if($taintedValues['source'] == 'specimen')
-        $model = 'Specimens';
-      elseif($taintedValues['source'] == 'individual')
-        $model = 'SpecimenIndividuals';
-      else
-        $model = 'SpecimenParts';
-
-      $this->validatorSchema['item_list'] = new sfValidatorDoctrineChoice(array(
-        'multiple' => true,
-        'model' => $model,
-        'min' => 1,
-      ));
-    }
-
     if(isset($taintedValues['field_action']) && is_array(($taintedValues['field_action'])) && count($taintedValues['field_action']) != 0 
       && isset($taintedValues['MassActionForm']) && is_array(($taintedValues['MassActionForm'])) && count($taintedValues['MassActionForm']) != 0 )
     {
@@ -197,15 +153,8 @@ class BaseMassActionForm extends sfFormSymfony
 
   public function configure()
   {
-    $action_sources = self::getActionsSources();
-
     sfWidgetFormSchema::setDefaultFormFormatterName('list');
     $this->widgetSchema->setNameFormat('mass_action[%s]');
-
-    $this->widgetSchema['source'] = new sfWidgetFormChoice(array( 
-     'choices' => $action_sources
-    ));
-    $this->validatorSchema['source'] = new sfValidatorPass();
 
     $this->widgetSchema['field_action'] = new sfWidgetFormSelectCheckbox(array( 
      'choices' =>  self::getPossibleActions(),
@@ -214,7 +163,8 @@ class BaseMassActionForm extends sfFormSymfony
 
     $this->validatorSchema['field_action'] = new sfValidatorPass();
 
-    $this->widgetSchema['item_list'] = new sfWidgetFormChoice(array( 'choices' => array() ));
+    $this->widgetSchema['item_list'] =  new sfWidgetFormChoice(array( 'choices' => array() ));
+
 
     $this->validatorSchema['item_list'] = new sfValidatorDoctrineChoice(array(
       'multiple' => true,

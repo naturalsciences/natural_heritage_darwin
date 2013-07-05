@@ -1,12 +1,5 @@
 <!-- <label><?php //echo format_number_choice('[1] Save my pinned specimen|(1,+Inf] Save my %1% pinned specimens', array('%1%' =>  count($sf_user->getAllPinned())), count($sf_user->getAllPinned()) );?></label> -->
-<?php
-  switch($source){
-    case 'individual': $saveText = __('Save my pinned individuals'); break;
-    case 'part': $saveText = __('Save my pinned parts'); break;
-    default: $saveText = __('Save my pinned specimens');
-  }
-?>
-<label><?php echo $saveText;?></label>
+<label><?php echo _('Save my pinned specimens');;?></label>
 <select id="save_specs_choice">
     <option value="" selected="selected"></option>
     <optgroup label="<?php echo __('New');?>">
@@ -26,13 +19,13 @@ $(document).ready(function () {
     event.preventDefault();
     if($('#save_specs_choice').val()=="") return;
     var column_str = ' ';
-    $('.column_menu ul > li.check').each(function (index)
+    $('.column_menu li.check').each(function (index)
       {
         if(column_str != '') column_str += '|';
         column_str += $(this).attr('id').substr(3);
       });
 
-    var last_position = $('body').scrollTop() ;              
+    var last_position = $('body').scrollTop() ;
     scroll(0,0) ;
 
     $('form.search_form select.double_list_select-selected option').attr('selected', 'selected');
@@ -42,7 +35,7 @@ $(document).ready(function () {
         text: '<img src="/images/loader.gif" alt="loading"> loading ...',
         title: { button: true, text: '<?php echo __('Save your specimens')?>' },
         ajax: {
-          url: '<?php echo url_for('savesearch/saveSearch?type=pin&source='.$source);?>/cols/' + encodeURI(column_str) + '/list_nr/' + $('#save_specs_choice').val(),
+          url: '<?php echo url_for('savesearch/saveSearch?type=pin&source=specimen');?>/cols/' + encodeURI(column_str) + '/list_nr/' + $('#save_specs_choice').val(),
           type: 'POST'
         }
       },

@@ -44,8 +44,7 @@ CREATE INDEX CONCURRENTLY idx_specimens_lithology_ref on specimens(lithology_ref
 CREATE INDEX CONCURRENTLY idx_specimens_mineral_ref on specimens(mineral_ref) WHERE mineral_ref <> 0;
 CREATE INDEX CONCURRENTLY idx_specimens_host_taxon_ref on specimens(host_taxon_ref) WHERE host_taxon_ref <> 0;
 CREATE INDEX CONCURRENTLY idx_specimens_host_specimen_ref on specimens(host_specimen_ref) WHERE host_specimen_ref IS NOT NULL;
-CREATE INDEX CONCURRENTLY idx_specimen_parts_specimen_individual_ref on specimen_parts(specimen_individual_ref);
-CREATE INDEX CONCURRENTLY idx_specimen_parts_specimen_part_institution_ref on specimen_parts(institution_ref);
+CREATE INDEX CONCURRENTLY idx_specimens_institution_ref on specimens(institution_ref);
 
 CREATE INDEX CONCURRENTLY idx_specimens_accompanying_taxon_ref on specimens_accompanying(taxon_ref);
 CREATE INDEX CONCURRENTLY idx_specimens_accompanying_mineral_ref on specimens_accompanying(mineral_ref);
@@ -88,10 +87,13 @@ CREATE INDEX CONCURRENTLY idx_vernacular_names_community_indexed on vernacular_n
 CREATE INDEX CONCURRENTLY idx_vernacular_names_name_indexed on vernacular_names (name_indexed);
 CREATE INDEX CONCURRENTLY idx_vernacular_names_referenced_record on vernacular_names(referenced_relation, record_id);
 
-CREATE INDEX CONCURRENTLY idx_specimen_parts_object_name_indexed on specimen_parts (object_name_indexed);
+CREATE INDEX CONCURRENTLY idx_specimens_object_name_indexed on specimens (object_name_indexed);
 
 
 CREATE INDEX CONCURRENTLY idx_codes_code_num on codes(code_num) WHERE NOT code_num IS NULL;
+CREATE INDEX idx_codes_full_code_indexed_btree ON codes USING btree (full_code_indexed);
+CREATE INDEX CONCURRENTLY idx_codes_referenced_record on codes(referenced_relation, record_id);
+
 CREATE INDEX CONCURRENTLY idx_collecting_methods_method_indexed on collecting_methods(method_indexed);
 CREATE INDEX CONCURRENTLY idx_collecting_tools_tool_indexed on collecting_tools(tool_indexed);
 CREATE INDEX CONCURRENTLY idx_collection_maintenance_action on collection_maintenance(action_observation);
@@ -120,23 +122,22 @@ CREATE INDEX CONCURRENTLY idx_people_languages_language_country on people_langua
 --CREATE INDEX CONCURRENTLY idx_specimens_host_relationship on specimens(host_relationship) WHERE NOT host_relationship IS NULL;
 CREATE INDEX CONCURRENTLY idx_specimens_accompanying_form on specimens_accompanying(form);
 CREATE INDEX CONCURRENTLY idx_specimens_accompanying_unit on specimens_accompanying(unit);
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_type_search on specimen_individuals(type_search) WHERE type_search <> 'specimen';
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_sex on specimen_individuals(sex) where sex not in ('undefined', 'unknown');
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_stage on specimen_individuals(stage) WHERE stage not in ('undefined', 'unknown');
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_state on specimen_individuals(state) WHERE state <> 'not applicable';
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_social_status on specimen_individuals(social_status)  WHERE social_status <> 'not applicable';
-CREATE INDEX CONCURRENTLY idx_specimen_individuals_rock_form on specimen_individuals(rock_form);
-CREATE INDEX CONCURRENTLY idx_specimen_parts_specimen_part on specimen_parts(specimen_part);
-CREATE INDEX CONCURRENTLY idx_specimen_parts_parent_ref on specimen_parts(parent_ref);
-CREATE INDEX CONCURRENTLY idx_specimen_parts_room on specimen_parts(room) WHERE NOT room IS NULL;
-CREATE INDEX CONCURRENTLY idx_specimen_parts_row on specimen_parts(row) WHERE NOT row IS NULL;
-CREATE INDEX CONCURRENTLY idx_specimen_parts_shelf on specimen_parts(shelf) WHERE NOT shelf IS NULL;
-CREATE INDEX CONCURRENTLY idx_specimen_parts_container on specimen_parts(container) WHERE NOT container IS NULL;
-CREATE INDEX CONCURRENTLY idx_specimen_parts_sub_container on specimen_parts(sub_container) WHERE NOT sub_container IS NULL;
-CREATE INDEX CONCURRENTLY idx_specimen_parts_container_type on specimen_parts(container_type);
-CREATE INDEX CONCURRENTLY idx_specimen_parts_sub_container_type on specimen_parts(sub_container_type);
-CREATE INDEX CONCURRENTLY idx_specimen_parts_container_storage on specimen_parts(container_storage);
-CREATE INDEX CONCURRENTLY idx_specimen_parts_sub_container_storage on specimen_parts(sub_container_storage);
+CREATE INDEX CONCURRENTLY idx_specimens_type_search on specimens(type_search) WHERE type_search <> 'specimen';
+CREATE INDEX CONCURRENTLY idx_specimens_sex on specimens(sex) where sex not in ('undefined', 'unknown');
+CREATE INDEX CONCURRENTLY idx_specimens_stage on specimens(stage) WHERE stage not in ('undefined', 'unknown');
+CREATE INDEX CONCURRENTLY idx_specimens_state on specimens(state) WHERE state <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_specimens_social_status on specimens(social_status)  WHERE social_status <> 'not applicable';
+CREATE INDEX CONCURRENTLY idx_specimens_rock_form on specimens(rock_form);
+CREATE INDEX CONCURRENTLY idx_specimens_specimen_part on specimens(specimen_part);
+CREATE INDEX CONCURRENTLY idx_specimens_room on specimens(room) WHERE NOT room IS NULL;
+CREATE INDEX CONCURRENTLY idx_specimens_row on specimens(row) WHERE NOT row IS NULL;
+CREATE INDEX CONCURRENTLY idx_specimens_shelf on specimens(shelf) WHERE NOT shelf IS NULL;
+CREATE INDEX CONCURRENTLY idx_specimens_container on specimens(container) WHERE NOT container IS NULL;
+CREATE INDEX CONCURRENTLY idx_specimens_sub_container on specimens(sub_container) WHERE NOT sub_container IS NULL;
+CREATE INDEX CONCURRENTLY idx_specimens_container_type on specimens(container_type);
+CREATE INDEX CONCURRENTLY idx_specimens_sub_container_type on specimens(sub_container_type);
+CREATE INDEX CONCURRENTLY idx_specimens_container_storage on specimens(container_storage);
+CREATE INDEX CONCURRENTLY idx_specimens_sub_container_storage on specimens(sub_container_storage);
 
 CREATE INDEX CONCURRENTLY idx_taxonomy_path on taxonomy(path text_pattern_ops);
 CREATE INDEX CONCURRENTLY idx_tag_groups_group_name_indexed on tag_groups(group_name_indexed);
@@ -187,7 +188,7 @@ CREATE INDEX CONCURRENTLY idx_users_tracking_modification_date_time on users_tra
 
 CREATE INDEX CONCURRENTLY idx_loan_items_loan_ref on loan_items(loan_ref);
 CREATE INDEX CONCURRENTLY idx_loan_items_ig_ref on loan_items(ig_ref);
-CREATE INDEX CONCURRENTLY idx_loan_items_part_ref on loan_items(part_ref);
+CREATE INDEX CONCURRENTLY idx_loan_items_part_ref on loan_items(specimen_ref);
 
 
 CREATE INDEX CONCURRENTLY idx_loan_rights_ig_ref on loan_rights(loan_ref);
