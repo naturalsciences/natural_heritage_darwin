@@ -40,8 +40,8 @@ INSERT INTO igs(id, ig_num) VALUES (100001, '240276');
 -- Insertion of specimens using these data
 INSERT INTO specimens (id, collection_ref, expedition_ref, gtu_ref, taxon_ref, chrono_ref, litho_ref, lithology_ref, mineral_ref)
        VALUES (1,100001,100000,100001,100000,100000,100000,100000,100000);
-INSERT INTO specimens (id, collection_ref, expedition_ref, gtu_ref, taxon_ref, chrono_ref, litho_ref, lithology_ref, mineral_ref, ig_ref, host_relationship, host_taxon_ref)
-       VALUES (2,100005,100001,100002,100001,100001,100001,100001,100001,100001,'Parasit',100000);
+INSERT INTO specimens (id, collection_ref, expedition_ref, gtu_ref, taxon_ref, chrono_ref, litho_ref, lithology_ref, mineral_ref, ig_ref)
+       VALUES (2,100005,100001,100002,100001,100001,100001,100001,100001,100001);
 
 SELECT is('physical' , (SELECT category FROM specimens WHERE id = 1), 'It''s well a "physical" specimen.');
 SELECT is('mix' , (SELECT collection_type FROM specimens WHERE id = 1), 'Collection referenced type is well "mix".');

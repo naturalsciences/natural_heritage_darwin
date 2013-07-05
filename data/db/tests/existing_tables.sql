@@ -46,7 +46,7 @@ SELECT has_table('specimens','specimens exists');
 SELECT has_table('codes','codes exists');
 SELECT has_table('insurances', 'insurances exists');
 /*SELECT has_table('igs', 'igs exists');*/
-SELECT has_table('specimens_accompanying','specimens_accompanying exists');
+SELECT has_table('specimens_relationships','specimens_relationships exists');
 
 -- Finish the tests and clean up.
 SELECT * FROM finish();
