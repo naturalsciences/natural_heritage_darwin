@@ -31,6 +31,12 @@ class ParsingIdentifications
     if(!$this->fullname) return $this->$scientificName ;
     return $this->fullname ;
   }
+  
+  public function getMineralName($name)
+  {
+    if(!$this->fullname) return $name ;
+    return $this->fullname ;
+  }
 
   // return the Hstore taxon_parent
   public function getTaxonParent()

@@ -32,7 +32,7 @@ class ParsingProperties
     }
   }
 
-  public function getDateTo($duration)
+  public function setDateTo($duration)
   {
     if(strtotime($duration)) $this->property->setDateTo($this->date_from+$duration) ;
   }

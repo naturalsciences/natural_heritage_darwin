@@ -84,7 +84,7 @@ class ImportABCDXml implements IImportModels
       case "Identification" : $this->staging->addRelated($this->object->identification) ; break ;;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break ;;
       case "MineralRockIdentified" : $this->staging["mineral_name"] = $this->object->fullname ; break ;;
-      case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; break ;;
+      case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; else $this->errors_reported .= "MultiMediaObject not saved (no FileURI);"; break ;;
       case "NamedArea" : $this->object->addTagGroups() ;break;;
       case "NameAtomised" : $this->higher_tag = "" ; break ;;
       case "Notes" : $this->addComment($this->temp_data,$this->depth==1?'general':'general comments') ; break ;
@@ -130,7 +130,7 @@ class ImportABCDXml implements IImportModels
       case "dna:ExtractionMethod" : $this->temp_data.="$data " ; break ;;
       case "dna:RatioOfAbsorbance260_280" : /* this->object->properties */ break ;;
       case "dna:Tissu" : $this->object->maintenance->setActionObservation($data) ; break ;;
-      case "Duration" : break ;; //@TODO parsingProperties
+      case "Duration" : $this->property->setDateTo($data) ; break ;;
       case "GivenNames" : $this->people['given_name'] = $data ; break ;;
       case "FileURI" : $this->object->getFile($data) ; break ;;
       case "Format" : $this->object->multimedia_data['type'] = $data ; break ;;
@@ -149,6 +149,8 @@ class ImportABCDXml implements IImportModels
       case "LocalityText" : $this->staging['gtu_code'] = $data ; break ;; //@TOTO maybe find a better place for that.
       case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $data ; break ;;
       case "LowerValue" : $this->property->getLowerValue($data, $this->higher_tag,$this->staging) ; break ;;
+      case "MineralRockClassification" : $this->staging->setMineralColour($data) ; break ;;
+      case "MineralRockGroupName" : $this->staging->setMineralName($this->object->getMineralName($data)) ; break ;;
       case "MeasurementDateTime" : $this->property->getDateFrom($data, $this->higher_tag,$this->staging) ; break ;;
       case "Method" : $this->object_to_save[] = $this->object->addMethod($data,$this->next_id) ; break ;;
       case "Notes" : $this->temp_data.="$data." ; break ;;
@@ -157,6 +159,8 @@ class ImportABCDXml implements IImportModels
       case "Prefix" : $this->people['title'] = $data ; break ;;
       case "PreparationMaterials" : $this->staging['container_storage'] = $data ; break ;;
       case "ProjectTitle" : $this->staging['expedition_name'] = $data ; break ;;
+      case "RecordURI" : $this->addExternalLink($data) ; break ;;
+      case "Sex" : $this->staging->setIndividualSex($data) ; break ;;
       case "SortingName" : $this->object->people_order_by = $data ; break ;;
       case "TitleCitation" : $this->temp_data.="$data." ; break ;;
       case "UnitID" : $this->code['code'] = $data ; $this->name = $data ; break ;;
@@ -197,7 +201,16 @@ class ImportABCDXml implements IImportModels
     }
     $this->object_to_save = array() ;
   }
-  
+
+  private function addExternalLink($link)
+  {
+    if(substr($link,0,strpos($link,"://")) != "html") $link = "http://".$link ;
+    $ext = new ExtLinks();
+    $ext->setUrl($link) ;
+    $ext->setComment('Record web address') ;
+    $this->staging->addRelated($ext) ;
+  }
+
   private function saveUnit()
   {
     $this->staging->fromArray(array("import_ref" => $this->import_id, "level" => "spec"));
