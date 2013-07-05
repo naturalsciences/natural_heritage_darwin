@@ -174,8 +174,8 @@ $browser->
   with('response')->begin()->
     isStatusCode()->
     checkElement('tr:first td:first[class="spec_ident_handle"]',1)->
-    checkElement('tr:first td:nth-child(3) select#specimen_newIdentification_'.$num.'_notion_concerned option',5)->
-    checkElement('tr:first td:nth-child(3) select#specimen_newIdentification_'.$num.'_notion_concerned option:first','Taxon.')->
+    checkElement('tr:first td:nth-child(3) select#specimen_newIdentification_'.$num.'_notion_concerned option',11)->
+    checkElement('tr:first td:nth-child(3) select#specimen_newIdentification_'.$num.'_notion_concerned option:first','All')->
     checkElement('tr:first td:last input:last[id="specimen_newIdentification_'.$num.'_order_by"][value="0"]',1)->
     checkElement('tr:nth-child(2)[class="spec_ident_identifiers"]',1)->
     checkElement('tr:nth-child(2)[class="spec_ident_identifiers"] td:nth-child(2) table#spec_ident_identifiers_'.$num,1)->
@@ -225,7 +225,6 @@ $browser->with('response')->begin()->
   checkElement('.board_col:first .widget:nth-child(5) .spec_ident_identifiers_handle',2)->
   checkElement('table.collectors tr.spec_ident_collector_data',2)->
   checkElement('#specimen_Comments_0_comment','Test comment for a collector')-> 
-  checkElement('.board_col:last .widget:nth-child(8) li#specimensAccompanying',1)->
   click('Delete')->
   end() ;
 
