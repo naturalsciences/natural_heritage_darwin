@@ -1133,6 +1133,7 @@ Staging:
         mineral_local: { type: boolean}
         mineral_color: { type: string}
         mineral_parents: { type: string}
+        mineral_classification: { type: string}
         host_taxon_ref: { type: integer}
         host_relationship: { type: string}
         host_taxon_name: { type: string}

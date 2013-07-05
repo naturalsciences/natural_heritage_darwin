@@ -47,6 +47,7 @@ GRANT ALL ON TABLE staging_relationship TO darwin2;
 GRANT SELECT ON TABLE staging_relationship TO d2viewer;
 
 ALTER TABLE staging DROP COLUMN part_status ;
+ALTER TABLE staging add column mineral_classification text ;
 alter table collection_maintenance alter column people_ref drop not null ;
 ALTER TABLE imports add column errors_in_import text ;
 

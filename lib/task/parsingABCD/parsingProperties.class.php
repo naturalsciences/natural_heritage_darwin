@@ -1,6 +1,6 @@
 <?php
 
-class ParsingProperties
+class ParsingProperties extends importABCDXml
 {
   public $people_order_by=null, $date_from, $accuracy=null ;
 

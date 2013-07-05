@@ -27,7 +27,6 @@ EOF;
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     $conn = Doctrine_Manager::connection();
     $conn->getDbh()->exec('BEGIN TRANSACTION;');
-    $staging_id = $conn->fetchOne('SELECT last_value from staging_id_seq;') ;
     while($id = $conn->fetchOne('SELECT get_import_row()'))
     {
         $q = Doctrine_Query::create()
@@ -40,7 +39,7 @@ EOF;
           try{
             if($q->getFormat() == 'abcd') $import = new importABCDXml() ;
             else $import = new importDnaXml() ;
-            $result = $import->parseFile($file,$id, $staging_id) ;
+            $result = $import->parseFile($file,$id) ;
           }
           catch(Exception $e)
           {

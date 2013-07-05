@@ -1,6 +1,6 @@
 <?php
 
-class ParsingTag
+class ParsingTag extends ImportABCDXml
 {
   public $GTUDate = array('from'=>null,'to'=>null,'time'=>null) ;
 //  public $peoples = array();
