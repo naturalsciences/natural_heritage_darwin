@@ -14,16 +14,17 @@
     <tr>
       <td colspan='5'>
         <div class="add_code">
-          <a href="<?php echo url_for('specimen/addSpecimensRelationships'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_accompanying"><?php echo __('Add element');?></a>
+          <a href="<?php echo url_for('specimen/addSpecimensRelationships'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_relship"><?php echo __('Add element');?></a>
         </div>
       </td>
     </tr>
   </tfoot>
 </table>
+<?php echo $form['SpecimensRelationships_holder'];?>
 <script  type="text/javascript">
 $(document).ready(function () {
 
-    $('#add_accompanying').click(function()
+    $('#add_relship').click(function()
     {
         hideForRefresh('#SpecimensRelationships');
 

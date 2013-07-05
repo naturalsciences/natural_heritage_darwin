@@ -20,7 +20,7 @@
     <td class="unit_choose" colspan="3">
       <div class="unit_taxon"><?php echo $form['taxon_ref'];?></div>
       <div class="unit_mineral"><?php echo $form['mineral_ref'];?>
-        <?php echo $form['quantity'];?>
+        <?php echo $form['quantity']->render(array('placeholder'=>$form['quantity']->renderLabelName()));;?>
         <?php echo $form['unit'];?>
       </div>
       <div class="unit_specimens"><?php echo $form['specimen_related_ref'];?></div>
@@ -28,8 +28,6 @@
         <?php echo $form['institution_ref']->renderLabel();?><?php echo $form['institution_ref'];?>
         <?php echo $form['source_name']->render(array('placeholder'=>$form['source_name']->renderLabelName()));?>
         <?php echo $form['source_id']->render(array('placeholder'=>$form['source_id']->renderLabelName()));?>
-        
-
       </div>
     </td>
     <td class="widget_row_delete">
