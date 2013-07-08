@@ -16,7 +16,7 @@ abstract class BaseSpecimensRelationshipsForm extends BaseFormDoctrine
   {
     $this->setWidgets(array(
       'id'                   => new sfWidgetFormInputHidden(),
-      'specimen_ref'         => new sfWidgetFormInputText(),
+      'specimen_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'), 'add_empty' => false)),
       'taxon_ref'            => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Taxonomy'), 'add_empty' => true)),
       'mineral_ref'          => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Mineralogy'), 'add_empty' => true)),
       'specimen_related_ref' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SpecimenRelated'), 'add_empty' => true)),
@@ -31,7 +31,7 @@ abstract class BaseSpecimensRelationshipsForm extends BaseFormDoctrine
 
     $this->setValidators(array(
       'id'                   => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'specimen_ref'         => new sfValidatorInteger(),
+      'specimen_ref'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimen'))),
       'taxon_ref'            => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Taxonomy'), 'required' => false)),
       'mineral_ref'          => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Mineralogy'), 'required' => false)),
       'specimen_related_ref' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SpecimenRelated'), 'required' => false)),

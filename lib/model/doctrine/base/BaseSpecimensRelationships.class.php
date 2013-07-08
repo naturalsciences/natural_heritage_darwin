@@ -16,6 +16,7 @@
  * @property integer $institution_ref
  * @property string $source_name
  * @property string $source_id
+ * @property Specimens $Specimen
  * @property Specimens $SpecimenRelated
  * @property Taxonomy $Taxonomy
  * @property Mineralogy $Mineralogy
@@ -32,6 +33,7 @@
  * @method integer                getInstitutionRef()       Returns the current record's "institution_ref" value
  * @method string                 getSourceName()           Returns the current record's "source_name" value
  * @method string                 getSourceId()             Returns the current record's "source_id" value
+ * @method Specimens              getSpecimen()             Returns the current record's "Specimen" value
  * @method Specimens              getSpecimenRelated()      Returns the current record's "SpecimenRelated" value
  * @method Taxonomy               getTaxonomy()             Returns the current record's "Taxonomy" value
  * @method Mineralogy             getMineralogy()           Returns the current record's "Mineralogy" value
@@ -47,6 +49,7 @@
  * @method SpecimensRelationships setInstitutionRef()       Sets the current record's "institution_ref" value
  * @method SpecimensRelationships setSourceName()           Sets the current record's "source_name" value
  * @method SpecimensRelationships setSourceId()             Sets the current record's "source_id" value
+ * @method SpecimensRelationships setSpecimen()             Sets the current record's "Specimen" value
  * @method SpecimensRelationships setSpecimenRelated()      Sets the current record's "SpecimenRelated" value
  * @method SpecimensRelationships setTaxonomy()             Sets the current record's "Taxonomy" value
  * @method SpecimensRelationships setMineralogy()           Sets the current record's "Mineralogy" value
@@ -108,6 +111,10 @@ abstract class BaseSpecimensRelationships extends DarwinModel
     public function setUp()
     {
         parent::setUp();
+        $this->hasOne('Specimens as Specimen', array(
+             'local' => 'specimen_ref',
+             'foreign' => 'id'));
+
         $this->hasOne('Specimens as SpecimenRelated', array(
              'local' => 'specimen_related_ref',
              'foreign' => 'id'));

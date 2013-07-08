@@ -172,10 +172,13 @@ class specimenwidgetComponents extends sfComponents
   }
 
   public function executeSpecimensRelationships()
-  {
+  {    
     $this->defineForm();
     if(!isset($this->form['newSpecimensRelationships']))
       $this->form->loadEmbed('SpecimensRelationships');
+
+//     if($this->spec_id != 0)
+//       $this->spec_related_inverse = Doctrine::getTable("SpecimensRelationships")->findByRelatedSpecimenRef($this->spec_id);
   }
 
   public function executeInformativeWorkflow()

@@ -836,7 +836,7 @@ abstract class BaseSpecimens extends DarwinModel
 
         $this->hasMany('SpecimensRelationships', array(
              'local' => 'id',
-             'foreign' => 'specimen_related_ref'));
+             'foreign' => 'specimen_ref'));
 
         $this->hasMany('SpecimensCodes', array(
              'local' => 'id',

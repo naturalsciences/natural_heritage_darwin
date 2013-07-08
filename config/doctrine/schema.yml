@@ -880,6 +880,7 @@ SpecimensRelationships:
     relations:
         Specimen:
             local: specimen_ref
+            class: Specimens
             foreign: id
         SpecimenRelated:
             local: specimen_related_ref
