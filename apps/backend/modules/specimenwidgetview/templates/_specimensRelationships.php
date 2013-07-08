@@ -19,7 +19,7 @@
       <?php elseif($val->getUnitType()=="taxon") : ?>
         <a href="<?php echo url_for('taxonomy/view?id='.$val->getTaxonRef()) ; ?>"><?php echo $val->Taxonomy->getName(); ?></a>
       <?php elseif($val->getUnitType()=="specimens") : ?>
-        <a href="<?php echo url_for('specimen/view?id='.$val->getRelatedSpecimen()) ; ?>"><?php echo $val->SpecimenRelated->getName(); ?></a>
+        <a href="<?php echo url_for('specimen/view?id='.$val->getSpecimenRelatedRef()) ; ?>"><?php echo $val->SpecimenRelated->getName(); ?></a>
       <?php elseif($val->getUnitType()=="external") : ?>
         <?php echo $val->getSourceName();?> ID: <?php echo $val->getSourceId();?>
       <?php endif ; ?>

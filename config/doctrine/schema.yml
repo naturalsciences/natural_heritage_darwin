@@ -883,6 +883,7 @@ SpecimensRelationships:
             foreign: id
         SpecimenRelated:
             local: specimen_related_ref
+            class: Specimens
             foreign: id
         Taxonomy:
             local: taxon_ref

@@ -192,7 +192,13 @@ table.extended_info hr
 .unit_external .button {
   float:none;
 }
-.relationship_detail_edit{
-  background-color: rgb(233, 237, 190);
+
+.relationship_detail_edit {
+  background-color: #E9EDBE;
+  border: 1px solid #C1CF56;
   vertical-align:center;
+}
+
+.relationship_detail_edit td{
+  padding: 0.5em;
 }
