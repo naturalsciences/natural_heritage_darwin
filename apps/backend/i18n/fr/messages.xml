@@ -5720,6 +5720,10 @@
         <source>This part is currently loaned</source>
         <target>Cette partie est en prêt</target>
       </trans-unit>
+      <trans-unit id="1737">
+        <source>Error: The comment is missing</source>
+        <target>Erreur: le commentaire est manquant</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

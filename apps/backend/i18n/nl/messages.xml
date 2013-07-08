@@ -5719,6 +5719,10 @@
         <source>This part is currently loaned</source>
         <target>Dit object is momenteel uitgeleend</target>
       </trans-unit>
+      <trans-unit id="1737">
+        <source>Error: The comment is missing</source>
+        <target>Fout: De commentaar ontbreekt</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

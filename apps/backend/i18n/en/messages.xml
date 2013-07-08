@@ -5723,6 +5723,11 @@
         <source>This part is currently loaned</source>
         <target>This part is currently loaned</target>
       </trans-unit>
+      <trans-unit id="1737">
+        <source>Error: The comment is missing</source>
+        <target>Error: The comment is missing</target>
+      </trans-unit>
+      
     </body>
   </file>
 </xliff>
