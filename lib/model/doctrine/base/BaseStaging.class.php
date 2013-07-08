@@ -71,6 +71,7 @@
  * @property boolean $mineral_local
  * @property string $mineral_color
  * @property string $mineral_parents
+ * @property string $mineral_classification
  * @property integer $host_taxon_ref
  * @property string $host_relationship
  * @property string $host_taxon_name
@@ -186,6 +187,7 @@
  * @method boolean             getMineralLocal()              Returns the current record's "mineral_local" value
  * @method string              getMineralColor()              Returns the current record's "mineral_color" value
  * @method string              getMineralParents()            Returns the current record's "mineral_parents" value
+ * @method string              getMineralClassification()     Returns the current record's "mineral_classification" value
  * @method integer             getHostTaxonRef()              Returns the current record's "host_taxon_ref" value
  * @method string              getHostRelationship()          Returns the current record's "host_relationship" value
  * @method string              getHostTaxonName()             Returns the current record's "host_taxon_name" value
@@ -300,6 +302,7 @@
  * @method Staging             setMineralLocal()              Sets the current record's "mineral_local" value
  * @method Staging             setMineralColor()              Sets the current record's "mineral_color" value
  * @method Staging             setMineralParents()            Sets the current record's "mineral_parents" value
+ * @method Staging             setMineralClassification()     Sets the current record's "mineral_classification" value
  * @method Staging             setHostTaxonRef()              Sets the current record's "host_taxon_ref" value
  * @method Staging             setHostRelationship()          Sets the current record's "host_relationship" value
  * @method Staging             setHostTaxonName()             Sets the current record's "host_taxon_name" value
@@ -564,6 +567,9 @@ abstract class BaseStaging extends DarwinModel
              'type' => 'string',
              ));
         $this->hasColumn('mineral_parents', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('mineral_classification', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('host_taxon_ref', 'integer', null, array(
