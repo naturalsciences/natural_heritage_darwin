@@ -247,7 +247,9 @@ ul.spec_error_list, ul.error_list
   display:block;
   height:24px;
   -moz-border-radius: 3px;
+  border-radius: 3px;
   -webkit-border-radius: 3px;
+  border: 1px solid gray;
   padding-left: 1em;
   padding-right: 1em;
   font-weight: normal;

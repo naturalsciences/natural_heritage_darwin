@@ -37,11 +37,6 @@ $browser->
     checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr',2)->
     checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:first th',7)->
     checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:nth-child(2) th',5)->
-    checkElement('.board_col:first #refHosts div.widget_content table tbody tr', 3)->
-    checkElement('.board_col:first #refHosts div.widget_content table tbody tr:first td input#specimen_host_taxon_ref', 1)->
-    checkElement('.board_col:first #refHosts div.widget_content table tbody tr:first td div#specimen_host_taxon_ref_name', '-')->
-    checkElement('.board_col:first #refHosts div.widget_content table tbody tr:last td input#specimen_host_specimen_ref', 1)->
-    checkElement('.board_col:first #refHosts div.widget_content table tbody tr:last td div#specimen_host_specimen_ref_name', '-')->
     checkElement('.board_col:last .widget:first .widget_top_bar span','/Acquisition/')->
     checkElement('.board_col:last .widget:nth-child(2) .widget_top_bar span','/Expedition/')->
     checkElement('.board_col:last .widget:nth-child(3) .widget_top_bar span','/I.G. number/')->
@@ -110,7 +105,6 @@ $browser->
   click('Save', 
         array('specimen' => array('taxon_ref'  => $taxonId,
                                   'collection_ref' => $collectionId,
-                                  'host_taxon_ref' => $secondTaxonId
                                  )
              )
        )->
@@ -124,8 +118,6 @@ $browser->
     isStatusCode(200)->
     checkElement('.board_col:first .widget:first .widget_content div#specimen_collection_ref_name','Aves')->
     checkElement('.board_col:first .widget:nth-child(2) .widget_content div#specimen_taxon_ref_name','Falco Peregrinus Tunstall, 1771')->
-    checkElement('.board_col:first #refHosts div.widget_content table tbody tr', 3)->
-    checkElement('.board_col:first #refHosts div.widget_content table tbody tr:first td div#specimen_host_taxon_ref_name', 'Eucaryota')->
   end()->
   
   info('4 - Check sameTaxon action call')->
@@ -156,17 +148,6 @@ $browser->
   get('specimen/getTaxon')->
   with('response')->begin()->
     isStatusCode(404)->
-  end()->
-  info('5.2 - ...with a wrong specimen id')->
-  get('specimen/getTaxon', array('specId'=>'0', 'targetField'=>'specimen_host_taxon'))->
-  with('response')->begin()->
-    isStatusCode(404)->
-  end()->
-  info('5.3 - ...with correct infos')->
-  get('specimen/getTaxon', array('specId'=>$specId, 'targetField'=>'specimen_host_taxon'))->
-  with('response')->begin()->
-    isStatusCode(200)->
-    matches('/specimen_host_taxon_name":"Animalia"}/')->
   end();
 
 $num = 5;
@@ -193,8 +174,8 @@ $browser->
   with('response')->begin()->
     isStatusCode()->
     checkElement('tr:first td:first[class="spec_ident_handle"]',1)->
-    checkElement('tr:first td:nth-child(3) select#specimen_newIdentification_'.$num.'_notion_concerned option',5)->
-    checkElement('tr:first td:nth-child(3) select#specimen_newIdentification_'.$num.'_notion_concerned option:first','Taxon.')->
+    checkElement('tr:first td:nth-child(3) select#specimen_newIdentification_'.$num.'_notion_concerned option',11)->
+    checkElement('tr:first td:nth-child(3) select#specimen_newIdentification_'.$num.'_notion_concerned option:first','All')->
     checkElement('tr:first td:last input:last[id="specimen_newIdentification_'.$num.'_order_by"][value="0"]',1)->
     checkElement('tr:nth-child(2)[class="spec_ident_identifiers"]',1)->
     checkElement('tr:nth-child(2)[class="spec_ident_identifiers"] td:nth-child(2) table#spec_ident_identifiers_'.$num,1)->
@@ -244,7 +225,6 @@ $browser->with('response')->begin()->
   checkElement('.board_col:first .widget:nth-child(5) .spec_ident_identifiers_handle',2)->
   checkElement('table.collectors tr.spec_ident_collector_data',2)->
   checkElement('#specimen_Comments_0_comment','Test comment for a collector')-> 
-  checkElement('.board_col:last .widget:nth-child(8) li#specimensAccompanying',1)->
   click('Delete')->
   end() ;
 

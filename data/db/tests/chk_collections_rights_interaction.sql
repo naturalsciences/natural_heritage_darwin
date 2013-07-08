@@ -100,8 +100,8 @@ SELECT ok(4 = (SELECT db_user_type FROM users WHERE id = 100000), 'Jos Chevremon
 SELECT ok(0 = (SELECT COUNT(*) FROM collections_rights WHERE user_ref = 100003), 'No more Francka referenced');
 SELECT ok(1 = (SELECT db_user_type FROM users WHERE id = 100003), 'Francka unpromoted to registered user');
 SELECT ok('taxon|part' = (SELECT pref_value FROM preferences WHERE user_ref = 100003 AND pref_key = 'search_cols_specimen'), 'Preferences - s columns not visible well removed');
-SELECT ok('taxon|part' = (SELECT visible_fields_in_result FROM my_saved_searches WHERE user_ref = 100003 AND subject = 'specimens' AND name = 'spec search'), 'My saved searches - spec columns not visible well removed');
-SELECT ok('taxon|part' = (SELECT visible_fields_in_result FROM my_saved_searches WHERE user_ref = 100003 AND subject = 'specimens' AND name = 'spec search 2'), 'My saved searches - spec columns not visible well removed');
+SELECT ok('taxon|part' = (SELECT visible_fields_in_result FROM my_saved_searches WHERE user_ref = 100003 AND subject = 'specimen' AND name = 'spec search'), 'My saved searches - spec columns not visible well removed');
+SELECT ok('taxon|part' = (SELECT visible_fields_in_result FROM my_saved_searches WHERE user_ref = 100003 AND subject = 'specimen' AND name = 'spec search 2'), 'My saved searches - spec columns not visible well removed');
 
 -- Finish the tests and clean up.
 SELECT * FROM finish();

@@ -179,8 +179,8 @@ CREATE TRIGGER trg_clr_referenceRecord_specimens AFTER DELETE OR UPDATE
 	ON specimens FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_referenceRecord_specimensaccompanying AFTER DELETE OR UPDATE
-	ON specimens_accompanying FOR EACH ROW
+CREATE TRIGGER trg_clr_referenceRecord_specimens_relationships AFTER DELETE OR UPDATE
+	ON specimens_relationships FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
 CREATE TRIGGER trg_clr_referenceRecord_loans AFTER DELETE OR UPDATE
@@ -342,8 +342,8 @@ CREATE TRIGGER trg_trk_log_table_collections_rights AFTER INSERT OR UPDATE OR DE
         ON collections_rights FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
-CREATE TRIGGER trg_trk_log_table_specimens_accompanying AFTER INSERT OR UPDATE OR DELETE
-        ON specimens_accompanying FOR EACH ROW
+CREATE TRIGGER trg_trk_log_table_specimens_relationship AFTER INSERT OR UPDATE OR DELETE
+        ON specimens_relationships FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
 CREATE TRIGGER trg_trk_log_table_collecting_tools AFTER INSERT OR UPDATE OR DELETE
@@ -463,16 +463,6 @@ CREATE TRIGGER trg_nbr_in_synonym  AFTER INSERT OR UPDATE
    	ON classification_synonymies FOR EACH ROW
 	EXECUTE PROCEDURE fct_nbr_in_synonym();
 
-
-/**** Specimen Hosting triggers ****/
-
-CREATE TRIGGER trg_cpy_updateHosts AFTER UPDATE
-        ON specimens FOR EACH ROW
-        EXECUTE PROCEDURE fct_cpy_updateHosts();
-
-CREATE TRIGGER trg_cpy_updateSpecHostImpact BEFORE UPDATE
-        ON specimens FOR EACH ROW
-        EXECUTE PROCEDURE fct_cpy_updateSpecHostImpact();
 
 /**** Darwin Flat Synchronisation triggers ****/
 
@@ -653,8 +643,8 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimens AFTER INSERT OR UPDATE
         ON specimens FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
-CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimens_accompanying AFTER INSERT OR UPDATE
-        ON specimens_accompanying FOR EACH ROW
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimens_relationships AFTER INSERT OR UPDATE
+        ON specimens_relationships FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
 CREATE TRIGGER fct_cpy_trg_ins_update_dict_users AFTER INSERT OR UPDATE
@@ -711,8 +701,8 @@ CREATE TRIGGER fct_cpy_trg_del_dict_specimens AFTER DELETE  OR UPDATE
         ON specimens FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
 
-CREATE TRIGGER fct_cpy_trg_del_dict_specimens_accompanying AFTER DELETE  OR UPDATE
-        ON specimens_accompanying FOR EACH ROW
+CREATE TRIGGER fct_cpy_trg_del_dict_specimens_relationships AFTER DELETE  OR UPDATE
+        ON specimens_relationships FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
 
 CREATE TRIGGER fct_cpy_trg_del_dict_users AFTER DELETE  OR UPDATE

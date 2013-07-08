@@ -15,9 +15,6 @@
  * @property integer $chrono_ref
  * @property integer $lithology_ref
  * @property integer $mineral_ref
- * @property integer $host_taxon_ref
- * @property integer $host_specimen_ref
- * @property string $host_relationship
  * @property string $acquisition_category
  * @property integer $acquisition_date_mask
  * @property string $acquisition_date
@@ -89,14 +86,6 @@
  * @property string $mineral_color
  * @property string $mineral_path
  * @property integer $mineral_parent_ref
- * @property string $host_taxon_name
- * @property string $host_taxon_name_indexed
- * @property integer $host_taxon_level_ref
- * @property string $host_taxon_level_name
- * @property string $host_taxon_status
- * @property string $host_taxon_path
- * @property integer $host_taxon_parent_ref
- * @property boolean $host_taxon_extinct
  * @property string $ig_num
  * @property string $ig_num_indexed
  * @property integer $ig_date_mask
@@ -136,13 +125,9 @@
  * @property Chronostratigraphy $Chronostratigraphy
  * @property Lithology $Lithology
  * @property Mineralogy $Mineralogy
- * @property Taxonomy $HostTaxon
- * @property Specimens $HostSpecimen
  * @property Igs $Igs
  * @property Doctrine_Collection $CollectingMethods
  * @property Doctrine_Collection $CollectingTools
- * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimensAccompanying
  * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
  * @property Doctrine_Collection $SpecimensTools
@@ -158,9 +143,6 @@
  * @method integer             getChronoRef()               Returns the current record's "chrono_ref" value
  * @method integer             getLithologyRef()            Returns the current record's "lithology_ref" value
  * @method integer             getMineralRef()              Returns the current record's "mineral_ref" value
- * @method integer             getHostTaxonRef()            Returns the current record's "host_taxon_ref" value
- * @method integer             getHostSpecimenRef()         Returns the current record's "host_specimen_ref" value
- * @method string              getHostRelationship()        Returns the current record's "host_relationship" value
  * @method string              getAcquisitionCategory()     Returns the current record's "acquisition_category" value
  * @method integer             getAcquisitionDateMask()     Returns the current record's "acquisition_date_mask" value
  * @method string              getAcquisitionDate()         Returns the current record's "acquisition_date" value
@@ -232,14 +214,6 @@
  * @method string              getMineralColor()            Returns the current record's "mineral_color" value
  * @method string              getMineralPath()             Returns the current record's "mineral_path" value
  * @method integer             getMineralParentRef()        Returns the current record's "mineral_parent_ref" value
- * @method string              getHostTaxonName()           Returns the current record's "host_taxon_name" value
- * @method string              getHostTaxonNameIndexed()    Returns the current record's "host_taxon_name_indexed" value
- * @method integer             getHostTaxonLevelRef()       Returns the current record's "host_taxon_level_ref" value
- * @method string              getHostTaxonLevelName()      Returns the current record's "host_taxon_level_name" value
- * @method string              getHostTaxonStatus()         Returns the current record's "host_taxon_status" value
- * @method string              getHostTaxonPath()           Returns the current record's "host_taxon_path" value
- * @method integer             getHostTaxonParentRef()      Returns the current record's "host_taxon_parent_ref" value
- * @method boolean             getHostTaxonExtinct()        Returns the current record's "host_taxon_extinct" value
  * @method string              getIgNum()                   Returns the current record's "ig_num" value
  * @method string              getIgNumIndexed()            Returns the current record's "ig_num_indexed" value
  * @method integer             getIgDateMask()              Returns the current record's "ig_date_mask" value
@@ -279,13 +253,9 @@
  * @method Chronostratigraphy  getChronostratigraphy()      Returns the current record's "Chronostratigraphy" value
  * @method Lithology           getLithology()               Returns the current record's "Lithology" value
  * @method Mineralogy          getMineralogy()              Returns the current record's "Mineralogy" value
- * @method Taxonomy            getHostTaxon()               Returns the current record's "HostTaxon" value
- * @method Specimens           getHostSpecimen()            Returns the current record's "HostSpecimen" value
  * @method Igs                 getIgs()                     Returns the current record's "Igs" value
  * @method Doctrine_Collection getCollectingMethods()       Returns the current record's "CollectingMethods" collection
  * @method Doctrine_Collection getCollectingTools()         Returns the current record's "CollectingTools" collection
- * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimensAccompanying()   Returns the current record's "SpecimensAccompanying" collection
  * @method Doctrine_Collection getSpecimensCodes()          Returns the current record's "SpecimensCodes" collection
  * @method Doctrine_Collection getSpecimensMethods()        Returns the current record's "SpecimensMethods" collection
  * @method Doctrine_Collection getSpecimensTools()          Returns the current record's "SpecimensTools" collection
@@ -300,9 +270,6 @@
  * @method Specimens           setChronoRef()               Sets the current record's "chrono_ref" value
  * @method Specimens           setLithologyRef()            Sets the current record's "lithology_ref" value
  * @method Specimens           setMineralRef()              Sets the current record's "mineral_ref" value
- * @method Specimens           setHostTaxonRef()            Sets the current record's "host_taxon_ref" value
- * @method Specimens           setHostSpecimenRef()         Sets the current record's "host_specimen_ref" value
- * @method Specimens           setHostRelationship()        Sets the current record's "host_relationship" value
  * @method Specimens           setAcquisitionCategory()     Sets the current record's "acquisition_category" value
  * @method Specimens           setAcquisitionDateMask()     Sets the current record's "acquisition_date_mask" value
  * @method Specimens           setAcquisitionDate()         Sets the current record's "acquisition_date" value
@@ -374,14 +341,6 @@
  * @method Specimens           setMineralColor()            Sets the current record's "mineral_color" value
  * @method Specimens           setMineralPath()             Sets the current record's "mineral_path" value
  * @method Specimens           setMineralParentRef()        Sets the current record's "mineral_parent_ref" value
- * @method Specimens           setHostTaxonName()           Sets the current record's "host_taxon_name" value
- * @method Specimens           setHostTaxonNameIndexed()    Sets the current record's "host_taxon_name_indexed" value
- * @method Specimens           setHostTaxonLevelRef()       Sets the current record's "host_taxon_level_ref" value
- * @method Specimens           setHostTaxonLevelName()      Sets the current record's "host_taxon_level_name" value
- * @method Specimens           setHostTaxonStatus()         Sets the current record's "host_taxon_status" value
- * @method Specimens           setHostTaxonPath()           Sets the current record's "host_taxon_path" value
- * @method Specimens           setHostTaxonParentRef()      Sets the current record's "host_taxon_parent_ref" value
- * @method Specimens           setHostTaxonExtinct()        Sets the current record's "host_taxon_extinct" value
  * @method Specimens           setIgNum()                   Sets the current record's "ig_num" value
  * @method Specimens           setIgNumIndexed()            Sets the current record's "ig_num_indexed" value
  * @method Specimens           setIgDateMask()              Sets the current record's "ig_date_mask" value
@@ -421,13 +380,9 @@
  * @method Specimens           setChronostratigraphy()      Sets the current record's "Chronostratigraphy" value
  * @method Specimens           setLithology()               Sets the current record's "Lithology" value
  * @method Specimens           setMineralogy()              Sets the current record's "Mineralogy" value
- * @method Specimens           setHostTaxon()               Sets the current record's "HostTaxon" value
- * @method Specimens           setHostSpecimen()            Sets the current record's "HostSpecimen" value
  * @method Specimens           setIgs()                     Sets the current record's "Igs" value
  * @method Specimens           setCollectingMethods()       Sets the current record's "CollectingMethods" collection
  * @method Specimens           setCollectingTools()         Sets the current record's "CollectingTools" collection
- * @method Specimens           setSpecimens()               Sets the current record's "Specimens" collection
- * @method Specimens           setSpecimensAccompanying()   Sets the current record's "SpecimensAccompanying" collection
  * @method Specimens           setSpecimensCodes()          Sets the current record's "SpecimensCodes" collection
  * @method Specimens           setSpecimensMethods()        Sets the current record's "SpecimensMethods" collection
  * @method Specimens           setSpecimensTools()          Sets the current record's "SpecimensTools" collection
@@ -478,15 +433,6 @@ abstract class BaseSpecimens extends DarwinModel
              ));
         $this->hasColumn('mineral_ref', 'integer', null, array(
              'type' => 'integer',
-             ));
-        $this->hasColumn('host_taxon_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('host_specimen_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('host_relationship', 'string', null, array(
-             'type' => 'string',
              ));
         $this->hasColumn('acquisition_category', 'string', null, array(
              'type' => 'string',
@@ -705,30 +651,6 @@ abstract class BaseSpecimens extends DarwinModel
         $this->hasColumn('mineral_parent_ref', 'integer', null, array(
              'type' => 'integer',
              ));
-        $this->hasColumn('host_taxon_name', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_name_indexed', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_level_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('host_taxon_level_name', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_status', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_path', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_parent_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('host_taxon_extinct', 'boolean', null, array(
-             'type' => 'boolean',
-             ));
         $this->hasColumn('ig_num', 'string', null, array(
              'type' => 'string',
              ));
@@ -895,14 +817,6 @@ abstract class BaseSpecimens extends DarwinModel
              'local' => 'mineral_ref',
              'foreign' => 'id'));
 
-        $this->hasOne('Taxonomy as HostTaxon', array(
-             'local' => 'host_taxon_ref',
-             'foreign' => 'id'));
-
-        $this->hasOne('Specimens as HostSpecimen', array(
-             'local' => 'host_specimen_ref',
-             'foreign' => 'id'));
-
         $this->hasOne('Igs', array(
              'local' => 'ig_ref',
              'foreign' => 'id'));
@@ -916,14 +830,6 @@ abstract class BaseSpecimens extends DarwinModel
              'refClass' => 'SpecimensTools',
              'local' => 'specimen_ref',
              'foreign' => 'collecting_tool_ref'));
-
-        $this->hasMany('Specimens', array(
-             'local' => 'id',
-             'foreign' => 'host_specimen_ref'));
-
-        $this->hasMany('SpecimensAccompanying', array(
-             'local' => 'id',
-             'foreign' => 'specimen_ref'));
 
         $this->hasMany('SpecimensCodes', array(
              'local' => 'id',

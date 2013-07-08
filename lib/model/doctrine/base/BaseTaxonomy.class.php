@@ -17,34 +17,34 @@
  * @property CatalogueLevels $Level
  * @property Doctrine_Collection $Taxonomy
  * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimensAccompanying
+ * @property Doctrine_Collection $SpecimensRelationships
  * 
- * @method integer             getId()                    Returns the current record's "id" value
- * @method string              getName()                  Returns the current record's "name" value
- * @method string              getNameIndexed()           Returns the current record's "name_indexed" value
- * @method integer             getLevelRef()              Returns the current record's "level_ref" value
- * @method string              getStatus()                Returns the current record's "status" value
- * @method string              getPath()                  Returns the current record's "path" value
- * @method integer             getParentRef()             Returns the current record's "parent_ref" value
- * @method boolean             getExtinct()               Returns the current record's "extinct" value
- * @method Taxonomy            getParent()                Returns the current record's "Parent" value
- * @method CatalogueLevels     getLevel()                 Returns the current record's "Level" value
- * @method Doctrine_Collection getTaxonomy()              Returns the current record's "Taxonomy" collection
- * @method Doctrine_Collection getSpecimens()             Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimensAccompanying() Returns the current record's "SpecimensAccompanying" collection
- * @method Taxonomy            setId()                    Sets the current record's "id" value
- * @method Taxonomy            setName()                  Sets the current record's "name" value
- * @method Taxonomy            setNameIndexed()           Sets the current record's "name_indexed" value
- * @method Taxonomy            setLevelRef()              Sets the current record's "level_ref" value
- * @method Taxonomy            setStatus()                Sets the current record's "status" value
- * @method Taxonomy            setPath()                  Sets the current record's "path" value
- * @method Taxonomy            setParentRef()             Sets the current record's "parent_ref" value
- * @method Taxonomy            setExtinct()               Sets the current record's "extinct" value
- * @method Taxonomy            setParent()                Sets the current record's "Parent" value
- * @method Taxonomy            setLevel()                 Sets the current record's "Level" value
- * @method Taxonomy            setTaxonomy()              Sets the current record's "Taxonomy" collection
- * @method Taxonomy            setSpecimens()             Sets the current record's "Specimens" collection
- * @method Taxonomy            setSpecimensAccompanying() Sets the current record's "SpecimensAccompanying" collection
+ * @method integer             getId()                     Returns the current record's "id" value
+ * @method string              getName()                   Returns the current record's "name" value
+ * @method string              getNameIndexed()            Returns the current record's "name_indexed" value
+ * @method integer             getLevelRef()               Returns the current record's "level_ref" value
+ * @method string              getStatus()                 Returns the current record's "status" value
+ * @method string              getPath()                   Returns the current record's "path" value
+ * @method integer             getParentRef()              Returns the current record's "parent_ref" value
+ * @method boolean             getExtinct()                Returns the current record's "extinct" value
+ * @method Taxonomy            getParent()                 Returns the current record's "Parent" value
+ * @method CatalogueLevels     getLevel()                  Returns the current record's "Level" value
+ * @method Doctrine_Collection getTaxonomy()               Returns the current record's "Taxonomy" collection
+ * @method Doctrine_Collection getSpecimens()              Returns the current record's "Specimens" collection
+ * @method Doctrine_Collection getSpecimensRelationships() Returns the current record's "SpecimensRelationships" collection
+ * @method Taxonomy            setId()                     Sets the current record's "id" value
+ * @method Taxonomy            setName()                   Sets the current record's "name" value
+ * @method Taxonomy            setNameIndexed()            Sets the current record's "name_indexed" value
+ * @method Taxonomy            setLevelRef()               Sets the current record's "level_ref" value
+ * @method Taxonomy            setStatus()                 Sets the current record's "status" value
+ * @method Taxonomy            setPath()                   Sets the current record's "path" value
+ * @method Taxonomy            setParentRef()              Sets the current record's "parent_ref" value
+ * @method Taxonomy            setExtinct()                Sets the current record's "extinct" value
+ * @method Taxonomy            setParent()                 Sets the current record's "Parent" value
+ * @method Taxonomy            setLevel()                  Sets the current record's "Level" value
+ * @method Taxonomy            setTaxonomy()               Sets the current record's "Taxonomy" collection
+ * @method Taxonomy            setSpecimens()              Sets the current record's "Specimens" collection
+ * @method Taxonomy            setSpecimensRelationships() Sets the current record's "SpecimensRelationships" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -111,7 +111,7 @@ abstract class BaseTaxonomy extends DarwinModel
              'local' => 'id',
              'foreign' => 'taxon_ref'));
 
-        $this->hasMany('SpecimensAccompanying', array(
+        $this->hasMany('SpecimensRelationships', array(
              'local' => 'id',
              'foreign' => 'taxon_ref'));
     }

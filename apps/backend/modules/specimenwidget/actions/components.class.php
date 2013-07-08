@@ -171,11 +171,11 @@ class specimenwidgetComponents extends sfComponents
 
   }
 
-  public function executeSpecimensAccompanying()
+  public function executeSpecimensRelationships()
   {
     $this->defineForm();
-    if(!isset($this->form['newSpecimensAccompanying']))
-      $this->form->loadEmbed('SpecimensAccompanying');
+    if(!isset($this->form['newSpecimensRelationships']))
+      $this->form->loadEmbed('SpecimensRelationships');
   }
 
   public function executeInformativeWorkflow()

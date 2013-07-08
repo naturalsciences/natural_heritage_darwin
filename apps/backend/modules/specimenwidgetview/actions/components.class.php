@@ -110,11 +110,6 @@ class specimenwidgetviewComponents extends sfComponents
     }
   }
 
-  public function executeRefHosts()
-  {
-    $this->spec = Doctrine::getTable('Specimens')->find($this->eid);
-  }
-
   public function executeRefCodes()
   {
     $this->Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;    
@@ -152,9 +147,9 @@ class specimenwidgetviewComponents extends sfComponents
   public function executeExtLinks()
   {}
   
-  public function executeSpecimensAccompanying()
+  public function executeSpecimensRelationships()
   {
-    $this->accompanying = Doctrine::getTable("SpecimensAccompanying")->findBySpecimenRef($this->eid) ;
+    $this->accompanying = Doctrine::getTable("SpecimensRelationships")->findBySpecimenRef($this->eid) ;
   }
 
   public function executeRefRelatedFiles()

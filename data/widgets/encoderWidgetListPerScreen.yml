@@ -115,16 +115,6 @@ sw17:
    visible: true
    title_perso: Collectors
 
-sw20:
-   col_num: 2
-   category: specimen_widget
-   group_name: specimensAccompanying
-   mandatory: false
-   order_by: 10
-   opened: true
-   visible: true
-   title_perso: Accompanying elements
-
 sw21:
    col_num: 2
    category: specimen_widget

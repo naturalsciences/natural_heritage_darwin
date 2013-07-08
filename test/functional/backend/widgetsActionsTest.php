@@ -29,7 +29,7 @@ $browser->
   get('/specimen/new')->
   with('response')->begin()->
     checkElement('.board_col:first .widget',11)->
-    checkElement('.board_col:last .widget',16)->
+    checkElement('.board_col:last .widget',15)->
   end()->
   
   info('1.3 - add widget when the category is ok')->

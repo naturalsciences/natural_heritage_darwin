@@ -71,14 +71,6 @@
  * @property boolean $mineral_local
  * @property string $mineral_color
  * @property string $mineral_parents
- * @property string $mineral_classification
- * @property integer $host_taxon_ref
- * @property string $host_relationship
- * @property string $host_taxon_name
- * @property integer $host_taxon_level_ref
- * @property string $host_taxon_level_name
- * @property string $host_taxon_status
- * @property integer $host_specimen_ref
  * @property integer $ig_ref
  * @property string $ig_num
  * @property integer $ig_date_mask
@@ -187,14 +179,6 @@
  * @method boolean             getMineralLocal()              Returns the current record's "mineral_local" value
  * @method string              getMineralColor()              Returns the current record's "mineral_color" value
  * @method string              getMineralParents()            Returns the current record's "mineral_parents" value
- * @method string              getMineralClassification()     Returns the current record's "mineral_classification" value
- * @method integer             getHostTaxonRef()              Returns the current record's "host_taxon_ref" value
- * @method string              getHostRelationship()          Returns the current record's "host_relationship" value
- * @method string              getHostTaxonName()             Returns the current record's "host_taxon_name" value
- * @method integer             getHostTaxonLevelRef()         Returns the current record's "host_taxon_level_ref" value
- * @method string              getHostTaxonLevelName()        Returns the current record's "host_taxon_level_name" value
- * @method string              getHostTaxonStatus()           Returns the current record's "host_taxon_status" value
- * @method integer             getHostSpecimenRef()           Returns the current record's "host_specimen_ref" value
  * @method integer             getIgRef()                     Returns the current record's "ig_ref" value
  * @method string              getIgNum()                     Returns the current record's "ig_num" value
  * @method integer             getIgDateMask()                Returns the current record's "ig_date_mask" value
@@ -302,14 +286,6 @@
  * @method Staging             setMineralLocal()              Sets the current record's "mineral_local" value
  * @method Staging             setMineralColor()              Sets the current record's "mineral_color" value
  * @method Staging             setMineralParents()            Sets the current record's "mineral_parents" value
- * @method Staging             setMineralClassification()     Sets the current record's "mineral_classification" value
- * @method Staging             setHostTaxonRef()              Sets the current record's "host_taxon_ref" value
- * @method Staging             setHostRelationship()          Sets the current record's "host_relationship" value
- * @method Staging             setHostTaxonName()             Sets the current record's "host_taxon_name" value
- * @method Staging             setHostTaxonLevelRef()         Sets the current record's "host_taxon_level_ref" value
- * @method Staging             setHostTaxonLevelName()        Sets the current record's "host_taxon_level_name" value
- * @method Staging             setHostTaxonStatus()           Sets the current record's "host_taxon_status" value
- * @method Staging             setHostSpecimenRef()           Sets the current record's "host_specimen_ref" value
  * @method Staging             setIgRef()                     Sets the current record's "ig_ref" value
  * @method Staging             setIgNum()                     Sets the current record's "ig_num" value
  * @method Staging             setIgDateMask()                Sets the current record's "ig_date_mask" value
@@ -568,30 +544,6 @@ abstract class BaseStaging extends DarwinModel
              ));
         $this->hasColumn('mineral_parents', 'string', null, array(
              'type' => 'string',
-             ));
-        $this->hasColumn('mineral_classification', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('host_relationship', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_name', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_level_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('host_taxon_level_name', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_status', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_specimen_ref', 'integer', null, array(
-             'type' => 'integer',
              ));
         $this->hasColumn('ig_ref', 'integer', null, array(
              'type' => 'integer',

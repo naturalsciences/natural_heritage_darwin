@@ -132,8 +132,8 @@ insert into staging_tag_groups (staging_ref,group_name, sub_group_name, tag_valu
 update staging set to_import = true;
 
 select is(true, (select fct_importer_dna(1)));
-select is(1, (select count(*)::integer from specimen_individuals));
-select is(1, (select count(*)::integer from specimen_parts));
+-- select is(1, (select count(*)::integer from specimen_individuals));
+-- select is(1, (select count(*)::integer from specimen_parts));
 select is(1, (select count(*)::integer from specimens where gtu_ref = 1));
 select is('Hello; world; ', (select tag_value from tag_groups where gtu_ref = 1));
 
