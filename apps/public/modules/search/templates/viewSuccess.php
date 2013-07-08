@@ -29,7 +29,7 @@
                 <?php if ($institute->getAdditionalNames()) : ?>
                   (<span><?php echo $institute->getAdditionalNames() ; ?></span>)
                 <?php endif ; ?>
-              </div>            
+              </div>
             </td>
             <td>
               <div class="tree_view">
