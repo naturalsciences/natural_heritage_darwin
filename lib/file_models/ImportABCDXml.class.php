@@ -95,7 +95,7 @@ class ImportABCDXml implements IImportModels
   {
     $data = trim($data) ;
     if ($data == "") return ;
-    if ($this->getPreviousTag() == "NameAtomised") $this->object->handleKeyword($this->tag,$data,$this->staging) ;
+    if (in_array($this->getPreviousTag(),array('Bacterial','Zoological','Botanical','Viral'))) $this->object->handleKeyword($this->tag,$data,$this->staging) ;
     switch ($this->tag) {
       case "AccessionCatalogue" : $this->object->addAccession($data) ; break ;;
       case "AccessionDate" : $this->object->InitAccessionVar($data) ; break ;;
