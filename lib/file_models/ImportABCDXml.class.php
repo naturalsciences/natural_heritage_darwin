@@ -1,7 +1,7 @@
 <?php 
 class ImportABCDXml implements IImportModels
 {
-  private $tag, $staging, $object, $people,$import_id, $temp_data, $higher_tag, $depth, $name, $errors_reported='';
+  private $tag, $staging, $object, $people,$import_id, $temp_data, $path="", $name, $errors_reported='';
   private $unit_id_ref = array() ; // to keep the original unid_id per staging for Associations
   private $object_to_save = array() ;
   /**
@@ -35,80 +35,72 @@ class ImportABCDXml implements IImportModels
   private function startElement($parser, $name, $attrs) 
   {
     $this->tag = $name ;
-    $this->depth++;
+    $this->path .= "/$name" ;
     $this->temp_data = '' ;
     switch ($name) {
-      case "Altitude" : $this->higher_tag = "altitude" ; break ;;
       case "Accessions" : $this->object = new parsingTag() ; break ;;
       case "Biotope" : /*@TODO ;*/ break ;;
-      case "Country" : $this->higher_tag = "country" ; $this->object->tag_group_name="country" ; break ;;
-      case "Depth" : $this->higher_tag = "depth" ; break ;;
+      case "Country" : $this->object->tag_group_name="country" ; break ;;
       case "dna:DNASample" : $this->object = new ParsingMaintenance('Dna extraction') ; break ;;
+      case "efg:RockPhysicalCharacteristics" : $this->object = new parsingTag("lithology") ; break ;;
       case "Gathering" : $this->object = new parsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break ;;
-      case "Height" : $this->higher_tag = "height" ; break ;;
       case "HigherTaxa" : $this->object->taxon_parent = new Hstore() ;break ;;
       case "Identification" : $this->object = new parsingIdentifications() ; break ;;
-      //case "Identifiers" : $this->peoples = array() ; break ;;
-      case "MeasurementOrFact" : $this->higher_tag = "MeasurementOrFact" ; break ;;
-      case "MeasurementOrFactAtomised" : $this->property = new parsingProperties($this->higher_tag) ; break ;;
+      case "MeasurementOrFactAtomised" : $this->property = new parsingProperties($this->getPreviousTag()) ; break ;;
       case "MultiMediaObject" : $this->object = new parsingMultimedia() ; break ;;
-      case "NameAtomised" : $this->higher_tag = "keyword" ;
-      //case "Notes" :  break ;;
       case "PersonName" : $this->people = new StagingPeople() ; break ;;
       case "Person" : $this->people = new StagingPeople() ; break ;;
       case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break ;;
-      case "SiteMeasurementOrFact" : $this->higher_tag = "SiteMeasurementOrFact" ; break ;;
       case "SpecimenUnit" : $this->object = new parsingTag("unit") ; break ;;
-      case "Unit" : $this->staging = new Staging(); $this->depth=0 ; $this->name = ""; $this->staging->setId($this->getStagingId()); break ;;
+      case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); break ;;
       case "UnitAssociation" : $this->object = new stagingRelationship() ; break ;;
       case "UnitID" : $this->code = new Codes() ; break ;;
-//      case "Organisation" : $this->higher_tag = "people" ;
     }
   }
 
   private function endElement($parser, $name)
   {
-    $this->tag = "" ;
     switch ($name) {
-      case "AccessionNumber" : $this->object->HandleAccession($this->staging) ; break ;;
+      case "AccessionNumber" : $this->object->HandleAccession($this->staging,$this->object_to_save) ; break ;;
       case "Comment" : $this->object->multimedia_data['description'] = $this->temp_data ; break ;;
       case "Country" : $this->object->addTagGroups() ;break;;
       case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break ;;
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->temp_data) ; break ;;
-      case "Gathering" : $this->object->insertTags($this->staging->getId())  ; break ;;
+      case "Gathering" : $this->object->insertTags($this->staging->getId()) ; if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break ;;
       case "HigherTaxa" : $this->staging["taxon_parents"] = $this->object->getTaxonParent() ;; break ;;
       case "HigherTaxon" : $this->object->handleTaxonParent() ;break;;
       //case "Height" : $this->object->save() ; break ;;
       case "Identification" : $this->staging->addRelated($this->object->identification) ; break ;;
+      case "MeasurementsOrFacts" : if($this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break ;;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break ;;
       case "MineralRockIdentified" : $this->staging["mineral_name"] = $this->object->fullname ; break ;;
-      case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; else $this->errors_reported .= "MultiMediaObject not saved (no FileURI);"; break ;;
+      case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; else $this->errors_reported .= "MultiMediaObject not saved (no or wrong FileURI);"; break ;;
       case "NamedArea" : $this->object->addTagGroups() ;break;;
-      case "NameAtomised" : $this->higher_tag = "" ; break ;;
-      case "Notes" : $this->addComment($this->temp_data,$this->depth==1?'general':'general comments') ; break ;
+      case "Notes" : $this->addComment() ; break ;
       case "PersonName" : $this->object->handlePeople($this->people) ; break ;;
       case "Person" : $this->object->handlePeople($this->people,$this->staging,true) ; break ;;
       case "ScientificName" : $this->staging["taxon_name"] = $this->object->getTaxonName() ; break ;;
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break ;;
-      case "TitleCitation" : $this->addComment($this->temp_data,'general',true) ; break ;
+      case "TitleCitation" : $this->addComment(true) ; break ;
       case "Unit" : $this->saveUnit(); break ;;
       case "UnitAssociation" : $this->staging->addRelated($this->object) ; break ;;
       case "UnitID" : $this->staging->addRelated($this->code) ; break ;;
     }
-    $this->depth--;
+    $this->tag = "" ;
+    $this->path = substr($this->path,0,strrpos($this->path,"/$name")) ;
   }
 
   private function characterData($parser, $data) 
   {
     $data = trim($data) ;
     if ($data == "") return ;
-    if ($this->higher_tag == "keyword") $this->object->handleKeyword($this->tag,$data,$this->staging) ;
+    if ($this->getPreviousTag() == "NameAtomised") $this->object->handleKeyword($this->tag,$data,$this->staging) ;
     switch ($this->tag) {
       case "AccessionCatalogue" : $this->object->addAccession($data) ; break ;;
       case "AccessionDate" : $this->object->InitAccessionVar($data) ; break ;;
       case "AccessionNumber" : $this->object->accession_num = $data ; break ;;
-      case "Accuracy" : $this->higher_tag=='altitude'?$this->staging['gtu_elevation_accuracy']=$data:$this->property->accuracy=$data ; break ;;
+      case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$data:$this->property->accuracy=$data ; break ;;
       case "AcquisitionDate" : $this->staging['acquisition_date'] = $data ; break ;;
       case "AcquisitionType" : $this->staging['acquisition_category'] = $data ; break ;;
       case "AreaClass" : $this->object->tag_value = $data ; break ;;
@@ -147,14 +139,14 @@ class ImportABCDXml implements IImportModels
       case "Length" : $this->object->desc .= "Length : $data ;" ; break ;;
       case "LocalityText" : $this->staging['gtu_code'] = $data ; break ;; //@TOTO maybe find a better place for that.
       case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $data ; break ;;
-      case "LowerValue" : $this->property->getLowerValue($data, $this->higher_tag,$this->staging) ; break ;;
+      case "LowerValue" : $this->property->getLowerValue($data, $this->getPreviousTag(),$this->staging) ; break ;;
       case "MineralColour" : $this->staging->setMineralColour($data) ; break ;;
       case "MineralRockClassification" : $this->staging->setMineralClassification($data) ; break ;;
       case "MineralRockGroupName" : $this->staging->setMineralName($this->object->getMineralName($data)) ; break ;;
-      case "MeasurementDateTime" : $this->property->getDateFrom($data, $this->higher_tag,$this->staging) ; break ;;
+      case "MeasurementDateTime" : $this->property->getDateFrom($data, $this->getPreviousTag(),$this->staging) ; break ;;
       case "Method" : $this->object_to_save[] = $this->object->addMethod($data,$this->staging->getId()) ; break ;;
       case "Notes" : $this->temp_data.="$data." ; break ;;
-      case "Name" : if($this->higher_tag == "country") $this->object->tag_value=$data ; break ;; //@TODO
+      case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$data ; break ;; //@TODO
       case "Parameter" : $this->property->property->setPropertySubType($data);break ;;
       case "PhaseOrStage" : $this->staging->setIndividualStage($data) ; break ;; 
       case "Prefix" : $this->people['title'] = $data ; break ;;
@@ -168,27 +160,39 @@ class ImportABCDXml implements IImportModels
       case "TypeStatus" : $this->staging->setIndividualState($data) ; break ;;
       case "UnitID" : $this->code['code'] = $data ; $this->name = $data ; break ;;
       case "UnitOfMeasurement" : $this->property->property->setPropertyAccuracyUnit($data);$this->property->property->setPropertyUnit($data); break ;;
-      case "UpperValue" : $this->property->getUpperValue($data, $this->higher_tag,$this->staging) ; break ;;
+      case "UpperValue" : $this->property->getUpperValue($data, $this->getPreviousTag(),$this->staging) ; break ;;
       case "VerificationLevel" : $this->object->determination_status = $data ; break ;;
-  //    case "SortingName" : $this->temp_data = $data ; break ;;
-  //    case "Text" : if($this->higher_tag == "people") $this->object->organisation = $data ; break ;;
       default : break ;;
       }
   }
+  
+  private function getPreviousTag($tag=null)
+  {
+    if(!$tag) $tag = $this->tag ;
+    $part = substr($this->path,0,strrpos($this->path,"/$tag")) ;
+    return (substr($part,strrpos($part,'/')+1,strlen($part))) ;
+  }
 
-  private function addComment($data,$notion, $is_staging = false)
+  private function addComment($is_staging = false)
   {
     $comment = new Comments() ;
-    $comment->setNotionConcerned($notion) ;
-    $comment->setComment($data) ;
-    if($this->depth==1 || $is_staging) $this->staging->addRelated($comment) ;
-    else  $this->object_to_save[] = $this->object->addStagingInfo($comment,$this->staging->getId());
+    $comment->setComment($this->temp_data) ;
+    if($is_staging || $this->getPreviousTag()=='Unit')
+    {
+      $comment->setNotionConcerned("general") ;
+      $this->staging->addRelated($comment) ;
+    }
+    else
+    {
+      $comment->setNotionConcerned("general comments") ;
+      $this->object->addStagingInfo($comment,$this->staging->getId());
+    }
   }
 
   private function addProperty()
   {
-    if($this->higher_tag=='MeasurementOrFact') $this->staging->addRelated($this->property->property) ;
-    else $this->object_to_save[] = $this->object->addStagingInfo($this->property->property, $this->staging->getId());
+    if($this->getPreviousTag("MeasurementOrFacts") == "Unit") $this->staging->addRelated($this->property->property) ;
+    else $this->object->addStagingInfo($this->property->property, $this->staging->getId());
   }
 
   private function saveObjects()
@@ -221,14 +225,14 @@ class ImportABCDXml implements IImportModels
     try 
     {
       $this->staging->save() ; 
-      $this->saveObjects() ;
-      $this->unit_id_ref[$this->name] = $this->staging->getId()  ;
     }
     catch(Doctrine_Exception $ne)
     {
       $e = new DarwinPgErrorParser($ne);
-      $this->errors_reported .= "Unit ".$this->name." or associated object were not saved:".$e->getMessage().";";
+      $this->errors_reported .= "Unit ".$this->name." object were not saved:".$e->getMessage().";";
     }
+    $this->saveObjects() ;
+    $this->unit_id_ref[$this->name] = $this->staging->getId()  ;
   }
   
   private function getStagingId()

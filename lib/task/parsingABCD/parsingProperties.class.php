@@ -24,7 +24,7 @@ class ParsingProperties extends importABCDXml
   
   public function getDateFrom($date, $tag,$staging)
   {
-    if($tag=="altitude") $staging["gtu_from_date"]=$date ;
+    if($tag=="Altitude") $staging["gtu_from_date"]=$date ;
     else
     {
       $this->date_from = $date ;
@@ -39,13 +39,13 @@ class ParsingProperties extends importABCDXml
 
   public function getLowerValue($data, $tag, $staging)
   {
-    if($tag=="altitude") $staging['gtu_elevation']=$data;
+    if($tag=="Altitude") $staging['gtu_elevation']=$data;
     else $this->addPropertyvalue($data) ;
   }
 
   public function getUpperValue($data, $tag, $staging)
   {
-    if($tag!="altitude") $value = new PropertiesValues() ;
+    if($tag!="Altitude") $value = new PropertiesValues() ;
   }
 
   private function addPropertyvalue($data)

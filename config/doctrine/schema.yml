@@ -1133,6 +1133,20 @@ StagingPeople:
             local: people_ref
             foreign: id
 
+StagingMethods:
+    tableName: staging_collecting_methods
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        staging_ref: { type: integer, notnull: true}
+        collecting_method_ref: { type: integer, notnull: true}
+    relations:
+        Staging:
+          local: staging_ref
+          foreign: id
+        CollectingMethods:
+          local: collecting_method_ref
+          foreign: id
+
 Multimedia:
     columns:
         id: { type: integer, primary: true, autoincrement: true }

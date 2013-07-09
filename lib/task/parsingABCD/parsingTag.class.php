@@ -2,25 +2,25 @@
 
 class ParsingTag extends ImportABCDXml
 {
-  public $GTUDate = array('from'=>null,'to'=>null,'time'=>null) ;
-//  public $peoples = array();
-//  public $comments = array() ;
-  public $tags = array() ;
-  public $tag_group_name, $tag_value, $people_order_by=null, $accession, $accession_num, $accession_date ;
+  public $GTUDate = array('from'=>null,'to'=>null,'time'=>null),  $tags = array(), $staging_info=null, $tag_group_name, $tag_value,
+      $people_order_by=null, $accession, $accession_num, $accession_date ;
   private $array_object = array() ;
 
   public function __construct($tagtype=null)
   {
     switch($tagtype)
     {
-      case "gtu" : $this->people_type = "collector" ; break ;;
+      case "gtu" : $this->people_type = "collector" ; $this->relation = "gtu";  break ;;
       case "unit" : $this->people_type = "donator" ; break ;;
+      case "lithology" : $this->relation = "lithology" ; break ;;
     }
   }
+  /*
   public function addRelated($object)
   {
     $this->array_object[] = $object ;
-  }
+  }*/
+
   //return ISODateTimeBegin tag value, if not return DateTime tag value, null otherwise
   public function getFromDate()
   {
@@ -52,15 +52,17 @@ class ParsingTag extends ImportABCDXml
   }
   public function addStagingInfo($object, $id)
   {
-    $info = new StagingInfo() ;
-    $info->setStagingRef($id) ;
-    $info->setReferencedRelation('gtu') ;
-    $info->addRelated($object) ;
-    return $info ;
+    if(!$this->staging_info) 
+    {
+      $this->staging_info = new StagingInfo() ;
+      $this->staging_info->setStagingRef($id) ;
+      $this->staging_info->setReferencedRelation($this->relation) ;
+    }
+    $this->staging_info->addRelated($object) ;
   }
   public function InitAccessionVar($date)
   {
-    $this->accession_date = $date!= ''?$date:null ;
+    $this->accession_date = date('Y-m-d',strtotime($date)) ;
     $this->accession_num = null ;
   }
   public function addAccession($catalogue)
@@ -73,7 +75,7 @@ class ParsingTag extends ImportABCDXml
       default : $this->accession = null ; break ;;
     }
   }
-  public function HandleAccession($staging)
+  public function HandleAccession($staging,$tosave)
   {
     if(!$this->accession_num) return null ;
     switch($this->accession)
@@ -84,9 +86,8 @@ class ParsingTag extends ImportABCDXml
         $staging->addRelated($object) ;
         break ;;
       case "igs" : 
-        $object = new Igs() ;
-        $object->fromArray(array('ig_date' => $this->accession_date, 'ig_num' => $this->accession_num)) ;
-        $staging->addRelated($object) ;
+        $staging->setIgDate($this->accession_date);
+        $staging->setIgNum($this->accession_num) ;
         break ;;
       default :
         return null ;
@@ -103,8 +104,8 @@ class ParsingTag extends ImportABCDXml
       $object->save() ;
       $ref = $object->getId() ;
     }
-    $object = new SpecimensMethods() ;
-    $object->fromArray(array("specimen_ref" => $staging_id, "collecting_method_ref" => $ref)) ;
+    $object = new StagingMethods() ;
+    $object->fromArray(array("staging_ref" => $staging_id, "collecting_method_ref" => $ref)) ;
     return $object ;
   }
   

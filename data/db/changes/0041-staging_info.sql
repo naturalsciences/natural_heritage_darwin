@@ -47,6 +47,26 @@ ALTER TABLE staging_relationship
 GRANT ALL ON TABLE staging_relationship TO darwin2;
 GRANT SELECT ON TABLE staging_relationship TO d2viewer;
 
+create table staging_collecting_methods
+  (
+    id serial,
+    staging_ref integer not null,
+    collecting_method_ref integer not null,
+    constraint pk_staging_collecting_methods primary key (id),
+    constraint unq_staging_collecting_methods unique (staging_ref, collecting_method_ref),
+    constraint fk_staging_collecting_methods_staging foreign key (staging_ref) references staging (id) on delete cascade,
+    constraint fk_staging_collecting_methods_method foreign key (collecting_method_ref) references collecting_methods (id) on delete cascade
+  );
+
+comment on table staging_collecting_methods is 'Association of collecting methods with specimens';
+comment on column staging_collecting_methods.id is 'Unique identifier of an association';
+comment on column staging_collecting_methods.staging_ref is 'Identifier of a specimen - comes from specimens table (id field)';
+comment on column staging_collecting_methods.collecting_method_ref is 'Identifier of a collecting method - comes from collecting_methods table (id field)';
+ALTER TABLE staging_collecting_methods
+  OWNER TO darwin2;
+GRANT ALL ON TABLE staging_collecting_methods TO darwin2;
+GRANT SELECT ON TABLE staging_collecting_methods TO d2viewer;
+
 ALTER TABLE staging DROP COLUMN part_status ;
 ALTER TABLE staging add column mineral_classification text ;
 alter table collection_maintenance alter column people_ref drop not null ;

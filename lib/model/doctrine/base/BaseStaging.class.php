@@ -112,6 +112,7 @@
  * @property Doctrine_Collection $Staging
  * @property Doctrine_Collection $StagingInfo
  * @property Doctrine_Collection $StagingTagGroups
+ * @property Doctrine_Collection $StagingMethods
  * 
  * @method integer             getId()                        Returns the current record's "id" value
  * @method integer             getImportRef()                 Returns the current record's "import_ref" value
@@ -220,6 +221,7 @@
  * @method Doctrine_Collection getStaging()                   Returns the current record's "Staging" collection
  * @method Doctrine_Collection getStagingInfo()               Returns the current record's "StagingInfo" collection
  * @method Doctrine_Collection getStagingTagGroups()          Returns the current record's "StagingTagGroups" collection
+ * @method Doctrine_Collection getStagingMethods()            Returns the current record's "StagingMethods" collection
  * @method Staging             setId()                        Sets the current record's "id" value
  * @method Staging             setImportRef()                 Sets the current record's "import_ref" value
  * @method Staging             setParentRef()                 Sets the current record's "parent_ref" value
@@ -327,6 +329,7 @@
  * @method Staging             setStaging()                   Sets the current record's "Staging" collection
  * @method Staging             setStagingInfo()               Sets the current record's "StagingInfo" collection
  * @method Staging             setStagingTagGroups()          Sets the current record's "StagingTagGroups" collection
+ * @method Staging             setStagingMethods()            Sets the current record's "StagingMethods" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -675,6 +678,10 @@ abstract class BaseStaging extends DarwinModel
              'foreign' => 'staging_ref'));
 
         $this->hasMany('StagingTagGroups', array(
+             'local' => 'id',
+             'foreign' => 'staging_ref'));
+
+        $this->hasMany('StagingMethods', array(
              'local' => 'id',
              'foreign' => 'staging_ref'));
     }
