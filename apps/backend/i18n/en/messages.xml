@@ -92,8 +92,8 @@
         <target>Specimens</target>
       </trans-unit>
           <trans-unit id="31">
-        <source>Pinned Specimens (%d)</source>
-        <target>Pinned Specimens (%d)</target>
+          <source>Pinned Specimens <i>(%d)</i></source>
+        <target>Pinned Specimens <i>(%d)</i></target>
       </trans-unit>
           <trans-unit id="34">
         <source>Collections</source>

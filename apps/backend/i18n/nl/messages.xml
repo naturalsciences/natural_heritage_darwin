@@ -1276,8 +1276,8 @@
         <target>Stalen</target>
       </trans-unit>
       <trans-unit id="31">
-        <source>Pinned Specimens (%d)</source>
-        <target>Gepinde Stalen (%d)</target>
+        <source>Pinned Specimens <i>(%d)</i></source>
+        <target>Gepinde Stalen <i>(%d)</i></target>
       </trans-unit>
       <trans-unit id="34">
         <source>Collections</source>

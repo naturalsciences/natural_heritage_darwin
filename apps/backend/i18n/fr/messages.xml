@@ -88,8 +88,8 @@
         <target>Échantillons</target>
       </trans-unit>
       <trans-unit id="31">
-        <source>Pinned Specimens (%d)</source>
-        <target>Échantillons épinglés (%d)</target>
+        <source>Pinned Specimens <i>(%d)</i></source>
+        <target>Échantillons épinglés <i>(%d)</i></target>
       </trans-unit>
       <trans-unit id="34">
         <source>Collections</source>

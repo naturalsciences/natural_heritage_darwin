@@ -93,6 +93,21 @@ $(document).ready(function () {
   $(window).resize(function(){
     check_screen_size();
   }); 
+
+function pin(ids, status) {
+  var id_part = "";
+  if( Object.prototype.toString.call( ids ) === '[object Array]' ) {
+    id_part = '/mid/' + ids.join(",");
+  } else {
+    id_part = '/id/' + ids;
+  }
+  $.getJSON('<?php echo url_for('savesearch/pin?source=specimen');?>'+ id_part + '/status/' + status,function (data){
+    if(data.pinned) {
+      $('.pinned_specimens i').text('(' + data.pinned.length + ')');
+    }
+  });
+}
+  
 /****COL MANAGEMENT ***/
   $('ul.column_menu > li').each(function(){
     hide_or_show($(this));
@@ -114,7 +129,7 @@ $(document).ready(function () {
       pin_status = 1;
     }
     rid = getIdInClasses($(this).closest('tr'));
-    $.get('<?php echo url_for('savesearch/pin?source=specimen');?>/id/' + rid + '/status/' + pin_status,function (html){});
+    pin(rid, pin_status);
   });
 
   if($('.spec_results tbody .pin_on').not('.hidden').length == $('.spec_results tbody .pin_on').length)
@@ -142,13 +157,10 @@ $(document).ready(function () {
       $(this).addClass('hidden') ;
       pin_status = 1;
     }
-    pins = '';
+    pins = [];
     $('.spec_results tbody tr').not('.sub_row').each(function(){
       rid = getIdInClasses($(this));
-      if(pins == '')
-        pins = rid;
-      else
-        pins += ','+rid;
+      pins.push(rid);
     });
 
     if(pin_status == 0)
@@ -161,7 +173,7 @@ $(document).ready(function () {
         $('.spec_results tbody tr .pin_off').addClass('hidden');
         $('.spec_results tbody tr .pin_on').removeClass('hidden') ;
     }
-    $.get('<?php echo url_for('savesearch/pin?source=specimen');?>/mid/' + pins + '/status/' + pin_status,function (html){});
+    pin(pins, pin_status);
   }); 
 
   /*Remove management*/

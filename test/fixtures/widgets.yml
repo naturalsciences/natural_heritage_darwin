@@ -1188,13 +1188,13 @@ MyWidgets:
         User: u1
         col_num: 1
         category: specimensearch_widget
-        group_name: whatSearched
-        mandatory: true
+        group_name: multimedia
+        mandatory: false
         order_by: 1
         opened: true
         visible: true
         is_available: true
-        title_perso: Type of search
+        title_perso: Multimedia
         all_public : true   
         
     u1sps1:
