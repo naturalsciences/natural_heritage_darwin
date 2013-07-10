@@ -44,7 +44,7 @@
       <script  type="text/javascript">
         $(document).ready(function () {
           $(".col_switcher").click(function(){
-            update_list($(this));
+            update_check_uncheck($(this));
             hide_or_show($(this));
           });
 

@@ -74,7 +74,6 @@ class myUser extends sfBasicSecurityUser
       $pins[] = $id;
     $pins = array_unique($pins);
     $this->setAttribute('spec_pinned_'.$source,$pins);
-    
   }
 
   public function getAllPinned($source)

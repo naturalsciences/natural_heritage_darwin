@@ -228,15 +228,15 @@ function postToUrl(url, params, newWindow)
 /***
  * Update the visible columns list in specimens_search
  */
-function update_list(li)
+function update_check_uncheck(item)
 {
-  if ( li.hasClass('check')) {
-    li.removeClass('check') ;
-    li.addClass('uncheck') ; 
+  if ( item.hasClass('check')) {
+    item.removeClass('check') ;
+    item.addClass('uncheck') ; 
   }
   else {
-    li.removeClass('uncheck') ;
-    li.addClass('check') ;
+    item.removeClass('uncheck') ;
+    item.addClass('check') ;
   }
 }
 

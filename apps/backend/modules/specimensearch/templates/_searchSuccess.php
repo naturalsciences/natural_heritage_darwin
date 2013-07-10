@@ -21,9 +21,9 @@
                 <?php echo image_tag('checkbox_remove_on.png', array('class'=>'top_remove_but remove_on hidden', 'alt' =>  __('Remove all elements from list'))) ; ?>
               <?php endif;?>
             </th>
-            <th><!-- Pin -->
-               <?php echo image_tag('white_pin_off.png', array('class'=>'top_pin_but pin_off','alt' =>  __('Cancel this result'))) ; ?>
-               <?php echo image_tag('white_pin_on.png', array('class'=>'top_pin_but pin_on', 'alt' =>  __('Save this result'))) ; ?>
+            <th class="top_pin_but"><!-- Pin -->
+               <?php echo image_tag('white_pin_off.png', array('class'=>'pin_off','alt' =>  __('Cancel this result'))) ; ?>
+               <?php echo image_tag('white_pin_on.png', array('class'=>'pin_on', 'alt' =>  __('Save this result'))) ; ?>
             </th>
             <?php $all_columns = $columns->getRawValue() ;?>
             <?php foreach($all_columns as $col_name => $col):?>
@@ -39,9 +39,6 @@
                   <?php if($col_name == 'codes') : ?>
                     <?php echo image_tag('blue_expand.png', array('id' => 'display_all_codes','title' => 'Display all codes', 'class'=> 'tree_cmd_td collapsed')); ?>
                     <?php echo image_tag('blue_expand_up.png', array('id' => 'hide_all_codes','title' => 'Hide all codes', 'class'=> 'tree_cmd_td expanded')); ?>
-                  <?php elseif($col_name == 'part_codes') : ?>
-                    <?php echo image_tag('blue_expand.png', array('id' => 'display_part_codes','title' => 'Display all codes', 'class'=> 'tree_cmd_td collapsed')); ?>
-                    <?php echo image_tag('blue_expand_up.png', array('id' => 'hide_part_codes','title' => 'Hide all codes', 'class'=> 'tree_cmd_td expanded')); ?>
                   <?php endif ; ?>
                 <?php endif;?>
               </th>
@@ -58,14 +55,9 @@
                   <?php echo image_tag('checkbox_remove_on.png', array('class'=>'remove_but remove_on hidden', 'alt' =>  __('Remove all elements from list'))) ; ?>
                 <?php endif;?>
               </td>
-              <td >
-                <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>
-                  <?php echo image_tag('blue_pin_on.png', array('class'=>'pin_but pin_on','alt' =>  __('Cancel this result'))) ; ?>
-                  <?php echo image_tag('blue_pin_off.png', array('class'=>'pin_but pin_off hidden', 'alt' =>  __('Save this result'))) ; ?>
-                <?php else:?>
-                  <?php echo image_tag('blue_pin_on.png', array('class'=>'pin_but pin_on hidden','alt' =>  __('Cancel this result'))) ; ?>
-                  <?php echo image_tag('blue_pin_off.png', array('class'=>'pin_but pin_off', 'alt' =>  __('Save this result'))) ; ?>
-                <?php endif;?>
+              <td class="pin_but <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>check<?php else:?>uncheck<?php endif;?>" >
+                  <?php echo image_tag('blue_pin_on.png', array('class'=>'pin_on','alt' =>  __('Cancel this result'))) ; ?>
+                  <?php echo image_tag('blue_pin_off.png', array('class'=>'pin_off', 'alt' =>  __('Save this result'))) ; ?>
               </td>
               <?php include_partial('result_content_specimen', array( 'specimen' => $specimen, 'codes' => $codes, 'is_specimen_search' => $is_specimen_search)); ?>
               <?php include_partial('result_content_individual', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
@@ -103,7 +95,7 @@ function pin(ids, status) {
   }
   $.getJSON('<?php echo url_for('savesearch/pin?source=specimen');?>'+ id_part + '/status/' + status,function (data){
     if(data.pinned) {
-      $('.pinned_specimens i').text('(' + data.pinned.length + ')');
+      $('.pinned_specimens i').text('(' + Object.keys(data.pinned).length + ')');
     }
   });
 }
@@ -116,63 +108,42 @@ function pin(ids, status) {
 
   /**PIN management **/
   $('.spec_results .pin_but').click(function(){
-    if($(this).hasClass('pin_on'))
-    {
-      $(this).parent().find('.pin_off').removeClass('hidden'); 
-      $(this).addClass('hidden') ;
-      pin_status = 0;
-    }
-    else
-    {
-      $(this).parent().find('.pin_on').removeClass('hidden');
-      $(this).addClass('hidden') ;
+    update_check_uncheck($(this));
+    if($(this).hasClass('check')) {
       pin_status = 1;
+    }
+    else {
+      pin_status = 0;
     }
     rid = getIdInClasses($(this).closest('tr'));
     pin(rid, pin_status);
   });
 
-  if($('.spec_results tbody .pin_on').not('.hidden').length == $('.spec_results tbody .pin_on').length)
-  {
-      $('.top_pin_but').parent().find('.pin_on').removeClass('hidden');
-      $('.top_pin_but').parent().find('.pin_off').addClass('hidden') ;
+  // Init Top pin state
+  if($('.pin_but.check').length == $('.spec_results tbody .pin_but').length) {
+    $('.top_pin_but').addClass('check');
   }
-  else
-  {
-      $('.top_pin_but').parent().find('.pin_off').removeClass('hidden');
-      $('.top_pin_but').parent().find('.pin_on').addClass('hidden') ;
+  else {
+    $('.top_pin_but').addClass('uncheck');
   }
-  
+
   $('.spec_results .top_pin_but').click(function(){
+    update_check_uncheck($(this));
     /** Multiple pin behavior ***/
-    if($(this).hasClass('pin_on'))
-    {
-      $(this).parent().find('.pin_off').removeClass('hidden'); 
-      $(this).addClass('hidden') ;
-      pin_status = 0;
-    }
-    else
-    {
-      $(this).parent().find('.pin_on').removeClass('hidden');
-      $(this).addClass('hidden') ;
+    if($(this).hasClass('check')) {
       pin_status = 1;
+      $('.spec_results tbody tr .pin_but').addClass('check').removeClass('uncheck');
+    }
+    else {
+      pin_status = 0;
+      $('.spec_results tbody tr .pin_but').addClass('uncheck').removeClass('check');
     }
     pins = [];
-    $('.spec_results tbody tr').not('.sub_row').each(function(){
+    $('.spec_results tbody tr').each(function(){
       rid = getIdInClasses($(this));
       pins.push(rid);
     });
 
-    if(pin_status == 0)
-    {
-        $('.spec_results tbody tr .pin_off').removeClass('hidden');
-        $('.spec_results tbody tr .pin_on').addClass('hidden') ;
-    }
-    else
-    {
-        $('.spec_results tbody tr .pin_off').addClass('hidden');
-        $('.spec_results tbody tr .pin_on').removeClass('hidden') ;
-    }
     pin(pins, pin_status);
   }); 
 
@@ -223,7 +194,8 @@ function pin(ids, status) {
     $('td.col_codes li.code_supp').each(function() {
       $(this).removeClass('hidden');    
     });
-  });  
+  });
+
   $('#hide_all_codes').click(function() 
   {
     $(this).hide();
@@ -233,21 +205,5 @@ function pin(ids, status) {
     });
   });
 
-  $('#display_part_codes').click(function() 
-  {
-    $(this).hide();
-    $('#hide_part_codes').show();
-    $('td.col_part_codes li.code_supp').each(function() {
-      $(this).removeClass('hidden');    
-    });
-  });  
-  $('#hide_part_codes').click(function() 
-  {
-    $(this).hide();
-    $('#display_part_codes').show();
-    $('td.col_part_codes li.code_supp').each(function() {
-      $(this).addClass('hidden'); 
-    });
-  });
 });
 </script>
