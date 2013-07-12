@@ -4,7 +4,7 @@
 	<xs:element name="Storage">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:sequence>
+				<xs:sequence minOccurs="0">
 					<xs:element name="Loan">
 						<xs:complexType>
 							<xs:sequence>
@@ -15,7 +15,7 @@
 						</xs:complexType>
 					</xs:element>
 				</xs:sequence>
-				<xs:sequence>
+				<xs:sequence minOccurs="0">
 					<xs:element name="Localisation">
 						<xs:complexType>
 							<xs:sequence>
