@@ -750,3 +750,7 @@ CREATE TRIGGER trg_cpy_ig_to_loan_items AFTER UPDATE
 CREATE TRIGGER trg_cpy_deleted_file AFTER DELETE
   ON multimedia FOR EACH ROW
   EXECUTE PROCEDURE fct_cpy_deleted_file();
+
+CREATE TRIGGER trg_clr_referenceRecord_staging_info AFTER DELETE OR UPDATE
+  ON staging_info FOR EACH ROW
+  EXECUTE PROCEDURE fct_clear_referencedRecord();

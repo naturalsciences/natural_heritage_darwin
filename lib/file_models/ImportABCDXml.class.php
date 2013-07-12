@@ -42,16 +42,18 @@ class ImportABCDXml implements IImportModels
       case "Biotope" : /*@TODO ;*/ break ;;
       case "Country" : $this->object->tag_group_name="country" ; break ;;
       case "dna:DNASample" : $this->object = new ParsingMaintenance('Dna extraction') ; break ;;
-      case "efg:RockPhysicalCharacteristics" : $this->object = new parsingTag("lithology") ; break ;;
-      case "Gathering" : $this->object = new parsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break ;;
+      case "RockPhysicalCharacteristics" :
+      case "efg:RockPhysicalCharacteristics" : $this->object = new ParsingTag("lithology") ; break ;;
+      case "Gathering" : $this->object = new ParsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break ;;
       case "HigherTaxa" : $this->object->taxon_parent = new Hstore() ;break ;;
-      case "Identification" : $this->object = new parsingIdentifications() ; break ;;
-      case "MeasurementOrFactAtomised" : $this->property = new parsingProperties($this->getPreviousTag()) ; break ;;
-      case "MultiMediaObject" : $this->object = new parsingMultimedia() ; break ;;
+      case "Identification" : $this->object = new ParsingIdentifications() ; break ;;
+      case "MeasurementOrFactAtomised" : $this->property = new ParsingProperties($this->getPreviousTag()) ; break ;;
+      case "MultiMediaObject" : $this->object = new ParsingMultimedia() ; break ;;
       case "PersonName" : $this->people = new StagingPeople() ; break ;;
       case "Person" : $this->people = new StagingPeople() ; break ;;
+      case "Petrology" : $this->object = new ParsingTag("lithology") ; break ;;
       case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break ;;
-      case "SpecimenUnit" : $this->object = new parsingTag("unit") ; break ;;
+      case "SpecimenUnit" : $this->object = new ParsingTag("unit") ; break ;;
       case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); break ;;
       case "UnitAssociation" : $this->object = new stagingRelationship() ; break ;;
       case "UnitID" : $this->code = new Codes() ; break ;;
@@ -69,8 +71,7 @@ class ImportABCDXml implements IImportModels
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->temp_data) ; break ;;
       case "Gathering" : $this->object->insertTags($this->staging->getId()) ; if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break ;;
       case "HigherTaxa" : $this->staging["taxon_parents"] = $this->object->getTaxonParent() ;; break ;;
-      case "HigherTaxon" : $this->object->handleTaxonParent() ;break;;
-      //case "Height" : $this->object->save() ; break ;;
+      case "HigherTaxon" : $this->object->handleParent() ;break;;
       case "Identification" : $this->staging->addRelated($this->object->identification) ; break ;;
       case "MeasurementsOrFacts" : if($this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break ;;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break ;;
@@ -80,6 +81,8 @@ class ImportABCDXml implements IImportModels
       case "Notes" : $this->addComment() ; break ;
       case "PersonName" : $this->object->handlePeople($this->people) ; break ;;
       case "Person" : $this->object->handlePeople($this->people,$this->staging,true) ; break ;;
+      case "PetrologyDescriptiveText" :
+      case "efg:PetrologyDescriptiveText" : if($this->staging->getLithologyName()) $this->addComment() ; break ;;
       case "ScientificName" : $this->staging["taxon_name"] = $this->object->getTaxonName() ; break ;;
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break ;;
       case "TitleCitation" : $this->addComment(true) ; break ;
@@ -98,7 +101,7 @@ class ImportABCDXml implements IImportModels
     if (in_array($this->getPreviousTag(),array('Bacterial','Zoological','Botanical','Viral'))) $this->object->handleKeyword($this->tag,$data,$this->staging) ;
     switch ($this->tag) {
       case "AccessionCatalogue" : $this->object->addAccession($data) ; break ;;
-      case "AccessionDate" : $this->object->InitAccessionVar($data) ; break ;;
+      case "AccessionDate" : if (date('Y-m-d H:i:s', strtotime($data)) == $data) $this->object->InitAccessionVar($data) ; break ;;
       case "AccessionNumber" : $this->object->accession_num = $data ; break ;;
       case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$data:$this->property->accuracy=$data ; break ;;
       case "AcquisitionDate" : $this->staging['acquisition_date'] = $data ; break ;;
@@ -106,7 +109,7 @@ class ImportABCDXml implements IImportModels
       case "AreaClass" : $this->object->tag_value = $data ; break ;;
       case "AreaName" : $this->object->tag_group_name = $data ; break ;;
       case "AssociatedUnitID" : if(in_array($data, array_keys($this->unit_id_ref))) $this->object->setStagingRelatedRef($this->unit_id_ref[$data]); else $this->object->setSourceId($data) ; break ;;
-      case "AssociatedUnitSourceInstitutionCode" : $this->object->setInstitutionName($data) ; break ;;
+      //case "AssociatedUnitSourceInstitutionCode" : $this->object->setInstitutionName($data) ; break ;;
       case "AssociatedUnitSourceName" : $this->object->setSourceName($data) ; break ;;
       case "AssociationType" : $this->object->setRelationshipType($data) ; break ;;
       case "Code" : $this->staging['gtu_code'] = $data ; break ;;
@@ -142,20 +145,33 @@ class ImportABCDXml implements IImportModels
       case "LowerValue" : $this->property->getLowerValue($data, $this->getPreviousTag(),$this->staging) ; break ;;
       case "MineralColour" : $this->staging->setMineralColour($data) ; break ;;
       case "MineralRockClassification" : $this->staging->setMineralClassification($data) ; break ;;
+      // mineral name ? or litho_name ?
       case "MineralRockGroupName" : $this->staging->setMineralName($this->object->getMineralName($data)) ; break ;;
       case "MeasurementDateTime" : $this->property->getDateFrom($data, $this->getPreviousTag(),$this->staging) ; break ;;
       case "Method" : $this->object_to_save[] = $this->object->addMethod($data,$this->staging->getId()) ; break ;;
       case "Notes" : $this->temp_data.="$data." ; break ;;
       case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$data ; break ;; //@TODO
       case "Parameter" : $this->property->property->setPropertySubType($data);break ;;
+      case "PetrologyDescriptiveText" :
+      case "efg:PetrologyDescriptiveText" :  $this->temp_data.="$data." ; break ;;
       case "PhaseOrStage" : $this->staging->setIndividualStage($data) ; break ;; 
       case "Prefix" : $this->people['title'] = $data ; break ;;
       case "PreparationMaterials" : $this->staging['container_storage'] = $data ; break ;;
       case "ProjectTitle" : $this->staging['expedition_name'] = $data ; break ;;
       case "RecordURI" : $this->addExternalLink($data) ; break ;;
-      case "RockType" : $this->staging->lithologyName($data) ; break ;;
+      case "efg:RockType" :
+      // litho_name ? or mineral_name ?
+      case "RockType" : $this->staging->setLithologyName($data) ; break ;;
       case "Sex" : $this->staging->setIndividualSex($data) ; break ;;
       case "SortingName" : $this->object->people_order_by = $data ; break ;;
+      case "storage:Institution" : $this->staging->setInstitutionName($data) ; break ;;
+      case "storage:Building" : $this->staging->setBuilding($data) ; break ;;
+      case "storage:Floor" : $this->staging->setFloor($data) ; break ;;
+      case "storage:Room" : $this->staging->setRoom($data) ; break ;;
+      case "storage:Row" : $this->staging->setRow($data) ; break ;;
+      case "storage:Shelf" : $this->staging->setShelf($data) ; break ;;
+      case "storage:Box" : $this->staging->setContainerType($data) ; break ;;
+      //case "SourceInstitutionID" : $this->staging->setInstitutionName($data) ; break ;;
       case "TitleCitation" : $this->temp_data.="$data." ; break ;;
       case "TypeStatus" : $this->staging->setIndividualState($data) ; break ;;
       case "UnitID" : $this->code['code'] = $data ; $this->name = $data ; break ;;

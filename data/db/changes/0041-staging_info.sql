@@ -58,9 +58,9 @@ create table staging_collecting_methods
     constraint fk_staging_collecting_methods_method foreign key (collecting_method_ref) references collecting_methods (id) on delete cascade
   );
 
-comment on table staging_collecting_methods is 'Association of collecting methods with specimens';
+comment on table staging_collecting_methods is 'Association of collecting methods with staging';
 comment on column staging_collecting_methods.id is 'Unique identifier of an association';
-comment on column staging_collecting_methods.staging_ref is 'Identifier of a specimen - comes from specimens table (id field)';
+comment on column staging_collecting_methods.staging_ref is 'Identifier of a specimen - comes from staging table (id field)';
 comment on column staging_collecting_methods.collecting_method_ref is 'Identifier of a collecting method - comes from collecting_methods table (id field)';
 ALTER TABLE staging_collecting_methods
   OWNER TO darwin2;
@@ -68,6 +68,10 @@ GRANT ALL ON TABLE staging_collecting_methods TO darwin2;
 GRANT SELECT ON TABLE staging_collecting_methods TO d2viewer;
 
 ALTER TABLE staging DROP COLUMN part_status ;
+ALTER TABLE staging DROP COLUMN parent_ref ;
+ALTER TABLE staging DROP COLUMN path ;
+ALTER TABLE staging DROP COLUMN level ;
+ALTER TABLE staging DROP COLUMN spec_ref ;
 ALTER TABLE staging add column mineral_classification text ;
 alter table collection_maintenance alter column people_ref drop not null ;
 ALTER TABLE imports add column errors_in_import text ;

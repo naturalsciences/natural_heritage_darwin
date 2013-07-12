@@ -11,18 +11,17 @@ class ParsingIdentifications
             'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe');
   public $peoples = array(); // an array of Doctrine People class
   public $keyword; // an array of doctrine Keywords class
-  public $type_identified, $taxon_parent, $fullname=null, $determination_status=null, $higher_taxon_name,$higher_taxon_level;
+  public $type_identified, $catalogue_parent, $fullname=null, $determination_status=null, $higher_taxon_name,$higher_taxon_level;
   public $scientificName = "",$people_order_by=null;
 
   public function __construct()
   {
     $this->identification = new Identifications() ;
   }
-  // fill the Hstore taxon_parent
-  public function handleTaxonParent()
+  // fill the Hstore taxon_parent/litho_parent etc...
+  public function handleParent()
   {
-    $this->taxon_parent[$this->array_level[$this->higher_taxon_level]] = $this->higher_taxon_name ;
-    //$this->scientificName .= $this->higher_taxon_name." " ;
+    $this->catalogue_parent[$this->array_level[$this->higher_level]] = $this->higher_name ;
   }
 
   // Return ne scientificName in FullScientificNameString tag, otherwise return a self built name with parent and keywords
@@ -41,7 +40,13 @@ class ParsingIdentifications
   // return the Hstore taxon_parent
   public function getTaxonParent()
   {
-    return $this->taxon_parent->export() ;
+    return $this->catalogue_parent->export() ;
+  }
+  
+  // return the Hstore litho_parent
+  public function getLithoParent()
+  {
+    return $this->catalogue_parent->export() ;
   }
   public function setRecordId($id)
   {

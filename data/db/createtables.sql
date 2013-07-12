@@ -1410,10 +1410,6 @@ create table staging
   (
     id serial,
     import_ref integer not null,
-    parent_ref integer,
-    path varchar,
-    level varchar not null,
-    spec_ref integer,
     category varchar,
     expedition_ref integer,
     expedition_name varchar,
@@ -1475,7 +1471,7 @@ create table staging
     mineral_color varchar,
     mineral_path varchar,
     mineral_parents hstore,
-
+    mineral_classification varchar,
     ig_ref integer,
     ig_num varchar,
     ig_date_mask integer,
@@ -1523,6 +1519,64 @@ create table staging
     constraint fk_staging_lithology foreign key (lithology_ref) references lithology(id) on delete set NULL,
     constraint fk_staging_mineralogy foreign key (mineral_ref) references mineralogy(id) on delete set NULL
   );
+
+CREATE TABLE staging_info
+(
+  id serial NOT NULL,
+  staging_ref integer NOT NULL,
+  referenced_relation character varying NOT NULL,
+
+  CONSTRAINT pk_staging_info PRIMARY KEY (id),
+  CONSTRAINT fk_staging_ref FOREIGN KEY (staging_ref)
+      REFERENCES staging (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+);
+comment on table staging_info is 'used to make association between catalogue informations and staging eg taxon properties';
+comment on column staging_info.id is 'Unique identifier of a grouped tag';
+comment on column staging_info.staging_ref is 'Ref of a staging record';
+comment on column staging_info.referenced_relation is 'catalogue where associating the info' ;
+
+CREATE TABLE staging_relationship
+(
+  id serial NOT NULL,
+  record_id integer NOT NULL,
+  referenced_relation character varying NOT NULL,
+  relationship_type character varying,
+  staging_related_ref integer,
+  institution_ref integer,
+  institution_name text,
+  source_name text,
+  source_id text,
+
+  CONSTRAINT pk_staging_relationship PRIMARY KEY (id),
+  CONSTRAINT fk_record_id FOREIGN KEY (record_id)
+      REFERENCES staging (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+);
+COMMENT ON COLUMN staging_relationship.record_id IS 'id of the orignial record';
+COMMENT ON COLUMN staging_relationship.referenced_relation IS 'where to find the record_id, referenced_relation is always staging but this field uis mandatory for addRelated php function';
+COMMENT ON COLUMN staging_relationship.relationship_type IS 'relation type (eg. host, parent, part of)';
+COMMENT ON COLUMN staging_relationship.staging_related_ref IS 'the record id associated, this record id must be found in the same import file';
+COMMENT ON COLUMN staging_relationship.institution_ref IS 'the institution id associated to this relationship';
+COMMENT ON COLUMN staging_relationship.institution_name IS 'the institution name associated to this relationship, used to add to darwin institution if it dont exist';
+COMMENT ON COLUMN staging_relationship.source_name IS 'External Specimen related  source DB';
+COMMENT ON COLUMN staging_relationship.source_id IS 'External Specimen related id in the source';
+
+create table staging_collecting_methods
+  (
+    id serial,
+    staging_ref integer not null,
+    collecting_method_ref integer not null,
+    constraint pk_staging_collecting_methods primary key (id),
+    constraint unq_staging_collecting_methods unique (staging_ref, collecting_method_ref),
+    constraint fk_staging_collecting_methods_staging foreign key (staging_ref) references staging (id) on delete cascade,
+    constraint fk_staging_collecting_methods_method foreign key (collecting_method_ref) references collecting_methods (id) on delete cascade
+  );
+
+comment on table staging_collecting_methods is 'Association of collecting methods with Staging';
+comment on column staging_collecting_methods.id is 'Unique identifier of an association';
+comment on column staging_collecting_methods.staging_ref is 'Identifier of a specimen - comes from staging table (id field)';
+comment on column staging_collecting_methods.collecting_method_ref is 'Identifier of a collecting method - comes from collecting_methods table (id field)';
 
 create table  staging_tag_groups
        (

@@ -93,6 +93,7 @@ class ParsingTag extends ImportABCDXml
         return null ;
     }
   }
+
   public function addMethod($data,$staging_id)
   {
     $method = Doctrine::getTable('CollectingMethods')->findOneByMethod($data);

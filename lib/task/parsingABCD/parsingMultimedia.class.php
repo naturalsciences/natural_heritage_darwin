@@ -1,6 +1,6 @@
 <?php 
 
-class parsingMultimedia
+class ParsingMultimedia
 {
   public $multimedia_data = array() ;
   public $multimedia ;
