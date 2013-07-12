@@ -2,7 +2,7 @@
 <!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by Markus Döring (BGBM) -->
 <!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Charles Copp (EIM) -->
 <!-- Proposed collection of global elements and extensions for Earth Sciences extension to the ABCD Schema -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:efg="http://darwin.naturalsciences.be/xsd/" xmlns:abcd="http://www.tdwg.org/schemas/abcd/2.06" targetNamespace="http://darwin.naturalsciences.be/xsd/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:efg="http://darwin.naturalsciences.be/xsd/" xmlns:abcd="http://www.tdwg.org/schemas/abcd/2.06" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://darwin.naturalsciences.be/xsd/" targetNamespace="http://darwin.naturalsciences.be/xsd/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
 	<xs:import namespace="http://www.tdwg.org/schemas/abcd/2.06" schemaLocation="http://rs.tdwg.org/abcd/2.06/ABCD_2.06.xsd"/>
 	<!--Elements extending ABCD Unit-->
 	<xs:complexType name="EarthScienceSpecimenType">
