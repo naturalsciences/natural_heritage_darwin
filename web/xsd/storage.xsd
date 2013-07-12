@@ -8,7 +8,7 @@
 					<xs:element name="Loan">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="On_loan" minOccurs="0"/>
+								<xs:element name="On_loan" type="xs:boolean" minOccurs="0"/>
 								<xs:element name="Loan_from" type="xs:date" minOccurs="0"/>
 								<xs:element name="Loan_to" type="xs:date" minOccurs="0"/>
 							</xs:sequence>
@@ -22,9 +22,9 @@
 								<xs:element name="Institution" type="xs:string" minOccurs="0"/>
 								<xs:element name="Building" type="xs:string" minOccurs="0"/>
 								<xs:element name="Floor" type="xs:string" minOccurs="0"/>
-								<xs:element name="Room" type="xs:date" minOccurs="0"/>
-								<xs:element name="Row" type="xs:date" minOccurs="0"/>
-								<xs:element name="Column"/>
+								<xs:element name="Room" type="xs:string" minOccurs="0"/>
+								<xs:element name="Row" type="xs:string" minOccurs="0"/>
+								<xs:element name="Column" type="xs:string" minOccurs="0"/>
 								<xs:element name="Shelf" type="xs:string" minOccurs="0"/>
 								<xs:element name="Box" type="xs:string" minOccurs="0"/>
 								<xs:element name="Rack" type="xs:string" minOccurs="0"/>
