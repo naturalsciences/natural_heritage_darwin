@@ -61,27 +61,22 @@
           });
         <?php if($is_specimen_search):?>
           $('#del_from_spec').click(function(){
-            pins = '';
             pins_array = new Array();
             $('.spec_results tbody tr .remove_on').not('.hidden').each(function(){
               rid = getIdInClasses($(this).closest('tr'));
               pins_array.push(rid);
             });
-            if(pins_array.length == 0)
-            {
+            if(pins_array.length == 0) {
               alert("<?php echo __('You must select at least one specimen.');?>");
             }
-            else
-            {
+            else {
               if(confirm('<?php echo addslashes(__('Are you sure?'));?>'))
               {
                 $.get('<?php echo url_for('savesearch/removePin?search='.$is_specimen_search);?>/ids/' + pins_array.join(',') ,function (html){
-                  for(var i = 0; i < pins_array.length; ++i)
-                  {
-                    $('.rid_' + pins_array[i]).closest('tbody').remove();
+                  for(var i = 0; i < pins_array.length; i++) {
+                    $('.rid_' + pins_array[i]).remove();
                   }
-                  if($('.spec_results tbody').length == 0)
-                  {
+                  if($('.spec_results tbody tr').length == 0) {
                     location.reload();
                   }
                 });
