@@ -17,8 +17,7 @@
           <tr>
             <th><!-- checkbox for selection of records to be removed -->
               <?php if($is_specimen_search):?>
-                <?php echo image_tag('checkbox_remove_off.png', array('class'=>'top_remove_but remove_off','alt' =>  __('Keep all elements in list'))) ; ?>
-                <?php echo image_tag('checkbox_remove_on.png', array('class'=>'top_remove_but remove_on hidden', 'alt' =>  __('Remove all elements from list'))) ; ?>
+                <label><input type="checkbox" class="top_remove_spec" /></label>
               <?php endif;?>
             </th>
             <th class="top_pin_but"><!-- Pin -->
@@ -51,8 +50,7 @@
             <tr class="rid_<?php echo $specimen->getId()?>">
               <td>
                 <?php if($is_specimen_search):?>
-                  <?php echo image_tag('checkbox_remove_off.png', array('class'=>'remove_but remove_off','alt' =>  __('Keep all elements in list'))) ; ?>
-                  <?php echo image_tag('checkbox_remove_on.png', array('class'=>'remove_but remove_on hidden', 'alt' =>  __('Remove all elements from list'))) ; ?>
+                  <label><input type="checkbox" class="remove_spec" value="<?php echo $specimen->getId()?>"/></label>
                 <?php endif;?>
               </td>
               <td class="pin_but <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>check<?php else:?>uncheck<?php endif;?>" >
@@ -84,8 +82,9 @@ $(document).ready(function () {
   check_screen_size() ;
   $(window).resize(function(){
     check_screen_size();
-  }); 
-
+  });
+  
+  $('input[type=checkbox], input[type=radio]').customRadioCheck();
 function pin(ids, status) {
   var id_part = "";
   if( Object.prototype.toString.call( ids ) === '[object Array]' ) {
@@ -149,22 +148,8 @@ function pin(ids, status) {
 
   /*Remove management*/
 
-  $('.spec_results .top_remove_but').click(function(){
-    /** Multiple pin behavior ***/
-    if($(this).hasClass('remove_on'))
-    {
-      $(this).parent().find('.remove_off').removeClass('hidden'); 
-      $(this).addClass('hidden');
-      $('.spec_results tbody .remove_off').removeClass('hidden');
-      $('.spec_results tbody .remove_on').addClass('hidden');
-    }
-    else
-    {
-      $(this).parent().find('.remove_on').removeClass('hidden');
-      $(this).addClass('hidden');
-      $('.spec_results tbody .remove_on').removeClass('hidden');
-      $('.spec_results tbody .remove_off').addClass('hidden');
-    }
+  $('.spec_results .top_remove_spec').click(function(){
+    $('.remove_spec').attr('checked', $(this).is(':checked')).trigger('change');;
   });
 
   $('.spec_results tbody .remove_but').click(function(){
