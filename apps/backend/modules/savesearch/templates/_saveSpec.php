@@ -18,12 +18,19 @@ $(document).ready(function () {
   $("#save_specs").click(function(event){
     event.preventDefault();
     if($('#save_specs_choice').val()=="") return;
-    var column_str = ' ';
-    $('.column_menu li.check').each(function (index)
-      {
-        if(column_str != '') column_str += '|';
-        column_str += $(this).attr('id').substr(3);
+    column_str = '';
+    if( $('ul.column_menu .col_switcher :checked').length)
+    {
+      column_arr = []
+      $('ul.column_menu .col_switcher :checked').each(function(){
+        column_arr.push($(this).val());
       });
+      column_str = column_arr.join('|');
+    }
+    else
+    {
+      column_str = $('#specimen_search_filters_col_fields').val();
+    }
 
     var last_position = $('body').scrollTop() ;
     scroll(0,0) ;
