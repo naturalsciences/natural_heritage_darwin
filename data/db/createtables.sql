@@ -1512,7 +1512,6 @@ create table staging
     object_name text,
     constraint pk_staging primary key (id),
     constraint fk_staging_import foreign key (import_ref) references imports(id) on delete cascade,
-    constraint fk_parent_ref foreign key (parent_ref) references staging(id) on delete cascade,
     constraint fk_staging_taxonomy foreign key (taxon_ref) references taxonomy(id) on delete set NULL,
     constraint fk_staging_chronostratigraphy foreign key (chrono_ref) references chronostratigraphy(id) on delete set NULL,
     constraint fk_staging_lithostratigraphy foreign key (litho_ref) references lithostratigraphy(id) on delete set NULL,
