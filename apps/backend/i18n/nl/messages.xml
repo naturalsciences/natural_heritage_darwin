@@ -1276,8 +1276,8 @@
         <target>Stalen</target>
       </trans-unit>
       <trans-unit id="31">
-        <source>Pinned Specimens (%d)</source>
-        <target>Gepinde Stalen (%d)</target>
+        <source>Pinned Specimens <i>(%d)</i></source>
+        <target>Gepinde Stalen <i>(%d)</i></target>
       </trans-unit>
       <trans-unit id="34">
         <source>Collections</source>
@@ -5718,6 +5718,10 @@
       <trans-unit id="1736">
         <source>This part is currently loaned</source>
         <target>Dit object is momenteel uitgeleend</target>
+      </trans-unit>
+      <trans-unit id="1737">
+        <source>Error: The comment is missing</source>
+        <target>Fout: De commentaar ontbreekt</target>
       </trans-unit>
         </body>
   </file>

@@ -319,10 +319,10 @@ class loanActions extends DarwinActions
   {    
     if($request->isXmlHttpRequest()) 
     {    
-      $form = new InformativeWorkflowForm(null, array('available_status' => LoanStatus::getAvailableStatus())) ;
+      $form = new LoanStatusForm(null, array('available_status' => LoanStatus::getAvailableStatus())) ;
       $form->bind(array('comment'=>$request->getParameter('comment'),'status'=>$request->getParameter('status'))) ;
       if($form->isValid())
-      {        
+      {
         $data = array(
             'loan_ref' => $request->getParameter('id'),
             'status' => $request->getParameter('status'),   
@@ -331,10 +331,14 @@ class loanActions extends DarwinActions
             
         $loanstatus = new LoanStatus() ;
         $loanstatus->fromArray($data) ;
-        $loanstatus->save() ;
+        $loanstatus->save();
+        return $this->renderText('ok');
       }
+      else {
+        return $this->renderText('notok'.$form->getErrorSchema()); 
+      }
+      
       // else : nothing append, and it's a good thing
-      return $this->renderText('ok') ;
     }
     $this->redirect('board/index') ;
   }

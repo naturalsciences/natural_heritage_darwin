@@ -61,6 +61,7 @@ class Specimens extends BaseSpecimens
       'physical' => 'Physical',
       'observation' => 'Observation',
       'figurate' => 'Figurate',
+      'figurate-physical' => 'Figurate-Physical',
     );
   }
 

@@ -92,8 +92,8 @@
         <target>Specimens</target>
       </trans-unit>
           <trans-unit id="31">
-        <source>Pinned Specimens (%d)</source>
-        <target>Pinned Specimens (%d)</target>
+          <source>Pinned Specimens <i>(%d)</i></source>
+        <target>Pinned Specimens <i>(%d)</i></target>
       </trans-unit>
           <trans-unit id="34">
         <source>Collections</source>
@@ -5723,6 +5723,11 @@
         <source>This part is currently loaned</source>
         <target>This part is currently loaned</target>
       </trans-unit>
+      <trans-unit id="1737">
+        <source>Error: The comment is missing</source>
+        <target>Error: The comment is missing</target>
+      </trans-unit>
+      
     </body>
   </file>
 </xliff>

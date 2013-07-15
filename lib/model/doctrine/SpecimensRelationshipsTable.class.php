@@ -33,4 +33,12 @@ class SpecimensRelationshipsTable extends DarwinTable
          where('specimen_ref = ?', $spec_id);
     return $q->execute();
   }
+
+  public function findByRelatedSpecimenRef($spec_id){
+    $q = Doctrine_Query::create()->
+         from('SpecimensRelationships')->
+         where('unit_type= ? ', 'specimens')->
+         andWhere('specimen_related_ref = ?', $spec_id);
+    return $q->execute();
+  }
 }

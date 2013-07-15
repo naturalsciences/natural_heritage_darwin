@@ -117,10 +117,11 @@ class igsActions extends DarwinActions
   {
     // Forward to a 404 page if the method used is not a post
     $this->forward404Unless($request->isMethod('get'));
+    $ig_num = trim($request->getParameter('searchedCrit', ''));
     // Triggers the search ID function
-    if($request->getParameter('searchedCrit', '') !== '')
+    if( $ig_num !== '')
     {
-      $igId = Doctrine::getTable('Igs')->findOneByIgNum($request->getParameter('searchedCrit'));
+      $igId = Doctrine::getTable('Igs')->findOneByIgNum($ig_num);
       if ($igId) 
         return $this->renderText($igId->getId());
       else
