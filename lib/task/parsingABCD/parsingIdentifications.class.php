@@ -11,13 +11,14 @@ class ParsingIdentifications
             'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe');
   public $peoples = array(); // an array of Doctrine People class
   public $keyword; // an array of doctrine Keywords class
-  public $type_identified, $catalogue_parent, $fullname=null, $determination_status=null, $higher_taxon_name,$higher_taxon_level;
+  public $type_identified, $catalogue_parent, $fullname=null, $determination_status=null, $higher_name,$higher_level;
   public $scientificName = "",$people_order_by=null;
 
   public function __construct()
   {
     $this->identification = new Identifications() ;
   }
+
   // fill the Hstore taxon_parent/litho_parent etc...
   public function handleParent()
   {
@@ -30,7 +31,7 @@ class ParsingIdentifications
     if(!$this->fullname) return $this->$scientificName ;
     return $this->fullname ;
   }
-  
+
   public function getMineralName($name)
   {
     if(!$this->fullname) return $name ;
@@ -42,7 +43,7 @@ class ParsingIdentifications
   {
     return $this->catalogue_parent->export() ;
   }
-  
+
   // return the Hstore litho_parent
   public function getLithoParent()
   {

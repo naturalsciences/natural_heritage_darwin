@@ -45,7 +45,7 @@ class ImportABCDXml implements IImportModels
       case "RockPhysicalCharacteristics" :
       case "efg:RockPhysicalCharacteristics" : $this->object = new ParsingTag("lithology") ; break ;;
       case "Gathering" : $this->object = new ParsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break ;;
-      case "HigherTaxa" : $this->object->taxon_parent = new Hstore() ;break ;;
+      case "HigherTaxa" : $this->object->catalogue_parent = new Hstore() ;break ;;
       case "Identification" : $this->object = new ParsingIdentifications() ; break ;;
       case "MeasurementOrFactAtomised" : $this->property = new ParsingProperties($this->getPreviousTag()) ; break ;;
       case "MultiMediaObject" : $this->object = new ParsingMultimedia() ; break ;;
@@ -130,8 +130,8 @@ class ImportABCDXml implements IImportModels
       case "Format" : $this->object->multimedia_data['type'] = $data ; break ;;
       case "FullName" : $this->people['formated_name'] = $data ; break ;;
       case "FullScientificNameString" : $this->object->fullname = $data ;break;;
-      case "HigherTaxonName" : $this->object->higher_taxon_name = $data ;break;;
-      case "HigherTaxonRank" : $this->object->higher_taxon_level = $data ;break;;
+      case "HigherTaxonName" : $this->object->higher_name = $data ;break;;
+      case "HigherTaxonRank" : $this->object->higher_level = $data ;break;;
       case "ID-in-Database" : $this->object->desc .= "id in database : $data ;" ; break ;;
       case "InheritedName" : $this->people['family_name'] = $data ; break ;;
       case "ISODateTimeBegin" : $this->object->GTUdate['from'] = $data ; break ;;
@@ -173,7 +173,7 @@ class ImportABCDXml implements IImportModels
       case "storage:Box" : $this->staging->setContainerType($data) ; break ;;
       //case "SourceInstitutionID" : $this->staging->setInstitutionName($data) ; break ;;
       case "TitleCitation" : $this->temp_data.="$data." ; break ;;
-      case "TypeStatus" : $this->staging->setIndividualState($data) ; break ;;
+      case "TypeStatus" : $this->staging->setIndividualType($data) ; break ;;
       case "UnitID" : $this->code['code'] = $data ; $this->name = $data ; break ;;
       case "UnitOfMeasurement" : $this->property->property->setPropertyAccuracyUnit($data);$this->property->property->setPropertyUnit($data); break ;;
       case "UpperValue" : $this->property->getUpperValue($data, $this->getPreviousTag(),$this->staging) ; break ;;
