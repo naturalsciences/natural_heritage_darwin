@@ -3,7 +3,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dna="http://www.dnabank-network.org/schemas/ABCDDNA" xmlns:efg="http://www.synthesys.info/ABCDEFG/1.0" xmlns:abcd="http://www.tdwg.org/schemas/abcd/2.06" xmlns:storage="http://darwin.naturalsciences.be/xsd/" xmlns="http://www.tdwg.org/schemas/abcd/2.06" targetNamespace="http://www.tdwg.org/schemas/abcd/2.06" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.06">
 	<xs:import namespace="http://www.synthesys.info/ABCDEFG/1.0" schemaLocation="http://darwin.naturalsciences.be/xsd/abcdefg.xsd"/>
 	<xs:import namespace="http://www.dnabank-network.org/schemas/ABCDDNA" schemaLocation="http://www.dnabank-network.org/schemas/ABCDDNA/DNA.XSD"/>
-	<xs:import namespace="http://www.synthesys.info/ABCDEFG/1.0" schemaLocation="http://darwin.naturalsciences.be/xsd/storage.xsd"/>
+	<xs:import namespace="http://darwin.naturalsciences.be/xsd/" schemaLocation="http://darwin.naturalsciences.be/xsd/storage.xsd"/>
 	
 	<xs:complexType name="anyUriP">
 		<xs:annotation>
