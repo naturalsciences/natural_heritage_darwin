@@ -266,22 +266,27 @@ case "$@" in
     if [ "$(echo $dw_version | grep "^[[:digit:]]*$")" ] 
     then
       upd_file=$(ls changes/*.sql | sort -n | grep $dw_version)
-      [ ! $upd_file ] && echo -e "\n\t- Everything is up to date -"
-      while [ $upd_file ]
-      do
-        $admpsql --set ON_ERROR_STOP=on -f $upd_file
-        psql_exit_status=$?
-        if [ $psql_exit_status != 0 ]; then
-          error_msg "Problem occurs durring upgrade. Last command was"
-          echo $admpsql --set ON_ERROR_STOP=on -f $upd_file
-          exit $psql_exit_status
-        fi
+      if [ "$upd_file" = '' ] 
+      then
+        echo -e "\n\t- Everything is up to date -"
+        exit 0;
+      else
+        while [ $upd_file ]
+        do
+          $admpsql --set ON_ERROR_STOP=on -f $upd_file
+          psql_exit_status=$?
+          if [ $psql_exit_status != 0 ]; then
+            error_msg "Problem occurs durring upgrade. Last command was"
+            echo $admpsql --set ON_ERROR_STOP=on -f $upd_file
+            exit $psql_exit_status
+          fi
 
-        $admpsql -c "update $schema.db_version set id=$dw_version , update_at=now();"
-        echo -e "- $upd_file processed, Darwin database version is now \033[1;32m$dw_version\033[0;0m"
-        dw_version=$(( $dw_version + 1))
-        upd_file=$(ls changes/*.sql | sort -n | grep $dw_version)
-      done
+          $admpsql -c "update $schema.db_version set id=$dw_version , update_at=now();"
+          echo -e "- $upd_file processed, Darwin database version is now \033[1;32m$dw_version\033[0;0m"
+          dw_version=$(( $dw_version + 1))
+          upd_file=$(ls changes/*.sql | sort -n | grep $dw_version)
+        done
+      fi
     else
       echo "Db version not set"
       exit;

@@ -1,13 +1,13 @@
 begin;
 set search_path=darwin2,public;
-
+drop view labeling;
 create table specimens_relationships
        (
         id serial,
         specimen_ref integer not null,
         relationship_type varchar not null default 'host',
         unit_type varchar not null default 'specimens',
-        specimen_related_ref integer
+        specimen_related_ref integer,
         taxon_ref integer,
         mineral_ref integer,
 
@@ -39,11 +39,11 @@ comment on column specimens_relationships.source_name is 'External Specimen rela
 comment on column specimens_relationships.source_id is 'External Specimen related id in the source';
 
 CREATE TRIGGER trg_clr_referenceRecord_specimens_relationships AFTER DELETE OR UPDATE
-        ON specimens_relationship FOR EACH ROW
+        ON specimens_relationships FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
 
 CREATE TRIGGER trg_trk_log_table_specimens_relationship AFTER INSERT OR UPDATE OR DELETE
-        ON specimens_relationship FOR EACH ROW
+        ON specimens_relationships FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
 CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimens_relationships AFTER INSERT OR UPDATE
@@ -56,7 +56,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_specimens_relationships AFTER DELETE  OR UPD
 
 --host spec
 insert into specimens_relationships(
- specimen_ref
+ specimen_ref,
  relationship_type,
  unit_type,
  specimen_related_ref)
@@ -66,7 +66,7 @@ insert into specimens_relationships(
  
 --HOST taxon
 insert into specimens_relationships(
- specimen_ref
+ specimen_ref,
  relationship_type,
  unit_type,
  taxon_ref)
@@ -77,7 +77,7 @@ insert into specimens_relationships(
  
 --Accomp mineralo
 insert into specimens_relationships(
- specimen_ref
+ specimen_ref,
  relationship_type,
  unit_type,
  mineral_ref,
@@ -91,7 +91,7 @@ insert into specimens_relationships(
  
 --Accomp mineralo
 insert into specimens_relationships(
- specimen_ref
+ specimen_ref,
  relationship_type,
  unit_type,
  taxon_ref)
@@ -125,5 +125,5 @@ alter table specimens drop column host_taxon_extinct ;
  
  delete from flat_dict where dict_field = 'host_relationship';
  
- 
+\i reports/ticketing/labeling.sql
 COMMIT;
