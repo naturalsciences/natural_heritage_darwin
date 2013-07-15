@@ -20,9 +20,8 @@
                 <label><input type="checkbox" class="top_remove_spec" /></label>
               <?php endif;?>
             </th>
-            <th class="top_pin_but"><!-- Pin -->
-               <?php echo image_tag('white_pin_off.png', array('class'=>'pin_off','alt' =>  __('Cancel this result'))) ; ?>
-               <?php echo image_tag('white_pin_on.png', array('class'=>'pin_on', 'alt' =>  __('Save this result'))) ; ?>
+            <th><!-- Pin -->
+              <label class="top_pin"><input type="checkbox" /></label>
             </th>
             <?php $all_columns = $columns->getRawValue() ;?>
             <?php foreach($all_columns as $col_name => $col):?>
@@ -36,8 +35,7 @@
                 <?php else:?>
                   <?php echo $col[1];?>
                   <?php if($col_name == 'codes') : ?>
-                    <?php echo image_tag('blue_expand.png', array('id' => 'display_all_codes','title' => 'Display all codes', 'class'=> 'tree_cmd_td collapsed')); ?>
-                    <?php echo image_tag('blue_expand_up.png', array('id' => 'hide_all_codes','title' => 'Hide all codes', 'class'=> 'tree_cmd_td expanded')); ?>
+                    <!-- Codes --><label class="top_code"><input type="checkbox" /></label>
                   <?php endif ; ?>
                 <?php endif;?>
               </th>
@@ -53,9 +51,8 @@
                   <label><input type="checkbox" class="remove_spec" value="<?php echo $specimen->getId()?>"/></label>
                 <?php endif;?>
               </td>
-              <td class="pin_but <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>check<?php else:?>uncheck<?php endif;?>" >
-                  <?php echo image_tag('blue_pin_on.png', array('class'=>'pin_on','alt' =>  __('Cancel this result'))) ; ?>
-                  <?php echo image_tag('blue_pin_off.png', array('class'=>'pin_off', 'alt' =>  __('Save this result'))) ; ?>
+              <td>
+                <label class="pin"><input type="checkbox" value="<?php echo $specimen->getId();?>" <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>checked="checked"<?php endif;?> /></label>
               </td>
               <?php include_partial('result_content_specimen', array( 'specimen' => $specimen, 'codes' => $codes, 'is_specimen_search' => $is_specimen_search)); ?>
               <?php include_partial('result_content_individual', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
@@ -78,13 +75,7 @@
     <?php endif;?>
 </div>  
 <script type="text/javascript">
-$(document).ready(function () {
-  check_screen_size() ;
-  $(window).resize(function(){
-    check_screen_size();
-  });
-  
-  $('input[type=checkbox], input[type=radio]').customRadioCheck();
+
 function pin(ids, status) {
   var id_part = "";
   if( Object.prototype.toString.call( ids ) === '[object Array]' ) {
@@ -92,103 +83,58 @@ function pin(ids, status) {
   } else {
     id_part = '/id/' + ids;
   }
-  $.getJSON('<?php echo url_for('savesearch/pin?source=specimen');?>'+ id_part + '/status/' + status,function (data){
+  $.getJSON('<?php echo url_for('savesearch/pin?source=specimen');?>'+ id_part + '/status/' + ( status ? '1':'0'),function (data){
     if(data.pinned) {
       $('.pinned_specimens i').text('(' + Object.keys(data.pinned).length + ')');
     }
   });
 }
+
+$(document).ready(function () {
+  //Init screen size
+  check_screen_size();
+
+  //Init resize of screen
+  $(window).resize(check_screen_size);
+
+  //Init custom checkbox
+  $('input[type=checkbox], input[type=radio]').customRadioCheck();
   
-/****COL MANAGEMENT ***/
-  $('ul.column_menu > li').each(function(){
-    hide_or_show($(this));
-  });
-/****END COL MANAGEMENT ***/
-
-  /**PIN management **/
-  $('.spec_results .pin_but').click(function(){
-    update_check_uncheck($(this));
-    if($(this).hasClass('check')) {
-      pin_status = 1;
-    }
-    else {
-      pin_status = 0;
-    }
-    rid = getIdInClasses($(this).closest('tr'));
-    pin(rid, pin_status);
-  });
-
   // Init Top pin state
-  if($('.pin_but.check').length == $('.spec_results tbody .pin_but').length) {
-    $('.top_pin_but').addClass('check');
+  if($('.pin :checked').length == $('.pin :checkbox').length) {
+    $('.top_pin :checkbox').attr('checked','checked').trigger('update');
   }
   else {
-    $('.top_pin_but').addClass('uncheck');
+    $('.top_pin :checkbox').attr('checked',false).trigger('update');
   }
 
-  $('.spec_results .top_pin_but').click(function(){
-    update_check_uncheck($(this));
-    /** Multiple pin behavior ***/
-    if($(this).hasClass('check')) {
-      pin_status = 1;
-      $('.spec_results tbody tr .pin_but').addClass('check').removeClass('uncheck');
-    }
-    else {
-      pin_status = 0;
-      $('.spec_results tbody tr .pin_but').addClass('uncheck').removeClass('check');
-    }
-    pins = [];
-    $('.spec_results tbody tr').each(function(){
-      rid = getIdInClasses($(this));
-      pins.push(rid);
-    });
+  
+  //Pin a specimen
+  $('.spec_results .pin :checkbox').change(function(){
+     pin($(this).val(), $(this).is(':checked'));
+  });
 
-    pin(pins, pin_status);
+  // Check all pin's on the page
+  $('.spec_results .top_pin :checkbox').click(function(){
+    $('.spec_results .pin :checkbox').attr('checked', $(this).is(':checked')).trigger('update');
+    pins = [];
+    $('.spec_results .pin :checkbox').each(function(){
+      pins.push($(this).val());
+    });
+    pin(pins, $(this).is(':checked'));
   }); 
 
-  /*Remove management*/
-
+  // Check all "remove specimen" for saved spec search
   $('.spec_results .top_remove_spec').click(function(){
-    $('.remove_spec').attr('checked', $(this).is(':checked')).trigger('change');;
+    $('.remove_spec').attr('checked', $(this).is(':checked')).trigger('change');
   });
-
-  $('.spec_results tbody .remove_but').click(function(){
-    /** Multiple pin behavior ***/
-    if($(this).hasClass('remove_on'))
-    {
-      $(this).parent().find('.remove_off').removeClass('hidden'); 
-      $(this).addClass('hidden');
-      $('.spec_results thead th .remove_off').removeClass('hidden');
-      $('.spec_results thead th .remove_on').addClass('hidden');
-    }
+  
+  // Hide or Show more than 2 codes 
+  $('.top_code :checkbox').change(function(){
+    if($(this).is(':checked'))
+     $('.code_supp').removeClass('hidden')
     else
-    {
-      $(this).parent().find('.remove_on').removeClass('hidden');
-      $(this).addClass('hidden');
-      if($('.spec_results tbody .remove_on').not('.hidden').length == $('.spec_results tbody .remove_on').length)
-      {
-        $('.spec_results thead th .remove_on').removeClass('hidden');
-        $('.spec_results thead th .remove_off').addClass('hidden');
-      }
-    }
+     $('.code_supp').addClass('hidden')
   });
-  $('#display_all_codes').click(function() 
-  {
-    $(this).hide();
-    $('#hide_all_codes').show();
-    $('td.col_codes li.code_supp').each(function() {
-      $(this).removeClass('hidden');    
-    });
-  });
-
-  $('#hide_all_codes').click(function() 
-  {
-    $(this).hide();
-    $('#display_all_codes').show();
-    $('td.col_codes li.code_supp').each(function() {
-      $(this).addClass('hidden'); 
-    });
-  });
-
 });
 </script>

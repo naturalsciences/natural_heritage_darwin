@@ -144,11 +144,11 @@ function clearSelection(el)
 
 function result_choose ()
 {
-        el = $(this).closest('tr');
-        ref_element_id = getIdInClasses(el);
-        ref_element_name = el.find('span.item_name').text();
-        $('.result_choose').die('click');
-        $('body').trigger('close_modal');
+  el = $(this).closest('tr');
+  ref_element_id = getIdInClasses(el);
+  ref_element_name = el.find('span.item_name').text();
+  $('.result_choose').die('click');
+  $('body').trigger('close_modal');
 }
 
 function objectsAreSame(x, y) {
@@ -217,63 +217,7 @@ function postToUrl(url, params, newWindow)
 }
 
 
-
-
-
-/**********************************
- * Specimen Search related functions
- * 
- ************************************/
-
-/***
- * Update the visible columns list in specimens_search
- */
-function update_check_uncheck(item)
-{
-  if ( item.hasClass('check')) {
-    item.removeClass('check') ;
-    item.addClass('uncheck') ; 
-  }
-  else {
-    item.removeClass('uncheck') ;
-    item.addClass('check') ;
-  }
-}
-
-function getColVisible()
-{
-  column_str = '';
-  if($('.column_menu ul > li.check').length)
-  {
-    $('.column_menu ul > li.check').each(function (index)
-    {
-      if(column_str != '') column_str += '|';
-      column_str += $(this).attr('id').substr(3);
-    });
-  }
-  return column_str;
-}
-
-/***
- * Hide or show table column when a column is checked as visible
- */
-function hide_or_show(li)
-{
-  field = li.attr('id') ;
-  column = field.substr(3) ;
-  
-  if(li.hasClass('uncheck')) {
-    $('table.spec_results thead tr th.col_'+column).hide();
-    $('table.spec_results tbody tr td.col_'+column).hide();
-    //this line below is neccessary to avoid table border to be cut
-  }
-  else {
-    $('table.spec_results thead tr th.col_'+column).show();
-    $('table.spec_results tbody tr td.col_'+column).show();
-    //this line below is neccessary to avoid table border to be cut    
-  }
-}
-
+//http://www.1stwebmagazine.com/jquery-checkbox-and-radio-button-styling
 ;(function(){
 $.fn.customRadioCheck = function() {
  
@@ -293,12 +237,15 @@ $.fn.customRadioCheck = function() {
  
     // Events
     $this.on({
-      change: function() {
+      update: function() {
         if ($this.is(':radio')) {
           $this.parent().siblings('label')
             .find('.custom-radio').removeClass('checked');
         }
         $span.toggleClass('checked', $this.is(':checked'));
+      },
+      change: function() {
+        $this.trigger('update');
       },
       focus: function() { $span.addClass('focus'); },
       blur: function() { $span.removeClass('focus'); }

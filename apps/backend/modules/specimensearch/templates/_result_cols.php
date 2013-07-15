@@ -16,10 +16,14 @@ $(document).ready(function () {
   <div class="widget_collection_container">
     <ul class="column_menu">
       <?php foreach($columns as $col_name => $col):?>
-        <li class="col_switcher <?php echo $field_to_show[$col_name]; ?>" id="li_<?php echo $col_name;?>">
-          <span class="check_mark">&#10003;</span>
-          <span class="uncheck_mark">&#10007;</span>
-          &nbsp;<?php echo $col[1];?>
+        <li>
+<!-- <?php echo $field_to_show[$col_name]; ?>
+<span class="check_mark">&#10003;</span>
+          <span class="uncheck_mark">&#10007;</span>-->
+          <label class="col_switcher">
+            <input type="checkbox" value="<?php echo $col_name;?>" <?php if($field_to_show[$col_name]=='check') echo 'checked="checked"'; ?> />
+            <?php echo $col[1];?>
+          </label>
         </li>
       <?php endforeach;?>
     </ul>
@@ -30,3 +34,20 @@ $(document).ready(function () {
   <div class="widget_collection_button"><a href="#"><?php echo image_tag('widget_expand_button.png','alt=Expand');?></a></div>
 </div>
 
+<script type="text/javascript">
+$(document).ready(function () {
+
+  /**** init COL MANAGEMENT ***/
+  $('ul.column_menu .col_switcher :not(:checked)').each(function(){
+    $('.col_' + $(this).val()).hide();
+  });
+
+  $(".col_switcher :checkbox").change(function(){
+    el = $('.col_' + $(this).val());
+    if($(this).is(':checked'))
+      el.show();
+    else
+      el.hide();
+  });
+});
+</script>

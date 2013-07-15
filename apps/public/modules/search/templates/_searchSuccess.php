@@ -50,12 +50,3 @@
   </table>
   <?php endif;?>
 </div>
-<script type="text/javascript">
-$(document).ready(function () {
-
-/****COL MANAGEMENT ***/
-  $('ul.column_menu > li').each(function(){
-    hide_or_show($(this));
-  });
-});
-</script>

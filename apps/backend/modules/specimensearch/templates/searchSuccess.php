@@ -43,10 +43,6 @@
       <?php endif;?>
       <script  type="text/javascript">
         $(document).ready(function () {
-          $(".col_switcher").click(function(){
-            update_check_uncheck($(this));
-            hide_or_show($(this));
-          });
 
           $('form#specimen_filter select.double_list_select-selected option').attr('selected', 'selected');
           $('body').duplicatable({
