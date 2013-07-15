@@ -2,8 +2,20 @@
 <!-- edited with XMLSpy v2005 rel. 3 U (http://www.altova.com) by Markus Döring (BGBM) -->
 <!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Charles Copp (EIM) -->
 <!-- Proposed collection of global elements and extensions for Earth Sciences extension to the ABCD Schema -->
-<xs:schema xmlns:efg="http://darwin.naturalsciences.be/xsd/" xmlns:abcd="http://www.tdwg.org/schemas/abcd/2.06" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://darwin.naturalsciences.be/xsd/" targetNamespace="http://darwin.naturalsciences.be/xsd/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
-	<xs:import namespace="http://www.tdwg.org/schemas/abcd/2.06" schemaLocation="http://rs.tdwg.org/abcd/2.06/ABCD_2.06.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:efg="http://www.synthesys.info/ABCDEFG/1.0" xmlns:abcd="http://www.tdwg.org/schemas/abcd/2.06" 
+targetNamespace="http://www.synthesys.info/ABCDEFG/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.tdwg.org/schemas/abcd/2.06" schemaLocation="ABCDEFGDNA.xsd"/>
+	
+	<!--Referenced elements extending ABCD Unit-->
+	<xs:element name="EarthScienceSpecimen" type="efg:EarthScienceSpecimenType"/>
+	<xs:element name="RockUnit" type="efg:RockUnitType"/>
+	<xs:element name="PalaeontologicalUnit" type="efg:PalaeontologicalUnitType"/>
+	<xs:element name="MineralogicalUnit" type="efg:MineralogicalUnitType"/>
+	<xs:element name="AllocthonousMaterial" type="efg:AllocthonousMaterialType"/>
+	<xs:element name="UnitHostRock" type="efg:UnitHostRockType"/>			
+	<xs:element name="Alteration" type="efg:AlterationType"/>
+	<xs:element name="MineralRockIdentified" type="efg:MineralRockIdentifiedType"/>
+	<xs:element name="SiteStratigraphy" type="efg:SiteStratigraphyType"/>
 	<!--Elements extending ABCD Unit-->
 	<xs:complexType name="EarthScienceSpecimenType">
 		<xs:annotation>
