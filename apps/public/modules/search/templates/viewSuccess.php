@@ -1,7 +1,7 @@
 <?php slot('title', __('View Specimens') .  ( $specimen->getTaxonRef()  ? " : ".$specimen->getTaxonName() : ""));  ?>  
 
 <div class="page viewer">
-  <h1><?php echo __("Specimen Record");?><?php echo (": i".$specimen->getId());?></h1>
+  <h1><?php echo __("Specimen Record");?><?php echo (": p".$specimen->getId());?></h1>
     <h2 class="title"><?php echo __("Collection") ?></h2>  
     <div class="borded right_padded">
       <table>
@@ -286,7 +286,7 @@
             <ul class="name_tags_view">
               <?php foreach($tags as $key=>$tag):?>
                 <?php if($tag == "") echo "-" ; ?>
-                <li class="tag_size_2"><?php echo $tag ;?></li>
+                <stateli class="tag_size_2"><?php echo $tag ;?></li>
               <?php endforeach;?>
             </ul>
             <?php else : ?>
@@ -294,6 +294,20 @@
             <?php endif ; ?>
           </td>
         </tr>
+        <?php if($specimen->getObjectName()!=""):?>
+        <tr>
+          <td><span class="pager_nav"><?php echo __("Name") ; ?> :</span></td>
+          <td>
+            <span><?php echo $specimen->getObjectName(); ?></span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="pager_nav"><?php echo __("Specimen State") ; ?> :</span></td>
+          <td>
+            <span><?php echo $specimen->getSpecimenStatus() ; ?></span>
+          </td>
+        </tr>
+        <?php endif;?>
         <tr><td colspan="2">
           <?php include_partial('multimedia_classification', array('files' => $files, 'count' => $specFilesCount,'type' => 'spec')) ; ?>
         </td></tr>
