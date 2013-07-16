@@ -695,10 +695,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $query_value = array();
       foreach($values as $value) {
         if(trim($value) != '')
-          $query_value[] = '%'.strtolower($value).'%';
+          $query_value[] = '%'.$value.'%';
       }
 
-      $query_array = array_fill(0,count($query_value),'lower(s.container) like ?');
+      $query_array = array_fill(0,count($query_value),'s.container ilike ?');
       $query->andWhere( implode(' or ',$query_array) ,$query_value);
     }
     return $query ;
@@ -714,7 +714,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
           $query_value[] = '%'.strtolower($value).'%';
       }
 
-      $query_array = array_fill(0,count($query_value),'lower(s.sub_container) like ?');
+      $query_array = array_fill(0,count($query_value),'s.sub_container ilike ?');
       $query->andWhere( implode(' or ',$query_array) ,$query_value);
     }
     return $query ;
