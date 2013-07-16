@@ -1390,6 +1390,7 @@ create table imports
     updated_at timestamp,
     initial_count integer not null default 0,
     is_finished boolean  not null default false,
+    errors_in_import text,
     constraint pk_import primary key (id) ,
     constraint fk_imports_collections foreign key (collection_ref) references collections(id) on delete cascade,
     constraint fk_imports_users foreign key (user_ref) references users(id) on delete cascade
