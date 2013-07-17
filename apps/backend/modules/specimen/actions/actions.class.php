@@ -76,7 +76,7 @@ class specimenActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
-    $form->addComments($number);
+    $form->addComments($number, '');
     return $this->renderPartial('spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
 
