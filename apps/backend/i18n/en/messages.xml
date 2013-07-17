@@ -5727,7 +5727,18 @@
         <source>Error: The comment is missing</source>
         <target>Error: The comment is missing</target>
       </trans-unit>
-      
+      <trans-unit id="1738">
+        <source>If you're looking for only illustrated object (or object with files), check the box below</source>
+        <target>If you're looking for only illustrated object (or object with files), check the box below</target>
+      </trans-unit>
+      <trans-unit id="1739">
+        <source>Search Only objects with multimedia files </source>
+        <target>Search Only objects with multimedia files</target>
+      </trans-unit>
+      <trans-unit id="1740">
+        <source>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</source>
+        <target>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

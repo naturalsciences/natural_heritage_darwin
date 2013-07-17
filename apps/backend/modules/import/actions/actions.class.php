@@ -36,6 +36,17 @@ class importActions extends DarwinActions
     return $this->redirect('import/index');
   }
 
+  public function executeViewError(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->hasParameter('id'));
+    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('id'));
+
+    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
+       $this->forwardToSecureAction();
+
+    $this->errors = explode(';',$this->import->getErrorsInImport()) ;
+    array_pop($this->errors) ; // just remove the solo ";" with cause to have a empty column at the end of the array
+  }
 
   public function executeClear(sfWebRequest $request)
   {

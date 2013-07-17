@@ -17,10 +17,6 @@ abstract class BaseStagingForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'                        => new sfWidgetFormInputHidden(),
       'import_ref'                => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Import'), 'add_empty' => false)),
-      'parent_ref'                => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
-      'spec_ref'                  => new sfWidgetFormInputText(),
-      'path'                      => new sfWidgetFormTextarea(),
-      'level'                     => new sfWidgetFormTextarea(),
       'category'                  => new sfWidgetFormTextarea(),
       'expedition_ref'            => new sfWidgetFormInputText(),
       'expedition_name'           => new sfWidgetFormTextarea(),
@@ -122,10 +118,6 @@ abstract class BaseStagingForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'                        => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'import_ref'                => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Import'))),
-      'parent_ref'                => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false)),
-      'spec_ref'                  => new sfValidatorInteger(array('required' => false)),
-      'path'                      => new sfValidatorString(array('required' => false)),
-      'level'                     => new sfValidatorString(),
       'category'                  => new sfValidatorString(array('required' => false)),
       'expedition_ref'            => new sfValidatorInteger(array('required' => false)),
       'expedition_name'           => new sfValidatorString(array('required' => false)),

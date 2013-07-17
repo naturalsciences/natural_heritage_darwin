@@ -76,7 +76,7 @@ class ImportABCDXml implements IImportModels
       case "MeasurementsOrFacts" : if($this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break ;;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break ;;
       case "MineralRockIdentified" : $this->staging["mineral_name"] = $this->object->fullname ; break ;;
-      case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; else $this->errors_reported .= "MultiMediaObject not saved (no or wrong FileURI);"; break ;;
+      case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; else $this->errors_reported .= "Unit ".$this->name." : MultiMediaObject not saved (no or wrong FileURI);"; break ;;
       case "NamedArea" : $this->object->addTagGroups() ;break;;
       case "Notes" : $this->addComment() ; break ;
       case "PersonName" : $this->object->handlePeople($this->people) ; break ;;
@@ -219,7 +219,7 @@ class ImportABCDXml implements IImportModels
       catch(Doctrine_Exception $ne)
       {
         $e = new DarwinPgErrorParser($ne);
-        $this->errors_reported .= $object->getTable()->getTableName()." were not saved".$e->getMessage().";";
+        $this->errors_reported .= "Unit ".$this->name." : ".$object->getTable()->getTableName()." were not saved".$e->getMessage().";";
       }
     }
     $this->object_to_save = array() ;
@@ -237,7 +237,8 @@ class ImportABCDXml implements IImportModels
 
   private function saveUnit()
   {
-    $this->staging->fromArray(array("import_ref" => $this->import_id, "level" => "spec"));
+    $ok = true ;
+    $this->staging->fromArray(array("import_ref" => $this->import_id));
     try 
     {
       $this->staging->save() ; 
@@ -246,9 +247,13 @@ class ImportABCDXml implements IImportModels
     {
       $e = new DarwinPgErrorParser($ne);
       $this->errors_reported .= "Unit ".$this->name." object were not saved:".$e->getMessage().";";
+      $ok = false ;
     }
-    $this->saveObjects() ;
-    $this->unit_id_ref[$this->name] = $this->staging->getId()  ;
+    if ($ok)
+    {
+      $this->saveObjects() ;
+      $this->unit_id_ref[$this->name] = $this->staging->getId()  ;
+    }
   }
   
   private function getStagingId()

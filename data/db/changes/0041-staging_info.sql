@@ -76,6 +76,7 @@ ALTER TABLE staging add column mineral_classification text ;
 alter table collection_maintenance alter column people_ref drop not null ;
 ALTER TABLE imports add column errors_in_import text ;
 
+DROP trigger trg_cpy_path_staging on staging ;
 
 CREATE TRIGGER trg_clr_referenceRecord_staging_info AFTER DELETE OR UPDATE
   ON staging_info FOR EACH ROW

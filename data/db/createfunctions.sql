@@ -414,8 +414,7 @@ CREATE OR REPLACE FUNCTION fct_cpy_path() RETURNS TRIGGER
 AS $$
 BEGIN
   IF TG_OP = 'INSERT' THEN
-      IF( TG_TABLE_NAME::text = 'collections' OR
-        TG_TABLE_NAME::text = 'staging') THEN
+      IF TG_TABLE_NAME::text = 'collections' THEN
 
         IF NEW.id = 0 THEN
           NEW.parent_ref := null;
@@ -434,8 +433,7 @@ BEGIN
         END IF;
       END IF;
     ELSIF TG_OP = 'UPDATE' THEN
-      IF(TG_TABLE_NAME::text = 'collections' OR
-        TG_TABLE_NAME::text = 'staging') THEN
+      IF TG_TABLE_NAME::text = 'collections' THEN
 
         IF NEW.parent_ref IS DISTINCT FROM OLD.parent_ref THEN
           IF NEW.parent_ref IS NULL THEN

@@ -36,12 +36,13 @@ class StagingFormFilter extends BaseStagingFormFilter
       $query->andWhere("status != '' ");
     }
   }
-  public function addSlevelColumnQuery(Doctrine_Query $query, $field, $value)
+  
+  /*public function addSlevelColumnQuery(Doctrine_Query $query, $field, $value)
   {
      if ($value != "")
        $query->andWhere("level = ? ", $value);
      return $query;
-  }
+  }*/
   public function  getQuery()
   {
     $query = parent::getQuery();

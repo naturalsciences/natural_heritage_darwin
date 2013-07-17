@@ -5724,6 +5724,14 @@
         <source>Error: The comment is missing</source>
         <target>Erreur: le commentaire est manquant</target>
       </trans-unit>
+      <trans-unit id="1738">
+        <source>If you're looking for only illustrated object (or object with files), check the box below</source>
+        <target>Si vous recherchez des enregistrements illustrés (ou ccontenant des fichiers), cochez la case ci-dessous</target>
+      </trans-unit>
+      <trans-unit id="1739">
+        <source>Search Only objects with multimedia files </source>
+        <target>Rechercher uniquement les enregistrements avec des fichiers multimedias</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

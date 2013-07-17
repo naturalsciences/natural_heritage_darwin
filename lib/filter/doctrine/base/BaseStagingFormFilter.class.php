@@ -14,10 +14,6 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'import_ref'                => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Import'), 'add_empty' => true)),
-      'parent_ref'                => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
-      'spec_ref'                  => new sfWidgetFormFilterInput(),
-      'path'                      => new sfWidgetFormFilterInput(),
-      'level'                     => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'category'                  => new sfWidgetFormFilterInput(),
       'expedition_ref'            => new sfWidgetFormFilterInput(),
       'expedition_name'           => new sfWidgetFormFilterInput(),
@@ -118,10 +114,6 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'import_ref'                => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Import'), 'column' => 'id')),
-      'parent_ref'                => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Parent'), 'column' => 'id')),
-      'spec_ref'                  => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
-      'path'                      => new sfValidatorPass(array('required' => false)),
-      'level'                     => new sfValidatorPass(array('required' => false)),
       'category'                  => new sfValidatorPass(array('required' => false)),
       'expedition_ref'            => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'expedition_name'           => new sfValidatorPass(array('required' => false)),
@@ -239,10 +231,6 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
     return array(
       'id'                        => 'Number',
       'import_ref'                => 'ForeignKey',
-      'parent_ref'                => 'ForeignKey',
-      'spec_ref'                  => 'Number',
-      'path'                      => 'Text',
-      'level'                     => 'Text',
       'category'                  => 'Text',
       'expedition_ref'            => 'Number',
       'expedition_name'           => 'Text',

@@ -244,10 +244,6 @@ CREATE TRIGGER trg_cpy_path_peopleRelationships BEFORE INSERT OR UPDATE
 	ON people_relationships FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_path();
 
-CREATE TRIGGER trg_cpy_path_staging BEFORE INSERT OR UPDATE
-        ON staging FOR EACH ROW
-        EXECUTE PROCEDURE fct_cpy_path();
-        
 CREATE TRIGGER trg_upd_fields_staging BEFORE UPDATE
         ON staging FOR EACH ROW
         EXECUTE PROCEDURE fct_upd_staging_fields();   

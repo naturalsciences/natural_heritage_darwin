@@ -5723,6 +5723,14 @@
         <source>Error: The comment is missing</source>
         <target>Fout: De commentaar ontbreekt</target>
       </trans-unit>
+      <trans-unit id="1738">
+        <source>If you're looking for only illustrated object (or object with files), check the box below</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1739">
+        <source>Search Only objects with multimedia files </source>
+        <target></target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

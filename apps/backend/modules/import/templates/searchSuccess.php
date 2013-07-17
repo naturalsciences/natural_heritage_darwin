@@ -36,9 +36,9 @@
                 <?php echo __('Last modification');?>
                 <?php if($orderBy=='updated_at') echo $orderSign ?>
               </a>
-            </th>                      
+            </th>
             <th><?php echo __("Progression") ; ?></th>
-            <th colspan="4"><?php echo __("Actions") ; ?></th>
+            <th colspan="5"><?php echo __("Actions") ; ?></th>
           </tr>
         </thead>
         <tbody>
@@ -56,7 +56,11 @@
                 <?php else:?>
                   <?php echo __('n/a');?>
                 <?php endif;?>
-                
+              </td>
+              <td>
+                <?php if ($import->getErrorsInImport() != '') : ?>
+                  <?php echo link_to(image_tag('warning.png',array('title'=>__('View errors while importing'))),'import/viewError?id='.$import->getId());?>
+                 <?php endif ; ?>
               </td>
               <td>
                 <?php if ($import->isEditableState()) : ?>
@@ -67,13 +71,13 @@
                 <?php if ($import->isEditableState()) : ?>
                   <?php echo link_to(image_tag('checkbox_checked.png',array('title'=>__('Import "Ok" lines'))),'staging/markok?import='.$import->getId());?>
                 <?php endif ; ?>
-              </td>              
+              </td>
               <td>
                 <?php if (!$import->getIsFinished()) : ?>
                   <?php echo link_to(image_tag('remove_2.png',array('title'=>__('Abort import'))),'import/clear?id='.$import->getId(),'class=remove_import');?>
                 <?php endif;?>
               </td>
-              <td>         
+              <td>
                 <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'import/delete?id='.$import->getId(),'class=remove_import');?>
               </td>
             </tr>

@@ -299,9 +299,6 @@ DROP TRIGGER IF EXISTS trg_cpy_path_peoplerelationships
 DROP TRIGGER IF EXISTS trg_cpy_path_gtu
         ON gtu;
 
-DROP TRIGGER IF EXISTS trg_cpy_path_staging
-        ON staging;
-        
 DROP TRIGGER IF EXISTS trg_upd_fields_staging
         ON staging;
 
