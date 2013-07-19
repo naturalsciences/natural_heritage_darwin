@@ -113,10 +113,19 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="RockPhysicalCharacteristics" type="abcd:MeasurementOrFact" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="RockPhysicalCharacteristics" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>Container for descriptive terms and measurements related to rocks e.g. grain size, grain sphericity, crystal sizes and orientations, laminations etc.</xs:documentation>
 				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="RockPhysicalCharacteristic" type="abcd:MeasurementOrFact" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Quantitative or categorical measurement refering to the unit.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="Petrology" minOccurs="0">
 				<xs:annotation>
