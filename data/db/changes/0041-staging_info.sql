@@ -24,24 +24,42 @@ CREATE TABLE staging_relationship
   referenced_relation character varying NOT NULL,
   relationship_type character varying,
   staging_related_ref integer,
+  taxon_ref integer, -- Reference of the related specimen
+  mineral_ref integer, -- Reference of related mineral
   institution_ref integer,
   institution_name text,
   source_name text,
   source_id text,
+  quantity numeric(16,2),
+  unit character varying DEFAULT '%'::character varying,
+  unit_type character varying NOT NULL DEFAULT 'specimens'::character varying,
 
   CONSTRAINT pk_staging_relationship PRIMARY KEY (id),
   CONSTRAINT fk_record_id FOREIGN KEY (record_id)
       REFERENCES staging (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT fk_specimens_relationships_mineralogy FOREIGN KEY (mineral_ref)
+      REFERENCES mineralogy (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_specimens_relationships_institution FOREIGN KEY (institution_ref)
+      REFERENCES people (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_specimens_relationships_taxonomy FOREIGN KEY (taxon_ref)
+      REFERENCES taxonomy (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 COMMENT ON COLUMN staging_relationship.record_id IS 'id of the orignial record';
 COMMENT ON COLUMN staging_relationship.referenced_relation IS 'where to find the record_id, referenced_relation is always staging but this field uis mandatory for addRelated php function';
 COMMENT ON COLUMN staging_relationship.relationship_type IS 'relation type (eg. host, parent, part of)';
 COMMENT ON COLUMN staging_relationship.staging_related_ref IS 'the record id associated, this record id must be found in the same import file';
+COMMENT ON COLUMN specimens_relationships.taxon_ref IS 'Reference of the related specimen';
+COMMENT ON COLUMN specimens_relationships.mineral_ref IS 'Reference of related mineral';
 COMMENT ON COLUMN staging_relationship.institution_ref IS 'the institution id associated to this relationship';
 COMMENT ON COLUMN staging_relationship.institution_name IS 'the institution name associated to this relationship, used to add to darwin institution if it dont exist';
 COMMENT ON COLUMN staging_relationship.source_name IS 'External Specimen related  source DB';
 COMMENT ON COLUMN staging_relationship.source_id IS 'External Specimen related id in the source';
+COMMENT ON COLUMN specimens_relationships.quantity IS 'Quantity of accompanying mineral';
+
 ALTER TABLE staging_relationship
   OWNER TO darwin2;
 GRANT ALL ON TABLE staging_relationship TO darwin2;
@@ -71,7 +89,6 @@ ALTER TABLE staging DROP COLUMN part_status ;
 ALTER TABLE staging DROP COLUMN parent_ref ;
 ALTER TABLE staging DROP COLUMN path ;
 ALTER TABLE staging DROP COLUMN level ;
-ALTER TABLE staging DROP COLUMN spec_ref ;
 ALTER TABLE staging add column mineral_classification text ;
 alter table collection_maintenance alter column people_ref drop not null ;
 ALTER TABLE imports add column errors_in_import text ;
@@ -274,149 +291,74 @@ $$ LANGUAGE plpgsql;
 
 
 
-Drop function fct_importer_dna;
+Drop function fct_importer_dna(integer);
 
 CREATE OR REPLACE FUNCTION fct_importer_abcd(req_import_ref integer)  RETURNS boolean
 AS $$
 DECLARE
-  prev_levels hstore default '';
   rec_id integer;
-  people_id integer;
-  line RECORD;
-  s_line RECORD;
+--   people_id integer;
+  all_line RECORD ;
+  line staging;
   people_line RECORD;
   staging_line staging;
-  old_level int;
+  id_to_delete integer ARRAY;
+  id_to_keep integer ARRAY ;
+--   collection int;
 BEGIN
-  FOR line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id 
+  FOR all_line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id 
       WHERE import_ref = req_import_ref AND to_import=true and status = ''::hstore AND i.is_finished =  FALSE
   LOOP
-    /************
-    *
-    *  DON'T FORGET TO MAKE A CHECK !
-    *
-     ***/
     BEGIN
-      --Import Specimen
-
       -- I know it's dumb but....
-      select * into staging_line from staging where id = line.id;
+      select * into staging_line from staging where id = all_line.id;
       PERFORM fct_imp_checker_igs(staging_line, true);
       PERFORM fct_imp_checker_expeditions(staging_line, true);
       PERFORM fct_imp_checker_gtu(staging_line, true);
+      PERFORM fct_imp_checker_staging_info(staging_line) ;
       --RE SELECT WITH UPDATE
-      select * into line from staging s INNER JOIN imports i on  s.import_ref = i.id where s.id=line.id;
+      select * into line from staging s INNER JOIN imports i on  s.import_ref = i.id where s.id=all_line.id;
 
-      BEGIN
-  IF line.spec_ref is NULL THEN
     rec_id := nextval('specimens_id_seq');
     INSERT INTO specimens (id, category, collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref,
-        host_taxon_ref, host_specimen_ref, host_relationship, acquisition_category, acquisition_date_mask, acquisition_date, station_visible, ig_ref)
-    VALUES (rec_id, COALESCE(line.category,'physical') , line.collection_ref, line.expedition_ref, line.gtu_ref,
-      line.taxon_ref, line.litho_ref, line.chrono_ref,
-      line.lithology_ref, line.mineral_ref, line.host_taxon_ref,
-      line.host_specimen_ref, line.host_relationship, COALESCE(line.acquisition_category,''), COALESCE(line.acquisition_date_mask,0),
-      COALESCE(line.acquisition_date,'01/01/0001'), COALESCE(line.station_visible,true),  line.ig_ref
+        acquisition_category, acquisition_date_mask, acquisition_date, station_visible, ig_ref, type, sex, stage, state, social_status, rock_form,
+        specimen_part, complete, institution_ref, building, floor, room, row, shelf, container, sub_container,container_type, sub_container_type,
+        container_storage, sub_container_storage, surnumerary, specimen_status, specimen_count_min, specimen_count_max)
+    VALUES (rec_id, COALESCE(line.category,'physical') , all_line.collection_ref, line.expedition_ref, line.gtu_ref, line.taxon_ref, line.litho_ref, line.chrono_ref,
+      line.lithology_ref, line.mineral_ref, COALESCE(line.acquisition_category,''), COALESCE(line.acquisition_date_mask,0), COALESCE(line.acquisition_date,'01/01/0001'),
+      COALESCE(line.station_visible,true),  line.ig_ref, COALESCE(line.individual_type,'specimen'), COALESCE(line.individual_sex,'undefined'),
+      COALESCE(line.individual_stage,'undefined'), COALESCE(line.individual_state,'not applicable'),COALESCE(line.individual_social_status,'not applicable'),
+      COALESCE(line.individual_rock_form,'not applicable'), COALESCE(line.part,'specimen'), COALESCE(line.complete,true), line.institution_ref, line.building,
+      line.floor, line.room, line.row, line.shelf, line.container, line.sub_container,COALESCE(line.container_type,'container'), 
+      COALESCE(line.sub_container_type, 'container'), COALESCE(line.container_storage,'dry'),COALESCE(line.sub_container_storage,'dry'),
+      COALESCE(line.surnumerary,false), COALESCE(line.specimen_status,'good state'),COALESCE(line.part_count_min,1), COALESCE(line.part_count_max,2)
     );
     UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
     -- Import identifiers whitch identification have been updated to specimen
     INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
     SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
-    DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ) ;    
-  ELSE
-    rec_id = line.spec_ref;
-  END IF;
-  prev_levels := prev_levels || ('specimen' => rec_id::text);
-      EXCEPTION WHEN unique_violation THEN
-  SELECT id INTO rec_id FROM specimens WHERE
-    category = COALESCE(line.category,'physical')
-    AND collection_ref=line.collection_ref
-    AND expedition_ref= line.expedition_ref
-    AND gtu_ref= line.gtu_ref
-    AND taxon_ref= line.taxon_ref
-    AND litho_ref = line.litho_ref
-    AND chrono_ref = line.chrono_ref
-    AND lithology_ref = line.lithology_ref
-    AND mineral_ref = line.mineral_ref
-    AND host_taxon_ref = line.host_taxon_ref
-    AND host_specimen_ref = line.host_specimen_ref
-    AND host_relationship = line.host_relationship
-    AND acquisition_category = COALESCE(line.acquisition_category,'')
-    AND acquisition_date_mask = COALESCE(line.acquisition_date_mask,0)
-    AND acquisition_date = COALESCE(line.acquisition_date,'01/01/0001')
-    AND station_visible = COALESCE(line.station_visible,true)
-    AND ig_ref = line.ig_ref; 
-  UPDATE staging SET status=(status || ('duplicate' => rec_id::text)) , to_import=false WHERE id = (prev_levels->'specimen')::integer;
-  UPDATE staging SET to_import=false where path like '/' || line.id || '/%';
-  CONTINUE;
-    END;
-      --Import lower levels
-      FOR s_line IN  SELECT * from staging s where path like '/' || line.id || '/%' ORDER BY path || s.id
-      LOOP
-        IF s_line.level = 'individual' THEN
-          rec_id := nextval('specimen_individuals_id_seq');
-          INSERT INTO specimen_individuals (id, specimen_ref, type, sex, stage, state, social_status, rock_form, specimen_individuals_count_min, specimen_individuals_count_max)
-          VALUES (
-            rec_id,(prev_levels->'specimen')::integer, COALESCE(s_line.individual_type,'specimen'), 
-            COALESCE(s_line.individual_sex,'undefined'), COALESCE( s_line.individual_state,'not applicable'),
-            COALESCE(s_line.individual_stage,'undefined'), COALESCE(s_line.individual_social_status,'not applicable'),
-            COALESCE(s_line.individual_rock_form,'not applicable'),
-            COALESCE(s_line.individual_count_min,'1'), COALESCE(s_line.individual_count_max,'1')
-          );       
-          UPDATE template_table_record_ref SET referenced_relation ='specimen_individuals' , record_id = rec_id where referenced_relation ='staging' and record_id = s_line.id;
-           -- Import identifiers whitch identification have been updated to specimen
-          INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
-          SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimen_individuals' ;
-          DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimen_individuals') ;                 
-          prev_levels := (prev_levels || ('individual' => rec_id::text));
+    DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ) ;
+    -- Import collecting_methods
+    INSERT INTO specimen_collecting_methods(id, specimen_ref, collecting_method_ref)
+    SELECT nextval('specimen_collecting_methods_id_seq'), rec_id, collecting_method_ref FROM staging_collecting_methods WHERE staging_ref = line.id;
+    DELETE FROM staging_collecting_methods where staging_ref = line.id;
+    UPDATE staging set spec_ref=rec_id WHERE id=line.id ;
 
-        ELSIF lower(s_line.level) in ('specimen part','tissue part','dna part') THEN /*** @TODO:CHECK THIS!!**/
-          rec_id := nextval('specimen_parts_id_seq');
-          IF  lower(s_line.level) = 'specimen part' THEN
-            old_level := null;
-          ELSIF lower(s_line.level) = 'tissue part' THEN
-            old_level :=  prev_levels->'specimen part';
-          ELSIF lower(s_line.level) = 'dna part' THEN
-            old_level :=  prev_levels->'tissue part';
-          END IF;
-          ALTER TABLE specimen_parts DISABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
-          INSERT INTO specimen_parts (id, parent_ref, specimen_individual_ref, specimen_part, complete, institution_ref, building, floor, room, row, shelf,
-            container, sub_container, container_type, sub_container_type, container_storage, sub_container_storage, surnumerary, specimen_status,
-              specimen_part_count_min, specimen_part_count_max)
-          VALUES (
-            rec_id, old_level, (prev_levels->'individual')::integer,
-            COALESCE(s_line.part,'specimen'), COALESCE(s_line.complete,true),
-            s_line.institution_ref, s_line.building ,s_line.floor, s_line.room, s_line.row, s_line.shelf,
-            s_line.container, s_line.sub_container,
-            COALESCE(s_line.container_type,'container'),  COALESCE(s_line.sub_container_type, 'container'), 
-            COALESCE(s_line.container_storage,'dry'),  COALESCE(s_line.sub_container_storage,'dry'),
-            COALESCE(s_line.surnumerary,false),  COALESCE(s_line.specimen_status,'good state'), 
-            COALESCE(s_line.part_count_min,1),  COALESCE(s_line.part_count_max,2)
-          );
-          UPDATE template_table_record_ref SET referenced_relation ='specimen_parts' , record_id = rec_id where referenced_relation ='staging' and record_id = s_line.id;
-
-          prev_levels := (prev_levels || (s_line.level => rec_id::text));
-
-          ALTER TABLE specimen_parts ENABLE TRIGGER trg_cpy_specimensmaincode_specimenpartcode;
-        END IF; 
-      END LOOP;
-      -- Import staging people into catalogue people
-      FOR people_line IN SELECT * from staging_people WHERE referenced_relation in ('specimens','specimen_individuals','specimen_parts') 
-      LOOP     
-        INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
-        VALUES(nextval('catalogue_people_id_seq'),people_line.referenced_relation, people_line.record_id, people_line.people_type, people_line.people_sub_type, people_line.order_by, people_line.people_ref) ;
-      END LOOP;
-      DELETE FROM staging_people WHERE referenced_relation in ('specimens','specimen_individuals','specimen_parts') ;
-
-      DELETE from staging where path like '/' || line.id || '/%' OR  id = line.id;
-    EXCEPTION WHEN unique_violation THEN
-      RAISE info 'Error uniq_violation: %', SQLERRM;
-      UPDATE staging SET status=(status || ('duplicate' => '0')) , to_import=false WHERE id = (prev_levels->'specimen')::integer;
-      UPDATE staging SET to_import=false where path like '/' || line.id || '/%';
-
+    FOR people_line IN SELECT * from staging_people WHERE referenced_relation = 'specimens'
+    LOOP
+      INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
+      VALUES(nextval('catalogue_people_id_seq'),people_line.referenced_relation, people_line.record_id, people_line.people_type, people_line.people_sub_type, people_line.order_by, people_line.people_ref) ;
+    END LOOP;
+    DELETE FROM staging_people WHERE referenced_relation = 'specimens' ;
+    id_to_delete = array_append(id_to_delete,all_line.id) ;
     END;
   END LOOP;
-
+  select fct_imp_checker_staging_relationship() into id_to_keep ;
+  IF id_to_keep IS NOT NULL THEN
+    DELETE from staging where (id = ANY (id_to_delete)) AND NOT (id = ANY (id_to_keep)) ;
+  else
+    DELETE from staging where (id = ANY (id_to_delete)) ;
+  END IF ;
   IF EXISTS( select id FROM  staging WHERE import_ref = req_import_ref) THEN
     UPDATE imports set state = 'pending' where id = req_import_ref;
   ELSE
@@ -426,7 +368,95 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
 GRANT ALL ON TABLE staging TO darwin2;
 GRANT SELECT ON TABLE staging TO d2viewer;
-COMMIT;
 
+CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info(line staging) RETURNS boolean
+AS $$
+DECLARE
+  info_line staging_info ;
+BEGIN
+
+  FOR info_line IN select * from staging_info WHERE staging_ref = line.id
+  LOOP
+    BEGIN
+    CASE info_line.referenced_relation 
+      WHEN 'gtu' THEN
+        IF line.gtu_ref IS NOT NULL THEN
+          UPDATE template_table_record_ref set referenced_relation='gtu', record_id=line.gtu_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+        END IF;
+      WHEN 'taxonomy' THEN
+        IF line.taxon_ref IS NOT NULL THEN
+          UPDATE template_table_record_ref set referenced_relation='taxonomy', record_id=line.taxon_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+        END IF;
+      WHEN 'expeditions' THEN
+        IF line.expedition_ref IS NOT NULL THEN
+          UPDATE template_table_record_ref set referenced_relation='expeditions', record_id=line.expedition_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+        END IF;
+      WHEN 'lithostratigraphy' THEN
+        IF line.litho_ref IS NOT NULL THEN
+          UPDATE template_table_record_ref set referenced_relation='lithostratigraphy', record_id=line.litho_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+        END IF;
+      WHEN 'lithology' THEN
+        IF line.lithology_ref IS NOT NULL THEN
+          UPDATE template_table_record_ref set referenced_relation='lithology', record_id=line.lithology_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+        END IF;
+      WHEN 'chronostratigraphy' THEN
+        IF line.chrono_ref IS NOT NULL THEN
+          UPDATE template_table_record_ref set referenced_relation='chronostratigraphy', record_id=line.chrono_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+        END IF;
+      WHEN 'mineralogy' THEN
+        IF line.mineral_ref IS NOT NULL THEN
+          UPDATE template_table_record_ref set referenced_relation='mineralogy', record_id=line.mineral_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+        END IF;
+      WHEN 'igs' THEN
+        IF line.ig_ref IS NOT NULL THEN
+          UPDATE template_table_record_ref set referenced_relation='igs', record_id=line.ig_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+        END IF;
+      ELSE continue ;
+      END CASE ;
+      EXCEPTION WHEN unique_violation THEN
+        RAISE NOTICE 'An error occured: %', SQLERRM;
+      END ;
+  END LOOP;
+  DELETE FROM staging_info WHERE staging_ref = line.id ;
+  RETURN true;
+END;
+$$ LANGUAGE plpgsql;
+
+drop function fct_imp_checker_staging_relationship()  ;
+CREATE OR REPLACE FUNCTION fct_imp_checker_staging_relationship() RETURNS integer ARRAY
+AS $$
+DECLARE
+  relation_line RECORD ;
+  specimen_ref INTEGER ;
+  id_array integer ARRAY ;
+BEGIN
+
+  FOR relation_line IN select sr.* from staging_relationship sr, staging s WHERE sr.record_id = s.id AND s.spec_ref IS NOT NULL
+  LOOP
+    IF relation_line.staging_related_ref IS NOT NULL THEN
+      SELECT spec_ref INTO specimen_ref FROM staging where id=relation_line.staging_related_ref ;
+      IF specimen_ref IS NULL THEN 
+        id_array = array_append(id_array, s.id);
+        continue ;
+      ELSE
+        INSERT INTO specimens_relationships(id, specimen_ref, relationship_type, unit_type, specimen_related_ref, institution_ref)
+        SELECT nextval('specimens_relationships_id_seq'), relation_line.staging_related_ref, 'parent', unit_type, specimen_ref, institution_ref
+        from staging_relationship where record_id=relation_line.id AND staging_related_ref=relation_line.staging_related_ref;
+      END IF;
+    ELSE
+    INSERT INTO specimens_relationships(id, specimen_ref, relationship_type, unit_type, institution_ref,taxon_ref, mineral_ref, source_name,
+    source_id, quantity, unit)
+        SELECT nextval('specimens_relationships_id_seq'), relation_line.staging_related_ref, 'parent', unit_type, specimen_ref, institution_ref,
+        taxon_ref, mineral_ref, source_name, source_id, quantity, unit
+        from staging_relationship where record_id=relation_line.id ;
+    END IF ;
+    DELETE FROM staging_relationship WHERE id = relation_line.id ;
+  END LOOP;
+  RETURN id_array;
+END;
+$$ LANGUAGE plpgsql;
+
+COMMIT;

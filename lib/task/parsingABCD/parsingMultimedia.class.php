@@ -52,9 +52,9 @@ class ParsingMultimedia
   private function copyDistantFile($file)
   {
     if(strpos($file,'naturalsciences.be')||strpos($file,'natuurwetenschappen.be')||strpos($file,'sciencesnaturelles.be'))
-      $src = fopen($file,'r') ;
+      $src = @fopen($file,'r') ;
     else
-      $src = fopen($file,'r',false, $this->getContext()) ;
+      $src = @fopen($file,'r',false, $this->getContext()) ;
     if(!$src) return false ;
     $this->saveFile($src,$file) ;
     fclose($src) ;

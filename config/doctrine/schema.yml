@@ -1096,12 +1096,17 @@ StagingRelationship:
         id: { type: integer, primary: true, autoincrement: true }
         record_id : { type: integer, notnull: true }
         referenced_relation : {type: string, notnull: true }
-        relationship_type : {type: string }
+        relationship_type: { type: string, notnull: true, default: 'host'}
         staging_related_ref : { type: integer }
+        taxon_ref : { type: integer }
+        mineral_ref : { type: integer }
         institution_ref : { type:integer }
         institution_name : { type:string }
         source_name : { type:string }
         source_id : { type:string }
+        unit_type: { type: string, notnull: true, default: 'specimens'}
+        quantity: { type: decimal, length: 16, scale: 2}
+        unit: { type: string, default: '%'}
 
 StagingTagGroups:
     columns:

@@ -1411,6 +1411,7 @@ create table staging
   (
     id serial,
     import_ref integer not null,
+    spec_ref integer,
     category varchar,
     expedition_ref integer,
     expedition_name varchar,
@@ -1543,24 +1544,41 @@ CREATE TABLE staging_relationship
   referenced_relation character varying NOT NULL,
   relationship_type character varying,
   staging_related_ref integer,
+  taxon_ref integer, -- Reference of the related specimen
+  mineral_ref integer, -- Reference of related mineral
   institution_ref integer,
   institution_name text,
   source_name text,
   source_id text,
+  quantity numeric(16,2),
+  unit character varying DEFAULT '%'::character varying,
+  unit_type character varying NOT NULL DEFAULT 'specimens'::character varying,
 
   CONSTRAINT pk_staging_relationship PRIMARY KEY (id),
   CONSTRAINT fk_record_id FOREIGN KEY (record_id)
       REFERENCES staging (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE CASCADE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT fk_specimens_relationships_mineralogy FOREIGN KEY (mineral_ref)
+      REFERENCES mineralogy (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_specimens_relationships_institution FOREIGN KEY (institution_ref)
+      REFERENCES people (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_specimens_relationships_taxonomy FOREIGN KEY (taxon_ref)
+      REFERENCES taxonomy (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 COMMENT ON COLUMN staging_relationship.record_id IS 'id of the orignial record';
 COMMENT ON COLUMN staging_relationship.referenced_relation IS 'where to find the record_id, referenced_relation is always staging but this field uis mandatory for addRelated php function';
 COMMENT ON COLUMN staging_relationship.relationship_type IS 'relation type (eg. host, parent, part of)';
 COMMENT ON COLUMN staging_relationship.staging_related_ref IS 'the record id associated, this record id must be found in the same import file';
+COMMENT ON COLUMN specimens_relationships.taxon_ref IS 'Reference of the related specimen';
+COMMENT ON COLUMN specimens_relationships.mineral_ref IS 'Reference of related mineral';
 COMMENT ON COLUMN staging_relationship.institution_ref IS 'the institution id associated to this relationship';
 COMMENT ON COLUMN staging_relationship.institution_name IS 'the institution name associated to this relationship, used to add to darwin institution if it dont exist';
 COMMENT ON COLUMN staging_relationship.source_name IS 'External Specimen related  source DB';
 COMMENT ON COLUMN staging_relationship.source_id IS 'External Specimen related id in the source';
+COMMENT ON COLUMN specimens_relationships.quantity IS 'Quantity of accompanying mineral';
 
 create table staging_collecting_methods
   (

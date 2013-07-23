@@ -88,7 +88,7 @@ class ImportABCDXml implements IImportModels
       case "TitleCitation" : $this->addComment(true) ; break ;
       case "Unit" : $this->saveUnit(); break ;;
       case "UnitAssociation" : $this->staging->addRelated($this->object) ; break ;;
-      case "UnitID" : $this->staging->addRelated($this->code) ; break ;;
+      case "UnitID" : if(substr($this->code['code'],0,4) != 'hash') $this->staging->addRelated($this->code) ; break ;;
     }
     $this->tag = "" ;
     $this->path = substr($this->path,0,strrpos($this->path,"/$name")) ;
