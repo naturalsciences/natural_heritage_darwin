@@ -191,7 +191,7 @@ class searchActions extends DarwinActions
   {
     $flds = array('category','collection','taxon','type','gtu','chrono','taxon_common_name', 'chrono_common_name',
               'litho_common_name','lithologic_common_name','mineral_common_name', 'expedition', 'individual_type',
-              'litho','lithologic','mineral','sex','state','stage','social_status','rock_form','specimen_count');
+              'litho','lithologic','mineral','sex','state','stage','social_status','rock_form','specimen_count','object_name');
     $flds = array_fill_keys($flds, 'uncheck');
 
     if($form->isBound())
@@ -277,6 +277,10 @@ class searchActions extends DarwinActions
       'specimen_count' => array(
         'specimen_count_max',
         $this->getI18N()->__('Specimen Count'),),
+
+      'object_name' => array(
+        'object_name',
+        $this->getI18N()->__('Object name'),),
 
       'taxon_common_name' => array(
         false,

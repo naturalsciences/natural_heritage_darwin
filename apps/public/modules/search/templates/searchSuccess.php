@@ -42,12 +42,6 @@
           $("#criteria_butt").click(function(){
             $('#specimen_filter').attr('action','<?php echo url_for('search/search?criteria=1');?>').submit();
           });
-
-          $("ul.column_menu li").click(function(){
-            update_list($(this));
-            hide_or_show($(this));
-          });
-
         });
       </script>
       <div class="check_right" id="save_button"> 

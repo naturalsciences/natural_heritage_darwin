@@ -303,7 +303,7 @@ language plpgsql;
 
 SET SESSION session_replication_role = replica;
 
---select move_refs();
+select move_refs();
 
 SET SESSION session_replication_role = origin;
 
@@ -1059,4 +1059,4 @@ update my_widgets set group_name='multimedia', title_perso='Multimedia', mandato
 
 select 'Do not forget to run : symfony darwin:add-widgets --reset specimen_widget';
 
-rollback;
+commit;

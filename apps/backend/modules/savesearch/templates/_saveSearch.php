@@ -5,14 +5,14 @@ $(document).ready(function () {
 
   $("#save_search").click(function(event){
     event.preventDefault();
-    column_str = ' ';
-    if($('.column_menu li.check').length)
+    column_str = '';
+    if( $('ul.column_menu .col_switcher :checked').length)
     {
-      $('.column_menu  li.check').each(function (index)
-      {
-        if(column_str != '') column_str += '|';
-        column_str += $(this).attr('id').substr(3);
+      column_arr = []
+      $('ul.column_menu .col_switcher :checked').each(function(){
+        column_arr.push($(this).val());
       });
+      column_str = column_arr.join('|');
     }
     else
     {

@@ -43,10 +43,6 @@
       <?php endif;?>
       <script  type="text/javascript">
         $(document).ready(function () {
-          $(".col_switcher").click(function(){
-            update_check_uncheck($(this));
-            hide_or_show($(this));
-          });
 
           $('form#specimen_filter select.double_list_select-selected option').attr('selected', 'selected');
           $('body').duplicatable({
@@ -62,9 +58,8 @@
         <?php if($is_specimen_search):?>
           $('#del_from_spec').click(function(){
             pins_array = new Array();
-            $('.spec_results tbody tr .remove_on').not('.hidden').each(function(){
-              rid = getIdInClasses($(this).closest('tr'));
-              pins_array.push(rid);
+            $('.remove_spec:checked').each(function(){
+              pins_array.push( $(this).val() );
             });
             if(pins_array.length == 0) {
               alert("<?php echo __('You must select at least one specimen.');?>");

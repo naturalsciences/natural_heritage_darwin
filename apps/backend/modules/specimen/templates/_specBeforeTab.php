@@ -84,6 +84,7 @@ $(document).ready(function()
         </a>
       <?php elseif($mode == 'specimen_edit'):?>
           <a class="enabled selected with_actions" id="tab_0"> &lt; <?php echo $specimen_name;?> &gt; </a>
+          <?php include_partial('specimen/itemactions', array('source' => 'specimen','id'=>$specimen_id)); ?>
       <?php endif;?>
     </div>
 <div class="<?php if(isset($view) && $view) echo 'panel_view' ; else echo 'panel edition ' ?> encod_screen" id="intro">

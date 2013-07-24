@@ -210,21 +210,3 @@ img.tree_cmd_td
 {
   cursor:pointer;
 }
-
-.pin_but.check .pin_on,
- .top_pin_but.check .pin_on {
-  display:inline;
-}
-.pin_but.check .pin_off,
- .top_pin_but.check .pin_off {
-  display:none;
-}
-
-.pin_but.uncheck .pin_on,
- .top_pin_but.uncheck .pin_on {
-  display:none;
-}
-.pin_but.uncheck .pin_off,
- .top_pin_but.uncheck .pin_off {
-  display:inline;
-}

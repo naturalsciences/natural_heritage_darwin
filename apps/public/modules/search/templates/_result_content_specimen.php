@@ -174,3 +174,6 @@
     <?php echo $specimen->getSpecimenCountMin();?>
   <?php endif;?>
 </td>
+<td class="col_object_name">
+  <?php echo $specimen->getObjectName();?>
+</td>

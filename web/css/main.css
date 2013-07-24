@@ -2992,3 +2992,69 @@ span.label {
 .qa_table > tbody > tr:nth-child(odd) {background: #E9F2F7}
 .qa_table form  tbody > tr:nth-child(odd) {background: #a9d4db}
 
+
+/*** Custom Labels ***/
+
+.custom-label {
+  display: inline-block;
+  margin-right: .8em;
+  cursor: pointer; 
+}
+.custom-radio,
+.custom-check {
+    vertical-align: middle;
+    display: inline-block;
+    position: relative;
+    top: -.15em; /* Adjust to for best fit */
+    margin: 0 .4em;
+    width: 20px;
+    height: 20px;
+    background: url(/images/customRadioCheck.png) 0 0 no-repeat;
+}
+.custom-radio { background-position: 0 -20px; }
+.custom-check.focus { background-position: -20px 0; }
+.custom-radio.focus { background-position: -20px -20px; }
+.custom-check.checked { background-position: -40px 0; }
+.custom-radio.checked { background-position: -40px -20px; }
+.custom-check.checked.focus { background-position: -60px 0; }
+.custom-radio.checked.focus { background-position: -60px -20px; }
+
+.pin .custom-check,
+.top_pin .custom-check,
+.top_code .custom-check {
+  height: 13px;
+  top:0;
+  background-position: 0 0;
+}
+.pin .custom-check.focus,
+.top_pin .custom-check.focus,
+.top_code .custom-check.focus {
+  background-position: 0 0;
+}
+
+.pin .custom-check.checked  {
+  background-image: url(/images/blue_pin_on.png);
+}
+
+.pin .custom-check {
+  background-image: url(/images/blue_pin_off.png);
+}
+
+.top_pin .custom-check.checked {
+  background-image: url(/images/white_pin_on.png);
+}
+
+.top_pin .custom-check {
+  background-image: url(/images/white_pin_off.png);
+}
+
+.top_code .custom-check.checked, .drawer_column .custom-check.checked{
+  background-image: url(/images/blue_expand_up.png);
+}
+
+.top_code .custom-check, .drawer_column .custom-check {
+  background-image: url(/images/blue_expand.png);
+}
+/*.col_switcher .custom-check.checked {
+  background-image: url(/images/white_pin_on.png);
+}*/
