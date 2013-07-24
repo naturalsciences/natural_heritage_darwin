@@ -16,6 +16,7 @@ class StagingForm extends BaseStagingForm
     if (in_array('identifiers',$array_of_field)) unset($array_of_field[array_search('identifiers', $array_of_field)]);
     if (in_array('people',$array_of_field)) unset($array_of_field[array_search('people', $array_of_field)]);
     if (in_array('operator',$array_of_field)) unset($array_of_field[array_search('operator', $array_of_field)]);
+    if (in_array('relation_institution_ref',$array_of_field)) unset($array_of_field[array_search('relation_institution_ref', $array_of_field)]);
     $this->useFields($array_of_field) ;
     if (in_array('spec_ref',$array_of_field))
     {
@@ -152,7 +153,7 @@ class StagingForm extends BaseStagingForm
 
     /* Gtu Reference */
     if(in_array('gtu_ref',$this->options['fields']) )  
-    { 
+    {
       $this->widgetSchema['gtu_ref'] = new widgetFormButtonRef(array(
          'model' => 'Gtu',
          'link_url' => 'gtu/choose?with_js=1',
@@ -165,15 +166,15 @@ class StagingForm extends BaseStagingForm
       );   
       $this->validatorSchema['gtu_ref'] = new sfValidatorInteger(array('required'=>false));
     }
-    
+
     /* Lithology Reference */
-    if(in_array('institution_ref',$this->options['fields']))    
+    if(in_array('institution_ref',$this->options['fields']))
     {
       $this->widgetSchema['institution_ref'] = new widgetFormButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'institution/choose?name='.$this->getObject()->getInstitutionName(),
          'method' => 'getInstitution',
-         'default_name' => $this->getObject()->getInstitutionName(),       
+         'default_name' => $this->getObject()->getInstitutionName(),
          'box_title' => $this->getI18N()->__('Choose an Institution'),
          'nullable' => true,
          'button_class'=>'',
@@ -182,6 +183,18 @@ class StagingForm extends BaseStagingForm
              )
       );
       $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required'=>false));
+    }
+
+    if(in_array('relation_institution_ref',$this->options['fields']))
+    {
+      $subForm = new sfForm();
+      $this->embedForm('WrongRelation_institution_ref',$subForm);
+      foreach(Doctrine::getTable("StagingRelationShip")->findByRecordId($this->getObject()->getId()) as $key=>$relation)
+      {
+        $form = new stagingRelationShipForm($relation);
+        $this->embeddedForms['WrongRelation_institution_ref']->embedForm($key, $form);
+      } 
+      $this->embedForm('WrongRelation_institution_ref', $this->embeddedForms['WrongRelation_institution_ref']); 
     }
 
     if(in_array('people',$this->options['fields']) )
@@ -193,7 +206,7 @@ class StagingForm extends BaseStagingForm
         $form = new PeopleInErrorForm($people);
         $this->embeddedForms['WrongPeople']->embedForm($key, $form);
       } 
-      $this->embedForm('WrongPeople', $this->embeddedForms['WrongPeople']); 
+      $this->embedForm('WrongPeople', $this->embeddedForms['WrongPeople']);
     }  
 
     if(in_array('identifiers',$this->options['fields']) )
@@ -201,13 +214,13 @@ class StagingForm extends BaseStagingForm
       // $identifications containts all indentification id of this staging id
       $identifications = Doctrine::getTable('identifications')->getStagingIds($this->getObject()->getId()) ;
       $subForm = new sfForm();
-      $this->embedForm('WrongIdentifiers',$subForm);      
+      $this->embedForm('WrongIdentifiers',$subForm);
       foreach(Doctrine::getTable("stagingPeople")->getPeopleInError($identifications,'identification') as $key=>$people)
-      {      
+      {
         $form = new PeopleInErrorForm($people);
-        $this->embeddedForms['WrongIdentifiers']->embedForm($key, $form);      
-      } 
-      $this->embedForm('WrongIdentifiers', $this->embeddedForms['WrongIdentifiers']); 
+        $this->embeddedForms['WrongIdentifiers']->embedForm($key, $form);
+      }
+      $this->embedForm('WrongIdentifiers', $this->embeddedForms['WrongIdentifiers']);
     }
 
     if(in_array('operator',$this->options['fields']) )
@@ -220,7 +233,7 @@ class StagingForm extends BaseStagingForm
         $form = new PeopleInErrorForm($people);
         $this->embeddedForms['WrongOperator']->embedForm($key, $form);
       } 
-      $this->embedForm('WrongOperator', $this->embeddedForms['WrongOperator']); 
+      $this->embedForm('WrongOperator', $this->embeddedForms['WrongOperator']);
     }
   }
   
@@ -230,7 +243,7 @@ class StagingForm extends BaseStagingForm
     $subForm = new sfForm();
     $this->embedForm('WrongPeople',$subForm);
     foreach($people as $key=>$vals)
-    {       
+    {
       $val = new StagingPeople();
       $val->fromArray($vals);
       $form = new PeopleInErrorForm($val);
@@ -271,12 +284,27 @@ class StagingForm extends BaseStagingForm
     //Re-embedding the container
     $this->embedForm('WrongOperator', $this->embeddedForms['WrongOperator']);
   }
-
+  public function loadEmbedWrongRelation_institution_ref($people)
+  {
+    if($this->isBound()) return;
+    $subForm = new sfForm();
+    $this->embedForm('WrongRelation_institution_ref',$subForm);
+    foreach($people as $key=>$vals)
+    {
+      $val = new StagingRelationship();
+      $val->fromArray($vals);
+      $form = new StagingRelationShipForm($val);
+      $this->embeddedForms['WrongRelation_institution_ref']->embedForm($key, $form);
+    }
+    //Re-embedding the container
+    $this->embedForm('WrongRelation_institution_ref', $this->embeddedForms['WrongRelation_institution_ref']);
+  }
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     if(isset($taintedValues['WrongPeople'])) $this->loadEmbedPeople($taintedValues['WrongPeople']); 
     if(isset($taintedValues['WrongIdentifiers'])) $this->loadEmbedIdentifiers($taintedValues['WrongIdentifiers']);
     if(isset($taintedValues['WrongOperator'])) $this->loadEmbedWrongOperator($taintedValues['WrongOperator']);
+    if(isset($taintedValues['WrongRelation_institution_ref'])) $this->loadEmbedWrongRelation_institution_ref($taintedValues['WrongRelation_institution_ref']);
     parent::bind($taintedValues, $taintedFiles); 
   }
 
@@ -305,15 +333,17 @@ class StagingForm extends BaseStagingForm
       foreach($this->embeddedForms['WrongPeople']->getEmbeddedForms() as $name => $form)
       {
         if (isset($value[$name]['people_ref'])) Doctrine::getTable('StagingPeople')->UpdatePeopleRef($value[$name]) ;
+        else  $status['people'] = 'people' ;
         unset($this->embeddedForms['WrongPeople'][$name]);
       }
     }
     if($value = $this->getValue('WrongIdentifiers')) 
     {
-      unset($this['identifiers']) ;     
+      unset($this['identifiers']) ;
       foreach($this->embeddedForms['WrongIdentifiers']->getEmbeddedForms() as $name => $form)
       {
         if (isset($value[$name]['people_ref']))  Doctrine::getTable('StagingPeople')->UpdatePeopleRef($value[$name]) ;
+        else  $status['identifiers'] = 'people' ;
         unset($this->embeddedForms['WrongIdentifiers'][$name]);
       }
     }
@@ -323,7 +353,18 @@ class StagingForm extends BaseStagingForm
       foreach($this->embeddedForms['WrongOperator']->getEmbeddedForms() as $name => $form)
       {
         if (isset($value[$name]['people_ref']))  Doctrine::getTable('StagingPeople')->UpdatePeopleRef($value[$name]) ;
+        else  $status['operator'] = 'people' ;
         unset($this->embeddedForms['WrongOperator'][$name]);
+      }
+    }
+    if($value = $this->getValue('WrongRelation_institution_ref')) 
+    {
+      unset($this['relation_institution_ref']) ;
+      foreach($this->embeddedForms['WrongRelation_institution_ref']->getEmbeddedForms() as $name => $form)
+      {
+        if (isset($value[$name]['institution_ref']))  Doctrine::getTable('StagingRelationship')->UpdateInstitutionRef($value[$name]) ;
+        else  $status['institution_relationship'] = 'relation_institution_ref' ;
+        unset($this->embeddedForms['WrongRelation_institution_ref'][$name]);
       }
     }
     $this->getObject()->setStatus($status) ;

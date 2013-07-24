@@ -15,12 +15,17 @@ abstract class BaseStagingRelationshipFormFilter extends BaseFormFilterDoctrine
     $this->setWidgets(array(
       'record_id'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'referenced_relation' => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'relationship_type'   => new sfWidgetFormFilterInput(),
+      'relationship_type'   => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'staging_related_ref' => new sfWidgetFormFilterInput(),
+      'taxon_ref'           => new sfWidgetFormFilterInput(),
+      'mineral_ref'         => new sfWidgetFormFilterInput(),
       'institution_ref'     => new sfWidgetFormFilterInput(),
       'institution_name'    => new sfWidgetFormFilterInput(),
       'source_name'         => new sfWidgetFormFilterInput(),
       'source_id'           => new sfWidgetFormFilterInput(),
+      'unit_type'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'quantity'            => new sfWidgetFormFilterInput(),
+      'unit'                => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -28,10 +33,15 @@ abstract class BaseStagingRelationshipFormFilter extends BaseFormFilterDoctrine
       'referenced_relation' => new sfValidatorPass(array('required' => false)),
       'relationship_type'   => new sfValidatorPass(array('required' => false)),
       'staging_related_ref' => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'taxon_ref'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'mineral_ref'         => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'institution_ref'     => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'institution_name'    => new sfValidatorPass(array('required' => false)),
       'source_name'         => new sfValidatorPass(array('required' => false)),
       'source_id'           => new sfValidatorPass(array('required' => false)),
+      'unit_type'           => new sfValidatorPass(array('required' => false)),
+      'quantity'            => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
+      'unit'                => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('staging_relationship_filters[%s]');
@@ -56,10 +66,15 @@ abstract class BaseStagingRelationshipFormFilter extends BaseFormFilterDoctrine
       'referenced_relation' => 'Text',
       'relationship_type'   => 'Text',
       'staging_related_ref' => 'Number',
+      'taxon_ref'           => 'Number',
+      'mineral_ref'         => 'Number',
       'institution_ref'     => 'Number',
       'institution_name'    => 'Text',
       'source_name'         => 'Text',
       'source_id'           => 'Text',
+      'unit_type'           => 'Text',
+      'quantity'            => 'Number',
+      'unit'                => 'Text',
     );
   }
 }

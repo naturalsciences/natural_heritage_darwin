@@ -28,7 +28,7 @@
             <li><?php echo __($array['display_error'],array('%field%' => $key)) ; ?></li>
       <?php endif ; ?>
         </ul>
-        <?php if(in_array($array['fields'],array('people','identifiers','operator'))) : ?>
+        <?php if(in_array($array['fields'],array('people','identifiers','operator','relation_institution_ref'))) : ?>
         <table class="encoding collections_rights" id="<?php echo $array['fields'] ; ?>_table">
           <thead>
             <tr>

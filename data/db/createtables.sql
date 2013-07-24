@@ -732,7 +732,7 @@ comment on column users_tracking.modification_date_time is 'Track date and time'
 create table collection_maintenance
        (
         id serial,
-        people_ref integer not null,
+        people_ref integer,
         category varchar not null default 'action',
         action_observation varchar not null,
         description varchar,

@@ -200,8 +200,8 @@ class Staging extends BaseStaging
     {
       if($tosave) 
       {
-        // staging_people status are updated by a trigger, so we don't care about it here
-        if($value!='people') $fieldsToShow[$key] = $value ;
+        // staging_people and institution_relationship status are updated by a trigger, so we don't care about it here
+        if(!in_array($key,array('people','identifiers','operator','institution_relationship'))) $fieldsToShow[$key] = $value ;
       }
       else  $fieldsToShow[$key] = array(
                                     'embedded_field' => $this->getFieldsToUseFor($key).'_'.$value, // to TEST
@@ -235,7 +235,7 @@ class Staging extends BaseStaging
     if($field == 'people') return('people') ;
     if($field == 'identifiers') return('identifiers') ;
     if($field == 'institution') return('institution_ref') ;
-    //if($field == 'institution_relationship') return('institution_relationship') ;
+    if($field == 'institution_relationship') return('relation_institution_ref') ;
     if($field == 'duplicate') return('spec_ref') ;
     if($field == 'operator') return('operator') ;
     return($field) ;
