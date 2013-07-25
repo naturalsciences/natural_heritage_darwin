@@ -36,10 +36,10 @@ class CollectionMaintenanceTable extends DarwinTable
   {
     if(!is_array($ids))
       $ids = array($ids);
-	if(empty($ids)) return array();
+    if(empty($ids)) return array();
     $q = Doctrine_Query::create()->
          from('CollectionMaintenance m')->
-		 innerJoin('m.People')->
+         leftJoin('m.People')->
          where('referenced_relation = ?', $table)->
          andWhereIn('record_id', $ids)->
          orderBy('referenced_relation ASC, record_id ASC, modification_date_time DESC, id ASC');

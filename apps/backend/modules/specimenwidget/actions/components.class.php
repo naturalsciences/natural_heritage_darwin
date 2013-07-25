@@ -257,7 +257,7 @@ class specimenwidgetComponents extends sfComponents
   {
     $this->defineForm();
     if($this->eid){
-      $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimen_parts', array($this->eid));
+      $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimens', array($this->eid));
     }
   }
 }

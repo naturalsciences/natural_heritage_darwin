@@ -495,4 +495,148 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION fct_upd_staging_fields() RETURNS TRIGGER
+AS $$
+BEGIN
+  IF get_setting('darwin.upd_imp_ref') is null OR  get_setting('darwin.upd_imp_ref') = '' THEN
+    PERFORM set_config('darwin.upd_imp_ref', 'ok', true);
+    IF OLD.taxon_ref IS DISTINCT FROM NEW.taxon_ref AND  NEW.taxon_ref is not null THEN
+        SELECT t.id ,t.name, t.level_ref , cl.level_name, t.status, t.extinct
+        INTO NEW.taxon_ref,NEW.taxon_name, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_extinct
+        FROM taxonomy t, catalogue_levels cl 
+        WHERE cl.id=t.level_ref AND t.id = NEW.taxon_ref;
+
+        UPDATE staging set taxon_ref=NEW.taxon_ref, taxon_name = new.taxon_name, taxon_level_ref=new.taxon_level_ref, 
+          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct, taxon_parents = ''::hstore, 
+        status = delete(status,'taxon')
+
+        WHERE 
+          taxon_name  IS NOT DISTINCT FROM  old.taxon_name AND  taxon_level_ref IS NOT DISTINCT FROM old.taxon_level_ref AND 
+          taxon_level_name IS NOT DISTINCT FROM old.taxon_level_name AND  taxon_status IS NOT DISTINCT FROM old.taxon_status 
+          AND  taxon_extinct IS NOT DISTINCT FROM old.taxon_extinct
+          AND import_ref = NEW.import_ref;
+        NEW.status = delete(NEW.status,'taxon');
+    END IF;
+
+    IF OLD.chrono_ref IS DISTINCT FROM NEW.chrono_ref  AND  NEW.chrono_ref is not null THEN
+      SELECT c.id, c.name, c.level_ref, cl.level_name, c.status, c.local_naming, c.color, c.upper_bound, c.lower_bound
+        INTO NEW.chrono_ref, NEW.chrono_name, NEW.chrono_level_ref, NEW.chrono_level_name, NEW.chrono_status, NEW.chrono_local, NEW.chrono_color, NEW.chrono_upper_bound, NEW.chrono_lower_bound
+        FROM chronostratigraphy c, catalogue_levels cl 
+        WHERE cl.id=c.level_ref AND c.id = NEW.chrono_ref ; 
+
+        UPDATE staging set chrono_ref=NEW.chrono_ref, chrono_name = NEW.chrono_name, chrono_level_ref=NEW.chrono_level_ref, chrono_level_name=NEW.chrono_level_name, chrono_status=NEW.chrono_status,
+        chrono_local=NEW.chrono_local, chrono_color=NEW.chrono_color, chrono_upper_bound=NEW.chrono_upper_bound, chrono_lower_bound=NEW.chrono_lower_bound,
+        status = delete(status,'chrono'), chrono_parents = ''::hstore
+
+        WHERE 
+        chrono_name  IS NOT DISTINCT FROM  OLD.chrono_name AND  chrono_level_ref IS NOT DISTINCT FROM OLD.chrono_level_ref AND 
+        chrono_level_name IS NOT DISTINCT FROM OLD.chrono_level_name AND  chrono_status IS NOT DISTINCT FROM OLD.chrono_status AND 
+        chrono_local IS NOT DISTINCT FROM OLD.chrono_local AND  chrono_color IS NOT DISTINCT FROM OLD.chrono_color AND 
+        chrono_upper_bound IS NOT DISTINCT FROM OLD.chrono_upper_bound AND  chrono_lower_bound IS NOT DISTINCT FROM OLD.chrono_lower_bound
+        AND import_ref = NEW.import_ref;
+        NEW.status = delete(NEW.status,'chrono');
+
+    END IF;
+
+    IF OLD.litho_ref IS DISTINCT FROM NEW.litho_ref  AND  NEW.litho_ref is not null  THEN
+      SELECT l.id,l.name, l.level_ref, cl.level_name, l.status, l.local_naming, l.color
+      INTO NEW.litho_ref, NEW.litho_name, NEW.litho_level_ref, NEW.litho_level_name, NEW.litho_status, NEW.litho_local, NEW.litho_color
+      FROM lithostratigraphy l, catalogue_levels cl 
+      WHERE cl.id=l.level_ref AND l.id = NEW.litho_ref ; 
+
+      UPDATE staging set 
+        litho_ref=NEW.litho_ref, litho_name=NEW.litho_name, litho_level_ref=NEW.litho_level_ref, litho_level_name=NEW.litho_level_name,
+        litho_status=NEW.litho_status, litho_local=NEW.litho_local, litho_color=NEW.litho_color,
+        status = delete(status,'litho'), litho_parents = ''::hstore
+
+      WHERE 
+        litho_name IS NOT DISTINCT FROM  OLD.litho_name AND litho_level_ref IS NOT DISTINCT FROM  OLD.litho_level_ref AND 
+        litho_level_name IS NOT DISTINCT FROM  OLD.litho_level_name AND 
+        NEW.litho_status IS NOT DISTINCT FROM  OLD.litho_status AND litho_local IS NOT DISTINCT FROM  OLD.litho_local AND litho_color=NEW.litho_color
+        AND import_ref = NEW.import_ref;
+        NEW.status = delete(NEW.status,'litho');
+
+    END IF;
+
+
+    IF OLD.lithology_ref IS DISTINCT FROM NEW.lithology_ref  AND  NEW.lithology_ref is not null THEN
+      SELECT l.id, l.name, l.level_ref, cl.level_name, l.status, l.local_naming, l.color
+      INTO NEW.lithology_ref, NEW.lithology_name, NEW.lithology_level_ref, NEW.lithology_level_name, NEW.lithology_status, NEW.lithology_local, NEW.lithology_color
+      FROM lithology l, catalogue_levels cl 
+      WHERE cl.id=l.level_ref AND l.id = NEW.lithology_ref ; 
+
+      UPDATE staging set 
+        lithology_ref=NEW.lithology_ref, lithology_name=NEW.lithology_name, lithology_level_ref=NEW.lithology_level_ref,
+        lithology_level_name=NEW.lithology_level_name, lithology_status=NEW.lithology_status, lithology_local=NEW.lithology_local,
+        lithology_color=NEW.lithology_color,
+        status = delete(status,'lithology'), lithology_parents = ''::hstore
+
+      WHERE 
+        lithology_name IS NOT DISTINCT FROM OLD.lithology_name AND  lithology_level_ref IS NOT DISTINCT FROM OLD.lithology_level_ref AND 
+        lithology_level_name IS NOT DISTINCT FROM OLD.lithology_level_name AND  lithology_status IS NOT DISTINCT FROM OLD.lithology_status AND  lithology_local IS NOT DISTINCT FROM OLD.lithology_local AND 
+        lithology_color IS NOT DISTINCT FROM OLD.lithology_color
+        AND import_ref = NEW.import_ref;
+        NEW.status = delete(NEW.status,'lithology');
+
+    END IF;
+
+
+    IF OLD.mineral_ref IS DISTINCT FROM NEW.mineral_ref  AND  NEW.mineral_ref is not null THEN
+      SELECT m.id, m.name, m.level_ref, cl.level_name, m.status, m.local_naming, m.color, m.path
+      INTO NEW.mineral_ref, NEW.mineral_name, NEW.mineral_level_ref, NEW.mineral_level_name, NEW.mineral_status, NEW.mineral_local, NEW.mineral_color, NEW.mineral_path
+      FROM mineralogy m, catalogue_levels cl 
+      WHERE cl.id=m.level_ref AND m.id = NEW.mineral_ref ; 
+
+      UPDATE staging set 
+        mineral_ref=NEW.mineral_ref, mineral_name=NEW.mineral_name, mineral_level_ref=NEW.mineral_level_ref,
+        mineral_level_name=NEW.mineral_level_name, mineral_status=NEW.mineral_status, mineral_local=NEW.mineral_local, 
+        mineral_color=NEW.mineral_color, mineral_path=NEW.mineral_path,
+        status = delete(status,'mineral'), mineral_parents = ''::hstore
+
+      WHERE 
+        mineral_name IS NOT DISTINCT FROM OLD.mineral_name AND  mineral_level_ref IS NOT DISTINCT FROM OLD.mineral_level_ref AND 
+        mineral_level_name IS NOT DISTINCT FROM OLD.mineral_level_name AND  mineral_status IS NOT DISTINCT FROM OLD.mineral_status AND  mineral_local IS NOT DISTINCT FROM OLD.mineral_local AND  
+        mineral_color IS NOT DISTINCT FROM OLD.mineral_color AND  mineral_path IS NOT DISTINCT FROM OLD.mineral_path
+        AND import_ref = NEW.import_ref;
+
+        NEW.status = delete(NEW.status,'mineral');
+
+    END IF;
+
+    IF OLD.expedition_ref IS DISTINCT FROM NEW.expedition_ref  AND  NEW.expedition_ref is not null THEN
+      SELECT id, "name", expedition_from_date, expedition_to_date, expedition_from_date_mask , expedition_to_date_mask
+      INTO NEW.expedition_ref, NEW.expedition_name, NEW.expedition_from_date, NEW.expedition_to_date, NEW.expedition_from_date_mask , NEW.expedition_to_date_mask
+      FROM expeditions
+      WHERE id = NEW.expedition_ref ;
+
+      UPDATE staging set 
+        expedition_ref=NEW.expedition_ref, expedition_name=NEW.expedition_name, expedition_from_date=NEW.expedition_from_date,
+        expedition_to_date=NEW.expedition_to_date, expedition_from_date_mask=NEW.expedition_from_date_mask , expedition_to_date_mask=NEW.expedition_to_date_mask
+      WHERE 
+        expedition_name IS NOT DISTINCT FROM OLD.expedition_name AND  expedition_from_date IS NOT DISTINCT FROM OLD.expedition_from_date AND 
+        expedition_to_date IS NOT DISTINCT FROM OLD.expedition_to_date AND  expedition_from_date_mask IS NOT DISTINCT FROM OLD.expedition_from_date_mask  AND
+        expedition_to_date_mask IS NOT DISTINCT FROM OLD.expedition_to_date_mask
+        AND import_ref = NEW.import_ref;
+
+    END IF; 
+
+    IF OLD.institution_ref IS DISTINCT FROM NEW.institution_ref  AND  NEW.institution_ref is not null THEN
+      SELECT formated_name INTO NEW.institution_name FROM people WHERE id = NEW.institution_ref ;
+
+      UPDATE staging set institution_ref = NEW.institution_ref, institution_name=NEW.institution_name,
+        status = delete(status,'institution')
+        WHERE
+        institution_name IS NOT DISTINCT FROM OLD.institution_name
+        AND import_ref = NEW.import_ref;
+
+        NEW.status = delete(NEW.status,'institution');
+
+    END IF;
+
+    PERFORM set_config('darwin.upd_imp_ref', NULL, true);
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 COMMIT;

@@ -14,11 +14,11 @@
     <?php foreach($maintenances as $maintenance):?>
     <tr>
       <td>
-        <?php echo link_to($maintenance->getCategory(),'parts/editMaintenance?id='.$maintenance->getId(),array('class'=>"link_catalogue",'title'=> __('Edit Maintenance'))); ?>
+        <?php echo link_to($maintenance->getCategory(),'specimen/editMaintenance?id='.$maintenance->getId(),array('class'=>"link_catalogue",'title'=> __('Edit Maintenance'))); ?>
       </td>
       <td><?php echo $maintenance->getActionObservation();?></td>
       <td class="datesNum"><?php echo $maintenance->getModificationDateTimeMasked(ESC_RAW);?></td>
-      <td><?php echo $maintenance->People->getFormatedName();?></td>
+      <td><?php echo ($maintenance->getPeopleRef()?$maintenance->People->getFormatedName():'-');?></td>
       <td><?php echo $maintenance->getDescription();?></td>
       <td class="widget_row_delete">
         <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=collection_maintenance&id='.$maintenance->getId());?>" title="<?php echo __('Are you sure ?') ?>"><?php echo image_tag('remove.png'); ?></a>

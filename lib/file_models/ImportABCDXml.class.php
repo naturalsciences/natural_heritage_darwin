@@ -44,6 +44,8 @@ class ImportABCDXml implements IImportModels
       case "dna:DNASample" : $this->object = new ParsingMaintenance('Dna extraction') ; break ;;
       case "RockPhysicalCharacteristics" :
       case "efg:RockPhysicalCharacteristics" : $this->object = new ParsingTag("lithology") ; break ;;
+      case "LithostratigraphicAttribution" :
+      case "efg:LithostratigraphicAttribution" : $this->object = new ParsingCatalogue('litho') ; break ;;
       case "Gathering" : $this->object = new ParsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break ;;
       case "HigherTaxa" : $this->object->catalogue_parent = new Hstore() ;break ;;
       case "Identification" : $this->object = new ParsingIdentifications() ; break ;;
@@ -69,6 +71,7 @@ class ImportABCDXml implements IImportModels
       case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break ;;
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->temp_data) ; break ;;
+      case "efg:LithostratigraphicAttribution" : $this->staging["litho_parents"] = $this->object->getParent() ; break ;;
       case "Gathering" : $this->object->insertTags($this->staging->getId()) ; if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break ;;
       case "HigherTaxa" : $this->staging["taxon_parents"] = $this->object->getTaxonParent() ;; break ;;
       case "HigherTaxon" : $this->object->handleParent() ;break;;
@@ -82,7 +85,7 @@ class ImportABCDXml implements IImportModels
       case "PersonName" : $this->object->handlePeople($this->people) ; break ;;
       case "Person" : $this->object->handlePeople($this->people,$this->staging,true) ; break ;;
       case "PetrologyDescriptiveText" :
-      case "efg:PetrologyDescriptiveText" : if($this->staging->getLithologyName()) $this->addComment() ; break ;;
+      case "efg:PetrologyDescriptiveText" : if($this->staging->getLithostratigraphyName()) $this->addComment() ; break ;;
       case "ScientificName" : $this->staging["taxon_name"] = $this->object->getTaxonName() ; break ;;
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break ;;
       case "TitleCitation" : $this->addComment(true) ; break ;
@@ -99,6 +102,7 @@ class ImportABCDXml implements IImportModels
     $data = trim($data) ;
     if ($data == "") return ;
     if (in_array($this->getPreviousTag(),array('Bacterial','Zoological','Botanical','Viral'))) $this->object->handleKeyword($this->tag,$data,$this->staging) ;
+    if($this->getPreviousTag() == "efg:LithostratigraphicAttribution") $this->object->handleParent($this->tag, $data) ;
     switch ($this->tag) {
       case "AccessionCatalogue" : $this->object->addAccession($data) ; break ;;
       case "AccessionDate" : if (date('Y-m-d H:i:s', strtotime($data)) == $data) $this->object->InitAccessionVar($data) ; break ;;
@@ -161,7 +165,7 @@ class ImportABCDXml implements IImportModels
       case "RecordURI" : $this->addExternalLink($data) ; break ;;
       case "efg:RockType" :
       // litho_name ? or mineral_name ?
-      case "RockType" : $this->staging->setLithologyName($data) ; break ;;
+      case "RockType" : $this->staging->setLithostrigraphyName($data) ; break ;;
       case "Sex" : $this->staging->setIndividualSex($data) ; break ;;
       case "SortingName" : $this->object->people_order_by = $data ; break ;;
       case "storage:Institution" : $this->staging->setInstitutionName($data) ; break ;;

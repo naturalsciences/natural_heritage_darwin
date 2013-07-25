@@ -3004,7 +3004,7 @@ BEGIN
 
         UPDATE staging set chrono_ref=NEW.chrono_ref, chrono_name = NEW.chrono_name, chrono_level_ref=NEW.chrono_level_ref, chrono_level_name=NEW.chrono_level_name, chrono_status=NEW.chrono_status,
         chrono_local=NEW.chrono_local, chrono_color=NEW.chrono_color, chrono_upper_bound=NEW.chrono_upper_bound, chrono_lower_bound=NEW.chrono_lower_bound,
-        status = delete(status,'chrono'), chrono_parent = ''::hstore
+        status = delete(status,'chrono'), chrono_parents = ''::hstore
 
         WHERE 
         chrono_name  IS NOT DISTINCT FROM  OLD.chrono_name AND  chrono_level_ref IS NOT DISTINCT FROM OLD.chrono_level_ref AND 
@@ -3025,7 +3025,7 @@ BEGIN
       UPDATE staging set 
         litho_ref=NEW.litho_ref, litho_name=NEW.litho_name, litho_level_ref=NEW.litho_level_ref, litho_level_name=NEW.litho_level_name,
         litho_status=NEW.litho_status, litho_local=NEW.litho_local, litho_color=NEW.litho_color,
-        status = delete(status,'litho'), litho_parent = ''::hstore
+        status = delete(status,'litho'), litho_parents = ''::hstore
 
       WHERE 
         litho_name IS NOT DISTINCT FROM  OLD.litho_name AND litho_level_ref IS NOT DISTINCT FROM  OLD.litho_level_ref AND 
@@ -3047,7 +3047,7 @@ BEGIN
         lithology_ref=NEW.lithology_ref, lithology_name=NEW.lithology_name, lithology_level_ref=NEW.lithology_level_ref,
         lithology_level_name=NEW.lithology_level_name, lithology_status=NEW.lithology_status, lithology_local=NEW.lithology_local,
         lithology_color=NEW.lithology_color,
-        status = delete(status,'lithology'), lithology_parent = ''::hstore
+        status = delete(status,'lithology'), lithology_parents = ''::hstore
 
       WHERE 
         lithology_name IS NOT DISTINCT FROM OLD.lithology_name AND  lithology_level_ref IS NOT DISTINCT FROM OLD.lithology_level_ref AND 
@@ -3069,7 +3069,7 @@ BEGIN
         mineral_ref=NEW.mineral_ref, mineral_name=NEW.mineral_name, mineral_level_ref=NEW.mineral_level_ref,
         mineral_level_name=NEW.mineral_level_name, mineral_status=NEW.mineral_status, mineral_local=NEW.mineral_local, 
         mineral_color=NEW.mineral_color, mineral_path=NEW.mineral_path,
-        status = delete(status,'mineral'), mineral_parent = ''::hstore
+        status = delete(status,'mineral'), mineral_parents = ''::hstore
 
       WHERE 
         mineral_name IS NOT DISTINCT FROM OLD.mineral_name AND  mineral_level_ref IS NOT DISTINCT FROM OLD.mineral_level_ref AND 
