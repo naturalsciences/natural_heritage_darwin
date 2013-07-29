@@ -50,3 +50,11 @@
   </table>
   <?php endif;?>
 </div>
+<script type="text/javascript">
+$(document).ready(function () {
+  //Init columns visibilty
+  $('ul.column_menu .col_switcher :not(:checked)').each(function(){
+    $('.col_' + $(this).val()).hide();
+  });
+});
+</script>

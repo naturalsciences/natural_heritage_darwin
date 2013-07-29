@@ -216,6 +216,14 @@ function postToUrl(url, params, newWindow)
     form.remove();
 }
 
+function getSearchColumnVisibilty() {
+  column_arr = []
+  $('ul.column_menu .col_switcher :checked').each(function(){
+    column_arr.push($(this).val());
+  });
+  column_str = column_arr.join('|');
+  return column_str;
+}
 
 //http://www.1stwebmagazine.com/jquery-checkbox-and-radio-button-styling
 ;(function(){

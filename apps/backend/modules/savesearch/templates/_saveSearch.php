@@ -6,16 +6,9 @@ $(document).ready(function () {
   $("#save_search").click(function(event){
     event.preventDefault();
     column_str = '';
-    if( $('ul.column_menu .col_switcher :checked').length)
-    {
-      column_arr = []
-      $('ul.column_menu .col_switcher :checked').each(function(){
-        column_arr.push($(this).val());
-      });
-      column_str = column_arr.join('|');
-    }
-    else
-    {
+    if( $('ul.column_menu .col_switcher :checked').length) {
+      column_str = getSearchColumnVisibilty();
+    } else {
       column_str = $('#specimen_search_filters_col_fields').val();
     }
     var last_position = $('body').scrollTop() ;
@@ -38,10 +31,9 @@ $(document).ready(function () {
         at: 'top center',
         adjust:{
           y: 250 // option set in case of the qtip become too big
-        },         
+        },
         target: $(document.body),
       },
-        
         show: {
           ready: true,
           delay: 0,
