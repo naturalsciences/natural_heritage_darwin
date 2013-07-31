@@ -97,8 +97,13 @@ $(document).ready(function () {
   //Init resize of screen
   $(window).resize(check_screen_size);
 
+  //Init columns visibilty
+  $('ul.column_menu .col_switcher :not(:checked)').each(function(){
+    $('.col_' + $(this).val()).hide();
+  });
+
   //Init custom checkbox
-  $('input[type=checkbox], input[type=radio]').customRadioCheck();
+  $('input[type=checkbox], input[type=radio]').not('label.custom-label input').customRadioCheck();
   
   // Init Top pin state
   if($('.pin :checked').length == $('.pin :checkbox').length) {

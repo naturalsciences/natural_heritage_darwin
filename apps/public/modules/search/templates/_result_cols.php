@@ -1,44 +1,22 @@
 <script type="text/javascript">
 
 $(document).ready(function () {
-  /*$('#fld_spec legend').click(function()
-  
-   /* if( $(this).parent().attr('class') == 'closed')
-    {
-      $(this).parent().attr('class','opened') ;
-      $(this).parent().find('table').show();
-      $(this).find('.collapsed').show();
-      $(this).find('.expanded').hide();
-    }
-    else
-    {
-      $(this).parent().attr('class','closed') ;
-      $(this).parent().find('table').hide();
-      $(this).find('.collapsed').hide();
-      $(this).find('.expanded').show();
-    }
-  });
-  $('#fld_spec').attr('class','closed') ;
-  $('#fld_spec').find('table').hide();
-  $('#fld_spec').find('.collapsed').hide();
-  $('#fld_spec').find('.expanded').show();
-*/
-    
+
   //Init custom checkbox
-  $('input[type=checkbox], input[type=radio]').customRadioCheck();
+  $('input[type=checkbox], input[type=radio]').not('label.custom-label input').customRadioCheck();
 
+  // Init
+  $('#specimen_search_filters_col_fields').val(getSearchColumnVisibilty());
   
-  /**** init COL MANAGEMENT ***/
-  $('ul.column_menu .col_switcher :not(:checked)').each(function(){
-    $('.col_' + $(this).val()).hide();
-  });
-
   $(".col_switcher :checkbox").change(function(){
     el = $('.col_' + $(this).val());
     if($(this).is(':checked'))
       el.show();
     else
       el.hide();
+      
+    //Update visible column list
+    $('#specimen_search_filters_col_fields').val(getSearchColumnVisibilty());
   });
 
   $('.drawer_column :checkbox').change(function(){

@@ -35,12 +35,9 @@ $(document).ready(function () {
 </div>
 
 <script type="text/javascript">
+
 $(document).ready(function () {
 
-  /**** init COL MANAGEMENT ***/
-  $('ul.column_menu .col_switcher :not(:checked)').each(function(){
-    $('.col_' + $(this).val()).hide();
-  });
 
   $(".col_switcher :checkbox").change(function(){
     el = $('.col_' + $(this).val());
@@ -48,6 +45,10 @@ $(document).ready(function () {
       el.show();
     else
       el.hide();
+
+    //Update visible column list
+    $('#specimen_search_filters_col_fields').val(getSearchColumnVisibilty());
   });
+  
 });
 </script>
