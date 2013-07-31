@@ -36,7 +36,7 @@ SELECT is( 1 , (SELECT count(*)::int from comments),'Comment was deleted  on mul
 
 
 insert into imports (id, user_ref, format, filename, collection_ref) VALUES (1,1,'brol','brol.xml',2);
-insert into staging (id,import_ref, taxon_name) VALUES (5555,'specimens','Falco coco');
+insert into staging (id,import_ref, taxon_name) VALUES (5555,1,'Falco coco');
 INSERT INTO comments (referenced_relation, record_id, notion_concerned, comment)
         (SELECT 'staging',5555,'name','Roooh c''est TOF ça' );
 SELECT is( 2 , (SELECT count(*)::int from comments),'Comment was added  on staging');

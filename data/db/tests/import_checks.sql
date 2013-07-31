@@ -6,12 +6,12 @@ select diag('Test of staging check without levels');
 update people set name_formated_indexed = fulltoindex(coalesce(given_name,'') || coalesce(family_name,''));
 
 insert into imports (id, user_ref, format, filename, collection_ref) VALUES (1,1,'brol','brol.xml',2);
-insert into staging (id,import_ref,taxon_name) VALUES (12,'specimens','');
+insert into staging (id,import_ref,taxon_name) VALUES (12,1,'');
 
 select is(true , (select fct_imp_checker_manager(s.*) from staging s));
 select is(null , (select taxon_ref from staging s where id = 12));
 
-insert into staging (id,import_ref,taxon_name) VALUES (1,'specimens','Falco Peregrinus');
+insert into staging (id,import_ref,taxon_name) VALUES (1,1,'Falco Peregrinus');
 INSERT INTO taxonomy (id, name, level_ref) VALUES (10, 'Falco Coco lus (Brolus 1972)', 1);
 INSERT INTO taxonomy (id, name, level_ref,parent_ref) VALUES (20, 'Falco',2,10);
 INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (30, 'Falco Peregrinus', 3,20);
@@ -19,13 +19,13 @@ INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (30, 'Falco Peregr
 select is(1 , (select min(fct_imp_checker_manager(s.*)::int) from staging s ));
 select is(30 , (select taxon_ref from staging s where id = 1));
 
-insert into staging (id,import_ref,taxon_name) VALUES (2,'specimens','Falco Brolus');
+insert into staging (id,import_ref,taxon_name) VALUES (2,1,'Falco Brolus');
 
 select is(1 ,(select min(fct_imp_checker_manager(s.*)::int) from staging s));
 select is(null, (select  taxon_ref from staging s where id = 2));
 select is('taxon=>not_found', (select  status from staging s where id = 2));
 
-insert into staging (id,import_ref,taxon_name) VALUES (3,'specimens','Falco coco');
+insert into staging (id,import_ref,taxon_name) VALUES (3,1,'Falco coco');
 
 select is(1 , (select min(fct_imp_checker_manager(s.*)::int) from staging s));
 select is(10, (select taxon_ref from staging s where id = 3));
