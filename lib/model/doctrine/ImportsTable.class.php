@@ -62,4 +62,14 @@ class ImportsTable extends Doctrine_Table
 
     return $q->execute();
   }
+  
+  public function updateStatus($id)
+  {
+    $q = Doctrine_Query::create() 
+      ->update('Imports i')
+      ->set('state', '?','pending')
+      ->update('Imports i')
+      ->andwhere('id = ? ',$id)
+      ->execute() ;
+  }
 }

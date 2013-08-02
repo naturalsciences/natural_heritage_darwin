@@ -11,10 +11,15 @@
     </ul>
     <div class="warn_message">
     <?php echo __('<strong>Warning!</strong><br /> These errors cannot be corrected, the best way to remove it is to delete your import,
-    correct your XML file and import it again. You can also continue your import but you won\'t have information above.');?>
+    correct your XML file and import it again. You can also continue your import but you won\'t have information above. What do you want to do ?');?>
     </div>
+    <p>
+      <a href="<?php echo url_for('import/maj?id='.$id) ?>" class="bt_close"><?php echo __('Continue import');?></a>
+      <a href="<?php echo url_for('import/clear?id='.$id) ?>" class="bt_close"><?php echo __('Delete import');?></a>
+    </p>
+
     <hr />
-    <p>  
+    <p>
       <a href="<?php echo url_for('import/index') ?>" class="bt_close"><?php echo __('Back');?></a>
     </p>
 

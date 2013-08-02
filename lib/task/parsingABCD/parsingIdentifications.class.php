@@ -10,8 +10,8 @@ class ParsingIdentifications
             'subclassis' => 'subclassis','superordo' => 'super_order','ordo' => 'order', 'subordo' => 'sub_order',
             'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe');
   private $rock_level = array(
-    'lithology' => array('unit_main_group'=>'unit_main_group', 'unit_main_class'=>'unit_main_class','type'=>'unit_category',
-                  'subtype'=> 'unit_class','unit_clan'=>'unit_clan','unit_group'=>'unit_group','unit_sub_group'=>'unit_sub_group',
+    'lithology' => array('Rock_maingroup'=>'unit_main_group', 'Rock_mainclass'=>'unit_main_class','Rock_category'=>'unit_category',
+                  'Rock_class'=> 'unit_class','Rock_clan'=>'unit_clan','Rock_group'=>'unit_group','Rock_subgroup'=>'unit_sub_group',
                   'FullScientificNameString'=>'unit_rock'),
     'mineralogy' => array('class'=>'class', 'subclass'=>'sub_class','series'=>'series','variety'=>'variety'),
   );
@@ -28,6 +28,7 @@ class ParsingIdentifications
   public function setNotion($data)
   {
     if(substr($data,0,7) == 'mineral') $this->notion = 'mineralogy' ;
+    elseif(substr($data,0,4) == 'rock') $this->notion = 'lithology' ;
     else $this->notion = $data ;
   }
   public function handleRockParent()
@@ -73,7 +74,7 @@ class ParsingIdentifications
     if($this->notion == 'lithology')
     {
       $staging['lithology_parents'] = $this->catalogue_parent->export() ;
-       $staging->setLithologyName($this->fullname) ;
+      $staging->setLithologyName($this->fullname) ;
     }
     if($this->notion == 'mineralogy') 
     {
@@ -88,6 +89,7 @@ class ParsingIdentifications
     {
       foreach($this->temp_array as $level=>$name)
       { 
+        if(!$name) continue ;
         if(in_array($level,array_keys($this->rock_level[$this->notion])))
           $this->catalogue_parent[$this->rock_level[$this->notion][$level]] = $name ;
       }

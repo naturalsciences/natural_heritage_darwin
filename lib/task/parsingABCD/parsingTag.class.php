@@ -2,7 +2,7 @@
 
 class ParsingTag extends ImportABCDXml
 {
-  public $GTUDate = array('from'=>null,'to'=>null,'time'=>null),  $tags = array(), $staging_info=null, $tag_group_name, $tag_value,
+  public $GTUDate = array('from'=>null,'to'=>null,'time'=>null),  $staging_info=null, $tag_group_name, $tag_value,
       $people_order_by=null, $accession, $accession_num, $accession_date ;
   private $array_object = array() ;
 
@@ -24,12 +24,14 @@ class ParsingTag extends ImportABCDXml
   //return ISODateTimeBegin tag value, if not return DateTime tag value, null otherwise
   public function getFromDate()
   {
+    $this->GTUDate['time'] = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
     return ($this->GTUDate['from'] ? $this->GTUDate['from'] : $this->GTUDate['time']) ;
   }
 
   //return ISODateTimeEnd tag value, if not return DateTime tag value, null otherwise
   public function getToDate()
   {
+    $this->GTUDate['time'] = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
     return ($this->GTUDate['to'] ? $this->GTUDate['to'] : $this->GTUDate['time']) ;
   }
 
@@ -37,7 +39,7 @@ class ParsingTag extends ImportABCDXml
   {
     $tag_group = new stagingTagGroups() ;
     //@TODO find a better way to manage all known tags
-    if(in_array(strtolower($this->tag_group_name),array("continent", "country", "province", "region", "municipality")))
+    if(in_array(strtolower($this->tag_group_name),array("continent", "country", "province", "region", "municipality","province/region")))
     {
       $tag_group->setGroupName("administrative area") ;
       $tag_group->setSubGroupName($this->tag_group_name) ;
@@ -48,7 +50,7 @@ class ParsingTag extends ImportABCDXml
       $tag_group->setSubGroupName($this->tag_group_name) ;
     }
     $tag_group->setTagValue($this->tag_value) ;
-    $tags[] = $tag_group ;
+    return $tag_group ;
   }
   public function addStagingInfo($object, $id)
   {
@@ -119,14 +121,5 @@ class ParsingTag extends ImportABCDXml
       $this->people_order_by = null ;
     }
     $staging->addRelated($people) ;
-  }
-
-  public function insertTags()
-  {
-    foreach($this->tags as $tag)
-    {
-      $tag->setStagingRef($this->record_id) ;
-      $tag->save() ;
-    }
   }
 }

@@ -377,9 +377,9 @@ class FuzzyDateTime extends DateTime
    * @return string    Date/Time formated
    *
    */ 
-  public function getDateTime($withTime=null, $dateFormat = null, $timeFormat=null)                                                
-  {                                                                                                                                
-    $withTime = (is_null($withTime)) ? $this->getWithTime() : $withTime;                                                               
+  public function getDateTime($withTime=null, $dateFormat = null, $timeFormat=null)
+  {
+    $withTime = (is_null($withTime)) ? $this->getWithTime() : $withTime;
     $dateFormat = (is_null($dateFormat)) ? $this->getDateFormat() : $dateFormat;
     $timeFormat = (is_null($timeFormat)) ? $this->getTimeFormat() : $timeFormat;
     return $this->format($dateFormat.(($withTime) ? ' '.$timeFormat : ''));
@@ -484,6 +484,40 @@ class FuzzyDateTime extends DateTime
   public function __ToString()
   {
     return $this->getDateTime($this->getWithTime(), $this->getDateFormat(), $this->getTimeFormat());
+  }
+  
+  
+ /**
+   * Returns a valid date from a string 
+   * 
+   * This function is used in import 
+   *
+   * @return date('Y-m-d')
+   *
+   */ 
+  public static function getValidDate($date)
+  {
+    if(DateTime::createFromFormat('d/m/Y H:i', $date)) return($date) ;
+    if(DateTime::createFromFormat('d/m/y H:i', $date)) return($date) ;
+    if(DateTime::createFromFormat('d-m-Y H:i', $date)) return($date) ;
+    if(DateTime::createFromFormat('d-m-y H:i', $date)) return($date) ;
+    if(DateTime::createFromFormat('d/m/Y', $date)) return($date) ;
+    if(DateTime::createFromFormat('d/m/y', $date)) return($date) ;
+    if(DateTime::createFromFormat('d-m-Y', $date)) return($date) ;
+    if(DateTime::createFromFormat('d-m-y', $date)) return($date) ;
+    if(DateTime::createFromFormat('m/Y', $date) || DateTime::createFromFormat('m/y', $date))
+    {
+      $ladate = explode('/',$date);
+      return date('Y-m-d',mktime(0,0,0,$ladate[0],1,$ladate[1]));
+    }
+    if(DateTime::createFromFormat('m-y', $date) || DateTime::createFromFormat('m-Y', $date))
+    {
+      $ladate = explode('-',$date) ;
+      return date('Y-m-d',mktime(0,0,0,$ladate[0],1,$ladate[1]));
+    }
+    if(DateTime::createFromFormat('y', $date) || DateTime::createFromFormat('Y', $date))
+      return date('Y-m-d',mktime(0,0,0,1,1,$date));
+    return null ;
   }
   
 }
