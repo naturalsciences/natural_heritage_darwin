@@ -3058,3 +3058,8 @@ span.label {
 /*.col_switcher .custom-check.checked {
   background-image: url(/images/white_pin_on.png);
 }*/
+
+.float_left
+{
+  float: left !important;
+}

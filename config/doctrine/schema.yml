@@ -1035,6 +1035,7 @@ Staging:
         mineral_local: { type: boolean}
         mineral_color: { type: string}
         mineral_parents: { type: string}
+        mineral_classification: { type: string}
         ig_ref: { type: integer}
         ig_num: { type: string}
         ig_date_mask: { type: integer }

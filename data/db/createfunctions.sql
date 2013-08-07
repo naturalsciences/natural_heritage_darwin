@@ -2797,7 +2797,7 @@ BEGIN
   /**********
   * Institution
   **********/
-  IF line.institution_name IS NOT NULL and line.institution_name  != '' AND line.institution_ref is null AND ident_line.institution_name  != 'Not defined' THEN
+  IF line.institution_name IS NOT NULL and line.institution_name  != '' AND line.institution_ref is null THEN
     SELECT fct_look_for_institution(line.institution_name) into ref_record ;
   CASE ref_record
   WHEN -1 THEN 
@@ -2864,7 +2864,7 @@ BEGIN
     INSERT INTO specimens (id, category, collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref,
         acquisition_category, acquisition_date_mask, acquisition_date, station_visible, ig_ref, type, sex, stage, state, social_status, rock_form,
         specimen_part, complete, institution_ref, building, floor, room, row, shelf, container, sub_container,container_type, sub_container_type,
-        container_storage, sub_container_storage, surnumerary, specimen_status, specimen_count_min, specimen_count_max)
+        container_storage, sub_container_storage, surnumerary, specimen_status, specimen_count_min, specimen_count_max, object_name)
     VALUES (rec_id, COALESCE(line.category,'physical') , all_line.collection_ref, line.expedition_ref, line.gtu_ref, line.taxon_ref, line.litho_ref, line.chrono_ref,
       line.lithology_ref, line.mineral_ref, COALESCE(line.acquisition_category,''), COALESCE(line.acquisition_date_mask,0), COALESCE(line.acquisition_date,'01/01/0001'),
       COALESCE(line.station_visible,true),  line.ig_ref, COALESCE(line.individual_type,'specimen'), COALESCE(line.individual_sex,'undefined'),
@@ -2872,7 +2872,7 @@ BEGIN
       COALESCE(line.individual_rock_form,'not applicable'), COALESCE(line.part,'specimen'), COALESCE(line.complete,true), line.institution_ref, line.building,
       line.floor, line.room, line.row, line.shelf, line.container, line.sub_container,COALESCE(line.container_type,'container'), 
       COALESCE(line.sub_container_type, 'container'), COALESCE(line.container_storage,'dry'),COALESCE(line.sub_container_storage,'dry'),
-      COALESCE(line.surnumerary,false), COALESCE(line.specimen_status,'good state'),COALESCE(line.part_count_min,1), COALESCE(line.part_count_max,2)
+      COALESCE(line.surnumerary,false), COALESCE(line.specimen_status,'good state'),COALESCE(line.part_count_min,1), COALESCE(line.part_count_max,2), line.object_name
     );
     FOR maintenance_line IN SELECT * from collection_maintenance where referenced_relation = 'staging' AND record_id=line.id
     LOOP

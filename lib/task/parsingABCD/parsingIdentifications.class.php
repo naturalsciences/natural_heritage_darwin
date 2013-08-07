@@ -2,23 +2,38 @@
 
 class ParsingIdentifications
 {
-  private $known_keywords = array("GenusOrMonomial","SpeciesEpithet","SubspeciesEpithet","Subgenus","AuthorTeamAndYear","SubgenusAuthorAndYear",
-                      "AuthorTeam","AuthorTeamParenthesis","CultivarGroupName","CultivarName","FirstEpithet","InfraspecificEpithet","AuthorTeamOriginalAndYear",
-                      "AuthorTeamParenthesisAndYear","Breed","CombinationAuthorTeamAndYear","NamedIndividual") ;
+  private $known_keywords = array("GenusOrMonomial"=>"genus",
+                                  "SpeciesEpithet"=>"species",
+                                  "SubspeciesEpithet"=>"sub_species",
+                                  "Subgenus"=> "sub_genus",
+                                  "AuthorTeamAndYear"=> "",
+                                  "SubgenusAuthorAndYear" => "",
+                                  "AuthorTeam"=> "",
+                                  "AuthorTeamParenthesis" => "",
+                                  "CultivarGroupName" => "",
+                                  "CultivarName" => "",
+                                  "FirstEpithet" => "",
+                                  "InfraspecificEpithet"=>"",
+                                  "AuthorTeamOriginalAndYear"=>"",
+                                  "AuthorTeamParenthesisAndYear"=>"",
+                                  "Breed"=>"",
+                                  "CombinationAuthorTeamAndYear"=>"",
+                                  "NamedIndividual"=>""
+                                  ) ;
   private $array_level = array('regnum' => 'domain','subregnum'  => 'kingdom', 'superphylum' => 'super_phylum','genusgroup' => 'genus',
             'phylum' => 'phylum','subphylum' => 'sub_phylum','superclassis' => 'super_class','classis' => 'class',
             'subclassis' => 'subclassis','superordo' => 'super_order','ordo' => 'order', 'subordo' => 'sub_order',
             'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe');
   private $rock_level = array(
-    'lithology' => array('Rock_maingroup'=>'unit_main_group', 'Rock_mainclass'=>'unit_main_class','Rock_category'=>'unit_category',
-                  'Rock_class'=> 'unit_class','Rock_clan'=>'unit_clan','Rock_group'=>'unit_group','Rock_subgroup'=>'unit_sub_group',
-                  'FullScientificNameString'=>'unit_rock'),
-    'mineralogy' => array('class'=>'class', 'subclass'=>'sub_class','series'=>'series','variety'=>'variety'),
+    'lithology' => array('rock_maingroup'=>'unit_main_group', 'rock_mainclass'=>'unit_main_class','rock_category'=>'unit_category',
+                  'rock_class'=> 'unit_class','rock_clan'=>'unit_clan','rock_group'=>'unit_group','rock_subgroup'=>'unit_sub_group',
+                  'fullScientificnamestring'=>'unit_rock'),
+    'mineralogy' => array('class'=>'unit_class', 'subclass'=>'unit_sub_class','group' => 'unit_group', 'series'=>'unit_series','variety'=>'unit_variety'),
   );
   public $peoples = array(); // an array of Doctrine People class
   public $keyword; // an array of doctrine Keywords class
   public $type_identified, $catalogue_parent, $fullname='', $determination_status=null, $higher_name,$higher_level,$level_name;
-  public $scientificName = "",$people_order_by=null, $notion='taxonomy', $temp_array=array(), $classification='strunz';
+  public $scientificName = "",$people_order_by=null, $notion='taxonomy', $temp_array=array(), $classification=null;
 
   public function __construct()
   {
@@ -33,16 +48,17 @@ class ParsingIdentifications
   }
   public function handleRockParent()
   {
-    if(strpos($this->higher_level,'Dana')) 
+    if(strpos($this->higher_level,'dana')) 
     {
       $this->classification = 'dana' ;
-      $this->higher_level = strtolower(substr($this->higher_level,0,strpos($this->higher_level,' - ')));
+      $this->higher_level = substr($this->higher_level,0,strpos($this->higher_level,' - '));
     }
-    if (strpos($this->higher_level,'Strunz'))
+    if (strpos($this->higher_level,'strunz'))
     {
       $this->classification = 'strunz' ;
-      $this->higher_level = strtolower(substr($this->higher_level,0,strpos($this->higher_level,' - ')));
+      $this->higher_level = substr($this->higher_level,0,strpos($this->higher_level,' - '));
     }
+    $this->notion = 'mineralogy' ;
     $this->temp_array[$this->higher_level] = $this->higher_name ;
   }
 
@@ -59,13 +75,6 @@ class ParsingIdentifications
     return $this->fullname ;
   }
 
-  /*public function setRockName($staging)
-  {
-    if($this->notion == 'lithology') $staging->setLithologyName($this->fullname) ;
-    if($this->notion == 'mineralogy') $staging->setMineralName($this->fullname) ;
-  }*/
-
-
   // return the Hstore parent
   public function getCatalogueParent($staging)
   {
@@ -80,6 +89,9 @@ class ParsingIdentifications
     {
       $staging['mineral_parents'] = $this->catalogue_parent->export() ;
       $staging->setMineralName($this->fullname) ;
+      $staging->setMineralClassification($this->classification) ;
+      // il me semble que seul des variety sont inséré en lihology, sinon faut virer ci-dessous
+      $staging->setMineralLevelName('unit_variety') ;
     }
   }
 
@@ -109,7 +121,8 @@ class ParsingIdentifications
   public function handleKeyword($tag,$value,$staging)
   {
     // not sure if it's usefull or not, if not, simply delete the line below and $this->keyword array
-    if (!in_array($tag,$this->known_keywords)) return ;
+    if (!in_array($tag,array_keys($this->known_keywords))) return ;
+    $this->level_name = $this->known_keywords[$tag] ;
     $keyword = new ClassificationKeywords();
     $keyword->fromArray(array('keyword_type'=> $tag, 'keyword'=> $value));
     $this->scientificName .= "$value " ;

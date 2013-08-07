@@ -67,6 +67,7 @@
  * @property boolean $mineral_local
  * @property string $mineral_color
  * @property string $mineral_parents
+ * @property string $mineral_classification
  * @property integer $ig_ref
  * @property string $ig_num
  * @property integer $ig_date_mask
@@ -172,6 +173,7 @@
  * @method boolean             getMineralLocal()              Returns the current record's "mineral_local" value
  * @method string              getMineralColor()              Returns the current record's "mineral_color" value
  * @method string              getMineralParents()            Returns the current record's "mineral_parents" value
+ * @method string              getMineralClassification()     Returns the current record's "mineral_classification" value
  * @method integer             getIgRef()                     Returns the current record's "ig_ref" value
  * @method string              getIgNum()                     Returns the current record's "ig_num" value
  * @method integer             getIgDateMask()                Returns the current record's "ig_date_mask" value
@@ -276,6 +278,7 @@
  * @method Staging             setMineralLocal()              Sets the current record's "mineral_local" value
  * @method Staging             setMineralColor()              Sets the current record's "mineral_color" value
  * @method Staging             setMineralParents()            Sets the current record's "mineral_parents" value
+ * @method Staging             setMineralClassification()     Sets the current record's "mineral_classification" value
  * @method Staging             setIgRef()                     Sets the current record's "ig_ref" value
  * @method Staging             setIgNum()                     Sets the current record's "ig_num" value
  * @method Staging             setIgDateMask()                Sets the current record's "ig_date_mask" value
@@ -521,6 +524,9 @@ abstract class BaseStaging extends DarwinModel
              'type' => 'string',
              ));
         $this->hasColumn('mineral_parents', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('mineral_classification', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('ig_ref', 'integer', null, array(

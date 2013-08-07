@@ -77,7 +77,7 @@ class ImportABCDXml implements IImportModels
       case "AccessionNumber" :  $this->object->accession_num = $this->data ; $this->object->HandleAccession($this->staging,$this->object_to_save) ; break ;;
       case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$this->data:$this->property->accuracy=$this->data ; break ;;
       case "AcquisitionDate" : $this->staging['acquisition_date'] = FuzzyDateTime::getValidDate($this->data) ; break ;;
-      case "AcquisitionType" : $this->staging['acquisition_category'] = $this->data ; break ;;
+      case "AcquisitionType" : $this->staging['acquisition_category'] = $this->data=='gift'?'donation':$this->data ; break ;;
       case "AreaClass" : $this->object->tag_group_name = $this->data ; break ;;
       case "AreaName" : $this->object->tag_value = $this->data ; break ;;
       case "AssociatedUnitID" : if(in_array($this->data, array_keys($this->unit_id_ref))) $this->object->setStagingRelatedRef($this->unit_id_ref[$this->data]); else $this->object->setSourceId($this->data) ; break ;;
@@ -133,6 +133,7 @@ class ImportABCDXml implements IImportModels
       case "efg:Petrology" :
       case "MeasurementsOrFacts" : if($this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break ;;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break ;;
+      case "MeasurementOrFactText" : $this->addComment() ; break ;;
       case "MineralColour" : $this->staging->setMineralColour($this->data) ; break ;;
       case "efg:MineralRockClassification" : $this->object->higher_level = $this->data ;break;;
       case "efg:MineralRockGroup" : $this->object->handleRockParent() ; break ;;
@@ -146,16 +147,18 @@ class ImportABCDXml implements IImportModels
       case "Parameter" : $this->property->property->setPropertySubType($this->data);break ;;
       case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->object->handlePeople($this->people) ; break ;;
       case "Person" : $this->object->handlePeople($this->people,$this->staging,true) ; break ;;
+      case "efg:MineralDescriptionText" :
       case "PetrologyDescriptiveText" :
       case "efg:PetrologyDescriptiveText" : $this->addComment() ; break ;;
       case "PhaseOrStage" : $this->staging->setIndividualStage($this->data) ; break ;; 
       case "Prefix" : $this->people['title'] = $this->data ; break ;;
       case "PreparationMaterials" : $this->staging['container_storage'] = $this->data ; break ;;
       case "ProjectTitle" : $this->staging['expedition_name'] = $this->data ; break ;;
-      case "RecordURI" : $this->addExternalLink($this->data) ; break ;;
+      case "RecordURI" : $this->addExternalLink() ; break ;;
       //case "efg:RockType" :
       //case "RockType" : $this->staging->setLithologyName($this->data) ; break ;;
-      case "ScientificName" : $this->staging["taxon_name"] = $this->object->getCatalogueName() ; break ;;
+      case "ScientificName" : $this->staging["taxon_name"] = $this->object->getCatalogueName() ; 
+                              $this->staging["taxon_level_name"] = $this->object->level_name ;break ;;
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break ;;
       case "Sex" : $this->staging->setIndividualSex($this->data) ; break ;;
       case "SortingName" : $this->object->people_order_by = $this->data ; break ;;
@@ -166,7 +169,7 @@ class ImportABCDXml implements IImportModels
       case "storage:Row" : $this->staging->setRow($this->data) ; break ;;
       case "storage:Shelf" : $this->staging->setShelf($this->data) ; break ;;
       case "storage:Box" : $this->staging->setContainerType($this->data) ; break ;;
-      case "TitleCitation" : $this->addComment(true) ; break ;
+      case "TitleCitation" : if(substr($this->data,0,7) == 'http://') $this->addExternalLink() ;  $this->addComment(true) ; break ;
       case "TypeStatus" : $this->staging->setIndividualType($this->data) ; break ;;
       case "Unit" : $this->saveUnit(); break ;;
       case "UnitAssociation" : $this->staging->addRelated($this->object) ; break ;;
@@ -185,9 +188,9 @@ class ImportABCDXml implements IImportModels
   {
     //$this->data = trim($this->data) ;
     if ($this->inside_data)
-      $this->data .= $data ;
+      $this->data .= strtolower($data) ;
     else
-      $this->data = $data ;
+      $this->data = strtolower($data) ;
     $this->inside_data = true;
   }
 
@@ -216,7 +219,9 @@ class ImportABCDXml implements IImportModels
 
   private function addProperty()
   {
-    if($this->getPreviousTag("MeasurementOrFacts") == "Unit" || ($this->getPreviousTag() == 'efg:RockPhysicalCharacteristic'))
+    if($this->getPreviousTag("MeasurementsOrFacts") == "Unit")
+      $this->staging->addRelated($this->property->property) ;
+    elseif (in_array($this->getPreviousTag(),array('efg:RockPhysicalCharacteristic','efg:MineralMeasurementOrFact')))
       $this->staging->addRelated($this->property->property) ;
     else $this->object->addStagingInfo($this->property->property, $this->staging->getId());
   }
@@ -246,12 +251,12 @@ class ImportABCDXml implements IImportModels
     $this->object_to_save = array() ;
   }
 
-  private function addExternalLink($link)
+  private function addExternalLink()
   {
-    $prefix = substr($link,0,strpos($link,"://")) ;
-    if($prefix != "http" && $prefix != "https") $link = "http://".$link ;
+    $prefix = substr($this->data,0,strpos($this->data,"://")) ;
+    if($prefix != "http" && $prefix != "https") $this->data = "http://".$this->data ;
     $ext = new ExtLinks();
-    $ext->setUrl($link) ;
+    $ext->setUrl($this->data) ;
     $ext->setComment('Record web address') ;
     $this->staging->addRelated($ext) ;
   }

@@ -39,7 +39,7 @@ class ParsingTag extends ImportABCDXml
   {
     $tag_group = new stagingTagGroups() ;
     //@TODO find a better way to manage all known tags
-    if(in_array(strtolower($this->tag_group_name),array("continent", "country", "province", "region", "municipality","province/region")))
+    if(in_array($this->tag_group_name,array("continent", "country", "province", "region", "municipality","province/region")))
     {
       $tag_group->setGroupName("administrative area") ;
       $tag_group->setSubGroupName($this->tag_group_name) ;
@@ -98,7 +98,7 @@ class ParsingTag extends ImportABCDXml
 
   public function addMethod($data,$staging_id)
   {
-    $method = Doctrine::getTable('CollectingMethods')->findOneByMethod($data);
+    $method = Doctrine::getTable('CollectingMethods')->findOneByMethodIndexed($data);
     if($method) $ref = $method->getId() ;
     else
     {

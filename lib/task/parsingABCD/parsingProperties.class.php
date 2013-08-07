@@ -10,7 +10,7 @@ class ParsingProperties extends importABCDXml
     $this->property->setPropertyType("length") ;
     $this->property->setPropertySubType($tag) ;
   }
-  
+
   public function handlePeople($people,$staging)
   {
     $people->setPeopleType('donator');
@@ -21,7 +21,7 @@ class ParsingProperties extends importABCDXml
     }
     $staging->addRelated($people) ;
   }
-  
+
   public function getDateFrom($date, $tag,$staging)
   {
     if($tag=="Altitude") $staging["gtu_from_date"]=$date ;
@@ -55,16 +55,4 @@ class ParsingProperties extends importABCDXml
     $value->setPropertyValue($data) ;
     $this->property->PropertiesValues[] = $value ;
   }
-
-  /*
-"length" => type
-Accuracy > property value => accuracy
-Duration > MeasurementDateTime+duration = date_to
-MeasurementDateTime > date_from
-IsQuantitative > osef
-LowerValue -> propertiesValues->propertyvalue
-Parameter -> sub type
-UnitOfMeasurement -> property_unit et property_accuracy_unit
-UpperValue -> propertiesValues->propertyvalue
-*/
 }
