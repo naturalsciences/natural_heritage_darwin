@@ -9,8 +9,9 @@
 						<xs:complexType>
 							<xs:sequence>
 								<xs:element name="On_loan" type="xs:boolean" minOccurs="0"/>
-								<xs:element name="Loan_from" type="xs:date" minOccurs="0"/>
-								<xs:element name="Loan_to" type="xs:date" minOccurs="0"/>
+								<xs:element name="Loan_ID" minOccurs="0"/>
+								<xs:element name="Loan_from" minOccurs="0"/>
+								<xs:element name="Loan_to" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
