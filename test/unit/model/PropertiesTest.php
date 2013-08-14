@@ -1,7 +1,7 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
 $t = new lime_test(6, new lime_output_color());
-$c = new CatalogueProperties();
+$c = new Properties();
 $c->setDateFrom('1830/10/05 00:00:00');
 $c->setDateFromMask(56);
 $t->is($c->getFromDateMasked(),'05/10/1830 <em>00:00:00</em>', 'The date from Is construct and Masked');

@@ -593,70 +593,32 @@ Identifications:
         order_by: 2
 
 
-CatalogueProperties:
+Properties:
     cprop1:
         referenced_relation: taxonomy
         record_id: 4
         property_type: protection status
-        property_sub_type: bxl
         property_unit: ''
-        property_accuracy_unit: ''
     cprop2:
         referenced_relation: taxonomy
         record_id: 4
         property_type: physical measurement
-        property_sub_type: length
-        property_qualifier: beak length
+        applies_to: beak length
         date_from_mask: 56
         date_from: '1932-12-24 23:32:11'
         date_to_mask: 0
         date_to: '0001-01-01 0:0:0'
         property_unit: cm
-        property_accuracy_unit: mm
     cprop3:
         referenced_relation: specimens
         record_id: 1
         property_type: protection status
-        property_sub_type: top
         property_unit: ''
-        property_accuracy_unit: ''
     cprop4:
         referenced_relation: specimens
         record_id: 1
         property_type: physical measurement
-        property_sub_type: length
         property_unit: mm
-        property_accuracy_unit: mm
-
-PropertiesValues:
-    prop1val1:
-        CatalogueProperties: cprop1
-        property_value: 1
-
-    prop2val1:
-        CatalogueProperties: cprop2
-        property_value: 12
-        property_accuracy: 1.5
-
-    prop2val2:
-        CatalogueProperties: cprop2
-        property_value: 8
-        property_accuracy: 1.5
-
-    prop3val1:
-        CatalogueProperties: cprop3
-        property_value: 18
-        property_accuracy: 15  
-
-    prop3val2:
-        CatalogueProperties: cprop4
-        property_value: 120
-        property_accuracy: 45    
-
-    prop3val3:
-        CatalogueProperties: cprop4
-        property_value: 1900
-        property_accuracy: 1                    
 
 Comments:
     comment1:

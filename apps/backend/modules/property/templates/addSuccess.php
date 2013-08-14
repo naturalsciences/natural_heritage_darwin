@@ -19,17 +19,10 @@
       </td>
     </tr>
     <tr>
-      <th class="top_aligned"><?php echo $form['property_sub_type']->renderLabel();?></th>
+      <th class="top_aligned"><?php echo $form['applies_to']->renderLabel();?></th>
       <td>
-        <?php echo $form['property_sub_type']->renderError(); ?>
-        <?php echo $form['property_sub_type'];?>
-      </td>
-    </tr>
-    <tr>
-      <th class="top_aligned"><?php echo $form['property_qualifier']->renderLabel();?></th>
-      <td>
-        <?php echo $form['property_qualifier']->renderError(); ?>
-        <?php echo $form['property_qualifier'];?>
+        <?php echo $form['applies_to']->renderError(); ?>
+        <?php echo $form['applies_to'];?>
       </td>
     </tr>
     <tr>
@@ -47,50 +40,67 @@
       </td>
     </tr>
     <tr>
-      <th><?php echo $form['property_method']->renderLabel();?></th>
+      <th><?php echo $form['method']->renderLabel();?></th>
       <td>
-        <?php echo $form['property_method']->renderError(); ?>
-        <?php echo $form['property_method'];?>
+        <?php echo $form['method']->renderError(); ?>
+        <?php echo $form['method'];?>
       </td>
     </tr>
     <tr>
-      <th><?php echo $form['property_tool']->renderLabel();?></th>
+      <th><?php echo $form['is_quantitative']->renderLabel();?></th>
       <td>
-        <?php echo $form['property_tool']->renderError(); ?>
-        <?php echo $form['property_tool'];?>
+        <?php echo $form['is_quantitative']->renderError(); ?>
+        <?php echo $form['is_quantitative'];?>
       </td>
     </tr>
-  </tbody>
-</table>
-<table class="encoding property_values">
-  <thead>
     <tr>
-      <th><label><?php echo __("Value units") ; ?></label></th>
-      <th class="unit_col"><?php echo $form['property_unit'];?></th>
-      <th><label><?php echo __("Accuracy units") ; ?></label></th>
-      <th class="unit_col"><?php echo $form['property_accuracy_unit'];?></th>
-      <th></th>
+      <th colspan="2" style="text-align:center">
+        <label for="is_range"><?php echo __('Is range');?></label>
+        <input type="checkbox" id="is_range" name="is_range" />
+      </th>
     </tr>
-  </thead>
-  <tbody id="property">
-    <?php foreach($form['PropertiesValues'] as $form_value):?>
-      <?php include_partial('prop_value', array('form' => $form_value));?>
-    <?php endforeach;?>
-    <?php foreach($form['newVal'] as $form_value):?>
-      <?php include_partial('prop_value', array('form' => $form_value));?>
-    <?php endforeach;?>
+    <tr class="prop_values">
+      <th class="range_value"><?php echo $form['lower_value']->renderLabel();?></th>
+      <th class="single_value"><?php echo $form['lower_value']->renderLabel('Value');?></th>
+      <td>
+        <?php echo $form['lower_value']->renderError(); ?>
+        <?php echo $form['lower_value'];?>
+      </td>
+    </tr>
+    <tr class="prop_values">
+      <th class="range_value"><?php echo $form['upper_value']->renderLabel();?></th>
+      <td  class="range_value">
+        <?php echo $form['upper_value']->renderError(); ?>
+        <?php echo $form['upper_value'];?>
+      </td>
+    </tr>
+    <tr>
+      <th><?php echo $form['property_unit']->renderLabel();?></th>
+      <td>
+        <?php echo $form['property_unit']->renderError(); ?>
+        <?php echo $form['property_unit'];?>
+      </td>
+    </tr>
+    <tr>
+      <th><?php echo $form['property_accuracy']->renderLabel();?></th>
+      <td>
+        <?php echo $form['property_accuracy']->renderError(); ?>
+        <?php echo $form['property_accuracy'];?>
+      </td>
+    </tr>
+  <tr>
+  <tr>
   </tbody>
 </table>
-<div class='add_value'>
-  <a href="<?php echo url_for('property/addValue'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/table/<?php echo $sf_request->getParameter('table');?>/num/" id="add_prop_value"><?php echo __('Add Value');?></a>
-</div>
+
+
 <table class="bottom_actions">
   <tfoot>
     <tr>
       <td>
         <a href="#" class="cancel_qtip"><?php echo __('Cancel');?></a>
         <?php if(! $form->getObject()->isNew()):?>
-	  <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=catalogue_properties&id='.$form->getObject()->getId());?>" title="<?php echo __('Are you sure ?') ?>">
+	  <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=properties&id='.$form->getObject()->getId());?>" title="<?php echo __('Are you sure ?') ?>">
 	    <?php echo __('Delete');?>
 	  </a>
         <?php endif;?> 
@@ -104,6 +114,22 @@
 <script  type="text/javascript">
 $(document).ready(function () {
   $('form.qtiped_form').modal_screen();
+  
+  function toggleRangeValue(){
+    if($(this).is(':checked')) {
+      $('.range_value').show();
+      $('.single_value').hide();
+    } else {
+      $('.range_value').hide();
+      $('.single_value').show();
+    }
+  }
+
+  if($('#properties_upper_value').val() != '') {
+    $('#is_range').attr('checked','checked');
+  }
+  $('#is_range').change(toggleRangeValue);
+  $('#is_range').trigger('change');
 
   function addPropertyValue(event)
   {
@@ -122,29 +148,18 @@ $(document).ready(function () {
     return false;
   }
 
-    $('#catalogue_properties_property_type').change(function() {
+    $('#properties_property_type').change(function() {
       $.get("<?php echo url_for('property/getUnit');?>/type/"+$(this).val(), function (data) {
-      $("#catalogue_properties_property_unit_parent select").html(data);
-      $("#catalogue_properties_property_accuracy_unit_parent select").html(data);
-      $("#catalogue_properties_property_qualifier_parent select").html(' ');
+      $("#properties_property_unit_parent select").html(data);
+      $("#properties_property_accuracy_unit_parent select").html(data);
+      $("#properties_property_qualifier_parent select").html(' ');
       });
 
-      $.get("<?php echo url_for('property/getSubtype');?>/type/"+$(this).val(), function (data) {
-        $("#catalogue_properties_property_sub_type_parent select").html(data);
+      $.get("<?php echo url_for('property/getApplies');?>/type/"+$(this).val(), function (data) {
+        $("#properties_property_sub_type_parent select").html(data);
       });
 
     });
-
-    $('#catalogue_properties_property_sub_type').change(function() {
-      $.get("<?php echo url_for('property/getQualifier');?>/subtype/"+$(this).val(), function (data) {
-        $("#catalogue_properties_property_qualifier_parent select").html(data);
-      });
-    });
-
-    $('.clear_prop').live('click', clearPropertyValue);
-
-    $('#add_prop_value').click(addPropertyValue);
-
   });
 </script>
 </div>

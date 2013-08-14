@@ -248,65 +248,48 @@ comment on column tags.sub_group_type is 'Indexed form of a sub-group name';
 comment on column tags.tag is 'The readable version of the tag';
 comment on column tags.tag_indexed is 'The indexed version of the tag';
 
-create table catalogue_properties
+create table properties
        (
         id serial,
         property_type varchar not null,
-        property_sub_type varchar not null default '',
-        property_sub_type_indexed varchar not null,
-        property_qualifier varchar,
-        property_qualifier_indexed varchar not null,
+        applies_to varchar not null default '',
+        applies_to_indexed varchar not null,
         date_from_mask integer not null default 0,
         date_from timestamp not null default '01/01/0001 00:00:00',
         date_to_mask integer not null default 0,
         date_to timestamp not null default '31/12/2038 00:00:00',
+        is_quantitative boolean not null default false,
+
         property_unit varchar not null default '',
-        property_accuracy_unit varchar not null default '',
-        property_method varchar,
-        property_method_indexed varchar not null,
-        property_tool varchar,
-        property_tool_indexed varchar not null,
-        constraint pk_catalogue_properties primary key (id),
-        constraint unq_catalogue_properties unique (referenced_relation, record_id, property_type, property_sub_type_indexed, property_qualifier_indexed, date_from, date_to, property_method_indexed, property_tool_indexed)
-       )
+        method varchar,
+        method_indexed varchar not null,
+        lower_value varchar not null,
+        lower_value_unified varchar not null,
+        upper_value  varchar not null,
+        upper_value_unified varchar not null,
+        property_accuracy varchar not null default '',
+
+        constraint pk_properties primary key (id)
+        )
 inherits (template_table_record_ref);
 
-comment on table catalogue_properties is 'All properties or all measurements describing an object in darwin are stored in this table';
-comment on column catalogue_properties.referenced_relation is 'Identifier-Name of the table a property is defined for';
-comment on column catalogue_properties.record_id is 'Identifier of record a property is defined for';
-comment on column catalogue_properties.property_type is 'Type-Category of property - Latitude, Longitude, Ph, Height, Weight, Color, Temperature, Wind direction,...';
-comment on column catalogue_properties.property_sub_type is 'Sub type or sub category of property: For Latitudes and Longitudes, precise which type of lat/long it is like Lambert 72, Lambert 92, UTM,...';
-comment on column catalogue_properties.property_sub_type_indexed is 'Indexed form of Sub type of property - if subtype is null, takes a generic replacement value';
-comment on column catalogue_properties.property_qualifier is 'Bring a complement of information to the property sub type. i.e.: if sub type is speed, qualifier can be wave speed, wind speed, light speed,...';
-comment on column catalogue_properties.property_qualifier_indexed is 'Indexed form of property_qualifier field';
-comment on column catalogue_properties.date_from is 'For a range of measurements, give the measurement start - if null, takes a generic replacement value';
-comment on column catalogue_properties.date_from_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
-comment on column catalogue_properties.date_to is 'For a range of measurements, give the measurement stop date/time - if null, takes a generic replacement value';
-comment on column catalogue_properties.date_to_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
-comment on column catalogue_properties.property_unit is 'Unit used for property value introduced';
-comment on column catalogue_properties.property_method is 'Method used to collect property value';
-comment on column catalogue_properties.property_method_indexed is 'Indexed version of property_method field - if null, takes a generic replacement value';
-comment on column catalogue_properties.property_accuracy_unit is 'Unit used for accuracy value(s)';
-comment on column catalogue_properties.property_tool is 'Tool used to collect property value';
-comment on column catalogue_properties.property_tool_indexed is 'Indexed version of property_tool field - if null, takes a generic replacement value';
+comment on table properties is 'All properties or all measurements describing an object in darwin are stored in this table';
+comment on column properties.referenced_relation is 'Identifier-Name of the table a property is defined for';
+comment on column properties.record_id is 'Identifier of record a property is defined for';
+comment on column properties.property_type is 'Type-Category of property - Latitude, Longitude, Ph, Height, Weight, Color, Temperature, Wind direction,...';
+comment on column properties.applies_to is 'Depending on the use of the type, this can further specify the actual part measured. For example, a measurement of temperature may be a surface, air or sub-surface measurement.';
+comment on column properties.applies_to_indexed is 'Indexed form of Sub type of property - if subtype is null, takes a generic replacement value';
+comment on column properties.date_from is 'For a range of measurements, give the measurement start - if null, takes a generic replacement value';
+comment on column properties.date_from_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
+comment on column properties.date_to is 'For a range of measurements, give the measurement stop date/time - if null, takes a generic replacement value';
+comment on column properties.date_to_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
+comment on column properties.property_unit is 'Unit used for property value introduced';
+comment on column properties.method is 'Method used to collect property value';
+comment on column properties.method_indexed is 'Indexed version of property_method field - if null, takes a generic replacement value';
+comment on column properties.lower_value is 'Lower value of Single Value';
+comment on column properties.lower_value_unified is 'unified version of the value for comparison with other units';
+comment on column properties.property_accuracy is 'Accuracy of the values';
 
-create table properties_values
-      (
-        id serial,
-        property_ref integer not null,
-        property_value varchar not null,
-        property_value_unified varchar not null default '',
-        property_accuracy real,
-        property_accuracy_unified real,
-        constraint pk_properties_values primary key (id),
-        constraint fk_properties_values_properties foreign key (property_ref) references catalogue_properties(id) on delete cascade
-      );
-comment on table properties_values is 'All properties values seen in catalogue_properties';
-comment on column properties_values.id is 'Unique identifier of a property value';
-comment on column properties_values.property_value is 'Value for the property type and subtype selected';
-comment on column properties_values.property_value_unified is 'Unified version of property_value -> means that the value is converted into a common unit allowing comparisons';
-comment on column properties_values.property_accuracy is 'Accuracy of property measurement';
-comment on column properties_values.property_accuracy_unified is 'Unified version of accuracy on property or sub property value -> means that the value is converted into a common unit allowing comparisons';
 
 create table identifications
        (

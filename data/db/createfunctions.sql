@@ -91,11 +91,9 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION fct_cpy_fullToIndex() RETURNS trigger
 AS $$
 BEGIN
-        IF TG_TABLE_NAME = 'catalogue_properties' THEN
-                NEW.property_tool_indexed := COALESCE(fullToIndex(NEW.property_tool),'');
-                NEW.property_sub_type_indexed := COALESCE(fullToIndex(NEW.property_sub_type),'');
-                NEW.property_method_indexed := COALESCE(fullToIndex(NEW.property_method),'');
-                NEW.property_qualifier_indexed := COALESCE(fullToIndex(NEW.property_qualifier),'');
+        IF TG_TABLE_NAME = 'properties' THEN
+                NEW.applies_to_indexed := COALESCE(fullToIndex(NEW.applies_to),'');
+                NEW.method_indexed := COALESCE(fullToIndex(NEW.method),'');
         ELSIF TG_TABLE_NAME = 'chronostratigraphy' THEN
                 NEW.name_indexed := fullToIndex(NEW.name);
         ELSIF TG_TABLE_NAME = 'collections' THEN
@@ -580,7 +578,7 @@ LANGUAGE plpgsql;
 ** fct_cpy_length_conversion
 ** Convert length into unified version (m - meter)
 */
-CREATE OR REPLACE FUNCTION fct_cpy_length_conversion (IN property real, IN property_unit catalogue_properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_length_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -683,7 +681,7 @@ $$;
 ** fct_cpy_temperature_conversion
 ** Convert temperatures into unified version (K - Kelvin)
 */
-CREATE OR REPLACE FUNCTION fct_cpy_temperature_conversion (IN property real, IN property_unit catalogue_properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_temperature_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -711,7 +709,7 @@ $$;
 ** fct_cpy_time_conversion
 ** Convert time values into unified one (s - second)
 */
-CREATE OR REPLACE FUNCTION fct_cpy_time_conversion (IN property real, IN property_unit catalogue_properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_time_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -749,7 +747,7 @@ $$;
 ** If no unit or wrong unit provided value entered is returned so.
 ** If array of values is empty, empty array of values returned
 */
-CREATE OR REPLACE FUNCTION fct_cpy_speed_conversion (IN property real, IN property_unit catalogue_properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_speed_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -799,7 +797,7 @@ $$;
 ** fct_cpy_volume_conversion
 ** Convert volume into unified version (m³ - cube meter)
 */
-CREATE OR REPLACE FUNCTION fct_cpy_volume_conversion (IN property real, IN property_unit catalogue_properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_volume_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -827,7 +825,7 @@ $$;
 ** fct_cpy_weight_conversion
 ** Convert weight into unified version (g - gram)
 */
-CREATE OR REPLACE FUNCTION fct_cpy_weight_conversion (IN property real, IN property_unit catalogue_properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_weight_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -902,7 +900,7 @@ $$;
 
 /*
 ** fct_cpy_unified_values
-** Used as a trigger in catalogue_properties table to transform values into unified common value
+** Used as a trigger in properties table to transform values into unified common value
 ** Case by case function
 */
 CREATE OR REPLACE FUNCTION fct_cpy_unified_values () RETURNS TRIGGER
@@ -911,23 +909,10 @@ AS
 
 $$
 DECLARE
-  property_line catalogue_properties%ROWTYPE;
+  property_line properties%ROWTYPE;
 BEGIN
-    IF TG_TABLE_NAME ='properties_values' THEN
-        SELECT * INTO property_line FROM  catalogue_properties WHERE id=NEW.property_ref;
-        NEW.property_value_unified := convert_to_unified(NEW.property_value,  property_line.property_unit, property_line.property_sub_type_indexed);
-        NEW.property_accuracy_unified := convert_to_unified(NEW.property_accuracy::varchar,  property_line.property_accuracy_unit, property_line.property_sub_type_indexed)::real;
-    ELSIF TG_OP = 'UPDATE' THEN
-      IF NEW.property_sub_type_indexed IS DISTINCT FROM OLD.property_sub_type_indexed 
-      OR NEW.property_unit IS DISTINCT FROM OLD.property_unit
-      OR NEW.property_accuracy_unit IS DISTINCT FROM OLD.property_accuracy_unit
-      THEN
-        UPDATE properties_values SET
-            property_value_unified = convert_to_unified(property_value, NEW.property_unit, NEW.property_sub_type_indexed),
-            property_accuracy_unified = convert_to_unified(property_accuracy::varchar,  NEW.property_accuracy_unit, NEW.property_sub_type_indexed)::real
-            WHERE property_ref = NEW.id;
-      END IF;
-    END IF;
+  NEW.lower_value_unified = convert_to_unified(NEW.lower_value, NEW.property_unit, NEW.property_type);
+  NEW.upper_value_unified = convert_to_unified(NEW.upper_value, NEW.property_unit, NEW.property_type);
   RETURN NEW;
 END;
 $$;
@@ -2164,17 +2149,13 @@ BEGIN
     ELSIF TG_TABLE_NAME = 'loan_status' THEN
       PERFORM fct_del_in_dict('loan_status','status', oldfield.status, newfield.status);
 
-    ELSIF TG_TABLE_NAME = 'catalogue_properties' THEN
+    ELSIF TG_TABLE_NAME = 'properties' THEN
 
-      PERFORM fct_del_in_dict_dept('catalogue_properties','property_type', oldfield.property_type, newfield.property_type,
+      PERFORM fct_del_in_dict_dept('properties','property_type', oldfield.property_type, newfield.property_type,
         oldfield.referenced_relation, newfield.referenced_relation, 'referenced_relation' );
-      PERFORM fct_del_in_dict_dept('catalogue_properties','property_sub_type', oldfield.property_sub_type, newfield.property_sub_type,
+      PERFORM fct_del_in_dict_dept('properties','applies_to', oldfield.applies_to, newfield.applies_to,
         oldfield.property_type, newfield.property_type, 'property_type' );
-      PERFORM fct_del_in_dict_dept('catalogue_properties','property_qualifier', oldfield.property_qualifier, newfield.property_qualifier,
-        oldfield.property_sub_type, newfield.property_sub_type, 'property_sub_type' );
-      PERFORM fct_del_in_dict_dept('catalogue_properties','property_unit', oldfield.property_unit, newfield.property_unit,
-        oldfield.property_type, newfield.property_type, 'property_type' );
-      PERFORM fct_del_in_dict_dept('catalogue_properties','property_accuracy_unit', oldfield.property_accuracy_unit, newfield.property_accuracy_unit,
+      PERFORM fct_del_in_dict_dept('properties','property_unit', oldfield.property_unit, newfield.property_unit,
         oldfield.property_type, newfield.property_type, 'property_type' );
 
     ELSIF TG_TABLE_NAME = 'tag_groups' THEN
@@ -2253,18 +2234,14 @@ BEGIN
     ELSIF TG_TABLE_NAME = 'loan_status' THEN
       PERFORM fct_add_in_dict('loan_status','status', oldfield.status, newfield.status);
 
-    ELSIF TG_TABLE_NAME = 'catalogue_properties' THEN
+    ELSIF TG_TABLE_NAME = 'properties' THEN
 
-      PERFORM fct_add_in_dict_dept('catalogue_properties','property_type', oldfield.property_type, newfield.property_type,
+      PERFORM fct_add_in_dict_dept('properties','property_type', oldfield.property_type, newfield.property_type,
         oldfield.referenced_relation, newfield.referenced_relation);
-      PERFORM fct_add_in_dict_dept('catalogue_properties','property_sub_type', oldfield.property_sub_type, newfield.property_sub_type,
+      PERFORM fct_add_in_dict_dept('properties','applies_to', oldfield.applies_to, newfield.applies_to,
         oldfield.property_type, newfield.property_type);
-      PERFORM fct_add_in_dict_dept('catalogue_properties','property_qualifier', oldfield.property_qualifier, newfield.property_qualifier,
-        oldfield.property_sub_type, newfield.property_sub_type);
-      PERFORM fct_add_in_dict_dept('catalogue_properties','property_unit', oldfield.property_unit, newfield.property_unit,
+      PERFORM fct_add_in_dict_dept('properties','property_unit', oldfield.property_unit, newfield.property_unit,
         oldfield.property_type, newfield.property_type);
-      PERFORM fct_add_in_dict_dept('catalogue_properties','property_accuracy_unit', oldfield.property_accuracy_unit, newfield.property_accuracy_unit,
-        oldfield.property_type, newfield.property_type );
 
     ELSIF TG_TABLE_NAME = 'tag_groups' THEN
       PERFORM fct_add_in_dict_dept('tag_groups','sub_group_name', oldfield.sub_group_name, newfield.sub_group_name,
@@ -3335,7 +3312,7 @@ BEGIN
 
     UNION
 
-    select loan_id, 'catalogue_properties', hstore(c.*) from catalogue_properties c where 
+    select loan_id, 'properties', hstore(c.*) from properties c where 
       (referenced_relation='loans'  AND record_id = loan_id) OR (referenced_relation='loan_items'  AND record_id in (select id from loan_items l where l.loan_ref = loan_id) )
 
   );
@@ -3362,11 +3339,6 @@ BEGIN
 
     select loan_id, 'people_addresses', hstore(p.*) from people_addresses p where person_user_ref in (select (record_line->'id')::int from loan_history where loan_ref = loan_id 
       and referenced_table='people' and modification_date_time = now())
-
-    UNION
-
-    select loan_id, 'properties_values', hstore(v.*) from properties_values v where property_ref in (select (record_line->'id')::int from loan_history where loan_ref = loan_id 
-      and referenced_table='catalogue_properties' and modification_date_time = now())
   );
   RETURN true;
 END;

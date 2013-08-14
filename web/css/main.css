@@ -963,6 +963,9 @@ table.collections
   font-size : 9pt ;  
   border: 1px solid #C1CF56; 
 }
+.prop_values {
+  background-color:#E9EDBE;
+}
 
 .property_values
 {
@@ -1093,7 +1096,7 @@ border-bottom: none ;
   background-color: white;
 }
 
-#catalogue_properties_property_unit_parent, #catalogue_properties_property_accuracy_unit_parent
+#properties_property_unit_parent, #properties_property_accuracy_unit_parent
 {
   display:inline;
 }

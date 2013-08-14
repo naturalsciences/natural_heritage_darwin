@@ -138,39 +138,27 @@ Gtu:
         elevation: {type: float}
         elevation_accuracy: {type: float}
 
-CatalogueProperties:
+Properties:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
         referenced_relation: { type: string, notnull: true}
         record_id: { type: integer, notnull: true}
         property_type: {type: string, notnull: true}
-        property_sub_type: {type: string}
-        property_sub_type_indexed: {type: string}
-        property_qualifier: {type: string}
-        property_qualifier_indexed: {type: string}
+        applies_to: {type: string}
+        applies_to_indexed: {type: string}
         date_from_mask: { type: integer, notnull: true, default:0}
         date_from: { type: string, notnull: true, default: '0001-01-01'}
         date_to_mask: { type: integer, notnull: true, default:0}
         date_to: { type: string, notnull: true, default: '2038-12-31'}
+        is_quantitative: {type: boolean, default: false }
         property_unit: {type: string, default: ''}
-        property_accuracy_unit: {type: string}
-        property_method: {type: string}
-        property_method_indexed: {type: string}
-        property_tool: {type: string}
-        property_tool_indexed: {type: string}
-
-PropertiesValues:
-    columns:
-        id: { type: integer, primary: true, autoincrement: true }
-        property_ref: { type: integer}
-        property_value: {type: string, notnull: true}
-        property_value_unified: {type: string}
-        property_accuracy: {type: float}
-        property_accuracy_unified: {type: float}
-    relations:
-        CatalogueProperties:
-            local: property_ref
-            foreign: id
+        method: {type: string}
+        method_indexed: {type: string}
+        lower_value: {type: string, notnull: true, default:''}
+        lower_value_unified: {type: string}
+        upper_value: {type: string, notnull: true , default:''}
+        upper_value_unified: {type: string}
+        property_accuracy: {type: string, default:''}
 
 Identifications:
     columns:

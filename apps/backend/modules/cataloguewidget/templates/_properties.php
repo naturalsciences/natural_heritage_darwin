@@ -2,8 +2,7 @@
   <thead>
     <tr>
       <th><?php echo __('Type');?></th>
-      <th><?php echo __('Sub-Type');?></th>
-      <th><?php echo __('Qualifier');?></th>
+      <th><?php echo __('Applies To');?></th>
       <th><?php echo __('Date From');?></th>
       <th><?php echo __('Date To');?></th>
       <th><?php echo __('Values');?></th>
@@ -18,35 +17,23 @@
 	        <?php echo $property->getPropertyType();?>
     	  </a>
       </td>
-      <td><?php echo $property->getPropertySubType();?></td>
-      <td><?php echo $property->getPropertyQualifier();?></td>
+      <td><?php echo $property->getAppliesTo();?></td>
       <td class="datesNum"><?php echo $property->getFromDateMasked(ESC_RAW);?></td>
       <td class="datesNum"><?php echo $property->getToDateMasked(ESC_RAW);?></td>
       <td>
-	<?php if( count($property->PropertiesValues) > 1):?>
-	  <a href="#" class="display_value"><?php echo format_number_choice('[1]Show 1 Value|(1,+Inf]Show %1% Values', array('%1%' => count($property->PropertiesValues) ), count($property->PropertiesValues));?></a>
-	  <a href="#" class="hidden hide_value"><?php echo __('Hide Values');?></a>
-	  <ul class="hidden">
-	    <?php foreach($property->PropertiesValues as $value):?>
-	      <li>
-		<?php echo $value->getPropertyValue();?> <?php echo $property->getPropertyUnit();?> 
-		<?php if($value->getPropertyAccuracy() != ""):?>
-		  ( +- <?php echo $value->getPropertyAccuracy();?> <?php echo $property->getPropertyAccuracyUnit();?>)
-		<?php endif;?>
-	      </li>
-	    <?php endforeach;?>    
-	  </ul>
-	<?php elseif(count($property->PropertiesValues) == 1):?>
-	  <ul><li><?php echo $property->PropertiesValues[0]->getPropertyValue();?> <?php echo $property->getPropertyUnit();?> 
-	    <?php if($property->PropertiesValues[0]->getPropertyAccuracy() != ""):?>
-	      ( +- <?php echo $property->PropertiesValues[0]->getPropertyAccuracy();?> <?php echo $property->getPropertyAccuracyUnit();?>)
-	    <?php endif;?></li></ul>
-	<?php else:?>
-	  <?php echo __('No Values');?>
-	<?php endif;?>
+        <?php echo $property->getLowerValue();?>
+        <?php if($property->getUpperValue() != ''):?>
+          -> <?php echo $property->getUpperValue();?>
+        <?php endif;?>
+        <?php echo $property->getPropertyUnit();?>
+
+        <?php if($property->getPropertyAccuracy() != ''):?>
+          ( +- <?php echo $property->getPropertyAccuracy();?> <?php echo $property->getPropertyUnit();?>)
+        <?php endif;?>
+
       </td>
       <td class="widget_row_delete">
-        <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=catalogue_properties&id='.$property->getId());?>" title="<?php echo __('Delete Properties') ?>"><?php echo image_tag('remove.png'); ?>
+        <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=properties&id='.$property->getId());?>" title="<?php echo __('Delete Properties') ?>"><?php echo image_tag('remove.png'); ?>
         </a>
       </td>
     </tr>
@@ -61,10 +48,10 @@ $('.hide_value').click(hideValues);
 <br />
 <?php echo image_tag('add_green.png');?>
 <a title="<?php echo __('Add Properties');?>" class="link_catalogue" href="<?php echo url_for('property/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add property');?></a> 
-<?php if(count(CatalogueProperties::getModels($table)) > 1):?>
+<?php if(count(Properties::getModels($table)) > 1):?>
   <?php echo __("with this pre defined template") ; ?>:
   <select id='property_template'>
-    <?php foreach(CatalogueProperties::getModels($table) as $key=>$values)
+    <?php foreach(Properties::getModels($table) as $key=>$values)
       echo "<option value=\"$key\">$values" ;?>
   </select>
 <?php endif;?>

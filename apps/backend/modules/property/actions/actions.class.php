@@ -40,22 +40,22 @@ class propertyActions extends DarwinActions
     $this->property = null;
     if($request->hasParameter('rid'))
     {
-      $this->property = Doctrine::getTable('CatalogueProperties')->find($request->getParameter('rid'));
+      $this->property = Doctrine::getTable('Properties')->find($request->getParameter('rid'));
     }
 
     if(! $this->property)
     {
-     $this->property = new CatalogueProperties();
+     $this->property = new Properties();
      $this->property->setRecordId($request->getParameter('id'));
      $this->property->setReferencedRelation($request->getParameter('table'));
      if($request->hasParameter('model'))
        $this->property->setPropertyTemplate($request->getParameter('model'));     
     }
-    $this->form = new CataloguePropertiesForm($this->property,array('ref_relation' => $request->getParameter('table'),'hasmodel' => $request->getParameter('model')?true:false));
+    $this->form = new PropertiesForm($this->property,array('ref_relation' => $request->getParameter('table'),'hasmodel' => $request->getParameter('model')?true:false));
     
     if($request->isMethod('post'))
     {
-	    $this->form->bind($request->getParameter('catalogue_properties'));
+	    $this->form->bind($request->getParameter('properties'));
 	    if($this->form->isValid())
 	    {
 	      try{
@@ -74,19 +74,13 @@ class propertyActions extends DarwinActions
   
   public function executeGetUnit(sfWebRequest $request)
   {
-    $this->items = Doctrine::getTable('CatalogueProperties')->getDistinctUnit($request->getParameter('type'));
+    $this->items = Doctrine::getTable('Properties')->getDistinctUnit($request->getParameter('type'));
     $this->setTemplate('options');
   }
 
-  public function executeGetSubtype(sfWebRequest $request)
+  public function executeGetApplies(sfWebRequest $request)
   {
-    $this->items = Doctrine::getTable('CatalogueProperties')->getDistinctSubType($request->getParameter('type'));
-    $this->setTemplate('options');
-  }
-
-  public function executeGetQualifier(sfWebRequest $request)
-  {
-    $this->items = Doctrine::getTable('CatalogueProperties')->getDistinctQualifier($request->getParameter('subtype'));
+    $this->items = Doctrine::getTable('Properties')->getDistinctApplies($request->getParameter('type'));
     $this->setTemplate('options');
   }
 
@@ -96,9 +90,9 @@ class propertyActions extends DarwinActions
     $prop = null;
 
     if($request->hasParameter('id') && $request->getParameter('id'))
-      $prop = Doctrine::getTable('CatalogueProperties')->find($request->getParameter('id') );
+      $prop = Doctrine::getTable('Properties')->find($request->getParameter('id') );
 
-    $form = new CataloguePropertiesForm($prop, array('ref_relation' => $request->getParameter('table')));
+    $form = new PropertiesForm($prop, array('ref_relation' => $request->getParameter('table')));
     $form->addValue($number);
     return $this->renderPartial('prop_value',array('form' => $form['newVal'][$number]));
   }

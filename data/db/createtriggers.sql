@@ -7,8 +7,8 @@ CREATE TRIGGER trg_cpy_fullToIndex_comments BEFORE INSERT OR UPDATE
         ON comments FOR EACH ROW
         EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
-CREATE TRIGGER trg_cpy_fullToIndex_catalogueproperties BEFORE INSERT OR UPDATE
-	ON catalogue_properties FOR EACH ROW
+CREATE TRIGGER trg_cpy_fullToIndex_properties BEFORE INSERT OR UPDATE
+	ON properties FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
 CREATE TRIGGER trg_cpy_fullToIndex_chronostratigraphy BEFORE INSERT OR UPDATE
@@ -306,12 +306,8 @@ CREATE TRIGGER trg_trk_log_table_classification_synonymies AFTER INSERT OR UPDAT
         ON classification_synonymies FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
-CREATE TRIGGER trg_trk_log_table_catalogue_properties AFTER INSERT OR UPDATE OR DELETE
-        ON catalogue_properties FOR EACH ROW
-        EXECUTE PROCEDURE fct_trk_log_table();
-
-CREATE TRIGGER trg_trk_log_table_properties_values AFTER INSERT OR UPDATE OR DELETE
-        ON properties_values FOR EACH ROW
+CREATE TRIGGER trg_trk_log_table_properties AFTER INSERT OR UPDATE OR DELETE
+        ON properties FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
 CREATE TRIGGER trg_trk_log_table_identifications AFTER INSERT OR UPDATE OR DELETE
@@ -439,11 +435,7 @@ CREATE TRIGGER trg_trk_log_table_people AFTER INSERT OR UPDATE OR DELETE
 */
 
 CREATE TRIGGER trg_cpy_unified_values BEFORE INSERT OR UPDATE
-	ON properties_values FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_unified_values();
-
-CREATE TRIGGER trg_cpy_unified_values BEFORE INSERT OR UPDATE
-	ON catalogue_properties FOR EACH ROW
+	ON properties FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_unified_values();
 
 /** GTU GIS ***/
@@ -526,8 +518,8 @@ CREATE TRIGGER trg_chk_ref_record_ext_links AFTER INSERT OR UPDATE
         ON ext_links FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
 
-CREATE TRIGGER trg_chk_ref_record_catalogue_properties AFTER INSERT OR UPDATE
-        ON catalogue_properties FOR EACH ROW
+CREATE TRIGGER trg_chk_ref_record_properties AFTER INSERT OR UPDATE
+        ON properties FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecord();
 
 CREATE TRIGGER trg_chk_ref_record_identifications AFTER INSERT OR UPDATE
@@ -655,8 +647,8 @@ CREATE TRIGGER fct_cpy_trg_ins_update_dict_loan_status AFTER INSERT OR UPDATE
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
-CREATE TRIGGER fct_cpy_trg_ins_update_dict_catalogue_properties AFTER INSERT OR UPDATE
-        ON catalogue_properties FOR EACH ROW
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_properties AFTER INSERT OR UPDATE
+        ON properties FOR EACH ROW
         EXECUTE PROCEDURE trg_ins_update_dict();
 
 CREATE TRIGGER fct_cpy_trg_ins_update_dict_tag_groups AFTER INSERT OR UPDATE
@@ -713,8 +705,8 @@ CREATE TRIGGER fct_cpy_trg_del_dict_loan_status AFTER DELETE OR UPDATE
         ON loan_status FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
 
-CREATE TRIGGER fct_cpy_trg_del_dict_catalogue_properties AFTER DELETE OR UPDATE
-        ON catalogue_properties FOR EACH ROW
+CREATE TRIGGER fct_cpy_trg_del_dict_properties AFTER DELETE OR UPDATE
+        ON properties FOR EACH ROW
         EXECUTE PROCEDURE trg_del_dict();
 
 CREATE TRIGGER fct_cpy_trg_del_dict_tag_groups AFTER DELETE OR UPDATE

@@ -11,7 +11,7 @@
 class catalogueActions extends DarwinActions
 {
   protected $catalogue = array(
-   'catalogue_relationships','catalogue_people','vernacular_names','catalogue_properties','comments',
+   'catalogue_relationships','catalogue_people','vernacular_names','properties','comments',
    'specimens','specimen_individuals','specimen_parts','ext_links','collection_maintenance', 'insurances',
    'people_addresses', 'people_comm','people_languages', 'people_relationships', 'classification_keywords','catalogue_bibliography', 'multimedia');
 
@@ -108,7 +108,7 @@ class catalogueActions extends DarwinActions
 
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($request->getParameter('table'),array('comments','catalogue_properties','ext_links')) && in_array($r->getReferencedRelation(),$this->ref_id))
+      if(in_array($request->getParameter('table'),array('comments','properties','ext_links')) && in_array($r->getReferencedRelation(),$this->ref_id))
       {
 
       if(! Doctrine::getTable('Specimens')->hasRights($this->ref_id[$r->getReferencedRelation()], $r->getRecordId(), $this->getUser()->getId()))

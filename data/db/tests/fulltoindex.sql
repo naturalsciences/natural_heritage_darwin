@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(26);
+SELECT plan(24);
 
 SELECT diag('FulltoIndex Function');
 SELECT ok('msdfnjrt' = fullToIndex('MsdfnJrt'),'With Majuscule and minuscule');
@@ -15,16 +15,15 @@ SELECT ok( fullToIndex(null) is null,'With null argument');
 SELECT diag('FulltoIndex Trigger');
 INSERT INTO taxonomy (id, name,level_ref) VALUES (10, 'Brol',1);
 
-INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, property_unit, date_from, date_to) VALUES ('taxonomy',10,'Ph', 'm', TIMESTAMP '0001-01-01 00:00:00', TIMESTAMP '0001-01-01 00:00:00');
-SELECT ok( '' = (SELECT property_sub_type_indexed FROM catalogue_properties WHERE record_id=10),'FulltoIndex on catalogue_properties null - property_sub_type_indexed');
-SELECT ok( '' = (SELECT property_method_indexed FROM catalogue_properties WHERE record_id=10),'FulltoIndex on catalogue_properties null - property_method_indexed');
-SELECT ok( '' = (SELECT property_tool_indexed FROM catalogue_properties WHERE record_id=10),'FulltoIndex on catalogue_properties null - property_tool_indexed');
+INSERT INTO properties (referenced_relation, record_id, property_type, property_unit, date_from, date_to, lower_value, upper_value) 
+  VALUES ('taxonomy',10,'Ph', 'm', TIMESTAMP '0001-01-01 00:00:00', TIMESTAMP '0001-01-01 00:00:00', 12, '');
+SELECT ok( '' = (SELECT applies_to_indexed FROM properties WHERE record_id=10),'FulltoIndex on properties null - applies_to_indexed');
+SELECT ok( '' = (SELECT method_indexed FROM properties WHERE record_id=10),'FulltoIndex on properties null - property_method_indexed');
 
-INSERT INTO catalogue_properties (referenced_relation, record_id, property_type, date_from, date_to, property_unit, property_tool_indexed, property_method_indexed, property_sub_type_indexed )
-  VALUES ('taxonomy',10,'Temperature',NOW(),NOW(), 'degC', 'ham ér', 'cra hé', 'Lambert 72');
-SELECT ok( '' = (SELECT property_sub_type_indexed FROM catalogue_properties WHERE record_id=10 AND property_type='Temperature'),'FulltoIndex on catalogue_properties null - property_sub_type_indexed');
-SELECT ok( '' = (SELECT property_method_indexed FROM catalogue_properties WHERE record_id=10 AND property_type='Temperature'),'FulltoIndex on catalogue_properties null - property_method_indexed');
-SELECT ok( '' = (SELECT property_tool_indexed FROM catalogue_properties WHERE record_id=10 AND property_type='Temperature'),'FulltoIndex on catalogue_properties null - property_tool_indexed');
+INSERT INTO properties (referenced_relation, record_id, property_type, date_from, date_to, property_unit, method_indexed, applies_to_indexed , lower_value, upper_value)
+  VALUES ('taxonomy',10,'Temperature',NOW(),NOW(), 'degC','cra hé', 'Lambert 72' , 12, '');
+SELECT ok( '' = (SELECT applies_to_indexed FROM properties WHERE record_id=10 AND property_type='Temperature'),'FulltoIndex on properties null - applies_to_indexed');
+SELECT ok( '' = (SELECT method_indexed FROM properties WHERE record_id=10 AND property_type='Temperature'),'FulltoIndex on properties null - property_method_indexed');
 
 INSERT INTO chronostratigraphy (id, name, level_ref ) VALUES (1,'ÉLo Wÿorléds', 55);
 SELECT ok( fullToIndex('ÉLo Wÿorléds') = (SELECT name_indexed FROM chronostratigraphy WHERE id=1),'FulltoIndex on chronostratigraphy');

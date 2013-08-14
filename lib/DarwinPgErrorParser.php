@@ -19,7 +19,7 @@ class DarwinPgErrorParser
     '/\bunq_comments\b/' => 'You cannot add a particular comment notion twice',
     '/duplicate key value violates unique constraint "unq_specimens"/i' => 'This specimen already exists',
     '/duplicate key value violates unique constraint "unq_specimen_individuals"/i' => 'This individual already exists for this specimen',
-    '/duplicate key value violates unique constraint "unq_catalogue_properties"/i' => 'This property already exists',
+    '/duplicate key value violates unique constraint "unq_properties"/i' => 'This property already exists',
     '/unq_collecting_methods/i' => 'This method already exists',
     '/unq_collecting_tools/i' => 'This tool already exist',
     '/violates check constraint ".*_minmax"/i' => 'Max count value must be superior or equal to Min count value',

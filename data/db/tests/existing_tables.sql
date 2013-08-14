@@ -12,7 +12,7 @@ SELECT has_table('possible_upper_levels','possible_upper_levels exists');
 SELECT has_table('comments','comments exists');
 SELECT has_table('tag_groups','tag_groups exists');
 SELECT has_table('gtu','gtu exists');
-SELECT has_table('catalogue_properties','catalogue_properties exists');
+SELECT has_table('properties','properties exists');
 SELECT has_table('identifications','identifications exists');
 SELECT has_table('vernacular_names','vernacular_names exists');
 SELECT has_table('expeditions','expeditions exists');
