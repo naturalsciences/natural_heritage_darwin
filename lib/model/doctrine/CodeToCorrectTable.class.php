@@ -46,7 +46,7 @@ class CodeToCorrectTable extends DarwinTable
     return $q->execute(array(), Doctrine_Core::HYDRATE_SINGLE_SCALAR);
   }
 
-  public function getForUser($uid, $offset=0, $limit= 50) {
+  public function getForUser($uid, $offset=0, $limit= 100) {
     $cols = BaseFormFilterDoctrine::getCollectionWithRights($uid, true);
 
     $conn_MGR = Doctrine_Manager::connection();

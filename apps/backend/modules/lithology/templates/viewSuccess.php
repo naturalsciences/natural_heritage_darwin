@@ -48,7 +48,7 @@ $(document).ready(function ()
       <tr>
         <th><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>
-          <?php if ($litho->Parent->getName() != "-") : ?>
+          <?php if ($litho->Parent->getName() != "-" && (!is_null($litho->Parent->getName()))) : ?>
             <?php echo link_to(__($litho->Parent->getName()), 'lithology/view?id='.$litho->Parent->getId(), array('id' => $litho->Parent->getId())) ?>
             <?php echo image_tag('info.png',"title=info class=info");?>
             <div class="tree">
