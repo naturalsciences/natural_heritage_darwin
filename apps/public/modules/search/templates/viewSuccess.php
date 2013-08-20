@@ -249,7 +249,7 @@
     </div>
     <?php endif;?>
     <h2 class="title"><?php echo __("Specimen Characteristics") ?></h2>  
-    <div class="borded right_padded">        
+    <div class="borded right_padded">
       <table class="caract_table">
         <tr>
           <td><span class="pager_nav"><?php echo __("Number of items") ; ?> :</span></td>
