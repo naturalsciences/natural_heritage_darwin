@@ -62,6 +62,68 @@ CREATE TRIGGER trg_cpy_unified_values BEFORE INSERT OR UPDATE
         ON properties FOR EACH ROW
         EXECUTE PROCEDURE fct_cpy_unified_values();
 
-CREATE TRIGGER trg_cpy_unified_values BEFORE INSERT OR UPDATE
+/*** Add other triggers **/
+
+
+CREATE TRIGGER trg_trk_log_table_properties AFTER INSERT OR UPDATE OR DELETE
         ON properties FOR EACH ROW
-        EXECUTE PROCEDURE fct_cpy_unified_values();
+        EXECUTE PROCEDURE fct_trk_log_table();
+
+CREATE TRIGGER trg_chk_ref_record_properties AFTER INSERT OR UPDATE
+        ON properties FOR EACH ROW
+        EXECUTE PROCEDURE fct_chk_ReferencedRecord();
+
+CREATE TRIGGER fct_cpy_trg_ins_update_dict_properties AFTER INSERT OR UPDATE
+        ON properties FOR EACH ROW
+        EXECUTE PROCEDURE trg_ins_update_dict();
+
+CREATE TRIGGER fct_cpy_trg_del_dict_properties AFTER DELETE OR UPDATE
+        ON properties FOR EACH ROW
+        EXECUTE PROCEDURE trg_del_dict();
+
+CREATE TRIGGER trg_cpy_fullToIndex_properties BEFORE INSERT OR UPDATE
+        ON properties FOR EACH ROW
+        EXECUTE PROCEDURE fct_cpy_fullToIndex();
+
+-- DELETE PROPERTY w-o values
+DELETE from catalogue_properties c where not exists (select 1 from properties_values where property_ref = c.id)
+
+INSERT INTO properties(
+            referenced_relation, record_id, property_type, applies_to,
+            date_from_mask, date_from, date_to_mask,
+            date_to, method, property_unit, property_accuracy
+            lower_value, upper_value) (
+
+SELECT
+referenced_relation,
+record_id,
+
+CASE WHEN coalesce(property_sub_type, '') = '' THEN property_type
+  WHEN property_type='electronical measurement' and property_sub_type = 'weight' THEN 'electronical weight'
+  ELSE property_sub_type END as prop_type,
+property_qualifier as applies_to,
+date_from_mask,
+date_from,
+date_to_mask,
+date_to,
+CASE WHEN coalesce(property_method, '') = '' THEN property_tool ELSE property_method END as method,
+
+CASE WHEN property_unit = 'unit' OR property_unit ='unit(s)' OR property_unit='' OR property_unit='units' THEN ''
+END as  property_unit,
+(select property_accuracy from properties_values where property_ref = c.id  limit 1) as property_accuracy,
+
+(select min(property_value) from properties_values where property_ref = c.id) as lower_value,
+CASE WHEN (select count(*) from properties_values where property_ref = c.id) > 1 THEN
+        (select max(property_value) from properties_values where property_ref = c.id)
+ELSE '' END as upper_value
+
+
+        from catalogue_properties c
+  where property_type != 'category'
+
+  );
+
+drop table catalogue_properties;
+drop table properties_values;
+DELETE FROM flat_dict where  referenced_relation in ('catalogue_properties', 'properties_values');
+
