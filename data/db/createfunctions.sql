@@ -578,7 +578,7 @@ LANGUAGE plpgsql;
 ** fct_cpy_length_conversion
 ** Convert length into unified version (m - meter)
 */
-CREATE OR REPLACE FUNCTION fct_cpy_length_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_length_conversion (IN property real, IN property_unit text) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -681,7 +681,7 @@ $$;
 ** fct_cpy_temperature_conversion
 ** Convert temperatures into unified version (K - Kelvin)
 */
-CREATE OR REPLACE FUNCTION fct_cpy_temperature_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_temperature_conversion (IN property real, IN property_unit text) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -709,7 +709,7 @@ $$;
 ** fct_cpy_time_conversion
 ** Convert time values into unified one (s - second)
 */
-CREATE OR REPLACE FUNCTION fct_cpy_time_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_time_conversion (IN property real, IN property_unit text) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -747,7 +747,7 @@ $$;
 ** If no unit or wrong unit provided value entered is returned so.
 ** If array of values is empty, empty array of values returned
 */
-CREATE OR REPLACE FUNCTION fct_cpy_speed_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_speed_conversion (IN property real, IN property_unit text) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -797,7 +797,7 @@ $$;
 ** fct_cpy_volume_conversion
 ** Convert volume into unified version (m³ - cube meter)
 */
-CREATE OR REPLACE FUNCTION fct_cpy_volume_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_volume_conversion (IN property real, IN property_unit text) RETURNS real
 language SQL STABLE
 AS
 $$
@@ -825,7 +825,7 @@ $$;
 ** fct_cpy_weight_conversion
 ** Convert weight into unified version (g - gram)
 */
-CREATE OR REPLACE FUNCTION fct_cpy_weight_conversion (IN property real, IN property_unit properties.property_unit%TYPE) RETURNS real
+CREATE OR REPLACE FUNCTION fct_cpy_weight_conversion (IN property real, IN property_unit text) RETURNS real
 language SQL STABLE
 AS
 $$

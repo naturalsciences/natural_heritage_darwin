@@ -1,6 +1,727 @@
 begin;
 set search_path=darwin2,public;
-\i  createfunctions.sql
+
+
+
+/***
+* Trigger function fct_cpy_fullToIndex
+* Call the fulltoIndex function for different tables
+*/
+CREATE OR REPLACE FUNCTION fct_cpy_fullToIndex() RETURNS trigger
+AS $$
+BEGIN
+        IF TG_TABLE_NAME = 'catalogue_properties' THEN
+                NEW.property_tool_indexed := COALESCE(fullToIndex(NEW.property_tool),'');
+                NEW.property_sub_type_indexed := COALESCE(fullToIndex(NEW.property_sub_type),'');
+                NEW.property_method_indexed := COALESCE(fullToIndex(NEW.property_method),'');
+                NEW.property_qualifier_indexed := COALESCE(fullToIndex(NEW.property_qualifier),'');
+        ELSIF TG_TABLE_NAME = 'chronostratigraphy' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'collections' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'expeditions' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'bibliography' THEN
+                NEW.title_indexed := fullToIndex(NEW.title);
+        ELSIF TG_TABLE_NAME = 'identifications' THEN
+                NEW.value_defined_indexed := COALESCE(fullToIndex(NEW.value_defined),'');
+        ELSIF TG_TABLE_NAME = 'lithology' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'lithostratigraphy' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'mineralogy' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+                NEW.formule_indexed := fullToIndex(NEW.formule);
+        ELSIF TG_TABLE_NAME = 'people' THEN
+                NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
+                NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
+                NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
+        ELSIF TG_TABLE_NAME = 'codes' THEN
+                IF NEW.code ~ '^[0-9]+$' THEN
+                    NEW.code_num := NEW.code;
+                ELSE
+                    NEW.code_num := null;
+                END IF;
+                NEW.full_code_indexed := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
+        ELSIF TG_TABLE_NAME = 'tag_groups' THEN
+                NEW.group_name_indexed := fullToIndex(NEW.group_name);
+                NEW.sub_group_name_indexed := fullToIndex(NEW.sub_group_name);
+        ELSIF TG_TABLE_NAME = 'taxonomy' THEN
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'classification_keywords' THEN
+                NEW.keyword_indexed := fullToIndex(NEW.keyword);
+        ELSIF TG_TABLE_NAME = 'users' THEN
+                NEW.formated_name_indexed := COALESCE(fullToIndex(NEW.formated_name),'');
+                NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
+        ELSIF TG_TABLE_NAME = 'vernacular_names' THEN
+                NEW.community_indexed := fullToIndex(NEW.community);
+                NEW.name_indexed := fullToIndex(NEW.name);
+        ELSIF TG_TABLE_NAME = 'igs' THEN
+                NEW.ig_num_indexed := fullToIndex(NEW.ig_num);
+        ELSIF TG_TABLE_NAME = 'collecting_methods' THEN
+                NEW.method_indexed := fullToIndex(NEW.method);
+        ELSIF TG_TABLE_NAME = 'collecting_tools' THEN
+                NEW.tool_indexed := fullToIndex(NEW.tool);
+        ELSIF TG_TABLE_NAME = 'loans' THEN
+                NEW.search_indexed := fullToIndex(COALESCE(NEW.name,'') || COALESCE(NEW.description,''));
+        ELSIF TG_TABLE_NAME = 'multimedia' THEN
+                NEW.search_indexed := fullToIndex ( COALESCE(NEW.title,'') ||  COALESCE(NEW.description,'') ) ;
+        ELSIF TG_TABLE_NAME = 'comments' THEN
+                NEW.comment_indexed := fullToIndex(NEW.comment);
+        ELSIF TG_TABLE_NAME = 'ext_links' THEN
+                NEW.comment_indexed := fullToIndex(NEW.comment);
+        ELSIF TG_TABLE_NAME = 'specimens' THEN
+                NEW.object_name_indexed := fullToIndex(COALESCE(NEW.object_name,'') );
+        END IF;
+        RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION fct_update_specimens_flat_related() returns TRIGGER
+language plpgsql
+AS
+$$
+DECLARE
+  indCount INTEGER := 0;
+  indType BOOLEAN := false;
+BEGIN
+  IF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'expeditions' THEN
+    IF NEW.name_indexed IS DISTINCT FROM OLD.name_indexed THEN
+      UPDATE specimens
+      SET (expedition_name, expedition_name_indexed) =
+          (NEW.name, NEW.name_indexed)
+      WHERE expedition_ref = NEW.id;
+    END IF;
+  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'collections' THEN
+    IF OLD.collection_type IS DISTINCT FROM NEW.collection_type
+    OR OLD.code IS DISTINCT FROM NEW.code
+    OR OLD.name IS DISTINCT FROM NEW.name
+    OR OLD.is_public IS DISTINCT FROM NEW.is_public
+    OR OLD.path IS DISTINCT FROM NEW.path
+    THEN
+      UPDATE specimens
+      SET (collection_type, collection_code, collection_name, collection_is_public,
+          collection_parent_ref, collection_path
+          ) =
+          (NEW.collection_type, NEW.code, NEW.name, NEW.is_public,
+           NEW.parent_ref, NEW.path
+          )
+      WHERE collection_ref = NEW.id;
+    END IF;
+  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'gtu' THEN
+    UPDATE specimens
+    SET (gtu_code, gtu_from_date, gtu_from_date_mask,
+         gtu_to_date, gtu_to_date_mask,
+         gtu_elevation, gtu_elevation_accuracy,
+         gtu_tag_values_indexed, gtu_location
+        ) =
+        (NEW.code, NEW.gtu_from_date, NEW.gtu_from_date_mask,
+         NEW.gtu_to_date, NEW.gtu_to_date_mask,
+         NEW.elevation, NEW.elevation_accuracy,
+         NEW.tag_values_indexed, NEW.location
+        )
+    WHERE gtu_ref = NEW.id;
+  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'igs' THEN
+    IF NEW.ig_num_indexed IS DISTINCT FROM OLD.ig_num_indexed OR NEW.ig_date IS DISTINCT FROM OLD.ig_date THEN
+      UPDATE specimens
+      SET (ig_num, ig_num_indexed, ig_date, ig_date_mask) =
+          (NEW.ig_num, NEW.ig_num_indexed, NEW.ig_date, NEW.ig_date_mask)
+      WHERE ig_ref = NEW.id;
+    END IF;
+  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'taxonomy' THEN
+    UPDATE specimens
+    SET (taxon_name, taxon_name_indexed,
+         taxon_level_ref, taxon_level_name,
+         taxon_status, taxon_path, taxon_parent_ref, taxon_extinct
+        ) =
+        (NEW.name, NEW.name_indexed,
+         NEW.level_ref, subq.level_name,
+         NEW.status, NEW.path, NEW.parent_ref, NEW.extinct
+        )
+        FROM
+        (SELECT level_name
+         FROM catalogue_levels
+         WHERE id = NEW.level_ref
+        ) subq
+    WHERE taxon_ref = NEW.id;
+
+    UPDATE specimens
+    SET (host_taxon_name, host_taxon_name_indexed,
+         host_taxon_level_ref, host_taxon_level_name,
+         host_taxon_status, host_taxon_path, host_taxon_parent_ref, host_taxon_extinct
+        ) =
+        (NEW.name, NEW.name_indexed,
+         NEW.level_ref, subq.level_name,
+         NEW.status, NEW.path, NEW.parent_ref, NEW.extinct
+        )
+        FROM
+        (SELECT level_name
+         FROM catalogue_levels
+         WHERE id = NEW.level_ref
+        ) subq
+    WHERE host_taxon_ref = NEW.id;
+  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'chronostratigraphy' THEN
+    UPDATE specimens
+    SET (chrono_name, chrono_name_indexed,
+         chrono_level_ref, chrono_level_name,
+         chrono_status,
+         chrono_local, chrono_color,
+         chrono_path, chrono_parent_ref
+        ) =
+        (NEW.name, NEW.name_indexed,
+         NEW.level_ref, subq.level_name,
+         NEW.status,
+         NEW.local_naming, NEW.color,
+         NEW.path, NEW.parent_ref
+        )
+        FROM
+        (SELECT level_name
+         FROM catalogue_levels
+         WHERE id = NEW.level_ref
+        ) subq
+    WHERE chrono_ref = NEW.id;
+  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'lithostratigraphy' THEN
+    UPDATE specimens
+    SET (litho_name, litho_name_indexed,
+         litho_level_ref, litho_level_name,
+         litho_status,
+         litho_local, litho_color,
+         litho_path, litho_parent_ref
+        ) =
+        (NEW.name, NEW.name_indexed,
+         NEW.level_ref, subq.level_name,
+         NEW.status,
+         NEW.local_naming, NEW.color,
+         NEW.path, NEW.parent_ref
+        )
+        FROM
+        (SELECT level_name
+         FROM catalogue_levels
+         WHERE id = NEW.level_ref
+        ) subq
+    WHERE litho_ref = NEW.id;
+  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'lithology' THEN
+    UPDATE specimens
+    SET (lithology_name, lithology_name_indexed,
+         lithology_level_ref, lithology_level_name,
+         lithology_status,
+         lithology_local, lithology_color,
+         lithology_path, lithology_parent_ref
+        ) =
+        (NEW.name, NEW.name_indexed,
+         NEW.level_ref, subq.level_name,
+         NEW.status,
+         NEW.local_naming, NEW.color,
+         NEW.path, NEW.parent_ref
+        )
+        FROM
+        (SELECT level_name
+         FROM catalogue_levels
+         WHERE id = NEW.level_ref
+        ) subq
+    WHERE lithology_ref = NEW.id;
+  ELSIF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'mineralogy' THEN
+    UPDATE specimens
+    SET (mineral_name, mineral_name_indexed,
+         mineral_level_ref, mineral_level_name,
+         mineral_status,
+         mineral_local, mineral_color,
+         mineral_path, mineral_parent_ref
+        ) =
+        (NEW.name, NEW.name_indexed,
+         NEW.level_ref, subq.level_name,
+         NEW.status,
+         NEW.local_naming, NEW.color,
+         NEW.path, NEW.parent_ref
+        )
+        FROM
+        (SELECT level_name
+         FROM catalogue_levels
+         WHERE id = NEW.level_ref
+        ) subq
+    WHERE mineral_ref = NEW.id;
+
+  ELSIF TG_TABLE_NAME = 'tag_groups' THEN
+    IF TG_OP = 'INSERT' THEN
+      IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
+        UPDATE specimens
+        SET gtu_country_tag_value = NEW.tag_value,
+            gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
+        WHERE gtu_ref = NEW.gtu_ref;
+      ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
+        UPDATE specimens
+        SET gtu_province_tag_value = NEW.tag_value,
+            gtu_province_tag_indexed = lineToTagArray(NEW.tag_value)
+        WHERE gtu_ref = NEW.gtu_ref;
+      ELSIF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
+      /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
+        UPDATE specimens
+        SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
+            gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')))
+        WHERE gtu_ref = NEW.gtu_ref;
+      END IF;
+    ELSIF TG_OP = 'UPDATE' THEN
+      IF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' AND NEW.sub_group_name_indexed != 'country' THEN
+        UPDATE specimens
+        SET gtu_country_tag_value = NULL,
+            gtu_country_tag_indexed = NULL
+        WHERE gtu_ref = NEW.gtu_ref;
+      ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'province' AND NEW.sub_group_name_indexed != 'province' THEN
+        UPDATE specimens
+        SET gtu_province_tag_value = NULL,
+            gtu_province_tag_indexed = NULL
+        WHERE gtu_ref = NEW.gtu_ref;
+      END IF;
+      IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
+        UPDATE specimens
+        SET gtu_country_tag_value = NEW.tag_value,
+            gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
+        WHERE gtu_ref = NEW.gtu_ref;
+      ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
+        UPDATE specimens
+        SET gtu_province_tag_value = NEW.tag_value,
+            gtu_province_tag_indexed = lineToTagArray(NEW.tag_value)
+        WHERE gtu_ref = NEW.gtu_ref;
+      END IF;
+      IF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
+      /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
+        UPDATE specimens
+        SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
+            gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = NEW.gtu_ref and sub_group_type not in ('country', 'province')))
+        WHERE gtu_ref = NEW.gtu_ref;
+      END IF;
+    ELSIF TG_OP = 'DELETE' THEN
+      IF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'country' THEN
+        UPDATE specimens
+        SET gtu_country_tag_value = NULL,
+            gtu_country_tag_indexed = NULL
+        WHERE gtu_ref = OLD.gtu_ref;
+      ELSIF OLD.group_name_indexed = 'administrativearea' AND OLD.sub_group_name_indexed = 'province' THEN
+        UPDATE specimens
+        SET gtu_province_tag_value = NULL,
+            gtu_province_tag_indexed = NULL
+        WHERE gtu_ref = OLD.gtu_ref;
+      ELSE
+        /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
+        UPDATE specimens
+        SET gtu_others_tag_value = (select array_to_string(array(select tag from tags where gtu_ref = OLD.gtu_ref and sub_group_type not in ('country', 'province')), ';')),
+            gtu_others_tag_indexed = (select array(select distinct fullToIndex(tag) from tags where gtu_ref = OLD.gtu_ref and sub_group_type not in ('country', 'province')))
+        WHERE gtu_ref = OLD.gtu_ref;
+      END IF;
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+
+
+CREATE OR REPLACE FUNCTION fct_update_specimen_flat() RETURNS TRIGGER
+AS $$
+DECLARE
+  cnt integer;
+  old_val specimens%ROWTYPE;
+  new_val specimens%ROWTYPE;
+BEGIN
+
+    IF TG_OP = 'UPDATE' THEN
+      old_val = OLD;
+      new_val = NEW;
+    ELSE --INSERT
+      new_val = NEW;
+    END IF;
+
+    IF old_val.taxon_ref IS DISTINCT FROM new_val.taxon_ref THEN
+      SELECT  name, name_indexed, level_ref, level_name, status, path, parent_ref, extinct
+        INTO NEW.taxon_name, NEW.taxon_name_indexed, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status,
+          NEW.taxon_path, NEW.taxon_parent_ref, NEW.taxon_extinct
+        FROM taxonomy c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.taxon_ref;
+    END IF;
+
+    IF old_val.chrono_ref IS DISTINCT FROM new_val.chrono_ref THEN
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref
+      INTO NEW.chrono_name, NEW.chrono_name_indexed, NEW.chrono_level_ref, NEW.chrono_level_name, NEW.chrono_status,
+          NEW.chrono_local, NEW.chrono_color, NEW.chrono_path, NEW.chrono_parent_ref
+        FROM chronostratigraphy c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.chrono_ref;
+    END IF;
+
+    IF old_val.litho_ref IS DISTINCT FROM new_val.litho_ref THEN
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref
+        INTO NEW.litho_name, NEW.litho_name_indexed, NEW.litho_level_ref, NEW.litho_level_name, NEW.litho_status,
+          NEW.litho_local, NEW.litho_color, NEW.litho_path, NEW.litho_parent_ref
+        FROM lithostratigraphy c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.litho_ref;
+    END IF;
+
+    IF old_val.lithology_ref IS DISTINCT FROM new_val.lithology_ref THEN
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref
+        INTO NEW.lithology_name, NEW.lithology_name_indexed, NEW.lithology_level_ref, NEW.lithology_level_name, NEW.lithology_status,
+          NEW.lithology_local, NEW.lithology_color, NEW.lithology_path, NEW.lithology_parent_ref
+        FROM lithology c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.lithology_ref;
+    END IF;
+
+    IF old_val.mineral_ref IS DISTINCT FROM new_val.mineral_ref THEN
+      SELECT  name, name_indexed, level_ref, level_name, status, local_naming, color, path, parent_ref
+        INTO NEW.mineral_name, NEW.mineral_name_indexed, NEW.mineral_level_ref, NEW.mineral_level_name, NEW.mineral_status,
+          NEW.mineral_local, NEW.mineral_color, NEW.mineral_path, NEW.mineral_parent_ref
+        FROM mineralogy c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.mineral_ref;
+    END IF;
+
+
+    IF old_val.expedition_ref IS DISTINCT FROM new_val.expedition_ref THEN
+      SELECT  name, name_indexed
+        INTO NEW.expedition_name, NEW.expedition_name_indexed
+        FROM expeditions c
+        WHERE c.id = new_val.expedition_ref;
+    END IF;
+
+    IF old_val.collection_ref IS DISTINCT FROM new_val.collection_ref THEN
+      SELECT collection_type, code, name, is_public, parent_ref, path
+        INTO NEW.collection_type, NEW.collection_code, NEW.collection_name, NEW.collection_is_public,
+          NEW.collection_parent_ref, NEW.collection_path
+        FROM collections c
+        WHERE c.id = new_val.collection_ref;
+    END IF;
+
+    IF old_val.ig_ref IS DISTINCT FROM new_val.ig_ref THEN
+      SELECT  ig_num, ig_num_indexed, ig_date, ig_date_mask
+        INTO NEW.ig_num, NEW.ig_num_indexed, NEW.ig_date, NEW.ig_date_mask
+        FROM igs c
+        WHERE c.id = new_val.ig_ref;
+    END IF;
+
+    IF old_val.gtu_ref IS DISTINCT FROM new_val.gtu_ref THEN
+      SELECT  code, gtu_from_date, gtu_from_date_mask,
+         gtu_to_date, gtu_to_date_mask,
+         elevation, elevation_accuracy,
+         tag_values_indexed, location,
+
+         taggr_countries.tag_value, lineToTagArray(taggr_countries.tag_value),
+         taggr_provinces.tag_value, lineToTagArray(taggr_provinces.tag_value),
+         (select array_to_string(array(select tag from tags where gtu_ref = c.id and sub_group_type not in ('country', 'province')), ';')) as other_gtu_values,
+         (select array(select distinct fullToIndex(tag) from tags where gtu_ref = c.id and sub_group_type not in ('country', 'province'))) as other_gtu_values_array
+
+        INTO NEW.gtu_code, NEW.gtu_from_date, NEW.gtu_from_date_mask, NEW.gtu_to_date, NEW.gtu_to_date_mask,
+         NEW.gtu_elevation, NEW.gtu_elevation_accuracy, NEW.gtu_tag_values_indexed, NEW.gtu_location,
+         NEW.gtu_country_tag_value, NEW.gtu_country_tag_indexed, NEW.gtu_province_tag_value,
+         NEW.gtu_province_tag_indexed, NEW.gtu_others_tag_value, NEW.gtu_others_tag_indexed
+        FROM gtu c
+          LEFT JOIN tag_groups taggr_countries ON c.id = taggr_countries.gtu_ref AND taggr_countries.group_name_indexed = 'administrativearea' AND taggr_countries.sub_group_name_indexed = 'country'
+          LEFT JOIN tag_groups taggr_provinces ON c.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
+        WHERE c.id = new_val.gtu_ref;
+    END IF;
+
+    IF old_val.host_taxon_ref IS DISTINCT FROM new_val.host_taxon_ref THEN
+      SELECT name, name_indexed, level_ref, level_name, status, path, parent_ref, extinct
+        INTO NEW.host_taxon_name, NEW.host_taxon_name_indexed, NEW.host_taxon_level_ref,
+         NEW.host_taxon_level_name, NEW.host_taxon_status, NEW.host_taxon_path, NEW.host_taxon_parent_ref,
+         NEW.host_taxon_extinct
+        FROM taxonomy c
+        INNER JOIN catalogue_levels l on c.level_ref = l.id
+        WHERE c.id = new_val.host_taxon_ref;
+    END IF;
+  RETURN NEW;
+END;
+$$
+language plpgsql;
+
+
+
+
+/*When unpromoting a user we have to remove the non availble columns from preferences*/
+CREATE OR REPLACE FUNCTION fct_unpromotion_impact_prefs() RETURNS TRIGGER
+language plpgSQL
+AS
+$$
+DECLARE
+  saved_search_row RECORD;
+BEGIN
+  IF NEW.db_user_type IS DISTINCT FROM OLD.db_user_type AND NEW.db_user_type = 1 THEN
+    UPDATE preferences
+    SET pref_value = subq.fields_available
+    FROM (select array_to_string(array(select fields_list
+                                       from regexp_split_to_table((SELECT pref_value
+                                                                   FROM preferences
+                                                                   WHERE user_ref = NEW.id
+                                                                     AND pref_key = 'search_cols_specimen'
+                                                                   LIMIT 1
+                                                                  ), E'\\|') as fields_list
+                                       where fields_list not in ('institution_ref', 'building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type', 'container_storage', 'sub_container', 'sub_container_type', 'sub_container_storage')
+                                      ),'|'
+                                ) as fields_available
+         ) subq
+    WHERE user_ref = NEW.id
+      AND pref_key = 'search_cols_specimen';
+    FOR saved_search_row IN SELECT id, visible_fields_in_result FROM my_saved_searches WHERE user_ref = NEW.id LOOP
+      UPDATE my_saved_searches
+      SET visible_fields_in_result = subq.fields_available
+      FROM (select array_to_string(array(select fields_list
+                                         from regexp_split_to_table(saved_search_row.visible_fields_in_result, E'\\|') as fields_list
+                                         where fields_list not in ('institution_ref','building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type', 'container_storage', 'sub_container', 'sub_container_type', 'sub_container_storage')
+                                        ),'|'
+                                  ) as fields_available
+          ) subq
+      WHERE id = saved_search_row.id;
+    END LOOP;
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+
+
+CREATE OR REPLACE FUNCTION fct_upd_people_in_flat() RETURNS TRIGGER
+AS
+$$
+DECLARE
+  spec_row RECORD;
+  ident RECORD;
+BEGIN
+
+  IF TG_OP = 'DELETE' THEN
+    IF OLD.people_type = 'collector' THEN
+      UPDATE specimens s SET spec_coll_ids = fct_remove_array_elem(spec_coll_ids,ARRAY[OLD.people_ref])
+        WHERE id  = OLD.record_id;
+    ELSIF OLD.people_type = 'donator' THEN
+      UPDATE specimens s SET spec_don_sel_ids = fct_remove_array_elem(spec_don_sel_ids,ARRAY[OLD.people_ref])
+        WHERE id  = OLD.record_id;
+    ELSIF OLD.people_type = 'identifier' THEN
+      SELECT * into ident FROM identifications where id = OLD.record_id;
+      IF NOT FOUND Then
+        RETURN OLD;
+      END IF;
+
+      UPDATE specimens s SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,ARRAY[OLD.people_ref])
+        WHERE id  = ident.record_id
+            AND NOT exists (
+              SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications'
+                WHERE i.record_id = ident.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens'
+            );
+    END IF;
+
+  ELSIF TG_OP = 'INSERT' THEN --- INSERT
+
+    IF NEW.people_type = 'collector' THEN
+      UPDATE specimens s SET spec_coll_ids = array_append(spec_coll_ids,NEW.people_ref)
+        WHERE id  = NEW.record_id and NOT (spec_coll_ids && ARRAY[ NEW.people_ref::integer ]);
+    ELSIF NEW.people_type = 'donator' THEN
+      UPDATE specimens s SET spec_don_sel_ids = array_append(spec_don_sel_ids,NEW.people_ref)
+        WHERE id  = NEW.record_id  and NOT (spec_don_sel_ids && ARRAY[ NEW.people_ref::integer ]);
+    ELSIF NEW.people_type = 'identifier' THEN
+      SELECT * into ident FROM identifications where id = NEW.record_id;
+
+      UPDATE specimens s SET spec_ident_ids = array_append(spec_ident_ids,NEW.people_ref)
+          WHERE id  = ident.record_id and NOT (spec_ident_ids && ARRAY[ NEW.people_ref::integer ]);
+    END IF;
+
+  ELSIF OLD.people_ref != NEW.people_ref THEN --UPDATE
+
+    IF NEW.people_type = 'collector' THEN
+      UPDATE specimens s SET spec_coll_ids = array_append(fct_remove_array_elem(spec_coll_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
+        WHERE id  = NEW.record_id;
+    ELSIF NEW.people_type = 'donator' THEN
+      UPDATE specimens s SET spec_don_sel_ids = array_append(fct_remove_array_elem(spec_don_sel_ids ,ARRAY[OLD.people_ref]),NEW.people_ref::integer)
+        WHERE id  = NEW.record_id;
+
+    ELSIF NEW.people_type = 'identifier' THEN
+      SELECT * into ident FROM identifications where id = NEW.record_id;
+
+        SELECT id, spec_ident_ids INTO spec_row FROM specimens WHERE id = ident.record_id;
+
+        IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications'
+          WHERE i.record_id = spec_row.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens' AND c.id != OLD.id
+        ) THEN
+          spec_row.spec_ident_ids := fct_remove_array_elem(spec_row.spec_ident_ids ,ARRAY[OLD.people_ref]);
+        END IF;
+
+        IF NOT spec_row.spec_ident_ids && ARRAY[ NEW.people_ref::integer ] THEN
+          spec_row.spec_ident_ids := array_append(spec_row.spec_ident_ids ,NEW.people_ref);
+        END IF;
+
+        UPDATE specimens SET spec_ident_ids = spec_row.spec_ident_ids WHERE id = spec_row.id;
+    END IF;
+    --else  raise info 'ooh';
+  END IF;
+  RETURN NEW;
+END;
+$$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION fct_clear_identifiers_in_flat() RETURNS TRIGGER
+AS
+$$
+BEGIN
+
+  IF EXISTS(SELECT true FROM catalogue_people cp WHERE cp.record_id = OLD.id AND cp.referenced_relation = 'identifications') THEN
+    -- There's NO identifier associated to this identification'
+    UPDATE specimens SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,
+      (
+        select array_agg(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id
+        AND people_ref NOT in
+          (
+            SELECT people_ref from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications'
+            AND p.people_type='identifier' where i.record_id=OLD.record_id AND i.referenced_relation=OLD.referenced_relation AND i.id != OLD.id
+          )
+      ))
+      WHERE id = OLD.record_id;
+  END IF;
+  RETURN OLD;
+
+END;
+$$ language plpgsql;
+
+
+
+
+CREATE OR REPLACE function chk_specimens_not_loaned() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+BEGIN
+
+    IF exists( SELECT 1 FROM loan_items i INNER JOIN loan_status s on i.loan_ref = s.loan_ref
+        WHERE s.is_last= true AND s.status != 'closed' AND i.specimen_ref = OLD.id ) THEN
+      RAISE EXCEPTION 'The Part is currently used in an ongoing loan';
+    END IF;
+    RETURN OLD;
+END;
+$$;
+
+CREATE OR REPLACE function fct_auto_insert_status_history() RETURNS TRIGGER
+language plpgsql
+AS
+$$
+DECLARE
+ user_id int;
+BEGIN
+    SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
+    IF user_id = 0 THEN
+      RETURN NEW;
+    END IF;
+
+    INSERT INTO loan_status
+      (loan_ref, user_ref, status, modification_date_time, comment, is_last)
+      VALUES
+      (NEW.id, user_id, 'new', now(), '', true);
+
+    INSERT INTO loan_rights
+      (loan_ref, user_ref, has_encoding_right)
+      VALUES
+      (NEW.id, user_id, true);
+
+  RETURN NEW;
+END;
+$$;
+
+
+
+
+
+CREATE OR REPLACE FUNCTION fct_cpy_loan_history(loan_id integer) RETURNS boolean
+AS $$
+BEGIN
+
+  -- LOAN
+  INSERT INTO loan_history (loan_ref, referenced_table, record_line)
+  (
+    select loan_id, 'loans', hstore(l.*) from loans l where l.id = loan_id
+
+    UNION
+
+    select loan_id, 'catalogue_people', hstore(p.*) from catalogue_people p where
+      (referenced_relation='loans'  AND record_id = loan_id) OR (referenced_relation='loan_items'  AND record_id in (select id from loan_items l where l.loan_ref = loan_id) )
+
+    UNION
+
+    select loan_id, 'catalogue_properties', hstore(c.*) from catalogue_properties c where
+      (referenced_relation='loans'  AND record_id = loan_id) OR (referenced_relation='loan_items'  AND record_id in (select id from loan_items l where l.loan_ref = loan_id) )
+
+  );
+
+
+  --ITEMS
+  INSERT INTO loan_history (loan_ref, referenced_table, record_line)
+  (
+    select loan_id, 'loan_items', hstore(l.*) from loan_items l where l.loan_ref = loan_id
+
+    UNION
+
+    select loan_id, 'specimens', hstore(sfl.*) from specimens sfl
+      where sfl.id in (select specimen_ref from loan_items l where l.loan_ref = loan_id)
+  );
+
+  -- BOTH
+  INSERT INTO loan_history (loan_ref, referenced_table, record_line)
+  (
+    select loan_id, 'people', hstore(p.*) from people p where id in (select (record_line->'people_ref')::int from loan_history where loan_ref = loan_id
+      and referenced_table='catalogue_people' and modification_date_time = now())
+
+    UNION
+
+    select loan_id, 'people_addresses', hstore(p.*) from people_addresses p where person_user_ref in (select (record_line->'id')::int from loan_history where loan_ref = loan_id
+      and referenced_table='people' and modification_date_time = now())
+
+    UNION
+
+    select loan_id, 'properties_values', hstore(v.*) from properties_values v where property_ref in (select (record_line->'id')::int from loan_history where loan_ref = loan_id
+      and referenced_table='catalogue_properties' and modification_date_time = now())
+  );
+  RETURN true;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ALTER TABLE specimens_accompanying drop constraint if exists fk_specimens_accompanying_specimens;
+ALTER TABLE specimens_accompanying add constraint "fk_specimens_accompanying_specimens" foreign key (specimen_ref) references specimens(id) on delete cascade;
 
 /***
 * Move Codes from Spec to parts
@@ -32,7 +753,7 @@ BEGIN
     specimens s
     INNER JOIN specimen_individuals i on s.id = i.specimen_ref
     INNER JOIN specimen_parts p on i.id = p.specimen_individual_ref
-    where  (select count(*) from spspecimen_individuals i2
+    where  (select count(*) from specimen_individuals i2
       inner join specimen_parts p2 on i2.id = p2.specimen_individual_ref
       where i2.specimen_ref = s.id) = 1
       LOOP
@@ -127,10 +848,11 @@ BEGIN
              ) 
          );
 
-      INSERT INTO catalogue_bibliography(referenced_relation, record_id, bibliography_ref) 
-        (SELECT 'specimen_parts', tmp.p_id, bibliography_ref
-          FROM catalogue_bibliography c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref  ); 
-
+        INSERT INTO catalogue_bibliography(referenced_relation, record_id, bibliography_ref)
+          (SELECT distinct 'specimen_parts', tmp.p_id, bibliography_ref
+            FROM catalogue_bibliography c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref
+            AND NOT EXISTS (select 1 from  catalogue_bibliography c2 WHERE c2.referenced_relation='specimen_parts' and c2.record_id=tmp.p_id and c2.bibliography_ref = c.bibliography_ref)
+          );
       INSERT INTO catalogue_people(
             referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
         ( SELECT 'specimen_parts', tmp.p_id, people_type, people_sub_type, order_by, people_ref
@@ -169,7 +891,7 @@ BEGIN
 
    FOR tmp2 IN SELECT * from identifications c where referenced_relation='specimens' and record_id=tmp.source_ref
    LOOP
-
+   BEGIN
       INSERT INTO identifications (referenced_relation, record_id, 
         notion_concerned, notion_date, 
         notion_date_mask, value_defined, value_defined_indexed, determination_status, 
@@ -180,7 +902,7 @@ BEGIN
           tmp2.notion_date_mask, tmp2.value_defined, tmp2.value_defined_indexed, tmp2.determination_status, 
           tmp2.order_by
          );
-      
+
         INSERT INTO catalogue_people(record_id, referenced_relation,  people_type, people_sub_type, 
             order_by, people_ref
             )
@@ -188,7 +910,9 @@ BEGIN
             order_by, people_ref
             from catalogue_people where record_id = tmp2.id and referenced_relation = 'identifications'
           );
-            
+      EXCEPTION
+        when unique_violation then --NOOP
+      END;
    END LOOP;
       IF cnt % 10000 = 0 THEN
         RAISE INFO 'CTN %', cnt ;
@@ -213,7 +937,7 @@ BEGIN
 
    source_ref := -1;
    RAISE INFO 'Start moving template_ref from indiv ';
-   FOR tmp IN SELECT i.id as source_ref, p.id as p_id from specimen_individuals
+   FOR tmp IN SELECT i.id as source_ref, p.id as p_id from specimen_individuals i
     INNER JOIN specimen_parts p on i.id = p.specimen_individual_ref
     LOOP
 
@@ -1043,16 +1767,16 @@ DROP INDEX idx_specimens_spec_id;
 alter table specimens drop column ind_id;
 alter table specimens drop column spec_id;
 
-drop function chk_specimens_not_loaned();
 
-
-
-\i  createfunctions.sql
 \i reports/ticketing/labeling.sql
 
 CREATE TRIGGER trg_chk_specimens_not_loaned BEFORE DELETE
   ON specimens FOR EACH ROW
   EXECUTE PROCEDURE chk_specimens_not_loaned();
+
+SET SESSION session_replication_role = replica;
+delete from template_table_record_ref where referenced_relation ='specimen_individuals' or referenced_relation ='specimen_parts';
+SET SESSION session_replication_role = origin;
 
 delete from my_widgets where category in ('specimen_widget', 'individual_widget', 'part_widget');
 update my_widgets set group_name='multimedia', title_perso='Multimedia', mandatory = false where category='specimensearch_widget' and group_name = 'whatSearched';

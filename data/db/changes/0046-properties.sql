@@ -37,10 +37,10 @@ comment on column properties.date_from_mask is 'Mask Flag to know wich part of t
 comment on column properties.date_to is 'For a range of measurements, give the measurement stop date/time - if null, takes a generic replacement value';
 comment on column properties.date_to_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
 comment on column properties.property_unit is 'Unit used for property value introduced';
-comment on column properties.property_method is 'Method used to collect property value';
-comment on column properties.property_method_indexed is 'Indexed version of property_method field - if null, takes a generic replacement value';
+comment on column properties.method is 'Method used to collect property value';
+comment on column properties.method_indexed is 'Indexed version of property_method field - if null, takes a generic replacement value';
 comment on column properties.lower_value is 'Lower value of Single Value';
-comment on column properties.lower_value_unified is 'unified version of the value for comparison with other units';µ
+comment on column properties.lower_value_unified is 'unified version of the value for comparison with other units';
 comment on column properties.upper_value is 'upper value if in bound';
 comment on column properties.upper_value_unified is 'unified version of the value for comparison with other units';
 comment on column properties.property_accuracy is 'Accuracy of the values';
@@ -86,12 +86,12 @@ CREATE TRIGGER trg_cpy_fullToIndex_properties BEFORE INSERT OR UPDATE
         EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
 -- DELETE PROPERTY w-o values
-DELETE from catalogue_properties c where not exists (select 1 from properties_values where property_ref = c.id)
+DELETE from catalogue_properties c where not exists (select 1 from properties_values where property_ref = c.id);
 
 INSERT INTO properties(
             referenced_relation, record_id, property_type, applies_to,
             date_from_mask, date_from, date_to_mask,
-            date_to, method, property_unit, property_accuracy
+            date_to, method, property_unit, property_accuracy,
             lower_value, upper_value) (
 
 SELECT
@@ -101,7 +101,7 @@ record_id,
 CASE WHEN coalesce(property_sub_type, '') = '' THEN property_type
   WHEN property_type='electronical measurement' and property_sub_type = 'weight' THEN 'electronical weight'
   ELSE property_sub_type END as prop_type,
-property_qualifier as applies_to,
+COALESCE(property_qualifier,'') as applies_to,
 date_from_mask,
 date_from,
 date_to_mask,
@@ -109,8 +109,8 @@ date_to,
 CASE WHEN coalesce(property_method, '') = '' THEN property_tool ELSE property_method END as method,
 
 CASE WHEN property_unit = 'unit' OR property_unit ='unit(s)' OR property_unit='' OR property_unit='units' THEN ''
-END as  property_unit,
-(select property_accuracy from properties_values where property_ref = c.id  limit 1) as property_accuracy,
+ELSE COALESCE(property_unit,'') END as  property_unit,
+COALESCE((select property_accuracy from properties_values where property_ref = c.id  limit 1)::text, '') as property_accuracy,
 
 (select min(property_value) from properties_values where property_ref = c.id) as lower_value,
 CASE WHEN (select count(*) from properties_values where property_ref = c.id) > 1 THEN
@@ -123,7 +123,7 @@ ELSE '' END as upper_value
 
   );
 
-drop table catalogue_properties;
 drop table properties_values;
+drop table catalogue_properties;
 DELETE FROM flat_dict where  referenced_relation in ('catalogue_properties', 'properties_values');
 
