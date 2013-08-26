@@ -1783,4 +1783,9 @@ update my_widgets set group_name='multimedia', title_perso='Multimedia', mandato
 
 select 'Do not forget to run : symfony darwin:add-widgets --reset specimen_widget';
 
+GRANT SELECT ON specimens TO d2viewer;
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens TO cebmpad;
+ GRANT USAGE, SELECT ON SEQUENCE darwin2.specimens_id_seq TO cebmpad;
+
+
 commit;

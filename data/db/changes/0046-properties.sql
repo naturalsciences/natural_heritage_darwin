@@ -51,6 +51,12 @@ CREATE INDEX idx_properties_property_unit on properties(property_unit);
 CREATE INDEX idx_properties_property_lower_value on properties(lower_value);
 CREATE INDEX idx_properties_property_upper_value on properties(upper_value);
 
+GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.properties TO cebmpad;
+GRANT USAGE, SELECT ON SEQUENCE darwin2.properties_id_seq TO cebmpad;
+GRANT SELECT ON properties TO d2viewer;
+GRANT USAGE ON properties_id_seq TO d2viewer;
+
+
 \i  createfunctions.sql
 
 
@@ -127,3 +133,4 @@ drop table properties_values;
 drop table catalogue_properties;
 DELETE FROM flat_dict where  referenced_relation in ('catalogue_properties', 'properties_values');
 
+COMMIT;

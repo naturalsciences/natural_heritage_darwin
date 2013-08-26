@@ -66,6 +66,8 @@
  GRANT SELECT ON loan_history TO d2viewer;
  GRANT SELECT ON catalogue_bibliography TO d2viewer;
  GRANT SELECT ON bibliography TO d2viewer;
+ GRANT SELECT ON specimens_relationships TO d2viewer;
+ GRANT SELECT ON properties TO d2viewer;
 
  GRANT SELECT, INSERT ON users_comm TO d2viewer;
  GRANT USAGE ON users_comm_id_seq to d2viewer;
@@ -83,4 +85,7 @@
  GRANT USAGE ON preferences_id_seq TO d2viewer;
  GRANT SELECT, INSERT ON informative_workflow TO d2viewer;
  GRANT USAGE ON informative_workflow_id_seq TO d2viewer;
+ GRANT USAGE ON specimens_relationships_id_seq TO d2viewer;
+ GRANT USAGE ON properties_id_seq TO d2viewer;
+
  ALTER USER d2viewer SET search_path TO darwin2, public;

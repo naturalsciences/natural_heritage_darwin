@@ -67,6 +67,8 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.loan_history TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_bibliography TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.bibliography TO cebmpad;
+ GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens_relationships TO cebmpad;
+ GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.properties TO cebmpad;
 
  GRANT USAGE, SELECT ON SEQUENCE darwin2.staging_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.catalogue_levels_id_seq TO cebmpad;
@@ -127,6 +129,8 @@
  GRANT USAGE, SELECT ON SEQUENCE darwin2.loan_history_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.bibliography_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.catalogue_bibliography_id_seq TO cebmpad;
+ GRANT USAGE, SELECT ON SEQUENCE darwin2.specimens_relationships_id_seq TO cebmpad;
+ GRANT USAGE, SELECT ON SEQUENCE darwin2.properties_id_seq TO cebmpad;
 
  ALTER USER cebmpad SET search_path TO darwin2, public;
 

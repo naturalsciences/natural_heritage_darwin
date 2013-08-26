@@ -308,6 +308,11 @@ alter table specimens drop column host_taxon_extinct ;
  alter table staging drop column host_taxon_ref;
  alter table staging drop column host_relationship;
  
+ GRANT SELECT, INSERT, UPDATE, DELETE ON specimens_relationships TO cebmpad;
+ GRANT USAGE, SELECT ON SEQUENCE darwin2.specimens_relationships_id_seq TO cebmpad;
+
+ GRANT SELECT ON specimens_relationships TO d2viewer;
+ GRANT USAGE ON specimens_relationships_id_seq TO d2viewer;
 
  delete from flat_dict where dict_field = 'host_relationship';
  
