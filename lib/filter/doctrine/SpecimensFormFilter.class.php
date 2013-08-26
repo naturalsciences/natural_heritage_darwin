@@ -817,7 +817,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $params[] = $code['referenced_relation'];
     }
     if(! empty($params)) {
-      $query->addWhere("s.specimen_ref in (select fct_searchCodes($str_params) )", $params);
+      $query->addWhere("s.id in (select fct_searchCodes($str_params) )", $params);
     }
  
     return $query ;
@@ -942,7 +942,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       ->from('Specimens s');
 
     if($values['with_multimedia'])
-      $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.specimen_ref)") ;
+      $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.id)") ;
 
     $this->options['query'] = $query;
 

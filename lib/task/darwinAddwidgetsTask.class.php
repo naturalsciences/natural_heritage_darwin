@@ -36,7 +36,7 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
-    if(($options['name'] && !$options['category']) || (!$options['name'] && $options['category']))
+    if($options['name'] && !$options['category'])
     {
       $this->logSection('Incomplete command', sprintf('If you want to add specific widget, you have to give de --name option AND the --category option'),null, 'ERROR') ;
       exit() ;

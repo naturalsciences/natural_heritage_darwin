@@ -98,7 +98,13 @@ class Users extends BaseUsers
         $array = $data->loadData($file);
         foreach ($array as $widget => $array_values)
         {
-          if($thisWidget && ($thisWidget['name'] != $array_values['group_name'] || $thisWidget['category'] != $array_values['category'])) continue;
+          if($thisWidget) {
+            if(isset($thisWidget['category']) && $thisWidget['category'] != $array_values['category']) {
+              continue;
+            } elseif(isset($thisWidget['name']) &&  isset($thisWidget['category']) && ($thisWidget['name'] != $array_values['group_name'] || $thisWidget['category'] != $array_values['category']) ) {
+              continue;
+            }
+          }
           $pref = new MyWidgets() ;
           $array_values['user_ref'] = $this->getId();
           $pref->fromArray($array_values);

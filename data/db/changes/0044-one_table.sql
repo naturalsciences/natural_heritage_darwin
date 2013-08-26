@@ -1704,7 +1704,7 @@ CREATE INDEX  idx_specimens_spec_id on specimens(spec_id);
 update my_saved_searches set subject='specimen';
 delete from preferences where pref_key in('search_cols_specimen', 'search_cols_individual', 'gtu_google_activated') ;
 update preferences set pref_key='search_cols_specimen' where pref_key='search_cols_part';
-update flat_dict set referenced_relation='specimens' where referenced_relation in ('specimen_individuals', 'specimen_part');
+update flat_dict set referenced_relation='specimens' where referenced_relation in ('specimen_individuals', 'specimen_parts');
 
 
 alter table specimen_collecting_methods add column old_id integer;
@@ -1781,7 +1781,7 @@ SET SESSION session_replication_role = origin;
 delete from my_widgets where category in ('specimen_widget', 'individual_widget', 'part_widget');
 update my_widgets set group_name='multimedia', title_perso='Multimedia', mandatory = false where category='specimensearch_widget' and group_name = 'whatSearched';
 
-select 'Do not forget to run : symfony darwin:add-widgets --reset specimen_widget';
+select 'Do not forget to run : symfony darwin:add-widgets --reset --category=specimen_widget --env=prod all';
 
 GRANT SELECT ON specimens TO d2viewer;
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens TO cebmpad;

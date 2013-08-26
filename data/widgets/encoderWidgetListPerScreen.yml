@@ -165,16 +165,6 @@ sw26:
    visible: true
    title_perso: Maintenance
 
-sw27:
-   col_num: 2
-   category: specimen_widget
-   group_name: parent
-   mandatory: false
-   order_by: 15
-   opened: true
-   visible: true
-   title_perso: Parent 
-
 pe3:
    col_num: 1
    category: people_widget
