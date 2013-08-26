@@ -44,13 +44,6 @@
       </td>
     </tr>
     <tr>
-      <th><?php echo $form['code_part_code_auto_copy']->renderLabel();?></th>
-      <td>
-        <?php echo $form['code_part_code_auto_copy']->renderError(); ?>
-        <?php echo $form['code_part_code_auto_copy'];?>
-      </td>
-    </tr>
-    <tr>
       <th><?php echo $form['code_specimen_duplicate']->renderLabel();?></th>
       <td>
         <?php echo $form['code_specimen_duplicate']->renderError(); ?>

@@ -191,7 +191,6 @@ $browser->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(4) td input#collections_code_suffix_separator', 1)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(5) td input#collections_code_suffix', 1)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(6) td input#collections_code_auto_increment', 1)->
-    checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(7) td input#collections_code_part_code_auto_copy', 1)->
   end()->
   click('a.delete_button')->
   with('response')->

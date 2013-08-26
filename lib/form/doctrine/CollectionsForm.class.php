@@ -18,7 +18,6 @@ class CollectionsForm extends BaseCollectionsForm
           $this['code_prefix_separator'],
           $this['code_suffix'],
           $this['code_suffix_separator'],
-          $this['code_part_code_auto_copy'],
           $this['name_indexed']
          );
     $this->widgetSchema['is_public'] = new sfWidgetFormInputCheckbox(array ('default' => 'true'), array('title' => 'checked = public'));          

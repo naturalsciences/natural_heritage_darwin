@@ -342,7 +342,6 @@ Collections:
         code_prefix_separator: { type: string}
         code_suffix: { type: string}
         code_suffix_separator: { type: string}
-        code_part_code_auto_copy: { type: boolean, notnull: true, default: false}
         code_specimen_duplicate: { type: boolean, notnull: true, default: false}
         is_public: { type:boolean, notnull:true,default:true}
     relations:

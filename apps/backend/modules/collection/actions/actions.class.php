@@ -69,7 +69,6 @@ class collectionActions extends DarwinActions
       $item->setCodeSuffix(Doctrine::getTable('Collections')->getDefaultValueOf('code_suffix'));
       $item->setCodeSuffixSeparator(Doctrine::getTable('Collections')->getDefaultValueOf('code_suffix_separator'));
       $item->setCodeAutoIncrement(Doctrine::getTable('Collections')->getDefaultValueOf('code_auto_increment'));
-      $item->setCodePartCodeAutoCopy(Doctrine::getTable('Collections')->getDefaultValueOf('code_part_code_auto_copy'));
       $item->save();
       return $this->renderText('ok');
     }
