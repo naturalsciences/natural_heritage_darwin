@@ -110,6 +110,16 @@ class Multimedia extends BaseMultimedia
     return $this->getReferencedRelation().'/'.implode('/',str_split($num,'2'));
   }
 
+  public function move($from){
+    $this->checkUploadPathAvailable() ;
+    $filename = basename($from);
+    $this->setUri($this->getBuildedDir().$filename);
+    copy(
+      sfConfig::get('sf_upload_dir')."/multimedia/".$from,
+      sfConfig::get('sf_upload_dir')."/multimedia/".$this->getUri()
+    );
+  }
+
   protected function checkUploadPathAvailable()
   {
     //function used to verify if the folder for the uploaded file exists

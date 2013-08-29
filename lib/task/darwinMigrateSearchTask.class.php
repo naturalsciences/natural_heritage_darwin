@@ -35,6 +35,40 @@ EOF;
       $task->run($arguments, $options);
 
       // Move Images
+      $q = Doctrine_Query::create()
+        ->from('Multimedia m')
+        ->where('referenced_relation= ?', 'specimens')
+        //->andWhere('uri not like ?', '%part%')
+        ;
+      $mmObjects = $q->execute();
+      //Remove Old Folder
+      $dirsNames=array('specimens', 'specimen_individuals', 'specimen_parts');
+      foreach($dirsNames as $dirn) {
+        if(is_dir(sfConfig::get('sf_upload_dir')."/multimedia/".$dirn."/") &&
+          ! is_dir(sfConfig::get('sf_upload_dir')."/multimedia/old".$dirn."/")) {
+          rename(
+            sfConfig::get('sf_upload_dir')."/multimedia/".$dirn."/",
+            sfConfig::get('sf_upload_dir')."/multimedia/".$dirn."/"
+          );
+        }
+      }
+
+      $i=0;
+      foreach($mmObjects as $obj) {
+        if( file_exists(sfConfig::get('sf_upload_dir')."/multimedia/old".$obj->getUri()) ) {
+
+          $obj->move('old'.$obj->getUri());
+          $obj->save();
+          $i++;
+        } else {
+          echo sfConfig::get('sf_upload_dir')."/multimedia/old".$obj->getUri()."\n";
+          echo $obj->getUri()."\n";
+          die("AAAARG\n");
+        }
+        if($i%10 == 0) {
+          $this->logSection('move-file', sprintf('Moved %d files',$i));
+        }
+      }
     }
 /*
     $searches = Doctrine::getTable('MySavedSearches')->findAll();
