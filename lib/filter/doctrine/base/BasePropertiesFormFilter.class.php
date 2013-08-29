@@ -48,9 +48,9 @@ abstract class BasePropertiesFormFilter extends BaseFormFilterDoctrine
       'method'              => new sfValidatorPass(array('required' => false)),
       'method_indexed'      => new sfValidatorPass(array('required' => false)),
       'lower_value'         => new sfValidatorPass(array('required' => false)),
-      'lower_value_unified' => new sfValidatorPass(array('required' => false)),
+      'lower_value_unified' => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
       'upper_value'         => new sfValidatorPass(array('required' => false)),
-      'upper_value_unified' => new sfValidatorPass(array('required' => false)),
+      'upper_value_unified' => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
       'property_accuracy'   => new sfValidatorPass(array('required' => false)),
     ));
 
@@ -86,9 +86,9 @@ abstract class BasePropertiesFormFilter extends BaseFormFilterDoctrine
       'method'              => 'Text',
       'method_indexed'      => 'Text',
       'lower_value'         => 'Text',
-      'lower_value_unified' => 'Text',
+      'lower_value_unified' => 'Number',
       'upper_value'         => 'Text',
-      'upper_value_unified' => 'Text',
+      'upper_value_unified' => 'Number',
       'property_accuracy'   => 'Text',
     );
   }

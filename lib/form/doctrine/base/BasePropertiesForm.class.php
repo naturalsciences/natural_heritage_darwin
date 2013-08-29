@@ -30,9 +30,9 @@ abstract class BasePropertiesForm extends BaseFormDoctrine
       'method'              => new sfWidgetFormTextarea(),
       'method_indexed'      => new sfWidgetFormTextarea(),
       'lower_value'         => new sfWidgetFormTextarea(),
-      'lower_value_unified' => new sfWidgetFormTextarea(),
+      'lower_value_unified' => new sfWidgetFormInputText(),
       'upper_value'         => new sfWidgetFormTextarea(),
-      'upper_value_unified' => new sfWidgetFormTextarea(),
+      'upper_value_unified' => new sfWidgetFormInputText(),
       'property_accuracy'   => new sfWidgetFormTextarea(),
     ));
 
@@ -52,9 +52,9 @@ abstract class BasePropertiesForm extends BaseFormDoctrine
       'method'              => new sfValidatorString(array('required' => false)),
       'method_indexed'      => new sfValidatorString(array('required' => false)),
       'lower_value'         => new sfValidatorString(array('required' => false)),
-      'lower_value_unified' => new sfValidatorString(array('required' => false)),
+      'lower_value_unified' => new sfValidatorNumber(array('required' => false)),
       'upper_value'         => new sfValidatorString(array('required' => false)),
-      'upper_value_unified' => new sfValidatorString(array('required' => false)),
+      'upper_value_unified' => new sfValidatorNumber(array('required' => false)),
       'property_accuracy'   => new sfValidatorString(array('required' => false)),
     ));
 

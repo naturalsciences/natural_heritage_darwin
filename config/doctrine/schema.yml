@@ -155,9 +155,9 @@ Properties:
         method: {type: string}
         method_indexed: {type: string}
         lower_value: {type: string, notnull: true, default:''}
-        lower_value_unified: {type: string}
+        lower_value_unified: {type: float}
         upper_value: {type: string, notnull: true , default:''}
-        upper_value_unified: {type: string}
+        upper_value_unified: {type: float}
         property_accuracy: {type: string, default:''}
 
 Identifications:

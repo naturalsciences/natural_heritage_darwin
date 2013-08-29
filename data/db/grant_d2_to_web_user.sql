@@ -2,7 +2,6 @@
 
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_table_record_ref TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_levels TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_properties TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.template_classifications TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.collection_maintenance TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.catalogue_relationships TO cebmpad;
@@ -34,7 +33,6 @@
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens_relationships TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.possible_upper_levels TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.people_relationships TO cebmpad;
- GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.properties_values TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.preferences TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.staging_tag_groups TO cebmpad;
  GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.users_comm TO cebmpad;
@@ -73,7 +71,6 @@
  GRANT USAGE, SELECT ON SEQUENCE darwin2.staging_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.catalogue_levels_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.catalogue_people_id_seq TO cebmpad;
- GRANT USAGE, SELECT ON SEQUENCE darwin2.catalogue_properties_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.catalogue_relationships_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.chronostratigraphy_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.classification_synonymies_group_id_seq TO cebmpad;
@@ -106,7 +103,6 @@
  GRANT USAGE, SELECT ON SEQUENCE darwin2.people_languages_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.preferences_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.people_relationships_id_seq TO cebmpad;
- GRANT USAGE, SELECT ON SEQUENCE darwin2.properties_values_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.specimen_collecting_methods_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.specimen_collecting_tools_id_seq TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.specimens_id_seq TO cebmpad;

@@ -11,15 +11,6 @@ class PropertiesForm extends BasePropertiesForm
 {
   public function configure()
   {
-//     unset(
-//       $this[' _indexed'],
-//       $this['property_qualifier_indexed'],
-//       $this['property_method_indexed'],
-//       $this['property_tool_indexed'],
-//       $this['date_from_mask'],
-//       $this['date_to_mask'],
-//       $this['id']
-//     );
     $this->useFields(array(
       'date_from',
       'date_to',

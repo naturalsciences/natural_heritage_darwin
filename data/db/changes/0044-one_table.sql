@@ -853,10 +853,19 @@ BEGIN
             FROM catalogue_bibliography c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref
             AND NOT EXISTS (select 1 from  catalogue_bibliography c2 WHERE c2.referenced_relation='specimen_parts' and c2.record_id=tmp.p_id and c2.bibliography_ref = c.bibliography_ref)
           );
+
       INSERT INTO catalogue_people(
             referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
         ( SELECT 'specimen_parts', tmp.p_id, people_type, people_sub_type, order_by, people_ref
-         FROM catalogue_people c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref  ); 
+         FROM catalogue_people c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref  );
+
+      INSERT INTO multimedia(
+          referenced_relation, record_id, is_digital, type, sub_type, title, description,
+          uri, filename, creation_date, creation_date_mask, mime_type, visible, publishable, search_indexed)
+
+        ( SELECT 'specimen_parts', tmp.p_id, is_digital, type, sub_type, title, description,
+          uri, filename, creation_date, creation_date_mask, mime_type, visible, publishable, search_indexed
+         FROM multimedia c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref  );
 
    FOR tmp2 IN SELECT * from catalogue_properties c where referenced_relation='specimens' and record_id=tmp.source_ref
    LOOP
@@ -954,6 +963,13 @@ BEGIN
              ) 
          );
 
+      INSERT INTO multimedia(
+          referenced_relation, record_id, is_digital, type, sub_type, title, description,
+          uri, filename, creation_date, creation_date_mask, mime_type, visible, publishable, search_indexed)
+
+        ( SELECT 'specimen_parts', tmp.p_id, is_digital, type, sub_type, title, description,
+          uri, filename, creation_date, creation_date_mask, mime_type, visible, publishable, search_indexed
+         FROM multimedia c WHERE c.referenced_relation='specimen_individuals' and record_id=tmp.source_ref  );
          
    FOR tmp2 IN SELECT * from catalogue_properties c where referenced_relation='specimen_individuals' and record_id=tmp.source_ref
    LOOP
@@ -1429,8 +1445,8 @@ SELECT
   f.individual_type_group,
   f.individual_type_search,
   f.individual_sex,
-  f.individual_state,
   f.individual_stage,
+  f.individual_state,
   f.individual_social_status,
   f.individual_rock_form,
 
@@ -1775,13 +1791,15 @@ CREATE TRIGGER trg_chk_specimens_not_loaned BEFORE DELETE
   EXECUTE PROCEDURE chk_specimens_not_loaned();
 
 SET SESSION session_replication_role = replica;
-delete from template_table_record_ref where referenced_relation ='specimen_individuals' or referenced_relation ='specimen_parts';
+delete from template_table_record_ref where referenced_relation ='specimens' or referenced_relation ='specimen_individuals';
+
+UPDATE template_table_record_ref set referenced_relation = 'specimens' where referenced_relation ='specimen_parts';
 SET SESSION session_replication_role = origin;
 
 delete from my_widgets where category in ('specimen_widget', 'individual_widget', 'part_widget');
 update my_widgets set group_name='multimedia', title_perso='Multimedia', mandatory = false where category='specimensearch_widget' and group_name = 'whatSearched';
 
-select 'Do not forget to run : symfony darwin:add-widgets --reset --category=specimen_widget --env=prod all';
+select 'Do not forget to run : php symfony darwin:migrate --env=prod 44';
 
 GRANT SELECT ON specimens TO d2viewer;
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens TO cebmpad;

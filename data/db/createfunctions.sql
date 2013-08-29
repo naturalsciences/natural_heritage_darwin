@@ -857,7 +857,7 @@ $$;
 ** convert_to_unified
 * convert the unit to the unified form
 */
-CREATE OR REPLACE FUNCTION convert_to_unified (IN property varchar, IN property_unit varchar, IN property_type varchar) RETURNS varchar
+CREATE OR REPLACE FUNCTION convert_to_unified (IN property varchar, IN property_unit varchar) RETURNS float
 language plpgsql
 AS
 $$
@@ -871,7 +871,82 @@ BEGIN
     BEGIN
       r_val := property::real;
     EXCEPTION WHEN SQLSTATE '22P02' THEN
-      RETURN '';
+      RETURN null;
+    END;
+
+    IF property_unit IN ('Kt', 'Beaufort', 'm/s') THEN
+        RETURN fct_cpy_speed_conversion(r_val, property_unit)::text;
+    END IF;
+
+    IF property_unit IN ( 'g', 'hg', 'kg', 'ton', 'dg', 'cg', 'mg', 'lb', 'lbs', 'pound' , 'ounce' , 'grain') THEN
+        RETURN fct_cpy_weight_conversion(r_val, property_unit)::text;
+    END IF;
+
+    IF property_unit IN ('m³', 'l', 'cm³', 'ml', 'mm³' ,'µl' , 'µm³' , 'km³', 'Ml' , 'hl') THEN
+        RETURN fct_cpy_volume_conversion(r_val, property_unit)::text;
+    END IF;
+
+    IF property_unit IN ('K', '°C', '°F', '°Ra', '°Re', '°r', '°N', '°Rø', '°De') THEN
+        RETURN fct_cpy_temperature_conversion(r_val, property_unit)::text;
+    END IF;
+
+    IF property_unit IN ('m', 'dm', 'cm', 'mm', 'µm', 'nm', 'pm', 'fm', 'am', 'zm', 'ym', 'am', 'dam', 'hm', 'km', 'Mm', 'Gm', 'Tm', 'Pm', 'Em', 'Zm', 'Ym', 'mam', 'mom', 'Å', 'ua', 'ch', 'fathom', 'fermi', 'ft', 'in', 'K', 'l.y.', 'ly', 'µ', 'mil', 'mi', 'nautical mi', 'pc', 'point', 'pt', 'pica', 'rd', 'yd', 'arp', 'lieue', 'league', 'cal', 'twp', 'p', 'P', 'fur', 'brasse', 'vadem', 'fms') THEN
+        RETURN fct_cpy_length_conversion(r_val, property_unit)::text;
+    END IF;
+
+    RETURN  property;
+
+END;
+$$;
+
+
+CREATE OR REPLACE FUNCTION is_property_unit_in_group(searched_unit text, property_unit text) RETURNS boolean
+LANGUAGE SQL IMMUTABLE AS
+$$
+
+  SELECT CASE
+  WHEN $1 IN ('Kt', 'Beaufort', 'm/s')
+    AND  $2  IN ('Kt', 'Beaufort', 'm/s')
+    THEN TRUE
+  WHEN $1 IN ( 'g', 'hg', 'kg', 'ton', 'dg', 'cg', 'mg', 'lb', 'lbs', 'pound' , 'ounce' , 'grain')
+    AND  $2  IN ( 'g', 'hg', 'kg', 'ton', 'dg', 'cg', 'mg', 'lb', 'lbs', 'pound' , 'ounce' , 'grain')
+    THEN TRUE
+
+  WHEN $1 IN ('m³', 'l', 'cm³', 'ml', 'mm³' ,'µl' , 'µm³' , 'km³', 'Ml' , 'hl')
+    AND  $2  IN ( 'g', 'hg', 'kg', 'ton', 'dg', 'cg', 'mg', 'lb', 'lbs', 'pound' , 'ounce' , 'grain')
+    THEN TRUE
+
+  WHEN $1 IN ('K', '°C', '°F', '°Ra', '°Re', '°r', '°N', '°Rø', '°De')
+    AND  $2  IN ('K', '°C', '°F', '°Ra', '°Re', '°r', '°N', '°Rø', '°De')
+    THEN TRUE
+
+  WHEN $1 IN ('m', 'dm', 'cm', 'mm', 'µm', 'nm', 'pm', 'fm', 'am', 'zm', 'ym', 'am', 'dam', 'hm', 'km', 'Mm', 'Gm', 'Tm', 'Pm', 'Em', 'Zm', 'Ym', 'mam', 'mom', 'Å', 'ua', 'ch', 'fathom', 'fermi', 'ft', 'in', 'K', 'l.y.', 'ly', 'µ', 'mil', 'mi', 'nautical mi', 'pc', 'point', 'pt', 'pica', 'rd', 'yd', 'arp', 'lieue', 'league', 'cal', 'twp', 'p', 'P', 'fur', 'brasse', 'vadem', 'fms')
+    AND  $2  IN ('m', 'dm', 'cm', 'mm', 'µm', 'nm', 'pm', 'fm', 'am', 'zm', 'ym', 'am', 'dam', 'hm', 'km', 'Mm', 'Gm', 'Tm', 'Pm', 'Em', 'Zm', 'Ym', 'mam', 'mom', 'Å', 'ua', 'ch', 'fathom', 'fermi', 'ft', 'in', 'K', 'l.y.', 'ly', 'µ', 'mil', 'mi', 'nautical mi', 'pc', 'point', 'pt', 'pica', 'rd', 'yd', 'arp', 'lieue', 'league', 'cal', 'twp', 'p', 'P', 'fur', 'brasse', 'vadem', 'fms')
+    THEN TRUE
+  ELSE FALSE END;
+$$;
+
+
+
+/*
+** convert_to_unified
+* convert the unit to the unified form
+*/
+CREATE OR REPLACE FUNCTION convert_to_unified (IN property varchar, IN property_unit varchar, IN property_type varchar) RETURNS float
+language plpgsql
+AS
+$$
+DECLARE
+    r_val real :=0;
+BEGIN
+    IF property is NULL THEN
+        RETURN NULL;
+    END IF;
+
+    BEGIN
+      r_val := property::real;
+    EXCEPTION WHEN SQLSTATE '22P02' THEN
+      RETURN null;
     END;
 
     IF property_type = 'speed' THEN

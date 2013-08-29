@@ -5,6 +5,34 @@
  */
 class Properties extends BaseProperties
 {
+
+  public static function searchRecognizedUnitsGroups($unit){
+    foreach(self::getRecognizedUnitsByType() as $type => $group) {
+      if(in_array($unit, $group))
+        return $group;
+    }
+    return false;
+  }
+
+  public static function getRecognizedUnitsByType(){
+    return array(
+      //time
+      //'ns', 'shake', 'µs', 'ms', 'cs', 't', 'ds', 'min', 'h', 'd', 'j', 'y', 'year',
+      'speed' => array(
+        'Kt', 'Beaufort', 'm/s'),
+      'weight' => array(
+        'g', 'hg', 'kg', 'ton', 'dg', 'cg', 'mg', 'lb', 'lbs', 'pound' , 'ounce' , 'grain',),
+      'volume' => array(
+        'm³', 'l', 'cm³', 'ml', 'mm³' ,'µl' , 'µm³' , 'km³', 'Ml' , 'hl',),
+      'temperature' => array(
+        'K', '°C', '°F', '°Ra', '°Re', '°r', '°N', '°Rø', '°De',),
+      'length' => array(
+        'm', 'dm', 'cm', 'mm', 'µm', 'nm', 'pm', 'fm', 'am', 'zm', 'ym', 'am', 'dam', 'hm', 'km', 'Mm',
+        'Gm', 'Tm', 'Pm', 'Em', 'Zm', 'Ym', 'mam', 'mom', 'Å', 'ua', 'ch', 'fathom', 'fermi', 'ft', 'in',
+        'K', 'l.y.', 'ly', 'µ', 'mil', 'mi', 'nautical mi', 'pc', 'point', 'pt', 'pica', 'rd', 'yd', 'arp',
+        'lieue', 'league', 'cal', 'twp', 'p', 'P', 'fur', 'brasse', 'vadem', 'fms',),
+    );
+  }
   private static function getModelList($table)
   {
     $file=sfConfig::get('sf_data_dir').'/feed/properties_template.yml' ;

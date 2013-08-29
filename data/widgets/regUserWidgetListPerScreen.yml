@@ -338,7 +338,18 @@ sps24:
    opened: true
    visible: false
    title_perso: Part
-   all_public: true 
+   all_public: true
+
+sps25:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: properties
+   mandatory: false
+   order_by: 13
+   opened: true
+   visible: false
+   title_perso: Properties
+   all_public: true
 
 sw1:
    col_num: 1
@@ -1712,7 +1723,7 @@ u1wmetto3:
    opened: true
    visible: true
    title_perso: External Links   
-   all_public: true  
+   all_public: true
    
 u1wmetto4:
    col_num: 1

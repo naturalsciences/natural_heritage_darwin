@@ -17,9 +17,9 @@ create table properties
         method varchar,
         method_indexed varchar not null,
         lower_value varchar not null,
-        lower_value_unified varchar not null,
+        lower_value_unified float,
         upper_value  varchar not null,
-        upper_value_unified varchar not null,
+        upper_value_unified float,
         property_accuracy varchar not null default '',
 
         constraint pk_properties primary key (id)
@@ -56,6 +56,7 @@ GRANT USAGE, SELECT ON SEQUENCE darwin2.properties_id_seq TO cebmpad;
 GRANT SELECT ON properties TO d2viewer;
 GRANT USAGE ON properties_id_seq TO d2viewer;
 
+DROP FUNCTION IF EXISTS convert_to_unified (IN property varchar, IN property_unit varchar, IN property_type varchar);
 
 \i  createfunctions.sql
 
@@ -131,6 +132,26 @@ ELSE '' END as upper_value
 
 drop table properties_values;
 drop table catalogue_properties;
-DELETE FROM flat_dict where  referenced_relation in ('catalogue_properties', 'properties_values');
+DELETE FROM flat_dict where  referenced_relation in ('catalogue_properties', 'properties_values', 'properties');
+
+INSERT INTO flat_dict (dict_value, referenced_relation, dict_field, dict_depend)
+(
+
+  select property_type , 'properties' ,'property_type', referenced_relation
+    FROM properties where property_type is not null
+    GROUP BY property_type, referenced_relation
+
+    UNION
+
+      select applies_to , 'properties' ,'applies_to', property_type
+    FROM properties where applies_to is not null
+    GROUP BY applies_to, property_type
+
+    UNION
+
+      select property_unit , 'properties' ,'property_unit', property_type
+    FROM properties where property_unit is not null
+    GROUP BY property_unit, property_type
+    );
 
 COMMIT;

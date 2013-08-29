@@ -20,9 +20,9 @@
  * @property string $method
  * @property string $method_indexed
  * @property string $lower_value
- * @property string $lower_value_unified
+ * @property float $lower_value_unified
  * @property string $upper_value
- * @property string $upper_value_unified
+ * @property float $upper_value_unified
  * @property string $property_accuracy
  * 
  * @method integer    getId()                  Returns the current record's "id" value
@@ -40,9 +40,9 @@
  * @method string     getMethod()              Returns the current record's "method" value
  * @method string     getMethodIndexed()       Returns the current record's "method_indexed" value
  * @method string     getLowerValue()          Returns the current record's "lower_value" value
- * @method string     getLowerValueUnified()   Returns the current record's "lower_value_unified" value
+ * @method float      getLowerValueUnified()   Returns the current record's "lower_value_unified" value
  * @method string     getUpperValue()          Returns the current record's "upper_value" value
- * @method string     getUpperValueUnified()   Returns the current record's "upper_value_unified" value
+ * @method float      getUpperValueUnified()   Returns the current record's "upper_value_unified" value
  * @method string     getPropertyAccuracy()    Returns the current record's "property_accuracy" value
  * @method Properties setId()                  Sets the current record's "id" value
  * @method Properties setReferencedRelation()  Sets the current record's "referenced_relation" value
@@ -136,16 +136,16 @@ abstract class BaseProperties extends DarwinModel
              'notnull' => true,
              'default' => '',
              ));
-        $this->hasColumn('lower_value_unified', 'string', null, array(
-             'type' => 'string',
+        $this->hasColumn('lower_value_unified', 'float', null, array(
+             'type' => 'float',
              ));
         $this->hasColumn('upper_value', 'string', null, array(
              'type' => 'string',
              'notnull' => true,
              'default' => '',
              ));
-        $this->hasColumn('upper_value_unified', 'string', null, array(
-             'type' => 'string',
+        $this->hasColumn('upper_value_unified', 'float', null, array(
+             'type' => 'float',
              ));
         $this->hasColumn('property_accuracy', 'string', null, array(
              'type' => 'string',

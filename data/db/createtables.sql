@@ -264,9 +264,9 @@ create table properties
         method varchar,
         method_indexed varchar not null,
         lower_value varchar not null,
-        lower_value_unified varchar not null,
+        lower_value_unified float,
         upper_value  varchar not null,
-        upper_value_unified varchar not null,
+        upper_value_unified float,
         property_accuracy varchar not null default '',
 
         constraint pk_properties primary key (id)

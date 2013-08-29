@@ -3,7 +3,6 @@
 
  GRANT SELECT ON template_table_record_ref TO d2viewer;
  GRANT SELECT ON catalogue_levels TO d2viewer;
- GRANT SELECT ON catalogue_properties TO d2viewer;
  GRANT SELECT ON template_classifications TO d2viewer;
  GRANT SELECT ON collection_maintenance TO d2viewer;
  GRANT SELECT ON catalogue_relationships TO d2viewer;
@@ -35,7 +34,6 @@
  GRANT SELECT ON specimens_relationships TO d2viewer;
  GRANT SELECT ON possible_upper_levels TO d2viewer;
  GRANT SELECT ON people_relationships TO d2viewer;
- GRANT SELECT ON properties_values TO d2viewer;
  GRANT SELECT ON preferences TO d2viewer;
  GRANT SELECT ON staging_tag_groups TO d2viewer;
  GRANT SELECT ON users_comm TO d2viewer;
