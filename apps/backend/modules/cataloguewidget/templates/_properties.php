@@ -41,10 +41,6 @@
   </tbody>
 </table>
 
-<script>
-$('.display_value').click(showValues);
-$('.hide_value').click(hideValues);
-</script>
 <br />
 <?php echo image_tag('add_green.png');?>
 <a title="<?php echo __('Add Properties');?>" class="link_catalogue" href="<?php echo url_for('property/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add property');?></a> 
