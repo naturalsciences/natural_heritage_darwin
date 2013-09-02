@@ -608,16 +608,16 @@ Properties:
         date_to_mask: 0
         date_to: '0001-01-01 0:0:0'
         property_unit: cm
-    cprop3:
-        referenced_relation: specimens
-        record_id: 1
-        property_type: protection status
-        property_unit: ''
-    cprop4:
-        referenced_relation: specimens
-        record_id: 1
-        property_type: physical measurement
-        property_unit: mm
+#     cprop3:
+#         referenced_relation: specimens
+#         record_id: 4
+#         property_type: protection status
+#         property_unit: ''
+#     cprop4:
+#         referenced_relation: specimens
+#         record_id: 4
+#         property_type: physical measurement
+#         property_unit: mm
 
 Comments:
     comment1:

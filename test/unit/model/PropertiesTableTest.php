@@ -16,6 +16,6 @@ $t->is( $stype['beak length'] , 'beak length', 'the and is accessible through ge
 
 
 $units = Doctrine::getTable('Properties')->getDistinctUnit('physical measurement');
-$t->is( count($units) ,3, 'There is 3 different units');
-$t->is_deeply($units, array('' =>'','cm' => 'cm', 'mm' => 'mm'), 'There is 3 corret units');
+$t->is( count($units) ,2, 'There is 2 different units');
+$t->is_deeply($units, array('' =>'','cm' => 'cm'), 'There is 2 corret units');
 
