@@ -11,7 +11,7 @@ $browser->
     isStatusCode(200)->
     checkElement('#properties_property_type option',3)->
     checkElement('#properties_applies_to option',2)->
-    checkElement('#properties_property_unit option',3)->
+    checkElement('#properties_property_unit option',2)->
   end()->
   
   click('Save', array('properties' => array(
