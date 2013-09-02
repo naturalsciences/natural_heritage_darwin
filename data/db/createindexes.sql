@@ -74,6 +74,11 @@ CREATE INDEX CONCURRENTLY idx_properties_property_type on properties(property_ty
 CREATE INDEX CONCURRENTLY idx_properties_property_unit on properties(property_unit);
 CREATE INDEX CONCURRENTLY idx_properties_property_lower_value on properties(lower_value);
 CREATE INDEX CONCURRENTLY idx_properties_property_upper_value on properties(upper_value);
+CREATE INDEX CONCURRENTLY idx_properties_referenced_record on properties(referenced_relation, record_id);
+
+
+CREATE INDEX CONCURRENTLY idx_properties_property_lower_value_unified on properties(lower_value_unified );
+CREATE INDEX CONCURRENTLY idx_properties_property_upper_value_unified  on properties(upper_value_unified );
 
 CREATE INDEX CONCURRENTLY idx_catalogue_relationships_relations on catalogue_relationships (referenced_relation, record_id_1, relationship_type);
 

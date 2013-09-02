@@ -125,7 +125,7 @@ class specimensearchActions extends DarwinActions
             ->getListFor($this->getUser()->getId(), 'specimen');
           $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir. ', id');
           //If export is defined export it!
-          
+
           if($request->getParameter('export','') != '')
           {
             $this->specimensearch = $query->limit(1000)->execute();
@@ -148,6 +148,9 @@ class specimensearchActions extends DarwinActions
           $count_q = clone $query;//$pager->getCountQuery();
           // Remove from query the group by and order by clauses
           $count_q = $count_q->select('count(s.id)')->removeDqlQueryPart('orderby')->limit(0);
+          if($this->form->with_group) {
+             $count_q->select('count(distinct s.id)')->removeDqlQueryPart('groupby');
+          }
 
           // Initialize an empty count query
           $counted = new DoctrineCounted();

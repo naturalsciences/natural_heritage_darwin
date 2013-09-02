@@ -1466,6 +1466,18 @@ MyWidgets:
         is_available: true
         title_perso: Expedition
 
+    u1sps21:
+        User: u1
+        col_num: 2
+        category: specimensearch_widget
+        group_name: properties
+        mandatory: false
+        order_by: 13
+        opened: true
+        visible: false
+        is_available: true
+        title_perso: Properties
+
     u1bw1:
         User: u1
         col_num: 2

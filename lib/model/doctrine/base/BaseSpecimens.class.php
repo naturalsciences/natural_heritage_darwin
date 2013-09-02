@@ -128,6 +128,7 @@
  * @property Igs $Igs
  * @property Doctrine_Collection $CollectingMethods
  * @property Doctrine_Collection $CollectingTools
+ * @property Properties $Properties
  * @property Doctrine_Collection $SpecimensRelationships
  * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
@@ -257,6 +258,7 @@
  * @method Igs                 getIgs()                     Returns the current record's "Igs" value
  * @method Doctrine_Collection getCollectingMethods()       Returns the current record's "CollectingMethods" collection
  * @method Doctrine_Collection getCollectingTools()         Returns the current record's "CollectingTools" collection
+ * @method Properties          getProperties()              Returns the current record's "Properties" value
  * @method Doctrine_Collection getSpecimensRelationships()  Returns the current record's "SpecimensRelationships" collection
  * @method Doctrine_Collection getSpecimensCodes()          Returns the current record's "SpecimensCodes" collection
  * @method Doctrine_Collection getSpecimensMethods()        Returns the current record's "SpecimensMethods" collection
@@ -385,6 +387,7 @@
  * @method Specimens           setIgs()                     Sets the current record's "Igs" value
  * @method Specimens           setCollectingMethods()       Sets the current record's "CollectingMethods" collection
  * @method Specimens           setCollectingTools()         Sets the current record's "CollectingTools" collection
+ * @method Specimens           setProperties()              Sets the current record's "Properties" value
  * @method Specimens           setSpecimensRelationships()  Sets the current record's "SpecimensRelationships" collection
  * @method Specimens           setSpecimensCodes()          Sets the current record's "SpecimensCodes" collection
  * @method Specimens           setSpecimensMethods()        Sets the current record's "SpecimensMethods" collection
@@ -833,6 +836,10 @@ abstract class BaseSpecimens extends DarwinModel
              'refClass' => 'SpecimensTools',
              'local' => 'specimen_ref',
              'foreign' => 'collecting_tool_ref'));
+
+        $this->hasOne('Properties', array(
+             'local' => 'id',
+             'foreign' => 'record_id'));
 
         $this->hasMany('SpecimensRelationships', array(
              'local' => 'id',

@@ -12,6 +12,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 {
   public function configure()
   {
+    $this->with_group = false;
     $this->useFields(array('gtu_code','gtu_from_date','gtu_to_date', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'litho_level_name', 'chrono_name', 'chrono_level_ref',
         'chrono_level_name', 'lithology_name', 'lithology_level_ref', 'lithology_level_name', 'mineral_name', 'mineral_level_ref',
         'mineral_level_name','ig_num','acquisition_category','acquisition_date'));
@@ -341,28 +342,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['role_ref'] = new sfValidatorChoice(array('choices'=>array_keys($fields_to_search), 'required'=>false)) ;
     $this->validatorSchema['role_ref'] = new sfValidatorPass() ;
 
-    /* Labels */
-    $this->widgetSchema->setLabels(array(
-      'gtu_code' => 'Sampling Location code',
-      'taxon_name' => 'Taxon text search',
-      'litho_name' => 'Litho text search',
-      'lithology_name' => 'Lithology text search',
-      'chrono_name' => 'Chrono text search',
-      'mineral_name' => 'Mineralo text search',
-      'taxon_level_ref' => 'Level',
-      'what_searched' => 'What would you like to search ?',
-      'code_ref_relation' => 'Code of',
-      'people_ref' => 'Whom are you looking for',
-      'role_ref' => 'Which role',
-      'with_multimedia' => 'Search Only objects with multimedia files',
-      'gtu_from_date' => 'Between',
-      'gtu_to_date' => 'and',
-      'acquisition_from_date' => 'Between',
-      'acquisition_to_date' => 'and',
-      'ig_from_date' => 'Between',
-      'ig_to_date' => 'and',
-      'ig_num' => 'I.G. unit',
-    ));
+
 
     /* Acquisition categories */
     $this->widgetSchema['acquisition_category'] = new sfWidgetFormChoice(array(
@@ -477,7 +457,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['part'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['part'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctParts',
       'method' => 'getSpecimenPart',
       'key_method' => 'getSpecimenPart',
@@ -546,6 +526,37 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));
     $this->validatorSchema['shelf'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema['property_type'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Properties',
+      'table_method' => array('method'=>'getDistinctType', 'parameters'=> array('specimens') ),
+      'add_empty' => $this->getI18N()->__('All')
+    ));
+    $this->validatorSchema['property_type'] = new sfValidatorString(array('required' => false));
+
+
+    $this->widgetSchema['property_applies_to'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Properties',
+      'table_method' => array('method'=>'getDistinctApplies', 'parameters'=> array() ),
+      'add_empty' => $this->getI18N()->__('All')
+    ));
+    $this->validatorSchema['property_applies_to'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema['property_value_from'] = new sfWidgetFormInput();
+    $this->validatorSchema['property_value_from'] = new sfValidatorString(array('required' => false));
+
+    $this->widgetSchema['property_value_to'] = new sfWidgetFormInput();
+    $this->validatorSchema['property_value_to'] = new sfValidatorString(array('required' => false));
+
+
+    $this->widgetSchema['property_units'] = new widgetFormSelectComplete(array(
+      'model' => 'Properties',
+      'table_method' => array('method' => 'getDistinctUnit', 'parameters' => array(/*$this->options['ref_relation']*/)),
+      'add_empty' => true,
+      'change_label' => 'Pick a unit in the list',
+      'add_label' => 'Add another unit',
+    ));
+    $this->validatorSchema['property_units'] = new sfValidatorString(array('required' => false));
+
     $subForm = new sfForm();
     $this->embedForm('Codes',$subForm);
 
@@ -568,7 +579,33 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     sfWidgetFormSchema::setDefaultFormFormatterName('list');
     $this->widgetSchema->setNameFormat('specimen_search_filters[%s]');
-
+    /* Labels */
+    $this->widgetSchema->setLabels(array(
+      'gtu_code' => 'Sampling Location code',
+      'taxon_name' => 'Taxon text search',
+      'litho_name' => 'Litho text search',
+      'lithology_name' => 'Lithology text search',
+      'chrono_name' => 'Chrono text search',
+      'mineral_name' => 'Mineralo text search',
+      'taxon_level_ref' => 'Level',
+      'what_searched' => 'What would you like to search ?',
+      'code_ref_relation' => 'Code of',
+      'people_ref' => 'Whom are you looking for',
+      'role_ref' => 'Which role',
+      'with_multimedia' => 'Search Only objects with multimedia files',
+      'gtu_from_date' => 'Between',
+      'gtu_to_date' => 'and',
+      'acquisition_from_date' => 'Between',
+      'acquisition_to_date' => 'and',
+      'ig_from_date' => 'Between',
+      'ig_to_date' => 'and',
+      'ig_num' => 'I.G. unit',
+      'property_type' => 'Type',
+      'property_applies_to' => 'Applies to',
+      'property_value_from' => 'Value from',
+      'property_value_to' => 'to',
+      'property_units' => 'Units',
+    ));
   }
 
   public function addGtuTagValue($num)
@@ -896,6 +933,102 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     return $query;
   }
 
+  public function addPropertiesQuery($query, $type , $applies_to, $value_from, $value_to, $unit) {
+    $sql_part = array();
+    $sql_params = array();
+    if(trim($type) != '') {
+      $sql_part[] = ' property_type = ? ';
+      $sql_params[] = $type;
+    }
+    if(trim($applies_to) != '') {
+      $sql_part[] = ' applies_to = ? ';
+      $sql_params[] = $applies_to;
+    }
+    $value_from = trim($value_from);
+    $value_to = trim($value_to);
+    $unit = trim($unit);
+    if($value_from == '' && $value_to != '') {
+      $value_from = $value_to;
+      $value_to = '';
+    }
+
+    // We have only 1 Value
+    if($value_from != '' && $value_to == '') {
+      if($unit == '') {
+        $sql_part[] = '  ( p.lower_value = ? OR  p.upper_value = ?) ';
+        $sql_params[] = $value_from;
+        $sql_params[] = $value_from;
+      //We don't know the filed unit
+      } elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
+        $sql_part[] = '  ( p.lower_value = ? OR  p.upper_value = ?) AND property_unit = ? ';
+        $sql_params[] = $value_from;
+        $sql_params[] = $value_from;
+        $sql_params[] = $unit;
+
+      } else { // Recognized unit
+        $sql_params[] = $value_from;
+        $sql_params[] = $unit;
+        $sql_params[] = $unit;
+
+        $unitGroupStr =  implode(',',array_fill(0,count($unitGroup),'?'));
+        $sql_part[] = ' ( convert_to_unified ( ?,  ? ) BETWEEN p.lower_value_unified AND  p.upper_value_unified) AND is_property_unit_in_group(property_unit, ?)  ';
+      }
+    }
+    // We have 2 Values
+    elseif($value_from != '' && $value_to != '') {
+      if($unit == '') {
+        $sql_part[] = ' ( ( p.lower_value = ? OR  p.upper_value = ?) OR ( p.lower_value = ? OR  p.upper_value = ?) )';
+        $sql_params[] = $value_from;
+        $sql_params[] = $value_from;
+        $sql_params[] = $value_to;
+        $sql_params[] = $value_to;
+      //We don't know the filed unit
+      } elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
+        $sql_part[] = ' ( ( p.lower_value = ? OR  p.upper_value = ?) OR ( p.lower_value = ? OR  p.upper_value = ?) )  AND property_unit = ? ';
+        $sql_params[] = $value_from;
+        $sql_params[] = $value_from;
+        $sql_params[] = $value_to;
+        $sql_params[] = $value_to;
+        $sql_params[] = $unit;
+
+      } else { // Recognized unit
+        $conn_MGR = Doctrine_Manager::connection();
+        $lv = $conn_MGR->quote($value_from, 'string');
+        $uv = $conn_MGR->quote($value_to, 'string');
+        $unit = $conn_MGR->quote($unit, 'string');
+        $sql_part[] = "
+            (
+              ( p.lower_value_unified BETWEEN convert_to_unified($lv,$unit) AND convert_to_unified($uv,$unit))
+              OR
+              ( p.upper_value_unified BETWEEN convert_to_unified($lv,$unit) AND convert_to_unified($uv,$unit))
+            )
+            OR
+            (
+              p.lower_value_unified BETWEEN 0 AND convert_to_unified($lv,$unit)
+              AND
+              p.upper_value_unified BETWEEN convert_to_unified($uv,$unit) AND 'Infinity'
+        )";
+        $query->andWhere("is_property_unit_in_group(property_unit,$unit)") ;
+        //OR ( convert_to_unified ( ?::text,  ?::text ) < p.lower_value_unified AND convert_to_unified ( ?::text,  ?::text ) > p.upper_value_unified)
+      }
+
+    }
+    elseif($unit != '') {
+      $sql_part[] = ' property_unit = ? ';
+      $sql_params[] = $unit;
+    }
+
+    if(!empty($sql_part) ) {
+      $query->innerJoin('s.Properties p');
+      $query->andWhere("p.referenced_relation = ? ",'specimens');
+      $query->groupBy("s.id");
+
+      $query->andWhere(implode(' AND ', $sql_part), $sql_params ) ;
+      $this->with_group = true;
+    }
+    return $query;
+  }
+
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     // the line below is used to avoid with_multimedia checkbox to remains checked when we click to back to criteria
@@ -971,7 +1104,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->addNamingColumnQuery($query, 'lithology', 'lithology_name_indexed', $values['lithology_name'],'s','lithology_name_indexed');
     $this->addNamingColumnQuery($query, 'mineralogy', 'mineral_name_indexed', $values['mineral_name'],'s','mineral_name_indexed');
 
-//     $this->addNamingColumnQuery($query, 'specimen_parts', 's.object_name_indexed', $values['object_name'],'p','object_name_indexed');
+    $this->addPropertiesQuery($query, $values['property_type'] , $values['property_applies_to'], $values['property_value_from'], $values['property_value_to'], $values['property_units']);
 
         
     $fields = array('gtu_from_date', 'gtu_to_date');

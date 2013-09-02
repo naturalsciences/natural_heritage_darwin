@@ -112,7 +112,7 @@ class Users extends BaseUsers
           try
           {
             $pref->save();
-            $count_widget++;            
+            $count_widget++;
           }
           catch(Doctrine_Exception $ne) {}
         }

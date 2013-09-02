@@ -933,7 +933,7 @@ $$;
 * convert the unit to the unified form
 */
 CREATE OR REPLACE FUNCTION convert_to_unified (IN property varchar, IN property_unit varchar, IN property_type varchar) RETURNS float
-language plpgsql
+language plpgsql IMMUTABLE
 AS
 $$
 DECLARE
@@ -987,7 +987,7 @@ DECLARE
   property_line properties%ROWTYPE;
 BEGIN
   NEW.lower_value_unified = convert_to_unified(NEW.lower_value, NEW.property_unit, NEW.property_type);
-  NEW.upper_value_unified = convert_to_unified(NEW.upper_value, NEW.property_unit, NEW.property_type);
+  NEW.upper_value_unified = convert_to_unified(CASE WHEN NEW.upper_value = '' THEN NEW.lower_value ELSE NEW.upper_value END, NEW.property_unit, NEW.property_type);
   RETURN NEW;
 END;
 $$;

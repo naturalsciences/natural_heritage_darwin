@@ -51,6 +51,10 @@ CREATE INDEX idx_properties_property_unit on properties(property_unit);
 CREATE INDEX idx_properties_property_lower_value on properties(lower_value);
 CREATE INDEX idx_properties_property_upper_value on properties(upper_value);
 
+CREATE INDEX idx_properties_property_lower_value_unified on properties(lower_value_unified );
+CREATE INDEX idx_properties_property_upper_value_unified  on properties(upper_value_unified );
+CREATE INDEX idx_properties_referenced_record on properties(referenced_relation, record_id);
+
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.properties TO cebmpad;
 GRANT USAGE, SELECT ON SEQUENCE darwin2.properties_id_seq TO cebmpad;
 GRANT SELECT ON properties TO d2viewer;

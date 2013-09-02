@@ -17,7 +17,7 @@ abstract class BasePropertiesForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'                  => new sfWidgetFormInputHidden(),
       'referenced_relation' => new sfWidgetFormTextarea(),
-      'record_id'           => new sfWidgetFormInputText(),
+      'record_id'           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => false)),
       'property_type'       => new sfWidgetFormTextarea(),
       'applies_to'          => new sfWidgetFormTextarea(),
       'applies_to_indexed'  => new sfWidgetFormTextarea(),
@@ -39,7 +39,7 @@ abstract class BasePropertiesForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'                  => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'referenced_relation' => new sfValidatorString(),
-      'record_id'           => new sfValidatorInteger(),
+      'record_id'           => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'))),
       'property_type'       => new sfValidatorString(),
       'applies_to'          => new sfValidatorString(array('required' => false)),
       'applies_to_indexed'  => new sfValidatorString(array('required' => false)),

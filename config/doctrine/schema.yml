@@ -764,6 +764,11 @@ Specimens:
             local: specimen_ref
             foreign: collecting_tool_ref
 
+        Properties:
+            class: Properties
+            local: id
+            foreign: record_id
+
 
 IgsSearch:
     tableName: specimens

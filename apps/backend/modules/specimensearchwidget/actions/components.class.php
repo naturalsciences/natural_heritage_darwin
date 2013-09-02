@@ -147,4 +147,9 @@ class specimensearchwidgetComponents extends sfComponents
   {
     $this->defineForm();
   }
+
+  public function executeProperties()
+  {
+    $this->defineForm();
+  }
 }

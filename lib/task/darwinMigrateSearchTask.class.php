@@ -38,7 +38,6 @@ EOF;
       $q = Doctrine_Query::create()
         ->from('Multimedia m')
         ->where('referenced_relation= ?', 'specimens')
-        //->andWhere('uri not like ?', '%part%')
         ;
       $mmObjects = $q->execute();
       //Remove Old Folder
