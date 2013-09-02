@@ -33,13 +33,17 @@ class ParsingIdentifications
   public $peoples = array(); // an array of Doctrine People class
   public $keyword; // an array of doctrine Keywords class
   public $type_identified, $catalogue_parent, $fullname='', $determination_status=null, $higher_name,$higher_level,$level_name;
-  public $scientificName = "",$people_order_by=null, $notion='taxonomy', $temp_array=array(), $classification=null;
+  public $scientificName = "",$people_order_by=null, $notion='taxonomy', $temp_array=array(), $classification=null, $informal=false;
 
   public function __construct()
   {
     $this->identification = new Identifications() ;
   }
-
+  
+  public function getDateText($date)
+  {
+    $this->identification->setNotionDate(FuzzyDateTime::getValidDate($date)) ;
+  }
   public function setNotion($data)
   {
     if(substr($data,0,7) == 'mineral') $this->notion = 'mineralogy' ;
@@ -64,7 +68,7 @@ class ParsingIdentifications
 
   // fill the Hstore taxon_parent/litho_parent etc...
   public function handleParent()
-  {
+  { 
     $this->catalogue_parent[$this->array_level[$this->higher_level]] = $this->higher_name ;
   }
 
@@ -78,6 +82,11 @@ class ParsingIdentifications
   // return the Hstore parent
   public function getCatalogueParent($staging)
   {
+    if($this->informal)
+    {
+      if($this->notion == 'mineralogy') $staging->setMineralLocal(true) ;
+      if($this->notion == 'lithology') $staging->setLithologyLocal(true) ;
+    }
     $this->getRockParent() ;
     if($this->notion == 'taxonomy') $staging['taxon_parents'] = $this->catalogue_parent->export() ;
     if($this->notion == 'lithology')

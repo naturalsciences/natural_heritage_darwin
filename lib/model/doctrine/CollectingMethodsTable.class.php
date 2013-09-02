@@ -31,5 +31,14 @@ class CollectingMethodsTable extends DarwinTable
     }
     return $response;
   }
+  
+  public function checkIfMethod($method)
+  {
+    $q = Doctrine_Query::create()
+      ->from('CollectingMethods')
+      ->where('method_indexed=fulltoindex(?)',$method)
+      ->orderBy('method_indexed');
+    return $q->fetchOne();
+  }
 
 }

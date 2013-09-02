@@ -67,7 +67,7 @@ class ImportsTable extends Doctrine_Table
   {
     $q = Doctrine_Query::create() 
       ->update('Imports i')
-      ->set('state', '?','pending')
+      ->set('state', '?','loaded')
       ->update('Imports i')
       ->andwhere('id = ? ',$id)
       ->execute() ;

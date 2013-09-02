@@ -20,19 +20,31 @@ class ParsingTag extends ImportABCDXml
   {
     $this->array_object[] = $object ;
   }*/
+  
+  public function getDateText($date)
+  {
+    if(strpos($date, '-'))
+    {
+      $dates= explode('-',$date) ;
+      $this->GTUDate['from'] = FuzzyDateTime::getValidDate(trim($dates[0])) ;
+      $this->GTUDate['to'] = FuzzyDateTime::getValidDate(trim($dates[1])) ;
+    }
+    else
+      $this->GTUDate['time'] = FuzzyDateTime::getValidDate($date) ;
+  }
 
   //return ISODateTimeBegin tag value, if not return DateTime tag value, null otherwise
   public function getFromDate()
   {
-    $this->GTUDate['time'] = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
-    return ($this->GTUDate['from'] ? $this->GTUDate['from'] : $this->GTUDate['time']) ;
+    if($this->GTUDate['time']) $time = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
+    return ($this->GTUDate['from'] ? $this->GTUDate['from'] : $time) ;
   }
 
   //return ISODateTimeEnd tag value, if not return DateTime tag value, null otherwise
   public function getToDate()
   {
-    $this->GTUDate['time'] = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
-    return ($this->GTUDate['to'] ? $this->GTUDate['to'] : $this->GTUDate['time']) ;
+    if($this->GTUDate['time']) $time = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
+    return ($this->GTUDate['to'] ? $this->GTUDate['to'] : $time) ;
   }
 
   public function addTagGroups()
@@ -98,7 +110,7 @@ class ParsingTag extends ImportABCDXml
 
   public function addMethod($data,$staging_id)
   {
-    $method = Doctrine::getTable('CollectingMethods')->findOneByMethodIndexed($data);
+    $method = Doctrine::getTable('CollectingMethods')->checkIfMethod($data);
     if($method) $ref = $method->getId() ;
     else
     {

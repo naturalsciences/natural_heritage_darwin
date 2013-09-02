@@ -13,6 +13,9 @@ CREATE TABLE staging_info
 );
 ALTER TABLE staging_info
   OWNER TO darwin2;
+ALTER TABLE staging_tag_groups
+  ADD CONSTRAINT unq_staging_tag_groups UNIQUE (staging_ref, group_name, sub_group_name);
+
   
 GRANT ALL ON TABLE staging_info TO darwin2;
 GRANT SELECT ON TABLE staging_info TO d2viewer;
@@ -415,6 +418,7 @@ CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info(line staging) RETURNS bo
 AS $$
 DECLARE
   info_line staging_info ;
+  record_line RECORD ;
 BEGIN
 
   FOR info_line IN select * from staging_info WHERE staging_ref = line.id
@@ -423,35 +427,59 @@ BEGIN
     CASE info_line.referenced_relation 
       WHEN 'gtu' THEN
         IF line.gtu_ref IS NOT NULL THEN
-          UPDATE template_table_record_ref set referenced_relation='gtu', record_id=line.gtu_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='gtu', record_id=line.gtu_ref where id=record_line.id ;
+          END LOOP ;
         END IF;
       WHEN 'taxonomy' THEN
         IF line.taxon_ref IS NOT NULL THEN
-          UPDATE template_table_record_ref set referenced_relation='taxonomy', record_id=line.taxon_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='taxonomy', record_id=line.gtu_ref where id=record_line.id ;
+          END LOOP ;
         END IF;
       WHEN 'expeditions' THEN
         IF line.expedition_ref IS NOT NULL THEN
-          UPDATE template_table_record_ref set referenced_relation='expeditions', record_id=line.expedition_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='expeditions', record_id=line.gtu_ref where id=record_line.id ;
+          END LOOP ;
         END IF;
       WHEN 'lithostratigraphy' THEN
         IF line.litho_ref IS NOT NULL THEN
-          UPDATE template_table_record_ref set referenced_relation='lithostratigraphy', record_id=line.litho_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='lithostratigraphy', record_id=line.gtu_ref where id=record_line.id ;
+          END LOOP ;
         END IF;
       WHEN 'lithology' THEN
         IF line.lithology_ref IS NOT NULL THEN
-          UPDATE template_table_record_ref set referenced_relation='lithology', record_id=line.lithology_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='lithology', record_id=line.gtu_ref where id=record_line.id ;
+          END LOOP ;
         END IF;
       WHEN 'chronostratigraphy' THEN
         IF line.chrono_ref IS NOT NULL THEN
-          UPDATE template_table_record_ref set referenced_relation='chronostratigraphy', record_id=line.chrono_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='chronostratigraphy', record_id=line.gtu_ref where id=record_line.id ;
+          END LOOP ;
         END IF;
       WHEN 'mineralogy' THEN
         IF line.mineral_ref IS NOT NULL THEN
-          UPDATE template_table_record_ref set referenced_relation='mineralogy', record_id=line.mineral_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='mineralogy', record_id=line.gtu_ref where id=record_line.id ;
+          END LOOP ;
         END IF;
       WHEN 'igs' THEN
         IF line.ig_ref IS NOT NULL THEN
-          UPDATE template_table_record_ref set referenced_relation='igs', record_id=line.ig_ref where referenced_relation='staging_info' and record_id=info_line.id ;
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='igs', record_id=line.gtu_ref where id=record_line.id ;
+          END LOOP ;
         END IF;
       ELSE continue ;
       END CASE ;
@@ -566,7 +594,7 @@ BEGIN
       SELECT l.id, l.name, l.level_ref, cl.level_name, l.status, l.local_naming, l.color
       INTO NEW.lithology_ref, NEW.lithology_name, NEW.lithology_level_ref, NEW.lithology_level_name, NEW.lithology_status, NEW.lithology_local, NEW.lithology_color
       FROM lithology l, catalogue_levels cl 
-      WHERE cl.id=l.level_ref AND l.id = NEW.lithology_ref ; 
+      WHERE cl.id=l.level_ref AND l.id = NEW.lithology_ref ;
 
       UPDATE staging set 
         lithology_ref=NEW.lithology_ref, lithology_name=NEW.lithology_name, lithology_level_ref=NEW.lithology_level_ref,
@@ -642,4 +670,53 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION fct_imp_checker_gtu(line staging, import boolean default false)  RETURNS boolean
+AS $$
+DECLARE
+  ref_rec integer :=0;
+BEGIN
+  IF line.gtu_code is null OR line.gtu_code  ='' OR line.gtu_ref is not null THEN
+    RETURN true;
+  END IF;
+
+  select id into ref_rec from gtu where
+    COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
+    COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
+    gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
+    gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038')
+    AND CASE WHEN (line.gtu_longitude is null and line.gtu_from_date is null and line.gtu_to_date is null) THEN line.gtu_code ELSE code END
+      = code
+    AND id != 0 LIMIT 1;
+  
+
+  IF NOT FOUND THEN
+      IF import THEN
+        INSERT into gtu
+          (code, gtu_from_date_mask, gtu_from_date,gtu_to_date_mask, gtu_to_date, latitude, longitude, lat_long_accuracy, elevation, elevation_accuracy)
+        VALUES
+          (line.gtu_code, COALESCE(line.gtu_from_date_mask,0), COALESCE(line.gtu_from_date, '01/01/0001'),
+          COALESCE(line.gtu_to_date_mask,0), COALESCE(line.gtu_to_date, '31/12/2038')
+          , line.gtu_latitude, line.gtu_longitude, line.gtu_lat_long_accuracy, line.gtu_elevation, line.gtu_elevation_accuracy)
+        RETURNING id INTO ref_rec;
+        BEGIN
+        INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
+          (
+            SELECT ref_rec,group_name, sub_group_name, tag_value
+              FROM staging_tag_groups WHERE staging_ref = line.id
+          );
+        DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
+        EXCEPTION WHEN unique_violation THEN
+          RAISE NOTICE 'An error occured: %', SQLERRM;
+        END ;
+      ELSE
+        RETURN TRUE;
+      END IF;
+  END IF;
+
+  UPDATE staging SET gtu_ref = ref_rec where id=line.id;
+
+  RETURN true;
+END;
+$$ LANGUAGE plpgsql;
 COMMIT;

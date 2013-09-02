@@ -8,7 +8,6 @@ schema="darwin2"
 unifiedpasswd=""
 darwin_version=`ls changes/*.sql | sort -nr | head -n1 | sed 's/-.*//' | xargs  basename`
 
-export PGOPTIONS='-c client_min_messages=WARNING'
 
 function title() {
   echo -e "\n \033[1m${@}\033[0m :"

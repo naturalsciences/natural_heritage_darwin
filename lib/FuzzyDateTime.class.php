@@ -497,24 +497,28 @@ class FuzzyDateTime extends DateTime
    */ 
   public static function getValidDate($date)
   {
-    if(DateTime::createFromFormat('d/m/Y H:i', $date)) return($date) ;
-    if(DateTime::createFromFormat('d/m/y H:i', $date)) return($date) ;
-    if(DateTime::createFromFormat('d-m-Y H:i', $date)) return($date) ;
-    if(DateTime::createFromFormat('d-m-y H:i', $date)) return($date) ;
-    if(DateTime::createFromFormat('d/m/Y', $date)) return($date) ;
-    if(DateTime::createFromFormat('d/m/y', $date)) return($date) ;
-    if(DateTime::createFromFormat('d-m-Y', $date)) return($date) ;
-    if(DateTime::createFromFormat('d-m-y', $date)) return($date) ;
-    if(DateTime::createFromFormat('m/Y', $date) || DateTime::createFromFormat('m/y', $date))
-    {
-      $ladate = explode('/',$date);
+    $ladate = explode('/',$date);
+    $ladate2 = explode('-',$date);
+    if(DateTime::createFromFormat('d/m/Y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
+    if(DateTime::createFromFormat('d/m/y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
+    if(DateTime::createFromFormat('d-m-Y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
+    if(DateTime::createFromFormat('d-m-y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
+    if(DateTime::createFromFormat('d/m/Y', $date))
+      return date('Y-m-d',mktime(0,0,0,$ladate[1],$ladate[0],$ladate[2]));
+    if(DateTime::createFromFormat('d/m/y', $date))
+      return date('Y-m-d',mktime(0,0,0,$ladate[1],$ladate[0],$ladate[2]));
+    if(DateTime::createFromFormat('d-n-Y', $date))
+      return date('Y-m-d',mktime(0,0,0,$ladate2[1],$ladate2[0],$ladate2[2]));
+    if(DateTime::createFromFormat('d/n/y', $date))
+      return date('Y-m-d',mktime(0,0,0,$ladate[1],$ladate[0],$ladate[2]));
+    if(DateTime::createFromFormat('d-m-Y', $date))
+      return date('Y-m-d',mktime(0,0,0,$ladate2[1],$ladate2[0],$ladate2[2]));
+    if(DateTime::createFromFormat('d-m-y', $date))
+      return date('Y-m-d',mktime(0,0,0,$ladate2[1],$ladate2[0],$ladate2[2]));
+    if(DateTime::createFromFormat('m/Y', $date) || DateTime::createFromFormat('m/y', $date) || DateTime::createFromFormat('n/y', $date) || DateTime::createFromFormat('n/Y', $date))
       return date('Y-m-d',mktime(0,0,0,$ladate[0],1,$ladate[1]));
-    }
-    if(DateTime::createFromFormat('m-y', $date) || DateTime::createFromFormat('m-Y', $date))
-    {
-      $ladate = explode('-',$date) ;
-      return date('Y-m-d',mktime(0,0,0,$ladate[0],1,$ladate[1]));
-    }
+    if(DateTime::createFromFormat('m-y', $date) || DateTime::createFromFormat('m-Y', $date) || DateTime::createFromFormat('n-y', $date) || DateTime::createFromFormat('n-Y', $date))
+      return date('Y-m-d',mktime(0,0,0,$ladate2[0],1,$ladate2[1]));
     if(DateTime::createFromFormat('y', $date) || DateTime::createFromFormat('Y', $date))
       return date('Y-m-d',mktime(0,0,0,1,1,$date));
     return null ;

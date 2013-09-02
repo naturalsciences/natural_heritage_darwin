@@ -6,9 +6,9 @@ class ParsingProperties extends importABCDXml
 
   public function __construct($tag)
   {
-    $this->property = new CatalogueProperties() ;
+    $this->property = new Properties() ;
     $this->property->setPropertyType("length") ;
-    $this->property->setPropertySubType($tag) ;
+    $this->property->setAppliesTo($tag) ;
   }
 
   public function handlePeople($people,$staging)
@@ -36,7 +36,7 @@ class ParsingProperties extends importABCDXml
   {
     if(strtotime($duration)) $this->property->setDateTo($this->date_from+$duration) ;
   }
-
+/*
   public function getLowerValue($data, $tag, $staging)
   {
     if($tag=="Altitude") $staging['gtu_elevation']=$data;
@@ -54,5 +54,5 @@ class ParsingProperties extends importABCDXml
     $value->setPropertyAccuracy($this->accuracy) ;
     $value->setPropertyValue($data) ;
     $this->property->PropertiesValues[] = $value ;
-  }
+  }*/
 }

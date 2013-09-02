@@ -35,7 +35,7 @@ class ImportABCDXml implements IImportModels
   {
     $this->tag = $name ;
     $this->path .= "/$name" ;
-    $this->data = '' ;
+    $this->cdata = '' ;
     $this->inside_data = false ;
     switch ($name) {
       case "Accessions" : $this->object = new parsingTag() ; break ;;
@@ -68,129 +68,132 @@ class ImportABCDXml implements IImportModels
   private function endElement($parser, $name)
   {
     $this->inside_data = false ;
-    if (in_array($this->getPreviousTag(),array('Bacterial','Zoological','Botanical','Viral'))) $this->object->handleKeyword($this->tag,$this->data,$this->staging) ;
-    if($this->getPreviousTag() == "efg:LithostratigraphicAttribution") $this->object->handleParent($name, $this->data,$this->staging) ;
-
+    if (in_array($this->getPreviousTag(),array('Bacterial','Zoological','Botanical','Viral'))) $this->object->handleKeyword($this->tag,$this->cdata,$this->staging) ;
+    elseif($this->getPreviousTag() == "efg:LithostratigraphicAttribution") $this->object->handleParent($name, $this->cdata,$this->staging) ;
+    else {
     switch ($name) {
-      case "AccessionCatalogue" : $this->object->addAccession($this->data) ; break ;;
-      case "AccessionDate" : if (date('Y-m-d H:i:s', strtotime($this->data)) == $this->data) $this->object->InitAccessionVar($this->data) ; break ;;
-      case "AccessionNumber" :  $this->object->accession_num = $this->data ; $this->object->HandleAccession($this->staging,$this->object_to_save) ; break ;;
-      case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$this->data:$this->property->accuracy=$this->data ; break ;;
-      case "AcquisitionDate" : $this->staging['acquisition_date'] = FuzzyDateTime::getValidDate($this->data) ; break ;;
-      case "AcquisitionType" : $this->staging['acquisition_category'] = $this->data=='gift'?'donation':$this->data ; break ;;
-      case "AreaClass" : $this->object->tag_group_name = $this->data ; break ;;
-      case "AreaName" : $this->object->tag_value = $this->data ; break ;;
-      case "AssociatedUnitID" : if(in_array($this->data, array_keys($this->unit_id_ref))) $this->object->setStagingRelatedRef($this->unit_id_ref[$this->data]); else $this->object->setSourceId($this->data) ; break ;;
-      case "AssociatedUnitSourceInstitutionCode" : $this->object->setInstitutionName($this->data) ; break ;;
-      case "AssociatedUnitSourceName" : $this->object->setSourceName($this->data) ; break ;;
-      case "AssociationType" : $this->object->setRelationshipType($this->data) ; break ;;
-      case "Code" : $this->staging['gtu_code'] = $this->data ; break ;;
-      case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $this->data ; break ;;
-      case "Context" : $this->object->multimedia_data['sub_type'] = $this->data ; break ;;
-      case "CreatedDate" : $this->object->multimedia_data['creation_date'] = $this->data ; break ;; 
+      case "AccessionCatalogue" : $this->object->addAccession($this->cdata) ; break ;;
+      case "AccessionDate" : if (date('Y-m-d H:i:s', strtotime($this->cdata)) == $this->cdata) $this->object->InitAccessionVar($this->cdata) ; break ;;
+      case "AccessionNumber" :  $this->object->accession_num = $this->cdata ; $this->object->HandleAccession($this->staging,$this->object_to_save) ; break ;;
+      case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$this->cdata:$this->property->property->property_accuracy=$this->cdata ; break ;;
+      case "AcquisitionDate" : $this->staging['acquisition_date'] = FuzzyDateTime::getValidDate($this->cdata) ; break ;;
+      case "AcquisitionType" : $this->staging['acquisition_category'] = $this->cdata=='gift'?'donation':$this->cdata ; break ;;
+      case "AppliesTo" : $this->property->setAppliesTo($this->cdata); break ;;
+      case "AreaClass" : $this->object->tag_group_name = $this->cdata ; break ;;
+      case "AreaName" : $this->object->tag_value = $this->cdata ; break ;;
+      case "AssociatedUnitID" : if(in_array($this->cdata, array_keys($this->unit_id_ref))) $this->object->setStagingRelatedRef($this->unit_id_ref[$this->cdata]); else $this->object->setSourceId($this->cdata) ; break ;;
+      case "AssociatedUnitSourceInstitutionCode" : $this->object->setInstitutionName($this->cdata) ; break ;;
+      case "AssociatedUnitSourceName" : $this->object->setSourceName($this->cdata) ; break ;;
+      case "AssociationType" : $this->object->setRelationshipType($this->cdata) ; break ;;
+      case "Code" : $this->staging['gtu_code'] = $this->cdata ; break ;;
+      case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $this->cdata ; break ;;
+      case "Context" : $this->object->multimedia_data['sub_type'] = $this->cdata ; break ;;
+      case "CreatedDate" : $this->object->multimedia_data['creation_date'] = $this->cdata ; break ;; 
     //  case "efg:ClassifiedName" : $this->object->setRockName($this->staging) ; break ;;
-      case "Comment" : $this->object->multimedia_data['description'] = $this->data ; break ;;
+      case "Comment" : $this->object->multimedia_data['description'] = $this->cdata ; break ;;
       case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
-      case "Database" : $this->object->desc .= "Database ref :".$this->data.";"  ; break ;;
-      case "DateText" : $this->object->GTUDate['time'] = strtotime(FuzzyDateTime::getValidDate($this->data)) ; break ;;
+      case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break ;;
+      case "DateText" : $this->object->getDateText($this->cdata) ; break ;;
       case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
       case "dna:Concentration" : /* this->object->properties */ break ;;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break ;;
-      case "dna:ExtractionDate" : $this->object->maintenance->setModificationDateTime($this->data) ; break ;;
-      case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->data) ; break ;;
+      case "dna:ExtractionDate" : $this->object->maintenance->setModificationDateTime($this->cdata) ; break ;;
+      case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break ;;
       case "dna:RatioOfAbsorbance260_280" : /* this->object->properties */ break ;;
-      case "dna:Tissu" : $this->object->maintenance->setActionObservation($this->data) ; break ;;
-      case "Duration" : $this->property->setDateTo($this->data) ; break ;;
-      case "FileURI" : $this->object->getFile($this->data) ; break ;;
-      case "Format" : $this->object->multimedia_data['type'] = $this->data ; break ;;
-      case "FullName" : $this->people['formated_name'] = $this->data ; break ;;
+      case "dna:Tissu" : $this->object->maintenance->setActionObservation($this->cdata) ; break ;;
+      case "Duration" : $this->property->setDateTo($this->cdata) ; break ;;
+      case "FileURI" : $this->object->getFile($this->cdata) ; break ;;
+      case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break ;;
+      case "FullName" : $this->people['formated_name'] = $this->cdata ; break ;;
       case "efg:FullScientificNameString":
-      case "FullScientificNameString" : $this->object->fullname = $this->data ; break;;
+      case "FullScientificNameString" : $this->object->fullname = $this->cdata ; break;;
       case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break ;;
       case "Gathering" : if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break ;;
-      case "GivenNames" : $this->people['given_name'] = $this->data ; break ;;
+      case "GivenNames" : $this->people['given_name'] = $this->cdata ; break ;;
       case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break ;;
       case "HigherTaxon" : $this->object->handleParent() ;break;;
-      case "HigherTaxonName" : $this->object->higher_name = $this->data ;break;;
-      case "HigherTaxonRank" : $this->object->higher_level = $this->data ;break;;
+      case "HigherTaxonName" : $this->object->higher_name = $this->cdata ; break;;
+      case "HigherTaxonRank" : $this->object->higher_level = $this->cdata ; break;;
       case "efg:LithostratigraphicAttribution" : $this->staging["litho_parents"] = $this->object->getParent() ; break ;;
       case "Identification" : $this->object->save($this->staging) ; break ;;
-      case "ID-in-Database" : $this->object->desc .= "id in database :".$this->data." ;" ; break ;;
+      case "IdentificationHistory" : $this->object->determination_status = $this->cdata ; break ;;
+      case "ID-in-Database" : $this->object->desc .= "id in database :".$this->cdata." ;" ; break ;;
       case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break ;;
-      case "InheritedName" : $this->people['family_name'] = $this->data ; break ;;
-      case "ISODateTimeBegin" : $this->object->GTUdate['from'] = $this->data ; break ;;
-      case "ISODateTimeEnd" : $this->object->GTUdate['to'] = $this->data ; break ;;
-      case "IsQuantitative" : break ;; //@TODO parsingProperties
-      case "KindOfUnit" : $this->staging['part'] = $this->data ; break ;;
-      case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $this->data ; break ;;
-      case "Length" : $this->object->desc .= "Length : ".$this->data." ;" ; break ;;
+      case "efg:InformalNameString" : $this->object->informal = true ; break ;;
+      case "InheritedName" : $this->people['family_name'] = $this->cdata ; break ;;
+      case "ISODateTimeBegin" : $this->object->GTUdate['from'] = $this->cdata ; break ;;
+      case "ISODateTimeEnd" : $this->object->GTUdate['to'] = $this->cdata ; break ;;
+      case "IsQuantitative" : /*$this->property->property->setIsQuantitative($this->cdata) ; */ break ;;
+      case "KindOfUnit" : $this->staging['part'] = $this->cdata ; break ;;
+      case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $this->cdata ; break ;;
+      case "Length" : $this->object->desc .= "Length : ".$this->cdata." ;" ; break ;;
       case "efg:LithostratigraphicAttributions" : $this->object->setAttribution($this->staging) ; break ;;
-      case "LocalityText" : $this->staging['gtu_code'] = $this->data ; break ;; //@TOTO maybe find a better place for that.
-      case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $this->data ; break ;;
-      case "LowerValue" : $this->property->getLowerValue($this->data, $this->getPreviousTag(),$this->staging) ; break ;;
-      case "MeasurementDateTime" : $this->property->getDateFrom($this->data, $this->getPreviousTag(),$this->staging) ; break ;;
-      case "Method" : $this->object_to_save[] = $this->object->addMethod($this->data,$this->staging->getId()) ; break ;;
+      case "LocalityText" : $this->staging['gtu_code'] = $this->cdata ; break ;; //@TOTO maybe find a better place for that.
+      case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $this->cdata ; break ;;
+      case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break ;;
+      case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break ;;
+      case "Method" : $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break ;;
       case "efg:Petrology" :
       case "MeasurementsOrFacts" : if($this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break ;;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break ;;
       case "MeasurementOrFactText" : $this->addComment() ; break ;;
-      case "MineralColour" : $this->staging->setMineralColour($this->data) ; break ;;
-      case "efg:MineralRockClassification" : $this->object->higher_level = $this->data ;break;;
+      case "MineralColour" : $this->staging->setMineralColour($this->cdata) ; break ;;
+      case "efg:MineralRockClassification" : $this->object->higher_level = $this->cdata ;break;;
       case "efg:MineralRockGroup" : $this->object->handleRockParent() ; break ;;
-      case "efg:MineralRockGroupName" : $this->object->higher_name = $this->data ; break ;;
+      case "efg:MineralRockGroupName" : $this->object->higher_name = $this->cdata ; break ;;
       case "efg:MineralRockIdentified" : $this->object->getCatalogueParent($this->staging) ; break ;;
       case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; else $this->errors_reported .= "Unit ".$this->name." : MultiMediaObject not saved (no or wrong FileURI);"; break ;;
-      case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->data ; break ;; //@TODO
-      case "efg:NameComments" : $this->object->setNotion(strtolower($this->data)) ; break ;;
+      case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break ;; //@TODO
+      case "efg:NameComments" : $this->object->setNotion(strtolower($this->cdata)) ; break ;;
       case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
       case "Notes" : $this->addComment() ; break ;
-      case "Parameter" : $this->property->property->setPropertySubType($this->data);break ;;
+      case "Parameter" : $this->property->property->setPropertyType($this->cdata);break ;;
       case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->object->handlePeople($this->people) ; break ;;
       case "Person" : $this->object->handlePeople($this->people,$this->staging,true) ; break ;;
       case "efg:MineralDescriptionText" :
       case "PetrologyDescriptiveText" :
       case "efg:PetrologyDescriptiveText" : $this->addComment() ; break ;;
-      case "PhaseOrStage" : $this->staging->setIndividualStage($this->data) ; break ;; 
-      case "Prefix" : $this->people['title'] = $this->data ; break ;;
-      case "PreparationMaterials" : $this->staging['container_storage'] = $this->data ; break ;;
-      case "ProjectTitle" : $this->staging['expedition_name'] = $this->data ; break ;;
+      case "PhaseOrStage" : $this->staging->setIndividualStage($this->cdata) ; break ;;
+      case "Prefix" : $this->people['title'] = $this->cdata ; break ;;
+      case "PreparationMaterials" : $this->staging['container_storage'] = $this->cdata ; break ;;
+      case "ProjectTitle" : $this->staging['expedition_name'] = $this->cdata ; break ;;
       case "RecordURI" : $this->addExternalLink() ; break ;;
       //case "efg:RockType" :
-      //case "RockType" : $this->staging->setLithologyName($this->data) ; break ;;
-      case "ScientificName" : $this->staging["taxon_name"] = $this->object->getCatalogueName() ; 
+      //case "RockType" : $this->staging->setLithologyName($this->cdata) ; break ;;
+      case "ScientificName" : $this->staging["taxon_name"] = $this->object->getCatalogueName() ;
                               $this->staging["taxon_level_name"] = $this->object->level_name ;break ;;
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break ;;
-      case "Sex" : $this->staging->setIndividualSex($this->data) ; break ;;
-      case "SortingName" : $this->object->people_order_by = $this->data ; break ;;
-      case "storage:Institution" : $this->staging->setInstitutionName($this->data) ; break ;;
-      case "storage:Building" : $this->staging->setBuilding($this->data) ; break ;;
-      case "storage:Floor" : $this->staging->setFloor($this->data) ; break ;;
-      case "storage:Room" : $this->staging->setRoom($this->data) ; break ;;
-      case "storage:Row" : $this->staging->setRow($this->data) ; break ;;
-      case "storage:Shelf" : $this->staging->setShelf($this->data) ; break ;;
-      case "storage:Box" : $this->staging->setContainerType($this->data) ; break ;;
-      case "TitleCitation" : if(substr($this->data,0,7) == 'http://') $this->addExternalLink() ;  $this->addComment(true) ; break ;
-      case "TypeStatus" : $this->staging->setIndividualType($this->data) ; break ;;
+      case "Sex" : $this->staging->setIndividualSex($this->cdata) ; break ;;
+      case "SortingName" : $this->object->people_order_by = $this->cdata ; break ;;
+      case "storage:Institution" : $this->staging->setInstitutionName($this->cdata) ; break ;;
+      case "storage:Building" : $this->staging->setBuilding($this->cdata) ; break ;;
+      case "storage:Floor" : $this->staging->setFloor($this->cdata) ; break ;;
+      case "storage:Room" : $this->staging->setRoom($this->cdata) ; break ;;
+      case "storage:Row" : $this->staging->setRow($this->cdata) ; break ;;
+      case "storage:Shelf" : $this->staging->setShelf($this->cdata) ; break ;;
+      case "storage:Box" : $this->staging->setContainerType($this->cdata) ; break ;;
+      case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ;  $this->addComment(true) ; break ;;
+      case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break ;;
       case "Unit" : $this->saveUnit(); break ;;
       case "UnitAssociation" : $this->staging->addRelated($this->object) ; break ;;
-      case "UnitID" : $this->code['code'] = $this->data ; $this->name = $this->data ; break ;;
-                      if(substr($this->code['code'],0,4) != 'hash') $this->staging->addRelated($this->code) ;
-      case "UnitOfMeasurement" : $this->property->property->setPropertyAccuracyUnit($this->data);$this->property->property->setPropertyUnit($this->data); break ;;
-      case "UpperValue" : $this->property->getUpperValue($this->data, $this->getPreviousTag(),$this->staging) ; break ;;
-      case "efg:VarietalNameString" : $this->staging->setObjectName($this->data) ; break ;; //$this->object->level_name='variety' ; break ;;
-      case "VerificationLevel" : $this->object->determination_status = $this->data ; break ;;
-    }
+      case "UnitID" : $this->code['code'] = $this->cdata ; $this->name = $this->cdata ; 
+                      if(substr($this->code['code'],0,4) != 'hash') $this->staging->addRelated($this->code) ; break ;;
+      case "UnitOfMeasurement" : $this->property->property->setPropertyAccuracy($this->cdata);$this->property->property->setPropertyUnit($this->cdata); break ;;
+      case "UpperValue" : $this->property->property->setUpperValue($this->cdata) ; break ;;
+      case "efg:VarietalNameString" : $this->staging->setObjectName($this->cdata) ; break ;; //$this->object->level_name='variety' ; break ;;
+      case "VerificationLevel" : $this->object->determination_status = $this->cdata ; break ;;
+    } }
     $this->tag = "" ;
     $this->path = substr($this->path,0,strrpos($this->path,"/$name")) ;
   }
 
   private function characterData($parser, $data)
   {
-    //$this->data = trim($this->data) ;
+//     if($this->tag == 'AcquisitionDate') echo(FuzzyDateTime::getValidDate($data)) ;
     if ($this->inside_data)
-      $this->data .= strtolower($data) ;
+      $this->cdata .= strtolower($data) ;
     else
-      $this->data = strtolower($data) ;
+      $this->cdata = strtolower($data) ;
     $this->inside_data = true;
   }
 
@@ -204,8 +207,8 @@ class ImportABCDXml implements IImportModels
   private function addComment($is_staging = false)
   {
     $comment = new Comments() ;
-    $comment->setComment($this->data) ;
-    if($is_staging || $this->getPreviousTag()=='Unit')
+    $comment->setComment($this->cdata) ;
+    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification')
     {
       $comment->setNotionConcerned("general") ;
       $this->staging->addRelated($comment) ;
@@ -219,7 +222,7 @@ class ImportABCDXml implements IImportModels
 
   private function addProperty()
   {
-    if($this->getPreviousTag("MeasurementsOrFacts") == "Unit")
+    if($this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag()=='Identification')
       $this->staging->addRelated($this->property->property) ;
     elseif (in_array($this->getPreviousTag(),array('efg:RockPhysicalCharacteristic','efg:MineralMeasurementOrFact')))
       $this->staging->addRelated($this->property->property) ;
@@ -253,10 +256,10 @@ class ImportABCDXml implements IImportModels
 
   private function addExternalLink()
   {
-    $prefix = substr($this->data,0,strpos($this->data,"://")) ;
-    if($prefix != "http" && $prefix != "https") $this->data = "http://".$this->data ;
+    $prefix = substr($this->cdata,0,strpos($this->cdata,"://")) ;
+    if($prefix != "http" && $prefix != "https") $this->cdata = "http://".$this->cdata ;
     $ext = new ExtLinks();
-    $ext->setUrl($this->data) ;
+    $ext->setUrl($this->cdata) ;
     $ext->setComment('Record web address') ;
     $this->staging->addRelated($ext) ;
   }

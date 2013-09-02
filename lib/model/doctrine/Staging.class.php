@@ -130,6 +130,12 @@ class Staging extends BaseStaging
       else
         return $tb_ok;
     }
+    elseif($field == "gtu")
+    {
+      if($this['gtu_ref'] == '') return null ;
+      else
+        return $tb_ok;
+    }
   }
 /*
   public function getIdentifier()
