@@ -1594,6 +1594,10 @@ drop table specimen_parts;
 drop table specimen_individuals;
 drop table specimens_flat;
 
+drop sequence specimens_id_seq;
+drop sequence specimen_individuals_id_seq;
+drop sequence specimen_parts_id_seq;
+
 alter table specimens drop constraint fk_specimens_host_specimen;
 drop table specimens;
 
@@ -1805,5 +1809,9 @@ GRANT SELECT ON specimens TO d2viewer;
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.specimens_id_seq TO cebmpad;
 
+select setval('specimens_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.specimens));
+
+ALTER SEQUENCE new_specimens_id_seq RENAME TO specimens_id_seq;
+ALTER TABLE specimens ALTER COLUMN id SET DEFAULT nextval('specimens_id_seq'::regclass);
 
 commit;
