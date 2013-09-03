@@ -76,7 +76,7 @@ class ImportABCDXml implements IImportModels
       case "AccessionDate" : if (date('Y-m-d H:i:s', strtotime($this->cdata)) == $this->cdata) $this->object->InitAccessionVar($this->cdata) ; break ;;
       case "AccessionNumber" :  $this->object->accession_num = $this->cdata ; $this->object->HandleAccession($this->staging,$this->object_to_save) ; break ;;
       case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$this->cdata:$this->property->property->property_accuracy=$this->cdata ; break ;;
-      case "AcquisitionDate" : $this->staging['acquisition_date'] = FuzzyDateTime::getValidDate($this->cdata) ; break ;;
+      case "AcquisitionDate" : $this->staging['acquisition_date'] = FuzzyDateTime::getValidDate($this->cdata) ; $this->staging['acquisition_date_mask'] = 56;  break ;;
       case "AcquisitionType" : $this->staging['acquisition_category'] = $this->cdata=='gift'?'donation':$this->cdata ; break ;;
       case "AppliesTo" : $this->property->setAppliesTo($this->cdata); break ;;
       case "AreaClass" : $this->object->tag_group_name = $this->cdata ; break ;;
@@ -171,7 +171,8 @@ class ImportABCDXml implements IImportModels
       case "storage:Room" : $this->staging->setRoom($this->cdata) ; break ;;
       case "storage:Row" : $this->staging->setRow($this->cdata) ; break ;;
       case "storage:Shelf" : $this->staging->setShelf($this->cdata) ; break ;;
-      case "storage:Box" : $this->staging->setContainerType($this->cdata) ; break ;;
+      case "storage:Box" : $this->staging->setContainerType('box'); $this->staging->setContainer($this->cdata) ; break ;;
+      case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break ;;
       case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ;  $this->addComment(true) ; break ;;
       case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break ;;
       case "Unit" : $this->saveUnit(); break ;;

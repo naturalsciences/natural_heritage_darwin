@@ -2913,10 +2913,12 @@ BEGIN
       PERFORM fct_imp_checker_igs(staging_line, true);
       PERFORM fct_imp_checker_expeditions(staging_line, true);
       PERFORM fct_imp_checker_gtu(staging_line, true);
-      PERFORM fct_imp_checker_staging_info(staging_line) ;
+      
       --RE SELECT WITH UPDATE
       select * into line from staging s INNER JOIN imports i on  s.import_ref = i.id where s.id=all_line.id;
 
+      PERFORM fct_imp_checker_staging_info(line) ;
+      
     rec_id := nextval('specimens_id_seq');
     INSERT INTO specimens (id, category, collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref,
         acquisition_category, acquisition_date_mask, acquisition_date, station_visible, ig_ref, type, sex, stage, state, social_status, rock_form,
@@ -3265,7 +3267,7 @@ BEGIN
     IF relation_line.staging_related_ref IS NOT NULL THEN
       SELECT spec_ref INTO specimen_ref FROM staging where id=relation_line.staging_related_ref ;
       IF specimen_ref IS NULL THEN 
-        id_array = array_append(id_array, s.id);
+        id_array = array_append(id_array, relation_line.id);
         continue ;
       ELSE
         INSERT INTO specimens_relationships(id, specimen_ref, relationship_type, unit_type, specimen_related_ref, institution_ref)
