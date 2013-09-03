@@ -158,48 +158,42 @@ ul.spec_error_list, ul.error_list
 }
 
 /* Tree views (Collections list) */
-
-.treelist ul, .treelist ul li
-{
-  margin-left: 15px;
+.col_name {
+  display: table-row;
+  table-layout:fixed;
+  width: 100%;
 }
 
-.treelist li
-{
-  margin-left: 0.5em;
-  margin-top: 0.5em;  
-  margin-bottom: 0.5em;
+.col_name > * {
+  display: table-cell;
 }
-
-.treelist
-{}
-
-.treelist li > ul, .expanded
-{
+.col_name .hidden {
   display:none;
 }
-
-.treelist a img
-{
-  vertical-align:middle;
+.col_name > span {
+  width: 100%;
 }
 
-.col_name
-{
-  margin-left: 0.5em;
-  padding:0.1em;
-}
-
-.col_name:hover
-{
+.col_name:hover {
   background-color: #ececec;
 }
-.col_name span
-{
-  margin-left: 0.3em;
-  padding-left: 0.2em;
-  padding-bottom: 0.2em;
-  border-bottom: 1px dashed #878988;
+
+img.clear_prop, img.tree_cmd {
+  cursor:pointer;
+  vertical-align:middle;
+  margin-right:5px;
+  width: 13px;
+  height: 13px;
+}
+
+.treelist li > ul {
+  display:none;
+}
+.treelist ul, .treelist ul li {
+  margin-left: 8px;
+}
+ .treelist ul li {
+  padding-top: 8px;
 }
 
 /* Widget behavior */

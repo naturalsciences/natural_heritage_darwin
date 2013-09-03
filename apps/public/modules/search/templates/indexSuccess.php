@@ -151,31 +151,36 @@
 <script type="text/javascript">
 $(document).ready(function () {
     $('.treelist li:not(li:has(ul)) img.tree_cmd').hide();
+
+    $('.col_check').not('label.custom-label input').customRadioCheck();
     $('.collapsed').click(function()
     {
-        $(this).hide();
-        $(this).siblings('.expanded').show();
+        $(this).addClass('hidden');
+        $(this).siblings('.expanded').removeClass('hidden');
         $(this).parent().siblings('ul').show();
     });
-    
+
     $('.expanded').click(function()
     {
-        $(this).hide();
-        $(this).siblings('.collapsed').show();
+        $(this).addClass('hidden');
+        $(this).siblings('.collapsed').removeClass('hidden');
         $(this).parent().siblings('ul').hide();
     });
-    $('.treelist li input[type=checkbox]').click(function()
+
+    $('.chk input').change(function()
     {
-      class_val = $(this).closest('li').attr('class');
+      li = $(this).closest('li');
       if(! $(this).is(':checked'))
-        $('.'+class_val).find(':checkbox').not($(this)).removeAttr('checked');
+        li.find(':checkbox').not($(this)).removeAttr('checked').change();
       else
-        $('.'+class_val).find(':checkbox').not($(this)).attr('checked','checked');  
+        li.find(':checkbox').not($(this)).attr('checked','checked').change();
     });
+
     $('#clear_collections').click(function()
     {
-  	  $('table.collections').find(':checkbox').removeAttr('checked');    
-    });   
+      $('table.collections').find(':checked').removeAttr('checked').change();
+    });
+
   var num_fld = 1;
   $('.and_tag').click(function()
   {

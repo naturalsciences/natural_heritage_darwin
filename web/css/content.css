@@ -277,7 +277,7 @@ input[type="submit"][class="search_submit"]:hover,input[type="button"]:hover
   width: 100% ;
 }
 
-.treelist li > ul, .expanded
+.treelist li > ul
 {
   display:none;
 }
@@ -297,36 +297,31 @@ input[type="submit"][class="search_submit"]:hover,input[type="button"]:hover
 {
   margin-top : 0.3em ;
 }
-
-.col_name
+.col_name {
+  display: table-row;
+  table-layout:fixed;
+  width: 100%;
+}
+.col_name > * {
+  display: table-cell;
+}
+.col_name > span
 {
-  margin-left: 0.5em;
-  padding:0.1em;
-  display:inline;
+  width: 100%;
 }
 
 .col_name:hover
 {
   background-color: #ececec;
 }
-.col_name img
+img.clear_prop, img.tree_cmd
 {
-  float:left;
+  cursor:pointer;
+  vertical-align:middle;
+  margin-right:5px;
+  width: 13px;
+  height: 13px;
 }
-
-.col_name span
-{
-  margin-left: 0.3em;
-  padding-left: 0.2em;
-  float:left;
-  border-bottom: 1px dashed #878988;
-}
-
-.check_right
-{
- float:right
-}
-
 /* Gtu View (Sampling location) */
 
 tr.tag_line input
@@ -724,13 +719,6 @@ li.uncheck span
   padding:0.2em;
   margin:0.3em;
   border: 1px solid #3390a1;
-}
-
-img.clear_prop, img.tree_cmd
-{
-  cursor:pointer;
-  vertical-align:middle;
-  margin-top:-0.1em;
 }
 
 /* Input text sizes */
