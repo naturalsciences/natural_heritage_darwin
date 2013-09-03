@@ -15,7 +15,6 @@
           <?php echo link_to($specimen->getName(),'specimensearch/search?search_id='.$specimen->getId(),array('title'=>__('Go to your search')) ); ?>
           <span class="saved_count">(<?php echo format_number_choice('[0] No Items|[1] 1 Item |(1,+Inf] %1% Items', array('%1%' =>  $specimen->getNumberOfIds()), $specimen->getNumberOfIds());?>)</span>
         </td>
-        <td><div class="source_flag"><?php echo __($specimen->getSubject());?></div></td>
         <td class="row_delete">
          <?php echo link_to(image_tag('remove.png'), 'savesearch/deleteSavedSearch?table=my_saved_searches&id='.$specimen->getId(), array('class'=>'del_butt'));?>
         </td>

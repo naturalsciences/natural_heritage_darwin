@@ -32,7 +32,6 @@
             <?php echo format_datetime($search->getModificationDateTime(),'f');?>
           </div>
         </td>
-        <td><div class="source_flag"><?php echo __($search->getSubject());?></div></td>
         <td><?php if(!$is_only_spec):?><?php echo link_to(image_tag('criteria.png'),'specimensearch/index?search_id='.$search->getId());?><?php endif;?></td>
         <td><a href="" class="edit_request"><?php echo image_tag('edit.png');?></a></td>
         <td>
