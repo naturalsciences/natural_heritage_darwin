@@ -588,7 +588,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'chrono_name' => 'Chrono text search',
       'mineral_name' => 'Mineralo text search',
       'taxon_level_ref' => 'Level',
-      'what_searched' => 'What would you like to search ?',
       'code_ref_relation' => 'Code of',
       'people_ref' => 'Whom are you looking for',
       'role_ref' => 'Which role',
@@ -606,6 +605,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'property_value_to' => 'to',
       'property_units' => 'Units',
     ));
+
+    // For compat only with old saved search
+    // FIXME: might be removed with a migration
+    $this->validatorSchema['what_searched'] = new sfValidatorPass();
   }
 
   public function addGtuTagValue($num)
