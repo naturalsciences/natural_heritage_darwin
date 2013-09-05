@@ -58,7 +58,7 @@ class ParsingCatalogue
   public function setChronoParent()
   {
     if($this->temp_array && in_array($this->level_name, array_keys($this->temp_array)))
-      return("Associated level:".$this->level_name." , associated name :".$this->name) ;
+      return("(Chronostratigraphy Local Nomenclature) level:".$this->level_name." , name :".$this->name) ;
     $this->temp_array[$this->level[$this->catalogue][$this->level_name]] = $this->name ;
     return(false) ;
   }
