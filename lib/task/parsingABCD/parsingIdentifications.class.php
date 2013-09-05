@@ -93,14 +93,13 @@ class ParsingIdentifications
     {
       $staging['lithology_parents'] = $this->catalogue_parent->export() ;
       $staging->setLithologyName($this->fullname) ;
+      $staging->setLithologyLevelName($this->level_name) ;
     }
     if($this->notion == 'mineralogy') 
     {
       $staging['mineral_parents'] = $this->catalogue_parent->export() ;
       $staging->setMineralName($this->fullname) ;
       $staging->setMineralClassification($this->classification) ;
-      // il me semble que seul des variety sont inséré en lihology, sinon faut virer ci-dessous
-      $staging->setMineralLevelName('unit_variety') ;
     }
   }
 
@@ -108,6 +107,12 @@ class ParsingIdentifications
   {
     if($this->notion != 'taxonomy')
     {
+      if($this->fullname == '')
+      {
+        $this->fullname = $this->higher_name ;
+        $this->level_name = $this->rock_level[$this->notion][$this->higher_level] ;
+        array_pop($this->temp_array) ;
+      }
       foreach($this->temp_array as $level=>$name)
       { 
         if(!$name) continue ;

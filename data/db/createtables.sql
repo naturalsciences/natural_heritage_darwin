@@ -1585,6 +1585,7 @@ create table  staging_tag_groups
         sub_group_name varchar not null,
         tag_value varchar not null,
         constraint pk_staging_tag_groups primary key (id)
+        CONSTRAINT fk_staging_tag_groups FOREIGN KEY (staging_ref) REFERENCES staging (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE
        );
 
 comment on table staging_tag_groups is 'List of grouped tags for an imported row (copy of tag group)';

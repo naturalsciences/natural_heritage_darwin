@@ -311,6 +311,7 @@ class StagingForm extends BaseStagingForm
   public function save($con = null, $forms = null) 
   {
     $status = $this->getObject()->getFields(true) ;
+    
     if(is_numeric($this->getValue('taxon_ref'))) $status['taxon'] = 'done' ;
     else unset($this['taxon_ref']) ;
     if(is_numeric($this->getValue('chrono_ref'))) $status['chrono'] = 'done' ;

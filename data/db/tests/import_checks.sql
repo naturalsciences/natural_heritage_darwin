@@ -123,7 +123,7 @@ select '#' || min(fct_imp_checker_manager(s.*)::integer) from staging s;
 
 select diag('Test of Import');
 
-update staging set level='individual', parent_ref=4 where id =  1;
+update staging set parent_ref=4 where id =  1;
 insert into staging (id,import_ref,parent_ref,room) VALUES (6,1,1,'12');
 
 update staging set gtu_code='My Gtu', gtu_ref=null where id = 4;

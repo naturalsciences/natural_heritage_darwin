@@ -2663,6 +2663,7 @@ CREATE OR REPLACE FUNCTION fct_imp_checker_gtu(line staging, import boolean defa
 AS $$
 DECLARE
   ref_rec integer :=0;
+  tags staging_tag_groups ;
 BEGIN
   IF line.gtu_code is null OR line.gtu_code  ='' OR line.gtu_ref is not null THEN
     RETURN true;
@@ -2687,16 +2688,15 @@ BEGIN
           COALESCE(line.gtu_to_date_mask,0), COALESCE(line.gtu_to_date, '31/12/2038')
           , line.gtu_latitude, line.gtu_longitude, line.gtu_lat_long_accuracy, line.gtu_elevation, line.gtu_elevation_accuracy)
         RETURNING id INTO ref_rec;
+        FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
         BEGIN
-        INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
-          (
-            SELECT ref_rec,group_name, sub_group_name, tag_value
-              FROM staging_tag_groups WHERE staging_ref = line.id
-          );
-          DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
-        EXCEPTION WHEN unique_violation THEN
-          RAISE NOTICE 'An error occured: %', SQLERRM;
+          INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
+            Values(ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value );
+        --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
+          EXCEPTION WHEN unique_violation THEN
+            RAISE NOTICE 'An error occured: %', SQLERRM;
         END ;
+        END LOOP ;
       ELSE
         RETURN TRUE;
       END IF;
@@ -2920,43 +2920,45 @@ BEGIN
       PERFORM fct_imp_checker_staging_info(line) ;
       
     rec_id := nextval('specimens_id_seq');
-    INSERT INTO specimens (id, category, collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref,
-        acquisition_category, acquisition_date_mask, acquisition_date, station_visible, ig_ref, type, sex, stage, state, social_status, rock_form,
-        specimen_part, complete, institution_ref, building, floor, room, row, shelf, container, sub_container,container_type, sub_container_type,
-        container_storage, sub_container_storage, surnumerary, specimen_status, specimen_count_min, specimen_count_max, object_name)
-    VALUES (rec_id, COALESCE(line.category,'physical') , all_line.collection_ref, line.expedition_ref, line.gtu_ref, line.taxon_ref, line.litho_ref, line.chrono_ref,
-      line.lithology_ref, line.mineral_ref, COALESCE(line.acquisition_category,''), COALESCE(line.acquisition_date_mask,0), COALESCE(line.acquisition_date,'01/01/0001'),
-      COALESCE(line.station_visible,true),  line.ig_ref, COALESCE(line.individual_type,'specimen'), COALESCE(line.individual_sex,'undefined'),
-      COALESCE(line.individual_stage,'undefined'), COALESCE(line.individual_state,'not applicable'),COALESCE(line.individual_social_status,'not applicable'),
-      COALESCE(line.individual_rock_form,'not applicable'), COALESCE(line.part,'specimen'), COALESCE(line.complete,true), line.institution_ref, line.building,
-      line.floor, line.room, line.row, line.shelf, line.container, line.sub_container,COALESCE(line.container_type,'container'), 
-      COALESCE(line.sub_container_type, 'container'), COALESCE(line.container_storage,'dry'),COALESCE(line.sub_container_storage,'dry'),
-      COALESCE(line.surnumerary,false), COALESCE(line.specimen_status,'good state'),COALESCE(line.part_count_min,1), COALESCE(line.part_count_max,2), line.object_name
-    );
-    FOR maintenance_line IN SELECT * from collection_maintenance where referenced_relation = 'staging' AND record_id=line.id
-    LOOP
-      SELECT people_ref into people_id FROM staging_people where referenced_relation='collection_maintenance' AND record_id=maintenance_line.id ;
-      UPDATE collection_maintenance set people_ref=people_id where id=maintenance_line.id ;
-      DELETE FROM staging_people where referenced_relation='collection_maintenance' AND record_id=maintenance_line.id ;
-    END LOOP;
-    UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
-    -- Import identifiers whitch identification have been updated to specimen
-    INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
-    SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
-    DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ) ;
-    -- Import collecting_methods
-    INSERT INTO specimen_collecting_methods(id, specimen_ref, collecting_method_ref)
-    SELECT nextval('specimen_collecting_methods_id_seq'), rec_id, collecting_method_ref FROM staging_collecting_methods WHERE staging_ref = line.id;
-    DELETE FROM staging_collecting_methods where staging_ref = line.id;
-    UPDATE staging set spec_ref=rec_id WHERE id=all_line.id ;
-
-    FOR people_line IN SELECT * from staging_people WHERE referenced_relation = 'specimens'
-    LOOP
+    IF line.spec_ref IS NULL THEN
+      INSERT INTO specimens (id, category, collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref,
+          acquisition_category, acquisition_date_mask, acquisition_date, station_visible, ig_ref, type, sex, stage, state, social_status, rock_form,
+          specimen_part, complete, institution_ref, building, floor, room, row, shelf, container, sub_container,container_type, sub_container_type,
+          container_storage, sub_container_storage, surnumerary, specimen_status, specimen_count_min, specimen_count_max, object_name)
+      VALUES (rec_id, COALESCE(line.category,'physical') , all_line.collection_ref, line.expedition_ref, line.gtu_ref, line.taxon_ref, line.litho_ref, line.chrono_ref,
+        line.lithology_ref, line.mineral_ref, COALESCE(line.acquisition_category,''), COALESCE(line.acquisition_date_mask,0), COALESCE(line.acquisition_date,'01/01/0001'),
+        COALESCE(line.station_visible,true),  line.ig_ref, COALESCE(line.individual_type,'specimen'), COALESCE(line.individual_sex,'undefined'),
+        COALESCE(line.individual_stage,'undefined'), COALESCE(line.individual_state,'not applicable'),COALESCE(line.individual_social_status,'not applicable'),
+        COALESCE(line.individual_rock_form,'not applicable'), COALESCE(line.part,'specimen'), COALESCE(line.complete,true), line.institution_ref, line.building,
+        line.floor, line.room, line.row, line.shelf, line.container, line.sub_container,COALESCE(line.container_type,'container'), 
+        COALESCE(line.sub_container_type, 'container'), COALESCE(line.container_storage,'dry'),COALESCE(line.sub_container_storage,'dry'),
+        COALESCE(line.surnumerary,false), COALESCE(line.specimen_status,'good state'),COALESCE(line.part_count_min,1), COALESCE(line.part_count_max,2), line.object_name
+      );
+      FOR maintenance_line IN SELECT * from collection_maintenance where referenced_relation = 'staging' AND record_id=line.id
+      LOOP
+        SELECT people_ref into people_id FROM staging_people where referenced_relation='collection_maintenance' AND record_id=maintenance_line.id ;
+        UPDATE collection_maintenance set people_ref=people_id where id=maintenance_line.id ;
+        DELETE FROM staging_people where referenced_relation='collection_maintenance' AND record_id=maintenance_line.id ;
+      END LOOP;
+      UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
+      -- Import identifiers whitch identification have been updated to specimen
       INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
-      VALUES(nextval('catalogue_people_id_seq'),people_line.referenced_relation, people_line.record_id, people_line.people_type, people_line.people_sub_type, people_line.order_by, people_line.people_ref) ;
-    END LOOP;
-    DELETE FROM staging_people WHERE referenced_relation = 'specimens' ;
-    id_to_delete = array_append(id_to_delete,all_line.id) ;
+      SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
+      DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ) ;
+      -- Import collecting_methods
+      INSERT INTO specimen_collecting_methods(id, specimen_ref, collecting_method_ref)
+      SELECT nextval('specimen_collecting_methods_id_seq'), rec_id, collecting_method_ref FROM staging_collecting_methods WHERE staging_ref = line.id;
+      DELETE FROM staging_collecting_methods where staging_ref = line.id;
+      UPDATE staging set spec_ref=rec_id WHERE id=all_line.id ;
+
+      FOR people_line IN SELECT * from staging_people WHERE referenced_relation = 'specimens'
+      LOOP
+        INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
+        VALUES(nextval('catalogue_people_id_seq'),people_line.referenced_relation, people_line.record_id, people_line.people_type, people_line.people_sub_type, people_line.order_by, people_line.people_ref) ;
+      END LOOP;
+      DELETE FROM staging_people WHERE referenced_relation = 'specimens' ;
+      id_to_delete = array_append(id_to_delete,all_line.id) ;
+    END IF ;
     END;
   END LOOP;
   select fct_imp_checker_staging_relationship() into id_to_keep ;
@@ -3089,7 +3091,7 @@ BEGIN
       WHERE 
         litho_name IS NOT DISTINCT FROM  OLD.litho_name AND litho_level_ref IS NOT DISTINCT FROM  OLD.litho_level_ref AND 
         litho_level_name IS NOT DISTINCT FROM  OLD.litho_level_name AND 
-        NEW.litho_status IS NOT DISTINCT FROM  OLD.litho_status AND litho_local IS NOT DISTINCT FROM  OLD.litho_local AND litho_color=NEW.litho_color
+        litho_status IS NOT DISTINCT FROM  OLD.litho_status AND litho_local IS NOT DISTINCT FROM  OLD.litho_local AND litho_color IS NOT DISTINCT FROM OLD.litho_color
         AND import_ref = NEW.import_ref;
         NEW.status = delete(NEW.status,'litho');
 
@@ -3191,56 +3193,56 @@ BEGIN
         IF line.gtu_ref IS NOT NULL THEN
           FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
           LOOP
-            UPDATE template_table_record_ref set referenced_relation='gtu', record_id=line.gtu_ref where id=record_line.id ;
+            UPDATE template_table_record_ref set referenced_relation='gtu', record_id=line.gtu_ref where referenced_relation='staging_info' and record_id=info_line.id;
           END LOOP ;
         END IF;
       WHEN 'taxonomy' THEN
         IF line.taxon_ref IS NOT NULL THEN
           FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
           LOOP
-            UPDATE template_table_record_ref set referenced_relation='taxonomy', record_id=line.gtu_ref where id=record_line.id ;
+            UPDATE template_table_record_ref set referenced_relation='taxonomy', record_id=line.taxon_ref where referenced_relation='staging_info' and record_id=info_line.id;
           END LOOP ;
         END IF;
       WHEN 'expeditions' THEN
         IF line.expedition_ref IS NOT NULL THEN
           FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
           LOOP
-            UPDATE template_table_record_ref set referenced_relation='expeditions', record_id=line.gtu_ref where id=record_line.id ;
+            UPDATE template_table_record_ref set referenced_relation='expeditions', record_id=line.expedition_ref where referenced_relation='staging_info' and record_id=info_line.id;
           END LOOP ;
         END IF;
       WHEN 'lithostratigraphy' THEN
         IF line.litho_ref IS NOT NULL THEN
           FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
           LOOP
-            UPDATE template_table_record_ref set referenced_relation='lithostratigraphy', record_id=line.gtu_ref where id=record_line.id ;
+            UPDATE template_table_record_ref set referenced_relation='lithostratigraphy', record_id=line.litho_ref where referenced_relation='staging_info' and record_id=info_line.id;
           END LOOP ;
         END IF;
       WHEN 'lithology' THEN
         IF line.lithology_ref IS NOT NULL THEN
           FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
           LOOP
-            UPDATE template_table_record_ref set referenced_relation='lithology', record_id=line.gtu_ref where id=record_line.id ;
+            UPDATE template_table_record_ref set referenced_relation='lithology', record_id=line.lithology_ref where referenced_relation='staging_info' and record_id=info_line.id;
           END LOOP ;
         END IF;
       WHEN 'chronostratigraphy' THEN
         IF line.chrono_ref IS NOT NULL THEN
           FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
           LOOP
-            UPDATE template_table_record_ref set referenced_relation='chronostratigraphy', record_id=line.gtu_ref where id=record_line.id ;
+            UPDATE template_table_record_ref set referenced_relation='chronostratigraphy', record_id=line.chrono_ref where id=record_line.id ;
           END LOOP ;
         END IF;
       WHEN 'mineralogy' THEN
         IF line.mineral_ref IS NOT NULL THEN
           FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
           LOOP
-            UPDATE template_table_record_ref set referenced_relation='mineralogy', record_id=line.gtu_ref where id=record_line.id ;
+            UPDATE template_table_record_ref set referenced_relation='mineralogy', record_id=line.mineral_ref where referenced_relation='staging_info' and record_id=info_line.id;
           END LOOP ;
         END IF;
       WHEN 'igs' THEN
         IF line.ig_ref IS NOT NULL THEN
           FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
           LOOP
-            UPDATE template_table_record_ref set referenced_relation='igs', record_id=line.gtu_ref where id=record_line.id ;
+            UPDATE template_table_record_ref set referenced_relation='igs', record_id=line.ig_ref where referenced_relation='staging_info' and record_id=info_line.id;
           END LOOP ;
         END IF;
       ELSE continue ;
@@ -3253,7 +3255,6 @@ BEGIN
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_relationship() RETURNS integer ARRAY
 AS $$
 DECLARE
@@ -3267,7 +3268,7 @@ BEGIN
     IF relation_line.staging_related_ref IS NOT NULL THEN
       SELECT spec_ref INTO specimen_ref FROM staging where id=relation_line.staging_related_ref ;
       IF specimen_ref IS NULL THEN 
-        id_array = array_append(id_array, relation_line.id);
+        id_array := array_append(id_array, relation_line.record_id);
         continue ;
       ELSE
         INSERT INTO specimens_relationships(id, specimen_ref, relationship_type, unit_type, specimen_related_ref, institution_ref)

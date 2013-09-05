@@ -9,13 +9,12 @@ class ParsingCatalogue
                      'efg:Member'=>'member',
                      'efg:Bed'=>'layer',
                      ),
-    'chronostratigraphy' => array('Eon'=>'eon','Era'=>'era','Period'=>'system','Epook'=>'serie','Age'=>'stage','Subage'=>'sub_age'),
+    'chronostratigraphy' => array('eon'=>'eon','era'=>'era','period'=>'system','serie'=>'serie','epook'=>'serie','age'=>'stage','stage'=>'stage','subage'=>'sub_age'),
     'lithology' => array('unit_main_group'=>'unit_main_group', 'unit_main_class'=>'unit_main_class','type'=>'unit_category',
                   'subtype'=> 'unit_class','unit_clan'=>'unit_clan','unit_group'=>'unit_group','unit_sub_group'=>'unit_sub_group',
                   'FullScientificNameString'=>'unit_rock'),
-    'mineralogy' => array(''),
   );
-  public $catalogue, $catalogue_parent, $staging_info=null, $name=null, $level_name=null;
+  public $catalogue, $catalogue_parent, $temp_array, $staging_info=null, $name=null, $level_name=null;
 
   public function __construct($var)
   {
@@ -47,7 +46,36 @@ class ParsingCatalogue
     unset($this->catalogue_parent[$this->level_name]) ;
     return $this->catalogue_parent->export() ;
   }
-  
+
+  public function getChronoLevel($level)
+  {
+    if(strpos($level,'/'))
+      $this->level_name = substr($level,strpos($level,'/')+1,strlen($level)) ;
+    else
+      $this->level_name = $level ;
+  }
+
+  public function setChronoParent()
+  {
+    if($this->temp_array && in_array($this->level_name, array_keys($this->temp_array)))
+      return("Associated level:".$this->level_name." , associated name :".$this->name) ;
+    $this->temp_array[$this->level[$this->catalogue][$this->level_name]] = $this->name ;
+    return(false) ;
+  }
+
+  public function saveChrono($staging)
+  {
+    $staging['chrono_name'] = end($this->temp_array) ;
+    $tab = array_keys($this->temp_array) ;
+    $staging['chrono_level_name'] = array_pop($tab) ;
+    foreach($this->temp_array as $level=>$name)
+    {
+      if($level != $staging['chrono_level_name'])
+        $this->catalogue_parent[$this->level[$this->catalogue][$level]] = $name ;
+    }
+    $staging['chrono_parents'] = $this->catalogue_parent->export() ;
+  }
+
   public function addStagingInfo($object, $id)
   {
     if(!$this->staging_info) 

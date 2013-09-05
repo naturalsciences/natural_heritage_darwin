@@ -40,6 +40,8 @@ class ImportABCDXml implements IImportModels
     switch ($name) {
       case "Accessions" : $this->object = new parsingTag() ; break ;;
       case "Biotope" : /*@TODO ;*/ break ;;
+      case "efg:ChronostratigraphicAttributions" :
+      case "ChronostratigraphicAttributions" : $this->object = new ParsingCatalogue('chronostratigraphy') ; break ;;
       case "Country" : $this->object->tag_group_name="country" ; break ;;
       case "dna:DNASample" : $this->object = new ParsingMaintenance('Dna extraction') ; break ;;
       case "RockPhysicalCharacteristics" :
@@ -85,6 +87,10 @@ class ImportABCDXml implements IImportModels
       case "AssociatedUnitSourceInstitutionCode" : $this->object->setInstitutionName($this->cdata) ; break ;;
       case "AssociatedUnitSourceName" : $this->object->setSourceName($this->cdata) ; break ;;
       case "AssociationType" : $this->object->setRelationshipType($this->cdata) ; break ;;
+      case "efg:ChronostratigraphicAttribution" : $this->cdata = $this->object->setChronoParent() ; if(!$this->cdata) $this->addComment() ; break ;;
+      case "efg:ChronoStratigraphicDivision" : $this->object->getChronoLevel($this->cdata) ; break ;;
+      case "efg:ChronostratigraphicAttributions" : $this->object->saveChrono($this->staging) ; break ;;
+      case "efg:ChronostratigraphicName" : $this->object->name = $this->cdata ; break ;;
       case "Code" : $this->staging['gtu_code'] = $this->cdata ; break ;;
       case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $this->cdata ; break ;;
       case "Context" : $this->object->multimedia_data['sub_type'] = $this->cdata ; break ;;
@@ -94,7 +100,8 @@ class ImportABCDXml implements IImportModels
       case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
       case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break ;;
       case "DateText" : $this->object->getDateText($this->cdata) ; break ;;
-      case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; break ;;
+      case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ; 
+                        $this->staging["gtu_from_date_mask"] = 56 ; $this->staging["gtu_to_date_mask"] = 56 ; break ;;
       case "dna:Concentration" : /* this->object->properties */ break ;;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break ;;
       case "dna:ExtractionDate" : $this->object->maintenance->setModificationDateTime($this->cdata) ; break ;;
@@ -128,7 +135,7 @@ class ImportABCDXml implements IImportModels
       case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $this->cdata ; break ;;
       case "Length" : $this->object->desc .= "Length : ".$this->cdata." ;" ; break ;;
       case "efg:LithostratigraphicAttributions" : $this->object->setAttribution($this->staging) ; break ;;
-      case "LocalityText" : $this->staging['gtu_code'] = $this->cdata ; break ;; //@TOTO maybe find a better place for that.
+      case "LocalityText" : if($this->staging['gtu_code']) $this->addComment() ; ELSE $this->staging['gtu_code'] = $this->cdata ; break ;; 
       case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $this->cdata ; break ;;
       case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break ;;
       case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break ;;
@@ -209,7 +216,7 @@ class ImportABCDXml implements IImportModels
   {
     $comment = new Comments() ;
     $comment->setComment($this->cdata) ;
-    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification')
+    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag() == "efg:MineralogicalUnit")
     {
       $comment->setNotionConcerned("general") ;
       $this->staging->addRelated($comment) ;
