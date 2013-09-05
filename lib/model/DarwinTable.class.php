@@ -217,18 +217,22 @@ class DarwinTable extends Doctrine_Table
     return $noRights;
   }
 
-  public function completeaAsArray($name, $limit = 30)
+  public function completeAsArray($name, $exact, $limit = 30)
   {
+
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
          ->from($this->getTableName())
-         ->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($name, 'string')."),'%') ")
          ->orderBy('path ASC')
          ->limit($limit);
+    if($exact)
+      $q->andWhere("name = ?",$name);
+    else
+      $q->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($name, 'string')."),'%') ");
     $q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
-      $result[] = array('name' => $item->getName(), 'name_indexed'=> $item->getNameIndexed(), 'id'=> $item->getId() );
+      $result[] = array('label' => $item->getName(), 'name_indexed'=> $item->getNameIndexed(), 'value'=> $item->getId() );
     }
     return $result;
   }

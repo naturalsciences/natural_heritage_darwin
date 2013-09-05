@@ -82,8 +82,8 @@ $(document).ready(function () {
         $.getJSON('<?php echo url_for('catalogue/completeName?table=taxonomy');?>', {term : request.term }, function( data) {
             response( $.map( data, function( item ) {
               return {
-                label: item.name,
-                value: item.name
+                label: item.label,
+                value: item.label
               }
             }));
 

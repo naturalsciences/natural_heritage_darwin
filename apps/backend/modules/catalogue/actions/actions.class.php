@@ -265,7 +265,7 @@ class catalogueActions extends DarwinActions
   }
 
   public function executeCompleteName(sfWebRequest $request) {
-    $result = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->completeaAsArray($request->getParameter('term'));
+    $result = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->completeAsArray($request->getParameter('term'), $request->getParameter('exact'));
     return $this->renderText(json_encode($result));
   }
 

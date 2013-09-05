@@ -25,10 +25,10 @@ function button_ref_modal(event)
         at: 'top center',
         adjust:{
           y: 250 // option set in case of the qtip become too big
-        },         
+        },
         target: $(document.body)
       },
-      
+
       show: {
         ready: true,
         delay: 0,
