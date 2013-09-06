@@ -249,7 +249,7 @@ img.clear_prop, img.tree_cmd {
   font-weight: normal;
 }
 
-a.but_text
+a.but_text, a.but_more
 {
   text-decoration:none;
   color:black;
@@ -3056,7 +3056,18 @@ span.label {
   background-image: url(/images/white_pin_on.png);
 }*/
 
-.float_left
-{
+.float_left {
   float: left !important;
+}
+
+a.but_more{
+    background: url(/images/magnifier.gif) 0 0 no-repeat;
+    width: 16px;
+    padding-left: 8px;
+    padding-right: 8px;
+    height: 16px;
+}
+.complete_ref .ref_name {
+  float:none;
+  display:inline;
 }
