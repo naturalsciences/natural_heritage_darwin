@@ -40,23 +40,25 @@ class MineralogyForm extends BaseMineralogyForm
       array('class'=>'catalogue_level')
       );
 
-    $this->widgetSchema['parent_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Mineralogy',
-       'method' => 'getName',
-       'link_url' => 'mineralogy/choose',
-       'box_title' => $this->getI18N()->__('Choose Parent'),
-       'button_is_hidden' => true,
+    $this->widgetSchema['parent_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Mineralogy',
+      'method' => 'getName',
+      'link_url' => 'mineralogy/choose',
+      'box_title' => $this->getI18N()->__('Choose Parent'),
+      'button_is_hidden' => true,
+      'complete_url' => 'catalogue/completeName?table=mineralogy',
      ));
 
-    $this->widgetSchema['cristal_system'] = new widgetFormSelectComplete(array('model' => 'Mineralogy',
-                                                                               'table_method' => 'getDistinctSystems',
-                                                                               'method' => 'getCSystem',
-                                                                               'key_method' => 'getCSystem',
-                                                                               'add_empty' => false,
-                                                                               'change_label' => 'Pick a system in the list',
-                                                                               'add_label' => 'Add another system',
-                                                                              )
-                                                                        );
+    $this->widgetSchema['cristal_system'] = new widgetFormSelectComplete(array(
+      'model' => 'Mineralogy',
+      'table_method' => 'getDistinctSystems',
+      'method' => 'getCSystem',
+      'key_method' => 'getCSystem',
+      'add_empty' => false,
+      'change_label' => 'Pick a system in the list',
+      'add_label' => 'Add another system',
+    ));
+
     $this->widgetSchema['local_naming'] = new sfWidgetFormInputCheckbox();
     $this->widgetSchema->setLabels(array('cristal_system' => 'Cristalographic system',
                                          'level_ref' => 'Level',

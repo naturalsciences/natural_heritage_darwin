@@ -26,30 +26,33 @@ class CollectionsForm extends BaseCollectionsForm
     $this->widgetSchema['code']->setAttributes(array('class'=>'small_size'));
     $this->widgetSchema['name'] = new sfWidgetFormInputText();
     $this->widgetSchema['name']->setAttributes(array('class'=>'medium_size'));
-    $this->widgetSchema['institution_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Institutions',
-       'link_url' => 'institution/choose?with_js=1',
-       'method' => 'getFamilyName',
-       'box_title' => $this->getI18N()->__('Choose Institution'),
-     ));
+    $this->widgetSchema['institution_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Institutions',
+      'link_url' => 'institution/choose?with_js=1',
+      'method' => 'getFamilyName',
+      'box_title' => $this->getI18N()->__('Choose Institution'),
+      'complete_url' => 'catalogue/completeName?table=institutions',
+    ));
     $this->widgetSchema['institution_ref']->setLabel('Institution');
 
-    $this->widgetSchema['main_manager_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Users',
-       'link_url' => 'user/choose',
-       'method' => 'getFormatedName',
-       'box_title' => $this->getI18N()->__('Choose Manager'),
-     ));
-     
-    $this->widgetSchema['staff_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Users',
-       'link_url' => 'user/choose',
-       'method' => 'getFormatedName',
-        'nullable' => true,
-       'box_title' => $this->getI18N()->__('Choose Staff Member'),
+    $this->widgetSchema['main_manager_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Users',
+      'link_url' => 'user/choose',
+      'method' => 'getFormatedName',
+      'box_title' => $this->getI18N()->__('Choose Manager'),
+      'complete_url' => 'catalogue/completeName?table=users',
+    ));
+
+    $this->widgetSchema['staff_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Users',
+      'link_url' => 'user/choose',
+      'method' => 'getFormatedName',
+      'nullable' => true,
+      'box_title' => $this->getI18N()->__('Choose Staff Member'),
+      'complete_url' => 'catalogue/completeName?table=users',
      ));
     $this->widgetSchema['staff_ref']->setLabel('Staff Member');
-//      $this->validatorSchema['staff_ref'] = new sfValidatorInteger(array('required' => false)) ;     
+//      $this->validatorSchema['staff_ref'] = new sfValidatorInteger(array('required' => false)) ;
     
     $this->widgetSchema['main_manager_ref']->setLabel('Conservator');
 
@@ -59,20 +62,20 @@ class CollectionsForm extends BaseCollectionsForm
     $this->widgetSchema['parent_ref']->setLabel('Parent collection');
 
     $this->widgetSchema->setHelps(array(
-                                       'is_public' => "Uncheck this option if you want your collection to be private. So this collection won't be visible in the public interface neither by simply registered user",
-                                       'main_manager_ref' => "Specify the main manager for this collection, you can add other manager on the rights table below", )
-                                 );
+      'is_public' => "Uncheck this option if you want your collection to be private. So this collection won't be visible in the public interface neither by simply registered user",
+      'main_manager_ref' => "Specify the main manager for this collection, you can add other manager on the rights table below", )
+    );
 
     $this->validatorSchema['collection_type'] = new sfValidatorChoice(array('choices' => array('mix' => 'mix', 'observation' => 'observation', 'physical' => 'physical'), 'required' => true));
 
-   if(! $this->getObject()->isNew() || isset($this->options['duplicate']))
-     $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->getObject()->getInstitutionRef()) );
-   elseif(isset($this->options['new_with_error']))
-     $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->options['institution']));   	
+    if(! $this->getObject()->isNew() || isset($this->options['duplicate']))
+      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->getObject()->getInstitutionRef()) );
+    elseif(isset($this->options['new_with_error']))
+      $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->options['institution']));
 
-     $this->validatorSchema->setPostValidator(
+    $this->validatorSchema->setPostValidator(
       new sfValidatorCallback(array('callback' => array($this, 'checkSelfAttached')))
-     );
+    );
 
     $subForm = new sfForm();
     $this->embedForm('CollectionsRights',$subForm);   
@@ -106,7 +109,7 @@ class CollectionsForm extends BaseCollectionsForm
     {
       if($values['parent_ref'] == $values['id'])
       {
-	      $error = new sfValidatorError($validator, "A collection can't be attached to itself");
+        $error = new sfValidatorError($validator, "A collection can't be attached to itself");
         throw new sfValidatorErrorSchema($validator, array('parent_ref' => $error));
       }
     }
@@ -130,30 +133,30 @@ class CollectionsForm extends BaseCollectionsForm
 
   public function saveEmbeddedForms($con = null, $forms = null)
   {
-   if (null === $forms)
-   {
-	    $value = $this->getValue('CollectionsRights');	    
-	    foreach($this->embeddedForms['CollectionsRights']->getEmbeddedForms() as $name => $form)
-    	{
-    	  if (!isset($value[$name]['user_ref']))
-	      {         
-	       /* DO BE DONE WITH A TRIGGER
-	        if ($form->getObject()->getDbUserType() == Users::REGISTERED_USER ) // so we have to delete widget right for this guy
-	          Doctrine::getTable('MyWidgets')->setUserRef($form->getObject()->getUserRef())->doUpdateWidgetRight($form->getObject()->getCollectionRef());
-	        */
-	        $form->getObject()->delete();
-	        unset($this->embeddedForms['CollectionsRights'][$name]);
-	      } 
-	    }	  
-	    $value = $this->getValue('newVal');
-	    foreach($this->embeddedForms['newVal']->getEmbeddedForms() as $name => $form)
-    	{
-    	  if (!isset($value[$name]['user_ref']) || $value[$name]['user_ref'] == sfContext::getInstance()->getUser()->getId())
-    	  {
-	        unset($this->embeddedForms['newVal'][$name]);
-	      }
-	    }	      
-   }
-   return parent::saveEmbeddedForms($con, $forms);
+    if (null === $forms) {
+      $value = $this->getValue('CollectionsRights');
+      foreach($this->embeddedForms['CollectionsRights']->getEmbeddedForms() as $name => $form)
+      {
+        if (!isset($value[$name]['user_ref']))
+        {
+          /* DO BE DONE WITH A TRIGGER
+          if ($form->getObject()->getDbUserType() == Users::REGISTERED_USER ) // so we have to delete widget right for this guy
+          Doctrine::getTable('MyWidgets')->setUserRef($form->getObject()->getUserRef())->doUpdateWidgetRight($form->getObject()->getCollectionRef());
+          */
+          $form->getObject()->delete();
+          unset($this->embeddedForms['CollectionsRights'][$name]);
+        }
+      }
+
+      $value = $this->getValue('newVal');
+      foreach($this->embeddedForms['newVal']->getEmbeddedForms() as $name => $form)
+      {
+        if (!isset($value[$name]['user_ref']) || $value[$name]['user_ref'] == sfContext::getInstance()->getUser()->getId())
+        {
+          unset($this->embeddedForms['newVal'][$name]);
+        }
+      }
+    }
+    return parent::saveEmbeddedForms($con, $forms);
   }
 }

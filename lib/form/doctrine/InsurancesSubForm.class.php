@@ -23,26 +23,30 @@ class InsurancesSubForm extends BaseInsurancesForm
       'add_label' => '',
     ));
 
-    $this->widgetSchema['insurer_ref'] = new widgetFormButtonRef(array(
+    $this->widgetSchema['insurer_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'People',
       'link_url' => 'institution/choose',
       'method' => 'getFormatedName',
       'box_title' => $this->getI18N()->__('Choose Insurer'),
       'nullable' => true,
       'button_class'=>'add_insurance_insurer_ref',
+      'complete_url' => 'catalogue/completeName?table=institutions',
      ),
       array('class'=>'inline',)
     );
-    $this->widgetSchema['contact_ref'] = new widgetFormButtonRef(array(
+
+    $this->widgetSchema['contact_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'People',
       'link_url' => 'people/choose',
       'method' => 'getFormatedName',
       'box_title' => $this->getI18N()->__('Choose contact'),
       'nullable' => true,
       'button_class'=>'add_insurance_contact_ref',
+      'complete_url' => 'catalogue/completeName?table=people',
      ),
      array('class'=>'inline',)
     );
+
     $this->widgetSchema->setLabels(array(
       'insurance_value' => 'Value' ,
       'insurance_currency' => 'Currency',

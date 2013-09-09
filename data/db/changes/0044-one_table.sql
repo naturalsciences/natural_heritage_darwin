@@ -1650,6 +1650,8 @@ CREATE INDEX idx_specimens_lithology_ref ON specimens  (lithology_ref) WHERE lit
 CREATE INDEX idx_specimens_mineral_ref ON specimens  (mineral_ref) WHERE mineral_ref <> 0;
 CREATE INDEX idx_specimens_taxon_ref ON specimens  (taxon_ref) WHERE taxon_ref <> 0;
 
+
+
 CREATE TRIGGER fct_cpy_trg_del_dict_specimens AFTER UPDATE OR DELETE
   ON specimens FOR EACH ROW EXECUTE PROCEDURE trg_del_dict();
   

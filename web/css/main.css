@@ -219,7 +219,7 @@ img.clear_prop, img.tree_cmd {
   margin-left: 0;
   font-weight: bold;
   float:left;
-  line-height:24px;
+  line-height:1.2em;
 }
 
 .ref_clear
@@ -2847,7 +2847,7 @@ body .ui-tooltip, body .qtip
 .ui-autocomplete-loading { background: white url('/images/loader.gif') right center no-repeat; }
 
 .ui-autocomplete {
-		max-height: 100px;
+		max-height: 120px;
 		overflow-y: auto;
 		/* prevent horizontal scrollbar */
 		overflow-x: hidden;

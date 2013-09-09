@@ -6,6 +6,7 @@ class CollectionsTable extends DarwinTable
 {
   public function completeAsArray($user, $needle, $exact, $limit = 30)
   {
+    $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
       ->from('Collections r')
       ->orderBy('name ASC')
@@ -13,7 +14,7 @@ class CollectionsTable extends DarwinTable
     if($exact)
       $q->andWhere("name = ?",$needle);
     else
-      $q->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
+      $q->andWhere("name_indexed like concat('%',fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
 
     if($user && ! $user->isA(Users::ADMIN) ) {
       $q->leftJoin('col.CollectionsRights r ON col.id=r.collection_ref AND r.user_ref = '.$user->getId())

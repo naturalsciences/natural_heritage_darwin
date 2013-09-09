@@ -31,13 +31,14 @@ class LithostratigraphyForm extends BaseLithostratigraphyForm
       ),
       array('class'=>'catalogue_level')
       );
-    $this->widgetSchema['parent_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Lithostratigraphy',
-       'method' => 'getName',
-       'link_url' => 'lithostratigraphy/choose',
-       'box_title' => $this->getI18N()->__('Choose Parent'),
-       'button_is_hidden' => true,
-     ));
+    $this->widgetSchema['parent_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Lithostratigraphy',
+      'method' => 'getName',
+      'link_url' => 'lithostratigraphy/choose',
+      'box_title' => $this->getI18N()->__('Choose Parent'),
+      'button_is_hidden' => true,
+      'complete_url' => 'catalogue/completeName?table=lithostratigraphy',
+    ));
     $this->widgetSchema['local_naming'] = new sfWidgetFormInputCheckbox();
     $this->widgetSchema->setLabels(array('level_ref' => 'Level',
                                          'parent_ref' => 'Parent',

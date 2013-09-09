@@ -4,13 +4,14 @@ class MaLithologyRefForm extends BaseForm
 {
   public function configure()
   {
-    $this->widgetSchema['lithology_ref'] = new widgetFormButtonRef(array(
+    $this->widgetSchema['lithology_ref'] = new widgetFormCompleteButtonRef(array(
        'model' => 'Lithology',
        'link_url' => 'lithology/choose',
        'method' => 'getName',
        'box_title' => $this->getI18N()->__('Choose Lithologic unit'),
        'nullable' => true,
        'button_class'=>'',
+       'complete_url' => 'catalogue/completeName?table=lithology',
      ));
 
     $this->widgetSchema['lithology_ref']->setLabel('Choose New Lithologic unit');

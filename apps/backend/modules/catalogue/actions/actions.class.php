@@ -102,7 +102,7 @@ class catalogueActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::ENCODER))
       $this->forwardToSecureAction();
     if(! in_array($request->getParameter('table'),$this->catalogue))
-      $this->forwardToSecureAction();   
+      $this->forwardToSecureAction();
     $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
     $this->forward404Unless($r,'No such item');
 
@@ -265,13 +265,19 @@ class catalogueActions extends DarwinActions
   }
 
   public function executeCompleteName(sfWebRequest $request) {
+    $tbl = $request->getParameter('table');
+    $catalogues = array('taxonomy','mineralogy','chronostratigraphy','lithostratigraphy','lithology','people', 'institutions', 'users' ,'expeditions');
+    $result = array();
 
-    if($request->getParameter('table') =='colletions') {
+    if($tbl =='collections') {
       $result = Doctrine::getTable('Collections')->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'));
-    } else {
-      $model = DarwinTable::getModelForTable($request->getParameter('table'));
+    } elseif(in_array($tbl,$catalogues)) {
+      $model = DarwinTable::getModelForTable($tbl);
       $result = Doctrine::getTable($model)->completeAsArray($request->getParameter('term'), $request->getParameter('exact'));
+    }else{
+      $this->forward404('Unknown table : '.$tbl);
     }
+
     return $this->renderText(json_encode($result));
   }
 

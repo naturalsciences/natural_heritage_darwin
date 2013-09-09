@@ -20,14 +20,15 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
 
-	$this->widgetSchema['modification_date_time'] = new widgetFormJQueryFuzzyDate(array('culture'=>$this->getCurrentCulture(), 
-		'image'=>'/images/calendar.gif', 
-		'format' => '%day%/%month%/%year%', 
-		'years' => $years,
-		'with_time' => true
-	  ),
-	  array('class' => 'from_date')
-	  );
+    $this->widgetSchema['modification_date_time'] = new widgetFormJQueryFuzzyDate(array(
+      'culture'=>$this->getCurrentCulture(),
+      'image'=>'/images/calendar.gif',
+      'format' => '%day%/%month%/%year%',
+      'years' => $years,
+      'with_time' => true
+      ),
+      array('class' => 'from_date')
+    );
 
     $this->widgetSchema['modification_date_time']->setLabel('Last update date') ;
     $this->validatorSchema['modification_date_time'] = new fuzzyDateValidator(array(
@@ -37,34 +38,36 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
       'max' => $maxDate,
       'empty_value' => $dateLowerBound,
       'with_time' => true
-	  ),
-	  array('invalid' => 'Invalid date "from"')
+      ),
+      array('invalid' => 'Invalid date "from"')
     );
 
-	$this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
-	  'model' => 'People',
-	  'method' => 'getFormatedName',
-	  'link_url' => 'people/choose',
-	  'nullable' => false,
-	  'box_title' => $this->getI18N()->__('Choose Yourself'),
-	));
-
-	$this->widgetSchema['parts_ids'] = new sfWidgetFormInputHidden();
-	$this->validatorSchema['parts_ids'] = new sfValidatorString(array('required' => false, 'empty_value' => ''));
-
-	$this->widgetSchema['category'] = new sfWidgetFormChoice(array('choices' => array('action' => 'Action', 'observation'=>'Observation')));
-	$this->widgetSchema['category']->setLabel('Type');
-
-	$this->widgetSchema['action_observation'] = new widgetFormSelectComplete(array(
-	  'model' => 'CollectionMaintenance',
-	  'table_method' => 'getDistinctActions',
-	  'method' => 'getAction',
-	  'key_method' => 'getAction',
-	  'add_empty' => false,
-	  'change_label' => 'Pick an action in the list',
-	  'add_label' => 'Add another action',
+    $this->widgetSchema['people_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'People',
+      'method' => 'getFormatedName',
+      'link_url' => 'people/choose',
+      'nullable' => false,
+      'box_title' => $this->getI18N()->__('Choose Yourself'),
+      'complete_url' => 'catalogue/completeName?table=people',
     ));
-	$this->widgetSchema['action_observation']->setLabel('Action / Observation');
+
+    $this->widgetSchema['parts_ids'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['parts_ids'] = new sfValidatorString(array('required' => false, 'empty_value' => ''));
+
+    $this->widgetSchema['category'] = new sfWidgetFormChoice(array('choices' => array('action' => 'Action', 'observation'=>'Observation')));
+    $this->widgetSchema['category']->setLabel('Type');
+
+    $this->widgetSchema['action_observation'] = new widgetFormSelectComplete(array(
+      'model' => 'CollectionMaintenance',
+      'table_method' => 'getDistinctActions',
+      'method' => 'getAction',
+      'key_method' => 'getAction',
+      'add_empty' => false,
+      'change_label' => 'Pick an action in the list',
+      'add_label' => 'Add another action',
+    ));
+
+    $this->widgetSchema['action_observation']->setLabel('Action / Observation');
     /* input file for related files */
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setLabel("Add File") ;

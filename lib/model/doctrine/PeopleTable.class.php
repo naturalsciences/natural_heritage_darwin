@@ -4,6 +4,26 @@
  */
 class PeopleTable extends DarwinTable
 {
+  public function completeAsArray($needle, $exact, $limit = 30)
+  {
+    $conn_MGR = Doctrine_Manager::connection();
+    $q = Doctrine_Query::create()
+      ->from('Institutions')
+      ->andWhere('is_physical = ?', true)
+      ->orderBy('formated_name ASC')
+      ->limit($limit);
+    if($exact)
+      $q->andWhere("formated_name = ?",$needle);
+    else
+      $q->andWhere("formated_name_indexed like concat('%',fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
+    $q_results = $q->execute();
+    $result = array();
+    foreach($q_results as $item) {
+      $result[] = array('label' => $item->getFormatedName(), 'value'=> $item->getId() );
+    }
+    return $result;
+  }
+
   /**
   * Find all distinct tyoe of institutions
   * @return Doctrine_Collection with only the key 'type'

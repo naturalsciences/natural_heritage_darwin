@@ -4,6 +4,25 @@
  */
 class UsersTable extends DarwinTable
 {
+  public function completeAsArray($needle, $exact, $limit = 30)
+  {
+    $conn_MGR = Doctrine_Manager::connection();
+    $q = Doctrine_Query::create()
+      ->from('Users')
+      ->orderBy('formated_name ASC')
+      ->limit($limit);
+    if($exact)
+      $q->andWhere("formated_name = ?",$needle);
+    else
+      $q->andWhere("formated_name_indexed like concat('%',fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
+    $q_results = $q->execute();
+    $result = array();
+    foreach($q_results as $item) {
+      $result[] = array('label' => $item->getFormatedName(), 'value'=> $item->getId() );
+    }
+    return $result;
+  }
+
   /**
   * Get a user with his username and password in internal system
   * @param string $username The username

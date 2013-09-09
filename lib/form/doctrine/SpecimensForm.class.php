@@ -50,94 +50,80 @@ class SpecimensForm extends BaseSpecimensForm
     $this->validatorSchema['category'] = new sfValidatorChoice(array('choices'=>array_keys(Specimens::getCategories())));
 
     /* Collection Reference */
-    $this->widgetSchema['collection_ref'] = new widgetFormButtonRef(
-      array('model' => 'Collections',
-            'link_url' => 'collection/choose',
-            'method' => 'getName',
-            'box_title' => $this->getI18N()->__('Choose Collection'),
-            'button_class'=>'',
-           ),
-      array('class'=>'inline',
-           )
-     );
+    $this->widgetSchema['collection_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Collections',
+      'link_url' => 'collection/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Collection'),
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=collections',
+    ));
 
     /* Expedition Reference */
-    $this->widgetSchema['expedition_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Expeditions',
-       'link_url' => 'expedition/choose',
-       'method' => 'getName',
-       'box_title' => $this->getI18N()->__('Choose Expedition'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
-    );
+    $this->widgetSchema['expedition_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Expeditions',
+      'link_url' => 'expedition/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Expedition'),
+      'nullable' => true,
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=expeditions',
+    ));
 
     /* Taxonomy Reference */
-    $this->widgetSchema['taxon_ref'] = new widgetFormButtonRef(array(
+    $this->widgetSchema['taxon_ref'] = new widgetFormCompleteButtonRef(array(
        'model' => 'Taxonomy',
        'link_url' => 'taxonomy/choose',
-       'method' => 'getNameWithFormat',
+       'method' => 'getName',
        'box_title' => $this->getI18N()->__('Choose Taxon'),
        'nullable' => true,
        'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
-    );
+       'complete_url' => 'catalogue/completeName?table=taxonomy',
+    ));
 
     /* Chronostratigraphy Reference */
-    $this->widgetSchema['chrono_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Chronostratigraphy',
-       'link_url' => 'chronostratigraphy/choose',
-       'method' => 'getName',
-       'box_title' => $this->getI18N()->__('Choose Chronostratigraphic unit'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
-    );
+    $this->widgetSchema['chrono_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Chronostratigraphy',
+      'link_url' => 'chronostratigraphy/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Chronostratigraphic unit'),
+      'nullable' => true,
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=chronostratigraphy',
+     ));
 
     /* Lithostratigraphy Reference */
-    $this->widgetSchema['litho_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Lithostratigraphy',
-       'link_url' => 'lithostratigraphy/choose',
-       'method' => 'getName',
-       'box_title' => $this->getI18N()->__('Choose Lithostratigraphic unit'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
-    );
+    $this->widgetSchema['litho_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Lithostratigraphy',
+      'link_url' => 'lithostratigraphy/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Lithostratigraphic unit'),
+      'nullable' => true,
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=lithostratigraphy',
+     ));
 
     /* Lithology Reference */
-    $this->widgetSchema['lithology_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Lithology',
-       'link_url' => 'lithology/choose',
-       'method' => 'getName',
-       'box_title' => $this->getI18N()->__('Choose Lithologic unit'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
-    );
+    $this->widgetSchema['lithology_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Lithology',
+      'link_url' => 'lithology/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Lithologic unit'),
+      'nullable' => true,
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=lithology',
+     ));
 
     /* Mineralogy Reference */
-    $this->widgetSchema['mineral_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Mineralogy',
-       'link_url' => 'mineralogy/choose',
-       'method' => 'getName',
-       'box_title' => $this->getI18N()->__('Choose Mineralogic unit'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
-    );
+    $this->widgetSchema['mineral_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Mineralogy',
+      'link_url' => 'mineralogy/choose',
+      'method' => 'getName',
+      'box_title' => $this->getI18N()->__('Choose Mineralogic unit'),
+      'nullable' => true,
+      'button_class'=>'',
+      'complete_url' => 'catalogue/completeName?table=mineralogy',
+     ));
 
     /* IG number Reference */
     $this->widgetSchema['ig_ref'] = new widgetFormInputChecked(
@@ -175,14 +161,15 @@ class SpecimensForm extends BaseSpecimensForm
       'choices' =>  SpecimensTable::getDistinctCategories(),
     ));
 
-    $this->widgetSchema['acquisition_date'] = new widgetFormJQueryFuzzyDate(array('culture'=>$this->getCurrentCulture(),
-                                                                                  'image'=>'/images/calendar.gif',
-                                                                                  'format' => '%day%/%month%/%year%',
-                                                                                  'years' => $years,
-                                                                                  'empty_values' => $dateText,
-                                                                                 ),
-                                                                            array('class' => 'to_date')
-                                                                           );
+    $this->widgetSchema['acquisition_date'] = new widgetFormJQueryFuzzyDate(array(
+      'culture'=>$this->getCurrentCulture(),
+      'image'=>'/images/calendar.gif',
+      'format' => '%day%/%month%/%year%',
+      'years' => $years,
+      'empty_values' => $dateText,
+      ),
+      array('class' => 'to_date')
+    );
 
     $this->widgetSchema['relationship'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['ident'] = new sfWidgetFormInputHidden(array('default'=>1));
@@ -260,13 +247,15 @@ class SpecimensForm extends BaseSpecimensForm
       'add_label' => 'Add another part',
       ));
 
-    $this->widgetSchema['institution_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Institutions',
-       'link_url' => 'institution/choose?with_js=1',
-       'method' => 'getFamilyName',
-       'box_title' => $this->getI18N()->__('Choose Institution'),
-       'nullable' => true,
-     ));
+    $this->widgetSchema['institution_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Institutions',
+      'link_url' => 'institution/choose?with_js=1',
+      'method' => 'getFamilyName',
+      'box_title' => $this->getI18N()->__('Choose Institution'),
+      'complete_url' => 'catalogue/completeName?table=institutions',
+      'nullable' => true,
+    ));
+
     if(sfConfig::get('dw_defaultInstitutionRef')) {
       $this->setDefault('institution_ref', sfConfig::get('dw_defaultInstitutionRef'));
      }
@@ -279,7 +268,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a building in the list',
       'add_label' => 'Add another building',
-      ));
+    ));
 
     $this->widgetSchema['floor'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -289,7 +278,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a floor in the list',
       'add_label' => 'Add another floor',
-      ));
+    ));
 
     $this->widgetSchema['row'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -299,7 +288,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a row in the list',
       'add_label' => 'Add another row',
-      ));
+    ));
 
     $this->widgetSchema['room'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -309,7 +298,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a room in the list',
       'add_label' => 'Add another room',
-      ));
+    ));
 
     $this->widgetSchema['shelf'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -319,7 +308,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a shelf in the list',
       'add_label' => 'Add another shelf',
-      ));
+    ));
 
     $this->widgetSchema['container_type'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -339,7 +328,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a sub container type in the list',
       'add_label' => 'Add another sub container type',
-      ));
+    ));
 
     $this->widgetSchema['specimen_status'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -349,7 +338,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => true,
       'change_label' => 'Pick a status in the list',
       'add_label' => 'Add another status',
-      ));
+    ));
 
     $this->widgetSchema['container'] = new sfWidgetFormInput();
     $this->widgetSchema['sub_container'] = new sfWidgetFormInput();
@@ -1049,6 +1038,7 @@ class SpecimensForm extends BaseSpecimensForm
   {
     $javascripts=parent::getJavascripts();
     $javascripts[]='/js/jquery-datepicker-lang.js';
+    $javascripts[]='/js/ui.complete.js';
     return $javascripts;
   }
 
