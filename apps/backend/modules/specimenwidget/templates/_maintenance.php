@@ -27,7 +27,8 @@
     <?php endforeach;?>
   </tbody>
 </table>
-
+<?php echo image_tag('add_green.png');?>
+<a title="<?php echo __('Add Maintenance');?>" class="link_catalogue" href="<?php echo url_for('specimen/editMaintenance?table=specimens&rid='.$eid); ?>"><?php echo __('Add Maintenance');?></a>
 <br />
 <?php else:?>
   <?php echo __('Please save your part and use the "mass action" in order to add maintenances');?>

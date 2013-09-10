@@ -1,10 +1,10 @@
 <?php slot('title', __('Edit Maintenance'));  ?>
-    <form class="edition qtiped_form" method="post" id="collection_maintenance" action="<?php echo url_for('parts/editMaintenance?id='.$form->getObject()->getId());?>">
+    <form class="edition qtiped_form" method="post" id="collection_maintenance" action="<?php echo url_for('specimen/editMaintenance?'.($form->getObject()->isNew() ? 'rid='.$sf_params->get('rid'): '&id='.$form->getObject()->getId()));?>">
       <h1><?php echo __('Edit Maintenance :');?></h1>
       <div class="action_maintenance">
     <?php include_stylesheets_for_form($form) ?>
     <?php include_javascripts_for_form($form) ?>
-    
+
     <?php echo $form->renderGlobalErrors() ?>
 
     <table>
