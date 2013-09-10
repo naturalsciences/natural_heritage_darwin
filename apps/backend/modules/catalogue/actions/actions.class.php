@@ -254,6 +254,8 @@ class catalogueActions extends DarwinActions
       $request->getParameter('id'),
       'rename'
     );
+
+    $this->getResponse()->setContentType('application/json');
     if($relation == 0)
       return $this->renderText('{}'); // The record has no current name
 
@@ -276,6 +278,7 @@ class catalogueActions extends DarwinActions
       $this->forward404('Unsuported table for completion : '.$tbl);
     }
 
+    $this->getResponse()->setContentType('application/json');
     return $this->renderText(json_encode($result));
   }
 
