@@ -32,7 +32,7 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
       $complete_options['required'] = 'required';
     }
 
-    $input .= $this->renderContentTag('input','',$complete_options );
+    $input .= $this->renderTag('input',$complete_options );
 
     if ($this->getOption('button_class') != '') {
       $class .= ' '.$this->getOption('button_class');

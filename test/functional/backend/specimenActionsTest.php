@@ -116,10 +116,10 @@ $browser->
 
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('.board_col:first .widget:first .widget_content #specimen_collection_ref_name[value="Aves"]')->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_content #specimen_taxon_ref_name[value="Falco Peregrinus Tunstall, 1771"]')->
+    checkElement('.widget_content #specimen_collection_ref_name')->
+    checkElement('.widget_content #specimen_taxon_ref_name')->
   end()->
-  
+
   info('4 - Check sameTaxon action call')->
   info('4.1 - ...without arguments')->  
   get('/specimen/sameTaxon')->
