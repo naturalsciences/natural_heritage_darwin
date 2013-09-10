@@ -266,16 +266,14 @@ class catalogueActions extends DarwinActions
 
   public function executeCompleteName(sfWebRequest $request) {
     $tbl = $request->getParameter('table');
-    $catalogues = array('taxonomy','mineralogy','chronostratigraphy','lithostratigraphy','lithology','people', 'institutions', 'users' ,'expeditions');
+    $catalogues = array('taxonomy','mineralogy','chronostratigraphy','lithostratigraphy','lithology','people', 'institutions', 'users' ,'expeditions', 'collections');
     $result = array();
 
-    if($tbl =='collections') {
-      $result = Doctrine::getTable('Collections')->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'));
-    } elseif(in_array($tbl,$catalogues)) {
+    if(in_array($tbl,$catalogues)) {
       $model = DarwinTable::getModelForTable($tbl);
-      $result = Doctrine::getTable($model)->completeAsArray($request->getParameter('term'), $request->getParameter('exact'));
+      $result = Doctrine::getTable($model)->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'));
     }else{
-      $this->forward404('Unknown table : '.$tbl);
+      $this->forward404('Unsuported table for completion : '.$tbl);
     }
 
     return $this->renderText(json_encode($result));

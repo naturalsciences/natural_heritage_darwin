@@ -4,7 +4,14 @@
  */
 class PeopleTable extends DarwinTable
 {
-  public function completeAsArray($needle, $exact, $limit = 30)
+  /**
+  * Find item for autocompletion
+  * @param $user The User object for right management
+  * @param $needle the string entered by the user for search
+  * @param $exact bool are we searching the exact term or more or less fuzzy
+  * @return Array of results
+  */
+  public function completeAsArray($user, $needle, $exact, $limit = 30)
   {
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
