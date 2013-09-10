@@ -11,7 +11,7 @@ class InsurancesForm extends BaseInsurancesForm
 {
   public function configure()
   {
-    $this->useFields(array('insurance_currency', 'insurer_ref', 'contact_ref', 'insurance_value', 'date_from', 'date_to' ));
+    $this->useFields(array('referenced_relation', 'record_id','insurance_currency', 'insurer_ref', 'contact_ref', 'insurance_value', 'date_from', 'date_to' ));
 
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
     $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
