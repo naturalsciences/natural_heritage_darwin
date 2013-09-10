@@ -20,7 +20,7 @@ fieldset > legend
   padding: 3px ;
   border: 1px solid #C1CF56 ;
   -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;  
+  -webkit-border-radius: 5px;
 }
 
 .search_form fieldset > legend
@@ -117,7 +117,7 @@ table td.centered, table th.centered
   padding-top: 10px;
   margin-top: 15px;
   margin-left:0;
-  margin-right:0;  
+  margin-right:0;
 }
 
 h1
@@ -205,7 +205,7 @@ img.clear_prop, img.tree_cmd {
   display:none !important;
 }
 
-.complete_widget select, .complete_widget img, .complete_widget span 
+.complete_widget select, .complete_widget img, .complete_widget span
 {
   vertical-align: middle;
   display: inline-block;
@@ -300,7 +300,7 @@ form th, form tr > td
   display:none;
 }
 
-.button 
+.button
 {
   line-height:24px;
   float:left;
@@ -319,7 +319,7 @@ input, textarea
 
 input[type="radio"], input[type="checkbox"]
 {
-  border:none;  
+  border:none;
 }
 
 input:focus, textarea:focus
@@ -374,7 +374,7 @@ input[type="submit"][class="search_submit"]:hover
   cursor:pointer;
 }
 
-input[type="text"], input[type="password"] 
+input[type="text"], input[type="password"]
 {
   width:220px;
 }
@@ -668,7 +668,7 @@ a.bt_close
   text-decoration:none;
 }
 
-.order_sign_down 
+.order_sign_down
 {
   vertical-align:middle;
   font-size:0.8em;
@@ -740,7 +740,7 @@ p.tree
   background-color:#5BAABD;
   color:white;
   padding-top:3px;
-  padding-bottom:3px;  
+  padding-bottom:3px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
@@ -781,7 +781,7 @@ p.tree
   display:none;
   border: 2px solid #5BAABD;
   padding:1em;
-  margin-top:1em;  
+  margin-top:1em;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
@@ -884,9 +884,9 @@ table.widget_right tbody th, table.widget_right tbody td
 {
   padding-left : 6px ;
   margin-top: 0;
-  padding-top: 0; 
+  padding-top: 0;
   margin-bottom: 0;
-  padding-bottom: 0;     
+  padding-bottom: 0;
   border: 1px solid #C1CF56;
   background-color: #F6F6F6;
 }
@@ -926,7 +926,7 @@ table.collections
   margin: 0.5em;
   margin-left:0;
   width:98%;
-  font-size : 9pt ;  
+  font-size : 9pt ;
 }
 
 .collections_rights td, .collections_rights th
@@ -954,8 +954,8 @@ table.collections
 
 .collections_rights select
 {
-  font-size : 9pt ;  
-  border: 1px solid #C1CF56; 
+  font-size : 9pt ;
+  border: 1px solid #C1CF56;
 }
 .prop_values {
   background-color:#E9EDBE;
@@ -1049,7 +1049,7 @@ border-bottom: none ;
 
 #synonym .catalogue_table > tbody > tr,#synonym .catalogue_table_view > tbody > tr
 {
-  border-bottom: 1px dashed #E9EDBE; 
+  border-bottom: 1px dashed #E9EDBE;
 }
 
 .catalogue_table tbody tr ul,.catalogue_table_view tbody tr ul
@@ -1125,7 +1125,7 @@ border-bottom: none ;
 .add_member
 {
   text-align:center;
-  font-size:small;  
+  font-size:small;
   border:1px solid #C1CC33;
   background-color:#C1CF56;
   -moz-border-radius: 5px;
@@ -1134,10 +1134,10 @@ border-bottom: none ;
 
 }
 
-.set_rights 
+.set_rights
 {
   margin-top:0.3em;
-  margin-bottom:0.3em;  
+  margin-bottom:0.3em;
   border:1px solid #C1CC33;
   background-color:#C1CF56;
   -moz-border-radius: 5px;
@@ -1184,11 +1184,11 @@ tbody.spec_ident_identifiers_data tr td
   text-decoration:none;
   color:#525A20;
   margin-top:0.3em ;
-  margin-bottom:0.3em ;    
+  margin-bottom:0.3em ;
 
   border:1px solid #C1CC33;
   background-color:#C1CF56;
-  
+
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   padding:2px;
@@ -1200,7 +1200,7 @@ tbody.spec_ident_identifiers_data tr td
   width:99.5%;
 }
 
-.property_values .show , .property_values .add_item_button, .property_values .change_item_button 
+.property_values .show , .property_values .add_item_button, .property_values .change_item_button
 {
    display:inline;
 }
@@ -1319,7 +1319,7 @@ a.widget_row_delete
 table.encoding tbody .widget_row_delete
 {
   vertical-align:middle;
-  text-align:center;  
+  text-align:center;
   padding-right:1px;
 }
 
@@ -1400,14 +1400,14 @@ h1.warn_message
   padding-left:1em;
 }
 
-table.details_info 
+table.details_info
 {
   width:95%;
   margin: 5px;
   background-color:#ebf5f5;
 }
 
-.results tbody tr.details:hover 
+.results tbody tr.details:hover
 {
   background-color:white;
 }
@@ -1420,7 +1420,7 @@ tr.details .details_info tr:hover
 .details_info td
 {
   vertical-align:top;
-  border: 1px dashed #5BABBD; 
+  border: 1px dashed #5BABBD;
   padding:0.5em;
 }
 
@@ -1481,17 +1481,17 @@ tr.details .details_info tr:hover
 
 .Tags_Bac
 {
-  border-left: 6px solid #d97d12 !important;  
+  border-left: 6px solid #d97d12 !important;
 }
 
 .Tags_Zoo
 {
-  border-left: 6px solid #FF0000 !important;  
+  border-left: 6px solid #FF0000 !important;
 }
 
 .Tags_Vir
 {
-  border-left: 6px solid #0000FF !important;  
+  border-left: 6px solid #0000FF !important;
 }
 
 .name_tags_view li, .purposed_tags_view li
@@ -1559,7 +1559,7 @@ th .error_list
   margin-bottom: 1em;
   margin-top: 1em;
   font-weight:bold;
-  
+
 }
 
 .name_tags li:hover, .purposed_tags li:hover, #reverse_tags li:hover
@@ -1676,7 +1676,7 @@ th .error_list
   padding: 3px ;
   border: 1px solid #5BAABD ;
   -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;  
+  -webkit-border-radius: 5px;
 }
 
 .panel fieldset
@@ -1690,7 +1690,7 @@ th .error_list
   padding: 3px ;
   border: 1px solid #C1CF56 ;
   -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;  
+  -webkit-border-radius: 5px;
 }
 
 /* catalogue_keyword_view */
@@ -1763,7 +1763,7 @@ img.info
 }
 /** Profile Page **/
 .trusted_user_links td
-{ 
+{
   text-align:center;
   height: 50px;
 }
@@ -1799,7 +1799,7 @@ img.info
 
 .tab_choice
 {
-  
+
   margin-top:1em;
   margin-left:2em;
 }
@@ -1912,7 +1912,7 @@ li.tag_size_5 { font-size: 20px; }
     margin-bottom:0.5em;
 }
 
-.tag_parts_screen ul .sub_group 
+.tag_parts_screen ul .sub_group
 {
   float: left;
   width: 240px;
@@ -1983,7 +1983,7 @@ tr.tag_line input
 }
 
 /** used for render for WidgetSuccess */
-.widget_selection 
+.widget_selection
 {
   background: white;
   height:22px;
@@ -1997,8 +1997,8 @@ tr.tag_line input
 .head_widget
 {
   background: #E9F2F7;
-  border-right:1px solid #C1CC33; 
-  border-left:1px solid #C1CC33;   
+  border-right:1px solid #C1CC33;
+  border-left:1px solid #C1CC33;
   color: black;
   height:22px;
   width:174px;
@@ -2073,7 +2073,7 @@ ul.graph_range, #checking
 
 .maintenace_form table
 {
- width:100%; 
+ width:100%;
 }
 
 .action_maintenance
@@ -2208,8 +2208,8 @@ table.saved_searches_board ,  table.saved_spec_board, table.full_size
 
 .source_flag
 {
-/*   height: 1.2em; 
-  
+/*   height: 1.2em;
+
   overflow:hide;*/
   width: 5em;
   color:#3390A1;
@@ -2268,8 +2268,8 @@ a.and_search_code
 
 .help_ico:hover
 {
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   background-image: url('/images/help_icon_green.png');
   display:inline-block;
   *display: inline; /*IE HACK*/
@@ -2278,8 +2278,8 @@ a.and_search_code
 
 .help_ico
 {
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   background-image: url('/images/help_icon_grey.png');
   display:inline-block;
   *display: inline; /*IE HACK*/
@@ -2438,7 +2438,7 @@ dd
  	margin:2px 2px 0;
 	height: 20px;
 	cursor:pointer;
-  font-size : 9pt ;	
+  font-size : 9pt ;
 }
 
 .tabs_view a.enabled
@@ -2493,17 +2493,17 @@ tbody .col_taxon a
 
 .col_extd_info
 {
-  word-wrap: break-word; 
+  word-wrap: break-word;
 }
 
 /*** style for a color render for color picker */
 
 .round_color
 {
-	width: 20px;  
-	height: 20px; 
+	width: 20px;
+	height: 20px;
 	padding-left : 15px;
-	background-color:#ededee;	 
+	background-color:#ededee;
 }
 
 /** Tooltip for the map **/
@@ -2552,7 +2552,7 @@ ul.board_news li div.news_info
 .expanded_stats th
 {
   padding-top: 2px;
-  padding-bottom: 2px;  
+  padding-bottom: 2px;
 }
 
 
@@ -2584,7 +2584,7 @@ ul.board_news li div.news_info
 {
   text-align:right;
   color: gray;
-  font-style: italic ;  
+  font-style: italic ;
 }
 
 .underlined
@@ -2599,8 +2599,8 @@ ul.board_news li div.news_info
 /* style for input type file entry */
 .little-frame
 {
-opacity : 0; 
-filter : alpha(opacity=0); 
+opacity : 0;
+filter : alpha(opacity=0);
 position : absolute;
 width : 1px;
 height : 1px;
@@ -2639,7 +2639,7 @@ height : 1px;
   text-decoration: none;
   font-size:90%;
   top: 0px;
-  vertical-align: middle;  
+  vertical-align: middle;
   text-align : center;
   cursor:pointer;
 }
@@ -2694,11 +2694,11 @@ height : 1px;
   opacity: 0.7 !important;
   background-color: black;
   cursor: pointer;
-  
+
   /* Set this to any below 15000 (default starting z-index for qTips) */
   z-index: 14999;
 }
-body .ui-tooltip, body .qtip 
+body .ui-tooltip, body .qtip
 {
   font-size:10pt;
 }
@@ -2745,7 +2745,7 @@ body .ui-tooltip, body .qtip
 
 .staging_table .fld_tocomplete
 {
-  background-color: #E0BF52; 
+  background-color: #E0BF52;
 }
 
 .staging_table .fld_ok
@@ -2778,7 +2778,7 @@ body .ui-tooltip, body .qtip
   width:163px;
 }
 
-.encod_tooltip .ui-tooltip-content 
+.encod_tooltip .ui-tooltip-content
 {
     background-color:white;
     border: 1px solid #C0D147;
@@ -2854,8 +2854,8 @@ body .ui-tooltip, body .qtip
 		overflow:hidden;
 		/* add padding to account for vertical scrollbar */
 		padding-right: 20px;
-	}	
-.ui-autocomplete { position: absolute; cursor: default; }	
+	}
+.ui-autocomplete { position: absolute; cursor: default; }
 
 input.complete_missing {
   border: 1px solid red;
@@ -2882,7 +2882,7 @@ input.complete_missing {
   padding-right: 2em;
 }
 .loanitem_details {
-  vertical-align:top;  
+  vertical-align:top;
 }
 
 .spr_checkbox_on
@@ -2901,9 +2901,9 @@ input.complete_missing {
   display: block;
 }
 
-.maintenance_details { 
+.maintenance_details {
   display:none;
-  
+
 }
 
 .loan_line_closed {
@@ -2957,7 +2957,7 @@ input.complete_missing {
   padding-left: 4em;
   text-align:right;
 }
-#maintenances .buttons 
+#maintenances .buttons
 {
   text-align:right;
 }
@@ -2995,7 +2995,7 @@ span.label {
 .custom-label {
   display: inline-block;
   margin-right: .8em;
-  cursor: pointer; 
+  cursor: pointer;
 }
 .custom-radio,
 .custom-check {
