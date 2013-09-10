@@ -28,7 +28,7 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
       'type'=> 'search',
     );
 
-    if( $this->getOption('nullable')) {
+    if(! $this->getOption('nullable')) {
       $complete_options['required'] = 'required';
     }
 
