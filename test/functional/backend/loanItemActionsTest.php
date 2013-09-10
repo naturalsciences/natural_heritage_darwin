@@ -29,7 +29,7 @@ $browser->
   end()->
 
  click('Save', array('loan_overview' => array('newLoanItems'=> array('0'=>array(
-    'part_ref' => '',
+    'specimen_ref' => '',
     'ig_ref'           => '',
     'details'       => 'details message',
     'item_visible'   => 'true',
@@ -139,12 +139,12 @@ $browser->
     checkElement('.loan_overview_form tbody tr',3)-> // 3 Row per items
   end()->
  click('Save', array('loan_overview' => array('LoanItems'=> array('0'=>array(
-    'part_ref' => '',
+    'specimen_ref' => '',
     'ig_ref'           => '',
     'details'       => 'details message2',
     'item_visible'   => '',
   )))) )->
- 
+
   with('response')->
   begin()->
       isRedirected()->
