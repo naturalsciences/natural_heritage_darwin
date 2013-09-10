@@ -15,9 +15,9 @@ class MaMaintenanceForm extends BaseCollectionMaintenanceForm
 
     $this->widgetSchema['modification_date_time'] = new widgetFormJQueryFuzzyDate(
       array(
-        'culture'=> $this->getCurrentCulture(), 
-        'image'=>'/images/calendar.gif', 
-        'format' => '%day%/%month%/%year%', 
+        'culture'=> $this->getCurrentCulture(),
+        'image'=>'/images/calendar.gif',
+        'format' => '%day%/%month%/%year%',
         'years' => $years,
         'with_time' => true
       ),
@@ -67,8 +67,8 @@ class MaMaintenanceForm extends BaseCollectionMaintenanceForm
 
   public function doMassAction($user_id, $items, $values)
   {
-    $query = Doctrine_Query::create()->select('id')->from('SpecimenParts s');
-    $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$items),'part_ref', $user_id));
+    $query = Doctrine_Query::create()->select('id')->from('Specimens s');
+    $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$items),'spec_ref', $user_id));
     $results = $query->execute();
 
     foreach($results as $result)
@@ -76,7 +76,7 @@ class MaMaintenanceForm extends BaseCollectionMaintenanceForm
       $maintenance = new CollectionMaintenance();
       $maintenance->fromArray($values);
       $maintenance->setRecordId($result->getId());
-      $maintenance->setReferencedRelation("specimen_parts");
+      $maintenance->setReferencedRelation("specimens");
       $maintenance->save();
     }
   }

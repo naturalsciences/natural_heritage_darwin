@@ -34,9 +34,9 @@ class LoanItemsForm extends BaseLoanItemsForm
 
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(
-        'culture'=> $this->getCurrentCulture(), 
-        'image'=>'/images/calendar.gif', 
-        'format' => '%day%/%month%/%year%', 
+        'culture'=> $this->getCurrentCulture(),
+        'image'=>'/images/calendar.gif',
+        'format' => '%day%/%month%/%year%',
         'years' => $years,
         'with_time' => false
       ),
@@ -54,9 +54,9 @@ class LoanItemsForm extends BaseLoanItemsForm
 
     $this->widgetSchema['to_date'] = new widgetFormJQueryFuzzyDate(
       array(
-        'culture'=> $this->getCurrentCulture(), 
-        'image'=>'/images/calendar.gif', 
-        'format' => '%day%/%month%/%year%', 
+        'culture'=> $this->getCurrentCulture(),
+        'image'=>'/images/calendar.gif',
+        'format' => '%day%/%month%/%year%',
         'years' => $years,
         'with_time' => false
       ),
@@ -101,7 +101,7 @@ class LoanItemsForm extends BaseLoanItemsForm
                                          'to_date' => 'Return'
                                         )
                                   );
-    $this->validatorSchema['part_ref'] = new sfValidatorInteger(array('required'=>false));
+    $this->validatorSchema['specimen_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->mergePostValidator(new LoanOverviewLineValidatorSchema());
   }
 }
