@@ -24,71 +24,77 @@ class LoansFormFilter extends BaseLoansFormFilter
     ));
     $this->validatorSchema['status'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
-                                                                                array('class' => 'from_date')
-                                                                               );
-    $this->widgetSchema['to_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
-                                                                              array('class' => 'to_date')
-                                                                             );
+    $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+
+    $this->widgetSchema['to_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'to_date')
+    );
+
     $this->widgetSchema['name'] = new sfWidgetFormInput(array());
     $this->validatorSchema['name'] = new sfValidatorString(array('required' => false, 'trim' => true));
-    $this->validatorSchema['from_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                                  'from_date' => true,
-                                                                                  'min' => $minDate,
-                                                                                  'max' => $maxDate, 
-                                                                                  'empty_value' => $dateLowerBound,
-                                                                                 ),
-                                                                            array('invalid' => 'Date provided is not valid',)
-                                                                           );
-    $this->validatorSchema['to_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                                'from_date' => false,
-                                                                                'min' => $minDate,
-                                                                                'max' => $maxDate,
-                                                                                'empty_value' => $dateUpperBound,
-                                                                               ),
-                                                                          array('invalid' => 'Date provided is not valid',)
-                                                                         );
-    $this->validatorSchema->setPostValidator(new sfValidatorSchemaCompare('from_date', 
-                                                                          '<=', 
-                                                                          'to_date', 
-                                                                          array('throw_global_error' => true), 
-                                                                          array('invalid'=>'The "begin" date cannot be above the "end" date.')
-                                                                         )
-                                            );
-    
+    $this->validatorSchema['from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema['to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => false,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema->setPostValidator(new sfValidatorSchemaCompare(
+      'from_date',
+      '<=',
+      'to_date',
+      array('throw_global_error' => true),
+      array('invalid'=>'The "begin" date cannot be above the "end" date.')
+    ));
+
     $this->widgetSchema['only_darwin'] = new sfWidgetFormInputCheckbox();
 
     $this->validatorSchema['only_darwin'] = new sfValidatorBoolean();
     $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
-       'model' => 'People',
-       'link_url' => 'people/searchBoth',
-       'box_title' => $this->getI18N()->__('Choose people'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
+      'model' => 'People',
+      'link_url' => 'people/searchBoth',
+      'box_title' => $this->getI18N()->__('Choose people'),
+      'nullable' => true,
+      'button_class'=>'',
+      ),
+      array('class'=>'inline',)
     );
+
     $this->validatorSchema['people_ref'] = new sfValidatorInteger(array('required' => false)) ;
 
 
-    $this->widgetSchema['ig_ref'] = new widgetFormInputChecked(
-      array(
-        'model' => 'Igs',
-        'method' => 'getIgNum',
-        'nullable' => true,
-        'link_url' => 'igs/searchFor',
-        'notExistingAddDisplay' => false
-      )
-    );
+    $this->widgetSchema['ig_ref'] = new widgetFormInputChecked(array(
+      'model' => 'Igs',
+      'method' => 'getIgNum',
+      'nullable' => true,
+      'link_url' => 'igs/searchFor',
+      'notExistingAddDisplay' => false
+    ));
 
     $this->validatorSchema['ig_ref'] = new sfValidatorInteger(array('required' => false)) ;
-    $this->widgetSchema->setLabels(array('from_date' => 'Between',
-                                         'to_date' => 'and',
-                                         'only_darwin' => 'Contains Darwin items',
-                                         'people_ref' => 'Person involved',
-                                        )
-                                  );
+    $this->widgetSchema->setLabels(array(
+      'from_date' => 'Between',
+      'to_date' => 'and',
+      'only_darwin' => 'Contains Darwin items',
+      'people_ref' => 'Person involved',
+    ));
   }
 
 
@@ -111,7 +117,7 @@ class LoansFormFilter extends BaseLoansFormFilter
   {
     if($val) {
       $alias = $query->getRootAlias() ;
-      $query->andWhere("EXISTS (select d.id from LoanItems d where $alias.id = d.loan_ref and part_ref is not null)");
+      $query->andWhere("EXISTS (select d.id from LoanItems d where $alias.id = d.loan_ref and specimen_ref is not null)");
     }
     return $query;
   }
