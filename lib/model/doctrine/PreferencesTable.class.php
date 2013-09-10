@@ -75,7 +75,11 @@ class PreferencesTable extends Doctrine_Table
     }
     $manager = Doctrine_Manager::getInstance();
     $cacheDriver = $manager->getAttribute(Doctrine_Core::ATTR_RESULT_CACHE);
-    $cacheDriver->deleteByPrefix('users_'.$user_id);
+    try {
+      $cacheDriver->deleteByPrefix('users_'.$user_id);
+    } catch(Exception $e) {
+      //When doing test we cannot clear doctrine cache as there isn't any
+    }
   }
 
   public function getDefaultValue($key)
