@@ -1553,8 +1553,8 @@ COMMENT ON COLUMN staging_relationship.record_id IS 'id of the orignial record';
 COMMENT ON COLUMN staging_relationship.referenced_relation IS 'where to find the record_id, referenced_relation is always staging but this field uis mandatory for addRelated php function';
 COMMENT ON COLUMN staging_relationship.relationship_type IS 'relation type (eg. host, parent, part of)';
 COMMENT ON COLUMN staging_relationship.staging_related_ref IS 'the record id associated, this record id must be found in the same import file';
-COMMENT ON COLUMN specimens_relationships.taxon_ref IS 'Reference of the related specimen';
-COMMENT ON COLUMN specimens_relationships.mineral_ref IS 'Reference of related mineral';
+COMMENT ON COLUMN staging_relationship.taxon_ref IS 'Reference of the related specimen';
+COMMENT ON COLUMN staging_relationship.mineral_ref IS 'Reference of related mineral';
 COMMENT ON COLUMN staging_relationship.institution_ref IS 'the institution id associated to this relationship';
 COMMENT ON COLUMN staging_relationship.institution_name IS 'the institution name associated to this relationship, used to add to darwin institution if it dont exist';
 COMMENT ON COLUMN staging_relationship.source_name IS 'External Specimen related  source DB';
@@ -1584,7 +1584,7 @@ create table  staging_tag_groups
         group_name varchar not null,
         sub_group_name varchar not null,
         tag_value varchar not null,
-        constraint pk_staging_tag_groups primary key (id)
+        constraint pk_staging_tag_groups primary key (id),
         CONSTRAINT fk_staging_tag_groups FOREIGN KEY (staging_ref) REFERENCES staging (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE
        );
 
