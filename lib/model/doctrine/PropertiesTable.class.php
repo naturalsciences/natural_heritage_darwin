@@ -13,11 +13,11 @@ class PropertiesTable extends DarwinTable
   */
   public function findForTable($table_name, $record_id)
   {
-     $q = Doctrine_Query::create()
-	 ->from('Properties p')
-	 ->orderBy('p.property_type ASC');
-     $q = $this->addCatalogueReferences($q, $table_name, $record_id, 'p', true);
-     return $q->execute();
+    $q = Doctrine_Query::create()
+      ->from('Properties p')
+      ->orderBy('p.property_type ASC');
+    $q = $this->addCatalogueReferences($q, $table_name, $record_id, 'p', true);
+    return $q->execute();
   }
 
   /**

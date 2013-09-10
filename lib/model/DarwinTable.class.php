@@ -6,7 +6,7 @@ class DarwinTable extends Doctrine_Table
   {
     return self::getModelForTable($table). 'FormFilter';
   }
-  
+
   /**
     * Get the Form formating of a table name
     * @param $table string a table name
@@ -61,7 +61,7 @@ class DarwinTable extends Doctrine_Table
   }
 
   /**
-   * createDistinct 
+   * createDistinct
    * Initiate a distinct query on a given model and column
    * @param string $model The model name
    * @param string $column The db column name that will be distinct
@@ -72,7 +72,7 @@ class DarwinTable extends Doctrine_Table
   public function createDistinct($model, $column, $new_col='item', $table_alias = 't')
   {
     $q = Doctrine_Query::create()
-      ->useResultCache(new Doctrine_Cache_Apc())
+      ->useResultCache(true)
       ->setResultCacheLifeSpan(5) //5 sec
       ->select("DISTINCT($table_alias.$column) as $new_col")
       ->from("$model $table_alias")
@@ -83,7 +83,7 @@ class DarwinTable extends Doctrine_Table
   public function createFlatDistinct($table, $column, $new_col='item')
   {
     $q = Doctrine_Query::create()
-      ->useResultCache(new Doctrine_Cache_Apc())
+      ->useResultCache(true)
       ->setResultCacheLifeSpan(5) //5 sec
       ->From('FlatDict')
       ->select('dict_value as '.$new_col)
@@ -95,7 +95,7 @@ class DarwinTable extends Doctrine_Table
   public function createFlatDistinctDepend($table, $column, $depend, $new_col='item')
   {
     $q = Doctrine_Query::create()
-      ->useResultCache(new Doctrine_Cache_Apc())
+      ->useResultCache(true)
       ->setResultCacheLifeSpan(5) //5 sec
       ->From('FlatDict')
       ->select('dict_value as '.$new_col)
@@ -117,7 +117,7 @@ class DarwinTable extends Doctrine_Table
     $self_unit = Doctrine::getTable($this->getTableName())->find($id);
     $ids = explode('/', $self_unit->getPath().$self_unit->getId());
 
-    array_shift($ids); //Removing the first blank element 
+    array_shift($ids); //Removing the first blank element
 
     $q = Doctrine_Query::create()
 	 ->from($this->getTableName())
@@ -125,19 +125,19 @@ class DarwinTable extends Doctrine_Table
 	 ->orderBy('path ASC');
     return $q->execute();
   }
-  
+
   public function findRights($user, $table)
   {
  		$q = Doctrine_Query::create()
 		   ->select('collection_ref')
 		   ->from($table)
 		   ->andWhere('user_ref = ?', $user) ;
-		return $q->execute() ; 
+		return $q->execute() ;
   }
 
   public function hasRights($field_name, $unit_id, $user_id)
   {
-    //TEST the rights in the given collection 
+    //TEST the rights in the given collection
     if($field_name =='spec_ref')
     {
       $q = Doctrine_Query::create()
@@ -175,7 +175,7 @@ class DarwinTable extends Doctrine_Table
   }
 
   /** Search in flat specimens with a given value ($unit_id) for a field (field_name)
-   * if a there is at least on collections matching criterias where you don't have rights to encod, 
+   * if a there is at least on collections matching criterias where you don't have rights to encod,
    * return collections ids
    * @param string $field_name field of the darwin_flat
    * @param int $unit_id An field value

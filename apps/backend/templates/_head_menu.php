@@ -65,9 +65,9 @@
                 </li>
                 <li><?php echo link_to(__('Specimens'),'specimen/new');?></li>
                 <?php if($sf_user->isAtLeast(Users::MANAGER)) : ?>
-                <li><?php echo link_to(__('Collections'),'collection/new');?></li>                
+                <li><?php echo link_to(__('Collections'),'collection/new');?></li>
                 <?php endif ?>
-                <li><?php echo link_to(__('Loans'),'loan/new');?></li>                
+                <li><?php echo link_to(__('Loans'),'loan/new');?></li>
             </ul>
         </li>
         <?php endif ?>
@@ -96,7 +96,7 @@
         <li>
             <a href="" class="subtitle"><?php echo __('Help');?></a>
             <ul class="submenu">
-                <li><?php echo link_to(__('Help'),'help/index');?></li>                
+                <li><?php echo link_to(__('Help'),'help/index');?></li>
                 <li><?php echo link_to(__('Contacts'),'help/contact');?></li>
                 <li><?php echo link_to(__('Contribute'),'help/contrib');?></li>
                 <li><?php echo link_to(__('About'),'help/about');?></li>
@@ -106,13 +106,7 @@
     </ul>
 </div>
 
-<?php $is_google_active = $sf_user->getPreference('gtu_google_activated', true);
-    if($is_google_active):?>
-  <script src="http://maps.google.com/maps/api/js?v=3.3&amp;sensor=false"></script>
-<?php endif;?>
-
 <script  type="text/javascript">
- var with_gmap= <?php echo $is_google_active ? 'true' : 'false';?>;
 $(document).ready(function()
 {
    $('#navigation').delegate('a.subtitle', 'mouseover', function(event) {
@@ -120,10 +114,10 @@ $(document).ready(function()
          qtip = '.qtip.ui-tooltip',
          container = $(event.delegateTarget || event.liveFired),
          submenu = self.next('ul'),
- 
+
       // Determine whether this is a top-level menu
       isTopMenu = self.parents(qtip).length < 1;
- 
+
       // If it's not a top level and we can't find a sub-menu... return
       if(isTopMenu && !submenu.length) { return false; }
       /*
@@ -133,7 +127,7 @@ $(document).ready(function()
       position = isTopMenu ?
          { my: 'top center', at: 'bottom center' } :
          { my: 'top left', at: 'right top' }
-   
+
       // Create the tooltip
       self.qtip({
          overwrite: false, // Make sure we only render one tooltip
@@ -149,7 +143,7 @@ $(document).ready(function()
          show: {
             event: event.type, // Make sure to sue the same event as above
             ready: true, // Make sure it shows on first mouseover
- 
+
             /*
              * If it's a top level menu, make sure only one is shown at a time!
              * We'll pass the container element through too so it doesn't hide

@@ -2257,7 +2257,7 @@ a.and_search_code
   text-align:left;
 }
 
-.search_cols_part, .search_cols_individual, .search_cols_specimen
+.search_cols_specimen
 {
   max-height: 200px;
   overflow-y: scroll;

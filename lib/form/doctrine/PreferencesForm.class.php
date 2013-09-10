@@ -8,19 +8,19 @@
  * @author     DB team <darwin-ict@naturalsciences.be>
  * @version    SVN: $Id: sfDoctrineFormTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class PreferencesForm extends BaseForm 
+class PreferencesForm extends BaseForm
 {
   public function configure()
   {
     $pref_keys = array('search_cols_specimen', 'board_search_rec_pp',
-      'board_spec_rec_pp','help_message_activated', 'gtu_google_activated');
+      'board_spec_rec_pp','help_message_activated');
     $this->db_keys = Doctrine::getTable('Preferences')->getAllPreferences($this->options['user']->getId(), $pref_keys);
     $is_reg_user = $this->options['user']->isA(Users::REGISTERED_USER) ;
     $choices = Doctrine::getTable('MySavedSearches')->getAllFields('specimen') ;
     $choices = $this->translateValues($choices);
 
     $this->widgetSchema['search_cols_specimen'] = new sfWidgetFormChoice(array(
-      'choices' => $choices, 
+      'choices' => $choices,
       'expanded' => true,
       'multiple' => true,
       'renderer_options' => array('formatter' => array($this, 'formatter'))

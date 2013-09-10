@@ -69,7 +69,7 @@ class SpecimensTable extends DarwinTable
       ->where('s.collection_is_public = true')
       ->orderBy('random()')
       ->limit($number)
-      ->useResultCache(new Doctrine_Cache_Apc() )
+      ->useResultCache(true)
       ->setResultCacheLifeSpan( 60 * 30 ) // 30 min
       ;
     return $q->execute();
