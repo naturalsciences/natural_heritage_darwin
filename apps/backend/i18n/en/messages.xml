@@ -5742,6 +5742,39 @@
         <source>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</source>
         <target>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
       </trans-unit>
+      <trans-unit id="1741">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</source>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</target>
+      </trans-unit>
+      <trans-unit id="1742">
+        <source>defined as %role%</source>
+        <target>Défini(e) comme %role%</target>
+      </traNs-unit>
+      <trans-unit id="1743">
+        <source>View errors while importing</source>
+        <target>View errors while importing</target>
+      </trans-unit>
+      <trans-unit id="1744">
+        <source>List of errors occured during import</source>
+        <target>List of errors occured during import</target>
+      </trans-unit>
+      <trans-unit id="1745">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import,
+        correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</source>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import, correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</target>
+      </trans-unit>
+      <trans-unit id="1745">
+        <source>Continue import</source>
+        <target>Continue import</target>
+      </trans-unit>
+      <trans-unit id="1745">
+        <source></source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1745">
+        <source></source>
+        <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

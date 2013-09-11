@@ -5732,6 +5732,36 @@
         <source>Search Only objects with multimedia files </source>
         <target>Rechercher uniquement les enregistrements avec des fichiers multimedias</target>
       </trans-unit>
+      <trans-unit id="1740">
+        <source>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</source>
+        <target>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
+      </trans-unit>
+      <trans-unit id="1741">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</source>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt;Si vous ne corrigez pas les valeurs par défaut avant de sauver, les erreurs associées resteront</target>
+      </trans-unit>
+      <trans-unit id="1742">
+        <source>defined as %role%</source>
+        <target>Défini(e) comme %role%</target>
+      </trans-unit>
+      <trans-unit id="1743">
+        <source>View errors while importing</source>
+        <target>Voir les erreurs lors de l'import</target>
+      </trans-unit>
+      <trans-unit id="1744">
+        <source>List of errors occured during import</source>
+        <target>Liste des erreurs apparues durant l'import</target>
+      </trans-unit>
+      <trans-unit id="1745">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import,
+    correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</source>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt; Ces erreurs ne peuvent pas être corrigées, Le meilleur moyen de les corriger est de supprimer votre import, corriger votre fichier XML, et réimporter.
+          Vous pouvez aussi continuer votre import mais vous perdrez alors les informations ci-dessus. Que voulez vous faire ?</target>
+      </trans-unit>
+      <trans-unit id="1745">
+        <source>Continue import</source>
+        <target>Continuer l'import</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

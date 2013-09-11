@@ -104,7 +104,7 @@ class ImportABCDXml implements IImportModels
                         $this->staging["gtu_from_date_mask"] = 56 ; $this->staging["gtu_to_date_mask"] = 56 ; break ;;
       case "dna:Concentration" : /* this->object->properties */ break ;;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break ;;
-      case "dna:ExtractionDate" : $this->object->maintenance->setModificationDateTime($this->cdata) ; break ;;
+      case "dna:ExtractionDate" : $this->object->maintenance->setModificationDateTime(FuzzyDateTime::getValidDate($this->cdata)) ; break ;;
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break ;;
       case "dna:RatioOfAbsorbance260_280" : /* this->object->properties */ break ;;
       case "dna:Tissu" : $this->object->maintenance->setActionObservation($this->cdata) ; break ;;

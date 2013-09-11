@@ -503,6 +503,10 @@ class FuzzyDateTime extends DateTime
     if(DateTime::createFromFormat('d/m/y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
     if(DateTime::createFromFormat('d-m-Y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
     if(DateTime::createFromFormat('d-m-y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
+    if(DateTime::createFromFormat('Y-n-d', $date))
+      return date('Y-m-d',mktime(0,0,0,$ladate2[1],$ladate2[2],$ladate2[0]));
+    if(DateTime::createFromFormat('Y-m-d', $date))
+      return date('Y-m-d',mktime(0,0,0,$ladate2[1],$ladate2[2],$ladate2[0]));
     if(DateTime::createFromFormat('d/m/Y', $date))
       return date('Y-m-d',mktime(0,0,0,$ladate[1],$ladate[0],$ladate[2]));
     if(DateTime::createFromFormat('d/m/y', $date))
