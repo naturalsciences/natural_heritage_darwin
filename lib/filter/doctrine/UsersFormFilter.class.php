@@ -41,7 +41,7 @@ class UsersFormFilter extends BaseUsersFormFilter
     $query->andWhere('id >0');
     if ($this->options['db_user_type']!=8) $query->addWhere('db_user_type <= 4') ;
 
-    $query->select('*, (select last_seen from users_login_infos where user_ref = '.$query->getRootAlias().'.id) as last_seen');
+    $query->select('*, (select max(last_seen) from users_login_infos where user_ref = '.$query->getRootAlias().'.id limit 1) as last_seen');
     return $query ;
   }
 }

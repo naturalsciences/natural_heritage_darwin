@@ -100,7 +100,7 @@ class accountActions extends DarwinActions
           );
 
           if(! $user) {
-            $user = Doctrine::getTable('Users')->getUserByLoginOnly($this->form->getValue('user_name'));
+            $user = Doctrine::getTable('Users')->getUserByLoginWithEmailOnly($this->form->getValue('user_name'));
           }
 
           $this->getUser()->setCulture($user->getSelectedLang());

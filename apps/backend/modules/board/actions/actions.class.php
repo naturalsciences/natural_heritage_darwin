@@ -14,7 +14,7 @@ class boardActions extends DarwinActions
 
   public function executeIndex(sfWebRequest $request)
   {
-     $this->loadWidgets();
+    $this->loadWidgets();
   }
 
 }

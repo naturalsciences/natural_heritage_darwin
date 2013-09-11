@@ -2,7 +2,6 @@
   <thead>
     <tr>
       <th><?php echo __('Login Type');?></th>
-      <th><?php echo __('Login System Id');?></th>
       <th><?php echo __('User Name');?></th>
       <th>&nbsp;</th>
     </tr>
@@ -11,12 +10,13 @@
   <?php foreach($login_info as $login_info):?>
   <tr>
     <td>
-    <a class="link_catalogue" title="<?php echo __('Edit Login');?>"  href="<?php echo url_for('user/loginInfo?id='.$login_info->getId().'&user_ref='.$login_info->getUserRef());?>"">
-      <?php echo $login_info->getLoginType();?>
-    </a>
-    </td>
-    <td>
-       <?php echo($login_info->getLoginSystem()?$login_info->getLoginSystem():"-");?>
+      <?php if($login_info->getLoginType() == 'local'):?>
+        <a class="link_catalogue" title="<?php echo __('Edit Login');?>"  href="<?php echo url_for('user/loginInfo?id='.$login_info->getId().'&user_ref='.$login_info->getUserRef());?>"">
+          <?php echo $login_info->getLoginType();?>
+        </a>
+      <?php else:?>
+        <?php echo $login_info->getLoginType();?>
+      <?php endif;?>
     </td>
     <td>
        <?php echo($login_info->getUserName());?>

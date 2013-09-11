@@ -26,7 +26,7 @@ class LostPwdValidatorSchema extends sfValidatorBase
     $user = Doctrine::getTable('Users')->getUserByLoginAndEMail($value['user_name'], $value['user_email']);
     if(! $user)
     {
-       $user = Doctrine::getTable('Users')->getUserByLoginOnly($value['user_name']);
+       $user = Doctrine::getTable('Users')->getUserByLoginWithEmailOnly($value['user_name']);
        if($user && count($user->UsersComm) ==0)
         $user=null;
     }

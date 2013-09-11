@@ -100,7 +100,19 @@ class UsersTable extends DarwinTable
     return $q->fetchOne();
   }
 
-  public function getUserByLoginOnly($username)
+  public function getUserByLogin($username, $type='local')
+  {
+     $q = Doctrine_Query::create()
+      ->useResultCache(null)
+      ->from('Users u')
+      ->innerJoin('u.UsersLoginInfos ul')
+      ->andWhere('ul.user_name = ?',$username)
+      ->andWhere('ul.login_system is null')
+      ->andWhere('ul.login_type = ?', $type);
+    return $q->fetchOne();
+  }
+
+  public function getUserByLoginWithEmailOnly($username, $type='local')
   {
      $q = Doctrine_Query::create()
           ->useResultCache(null)
@@ -109,7 +121,7 @@ class UsersTable extends DarwinTable
           ->innerJoin('u.UsersComm uc')
           ->andWhere('ul.user_name = ?',$username)
           ->andWhere('ul.login_system is null')
-          ->andWhere('ul.login_type = ?', 'local')
+          ->andWhere('ul.login_type = ?', $type)
           ->andWhere('uc.comm_type = ?', 'e-mail');
     return $q->fetchOne();
   }
