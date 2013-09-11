@@ -5725,19 +5725,39 @@
       </trans-unit>
       <trans-unit id="1738">
         <source>If you're looking for only illustrated object (or object with files), check the box below</source>
-        <target></target>
+        <target>Indien u enkel geïllustreerde objecten zoekt (of objecten met bijgevoegde bestanden), vink het onderstaande vakje aan</target>
       </trans-unit>
       <trans-unit id="1739">
         <source>Search Only objects with multimedia files </source>
-        <target></target>
+        <target>Zoek alleen objecten met multimediabestanden</target>
       <trans-unit id="1740">
         <source>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</source>
-        <target>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
+        <target>Deze knop toont alle fouten opgetreden tijdens het importeren: aan u de keuze om het importeren te vervolgen, of deze import te verwijderen, het bestand te corrigeren en opnieuw te importeren</target>
       </trans-unit>
       <trans-unit id="1741">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</source>
-        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</target>
+        <target>&lt;strong&gt;Waarschuwing!&lt;/strong&gt;&lt;br /&gt;Gelieve de standaardwaarden te corrigeren om de gerelateerde foutmeldingen te doen verdwijnen</target>
       </trans-unit>
+      <trans-unit id="1742">
+        <source>defined as %role%</source>
+        <target>Gedefinieerd als %rol%</target>
+      </trans-unit>
+      <trans-unit id="1743">
+        <source>View errors while importing</source>
+        <target>Foutmeldingen tonen tijdens het importeren</target>
+      </trans-unit>
+      <trans-unit id="1744">
+        <source>List of errors occured during import</source>
+        <target>Lijst van opgetreden foutmeldingen tijdens het importeren</target>
+      </trans-unit>
+      <trans-unit id="1745">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import,
+    correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</source>
+        <target>&lt;strong&gt;Waarschuwing!&lt;/strong&gt;&lt;br /&gt; Deze foutmeldingen kunnen niet worden gecorrigeerd. U kan best uw import verwijderen, het XML-bestand corrigeren en opnieuw importeren. U kan eveneens het importeren vervolgen, maar u zal bovenstaande informatie verliezen. Wat wenst u te doen?</target>
+      </trans-unit>
+      <trans-unit id="1745">
+        <source>Continue import</source>
+        <target>Het importeren vervolgen</target>
       </trans-unit>
         </body>
   </file>
