@@ -24,7 +24,8 @@ class BaseMassActionForm extends sfFormSymfony
         'mineralogy_ref' => self::getI18N()->__('Change Mineralogy'),
         'station_visible' => self::getI18N()->__('Change Station visibility'),
         'ig_ref' => self::getI18N()->__('Change I.G. Num'),
-        
+        'acquisition' => self::getI18N()->__('Change Acquisition'),
+
         'type' => self::getI18N()->__('Change Individual Type'),
         'social_status' => self::getI18N()->__('Change Individual Social Status'),
         'sex' => self::getI18N()->__('Change Individual Sex'),
@@ -67,6 +68,8 @@ class BaseMassActionForm extends sfFormSymfony
 
     elseif($action == 'station_visible')
       return 'MaStationVisibleForm';
+    elseif($action == 'acquisition')
+      return 'MaAcquisitionForm';
 
     elseif($action == 'type')
       return 'MaTypeForm';
@@ -93,6 +96,7 @@ class BaseMassActionForm extends sfFormSymfony
       return 'MaContainerForm';
     elseif($action == 'sub_container')
       return 'MaSubContainerForm';
+
 
     else
       return 'sfForm';
@@ -140,7 +144,7 @@ class BaseMassActionForm extends sfFormSymfony
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
-    if(isset($taintedValues['field_action']) && is_array(($taintedValues['field_action'])) && count($taintedValues['field_action']) != 0 
+    if(isset($taintedValues['field_action']) && is_array(($taintedValues['field_action'])) && count($taintedValues['field_action']) != 0
       && isset($taintedValues['MassActionForm']) && is_array(($taintedValues['MassActionForm'])) && count($taintedValues['MassActionForm']) != 0 )
     {
       foreach($taintedValues['field_action'] as $form_name)
@@ -156,7 +160,7 @@ class BaseMassActionForm extends sfFormSymfony
     sfWidgetFormSchema::setDefaultFormFormatterName('list');
     $this->widgetSchema->setNameFormat('mass_action[%s]');
 
-    $this->widgetSchema['field_action'] = new sfWidgetFormSelectCheckbox(array( 
+    $this->widgetSchema['field_action'] = new sfWidgetFormSelectCheckbox(array(
      'choices' =>  self::getPossibleActions(),
      'template' => '<div class="group_%group% fld_group"><label>%group%</label> %options%</div>',
     ));
