@@ -24,7 +24,8 @@ class BaseMassActionForm extends sfFormSymfony
         'mineralogy_ref' => self::getI18N()->__('Change Mineralogy'),
         'station_visible' => self::getI18N()->__('Change Station visibility'),
         'ig_ref' => self::getI18N()->__('Change I.G. Num'),
-        'acquisition' => self::getI18N()->__('Change Acquisition'),
+        'acquisition_category' => self::getI18N()->__('Change Acquisition Category'),
+        'acquisition_date' => self::getI18N()->__('Change Acquisition Date'),
 
         'type' => self::getI18N()->__('Change Individual Type'),
         'social_status' => self::getI18N()->__('Change Individual Social Status'),
@@ -68,8 +69,10 @@ class BaseMassActionForm extends sfFormSymfony
 
     elseif($action == 'station_visible')
       return 'MaStationVisibleForm';
-    elseif($action == 'acquisition')
-      return 'MaAcquisitionForm';
+    elseif($action == 'acquisition_category')
+      return 'MaAcquisitionCategoryForm';
+    elseif($action == 'acquisition_date')
+      return 'MaAcquisitionDateForm';
 
     elseif($action == 'type')
       return 'MaTypeForm';
