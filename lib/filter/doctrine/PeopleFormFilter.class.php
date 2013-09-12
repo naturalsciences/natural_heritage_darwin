@@ -17,7 +17,6 @@ class PeopleFormFilter extends BasePeopleFormFilter
     $this->addPagerItems();
 
     $this->widgetSchema['family_name'] = new sfWidgetFormInput();
-    
 
     $this->widgetSchema['is_physical'] = new sfWidgetFormInputHidden();
     $this->setDefault('is_physical', true); 
