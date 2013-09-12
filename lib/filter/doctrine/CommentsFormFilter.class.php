@@ -30,7 +30,7 @@ class CommentsFormFilter extends BaseCommentsFormFilter
     foreach($this->allowed_relations as $relation) {
       $choices = $choices + CommentsTable::getNotionsFor($relation);
     }
-    
+
     $this->widgetSchema['notion_concerned'] = new sfWidgetFormChoice(array('choices'=> $choices));
     $this->validatorSchema['notion_concerned'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($choices)));
 

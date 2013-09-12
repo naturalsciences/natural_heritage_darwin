@@ -40,7 +40,7 @@
             <td><?php echo image_tag('info.png',"title=info class=info");?></td>
             <td><?php echo $item->getReferencedRelation() ?></td>
             <td><?php echo $item->getComment();?></td>
-            <td><?php echo $item->getNotionText() ?></td>
+            <td><?php echo __($item->getNotionText()); ?></td>
             <td class="edit">
               <?php if($item->getLink() != ''):?>
                 <?php echo link_to(image_tag('next.png', array("title" => __("View"))),$item->getLink());?>

@@ -17,7 +17,7 @@ class specimensearchwidgetComponents extends sfComponents
      $this->form = new SpecimensFormFilter() ;
     }
   }
-  
+
   public function executeRefCollection()
   {
     $this->defineForm();
@@ -33,7 +33,7 @@ class specimensearchwidgetComponents extends sfComponents
   }
   public function executeRefLithology()
   {
-    $this->defineForm(); 
+    $this->defineForm();
   }
   public function executeRefChrono()
   {
@@ -51,7 +51,7 @@ class specimensearchwidgetComponents extends sfComponents
 
   public function executeRefGtu()
   {
-    $this->defineForm();  
+    $this->defineForm();
     if(!$this->form) $this->form->addGtuTagValue(0);
   }
 
@@ -68,7 +68,7 @@ class specimensearchwidgetComponents extends sfComponents
   public function executeStage()
   {
     $this->defineForm();
-  } 
+  }
 
   public function executeStatus()
   {
@@ -84,12 +84,12 @@ class specimensearchwidgetComponents extends sfComponents
   {
     $this->defineForm();
   }
-  
+
   public function executeRefIgs()
   {
     $this->defineForm();
   }
-  
+
 
   public function executeCodes()
   {
@@ -110,24 +110,24 @@ class specimensearchwidgetComponents extends sfComponents
 
   public function executeMultimedia()
   {
-    $this->defineForm(); 
+    $this->defineForm();
   }
 
   public function executeLocalisation()
   {
     $this->defineForm();
   }
-  
+
   public function executeAcquisitions()
   {
     $this->defineForm();
   }
-  
+
   public function executeContainer()
   {
     $this->defineForm();
   }
-  
+
   public function executeLatlong()
   {
     $this->defineForm();
@@ -149,6 +149,10 @@ class specimensearchwidgetComponents extends sfComponents
   }
 
   public function executeProperties()
+  {
+    $this->defineForm();
+  }
+  public function executeComments()
   {
     $this->defineForm();
   }

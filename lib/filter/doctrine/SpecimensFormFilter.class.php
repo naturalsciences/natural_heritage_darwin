@@ -29,7 +29,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         'add_empty' => $this->getI18N()->__('All')
       ));
     $rel = array('child'=>'Is a Child Of','direct_child'=>'Is a Direct Child','synonym'=> 'Is a Synonym Of', 'equal' => 'Is strictly equal to');
-    
+
     $this->widgetSchema['taxon_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
     $this->widgetSchema['taxon_item_ref'] = new widgetFormButtonRef(array(
        'model' => 'Taxonomy',
@@ -161,7 +161,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'required' => false,
       'from_date' => true,
       'min' => $minDate,
-      'max' => $maxDate, 
+      'max' => $maxDate,
       'empty_value' => $dateLowerBound,
       ),
       array('invalid' => 'Date provided is not valid',)
@@ -178,11 +178,11 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     );
 
     $this->validatorSchema->setPostValidator(new sfValidatorSchemaCompare(
-      'ig_from_date', 
-      '<=', 
-      'ig_to_date', 
-      array('throw_global_error' => true), 
-      array('invalid'=>'The "begin" date cannot be above the "end" date.') 
+      'ig_from_date',
+      '<=',
+      'ig_to_date',
+      array('throw_global_error' => true),
+      array('invalid'=>'The "begin" date cannot be above the "end" date.')
     ));
 
 
@@ -277,7 +277,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'required' => false,
       'from_date' => true,
       'min' => $minDate,
-      'max' => $maxDate, 
+      'max' => $maxDate,
       'empty_value' => $dateLowerBound,
       ),
       array('invalid' => 'Date provided is not valid',)
@@ -326,7 +326,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       ),
       array('class'=>'inline',)
     );
-    
+
     $fields_to_search = array(
       'spec_coll_ids' => $this->getI18N()->__('Collector'),
       'spec_don_sel_ids' => $this->getI18N()->__('Donator or seller'),
@@ -353,7 +353,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $this->getDateItemOptions(),
       array('class' => 'from_date')
     );
-    
+
     $this->widgetSchema['acquisition_to_date'] = new widgetFormJQueryFuzzyDate(
       $this->getDateItemOptions(),
       array('class' => 'to_date')
@@ -363,7 +363,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'required' => false,
       'from_date' => true,
       'min' => $minDate,
-      'max' => $maxDate, 
+      'max' => $maxDate,
       'empty_value' => $dateLowerBound,
       ),
       array('invalid' => 'Date provided is not valid',)
@@ -466,7 +466,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $this->widgetSchema['object_name'] = new sfWidgetFormInput();
     $this->validatorSchema['object_name'] = new sfValidatorString(array('required' => false));
-    
+
     $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['institution_ref'] = new widgetFormButtonRef(array(
@@ -557,10 +557,20 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));
     $this->validatorSchema['property_units'] = new sfValidatorString(array('required' => false));
 
+
+    $this->widgetSchema['comment'] = new sfWidgetFormInput();
+    $this->validatorSchema['comment'] = new sfValidatorString(array('required' => false));
+
+    $comment_choices = array(''=>'');
+    $comment_choices = $comment_choices + CommentsTable::getNotionsFor('specimens');
+    $this->widgetSchema['comment_notion_concerned'] = new sfWidgetFormChoice(array('choices'=> $comment_choices));
+    $this->validatorSchema['comment_notion_concerned'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($comment_choices)));
+
+
     $subForm = new sfForm();
     $this->embedForm('Codes',$subForm);
 
-     // LAT LON 
+     // LAT LON
     $this->widgetSchema['lat_from'] = new sfWidgetForminput();
     $this->widgetSchema['lat_from']->setLabel('Latitude');
     $this->widgetSchema['lat_from']->setAttributes(array('class'=>'medium_small_size'));
@@ -604,6 +614,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'property_value_from' => 'Value from',
       'property_value_to' => 'to',
       'property_units' => 'Units',
+      'comment_notion_concerned' => 'Notion concerned',
     ));
 
     // For compat only with old saved search
@@ -617,13 +628,29 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $this->embeddedForms['Tags']->embedForm($num, $form);
       $this->embedForm('Tags', $this->embeddedForms['Tags']);
   }
-  
+
 
   public function addCodeValue($num)
   {
       $form = new CodeLineForm();
       $this->embeddedForms['Codes']->embedForm($num, $form);
       $this->embedForm('Codes', $this->embeddedForms['Codes']);
+  }
+  public function addCommentsQuery($query, $notion, $comment)
+  {
+    if($notion != '' || $comment != '') {
+      $query->innerJoin('s.Comments c');
+      $query->andWhere("c.referenced_relation = ? ",'specimens');
+
+      $query->groupBy("s.id");
+
+      if($notion != '')
+        $query->andWhere('notion_concerned = ?', $notion ) ;
+      if($comment != '')
+        $query->andWhere('comment_indexed like concat(\'%\', fulltoindex(?), \'%\' )', $comment);
+      $this->with_group = true;
+    }
+    return $query ;
   }
 
   public function addLatLonColumnQuery($query, $values)
@@ -633,8 +660,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $query->andWhere('
         ( station_visible = true AND gtu_location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
         ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326) )
-       OR 
-        ( station_visible = false AND collection_ref in ('.implode(',',$this->encoding_collection).') 
+       OR
+        ( station_visible = false AND collection_ref in ('.implode(',',$this->encoding_collection).')
         AND gtu_location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
         ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326) )
       ');
@@ -667,7 +694,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $query->andWhere("ig_num_indexed like concat(fullToIndex(".$conn_MGR->quote($values, 'string')."), '%') ");
     }
     return $query;
-  } 
+  }
 
   public function checksToQuotedValues($val) {
     if($val == '') return ;
@@ -743,7 +770,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     }
     return $query ;
   }
-  
+
   public function addSubContainerColumnQuery($query, $field, $val)
   {
     if(trim($val) != '') {
@@ -804,7 +831,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     }
     return $query ;
   }
-  
+
   public function addTagsColumnQuery($query, $field, $val)
   {
     $alias = $query->getRootAlias();
@@ -818,7 +845,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       {
         $tagList = $conn_MGR->quote($line_val, 'string');
         $query->andWhere("
-              (station_visible = true AND  gtu_tag_values_indexed && getTagsIndexedAsArray($tagList)) 
+              (station_visible = true AND  gtu_tag_values_indexed && getTagsIndexedAsArray($tagList))
                OR
               (station_visible = false
                AND (
@@ -859,7 +886,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     if(! empty($params)) {
       $query->addWhere("s.id in (select fct_searchCodes($str_params) )", $params);
     }
- 
+
     return $query ;
   }
 
@@ -874,7 +901,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
           AND gtu_code ilike ? )", array('%'.$val.'%','%'.$val.'%'));
       $query->whereParenWrap();
     }
-    return $query ;  
+    return $query ;
   }
 
   public function addSpecIdsColumnQuery($query, $field, $val)
@@ -898,7 +925,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
   public function addPeopleSearchColumnQuery(Doctrine_Query $query, $people_id, $field_to_use)
   {
-    $build_query = ''; 
+    $build_query = '';
     if(! is_array($field_to_use) || count($field_to_use) < 1)
       $field_to_use = array('ident_ids','spec_coll_ids','spec_don_sel_ids') ;
 
@@ -914,7 +941,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       }
       else
       {
-        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;    
+        $build_query .= "s.spec_don_sel_ids @> ARRAY[$people_id]::int[] OR " ;
       }
     }
     // I remove the last 'OR ' at the end of the string
@@ -1070,7 +1097,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
 
     $query = DQ::create()
-      ->select('s.*, 
+      ->select('s.*,
         ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude,
         ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude,
         (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights'
@@ -1095,7 +1122,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     if ($values['acquisition_category'] != '' ) $query->andWhere('acquisition_category = ?',$values['acquisition_category']);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));
     if ($values['chrono_level_ref'] != '') $query->andWhere('chrono_level_ref = ?', intval($values['chrono_level_ref']));
-    if ($values['litho_level_ref'] != '') $query->andWhere('litho_level_ref = ?', intval($values['litho_level_ref']));    
+    if ($values['litho_level_ref'] != '') $query->andWhere('litho_level_ref = ?', intval($values['litho_level_ref']));
     if ($values['lithology_level_ref'] != '') $query->andWhere('lithology_level_ref = ?', intval($values['lithology_level_ref']));
     if ($values['mineral_level_ref'] != '') $query->andWhere('mineral_level_ref = ?', intval($values['mineral_level_ref']));
     $this->addLatLonColumnQuery($query, $values);
@@ -1109,10 +1136,11 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $this->addPropertiesQuery($query, $values['property_type'] , $values['property_applies_to'], $values['property_value_from'], $values['property_value_to'], $values['property_units']);
 
-        
+    $this->addCommentsQuery($query, $values['comment_notion_concerned'] , $values['comment']);
+
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
-    $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);    
+    $this->addDateFromToColumnQuery($query, array('ig_date'), $values['ig_from_date'], $values['ig_to_date']);
     $this->addDateFromToColumnQuery($query, array('acquisition_date'), $values['acquisition_from_date'], $values['acquisition_to_date']);
 
     $this->addCatalogueRelationColumnQuery($query, $values['taxon_item_ref'], $values['taxon_relation'],'taxonomy','taxon');

@@ -407,7 +407,7 @@ InformativeWorkflow:
         Users:
             local: user_ref
             foreign: id
-            
+
 CollectionMaintenance:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -723,7 +723,7 @@ Specimens:
         specimen_count_max: { type: integer, notnull: true, default:1}
         object_name: { type: string}
         object_name_indexed: { type: string}
-        
+
     relations:
         Collections:
             local: collection_ref
@@ -766,6 +766,10 @@ Specimens:
 
         Properties:
             class: Properties
+            local: id
+            foreign: record_id
+        Comments:
+            class: Comments
             local: id
             foreign: record_id
 
@@ -1185,15 +1189,15 @@ LoanItems:
         Loan:
             local: loan_ref
             foreign: id
-            class: Loans 
+            class: Loans
         Ig:
             local: ig_ref
             foreign: id
-            class: Igs 
+            class: Igs
         DarwinParts:
             local: specimen_ref
             foreign: id
-            class: Specimens 
+            class: Specimens
 
 LoanRights:
     columns:
@@ -1205,7 +1209,7 @@ LoanRights:
         Loan:
             local: loan_ref
             foreign: id
-            class: Loans 
+            class: Loans
         User:
             local: user_ref
             foreign: id
@@ -1224,7 +1228,7 @@ LoanStatus:
         Loan:
             local: loan_ref
             foreign: id
-            class: Loans 
+            class: Loans
         Users:
             local: user_ref
             foreign: id
