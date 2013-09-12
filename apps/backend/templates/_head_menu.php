@@ -77,7 +77,6 @@
             <ul class="submenu">
                 <li><?php echo link_to(__('Mass Actions'),'massactions/index');?></li>
                 <li><?php echo link_to(__('Import'),'import/index');?></li>
-                <li><?php echo link_to(__('Quality assurance'),'qa/index');?></li>
                 <?php if($sf_user->isAtLeast(Users::ADMIN) ): ?>
                   <li><?php echo link_to(__('Big Brother'),'bigbro/index');?></li>
                 <?php endif ; ?>
