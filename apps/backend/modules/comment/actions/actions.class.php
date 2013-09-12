@@ -10,19 +10,18 @@
  */
 class commentActions extends DarwinActions
 {
-  protected $ref_id = array('specimens' => 'spec_ref','specimen_individuals' => 'individual_ref','specimen_parts' => 'part_ref') ;
   public function executeComment(sfWebRequest $request)
   { 
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction(); 
     if($request->hasParameter('id'))    
     {
       $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
-      $this->forward404Unless($r,'No such item');  
-      if(!$this->getUser()->isA(Users::ADMIN))   
+      $this->forward404Unless($r,'No such item');
+      if(!$this->getUser()->isA(Users::ADMIN))
       {
-        if(in_array($request->getParameter('table'),array_keys($this->ref_id)) )
+        if($request->getParameter('table') == 'specimens' )
         {
-          if(! Doctrine::getTable('Specimens')->hasRights($this->ref_id[$request->getParameter('table')],$request->getParameter('id'), $this->getUser()->getId()))
+          if(! Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
             $this->forwardToSecureAction();    
         }
       }

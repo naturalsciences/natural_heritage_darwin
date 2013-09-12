@@ -12,10 +12,9 @@ class catalogueActions extends DarwinActions
 {
   protected $catalogue = array(
    'catalogue_relationships','catalogue_people','vernacular_names','properties','comments',
-   'specimens','specimen_individuals','specimen_parts','ext_links','collection_maintenance', 'insurances',
-   'people_addresses', 'people_comm','people_languages', 'people_relationships', 'classification_keywords','catalogue_bibliography', 'multimedia');
+   'specimens', 'ext_links','collection_maintenance', 'insurances', 'people_addresses', 'people_comm',
+   'people_languages', 'people_relationships', 'classification_keywords','catalogue_bibliography', 'multimedia');
 
-  protected $ref_id = array('specimens' => 'spec_ref','specimen_individuals' => 'individual_ref','specimen_parts' => 'part_ref') ;
   public function executeRelation(sfWebRequest $request)
   {
     if(! $this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();  
@@ -108,20 +107,20 @@ class catalogueActions extends DarwinActions
 
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($request->getParameter('table'),array('comments','properties','ext_links')) && in_array($r->getReferencedRelation(),$this->ref_id))
+      if(in_array($request->getParameter('table'),array('comments','properties','ext_links')) && $r->getReferencedRelation() =='specimens')
       {
-
-      if(! Doctrine::getTable('Specimens')->hasRights($this->ref_id[$r->getReferencedRelation()], $r->getRecordId(), $this->getUser()->getId()))
-            $this->forwardToSecureAction();    
-      } 
+        if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $r->getRecordId(), $this->getUser()->getId()))
+          $this->forwardToSecureAction();
+      }
     }
 
     try{
-          if($request->getParameter('table')=='multimedia'){
-            $r->delete();
-          }
-          else
-            $r->delete();
+      if($request->getParameter('table')=='multimedia'){
+        $r->delete();
+      }
+      else {
+        $r->delete();
+      }
     }
     catch(Doctrine_Exception $ne)
     {
@@ -139,8 +138,8 @@ class catalogueActions extends DarwinActions
       if ($form->isValid())
       {
         $query = $form
-                 ->getQuery()
-                 ->orderBy($this->orderBy .' '.$this->orderDir);
+          ->getQuery()
+          ->orderBy($this->orderBy .' '.$this->orderDir);
 
         $pager = new DarwinPager($query,
           $this->currentPage,
