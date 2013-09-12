@@ -25,13 +25,13 @@ class searchActions extends DarwinActions
   {
     $this->tags = Doctrine::getTable('TagGroups')->getPropositions($request->getParameter('value'), 'administrative area', 'country');
   }
-  
+
   public function executeTree(sfWebRequest $request)
   {
     $this->items = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )
       ->findWithParents($request->getParameter('id'));
   }
-   
+
   public function executeSearch(sfWebRequest $request)
   {
     // Initialize the order by and paging values: order by collection_name here
@@ -62,7 +62,7 @@ class searchActions extends DarwinActions
       // Define the correct select count() of the count query
       $counted->count_query = $count_q;
       // And replace the one of the pager with this new one
-      $pager->setCountQuery($counted);         
+      $pager->setCountQuery($counted);
       // Define in one line a pager Layout based on a pagerLayoutWithArrows object
       // This pager layout is based on a Doctrine_Pager, itself based on a customed Doctrine_Query object (call to the getExpLike method of ExpeditionTable class)
 
@@ -85,7 +85,7 @@ class searchActions extends DarwinActions
       $ids = $this->FecthIdForCommonNames() ;
       $this->common_names = Doctrine::getTable('VernacularNames')->findAllCommonNames($ids) ;
       if(!count($this->common_names))
-        $this->common_names = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(), 
+        $this->common_names = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(),
                                     'lithology' => array(),'mineralogy' => array()) ;
       return;
     }
@@ -93,32 +93,33 @@ class searchActions extends DarwinActions
       $this->setTemplate('searchGeo');
     else
     $this->setTemplate('index');
-  }   
-  
+  }
+
   public function executeSearchResult(sfWebRequest $request)
   {
     // Do the same as a executeSearch...
     $this->executeSearch($request) ;
     // ... and render partial searchSuccess
     return $this->renderPartial('searchSuccess');
-  } 
+  }
 
   public function executeView(sfWebRequest $request)
   {
     $ajax = false ;
-    if($request->isXmlHttpRequest()) 
+    if($request->isXmlHttpRequest())
     {
       $suggestion = $request->getParameter('suggestion') ;
       $captcha = array(
         'recaptcha_challenge_field' => $request->getParameter('recaptcha_challenge_field'),
         'recaptcha_response_field'  => $request->getParameter('recaptcha_response_field'),
-      );    
+      );
       $id = $suggestion['id'] ;
       $ajax = true ;
     }
     else $id = $request->getParameter('id') ;
 
-    $this->specimen = Doctrine::getTable('Specimens')->find($request->getParameter('id'));   
+    $this->forward404Unless(ctype_digit($request->getParameter('id')));
+    $this->specimen = Doctrine::getTable('Specimens')->find((int) $request->getParameter('id'));
     $this->forward404Unless($this->specimen);
     if(!$this->specimen->getCollectionIsPublic()) $this->forwardToSecureAction();
 
@@ -154,8 +155,8 @@ class searchActions extends DarwinActions
 
     $ids = $this->FecthIdForCommonNames() ;
     $this->common_names = Doctrine::getTable('VernacularNames')->findAllCommonNames($ids) ;
-    
-    if ($tag = $this->specimen->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ; 
+
+    if ($tag = $this->specimen->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ;
     else $this->tags = false ;
     $this->form = new SuggestionForm(null,array('ref_id' => $id, 'ajax' => $ajax)) ;
     if($request->isXmlHttpRequest())
@@ -168,8 +169,8 @@ class searchActions extends DarwinActions
         $data = array(
             'referenced_relation' => 'specimens',
             'record_id' => $suggestion['id'],
-            'status' => 'suggestion',   
-            'comment' => $comment,    
+            'status' => 'suggestion',
+            'comment' => $comment,
             'formated_name' => $suggestion['formated_name']!=''?$suggestion['formated_name']:'anonymous'
         );
         $workflow = new InformativeWorkflow() ;
@@ -180,7 +181,7 @@ class searchActions extends DarwinActions
       return $this->renderPartial("suggestion", array('form' => $this->form,'id'=> $id)) ;
     }
   }
-    
+
   /**
   * Compute different sources to get the columns that must be showed
   * 1) from form request 2) from session 3) from default value
@@ -200,16 +201,16 @@ class searchActions extends DarwinActions
       if($form->getValue('taxon_common_name') != '' || $form->getValue('taxon_name') != '') $req_fields .= '|taxon|taxon_common_name';
       if($form->getValue('chrono_common_name') != '' || $form->getValue('chrono_name') != '') $req_fields .= '|chrono|chrono_common_name';
       if($form->getValue('litho_common_name') != '' || $form->getValue('litho_name') != '') $req_fields .= '|litho|litho_common_name';
-      if($form->getValue('lithology_common_name') != '' || $form->getValue('lithology_name') != '') $req_fields .= '|lithologic|lithology_common_name'; 
+      if($form->getValue('lithology_common_name') != '' || $form->getValue('lithology_name') != '') $req_fields .= '|lithologic|lithology_common_name';
       if($form->getValue('mineral_common_name') != '' || $form->getValue('mineral_name') != '') $req_fields .= '|mineral|mineral_common_name';
 
       if($form->getValue('search_type','zoo') == 'zoo') {
         if(!strpos($req_fields,'common_name')) {
-          $req_fields .= '|taxon|taxon_common_name'; // add taxon by default if there is not other catalogue 
+          $req_fields .= '|taxon|taxon_common_name'; // add taxon by default if there is not other catalogue
         }
       }
       else {
-        if(!strpos($req_fields,'common_name')) $req_fields .= '|chrono|litho|lithologic|mineral'; // add cols by default if there is not other catalogue 
+        if(!strpos($req_fields,'common_name')) $req_fields .= '|chrono|litho|lithologic|mineral'; // add cols by default if there is not other catalogue
       }
       $req_fields_array = explode('|',$req_fields);
 
@@ -223,8 +224,8 @@ class searchActions extends DarwinActions
     }
     $form->setDefault('col_fields',$req_fields) ;
     return $flds;
-  } 
-   
+  }
+
   protected function defineFields()
   {
     $this->columns = array(
@@ -296,11 +297,11 @@ class searchActions extends DarwinActions
         $this->getI18N()->__('Lithologic common name'),),
       'mineral_common_name' => array(
         false,
-        $this->getI18N()->__('Mineral common name'),), 
+        $this->getI18N()->__('Mineral common name'),),
     );
   }
 
-  private function FecthIdForCommonNames() 
+  private function FecthIdForCommonNames()
   {
     $tab = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(), 'lithology' => array(),'mineralogy' => array()) ;
     if(isset($this->search))
@@ -320,7 +321,7 @@ class searchActions extends DarwinActions
       if($this->specimen->getChronoRef()) $tab['chronostratigraphy'][] = $this->specimen->getChronoRef() ;
       if($this->specimen->getLithoRef()) $tab['lithostratigraphy'][] = $this->specimen->getLithoRef() ;
       if($this->specimen->getLithologyRef()) $tab['lithology'][] = $this->specimen->getLithologyRef() ;
-      if($this->specimen->getMineralRef()) $tab['mineralogy'][] = $this->specimen->getMineralRef() ;   
+      if($this->specimen->getMineralRef()) $tab['mineralogy'][] = $this->specimen->getMineralRef() ;
     }
     return $tab ;
   }
