@@ -22,34 +22,41 @@ class GtuFormFilter extends BaseGtuFormFilter
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $this->widgetSchema['code'] = new sfWidgetFormInputText();
     $this->widgetSchema['tags'] = new sfWidgetFormInputText();
-    $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
-                                                                                array('class' => 'from_date')
-                                                                               );
-    $this->widgetSchema['gtu_to_date'] = new widgetFormJQueryFuzzyDate($this->getDateItemOptions(),
-                                                                              array('class' => 'to_date')
-                                                                             );
-    $this->widgetSchema->setLabels(array('gtu_from_date' => 'Between',
-                                         'gtu_to_date' => 'and',
-                                        )
-                                  );
+    $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+
+    $this->widgetSchema['gtu_to_date'] = new widgetFormJQueryFuzzyDate(
+      $this->getDateItemOptions(),
+      array('class' => 'to_date')
+    );
+    $this->widgetSchema->setLabels(array(
+      'gtu_from_date' => 'Between',
+      'gtu_to_date' => 'and',
+    ));
+
     $this->validatorSchema['tags'] = new sfValidatorString(array('required' => false, 'trim' => true));
     $this->validatorSchema['code'] = new sfValidatorString(array('required' => false, 'trim' => true));
-    $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                                  'from_date' => true,
-                                                                                  'min' => $minDate,
-                                                                                  'max' => $maxDate, 
-                                                                                  'empty_value' => $dateLowerBound,
-                                                                                 ),
-                                                                            array('invalid' => 'Date provided is not valid',)
-                                                                           );
-    $this->validatorSchema['gtu_to_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                                'from_date' => false,
-                                                                                'min' => $minDate,
-                                                                                'max' => $maxDate,
-                                                                                'empty_value' => $dateUpperBound,
-                                                                               ),
-                                                                          array('invalid' => 'Date provided is not valid',)
-                                                                         );
+    $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema['gtu_to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => false,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
     $this->widgetSchema['lat_from'] = new sfWidgetForminput();
     $this->widgetSchema['lat_from']->setLabel('Latitude');
     $this->widgetSchema['lat_to'] = new sfWidgetForminput();
@@ -62,13 +69,14 @@ class GtuFormFilter extends BaseGtuFormFilter
     $this->validatorSchema['lat_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-90', 'max'=>'90'));
     $this->validatorSchema['lon_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
 
-    $this->validatorSchema->setPostValidator(new sfValidatorSchemaCompare('gtu_from_date', 
-                                                                          '<=', 
-                                                                          'gtu_to_date', 
-                                                                          array('throw_global_error' => true), 
-                                                                          array('invalid'=>'The "begin" date cannot be above the "end" date.')
-                                                                         )
-                                            );
+    $this->validatorSchema->setPostValidator(new sfValidatorSchemaCompare(
+      'gtu_from_date',
+      '<=',
+      'gtu_to_date',
+      array('throw_global_error' => true),
+      array('invalid'=>'The "begin" date cannot be above the "end" date.')
+    ));
+
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
   }
