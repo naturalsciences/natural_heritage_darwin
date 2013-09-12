@@ -6,6 +6,10 @@
 class Properties extends BaseProperties
 {
 
+  public function getLink()
+  {
+    return $this->getTable()->getLinkforKnownTable($this->getReferencedRelation(),$this->getRecordId());
+  }
   public static function searchRecognizedUnitsGroups($unit){
     foreach(self::getRecognizedUnitsByType() as $type => $group) {
       if(in_array($unit, $group))

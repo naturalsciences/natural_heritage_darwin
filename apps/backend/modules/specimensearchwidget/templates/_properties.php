@@ -5,12 +5,13 @@
         <?php echo $form['property_type']->renderError();?></th>
       <th><?php echo $form['property_applies_to']->renderLabel(); ?>
         <?php echo $form['property_applies_to']->renderError();?></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><?php echo $form['property_type'];?></td>
-      <td><?php echo $form['property_applies_to'];?></td>
+      <td colspan="2"><?php echo $form['property_applies_to'];?></td>
     </tr>
     <tr>
       <th><?php echo $form['property_value_from']->renderLabel(); ?>

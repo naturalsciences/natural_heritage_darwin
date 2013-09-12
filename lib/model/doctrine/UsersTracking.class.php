@@ -7,49 +7,13 @@ class UsersTracking extends BaseUsersTracking
 {
   public function getLink()
   {
-    $result = $this->getLinkforKnownTable($this->_get('referenced_relation') , $this->_get('record_id'));
+    $result = $this->getTable()->getLinkforKnownTable($this->_get('referenced_relation') , $this->_get('record_id'));
     if($result)
       return $result;
     $result = $this->getLinkforRefTable($this->_get('referenced_relation') , $this->_get('record_id'));
     if($result)
       return $result;
     return "";
-  }
-  
-  protected function getLinkforKnownTable($table, $id)
-  {
-    switch($table)
-    {
-      case 'collections':
-        $link = 'collection/edit?id='.$id; break;
-      case 'specimens':
-        $link = 'specimen/edit?id='.$id; break;
-      case 'specimen_individuals':
-        $link = 'individuals/edit?id='.$id; break;
-      case 'specimen_parts':
-        $link = 'parts/edit?id='.$id; break;
-      case 'expeditions':
-        $link = 'expedition/edit?id='.$id; break;
-      case 'loans':
-        $link = 'loan/edit?id='.$id; break;
-      case 'loan_items':
-        $link = 'loanitem/edit?id='.$id; break;
-      case 'taxonomy':
-      case 'lithology':
-      case 'lithostratigraphy':
-      case 'chronostratigraphy':
-      case 'mineralogy':
-      case 'people':
-      case 'insurances':
-      case 'igs':
-      case 'igs':
-      case 'gtu':
-      case 'bibliography':
-        $link = $table.'/edit?id='.$id; break;
-      default:
-        $link = false; break;
-    }
-    return $link;
   }
 
   protected function getLinkforRefTable($table, $id)
@@ -58,19 +22,19 @@ class UsersTracking extends BaseUsersTracking
     $hvals = new Hstore();
     $hvals->import($hstore);
     if(isset($hvals['referenced_relation']) && isset($hvals['record_id']))
-      return $this->getLinkforKnownTable($hvals['referenced_relation'],$hvals['record_id']);
+      return $this->getTable()->getLinkforKnownTable($hvals['referenced_relation'],$hvals['record_id']);
 
     if(isset($hvals['referenced_relation']) && isset($hvals['record_id_1']))
-      return $this->getLinkforKnownTable($hvals['referenced_relation'],$hvals['record_id_1']);
+      return $this->getTable()->getLinkforKnownTable($hvals['referenced_relation'],$hvals['record_id_1']);
 
     if($table == 'collections_rights')
-      return $this->getLinkforKnownTable('collections',$hvals['collection_ref']);
+      return $this->getTable()->getLinkforKnownTable('collections',$hvals['collection_ref']);
 
     if($table == 'tag_groups')
-      return $this->getLinkforKnownTable('gtu',$hvals['gtu_ref']);
+      return $this->getTable()->getLinkforKnownTable('gtu',$hvals['gtu_ref']);
 
     if($table == 'specimen_collecting_methods' || $table == 'specimen_collecting_tools')
-      return $this->getLinkforKnownTable('specimens',$hvals['specimen_ref']);
+      return $this->getTable()->getLinkforKnownTable('specimens',$hvals['specimen_ref']);
 
     return false;
   }
