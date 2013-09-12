@@ -27,7 +27,7 @@ class SpecimensForm extends BaseSpecimensForm
       'type', 'sex', 'state','stage','social_status','rock_form',
       'specimen_part', 'complete', 'institution_ref', 'building', 'floor', 'room',
       'row', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
-      'container_storage', 'sub_container_storage', 'surnumerary', 'specimen_status', 
+      'container_storage', 'sub_container_storage', 'surnumerary', 'specimen_status',
       'specimen_count_min', 'specimen_count_max','object_name'
         ));
 
@@ -402,7 +402,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->validatorSchema['social_status'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('social_status')));
     $this->validatorSchema['rock_form'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('rock_form')));
 
-    
+
     $this->validatorSchema['acquisition_category'] = new sfValidatorChoice(array(
         'choices' => array_keys(SpecimensTable::getDistinctCategories()),
         'required' => false,
@@ -454,7 +454,7 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->widgetSchema['Biblio_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->validatorSchema['Biblio_holder'] = new sfValidatorPass();
-    
+
     $this->validatorSchema['Collectors_holder'] = new sfValidatorPass();
     $this->widgetSchema['Collectors_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
@@ -509,14 +509,14 @@ class SpecimensForm extends BaseSpecimensForm
       //Re-embedding the container
       $this->embedForm('newIdentification', $this->embeddedForms['newIdentification']);
   }
-  
+
   public function addInsurances($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'specimens', 'record_id' => $this->getObject()->getId());
     $options = array_merge($values, $options);
     $this->attachEmbedRecord('Insurances', new InsurancesSubForm(DarwinTable::newObjectFromArray('Insurances',$options)), $num);
   }
-  
+
   public function reembedIdentifications ($identification, $identification_number)
   {
       $this->getEmbeddedForm('Identifications')->embedForm($identification_number, $identification);
@@ -588,7 +588,7 @@ class SpecimensForm extends BaseSpecimensForm
       'Rock' => array('rock_form'),
     );
   }
-  
+
   public function loadEmbedTools()
   {
     /* Collecting tools */
@@ -764,7 +764,7 @@ class SpecimensForm extends BaseSpecimensForm
         $taintedValues['institution_ref'] = sfConfig::get('dw_defaultInstitutionRef');
       }
     }
-    
+
     parent::bind($taintedValues, $taintedFiles);
   }
 
@@ -935,7 +935,7 @@ class SpecimensForm extends BaseSpecimensForm
       $links->fromArray($val->toArray());
       $form = new ExtLinksForm($links);
       $this->attachEmbedRecord('ExtLinks', $form, $key);
-    } 
+    }
 
     // reembed duplicated specimen Relationships
     $spec_a = Doctrine::getTable('SpecimensRelationships')->findBySpecimen($id) ;
@@ -946,7 +946,7 @@ class SpecimensForm extends BaseSpecimensForm
       $form = new SpecimensRelationshipsForm($spec);
       $this->attachEmbedRecord('SpecimensRelationships', $key, $spec) ;
     }
-    
+
     // reembed duplicated insurances
     $Insurances = Doctrine::getTable('Insurances')->findForTable('specimens',$id) ;
     foreach ($Insurances as $key=>$val)

@@ -24,48 +24,48 @@
  * @property string $upper_value
  * @property float $upper_value_unified
  * @property string $property_accuracy
- * @property Doctrine_Collection $Specimens
+ * @property Specimens $Specimens
  * 
- * @method integer             getId()                  Returns the current record's "id" value
- * @method string              getReferencedRelation()  Returns the current record's "referenced_relation" value
- * @method integer             getRecordId()            Returns the current record's "record_id" value
- * @method string              getPropertyType()        Returns the current record's "property_type" value
- * @method string              getAppliesTo()           Returns the current record's "applies_to" value
- * @method string              getAppliesToIndexed()    Returns the current record's "applies_to_indexed" value
- * @method integer             getDateFromMask()        Returns the current record's "date_from_mask" value
- * @method string              getDateFrom()            Returns the current record's "date_from" value
- * @method integer             getDateToMask()          Returns the current record's "date_to_mask" value
- * @method string              getDateTo()              Returns the current record's "date_to" value
- * @method boolean             getIsQuantitative()      Returns the current record's "is_quantitative" value
- * @method string              getPropertyUnit()        Returns the current record's "property_unit" value
- * @method string              getMethod()              Returns the current record's "method" value
- * @method string              getMethodIndexed()       Returns the current record's "method_indexed" value
- * @method string              getLowerValue()          Returns the current record's "lower_value" value
- * @method float               getLowerValueUnified()   Returns the current record's "lower_value_unified" value
- * @method string              getUpperValue()          Returns the current record's "upper_value" value
- * @method float               getUpperValueUnified()   Returns the current record's "upper_value_unified" value
- * @method string              getPropertyAccuracy()    Returns the current record's "property_accuracy" value
- * @method Doctrine_Collection getSpecimens()           Returns the current record's "Specimens" collection
- * @method Properties          setId()                  Sets the current record's "id" value
- * @method Properties          setReferencedRelation()  Sets the current record's "referenced_relation" value
- * @method Properties          setRecordId()            Sets the current record's "record_id" value
- * @method Properties          setPropertyType()        Sets the current record's "property_type" value
- * @method Properties          setAppliesTo()           Sets the current record's "applies_to" value
- * @method Properties          setAppliesToIndexed()    Sets the current record's "applies_to_indexed" value
- * @method Properties          setDateFromMask()        Sets the current record's "date_from_mask" value
- * @method Properties          setDateFrom()            Sets the current record's "date_from" value
- * @method Properties          setDateToMask()          Sets the current record's "date_to_mask" value
- * @method Properties          setDateTo()              Sets the current record's "date_to" value
- * @method Properties          setIsQuantitative()      Sets the current record's "is_quantitative" value
- * @method Properties          setPropertyUnit()        Sets the current record's "property_unit" value
- * @method Properties          setMethod()              Sets the current record's "method" value
- * @method Properties          setMethodIndexed()       Sets the current record's "method_indexed" value
- * @method Properties          setLowerValue()          Sets the current record's "lower_value" value
- * @method Properties          setLowerValueUnified()   Sets the current record's "lower_value_unified" value
- * @method Properties          setUpperValue()          Sets the current record's "upper_value" value
- * @method Properties          setUpperValueUnified()   Sets the current record's "upper_value_unified" value
- * @method Properties          setPropertyAccuracy()    Sets the current record's "property_accuracy" value
- * @method Properties          setSpecimens()           Sets the current record's "Specimens" collection
+ * @method integer    getId()                  Returns the current record's "id" value
+ * @method string     getReferencedRelation()  Returns the current record's "referenced_relation" value
+ * @method integer    getRecordId()            Returns the current record's "record_id" value
+ * @method string     getPropertyType()        Returns the current record's "property_type" value
+ * @method string     getAppliesTo()           Returns the current record's "applies_to" value
+ * @method string     getAppliesToIndexed()    Returns the current record's "applies_to_indexed" value
+ * @method integer    getDateFromMask()        Returns the current record's "date_from_mask" value
+ * @method string     getDateFrom()            Returns the current record's "date_from" value
+ * @method integer    getDateToMask()          Returns the current record's "date_to_mask" value
+ * @method string     getDateTo()              Returns the current record's "date_to" value
+ * @method boolean    getIsQuantitative()      Returns the current record's "is_quantitative" value
+ * @method string     getPropertyUnit()        Returns the current record's "property_unit" value
+ * @method string     getMethod()              Returns the current record's "method" value
+ * @method string     getMethodIndexed()       Returns the current record's "method_indexed" value
+ * @method string     getLowerValue()          Returns the current record's "lower_value" value
+ * @method float      getLowerValueUnified()   Returns the current record's "lower_value_unified" value
+ * @method string     getUpperValue()          Returns the current record's "upper_value" value
+ * @method float      getUpperValueUnified()   Returns the current record's "upper_value_unified" value
+ * @method string     getPropertyAccuracy()    Returns the current record's "property_accuracy" value
+ * @method Specimens  getSpecimens()           Returns the current record's "Specimens" value
+ * @method Properties setId()                  Sets the current record's "id" value
+ * @method Properties setReferencedRelation()  Sets the current record's "referenced_relation" value
+ * @method Properties setRecordId()            Sets the current record's "record_id" value
+ * @method Properties setPropertyType()        Sets the current record's "property_type" value
+ * @method Properties setAppliesTo()           Sets the current record's "applies_to" value
+ * @method Properties setAppliesToIndexed()    Sets the current record's "applies_to_indexed" value
+ * @method Properties setDateFromMask()        Sets the current record's "date_from_mask" value
+ * @method Properties setDateFrom()            Sets the current record's "date_from" value
+ * @method Properties setDateToMask()          Sets the current record's "date_to_mask" value
+ * @method Properties setDateTo()              Sets the current record's "date_to" value
+ * @method Properties setIsQuantitative()      Sets the current record's "is_quantitative" value
+ * @method Properties setPropertyUnit()        Sets the current record's "property_unit" value
+ * @method Properties setMethod()              Sets the current record's "method" value
+ * @method Properties setMethodIndexed()       Sets the current record's "method_indexed" value
+ * @method Properties setLowerValue()          Sets the current record's "lower_value" value
+ * @method Properties setLowerValueUnified()   Sets the current record's "lower_value_unified" value
+ * @method Properties setUpperValue()          Sets the current record's "upper_value" value
+ * @method Properties setUpperValueUnified()   Sets the current record's "upper_value_unified" value
+ * @method Properties setPropertyAccuracy()    Sets the current record's "property_accuracy" value
+ * @method Properties setSpecimens()           Sets the current record's "Specimens" value
  * 
  * @package    darwin
  * @subpackage model
@@ -159,7 +159,7 @@ abstract class BaseProperties extends DarwinModel
     public function setUp()
     {
         parent::setUp();
-        $this->hasMany('Specimens', array(
+        $this->hasOne('Specimens', array(
              'local' => 'record_id',
              'foreign' => 'id'));
     }

@@ -56,7 +56,7 @@ abstract class BaseFormDoctrine extends sfFormDoctrine
     $subForm = new sfForm();
     $this->embedForm('new'.$emFieldName, $subForm);
   }
-  
+
   /**
   * emtpyField is the field to check if the subForm is there or not
   * $enforce_value are values you want to be in the ref record
