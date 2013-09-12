@@ -13,11 +13,11 @@ class UsersFormFilter extends BaseUsersFormFilter
   public function configure()
   {
     $this->useFields(array('family_name','db_user_type','is_physical'));
-    
-    $this->addPagerItems();  
+
+    $this->addPagerItems();
     $db_user_type = array(''=>'All') ;
     foreach(Users::getTypes($this->options) as $flag => $name)
-	    $db_user_type[strval($flag)] = $name; 
+	    $db_user_type[strval($flag)] = $name;
     $status = array(''=>"All",'true'=>'Physical','false'=>'moral');
     $this->widgetSchema['family_name'] = new sfWidgetFormFilterInput(array('template' => '%input%'));
     $this->widgetSchema['db_user_type'] = new sfWidgetFormChoice(array('choices' => $db_user_type));
@@ -34,7 +34,7 @@ class UsersFormFilter extends BaseUsersFormFilter
   {
     return $query->andWhere($field.' = ?',$val);
   }
-  
+
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
