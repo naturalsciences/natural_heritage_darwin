@@ -29,7 +29,7 @@ class SpecimensForm extends BaseSpecimensForm
       'row', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
       'container_storage', 'sub_container_storage', 'surnumerary', 'specimen_status',
       'specimen_count_min', 'specimen_count_max','object_name'
-        ));
+    ));
 
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
@@ -126,29 +126,27 @@ class SpecimensForm extends BaseSpecimensForm
      ));
 
     /* IG number Reference */
-    $this->widgetSchema['ig_ref'] = new widgetFormInputChecked(
-      array(
-        'model' => 'Igs',
-        'method' => 'getIgNum',
-        'nullable' => true,
-        'link_url' => 'igs/searchFor',
-        'notExistingAddTitle' => $this->getI18N()->__('This I.G. number does not exist. Would you like to automatically insert it ?'),
-        'notExistingAddValues' => array(
+    $this->widgetSchema['ig_ref'] = new widgetFormInputChecked(array(
+      'model' => 'Igs',
+      'method' => 'getIgNum',
+      'nullable' => true,
+      'link_url' => 'igs/searchFor',
+      'notExistingAddTitle' => $this->getI18N()->__('This I.G. number does not exist. Would you like to automatically insert it ?'),
+      'notExistingAddValues' => array(
           $this->getI18N()->__('No'),
           $this->getI18N()->__('Yes')
         ),
-      )
-    );
+    ));
 
     /* Gtu Reference */
     $this->widgetSchema['gtu_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Gtu',
-       'link_url' => 'gtu/choose?with_js=1',
-       'method' => 'getTagsWithCode',
-       'box_title' => $this->getI18N()->__('Choose Sampling Location'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
+      'model' => 'Gtu',
+      'link_url' => 'gtu/choose?with_js=1',
+      'method' => 'getTagsWithCode',
+      'box_title' => $this->getI18N()->__('Choose Sampling Location'),
+      'nullable' => true,
+      'button_class'=>'',
+      ),
       array('class'=>'inline')
     );
 
@@ -182,58 +180,58 @@ class SpecimensForm extends BaseSpecimensForm
 
 
     $this->widgetSchema['type'] = new widgetFormSelectComplete(array(
-        'model' => 'Specimens',
-        'table_method' => 'getDistinctTypes',
-        'method' => 'getType',
-        'key_method' => 'getType',
-        'add_empty' => false,
-        'change_label' => 'Pick a type in the list',
-        'add_label' => 'Add an other type',
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctTypes',
+      'method' => 'getType',
+      'key_method' => 'getType',
+      'add_empty' => false,
+      'change_label' => 'Pick a type in the list',
+      'add_label' => 'Add an other type',
     ));
     $this->widgetSchema['sex'] = new widgetFormSelectComplete(array(
-        'model' => 'Specimens',
-        'table_method' => 'getDistinctSexes',
-        'method' => 'getSex',
-        'key_method' => 'getSex',
-        'add_empty' => false,
-        'change_label' => 'Pick a sex in the list',
-        'add_label' => 'Add an other sex',
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctSexes',
+      'method' => 'getSex',
+      'key_method' => 'getSex',
+      'add_empty' => false,
+      'change_label' => 'Pick a sex in the list',
+      'add_label' => 'Add an other sex',
     ));
     $this->widgetSchema['state'] = new widgetFormSelectComplete(array(
-        'model' => 'Specimens',
-        'table_method' => 'getDistinctStates',
-        'method' => 'getState',
-        'key_method' => 'getState',
-        'add_empty' => false,
-        'change_label' => 'Pick a "sexual" state in the list',
-        'add_label' => 'Add an other "sexual" state',
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctStates',
+      'method' => 'getState',
+      'key_method' => 'getState',
+      'add_empty' => false,
+      'change_label' => 'Pick a "sexual" state in the list',
+      'add_label' => 'Add an other "sexual" state',
     ));
     $this->widgetSchema['stage'] = new widgetFormSelectComplete(array(
-        'model' => 'Specimens',
-        'table_method' => 'getDistinctStages',
-        'method' => 'getStage',
-        'key_method' => 'getStage',
-        'add_empty' => false,
-        'change_label' => 'Pick a stage in the list',
-        'add_label' => 'Add an other stage',
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctStages',
+      'method' => 'getStage',
+      'key_method' => 'getStage',
+      'add_empty' => false,
+      'change_label' => 'Pick a stage in the list',
+      'add_label' => 'Add an other stage',
     ));
     $this->widgetSchema['social_status'] = new widgetFormSelectComplete(array(
-        'model' => 'Specimens',
-        'table_method' => 'getDistinctSocialStatuses',
-        'method' => 'getSocialStatus',
-        'key_method' => 'getSocialStatus',
-        'add_empty' => false,
-        'change_label' => 'Pick a social status in the list',
-        'add_label' => 'Add an other social status',
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctSocialStatuses',
+      'method' => 'getSocialStatus',
+      'key_method' => 'getSocialStatus',
+      'add_empty' => false,
+      'change_label' => 'Pick a social status in the list',
+      'add_label' => 'Add an other social status',
     ));
     $this->widgetSchema['rock_form'] = new widgetFormSelectComplete(array(
-        'model' => 'Specimens',
-        'table_method' => 'getDistinctRockForms',
-        'method' => 'getRockForm',
-        'key_method' => 'getRockForm',
-        'add_empty' => false,
-        'change_label' => 'Pick a rock form in the list',
-        'add_label' => 'Add another rock form',
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctRockForms',
+      'method' => 'getRockForm',
+      'key_method' => 'getRockForm',
+      'add_empty' => false,
+      'change_label' => 'Pick a rock form in the list',
+      'add_label' => 'Add another rock form',
     ));
 
 
@@ -245,7 +243,7 @@ class SpecimensForm extends BaseSpecimensForm
       'add_empty' => false,
       'change_label' => 'Pick parts in the list',
       'add_label' => 'Add another part',
-      ));
+    ));
 
     $this->widgetSchema['institution_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Institutions',
@@ -258,7 +256,7 @@ class SpecimensForm extends BaseSpecimensForm
 
     if(sfConfig::get('dw_defaultInstitutionRef')) {
       $this->setDefault('institution_ref', sfConfig::get('dw_defaultInstitutionRef'));
-     }
+    }
 
     $this->widgetSchema['building'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
@@ -348,18 +346,19 @@ class SpecimensForm extends BaseSpecimensForm
       'model' => 'Specimens',
       'change_label' => 'Pick a container storage in the list',
       'add_label' => 'Add another container storage',
-      ));
+    ));
 
     $this->widgetSchema['sub_container_storage'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
       'change_label' => 'Pick a sub container storage in the list',
       'add_label' => 'Add another sub container storage',
-      ));
+    ));
 
     $this->widgetSchema['accuracy'] = new sfWidgetFormChoice(array(
         'choices'  => array($this->getI18N()->__('exact'), $this->getI18N()->__('imprecise')),
         'expanded' => true,
     ));
+
     $this->setDefault('accuracy', 1);
     $this->validatorSchema['accuracy'] = new sfValidatorPass();
 
@@ -404,36 +403,37 @@ class SpecimensForm extends BaseSpecimensForm
 
 
     $this->validatorSchema['acquisition_category'] = new sfValidatorChoice(array(
-        'choices' => array_keys(SpecimensTable::getDistinctCategories()),
-        'required' => false,
-        ));
-    $this->validatorSchema['acquisition_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                              'from_date' => true,
-                                                                              'min' => $minDate,
-                                                                              'max' => $maxDate,
-                                                                              'empty_value' => $dateLowerBound,
-                                                                             ),
-                                                                        array('invalid' => 'Date provided is not valid',
-                                                                             )
-                                                                       );
+      'choices' => array_keys(SpecimensTable::getDistinctCategories()),
+      'required' => false,
+    ));
+
+    $this->validatorSchema['acquisition_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      ),
+      array('invalid' => 'Date provided is not valid',
+    ));
 
 
     $this->widgetSchema['prefix_separator'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'Codes',
-        'table_method' => 'getDistinctPrefixSep',
-        'method' => 'getCodePrefixSeparator',
-        'key_method' => 'getCodePrefixSeparator',
-        'add_empty' => true,
+      'model' => 'Codes',
+      'table_method' => 'getDistinctPrefixSep',
+      'method' => 'getCodePrefixSeparator',
+      'key_method' => 'getCodePrefixSeparator',
+      'add_empty' => true,
     ));
 
     $this->widgetSchema['prefix_separator']->setAttributes(array('class'=>'vvsmall_size'));
 
     $this->widgetSchema['suffix_separator'] = new sfWidgetFormDoctrineChoice(array(
-        'model' => 'Codes',
-        'table_method' => 'getDistinctSuffixSep',
-        'method' => 'getCodeSuffixSeparator',
-        'key_method' => 'getCodeSuffixSeparator',
-        'add_empty' => true,
+      'model' => 'Codes',
+      'table_method' => 'getDistinctSuffixSep',
+      'method' => 'getCodeSuffixSeparator',
+      'key_method' => 'getCodeSuffixSeparator',
+      'add_empty' => true,
     ));
 
     $this->widgetSchema['suffix_separator']->setAttributes(array('class'=>'vvsmall_size'));
@@ -498,16 +498,21 @@ class SpecimensForm extends BaseSpecimensForm
 
   public function addIdentifications($num, $order_by=0, $obj=null)
   {
-      if(! isset($this['newIdentification'])) $this->loadEmbedIndentifications();
-      $options = array('referenced_relation' => 'specimens', 'order_by' => $order_by);
-      if (!$obj) $val = new Identifications();
-      else $val = $obj ;
-      $val->fromArray($options);
-      $val->setRecordId($this->getObject()->getId());
-      $form = new IdentificationsForm($val);
-      $this->embeddedForms['newIdentification']->embedForm($num, $form);
-      //Re-embedding the container
-      $this->embedForm('newIdentification', $this->embeddedForms['newIdentification']);
+    if(! isset($this['newIdentification']))
+      $this->loadEmbedIndentifications();
+
+    $options = array('referenced_relation' => 'specimens', 'order_by' => $order_by);
+    if (!$obj)
+      $val = new Identifications();
+    else
+      $val = $obj ;
+
+    $val->fromArray($options);
+    $val->setRecordId($this->getObject()->getId());
+    $form = new IdentificationsForm($val);
+    $this->embeddedForms['newIdentification']->embedForm($num, $form);
+    //Re-embedding the container
+    $this->embedForm('newIdentification', $this->embeddedForms['newIdentification']);
   }
 
   public function addInsurances($num, $values, $order_by=0)
@@ -519,14 +524,14 @@ class SpecimensForm extends BaseSpecimensForm
 
   public function reembedIdentifications ($identification, $identification_number)
   {
-      $this->getEmbeddedForm('Identifications')->embedForm($identification_number, $identification);
-      $this->embedForm('Identifications', $this->embeddedForms['Identifications']);
+    $this->getEmbeddedForm('Identifications')->embedForm($identification_number, $identification);
+    $this->embedForm('Identifications', $this->embeddedForms['Identifications']);
   }
 
   public function reembedNewIdentification ($identification, $identification_number)
   {
-      $this->getEmbeddedForm('newIdentification')->embedForm($identification_number, $identification);
-      $this->embedForm('newIdentification', $this->embeddedForms['newIdentification']);
+    $this->getEmbeddedForm('newIdentification')->embedForm($identification_number, $identification);
+    $this->embedForm('newIdentification', $this->embeddedForms['newIdentification']);
   }
 
   protected function getFieldsByGroup()
@@ -594,12 +599,12 @@ class SpecimensForm extends BaseSpecimensForm
     /* Collecting tools */
     $this->widgetSchema['collecting_tools_list'] = new widgetFormSelectDoubleListFilterable(
       array(
-            'choices' => new sfCallable(array(Doctrine::getTable('CollectingTools'),'fetchTools')),
-            'label_associated'=>$this->getI18N()->__('Selected'),
-            'label_unassociated'=>$this->getI18N()->__('Available'),
-            'add_active'=>true,
-            'add_url'=>'methods_and_tools/addTool'
-           )
+        'choices' => new sfCallable(array(Doctrine::getTable('CollectingTools'),'fetchTools')),
+        'label_associated'=>$this->getI18N()->__('Selected'),
+        'label_unassociated'=>$this->getI18N()->__('Available'),
+        'add_active'=>true,
+        'add_url'=>'methods_and_tools/addTool'
+      )
     );
     $this->validatorSchema['collecting_tools_list'] = new sfValidatorDoctrineChoice(array('model' => 'CollectingTools','column' => 'id', 'required' => false, 'multiple' => true));
     $this->setDefault('collecting_tools_list', $this->object->CollectingTools->getPrimaryKeys());
@@ -610,12 +615,12 @@ class SpecimensForm extends BaseSpecimensForm
     /* Collecting methods */
     $this->widgetSchema['collecting_methods_list'] = new widgetFormSelectDoubleListFilterable(
       array(
-            'choices' => new sfCallable(array(Doctrine::getTable('CollectingMethods'), 'fetchMethods')),
-            'label_associated'=>$this->getI18N()->__('Selected'),
-            'label_unassociated'=>$this->getI18N()->__('Available'),
-            'add_active'=>true,
-            'add_url'=>'methods_and_tools/addMethod'
-           )
+        'choices' => new sfCallable(array(Doctrine::getTable('CollectingMethods'), 'fetchMethods')),
+        'label_associated'=>$this->getI18N()->__('Selected'),
+        'label_unassociated'=>$this->getI18N()->__('Available'),
+        'add_active'=>true,
+        'add_url'=>'methods_and_tools/addMethod'
+      )
     );
     $this->validatorSchema['collecting_methods_list'] = new sfValidatorDoctrineChoice(array('model' => 'CollectingMethods','column' => 'id', 'required' => false, 'multiple' => true));
     $this->setDefault('collecting_methods_list', $this->object->CollectingMethods->getPrimaryKeys());
