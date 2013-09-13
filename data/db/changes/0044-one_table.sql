@@ -747,9 +747,9 @@ BEGIN
       SELECT id from specimen_individuals i
       where not exists( select 1 from specimen_parts p where i.id = p.specimen_individual_ref)
     );
- 
+
    RAISE INFO 'Start moving template_ref from spec with 1 part';
-   FOR tmp IN SELECT *, p.id as part_id, s.id as spec_id from 
+   FOR tmp IN SELECT *, p.id as part_id, s.id as spec_id from
     specimens s
     INNER JOIN specimen_individuals i on s.id = i.specimen_ref
     INNER JOIN specimen_parts p on i.id = p.specimen_individual_ref
@@ -767,7 +767,7 @@ BEGIN
    END LOOP;
 
    RAISE INFO 'Start moving template_ref from ind with 1 part';
-   FOR tmp IN SELECT *, p.id as part_id, i.id as ind_id from 
+   FOR tmp IN SELECT *, p.id as part_id, i.id as ind_id from
     specimen_individuals i
     INNER JOIN specimen_parts p on i.id = p.specimen_individual_ref
 
@@ -782,7 +782,7 @@ BEGIN
          --IIIK Nothing
       END;
    END LOOP;
-   
+
 
 
    cnt := 0;
@@ -800,13 +800,13 @@ BEGIN
       cnt := cnt + 1;
 
       INSERT INTO codes(
-            referenced_relation, record_id, code_category, code_prefix, 
-            code_prefix_separator, code, code_suffix, code_suffix_separator, 
-            full_code_indexed, code_date, code_date_mask, 
+            referenced_relation, record_id, code_category, code_prefix,
+            code_prefix_separator, code, code_suffix, code_suffix_separator,
+            full_code_indexed, code_date, code_date_mask,
             code_num)
-        VALUES('specimen_parts', tmp.p_id, tmp.code_category, tmp.code_prefix, 
-            tmp.code_prefix_separator, tmp.code, tmp.code_suffix, tmp.code_suffix_separator, 
-            tmp.full_code_indexed, tmp.code_date, tmp.code_date_mask, 
+        VALUES('specimen_parts', tmp.p_id, tmp.code_category, tmp.code_prefix,
+            tmp.code_prefix_separator, tmp.code, tmp.code_suffix, tmp.code_suffix_separator,
+            tmp.full_code_indexed, tmp.code_date, tmp.code_date_mask,
             tmp.code_num);
        IF cnt % 40000 = 0 THEN
         RAISE INFO 'CTN % ' , cnt ;
@@ -835,17 +835,17 @@ BEGIN
     LOOP
       cnt := cnt + 1;
 
-      INSERT INTO comments(referenced_relation, record_id, notion_concerned, comment, comment_indexed) 
+      INSERT INTO comments(referenced_relation, record_id, notion_concerned, comment, comment_indexed)
         (SELECT 'specimen_parts', tmp.p_id, notion_concerned, comment, comment_indexed
           FROM comments c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref  );
 
 
-      INSERT INTO ext_links(referenced_relation, record_id, url, comment, comment_indexed) 
+      INSERT INTO ext_links(referenced_relation, record_id, url, comment, comment_indexed)
         (SELECT 'specimen_parts', tmp.p_id, url, comment, comment_indexed
           FROM ext_links c WHERE c.referenced_relation='specimens' and record_id=tmp.source_ref
-            AND not exists( 
+            AND not exists(
               select 1 from ext_links c2 where  referenced_relation='specimens' and record_id=tmp.source_ref and c2.url=c.url
-             ) 
+             )
          );
 
         INSERT INTO catalogue_bibliography(referenced_relation, record_id, bibliography_ref)
@@ -870,26 +870,26 @@ BEGIN
    FOR tmp2 IN SELECT * from catalogue_properties c where referenced_relation='specimens' and record_id=tmp.source_ref
    LOOP
       BEGIN
-      INSERT INTO catalogue_properties(referenced_relation, record_id, 
-        property_type, property_sub_type, 
-        property_sub_type_indexed, property_qualifier, property_qualifier_indexed, 
-        date_from_mask, date_from, date_to_mask, date_to, property_unit, 
-        property_accuracy_unit, property_method, property_method_indexed, 
+      INSERT INTO catalogue_properties(referenced_relation, record_id,
+        property_type, property_sub_type,
+        property_sub_type_indexed, property_qualifier, property_qualifier_indexed,
+        date_from_mask, date_from, date_to_mask, date_to, property_unit,
+        property_accuracy_unit, property_method, property_method_indexed,
         property_tool, property_tool_indexed
-      ) 
+      )
         VALUES ('specimen_parts', tmp.p_id,
           tmp2.property_type, tmp2.property_sub_type,
-          tmp2.property_sub_type_indexed, tmp2.property_qualifier, tmp2.property_qualifier_indexed, 
-          tmp2.date_from_mask, tmp2.date_from, tmp2.date_to_mask, tmp2.date_to, tmp2.property_unit, 
-          tmp2.property_accuracy_unit, tmp2.property_method, tmp2.property_method_indexed, 
+          tmp2.property_sub_type_indexed, tmp2.property_qualifier, tmp2.property_qualifier_indexed,
+          tmp2.date_from_mask, tmp2.date_from, tmp2.date_to_mask, tmp2.date_to, tmp2.property_unit,
+          tmp2.property_accuracy_unit, tmp2.property_method, tmp2.property_method_indexed,
           tmp2.property_tool, tmp2.property_tool_indexed
          );
-      
+
       INSERT INTO properties_values(
-          property_ref, property_value, property_value_unified, property_accuracy, 
+          property_ref, property_value, property_value_unified, property_accuracy,
           property_accuracy_unified)
         (
-          SELECT currval('catalogue_properties_id_seq'), property_value, property_value_unified, property_accuracy, 
+          SELECT currval('catalogue_properties_id_seq'), property_value, property_value_unified, property_accuracy,
             property_accuracy_unified from properties_values where property_ref = tmp2.id
         );
       EXCEPTION
@@ -901,21 +901,21 @@ BEGIN
    FOR tmp2 IN SELECT * from identifications c where referenced_relation='specimens' and record_id=tmp.source_ref
    LOOP
    BEGIN
-      INSERT INTO identifications (referenced_relation, record_id, 
-        notion_concerned, notion_date, 
-        notion_date_mask, value_defined, value_defined_indexed, determination_status, 
+      INSERT INTO identifications (referenced_relation, record_id,
+        notion_concerned, notion_date,
+        notion_date_mask, value_defined, value_defined_indexed, determination_status,
         order_by
-      ) 
+      )
         VALUES ('specimen_parts', tmp.p_id,
-          tmp2.notion_concerned, tmp2.notion_date, 
-          tmp2.notion_date_mask, tmp2.value_defined, tmp2.value_defined_indexed, tmp2.determination_status, 
+          tmp2.notion_concerned, tmp2.notion_date,
+          tmp2.notion_date_mask, tmp2.value_defined, tmp2.value_defined_indexed, tmp2.determination_status,
           tmp2.order_by
          );
 
-        INSERT INTO catalogue_people(record_id, referenced_relation,  people_type, people_sub_type, 
+        INSERT INTO catalogue_people(record_id, referenced_relation,  people_type, people_sub_type,
             order_by, people_ref
             )
-          (SELECT currval('identifications_id_seq'), referenced_relation, people_type, people_sub_type, 
+          (SELECT currval('identifications_id_seq'), referenced_relation, people_type, people_sub_type,
             order_by, people_ref
             from catalogue_people where record_id = tmp2.id and referenced_relation = 'identifications'
           );
@@ -950,17 +950,17 @@ BEGIN
     INNER JOIN specimen_parts p on i.id = p.specimen_individual_ref
     LOOP
 
-      INSERT INTO comments(referenced_relation, record_id, notion_concerned, comment, comment_indexed) 
+      INSERT INTO comments(referenced_relation, record_id, notion_concerned, comment, comment_indexed)
         (SELECT 'specimen_parts', tmp.p_id, notion_concerned, comment, comment_indexed
           FROM comments c WHERE c.referenced_relation='specimen_individuals' and record_id=tmp.source_ref  );
 
 
-      INSERT INTO ext_links(referenced_relation, record_id, url, comment, comment_indexed) 
+      INSERT INTO ext_links(referenced_relation, record_id, url, comment, comment_indexed)
         (SELECT 'specimen_parts', tmp.p_id, url, comment, comment_indexed
           FROM ext_links c WHERE c.referenced_relation='specimen_individuals' and record_id=tmp.source_ref
-            AND not exists( 
+            AND not exists(
               select 1 from ext_links c2 where  referenced_relation='specimen_individuals' and record_id=tmp.source_ref and c2.url=c.url
-             ) 
+             )
          );
 
       INSERT INTO multimedia(
@@ -970,61 +970,61 @@ BEGIN
         ( SELECT 'specimen_parts', tmp.p_id, is_digital, type, sub_type, title, description,
           uri, filename, creation_date, creation_date_mask, mime_type, visible, publishable, search_indexed
          FROM multimedia c WHERE c.referenced_relation='specimen_individuals' and record_id=tmp.source_ref  );
-         
+
    FOR tmp2 IN SELECT * from catalogue_properties c where referenced_relation='specimen_individuals' and record_id=tmp.source_ref
    LOOP
 
-      INSERT INTO catalogue_properties(referenced_relation, record_id, 
-        property_type, property_sub_type, 
-        property_sub_type_indexed, property_qualifier, property_qualifier_indexed, 
-        date_from_mask, date_from, date_to_mask, date_to, property_unit, 
-        property_accuracy_unit, property_method, property_method_indexed, 
+      INSERT INTO catalogue_properties(referenced_relation, record_id,
+        property_type, property_sub_type,
+        property_sub_type_indexed, property_qualifier, property_qualifier_indexed,
+        date_from_mask, date_from, date_to_mask, date_to, property_unit,
+        property_accuracy_unit, property_method, property_method_indexed,
         property_tool, property_tool_indexed
-      ) 
+      )
         VALUES ('specimen_parts', tmp.p_id,
           tmp2.property_type, tmp2.property_sub_type,
-          tmp2.property_sub_type_indexed, tmp2.property_qualifier, tmp2.property_qualifier_indexed, 
-          tmp2.date_from_mask, tmp2.date_from, tmp2.date_to_mask, tmp2.date_to, tmp2.property_unit, 
-          tmp2.property_accuracy_unit, tmp2.property_method, tmp2.property_method_indexed, 
+          tmp2.property_sub_type_indexed, tmp2.property_qualifier, tmp2.property_qualifier_indexed,
+          tmp2.date_from_mask, tmp2.date_from, tmp2.date_to_mask, tmp2.date_to, tmp2.property_unit,
+          tmp2.property_accuracy_unit, tmp2.property_method, tmp2.property_method_indexed,
           tmp2.property_tool, tmp2.property_tool_indexed
          );
-      
+
         INSERT INTO properties_values(
-            property_ref, property_value, property_value_unified, property_accuracy, 
+            property_ref, property_value, property_value_unified, property_accuracy,
             property_accuracy_unified)
         (
-          SELECT currval('catalogue_properties_id_seq'), property_value, property_value_unified, property_accuracy, 
+          SELECT currval('catalogue_properties_id_seq'), property_value, property_value_unified, property_accuracy,
             property_accuracy_unified from properties_values where property_ref = tmp2.id
         );
-            
+
    END LOOP;
    --END LOOP;
 
    FOR tmp2 IN SELECT * from identifications c where referenced_relation='specimen_individuals' and record_id=tmp.source_ref
    LOOP
 
-      INSERT INTO identifications (referenced_relation, record_id, 
-        notion_concerned, notion_date, 
-        notion_date_mask, value_defined, value_defined_indexed, determination_status, 
+      INSERT INTO identifications (referenced_relation, record_id,
+        notion_concerned, notion_date,
+        notion_date_mask, value_defined, value_defined_indexed, determination_status,
         order_by
-      ) 
+      )
         VALUES ('specimen_parts', tmp.p_id,
-          tmp2.notion_concerned, tmp2.notion_date, 
-          tmp2.notion_date_mask, tmp2.value_defined, tmp2.value_defined_indexed, tmp2.determination_status, 
+          tmp2.notion_concerned, tmp2.notion_date,
+          tmp2.notion_date_mask, tmp2.value_defined, tmp2.value_defined_indexed, tmp2.determination_status,
           tmp2.order_by
          );
-      
-        INSERT INTO catalogue_people(record_id, referenced_relation,  people_type, people_sub_type, 
+
+        INSERT INTO catalogue_people(record_id, referenced_relation,  people_type, people_sub_type,
             order_by, people_ref
             )
-          (SELECT currval('identifications_id_seq'), referenced_relation, people_type, people_sub_type, 
+          (SELECT currval('identifications_id_seq'), referenced_relation, people_type, people_sub_type,
             order_by, people_ref
             from catalogue_people where record_id = tmp2.id and referenced_relation = 'identifications'
           );
-            
+
    END LOOP;
  END LOOP;
-   
+
   RAISE INFO 'Delete ind comments';
   DELETE FROM comments where referenced_relation='specimen_individuals';
   RAISE INFO 'Delete ind ext_links';
@@ -1116,7 +1116,7 @@ create table new_specimens
     spec_ident_ids integer[] not null default '{}',
     spec_coll_ids integer[] not null default '{}',
     spec_don_sel_ids integer[] not null default '{}',
-    
+
     collection_type varchar,
     collection_code varchar,
     collection_name varchar,
@@ -1421,7 +1421,7 @@ INSERT INTO new_specimens (
     ind_id
 )
 (
-SELECT 
+SELECT
   p.id,
   p.category,
   f.collection_ref,
@@ -1470,12 +1470,12 @@ SELECT
   p.object_name,
   p.object_name_indexed,
   p.complete,
-  
-  
+
+
   spec_ident_ids,
   spec_coll_ids,
   spec_don_sel_ids,
-  
+
 
   f.collection_type,
   f.collection_code,
@@ -1564,7 +1564,7 @@ SELECT
   f.ig_num_indexed,
   f.ig_date_mask,
   f.ig_date,
-  f.spec_ref, 
+  f.spec_ref,
   f.individual_ref
 
 
@@ -1654,7 +1654,7 @@ CREATE INDEX idx_specimens_taxon_ref ON specimens  (taxon_ref) WHERE taxon_ref <
 
 CREATE TRIGGER fct_cpy_trg_del_dict_specimens AFTER UPDATE OR DELETE
   ON specimens FOR EACH ROW EXECUTE PROCEDURE trg_del_dict();
-  
+
 CREATE TRIGGER fct_cpy_trg_ins_update_dict_specimens AFTER INSERT OR UPDATE
   ON specimens FOR EACH ROW EXECUTE PROCEDURE trg_ins_update_dict();
 
@@ -1689,13 +1689,13 @@ CREATE INDEX idx_specimen_rock_form ON specimens (rock_form);
 
 CREATE INDEX idx_specimens_sex ON specimens (sex)
   WHERE sex::text <> ALL (ARRAY['undefined', 'unknown']::text[]);
-  
+
 CREATE INDEX idx_specimens_social_status ON specimens (social_status)
   WHERE social_status::text <> 'not applicable'::text;
 
 CREATE INDEX idx_specimens_stage ON specimens  (stage)
   WHERE stage::text <> ALL (ARRAY['undefined', 'unknown']::text[]);
-  
+
 CREATE INDEX idx_specimens_state ON specimens (state)
   WHERE state::text <> 'not applicable'::text;
 
@@ -1739,19 +1739,19 @@ update specimens_accompanying set old_id = specimen_ref;
 
 insert into specimen_collecting_methods (specimen_ref, collecting_method_ref)
 ( select s.id , m.collecting_method_ref
-  from specimens s 
+  from specimens s
   inner join specimen_collecting_methods m on m.old_id = s.spec_id );
 
 insert into specimen_collecting_tools (specimen_ref, collecting_tool_ref)
-( select s.id , m.collecting_tool_ref 
-  from specimens s 
+( select s.id , m.collecting_tool_ref
+  from specimens s
   inner join specimen_collecting_tools m on m.old_id = s.spec_id );
-  
+
 insert into specimens_accompanying (specimen_ref, accompanying_type, taxon_ref, mineral_ref, form, quantity, unit)
 ( select s.id , a.accompanying_type, a.taxon_ref, a.mineral_ref, a.form, a.quantity, a.unit
-  from specimens s 
+  from specimens s
   inner join specimens_accompanying a on a.old_id = s.spec_id );
-  
+
 delete from specimen_collecting_methods where old_id is not null;
 delete from specimen_collecting_tools where old_id is not null;
 delete from specimens_accompanying where old_id is not null;
@@ -1764,7 +1764,7 @@ ALTER TABLE specimen_collecting_methods
   ADD CONSTRAINT fk_specimen_collecting_methods_specimen FOREIGN KEY (specimen_ref)
       REFERENCES specimens (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION;
-      
+
 ALTER TABLE specimen_collecting_tools
   ADD CONSTRAINT fk_specimen_collecting_tools_specimen FOREIGN KEY (specimen_ref)
       REFERENCES specimens (id) MATCH SIMPLE

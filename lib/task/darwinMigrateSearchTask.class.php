@@ -34,6 +34,17 @@ EOF;
       $task = new darwinAddwidgetsTask($this->dispatcher, new sfFormatter());
       $task->run($arguments, $options);
 
+      //Add 2 more widgets
+      $task = new darwinAddwidgetsTask($this->dispatcher, new sfFormatter());
+      $options['category'] = ' specimensearch_widget';
+      $options['name'] ='properties';
+      $task->run($arguments, $options);
+
+      $task = new darwinAddwidgetsTask($this->dispatcher, new sfFormatter());
+      $options['category'] = ' specimensearch_widget';
+      $options['name'] ='comments';
+      $task->run($arguments, $options);
+
       // Move Images
       $q = Doctrine_Query::create()
         ->from('Multimedia m')
@@ -69,16 +80,6 @@ EOF;
         }
       }
     }
-/*
-    $searches = Doctrine::getTable('MySavedSearches')->findAll();
-    $i= 0;
-    foreach($searches as $search) {
-      $req = unserialize($search->getSearchCriterias());
-      $search->setUnserialRequest($req);
-      $search->save();
-      $i++;
-    }
-    $this->logSection('Done', sprintf('Job done for %d searches',$i));*/
 
   }
 }
