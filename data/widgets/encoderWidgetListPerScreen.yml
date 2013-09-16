@@ -35,7 +35,7 @@ bw5:
    opened: true
    visible: true
    title_perso: My activity
- 
+
 bw6:
    col_num: 1
    category: board_widget
@@ -44,7 +44,7 @@ bw6:
    opened: true
    visible: true
    title_perso: Statistics
-   all_public: true   
+   all_public: true
 
 bw7:
    col_num: 2
@@ -53,8 +53,8 @@ bw7:
    order_by: 4
    opened: true
    visible: true
-   title_perso: Workflows summary 
-      
+   title_perso: Workflows summary
+
 sps18:
    col_num: 2
    category: specimensearch_widget
@@ -64,7 +64,7 @@ sps18:
    opened: false
    visible: false
    title_perso: Localisation
-   
+
 sps19:
    col_num: 2
    category: specimensearch_widget
@@ -73,7 +73,7 @@ sps19:
    order_by: 10
    opened: false
    visible: false
-   title_perso: Container 
+   title_perso: Container
 
 sw13:
    col_num: 2
@@ -144,7 +144,7 @@ sw23:
    opened: true
    visible: true
    title_perso: Container
- 
+
 sw24:
    col_num: 2
    category: specimen_widget
@@ -154,7 +154,7 @@ sw24:
    opened: true
    visible: true
    title_perso: Insurances
-   
+
 sw26:
    col_num: 2
    category: specimen_widget
@@ -183,7 +183,7 @@ pe4:
    order_by: 3
    opened: false
    visible: false
-   title_perso: Communications 
+   title_perso: Communications
 
 ins2:
    col_num: 1

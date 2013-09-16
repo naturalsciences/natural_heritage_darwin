@@ -40,7 +40,7 @@ class LoansTable extends DarwinTable
       ->andWhere("EXISTS (SELECT ls.id FROM LoanStatus ls WHERE loan_ref = l.id AND ls.status NOT IN (". $status_group_params.") AND is_last = TRUE )", $status_group)
       ->orderBy('l.from_date desc');
       if( $max_items )
-	$q->limit($max_items);
+        $q->limit($max_items);
 
     return $q;
   }
@@ -67,6 +67,15 @@ class LoansTable extends DarwinTable
       ->from('Loans l')
       ->andWhere("EXISTS (SELECT ls.id FROM LoanStatus ls WHERE loan_ref = l.id AND ls.status IN ('running', 'extended') AND is_last = TRUE )")
       ->andWhere('EXISTS (SELECT li.id FROM LoanItems li WHERE li.loan_ref = l.id AND li.specimen_ref = ? )', $part_id);
+    return $q->execute();
+  }
+
+  public function getRelatedToSpecimen($id) {
+    $q = Doctrine_Query::create()
+      ->from('Loans l')
+      ->innerJoin('l.LoanStatus')
+//       ->andWhere("EXISTS (SELECT ls.id FROM LoanStatus ls WHERE loan_ref = l.id AND ls.status IN ('running', 'extended') AND is_last = TRUE )")
+      ->andWhere('EXISTS (SELECT li.id FROM LoanItems li WHERE li.loan_ref = l.id AND li.specimen_ref = ? )', $id);
     return $q->execute();
   }
 }

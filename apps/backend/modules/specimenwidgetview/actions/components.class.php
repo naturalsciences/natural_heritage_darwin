@@ -40,17 +40,17 @@ class specimenwidgetviewComponents extends sfComponents
   {
     $this->defineObject();
   }
-  
+
   public function executeRefCollection()
   {
     $this->defineObject();
   }
-  
+
   public function executeRefDonators()
   {
     $this->Donators = Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens','donator',$this->eid) ;
   }
-  
+
   public function executeRefExpedition()
   {
     $this->defineObject();
@@ -68,7 +68,7 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeTool()
   {
-    $this->form = Doctrine::getTable('SpecimensTools')->getToolName($this->eid) ;  
+    $this->form = Doctrine::getTable('SpecimensTools')->getToolName($this->eid) ;
   }
 
   public function executeMethod()
@@ -112,7 +112,7 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeRefCodes()
   {
-    $this->Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;    
+    $this->Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;
   }
 
   public function executeRefCollectors()
@@ -121,14 +121,14 @@ class specimenwidgetviewComponents extends sfComponents
   }
 
   public function executeRefProperties()
-  {    
+  {
   }
 
   public function executeRefComment()
-  {    
+  {
     $this->Comments = Doctrine::getTable('Comments')->findForTable('specimens',$this->eid) ;
   }
-  
+
   public function executeRefIdentifications()
   {
     $this->identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$this->eid) ;
@@ -141,12 +141,12 @@ class specimenwidgetviewComponents extends sfComponents
       {
         $this->people[$val->getId()][] = $val2->People->getFormatedName() ;
       }
-    }    
+    }
   }
 
   public function executeExtLinks()
   {}
-  
+
   public function executeSpecimensRelationships()
   {
     $this->spec_related = Doctrine::getTable("SpecimensRelationships")->findBySpecimenRef($this->eid);
@@ -205,11 +205,19 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeRefInsurances()
   {
-    $this->Insurances = Doctrine::getTable('Insurances')->findForTable('specimens',$this->eid) ;   
+    $this->Insurances = Doctrine::getTable('Insurances')->findForTable('specimens',$this->eid) ;
   }
 
   public function executeMaintenance()
   {
     $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimens', array($this->eid));
+  }
+  public function executeHistoric()
+  {
+    $this->defineObject();
+  }
+  public function executeLoan()
+  {
+    $this->defineObject();
   }
 }

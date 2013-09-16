@@ -650,6 +650,28 @@ sw31:
    title_perso: Count
    all_public: true
 
+sw32:
+   col_num: 1
+   category: specimen_widget
+   group_name: loan
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: false
+   title_perso: Loans
+   all_public: true
+
+sw33:
+   col_num: 1
+   category: specimen_widget
+   group_name: historic
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: false
+   title_perso: Historic
+   all_public: true
+
 
 tw1:
    col_num: 1
