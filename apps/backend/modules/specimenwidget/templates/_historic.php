@@ -1,4 +1,4 @@
-<?php if($eid)://$eid):?>
+<?php if($eid):?>
 <table class="catalogue_table<?php if(isset($view)) echo '_view';?>">
   <thead>
     <tr>
