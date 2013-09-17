@@ -23,6 +23,7 @@ abstract class BaseTagGroupsForm extends BaseFormDoctrine
       'sub_group_name_indexed' => new sfWidgetFormTextarea(),
       'color'                  => new sfWidgetFormTextarea(),
       'tag_value'              => new sfWidgetFormTextarea(),
+      'international_name'     => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -34,6 +35,7 @@ abstract class BaseTagGroupsForm extends BaseFormDoctrine
       'sub_group_name_indexed' => new sfValidatorString(array('required' => false)),
       'color'                  => new sfValidatorString(array('required' => false)),
       'tag_value'              => new sfValidatorString(),
+      'international_name'     => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('tag_groups[%s]');

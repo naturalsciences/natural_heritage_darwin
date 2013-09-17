@@ -1914,25 +1914,36 @@ li.tag_size_5 { font-size: 20px; }
 
 .tag_parts_screen ul .sub_group
 {
-  float: left;
-  width: 240px;
+/*   float: left; */
+  display: table-cell;
+  max-width: 190px;
+  width: 190px;
 }
 
 .tag_parts_screen ul .tag_encod
 {
-  float: left;
-  width: 55%;
+/*   float: left; */
+  display: table-cell;
+  min-width: 200px;
 }
 
-.tag_encod input
-{
-  width: 95%;
+.tag_encod input:first {
+  width: 40%;
+}
+.tag_encod input.tag_val {
+  width: 55%;
 }
 
 .tag_parts_screen ul div.widget_row_delete
 {
-  float:left;
-  width:18px;
+/*   float:left; */
+  display: table-cell;
+  width: 18px;
+}
+
+.tag_parts_screen fieldset > ul > li {
+  width: 100%;
+  display: table;
 }
 
 a.sub_group

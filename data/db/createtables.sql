@@ -212,6 +212,7 @@ create table tag_groups
         group_name_indexed varchar not null,
         sub_group_name varchar not null,
         sub_group_name_indexed varchar not null,
+        international_name varchar not null default '',
         color varchar not null default '#FFFFFF',
         tag_value varchar not null,
         constraint fk_tag_groups_gtu foreign key (gtu_ref) references gtu(id) on delete cascade,
@@ -227,6 +228,7 @@ comment on column tag_groups.sub_group_name is 'Sub-Group name under which the t
 comment on column tag_groups.sub_group_name_indexed is 'Indexed form of a sub-group name';
 comment on column tag_groups.color is 'Color associated to the group concerned';
 comment on column tag_groups.tag_value is 'Ensemble of Tags';
+comment on column tag_groups.international_name is 'The international(english) name of the place / ocean / country';
 
 create table tags
       (
@@ -328,7 +330,7 @@ create table vernacular_names
         constraint pk_vernacular_names primary key (id)
        )
 inherits (template_table_record_ref);
-       
+
 comment on table vernacular_names is 'List of vernacular names for a given unit and a given language community';
 comment on column vernacular_names.community is 'Language community, a unit translation is available for';
 comment on column vernacular_names.community_indexed is 'indexed version of the language community';
@@ -673,7 +675,7 @@ create table informative_workflow
         formated_name varchar not null default 'anonymous',
         status varchar not null default 'suggestion',
         modification_date_time timestamp default now() not null,
-        is_last boolean not null default true,        
+        is_last boolean not null default true,
         comment varchar not null ,
         constraint pk_informative_workflow primary key (id),
         constraint fk_informative_workflow_users foreign key (user_ref) references users(id) ON DELETE CASCADE
@@ -1105,12 +1107,12 @@ create table specimens
     mineral_color varchar,
     mineral_path varchar,
     mineral_parent_ref integer,
-    
+
     ig_num varchar,
     ig_num_indexed varchar,
     ig_date_mask integer,
     ig_date date,
-    
+
         constraint pk_specimens primary key (id),
         constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
         constraint fk_specimens_gtu foreign key (gtu_ref) references gtu(id),
@@ -1425,7 +1427,7 @@ create table staging
     litho_level_name varchar,
     litho_status varchar,
     litho_local boolean,
-    litho_color varchar,   
+    litho_color varchar,
     litho_parents hstore,
     chrono_ref integer,
     chrono_name varchar,
@@ -1646,13 +1648,13 @@ create table loan_items (
   from_date date,
   to_date date,
   specimen_ref integer,
-  details varchar default '',  
+  details varchar default '',
   constraint pk_loan_items primary key (id),
   constraint fk_loan_items_ig foreign key (ig_ref) references igs(id),
   constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
   constraint fk_loan_items_specimen_ref foreign key (specimen_ref) references specimens(id) on delete set null,
   constraint unq_loan_items unique(loan_ref, specimen_ref)
-); 
+);
 
 comment on table loan_items is 'Table holding an item of a loan. It may be a part from darwin or only an generic item';
 
@@ -1775,7 +1777,7 @@ comment on column catalogue_bibliography.bibliography_ref is 'Reference of the b
 create table db_version (
  id integer not null,
  update_at timestamp default now()
- 
+
 );
 
 comment on table db_version is 'Table holding the database version and update date';

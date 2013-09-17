@@ -108,6 +108,7 @@ TagGroups:
         sub_group_name_indexed: {type: string}
         color: {type: string, default: '#FFFFFF' }
         tag_value: { type: string, notnull: true}
+        international_name: { type: string, notnull: true, default:''}
     relations:
         Gtu:
             local: gtu_ref

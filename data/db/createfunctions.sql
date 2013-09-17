@@ -9,7 +9,7 @@ DECLARE
   rec_exists boolean;
 BEGIN
    SELECT is_physical FROM people WHERE id=NEW.institution_ref into rec_exists;
-   
+
    IF rec_exists = TRUE THEN
     RAISE EXCEPTION 'You cannot link a moral person as Institution';
    END IF;
@@ -97,7 +97,7 @@ BEGIN
         ELSIF TG_TABLE_NAME = 'chronostratigraphy' THEN
                 NEW.name_indexed := fullToIndex(NEW.name);
         ELSIF TG_TABLE_NAME = 'collections' THEN
-                NEW.name_indexed := fullToIndex(NEW.name);		
+                NEW.name_indexed := fullToIndex(NEW.name);
         ELSIF TG_TABLE_NAME = 'expeditions' THEN
                 NEW.name_indexed := fullToIndex(NEW.name);
         ELSIF TG_TABLE_NAME = 'bibliography' THEN
@@ -333,8 +333,8 @@ DECLARE
 BEGIN
 
   EXECUTE 'SELECT count(id)  FROM ' || quote_ident(TG_TABLE_NAME::text) ||
-    ' WHERE parent_ref=' || quote_literal(NEW.id) || 
-    ' AND fct_chk_possible_upper_level('|| quote_literal(TG_TABLE_NAME::text) || 
+    ' WHERE parent_ref=' || quote_literal(NEW.id) ||
+    ' AND fct_chk_possible_upper_level('|| quote_literal(TG_TABLE_NAME::text) ||
     ', parent_ref, level_ref, id) = false ' INTO rec_exists;
 
   IF rec_exists > 0 THEN
@@ -370,7 +370,7 @@ DECLARE
 BEGIN
 
   EXECUTE 'SELECT count(id)  FROM ' || quote_ident(NEW.referenced_relation)  || ' WHERE id=' || quote_literal(NEW.record_id_1) ||  ' OR id=' || quote_literal(NEW.record_id_2) INTO rec_exists;
-  
+
   IF rec_exists != 2 THEN
     RAISE EXCEPTION 'The referenced record does not exists';
   END IF;
@@ -513,7 +513,7 @@ END;$$;
 DROP FUNCTION IF EXISTS fct_set_user(integer);
 
 /**
- Set user id 
+ Set user id
 */
 CREATE OR REPLACE FUNCTION fct_set_user(userid integer) RETURNS void
 language SQL AS
@@ -1124,7 +1124,7 @@ DECLARE
 BEGIN
   IF TG_OP != 'DELETE' THEN
     OPEN curs_entry FOR SELECT distinct(fulltoIndex(tags)) as u_tag, trim(tags) as tags
-                        FROM regexp_split_to_table(NEW.tag_value, ';') as tags
+                        FROM regexp_split_to_table(case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value, ';') as tags
                         WHERE fulltoIndex(tags) != '';
     LOOP
       FETCH curs_entry INTO entry_row;
@@ -1155,12 +1155,12 @@ BEGIN
     UPDATE gtu
     SET tag_values_indexed = (SELECT array_agg(tags_list)
                               FROM (SELECT lineToTagRows(tag_agg) AS tags_list
-                                    FROM (SELECT tag_value AS tag_agg
+                                    FROM (SELECT case when international_name != '' THEN international_name || ';' ELSE '' END || tag_value AS tag_agg
                                           FROM tag_groups
                                           WHERE id <> NEW.id
                                             AND gtu_ref = NEW.gtu_ref
                                           UNION
-                                          SELECT NEW.tag_value
+                                          SELECT case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value
                                          ) as tag_list_selection
                                    ) as tags_rows
                              )
@@ -1457,13 +1457,13 @@ BEGIN
     UPDATE specimens
     SET (chrono_name, chrono_name_indexed,
          chrono_level_ref, chrono_level_name,
-         chrono_status, 
+         chrono_status,
          chrono_local, chrono_color,
          chrono_path, chrono_parent_ref
         ) =
         (NEW.name, NEW.name_indexed,
          NEW.level_ref, subq.level_name,
-         NEW.status, 
+         NEW.status,
          NEW.local_naming, NEW.color,
          NEW.path, NEW.parent_ref
         )
@@ -1477,13 +1477,13 @@ BEGIN
     UPDATE specimens
     SET (litho_name, litho_name_indexed,
          litho_level_ref, litho_level_name,
-         litho_status, 
+         litho_status,
          litho_local, litho_color,
          litho_path, litho_parent_ref
         ) =
         (NEW.name, NEW.name_indexed,
          NEW.level_ref, subq.level_name,
-         NEW.status, 
+         NEW.status,
          NEW.local_naming, NEW.color,
          NEW.path, NEW.parent_ref
         )
@@ -1497,13 +1497,13 @@ BEGIN
     UPDATE specimens
     SET (lithology_name, lithology_name_indexed,
          lithology_level_ref, lithology_level_name,
-         lithology_status, 
+         lithology_status,
          lithology_local, lithology_color,
          lithology_path, lithology_parent_ref
         ) =
         (NEW.name, NEW.name_indexed,
          NEW.level_ref, subq.level_name,
-         NEW.status, 
+         NEW.status,
          NEW.local_naming, NEW.color,
          NEW.path, NEW.parent_ref
         )
@@ -1517,13 +1517,13 @@ BEGIN
     UPDATE specimens
     SET (mineral_name, mineral_name_indexed,
          mineral_level_ref, mineral_level_name,
-         mineral_status, 
+         mineral_status,
          mineral_local, mineral_color,
          mineral_path, mineral_parent_ref
         ) =
         (NEW.name, NEW.name_indexed,
          NEW.level_ref, subq.level_name,
-         NEW.status, 
+         NEW.status,
          NEW.local_naming, NEW.color,
          NEW.path, NEW.parent_ref
         )
@@ -1533,18 +1533,18 @@ BEGIN
          WHERE id = NEW.level_ref
         ) subq
     WHERE mineral_ref = NEW.id;
-  
+
   ELSIF TG_TABLE_NAME = 'tag_groups' THEN
     IF TG_OP = 'INSERT' THEN
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
         UPDATE specimens
-        SET gtu_country_tag_value = NEW.tag_value,
-            gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
+        SET gtu_country_tag_value = case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value,
+            gtu_country_tag_indexed = lineToTagArray(case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
         UPDATE specimens
-        SET gtu_province_tag_value = NEW.tag_value,
-            gtu_province_tag_indexed = lineToTagArray(NEW.tag_value)
+        SET gtu_province_tag_value = case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value,
+            gtu_province_tag_indexed = lineToTagArray(case when international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       ELSIF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
       /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/
@@ -1567,13 +1567,13 @@ BEGIN
       END IF;
       IF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'country' THEN
         UPDATE specimens
-        SET gtu_country_tag_value = NEW.tag_value,
-            gtu_country_tag_indexed = lineToTagArray(NEW.tag_value)
+        SET gtu_country_tag_value = case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value,
+            gtu_country_tag_indexed = lineToTagArray(case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END ||NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
         UPDATE specimens
-        SET gtu_province_tag_value = NEW.tag_value,
-            gtu_province_tag_indexed = lineToTagArray(NEW.tag_value)
+        SET gtu_province_tag_value = case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value,
+            gtu_province_tag_indexed = lineToTagArray(case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       END IF;
       IF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
@@ -1881,7 +1881,7 @@ as $$
 BEGIN
 
   IF TG_OP = 'INSERT' THEN
- -- IF (TG_OP = 'UPDATE' AND 
+ -- IF (TG_OP = 'UPDATE' AND
       NEW.location =  ST_Buffer(ST_GeographyFromText('SRID=4326;POINT(' || NEW.longitude || ' ' ||  NEW.latitude || ')'), NEW.lat_long_accuracy);
   ELSE IF NEW.longitude IS DISTINCT FROM OLD.longitude OR NEW.latitude IS DISTINCT FROM OLD.latitude OR NEW.lat_long_accuracy IS DISTINCT FROM OLD.lat_long_accuracy THEN
       NEW.location =  ST_Buffer(ST_GeographyFromText('SRID=4326;POINT(' || NEW.longitude || ' ' ||  NEW.latitude || ')'), NEW.lat_long_accuracy);
@@ -1897,7 +1897,7 @@ AS $$
 DECLARE
   rec_id integer;
 BEGIN
-    IF col_name = 'spec_ref' THEN    
+    IF col_name = 'spec_ref' THEN
       FOR rec_id IN SELECT id FROM specimens WHERE id in (select X::int from regexp_split_to_table(ids, ',' ) as X)
             AND collection_ref in (select X FROM fct_search_authorized_encoding_collections(user_id) as X)
       LOOP
@@ -1995,11 +1995,11 @@ BEGIN
   IF NEW.db_user_type IS DISTINCT FROM OLD.db_user_type AND NEW.db_user_type = 1 THEN
     UPDATE preferences
     SET pref_value = subq.fields_available
-    FROM (select array_to_string(array(select fields_list 
-                                       from regexp_split_to_table((SELECT pref_value 
-                                                                   FROM preferences 
-                                                                   WHERE user_ref = NEW.id 
-                                                                     AND pref_key = 'search_cols_specimen' 
+    FROM (select array_to_string(array(select fields_list
+                                       from regexp_split_to_table((SELECT pref_value
+                                                                   FROM preferences
+                                                                   WHERE user_ref = NEW.id
+                                                                     AND pref_key = 'search_cols_specimen'
                                                                    LIMIT 1
                                                                   ), E'\\|') as fields_list
                                        where fields_list not in ('institution_ref', 'building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type', 'container_storage', 'sub_container', 'sub_container_type', 'sub_container_storage')
@@ -2012,7 +2012,7 @@ BEGIN
       UPDATE my_saved_searches
       SET visible_fields_in_result = subq.fields_available
       FROM (select array_to_string(array(select fields_list
-                                         from regexp_split_to_table(saved_search_row.visible_fields_in_result, E'\\|') as fields_list 
+                                         from regexp_split_to_table(saved_search_row.visible_fields_in_result, E'\\|') as fields_list
                                          where fields_list not in ('institution_ref','building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type', 'container_storage', 'sub_container', 'sub_container_type', 'sub_container_storage')
                                         ),'|'
                                   ) as fields_available
@@ -2028,16 +2028,16 @@ $$;
 create or replace function getSpecificParentForLevel(referenced_relation IN catalogue_levels.level_type%TYPE, path IN template_classifications.path%TYPE, level_searched IN catalogue_levels.level_name%TYPE) RETURNS template_classifications.name%TYPE LANGUAGE plpgsql IMMUTABLE AS
 $$
 DECLARE
-  response template_classifications.name%TYPE := ''; 
+  response template_classifications.name%TYPE := '';
 BEGIN
   EXECUTE
   'SELECT name ' ||
-  ' FROM ' 
+  ' FROM '
   || quote_ident(lower(referenced_relation)) || ' cat '
   ' INNER JOIN catalogue_levels ON cat.level_ref = catalogue_levels.id '
   ' WHERE level_name = '
-  || quote_literal(lower(level_searched)) || 
-  '   AND cat.id IN (SELECT i_id::integer FROM regexp_split_to_table(' || quote_literal(path) || E', E''\/'') as i_id WHERE i_id != '''')' 
+  || quote_literal(lower(level_searched)) ||
+  '   AND cat.id IN (SELECT i_id::integer FROM regexp_split_to_table(' || quote_literal(path) || E', E''\/'') as i_id WHERE i_id != '''')'
   INTO response;
   RETURN response;
 EXCEPTION
@@ -2059,7 +2059,7 @@ $$
 DECLARE
   query_str varchar;
 BEGIN
-  IF new_val is NULL OR old_value IS NOT DISTINCT FROM new_val THEN 
+  IF new_val is NULL OR old_value IS NOT DISTINCT FROM new_val THEN
     RETURN TRUE;
   END IF;
     query_str := ' INSERT INTO flat_dict (referenced_relation, dict_field, dict_value)
@@ -2084,7 +2084,7 @@ DECLARE
   query_str varchar;
   dpt_new_val varchar;
 BEGIN
-  IF new_val is NULL OR ( old_value IS NOT DISTINCT FROM new_val AND depending_old_value IS NOT DISTINCT FROM depending_new_value ) THEN 
+  IF new_val is NULL OR ( old_value IS NOT DISTINCT FROM new_val AND depending_old_value IS NOT DISTINCT FROM depending_new_value ) THEN
     RETURN TRUE;
   END IF;
   dpt_new_val := coalesce(depending_new_value,'');
@@ -2115,14 +2115,14 @@ DECLARE
   result boolean;
   query_str text;
 BEGIN
-  IF old_value IS null OR old_value IS NOT DISTINCT FROM new_val THEN 
+  IF old_value IS null OR old_value IS NOT DISTINCT FROM new_val THEN
     RETURN TRUE;
   END IF;
   query_str := ' SELECT EXISTS( SELECT 1 from ' || quote_ident(ref_relation) || ' where ' || quote_ident(ref_field) || ' = ' || quote_literal(old_value) || ');';
   execute query_str into result;
 
   IF result = false THEN
-    DELETE FROM flat_dict where 
+    DELETE FROM flat_dict where
           referenced_relation = ref_relation
           AND dict_field = ref_field
           AND dict_value = old_value;
@@ -2138,7 +2138,7 @@ DECLARE
   result boolean;
   query_str text;
 BEGIN
-  IF old_value is NULL OR ( old_value IS NOT DISTINCT FROM new_val AND depending_old_value IS NOT DISTINCT FROM depending_new_value ) THEN 
+  IF old_value is NULL OR ( old_value IS NOT DISTINCT FROM new_val AND depending_old_value IS NOT DISTINCT FROM depending_new_value ) THEN
     RETURN TRUE;
   END IF;
   query_str := ' SELECT EXISTS( SELECT id from ' || quote_ident(ref_relation) || ' where ' || quote_ident(ref_field) || ' = ' || quote_literal(old_value)
@@ -2146,7 +2146,7 @@ BEGIN
   execute query_str into result;
 
   IF result = false THEN
-    DELETE FROM flat_dict where 
+    DELETE FROM flat_dict where
           referenced_relation = ref_relation
           AND dict_field = ref_field
           AND dict_value = old_value
@@ -2297,7 +2297,7 @@ BEGIN
         oldfield.container_type, newfield.container_type);
       PERFORM fct_add_in_dict_dept('specimens','sub_container_storage', oldfield.sub_container_storage, newfield.sub_container_storage,
         oldfield.sub_container_type, newfield.sub_container_type);
-        
+
     ELSIF TG_TABLE_NAME = 'specimens_relationships' THEN
       PERFORM fct_add_in_dict('specimens_relationships','relationship_type', oldfield.relationship_type, newfield.relationship_type);
     ELSIF TG_TABLE_NAME = 'users' THEN
@@ -2351,9 +2351,9 @@ BEGIN
       END IF;
 
       UPDATE specimens s SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,ARRAY[OLD.people_ref])
-        WHERE id  = ident.record_id 
+        WHERE id  = ident.record_id
             AND NOT exists (
-              SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications' 
+              SELECT true FROM catalogue_people cp INNER JOIN identifications i ON cp.record_id = i.id AND cp.referenced_relation = 'identifications'
                 WHERE i.record_id = ident.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens'
             );
     END IF;
@@ -2387,13 +2387,13 @@ BEGIN
 
         SELECT id, spec_ident_ids INTO spec_row FROM specimens WHERE id = ident.record_id;
 
-        IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications' 
+        IF NOT exists (SELECT 1 from identifications i INNER JOIN catalogue_people c ON c.record_id = i.id AND c.referenced_relation = 'identifications'
           WHERE i.record_id = spec_row.id AND people_ref = OLD.people_ref AND i.referenced_relation = 'specimens' AND c.id != OLD.id
-        ) THEN 
+        ) THEN
           spec_row.spec_ident_ids := fct_remove_array_elem(spec_row.spec_ident_ids ,ARRAY[OLD.people_ref]);
         END IF;
 
-        IF NOT spec_row.spec_ident_ids && ARRAY[ NEW.people_ref::integer ] THEN 
+        IF NOT spec_row.spec_ident_ids && ARRAY[ NEW.people_ref::integer ] THEN
           spec_row.spec_ident_ids := array_append(spec_row.spec_ident_ids ,NEW.people_ref);
         END IF;
 
@@ -2412,9 +2412,9 @@ BEGIN
 
   IF EXISTS(SELECT true FROM catalogue_people cp WHERE cp.record_id = OLD.id AND cp.referenced_relation = 'identifications') THEN
     -- There's NO identifier associated to this identification'
-    UPDATE specimens SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids, 
+    UPDATE specimens SET spec_ident_ids = fct_remove_array_elem(spec_ident_ids,
       (
-        select array_agg(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id 
+        select array_agg(people_ref) FROM catalogue_people p  INNER JOIN identifications i ON p.record_id = i.id AND i.id = OLD.id
         AND people_ref NOT in
           (
             SELECT people_ref from catalogue_people p INNER JOIN identifications i ON p.record_id = i.id AND p.referenced_relation = 'identifications'
@@ -2424,7 +2424,7 @@ BEGIN
       WHERE id = OLD.record_id;
   END IF;
   RETURN OLD;
-  
+
 END;
 $$ language plpgsql;
 
@@ -2461,9 +2461,9 @@ BEGIN
     field_level_name := prefix || '_level_name';
     field_level_name := coalesce(line_store->field_level_name,'');
 
-    OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t 
-    INNER JOIN catalogue_levels c on t.level_ref = c.id 
-    WHERE name = ' || quote_literal( field_name) || ' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END 
+    OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
+    INNER JOIN catalogue_levels c on t.level_ref = c.id
+    WHERE name = ' || quote_literal( field_name) || ' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
     LIMIT 2';
     LOOP
       FETCH ref INTO ref_record;
@@ -2476,7 +2476,7 @@ BEGIN
     END LOOP;
 
     IF result_nbr = 1 THEN -- It's Ok!
-      
+
       PERFORM fct_imp_checker_catalogues_parents(line,rec_id, catalogue_table, prefix);
       RETURN true;
     END IF;
@@ -2491,9 +2491,9 @@ BEGIN
   /*** Then CHECK fuzzy name ***/
 
   result_nbr := 0;
-    OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t 
-    INNER JOIN catalogue_levels c on t.level_ref = c.id 
-    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END 
+    OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
+    INNER JOIN catalogue_levels c on t.level_ref = c.id
+    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
     LIMIT 2';
     LOOP
       FETCH ref INTO ref_record;
@@ -2531,11 +2531,11 @@ BEGIN
   IF line.taxon_name IS NOT NULL AND line.taxon_name is distinct from '' AND line.taxon_ref is null THEN
     PERFORM fct_imp_checker_catalogue(line,'taxonomy','taxon');
   END IF;
-  
+
   IF line.chrono_name IS NOT NULL AND line.chrono_name is not null AND line.chrono_ref is null THEN
     PERFORM fct_imp_checker_catalogue(line,'chronostratigraphy','chrono');
   END IF;
-  
+
   IF line.lithology_name IS NOT NULL AND line.lithology_name is distinct from '' AND line.lithology_ref is null THEN
     PERFORM fct_imp_checker_catalogue(line,'lithology','lithology');
   END IF;
@@ -2578,11 +2578,11 @@ BEGIN
     EXECUTE 'select * from '|| quote_ident(catalogue_table) || ' where id = ' || rec_id into row_record ;
 
     FOR lvl_name in SELECT s FROM fct_explode_array(akeys(rec_parents)) as s
-    LOOP 
+    LOOP
       lvl_value := rec_parents->lvl_name;
       EXECUTE 'SELECT count(*) from ' || quote_ident(catalogue_table) || ' t
         INNER JOIN catalogue_levels c on t.level_ref = c.id
-        WHERE level_sys_name = ' || quote_literal(lvl_name) || ' AND 
+        WHERE level_sys_name = ' || quote_literal(lvl_name) || ' AND
           name_indexed like fullToIndex( ' || quote_literal(lvl_value) || '  ) || ''%''
           AND ' || quote_literal(row_record.path) || 'like t.path || t.id || ''/%'' ' INTO result_nbr;
       IF result_nbr = 0 THEN
@@ -2591,7 +2591,7 @@ BEGIN
       END IF;
     END LOOP;
   END IF;
-  EXECUTE 'UPDATE staging SET status = delete(status, ' || quote_literal(prefix) ||'), ' || prefix|| '_ref = ' || rec_id || ' where id=' || line.id; 
+  EXECUTE 'UPDATE staging SET status = delete(status, ' || quote_literal(prefix) ||'), ' || prefix|| '_ref = ' || rec_id || ' where id=' || line.id;
 
   RETURN true;
 END;
@@ -2634,7 +2634,7 @@ BEGIN
     RETURN true;
   END IF;
 
-  select id into ref_rec from expeditions where name_indexed = fulltoindex(line.expedition_name) and 
+  select id into ref_rec from expeditions where name_indexed = fulltoindex(line.expedition_name) and
     expedition_from_date = COALESCE(line.expedition_from_date,'01/01/0001') AND
     expedition_to_date = COALESCE(line.expedition_to_date,'31/12/2038');
   IF NOT FOUND THEN
@@ -2677,7 +2677,7 @@ BEGIN
     AND CASE WHEN (line.gtu_longitude is null and line.gtu_from_date is null and line.gtu_to_date is null) THEN line.gtu_code ELSE code END
       = code
     AND id != 0 LIMIT 1;
-  
+
 
   IF NOT FOUND THEN
       IF import THEN
@@ -2718,9 +2718,9 @@ DECLARE
 BEGIN
     result_nbr := 0;
     searched_name := fulltoindex(fullname)|| '%'  ;
-    FOR ref_record IN SELECT id from people p 
-      WHERE 
-        formated_name_indexed like searched_name 
+    FOR ref_record IN SELECT id from people p
+      WHERE
+        formated_name_indexed like searched_name
         OR  name_formated_indexed like searched_name LIMIT 2
     LOOP
       result_nbr := result_nbr +1;
@@ -2746,7 +2746,7 @@ DECLARE
 
 BEGIN
     result_nbr := 0;
-    FOR ref_record IN SELECT id from people p 
+    FOR ref_record IN SELECT id from people p
       WHERE is_physical = false  AND formated_name_indexed like fulltoindex(fullname) || '%'  LIMIT 2
     LOOP
       result_nbr := result_nbr +1;
@@ -2780,7 +2780,7 @@ BEGIN
 
   --  Donators and collectors
 
-  FOR people_line IN select * from staging_people WHERE referenced_relation ='staging' AND record_id = line.id 
+  FOR people_line IN select * from staging_people WHERE referenced_relation ='staging' AND record_id = line.id
   LOOP
     IF people_line.people_ref is not null THEN
       continue;
@@ -2793,18 +2793,18 @@ BEGIN
         UPDATE staging_people SET people_ref = ref_record WHERE id=people_line.id ;
     END CASE;
   END LOOP;
-  IF merge_status = 1 THEN 
+  IF merge_status = 1 THEN
     UPDATE staging SET status = delete(status,'people') where id=line.id;
   ELSE
-    UPDATE staging SET status = (status || ('people' => 'people')) where id= line.id;  
+    UPDATE staging SET status = (status || ('people' => 'people')) where id= line.id;
   END IF;
-  
+
   -- Indentifiers
-   
-  merge_status := 1 ; 
+
+  merge_status := 1 ;
   FOR ident_line in select * from identifications where referenced_relation ='staging' AND  record_id = line.id
   LOOP
-    FOR people_line IN select * from staging_people WHERE referenced_relation ='identifications' AND record_id = ident_line.id 
+    FOR people_line IN select * from staging_people WHERE referenced_relation ='identifications' AND record_id = ident_line.id
     LOOP
       IF people_line.people_ref is not null THEN
         continue;
@@ -2819,15 +2819,15 @@ BEGIN
     END LOOP;
   END LOOP;
 
-  IF merge_status = 1 THEN 
+  IF merge_status = 1 THEN
     UPDATE staging SET status = delete(status,'identifiers') where id=line.id;
   ELSE
-    UPDATE staging SET status = (status || ('identifiers' => 'people')) where id= line.id;  
+    UPDATE staging SET status = (status || ('identifiers' => 'people')) where id= line.id;
   END IF;
-  
+
   -- Sequencers
-   
-  merge_status := 1 ; 
+
+  merge_status := 1 ;
   FOR ident_line in select * from collection_maintenance where referenced_relation ='staging' AND  record_id = line.id
   LOOP
     FOR people_line IN select * from staging_people WHERE referenced_relation ='collection_maintenance' AND record_id = ident_line.id
@@ -2845,10 +2845,10 @@ BEGIN
     END LOOP;
   END LOOP;
 
-  IF merge_status = 1 THEN 
+  IF merge_status = 1 THEN
     UPDATE staging SET status = delete(status,'operator') where id=line.id;
   ELSE
-    UPDATE staging SET status = (status || ('operator' => 'people')) where id= line.id;  
+    UPDATE staging SET status = (status || ('operator' => 'people')) where id= line.id;
   END IF;
 
   /**********
@@ -2857,7 +2857,7 @@ BEGIN
   IF line.institution_name IS NOT NULL and line.institution_name  != '' AND line.institution_ref is null THEN
     SELECT fct_look_for_institution(line.institution_name) into ref_record ;
   CASE ref_record
-  WHEN -1 THEN 
+  WHEN -1 THEN
     UPDATE staging SET status = (status || ('institution' => 'too_much')) where id= line.id;
   WHEN 0 THEN
     UPDATE staging SET status = (status || ('institution' => 'not_found')) where id= line.id;
@@ -2874,7 +2874,7 @@ BEGIN
     IF ident_line.institution_name IS NOT NULL and ident_line.institution_name  != '' AND ident_line.institution_ref is null AND ident_line.institution_name  != 'Not defined' THEN
       SELECT fct_look_for_institution(ident_line.institution_name) into ref_record;
       CASE ref_record
-      WHEN -1 THEN 
+      WHEN -1 THEN
         UPDATE staging SET status = (status || ('institution_relationship' => 'too_much')) where id= line.id;
       WHEN 0 THEN
         UPDATE staging SET status = (status || ('institution_relationship' => 'not_found')) where id= line.id;
@@ -2904,7 +2904,7 @@ DECLARE
   id_to_keep integer ARRAY ;
 --   collection int;
 BEGIN
-  FOR all_line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id 
+  FOR all_line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id
       WHERE import_ref = req_import_ref AND to_import=true and status = ''::hstore AND i.is_finished =  FALSE
   LOOP
     BEGIN
@@ -2913,12 +2913,12 @@ BEGIN
       PERFORM fct_imp_checker_igs(staging_line, true);
       PERFORM fct_imp_checker_expeditions(staging_line, true);
       PERFORM fct_imp_checker_gtu(staging_line, true);
-      
+
       --RE SELECT WITH UPDATE
       select * into line from staging s INNER JOIN imports i on  s.import_ref = i.id where s.id=all_line.id;
 
       PERFORM fct_imp_checker_staging_info(line) ;
-      
+
     rec_id := nextval('specimens_id_seq');
     IF line.spec_ref IS NULL THEN
       INSERT INTO specimens (id, category, collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref,
@@ -2930,7 +2930,7 @@ BEGIN
         COALESCE(line.station_visible,true),  line.ig_ref, COALESCE(line.individual_type,'specimen'), COALESCE(line.individual_sex,'undefined'),
         COALESCE(line.individual_stage,'undefined'), COALESCE(line.individual_state,'not applicable'),COALESCE(line.individual_social_status,'not applicable'),
         COALESCE(line.individual_rock_form,'not applicable'), COALESCE(line.part,'specimen'), COALESCE(line.complete,true), line.institution_ref, line.building,
-        line.floor, line.room, line.row, line.shelf, line.container, line.sub_container,COALESCE(line.container_type,'container'), 
+        line.floor, line.room, line.row, line.shelf, line.container, line.sub_container,COALESCE(line.container_type,'container'),
         COALESCE(line.sub_container_type, 'container'), COALESCE(line.container_storage,'dry'),COALESCE(line.sub_container_storage,'dry'),
         COALESCE(line.surnumerary,false), COALESCE(line.specimen_status,'good state'),COALESCE(line.part_count_min,1), COALESCE(line.part_count_max,2), line.object_name
       );
@@ -2986,23 +2986,23 @@ BEGIN
     IF OLD.referenced_relation = 'staging' THEN
       select s.import_ref INTO import_id FROM staging s, staging_people sp WHERE sp.id=OLD.id AND sp.record_id = s.id ;
     ELSEIF OLD.referenced_relation = 'identifications' THEN
-      select s.import_ref INTO import_id FROM staging s, staging_people sp, identifications i WHERE sp.id=OLD.id 
+      select s.import_ref INTO import_id FROM staging s, staging_people sp, identifications i WHERE sp.id=OLD.id
       AND sp.record_id = i.id AND i.record_id = s.id ;
     ELSE
-      select s.import_ref INTO import_id FROM staging s, staging_people sp, collection_maintenance c WHERE sp.id=OLD.id 
+      select s.import_ref INTO import_id FROM staging s, staging_people sp, collection_maintenance c WHERE sp.id=OLD.id
       AND sp.record_id = c.id AND c.record_id = s.id ;
     END IF;
 
     UPDATE staging_people SET people_ref = NEW.people_ref WHERE id IN (
       SELECT sp.id from staging_people sp, identifications i, staging s WHERE formated_name = OLD.formated_name AND s.import_ref = import_id
-      AND i.record_id = s.id AND sp.referenced_relation = 'identifications' AND sp.record_id = i.id 
+      AND i.record_id = s.id AND sp.referenced_relation = 'identifications' AND sp.record_id = i.id
       UNION
       SELECT sp.id from staging_people sp, staging s WHERE formated_name = OLD.formated_name AND s.import_ref = import_id AND
       sp.record_id = s.id AND sp.referenced_relation = 'staging'
       UNION
       SELECT sp.id from staging_people sp, collection_maintenance c, staging s WHERE formated_name = OLD.formated_name AND s.import_ref = import_id
-      AND c.record_id = s.id AND sp.referenced_relation = 'collection_maintenance' AND sp.record_id = c.id 
-    ); 
+      AND c.record_id = s.id AND sp.referenced_relation = 'collection_maintenance' AND sp.record_id = c.id
+    );
     -- update status field, if all error people are corrected, statut 'people', 'operator' or 'identifiers' will be removed
     PERFORM fct_imp_checker_people(s.*) FROM staging s WHERE import_ref = import_id AND (status::hstore ? 'people' OR status::hstore ? 'identifiers'  OR status::hstore ? 'operator') ;
     PERFORM set_config('darwin.upd_imp_ref', NULL, true);
@@ -3023,7 +3023,7 @@ BEGIN
     UPDATE staging_relationship SET institution_ref = NEW.institution_ref WHERE id IN (
       SELECT sr.id from staging_relationship sr, staging s WHERE sr.institution_name = OLD.institution_name AND s.import_ref = import_id AND
       sr.record_id = s.id
-    ); 
+    );
     FOR line IN SELECT s.* FROM staging s, staging_relationship sr WHERE s.id=sr.record_id AND sr.institution_ref = NEW.institution_ref
     LOOP
       UPDATE staging SET status = delete(status,'institution_relationship') where id=line.id;
@@ -3042,16 +3042,16 @@ BEGIN
     IF OLD.taxon_ref IS DISTINCT FROM NEW.taxon_ref AND  NEW.taxon_ref is not null THEN
         SELECT t.id ,t.name, t.level_ref , cl.level_name, t.status, t.extinct
         INTO NEW.taxon_ref,NEW.taxon_name, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_extinct
-        FROM taxonomy t, catalogue_levels cl 
+        FROM taxonomy t, catalogue_levels cl
         WHERE cl.id=t.level_ref AND t.id = NEW.taxon_ref;
 
-        UPDATE staging set taxon_ref=NEW.taxon_ref, taxon_name = new.taxon_name, taxon_level_ref=new.taxon_level_ref, 
-          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct, taxon_parents = ''::hstore, 
+        UPDATE staging set taxon_ref=NEW.taxon_ref, taxon_name = new.taxon_name, taxon_level_ref=new.taxon_level_ref,
+          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct, taxon_parents = ''::hstore,
         status = delete(status,'taxon')
 
-        WHERE 
-          taxon_name  IS NOT DISTINCT FROM  old.taxon_name AND  taxon_level_ref IS NOT DISTINCT FROM old.taxon_level_ref AND 
-          taxon_level_name IS NOT DISTINCT FROM old.taxon_level_name AND  taxon_status IS NOT DISTINCT FROM old.taxon_status 
+        WHERE
+          taxon_name  IS NOT DISTINCT FROM  old.taxon_name AND  taxon_level_ref IS NOT DISTINCT FROM old.taxon_level_ref AND
+          taxon_level_name IS NOT DISTINCT FROM old.taxon_level_name AND  taxon_status IS NOT DISTINCT FROM old.taxon_status
           AND  taxon_extinct IS NOT DISTINCT FROM old.taxon_extinct
           AND import_ref = NEW.import_ref;
         NEW.status = delete(NEW.status,'taxon');
@@ -3060,17 +3060,17 @@ BEGIN
     IF OLD.chrono_ref IS DISTINCT FROM NEW.chrono_ref  AND  NEW.chrono_ref is not null THEN
       SELECT c.id, c.name, c.level_ref, cl.level_name, c.status, c.local_naming, c.color, c.upper_bound, c.lower_bound
         INTO NEW.chrono_ref, NEW.chrono_name, NEW.chrono_level_ref, NEW.chrono_level_name, NEW.chrono_status, NEW.chrono_local, NEW.chrono_color, NEW.chrono_upper_bound, NEW.chrono_lower_bound
-        FROM chronostratigraphy c, catalogue_levels cl 
-        WHERE cl.id=c.level_ref AND c.id = NEW.chrono_ref ; 
+        FROM chronostratigraphy c, catalogue_levels cl
+        WHERE cl.id=c.level_ref AND c.id = NEW.chrono_ref ;
 
         UPDATE staging set chrono_ref=NEW.chrono_ref, chrono_name = NEW.chrono_name, chrono_level_ref=NEW.chrono_level_ref, chrono_level_name=NEW.chrono_level_name, chrono_status=NEW.chrono_status,
         chrono_local=NEW.chrono_local, chrono_color=NEW.chrono_color, chrono_upper_bound=NEW.chrono_upper_bound, chrono_lower_bound=NEW.chrono_lower_bound,
         status = delete(status,'chrono'), chrono_parents = ''::hstore
 
-        WHERE 
-        chrono_name  IS NOT DISTINCT FROM  OLD.chrono_name AND  chrono_level_ref IS NOT DISTINCT FROM OLD.chrono_level_ref AND 
-        chrono_level_name IS NOT DISTINCT FROM OLD.chrono_level_name AND  chrono_status IS NOT DISTINCT FROM OLD.chrono_status AND 
-        chrono_local IS NOT DISTINCT FROM OLD.chrono_local AND  chrono_color IS NOT DISTINCT FROM OLD.chrono_color AND 
+        WHERE
+        chrono_name  IS NOT DISTINCT FROM  OLD.chrono_name AND  chrono_level_ref IS NOT DISTINCT FROM OLD.chrono_level_ref AND
+        chrono_level_name IS NOT DISTINCT FROM OLD.chrono_level_name AND  chrono_status IS NOT DISTINCT FROM OLD.chrono_status AND
+        chrono_local IS NOT DISTINCT FROM OLD.chrono_local AND  chrono_color IS NOT DISTINCT FROM OLD.chrono_color AND
         chrono_upper_bound IS NOT DISTINCT FROM OLD.chrono_upper_bound AND  chrono_lower_bound IS NOT DISTINCT FROM OLD.chrono_lower_bound
         AND import_ref = NEW.import_ref;
         NEW.status = delete(NEW.status,'chrono');
@@ -3080,17 +3080,17 @@ BEGIN
     IF OLD.litho_ref IS DISTINCT FROM NEW.litho_ref  AND  NEW.litho_ref is not null  THEN
       SELECT l.id,l.name, l.level_ref, cl.level_name, l.status, l.local_naming, l.color
       INTO NEW.litho_ref, NEW.litho_name, NEW.litho_level_ref, NEW.litho_level_name, NEW.litho_status, NEW.litho_local, NEW.litho_color
-      FROM lithostratigraphy l, catalogue_levels cl 
-      WHERE cl.id=l.level_ref AND l.id = NEW.litho_ref ; 
+      FROM lithostratigraphy l, catalogue_levels cl
+      WHERE cl.id=l.level_ref AND l.id = NEW.litho_ref ;
 
-      UPDATE staging set 
+      UPDATE staging set
         litho_ref=NEW.litho_ref, litho_name=NEW.litho_name, litho_level_ref=NEW.litho_level_ref, litho_level_name=NEW.litho_level_name,
         litho_status=NEW.litho_status, litho_local=NEW.litho_local, litho_color=NEW.litho_color,
         status = delete(status,'litho'), litho_parents = ''::hstore
 
-      WHERE 
-        litho_name IS NOT DISTINCT FROM  OLD.litho_name AND litho_level_ref IS NOT DISTINCT FROM  OLD.litho_level_ref AND 
-        litho_level_name IS NOT DISTINCT FROM  OLD.litho_level_name AND 
+      WHERE
+        litho_name IS NOT DISTINCT FROM  OLD.litho_name AND litho_level_ref IS NOT DISTINCT FROM  OLD.litho_level_ref AND
+        litho_level_name IS NOT DISTINCT FROM  OLD.litho_level_name AND
         litho_status IS NOT DISTINCT FROM  OLD.litho_status AND litho_local IS NOT DISTINCT FROM  OLD.litho_local AND litho_color IS NOT DISTINCT FROM OLD.litho_color
         AND import_ref = NEW.import_ref;
         NEW.status = delete(NEW.status,'litho');
@@ -3101,18 +3101,18 @@ BEGIN
     IF OLD.lithology_ref IS DISTINCT FROM NEW.lithology_ref  AND  NEW.lithology_ref is not null THEN
       SELECT l.id, l.name, l.level_ref, cl.level_name, l.status, l.local_naming, l.color
       INTO NEW.lithology_ref, NEW.lithology_name, NEW.lithology_level_ref, NEW.lithology_level_name, NEW.lithology_status, NEW.lithology_local, NEW.lithology_color
-      FROM lithology l, catalogue_levels cl 
-      WHERE cl.id=l.level_ref AND l.id = NEW.lithology_ref ; 
+      FROM lithology l, catalogue_levels cl
+      WHERE cl.id=l.level_ref AND l.id = NEW.lithology_ref ;
 
-      UPDATE staging set 
+      UPDATE staging set
         lithology_ref=NEW.lithology_ref, lithology_name=NEW.lithology_name, lithology_level_ref=NEW.lithology_level_ref,
         lithology_level_name=NEW.lithology_level_name, lithology_status=NEW.lithology_status, lithology_local=NEW.lithology_local,
         lithology_color=NEW.lithology_color,
         status = delete(status,'lithology'), lithology_parents = ''::hstore
 
-      WHERE 
-        lithology_name IS NOT DISTINCT FROM OLD.lithology_name AND  lithology_level_ref IS NOT DISTINCT FROM OLD.lithology_level_ref AND 
-        lithology_level_name IS NOT DISTINCT FROM OLD.lithology_level_name AND  lithology_status IS NOT DISTINCT FROM OLD.lithology_status AND  lithology_local IS NOT DISTINCT FROM OLD.lithology_local AND 
+      WHERE
+        lithology_name IS NOT DISTINCT FROM OLD.lithology_name AND  lithology_level_ref IS NOT DISTINCT FROM OLD.lithology_level_ref AND
+        lithology_level_name IS NOT DISTINCT FROM OLD.lithology_level_name AND  lithology_status IS NOT DISTINCT FROM OLD.lithology_status AND  lithology_local IS NOT DISTINCT FROM OLD.lithology_local AND
         lithology_color IS NOT DISTINCT FROM OLD.lithology_color
         AND import_ref = NEW.import_ref;
         NEW.status = delete(NEW.status,'lithology');
@@ -3123,18 +3123,18 @@ BEGIN
     IF OLD.mineral_ref IS DISTINCT FROM NEW.mineral_ref  AND  NEW.mineral_ref is not null THEN
       SELECT m.id, m.name, m.level_ref, cl.level_name, m.status, m.local_naming, m.color, m.path
       INTO NEW.mineral_ref, NEW.mineral_name, NEW.mineral_level_ref, NEW.mineral_level_name, NEW.mineral_status, NEW.mineral_local, NEW.mineral_color, NEW.mineral_path
-      FROM mineralogy m, catalogue_levels cl 
-      WHERE cl.id=m.level_ref AND m.id = NEW.mineral_ref ; 
+      FROM mineralogy m, catalogue_levels cl
+      WHERE cl.id=m.level_ref AND m.id = NEW.mineral_ref ;
 
-      UPDATE staging set 
+      UPDATE staging set
         mineral_ref=NEW.mineral_ref, mineral_name=NEW.mineral_name, mineral_level_ref=NEW.mineral_level_ref,
-        mineral_level_name=NEW.mineral_level_name, mineral_status=NEW.mineral_status, mineral_local=NEW.mineral_local, 
+        mineral_level_name=NEW.mineral_level_name, mineral_status=NEW.mineral_status, mineral_local=NEW.mineral_local,
         mineral_color=NEW.mineral_color, mineral_path=NEW.mineral_path,
         status = delete(status,'mineral'), mineral_parents = ''::hstore
 
-      WHERE 
-        mineral_name IS NOT DISTINCT FROM OLD.mineral_name AND  mineral_level_ref IS NOT DISTINCT FROM OLD.mineral_level_ref AND 
-        mineral_level_name IS NOT DISTINCT FROM OLD.mineral_level_name AND  mineral_status IS NOT DISTINCT FROM OLD.mineral_status AND  mineral_local IS NOT DISTINCT FROM OLD.mineral_local AND  
+      WHERE
+        mineral_name IS NOT DISTINCT FROM OLD.mineral_name AND  mineral_level_ref IS NOT DISTINCT FROM OLD.mineral_level_ref AND
+        mineral_level_name IS NOT DISTINCT FROM OLD.mineral_level_name AND  mineral_status IS NOT DISTINCT FROM OLD.mineral_status AND  mineral_local IS NOT DISTINCT FROM OLD.mineral_local AND
         mineral_color IS NOT DISTINCT FROM OLD.mineral_color AND  mineral_path IS NOT DISTINCT FROM OLD.mineral_path
         AND import_ref = NEW.import_ref;
 
@@ -3148,16 +3148,16 @@ BEGIN
       FROM expeditions
       WHERE id = NEW.expedition_ref ;
 
-      UPDATE staging set 
+      UPDATE staging set
         expedition_ref=NEW.expedition_ref, expedition_name=NEW.expedition_name, expedition_from_date=NEW.expedition_from_date,
         expedition_to_date=NEW.expedition_to_date, expedition_from_date_mask=NEW.expedition_from_date_mask , expedition_to_date_mask=NEW.expedition_to_date_mask
-      WHERE 
-        expedition_name IS NOT DISTINCT FROM OLD.expedition_name AND  expedition_from_date IS NOT DISTINCT FROM OLD.expedition_from_date AND 
+      WHERE
+        expedition_name IS NOT DISTINCT FROM OLD.expedition_name AND  expedition_from_date IS NOT DISTINCT FROM OLD.expedition_from_date AND
         expedition_to_date IS NOT DISTINCT FROM OLD.expedition_to_date AND  expedition_from_date_mask IS NOT DISTINCT FROM OLD.expedition_from_date_mask  AND
         expedition_to_date_mask IS NOT DISTINCT FROM OLD.expedition_to_date_mask
         AND import_ref = NEW.import_ref;
 
-    END IF; 
+    END IF;
 
     IF OLD.institution_ref IS DISTINCT FROM NEW.institution_ref  AND  NEW.institution_ref is not null THEN
       SELECT formated_name INTO NEW.institution_name FROM people WHERE id = NEW.institution_ref ;
@@ -3188,7 +3188,7 @@ BEGIN
   FOR info_line IN select * from staging_info WHERE staging_ref = line.id
   LOOP
     BEGIN
-    CASE info_line.referenced_relation 
+    CASE info_line.referenced_relation
       WHEN 'gtu' THEN
         IF line.gtu_ref IS NOT NULL THEN
           FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
@@ -3267,7 +3267,7 @@ BEGIN
   LOOP
     IF relation_line.staging_related_ref IS NOT NULL THEN
       SELECT spec_ref INTO specimen_ref FROM staging where id=relation_line.staging_related_ref ;
-      IF specimen_ref IS NULL THEN 
+      IF specimen_ref IS NULL THEN
         id_array := array_append(id_array, relation_line.record_id);
         continue ;
       ELSE
@@ -3292,10 +3292,10 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_mask_date(date_fld timestamp , mask_fld integer) RETURNS text as
 $$
 
-  SELECT 
+  SELECT
 CASE WHEN ($2 & 32)!=0 THEN date_part('year',$1)::text ELSE 'xxxx' END || '-' ||
 CASE WHEN ($2 & 16)!=0 THEN date_part('month',$1)::text ELSE 'xx' END || '-' ||
-CASE WHEN ($2 & 8)!=0 THEN date_part('day',$1)::text ELSE 'xx' END; 
+CASE WHEN ($2 & 8)!=0 THEN date_part('day',$1)::text ELSE 'xx' END;
 $$
 LANGUAGE sql immutable;
 
@@ -3322,7 +3322,7 @@ BEGIN
     SET is_last = true
     WHERE referenced_relation = OLD.referenced_relation
       AND record_id = OLD.record_id
-      AND id = (select id from informative_workflow 
+      AND id = (select id from informative_workflow
         WHERE referenced_relation = OLD.referenced_relation AND record_id = OLD.record_id ORDER BY modification_date_time desc LIMIT 1)
     ;
   RETURN NEW;
@@ -3415,12 +3415,12 @@ BEGIN
 
     UNION
 
-    select loan_id, 'catalogue_people', hstore(p.*) from catalogue_people p where 
+    select loan_id, 'catalogue_people', hstore(p.*) from catalogue_people p where
       (referenced_relation='loans'  AND record_id = loan_id) OR (referenced_relation='loan_items'  AND record_id in (select id from loan_items l where l.loan_ref = loan_id) )
 
     UNION
 
-    select loan_id, 'properties', hstore(c.*) from properties c where 
+    select loan_id, 'properties', hstore(c.*) from properties c where
       (referenced_relation='loans'  AND record_id = loan_id) OR (referenced_relation='loan_items'  AND record_id in (select id from loan_items l where l.loan_ref = loan_id) )
 
   );
@@ -3440,12 +3440,12 @@ BEGIN
   -- BOTH
   INSERT INTO loan_history (loan_ref, referenced_table, record_line)
   (
-    select loan_id, 'people', hstore(p.*) from people p where id in (select (record_line->'people_ref')::int from loan_history where loan_ref = loan_id 
+    select loan_id, 'people', hstore(p.*) from people p where id in (select (record_line->'people_ref')::int from loan_history where loan_ref = loan_id
       and referenced_table='catalogue_people' and modification_date_time = now())
 
     UNION
 
-    select loan_id, 'people_addresses', hstore(p.*) from people_addresses p where person_user_ref in (select (record_line->'id')::int from loan_history where loan_ref = loan_id 
+    select loan_id, 'people_addresses', hstore(p.*) from people_addresses p where person_user_ref in (select (record_line->'id')::int from loan_history where loan_ref = loan_id
       and referenced_table='people' and modification_date_time = now())
   );
   RETURN true;
