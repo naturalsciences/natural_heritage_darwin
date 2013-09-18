@@ -3451,3 +3451,18 @@ BEGIN
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION fct_cast_to_real(element text) RETURNS real
+AS $$
+DECLARE r_val real;
+BEGIN
+    BEGIN
+      r_val := element::real;
+      return r_val;
+    EXCEPTION WHEN SQLSTATE '22P02' THEN
+      RETURN null;
+    END;
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+

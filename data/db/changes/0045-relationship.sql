@@ -248,7 +248,7 @@ insert into specimens_relationships(
  (
   select id, CASE WHEN host_relationship='koekoeksei in nest' THEN 'cuckoo eggs in the nest' ELSE 'host' END, 'specimens', host_specimen_ref from specimens where host_specimen_ref is not null
  );
- 
+
 --HOST taxon
 insert into specimens_relationships(
  specimen_ref,
@@ -259,7 +259,7 @@ insert into specimens_relationships(
   select id, 'host', 'taxonomy', host_taxon_ref from specimens where host_specimen_ref is null and host_taxon_ref is not null
  );
 
- 
+
 --Accomp mineralo
 insert into specimens_relationships(
  specimen_ref,
@@ -272,9 +272,9 @@ insert into specimens_relationships(
  (
   select specimen_ref, 'combination', 'mineralogy', mineral_ref , quantity , unit from specimens_accompanying where accompanying_type='mineral'
  );
- 
- 
---Accomp mineralo
+
+
+--Accomp taxo
 insert into specimens_relationships(
  specimen_ref,
  relationship_type,
@@ -283,17 +283,17 @@ insert into specimens_relationships(
  (
   select specimen_ref, 'host', 'taxonomy', taxon_ref from specimens_accompanying where accompanying_type='biological'
  );
- 
+
 CREATE INDEX idx_specimens_relationships_taxon_ref on specimens_relationships(taxon_ref);
 CREATE INDEX idx_specimens_relationships_mineral_ref on specimens_relationships(mineral_ref);
 CREATE INDEX idx_specimens_relationships_specimen_ref on specimens_relationships(specimen_ref);
 CREATE INDEX idx_specimens_relationships_specimen_related_ref on specimens_relationships(specimen_related_ref);
- 
+
  drop table specimens_accompanying;
  alter table specimens drop column host_specimen_ref;
  alter table specimens drop column host_taxon_ref;
  alter table specimens drop column host_relationship;
- 
+
 alter table specimens drop column host_taxon_name;
 alter table specimens drop column host_taxon_name_indexed ;
 alter table specimens drop column host_taxon_level_ref ;
@@ -303,11 +303,11 @@ alter table specimens drop column host_taxon_path ;
 alter table specimens drop column host_taxon_parent_ref ;
 alter table specimens drop column host_taxon_extinct ;
 
-    
+
  alter table staging drop column host_specimen_ref;
  alter table staging drop column host_taxon_ref;
  alter table staging drop column host_relationship;
- 
+
  GRANT SELECT, INSERT, UPDATE, DELETE ON specimens_relationships TO cebmpad;
  GRANT USAGE, SELECT ON SEQUENCE darwin2.specimens_relationships_id_seq TO cebmpad;
 
@@ -315,6 +315,6 @@ alter table specimens drop column host_taxon_extinct ;
  GRANT USAGE ON specimens_relationships_id_seq TO d2viewer;
 
  delete from flat_dict where dict_field = 'host_relationship';
- 
+
 \i reports/ticketing/labeling.sql
 COMMIT;
