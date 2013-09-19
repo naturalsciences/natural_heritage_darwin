@@ -71,7 +71,7 @@ class ImportABCDXml implements IImportModels
   {
     $this->inside_data = false ;
     if (in_array($this->getPreviousTag(),array('Bacterial','Zoological','Botanical','Viral'))) $this->object->handleKeyword($this->tag,$this->cdata,$this->staging) ;
-    elseif($this->getPreviousTag() == "efg:LithostratigraphicAttribution") $this->object->handleParent($name, $this->cdata,$this->staging) ;
+    elseif($this->getPreviousTag() == "efg:LithostratigraphicAttribution") $this->object->handleParent($name, strtolower($this->cdata),$this->staging) ;
     else {
     switch ($name) {
       case "AccessionCatalogue" : $this->object->addAccession($this->cdata) ; break ;;
@@ -88,7 +88,7 @@ class ImportABCDXml implements IImportModels
       case "AssociatedUnitSourceName" : $this->object->setSourceName($this->cdata) ; break ;;
       case "AssociationType" : $this->object->setRelationshipType($this->cdata) ; break ;;
       case "efg:ChronostratigraphicAttribution" : $this->cdata = $this->object->setChronoParent() ; if(!$this->cdata) $this->addComment(true) ; break ;;
-      case "efg:ChronoStratigraphicDivision" : $this->object->getChronoLevel($this->cdata) ; break ;;
+      case "efg:ChronoStratigraphicDivision" : $this->object->getChronoLevel(strtolower($this->cdata)) ; break ;;
       case "efg:ChronostratigraphicAttributions" : $this->object->saveChrono($this->staging) ; break ;;
       case "efg:ChronostratigraphicName" : $this->object->name = $this->cdata ; break ;;
       case "Code" : $this->staging['gtu_code'] = $this->cdata ; break ;;
@@ -96,7 +96,7 @@ class ImportABCDXml implements IImportModels
       case "Context" : $this->object->multimedia_data['sub_type'] = $this->cdata ; break ;;
       case "CreatedDate" : $this->object->multimedia_data['creation_date'] = $this->cdata ; break ;; 
     //  case "efg:ClassifiedName" : $this->object->setRockName($this->staging) ; break ;;
-      case "Comment" : $this->object->multimedia_data['description'] = $this->cdata ; break ;;
+//       case "Comment" : $this->object->multimedia_data['description'] = $this->cdata ; break ;;
       case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
       case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break ;;
       case "DateText" : $this->object->getDateText($this->cdata) ; break ;;
@@ -120,7 +120,7 @@ class ImportABCDXml implements IImportModels
       case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break ;;
       case "HigherTaxon" : $this->object->handleParent() ;break;;
       case "HigherTaxonName" : $this->object->higher_name = $this->cdata ; break;;
-      case "HigherTaxonRank" : $this->object->higher_level = $this->cdata ; break;;
+      case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ; break;;
       case "efg:LithostratigraphicAttribution" : $this->staging["litho_parents"] = $this->object->getParent() ; break ;;
       case "Identification" : $this->object->save($this->staging) ; break ;;
       case "IdentificationHistory" : $this->object->determination_status = $this->cdata ; break ;;
@@ -145,7 +145,7 @@ class ImportABCDXml implements IImportModels
       case "MeasurementOrFactAtomised" : $this->addProperty(); break ;;
       case "MeasurementOrFactText" : $this->addComment() ; break ;;
       case "MineralColour" : $this->staging->setMineralColour($this->cdata) ; break ;;
-      case "efg:MineralRockClassification" : $this->object->higher_level = $this->cdata ;break;;
+      case "efg:MineralRockClassification" : $this->object->higher_level = strtolower($this->cdata) ;break;;
       case "efg:MineralRockGroup" : $this->object->handleRockParent() ; break ;;
       case "efg:MineralRockGroupName" : $this->object->higher_name = $this->cdata ; break ;;
       case "efg:MineralRockIdentified" : $this->object->getCatalogueParent($this->staging) ; break ;;
@@ -168,7 +168,7 @@ class ImportABCDXml implements IImportModels
       //case "efg:RockType" :
       //case "RockType" : $this->staging->setLithologyName($this->cdata) ; break ;;
       case "ScientificName" : $this->staging["taxon_name"] = $this->object->getCatalogueName() ;
-                              $this->staging["taxon_level_name"] = $this->object->level_name ;break ;;
+                              $this->staging["taxon_level_name"] = strtolower($this->object->level_name) ;break ;;
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break ;;
       case "Sex" : $this->staging->setIndividualSex($this->cdata) ; break ;;
       case "SortingName" : $this->object->people_order_by = $this->cdata ; break ;;
@@ -199,9 +199,9 @@ class ImportABCDXml implements IImportModels
   {
 //     if($this->tag == 'AcquisitionDate') echo(FuzzyDateTime::getValidDate($data)) ;
     if ($this->inside_data)
-      $this->cdata .= strtolower($data) ;
+      $this->cdata .= trim($data) ;
     else
-      $this->cdata = strtolower($data) ;
+      $this->cdata = trim($data) ;
     $this->inside_data = true;
   }
 

@@ -30,34 +30,32 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       ));
     $rel = array('child'=>'Is a Child Of','direct_child'=>'Is a Direct Child','synonym'=> 'Is a Synonym Of', 'equal' => 'Is strictly equal to');
 
-    $this->widgetSchema['taxon_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
-    $this->widgetSchema['taxon_item_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Taxonomy',
-       'link_url' => 'taxonomy/choose',
-       'method' => 'getNameWithFormat',
-       'box_title' => $this->getI18N()->__('Choose Taxon'),
-       'nullable' => true,
-       'button_class'=>'',
-     ),
-      array('class'=>'inline',
-           )
-    );
+    $this->widgetSchema['taxon_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
+    $this->widgetSchema['taxon_relation']->setDefault('child');
+    $this->widgetSchema['taxon_item_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Taxonomy',
+      'method' => 'getName',
+      'link_url' => 'taxonomy/choose',
+      'box_title' => $this->getI18N()->__('Choose Taxon'),
+      'button_is_hidden' => true,
+      'complete_url' => 'catalogue/completeName?table=taxonomy',
+      'nullable' => true
+    ));
 
     $this->validatorSchema['taxon_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
 
 
-    $this->widgetSchema['lithology_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
-    $this->widgetSchema['lithology_item_ref'] = new widgetFormButtonRef(array(
+    $this->widgetSchema['lithology_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
+    $this->widgetSchema['lithology_item_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Lithology',
       'link_url' => 'lithology/choose',
       'method' => 'getName',
       'box_title' => $this->getI18N()->__('Choose Lithologic unit'),
+      'button_is_hidden' => true,
+      'complete_url' => 'catalogue/completeName?table=lithology',
       'nullable' => true,
-      'button_class'=>'',
-      ),
-      array('class'=>'inline',)
-    );
+      ));
 
     $this->validatorSchema['lithology_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['lithology_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
@@ -77,17 +75,16 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'add_empty' => $this->getI18N()->__('All')
     ));
 
-    $this->widgetSchema['litho_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
-    $this->widgetSchema['litho_item_ref'] = new widgetFormButtonRef(array(
+    $this->widgetSchema['litho_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
+    $this->widgetSchema['litho_item_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Lithostratigraphy',
       'link_url' => 'lithostratigraphy/choose',
       'method' => 'getName',
       'box_title' => $this->getI18N()->__('Choose Lithostratigraphic unit'),
+      'button_is_hidden' => true,
+      'complete_url' => 'catalogue/completeName?table=lithostratigraphy',
       'nullable' => true,
-      'button_class'=>'',
-      ),
-      array('class'=>'inline',)
-    );
+      ));
 
     $this->validatorSchema['litho_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['litho_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
@@ -99,17 +96,17 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'add_empty' => $this->getI18N()->__('All')
     ));
 
-    $this->widgetSchema['chrono_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
-    $this->widgetSchema['chrono_item_ref'] = new widgetFormButtonRef(array(
+    $this->widgetSchema['chrono_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
+    $this->widgetSchema['chrono_item_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Chronostratigraphy',
       'link_url' => 'chronostratigraphy/choose',
       'method' => 'getName',
       'box_title' => $this->getI18N()->__('Choose Chronostratigraphic unit'),
       'nullable' => true,
+      'button_is_hidden' => true,
+      'complete_url' => 'catalogue/completeName?table=chronostratigraphy',
       'button_class'=>'',
-     ),
-      array('class'=>'inline',)
-    );
+     ));
 
     $this->validatorSchema['chrono_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['chrono_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
@@ -122,18 +119,18 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'add_empty' => $this->getI18N()->__('All')
     ));
 
-    $this->widgetSchema['mineral_item_ref'] = new widgetFormButtonRef(array(
+    $this->widgetSchema['mineral_item_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Mineralogy',
       'link_url' => 'mineralogy/choose',
       'method' => 'getName',
       'box_title' => $this->getI18N()->__('Choose Mineralogic unit'),
       'nullable' => true,
+      'button_is_hidden' => true,
+      'complete_url' => 'catalogue/completeName?table=mineralogy',
       'button_class'=>'',
-      ),
-      array('class'=>'inline',)
-    );
+      ));
 
-    $this->widgetSchema['mineral_relation'] = new sfWidgetFormChoice(array('choices'=> $rel));
+    $this->widgetSchema['mineral_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
 
     $this->validatorSchema['mineral_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['mineral_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
