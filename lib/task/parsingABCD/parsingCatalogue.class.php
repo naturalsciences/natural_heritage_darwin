@@ -9,7 +9,7 @@ class ParsingCatalogue
                      'efg:Member'=>'member',
                      'efg:Bed'=>'layer',
                      ),
-    'chronostratigraphy' => array('eon'=>'eon','era'=>'era','period'=>'system','serie'=>'serie','epook'=>'serie','age'=>'stage','stage'=>'stage','subage'=>'sub_age'),
+    'chronostratigraphy' => array('eon'=>'eon','era'=>'era','period'=>'system','serie'=>'serie','epook'=>'serie','age'=>'stage','stage'=>'stage','subage'=>'sub_age','substage'=>'stage'),
     'lithology' => array('unit_main_group'=>'unit_main_group', 'unit_main_class'=>'unit_main_class','type'=>'unit_category',
                   'subtype'=> 'unit_class','unit_clan'=>'unit_clan','unit_group'=>'unit_group','unit_sub_group'=>'unit_sub_group',
                   'FullScientificNameString'=>'unit_rock'),
