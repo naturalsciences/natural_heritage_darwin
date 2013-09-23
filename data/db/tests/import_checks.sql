@@ -124,7 +124,7 @@ select '#' || min(fct_imp_checker_manager(s.*)::integer) from staging s;
 select diag('Test of Import');
 
 update staging set parent_ref=4 where id =  1;
-insert into staging (id,import_ref,parent_ref,room) VALUES (6,1,1,'12');
+insert into staging (id,import_ref,room) VALUES (6,1,'12');
 
 update staging set gtu_code='My Gtu', gtu_ref=null where id = 4;
 insert into staging_tag_groups (staging_ref,group_name, sub_group_name, tag_value)
@@ -140,7 +140,7 @@ select is('Hello; world; ', (select tag_value from tag_groups where gtu_ref = 1)
 update staging set gtu_code='My Gtuz' , gtu_ref=null, taxon_name=null, taxon_level_name=null ,status='' where id = 2;
 
 select is(1 , (select min(fct_imp_checker_gtu(s.*)::int) from staging s));
-select is(true, (select fct_importer_dna(1)));
+select is(true, (select fct_importer_abcd(1)));
 select is(1, (select gtu_ref from specimens where id=3));
 
 insert into staging (id,import_ref,taxon_name) VALUES (7,1,'Falco Pérégrinuz');
