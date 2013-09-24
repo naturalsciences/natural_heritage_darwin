@@ -40,6 +40,7 @@ FROM
         and modification_date_time between $2 and $3
         where s.collection_ref = collpath.id
         ) as new_items,
+
         (select count(distinct sp.id)
         from users_tracking as ut inner join
           (specimen_parts as sp
@@ -55,6 +56,7 @@ FROM
         and modification_date_time between $2 and $3
         where s.collection_ref = collpath.id
         ) as updated_items,
+
         (select count(si.id)
         from users_tracking as ut inner join
           (specimen_individuals as si
@@ -67,6 +69,7 @@ FROM
         and modification_date_time between $2 and $3
         where s.collection_ref = collpath.id
         ) as new_types,
+
         (select count(si.id)
         from users_tracking as ut inner join
           (specimen_individuals as si
@@ -79,6 +82,7 @@ FROM
         and modification_date_time between $2 and $3
         where s.collection_ref = collpath.id
         ) as updated_types,
+
         (select count(s.id)
         from users_tracking as ut inner join specimens as s
         on ut.referenced_relation = 'specimens'
@@ -87,6 +91,8 @@ FROM
         and modification_date_time between $2 and $3
         where s.collection_ref = collpath.id
         ) as new_specimens,
+
+
         (select count(s.id)
         from users_tracking as ut inner join specimens as s
         on ut.referenced_relation = 'specimens'
@@ -95,6 +101,8 @@ FROM
         and modification_date_time between $2 and $3
         where s.collection_ref = collpath.id
         ) as updated_specimens,
+
+
         (select count(distinct tax.id)
         from
         (users_tracking as ut inner join taxonomy as tax
@@ -112,6 +120,7 @@ FROM
         ) on s.taxon_ref = tax.id
         where s.collection_ref = collpath.id
         ) as new_species
+
   FROM collpath
   ORDER BY collection_path
 ) as subqry
