@@ -38,7 +38,7 @@ class specimensearchActions extends DarwinActions
     * It's also the same action that is used to open a saved search reopened, a list of pinned specimens
     * or when clicking on the back to criterias button
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeSearch(sfWebRequest $request)
   {
     $this->is_specimen_search = false;
@@ -125,6 +125,7 @@ class specimensearchActions extends DarwinActions
             ->getListFor($this->getUser()->getId(), 'specimen');
           $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir. ', id');
           //If export is defined export it!
+          $this->field_to_show = $this->getVisibleColumns($this->getUser(), $this->form);
 
           if($request->getParameter('export','') != '')
           {
@@ -134,7 +135,7 @@ class specimensearchActions extends DarwinActions
             $this->getResponse()->setHttpHeader('Pragma: private', true);
             $this->getResponse()->setHttpHeader('Content-Disposition',
                             'attachment; filename="export.csv"');
-            $this->getResponse()->setContentType("application/force-download text/csv"); 
+            $this->getResponse()->setContentType("application/force-download text/csv");
             $this->setTemplate('exportCsv');
             return ;
           }
@@ -182,8 +183,8 @@ class specimensearchActions extends DarwinActions
       Doctrine::getTable('Specimens')->getRequiredWidget($criterias['specimen_search_filters'], $this->getUser()->getId(), 'specimensearch_widget');
     $this->loadWidgets();
   }
-  
-  /** 
+
+  /**
   * Load related things for the specimens (code )
   */
   protected function loadRelated()
@@ -193,7 +194,7 @@ class specimensearchActions extends DarwinActions
     foreach($this->specimensearch as $key=>$specimen){
       $spec_list[] = $specimen->getId() ;
     }
-    
+
     $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
     $this->codes = array();
     foreach($codes_collection as $code) {
@@ -253,7 +254,7 @@ class specimensearchActions extends DarwinActions
     $form = new SpecimensFormFilter(null,array('user' => $this->getUser()));
     $form->addGtuTagValue($number);
     return $this->renderPartial('andSearch',array('form' => $form['Tags'][$number], 'row_line'=>$number));
-  }  
+  }
 
   public function executeAddCode(sfWebRequest $request)
   {
