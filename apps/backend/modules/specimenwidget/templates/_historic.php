@@ -11,7 +11,7 @@
   <tbody>
     <?php foreach($items as $item):?>
     <tr>
-      <td><?php $date = new DateTime($change['modification_date_time']);
+      <td><?php $date = new DateTime($item['modification_date_time']);
     echo $date->format('Y/m/d H:i'); ?></td>
       <td><?php echo $item['Users'];?></td>
     </tr>
