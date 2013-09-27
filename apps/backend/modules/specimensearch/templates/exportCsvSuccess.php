@@ -1,104 +1,109 @@
 <?php $sep=';';?>
-Category<?php echo $sep;?>
-Collection ID<?php echo $sep;?>
-Collection Name<?php echo $sep;?>
-Taxonomy ID<?php echo $sep;?>
-Taxonomy Name<?php echo $sep;?>
-Sampling Location ID<?php echo $sep;?>
-Sampling Location Code<?php echo $sep;?>
-Country<?php echo $sep;?>
-Latitude<?php echo $sep;?>
-Longitude<?php echo $sep;?>
-Altitude (m.)<?php echo $sep;?>
-Altitude accuracy (m.)<?php echo $sep;?>
-Specimens Codes<?php echo $sep;?>
-Chronostratigraphy ID<?php echo $sep;?>
-Chronostratigraphy Name<?php echo $sep;?>
-I.G. ID<?php echo $sep;?>
-I.G. Number<?php echo $sep;?>
-Lithostratigraphy ID<?php echo $sep;?>
-Lithostratigraphy Name<?php echo $sep;?>
-Lithology ID<?php echo $sep;?>
-Lithology Name<?php echo $sep;?>
-Mineralogy ID<?php echo $sep;?>
-Mineralogy Name<?php echo $sep;?>
-Expedition ID<?php echo $sep;?>
-Expedition Name<?php echo $sep;?>
-Acquisition Category<?php echo $sep;?>
-Type Grouped<?php echo $sep;?>
-Sex<?php echo $sep;?>
-Developpement State<?php echo $sep;?>
-Individual Stage<?php echo $sep;?>
-SocialStatus<?php echo $sep;?>
-RockForm<?php echo $sep;?>
-Count Min<?php echo $sep;?>
-Count Max<?php echo $sep;?>
-Part<?php echo $sep;?>
-Part Status<?php echo $sep;?>
-Object name<?php echo $sep;?>
+<?php if($field_to_show['category']=='check'):?>Category<?php echo $sep; endif;?>
+<?php if($field_to_show['collection']=='check'):?>Collection ID<?php echo $sep;endif;?>
+<?php if($field_to_show['collection']=='check'):?>Collection Name<?php echo $sep;endif;?>
+<?php if($field_to_show['taxon']=='check'):?>Taxonomy ID<?php echo $sep;endif;?>
+<?php if($field_to_show['taxon']=='check'):?>Taxonomy Name<?php echo $sep;endif;?>
+<?php if($field_to_show['gtu']=='check'):?>Sampling Location ID<?php echo $sep;endif;?>
+<?php if($field_to_show['gtu']=='check'):?>Sampling Location Code<?php echo $sep;endif;?>
+<?php if($field_to_show['gtu']=='check'):?>Country<?php echo $sep;endif;?>
+<?php if($field_to_show['gtu']=='check'):?>Latitude<?php echo $sep;endif;?>
+<?php if($field_to_show['gtu']=='check'):?>Longitude<?php echo $sep;endif;?>
+<?php if($field_to_show['gtu']=='check'):?>Altitude (m.)<?php echo $sep;endif;?>
+<?php if($field_to_show['gtu']=='check'):?>Altitude accuracy (m.)<?php echo $sep;endif;?>
+<?php if($field_to_show['codes']=='check'):?>Specimens Codes<?php echo $sep;endif;?>
+<?php if($field_to_show['chrono']=='check'):?>Chronostratigraphy ID<?php echo $sep;endif;?>
+<?php if($field_to_show['chrono']=='check'):?>Chronostratigraphy Name<?php echo $sep;endif;?>
+<?php if($field_to_show['ig']=='check'):?>I.G. ID<?php echo $sep;endif;?>
+<?php if($field_to_show['ig']=='check'):?>I.G. Number<?php echo $sep;endif;?>
+<?php if($field_to_show['litho']=='check'):?>Lithostratigraphy ID<?php echo $sep;endif;?>
+<?php if($field_to_show['litho']=='check'):?>Lithostratigraphy Name<?php echo $sep;endif;?>
+<?php if($field_to_show['lithology']=='check'):?>Lithology ID<?php echo $sep;endif;?>
+<?php if($field_to_show['lithology']=='check'):?>Lithology Name<?php echo $sep;endif;?>
+<?php if($field_to_show['mineral']=='check'):?>Mineralogy ID<?php echo $sep;endif;?>
+<?php if($field_to_show['mineral']=='check'):?>Mineralogy Name<?php echo $sep;endif;?>
+<?php if($field_to_show['expedition']=='check'):?>Expedition ID<?php echo $sep;endif;?>
+<?php if($field_to_show['expedition']=='check'):?>Expedition Name<?php echo $sep;endif;?>
+<?php if($field_to_show['acquisition_category']=='check'):?>Acquisition Category<?php echo $sep;endif;?>
+<?php if($field_to_show['individual_type']=='check'):?>Type Grouped<?php echo $sep;endif;?>
+<?php if($field_to_show['sex']=='check'):?>Sex<?php echo $sep;endif;?>
+<?php if($field_to_show['state']=='check'):?>Developpement State<?php echo $sep;endif;?>
+<?php if($field_to_show['stage']=='check'):?>Individual Stage<?php echo $sep;endif;?>
+<?php if($field_to_show['status']=='check'):?>SocialStatus<?php echo $sep;endif;?>
+<?php if($field_to_show['rock_form']=='check'):?>RockForm<?php echo $sep;endif;?>
+<?php if($field_to_show['specimen_count']=='check'):?>Count Min<?php echo $sep;endif;?>
+<?php if($field_to_show['specimen_count']=='check'):?>Count Max<?php echo $sep;endif;?>
+<?php if($field_to_show['part']=='check'):?>Part<?php echo $sep;endif;?>
+<?php if($field_to_show['part_status']=='check'):?>Part Status<?php echo $sep;endif;?>
+<?php if($field_to_show['object_name']=='check'):?>Object name<?php echo $sep;endif;?>
 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-Building<?php echo $sep;?>
-Floor<?php echo $sep;?>
-Room<?php echo $sep;?>
-Row<?php echo $sep;?>
-Shelf<?php echo $sep;?>
-Container<?php echo $sep;?>
-Container Type<?php echo $sep;?>
-Container Storage<?php echo $sep;?>
-Sub Container<?php echo $sep;?>
-Sub Container Type<?php echo $sep;?>
-Sub Container Storage<?php echo $sep;?>
+<?php if($field_to_show['building']=='check'):?>Building<?php echo $sep;endif;?>
+<?php if($field_to_show['floor']=='check'):?>Floor<?php echo $sep;endif;?>
+<?php if($field_to_show['room']=='check'):?>Room<?php echo $sep;endif;?>
+<?php if($field_to_show['row']=='check'):?>Row<?php echo $sep;endif;?>
+<?php if($field_to_show['shelf']=='check'):?>Shelf<?php echo $sep;endif;?>
+<?php if($field_to_show['container']=='check'):?>Container<?php echo $sep;endif;?>
+<?php if($field_to_show['container_type']=='check'):?>Container Type<?php echo $sep;endif;?>
+<?php if($field_to_show['container_storage']=='check'):?>Container Storage<?php echo $sep;endif;?>
+<?php if($field_to_show['sub_container']=='check'):?>Sub Container<?php echo $sep;endif;?>
+<?php if($field_to_show['sub_container_type']=='check'):?>Sub Container Type<?php echo $sep;endif;?>
+<?php if($field_to_show['sub_container_storage']=='check'):?>Sub Container Storage<?php echo $sep;endif;?>
 <?php endif;?>
 <?php foreach($specimensearch as $specimen):?>
 
-<?php echo $specimen->getCategory().$sep;?>
-<?php echo $specimen->getCollectionRef().$sep;?>
-<?php echo $specimen->getCollectionName().$sep;?>
-<?php echo $specimen->getTaxonRef().$sep;?>
-<?php echo $specimen->getTaxonName().$sep;?>
-<?php echo $specimen->getGtuRef().$sep;?>
-<?php echo $specimen->getGtuCode().$sep;?>
-<?php echo str_replace(';', ',', $specimen->getGtuCountryTagValue('')).$sep; ?>
-<?php echo (($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$specimen->getLatitude():'').$sep;?>
-<?php echo (($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN))?$specimen->getLongitude():'').$sep;?>
-<?php echo ((($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation())?$specimen->getGtuElevation():'').$sep;?>
-<?php echo ((($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation())?$specimen->getGtuElevationAccuracy():'').$sep;?>
-<?php if(isset($codes[$specimen->getId()])) foreach($codes[$specimen->getId()] as $code) echo $code->getFullCode().',';?><?php echo $sep;?>
-<?php echo $specimen->getChronoRef().$sep;?>
-<?php echo $specimen->getChronoName().$sep;?>
-<?php echo $specimen->getIgRef().$sep;?>
-<?php echo $specimen->getIgNum().$sep;?>
-<?php echo $specimen->getLithoRef().$sep;?>
-<?php echo $specimen->getLithoName().$sep;?>
-<?php echo $specimen->getLithologyRef().$sep;?>
-<?php echo $specimen->getLithologyName().$sep;?>
-<?php echo $specimen->getMineralRef().$sep;?>
-<?php echo $specimen->getMineralName().$sep;?>
-<?php echo $specimen->getExpeditionRef().$sep;?>
-<?php echo $specimen->getExpeditionName().$sep;?>
-<?php echo $specimen->getAcquisitionCategory().$sep;?>
-<?php echo $specimen->getTypeGroup().$sep;;?>
-<?php echo $specimen->getSex().$sep;?>
-<?php echo $specimen->getState().$sep;?>
-<?php echo $specimen->getStage().$sep;?>
-<?php echo $specimen->getSocialStatus().$sep;?>
-<?php echo $specimen->getRockForm().$sep;?>
-<?php echo $specimen->getSpecimenCountMin().$sep;?>
-<?php echo $specimen->getSpecimenCountMax().$sep;?>
-<?php echo $specimen->getSpecimenPart().$sep;?>
-<?php echo $specimen->getSpecimenStatus().$sep;?>
-<?php echo $specimen->getObjectName().$sep;?>
+<?php if($field_to_show['category']=='check'): echo $specimen ->getCategory(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['collection']=='check'): echo $specimen ->getCollectionRef(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['collection']=='check'): echo $specimen ->getCollectionName(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['taxon']=='check'): echo $specimen ->getTaxonRef(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['taxon']=='check'): echo $specimen ->getTaxonName(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['gtu']=='check'): echo $specimen ->getGtuRef(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['gtu']=='check'): echo $specimen ->getGtuCode(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['gtu']=='check'): echo str_replace(';', ',', $specimen->getGtuCountryTagValue('')).$sep;endif;?>
+<?php if($field_to_show['gtu']=='check'): echo (($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) ? $specimen->getLatitude(ESC_RAW):'').$sep;endif;?>
+<?php if($field_to_show['gtu']=='check'): echo (($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) ? $specimen->getLongitude(ESC_RAW):'').$sep;endif;?>
+<?php if($field_to_show['gtu']=='check'): echo ((($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation()) ? $specimen->getGtuElevation(ESC_RAW):'').$sep;endif;?>
+<?php if($field_to_show['gtu']=='check'): echo ((($specimen->getStationVisible() || $specimen->getHasEncodingRights() || $sf_user->isAtLeast(Users::ADMIN)) && $specimen->getGtuElevation()) ? $specimen->getGtuElevationAccuracy(ESC_RAW):'').$sep;endif;?>
+<?php if($field_to_show['codes']=='check'):
+  if(isset($codes[$specimen->getId()])):
+  foreach($codes[$specimen->getId()] as $code) {
+    echo $code->getFullCode(ESC_RAW).',';
+  }
+  echo $sep;endif;endif;?>
+<?php if($field_to_show['chrono']=='check'): echo $specimen ->getChronoRef(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['chrono']=='check'): echo $specimen ->getChronoName(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['ig']=='check'): echo $specimen ->getIgRef(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['ig']=='check'): echo $specimen ->getIgNum(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['litho']=='check'): echo $specimen ->getLithoRef(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['litho']=='check'): echo $specimen ->getLithoName(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['lithology']=='check'): echo $specimen ->getLithologyRef(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['lithology']=='check'): echo $specimen ->getLithologyName(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['mineral']=='check'): echo $specimen ->getMineralRef(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['mineral']=='check'): echo $specimen ->getMineralName(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['expedition']=='check'): echo $specimen ->getExpeditionRef(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['expedition']=='check'): echo $specimen ->getExpeditionName(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['acquisition_category']=='check'): echo $specimen ->getAcquisitionCategory(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['individual_type']=='check'): echo $specimen ->getTypeGroup(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['sex']=='check'): echo $specimen ->getSex(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['state']=='check'): echo $specimen ->getState(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['stage']=='check'): echo $specimen ->getStage(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['status']=='check'): echo $specimen ->getSocialStatus(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['rock_form']=='check'): echo $specimen ->getRockForm(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['specimen_count']=='check'): echo $specimen ->getSpecimenCountMin(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['specimen_count']=='check'): echo $specimen ->getSpecimenCountMax(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['part']=='check'): echo $specimen ->getSpecimenPart(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['part_status']=='check'): echo $specimen ->getSpecimenStatus(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['object_name']=='check'): echo $specimen ->getObjectName(ESC_RAW).$sep;endif;?>
 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-<?php echo $specimen->getBuilding().$sep;?>
-<?php echo $specimen->getFloor().$sep;?>
-<?php echo $specimen->getRoom().$sep;?>
-<?php echo $specimen->getRow().$sep;?>
-<?php echo $specimen->getShelf().$sep;?>
-<?php echo $specimen->getContainer().$sep;?>
-<?php echo $specimen->getContainerType().$sep;?>
-<?php echo $specimen->getContainerStorage().$sep;?>
-<?php echo $specimen->getSubContainer().$sep;?>
-<?php echo $specimen->getSubContainerType().$sep;?>
-<?php echo $specimen->getSubContainerStorage().$sep;?>
+<?php if($field_to_show['building']=='check'): echo $specimen ->getBuilding(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['floor']=='check'): echo $specimen ->getFloor(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['room']=='check'): echo $specimen ->getRoom(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['row']=='check'): echo $specimen ->getRow(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['shelf']=='check'): echo $specimen ->getShelf(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['container']=='check'): echo $specimen ->getContainer(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['container_type']=='check'): echo $specimen ->getContainerType(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['container_storage']=='check'): echo $specimen ->getContainerStorage(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['sub_container']=='check'): echo $specimen ->getSubContainer(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['sub_container_type']=='check'): echo $specimen ->getSubContainerType(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['sub_container_storage']=='check'): echo $specimen ->getSubContainerStorage(ESC_RAW).$sep;endif;?>
 <?php endif;?>
 <?php endforeach;?>
