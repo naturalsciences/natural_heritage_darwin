@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(55);
+SELECT plan(60);
 
 select diag('Test of staging check without levels');
 update people set name_formated_indexed = fulltoindex(coalesce(given_name,'') || coalesce(family_name,''));
@@ -128,6 +128,10 @@ insert into staging (id,import_ref,room) VALUES (6,1,'12');
 update staging set gtu_code='My Gtu', gtu_ref=null where id = 4;
 insert into staging_tag_groups (staging_ref,group_name, sub_group_name, tag_value)
   VALUES(4,'administrative area', 'populated place','Hello; world; ');
+insert into staging_info (id,staging_ref, referenced_relation)
+  VALUES(1,4,'gtu') ;
+insert into comments(referenced_relation,record_id, notion_concerned, comment)
+  VALUES('staging_info',1,'general','info') ;
 update staging set to_import = true;
 
 select is(true, (select fct_importer_abcd(1)));
@@ -135,14 +139,19 @@ select is(true, (select fct_importer_abcd(1)));
 -- select is(1, (select count(*)::integer from specimen_parts));
 select is(1, (select count(*)::integer from specimens where gtu_ref = 1));
 select is('Hello; world; ', (select tag_value from tag_groups where gtu_ref = 1));
-
+select is ('info', (select comment from comments where referenced_relation='gtu' and record_id=1));
 update staging set gtu_code='My Gtuz' , gtu_ref=null, taxon_name=null, taxon_level_name=null ,status='',to_import=true where id = 2;
 
 select is(1 , (select min(fct_imp_checker_gtu(s.*)::int) from staging s));
 select is(true, (select fct_importer_abcd(1)));
 select is(2, (select gtu_ref from specimens where id=6));
-insert into staging (id,import_ref,taxon_name) VALUES (7,1,'Falco Pérégrinuz');
+update imports set is_finished=false where id=1 ;
+insert into staging (id,import_ref,taxon_name,specimen_status) VALUES (7,1,'Falco Pérégrinuz','osef');
 insert into staging (id,import_ref,taxon_name) VALUES (8,1,'Falco Pérégrinuz');
+insert into staging_relationship (relationship_type, referenced_relation, record_id, staging_related_ref)
+  VALUES('host', 'staging', 7, 8 ) ;
+insert into collecting_methods (id,method) VALUES(1, 'all by mylself') ;
+insert into staging_collecting_methods VALUES(1,8,1);
 select is(1 , (select min(fct_imp_checker_manager(s.*)::int) from staging s));
 select is(null , (select taxon_ref from staging s where id = 7));
 select is(null , (select taxon_ref from staging s where id = 8));
@@ -161,7 +170,12 @@ update staging set expedition_ref = 2 where id = 8;
 select is(2 , (select expedition_ref from staging s where id = 7));
 select is(2 , (select expedition_ref from staging s where id = 8));
 select is('Antar' , (select expedition_name from staging s where id = 7));
-
+update staging set expedition_name=null, taxon_name=null, taxon_level_name=null ,status='',to_import=true where id = 7 ;
+update staging set expedition_name=null, taxon_name=null, taxon_level_name=null ,status='',to_import=true where id = 8;
+select is(true, (select fct_importer_abcd(1)));
+select is (1, (select collecting_method_ref from specimen_collecting_methods WHERE specimen_ref=8)) ;
+select is('osef', (select specimen_status from specimens where specimen_status='osef')) ;
+select is('host', (select relationship_type from specimens_relationships)) ;
 SELECT * FROM finish();
 
 

@@ -513,13 +513,13 @@ BEGIN
         continue ;
       ELSE
         INSERT INTO specimens_relationships(id, specimen_ref, relationship_type, unit_type, specimen_related_ref, institution_ref)
-        SELECT nextval('specimens_relationships_id_seq'), relation_line.spec_ref, 'parent', unit_type, specimen_ref, institution_ref
+        SELECT nextval('specimens_relationships_id_seq'), relation_line.spec_ref, relation_line.relationship_type, unit_type, specimen_ref, institution_ref
         from staging_relationship where id=relation_line.id AND staging_related_ref=relation_line.staging_related_ref;
       END IF;
     ELSE
     INSERT INTO specimens_relationships(id, specimen_ref, relationship_type, unit_type, institution_ref,taxon_ref, mineral_ref, source_name,
     source_id, quantity, unit)
-        SELECT nextval('specimens_relationships_id_seq'), relation_line.spec_ref, 'parent', unit_type, institution_ref,
+        SELECT nextval('specimens_relationships_id_seq'), relation_line.spec_ref, relation_line.relationship_type, unit_type, institution_ref,
         taxon_ref, mineral_ref, source_name, source_id, quantity, unit
         from staging_relationship where record_id=relation_line.id ;
     END IF ;
@@ -773,7 +773,7 @@ BEGIN
         UPDATE collection_maintenance set people_ref=people_id where id=maintenance_line.id ;
         DELETE FROM staging_people where referenced_relation='collection_maintenance' AND record_id=maintenance_line.id ;
       END LOOP;
-      UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
+      UPDATE collection_maintenance SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
       -- Import identifiers whitch identification have been updated to specimen
       INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
       SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
