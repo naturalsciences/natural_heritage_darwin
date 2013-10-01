@@ -11,10 +11,12 @@ class LoginForm extends BaseForm
 
     $this->setValidators(array(
       'username'    => new sfValidatorString(
-            array('required' => true, 'min_length' => 4, 'trim' => true),
-            array('min_length' => '"%value%" must be at least %min_length% characters.')
+        array(
+          'required' => true,
+          'min_length' => 4, 'trim' => true),
+          array('min_length' => '"%value%" must be at least %min_length% characters.')
         ),
-      'password'   => new sfValidatorString(array('required' => false)),
+        'password'   => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('login[%s]');
