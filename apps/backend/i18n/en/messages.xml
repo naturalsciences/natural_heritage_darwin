@@ -5735,9 +5735,9 @@
         <source>Search Only objects with multimedia files </source>
         <target>Search Only objects with multimedia files</target>
       </trans-unit>
-      
-      
-      
+
+
+
       <trans-unit id="1740">
         <source>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</source>
         <target>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
@@ -5763,15 +5763,15 @@
         correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</source>
         <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import, correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</target>
       </trans-unit>
-      <trans-unit id="1745">
+      <trans-unit id="1746">
         <source>Continue import</source>
         <target>Continue import</target>
       </trans-unit>
-      <trans-unit id="1745">
-        <source></source>
-        <target></target>
+      <trans-unit id="1747">
+        <source>Applies To</source>
+        <target>Applies To</target>
       </trans-unit>
-      <trans-unit id="1745">
+      <trans-unit id="1748">
         <source></source>
         <target></target>
       </trans-unit>

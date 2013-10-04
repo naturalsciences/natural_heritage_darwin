@@ -723,6 +723,36 @@
         <source>Geo/Paleo Search</source>
         <target>Geo/Paleo Search</target>
       </trans-unit>
+
+
+      <trans-unit id="1711">
+        <source>Properties</source>
+        <target>Properties</target>
+      </trans-unit>
+      <trans-unit id="1712">
+        <source>Codes</source>
+        <target>Codes</target>
+      </trans-unit>
+      <trans-unit id="1713">
+        <source>Property type</source>
+        <target>Type</target>
+      </trans-unit>
+      <trans-unit id="1714">
+        <source>Applies To</source>
+        <target>Applies To</target>
+      </trans-unit>
+      <trans-unit id="1715">
+        <source>Date From</source>
+        <target>Date From</target>
+      </trans-unit>
+      <trans-unit id="176">
+        <source>Date To</source>
+        <target>Date To</target>
+      </trans-unit>
+      <trans-unit id="1717">
+        <source>Value</source>
+        <target>Value</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>

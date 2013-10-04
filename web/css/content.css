@@ -3,7 +3,7 @@ html, body
   min-width: 996px;
   font-size: 10pt;
   font-family: sans-serif;
-  height: 100%;  
+  height: 100%;
 }
 
 table
@@ -13,7 +13,7 @@ table
 
 table td, table th
 {
-   vertical-align: middle ; 
+   vertical-align: middle ;
 }
 
 table td.content
@@ -30,7 +30,7 @@ table.tag td
 table.spec_result tr
 {
   text-align:left;
-  vertical-align: top ;  
+  vertical-align: top ;
 }
 
 
@@ -45,7 +45,7 @@ table.classification td, table.classification th
   margin-top: 0.2em;
   margin-bottom: 0.5em ;
   padding-top: 0.2em;
-  padding-left: 0.2em;    
+  padding-left: 0.2em;
   vertical-align : middle ;
   text-align: left ;
 }
@@ -146,7 +146,7 @@ div#login_arrow_middle_white
 
 td.line, table.caract_table td, table.classification td
 {
-  padding:0.2em; 
+  padding:0.2em;
 }
 
 .framed
@@ -159,7 +159,7 @@ td.line, table.caract_table td, table.classification td
 
 .borded
 {
-  border: 1px solid #3390a1; 
+  border: 1px solid #3390a1;
   margin-top: 0.2em;
   margin-bottom: 0.5em ;
   padding-bottom: 0.4em;
@@ -193,7 +193,7 @@ td.line, table.caract_table td, table.classification td
 .triple_table
 {
  width: 341px ;
-} 
+}
 
 hr
 {
@@ -224,7 +224,7 @@ h2.title
 	padding-top: 0.4em;
 	color:white;
   -moz-border-radius: 5px 5px 0 0;
-  -webkit-border-radius: 5px 5px 0 0;	
+  -webkit-border-radius: 5px 5px 0 0;
 }
 
 .medium_small_size
@@ -268,7 +268,7 @@ input[type="submit"][class="search_submit"]:hover,input[type="button"]:hover
 .treelist li
 {
   margin-left: 0.5em;
-  margin-top: 0.5em;  
+  margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
 
@@ -285,7 +285,7 @@ input[type="submit"][class="search_submit"]:hover,input[type="button"]:hover
 .collections td
 {
   text-align: left ;
-  padding-right: 1em;  
+  padding-right: 1em;
 }
 
 .collections tr
@@ -387,9 +387,9 @@ table#gtu_search tr.and_row td:nth-child(2)
   padding:0.2em;
   margin:0.3em;
   border: 1px solid #878988;
-  
+
   font-size: x-small;
-  border-color: #878988;  
+  border-color: #878988;
 }
 
 /** Pager **/
@@ -528,7 +528,7 @@ table.caract_table tr:hover
 
 ul.column_menu:hover
 {
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 .clear
@@ -540,7 +540,7 @@ ul.column_menu:hover
 
 .spec_results
 {
-  margin: auto; 
+  margin: auto;
   padding : auto ;
   background-color:white;
   -moz-border-radius: 5px;
@@ -586,7 +586,7 @@ ul.column_menu:hover
 .spec_results span
 {
   vertical-align : middle;
-  display : inline ;  
+  display : inline ;
 }
 
 /* Style for choose column menu */
@@ -640,7 +640,7 @@ fieldset legend
   margin-bottom: 0.4em;
 }
 
-.column_menu ul > li 
+.column_menu ul > li
 {
   display: list-item ;
 }
@@ -860,7 +860,7 @@ a#register_link, a#login_lostpwd
 }
 .tour_left .tour_img
 {
- float:left; 
+ float:left;
  margin-right: 2em;
 }
 
@@ -878,8 +878,8 @@ a#register_link, a#login_lostpwd
 
 .tour_text p
 {
-  height: 75px; 
-  margin-top: 75px; /* moitié de la hauteur */ 
+  height: 75px;
+  margin-top: 75px; /* moitié de la hauteur */
 }
 
 .fan_register_but {
@@ -947,7 +947,7 @@ a#register_link, a#login_lostpwd
 .about_content ul li span
 {
   display:block;
-  
+
 }
 .about_content h2
 {
@@ -986,8 +986,9 @@ a#register_link, a#login_lostpwd
 
 .borded h3 {
   border-bottom:1px solid #5BAABD;
-  margin-bottom:6px;
+  margin-bottom:8px;
   padding-bottom:4px;
+  margin-top: 7px;
 }
 /*
 td.line h3 a {
@@ -1019,7 +1020,7 @@ div.files .file_title {
 .custom-label {
   display: inline-block;
   margin-right: .8em;
-  cursor: pointer; 
+  cursor: pointer;
 }
 .custom-radio,
 .custom-check {
@@ -1052,3 +1053,14 @@ div.files .file_title {
   background-image: url(/images/blue_expand.png);
 }
 
+.datesNum, .borded .datesNum
+{
+/*   text-align: right; */
+}
+
+
+.datesNum em, #properties table em
+{
+  color:#C1C1C1;
+  font-style:normal;
+}

@@ -5755,9 +5755,13 @@
     correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</source>
         <target>&lt;strong&gt;Waarschuwing!&lt;/strong&gt;&lt;br /&gt; Deze foutmeldingen kunnen niet worden gecorrigeerd. U kan best uw import verwijderen, het XML-bestand corrigeren en opnieuw importeren. U kan eveneens het importeren vervolgen, maar u zal bovenstaande informatie verliezen. Wat wenst u te doen?</target>
       </trans-unit>
-      <trans-unit id="1745">
+      <trans-unit id="1746">
         <source>Continue import</source>
         <target>Het importeren vervolgen</target>
+      </trans-unit>
+      <trans-unit id="1747">
+        <source>Applies To</source>
+        <target>Geldig voor</target>
       </trans-unit>
         </body>
   </file>

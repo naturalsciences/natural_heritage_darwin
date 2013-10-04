@@ -3,8 +3,8 @@
     <tr>
       <th><?php echo __('Type');?></th>
       <th><?php echo __('Applies To');?></th>
-      <th><?php echo __('Date From');?></th>
-      <th><?php echo __('Date To');?></th>
+      <th class="datesNum"><?php echo __('Date From');?></th>
+      <th class="datesNum"><?php echo __('Date To');?></th>
       <th><?php echo __('Values');?></th>
     </tr>
   </thead>
