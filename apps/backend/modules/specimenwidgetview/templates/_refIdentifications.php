@@ -7,11 +7,11 @@
       <th><?php echo __('Det. St.'); ?></th>
       <th><?php echo __("Identifiers") ; ?></th>
     </tr>
-  </thead>   
+  </thead>
   <?php foreach($identifications as $identification):?>
   <tbody id="refIdent" class="spec_ident_data">
     <tr class="spec_ident_data">
-      <td colspan="2" class="datesNum">        
+      <td class="datesNum">
         <?php echo sfOutputEscaper::unescape($identification->getNotionDateMasked()); ?>
       </td>
       <td>
@@ -26,11 +26,11 @@
       <td>
         <ul class="tool">
         <?php foreach($people[$identification->getId()] as $identifier):?>
-           <?php echo ("<li>".$identifier."</li>") ; ?>
+           <li><?php echo $identifier; ?></li>
         <?php endforeach ; ?>
         </ul>
       </td>
     </tr>
-  </tbody> 
+  </tbody>
   <?php endforeach;?>
 </table>
