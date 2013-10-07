@@ -7,7 +7,7 @@ $(document).ready(function () {
         $(this).siblings('.expanded').show();
         $(this).parent().siblings('ul').show();
     });
-    
+
     $('.expanded').click(function()
     {
         $(this).hide();
