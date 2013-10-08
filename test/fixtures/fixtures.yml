@@ -283,7 +283,12 @@ Collections:
         name: Fossile Aves
         Institution: p1
         Manager: u1
-        Parent: c4                            
+        Parent: c4
+    c6:
+        code: imp
+        name: Import collection
+        Institution: p1
+        Manager: u1
 
 CollectingMethods:
     cm1:
@@ -959,3 +964,78 @@ CollectionMaintenance:
         description: test de workflow pour les tests
         People: p1
         action_observation: observation
+        
+Imports:
+    imp1:
+        id: 1
+        Users: u1
+        format : abcd
+        Collections: c6
+        filename : test.xml
+        initial_count: 3
+        state : pending
+
+Staging:
+    stg1:
+        id: 1
+        Import: imp1
+        taxon_name: Cacaleluya
+        taxon_level_name: class
+        status : <?php echo json_encode(array('taxon'=>'not_found'));?>
+        
+    stg2:
+        id: 2
+        Import: imp1
+        building: Vestel
+        status : <?php echo json_encode(array('people'=>'not_found'));?>
+        
+    stg3:
+        id: 3
+        Import: imp1
+        taxon_name: Cacaleluya
+        taxon_level_name: class
+        status : <?php echo json_encode(array('taxon'=>'not_found'));?>
+
+StagingPeople:
+    stgp1:
+        id: 1
+        record_id: 2
+        referenced_relation: staging
+        formated_name: Poilux
+        people_type: collector
+
+StagingInfo:
+    stgi1:
+        id: 1
+        Staging: stg1
+        referenced_relation: taxonomy
+
+ExtLinks:
+    extl1:
+      id: 1
+      referenced_relation: staging_info
+      record_id: 1
+      url: http://darwin.naturalsciences.be/taxonomy/view/id/95862
+      comment: link to an awesome taxon
+
+StagingTagGroups:
+    stgtg1:
+      id: 1
+      Staging: stg2
+      group_name: administrative area
+      sub_group_name: country
+      tag_value: France
+
+StagingMethods:
+    stgm11:
+      id: 1
+      Staging: stg1
+      CollectingMethods: cm1
+      
+StagingRelationship:
+    stgrl:
+      id: 1
+      referenced_relation: staging
+      record_id: 3
+      relationship_type: part of
+      staging_related_ref: 2

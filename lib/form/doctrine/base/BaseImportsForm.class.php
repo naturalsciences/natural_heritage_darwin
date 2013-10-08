@@ -17,7 +17,7 @@ abstract class BaseImportsForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'               => new sfWidgetFormInputHidden(),
       'filename'         => new sfWidgetFormTextarea(),
-      'user_ref'         => new sfWidgetFormInputText(),
+      'user_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => false)),
       'format'           => new sfWidgetFormTextarea(),
       'collection_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => false)),
       'state'            => new sfWidgetFormTextarea(),
@@ -31,7 +31,7 @@ abstract class BaseImportsForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'               => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'filename'         => new sfValidatorString(),
-      'user_ref'         => new sfValidatorInteger(),
+      'user_ref'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Users'))),
       'format'           => new sfValidatorString(),
       'collection_ref'   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'))),
       'state'            => new sfValidatorString(array('required' => false)),

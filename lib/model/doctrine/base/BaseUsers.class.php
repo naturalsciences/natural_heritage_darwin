@@ -31,6 +31,7 @@
  * @property Doctrine_Collection $MySavedSearches
  * @property Doctrine_Collection $MyWidgets
  * @property Doctrine_Collection $Preferences
+ * @property Doctrine_Collection $Imports
  * @property Doctrine_Collection $LoanRights
  * @property Doctrine_Collection $LoanStatus
  * 
@@ -60,6 +61,7 @@
  * @method Doctrine_Collection getMySavedSearches()       Returns the current record's "MySavedSearches" collection
  * @method Doctrine_Collection getMyWidgets()             Returns the current record's "MyWidgets" collection
  * @method Doctrine_Collection getPreferences()           Returns the current record's "Preferences" collection
+ * @method Doctrine_Collection getImports()               Returns the current record's "Imports" collection
  * @method Doctrine_Collection getLoanRights()            Returns the current record's "LoanRights" collection
  * @method Doctrine_Collection getLoanStatus()            Returns the current record's "LoanStatus" collection
  * @method Users               setId()                    Sets the current record's "id" value
@@ -88,6 +90,7 @@
  * @method Users               setMySavedSearches()       Sets the current record's "MySavedSearches" collection
  * @method Users               setMyWidgets()             Sets the current record's "MyWidgets" collection
  * @method Users               setPreferences()           Sets the current record's "Preferences" collection
+ * @method Users               setImports()               Sets the current record's "Imports" collection
  * @method Users               setLoanRights()            Sets the current record's "LoanRights" collection
  * @method Users               setLoanStatus()            Sets the current record's "LoanStatus" collection
  * 
@@ -209,6 +212,10 @@ abstract class BaseUsers extends DarwinModel
              'foreign' => 'user_ref'));
 
         $this->hasMany('Preferences', array(
+             'local' => 'id',
+             'foreign' => 'user_ref'));
+
+        $this->hasMany('Imports', array(
              'local' => 'id',
              'foreign' => 'user_ref'));
 

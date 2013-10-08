@@ -14,7 +14,7 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'filename'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'user_ref'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'user_ref'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => true)),
       'format'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'collection_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Collections'), 'add_empty' => true)),
       'state'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
@@ -27,7 +27,7 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'filename'         => new sfValidatorPass(array('required' => false)),
-      'user_ref'         => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'user_ref'         => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Users'), 'column' => 'id')),
       'format'           => new sfValidatorPass(array('required' => false)),
       'collection_ref'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Collections'), 'column' => 'id')),
       'state'            => new sfValidatorPass(array('required' => false)),
@@ -57,7 +57,7 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
     return array(
       'id'               => 'Number',
       'filename'         => 'Text',
-      'user_ref'         => 'Number',
+      'user_ref'         => 'ForeignKey',
       'format'           => 'Text',
       'collection_ref'   => 'ForeignKey',
       'state'            => 'Text',

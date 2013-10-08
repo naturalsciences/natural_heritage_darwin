@@ -968,6 +968,9 @@ Imports:
         Collections:
             local: collection_ref
             foreign: id
+        Users:
+            local: user_ref
+            foreign: id
 
 Staging:
     columns:

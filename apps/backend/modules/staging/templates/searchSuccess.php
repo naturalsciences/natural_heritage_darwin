@@ -29,6 +29,7 @@
       <th><?php echo __($title);?></th>
     <?php endforeach;?>
     </thead>
+    <tbody>
     <?php foreach($search as $row):?>
       <tr>
         <td>
@@ -60,6 +61,7 @@
         <?php endforeach;?>
         </tr>
     <?php endforeach;?>
+    </tbody>
   </table>
   <br/>
   <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?>

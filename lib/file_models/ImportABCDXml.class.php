@@ -39,7 +39,6 @@ class ImportABCDXml implements IImportModels
     $this->inside_data = false ;
     switch ($name) {
       case "Accessions" : $this->object = new parsingTag() ; break ;;
-      case "Biotope" : /*@TODO ;*/ break ;;
       case "efg:ChronostratigraphicAttributions" :
       case "ChronostratigraphicAttributions" : $this->object = new ParsingCatalogue('chronostratigraphy') ; break ;;
       case "Country" : $this->object->tag_group_name="country" ; break ;;
@@ -130,7 +129,7 @@ class ImportABCDXml implements IImportModels
       case "InheritedName" : $this->people['family_name'] = $this->cdata ; break ;;
       case "ISODateTimeBegin" : $this->object->GTUdate['from'] = $this->cdata ; break ;;
       case "ISODateTimeEnd" : $this->object->GTUdate['to'] = $this->cdata ; break ;;
-      case "IsQuantitative" : /*$this->property->property->setIsQuantitative($this->cdata) ; */ break ;;
+      case "IsQuantitative" : $this->property->property->setIsQuantitative($this->cdata) ; break ;;
       case "KindOfUnit" : $this->staging['part'] = $this->cdata ; break ;;
       case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $this->cdata ; break ;;
       case "Length" : $this->object->desc .= "Length : ".$this->cdata." ;" ; break ;;
@@ -180,6 +179,7 @@ class ImportABCDXml implements IImportModels
       case "storage:Shelf" : $this->staging->setShelf($this->cdata) ; break ;;
       case "storage:Box" : $this->staging->setContainerType('box'); $this->staging->setContainer($this->cdata) ; break ;;
       case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break ;;
+      case "Text": if($this->getPreviousTag() == "Biotope") $this->addComment() ; break ;;
       case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ;  $this->addComment(true) ; break ;;
       case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break ;;
       case "Unit" : $this->saveUnit(); break ;;
