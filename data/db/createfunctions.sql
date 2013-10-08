@@ -2957,8 +2957,8 @@ BEGIN
         VALUES(nextval('catalogue_people_id_seq'),people_line.referenced_relation, people_line.record_id, people_line.people_type, people_line.people_sub_type, people_line.order_by, people_line.people_ref) ;
       END LOOP;
       DELETE FROM staging_people WHERE referenced_relation = 'specimens' ;
-      id_to_delete = array_append(id_to_delete,all_line.id) ;
     END IF ;
+    id_to_delete = array_append(id_to_delete,all_line.id) ;
     END;
   END LOOP;
   select fct_imp_checker_staging_relationship() into id_to_keep ;

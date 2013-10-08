@@ -104,6 +104,21 @@ $browser->
   begin()->
     isStatusCode()->
     checkElement('table.spec_results tbody tr', 3)->
+  end()->
+  info('Ensure the import is finished (and so doesn\'t appear in search anymore)')->
+get('/import/index')->
+  with('request')->begin()->
+    isParameter('module', 'import')->
+    isParameter('action', 'index')->
+  end()->
+  with('response')->begin()->
+    checkElement('h1', 'Imports : ')->
+  end()->
+  click('input.search_submit', array('imports_filters' => array('show_finished' => true)))->
+  with('response')->
+  begin()->
+    checkElement('table.results tbody tr',1)->
+    checkElement('table.results tbody tr td:nth-child(4)','/Finished/')->
   end();
   
   
