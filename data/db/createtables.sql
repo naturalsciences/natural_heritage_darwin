@@ -71,6 +71,7 @@ create table catalogue_relationships
         record_id_1 integer not null,
         record_id_2 integer not null,
         relationship_type varchar not null default 'recombined from',
+        constraint pk_catalogue_relationships primary key (id),
         constraint unq_catalogue_relationships unique (referenced_relation, relationship_type, record_id_1, record_id_2)
        );
 comment on table catalogue_relationships is 'Stores the relationships between records of a table - current name, original combination, ...';
@@ -1336,6 +1337,7 @@ create table preferences
     user_ref integer not null,
     pref_key varchar not null,
     pref_value varchar not null,
+    constraint pk_preferences primary key (id),
     constraint fk_users_preferences foreign key (user_ref) references users(id) on delete cascade
   );
 

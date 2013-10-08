@@ -18,39 +18,42 @@ class RegisterLoginInfosForm extends UsersLoginInfosForm
     $this->widgetSchema['user_name']->setAttributes(array('class'=>'medium_small_size required_field'));
     $this->widgetSchema['new_password']->setAttributes(array('class'=>'medium_small_size required_field'));
     $this->widgetSchema['confirm_password']->setAttributes(array('class'=>'medium_small_size required_field'));
-    $this->validatorSchema['user_name'] = new sfValidatorString(array('required' => true, 'min_length' => 4),
-                                                                array('min_length' => '"%value%" must be at least %min_length% characters.',
-                                                                      'required' => 'Login is required'
-                                                                     )
-                                                               ) ;
+    $this->validatorSchema['user_name'] = new sfValidatorString(
+      array('required' => true, 'min_length' => 4, 'trim' => true),
+      array('min_length' => '"%value%" must be at least %min_length% characters.',
+      'required' => 'Login is required'
+      )
+    );
+
     $this->validatorSchema['new_password'] = new sfValidatorAnd(
-                                              array(
-                                                new sfValidatorRegex(
-                                                  array('pattern' => "/\w*(?=\w*\d)(?=\w*[a-z])(?=\w*[A-Z])\w*/"),
-                                                  array('invalid' => 'Password must contain at least a case mix and at least one digit')
-                                                  ),
-                                                new sfValidatorString(
-                                                  array('min_length' => 6, 'trim'=>true, 'required'=>true),
-                                                  array('required'=>'You need to provide a password',
-                                                        'min_length' => 'Password must be at least %min_length% characters length'
-                                                       )
-                                                  )
-                                              )
-                                             );
+      array(
+        new sfValidatorRegex(
+          array('pattern' => "/\w*(?=\w*\d)(?=\w*[a-z])(?=\w*[A-Z])\w*/"),
+          array('invalid' => 'Password must contain at least a case mix and at least one digit')
+          ),
+        new sfValidatorString(
+          array('min_length' => 6, 'trim'=>true, 'required'=>true),
+          array('required'=>'You need to provide a password',
+            'min_length' => 'Password must be at least %min_length% characters length'
+          )
+        )
+      )
+    );
     $this->validatorSchema['confirm_password'] = new sfValidatorAnd(
-                                                  array(
-                                                    new sfValidatorRegex(
-                                                      array('pattern' => "/\w*(?=\w*\d)(?=\w*[a-z])(?=\w*[A-Z])\w*/"),
-                                                      array('invalid' => 'Password must contain at least a case mix and at least one digit')
-                                                      ),
-                                                    new sfValidatorString(
-                                                      array('min_length' => 6, 'trim'=>true, 'required'=>true),
-                                                      array('required'=>'You need to confirm your password',
-                                                            'min_length' => 'Password must be at least %min_length% characters length'
-                                                          )
-                                                      )
-                                                  )
-                                                );
+      array(
+        new sfValidatorRegex(
+          array('pattern' => "/\w*(?=\w*\d)(?=\w*[a-z])(?=\w*[A-Z])\w*/"),
+          array('invalid' => 'Password must contain at least a case mix and at least one digit')
+        ),
+        new sfValidatorString(
+          array('min_length' => 6, 'trim'=>true, 'required'=>true),
+          array(
+            'required'=>'You need to confirm your password',
+            'min_length' => 'Password must be at least %min_length% characters length'
+          )
+        )
+      )
+    );
     $this->validatorSchema['user_ref'] = new sfValidatorInteger(array('required'=>false));
   }
 
@@ -66,9 +69,9 @@ class RegisterLoginInfosForm extends UsersLoginInfosForm
         $this->user = Doctrine::getTable('UsersLoginInfos')->getUserByUserName($values['user_name']);
         if ($this->user)
         {
-            $error = new sfValidatorError($validator, 'Login is already used, please provide an other');
-            // throw an error bound to the password field
-            throw new sfValidatorErrorSchema($validator, array('user_name' => $error));
+          $error = new sfValidatorError($validator, 'Login is already used, please provide an other');
+          // throw an error bound to the password field
+          throw new sfValidatorErrorSchema($validator, array('user_name' => $error));
         }
     }
     return $values;

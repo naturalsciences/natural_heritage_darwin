@@ -17,7 +17,7 @@ class collectionActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
 
     $this->forward404Unless($request->hasParameter('id'));
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId())) 
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
       $this->forwardToSecureAction();
 
     $this->collCodes = Doctrine::getTable('Collections')->find($request->getParameter('id'));
@@ -36,7 +36,7 @@ class collectionActions extends DarwinActions
         catch(Exception $e)
         {
           $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-          $this->form->getErrorSchema()->addError($error); 
+          $this->form->getErrorSchema()->addError($error);
         }
       }
     }
@@ -57,7 +57,7 @@ class collectionActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
 
     $this->forward404Unless($request->hasParameter('id'),'No id given');
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId())) 
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
       $this->forwardToSecureAction();
 
     $item = Doctrine::getTable('Collections')->find($request->getParameter('id'));
@@ -86,18 +86,18 @@ class collectionActions extends DarwinActions
     $this->collections = Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($request->getParameter('institution'));
     $this->setLayout(false);
   }
-  
+
   /* function that modify the institution when we change the parent_ref */
   public function executeSetInstitution(sfWebRequest $request)
   {
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
-     
+
     $collection = new Collections() ;
     $collection->setInstitutionRef(Doctrine::getTable('Collections')->getInstitutionNameByCollection($request->getParameter('parent_ref'))->getId()) ;
     $this->form = new CollectionsForm($collection);
     $this->setLayout(false);
   }
-    
+
   public function executeChoose(sfWebRequest $request)
   {
     if(! $this->getUser()->isAtLeast(Users::ENCODER) ) $this->forwardToSecureAction();
@@ -116,7 +116,7 @@ class collectionActions extends DarwinActions
 
     $duplic = $request->getParameter('duplicate_id','0') ;
     $collection = $this->getRecordIfDuplicate($duplic, new Collections());
-    $this->form = new CollectionsForm($collection, array('duplicate'=> true));    
+    $this->form = new CollectionsForm($collection, array('duplicate'=> true));
     if ($duplic)
     {
       $User = Doctrine::getTable('CollectionsRights')->getAllUserRef($collection->getId()) ;
@@ -124,7 +124,7 @@ class collectionActions extends DarwinActions
       {
          $this->form->addValue($key, $val->getUserRef(),'encoder');
       }
-    }  
+    }
   }
 
   public function executeCreate(sfWebRequest $request)
@@ -134,7 +134,7 @@ class collectionActions extends DarwinActions
     $this->forward404Unless($request->isMethod('post'));
     $options = $request->getParameter('collections');
     $this->form = new CollectionsForm(null,array('new_with_error' => true, 'institution' => $options['institution_ref']));
-    
+
     $this->processForm($request, $this->form);
 
     $this->setTemplate('new');
@@ -143,11 +143,11 @@ class collectionActions extends DarwinActions
   public function executeEdit(sfWebRequest $request)
   {
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId())) 
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) &&  !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
       $this->forwardToSecureAction();
     $collection = Doctrine::getTable('Collections')->find($request->getParameter('id'));
     $this->forward404Unless($collection, 'collections does not exist');
-    $this->level = $this->getUser()->getDbUserType() ;      
+    $this->level = $this->getUser()->getDbUserType() ;
     $this->form = new CollectionsForm($collection);
     $this->loadWidgets();
   }
@@ -175,7 +175,7 @@ class collectionActions extends DarwinActions
   {
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
-    $this->level = $this->getUser()->getDbUserType() ;    
+    $this->level = $this->getUser()->getDbUserType() ;
     $collection = Doctrine::getTable('Collections')->find($request->getParameter('id'));
     $this->forward404Unless($collection, 'collections does not exist');
     $this->form = new CollectionsForm($collection);
@@ -192,7 +192,7 @@ class collectionActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     if(! $this->getUser()->isAtLeast(Users::MANAGER) ) $this->forwardToSecureAction();
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId())) 
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('id'),$this->getUser()->getId()))
       $this->forwardToSecureAction();
     $request->checkCSRFProtection();
     $collection = Doctrine::getTable('Collections')->find($request->getParameter('id'));
@@ -207,7 +207,7 @@ class collectionActions extends DarwinActions
     {
       $this->form = new CollectionsForm($collection);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-      $this->form->getErrorSchema()->addError($error); 
+      $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
       $this->setTemplate('edit');
       return ;
@@ -223,7 +223,7 @@ class collectionActions extends DarwinActions
     $parent_ref = $request->getParameter('collection_ref');
 
     /*** Check if the user has rights on this collection ***/
-    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($parent_ref,$this->getUser()->getId())) 
+    if(!$this->getUser()->isAtLeast(Users::ADMIN) && !Doctrine::getTable('CollectionsRights')->findOneByCollectionRefAndUserRef($parent_ref,$this->getUser()->getId()))
       $this->forwardToSecureAction();
 
     $this->form = new SubCollectionsForm(null, array('current_user' => $this->getUser(),'collection_ref' => $parent_ref ,'user_ref' => $user_ref));
@@ -239,7 +239,7 @@ class collectionActions extends DarwinActions
         catch(Doctrine_Connection_Pgsql_Exception $e)
         {
           $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-          $this->form->getErrorSchema()->addError($error); 
+          $this->form->getErrorSchema()->addError($error);
           return ;
         }
         return $this->renderText('ok') ;
@@ -260,7 +260,7 @@ class collectionActions extends DarwinActions
         catch(Exception $e)
         {
             $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-            $form->getErrorSchema()->addError($error); 
+            $form->getErrorSchema()->addError($error);
         }
     }
   }
@@ -268,12 +268,12 @@ class collectionActions extends DarwinActions
   public function executeWidgetsRight(sfWebRequest $request)
   {
     if($this->getUser()->getDbUserType() < Users::MANAGER ) $this->forwardToSecureAction();
-    if(!$this->getUser()->isA(Users::ADMIN))    
+    if(!$this->getUser()->isA(Users::ADMIN))
       if (!Doctrine::getTable('collectionsRights')->findOneByCollectionRefAndUserRef($request->getParameter('collection_ref'),$this->getUser()->getId()))
         $this->forwardToSecureAction();
     $id = $request->getParameter('user_ref');
     $this->form = new WidgetRightsForm(null,array('user_ref' => $id,'collection_ref' => $request->getParameter('collection_ref'))) ;
-    $this->user = Doctrine::getTable("Users")->findUser($id) ;    
+    $this->user = Doctrine::getTable("Users")->findUser($id) ;
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('widget_rights')) ;
@@ -282,6 +282,6 @@ class collectionActions extends DarwinActions
         $this->form->save();
         return $this->renderText('ok') ;
       }
-    }    
+    }
   }
 }

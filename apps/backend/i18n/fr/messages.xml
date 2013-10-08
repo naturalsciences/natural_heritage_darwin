@@ -5758,9 +5758,13 @@
         <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt; Ces erreurs ne peuvent pas être corrigées, Le meilleur moyen de les corriger est de supprimer votre import, corriger votre fichier XML, et réimporter.
           Vous pouvez aussi continuer votre import mais vous perdrez alors les informations ci-dessus. Que voulez vous faire ?</target>
       </trans-unit>
-      <trans-unit id="1745">
+      <trans-unit id="1746">
         <source>Continue import</source>
         <target>Continuer l'import</target>
+      </trans-unit>
+      <trans-unit id="1747">
+        <source>Applies To</source>
+        <target>Applies To</target>
       </trans-unit>
         </body>
   </file>

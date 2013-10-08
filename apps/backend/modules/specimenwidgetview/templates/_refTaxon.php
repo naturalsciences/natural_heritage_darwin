@@ -13,7 +13,7 @@
 <script type="text/javascript">
 $(document).ready(function ()
 {
-   $('.taxon_view .info').click(function() 
+   $('.taxon_view .info').click(function()
    {
      if($('.taxon_view .tree').is(":hidden"))
      {

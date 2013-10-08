@@ -1,8 +1,8 @@
-<?php slot('title', __('View Specimens') .  ( $specimen->getTaxonRef()  ? " : ".$specimen->getTaxonName() : ""));  ?>  
+<?php slot('title', __('View Specimens') .  ( $specimen->getTaxonRef()  ? " : ".$specimen->getTaxonName() : ""));  ?>
 
 <div class="page viewer">
   <h1><?php echo __("Specimen Record");?><?php echo (": p".$specimen->getId());?></h1>
-    <h2 class="title"><?php echo __("Collection") ?></h2>  
+    <h2 class="title"><?php echo __("Collection") ?></h2>
     <div class="borded right_padded">
       <table>
         <tbody>
@@ -12,7 +12,7 @@
                 <?php echo image_tag('info.png',"title=info class=info id=collection_info");?>
               <div id="collection_tree" class="tree"></div>
                 <script type="text/javascript">
-                   $('#collection_info').click(function() 
+                   $('#collection_info').click(function()
                    {
                      if($('#collection_tree').is(":hidden"))
                      {
@@ -54,10 +54,10 @@
           </tr>
         </tbody>
       </table>
-    </div>    
+    </div>
     <?php if(count($common_names)) : ?>
-    <h2 class="title"><?php echo __("Common Names") ?></h2>  
-    <div class="borded right_padded">    
+    <h2 class="title"><?php echo __("Common Names") ?></h2>
+    <div class="borded right_padded">
       <table class="classification">
         <thead>
           <tr>
@@ -97,7 +97,7 @@
             <td colspan="2">
               <div id="taxon_tree" class="tree"></div>
               <script type="text/javascript">
-                 $('#taxon_info').click(function() 
+                 $('#taxon_info').click(function()
                  {
                    if($('#taxon_tree').is(":hidden"))
                    {
@@ -108,7 +108,7 @@
                    $('#taxon_tree').slideUp();
                  });
               </script>
-              </div>          
+              </div>
             </td>
             <td></td>
           </tr>
@@ -130,7 +130,7 @@
             <td colspan="2">
               <div id="chrono_tree" class="tree"></div>
               <script type="text/javascript">
-                 $('#chrono_info').click(function() 
+                 $('#chrono_info').click(function()
                  {
                    if($('#chrono_tree').is(":hidden"))
                    {
@@ -141,7 +141,7 @@
                    $('#chrono_tree').slideUp();
                  });
               </script>
-              </div>          
+              </div>
             </td>
           </tr>
           <tr><td colspan="2">
@@ -162,7 +162,7 @@
             <td colspan="2">
               <div id="litho_tree" class="tree"></div>
               <script type="text/javascript">
-                 $('#litho_info').click(function() 
+                 $('#litho_info').click(function()
                  {
                    if($('#litho_tree').is(":hidden"))
                    {
@@ -173,7 +173,7 @@
                    $('#litho_tree').slideUp();
                  });
               </script>
-              </div>          
+              </div>
             </td>
           </tr>
           <tr><td colspan="2">
@@ -194,7 +194,7 @@
             <td colspan="2">
               <div id="lithology_tree" class="tree"></div>
               <script type="text/javascript">
-                 $('#lithology_info').click(function() 
+                 $('#lithology_info').click(function()
                  {
                    if($('#lithology_tree').is(":hidden"))
                    {
@@ -205,7 +205,7 @@
                    $('#lithology_tree').slideUp();
                  });
               </script>
-              </div>          
+              </div>
             </td>
           </tr>
           <tr><td colspan="2">
@@ -226,7 +226,7 @@
             <td colspan="2">
               <div id="mineral_tree" class="tree"></div>
               <script type="text/javascript">
-                 $('#mineral_info').click(function() 
+                 $('#mineral_info').click(function()
                  {
                    if($('#mineral_tree').is(":hidden"))
                    {
@@ -245,16 +245,16 @@
           </td></tr>
         <?php endif ; ?>
         </tbody>
-      </table>      
+      </table>
     </div>
     <?php endif;?>
-    <h2 class="title"><?php echo __("Specimen Characteristics") ?></h2>  
+    <h2 class="title"><?php echo __("Specimen Characteristics") ?></h2>
     <div class="borded right_padded">
       <table class="caract_table">
         <tr>
           <td><span class="pager_nav"><?php echo __("Number of items") ; ?> :</span></td>
           <td><span>
-            <?php if($specimen->getSpecimenCountMin() == $specimen->getSpecimenCountMax()) 
+            <?php if($specimen->getSpecimenCountMin() == $specimen->getSpecimenCountMax())
                 echo ($specimen->getSpecimenCountMin()==""?"-":$specimen->getSpecimenCountMin()) ;
               else
                 echo __("Between ".$specimen->getSpecimenCountMin()." and ".$specimen->getSpecimenCountMax()) ;
@@ -282,11 +282,11 @@
         <tr>
           <td><span class="pager_nav"><?php echo __("Country") ; ?> :</span></td>
           <td>
-            <?php if($tags) : ?> 
+            <?php if($tags) : ?>
             <ul class="name_tags_view">
               <?php foreach($tags as $key=>$tag):?>
                 <?php if($tag == "") echo "-" ; ?>
-                <stateli class="tag_size_2"><?php echo $tag ;?></li>
+                <li class="tag_size_2"><?php echo $tag ;?></li>
               <?php endforeach;?>
             </ul>
             <?php else : ?>
@@ -294,6 +294,62 @@
             <?php endif ; ?>
           </td>
         </tr>
+        <tr>
+          <td><span class="pager_nav"><?php echo __("Codes") ; ?> :</span></td>
+          <td>
+            <?php if(count($codes)) : ?>
+            <ul class="">
+              <?php foreach($codes as $key=>$code):?>
+                <li class"><?php echo $code->getCodeFormated() ;?></li>
+              <?php endforeach;?>
+            </ul>
+            <?php else : ?>
+              <span>-</span>
+            <?php endif ; ?>
+          </td>
+        </tr>
+            <?php if(count($properties)) : ?>
+        <tr>
+          <td colspan="2">
+
+              <h3><?php echo __("Properties") ; ?></h3>
+              <table class="catalogue_table_view">
+                <thead>
+                  <tr>
+                    <th><?php echo __('Property type');?></th>
+                    <th><?php echo __('Applies To');?></th>
+                    <th class="datesNum"><?php echo __('Date From');?></th>
+                    <th class="datesNum"><?php echo __('Date To');?></th>
+                    <th><?php echo __('Value');?></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach($properties as $property):?>
+                      <tr>
+                        <td><?php echo $property->getPropertyType();?></td>
+                        <td><?php echo $property->getAppliesTo();?></td>
+                        <td class="datesNum"><?php echo $property->getFromDateMasked(ESC_RAW);?></td>
+                        <td class="datesNum"><?php echo $property->getToDateMasked(ESC_RAW);?></td>
+                        <td>
+                          <?php echo $property->getLowerValue();?>
+                          <?php if($property->getUpperValue() != ''):?>
+                            -> <?php echo $property->getUpperValue();?>
+                          <?php endif;?>
+                          <?php echo $property->getPropertyUnit();?>
+
+                          <?php if($property->getPropertyAccuracy() != ''):?>
+                            ( +- <?php echo $property->getPropertyAccuracy();?> <?php echo $property->getPropertyUnit();?>)
+                          <?php endif;?>
+
+                        </td>
+                      </tr>
+                  <?php endforeach;?>
+                </tbody>
+              </table>
+          </td>
+        </tr>
+
+        <?php endif ; ?>
         <?php if($specimen->getObjectName()!=""):?>
         <tr>
           <td><span class="pager_nav"><?php echo __("Name") ; ?> :</span></td>
@@ -315,12 +371,12 @@
 
     </div>
 
-    <h2 class="title"><?php echo __("You think there's a mistake ? please suggest us a correction") ?></h2>  
+    <h2 class="title"><?php echo __("You think there's a mistake ? please suggest us a correction") ?></h2>
     <div class="suggestion_zone">
       <?php include_partial('suggestion', array('form' => $form,'id'=> $specimen->getId())) ; ?>
     </div>
 
-  <div class="check_right"> 
+  <div class="check_right">
     <input type="button" id="close_butt" value="<?php echo __('Close this record'); ?>">
   </div>
   <script type="text/javascript">

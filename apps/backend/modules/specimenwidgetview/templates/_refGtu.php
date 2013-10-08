@@ -11,7 +11,13 @@
     <?php if(isset($gtu) && ($spec->getStationVisible() || (!$spec->getStationVisible() && $sf_user->isAtLeast(Users::ENCODER)))) : ?>
     <tr>
       <th><label><?php echo __('Sampling location code');?></label></th>
-      <td id="specimen_gtu_ref_code"><?php echo $gtu->getCode() ; ?></td>
+      <td id="specimen_gtu_ref_code">
+        <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
+          <?php echo link_to($gtu->getCode(), 'gtu/edit?id='.$spec->getGtuRef()) ?>
+        <?php else:?>
+          <?php echo $gtu->getCode();?>
+        <?php endif;?>
+      </td>
     </tr>
     <?php if($gtu->getLocation()):?>
     <tr>

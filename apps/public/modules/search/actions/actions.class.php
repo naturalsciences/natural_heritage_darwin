@@ -152,6 +152,8 @@ class searchActions extends DarwinActions
     $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef());
     $this->col_staff = Doctrine::getTable('Users')->find($collection->getStaffRef());
     $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());
+    $this->codes = Doctrine::getTable('Codes')->getCodesRelated('specimens', $this->specimen->getId());
+    $this->properties = Doctrine::getTable('Properties')->findForTable('specimens', $this->specimen->getId());
 
     $ids = $this->FecthIdForCommonNames() ;
     $this->common_names = Doctrine::getTable('VernacularNames')->findAllCommonNames($ids) ;

@@ -3082,3 +3082,7 @@ a.but_more{
   float:none;
   display:inline;
 }
+
+.treelist > h2 {
+    margin-top: 10px;
+}
