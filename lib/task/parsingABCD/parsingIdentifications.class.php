@@ -125,7 +125,7 @@ class ParsingIdentifications
   // save the identification and the associated identifiers
   public function save($staging)
   {
-    $this->identification->fromArray(array('notion_concerned' => $this->notion,'determination_status'=>$this->determination_status));
+    $this->identification->fromArray(array('notion_concerned' => $this->notion,'determination_status'=>$this->determination_status, 'value_defined' => '-'));
     $staging->addRelated($this->identification) ;
     //$this->insertPeopleInStaging($identification->getId());
     //$this->insertKeywords() ;

@@ -18,11 +18,11 @@ $browser->
     isStatusCode(200)->
     checkElement('h1', 'Collection List')->
     checkElement('h2:last','UGMM')->
-    checkElement('.treelist:first > ul > li',1)->
-    checkElement('.treelist:first > ul > li:first span','/Vertebrates/')->
-    checkElement('.treelist:first > ul > li:first a img')->
-    checkElement('.treelist:first > ul > li:first > ul > li',2)->
-    checkElement('.treelist:first > ul > li:first > ul > li:first span', '/Amphibia/')->
+    checkElement('.treelist:first > ul > li',2)->
+    checkElement('.treelist:first > ul > li:nth-child(2) span','/Vertebrates/')->
+    checkElement('.treelist:first > ul > li:nth-child(2) a img')->
+    checkElement('.treelist:first > ul > li:nth-child(2) > ul > li',2)->
+    checkElement('.treelist:first > ul > li:nth-child(2) > ul > li:first span', '/Amphibia/')->
     checkElement('.treelist:last > ul > li',1)->
   end()->
   
@@ -81,7 +81,7 @@ $browser->
   
   get('/collection/index')->
   info('Edit')->
-  click('.treelist:first > ul > li:nth-child(2) > ul > li:nth-child(2) div a', array())->
+  click('.treelist:first > ul > li:nth-child(3) > ul > li:nth-child(2) div a', array())->
   with('request')->begin()->
     isParameter('module', 'collection')->
     isParameter('action', 'edit')->
@@ -95,13 +95,13 @@ $browser->
   get('/collection/index')->
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('.treelist:first > ul > li',2)->
+    checkElement('.treelist:first > ul > li',3)->
     checkElement('.treelist:last > ul > li',1)->
   end()->
 
   info('Delete')->
 
-  click('.col_name:eq(4) > a:first')->
+  click('.col_name:eq(5) > a:first')->
   with('request')->begin()->
     isParameter('module', 'collection')->
     isParameter('action', 'edit')->
@@ -116,11 +116,11 @@ $browser->
   
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('.treelist:first > ul > li',2)->
+    checkElement('.treelist:first > ul > li',3)->
   end();
 
 $user_id = $browser->addCustomUserAndLogin();
-$collection_id = Doctrine::getTable('collections')->getCollectionByName('Vertebrates')->getId() ;
+$collection_id = Doctrine::getTable('Collections')->getCollectionByName('Vertebrates')->getId() ;
 
 $browser->
   info('sub collection right')->
@@ -138,11 +138,11 @@ $browser->
     'SubCollectionsRights' => array(
       0 => array(
         'user_ref'       => $user_id,
-        'collection_ref' => Doctrine::getTable('collections')->getCollectionByName('Amphibia')->getId(),
+        'collection_ref' => Doctrine::getTable('Collections')->getCollectionByName('Amphibia')->getId() ,
         'check_right' => true),
       1 => array(
         'user_ref'       => $user_id,
-        'collection_ref' => Doctrine::getTable('collections')->getCollectionByName('Aves')->getId(),
+        'collection_ref' => Doctrine::getTable('Collections')->getCollectionByName('Aves')->getId(),
         'check_right' => false)
     )
     )));
