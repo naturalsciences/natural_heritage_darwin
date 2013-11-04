@@ -316,5 +316,8 @@ alter table specimens drop column host_taxon_extinct ;
 
  delete from flat_dict where dict_field = 'host_relationship';
 
+DROP TRIGGER trg_cpy_updatehosts ON specimens;
+DROP FUNCTION fct_cpy_updatehosts();
+
 \i reports/ticketing/labeling.sql
 COMMIT;

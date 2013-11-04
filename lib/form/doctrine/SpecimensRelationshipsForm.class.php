@@ -18,7 +18,7 @@ class SpecimensRelationshipsForm extends BaseSpecimensRelationshipsForm
     $rel_types = SpecimensRelationships::getTypes();
 
     $units = array(''=>'','%'=>'%');
-    
+
     $this->widgetSchema['unit_type'] = new sfWidgetFormChoice(array('choices'=>$rel_types,'expanded'=>false));
     $this->validatorSchema['unit_type'] = new sfValidatorChoice(array('choices'=>array_keys($rel_types), 'required'=>true));
     $this->widgetSchema['unit'] = new sfWidgetFormChoice(array('choices'=>$units, 'default'=>'%'));
@@ -84,7 +84,7 @@ class SpecimensRelationshipsForm extends BaseSpecimensRelationshipsForm
     if(sfConfig::get('dw_defaultInstitutionRef')) {
       $this->setDefault('institution_ref', sfConfig::get('dw_defaultInstitutionRef'));
      }
-     
+
     $this->widgetSchema['source_id'] = new sfWidgetFormInput();
     $this->widgetSchema['source_name'] = new sfWidgetFormInput();
 
@@ -100,7 +100,7 @@ class SpecimensRelationshipsForm extends BaseSpecimensRelationshipsForm
     $this->widgetSchema['quantity']->setAttributes(array('class'=>'small_size'));
     $this->widgetSchema['source_id']->setAttributes(array('class'=>'small_size'));
     $this->widgetSchema['source_name']->setAttributes(array('class'=>'small_size'));
-
+    $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required' => false));
 
     /*Specimens accompanying post-validation to empty null values*/
     $this->mergePostValidator(new SpecimensRelationshipsValidatorSchema());
