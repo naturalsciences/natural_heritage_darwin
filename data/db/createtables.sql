@@ -116,6 +116,7 @@ create table catalogue_levels
         level_name varchar not null,
         level_sys_name varchar not null,
         optional_level boolean not null default false,
+        level_order integer not null default 999,
         constraint pk_catalogue_levels primary key (id),
         constraint unq_catalogue_levels unique (level_type, level_name)
        );

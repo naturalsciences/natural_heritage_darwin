@@ -2591,11 +2591,58 @@ BEGIN
       END IF;
     END LOOP;
   END IF;
+/*
+  IF rec_parents is not null AND rec_parents != ''::hstore AND rec_id IS NULL THEN
+
+  select fct_imp_checker_higher_catalogues_parents
+
+  END IF;*/
+
   EXECUTE 'UPDATE staging SET status = delete(status, ' || quote_literal(prefix) ||'), ' || prefix|| '_ref = ' || rec_id || ' where id=' || line.id;
 
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION fct_imp_checker_higher_catalogues_parents(line staging, rec_id integer, catalogue_table text, prefix text) RETURNS boolean
+AS $$
+DECLARE
+  result_nbr integer :=0;
+  row_record record;
+  lvl_name varchar;
+  lvl_value varchar;
+  rec_parents hstore;
+  line_store hstore;
+  field_name text;
+BEGIN
+  line_store := hstore(line);
+  field_name := prefix || '_parents';
+  rec_parents := line_store->field_name;
+
+  IF rec_parents is not null AND rec_parents != ''::hstore AND rec_id IS NULL THEN
+
+    FOR lvl_name, lvl_value in SELECT s FROM each(rec_parents) as s
+    LOOP
+      --lvl_value := rec_parents->lvl_name;
+      EXECUTE 'SELECT count(*) from ' || quote_ident(catalogue_table) || ' t
+        INNER JOIN catalogue_levels c on t.level_ref = c.id
+        WHERE level_sys_name = ' || quote_literal(lvl_name) || ' AND
+          name_indexed like fullToIndex( ' || quote_literal(lvl_value) || '  ) || ''%''
+          AND ' || quote_literal(row_record.path) || 'like t.path || t.id || ''/%'' ' INTO result_nbr;
+      IF result_nbr = 0 THEN
+        EXECUTE 'UPDATE staging SET status = (status || ('|| quote_literal(prefix) || ' => ''bad_hierarchy'')), ' || prefix || '_ref = null where id=' || line.id;
+        RETURN TRUE;
+      END IF;
+    END LOOP;
+  END IF;
+
+  EXECUTE 'UPDATE staging SET status = delete(status, ' || quote_literal(prefix) ||'), ' || prefix|| '_ref = ' || rec_id || ' where id=' || line.id;
+
+  RETURN true;
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION fct_imp_checker_igs(line staging, import boolean default false)  RETURNS boolean
 AS $$
