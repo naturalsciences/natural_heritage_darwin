@@ -23,10 +23,11 @@ class xmlFileValidator extends sfValidatorFile
     {
       $errorSchemaLocal->addError(new sfValidatorError($this, 'invalid_format'), 'invalid_format_ABCD');
       $errors = libxml_get_errors();
-
+      $i=0;
       foreach ($errors as $error) {
           $error_msg = $this->display_xml_error($error);
           $errorSchemaLocal->addError(new sfValidatorError($this, $error_msg), 'invalid_line');
+          if($i++ > 100) break;
       }
       libxml_clear_errors();
       if (count($errorSchemaLocal))
