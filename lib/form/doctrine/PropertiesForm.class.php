@@ -45,8 +45,8 @@ class PropertiesForm extends BasePropertiesForm
     );
     $this->widgetSchema['date_to'] = new widgetFormJQueryFuzzyDate(array(
       'culture'=> $this->getCurrentCulture(),
-      'image'=> '/images/calendar.gif', 
-      'format' => '%day%/%month%/%year%', 
+      'image'=> '/images/calendar.gif',
+      'format' => '%day%/%month%/%year%',
       'years' => $years,
       'with_time' => true,
       ),
@@ -78,15 +78,15 @@ class PropertiesForm extends BasePropertiesForm
      $this->validatorSchema->setPostValidator(
       new sfValidatorSchemaCompare(
         'date_from',
-        '<=', 
-        'date_to', 
+        '<=',
+        'date_to',
         array('throw_global_error' => true),
         array('invalid' => 'The "from" date cannot be above the "to" date.')
       )
     );
 
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
-    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();    
+    $this->validatorSchema['record_id'] = new sfValidatorInteger();
     $this->widgetSchema['property_type'] = new widgetFormSelectComplete(array(
       'model' => 'Properties',
       'table_method' => array('method' => 'getDistinctType', 'parameters' => array($this->options['ref_relation'])),

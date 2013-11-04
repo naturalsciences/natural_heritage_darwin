@@ -1,6 +1,6 @@
 begin;
 set search_path=darwin2,public;
-
+alter table tags add column id serial;
 alter table tag_groups ADD COLUMN international_name text not null default '' ;
 
 comment on column tag_groups.international_name is 'The international(english) name of the place / ocean / country';
