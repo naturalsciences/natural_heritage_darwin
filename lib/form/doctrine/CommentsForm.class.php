@@ -11,7 +11,7 @@ class CommentsForm extends BaseCommentsForm
 {
   public function configure()
   {
-    unset($this['comment_indexed']);
+    $this->useFields(array('referenced_relation','record_id', 'notion_concerned', 'comment'));
 
     $choices = CommentsTable::getNotionsFor($this->options['table']);
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
@@ -19,6 +19,7 @@ class CommentsForm extends BaseCommentsForm
     $this->widgetSchema['notion_concerned'] =  new sfWidgetFormChoice(array(
       'choices' =>  $choices,
     ));
+    $this->validatorSchema['record_id'] = new sfValidatorInteger();
     $this->validatorSchema['notion_concerned'] = new sfValidatorChoice(array('required'=>true,'choices'=>array_keys($choices)));
     $this->validatorSchema['comment'] = new sfValidatorString(array('trim'=>true, 'required'=>true));
 
