@@ -867,27 +867,27 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $str_params_part = '' ;
     $params = array();
     $params_part = array() ;
-
-    $has_query = false;
     foreach($val as $i => $code)
     {
       if(empty($code)) continue;
+      $sql = '';
+      $sql_params = array();
+      $has_query = false;
       if(ctype_digit($code['code_from']) && ctype_digit($code['code_to'])) {
-        $query->andWhere("code_num BETWEEN ? AND ? ", array($code['code_from'], $code['code_to']));
-        $has_query = true;
-      }
-      if($code['code_part']  != '') {
-        $query->andWhere("full_code_indexed ilike '%' || fulltoindex(?) || '%' ", $code['code_part']);
-        $has_query = true;
-      }
+          $sql = " code_num BETWEEN ? AND ? ";
+          $sql_params = array($code['code_from'], $code['code_to']);
+          $has_query = true;
+        }
+        if($code['code_part']  != '') {
+          if($has_query) $sql .= ' AND ';
+          $sql .= " full_code_indexed ilike '%' || fulltoindex(?) || '%' ";
+          $sql_params[] = $code['code_part'];
+          $has_query = true;
+        }
+        if($has_query)
+          $query->addWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
     }
 
-    if($has_query) {
-      $query->innerJoin('s.SpecimensCodes c');
-      $query->andWhere("c.referenced_relation = ? ",'specimens');
-      $query->groupBy("s.id");
-      $this->with_group = true;
-    }
     return $query ;
   }
 
