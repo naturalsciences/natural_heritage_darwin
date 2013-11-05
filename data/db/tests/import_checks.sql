@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(68);
+SELECT plan(76);
 
 select diag('Test of staging check without levels');
 update people set name_formated_indexed = fulltoindex(coalesce(given_name,'') || coalesce(family_name,''));
@@ -177,6 +177,7 @@ select is (1, (select collecting_method_ref from specimen_collecting_methods WHE
 select is('osef', (select specimen_status from specimens where specimen_status='osef')) ;
 select is('host', (select relationship_type from specimens_relationships)) ;
 
+select diag('Test of Create Taxon');
 select isnt(null, ( SELECT nextval('taxonomy_id_seq')));
 select isnt(null, ( SELECT setval('taxonomy_id_seq',10000)));
 
@@ -188,10 +189,7 @@ taxon_parents = 'species=> "Falco longipennis Swainson, 1837", genus=>"Falco Lin
 sub_family=>"Falconinae", family=>"Falconidae", sub_order=>"Falcones", order=>"Falconiformes", class=>"Aves", phylum=>"Falco Phyl"'
   where id = 8;
 
---update staging set create_taxon = true, taxon_name='Falco longipennis longipennis Swainson, 1837', taxon_level_name='sub_species' ,
---taxon_parents = '"genus"=>"Falco Linnaeus, 1758", "family"=>"Falco Fam", "species"=>"Falco longipennis Swainson, 1837", "sub_family"=>"Falconinae", phylum=>"Falco Phyl"'
 
---where id = 8;
 select is(true, (select fct_imp_checker_manager(s.*) from staging s));
 
 select is(true , (select  create_taxon from staging s where id = 8) );
@@ -211,9 +209,32 @@ select is(true, (select fct_imp_checker_manager(s.*) from staging s));
 select is(false , (select  create_taxon from staging s where id = 8) );
 select is( null , (select  taxon_ref from staging s where id = 8) );
 
---select * from taxonomy;
+
+delete from staging where id = 8;
+insert into staging (id,import_ref,taxon_name) VALUES (9,1,'Falco Pérégrinuz');
+
+update staging set create_taxon = true, taxon_name='Falco Testinus', taxon_level_name='sub_species' ,
+taxon_parents = '"genus"=>"Falco Linnaeus, 1758", "family"=>"Falco Fam", "species"=>"Falco longipennis Swainson, 1837", "sub_family"=>"Falconinae", phylum=>"Falco Phyl"'
+where id = 9;
 
 
+select is(true, (select fct_imp_checker_manager(s.*) from staging s));
+select is(true , (select  create_taxon from staging s where id = 9) );
+select is( null , (select  taxon_ref from staging s where id = 9) );
+select is( 'taxon=>"bad_hierarchy"'::hstore , (select  status from staging s where id = 9) );
+
+update staging set create_taxon = true, taxon_name='Falco Testinus', taxon_level_name='sub_species' ,
+taxon_parents = '"genus"=>"Falco Linnaeus, 1758", "family"=>"Falconidae", "species"=>"Falco longipennis Swainson, 1837", "sub_family"=>"Falconinae", phylum=>"Falco Phyl"'
+where id = 9;
+
+
+select is(true, (select fct_imp_checker_manager(s.*) from staging s));
+select is(true , (select  create_taxon from staging s where id = 9) );
+select isnt( null , (select  taxon_ref from staging s where id = 9) );
+select is(''::hstore , (select  status from staging s where id = 9) );
+
+--select t.id, name, parent_Ref, level_sys_name  from taxonomy t inner join catalogue_levels c on t.level_ref = c.id;
+--select id, create_taxon, taxon_ref, taxon_name, taxon_parents , status from staging where id = 9;
 SELECT * FROM finish();
 
 
