@@ -478,7 +478,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required' => false));
 
     $this->widgetSchema['building'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctBuildings',
       'method' => 'getBuildings',
       'key_method' => 'getBuildings',
@@ -488,7 +488,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['building'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['floor'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctFloors',
       'method' => 'getFloors',
       'key_method' => 'getFloors',
@@ -497,7 +497,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['row'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRows',
       'method' => 'getRows',
       'key_method' => 'getRows',
@@ -506,7 +506,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['row'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['room'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRooms',
       'method' => 'getRooms',
       'key_method' => 'getRooms',
@@ -515,7 +515,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['room'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['shelf'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctShelfs',
       'method' => 'getShelfs',
       'key_method' => 'getShelfs',
