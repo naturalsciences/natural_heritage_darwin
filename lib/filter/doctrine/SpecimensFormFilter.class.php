@@ -873,12 +873,11 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
       if($str_params != '')
         $str_params .= ',';
-      $str_params .= '?,?,?,?,?';
+      $str_params .= '?,?,?,?,\'specimens\'';
       $params[] = $code['category'];
       $params[] = $code['code_part'];
       $params[] = $code['code_from'];
       $params[] = $code['code_to'];
-      $params[] = $code['referenced_relation'];
     }
     if(! empty($params)) {
       $query->addWhere("s.id in (select fct_searchCodes($str_params) )", $params);
