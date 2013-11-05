@@ -1,7 +1,6 @@
 <table id="code_search" class="full_size">
   <thead>
     <tr>
-      <th><?php echo __('Relation');?></th>
       <th><?php echo __('Category');?></th>
       <th colspan="2"></th>
       <th class="between_col"><?php echo __('Between');?></th>
@@ -21,7 +20,7 @@
 </table>
 <script  type="text/javascript">
 function checkBetween()
-{ 
+{
   if( $('#code_search tbody .between_col:visible').length)
     $('#code_search thead .between_col').show();
   else

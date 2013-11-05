@@ -187,7 +187,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['collection_ref'] = new sfWidgetCollectionList(array('choices' => array()));
     $this->widgetSchema['collection_ref']->addOption('public_only',false);
     $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
-    $this->widgetSchema['spec_ids'] = new sfWidgetFormTextarea(array('label'=>'#ID list'));
+    $this->widgetSchema['spec_ids'] = new sfWidgetFormTextarea(array('label'=>"#ID list separated by ',' "));
 
     $this->validatorSchema['spec_ids'] = new sfValidatorString( array(
       'required' => false,
@@ -478,7 +478,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required' => false));
 
     $this->widgetSchema['building'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctBuildings',
       'method' => 'getBuildings',
       'key_method' => 'getBuildings',
@@ -488,7 +488,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['building'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['floor'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctFloors',
       'method' => 'getFloors',
       'key_method' => 'getFloors',
@@ -497,7 +497,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['row'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRows',
       'method' => 'getRows',
       'key_method' => 'getRows',
@@ -506,7 +506,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['row'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['room'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRooms',
       'method' => 'getRooms',
       'key_method' => 'getRooms',
@@ -515,7 +515,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['room'] = new sfValidatorString(array('required' => false));
 
     $this->widgetSchema['shelf'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimen',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctShelfs',
       'method' => 'getShelfs',
       'key_method' => 'getShelfs',
@@ -870,18 +870,22 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     foreach($val as $i => $code)
     {
       if(empty($code)) continue;
-
-      if($str_params != '')
-        $str_params .= ',';
-      $str_params .= '?,?,?,?,?';
-      $params[] = $code['category'];
-      $params[] = $code['code_part'];
-      $params[] = $code['code_from'];
-      $params[] = $code['code_to'];
-      $params[] = $code['referenced_relation'];
-    }
-    if(! empty($params)) {
-      $query->addWhere("s.id in (select fct_searchCodes($str_params) )", $params);
+      $sql = '';
+      $sql_params = array();
+      $has_query = false;
+      if(ctype_digit($code['code_from']) && ctype_digit($code['code_to'])) {
+          $sql = " code_num BETWEEN ? AND ? ";
+          $sql_params = array($code['code_from'], $code['code_to']);
+          $has_query = true;
+        }
+        if($code['code_part']  != '') {
+          if($has_query) $sql .= ' AND ';
+          $sql .= " full_code_indexed ilike '%' || fulltoindex(?) || '%' ";
+          $sql_params[] = $code['code_part'];
+          $has_query = true;
+        }
+        if($has_query)
+          $query->addWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
     }
 
     return $query ;
