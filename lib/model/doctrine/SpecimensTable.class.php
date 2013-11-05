@@ -36,7 +36,7 @@ class SpecimensTable extends DarwinTable
     'expedition_ref' => 'refExpedition' ,
     'acquisition_category' => 'acquisitionCategory' ,
     'acquisition_date_mask' => 'acquisitionCategory' ,
-    'acquisition_date' => 'acquisitionCategory' ,   
+    'acquisition_date' => 'acquisitionCategory' ,
     'collecting_method' => 'tool' ,
     'collecting_tool' => 'tool' ,
   );
@@ -58,7 +58,7 @@ class SpecimensTable extends DarwinTable
       ->andwhere('s.ig_ref is not distinct from ?', $object->getIgRef())
       ->andwhere('s.acquisition_category = ?', $object->getAcquisitionCategory())
       ->andwhere('s.acquisition_date = ?', $object->getRawAcquisitionDate());
-    return $q->fetchOne(); 
+    return $q->fetchOne();
   }
 
 
@@ -236,7 +236,7 @@ class SpecimensTable extends DarwinTable
     $a =  DarwinTable::CollectionToArray($q->execute(), 'storage');
     return array_merge(array('dry'=>'dry'),$a);
   }
-  
+
 
   /**
   * Get Distincts Container Storages of Part
@@ -316,6 +316,19 @@ class SpecimensTable extends DarwinTable
       $stages->add(new Specimens);
       return $stages;
     }
+    /**
+    * Get distinct Stages As an array
+    * @return Doctrine_collection with distinct "stages" as column
+    */
+    public function getDistinctStagesArray()
+    {
+      $stages = $this->createFlatDistinct('specimens', 'stage', 'stage')->execute();
+      $response = array();
+      foreach($stages as $stage) {
+        $response[$stage->getStage()] = $stage->getStageSearchFormated();
+      }
+      return $response;
+    }
 
     /**
     * Get distinct Social statuses
@@ -346,12 +359,12 @@ class SpecimensTable extends DarwinTable
               ->where('s.collection_ref = ?', $collection_id)
               ->andWhere('s.taxon_ref = ?', $taxon_id);
 
-          return $q->fetchOne(); 
+          return $q->fetchOne();
   }
 
   /**
-  * Set required widget visible and opened 
-  */   
+  * Set required widget visible and opened
+  */
   public function getRequiredWidget($criterias, $user, $category, $all = 0)
   {
     if (!$all)
@@ -363,7 +376,7 @@ class SpecimensTable extends DarwinTable
         if ($key == "rec_per_page") continue ;
         if (!$fields) continue ;
 
-        if(isset(self::$widget_array[$key]) && !in_array($fields,$default_values)) 
+        if(isset(self::$widget_array[$key]) && !in_array($fields,$default_values))
           $req_widget[self::$widget_array[$key]] = 1 ;
       }
       Doctrine::getTable('MyWidgets')->forceWidgetOpened($user, $category ,array_keys($req_widget));

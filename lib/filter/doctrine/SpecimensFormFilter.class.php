@@ -378,6 +378,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   /**
   * Individuals Fields
   */
+
     $this->widgetSchema['type'] = new sfWidgetFormDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctTypeGroups',
@@ -400,15 +401,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));
     $this->validatorSchema['sex'] = new sfValidatorPass();
 
-    $this->widgetSchema['stage'] = new sfWidgetFormDoctrineChoice(array(
-      'model' => 'Specimens',
-      'table_method' => 'getDistinctStages',
-      'method' => 'getStageSearchFormated',
-      'key_method' => 'getStage',
-      'multiple' => true,
-      'expanded' => true,
-      'add_empty' => false,
+
+    $this->widgetSchema['stage'] = new widgetFormSelectDoubleListFilterable(array(
+      'choices' => new sfCallable(array(Doctrine::getTable('Specimens'),'getDistinctStagesArray')),
+      'label_associated'=>$this->getI18N()->__('Selected'),
+      'label_unassociated'=>$this->getI18N()->__('Available')
     ));
+
     $this->validatorSchema['stage'] = new sfValidatorPass();
 
     $this->widgetSchema['status'] = new sfWidgetFormDoctrineChoice(array(

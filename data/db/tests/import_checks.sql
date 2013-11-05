@@ -188,6 +188,10 @@ taxon_parents = 'species=> "Falco longipennis Swainson, 1837", genus=>"Falco Lin
 sub_family=>"Falconinae", family=>"Falconidae", sub_order=>"Falcones", order=>"Falconiformes", class=>"Aves", phylum=>"Falco Phyl"'
   where id = 8;
 
+update staging set create_taxon = true, taxon_name='Falco longipennis longipennis Swainson, 1837', taxon_level_name='sub_species' ,
+taxon_parents = '"genus"=>"Falco Linnaeus, 1758", "family"=>"Falco Fam", "species"=>"Falco longipennis Swainson, 1837", "sub_family"=>"Falconinae", phylum=>"Falco Phyl"'
+
+where id = 8;
 select is(true, (select fct_imp_checker_manager(s.*) from staging s));
 
 select is(true , (select  create_taxon from staging s where id = 8) );
@@ -207,7 +211,7 @@ select is(true, (select fct_imp_checker_manager(s.*) from staging s));
 select is(false , (select  create_taxon from staging s where id = 8) );
 select is( null , (select  taxon_ref from staging s where id = 8) );
 
---select * from taxonomy;
+select * from taxonomy;
 
 
 SELECT * FROM finish();
