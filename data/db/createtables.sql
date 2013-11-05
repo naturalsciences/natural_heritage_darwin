@@ -1397,6 +1397,7 @@ create table staging
   (
     id serial,
     import_ref integer not null,
+    create_taxon boolean not null default false,
     spec_ref integer,
     category varchar,
     expedition_ref integer,
