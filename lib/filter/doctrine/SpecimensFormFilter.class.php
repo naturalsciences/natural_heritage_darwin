@@ -867,22 +867,27 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $str_params_part = '' ;
     $params = array();
     $params_part = array() ;
+
+    $has_query = false;
     foreach($val as $i => $code)
     {
       if(empty($code)) continue;
-
-      if($str_params != '')
-        $str_params .= ',';
-      $str_params .= '?,?,?,?,\'specimens\'';
-      $params[] = $code['category'];
-      $params[] = $code['code_part'];
-      $params[] = $code['code_from'];
-      $params[] = $code['code_to'];
-    }
-    if(! empty($params)) {
-      $query->addWhere("s.id in (select fct_searchCodes($str_params) )", $params);
+      if(ctype_digit($code['code_from']) && ctype_digit($code['code_to'])) {
+        $query->andWhere("code_num BETWEEN ? AND ? ", array($code['code_from'], $code['code_to']));
+        $has_query = true;
+      }
+      if($code['code_part']  != '') {
+        $query->andWhere("full_code_indexed ilike ? ", '%' .$code['code_part']. '%');
+        $has_query = true;
+      }
     }
 
+    if($has_query) {
+      $query->innerJoin('s.SpecimensCodes c');
+      $query->andWhere("c.referenced_relation = ? ",'specimens');
+      $query->groupBy("s.id");
+      $this->with_group = true;
+    }
     return $query ;
   }
 
