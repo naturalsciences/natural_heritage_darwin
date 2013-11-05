@@ -187,7 +187,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['collection_ref'] = new sfWidgetCollectionList(array('choices' => array()));
     $this->widgetSchema['collection_ref']->addOption('public_only',false);
     $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
-    $this->widgetSchema['spec_ids'] = new sfWidgetFormTextarea(array('label'=>'#ID list'));
+    $this->widgetSchema['spec_ids'] = new sfWidgetFormTextarea(array('label'=>"#ID list separated by ',' "));
 
     $this->validatorSchema['spec_ids'] = new sfValidatorString( array(
       'required' => false,
