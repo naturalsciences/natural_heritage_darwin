@@ -877,7 +877,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         $has_query = true;
       }
       if($code['code_part']  != '') {
-        $query->andWhere("full_code_indexed ilike ? ", '%' .$code['code_part']. '%');
+        $query->andWhere("full_code_indexed ilike '%' || fulltoindex(?) || '%' ", $code['code_part']);
         $has_query = true;
       }
     }
