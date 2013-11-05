@@ -21,6 +21,18 @@ class stagingActions extends DarwinActions
     return $this->redirect('import/index');
   }
 
+  public function executeCreateTaxon(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->hasParameter('import'));
+    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
+
+    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
+       $this->forwardToSecureAction();
+    $this->import = Doctrine::getTable('Staging')->markTaxon($this->import->getId());
+    return $this->redirect('import/index');
+
+  }
+
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
@@ -140,7 +152,13 @@ class stagingActions extends DarwinActions
       foreach($this->fields as $key => $values)
         $form_fields[] = $values['fields'] ;
     }
+    if(in_array('taxon_ref', $form_fields))
+    {      
+      $this->parent = new Hstore ;
+      $this->parent->import($staging->getTaxonParents()) ;      
+    }
     $this->form = new StagingForm($staging, array('fields' => $form_fields));
+
   } 
    
   public function executeUpdate(sfWebRequest $request)

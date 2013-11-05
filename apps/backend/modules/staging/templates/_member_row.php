@@ -1,7 +1,7 @@
           <?php if($form->hasError()):?>
           <tr>
               <td>
-                <?php echo $form->renderError();?>
+                salut<?php echo $form->renderError();?>
               </td>
           </tr>
           <?php endif;?>

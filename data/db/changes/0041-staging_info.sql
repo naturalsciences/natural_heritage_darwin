@@ -72,7 +72,7 @@ GRANT ALL ON TABLE staging_relationship TO darwin2;
 GRANT SELECT ON TABLE staging_relationship TO d2viewer;
 
 INSERT INTO possible_upper_levels VALUES(73,70) ;
-INSERT INTO possible_upper_levels VALUES(73,71)
+INSERT INTO possible_upper_levels VALUES(73,71) ;
 
 create table staging_collecting_methods
   (

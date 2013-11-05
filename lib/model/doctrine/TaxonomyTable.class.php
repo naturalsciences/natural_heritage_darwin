@@ -23,4 +23,15 @@ class TaxonomyTable extends DarwinTable
       ->where('t.id > 0') ;  
       return $q->execute() ;  
   }
+
+  public function ifTaxonExist($level,$name)
+  {
+    $q = Doctrine_Query::create()
+      ->from('Taxonomy t')
+      ->innerjoin('t.Level l')
+      ->where('t.name_indexed = fulltoindex(?)', $name)
+      ->andWhere('l.level_sys_name = ?', $level);
+    return $q->fetchOne();
+
+  }
 }

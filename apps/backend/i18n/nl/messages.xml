@@ -5763,6 +5763,14 @@
         <source>Applies To</source>
         <target>Geldig voor</target>
       </trans-unit>
-        </body>
+      <trans-unit id="1748">
+        <source>import_taxon_parent_info</source>
+        <target>Parent set in your file (in red : taxon not found in the catalogue, in green : taxon found in the catalogue)</target>
+      </trans-unit>
+      <trans-unit id="1749">
+        <source>Try to create missing taxons</source>
+        <target></target>
+      </trans-unit>
+    </body>
   </file>
 </xliff>

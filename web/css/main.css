@@ -741,6 +741,7 @@ p.tree
   color:white;
   padding-top:3px;
   padding-bottom:3px;
+  margin-left: 1em;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
@@ -3085,4 +3086,24 @@ a.but_more{
 
 .treelist > h2 {
     margin-top: 10px;
+}
+
+ul.taxon_parent > li {
+  margin-top: 0.5em ;
+  margin-left: 1em;
+  background-color: #F0F3DD;
+  display: list-item;
+}
+
+li > div.line_not_ok {
+  width: 11px ;
+  height: 11px ;
+  background-color: #D10D0D;
+  display: inline-block;
+}
+li > div.line_ok {
+  width: 11px ;
+  height: 11px ;
+  background-color: #1FC928;
+  display: inline-block;
 }

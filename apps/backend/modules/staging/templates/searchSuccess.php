@@ -64,10 +64,9 @@
     </tbody>
   </table>
   <br/>
-  <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?>
-  </div>&nbsp;<div class="blue_link float_left">
-  <?php echo link_to(__('Import "Ok" lines'), 'staging/markok?import='.$import->getId() ,'class=but');?>
-  </div>
+  <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?></div>&#x09;
+  <div class="blue_link float_left"><?php echo link_to(__('Import "Ok" lines'), 'staging/markok?import='.$import->getId() );?></div>&#x09;
+  <div class="blue_link float_left"><?php echo link_to(__('Try to create incorrect taxons'), 'staging/createTaxon?import='.$import->getId() );?></div>
   </div>
 
 <script language="javascript">

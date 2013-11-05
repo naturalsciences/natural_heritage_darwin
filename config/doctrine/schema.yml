@@ -60,6 +60,7 @@ CatalogueLevels:
         level_name: {  type: string, notnull: true}
         level_sys_name: {  type: string, notnull: true}
         optional_level: { type: boolean, notnull: true, default: false}
+        level_order: { type: integer, notnull: true}
 
 PossibleUpperLevels:
     columns:

@@ -19,7 +19,7 @@
   <?php else : ?> 
     <?php foreach($fields as $key => $array) : ?>
       <?php if($key == 'duplicate') : ?>
-      <fieldset>
+      <fieldset>   
         <ul class="error_list">  
           <li><?php echo __($array['display_error'],array('%here%' => link_to('here', $form->getObject()->getLevel().'/view?id='.$array['duplicate_record'],'target=blanck'))) ?></li>       
       <?php else : ?>
@@ -47,6 +47,16 @@
         <?php else : ?>
           <?php echo $form[$array['fields']]->renderError() ; ?>
           <?php echo $form[$array['fields']]->render() ; ?>
+          <?php if ($key == 'taxon') : ?>
+            <?php if (count($parent) > 0) : ?><ul class="taxon_parent"><?php echo __("import_taxon_parent_info") ; ?><?php endif; ?>
+            <?php foreach($parent as $level => $name) : ?>
+              <li>
+              <div class="<?php echo(Doctrine::getTable("Taxonomy")->ifTaxonExist($level,$name)?'line_ok':'line_not_ok') ?>"></div>
+                <?php echo("$name ($level)") ; ?>
+              </li>
+            <?php endforeach ; ?>
+            </ul>
+          <?php endif ; ?>
         <?php endif ; ?>
       </fieldset>
     <?php endforeach ; ?>  

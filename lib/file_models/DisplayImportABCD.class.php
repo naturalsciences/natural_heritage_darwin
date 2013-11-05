@@ -13,10 +13,6 @@ class DisplayImportABCD implements IDisplayModels
       'expedition_name' => 'Expedition',
       'gtu' => 'Sampling Location',
       'taxon' => 'Taxon.',
-      'chrono' => 'Chrono.',
-      'litho' => 'Litho.',
-      'lithology' => 'Lithology',
-      'mineral' => 'Mineral.',
       'ig' => 'I.G.',
       'acquisition' => 'Acquisition',
       'individual_type' => 'Type',
@@ -41,6 +37,10 @@ class DisplayImportABCD implements IDisplayModels
       'sub_container_storage' => 'Sub container storage',
       'sub_container' => 'Sub container',
       'part_count' => 'Number',
+      'chrono' => 'Chrono.',
+      'litho' => 'Litho.',
+      'lithology' => 'Lithology',
+      'mineral' => 'Mineral.',
     );
   }
 }

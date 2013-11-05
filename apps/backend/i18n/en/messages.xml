@@ -5735,9 +5735,6 @@
         <source>Search Only objects with multimedia files </source>
         <target>Search Only objects with multimedia files</target>
       </trans-unit>
-
-
-
       <trans-unit id="1740">
         <source>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</source>
         <target>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
@@ -5749,7 +5746,7 @@
       <trans-unit id="1742">
         <source>defined as %role%</source>
         <target>Défini(e) comme %role%</target>
-      </traNs-unit>
+      </trans-unit>
       <trans-unit id="1743">
         <source>View errors while importing</source>
         <target>View errors while importing</target>
@@ -5772,8 +5769,12 @@
         <target>Applies To</target>
       </trans-unit>
       <trans-unit id="1748">
-        <source></source>
-        <target></target>
+        <source>import_taxon_parent_info</source>
+        <target>Parent set in your file (in red : taxon not found in the catalogue, in green : taxon found in the catalogue)</target>
+      </trans-unit>
+      <trans-unit id="1749">
+        <source>Try to create missing taxons</source>
+        <target>Try to create missing taxons</target>
       </trans-unit>
     </body>
   </file>

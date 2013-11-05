@@ -5766,6 +5766,14 @@
         <source>Applies To</source>
         <target>Applies To</target>
       </trans-unit>
+      <trans-unit id="1748">
+        <source>import_taxon_parent_info</source>
+        <target>Parenté définie dans votre fichier (en rouge : taxon non trouvé dans le catalogue, en vert : taxon trouvé dans le catalogue)</target>
+      </trans-unit>
+      <trans-unit id="1749">
+        <source>Try to create missing taxons</source>
+        <target>Essayer de créer taxon manquant</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>
