@@ -30,7 +30,10 @@ BEGIN
     BEGIN
       field_name2 := prefix || '_name';
       field_name1 := prefix || '_level_name';
-      rec_parents = rec_parents || hstore(line_store->field_name1, line_store->field_name2);
+
+      IF line_store->field_name2 != '' THEN
+        rec_parents = rec_parents || hstore(line_store->field_name1, line_store->field_name2);
+      END IF;
 
       FOR row_record in SELECT s.key as lvl_name, s.value as lvl_value, l.id as lvl_id
         FROM each(rec_parents) as s LEFT JOIN catalogue_levels l on s.key = l.level_sys_name
@@ -62,7 +65,6 @@ BEGIN
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
-
 
 
 CREATE OR REPLACE FUNCTION fct_imp_checker_manager(line staging)  RETURNS boolean
