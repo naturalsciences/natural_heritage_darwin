@@ -138,7 +138,8 @@ class ParsingIdentifications
   {
     // not sure if it's usefull or not, if not, simply delete the line below and $this->keyword array
     if (!in_array($tag,array_keys($this->known_keywords))) return ;
-    $this->level_name = $this->known_keywords[$tag] ;
+    if($this->known_keywords[$tag] != '')
+      $this->level_name = $this->known_keywords[$tag] ;
     $keyword = new ClassificationKeywords();
     $keyword->fromArray(array('keyword_type'=> $tag, 'keyword'=> $value));
     $this->scientificName .= "$value " ;
