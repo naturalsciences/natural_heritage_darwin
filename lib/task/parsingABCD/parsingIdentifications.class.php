@@ -2,24 +2,26 @@
 
 class ParsingIdentifications
 {
-  private $known_keywords = array("GenusOrMonomial"=>"genus",
-                                  "SpeciesEpithet"=>"species",
-                                  "SubspeciesEpithet"=>"sub_species",
-                                  "Subgenus"=> "sub_genus",
-                                  "AuthorTeamAndYear"=> "",
-                                  "SubgenusAuthorAndYear" => "",
-                                  "AuthorTeam"=> "",
-                                  "AuthorTeamParenthesis" => "",
-                                  "CultivarGroupName" => "",
-                                  "CultivarName" => "",
-                                  "FirstEpithet" => "",
-                                  "InfraspecificEpithet"=>"",
-                                  "AuthorTeamOriginalAndYear"=>"",
-                                  "AuthorTeamParenthesisAndYear"=>"",
-                                  "Breed"=>"",
-                                  "CombinationAuthorTeamAndYear"=>"",
-                                  "NamedIndividual"=>""
-                                  ) ;
+  private $known_keywords = array(
+    "GenusOrMonomial"=>"genus",
+    "SpeciesEpithet"=>"species",
+    "SubspeciesEpithet"=>"sub_species",
+    "Subgenus"=> "sub_genus",
+    "AuthorTeamAndYear"=> "",
+    "SubgenusAuthorAndYear" => "",
+    "AuthorTeam"=> "",
+    "AuthorTeamParenthesis" => "",
+    "CultivarGroupName" => "",
+    "CultivarName" => "",
+    "FirstEpithet" => "",
+    "InfraspecificEpithet"=>"",
+    "AuthorTeamOriginalAndYear"=>"",
+    "AuthorTeamParenthesisAndYear"=>"",
+    "Breed"=>"",
+    "CombinationAuthorTeamAndYear"=>"",
+    "NamedIndividual"=>""
+  );
+
   private $array_level = array('regnum' => 'domain','subregnum'  => 'kingdom', 'superphylum' => 'super_phylum','genusgroup' => 'genus',
             'phylum' => 'phylum','subphylum' => 'sub_phylum','superclassis' => 'super_class','classis' => 'class',
             'subclassis' => 'subclassis','superordo' => 'super_order','ordo' => 'order', 'subordo' => 'sub_order',
@@ -39,7 +41,7 @@ class ParsingIdentifications
   {
     $this->identification = new Identifications() ;
   }
-  
+
   public function getDateText($date)
   {
     $this->identification->setNotionDate(FuzzyDateTime::getValidDate($date)) ;
@@ -52,7 +54,7 @@ class ParsingIdentifications
   }
   public function handleRockParent()
   {
-    if(strpos($this->higher_level,'dana')) 
+    if(strpos($this->higher_level,'dana'))
     {
       $this->classification = 'dana' ;
       $this->higher_level = substr($this->higher_level,0,strpos($this->higher_level,' - '));
@@ -68,7 +70,7 @@ class ParsingIdentifications
 
   // fill the Hstore taxon_parent/litho_parent etc...
   public function handleParent()
-  { 
+  {
     $this->catalogue_parent[$this->array_level[$this->higher_level]] = $this->higher_name ;
   }
 
@@ -95,7 +97,7 @@ class ParsingIdentifications
       $staging->setLithologyName($this->fullname) ;
       $staging->setLithologyLevelName($this->level_name) ;
     }
-    if($this->notion == 'mineralogy') 
+    if($this->notion == 'mineralogy')
     {
       $staging['mineral_parents'] = $this->catalogue_parent->export() ;
       $staging->setMineralName($this->fullname) ;
@@ -114,7 +116,7 @@ class ParsingIdentifications
         array_pop($this->temp_array) ;
       }
       foreach($this->temp_array as $level=>$name)
-      { 
+      {
         if(!$name) continue ;
         if(in_array($level,array_keys($this->rock_level[$this->notion])))
           $this->catalogue_parent[$this->rock_level[$this->notion][$level]] = $name ;
@@ -155,7 +157,7 @@ class ParsingIdentifications
 
   /*private function insertKeywords()
   {
-    foreach($this->keywords as $keyword) 
+    foreach($this->keywords as $keyword)
     {
       $keyword->setRecordId($this->record_id) ;
       $keyword->save() ;

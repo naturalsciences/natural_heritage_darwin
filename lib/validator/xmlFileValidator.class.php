@@ -40,7 +40,7 @@ class xmlFileValidator extends sfValidatorFile
         throw new sfValidatorErrorSchema($this, $errorSchema);
       }
     }
-    /*if(strpos($xml_file, "DNASample")) 
+    /*if(strpos($xml_file, "DNASample"))
     {
       if(!$xml->schemaValidate(sfConfig::get('sf_data_dir').'/import/ABCDDNA.xsd'))
       {
@@ -63,7 +63,7 @@ class xmlFileValidator extends sfValidatorFile
         }
       }
     }
-    if(strpos($xml_file, "EarthScienceSpecimenType")) 
+    if(strpos($xml_file, "EarthScienceSpecimenType"))
     {
       if(!$xml->schemaValidate(sfConfig::get('sf_data_dir').'/import/ABCDEFG.xsd'))
       {
@@ -86,13 +86,13 @@ class xmlFileValidator extends sfValidatorFile
         }
       }
     }*/
-    $class = $this->getOption('validated_file_class');    
+    $class = $this->getOption('validated_file_class');
     return new $class($value['name'], 'text/xml', $value['tmp_name'], $value['size'], $this->getOption('path'));
   }
-  
+
   function display_xml_error($error)
   {
-    $error_list  = ""; 
+    $error_list  = "";
     switch ($error->level) {
         case LIBXML_ERR_WARNING:
             $error_list .= "Warning $error->code: ";
@@ -106,5 +106,5 @@ class xmlFileValidator extends sfValidatorFile
     }
     $error_list .= trim($error->message)."\n  Line: $error->line \n";
     return($error_list);
-  }  
+  }
 }
