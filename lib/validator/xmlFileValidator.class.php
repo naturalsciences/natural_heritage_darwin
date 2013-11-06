@@ -6,16 +6,21 @@ class xmlFileValidator extends sfValidatorFile
   {
     $this->addMessage('invalid_format', 'Invalid Xml file format <br /><u>Detail :</u>');
     $this->addMessage('invalid_line', '- %error%');
-    $this->addMessage('unreadable_file', 'This file is unreadable.');    
-    parent::configure($options, $messages);    
+    $this->addMessage('unreadable_file', 'This file is unreadable.');
+    parent::configure($options, $messages);
   }
-  
+
   protected function doClean($value)
   {
+    parent::doClean($value);
     libxml_use_internal_errors(true) ;
     $xml = new DOMDocument();
     $errorSchema = new sfValidatorErrorSchema($this);
     $errorSchemaLocal = new sfValidatorErrorSchema($this);
+
+    if(! file_exists($value['tmp_name'])) {
+      throw new sfValidatorError($this, 'unreadable_file');
+    }
     $xml_file = file_get_contents($value['tmp_name']) ;
     if(!$xml->load($value['tmp_name']))
       throw new sfValidatorError($this, 'unreadable_file');
