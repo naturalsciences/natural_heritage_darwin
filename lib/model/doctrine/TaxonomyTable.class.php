@@ -29,7 +29,7 @@ class TaxonomyTable extends DarwinTable
     $q = Doctrine_Query::create()
       ->from('Taxonomy t')
       ->innerjoin('t.Level l')
-      ->where('t.name_indexed = fulltoindex(?)', $name)
+      ->where("t.name_indexed ilike fulltoindex(?) || '%' ", $name)
       ->andWhere('l.level_sys_name = ?', $level);
     return $q->fetchOne();
 
