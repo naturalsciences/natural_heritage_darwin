@@ -10,20 +10,20 @@
  */
 class methods_and_toolsActions extends DarwinActions
 {
-  
+
   protected $widgetCategory = 'catalogue_methods_and_tools_widget';
 
   /**
-    * Action executed when trying to add a new method in collecting methods table 
+    * Action executed when trying to add a new method in collecting methods table
     * Returns id if successfull and error message if not
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeAddMethod(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     // Test well action is Ajaxly called and that value parameter exist
-    $this->forward404Unless($request->isMethod(sfRequest::POST) 
-                            && $request->isXmlHttpRequest() 
+    $this->forward404Unless($request->isMethod(sfRequest::POST)
+                            && $request->isXmlHttpRequest()
                             && $request->hasParameter('value')
                            );
     try
@@ -45,16 +45,16 @@ class methods_and_toolsActions extends DarwinActions
   }
 
   /**
-    * Action executed when trying to add a new tool in collecting tools table 
+    * Action executed when trying to add a new tool in collecting tools table
     * Returns id if successfull and error message if not
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeAddTool(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     // Test well action is Ajaxly called and that value parameter exist
-    $this->forward404Unless($request->isMethod(sfRequest::POST) 
-                            && $request->isXmlHttpRequest() 
+    $this->forward404Unless($request->isMethod(sfRequest::POST)
+                            && $request->isXmlHttpRequest()
                             && $request->hasParameter('value')
                            );
     try
@@ -78,7 +78,7 @@ class methods_and_toolsActions extends DarwinActions
   /**
     * Action executed when calling the general index
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeIndex(sfWebRequest $request)
   {
     if($request->getParameter('notion','')=='tool')
@@ -96,7 +96,7 @@ class methods_and_toolsActions extends DarwinActions
   /**
     * Action executed when calling the methods directly
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeMethodsIndex(sfWebRequest $request)
   {
     // Set common values with default order by field = method
@@ -110,7 +110,7 @@ class methods_and_toolsActions extends DarwinActions
   /**
     * Action executed when calling the tools directly
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeToolsIndex(sfWebRequest $request)
   {
     // Set common values with default order by field = tool
@@ -124,12 +124,12 @@ class methods_and_toolsActions extends DarwinActions
   /**
     * Action executed when searching an expedition - trigger by the click on the search button
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeSearch(sfWebRequest $request)
   {
     // Forward to a 404 page if the method used is not a post
     // Test also that notion is well defined as tool or method
-    $this->forward404Unless($request->isMethod('post') && 
+    $this->forward404Unless($request->isMethod('post') &&
                             ($request->getParameter('notion','')=='method' || $request->getParameter('notion','')=='tool')
                            );
     // Define notion parameter
@@ -183,17 +183,17 @@ class methods_and_toolsActions extends DarwinActions
         if (! $this->pagerLayout->getPager()->getExecuted())
            $this->methods_and_tools = $this->pagerLayout->execute();
       }
-      $this->level = $this->getUser()->getDbUserType() ;       
+      $this->level = $this->getUser()->getDbUserType() ;
     }
   }
 
   /**
     * Action executed when calling expedition/new: will trigger the display of a new empty form for new expedition encoding
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeNew(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     // Forward to a 404 page if notion is not defined as tool or method
     $this->forward404Unless($request->getParameter('notion','')=='method' || $request->getParameter('notion','')=='tool');
     // Get duplicate id parameter
@@ -219,15 +219,15 @@ class methods_and_toolsActions extends DarwinActions
   /**
     * Action executed when creating a new expedition by clicking on the save after edition
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeCreate(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     // Trigger the protection against the XSS attack
     $request->checkCSRFProtection();
     // Forward to a 404 page if the method used is not a post
     // Test also that notion is well defined as tool or method
-    $this->forward404Unless($request->isMethod('post') && 
+    $this->forward404Unless($request->isMethod('post') &&
                             ($request->getParameter('notion','')=='method' || $request->getParameter('notion','')=='tool')
                            );
     // Define notion parameter
@@ -250,10 +250,10 @@ class methods_and_toolsActions extends DarwinActions
   /**
     * Action executed when calling expedition/edit: will trigger the display of a form for expedition encoding
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeEdit(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     // Forward to a 404 page if notion is not defined as tool or method
     $this->forward404Unless($request->getParameter('notion','')=='method' || $request->getParameter('notion','')=='tool');
     // Set notion parameter
@@ -261,14 +261,16 @@ class methods_and_toolsActions extends DarwinActions
     if($this->notion=='method')
     {
       // Forward to a 404 page if the requested method id is not found
-      $this->forward404Unless($method = Doctrine::getTable('CollectingMethods')->find($request->getParameter('id')), sprintf('Object method does not exist (%s).', array($request->getParameter('id'))));
+      $method = Doctrine::getTable('CollectingMethods')->find($request->getParameter('id'));
+      $this->forward404Unless($method, sprintf('Object method does not exist (%s).', $request->getParameter('id')));
       // Otherwise initialize the method encoding form
       $this->form = new CollectingMethodsForm($method);
     }
     else
     {
       // Forward to a 404 page if the requested tool id is not found
-      $this->forward404Unless($tool = Doctrine::getTable('CollectingTools')->find($request->getParameter('id')), sprintf('Object tool does not exist (%s).', array($request->getParameter('id'))));
+      $tool = Doctrine::getTable('CollectingTools')->find($request->getParameter('id'));
+      $this->forward404Unless($tool, sprintf('Object tool does not exist (%s).', $request->getParameter('id')));
       // Otherwise initialize the tool encoding form
       $this->form = new CollectingToolsForm($tool);
     }
@@ -278,10 +280,10 @@ class methods_and_toolsActions extends DarwinActions
   /**
     * Action executed when updating expedition data by clicking on the save after edition
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeUpdate(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     // Trigger the protection against the XSS attack
     $request->checkCSRFProtection();
     // If method is <> from post or put and if the id edited and to be saved doesn't exist anymore... forward to a 404 page
@@ -292,13 +294,15 @@ class methods_and_toolsActions extends DarwinActions
     $this->notion = $request->getParameter('notion');
     if($this->notion=='method')
     {
-      $this->forward404Unless($method = Doctrine::getTable('CollectingMethods')->find($request->getParameter('id')), sprintf('Object method does not exist (%s).', array($request->getParameter('id'))));
+      $method = Doctrine::getTable('CollectingMethods')->find($request->getParameter('id'));
+      $this->forward404Unless($method, sprintf('Object method does not exist (%s).', $request->getParameter('id')));
       // Instantiate a new method form
       $this->form = new CollectingMethodsForm($method);
     }
     else
     {
-      $this->forward404Unless($tool = Doctrine::getTable('CollectingTools')->find($request->getParameter('id')), sprintf('Object tool does not exist (%s).', array($request->getParameter('id'))));
+      $tool = Doctrine::getTable('CollectingTools')->find($request->getParameter('id'));
+      $this->forward404Unless($tool, sprintf('Object tool does not exist (%s).', $request->getParameter('id')));
       // Instantiate a new tool form
       $this->form = new CollectingToolsForm($tool);
     }
@@ -323,7 +327,7 @@ class methods_and_toolsActions extends DarwinActions
       {
         $e = new DarwinPgErrorParser($ne);
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-        $form->getErrorSchema()->addError($error); 
+        $form->getErrorSchema()->addError($error);
       }
     }
   }
@@ -331,10 +335,10 @@ class methods_and_toolsActions extends DarwinActions
   /**
     * Action executed when deleting an expedition by clicking on the delete link
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeDelete(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     // Trigger the protection against the XSS attack
     $request->checkCSRFProtection();
     // Forward to a 404 page if the expedition to be deleted has not been found
@@ -344,11 +348,13 @@ class methods_and_toolsActions extends DarwinActions
     $this->notion = $request->getParameter('notion');
     if($this->notion=='method')
     {
-      $this->forward404Unless($tool_or_method = Doctrine::getTable('CollectingMethods')->find($request->getParameter('id')), sprintf('Object method does not exist (%s).', array($request->getParameter('id'))));
+      $tool_or_method = Doctrine::getTable('CollectingMethods')->find($request->getParameter('id'));
+      $this->forward404Unless($tool_or_method, sprintf('Object method does not exist (%s).', $request->getParameter('id')));
     }
     else
     {
-      $this->forward404Unless($tool_or_method = Doctrine::getTable('CollectingTools')->find($request->getParameter('id')), sprintf('Object tool does not exist (%s).', array($request->getParameter('id'))));
+      $tool_or_method = Doctrine::getTable('CollectingTools')->find($request->getParameter('id'));
+      $this->forward404Unless($tool_or_method, sprintf('Object tool does not exist (%s).', $request->getParameter('id')));
     }
     // Effectively triggers the delete method of the expedition table
     try
@@ -368,7 +374,7 @@ class methods_and_toolsActions extends DarwinActions
       {
         $this->form = new CollectingToolsForm($tool_or_method);
       }
-      $this->form->getErrorSchema()->addError($error); 
+      $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
       $this->setTemplate('edit');
     }
@@ -377,7 +383,7 @@ class methods_and_toolsActions extends DarwinActions
   /**
     * Action executed when calling the expeditions from an other screen
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeChoose(sfWebRequest $request)
   {
     // Forward to a 404 page if the method used is not a post
@@ -402,4 +408,4 @@ class methods_and_toolsActions extends DarwinActions
   }
 
 }
- 
+

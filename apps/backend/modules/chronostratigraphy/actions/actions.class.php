@@ -12,7 +12,7 @@ class chronostratigraphyActions extends DarwinActions
 {
   protected $widgetCategory = 'catalogue_chronostratigraphy_widget';
   protected $table = 'chronostratigraphy';
-  
+
   public function preExecute()
   {
     if (! strstr('view',$this->getActionName()) && ! strstr('index',$this->getActionName()))
@@ -23,20 +23,21 @@ class chronostratigraphyActions extends DarwinActions
       }
     }
   }
-  
+
   public function executeChoose(sfWebRequest $request)
   {
-    $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;  
+    $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;
     $this->setLevelAndCaller($request);
     $this->searchForm = new ChronostratigraphyFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id, 'name' => $name));
     $this->setLayout(false);
   }
 
   public function executeDelete(sfWebRequest $request)
-  {   
+  {
+    $unit = Doctrine::getTable('Chronostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless(
-      $unit = Doctrine::getTable('Chronostratigraphy')->find($request->getParameter('id')),
-      sprintf('Object chronostratigraphy does not exist (%s).', array($request->getParameter('id')))
+      $unit,
+      sprintf('Object chronostratigraphy does not exist (%s).', $request->getParameter('id'))
     );
 
     if(! $request->hasParameter('confirm'))
@@ -60,7 +61,7 @@ class chronostratigraphyActions extends DarwinActions
       $e = new DarwinPgErrorParser($ne);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
       $this->form = new ChronostratigraphyForm($unit);
-      $this->form->getErrorSchema()->addError($error); 
+      $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
       $this->setTemplate('edit');
       $this->no_right_col = Doctrine::getTable('Chronostratigraphy')->testNoRightsCollections('chrono_ref',$request->getParameter('id'), $this->getUser()->getId());
@@ -72,9 +73,9 @@ class chronostratigraphyActions extends DarwinActions
   public function executeNew(sfWebRequest $request)
   {
     $chrono = new Chronostratigraphy();
-    $duplic = $request->getParameter('duplicate_id','0');    
+    $duplic = $request->getParameter('duplicate_id','0');
     $chrono = $this->getRecordIfDuplicate($duplic, $chrono);
-    if($request->hasParameter('chronostratigraphy')) $chrono->fromArray($request->getParameter('chronostratigraphy'));    
+    if($request->hasParameter('chronostratigraphy')) $chrono->fromArray($request->getParameter('chronostratigraphy'));
     // if there is no duplicate $chrono is an empty array
     $this->form = new ChronostratigraphyForm($chrono);
   }
@@ -85,14 +86,14 @@ class chronostratigraphyActions extends DarwinActions
     $this->processForm($request,$this->form);
     $this->setTemplate('new');
   }
-    
+
   public function executeEdit(sfWebRequest $request)
   {
     $unit = Doctrine::getTable('Chronostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
     $this->no_right_col = Doctrine::getTable('Chronostratigraphy')->testNoRightsCollections('chrono_ref',$request->getParameter('id'), $this->getUser()->getId());
 
-    $this->form = new ChronostratigraphyForm($unit);  
+    $this->form = new ChronostratigraphyForm($unit);
     $this->loadWidgets();
   }
 
@@ -100,9 +101,9 @@ class chronostratigraphyActions extends DarwinActions
   {
     $unit = Doctrine::getTable('Chronostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
-    $this->no_right_col = Doctrine::getTable('Chronostratigraphy')->testNoRightsCollections('chrono_ref',$request->getParameter('id'), $this->getUser()->getId());    
+    $this->no_right_col = Doctrine::getTable('Chronostratigraphy')->testNoRightsCollections('chrono_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new ChronostratigraphyForm($unit);
-    
+
     $this->processForm($request,$this->form);
 
     $this->loadWidgets();
@@ -118,7 +119,7 @@ class chronostratigraphyActions extends DarwinActions
   }
 
   protected function processForm(sfWebRequest $request, sfForm $form)
-  {  
+  {
     $form->bind( $request->getParameter($form->getName()),$request->getFiles($form->getName()) );
     if ($form->isValid())
     {
@@ -130,16 +131,16 @@ class chronostratigraphyActions extends DarwinActions
       {
 	      $e = new DarwinPgErrorParser($ne);
 	      $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-	      $form->getErrorSchema()->addError($error); 
+	      $form->getErrorSchema()->addError($error);
       }
     }
   }
-  
+
   public function executeView(sfWebRequest $request)
   {
     $this->chrono = Doctrine::getTable('Chronostratigraphy')->find($request->getParameter('id'));
     $this->forward404Unless($this->chrono,'Chrono not Found');
-    $this->form = new ChronostratigraphyForm($this->chrono);    
+    $this->form = new ChronostratigraphyForm($this->chrono);
     $this->loadWidgets();
-  }  
+  }
 }
