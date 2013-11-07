@@ -5745,7 +5745,7 @@
       </trans-unit>
       <trans-unit id="1742">
         <source>defined as %role%</source>
-        <target>Défini(e) comme %role%</target>
+        <target>Défined as %role%</target>
       </trans-unit>
       <trans-unit id="1743">
         <source>View errors while importing</source>
