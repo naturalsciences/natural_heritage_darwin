@@ -1,11 +1,10 @@
 <table>
   <thead>
     <tr>
-      <td width='175px'>
-        <input type="button" id='chrono_precise' value="<?php echo __('Precise'); ?>" disabled>
-        <input type="button" id='chrono_full_text' value="<?php echo __('Full text'); ?>">
+      <td colspan="2">
+        <input type="button" id='chrono_precise' value="<?php echo __('Precise Search'); ?>" disabled>
+        <input type="button" id='chrono_full_text' value="<?php echo __('Name search'); ?>">
       </td>
-      <td width='300px'>&nbsp;</td>
     </tr>
     <tr id="chrono_full_text_line" class="hidden">
       <th><?php echo $form['chrono_name']->renderLabel();?></th>

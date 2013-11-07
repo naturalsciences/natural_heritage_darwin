@@ -1,9 +1,9 @@
 <table>
   <thead>
     <tr>
-      <td width='175px'>
-        <input type="button" id='mineral_precise' value="<?php echo __('Precise'); ?>" disabled>
-        <input type="button" id='mineral_full_text' value="<?php echo __('Full text'); ?>">
+      <td>
+        <input type="button" id='mineral_precise' value="<?php echo __('Precise search'); ?>" disabled>
+        <input type="button" id='mineral_full_text' value="<?php echo __('Name search'); ?>">
       </td>
       <td width='300px'>&nbsp;</td>
     </tr>

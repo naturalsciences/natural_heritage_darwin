@@ -2903,7 +2903,7 @@
         <source>Pick a stage in the list</source>
         <target>Pick a stage in the list</target>
       </trans-unit>
-          <trans-unit id="748">
+      <trans-unit id="748">
         <source>imprecise</source>
         <target>imprecise</target>
       </trans-unit>
@@ -5827,6 +5827,14 @@
       <trans-unit id="1762">
         <source>Search Only objects with multimedia files</source>
         <target>Search Only objects with multimedia files</target>
+      </trans-unit>
+      <trans-unit id="1763">
+        <source>Precise search</source>
+        <target>Precise search</target>
+      </trans-unit>
+      <trans-unit id="1764">
+        <source>Name search</source>
+        <target>Name search</target>
       </trans-unit>
     </body>
   </file>
