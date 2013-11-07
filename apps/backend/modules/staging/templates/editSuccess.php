@@ -3,25 +3,25 @@
 <?php include_javascripts_for_form($form) ?>
 <div class="page">
 
-  <?php echo form_tag('staging/update?id='.$form->getObject()->getId(), array('class'=>'edition','method'=>'post'));?>  
+  <?php echo form_tag('staging/update?id='.$form->getObject()->getId(), array('class'=>'edition','method'=>'post'));?>
   <?php if($form->hasGlobalErrors()):?>
     <ul class="spec_error_list">
       <?php foreach ($form->getErrorSchema()->getErrors() as $name => $error): ?>
         <li class="error_fld_<?php echo $name;?>"><?php echo __($error) ?></li>
       <?php endforeach; ?>
     </ul>
-  <?php endif;?> 
+  <?php endif;?>
   <?php if(!$fields) : ?>
     <?php echo __('No errors on this record') ; ?>
-    <p class="form_buttons right_aligned error">  
+    <p class="form_buttons right_aligned error">
       <a href="<?php echo url_for('staging/index?import='.$form->getObject()->getImportRef()) ?>" id="spec_cancel"><?php echo __('Back');?></a>
     </p>
-  <?php else : ?> 
+  <?php else : ?>
     <?php foreach($fields as $key => $array) : ?>
       <?php if($key == 'duplicate') : ?>
-      <fieldset>   
-        <ul class="error_list">  
-          <li><?php echo __($array['display_error'],array('%here%' => link_to('here', $form->getObject()->getLevel().'/view?id='.$array['duplicate_record'],'target=blanck'))) ?></li>       
+      <fieldset>
+        <ul class="error_list">
+          <li><?php echo __($array['display_error'],array('%here%' => link_to('here', $form->getObject()->getLevel().'/view?id='.$array['duplicate_record'],'target=blanck'))) ?></li>
       <?php else : ?>
       <fieldset><legend><?php echo __('Field to be corrected')." : ".$key ;?></legend>
         <ul class="error_list">
@@ -38,8 +38,8 @@
           <tbody>
           <?php foreach($form['Wrong'.ucfirst($array['fields'])] as $form_value) : ?>
            <?php $retainedKey = 0;?>
-           <?php include_partial('member_row', array('form' => $form_value, 'ref_id' => $form->getObject()->getId(), 'row_num'=>$retainedKey, 
-                                                     'id_field'=>$array['embedded_field'])); 
+           <?php include_partial('member_row', array('form' => $form_value, 'ref_id' => $form->getObject()->getId(), 'row_num'=>$retainedKey,
+                                                     'id_field'=>$array['embedded_field']));
            $retainedKey ++;?>
           <?php endforeach ; ?>
           </tbody>
@@ -51,20 +51,26 @@
             <?php if (count($catalogues) > 0) : ?><ul class="taxon_parent"><?php echo __("import_taxon_parent_info") ; ?><?php endif; ?>
             <?php foreach($catalogues as $level => $catalogue) : ?>
               <li>
-              <div class="<?php echo($catalogue['class']) ?>"></div>
-                <?php echo($catalogue['name']." ($level)") ; ?>
+                <div class="<?php echo $catalogue['class'] ?>"></div>
+                <?php if($catalogue['class'] == "line_not_ok"):?>
+                  <a href="<?php echo url_for('taxonomy/new').'?taxonomy[name]='.$catalogue['name'].'&taxonomy[level_ref]='.$catalogue['level_ref'] ; ?>">
+                    <?php echo $catalogue['name']." ($level)";?>
+                  </a>
+                <?php else:?>
+                  <?php echo $catalogue['name']." ($level)" ; ?>
+                <?php endif;?>
               </li>
             <?php endforeach ; ?>
             </ul>
           <?php endif ; ?>
         <?php endif ; ?>
       </fieldset>
-    <?php endforeach ; ?>  
-    <?php echo $form->renderHiddenFields() ; ?>  
+    <?php endforeach ; ?>
+    <?php echo $form->renderHiddenFields() ; ?>
     <div class="warn_message">
       <?php echo __('<strong>Warning!</strong><br />If you don\'t correct default values before saving, the associated error will remain.');?>
-    </div>  
-    <p class="form_buttons right_aligned error">  
+    </div>
+    <p class="form_buttons right_aligned error">
       <a href="<?php echo url_for('staging/index?import='.$form->getObject()->getImportRef()) ?>" id="spec_cancel"><?php echo __('Back');?></a>
       <input type="submit" value="<?php echo __('Update');?>" id="submit"/>
     </p>
