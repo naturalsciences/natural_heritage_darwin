@@ -5771,6 +5771,34 @@
         <source>Try to create missing taxons</source>
         <target></target>
       </trans-unit>
+      <trans-unit id="1750">
+        <source>Choose an institution</source>
+        <target>Kies een instelling</target>
+      </trans-unit>
+      <trans-unit id="1755">
+        <source>Choose Manager</source>
+        <target>Kies een Manager</target>
+      </trans-unit>
+      <trans-unit id="1756">
+        <source>Choose People</source>
+        <target>Kies een Personen</target>
+      </trans-unit>
+      <trans-unit id="1757">
+        <source>Choose Sampling Location</source>
+        <target>Kies Bemonsteringsplaats</target>
+      </trans-unit>
+      <trans-unit id="1758">
+        <source>Choose Specimen</source>
+        <target>Kies Tal</target>
+      </trans-unit>
+      <trans-unit id="1759">
+        <source>Choose Staff Member</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1760">
+        <source>Parent collection</source>
+        <target>Verwantschap collectie</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

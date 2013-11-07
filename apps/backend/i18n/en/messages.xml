@@ -5776,6 +5776,50 @@
         <source>Try to create missing taxons</source>
         <target>Try to create missing taxons</target>
       </trans-unit>
+      <trans-unit id="1750">
+        <source>Choose an institution</source>
+        <target>Choose an institution</target>
+      </trans-unit>
+      <trans-unit id="1751">
+        <source>Choose Chronostratigraphic unit</source>
+        <target>Choose Chronostratigraphic unit</target>
+      </trans-unit>
+      <trans-unit id="1752">
+        <source>Choose Darwin item</source>
+        <target>Choose Darwin item</target>
+      </trans-unit>
+      <trans-unit id="1753">
+        <source>Choose Expedition</source>
+        <target>Choose Expedition</target>
+      </trans-unit>
+      <trans-unit id="1754">
+        <source>Choose Institution</source>
+        <target>Choose Institution</target>
+      </trans-unit>
+      <trans-unit id="1755">
+        <source>Choose Manager</source>
+        <target>Choose Manager</target>
+      </trans-unit>
+      <trans-unit id="1756">
+        <source>Choose People</source>
+        <target>Choose People</target>
+      </trans-unit>
+      <trans-unit id="1757">
+        <source>Choose Sampling Location</source>
+        <target>Choose Sampling Location</target>
+      </trans-unit>
+      <trans-unit id="1758">
+        <source>Choose Specimen</source>
+        <target>Choose Specimen</target>
+      </trans-unit>
+      <trans-unit id="1759">
+        <source>Choose Staff Member</source>
+        <target>Choose Staff Member</target>
+      </trans-unit>
+      <trans-unit id="1760">
+        <source>Parent collection</source>
+        <target>Parent collection</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

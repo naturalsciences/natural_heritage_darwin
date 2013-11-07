@@ -1901,7 +1901,7 @@
       </trans-unit>
       <trans-unit id="501">
         <source>This element already has synonyms.&lt;br /&gt;Are you sure that you want to merge them together?</source>
-        <target>Cet élément a déjà un synonyme.&lt;br /&gt;Etes vous sûre de vouloir les regrouper ?</target>
+        <target>Cet élément a déjà un synonyme.&lt;br Choose/&gt;Etes vous sûre de vouloir les regrouper ?</target>
       </trans-unit>
       <trans-unit id="503">
         <source>There are no widgets here. Pick one from the widgets collection.</source>
@@ -5774,6 +5774,34 @@
         <source>Try to create missing taxons</source>
         <target>Essayer de créer taxon manquant</target>
       </trans-unit>
-        </body>
+      <trans-unit id="1750">
+        <source>Choose an institution</source>
+        <target>Choisissez une institution</target>
+      </trans-unit>
+      <trans-unit id="1755">
+        <source>Choose Manager</source>
+        <target>Choisissez un Manager</target>
+      </trans-unit>
+      <trans-unit id="1756">
+        <source>Choose People</source>
+        <target>Choisissez une Personne</target>
+      </trans-unit>
+      <trans-unit id="1757">
+        <source>Choose Sampling Location</source>
+        <target>Choisissez Point d'échantillonage</target>
+      </trans-unit>
+      <trans-unit id="1758">
+        <source>Choose Specimen</source>
+        <target>Choisissez un Echantillon</target>
+      </trans-unit>
+      <trans-unit id="1759">
+        <source>Choose Staff Member</source>
+        <target>Choisissez un Membre de l'équipe</target>
+      </trans-unit>
+      <trans-unit id="1760">
+        <source>Parent collection</source>
+        <target>Collection parent</target>
+      </trans-unit>
+    </body>
   </file>
 </xliff>
