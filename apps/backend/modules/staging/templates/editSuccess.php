@@ -53,7 +53,7 @@
               <li>
                 <div class="<?php echo $catalogue['class'] ?>"></div>
                 <?php if($catalogue['class'] == "line_not_ok"):?>
-                  <a href="<?php echo url_for('taxonomy/new').'?taxonomy[name]='.$catalogue['name'].'&taxonomy[level_ref]='.$catalogue['level_ref'] ; ?>">
+                  <a target="_blank" href="<?php echo url_for('taxonomy/new').'?taxonomy[name]='.$catalogue['name'].'&taxonomy[level_ref]='.$catalogue['level_ref'] ; ?>">
                     <?php echo $catalogue['name']." ($level)";?>
                   </a>
                 <?php else:?>

@@ -11,16 +11,18 @@ class CollectionsForm extends BaseCollectionsForm
 {
   public function configure()
   {
-    unset($this['path'],
-          $this['code_auto_increment'],
-          $this['code_last_value'],
-          $this['code_prefix'],
-          $this['code_prefix_separator'],
-          $this['code_suffix'],
-          $this['code_suffix_separator'],
-          $this['name_indexed']
-         );
-    $this->widgetSchema['is_public'] = new sfWidgetFormInputCheckbox(array ('default' => 'true'), array('title' => 'checked = public'));          
+    $this->useFields(array(
+      'is_public',
+      'code',
+      'name',
+      'institution_ref',
+      'main_manager_ref',
+      'staff_ref',
+      'parent_ref',
+      'collection_type',
+    ));
+
+    $this->widgetSchema['is_public'] = new sfWidgetFormInputCheckbox(array ('default' => 'true'), array('title' => 'checked = public'));
     $this->validatorSchema['is_public'] = new sfValidatorBoolean() ;
     $this->widgetSchema['code'] = new sfWidgetFormInputText();
     $this->widgetSchema['code']->setAttributes(array('class'=>'small_size'));
@@ -53,7 +55,7 @@ class CollectionsForm extends BaseCollectionsForm
      ));
     $this->widgetSchema['staff_ref']->setLabel('Staff Member');
 //      $this->validatorSchema['staff_ref'] = new sfValidatorInteger(array('required' => false)) ;
-    
+
     $this->widgetSchema['main_manager_ref']->setLabel('Conservator');
 
     $this->widgetSchema['parent_ref'] = new sfWidgetFormChoice(array(
@@ -78,26 +80,26 @@ class CollectionsForm extends BaseCollectionsForm
     );
 
     $subForm = new sfForm();
-    $this->embedForm('CollectionsRights',$subForm);   
+    $this->embedForm('CollectionsRights',$subForm);
     foreach(Doctrine::getTable('CollectionsRights')->getAllUserRef($this->getObject()->getId()) as $key=>$vals)
     {
       $form = new CollectionsRightsForm($vals);
       $this->embeddedForms['CollectionsRights']->embedForm($key, $form);
     }
     //Re-embedding the container
-    $this->embedForm('CollectionsRights', $this->embeddedForms['CollectionsRights']); 
-    
+    $this->embedForm('CollectionsRights', $this->embeddedForms['CollectionsRights']);
+
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
   }
-  
+
   public function addValue($num,$user_id,$rights)
   {
     $val = new CollectionsRights() ;
-    $val->Collections = $this->getObject();      
+    $val->Collections = $this->getObject();
     $val->setUserRef($user_id) ;
     $val->setDbUserType($rights) ;
-    $form = new CollectionsRightsForm($val,array('user_id'=>$user_id));  
+    $form = new CollectionsRightsForm($val,array('user_id'=>$user_id));
     $this->embeddedForms['newVal']->embedForm($num, $form);
     //Re-embedding the container
     $this->embedForm('newVal', $this->embeddedForms['newVal']);
@@ -115,7 +117,7 @@ class CollectionsForm extends BaseCollectionsForm
     }
     return $values;
   }
-  
+
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
     if(isset($taintedValues['newVal']))

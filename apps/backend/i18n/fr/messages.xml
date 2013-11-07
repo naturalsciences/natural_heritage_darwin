@@ -5802,6 +5802,10 @@
         <source>Parent collection</source>
         <target>Collection parent</target>
       </trans-unit>
+      <trans-unit id="1761">
+        <source>Choose Institution</source>
+        <target>Choisissez une Institution</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
