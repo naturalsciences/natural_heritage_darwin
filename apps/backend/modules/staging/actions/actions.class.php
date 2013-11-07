@@ -154,8 +154,10 @@ class stagingActions extends DarwinActions
     }
     if(in_array('taxon_ref', $form_fields))
     {      
-      $this->parent = new Hstore ;
-      $this->parent->import($staging->getTaxonParents()) ;      
+      $parent = new Hstore ;
+      $parent->import($staging->getTaxonParents()) ;
+      $taxon_parent = $parent->getArrayCopy() ;
+      $this->catalogues = Doctrine::getTable('Taxonomy')->getLevelTaxonParent($taxon_parent) ;      
     }
     $this->form = new StagingForm($staging, array('fields' => $form_fields));
 

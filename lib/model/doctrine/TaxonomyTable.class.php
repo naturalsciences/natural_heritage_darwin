@@ -24,14 +24,27 @@ class TaxonomyTable extends DarwinTable
       return $q->execute() ;  
   }
 
-  public function ifTaxonExist($level,$name)
-  {
-    $q = Doctrine_Query::create()
-      ->from('Taxonomy t')
-      ->innerjoin('t.Level l')
-      ->where("t.name_indexed ilike fulltoindex(?) || '%' ", $name)
-      ->andWhere('l.level_sys_name = ?', $level);
-    return $q->fetchOne();
-
+  public function getLevelTaxonParent($parents)
+  {    
+    $catalogue_level =array();
+    if(count($parents) == 0) return $catalogue_level ;
+    $q= Doctrine_Query::create()
+      ->from('CatalogueLevels cl')
+      ->orderby('level_order')
+      ->wherein('level_sys_name',array_keys($parents)) ;
+    $result = $q->execute() ;
+    foreach ($result as $catalogue) {
+      $q = Doctrine_Query::create()
+        ->from('Taxonomy t')
+        ->innerjoin('t.Level l')
+        ->where('t.name_indexed ilike fulltoindex(?)', $parents[$catalogue->getLevelSysName()])
+        ->andWhere('l.level_sys_name = ?', $catalogue->getLevelSysName());
+      $taxon = $q->fetchOne();
+      $catalogue_level[$catalogue->getLevelName()] = array( 
+        'name' => $parents[$catalogue->getLevelSysName()],
+        'level_ref' => $catalogue->getId(),
+        'class' => $taxon?'line_ok':'line_not_ok') ;
+    }
+    return($catalogue_level) ;
   }
 }

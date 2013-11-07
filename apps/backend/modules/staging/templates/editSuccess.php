@@ -48,11 +48,11 @@
           <?php echo $form[$array['fields']]->renderError() ; ?>
           <?php echo $form[$array['fields']]->render() ; ?>
           <?php if ($key == 'taxon') : ?>
-            <?php if (count($parent) > 0) : ?><ul class="taxon_parent"><?php echo __("import_taxon_parent_info") ; ?><?php endif; ?>
-            <?php foreach($parent as $level => $name) : ?>
+            <?php if (count($catalogues) > 0) : ?><ul class="taxon_parent"><?php echo __("import_taxon_parent_info") ; ?><?php endif; ?>
+            <?php foreach($catalogues as $level => $catalogue) : ?>
               <li>
-              <div class="<?php echo(Doctrine::getTable("Taxonomy")->ifTaxonExist($level,$name)?'line_ok':'line_not_ok') ?>"></div>
-                <?php echo("$name ($level)") ; ?>
+              <div class="<?php echo($catalogue['class']) ?>"></div>
+                <?php echo($catalogue['name']." ($level)") ; ?>
               </li>
             <?php endforeach ; ?>
             </ul>

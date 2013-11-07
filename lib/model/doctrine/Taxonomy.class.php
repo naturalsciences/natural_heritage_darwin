@@ -27,3 +27,4 @@ class Taxonomy extends BaseTaxonomy
     return $this->_get('name');
   }
 }
+
