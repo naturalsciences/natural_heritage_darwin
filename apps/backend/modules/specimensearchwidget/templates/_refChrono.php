@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <td colspan="2">
-        <input type="button" id='chrono_precise' value="<?php echo __('Precise Search'); ?>" disabled>
+        <input type="button" id='chrono_precise' value="<?php echo __('Precise search'); ?>" disabled>
         <input type="button" id='chrono_full_text' value="<?php echo __('Name search'); ?>">
       </td>
     </tr>
