@@ -24,17 +24,18 @@ class mineralogyActions extends DarwinActions
   }
   public function executeChoose(sfWebRequest $request)
   {
-    $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;  
+    $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;
     $this->setLevelAndCaller($request);
     $this->searchForm = new MineralogyFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id, 'name' => $name));
     $this->setLayout(false);
   }
 
   public function executeDelete(sfWebRequest $request)
-  { 
+  {
+    $unit = Doctrine::getTable('Mineralogy')->find($request->getParameter('id'));
     $this->forward404Unless(
-      $unit = Doctrine::getTable('Mineralogy')->find($request->getParameter('id')),
-      sprintf('Object mineralogy does not exist (%s).', array($request->getParameter('id')))
+      $unit,
+      sprintf('Object mineralogy does not exist (%s).', $request->getParameter('id'))
     );
 
     if(! $request->hasParameter('confirm'))
@@ -59,7 +60,7 @@ class mineralogyActions extends DarwinActions
       $e = new DarwinPgErrorParser($ne);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
       $this->form = new MineralogyForm($unit);
-      $this->form->getErrorSchema()->addError($error); 
+      $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
       $this->no_right_col = Doctrine::getTable('Mineralogy')->testNoRightsCollections('mineral_ref',$request->getParameter('id'), $this->getUser()->getId());
       $this->setTemplate('edit');
@@ -70,7 +71,7 @@ class mineralogyActions extends DarwinActions
   {
     $mineral = new Mineralogy() ;
     $mineral = $this->getRecordIfDuplicate($request->getParameter('duplicate_id','0'), $mineral);
-    if($request->hasParameter('mineralogy')) $mineral->fromArray($request->getParameter('mineralogy'));        
+    if($request->hasParameter('mineralogy')) $mineral->fromArray($request->getParameter('mineralogy'));
     $this->form = new MineralogyForm($mineral);
   }
 
@@ -80,7 +81,7 @@ class mineralogyActions extends DarwinActions
     $this->processForm($request,$this->form);
     $this->setTemplate('new');
   }
-    
+
   public function executeEdit(sfWebRequest $request)
   {
     $unit = Doctrine::getTable('Mineralogy')->find($request->getParameter('id'));
@@ -94,9 +95,9 @@ class mineralogyActions extends DarwinActions
   {
     $unit = Doctrine::getTable('Mineralogy')->find($request->getParameter('id'));
     $this->forward404Unless($unit,'Unit not Found');
-    $this->no_right_col = Doctrine::getTable('Mineralogy')->testNoRightsCollections('mineral_ref',$request->getParameter('id'), $this->getUser()->getId());    
+    $this->no_right_col = Doctrine::getTable('Mineralogy')->testNoRightsCollections('mineral_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new MineralogyForm($unit);
-    
+
     $this->processForm($request,$this->form);
 
     $this->loadWidgets();
@@ -124,7 +125,7 @@ class mineralogyActions extends DarwinActions
       {
 	$e = new DarwinPgErrorParser($ne);
 	$error = new sfValidatorError(new savedValidator(),$e->getMessage());
-	$form->getErrorSchema()->addError($error); 
+	$form->getErrorSchema()->addError($error);
       }
     }
   }
@@ -137,11 +138,11 @@ class mineralogyActions extends DarwinActions
     if($request->getParameter('searchedCrit', '') !== '')
     {
       $unitId = Doctrine::getTable('Mineralogy')->findOneByCode($request->getParameter('searchedCrit'));
-      if ($unitId) 
+      if ($unitId)
         return $this->renderText($unitId->getCode());
       else
         return $this->renderText('not found');
-    }  
+    }
     return $this->renderText('');
   }
 
@@ -153,7 +154,7 @@ class mineralogyActions extends DarwinActions
     if($request->getParameter('q', '') !== '' && $request->getParameter('limit', '') !== '')
     {
       $codes = Doctrine::getTable('Mineralogy')->fetchByCodeLimited($request->getParameter('q'), $request->getParameter('limit'));
-      if ($codes) 
+      if ($codes)
       {
         $values=array();
         foreach($codes as $key=>$value)
@@ -164,14 +165,14 @@ class mineralogyActions extends DarwinActions
       }
       else
         return $this->renderText(array(''));
-    }  
+    }
     return $this->renderText(array(''));
   }
   public function executeView(sfWebRequest $request)
   {
     $this->mineral = Doctrine::getTable('Mineralogy')->find($request->getParameter('id'));
     $this->forward404Unless($this->mineral,'Mineralogic unit not Found');
-    $this->form = new MineralogyForm($this->mineral);    
+    $this->form = new MineralogyForm($this->mineral);
     $this->loadWidgets();
   }
 }

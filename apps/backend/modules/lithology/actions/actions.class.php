@@ -33,9 +33,10 @@ class lithologyActions extends DarwinActions
 
   public function executeDelete(sfWebRequest $request)
   { 
+    $unit = Doctrine::getTable('Lithology')->find($request->getParameter('id'));
     $this->forward404Unless(
-      $unit = Doctrine::getTable('Lithology')->find($request->getParameter('id')),
-      sprintf('Object lithology does not exist (%s).', array($request->getParameter('id')))
+      $unit,
+      sprintf('Object lithology does not exist (%s).', $request->getParameter('id'))
     );
     if(! $request->hasParameter('confirm'))
     {

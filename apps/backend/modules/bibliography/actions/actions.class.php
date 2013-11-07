@@ -25,10 +25,10 @@ class bibliographyActions extends DarwinActions
   /**
     * Action executed when calling the bibliography from an other screen
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeChoose(sfWebRequest $request)
   {
-    $title = $request->hasParameter('title')?$request->getParameter('title'):'' ;  
+    $title = $request->hasParameter('title')?$request->getParameter('title'):'' ;
     // Initialization of the Search bibliography form
     $this->form = new BibliographyFormFilter(array('title' => $title));
     // Remove surrounding layout
@@ -38,7 +38,7 @@ class bibliographyActions extends DarwinActions
   /**
     * Action executed when calling the bibliography directly
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeIndex(sfWebRequest $request)
   {
     //  Initialization of the Search bibliography form
@@ -48,7 +48,7 @@ class bibliographyActions extends DarwinActions
   /**
     * Action executed when calling bibliography/new: will trigger the display of a new empty form for new bibliography encoding
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeNew(sfWebRequest $request)
   {
     $bibliography = new Bibliography() ;
@@ -66,7 +66,7 @@ class bibliographyActions extends DarwinActions
   /**
     * Action executed when creating a new bibliography by clicking on the save after edition
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeCreate(sfWebRequest $request)
   {
     // Trigger the protection against the XSS attack
@@ -84,7 +84,7 @@ class bibliographyActions extends DarwinActions
   /**
     * Action executed when calling bibliography/edit: will trigger the display of a form for bibliography encoding
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeEdit(sfWebRequest $request)
   {
     $bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id'));
@@ -99,15 +99,17 @@ class bibliographyActions extends DarwinActions
   /**
     * Action executed when updating bibliography data by clicking on the save after edition
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeUpdate(sfWebRequest $request)
   {
     // Trigger the protection against the XSS attack
     $request->checkCSRFProtection();
     // If method is <> from post or put and if the id edited and to be saved doesn't exist anymore... forward to a 404 page
+    $bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id'));
+
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
-    $this->forward404Unless($bibliography = Doctrine::getTable('Bibliography')->find($request->getParameter('id')), sprintf('Object bibliography does not exist (%s).', array($request->getParameter('id'))));
-    $this->no_right_col = Doctrine::getTable('Bibliography')->testNoRightsCollections('bibliography_ref',$request->getParameter('id'), $this->getUser()->getId());    
+    $this->forward404Unless($bibliography, sprintf('Object bibliography does not exist (%s).', $request->getParameter('id')));
+    $this->no_right_col = Doctrine::getTable('Bibliography')->testNoRightsCollections('bibliography_ref',$request->getParameter('id'), $this->getUser()->getId());
     // Instantiate a new bibliography form
     $this->form = new BibliographyForm($bibliography);
     // Process the form for saving informations
@@ -120,13 +122,14 @@ class bibliographyActions extends DarwinActions
   /**
     * Action executed when deleting an bibliography by clicking on the delete link
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeDelete(sfWebRequest $request)
   {
     // Trigger the protection against the XSS attack
     $request->checkCSRFProtection();
     // Forward to a 404 page if the bibliography to be deleted has not been found
-    $this->forward404Unless($bibliography = Doctrine::getTable('Bibliography')->find(array($request->getParameter('id'))), sprintf('Object bibliography does not exist (%s).', array($request->getParameter('id'))));
+    $bibliography = Doctrine::getTable('Bibliography')->find(array($request->getParameter('id')));
+    $this->forward404Unless($bibliography, sprintf('Object bibliography does not exist (%s).', $request->getParameter('id')));
     // Effectively triggers the delete method of the bibliography table
     try
     {
@@ -138,7 +141,7 @@ class bibliographyActions extends DarwinActions
       $e = new DarwinPgErrorParser($ne);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
       $this->form = new BibliographyForm($bibliography);
-      $this->form->getErrorSchema()->addError($error); 
+      $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
       $this->setTemplate('edit');
     }
@@ -147,7 +150,7 @@ class bibliographyActions extends DarwinActions
   /**
     * Action executed when searching an bibliography - trigger by the click on the search button
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeSearch(sfWebRequest $request)
   {
     // Forward to a 404 page if the method used is not a post
@@ -156,7 +159,7 @@ class bibliographyActions extends DarwinActions
     // Instantiate a new bibliography form
     $this->form = new BibliographyFormFilter();
     // Triggers the search result function
-    $this->searchResults($this->form, $request);    
+    $this->searchResults($this->form, $request);
   }
 
   public function executeAddAuthor(sfWebRequest $request)
@@ -199,7 +202,7 @@ class bibliographyActions extends DarwinActions
         $this->setDefaultPaggingLayout($this->pagerLayout);
         // If pager not yet executed, this means the query has to be executed for data loading
         if (! $this->pagerLayout->getPager()->getExecuted())
-           $this->bibliography = $this->pagerLayout->execute();         
+           $this->bibliography = $this->pagerLayout->execute();
       }
     }
   }
@@ -209,7 +212,7 @@ class bibliographyActions extends DarwinActions
     * @param sfWebRequest $request Request coming from browser
     * @param sfForm       $form    The encoding form passed to be bound with data brought by the request and to be checked
     * @var   sfForm       $bibliography: Form saved
-    */ 
+    */
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
     $form->bind($request->getParameter($form->getName()));
@@ -224,7 +227,7 @@ class bibliographyActions extends DarwinActions
       {
         $e = new DarwinPgErrorParser($ne);
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-        $form->getErrorSchema()->addError($error); 
+        $form->getErrorSchema()->addError($error);
       }
     }
   }
@@ -235,5 +238,5 @@ class bibliographyActions extends DarwinActions
     $this->form = new BibliographyForm($this->bibliography);
     $this->loadWidgets();
   }
-    
+
 }

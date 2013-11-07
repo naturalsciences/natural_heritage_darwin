@@ -1746,6 +1746,7 @@ RETURN v_int_value;
 END;
 $$ LANGUAGE plpgsql;
 
+/** Deprecated ... might be removed **/
 CREATE OR REPLACE FUNCTION fct_searchCodes(VARIADIC varchar[]) RETURNS SETOF integer  AS $$
 DECLARE
   sqlString varchar := E'select record_id from codes';

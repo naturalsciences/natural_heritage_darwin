@@ -22,10 +22,11 @@ class igsActions extends DarwinActions
       }
     }
   }
+
   /**
     * Action executed when calling the expeditions from an other screen
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeChoose(sfWebRequest $request)
   {
     // Initialization of the Search expedition form
@@ -37,15 +38,15 @@ class igsActions extends DarwinActions
   /**
     * Action executed when calling the expeditions directly
     * @param sfWebRequest $request Request coming from browser
-    */ 
+    */
   public function executeIndex(sfWebRequest $request)
   {
     //  Initialization of the Search expedition form
-    $this->form = new IgsFormFilter();    
+    $this->form = new IgsFormFilter();
   }
 
   public function executeNew(sfWebRequest $request)
-  { 
+  {
     $igs = new igs() ;
     $igs = $this->getRecordIfDuplicate($request->getParameter('duplicate_id','0'), $igs);
     if($request->hasParameter('searchIg')) $igs->fromArray($request->getParameter('searchIg'));
@@ -65,7 +66,8 @@ class igsActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $this->forward404Unless($igs = Doctrine::getTable('Igs')->find(array($request->getParameter('id'))), sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
+    $igs = Doctrine::getTable('Igs')->find(array($request->getParameter('id')));
+    $this->forward404Unless($igs, sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new igsForm($igs);
     $this->loadWidgets();
@@ -73,9 +75,11 @@ class igsActions extends DarwinActions
 
   public function executeUpdate(sfWebRequest $request)
   {
+    $igs = Doctrine::getTable('Igs')->find(array($request->getParameter('id')));
+
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($igs = Doctrine::getTable('igs')->find(array($request->getParameter('id'))), sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());    
+    $this->forward404Unless($igs, sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
+    $this->no_right_col = Doctrine::getTable('Igs')->testNoRightsCollections('ig_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new igsForm($igs);
 
     $this->processForm($request, $this->form);
@@ -86,7 +90,8 @@ class igsActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     $request->checkCSRFProtection();
-    $this->forward404Unless($igs = Doctrine::getTable('igs')->find(array($request->getParameter('id'))), sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
+    $igs = Doctrine::getTable('igs')->find(array($request->getParameter('id')));
+    $this->forward404Unless($igs, sprintf('Object I.G. does not exist (%s).', $request->getParameter('id')));
     try
     {
       $igs->delete();
@@ -97,7 +102,7 @@ class igsActions extends DarwinActions
       $e = new DarwinPgErrorParser($ne);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
       $this->form = new IgsForm($igs);
-      $this->form->getErrorSchema()->addError($error); 
+      $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
       $this->setTemplate('edit');
     }
@@ -110,7 +115,7 @@ class igsActions extends DarwinActions
     // Instantiate a new expedition form
     $this->form = new IgsFormFilter();
     // Triggers the search result function
-    $this->searchResults($this->form,$request);    
+    $this->searchResults($this->form,$request);
   }
 
   public function executeSearchFor(sfWebRequest $request)
@@ -122,7 +127,7 @@ class igsActions extends DarwinActions
     if( $ig_num !== '')
     {
       $igId = Doctrine::getTable('Igs')->findOneByIgNum($ig_num);
-      if ($igId) 
+      if ($igId)
         return $this->renderText($igId->getId());
       else
         return $this->renderText('not found');
@@ -138,7 +143,7 @@ class igsActions extends DarwinActions
     if($request->getParameter('q', '') !== '' && $request->getParameter('limit', '') !== '')
     {
       $igIds = Doctrine::getTable('Igs')->fetchByIgNumLimited($request->getParameter('q'), $request->getParameter('limit'));
-      if ($igIds) 
+      if ($igIds)
       {
         $values=array();
         foreach($igIds as $key=>$value)
@@ -149,7 +154,7 @@ class igsActions extends DarwinActions
       }
       else
         return $this->renderText(array(''));
-    }  
+    }
     return $this->renderText(array(''));
   }
 
@@ -201,7 +206,7 @@ class igsActions extends DarwinActions
     * @param sfWebRequest $request Request coming from browser
     * @param sfForm       $form    The encoding form passed to be bound with data brought by the request and to be checked
     * @var   sfForm       $igs: Form saved
-    */ 
+    */
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
     $form->bind($request->getParameter($form->getName()));
@@ -242,7 +247,7 @@ class igsActions extends DarwinActions
 
   public function executeAddNew(sfWebRequest $request)
   {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();  
+    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     if($request->hasParameter('num'))
     {
       $igs = new Igs() ;
