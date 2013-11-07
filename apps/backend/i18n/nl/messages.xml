@@ -5730,6 +5730,7 @@
       <trans-unit id="1739">
         <source>Search Only objects with multimedia files </source>
         <target>Zoek alleen objecten met multimediabestanden</target>
+      </trans-unit>
       <trans-unit id="1740">
         <source>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</source>
         <target>Deze knop toont alle fouten opgetreden tijdens het importeren: aan u de keuze om het importeren te vervolgen, of deze import te verwijderen, het bestand te corrigeren en opnieuw te importeren</target>
