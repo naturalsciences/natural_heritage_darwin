@@ -5790,7 +5790,7 @@
       </trans-unit>
       <trans-unit id="1758">
         <source>Choose Specimen</source>
-        <target>Kies Tal</target>
+        <target>Kies Stal</target>
       </trans-unit>
       <trans-unit id="1759">
         <source>Choose Staff Member</source>
@@ -5803,6 +5803,10 @@
       <trans-unit id="1761">
         <source>Choose Institution</source>
         <target>Kies een Instituut</target>
+      </trans-unit>
+      <trans-unit id="1762">
+        <source>Search Only objects with multimedia files</source>
+        <target></target>
       </trans-unit>
     </body>
   </file>

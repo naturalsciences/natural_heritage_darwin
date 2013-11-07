@@ -5806,6 +5806,10 @@
         <source>Choose Institution</source>
         <target>Choisissez une Institution</target>
       </trans-unit>
+      <trans-unit id="1762">
+        <source>Search Only objects with multimedia files</source>
+        <target>Rechercher uniquement dans les fichiers multimedia</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
