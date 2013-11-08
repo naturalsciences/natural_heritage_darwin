@@ -3110,3 +3110,31 @@ li > div.line_ok {
   background-color: #1FC928;
   display: inline-block;
 }
+
+h3.spec {
+    margin-left: 0.5em;
+    margin-bottom: 1.5em;
+    font-size: large;
+    text-shadow: 1px 1px 1px gray;
+    font-weight:bold;
+}
+h3.spec .title {
+  border-bottom: 3px solid #5baabd;
+  padding-left: .5em;
+  padding-right: .5em;
+}
+.specimen_actions a {
+  line-height: 20px;
+}
+
+.specimen_actions {
+    border: 1px solid lightgray;
+        border-radius: 10px;
+
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.specimen_actions:hover {
+  background-color: lightgray;
+
+}

@@ -16,12 +16,52 @@ $(document).ready(function ()
         if( $('#specimen_'+field).length == 0 )
             $(this).show();
     });
+
+  $('.pin_but').click(function(e){
+    e.preventDefault();
+    if($(this).hasClass('pin_on'))
+    {
+      $(this).parent().find('.pin_off').removeClass('hidden');
+      $(this).addClass('hidden') ;
+      pin_status = 0;
+    }
+    else
+    {
+      $(this).parent().find('.pin_on').removeClass('hidden');
+      $(this).addClass('hidden') ;
+      pin_status = 1;
+    }
+    $.get( $(this).parent().attr('href') + '/status/' + pin_status,function (html){});
+  });
+
 });
 </script>
 
 <?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'specimen','eid'=> (! $form->getObject()->isNew() ? $form->getObject()->getId() : null ))); ?>
 
-<?php include_partial('specBeforeTab', array('specimen' => $form->getObject(),'form'=> $form, 'mode'=>'specimen_edit') );?>
+<div class="encoding">
+  <div class="page">
+
+<?php if($form->isNew()):?>
+  <h3 class="spec"><span class="title"><?php echo __( 'Add Specimens');?></span></h3>
+<?php else:?>
+  <h3 class="spec">
+  <span class="title"><?php echo __('Edit Specimen');?></span>
+    <span class="specimen_actions">
+        <?php if($sf_user->isPinned($form->getObject()->getId(), 'specimen')) {
+          $txt = image_tag('blue_pin_on.png', array('class'=>'pin_but pin_on'));
+          $txt .= image_tag('blue_pin_off.png', array('class'=>'pin_but pin_off hidden'));
+        }else{
+          $txt = image_tag('blue_pin_on.png', array('class'=>'pin_but pin_on hidden'));
+          $txt .= image_tag('blue_pin_off.png', array('class'=>'pin_but pin_off'));
+        }?>
+
+        <?php echo link_to($txt, 'savesearch/pin?source=specimen&id='.$form->getObject()->getId(), array('class'=>'pin_link'));?>
+        <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$form->getObject()->getId()); ?>
+    </span>
+  </h3>
+<?php endif;?>
+
   <?php include_stylesheets_for_form($form) ?>
   <?php include_javascripts_for_form($form) ?>
   <?php use_javascript('double_list.js');?>
@@ -76,7 +116,7 @@ function removeError()
 $(document).ready(function () {
   $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>'});
   $('body').catalogue({});
-  
+
   $('#submit_spec_f1').click(function(event){
     if($('#specimen_ig_ref_check').val() == 0 && $('#specimen_ig_ref').val() == "" && $('#specimen_ig_ref_name').val() != "")
     {
@@ -86,4 +126,4 @@ $(document).ready(function () {
   }) ;
 });
 </script>
-<?php include_partial('specAfterTab', array('specimen'=> $form->getObject()) );?>
+</div></div>

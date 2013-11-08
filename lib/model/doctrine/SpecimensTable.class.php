@@ -367,7 +367,7 @@ class SpecimensTable extends DarwinTable
   */
   public function getRequiredWidget($criterias, $user, $category, $all = 0)
   {
-    if (!$all)
+    if (!$all && $criterias)
     {
       $req_widget = array() ;
       $default_values = array(0,"Undefined","undefined","not applicable","0001/01/01");
