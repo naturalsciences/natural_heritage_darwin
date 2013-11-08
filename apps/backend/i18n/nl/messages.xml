@@ -5766,11 +5766,11 @@
       </trans-unit>
       <trans-unit id="1748">
         <source>import_taxon_parent_info</source>
-        <target>Parent set in your file (in red : taxon not found in the catalogue, in green : taxon found in the catalogue)</target>
+        <target>Parent geplaatst in je bestand (in rood: taxon niet gevonden in de catalogus, in groen: taxon gevonden in de catalogus)</target>
       </trans-unit>
       <trans-unit id="1749">
         <source>Try to create missing taxons</source>
-        <target></target>
+        <target>Tracht ontbrekende taxa aan te maken</target>
       </trans-unit>
       <trans-unit id="1750">
         <source>Choose an institution</source>
@@ -5778,23 +5778,23 @@
       </trans-unit>
       <trans-unit id="1755">
         <source>Choose Manager</source>
-        <target>Kies een Manager</target>
+        <target>Kies een Conservator</target>
       </trans-unit>
       <trans-unit id="1756">
         <source>Choose People</source>
-        <target>Kies een Personen</target>
+        <target>Kies Personen</target>
       </trans-unit>
       <trans-unit id="1757">
         <source>Choose Sampling Location</source>
-        <target>Kies Bemonsteringsplaats</target>
+        <target>Kies een Bemonsteringsplaats</target>
       </trans-unit>
       <trans-unit id="1758">
         <source>Choose Specimen</source>
-        <target>Kies Stal</target>
+        <target>Kies Staal</target>
       </trans-unit>
       <trans-unit id="1759">
         <source>Choose Staff Member</source>
-        <target></target>
+        <target>Kies Personeelslid</target>
       </trans-unit>
       <trans-unit id="1760">
         <source>Parent collection</source>
@@ -5806,7 +5806,7 @@
       </trans-unit>
       <trans-unit id="1762">
         <source>Search Only objects with multimedia files</source>
-        <target></target>
+        <target>Zoek enkel objecten met multimedia bestanden</target>
       </trans-unit>
     </body>
   </file>
