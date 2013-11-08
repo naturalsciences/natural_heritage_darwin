@@ -5810,6 +5810,14 @@
         <source>Search Only objects with multimedia files</source>
         <target>Rechercher uniquement dans les fichiers multimedia</target>
       </trans-unit>
+      <trans-unit id="1763">
+        <source>Precise search</source>
+        <target>Recherche précise</target>
+      </trans-unit>
+      <trans-unit id="1764">
+        <source>Name search</source>
+        <target>Recherche textuelle</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

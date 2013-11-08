@@ -1,11 +1,10 @@
 <table>
   <thead>
     <tr>
-      <td width='175px'>
-        <input type="button" id='taxon_precise' value="<?php echo __('Precise'); ?>" disabled>
-        <input type="button" id='taxon_full_text' value="<?php echo __('Full text'); ?>">
+      <td colspan="2">
+        <input type="button" id='taxon_precise' value="<?php echo __('Precise search'); ?>" disabled>
+        <input type="button" id='taxon_full_text' value="<?php echo __('Name search'); ?>">
       </td>
-      <td width='300px'>&nbsp;</td>
     </tr>
     <tr id="taxon_full_text_line" class="hidden">
       <th><?php echo $form['taxon_name']->renderLabel();?></th>
