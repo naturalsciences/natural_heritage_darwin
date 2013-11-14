@@ -45,11 +45,12 @@ EOF;
           {
             echo $e->getMessage()."\n";break;
           }
+         //print $id."-".$result.'-';
           Doctrine_Query::create()
             ->update('imports p')
             ->set('p.state','?',$result!=''?'error':'loaded')
             ->set('p.initial_count','(select count(*) from staging where import_ref = ? )',$id)
-            ->set('p.errors_in_import','?',$result)
+            ->set('p.errors_in_import','?',$result ? $result : '')
             ->where('p.id = ?', $id)
             ->execute();
         }
