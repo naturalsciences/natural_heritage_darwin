@@ -523,7 +523,7 @@ BEGIN
         taxon_ref, mineral_ref, source_name, source_id, quantity, unit
         from staging_relationship where record_id=relation_line.id ;
     END IF ;
-    DELETE FROM staging_relationship WHERE id = line.id ;
+    DELETE FROM staging_relationship WHERE id = relation_line.id ;
   END LOOP;
   RETURN id_array;
 END;
