@@ -1,4 +1,4 @@
-<?php 
+<?php
 class DisplayImportABCD implements IDisplayModels
 {
   public function getName()
@@ -21,7 +21,6 @@ class DisplayImportABCD implements IDisplayModels
       'individual_stage' => 'Stage',
       'individual_social_status' => 'Social Status',
       'individual_rock_form' => 'Rock Form',
-      'individual_count' => 'Number',
       'part' => 'Part',
       'specimen_status' => 'Status',
       'institution' => 'Institution',
