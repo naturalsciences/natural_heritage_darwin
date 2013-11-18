@@ -138,7 +138,7 @@ class ImportABCDXml implements IImportModels
       case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $this->cdata ; break;
       case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break;
       case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;
-      case "Method" : if($this->getPreviousTag() == "Identifi") $this->addComment(); else $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
+      case "Method" : if($this->getPreviousTag() == "Identification") $this->addComment(); else $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
       case "efg:Petrology" :
       case "MeasurementsOrFacts" : if($this->object && $this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break;
