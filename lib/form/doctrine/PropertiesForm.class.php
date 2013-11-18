@@ -86,6 +86,8 @@ class PropertiesForm extends BasePropertiesForm
     );
 
     $this->widgetSchema['referenced_relation'] = new sfWidgetFormInputHidden();
+    $this->widgetSchema['record_id'] = new sfWidgetFormInputHidden();
+
     $this->validatorSchema['record_id'] = new sfValidatorInteger();
     $this->widgetSchema['property_type'] = new widgetFormSelectComplete(array(
       'model' => 'Properties',
