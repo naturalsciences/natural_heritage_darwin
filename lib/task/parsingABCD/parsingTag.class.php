@@ -25,7 +25,7 @@ class ParsingTag extends ImportABCDXml
   {
     if(strpos($date, '-'))
     {
-      $dates= explode('-',$date)
+      $dates= explode('-',$date);
       $this->GTUdate['from'] = FuzzyDateTime::getValidDate(trim($dates[0])) ;
       $this->GTUdate['to'] = FuzzyDateTime::getValidDate(trim($dates[1])) ;
     }
