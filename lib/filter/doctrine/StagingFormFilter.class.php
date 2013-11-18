@@ -36,7 +36,7 @@ class StagingFormFilter extends BaseStagingFormFilter
       $query->andWhere("status != '' ");
     }
   }
-  
+
   /*public function addSlevelColumnQuery(Doctrine_Query $query, $field, $value)
   {
      if ($value != "")
@@ -47,7 +47,9 @@ class StagingFormFilter extends BaseStagingFormFilter
   {
     $query = parent::getQuery();
     $query->andWhere('import_ref = ?',$this->options['import']->getId())
-        ->andWhere('to_import = false');
+        ->andWhere('to_import = false')
+        ->orderBy('id asc');
+
     return $query;
   }
 }
