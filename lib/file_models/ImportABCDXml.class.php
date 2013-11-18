@@ -60,7 +60,7 @@ class ImportABCDXml implements IImportModels
       case "RockUnit" : $this->object = new ParsingCatalogue('lithology') ; break;
       case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break;
       case "SpecimenUnit" : $this->object = new ParsingTag("unit") ; break;
-      case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); break;
+      case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); $this->object = null; break;
       case "UnitAssociation" : $this->object = new stagingRelationship() ; break;
       case "UnitID" : $this->code = new Codes() ; break;
     }
@@ -140,7 +140,7 @@ class ImportABCDXml implements IImportModels
       case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;
       case "Method" : $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
       case "efg:Petrology" :
-      case "MeasurementsOrFacts" : if($this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break;
+      case "MeasurementsOrFacts" : if($this->object && $this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break;
       case "MeasurementOrFactText" : $this->addComment() ; break;
       case "MineralColour" : $this->staging->setMineralColour($this->cdata) ; break;
@@ -230,11 +230,15 @@ class ImportABCDXml implements IImportModels
 
   private function addProperty()
   {
-    if($this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag()=='Identification')
+    if($this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag()=='Identification') {
       $this->staging->addRelated($this->property->property) ;
-    elseif (in_array($this->getPreviousTag(),array('efg:RockPhysicalCharacteristic','efg:MineralMeasurementOrFact')))
+    }
+    elseif (in_array($this->getPreviousTag(),array('efg:RockPhysicalCharacteristic','efg:MineralMeasurementOrFact'))) {
       $this->staging->addRelated($this->property->property) ;
-    else $this->object->addStagingInfo($this->property->property, $this->staging->getId());
+    }
+    else {
+      $this->object->addStagingInfo($this->property->property, $this->staging->getId());
+    }
   }
 
   private function saveObjects()
