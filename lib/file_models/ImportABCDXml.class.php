@@ -138,7 +138,7 @@ class ImportABCDXml implements IImportModels
       case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $this->cdata ; break;
       case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break;
       case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;
-      case "Method" : if($this->getPreviousTag() == "Identification") $this->addComment(); else $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
+      case "Method" : if($this->getPreviousTag() == "Identifi") $this->addComment(); else $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
       case "efg:Petrology" :
       case "MeasurementsOrFacts" : if($this->object && $this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break;
@@ -183,7 +183,7 @@ class ImportABCDXml implements IImportModels
       case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ;  $this->addComment(true) ; break;
       case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break;
       case "Unit" : $this->saveUnit(); break;
-      case "UnitAssociation" : $this->staging->addRelated($this->object) ; break;
+      case "UnitAssociation" : $this->staging->addRelated($this->object) ; $this->object=null; break;
       case "UnitID" : $this->code['code'] = $this->cdata ; $this->name = $this->cdata ;
                       if(substr($this->code['code'],0,4) != 'hash') $this->staging->addRelated($this->code) ; break;
       case "UnitOfMeasurement" : $this->property->property->setPropertyAccuracy($this->cdata);$this->property->property->setPropertyUnit($this->cdata); break;
