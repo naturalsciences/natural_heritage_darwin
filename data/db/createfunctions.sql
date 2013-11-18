@@ -2646,7 +2646,8 @@ BEGIN
 
         IF result_nbr = 0 THEN
           IF old_parent_id IS NULL THEN
-            RAISE EXCEPTION 'Unable to create taxon with no common parents';
+            return true;
+            --RAISE EXCEPTION 'Unable to create taxon with no common parents';
           END IF;
           EXECUTE 'INSERT INTO ' || quote_ident(catalogue_table) || '  (name, level_ref, parent_ref) VALUES
             (' || quote_literal(row_record.lvl_value) || ', ' ||
@@ -2733,7 +2734,10 @@ DECLARE
   ref_rec integer :=0;
   tags staging_tag_groups ;
 BEGIN
-  IF line.gtu_code is null OR line.gtu_code  ='' OR line.gtu_ref is not null THEN
+  IF line.gtu_ref is not null THEN
+    RETURN true;
+  END IF;
+  IF (line.gtu_code is null OR line.gtu_code  = '') AND NOT EXISTS (select 1 from staging_tag_groups g where g.staging_ref = line.id ) THEN
     RETURN true;
   END IF;
 
@@ -2752,7 +2756,7 @@ BEGIN
         INSERT into gtu
           (code, gtu_from_date_mask, gtu_from_date,gtu_to_date_mask, gtu_to_date, latitude, longitude, lat_long_accuracy, elevation, elevation_accuracy)
         VALUES
-          (line.gtu_code, COALESCE(line.gtu_from_date_mask,0), COALESCE(line.gtu_from_date, '01/01/0001'),
+          (COALESCE(line.gtu_code,'import/'|| line.import_ref || '/' || line.id ), COALESCE(line.gtu_from_date_mask,0), COALESCE(line.gtu_from_date, '01/01/0001'),
           COALESCE(line.gtu_to_date_mask,0), COALESCE(line.gtu_to_date, '31/12/2038')
           , line.gtu_latitude, line.gtu_longitude, line.gtu_lat_long_accuracy, line.gtu_elevation, line.gtu_elevation_accuracy)
         RETURNING id INTO ref_rec;
@@ -2762,7 +2766,7 @@ BEGIN
             Values(ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value );
         --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
           EXCEPTION WHEN unique_violation THEN
-            RAISE NOTICE 'An error occured: %', SQLERRM;
+            RAISE EXCEPTION 'An error occured: %', SQLERRM;
         END ;
         END LOOP ;
       ELSE
