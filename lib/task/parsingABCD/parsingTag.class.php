@@ -2,7 +2,7 @@
 
 class ParsingTag extends ImportABCDXml
 {
-  public $GTUDate = array('from'=>null,'to'=>null,'time'=>null),  $staging_info=null, $tag_group_name, $tag_value,
+  public $GTUdate = array('from'=>null,'to'=>null,'time'=>null),  $staging_info=null, $tag_group_name, $tag_value,
       $people_order_by=null, $accession, $accession_num, $accession_date ;
   private $array_object = array() ;
 
@@ -25,30 +25,30 @@ class ParsingTag extends ImportABCDXml
   {
     if(strpos($date, '-'))
     {
-      $dates= explode('-',$date) ;
-      $this->GTUDate['from'] = FuzzyDateTime::getValidDate(trim($dates[0])) ;
-      $this->GTUDate['to'] = FuzzyDateTime::getValidDate(trim($dates[1])) ;
+      $dates= explode('-',$date)
+      $this->GTUdate['from'] = FuzzyDateTime::getValidDate(trim($dates[0])) ;
+      $this->GTUdate['to'] = FuzzyDateTime::getValidDate(trim($dates[1])) ;
     }
     else
-      $this->GTUDate['time'] = FuzzyDateTime::getValidDate($date) ;
+      $this->GTUdate['time'] = FuzzyDateTime::getValidDate($date) ;
   }
 
   //return ISODateTimeBegin tag value, if not return DateTime tag value, null otherwise
   public function getFromDate()
   {
     $time = null;
-    if($this->GTUDate['time'])
-      $time = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
-    return ($this->GTUDate['from'] ? $this->GTUDate['from'] : $time) ;
+    if($this->GTUdate['time'])
+      $time = date('d/M/Y',strtotime($this->GTUdate['time'])) ;
+    return ($this->GTUdate['from'] ? $this->GTUdate['from'] : $time) ;
   }
 
   //return ISODateTimeEnd tag value, if not return DateTime tag value, null otherwise
   public function getToDate()
   {
     $time = null;
-    if($this->GTUDate['time'])
-      $time = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
-    return ($this->GTUDate['to'] ? $this->GTUDate['to'] : $time) ;
+    if($this->GTUdate['time'])
+      $time = date('d/M/Y',strtotime($this->GTUdate['time'])) ;
+    return ($this->GTUdate['to'] ? $this->GTUdate['to'] : $time) ;
   }
 
   public function addTagGroups()

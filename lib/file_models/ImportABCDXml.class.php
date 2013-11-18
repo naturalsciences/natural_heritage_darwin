@@ -99,8 +99,11 @@ class ImportABCDXml implements IImportModels
       case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
       case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break;
       case "DateText" : $this->object->getDateText($this->cdata) ; break;
-      case "DateTime" : $this->staging["gtu_from_date"] = $this->object->getFromDate() ; $this->staging["gtu_to_date"] = $this->object->getToDate() ;
-                        $this->staging["gtu_from_date_mask"] = 56 ; $this->staging["gtu_to_date_mask"] = 56 ; break;
+      case "DateTime" : if($this->getPreviousTag() == "Gathering"){
+                        $this->staging["gtu_from_date"] = $this->object->getFromDate() ;
+                        $this->staging["gtu_to_date"] = $this->object->getToDate() ;
+                        $this->staging["gtu_from_date_mask"] = 56 ; $this->staging["gtu_to_date_mask"] = 56 ;
+                       } ; break;
       case "dna:Concentration" : /* this->object->properties */ break;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break;
       case "dna:ExtractionDate" : $this->object->maintenance->setModificationDateTime(FuzzyDateTime::getValidDate($this->cdata)) ; break;
@@ -127,8 +130,8 @@ class ImportABCDXml implements IImportModels
       case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break;
       case "efg:InformalNameString" : $this->object->informal = true ; break;
       case "InheritedName" : $this->people['family_name'] = $this->cdata ; break;
-      case "ISODateTimeBegin" : $this->object->GTUdate['from'] = $this->cdata ; break;
-      case "ISODateTimeEnd" : $this->object->GTUdate['to'] = $this->cdata ; break;
+      case "ISODateTimeBegin" : if($this->getPreviousTag() == "DateTime")  { $this->object->GTUdate['from'] = $this->cdata ;} break;
+      case "ISODateTimeEnd" :  if($this->getPreviousTag() == "DateTime"){ $this->object->GTUdate['to'] = $this->cdata;}  break;
       case "IsQuantitative" : $this->property->property->setIsQuantitative($this->cdata) ; break;
       case "KindOfUnit" : $this->staging['part'] = $this->cdata ; break;
       case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $this->cdata ; break;
