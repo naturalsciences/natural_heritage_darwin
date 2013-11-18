@@ -12,11 +12,11 @@
           })
         });
       </script>
-
+  </div>
     <?php endif;?>
 <?php else:?>
   <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
-  <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>  
+  <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>
 
   <div class="edition">
   <table class="staging_table results_container results">
@@ -64,10 +64,7 @@
     </tbody>
   </table>
   <br/>
-  <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?></div>&#x09;
-  <div class="blue_link float_left"><?php echo link_to(__('Import "Ok" lines'), 'staging/markok?import='.$import->getId() );?></div>&#x09;
-  <div class="blue_link float_left"><?php echo link_to(__('Try to create missing taxons'), 'staging/createTaxon?import='.$import->getId() );?></div>
-  </div>
+</div>
 
 <script language="javascript">
 $(document).ready(function () {
@@ -90,4 +87,9 @@ $(document).ready(function () {
   });
 });
 </script>
+<?php endif;?>
+  <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?></div>&#x09;
+  <div class="blue_link float_left"><?php echo link_to(__('Import "Ok" lines'), 'staging/markok?import='.$import->getId() );?></div>&#x09;
+<?php if(count($search)!==0):?>
+  <div class="blue_link float_left"><?php echo link_to(__('Try to create missing taxons'), 'staging/createTaxon?import='.$import->getId() );?></div>
 <?php endif;?>
