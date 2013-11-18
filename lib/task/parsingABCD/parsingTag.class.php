@@ -20,7 +20,7 @@ class ParsingTag extends ImportABCDXml
   {
     $this->array_object[] = $object ;
   }*/
-  
+
   public function getDateText($date)
   {
     if(strpos($date, '-'))
@@ -51,7 +51,7 @@ class ParsingTag extends ImportABCDXml
   {
     $tag_group = new stagingTagGroups() ;
     //@TODO find a better way to manage all known tags
-    if(in_array($this->tag_group_name,array("continent", "country", "province", "region", "municipality","province/region")))
+    if(in_array(strtolower($this->tag_group_name),array("continent", "country", "province", "region", "municipality","province/region")))
     {
       $tag_group->setGroupName("administrative area") ;
       $tag_group->setSubGroupName($this->tag_group_name) ;
@@ -66,7 +66,7 @@ class ParsingTag extends ImportABCDXml
   }
   public function addStagingInfo($object, $id)
   {
-    if(!$this->staging_info) 
+    if(!$this->staging_info)
     {
       $this->staging_info = new StagingInfo() ;
       $this->staging_info->setStagingRef($id) ;
@@ -99,7 +99,7 @@ class ParsingTag extends ImportABCDXml
         $object->fromArray(array('code_date' => $this->accession_date?strtotime($this->accession_date):null, 'code' => $this->accession_num)) ;
         $staging->addRelated($object) ;
         break ;;
-      case "igs" : 
+      case "igs" :
         $staging->setIgDate($this->accession_date);
         $staging->setIgNum($this->accession_num) ;
         break ;;
@@ -123,7 +123,7 @@ class ParsingTag extends ImportABCDXml
     $object->fromArray(array("staging_ref" => $staging_id, "collecting_method_ref" => $ref)) ;
     return $object ;
   }
-  
+
   public function handlePeople($people,$staging)
   {
     $people->setPeopleType($this->people_type);
