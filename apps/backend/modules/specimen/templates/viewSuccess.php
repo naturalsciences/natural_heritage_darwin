@@ -5,7 +5,7 @@
 <?php use_javascript('button_ref.js') ?>
 <div class="page">
   <h3 class="spec">
-  <span class="title"><?php echo __('Edit Specimen');?></span>
+  <span class="title"><?php echo __('View Specimen');?></span>
     <span class="specimen_actions">
         <?php if($sf_user->isPinned($specimen->getId(), 'specimen')) {
           $txt = image_tag('blue_pin_on.png', array('class'=>'pin_but pin_on'));
