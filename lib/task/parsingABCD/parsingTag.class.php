@@ -36,14 +36,18 @@ class ParsingTag extends ImportABCDXml
   //return ISODateTimeBegin tag value, if not return DateTime tag value, null otherwise
   public function getFromDate()
   {
-    if($this->GTUDate['time']) $time = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
+    $time = null;
+    if($this->GTUDate['time'])
+      $time = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
     return ($this->GTUDate['from'] ? $this->GTUDate['from'] : $time) ;
   }
 
   //return ISODateTimeEnd tag value, if not return DateTime tag value, null otherwise
   public function getToDate()
   {
-    if($this->GTUDate['time']) $time = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
+    $time = null;
+    if($this->GTUDate['time'])
+      $time = date('d/M/Y',strtotime($this->GTUDate['time'])) ;
     return ($this->GTUDate['to'] ? $this->GTUDate['to'] : $time) ;
   }
 
