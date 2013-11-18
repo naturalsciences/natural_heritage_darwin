@@ -18,7 +18,9 @@
       </td>
       <td><?php echo $maintenance->getActionObservation();?></td>
       <td class="datesNum"><?php echo $maintenance->getModificationDateTimeMasked(ESC_RAW);?></td>
-      <td><?php echo $maintenance->People->getFormatedName();?></td>
+      <td><?php if($maintenance->People):?>
+        <?php echo $maintenance->People->getFormatedName();?>
+      <?php endif;?></td>
       <td><?php echo $maintenance->getDescription();?></td>
     </tr>
     <?php endforeach;?>
