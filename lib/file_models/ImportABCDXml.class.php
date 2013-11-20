@@ -189,7 +189,8 @@ class ImportABCDXml implements IImportModels
       case "UnitAssociation" : $this->staging->addRelated($this->object) ; $this->object=null; break;
       case "UnitID" : $this->code['code'] = $this->cdata ; $this->name = $this->cdata ;
                       if(substr($this->code['code'],0,4) != 'hash') $this->staging->addRelated($this->code) ; break;
-      case "UnitOfMeasurement" : $this->property->property->setPropertyAccuracy($this->cdata);$this->property->property->setPropertyUnit($this->cdata); break;
+      case "UnitOfMeasurement" : $this->property->property->setPropertyUnit($this->cdata); break;
+      case "Accuracy" : $this->property->property->setPropertyAccuracy($this->cdata); break;
       case "UpperValue" : $this->property->property->setUpperValue($this->cdata) ; break;
       case "efg:VarietalNameString" : $this->staging->setObjectName($this->cdata) ; break; //$this->object->level_name='variety' ; break;
       case "VerificationLevel" : $this->object->determination_status = $this->cdata ; break;

@@ -8,7 +8,7 @@ class ParsingProperties extends importABCDXml
   {
     $this->property = new Properties() ;
     $this->property->setPropertyType("length") ;
-    $this->property->setAppliesTo($tag) ;
+    $this->property->setAppliesTo('') ;
   }
 
   public function handlePeople($people,$staging)
@@ -50,7 +50,7 @@ class ParsingProperties extends importABCDXml
 
   private function addPropertyvalue($data)
   {
-    $value = new PropertiesValues() ; 
+    $value = new PropertiesValues() ;
     $value->setPropertyAccuracy($this->accuracy) ;
     $value->setPropertyValue($data) ;
     $this->property->PropertiesValues[] = $value ;
