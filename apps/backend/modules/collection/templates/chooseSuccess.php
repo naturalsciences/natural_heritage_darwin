@@ -3,9 +3,9 @@
 <script language="javascript">
 $(document).ready(function () {
     $('.col_name span').click(function () {
-	ref_element_id = getIdInClasses($(this).parent().parent());
-	ref_element_name = $(this).text();
-        $('body').trigger('close_modal');
+      ref_element_id = getIdInClasses($(this).parent().parent());
+      ref_element_name = $(this).text();
+      $('body').trigger('close_modal');
     });
 });
 </script>

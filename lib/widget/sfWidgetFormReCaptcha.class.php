@@ -53,19 +53,19 @@ class sfWidgetFormReCaptcha extends sfWidgetForm
   {
     $this->addRequiredOption('public_key');
 
-    $this->addOption('use_ssl', false);
-    $this->addOption('server_url', 'http://api.recaptcha.net');
-    $this->addOption('server_url_ssl', 'https://api-secure.recaptcha.net');
+    $this->addOption('use_ssl', true);
+    $this->addOption('server_url', 'https://api.recaptcha.net');
+    $this->addOption('server_url_ssl', 'https://www.google.com/recaptcha/api');
     $this->addOption('theme', 'clean');
     $this->addOption('culture', 'en');
-    $this->addOption('ajax', false);    
+    $this->addOption('ajax', false);
   }
 
   /**
    * @see sfWidgetForm
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
-  {  
+  {
     $server = $this->getServerUrl();
     $key = $this->getOption('public_key');
     $theme = $this->getOption('theme');
@@ -80,8 +80,8 @@ class sfWidgetFormReCaptcha extends sfWidgetForm
               theme: \'%s\',
               lang : \'%s\' });
           });
-        </script>          
-       ', $key, $theme, $culture) ;   
+        </script>
+       ', $key, $theme, $culture) ;
     }
     return sprintf('
     <script type="text/javascript">
