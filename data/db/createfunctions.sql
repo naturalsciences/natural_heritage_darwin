@@ -2646,8 +2646,7 @@ BEGIN
 
         IF result_nbr = 0 THEN
           IF old_parent_id IS NULL THEN
-            return true;
-            --RAISE EXCEPTION 'Unable to create taxon with no common parents';
+            RAISE EXCEPTION 'Unable to create taxon with no common parents';
           END IF;
           EXECUTE 'INSERT INTO ' || quote_ident(catalogue_table) || '  (name, level_ref, parent_ref) VALUES
             (' || quote_literal(row_record.lvl_value) || ', ' ||
@@ -2741,14 +2740,30 @@ BEGIN
     RETURN true;
   END IF;
 
-  select id into ref_rec from gtu where
-    COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
-    COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
-    gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
-    gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038')
-    AND CASE WHEN (line.gtu_longitude is null and line.gtu_from_date is null and line.gtu_to_date is null) THEN line.gtu_code ELSE code END
-      = code
-    AND id != 0 LIMIT 1;
+  IF line.gtu_latitude is not null and line.gtu_longitude IS NOT NULL and line.gtu_from_date is not null and line.gtu_to_date is not null THEN
+    select id into ref_rec from gtu g where
+      COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
+      COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
+      gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
+      gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038')
+
+      --try to compare tags
+      AND (
+        select string_agg(fulltoindex(group_name)|| fulltoindex(sub_group_name)|| fulltoindex(tag_value), '/' order by group_name, sub_group_name, tag_value)
+        from tag_groups tg where tg.gtu_ref = g.id
+        group by gtu_ref
+      ) = (
+        select string_agg(fulltoindex(group_name)|| fulltoindex(sub_group_name)|| fulltoindex(tag_value), '/' order by group_name, sub_group_name, tag_value)
+        from staging_tag_groups stg where stg.staging_ref = line.id
+        group by staging_ref
+      )
+      /* AND CASE WHEN (line.gtu_longitude is null and line.gtu_from_date is null and line.gtu_to_date is null) THEN line.gtu_code ELSE code END
+      = code*/
+      AND id != 0 LIMIT 1;
+  ELSE
+    --Want to trigger a "Not Found"
+    SELECT -1 into  ref_rec from gtu where id = -1;
+  END IF;
 
 
   IF NOT FOUND THEN
