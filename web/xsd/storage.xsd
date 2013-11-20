@@ -4,38 +4,38 @@
 	<xs:element name="Storage">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:sequence minOccurs="0">
-					<xs:element name="Loan">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="On_loan" type="xs:boolean" minOccurs="0"/>
-								<xs:element name="Loan_ID" minOccurs="0"/>
-								<xs:element name="Loan_from" minOccurs="0"/>
-								<xs:element name="Loan_to" minOccurs="0"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-				<xs:sequence minOccurs="0">
-					<xs:element name="Localisation">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Institution" type="xs:string" minOccurs="0"/>
-								<xs:element name="Building" type="xs:string" minOccurs="0"/>
-								<xs:element name="Floor" type="xs:string" minOccurs="0"/>
-								<xs:element name="Room" type="xs:string" minOccurs="0"/>
-								<xs:element name="Row" type="xs:string" minOccurs="0"/>
-								<xs:element name="Column" type="xs:string" minOccurs="0"/>
-								<xs:element name="Shelf" type="xs:string" minOccurs="0"/>
-								<xs:element name="Box" type="xs:string" minOccurs="0"/>
-								<xs:element name="Rack" type="xs:string" minOccurs="0"/>
-								<xs:element name="Tube" type="xs:string" minOccurs="0"/>
-								<xs:element name="Position" type="xs:string" minOccurs="0"/>
-								<xs:element name="Barcode" type="xs:string" minOccurs="0"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
+				<xs:element name="Localisation">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Institution" type="xs:string" minOccurs="0"/>
+							<xs:element name="Building" type="xs:string" minOccurs="0"/>
+							<xs:element name="Floor" type="xs:string" minOccurs="0"/>
+							<xs:element name="Room" type="xs:string" minOccurs="0"/>
+							<xs:element name="Row" type="xs:string" minOccurs="0"/>
+							<xs:element name="Column" type="xs:string" minOccurs="0"/>
+							<xs:element name="Shelf" type="xs:string" minOccurs="0"/>
+							<xs:element name="Box" type="xs:string" minOccurs="0"/>
+							<xs:element name="Rack" type="xs:string" minOccurs="0"/>
+							<xs:element name="Tube" type="xs:string" minOccurs="0"/>
+							<xs:element name="Position" type="xs:string" minOccurs="0"/>
+							<xs:element name="Barcode" type="xs:string" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Codes">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Code">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Type"/>
+										<xs:element name="Value"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
