@@ -2819,7 +2819,9 @@ DECLARE
 BEGIN
     result_nbr := 0;
     FOR ref_record IN SELECT id from people p
-      WHERE is_physical = false  AND formated_name_indexed like fulltoindex(fullname) || '%'  LIMIT 2
+      WHERE is_physical = false  AND
+      ( formated_name_indexed like fulltoindex(fullname) || '%' OR fulltoindex(additional_names) =  fulltoindex(fullname) )
+      LIMIT 2
     LOOP
       result_nbr := result_nbr +1;
     END LOOP;
