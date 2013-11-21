@@ -16,14 +16,11 @@ class ParsingMaintenance
   }
   
   // $staging is useless here, but I should put it to respect cohérence for HandlePeople function in parsingTag
-  public function handlePeople($people,$staging)
+  public function handlePeople($peopleName)
   {
+    $people = new StagingPeople() ;
     $people->setPeopleType("operator");
-    if($this->people_order_by)
-    {
-      $people->setOrderBy($this->people_order_by) ;
-      $this->people_order_by = null ;
-    }
+    $people->setFormatedName($peopleName) ;
     $this->maintenance->addRelated($people) ;
   }
   
