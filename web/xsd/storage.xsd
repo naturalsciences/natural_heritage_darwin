@@ -24,12 +24,12 @@
 				</xs:element>
 				<xs:element name="Codes" minOccurs="0">
 					<xs:complexType>
-						<xs:sequence>
+						<xs:sequence maxOccurs="unbounded">
 							<xs:element name="Code">
 								<xs:complexType>
 									<xs:sequence>
-										<xs:element name="Type"/>
-										<xs:element name="Value"/>
+										<xs:element name="Type" minOccurs="0"/>
+										<xs:element name="Value" minOccurs="0"/>
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
