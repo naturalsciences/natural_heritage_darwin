@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(76);
+SELECT plan(77);
 
 select diag('Test of staging check without levels');
 update people set name_formated_indexed = fulltoindex(coalesce(given_name,'') || coalesce(family_name,''));
@@ -135,7 +135,9 @@ insert into comments(referenced_relation,record_id, notion_concerned, comment)
   VALUES('staging_info',1,'general','info') ;
 update staging set to_import = true;
 
+select is(0, (select count(*)::int from gtu));
 select is(true, (select fct_importer_abcd(1)));
+
 
 select is(1, (select count(*)::integer from specimens where gtu_ref = 1));
 select is('Hello; world; ', (select tag_value from tag_groups where gtu_ref = 1));

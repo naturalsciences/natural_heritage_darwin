@@ -1682,6 +1682,16 @@ CREATE TRIGGER trg_cpy_fulltoindex_s  BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_update_specimens_darwin_flat BEFORE INSERT OR UPDATE
         ON specimens FOR EACH ROW EXECUTE PROCEDURE fct_update_specimen_flat();
 
+CREATE TRIGGER trg_clr_specialstatus_specimens BEFORE INSERT OR UPDATE
+  ON specimens FOR EACH ROW
+  EXECUTE PROCEDURE fct_clr_specialstatus();
+
+CREATE TRIGGER trg_chk_specimens_not_loaned
+  BEFORE DELETE
+  ON specimens
+  FOR EACH ROW
+  EXECUTE PROCEDURE chk_specimens_not_loaned();
+
 CREATE INDEX idx_labeling_specimens_type ON specimens
   USING gin (labeling_individual_type_for_indexation(type));
 

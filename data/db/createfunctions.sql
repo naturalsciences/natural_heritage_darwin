@@ -2652,6 +2652,10 @@ BEGIN
             (' || quote_literal(row_record.lvl_value) || ', ' ||
             quote_literal(row_record.lvl_id) ||', '|| quote_literal(old_parent_id) ||') returning ID' into parent_id ;
 
+          -- We are at the last level
+          IF lvl_name = line_store->field_name1 THEN
+            PERFORM fct_imp_checker_staging_info(line, 'taxonomy');
+          END IF;
         END IF;
       END LOOP;
 
@@ -2679,7 +2683,10 @@ BEGIN
     IF import THEN
         INSERT INTO igs (ig_num, ig_date_mask, ig_date)
         VALUES (line.ig_num,  COALESCE(line.ig_date_mask,line.ig_date_mask,'0'), COALESCE(line.ig_date,'01/01/0001'))
-        RETURNING id INTO ref_rec;
+        RETURNING id INTO line.ig_ref;
+
+        ref_rec := line.ig_ref;
+        PERFORM fct_imp_checker_staging_info(line, 'igs');
     ELSE
     --UPDATE staging SET status = (status || ('igs' => 'not_found')), ig_ref = null where id=line.id;
       RETURN TRUE;
@@ -2713,7 +2720,10 @@ BEGIN
           COALESCE(line.expedition_to_date,'31/12/2038'), COALESCE(line.expedition_from_date_mask,0),
           COALESCE(line.expedition_to_date_mask,0)
         )
-        RETURNING id INTO ref_rec;
+        RETURNING id INTO line.expedition_ref;
+
+        ref_rec := line.expedition_ref;
+        PERFORM fct_imp_checker_staging_info(line, 'expeditions');
       ELSE
         RETURN TRUE;
       END IF;
@@ -2745,8 +2755,8 @@ BEGIN
       COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
       COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
       gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
-      gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038')
-
+      gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038') AND
+      fullToIndex(code) = fullToIndex(line.gtu_code)
       --try to compare tags
       AND (
         select string_agg(fulltoindex(group_name)|| fulltoindex(sub_group_name)|| fulltoindex(tag_value), '/' order by group_name, sub_group_name, tag_value)
@@ -2774,7 +2784,8 @@ BEGIN
           (COALESCE(line.gtu_code,'import/'|| line.import_ref || '/' || line.id ), COALESCE(line.gtu_from_date_mask,0), COALESCE(line.gtu_from_date, '01/01/0001'),
           COALESCE(line.gtu_to_date_mask,0), COALESCE(line.gtu_to_date, '31/12/2038')
           , line.gtu_latitude, line.gtu_longitude, line.gtu_lat_long_accuracy, line.gtu_elevation, line.gtu_elevation_accuracy)
-        RETURNING id INTO ref_rec;
+        RETURNING id INTO line.gtu_ref;
+        ref_rec := line.gtu_ref;
         FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
         BEGIN
           INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
@@ -2784,6 +2795,7 @@ BEGIN
             RAISE EXCEPTION 'An error occured: %', SQLERRM;
         END ;
         END LOOP ;
+        PERFORM fct_imp_checker_staging_info(line, 'gtu');
       ELSE
         RETURN TRUE;
       END IF;
@@ -3005,8 +3017,6 @@ BEGIN
 
       --RE SELECT WITH UPDATE
       select * into line from staging s INNER JOIN imports i on  s.import_ref = i.id where s.id=all_line.id;
-
-      PERFORM fct_imp_checker_staging_info(line) ;
 
     rec_id := nextval('specimens_id_seq');
     IF line.spec_ref IS NULL THEN
@@ -3268,14 +3278,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info(line staging) RETURNS boolean
+CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info(line staging, st_type text) RETURNS boolean
 AS $$
 DECLARE
   info_line staging_info ;
   record_line RECORD ;
 BEGIN
 
-  FOR info_line IN select * from staging_info WHERE staging_ref = line.id
+  FOR info_line IN select * from staging_info i WHERE i.staging_ref = line.id AND i.referenced_relation = st_type
   LOOP
     BEGIN
     CASE info_line.referenced_relation
@@ -3345,6 +3355,8 @@ BEGIN
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
+
+
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_relationship() RETURNS integer ARRAY
 AS $$
 DECLARE

@@ -53,7 +53,7 @@ CREATE TRIGGER trg_cpy_fullToIndex_taxa BEFORE INSERT OR UPDATE
 
 CREATE TRIGGER trg_cpy_fullToIndex_collection BEFORE INSERT OR UPDATE
 	ON collections FOR EACH ROW
-	EXECUTE PROCEDURE fct_cpy_fullToIndex();	
+	EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
 CREATE TRIGGER trg_cpy_fullToIndex_classification_keywords BEFORE INSERT OR UPDATE
         ON classification_keywords FOR EACH ROW
@@ -66,7 +66,7 @@ CREATE TRIGGER trg_cpy_fullToIndex_vernacularnames BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_cpy_fullToIndex_igs BEFORE INSERT OR UPDATE
 	ON igs FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_fullToIndex();
-        
+
 CREATE TRIGGER trg_cpy_fullToIndex_collecting_methods BEFORE INSERT OR UPDATE
   ON collecting_methods FOR EACH ROW
   EXECUTE PROCEDURE fct_cpy_fullToIndex();
@@ -82,10 +82,6 @@ CREATE TRIGGER trg_cpy_fullToIndex_loans BEFORE INSERT OR UPDATE
 CREATE TRIGGER trg_cpy_fullToIndex_bibliography BEFORE INSERT OR UPDATE
         ON bibliography FOR EACH ROW
         EXECUTE PROCEDURE fct_cpy_fullToIndex();
-
-CREATE TRIGGER trg_clr_specialstatus_specimens BEFORE INSERT OR UPDATE
-	ON specimens FOR EACH ROW
-	EXECUTE PROCEDURE fct_clr_specialstatus();
 
 CREATE TRIGGER trg_cpy_gtuTags_TagGroups AFTER INSERT OR UPDATE OR DELETE
 	ON tag_groups FOR EACH ROW
@@ -246,11 +242,11 @@ CREATE TRIGGER trg_cpy_path_peopleRelationships BEFORE INSERT OR UPDATE
 
 CREATE TRIGGER trg_upd_fields_staging BEFORE UPDATE
         ON staging FOR EACH ROW
-        EXECUTE PROCEDURE fct_upd_staging_fields();   
-        
+        EXECUTE PROCEDURE fct_upd_staging_fields();
+
 CREATE TRIGGER trg_upd_people_ref_staging_people AFTER UPDATE
         ON staging_people FOR EACH ROW
-        EXECUTE PROCEDURE fct_upd_people_staging_fields();               
+        EXECUTE PROCEDURE fct_upd_people_staging_fields();
 
 CREATE TRIGGER trg_cpy_path_chronostratigraphy BEFORE INSERT OR UPDATE
         ON chronostratigraphy FOR EACH ROW
@@ -499,6 +495,10 @@ CREATE TRIGGER trg_update_specimens_darwin_flat BEFORE INSERT OR UPDATE
         ON specimens FOR EACH ROW
         EXECUTE PROCEDURE fct_update_specimen_flat();
 
+CREATE TRIGGER trg_clr_specialstatus_specimens BEFORE INSERT OR UPDATE
+  ON specimens FOR EACH ROW
+  EXECUTE PROCEDURE fct_clr_specialstatus();
+
 CREATE TRIGGER trg_unpromotion_remove_cols AFTER UPDATE
         ON users FOR EACH ROW
         EXECUTE PROCEDURE fct_unpromotion_impact_prefs();
@@ -555,7 +555,7 @@ CREATE TRIGGER trg_chk_ref_record_relationship_catalogue_relationships AFTER INS
         ON catalogue_relationships FOR EACH ROW
         EXECUTE PROCEDURE fct_chk_ReferencedRecordRelationShip();
 
-        
+
 /*** Informativ Workflow ****/
 CREATE TRIGGER trg_chk_ref_record_informative_workflow AFTER INSERT OR UPDATE
         ON informative_workflow FOR EACH ROW
@@ -714,7 +714,7 @@ CREATE TRIGGER fct_cpy_trg_del_dict_tag_groups AFTER DELETE OR UPDATE
         EXECUTE PROCEDURE trg_del_dict();
 
 /********************* *****/
-      
+
 CREATE TRIGGER trg_upd_people_in_flat AFTER INSERT OR UPDATE OR DELETE
   ON catalogue_people FOR EACH ROW
   EXECUTE PROCEDURE fct_upd_people_in_flat();
