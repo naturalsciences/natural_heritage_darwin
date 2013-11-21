@@ -1,7 +1,7 @@
 <?php
 class ImportABCDXml implements IImportModels
 {
-  private $tag, $staging, $object, $people,$import_id, $path="", $name, $errors_reported='';
+  private $tag, $staging, $object, $people,$import_id, $path="", $name, $errors_reported='',$preparation_type, $preparation_mat;
   private $unit_id_ref = array() ; // to keep the original unid_id per staging for Associations
   private $object_to_save = array(), $staging_tags = array() , $data, $inside_data;
   /**
