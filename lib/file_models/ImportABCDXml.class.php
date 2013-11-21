@@ -227,7 +227,7 @@ class ImportABCDXml implements IImportModels
     $code = new Codes() ;
     $code->setCodeCategory($category) ;
     $code->setCode($this->cdata) ;
-    if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($this->code) ;
+    if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($code) ;
 
   }
 
