@@ -4,7 +4,7 @@
 	<xs:element name="Storage">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="Localisation">
+				<xs:element name="Localisation" minOccurs="0">
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="Institution" type="xs:string" minOccurs="0"/>
@@ -22,7 +22,7 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="Codes">
+				<xs:element name="Codes" minOccurs="0">
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="Code">
