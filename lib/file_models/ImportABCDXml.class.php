@@ -143,7 +143,7 @@ class ImportABCDXml implements IImportModels
       case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;
       case "Method" : if($this->getPreviousTag() == "Identification") $this->addComment(false, "identifications"); else $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
       case "efg:Petrology" :
-      case "MeasurementsOrFacts" : if($this->object && $this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break;
+      case "MeasurementsOrFacts" : if($this->object && property_exists($this->object,'staging_info') $this->object_to_save[] = $this->object->staging_info; break;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break;
       case "MeasurementOrFactText" : $this->addComment() ; break;
       case "MineralColour" : $this->staging->setMineralColour($this->cdata) ; break;
