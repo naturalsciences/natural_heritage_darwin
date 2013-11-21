@@ -167,7 +167,7 @@ class ImportABCDXml implements IImportModels
       case "PhaseOrStage" : $this->staging->setIndividualStage($this->cdata) ; break;
       case "Prefix" : $this->people['title'] = $this->cdata ; break;
       case "Preparation" : $this->addPreparation() ; break ;
-      case "Preparationtype" : $this->preparation_type = $this->cdata ; break
+      case "Preparationtype" : $this->preparation_type = $this->cdata ; break ;
       case "PreparationMaterials" : $this->preparation_mat = $this->cdata ; break; 
       case "ProjectTitle" : $this->staging['expedition_name'] = $this->cdata ; break;
       case "RecordURI" : $this->addExternalLink() ; break;
@@ -225,7 +225,7 @@ class ImportABCDXml implements IImportModels
   private function addCode($category='main')
   {
     $code = new Codes() ;
-    $code->setCategory($category) ;
+    $code->setCodeCategory($category) ;
     $code->setCode($this->cdata) ;
     if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($this->code) ;
 
