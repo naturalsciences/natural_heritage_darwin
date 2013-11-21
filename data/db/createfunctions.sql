@@ -2683,8 +2683,9 @@ BEGIN
     IF import THEN
         INSERT INTO igs (ig_num, ig_date_mask, ig_date)
         VALUES (line.ig_num,  COALESCE(line.ig_date_mask,line.ig_date_mask,'0'), COALESCE(line.ig_date,'01/01/0001'))
-        RETURNING id INTO ref_rec;
+        RETURNING id INTO line.ig_ref;
 
+        ref_rec := line.ig_ref;
         PERFORM fct_imp_checker_staging_info(line, 'igs');
     ELSE
     --UPDATE staging SET status = (status || ('igs' => 'not_found')), ig_ref = null where id=line.id;
@@ -2719,7 +2720,9 @@ BEGIN
           COALESCE(line.expedition_to_date,'31/12/2038'), COALESCE(line.expedition_from_date_mask,0),
           COALESCE(line.expedition_to_date_mask,0)
         )
-        RETURNING id INTO ref_rec;
+        RETURNING id INTO line.expedition_ref;
+
+        ref_rec := line.expedition_ref;
         PERFORM fct_imp_checker_staging_info(line, 'expeditions');
       ELSE
         RETURN TRUE;
@@ -2781,7 +2784,8 @@ BEGIN
           (COALESCE(line.gtu_code,'import/'|| line.import_ref || '/' || line.id ), COALESCE(line.gtu_from_date_mask,0), COALESCE(line.gtu_from_date, '01/01/0001'),
           COALESCE(line.gtu_to_date_mask,0), COALESCE(line.gtu_to_date, '31/12/2038')
           , line.gtu_latitude, line.gtu_longitude, line.gtu_lat_long_accuracy, line.gtu_elevation, line.gtu_elevation_accuracy)
-        RETURNING id INTO ref_rec;
+        RETURNING id INTO line.gtu_ref;
+        ref_rec := line.gtu_ref;
         FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
         BEGIN
           INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
@@ -2791,7 +2795,6 @@ BEGIN
             RAISE EXCEPTION 'An error occured: %', SQLERRM;
         END ;
         END LOOP ;
-
         PERFORM fct_imp_checker_staging_info(line, 'gtu');
       ELSE
         RETURN TRUE;
