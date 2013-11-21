@@ -2652,6 +2652,10 @@ BEGIN
             (' || quote_literal(row_record.lvl_value) || ', ' ||
             quote_literal(row_record.lvl_id) ||', '|| quote_literal(old_parent_id) ||') returning ID' into parent_id ;
 
+          -- We are at the last level
+          IF lvl_name = line_store->field_name1 THEN
+            PERFORM fct_imp_checker_staging_info(line, 'taxonomy');
+          END IF;
         END IF;
       END LOOP;
 
