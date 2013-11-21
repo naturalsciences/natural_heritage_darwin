@@ -125,7 +125,7 @@ class ImportABCDXml implements IImportModels
       case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ; break;;
       case "efg:LithostratigraphicAttribution" : $this->staging["litho_parents"] = $this->object->getParent() ; break;
       case "Identification" : $this->object->save($this->staging) ; break;
-      case "IdentificationHistory" : $this->object->determination_status = $this->cdata ; break;
+      case "IdentificationHistory" : $this->addComment(false, 'taxonomy'); break;
       case "ID-in-Database" : $this->object->desc .= "id in database :".$this->cdata." ;" ; break;
       case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break;
       case "efg:InformalNameString" : $this->object->informal = true ; break;
@@ -141,7 +141,7 @@ class ImportABCDXml implements IImportModels
       case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $this->cdata ; break;
       case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break;
       case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;
-      case "Method" : if($this->getPreviousTag() == "Identification") $this->addComment(); else $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
+      case "Method" : if($this->getPreviousTag() == "Identification") $this->addComment(false, "identifications"); else $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
       case "efg:Petrology" :
       case "MeasurementsOrFacts" : if($this->object && $this->object->staging_info) $this->object_to_save[] = $this->object->staging_info; break;
       case "MeasurementOrFactAtomised" : $this->addProperty(); break;
@@ -155,7 +155,7 @@ class ImportABCDXml implements IImportModels
       case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break; //@TODO
       case "efg:NameComments" : $this->object->setNotion(strtolower($this->cdata)) ; break;
       case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
-      case "Notes" : $this->addComment() ; break ;
+      case "Notes" : $this->addComment("Sampling location") ; break ;
       case "Parameter" : $this->property->property->setPropertyType($this->cdata);break;
       case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->object->handlePeople($this->people) ; break;
       case "Person" : $this->object->handlePeople($this->people,$this->staging,true) ; break;
@@ -183,7 +183,7 @@ class ImportABCDXml implements IImportModels
       case "storage:Box" : $this->staging->setContainerType('box'); $this->staging->setContainer($this->cdata) ; break;
       case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break;
       case "Text": if($this->getPreviousTag() == "Biotope") $this->addComment() ; break;
-      case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ;  $this->addComment(true) ; break;
+      case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ;  $this->addComment('Publication') ; break;
       case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break;
       case "Unit" : $this->saveUnit(); break;
       case "UnitAssociation" : $this->staging->addRelated($this->object) ; $this->object=null; break;
@@ -216,18 +216,18 @@ class ImportABCDXml implements IImportModels
     return (substr($part,strrpos($part,'/')+1,strlen($part))) ;
   }
 
-  private function addComment($is_staging = false)
+  private function addComment($is_staging = false, $notion =  'general comments')
   {
     $comment = new Comments() ;
     $comment->setComment($this->cdata) ;
+    $comment->setNotionConcerned($notion);
+
     if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag() == "efg:MineralogicalUnit")
     {
-      $comment->setNotionConcerned("general") ;
       $this->staging->addRelated($comment) ;
     }
     else
     {
-      $comment->setNotionConcerned("general comments") ;
       $this->object->addStagingInfo($comment,$this->staging->getId());
     }
   }
