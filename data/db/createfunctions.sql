@@ -2683,8 +2683,9 @@ BEGIN
     IF import THEN
         INSERT INTO igs (ig_num, ig_date_mask, ig_date)
         VALUES (line.ig_num,  COALESCE(line.ig_date_mask,line.ig_date_mask,'0'), COALESCE(line.ig_date,'01/01/0001'))
-        PERFORM fct_imp_checker_staging_info(line, 'igs');
         RETURNING id INTO ref_rec;
+
+        PERFORM fct_imp_checker_staging_info(line, 'igs');
     ELSE
     --UPDATE staging SET status = (status || ('igs' => 'not_found')), ig_ref = null where id=line.id;
       RETURN TRUE;
