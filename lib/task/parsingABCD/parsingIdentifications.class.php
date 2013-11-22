@@ -81,6 +81,14 @@ class ParsingIdentifications
     return $this->fullname ;
   }
 
+  public function checkNoSelfInParents($staging) {
+    if($this->notion == 'taxonomy') {
+      if(isset( $this->catalogue_parent[$staging["taxon_level_name"]]))
+        unset($this->catalogue_parent[$staging["taxon_level_name"]]);
+      $staging['taxon_parents'] = $this->catalogue_parent->export() ;
+    }
+  }
+
   // return the Hstore parent
   public function getCatalogueParent($staging)
   {

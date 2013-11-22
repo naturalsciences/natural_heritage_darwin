@@ -123,8 +123,9 @@ class ImportABCDXml implements IImportModels
       case "GivenNames" : $this->people['given_name'] = $this->cdata ; break;
       case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
       case "HigherTaxon" : $this->object->handleParent() ;break;;
-      case "HigherTaxonName" : $this->object->higher_name = $this->cdata ; break;;
-      case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ; break;;
+      case "HigherTaxonName" : $this->object->higher_name = $this->cdata ; break;
+      case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ; break;
+      case "TaxonIdentified":  $this->object->checkNoSelfInParents($this->staging); break;
       case "efg:LithostratigraphicAttribution" : $this->staging["litho_parents"] = $this->object->getParent() ; break;
       case "Identification" : $this->object->save($this->staging) ; break;
       case "IdentificationHistory" : $this->addComment(false, 'taxonomy'); break;
