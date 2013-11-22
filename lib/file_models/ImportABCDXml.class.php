@@ -77,7 +77,7 @@ class ImportABCDXml implements IImportModels
       case "AccessionDate" : if (date('Y-m-d H:i:s', strtotime($this->cdata)) == $this->cdata) $this->object->InitAccessionVar($this->cdata) ; break;
       case "AccessionNumber" :  $this->object->accession_num = $this->cdata ; $this->object->HandleAccession($this->staging,$this->object_to_save) ; break;
       case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$this->cdata:$this->property->property->property_accuracy=$this->cdata ; break;
-      case "AcquisitionDate" : $this->staging['acquisition_date'] = FuzzyDateTime::getValidDate($this->cdata) ; $this->staging['acquisition_date_mask'] = 56;  break;
+      case "AcquisitionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); $this->staging['acquisition_date'] = $dt->getDateTime(); $this->staging['acquisition_date_mask'] = $dt->getMask();  break;
       case "AcquisitionType" : $this->staging['acquisition_category'] = $this->cdata=='gift'?'donation':$this->cdata ; break;
       case "AppliesTo" : $this->property->setAppliesTo($this->cdata); break;
       case "AreaClass" : $this->object->tag_group_name = $this->cdata ; break;
@@ -106,7 +106,7 @@ class ImportABCDXml implements IImportModels
                        } ; break;
       case "dna:Concentration" : $this->property = new ParsingProperties("DNA Concentration") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break;
-      case "dna:ExtractionDate" : $this->object->maintenance->setModificationDateTime(FuzzyDateTime::getValidDate($this->cdata)) ; $this->object->maintenance->setModificationDateMask(56) ; break;
+      case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); $this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask()); break;
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
       case "dna:ExtractionStaff" : $this->object->handlePeople($this->cdata) ; break;
       case "dna:GenBankNumber" : $this->property = new ParsingProperties("Gen bank number") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ;

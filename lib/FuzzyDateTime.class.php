@@ -99,8 +99,12 @@ class FuzzyDateTime extends DateTime
   {
     // If static max year value is not defined,
     // take it from a config parameter in a config file
-    if (!isset( self::$defaultMaxValues['year']) )
+    if (!isset( self::$defaultMaxValues['year'])) {
+      if(class_exists('sfConfig') && sfConfig::get('dw_yearUpperBound') != '')
         self::$defaultMaxValues['year'] = sfConfig::get('dw_yearUpperBound');
+      else
+        self::$defaultMaxValues['year'] = "2038";
+    }
     return self::$defaultMaxValues;
   }
 
@@ -128,7 +132,8 @@ class FuzzyDateTime extends DateTime
   {
     $max_array = self::getDefaultMaxArray();
     $min_array = self::getDefaultMinArray();
-    if (is_numeric($value) && intval($value)>= $min_array[$field] &&
+
+    if (ctype_digit($value) && intval($value)>= $min_array[$field] &&
         intval($value) <= $max_array[$field])
     {
       return true;
@@ -193,13 +198,13 @@ class FuzzyDateTime extends DateTime
         }
         else
         {
-	  if ($key == 'day')
-	  {
+          if ($key == 'day')
+          {
             // Compute the max days in month
-	    $maxDaysInMonth = new DateTime("$year/$month/01");
-	    $$key = $maxDaysInMonth->format('t');
-	  }
-	  else
+            $maxDaysInMonth = new DateTime("$year/$month/01");
+            $$key = $maxDaysInMonth->format('t');
+          }
+          else
           {
             $$key = $max_array[$key];
           }
@@ -210,7 +215,6 @@ class FuzzyDateTime extends DateTime
           $$key = $dateTime[$key];
       }
     }
-
     // Format the string to be produced
     $dateTime = sprintf('%04d/%02d/%02d' .($withTime?' %02d:%02d:%02d':''), $year, $month, $day, $hour, $minute, $second);
     return $dateTime;
@@ -327,17 +331,17 @@ class FuzzyDateTime extends DateTime
       $items = array('year', 'month', 'day', 'hour', 'minute', 'second');
       foreach ($items as $i => $key)
       {
-	if ( isset($dateTime[$key]) && self::validateDateField($key, $dateTime[$key]) )
-	{
-	  if ($has_an_empty === null)
-	    continue; //untill there is a filled value
-	  return $items[$has_an_empty].'_missing';
-	}
-	else
-	{
-	  if ($has_an_empty === null) // we got an empty... if no value after that, it's ok
-	    $has_an_empty = $i;
-	}
+        if ( isset($dateTime[$key]) && self::validateDateField($key, $dateTime[$key]) )
+        {
+          if ($has_an_empty === null)
+            continue; //untill there is a filled value
+          return $items[$has_an_empty].'_missing';
+        }
+        else
+        {
+          if ($has_an_empty === null) // we got an empty... if no value after that, it's ok
+            $has_an_empty = $i;
+        }
       }
       return '';
   }
@@ -406,13 +410,14 @@ class FuzzyDateTime extends DateTime
    */
   public function getDateTimeAsArray()
   {
-    return array('year' => intval($this->format('Y')),
-                 'month' => intval($this->format('m')),
-                 'day' => intval($this->format('d')),
-                 'hour' => intval($this->format('H')),
-                 'minute' => intval($this->format('i')),
-                 'second' => intval($this->format('s'))
-                );
+    return array(
+      'year' => intval($this->format('Y')),
+      'month' => intval($this->format('m')),
+      'day' => intval($this->format('d')),
+      'hour' => intval($this->format('H')),
+      'minute' => intval($this->format('i')),
+      'second' => intval($this->format('s'))
+    );
   }
 
  /**
@@ -462,11 +467,10 @@ class FuzzyDateTime extends DateTime
     {
       if ( ! ($associated_mask & $this->getMask()) )
       {
-	 foreach($patterns[$date_part] as $pattern)
-	 {
-
-	    $format = preg_replace("/($pattern)/", '§$1£',$format);
-	 }
+        foreach($patterns[$date_part] as $pattern)
+        {
+          $format = preg_replace("/($pattern)/", '§$1£',$format);
+        }
       }
     }
     $result = $this->format($format);
@@ -497,7 +501,27 @@ class FuzzyDateTime extends DateTime
    */
   public static function getValidDate($date)
   {
-    
+    $pattern = '/(\d\d\d\d)(\-(0[1-9]|1[012])(\-((0[1-9])|1\d|2\d|3[01])(T(0\d|1\d|2[0-3])(:([0-5]\d)(:([0-5]\d))?))?)?)?|\-\-(0[1-9]|1[012])(\-(0[1-9]|1\d|2\d|3[01]))?|\-\-\-(0[1-9]|1\d|2\d|3[01])/';
+
+    if(preg_match($pattern, $date, $matches)) {
+
+      $date_part = array('year'=>$matches[1], 'month'=>'', 'day'=>'', 'hour'=>'', 'minute'=>'', 'second'=>'');
+      if(isset($matches[3]))
+        $date_part['month'] = $matches[3];
+      if(isset($matches[5]))
+        $date_part['day'] = $matches[5];
+      if(isset($matches[8]))
+        $date_part['hour'] = $matches[8];
+      if(isset($matches[10]))
+        $date_part['minute'] = $matches[10];
+      if(isset($matches[12]))
+        $date_part['second'] = $matches[12];
+
+      $fuzzy =   new FuzzyDateTime($date_part,56, true, $date_part['hour']=='');
+      $fuzzy->setMaskFromDate($date_part);
+      return $fuzzy;
+    }
+
     $ladate = explode('/',$date);
     $ladate2 = explode('-',$date);
     if(DateTime::createFromFormat('d/m/Y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
