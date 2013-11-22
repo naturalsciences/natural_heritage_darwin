@@ -5736,10 +5736,6 @@
         <source>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</source>
         <target>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
       </trans-unit>
-      <trans-unit id="1741">
-        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</source>
-        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt;Si vous ne corrigez pas les valeurs par défaut avant de sauver, les erreurs associées resteront</target>
-      </trans-unit>
       <trans-unit id="1742">
         <source>defined as %role%</source>
         <target>Défini(e) comme %role%</target>
