@@ -100,7 +100,6 @@ class ImportABCDXml implements IImportModels
       case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break;
       case "DateText" : $this->object->getDateText($this->cdata) ; break;
       case "DateTime" : if($this->getPreviousTag() == "Gathering"){
-      echo $this->object->getFromDate();
           if( $this->object->getFromDate()) $this->staging["gtu_from_date"] = $this->object->getFromDate()->getDateTime() ;
           if( $this->object->getToDate()) $this->staging["gtu_to_date"] = $this->object->getToDate()->getDateTime() ;
           if( $this->object->getFromDate())$this->staging["gtu_from_date_mask"] =  $this->object->getFromDate()->getMask() ;
