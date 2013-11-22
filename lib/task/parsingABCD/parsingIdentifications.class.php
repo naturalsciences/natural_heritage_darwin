@@ -142,6 +142,9 @@ class ParsingIdentifications
     if($this->known_keywords[$tag] != '') {
       $this->level_name = $this->known_keywords[$tag] ;
       if($value != '') {
+        if(! $this->catalogue_parent)
+          $this->catalogue_parent = new Hstore() ;
+
         $this->catalogue_parent[$this->known_keywords[$tag]] = $value ;
         $staging['taxon_parents'] = $this->catalogue_parent->export() ;
       }
