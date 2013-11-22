@@ -5,7 +5,7 @@
     <?php if($i != 0):?>
       <?php echo image_tag('tree_spacer.gif');?>
     <?php endif;?>
-    <?php echo $item->getNameWithFormat(ESC_RAW);?>
+    <?php echo $item->getNameWithFormat(ESC_RAW);?> (<?php echo $item->getLevel()->getLevelName();?>)
   </li>
 <?php endforeach;?>
 </ul>

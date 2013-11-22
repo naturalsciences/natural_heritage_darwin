@@ -135,10 +135,10 @@ class stagingActions extends DarwinActions
 
     $this->form = new StagingFormFilter(null, array('import' =>$this->import));
   }
-  
+
   public function executeEdit(sfWebRequest $request)
-  {  
-//     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
+  {
+//     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $staging = Doctrine::getTable('Staging')->findOneById($request->getParameter('id'));
     $this->import = Doctrine::getTable('Imports')->find($staging->getImportRef());
 
@@ -153,16 +153,18 @@ class stagingActions extends DarwinActions
         $form_fields[] = $values['fields'] ;
     }
     if(in_array('taxon_ref', $form_fields))
-    {      
+    {
       $parent = new Hstore ;
       $parent->import($staging->getTaxonParents()) ;
       $taxon_parent = $parent->getArrayCopy() ;
-      $this->catalogues = Doctrine::getTable('Taxonomy')->getLevelTaxonParent($taxon_parent) ;      
+      $taxon_parent[$staging->getTaxonLevelName()] = $staging->getTaxonName();
+      $this->taxon_level_name = $staging->getTaxonLevelName();
+      $this->catalogues = Doctrine::getTable('Taxonomy')->getLevelTaxonParent($taxon_parent) ;
     }
     $this->form = new StagingForm($staging, array('fields' => $form_fields));
 
-  } 
-   
+  }
+
   public function executeUpdate(sfWebRequest $request)
   {
 /*    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction(); */
@@ -174,19 +176,19 @@ class stagingActions extends DarwinActions
        $this->forwardToSecureAction();
 
     $this->fields = $staging->getFields() ;
-    $form_fields = array() ;   
+    $form_fields = array() ;
     if($this->fields)
     {
       foreach($this->fields as $key => $values)
         $form_fields[] = $values['fields'] ;
     }
     $this->form = new StagingForm($staging, array('fields' => $form_fields));
-    
+
     $this->processForm($request,$this->form, $form_fields);
 
     $this->setTemplate('edit');
-  }  
-  
+  }
+
   protected function processForm(sfWebRequest $request, sfForm $form, array $fields)
   {
     $form->bind( $request->getParameter($form->getName()) );
@@ -201,8 +203,8 @@ class stagingActions extends DarwinActions
       {
         $e = new DarwinPgErrorParser($ne);
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-        $form->getErrorSchema()->addError($error); 
+        $form->getErrorSchema()->addError($error);
       }
     }
-  }  
+  }
 }
