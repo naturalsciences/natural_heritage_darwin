@@ -3138,3 +3138,8 @@ h3.spec .title {
   background-color: lightgray;
 
 }
+
+tr.spec_ident_collectors_data
+{
+  height: 40px ;
+}

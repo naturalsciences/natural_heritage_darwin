@@ -45,7 +45,7 @@ $browser->
   post('/staging/search/import/1')->
   with('response')->
   begin()->
-    checkElement('table.staging_table tbody td.fld_tocomplete',1)->
+    checkElement('table.staging_table tbody td.fld_tocomplete:first',1)->
   end()->
   info('Mark The 2 good lines as ok')->
   get('/staging/markok?import=1')->
