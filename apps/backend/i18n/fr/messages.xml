@@ -4781,8 +4781,8 @@
         <target>Rejeté</target>
       </trans-unit>
       <trans-unit id="806">
-        <source>You don\&#039;t have the rights to insert into or update a specimen in this collection</source>
-        <target>Vous n\&#039;avez pas la permission d&#039;insérer ou mettre à jour un échantillon dans cet collection</target>
+        <source>You don&#039;t have the rights to insert into or update a specimen in this collection</source>
+        <target>Vous n&#039;avez pas la permission d&#039;insérer ou mettre à jour un échantillon dans cet collection</target>
       </trans-unit>
       <trans-unit id="1635">
         <source>Target</source>
@@ -5545,7 +5545,7 @@
         <target>Personnes concernées</target>
       </trans-unit>
       <trans-unit id="1581">
-        <source>All the loans you\&#039;re involved in.</source>
+        <source>All the loans you&#039;re involved in.</source>
         <target>Tout les prêts qui vous concernent.</target>
       </trans-unit>
       <trans-unit id="1655">
@@ -5554,23 +5554,23 @@
       </trans-unit>
       <trans-unit id="1445">
         <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
-        <target>La hiérarchie de ce %field% est incorrecte, nous vous prions d\&#039;en sélectionner une autre ou de laisse le champ vide</target>
+        <target>La hiérarchie de ce %field% est incorrecte, nous vous prions d&#039;en sélectionner une autre ou de laisse le champ vide</target>
       </trans-unit>
       <trans-unit id="1446">
-        <source>Too many records match this %field%\&#039;s value, please choose the good one or leave it empty</source>
-        <target>Trop d&#039;enregistrements correspondent à la valeur de %field%, nous vous prions d\&#039;en choisir une ou de laisser le champ vide</target>
+        <source>Too many records match this %field%&#039;s value, please choose the good one or leave it empty</source>
+        <target>Trop d&#039;enregistrements correspondent à la valeur de %field%, nous vous prions d&#039;en choisir une ou de laisser le champ vide</target>
       </trans-unit>
       <trans-unit id="1447">
-        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don\&#039;t correct default values before saving, the associated error will remain.</source>
-        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l\&#039;abscence de correction de la valeur par défaut au moment de la sauvegarde, l&#039;erreur persistera.</target>
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don&#039;t correct default values before saving, the associated error will remain.</source>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l&#039;abscence de correction de la valeur par défaut au moment de la sauvegarde, l&#039;erreur persistera.</target>
       </trans-unit>
       <trans-unit id="1448">
         <source>This record seems to have already been saved. You can see it %here% or you can also choose an existing one with the button below.</source>
         <target>Cet enregistrement semble avoir déjà été enregistré. Vous pouvez le visualiser %here% ou choisir un enregistrement existant avec le bouton ci-dessous.</target>
       </trans-unit>
       <trans-unit id="1449">
-        <source>Your \&#039;Ok\&#039; lines are  being imported into DaRWIN</source>
-        <target>Vos lignes \&#039;Ok\&#039; sont importées dans DaRWIN</target>
+        <source>Your &#039;Ok&#039; lines are  being imported into DaRWIN</source>
+        <target>Vos lignes &#039;Ok&#039; sont importées dans DaRWIN</target>
       </trans-unit>
       <trans-unit id="1450">
         <source>This file has been completely imported into DaRWIN</source>
@@ -5578,15 +5578,15 @@
       </trans-unit>
       <trans-unit id="1451">
         <source>This file has been aborted. This line will remain for a limited time in the summary list for information purposes only.</source>
-        <target>L\&#039;import de ce fichier a été interrompu. Cette ligne restera visible pendant un temps limité pour information seulement.</target>
+        <target>L&#039;import de ce fichier a été interrompu. Cette ligne restera visible pendant un temps limité pour information seulement.</target>
       </trans-unit>
       <trans-unit id="1452">
         <source>This button will cancel the importing of the file. Your file will state Aborted. this will allow you to keep a trace of this import, even though the data is not imported.</source>
-        <target>Ce bouton annulera l\&#039;import du fichier. Votre fichier affichera un état Interrompu. Cela laissera la possibilité de garder un historique de l\&#039;import sans qu&#039;aucune donnée ne soit importée.</target>
+        <target>Ce bouton annulera l&#039;import du fichier. Votre fichier affichera un état Interrompu. Cela laissera la possibilité de garder un historique de l&#039;import sans qu&#039;aucune donnée ne soit importée.</target>
       </trans-unit>
       <trans-unit id="1453">
         <source>This button (only visible when your file statesPending) will allow you to edit or remove data</source>
-        <target>Ce bouton (visible seulement lorsque votre fichier est en état Attente) vous permet d\&#039;éditer ou d\&#039;enlever une donnée</target>
+        <target>Ce bouton (visible seulement lorsque votre fichier est en état Attente) vous permet d&#039;éditer ou d&#039;enlever une donnée</target>
       </trans-unit>
       <trans-unit id="1454">
         <source>This will delete this line. Already imported lines will remain in the database. All other lines will be deleted without a trace.</source>
@@ -5735,10 +5735,6 @@
       <trans-unit id="1740">
         <source>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</source>
         <target>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
-      </trans-unit>
-      <trans-unit id="1741">
-        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</source>
-        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt;Si vous ne corrigez pas les valeurs par défaut avant de sauver, les erreurs associées resteront</target>
       </trans-unit>
       <trans-unit id="1742">
         <source>defined as %role%</source>

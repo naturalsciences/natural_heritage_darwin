@@ -38,7 +38,7 @@ class ParsingTag extends ImportABCDXml
   {
     $time = null;
     if($this->GTUdate['time'])
-      $time = date('d/M/Y',strtotime($this->GTUdate['time'])) ;
+      $time =  $this->GTUdate['time'] ;
     return ($this->GTUdate['from'] ? $this->GTUdate['from'] : $time) ;
   }
 
@@ -47,7 +47,7 @@ class ParsingTag extends ImportABCDXml
   {
     $time = null;
     if($this->GTUdate['time'])
-      $time = date('d/M/Y',strtotime($this->GTUdate['time'])) ;
+      $time =  $this->GTUdate['time'] ;
     return ($this->GTUdate['to'] ? $this->GTUdate['to'] : $time) ;
   }
 

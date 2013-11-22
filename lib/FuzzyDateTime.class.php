@@ -521,36 +521,44 @@ class FuzzyDateTime extends DateTime
       $fuzzy->setMaskFromDate($date_part);
       return $fuzzy;
     }
+    $tmp_date = $date = str_replace('-','/', $date);
 
-    $ladate = explode('/',$date);
-    $ladate2 = explode('-',$date);
-    if(DateTime::createFromFormat('d/m/Y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
-    if(DateTime::createFromFormat('d/m/y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
-    if(DateTime::createFromFormat('d-m-Y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
-    if(DateTime::createFromFormat('d-m-y H:i', $date)) return(date('Y-m-d',strtotime($date))) ;
-    if(DateTime::createFromFormat('Y-n-d', $date))
-      return date('Y-m-d',mktime(0,0,0,$ladate2[1],$ladate2[2],$ladate2[0]));
-    if(DateTime::createFromFormat('Y-m-d', $date))
-      return date('Y-m-d',mktime(0,0,0,$ladate2[1],$ladate2[2],$ladate2[0]));
-    if(DateTime::createFromFormat('d/m/Y', $date))
-      return date('Y-m-d',mktime(0,0,0,$ladate[1],$ladate[0],$ladate[2]));
-    if(DateTime::createFromFormat('d/m/y', $date))
-      return date('Y-m-d',mktime(0,0,0,$ladate[1],$ladate[0],$ladate[2]));
-    if(DateTime::createFromFormat('d-n-Y', $date))
-      return date('Y-m-d',mktime(0,0,0,$ladate2[1],$ladate2[0],$ladate2[2]));
-    if(DateTime::createFromFormat('d/n/y', $date))
-      return date('Y-m-d',mktime(0,0,0,$ladate[1],$ladate[0],$ladate[2]));
-    if(DateTime::createFromFormat('d-m-Y', $date))
-      return date('Y-m-d',mktime(0,0,0,$ladate2[1],$ladate2[0],$ladate2[2]));
-    if(DateTime::createFromFormat('d-m-y', $date))
-      return date('Y-m-d',mktime(0,0,0,$ladate2[1],$ladate2[0],$ladate2[2]));
-    if(DateTime::createFromFormat('m/Y', $date) || DateTime::createFromFormat('m/y', $date) || DateTime::createFromFormat('n/y', $date) || DateTime::createFromFormat('n/Y', $date))
-      return date('Y-m-d',mktime(0,0,0,$ladate[0],1,$ladate[1]));
-    if(DateTime::createFromFormat('m-y', $date) || DateTime::createFromFormat('m-Y', $date) || DateTime::createFromFormat('n-y', $date) || DateTime::createFromFormat('n-Y', $date))
-      return date('Y-m-d',mktime(0,0,0,$ladate2[0],1,$ladate2[1]));
-    if(DateTime::createFromFormat('y', $date) || DateTime::createFromFormat('Y', $date))
-      return date('Y-m-d',mktime(0,0,0,1,1,$date));
-    return null ;
+    if( ($dt = DateTime::createFromFormat('y', $tmp_date)) || ($dt=DateTime::createFromFormat('Y', $tmp_date))){
+      ($dt = DateTime::createFromFormat('y/m/d', $tmp_date.'/01/01')) || ($dt=DateTime::createFromFormat('Y/m/d', $tmp_date.'/01/01'));
+      $tmp_date = $dt->format('Y-m-d');
+    }
+    if(DateTime::createFromFormat('m/y', $tmp_date) || DateTime::createFromFormat('n/y', $tmp_date)) $tmp_date = '01/'.$tmp_date;
+    if(DateTime::createFromFormat('m/Y', $tmp_date) || DateTime::createFromFormat('n/Y', $tmp_date)) $tmp_date = '01/'.$tmp_date;
+
+     try{
+      $fuzzy =   new FuzzyDateTime($tmp_date);
+      // try to find the mask
+      $ctn_sep = substr_count($date, '/');
+      if($ctn_sep == 0)
+        $fuzzy->setMask(FuzzyDateTime::getMaskFor('year'));
+      elseif($ctn_sep == 1)
+        $fuzzy->setMask(FuzzyDateTime::getMaskFor('year') + FuzzyDateTime::getMaskFor('month'));
+      elseif($ctn_sep == 2)
+        $fuzzy->setMask(FuzzyDateTime::getMaskFor('year') + FuzzyDateTime::getMaskFor('month') + FuzzyDateTime::getMaskFor('day'));
+      elseif($ctn_sep == 3)
+        $fuzzy->setMask(
+          FuzzyDateTime::getMaskFor('year') + FuzzyDateTime::getMaskFor('month') + FuzzyDateTime::getMaskFor('day') +
+          FuzzyDateTime::getMaskFor('hour')
+        );
+      elseif($ctn_sep == 4)
+        $fuzzy->setMask(
+          FuzzyDateTime::getMaskFor('year') + FuzzyDateTime::getMaskFor('month') + FuzzyDateTime::getMaskFor('day') +
+          FuzzyDateTime::getMaskFor('hour') + FuzzyDateTime::getMaskFor('minute')
+        );
+      elseif($ctn_sep == 5)
+        $fuzzy->setMask(
+          FuzzyDateTime::getMaskFor('year') + FuzzyDateTime::getMaskFor('month') + FuzzyDateTime::getMaskFor('day') +
+          FuzzyDateTime::getMaskFor('hour') + FuzzyDateTime::getMaskFor('minute') + FuzzyDateTime::getMaskFor('second')
+        );
+
+      return $fuzzy;
+     } catch(Exception $e) {}
+     return null;
   }
 
 }

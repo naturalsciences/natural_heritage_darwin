@@ -100,10 +100,11 @@ class ImportABCDXml implements IImportModels
       case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break;
       case "DateText" : $this->object->getDateText($this->cdata) ; break;
       case "DateTime" : if($this->getPreviousTag() == "Gathering"){
-                        $this->staging["gtu_from_date"] = $this->object->getFromDate() ;
-                        $this->staging["gtu_to_date"] = $this->object->getToDate() ;
-                        $this->staging["gtu_from_date_mask"] = 56 ; $this->staging["gtu_to_date_mask"] = 56 ;
-                       } ; break;
+          if( $this->object->getFromDate()) $this->staging["gtu_from_date"] = $this->object->getFromDate()->getDateTime() ;
+          if( $this->object->getToDate()) $this->staging["gtu_to_date"] = $this->object->getToDate()->getDateTime() ;
+          if( $this->object->getFromDate())$this->staging["gtu_from_date_mask"] =  $this->object->getFromDate()->getMask() ;
+          if( $this->object->getToDate()) $this->staging["gtu_to_date_mask"] =  $this->object->getToDate()->getMask() ;
+        } ; break;
       case "dna:Concentration" : $this->property = new ParsingProperties("DNA Concentration") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break;
       case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); $this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask()); break;
@@ -123,8 +124,9 @@ class ImportABCDXml implements IImportModels
       case "GivenNames" : $this->people['given_name'] = $this->cdata ; break;
       case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
       case "HigherTaxon" : $this->object->handleParent() ;break;;
-      case "HigherTaxonName" : $this->object->higher_name = $this->cdata ; break;;
-      case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ; break;;
+      case "HigherTaxonName" : $this->object->higher_name = $this->cdata ; break;
+      case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ; break;
+      case "TaxonIdentified":  $this->object->checkNoSelfInParents($this->staging); break;
       case "efg:LithostratigraphicAttribution" : $this->staging["litho_parents"] = $this->object->getParent() ; break;
       case "Identification" : $this->object->save($this->staging) ; break;
       case "IdentificationHistory" : $this->addComment(false, 'taxonomy'); break;
@@ -132,8 +134,8 @@ class ImportABCDXml implements IImportModels
       case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break;
       case "efg:InformalNameString" : $this->object->informal = true ; break;
       case "InheritedName" : $this->people['family_name'] = $this->cdata ; break;
-      case "ISODateTimeBegin" : if($this->getPreviousTag() == "DateTime")  { $this->object->GTUdate['from'] = $this->cdata ;} break;
-      case "ISODateTimeEnd" :  if($this->getPreviousTag() == "DateTime"){ $this->object->GTUdate['to'] = $this->cdata;}  break;
+      case "ISODateTimeBegin" : if($this->getPreviousTag() == "DateTime")  { $this->object->GTUdate['from'] = FuzzyDateTime::getValidDate($this->cdata) ;} break;
+      case "ISODateTimeEnd" :  if($this->getPreviousTag() == "DateTime"){ $this->object->GTUdate['to'] = FuzzyDateTime::getValidDate($this->cdata);}  break;
       case "IsQuantitative" : $this->property->property->setIsQuantitative($this->cdata) ; break;
       case "KindOfUnit" : $this->staging['part'] = $this->cdata ; break;
       case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $this->cdata ; break;
