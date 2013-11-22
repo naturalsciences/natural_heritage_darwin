@@ -90,15 +90,16 @@ class ParsingIdentifications
       if($this->notion == 'lithology') $staging->setLithologyLocal(true) ;
     }
     $this->getRockParent() ;
-    if($this->notion == 'taxonomy') $staging['taxon_parents'] = $this->catalogue_parent->export() ;
-    if($this->notion == 'lithology')
-    {
+
+    if($this->notion == 'taxonomy') {
+      $staging['taxon_parents'] = $this->catalogue_parent->export() ;
+    }
+    elseif($this->notion == 'lithology') {
       $staging['lithology_parents'] = $this->catalogue_parent->export() ;
       $staging->setLithologyName($this->fullname) ;
       $staging->setLithologyLevelName($this->level_name) ;
     }
-    if($this->notion == 'mineralogy')
-    {
+    elseif($this->notion == 'mineralogy'){
       $staging['mineral_parents'] = $this->catalogue_parent->export() ;
       $staging->setMineralName($this->fullname) ;
       $staging->setMineralClassification($this->classification) ;
@@ -138,8 +139,16 @@ class ParsingIdentifications
   {
     // not sure if it's usefull or not, if not, simply delete the line below and $this->keyword array
     if (!in_array($tag,array_keys($this->known_keywords))) return ;
-    if($this->known_keywords[$tag] != '')
+    if($this->known_keywords[$tag] != '') {
       $this->level_name = $this->known_keywords[$tag] ;
+      if($value != '') {
+        if(! $this->catalogue_parent)
+          $this->catalogue_parent = new Hstore() ;
+
+        $this->catalogue_parent[$this->known_keywords[$tag]] = $value ;
+        $staging['taxon_parents'] = $this->catalogue_parent->export() ;
+      }
+    }
     $keyword = new ClassificationKeywords();
     $keyword->fromArray(array('keyword_type'=> $tag, 'keyword'=> $value));
     $this->scientificName .= "$value " ;
