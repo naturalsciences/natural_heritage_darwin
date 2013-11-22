@@ -39,7 +39,7 @@ class ParsingIdentifications
 
   public function __construct()
   {
-    $this->identification = new Identifications() ;
+    $this->identification = new Identifications();
   }
 
   public function getDateText($date)
@@ -83,8 +83,20 @@ class ParsingIdentifications
 
   public function checkNoSelfInParents($staging) {
     if($this->notion == 'taxonomy') {
-      if(isset( $this->catalogue_parent[$staging["taxon_level_name"]]))
+      if($staging["taxon_level_name"] != '' && isset( $this->catalogue_parent[$staging["taxon_level_name"]])) {
         unset($this->catalogue_parent[$staging["taxon_level_name"]]);
+      } else {
+        $last_lvl = null;
+        foreach($this->array_level as $lvl){
+          if(isset($this->catalogue_parent[$lvl]))
+            $last_lvl = $lvl;
+        }
+        if($last_lvl) {
+          $staging["taxon_level_name"] = $last_lvl;
+          $staging["taxon_name"] = $this->catalogue_parent[$last_lvl];
+          unset($this->catalogue_parent[$last_lvl]);
+        }
+      }
       $staging['taxon_parents'] = $this->catalogue_parent->export() ;
     }
   }
