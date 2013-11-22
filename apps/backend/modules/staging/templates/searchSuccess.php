@@ -22,45 +22,47 @@
   <table class="staging_table results_container results">
     <thead>
       <th><?php echo __('Actions');?></th>
-      <th><?php echo __('Linked Info');?></th>
+      <th><?php echo __('Error(s) found') ; ?></th>
       <th><?php echo __('Status');?></th>
-     <th><?php echo __('Codes');?></th>
-    <?php foreach($fields as $name=>$title):?>
-      <th><?php echo __($title);?></th>
-    <?php endforeach;?>
-    </thead>
-    <tbody>
-    <?php foreach($search as $row):?>
-      <tr>
-        <td>
-          <?php if(count($row['status']) != 0 ):?>
-            <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'staging/edit?id='.$row['id']);?>
-          <?php endif;?>
-          <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'staging/delete?id='.$row['id'],'class=remove_staging');?>
-        </td>
-        <td><?php echo $row['linked_info'];?></td>
-        <td  class="<?php if(count($row['status']) != 0 ):?>fld_tocomplete<?php else:?>fld_ok<?php endif;?>">
-          <?php if(count($row['status']) != 0 ):?>
-            <?php echo __('Error');?>
-          <?php else:?>
-            <?php echo __('No problems detected');?>
-          <?php endif;?>
-        </td>
-        <td>
-          <ul class="codes">
-            <?php foreach($row['codes'] as $k=>$v):?>
-              <li>
-                <?php echo $v->code_prefix.$v->code_prefix_separator.
-                $v->code.$v->code_suffix.$v->code_suffix_separator;?>
-              </li>
-            <?php endforeach;?>
-          </ul>
-        </td>
-        <?php foreach($fields as $name=>$title):?>
-          <td class="<?php echo $row->getStatusFor($name);?>"><?php echo $row[$name];?></td>
-        <?php endforeach;?>
-        </tr>
-    <?php endforeach;?>
+      <th><?php echo __('Linked Info');?></th>      
+      <th><?php echo __('Codes');?></th>
+      <?php foreach($fields as $name=>$title):?>
+        <th><?php echo __($title);?></th>
+      <?php endforeach;?>
+      </thead>
+      <tbody>
+      <?php foreach($search as $row):?>
+        <tr>
+          <td>
+            <?php if(count($row['status']) != 0 ):?>
+              <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'staging/edit?id='.$row['id']);?>
+            <?php endif;?>
+            <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'staging/delete?id='.$row['id'],'class=remove_staging');?>
+          </td>
+          <td class="fld_tocomplete"><?php echo (count(explode(',',$row->getStatus()->export()))) ; ?></td>
+          <td  class="<?php if(count($row['status']) != 0 ):?>fld_tocomplete<?php else:?>fld_ok<?php endif;?>">
+            <?php if(count($row['status']) != 0 ):?>
+              <?php echo __('Error');?>
+            <?php else:?>
+              <?php echo __('No problems detected');?>
+            <?php endif;?>
+          </td>
+          <td><?php echo $row['linked_info'];?></td>
+          <td>
+            <ul class="codes">
+              <?php foreach($row['codes'] as $k=>$v):?>
+                <li>
+                  <?php echo $v->code_prefix.$v->code_prefix_separator.
+                  $v->code.$v->code_suffix.$v->code_suffix_separator;?>
+                </li>
+              <?php endforeach;?>
+            </ul>
+          </td>
+          <?php foreach($fields as $name=>$title):?>
+            <td class="<?php echo $row->getStatusFor($name);?>"><?php echo $row[$name];?></td>
+          <?php endforeach;?>
+          </tr>
+      <?php endforeach;?>
     </tbody>
   </table>
   <br/>

@@ -299,7 +299,7 @@ class ImportABCDXml implements IImportModels
 
   private function addPreparation()
   {
-    if($this->preparation_type == "fixation")
+    if(strtolower($this->preparation_type) == "fixation")
     {
         $this->property = new ParsingProperties('Preparation') ;
         $this->property->property->setAppliesTo('Fixation') ;

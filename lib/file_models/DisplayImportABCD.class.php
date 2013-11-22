@@ -24,7 +24,7 @@ class DisplayImportABCD implements IDisplayModels
       'part' => 'Part',
       'specimen_status' => 'Status',
       'institution' => 'Institution',
-      'building' => 'Building',
+     /* 'building' => 'Building',
       'floor' => 'Floor',
       'room' => 'Room',
       'row' => 'Row',
@@ -34,7 +34,7 @@ class DisplayImportABCD implements IDisplayModels
       'container' => 'Container',
       'sub_container_type' => 'Sub container type',
       'sub_container_storage' => 'Sub container storage',
-      'sub_container' => 'Sub container',
+      'sub_container' => 'Sub container',*/
       'part_count' => 'Number',
       'chrono' => 'Chrono.',
       'litho' => 'Litho.',
