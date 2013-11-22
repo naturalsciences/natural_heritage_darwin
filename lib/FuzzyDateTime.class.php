@@ -133,7 +133,7 @@ class FuzzyDateTime extends DateTime
     $max_array = self::getDefaultMaxArray();
     $min_array = self::getDefaultMinArray();
 
-    if (ctype_digit($value) && intval($value)>= $min_array[$field] &&
+    if (is_numeric($value) && intval($value)>= $min_array[$field] &&
         intval($value) <= $max_array[$field])
     {
       return true;
