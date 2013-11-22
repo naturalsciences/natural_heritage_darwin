@@ -168,7 +168,7 @@ class ImportABCDXml implements IImportModels
       case "Prefix" : $this->people['title'] = $this->cdata ; break;
       case "Preparation" : $this->addPreparation() ; break ;
       case "Preparationtype" : $this->preparation_type = $this->cdata ; break ;
-      case "PreparationMaterials" : $this->preparation_mat = $this->cdata ; break; 
+      case "PreparationMaterials" : $this->preparation_mat = $this->cdata ; break;
       case "ProjectTitle" : $this->staging['expedition_name'] = $this->cdata ; break;
       case "RecordURI" : $this->addExternalLink() ; break;
       //case "efg:RockType" :
@@ -237,7 +237,7 @@ class ImportABCDXml implements IImportModels
     $comment->setComment($this->cdata) ;
     $comment->setNotionConcerned($notion);
 
-    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag() == "efg:MineralogicalUnit")
+    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification' || $this->getPreviousTag()=='Identifications' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag() == "efg:MineralogicalUnit")
     {
       $this->staging->addRelated($comment) ;
     }
