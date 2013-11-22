@@ -1,7 +1,7 @@
 <?php
 class ImportABCDXml implements IImportModels
 {
-  private $tag, $staging, $object, $people,$import_id, $path="", $name, $errors_reported='',$preparation_type, $preparation_mat;
+  private $tag, $staging, $object, $people,$import_id, $path="", $name, $errors_reported='',$preparation_type='', $preparation_mat='';
   private $unit_id_ref = array() ; // to keep the original unid_id per staging for Associations
   private $object_to_save = array(), $staging_tags = array() , $data, $inside_data;
   /**
@@ -104,13 +104,13 @@ class ImportABCDXml implements IImportModels
                         $this->staging["gtu_to_date"] = $this->object->getToDate() ;
                         $this->staging["gtu_from_date_mask"] = 56 ; $this->staging["gtu_to_date_mask"] = 56 ;
                        } ; break;
-      case "dna:Concentration" : $this->property = new ParsingProperties("DNA Concentration") ; $this->property->property->setLowerValue($this->cdata) ; $this->staging->addProperty(true) ; break;
+      case "dna:Concentration" : $this->property = new ParsingProperties("DNA Concentration") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break;
       case "dna:ExtractionDate" : $this->object->maintenance->setModificationDateTime(FuzzyDateTime::getValidDate($this->cdata)) ; $this->object->maintenance->setModificationDateMask(56) ; break;
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
-      case "dna:ExtractionStaff" : $this->object->maintenance->handlePeople($this->cdata) ; break;
-      case "dna:GenBankNumber" : $this->property = new ParsingProperties("Gen bank number") ; $this->property->property->setLowerValue($this->cdata) ;  $this->staging->addProperty(true) ;
-      case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ration of absorbance") ; $this->property->property->setLowerValue($this->cdata) ; $this->staging->addProperty(true) ; break;
+      case "dna:ExtractionStaff" : $this->object->handlePeople($this->cdata) ; break;
+      case "dna:GenBankNumber" : $this->property = new ParsingProperties("Gen bank number") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ;
+      case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ration of absorbance") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:Tissue" : $this->object->maintenance->setActionObservation($this->cdata) ; break;
       case "Duration" : $this->property->setDateTo($this->cdata) ; break;
       case "FileURI" : $this->object->getFile($this->cdata) ; break;
