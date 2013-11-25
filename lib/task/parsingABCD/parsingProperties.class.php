@@ -4,11 +4,11 @@ class ParsingProperties extends importABCDXml
 {
   public $people_order_by=null, $date_from, $accuracy=null ;
 
-  public function __construct($tag)
+  public function __construct($tag="length",$applies_to="")
   {
     $this->property = new Properties() ;
-    $this->property->setPropertyType("length") ;
-    $this->property->setAppliesTo('') ;
+    $this->property->setPropertyType($tag) ;
+    $this->property->setAppliesTo($applies_to) ;
   }
 
   public function handlePeople($people,$staging)

@@ -7,13 +7,17 @@ class PeopleInErrorForm extends BaseStagingPeopleForm
   {
     $name = $this->getObject()->getFormatedName() ;
     $link = $this->getObject()->getPeopleType()=='donator'?'people/searchBoth':'people/choose?name='.$name;  
-    $this->widgetSchema['people_ref'] = new widgetFormButtonRef(array(
+    $this->widgetSchema['people_ref'] = new widgetFormCompleteButtonRef(array(
        'model' => 'People',
        'link_url' => $link,
        'method' => 'getFormatedName',
        'default_name' => $name,
        'box_title' => $this->getI18N()->__('Choose People'),
-       'nullable' => false,
+       'box_remove_title' => $this->getI18N()->__('Delete People'),
+       'confirm_msg' => $this->getI18N()->__('Deleting this people will remove it from your import, are you sure ?'),
+       'deletable' => true,
+       'nullable' => true,
+       'complete_url' => 'catalogue/completeName?table=people',
        'button_class'=>'',
      ),
       array('class'=>'inline',

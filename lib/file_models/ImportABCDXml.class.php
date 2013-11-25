@@ -105,14 +105,14 @@ class ImportABCDXml implements IImportModels
           if( $this->object->getFromDate())$this->staging["gtu_from_date_mask"] =  $this->object->getFromDate()->getMask() ;
           if( $this->object->getToDate()) $this->staging["gtu_to_date_mask"] =  $this->object->getToDate()->getMask() ;
         } ; break;
-      case "dna:Concentration" : $this->property = new ParsingProperties("DNA Concentration") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
+      case "dna:Concentration" : $this->property = new ParsingProperties("Concentration","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break;
       case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); $this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask()); break;
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
       case "dna:ExtractionStaff" : $this->object->handlePeople($this->cdata) ; break;
-      case "dna:GenBankNumber" : $this->property = new ParsingProperties("Gen bank number") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ;
-      case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ration of absorbance") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
-      case "dna:Tissue" : $this->object->maintenance->setActionObservation($this->cdata) ; break;
+      case "dna:GenBankNumber" : $this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ;
+      case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ration of absorbance","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
+      case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "Duration" : $this->property->setDateTo($this->cdata) ; break;
       case "FileURI" : $this->object->getFile($this->cdata) ; break;
       case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;

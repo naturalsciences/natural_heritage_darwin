@@ -43,6 +43,16 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
       $class .= ' hidden';
     }
 
+    if($this->getOption('deletable'))
+    {
+      $options = array(
+        'src' => '/images/remove.png',
+              'id' => $this->generateId($name)."_clear",
+        'class' => "ref_clear_people" . $class
+      );
+      $input .= $this->renderTag('img',$options);
+    }
+
     $input .= $this->renderContentTag('div',link_to(' ', $this->getOption('link_url'), array('class' => 'but_more','title'=>$this->getOption('box_title') )),
       array('title'=> $this->getOption('box_title'),
       'id' => $this->generateId($name).'_button',
@@ -52,8 +62,18 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
     $input .= '<script  type="text/javascript">
       $(document).ready(function () {
       $("#'.$this->generateId($name).'_name").catcomplete({source: "'.url_for($this->getOption('complete_url')).'"});
-      $("#'.$this->generateId($name).'_button a.but_more").click(button_ref_modal);
+      $("#'.$this->generateId($name).'_button a.but_more").click(button_ref_modal);';
 
+   if($this->getOption('deletable'))
+        $input .= '$("#'.$this->generateId($name).'_clear").click(function(){
+          if(confirm("'.$this->getOption('confirm_msg').'"))
+          {  
+            $("#'.$this->generateId($name).'").attr(\'value\',-1) ;
+            $("#'.$this->generateId($name).'_name").val(\'\') ;
+          }
+        });';
+
+    $input .= '
     });</script>
     </div>';
 

@@ -70,12 +70,15 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
   {
       parent::configure($options, $attributes);
       $this->addRequiredOption('model');
+      $this->addOption('confirm_msg') ;
       $this->addOption('method', '__toString');
       $this->addOption('nullable', false);
+      $this->addOption('deletable', false);
       $this->addOption('is_hidden', false);
       $this->addOption('button_is_hidden', false);
       $this->addRequiredOption('link_url');
       $this->addRequiredOption('box_title');
+      $this->addOption('box_remove_title');
       $this->addOption('button_class', 'button');
       $this->addOption('default_name', null);
   }

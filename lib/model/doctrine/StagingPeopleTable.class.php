@@ -38,10 +38,19 @@ class StagingPeopleTable extends Doctrine_Table
 
   public function UpdatePeopleRef($people)
   {
-    $q = Doctrine_Query::create()
-      ->update('StagingPeople s')
-      ->set('s.people_ref',$people['people_ref'])
-      ->where('s.id = ?',$people['id']) ;
+    if($people['people_ref'] != -1)
+    {
+      $q = Doctrine_Query::create()
+        ->update('StagingPeople s')
+        ->set('s.people_ref',$people['people_ref'])
+        ->where('s.id = ?',$people['id']) ;
+    }
+    else
+    {
+      $q = Doctrine_Query::create()
+        ->delete('StagingPeople s')
+        ->where('s.id = ?',$people['id']) ;
+    }
     return $q->execute() ;
   }
 }

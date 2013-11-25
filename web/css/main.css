@@ -229,7 +229,13 @@ img.clear_prop, img.tree_cmd {
   vertical-align: bottom;
 }
 
-.ref_clear:hover, img.filter_clear:hover, img.add_option:hover
+.ref_clear_people
+{
+  margin-right: 1em;
+  margin-bottom: 0.7em ;
+}
+
+.ref_clear:hover, img.filter_clear:hover, img.add_option:hover, .ref_clear_people:hover
 {
   cursor:pointer;
 }
