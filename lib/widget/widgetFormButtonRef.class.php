@@ -52,7 +52,15 @@ class widgetFormButtonRef extends sfWidgetFormInputHidden
       $in_text .='">'. __('Choose !').'</span><span class="off';
       if($obj_name=='' || $obj_name=='-')  $in_text .=' hidden';
       $in_text .= '">'. __('Change !').'</span>';
-      $input .= link_to($in_text, $this->getOption('link_url'), array('class' => 'but_text' ));
+
+      $url_params = '';
+      if(count($this->getOption('url_params')) != 0 ) {
+        $url_params = '?';
+        foreach($this->getOption('url_params') as $k=>$v){
+          $url_params .= urlencode($k).'='.urlencode($v);
+        }
+      }
+      $input .= '<a href="'.url_for($this->getOption('link_url')).$url_params.'" class="but_text">'.$in_text.'</a>';
 
       $input .= '</div>';
       $input .= '<script  type="text/javascript">
@@ -78,6 +86,7 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
       $this->addRequiredOption('box_title');
       $this->addOption('button_class', 'button');
       $this->addOption('default_name', null);
+      $this->addOption('url_params', array());
   }
 
   public function getJavaScripts()

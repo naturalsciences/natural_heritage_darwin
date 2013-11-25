@@ -25,12 +25,12 @@
       </tbody>
     </table>
     <div class="search_results">
-      <div class="search_results_content"> 
+      <div class="search_results_content">
       </div>
-    </div> 
-    <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('people/new?name='.$form['family_name']->getValue()) ; ?>"><?php echo __('New');?></a></div>
+    </div>
+    <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('people/new'). ($form['family_name']->getValue() ? '?name='.urlencode($form['family_name']->getValue()) :'') ; ?>"><?php echo __('New');?></a></div>
   </div>
-</form> 
+</form>
 <div>
 <script>
 $(document).ready(function () {
@@ -39,9 +39,9 @@ $(document).ready(function () {
   {
    url = $(this).find('a').attr('href'),
    data= $('.search_form').serialize(),
-   reg=new RegExp("(<?php echo $form->getName() ; ?>)", "g");   
+   reg=new RegExp("(<?php echo $form->getName() ; ?>)", "g");
    open(url+'?'+data.replace(reg,'people'));
-    return false;  
+    return false;
   });
 });
 </script>
