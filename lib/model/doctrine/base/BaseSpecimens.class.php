@@ -126,6 +126,7 @@
  * @property Lithology $Lithology
  * @property Mineralogy $Mineralogy
  * @property Igs $Igs
+ * @property Institutions $Institution
  * @property Doctrine_Collection $CollectingMethods
  * @property Doctrine_Collection $CollectingTools
  * @property Doctrine_Collection $Comments
@@ -257,6 +258,7 @@
  * @method Lithology           getLithology()               Returns the current record's "Lithology" value
  * @method Mineralogy          getMineralogy()              Returns the current record's "Mineralogy" value
  * @method Igs                 getIgs()                     Returns the current record's "Igs" value
+ * @method Institutions        getInstitution()             Returns the current record's "Institution" value
  * @method Doctrine_Collection getCollectingMethods()       Returns the current record's "CollectingMethods" collection
  * @method Doctrine_Collection getCollectingTools()         Returns the current record's "CollectingTools" collection
  * @method Doctrine_Collection getComments()                Returns the current record's "Comments" collection
@@ -387,6 +389,7 @@
  * @method Specimens           setLithology()               Sets the current record's "Lithology" value
  * @method Specimens           setMineralogy()              Sets the current record's "Mineralogy" value
  * @method Specimens           setIgs()                     Sets the current record's "Igs" value
+ * @method Specimens           setInstitution()             Sets the current record's "Institution" value
  * @method Specimens           setCollectingMethods()       Sets the current record's "CollectingMethods" collection
  * @method Specimens           setCollectingTools()         Sets the current record's "CollectingTools" collection
  * @method Specimens           setComments()                Sets the current record's "Comments" collection
@@ -828,6 +831,10 @@ abstract class BaseSpecimens extends DarwinModel
 
         $this->hasOne('Igs', array(
              'local' => 'ig_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('Institutions as Institution', array(
+             'local' => 'institution_ref',
              'foreign' => 'id'));
 
         $this->hasMany('CollectingMethods', array(

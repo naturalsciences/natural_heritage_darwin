@@ -1,5 +1,9 @@
 <table class="catalogue_table_view">
-<?php if ($spec->getBuilding() != '' && $spec->getFloor() !='' && $spec->getRoom()!='' && $spec->getRow()!='' && $spec->getShelf() != '') : ?>
+
+  <tr>
+  <th class="top_aligned"><?php echo __("Institution");?></th>
+  <td><?php echo $spec->getInstitution()==''?'-':$spec->getInstitution()->getFormatedName() ?></td>
+  </tr>
   <tr>
 	<th class="top_aligned"><?php echo __("Building");?></th>
 	<td><?php echo $spec->getBuilding()==''?'-':$spec->getBuilding() ?></td>
@@ -20,5 +24,4 @@
 	<th class="top_aligned"><?php echo __("Shelf");?></th>
 	<td><?php echo $spec->getShelf()==''?'-':$spec->getShelf() ?></td>
   </tr>
-<?php endif ; ?>
 </table>
