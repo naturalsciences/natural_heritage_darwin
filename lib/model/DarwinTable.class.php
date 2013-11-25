@@ -157,9 +157,11 @@ class DarwinTable extends Doctrine_Table
     array_shift($ids); //Removing the first blank element
 
     $q = Doctrine_Query::create()
-      ->from($this->getTableName().' t')
-      ->innerJoin('t.Level l')
-      ->whereIn('id', $ids)
+      ->from($this->getTableName().' t');
+    if(strtolower($this->getTableName()) != 'collections')
+      $q->innerJoin('t.Level l');
+
+    $q->whereIn('id', $ids)
       ->orderBy('path ASC');
     return $q->execute();
   }
