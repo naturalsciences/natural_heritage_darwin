@@ -5553,8 +5553,8 @@
         <target>Dans cette &quot;widget&quot; vous pouvez prévisualiser toute les maintenances effectuées sur ce prêt ou sur les objets associés</target>
       </trans-unit>
       <trans-unit id="1445">
-        <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
-        <target>La hiérarchie de ce %field% est incorrecte, nous vous prions d&#039;en sélectionner une autre ou de laisse le champ vide</target>
+        <source>The hierarchy of this %field% is different from the one in our database, please choose or create the correct hierarchy</source>
+        <target>La hiérarchie de ce %field% est différente de celle dans notre base de données, nous vous prions de sélectionner ou de créer la hiérarchie correcte</target>
       </trans-unit>
       <trans-unit id="1446">
         <source>Too many records match this %field%&#039;s value, please choose the good one or leave it empty</source>

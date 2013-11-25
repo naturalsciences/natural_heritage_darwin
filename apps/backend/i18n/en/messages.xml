@@ -4788,8 +4788,8 @@
         <target>You may want to include &lt;em&gt;rows without errors&lt;/em&gt;</target>
       </trans-unit>
           <trans-unit id="1445">
-        <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
-        <target>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</target>
+        <source>The hierarchy of this %field% is different from the one in our database, please choose or create the correct hierarchy</source>
+        <target>The hierarchy of this %field% is different from the one in our database, please choose or create the correct hierarchy</target>
       </trans-unit>
           <trans-unit id="1446">
         <source>Too many records match this %field%\&#039;s value, please choose the good one or leave it empty</source>

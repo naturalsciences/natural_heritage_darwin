@@ -2716,8 +2716,8 @@
         <target>Wat nu</target>
       </trans-unit>
       <trans-unit id="1445">
-        <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
-        <target>De hierarchie van dit %field% is niet correct, gelieve een correcte hierarchie te kiezen of het veld leeg te laten</target>
+        <source>The hierarchy of this %field% is different from the one in our database, please choose or create the correct hierarchy</source>
+        <target>De hierarchie van dit %field% wijkt af van diegene in onze databank; gelieve de juiste hierarchie te selecteren of een nieuwe aan te maken</target>
       </trans-unit>
       <trans-unit id="1446">
         <source>Too many records match this %field%\&#039;s value, please choose the good one or leave it empty</source>
