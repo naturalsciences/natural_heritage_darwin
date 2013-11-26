@@ -112,7 +112,7 @@ class ImportABCDXml implements IImportModels
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
       case "dna:ExtractionStaff" : $this->object->handlePeople($this->cdata) ; break;
       case "dna:GenBankNumber" : $this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ;
-      case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ration of absorbance","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
+      case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ratio of absorbance 260/280","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "Duration" : $this->property->setDateTo($this->cdata) ; break;
       case "FileURI" : $this->object->getFile($this->cdata) ; break;
@@ -191,7 +191,7 @@ class ImportABCDXml implements IImportModels
       case "storage:Rack" : $this->staging->setShelf($this->cdata) ; break;
       case "storage:Box" : $this->staging->setContainerType('box'); $this->staging->setContainer($this->cdata) ; break;
       case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break;
-      case "storage:Position" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break;
+      case "storage:Position" : $this->staging->setSubContainerType('position'); $this->staging->setSubContainer($this->cdata) ; break;
       case "Text": if($this->getPreviousTag() == "Biotope") $this->addComment() ; break;
       case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ;  $this->addComment('Publication') ; break;
       case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break;
@@ -308,6 +308,12 @@ class ImportABCDXml implements IImportModels
         $this->property->property->setAppliesTo('Fixation') ;
         $this->property->property->setLowerValue($this->preparation_mat) ;
         $this->staging->addProperty(true) ;
+    }
+    elseif(strtolower($this->preparation_type) == "tissue preparation")
+    {
+        $this->object = new ParsingMaintenance('Tissue Preparation') ;
+        $this->object->addMaintenance($this->staging) ;
+        $this->object->maintenance->setDescription($this->preparation_mat) ;
     }
     else $this->staging['container_storage'] = $this->preparation_mat ;
 
