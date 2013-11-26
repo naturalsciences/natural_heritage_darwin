@@ -51,14 +51,16 @@
             <?php if (count($catalogues) > 0) : ?><ul class="taxon_parent"><?php echo __("import_taxon_parent_info") ; ?><?php endif; ?>
             <?php foreach($catalogues as $level => $catalogue) : ?>
               <li>
-                <div class="<?php echo $catalogue['class'] ?>"></div>
-                <?php if($catalogue['class'] == "line_not_ok"):?>
+                <div class="<?php echo $catalogue['class'] != ''? 'line_ok':'line_not_ok'; ?>"></div>
+                <?php if($level == $taxon_level_name) echo '<strong>';?>
+                <?php if($catalogue['class'] == ''):?>
                   <a target="_blank" href="<?php echo url_for('taxonomy/new').'?taxonomy[name]='.$catalogue['name'].'&taxonomy[level_ref]='.$catalogue['level_ref'] ; ?>">
                     <?php echo $catalogue['name']." ($level)";?>
                   </a>
                 <?php else:?>
-                  <?php echo $catalogue['name']." ($level)" ; ?>
+                  <?php echo link_to($catalogue['name']." ($level)", 'taxonomy/view?id='.$catalogue['class']) ; ?>
                 <?php endif;?>
+                <?php if($level == $taxon_level_name) echo '</strong>';?>
               </li>
             <?php endforeach ; ?>
             </ul>

@@ -165,7 +165,7 @@ BEGIN
       ELSIF NEW.group_name_indexed = 'administrativearea' AND NEW.sub_group_name_indexed = 'province' THEN
         UPDATE specimens
         SET gtu_province_tag_value = case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value,
-            gtu_province_tag_indexed = lineToTagArray(case when international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value)
+            gtu_province_tag_indexed = lineToTagArray(case when NEW.international_name != '' THEN NEW.international_name || ';' ELSE '' END || NEW.tag_value)
         WHERE gtu_ref = NEW.gtu_ref;
       ELSIF NEW.sub_group_name_indexed NOT IN ('country','province') THEN
       /*Trigger trg_cpy_gtutags_taggroups has already occured and values from tags table should be correct... but really need a check !*/

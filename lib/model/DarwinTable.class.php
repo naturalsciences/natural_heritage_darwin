@@ -157,19 +157,22 @@ class DarwinTable extends Doctrine_Table
     array_shift($ids); //Removing the first blank element
 
     $q = Doctrine_Query::create()
-	 ->from($this->getTableName())
-	 ->whereIn('id', $ids)
-	 ->orderBy('path ASC');
+      ->from($this->getTableName().' t');
+    if(strtolower($this->getTableName()) != 'collections')
+      $q->innerJoin('t.Level l');
+
+    $q->whereIn('id', $ids)
+      ->orderBy('path ASC');
     return $q->execute();
   }
 
   public function findRights($user, $table)
   {
- 		$q = Doctrine_Query::create()
-		   ->select('collection_ref')
-		   ->from($table)
-		   ->andWhere('user_ref = ?', $user) ;
-		return $q->execute() ;
+    $q = Doctrine_Query::create()
+      ->select('collection_ref')
+      ->from($table)
+      ->andWhere('user_ref = ?', $user) ;
+    return $q->execute() ;
   }
 
   public function hasRights($field_name, $unit_id, $user_id)

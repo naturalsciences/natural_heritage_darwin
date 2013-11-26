@@ -24,7 +24,9 @@ class ParsingProperties extends importABCDXml
 
   public function getDateFrom($date, $tag,$staging)
   {
-    if($tag=="Altitude") $staging["gtu_from_date"]=$date ;
+    if($tag=="Altitude") {
+      $staging["gtu_from_date"]=$date ;
+    }
     else
     {
       $this->date_from = $date ;

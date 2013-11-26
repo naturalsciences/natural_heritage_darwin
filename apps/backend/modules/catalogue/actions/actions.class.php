@@ -17,7 +17,7 @@ class catalogueActions extends DarwinActions
 
   public function executeRelation(sfWebRequest $request)
   {
-    if(! $this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();  
+    if(! $this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     $this->relation = null;
     if($request->hasParameter('id'))
     {
@@ -32,7 +32,7 @@ class catalogueActions extends DarwinActions
     }
 
     $this->form = new CatalogueRelationshipsForm($this->relation);
-    
+
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('catalogue_relationships'));
@@ -55,9 +55,10 @@ class catalogueActions extends DarwinActions
     $filterFormName = DarwinTable::getFilterForTable($request->getParameter('table'));
     $this->searchForm = new $filterFormName(array('table'=>$request->getParameter('table')));
   }
-  
+
   public function executeTree(sfWebRequest $request)
   {
+    $this->table = $request->getParameter('table');
     $this->items = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )
       ->findWithParents($request->getParameter('id'));
   }
@@ -234,7 +235,7 @@ class catalogueActions extends DarwinActions
 
   public function executeAddKeyword(sfWebRequest $request)
   {
-    if($this->getUser()->getDbUserType() < Users::ENCODER) $this->forwardToSecureAction();  
+    if($this->getUser()->getDbUserType() < Users::ENCODER) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
 
     $form = new  KeywordsForm(null,array('no_load'=>true));
@@ -283,7 +284,7 @@ class catalogueActions extends DarwinActions
 
   public function executeBiblio(sfWebRequest $request)
   {
-    if(! $this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();  
+    if(! $this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     $this->biblio = null;
     if($request->hasParameter('id'))
     {
@@ -297,7 +298,7 @@ class catalogueActions extends DarwinActions
     }
 
     $this->form = new CatalogueBibliographyForm($this->biblio);
-    
+
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('catalogue_bibliography'));

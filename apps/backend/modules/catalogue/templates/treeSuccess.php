@@ -6,6 +6,9 @@
       <?php echo image_tag('tree_spacer.gif');?>
     <?php endif;?>
     <?php echo $item->getNameWithFormat(ESC_RAW);?>
+      <?php if($table != 'collections'):?>
+        (<?php echo $item->getLevel()->getLevelName();?>)
+      <?php endif;?>
   </li>
 <?php endforeach;?>
 </ul>

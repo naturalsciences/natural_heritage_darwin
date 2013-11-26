@@ -43,7 +43,7 @@ class TaxonomyTable extends DarwinTable
       $catalogue_level[$catalogue->getLevelName()] = array(
         'name' => $parents[$catalogue->getLevelSysName()],
         'level_ref' => $catalogue->getId(),
-        'class' => $taxon?'line_ok':'line_not_ok') ;
+        'class' => $taxon? $taxon->getId(): '') ;
     }
     return($catalogue_level) ;
   }

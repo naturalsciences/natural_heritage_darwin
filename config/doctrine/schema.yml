@@ -765,6 +765,10 @@ Specimens:
             class: Igs
             local: ig_ref
             foreign: id
+        Institution:
+            class: Institutions
+            local: institution_ref
+            foreign: id
         CollectingMethods:
             class: CollectingMethods
             refClass: SpecimensMethods

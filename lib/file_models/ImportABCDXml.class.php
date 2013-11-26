@@ -51,7 +51,8 @@ class ImportABCDXml implements IImportModels
       case "efg:MineralRockIdentified" :
       case "HigherTaxa" : $this->object->catalogue_parent = new Hstore() ;break;
       case "Identification" : $this->object = new ParsingIdentifications() ; break;
-      case "MeasurementOrFactAtomised" : $this->property = new ParsingProperties($this->getPreviousTag()) ; break;
+      case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ; 
+                                         else $this->property = new ParsingProperties() ; break;
       case "MultiMediaObject" : $this->object = new ParsingMultimedia() ; break;
       case "PersonName" : $this->people = new StagingPeople() ; break;
       case "Person" : $this->people = new StagingPeople() ; break;

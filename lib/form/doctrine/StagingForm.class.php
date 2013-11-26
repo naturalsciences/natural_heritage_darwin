@@ -18,9 +18,9 @@ class StagingForm extends BaseStagingForm
     if (in_array('operator',$array_of_field)) unset($array_of_field[array_search('operator', $array_of_field)]);
     if (in_array('relation_institution_ref',$array_of_field)) unset($array_of_field[array_search('relation_institution_ref', $array_of_field)]);
     $this->useFields($array_of_field) ;
-    if (in_array('spec_ref',$array_of_field))
+    /*if (in_array('spec_ref',$array_of_field))
     {
-      $this->widgetSchema['spec_ref'] = new widgetFormButtonRef(array(
+      $this->widgetSchema['spec_ref'] = new widgetFormCompleteButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'specimen/choose',
          'method' => 'getName',
@@ -32,16 +32,17 @@ class StagingForm extends BaseStagingForm
              )
       );
       $this->validatorSchema['spec_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
-    }
+    }*/
     /* Taxonomy Reference */
     if(in_array('taxon_ref',$this->options['fields']))
     {
-      $this->widgetSchema['taxon_ref'] = new widgetFormButtonRef(array(
+      $this->widgetSchema['taxon_ref'] = new widgetFormCompleteButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'taxonomy/choose?name='.$this->getObject()->getTaxonName(),
          'method' => 'getTaxon',
          'default_name' => $this->getObject()->getTaxonName(),
          'box_title' => $this->getI18N()->__('Choose Taxon'),
+         'complete_url' => 'catalogue/completeName?table=taxonomy',
          'nullable' => true,
          'button_class'=>'',
        ),
@@ -53,12 +54,13 @@ class StagingForm extends BaseStagingForm
     /* Chronostratigraphy Reference */
     if(in_array('chrono_ref',$this->options['fields']))
     {
-      $this->widgetSchema['chrono_ref'] = new widgetFormButtonRef(array(
+      $this->widgetSchema['chrono_ref'] = new widgetFormCompleteButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'chronostratigraphy/choose?name='.$this->getObject()->getChronoName(),
          'method' => 'getChrono',
          'default_name' => $this->getObject()->getChronoName(),       
          'box_title' => $this->getI18N()->__('Choose Chronostratigraphic unit'),
+         'complete_url' => 'catalogue/completeName?table=chronostratigraphy',
          'nullable' => true,
          'button_class'=>'',
        ),
@@ -71,12 +73,13 @@ class StagingForm extends BaseStagingForm
     /* Lithostratigraphy Reference */
     if(in_array('litho_ref',$this->options['fields']) )
     {
-      $this->widgetSchema['litho_ref'] = new widgetFormButtonRef(array(
+      $this->widgetSchema['litho_ref'] = new widgetFormCompleteButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'lithostratigraphy/choose?name='.$this->getObject()->getLithoName(),
          'method' => 'getLitho',
          'default_name' => $this->getObject()->getLithoName(),       
          'box_title' => $this->getI18N()->__('Choose Lithostratigraphic unit'),
+         'complete_url' => 'catalogue/completeName?table=lithostratigraphy',
          'nullable' => true,
          'button_class'=>'',
        ),
@@ -89,12 +92,13 @@ class StagingForm extends BaseStagingForm
     /* Lithology Reference */
     if(in_array('lithology_ref',$this->options['fields']))    
     {
-      $this->widgetSchema['lithology_ref'] = new widgetFormButtonRef(array(
+      $this->widgetSchema['lithology_ref'] = new widgetFormCompleteButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'lithology/choose?name='.$this->getObject()->getLithologyName(),
          'method' => 'getLithology',
          'default_name' => $this->getObject()->getLithologyName(),       
          'box_title' => $this->getI18N()->__('Choose Lithologic unit'),
+         'complete_url' => 'catalogue/completeName?table=lithology',
          'nullable' => true,
          'button_class'=>'',
        ),
@@ -107,12 +111,13 @@ class StagingForm extends BaseStagingForm
     /* Mineralogy Reference */
     if(in_array('mineral_ref',$this->options['fields']))
     {
-      $this->widgetSchema['mineral_ref'] = new widgetFormButtonRef(array(
+      $this->widgetSchema['mineral_ref'] = new widgetFormCompleteButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'mineralogy/choose?name='.$this->getObject()->getMineralName(),
          'method' => 'getMineral',
          'default_name' => $this->getObject()->getMineralName(),
          'box_title' => $this->getI18N()->__('Choose Mineralogic unit'),
+         'complete_url' => 'catalogue/completeName?table=mineralogy',
          'nullable' => true,
          'button_class'=>'',
        ),
@@ -136,12 +141,13 @@ class StagingForm extends BaseStagingForm
     /* Expedition Reference */
     if(in_array('expedition_ref',$this->options['fields']) ) 
     {  
-      $this->widgetSchema['expedition_ref'] = new widgetFormButtonRef(array(
+      $this->widgetSchema['expedition_ref'] = new widgetFormCompleteButtonRef(array(
          'model' => 'Expeditions',
          'link_url' => 'expedition/choose?name='.$this->getObject()->getExpeditionName(),
          'method' => 'getExpedition',
          'default_name' => $this->getObject()->getExpeditionName(),         
          'box_title' => $this->getI18N()->__('Choose Expedition'),
+         'complete_url' => 'catalogue/completeName?table=expedition',
          'nullable' => true,
          'button_class'=>'',
        ),
@@ -154,11 +160,12 @@ class StagingForm extends BaseStagingForm
     /* Gtu Reference */
     if(in_array('gtu_ref',$this->options['fields']) )  
     {
-      $this->widgetSchema['gtu_ref'] = new widgetFormButtonRef(array(
+      $this->widgetSchema['gtu_ref'] = new widgetFormCompleteButtonRef(array(
          'model' => 'Gtu',
          'link_url' => 'gtu/choose?with_js=1',
          'method' => 'getTagsWithCode',
          'box_title' => $this->getI18N()->__('Choose Sampling Location'),
+         'complete_url' => 'catalogue/completeName?table=gtu',
          'nullable' => true,
          'button_class'=>'',
        ),
@@ -170,12 +177,13 @@ class StagingForm extends BaseStagingForm
     /* Lithology Reference */
     if(in_array('institution_ref',$this->options['fields']))
     {
-      $this->widgetSchema['institution_ref'] = new widgetFormButtonRef(array(
+      $this->widgetSchema['institution_ref'] = new widgetFormCompleteButtonRef(array(
          'model' => 'Staging',
          'link_url' => 'institution/choose?name='.$this->getObject()->getInstitutionName(),
          'method' => 'getInstitution',
          'default_name' => $this->getObject()->getInstitutionName(),
          'box_title' => $this->getI18N()->__('Choose an Institution'),
+         'complete_url' => 'catalogue/completeName?table=institutions',
          'nullable' => true,
          'button_class'=>'',
        ),
