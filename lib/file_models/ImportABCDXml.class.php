@@ -181,7 +181,7 @@ class ImportABCDXml implements IImportModels
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break;
       case "Sex" : $this->staging->setIndividualSex($this->cdata) ; break;
       case "SortingName" : $this->object->people_order_by = $this->cdata ; break;
-       case "storage:Barcode" : $this->addCode("2Dbarcode") ; break ; // c'est un code avec "2dbarcode" dans le main
+      case "storage:Barcode" : $this->addCode("2Dbarcode") ; break ; // c'est un code avec "2dbarcode" dans le main
       case "storage:Institution" : $this->staging->setInstitutionName($this->cdata) ; break;
       case "storage:Building" : $this->staging->setBuilding($this->cdata) ; break;
       case "storage:Floor" : $this->staging->setFloor($this->cdata) ; break;
