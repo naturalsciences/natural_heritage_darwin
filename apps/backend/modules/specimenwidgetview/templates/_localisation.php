@@ -2,7 +2,7 @@
 
   <tr>
   <th class="top_aligned"><?php echo __("Institution");?></th>
-  <td><?php echo $spec->getInstitution()==''?'-':$spec->getInstitution()->getFormatedName() ?></td>
+  <td><?php echo $spec->getInstitutionRef()==''?'-':$spec->getInstitution()->getFormatedName() ?></td>
   </tr>
   <tr>
 	<th class="top_aligned"><?php echo __("Building");?></th>

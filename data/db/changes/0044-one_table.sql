@@ -1,6 +1,9 @@
 begin;
 set search_path=darwin2,public;
 
+ALTER DEFAULT PRIVILEGES IN SCHEMA darwin2 GRANT ALL on TABLES to darwin2;
+ALTER DEFAULT PRIVILEGES IN SCHEMA darwin2 GRANT ALL on SEQUENCES to darwin2;
+ALTER DEFAULT PRIVILEGES IN SCHEMA darwin2 GRANT ALL on FUNCTIONS to darwin2;
 
 
 /***
