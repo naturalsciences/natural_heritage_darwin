@@ -27,7 +27,7 @@ $browser->
     isParameter('action', 'edit')->
   end()->
   with('response')->begin()->
-    checkElement('#staging_taxon_ref_name','Cacaleluya')->
+    checkElement('input[id="staging_taxon_ref_name"][value="Cacaleluya"]')->
   end()->
   info('Correct the taxon error')->
   click("#submit",
@@ -76,7 +76,7 @@ $browser->
     isParameter('action', 'edit')->
   end()->
   with('response')->begin()->
-    checkElement('#staging_WrongPeople_0_people_ref_name','Poilux')->
+    checkElement('input[id="staging_WrongPeople_0_people_ref_name"][value="Poilux"]')->
   end()->
   info('Correct the people error')->
   click("#submit",
