@@ -15,7 +15,7 @@ class PeopleInErrorForm extends BaseStagingPeopleForm
        'url_params' => array('name'=>$name),
        'box_title' => $this->getI18N()->__('Choose People'),
        'box_remove_title' => $this->getI18N()->__('Delete People'),
-       'confirm_msg' => $this->getI18N()->__('Deleting this people will remove it from your import, are you sure ?'),
+       'confirm_msg' => $this->getI18N()->__('deleteting_confirm'),
        'deletable' => true,
        'nullable' => true,
        'complete_url' => 'catalogue/completeName?table=people',

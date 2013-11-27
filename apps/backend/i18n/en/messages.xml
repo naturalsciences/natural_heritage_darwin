@@ -5836,6 +5836,10 @@
         <source>Name search</source>
         <target>Name search</target>
       </trans-unit>
+      <trans-unit id="1765">
+        <source>deleteting_confirm</source>
+        <target>Deleting this people will remove it from your import on this record, are you sure ?</target>
+      </trans-unit>      
     </body>
   </file>
 </xliff>
