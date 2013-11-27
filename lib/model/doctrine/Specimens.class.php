@@ -76,7 +76,13 @@ class Specimens extends BaseSpecimens
     $name = '';
     foreach ($codes as $code)
     {
-      $name .= '['.$code->getCodeFormated().'] ';
+      if ($code->getCodeCategory() == 'main') {
+        $name = '['.$code->getCodeFormated().'] ';
+        break;
+      }
+      else {
+        $name .= '['.$code->getCodeFormated().'] ';
+      }
     }
     $name = rtrim($name);
     return $name;
