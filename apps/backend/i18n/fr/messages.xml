@@ -5814,6 +5814,10 @@
         <source>Name search</source>
         <target>Recherche textuelle</target>
       </trans-unit>
+      <trans-unit id="1765">
+        <source>deleteting_confirm</source>
+        <target>Supprimer cette personne la supprimera également de votre import sur cet enregistrement, êtes vous sûr ?</target>
+      </trans-unit>   
     </body>
   </file>
 </xliff>

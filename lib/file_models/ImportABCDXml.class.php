@@ -160,7 +160,7 @@ class ImportABCDXml implements IImportModels
       case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break; //@TODO
       case "efg:NameComments" : $this->object->setNotion(strtolower($this->cdata)) ; break;
       case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
-      case "Notes" : $this->addComment("Sampling location") ; break ;
+      case "Notes" : $this->addComment() ; break ;
       case "Parameter" : $this->property->property->setPropertyType($this->cdata); if($this->cdata == 'DNA size') $this->property->property->setAppliesTo('DNA'); break;
       case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->object->handlePeople($this->people) ; break;
       case "Person" : $this->object->handlePeople($this->people,$this->staging) ; break;
@@ -235,7 +235,7 @@ class ImportABCDXml implements IImportModels
 
   }
 
-  private function addComment($is_staging = false, $notion =  'general comments')
+  private function addComment($is_staging = false, $notion =  'general')
   {
     $comment = new Comments() ;
     $comment->setComment($this->cdata) ;
