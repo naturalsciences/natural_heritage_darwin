@@ -130,7 +130,7 @@ class ImportABCDXml implements IImportModels
       case "TaxonIdentified":  $this->object->checkNoSelfInParents($this->staging); break;
       case "efg:LithostratigraphicAttribution" : $this->staging["litho_parents"] = $this->object->getParent() ; break;
       case "Identification" : $this->object->save($this->staging) ; break;
-      case "IdentificationHistory" : $this->addComment(false, 'taxonomy'); break;
+      case "IdentificationHistory" : $this->addComment(true, 'taxonomy'); break;
       case "ID-in-Database" : $this->object->desc .= "id in database :".$this->cdata." ;" ; break;
       case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break;
       case "efg:InformalNameString" : $this->object->informal = true ; break;
@@ -160,13 +160,13 @@ class ImportABCDXml implements IImportModels
       case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break; //@TODO
       case "efg:NameComments" : $this->object->setNotion(strtolower($this->cdata)) ; break;
       case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
-      case "Notes" : $this->addComment() ; break ;
+      case "Notes" : if($this->getPreviousTag() == "Identification") $this->addComment(true,"identifications") ; else $this->addComment() ;  break ;
       case "Parameter" : $this->property->property->setPropertyType($this->cdata); if($this->cdata == 'DNA size') $this->property->property->setAppliesTo('DNA'); break;
       case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->object->handlePeople($this->people) ; break;
       case "Person" : $this->object->handlePeople($this->people,$this->staging) ; break;
       case "efg:MineralDescriptionText" :
       case "PetrologyDescriptiveText" :
-      case "efg:PetrologyDescriptiveText" : $this->addComment() ; break;
+      case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'Mineralogy') ; break;
       case "PhaseOrStage" : $this->staging->setIndividualStage($this->cdata) ; break;
       case "Prefix" : $this->people['title'] = $this->cdata ; break;
       case "Preparation" : $this->addPreparation() ; break ;
@@ -193,7 +193,7 @@ class ImportABCDXml implements IImportModels
       case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break;
       case "storage:Position" : $this->staging->setSubContainerType('position'); $this->staging->setSubContainer($this->cdata) ; break;
       case "Text": if($this->getPreviousTag() == "Biotope") $this->addComment() ; break;
-      case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ;  $this->addComment('Publication') ; break;
+      case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ; if($this->getPreviousTag() == "UnitReference")  $this->addComment(true,'Publication') ; else $this->addComment(true, "Identifications") ;break;
       case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break;
       case "Unit" : $this->saveUnit(); break;
       case "UnitAssociation" : $this->staging->addRelated($this->object) ; $this->object=null; break;
@@ -241,7 +241,7 @@ class ImportABCDXml implements IImportModels
     $comment->setComment($this->cdata) ;
     $comment->setNotionConcerned($notion);
 
-    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification' || $this->getPreviousTag()=='Identifications' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag() == "efg:MineralogicalUnit")
+    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit")
     {
       $this->staging->addRelated($comment) ;
     }
@@ -308,7 +308,7 @@ class ImportABCDXml implements IImportModels
         $this->property = new ParsingProperties('Preparation') ;
         $this->property->property->setAppliesTo('Fixation') ;
         $this->property->property->setLowerValue($this->preparation_mat) ;
-        $this->staging->addProperty(true) ;
+        $this->addProperty(true) ;
     }
     elseif(strtolower($this->preparation_type) == "tissue preparation")
     {
