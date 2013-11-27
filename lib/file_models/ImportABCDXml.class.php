@@ -166,7 +166,7 @@ class ImportABCDXml implements IImportModels
       case "Person" : $this->object->handlePeople($this->people,$this->staging) ; break;
       case "efg:MineralDescriptionText" :
       case "PetrologyDescriptiveText" :
-      case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'Mineralogy') ; break;
+      case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'mineralogy') ; break;
       case "PhaseOrStage" : $this->staging->setIndividualStage($this->cdata) ; break;
       case "Prefix" : $this->people['title'] = $this->cdata ; break;
       case "Preparation" : $this->addPreparation() ; break ;
@@ -192,8 +192,8 @@ class ImportABCDXml implements IImportModels
       case "storage:Box" : $this->staging->setContainerType('box'); $this->staging->setContainer($this->cdata) ; break;
       case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break;
       case "storage:Position" : $this->staging->setSubContainerType('position'); $this->staging->setSubContainer($this->cdata) ; break;
-      case "Text": if($this->getPreviousTag() == "Biotope") $this->addComment() ; break;
-      case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ; if($this->getPreviousTag() == "UnitReference")  $this->addComment(true,'Publication') ; else $this->addComment(true, "Identifications") ;break;
+      case "Text": if($this->getPreviousTag() == "Biotope") $this->addComment(true, 'sampling_locations') ; break;
+      case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ; if($this->getPreviousTag() == "UnitReference")  $this->addComment(true,'publication') ; else $this->addComment(true, "identifications") ;break;
       case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break;
       case "Unit" : $this->saveUnit(); break;
       case "UnitAssociation" : $this->staging->addRelated($this->object) ; $this->object=null; break;
@@ -241,7 +241,7 @@ class ImportABCDXml implements IImportModels
     $comment->setComment($this->cdata) ;
     $comment->setNotionConcerned($notion);
 
-    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit")
+    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification' || $this->getPreviousTag()=='Identifications' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag() == "efg:MineralogicalUnit")
     {
       $this->staging->addRelated($comment) ;
     }
@@ -255,8 +255,20 @@ class ImportABCDXml implements IImportModels
   {
     if($unit) // if unit is true so it's a forced Staging property
       $this->staging->addRelated($this->property->property) ;
-    elseif($this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag()=='Identification') {
-      $this->staging->addRelated($this->property->property) ;
+    elseif($this->getPreviousTag("MeasurementsOrFacts") == "Unit") {
+      if($this->property->getPropertyType() == 'N total') {
+        if(ctype_digit($this->property->getLowerValue())) {
+          $this->staging->setPartCountMin($this->property->getLowerValue());
+          $this->staging->setPartCountMax($this->property->getLowerValue());
+        } else {
+          $this->staging->addRelated($this->property->property);
+        }
+      }
+      if($this->property->getPropertyType() == 'Social status') {
+        $this->staging->setIndividualSocialStatus($this->property->getLowerValue()) ;
+      } else {
+        $this->staging->addRelated($this->property->property);
+      }
     }
     elseif (in_array($this->getPreviousTag(),array('efg:RockPhysicalCharacteristic','efg:MineralMeasurementOrFact'))) {
       $this->staging->addRelated($this->property->property) ;
