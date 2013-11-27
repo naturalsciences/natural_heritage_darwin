@@ -40,6 +40,7 @@ class CommentsTable extends DarwinTable
       'position information' => 'Position information',
       'period information' => 'Period information',
       'general comments' => 'sampling point information',
+      'general' => 'General',
     ),
     'collection_maintenance' => array(
       'general information' => 'General information',
@@ -64,7 +65,8 @@ class CommentsTable extends DarwinTable
       'conservation_location' => 'Conservation location', 'preparation' => 'Preparation',
       'type' => 'Type', 'stage' => 'Stage', 'sex' => 'Sex',
       'social_status' => 'Social status', 'rock_form' => 'Rock form',
-      'identifications' => 'Identifications'
+      'identifications' => 'Identifications',
+      'publication' => 'Publication',
     ),
     'loans' => array(
       'usage' => 'Usage',
