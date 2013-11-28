@@ -261,12 +261,14 @@ class ImportABCDXml implements IImportModels
         if(ctype_digit($this->property->getLowerValue())) {
           $this->staging->setPartCountMin($this->property->getLowerValue());
           $this->staging->setPartCountMax($this->property->getLowerValue());
+          $this->property = null;
         } else {
           $this->staging->addRelated($this->property->property);
         }
       }
-      if($this->property->getPropertyType() == 'Social status') {
+      elseif($this->property->getPropertyType() == 'Social status') {
         $this->staging->setIndividualSocialStatus($this->property->getLowerValue()) ;
+        $this->property = null;
       } else {
         $this->staging->addRelated($this->property->property);
       }
