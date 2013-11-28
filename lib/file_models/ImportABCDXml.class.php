@@ -114,6 +114,7 @@ class ImportABCDXml implements IImportModels
       case "dna:GenBankNumber" : $this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ;
       case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ratio of absorbance 260/280","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
+      case "dna:Preservation" : $this->addComment(false, "conservation_mean"); break;
       case "Duration" : $this->property->setDateTo($this->cdata) ; break;
       case "FileURI" : $this->object->getFile($this->cdata) ; break;
       case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
@@ -241,7 +242,7 @@ class ImportABCDXml implements IImportModels
     $comment->setComment($this->cdata) ;
     $comment->setNotionConcerned($notion);
 
-    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification' || $this->getPreviousTag()=='Identifications' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag() == "efg:MineralogicalUnit")
+    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification' || $this->getPreviousTag()=='Identifications' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag() == "efg:MineralogicalUnit" || $this->getPreviousTag() == "dna:DNASample")
     {
       $this->staging->addRelated($comment) ;
     }
@@ -325,6 +326,12 @@ class ImportABCDXml implements IImportModels
     elseif(strtolower($this->preparation_type) == "tissue preparation")
     {
         $this->object = new ParsingMaintenance('Tissue Preparation') ;
+        $this->object->addMaintenance($this->staging) ;
+        $this->object->maintenance->setDescription($this->preparation_mat) ;
+    }
+    elseif(strtolower($this->preparation_type) == "tissue preservation")
+    {
+        $this->object = new ParsingMaintenance('Tissue Preservation') ;
         $this->object->addMaintenance($this->staging) ;
         $this->object->maintenance->setDescription($this->preparation_mat) ;
     }
