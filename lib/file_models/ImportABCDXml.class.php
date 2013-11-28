@@ -328,8 +328,14 @@ class ImportABCDXml implements IImportModels
         $this->object->addMaintenance($this->staging) ;
         $this->object->maintenance->setDescription($this->preparation_mat) ;
     }
-    else $this->staging['container_storage'] = $this->preparation_mat ;
-
+    else 
+    {
+        $comment = new Comments() ;
+        $comment->setComment($this->preparation_mat) ;
+        $comment->setNotionConcerned('conservation_mean');
+        $this->staging->addRelated($comment) ;
+        //$this->staging['container_storage'] = $this->preparation_mat ;
+    }
   }
   private function saveUnit()
   {
