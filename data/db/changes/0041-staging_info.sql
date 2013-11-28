@@ -521,7 +521,7 @@ BEGIN
     source_id, quantity, unit)
         SELECT nextval('specimens_relationships_id_seq'), relation_line.spec_ref, relation_line.relationship_type, unit_type, institution_ref,
         taxon_ref, mineral_ref, source_name, source_id, quantity, unit
-        from staging_relationship where record_id=relation_line.id ;
+        from staging_relationship where id=relation_line.id ;
     END IF ;
     DELETE FROM staging_relationship WHERE id = relation_line.id ;
   END LOOP;

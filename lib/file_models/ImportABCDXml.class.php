@@ -83,7 +83,7 @@ class ImportABCDXml implements IImportModels
       case "AppliesTo" : $this->property->setAppliesTo($this->cdata); break;
       case "AreaClass" : $this->object->tag_group_name = $this->cdata ; break;
       case "AreaName" : $this->object->tag_value = $this->cdata ; break;
-      case "AssociatedUnitID" : if(in_array($this->cdata, array_keys($this->unit_id_ref))) $this->object->setStagingRelatedRef($this->unit_id_ref[$this->cdata]); else $this->object->setSourceId($this->cdata) ; break;
+      case "AssociatedUnitID" : if(in_array($this->cdata, array_keys($this->unit_id_ref))) $this->object->setStagingRelatedRef($this->unit_id_ref[$this->cdata]); else { $this->object->setSourceId($this->cdata) ; $this->object->setUnitType('external') ;} break;
       case "AssociatedUnitSourceInstitutionCode" : $this->object->setInstitutionName($this->cdata) ; break;
       case "AssociatedUnitSourceName" : $this->object->setSourceName($this->cdata) ; break;
       case "AssociationType" : $this->object->setRelationshipType($this->cdata) ; break;
