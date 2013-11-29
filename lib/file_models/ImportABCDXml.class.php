@@ -207,7 +207,7 @@ class ImportABCDXml implements IImportModels
       case "Unit" : $this->saveUnit(); break;
       case "UnitAssociation" : $this->staging->addRelated($this->object) ; $this->object=null; break;
       case "UnitID" : $this->addCode() ; $this->name = $this->cdata ; break ;
-      case "SourceID" : if($this->cdata != 'Not defined') { $this->addCode('dataset') ;} break ;
+      case "SourceID" : if($this->cdata != 'Not defined') { $this->addCode('secondary') ;} break ;
       case "UnitOfMeasurement" : $this->property->property->setPropertyUnit($this->cdata); break;
       case "Accuracy" : $this->property->property->setPropertyAccuracy($this->cdata); break;
       case "UpperValue" : $this->property->property->setUpperValue($this->cdata) ; break;
