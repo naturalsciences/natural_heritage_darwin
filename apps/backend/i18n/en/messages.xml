@@ -5880,6 +5880,10 @@
         <source>Unit</source>
         <target>Unit</target>
       </trans-unit>
+      <trans-unit id="1776">
+        <source>Edit Specimen</source>
+        <target>Edit Specimen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

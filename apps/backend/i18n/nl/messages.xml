@@ -5856,6 +5856,10 @@
         <source>Unit</source>
         <target>Eenheid</target>
       </trans-unit>
+      <trans-unit id="1776">
+        <source>Edit Specimen</source>
+        <target>Wijzig stalen</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
