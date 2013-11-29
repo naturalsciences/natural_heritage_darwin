@@ -287,6 +287,20 @@ class ImportABCDXml implements IImportModels
     else {
       $this->object->addStagingInfo($this->property->property, $this->staging->getId());
     }
+
+
+    $pattern = '/(\d+([\,\.]\d+)?)\W?([a-zA-Z\°]+.*)/';
+    // if unit not defined
+    if($this->property && $this->property->property && $this->property->property->getPropertyUnit() =='') {
+      // try to guess unit
+      $val = $this->property->getLowerValue();
+      $val = str_replace('°', 'deg',$val);
+      if(preg_match($pattern, $val, $matches)) {
+        $val = str_replace('deg', '°',$matches[3]);
+        $this->property->property->setPropertyUnit($val);
+        $this->property->property->setLowerValue($matches[1]);
+      }
+    }
   }
 
   private function saveObjects()
@@ -297,7 +311,7 @@ class ImportABCDXml implements IImportModels
       catch(Doctrine_Exception $ne)
       {
         $e = new DarwinPgErrorParser($ne);
-        $this->errors_reported .= "Unit ".$this->name." : ".$object->getTable()->getTableName()." were not saved".$e->getMessage().";";
+        $this->errors_reported .= "Unit ".$this->name." : ".$object->getTable()->getTableName()." were not saved : ".$e->getMessage().";";
       }
     }
     foreach($this->staging_tags as $object)
@@ -307,7 +321,7 @@ class ImportABCDXml implements IImportModels
       catch(Doctrine_Exception $ne)
       {
         $e = new DarwinPgErrorParser($ne);
-        $this->errors_reported .= "NamedArea ".$object->getSubGroupName()." were not saved".$e->getMessage().";";
+        $this->errors_reported .= "NamedArea ".$object->getSubGroupName()." were not saved : ".$e->getMessage().";";
       }
     }
     $this->staging_tags = array() ;
@@ -365,7 +379,7 @@ class ImportABCDXml implements IImportModels
     catch(Doctrine_Exception $ne)
     {
       $e = new DarwinPgErrorParser($ne);
-      $this->errors_reported .= "Unit ".$this->name." object were not saved:".$e->getMessage().";";
+      $this->errors_reported .= "Unit ".$this->name." object were not saved: ".$e->getMessage().";";
       $ok = false ;
     }
     if ($ok)
