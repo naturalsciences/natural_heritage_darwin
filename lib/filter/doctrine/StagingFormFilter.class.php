@@ -24,8 +24,17 @@ class StagingFormFilter extends BaseStagingFormFilter
     $this->validatorSchema['only_errors'] = new sfValidatorBoolean(array('required' => false));
     $this->setDefault('only_errors', 1);
 
+    $stype = array(
+      'zoology'=> 'Zoology',
+      'geology'=> 'Geology',
+    );
+    $this->widgetSchema['bio_geo']  = new sfWidgetFormChoice(array('expanded' =>true,'choices' => $stype));
+    $this->validatorSchema['bio_geo'] =  new sfValidatorChoice(array('choices' => array_keys($stype), 'required'=>false,'empty_value'=>'zoology'));
+    $this->setDefault('bio_geo', 'zoology');
+
     $this->widgetSchema->setLabels(array(
       'only_errors'=>'Show only row with errors',
+      'bio_geo' => 'Display type',
     ));
   }
 
