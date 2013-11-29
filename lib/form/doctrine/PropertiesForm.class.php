@@ -127,7 +127,7 @@ class PropertiesForm extends BasePropertiesForm
     $this->widgetSchema['lower_value'] = new sfWidgetFormInput();
     $this->widgetSchema['upper_value'] = new sfWidgetFormInput();
     $this->widgetSchema['property_accuracy'] = new sfWidgetFormInput();
-    $this->widgetSchema['property_unit']->setLabel("Value's unit");
-    $this->widgetSchema['property_accuracy']->setLabel('Value accuracy');
+    $this->widgetSchema['property_unit']->setLabel("Unit");
+    $this->widgetSchema['property_accuracy']->setLabel('Accuracy');
   }
 }

@@ -5864,6 +5864,22 @@
         <source>Upper value</source>
         <target>Upper value</target>
       </trans-unit>
+      <trans-unit id="1772">
+        <source>Method</source>
+        <target>Method</target>
+      </trans-unit>
+      <trans-unit id="1773">
+        <source>Is quantitative</source>
+        <target>Is quantitative</target>
+      </trans-unit>
+      <trans-unit id="1774">
+        <source>Is range</source>
+        <target>Is range</target>
+      </trans-unit>
+      <trans-unit id="1775">
+        <source>Unit</source>
+        <target>Unit</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

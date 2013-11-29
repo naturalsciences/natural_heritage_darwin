@@ -5840,6 +5840,22 @@
         <source>Upper value</source>
         <target>Laagste waarde</target>
       </trans-unit>
+      <trans-unit id="1772">
+        <source>Method</source>
+        <target>Methode</target>
+      </trans-unit>
+      <trans-unit id="1773">
+        <source>Is quantitative</source>
+        <target>Kwantitatief ?</target>
+      </trans-unit>
+      <trans-unit id="1774">
+        <source>Is range</source>
+        <target>Waarden interval ?</target>
+      </trans-unit>
+      <trans-unit id="1775">
+        <source>Unit</source>
+        <target>Eenheid</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

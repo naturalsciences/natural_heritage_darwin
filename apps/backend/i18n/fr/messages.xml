@@ -5838,6 +5838,22 @@
         <source>Upper value</source>
         <target>Valeur suppérieure</target>
       </trans-unit>
+      <trans-unit id="1772">
+        <source>Method</source>
+        <target>Méthode</target>
+      </trans-unit>
+      <trans-unit id="1773">
+        <source>Is quantitative</source>
+        <target>Quantitatif ?</target>
+      </trans-unit>
+      <trans-unit id="1774">
+        <source>Is range</source>
+        <target>Interval de valeurs?</target>
+      </trans-unit>
+      <trans-unit id="1775">
+        <source>Unit</source>
+        <target>Unité</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

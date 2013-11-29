@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th><?php echo __('Type');?></th>
-      <th><?php echo __('Applies To');?></th>
+      <th><?php echo __('Applies to');?></th>
       <th><?php echo __('Date From');?></th>
       <th><?php echo __('Date To');?></th>
       <th><?php echo __('Values');?></th>
@@ -12,7 +12,7 @@
   <tbody>
     <?php foreach($properties as $property):?>
     <tr>
-      <td>  
+      <td>
     	  <a class="link_catalogue" title="<?php echo __('Edit Properties');?>" href="<?php echo url_for('property/add?table='.$table.'&rid='.$property->getId().'&id='.$eid); ?>">
 	        <?php echo $property->getPropertyType();?>
     	  </a>
@@ -43,7 +43,7 @@
 
 <br />
 <?php echo image_tag('add_green.png');?>
-<a title="<?php echo __('Add Properties');?>" class="link_catalogue" href="<?php echo url_for('property/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add property');?></a> 
+<a title="<?php echo __('Add Properties');?>" class="link_catalogue" href="<?php echo url_for('property/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add Properties');?></a>
 <?php if(count(Properties::getModels($table)) > 1):?>
   <?php echo __("with this pre defined template") ; ?>:
   <select id='property_template'>
