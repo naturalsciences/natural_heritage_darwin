@@ -5761,7 +5761,7 @@
         <target>Het importeren vervolgen</target>
       </trans-unit>
       <trans-unit id="1747">
-        <source>Applies To</source>
+        <source>Applies to</source>
         <target>Geldig voor</target>
       </trans-unit>
       <trans-unit id="1748">
@@ -5819,7 +5819,27 @@
       <trans-unit id="1765">
         <source>deleteting_confirm</source>
         <target>Deleting this people will remove it from your import on this record, are you sure ?</target>
-      </trans-unit>   
+      </trans-unit>
+      <trans-unit id="1767">
+        <source>Property unit</source>
+        <target>Eenheid eigenschap</target>
+      </trans-unit>
+          <trans-unit id="1768">
+        <source>Add another unit</source>
+        <target>Een andere eenheid toevoegen</target>
+      </trans-unit>
+          <trans-unit id="1769">
+        <source>Pick a unit in the list</source>
+        <target>Kies een eenheid uit de lijst</target>
+      </trans-unit>
+      <trans-unit id="1770">
+        <source>Lower value</source>
+        <target>Hoogste waarde</target>
+      </trans-unit>
+      <trans-unit id="1771">
+        <source>Upper value</source>
+        <target>Laagste waarde</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

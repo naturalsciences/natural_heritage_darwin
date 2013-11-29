@@ -5765,8 +5765,8 @@
         <target>Continue import</target>
       </trans-unit>
       <trans-unit id="1747">
-        <source>Applies To</source>
-        <target>Applies To</target>
+        <source>Applies to</source>
+        <target>Applies to</target>
       </trans-unit>
       <trans-unit id="1748">
         <source>import_taxon_parent_info</source>
@@ -5839,7 +5839,31 @@
       <trans-unit id="1765">
         <source>deleteting_confirm</source>
         <target>Deleting this people will remove it from your import on this record, are you sure ?</target>
-      </trans-unit>      
+      </trans-unit>
+      <trans-unit id="1766">
+        <source>Property unit</source>
+        <target>Property unit</target>
+      </trans-unit>
+      <trans-unit id="1767">
+        <source>Property unit</source>
+        <target>Property unit</target>
+      </trans-unit>
+          <trans-unit id="1768">
+        <source>Add another unit</source>
+        <target>Add another unit</target>
+      </trans-unit>
+          <trans-unit id="1769">
+        <source>Pick a unit in the list</source>
+        <target>Pick a unit in the list</target>
+      </trans-unit>
+      <trans-unit id="1770">
+        <source>Lower value</source>
+        <target>Lower value</target>
+      </trans-unit>
+      <trans-unit id="1771">
+        <source>Upper value</source>
+        <target>Upper value</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

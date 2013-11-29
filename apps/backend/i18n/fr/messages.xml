@@ -5759,8 +5759,8 @@
         <target>Continuer l'import</target>
       </trans-unit>
       <trans-unit id="1747">
-        <source>Applies To</source>
-        <target>Applies To</target>
+        <source>Applies to</source>
+        <target>S'applique à</target>
       </trans-unit>
       <trans-unit id="1748">
         <source>import_taxon_parent_info</source>
@@ -5817,7 +5817,27 @@
       <trans-unit id="1765">
         <source>deleteting_confirm</source>
         <target>Supprimer cette personne la supprimera également de votre import sur cet enregistrement, êtes vous sûr ?</target>
-      </trans-unit>   
+      </trans-unit>
+      <trans-unit id="1767">
+        <source>Property unit</source>
+        <target>Unité</target>
+      </trans-unit>
+      <trans-unit id="1768">
+        <source>Add another unit</source>
+        <target>Ajouter une autre unité</target>
+      </trans-unit>
+      <trans-unit id="1769">
+        <source>Pick a unit in the list</source>
+        <target>Choisir une unité dans la liste</target>
+      </trans-unit>
+      <trans-unit id="1770">
+        <source>Lower value</source>
+        <target>Valeur inférieure</target>
+      </trans-unit>
+      <trans-unit id="1771">
+        <source>Upper value</source>
+        <target>Valeur suppérieure</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
