@@ -265,7 +265,7 @@ class ImportABCDXml implements IImportModels
     if($unit) // if unit is true so it's a forced Staging property
       $this->staging->addRelated($this->property->property) ;
     elseif($this->getPreviousTag("MeasurementsOrFacts") == "Unit") {
-      if($this->property->getPropertyType() == 'N total') {
+      if(strtolower($this->property->getPropertyType()) == 'n total') {
         if(ctype_digit($this->property->getLowerValue())) {
           $this->staging->setPartCountMin($this->property->getLowerValue());
           $this->staging->setPartCountMax($this->property->getLowerValue());
@@ -274,7 +274,7 @@ class ImportABCDXml implements IImportModels
           $this->staging->addRelated($this->property->property);
         }
       }
-      elseif($this->property->getPropertyType() == 'Social status') {
+      elseif(strtolower($this->property->getPropertyType()) == 'social status') {
         $this->staging->setIndividualSocialStatus($this->property->getLowerValue()) ;
         $this->property = null;
       } else {
