@@ -451,7 +451,7 @@ class FuzzyDateTime extends DateTime
     {
       $format = $this->dateFormat;
       if ($this->getWithTime())
-	$format .= ' '.$this->timeFormat;
+        $format .= ' '.$this->timeFormat;
     }
 
     $patterns = array(
@@ -490,7 +490,18 @@ class FuzzyDateTime extends DateTime
     return $this->getDateTime($this->getWithTime(), $this->getDateFormat(), $this->getTimeFormat());
   }
 
-
+  public function addTime($time) {
+    $ntime = DateTime::createFromFormat('H:i:s', $time);
+    if($ntime) {
+      $this->setTime($ntime->format('H'), $ntime->format('i'), $ntime->format('s'));
+      $mask = $this->getMask();
+      if( ! (self::getMaskFor('hour') & $mask) ) $mask += self::getMaskFor('hour');
+      if( ! (self::getMaskFor('minute') & $mask) ) $mask += self::getMaskFor('minute');
+      if( ! (self::getMaskFor('second') & $mask) ) $mask += self::getMaskFor('second');
+      $this->setWithTime(true);
+      $this->setMask($mask);
+    }
+  }
  /**
    * Returns a valid date from a string
    *

@@ -51,7 +51,7 @@ class ImportABCDXml implements IImportModels
       case "efg:MineralRockIdentified" :
       case "HigherTaxa" : $this->object->catalogue_parent = new Hstore() ;break;
       case "Identification" : $this->object = new ParsingIdentifications() ; break;
-      case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ; 
+      case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ;
                                          else $this->property = new ParsingProperties() ; break;
       case "MultiMediaObject" : $this->object = new ParsingMultimedia() ; break;
       case "PersonName" : $this->people = new StagingPeople() ; break;
@@ -106,6 +106,14 @@ class ImportABCDXml implements IImportModels
           if( $this->object->getFromDate())$this->staging["gtu_from_date_mask"] =  $this->object->getFromDate()->getMask() ;
           if( $this->object->getToDate()) $this->staging["gtu_to_date_mask"] =  $this->object->getToDate()->getMask() ;
         } ; break;
+      case "TimeOfDayBegin": if($this->getPreviousTag() == "DateTime"){
+          $this->object->GTUdate['from']->addTime($this->cdata);
+        }
+        break;
+      case "TimeOfDayEnd": if($this->getPreviousTag() == "DateTime"){
+          $this->object->GTUdate['to']->addTime($this->cdata);
+        }
+        break;
       case "dna:Concentration" : $this->property = new ParsingProperties("Concentration","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->property->property->setPropertyUnit("ng/µl") ; $this->addProperty(true) ; break;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break;
       case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); $this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask()); break;
@@ -337,7 +345,7 @@ class ImportABCDXml implements IImportModels
         $this->object->addMaintenance($this->staging) ;
         $this->object->maintenance->setDescription($this->preparation_mat) ;
     }
-    else 
+    else
     {
         $comment = new Comments() ;
         $comment->setComment($this->preparation_mat) ;
