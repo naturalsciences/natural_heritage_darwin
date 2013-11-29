@@ -1776,12 +1776,12 @@ alter table specimens_accompanying drop column old_id;
 ALTER TABLE specimen_collecting_methods
   ADD CONSTRAINT fk_specimen_collecting_methods_specimen FOREIGN KEY (specimen_ref)
       REFERENCES specimens (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION;
+      ON UPDATE NO ACTION ON DELETE CASCADE;
 
 ALTER TABLE specimen_collecting_tools
   ADD CONSTRAINT fk_specimen_collecting_tools_specimen FOREIGN KEY (specimen_ref)
       REFERENCES specimens (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION;
+      ON UPDATE NO ACTION ON DELETE CASCADE;
 
 ALTER TABLE specimens_accompanying
   ADD CONSTRAINT fk_specimens_accompanying_specimens FOREIGN KEY (specimen_ref)
@@ -1818,7 +1818,7 @@ select 'Do not forget to run : php symfony darwin:migrate --env=prod 44';
 
 GRANT SELECT ON specimens TO d2viewer;
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens TO cebmpad;
-ALTER SEQUENCE new_specimens_id_seq RENAME TO specimens_id_seq; 
+ALTER SEQUENCE new_specimens_id_seq RENAME TO specimens_id_seq;
 
 GRANT USAGE, SELECT ON SEQUENCE darwin2.specimens_id_seq TO cebmpad;
 
