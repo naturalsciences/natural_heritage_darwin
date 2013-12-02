@@ -5817,7 +5817,31 @@
       <trans-unit id="1765">
         <source>deleteting_confirm</source>
         <target>Supprimer cette personne la supprimera également de votre import sur cet enregistrement, êtes vous sûr ?</target>
+      </trans-unit>
+      <trans-unit id="1766">
+        <source>Error(s) found</source>
+        <target>Nbr d'erreurs</target>
+      </trans-unit>
+      <trans-unit id="1767">
+        <source>Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file</source>
+        <target>Des erreurs sont survenues durant l'import, regardez ces dernieres via le bouton d'erreur (triangle jaune), vous pouvez continuer votre import sans vous occuper de ces erreurs ou supprimer votre import, réparer votre fichier et le ré-importer ensuite</target>
+      </trans-unit>
+      <trans-unit id="1768">
+        <source>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</source>
+        <target>Ce bouton annulera l'import de votre fichier, ce dernier aura un état "annulé", ce qui vous permettra de conserver une trace de celui-ci, meme si les données n'ont pas été importées</target>
       </trans-unit>   
+      <trans-unit id="1769">
+        <source>warning_button_explanation</source>
+        <target>Ce bouton, si présent, vous montrera les erreurs survenues durant l'import. C'est a vous de décider de continuer le processus d'import sans vous occuper de ces erreurs, ou bien de corriger votre fichier et le ré-importer ensuite.</target>
+      </trans-unit>
+      <trans-unit id="1770">
+        <source>This file has been completly been imported in DaRWIN</source>
+        <target>Ce fichier a été compètement importé dans DaRWIN.</target>
+      </trans-unit>
+      <trans-unit id="1771">
+        <source>ok_line_explanation</source>
+        <target>Vos lignes &#039;Ok&#039; sont en cours d'import dans DaRWIN</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

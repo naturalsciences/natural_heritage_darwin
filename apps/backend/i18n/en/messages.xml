@@ -5839,7 +5839,31 @@
       <trans-unit id="1765">
         <source>deleteting_confirm</source>
         <target>Deleting this people will remove it from your import on this record, are you sure ?</target>
-      </trans-unit>      
+      </trans-unit>
+      <trans-unit id="1766">
+        <source>Error(s) found</source>
+        <target>Error(s) found</target>
+      </trans-unit>   
+      <trans-unit id="1767">
+        <source>Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file</source>
+        <target>Errors appeared during import, check these errors with the error icon (yellow triangle), you can continue the import process or delete the entry and repair your file</target>
+      </trans-unit>
+      <trans-unit id="1768">
+        <source>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</source>
+        <target>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</target>
+      </trans-unit>   
+      <trans-unit id="1769">
+        <source>warning_button_explanation</source>
+        <target>This button will show you all errors occured during import, it&#039;s your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
+      </trans-unit>
+      <trans-unit id="1770">
+        <source>This file has been completly been imported in DaRWIN</source>
+        <target>This file has been completly been imported in DaRWIN</target>
+      </trans-unit>
+      <trans-unit id="1771">
+        <source>ok_line_explanation</source>
+        <target>Your &#039;Ok&#039; lines are beeing imported in DaRWIN</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

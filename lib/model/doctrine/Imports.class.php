@@ -31,7 +31,7 @@ class Imports extends BaseImports
     'loaded'=>'Your file has been loaded, but still need to be checked',
     'checking'=> 'Your file has been loaded and is being checked',
     'pending'=> 'Your file has been loaded and checked, you can edit line in errors or import corrects lines',
-    'processing'=> 'Your \'Ok\' lines are beeing imported in DaRWIN',
+    'processing'=> 'ok_line_explanation',
     'finished' => 'This file has been completly been imported in DaRWIN',
     'aborted' => 'This file has been aborted. This line will remain for a limited time in the summary list just for information purposes only.',
     'error' => 'Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file',
