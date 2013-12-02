@@ -512,7 +512,7 @@ class FuzzyDateTime extends DateTime
    */
   public static function getValidDate($date)
   {
-    $pattern = '/(\d\d\d\d)(\-(0[1-9]|1[012])(\-((0[1-9])|1\d|2\d|3[01])(T(0\d|1\d|2[0-3])(:([0-5]\d)(:([0-5]\d))?))?)?)?|\-\-(0[1-9]|1[012])(\-(0[1-9]|1\d|2\d|3[01]))?|\-\-\-(0[1-9]|1\d|2\d|3[01])/';
+    $pattern = '/^(\d\d\d\d)(\-(0[1-9]|1[012])(\-((0[1-9])|1\d|2\d|3[01])(T(0\d|1\d|2[0-3])(:([0-5]\d)(:([0-5]\d))?))?)?)?|\-\-(0[1-9]|1[012])(\-(0[1-9]|1\d|2\d|3[01]))?|\-\-\-(0[1-9]|1\d|2\d|3[01])/';
 
     if(preg_match($pattern, $date, $matches)) {
 
@@ -527,7 +527,6 @@ class FuzzyDateTime extends DateTime
         $date_part['minute'] = $matches[10];
       if(isset($matches[12]))
         $date_part['second'] = $matches[12];
-
       $fuzzy =   new FuzzyDateTime($date_part,56, true, $date_part['hour']=='');
       $fuzzy->setMaskFromDate($date_part);
       return $fuzzy;
