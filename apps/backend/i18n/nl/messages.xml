@@ -5884,6 +5884,14 @@
         <source>ok_line_explanation</source>
         <target>Your 'Ok' lines are beeing imported in DaRWIN</target>
       </trans-unit>
+      <trans-unit id="1783">
+        <source>Display of import file</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1784">
+        <source>Correction of import row</source>
+        <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

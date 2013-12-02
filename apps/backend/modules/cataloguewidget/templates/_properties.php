@@ -3,9 +3,9 @@
     <tr>
       <th><?php echo __('Type');?></th>
       <th><?php echo __('Applies to');?></th>
+      <th><?php echo __('Values');?></th>      
       <th><?php echo __('Date From');?></th>
       <th><?php echo __('Date To');?></th>
-      <th><?php echo __('Values');?></th>
       <th></th>
     </tr>
   </thead>
@@ -18,8 +18,6 @@
     	  </a>
       </td>
       <td><?php echo $property->getAppliesTo();?></td>
-      <td class="datesNum"><?php echo $property->getFromDateMasked(ESC_RAW);?></td>
-      <td class="datesNum"><?php echo $property->getToDateMasked(ESC_RAW);?></td>
       <td>
         <?php echo $property->getLowerValue();?>
         <?php if($property->getUpperValue() != ''):?>
@@ -32,6 +30,8 @@
         <?php endif;?>
 
       </td>
+      <td class="datesNum"><?php echo $property->getFromDateMasked(ESC_RAW);?></td>
+      <td class="datesNum"><?php echo $property->getToDateMasked(ESC_RAW);?></td>      
       <td class="widget_row_delete">
         <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=properties&id='.$property->getId());?>" title="<?php echo __('Delete Properties') ?>"><?php echo image_tag('remove.png'); ?>
         </a>
