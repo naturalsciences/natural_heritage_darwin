@@ -119,11 +119,10 @@ class stagingActions extends DarwinActions
             $v->setLinkedInfo($link['cnt']);
         }
       }
-
       $this->displayModel = new DisplayImportABCD();
-      $this->fields = $this->displayModel->getColumns();
+      $this->search_type = $this->form->getValue('bio_geo');
+      $this->fields = $this->displayModel->getColumns($this->search_type);
     }
-
   }
   public function executeIndex(sfWebRequest $request)
   {

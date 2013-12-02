@@ -1597,12 +1597,12 @@ drop table specimen_parts;
 drop table specimen_individuals;
 drop table specimens_flat;
 
+alter table specimens drop constraint fk_specimens_host_specimen;
+drop table specimens;
+
 drop sequence specimens_id_seq;
 drop sequence specimen_individuals_id_seq;
 drop sequence specimen_parts_id_seq;
-
-alter table specimens drop constraint fk_specimens_host_specimen;
-drop table specimens;
 
 alter table new_specimens rename to specimens;
 
@@ -1776,12 +1776,12 @@ alter table specimens_accompanying drop column old_id;
 ALTER TABLE specimen_collecting_methods
   ADD CONSTRAINT fk_specimen_collecting_methods_specimen FOREIGN KEY (specimen_ref)
       REFERENCES specimens (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION;
+      ON UPDATE NO ACTION ON DELETE CASCADE;
 
 ALTER TABLE specimen_collecting_tools
   ADD CONSTRAINT fk_specimen_collecting_tools_specimen FOREIGN KEY (specimen_ref)
       REFERENCES specimens (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION;
+      ON UPDATE NO ACTION ON DELETE CASCADE;
 
 ALTER TABLE specimens_accompanying
   ADD CONSTRAINT fk_specimens_accompanying_specimens FOREIGN KEY (specimen_ref)
@@ -1805,10 +1805,6 @@ alter table specimens drop column spec_id;
 
 \i reports/ticketing/labeling.sql
 
-CREATE TRIGGER trg_chk_specimens_not_loaned BEFORE DELETE
-  ON specimens FOR EACH ROW
-  EXECUTE PROCEDURE chk_specimens_not_loaned();
-
 SET SESSION session_replication_role = replica;
 delete from template_table_record_ref where referenced_relation ='specimens' or referenced_relation ='specimen_individuals';
 
@@ -1822,11 +1818,12 @@ select 'Do not forget to run : php symfony darwin:migrate --env=prod 44';
 
 GRANT SELECT ON specimens TO d2viewer;
 GRANT SELECT, INSERT, UPDATE, DELETE ON darwin2.specimens TO cebmpad;
- GRANT USAGE, SELECT ON SEQUENCE darwin2.specimens_id_seq TO cebmpad;
+ALTER SEQUENCE new_specimens_id_seq RENAME TO specimens_id_seq;
+
+GRANT USAGE, SELECT ON SEQUENCE darwin2.specimens_id_seq TO cebmpad;
 
 select setval('specimens_id_seq'::regclass, (select case when max(id) = 0 then 1 else max(id) end from only darwin2.specimens));
 
-ALTER SEQUENCE new_specimens_id_seq RENAME TO specimens_id_seq;
 ALTER TABLE specimens ALTER COLUMN id SET DEFAULT nextval('specimens_id_seq'::regclass);
 
 commit;

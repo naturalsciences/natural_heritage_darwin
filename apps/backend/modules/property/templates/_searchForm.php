@@ -39,11 +39,11 @@
 </table>
 
     <div class="search_results">
-      <div class="search_results_content"> 
+      <div class="search_results_content">
       </div>
     </div>
   </div>
-</form> 
+</form>
 <div>
 <script>
 $(document).ready(function () {

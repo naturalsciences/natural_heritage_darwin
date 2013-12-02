@@ -38,6 +38,17 @@ class ParsingProperties extends importABCDXml
   {
     if(strtotime($duration)) $this->property->setDateTo($this->date_from+$duration) ;
   }
+  
+  public function getPropertyType()
+  {
+    return $this->property->getPropertyType();
+  }
+  
+  public function getLowerValue()
+  {
+    return $this->property->getLowerValue();
+  }
+  
 /*
   public function getLowerValue($data, $tag, $staging)
   {

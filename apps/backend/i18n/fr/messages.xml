@@ -5759,8 +5759,8 @@
         <target>Continuer l'import</target>
       </trans-unit>
       <trans-unit id="1747">
-        <source>Applies To</source>
-        <target>Applies To</target>
+        <source>Applies to</source>
+        <target>S'applique à</target>
       </trans-unit>
       <trans-unit id="1748">
         <source>import_taxon_parent_info</source>
@@ -5818,27 +5818,67 @@
         <source>deleteting_confirm</source>
         <target>Supprimer cette personne la supprimera également de votre import sur cet enregistrement, êtes vous sûr ?</target>
       </trans-unit>
-      <trans-unit id="1766">
+      <trans-unit id="1767">
+        <source>Property unit</source>
+        <target>Unité</target>
+      </trans-unit>
+      <trans-unit id="1768">
+        <source>Add another unit</source>
+        <target>Ajouter une autre unité</target>
+      </trans-unit>
+      <trans-unit id="1769">
+        <source>Pick a unit in the list</source>
+        <target>Choisir une unité dans la liste</target>
+      </trans-unit>
+      <trans-unit id="1770">
+        <source>Lower value</source>
+        <target>Valeur inférieure</target>
+      </trans-unit>
+      <trans-unit id="1771">
+        <source>Upper value</source>
+        <target>Valeur suppérieure</target>
+      </trans-unit>
+      <trans-unit id="1772">
+        <source>Method</source>
+        <target>Méthode</target>
+      </trans-unit>
+      <trans-unit id="1773">
+        <source>Is quantitative</source>
+        <target>Quantitatif ?</target>
+      </trans-unit>
+      <trans-unit id="1774">
+        <source>Is range</source>
+        <target>Interval de valeurs?</target>
+      </trans-unit>
+      <trans-unit id="1775">
+        <source>Unit</source>
+        <target>Unité</target>
+      </trans-unit>
+      <trans-unit id="1776">
+        <source>Edit Specimen</source>
+        <target>Editer un Spécimen</target>
+      </trans-unit>
+      <trans-unit id="1777">
         <source>Error(s) found</source>
         <target>Nbr d'erreurs</target>
       </trans-unit>
-      <trans-unit id="1767">
+      <trans-unit id="1778">
         <source>Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file</source>
         <target>Des erreurs sont survenues durant l'import, regardez ces dernieres via le bouton d'erreur (triangle jaune), vous pouvez continuer votre import sans vous occuper de ces erreurs ou supprimer votre import, réparer votre fichier et le ré-importer ensuite</target>
       </trans-unit>
-      <trans-unit id="1768">
+      <trans-unit id="1779">
         <source>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</source>
         <target>Ce bouton annulera l'import de votre fichier, ce dernier aura un état "annulé", ce qui vous permettra de conserver une trace de celui-ci, meme si les données n'ont pas été importées</target>
       </trans-unit>   
-      <trans-unit id="1769">
+      <trans-unit id="1780">
         <source>warning_button_explanation</source>
         <target>Ce bouton, si présent, vous montrera les erreurs survenues durant l'import. C'est a vous de décider de continuer le processus d'import sans vous occuper de ces erreurs, ou bien de corriger votre fichier et le ré-importer ensuite.</target>
       </trans-unit>
-      <trans-unit id="1770">
+      <trans-unit id="1781">
         <source>This file has been completly been imported in DaRWIN</source>
         <target>Ce fichier a été compètement importé dans DaRWIN.</target>
       </trans-unit>
-      <trans-unit id="1771">
+      <trans-unit id="1782">
         <source>ok_line_explanation</source>
         <target>Vos lignes &#039;Ok&#039; sont en cours d'import dans DaRWIN</target>
       </trans-unit>

@@ -1,3 +1,4 @@
+<?php if(isset($search)):?>
 <?php if(count($search)==0):?>
 
   <div class="warn_message no_record_msg">
@@ -17,14 +18,13 @@
 <?php else:?>
   <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
   <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout)); ?>
-
   <div class="edition">
   <table class="staging_table results_container results">
     <thead>
       <th><?php echo __('Actions');?></th>
       <th><?php echo __('Error(s) found') ; ?></th>
       <th><?php echo __('Status');?></th>
-      <th><?php echo __('Linked Info');?></th>      
+      <th><?php echo __('Linked Info');?></th>
       <th><?php echo __('Codes');?></th>
       <?php foreach($fields as $name=>$title):?>
         <th><?php echo __($title);?></th>
@@ -90,8 +90,14 @@ $(document).ready(function () {
 });
 </script>
 <?php endif;?>
-  <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?></div>&#x09;
+  <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?></div>
   <div class="blue_link float_left"><?php echo link_to(__('Import "Ok" lines'), 'staging/markok?import='.$import->getId() );?></div>&#x09;
-<?php if(count($search)!==0):?>
+<?php if(count($search)!==0 && $search_type=='zoology'):?>
   <div class="blue_link float_left"><?php echo link_to(__('Try to create missing taxons'), 'staging/createTaxon?import='.$import->getId() );?></div>
 <?php endif;?>
+<?php //Else not valid form
+  else:?>
+  <?php echo $form['only_errors']->renderError() ?>
+  <?php echo $form['bio_geo']->renderError() ?>
+<?php endif;?>
+

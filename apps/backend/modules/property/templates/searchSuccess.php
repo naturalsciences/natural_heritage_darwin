@@ -12,7 +12,6 @@
     <table class="results <?php if($is_choose) echo 'is_choose';?>">
       <thead>
         <tr>
-          <th></th>
           <th>
             <a class="sort" href="<?php echo url_for($s_url.'&orderby=referenced_relation'.( ($orderBy=='referenced_relation' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
               <?php echo __('Relation');?>
@@ -20,36 +19,35 @@
             </a>
           </th>
           <th>
-	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=property_type'.( ($orderBy=='property_type' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
-	      <?php echo __('Property type');?>
-	      <?php if($orderBy=='property_type') echo $orderSign ?>
-	    </a>
+            <a class="sort" href="<?php echo url_for($s_url.'&orderby=property_type'.( ($orderBy=='property_type' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+              <?php echo __('Property type');?>
+              <?php if($orderBy=='property_type') echo $orderSign ?>
+            </a>
           </th>
           <th>
-	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=applies_to'.( ($orderBy=='applies_to' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
-	      <?php echo __('Applies to');?>
-	      <?php if($orderBy=='applies_to') echo $orderSign ?>
-	    </a>
+            <a class="sort" href="<?php echo url_for($s_url.'&orderby=applies_to'.( ($orderBy=='applies_to' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+              <?php echo __('Applies to');?>
+              <?php if($orderBy=='applies_to') echo $orderSign ?>
+            </a>
           </th>
           <th>
-	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=lower_value'.( ($orderBy=='lower_value' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
-	      <?php echo __('Value');?>
-	      <?php if($orderBy=='lower_value') echo $orderSign ?>
-	    </a>
+            <a class="sort" href="<?php echo url_for($s_url.'&orderby=lower_value'.( ($orderBy=='lower_value' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+              <?php echo __('Value');?>
+              <?php if($orderBy=='lower_value') echo $orderSign ?>
+            </a>
           </th>
           <th>
-	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=property_unit'.( ($orderBy=='property_unit' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
-	      <?php echo __('Property unit');?>
-	      <?php if($orderBy=='property_unit') echo $orderSign ?>
-	    </a>
+            <a class="sort" href="<?php echo url_for($s_url.'&orderby=property_unit'.( ($orderBy=='property_unit' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
+              <?php echo __('Property unit');?>
+              <?php if($orderBy=='property_unit') echo $orderSign ?>
+            </a>
           </th>
           <th></th>
-        <tr>
+        </tr>
       </thead>
       <tbody>
         <?php foreach($items as $item):?>
           <tr>
-            <td><?php echo image_tag('info.png',"title=info class=info");?></td>
             <td><?php echo $item->getReferencedRelation() ?></td>
             <td><?php echo $item->getPropertyType();?></td>
             <td><?php echo $item->getAppliesTo() ?></td>

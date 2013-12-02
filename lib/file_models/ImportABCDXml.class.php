@@ -51,7 +51,7 @@ class ImportABCDXml implements IImportModels
       case "efg:MineralRockIdentified" :
       case "HigherTaxa" : $this->object->catalogue_parent = new Hstore() ;break;
       case "Identification" : $this->object = new ParsingIdentifications() ; break;
-      case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ; 
+      case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ;
                                          else $this->property = new ParsingProperties() ; break;
       case "MultiMediaObject" : $this->object = new ParsingMultimedia() ; break;
       case "PersonName" : $this->people = new StagingPeople() ; break;
@@ -83,7 +83,7 @@ class ImportABCDXml implements IImportModels
       case "AppliesTo" : $this->property->setAppliesTo($this->cdata); break;
       case "AreaClass" : $this->object->tag_group_name = $this->cdata ; break;
       case "AreaName" : $this->object->tag_value = $this->cdata ; break;
-      case "AssociatedUnitID" : if(in_array($this->cdata, array_keys($this->unit_id_ref))) $this->object->setStagingRelatedRef($this->unit_id_ref[$this->cdata]); else $this->object->setSourceId($this->cdata) ; break;
+      case "AssociatedUnitID" : if(in_array($this->cdata, array_keys($this->unit_id_ref))) $this->object->setStagingRelatedRef($this->unit_id_ref[$this->cdata]); else { $this->object->setSourceId($this->cdata) ; $this->object->setUnitType('external') ;} break;
       case "AssociatedUnitSourceInstitutionCode" : $this->object->setInstitutionName($this->cdata) ; break;
       case "AssociatedUnitSourceName" : $this->object->setSourceName($this->cdata) ; break;
       case "AssociationType" : $this->object->setRelationshipType($this->cdata) ; break;
@@ -106,6 +106,14 @@ class ImportABCDXml implements IImportModels
           if( $this->object->getFromDate())$this->staging["gtu_from_date_mask"] =  $this->object->getFromDate()->getMask() ;
           if( $this->object->getToDate()) $this->staging["gtu_to_date_mask"] =  $this->object->getToDate()->getMask() ;
         } ; break;
+      case "TimeOfDayBegin": if($this->getPreviousTag() == "DateTime"){
+          $this->object->GTUdate['from']->addTime($this->cdata);
+        }
+        break;
+      case "TimeOfDayEnd": if($this->getPreviousTag() == "DateTime"){
+          $this->object->GTUdate['to']->addTime($this->cdata);
+        }
+        break;
       case "dna:Concentration" : $this->property = new ParsingProperties("Concentration","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->property->property->setPropertyUnit("ng/µl") ; $this->addProperty(true) ; break;
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break;
       case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); $this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask()); break;
@@ -114,6 +122,7 @@ class ImportABCDXml implements IImportModels
       case "dna:GenBankNumber" : $this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ;
       case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ratio of absorbance 260/280","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
+      case "dna:Preservation" : $this->addComment(false, "conservation_mean"); break;
       case "Duration" : $this->property->setDateTo($this->cdata) ; break;
       case "FileURI" : $this->object->getFile($this->cdata) ; break;
       case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
@@ -166,7 +175,7 @@ class ImportABCDXml implements IImportModels
       case "Person" : $this->object->handlePeople($this->people,$this->staging) ; break;
       case "efg:MineralDescriptionText" :
       case "PetrologyDescriptiveText" :
-      case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'Mineralogy') ; break;
+      case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'mineralogy') ; break;
       case "PhaseOrStage" : $this->staging->setIndividualStage($this->cdata) ; break;
       case "Prefix" : $this->people['title'] = $this->cdata ; break;
       case "Preparation" : $this->addPreparation() ; break ;
@@ -192,13 +201,13 @@ class ImportABCDXml implements IImportModels
       case "storage:Box" : $this->staging->setContainerType('box'); $this->staging->setContainer($this->cdata) ; break;
       case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break;
       case "storage:Position" : $this->staging->setSubContainerType('position'); $this->staging->setSubContainer($this->cdata) ; break;
-      case "Text": if($this->getPreviousTag() == "Biotope") $this->addComment() ; break;
-      case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ; if($this->getPreviousTag() == "UnitReference")  $this->addComment(true,'Publication') ; else $this->addComment(true, "Identifications") ;break;
+      case "Text": if($this->getPreviousTag() == "Biotope") $this->addComment(true, 'sampling_locations') ; break;
+      case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ; if($this->getPreviousTag() == "UnitReference")  $this->addComment(true,'publication') ; else $this->addComment(true, "identifications") ;break;
       case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break;
       case "Unit" : $this->saveUnit(); break;
       case "UnitAssociation" : $this->staging->addRelated($this->object) ; $this->object=null; break;
       case "UnitID" : $this->addCode() ; $this->name = $this->cdata ; break ;
-      case "SourceID" : if($this->cdata != 'Not defined') { $this->addCode('dataset') ;} break ;
+      case "SourceID" : if($this->cdata != 'Not defined') { $this->addCode('secondary') ;} break ;
       case "UnitOfMeasurement" : $this->property->property->setPropertyUnit($this->cdata); break;
       case "Accuracy" : $this->property->property->setPropertyAccuracy($this->cdata); break;
       case "UpperValue" : $this->property->property->setUpperValue($this->cdata) ; break;
@@ -241,7 +250,7 @@ class ImportABCDXml implements IImportModels
     $comment->setComment($this->cdata) ;
     $comment->setNotionConcerned($notion);
 
-    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit")
+    if($is_staging || $this->getPreviousTag()=='Unit' || $this->getPreviousTag()=='Identification' || $this->getPreviousTag()=='Identifications' || $this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag() == "efg:MineralogicalUnit" || $this->getPreviousTag() == "dna:DNASample")
     {
       $this->staging->addRelated($comment) ;
     }
@@ -255,14 +264,42 @@ class ImportABCDXml implements IImportModels
   {
     if($unit) // if unit is true so it's a forced Staging property
       $this->staging->addRelated($this->property->property) ;
-    elseif($this->getPreviousTag("MeasurementsOrFacts") == "Unit" || $this->getPreviousTag()=='Identification') {
-      $this->staging->addRelated($this->property->property) ;
+    elseif($this->getPreviousTag("MeasurementsOrFacts") == "Unit") {
+      if(strtolower($this->property->getPropertyType()) == 'n total') {
+        if(ctype_digit($this->property->getLowerValue())) {
+          $this->staging->setPartCountMin($this->property->getLowerValue());
+          $this->staging->setPartCountMax($this->property->getLowerValue());
+          $this->property = null;
+        } else {
+          $this->staging->addRelated($this->property->property);
+        }
+      }
+      elseif(strtolower($this->property->getPropertyType()) == 'social status') {
+        $this->staging->setIndividualSocialStatus($this->property->getLowerValue()) ;
+        $this->property = null;
+      } else {
+        $this->staging->addRelated($this->property->property);
+      }
     }
     elseif (in_array($this->getPreviousTag(),array('efg:RockPhysicalCharacteristic','efg:MineralMeasurementOrFact'))) {
       $this->staging->addRelated($this->property->property) ;
     }
     else {
       $this->object->addStagingInfo($this->property->property, $this->staging->getId());
+    }
+
+
+    $pattern = '/(\d+([\,\.]\d+)?)\W?([a-zA-Z\°]+.*)/';
+    // if unit not defined
+    if($this->property && $this->property->property && $this->property->property->getPropertyUnit() =='') {
+      // try to guess unit
+      $val = $this->property->getLowerValue();
+      $val = str_replace('°', 'deg',$val);
+      if(preg_match($pattern, $val, $matches)) {
+        $val = str_replace('deg', '°',$matches[3]);
+        $this->property->property->setPropertyUnit($val);
+        $this->property->property->setLowerValue($matches[1]);
+      }
     }
   }
 
@@ -274,7 +311,7 @@ class ImportABCDXml implements IImportModels
       catch(Doctrine_Exception $ne)
       {
         $e = new DarwinPgErrorParser($ne);
-        $this->errors_reported .= "Unit ".$this->name." : ".$object->getTable()->getTableName()." were not saved".$e->getMessage().";";
+        $this->errors_reported .= "Unit ".$this->name." : ".$object->getTable()->getTableName()." were not saved : ".$e->getMessage().";";
       }
     }
     foreach($this->staging_tags as $object)
@@ -284,7 +321,7 @@ class ImportABCDXml implements IImportModels
       catch(Doctrine_Exception $ne)
       {
         $e = new DarwinPgErrorParser($ne);
-        $this->errors_reported .= "NamedArea ".$object->getSubGroupName()." were not saved".$e->getMessage().";";
+        $this->errors_reported .= "NamedArea ".$object->getSubGroupName()." were not saved : ".$e->getMessage().";";
       }
     }
     $this->staging_tags = array() ;
@@ -316,8 +353,20 @@ class ImportABCDXml implements IImportModels
         $this->object->addMaintenance($this->staging) ;
         $this->object->maintenance->setDescription($this->preparation_mat) ;
     }
-    else $this->staging['container_storage'] = $this->preparation_mat ;
-
+    elseif(strtolower($this->preparation_type) == "tissue preservation")
+    {
+        $this->object = new ParsingMaintenance('Tissue Preservation') ;
+        $this->object->addMaintenance($this->staging) ;
+        $this->object->maintenance->setDescription($this->preparation_mat) ;
+    }
+    else
+    {
+        $comment = new Comments() ;
+        $comment->setComment($this->preparation_mat) ;
+        $comment->setNotionConcerned('conservation_mean');
+        $this->staging->addRelated($comment) ;
+        //$this->staging['container_storage'] = $this->preparation_mat ;
+    }
   }
   private function saveUnit()
   {
@@ -330,7 +379,7 @@ class ImportABCDXml implements IImportModels
     catch(Doctrine_Exception $ne)
     {
       $e = new DarwinPgErrorParser($ne);
-      $this->errors_reported .= "Unit ".$this->name." object were not saved:".$e->getMessage().";";
+      $this->errors_reported .= "Unit ".$this->name." object were not saved: ".$e->getMessage().";";
       $ok = false ;
     }
     if ($ok)
