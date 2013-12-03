@@ -39,9 +39,9 @@
             <?php endif;?>
             <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'staging/delete?id='.$row['id'],'class=remove_staging');?>
           </td>
-          <td class="fld_tocomplete"><?php echo (count(explode(',',$row->getStatus()->export()))) ; ?></td>
+          <td class="<?php echo ($row->getStatus()->export()==''?'fld_ok':'fld_tocomplete') ; ?>"><?php echo ($row->getStatus()->export()==''?'0':count(explode(',',$row->getStatus()->export()))) ; ?></td>
           <td  class="<?php if(count($row['status']) != 0 && $row['status']->export() != ''):?>fld_tocomplete<?php else:?>fld_ok<?php endif;?>">
-            <?php if(count($row['status'] && $row['status']->export() != '') != 0 ):?>
+            <?php if(count($row['status']) != 0 && $row['status']->export() != ''):?>
               <?php echo __('Error');?>
             <?php else:?>
               <?php echo __('No problems detected');?>
