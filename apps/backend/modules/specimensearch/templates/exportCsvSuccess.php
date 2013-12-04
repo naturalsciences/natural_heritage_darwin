@@ -18,8 +18,8 @@
 <?php if($field_to_show['ig']=='check'):?>I.G. Number<?php echo $sep;endif;?>
 <?php if($field_to_show['litho']=='check'):?>Lithostratigraphy ID<?php echo $sep;endif;?>
 <?php if($field_to_show['litho']=='check'):?>Lithostratigraphy Name<?php echo $sep;endif;?>
-<?php if($field_to_show['lithology']=='check'):?>Lithology ID<?php echo $sep;endif;?>
-<?php if($field_to_show['lithology']=='check'):?>Lithology Name<?php echo $sep;endif;?>
+<?php if($field_to_show['lithologic']=='check'):?>Lithology ID<?php echo $sep;endif;?>
+<?php if($field_to_show['lithologic']=='check'):?>Lithology Name<?php echo $sep;endif;?>
 <?php if($field_to_show['mineral']=='check'):?>Mineralogy ID<?php echo $sep;endif;?>
 <?php if($field_to_show['mineral']=='check'):?>Mineralogy Name<?php echo $sep;endif;?>
 <?php if($field_to_show['expedition']=='check'):?>Expedition ID<?php echo $sep;endif;?>
@@ -29,7 +29,7 @@
 <?php if($field_to_show['sex']=='check'):?>Sex<?php echo $sep;endif;?>
 <?php if($field_to_show['state']=='check'):?>Developpement State<?php echo $sep;endif;?>
 <?php if($field_to_show['stage']=='check'):?>Individual Stage<?php echo $sep;endif;?>
-<?php if($field_to_show['status']=='check'):?>SocialStatus<?php echo $sep;endif;?>
+<?php if($field_to_show['part_status']=='check'):?>SocialStatus<?php echo $sep;endif;?>
 <?php if($field_to_show['rock_form']=='check'):?>RockForm<?php echo $sep;endif;?>
 <?php if($field_to_show['specimen_count']=='check'):?>Count Min<?php echo $sep;endif;?>
 <?php if($field_to_show['specimen_count']=='check'):?>Count Max<?php echo $sep;endif;?>
@@ -41,6 +41,7 @@
 <?php if($field_to_show['floor']=='check'):?>Floor<?php echo $sep;endif;?>
 <?php if($field_to_show['room']=='check'):?>Room<?php echo $sep;endif;?>
 <?php if($field_to_show['row']=='check'):?>Row<?php echo $sep;endif;?>
+<?php if($field_to_show['col']=='check'):?>Col<?php echo $sep;endif;?>
 <?php if($field_to_show['shelf']=='check'):?>Shelf<?php echo $sep;endif;?>
 <?php if($field_to_show['container']=='check'):?>Container<?php echo $sep;endif;?>
 <?php if($field_to_show['container_type']=='check'):?>Container Type<?php echo $sep;endif;?>
@@ -75,8 +76,8 @@
 <?php if($field_to_show['ig']=='check'): echo $specimen ->getIgNum(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['litho']=='check'): echo $specimen ->getLithoRef(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['litho']=='check'): echo $specimen ->getLithoName(ESC_RAW).$sep;endif;?>
-<?php if($field_to_show['lithology']=='check'): echo $specimen ->getLithologyRef(ESC_RAW).$sep;endif;?>
-<?php if($field_to_show['lithology']=='check'): echo $specimen ->getLithologyName(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['lithologic']=='check'): echo $specimen ->getLithologyRef(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['lithologic']=='check'): echo $specimen ->getLithologyName(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['mineral']=='check'): echo $specimen ->getMineralRef(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['mineral']=='check'): echo $specimen ->getMineralName(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['expedition']=='check'): echo $specimen ->getExpeditionRef(ESC_RAW).$sep;endif;?>
@@ -86,7 +87,7 @@
 <?php if($field_to_show['sex']=='check'): echo $specimen ->getSex(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['state']=='check'): echo $specimen ->getState(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['stage']=='check'): echo $specimen ->getStage(ESC_RAW).$sep;endif;?>
-<?php if($field_to_show['status']=='check'): echo $specimen ->getSocialStatus(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['part_status']=='check'): echo $specimen ->getSocialStatus(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['rock_form']=='check'): echo $specimen ->getRockForm(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['specimen_count']=='check'): echo $specimen ->getSpecimenCountMin(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['specimen_count']=='check'): echo $specimen ->getSpecimenCountMax(ESC_RAW).$sep;endif;?>
@@ -99,6 +100,7 @@
 <?php if($field_to_show['room']=='check'): echo $specimen ->getRoom(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['row']=='check'): echo $specimen ->getRow(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['shelf']=='check'): echo $specimen ->getShelf(ESC_RAW).$sep;endif;?>
+<?php if($field_to_show['col']=='check'): echo $specimen ->getCol(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['container']=='check'): echo $specimen ->getContainer(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['container_type']=='check'): echo $specimen ->getContainerType(ESC_RAW).$sep;endif;?>
 <?php if($field_to_show['container_storage']=='check'): echo $specimen ->getContainerStorage(ESC_RAW).$sep;endif;?>
