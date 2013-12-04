@@ -26,7 +26,7 @@ class SpecimensForm extends BaseSpecimensForm
 
       'type', 'sex', 'state','stage','social_status','rock_form',
       'specimen_part', 'complete', 'institution_ref', 'building', 'floor', 'room',
-      'row', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
+      'row', 'col', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
       'container_storage', 'sub_container_storage', 'surnumerary', 'specimen_status',
       'specimen_count_min', 'specimen_count_max','object_name'
     ));
@@ -288,6 +288,17 @@ class SpecimensForm extends BaseSpecimensForm
       'add_label' => 'Add another row',
     ));
 
+
+    $this->widgetSchema['col'] = new widgetFormSelectComplete(array(
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctCols',
+      'method' => 'getCols',
+      'key_method' => 'getCols',
+      'add_empty' => true,
+      'change_label' => 'Pick a col in the list',
+      'add_label' => 'Add another col',
+    ));
+
     $this->widgetSchema['room'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctRooms',
@@ -370,6 +381,7 @@ class SpecimensForm extends BaseSpecimensForm
       'institution_ref' => 'Institution',
       'accuracy' => 'Accuracy',
       'surnumerary' => 'supernumerary',
+      'col' => 'column',
     ));
 
     /* Validators */
@@ -570,6 +582,7 @@ class SpecimensForm extends BaseSpecimensForm
         'floor',
         'room',
         'row',
+        'col',
         'shelf',
       ),
       'Container' => array(

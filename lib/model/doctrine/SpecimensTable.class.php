@@ -159,6 +159,26 @@ class SpecimensTable extends DarwinTable
         return $q->execute();
   }
 
+    /**
+  * Get Distincts Column of Part
+  * @return array an Array of types in keys
+  */
+  public function getDistinctCols($building = null, $floor = null, $room = null)
+  {
+    if($building == null && $floor == null && $room == null) return $this->createFlatDistinct('specimens', 'col', 'cols')->execute();
+    $q = $this->createDistinct('Specimens', 'col', 'cols');
+        if(! is_null($building))
+          $q->addWhere('building = ?', $building);
+
+        if(! is_null($floor))
+          $q->addWhere('floor = ?', $floor);
+
+        if(! is_null($room))
+          $q->addWhere('room = ?', $room);
+
+        return $q->execute();
+  }
+
   /**
   * Get Distincts Shelve of Part
   * @return array an Array of types in keys

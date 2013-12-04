@@ -5912,6 +5912,22 @@
         <source>Correction of import row</source>
         <target>Correction of import row</target>
       </trans-unit>
+      <trans-unit id="1785">
+        <source>Pick a column in the list</source>
+        <target>Pick a column in the list</target>
+      </trans-unit>
+      <trans-unit id="1786">
+        <source>Add another column</source>
+        <target>Add another column</target>
+      </trans-unit>
+      <trans-unit id="1787">
+        <source>column</source>
+        <target>Column</target>
+      </trans-unit>
+      <trans-unit id="1788">
+        <source>Change Column</source>
+        <target>Change Column</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

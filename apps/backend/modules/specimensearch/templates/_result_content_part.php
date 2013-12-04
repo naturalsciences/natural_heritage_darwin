@@ -6,6 +6,7 @@
   <td class="col_floor"><?php echo $specimen->getFloor();?></td> 
   <td class="col_room"><?php echo $specimen->getRoom();?></td> 
   <td class="col_row"><?php echo $specimen->getRow();?></td> 
+  <td class="col_col"><?php echo $specimen->getCol();?></td> 
   <td class="col_shelf"><?php echo $specimen->getShelf();?></td> 
   <td class="col_container"><?php echo $specimen->getContainer();?></td> 
   <td class="col_container_type"><?php echo $specimen->getContainerType();?></td> 

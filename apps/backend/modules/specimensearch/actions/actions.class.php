@@ -216,7 +216,7 @@ class specimensearchActions extends DarwinActions
   {
     $flds = array('category','collection','taxon','type','gtu','codes','chrono','ig','acquisition_category',
               'litho','lithologic','mineral','expedition','type', 'individual_type','sex','state','stage','social_status','rock_form','individual_count',
-              'part', 'object_name', 'part_status', 'building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
+              'part', 'object_name', 'part_status', 'building', 'floor', 'room', 'row', 'col' ,'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
               'sub_container_type' , 'sub_container_storage', 'specimen_count','part_codes');
 
 
@@ -362,6 +362,9 @@ class specimensearchActions extends DarwinActions
         'row' => array(
           'row',
           $this->getI18N()->__('Row'),),
+        'col' => array(
+          'col',
+          $this->getI18N()->__('column'),),
         'shelf' => array(
           'shelf',
           $this->getI18N()->__('Shelf'),),

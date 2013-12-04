@@ -5890,6 +5890,18 @@
         <source>Correction of import row</source>
         <target>Correction d'une ligne d'import</target>
       </trans-unit>
+      <trans-unit id="1785">
+        <source>Pick a column in the list</source>
+        <target>Choisissez une colonne dans la liste</target>
+      </trans-unit>
+      <trans-unit id="1786">
+        <source>Add another column</source>
+        <target>Ajouter une autre colonne</target>
+      </trans-unit>
+      <trans-unit id="1787">
+        <source>column</source>
+        <target>Colonne</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

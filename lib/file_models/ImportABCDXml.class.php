@@ -195,6 +195,7 @@ class ImportABCDXml implements IImportModels
       case "storage:Building" : $this->staging->setBuilding($this->cdata) ; break;
       case "storage:Floor" : $this->staging->setFloor($this->cdata) ; break;
       case "storage:Room" : $this->staging->setRoom($this->cdata) ; break;
+      case "storage:Column" : $this->staging->setCol($this->cdata) ; break;
       case "storage:Row" : $this->staging->setRow($this->cdata) ; break;
       case "storage:Shelf" : $this->staging->setShelf($this->cdata) ; break;
       case "storage:Rack" : $this->staging->setShelf($this->cdata) ; break;

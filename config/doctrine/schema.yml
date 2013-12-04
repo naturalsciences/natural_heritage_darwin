@@ -722,6 +722,7 @@ Specimens:
         floor: { type: string}
         room: { type: string}
         row: { type: string}
+        col: { type: string}
         shelf: { type: string}
         container: { type: string}
         sub_container: { type: string}
@@ -1064,6 +1065,7 @@ Staging:
         floor: {type: string }
         room: {type: string }
         row: {type: string }
+        col: { type: string }
         shelf: {type: string }
         container_type: {type: string }
         container_storage: {type: string }

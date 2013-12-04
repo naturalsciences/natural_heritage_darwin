@@ -104,6 +104,7 @@
  * @property string $floor
  * @property string $room
  * @property string $row
+ * @property string $col
  * @property string $shelf
  * @property string $container
  * @property string $sub_container
@@ -236,6 +237,7 @@
  * @method string              getFloor()                   Returns the current record's "floor" value
  * @method string              getRoom()                    Returns the current record's "room" value
  * @method string              getRow()                     Returns the current record's "row" value
+ * @method string              getCol()                     Returns the current record's "col" value
  * @method string              getShelf()                   Returns the current record's "shelf" value
  * @method string              getContainer()               Returns the current record's "container" value
  * @method string              getSubContainer()            Returns the current record's "sub_container" value
@@ -367,6 +369,7 @@
  * @method Specimens           setFloor()                   Sets the current record's "floor" value
  * @method Specimens           setRoom()                    Sets the current record's "room" value
  * @method Specimens           setRow()                     Sets the current record's "row" value
+ * @method Specimens           setCol()                     Sets the current record's "col" value
  * @method Specimens           setShelf()                   Sets the current record's "shelf" value
  * @method Specimens           setContainer()               Sets the current record's "container" value
  * @method Specimens           setSubContainer()            Sets the current record's "sub_container" value
@@ -735,6 +738,9 @@ abstract class BaseSpecimens extends DarwinModel
              'type' => 'string',
              ));
         $this->hasColumn('row', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('col', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('shelf', 'string', null, array(

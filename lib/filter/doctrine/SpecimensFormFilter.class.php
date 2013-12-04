@@ -504,6 +504,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));
     $this->validatorSchema['row'] = new sfValidatorString(array('required' => false));
 
+    $this->widgetSchema['col'] = new sfWidgetFormDoctrineChoice(array(
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctCols',
+      'method' => 'getCols',
+      'key_method' => 'getCols',
+      'add_empty' => true,
+    ));
+    $this->validatorSchema['col'] = new sfValidatorString(array('required' => false));
+
     $this->widgetSchema['room'] = new sfWidgetFormDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctRooms',
@@ -808,6 +817,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   {
     $val = $this->checksToQuotedValues($val);
     $query->andWhere('s.row in ('.implode(',',$val).')');
+    return $query ;
+  }
+
+  public function addColColumnQuery($query, $field, $val)
+  {
+    $val = $this->checksToQuotedValues($val);
+    $query->andWhere('s.col in ('.implode(',',$val).')');
     return $query ;
   }
 

@@ -2003,7 +2003,7 @@ BEGIN
                                                                      AND pref_key = 'search_cols_specimen'
                                                                    LIMIT 1
                                                                   ), E'\\|') as fields_list
-                                       where fields_list not in ('institution_ref', 'building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type', 'container_storage', 'sub_container', 'sub_container_type', 'sub_container_storage')
+                                       where fields_list not in ('institution_ref', 'building', 'floor', 'room', 'row', 'shelf', 'col', 'container', 'container_type', 'container_storage', 'sub_container', 'sub_container_type', 'sub_container_storage')
                                       ),'|'
                                 ) as fields_available
          ) subq
@@ -2014,7 +2014,7 @@ BEGIN
       SET visible_fields_in_result = subq.fields_available
       FROM (select array_to_string(array(select fields_list
                                          from regexp_split_to_table(saved_search_row.visible_fields_in_result, E'\\|') as fields_list
-                                         where fields_list not in ('institution_ref','building', 'floor', 'room', 'row', 'shelf', 'container', 'container_type', 'container_storage', 'sub_container', 'sub_container_type', 'sub_container_storage')
+                                         where fields_list not in ('institution_ref','building', 'floor', 'room', 'row', 'shelf', 'col', 'container', 'container_type', 'container_storage', 'sub_container', 'sub_container_type', 'sub_container_storage')
                                         ),'|'
                                   ) as fields_available
           ) subq
@@ -2204,6 +2204,7 @@ BEGIN
       PERFORM fct_del_in_dict('specimens','specimen_status', oldfield.specimen_status, newfield.specimen_status);
 
       PERFORM fct_del_in_dict('specimens','shelf', oldfield.shelf, newfield.shelf);
+      PERFORM fct_del_in_dict('specimens','col', oldfield.col, newfield.col);
       PERFORM fct_del_in_dict('specimens','row', oldfield.row, newfield.row);
       PERFORM fct_del_in_dict('specimens','room', oldfield.room, newfield.room);
       PERFORM fct_del_in_dict('specimens','floor', oldfield.floor, newfield.floor);
@@ -2289,6 +2290,7 @@ BEGIN
       PERFORM fct_add_in_dict('specimens','specimen_status', oldfield.specimen_status, newfield.specimen_status);
 
       PERFORM fct_add_in_dict('specimens','shelf', oldfield.shelf, newfield.shelf);
+      PERFORM fct_add_in_dict('specimens','col', oldfield.col, newfield.col);
       PERFORM fct_add_in_dict('specimens','row', oldfield.row, newfield.row);
       PERFORM fct_add_in_dict('specimens','room', oldfield.room, newfield.room);
       PERFORM fct_add_in_dict('specimens','floor', oldfield.floor, newfield.floor);
@@ -3022,14 +3024,14 @@ BEGIN
     IF line.spec_ref IS NULL THEN
       INSERT INTO specimens (id, category, collection_ref, expedition_ref, gtu_ref, taxon_ref, litho_ref, chrono_ref, lithology_ref, mineral_ref,
           acquisition_category, acquisition_date_mask, acquisition_date, station_visible, ig_ref, type, sex, stage, state, social_status, rock_form,
-          specimen_part, complete, institution_ref, building, floor, room, row, shelf, container, sub_container,container_type, sub_container_type,
+          specimen_part, complete, institution_ref, building, floor, room, row, col, shelf, container, sub_container,container_type, sub_container_type,
           container_storage, sub_container_storage, surnumerary, specimen_status, specimen_count_min, specimen_count_max, object_name)
       VALUES (rec_id, COALESCE(line.category,'physical') , all_line.collection_ref, line.expedition_ref, line.gtu_ref, line.taxon_ref, line.litho_ref, line.chrono_ref,
         line.lithology_ref, line.mineral_ref, COALESCE(line.acquisition_category,''), COALESCE(line.acquisition_date_mask,0), COALESCE(line.acquisition_date,'01/01/0001'),
         COALESCE(line.station_visible,true),  line.ig_ref, COALESCE(line.individual_type,'specimen'), COALESCE(line.individual_sex,'undefined'),
         COALESCE(line.individual_stage,'undefined'), COALESCE(line.individual_state,'not applicable'),COALESCE(line.individual_social_status,'not applicable'),
         COALESCE(line.individual_rock_form,'not applicable'), COALESCE(line.part,'specimen'), COALESCE(line.complete,true), line.institution_ref, line.building,
-        line.floor, line.room, line.row, line.shelf, line.container, line.sub_container,COALESCE(line.container_type,'container'),
+        line.floor, line.room, line.row,  line.col, line.shelf, line.container, line.sub_container,COALESCE(line.container_type,'container'),
         COALESCE(line.sub_container_type, 'container'), COALESCE(line.container_storage,''),COALESCE(line.sub_container_storage,''),
         COALESCE(line.surnumerary,false), COALESCE(line.specimen_status,''),COALESCE(line.part_count_min,1), COALESCE(line.part_count_max,line.part_count_min,1), line.object_name
       );

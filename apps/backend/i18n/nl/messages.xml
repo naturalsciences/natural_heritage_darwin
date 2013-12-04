@@ -5892,6 +5892,18 @@
         <source>Correction of import row</source>
         <target></target>
       </trans-unit>
+      <trans-unit id="1785">
+        <source>Pick a column in the list</source>
+        <target>Een kolom uit de lijst selecteren</target>
+      </trans-unit>
+      <trans-unit id="1786">
+        <source>Add another column</source>
+        <target>Een andere kolom toevoegen</target>
+      </trans-unit>
+      <trans-unit id="1787">
+        <source>column</source>
+        <target>Kolom</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

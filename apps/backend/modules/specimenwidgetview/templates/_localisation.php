@@ -21,6 +21,10 @@
 	<td><?php echo $spec->getRow()==''?'-':$spec->getRow() ?></td>
   </tr>
   <tr>
+  <th class="top_aligned"><?php echo __("column");?></th>
+  <td><?php echo $spec->getCol()==''?'-':$spec->getCol() ?></td>
+  </tr>
+  <tr>
 	<th class="top_aligned"><?php echo __("Shelf");?></th>
 	<td><?php echo $spec->getShelf()==''?'-':$spec->getShelf() ?></td>
   </tr>
