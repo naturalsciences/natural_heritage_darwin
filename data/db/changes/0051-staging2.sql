@@ -1,6 +1,11 @@
 begin;
 set search_path=darwin2,public;
 
+alter table staging drop column parent_ref;
+alter table staging drop column path;
+alter table staging drop column "level";
+alter table staging drop column "collectors";
+alter table staging drop column "donator";
 
 
 
