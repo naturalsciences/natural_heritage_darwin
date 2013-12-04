@@ -37,6 +37,7 @@ class BaseMassActionForm extends sfFormSymfony
         'floor' => self::getI18N()->__('Change Floor'),
         'room' => self::getI18N()->__('Change Room'),
         'row' => self::getI18N()->__('Change Row'),
+        'col' => self::getI18N()->__('Change Column'),
         'shelf' => self::getI18N()->__('Change Shelf'),
         'container' => self::getI18N()->__('Change Container'),
         'sub_container' => self::getI18N()->__('Change Sub Container'),
@@ -95,6 +96,8 @@ class BaseMassActionForm extends sfFormSymfony
       return 'MaRowForm';
     elseif($action == 'shelf')
       return 'MaShelfForm';
+    elseif($action == 'col')
+      return 'MaColForm';
     elseif($action == 'container')
       return 'MaContainerForm';
     elseif($action == 'sub_container')
