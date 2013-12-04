@@ -36,12 +36,12 @@ EOF;
 
       //Add 2 more widgets
       $task = new darwinAddwidgetsTask($this->dispatcher, new sfFormatter());
-      $options['category'] = ' specimensearch_widget';
+      $options['category'] = 'specimensearch_widget';
       $options['name'] ='properties';
       $task->run($arguments, $options);
 
       $task = new darwinAddwidgetsTask($this->dispatcher, new sfFormatter());
-      $options['category'] = ' specimensearch_widget';
+      $options['category'] = 'specimensearch_widget';
       $options['name'] ='comments';
       $task->run($arguments, $options);
 
