@@ -124,25 +124,25 @@ class sfWidgetFormDarwinDoctrineChoice extends sfWidgetFormDoctrineChoice
 
     return $choices;
   }
-/** 
- * Gets result for 'choices' from the Table class of model 
- * 
- * @return mixed Result of table method [Doctrine_Query, Doctrine_Collection, Doctrine_Record] 
- */ 
- private function callTableMethod() 
- { 
-   $tableMethod = $this->getOption('table_method'); 
-   if (is_array($tableMethod)) 
-   { 
-     $results = call_user_func_array(array(Doctrine::getTable($this->getOption('model')), 
+/**
+ * Gets result for 'choices' from the Table class of model
+ *
+ * @return mixed Result of table method [Doctrine_Query, Doctrine_Collection, Doctrine_Record]
+ */
+ private function callTableMethod()
+ {
+   $tableMethod = $this->getOption('table_method');
+   if (is_array($tableMethod))
+   {
+     $results = call_user_func_array(array(Doctrine::getTable($this->getOption('model')),
                                            $tableMethod['method']
-                                          ), 
-                                          $tableMethod['parameters']); 
-   } 
-   else 
-   { 
-     $results = Doctrine::getTable($this->getOption('model'))->$tableMethod(); 
-   } 
-   return $results; 
- } 
+                                          ),
+                                          $tableMethod['parameters']);
+   }
+   else
+   {
+     $results = Doctrine::getTable($this->getOption('model'))->$tableMethod();
+   }
+   return $results;
+ }
 }

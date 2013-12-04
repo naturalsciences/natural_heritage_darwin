@@ -91,22 +91,15 @@ class SpecimensTable extends DarwinTable
       return array_map(array($i18n_object, '__'), self::$acquisition_category);
   }
 
-  /**
-  * Get distinct Host Relationships
-  * @return Doctrine_collection with distinct "host_relationship" as column
-  */
-  public function getDistinctHostRelationships()
-  {
-      return $this->createFlatDistinct('specimens', 'host_relationship', 'host_relationship')->execute();
-  }
 
-/**
+  /**
   * Get Distincts Buildings of Part
   * @return array an Array of types in keys
   */
   public function getDistinctBuildings()
   {
-    return $this->createFlatDistinct('specimens', 'building', 'buildings')->execute();
+    $items = $this->createUniqFlatDistinct('specimens', 'building', 'building', true);
+    return $items;
   }
 
   /**
@@ -115,11 +108,8 @@ class SpecimensTable extends DarwinTable
   */
   public function getDistinctFloors($building = null)
   {
-    if($building == null) return $this->createFlatDistinct('specimens', 'floor', 'floors')->execute();
-    $q = $this->createDistinct('Specimens', 'floor', 'floors');
-        if(! is_null($building))
-          $q->addWhere('building = ?', $building);
-        return $q->execute();
+    $items = $this->createUniqFlatDistinct('specimens', 'floor', 'floor', true);
+    return $items;
   }
 
   /**
@@ -128,15 +118,8 @@ class SpecimensTable extends DarwinTable
   */
   public function getDistinctRooms($building = null, $floor = null)
   {
-    if($building == null && $floor == null) return $this->createFlatDistinct('specimens', 'room', 'rooms')->execute();
-    $q = $this->createDistinct('Specimens', 'room', 'rooms');
-        if(! is_null($building))
-          $q->addWhere('building = ?', $building);
-
-        if(! is_null($floor))
-          $q->addWhere('floor = ?', $floor);
-
-        return $q->execute();
+    $items = $this->createUniqFlatDistinct('specimens', 'room', 'room', true);
+    return $items;
   }
 
   /**
@@ -145,18 +128,8 @@ class SpecimensTable extends DarwinTable
   */
   public function getDistinctRows($building = null, $floor = null, $room = null)
   {
-    if($building == null && $floor == null && $room == null) return $this->createFlatDistinct('specimens', 'row', 'rows')->execute();
-    $q = $this->createDistinct('Specimens', 'row', 'rows');
-        if(! is_null($building))
-          $q->addWhere('building = ?', $building);
-
-        if(! is_null($floor))
-          $q->addWhere('floor = ?', $floor);
-
-        if(! is_null($room))
-          $q->addWhere('room = ?', $room);
-
-        return $q->execute();
+    $items = $this->createUniqFlatDistinct('specimens', 'row', 'row', true);
+    return $items;
   }
 
     /**
@@ -165,18 +138,8 @@ class SpecimensTable extends DarwinTable
   */
   public function getDistinctCols($building = null, $floor = null, $room = null)
   {
-    if($building == null && $floor == null && $room == null) return $this->createFlatDistinct('specimens', 'col', 'cols')->execute();
-    $q = $this->createDistinct('Specimens', 'col', 'cols');
-        if(! is_null($building))
-          $q->addWhere('building = ?', $building);
-
-        if(! is_null($floor))
-          $q->addWhere('floor = ?', $floor);
-
-        if(! is_null($room))
-          $q->addWhere('room = ?', $room);
-
-        return $q->execute();
+    $items = $this->createUniqFlatDistinct('specimens', 'col', 'col', true);
+    return $items;
   }
 
   /**
@@ -185,20 +148,8 @@ class SpecimensTable extends DarwinTable
   */
   public function getDistinctShelfs($building = null, $floor = null, $room = null, $rows = null)
   {
-    if($building == null && $floor == null && $room == null && $rows == null) return $this->createFlatDistinct('specimens', 'shelf', 'shelfs')->execute();
-    $q = $this->createDistinct('Specimens', 'shelf', 'shelfs');
-        if(! is_null($building))
-          $q->addWhere('building = ?', $building);
-
-        if(! is_null($floor))
-          $q->addWhere('floor = ?', $floor);
-
-        if(! is_null($room))
-          $q->addWhere('room = ?', $room);
-
-        if(! is_null($rows))
-          $q->addWhere('row = ?', $rows);
-        return $q->execute();
+    $items = $this->createUniqFlatDistinct('specimens', 'shelf', 'shelf', true);
+    return $items;
   }
 
   /**
@@ -207,9 +158,8 @@ class SpecimensTable extends DarwinTable
   */
   public function getDistinctContainerTypes()
   {
-    $contTypes = $this->createFlatDistinct('specimens', 'container_type', 'container_type')->execute();
-    $contTypes->add(new Specimens);
-    return $contTypes;
+    $items = $this->createUniqFlatDistinct('specimens', 'container_type', 'container_type', true);
+    return $items;
   }
 
   /**
@@ -218,9 +168,8 @@ class SpecimensTable extends DarwinTable
   */
   public function getDistinctSubContainerTypes()
   {
-    $subContTypes = $this->createFlatDistinct('specimens', 'sub_container_type', 'sub_container_type')->execute();
-    $subContTypes->add(new Specimens);
-    return $subContTypes;
+    $items = $this->createUniqFlatDistinct('specimens', 'sub_container_type', 'sub_container_type', true);
+    return $items;
   }
 
   /**
@@ -229,9 +178,8 @@ class SpecimensTable extends DarwinTable
   */
   public function getDistinctParts()
   {
-    $parts = $this->createFlatDistinct('specimens', 'specimen_part', 'specimen_part')->execute();
-    $parts->add(new Specimens);
-    return $parts;
+    $items = $this->createUniqFlatDistinct('specimens', 'specimen_part', 'specimen_part', true);
+    return $items;
   }
 
   /**
@@ -240,10 +188,10 @@ class SpecimensTable extends DarwinTable
   */
   public function getDistinctStatus()
   {
-    $statuses = $this->createFlatDistinct('specimens', 'specimen_status', 'specimen_status')->execute();
-    $statuses->add(new Specimens);
-    return $statuses;
+    $items = $this->createUniqFlatDistinct('specimens', 'specimen_status', 'specimen_status', true);
+    return $items;
   }
+
   /**
   * Get Distincts Sub Container Storages of Part
   * filter by type if one given
@@ -277,9 +225,8 @@ class SpecimensTable extends DarwinTable
     */
     public function getDistinctTypes()
     {
-      $types = $this->createFlatDistinct('specimens', 'type', 'type')->execute();
-      $types->add(new Specimens);
-      return $types;
+      $items = $this->createUniqFlatDistinct('specimens', 'type', 'type', true);
+      return $items;
     }
 
     /**
@@ -288,9 +235,8 @@ class SpecimensTable extends DarwinTable
     */
     public function getDistinctTypeGroups()
     {
-      $types = $this->createFlatDistinct('specimens', 'type_group', 'type_group')->execute();
-      $types->add(new Specimens);
-      return $types;
+      $items = $this->createUniqFlatDistinct('specimens', 'type_group', 'type_group', true);
+      return $items;
     }
 
     /**
@@ -299,9 +245,8 @@ class SpecimensTable extends DarwinTable
     */
     public function getDistinctTypeSearches()
     {
-      $types = $this->createFlatDistinct('specimens', 'type_search', 'type_search')->execute();
-      $types->add(new Specimens);
-      return $types;
+      $items = $this->createUniqFlatDistinct('specimens', 'type_search', 'type_search', true);
+      return $items;
     }
 
     /**
@@ -310,8 +255,7 @@ class SpecimensTable extends DarwinTable
     */
     public function getDistinctSexes()
     {
-      $sexes = $this->createFlatDistinct('specimens', 'sex', 'sex')->execute();
-      $sexes->add(new Specimens);
+      $sexes = $this->createUniqFlatDistinct('specimens', 'sex', 'sex', true);
       return $sexes;
     }
 
@@ -321,8 +265,7 @@ class SpecimensTable extends DarwinTable
     */
     public function getDistinctStates()
     {
-      $states = $this->createFlatDistinct('specimens', 'state', 'state')->execute();
-      $states->add(new Specimens);
+      $states = $this->createUniqFlatDistinct('specimens', 'state', 'state',true);
       return $states;
     }
 
@@ -332,22 +275,8 @@ class SpecimensTable extends DarwinTable
     */
     public function getDistinctStages()
     {
-      $stages = $this->createFlatDistinct('specimens', 'stage', 'stage')->execute();
-      $stages->add(new Specimens);
+      $stages = $this->createUniqFlatDistinct('specimens', 'stage', 'stage', true);
       return $stages;
-    }
-    /**
-    * Get distinct Stages As an array
-    * @return Doctrine_collection with distinct "stages" as column
-    */
-    public function getDistinctStagesArray()
-    {
-      $stages = $this->createFlatDistinct('specimens', 'stage', 'stage')->execute();
-      $response = array();
-      foreach($stages as $stage) {
-        $response[$stage->getStage()] = $stage->getStageSearchFormated();
-      }
-      return $response;
     }
 
     /**
@@ -356,9 +285,8 @@ class SpecimensTable extends DarwinTable
     */
     public function getDistinctSocialStatuses()
     {
-      $social_statuses = $this->createFlatDistinct('specimens', 'social_status', 'social_status')->execute();
-      $social_statuses->add(new Specimens);
-      return $social_statuses;
+      $items = $this->createUniqFlatDistinct('specimens', 'social_status', 'social_status', true);
+      return $items;
     }
 
     /**
@@ -367,9 +295,8 @@ class SpecimensTable extends DarwinTable
     */
     public function getDistinctRockForms()
     {
-      $rock_forms = $this->createFlatDistinct('specimens', 'rock_form', 'rock_form')->execute();
-      $rock_forms->add(new Specimens);
-      return $rock_forms;
+      $items = $this->createUniqFlatDistinct('specimens', 'rock_form', 'rock_form', true);
+      return $items;
     }
 
   public function getSpecimenByRef($collection_id,$taxon_id)
@@ -436,5 +363,26 @@ class SpecimensTable extends DarwinTable
     if(!$is_admin)
       $q->andWhere('s.collection_ref in (select fct_search_authorized_encoding_collections(?))',$user_id);
     return $q->execute();
+  }
+
+  public function createUniqFlatDistinct($table, $column,  $new_col='item', $empty = false)
+  {
+    if(! isset($this->flat_results)){
+      $q = Doctrine_Query::create()
+        ->useResultCache(true)
+        ->setResultCacheLifeSpan(5) //5 sec
+        ->From('FlatDict')
+        ->select('dict_field, dict_value')
+        ->andwhere('referenced_relation = ?', $table)
+        ->orderBy("dict_value ASC");
+      $res = $q->execute();
+      $this->flat_results = array();
+      foreach($res as $result) {
+        if(! isset($this->flat_results[$result->getDictField()]))
+          $this->flat_results[$result->getDictField()] = array();
+        $this->flat_results[$result->getDictField()][$result->getDictValue()] = $result->getDictValue();
+      }
+    }
+    return $this->flat_results[$column];
   }
 }

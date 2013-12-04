@@ -343,7 +343,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     /* Acquisition categories */
     $this->widgetSchema['acquisition_category'] = new sfWidgetFormChoice(array(
-      'choices' =>  array_merge(array('' => ''),SpecimensTable::getDistinctCategories()),
+      'choices' =>  array_merge(array('' => ''), SpecimensTable::getDistinctCategories()),
     ));
 
     $this->widgetSchema['acquisition_from_date'] = new widgetFormJQueryFuzzyDate(
@@ -379,22 +379,18 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   * Individuals Fields
   */
 
-    $this->widgetSchema['type'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['type'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctTypeGroups',
-      'method' => 'getTypeGroupFormated',
-      'key_method' => 'getTypeGroup',
       'multiple' => true,
       'expanded' => true,
       'add_empty' => false,
     ));
     $this->validatorSchema['type'] = new sfValidatorPass();
 
-    $this->widgetSchema['sex'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['sex'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctSexes',
-      'method' => 'getSexSearchFormated',
-      'key_method' => 'getSex',
       'multiple' => true,
       'expanded' => true,
       'add_empty' => false,
@@ -403,40 +399,34 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
 
     $this->widgetSchema['stage'] = new widgetFormSelectDoubleListFilterable(array(
-      'choices' => new sfCallable(array(Doctrine::getTable('Specimens'),'getDistinctStagesArray')),
+      'choices' => new sfCallable(array(Doctrine::getTable('Specimens'),'getDistinctStages')),
       'label_associated'=>$this->getI18N()->__('Selected'),
       'label_unassociated'=>$this->getI18N()->__('Available')
     ));
 
     $this->validatorSchema['stage'] = new sfValidatorPass();
 
-    $this->widgetSchema['status'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['status'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctStates',
-      'method' => 'getStateSearchFormated',
-      'key_method' => 'getState',
       'multiple' => true,
       'expanded' => true,
       'add_empty' => false,
     ));
     $this->validatorSchema['status'] = new sfValidatorPass();
 
-    $this->widgetSchema['social'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['social'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctSocialStatuses',
-      'method' => 'getSocialStatusSearchFormated',
-      'key_method' => 'getSocialStatus',
       'multiple' => true,
       'expanded' => true,
       'add_empty' => false,
     ));
     $this->validatorSchema['social'] = new sfValidatorPass();
 
-    $this->widgetSchema['rockform'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['rockform'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctRockForms',
-      'method' => 'getRockFormSearchFormated',
-      'key_method' => 'getRockForm',
       'multiple' => true,
       'expanded' => true,
       'add_empty' => false,
@@ -452,11 +442,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $this->validatorSchema['part'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema['part'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['part'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctParts',
-      'method' => 'getSpecimenPart',
-      'key_method' => 'getSpecimenPart',
       'add_empty' => true,
     ));
 
@@ -476,11 +464,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required' => false));
 
-    $this->widgetSchema['building'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['building'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctBuildings',
-      'method' => 'getBuildings',
-      'key_method' => 'getBuildings',
       'add_empty' => true,
     ));
 

@@ -191,8 +191,6 @@ class SpecimensForm extends BaseSpecimensForm
     $this->widgetSchema['sex'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctSexes',
-      'method' => 'getSex',
-      'key_method' => 'getSex',
       'add_empty' => false,
       'change_label' => 'Pick a sex in the list',
       'add_label' => 'Add an other sex',
@@ -253,7 +251,7 @@ class SpecimensForm extends BaseSpecimensForm
       'complete_url' => 'catalogue/completeName?table=institutions',
       'nullable' => true,
     ));
-
+    $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required'=>false));
     if(sfConfig::get('dw_defaultInstitutionRef')) {
       $this->setDefault('institution_ref', sfConfig::get('dw_defaultInstitutionRef'));
     }
@@ -782,7 +780,6 @@ class SpecimensForm extends BaseSpecimensForm
         $taintedValues['institution_ref'] = sfConfig::get('dw_defaultInstitutionRef');
       }
     }
-
     parent::bind($taintedValues, $taintedFiles);
   }
 
