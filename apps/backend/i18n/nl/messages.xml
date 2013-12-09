@@ -5862,11 +5862,11 @@
       </trans-unit>
       <trans-unit id="1777">
         <source>Error(s) found</source>
-        <target></target>
+        <target>Fout(en) gevonden</target>
       </trans-unit>
       <trans-unit id="1778">
         <source>Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file</source>
-        <target></target>
+        <target>Er werden fouten gevonden tijdens de import, u kunt deze fouten verbeteren via het fouticoontje en nadien de import verderzetten of u kunt het bestand verwijderen en uw gecorrigeerde bestand opnieuw importeren</target>
       </trans-unit>
       <trans-unit id="1779">
         <source>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</source>
@@ -5874,23 +5874,23 @@
       </trans-unit>   
       <trans-unit id="1780">
         <source>warning_button_explanation</source>
-        <target>This button will show you all errors occured during import, it&#039;s your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
+        <target>Deze knop zal u al de foutmeldingen tonen die tijdens de import zijn opgetreden; aan u de keuze om het import proces verder te zetten of het bestand te verwijderen, te corrigeren en opnieuw te importeren.</target>
       </trans-unit>
       <trans-unit id="1781">
         <source>This file has been completly been imported in DaRWIN</source>
-        <target>This file has been completly been imported in DaRWIN</target>
+        <target>Dit bestand werd volledig geïmporteerd in DaRWIN</target>
       </trans-unit>
       <trans-unit id="1782">
         <source>ok_line_explanation</source>
-        <target>Your 'Ok' lines are beeing imported in DaRWIN</target>
+        <target>Uw 'Ok' lijnen worden geïmporteerd in DaRWIN</target>
       </trans-unit>
       <trans-unit id="1783">
         <source>Display of import file</source>
-        <target></target>
+        <target>Tonen van het import bestand</target>
       </trans-unit>
       <trans-unit id="1784">
         <source>Correction of import row</source>
-        <target></target>
+        <target>Correctie van de te importeren rij</target>
       </trans-unit>
       <trans-unit id="1785">
         <source>Pick a column in the list</source>

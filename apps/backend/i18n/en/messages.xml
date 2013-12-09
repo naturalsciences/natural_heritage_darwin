@@ -5886,19 +5886,26 @@
       </trans-unit>   
       <trans-unit id="1778">
         <source>Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file</source>
-        <target>Errors appeared during import, check these errors with the error icon (yellow triangle), you can continue the import process or delete the entry and repair your file</target>
+        <target>Errors appeared during import, you can either check these errors with
+the error icon, and you can continue the import process or you can  delete the entry
+and re-import your corrected file</target>
       </trans-unit>
       <trans-unit id="1779">
         <source>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</source>
-        <target>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</target>
+        <target>This button will cancel the importing of the file, your
+file will have the Aborted state, it will allow you to keep a trace of
+this import, even if the data is not imported</target>
       </trans-unit>   
       <trans-unit id="1780">
         <source>warning_button_explanation</source>
-        <target>This button will show you all errors occured during import, it&#039;s your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
+        <target>This button will show you all errors that occured during
+import, it&#039;s your choice to decide whether to continue the import process
+or to delete your import, correct the file and re-import it</target>
       </trans-unit>
       <trans-unit id="1781">
         <source>This file has been completly been imported in DaRWIN</source>
-        <target>This file has been completly been imported in DaRWIN</target>
+        <target>This file has been completely imported in
+DaRWIN</target>
       </trans-unit>
       <trans-unit id="1782">
         <source>ok_line_explanation</source>

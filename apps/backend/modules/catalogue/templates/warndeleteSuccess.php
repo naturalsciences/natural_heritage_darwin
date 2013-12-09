@@ -5,7 +5,6 @@
       <?php echo __('The record that you are trying to delete has children. If you delete it, every children will be deleted too!');?>
     </p>
     <br />
-<?php echo get_class($link_delete);?>
     <span class="remove_confirm">
       <?php echo image_tag('remove.png'); ?>
       <?php echo link_to("Delete it anyway",sfOutputEscaper::unescape($link_delete));?>
