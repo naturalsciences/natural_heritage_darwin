@@ -1,3 +1,5 @@
+html { height:100%; }
+body, .wrapper { position:absolute; top:0; bottom:0; right:0; left:0; }
 #navigation{
    position: absolute;
    top: 0; left: 0;
@@ -5,22 +7,22 @@
    float: left;
 
 }
- 
+
 #navigation,
 .ui-tooltip-nav .ui-tooltip-content{
    font-size: 14px;
    line-height: 18px;
    text-align: left;
- 
+
    background-color: #3390A1;
 }
- 
+
 #navigation ul,
 #navigation li{
-		  line-height:  1.0;
-      float: left;
+/* 		  line-height:  1.0; */
+/*       float: left; */
 }
- 
+
 #navigation li a[href]{
 	display: block;
 	text-decoration:none;
@@ -31,33 +33,26 @@
 	padding-bottom: 15px;
 	border-left-width: 1px;
 }
- 
-#navigation .submenu{
-	display: none;
-  border-width: 1px;
-}
- 
- 
- 
- 
+
+
 #navigation .ui-tooltip-nav{
    max-width: 240px;
 }
- 
+
 #navigation   .ui-tooltip-nav .ui-tooltip-content{
       padding: 0;
       border-width: 0;
 			background-color:#A9D4DB;
    }
-   
+
    #navigation .ui-tooltip-nav ul,
    #navigation .ui-tooltip-nav li{
       float: none;
    }
- 
-   
-   
-/************ END OF Default style ****/  
+
+
+
+/************ END OF Default style ****/
 
 .menu_top {
     background-color: #3390A1;
@@ -69,10 +64,10 @@
     z-index: 2000;
 }
 
-#navigation .lvl_2 a[href] { 
+#navigation .lvl_2 a[href] {
 	background-color:#ebf5f5 !important;
 }
-#navigation .lvl_2 a[href]:hover { 
+#navigation .lvl_2 a[href]:hover {
 	background-color:#a9d4db !important;
 }
 
@@ -104,7 +99,7 @@
 /* 	width: 171px; */
 	height: 32px;
 	color:white;
-	font-size:10pt; 
+	font-size:10pt;
 	font-stretch: ultra-expanded;
 }
 
@@ -116,13 +111,19 @@
 }
 
 #navigation li.house {
-	
+
     border-left: medium none;
     padding: 0 0 0;
     text-align: center;
     width: 50px;
 }
 
+.sf-arrows .sf-with-ul{
+  padding-right: 0px !important;
+}
+.lvl_2 {
+  display: none;
+}
 /*** WARNING CRAP PLACEMENT :p ***/
 #navigation > li.exit
 {

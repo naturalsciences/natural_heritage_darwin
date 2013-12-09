@@ -1,5 +1,5 @@
 <div class="menu_top">
-    <ul id="navigation">
+    <ul id="navigation" class="sf-menu">
         <li class="house"><?php echo link_to(image_tag('home.png', 'alt=Home'),'board/index');?></li>
         <li>
             <a href="#" class="subtitle"><?php echo __('My Preferences');?></a>
@@ -106,68 +106,19 @@
         <li class="exit" ><?php echo link_to(image_tag('exit.png', 'alt=Exit'),'account/logout');?></li>
     </ul>
 </div>
+<script>
 
-<script  type="text/javascript">
-$(document).ready(function()
-{
-   $('#navigation').delegate('a.subtitle', 'mouseover', function(event) {
-      var self = $(this),
-         qtip = '.qtip.ui-tooltip',
-         container = $(event.delegateTarget || event.liveFired),
-         submenu = self.next('ul'),
+    (function($){ //create closure so we can safely use $ as alias for jQuery
 
-      // Determine whether this is a top-level menu
-      isTopMenu = self.parents(qtip).length < 1;
+      $(document).ready(function(){
 
-      // If it's not a top level and we can't find a sub-menu... return
-      if(isTopMenu && !submenu.length) { return false; }
-      /*
-       * Top-level menus will be placed below the menu item, all others
-       * will be placed to the right of each other, top aligned.
-       */
-      position = isTopMenu ?
-         { my: 'top center', at: 'bottom center' } :
-         { my: 'top left', at: 'right top' }
-
-      // Create the tooltip
-      self.qtip({
-         overwrite: false, // Make sure we only render one tooltip
-         content: {
-            text: self.next('ul') // Use the submenu as the qTip content
-         },
-         position: $.extend(true, position, {
-            // Append the nav tooltips to the #navigation element (see show.solo below)
-            container: container,
-            // We'll make sure the menus stay visible by shifting/flipping them back into the viewport
-            viewport: $(window), adjust: { method: 'shift flip', y: isTopMenu ? -5 : 0}
-         }),
-         show: {
-            event: event.type, // Make sure to sue the same event as above
-            ready: true, // Make sure it shows on first mouseover
-
-            /*
-             * If it's a top level menu, make sure only one is shown at a time!
-             * We'll pass the container element through too so it doesn't hide
-             * tooltips unrelated to the menu itself
-             */
-            solo: isTopMenu ? container : false
-         },
-         hide: {
-            delay: 100,
-            event: 'unfocus mouseleave',
-            fixed: true // Make sure we can interact with the qTip by setting it as fixed
-         },
-         style: {
-            classes: 'ui-tooltip-nav', // Basic styles
-            tip: isTopMenu // We don't want a tip... it's a menu duh!
-         },
-         events: {
-            // Toggle an active class on each menus activator
-            toggle: function(event, api) {
-               api.elements.target.toggleClass('active', event.type === 'tooltipshow');
-            }
-         }
+        // initialise plugin
+        var example = $('#navigation').superclick({
+          cssArrows: false
+          //add options here if required
+        });
+        $('.lvl_2').hide();
       });
-   });
-});
+
+    })(jQuery);
 </script>
