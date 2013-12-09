@@ -3142,7 +3142,7 @@ BEGIN
   IF get_setting('darwin.upd_imp_ref') is null OR  get_setting('darwin.upd_imp_ref') = '' THEN
     PERFORM set_config('darwin.upd_imp_ref', 'ok', true);
     IF OLD.taxon_ref IS DISTINCT FROM NEW.taxon_ref AND  NEW.taxon_ref is not null THEN
-        SELECT t.id ,t.name, t.level_ref , cl.level_name, t.status, t.extinct
+        SELECT t.id ,t.name, t.level_ref , cl.level_sys_name, t.status, t.extinct
         INTO NEW.taxon_ref,NEW.taxon_name, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_extinct
         FROM taxonomy t, catalogue_levels cl
         WHERE cl.id=t.level_ref AND t.id = NEW.taxon_ref;
