@@ -56,9 +56,10 @@ EOF;
       foreach($dirsNames as $dirn) {
         if(is_dir(sfConfig::get('sf_upload_dir')."/multimedia/".$dirn."/") &&
           ! is_dir(sfConfig::get('sf_upload_dir')."/multimedia/old".$dirn."/")) {
+          $this->logSection('Move', "Move files directory to". sfConfig::get('sf_upload_dir')."/multimedia/old".$dirn."/") ;
           rename(
             sfConfig::get('sf_upload_dir')."/multimedia/".$dirn."/",
-            sfConfig::get('sf_upload_dir')."/multimedia/".$dirn."/"
+            sfConfig::get('sf_upload_dir')."/multimedia/old".$dirn."/"
           );
         }
       }
@@ -72,8 +73,7 @@ EOF;
           $i++;
         } else {
           echo sfConfig::get('sf_upload_dir')."/multimedia/old".$obj->getUri()."\n";
-          echo $obj->getUri()."\n";
-          die("AAAARG\n");
+          $this->logSection('Delete Error', "Unable to move File: ". $obj->getUri(),null, 'ERROR') ;
         }
         if($i%10 == 0) {
           $this->logSection('move-file', sprintf('Moved %d files',$i));
