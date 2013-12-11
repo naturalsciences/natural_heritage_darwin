@@ -472,47 +472,37 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $this->validatorSchema['building'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema['floor'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['floor'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctFloors',
-      'method' => 'getFloors',
-      'key_method' => 'getFloors',
       'add_empty' => true,
     ));
     $this->validatorSchema['floor'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema['row'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['row'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctRows',
-      'method' => 'getRows',
-      'key_method' => 'getRows',
       'add_empty' => true,
     ));
     $this->validatorSchema['row'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema['col'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['col'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctCols',
-      'method' => 'getCols',
-      'key_method' => 'getCols',
       'add_empty' => true,
     ));
     $this->validatorSchema['col'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema['room'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['room'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctRooms',
-      'method' => 'getRooms',
-      'key_method' => 'getRooms',
       'add_empty' => true,
     ));
     $this->validatorSchema['room'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema['shelf'] = new sfWidgetFormDoctrineChoice(array(
+    $this->widgetSchema['shelf'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctShelfs',
-      'method' => 'getShelfs',
-      'key_method' => 'getShelfs',
       'add_empty' => true,
     ));
     $this->validatorSchema['shelf'] = new sfValidatorString(array('required' => false));
