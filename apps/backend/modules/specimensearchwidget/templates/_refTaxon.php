@@ -33,7 +33,7 @@ $(document).ready(function () {
     $('#taxon_full_text_line').find('input:text').val("") ;
     $('#taxon_full_text_line').find('select').val('') ;
   });
-  
+
   $('#taxon_full_text').click(function() {
     $('#taxon_precise').removeAttr('disabled') ;
     $('#taxon_full_text').attr('disabled','disabled') ;
@@ -42,8 +42,8 @@ $(document).ready(function () {
     $('#taxon_full_text_line').find('input:text').val("") ;
     $('#taxon_full_text_line').find('input:hidden').val('') ;
 
-  }); 
-  
+  });
+
   if($('#specimen_search_filters_taxon_name').val() != '')
   {
     $('#taxon_full_text').trigger("click") ;

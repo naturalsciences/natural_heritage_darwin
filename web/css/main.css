@@ -3149,3 +3149,9 @@ tr.spec_ident_collectors_data
 {
   height: 40px ;
 }
+
+#search_div input[type="button"]:disabled {
+  background-color: #5BAABD;
+  color:white;
+  cursor:not-allowed;
+}
