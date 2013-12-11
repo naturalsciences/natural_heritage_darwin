@@ -32,7 +32,7 @@ $(document).ready(function () {
       column_str = $('#specimen_search_filters_col_fields').val();
     }
 
-    var last_position = $('body').scrollTop() ;
+    var last_position = $(window).scrollTop();
     scroll(0,0) ;
 
     $('form.search_form select.double_list_select-selected option').attr('selected', 'selected');
@@ -51,10 +51,10 @@ $(document).ready(function () {
         at: 'top center',
         adjust:{
           y: 250 // option set in case of the qtip become too big
-        },         
+        },
         target: $(document.body),
       },
-            
+
       show: {
         ready: true,
         delay: 0,
@@ -70,7 +70,7 @@ $(document).ready(function () {
         target: $('body')
       },
       events: {
-        hide: function(event, api) {                
+        hide: function(event, api) {
           scroll(0,last_position);
           api.destroy();
           if(typeof(spec_list_saved) !='undefined' && spec_list_saved !=null)
@@ -81,5 +81,5 @@ $(document).ready(function () {
     });
     return false;
  });
-}); 
+});
 </script>

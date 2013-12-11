@@ -11,7 +11,7 @@ $(document).ready(function () {
     } else {
       column_str = $('#specimen_search_filters_col_fields').val();
     }
-    var last_position = $('body').scrollTop() ;
+    var last_position = $(window).scrollTop();
     scroll(0,0) ;
 
     $('form.specimensearch_form select.double_list_select-selected option').attr('selected', 'selected');
@@ -49,7 +49,7 @@ $(document).ready(function () {
           target: $('body')
         },
         events: {
-          hide: function(event, api) {                
+          hide: function(event, api) {
             scroll(0,last_position);
             api.destroy();
           }
@@ -58,5 +58,5 @@ $(document).ready(function () {
       });
     return false;
  });
-}); 
+});
 </script>

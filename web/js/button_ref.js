@@ -6,7 +6,7 @@ var ref_caller_id = '';
 function button_ref_modal(event)
 {
     event.preventDefault();
-    var last_position = $('body').scrollTop() ;
+    var last_position = $(window).scrollTop();
     scroll(0,0) ;
     $(this).parent().parent().find('input[type="hidden"]').trigger({ type:"loadref"});
     $(this).qtip({

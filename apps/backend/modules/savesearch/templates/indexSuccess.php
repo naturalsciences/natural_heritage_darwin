@@ -63,7 +63,7 @@ $(document).ready(function () {
   $('.saved_searches .fav_img').click(function(){
     if($(this).hasClass('favorite_on'))
     {
-      $(this).parent().find('.favorite_off').removeClass('hidden'); 
+      $(this).parent().find('.favorite_off').removeClass('hidden');
       $(this).addClass('hidden') ;
       fav_status = 0;
     }
@@ -82,7 +82,7 @@ $(document).ready(function () {
 
   $(".edit_request").click(function(event){
     event.preventDefault();
-    var last_position = $('body').scrollTop() ;              
+    var last_position = $(window).scrollTop();
     scroll(0,0) ;
 
     $(this).qtip({
@@ -100,10 +100,10 @@ $(document).ready(function () {
         at: 'top center',
         adjust:{
           y: 250 // option set in case of the qtip become too big
-        },         
+        },
         target: $(document.body),
       },
-            
+
       show: {
         ready: true,
         delay: 0,
@@ -119,7 +119,7 @@ $(document).ready(function () {
         target: $('body')
       },
       events: {
-        hide: function(event, api) {                
+        hide: function(event, api) {
           scroll(0,last_position);
           api.destroy();
           location.reload();
@@ -129,5 +129,5 @@ $(document).ready(function () {
     });
     return false;
  });
-}); 
+});
 </script>
