@@ -1,8 +1,8 @@
 <script type="text/javascript">
-$(document).ready(function () 
+$(document).ready(function ()
 {
-   $('table.classifications_edit').find('.info').click(function() 
-   {   
+   $('table.classifications_edit').find('.info').click(function()
+   {
      if($('.tree').is(":hidden"))
      {
        $.get('<?php echo url_for('catalogue/tree?table=taxonomy&id='.$taxon->Parent->getId()) ; ?>',function (html){
@@ -42,13 +42,13 @@ $(document).ready(function ()
       <tr>
         <th><?php echo $form['extinct']->renderLabel() ?></th>
         <td>
-  		    <?php if($form['extinct']->getValue()) echo __("Yes") ; else echo __("No") ;?>             
+  		    <?php if($form['extinct']->getValue()) echo __("Yes") ; else echo __("No") ;?>
         </td>
-      </tr> 
+      </tr>
       <tr>
         <th><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>
-          <?php if ($taxon->Parent->getName() != "-") : ?>
+          <?php if ($taxon->getParentRef() &&  $taxon->Parent->getName() != "-") : ?>
           <?php echo link_to(__($taxon->Parent->getNameWithFormat(ESC_RAW)), 'taxonomy/view?id='.$taxon->Parent->getId(), array('id' => $taxon->Parent->getId())) ?>
           <?php echo image_tag('info.png',"title=info class=info");?>
           <div class="tree">
@@ -76,7 +76,7 @@ $(document).ready(function ()
     </tbody>
   </table>
 </div>
- <div class="view_mode">  
+ <div class="view_mode">
   <?php include_partial('widgets/screen', array(
     'widgets' => $widgets,
     'category' => 'cataloguewidgetview',
