@@ -3122,7 +3122,7 @@ h3.spec {
     margin-bottom: 1.5em;
     font-size: large;
     text-shadow: 1px 1px 1px gray;
-    font-weight:bold;
+    font-weight: normal;
 }
 h3.spec .title {
   border-bottom: 3px solid #5baabd;
