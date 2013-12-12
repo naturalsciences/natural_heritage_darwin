@@ -5883,7 +5883,7 @@
       <trans-unit id="1777">
         <source>Error(s) found</source>
         <target>Error(s) found</target>
-      </trans-unit>   
+      </trans-unit>
       <trans-unit id="1778">
         <source>Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file</source>
         <target>Errors appeared during import, you can either check these errors with
@@ -5895,7 +5895,7 @@ and re-import your corrected file</target>
         <target>This button will cancel the importing of the file, your
 file will have the Aborted state, it will allow you to keep a trace of
 this import, even if the data is not imported</target>
-      </trans-unit>   
+      </trans-unit>
       <trans-unit id="1780">
         <source>warning_button_explanation</source>
         <target>This button will show you all errors that occured during
@@ -5934,6 +5934,18 @@ DaRWIN</target>
       <trans-unit id="1788">
         <source>Change Column</source>
         <target>Change Column</target>
+      </trans-unit>
+      <trans-unit id="1789">
+        <source>Search in comments</source>
+        <target>Search in comments</target>
+      </trans-unit>
+      <trans-unit id="1790">
+        <source>Search in properties</source>
+        <target>Search in properties</target>
+      </trans-unit>
+      <trans-unit id="1791">
+        <source>Referenced relation</source>
+        <target>Referenced relation</target>
       </trans-unit>
     </body>
   </file>

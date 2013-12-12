@@ -5869,7 +5869,7 @@
       <trans-unit id="1779">
         <source>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</source>
         <target>Ce bouton annulera l'import de votre fichier, ce dernier aura un état "annulé", ce qui vous permettra de conserver une trace de celui-ci, meme si les données n'ont pas été importées</target>
-      </trans-unit>   
+      </trans-unit>
       <trans-unit id="1780">
         <source>warning_button_explanation</source>
         <target>Ce bouton, si présent, vous montrera les erreurs survenues durant l'import. C'est a vous de décider de continuer le processus d'import sans vous occuper de ces erreurs, ou bien de corriger votre fichier et le ré-importer ensuite.</target>
@@ -5901,6 +5901,22 @@
       <trans-unit id="1787">
         <source>column</source>
         <target>Colonne</target>
+      </trans-unit>
+      <trans-unit id="1788">
+        <source>Change Column</source>
+        <target>Changer de colonne</target>
+      </trans-unit>
+      <trans-unit id="1789">
+        <source>Search in comments</source>
+        <target>Recherche dans les commentaires</target>
+      </trans-unit>
+      <trans-unit id="1790">
+        <source>Search in properties</source>
+        <target>Recherche dans les propiétés</target>
+      </trans-unit>
+      <trans-unit id="1791">
+        <source>Referenced relation</source>
+        <target>Referenced relation</target>
       </trans-unit>
     </body>
   </file>

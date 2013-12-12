@@ -529,12 +529,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['property_value_to'] = new sfValidatorString(array('required' => false));
 
 
-    $this->widgetSchema['property_units'] = new widgetFormSelectComplete(array(
+    $this->widgetSchema['property_units'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Properties',
       'table_method' => array('method' => 'getDistinctUnit', 'parameters' => array(/*$this->options['ref_relation']*/)),
       'add_empty' => true,
-      'change_label' => 'Pick a unit in the list',
-      'add_label' => 'Add another unit',
     ));
     $this->validatorSchema['property_units'] = new sfValidatorString(array('required' => false));
 

@@ -188,7 +188,10 @@ class specimenActions extends DarwinActions
     }
     else
     {
-      $this->form = new SpecimensForm();
+      $spec = new Specimens();
+      $spec->setCollectionRef(6);
+      $spec->setTaxonRef(10004);
+      $this->form = new SpecimensForm($spec);
     }
     $this->loadWidgets();
   }
@@ -197,7 +200,10 @@ class specimenActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $this->forward404Unless($request->isMethod('post'),'You must submit your data with Post Method');
-    $this->form = new SpecimensForm();
+      $spec = new Specimens();
+      $spec->setCollectionRef(6);
+      $spec->setTaxonRef(10004);
+      $this->form = new SpecimensForm($spec);
     $this->processForm($request, $this->form,'create');
     $this->loadWidgets();
 
