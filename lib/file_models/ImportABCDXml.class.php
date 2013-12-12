@@ -87,7 +87,7 @@ class ImportABCDXml implements IImportModels
       case "AssociatedUnitSourceInstitutionCode" : $this->object->setInstitutionName($this->cdata) ; break;
       case "AssociatedUnitSourceName" : $this->object->setSourceName($this->cdata) ; break;
       case "AssociationType" : $this->object->setRelationshipType($this->cdata) ; break;
-      case "efg:ChronostratigraphicAttribution" : $this->cdata = $this->object->setChronoParent() ; if($this->cdata) $this->addComment(true) ; break;
+      case "efg:ChronostratigraphicAttribution" : $this->cdata = $this->object->setChronoParent() ; if($this->cdata) $this->addComment(true, 'chronostratigraphy') ; break;
       case "efg:ChronoStratigraphicDivision" : $this->object->getChronoLevel(strtolower($this->cdata)) ; break;
       case "efg:ChronostratigraphicAttributions" : $this->object->saveChrono($this->staging) ; break;
       case "efg:ChronostratigraphicName" : $this->object->name = $this->cdata ; break;
