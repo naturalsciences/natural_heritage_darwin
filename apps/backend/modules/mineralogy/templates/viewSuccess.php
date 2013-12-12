@@ -1,8 +1,8 @@
 <script type="text/javascript">
-$(document).ready(function () 
+$(document).ready(function ()
 {
-   $('table.classifications_edit').find('.info').click(function() 
-   {   
+   $('table.classifications_edit').find('.info').click(function()
+   {
      if($('.tree').is(":hidden"))
      {
        $.get('<?php echo url_for('catalogue/tree?table=mineralogy&id='.$mineral->Parent->getId()) ; ?>',function (html){
@@ -26,7 +26,7 @@ $(document).ready(function ()
         <td>
           <?php echo $mineral->getCode() ?>
         </td>
-      </tr>    
+      </tr>
       <tr>
         <th><?php echo $form['name']->renderLabel() ?></th>
         <td>
@@ -38,7 +38,7 @@ $(document).ready(function ()
         <td>
           <?php echo $mineral->getClassification() ?>
         </td>
-      </tr>      
+      </tr>
       <tr>
         <th><?php echo $form['local_naming']->renderLabel() ?></th>
         <td>
@@ -60,7 +60,7 @@ $(document).ready(function ()
       <tr>
         <th><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>
-          <?php if ($mineral->Parent->getName() != "-") : ?>        
+          <?php if ($mineral->getParentRef() &&  $mineral->Parent->getName() != "-") : ?>
             <?php echo link_to(__($mineral->Parent->getName()), 'mineralogy/view?id='.$mineral->Parent->getId(), array('id' => $mineral->Parent->getId())) ?>
             <?php echo image_tag('info.png',"title=info class=info");?>
             <div class="tree">
@@ -75,7 +75,7 @@ $(document).ready(function ()
         <td>
           <?php echo $mineral->getCristalSystem() ?>
         </td>
-      </tr> 
+      </tr>
       <tr>
         <th><?php echo __("Colour") ?></th>
         <td>
@@ -100,7 +100,7 @@ $(document).ready(function ()
     </tbody>
   </table>
 </div>
-<div class="view_mode">  
+<div class="view_mode">
  <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,
 	'category' => 'cataloguewidgetview',
