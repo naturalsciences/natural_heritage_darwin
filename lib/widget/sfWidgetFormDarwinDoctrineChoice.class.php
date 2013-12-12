@@ -106,6 +106,7 @@ class sfWidgetFormDarwinDoctrineChoice extends sfWidgetFormDoctrineChoice
         $objects[] = $results;
       }
       elseif (is_array($results)) {
+        $results = array_merge($choices, $results);
         return $results;
       }
       else
@@ -121,7 +122,6 @@ class sfWidgetFormDarwinDoctrineChoice extends sfWidgetFormDoctrineChoice
     {
       $choices[$object->$keyMethod()] = $object->$method();
     }
-
     return $choices;
   }
 /**
