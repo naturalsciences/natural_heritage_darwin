@@ -34,7 +34,9 @@ class CommentsFormFilter extends BaseCommentsFormFilter
     $this->widgetSchema['notion_concerned'] = new sfWidgetFormChoice(array('choices'=> $choices));
     $this->validatorSchema['notion_concerned'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($choices)));
 
-
+    $this->widgetSchema->setLabels(array(
+      'referenced_relation' => 'Linked Info',
+    ));
   }
 
 

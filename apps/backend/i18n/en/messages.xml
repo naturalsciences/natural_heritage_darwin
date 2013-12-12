@@ -5944,8 +5944,8 @@ DaRWIN</target>
         <target>Search in properties</target>
       </trans-unit>
       <trans-unit id="1791">
-        <source>Referenced relation</source>
-        <target>Referenced relation</target>
+        <source>Linked info</source>
+        <target>Linked info</target>
       </trans-unit>
     </body>
   </file>

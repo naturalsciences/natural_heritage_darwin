@@ -5871,7 +5871,7 @@
       <trans-unit id="1779">
         <source>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</source>
         <target>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</target>
-      </trans-unit>   
+      </trans-unit>
       <trans-unit id="1780">
         <source>warning_button_explanation</source>
         <target>Deze knop zal u al de foutmeldingen tonen die tijdens de import zijn opgetreden; aan u de keuze om het import proces verder te zetten of het bestand te verwijderen, te corrigeren en opnieuw te importeren.</target>
@@ -5903,6 +5903,22 @@
       <trans-unit id="1787">
         <source>column</source>
         <target>Kolom</target>
+      </trans-unit>
+      <trans-unit id="1788">
+        <source>Change Column</source>
+        <target>Kolom wijzigen</target>
+      </trans-unit>
+      <trans-unit id="1789">
+        <source>Search in comments</source>
+        <target>In de Commentaar zoeken</target>
+      </trans-unit>
+      <trans-unit id="1790">
+        <source>Search in properties</source>
+        <target>In de Eigenschappen zoeken</target>
+      </trans-unit>
+      <trans-unit id="1791">
+        <source>Linked info</source>
+        <target>Gelinkt info</target>
       </trans-unit>
     </body>
   </file>

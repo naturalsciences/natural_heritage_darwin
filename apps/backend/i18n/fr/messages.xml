@@ -5915,8 +5915,8 @@
         <target>Recherche dans les propiétés</target>
       </trans-unit>
       <trans-unit id="1791">
-        <source>Referenced relation</source>
-        <target>Referenced relation</target>
+        <source>Linked info</source>
+        <target>Liée à</target>
       </trans-unit>
     </body>
   </file>

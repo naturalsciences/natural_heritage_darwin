@@ -57,6 +57,9 @@ class PropertiesFormFilter extends BasePropertiesFormFilter
     $this->validatorSchema['referenced_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($this->allowed_relations)));
 
     $this->validatorSchema['property_unit'] = new sfValidatorString(array('required' => false));
+    $this->widgetSchema->setLabels(array(
+      'referenced_relation' => 'Linked Info',
+    ));
   }
 
   public function addValuesColumnQuery($query, $field, $val)
