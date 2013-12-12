@@ -3155,3 +3155,25 @@ tr.spec_ident_collectors_data
   color:white;
   cursor:not-allowed;
 }
+
+.widget_preview.hidden {
+  display:block;
+}
+.widget_preview.hidden a[href]{
+    color: #666666;
+/*     text-decoration: line-through; */
+
+}
+
+.widget {
+  -webkit-transition : box-shadow 0.5s linear;
+       -moz-transition : box-shadow 0.5s linear;
+        -ms-transition : box-shadow 0.5s linear;
+         -o-transition : box-shadow 0.5s linear;
+            transition : box-shadow 0.5s linear;
+}
+.widget.flash {
+  -webkit-box-shadow : 0px 0px 10px 10px #C78B37;
+  -moz-box-shadow : 0px 0px 10px 10px #C78B37;
+  box-shadow : 0px 0px 10px 10px #C78B37;
+}
