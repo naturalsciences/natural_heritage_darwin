@@ -1,8 +1,8 @@
 <script type="text/javascript">
-$(document).ready(function () 
+$(document).ready(function ()
 {
-   $('table.classifications_edit').find('.info').click(function() 
-   {   
+   $('table.classifications_edit').find('.info').click(function()
+   {
      if($('.tree').is(":hidden"))
      {
        $.get('<?php echo url_for('catalogue/tree?table=chronostratigraphy&id='.$chrono->Parent->getId()) ; ?>',function (html){
@@ -50,24 +50,24 @@ $(document).ready(function ()
         <td>
           <?php echo $chrono->getLowerBound() ; ?>
         </td>
-      </tr> 
+      </tr>
       <tr>
         <th><?php echo $form['upper_bound']->renderLabel() ?></th>
         <td>
           <?php echo $chrono->getUpperBound() ; ?>
         </td>
-      </tr>       
+      </tr>
       <tr>
         <th><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>
-          <?php if ($chrono->Parent->getName() != "-") : ?>            
+          <?php if ($chrono->getParentRef() && $chrono->Parent->getName() != "-") : ?>
             <?php echo link_to(__($chrono->Parent->getName()), 'chronostratigraphy/view?id='.$chrono->Parent->getId(), array('id' => $chrono->Parent->getId())) ?>
             <?php echo image_tag('info.png',"title=info class=info");?>
             <div class="tree">
             </div>
           <?php else : ?>
           -
-          <?php endif ; ?>            
+          <?php endif ; ?>
         </td>
       </tr>
       <tr>
@@ -93,7 +93,7 @@ $(document).ready(function ()
       <?php endif;?>
     </tbody>
   </table>
-</div>  
+</div>
 <div class="view_mode">
  <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,

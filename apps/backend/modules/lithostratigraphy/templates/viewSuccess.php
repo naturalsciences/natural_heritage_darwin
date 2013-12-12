@@ -1,8 +1,8 @@
 <script type="text/javascript">
-$(document).ready(function () 
+$(document).ready(function ()
 {
-   $('table.classifications_edit').find('.info').click(function() 
-   {   
+   $('table.classifications_edit').find('.info').click(function()
+   {
      if($('.tree').is(":hidden"))
      {
        $.get('<?php echo url_for('catalogue/tree?table=lithostratigraphy&id='.$litho->Parent->getId()) ; ?>',function (html){
@@ -48,7 +48,7 @@ $(document).ready(function ()
       <tr>
         <th><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>
-          <?php if ($litho->Parent->getName() != "-") : ?>        
+          <?php if ($litho->getParentRef() && $litho->Parent->getName() != "-") : ?>
             <?php echo link_to(__($litho->Parent->getName()), 'lithostratigraphy/view?id='.$litho->Parent->getId(), array('id' => $litho->Parent->getId())) ?>
             <?php echo image_tag('info.png',"title=info class=info");?>
             <div class="tree">
@@ -83,7 +83,7 @@ $(document).ready(function ()
     </tbody>
   </table>
 </div>
-<div class="view_mode">  
+<div class="view_mode">
  <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,
 	'category' => 'cataloguewidgetview',
