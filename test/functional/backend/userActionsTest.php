@@ -8,7 +8,7 @@ $browser->loadData($configuration)->login('root','evil');
 $browser->
   info('Search')->
   get('/user/index')->
-  
+
   with('request')->begin()->
     isParameter('module', 'user')->
     isParameter('action', 'index')->
@@ -48,14 +48,14 @@ $browser->
 
 $browser->
   info('Address')->
-  
+
   get('/user/profile')->
 
   with('response')->begin()->
     isStatusCode(200)->
     checkElement('#address tbody tr',0)->
   end()->
-  
+
   click('#address a.link_catalogue')->
     with('response')->begin()->
     isStatusCode(200)->
@@ -92,13 +92,13 @@ $browser->
     checkElement('#address tbody tr',1)->
     checkElement('#address tbody tr .tag',2)->
   end()->
-  
+
   click('#address table tbody a.link_catalogue')->
   with('response')->begin()->
     isStatusCode(200)->
     checkElement('input[value="Bruxelles"]')->
   end()->
-  
+
   click('a.delete_button')->
    with('response')->begin()->
     isStatusCode(200)->
@@ -117,7 +117,7 @@ $browser->
     isStatusCode(200)->
     checkElement('#comm tbody tr',0)->
   end()->
-  
+
   click('#comm a.link_catalogue')->
     with('response')->begin()->
     isStatusCode(200)->
@@ -153,13 +153,13 @@ $browser->
     checkElement('#comm tbody tr',1)->
     checkElement('#comm tbody tr .tag','Home')->
   end()->
-  
+
   click('#comm table tbody a.link_catalogue')->
   with('response')->begin()->
     isStatusCode(200)->
     checkElement('input[value="+32478.254415"]')->
   end()->
-  
+
   click('.delete_button')->
    with('response')->begin()->
     isStatusCode(200)->
@@ -174,9 +174,9 @@ $browser->
     isStatusCode(200)->
   end();
 
-$browser->addCustomUserAndLogin('ychambert','toto');	
+$browser->addCustomUserAndLogin('ychambert','toto');
 $browser->addCustomUserAndLogin('encoder','evil');
-$browser->addCustomUserAndLogin('manager','evil');	
+$browser->addCustomUserAndLogin('manager','evil');
 $browser->get('account/logout')->
   with('response')->begin()->
     isRedirected()->
@@ -193,7 +193,7 @@ $browser->get('account/logout')->
 $browser->
   info('Search')->
   get('/user/index')->
-  
+
   with('request')->begin()->
     isParameter('module', 'user')->
     isParameter('action', 'index')->
@@ -239,14 +239,14 @@ $browser->
   end()->
 
   info('Prerences')->
-  
+
   get('user/preferences')->
   with('response')->begin()->
     isStatusCode()->
     checkElement('h1','/My Preferences/')->
-    checkElement('.user_table > thead',4)->
-    checkElement('.user_table > tbody',4)->
-    checkElement('.user_table > tbody > tr',9)->
+    checkElement('.user_table > thead',3)->
+    checkElement('.user_table > tbody',3)->
+    checkElement('.user_table > tbody > tr',5)->
     checkElement('#preferences_board_spec_rec_pp option[selected]','10')->
     checkElement('#preferences_board_search_rec_pp option[selected]','10')->
   end()->
@@ -268,4 +268,4 @@ $browser->
     checkElement('#preferences_board_spec_rec_pp option[selected]','5')->
     checkElement('#preferences_board_search_rec_pp option[selected]','5')->
   end();
-  
+

@@ -18,15 +18,20 @@ class importActions extends DarwinActions
       $this->forwardToSecureAction();
     }
   }
+  
+  private function getRight($id)
+  {
+    $import = Doctrine::getTable('Imports')->find($id);
 
+    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$import->getCollectionRef()))
+       $this->forwardToSecureAction();
+    return $import ;
+  }
+  
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
-    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('id'));
-
-    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
-       $this->forwardToSecureAction();
-
+    $this->import = $this->getRight($request->getParameter('id')) ;
     $this->import->delete();
 
     if($request->isXmlHttpRequest())
@@ -36,14 +41,27 @@ class importActions extends DarwinActions
     return $this->redirect('import/index');
   }
 
+  public function executeMaj(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->hasParameter('id'));
+    $this->import = $this->getRight($request->getParameter('id')) ;
+    Doctrine::getTable('Imports')->UpdateStatus($request->getParameter('id'));
+    $this->redirect('import/index');
+  }
+  
+  public function executeViewError(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->hasParameter('id'));
+    $this->id = $request->getParameter('id');
+    $this->import = $this->getRight($this->id);
+    $this->errors = explode(';',$this->import->getErrorsInImport()) ;
+    array_pop($this->errors) ; // just remove the solo ";" with cause to have a empty column at the end of the array
+  }
 
   public function executeClear(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
-    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('id'));
-
-    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
-       $this->forwardToSecureAction();
+    $this->import = $this->getRight($request->getParameter('id')) ;
 
     Doctrine::getTable('Imports')->clearImport($this->import->getId());
     if($request->isXmlHttpRequest())
@@ -67,7 +85,7 @@ class importActions extends DarwinActions
     {
       $this->form->bind($request->getParameter($this->form->getName()), $request->getFiles($this->form->getName()));
       if($this->form->isValid())
-      {       
+      {
         if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')))
         {  
           $error = new sfValidatorError(new sfValidatorPass(),'You don\'t have right on this collection');
@@ -145,7 +163,6 @@ class importActions extends DarwinActions
         {
           $ids[] = $v->getId();
         }
-      
         $imp_lines = Doctrine::getTable('Imports')->getNumberOfLines($ids) ;
         foreach($imp_lines as $k=>$v)
         {
@@ -154,12 +171,11 @@ class importActions extends DarwinActions
             if($v['id'] == $import->getId())
             {
               $import->setCurrentLineNum($v['cnt']);
-              break 2;
+              break 1;
             }
           }
         }
       }
     }
   }
-     
 }

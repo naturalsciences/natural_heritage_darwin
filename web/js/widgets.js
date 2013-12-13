@@ -3,14 +3,14 @@
     // To avoid scope issues, use 'base' instead of 'this'
     // to reference this class from internal events and functions.
     var base = this;
-    
+
     // Access to jQuery and DOM versions of element
     base.$el = $(el);
     base.el = el;
-    
+
     // Add a reverse reference to the DOM object
     base.$el.data("widgets_screen", base);
-    
+
     base.init = function(){
       base.options = $.extend({},$.widgets_screen.defaultOptions, options);
 
@@ -35,7 +35,7 @@
     {
       $(this).find('.widget_bottom_button:visible, .widget_top_button:visible').click();
     };
-    
+
     base.showWidgetContent = function()
     {
       elem = $(this).closest('.widget');
@@ -53,14 +53,14 @@
       elem.find('.widget_bottom_button').hide();
       elem.find('.widget_top_button').show();
     };
-    
+
     var last_notified = {};
 
     base.onInitialize = function (event, ui)
     {
       $('.widget script').remove();
     }
-    
+
     base.changeOrder = function ()
     {
       var notification = {};
@@ -70,10 +70,10 @@
       });
 
       if(! objectsAreSame(notification,last_notified))
-        $.post(base.options['change_order_url'], notification );    
+        $.post(base.options['change_order_url'], notification );
       last_notified = notification;
     };
-    
+
     base.refreshWidget = function(event, element){
       if(element == null)
         element = $(this);
@@ -96,7 +96,7 @@
     base.closeWidget = function(event){
         event.preventDefault();
         widget = $(this).closest('.widget');
-        
+
         base.changeStatus(widget.attr('id'), 'hidden');
         $('.widget_collection_container .no_more').addClass('hidden');
         $('#boardprev_'+widget.attr('id')).fadeIn();
@@ -105,7 +105,7 @@
           $('.no_more_wigets').removeClass('hidden');
         return false;
     };
-    
+
     base.showWidgetCollection = function(event){
       event.preventDefault();
       if($('.widget_collection_container').is(":hidden"))
@@ -124,7 +124,8 @@
       event.preventDefault();
       hideForRefresh('.widget_collection_container');
       var insertionDone = false;
-      var widget_id = $(this).find('img').attr('alt');
+      var widget_id = $(this).attr('alt');
+      var to_open_id = widget_id;
       // Change Widget Status
       var add_url = $(this).attr('href');
       var positions = [];
@@ -137,7 +138,7 @@
         {
            widget_id = first_non_mandatory.closest('.widget').attr('id');
            positions.push( $(el).find('>li').index($('#'+widget_id)) );
-        } 
+        }
       });
 
       add_url += '/place/' + positions.join(',');
@@ -151,26 +152,28 @@
         else
           $('.board_col:eq(' + col + ') > li:eq('+ positions[col] +')').before(html);
         showAfterRefresh('.widget_collection_container');
+        attachHelpQtip($('#'+to_open_id));
+
       });
 
       $(this).parent().hide();
-      
+
       if($('.widget_collection_container .widget_preview:visible').length == 0)
           $('.widget_collection_container .no_more').removeClass('hidden');
       $('.no_more_wigets').addClass('hidden');
     };
-    
+
     base.changeStatus = function (id,status)
     {
       $.post(base.options['change_status_url'] + '/widget/' + id + '/status/' + status );
     };
-    
+
     base.init();
   };
-  
 
 
-    
+
+
   $.widgets_screen.defaultOptions = {
     change_order_url: '',
     change_status_url: '',
@@ -179,7 +182,7 @@
     collection_img_up: '/images/widgets_expand_up_button.png',
     collection_img_down: '/images/widget_expand_button.png'
   };
-  
+
   $.fn.widgets_screen = function(options){
     return this.each(function(){
       (new $.widgets_screen(this, options));

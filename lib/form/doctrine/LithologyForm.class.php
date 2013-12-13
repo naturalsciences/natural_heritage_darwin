@@ -31,13 +31,15 @@ class LithologyForm extends BaseLithologyForm
       ),
       array('class'=>'catalogue_level')
       );
-    $this->widgetSchema['parent_ref'] = new widgetFormButtonRef(array(
-       'model' => 'Lithology',
-       'method' => 'getName',
-       'link_url' => 'lithology/choose',
-       'box_title' => $this->getI18N()->__('Choose Parent'),
-       'button_is_hidden' => true,
-     ));
+    $this->widgetSchema['parent_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'Lithology',
+      'method' => 'getName',
+      'link_url' => 'lithology/choose',
+      'box_title' => $this->getI18N()->__('Choose Parent'),
+      'button_is_hidden' => true,
+      'complete_url' => 'catalogue/completeName?table=lithology',
+    ));
+
     $this->widgetSchema['local_naming'] = new sfWidgetFormInputCheckbox();
     $this->widgetSchema->setLabels(array('level_ref' => 'Level',
                                          'parent_ref' => 'Parent',

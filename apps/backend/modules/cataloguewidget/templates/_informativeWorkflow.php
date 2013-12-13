@@ -7,8 +7,9 @@
     </tr>
     <tr>
       <td><?php echo $form["status"] ; ?></td>
-      <td><?php echo $form["comment"] ; ?><a title="<?php echo __('Add Workflow');?>" id="add_workflow" href="<?php echo url_for('informativeWorkflow/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add');?></a></td>
-    </tr>    
+      <td><ul class="comment_error error_list hidden"><li><?php echo __('Error: The comment is missing');?></li></ul>
+        <?php echo $form["comment"] ; ?><a title="<?php echo __('Add Workflow');?>" id="add_workflow" href="<?php echo url_for('informativeWorkflow/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add');?></a></td>
+    </tr>
   </thead>
 </table>
 </fieldset>
@@ -62,6 +63,8 @@ $(document).ready(function ()
      $(this).load($(this).attr('href'),{'status':$('#informative_workflow_status').val(),'comment':$('#informative_workflow_comment').val()}, function(){
        $('body').data('widgets_screen').refreshWidget(event, $(this));
      });
+   } else {
+    $('.comment_error').removeClass('hidden');
    }
   });
 

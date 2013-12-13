@@ -21,6 +21,18 @@ class stagingActions extends DarwinActions
     return $this->redirect('import/index');
   }
 
+  public function executeCreateTaxon(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->hasParameter('import'));
+    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
+
+    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
+       $this->forwardToSecureAction();
+    $this->import = Doctrine::getTable('Staging')->markTaxon($this->import->getId());
+    return $this->redirect('import/index');
+
+  }
+
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
@@ -49,7 +61,7 @@ class stagingActions extends DarwinActions
 
     $this->form = new StagingFormFilter(null, array('import' =>$this->import));
     $filters = $request->getParameter('staging_filters');
-    if(!isset($filters['slevel'])) $filters['slevel'] = 'specimen';
+    //if(!isset($filters['slevel'])) $filters['slevel'] = 'specimen';
 
     $this->form->bind($filters);
     if($this->form->isValid())
@@ -89,7 +101,7 @@ class stagingActions extends DarwinActions
       {
         $ids[] = $v->getId();
       }
-      
+
       $codes = Doctrine::getTable('Codes')->getCodesRelatedArray('staging',$ids) ;
       $linked = Doctrine::getTable('Staging')->findLinked($ids) ;
       foreach($this->search as $k=>$v)
@@ -107,27 +119,26 @@ class stagingActions extends DarwinActions
             $v->setLinkedInfo($link['cnt']);
         }
       }
-
-      $this->displayModel = new DisplayImportDna();
-      
-      $this->fields = $this->displayModel->getColumnsForLevel($this->form->getValue('slevel'));
+      $this->displayModel = new DisplayImportABCD();
+      $this->search_type = $this->form->getValue('bio_geo');
+      $this->fields = $this->displayModel->getColumns($this->search_type);
     }
-
   }
   public function executeIndex(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('import'));
     $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
+    $this->forward404Unless($this->import);
 
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
        $this->forwardToSecureAction();
 
     $this->form = new StagingFormFilter(null, array('import' =>$this->import));
   }
-  
+
   public function executeEdit(sfWebRequest $request)
-  {  
-//     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();   
+  {
+//     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $staging = Doctrine::getTable('Staging')->findOneById($request->getParameter('id'));
     $this->import = Doctrine::getTable('Imports')->find($staging->getImportRef());
 
@@ -135,15 +146,25 @@ class stagingActions extends DarwinActions
        $this->forwardToSecureAction();
 
     $this->fields = $staging->getFields() ;
-    $form_fields = array() ;   
+    $form_fields = array() ;
     if($this->fields)
     {
       foreach($this->fields as $key => $values)
         $form_fields[] = $values['fields'] ;
     }
+    if(in_array('taxon_ref', $form_fields))
+    {
+      $parent = new Hstore ;
+      $parent->import($staging->getTaxonParents()) ;
+      $taxon_parent = $parent->getArrayCopy() ;
+      $taxon_parent[$staging->getTaxonLevelName()] = $staging->getTaxonName();
+      $this->taxon_level_name = $staging->getTaxonLevelName();
+      $this->catalogues = Doctrine::getTable('Taxonomy')->getLevelTaxonParent($taxon_parent) ;
+    }
     $this->form = new StagingForm($staging, array('fields' => $form_fields));
-  } 
-   
+
+  }
+
   public function executeUpdate(sfWebRequest $request)
   {
 /*    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction(); */
@@ -155,19 +176,19 @@ class stagingActions extends DarwinActions
        $this->forwardToSecureAction();
 
     $this->fields = $staging->getFields() ;
-    $form_fields = array() ;   
+    $form_fields = array() ;
     if($this->fields)
     {
       foreach($this->fields as $key => $values)
         $form_fields[] = $values['fields'] ;
     }
     $this->form = new StagingForm($staging, array('fields' => $form_fields));
-    
+
     $this->processForm($request,$this->form, $form_fields);
 
     $this->setTemplate('edit');
-  }  
-  
+  }
+
   protected function processForm(sfWebRequest $request, sfForm $form, array $fields)
   {
     $form->bind( $request->getParameter($form->getName()) );
@@ -182,8 +203,8 @@ class stagingActions extends DarwinActions
       {
         $e = new DarwinPgErrorParser($ne);
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-        $form->getErrorSchema()->addError($error); 
+        $form->getErrorSchema()->addError($error);
       }
     }
-  }  
+  }
 }

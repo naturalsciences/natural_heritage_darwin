@@ -7,10 +7,6 @@
  * 
  * @property integer $id
  * @property integer $import_ref
- * @property integer $parent_ref
- * @property integer $spec_ref
- * @property string $path
- * @property string $level
  * @property string $category
  * @property integer $expedition_ref
  * @property string $expedition_name
@@ -71,13 +67,7 @@
  * @property boolean $mineral_local
  * @property string $mineral_color
  * @property string $mineral_parents
- * @property integer $host_taxon_ref
- * @property string $host_relationship
- * @property string $host_taxon_name
- * @property integer $host_taxon_level_ref
- * @property string $host_taxon_level_name
- * @property string $host_taxon_status
- * @property integer $host_specimen_ref
+ * @property string $mineral_classification
  * @property integer $ig_ref
  * @property string $ig_num
  * @property integer $ig_date_mask
@@ -100,6 +90,7 @@
  * @property string $floor
  * @property string $room
  * @property string $row
+ * @property string $col
  * @property string $shelf
  * @property string $container_type
  * @property string $container_storage
@@ -117,14 +108,12 @@
  * @property Imports $Import
  * @property Staging $Parent
  * @property Doctrine_Collection $Staging
+ * @property Doctrine_Collection $StagingInfo
  * @property Doctrine_Collection $StagingTagGroups
+ * @property Doctrine_Collection $StagingMethods
  * 
  * @method integer             getId()                        Returns the current record's "id" value
  * @method integer             getImportRef()                 Returns the current record's "import_ref" value
- * @method integer             getParentRef()                 Returns the current record's "parent_ref" value
- * @method integer             getSpecRef()                   Returns the current record's "spec_ref" value
- * @method string              getPath()                      Returns the current record's "path" value
- * @method string              getLevel()                     Returns the current record's "level" value
  * @method string              getCategory()                  Returns the current record's "category" value
  * @method integer             getExpeditionRef()             Returns the current record's "expedition_ref" value
  * @method string              getExpeditionName()            Returns the current record's "expedition_name" value
@@ -185,13 +174,7 @@
  * @method boolean             getMineralLocal()              Returns the current record's "mineral_local" value
  * @method string              getMineralColor()              Returns the current record's "mineral_color" value
  * @method string              getMineralParents()            Returns the current record's "mineral_parents" value
- * @method integer             getHostTaxonRef()              Returns the current record's "host_taxon_ref" value
- * @method string              getHostRelationship()          Returns the current record's "host_relationship" value
- * @method string              getHostTaxonName()             Returns the current record's "host_taxon_name" value
- * @method integer             getHostTaxonLevelRef()         Returns the current record's "host_taxon_level_ref" value
- * @method string              getHostTaxonLevelName()        Returns the current record's "host_taxon_level_name" value
- * @method string              getHostTaxonStatus()           Returns the current record's "host_taxon_status" value
- * @method integer             getHostSpecimenRef()           Returns the current record's "host_specimen_ref" value
+ * @method string              getMineralClassification()     Returns the current record's "mineral_classification" value
  * @method integer             getIgRef()                     Returns the current record's "ig_ref" value
  * @method string              getIgNum()                     Returns the current record's "ig_num" value
  * @method integer             getIgDateMask()                Returns the current record's "ig_date_mask" value
@@ -214,6 +197,7 @@
  * @method string              getFloor()                     Returns the current record's "floor" value
  * @method string              getRoom()                      Returns the current record's "room" value
  * @method string              getRow()                       Returns the current record's "row" value
+ * @method string              getCol()                       Returns the current record's "col" value
  * @method string              getShelf()                     Returns the current record's "shelf" value
  * @method string              getContainerType()             Returns the current record's "container_type" value
  * @method string              getContainerStorage()          Returns the current record's "container_storage" value
@@ -231,13 +215,11 @@
  * @method Imports             getImport()                    Returns the current record's "Import" value
  * @method Staging             getParent()                    Returns the current record's "Parent" value
  * @method Doctrine_Collection getStaging()                   Returns the current record's "Staging" collection
+ * @method Doctrine_Collection getStagingInfo()               Returns the current record's "StagingInfo" collection
  * @method Doctrine_Collection getStagingTagGroups()          Returns the current record's "StagingTagGroups" collection
+ * @method Doctrine_Collection getStagingMethods()            Returns the current record's "StagingMethods" collection
  * @method Staging             setId()                        Sets the current record's "id" value
  * @method Staging             setImportRef()                 Sets the current record's "import_ref" value
- * @method Staging             setParentRef()                 Sets the current record's "parent_ref" value
- * @method Staging             setSpecRef()                   Sets the current record's "spec_ref" value
- * @method Staging             setPath()                      Sets the current record's "path" value
- * @method Staging             setLevel()                     Sets the current record's "level" value
  * @method Staging             setCategory()                  Sets the current record's "category" value
  * @method Staging             setExpeditionRef()             Sets the current record's "expedition_ref" value
  * @method Staging             setExpeditionName()            Sets the current record's "expedition_name" value
@@ -298,13 +280,7 @@
  * @method Staging             setMineralLocal()              Sets the current record's "mineral_local" value
  * @method Staging             setMineralColor()              Sets the current record's "mineral_color" value
  * @method Staging             setMineralParents()            Sets the current record's "mineral_parents" value
- * @method Staging             setHostTaxonRef()              Sets the current record's "host_taxon_ref" value
- * @method Staging             setHostRelationship()          Sets the current record's "host_relationship" value
- * @method Staging             setHostTaxonName()             Sets the current record's "host_taxon_name" value
- * @method Staging             setHostTaxonLevelRef()         Sets the current record's "host_taxon_level_ref" value
- * @method Staging             setHostTaxonLevelName()        Sets the current record's "host_taxon_level_name" value
- * @method Staging             setHostTaxonStatus()           Sets the current record's "host_taxon_status" value
- * @method Staging             setHostSpecimenRef()           Sets the current record's "host_specimen_ref" value
+ * @method Staging             setMineralClassification()     Sets the current record's "mineral_classification" value
  * @method Staging             setIgRef()                     Sets the current record's "ig_ref" value
  * @method Staging             setIgNum()                     Sets the current record's "ig_num" value
  * @method Staging             setIgDateMask()                Sets the current record's "ig_date_mask" value
@@ -327,6 +303,7 @@
  * @method Staging             setFloor()                     Sets the current record's "floor" value
  * @method Staging             setRoom()                      Sets the current record's "room" value
  * @method Staging             setRow()                       Sets the current record's "row" value
+ * @method Staging             setCol()                       Sets the current record's "col" value
  * @method Staging             setShelf()                     Sets the current record's "shelf" value
  * @method Staging             setContainerType()             Sets the current record's "container_type" value
  * @method Staging             setContainerStorage()          Sets the current record's "container_storage" value
@@ -344,7 +321,9 @@
  * @method Staging             setImport()                    Sets the current record's "Import" value
  * @method Staging             setParent()                    Sets the current record's "Parent" value
  * @method Staging             setStaging()                   Sets the current record's "Staging" collection
+ * @method Staging             setStagingInfo()               Sets the current record's "StagingInfo" collection
  * @method Staging             setStagingTagGroups()          Sets the current record's "StagingTagGroups" collection
+ * @method Staging             setStagingMethods()            Sets the current record's "StagingMethods" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -363,19 +342,6 @@ abstract class BaseStaging extends DarwinModel
              ));
         $this->hasColumn('import_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
-             ));
-        $this->hasColumn('parent_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('spec_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('path', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('level', 'string', null, array(
-             'type' => 'string',
              'notnull' => true,
              ));
         $this->hasColumn('category', 'string', null, array(
@@ -563,26 +529,8 @@ abstract class BaseStaging extends DarwinModel
         $this->hasColumn('mineral_parents', 'string', null, array(
              'type' => 'string',
              ));
-        $this->hasColumn('host_taxon_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('host_relationship', 'string', null, array(
+        $this->hasColumn('mineral_classification', 'string', null, array(
              'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_name', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_level_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('host_taxon_level_name', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_taxon_status', 'string', null, array(
-             'type' => 'string',
-             ));
-        $this->hasColumn('host_specimen_ref', 'integer', null, array(
-             'type' => 'integer',
              ));
         $this->hasColumn('ig_ref', 'integer', null, array(
              'type' => 'integer',
@@ -650,6 +598,9 @@ abstract class BaseStaging extends DarwinModel
         $this->hasColumn('row', 'string', null, array(
              'type' => 'string',
              ));
+        $this->hasColumn('col', 'string', null, array(
+             'type' => 'string',
+             ));
         $this->hasColumn('shelf', 'string', null, array(
              'type' => 'string',
              ));
@@ -709,7 +660,15 @@ abstract class BaseStaging extends DarwinModel
              'local' => 'id',
              'foreign' => 'parent_ref'));
 
+        $this->hasMany('StagingInfo', array(
+             'local' => 'id',
+             'foreign' => 'staging_ref'));
+
         $this->hasMany('StagingTagGroups', array(
+             'local' => 'id',
+             'foreign' => 'staging_ref'));
+
+        $this->hasMany('StagingMethods', array(
              'local' => 'id',
              'foreign' => 'staging_ref'));
     }

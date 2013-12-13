@@ -1,6 +1,6 @@
 <?php slot('title', __('Specimens search result'));  ?>
 <?php use_javascript('double_list.js');?>
-<?php include_partial('result_cols', array('source' => $source, 'columns' => $columns, 'field_to_show' => $field_to_show));?>
+<?php include_partial('result_cols', array('columns' => $columns, 'field_to_show' => $field_to_show));?>
 
 <div class="encoding">
   <?php include_stylesheets_for_form($form) ?>
@@ -26,7 +26,6 @@
           <?php include_partial('searchSuccess',
                                 array('specimensearch' => $specimensearch,
                                       'codes' => $codes,
-                                      'part_codes' => $part_codes,
                                       'form' => $form, 
                                       'orderBy' => $orderBy,
                                       's_url' => $s_url,
@@ -35,7 +34,6 @@
                                       'pagerLayout' => $pagerLayout,
                                       'is_specimen_search' => $is_specimen_search,
                                       'columns' => $columns,
-                                      'source' => $source
                                      )
                                ); ?>
         </div>
@@ -45,10 +43,6 @@
       <?php endif;?>
       <script  type="text/javascript">
         $(document).ready(function () {
-          $(".col_switcher").click(function(){
-            update_list($(this));
-            hide_or_show($(this));
-          });
 
           $('form#specimen_filter select.double_list_select-selected option').attr('selected', 'selected');
           $('body').duplicatable({
@@ -63,27 +57,21 @@
           });
         <?php if($is_specimen_search):?>
           $('#del_from_spec').click(function(){
-            pins = '';
             pins_array = new Array();
-            $('.spec_results tbody tr .remove_on').not('.hidden').each(function(){
-              rid = getIdInClasses($(this).closest('tr'));
-              pins_array.push(rid);
+            $('.remove_spec:checked').each(function(){
+              pins_array.push( $(this).val() );
             });
-            if(pins_array.length == 0)
-            {
+            if(pins_array.length == 0) {
               alert("<?php echo __('You must select at least one specimen.');?>");
             }
-            else
-            {
+            else {
               if(confirm('<?php echo addslashes(__('Are you sure?'));?>'))
               {
                 $.get('<?php echo url_for('savesearch/removePin?search='.$is_specimen_search);?>/ids/' + pins_array.join(',') ,function (html){
-                  for(var i = 0; i < pins_array.length; ++i)
-                  {
-                    $('.rid_' + pins_array[i]).closest('tbody').remove();
+                  for(var i = 0; i < pins_array.length; i++) {
+                    $('.rid_' + pins_array[i]).remove();
                   }
-                  if($('.spec_results tbody').length == 0)
-                  {
+                  if($('.spec_results tbody tr').length == 0) {
                     location.reload();
                   }
                 });
@@ -101,10 +89,10 @@
     </form>
       <div class="check_right" id="save_button"> 
         <a href="<?php echo url_for('specimen/confirm') ; ?>" class="hidden"></a>
-        <?php include_partial('savesearch/saveSpec', array('spec_lists'=>$spec_lists,'source' => $source));?>
+        <?php include_partial('savesearch/saveSpec', array('spec_lists'=>$spec_lists));?>
 
         <?php if(! $is_specimen_search):?>
-          <?php include_partial('savesearch/saveSearch', array('source' => $source));?>
+          <?php include_partial('savesearch/saveSearch');?>
         <?php endif;?>
       </div>
       <?php if(!isset($is_pinned_only_search) && ! $is_specimen_search):?>

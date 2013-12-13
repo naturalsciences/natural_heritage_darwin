@@ -17,10 +17,10 @@ class PeopleFormFilter extends BasePeopleFormFilter
     $this->addPagerItems();
 
     $this->widgetSchema['family_name'] = new sfWidgetFormInput();
-    
+
 
     $this->widgetSchema['is_physical'] = new sfWidgetFormInputHidden();
-    $this->setDefault('is_physical', true); 
+    $this->setDefault('is_physical', true);
 
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
@@ -30,20 +30,20 @@ class PeopleFormFilter extends BasePeopleFormFilter
     $maxDate->setStart(false);
 
     $this->widgetSchema['activity_date_from'] = new widgetFormJQueryFuzzyDate(
-      $this->getDateItemOptions(),                                     
-      array('class' => 'from_date')                
-    );      
-                                      
+      $this->getDateItemOptions(),
+      array('class' => 'from_date')
+    );
+
     $this->widgetSchema['activity_date_to'] = new widgetFormJQueryFuzzyDate(
-      $this->getDateItemOptions(),                                       
-      array('class' => 'to_date')                
-    );      
+      $this->getDateItemOptions(),
+      array('class' => 'to_date')
+    );
 
     $this->validatorSchema['activity_date_from'] = new fuzzyDateValidator(
       array(
-        'required' => false,                       
-        'from_date' => true,                       
-        'min' => $minDate,                         
+        'required' => false,
+        'from_date' => true,
+        'min' => $minDate,
         'max' => $maxDate,
         'empty_value' => $dateLowerBound,
       ),
@@ -60,15 +60,15 @@ class PeopleFormFilter extends BasePeopleFormFilter
       ),
       array('invalid' => 'Date provided is not valid')
     );
-    
+
     $people_types = array(''=>'');
     $types = People::getTypes();
     foreach($types as $flag => $name)
-      $people_types[strval($flag)] = $name;  
-    $this->widgetSchema['people_type'] = new sfWidgetFormChoice(array('choices' => $people_types ));        
-    $this->widgetSchema['people_type']->setLabel('Role');      
+      $people_types[strval($flag)] = $name;
+    $this->widgetSchema['people_type'] = new sfWidgetFormChoice(array('choices' => $people_types ));
+    $this->widgetSchema['people_type']->setLabel('Role');
     $this->validatorSchema['people_type'] = new sfValidatorChoice(array('required' => false, 'choices' => array_keys($people_types) ));
-    
+
     $this->validatorSchema->setPostValidator(
       new sfValidatorSchemaCompare(
         'activity_date_from',
@@ -81,7 +81,7 @@ class PeopleFormFilter extends BasePeopleFormFilter
   }
 
   public function doBuildQuery(array $values)
-  {    
+  {
     $query = parent::doBuildQuery($values);
     $fields = array('activity_date_from', 'activity_date_to');
     $this->addDateFromToColumnQuery($query, $fields, $values['activity_date_from'], $values['activity_date_to']);

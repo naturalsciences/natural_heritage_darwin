@@ -6,7 +6,6 @@
       <th class="centered"><?php echo __('Code suffix sep.');?></th>
       <th><?php echo __('Code suffix');?></th>
       <th class="centered"><?php echo __('Auto incremented ?');?></th>
-      <th class="centered"><?php echo __('Same for parts ?');?></th>
       <th class="centered"><?php echo __('Duplicate specimen codes');?></th>
       <th></th>
       <th></th>
@@ -28,9 +27,6 @@
       </td>
       <td class="centered">
         <?php echo ($collCodes->getCodeAutoIncrement())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
-      </td>
-      <td class="centered">
-        <?php echo ($collCodes->getCodePartCodeAutoCopy())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
       </td>
       <td class="centered">
         <?php echo ($collCodes->getCodeSpecimenDuplicate())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>

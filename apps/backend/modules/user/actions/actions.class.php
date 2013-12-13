@@ -49,7 +49,7 @@ class userActions extends DarwinActions
         return $this->redirect('user/edit?id='.$this->user->getId());
       }
     }
-    $this->loadWidgets();    
+    $this->loadWidgets();
   }
   
   public function executeProfile(sfWebRequest $request)
@@ -58,15 +58,6 @@ class userActions extends DarwinActions
     $this->forward404Unless($this->user);
     $this->mode = 'profile' ;
     $this->form = new UsersForm($this->user,array("db_user_type" => $this->getUser()->getDbUserType(),'mode' => $this->mode,'is_physical'=>$this->user->getIsPhysical()));
- /*   if($request->isMethod('post'))
-    {
-      $this->form->bind($request->getParameter('users'));
-      if($this->form->isValid())
-      { 
-		    $this->form->save();
-		    return $this->redirect('user/profile');
-      }
-    }*/
     $this->loadWidgets();
   }
 
@@ -237,17 +228,17 @@ class userActions extends DarwinActions
     if($this->getUser()->getDbUserType() < Users::MANAGER) 
       if($this->getUser()->getId() != $request->getParameter('ref_id')) $this->forwardToSecureAction(); 
     if($request->hasParameter('id'))
-    { 
+    {
       $this->comm =  Doctrine::getTable('UsersComm')->find($request->getParameter('id'));
     }
     else
     {
-     $this->comm = new UsersComm();
-     $this->comm->setPersonUserRef($request->getParameter('ref_id'));
+      $this->comm = new UsersComm();
+      $this->comm->setPersonUserRef($request->getParameter('ref_id'));
     }
-     
+
     $this->form = new UsersCommForm($this->comm);
-    
+
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('users_comm'));
@@ -303,6 +294,10 @@ class userActions extends DarwinActions
     {
       $this->loginInfo = new UsersLoginInfos() ;
       $this->loginInfo->setUserRef($request->getParameter('user_ref')) ;
+    }
+    
+    if(! $this->getUser()->isAtLeast(Users::MANAGER) && $this->loginInfo->getLoginType() != 'local') {
+      $this->forwardToSecureAction();
     }
     $this->form = new UsersLoginInfosForm($this->loginInfo);
     if($request->isMethod('post'))

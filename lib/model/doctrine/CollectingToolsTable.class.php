@@ -3,7 +3,7 @@
 
 class CollectingToolsTable extends DarwinTable
 {
-    
+
   public static function getInstance()
   {
       return Doctrine_Core::getTable('CollectingTools');

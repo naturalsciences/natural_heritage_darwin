@@ -10,6 +10,7 @@
     <![endif]-->
   </head>
   <body>
+    <div class="wrapper">
     <?php include_partial('global/head_menu') ?>
     <?php echo $sf_content ?>
     <script type="text/javascript">
@@ -27,5 +28,6 @@
     <?php if(sfConfig::get('dw_analytics_enabled', false)):?>
 			<?php include_partial('global/analytics') ?>
     <?php endif;?>
+    </div>
   </body>
 </html>

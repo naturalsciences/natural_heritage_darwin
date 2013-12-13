@@ -23,45 +23,6 @@ abstract class BaseFormDoctrine extends sfFormDoctrine
     return sfContext::getInstance()->getUser()->getCulture();
   }
 
-  /**
-  * Bind
-  * @see getFieldsByGroup
-  */
-  public function bind(array $taintedValues = null, array $taintedFiles = null)
-  {
-    $fields_groups = $this->getFieldsByGroup();
-    foreach($fields_groups as $group)
-    {
-      $cnt_unset = 0;
-      foreach($group as $field)
-      {
-        if(!isset($taintedValues[$field]))
-        {
-          $cnt_unset++;
-        }
-        if($cnt_unset == count($group))
-        {
-          foreach($group as $ufield)
-          {
-            $this->offsetUnset($ufield);
-          }
-        }
-      }
-    }
-    parent::bind($taintedValues, $taintedFiles);
-  }
-
-  /**
-  * Get fields by widget
-  * In the bind function if 1 field (or more) of the group is not sended in tainted values,
-  * we remove the whole group from the form
-  * @return array of widget name with array of widgets
-  * @see bind
-  */
-  protected function getFieldsByGroup()
-  {
-    return array();
-  }
 
 /*************************************
 *** FOR Embedded Forms
@@ -95,7 +56,7 @@ abstract class BaseFormDoctrine extends sfFormDoctrine
     $subForm = new sfForm();
     $this->embedForm('new'.$emFieldName, $subForm);
   }
-  
+
   /**
   * emtpyField is the field to check if the subForm is there or not
   * $enforce_value are values you want to be in the ref record

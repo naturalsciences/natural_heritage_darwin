@@ -12,4 +12,24 @@
  */
 class StagingPeople extends BaseStagingPeople
 {
+  private $given_name, $family_name, $title ;
+  public function setGivenName($name)
+  {
+    $this->given_name = $name ;
+  }
+  public function setFamilyName($name)
+  {
+    $this->family_name = $name ;
+  }
+  public function setTitle($name)
+  {
+    $this->title = $name ;
+  }
+
+  public function save(Doctrine_Connection $conn = null)
+  {
+    if(!$this->getFormatedName()) $this->setFormatedName($this->family_name." ".$thi->given_name.($this->title?" (".$this->title.")":"")) ;
+    parent::save($conn);
+  }
+
 }

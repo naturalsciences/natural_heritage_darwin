@@ -5,33 +5,23 @@ $(document).ready(function () {
 
   $("#save_search").click(function(event){
     event.preventDefault();
-    source = '<?php if(isset($source)) echo $source;?>';
-    column_str = ' ';
-    if($('.column_menu ul > li.check').length)
-    {
-      $('.column_menu ul > li.check').each(function (index)
-      {
-        if(column_str != '') column_str += '|';
-        column_str += $(this).attr('id').substr(3);
-      });
-    }
-    else
-    {
+    column_str = '';
+    if( $('ul.column_menu .col_switcher :checked').length) {
+      column_str = getSearchColumnVisibilty();
+    } else {
       column_str = $('#specimen_search_filters_col_fields').val();
     }
-    var last_position = $('body').scrollTop() ;              
+    var last_position = $(window).scrollTop();
     scroll(0,0) ;
 
     $('form.specimensearch_form select.double_list_select-selected option').attr('selected', 'selected');
-    if(source == '')
-      source = $('#specimen_search_filters_what_searched').val();
     $("#save_search").qtip({
         id: 'modal',
         content: {
           text: '<img src="/images/loader.gif" alt="loading"> loading ...',
           title: { button: true, text: '<?php echo __('Save your search')?>' },
           ajax: {
-            url: '<?php echo url_for("savesearch/saveSearch");?>/source/' + source + '/cols/' + encodeURI(column_str),
+            url: '<?php echo url_for("savesearch/saveSearch");?>/source/specimen/cols/' + encodeURI(column_str),
             type: 'POST',
             data: $('form.specimensearch_form').serialize()
           }
@@ -41,10 +31,9 @@ $(document).ready(function () {
         at: 'top center',
         adjust:{
           y: 250 // option set in case of the qtip become too big
-        },         
+        },
         target: $(document.body),
       },
-        
         show: {
           ready: true,
           delay: 0,
@@ -60,7 +49,7 @@ $(document).ready(function () {
           target: $('body')
         },
         events: {
-          hide: function(event, api) {                
+          hide: function(event, api) {
             scroll(0,last_position);
             api.destroy();
           }
@@ -69,5 +58,5 @@ $(document).ready(function () {
       });
     return false;
  });
-}); 
+});
 </script>

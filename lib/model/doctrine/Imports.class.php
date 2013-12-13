@@ -23,6 +23,7 @@ class Imports extends BaseImports
     'processing'=> 'Processing',
     'finished' => 'Finished',
     'aborted' => 'Aborted',
+    'error' => 'Error',
   );  
   private static $info = array(
     'to_be_loaded' => 'This file is ready to be loaded, an automatic task will be activated to load lines.',
@@ -30,12 +31,13 @@ class Imports extends BaseImports
     'loaded'=>'Your file has been loaded, but still need to be checked',
     'checking'=> 'Your file has been loaded and is being checked',
     'pending'=> 'Your file has been loaded and checked, you can edit line in errors or import corrects lines',
-    'processing'=> 'Your \'Ok\' lines are beeing imported in DaRWIN',
+    'processing'=> 'ok_line_explanation',
     'finished' => 'This file has been completly been imported in DaRWIN',
-    'aborted' => 'This file has been aborted. This line will remain for a limited time in the summary list just for information purposes only.',    
-  );  
+    'aborted' => 'This file has been aborted. This line will remain for a limited time in the summary list just for information purposes only.',
+    'error' => 'Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file',
+  );
 
-  public static $formatArray = array('dna' => 'DNA') ;
+  public static $formatArray = array('abcd' => 'ABCD', 'dna' => 'DNA') ;
   
   public function setCurrentLineNum($nbr)
   {
@@ -69,7 +71,7 @@ class Imports extends BaseImports
   // function used to determine if we can display edition button or not
   public function isEditableState()
   {
-    if(in_array($this->getState(),array('pending')) && ! $this->getIsFinished()) return true ;
+    if(in_array($this->getState(),array('pending','error')) && ! $this->getIsFinished()) return true ;
     return false ;
   }   
 

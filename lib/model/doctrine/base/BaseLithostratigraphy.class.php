@@ -18,7 +18,6 @@
  * @property CatalogueLevels $Level
  * @property Doctrine_Collection $Lithostratigraphy
  * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimensFlat
  * 
  * @method integer             getId()                Returns the current record's "id" value
  * @method string              getName()              Returns the current record's "name" value
@@ -33,7 +32,6 @@
  * @method CatalogueLevels     getLevel()             Returns the current record's "Level" value
  * @method Doctrine_Collection getLithostratigraphy() Returns the current record's "Lithostratigraphy" collection
  * @method Doctrine_Collection getSpecimens()         Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimensFlat()     Returns the current record's "SpecimensFlat" collection
  * @method Lithostratigraphy   setId()                Sets the current record's "id" value
  * @method Lithostratigraphy   setName()              Sets the current record's "name" value
  * @method Lithostratigraphy   setNameIndexed()       Sets the current record's "name_indexed" value
@@ -47,7 +45,6 @@
  * @method Lithostratigraphy   setLevel()             Sets the current record's "Level" value
  * @method Lithostratigraphy   setLithostratigraphy() Sets the current record's "Lithostratigraphy" collection
  * @method Lithostratigraphy   setSpecimens()         Sets the current record's "Specimens" collection
- * @method Lithostratigraphy   setSpecimensFlat()     Sets the current record's "SpecimensFlat" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -114,10 +111,6 @@ abstract class BaseLithostratigraphy extends DarwinModel
              'foreign' => 'parent_ref'));
 
         $this->hasMany('Specimens', array(
-             'local' => 'id',
-             'foreign' => 'litho_ref'));
-
-        $this->hasMany('SpecimensFlat', array(
              'local' => 'id',
              'foreign' => 'litho_ref'));
     }

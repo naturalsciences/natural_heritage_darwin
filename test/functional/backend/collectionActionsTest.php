@@ -18,11 +18,11 @@ $browser->
     isStatusCode(200)->
     checkElement('h1', 'Collection List')->
     checkElement('h2:last','UGMM')->
-    checkElement('.treelist:first > ul > li',1)->
-    checkElement('.treelist:first > ul > li:first span','/Vertebrates/')->
-    checkElement('.treelist:first > ul > li:first a img')->
-    checkElement('.treelist:first > ul > li:first > ul > li',2)->
-    checkElement('.treelist:first > ul > li:first > ul > li:first span', '/Amphibia/')->
+    checkElement('.treelist:first > ul > li',2)->
+    checkElement('.treelist:first > ul > li:nth-child(2) span','/Vertebrates/')->
+    checkElement('.treelist:first > ul > li:nth-child(2) a img')->
+    checkElement('.treelist:first > ul > li:nth-child(2) > ul > li',2)->
+    checkElement('.treelist:first > ul > li:nth-child(2) > ul > li:first span', '/Amphibia/')->
     checkElement('.treelist:last > ul > li',1)->
   end()->
   
@@ -81,7 +81,7 @@ $browser->
   
   get('/collection/index')->
   info('Edit')->
-  click('.treelist:first > ul > li:nth-child(2) > ul > li:nth-child(2) div a', array())->
+  click('.treelist:first > ul > li:nth-child(3) > ul > li:nth-child(2) div a', array())->
   with('request')->begin()->
     isParameter('module', 'collection')->
     isParameter('action', 'edit')->
@@ -95,13 +95,13 @@ $browser->
   get('/collection/index')->
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('.treelist:first > ul > li',2)->
+    checkElement('.treelist:first > ul > li',3)->
     checkElement('.treelist:last > ul > li',1)->
   end()->
 
   info('Delete')->
 
-  click('.col_name:eq(4) > a:first')->
+  click('.col_name:eq(5) > a:first')->
   with('request')->begin()->
     isParameter('module', 'collection')->
     isParameter('action', 'edit')->
@@ -116,11 +116,11 @@ $browser->
   
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('.treelist:first > ul > li',2)->
+    checkElement('.treelist:first > ul > li',3)->
   end();
 
 $user_id = $browser->addCustomUserAndLogin();
-$collection_id = Doctrine::getTable('collections')->getCollectionByName('Vertebrates')->getId() ;
+$collection_id = Doctrine::getTable('Collections')->getCollectionByName('Vertebrates')->getId() ;
 
 $browser->
   info('sub collection right')->
@@ -138,11 +138,11 @@ $browser->
     'SubCollectionsRights' => array(
       0 => array(
         'user_ref'       => $user_id,
-        'collection_ref' => Doctrine::getTable('collections')->getCollectionByName('Amphibia')->getId(),
+        'collection_ref' => Doctrine::getTable('Collections')->getCollectionByName('Amphibia')->getId() ,
         'check_right' => true),
       1 => array(
         'user_ref'       => $user_id,
-        'collection_ref' => Doctrine::getTable('collections')->getCollectionByName('Aves')->getId(),
+        'collection_ref' => Doctrine::getTable('Collections')->getCollectionByName('Aves')->getId(),
         'check_right' => false)
     )
     )));
@@ -175,23 +175,22 @@ $browser->
   begin()->
     isStatusCode(200)->
     checkElement('li#collectionsCodes div.widget_content table tbody tr', 1)->
-    checkElement('li#collectionsCodes div.widget_content table tbody tr td', 9)->
+    checkElement('li#collectionsCodes div.widget_content table tbody tr td', 8)->
     checkElement('li#collectionsCodes div.widget_content table tbody tr td:first', '/VERT./')->
-    checkElement('li#collectionsCodes div.widget_content table tbody tr td:nth-child(8) a.link_catalogue', 1)->
+    checkElement('li#collectionsCodes div.widget_content table tbody tr td:nth-child(7) a.link_catalogue', 1)->
     checkElement('li#collectionsCodes div.widget_content table tbody tr td:last a.widget_row_delete', 1)->
   end()->
-  click('li#collectionsCodes div.widget_content table tbody tr td:nth-child(8) a.link_catalogue')->
+  click('li#collectionsCodes div.widget_content table tbody tr td:nth-child(7) a.link_catalogue')->
   with('response')->
   begin()->
     isStatusCode(200)->
     checkElement('div#collections_codes_screen form#collections_codes_form', 1)->
-    checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr', 8)->
+    checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr', 7)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(2) td input#collections_code_prefix', 1)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(3) td input#collections_code_prefix_separator', 1)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(4) td input#collections_code_suffix_separator', 1)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(5) td input#collections_code_suffix', 1)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(6) td input#collections_code_auto_increment', 1)->
-    checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(7) td input#collections_code_part_code_auto_copy', 1)->
   end()->
   click('a.delete_button')->
   with('response')->

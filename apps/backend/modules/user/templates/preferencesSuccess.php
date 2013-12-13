@@ -18,20 +18,6 @@
           </th>
           <td><div class="search_cols_specimen" ><table><?php echo $form['search_cols_specimen'];?></table></div></td>
         </tr>
-        <tr>
-          <th>
-            <?php echo $form['search_cols_individual']->renderLabel();?>
-            <?php echo help_ico($form['search_cols_individual']->renderHelp(),$sf_user);?>
-          </th>
-          <td><div class="search_cols_individual" ><table><?php echo $form['search_cols_individual'];?></table></div></td>
-        </tr>
-        <tr>
-          <th>
-            <?php echo $form['search_cols_part']->renderLabel();?>
-            <?php echo help_ico($form['search_cols_part']->renderHelp(),$sf_user);?>
-          </th>
-          <td><div class="search_cols_part" ><table><?php echo $form['search_cols_part'];?></table></div></td>
-        </tr>
       </tbody>
       <thead>
         <tr>
@@ -66,21 +52,6 @@
             <?php echo help_ico($form['help_message_activated']->renderHelp(),$sf_user);?>
           </th>
           <td><?php echo $form['help_message_activated'];?></td>
-        </tr>
-        <tr>
-      </tbody>
-      <thead>
-        <tr>
-          <th colspan="2"><?php echo __("Map");?></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>
-            <?php echo $form['gtu_google_activated']->renderLabel();?>
-            <?php echo help_ico($form['gtu_google_activated']->renderHelp(),$sf_user);?>
-          </th>
-          <td><?php echo $form['gtu_google_activated'];?></td>
         </tr>
         <tr>
       </tbody>

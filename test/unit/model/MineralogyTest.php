@@ -9,6 +9,6 @@ $t->isnt($unit,null, 'we got a unit');
 $t->is($unit->count(),3, 'we got all parent of the unit');
 $t->is($unit[1]->getId(),$mineralo->getParentRef(), 'Parent is correct');
 
-$t->is($unit[1]->Level->__toString(),'division', 'get Level');
+$t->is($unit[1]->Level->__toString(),'sub_class', 'get Level');
 $t->is($mineralo->getNameWithFormat(),'Alkali carbonates', 'get Name');
 $t->is($mineralo->getCode(), '5.AA', 'Corect code');

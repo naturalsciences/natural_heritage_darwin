@@ -458,6 +458,7 @@ class LoansForm extends BaseLoansForm
     $javascripts[]='/js/jquery-datepicker-lang.js';
     $javascripts[]='/js/button_ref.js'; 
     $javascripts[]='/js/catalogue_people.js';   
+    $javascripts[]='/js/ui.complete.js';
     return $javascripts;
   }
 

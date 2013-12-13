@@ -23,9 +23,9 @@
   $('#specimen_taxon_ref').bind('change',loadCurrent);
   $('#taxon_orig span').click(function()
   {
-    $('#specimen_taxon_ref_name').text($('#taxon_orig span').text());
+    $('#specimen_taxon_ref_name').val($('#taxon_orig span').text());
     $('#specimen_taxon_ref').val($('#taxon_orig span').attr('r_id'));
-    $('#taxon_orig').fadeOut();
+    $('#taxon_orig').addClass('hidden');
   }
   );
 

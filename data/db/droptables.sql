@@ -69,6 +69,9 @@ DROP TABLE  IF EXISTS import_id CASCADE;
 DROP TABLE  IF EXISTS staging CASCADE;
 DROP TABLE  IF EXISTS staging_tag_groups CASCADE;
 DROP TABLE  IF EXISTS staging_people CASCADE;
+DROP TABLE  IF EXISTS staging_info CASCADE;
+DROP TABLE  IF EXISTS staging_relationship CASCADE;
+DROP TABLE  IF EXISTS staging_collecting_methods CASCADE;
 DROP TABLE  IF EXISTS loans CASCADE;
 DROP TABLE  IF EXISTS loan_items CASCADE;
 DROP TABLE  IF EXISTS loan_rights CASCADE;
@@ -77,6 +80,8 @@ DROP TABLE  IF EXISTS loan_history CASCADE;
 DROP TABLE  IF EXISTS bibliography CASCADE;
 DROP TABLE  IF EXISTS multimedia_todelete CASCADE;
 DROP TABLE  IF EXISTS db_version CASCADE;
+DROP TABLE  IF EXISTS specimens_relationships CASCADE;
+
 
 DROP SEQUENCE IF EXISTS people_id_seq  CASCADE;
 DROP SEQUENCE IF EXISTS catalogue_relationships_id_seq  CASCADE;
@@ -136,9 +141,12 @@ DROP SEQUENCE IF EXISTS preferences_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS flat_dict_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS imports_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS staging_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS staging_info_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS staging_relationship_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS staging_collecting_methods_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS staging_tag_groups_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS staging_people_id_seq CASCADE;
-
+DROP SEQUENCE IF EXISTS specimens_relationships_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS loans_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS loan_items_id_seq CASCADE;
 DROP SEQUENCE IF EXISTS loan_rights_id_seq CASCADE;

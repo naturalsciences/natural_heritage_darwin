@@ -27,7 +27,7 @@
 	height:28px;
         vertical-align:center;
 	color:white;
-	
+
 }
 .widget .widget_top_bar span
 {
@@ -67,8 +67,6 @@
 
 .board
 {
-	margin-left:51px;
-	margin-right:51px;
 	margin-top:30px;
 	min-width:866px;
 }
@@ -106,8 +104,8 @@
 	border: 1px dashed #c1cf56;
 }
 
-.ui-sortable-placeholder 
-{ 
+.ui-sortable-placeholder
+{
 	border: 1px dotted black;
 	visibility: visible !important;
 	height: 100px !important;
@@ -137,12 +135,12 @@
 .widget_collection_container
 {
 	background-color:#55afc5;
-        
+
         column-count: 4;
         -moz-column-count: 4;
-        -webkit-column-count: 4; 
+        -webkit-column-count: 4;
         -moz-column-count: 4;
-        
+
         column-fill: balance;
         -moz-column-fill: balance;
         -o-column-fill: balance;
@@ -206,7 +204,7 @@ ul.saved_search_widget
 ul.saved_search_widget span , ul.saved_search_widget li > img
 {
   vertical-align: middle;
-  display: inline-block; 
+  display: inline-block;
 }
 
 ul.saved_search_widget span
@@ -230,7 +228,7 @@ ul.saved_search_widget span
 	margin-top:1px;
 }
 
-.action_button 
+.action_button
 {
 	width: 73px;
 	height: 21px;

@@ -1,0 +1,46 @@
+# upSimpleLdapPlugin
+
+## Features
+
+ * Authenticate an user with the credentials from the LDAP directory
+ * Retrieve informations from the directory for a given user
+ * An user can update his password
+
+## Installation
+
+  * Install the plugin :
+  
+>      php symfony plugin:install upSimpleLdapPlugin
+
+  * Edit apps/myapp/config/app.yml to add a ldap section :
+  
+>      ldap:
+>        host: 192.168.0.1
+>        port: 389
+>        user: cn=ldapuser,dc=myhost,dc=com
+>        pass: secret
+>        baseuser: dc=users,dc=myhost,dc=com
+>        version: 3
+
+## Usage
+
+### Initialize the LDAP object
+
+    $ldap = new ldapAuth();
+
+### Authenticate an user
+
+    $result = $ldap->authenticate($login, $pass);
+
+### Get informations for an user
+
+    $infos = $ldap->getAttributes($login, array('cn', 'loginShell', 'displayName'));
+
+### Update a password
+
+    $ldap->updatePassword($login, $oldpass, $newpass);
+
+## Copyright
+
+upSimpleLdapPlugin has been developped by Leo Cacheux for
+Devoteam/Uperto. It has been released under the MIT license.

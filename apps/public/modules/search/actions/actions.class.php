@@ -119,14 +119,13 @@ class searchActions extends DarwinActions
     else $id = $request->getParameter('id') ;
 
     $this->forward404Unless(ctype_digit($request->getParameter('id')));
+    $this->specimen = Doctrine::getTable('Specimens')->find((int) $request->getParameter('id'));
+    $this->forward404Unless($this->specimen);
+    if(!$this->specimen->getCollectionIsPublic()) $this->forwardToSecureAction();
 
-    $this->individual = Doctrine::getTable('SpecimenIndividuals')->find($request->getParameter('id'));
-    $this->forward404Unless($this->individual);
-    if(!$this->individual->SpecimensFlat->getCollectionIsPublic()) $this->forwardToSecureAction();
-
-    $collection = Doctrine::getTable('Collections')->findOneById($this->individual->SpecimensFlat->getCollectionRef());
+    $collection = Doctrine::getTable('Collections')->findOneById($this->specimen->getCollectionRef());
     $this->institute = Doctrine::getTable('People')->findOneById($collection->getInstitutionRef()) ;
-    $this->files = Doctrine::getTable('Multimedia')->findForPublic(array($this->individual->SpecimensFlat->getSpecimenRef(), $id, $id, $this->individual->SpecimensFlat->getTaxonRef(), $this->individual->SpecimensFlat->getChronoRef(), $this->individual->SpecimensFlat->getLithoRef(), $this->individual->SpecimensFlat->getLithologyRef(), $this->individual->SpecimensFlat->getMineralRef()));
+    $this->files = Doctrine::getTable('Multimedia')->findForPublic($this->specimen);
     $this->specFilesCount = $this->taxFilesCount = $this->chronoFilesCount = $this->lithoFilesCount = $this->lithologyFilesCount = $this->mineraloFilesCount = 0;
     foreach($this->files as $file) {
       switch ($file->getReferencedRelation()){
@@ -153,11 +152,13 @@ class searchActions extends DarwinActions
     $this->col_manager = Doctrine::getTable('Users')->find($collection->getMainManagerRef());
     $this->col_staff = Doctrine::getTable('Users')->find($collection->getStaffRef());
     $this->manager = Doctrine::getTable('UsersComm')->fetchByUser($collection->getMainManagerRef());
+    $this->codes = Doctrine::getTable('Codes')->getCodesRelated('specimens', $this->specimen->getId());
+    $this->properties = Doctrine::getTable('Properties')->findForTable('specimens', $this->specimen->getId());
 
     $ids = $this->FecthIdForCommonNames() ;
     $this->common_names = Doctrine::getTable('VernacularNames')->findAllCommonNames($ids) ;
 
-    if ($tag = $this->individual->SpecimensFlat->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ;
+    if ($tag = $this->specimen->getGtuCountryTagValue()) $this->tags = explode(';',$tag) ;
     else $this->tags = false ;
     $this->form = new SuggestionForm(null,array('ref_id' => $id, 'ajax' => $ajax)) ;
     if($request->isXmlHttpRequest())
@@ -168,7 +169,7 @@ class searchActions extends DarwinActions
         $comment = $suggestion['comment'];
         if($suggestion['email'] != '') $comment = $this->getI18N()->__("Suggestion send by")." : ".$suggestion['email']."\n".$suggestion['comment']; ;
         $data = array(
-            'referenced_relation' => 'specimen_individuals',
+            'referenced_relation' => 'specimens',
             'record_id' => $suggestion['id'],
             'status' => 'suggestion',
             'comment' => $comment,
@@ -193,7 +194,7 @@ class searchActions extends DarwinActions
   {
     $flds = array('category','collection','taxon','type','gtu','chrono','taxon_common_name', 'chrono_common_name',
               'litho_common_name','lithologic_common_name','mineral_common_name', 'expedition', 'individual_type',
-              'litho','lithologic','mineral','sex','state','stage','social_status','rock_form','individual_count');
+              'litho','lithologic','mineral','sex','state','stage','social_status','rock_form','specimen_count','object_name');
     $flds = array_fill_keys($flds, 'uncheck');
 
     if($form->isBound())
@@ -229,8 +230,7 @@ class searchActions extends DarwinActions
 
   protected function defineFields()
   {
-    $this->columns= array('individual'=>array());
-    $this->columns['specimen'] = array(
+    $this->columns = array(
       'category' => array(
         'category',
         $this->getI18N()->__('Category'),),
@@ -258,27 +258,7 @@ class searchActions extends DarwinActions
       'expedition' => array(
         'expedition_name_indexed',
         $this->getI18N()->__('Expedition'),),
-    );
 
-    $this->columns['common_name'] = array(
-      'taxon_common_name' => array(
-        false,
-        $this->getI18N()->__('Taxon common name'),),
-      'chrono_common_name' => array(
-        false,
-        $this->getI18N()->__('Chrono common name'),),
-      'litho_common_name' => array(
-        false,
-        $this->getI18N()->__('Litho common name'),),
-      'lithologic_common_name' => array(
-        false,
-        $this->getI18N()->__('Lithologic common name'),),
-      'mineral_common_name' => array(
-        false,
-        $this->getI18N()->__('Mineral common name'),),
-    );
-
-    $this->columns['individual'] = array(
       'individual_type' => array(
         'type_search',
         $this->getI18N()->__('Type'),),
@@ -297,10 +277,30 @@ class searchActions extends DarwinActions
       'rock_form' => array(
         'rock_form',
         $this->getI18N()->__('Rock Form'),),
-      'individual_count' => array(
-        'specimen_individuals_count_max',
-        $this->getI18N()->__('Individual Count'),),
-      );
+      'specimen_count' => array(
+        'specimen_count_max',
+        $this->getI18N()->__('Specimen Count'),),
+
+      'object_name' => array(
+        'object_name',
+        $this->getI18N()->__('Object name'),),
+
+      'taxon_common_name' => array(
+        false,
+        $this->getI18N()->__('Taxon common name'),),
+      'chrono_common_name' => array(
+        false,
+        $this->getI18N()->__('Chrono common name'),),
+      'litho_common_name' => array(
+        false,
+        $this->getI18N()->__('Litho common name'),),
+      'lithologic_common_name' => array(
+        false,
+        $this->getI18N()->__('Lithologic common name'),),
+      'mineral_common_name' => array(
+        false,
+        $this->getI18N()->__('Mineral common name'),),
+    );
   }
 
   private function FecthIdForCommonNames()
@@ -308,22 +308,22 @@ class searchActions extends DarwinActions
     $tab = array('taxonomy'=> array(), 'chronostratigraphy' => array(), 'lithostratigraphy' => array(), 'lithology' => array(),'mineralogy' => array()) ;
     if(isset($this->search))
     {
-      foreach($this->search as $individual)
+      foreach($this->search as $specimen)
       {
-        if($individual->SpecimensFlat->getTaxonRef()) $tab['taxonomy'][] = $individual->SpecimensFlat->getTaxonRef() ;
-        if($individual->SpecimensFlat->getChronoRef()) $tab['chronostratigraphy'][] = $individual->SpecimensFlat->getChronoRef() ;
-        if($individual->SpecimensFlat->getLithoRef()) $tab['lithostratigraphy'][] = $individual->SpecimensFlat->getLithoRef() ;
-        if($individual->SpecimensFlat->getLithologyRef()) $tab['lithology'][] = $individual->SpecimensFlat->getLithologyRef() ;
-        if($individual->SpecimensFlat->getMineralRef()) $tab['mineralogy'][] = $individual->SpecimensFlat->getMineralRef() ;
+        if($specimen->getTaxonRef()) $tab['taxonomy'][] = $specimen->getTaxonRef() ;
+        if($specimen->getChronoRef()) $tab['chronostratigraphy'][] = $specimen->getChronoRef() ;
+        if($specimen->getLithoRef()) $tab['lithostratigraphy'][] = $specimen->getLithoRef() ;
+        if($specimen->getLithologyRef()) $tab['lithology'][] = $specimen->getLithologyRef() ;
+        if($specimen->getMineralRef()) $tab['mineralogy'][] = $specimen->getMineralRef() ;
       }
     }
     else
     {
-      if($this->individual->SpecimensFlat->getTaxonRef()) $tab['taxonomy'][] = $this->individual->SpecimensFlat->getTaxonRef() ;
-      if($this->individual->SpecimensFlat->getChronoRef()) $tab['chronostratigraphy'][] = $this->individual->SpecimensFlat->getChronoRef() ;
-      if($this->individual->SpecimensFlat->getLithoRef()) $tab['lithostratigraphy'][] = $this->individual->SpecimensFlat->getLithoRef() ;
-      if($this->individual->SpecimensFlat->getLithologyRef()) $tab['lithology'][] = $this->individual->SpecimensFlat->getLithologyRef() ;
-      if($this->individual->SpecimensFlat->getMineralRef()) $tab['mineralogy'][] = $this->individual->SpecimensFlat->getMineralRef() ;
+      if($this->specimen->getTaxonRef()) $tab['taxonomy'][] = $this->specimen->getTaxonRef() ;
+      if($this->specimen->getChronoRef()) $tab['chronostratigraphy'][] = $this->specimen->getChronoRef() ;
+      if($this->specimen->getLithoRef()) $tab['lithostratigraphy'][] = $this->specimen->getLithoRef() ;
+      if($this->specimen->getLithologyRef()) $tab['lithology'][] = $this->specimen->getLithologyRef() ;
+      if($this->specimen->getMineralRef()) $tab['mineralogy'][] = $this->specimen->getMineralRef() ;
     }
     return $tab ;
   }

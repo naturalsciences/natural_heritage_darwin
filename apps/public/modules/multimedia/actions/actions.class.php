@@ -14,16 +14,20 @@ class multimediaActions extends DarwinActions
   {
     $this->setLayout(false);
     $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
-    if($multimedia->getReferencedRelation() == 'loans' || $multimedia->getReferencedRelation() == 'loan_items') $this->forwardToSecureAction();
+    if(!$multimedia || $multimedia->getReferencedRelation() == 'loans' || $multimedia->getReferencedRelation() == 'loan_items')
+      $this->forward404('Multimedia not found or not authorized');
     $this->forward404If(!($multimedia->getVisible()));
     $this->forward404Unless(file_exists($file = $multimedia->getFullURI()),sprintf('This file does not exist') );
     // Adding the file to the Response object
 
     $this->getResponse()->clearHttpHeaders();
     $this->getResponse()->setHttpHeader('Pragma: private', true);
-    $this->getResponse()->setHttpHeader('Content-Disposition',
-                            'attachment; filename="'.
-                            $multimedia->getFilename().'"');
+    $this->getResponse()->setHttpHeader(
+      'Content-Disposition',
+      'attachment; filename="'.
+      $multimedia->getFilename().'"'
+    );
+
     //$this->getResponse()->setContentType("application/force-download ".$multimedia->getMimeType());
     $this->getResponse()->setHttpHeader('content-type', 'application/octet-stream', true);
     $this->getResponse()->sendHttpHeaders();
@@ -35,7 +39,8 @@ class multimediaActions extends DarwinActions
   {
     $this->setLayout(false);
     $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
-    if($multimedia->getReferencedRelation() == 'loans' || $multimedia->getReferencedRelation() == 'loan_items') $this->forwardToSecureAction();
+    if(! $multimedia || $multimedia->getReferencedRelation() == 'loans' || $multimedia->getReferencedRelation() == 'loan_items')
+      $this->forwardToSecureAction('Multimedia not found or not authorized');
     $this->forward404If(!($multimedia->getVisible()));
     $this->forward404Unless(file_exists($multimedia->getFullURI()),sprintf('This file does not exist') );
 

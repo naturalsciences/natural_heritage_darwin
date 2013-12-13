@@ -89,9 +89,9 @@ SELECT lives_ok('UPDATE collections SET parent_ref = 100002 where id = 100001');
 SELECT ok(1 = (SELECT COUNT(*) FROM collections_rights WHERE collection_ref = 100001 and user_ref = 100004 and db_user_type = 4), 'Clown user well added as a collection manager of Bulots d''Afrique');
 
 SELECT diag('Add preference and a fake parts saved search for Francka');
-SELECT lives_ok('INSERT INTO preferences (user_ref, pref_key, pref_value) VALUES (100003, ''search_cols_part'', ''taxon|part|building|room|container_type'')', 'Insertion in preferences ok');
-SELECT lives_ok('INSERT INTO my_saved_searches (user_ref, name, search_criterias, visible_fields_in_result, subject) VALUES (100003, ''part search'', '''', ''taxon|part|building|room|container_type'', ''part'')', 'Insertion in my_saved_searches ok');
-SELECT lives_ok('INSERT INTO my_saved_searches (user_ref, name, search_criterias, visible_fields_in_result, subject) VALUES (100003, ''part search 2'', ''{s1:a11}'', ''taxon|floor|part|building|room|container|container_type'', ''part'')', 'Second insertion in my_saved_searches ok');
+SELECT lives_ok('INSERT INTO preferences (user_ref, pref_key, pref_value) VALUES (100003, ''search_cols_specimen'', ''taxon|part|building|room|container_type'')', 'Insertion in preferences ok');
+SELECT lives_ok('INSERT INTO my_saved_searches (user_ref, name, search_criterias, visible_fields_in_result, subject) VALUES (100003, ''spec search'', '''', ''taxon|part|building|room|container_type'', ''specimen'')', 'Insertion in my_saved_searches ok');
+SELECT lives_ok('INSERT INTO my_saved_searches (user_ref, name, search_criterias, visible_fields_in_result, subject) VALUES (100003, ''spec search 2'', ''{s1:a11}'', ''taxon|floor|part|building|room|container|container_type'', ''specimen'')', 'Second insertion in my_saved_searches ok');
 
 SELECT diag('Check cascade delete of collection well occurs and do the unpromotion job');
 SELECT lives_ok('DELETE FROM collections WHERE id = 100001');
@@ -99,9 +99,9 @@ SELECT ok(0 = (SELECT COUNT(*) FROM collections_rights WHERE collection_ref = 10
 SELECT ok(4 = (SELECT db_user_type FROM users WHERE id = 100000), 'Jos Chevremont still main manager');
 SELECT ok(0 = (SELECT COUNT(*) FROM collections_rights WHERE user_ref = 100003), 'No more Francka referenced');
 SELECT ok(1 = (SELECT db_user_type FROM users WHERE id = 100003), 'Francka unpromoted to registered user');
-SELECT ok('taxon|part' = (SELECT pref_value FROM preferences WHERE user_ref = 100003 AND pref_key = 'search_cols_part'), 'Preferences - parts columns not visible well removed');
-SELECT ok('taxon|part' = (SELECT visible_fields_in_result FROM my_saved_searches WHERE user_ref = 100003 AND subject = 'part' AND name = 'part search'), 'My saved searches - parts columns not visible well removed');
-SELECT ok('taxon|part' = (SELECT visible_fields_in_result FROM my_saved_searches WHERE user_ref = 100003 AND subject = 'part' AND name = 'part search 2'), 'My saved searches - parts columns not visible well removed');
+SELECT ok('taxon|part' = (SELECT pref_value FROM preferences WHERE user_ref = 100003 AND pref_key = 'search_cols_specimen'), 'Preferences - s columns not visible well removed');
+SELECT ok('taxon|part' = (SELECT visible_fields_in_result FROM my_saved_searches WHERE user_ref = 100003 AND subject = 'specimen' AND name = 'spec search'), 'My saved searches - spec columns not visible well removed');
+SELECT ok('taxon|part' = (SELECT visible_fields_in_result FROM my_saved_searches WHERE user_ref = 100003 AND subject = 'specimen' AND name = 'spec search 2'), 'My saved searches - spec columns not visible well removed');
 
 -- Finish the tests and clean up.
 SELECT * FROM finish();

@@ -1,7 +1,7 @@
 \unset ECHO
 \i unit_launch.sql
 -- Plan the tests.
-SELECT plan(48);
+SELECT plan(42);
 
 -- Run the tests.
 SELECT has_table('catalogue_relationships','catalogue_relationships exists');
@@ -12,7 +12,7 @@ SELECT has_table('possible_upper_levels','possible_upper_levels exists');
 SELECT has_table('comments','comments exists');
 SELECT has_table('tag_groups','tag_groups exists');
 SELECT has_table('gtu','gtu exists');
-SELECT has_table('catalogue_properties','catalogue_properties exists');
+SELECT has_table('properties','properties exists');
 SELECT has_table('identifications','identifications exists');
 SELECT has_table('vernacular_names','vernacular_names exists');
 SELECT has_table('expeditions','expeditions exists');
@@ -44,11 +44,9 @@ SELECT has_table('mineralogy','mineralogy exists');
 SELECT has_table('lithology','lithology exists');
 SELECT has_table('specimens','specimens exists');
 SELECT has_table('codes','codes exists');
-SELECT has_table('specimen_individuals','specimen_individuals exists');
-SELECT has_table('specimen_parts','specimen_parts exists');
 SELECT has_table('insurances', 'insurances exists');
 /*SELECT has_table('igs', 'igs exists');*/
-SELECT has_table('specimens_accompanying','specimens_accompanying exists');
+SELECT has_table('specimens_relationships','specimens_relationships exists');
 
 -- Finish the tests and clean up.
 SELECT * FROM finish();

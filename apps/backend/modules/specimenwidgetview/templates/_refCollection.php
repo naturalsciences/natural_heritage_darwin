@@ -9,7 +9,6 @@
           'data-staffid'=> $spec->getCollections()->getStaffRef())
           );?>
         <?php echo $spec->getCollections()->getName(); ?>
-
       </td>
     </tr>
     <tr>

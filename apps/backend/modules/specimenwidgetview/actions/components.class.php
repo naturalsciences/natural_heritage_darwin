@@ -14,19 +14,43 @@ class specimenwidgetviewComponents extends sfComponents
   protected function defineObject()
   {
     if(! isset($this->spec) )
-      $this->spec = Doctrine::getTable('SpecimensFlat')->find($this->eid);
+      $this->spec = Doctrine::getTable('Specimens')->find($this->eid);
+  }
+  public function executeType()
+  {
+    $this->defineObject();
+  }
+
+  public function executeSex()
+  {
+    $this->defineObject();
+  }
+
+  public function executeStage()
+  {
+    $this->defineObject();
+  }
+
+  public function executeSocialStatus()
+  {
+    $this->defineObject();
+  }
+
+  public function executeRockForm()
+  {
+    $this->defineObject();
   }
 
   public function executeRefCollection()
   {
     $this->defineObject();
   }
-  
+
   public function executeRefDonators()
   {
     $this->Donators = Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens','donator',$this->eid) ;
   }
-  
+
   public function executeRefExpedition()
   {
     $this->defineObject();
@@ -44,7 +68,7 @@ class specimenwidgetviewComponents extends sfComponents
 
   public function executeTool()
   {
-    $this->form = Doctrine::getTable('SpecimensTools')->getToolName($this->eid) ;  
+    $this->form = Doctrine::getTable('SpecimensTools')->getToolName($this->eid) ;
   }
 
   public function executeMethod()
@@ -86,14 +110,9 @@ class specimenwidgetviewComponents extends sfComponents
     }
   }
 
-  public function executeRefHosts()
-  {
-    $this->spec = Doctrine::getTable('Specimens')->find($this->eid);
-  }
-
   public function executeRefCodes()
   {
-    $this->Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;    
+    $this->Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;
   }
 
   public function executeRefCollectors()
@@ -102,14 +121,14 @@ class specimenwidgetviewComponents extends sfComponents
   }
 
   public function executeRefProperties()
-  {    
+  {
   }
 
   public function executeRefComment()
-  {    
+  {
     $this->Comments = Doctrine::getTable('Comments')->findForTable('specimens',$this->eid) ;
   }
-  
+
   public function executeRefIdentifications()
   {
     $this->identifications = Doctrine::getTable('Identifications')->getIdentificationsRelated('specimens',$this->eid) ;
@@ -122,15 +141,16 @@ class specimenwidgetviewComponents extends sfComponents
       {
         $this->people[$val->getId()][] = $val2->People->getFormatedName() ;
       }
-    }    
+    }
   }
 
   public function executeExtLinks()
   {}
-  
-  public function executeSpecimensAccompanying()
+
+  public function executeSpecimensRelationships()
   {
-    $this->accompanying = Doctrine::getTable("SpecimensAccompanying")->findBySpecimenRef($this->eid) ;
+    $this->spec_related = Doctrine::getTable("SpecimensRelationships")->findBySpecimenRef($this->eid);
+    $this->spec_related_inverse = Doctrine::getTable("SpecimensRelationships")->findByRelatedSpecimenRef($this->eid);
   }
 
   public function executeRefRelatedFiles()
@@ -151,5 +171,53 @@ class specimenwidgetviewComponents extends sfComponents
   public function executeBiblio()
   {
     $this->Biblios = Doctrine::getTable('CatalogueBibliography')->findForTable('specimens', $this->eid);
+  }
+
+
+  public function executeSpecimenCount()
+  {
+    $this->defineObject();
+    if ($this->spec->getSpecimenCountMin() === $this->spec->getSpecimenCountMax())
+      $this->accuracy = "Exact" ;
+    else
+      $this->accuracy = "Imprecise" ;
+  }
+
+  public function executeSpecPart()
+  {
+    $this->defineObject();
+  }
+
+  public function executeComplete()
+  {
+    $this->defineObject();
+  }
+
+  public function executeLocalisation()
+  {
+    $this->defineObject();
+  }
+
+  public function executeContainer()
+  {
+    $this->defineObject();
+  }
+
+  public function executeRefInsurances()
+  {
+    $this->Insurances = Doctrine::getTable('Insurances')->findForTable('specimens',$this->eid) ;
+  }
+
+  public function executeMaintenance()
+  {
+    $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimens', array($this->eid));
+  }
+  public function executeHistoric()
+  {
+    $this->defineObject();
+  }
+  public function executeLoan()
+  {
+    $this->defineObject();
   }
 }

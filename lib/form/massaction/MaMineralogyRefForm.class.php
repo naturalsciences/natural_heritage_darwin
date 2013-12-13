@@ -4,13 +4,14 @@ class MaMineralogyRefForm extends BaseForm
 {
   public function configure()
   {
-    $this->widgetSchema['mineralogy_ref'] = new widgetFormButtonRef(array(
+    $this->widgetSchema['mineralogy_ref'] = new widgetFormCompleteButtonRef(array(
        'model' => 'Mineralogy',
        'link_url' => 'mineralogy/choose',
        'method' => 'getName',
        'box_title' => $this->getI18N()->__('Choose Mineralogic unit'),
        'nullable' => true,
        'button_class'=>'',
+       'complete_url' => 'catalogue/completeName?table=mineralogy',
      ));
 
     $this->widgetSchema['mineralogy_ref']->setLabel('Choose Mineralogic unit');

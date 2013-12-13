@@ -10,17 +10,20 @@
  * @property string $method_indexed
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensMethods
+ * @property Doctrine_Collection $StagingMethods
  * 
  * @method integer             getId()               Returns the current record's "id" value
  * @method string              getMethod()           Returns the current record's "method" value
  * @method string              getMethodIndexed()    Returns the current record's "method_indexed" value
  * @method Doctrine_Collection getSpecimens()        Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensMethods() Returns the current record's "SpecimensMethods" collection
+ * @method Doctrine_Collection getStagingMethods()   Returns the current record's "StagingMethods" collection
  * @method CollectingMethods   setId()               Sets the current record's "id" value
  * @method CollectingMethods   setMethod()           Sets the current record's "method" value
  * @method CollectingMethods   setMethodIndexed()    Sets the current record's "method_indexed" value
  * @method CollectingMethods   setSpecimens()        Sets the current record's "Specimens" collection
  * @method CollectingMethods   setSpecimensMethods() Sets the current record's "SpecimensMethods" collection
+ * @method CollectingMethods   setStagingMethods()   Sets the current record's "StagingMethods" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -55,6 +58,10 @@ abstract class BaseCollectingMethods extends DarwinModel
              'foreign' => 'specimen_ref'));
 
         $this->hasMany('SpecimensMethods', array(
+             'local' => 'id',
+             'foreign' => 'collecting_method_ref'));
+
+        $this->hasMany('StagingMethods', array(
              'local' => 'id',
              'foreign' => 'collecting_method_ref'));
     }

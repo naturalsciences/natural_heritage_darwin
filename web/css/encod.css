@@ -42,18 +42,23 @@
 
 .panel
 {
-  margin-top:-2px;
-  border:1px solid #c0d147;
   padding-top: 30px;
-  padding-left:21px;
-  padding-right: 21px;
-  padding-bottom: 20px;
-  background-color:white;
   min-height:  300px;
+/*   margin-top:-2px; */
+/*   border:1px solid #c0d147; */
+/*   padding-left:21px; */
+/*   padding-right: 21px; */
+/*   padding-bottom: 20px; */
+/*   background-color:white; */
+
 }
 
 
 /**** WIDGET ENCODING ****/
+h3.spec .title {
+  border-bottom: 3px solid #C1CF56;
+}
+
 .encod_screen .widget .widget_top_bar
 {
   background-color:#C1CF56;
@@ -129,7 +134,7 @@ td >.link_catalogue
 
 .catalogue_action_type
 {
-  font-weight:bold; 
+  font-weight:bold;
   display:block;
   margin-left: 0.5em;
   margin-top: 0.5em;
@@ -188,4 +193,17 @@ table.extended_info hr
 }
 .loan_overview_form {
   z-index:-1;
+}
+.unit_external .button {
+  float:none;
+}
+
+.relationship_detail_edit {
+  background-color: #E9EDBE;
+  border: 1px solid #C1CF56;
+  vertical-align:center;
+}
+
+.relationship_detail_edit td{
+  padding: 0.5em;
 }

@@ -10,6 +10,7 @@
  */
 class savesearchActions extends sfActions
 {
+  // Remove pinned form a saved search 
   public function executeRemovePin(sfWebRequest $request)
   {
     if($request->getParameter('search') && ctype_digit($request->getParameter('search')) && $request->getParameter('ids',"") != "" )
@@ -35,7 +36,7 @@ class savesearchActions extends sfActions
 
   public function executePin(sfWebRequest $request)
   {
-    if( in_array($request->getParameter('source',""), array('specimen','individual','part')))
+    if( in_array($request->getParameter('source',""), array('specimen')))
     {
       $source =  $request->getParameter('source',"");
       if($request->getParameter('id') && ctype_digit($request->getParameter('id')))
@@ -45,7 +46,10 @@ class savesearchActions extends sfActions
         else
           $this->getUser()->removePinTo($request->getParameter('id'), $source);
 
-        return $this->renderText('ok');
+        return $this->renderText(json_encode(array(
+          'status' => 'ok',
+          'pinned' => $this->getUser()->getAllPinned($source),
+        )));
       }
       elseif($request->getParameter('mid','') != '')
       {
@@ -61,7 +65,10 @@ class savesearchActions extends sfActions
               $this->getUser()->removePinTo($id, $source);
           }
         }
-        return $this->renderText('ok');
+        return $this->renderText(json_encode(array(
+          'status' => 'ok',
+          'pinned' => $this->getUser()->getAllPinned($source),
+        )));
       }
     }
     $this->forward404();
@@ -107,7 +114,7 @@ class savesearchActions extends sfActions
       $saved_search->setVisibleFieldsInResult($cols);
       if($request->getParameter('type') == 'pin')
       {
-        $this->forward404unless(in_array($source, array('specimen','individual','part')));
+        $this->forward404unless(in_array($source, array('specimen')));
         $saved_search->setSubject($source);
 
         $this->is_spec_search=true;

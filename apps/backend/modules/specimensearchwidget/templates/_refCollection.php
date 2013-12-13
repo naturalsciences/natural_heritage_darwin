@@ -1,35 +1,37 @@
 <script type="text/javascript">
 $(document).ready(function () {
     $('.treelist li:not(li:has(ul)) img.tree_cmd').hide();
-    $('.collapsed').click(function()
+    $('.chk input').change(function()
     {
-        $(this).hide();
-        $(this).siblings('.expanded').show();
-        $(this).parent().siblings('ul').show();
-    });
-    
-    $('.expanded').click(function()
-    {
-        $(this).hide();
-        $(this).siblings('.collapsed').show();
-        $(this).parent().siblings('ul').hide();
-    });
-    $('.treelist li input[type=checkbox]').click(function()
-    {
-      class_val = $(this).closest('li').attr('class');
+      li = $(this).closest('li');
       if(! $(this).is(':checked'))
-        $('.'+class_val).find(':checkbox').not($(this)).removeAttr('checked');
+        li.find(':checkbox').not($(this)).removeAttr('checked').change();
       else
-	$('.'+class_val).find(':checkbox').not($(this)).attr('checked','checked');
-    });    
+        li.find(':checkbox').not($(this)).attr('checked','checked').change();
+    });
+
     $('#clear_collections').click(function()
     {
-  	  $('table.widget_sub_table').find(':checkbox').removeAttr('checked');
+       $('table.widget_sub_table').find(':checked').removeAttr('checked').change();
     });
-  
+
+    $('.collapsed').click(function()
+    {
+        $(this).addClass('hidden');
+        $(this).siblings('.expanded').removeClass('hidden');
+        $(this).parent().siblings('ul').show();
+    });
+
+    $('.expanded').click(function()
+    {
+        $(this).addClass('hidden');
+        $(this).siblings('.collapsed').removeClass('hidden');
+        $(this).parent().siblings('ul').hide();
+    });
+
     $('#check_editable').click(function(){
-      $('.treelist input:checkbox').removeAttr('checked');
-      $('li[data-enc] > div > input:checkbox').attr('checked','checked');
+      $('.treelist input:checked').removeAttr('checked').change();
+      $('li[data-enc] > div > label > input:checkbox').attr('checked','checked').change();
     });
 });
 </script>

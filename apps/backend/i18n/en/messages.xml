@@ -91,21 +91,9 @@
         <source>Specimens</source>
         <target>Specimens</target>
       </trans-unit>
-          <trans-unit id="30">
-        <source>Pinned Items</source>
-        <target>Pinned Items</target>
-      </trans-unit>
           <trans-unit id="31">
-        <source>Specimens (%d)</source>
-        <target>Specimens (%d)</target>
-      </trans-unit>
-          <trans-unit id="32">
-        <source>Individuals (%d)</source>
-        <target>Individuals (%d)</target>
-      </trans-unit>
-          <trans-unit id="33">
-        <source>Parts (%d)</source>
-        <target>Parts (%d)</target>
+          <source>Pinned Specimens <i>(%d)</i></source>
+        <target>Pinned Specimens <i>(%d)</i></target>
       </trans-unit>
           <trans-unit id="34">
         <source>Collections</source>
@@ -2915,7 +2903,7 @@
         <source>Pick a stage in the list</source>
         <target>Pick a stage in the list</target>
       </trans-unit>
-          <trans-unit id="748">
+      <trans-unit id="748">
         <source>imprecise</source>
         <target>imprecise</target>
       </trans-unit>
@@ -4800,8 +4788,8 @@
         <target>You may want to include &lt;em&gt;rows without errors&lt;/em&gt;</target>
       </trans-unit>
           <trans-unit id="1445">
-        <source>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</source>
-        <target>The hierarchy of this %field% is incorrect, please choose a good one or leave the field empty</target>
+        <source>The hierarchy of this %field% is different from the one in our database, please choose or create the correct hierarchy</source>
+        <target>The hierarchy of this %field% is different from the one in our database, please choose or create the correct hierarchy</target>
       </trans-unit>
           <trans-unit id="1446">
         <source>Too many records match this %field%\&#039;s value, please choose the good one or leave it empty</source>
@@ -5734,6 +5722,230 @@
       <trans-unit id="1736">
         <source>This part is currently loaned</source>
         <target>This part is currently loaned</target>
+      </trans-unit>
+      <trans-unit id="1737">
+        <source>Error: The comment is missing</source>
+        <target>Error: The comment is missing</target>
+      </trans-unit>
+      <trans-unit id="1738">
+        <source>If you're looking for only illustrated object (or object with files), check the box below</source>
+        <target>If you're looking for only illustrated object (or object with files), check the box below</target>
+      </trans-unit>
+      <trans-unit id="1739">
+        <source>Search Only objects with multimedia files </source>
+        <target>Search Only objects with multimedia files</target>
+      </trans-unit>
+      <trans-unit id="1740">
+        <source>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</source>
+        <target>This button will show you all errors occured during import, it's your choice to decide to continue the import process or delete your import, correct the file it and re-import it</target>
+      </trans-unit>
+      <trans-unit id="1741">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</source>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</target>
+      </trans-unit>
+      <trans-unit id="1742">
+        <source>defined as %role%</source>
+        <target>Défined as %role%</target>
+      </trans-unit>
+      <trans-unit id="1743">
+        <source>View errors while importing</source>
+        <target>View errors while importing</target>
+      </trans-unit>
+      <trans-unit id="1744">
+        <source>List of errors occured during import</source>
+        <target>List of errors occured during import</target>
+      </trans-unit>
+      <trans-unit id="1745">
+        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import,
+        correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</source>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import, correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</target>
+      </trans-unit>
+      <trans-unit id="1746">
+        <source>Continue import</source>
+        <target>Continue import</target>
+      </trans-unit>
+      <trans-unit id="1747">
+        <source>Applies to</source>
+        <target>Applies to</target>
+      </trans-unit>
+      <trans-unit id="1748">
+        <source>import_taxon_parent_info</source>
+        <target>Parent set in your file (in red : taxon not found in the catalogue, in green : taxon found in the catalogue)</target>
+      </trans-unit>
+      <trans-unit id="1749">
+        <source>Try to create missing taxons</source>
+        <target>Try to create missing taxons</target>
+      </trans-unit>
+      <trans-unit id="1750">
+        <source>Choose an institution</source>
+        <target>Choose an institution</target>
+      </trans-unit>
+      <trans-unit id="1751">
+        <source>Choose Chronostratigraphic unit</source>
+        <target>Choose Chronostratigraphic unit</target>
+      </trans-unit>
+      <trans-unit id="1752">
+        <source>Choose Darwin item</source>
+        <target>Choose Darwin item</target>
+      </trans-unit>
+      <trans-unit id="1753">
+        <source>Choose Expedition</source>
+        <target>Choose Expedition</target>
+      </trans-unit>
+      <trans-unit id="1754">
+        <source>Choose Institution</source>
+        <target>Choose Institution</target>
+      </trans-unit>
+      <trans-unit id="1755">
+        <source>Choose Manager</source>
+        <target>Choose Manager</target>
+      </trans-unit>
+      <trans-unit id="1756">
+        <source>Choose People</source>
+        <target>Choose People</target>
+      </trans-unit>
+      <trans-unit id="1757">
+        <source>Choose Sampling Location</source>
+        <target>Choose Sampling Location</target>
+      </trans-unit>
+      <trans-unit id="1758">
+        <source>Choose Specimen</source>
+        <target>Choose Specimen</target>
+      </trans-unit>
+      <trans-unit id="1759">
+        <source>Choose Staff Member</source>
+        <target>Choose Staff Member</target>
+      </trans-unit>
+      <trans-unit id="1760">
+        <source>Parent collection</source>
+        <target>Parent collection</target>
+      </trans-unit>
+      <trans-unit id="1761">
+        <source>Choose Institution</source>
+        <target>Choose Institution</target>
+      </trans-unit>
+      <trans-unit id="1762">
+        <source>Search Only objects with multimedia files</source>
+        <target>Search Only objects with multimedia files</target>
+      </trans-unit>
+      <trans-unit id="1763">
+        <source>Precise search</source>
+        <target>Precise search</target>
+      </trans-unit>
+      <trans-unit id="1764">
+        <source>Name search</source>
+        <target>Name search</target>
+      </trans-unit>
+      <trans-unit id="1765">
+        <source>deleteting_confirm</source>
+        <target>Deleting this people will remove it from your import on this record, are you sure ?</target>
+      </trans-unit>
+      <trans-unit id="1767">
+        <source>Property unit</source>
+        <target>Property unit</target>
+      </trans-unit>
+          <trans-unit id="1768">
+        <source>Add another unit</source>
+        <target>Add another unit</target>
+      </trans-unit>
+          <trans-unit id="1769">
+        <source>Pick a unit in the list</source>
+        <target>Pick a unit in the list</target>
+      </trans-unit>
+      <trans-unit id="1770">
+        <source>Lower value</source>
+        <target>Lower value</target>
+      </trans-unit>
+      <trans-unit id="1771">
+        <source>Upper value</source>
+        <target>Upper value</target>
+      </trans-unit>
+      <trans-unit id="1772">
+        <source>Method</source>
+        <target>Method</target>
+      </trans-unit>
+      <trans-unit id="1773">
+        <source>Is quantitative</source>
+        <target>Is quantitative</target>
+      </trans-unit>
+      <trans-unit id="1774">
+        <source>Is range</source>
+        <target>Is range</target>
+      </trans-unit>
+      <trans-unit id="1775">
+        <source>Unit</source>
+        <target>Unit</target>
+      </trans-unit>
+      <trans-unit id="1776">
+        <source>Edit Specimen</source>
+        <target>Edit Specimen</target>
+      </trans-unit>
+      <trans-unit id="1777">
+        <source>Error(s) found</source>
+        <target>Error(s) found</target>
+      </trans-unit>
+      <trans-unit id="1778">
+        <source>Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file</source>
+        <target>Errors appeared during import, you can either check these errors with
+the error icon, and you can continue the import process or you can  delete the entry
+and re-import your corrected file</target>
+      </trans-unit>
+      <trans-unit id="1779">
+        <source>This button will cancel the importing of the file, your file will have the Aborted state, it will allow you to keep a trace of this import, even if the data were not imported</source>
+        <target>This button will cancel the importing of the file, your
+file will have the Aborted state, it will allow you to keep a trace of
+this import, even if the data is not imported</target>
+      </trans-unit>
+      <trans-unit id="1780">
+        <source>warning_button_explanation</source>
+        <target>This button will show you all errors that occured during
+import, it&#039;s your choice to decide whether to continue the import process
+or to delete your import, correct the file and re-import it</target>
+      </trans-unit>
+      <trans-unit id="1781">
+        <source>This file has been completly been imported in DaRWIN</source>
+        <target>This file has been completely imported in
+DaRWIN</target>
+      </trans-unit>
+      <trans-unit id="1782">
+        <source>ok_line_explanation</source>
+        <target>Your &#039;Ok&#039; lines are beeing imported in DaRWIN</target>
+      </trans-unit>
+      <trans-unit id="1783">
+        <source>Display of import file</source>
+        <target>Display of import file</target>
+      </trans-unit>
+      <trans-unit id="1784">
+        <source>Correction of import row</source>
+        <target>Correction of import row</target>
+      </trans-unit>
+      <trans-unit id="1785">
+        <source>Pick a column in the list</source>
+        <target>Pick a column in the list</target>
+      </trans-unit>
+      <trans-unit id="1786">
+        <source>Add another column</source>
+        <target>Add another column</target>
+      </trans-unit>
+      <trans-unit id="1787">
+        <source>column</source>
+        <target>Column</target>
+      </trans-unit>
+      <trans-unit id="1788">
+        <source>Change Column</source>
+        <target>Change Column</target>
+      </trans-unit>
+      <trans-unit id="1789">
+        <source>Search in comments</source>
+        <target>Search in comments</target>
+      </trans-unit>
+      <trans-unit id="1790">
+        <source>Search in properties</source>
+        <target>Search in properties</target>
+      </trans-unit>
+      <trans-unit id="1791">
+        <source>Linked info</source>
+        <target>Linked info</target>
       </trans-unit>
     </body>
   </file>

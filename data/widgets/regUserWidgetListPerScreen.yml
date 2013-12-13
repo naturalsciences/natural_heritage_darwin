@@ -117,8 +117,8 @@ sps4:
    order_by: 2
    opened: false
    visible: false
-   title_perso: Latitude Longitude 
-   all_public: true  
+   title_perso: Latitude Longitude
+   all_public: true
 
 sps5:
    col_num: 2
@@ -141,7 +141,7 @@ sps6:
    visible: true
    title_perso: Lithology
    all_public: true
-   
+
 sps7:
    col_num: 1
    category: specimensearch_widget
@@ -152,7 +152,7 @@ sps7:
    visible: true
    title_perso: Lithostratigraphy
    all_public: true
-   
+
 sps8:
    col_num: 2
    category: specimensearch_widget
@@ -163,7 +163,7 @@ sps8:
    visible: true
    title_perso: Mineralogy
    all_public: true
-   
+
 sps9:
    col_num: 2
    category: specimensearch_widget
@@ -174,7 +174,7 @@ sps9:
    visible: false
    title_perso: Advanced: Search By ID
    all_public: true
-   
+
 sps10:
    col_num: 2
    category: specimensearch_widget
@@ -185,7 +185,7 @@ sps10:
    visible: false
    title_perso: Social Status
    all_public: true
-   
+
 sps11:
    col_num: 1
    category: specimensearch_widget
@@ -196,7 +196,7 @@ sps11:
    visible: false
    title_perso: Sex
    all_public: true
-   
+
 sps12:
    col_num: 1
    category: specimensearch_widget
@@ -207,7 +207,7 @@ sps12:
    visible: false
    title_perso: Stage
    all_public: true
-   
+
 sps13:
    col_num: 2
    category: specimensearch_widget
@@ -218,7 +218,7 @@ sps13:
    visible: false
    title_perso: Sexual State
    all_public: true
-   
+
 sps14:
    col_num: 2
    category: specimensearch_widget
@@ -240,7 +240,7 @@ sps15:
    visible: false
    title_perso: Codes
    all_public: true
-     
+
 sps16:
    col_num: 1
    category: specimensearch_widget
@@ -266,12 +266,12 @@ sps17:
 sps18:
    col_num: 1
    category: specimensearch_widget
-   group_name: whatSearched
-   mandatory: true
+   group_name: multimedia
+   mandatory: false
    order_by: 9
    opened: true
    visible: true
-   title_perso: Type of search  
+   title_perso: Type of search
    all_public: true
 
 sps19:
@@ -282,8 +282,8 @@ sps19:
    order_by: 9
    opened: true
    visible: true
-   title_perso: Type  
-   all_public: true  
+   title_perso: Type
+   all_public: true
 
 sps20:
    col_num: 1
@@ -304,9 +304,9 @@ sps21:
    order_by: 11
    opened: false
    visible: false
-   title_perso: Expedition  
+   title_perso: Expedition
    all_public: true
-   
+
 sps22:
    col_num: 2
    category: specimensearch_widget
@@ -315,8 +315,8 @@ sps22:
    order_by: 10
    opened: true
    visible: false
-   title_perso: Acquisitions  
-   all_public: true   
+   title_perso: Acquisitions
+   all_public: true
 
 sps23:
    col_num: 2
@@ -338,7 +338,29 @@ sps24:
    opened: true
    visible: false
    title_perso: Part
-   all_public: true 
+   all_public: true
+
+sps25:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: properties
+   mandatory: false
+   order_by: 13
+   opened: true
+   visible: false
+   title_perso: Properties
+   all_public: true
+
+sps26:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: comments
+   mandatory: false
+   order_by: 14
+   opened: true
+   visible: false
+   title_perso: Comments
+   all_public: true
 
 sw1:
    col_num: 1
@@ -376,12 +398,12 @@ sw3:
 sw4:
    col_num: 1
    category: specimen_widget
-   group_name: refHosts
+   group_name: specimensRelationships
    mandatory: false
    order_by: 4
    opened: true
    visible: true
-   title_perso: Host
+   title_perso: Relationships
    all_public: true
 
 sw5:
@@ -410,7 +432,7 @@ sw7:
    col_num: 1
    category: specimen_widget
    group_name: refLithology
-   mandatory: false   
+   mandatory: false
    order_by: 7
    opened: true
    visible: false
@@ -421,7 +443,7 @@ sw8:
    col_num: 1
    category: specimen_widget
    group_name: refMineral
-   mandatory: false   
+   mandatory: false
    order_by: 8
    opened: true
    visible: false
@@ -455,7 +477,7 @@ sw15:
    category: specimen_widget
    group_name: method
    order_by: 5
-   mandatory: false   
+   mandatory: false
    opened: false
    visible: false
    title_perso: Collecting method
@@ -551,20 +573,20 @@ sw24:
    title_perso: Bibliography
    all_public: true
 
-spi1:
+sw25:
    col_num: 1
-   category: individuals_widget
+   category: specimen_widget
    group_name: type
-   mandatory: true
+   mandatory: false
    order_by: 1
    opened: true
    visible: true
    title_perso: Type
    all_public: true
 
-spi2:
+sw26:
   col_num: 1
-  category: individuals_widget
+  category: specimen_widget
   group_name: sex
   mandatory: false
   order_by: 2
@@ -573,9 +595,9 @@ spi2:
   title_perso: Sex
   all_public: true
 
-spi3:
+sw27:
   col_num: 1
-  category: individuals_widget
+  category: specimen_widget
   group_name: stage
   mandatory: false
   order_by: 3
@@ -584,9 +606,9 @@ spi3:
   title_perso: Stage
   all_public: true
 
-spi4:
+sw28:
   col_num: 1
-  category: individuals_widget
+  category: specimen_widget
   group_name: socialStatus
   mandatory: false
   order_by: 4
@@ -595,9 +617,9 @@ spi4:
   title_perso: Social Status
   all_public: true
 
-spi5:
+sw29:
   col_num: 1
-  category: individuals_widget
+  category: specimen_widget
   group_name: rockForm
   mandatory: false
   order_by: 5
@@ -606,100 +628,21 @@ spi5:
   title_perso: Rock form
   all_public: true
 
-spi6:
-  col_num: 2
-  category: individuals_widget
-  group_name: specimenIndividualCount
-  mandatory: false
-  order_by: 1
-  opened: true
-  visible: true
-  title_perso: Count
-  all_public: true
-
-spi7:
-   col_num: 2
-   category: individuals_widget
-   group_name: refProperties
-   mandatory: false
-   order_by: 2
-   opened: false
-   visible: false
-   title_perso: Properties
-   all_public: true
-
-spi9:
-   col_num: 2
-   category: individuals_widget
-   group_name: comments
-   mandatory: false
-   order_by: 4
-   opened: true
-   visible: true
-   title_perso: Comments
-   all_public: true
-
-spi10:
-   col_num: 2
-   category: individuals_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 5
-   opened: true
-   visible: true
-   title_perso: External Links
-   all_public: true
-
-spi11:
-   col_num: 2
-   category: individuals_widget
-   group_name: informativeWorkflow
-   mandatory: false
-   order_by: 2
-   opened: true
-   visible: true
-   title_perso: Suggestions / Report problem
-   all_public: true
-
-spi12:
-   col_num: 2
-   category: individuals_widget
-   group_name: refRelatedFiles
-   mandatory: false
-   order_by: 3
-   opened: true
-   visible: true
-   is_available: true
-   title_perso: Related Files
-   all_public: true
-
-spi13:
-   col_num: 2
-   category: individuals_widget
-   group_name: biblio
-   mandatory: false
-   order_by: 4
-   opened: false
-   visible: false
-   is_available: true
-   title_perso: Bibliography
-   all_public: true
-
-sp1:
+sw30:
    col_num: 1
-   category: part_widget
+   category: specimen_widget
    group_name: specPart
-   mandatory: true
+   mandatory: false
    order_by: 1
    opened: true
    visible: true
    title_perso: Part
    all_public: true
 
-sp2:
+sw31:
    col_num: 1
-   category: part_widget
-   group_name: partCount
+   category: specimen_widget
+   group_name: specimenCount
    mandatory: false
    order_by: 2
    opened: true
@@ -707,84 +650,28 @@ sp2:
    title_perso: Count
    all_public: true
 
-sp6:
-   col_num: 2
-   category: part_widget
-   group_name: refProperties
-   mandatory: false
-   order_by: 3
-   opened: true
-   visible: true
-   title_perso: Properties
-   all_public: true
-
-sp9:
-   col_num: 2
-   category: part_widget
-   group_name: comments
-   mandatory: false
-   order_by: 4
-   opened: true
-   visible: true
-   title_perso: Comments
-   all_public: true
-
-sp11:
-   col_num: 2
-   category: part_widget
-   group_name: extLinks
-   mandatory: false
-   order_by: 11
-   opened: true
-   visible: true
-   title_perso: External Links
-   all_public: true
-
-sp12:
+sw32:
    col_num: 1
-   category: part_widget
-   group_name: refCodes
+   category: specimen_widget
+   group_name: loan
    mandatory: false
-   order_by: 4
-   opened: true
-   visible: true
-   title_perso: Codes
-   all_public: true
-
-sp13:
-   col_num: 2
-   category: part_widget
-   group_name: informativeWorkflow
-   mandatory: false
-   order_by: 6
-   opened: true
-   visible: true
-   title_perso: Suggestions / Report problem
-   all_public: true
-
-sp14:
-   col_num: 2
-   category: part_widget
-   group_name: refRelatedFiles
-   mandatory: false
-   order_by: 7
-   opened: true
-   visible: true
-   is_available: true
-   title_perso: Related Files
-   all_public: true
-
-sp15:
-   col_num: 2
-   category: part_widget
-   group_name: biblio
-   mandatory: false
-   order_by: 8
+   order_by: 2
    opened: false
    visible: false
-   is_available: true
-   title_perso: Bibliography
+   title_perso: Loans
    all_public: true
+
+sw33:
+   col_num: 1
+   category: specimen_widget
+   group_name: historic
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: false
+   title_perso: Historic
+   all_public: true
+
 
 tw1:
    col_num: 1
@@ -1400,7 +1287,7 @@ ins1:
    visible: true
    title_perso: Relationships
    all_public: true
-   
+
 ins4:
    col_num: 1
    category: people_institution_widget
@@ -1442,9 +1329,9 @@ ins7:
    order_by: 7
    opened: true
    visible: true
-   title_perso: Suggestions / Report problem 
-   all_public: true      
-   
+   title_perso: Suggestions / Report problem
+   all_public: true
+
 ins8:
    col_num: 2
    category: people_institution_widget
@@ -1508,7 +1395,7 @@ bib9:
    visible: false
    title_perso: Related Files
 
-lw1:   
+lw1:
    col_num: 1
    category: loan_widget
    group_name: mainInfo
@@ -1516,7 +1403,7 @@ lw1:
    mandatory: true
    opened: true
    visible: true
-   is_available: true 
+   is_available: true
    title_perso: Loan
    all_public: true
 
@@ -1527,7 +1414,7 @@ lw2:
    order_by: 2
    opened: true
    visible: true
-   is_available: true 
+   is_available: true
    title_perso: People involved
    all_public: true
 
@@ -1538,10 +1425,10 @@ lw3:
    order_by: 3
    opened: true
    visible: true
-   is_available: true 
+   is_available: true
    title_perso: Loan status
    all_public: true
-   
+
 lw4:
    col_num: 1
    category: loan_widget
@@ -1552,7 +1439,7 @@ lw4:
    is_available: true
    title_perso: Properties
    all_public: true
-   
+
 lw5:
    col_num: 1
    category: loan_widget
@@ -1563,7 +1450,7 @@ lw5:
    is_available: true
    title_perso: Comments
    all_public: true
-   
+
 lw6:
    col_num: 1
    category: loan_widget
@@ -1574,7 +1461,7 @@ lw6:
    is_available: true
    title_perso: Insurances
    all_public: true
-   
+
 lw7:
    col_num: 1
    category: loan_widget
@@ -1616,7 +1503,7 @@ litw1:
    mandatory: true
    opened: true
    visible: true
-   is_available: true 
+   is_available: true
    title_perso: Loan Item
    all_public: true
 
@@ -1627,8 +1514,8 @@ litw2:
    order_by: 2
    opened: true
    visible: true
-   is_available: true 
-   title_perso: People involved   
+   is_available: true
+   title_perso: People involved
    all_public: true
 
 
@@ -1696,8 +1583,8 @@ m1:
    visible: true
    is_available: true
    title_perso: Related Files
-   all_public: true   
-   
+   all_public: true
+
 m2:
    col_num: 1
    category: maintenances_widget
@@ -1708,7 +1595,7 @@ m2:
    is_available: true
    title_perso: Comments
    all_public: true
-   
+
 m3:
    col_num: 1
    category: maintenances_widget
@@ -1718,8 +1605,8 @@ m3:
    visible: false
    is_available: true
    title_perso: Properties
-   all_public: true  
-        
+   all_public: true
+
 m4:
    col_num: 1
    category: maintenances_widget
@@ -1730,7 +1617,7 @@ m4:
    is_available: true
    title_perso: External Url
    all_public: true
-    
+
 ig1:
    col_num: 1
    category: catalogue_igs_widget
@@ -1751,7 +1638,7 @@ ig3:
    opened: true
    visible: true
    title_perso: External Links
-   all_public: true  
+   all_public: true
 
 ex1:
    col_num: 1
@@ -1762,7 +1649,7 @@ ex1:
    opened: true
    visible: true
    title_perso: Comments
-   all_public: true  
+   all_public: true
 
 ex2:
    col_num: 1
@@ -1773,7 +1660,7 @@ ex2:
    opened: true
    visible: true
    title_perso: External Links
-   all_public: true     
+   all_public: true
 
 ex3:
    col_num: 1
@@ -1795,7 +1682,7 @@ gtu1:
    opened: false
    visible: true
    title_perso: Comments
-   all_public: true  
+   all_public: true
 
 gtu2:
    col_num: 1
@@ -1806,7 +1693,7 @@ gtu2:
    opened: true
    visible: true
    title_perso: Properties
-   all_public: true  
+   all_public: true
 
 gtu3:
    col_num: 1
@@ -1817,7 +1704,7 @@ gtu3:
    opened: true
    visible: true
    title_perso: External Links
-   all_public: true  
+   all_public: true
 
 gtu4:
    col_num: 1
@@ -1849,7 +1736,7 @@ u1wmetto1:
    opened: true
    visible: true
    title_perso: Properties
-   all_public: true  
+   all_public: true
 
 u1wmetto2:
    col_num: 1
@@ -1859,7 +1746,7 @@ u1wmetto2:
    opened: true
    visible: true
    title_perso: Comments
-   all_public: true  
+   all_public: true
 
 u1wmetto3:
    col_num: 1
@@ -1868,9 +1755,9 @@ u1wmetto3:
    order_by: 3
    opened: true
    visible: true
-   title_perso: External Links   
-   all_public: true  
-   
+   title_perso: External Links
+   all_public: true
+
 u1wmetto4:
    col_num: 1
    category: catalogue_methods_and_tools_widget

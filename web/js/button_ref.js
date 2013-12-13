@@ -6,7 +6,7 @@ var ref_caller_id = '';
 function button_ref_modal(event)
 {
     event.preventDefault();
-    var last_position = $('body').scrollTop() ;              
+    var last_position = $(window).scrollTop();
     scroll(0,0) ;
     $(this).parent().parent().find('input[type="hidden"]').trigger({ type:"loadref"});
     $(this).qtip({
@@ -17,7 +17,8 @@ function button_ref_modal(event)
         ajax: {
           url: $(this).attr('href'),
                 type: 'GET',
-                data: {with_js:1}
+                // Take name in input if set
+                data: {with_js:1, name: $(this).parent().parent().find('input.ref_name').val()}
         }
       },
       position: {
@@ -25,10 +26,10 @@ function button_ref_modal(event)
         at: 'top center',
         adjust:{
           y: 250 // option set in case of the qtip become too big
-        },         
+        },
         target: $(document.body)
       },
-      
+
       show: {
         ready: true,
         delay: 0,
@@ -51,15 +52,18 @@ function button_ref_modal(event)
         hide: function(event, api) {
           if(ref_element_id != null && ref_element_name != null)
           {
-            parent_el = api.elements.target.parent().prevAll('.ref_name');                           
-            parent_el.text(ref_element_name);         
+            parent_el = api.elements.target.parent().prevAll('.ref_name');
+            if(parent_el.get( 0 ).nodeName == 'INPUT')
+              parent_el.val(ref_element_name);
+            else
+              parent_el.text(ref_element_name);
             parent_el.prev().val(ref_element_id);
             api.elements.target.parent().prevAll('.ref_clear').removeClass('hidden').show();
             api.elements.target.find('.off').removeClass('hidden');
             api.elements.target.find('.on').addClass('hidden');
             parent_el.prev().trigger('change');
           }
-          scroll(0,last_position) ;     
+          scroll(0,last_position) ;
           api.destroy();
         }
       },

@@ -4,13 +4,12 @@
   <?php include_stylesheets_for_form($form) ?>
   <?php include_javascripts_for_form($form) ?>
 
+  <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?></div>
+  <br class="clear" />
   <div class="container">
-    <?php echo $form['slevel']->renderRow();?>
-    <?php echo $form['only_errors']->renderRow();?>
-    <br />
-    <br />
-    <input type="submit" value="<?php echo __('Search');?>"/>
-
+    <?php echo $form['only_errors']->renderRow();?><br />
+    <?php echo $form['bio_geo']->render();?><br />
+    <input id="search_submit" type="submit" value="<?php echo __('Search');?>"/>
     <div class="search_results">
       <div class="search_results_content">
 

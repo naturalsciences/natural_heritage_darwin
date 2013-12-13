@@ -20,6 +20,7 @@ abstract class BaseCatalogueLevelsForm extends BaseFormDoctrine
       'level_name'     => new sfWidgetFormTextarea(),
       'level_sys_name' => new sfWidgetFormTextarea(),
       'optional_level' => new sfWidgetFormInputCheckbox(),
+      'level_order'    => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -28,6 +29,7 @@ abstract class BaseCatalogueLevelsForm extends BaseFormDoctrine
       'level_name'     => new sfValidatorString(),
       'level_sys_name' => new sfValidatorString(),
       'optional_level' => new sfValidatorBoolean(array('required' => false)),
+      'level_order'    => new sfValidatorInteger(),
     ));
 
     $this->widgetSchema->setNameFormat('catalogue_levels[%s]');

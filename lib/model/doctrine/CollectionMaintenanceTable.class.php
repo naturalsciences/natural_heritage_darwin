@@ -36,10 +36,10 @@ class CollectionMaintenanceTable extends DarwinTable
   {
     if(!is_array($ids))
       $ids = array($ids);
-	if(empty($ids)) return array();
+    if(empty($ids)) return array();
     $q = Doctrine_Query::create()->
          from('CollectionMaintenance m')->
-		 innerJoin('m.People')->
+         leftJoin('m.People')->
          where('referenced_relation = ?', $table)->
          andWhereIn('record_id', $ids)->
          orderBy('referenced_relation ASC, record_id ASC, modification_date_time DESC, id ASC');
@@ -93,5 +93,31 @@ class CollectionMaintenanceTable extends DarwinTable
       $array_results[] = $m;
     }
     return $array_results;
+  }
+  
+  public function getStagingIds($id)
+  {
+     $q = Doctrine_Query::create()->
+         from('CollectionMaintenance')->
+         where('referenced_relation = \'staging\'')->
+         andWhere('record_id = ?', $id);
+    $result = $q->execute(); 
+    $maintenance_ids = array() ;
+    foreach($result as $maintenance) $maintenance_ids[] = $maintenance->getId() ;
+    return $maintenance_ids ;
+  }
+  
+  public function UpdatePeopleRef($people)
+  {
+      $q = Doctrine_Query::create()
+      ->update('CollectionMaintenance c')
+      ->set('c.people_ref',$people['people_ref'])
+      ->where('s.id = ?',$people['record_id']) ;
+    return $q->execute() ;
+      $q = Doctrine_Query::create()
+      ->delete('Stagin')
+      ->set('c.people_ref',$people['people_ref'])
+      ->where('s.id = ?',$people['record_id']) ;
+    return $q->execute() ;
   }
 }

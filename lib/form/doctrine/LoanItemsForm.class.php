@@ -12,7 +12,7 @@ class LoanItemsForm extends BaseLoanItemsForm
 {
   public function configure()
   {
-    $this->useFields(array('ig_ref','from_date', 'to_date','part_ref', 'details'));
+    $this->useFields(array('ig_ref','from_date', 'to_date','specimen_ref', 'details'));
     $this->widgetSchema['details'] = new sfWidgetFormTextarea(array(),array('rows'=>3));
     $yearsKeyVal = range(1970, intval(sfConfig::get('dw_yearRangeMax')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
@@ -34,9 +34,9 @@ class LoanItemsForm extends BaseLoanItemsForm
 
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(
-        'culture'=> $this->getCurrentCulture(), 
-        'image'=>'/images/calendar.gif', 
-        'format' => '%day%/%month%/%year%', 
+        'culture'=> $this->getCurrentCulture(),
+        'image'=>'/images/calendar.gif',
+        'format' => '%day%/%month%/%year%',
         'years' => $years,
         'with_time' => false
       ),
@@ -54,9 +54,9 @@ class LoanItemsForm extends BaseLoanItemsForm
 
     $this->widgetSchema['to_date'] = new widgetFormJQueryFuzzyDate(
       array(
-        'culture'=> $this->getCurrentCulture(), 
-        'image'=>'/images/calendar.gif', 
-        'format' => '%day%/%month%/%year%', 
+        'culture'=> $this->getCurrentCulture(),
+        'image'=>'/images/calendar.gif',
+        'format' => '%day%/%month%/%year%',
         'years' => $years,
         'with_time' => false
       ),
@@ -86,11 +86,11 @@ class LoanItemsForm extends BaseLoanItemsForm
       )
     );
 
-    $this->widgetSchema['part_ref'] = new widgetFormButtonRef(
-      array('model' => 'SpecimenParts',
-            'link_url' => 'parts/choosePinned',
+    $this->widgetSchema['specimen_ref'] = new widgetFormButtonRef(
+      array('model' => 'Specimens',
+            'link_url' => 'specimen/choosePinned',
             'method' => 'getId',
-            'box_title' => $this->getI18N()->__('Choose Darwin Part'),
+            'box_title' => $this->getI18N()->__('Choose Darwin item'),
             'button_class'=>'',
             'nullable'=> true,
            ),
@@ -101,7 +101,7 @@ class LoanItemsForm extends BaseLoanItemsForm
                                          'to_date' => 'Return'
                                         )
                                   );
-    $this->validatorSchema['part_ref'] = new sfValidatorInteger(array('required'=>false));
+    $this->validatorSchema['specimen_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->mergePostValidator(new LoanOverviewLineValidatorSchema());
   }
 }

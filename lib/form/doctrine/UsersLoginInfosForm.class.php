@@ -17,8 +17,8 @@ class UsersLoginInfosForm extends BaseUsersLoginInfosForm
          );
     if($this->getObject()->isNew())
     {
-     $this->widgetSchema['login_type'] = new sfWidgetFormChoice(array('choices' => array('local' => 'local'))) ;
-     $this->validatorSchema['login_type'] = new sfValidatorChoice(array('choices' => array('local' => 'local'))) ;
+     $this->widgetSchema['login_type'] = new sfWidgetFormChoice(array('choices' => array('local' => 'local' ,'ldap'=>'ldap'))) ;
+     $this->validatorSchema['login_type'] = new sfValidatorChoice(array('choices' => array('local' => 'local', 'ldap'=>'ldap'))) ;
      $this->widgetSchema['new_password'] = new sfwidgetFormInputPassword();
      $this->validatorSchema['new_password'] = new sfValidatorString(array('required' => true, 'min_length' => 4),
                                                                   array('min_length' => '"%value%" must be at least %min_length% characters.')); 

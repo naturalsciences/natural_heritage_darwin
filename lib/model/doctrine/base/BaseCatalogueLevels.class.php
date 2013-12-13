@@ -10,6 +10,7 @@
  * @property string $level_name
  * @property string $level_sys_name
  * @property boolean $optional_level
+ * @property integer $level_order
  * @property Doctrine_Collection $PossibleUpperLevels
  * @property Doctrine_Collection $Taxonomy
  * @property Doctrine_Collection $Chronostratigraphy
@@ -22,6 +23,7 @@
  * @method string              getLevelName()           Returns the current record's "level_name" value
  * @method string              getLevelSysName()        Returns the current record's "level_sys_name" value
  * @method boolean             getOptionalLevel()       Returns the current record's "optional_level" value
+ * @method integer             getLevelOrder()          Returns the current record's "level_order" value
  * @method Doctrine_Collection getPossibleUpperLevels() Returns the current record's "PossibleUpperLevels" collection
  * @method Doctrine_Collection getTaxonomy()            Returns the current record's "Taxonomy" collection
  * @method Doctrine_Collection getChronostratigraphy()  Returns the current record's "Chronostratigraphy" collection
@@ -33,6 +35,7 @@
  * @method CatalogueLevels     setLevelName()           Sets the current record's "level_name" value
  * @method CatalogueLevels     setLevelSysName()        Sets the current record's "level_sys_name" value
  * @method CatalogueLevels     setOptionalLevel()       Sets the current record's "optional_level" value
+ * @method CatalogueLevels     setLevelOrder()          Sets the current record's "level_order" value
  * @method CatalogueLevels     setPossibleUpperLevels() Sets the current record's "PossibleUpperLevels" collection
  * @method CatalogueLevels     setTaxonomy()            Sets the current record's "Taxonomy" collection
  * @method CatalogueLevels     setChronostratigraphy()  Sets the current record's "Chronostratigraphy" collection
@@ -71,6 +74,10 @@ abstract class BaseCatalogueLevels extends DarwinModel
              'type' => 'boolean',
              'notnull' => true,
              'default' => false,
+             ));
+        $this->hasColumn('level_order', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
              ));
     }
 

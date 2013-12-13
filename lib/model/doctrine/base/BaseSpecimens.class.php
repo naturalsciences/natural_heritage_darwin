@@ -15,14 +15,109 @@
  * @property integer $chrono_ref
  * @property integer $lithology_ref
  * @property integer $mineral_ref
- * @property integer $host_taxon_ref
- * @property integer $host_specimen_ref
- * @property string $host_relationship
  * @property string $acquisition_category
  * @property integer $acquisition_date_mask
  * @property string $acquisition_date
  * @property boolean $station_visible
  * @property integer $ig_ref
+ * @property string $spec_coll_ids
+ * @property string $spec_ident_ids
+ * @property string $spec_don_sel_ids
+ * @property string $collection_type
+ * @property string $collection_code
+ * @property string $collection_name
+ * @property boolean $collection_is_public
+ * @property integer $collection_parent_ref
+ * @property string $collection_path
+ * @property string $expedition_name
+ * @property string $expedition_name_indexed
+ * @property string $gtu_code
+ * @property integer $gtu_from_date_mask
+ * @property string $gtu_from_date
+ * @property integer $gtu_to_date_mask
+ * @property string $gtu_to_date
+ * @property string $gtu_tag_values_indexed
+ * @property string $gtu_country_tag_indexed
+ * @property string $gtu_country_tag_value
+ * @property string $gtu_location
+ * @property float $gtu_elevation
+ * @property float $gtu_elevation_accuracy
+ * @property string $taxon_name
+ * @property string $taxon_name_indexed
+ * @property integer $taxon_level_ref
+ * @property string $taxon_level_name
+ * @property string $taxon_status
+ * @property string $taxon_path
+ * @property integer $taxon_parent_ref
+ * @property boolean $taxon_extinct
+ * @property string $litho_name
+ * @property string $litho_name_indexed
+ * @property integer $litho_level_ref
+ * @property string $litho_level_name
+ * @property string $litho_status
+ * @property boolean $litho_local
+ * @property string $litho_color
+ * @property string $litho_path
+ * @property integer $litho_parent_ref
+ * @property string $chrono_name
+ * @property string $chrono_name_indexed
+ * @property integer $chrono_level_ref
+ * @property string $chrono_level_name
+ * @property string $chrono_status
+ * @property boolean $chrono_local
+ * @property string $chrono_color
+ * @property string $chrono_path
+ * @property integer $chrono_parent_ref
+ * @property string $lithology_name
+ * @property string $lithology_name_indexed
+ * @property integer $lithology_level_ref
+ * @property string $lithology_level_name
+ * @property string $lithology_status
+ * @property boolean $lithology_local
+ * @property string $lithology_color
+ * @property string $lithology_path
+ * @property integer $lithology_parent_ref
+ * @property string $mineral_name
+ * @property string $mineral_name_indexed
+ * @property integer $mineral_level_ref
+ * @property string $mineral_level_name
+ * @property string $mineral_status
+ * @property boolean $mineral_local
+ * @property string $mineral_color
+ * @property string $mineral_path
+ * @property integer $mineral_parent_ref
+ * @property string $ig_num
+ * @property string $ig_num_indexed
+ * @property integer $ig_date_mask
+ * @property string $type
+ * @property string $type_group
+ * @property string $type_search
+ * @property string $sex
+ * @property string $stage
+ * @property string $state
+ * @property string $social_status
+ * @property string $rock_form
+ * @property string $specimen_part
+ * @property boolean $complete
+ * @property integer $institution_ref
+ * @property string $building
+ * @property string $floor
+ * @property string $room
+ * @property string $row
+ * @property string $col
+ * @property string $shelf
+ * @property string $container
+ * @property string $sub_container
+ * @property string $container_type
+ * @property string $sub_container_type
+ * @property string $container_storage
+ * @property string $sub_container_storage
+ * @property boolean $surnumerary
+ * @property string $specimen_status
+ * @property integer $specimen_count_min
+ * @property integer $specimen_count_max
+ * @property string $object_name
+ * @property string $object_name_indexed
  * @property Collections $Collections
  * @property Expeditions $Expeditions
  * @property Gtu $Gtu
@@ -31,92 +126,282 @@
  * @property Chronostratigraphy $Chronostratigraphy
  * @property Lithology $Lithology
  * @property Mineralogy $Mineralogy
- * @property Taxonomy $HostTaxon
- * @property Specimens $HostSpecimen
  * @property Igs $Igs
+ * @property Institutions $Institution
  * @property Doctrine_Collection $CollectingMethods
  * @property Doctrine_Collection $CollectingTools
- * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimensFlat
- * @property Doctrine_Collection $SpecimenIndividuals
- * @property Doctrine_Collection $SpecimensAccompanying
+ * @property Doctrine_Collection $Comments
+ * @property Doctrine_Collection $Properties
+ * @property Doctrine_Collection $SpecimensRelationships
+ * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
  * @property Doctrine_Collection $SpecimensTools
+ * @property Doctrine_Collection $LoanItems
  * 
- * @method integer             getId()                    Returns the current record's "id" value
- * @method string              getCategory()              Returns the current record's "category" value
- * @method integer             getCollectionRef()         Returns the current record's "collection_ref" value
- * @method integer             getExpeditionRef()         Returns the current record's "expedition_ref" value
- * @method integer             getGtuRef()                Returns the current record's "gtu_ref" value
- * @method integer             getTaxonRef()              Returns the current record's "taxon_ref" value
- * @method integer             getLithoRef()              Returns the current record's "litho_ref" value
- * @method integer             getChronoRef()             Returns the current record's "chrono_ref" value
- * @method integer             getLithologyRef()          Returns the current record's "lithology_ref" value
- * @method integer             getMineralRef()            Returns the current record's "mineral_ref" value
- * @method integer             getHostTaxonRef()          Returns the current record's "host_taxon_ref" value
- * @method integer             getHostSpecimenRef()       Returns the current record's "host_specimen_ref" value
- * @method string              getHostRelationship()      Returns the current record's "host_relationship" value
- * @method string              getAcquisitionCategory()   Returns the current record's "acquisition_category" value
- * @method integer             getAcquisitionDateMask()   Returns the current record's "acquisition_date_mask" value
- * @method string              getAcquisitionDate()       Returns the current record's "acquisition_date" value
- * @method boolean             getStationVisible()        Returns the current record's "station_visible" value
- * @method integer             getIgRef()                 Returns the current record's "ig_ref" value
- * @method Collections         getCollections()           Returns the current record's "Collections" value
- * @method Expeditions         getExpeditions()           Returns the current record's "Expeditions" value
- * @method Gtu                 getGtu()                   Returns the current record's "Gtu" value
- * @method Taxonomy            getTaxonomy()              Returns the current record's "Taxonomy" value
- * @method Lithostratigraphy   getLithostratigraphy()     Returns the current record's "Lithostratigraphy" value
- * @method Chronostratigraphy  getChronostratigraphy()    Returns the current record's "Chronostratigraphy" value
- * @method Lithology           getLithology()             Returns the current record's "Lithology" value
- * @method Mineralogy          getMineralogy()            Returns the current record's "Mineralogy" value
- * @method Taxonomy            getHostTaxon()             Returns the current record's "HostTaxon" value
- * @method Specimens           getHostSpecimen()          Returns the current record's "HostSpecimen" value
- * @method Igs                 getIgs()                   Returns the current record's "Igs" value
- * @method Doctrine_Collection getCollectingMethods()     Returns the current record's "CollectingMethods" collection
- * @method Doctrine_Collection getCollectingTools()       Returns the current record's "CollectingTools" collection
- * @method Doctrine_Collection getSpecimens()             Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimensFlat()         Returns the current record's "SpecimensFlat" collection
- * @method Doctrine_Collection getSpecimenIndividuals()   Returns the current record's "SpecimenIndividuals" collection
- * @method Doctrine_Collection getSpecimensAccompanying() Returns the current record's "SpecimensAccompanying" collection
- * @method Doctrine_Collection getSpecimensMethods()      Returns the current record's "SpecimensMethods" collection
- * @method Doctrine_Collection getSpecimensTools()        Returns the current record's "SpecimensTools" collection
- * @method Specimens           setId()                    Sets the current record's "id" value
- * @method Specimens           setCategory()              Sets the current record's "category" value
- * @method Specimens           setCollectionRef()         Sets the current record's "collection_ref" value
- * @method Specimens           setExpeditionRef()         Sets the current record's "expedition_ref" value
- * @method Specimens           setGtuRef()                Sets the current record's "gtu_ref" value
- * @method Specimens           setTaxonRef()              Sets the current record's "taxon_ref" value
- * @method Specimens           setLithoRef()              Sets the current record's "litho_ref" value
- * @method Specimens           setChronoRef()             Sets the current record's "chrono_ref" value
- * @method Specimens           setLithologyRef()          Sets the current record's "lithology_ref" value
- * @method Specimens           setMineralRef()            Sets the current record's "mineral_ref" value
- * @method Specimens           setHostTaxonRef()          Sets the current record's "host_taxon_ref" value
- * @method Specimens           setHostSpecimenRef()       Sets the current record's "host_specimen_ref" value
- * @method Specimens           setHostRelationship()      Sets the current record's "host_relationship" value
- * @method Specimens           setAcquisitionCategory()   Sets the current record's "acquisition_category" value
- * @method Specimens           setAcquisitionDateMask()   Sets the current record's "acquisition_date_mask" value
- * @method Specimens           setAcquisitionDate()       Sets the current record's "acquisition_date" value
- * @method Specimens           setStationVisible()        Sets the current record's "station_visible" value
- * @method Specimens           setIgRef()                 Sets the current record's "ig_ref" value
- * @method Specimens           setCollections()           Sets the current record's "Collections" value
- * @method Specimens           setExpeditions()           Sets the current record's "Expeditions" value
- * @method Specimens           setGtu()                   Sets the current record's "Gtu" value
- * @method Specimens           setTaxonomy()              Sets the current record's "Taxonomy" value
- * @method Specimens           setLithostratigraphy()     Sets the current record's "Lithostratigraphy" value
- * @method Specimens           setChronostratigraphy()    Sets the current record's "Chronostratigraphy" value
- * @method Specimens           setLithology()             Sets the current record's "Lithology" value
- * @method Specimens           setMineralogy()            Sets the current record's "Mineralogy" value
- * @method Specimens           setHostTaxon()             Sets the current record's "HostTaxon" value
- * @method Specimens           setHostSpecimen()          Sets the current record's "HostSpecimen" value
- * @method Specimens           setIgs()                   Sets the current record's "Igs" value
- * @method Specimens           setCollectingMethods()     Sets the current record's "CollectingMethods" collection
- * @method Specimens           setCollectingTools()       Sets the current record's "CollectingTools" collection
- * @method Specimens           setSpecimens()             Sets the current record's "Specimens" collection
- * @method Specimens           setSpecimensFlat()         Sets the current record's "SpecimensFlat" collection
- * @method Specimens           setSpecimenIndividuals()   Sets the current record's "SpecimenIndividuals" collection
- * @method Specimens           setSpecimensAccompanying() Sets the current record's "SpecimensAccompanying" collection
- * @method Specimens           setSpecimensMethods()      Sets the current record's "SpecimensMethods" collection
- * @method Specimens           setSpecimensTools()        Sets the current record's "SpecimensTools" collection
+ * @method integer             getId()                      Returns the current record's "id" value
+ * @method string              getCategory()                Returns the current record's "category" value
+ * @method integer             getCollectionRef()           Returns the current record's "collection_ref" value
+ * @method integer             getExpeditionRef()           Returns the current record's "expedition_ref" value
+ * @method integer             getGtuRef()                  Returns the current record's "gtu_ref" value
+ * @method integer             getTaxonRef()                Returns the current record's "taxon_ref" value
+ * @method integer             getLithoRef()                Returns the current record's "litho_ref" value
+ * @method integer             getChronoRef()               Returns the current record's "chrono_ref" value
+ * @method integer             getLithologyRef()            Returns the current record's "lithology_ref" value
+ * @method integer             getMineralRef()              Returns the current record's "mineral_ref" value
+ * @method string              getAcquisitionCategory()     Returns the current record's "acquisition_category" value
+ * @method integer             getAcquisitionDateMask()     Returns the current record's "acquisition_date_mask" value
+ * @method string              getAcquisitionDate()         Returns the current record's "acquisition_date" value
+ * @method boolean             getStationVisible()          Returns the current record's "station_visible" value
+ * @method integer             getIgRef()                   Returns the current record's "ig_ref" value
+ * @method string              getSpecCollIds()             Returns the current record's "spec_coll_ids" value
+ * @method string              getSpecIdentIds()            Returns the current record's "spec_ident_ids" value
+ * @method string              getSpecDonSelIds()           Returns the current record's "spec_don_sel_ids" value
+ * @method string              getCollectionType()          Returns the current record's "collection_type" value
+ * @method string              getCollectionCode()          Returns the current record's "collection_code" value
+ * @method string              getCollectionName()          Returns the current record's "collection_name" value
+ * @method boolean             getCollectionIsPublic()      Returns the current record's "collection_is_public" value
+ * @method integer             getCollectionParentRef()     Returns the current record's "collection_parent_ref" value
+ * @method string              getCollectionPath()          Returns the current record's "collection_path" value
+ * @method string              getExpeditionName()          Returns the current record's "expedition_name" value
+ * @method string              getExpeditionNameIndexed()   Returns the current record's "expedition_name_indexed" value
+ * @method string              getGtuCode()                 Returns the current record's "gtu_code" value
+ * @method integer             getGtuFromDateMask()         Returns the current record's "gtu_from_date_mask" value
+ * @method string              getGtuFromDate()             Returns the current record's "gtu_from_date" value
+ * @method integer             getGtuToDateMask()           Returns the current record's "gtu_to_date_mask" value
+ * @method string              getGtuToDate()               Returns the current record's "gtu_to_date" value
+ * @method string              getGtuTagValuesIndexed()     Returns the current record's "gtu_tag_values_indexed" value
+ * @method string              getGtuCountryTagIndexed()    Returns the current record's "gtu_country_tag_indexed" value
+ * @method string              getGtuCountryTagValue()      Returns the current record's "gtu_country_tag_value" value
+ * @method string              getGtuLocation()             Returns the current record's "gtu_location" value
+ * @method float               getGtuElevation()            Returns the current record's "gtu_elevation" value
+ * @method float               getGtuElevationAccuracy()    Returns the current record's "gtu_elevation_accuracy" value
+ * @method string              getTaxonName()               Returns the current record's "taxon_name" value
+ * @method string              getTaxonNameIndexed()        Returns the current record's "taxon_name_indexed" value
+ * @method integer             getTaxonLevelRef()           Returns the current record's "taxon_level_ref" value
+ * @method string              getTaxonLevelName()          Returns the current record's "taxon_level_name" value
+ * @method string              getTaxonStatus()             Returns the current record's "taxon_status" value
+ * @method string              getTaxonPath()               Returns the current record's "taxon_path" value
+ * @method integer             getTaxonParentRef()          Returns the current record's "taxon_parent_ref" value
+ * @method boolean             getTaxonExtinct()            Returns the current record's "taxon_extinct" value
+ * @method string              getLithoName()               Returns the current record's "litho_name" value
+ * @method string              getLithoNameIndexed()        Returns the current record's "litho_name_indexed" value
+ * @method integer             getLithoLevelRef()           Returns the current record's "litho_level_ref" value
+ * @method string              getLithoLevelName()          Returns the current record's "litho_level_name" value
+ * @method string              getLithoStatus()             Returns the current record's "litho_status" value
+ * @method boolean             getLithoLocal()              Returns the current record's "litho_local" value
+ * @method string              getLithoColor()              Returns the current record's "litho_color" value
+ * @method string              getLithoPath()               Returns the current record's "litho_path" value
+ * @method integer             getLithoParentRef()          Returns the current record's "litho_parent_ref" value
+ * @method string              getChronoName()              Returns the current record's "chrono_name" value
+ * @method string              getChronoNameIndexed()       Returns the current record's "chrono_name_indexed" value
+ * @method integer             getChronoLevelRef()          Returns the current record's "chrono_level_ref" value
+ * @method string              getChronoLevelName()         Returns the current record's "chrono_level_name" value
+ * @method string              getChronoStatus()            Returns the current record's "chrono_status" value
+ * @method boolean             getChronoLocal()             Returns the current record's "chrono_local" value
+ * @method string              getChronoColor()             Returns the current record's "chrono_color" value
+ * @method string              getChronoPath()              Returns the current record's "chrono_path" value
+ * @method integer             getChronoParentRef()         Returns the current record's "chrono_parent_ref" value
+ * @method string              getLithologyName()           Returns the current record's "lithology_name" value
+ * @method string              getLithologyNameIndexed()    Returns the current record's "lithology_name_indexed" value
+ * @method integer             getLithologyLevelRef()       Returns the current record's "lithology_level_ref" value
+ * @method string              getLithologyLevelName()      Returns the current record's "lithology_level_name" value
+ * @method string              getLithologyStatus()         Returns the current record's "lithology_status" value
+ * @method boolean             getLithologyLocal()          Returns the current record's "lithology_local" value
+ * @method string              getLithologyColor()          Returns the current record's "lithology_color" value
+ * @method string              getLithologyPath()           Returns the current record's "lithology_path" value
+ * @method integer             getLithologyParentRef()      Returns the current record's "lithology_parent_ref" value
+ * @method string              getMineralName()             Returns the current record's "mineral_name" value
+ * @method string              getMineralNameIndexed()      Returns the current record's "mineral_name_indexed" value
+ * @method integer             getMineralLevelRef()         Returns the current record's "mineral_level_ref" value
+ * @method string              getMineralLevelName()        Returns the current record's "mineral_level_name" value
+ * @method string              getMineralStatus()           Returns the current record's "mineral_status" value
+ * @method boolean             getMineralLocal()            Returns the current record's "mineral_local" value
+ * @method string              getMineralColor()            Returns the current record's "mineral_color" value
+ * @method string              getMineralPath()             Returns the current record's "mineral_path" value
+ * @method integer             getMineralParentRef()        Returns the current record's "mineral_parent_ref" value
+ * @method string              getIgNum()                   Returns the current record's "ig_num" value
+ * @method string              getIgNumIndexed()            Returns the current record's "ig_num_indexed" value
+ * @method integer             getIgDateMask()              Returns the current record's "ig_date_mask" value
+ * @method string              getType()                    Returns the current record's "type" value
+ * @method string              getTypeGroup()               Returns the current record's "type_group" value
+ * @method string              getTypeSearch()              Returns the current record's "type_search" value
+ * @method string              getSex()                     Returns the current record's "sex" value
+ * @method string              getStage()                   Returns the current record's "stage" value
+ * @method string              getState()                   Returns the current record's "state" value
+ * @method string              getSocialStatus()            Returns the current record's "social_status" value
+ * @method string              getRockForm()                Returns the current record's "rock_form" value
+ * @method string              getSpecimenPart()            Returns the current record's "specimen_part" value
+ * @method boolean             getComplete()                Returns the current record's "complete" value
+ * @method integer             getInstitutionRef()          Returns the current record's "institution_ref" value
+ * @method string              getBuilding()                Returns the current record's "building" value
+ * @method string              getFloor()                   Returns the current record's "floor" value
+ * @method string              getRoom()                    Returns the current record's "room" value
+ * @method string              getRow()                     Returns the current record's "row" value
+ * @method string              getCol()                     Returns the current record's "col" value
+ * @method string              getShelf()                   Returns the current record's "shelf" value
+ * @method string              getContainer()               Returns the current record's "container" value
+ * @method string              getSubContainer()            Returns the current record's "sub_container" value
+ * @method string              getContainerType()           Returns the current record's "container_type" value
+ * @method string              getSubContainerType()        Returns the current record's "sub_container_type" value
+ * @method string              getContainerStorage()        Returns the current record's "container_storage" value
+ * @method string              getSubContainerStorage()     Returns the current record's "sub_container_storage" value
+ * @method boolean             getSurnumerary()             Returns the current record's "surnumerary" value
+ * @method string              getSpecimenStatus()          Returns the current record's "specimen_status" value
+ * @method integer             getSpecimenCountMin()        Returns the current record's "specimen_count_min" value
+ * @method integer             getSpecimenCountMax()        Returns the current record's "specimen_count_max" value
+ * @method string              getObjectName()              Returns the current record's "object_name" value
+ * @method string              getObjectNameIndexed()       Returns the current record's "object_name_indexed" value
+ * @method Collections         getCollections()             Returns the current record's "Collections" value
+ * @method Expeditions         getExpeditions()             Returns the current record's "Expeditions" value
+ * @method Gtu                 getGtu()                     Returns the current record's "Gtu" value
+ * @method Taxonomy            getTaxonomy()                Returns the current record's "Taxonomy" value
+ * @method Lithostratigraphy   getLithostratigraphy()       Returns the current record's "Lithostratigraphy" value
+ * @method Chronostratigraphy  getChronostratigraphy()      Returns the current record's "Chronostratigraphy" value
+ * @method Lithology           getLithology()               Returns the current record's "Lithology" value
+ * @method Mineralogy          getMineralogy()              Returns the current record's "Mineralogy" value
+ * @method Igs                 getIgs()                     Returns the current record's "Igs" value
+ * @method Institutions        getInstitution()             Returns the current record's "Institution" value
+ * @method Doctrine_Collection getCollectingMethods()       Returns the current record's "CollectingMethods" collection
+ * @method Doctrine_Collection getCollectingTools()         Returns the current record's "CollectingTools" collection
+ * @method Doctrine_Collection getComments()                Returns the current record's "Comments" collection
+ * @method Doctrine_Collection getProperties()              Returns the current record's "Properties" collection
+ * @method Doctrine_Collection getSpecimensRelationships()  Returns the current record's "SpecimensRelationships" collection
+ * @method Doctrine_Collection getSpecimensCodes()          Returns the current record's "SpecimensCodes" collection
+ * @method Doctrine_Collection getSpecimensMethods()        Returns the current record's "SpecimensMethods" collection
+ * @method Doctrine_Collection getSpecimensTools()          Returns the current record's "SpecimensTools" collection
+ * @method Doctrine_Collection getLoanItems()               Returns the current record's "LoanItems" collection
+ * @method Specimens           setId()                      Sets the current record's "id" value
+ * @method Specimens           setCategory()                Sets the current record's "category" value
+ * @method Specimens           setCollectionRef()           Sets the current record's "collection_ref" value
+ * @method Specimens           setExpeditionRef()           Sets the current record's "expedition_ref" value
+ * @method Specimens           setGtuRef()                  Sets the current record's "gtu_ref" value
+ * @method Specimens           setTaxonRef()                Sets the current record's "taxon_ref" value
+ * @method Specimens           setLithoRef()                Sets the current record's "litho_ref" value
+ * @method Specimens           setChronoRef()               Sets the current record's "chrono_ref" value
+ * @method Specimens           setLithologyRef()            Sets the current record's "lithology_ref" value
+ * @method Specimens           setMineralRef()              Sets the current record's "mineral_ref" value
+ * @method Specimens           setAcquisitionCategory()     Sets the current record's "acquisition_category" value
+ * @method Specimens           setAcquisitionDateMask()     Sets the current record's "acquisition_date_mask" value
+ * @method Specimens           setAcquisitionDate()         Sets the current record's "acquisition_date" value
+ * @method Specimens           setStationVisible()          Sets the current record's "station_visible" value
+ * @method Specimens           setIgRef()                   Sets the current record's "ig_ref" value
+ * @method Specimens           setSpecCollIds()             Sets the current record's "spec_coll_ids" value
+ * @method Specimens           setSpecIdentIds()            Sets the current record's "spec_ident_ids" value
+ * @method Specimens           setSpecDonSelIds()           Sets the current record's "spec_don_sel_ids" value
+ * @method Specimens           setCollectionType()          Sets the current record's "collection_type" value
+ * @method Specimens           setCollectionCode()          Sets the current record's "collection_code" value
+ * @method Specimens           setCollectionName()          Sets the current record's "collection_name" value
+ * @method Specimens           setCollectionIsPublic()      Sets the current record's "collection_is_public" value
+ * @method Specimens           setCollectionParentRef()     Sets the current record's "collection_parent_ref" value
+ * @method Specimens           setCollectionPath()          Sets the current record's "collection_path" value
+ * @method Specimens           setExpeditionName()          Sets the current record's "expedition_name" value
+ * @method Specimens           setExpeditionNameIndexed()   Sets the current record's "expedition_name_indexed" value
+ * @method Specimens           setGtuCode()                 Sets the current record's "gtu_code" value
+ * @method Specimens           setGtuFromDateMask()         Sets the current record's "gtu_from_date_mask" value
+ * @method Specimens           setGtuFromDate()             Sets the current record's "gtu_from_date" value
+ * @method Specimens           setGtuToDateMask()           Sets the current record's "gtu_to_date_mask" value
+ * @method Specimens           setGtuToDate()               Sets the current record's "gtu_to_date" value
+ * @method Specimens           setGtuTagValuesIndexed()     Sets the current record's "gtu_tag_values_indexed" value
+ * @method Specimens           setGtuCountryTagIndexed()    Sets the current record's "gtu_country_tag_indexed" value
+ * @method Specimens           setGtuCountryTagValue()      Sets the current record's "gtu_country_tag_value" value
+ * @method Specimens           setGtuLocation()             Sets the current record's "gtu_location" value
+ * @method Specimens           setGtuElevation()            Sets the current record's "gtu_elevation" value
+ * @method Specimens           setGtuElevationAccuracy()    Sets the current record's "gtu_elevation_accuracy" value
+ * @method Specimens           setTaxonName()               Sets the current record's "taxon_name" value
+ * @method Specimens           setTaxonNameIndexed()        Sets the current record's "taxon_name_indexed" value
+ * @method Specimens           setTaxonLevelRef()           Sets the current record's "taxon_level_ref" value
+ * @method Specimens           setTaxonLevelName()          Sets the current record's "taxon_level_name" value
+ * @method Specimens           setTaxonStatus()             Sets the current record's "taxon_status" value
+ * @method Specimens           setTaxonPath()               Sets the current record's "taxon_path" value
+ * @method Specimens           setTaxonParentRef()          Sets the current record's "taxon_parent_ref" value
+ * @method Specimens           setTaxonExtinct()            Sets the current record's "taxon_extinct" value
+ * @method Specimens           setLithoName()               Sets the current record's "litho_name" value
+ * @method Specimens           setLithoNameIndexed()        Sets the current record's "litho_name_indexed" value
+ * @method Specimens           setLithoLevelRef()           Sets the current record's "litho_level_ref" value
+ * @method Specimens           setLithoLevelName()          Sets the current record's "litho_level_name" value
+ * @method Specimens           setLithoStatus()             Sets the current record's "litho_status" value
+ * @method Specimens           setLithoLocal()              Sets the current record's "litho_local" value
+ * @method Specimens           setLithoColor()              Sets the current record's "litho_color" value
+ * @method Specimens           setLithoPath()               Sets the current record's "litho_path" value
+ * @method Specimens           setLithoParentRef()          Sets the current record's "litho_parent_ref" value
+ * @method Specimens           setChronoName()              Sets the current record's "chrono_name" value
+ * @method Specimens           setChronoNameIndexed()       Sets the current record's "chrono_name_indexed" value
+ * @method Specimens           setChronoLevelRef()          Sets the current record's "chrono_level_ref" value
+ * @method Specimens           setChronoLevelName()         Sets the current record's "chrono_level_name" value
+ * @method Specimens           setChronoStatus()            Sets the current record's "chrono_status" value
+ * @method Specimens           setChronoLocal()             Sets the current record's "chrono_local" value
+ * @method Specimens           setChronoColor()             Sets the current record's "chrono_color" value
+ * @method Specimens           setChronoPath()              Sets the current record's "chrono_path" value
+ * @method Specimens           setChronoParentRef()         Sets the current record's "chrono_parent_ref" value
+ * @method Specimens           setLithologyName()           Sets the current record's "lithology_name" value
+ * @method Specimens           setLithologyNameIndexed()    Sets the current record's "lithology_name_indexed" value
+ * @method Specimens           setLithologyLevelRef()       Sets the current record's "lithology_level_ref" value
+ * @method Specimens           setLithologyLevelName()      Sets the current record's "lithology_level_name" value
+ * @method Specimens           setLithologyStatus()         Sets the current record's "lithology_status" value
+ * @method Specimens           setLithologyLocal()          Sets the current record's "lithology_local" value
+ * @method Specimens           setLithologyColor()          Sets the current record's "lithology_color" value
+ * @method Specimens           setLithologyPath()           Sets the current record's "lithology_path" value
+ * @method Specimens           setLithologyParentRef()      Sets the current record's "lithology_parent_ref" value
+ * @method Specimens           setMineralName()             Sets the current record's "mineral_name" value
+ * @method Specimens           setMineralNameIndexed()      Sets the current record's "mineral_name_indexed" value
+ * @method Specimens           setMineralLevelRef()         Sets the current record's "mineral_level_ref" value
+ * @method Specimens           setMineralLevelName()        Sets the current record's "mineral_level_name" value
+ * @method Specimens           setMineralStatus()           Sets the current record's "mineral_status" value
+ * @method Specimens           setMineralLocal()            Sets the current record's "mineral_local" value
+ * @method Specimens           setMineralColor()            Sets the current record's "mineral_color" value
+ * @method Specimens           setMineralPath()             Sets the current record's "mineral_path" value
+ * @method Specimens           setMineralParentRef()        Sets the current record's "mineral_parent_ref" value
+ * @method Specimens           setIgNum()                   Sets the current record's "ig_num" value
+ * @method Specimens           setIgNumIndexed()            Sets the current record's "ig_num_indexed" value
+ * @method Specimens           setIgDateMask()              Sets the current record's "ig_date_mask" value
+ * @method Specimens           setType()                    Sets the current record's "type" value
+ * @method Specimens           setTypeGroup()               Sets the current record's "type_group" value
+ * @method Specimens           setTypeSearch()              Sets the current record's "type_search" value
+ * @method Specimens           setSex()                     Sets the current record's "sex" value
+ * @method Specimens           setStage()                   Sets the current record's "stage" value
+ * @method Specimens           setState()                   Sets the current record's "state" value
+ * @method Specimens           setSocialStatus()            Sets the current record's "social_status" value
+ * @method Specimens           setRockForm()                Sets the current record's "rock_form" value
+ * @method Specimens           setSpecimenPart()            Sets the current record's "specimen_part" value
+ * @method Specimens           setComplete()                Sets the current record's "complete" value
+ * @method Specimens           setInstitutionRef()          Sets the current record's "institution_ref" value
+ * @method Specimens           setBuilding()                Sets the current record's "building" value
+ * @method Specimens           setFloor()                   Sets the current record's "floor" value
+ * @method Specimens           setRoom()                    Sets the current record's "room" value
+ * @method Specimens           setRow()                     Sets the current record's "row" value
+ * @method Specimens           setCol()                     Sets the current record's "col" value
+ * @method Specimens           setShelf()                   Sets the current record's "shelf" value
+ * @method Specimens           setContainer()               Sets the current record's "container" value
+ * @method Specimens           setSubContainer()            Sets the current record's "sub_container" value
+ * @method Specimens           setContainerType()           Sets the current record's "container_type" value
+ * @method Specimens           setSubContainerType()        Sets the current record's "sub_container_type" value
+ * @method Specimens           setContainerStorage()        Sets the current record's "container_storage" value
+ * @method Specimens           setSubContainerStorage()     Sets the current record's "sub_container_storage" value
+ * @method Specimens           setSurnumerary()             Sets the current record's "surnumerary" value
+ * @method Specimens           setSpecimenStatus()          Sets the current record's "specimen_status" value
+ * @method Specimens           setSpecimenCountMin()        Sets the current record's "specimen_count_min" value
+ * @method Specimens           setSpecimenCountMax()        Sets the current record's "specimen_count_max" value
+ * @method Specimens           setObjectName()              Sets the current record's "object_name" value
+ * @method Specimens           setObjectNameIndexed()       Sets the current record's "object_name_indexed" value
+ * @method Specimens           setCollections()             Sets the current record's "Collections" value
+ * @method Specimens           setExpeditions()             Sets the current record's "Expeditions" value
+ * @method Specimens           setGtu()                     Sets the current record's "Gtu" value
+ * @method Specimens           setTaxonomy()                Sets the current record's "Taxonomy" value
+ * @method Specimens           setLithostratigraphy()       Sets the current record's "Lithostratigraphy" value
+ * @method Specimens           setChronostratigraphy()      Sets the current record's "Chronostratigraphy" value
+ * @method Specimens           setLithology()               Sets the current record's "Lithology" value
+ * @method Specimens           setMineralogy()              Sets the current record's "Mineralogy" value
+ * @method Specimens           setIgs()                     Sets the current record's "Igs" value
+ * @method Specimens           setInstitution()             Sets the current record's "Institution" value
+ * @method Specimens           setCollectingMethods()       Sets the current record's "CollectingMethods" collection
+ * @method Specimens           setCollectingTools()         Sets the current record's "CollectingTools" collection
+ * @method Specimens           setComments()                Sets the current record's "Comments" collection
+ * @method Specimens           setProperties()              Sets the current record's "Properties" collection
+ * @method Specimens           setSpecimensRelationships()  Sets the current record's "SpecimensRelationships" collection
+ * @method Specimens           setSpecimensCodes()          Sets the current record's "SpecimensCodes" collection
+ * @method Specimens           setSpecimensMethods()        Sets the current record's "SpecimensMethods" collection
+ * @method Specimens           setSpecimensTools()          Sets the current record's "SpecimensTools" collection
+ * @method Specimens           setLoanItems()               Sets the current record's "LoanItems" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -147,6 +432,7 @@ abstract class BaseSpecimens extends DarwinModel
              ));
         $this->hasColumn('gtu_ref', 'integer', null, array(
              'type' => 'integer',
+             'notnull' => true,
              ));
         $this->hasColumn('taxon_ref', 'integer', null, array(
              'type' => 'integer',
@@ -163,15 +449,6 @@ abstract class BaseSpecimens extends DarwinModel
         $this->hasColumn('mineral_ref', 'integer', null, array(
              'type' => 'integer',
              ));
-        $this->hasColumn('host_taxon_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('host_specimen_ref', 'integer', null, array(
-             'type' => 'integer',
-             ));
-        $this->hasColumn('host_relationship', 'string', null, array(
-             'type' => 'string',
-             ));
         $this->hasColumn('acquisition_category', 'string', null, array(
              'type' => 'string',
              'default' => 'expedition',
@@ -187,10 +464,339 @@ abstract class BaseSpecimens extends DarwinModel
              ));
         $this->hasColumn('station_visible', 'boolean', null, array(
              'type' => 'boolean',
-             'default' => true,
              ));
         $this->hasColumn('ig_ref', 'integer', null, array(
              'type' => 'integer',
+             ));
+        $this->hasColumn('spec_coll_ids', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('spec_ident_ids', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('spec_don_sel_ids', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('collection_type', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('collection_code', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('collection_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('collection_is_public', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('collection_parent_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('collection_path', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('expedition_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('expedition_name_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_code', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_from_date_mask', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('gtu_from_date', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_to_date_mask', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('gtu_to_date', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_tag_values_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_country_tag_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_country_tag_value', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_location', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_elevation', 'float', null, array(
+             'type' => 'float',
+             ));
+        $this->hasColumn('gtu_elevation_accuracy', 'float', null, array(
+             'type' => 'float',
+             ));
+        $this->hasColumn('taxon_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('taxon_name_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('taxon_level_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('taxon_level_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('taxon_status', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('taxon_path', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('taxon_parent_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('taxon_extinct', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('litho_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('litho_name_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('litho_level_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('litho_level_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('litho_status', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('litho_local', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('litho_color', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('litho_path', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('litho_parent_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('chrono_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('chrono_name_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('chrono_level_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('chrono_level_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('chrono_status', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('chrono_local', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('chrono_color', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('chrono_path', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('chrono_parent_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('lithology_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('lithology_name_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('lithology_level_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('lithology_level_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('lithology_status', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('lithology_local', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('lithology_color', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('lithology_path', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('lithology_parent_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('mineral_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('mineral_name_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('mineral_level_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('mineral_level_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('mineral_status', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('mineral_local', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('mineral_color', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('mineral_path', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('mineral_parent_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('ig_num', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('ig_num_indexed', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('ig_date_mask', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('type', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'specimen',
+             ));
+        $this->hasColumn('type_group', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'specimen',
+             ));
+        $this->hasColumn('type_search', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'specimen',
+             ));
+        $this->hasColumn('sex', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'undefined',
+             ));
+        $this->hasColumn('stage', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'undefined',
+             ));
+        $this->hasColumn('state', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'not applicable',
+             ));
+        $this->hasColumn('social_status', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'not applicable',
+             ));
+        $this->hasColumn('rock_form', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'not applicable',
+             ));
+        $this->hasColumn('specimen_part', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'specimen',
+             ));
+        $this->hasColumn('complete', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => true,
+             ));
+        $this->hasColumn('institution_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('building', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('floor', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('room', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('row', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('col', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('shelf', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('container', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('sub_container', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('container_type', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'container',
+             ));
+        $this->hasColumn('sub_container_type', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'container',
+             ));
+        $this->hasColumn('container_storage', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'dry',
+             ));
+        $this->hasColumn('sub_container_storage', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'dry',
+             ));
+        $this->hasColumn('surnumerary', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => false,
+             ));
+        $this->hasColumn('specimen_status', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'good state',
+             ));
+        $this->hasColumn('specimen_count_min', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             'default' => 1,
+             ));
+        $this->hasColumn('specimen_count_max', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
+             'default' => 1,
+             ));
+        $this->hasColumn('object_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('object_name_indexed', 'string', null, array(
+             'type' => 'string',
              ));
     }
 
@@ -229,16 +835,12 @@ abstract class BaseSpecimens extends DarwinModel
              'local' => 'mineral_ref',
              'foreign' => 'id'));
 
-        $this->hasOne('Taxonomy as HostTaxon', array(
-             'local' => 'host_taxon_ref',
-             'foreign' => 'id'));
-
-        $this->hasOne('Specimens as HostSpecimen', array(
-             'local' => 'host_specimen_ref',
-             'foreign' => 'id'));
-
         $this->hasOne('Igs', array(
              'local' => 'ig_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('Institutions as Institution', array(
+             'local' => 'institution_ref',
              'foreign' => 'id'));
 
         $this->hasMany('CollectingMethods', array(
@@ -251,27 +853,31 @@ abstract class BaseSpecimens extends DarwinModel
              'local' => 'specimen_ref',
              'foreign' => 'collecting_tool_ref'));
 
-        $this->hasMany('Specimens', array(
+        $this->hasMany('Comments', array(
              'local' => 'id',
-             'foreign' => 'host_specimen_ref'));
+             'foreign' => 'record_id'));
 
-        $this->hasMany('SpecimensFlat', array(
+        $this->hasMany('Properties', array(
+             'local' => 'id',
+             'foreign' => 'record_id'));
+
+        $this->hasMany('SpecimensRelationships', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
 
-        $this->hasMany('SpecimenIndividuals', array(
+        $this->hasMany('SpecimensCodes', array(
              'local' => 'id',
-             'foreign' => 'specimen_ref'));
-
-        $this->hasMany('SpecimensAccompanying', array(
-             'local' => 'id',
-             'foreign' => 'specimen_ref'));
+             'foreign' => 'record_id'));
 
         $this->hasMany('SpecimensMethods', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
 
         $this->hasMany('SpecimensTools', array(
+             'local' => 'id',
+             'foreign' => 'specimen_ref'));
+
+        $this->hasMany('LoanItems', array(
              'local' => 'id',
              'foreign' => 'specimen_ref'));
     }

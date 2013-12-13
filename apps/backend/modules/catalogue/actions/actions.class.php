@@ -11,14 +11,13 @@
 class catalogueActions extends DarwinActions
 {
   protected $catalogue = array(
-   'catalogue_relationships','catalogue_people','vernacular_names','catalogue_properties','comments',
-   'specimens','specimen_individuals','specimen_parts','ext_links','collection_maintenance', 'insurances',
-   'people_addresses', 'people_comm','people_languages', 'people_relationships', 'classification_keywords','catalogue_bibliography', 'multimedia');
+   'catalogue_relationships','catalogue_people','vernacular_names','properties','comments',
+   'specimens', 'ext_links','collection_maintenance', 'insurances', 'people_addresses', 'people_comm',
+   'people_languages', 'people_relationships', 'classification_keywords','catalogue_bibliography', 'multimedia');
 
-  protected $ref_id = array('specimens' => 'spec_ref','specimen_individuals' => 'individual_ref','specimen_parts' => 'part_ref') ;
   public function executeRelation(sfWebRequest $request)
   {
-    if(! $this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();  
+    if(! $this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     $this->relation = null;
     if($request->hasParameter('id'))
     {
@@ -33,7 +32,7 @@ class catalogueActions extends DarwinActions
     }
 
     $this->form = new CatalogueRelationshipsForm($this->relation);
-    
+
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('catalogue_relationships'));
@@ -56,9 +55,10 @@ class catalogueActions extends DarwinActions
     $filterFormName = DarwinTable::getFilterForTable($request->getParameter('table'));
     $this->searchForm = new $filterFormName(array('table'=>$request->getParameter('table')));
   }
-  
+
   public function executeTree(sfWebRequest $request)
   {
+    $this->table = $request->getParameter('table');
     $this->items = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )
       ->findWithParents($request->getParameter('id'));
   }
@@ -102,26 +102,26 @@ class catalogueActions extends DarwinActions
     if(! $this->getUser()->isAtLeast(Users::ENCODER))
       $this->forwardToSecureAction();
     if(! in_array($request->getParameter('table'),$this->catalogue))
-      $this->forwardToSecureAction();   
+      $this->forwardToSecureAction();
     $r = Doctrine::getTable( DarwinTable::getModelForTable($request->getParameter('table')) )->find($request->getParameter('id'));
     $this->forward404Unless($r,'No such item');
 
     if(!$this->getUser()->isA(Users::ADMIN))
     {
-      if(in_array($request->getParameter('table'),array('comments','catalogue_properties','ext_links')) && in_array($r->getReferencedRelation(),$this->ref_id))
+      if(in_array($request->getParameter('table'),array('comments','properties','ext_links')) && $r->getReferencedRelation() =='specimens')
       {
-
-      if(! Doctrine::getTable('Specimens')->hasRights($this->ref_id[$r->getReferencedRelation()], $r->getRecordId(), $this->getUser()->getId()))
-            $this->forwardToSecureAction();    
-      } 
+        if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $r->getRecordId(), $this->getUser()->getId()))
+          $this->forwardToSecureAction();
+      }
     }
 
     try{
-          if($request->getParameter('table')=='multimedia'){
-            $r->delete();
-          }
-          else
-            $r->delete();
+      if($request->getParameter('table')=='multimedia'){
+        $r->delete();
+      }
+      else {
+        $r->delete();
+      }
     }
     catch(Doctrine_Exception $ne)
     {
@@ -139,8 +139,8 @@ class catalogueActions extends DarwinActions
       if ($form->isValid())
       {
         $query = $form
-                 ->getQuery()
-                 ->orderBy($this->orderBy .' '.$this->orderDir);
+          ->getQuery()
+          ->orderBy($this->orderBy .' '.$this->orderDir);
 
         $pager = new DarwinPager($query,
           $this->currentPage,
@@ -235,7 +235,7 @@ class catalogueActions extends DarwinActions
 
   public function executeAddKeyword(sfWebRequest $request)
   {
-    if($this->getUser()->getDbUserType() < Users::ENCODER) $this->forwardToSecureAction();  
+    if($this->getUser()->getDbUserType() < Users::ENCODER) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
 
     $form = new  KeywordsForm(null,array('no_load'=>true));
@@ -254,6 +254,8 @@ class catalogueActions extends DarwinActions
       $request->getParameter('id'),
       'rename'
     );
+
+    $this->getResponse()->setContentType('application/json');
     if($relation == 0)
       return $this->renderText('{}'); // The record has no current name
 
@@ -265,13 +267,24 @@ class catalogueActions extends DarwinActions
   }
 
   public function executeCompleteName(sfWebRequest $request) {
-    $result = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('table')))->completeaAsArray($request->getParameter('term'));
+    $tbl = $request->getParameter('table');
+    $catalogues = array('taxonomy','mineralogy','chronostratigraphy','lithostratigraphy','lithology','people', 'institutions', 'users' ,'expeditions', 'collections');
+    $result = array();
+
+    if(in_array($tbl,$catalogues)) {
+      $model = DarwinTable::getModelForTable($tbl);
+      $result = Doctrine::getTable($model)->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'));
+    }else{
+      $this->forward404('Unsuported table for completion : '.$tbl);
+    }
+
+    $this->getResponse()->setContentType('application/json');
     return $this->renderText(json_encode($result));
   }
 
   public function executeBiblio(sfWebRequest $request)
   {
-    if(! $this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();  
+    if(! $this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     $this->biblio = null;
     if($request->hasParameter('id'))
     {
@@ -285,7 +298,7 @@ class catalogueActions extends DarwinActions
     }
 
     $this->form = new CatalogueBibliographyForm($this->biblio);
-    
+
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('catalogue_bibliography'));

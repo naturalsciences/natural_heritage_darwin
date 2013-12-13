@@ -44,15 +44,15 @@ else{e.value="no";location.reload();}
 	  <?php foreach($widgets as $widget):?>
 	    <?php if(! $widget->getVisible()) $has_one_visible = true;?>
             <div class="widget_preview <?php if($widget->getVisible()) echo 'hidden';?>" id="boardprev_<?php echo $widget->getGroupName();?>">
-              <a href="<?php echo url_for('widgets/addWidget?widget='.$widget->getGroupName()."&category=".$category.$record_ref.$table.$other_query.$read_only);?>">
+              <a href="<?php echo url_for('widgets/addWidget?widget='.$widget->getGroupName()."&category=".$category.$record_ref.$table.$other_query.$read_only);?>" alt="<?php echo $widget->getGroupName();?>">
                 <?php echo __($widget->getTitlePerso());?>
               </a>
             </div>
-  
+
 	  <?php endforeach;?>
 	<div class="no_more<?php if($has_one_visible) echo ' hidden';?>"><?php echo __("There are no more widgets to add");?></div>
         <p class="clear">&nbsp;</p>
-	</div>	
+	</div>
 	<div class="widget_collection_top">
 	</div>
 	<div class="widget_collection_button"><a href="#"><?php echo image_tag('widget_expand_button.png','alt=Expand');?></a></div>

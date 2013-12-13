@@ -8,8 +8,11 @@
     <?php echo $form['sub_group_name']->renderError(); ?>
     <?php echo $form['sub_group_name'];?>
   </div>
-  
+
   <div class="tag_encod">
+    <?php echo $form['international_name']->renderError(); ?>
+    <?php echo $form['international_name'];?>
+
     <?php echo $form['tag_value']->renderError(); ?>
     <?php echo $form['tag_value'];?>
 
@@ -20,5 +23,4 @@
   <div class="widget_row_delete">
     <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?>
   </div>
-  <div class="clear"></div>
 </li>

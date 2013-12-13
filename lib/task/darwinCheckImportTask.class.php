@@ -43,7 +43,6 @@ EOF;
             ->set('p.state','?','pending')
             ->andWhere('p.state = ?','loaded')
             ->execute();
-    
     if(empty($options['do-import']))
     {
       $sql = "update imports p set state = 'pending' where state = 'processing' and
@@ -51,7 +50,6 @@ EOF;
       $conn->getDbh()->exec($sql);
       return;
     }
-    
     //Then if option is set, do Import
     $conn->getDbh()->exec('BEGIN TRANSACTION;');
     $this->logSection('fetch', sprintf('Load Imports file in processing state'));
@@ -64,13 +62,18 @@ EOF;
     {
       $imports  = Doctrine::getTable('Imports')->getWithImports();
     }
-
     foreach($imports as $import)
     {
       $this->logSection('Processing', sprintf('Start processing import %d',$import->getId()));
-      $sql = 'select fct_importer_dna('.$import->getId().')';
+      $sql = 'select fct_importer_abcd('.$import->getId().')';
       $conn->getDbh()->exec($sql);
     }
+    // Ok import line asked but 0 ok lines....so it can remain some line in processing not processed....
+    Doctrine_Query::create()
+            ->update('imports p')
+            ->set('p.state','?','pending')
+            ->andWhere('p.state = ?','processing')
+            ->execute();
     $conn->getDbh()->exec('COMMIT;');
   }
 }  

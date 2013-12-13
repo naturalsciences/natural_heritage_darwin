@@ -5,6 +5,32 @@
 class UsersTable extends DarwinTable
 {
   /**
+  * Find item for autocompletion
+  * @param $user The User object for right management
+  * @param $needle the string entered by the user for search
+  * @param $exact bool are we searching the exact term or more or less fuzzy
+  * @return Array of results
+  */
+  public function completeAsArray($user, $needle, $exact, $limit = 30)
+  {
+    $conn_MGR = Doctrine_Manager::connection();
+    $q = Doctrine_Query::create()
+      ->from('Users')
+      ->orderBy('formated_name ASC')
+      ->limit($limit);
+    if($exact)
+      $q->andWhere("formated_name = ?",$needle);
+    else
+      $q->andWhere("formated_name_indexed like concat('%',fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
+    $q_results = $q->execute();
+    $result = array();
+    foreach($q_results as $item) {
+      $result[] = array('label' => $item->getFormatedName(), 'value'=> $item->getId() );
+    }
+    return $result;
+  }
+
+  /**
   * Get a user with his username and password in internal system
   * @param string $username The username
   * @param string $password The password of the user
@@ -74,7 +100,19 @@ class UsersTable extends DarwinTable
     return $q->fetchOne();
   }
 
-  public function getUserByLoginOnly($username)
+  public function getUserByLogin($username, $type='local')
+  {
+     $q = Doctrine_Query::create()
+      ->useResultCache(null)
+      ->from('Users u')
+      ->innerJoin('u.UsersLoginInfos ul')
+      ->andWhere('ul.user_name = ?',$username)
+      ->andWhere('ul.login_system is null')
+      ->andWhere('ul.login_type = ?', $type);
+    return $q->fetchOne();
+  }
+
+  public function getUserByLoginWithEmailOnly($username, $type='local')
   {
      $q = Doctrine_Query::create()
           ->useResultCache(null)
@@ -83,7 +121,7 @@ class UsersTable extends DarwinTable
           ->innerJoin('u.UsersComm uc')
           ->andWhere('ul.user_name = ?',$username)
           ->andWhere('ul.login_system is null')
-          ->andWhere('ul.login_type = ?', 'local')
+          ->andWhere('ul.login_type = ?', $type)
           ->andWhere('uc.comm_type = ?', 'e-mail');
     return $q->fetchOne();
   }

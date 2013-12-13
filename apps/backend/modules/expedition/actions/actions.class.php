@@ -106,7 +106,8 @@ class expeditionActions extends DarwinActions
     $request->checkCSRFProtection();
     // If method is <> from post or put and if the id edited and to be saved doesn't exist anymore... forward to a 404 page
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
-    $this->forward404Unless($expeditions = Doctrine::getTable('Expeditions')->find($request->getParameter('id')), sprintf('Object expeditions does not exist (%s).', array($request->getParameter('id'))));
+    $expeditions = Doctrine::getTable('Expeditions')->find($request->getParameter('id'));
+    $this->forward404Unless($expeditions, sprintf('Object expeditions does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine::getTable('Expeditions')->testNoRightsCollections('expedition_ref',$request->getParameter('id'), $this->getUser()->getId());    
     // Instantiate a new expedition form
     $this->form = new ExpeditionsForm($expeditions);
@@ -126,7 +127,8 @@ class expeditionActions extends DarwinActions
     // Trigger the protection against the XSS attack
     $request->checkCSRFProtection();
     // Forward to a 404 page if the expedition to be deleted has not been found
-    $this->forward404Unless($expeditions = Doctrine::getTable('Expeditions')->find(array($request->getParameter('id'))), sprintf('Object expeditions does not exist (%s).', array($request->getParameter('id'))));
+    $expeditions = Doctrine::getTable('Expeditions')->find(array($request->getParameter('id')));
+    $this->forward404Unless($expeditions, sprintf('Object expeditions does not exist (%s).', $request->getParameter('id')));
     // Effectively triggers the delete method of the expedition table
     try
     {

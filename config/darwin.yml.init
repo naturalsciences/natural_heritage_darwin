@@ -10,6 +10,7 @@ all:
     pagerSlidingSize: 5
     catalogueRecLimit: 200
     queryTimeout: 30000
+    defaultInstitutionRef: ~
 
   mailer:
     sender: your_send_email@example.com

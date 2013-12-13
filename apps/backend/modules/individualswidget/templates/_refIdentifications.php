@@ -1,1 +1,0 @@
-<?php include_component('specimenwidget','refIdentifications', array('form' => $form, 'module'=>$module, 'spec_id'=>$spec_id, 'individual_id'=>$individual_id));?>

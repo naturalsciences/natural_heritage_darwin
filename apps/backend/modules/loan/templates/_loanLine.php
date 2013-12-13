@@ -7,8 +7,8 @@
   </td>
   <td>
     <?php echo image_tag('info.png',"class=extd_info");?>
-    <?php echo $form['part_ref']->renderError();?>
-    <?php echo $form['part_ref'];?>
+    <?php echo $form['specimen_ref']->renderError();?>
+    <?php echo $form['specimen_ref'];?>
   </td>
   <td>
     <?php echo $form['ig_ref']->renderError();?>
@@ -60,7 +60,7 @@
       }
     });
 
-    $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> [id$=\"_part_ref\"]").change(function(){
+    $(".line_<?php echo $form->getparent()->getName().'_'.$form->getName();?> [id$=\"_specimen_ref\"]").change(function(){
       el = $(this);
       $.getJSON('<?php echo url_for('loanitem/getIgNum');?>', {id : $(this).val() }, function( data) {
         ig_ref = el.closest('tr').find('[id$=\"_ig_ref\"]');

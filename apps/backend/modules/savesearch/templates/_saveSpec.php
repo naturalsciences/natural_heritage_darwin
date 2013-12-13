@@ -1,12 +1,5 @@
 <!-- <label><?php //echo format_number_choice('[1] Save my pinned specimen|(1,+Inf] Save my %1% pinned specimens', array('%1%' =>  count($sf_user->getAllPinned())), count($sf_user->getAllPinned()) );?></label> -->
-<?php
-  switch($source){
-    case 'individual': $saveText = __('Save my pinned individuals'); break;
-    case 'part': $saveText = __('Save my pinned parts'); break;
-    default: $saveText = __('Save my pinned specimens');
-  }
-?>
-<label><?php echo $saveText;?></label>
+<label><?php echo _('Save my pinned specimens');;?></label>
 <select id="save_specs_choice">
     <option value="" selected="selected"></option>
     <optgroup label="<?php echo __('New');?>">
@@ -25,14 +18,21 @@ $(document).ready(function () {
   $("#save_specs").click(function(event){
     event.preventDefault();
     if($('#save_specs_choice').val()=="") return;
-    var column_str = ' ';
-    $('.column_menu ul > li.check').each(function (index)
-      {
-        if(column_str != '') column_str += '|';
-        column_str += $(this).attr('id').substr(3);
+    column_str = '';
+    if( $('ul.column_menu .col_switcher :checked').length)
+    {
+      column_arr = []
+      $('ul.column_menu .col_switcher :checked').each(function(){
+        column_arr.push($(this).val());
       });
+      column_str = column_arr.join('|');
+    }
+    else
+    {
+      column_str = $('#specimen_search_filters_col_fields').val();
+    }
 
-    var last_position = $('body').scrollTop() ;              
+    var last_position = $(window).scrollTop();
     scroll(0,0) ;
 
     $('form.search_form select.double_list_select-selected option').attr('selected', 'selected');
@@ -42,7 +42,7 @@ $(document).ready(function () {
         text: '<img src="/images/loader.gif" alt="loading"> loading ...',
         title: { button: true, text: '<?php echo __('Save your specimens')?>' },
         ajax: {
-          url: '<?php echo url_for('savesearch/saveSearch?type=pin&source='.$source);?>/cols/' + encodeURI(column_str) + '/list_nr/' + $('#save_specs_choice').val(),
+          url: '<?php echo url_for('savesearch/saveSearch?type=pin&source=specimen');?>/cols/' + encodeURI(column_str) + '/list_nr/' + $('#save_specs_choice').val(),
           type: 'POST'
         }
       },
@@ -51,10 +51,10 @@ $(document).ready(function () {
         at: 'top center',
         adjust:{
           y: 250 // option set in case of the qtip become too big
-        },         
+        },
         target: $(document.body),
       },
-            
+
       show: {
         ready: true,
         delay: 0,
@@ -70,7 +70,7 @@ $(document).ready(function () {
         target: $('body')
       },
       events: {
-        hide: function(event, api) {                
+        hide: function(event, api) {
           scroll(0,last_position);
           api.destroy();
           if(typeof(spec_list_saved) !='undefined' && spec_list_saved !=null)
@@ -81,5 +81,5 @@ $(document).ready(function () {
     });
     return false;
  });
-}); 
+});
 </script>

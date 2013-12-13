@@ -17,6 +17,7 @@ abstract class BaseCatalogueLevelsFormFilter extends BaseFormFilterDoctrine
       'level_name'     => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'level_sys_name' => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'optional_level' => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'level_order'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
 
     $this->setValidators(array(
@@ -24,6 +25,7 @@ abstract class BaseCatalogueLevelsFormFilter extends BaseFormFilterDoctrine
       'level_name'     => new sfValidatorPass(array('required' => false)),
       'level_sys_name' => new sfValidatorPass(array('required' => false)),
       'optional_level' => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'level_order'    => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
 
     $this->widgetSchema->setNameFormat('catalogue_levels_filters[%s]');
@@ -48,6 +50,7 @@ abstract class BaseCatalogueLevelsFormFilter extends BaseFormFilterDoctrine
       'level_name'     => 'Text',
       'level_sys_name' => 'Text',
       'optional_level' => 'Boolean',
+      'level_order'    => 'Number',
     );
   }
 }

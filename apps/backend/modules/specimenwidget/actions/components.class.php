@@ -13,7 +13,7 @@ class specimenwidgetComponents extends sfComponents
 
   protected function defineForm()
   {
-    if(!$this->getUser()->isAtLeast(Users::ENCODER)) die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;   
+    if(!$this->getUser()->isAtLeast(Users::ENCODER)) die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;
     if(! isset($this->form) )
     {
       if(isset($this->eid) && $this->eid != null)
@@ -25,14 +25,14 @@ class specimenwidgetComponents extends sfComponents
         {
           if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $this->eid, $this->getUser()->getId()))
             die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;
-        }            
+        }
       }
       else
       {
         $this->form = new SpecimensForm();
         $this->spec_id = 0;
       }
-      if(!isset($this->individual_id)) $this->individual_id = 0;    
+      if(!isset($this->individual_id)) $this->individual_id = 0;
     }
     elseif(! isset($this->individual_id) )
     {
@@ -137,13 +137,13 @@ class specimenwidgetComponents extends sfComponents
   }
 
   public function executeRefProperties()
-  {    
+  {
     if(isset($this->form) )
       $this->eid = $this->form->getObject()->getId() ;
   }
 
   public function executeRefComment()
-  {    
+  {
     $this->defineForm();
     if(!isset($this->form['newComments']))
       $this->form->loadEmbed('Comments');
@@ -155,14 +155,14 @@ class specimenwidgetComponents extends sfComponents
     if(!isset($this->form['newExtLinks']))
       $this->form->loadEmbed('ExtLinks');
   }
-    
+
   public function executeRefRelatedFiles()
   {
     $this->defineForm();
     if(!isset($this->form['newRelatedFiles']))
       $this->form->loadEmbed('RelatedFiles');
   }
-  
+
   public function executeRefIdentifications()
   {
     $this->defineForm();
@@ -171,11 +171,14 @@ class specimenwidgetComponents extends sfComponents
 
   }
 
-  public function executeSpecimensAccompanying()
+  public function executeSpecimensRelationships()
   {
     $this->defineForm();
-    if(!isset($this->form['newSpecimensAccompanying']))
-      $this->form->loadEmbed('SpecimensAccompanying');
+    if(!isset($this->form['newSpecimensRelationships']))
+      $this->form->loadEmbed('SpecimensRelationships');
+
+//     if($this->spec_id != 0)
+//       $this->spec_related_inverse = Doctrine::getTable("SpecimensRelationships")->findByRelatedSpecimenRef($this->spec_id);
   }
 
   public function executeInformativeWorkflow()
@@ -189,5 +192,98 @@ class specimenwidgetComponents extends sfComponents
     $this->defineForm();
     if(!isset($this->form['newBiblio']))
       $this->form->loadEmbed('Biblio');
+  }
+
+  public function executeType()
+  {
+    $this->defineForm();
+  }
+
+  public function executeSex()
+  {
+    $this->defineForm();
+  }
+
+  public function executeStage()
+  {
+    $this->defineForm();
+  }
+
+  public function executeSocialStatus()
+  {
+    $this->defineForm();
+  }
+
+  public function executeRockForm()
+  {
+    $this->defineForm();
+  }
+
+  public function executeSpecimenCount()
+  {
+    $this->defineForm();
+  }
+
+
+  public function executeSpecPart()
+  {
+    $this->defineForm();
+  }
+
+  public function executeComplete()
+  {
+    $this->defineForm();
+  }
+
+  public function executeLocalisation()
+  {
+    $this->defineForm();
+  }
+
+  public function executeContainer()
+  {
+    $this->defineForm();
+    $this->form->forceContainerChoices();
+  }
+
+  public function executeRefInsurances()
+  {
+    $this->defineForm();
+    if(!isset($this->form['newInsurances']))
+      $this->form->loadEmbed('Insurances');
+  }
+
+  public function executeMaintenance()
+  {
+    $this->defineForm();
+    if($this->eid){
+      $this->maintenances = Doctrine::getTable('CollectionMaintenance')->getRelatedArray('specimens', array($this->eid));
+    }
+  }
+
+  public function executeHistoric()
+  {
+    $this->defineForm();
+    if($this->eid){
+      $this->items = Doctrine::getTable('UsersTracking')->getRelated('specimens', $this->eid);
+    }
+
+  }
+  public function executeLoan()
+  {
+    $this->defineForm();
+    if($this->eid){
+      $this->loans = Doctrine::getTable('Loans')->getRelatedToSpecimen($this->eid);
+      $loan_list = array();
+      foreach($this->loans as $loan) {
+        $loan_list[] = $loan->getId() ;
+      }
+      $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
+      $this->status = array();
+      foreach($status as $sta) {
+        $this->status[$sta->getLoanRef()] = $sta;
+      }
+      $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
+    }
   }
 }

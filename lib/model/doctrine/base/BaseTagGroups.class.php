@@ -13,6 +13,7 @@
  * @property string $sub_group_name_indexed
  * @property string $color
  * @property string $tag_value
+ * @property string $international_name
  * @property Gtu $Gtu
  * @property Doctrine_Collection $Tags
  * 
@@ -24,6 +25,7 @@
  * @method string              getSubGroupNameIndexed()    Returns the current record's "sub_group_name_indexed" value
  * @method string              getColor()                  Returns the current record's "color" value
  * @method string              getTagValue()               Returns the current record's "tag_value" value
+ * @method string              getInternationalName()      Returns the current record's "international_name" value
  * @method Gtu                 getGtu()                    Returns the current record's "Gtu" value
  * @method Doctrine_Collection getTags()                   Returns the current record's "Tags" collection
  * @method TagGroups           setId()                     Sets the current record's "id" value
@@ -34,6 +36,7 @@
  * @method TagGroups           setSubGroupNameIndexed()    Sets the current record's "sub_group_name_indexed" value
  * @method TagGroups           setColor()                  Sets the current record's "color" value
  * @method TagGroups           setTagValue()               Sets the current record's "tag_value" value
+ * @method TagGroups           setInternationalName()      Sets the current record's "international_name" value
  * @method TagGroups           setGtu()                    Sets the current record's "Gtu" value
  * @method TagGroups           setTags()                   Sets the current record's "Tags" collection
  * 
@@ -77,6 +80,11 @@ abstract class BaseTagGroups extends DarwinModel
         $this->hasColumn('tag_value', 'string', null, array(
              'type' => 'string',
              'notnull' => true,
+             ));
+        $this->hasColumn('international_name', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => '',
              ));
     }
 

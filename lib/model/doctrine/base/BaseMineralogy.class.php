@@ -23,49 +23,46 @@
  * @property CatalogueLevels $Level
  * @property Doctrine_Collection $Mineralogy
  * @property Doctrine_Collection $Specimens
- * @property Doctrine_Collection $SpecimensFlat
- * @property Doctrine_Collection $SpecimensAccompanying
+ * @property Doctrine_Collection $SpecimensRelationships
  * 
- * @method integer             getId()                    Returns the current record's "id" value
- * @method string              getName()                  Returns the current record's "name" value
- * @method string              getNameIndexed()           Returns the current record's "name_indexed" value
- * @method integer             getLevelRef()              Returns the current record's "level_ref" value
- * @method string              getStatus()                Returns the current record's "status" value
- * @method boolean             getLocalNaming()           Returns the current record's "local_naming" value
- * @method string              getColor()                 Returns the current record's "color" value
- * @method string              getPath()                  Returns the current record's "path" value
- * @method integer             getParentRef()             Returns the current record's "parent_ref" value
- * @method string              getCode()                  Returns the current record's "code" value
- * @method string              getClassification()        Returns the current record's "classification" value
- * @method string              getFormule()               Returns the current record's "formule" value
- * @method string              getFormuleIndexed()        Returns the current record's "formule_indexed" value
- * @method string              getCristalSystem()         Returns the current record's "cristal_system" value
- * @method Mineralogy          getParent()                Returns the current record's "Parent" value
- * @method CatalogueLevels     getLevel()                 Returns the current record's "Level" value
- * @method Doctrine_Collection getMineralogy()            Returns the current record's "Mineralogy" collection
- * @method Doctrine_Collection getSpecimens()             Returns the current record's "Specimens" collection
- * @method Doctrine_Collection getSpecimensFlat()         Returns the current record's "SpecimensFlat" collection
- * @method Doctrine_Collection getSpecimensAccompanying() Returns the current record's "SpecimensAccompanying" collection
- * @method Mineralogy          setId()                    Sets the current record's "id" value
- * @method Mineralogy          setName()                  Sets the current record's "name" value
- * @method Mineralogy          setNameIndexed()           Sets the current record's "name_indexed" value
- * @method Mineralogy          setLevelRef()              Sets the current record's "level_ref" value
- * @method Mineralogy          setStatus()                Sets the current record's "status" value
- * @method Mineralogy          setLocalNaming()           Sets the current record's "local_naming" value
- * @method Mineralogy          setColor()                 Sets the current record's "color" value
- * @method Mineralogy          setPath()                  Sets the current record's "path" value
- * @method Mineralogy          setParentRef()             Sets the current record's "parent_ref" value
- * @method Mineralogy          setCode()                  Sets the current record's "code" value
- * @method Mineralogy          setClassification()        Sets the current record's "classification" value
- * @method Mineralogy          setFormule()               Sets the current record's "formule" value
- * @method Mineralogy          setFormuleIndexed()        Sets the current record's "formule_indexed" value
- * @method Mineralogy          setCristalSystem()         Sets the current record's "cristal_system" value
- * @method Mineralogy          setParent()                Sets the current record's "Parent" value
- * @method Mineralogy          setLevel()                 Sets the current record's "Level" value
- * @method Mineralogy          setMineralogy()            Sets the current record's "Mineralogy" collection
- * @method Mineralogy          setSpecimens()             Sets the current record's "Specimens" collection
- * @method Mineralogy          setSpecimensFlat()         Sets the current record's "SpecimensFlat" collection
- * @method Mineralogy          setSpecimensAccompanying() Sets the current record's "SpecimensAccompanying" collection
+ * @method integer             getId()                     Returns the current record's "id" value
+ * @method string              getName()                   Returns the current record's "name" value
+ * @method string              getNameIndexed()            Returns the current record's "name_indexed" value
+ * @method integer             getLevelRef()               Returns the current record's "level_ref" value
+ * @method string              getStatus()                 Returns the current record's "status" value
+ * @method boolean             getLocalNaming()            Returns the current record's "local_naming" value
+ * @method string              getColor()                  Returns the current record's "color" value
+ * @method string              getPath()                   Returns the current record's "path" value
+ * @method integer             getParentRef()              Returns the current record's "parent_ref" value
+ * @method string              getCode()                   Returns the current record's "code" value
+ * @method string              getClassification()         Returns the current record's "classification" value
+ * @method string              getFormule()                Returns the current record's "formule" value
+ * @method string              getFormuleIndexed()         Returns the current record's "formule_indexed" value
+ * @method string              getCristalSystem()          Returns the current record's "cristal_system" value
+ * @method Mineralogy          getParent()                 Returns the current record's "Parent" value
+ * @method CatalogueLevels     getLevel()                  Returns the current record's "Level" value
+ * @method Doctrine_Collection getMineralogy()             Returns the current record's "Mineralogy" collection
+ * @method Doctrine_Collection getSpecimens()              Returns the current record's "Specimens" collection
+ * @method Doctrine_Collection getSpecimensRelationships() Returns the current record's "SpecimensRelationships" collection
+ * @method Mineralogy          setId()                     Sets the current record's "id" value
+ * @method Mineralogy          setName()                   Sets the current record's "name" value
+ * @method Mineralogy          setNameIndexed()            Sets the current record's "name_indexed" value
+ * @method Mineralogy          setLevelRef()               Sets the current record's "level_ref" value
+ * @method Mineralogy          setStatus()                 Sets the current record's "status" value
+ * @method Mineralogy          setLocalNaming()            Sets the current record's "local_naming" value
+ * @method Mineralogy          setColor()                  Sets the current record's "color" value
+ * @method Mineralogy          setPath()                   Sets the current record's "path" value
+ * @method Mineralogy          setParentRef()              Sets the current record's "parent_ref" value
+ * @method Mineralogy          setCode()                   Sets the current record's "code" value
+ * @method Mineralogy          setClassification()         Sets the current record's "classification" value
+ * @method Mineralogy          setFormule()                Sets the current record's "formule" value
+ * @method Mineralogy          setFormuleIndexed()         Sets the current record's "formule_indexed" value
+ * @method Mineralogy          setCristalSystem()          Sets the current record's "cristal_system" value
+ * @method Mineralogy          setParent()                 Sets the current record's "Parent" value
+ * @method Mineralogy          setLevel()                  Sets the current record's "Level" value
+ * @method Mineralogy          setMineralogy()             Sets the current record's "Mineralogy" collection
+ * @method Mineralogy          setSpecimens()              Sets the current record's "Specimens" collection
+ * @method Mineralogy          setSpecimensRelationships() Sets the current record's "SpecimensRelationships" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -153,11 +150,7 @@ abstract class BaseMineralogy extends DarwinModel
              'local' => 'id',
              'foreign' => 'mineral_ref'));
 
-        $this->hasMany('SpecimensFlat', array(
-             'local' => 'id',
-             'foreign' => 'mineral_ref'));
-
-        $this->hasMany('SpecimensAccompanying', array(
+        $this->hasMany('SpecimensRelationships', array(
              'local' => 'id',
              'foreign' => 'mineral_ref'));
     }

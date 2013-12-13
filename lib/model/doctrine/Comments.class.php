@@ -10,4 +10,9 @@ class Comments extends BaseComments
     $notions = CommentsTable::getNotionsFor($this->get('referenced_relation'));
     return $notions[$this->getNotionConcerned()];
   }
+
+  public function getLink()
+  {
+    return $this->getTable()->getLinkforKnownTable($this->getReferencedRelation(),$this->getRecordId());
+  }
 }

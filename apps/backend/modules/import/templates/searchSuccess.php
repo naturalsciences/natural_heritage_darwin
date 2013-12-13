@@ -36,7 +36,7 @@
                 <?php echo __('Last modification');?>
                 <?php if($orderBy=='updated_at') echo $orderSign ?>
               </a>
-            </th>                      
+            </th>
             <th><?php echo __("Progression") ; ?></th>
             <th colspan="4"><?php echo __("Actions") ; ?></th>
           </tr>
@@ -51,13 +51,17 @@
               </td>
               <td><?php echo $import->getLastModifiedDate(ESC_RAW);?></td>
               <td>
-                <?php if(! in_array($import->getState(),array('loading','loaded','to_be_loaded')) ):?>
+                <?php if(! in_array($import->getState(),array('loading','loaded','to_be_loaded','error')) ):?>
                   <?php echo __('%rest% on %initial%',array('%rest%'=>$import->getInitialCount()-$import->getCurrentLineNum(), '%initial%'=>$import->getInitialCount() )) ;?>
                 <?php else:?>
                   <?php echo __('n/a');?>
                 <?php endif;?>
-                
               </td>
+              <?php if ($import->getState() == 'error') : ?>
+              <td colspan="2">
+                  <?php echo link_to(image_tag('warning.png',array('title'=>__('View errors while importing'))),'import/viewError?id='.$import->getId());?>
+              </td>
+              <?php else : ?>
               <td>
                 <?php if ($import->isEditableState()) : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'staging/index?import='.$import->getId());?>
@@ -67,13 +71,14 @@
                 <?php if ($import->isEditableState()) : ?>
                   <?php echo link_to(image_tag('checkbox_checked.png',array('title'=>__('Import "Ok" lines'))),'staging/markok?import='.$import->getId());?>
                 <?php endif ; ?>
-              </td>              
+              </td>
+              <?php endif ; ?>
               <td>
                 <?php if (!$import->getIsFinished()) : ?>
                   <?php echo link_to(image_tag('remove_2.png',array('title'=>__('Abort import'))),'import/clear?id='.$import->getId(),'class=remove_import');?>
                 <?php endif;?>
               </td>
-              <td>         
+              <td>
                 <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'import/delete?id='.$import->getId(),'class=remove_import');?>
               </td>
             </tr>

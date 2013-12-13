@@ -1,4 +1,4 @@
-DROP TRIGGER IF EXISTS trg_cpy_specimensMainCode_specimenPartCode ON specimen_parts;
+
 DROP TRIGGER IF EXISTS trg_cpy_idToCode_gtu ON gtu ;
 
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_lithology ON lithology ;
@@ -16,7 +16,6 @@ DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_collection ON collections;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_vernacularnames ON vernacular_names;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_collecting_tools ON collecting_tools;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_collecting_methods ON collecting_methods;
-DROP TRIGGER IF EXISTS trg_clr_specialstatus_specimenindividuals ON specimen_individuals;
 
 /*** REPERCUTION record_id ****/
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_cataloguerelationships ON catalogue_relationships;
@@ -40,9 +39,6 @@ DROP TRIGGER IF EXISTS trg_clr_referenceRecord_lithostratigraphy ON lithostratig
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_mineralogy ON mineralogy;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_lithology ON lithology;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimens ON specimens;
-DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimenindividuals ON specimen_individuals;
-DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimenparts ON specimen_parts;
-DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimensaccompanying ON specimens_accompanying;
 
 --DROP TRIGGER IF EXISTS trg_clear_referencedPeople ON people;
 
@@ -147,9 +143,6 @@ DROP TRIGGER IF EXISTS trg_trk_log_table_people_addresses
 DROP TRIGGER IF EXISTS trg_trk_log_table_collections_rights 
         ON collections_rights;
 
-DROP TRIGGER IF EXISTS trg_trk_log_table_specimens_accompanying 
-        ON specimens_accompanying;
-
 DROP TRIGGER IF EXISTS trg_trk_log_table_collecting_tools 
         ON collecting_tools;
 
@@ -197,12 +190,6 @@ DROP TRIGGER IF EXISTS trg_trk_log_table_insurances
 
 DROP TRIGGER IF EXISTS trg_trk_log_table_specimens 
         ON specimens;
-
-DROP TRIGGER IF EXISTS trg_trk_log_table_specimen_individuals 
-        ON specimen_individuals;
-
-DROP TRIGGER IF EXISTS trg_trk_log_table_specimen_parts 
-        ON specimen_parts;
 
 DROP TRIGGER IF EXISTS trg_trk_log_table_taxonomy 
         ON taxonomy;
@@ -264,18 +251,6 @@ DROP TRIGGER IF EXISTS trg_update_mineralogy_darwin_flat
 DROP TRIGGER IF EXISTS trg_update_specimens_darwin_flat
         ON specimens;
 
-DROP TRIGGER IF EXISTS trg_delete_specimen_individuals_darwin_flat
-        ON specimen_individuals;
-
-DROP TRIGGER IF EXISTS trg_delete_specimen_parts_darwin_flat
-        ON specimen_parts;
-
-DROP TRIGGER IF EXISTS trg_update_specimen_individuals_darwin_flat
-        ON specimen_individuals;
-
-DROP TRIGGER IF EXISTS trg_update_specimen_parts_darwin_flat
-        ON specimen_parts;
-
 DROP TRIGGER IF EXISTS trg_cpy_fulltoindex_classification_keywords
         ON classification_keywords;
 
@@ -290,12 +265,6 @@ DROP TRIGGER IF EXISTS trg_clr_referencerecord_insurances
 
 DROP TRIGGER IF EXISTS trg_chk_specimenCollectionAllowed
         ON specimens;
-
-DROP TRIGGER IF EXISTS trg_chk_specimenIndCollectionAllowed
-        ON specimen_individuals;
-
-DROP TRIGGER IF EXISTS trg_chk_specimenPartCollectionAllowed
-        ON specimen_parts;
 
 DROP TRIGGER IF EXISTS trg_chk_canUpdateCollectionsRights
         ON collections_rights;
@@ -330,12 +299,6 @@ DROP TRIGGER IF EXISTS trg_cpy_path_peoplerelationships
 DROP TRIGGER IF EXISTS trg_cpy_path_gtu
         ON gtu;
 
-DROP TRIGGER IF EXISTS trg_cpy_path_specimen_parts
-        ON specimen_parts;
-
-DROP TRIGGER IF EXISTS trg_cpy_path_staging
-        ON staging;
-        
 DROP TRIGGER IF EXISTS trg_upd_fields_staging
         ON staging;
 
@@ -429,17 +392,11 @@ DROP TRIGGER IF EXISTS fct_cpy_ins_update_dict_insurances ON insurances;
 
 DROP TRIGGER IF EXISTS fct_cpy_ins_update_dict_mineralogy ON mineralogy;
 
-DROP TRIGGER IF EXISTS fct_cpy_ins_update_dict_specimen_individuals ON specimen_individuals;
-
 DROP TRIGGER IF EXISTS fct_cpy_ins_update_dict_specimens ON specimens;
-
-DROP TRIGGER IF EXISTS fct_cpy_ins_update_dict_specimens_accompanying ON specimens_accompanying;
 
 DROP TRIGGER IF EXISTS fct_cpy_ins_update_dict_users ON users;
 
 DROP TRIGGER IF EXISTS fct_cpy_ins_update_dict_users_addresses ON users_addresses;
-
-DROP TRIGGER IF EXISTS fct_cpy_ins_update_dict_specimen_parts ON specimen_parts;
 
 /******************* DELETE FROM DICT ******************/
 
@@ -459,17 +416,11 @@ DROP TRIGGER IF EXISTS fct_cpy_del_dict_insurances ON insurances ;
 
 DROP TRIGGER IF EXISTS fct_cpy_del_dict_mineralogy ON mineralogy ;
 
-DROP TRIGGER IF EXISTS fct_cpy_del_dict_specimen_individuals ON specimen_individuals ;
-
 DROP TRIGGER IF EXISTS fct_cpy_del_dict_specimens ON specimens ;
-
-DROP TRIGGER IF EXISTS fct_cpy_del_dict_specimens_accompanying ON specimens_accompanying ;
 
 DROP TRIGGER IF EXISTS fct_cpy_del_dict_users ON users ;
 
 DROP TRIGGER IF EXISTS fct_cpy_del_dict_users_addresses ON users_addresses ;
-
-DROP TRIGGER IF EXISTS fct_cpy_del_dict_specimen_parts ON specimen_parts ;
 
 
 /**** LOANS ***/
@@ -479,3 +430,5 @@ DROP TRIGGER IF EXISTS trg_add_status_history ON loans;
 
 
 DROP TRIGGER IF EXISTS trg_cpy_deleted_file ON multimedia;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_staging_info ON staging_info ;
+DROP TRIGGER IF EXISTS trg_upd_institution_staging_relationship ON staging_relationship ;

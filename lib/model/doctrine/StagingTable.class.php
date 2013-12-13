@@ -35,4 +35,17 @@ class StagingTable extends DarwinTable
     $result = $conn->fetchAssoc($sql);
     return $result;
   }
+
+  public function markTaxon($import_ref)
+  {
+    $q = Doctrine_Query::create()
+      ->update('Staging')
+      ->set('create_taxon', '?','true')
+      ->andwhere('import_ref = ? ',$import_ref)
+      ->execute();
+    $q = Doctrine_Query::create()->update('Imports');
+    $q->andwhere('id = ? ',$import_ref)
+      ->set('state', '?','processing')
+      ->execute();
+  }
 }

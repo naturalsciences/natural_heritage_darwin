@@ -13,7 +13,7 @@
 
 BEGIN;
 
-SET search_path TO "unittest","public"; 
+SET search_path TO "unittest","public";
 SET client_min_messages TO warning; -- notice;
 
 

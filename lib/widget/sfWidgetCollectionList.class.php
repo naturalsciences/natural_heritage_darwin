@@ -102,12 +102,12 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
           $html .= ' data-enc="true" ';
         $html .= "><div class=\"col_name\">" ;
         $html .= image_tag ($img_expand, array('alt' => '+', 'class'=> 'tree_cmd collapsed'));
-        $html .= image_tag ($img_expand_up, array('alt' => '-', 'class'=> 'tree_cmd expanded'));
+        $html .= image_tag ($img_expand_up, array('alt' => '-', 'class'=> 'tree_cmd expanded hidden'));
         $html .=  "<span>".$child->getName()."</span>";
 
         $options = array(
           'type'=> 'checkbox',
-          'class' => 'check_right',
+          'class' => 'col_check',
           'value' => $child->getId(),
           'name' => $name,
         );
@@ -115,7 +115,7 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
           $options['checked'] = "checked";
 
         if($name != '')
-          $html .= $this->renderTag('input', $options).'<b class="clear">&nbsp;</b>';
+          $html .= '<label class="chk">'.$this->renderTag('input', $options).'</label>';//.'<b class="clear">&nbsp;</b>';
         else
         {
           if(! $this->getOption('is_choose') )

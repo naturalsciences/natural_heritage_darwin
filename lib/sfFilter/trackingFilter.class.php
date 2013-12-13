@@ -12,7 +12,7 @@ class trackingFilter extends sfFilter
 
         //Check if the user still exists
         $q = Doctrine_Query::create()
-          ->useResultCache(new Doctrine_Cache_Apc())
+          ->useResultCache(true)
           ->setResultCacheLifeSpan(60 * 5) //5 minutes
           ->from('Users')
           ->andWhere('id = ?',$user->getId());

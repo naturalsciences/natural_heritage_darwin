@@ -87,7 +87,7 @@ DROP FUNCTION IF EXISTS trg_fct_chk_possible_upper_level() CASCADE;
 
 DROP FUNCTION IF EXISTS fct_set_user(user_id integer) ;
 DROP FUNCTION IF EXISTS fct_upd_staging_fields() CASCADE;
-DROP FUNCTION IF EXISTS fct_importer_dna();
+DROP FUNCTION IF EXISTS fct_importer_abcd(integer) CASCADE;
 DROP FUNCTION IF EXISTS fct_upd_people_staging_fields();
 DROP FUNCTION IF EXISTS trg_ins_update_dict() CASCADE;
 DROP FUNCTION IF EXISTS trg_del_dict() CASCADE;
@@ -135,3 +135,6 @@ DROP FUNCTION IF EXISTS fct_cpy_ig_to_loan_items() CASCADE;
 DROP FUNCTION IF EXISTS fct_informative_reset_last_flag();
 DROP FUNCTION IF EXISTS fct_update_specimen_flat();
 DROP FUNCTION IF EXISTS fct_update_specimens_flat_related();
+DROP FUNCTION IF EXISTS fct_upd_institution_staging_relationship() ;
+DROP FUNCTION IF EXISTS fct_imp_checker_staging_info() ;
+DROP FUNCTION IF EXISTS fct_imp_checker_staging_relationship()  ;

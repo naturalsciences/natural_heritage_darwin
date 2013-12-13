@@ -13,8 +13,8 @@ class darwinAddwidgetsTask extends sfBaseTask
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
       new sfCommandOption('reset', null, sfCommandOption::PARAMETER_NONE, 'delete current data in the database for this user'),
-      new sfCommandOption('name', null, sfCommandOption::PARAMETER_REQUIRED, 'add a specific name widget in the database for this user'), 
-      new sfCommandOption('category', null, sfCommandOption::PARAMETER_REQUIRED, 'add a specific category widget in the database for this user'),       
+      new sfCommandOption('name', null, sfCommandOption::PARAMETER_REQUIRED, 'add a specific name widget in the database for this user'),
+      new sfCommandOption('category', null, sfCommandOption::PARAMETER_REQUIRED, 'add a specific category widget in the database for this user'),
       // add your own options here
     ));
 
@@ -36,7 +36,7 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
-    if(($options['name'] && !$options['category']) || (!$options['name'] && $options['category']))
+    if($options['name'] && !$options['category'])
     {
       $this->logSection('Incomplete command', sprintf('If you want to add specific widget, you have to give de --name option AND the --category option'),null, 'ERROR') ;
       exit() ;
@@ -70,7 +70,7 @@ EOF;
       if($options['category'])
         $cnt = $user->addUserWidgets(array('category' => $options['category'],'name' => $options['name']));
       else
-        $cnt = $user->addUserWidgets();      
+        $cnt = $user->addUserWidgets();
       $this->logSection('add-widgets', sprintf('Added %d widgets successfully!',$cnt));
     }
   }

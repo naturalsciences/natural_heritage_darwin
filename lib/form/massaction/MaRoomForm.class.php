@@ -5,7 +5,7 @@ class MaRoomForm extends BaseForm
   public function configure()
   {
     $this->widgetSchema['room'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRooms',
       'method' => 'getRooms',
       'key_method' => 'getRooms',

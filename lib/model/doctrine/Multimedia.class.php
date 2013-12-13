@@ -12,7 +12,7 @@
  */
 class Multimedia extends BaseMultimedia
 {
-  private static $allowed_mime_type = array(
+  public static $allowed_mime_type = array(
     'csv' => 'text/csv',
     'txt' => 'text/plain',
 //   'htm' => 'text/html',
@@ -108,6 +108,16 @@ class Multimedia extends BaseMultimedia
     //Make something like multimedia/00/01/01/12  for the multimed of id= 10112
     $num = sprintf('%08d', $this->getRecordId());
     return $this->getReferencedRelation().'/'.implode('/',str_split($num,'2'));
+  }
+
+  public function move($from){
+    $this->checkUploadPathAvailable() ;
+    $filename = basename($from);
+    $this->setUri($this->getBuildedDir().$filename);
+    copy(
+      sfConfig::get('sf_upload_dir')."/multimedia/".$from,
+      sfConfig::get('sf_upload_dir')."/multimedia/".$this->getUri()
+    );
   }
 
   protected function checkUploadPathAvailable()

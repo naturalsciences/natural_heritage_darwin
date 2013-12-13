@@ -58,9 +58,7 @@ $browser->
         isStatusCode(200)->
         checkElement('table tbody tr',2)->
         checkElement('table tbody tr:first td:first','/physical measurement/')->
-	checkElement('table tbody tr:first td::nth-child(6)','/Show 2 Values/')->
 	checkElement('table tbody tr:last td:first','/protection status/')->
-	checkElement('table tbody tr:last td::nth-child(6)','/1/')->
     end()->
 
     info('5 - Vernacular Names')->

@@ -5,7 +5,7 @@ class MaRowForm extends BaseForm
   public function configure()
   {
     $this->widgetSchema['row'] = new widgetFormSelectComplete(array(
-      'model' => 'SpecimenParts',
+      'model' => 'Specimens',
       'table_method' => 'getDistinctRows',
       'method' => 'getRows',
       'key_method' => 'getRows',

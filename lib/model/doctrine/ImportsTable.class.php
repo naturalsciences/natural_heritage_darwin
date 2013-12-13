@@ -20,11 +20,10 @@ class ImportsTable extends Doctrine_Table
   public function markOk($id)
   {
     $q = Doctrine_Query::create()->update('staging s');
-    $conn = Doctrine_Manager::connection();      
+    $conn = Doctrine_Manager::connection();
     $sql = "update staging s1 
         set to_import = true 
-        WHERE not exists (select 1 from staging childs where childs.path like s1.path || s1.id || '/%' and status != '')
-        AND not exists (select 1 from staging prts where s1.path like prts.path || prts.id || '/%' and status != '') and status = '' and import_ref=".intval($id);
+        WHERE status = '' and import_ref=".intval($id);
     $conn->getDbh()->exec($sql);
     $q = Doctrine_Query::create()->update('Imports');
     $q->andwhere('id = ? ',$id)
@@ -62,5 +61,15 @@ class ImportsTable extends Doctrine_Table
       ->andWhere("state = 'processing'");
 
     return $q->execute();
+  }
+  
+  public function updateStatus($id)
+  {
+    $q = Doctrine_Query::create() 
+      ->update('Imports i')
+      ->set('state', '?','loaded')
+      ->update('Imports i')
+      ->andwhere('id = ? ',$id)
+      ->execute() ;
   }
 }

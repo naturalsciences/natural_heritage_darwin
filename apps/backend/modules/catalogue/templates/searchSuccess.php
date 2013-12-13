@@ -15,11 +15,11 @@
         <th></th>
         <?php if(isset($items[0]['color'])): ?>
           <th>
-            <a class="sort" href="<?php echo url_for($s_url.'&orderby=color'.( ($orderBy=='color' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">            
+            <a class="sort" href="<?php echo url_for($s_url.'&orderby=color'.( ($orderBy=='color' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
             <?php echo __('Colour');?>
             <?php if($orderBy=='color') echo $orderSign ?>
           </th>
-        <?php endif ; ?>       
+        <?php endif ; ?>
         <?php if(isset($items[0]['code'])): ?>
           <th>
             <a class="sort" href="<?php echo url_for($s_url.'&orderby=code'.( ($orderBy=='code' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
@@ -62,7 +62,7 @@
           <tr class="rid_<?php echo $item->getId();?>">
             <?php
               $addedFormat = '';
-              switch ($item->getStatus()) 
+              switch ($item->getStatus())
               {
                 case 'invalid':
                   $addedFormat = ' ('.__('Invalid').')';
@@ -133,7 +133,7 @@
         $('.search_item_name').closest('tr').show();
       });
 
-      $('.search_results_content tbody tr .info').click(function() 
+      $('.search_results_content tbody tr .info').click(function()
       {
         item_row=$(this).closest('tr');
         if(item_row.find('.tree').is(":hidden"))

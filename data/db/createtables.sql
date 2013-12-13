@@ -33,7 +33,7 @@ create table people
        (
         id serial,
         end_date_mask integer not null default 0,
-        end_date date not null default '01/01/0001',
+        end_date date not null default '31/12/2038',
         activity_date_from_mask integer not null default 0,
         activity_date_from date not null default '01/01/0001',
         activity_date_to_mask integer not null default 0,
@@ -71,6 +71,7 @@ create table catalogue_relationships
         record_id_1 integer not null,
         record_id_2 integer not null,
         relationship_type varchar not null default 'recombined from',
+        constraint pk_catalogue_relationships primary key (id),
         constraint unq_catalogue_relationships unique (referenced_relation, relationship_type, record_id_1, record_id_2)
        );
 comment on table catalogue_relationships is 'Stores the relationships between records of a table - current name, original combination, ...';
@@ -115,6 +116,7 @@ create table catalogue_levels
         level_name varchar not null,
         level_sys_name varchar not null,
         optional_level boolean not null default false,
+        level_order integer not null default 999,
         constraint pk_catalogue_levels primary key (id),
         constraint unq_catalogue_levels unique (level_type, level_name)
        );
@@ -212,6 +214,7 @@ create table tag_groups
         group_name_indexed varchar not null,
         sub_group_name varchar not null,
         sub_group_name_indexed varchar not null,
+        international_name varchar not null default '',
         color varchar not null default '#FFFFFF',
         tag_value varchar not null,
         constraint fk_tag_groups_gtu foreign key (gtu_ref) references gtu(id) on delete cascade,
@@ -227,6 +230,7 @@ comment on column tag_groups.sub_group_name is 'Sub-Group name under which the t
 comment on column tag_groups.sub_group_name_indexed is 'Indexed form of a sub-group name';
 comment on column tag_groups.color is 'Color associated to the group concerned';
 comment on column tag_groups.tag_value is 'Ensemble of Tags';
+comment on column tag_groups.international_name is 'The international(english) name of the place / ocean / country';
 
 create table tags
       (
@@ -248,65 +252,48 @@ comment on column tags.sub_group_type is 'Indexed form of a sub-group name';
 comment on column tags.tag is 'The readable version of the tag';
 comment on column tags.tag_indexed is 'The indexed version of the tag';
 
-create table catalogue_properties
+create table properties
        (
         id serial,
         property_type varchar not null,
-        property_sub_type varchar not null default '',
-        property_sub_type_indexed varchar not null,
-        property_qualifier varchar,
-        property_qualifier_indexed varchar not null,
+        applies_to varchar not null default '',
+        applies_to_indexed varchar not null,
         date_from_mask integer not null default 0,
         date_from timestamp not null default '01/01/0001 00:00:00',
         date_to_mask integer not null default 0,
         date_to timestamp not null default '31/12/2038 00:00:00',
+        is_quantitative boolean not null default false,
+
         property_unit varchar not null default '',
-        property_accuracy_unit varchar not null default '',
-        property_method varchar,
-        property_method_indexed varchar not null,
-        property_tool varchar,
-        property_tool_indexed varchar not null,
-        constraint pk_catalogue_properties primary key (id),
-        constraint unq_catalogue_properties unique (referenced_relation, record_id, property_type, property_sub_type_indexed, property_qualifier_indexed, date_from, date_to, property_method_indexed, property_tool_indexed)
-       )
+        method varchar,
+        method_indexed varchar not null,
+        lower_value varchar not null,
+        lower_value_unified float,
+        upper_value  varchar not null,
+        upper_value_unified float,
+        property_accuracy varchar not null default '',
+
+        constraint pk_properties primary key (id)
+        )
 inherits (template_table_record_ref);
 
-comment on table catalogue_properties is 'All properties or all measurements describing an object in darwin are stored in this table';
-comment on column catalogue_properties.referenced_relation is 'Identifier-Name of the table a property is defined for';
-comment on column catalogue_properties.record_id is 'Identifier of record a property is defined for';
-comment on column catalogue_properties.property_type is 'Type-Category of property - Latitude, Longitude, Ph, Height, Weight, Color, Temperature, Wind direction,...';
-comment on column catalogue_properties.property_sub_type is 'Sub type or sub category of property: For Latitudes and Longitudes, precise which type of lat/long it is like Lambert 72, Lambert 92, UTM,...';
-comment on column catalogue_properties.property_sub_type_indexed is 'Indexed form of Sub type of property - if subtype is null, takes a generic replacement value';
-comment on column catalogue_properties.property_qualifier is 'Bring a complement of information to the property sub type. i.e.: if sub type is speed, qualifier can be wave speed, wind speed, light speed,...';
-comment on column catalogue_properties.property_qualifier_indexed is 'Indexed form of property_qualifier field';
-comment on column catalogue_properties.date_from is 'For a range of measurements, give the measurement start - if null, takes a generic replacement value';
-comment on column catalogue_properties.date_from_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
-comment on column catalogue_properties.date_to is 'For a range of measurements, give the measurement stop date/time - if null, takes a generic replacement value';
-comment on column catalogue_properties.date_to_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
-comment on column catalogue_properties.property_unit is 'Unit used for property value introduced';
-comment on column catalogue_properties.property_method is 'Method used to collect property value';
-comment on column catalogue_properties.property_method_indexed is 'Indexed version of property_method field - if null, takes a generic replacement value';
-comment on column catalogue_properties.property_accuracy_unit is 'Unit used for accuracy value(s)';
-comment on column catalogue_properties.property_tool is 'Tool used to collect property value';
-comment on column catalogue_properties.property_tool_indexed is 'Indexed version of property_tool field - if null, takes a generic replacement value';
+comment on table properties is 'All properties or all measurements describing an object in darwin are stored in this table';
+comment on column properties.referenced_relation is 'Identifier-Name of the table a property is defined for';
+comment on column properties.record_id is 'Identifier of record a property is defined for';
+comment on column properties.property_type is 'Type-Category of property - Latitude, Longitude, Ph, Height, Weight, Color, Temperature, Wind direction,...';
+comment on column properties.applies_to is 'Depending on the use of the type, this can further specify the actual part measured. For example, a measurement of temperature may be a surface, air or sub-surface measurement.';
+comment on column properties.applies_to_indexed is 'Indexed form of Sub type of property - if subtype is null, takes a generic replacement value';
+comment on column properties.date_from is 'For a range of measurements, give the measurement start - if null, takes a generic replacement value';
+comment on column properties.date_from_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
+comment on column properties.date_to is 'For a range of measurements, give the measurement stop date/time - if null, takes a generic replacement value';
+comment on column properties.date_to_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day, 4 for hour, 2 for minutes, 1 for seconds';
+comment on column properties.property_unit is 'Unit used for property value introduced';
+comment on column properties.method is 'Method used to collect property value';
+comment on column properties.method_indexed is 'Indexed version of property_method field - if null, takes a generic replacement value';
+comment on column properties.lower_value is 'Lower value of Single Value';
+comment on column properties.lower_value_unified is 'unified version of the value for comparison with other units';
+comment on column properties.property_accuracy is 'Accuracy of the values';
 
-create table properties_values
-      (
-        id serial,
-        property_ref integer not null,
-        property_value varchar not null,
-        property_value_unified varchar not null default '',
-        property_accuracy real,
-        property_accuracy_unified real,
-        constraint pk_properties_values primary key (id),
-        constraint fk_properties_values_properties foreign key (property_ref) references catalogue_properties(id) on delete cascade
-      );
-comment on table properties_values is 'All properties values seen in catalogue_properties';
-comment on column properties_values.id is 'Unique identifier of a property value';
-comment on column properties_values.property_value is 'Value for the property type and subtype selected';
-comment on column properties_values.property_value_unified is 'Unified version of property_value -> means that the value is converted into a common unit allowing comparisons';
-comment on column properties_values.property_accuracy is 'Accuracy of property measurement';
-comment on column properties_values.property_accuracy_unified is 'Unified version of accuracy on property or sub property value -> means that the value is converted into a common unit allowing comparisons';
 
 create table identifications
        (
@@ -345,7 +332,7 @@ create table vernacular_names
         constraint pk_vernacular_names primary key (id)
        )
 inherits (template_table_record_ref);
-       
+
 comment on table vernacular_names is 'List of vernacular names for a given unit and a given language community';
 comment on column vernacular_names.community is 'Language community, a unit translation is available for';
 comment on column vernacular_names.community_indexed is 'indexed version of the language community';
@@ -635,7 +622,6 @@ create table collections
         code_prefix_separator varchar,
         code_suffix varchar,
         code_suffix_separator varchar,
-        code_part_code_auto_copy boolean not null default false,
         code_specimen_duplicate boolean not null default false,
         is_public boolean not null default true,
         constraint pk_collections primary key (id),
@@ -663,7 +649,6 @@ comment on column collections.code_prefix is 'Default code prefix to be used for
 comment on column collections.code_prefix_separator is 'Character chain used to separate code prefix from code core';
 comment on column collections.code_suffix is 'Default code suffix to be used for specimens encoded in this collection';
 comment on column collections.code_suffix_separator is 'Character chain used to separate code suffix from code core';
-comment on column collections.code_part_code_auto_copy is 'Flag telling if the whole specimen code has to be copied for a part, when inserting a new one';
 comment on column collections.code_specimen_duplicate is 'Flag telling if the whole specimen code has to be copied when you do a duplicate';
 comment on column collections.is_public is 'Flag telling if the collection can be found in the public search';
 
@@ -692,7 +677,7 @@ create table informative_workflow
         formated_name varchar not null default 'anonymous',
         status varchar not null default 'suggestion',
         modification_date_time timestamp default now() not null,
-        is_last boolean not null default true,        
+        is_last boolean not null default true,
         comment varchar not null ,
         constraint pk_informative_workflow primary key (id),
         constraint fk_informative_workflow_users foreign key (user_ref) references users(id) ON DELETE CASCADE
@@ -732,7 +717,7 @@ comment on column users_tracking.modification_date_time is 'Track date and time'
 create table collection_maintenance
        (
         id serial,
-        people_ref integer not null,
+        people_ref integer,
         category varchar not null default 'action',
         action_observation varchar not null,
         description varchar,
@@ -1010,87 +995,12 @@ create table specimens
         chrono_ref integer,
         lithology_ref integer,
         mineral_ref integer,
-        host_taxon_ref integer,
-        host_specimen_ref integer,
-        host_relationship varchar,
         acquisition_category varchar not null default '',
         acquisition_date_mask integer not null default 0,
         acquisition_date date not null default '01/01/0001',
         station_visible boolean not null default true,
         ig_ref integer,
 
-        constraint pk_specimens primary key (id),
-        constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
-        constraint fk_specimens_gtu foreign key (gtu_ref) references gtu(id),
-        constraint fk_specimens_collections foreign key (collection_ref) references collections(id),
-        constraint fk_specimens_taxonomy foreign key (taxon_ref) references taxonomy(id),
-        constraint fk_specimens_lithostratigraphy foreign key (litho_ref) references lithostratigraphy(id),
-        constraint fk_specimens_lithology foreign key (lithology_ref) references lithology(id),
-        constraint fk_specimens_mineralogy foreign key (mineral_ref) references mineralogy(id),
-        constraint fk_specimens_chronostratigraphy foreign key (chrono_ref) references chronostratigraphy(id),
-        constraint fk_specimens_host_taxonomy foreign key (host_taxon_ref) references taxonomy(id),
-        constraint fk_specimens_host_specimen foreign key (host_specimen_ref) references specimens(id) on delete set null,
-        constraint fk_specimens_igs foreign key (ig_ref) references igs(id)
-       );
-
-/*CREATE UNIQUE INDEX unq_specimens ON specimens (collection_ref, COALESCE(expedition_ref,0), COALESCE(gtu_ref,0), COALESCE(taxon_ref,0), COALESCE(litho_ref,0), COALESCE(chrono_ref,0), COALESCE(lithology_ref,0), COALESCE(mineral_ref,0), COALESCE(host_taxon_ref,0), acquisition_category, acquisition_date, COALESCE(ig_ref,0));*/
-
-comment on table specimens is 'Specimens or batch of specimens stored in collection';
-comment on column specimens.id is 'Unique identifier of a specimen or batch of specimens';
-comment on column specimens.collection_ref is 'Reference of collection the specimen is grouped under - id field of collections table';
-comment on column specimens.expedition_ref is 'When acquisition category is expedition, contains the reference of the expedition having conducted to the current specimen capture - id field of expeditions table';
-comment on column specimens.gtu_ref is 'Reference of the sampling location the specimen is coming from - id field of gtu table';
-comment on column specimens.litho_ref is 'When encoding a rock, mineral or paleontologic specimen, contains the reference of lithostratigraphic unit the specimen have been found into - id field of lithostratigraphy table';
-comment on column specimens.chrono_ref is 'When encoding a rock, mineral or paleontologic specimen, contains the reference of chronostratigraphic unit the specimen have been found into - id field of chronostratigraphy table';
-comment on column specimens.taxon_ref is 'When encoding a ''living'' specimen, contains the reference of the taxon unit defining the specimen - id field of taxonomy table';
-comment on column specimens.host_relationship is 'When current specimen encoded is in a host relationship with an other specimen or taxon, this field contains the type of relationship between them: symbiosis, parasitism, saprophytism,...';
-comment on column specimens.host_specimen_ref is 'When current specimen encoded is in a host relationship with an other specimen, this field contains reference of the host specimen - recursive reference';
-comment on column specimens.acquisition_category is 'Describe how the specimen was collected: expedition, donation,...';
-comment on column specimens.acquisition_date_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
-comment on column specimens.acquisition_date is 'Date Composed (if possible) of the acquisition';
-comment on column specimens.station_visible is 'Flag telling if the sampling location can be visible or must be hidden for the specimen encoded';
-comment on column specimens.lithology_ref is 'Reference of a rock classification unit associated to the specimen encoded - id field of lithology table';
-comment on column specimens.mineral_ref is 'Reference of a mineral classification unit associated to the specimen encoded - id field of mineralogy table';
-comment on column specimens.host_taxon_ref is 'Reference of taxon definition defining the host which holds the current specimen - id field of taxonomy table';
-comment on column specimens.ig_ref is 'Reference of ig number this specimen has been associated to';
-comment on column specimens.category is 'Type of specimen encoded: a physical object stored in collections, an observation, a figurate specimen,...';
-
-create table codes
-       (
-        id serial,
-        code_category varchar not null default 'main',
-        code_prefix varchar,
-        code_prefix_separator varchar,
-        code varchar,
-        code_suffix varchar,
-        code_suffix_separator varchar,
-        full_code_indexed varchar not null,
-        code_date timestamp not null default '0001-01-01 00:00:00',
-        code_date_mask integer not null default 0,
-        code_num integer default 0,
-        constraint pk_codes primary key (id),
-        constraint unq_codes unique (referenced_relation, record_id, full_code_indexed,code_category)
-       )
-inherits (template_table_record_ref);
-
-comment on table codes is 'Template used to construct the specimen codes tables';
-comment on column codes.id is 'Unique identifier of a code';
-comment on column codes.code_category is 'Category of code: main, secondary, temporary,...';
-comment on column codes.code_prefix is 'Code prefix - entire code if all alpha, begining character part if code is made of characters and numeric parts';
-comment on column codes.code_prefix_separator is 'Separtor used between code core and code prefix';
-comment on column codes.code is 'Numerical part of code - but not forced: if users want to use it as alphanumerical code - possible too';
-comment on column codes.code_suffix is 'For codes made of characters and numerical parts, this field stores the last alpha part of code';
-comment on column codes.code_suffix_separator is 'Separtor used between code core and code suffix';
-comment on column codes.full_code_indexed is 'Full code composition by code_prefix, code and code suffix concatenation and indexed for unique check purpose';
-comment on column codes.code_date is 'Date of code creation (fuzzy date)';
-comment on column codes.code_date_mask is 'Mask used for code date';
-comment on column codes.referenced_relation is 'Reference name of table concerned';
-comment on column codes.record_id is 'Identifier of record concerned';
-
-create table specimen_individuals
-       (
-        id serial,
-        specimen_ref integer not null,
         type varchar not null default 'specimen',
         type_group varchar not null default 'specimen',
         type_search varchar not null default 'specimen',
@@ -1099,45 +1009,16 @@ create table specimen_individuals
         state varchar not null default 'not applicable',
         social_status varchar not null default 'not applicable',
         rock_form varchar not null default 'not applicable',
-        specimen_individuals_count_min integer not null default 1,
-        specimen_individuals_count_max integer not null default 1,
-        with_parts boolean not null default false,
-        ind_ident_ids integer[] not null default '{}',
-        constraint pk_specimen_individuals primary key (id),
-        constraint unq_specimen_individuals unique (specimen_ref, type, sex, stage, state, social_status, rock_form),
-        constraint fk_specimen_individuals_specimens foreign key (specimen_ref) references specimens(id) on delete cascade,
-        constraint chk_chk_specimen_individuals_minmax check (specimen_individuals_count_min <= specimen_individuals_count_max),
-        constraint chk_chk_specimens_individuals_min check (specimen_individuals_count_min >= 0)
-       );
-comment on table specimen_individuals is 'Stores characterized individudals from a specimen batch';
-comment on column specimen_individuals.id is 'Unique identifier of a specimen individual';
-comment on column specimen_individuals.specimen_ref is 'Reference of a specimen batch the individual(s) is/are extracted from';
-comment on column specimen_individuals.type is 'Special status given to individual(s): holotype, paratype,...';
-comment on column specimen_individuals.type_group is 'For some special status, a common appelation is used - ie: topotype and cotype are joined into a common appelation of syntype';
-comment on column specimen_individuals.type_search is 'On the interface, the separation in all special status is not suggested for non official appelations. For instance, an unified grouping name is provided: type for non official appelation,...';
-comment on column specimen_individuals.sex is 'Individual sex: male , female,...';
-comment on column specimen_individuals.stage is 'Individual stage: adult, juvenile,...';
-comment on column specimen_individuals.state is 'Individual state - a sex complement: ovigerous, pregnant,...';
-comment on column specimen_individuals.social_status is 'For social specimens, give the social status/role of individual in colony';
-comment on column specimen_individuals.rock_form is 'For rock specimens/individuals, a descriptive form can be given: polygonous,...';
-comment on column specimen_individuals.specimen_individuals_count_min is 'Minimum number of individuals';
-comment on column specimen_individuals.specimen_individuals_count_max is 'Maximum number of individuals';
-comment on column specimen_individuals.with_parts is 'Flag telling if they are parts for current individual - Triggerly composed';
 
-create table specimen_parts
-       (
-        id serial,
-        parent_ref integer,
-        category varchar not null default 'physical',
-        path varchar not null default '/',
-        specimen_individual_ref integer not null,
+
         specimen_part varchar not null default 'specimen',
         complete boolean not null default true,
         institution_ref integer,
         building varchar,
-        floor varchar,
-        room varchar,
+        floor varchar,        
+        room varchar,        
         row varchar,
+        col varchar,
         shelf varchar,
         container varchar,
         sub_container varchar,
@@ -1147,488 +1028,15 @@ create table specimen_parts
         sub_container_storage varchar not null default 'dry',
         surnumerary boolean not null default false,
         specimen_status varchar not null default 'good state',
+        specimen_count_min integer not null default 1,
+        specimen_count_max integer not null default 1,
         object_name text,
         object_name_indexed text not null default '',
-        specimen_part_count_min integer not null default 1,
-        specimen_part_count_max integer not null default 1,
-        constraint pk_specimen_parts primary key (id),
-        constraint fk_specimen_parts_specimen_individuals foreign key (specimen_individual_ref) references specimen_individuals(id) on delete cascade,
-        constraint fk_specimen_parts_parent_ref foreign key (parent_ref) references specimen_parts(id) on delete cascade,
-        constraint fk_specimen_parts_institutions foreign key (institution_ref) references people(id) ON DELETE no action,
-        constraint chk_chk_specimen_parts_minmax check (specimen_part_count_min <= specimen_part_count_max),
-        constraint chk_chk_specimen_part_min check (specimen_part_count_min >= 0)
-       );
 
-comment on table specimen_parts is 'List of individuals or parts of individuals stored in conservatories';
-comment on column specimen_parts.id is 'Unique identifier of a specimen part/individual';
-comment on column specimen_parts.specimen_individual_ref is 'Reference of corresponding characterized specimen';
-comment on column specimen_parts.specimen_part is 'Description of the part stored in conservatory: the whole specimen or a given precise part such as skelleton, head, fur,...';
-comment on column specimen_parts.building is 'Building the part/individual is stored in';
-comment on column specimen_parts.floor is 'Floor the part/individual is stored in';
-comment on column specimen_parts.room is 'Room the part/individual is stored in';
-comment on column specimen_parts.row is 'Row the part/individual is stored in';
-comment on column specimen_parts.shelf is 'Shelf the part/individual is stored in';
-comment on column specimen_parts.container is 'Container the part/individual is stored in';
-comment on column specimen_parts.sub_container is 'Sub-Container the part/individual is stored in';
-comment on column specimen_parts.container_type is 'Type of container: box, plateau-caisse,...';
-comment on column specimen_parts.sub_container_type is 'Type of sub-container: slide, needle,...';
-comment on column specimen_parts.container_storage is 'Conservative medium used: formol, alcohool, dry,...';
-comment on column specimen_parts.sub_container_storage is 'Conservative medium used: formol, alcohool, dry,...';
-comment on column specimen_parts.surnumerary is 'Tells if this part/individual has been added after first inventory';
-comment on column specimen_parts.specimen_status is 'Specimen status: good state, lost, damaged,...';
-comment on column specimen_parts.specimen_part_count_min is 'Minimum number of parts/individuals';
-comment on column specimen_parts.specimen_part_count_max is 'Maximum number of parts/individuals';
-comment on column specimen_parts.complete is 'Flag telling if part/specimen is complete or not';
-
-create table insurances
-       (
-        id serial,
-        insurance_value numeric(16,2) not null,
-        insurance_currency varchar not null default '€',
-        date_from_mask integer not null default 0,
-        date_from date not null default '01/01/0001',
-        date_to_mask integer not null default 0,
-        date_to date not null default '31/12/2038',
-        insurer_ref integer,
-        contact_ref integer,
-        constraint pk_insurances primary key (id),
-        constraint unq_specimen_parts_insurances unique (referenced_relation, record_id, date_from, date_to, insurer_ref),
-        constraint fk_specimen_parts_insurances_people foreign key (insurer_ref) references people(id) on delete set null,
-        constraint fk_specimen_parts_insurances_contact foreign key (contact_ref) references people(id) on delete set null,
-        constraint chk_chk_specimen_parts_insurances check (insurance_value > 0)
-       )
-       inherits (template_table_record_ref);
-comment on table insurances is 'List of insurances values for given specimen parts/individuals';
-comment on column insurances.referenced_relation is 'Reference-Name of table concerned';
-comment on column insurances.record_id is 'Identifier of record concerned';
-comment on column insurances.insurance_currency is 'Currency used with insurance value';
-comment on column insurances.insurance_value is 'Insurance value';
-comment on column insurances.insurer_ref is 'Reference of the insurance firm an insurance have been subscripted at';
-
-create table specimens_accompanying
-       (
-        id serial,
-        accompanying_type varchar not null default 'biological',
-        specimen_ref integer not null,
-        taxon_ref integer,
-        mineral_ref integer,
-        form varchar not null default 'isolated',
-        quantity numeric(16,2),
-        unit varchar default '%',
-        constraint pk_specimens_accompanying primary key (id),
-        constraint unq_specimens_accompanying unique (specimen_ref, taxon_ref, mineral_ref),
-        constraint fk_specimens_accompanying_specimens foreign key (specimen_ref) references specimens(id) on delete cascade,
-        constraint fk_specimens_accompanying_mineralogy foreign key (mineral_ref) references mineralogy(id),
-        constraint fk_specimens_accompanying_taxonomy foreign key (taxon_ref) references taxonomy(id)
-       );
-comment on table specimens_accompanying is 'List all the objects/specimens accompanying the current specimen';
-comment on column specimens_accompanying.specimen_ref is 'Reference of specimen concerned - id field of specimens table';
-comment on column specimens_accompanying.mineral_ref is 'Reference of accompanying mineral (if it''s an inhert unit accompanying - id field of mineralogy table';
-comment on column specimens_accompanying.accompanying_type is 'Type of accompanying specimen: biological or mineral';
-comment on column specimens_accompanying.quantity is 'Quantity of accompanying specimens';
-comment on column specimens_accompanying.unit is 'Unit used for quantity of accompanying specimen presence';
-comment on column specimens_accompanying.taxon_ref is 'Reference of the accompanying taxon (if it''s a biological unit accompanying) - id field of taxonomy table';
-comment on column specimens_accompanying.form is 'Form of accompanying specimen presence: colony, aggregate, isolated,...';
-
-create table collecting_tools
-       (
-        id serial,
-        tool varchar not null,
-        tool_indexed varchar not null,
-        constraint pk_collecting_tools primary key (id),
-        constraint unq_collecting_tools unique (tool_indexed),
-        constraint chk_collecting_tools_tool check (tool <> '')
-       );
-comment on table collecting_tools is 'List of all available collecting tools';
-comment on column collecting_tools.id is 'Unique identifier of a collecting tool';
-comment on column collecting_tools.tool is 'Tool used';
-comment on column collecting_tools.tool_indexed is 'Indexed form of tool used - for ordering and filtering purposes';
-
-create table specimen_collecting_tools
-  (
-    id serial,
-    specimen_ref integer not null,
-    collecting_tool_ref integer not null,
-    constraint pk_specimen_collecting_tools primary key (id),
-    constraint unq_specimen_collecting_tools unique (specimen_ref, collecting_tool_ref),
-    constraint fk_specimen_collecting_tools_specimen foreign key (specimen_ref) references specimens (id) on delete cascade,
-    constraint fk_specimen_collecting_tools_tool foreign key (collecting_tool_ref) references collecting_tools (id) on delete cascade
-  );
-
-comment on table specimen_collecting_tools is 'Association of collecting tools with specimens';
-comment on column specimen_collecting_tools.id is 'Unique identifier of an association';
-comment on column specimen_collecting_tools.specimen_ref is 'Identifier of a specimen - comes from specimens table (id field)';
-comment on column specimen_collecting_tools.collecting_tool_ref is 'Identifier of a collecting tool - comes from collecting_tools table (id field)';
-
-create table collecting_methods
-       (
-        id serial,
-        method varchar not null,
-        method_indexed varchar not null,
-        constraint pk_collecting_methods primary key (id),
-        constraint unq_collecting_methods unique (method_indexed),
-        constraint chk_collecting_methods_method check (method <> '')
-       );
-comment on table collecting_methods is 'List of all available collecting methods';
-comment on column collecting_methods.id is 'Unique identifier of a collecting method';
-comment on column collecting_methods.method is 'Method used';
-comment on column collecting_methods.method_indexed is 'Indexed form of method used - for ordering and filtering purposes';
-
-create table specimen_collecting_methods
-  (
-    id serial,
-    specimen_ref integer not null,
-    collecting_method_ref integer not null,
-    constraint pk_specimen_collecting_methods primary key (id),
-    constraint unq_specimen_collecting_methods unique (specimen_ref, collecting_method_ref),
-    constraint fk_specimen_collecting_methods_specimen foreign key (specimen_ref) references specimens (id) on delete cascade,
-    constraint fk_specimen_collecting_methods_method foreign key (collecting_method_ref) references collecting_methods (id) on delete cascade
-  );
-
-comment on table specimen_collecting_methods is 'Association of collecting methods with specimens';
-comment on column specimen_collecting_methods.id is 'Unique identifier of an association';
-comment on column specimen_collecting_methods.specimen_ref is 'Identifier of a specimen - comes from specimens table (id field)';
-comment on column specimen_collecting_methods.collecting_method_ref is 'Identifier of a collecting method - comes from collecting_methods table (id field)';
-
-create table preferences
-  (
-    id serial,
-    user_ref integer not null,
-    pref_key varchar not null,
-    pref_value varchar not null,
-    constraint fk_users_preferences foreign key (user_ref) references users(id) on delete cascade
-  );
-
-comment on table preferences is 'Table to handle users preferences';
-comment on column preferences.user_ref is 'The referenced user id';
-comment on column preferences.pref_key is 'The classification key of the preference. eg: color';
-comment on column preferences.pref_value is 'The value of the preference for this user eg: red';
-
-create table flat_dict
-(
-  id serial,
-  referenced_relation varchar not null,
-  dict_field varchar not null,
-  dict_value varchar not null,
-  dict_depend varchar not null default '',
-  constraint unq_flat_dict unique (dict_value, dict_field, referenced_relation, dict_depend),
-  constraint pk_flat_dict primary key (id)
-);
-
-
-comment on table flat_dict is 'Flat table compiling all small distinct values for a faster search like types, code prefixes ,...';
-comment on column flat_dict.referenced_relation is 'The table where the value come from';
-comment on column flat_dict.dict_field is 'the field name of where the value come from';
-comment on column flat_dict.dict_value is 'the distinct value';
-
-create table imports
-  (
-    id serial,
-    user_ref integer not null,
-    format varchar not null,
-    collection_ref integer not null,
-    filename varchar not null,
-    state varchar not null default '',
-    created_at timestamp not null default now(),
-    updated_at timestamp,
-    initial_count integer not null default 0,
-    is_finished boolean  not null default false,
-    constraint pk_import primary key (id) ,
-    constraint fk_imports_collections foreign key (collection_ref) references collections(id) on delete cascade,
-    constraint fk_imports_users foreign key (user_ref) references users(id) on delete cascade
-  );
-
-comment on table imports is 'Table used to check the state of the date coming from an uploaded file';
-comment on column imports.user_ref is 'The referenced user id';
-comment on column imports.format is 'The import template to use for the imported file';
-comment on column imports.filename is 'The filename of the file to proceed';
-comment on column imports.collection_ref is 'The collection associated';
-comment on column imports.state is 'the state of the processing the file';
-comment on column imports.created_at is 'Creation of the file';
-comment on column imports.updated_at is 'When the data has been modified lately';
-comment on column imports.initial_count is 'Number of rows of staging when the import was created';
-comment on column imports.is_finished is 'Boolean to mark if the import is finished or still need some operations';
-
-create table staging
-  (
-    id serial,
-    import_ref integer not null,
-    parent_ref integer,
-    path varchar,
-    level varchar not null,
-    spec_ref integer,
-    category varchar,
-    expedition_ref integer,
-    expedition_name varchar,
-    expedition_from_date date,
-    expedition_from_date_mask integer,
-    expedition_to_date date,
-    expedition_to_date_mask integer,
-    station_visible boolean,
-    gtu_ref integer,
-    gtu_code varchar,
-    gtu_from_date_mask integer,
-    gtu_from_date timestamp,
-    gtu_to_date_mask integer,
-    gtu_to_date timestamp,
-    gtu_latitude float,
-    gtu_longitude float,
-    gtu_lat_long_accuracy float,
-    gtu_elevation float,
-    gtu_elevation_accuracy float,
-    taxon_ref integer,
-    taxon_name varchar,
-    taxon_level_ref integer,
-    taxon_level_name varchar,
-    taxon_status varchar,
-    taxon_extinct boolean,
-    taxon_parents hstore,
-    litho_ref integer,
-    litho_name varchar,
-    litho_level_ref integer,
-    litho_level_name varchar,
-    litho_status varchar,
-    litho_local boolean,
-    litho_color varchar,   
-    litho_parents hstore,
-    chrono_ref integer,
-    chrono_name varchar,
-    chrono_level_ref integer,
-    chrono_level_name varchar,
-    chrono_status varchar,
-    chrono_local boolean,
-    chrono_color varchar,
-    chrono_upper_bound numeric(10,3),
-    chrono_lower_bound numeric(10,3),
-    chrono_parents hstore,
-    lithology_ref integer,
-    lithology_name varchar,
-    lithology_level_ref integer,
-    lithology_level_name varchar,
-    lithology_status varchar,
-    lithology_local boolean,
-    lithology_color varchar,
-    lithology_parents hstore,
-    mineral_ref integer,
-    mineral_name varchar,
-    mineral_level_ref integer,
-    mineral_level_name varchar,
-    mineral_status varchar,
-    mineral_local boolean,
-    mineral_color varchar,
-    mineral_path varchar,
-    mineral_parents hstore,
-    host_taxon_ref integer,
-    host_relationship varchar,
-    host_taxon_name varchar,
-    host_taxon_level_ref integer,
-    host_taxon_level_name varchar,
-    host_taxon_status varchar,
-    host_specimen_ref integer,
-    ig_ref integer,
-    ig_num varchar,
-    ig_date_mask integer,
-    ig_date date,
-    acquisition_category varchar,
-    acquisition_date_mask integer,
-    acquisition_date date,
-    individual_type varchar,
-    individual_sex  varchar,
-    individual_state varchar,
-    individual_stage varchar,
-    individual_social_status varchar,
-    individual_rock_form varchar,
-    individual_count_min integer,
-    individual_count_max integer,
-    part varchar,
-    part_status varchar,
-    institution_ref integer,
-    institution_name varchar,
-    building varchar,
-    floor varchar,
-    room varchar,
-    row varchar,
-    shelf varchar,
-    container_type varchar,
-    container_storage varchar,
-    container varchar,
-    sub_container_type varchar,
-    sub_container_storage varchar,
-    sub_container varchar,
-    part_count_min integer,
-    part_count_max integer,
-    specimen_status varchar,
-    complete boolean,
-    surnumerary boolean,
-    status hstore not null default '',
-    to_import boolean default false,
-    object_name text,
-    constraint pk_staging primary key (id),
-    constraint fk_staging_import foreign key (import_ref) references imports(id) on delete cascade,
-    constraint fk_parent_ref foreign key (parent_ref) references staging(id) on delete cascade,
-    constraint fk_staging_taxonomy foreign key (taxon_ref) references taxonomy(id) on delete set NULL,
-    constraint fk_staging_chronostratigraphy foreign key (chrono_ref) references chronostratigraphy(id) on delete set NULL,
-    constraint fk_staging_lithostratigraphy foreign key (litho_ref) references lithostratigraphy(id) on delete set NULL,
-    constraint fk_staging_lithology foreign key (lithology_ref) references lithology(id) on delete set NULL,
-    constraint fk_staging_mineralogy foreign key (mineral_ref) references mineralogy(id) on delete set NULL
-  );
-
-create table  staging_tag_groups
-       (
-        id serial,
-        staging_ref integer not null,
-        group_name varchar not null,
-        sub_group_name varchar not null,
-        tag_value varchar not null,
-        constraint pk_staging_tag_groups primary key (id)
-       );
-
-comment on table staging_tag_groups is 'List of grouped tags for an imported row (copy of tag group)';
-comment on column staging_tag_groups.id is 'Unique identifier of a grouped tag';
-comment on column staging_tag_groups.staging_ref is 'Ref of an imported line';
-comment on column staging_tag_groups.group_name is 'Group name under which the tag is grouped: Administrative area, Topographic structure,...';
-comment on column staging_tag_groups.sub_group_name is 'Sub-Group name under which the tag is grouped: Country, River, Mountain,...';
-comment on column staging_tag_groups.tag_value is 'Ensemble of Tags';
-
-create table staging_people
-       (
-        id serial,
-        people_type varchar not null default 'author',
-        people_sub_type varchar not null default '',
-        order_by integer not null default 1,
-        people_ref integer,
-        formated_name varchar,
-        constraint pk_staging_people primary key (id),
-        constraint fk_staging_people_list_person foreign key (people_ref) references people(id) on delete cascade
-       )
-inherits (template_table_record_ref);
-comment on table staging_people is 'List of people of staging units';
-comment on column staging_people.id is 'Unique identifier of record';
-comment on column staging_people.referenced_relation is 'Identifier-Name of table the units come from';
-comment on column staging_people.record_id is 'Identifier of record concerned in table concerned';
-comment on column staging_people.people_type is 'Type of "people" associated to the staging unit: authors, collectors, defined,  ...';
-comment on column staging_people.people_sub_type is 'Type of "people" associated to the staging unit: Main author, corrector, taking the sense from,...';
-comment on column staging_people.people_ref is 'Reference of person concerned - id field of people table';
-comment on column staging_people.order_by is 'Integer used to order the persons in a list';
-comment on column staging_people.formated_name is 'full name of the people';
-
-
-create table loans
-    (
-      id serial,
-      name varchar not null default '',
-      description varchar not null default '',
-      search_indexed text not null,
-      from_date date,
-      to_date date,
-      extended_to_date date,
-      constraint pk_loans primary key (id)
-    );
-
-comment on table loans is 'Table holding an entire loan made of multiple loan items may also be linked to other table as comment, properties , ...';
-
-comment on column loans.id is 'Unique identifier of record';
-comment on column loans.name is 'Global name of the loan. May be a sort of code of other naming scheme';
-comment on column loans.description is 'Description of the meaning of the loan';
-comment on column loans.search_indexed is 'indexed getting Description and title of the loan';
-comment on column loans.from_date  is 'Date of the start of the loan';
-comment on column loans.to_date  is 'Planned date of the end of the loan';
-
-create table loan_items (
-  id serial,
-  loan_ref integer not null,
-  ig_ref integer,
-  from_date date,
-  to_date date,
-  part_ref integer,
-  details varchar default '',  
-  constraint pk_loan_items primary key (id),
-  constraint fk_loan_items_ig foreign key (ig_ref) references igs(id),
-  constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
-  constraint fk_loan_items_part_ref foreign key (part_ref) references specimen_parts(id) on delete set null,
-  constraint unq_loan_items unique(loan_ref, part_ref)
-); 
-
-comment on table loan_items is 'Table holding an item of a loan. It may be a part from darwin or only an generic item';
-
-comment on column loan_items.id is 'Unique identifier of record';
-comment on column loan_items.loan_ref is 'Mandatory Reference to a loan';
-comment on column loan_items.from_date is 'Date when the item was sended';
-comment on column loan_items.to_date is 'Date when the item was recieved back';
-comment on column loan_items.ig_ref is 'Optional ref to an IG stored in the igs table';
-comment on column loan_items.part_ref is 'Optional reference to a Darwin Part';
-comment on column loan_items.details is 'Textual details describing the item';
-
-create table loan_rights (
-  id serial,
-  loan_ref integer not null,
-  user_ref integer not null,
-  has_encoding_right boolean not null default false,
-
-  constraint pk_loan_rights primary key (id),
-  constraint fk_loan_rights_loan_ref foreign key (loan_ref) references loans(id) on delete cascade,
-  constraint fk_loan_rights_user_ref foreign key (user_ref) references users(id) on delete cascade,
-  constraint unq_loan_rights unique (loan_ref, user_ref)
-);
-
-
-comment on table loan_rights is 'Table describing rights into an entire loan (if user is in the table he has at least viewing rights)';
-
-comment on column loan_rights.id is 'Unique identifier of record';
-comment on column loan_rights.loan_ref is 'Mandatory Reference to a loan';
-comment on column loan_rights.user_ref is 'Mandatory Reference to a user';
-comment on column loan_rights.has_encoding_right is 'Bool saying if the user can edit a loan';
-
-create table loan_status (
-  id serial,
-  loan_ref integer not null,
-  user_ref integer not null,
-  status varchar not null default 'new',
-  modification_date_time timestamp default now() not null,
-  comment varchar not null default '',
-  is_last boolean not null default true,
-  constraint pk_loan_status primary key (id),
-  constraint fk_loan_status_loan_ref foreign key (loan_ref) references loans(id) on delete cascade,
-  constraint fk_loan_status_user_ref foreign key (user_ref) references users(id) on delete cascade
-
-);
-
-comment on table loan_status is 'Table describing various states of a loan';
-
-comment on column loan_status.id is 'Unique identifier of record';
-comment on column loan_status.loan_ref is 'Mandatory Reference to a loan';
-comment on column loan_status.user_ref is 'Mandatory Reference to a user';
-comment on column loan_status.status is 'Current status of the loan in a list (new, closed, running, ...)';
-comment on column loan_status.modification_date_time is 'date of the modification';
-comment on column loan_status.comment is 'comment of the status modification';
-comment on column loan_status.is_last is 'flag telling which line is the current line';
-
-CREATE TABLE specimens_flat (
-    specimen_ref integer not null,
-
-    category varchar not null,
-    collection_ref integer not null,
-    expedition_ref integer,
-    gtu_ref integer,
-    taxon_ref integer,
-    litho_ref integer,
-    chrono_ref integer,
-    lithology_ref integer,
-    mineral_ref integer,
-    host_taxon_ref integer,
-    host_specimen_ref integer,
-    host_relationship varchar,
-    acquisition_category varchar not null,
-    acquisition_date_mask integer not null,
-    acquisition_date date not null,
-    station_visible boolean not null,
-    ig_ref integer,
 
     spec_ident_ids integer[] not null default '{}',
     spec_coll_ids integer[] not null default '{}',
     spec_don_sel_ids integer[] not null default '{}',
-    with_types boolean  not null default false,
-    with_individuals boolean not null default false,
     collection_type varchar,
     collection_code varchar,
     collection_name varchar,
@@ -1703,24 +1111,610 @@ CREATE TABLE specimens_flat (
     mineral_path varchar,
     mineral_parent_ref integer,
 
-    host_taxon_name varchar,
-    host_taxon_name_indexed varchar,
-    host_taxon_level_ref integer,
-    host_taxon_level_name varchar,
-    host_taxon_status varchar,
-    host_taxon_path varchar,
-    host_taxon_parent_ref integer,
-    host_taxon_extinct boolean,
-
     ig_num varchar,
     ig_num_indexed varchar,
     ig_date_mask integer,
     ig_date date,
-    constraint pk_specimens_flat primary key (specimen_ref),
-    constraint fk_specimens_flat_specimen_ref foreign key (specimen_ref) references specimens(id) on delete cascade
+
+        constraint pk_specimens primary key (id),
+        constraint fk_specimens_expeditions foreign key (expedition_ref) references expeditions(id),
+        constraint fk_specimens_gtu foreign key (gtu_ref) references gtu(id),
+        constraint fk_specimens_collections foreign key (collection_ref) references collections(id),
+        constraint fk_specimens_taxonomy foreign key (taxon_ref) references taxonomy(id),
+        constraint fk_specimens_lithostratigraphy foreign key (litho_ref) references lithostratigraphy(id),
+        constraint fk_specimens_lithology foreign key (lithology_ref) references lithology(id),
+        constraint fk_specimens_mineralogy foreign key (mineral_ref) references mineralogy(id),
+        constraint fk_specimens_chronostratigraphy foreign key (chrono_ref) references chronostratigraphy(id),
+        constraint fk_specimens_igs foreign key (ig_ref) references igs(id),
+
+        constraint fk_specimen_institutions foreign key (institution_ref) references people(id) ON DELETE no action,
+        constraint chk_chk_specimen_parts_minmax check (specimen_count_min <= specimen_count_max),
+        constraint chk_chk_specimen_part_min check (specimen_count_min >= 0)
+       );
+
+
+
+comment on table specimens is 'Specimens or batch of specimens stored in collection';
+comment on column specimens.id is 'Unique identifier of a specimen or batch of specimens';
+comment on column specimens.collection_ref is 'Reference of collection the specimen is grouped under - id field of collections table';
+comment on column specimens.expedition_ref is 'When acquisition category is expedition, contains the reference of the expedition having conducted to the current specimen capture - id field of expeditions table';
+comment on column specimens.gtu_ref is 'Reference of the sampling location the specimen is coming from - id field of gtu table';
+comment on column specimens.litho_ref is 'When encoding a rock, mineral or paleontologic specimen, contains the reference of lithostratigraphic unit the specimen have been found into - id field of lithostratigraphy table';
+comment on column specimens.chrono_ref is 'When encoding a rock, mineral or paleontologic specimen, contains the reference of chronostratigraphic unit the specimen have been found into - id field of chronostratigraphy table';
+comment on column specimens.taxon_ref is 'When encoding a ''living'' specimen, contains the reference of the taxon unit defining the specimen - id field of taxonomy table';
+comment on column specimens.acquisition_category is 'Describe how the specimen was collected: expedition, donation,...';
+comment on column specimens.acquisition_date_mask is 'Mask Flag to know wich part of the date is effectively known: 32 for year, 16 for month and 8 for day';
+comment on column specimens.acquisition_date is 'Date Composed (if possible) of the acquisition';
+comment on column specimens.station_visible is 'Flag telling if the sampling location can be visible or must be hidden for the specimen encoded';
+comment on column specimens.lithology_ref is 'Reference of a rock classification unit associated to the specimen encoded - id field of lithology table';
+comment on column specimens.mineral_ref is 'Reference of a mineral classification unit associated to the specimen encoded - id field of mineralogy table';
+comment on column specimens.ig_ref is 'Reference of ig number this specimen has been associated to';
+comment on column specimens.category is 'Type of specimen encoded: a physical object stored in collections, an observation, a figurate specimen,...';
+
+comment on column specimens.type is 'Special status given to specimen: holotype, paratype,...';
+comment on column specimens.type_group is 'For some special status, a common appelation is used - ie: topotype and cotype are joined into a common appelation of syntype';
+comment on column specimens.type_search is 'On the interface, the separation in all special status is not suggested for non official appelations. For instance, an unified grouping name is provided: type for non official appelation,...';
+comment on column specimens.sex is 'sex: male , female,...';
+comment on column specimens.stage is 'stage: adult, juvenile,...';
+comment on column specimens.state is 'state - a sex complement: ovigerous, pregnant,...';
+comment on column specimens.social_status is 'For social specimens, give the social status/role of the specimen in colony';
+comment on column specimens.rock_form is 'For rock specimens, a descriptive form can be given: polygonous,...';
+
+comment on column specimens.specimen_part is 'Description of the part stored in conservatory: the whole specimen or a given precise part such as skelleton, head, fur,...';
+comment on column specimens.building is 'Building the specimen is stored in';
+comment on column specimens.floor is 'Floor the specimen is stored in';
+comment on column specimens.room is 'Room the specimen is stored in';
+comment on column specimens.row is 'Row the specimen is stored in';
+comment on column specimens.shelf is 'Shelf the specimen is stored in';
+comment on column specimens.container is 'Container the specimen is stored in';
+comment on column specimens.sub_container is 'Sub-Container the specimen is stored in';
+comment on column specimens.container_type is 'Type of container: box, plateau-caisse,...';
+comment on column specimens.sub_container_type is 'Type of sub-container: slide, needle,...';
+comment on column specimens.container_storage is 'Conservative medium used: formol, alcohool, dry,...';
+comment on column specimens.sub_container_storage is 'Conservative medium used: formol, alcohool, dry,...';
+comment on column specimens.surnumerary is 'Tells if this specimen has been added after first inventory';
+comment on column specimens.specimen_status is 'Specimen status: good state, lost, damaged,...';
+comment on column specimens.specimen_count_min is 'Minimum number of specimens';
+comment on column specimens.specimen_count_max is 'Maximum number of specimens';
+comment on column specimens.complete is 'Flag telling if specimen is complete or not';
+
+
+create table codes
+       (
+        id serial,
+        code_category varchar not null default 'main',
+        code_prefix varchar,
+        code_prefix_separator varchar,
+        code varchar,
+        code_suffix varchar,
+        code_suffix_separator varchar,
+        full_code_indexed varchar not null,
+        code_date timestamp not null default '0001-01-01 00:00:00',
+        code_date_mask integer not null default 0,
+        code_num integer default 0,
+        constraint pk_codes primary key (id),
+        constraint unq_codes unique (referenced_relation, record_id, full_code_indexed,code_category)
+       )
+inherits (template_table_record_ref);
+
+comment on table codes is 'Template used to construct the specimen codes tables';
+comment on column codes.id is 'Unique identifier of a code';
+comment on column codes.code_category is 'Category of code: main, secondary, temporary,...';
+comment on column codes.code_prefix is 'Code prefix - entire code if all alpha, begining character part if code is made of characters and numeric parts';
+comment on column codes.code_prefix_separator is 'Separtor used between code core and code prefix';
+comment on column codes.code is 'Numerical part of code - but not forced: if users want to use it as alphanumerical code - possible too';
+comment on column codes.code_suffix is 'For codes made of characters and numerical parts, this field stores the last alpha part of code';
+comment on column codes.code_suffix_separator is 'Separtor used between code core and code suffix';
+comment on column codes.full_code_indexed is 'Full code composition by code_prefix, code and code suffix concatenation and indexed for unique check purpose';
+comment on column codes.code_date is 'Date of code creation (fuzzy date)';
+comment on column codes.code_date_mask is 'Mask used for code date';
+comment on column codes.referenced_relation is 'Reference name of table concerned';
+comment on column codes.record_id is 'Identifier of record concerned';
+
+create table insurances
+       (
+        id serial,
+        insurance_value numeric(16,2) not null,
+        insurance_currency varchar not null default '€',
+        date_from_mask integer not null default 0,
+        date_from date not null default '01/01/0001',
+        date_to_mask integer not null default 0,
+        date_to date not null default '31/12/2038',
+        insurer_ref integer,
+        contact_ref integer,
+        constraint pk_insurances primary key (id),
+        constraint unq_insurances unique (referenced_relation, record_id, date_from, date_to, insurer_ref),
+        constraint fk_insurances_people foreign key (insurer_ref) references people(id) on delete set null,
+        constraint fk_insurances_contact foreign key (contact_ref) references people(id) on delete set null,
+        constraint chk_chk_insurances check (insurance_value > 0)
+       )
+       inherits (template_table_record_ref);
+comment on table insurances is 'List of insurances values for given specimen or the loan';
+comment on column insurances.referenced_relation is 'Reference-Name of table concerned';
+comment on column insurances.record_id is 'Identifier of record concerned';
+comment on column insurances.insurance_currency is 'Currency used with insurance value';
+comment on column insurances.insurance_value is 'Insurance value';
+comment on column insurances.insurer_ref is 'Reference of the insurance firm an insurance have been subscripted at';
+
+create table specimens_relationships
+       (
+        id serial,
+        specimen_ref integer not null,
+        relationship_type varchar not null default 'host',
+        unit_type varchar not null default 'specimens',
+        specimen_related_ref integer,
+        taxon_ref integer,
+        mineral_ref integer,
+
+        institution_ref integer,
+        source_name text,
+        source_id text,
+
+        quantity numeric(16,2),
+        unit varchar default '%',
+        constraint pk_specimens_relationships primary key (id),
+        constraint fk_specimens_relationships_specimens foreign key (specimen_ref) references specimens(id) on delete cascade,
+        constraint fk_specimens_relationships_specimens_related foreign key (specimen_related_ref) references specimens(id) on delete cascade,
+        constraint fk_specimens_relationships_mineralogy foreign key (mineral_ref) references mineralogy(id),
+        constraint fk_specimens_relationships_taxonomy foreign key (taxon_ref) references taxonomy(id),
+        constraint fk_specimens_relationships_institution foreign key (institution_ref) references people(id)
+
+       );
+comment on table specimens_relationships is 'List all the objects/specimens related the current specimen';
+comment on column specimens_relationships.specimen_ref is 'Reference of specimen concerned - id field of specimens table';
+comment on column specimens_relationships.mineral_ref is 'Reference of related mineral';
+comment on column specimens_relationships.taxon_ref is 'Reference of the related taxon ';
+comment on column specimens_relationships.taxon_ref is 'Reference of the related specimen';
+
+comment on column specimens_relationships.relationship_type is 'Type of relationship: host, part of, related to, ...';
+comment on column specimens_relationships.unit_type is 'Type of the related unit : spec, taxo or mineralo';
+comment on column specimens_relationships.quantity is 'Quantity of accompanying mineral';
+comment on column specimens_relationships.institution_ref is 'External Specimen related institution';
+comment on column specimens_relationships.source_name is 'External Specimen related  source DB';
+comment on column specimens_relationships.source_id is 'External Specimen related id in the source';
+
+create table collecting_tools
+       (
+        id serial,
+        tool varchar not null,
+        tool_indexed varchar not null,
+        constraint pk_collecting_tools primary key (id),
+        constraint unq_collecting_tools unique (tool_indexed),
+        constraint chk_collecting_tools_tool check (tool <> '')
+       );
+comment on table collecting_tools is 'List of all available collecting tools';
+comment on column collecting_tools.id is 'Unique identifier of a collecting tool';
+comment on column collecting_tools.tool is 'Tool used';
+comment on column collecting_tools.tool_indexed is 'Indexed form of tool used - for ordering and filtering purposes';
+
+create table specimen_collecting_tools
+  (
+    id serial,
+    specimen_ref integer not null,
+    collecting_tool_ref integer not null,
+    constraint pk_specimen_collecting_tools primary key (id),
+    constraint unq_specimen_collecting_tools unique (specimen_ref, collecting_tool_ref),
+    constraint fk_specimen_collecting_tools_specimen foreign key (specimen_ref) references specimens (id) on delete cascade,
+    constraint fk_specimen_collecting_tools_tool foreign key (collecting_tool_ref) references collecting_tools (id) on delete cascade
+  );
+
+comment on table specimen_collecting_tools is 'Association of collecting tools with specimens';
+comment on column specimen_collecting_tools.id is 'Unique identifier of an association';
+comment on column specimen_collecting_tools.specimen_ref is 'Identifier of a specimen - comes from specimens table (id field)';
+comment on column specimen_collecting_tools.collecting_tool_ref is 'Identifier of a collecting tool - comes from collecting_tools table (id field)';
+
+create table collecting_methods
+       (
+        id serial,
+        method varchar not null,
+        method_indexed varchar not null,
+        constraint pk_collecting_methods primary key (id),
+        constraint unq_collecting_methods unique (method_indexed),
+        constraint chk_collecting_methods_method check (method <> '')
+       );
+comment on table collecting_methods is 'List of all available collecting methods';
+comment on column collecting_methods.id is 'Unique identifier of a collecting method';
+comment on column collecting_methods.method is 'Method used';
+comment on column collecting_methods.method_indexed is 'Indexed form of method used - for ordering and filtering purposes';
+
+create table specimen_collecting_methods
+  (
+    id serial,
+    specimen_ref integer not null,
+    collecting_method_ref integer not null,
+    constraint pk_specimen_collecting_methods primary key (id),
+    constraint unq_specimen_collecting_methods unique (specimen_ref, collecting_method_ref),
+    constraint fk_specimen_collecting_methods_specimen foreign key (specimen_ref) references specimens (id) on delete cascade,
+    constraint fk_specimen_collecting_methods_method foreign key (collecting_method_ref) references collecting_methods (id) on delete cascade
+  );
+
+comment on table specimen_collecting_methods is 'Association of collecting methods with specimens';
+comment on column specimen_collecting_methods.id is 'Unique identifier of an association';
+comment on column specimen_collecting_methods.specimen_ref is 'Identifier of a specimen - comes from specimens table (id field)';
+comment on column specimen_collecting_methods.collecting_method_ref is 'Identifier of a collecting method - comes from collecting_methods table (id field)';
+
+create table preferences
+  (
+    id serial,
+    user_ref integer not null,
+    pref_key varchar not null,
+    pref_value varchar not null,
+    constraint pk_preferences primary key (id),
+    constraint fk_users_preferences foreign key (user_ref) references users(id) on delete cascade
+  );
+
+comment on table preferences is 'Table to handle users preferences';
+comment on column preferences.user_ref is 'The referenced user id';
+comment on column preferences.pref_key is 'The classification key of the preference. eg: color';
+comment on column preferences.pref_value is 'The value of the preference for this user eg: red';
+
+create table flat_dict
+(
+  id serial,
+  referenced_relation varchar not null,
+  dict_field varchar not null,
+  dict_value varchar not null,
+  dict_depend varchar not null default '',
+  constraint unq_flat_dict unique (dict_value, dict_field, referenced_relation, dict_depend),
+  constraint pk_flat_dict primary key (id)
 );
 
-\i maintenance/recreate_flat_view.sql
+
+comment on table flat_dict is 'Flat table compiling all small distinct values for a faster search like types, code prefixes ,...';
+comment on column flat_dict.referenced_relation is 'The table where the value come from';
+comment on column flat_dict.dict_field is 'the field name of where the value come from';
+comment on column flat_dict.dict_value is 'the distinct value';
+
+create table imports
+  (
+    id serial,
+    user_ref integer not null,
+    format varchar not null,
+    collection_ref integer not null,
+    filename varchar not null,
+    state varchar not null default '',
+    created_at timestamp not null default now(),
+    updated_at timestamp,
+    initial_count integer not null default 0,
+    is_finished boolean  not null default false,
+    errors_in_import text,
+    constraint pk_import primary key (id) ,
+    constraint fk_imports_collections foreign key (collection_ref) references collections(id) on delete cascade,
+    constraint fk_imports_users foreign key (user_ref) references users(id) on delete cascade
+  );
+
+comment on table imports is 'Table used to check the state of the date coming from an uploaded file';
+comment on column imports.user_ref is 'The referenced user id';
+comment on column imports.format is 'The import template to use for the imported file';
+comment on column imports.filename is 'The filename of the file to proceed';
+comment on column imports.collection_ref is 'The collection associated';
+comment on column imports.state is 'the state of the processing the file';
+comment on column imports.created_at is 'Creation of the file';
+comment on column imports.updated_at is 'When the data has been modified lately';
+comment on column imports.initial_count is 'Number of rows of staging when the import was created';
+comment on column imports.is_finished is 'Boolean to mark if the import is finished or still need some operations';
+
+create table staging
+  (
+    id serial,
+    import_ref integer not null,
+    create_taxon boolean not null default false,
+    spec_ref integer,
+    category varchar,
+    expedition_ref integer,
+    expedition_name varchar,
+    expedition_from_date date,
+    expedition_from_date_mask integer,
+    expedition_to_date date,
+    expedition_to_date_mask integer,
+    station_visible boolean,
+    gtu_ref integer,
+    gtu_code varchar,
+    gtu_from_date_mask integer,
+    gtu_from_date timestamp,
+    gtu_to_date_mask integer,
+    gtu_to_date timestamp,
+    gtu_latitude float,
+    gtu_longitude float,
+    gtu_lat_long_accuracy float,
+    gtu_elevation float,
+    gtu_elevation_accuracy float,
+    taxon_ref integer,
+    taxon_name varchar,
+    taxon_level_ref integer,
+    taxon_level_name varchar,
+    taxon_status varchar,
+    taxon_extinct boolean,
+    taxon_parents hstore,
+    litho_ref integer,
+    litho_name varchar,
+    litho_level_ref integer,
+    litho_level_name varchar,
+    litho_status varchar,
+    litho_local boolean,
+    litho_color varchar,
+    litho_parents hstore,
+    chrono_ref integer,
+    chrono_name varchar,
+    chrono_level_ref integer,
+    chrono_level_name varchar,
+    chrono_status varchar,
+    chrono_local boolean,
+    chrono_color varchar,
+    chrono_upper_bound numeric(10,3),
+    chrono_lower_bound numeric(10,3),
+    chrono_parents hstore,
+    lithology_ref integer,
+    lithology_name varchar,
+    lithology_level_ref integer,
+    lithology_level_name varchar,
+    lithology_status varchar,
+    lithology_local boolean,
+    lithology_color varchar,
+    lithology_parents hstore,
+    mineral_ref integer,
+    mineral_name varchar,
+    mineral_level_ref integer,
+    mineral_level_name varchar,
+    mineral_status varchar,
+    mineral_local boolean,
+    mineral_color varchar,
+    mineral_path varchar,
+    mineral_parents hstore,
+    mineral_classification varchar,
+    ig_ref integer,
+    ig_num varchar,
+    ig_date_mask integer,
+    ig_date date,
+    acquisition_category varchar,
+    acquisition_date_mask integer,
+    acquisition_date date,
+    individual_type varchar,
+    individual_sex  varchar,
+    individual_state varchar,
+    individual_stage varchar,
+    individual_social_status varchar,
+    individual_rock_form varchar,
+    individual_count_min integer,
+    individual_count_max integer,
+    part varchar,
+    part_status varchar,
+    institution_ref integer,
+    institution_name varchar,
+    building varchar,
+    floor varchar,
+    room varchar,
+    row varchar,
+    col varchar,
+    shelf varchar,
+    container_type varchar,
+    container_storage varchar,
+    container varchar,
+    sub_container_type varchar,
+    sub_container_storage varchar,
+    sub_container varchar,
+    part_count_min integer,
+    part_count_max integer,
+    specimen_status varchar,
+    complete boolean,
+    surnumerary boolean,
+    status hstore not null default '',
+    to_import boolean default false,
+    object_name text,
+    constraint pk_staging primary key (id),
+    constraint fk_staging_import foreign key (import_ref) references imports(id) on delete cascade,
+    constraint fk_staging_taxonomy foreign key (taxon_ref) references taxonomy(id) on delete set NULL,
+    constraint fk_staging_chronostratigraphy foreign key (chrono_ref) references chronostratigraphy(id) on delete set NULL,
+    constraint fk_staging_lithostratigraphy foreign key (litho_ref) references lithostratigraphy(id) on delete set NULL,
+    constraint fk_staging_lithology foreign key (lithology_ref) references lithology(id) on delete set NULL,
+    constraint fk_staging_mineralogy foreign key (mineral_ref) references mineralogy(id) on delete set NULL
+  );
+
+CREATE TABLE staging_info
+(
+  id serial NOT NULL,
+  staging_ref integer NOT NULL,
+  referenced_relation character varying NOT NULL,
+
+  CONSTRAINT pk_staging_info PRIMARY KEY (id),
+  CONSTRAINT fk_staging_ref FOREIGN KEY (staging_ref)
+      REFERENCES staging (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE
+);
+comment on table staging_info is 'used to make association between catalogue informations and staging eg taxon properties';
+comment on column staging_info.id is 'Unique identifier of a grouped tag';
+comment on column staging_info.staging_ref is 'Ref of a staging record';
+comment on column staging_info.referenced_relation is 'catalogue where associating the info' ;
+
+CREATE TABLE staging_relationship
+(
+  id serial NOT NULL,
+  record_id integer NOT NULL,
+  referenced_relation character varying NOT NULL,
+  relationship_type character varying,
+  staging_related_ref integer,
+  taxon_ref integer, -- Reference of the related specimen
+  mineral_ref integer, -- Reference of related mineral
+  institution_ref integer,
+  institution_name text,
+  source_name text,
+  source_id text,
+  quantity numeric(16,2),
+  unit character varying DEFAULT '%'::character varying,
+  unit_type character varying NOT NULL DEFAULT 'specimens'::character varying,
+
+  CONSTRAINT pk_staging_relationship PRIMARY KEY (id),
+  CONSTRAINT fk_record_id FOREIGN KEY (record_id)
+      REFERENCES staging (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT fk_specimens_relationships_mineralogy FOREIGN KEY (mineral_ref)
+      REFERENCES mineralogy (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_specimens_relationships_institution FOREIGN KEY (institution_ref)
+      REFERENCES people (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT fk_specimens_relationships_taxonomy FOREIGN KEY (taxon_ref)
+      REFERENCES taxonomy (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+COMMENT ON COLUMN staging_relationship.record_id IS 'id of the orignial record';
+COMMENT ON COLUMN staging_relationship.referenced_relation IS 'where to find the record_id, referenced_relation is always staging but this field uis mandatory for addRelated php function';
+COMMENT ON COLUMN staging_relationship.relationship_type IS 'relation type (eg. host, parent, part of)';
+COMMENT ON COLUMN staging_relationship.staging_related_ref IS 'the record id associated, this record id must be found in the same import file';
+COMMENT ON COLUMN staging_relationship.taxon_ref IS 'Reference of the related specimen';
+COMMENT ON COLUMN staging_relationship.mineral_ref IS 'Reference of related mineral';
+COMMENT ON COLUMN staging_relationship.institution_ref IS 'the institution id associated to this relationship';
+COMMENT ON COLUMN staging_relationship.institution_name IS 'the institution name associated to this relationship, used to add to darwin institution if it dont exist';
+COMMENT ON COLUMN staging_relationship.source_name IS 'External Specimen related  source DB';
+COMMENT ON COLUMN staging_relationship.source_id IS 'External Specimen related id in the source';
+COMMENT ON COLUMN specimens_relationships.quantity IS 'Quantity of accompanying mineral';
+
+create table staging_collecting_methods
+  (
+    id serial,
+    staging_ref integer not null,
+    collecting_method_ref integer not null,
+    constraint pk_staging_collecting_methods primary key (id),
+    constraint unq_staging_collecting_methods unique (staging_ref, collecting_method_ref),
+    constraint fk_staging_collecting_methods_staging foreign key (staging_ref) references staging (id) on delete cascade,
+    constraint fk_staging_collecting_methods_method foreign key (collecting_method_ref) references collecting_methods (id) on delete cascade
+  );
+
+comment on table staging_collecting_methods is 'Association of collecting methods with Staging';
+comment on column staging_collecting_methods.id is 'Unique identifier of an association';
+comment on column staging_collecting_methods.staging_ref is 'Identifier of a specimen - comes from staging table (id field)';
+comment on column staging_collecting_methods.collecting_method_ref is 'Identifier of a collecting method - comes from collecting_methods table (id field)';
+
+create table  staging_tag_groups
+       (
+        id serial,
+        staging_ref integer not null,
+        group_name varchar not null,
+        sub_group_name varchar not null,
+        tag_value varchar not null,
+        constraint pk_staging_tag_groups primary key (id),
+        CONSTRAINT fk_staging_tag_groups FOREIGN KEY (staging_ref) REFERENCES staging (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE CASCADE
+       );
+
+comment on table staging_tag_groups is 'List of grouped tags for an imported row (copy of tag group)';
+comment on column staging_tag_groups.id is 'Unique identifier of a grouped tag';
+comment on column staging_tag_groups.staging_ref is 'Ref of an imported line';
+comment on column staging_tag_groups.group_name is 'Group name under which the tag is grouped: Administrative area, Topographic structure,...';
+comment on column staging_tag_groups.sub_group_name is 'Sub-Group name under which the tag is grouped: Country, River, Mountain,...';
+comment on column staging_tag_groups.tag_value is 'Ensemble of Tags';
+
+create table staging_people
+       (
+        id serial,
+        people_type varchar not null default 'author',
+        people_sub_type varchar not null default '',
+        order_by integer not null default 1,
+        people_ref integer,
+        formated_name varchar,
+        constraint pk_staging_people primary key (id),
+        constraint fk_staging_people_list_person foreign key (people_ref) references people(id) on delete cascade
+       )
+inherits (template_table_record_ref);
+comment on table staging_people is 'List of people of staging units';
+comment on column staging_people.id is 'Unique identifier of record';
+comment on column staging_people.referenced_relation is 'Identifier-Name of table the units come from';
+comment on column staging_people.record_id is 'Identifier of record concerned in table concerned';
+comment on column staging_people.people_type is 'Type of "people" associated to the staging unit: authors, collectors, defined,  ...';
+comment on column staging_people.people_sub_type is 'Type of "people" associated to the staging unit: Main author, corrector, taking the sense from,...';
+comment on column staging_people.people_ref is 'Reference of person concerned - id field of people table';
+comment on column staging_people.order_by is 'Integer used to order the persons in a list';
+comment on column staging_people.formated_name is 'full name of the people';
+
+
+create table loans
+    (
+      id serial,
+      name varchar not null default '',
+      description varchar not null default '',
+      search_indexed text not null,
+      from_date date,
+      to_date date,
+      extended_to_date date,
+      constraint pk_loans primary key (id)
+    );
+
+comment on table loans is 'Table holding an entire loan made of multiple loan items may also be linked to other table as comment, properties , ...';
+
+comment on column loans.id is 'Unique identifier of record';
+comment on column loans.name is 'Global name of the loan. May be a sort of code of other naming scheme';
+comment on column loans.description is 'Description of the meaning of the loan';
+comment on column loans.search_indexed is 'indexed getting Description and title of the loan';
+comment on column loans.from_date  is 'Date of the start of the loan';
+comment on column loans.to_date  is 'Planned date of the end of the loan';
+
+create table loan_items (
+  id serial,
+  loan_ref integer not null,
+  ig_ref integer,
+  from_date date,
+  to_date date,
+  specimen_ref integer,
+  details varchar default '',
+  constraint pk_loan_items primary key (id),
+  constraint fk_loan_items_ig foreign key (ig_ref) references igs(id),
+  constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
+  constraint fk_loan_items_specimen_ref foreign key (specimen_ref) references specimens(id) on delete set null,
+  constraint unq_loan_items unique(loan_ref, specimen_ref)
+);
+
+comment on table loan_items is 'Table holding an item of a loan. It may be a part from darwin or only an generic item';
+
+comment on column loan_items.id is 'Unique identifier of record';
+comment on column loan_items.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_items.from_date is 'Date when the item was sended';
+comment on column loan_items.to_date is 'Date when the item was recieved back';
+comment on column loan_items.ig_ref is 'Optional ref to an IG stored in the igs table';
+comment on column loan_items.specimen_ref is 'Optional reference to a Darwin Part';
+comment on column loan_items.details is 'Textual details describing the item';
+
+create table loan_rights (
+  id serial,
+  loan_ref integer not null,
+  user_ref integer not null,
+  has_encoding_right boolean not null default false,
+
+  constraint pk_loan_rights primary key (id),
+  constraint fk_loan_rights_loan_ref foreign key (loan_ref) references loans(id) on delete cascade,
+  constraint fk_loan_rights_user_ref foreign key (user_ref) references users(id) on delete cascade,
+  constraint unq_loan_rights unique (loan_ref, user_ref)
+);
+
+
+comment on table loan_rights is 'Table describing rights into an entire loan (if user is in the table he has at least viewing rights)';
+
+comment on column loan_rights.id is 'Unique identifier of record';
+comment on column loan_rights.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_rights.user_ref is 'Mandatory Reference to a user';
+comment on column loan_rights.has_encoding_right is 'Bool saying if the user can edit a loan';
+
+create table loan_status (
+  id serial,
+  loan_ref integer not null,
+  user_ref integer not null,
+  status varchar not null default 'new',
+  modification_date_time timestamp default now() not null,
+  comment varchar not null default '',
+  is_last boolean not null default true,
+  constraint pk_loan_status primary key (id),
+  constraint fk_loan_status_loan_ref foreign key (loan_ref) references loans(id) on delete cascade,
+  constraint fk_loan_status_user_ref foreign key (user_ref) references users(id) on delete cascade
+
+);
+
+comment on table loan_status is 'Table describing various states of a loan';
+
+comment on column loan_status.id is 'Unique identifier of record';
+comment on column loan_status.loan_ref is 'Mandatory Reference to a loan';
+comment on column loan_status.user_ref is 'Mandatory Reference to a user';
+comment on column loan_status.status is 'Current status of the loan in a list (new, closed, running, ...)';
+comment on column loan_status.modification_date_time is 'date of the modification';
+comment on column loan_status.comment is 'comment of the status modification';
+comment on column loan_status.is_last is 'flag telling which line is the current line';
 
 create table loan_history (
   id serial,
@@ -1758,7 +1752,6 @@ CREATE TABLE bibliography (
   year integer,
   constraint pk_bibliography primary key (id),
   constraint unq_bibliography unique (title_indexed, type, year)
-
 );
 comment on table bibliography is 'List of expeditions made to collect specimens';
 comment on column bibliography.id is 'Unique identifier';
@@ -1790,7 +1783,7 @@ comment on column catalogue_bibliography.bibliography_ref is 'Reference of the b
 create table db_version (
  id integer not null,
  update_at timestamp default now()
- 
+
 );
 
 comment on table db_version is 'Table holding the database version and update date';

@@ -35,13 +35,9 @@ class myUser extends sfBasicSecurityUser
    * Fetch the visible columns in the search
    * @return array an array of visible fields
    */
-  public function fetchVisibleCols($source)
+  public function fetchVisibleCols()
   {
-    if($source=='specimen')
-      return explode('|',Doctrine::getTable('Preferences')->getPreference($this->getId(),'search_cols_specimen',true));
-    if($source=='individual')
-      return explode('|',Doctrine::getTable('Preferences')->getPreference($this->getId(),'search_cols_individual',true));
-    return explode('|',Doctrine::getTable('Preferences')->getPreference($this->getId(),'search_cols_part',true));
+    return explode('|',Doctrine::getTable('Preferences')->getPreference($this->getId(),'search_cols_specimen',true));
   }
 
 
@@ -78,7 +74,6 @@ class myUser extends sfBasicSecurityUser
       $pins[] = $id;
     $pins = array_unique($pins);
     $this->setAttribute('spec_pinned_'.$source,$pins);
-    
   }
 
   public function getAllPinned($source)
@@ -86,7 +81,7 @@ class myUser extends sfBasicSecurityUser
     return $this->getAttribute('spec_pinned_'.$source,array());
   }
   
-  public function isPinned($id,$source)
+  public function isPinned($id, $source)
   {
     $pins = $this->getAttribute('spec_pinned_'.$source, array());
     return (array_search($id, $pins) === false) ? false : true;

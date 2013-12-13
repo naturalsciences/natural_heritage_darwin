@@ -75,7 +75,7 @@ class accountActions extends DarwinActions
   public function executeLogout(sfWebRequest $request)
   {
     $referer = $this->getRequest()->getReferer();
-    $this->getUser()->getAttributeHolder()->clear();  
+    $this->getUser()->getAttributeHolder()->clear();
     $this->getUser()->clearCredentials();
     $this->getUser()->setAuthenticated(false);
     if(!$referer)
@@ -94,21 +94,21 @@ class accountActions extends DarwinActions
       {
         try
         {
-          $user = Doctrine::getTable('Users')->getUserByLoginAndEMail($this->form->getValue('user_name'), 
-                                                                      $this->form->getValue('user_email')
-                                                                    );
+          $user = Doctrine::getTable('Users')->getUserByLoginAndEMail(
+            $this->form->getValue('user_name'),
+            $this->form->getValue('user_email')
+          );
 
-          if(! $user)
-          {
-            $user = Doctrine::getTable('Users')->getUserByLoginOnly($this->form->getValue('user_name'));
+          if(! $user) {
+            $user = Doctrine::getTable('Users')->getUserByLoginWithEmailOnly($this->form->getValue('user_name'));
           }
 
-	  $this->getUser()->setCulture($user->getSelectedLang());
+          $this->getUser()->setCulture($user->getSelectedLang());
 
           $renewHash = sha1(sfConfig::get('dw_salt').$user->UsersLoginInfos[0]->getUserName().mt_rand());
           $user->UsersLoginInfos[0]->setRenewHash($renewHash);
           $user->UsersLoginInfos[0]->save();
-          
+
           $userParams['user_id'] = $user->getId();
           $userParams['hash'] = $user->UsersLoginInfos[0]->getRenewHash();
           $userParams['name'] = $user->getFormatedName();
@@ -118,14 +118,13 @@ class accountActions extends DarwinActions
 
           // send an email to the registered user
           $this->sendPwdRenewMail($userParams);
-          
-          $this->redirect('account/pwdRenewMail?'.http_build_query(array('name'=>$userParams['name'],
-                                                                         'physical'=>$userParams['physical'],
-                                                                         'title'=>$userParams['title']
-                                                                        )
-                                                                  )
-                         );
-          
+
+          $this->redirect('account/pwdRenewMail?'.http_build_query(array(
+            'name'=>$userParams['name'],
+            'physical'=>$userParams['physical'],
+            'title'=>$userParams['title']
+            ))
+          );
         }
         catch(Doctrine_Exception $ne)
         {
@@ -139,10 +138,11 @@ class accountActions extends DarwinActions
 
   public function executePwdRenewMail(sfWebRequest $request)
   {
-    $this->params = array('physical'=> $request->getParameter('physical', 'physical'),
-                          'name' => $request->getParameter('name', ''),
-                          'title' => $request->getParameter('title', '')
-                         );
+    $this->params = array(
+      'physical'=> $request->getParameter('physical', 'physical'),
+      'name' => $request->getParameter('name', ''),
+      'title' => $request->getParameter('title', '')
+    );
   }
 
   public function executeRenewPwd(sfWebRequest $request)

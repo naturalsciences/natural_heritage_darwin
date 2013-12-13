@@ -30,13 +30,45 @@ class LoginForm extends BaseForm
   {
     if(! empty($values['username']) )
     {
-        $this->user = Doctrine::getTable('Users')->getUserByPassword($values['username'], $values['password']);
-        if (! $this->user)
-        {
-            $error = new sfValidatorError($validator, 'Bad login or password');
-            // throw an error bound to the password field
-            throw new sfValidatorErrorSchema($validator, array('global' => $error));
+      $this->user = Doctrine::getTable('Users')->getUserByPassword($values['username'], $values['password']);
+      if($this->user) {
+        return $values;
+      }
+      elseif(sfConfig::get('app_ldap_ldap_enabled', false) == true) {
+        $ldap = new ldapAuth();
+        if( $result = $ldap->authenticate($values['username'], $values['password'])) {
+          $this->user = Doctrine::getTable('Users')->getUserByLogin($values['username'], 'ldap');
+          //We don't know the user yet but be is known on the LDAP
+          if( !$this->user) {
+
+            $name_attr = sfConfig::get('app_ldap_attr_displayname', 'displayName');
+            $mail_attr = sfConfig::get('app_ldap_attr_mail', 'mail');
+
+            $infos = $ldap->getAttributes($values['username'], array($name_attr, $mail_attr ));
+            $this->user = new Users();
+            $this->user->setDbUserType( Users::REGISTERED_USER);
+             $this->user->setFamilyName('');
+            if($name_attr)
+              $this->user->setGivenName(isset($infos[$name_attr]) ? $infos[$name_attr]: '-');
+
+            $this->user->UsersLoginInfos[0]->setUserName($values['username']);
+            $this->user->UsersLoginInfos[0]->setLoginType('ldap');
+            if($mail_attr && isset($infos[$mail_attr])) {
+              $this->user->UsersComm[0]->setCommType('e-mail');
+              $this->user->UsersComm[0]->setEntry($infos[$mail_attr]);
+            }
+            $this->user->save();
+            $this->user->addUserWidgets();
+          }
         }
+      }
+
+      if (! $this->user)
+      {
+          $error = new sfValidatorError($validator, 'Bad login or password');
+          // throw an error bound to the password field
+          throw new sfValidatorErrorSchema($validator, array('global' => $error));
+      }
     }
     return $values;
   }

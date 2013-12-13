@@ -73,7 +73,7 @@ function fetchElevation(lonlat) {
     type: "GET",
     dataType: 'JSONP',
     key: 'Fmjtd%7Cluub2durn1%2Cbx%3Do5-9u2x14',
-    url: 'http://open.mapquestapi.com/elevation/v1/profile',
+    url: 'https://open.mapquestapi.com/elevation/v1/profile',
     data : {inFormat:'kvp', outFormat: 'json', latLngCollection: lonlat.lat+','+lonlat.lng, unit:'m', shapeFormat: 'raw'},
     success: function(data){
       if(data.elevationProfile[0])

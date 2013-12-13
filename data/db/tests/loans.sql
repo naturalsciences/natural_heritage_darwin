@@ -32,24 +32,22 @@ INSERT INTO igs(id, ig_num) VALUES (1458, '11');
 INSERT INTO igs(id, ig_num) VALUES (1459, '12');
 
 INSERT INTO specimens (id, collection_ref, ig_ref) VALUES (1,1, 1458);
-INSERT INTO specimen_individuals (id, specimen_ref, type) VALUES (1,1,'holotype');
-INSERT INTO specimen_parts (id, specimen_individual_ref, specimen_part) VALUES (1, 1, 'head');
 
 
-insert into  loan_items (id, loan_ref, part_ref, ig_ref)
+insert into  loan_items (id, loan_ref, specimen_ref, ig_ref)
   VALUES (1, 2 , 1, 1458);
 
 UPDATE specimens set ig_ref = 1459 where id = 1;
 SELECT is(1459, (select ig_ref from loan_items where id = 1), 'ig was changed');
 
 
-SELECT throws_ok('DELETE FROM specimen_parts WHERE ID = 1');
+SELECT throws_ok('DELETE FROM specimens WHERE ID = 1');
 
 INSERT INTO loan_status
       (loan_ref, user_ref, status, modification_date_time, comment, is_last)
       VALUES (2, 1, 'closed', now(), 'test', true);
 
-SELECT lives_ok('DELETE FROM specimen_parts WHERE ID = 1');
+SELECT lives_ok('DELETE FROM specimens WHERE ID = 1');
 
 SELECT * FROM finish();
 ROLLBACK;

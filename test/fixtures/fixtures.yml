@@ -257,7 +257,6 @@ Collections:
         code_prefix_separator: "-"
         code_suffix: Neo
         code_suffix_separator: "-"
-        code_part_code_auto_copy: true
     c2:
         code: vert
         name: Vertebrates
@@ -284,7 +283,12 @@ Collections:
         name: Fossile Aves
         Institution: p1
         Manager: u1
-        Parent: c4                            
+        Parent: c4
+    c6:
+        code: imp
+        name: Import collection
+        Institution: p1
+        Manager: u1
 
 CollectingMethods:
     cm1:
@@ -319,17 +323,12 @@ Specimens:
         acquisition_date: '2001-02-01'
         acquisition_category: expedition
         Taxonomy: ta3
-        HostSpecimen: sp1
-        HostTaxon: ta1
         Gtu: gtu2
     sp4:
         id: 4
         Collections : c3        
         acquisition_date: '2009-02-24'
         acquisition_category: expedition
-        HostSpecimen: sp2
-        HostTaxon: ta2
-        host_relationship: Symbiosis
         Taxonomy: ta5
 
 Loans:
@@ -598,70 +597,32 @@ Identifications:
         order_by: 2
 
 
-CatalogueProperties:
+Properties:
     cprop1:
         referenced_relation: taxonomy
         record_id: 4
         property_type: protection status
-        property_sub_type: bxl
         property_unit: ''
-        property_accuracy_unit: ''
     cprop2:
         referenced_relation: taxonomy
         record_id: 4
         property_type: physical measurement
-        property_sub_type: length
-        property_qualifier: beak length
+        applies_to: beak length
         date_from_mask: 56
         date_from: '1932-12-24 23:32:11'
         date_to_mask: 0
         date_to: '0001-01-01 0:0:0'
         property_unit: cm
-        property_accuracy_unit: mm
-    cprop3:
-        referenced_relation: specimens
-        record_id: 1
-        property_type: protection status
-        property_sub_type: top
-        property_unit: ''
-        property_accuracy_unit: ''
-    cprop4:
-        referenced_relation: specimens
-        record_id: 1
-        property_type: physical measurement
-        property_sub_type: length
-        property_unit: mm
-        property_accuracy_unit: mm
-
-PropertiesValues:
-    prop1val1:
-        CatalogueProperties: cprop1
-        property_value: 1
-
-    prop2val1:
-        CatalogueProperties: cprop2
-        property_value: 12
-        property_accuracy: 1.5
-
-    prop2val2:
-        CatalogueProperties: cprop2
-        property_value: 8
-        property_accuracy: 1.5
-
-    prop3val1:
-        CatalogueProperties: cprop3
-        property_value: 18
-        property_accuracy: 15  
-
-    prop3val2:
-        CatalogueProperties: cprop4
-        property_value: 120
-        property_accuracy: 45    
-
-    prop3val3:
-        CatalogueProperties: cprop4
-        property_value: 1900
-        property_accuracy: 1                    
+#     cprop3:
+#         referenced_relation: specimens
+#         record_id: 4
+#         property_type: protection status
+#         property_unit: ''
+#     cprop4:
+#         referenced_relation: specimens
+#         record_id: 4
+#         property_type: physical measurement
+#         property_unit: mm
 
 Comments:
     comment1:
@@ -987,10 +948,6 @@ TagGroups:
         sub_group_name:  mountain
         tag_value: Big White Mountain; Brussels
 
-SpecimenIndividuals:
-    spi1:
-        Specimens: sp4
-
 InformativeWorkflow:
     iw1:
         referenced_relation: taxonomy
@@ -1007,3 +964,78 @@ CollectionMaintenance:
         description: test de workflow pour les tests
         People: p1
         action_observation: observation
+        
+Imports:
+    imp1:
+        id: 1
+        Users: u1
+        format : abcd
+        Collections: c6
+        filename : test.xml
+        initial_count: 3
+        state : pending
+
+Staging:
+    stg1:
+        id: 1
+        Import: imp1
+        taxon_name: Cacaleluya
+        taxon_level_name: class
+        status : <?php echo json_encode(array('taxon'=>'not_found'));?>
+        
+    stg2:
+        id: 2
+        Import: imp1
+        building: Vestel
+        status : <?php echo json_encode(array('people'=>'not_found'));?>
+        
+    stg3:
+        id: 3
+        Import: imp1
+        taxon_name: Cacaleluya
+        taxon_level_name: class
+        status : <?php echo json_encode(array('taxon'=>'not_found'));?>
+
+StagingPeople:
+    stgp1:
+        id: 1
+        record_id: 2
+        referenced_relation: staging
+        formated_name: Poilux
+        people_type: collector
+
+StagingInfo:
+    stgi1:
+        id: 1
+        Staging: stg1
+        referenced_relation: taxonomy
+
+ExtLinks:
+    extl1:
+      id: 1
+      referenced_relation: staging_info
+      record_id: 1
+      url: http://darwin.naturalsciences.be/taxonomy/view/id/95862
+      comment: link to an awesome taxon
+
+StagingTagGroups:
+    stgtg1:
+      id: 1
+      Staging: stg2
+      group_name: administrative area
+      sub_group_name: country
+      tag_value: France
+
+StagingMethods:
+    stgm11:
+      id: 1
+      Staging: stg1
+      CollectingMethods: cm1
+      
+StagingRelationship:
+    stgrl:
+      id: 1
+      referenced_relation: staging
+      record_id: 3
+      relationship_type: part of
+      staging_related_ref: 2

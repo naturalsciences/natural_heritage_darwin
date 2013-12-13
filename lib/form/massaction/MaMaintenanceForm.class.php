@@ -15,9 +15,9 @@ class MaMaintenanceForm extends BaseCollectionMaintenanceForm
 
     $this->widgetSchema['modification_date_time'] = new widgetFormJQueryFuzzyDate(
       array(
-        'culture'=> $this->getCurrentCulture(), 
-        'image'=>'/images/calendar.gif', 
-        'format' => '%day%/%month%/%year%', 
+        'culture'=> $this->getCurrentCulture(),
+        'image'=>'/images/calendar.gif',
+        'format' => '%day%/%month%/%year%',
         'years' => $years,
         'with_time' => true
       ),
@@ -36,13 +36,13 @@ class MaMaintenanceForm extends BaseCollectionMaintenanceForm
       array('invalid' => 'Invalid date "from"')
     );
 
-    $this->widgetSchema['people_ref'] = new widgetFormButtonRef(
-      array(
-        'model' => 'People',
-        'method' => 'getFormatedName',
-        'link_url' => 'people/choose?with_js=1',
-        'nullable' => false,
-        'box_title' => $this->getI18N()->__('Choose Yourself'),
+    $this->widgetSchema['people_ref'] = new widgetFormCompleteButtonRef(array(
+      'model' => 'People',
+      'method' => 'getFormatedName',
+      'link_url' => 'people/choose?with_js=1',
+      'nullable' => false,
+      'box_title' => $this->getI18N()->__('Choose Yourself'),
+      'complete_url' => 'catalogue/completeName?table=people',
     ));
 
     $this->widgetSchema['parts_ids'] = new sfWidgetFormInputHidden();
@@ -52,15 +52,14 @@ class MaMaintenanceForm extends BaseCollectionMaintenanceForm
     $this->widgetSchema['category']->setLabel('Type');
     $this->validatorSchema['category'] = new sfValidatorString(array('required' => false));
 
-    $this->widgetSchema['action_observation'] = new widgetFormSelectComplete(
-      array(
-        'model' => 'CollectionMaintenance',
-        'table_method' => 'getDistinctActions',
-        'method' => 'getAction',
-        'key_method' => 'getAction',
-        'add_empty' => false,
-        'change_label' => 'Pick an action in the list',
-        'add_label' => 'Add another action',
+    $this->widgetSchema['action_observation'] = new widgetFormSelectComplete(array(
+      'model' => 'CollectionMaintenance',
+      'table_method' => 'getDistinctActions',
+      'method' => 'getAction',
+      'key_method' => 'getAction',
+      'add_empty' => false,
+      'change_label' => 'Pick an action in the list',
+      'add_label' => 'Add another action',
     ));
     $this->validatorSchema['action_observation'] = new sfValidatorString();
     $this->widgetSchema['action_observation']->setLabel('Maintenance Achieved');
@@ -68,8 +67,8 @@ class MaMaintenanceForm extends BaseCollectionMaintenanceForm
 
   public function doMassAction($user_id, $items, $values)
   {
-    $query = Doctrine_Query::create()->select('id')->from('SpecimenParts s');
-    $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$items),'part_ref', $user_id));
+    $query = Doctrine_Query::create()->select('id')->from('Specimens s');
+    $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$items),'spec_ref', $user_id));
     $results = $query->execute();
 
     foreach($results as $result)
@@ -77,7 +76,7 @@ class MaMaintenanceForm extends BaseCollectionMaintenanceForm
       $maintenance = new CollectionMaintenance();
       $maintenance->fromArray($values);
       $maintenance->setRecordId($result->getId());
-      $maintenance->setReferencedRelation("specimen_parts");
+      $maintenance->setReferencedRelation("specimens");
       $maintenance->save();
     }
   }

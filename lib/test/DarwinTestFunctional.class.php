@@ -42,7 +42,10 @@ class DarwinTestFunctional extends sfTestFunctional
     $conn->exec("SELECT setval('loan_status_id_seq',100)");
     $conn->exec("SELECT nextval('loan_rights_id_seq')");
     $conn->exec("SELECT setval('loan_rights_id_seq',100)");
-
+    
+    $conn->exec("SELECT nextval('imports_id_seq')");
+    $conn->exec("SELECT setval('imports_id_seq',100)");
+    
     $conn->exec("TRUNCATE TABLE specimens CASCADE");
     $conn->exec("TRUNCATE TABLE insurances CASCADE");
     $conn->exec("TRUNCATE TABLE flat_dict CASCADE");
@@ -200,69 +203,61 @@ class DarwinTestFunctional extends sfTestFunctional
 
   public function addCustomSpecimen()
   {
-  $this->setTester('doctrine', 'sfTesterDoctrine');
-	$collections = Doctrine::getTable('Collections')->findAll();
-	$collection_id = $collections[rand(0,count($collections)-1)]->getId(); 
-	$collector_1 = $this->addCustomPeople() ;
-  $collector_2 = $this->addCustomPeople() ;
-	$taxonomy = Doctrine::getTable('Taxonomy')->getRealTaxon();
-	$taxon_id = $taxonomy[rand(0,count($taxonomy)-1)]->getId();	 		  
-  	$this->
-  	  info('** add a custom specimen **')->
-  	  get('specimen/new')->
-  	  with('response')->begin()->     
-  	  click('#submit_spec_f1', array('specimen' => array(
-  	  	  'collection_ref' => $collection_id,
-  	  	  'taxon_ref' => $taxon_id,
-                  'Codes_holder' => 1,
-                  'Collectors_holder' => 1,
-                  'Comments_holder'=>1,
-                  'SpecimensAccompanying_holder' => 1,
-                  'ident' => 1,
-  	  	  'newCodes' => array(
-                    0 => array('code_category' => 'secondary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 'code_suffix' => 'ary','code_suffix_separator' => '/'),
-                    1 => array('code_category' => 'main','code_prefix' => 'mn', 'code_prefix_separator' => '/','code' => '112', 'code_suffix' => 'nn','code_suffix_separator' => '/')
+    $this->setTester('doctrine', 'sfTesterDoctrine');
+    $collections = Doctrine::getTable('Collections')->findAll();
+    $collection_id = $collections[rand(0,count($collections)-1)]->getId(); 
+    $collector_1 = $this->addCustomPeople() ;
+    $collector_2 = $this->addCustomPeople() ;
+    $taxonomy = Doctrine::getTable('Taxonomy')->getRealTaxon();
+    $taxon_id = $taxonomy[rand(0,count($taxonomy)-1)]->getId();	 		  
+    $this->
+      info('** add a custom specimen **')->
+      get('specimen/new')->
+      with('response')->begin()->
+      click('#submit_spec_f1', array('specimen' => array(
+              'collection_ref' => $collection_id,
+              'taxon_ref' => $taxon_id,
+              'Codes_holder' => 1,
+              'Collectors_holder' => 1,
+              'Comments_holder'=>1,
+              'ident' => 1,
+              'newCodes' => array(
+                0 => array('code_category' => 'secondary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 'code_suffix' => 'ary','code_suffix_separator' => '/'),
+                1 => array('code_category' => 'main','code_prefix' => 'mn', 'code_prefix_separator' => '/','code' => '112', 'code_suffix' => 'nn','code_suffix_separator' => '/')
+              ),
+              'newCollectors' => array(
+                  0 => array('people_ref' => $collector_1, 'referenced_relation' => 'specimens', 'order_by' => 1, 'people_type' => 'collector'),
+                  1 => array('people_ref' => $collector_2, 'referenced_relation' => 'specimens', 'order_by' => 2, 'people_type' => 'collector')
+                  ), 			
+            'newComments' => array(
+                  0 => array('notion_concerned' => 'collectors', 'comment' => 'Test comment for a collector')
                   ),
-  	  	  'newCollectors' => array(
-	              0 => array('people_ref' => $collector_1, 'referenced_relation' => 'specimens', 'order_by' => 1, 'people_type' => 'collector'),
-	              1 => array('people_ref' => $collector_2, 'referenced_relation' => 'specimens', 'order_by' => 2, 'people_type' => 'collector')
-	              ), 			
-	        'newComments' => array(
-	              0 => array('notion_concerned' => 'collectors', 'comment' => 'Test comment for a collector')
-	              ),
-  	  	  'newIdentification' => array(
-  	  	  			0 => array('notion_date' => array('day' => 10, 'month' => 02,'year' => 1945),
-  	  	  					 'notion_concerned' => 'taxonomy',
-  	  	  					 'value_defined' => 'tst val ind',
-                                                         'determination_status'=> '',
-                                                         'referenced_relation' => 'specimens',
-                                                         'order_by' => '1',
-  	  	  					 'newIdentifier' => array(
-	                          0 => array('people_ref' => $collector_1, 'referenced_relation' => 'identifications', 'order_by' => 1, 'people_type' => 'identifier'),
-            	              1 => array('people_ref' => $collector_2, 'referenced_relation' => 'identifications', 'order_by' => 2, 'people_type' => 'identifier')
-	              ))),
-	         'newSpecimensAccompanying' => array(
-	              0 => array('accompanying_type' => 'biological',
-	                    'form' => 'Test form',
-	                    'quantity' => 12,
-	                    'unit' => '%',
-	                    'taxon_ref' => $taxon_id
-  	  	  					)),
-		  'acquisition_category' => 'mission',
-		  'acquisition_date' => array('day' => 01, 'month' => 06, 'year' => 1984)
-  	       )))->
-      end()->
-      with('form')->begin()->
-        hasErrors(0)->
-      end()->
-      with('doctrine')->begin()-> 
-        check('Specimens', array(
-          'collection_ref' => $collection_id,
-          'taxon_ref' => $taxon_id,
-          'acquisition_category' => 'mission'
-          ))->
-      end(); 
-	  return ($this) ;
+              'newIdentification' => array(
+                                    0 => array('notion_date' => array('day' => 10, 'month' => 02,'year' => 1945),
+                                                      'notion_concerned' => 'taxonomy',
+                                                      'value_defined' => 'tst val ind',
+                                                      'determination_status'=> '',
+                                                      'referenced_relation' => 'specimens',
+                                                      'order_by' => '1',
+                                                      'newIdentifier' => array(
+                              0 => array('people_ref' => $collector_1, 'referenced_relation' => 'identifications', 'order_by' => 1, 'people_type' => 'identifier'),
+                          1 => array('people_ref' => $collector_2, 'referenced_relation' => 'identifications', 'order_by' => 2, 'people_type' => 'identifier')
+                  ))),
+              'acquisition_category' => 'mission',
+              'acquisition_date' => array('day' => 01, 'month' => 06, 'year' => 1984)
+            )))->
+    end()->
+    with('form')->begin()->
+    hasErrors(0)->
+    end()->
+    with('doctrine')->begin()-> 
+    check('Specimens', array(
+      'collection_ref' => $collection_id,
+      'taxon_ref' => $taxon_id,
+      'acquisition_category' => 'mission'
+      ))->
+    end(); 
+      return ($this) ;
   }  
 
   public function addCustomPeople($name = '')
@@ -280,82 +275,4 @@ class DarwinTestFunctional extends sfTestFunctional
 	  end();   
 	return (Doctrine::getTable("People")->findOneByFamilyName($name)->getId()) ;
   }
-  
-  public function addCustomIndividual($specimen_id)
-  {
-     $this->setTester('doctrine', 'sfTesterDoctrine');
-	   $indiv_id = $this->addCustomPeople() ;     
-     $this->
-     	info('** add a custom Individual **')->
-     	get('individuals/edit/spec_id/'.$specimen_id)->
-     	with('response')->begin()->
-        isStatusCode(200)->
-     	click('#submit_spec_individual_f1', array('specimen_individuals' => array(
-                          'Comments_holder'=>1,
-     	                  'newComments' => array(0 => array(
-                            'notion_concerned'=> 'stage',
-                            'comment' => 'stage of individual')
-                          ),
-                          'newIdentification' => array(0 => array(
-                            'referenced_relation'=>'specimen_individuals',
-                            'notion_date' => array('day' => 01, 'month' => 02,'year' => 1830),
-                            'notion_concerned' => 'rock_form',
-                            'order_by' => 1,
-                            'value_defined' => 'identifier for individual',
-                            'newIdentifier' => array(0 => array(
-                              'people_ref' => $indiv_id,
-                              'referenced_relation' => 'identifications',
-                              'order_by' => 1,
-                              'people_type' => 'identifier'
-                            )
-                          )
-                      )
-                    ),
-        )))->
-    end();
-    return(Doctrine::getTable('SpecimenIndividuals')->findOneBySpecimenRef($specimen_id)->getId()) ;
-  }
-  
-  public function addCustomPart($individual_id)
-  {
-    $institution = Doctrine::getTable('People')->getPeopleByName('Institut Royal des Sciences Naturelles de Belgique')->getId();
-    $this->setTester('doctrine', 'sfTesterDoctrine');
-    $this->
-      info('** add a custom Individual for Part **')->
-      get('parts/edit/indid/'.$individual_id)->
-      with('response')->begin()->
-        isStatusCode(200)->
-        click('#submit_spec_f1', array(
-          'specimen_parts' => array(
-            'container' => 'Test for parts',
-            'Codes_holder'=>1,
-            'Comments_holder'=>1,
-            'Insurances_holder'=>1,
-            'surnumerary' => true,
-            'sub_container' => 'Sub test for parts',
-            'newInsurances' => array(
-              0 => array(
-                'insurance_value' => 666,
-                'insurance_currency' => '€',
-                'insurer_ref' => $institution))	,
-            'newComments' => array(
-              0 => array(
-                'notion_concerned' =>'container',
-                'comment' => 'part preparation')),
-            'newCodes' => array(
-              0 => array(
-                'code_category' => 'temporary','code_prefix' => 'sec', 'code_prefix_separator' => '/','code' => '987', 
-                'code_suffix' => 'ary', 'code_suffix_separator' => '/'))
-        )))->
-      end()->
-      with('form')->begin()->
-        hasErrors(0)->
-      end()->
-      with('doctrine')->begin()->
-      check('SpecimenParts', array(
-        'specimen_individual_ref' => $individual_id,
-        'container' => 'Test for parts',
-        'sub_container' => 'Sub test for parts'))->
-      end();
-  } 
 }

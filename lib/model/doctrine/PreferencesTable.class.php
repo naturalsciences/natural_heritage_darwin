@@ -11,8 +11,8 @@ class PreferencesTable extends Doctrine_Table
   public function getPreference($user_id, $key, $take_from_default=true)
   {
     $result = Doctrine_Query::create()
-      ->useResultCache(new Doctrine_Cache_Apc())
-      ->setResultCacheLifeSpan(15) //5 sec
+      ->useResultCache(true, 3600, 'users_'.$user_id.'_'.$key)
+//       ->setResultCacheLifeSpan(15) //15 sec
       ->from('Preferences p')
       ->andwhere('p.user_ref = ?', $user_id)
       ->andWhere('p.pref_key = ?',$key)
@@ -23,7 +23,7 @@ class PreferencesTable extends Doctrine_Table
       return $this->getDefaultValue($key);
     else return null;
   }
-  
+
   public function setPreference($user_id, $key, $value)
   {
     $result = Doctrine_Query::create()
@@ -73,20 +73,23 @@ class PreferencesTable extends Doctrine_Table
     {
       $this->setPreference($user_id, $key, $value);
     }
+    $manager = Doctrine_Manager::getInstance();
+    $cacheDriver = $manager->getAttribute(Doctrine_Core::ATTR_RESULT_CACHE);
+    try {
+      $cacheDriver->deleteByPrefix('users_'.$user_id);
+    } catch(Exception $e) {
+      //When doing test we cannot clear doctrine cache as there isn't any
+    }
   }
 
   public function getDefaultValue($key)
   {
     switch($key)
     {
-      case 'search_cols_specimen': return 'taxon|collection|type|gtu'; break;
-      case 'search_cols_individual': return 'collection|gtu|taxon|individual_type|sex|state|stage'; break;
-      case 'search_cols_part': return 'taxon|individual_type|sex|stage|building|floor|room|row|shelf|container|container_storage'; break;
+      case 'search_cols_specimen': return 'taxon|individual_type|sex|stage|building|floor|room|row|shelf|container|container_storage'; break;
       case 'board_search_rec_pp': return '10'; break;
       case 'board_spec_rec_pp': return '10'; break;
       case 'help_message_activated': return true; break;
-      case 'gtu_google_activated': return false; break;
-
     }
   }
 }
