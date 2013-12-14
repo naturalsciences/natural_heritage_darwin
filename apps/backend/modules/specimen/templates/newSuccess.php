@@ -1,4 +1,4 @@
-<?php slot('title', __( $form->isNew() ? 'Add Specimens' : 'Edit Specimen'));  ?>
+<?php slot('title', __( $form->isNew() ? 'Add specimens' : 'Edit Specimen'));  ?>
 
 <script type="text/javascript">
 $(document).ready(function ()
@@ -43,7 +43,7 @@ $(document).ready(function ()
   <div class="page">
 
 <?php if($form->isNew()):?>
-  <h3 class="spec"><span class="title"><?php echo __( 'Add Specimens');?></span></h3>
+  <h3 class="spec"><span class="title"><?php echo __( 'Add specimens');?></span></h3>
 <?php else:?>
   <h3 class="spec">
   <span class="title"><?php echo __('Edit Specimen');?></span>
