@@ -383,6 +383,8 @@ class SpecimensTable extends DarwinTable
         $this->flat_results[$result->getDictField()][$result->getDictValue()] = $result->getDictValue();
       }
     }
-    return $this->flat_results[$column];
+    if(isset($this->flat_results[$column]))
+      return $this->flat_results[$column];
+    return array();
   }
 }
