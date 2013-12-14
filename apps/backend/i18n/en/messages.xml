@@ -5983,6 +5983,14 @@ DaRWIN</target>
         <source>New method</source>
         <target>New method</target>
       </trans-unit>
+      <trans-unit id="1801">
+        <source>Workflows summary</source>
+        <target>Workflows summary</target>
+      </trans-unit>
+      <trans-unit id="1802">
+        <source>My Loans</source>
+        <target>My Loans</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

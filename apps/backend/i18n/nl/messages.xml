@@ -7422,7 +7422,6 @@
       </trans-unit>
       <trans-unit id="1792">
         <source>Please save your specimen in order to add maintenances</source>
-        <target>Gelieve eerst het staal te bewaren alvorens onderhoud toe te voegen</target>
         
       </trans-unit>
       <trans-unit id="1793">
@@ -7455,6 +7454,14 @@
       </trans-unit>
       <trans-unit id="1800">
         <source>New method</source>
+        
+      </trans-unit>
+      <trans-unit id="1801">
+        <source>Workflows summary</source>
+        
+      </trans-unit>
+      <trans-unit id="1802">
+        <source>My Loans</source>
         
       </trans-unit>
     </body>

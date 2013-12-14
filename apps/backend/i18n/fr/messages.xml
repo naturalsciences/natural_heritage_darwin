@@ -7469,6 +7469,16 @@
         <target>Nouvelle méthode de collecte</target>
         
       </trans-unit>
+      <trans-unit id="1801">
+        <source>Workflows summary</source>
+        <target>Résumé des workflows</target>
+        
+      </trans-unit>
+      <trans-unit id="1802">
+        <source>My Loans</source>
+        <target>Mes Prêts</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
