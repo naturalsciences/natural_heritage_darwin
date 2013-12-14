@@ -103,7 +103,7 @@ foreach($form['newVal'] as $group)
         <td><?php echo $form['latitude'];?></td>
         <td><?php echo $form['longitude'];?></td>
         <td><?php echo $form['lat_long_accuracy'];?></td>
-        <td><strong><?php echo _('m');?></strong> <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
+        <td><strong><?php echo __('m');?></strong> <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
       </tr>
 
       <tr>
@@ -116,7 +116,7 @@ foreach($form['newVal'] as $group)
         <td></td>
         <td><?php echo $form['elevation'];?></td>
         <td><?php echo $form['elevation_accuracy'];?></td>
-        <td><strong><?php echo _('m');?></strong> <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
+        <td><strong><?php echo __('m');?></strong> <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
       </tr>
       <tr>
         <td colspan="3"><div style="width:100%; height:400px;" id="map"></div></td>

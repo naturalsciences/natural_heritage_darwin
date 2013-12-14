@@ -570,6 +570,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema->setNameFormat('specimen_search_filters[%s]');
     /* Labels */
     $this->widgetSchema->setLabels(array(
+      'rockform' => 'Rock form',
       'gtu_code' => 'Sampling Location code',
       'taxon_name' => 'Taxon text search',
       'litho_name' => 'Litho text search',
