@@ -753,6 +753,10 @@
         <source>Value</source>
         <target>Value</target>
       </trans-unit>
+      <trans-unit id="1718">
+        <source>Specimen State</source>
+        <target>Specimen State</target>
+      </trans-unit>
         </body>
   </file>
 </xliff>
