@@ -1152,16 +1152,16 @@
         <target>Accuracy</target>
       </trans-unit>
           <trans-unit id="305">
-        <source>Specimen part count</source>
-        <target>Specimen part count</target>
+        <source>Specimen count</source>
+        <target>Specimen count</target>
       </trans-unit>
           <trans-unit id="306">
-        <source>Specimen part count min</source>
-        <target>Specimen part count min</target>
+        <source>Specimen count min</source>
+        <target>Specimen count min</target>
       </trans-unit>
           <trans-unit id="307">
-        <source>Specimen part count max</source>
-        <target>Specimen part count max</target>
+        <source>Specimen count max</source>
+        <target>Specimen count max</target>
       </trans-unit>
           <trans-unit id="308">
         <source>Currency</source>
@@ -5946,6 +5946,42 @@ DaRWIN</target>
       <trans-unit id="1791">
         <source>Linked info</source>
         <target>Linked info</target>
+      </trans-unit>
+      <trans-unit id="1792">
+        <source>Please save your specimen in order to add maintenances</source>
+        <target>Please save your specimen in order to add maintenances</target>
+      </trans-unit>
+      <trans-unit id="1793">
+        <source>Unit type</source>
+        <target>Unit type</target>
+      </trans-unit>
+      <trans-unit id="1794">
+        <source>External Specimen</source>
+        <target>External Specimen</target>
+      </trans-unit>
+      <trans-unit id="1795">
+        <source>Darwin Specimen</source>
+        <target>Darwin Specimen</target>
+      </trans-unit>
+      <trans-unit id="1796">
+        <source>Choose a Donator or Seller</source>
+        <target>Choose a Donator or Seller</target>
+      </trans-unit>
+      <trans-unit id="1797">
+        <source>Specimen part</source>
+        <target>Specimen part</target>
+      </trans-unit>
+      <trans-unit id="1798">
+        <source>Specimen status</source>
+        <target>Specimen status</target>
+      </trans-unit>
+      <trans-unit id="1799">
+        <source>New tool</source>
+        <target>New tool</target>
+      </trans-unit>
+      <trans-unit id="1800">
+        <source>New method</source>
+        <target>New method</target>
       </trans-unit>
     </body>
   </file>
