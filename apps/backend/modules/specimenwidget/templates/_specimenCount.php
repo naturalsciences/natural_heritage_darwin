@@ -24,14 +24,14 @@
 <script type="text/javascript">
 $(document).ready(function()
 {
-  if($('input#specimens_accuracy_0:checked').length || ( $('#specimens_specimen_count_max').val() == $('#specimens_specimen_count_min').val()) )
+  if($('input#specimen_accuracy_0:checked').length || ( $('#specimen_specimen_count_max').val() == $('#specimen_specimen_count_min').val()) )
   {
-    $('input#specimens_accuracy_0').click();
+    $('input#specimen_accuracy_0').click();
     $('tr#specimen_count_max').hide();
   }
-  $("input[name=\"specimens\\[accuracy\\]\"]").click(function ()
+  $("input[name=\"specimen\\[accuracy\\]\"]").click(function ()
   {
-    if($('input#specimens_accuracy_0:checked').length)
+    if($('input#specimen_accuracy_0:checked').length)
     {
         $('tr#specimen_count_max').hide();
     }
@@ -39,8 +39,8 @@ $(document).ready(function()
     {
         $('tr#specimen_count_max').show();
     }
-    if(parseInt($('#specimens_specimen_count_max').val()) < parseInt($('#specimen_specimen_count_min').val()) )
-        $('#specimens_specimen_count_max').val($('#specimen_specimen_count_min').val());
+    if(parseInt($('#specimen_specimen_count_max').val()) < parseInt($('#specimen_specimen_count_min').val()) )
+        $('#specimen_specimen_count_max').val($('#specimen_specimen_count_min').val());
   });
 });
 </script>

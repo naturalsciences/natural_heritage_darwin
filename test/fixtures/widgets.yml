@@ -1547,7 +1547,7 @@ MyWidgets:
         opened: true
         visible: true
         is_available: true
-        title_perso: Loan Status
+        title_perso: Loan status
 
     u1lw4:
         User: u1
