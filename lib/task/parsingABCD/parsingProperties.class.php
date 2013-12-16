@@ -2,7 +2,7 @@
 
 class ParsingProperties extends importABCDXml
 {
-  public $people_order_by=null, $date_from, $accuracy=null ;
+  public $people_type="donator",$date_from, $accuracy=null ;
 
   public function __construct($tag="length",$applies_to="")
   {
@@ -11,14 +11,8 @@ class ParsingProperties extends importABCDXml
     $this->property->setAppliesTo($applies_to) ;
   }
 
-  public function handlePeople($people,$staging)
+  public function handleRelation($people,$staging)
   {
-    $people->setPeopleType('donator');
-    if($this->people_order_by)
-    {
-      $people->setOrderBy($this->people_order_by) ;
-      $this->people_order_by = null ;
-    }
     $staging->addRelated($people) ;
   }
 

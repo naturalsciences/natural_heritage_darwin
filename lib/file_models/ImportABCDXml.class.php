@@ -1,7 +1,7 @@
 <?php
 class ImportABCDXml implements IImportModels
 {
-  private $tag, $staging, $object, $people,$import_id, $path="", $name, $errors_reported='',$preparation_type='', $preparation_mat='';
+  private $tag, $staging, $object, $people_name,$import_id, $path="", $name, $errors_reported='',$preparation_type='', $preparation_mat='';
   private $unit_id_ref = array() ; // to keep the original unid_id per staging for Associations
   private $object_to_save = array(), $staging_tags = array() , $data, $inside_data;
   /**
@@ -54,8 +54,8 @@ class ImportABCDXml implements IImportModels
       case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ;
                                          else $this->property = new ParsingProperties() ; break;
       case "MultiMediaObject" : $this->object = new ParsingMultimedia() ; break;
-      case "PersonName" : $this->people = new StagingPeople() ; break;
-      case "Person" : $this->people = new StagingPeople() ; break;
+/*      case "PersonName" : $this->people = new StagingPeople() ; break;
+      case "Person" : $this->people = new StagingPeople() ; break;*/
       case "Petrology" : $this->object = new ParsingTag("lithology") ; break;
       case "efg:RockUnit" :
       case "RockUnit" : $this->object = new ParsingCatalogue('lithology') ; break;
@@ -118,7 +118,7 @@ class ImportABCDXml implements IImportModels
       case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break;
       case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); $this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask()); break;
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
-      case "dna:ExtractionStaff" : $this->object->handlePeople($this->cdata) ; break;
+      case "dna:ExtractionStaff" : $$this->handlePeople($this->object->people_type,$this->cdata) ; break;
       case "dna:GenBankNumber" : $this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ;
       case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ratio of absorbance 260/280","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
@@ -126,12 +126,12 @@ class ImportABCDXml implements IImportModels
       case "Duration" : $this->property->setDateTo($this->cdata) ; break;
       case "FileURI" : $this->object->getFile($this->cdata) ; break;
       case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
-      case "FullName" : $this->people['formated_name'] = $this->cdata ; break;
+      case "FullName" : $this->people_name = $this->cdata ; break;
       case "efg:FullScientificNameString":
       case "FullScientificNameString" : $this->object->fullname = $this->cdata ; break;;
       case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break;
       case "Gathering" : if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break;
-      case "GivenNames" : $this->people['given_name'] = $this->cdata ; break;
+      // case "GivenNames" : $this->people['given_name'] = $this->cdata ; break;
       case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
       case "HigherTaxon" : $this->object->handleParent() ;break;;
       case "HigherTaxonName" : $this->object->higher_name = $this->cdata ; break;
@@ -143,7 +143,7 @@ class ImportABCDXml implements IImportModels
       case "ID-in-Database" : $this->object->desc .= "id in database :".$this->cdata." ;" ; break;
       case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break;
       case "efg:InformalNameString" : $this->object->informal = true ; break;
-      case "InheritedName" : $this->people['family_name'] = $this->cdata ; break;
+      // case "InheritedName" : $this->people['family_name'] = $this->cdata ; break;
       case "ISODateTimeBegin" : if($this->getPreviousTag() == "DateTime")  { $this->object->GTUdate['from'] = FuzzyDateTime::getValidDate($this->cdata) ;} elseif($this->getPreviousTag() == "Date")  { $this->object->identification->setNotionDate(FuzzyDateTime::getValidDate($this->cdata)) ;} break;
       case "ISODateTimeEnd" :  if($this->getPreviousTag() == "DateTime"){ $this->object->GTUdate['to'] = FuzzyDateTime::getValidDate($this->cdata);}  break;
       case "IsQuantitative" : $this->property->property->setIsQuantitative($this->cdata) ; break;
@@ -171,13 +171,13 @@ class ImportABCDXml implements IImportModels
       case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
       case "Notes" : if($this->getPreviousTag() == "Identification") $this->addComment(true,"identifications") ; else $this->addComment() ;  break ;
       case "Parameter" : $this->property->property->setPropertyType($this->cdata); if($this->cdata == 'DNA size') $this->property->property->setAppliesTo('DNA'); break;
-      case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->object->handlePeople($this->people) ; break;
-      case "Person" : $this->object->handlePeople($this->people,$this->staging) ; break;
+      case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->handlePeople($this->object->people_type,$this->people_name) ; break;
+      case "Person" : $this->handlePeople($this->object->people_type,$this->people_name) ; break;
       case "efg:MineralDescriptionText" :
       case "PetrologyDescriptiveText" :
       case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'mineralogy') ; break;
       case "PhaseOrStage" : $this->staging->setIndividualStage($this->cdata) ; break;
-      case "Prefix" : $this->people['title'] = $this->cdata ; break;
+      // case "Prefix" : $this->people['title'] = $this->cdata ; break;
       case "Preparation" : $this->addPreparation() ; break ;
       case "PreparationType" : $this->preparation_type = $this->cdata ; break ;
       case "PreparationMaterials" : $this->preparation_mat = $this->cdata ; break;
@@ -189,7 +189,7 @@ class ImportABCDXml implements IImportModels
                               $this->staging["taxon_level_name"] = strtolower($this->object->level_name) ;break;
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break;
       case "Sex" : $this->staging->setIndividualSex($this->cdata) ; break;
-      case "SortingName" : $this->object->people_order_by = $this->cdata ; break;
+      // case "SortingName" : $this->object->people_order_by = $this->cdata ; break;
       case "storage:Barcode" : $this->addCode("2Dbarcode") ; break ; // c'est un code avec "2dbarcode" dans le main
       case "storage:Institution" : $this->staging->setInstitutionName($this->cdata) ; break;
       case "storage:Building" : $this->staging->setBuilding($this->cdata) ; break;
@@ -395,5 +395,16 @@ class ImportABCDXml implements IImportModels
     $conn = Doctrine_Manager::connection();
     $conn->getDbh()->exec('BEGIN TRANSACTION;');
     return $conn->fetchOne("SELECT nextval('staging_id_seq');") ;
+  }
+
+  private function handlePeople($type,$names)
+  {
+    foreach(explode(";",$names) as $name)
+    {
+      $people = new StagingPeople() ;
+      $people->setPeopleType($type) ;
+      $people->setFormatedName($name) ;      
+      $this->object->handleRelation($people,$this->staging) ;
+    }
   }
 }

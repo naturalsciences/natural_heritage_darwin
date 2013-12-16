@@ -35,7 +35,7 @@ class ParsingIdentifications
   public $peoples = array(); // an array of Doctrine People class
   public $keyword; // an array of doctrine Keywords class
   public $type_identified, $catalogue_parent, $fullname='', $determination_status=null, $higher_name,$higher_level,$level_name;
-  public $scientificName = "",$people_order_by=null, $notion='taxonomy', $temp_array=array(), $classification=null, $informal=false;
+  public $scientificName = "",$people_type='identifier', $notion='taxonomy', $temp_array=array(), $classification=null, $informal=false;
 
   public function __construct()
   {
@@ -174,14 +174,8 @@ class ParsingIdentifications
     $this->scientificName .= "$value " ;
     $staging->addRelated($keyword) ;
   }
-  public function handlePeople($people)
+  public function handleRelation($people,$staging)
   {
-    $people->setPeopleType('identifier') ;
-    if($this->people_order_by)
-    {
-      $people->setOrderBy($this->people_order_by) ;
-      $this->people_order_by = null ;
-    }
     $this->identification->addRelated($people) ;
   }
 

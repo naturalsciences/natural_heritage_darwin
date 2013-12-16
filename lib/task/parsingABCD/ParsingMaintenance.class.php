@@ -2,7 +2,7 @@
 
 class ParsingMaintenance
 {
-  public $maintenance, $desc='' , $people_order_by=null ;
+  public $maintenance, $desc='' , ,$people_type='operator',;
   public function __construct($action)
   {
     $this->maintenance= new CollectionMaintenance() ;
@@ -15,13 +15,8 @@ class ParsingMaintenance
     $staging->addRelated($this->maintenance) ;
   }
   
-  // $staging is useless here, but I should put it to respect cohérence for HandlePeople function in parsingTag
-  public function handlePeople($peopleName)
+  public function handleRelation($people,$staging)
   {
-    $people = new StagingPeople() ;
-    $people->setPeopleType("operator");
-    $people->setFormatedName($peopleName) ;
     $this->maintenance->addRelated($people) ;
   }
-  
 }

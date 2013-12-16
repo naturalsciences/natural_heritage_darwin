@@ -128,14 +128,8 @@ class ParsingTag extends ImportABCDXml
     return $object ;
   }
 
-  public function handlePeople($people,$staging)
+  public function handleRelation($object,$staging)
   {
-    $people->setPeopleType($this->people_type);
-    if($this->people_order_by)
-    {
-      $people->setOrderBy($this->people_order_by) ;
-      $this->people_order_by = null ;
-    }
-    $staging->addRelated($people) ;
+    $staging->addRelated($object) ;
   }
 }
