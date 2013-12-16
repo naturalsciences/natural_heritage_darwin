@@ -233,6 +233,10 @@ class igsActions extends DarwinActions
           }
           $error = new sfValidatorError(new savedValidator(),$e->getMessage().$extd_message);
           $form->getErrorSchema()->addError($error);
+        }else {
+          $this->logMessage('Undef igs Error : '. $ne->getMessage(), 'err');
+          $error = new sfValidatorError(new savedValidator(),'Undefined Error');
+          $form->getErrorSchema()->addError($error);
         }
       }
     }
