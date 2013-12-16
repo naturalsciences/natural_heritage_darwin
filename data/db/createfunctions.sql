@@ -548,7 +548,7 @@ BEGIN
   END IF;
 
   SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
-  IF user_id = 0 THEN
+  IF user_id = 0 OR  user_id = -1 THEN
     RETURN NEW;
   END IF;
 
@@ -1392,7 +1392,11 @@ $$
 DECLARE
   indCount INTEGER := 0;
   indType BOOLEAN := false;
+  tmp_user text;
 BEGIN
+ SELECT COALESCE(get_setting('darwin.userid'),'0') INTO tmp_user;
+  PERFORM set_config('darwin.userid', '-1', false) ;
+
   IF TG_OP = 'UPDATE' AND TG_TABLE_NAME = 'expeditions' THEN
     IF NEW.name_indexed IS DISTINCT FROM OLD.name_indexed THEN
       UPDATE specimens
@@ -1603,6 +1607,7 @@ BEGIN
       END IF;
     END IF;
   END IF;
+  PERFORM set_config('darwin.userid', tmp_user, false) ;
   RETURN NEW;
 END;
 $$;
@@ -1846,6 +1851,10 @@ BEGIN
     IF TG_OP = 'DELETE' THEN
       RETURN OLD;
     END IF;
+    RETURN NEW;
+  END IF;
+
+  IF user_id = -1 THEN
     RETURN NEW;
   END IF;
   /*If user_id <> 0, get db_user_type of user concerned*/
@@ -2338,7 +2347,11 @@ $$
 DECLARE
   spec_row RECORD;
   ident RECORD;
+  tmp_user text;
 BEGIN
+ SELECT COALESCE(get_setting('darwin.userid'),'0') INTO tmp_user;
+  PERFORM set_config('darwin.userid', '-1', false) ;
+
 
   IF TG_OP = 'DELETE' THEN
     IF OLD.people_type = 'collector' THEN
@@ -2350,6 +2363,7 @@ BEGIN
     ELSIF OLD.people_type = 'identifier' THEN
       SELECT * into ident FROM identifications where id = OLD.record_id;
       IF NOT FOUND Then
+        PERFORM set_config('darwin.userid', tmp_user, false) ;
         RETURN OLD;
       END IF;
 
@@ -2404,6 +2418,8 @@ BEGIN
     END IF;
     --else  raise info 'ooh';
   END IF;
+
+  PERFORM set_config('darwin.userid', tmp_user, false) ;
   RETURN NEW;
 END;
 $$ language plpgsql;
@@ -2411,7 +2427,11 @@ $$ language plpgsql;
 CREATE OR REPLACE FUNCTION fct_clear_identifiers_in_flat() RETURNS TRIGGER
 AS
 $$
+DECLARE
+  tmp_user text;
 BEGIN
+ SELECT COALESCE(get_setting('darwin.userid'),'0') INTO tmp_user;
+  PERFORM set_config('darwin.userid', '-1', false) ;
 
   IF EXISTS(SELECT true FROM catalogue_people cp WHERE cp.record_id = OLD.id AND cp.referenced_relation = 'identifications') THEN
     -- There's NO identifier associated to this identification'
@@ -2426,6 +2446,8 @@ BEGIN
       ))
       WHERE id = OLD.record_id;
   END IF;
+
+  PERFORM set_config('darwin.userid', tmp_user, false) ;
   RETURN OLD;
 
 END;
