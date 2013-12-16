@@ -16,10 +16,6 @@ class DarwinTable extends Doctrine_Table
         $link = 'collection/edit?id='.$id; break;
       case 'specimens':
         $link = 'specimen/edit?id='.$id; break;
-      case 'specimen_individuals':
-        $link = 'individuals/edit?id='.$id; break;
-      case 'specimen_parts':
-        $link = 'parts/edit?id='.$id; break;
       case 'expeditions':
         $link = 'expedition/edit?id='.$id; break;
       case 'loans':
@@ -38,6 +34,8 @@ class DarwinTable extends Doctrine_Table
       case 'gtu':
       case 'bibliography':
         $link = $table.'/edit?id='.$id; break;
+      case 'specimen_individuals':
+      case 'specimen_parts': $link = false; break;
       default:
         $link = false; break;
     }
