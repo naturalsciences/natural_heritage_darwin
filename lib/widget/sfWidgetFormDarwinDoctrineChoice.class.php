@@ -106,7 +106,7 @@ class sfWidgetFormDarwinDoctrineChoice extends sfWidgetFormDoctrineChoice
         $objects[] = $results;
       }
       elseif (is_array($results)) {
-        $results = array_merge($choices, $results);
+        $results = array_replace($choices, $results);
         return $results;
       }
       else
