@@ -18,7 +18,7 @@
   </tr>
   <tr class="relationship_detail_edit">
     <td class="unit_choose" colspan="3">
-      <div class="unit_taxon"><?php echo $form['taxon_ref'];?></div>
+      <div class="unit_taxonomy"><?php echo $form['taxon_ref'];?></div>
       <div class="unit_mineral"><?php echo $form['mineral_ref'];?>
         <?php echo $form['quantity']->render(array('placeholder'=>$form['quantity']->renderLabelName()));;?>
         <?php echo $form['unit'];?>
@@ -50,7 +50,7 @@
         $(this).closest('table.property_values').find('thead').hide();
       }
     });
-    
+
     $('#specimens_accompanying_<?php echo $rownum;?> .unit_type select').change(function()
     {
       type = $(this).val();
@@ -60,7 +60,7 @@
 
       top_row.find('.extd_info').hide();
       top_row.find('.extd_info_'+ type).show();
-      
+
     });
 
      $('#specimens_accompanying_<?php echo $rownum;?> .unit_type select').change();
