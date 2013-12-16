@@ -2077,6 +2077,11 @@ tr.tag_line input
   text-decoration: none;
 }
 
+.widget_content > table
+{
+  width: 100% ;
+}
+
 ul.graph_range, #checking
 {
 	padding-bottom:1em;
