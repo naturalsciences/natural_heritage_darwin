@@ -42,5 +42,9 @@ $(document).ready(function()
     if(parseInt($('#specimen_specimen_count_max').val()) < parseInt($('#specimen_specimen_count_min').val()) )
         $('#specimen_specimen_count_max').val($('#specimen_specimen_count_min').val());
   });
+  $('#specimen_specimen_count_max,#specimen_specimen_count_min').change(function(){
+    if(parseInt($('#specimen_specimen_count_max').val()) < parseInt($('#specimen_specimen_count_min').val()) )
+      $('#specimen_specimen_count_max').val($('#specimen_specimen_count_min').val());
+  });
 });
 </script>
