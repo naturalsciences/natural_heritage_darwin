@@ -2,7 +2,7 @@
 
 class ParsingMaintenance
 {
-  public $maintenance, $desc='' , ,$people_type='operator',;
+  public $maintenance, $desc='' , $people_type='operator';
   public function __construct($action)
   {
     $this->maintenance= new CollectionMaintenance() ;
