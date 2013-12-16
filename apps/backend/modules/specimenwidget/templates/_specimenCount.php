@@ -34,6 +34,7 @@ $(document).ready(function()
     if($('input#specimen_accuracy_0:checked').length)
     {
         $('tr#specimen_count_max').hide();
+        $('#specimen_specimen_count_max').val($('#specimen_specimen_count_min').val());
     }
     else
     {
