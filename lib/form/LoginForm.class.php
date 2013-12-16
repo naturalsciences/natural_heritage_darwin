@@ -36,6 +36,7 @@ class LoginForm extends BaseForm
       }
       elseif(sfConfig::get('app_ldap_ldap_enabled', false) == true) {
         $ldap = new ldapAuth();
+        $values['username'] = strtolower($values['username']);
         if( $result = $ldap->authenticate($values['username'], $values['password'])) {
           $this->user = Doctrine::getTable('Users')->getUserByLogin($values['username'], 'ldap');
           //We don't know the user yet but be is known on the LDAP
