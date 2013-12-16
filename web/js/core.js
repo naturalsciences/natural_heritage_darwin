@@ -14,10 +14,12 @@ function getIdInClasses(el)
 
 function check_screen_size()
 {
-  if($(window).width() < 1100)
+  if($(window).width() < 1100) {
     $('head').append('<link rel="stylesheet" id="tiny" type="text/css" href="/css/tiny.css">') ;
-  else
+  }
+  else {
     $('#tiny').remove() ;
+  }
 }
 
 function getElInClasses(element,prefix)
@@ -72,8 +74,8 @@ function showAfterRefresh(el)
   $(el).children('#loading_screen').remove();
 }
 
-function trim(myString) 
-{ 
+function trim(myString)
+{
   return jQuery.trim(myString);
 }
 
@@ -103,7 +105,7 @@ function clearPropertyValue()
 
 $(document).ready(function()
 {
-  $(this).ajaxStart(function(){ 
+  $(this).ajaxStart(function(){
     $('#load_indicator').fadeIn();
   });
 
@@ -228,21 +230,21 @@ function getSearchColumnVisibilty() {
 //http://www.1stwebmagazine.com/jquery-checkbox-and-radio-button-styling
 ;(function(){
 $.fn.customRadioCheck = function() {
- 
+
   return this.each(function() {
- 
+
     var $this = $(this);
     var $span = $('<span/>');
- 
+
     $span.addClass('custom-'+ ($this.is(':checkbox') ? 'check' : 'radio'));
     $this.is(':checked') && $span.addClass('checked'); // init
     $span.insertAfter($this);
- 
+
     $this.parent('label').addClass('custom-label')
       .attr('onclick', ''); // Fix clicking label in iOS
     // hide by shifting left
     $this.css({ position: 'absolute', left: '-9999px' });
- 
+
     // Events
     $this.on({
       update: function() {

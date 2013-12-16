@@ -3094,6 +3094,10 @@ a.but_more{
   float:none;
   display:inline;
 }
+.complete_ref input.ui-autocomplete-input
+{
+  width: 300px;
+}
 
 .treelist > h2 {
     margin-top: 10px;
