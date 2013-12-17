@@ -5,7 +5,7 @@
  <div class="warn_message">Import tool will be officialy available in 2014, we can use it, but we recommend you to wait a bit.</div>
 <h1><?php echo __('Imports');?> : <?php echo image_tag('info.png',array('title'=>'info','class'=>'extd_info')); ?></h1>
 
-    <?php include_partial('searchForm', array('form' => $form)) ?> -->
+    <?php include_partial('searchForm', array('form' => $form)) ?>
 </div>
 
 <script language="javascript">
