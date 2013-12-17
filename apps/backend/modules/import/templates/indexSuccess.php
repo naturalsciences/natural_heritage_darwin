@@ -1,8 +1,9 @@
-<?php slot('title', __('Import files summary'));  ?>        
+<?php slot('title', __('Import files summary'));  ?>
 
 <div class="page">
 <!--   <h1>Import will be available in 2014</h1> -->
- <div class="warn_message">Import tool will be officialy available in 2014, we can use it, but we recommend you to wait a bit.</div>
+ <div class="warn_message">The Import tool will be fully operational in 2014. This current beta version is already activated for testing purposes.<br />
+ We strongly advise you, however, to patiently await the new release before you actively make use of it.</div>
 <h1><?php echo __('Imports');?> : <?php echo image_tag('info.png',array('title'=>'info','class'=>'extd_info')); ?></h1>
 
     <?php include_partial('searchForm', array('form' => $form)) ?>
@@ -33,6 +34,6 @@ $(document).ready(function () {
         }
       }
     });
-  });  
+  });
 });
 </script>
