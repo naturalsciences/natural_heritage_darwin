@@ -959,7 +959,7 @@ class SpecimensForm extends BaseSpecimensForm
       $spec = new SpecimensRelationships() ;
       $spec->fromArray($val->toArray());
       $form = new SpecimensRelationshipsForm($spec);
-      $this->attachEmbedRecord('SpecimensRelationships', $key, $spec) ;
+      $this->attachEmbedRecord('SpecimensRelationships', $form, $spec) ;
     }
 
     // reembed duplicated insurances
