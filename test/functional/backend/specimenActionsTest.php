@@ -29,7 +29,7 @@ $browser->
   info('1.1 - is everything ok on screen')->
   with('response')->begin()->
     isStatusCode(200)->
-    checkElement('title','Add Specimens')->
+    checkElement('title','Add specimens')->
     checkElement('.board_col',2)->
     checkElement('.board_col:first .widget',11)->
     checkElement('.board_col:first .widget:first .widget_top_bar span','/Collection/')->

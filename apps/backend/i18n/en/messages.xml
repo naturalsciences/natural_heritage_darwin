@@ -5991,6 +5991,15 @@ DaRWIN</target>
         <source>My Loans</source>
         <target>My Loans</target>
       </trans-unit>
+      <trans-unit id="1803">
+        <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
+        <target>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</target>
+      </trans-unit>
+      <trans-unit id="1804">
+        <source>File is too large (maximum is %max_size% bytes).</source>
+        <target>File is too large (maximum is %max_size% bytes).</target>
+      </trans-unit>
+      
     </body>
   </file>
 </xliff>

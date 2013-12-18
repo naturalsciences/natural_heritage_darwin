@@ -7476,9 +7476,17 @@
       </trans-unit>
       <trans-unit id="1802">
         <source>My Loans</source>
-        <target>Mes Prêts</target>
-        
+        <target>Mes Prêts</target>        
       </trans-unit>
+      <trans-unit id="1803">
+        <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
+        <target>Le fichier n'a pas pu être uploadé. Il s'agit surement d'un fichier trop volumineux</target>
+      </trans-unit>
+      <trans-unit id="1804">
+        <source>File is too large (maximum is %max_size% bytes).</source>
+        <target>Fichier trop volumineux (maximum %max_size% Mo).</target>
+      </trans-unit>
+      
     </body>
   </file>
 </xliff>
