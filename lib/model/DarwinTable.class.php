@@ -282,6 +282,35 @@ class DarwinTable extends Doctrine_Table
     return $result;
   }
 
+
+
+  /**
+  * Find item for autocompletion
+  * @param $user The User object for right management
+  * @param $needle the string entered by the user for search
+  * @param $exact bool are we searching the exact term or more or less fuzzy
+  * @return Array of results
+  */
+  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30)
+  {
+    $conn_MGR = Doctrine_Manager::connection();
+      $q = Doctrine_Query::create()
+      ->from($this->getTableName(). ' i')
+      ->innerJoin('i.Level l')
+      ->orderBy('l.level_order ASC, name ASC')
+      ->limit($limit);
+    if($exact)
+      $q->andWhere("name = ?",$needle);
+    else
+      $q->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
+    $q_results = $q->execute();
+    $result = array();
+    foreach($q_results as $item) {
+      $result[] = array('label' => $item->getName(), 'name_indexed'=> $item->getNameIndexed(), 'value'=> $item->getId() );
+    }
+    return $result;
+  }
+
   public static function CollectionToArray($collection, $key)
   {
     $result = array();
