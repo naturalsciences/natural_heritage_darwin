@@ -7422,6 +7422,7 @@
       </trans-unit>
       <trans-unit id="1792">
         <source>Please save your specimen in order to add maintenances</source>
+        <target>Gelieve eerst het staal te bewaren alvorens onderhoud toe te voegen</target>
         
       </trans-unit>
       <trans-unit id="1793">
@@ -7464,6 +7465,20 @@
         <source>My Loans</source>
         
       </trans-unit>
+      <trans-unit id="1803">
+        <source>The form submission cannot be processed. It probably means that you have uploaded a file that is too big.</source>
+        <target>Het ingediende formulier kan niet verwerkt worden.  U hebt wellicht een te groot bestand geupload.</target>
+        
+      </trans-unit>
+      <trans-unit id="1804">
+        <source>File is too large (maximum is %max_size% bytes).</source>
+        
+      </trans-unit>
+      <trans-unit id="1804">
+        <source>Number of records per pages</source>
+        <target>Number of records per pages</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

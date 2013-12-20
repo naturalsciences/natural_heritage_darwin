@@ -5999,7 +5999,11 @@ DaRWIN</target>
         <source>File is too large (maximum is %max_size% bytes).</source>
         <target>File is too large (maximum is %max_size% bytes).</target>
       </trans-unit>
-      
+      <trans-unit id="1804">
+        <source>Number of records per pages</source>
+        <target>Number of records per pages</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>
