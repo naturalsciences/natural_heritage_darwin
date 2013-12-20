@@ -273,7 +273,7 @@ class catalogueActions extends DarwinActions
 
     if(in_array($tbl,$catalogues)) {
       $model = DarwinTable::getModelForTable($tbl);
-      if($request->getParameter('level', false))
+      if(! $request->getParameter('level', false))
         $result = Doctrine::getTable($model)->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'));
       else
         $result = Doctrine::getTable($model)->completeWithLevelAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'));
