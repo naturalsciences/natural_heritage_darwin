@@ -38,7 +38,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'link_url' => 'taxonomy/choose',
       'box_title' => $this->getI18N()->__('Choose Taxon'),
       'button_is_hidden' => true,
-      'complete_url' => 'catalogue/completeName?table=taxonomy',
+      'complete_url' => 'catalogue/completeName?table=taxonomy&level=1',
       'nullable' => true
     ));
 
