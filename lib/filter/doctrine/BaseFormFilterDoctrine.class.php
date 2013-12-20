@@ -16,11 +16,15 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 
   public function addPagerItems()
   {
-    $recPerPages = array("1"=>"1", "2"=>"2", "5"=>"5", "10"=>"10", "25"=>"25", "50"=>"50", "75"=>"75", "100"=>"100");
-    
+    $recPerPages = array("1"=>"1", "2"=>"2", "5"=>"5", "10"=>"10","20"=>"20", "25"=>"25", "50"=>"50", "75"=>"75", "100"=>"100");
+
     $this->widgetSchema['rec_per_page'] = new sfWidgetFormChoice(array('choices' => $recPerPages), array('class'=>'rec_per_page'));
-    $this->setDefault('rec_per_page', strval(sfConfig::get('dw_recPerPage'))); 
-    $this->widgetSchema->setLabels(array('rec_per_page' => 'Records per page: ',));    
+    $default = Doctrine::getTable('Preferences')->getPreference(
+      sfContext::getInstance()->getUser()->getId(),
+      'default_search_rec_pp'
+    );
+    $this->setDefault('rec_per_page', $default);
+    $this->widgetSchema->setLabels(array('rec_per_page' => 'Records per page: ',));
     $this->validatorSchema['rec_per_page'] = new sfValidatorChoice(array('required' => false, 'choices'=>$recPerPages, 'empty_value'=>strval(sfConfig::get('dw_recPerPage'))));
     $this->hasPager = true;
   }
@@ -48,7 +52,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       'format' => '%day%/%month%/%year%',
       'years' => $years,
       'empty_values' => $dateText,
-    ); 
+    );
   }
 
   protected function getCatalogueRecLimits()
@@ -88,7 +92,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   }
 
   /**
-  * Get a searched term and give a string containing all proposition separeted by $separator 
+  * Get a searched term and give a string containing all proposition separeted by $separator
   * @param string $term the searched term
   * @param string $proposition the array of propositions fetched in word db
   * @param string $separator the separator between fields
@@ -112,8 +116,8 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   }
 
   /**
-  * splitNameQuery: Analyse a query string to split elements 
-  * in remove all non-alphanum char (except - and _ ) 
+  * splitNameQuery: Analyse a query string to split elements
+  * in remove all non-alphanum char (except - and _ )
   * The array si organized with a 'with' key (all search terms) and other keys represent a 'NOT' search
   * Terms will be trimed and -- is used as not term
   * falco, peregrin (1985) --brolus test -- choze will be exported as:
@@ -193,7 +197,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       if ($val_from->getMask() > 0)
       {
         $query->andWhere(" CASE WHEN " . $dateFields[0] . " is NULL THEN '01/01/0001' ELSE ".$dateFields[0]." END >= ? ", $val_from->format('d/m/Y'));
-      } 
+      }
       if ($val_to->getMask() > 0)
       {
         $query->andWhere(" CASE WHEN " . $dateFields[1] . " is NULL THEN '31/12/2038' ELSE ".$dateFields[1]." END <= ? ", $val_to->format('d/m/Y'));
@@ -211,7 +215,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
         if (count($dateFields) == 1)
         {
           $query->andWhere($dateFields[0] . " Between ? and ? ",
-                           array($val_from->format('d/m/Y'), 
+                           array($val_from->format('d/m/Y'),
                                  $val_to->format('d/m/Y')
                                 )
                           );
@@ -230,10 +234,10 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
           $vals[] = $val_from->format('d/m/Y');
         }
         if (count($dateFields) > 1) $sql .= " OR (" . $dateFields[1] . " >= ? AND " . $dateFields[1] . "_mask > 0) ";
-        $query->andWhere($sql, 
+        $query->andWhere($sql,
                          $vals
                         );
-      } 
+      }
       elseif ($val_to->getMask() > 0)
       {
         $sql = " (" . $dateFields[0] . " <= ? AND " . $dateFields[0] . "_mask > 0) ";
@@ -242,7 +246,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
           $vals[] = $val_to->format('d/m/Y');
         }
         if (count($dateFields) > 1) $sql .= " OR (" . $dateFields[1] . " <= ? AND " . $dateFields[1] . "_mask > 0) ";
-        $query->andWhere($sql, 
+        $query->andWhere($sql,
                          $vals
                         );
       }
@@ -273,7 +277,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   {
      if ($values != "")
      {
-       $alias = $query->getRootAlias();       
+       $alias = $query->getRootAlias();
        $query->andWhere($alias.'.id != ?', $values);
      }
      return $query;
@@ -295,9 +299,9 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     $javascripts[]='/js/searchForm.js';
     return $javascripts;
   }
-  
+
   /**
-  * return an array of vernacular_name id 
+  * return an array of vernacular_name id
   * @param relation the relation concerned (taxonomy, chrono, litho...)
   * @param $val a list of words to include or exclude
   * @return string an list of id separated by ','
@@ -310,17 +314,17 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       ->andWhere('v.referenced_relation = ?', $relation);
 
     $this->addNamingColumnQuery($q, 'vernacular_names', 'name_indexed', $val, 'v');
-    $results = $q->execute(); 
+    $results = $q->execute();
     $list = "" ;
 
-    foreach($results as $key=>$result) 
+    foreach($results as $key=>$result)
       $list .= $result->getRecordId()."," ;
 
     if($list == "") return (-1) ;
     return (substr($list,0,strlen($list)-1)) ; //return list of id without the last ','
   }
 
-  
+
   public function addRelationItemColumnQuery($query, $values)
   {
     $relation = $values['relation'];
@@ -371,7 +375,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
         if(empty($synonyms))
           $query->andWhere('0=1'); //False
         $query->andWhereIn($field_prefix."_ref",$synonyms)
-          ->andWhere($field_prefix."_ref != ?",$item_ref); // remove himself 
+          ->andWhere($field_prefix."_ref != ?",$item_ref); // remove himself
       }
     }
     return $query ;

@@ -45,10 +45,10 @@ class myUser extends sfBasicSecurityUser
   {
     $this->setAttribute('rec_per_page',$number);
   }
-  
+
   public function fetchRecPerPage()
   {
-    return $this->getAttribute('rec_per_page',10);
+    return $this->getAttribute('rec_per_page',Doctrine::getTable('Preferences')->getPreference($this->getId(),'default_search_rec_pp',true));
   }
 
 
@@ -59,14 +59,14 @@ class myUser extends sfBasicSecurityUser
       unset($pins[$key]);
 
     $this->setAttribute('spec_pinned_'.$source, $pins);
-    
+
   }
-  
+
   public function clearPinned($source)
   {
      $this->setAttribute('spec_pinned_'.$source,array());
   }
-  
+
   public function addPinTo($id, $source)
   {
     $pins = $this->getAttribute('spec_pinned_'.$source, array());
@@ -80,7 +80,7 @@ class myUser extends sfBasicSecurityUser
   {
     return $this->getAttribute('spec_pinned_'.$source,array());
   }
-  
+
   public function isPinned($id, $source)
   {
     $pins = $this->getAttribute('spec_pinned_'.$source, array());
@@ -96,15 +96,15 @@ class myUser extends sfBasicSecurityUser
   {
     return $this->getDbUserType() == $role;
   }
-  
+
   /**
    * @return a boolean to know if the help icon is displayed on forms or not
    */
   public function getHelpIcon()
-  {  
+  {
     return $this->getAttribute('helpIcon') ;
   }
-  
+
   public function setHelpIcon($val)
   {
     $this->setAttribute('helpIcon',$val);
