@@ -27,11 +27,13 @@
           <li><?php echo link_to('Fr','board/lang?lang=fr');?></li>
           <li class="sep">|</li>
           <li><?php echo link_to('Nl','board/lang?lang=nl');?></li>
+          <li class="sep">|</li>
+          <li><?php echo link_to('Es','board/lang?lang=es_ES');?></li>
         </ul></td>
       </tr>
     </table>
   </div>
 
-  <?php include_component('login','MenuLogin') ; ?> 
+  <?php include_component('login','MenuLogin') ; ?>
 
 </td>

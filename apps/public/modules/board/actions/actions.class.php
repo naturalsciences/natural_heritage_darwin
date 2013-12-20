@@ -50,7 +50,7 @@ class boardActions extends DarwinActions
 
   public function executeLang(sfWebRequest $request)
   {
-    if(! in_array($request->getParameter('lang'), array('en','fr','nl','es')))
+    if(! in_array($request->getParameter('lang'), array('en','fr','nl','es_ES')))
       $this->forward404();
     $this->getUser()->setCulture($request->getParameter('lang'));
     $referer = $this->getRequest()->getReferer();
