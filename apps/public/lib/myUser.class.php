@@ -15,4 +15,9 @@ class myUser extends sfBasicSecurityUser
   {
     $this->setAttribute('helpIcon',$val);
   }
+
+  public function getId()
+  {
+    return -1;
+  }
 }

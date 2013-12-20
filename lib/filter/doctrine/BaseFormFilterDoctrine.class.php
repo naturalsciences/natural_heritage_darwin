@@ -19,10 +19,16 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     $recPerPages = array("1"=>"1", "2"=>"2", "5"=>"5", "10"=>"10","20"=>"20", "25"=>"25", "50"=>"50", "75"=>"75", "100"=>"100");
 
     $this->widgetSchema['rec_per_page'] = new sfWidgetFormChoice(array('choices' => $recPerPages), array('class'=>'rec_per_page'));
-    $default = Doctrine::getTable('Preferences')->getPreference(
-      sfContext::getInstance()->getUser()->getId(),
-      'default_search_rec_pp'
-    );
+    $user = sfContext::getInstance()->getUser();
+    if($user)
+    {
+      $default = Doctrine::getTable('Preferences')->getPreference(
+        $user->getId() ,
+        'default_search_rec_pp'
+      );
+    } else {
+      $default = 10;
+    }
     $this->setDefault('rec_per_page', $default);
     $this->widgetSchema->setLabels(array('rec_per_page' => 'Records per page: ',));
     $this->validatorSchema['rec_per_page'] = new sfValidatorChoice(array('required' => false, 'choices'=>$recPerPages, 'empty_value'=>strval(sfConfig::get('dw_recPerPage'))));
