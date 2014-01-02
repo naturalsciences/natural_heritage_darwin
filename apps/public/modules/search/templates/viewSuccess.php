@@ -67,7 +67,7 @@
           </tr>
         </thead>
         <tbody>
-          <?php include_partial('classification',array('common_name' => $common_names->getRawValue(), 'spec' => $specimen->SpecimensFlat)) ; ?>
+          <?php include_partial('classification',array('common_name' => $common_names->getRawValue(), 'spec' => $specimen)) ; ?>
         </tbody>
       </table>
     </div>
