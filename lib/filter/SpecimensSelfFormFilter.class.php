@@ -60,7 +60,7 @@ class SpecimensSelfFormFilter extends BaseSpecimensFormFilter
       $conn_MGR = Doctrine_Manager::connection();
       $query->leftJoin($alias.'.SpecimensCodes cod')
           ->andWhere("cod.referenced_relation = ?", array('specimens'))
-          ->andWhere("cod.record_id = $alias.specimen_ref")
+          ->andWhere("cod.record_id = $alias.id")
           ->andWhere("cod.full_code_indexed = fullToIndex(".$conn_MGR->quote($values, 'string').") ");
     }
     return $query;
