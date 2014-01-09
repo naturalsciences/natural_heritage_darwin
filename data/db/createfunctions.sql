@@ -2516,6 +2516,21 @@ BEGIN
   /*** Then CHECK fuzzy name ***/
 
   result_nbr := 0;
+  IF catalogue_table = 'mineralogy' THEN
+    OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
+    INNER JOIN catalogue_levels c on t.level_ref = c.id
+    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
+    LIMIT 2';
+    LOOP
+      FETCH ref INTO ref_record;
+      IF  NOT FOUND THEN
+        EXIT;  -- exit loop
+      END IF;
+
+      rec_id := ref_record.id;
+      result_nbr := result_nbr +1;
+    END LOOP;
+  ELSE
     OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
     INNER JOIN catalogue_levels c on t.level_ref = c.id
     WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
@@ -2529,23 +2544,24 @@ BEGIN
       rec_id := ref_record.id;
       result_nbr := result_nbr +1;
     END LOOP;
+  END IF ;
 
-    IF result_nbr = 1 THEN -- It's Ok!
-      PERFORM fct_imp_checker_catalogues_parents(line,rec_id, catalogue_table, prefix);
-      RETURN true;
-    END IF;
+  IF result_nbr = 1 THEN -- It's Ok!
+    PERFORM fct_imp_checker_catalogues_parents(line,rec_id, catalogue_table, prefix);
+    RETURN true;
+  END IF;
 
-    IF result_nbr >= 2 THEN
-      UPDATE staging SET status = (status || (prefix => 'too_much')) where id= line.id;
-      RETURN true;
-    END IF;
+  IF result_nbr >= 2 THEN
+    UPDATE staging SET status = (status || (prefix => 'too_much')) where id= line.id;
+    RETURN true;
+  END IF;
 
-    IF result_nbr = 0 THEN
-      UPDATE staging SET status = (status || (prefix => 'not_found')) where id=line.id;
-      RETURN true;
-    END IF;
+  IF result_nbr = 0 THEN
+    UPDATE staging SET status = (status || (prefix => 'not_found')) where id=line.id;
+    RETURN true;
+  END IF;
 
-    CLOSE ref;
+  CLOSE ref;
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
