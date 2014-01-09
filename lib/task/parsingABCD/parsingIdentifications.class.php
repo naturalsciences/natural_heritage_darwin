@@ -123,6 +123,7 @@ class ParsingIdentifications
       $staging['mineral_parents'] = $this->catalogue_parent->export() ;
       $staging->setMineralName($this->fullname) ;
       $staging->setMineralClassification($this->classification) ;
+      $staging->setMineralLevelName('unit_variety') ;
     }
   }
 

@@ -127,8 +127,8 @@ class ImportABCDXml implements IImportModels
       case "FileURI" : $this->object->getFile($this->cdata) ; break;
       case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
       case "FullName" : $this->people_name = $this->cdata ; break;
-      case "efg:FullScientificNameString":
-      case "FullScientificNameString" : $this->object->fullname = $this->cdata ; break;;
+      case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break; 
+      case "FullScientificNameString" : $this->object->fullname = $this->cdata ; break;
       case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break;
       case "Gathering" : if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break;
       // case "GivenNames" : $this->people['given_name'] = $this->cdata ; break;
@@ -161,7 +161,8 @@ class ImportABCDXml implements IImportModels
       case "MeasurementOrFactAtomised" : $this->addProperty(); break;
       case "MeasurementOrFactText" : $this->addComment() ; break;
       case "MineralColour" : $this->staging->setMineralColour($this->cdata) ; break;
-      case "efg:MineralRockClassification" : $this->object->higher_level = strtolower($this->cdata) ; break;
+      case "efg:MineralRockClassification" : if($this->getPreviousTag() == "efg:MineralRockGroup") {$this->object->higher_level = strtolower($this->cdata);}
+      elseif($this->getPreviousTag() == "efg:MineralRockNameAtomised") {$this->object->classification = strtolower($this->cdata);} break;
       case "efg:MineralRockGroup" : $this->object->handleRockParent() ; break;
       case "efg:MineralRockGroupName" : $this->object->higher_name = $this->cdata ; break;
       case "efg:MineralRockIdentified" : $this->object->getCatalogueParent($this->staging) ; break;
