@@ -79,7 +79,7 @@ $(document).ready(function () {
             parent_el.append(html);
             $('.warn_message').addClass('hidden');
             showAfterRefresh('.loan_overview_form');
-            $('.loan_overview_form').css({position: 'absolute'});
+            $('.loan_overview_form').css("z-index",999);
 
             $('.loan_overview_form > table').removeClass('hidden');
 
@@ -180,8 +180,7 @@ $(document).ready(function () {
         ref_table.append(html);
         $('.warn_message').addClass('hidden');
         showAfterRefresh('.loan_overview_form');
-        $('.loan_overview_form').css({position: 'absolute'});
-
+        $('.loan_overview_form').css("z-index",999);
         $('.loan_overview_form > table').removeClass('hidden');
       }
     });
