@@ -10,10 +10,48 @@
  */
 class multimediaActions extends DarwinActions
 {
+  public function executeIndex(sfWebRequest $request)
+  {
+    $this->form = new MultimediaFormFilter();
+  }
+
+  public function executeSearch(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->isMethod('post'));
+    $this->setCommonValues('multimedia', 'referenced_relation', $request);
+    $this->form = new MultimediaFormFilter(array(),array('user' => $this->getUser()));
+
+    if($request->getParameter('multimedia_filters','') !== '')
+    {
+      $this->form->bind($request->getParameter('multimedia_filters'));
+
+      if ($this->form->isValid())
+      {
+        $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
+        $this->pagerLayout = new PagerLayoutWithArrows(
+          new DarwinPager(
+            $query,
+            $this->currentPage,
+            $this->form->getValue('rec_per_page')
+          ),
+          new Doctrine_Pager_Range_Sliding(
+            array('chunk' => $this->pagerSlidingSize)
+            ),
+          $this->getController()->genUrl($this->s_url.$this->o_url).'/page/{%page_number}'
+        );
+
+        // Sets the Pager Layout templates
+        $this->setDefaultPaggingLayout($this->pagerLayout);
+        // If pager not yet executed, this means the query has to be executed for data loading
+        if (! $this->pagerLayout->getPager()->getExecuted())
+           $this->items = $this->pagerLayout->execute();
+      }
+    }
+  }
 
   public function executeDownloadFile(sfWebRequest $request)
   {
-    $this->setLayout(false);  
+    $this->setLayout(false);
     $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
     if(!($this->getUser()->isAtLeast(Users::ADMIN) || $this->checkRights($multimedia))) $this->forwardToSecureAction();
     $this->forward404If(!($this->getUser()->isAtLeast(Users::ENCODER)) && !($multimedia->getVisible()));
@@ -30,16 +68,16 @@ class multimediaActions extends DarwinActions
     $this->getResponse()->sendHttpHeaders();
     $this->getResponse()->setContent(readfile($file));
     return sfView::NONE;
-  } 
-  
-  public function checkRights($multimedia) 
+  }
+
+  public function checkRights($multimedia)
   {
-    if($multimedia->getReferencedRelation() == 'loans') 
+    if($multimedia->getReferencedRelation() == 'loans')
       return(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $multimedia->getRecordId()));
-    if($multimedia->getReferencedRelation() == 'loan_items') 
-    {   
+    if($multimedia->getReferencedRelation() == 'loan_items')
+    {
       $item = Doctrine::getTable('LoanItems')->findOneById($multimedia->getRecordId()) ;
-      return(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $item->getLoanRef()));    
+      return(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $item->getLoanRef()));
     }
     /* Actualy multimedia is only in loans and loan items, so for the moment any otehr referenced relation
      returns false */
@@ -48,7 +86,7 @@ class multimediaActions extends DarwinActions
 
   public function executePreview(sfWebRequest $request)
   {
-    $this->setLayout(false);  
+    $this->setLayout(false);
     $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
     if(!($this->getUser()->isAtLeast(Users::ADMIN) || $this->checkRights($multimedia))) $this->forwardToSecureAction();
     $this->forward404If(!($this->getUser()->isAtLeast(Users::ENCODER)) && !($multimedia->getVisible()));
@@ -139,7 +177,7 @@ class multimediaActions extends DarwinActions
       $file_record->setReferencedRelation($request->getParameter('table'));
       $file_record->setRecordId($request->getParameter('id'));
     }
-   
+
     $this->form = new MultimediaForm($file_record);
 
     if($request->isMethod('post'))

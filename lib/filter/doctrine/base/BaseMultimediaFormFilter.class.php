@@ -28,6 +28,7 @@ abstract class BaseMultimediaFormFilter extends BaseFormFilterDoctrine
       'mime_type'           => new sfWidgetFormFilterInput(),
       'visible'             => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'publishable'         => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'extracted_info'      => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -46,6 +47,7 @@ abstract class BaseMultimediaFormFilter extends BaseFormFilterDoctrine
       'mime_type'           => new sfValidatorPass(array('required' => false)),
       'visible'             => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'publishable'         => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'extracted_info'      => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('multimedia_filters[%s]');
@@ -81,6 +83,7 @@ abstract class BaseMultimediaFormFilter extends BaseFormFilterDoctrine
       'mime_type'           => 'Text',
       'visible'             => 'Boolean',
       'publishable'         => 'Boolean',
+      'extracted_info'      => 'Text',
     );
   }
 }
