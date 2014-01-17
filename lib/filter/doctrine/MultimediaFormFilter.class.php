@@ -66,7 +66,9 @@ class MultimediaFormFilter extends BaseMultimediaFormFilter
   public function doBuildQuery(array $values)
   {
     $query = parent::doBuildQuery($values);
+    $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
     $this->addCustomReferencedRelationColumnQuery($query, 'referenced_relation', $values['referenced_relation']);
+    $query->andWhere("case WHEN referenced_relation ='specimens' THEN EXISTS( select 1 from specimens ss where ss.id = record_id and collection_ref in (".implode(',',$this->encoding_collection).")) ELSE TRUE END");
     return $query ;
   }
 }

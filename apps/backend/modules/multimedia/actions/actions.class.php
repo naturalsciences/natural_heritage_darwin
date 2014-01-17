@@ -19,7 +19,7 @@ class multimediaActions extends DarwinActions
   {
     $this->forward404Unless($request->isMethod('post'));
     $this->setCommonValues('multimedia', 'referenced_relation', $request);
-    $this->form = new MultimediaFormFilter();
+    $this->form = new MultimediaFormFilter(array(),array('user' => $this->getUser()));
 
     if($request->getParameter('multimedia_filters','') !== '')
     {
