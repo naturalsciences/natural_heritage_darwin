@@ -10,6 +10,7 @@ class darwinCheckImportTask extends sfBaseTask
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),      
       new sfCommandOption('do-import', null, sfCommandOption::PARAMETER_NONE, 'if some lines are marked as "to be imported", try to import after the check'),
+      new sfCommandOption('full-check', null, sfCommandOption::PARAMETER_NONE, 'if this option is specified, even this import file on pending state are checked'),
       new sfCommandOption('id', null, sfCommandOption::PARAMETER_REQUIRED, 'Only do the job for a given import id'),
       ));      
     $this->namespace        = 'darwin';
@@ -32,9 +33,13 @@ EOF;
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     $conn = Doctrine_Manager::connection();
     // First Check :)
-    $sql = 'select fct_imp_checker_manager(s.*) from staging s';
+    if (empty($options['full-check'])) 
+      $state_to_check = "('loaded','processing')" ;
+    else
+      $state_to_check = "('loaded','processing','pending')" ;
+    $sql = "select fct_imp_checker_manager(s.*) from staging s, imports i WHERE s.import_ref=i.id AND i.state in ".$state_to_check;
     if(!empty($options['id']))
-      $sql.= " WHERE import_ref = ".$options['id'];
+      $sql.= " AND i.id = ".$options['id'];
     $this->logSection('checking', sprintf('Start checking staging'));
 
     $conn->getDbh()->exec($sql);

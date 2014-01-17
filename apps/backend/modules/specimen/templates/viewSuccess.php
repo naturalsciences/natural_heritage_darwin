@@ -15,6 +15,9 @@
           $txt .= image_tag('blue_pin_off.png', array('class'=>'pin_but pin_off'));
         }?>
         <?php echo link_to($txt, 'savesearch/pin?source=specimen&id='.$specimen->getId(), array('class'=>'pin_link'));?>
+        <?php if($hasEncodingRight):?>
+          <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'specimen/edit?id='.$specimen->getId()); ?>
+        <?php endif;?>
     </span>
   </h3>
   <div class="encod_screen edition" id="intro">

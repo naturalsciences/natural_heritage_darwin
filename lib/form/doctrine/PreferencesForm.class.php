@@ -13,7 +13,7 @@ class PreferencesForm extends BaseForm
   public function configure()
   {
     $pref_keys = array('search_cols_specimen', 'board_search_rec_pp',
-      'board_spec_rec_pp','help_message_activated');
+      'board_spec_rec_pp','help_message_activated','default_search_rec_pp');
     $this->db_keys = Doctrine::getTable('Preferences')->getAllPreferences($this->options['user']->getId(), $pref_keys);
     $is_reg_user = $this->options['user']->isA(Users::REGISTERED_USER) ;
     $choices = Doctrine::getTable('MySavedSearches')->getAllFields('specimen') ;
@@ -33,7 +33,7 @@ class PreferencesForm extends BaseForm
     $this->widgetSchema->setHelp('search_cols_specimen', 'Define which field will be available by default into the specimen search');
     $this->validatorSchema['search_cols_specimen'] = new sfValidatorChoice(array('choices' => array_keys($choices), 'multiple' => true));
 
-    $choices = array('5' => '5', '10' => '10', '15' => '15', '20' => '20');
+    $choices = array('5' => '5', '10' => '10', '15' => '15', '20' => '20','50'=>'50', '100'=>'100');
     $this->widgetSchema['board_search_rec_pp'] = new sfWidgetFormChoice(array('choices' => $choices));
     $this->validatorSchema['board_search_rec_pp'] = new sfValidatorChoice(array('choices' => array_keys($choices) ));
     $this->widgetSchema['board_search_rec_pp']->setLabel('Number of saved searches');
@@ -45,6 +45,13 @@ class PreferencesForm extends BaseForm
     $this->widgetSchema['board_spec_rec_pp']->setLabel('Number of saved specimens');
     $this->widgetSchema->setHelp('board_spec_rec_pp',"Number of saved specimens list showed on the board widget. (You browse every specimen lists on the dedicated page)");
     $this->widgetSchema['board_spec_rec_pp']->setDefault($this->db_keys['board_spec_rec_pp']? $this->db_keys['board_spec_rec_pp'] : Doctrine::getTable('Preferences')->getDefaultValue('board_spec_rec_pp'));
+
+
+    $this->widgetSchema['default_search_rec_pp'] = new sfWidgetFormChoice(array('choices' => $choices));
+    $this->validatorSchema['default_search_rec_pp'] = new sfValidatorChoice(array('choices' => array_keys($choices) ));
+    $this->widgetSchema['default_search_rec_pp']->setLabel('Number of records per pages');
+    $this->widgetSchema['default_search_rec_pp']->setDefault($this->db_keys['default_search_rec_pp']? $this->db_keys['default_search_rec_pp'] : Doctrine::getTable('Preferences')->getDefaultValue('default_search_rec_pp'));
+
 
     $this->widgetSchema['help_message_activated'] = new sfWidgetFormInputCheckbox() ;
     $this->widgetSchema->setHelp('help_message_activated',"Display help icons in forms or hide icons");
@@ -74,6 +81,7 @@ class PreferencesForm extends BaseForm
       'search_cols_specimen'=> implode('|',$this->getValue('search_cols_specimen')),
       'board_search_rec_pp'=> $this->getValue('board_search_rec_pp'),
       'board_spec_rec_pp'=> $this->getValue('board_spec_rec_pp'),
+      'default_search_rec_pp'=> $this->getValue('default_search_rec_pp'),
       'help_message_activated' => intval($this->getValue('help_message_activated')),
     );
     Doctrine::getTable('Preferences')->saveAllPreferences($this->options['user']->getId(),$results);

@@ -4,7 +4,7 @@ class myUser extends sfBasicSecurityUser
 {
   public function setCulture($culture)
   {
-    if(in_array($culture, array('en','fr','nl')))
+    if(in_array($culture, array('en','fr','nl','es_ES')))
     {
       parent::setCulture($culture);
     }
@@ -14,5 +14,10 @@ class myUser extends sfBasicSecurityUser
   public function setHelpIcon($val)
   {
     $this->setAttribute('helpIcon',$val);
+  }
+
+  public function getId()
+  {
+    return -1;
   }
 }

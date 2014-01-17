@@ -38,7 +38,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'link_url' => 'taxonomy/choose',
       'box_title' => $this->getI18N()->__('Choose Taxon'),
       'button_is_hidden' => true,
-      'complete_url' => 'catalogue/completeName?table=taxonomy',
+      'complete_url' => 'catalogue/completeName?table=taxonomy&level=1',
       'nullable' => true
     ));
 
@@ -943,8 +943,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
   public function addObjectNameColumnQuery($query, $field, $val) {
     $val = $this->checksToQuotedValues($val);
-    $query_array = array_fill(0,count($query_value)," s.object_name_indexed like '%' || fulltoindex(?) || '%'");
-    $query->andWhere( implode(' AND ',$query_array) ,$query_value);
+    $query_array = array_fill(0,count($val)," s.object_name_indexed like '%' || fulltoindex(?) || '%'");
+    $query->andWhere( implode(' AND ',$query_array) ,$val);
     return $query ;
   }
 

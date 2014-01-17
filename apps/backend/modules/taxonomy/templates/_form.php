@@ -35,7 +35,7 @@
           <?php echo $form['extinct']->renderError() ?>
           <?php echo $form['extinct'] ?>
         </td>
-      </tr> 
+      </tr>
       <tr id="parent_ref">
         <th class="ref_name"><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>
@@ -70,11 +70,11 @@
 
 $(document).ready(function () {
   <?php if($form->hasErrors())
-      echo "$('tr#parent_ref .button').show();";      
-  ?>  
+      echo "$('tr#parent_ref .button').show();";
+  ?>
 
-  <?php if($form['level_ref']->getValue())  
-      echo "$('#taxonomy_level_ref').trigger('change');" ; 
+  <?php if($form['level_ref']->getValue())
+      echo "$('#taxonomy_level_ref').trigger('change');" ;
   ?>
   $('#taxonomy_name').autocomplete({
       minLength: 3,

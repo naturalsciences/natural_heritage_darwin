@@ -11,7 +11,7 @@ class UsersLoginInfosForm extends BaseUsersLoginInfosForm
 {
   public function configure()
   {
-    $this->useFields(array('login_type', 'password', 'user_name', 'user_ref'));
+    $this->useFields(array('login_type', 'user_name', 'user_ref'));
 
     if($this->getObject()->isNew())
     {
@@ -76,6 +76,7 @@ class UsersLoginInfosForm extends BaseUsersLoginInfosForm
       $error = new sfValidatorError($validator, 'Password does not match' ) ;
       throw new sfvalidatorErrorSchema($validator, array('new_password' => $error));
     }
+
     return $values;
   }
 }

@@ -11,7 +11,7 @@
               </tr>
               <?php endforeach ; ?>
             <?php endif ; ?>
-            
+
             <?php if(isset($common_name['chronostratigraphy'][$spec->getTaxonRef()])) : ?>
             <?php $first=true ; ?>
             <?php foreach($common_name['chronostratigraphy'][$spec->getChronoRef()]['community'] as $community => $name) : ?>
@@ -25,10 +25,10 @@
               </tr>
               <?php endforeach ; ?>
             <?php endif ; ?>
-            
-            <?php if(isset($common_name['lithology'][$spec->getTaxonRef()])) : ?> 
-            <?php $first=true ; ?>                       
-            <?php foreach($common_name['lithology'][$spec->getLithologyRef()]['community'] as $community => $name) : ?>            
+
+            <?php if(isset($common_name['lithology'][$spec->getTaxonRef()])) : ?>
+            <?php $first=true ; ?>
+            <?php foreach($common_name['lithology'][$spec->getLithologyRef()]['community'] as $community => $name) : ?>
             <?php if($first) : ?>
               <tr>
                 <td rowspan="<?php echo count($common_name['lithology'][$spec->getLithologyRef()]['community']); ?>" class="top_aligned"><?php echo __('Lithology') ; ?></td>
@@ -39,11 +39,11 @@
               </tr>
               <?php endforeach ; ?>
             <?php endif ; ?>
-            
+
             <?php if(isset($common_name['lithostratigraphy'][$spec->getTaxonRef()])) : ?>
-            <?php $first=true ; ?>            
+            <?php $first=true ; ?>
             <?php foreach($common_name['lithostratigraphy'][$spec->getLithoRef()]['community'] as $community => $name) : ?>
-            <?php if($first) : ?> 
+            <?php if($first) : ?>
               <tr>
                 <td rowspan="<?php echo count($common_name['lithostratigraphy'][$spec->getLithoRef()]['community']); ?>" class="top_aligned"><?php echo __('Lithostratigraphy') ; ?></td>
                 <?php $first=false ; ?>
@@ -53,9 +53,9 @@
               </tr>
               <?php endforeach ; ?>
             <?php endif ; ?>
-            
-            <?php if(isset($common_name['mineralogy'][$spec->getTaxonRef()])) : ?>  
-            <?php $first=true ; ?>                      
+
+            <?php if(isset($common_name['mineralogy'][$spec->getTaxonRef()])) : ?>
+            <?php $first=true ; ?>
             <?php foreach($common_name['mineralogy'][$spec->getMineralRef()]['community'] as $community => $name) : ?>
             <?php if($first) : ?>
               <tr>

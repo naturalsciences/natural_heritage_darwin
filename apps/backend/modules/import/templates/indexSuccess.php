@@ -1,8 +1,7 @@
-<?php slot('title', __('Import files summary'));  ?>        
+<?php slot('title', __('Import files summary'));  ?>
 
 <div class="page">
 
-<!--   <h1>Import will be available in 2014</h1> -->
 <h1><?php echo __('Imports');?> : <?php echo image_tag('info.png',array('title'=>'info','class'=>'extd_info')); ?></h1>
     <?php include_partial('searchForm', array('form' => $form)) ?>
 </div>
@@ -32,6 +31,6 @@ $(document).ready(function () {
         }
       }
     });
-  });  
+  });
 });
 </script>

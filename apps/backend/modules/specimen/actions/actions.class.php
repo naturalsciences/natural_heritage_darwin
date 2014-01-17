@@ -408,6 +408,16 @@ class specimenActions extends DarwinActions
   public function executeView(sfWebRequest $request)
   {
     $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this->getUser());
+
+    $this->hasEncodingRight = false;
+
+    if($this->getUser()->isAtLeast(Users::ENCODER)) {
+      if( $this->getUser()->isA(Users::ADMIN) ||
+        Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId())) {
+
+        $this->hasEncodingRight = true;
+      }
+    }
     $this->forward404Unless($this->specimen,'Specimen does not exist');
 
     $this->loadWidgets(null,$this->specimen->getCollectionRef());

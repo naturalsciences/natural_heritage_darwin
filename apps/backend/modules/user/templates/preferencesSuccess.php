@@ -39,6 +39,14 @@
           </th>
           <td><?php echo $form['board_search_rec_pp'];?></td>
         </tr>
+        <tr>
+          <th>
+            <?php echo $form['default_search_rec_pp']->renderLabel();?>
+            <?php echo help_ico($form['default_search_rec_pp']->renderHelp(),$sf_user);?>
+          </th>
+          <td><?php echo $form['default_search_rec_pp'];?></td>
+        </tr>
+
       </tbody>
       <thead>
         <tr>
