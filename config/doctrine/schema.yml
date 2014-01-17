@@ -1177,6 +1177,7 @@ Multimedia:
         mime_type: { type: string }
         visible: {type:boolean, notnull: true, default: true}
         publishable: {type:boolean, notnull: true, default: true}
+        extracted_info: { type: string }
 
 Loans:
     columns:

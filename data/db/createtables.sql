@@ -426,6 +426,7 @@ create table multimedia
         mime_type varchar not null,
         visible boolean not null default true,
         publishable boolean not null default true,
+        extracted_info text,
         constraint pk_multimedia primary key (id)
       )
       inherits (template_table_record_ref);
@@ -1015,8 +1016,8 @@ create table specimens
         complete boolean not null default true,
         institution_ref integer,
         building varchar,
-        floor varchar,        
-        room varchar,        
+        floor varchar,
+        room varchar,
         row varchar,
         col varchar,
         shelf varchar,

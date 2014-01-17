@@ -144,7 +144,7 @@ BEGIN
         ELSIF TG_TABLE_NAME = 'loans' THEN
                 NEW.search_indexed := fullToIndex(COALESCE(NEW.name,'') || COALESCE(NEW.description,''));
         ELSIF TG_TABLE_NAME = 'multimedia' THEN
-                NEW.search_indexed := fullToIndex ( COALESCE(NEW.title,'') ||  COALESCE(NEW.description,'') ) ;
+                NEW.search_indexed := fullToIndex ( COALESCE(NEW.title,'') ||  COALESCE(NEW.description,'') || COALESCE(NEW.extracted_info,'') ) ;
         ELSIF TG_TABLE_NAME = 'comments' THEN
                 NEW.comment_indexed := fullToIndex(NEW.comment);
         ELSIF TG_TABLE_NAME = 'ext_links' THEN

@@ -21,6 +21,7 @@
  * @property string $mime_type
  * @property boolean $visible
  * @property boolean $publishable
+ * @property string $extracted_info
  * 
  * @method integer    getId()                  Returns the current record's "id" value
  * @method string     getReferencedRelation()  Returns the current record's "referenced_relation" value
@@ -37,6 +38,7 @@
  * @method string     getMimeType()            Returns the current record's "mime_type" value
  * @method boolean    getVisible()             Returns the current record's "visible" value
  * @method boolean    getPublishable()         Returns the current record's "publishable" value
+ * @method string     getExtractedInfo()       Returns the current record's "extracted_info" value
  * @method Multimedia setId()                  Sets the current record's "id" value
  * @method Multimedia setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method Multimedia setRecordId()            Sets the current record's "record_id" value
@@ -52,6 +54,7 @@
  * @method Multimedia setMimeType()            Sets the current record's "mime_type" value
  * @method Multimedia setVisible()             Sets the current record's "visible" value
  * @method Multimedia setPublishable()         Sets the current record's "publishable" value
+ * @method Multimedia setExtractedInfo()       Sets the current record's "extracted_info" value
  * 
  * @package    darwin
  * @subpackage model
@@ -128,6 +131,9 @@ abstract class BaseMultimedia extends DarwinModel
              'type' => 'boolean',
              'notnull' => true,
              'default' => true,
+             ));
+        $this->hasColumn('extracted_info', 'string', null, array(
+             'type' => 'string',
              ));
     }
 
