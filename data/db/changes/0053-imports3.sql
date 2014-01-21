@@ -1,6 +1,10 @@
 begin;
 set search_path=darwin2,public;
 
+CREATE TRIGGER trg_cpy_fullToIndex_specimens BEFORE INSERT OR UPDATE
+  ON specimens FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_fullToIndex();
+
 CREATE OR REPLACE FUNCTION fct_imp_checker_catalogue(line staging, catalogue_table text, prefix text)  RETURNS boolean
 AS $$
 DECLARE

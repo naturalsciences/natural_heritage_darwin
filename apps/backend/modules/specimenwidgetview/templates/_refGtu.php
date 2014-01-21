@@ -37,11 +37,11 @@
     <?php endif;?>
     <tr>
       <th><label><?php echo __('Date from');?></label></th>
-      <td id="specimen_gtu_date_from" class="datesNum"><?php echo $gtu->getGtuToDateMasked(ESC_RAW);?></td>
+      <td id="specimen_gtu_date_from" class="datesNum"><?php echo $gtu->getGtuFromDateMasked(ESC_RAW);?></td>
     </tr>
     <tr>
       <th><label><?php echo __('Date to');?></label></th>
-      <td id="specimen_gtu_date_to" class="datesNum"><?php echo $gtu->getGtuFromDateMasked(ESC_RAW);?></td>
+      <td id="specimen_gtu_date_to" class="datesNum"><?php echo $gtu->getGtuToDateMasked(ESC_RAW);?></td>
     </tr>
     <tr>
       <th class="top_aligned">

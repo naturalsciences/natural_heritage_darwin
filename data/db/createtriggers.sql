@@ -83,6 +83,10 @@ CREATE TRIGGER trg_cpy_fullToIndex_bibliography BEFORE INSERT OR UPDATE
         ON bibliography FOR EACH ROW
         EXECUTE PROCEDURE fct_cpy_fullToIndex();
 
+CREATE TRIGGER trg_cpy_fullToIndex_specimens BEFORE INSERT OR UPDATE
+  ON specimens FOR EACH ROW
+  EXECUTE PROCEDURE fct_cpy_fullToIndex();
+
 CREATE TRIGGER trg_cpy_gtuTags_TagGroups AFTER INSERT OR UPDATE OR DELETE
 	ON tag_groups FOR EACH ROW
 	EXECUTE PROCEDURE fct_cpy_gtuTags();
