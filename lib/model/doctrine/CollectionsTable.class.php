@@ -8,9 +8,9 @@ class CollectionsTable extends DarwinTable
   {
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
-      ->from('Collections r')
+      ->from('Collections col')
       ->orderBy('name ASC')
-      ->limit($limit);
+      ;
     if($exact)
       $q->andWhere("name = ?",$needle);
     else
@@ -20,11 +20,8 @@ class CollectionsTable extends DarwinTable
       $q->leftJoin('col.CollectionsRights r ON col.id=r.collection_ref AND r.user_ref = '.$user->getId())
         ->andWhere('r.id is not null OR col.is_public = TRUE');
 
-      if($only_encodable) {
-        $q->andWhere('r.db_user_type >= ?',USERS::ENCODER);
-      }
+      $q->andWhere('r.db_user_type >= ?',USERS::ENCODER);
     }
-
     $q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
