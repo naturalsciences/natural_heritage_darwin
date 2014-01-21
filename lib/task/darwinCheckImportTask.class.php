@@ -31,9 +31,12 @@ EOF;
 
     if(empty($options['no-delete'])) {
       $this->logSection('Delete', sprintf('Removing some deleted import lines')) ;
-      $batch_nbr = 200;
+      $batch_nbr = 2000;
       $sql = "delete from staging where ctid = ANY (select s.ctid from staging s inner join imports i on s.import_ref = i.id and i.state='deleted' limit $batch_nbr);";
       $ctn = $conn->getDbh()->exec($sql);
+
+      $sql = "delete from imports i WHERE i.state='deleted' AND NOT EXISTS (select 1 from staging where import_ref = i.id)";
+      $conn->getDbh()->exec($sql);
       $this->logSection('Delete', sprintf('Removed %d lines', $ctn)) ;
     }
 
