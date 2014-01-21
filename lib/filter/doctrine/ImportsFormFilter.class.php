@@ -27,8 +27,8 @@ class ImportsFormFilter extends BaseImportsFormFilter
       array(
         'choices' => $state_list
       )
-    ); 
-    $this->widgetSchema['filename'] = new sfWidgetFormInputText() ; 
+    );
+    $this->widgetSchema['filename'] = new sfWidgetFormInputText() ;
     $this->widgetSchema['filename']->setAttributes(array('class'=>'small_size'));
  //   $this->widgetSchema['user_ref'] = new sfWidgetFormInputHidden() ;
     /* Labels */
@@ -58,12 +58,13 @@ class ImportsFormFilter extends BaseImportsFormFilter
   {
     $query = DQ::create()
       ->from('Imports i')
-      ->innerJoin("i.Collections")    ;  
+      ->innerJoin("i.Collections")
+      ->where('i.state != ?', 'deleted');
     $this->addShowFinishedColumnQuery($query, 'is_finished', $values['show_finished']);
     if($values['collection_ref'] != 0) $query->addWhere('i.collection_ref = ?', $values['collection_ref']) ;
     if($values['filename']) $query->addWhere('i.filename LIKE \'%'.$values['filename'].'%\'');
-    if($values['state']) $query->addWhere('i.state = ?', $values['state']) ;    
-    // here, add where clause to look for import file only where the user have right on collection 
+    if($values['state']) $query->addWhere('i.state = ?', $values['state']) ;
+    // here, add where clause to look for import file only where the user have right on collection
     $query->andWhereIn('collection_ref',array_keys(
       Doctrine::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user_ref']))
     );

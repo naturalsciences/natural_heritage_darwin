@@ -18,7 +18,7 @@ class importActions extends DarwinActions
       $this->forwardToSecureAction();
     }
   }
-  
+
   private function getRight($id)
   {
     $import = Doctrine::getTable('Imports')->find($id);
@@ -27,12 +27,13 @@ class importActions extends DarwinActions
        $this->forwardToSecureAction();
     return $import ;
   }
-  
+
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
     $this->import = $this->getRight($request->getParameter('id')) ;
-    $this->import->delete();
+    $this->import->setState('deleted');
+    $this->import->save();
 
     if($request->isXmlHttpRequest())
     {
@@ -48,7 +49,7 @@ class importActions extends DarwinActions
     Doctrine::getTable('Imports')->UpdateStatus($request->getParameter('id'));
     $this->redirect('import/index');
   }
-  
+
   public function executeViewError(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
@@ -70,35 +71,35 @@ class importActions extends DarwinActions
     }
     return $this->redirect('import/index');
   }
-  
+
   public function executeExtdinfo(sfWebRequest $request)
-  {   
-    $this->import = new Imports() ;   
+  {
+    $this->import = new Imports() ;
   }
 
   public function executeUpload(sfWebRequest $request)
   {
-    if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();    
+    if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     // Initialization of the import form
-    $this->form = new importsForm();    
+    $this->form = new importsForm();
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter($this->form->getName()), $request->getFiles($this->form->getName()));
       if($this->form->isValid())
       {
         if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')))
-        {  
+        {
           $error = new sfValidatorError(new sfValidatorPass(),'You don\'t have right on this collection');
-          $this->form->getErrorSchema()->addError($error, 'Darwin2 :'); 
+          $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
           return ;
         }
         $file = $this->form->getValue('uploadfield');
         $date = date('Y-m-d H:i:s') ;
         $filename = 'uploaded_'.sha1($file->getOriginalName().$date);
-        $extension = $file->getExtension($file->getOriginalExtension());   
+        $extension = $file->getExtension($file->getOriginalExtension());
         // we can have the temporary file here : $file->getTempName()) ;
-        // usefull if we choose not to save the file in fact    
-        $this->form->getObject()->setUserRef($this->getUser()->getId()) ;   
+        // usefull if we choose not to save the file in fact
+        $this->form->getObject()->setUserRef($this->getUser()->getId()) ;
         $this->form->getObject()->setFilename($file->getOriginalName()) ;
         $this->form->getObject()->setCreatedAt($date) ;
         try {
@@ -107,15 +108,15 @@ class importActions extends DarwinActions
           $this->redirect('import/index?complete=true');
         }
         catch(Doctrine_Exception $e)
-        {  
+        {
           $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-          $this->form->getErrorSchema()->addError($error, 'Darwin2 :');        
+          $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
         }
       }
-      $this->setTemplate('upload');        
+      $this->setTemplate('upload');
     }
   }
-  
+
  /**
   * Executes index action
   *
@@ -124,7 +125,7 @@ class importActions extends DarwinActions
   public function executeIndex(sfWebRequest $request)
   {
     $this->form = new ImportsFormFilter(null,array('user_ref' =>$this->getUser()->getId()));
-  }  
+  }
   public function executeSearch(sfWebRequest $request)
   {
     $this->form = new ImportsFormFilter(null,array('user_ref' =>$this->getUser()->getId()));
@@ -135,10 +136,10 @@ class importActions extends DarwinActions
     $this->s_url = 'import/search'.'?is_choose='.$this->is_choose;
     $this->o_url = '&orderby='.$this->orderBy.'&orderdir='.$this->orderDir;
     if($request->getParameter('imports_filters','') !== '')
-    { 
+    {
       $this->form->bind($request->getParameter('imports_filters'));
       if ($this->form->isValid())
-      { 
+      {
         $query = $this->form->getQuery()
           ->orderBy($this->orderBy .' '.$this->orderDir);
         $this->pagerLayout = new PagerLayoutWithArrows(

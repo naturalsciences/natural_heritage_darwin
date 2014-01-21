@@ -8,11 +8,12 @@ class darwinCheckImportTask extends sfBaseTask
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
-      new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),      
+      new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
       new sfCommandOption('do-import', null, sfCommandOption::PARAMETER_NONE, 'if some lines are marked as "to be imported", try to import after the check'),
       new sfCommandOption('full-check', null, sfCommandOption::PARAMETER_NONE, 'if this option is specified, even this import file on pending state are checked'),
       new sfCommandOption('id', null, sfCommandOption::PARAMETER_REQUIRED, 'Only do the job for a given import id'),
-      ));      
+      new sfCommandOption('no-delete', null, sfCommandOption::PARAMETER_NONE, 'Do not try to delete old imported lines'),
+      ));
     $this->namespace        = 'darwin';
     $this->name             = 'check-import';
     $this->briefDescription = 'check staging lines status and/or import them into real tables';
@@ -23,17 +24,28 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
+    $databaseManager = new sfDatabaseManager($this->configuration);
+    $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
+    $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
+    $conn = Doctrine_Manager::connection();
+
+    if(empty($options['no-delete'])) {
+      $this->logSection('Delete', sprintf('Removing some deleted import lines')) ;
+      $batch_nbr = 200;
+      $sql = "delete from staging where ctid = ANY (select s.ctid from staging s inner join imports i on s.import_ref = i.id and i.state='deleted' limit $batch_nbr);";
+      $ctn = $conn->getDbh()->exec($sql);
+      $this->logSection('Delete', sprintf('Removed %d lines', $ctn)) ;
+    }
+
     if(!empty($options['id']) && ! ctype_digit($options['id']) )
     {
       $this->logSection('id not int', sprintf('the Id parameter must be an integer (id of import)'),null, 'ERROR') ;
     }
+
      // initialize the database connection
-    $databaseManager = new sfDatabaseManager($this->configuration);
-    $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env']; 
-    $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
-    $conn = Doctrine_Manager::connection();
+
     // First Check :)
-    if (empty($options['full-check'])) 
+    if (empty($options['full-check']))
       $state_to_check = "('loaded','processing')" ;
     else
       $state_to_check = "('loaded','processing','pending')" ;
@@ -81,4 +93,4 @@ EOF;
             ->execute();
     $conn->getDbh()->exec('COMMIT;');
   }
-}  
+}
