@@ -103,4 +103,40 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION fct_imp_checker_manager(line staging)  RETURNS boolean
+AS $$
+BEGIN
+
+  IF line.taxon_name IS NOT NULL AND line.taxon_name is distinct from '' AND line.taxon_ref is null THEN
+    PERFORM fct_imp_create_catalogues_and_parents(line, 'taxonomy','taxon');
+    PERFORM fct_imp_checker_catalogue(line,'taxonomy','taxon');
+  END IF;
+
+  IF line.chrono_name IS NOT NULL AND line.chrono_name is distinct from '' AND line.chrono_ref is null THEN
+    PERFORM fct_imp_checker_catalogue(line,'chronostratigraphy','chrono');
+  END IF;
+
+  IF line.lithology_name IS NOT NULL AND line.lithology_name is distinct from '' AND line.lithology_ref is null THEN
+    PERFORM fct_imp_checker_catalogue(line,'lithology','lithology');
+  END IF;
+
+  IF line.mineral_name IS NOT NULL AND line.mineral_name is distinct from '' AND line.mineral_ref is null THEN
+    PERFORM fct_imp_checker_catalogue(line,'mineralogy','mineral');
+  END IF;
+
+  IF line.litho_name IS NOT NULL AND line.litho_name is distinct from '' AND line.litho_ref is null THEN
+    PERFORM fct_imp_checker_catalogue(line,'lithostratigraphy','litho');
+  END IF;
+
+
+
+  PERFORM fct_imp_checker_igs(line);
+  PERFORM fct_imp_checker_expeditions(line);
+  PERFORM fct_imp_checker_gtu(line);
+  PERFORM fct_imp_checker_people(line);
+  RETURN true;
+END;
+$$ LANGUAGE plpgsql;
+
 COMMIT ;
