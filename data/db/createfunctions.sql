@@ -2575,7 +2575,7 @@ BEGIN
     PERFORM fct_imp_checker_catalogue(line,'taxonomy','taxon');
   END IF;
 
-  IF line.chrono_name IS NOT NULL AND line.chrono_name is not null AND line.chrono_ref is null THEN
+  IF line.chrono_name IS NOT NULL AND line.chrono_name is distinct from '' AND line.chrono_ref is null THEN
     PERFORM fct_imp_checker_catalogue(line,'chronostratigraphy','chrono');
   END IF;
 

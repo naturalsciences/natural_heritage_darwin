@@ -87,7 +87,8 @@ class ImportABCDXml implements IImportModels
       case "AssociatedUnitSourceInstitutionCode" : $this->object->setInstitutionName($this->cdata) ; break;
       case "AssociatedUnitSourceName" : $this->object->setSourceName($this->cdata) ; break;
       case "AssociationType" : $this->object->setRelationshipType($this->cdata) ; break;
-      case "efg:ChronostratigraphicAttribution" : $this->cdata = $this->object->setChronoParent() ; if($this->cdata) $this->addComment(true, 'chronostratigraphy') ; break;
+      case "efg:ChronostratigraphicAttribution" : $this->cdata = $this->object->setChronoParent() ;
+        if($this->cdata) { $this->property = new ParsingProperties("Local stage","chronostratigraphy") ; $this->property->property->setLowerValue($this->cdata['name']) ; $this->addProperty(true) ; } break;
       case "efg:ChronoStratigraphicDivision" : $this->object->getChronoLevel(strtolower($this->cdata)) ; break;
       case "efg:ChronostratigraphicAttributions" : $this->object->saveChrono($this->staging) ; break;
       case "efg:ChronostratigraphicName" : $this->object->name = $this->cdata ; break;
@@ -127,7 +128,7 @@ class ImportABCDXml implements IImportModels
       case "FileURI" : $this->object->getFile($this->cdata) ; break;
       case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
       case "FullName" : $this->people_name = $this->cdata ; break;
-      case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break; 
+      case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break;
       case "FullScientificNameString" : $this->object->fullname = $this->cdata ; break;
       case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break;
       case "Gathering" : if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break;
@@ -189,7 +190,12 @@ class ImportABCDXml implements IImportModels
       case "ScientificName" : $this->staging["taxon_name"] = $this->object->getCatalogueName() ;
                               $this->staging["taxon_level_name"] = strtolower($this->object->level_name) ;break;
       case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break;
-      case "Sex" : $this->staging->setIndividualSex($this->cdata) ; break;
+      case "Sex" : if(strtolower($this->cdata) == 'm') $this->staging->setIndividualSex('male') ;
+                   elseif (strtolower($this->cdata) == 'f') $this->staging->setIndividualSex('female') ;
+                   elseif (strtolower($this->cdata) == 'u') $this->staging->setIndividualSex('unknown') ;
+                   elseif (strtolower($this->cdata) == 'n') $this->staging->setIndividualSex('not applicable') ;
+                   elseif (strtolower($this->cdata) == 'x') $this->staging->setIndividualSex('mixed') ;
+                   break;
       // case "SortingName" : $this->object->people_order_by = $this->cdata ; break;
       case "storage:Barcode" : $this->addCode("2Dbarcode") ; break ; // c'est un code avec "2dbarcode" dans le main
       case "storage:Institution" : $this->staging->setInstitutionName($this->cdata) ; break;
@@ -404,7 +410,7 @@ class ImportABCDXml implements IImportModels
     {
       $people = new StagingPeople() ;
       $people->setPeopleType($type) ;
-      $people->setFormatedName($name) ;      
+      $people->setFormatedName($name) ;
       $this->object->handleRelation($people,$this->staging) ;
     }
   }

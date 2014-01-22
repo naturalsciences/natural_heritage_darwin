@@ -21,11 +21,11 @@ class ParsingCatalogue
     $this->catalogue = $var ;
     $this->catalogue_parent = new Hstore() ;
   }
-  
+
   // fill the Hstore parent
   public function handleParent($level, $name, $staging)
   {
-    if ($level == 'efg:InformalLithostratigraphicName') 
+    if ($level == 'efg:InformalLithostratigraphicName')
       $staging->setObjectName($name) ;
     elseif(in_array($level,array_keys($this->level[$this->catalogue])))
     {
@@ -57,8 +57,15 @@ class ParsingCatalogue
 
   public function setChronoParent()
   {
-    if($this->temp_array && in_array($this->level_name, array_keys($this->temp_array)))
-      return("Local Nomenclature: ".$this->name." (".$this->level_name.")") ;
+    if(stripos($this->level_name,'local')) {
+      $this->level_name = trim(substr($this->level_name,0,stripos($this->level_name,'local')));
+      $is_local = true;
+    }
+
+
+    if($this->temp_array && in_array($this->level_name, array_keys($this->temp_array)) && $is_local) {
+      return array('name'=> $this->name, "level"=> $this->level_name);
+    }
     $this->temp_array[$this->level[$this->catalogue][$this->level_name]] = $this->name ;
     return(false) ;
   }
@@ -78,7 +85,7 @@ class ParsingCatalogue
 
   public function addStagingInfo($object, $id)
   {
-    if(!$this->staging_info) 
+    if(!$this->staging_info)
     {
       $this->staging_info = new StagingInfo() ;
       $this->staging_info->setStagingRef($id) ;
