@@ -31,6 +31,15 @@ class specimenActions extends DarwinActions
   {
   }
 
+  public function executeGetStorage(sfWebRequest $request)
+  {
+    if($request->getParameter('item')=="container")
+      $items = Doctrine::getTable('Specimens')->getDistinctContainerStorages($request->getParameter('type'));
+    else
+      $items = Doctrine::getTable('Specimens')->getDistinctSubContainerStorages($request->getParameter('type'));
+    return $this->renderPartial('options', array('items'=> $items ));
+  }
+
   public function executeAddCode(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
