@@ -161,6 +161,18 @@
 }
 .widget_preview a[href] {
   color: white;
+  cursor: copy;
+  text-shadow: 1px 1px 1px GRAY;
+}
+
+/* help */
+
+.widget_preview.hidden {
+  display:block;
+}
+.widget_preview.hidden a[href]{
+    color: black;
+    cursor: help;
 }
 
 .widget_collection_container .no_more

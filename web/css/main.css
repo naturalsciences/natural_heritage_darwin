@@ -3156,14 +3156,6 @@ tr.spec_ident_collectors_data
   cursor:not-allowed;
 }
 
-.widget_preview.hidden {
-  display:block;
-}
-.widget_preview.hidden a[href]{
-    color: #666666;
-/*     text-decoration: line-through; */
-
-}
 
 .widget {
   -webkit-transition : box-shadow 0.5s linear;
