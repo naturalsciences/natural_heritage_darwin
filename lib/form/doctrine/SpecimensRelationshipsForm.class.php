@@ -90,6 +90,7 @@ class SpecimensRelationshipsForm extends BaseSpecimensRelationshipsForm
 
     $this->widgetSchema->setLabels(array(
       'unit_type' => 'Unit type' ,
+      'source_id' => 'Source Id' ,
       'Quantity' => 'Quantity',
       'taxon_ref' => 'Taxon :',
       'mineral_ref' => 'Mineral :',
