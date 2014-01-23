@@ -99,7 +99,7 @@
 
         base.changeStatus(widget.attr('id'), 'hidden');
         $('.widget_collection_container .no_more').addClass('hidden');
-        $('#boardprev_'+widget.attr('id')).fadeIn();
+        $('#boardprev_'+widget.attr('id')).removeClass('hidden');
         widget.remove();
         if($('.board_col li').length == 0)
           $('.no_more_wigets').removeClass('hidden');
@@ -120,12 +120,29 @@
         }
     };
 
+    base.flash = function (widget) {
+      var $flash_el = $('#'+widget);
+      var top_pos = $flash_el.position().top;
+      scroll(0,top_pos - $('.widget_collection_button').position().top - 40);
+
+      $flash_el.addClass('flash');
+      setTimeout(function () {
+        $flash_el.removeClass('flash');
+        }, 1000);
+    }
+
     base.addWidget = function(event){
       event.preventDefault();
-      hideForRefresh('.widget_collection_container');
-      var insertionDone = false;
       var widget_id = $(this).attr('alt');
       var to_open_id = widget_id;
+
+      if($(this).parent('div').hasClass('hidden')){
+        base.flash(to_open_id);
+        return;
+      }
+
+      hideForRefresh('.widget_collection_container');
+      var insertionDone = false;
       // Change Widget Status
       var add_url = $(this).attr('href');
       var positions = [];
@@ -153,10 +170,10 @@
           $('.board_col:eq(' + col + ') > li:eq('+ positions[col] +')').before(html);
         showAfterRefresh('.widget_collection_container');
         attachHelpQtip($('#'+to_open_id));
-
+        //base.flash(to_open_id);
       });
 
-      $(this).parent().hide();
+      $(this).parent().addClass('hidden');
 
       if($('.widget_collection_container .widget_preview:visible').length == 0)
           $('.widget_collection_container .no_more').removeClass('hidden');
