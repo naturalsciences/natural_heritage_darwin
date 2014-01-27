@@ -43,6 +43,7 @@
                 <li class="pinned_specimens"><?php echo link_to(sprintf(__('Pinned Specimens <i>(%d)</i>'), count($sf_user->getAllPinned('specimen'))),'specimensearch/search?pinned=true&source=specimen');?></li>
                 <li><?php echo link_to(__('Collections'),'collection/index');?></li>
                 <li><?php echo link_to(__('Loans'),'loan/index');?></li>
+                <li><?php echo link_to(__('Storage Search'),'storage/index');?></li>
             </ul>
         </li>
         <?php if($sf_user->isAtLeast(Users::ENCODER)) : ?>

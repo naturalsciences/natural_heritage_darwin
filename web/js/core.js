@@ -85,7 +85,7 @@ function showValues()
   $(this).parent().find('.hide_value').show();
   $(this).hide();
   return false;
-};
+}
 
 function hideValues()
 {
@@ -93,7 +93,7 @@ function hideValues()
   $(this).parent().find('.display_value').show();
   $(this).hide();
   return false;
-};
+}
 
 
 function clearPropertyValue()
@@ -219,12 +219,23 @@ function postToUrl(url, params, newWindow)
 }
 
 function getSearchColumnVisibilty() {
-  column_arr = []
+  column_arr = [];
   $('ul.column_menu .col_switcher :checked').each(function(){
     column_arr.push($(this).val());
   });
   column_str = column_arr.join('|');
   return column_str;
+}
+
+function decodeBase64(s) {
+    var e={},i,b=0,c,x,l=0,a,r='',w=String.fromCharCode,L=s.length;
+    var A="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    for(i=0;i<64;i++){e[A.charAt(i)]=i;}
+    for(x=0;x<L;x++){
+        c=e[s.charAt(x)];b=(b<<6)+c;l+=6;
+        while(l>=8){((a=(b>>>(l-=8))&0xff)||(x<(L-2)))&&(r+=w(a));}
+  }
+  return r;
 }
 
 //http://www.1stwebmagazine.com/jquery-checkbox-and-radio-button-styling

@@ -387,4 +387,23 @@ class SpecimensTable extends DarwinTable
       return $this->flat_results[$column];
     return array();
   }
+
+  public function findConservatories($user , $item, $cirterias) {
+    $sql = "SELECT COALESCE(".$item."::text,'') as item,  count(*) as ctn FROM Specimens s
+      WHERE  collection_ref in (select fct_search_authorized_view_collections(".$user->getId().'))';
+    $sql_params = array();
+    foreach($cirterias as $k => $v) {
+      $sql .= " AND COALESCE(".$k.", '') = ?";
+      $sql_params[] = $v;
+    }
+    $sql .= " GROUP BY item order by item asc";
+
+    $conn_MGR = Doctrine_Manager::connection();
+    $conn = $conn_MGR->getDbh();
+    $statement = $conn->prepare($sql);
+    $statement->execute($sql_params);
+    $res = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    return $res;
+  }
 }

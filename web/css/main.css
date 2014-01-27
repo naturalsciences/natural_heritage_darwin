@@ -3178,3 +3178,23 @@ tr.spec_ident_collectors_data
   -moz-box-shadow : 0px 0px 10px 10px #C78B37;
   box-shadow : 0px 0px 10px 10px #C78B37;
 }
+
+.conserv_view_box { background: #E9F2F7; }
+.conserv_view_box h3 {
+  background-color: #5BAABD;
+  text-align: left;
+  color: white;
+  padding: 3px;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+.conserv_list li{
+  margin-bottom: 0.3em;
+}
+.conserv_view_box {
+  border: 1px solid black;
+  width: 400px;
+  float: left;
+  margin-left: 20px;
+  padding: 0px 10px 10px;
+}
