@@ -1,6 +1,6 @@
-<?php slot('title',__("Storage View"));?>
+<?php slot('title',__("Depositories' view"));?>
 <div class="page">
-  <h1><?php echo __('Storage View :');?></h1>
+  <h1><?php echo __("Depositories' view");?></h1>
     <ul class="conserv_list">
     <?php foreach($to_query as $type=>$name):?>
       <li>

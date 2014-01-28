@@ -6008,8 +6008,8 @@ DaRWIN</target>
         <target>Ecology</target>
       </trans-unit>
       <trans-unit id="1806">
-        <source>Storage View</source>
-        <target>Storage View</target>
+        <source>Depositories' view</source>
+        <target>Depositories' View</target>
       </trans-unit>
     </body>
   </file>
