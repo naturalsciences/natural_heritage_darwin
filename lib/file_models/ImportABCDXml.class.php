@@ -221,6 +221,8 @@ class ImportABCDXml implements IImportModels
       case "UpperValue" : $this->property->property->setUpperValue($this->cdata) ; break;
       case "efg:VarietalNameString" : $this->staging->setObjectName($this->cdata) ; break; //$this->object->level_name='variety' ; break;
       case "VerificationLevel" : $this->object->determination_status = $this->cdata ; break;
+      case "storage:Type" : $this->code_type = $this->cdata; break;
+      case "storage:Value" : $this->addCode($this->code_type) ; break ; 
     } }
     $this->tag = "" ;
     $this->path = substr($this->path,0,strrpos($this->path,"/$name")) ;
