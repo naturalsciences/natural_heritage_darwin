@@ -7478,7 +7478,14 @@
         <source>Number of records per pages</source>
         <target>Number of records per pages</target>
       </trans-unit>
-
+      <trans-unit id="1805">
+        <source>Ecology</source>
+        
+      </trans-unit>
+      <trans-unit id="1806">
+        <source>Depositories' view</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
