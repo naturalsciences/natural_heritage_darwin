@@ -54,7 +54,7 @@ class CommentsTable extends DarwinTable
       'general information' => 'general information',
       'tool description' => 'tool description',
     ),
-    'specimens' => array('general' => 'General', 'taxonomy' => 'Taxonomy', 
+    'specimens' => array('general' => 'General', 'taxonomy' => 'Taxonomy',
       'chronostratigraphy' => 'Chronostratigraphy',
       'lithostratigraphy' => 'Lithostratigraphy', 'lithology' => 'Lithology', 'mineralogy' => 'Mineralogy',
       'sampling_locations' => 'Sampling locations', 'igs' => 'IGs', 'identifications' => 'Identifications',
@@ -67,6 +67,7 @@ class CommentsTable extends DarwinTable
       'social_status' => 'Social status', 'rock_form' => 'Rock form',
       'identifications' => 'Identifications',
       'publication' => 'Publication',
+      'ecology' => 'Ecology',
     ),
     'loans' => array(
       'usage' => 'Usage',
@@ -96,7 +97,7 @@ class CommentsTable extends DarwinTable
       ->orderby('notion_concerned asc');
     return $q->execute();
   }
-  
+
   /**
   * Find related comments for a table name a an array of id
   * @param string $table_name the table to look for

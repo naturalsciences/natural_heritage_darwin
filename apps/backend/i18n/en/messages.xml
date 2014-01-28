@@ -6003,7 +6003,14 @@ DaRWIN</target>
         <source>Number of records per pages</source>
         <target>Number of records per pages</target>
       </trans-unit>
-
+      <trans-unit id="1805">
+        <source>Ecology</source>
+        <target>Ecology</target>
+      </trans-unit>
+      <trans-unit id="1806">
+        <source>Storage View</source>
+        <target>Storage View</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
