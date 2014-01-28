@@ -1,6 +1,6 @@
 begin;
 set search_path=darwin2,public;
 
-ALTER TABLE import add column template_version text ;
+ALTER TABLE imports add column template_version text ;
 
 COMMIT ;
