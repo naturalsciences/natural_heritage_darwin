@@ -39,7 +39,7 @@
     <h2><?php echo __("Customizable Interface :");?></h2>
     <?php echo image_tag('public/customize.png',array('class'=>'tour_img'));?>
     <p><?php echo __("In the Darwin tool you have the ability to customize freely your interface.<br />
-      You are only interested in taxomy? No problem, no other infos will clutter your tool.<br />
+      You are only interested in taxonomy? No problem, no other infos will clutter your tool.<br />
       Hide or minimize the information you don't need to focus on.");?></p>
   </div>
   <div class="clear last_item"></div>
