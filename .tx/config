@@ -1,0 +1,14 @@
+[main]
+host = https://www.transifex.com
+
+[darwin.public]
+file_filter = apps/public/i18n/<lang>/messages.xml
+source_file = apps/public/i18n/en/messages.xml
+source_lang = en
+
+[darwin.backend]
+file_filter = apps/backend/i18n/<lang>/messages.xml
+source_file = apps/backend/i18n/en/messages.xml
+source_lang = en
+
+

@@ -6011,6 +6011,10 @@ DaRWIN</target>
         <source>Depositories' view</source>
         <target>Depositories' View</target>
       </trans-unit>
+      <trans-unit id="1807">
+        <source>Choose a Building</source>
+        <target>Choose a Building</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

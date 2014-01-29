@@ -1439,6 +1439,7 @@
       </trans-unit>
           <trans-unit id="305">
         <source>Specimen count</source>
+        <target>Aantal objecten</target>
         
       </trans-unit>
           <trans-unit id="306">
@@ -7484,6 +7485,10 @@
       </trans-unit>
       <trans-unit id="1806">
         <source>Depositories' view</source>
+        
+      </trans-unit>
+      <trans-unit id="1807">
+        <source>Choose a Building</source>
         
       </trans-unit>
     </body>

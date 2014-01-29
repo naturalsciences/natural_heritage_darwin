@@ -7503,6 +7503,11 @@
         <target>Vue des conservatoires</target>
         
       </trans-unit>
+      <trans-unit id="1807">
+        <source>Choose a Building</source>
+        <target>Choisir un bâtiment</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
