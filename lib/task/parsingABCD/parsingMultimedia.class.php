@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class ParsingMultimedia
 {
@@ -27,7 +27,7 @@ class ParsingMultimedia
     return($context);
   }
 
-  public function getFile($file) 
+  public function getFile($file)
   {
     $prefix = substr($file,0,strpos($file,"://")) ;
     if(substr($file,0,2) == "\\\\") $prefix = "smb" ; $file = str_replace("\\\\","smb://", $file) ; $file = str_replace("\\","/", $file) ;
@@ -59,7 +59,7 @@ class ParsingMultimedia
     $this->saveFile($src,$file) ;
     fclose($src) ;
   }
-  
+
   private function saveFile($src,$file)
   {
     $dest = fopen('/tmp/temp_file','a') ;
@@ -76,10 +76,10 @@ class ParsingMultimedia
       return (false) ;
     fclose($dest) ;
   }
-  
+
   public function isFileOk()
   {
-    if(isset($this->multimedia_data['uri'])&&$this->multimedia_data['uri']!='') 
+    if(isset($this->multimedia_data['uri'])&&$this->multimedia_data['uri']!='')
     {
       $this->multimedia->fromArray($this->multimedia_data) ;
       return true ;
