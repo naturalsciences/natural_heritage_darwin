@@ -228,10 +228,10 @@ Desde búsquedas de mapa hasta taxonomías complejas y sinonimias.</target>
       </trans-unit>
           <trans-unit id="1230">
         <source>In the Darwin tool you have the ability to customize freely your interface.&lt;br /&gt;
-      You are only interested in taxomy? No problem, no other infos will clutter your tool.&lt;br /&gt;
+      You are only interested in taxonomy? No problem, no other infos will clutter your tool.&lt;br /&gt;
       Hide or minimize the information you don't need to focus on.</source>
         <target>La herramienta Darwin da la posibilidad de personalizar libremente su interfaz.&lt;br /&gt;
-¿Solo esta interesado en la taxonomía? Esto no será un problema, ya que el resto de informaciones no entorpecerán la búsqueda.&lt;br /&gt;
+¿Solo esta interesado en la taxonomía? No habrá problema, ya que el resto de informaciones no entorpecerán la búsqueda.&lt;br /&gt;
 Oculte o minimice la información que no sea relevante.</target>
         
       </trans-unit>

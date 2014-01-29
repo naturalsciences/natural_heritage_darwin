@@ -228,10 +228,10 @@
       </trans-unit>
           <trans-unit id="1230">
         <source>In the Darwin tool you have the ability to customize freely your interface.&lt;br /&gt;
-      You are only interested in taxomy? No problem, no other infos will clutter your tool.&lt;br /&gt;
+      You are only interested in taxonomy? No problem, no other infos will clutter your tool.&lt;br /&gt;
       Hide or minimize the information you don't need to focus on.</source>
-        <target>Dans l'outil DaRWIN, vous avez la possiblilité de personnaliser librement votre interface.&lt;br /&gt;
-      Vous êtes interessé uniquement par la taxonomie? Aucun problème, aucunes autres informations ne viendront perturber votre outils.&lt;br /&gt;
+        <target>Dans l'outil DaRWIN, vous avez la intéressé de personnaliser librement votre interface.&lt;br /&gt;
+      Vous êtes intéressé uniquement par la taxonomie? Aucun problème, aucunes autres informations ne viendront perturber votre outils.&lt;br /&gt;
       Cacher ou minimiser les informations dont vous n'avez pas besoin pour vous concentrer sur votre travail.</target>
         
       </trans-unit>
@@ -932,6 +932,11 @@
       <trans-unit id="1717">
         <source>Value</source>
         <target>Valeur</target>
+        
+      </trans-unit>
+      <trans-unit id="1718">
+        <source>Specimen State</source>
+        <target>Etat de l'échantillon</target>
         
       </trans-unit>
         </body>
