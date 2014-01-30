@@ -21,6 +21,7 @@ $(document).ready(function () {
     $.ajax({
       type: "POST",
       url: '<?php echo url_for('people/choose?with_js=1' . ($is_choose?'&is_choose=1' : '') );?>',
+      data: {name:'<?php echo $sf_params->get('name'); ?>'},
       success: function(html){
         $('.search_box').html(html);
       }
@@ -39,6 +40,7 @@ $(document).ready(function () {
     $.ajax({
       type: "POST",
       url: '<?php echo url_for('institution/choose?with_js=1' . ($is_choose?'&is_choose=1' : '') );?>',
+      data: {name:'<?php echo $sf_params->get('name'); ?>'},
       success: function(html){
         $('.search_box').html(html);
       }
