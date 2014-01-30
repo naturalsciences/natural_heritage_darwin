@@ -357,6 +357,12 @@ class ImportABCDXml implements IImportModels
         $this->property->property->setLowerValue($this->preparation_mat) ;
         $this->addProperty(true) ;
     }
+    elseif(strtolower($this->preparation_type) == "specimen fixation")
+    {
+        $this->object = new ParsingMaintenance('Specimen Fixation') ;
+        $this->object->addMaintenance($this->staging) ;
+        $this->object->maintenance->setDescription($this->preparation_mat) ;
+    }
     elseif(strtolower($this->preparation_type) == "tissue preparation")
     {
         $this->object = new ParsingMaintenance('Tissue Preparation') ;
