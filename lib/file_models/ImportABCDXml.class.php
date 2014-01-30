@@ -120,7 +120,7 @@ class ImportABCDXml implements IImportModels
       case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); $this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask()); break;
       case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
       case "dna:ExtractionStaff" : $this->handlePeople($this->object->people_type,$this->cdata) ; break;
-      case "dna:GenBankNumber" : $this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ;
+      case "dna:GenBankNumber" : $this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ; break;
       case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ratio of absorbance 260/280","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
       case "dna:Preservation" : $this->addComment(false, "conservation_mean"); break;
