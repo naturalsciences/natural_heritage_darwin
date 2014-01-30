@@ -28,7 +28,7 @@ all:
     enabled: false
     code: UA-XXXXX-X
 
-  preview_max_size: 0.005
+  preview_max_size: 10
 #Uncomment this if you want to set a Broadcast message like demo or maintenance
 #    broadcast:
 #        enabled: true
