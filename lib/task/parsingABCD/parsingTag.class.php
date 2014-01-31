@@ -55,7 +55,7 @@ class ParsingTag extends ImportABCDXml
   {
     $tag_group = new stagingTagGroups() ;
     //@TODO find a better way to manage all known tags
-    if(in_array(strtolower($this->tag_group_name),array("continent", "country", "province", "region", "municipality","province/region")))
+    if(in_array(strtolower($this->tag_group_name),array("continent", "country", "state or province", "region or district", "municipality")))
     {
       $tag_group->setGroupName("administrative area") ;
       $tag_group->setSubGroupName($this->tag_group_name) ;
