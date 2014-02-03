@@ -222,7 +222,8 @@ class ImportABCDXml implements IImportModels
       case "efg:VarietalNameString" : $this->staging->setObjectName($this->cdata) ; break; //$this->object->level_name='variety' ; break;
       case "VerificationLevel" : $this->object->determination_status = $this->cdata ; break;
       case "storage:Type" : $this->code_type = $this->cdata; break;
-      case "storage:Value" : $this->addCode($this->code_type) ; break ; 
+      case "storage:Value" : $this->addCode($this->code_type) ; break ;
+      case "Major": Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion($this->cdata)->save(); break;
     } }
     $this->tag = "" ;
     $this->path = substr($this->path,0,strrpos($this->path,"/$name")) ;

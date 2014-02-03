@@ -23,6 +23,7 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'initial_count'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'is_finished'      => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'errors_in_import' => new sfWidgetFormFilterInput(),
+      'template_version' => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -36,6 +37,7 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'initial_count'    => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'is_finished'      => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'errors_in_import' => new sfValidatorPass(array('required' => false)),
+      'template_version' => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('imports_filters[%s]');
@@ -66,6 +68,7 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'initial_count'    => 'Number',
       'is_finished'      => 'Boolean',
       'errors_in_import' => 'Text',
+      'template_version' => 'Text',
     );
   }
 }

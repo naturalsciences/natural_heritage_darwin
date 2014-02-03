@@ -16,6 +16,7 @@
  * @property integer $initial_count
  * @property boolean $is_finished
  * @property string $errors_in_import
+ * @property string $template_version
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
@@ -31,6 +32,7 @@
  * @method integer             getInitialCount()     Returns the current record's "initial_count" value
  * @method boolean             getIsFinished()       Returns the current record's "is_finished" value
  * @method string              getErrorsInImport()   Returns the current record's "errors_in_import" value
+ * @method string              getTemplateVersion()  Returns the current record's "template_version" value
  * @method Collections         getCollections()      Returns the current record's "Collections" value
  * @method Users               getUsers()            Returns the current record's "Users" value
  * @method Doctrine_Collection getStaging()          Returns the current record's "Staging" collection
@@ -45,6 +47,7 @@
  * @method Imports             setInitialCount()     Sets the current record's "initial_count" value
  * @method Imports             setIsFinished()       Sets the current record's "is_finished" value
  * @method Imports             setErrorsInImport()   Sets the current record's "errors_in_import" value
+ * @method Imports             setTemplateVersion()  Sets the current record's "template_version" value
  * @method Imports             setCollections()      Sets the current record's "Collections" value
  * @method Imports             setUsers()            Sets the current record's "Users" value
  * @method Imports             setStaging()          Sets the current record's "Staging" collection
@@ -103,6 +106,9 @@ abstract class BaseImports extends DarwinModel
              'default' => false,
              ));
         $this->hasColumn('errors_in_import', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('template_version', 'string', null, array(
              'type' => 'string',
              ));
     }
