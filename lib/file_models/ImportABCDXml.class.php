@@ -69,6 +69,7 @@ class ImportABCDXml implements IImportModels
 
   private function endElement($parser, $name)
   {
+    $this->cdata = trim($this->cdata);
     $this->inside_data = false ;
     if (in_array($this->getPreviousTag(),array('Bacterial','Zoological','Botanical','Viral')))
       $this->object->handleKeyword($this->tag,$this->cdata,$this->staging) ;
@@ -244,9 +245,9 @@ class ImportABCDXml implements IImportModels
   {
 //     if($this->tag == 'AcquisitionDate') echo(FuzzyDateTime::getValidDate($data)) ;
     if ($this->inside_data)
-      $this->cdata .= trim($data) ;
+      $this->cdata .= $data ;
     else
-      $this->cdata = trim($data) ;
+      $this->cdata = $data ;
     $this->inside_data = true;
   }
 
