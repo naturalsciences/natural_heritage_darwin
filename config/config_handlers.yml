@@ -3,6 +3,11 @@ config/darwin.yml:
   param:
     prefix: dw_
 
+config/import_versions.yml:
+  class:    sfDefineEnvironmentConfigHandler
+  param:
+    prefix: tpl_
+
 data/feed/help_widgets.yml:
 #  class:    helpWidgetConfigHandler
   class:    sfDefineEnvironmentConfigHandler

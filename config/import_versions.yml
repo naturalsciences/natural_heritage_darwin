@@ -1,0 +1,4 @@
+all:
+  .general:
+    authorizedversion:
+      - 1

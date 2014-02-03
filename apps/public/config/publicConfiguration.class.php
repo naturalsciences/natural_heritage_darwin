@@ -6,6 +6,8 @@ class publicConfiguration extends sfApplicationConfiguration
 
   public function configure() {
     require_once($this->getConfigCache()->checkConfig('config/darwin.yml'));
+    require_once($this->getConfigCache()->checkConfig('config/import_versions.yml'));
+
   }
 
   public function generateBackendUrl($name, $parameters = array(), $request=null)
