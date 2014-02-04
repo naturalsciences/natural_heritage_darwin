@@ -872,6 +872,9 @@ BEGIN
       r_val := property::real;
     EXCEPTION WHEN SQLSTATE '22P02' THEN
       RETURN null;
+
+      WHEN OTHERS THEN
+        RETURN null;
     END;
 
     IF property_unit IN ('Kt', 'Beaufort', 'm/s') THEN
@@ -2786,34 +2789,19 @@ BEGIN
   IF line.gtu_ref is not null THEN
     RETURN true;
   END IF;
-  IF (line.gtu_code is null OR line.gtu_code  = '') AND NOT EXISTS (select 1 from staging_tag_groups g where g.staging_ref = line.id ) THEN
+  IF (line.gtu_code is null OR line.gtu_code  = '') AND (line.gtu_from_date is null OR line.gtu_code  = '') AND NOT EXISTS (select 1 from staging_tag_groups g where g.staging_ref = line.id ) THEN
     RETURN true;
   END IF;
 
-  IF line.gtu_latitude is not null and line.gtu_longitude IS NOT NULL and line.gtu_from_date is not null and line.gtu_to_date is not null THEN
     select id into ref_rec from gtu g where
       COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
       COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
       gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
       gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038') AND
       fullToIndex(code) = fullToIndex(line.gtu_code)
-      --try to compare tags
-      AND (
-        select string_agg(fulltoindex(group_name)|| fulltoindex(sub_group_name)|| fulltoindex(tag_value), '/' order by group_name, sub_group_name, tag_value)
-        from tag_groups tg where tg.gtu_ref = g.id
-        group by gtu_ref
-      ) = (
-        select string_agg(fulltoindex(group_name)|| fulltoindex(sub_group_name)|| fulltoindex(tag_value), '/' order by group_name, sub_group_name, tag_value)
-        from staging_tag_groups stg where stg.staging_ref = line.id
-        group by staging_ref
-      )
-      /* AND CASE WHEN (line.gtu_longitude is null and line.gtu_from_date is null and line.gtu_to_date is null) THEN line.gtu_code ELSE code END
-      = code*/
+
       AND id != 0 LIMIT 1;
-  ELSE
-    --Want to trigger a "Not Found"
-    SELECT -1 into  ref_rec from gtu where id = -1;
-  END IF;
+
 
 
   IF NOT FOUND THEN

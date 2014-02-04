@@ -155,14 +155,22 @@ class ImportABCDXml implements IImportModels
         case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $this->cdata ; break;
         case "Length" : $this->object->desc .= "Length : ".$this->cdata." ;" ; break;
         case "efg:LithostratigraphicAttributions" : $this->object->setAttribution($this->staging) ; break;
-        case "LocalityText" : if($this->staging['gtu_code']) $this->addComment() ; ELSE $this->staging['gtu_code'] = $this->cdata ; break;
+        case "LocalityText" : $this->addComment(); break;
         case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $this->cdata ; break;
         case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break;
         case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;
         case "Method" : if($this->getPreviousTag() == "Identification") $this->addComment(false, "identifications"); else $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
         case "efg:Petrology" :
-        case "MeasurementsOrFacts" : if($this->object && property_exists($this->object,'staging_info')&& $this->getPreviousTag() != "Unit") $this->object_to_save[] = $this->object->staging_info; break;
-        case "MeasurementOrFactAtomised" : $this->addProperty(); break;
+        case "MeasurementsOrFacts" :
+            if($this->object && property_exists($this->object,'staging_info') && $this->getPreviousTag() != "Unit")
+              $this->object_to_save[] = $this->object->staging_info;
+             break;
+        case "MeasurementOrFactAtomised" : if($this->getPreviousTag() == "Altitude") {
+                //Set Altitude in meters in GTU
+                $this->staging['gtu_elevation']  =  $this->property->property->getLowerValue();
+              } else {
+                $this->addProperty();
+              } break;
         case "MeasurementOrFactText" : $this->addComment() ; break;
         case "MineralColour" : $this->staging->setMineralColour($this->cdata) ; break;
         case "efg:MineralRockClassification" : if($this->getPreviousTag() == "efg:MineralRockGroup") {$this->object->higher_level = strtolower($this->cdata);}
@@ -218,7 +226,11 @@ class ImportABCDXml implements IImportModels
         case "storage:Box" : $this->staging->setContainerType('box'); $this->staging->setContainer($this->cdata) ; break;
         case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break;
         case "storage:Position" : $this->staging->setSubContainerType('position'); $this->staging->setSubContainer($this->cdata) ; break;
-        case "Text": if($this->getPreviousTag() == "Biotope") $this->addComment(true, 'ecology') ; break;
+        case "Text":  if($this->getPreviousTag() == "Biotope") {
+            $this->object->tag_group_name='ecology';
+            $this->object->tag_value = $this->cdata;
+            $this->staging_tags[] = $this->object->addTagGroups();
+          } break;
         case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ; if($this->getPreviousTag() == "UnitReference")  $this->addComment(true,'publication') ; else $this->addComment(true, "identifications") ;break;
         case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break;
         case "Unit" : $this->saveUnit(); break;

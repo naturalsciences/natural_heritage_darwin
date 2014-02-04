@@ -54,6 +54,7 @@ class ParsingTag extends ImportABCDXml
   public function addTagGroups()
   {
     $tag_group = new stagingTagGroups() ;
+
     //@TODO find a better way to manage all known tags
     if(in_array(strtolower($this->tag_group_name),array("continent", "country", "state or province", "region or district", "municipality")))
     {
@@ -62,7 +63,10 @@ class ParsingTag extends ImportABCDXml
     }
     else
     {
-      $tag_group->setGroupName("other") ;
+      if($this->tag_group_name == "ecology")
+        $tag_group->setGroupName("habitat");
+      else
+        $tag_group->setGroupName("other") ;
       $tag_group->setSubGroupName($this->tag_group_name) ;
     }
     $tag_group->setTagValue($this->tag_value) ;
