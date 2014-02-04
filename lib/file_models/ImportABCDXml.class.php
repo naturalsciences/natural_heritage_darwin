@@ -173,7 +173,13 @@ class ImportABCDXml implements IImportModels
         case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; else $this->errors_reported .= "Unit ".$this->name." : MultiMediaObject not saved (no or wrong FileURI);"; break;
         case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break; //@TODO
         case "efg:NameComments" : $this->object->setNotion(strtolower($this->cdata)) ; break;
-        case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
+        case "NameAddendum": if(stripos($this->cdata, 'Variety') !== false ) {
+            $this->object->level_name = 'variety' ;
+            $this->object->catalogue_parent['variety'] =  $this->object->getCatalogueName() ;
+            $staging['taxon_parents'] = $this->object->catalogue_parent->export() ;
+            $this->object->higher_level = 'variety';  $this->object->handleParent();
+          } break;
+        case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups(); break;
         case "Notes" : if($this->getPreviousTag() == "Identification") $this->addComment(true,"identifications") ; else $this->addComment() ;  break ;
         case "Parameter" : $this->property->property->setPropertyType($this->cdata); if($this->cdata == 'DNA size') $this->property->property->setAppliesTo('DNA'); break;
         case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->handlePeople($this->object->people_type,$this->people_name) ; break;

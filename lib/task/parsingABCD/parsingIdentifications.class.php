@@ -25,7 +25,7 @@ class ParsingIdentifications
   private $array_level = array('regnum' => 'domain','subregnum'  => 'kingdom', 'superphylum' => 'super_phylum','genusgroup' => 'genus',
             'phylum' => 'phylum','subphylum' => 'sub_phylum','superclassis' => 'super_class','classis' => 'class',
             'subclassis' => 'subclassis','superordo' => 'super_order','ordo' => 'order', 'subordo' => 'sub_order',
-            'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe');
+            'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe', 'variety' => 'variety');
   private $rock_level = array(
     'lithology' => array('rock_maingroup'=>'unit_main_group', 'rock_mainclass'=>'unit_main_class','rock_category'=>'unit_category',
                   'rock_class'=> 'unit_class','rock_clan'=>'unit_clan','rock_group'=>'unit_group','rock_subgroup'=>'unit_sub_group',
