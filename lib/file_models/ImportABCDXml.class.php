@@ -4,6 +4,8 @@ class ImportABCDXml implements IImportModels
   private $tag, $staging, $object, $people_name,$import_id, $path="", $name, $errors_reported='',$preparation_type='', $preparation_mat='';
   private $unit_id_ref = array() ; // to keep the original unid_id per staging for Associations
   private $object_to_save = array(), $staging_tags = array() , $data, $inside_data;
+  private $version_defined = false;
+  private $version_error_msg = "You use an unrecognized template version, please use it at your own risks or update the version of your template.;";
   /**
   * @function parseFile() read a 'to_be_loaded' xml file and import it, if possible in staging table
   * @var $file : the xml file to parse
@@ -28,6 +30,8 @@ class ImportABCDXml implements IImportModels
         }
     }
     xml_parser_free($xml_parser);
+    if(! $this->version_defined)
+      $this->errors_reported = $this->version_error_msg.$this->errors_reported;
     return $this->errors_reported ;
   }
 
@@ -247,10 +251,11 @@ class ImportABCDXml implements IImportModels
         case "Major": $this->version  =  $this->cdata; break;
         case "Modifier": $this->version .=  $this->cdata; break;
         case "Version":
+          $this->version_defined = true;
           $authorized = sfConfig::get('tpl_authorizedversion');
           Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
           if(! empty($authorized) && ! in_array(trim($this->version), $authorized )) {
-            $this->errors_reported .= "You use an unrecognized template version, please use it at your own risks or update the version of your template.;";
+            $this->errors_reported .= $this->version_error_msg;
           }
           break;
       }
