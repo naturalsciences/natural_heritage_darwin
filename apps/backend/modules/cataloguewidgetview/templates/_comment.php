@@ -11,7 +11,7 @@
   <?php foreach($comments as $comment):?>
   <tr>
     <td>
-      <?php echo $comment->getNotionConcerned();?>
+      <?php echo $comment->getNotionText();?>
     </td>
     <td>
       <?php echo auto_link_text( nl2br( $comment->getComment() ));?>

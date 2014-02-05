@@ -155,7 +155,7 @@ class ImportABCDXml implements IImportModels
         case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $this->cdata ; break;
         case "Length" : $this->object->desc .= "Length : ".$this->cdata." ;" ; break;
         case "efg:LithostratigraphicAttributions" : $this->object->setAttribution($this->staging) ; break;
-        case "LocalityText" : $this->addComment(); break;
+        case "LocalityText" : $this->addComment(false, "exact_site"); break;
         case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $this->cdata ; break;
         case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break;
         case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;

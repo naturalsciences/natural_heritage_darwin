@@ -11,15 +11,15 @@
   <?php foreach($comments as $comment):?>
   <tr>
     <td>
-      <a class="link_catalogue" title="<?php echo __('Edit Comment');?>" 
+      <a class="link_catalogue" title="<?php echo __('Edit Comment');?>"
 	  href="<?php echo url_for('comment/comment?table='.$table.'&cid='.$comment->getId().'&id='.$eid); ?>">
-	    <?php echo $comment->getNotionConcerned();?>
+	    <?php echo $comment->getNotionText();?>
       </a>
     </td>
     <td>
       <?php echo auto_link_text( nl2br( $comment->getComment() ));?>
     </td>
-    <td class="widget_row_delete">   
+    <td class="widget_row_delete">
       <a class="widget_row_delete" href="<?php echo url_for('catalogue/deleteRelated?table=comments&id='.$comment->getId());?>" title="<?php echo __('Delete Comment') ?>"><?php echo image_tag('remove.png'); ?>
       </a>
     </td>

@@ -41,6 +41,7 @@ class CommentsTable extends DarwinTable
       'period information' => 'Period information',
       'general comments' => 'sampling point information',
       'general' => 'General',
+      'exact_site' => 'Exact Site',
     ),
     'collection_maintenance' => array(
       'general information' => 'General information',
