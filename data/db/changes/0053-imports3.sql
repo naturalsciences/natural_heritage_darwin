@@ -103,7 +103,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE OR REPLACE FUNCTION fct_imp_checker_manager(line staging)  RETURNS boolean
 AS $$
 BEGIN
