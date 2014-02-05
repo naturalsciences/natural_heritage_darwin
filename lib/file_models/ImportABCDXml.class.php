@@ -250,7 +250,7 @@ class ImportABCDXml implements IImportModels
           $authorized = sfConfig::get('tpl_authorizedversion');
           Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
           if(! empty($authorized) && ! in_array(trim($this->version), $authorized )) {
-            $this->errors_reported .= "You use an unrecognized template version, please use it at you own risks or update the version of your template;";
+            $this->errors_reported .= "You use an unrecognized template version, please use it at your own risks or update the version of your template.;";
           }
           break;
       }
