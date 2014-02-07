@@ -7,7 +7,7 @@ timeout:
 
 tracking:
   class: trackingFilter
-tracking:
+db_version:
   class: dbVersionFilter
 cache:     ~
 common:
