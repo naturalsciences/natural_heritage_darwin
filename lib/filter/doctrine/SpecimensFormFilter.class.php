@@ -59,6 +59,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $this->validatorSchema['lithology_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['lithology_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
+    $this->widgetSchema['lithology_relation']->setDefault('child');
 
 
     $this->widgetSchema['lithology_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
@@ -76,6 +77,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));
 
     $this->widgetSchema['litho_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
+    $this->widgetSchema['litho_relation']->setDefault('child');
     $this->widgetSchema['litho_item_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Lithostratigraphy',
       'link_url' => 'lithostratigraphy/choose',
@@ -97,6 +99,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));
 
     $this->widgetSchema['chrono_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
+    $this->widgetSchema['chrono_relation']->setDefault('child');
+
     $this->widgetSchema['chrono_item_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Chronostratigraphy',
       'link_url' => 'chronostratigraphy/choose',
@@ -113,6 +117,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
 
     $this->widgetSchema['mineral_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    $this->widgetSchema['mineral_name']->setDefault('child');
     $this->widgetSchema['mineral_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'CatalogueLevels',
       'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'mineralogy'))),
