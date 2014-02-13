@@ -6,6 +6,7 @@ class ImportABCDXml implements IImportModels
   private $object_to_save = array(), $staging_tags = array() , $data, $inside_data;
   private $version_defined = false;
   private $version_error_msg = "You use an unrecognized template version, please use it at your own risks or update the version of your template.;";
+
   /**
   * @function parseFile() read a 'to_be_loaded' xml file and import it, if possible in staging table
   * @var $file : the xml file to parse
@@ -35,6 +36,15 @@ class ImportABCDXml implements IImportModels
     return $this->errors_reported ;
   }
 
+ /**
+ * startElement
+ * 
+ * Called when an open tag is found....
+ * @param XmlParser $parser The xml parsing object
+ * @param string $name the name of the tag found
+ * @param array $attrs array of attributes of the opening tags
+ * @return null return nothing
+ */
   private function startElement($parser, $name, $attrs)
   {
     $this->tag = $name ;
@@ -43,16 +53,16 @@ class ImportABCDXml implements IImportModels
     $this->inside_data = false ;
     switch ($name) {
       case "Accessions" : $this->object = new parsingTag() ; break;
-      case "efg:ChronostratigraphicAttributions" :
+      case "efg:ChronostratigraphicAttributions" : //SAME AS BELOW
       case "ChronostratigraphicAttributions" : $this->object = new ParsingCatalogue('chronostratigraphy') ; break;
       case "Country" : $this->object->tag_group_name="country" ; break;
       case "dna:DNASample" : $this->object = new ParsingMaintenance('DNA extraction') ; break;
-      case "RockPhysicalCharacteristics" :
+      case "RockPhysicalCharacteristics" : //SAME AS BELOW
       case "efg:RockPhysicalCharacteristics" : $this->object = new ParsingTag("lithology") ; break;
-      case "LithostratigraphicAttribution" :
+      case "LithostratigraphicAttribution" : //SAME AS BELOW
       case "efg:LithostratigraphicAttribution" : $this->object = new ParsingCatalogue('lithostratigraphy') ; break;
       case "Gathering" : $this->object = new ParsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break;
-      case "efg:MineralRockIdentified" :
+      case "efg:MineralRockIdentified" : break; //@TODO
       case "HigherTaxa" : $this->object->catalogue_parent = new Hstore() ;break;
       case "Identification" : $this->object = new ParsingIdentifications() ; break;
       case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ;
@@ -61,7 +71,7 @@ class ImportABCDXml implements IImportModels
 /*      case "PersonName" : $this->people = new StagingPeople() ; break;
       case "Person" : $this->people = new StagingPeople() ; break;*/
       case "Petrology" : $this->object = new ParsingTag("lithology") ; break;
-      case "efg:RockUnit" :
+      case "efg:RockUnit" : //SAME AS BELOW
       case "RockUnit" : $this->object = new ParsingCatalogue('lithology') ; break;
       case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break;
       case "SpecimenUnit" : $this->object = new ParsingTag("unit") ; break;
@@ -103,8 +113,8 @@ class ImportABCDXml implements IImportModels
         case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $this->cdata ; break;
         case "Context" : $this->object->multimedia_data['sub_type'] = $this->cdata ; break;
         case "CreatedDate" : $this->object->multimedia_data['creation_date'] = $this->cdata ; break;
-      //  case "efg:ClassifiedName" : $this->object->setRockName($this->staging) ; break;
-  //       case "Comment" : $this->object->multimedia_data['description'] = $this->cdata ; break;
+        //  case "efg:ClassifiedName" : $this->object->setRockName($this->staging) ; break;
+        // case "Comment" : $this->object->multimedia_data['description'] = $this->cdata ; break;
         case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
         case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break;
         case "DateText" : $this->object->getDateText($this->cdata) ; break;
@@ -135,10 +145,10 @@ class ImportABCDXml implements IImportModels
         case "FileURI" : $this->object->getFile($this->cdata) ; break;
         case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
         case "FullName" : $this->people_name = $this->cdata ; break;
-        case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break; //$this->object->informal = true ; break;
+        case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; $this->object->level_name='unit_rock'; break; //$this->object->informal = true ; break;
         case "FullScientificNameString" : $this->object->fullname = $this->cdata ; break;
         case "Mark" : $this->object->fullname = $this->cdata ; break;
-        case "efg:InformalLithostratigraphicName" : $this->addComment(true,"lithostratigraphy"); break; //$this->staging['litho_local'] = true ; break;
+        case "efg:InformalLithostratigraphicName" : $this->object->addComment(true,"lithostratigraphy"); break; //$this->staging['litho_local'] = true ; break;
         case "Gathering" : if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break;
         // case "GivenNames" : $this->people['given_name'] = $this->cdata ; break;
         case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
@@ -163,9 +173,9 @@ class ImportABCDXml implements IImportModels
         case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break;
         case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;
         case "Method" : if($this->getPreviousTag() == "Identification") $this->addComment(false, "identifications"); else $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
-        case "efg:Petrology" :
+        case "efg:Petrology" : break;  //@TODO
         case "MeasurementsOrFacts" :
-            if($this->object && property_exists($this->object,'staging_info') && $this->getPreviousTag() != "Unit")
+            if($this->object && property_exists($this->object,'staging_info') && $this->getPreviousTag() != "Unit" && $this->object->staging_info)
               $this->object_to_save[] = $this->object->staging_info;
              break;
         case "MeasurementOrFactAtomised" : if($this->getPreviousTag() == "Altitude") {
@@ -196,7 +206,7 @@ class ImportABCDXml implements IImportModels
         case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->handlePeople($this->object->people_type,$this->people_name) ; break;
         case "Person" : $this->handlePeople($this->object->people_type,$this->people_name) ; break;
         case "efg:MineralDescriptionText" : $this->addComment(true, 'mineralogy') ; break;
-        case "PetrologyDescriptiveText" :
+        case "PetrologyDescriptiveText" : //SAME AS BELOW
         case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'petrology') ; break;
         case "PhaseOrStage" : $this->staging->setIndividualStage($this->cdata) ; break;
         // case "Prefix" : $this->people['title'] = $this->cdata ; break;
