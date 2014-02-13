@@ -335,9 +335,10 @@ class ImportABCDXml implements IImportModels
     }
 
 
-    $pattern = '/(\d+([\,\.]\d+)?)\W?([a-zA-Z\°]+.*)/';
+    $pattern = '/^(\d+([\,\.]\d+)?)\W?([a-zA-Z\°]+)$/';
     // if unit not defined
     if($this->property && $this->property->property && $this->property->property->getPropertyUnit() =='') {
+
       // try to guess unit
       $val = $this->property->getLowerValue();
       $val = str_replace('°', 'deg',$val);
