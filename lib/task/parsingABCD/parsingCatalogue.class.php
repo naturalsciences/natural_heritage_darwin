@@ -25,9 +25,7 @@ class ParsingCatalogue
   // fill the Hstore parent
   public function handleParent($level, $name, $staging)
   {
-    if ($level == 'efg:InformalLithostratigraphicName')
-      $staging->setObjectName($name) ;
-    elseif(in_array($level,array_keys($this->level[$this->catalogue])))
+    if(in_array($level,array_keys($this->level[$this->catalogue])))
     {
       $this->catalogue_parent[$this->level[$this->catalogue][$level]] = $name ;
       $this->name = $name ;

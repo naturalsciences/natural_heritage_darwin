@@ -118,7 +118,8 @@ class ParsingIdentifications
     elseif($this->notion == 'lithology') {
       $staging['lithology_parents'] = $this->catalogue_parent->export() ;
       $staging->setLithologyName($this->fullname) ;
-      $staging->setLithologyLevelName($this->level_name) ;
+      $staging->setLithologyLevelName('unit_rock') ;
+      
     }
     elseif($this->notion == 'mineralogy'){
       $staging['mineral_parents'] = $this->catalogue_parent->export() ;
