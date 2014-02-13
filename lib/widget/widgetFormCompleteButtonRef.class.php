@@ -67,7 +67,7 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
    if($this->getOption('deletable'))
         $input .= '$("#'.$this->generateId($name).'_clear").click(function(){
           if(confirm("'.$this->getOption('confirm_msg').'"))
-          {  
+          {
             $("#'.$this->generateId($name).'").attr(\'value\',-1) ;
             $("#'.$this->generateId($name).'_name").val(\'\') ;
           }

@@ -20,7 +20,7 @@ class MineralogyForm extends BaseMineralogyForm
     $this->widgetSchema['code']->setAttributes(array('class'=>'small_size'));
     $this->widgetSchema['name']->setAttributes(array('class'=>'large_size'));
     $this->widgetSchema['formule']->setAttributes(array('class'=>'medium_size'));
-    $this->widgetSchema['color'] = new widgetFormColorPicker();    
+    $this->widgetSchema['color'] = new widgetFormColorPicker();
     $this->widgetSchema['color']->setAttributes(array('class'=>'vsmall_size'));
     $statuses = array('valid'=>$this->getI18N()->__('valid'), 'invalid'=>$this->getI18N()->__('invalid'), 'deprecated'=>$this->getI18N()->__('deprecated'));
     $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
@@ -47,6 +47,7 @@ class MineralogyForm extends BaseMineralogyForm
       'box_title' => $this->getI18N()->__('Choose Parent'),
       'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeName?table=mineralogy',
+      'nullable' => true,
      ));
 
     $this->widgetSchema['cristal_system'] = new widgetFormSelectComplete(array(
