@@ -135,9 +135,10 @@ class ImportABCDXml implements IImportModels
         case "FileURI" : $this->object->getFile($this->cdata) ; break;
         case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
         case "FullName" : $this->people_name = $this->cdata ; break;
-        case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break;
+        case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break; //$this->object->informal = true ; break;
         case "FullScientificNameString" : $this->object->fullname = $this->cdata ; break;
-        case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break;
+        case "Mark" : $this->object->fullname = $this->cdata ; break;
+        case "efg:InformalLithostratigraphicName" : $this->addComment(true,"lithostratigraphy"); break; //$this->staging['litho_local'] = true ; break;
         case "Gathering" : if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break;
         // case "GivenNames" : $this->people['given_name'] = $this->cdata ; break;
         case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
@@ -149,8 +150,6 @@ class ImportABCDXml implements IImportModels
         case "Identification" : $this->object->save($this->staging) ; break;
         case "IdentificationHistory" : $this->addComment(true, 'taxonomy'); break;
         case "ID-in-Database" : $this->object->desc .= "id in database :".$this->cdata." ;" ; break;
-        case "efg:InformalLithostratigraphicName" : $this->staging['litho_local'] = true ; break;
-        case "efg:InformalNameString" : $this->object->informal = true ; break;
         // case "InheritedName" : $this->people['family_name'] = $this->cdata ; break;
         case "ISODateTimeBegin" : if($this->getPreviousTag() == "DateTime")  { $this->object->GTUdate['from'] = FuzzyDateTime::getValidDate($this->cdata) ;} elseif($this->getPreviousTag() == "Date")  { $this->object->identification->setNotionDate(FuzzyDateTime::getValidDate($this->cdata)) ;} break;
         case "ISODateTimeEnd" :  if($this->getPreviousTag() == "DateTime"){ $this->object->GTUdate['to'] = FuzzyDateTime::getValidDate($this->cdata);}  break;
@@ -196,9 +195,9 @@ class ImportABCDXml implements IImportModels
         case "Parameter" : $this->property->property->setPropertyType($this->cdata); if($this->cdata == 'DNA size') $this->property->property->setAppliesTo('DNA'); break;
         case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->handlePeople($this->object->people_type,$this->people_name) ; break;
         case "Person" : $this->handlePeople($this->object->people_type,$this->people_name) ; break;
-        case "efg:MineralDescriptionText" :
+        case "efg:MineralDescriptionText" : $this->addComment(true, 'mineralogy') ; break;
         case "PetrologyDescriptiveText" :
-        case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'mineralogy') ; break;
+        case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'petrology') ; break;
         case "PhaseOrStage" : $this->staging->setIndividualStage($this->cdata) ; break;
         // case "Prefix" : $this->people['title'] = $this->cdata ; break;
         case "Preparation" : $this->addPreparation() ; break ;
@@ -230,7 +229,7 @@ class ImportABCDXml implements IImportModels
         case "storage:Box" : $this->staging->setContainerType('box'); $this->staging->setContainer($this->cdata) ; break;
         case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break;
         case "storage:Position" : $this->staging->setSubContainerType('position'); $this->staging->setSubContainer($this->cdata) ; break;
-        case "Text":  if($this->getPreviousTag() == "Biotope") {
+        case "Text":  if($this->getPreviousTamineralogyg() == "Biotope") {
             $this->object->tag_group_name='ecology';
             $this->object->tag_value = $this->cdata;
             $this->staging_tags[] = $this->object->addTagGroups();
@@ -244,7 +243,8 @@ class ImportABCDXml implements IImportModels
         case "UnitOfMeasurement" : $this->property->property->setPropertyUnit($this->cdata); break;
         case "Accuracy" : $this->property->property->setPropertyAccuracy($this->cdata); break;
         case "UpperValue" : $this->property->property->setUpperValue($this->cdata) ; break;
-        case "efg:VarietalNameString" : $this->staging->setObjectName($this->cdata) ; break; //$this->object->level_name='variety' ; break;
+        //case "efg:VarietalNameString" : $this->staging->setObjectName($this->cdata) ; break; 
+        case "efg:InformalNameString" : $this->staging->setObjectName($this->cdata) ; break;
         case "VerificationLevel" : $this->object->determination_status = $this->cdata ; break;
         case "storage:Type" : $this->code_type = $this->cdata; break;
         case "storage:Value" : $this->addCode($this->code_type) ; break ;
