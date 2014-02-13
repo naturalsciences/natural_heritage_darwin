@@ -117,7 +117,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
 
     $this->widgetSchema['mineral_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
-    $this->widgetSchema['mineral_name']->setDefault('child');
     $this->widgetSchema['mineral_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'CatalogueLevels',
       'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'mineralogy'))),
@@ -136,6 +135,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       ));
 
     $this->widgetSchema['mineral_relation'] = new sfWidgetFormChoice(array('choices'=> $rel,'expanded'=> true));
+    $this->widgetSchema['mineral_relation']->setDefault('child');
 
     $this->validatorSchema['mineral_item_ref'] = new sfValidatorInteger(array('required'=>false));
     $this->validatorSchema['mineral_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
@@ -642,6 +642,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
+
+      /*
       $query->andWhere('
         ( station_visible = true AND gtu_location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
         ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326) )
@@ -650,6 +652,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         AND gtu_location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
         ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326) )
       ');
+      */
+
+      $query->andWhere(
+        " ( station_visible = true AND box(? :: text) @> loc ) OR ( station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).") AND box(? :: text) @> loc )",
+        "((".$values['lat_from'].",".$values['lon_from']."),(".$values['lat_to'].",".$values['lon_to']."))"
+        );
+
       $query->whereParenWrap();
     }
     return $query;
