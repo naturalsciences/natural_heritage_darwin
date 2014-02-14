@@ -359,7 +359,7 @@
       </trans-unit>
           <trans-unit id="82">
         <source>The parenty does not follow the possible upper level rule</source>
-        <target>La parenté ne respecte pas la règle du niveau suppérieur possible</target>
+        <target>La parenté ne respecte pas la règle du niveau supérieur possible</target>
         
       </trans-unit>
           <trans-unit id="83">
@@ -944,7 +944,7 @@
       </trans-unit>
           <trans-unit id="199">
         <source>Specimens Search</source>
-        <target>Recherche de échantillons</target>
+        <target>Recherche d'échantillons</target>
         
       </trans-unit>
           <trans-unit id="200">
@@ -7175,7 +7175,7 @@
       </trans-unit>
       <trans-unit id="1741">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</source>
-        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l\'abscence de correction de la valeur par défaut au moment de la sauvegarde, l'erreur persistera.</target>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l'abscence de correction de la valeur par défaut au moment de la sauvegarde, l'erreur persistera.</target>
         
       </trans-unit>
       <trans-unit id="1742">
