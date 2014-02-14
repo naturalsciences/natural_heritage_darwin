@@ -73,7 +73,7 @@ usage(){
   command_desc "Test your administrative connection. Open a command to your db"
 
   title "Available [option] :"
-  
+
   option_desc "-h hostname (Default: $hostname)"
   command_desc "host for the connection to the database"
 
@@ -186,9 +186,6 @@ function install_db() {
 function install_lib() {
   if [ "$pg_version"="9.1" ] ; then
     $admpsql  -c "create extension pgcrypto; create extension pg_trgm; create extension hstore;"
-    $admpsql  -f /usr/share/postgresql/$pg_version/contrib/postgis-1.5/postgis.sql
-    $admpsql  -f  /usr/share/postgresql/$pg_version/contrib/postgis-1.5/spatial_ref_sys.sql
-    $admpsql  -f postgisgrant.sql -v dbuser=darwin2
   fi
 }
 
@@ -262,10 +259,10 @@ case "$@" in
     fi
 
     dw_version=$(( $dw_version + 1))
-    if [ "$(echo $dw_version | grep "^[[:digit:]]*$")" ] 
+    if [ "$(echo $dw_version | grep "^[[:digit:]]*$")" ]
     then
       upd_file=$(ls changes/*.sql | sort -n | grep $dw_version)
-      if [ "$upd_file" = '' ] 
+      if [ "$upd_file" = '' ]
       then
         echo -e "\n\t- Everything is up to date -"
         exit 0;

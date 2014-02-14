@@ -114,8 +114,17 @@ class GtuFormFilter extends BaseGtuFormFilter
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
-      $query->andWhere('location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
-        ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326)');
+      $horizontal_box = "((".$values['lat_from'].",-180),(".$values['lat_to'].",180))";
+      $query->andWhere("box(? :: text) @> location",$horizontal_box);
+
+      $vert_box = "((".$values['lat_from'].",".$values['lon_from']."),(".$values['lat_to'].",".$values['lon_to']."))";
+      // Look for a wrapped box (ie. between RUSSIA and USA)
+      if( (float)$values['lon_to'] < (float) $values['lon_from']) {
+        $query->andWhere(" NOT box(? :: text) @> location", $vert_box);
+      } else {
+        // Not wrapped, as in a normal world search
+        $query->andWhere("box(? :: text) @> location", $vert_box);
+      }
       $query->andWhere('location is not null');
     }
     return $query;

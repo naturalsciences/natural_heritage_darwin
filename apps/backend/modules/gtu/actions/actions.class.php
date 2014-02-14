@@ -22,7 +22,7 @@ class gtuActions extends DarwinActions
       }
     }
   }
-  
+
   public function executeChoose(sfWebRequest $request)
   {
     $this->form = new GtuFormFilter();
@@ -54,8 +54,6 @@ class gtuActions extends DarwinActions
         {
           $query->orderBy($this->orderBy .' '.$this->orderDir)
             ->andWhere('latitude is not null');
-          /** WARNING Limit select of accuracy point to let the map be browsable **/
-          $query->andWhere('lat_long_accuracy < 30000');
           $this->setLayout(false);
           if($request->getParameter('format') == 'json')
           {
@@ -76,7 +74,7 @@ class gtuActions extends DarwinActions
             );
             return $this->renderText($str);
           }
-          
+
         }
         else
         {
@@ -109,7 +107,7 @@ class gtuActions extends DarwinActions
           {
 
             if( $t->getGtuRef() == $i->getId())
-            {               
+            {
               $i->TagGroups[]= $t;
             }
           }
@@ -123,7 +121,7 @@ class gtuActions extends DarwinActions
     $gtu = new Gtu() ;
     $duplic = $request->getParameter('duplicate_id','0');
     $gtu = $this->getRecordIfDuplicate($duplic, $gtu);
-    if($request->hasParameter('gtu')) $gtu->fromArray($request->getParameter('gtu'));        
+    if($request->hasParameter('gtu')) $gtu->fromArray($request->getParameter('gtu'));
 
     // if there is no duplicate $gtu is an empty array
     $this->form = new GtuForm($gtu);
@@ -155,7 +153,7 @@ class gtuActions extends DarwinActions
   }
 
   public function executeEdit(sfWebRequest $request)
-  {  
+  {
     $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
     $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
 
@@ -167,7 +165,7 @@ class gtuActions extends DarwinActions
   {
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
     $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
-    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());    
+    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
     $this->form = new GtuForm($gtu);
 
     $this->processForm($request, $this->form, 'update');
@@ -193,7 +191,7 @@ class gtuActions extends DarwinActions
       $e = new DarwinPgErrorParser($ne);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
       $this->form = new GtuForm($unit);
-      $this->form->getErrorSchema()->addError($error); 
+      $this->form->getErrorSchema()->addError($error);
       $this->loadWidgets();
       $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
       $this->setTemplate('edit');
@@ -218,7 +216,7 @@ class gtuActions extends DarwinActions
         }
         $e = new DarwinPgErrorParser($ne);
         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-        $form->getErrorSchema()->addError($error); 
+        $form->getErrorSchema()->addError($error);
       }
     }
   }
@@ -240,7 +238,7 @@ class gtuActions extends DarwinActions
     $form->addValue($number, $request->getParameter('group'));
     return $this->renderPartial('taggroups',array('form' => $form['newVal'][$number]));
   }
-  
+
   public function executeAndSearch(sfWebRequest $request)
   {
     $number = intval($request->getParameter('num'));
@@ -286,6 +284,6 @@ class gtuActions extends DarwinActions
       $str .= '<li><label>Alt.: </label>'.$gtu->getElevation().' +- '.$gtu->getElevationAccuracy().' m</li>';
     }
     $str .= '</ul><div class="clear" />';
-    return $this->renderText($str); 
+    return $this->renderText($str);
   }
 }

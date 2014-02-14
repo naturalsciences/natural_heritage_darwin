@@ -186,7 +186,7 @@ create table gtu
         latitude float,
         longitude float,
         lat_long_accuracy float,
-        location GEOGRAPHY(POLYGON,4326),
+        location POINT,
         elevation float,
         elevation_accuracy float,
         constraint pk_gtu primary key (id)
@@ -204,7 +204,6 @@ comment on column gtu.longitude is 'longitude of the gtu';
 comment on column gtu.lat_long_accuracy is 'Accuracy in meter of both lat & long';
 comment on column gtu.elevation is 'Elevation from the level of the sea in meter';
 comment on column gtu.elevation_accuracy is 'Accuracy in meter of the elevation';
---SELECT substring(AddGeometryColumn('gtu', 'location', 4326, 'POLYGON', 2) for 0);
 
 create table tag_groups
        (
@@ -1061,7 +1060,7 @@ create table specimens
     gtu_others_tag_indexed varchar[],
     gtu_elevation double precision,
     gtu_elevation_accuracy double precision,
-    gtu_location GEOGRAPHY(POLYGON,4326),
+    gtu_location POINT,
 
     taxon_name varchar,
     taxon_name_indexed varchar,

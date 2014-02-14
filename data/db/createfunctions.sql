@@ -1890,19 +1890,13 @@ END;
 $$;
 
 CREATE OR REPLACE FUNCTION fct_cpy_location() RETURNS trigger
+language plpgSQL
 as $$
 BEGIN
-
-  IF TG_OP = 'INSERT' THEN
- -- IF (TG_OP = 'UPDATE' AND
-      NEW.location =  ST_Buffer(ST_GeographyFromText('SRID=4326;POINT(' || NEW.longitude || ' ' ||  NEW.latitude || ')'), NEW.lat_long_accuracy);
-  ELSE IF NEW.longitude IS DISTINCT FROM OLD.longitude OR NEW.latitude IS DISTINCT FROM OLD.latitude OR NEW.lat_long_accuracy IS DISTINCT FROM OLD.lat_long_accuracy THEN
-      NEW.location =  ST_Buffer(ST_GeographyFromText('SRID=4326;POINT(' || NEW.longitude || ' ' ||  NEW.latitude || ')'), NEW.lat_long_accuracy);
-    END IF;
-  END IF;
+  NEW.location := POINT(NEW.latitude, NEW.longitude);
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 
 CREATE OR REPLACE FUNCTION fct_filter_encodable_row(ids varchar, col_name varchar, user_id integer) RETURNS SETOF integer

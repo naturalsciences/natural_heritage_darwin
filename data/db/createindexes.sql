@@ -5,7 +5,7 @@
 CREATE INDEX CONCURRENTLY idx_possible_upper_levels_level_upper_ref on possible_upper_levels(level_upper_ref);
 CREATE INDEX CONCURRENTLY idx_gtu_code on gtu(code);
 CREATE INDEX CONCURRENTLY idx_gtu_location ON gtu USING GIST ( location );
-CREATE INDEX CONCURRENTLY idx_gtu_location_geom ON gtu USING GIST ( (location::geometry) );
+
 CREATE INDEX CONCURRENTLY idx_people_languages_people_ref on people_languages(people_ref);
 CREATE INDEX CONCURRENTLY idx_people_relationships_person_1_ref on people_relationships(person_1_ref);
 CREATE INDEX CONCURRENTLY idx_people_relationships_person_2_ref on people_relationships(person_2_ref);

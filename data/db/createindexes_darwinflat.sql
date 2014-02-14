@@ -3,7 +3,6 @@
 CREATE INDEX CONCURRENTLY idx_gin_specimens_gtu_tag_values_indexed on specimens using gin(gtu_tag_values_indexed);
 CREATE INDEX CONCURRENTLY idx_gin_specimens_gtu_country_tag_indexed_indexed on specimens using gin(gtu_country_tag_indexed);
 CREATE INDEX CONCURRENTLY idx_gist_specimens_gtu_location ON specimens USING GIST ( gtu_location );
-CREATE INDEX CONCURRENTLY idx_gist_specimens_gtu_location_geom ON specimens USING GIST ( (gtu_location::geometry) );
 
 CREATE INDEX CONCURRENTLY idx_specimens_category on specimens(category);
 

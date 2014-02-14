@@ -566,10 +566,10 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['lon_to'] = new sfWidgetForminput();
     $this->widgetSchema['lon_to']->setAttributes(array('class'=>'medium_small_size'));
 
-    $this->validatorSchema['lat_from'] = new sfValidatorNumber(array('required'=>false,'min' => '-90', 'max'=>'90'));
-    $this->validatorSchema['lon_from'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
-    $this->validatorSchema['lat_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-90', 'max'=>'90'));
-    $this->validatorSchema['lon_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
+    $this->validatorSchema['lat_from'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
+    $this->validatorSchema['lon_from'] = new sfValidatorNumber(array('required'=>false,'min' => '-360', 'max'=>'360'));
+    $this->validatorSchema['lat_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
+    $this->validatorSchema['lon_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-360', 'max'=>'360'));
 
     sfWidgetFormSchema::setDefaultFormFormatterName('list');
     $this->widgetSchema->setNameFormat('specimen_search_filters[%s]');
@@ -642,24 +642,32 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
+      $horizontal_box = "((".(float)$values['lat_from'].",-180),(".(float)$values['lat_to'].",180))";
+      $vert_box = "((".(float)$values['lat_from'].",".(float)$values['lon_from']."),(".(float)$values['lat_to'].",".(float)$values['lon_to']."))";
 
-      /*
-      $query->andWhere('
-        ( station_visible = true AND gtu_location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
-        ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326) )
-       OR
-        ( station_visible = false AND collection_ref in ('.implode(',',$this->encoding_collection).')
-        AND gtu_location::geometry && ST_SetSRID(ST_MakeBox2D(ST_Point('.$values['lon_from'].', '.$values['lat_from'].'),
-        ST_Point('.$values['lon_to'].', '.$values['lat_to'].')),4326) )
-      ');
-      */
+      // Look for a wrapped box (ie. between RUSSIA and USA)
+      if( (float)$values['lon_to'] < (float) $values['lon_from']) {
 
-      $query->andWhere(
-        " ( station_visible = true AND box(? :: text) @> loc ) OR ( station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).") AND box(? :: text) @> loc )",
-        "((".$values['lat_from'].",".$values['lon_from']."),(".$values['lat_to'].",".$values['lon_to']."))"
+        $query->andWhere("
+          ( station_visible = true AND box('$horizontal_box') @> gtu_location AND NOT box('$vert_box') @> gtu_location )
+        OR
+          ( station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
+            AND box('$horizontal_box') @> gtu_location AND NOT box('$vert_box') @> gtu_location
+          )"
         );
+        $query->whereParenWrap();
 
-      $query->whereParenWrap();
+      } else {
+        $query->andWhere("
+          ( station_visible = true AND box('$horizontal_box') @> gtu_location AND box('$vert_box') @> gtu_location )
+        OR
+          ( station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
+            AND box('$horizontal_box') @> gtu_location AND box('$vert_box') @> gtu_location
+          )
+        ");
+        $query->whereParenWrap();
+      }
+      $query->andWhere('gtu_location is not null');
     }
     return $query;
   }
@@ -1103,8 +1111,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
     $query = DQ::create()
       ->select('s.*,
-        ST_Y(ST_Centroid(geometry(s.gtu_location))) as latitude,
-        ST_X(ST_Centroid(geometry(s.gtu_location))) as longitude,
+        gtu_location[0] as latitude,
+        gtu_location[1] as longitude,
         (collection_ref in ('.implode(',',$this->encoding_collection).')) as has_encoding_rights'
       )
       ->from('Specimens s');

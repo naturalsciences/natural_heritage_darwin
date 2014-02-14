@@ -1,3 +1,7 @@
+/******
+* DEPRECATED!!!!!
+* DO NOT USE!!!
+*********/
 SET search_path = darwin2, public;
 
 BEGIN;
@@ -53,7 +57,7 @@ CREATE TABLE specimens_flat (
     gtu_province_tag_indexed varchar[],
     gtu_others_tag_value varchar,
     gtu_others_tag_indexed varchar[],
-    gtu_location GEOGRAPHY(POLYGON,4326),
+    gtu_location POINT,
 
     taxon_name varchar,
     taxon_name_indexed varchar,
@@ -189,7 +193,7 @@ GRANT SELECT ON specimens_flat TO d2viewer;
             spec.host_taxon_ref, host_taxon.name, host_taxon.name_indexed, host_taxon.level_ref, host_taxon_level.level_name, host_taxon.status,
             host_taxon.path, host_taxon.parent_ref, host_taxon.extinct,
             spec.host_specimen_ref, spec.ig_ref, igs.ig_num, igs.ig_num_indexed, igs.ig_date_mask, igs.ig_date, exists(select 1 from specimen_individuals where specimen_ref = spec.id and type_group != 'specimen'), exists(select 1 from specimen_individuals where specimen_ref = spec.id)
-     FROM specimens spec 
+     FROM specimens spec
       INNER JOIN
           collections coll ON spec.collection_ref = coll.id
       LEFT JOIN
@@ -201,22 +205,22 @@ GRANT SELECT ON specimens_flat TO d2viewer;
              LEFT JOIN tag_groups taggr_provinces ON gtu.id = taggr_provinces.gtu_ref AND taggr_provinces.group_name_indexed = 'administrativearea' AND taggr_provinces.sub_group_name_indexed = 'province'
         )
         ON gtu.id = spec.gtu_ref
-      LEFT JOIN 
+      LEFT JOIN
         (taxonomy taxon INNER JOIN catalogue_levels taxon_level ON taxon.level_ref = taxon_level.id)
         ON taxon.id=spec.taxon_ref
-      LEFT JOIN 
+      LEFT JOIN
         (taxonomy host_taxon INNER JOIN catalogue_levels host_taxon_level ON host_taxon.level_ref = host_taxon_level.id)
         ON host_taxon.id=spec.host_taxon_ref
-      LEFT JOIN 
+      LEFT JOIN
         (chronostratigraphy chrono INNER JOIN catalogue_levels chrono_level ON chrono.level_ref = chrono_level.id)
         ON chrono.id=spec.chrono_ref
-      LEFT JOIN 
+      LEFT JOIN
         (lithostratigraphy litho INNER JOIN catalogue_levels litho_level ON litho.level_ref = litho_level.id)
         ON litho.id=spec.litho_ref
-      LEFT JOIN 
+      LEFT JOIN
         (lithology INNER JOIN catalogue_levels lithology_level ON lithology.level_ref = lithology_level.id)
         ON lithology.id=spec.lithology_ref
-      LEFT JOIN 
+      LEFT JOIN
         (mineralogy mineral INNER JOIN catalogue_levels mineral_level ON mineral.level_ref = mineral_level.id)
         ON mineral.id=spec.mineral_ref
     );

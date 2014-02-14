@@ -50,12 +50,12 @@ select id as unique_id,
              ) as y
              inner join taxonomy as ordo on y.id = ordo.id and ordo.level_ref = 28
        )::varchar as ordo,
-       (select fam.name 
+       (select fam.name
         from (select x.id::integer as id from
-                 (select regexp_split_to_table(path, '/') as id 
+                 (select regexp_split_to_table(path, '/') as id
                   from taxonomy as taxfam
                   where taxfam.id = df.taxon_ref
-                 ) as x 
+                 ) as x
               where x.id != ''
              ) as y
              inner join taxonomy as fam on y.id = fam.id and fam.level_ref = 34
@@ -77,7 +77,7 @@ select id as unique_id,
        df.gtu_others_tag_indexed as location_array,
        case when trim(df.gtu_code) in ('', '/', '0', '0/') then '' else trim(df.gtu_code) end as location_code,
        case when df.gtu_from_date_mask >= 32 then to_char(df.gtu_from_date, 'DD/MM/YYYY') else '' end || case when df.gtu_to_date_mask >= 32 then ' - ' || to_char(df.gtu_to_date, 'DD/MM/YYYY') else '' end as gtu_date,
-       case when df.gtu_location is not null then trunc((ST_Y(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) || '/' || trunc((ST_X(ST_Centroid(geometry(df.gtu_location))))::numeric, 6) else '' end as lat_long,
+       case when df.gtu_location is not null then trunc(df.gtu_location[0]::numeric, 6) || '/' || trunc(df.gtu_location[1]::numeric, 6) else '' end as lat_long,
        case when df.gtu_elevation is not null then trunc(df.gtu_elevation::numeric,2) || ' m' || case when df.gtu_elevation_accuracy is not null then ' +- ' || trunc(df.gtu_elevation_accuracy::numeric,2) || ' m' else '' end else '' end as elevation,
        (select case when length(regexp_replace(coll, '[^,]+', '', 'g')) > 2
                     then substr(coll, 1, strpos(coll, ',')-1) || ' & al.'
