@@ -60,7 +60,7 @@ function setPointFromEvent( e ) {
     pt = e.target.getLatLng();
   }
   pt = pt.wrap();
-  
+
   $('#gtu_latitude').val(pt.lat)
   $('#gtu_longitude').val(pt.lng)
 
@@ -101,7 +101,7 @@ function fetchPositions(lonlat, zoom) {
 
       if( data.address.city != undefined )
         container.append($('<li></li>').text(data.address.city).attr({ 'data-group': 'administrative area', 'data-subgroup': 'city' }));
-      
+
       container.find('>li').click(onReverseTagClick);
       $('#reverse_tags').show();
     }
@@ -129,7 +129,7 @@ function initSearchMap() {
     if($(this).is(':checked')) {
       $('#map_search_form').show();
       map.invalidateSize();
-      if($('#gtu_filters_lat_from').val() != '' &&  $('#gtu_filters_lat_to').val() != '' && 
+      if($('#gtu_filters_lat_from').val() != '' &&  $('#gtu_filters_lat_to').val() != '' &&
         $('#gtu_filters_lon_from').val() != '' &&   $('#gtu_filters_lat_to').val() != '')
       {
           try{
@@ -167,7 +167,7 @@ function initSearchMap() {
     $(this).closest('tr').find('input').val('');
   });
 
-  map = L.map('smap').setView([0,0], 2);
+  map = L.map('smap', {minZoom: 2} ).setView([0,0], 3);
   accuracy_layer = L.layerGroup([]);
   if($('#show_accuracy').is(':checked'))
     accuracy_layer.addTo(map);
@@ -192,18 +192,18 @@ function updateLatLong() {
     if($('#gtu_filters_lat_from').length) {
       $('#gtu_filters_lat_from').val(bounds.getNorthWest().wrap().lat );
       $('#gtu_filters_lon_from').val(bounds.getNorthWest().wrap().lng);
-  
+
       $('#gtu_filters_lat_to').val(bounds.getSouthEast().wrap().lat);
       $('#gtu_filters_lon_to').val(bounds.getSouthEast().wrap().lng);
     }else if($('#specimen_search_filters_lat_from').length) {
       $('#specimen_search_filters_lat_from').val(bounds.getNorthWest().wrap().lat );
       $('#specimen_search_filters_lon_from').val(bounds.getNorthWest().lng);
-  
+
       $('#specimen_search_filters_lat_to').val(bounds.getSouthEast().wrap().lat);
       $('#specimen_search_filters_lon_to').val(bounds.getSouthEast().wrap().lng);
-      
+
     }
-    
+
   }
 }
 
@@ -237,7 +237,7 @@ function map_submit(event) {
       }).addTo(mg);
     }
   });
-  
+
   //Load Page counts
   $.ajax({
     url: $('#gtu_filter').attr('action')+'/format/text/extd/count?gtu_filters%5Brec_per_page%5D=' + number_to_fetch +'&'+ $('#gtu_filter').serialize(),
