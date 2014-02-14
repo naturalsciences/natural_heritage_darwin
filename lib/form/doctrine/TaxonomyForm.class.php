@@ -38,6 +38,8 @@ class TaxonomyForm extends BaseTaxonomyForm
       'complete_url' => 'catalogue/completeName?table=taxonomy&level=1',
     ));
 
+    $this->validatorSchema['parent_ref']->setOption('required', true);
+
     $this->widgetSchema->setLabels(array(
       'level_ref' => 'Level',
       'parent_ref' => 'Parent'

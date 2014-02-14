@@ -18,8 +18,8 @@ class LithologyForm extends BaseLithologyForm
     $this->widgetSchema['name']->setAttributes(array('class'=>'large_size'));
     $this->validatorSchema['name']->setOption('trim', true);
 
-    $this->widgetSchema['color'] = new widgetFormColorPicker();    
-    $this->widgetSchema['color']->setAttributes(array('class'=>'vsmall_size'));    
+    $this->widgetSchema['color'] = new widgetFormColorPicker();
+    $this->widgetSchema['color']->setAttributes(array('class'=>'vsmall_size'));
     $statuses = array('valid'=>$this->getI18N()->__('valid'), 'invalid'=>$this->getI18N()->__('invalid'), 'deprecated'=>$this->getI18N()->__('deprecated'));
     $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
         'choices'  => $statuses,
@@ -38,6 +38,7 @@ class LithologyForm extends BaseLithologyForm
       'box_title' => $this->getI18N()->__('Choose Parent'),
       'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeName?table=lithology',
+      'nullable' => true,
     ));
 
     $this->widgetSchema['local_naming'] = new sfWidgetFormInputCheckbox();

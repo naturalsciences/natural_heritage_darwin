@@ -15,7 +15,7 @@
               $(base.options['duplicate_link']).live('click',base.duplicateItem);
             }
             else
-            { 
+            {
               $(base.options['duplicate_link']).click(base.duplicateItem);
             }
         };
@@ -52,7 +52,7 @@
               at: 'top center',
               adjust:{
                 y: 250 // option set in case of the qtip become too big
-              },         
+              },
               target: $(document.body)
             },
             style: ' ui-tooltip-rounded ui-tooltip-dialogue',
@@ -68,13 +68,13 @@
                   new_link = $(self).attr('href') + element_name ;
                   document.location.href = new_link;
                 }
-                
+
               }
             }
             });
-            
+
           };
-        
+
         base.init();
     };
 
@@ -96,14 +96,14 @@
     $.catalogue = function(el, options){
         // To avoid scope issues, use 'base' instead of 'this'
         // to reference this class from internal events and functions.
-        var base = this;        
+        var base = this;
         // Access to jQuery and DOM versions of element
         base.$el = $(el);
         base.el = el;
-        
+
         // Add a reverse reference to the DOM object
         base.$el.data("catalogue", base);
-        
+
         base.init = function(){
             base.options = $.extend({},$.catalogue.defaultOptions, options);
             $(base.options['link_catalogue']).live('click', base.catalogueLinkEdit);
@@ -116,7 +116,7 @@
           event.preventDefault();
           var last_position = $('body').scrollTop() ;
           var style = 'dialog-modal-edit';
-          if($(this).attr('information')) style = 'dialog-modal-view' ;           
+          if($(this).attr('information')) style = 'dialog-modal-view' ;
           scroll(0,0);
           $(this).qtip({
             id: 'modal',
@@ -133,10 +133,10 @@
               at: 'top center',
               adjust:{
                 y: 250 // option set in case of the qtip become too big
-              },         
+              },
               target: $(document.body)
             },
-            
+
             show: {
               ready: true,
               delay: 0,
@@ -156,7 +156,7 @@
                 ref_element_id = null;
                 ref_element_name = null;
               },
-              hide: function(event, api) {                
+              hide: function(event, api) {
                 $('body').data('widgets_screen').refreshWidget(event, api.elements.target);
                 scroll(0,last_position);
                 api.destroy();
@@ -166,7 +166,7 @@
           },event);
         };
 
-        
+
         base.deleteItem = function(event)
         {
           event.preventDefault();
@@ -194,11 +194,11 @@
             });
           }
         };
-       
+
         // Run initializer
         base.init();
     };
-    
+
     $.catalogue.defaultOptions = {
       link_catalogue: "a.link_catalogue",
       delete_link: "a.widget_row_delete"
@@ -209,7 +209,7 @@
             (new $.catalogue(this, options));
         });
     };
-    
+
 })(jQuery);
 
 
@@ -239,21 +239,21 @@ function removeError(element)
         // To avoid scope issues, use 'base' instead of 'this'
         // to reference this class from internal events and functions.
         var base = this;
-        
+
         // Access to jQuery and DOM versions of element
         base.$el = $(el);
         base.el = el;
-        
+
         // Add a reverse reference to the DOM object
         base.$el.data("catalogue_level", base);
-        
+
         base.init = function(){
             base.options = $.extend({},$.catalogue_level.defaultOptions, options);
             $(base.options['level_ref']).change(base.changeLevel);
             $(base.options['parent_ref']).bind('loadref',base.beforeSearchParent);
             $(base.options['parent_ref']).change(base.changeParent);
         };
-        
+
         base.changeLevel = function(event)
         {
           event.preventDefault();
@@ -270,20 +270,20 @@ function removeError(element)
             }
           }
         };
-        
+
         base.checkUpperLevel = function()
         {
           parent_item = $(base.options['parent_ref']); //base.$el.find('input[id$=\"_parent_ref\"]');
           $.ajax({
             url: base.options['search_url'] +'/level_id/' + $(base.options['level_ref']).val() + '/parent_id/' + $(base.options['parent_ref']).val() ,
-            success: function(html) 
+            success: function(html)
             {
               switch (html)
               {
                 case "top":
                   $(base.options['button_ref']).fadeOut();
                   $(base.options['message_ref']).fadeOut();
-                  $(base.options['parent_ref']).val("0");
+                  $(base.options['parent_ref']).val("");
                   $(base.options['parent_name']).html("-");
                   break;
                 case "not ok":
@@ -298,7 +298,7 @@ function removeError(element)
             }
           });
         }
-        
+
         // Called just before the showing of the parent_ref chooser
         base.beforeSearchParent = function(event)
         {
@@ -307,13 +307,13 @@ function removeError(element)
           {
             ref_level_id = '/level/'+ref_level_id;
           }
-          
+
           ref_caller_id = '';
           if (base.options['current_id'] != undefined && base.options['current_id'] != '')
           {
             ref_caller_id = '/caller_id/' + base.options['current_id'];
           }
-          
+
           button_ref = $(base.options['button_ref']).find('.but_text');
           if(button_ref.data('href') == null)
           {
@@ -321,16 +321,16 @@ function removeError(element)
           }
           button_ref.attr('href', button_ref.data('href') + ref_level_id + ref_caller_id);
         };
-  
+
         base.changeParent = function(event)
         {
           base.checkUpperLevel();
         };
-        
+
         // Run initializer
         base.init();
     };
-    
+
     $.catalogue_level.defaultOptions = {
         level_ref: 'select.catalogue_level',
         button_ref:  'div[id$=\"_parent_ref_button\"]',
@@ -340,18 +340,18 @@ function removeError(element)
         current_id: '',
         search_url: ''
     };
-    
+
     $.fn.catalogue_level = function(options){
         return this.each(function(){
             (new $.catalogue_level(this, options));
         });
     };
-    
+
 })(jQuery);
 
 
 /**********************************
- *  Modal screen 
+ *  Modal screen
  * ***************************/
 
 (function($){
@@ -359,14 +359,14 @@ function removeError(element)
         // To avoid scope issues, use 'base' instead of 'this'
         // to reference this class from internal events and functions.
         var base = this;
-        
+
         // Access to jQuery and DOM versions of element
         base.$el = $(el);
         base.el = el;
-        
+
         // Add a reverse reference to the DOM object
         base.$el.data("modal_screen", base);
-        
+
         base.init = function(){
             base.options = $.extend({},$.modal_screen.defaultOptions, options);
             base.$el.submit(base.onSubmit);
@@ -374,7 +374,7 @@ function removeError(element)
             base.$el.find(base.options['cancel_button']).click(base.cancelButton);
             // Put your initialization code here
         };
-        
+
         base.onSubmit = function(event){
           event.preventDefault();
           form_el = $(this);
@@ -393,13 +393,13 @@ function removeError(element)
             }
           });
         };
-        
+
         base.cancelButton = function (event)
         {
             event.preventDefault();
             $('body').trigger('close_modal');
         };
-        
+
         base.deleteRecord = function (event)
         {
           event.preventDefault();
@@ -431,16 +431,16 @@ function removeError(element)
         // Run initializer
         base.init();
     };
-    
+
     $.modal_screen.defaultOptions = {
         delete_button: '.delete_button',
         cancel_button: '.cancel_qtip'
     };
-    
+
     $.fn.modal_screen = function(options){
         return this.each(function(){
             (new $.modal_screen(this, options));
         });
     };
-    
+
 })(jQuery);

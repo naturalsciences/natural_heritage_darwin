@@ -27,9 +27,8 @@ class ParsingIdentifications
             'subclassis' => 'subclassis','superordo' => 'super_order','ordo' => 'order', 'subordo' => 'sub_order',
             'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe', 'variety' => 'variety');
   private $rock_level = array(
-    'lithology' => array('rock_maingroup'=>'unit_main_group', 'rock_mainclass'=>'unit_main_class','rock_category'=>'unit_category',
-                  'rock_class'=> 'unit_class','rock_clan'=>'unit_clan','rock_group'=>'unit_group','rock_subgroup'=>'unit_sub_group',
-                  'fullScientificnamestring'=>'unit_rock'),
+    'lithology' => array('main group'=>'unit_main_group', 'main class'=>'unit_main_class','category'=>'unit_category',
+                  'class'=> 'unit_class','clan'=>'unit_clan','group'=>'unit_group','subgroup'=>'unit_sub_group'),
     'mineralogy' => array('class'=>'unit_class', 'subclass'=>'unit_sub_class','group' => 'unit_group', 'series'=>'unit_series','variety'=>'unit_variety'),
   );
   public $peoples = array(); // an array of Doctrine People class
@@ -40,6 +39,7 @@ class ParsingIdentifications
   public function __construct()
   {
     $this->identification = new Identifications();
+    $this->catalogue_parent = new Hstore() ;
   }
 
   public function getDateText($date)
@@ -65,6 +65,7 @@ class ParsingIdentifications
       $this->higher_level = substr($this->higher_level,0,strpos($this->higher_level,' - '));
     }
     $this->notion = 'mineralogy' ;
+
     $this->temp_array[$this->higher_level] = $this->higher_name ;
   }
 
@@ -117,7 +118,8 @@ class ParsingIdentifications
     elseif($this->notion == 'lithology') {
       $staging['lithology_parents'] = $this->catalogue_parent->export() ;
       $staging->setLithologyName($this->fullname) ;
-      $staging->setLithologyLevelName($this->level_name) ;
+      $staging->setLithologyLevelName('unit_rock') ;
+      
     }
     elseif($this->notion == 'mineralogy'){
       $staging['mineral_parents'] = $this->catalogue_parent->export() ;
@@ -140,8 +142,9 @@ class ParsingIdentifications
       foreach($this->temp_array as $level=>$name)
       {
         if(!$name) continue ;
-        if(in_array($level,array_keys($this->rock_level[$this->notion])))
+        if(in_array($level,array_keys($this->rock_level[$this->notion]))) {
           $this->catalogue_parent[$this->rock_level[$this->notion][$level]] = $name ;
+        }
       }
     }
   }

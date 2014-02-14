@@ -34,15 +34,18 @@ class ChronostratigraphyForm extends BaseChronostratigraphyForm
         'add_empty' => true
       ),
       array('class'=>'catalogue_level')
-      );
+    );
+
     $this->widgetSchema['parent_ref'] = new widgetFormCompleteButtonRef(array(
-       'model' => 'Chronostratigraphy',
-       'method' => 'getName',
-       'link_url' => 'chronostratigraphy/choose',
-       'box_title' => $this->getI18N()->__('Choose Parent'),
-       'button_is_hidden' => true,
+      'model' => 'Chronostratigraphy',
+      'method' => 'getName',
+      'link_url' => 'chronostratigraphy/choose',
+      'box_title' => $this->getI18N()->__('Choose Parent'),
+      'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeName?table=chronostratigraphy',
-     ));
+      'nullable' => true,
+    ));
+
     $this->widgetSchema['local_naming'] = new sfWidgetFormInputCheckbox();
     $this->widgetSchema->setLabels(array(
       'level_ref' => 'Level',
