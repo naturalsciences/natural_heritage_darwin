@@ -4,5 +4,4 @@
  */
 class LithostratigraphyTable extends DarwinTable
 {
-
 }
