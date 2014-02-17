@@ -53,7 +53,7 @@
           <?php echo $form[$array['fields']]->render() ; ?>
 
 
-          <?php if ( in_array($key, array('taxon','litho','lithology','mineralogy','chrono')) ) : ?>
+          <?php if ( in_array($key, array('taxon','litho','lithology','mineral','chrono')) ) : ?>
             <?php $catalogues = 'catalogues_'.$key;
             $catalogues = $$catalogues;
           ?>
@@ -64,7 +64,7 @@
                 <?php $lvl_name = $key.'_level_name';
                       $lvl_name = $$lvl_name;
                       if($key == 'taxon') $link_url = 'taxonomy';
-                      if($key == 'mineral') $link_url = 'mineral';
+                      if($key == 'mineral') $link_url = 'mineralogy';
                       if($key == 'litho') $link_url = 'lithostratigraphy';
                       if($key == 'lithology') $link_url = 'lithology';
                       if($key == 'chrono') $link_url = 'chronostratigraphy';

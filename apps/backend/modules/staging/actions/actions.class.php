@@ -188,6 +188,15 @@ class stagingActions extends DarwinActions
       $this->chrono_level_name = $staging->getChronoLevelName();
       $this->catalogues_chrono = Doctrine::getTable('Chronostratigraphy')->getLevelParents('Chronostratigraphy', $parents) ;
     }
+    if(in_array('mineral_ref', $form_fields))
+    {
+      $parent = new Hstore ;
+      $parent->import($staging->getChronoParents()) ;
+      $parents = $parent->getArrayCopy() ;
+      $parents[$staging->getMineralLevelName()] = $staging->getMineralName();
+      $this->mineral_level_name = $staging->getMineralLevelName();
+      $this->catalogues_mineral = Doctrine::getTable('Mineralogy')->getLevelParents('Mineralogy', $parents) ;
+    }
     $this->form = new StagingForm($staging, array('fields' => $form_fields));
 
   }
