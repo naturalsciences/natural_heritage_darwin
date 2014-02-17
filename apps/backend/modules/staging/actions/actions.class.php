@@ -191,7 +191,7 @@ class stagingActions extends DarwinActions
     if(in_array('mineral_ref', $form_fields))
     {
       $parent = new Hstore ;
-      $parent->import($staging->getChronoParents()) ;
+      $parent->import($staging->getMineralParents()) ;
       $parents = $parent->getArrayCopy() ;
       $parents[$staging->getMineralLevelName()] = $staging->getMineralName();
       $this->mineral_level_name = $staging->getMineralLevelName();
