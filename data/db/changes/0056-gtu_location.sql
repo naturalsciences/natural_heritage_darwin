@@ -18,7 +18,7 @@ update specimens s set gtu_loc = (select loc from gtu g where g.id = s.gtu_ref a
 
 SET SESSION session_replication_role = origin;
 
-drop view labeling;
+drop view IF EXISTS labeling;
 
 alter table gtu drop column location;
 alter table gtu rename column loc to location;
