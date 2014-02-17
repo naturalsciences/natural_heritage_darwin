@@ -896,8 +896,6 @@
         <target>Geo/Paleo opzoeking</target>
         
       </trans-unit>
-
-
       <trans-unit id="1711">
         <source>Properties</source>
         <target>Eigenschappen</target>
@@ -937,6 +935,14 @@
         <source>Specimen State</source>
         
       </trans-unit>
-        </body>
+      <trans-unit id="1719">
+        <source>You cannot register without accepting DaRWIN 2 terms of use</source>
+        
+      </trans-unit>
+      <trans-unit id="1720">
+        <source>Recommended browser for DaRWIN :</source>
+        
+      </trans-unit>
+    </body>
   </file>
 </xliff>

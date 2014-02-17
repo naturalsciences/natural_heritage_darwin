@@ -898,8 +898,6 @@ Etapas</target>
         <target>Búsqueda geo/paleo</target>
         
       </trans-unit>
-
-
       <trans-unit id="1711">
         <source>Properties</source>
         <target>Propiedades</target>
@@ -940,6 +938,14 @@ Etapas</target>
         <target>Estado del espécimen</target>
         
       </trans-unit>
-        </body>
+      <trans-unit id="1719">
+        <source>You cannot register without accepting DaRWIN 2 terms of use</source>
+        
+      </trans-unit>
+      <trans-unit id="1720">
+        <source>Recommended browser for DaRWIN :</source>
+        
+      </trans-unit>
+    </body>
   </file>
 </xliff>

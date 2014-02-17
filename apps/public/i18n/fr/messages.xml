@@ -897,8 +897,6 @@
         <target>Recherche Geo/Paleo</target>
         
       </trans-unit>
-
-
       <trans-unit id="1711">
         <source>Properties</source>
         <target>Propriétés</target>
@@ -939,6 +937,16 @@
         <target>Etat de l'échantillon</target>
         
       </trans-unit>
-        </body>
+      <trans-unit id="1719">
+        <source>You cannot register without accepting DaRWIN 2 terms of use</source>
+        <target>Vous ne pouvez vous enregistrer sans avoir accepté les conditions d'utilisation de DaRWIN2</target>
+        
+      </trans-unit>
+      <trans-unit id="1720">
+        <source>Recommended browser for DaRWIN :</source>
+        <target>Navigateurs recommandés pour DaRWIN :</target>
+        
+      </trans-unit>
+    </body>
   </file>
 </xliff>
