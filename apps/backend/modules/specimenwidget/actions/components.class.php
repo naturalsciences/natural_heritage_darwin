@@ -263,7 +263,9 @@ class specimenwidgetComponents extends sfComponents
 
   public function executeHistoric()
   {
-    $this->defineForm();
+    // $this->defineForm();
+    if(isset($this->form) )
+      $this->eid = $this->form->getObject()->getId() ;
     if($this->eid){
       $this->items = Doctrine::getTable('UsersTracking')->getRelated('specimens', $this->eid);
     }

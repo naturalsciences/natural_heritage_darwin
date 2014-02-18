@@ -84,7 +84,7 @@ all:
       informativeWorkflow: This widget allows you to add a note for this specific specimen, this note can be a modification suggestion, a question destined to managers, an own note to remind you of something, an explanation when a modification is added. The number of options in the status field depends on your privileges
       biblio : This widget allows you to add a bibliographic reference of the item
       refRelatedFiles : This widget allows you to add a file related to the item - This can either be a document describing the item or an illustration of it.
-
+      historic : You can see here an historic of who has modified this specimen
       socialStatus: This widget is mainly used for entering the social class of an animal living in a social group. e.g. to indicate that an individual is a workerbee
       rockForm: This widget allows you to add a sterioscopic form that you can find when analysing a mineral composition.
       specimenCount: In this widget you can specify the exact number of individuals belonging to the same specimen or you can specify a lower and upperbound estimate of the number of individuals"
