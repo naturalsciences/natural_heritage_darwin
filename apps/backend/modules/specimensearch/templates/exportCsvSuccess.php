@@ -29,7 +29,7 @@
 <?php if($field_to_show['sex']=='check'):?>Sex<?php echo $sep;endif;?>
 <?php if($field_to_show['state']=='check'):?>Developpement State<?php echo $sep;endif;?>
 <?php if($field_to_show['stage']=='check'):?>Individual Stage<?php echo $sep;endif;?>
-<?php if($field_to_show['part_status']=='check'):?>SocialStatus<?php echo $sep;endif;?>
+<?php if($field_to_show['social_status']=='check'):?>SocialStatus<?php echo $sep;endif;?>
 <?php if($field_to_show['rock_form']=='check'):?>RockForm<?php echo $sep;endif;?>
 <?php if($field_to_show['specimen_count']=='check'):?>Count Min<?php echo $sep;endif;?>
 <?php if($field_to_show['specimen_count']=='check'):?>Count Max<?php echo $sep;endif;?>
