@@ -1549,7 +1549,7 @@
       </trans-unit>
           <trans-unit id="327">
         <source>Language</source>
-        <target>Langage</target>
+        <target>Langue</target>
         
       </trans-unit>
           <trans-unit id="328">
@@ -1639,7 +1639,7 @@
       </trans-unit>
           <trans-unit id="345">
         <source>Duplicate People</source>
-        <target>Dipliquer personne</target>
+        <target>Dupliquer personne</target>
         
       </trans-unit>
           <trans-unit id="346">
@@ -5015,7 +5015,7 @@
       </trans-unit>
           <trans-unit id="1044">
         <source>This widget shows all known languages for this user. A language can be set as mothertongue. A language can also be set as preferred that will be used by DaRWIN. If our application cannot translate the preferred language the default language will be used (English)</source>
-        <target>Cette widget montre tout les langages connus par cet utilisateur. une langue maternelle peut être définie. Une langue préférée peut aussi être définie et sera utilisée par DaRWIN. Si notre application ne peut pas traduire la langue préférée, le langage par défaut sera utilisé (anglais)</target>
+        <target>Cette widget montre toutes les langes connues par cet utilisateur. Une langue maternelle peut être définie. Une langue préférée peut aussi être définie et sera utilisée par DaRWIN. Si notre application ne peut pas traduire la langue préférée, le langage par défaut sera utilisé (anglais)</target>
         
       </trans-unit>
           <trans-unit id="1045">
@@ -5315,7 +5315,7 @@
       </trans-unit>
           <trans-unit id="1121">
         <source>a cultivar name, which is a Latin botanical name followed by an epithet, mostly in a vernacular language</source>
-        <target>Un nom de cultivar, qui est un nom botanique lain accompagné d'un épithète, fréquenement dans un langage vernaculaire</target>
+        <target>Un nom de cultivar, qui est un nom botanique lain accompagné d'un épithète, fréquemment dans un langage vernaculaire</target>
         
       </trans-unit>
           <trans-unit id="1122">
@@ -6475,7 +6475,7 @@
       </trans-unit>
           <trans-unit id="1565">
         <source>New Status</source>
-        <target>Nouveau status</target>
+        <target>Nouveau statut</target>
         
       </trans-unit>
           <trans-unit id="1567">
@@ -7400,7 +7400,7 @@
         
       </trans-unit>
       <trans-unit id="1787">
-        <source>column</source>
+        <source>Column</source>
         <target>Colonne</target>
         
       </trans-unit>
@@ -7536,6 +7536,70 @@
       <trans-unit id="1813">
         <source>Choose a Shelf</source>
         <target>Choisir un plateau</target>
+        
+      </trans-unit>
+      <trans-unit id="1814">
+        <source>Duplicate Method</source>
+        <target>Dupliquer Méthode</target>
+        
+      </trans-unit>
+      <trans-unit id="1815">
+        <source>Duplicate tool</source>
+        <target>Dupliquer outil</target>
+        
+      </trans-unit>
+      <trans-unit id="1816">
+        <source>Full Bibliographic reference</source>
+        <target>Référence Bibliographique complète</target>
+        
+      </trans-unit>
+      <trans-unit id="1817">
+        <source>New bibliography</source>
+        <target>Nouvelle Bibliographie</target>
+        
+      </trans-unit>
+      <trans-unit id="1818">
+        <source>Add Properties with this pre defined template</source>
+        <target>Ajouter une propriété avec ce modèle prédéfini</target>
+        
+      </trans-unit>
+      <trans-unit id="1819">
+        <source>Search related specimens</source>
+        <target>Rechercher des spécimens liés</target>
+        
+      </trans-unit>
+      <trans-unit id="1820">
+        <source>Edit this item</source>
+        <target>Éditer cet élément</target>
+        
+      </trans-unit>
+      <trans-unit id="1821">
+        <source>#ID list separated by ','</source>
+        <target>Liste d'#ID séparé par des ','</target>
+        
+      </trans-unit>
+      <trans-unit id="1822">
+        <source>Actors</source>
+        <target>Participants</target>
+        
+      </trans-unit>
+      <trans-unit id="1823">
+        <source>Empty</source>
+        <target>Vide</target>
+        
+      </trans-unit>
+      <trans-unit id="1824">
+        <source>Choose New Column</source>
+        <target>Choisir une nouvelle Colonne</target>
+        
+      </trans-unit>
+      <trans-unit id="1825">
+        <source>Choose New Taxon</source>
+        <target>Choisir un Nouveau Taxon</target>
+        
+      </trans-unit>
+      <trans-unit id="1826">
+        <source>Historic</source>
         
       </trans-unit>
     </body>

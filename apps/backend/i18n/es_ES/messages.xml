@@ -6688,7 +6688,7 @@
         
       </trans-unit>
       <trans-unit id="1787">
-        <source>column</source>
+        <source>Column</source>
         
       </trans-unit>
       <trans-unit id="1788">
@@ -6795,9 +6795,61 @@
         <source>Choose a Column</source>
         
       </trans-unit>
-      <trans-unit id="1812">
+      <trans-unit id="1813">
         <source>Choose a Shelf</source>
-        <target>Choose a Shelf</target>
+        
+      </trans-unit>
+      <trans-unit id="1814">
+        <source>Duplicate Method</source>
+        
+      </trans-unit>
+      <trans-unit id="1815">
+        <source>Duplicate tool</source>
+        
+      </trans-unit>
+      <trans-unit id="1816">
+        <source>Full Bibliographic reference</source>
+        
+      </trans-unit>
+      <trans-unit id="1817">
+        <source>New bibliography</source>
+        
+      </trans-unit>
+      <trans-unit id="1818">
+        <source>Add Properties with this pre defined template</source>
+        
+      </trans-unit>
+      <trans-unit id="1819">
+        <source>Search related specimens</source>
+        
+      </trans-unit>
+      <trans-unit id="1820">
+        <source>Edit this item</source>
+        
+      </trans-unit>
+      <trans-unit id="1821">
+        <source>#ID list separated by ','</source>
+        
+      </trans-unit>
+      <trans-unit id="1822">
+        <source>Actors</source>
+        
+      </trans-unit>
+      <trans-unit id="1823">
+        <source>Empty</source>
+        
+      </trans-unit>
+      <trans-unit id="1824">
+        <source>Choose New Column</source>
+        
+      </trans-unit>
+      <trans-unit id="1825">
+        <source>Choose New Taxon</source>
+        
+      </trans-unit>
+      <trans-unit id="1826">
+        <source>Historic</source>
+        
       </trans-unit>
     </body>
   </file>
