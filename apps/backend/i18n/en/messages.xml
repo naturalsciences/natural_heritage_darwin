@@ -6015,6 +6015,30 @@ DaRWIN</target>
         <source>Choose a Building</source>
         <target>Choose a Building</target>
       </trans-unit>
+      <trans-unit id="1808">
+        <source>Storage Search</source>
+        <target>Storage Search</target>
+      </trans-unit>
+      <trans-unit id="1809">
+        <source>Choose a Floor</source>
+        <target>Choose a Floor</target>
+      </trans-unit>
+      <trans-unit id="1810">
+        <source>Choose a Room</source>
+        <target>Choose a Room</target>
+      </trans-unit>
+      <trans-unit id="1811">
+        <source>Choose a Row</source>
+        <target>Choose a Row</target>
+      </trans-unit>
+      <trans-unit id="1812">
+        <source>Choose a Column</source>
+        <target>Choose a Column</target>
+      </trans-unit>
+      <trans-unit id="1813">
+        <source>Choose a Shelf</source>
+        <target>Choose a Shelf</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

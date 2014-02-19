@@ -7491,6 +7491,30 @@
         <source>Choose a Building</source>
         
       </trans-unit>
+      <trans-unit id="1808">
+        <source>Storage Search</source>
+        
+      </trans-unit>
+      <trans-unit id="1809">
+        <source>Choose a Floor</source>
+        
+      </trans-unit>
+      <trans-unit id="1810">
+        <source>Choose a Room</source>
+        
+      </trans-unit>
+      <trans-unit id="1811">
+        <source>Choose a Row</source>
+        
+      </trans-unit>
+      <trans-unit id="1812">
+        <source>Choose a Column</source>
+        
+      </trans-unit>
+      <trans-unit id="1812">
+        <source>Choose a Shelf</source>
+        <target>Choose a Shelf</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

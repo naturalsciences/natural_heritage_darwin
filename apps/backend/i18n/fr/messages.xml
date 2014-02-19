@@ -7508,6 +7508,36 @@
         <target>Choisir un bâtiment</target>
         
       </trans-unit>
+      <trans-unit id="1808">
+        <source>Storage Search</source>
+        <target>Recherche Conservatoires</target>
+        
+      </trans-unit>
+      <trans-unit id="1809">
+        <source>Choose a Floor</source>
+        <target>Choisir un étage</target>
+        
+      </trans-unit>
+      <trans-unit id="1810">
+        <source>Choose a Room</source>
+        <target>Choisir une salle</target>
+        
+      </trans-unit>
+      <trans-unit id="1811">
+        <source>Choose a Row</source>
+        <target>Choisir une rangée</target>
+        
+      </trans-unit>
+      <trans-unit id="1812">
+        <source>Choose a Column</source>
+        <target>Choisir une Colonne</target>
+        
+      </trans-unit>
+      <trans-unit id="1813">
+        <source>Choose a Shelf</source>
+        <target>Choisir un plateau</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
