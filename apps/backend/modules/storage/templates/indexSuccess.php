@@ -6,9 +6,9 @@
       <li>
         <strong><?php echo __($elements[$type]); ?></strong> :
         <?php if($type == $previousEl):?>
-          <?php echo $name == ''? "<i>emtpy</i>": $name;?>
+          <?php echo $name == ''? "<i>".__('Empty')."</i>": $name;?>
         <?php else:?>
-          <?php echo link_to( $name == ''? "<i>emtpy</i>": $name ,$to_query2->getRawValue()[$type]);?>
+          <?php echo link_to( $name == ''? "<i>".__('Empty')."</i>": $name ,$to_query2->getRawValue()[$type]);?>
         <?php endif;?>
       </li>
     <?php endforeach;?>

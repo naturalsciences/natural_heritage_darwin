@@ -43,13 +43,15 @@
 
 <br />
 <?php echo image_tag('add_green.png');?>
-<a title="<?php echo __('Add Properties');?>" class="link_catalogue" href="<?php echo url_for('property/add?table='.$table.'&id='.$eid); ?>"><?php echo __('Add Properties');?></a>
+<a title="<?php echo __('Add Properties');?>" class="link_catalogue" href="<?php echo url_for('property/add?table='.$table.'&id='.$eid); ?>">
 <?php if(count(Properties::getModels($table)) > 1):?>
-  <?php echo __("with this pre defined template") ; ?>:
+  <?php echo __("Add Properties with this pre defined template") ; ?> :</a>
   <select id='property_template'>
     <?php foreach(Properties::getModels($table) as $key=>$values)
       echo "<option value=\"$key\">$values" ;?>
   </select>
+<?php else :?>
+ <?php echo __('Add Properties');?></a>
 <?php endif;?>
 <script>
   $('a.link_catalogue').click(function() {

@@ -89,7 +89,7 @@ $(document).ready(function ()
 </script></td>
       </tr>
       <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
-        <tr><td colspan="2"><?php echo image_tag('edit.png');?> <?php echo link_to(__('Edit this chronostratigraphy unit'),'chronostratigraphy/edit?id='.$chrono->getId());?></td></tr>
+        <tr><td colspan="2"><?php echo image_tag('edit.png');?> <?php echo link_to(__('Edit this item'),'chronostratigraphy/edit?id='.$chrono->getId());?></td></tr>
       <?php endif;?>
     </tbody>
   </table>

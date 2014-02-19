@@ -5928,7 +5928,7 @@ DaRWIN</target>
         <target>Add another column</target>
       </trans-unit>
       <trans-unit id="1787">
-        <source>column</source>
+        <source>Column</source>
         <target>Column</target>
       </trans-unit>
       <trans-unit id="1788">
@@ -6038,6 +6038,58 @@ DaRWIN</target>
       <trans-unit id="1813">
         <source>Choose a Shelf</source>
         <target>Choose a Shelf</target>
+      </trans-unit>
+      <trans-unit id="1814">
+        <source>Duplicate Method</source>
+        <target>Duplicate Method</target>
+      </trans-unit>
+      <trans-unit id="1815">
+        <source>Duplicate tool</source>
+        <target>Duplicate tool</target>
+      </trans-unit>
+      <trans-unit id="1816">
+        <source>Full Bibliographic reference</source>
+        <target>Full Bibliographic reference</target>
+      </trans-unit>
+      <trans-unit id="1817">
+        <source>New bibliography</source>
+        <target>New bibliography</target>
+      </trans-unit>
+      <trans-unit id="1818">
+        <source>Add Properties with this pre defined template</source>
+        <target>Add Properties with this pre defined template</target>
+      </trans-unit>
+      <trans-unit id="1819">
+        <source>Search related specimens</source>
+        <target>Search related specimens</target>
+      </trans-unit>
+      <trans-unit id="1820">
+        <source>Edit this item</source>
+        <target>Edit this item</target>
+      </trans-unit>
+      <trans-unit id="1821">
+        <source>#ID list separated by ','</source>
+        <target>#ID list separated by ','</target>
+      </trans-unit>
+      <trans-unit id="1822">
+        <source>Actors</source>
+        <target>Actors</target>
+      </trans-unit>
+      <trans-unit id="1823">
+        <source>Empty</source>
+        <target>Empty</target>
+      </trans-unit>
+      <trans-unit id="1824">
+        <source>Choose New Column</source>
+        <target>Choose New Column</target>
+      </trans-unit>
+      <trans-unit id="1825">
+        <source>Choose New Taxon</source>
+        <target>Choose New Taxon</target>
+      </trans-unit>
+      <trans-unit id="1826">
+        <source>Historic</source>
+        <target>Historic</target>
       </trans-unit>
     </body>
   </file>

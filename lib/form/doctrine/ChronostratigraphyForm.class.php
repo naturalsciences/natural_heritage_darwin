@@ -52,7 +52,8 @@ class ChronostratigraphyForm extends BaseChronostratigraphyForm
       'lower_bound' => 'Low. bound (My)',
       'upper_bound' => 'Up. bound (My)',
       'parent_ref' => 'Parent',
-      'local_naming' => 'Local unit ?'
+      'local_naming' => 'Local unit ?',
+      'color' => 'Colour'
     ));
 
     $this->validatorSchema['color'] = new ColorPickerValidatorSchema() ;

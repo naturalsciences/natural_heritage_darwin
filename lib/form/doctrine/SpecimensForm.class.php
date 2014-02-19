@@ -379,7 +379,7 @@ class SpecimensForm extends BaseSpecimensForm
       'institution_ref' => 'Institution',
       'accuracy' => 'Accuracy',
       'surnumerary' => 'supernumerary',
-      'col' => 'column',
+      'col' => 'Column',
     ));
 
     /* Validators */

@@ -337,7 +337,7 @@ class specimensearchActions extends DarwinActions
           $this->getI18N()->__('Part Status'),),
         'specimen_count' => array(
           'specimen_count_max',
-          $this->getI18N()->__('Specimen Count'),),
+          $this->getI18N()->__('Specimen count'),),
         ));
     } else {
       $this->columns = array_merge($this->columns, array(

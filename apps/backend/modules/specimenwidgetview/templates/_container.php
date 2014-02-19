@@ -1,6 +1,6 @@
 <table class="catalogue_table_view">
   <tr>
-	<th><?php echo __("supernumerary ? ");?></th>
+	<th><?php echo __("supernumerary ?");?></th>
 	<td><?php echo ($spec->getSurnumerary()?__('Yes'):__('No')); ?></td>
   </tr>
 

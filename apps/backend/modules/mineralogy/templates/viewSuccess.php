@@ -95,7 +95,7 @@ $(document).ready(function ()
 </script></td>
       </tr>
       <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
-        <tr><td colspan="2"><?php echo image_tag('edit.png');?> <?php echo link_to(__('Edit this mineralogic unit'),'mineralogy/edit?id='.$mineral->getId());?></td></tr>
+        <tr><td colspan="2"><?php echo image_tag('edit.png');?> <?php echo link_to(__('Edit this item'),'mineralogy/edit?id='.$mineral->getId());?></td></tr>
       <?php endif;?>
     </tbody>
   </table>

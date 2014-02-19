@@ -21,7 +21,7 @@
 	<td><?php echo $spec->getRow()==''?'-':$spec->getRow() ?></td>
   </tr>
   <tr>
-  <th class="top_aligned"><?php echo __("column");?></th>
+  <th class="top_aligned"><?php echo __("Column");?></th>
   <td><?php echo $spec->getCol()==''?'-':$spec->getCol() ?></td>
   </tr>
   <tr>

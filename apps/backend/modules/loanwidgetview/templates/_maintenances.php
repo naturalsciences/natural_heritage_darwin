@@ -7,7 +7,7 @@
     <th><?php echo __('Details') ;?></th>
     <th><?php echo __('Person') ;?></th>
     <th><?php echo __('Date') ;?></th>
-    <th><?php echo __('Has Files') ;?></th>
+    <th><?php echo __('Has files') ;?></th>
     <th></th>
   </tr>
 </thead>

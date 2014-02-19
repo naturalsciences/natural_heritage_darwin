@@ -2,9 +2,9 @@
     <?php foreach($results as $r):?>
       <li>
         <?php if ($link):?>
-          <?php echo link_to( $r['item'] == ''? "<i>emtpy</i>": $r['item'] ,$r->getRawValue()['link']);?>
+          <?php echo link_to( $r['item'] == ''? "<i>".__('Empty')."</i>": $r['item'] ,$r->getRawValue()['link']);?>
         <?php else:?>
-          <?php echo $r['item'] == ''? "<i>emtpy</i>": $r['item'];?>
+          <?php echo $r['item'] == ''? "<i>".__('Empty')."</i>": $r['item'];?>
         <?php endif;?>
         ( <?php echo $r['ctn'];?> )
 
