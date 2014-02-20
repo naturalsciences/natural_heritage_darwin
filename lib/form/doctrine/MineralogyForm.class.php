@@ -61,12 +61,13 @@ class MineralogyForm extends BaseMineralogyForm
     ));
 
     $this->widgetSchema['local_naming'] = new sfWidgetFormInputCheckbox();
-    $this->widgetSchema->setLabels(array('cristal_system' => 'Cristalographic system',
-                                         'level_ref' => 'Level',
-                                         'parent_ref' => 'Parent',
-                                         'local_naming' => 'Local unit ?'
-                                        )
-                                  );
+    $this->widgetSchema->setLabels(array(
+      'cristal_system' => 'Cristalographic system',
+      'level_ref' => 'Level',
+      'parent_ref' => 'Parent',
+      'local_naming' => 'Local unit ?',
+      'color' => 'Colour',
+    ));
 
     $this->validatorSchema['status'] = new sfValidatorChoice(array('choices'  => array_keys($statuses), 'required' => true));
     $this->validatorSchema['classification'] = new sfValidatorChoice(array('choices'  => array_keys($classifications), 'required' => true));

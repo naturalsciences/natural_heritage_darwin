@@ -42,11 +42,12 @@ class LithologyForm extends BaseLithologyForm
     ));
 
     $this->widgetSchema['local_naming'] = new sfWidgetFormInputCheckbox();
-    $this->widgetSchema->setLabels(array('level_ref' => 'Level',
-                                         'parent_ref' => 'Parent',
-                                         'local_naming' => 'Local unit ?'
-                                        )
-                                  );
+    $this->widgetSchema->setLabels(array(
+      'level_ref' => 'Level',
+      'parent_ref' => 'Parent',
+      'local_naming' => 'Local unit ?',
+      'color' => 'Colour',
+    ));
     $this->validatorSchema['status'] = new sfValidatorChoice(array('choices'  => array_keys($statuses), 'required' => true));
     $this->validatorSchema['table'] = new sfValidatorString(array('required' => false));
     $this->validatorSchema['color'] = new ColorPickerValidatorSchema() ;
