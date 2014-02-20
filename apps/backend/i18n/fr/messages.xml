@@ -7613,6 +7613,11 @@
         <target>Ajouter un autre système</target>
         
       </trans-unit>
+      <trans-unit id="1829">
+        <source>Choose an Author</source>
+        <target>Choisir un Auteur</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
