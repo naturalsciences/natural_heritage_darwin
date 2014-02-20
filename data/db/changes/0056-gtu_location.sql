@@ -18,6 +18,17 @@ update specimens s set gtu_loc = (select loc from gtu g where g.id = s.gtu_ref a
 
 SET SESSION session_replication_role = origin;
 
+
+CREATE OR REPLACE FUNCTION point_equal ( POINT, POINT )
+RETURNS boolean AS
+'SELECT
+CASE WHEN $1[0] = $2[0] AND $1[1] = $2[1] THEN true
+ELSE false END;'
+LANGUAGE SQL IMMUTABLE;
+
+CREATE OPERATOR =  (LEFTARG = POINT,  RIGHTARG = POINT, PROCEDURE = point_equal);
+
+
 drop view IF EXISTS labeling;
 
 alter table gtu drop column location;
