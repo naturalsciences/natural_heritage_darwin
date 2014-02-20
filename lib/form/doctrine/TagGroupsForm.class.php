@@ -11,12 +11,7 @@ class TagGroupsForm extends BaseTagGroupsForm
 {
   public function configure()
   {
-    unset(
-      $this['group_name_indexed'],
-      $this['sub_group_name_indexed'],
-      $this['gtu_ref'],
-      $this['color']
-    );
+    $this->useFields(array('group_name','sub_group_name','international_name', 'tag_value'));
 
     $this->validatorSchema['group_name']->setOption('required', false);
     $this->validatorSchema['group_name']->setOption('trim', true);
