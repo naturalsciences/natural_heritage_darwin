@@ -7567,6 +7567,14 @@
         <source>Historic</source>
         
       </trans-unit>
+      <trans-unit id="1827">
+        <source>Pick a system in the list</source>
+        
+      </trans-unit>
+      <trans-unit id="1828">
+        <source>Add another system</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

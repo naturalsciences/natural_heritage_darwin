@@ -7603,6 +7603,16 @@
         <target>Historique</target>
         
       </trans-unit>
+      <trans-unit id="1827">
+        <source>Pick a system in the list</source>
+        <target>Choisir un système dans la liste</target>
+        
+      </trans-unit>
+      <trans-unit id="1828">
+        <source>Add another system</source>
+        <target>Ajouter un autre système</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

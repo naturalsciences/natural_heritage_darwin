@@ -6091,6 +6091,14 @@ DaRWIN</target>
         <source>Historic</source>
         <target>Historic</target>
       </trans-unit>
+      <trans-unit id="1827">
+        <source>Pick a system in the list</source>
+        <target>Pick a system in the list</target>
+      </trans-unit>
+      <trans-unit id="1828">
+        <source>Add another system</source>
+        <target>Add another system</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
