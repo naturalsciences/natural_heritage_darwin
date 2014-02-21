@@ -34,7 +34,7 @@
           </th>
           <th>
 	    <a class="sort" href="<?php echo url_for($s_url.'&orderby=additional_names'.( ($orderBy=='additional_names' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
-	      <?php echo __('Additional Names');?>
+	      <?php echo __('Additional names');?>
 	      <?php if($orderBy=='additional_names') echo $orderSign ?>
 	    </a>
           </th>
@@ -63,13 +63,13 @@
             <td><?php echo $item->getGivenName();?></td>
             <td><?php echo $item->getAdditionalNames() ?></td>
             <td class="datesNum">
-	      <?php echo $item->getBirthDateObject()->getDateMasked('em','Y',ESC_RAW);?> - 
+	      <?php echo $item->getBirthDateObject()->getDateMasked('em','Y',ESC_RAW);?> -
 	      <?php echo $item->getEndDateObject()->getDateMasked('em','Y',ESC_RAW) ?>
             </td>
             <td class="datesNum">
-	      <?php echo $item->getActivityDateFromObject()->getDateMasked('em','Y',ESC_RAW);?> - 
+	      <?php echo $item->getActivityDateFromObject()->getDateMasked('em','Y',ESC_RAW);?> -
 	      <?php echo $item->getActivityDateToObject()->getDateMasked('em','Y',ESC_RAW) ?>
-            </td>            
+            </td>
             <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
                 <?php if(! $is_choose):?>
                   <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'people/view?id='.$item->getId());?>

@@ -1,4 +1,4 @@
-<?php slot('title', __('Specimens search result'));  ?>
+<?php slot('title', __('Specimens Search Result'));  ?>
 <?php use_javascript('double_list.js');?>
 <?php include_partial('result_cols', array('columns' => $columns, 'field_to_show' => $field_to_show));?>
 

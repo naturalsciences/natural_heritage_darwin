@@ -21,7 +21,7 @@
 	<td><?php echo $spec->getSubContainer()==''?'-':$spec->getSubContainer() ?></td>
   </tr>
   <tr>
-	<th class="top_aligned"><?php echo __("Sub container type");?></th>
+	<th class="top_aligned"><?php echo __("Sub Container Type");?></th>
 	<td><?php echo $spec->getSubContainerType()==''?'-':$spec->getSubContainerType() ?></td>
   </tr>
   <tr>

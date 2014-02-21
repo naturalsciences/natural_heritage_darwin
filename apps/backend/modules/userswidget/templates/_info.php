@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th><?php echo __('Login Type');?></th>
-      <th><?php echo __('User Name');?></th>
+      <th><?php echo __('User name');?></th>
       <th>&nbsp;</th>
     </tr>
   </thead>

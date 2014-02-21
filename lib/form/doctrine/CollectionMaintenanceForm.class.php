@@ -40,7 +40,7 @@ class CollectionMaintenanceForm extends BaseCollectionMaintenanceForm
       ),
       array('invalid' => 'Invalid date "from"')
     );
-
+    $this->widgetSchema['modification_date_time']->setLabel('Last update date');
     $this->widgetSchema['people_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'People',
       'method' => 'getFormatedName',
@@ -55,7 +55,6 @@ class CollectionMaintenanceForm extends BaseCollectionMaintenanceForm
 
     $this->widgetSchema['category'] = new sfWidgetFormChoice(array('choices' => array('action' => 'Action', 'observation'=>'Observation')));
     $this->widgetSchema['category']->setLabel('Type');
-    $this->widgetSchema['action_observation']->setLabel('Maintenance Achieved');
     $this->widgetSchema['action_observation'] = new widgetFormSelectComplete(array(
       'model' => 'CollectionMaintenance',
       'table_method' => 'getDistinctActions',
@@ -65,5 +64,6 @@ class CollectionMaintenanceForm extends BaseCollectionMaintenanceForm
       'change_label' => 'Pick an action in the list',
       'add_label' => 'Add another action',
     ));
+    $this->widgetSchema['action_observation']->setLabel('Maintenance Achieved');
   }
 }

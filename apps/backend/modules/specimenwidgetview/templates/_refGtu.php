@@ -5,7 +5,7 @@
         <?php echo __('Station visible ?') ?>
       </th>
       <td>
-        <?php echo $spec->getStationVisible()?__("yes"):__("no") ; ?>
+        <?php echo $spec->getStationVisible()?__("Yes"):__("No") ; ?>
       </td>
     </tr>
     <?php if(isset($gtu) && ($spec->getStationVisible() || (!$spec->getStationVisible() && $sf_user->isAtLeast(Users::ENCODER)))) : ?>
