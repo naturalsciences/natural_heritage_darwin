@@ -5939,6 +5939,10 @@ DaRWIN</target>
         <source>No modifications recorded yet</source>
         <target>No modifications recorded yet</target>
       </trans-unit>
+      <trans-unit id="1832">
+        <source>No Loans recorded yet</source>
+        <target>No Loans recorded yet</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

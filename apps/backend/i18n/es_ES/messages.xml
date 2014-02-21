@@ -6768,6 +6768,10 @@
         <source>No modifications recorded yet</source>
         
       </trans-unit>
+      <trans-unit id="1832">
+        <source>No Loans recorded yet</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

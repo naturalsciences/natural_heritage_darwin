@@ -7413,6 +7413,10 @@
         <target>Aucune modifications enregistrée</target>
         
       </trans-unit>
+      <trans-unit id="1832">
+        <source>No Loans recorded yet</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
