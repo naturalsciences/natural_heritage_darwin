@@ -153,7 +153,7 @@ $(document).ready(function () {
 
           &nbsp;<a href="<?php echo url_for('gtu/index') ?>"><?php echo __('Cancel');?></a>
           <?php if (!$form->getObject()->isNew()): ?>
-            &nbsp;<?php echo link_to('Delete', 'gtu/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => 'Are you sure?')) ?>
+            &nbsp;<?php echo link_to(__('Delete'), 'gtu/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => 'Are you sure?')) ?>
           <?php endif; ?>
           <input id="submit" type="submit" value="<?php echo __('Save');?>" />
         </td>

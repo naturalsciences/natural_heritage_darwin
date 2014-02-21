@@ -122,7 +122,7 @@ $(document).ready(function ()
           <?php if (!$form->getObject()->isNew()): ?>
       	    <a href="<?php echo url_for('collection/new') ?>"><?php echo __('New collection');?></a>
       	    &nbsp;<?php echo link_to(__('Duplicate collection'), 'collection/new?duplicate_id='.$form->getObject()->getId()) ?>
-            &nbsp;<?php echo link_to('Delete', 'collection/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => __('Are you sure?'))) ?>
+            &nbsp;<?php echo link_to(__('Delete'), 'collection/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => __('Are you sure?'))) ?>
           <?php endif; ?>
           &nbsp;<a href="<?php echo url_for('collection/index') ?>"><?php echo __('Cancel');?></a>
           <input id="submit" type="submit" value="<?php echo __('Save');?>" />
