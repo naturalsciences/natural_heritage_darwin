@@ -1,7 +1,7 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
 <script type="text/javascript">
-$(document).ready(function () 
+$(document).ready(function ()
 {
   $('body').catalogue({});
 
@@ -10,7 +10,7 @@ $(document).ready(function ()
 	    $("#collections_parent_ref").html(data);
     });
   });
-  $("#collections_parent_ref").change(function() {   
+  $("#collections_parent_ref").change(function() {
     if($(this).val())
     {
       $.get("<?php echo url_for('collection/setInstitution');?>/parent_ref/"+$(this).val(), function (data) {
@@ -33,7 +33,7 @@ $(document).ready(function ()
           <?php echo $form['is_public']->renderError() ?>
           <?php echo $form['is_public'] ?>
         </td>
-      </tr>    
+      </tr>
       <tr>
         <th><?php echo $form['code']->renderLabel() ?></th>
         <td>
@@ -81,7 +81,7 @@ $(document).ready(function ()
           <?php echo $form['staff_ref'] ?>
         </td>
       </tr>
-      
+
       <tr>
         <th><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>
@@ -110,10 +110,10 @@ $(document).ready(function ()
 
         <div class='add_value' id="user_right">
                 <a href="<?php echo url_for('collection/addValue'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" class="hidden"></a>
-                <a class='coll_right' href="<?php echo url_for('user/choose');?>"><?php echo __('Add User');?></a>
+                <a class='coll_right' href="<?php echo url_for('user/choose');?>" name="<?php echo __('Choose a User');?>"><?php echo __('Add User');?></a>
               </div>
       	</td>
-      </tr>          
+      </tr>
     </tbody>
     <tfoot>
       <tr>

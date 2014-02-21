@@ -14,7 +14,7 @@ class CollectionsRightsTable extends DarwinTable
   }
 
   public function getAllUserRef($collection_id = null)
-  {  
+  {
     $q = Doctrine_Query::create()
       ->from('CollectionsRights')
       ->andWhere('collection_ref = ?', $collection_id);
@@ -29,7 +29,7 @@ class CollectionsRightsTable extends DarwinTable
       $collections[] = $rights->getCollectionRef() ;
     return $collections ;
   }
-  
+
   public function hasEditRightsFor($user,$collection_ref)
   {
     if($user->isA(Users::ADMIN))

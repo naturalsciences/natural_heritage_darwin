@@ -5943,6 +5943,18 @@ DaRWIN</target>
         <source>No Loans recorded yet</source>
         <target>No Loans recorded yet</target>
       </trans-unit>
+      <trans-unit id="1833">
+        <source>List of Widgets</source>
+        <target>List of Widgets</target>
+      </trans-unit>
+      <trans-unit id="1834">
+        <source>List of sub collections</source>
+        <target>List of sub collections</target>
+      </trans-unit>
+      <trans-unit id="1835">
+        <source>Choose a User</source>
+        <target>Choose a User</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

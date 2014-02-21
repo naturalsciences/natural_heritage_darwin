@@ -11,7 +11,7 @@ function collection_add_user(event){
       id: 'modal',
       content: {
         text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
-        title: { button: true, text: 'Choose a User' },
+        title: { button: true, text: $(this).attr('name') },
         ajax: {
           url: $(this).attr('href'),
           type: 'GET'
@@ -22,7 +22,7 @@ function collection_add_user(event){
         at: 'center',
         target: $(document.body)
       },
-      
+
       show: {
         ready: true,
         delay: 0,
@@ -52,16 +52,16 @@ function collection_add_user(event){
     });
     return false;
 }
- 
+
 function collection_add_rights(event){
    // if ($(this).attr('id') == 'widget') { min_width = 476 } else { min_width = 876 }
-    var last_position = $('body').scrollTop() ;          
+    var last_position = $('body').scrollTop() ;
     scroll(0,0) ;
     $(this).qtip({
       id: 'modal',
       content: {
         text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
-        title: { button: true, text: 'List of '+$(this).attr('name') },
+        title: { button: true, text: $(this).attr('name') },
         ajax: {
           url: $(this).attr('href'),
                  type: 'GET'
@@ -100,7 +100,7 @@ function collection_add_rights(event){
       });
     return false;
  }
- 
+
 
 function addCollRightValue(user_ref)
 {
