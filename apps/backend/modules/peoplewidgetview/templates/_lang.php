@@ -9,7 +9,7 @@
   <?php foreach($langs as $lang):?>
   <tr>
     <td>
-      <?php echo format_language($lang->getLanguageCountry());?>  
+      <?php echo format_language($lang->getLanguageCountry());?>
       <?php if($lang->getPreferredLanguage()):?>
 	(<?php echo __('Preferred');?>)
       <?php endif;?>

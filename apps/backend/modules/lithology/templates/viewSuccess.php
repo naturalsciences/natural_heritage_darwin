@@ -76,7 +76,7 @@ $(document).ready(function ()
 </script></td>
       </tr>
       <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
-        <tr><td colspan="2"><?php echo image_tag('edit.png');?> <?php echo link_to(__('Edit this lithology unit'),'lithology/edit?id='.$litho->getId());?></td></tr>
+        <tr><td colspan="2"><?php echo image_tag('edit.png');?> <?php echo link_to(__('Edit this item'),'lithology/edit?id='.$litho->getId());?></td></tr>
       <?php endif;?>
     </tbody>
   </table>

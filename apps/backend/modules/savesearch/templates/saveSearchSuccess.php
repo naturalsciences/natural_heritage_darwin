@@ -28,7 +28,7 @@
       </td>
     </tr>
     <tr>
-      <td><label><?php echo __('Type of Search');?></label></td>
+      <td><label><?php echo __('Type of search');?></label></td>
       <td></td>
     </tr>
     <tr>

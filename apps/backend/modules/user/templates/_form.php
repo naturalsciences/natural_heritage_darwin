@@ -143,7 +143,7 @@
         <td colspan="2">
           <?php echo $form->renderHiddenFields(false) ?>
           <?php if ($mode == 'edit'): ?>
-            &nbsp;<?php echo link_to('Delete', 'user/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => 'Are you sure?')) ?>
+            &nbsp;<?php echo link_to(__('Delete'), 'user/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => 'Are you sure?')) ?>
           <?php endif; ?>
           <a href="<?php echo url_for('@homepage') ?>"><?php echo __('Cancel');?></a>
           <input id="submit" type="submit" value="<?php echo __('Save');?>" />

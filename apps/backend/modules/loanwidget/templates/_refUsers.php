@@ -9,7 +9,7 @@
   </thead>
  <tbody id="user_body">
    <?php $retainedKey = 0;?>
-   <?php foreach($form['Users'] as $form_value):?>   
+   <?php foreach($form['Users'] as $form_value):?>
      <?php include_partial('loan/darwin_user', array('form' => $form_value, 'row_num'=>$retainedKey));?>
      <?php $retainedKey = $retainedKey+1;?>
    <?php endforeach;?>
@@ -17,7 +17,7 @@
      <?php include_partial('loan/darwin_user', array('form' => $form_value, 'row_num'=>$retainedKey));?>
      <?php $retainedKey = $retainedKey+1;?>
    <?php endforeach;?>
- </tbody> 
+ </tbody>
  <tfoot>
    <tr>
      <td colspan="4">
@@ -27,7 +27,7 @@
        </div>
      </td>
    </tr>
- </tfoot> 
+ </tfoot>
 </table>
 
 <script  type="text/javascript">
@@ -35,13 +35,13 @@ $(document).ready(function () {
 
 
 function addUser(user_ref, user_name)
-{ 
+{
   info = 'ok';
   $('#user_body tr').each(function() {
     if($(this).find('input[id$=\"_user_ref\"]').val() == user_ref) info = 'bad' ;
   });
   if(info != 'ok') return false;
-  hideForRefresh($('.ui-tooltip-content .page')) ; 
+  hideForRefresh($('.ui-tooltip-content .page')) ;
   $.ajax(
   {
     type: "GET",
@@ -49,12 +49,12 @@ function addUser(user_ref, user_name)
     success: function(html)
     {
       $('#user_body').append(html);
-      showAfterRefresh($('.ui-tooltip-content .page')) ; 
+      showAfterRefresh($('.ui-tooltip-content .page')) ;
     }
-  }); 
+  });
   return true;
 }
-$("#user_table").catalogue_people({add_button: '#user_table a.add_user', q_tip_text: 'Choose a User',update_row_fct: addUser });
+$("#user_table").catalogue_people({add_button: '#user_table a.add_user', q_tip_text: '<?php echo __('Choose a User');?>',update_row_fct: addUser });
 });
 
 </script>

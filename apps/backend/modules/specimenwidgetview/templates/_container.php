@@ -1,6 +1,6 @@
 <table class="catalogue_table_view">
   <tr>
-	<th><?php echo __("supernumerary ? ");?></th>
+	<th><?php echo __("supernumerary ?");?></th>
 	<td><?php echo ($spec->getSurnumerary()?__('Yes'):__('No')); ?></td>
   </tr>
 
@@ -21,7 +21,7 @@
 	<td><?php echo $spec->getSubContainer()==''?'-':$spec->getSubContainer() ?></td>
   </tr>
   <tr>
-	<th class="top_aligned"><?php echo __("Sub container type");?></th>
+	<th class="top_aligned"><?php echo __("Sub Container Type");?></th>
 	<td><?php echo $spec->getSubContainerType()==''?'-':$spec->getSubContainerType() ?></td>
   </tr>
   <tr>

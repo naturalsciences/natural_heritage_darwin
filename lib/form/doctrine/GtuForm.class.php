@@ -25,44 +25,50 @@ class GtuForm extends BaseGtuForm
     $maxDate->setStart(false);
 
     $this->widgetSchema['name'] = new sfWidgetFormInputText();
-    $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate(array('culture'=>$this->getCurrentCulture(), 
-                                                                                      'image'=>'/images/calendar.gif', 
-                                                                                      'format' => '%day%/%month%/%year%', 
-                                                                                      'years' => $years,
-                                                                                      'empty_values' => $dateText,
-                                                                                      'with_time' => true
-                                                                                     ),
-                                                                                array('class' => 'from_date')
-                                                                               );
-    $this->widgetSchema['gtu_to_date'] = new widgetFormJQueryFuzzyDate(array('culture'=>$this->getCurrentCulture(), 
-                                                                                    'image'=>'/images/calendar.gif', 
-                                                                                    'format' => '%day%/%month%/%year%', 
-                                                                                    'years' => $years,
-                                                                                    'empty_values' => $dateText,
-                                                                                    'with_time' => true 
-                                                                                   ),
-                                                                              array('class' => 'to_date')
-                                                                             );
-    $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                                  'from_date' => true,
-                                                                                  'min' => $minDate,
-                                                                                  'max' => $maxDate, 
-                                                                                  'empty_value' => $dateLowerBound,
-                                                                                  'with_time' => true
-                                                                                 ),
-                                                                            array('invalid' => 'Date provided is not valid',
-                                                                                 )
-                                                                           );
-    $this->validatorSchema['gtu_to_date'] = new fuzzyDateValidator(array('required' => false,
-                                                                                'from_date' => false,
-                                                                                'min' => $minDate,
-                                                                                'max' => $maxDate,
-                                                                                'empty_value' => $dateUpperBound,
-                                                                                'with_time' => true
-                                                                               ),
-                                                                          array('invalid' => 'Date provided is not valid',
-                                                                               )
-                                                                         );
+    $this->widgetSchema['gtu_from_date'] = new widgetFormJQueryFuzzyDate(array(
+      'culture'=>$this->getCurrentCulture(),
+      'image'=>'/images/calendar.gif',
+      'format' => '%day%/%month%/%year%',
+      'years' => $years,
+      'empty_values' => $dateText,
+      'with_time' => true
+      ),
+      array('class' => 'from_date')
+    );
+
+    $this->widgetSchema['gtu_to_date'] = new widgetFormJQueryFuzzyDate(array(
+      'culture'=>$this->getCurrentCulture(),
+      'image'=>'/images/calendar.gif',
+      'format' => '%day%/%month%/%year%',
+      'years' => $years,
+      'empty_values' => $dateText,
+      'with_time' => true
+      ),
+      array('class' => 'to_date')
+    );
+
+    $this->validatorSchema['gtu_from_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => true,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateLowerBound,
+      'with_time' => true
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
+    $this->validatorSchema['gtu_to_date'] = new fuzzyDateValidator(array(
+      'required' => false,
+      'from_date' => false,
+      'min' => $minDate,
+      'max' => $maxDate,
+      'empty_value' => $dateUpperBound,
+      'with_time' => true
+      ),
+      array('invalid' => 'Date provided is not valid',)
+    );
+
     $this->widgetSchema['lat_long_accuracy']->setLabel('Accuracy');
     $this->widgetSchema['elevation_accuracy']->setLabel('Accuracy');
     $this->validatorSchema['latitude'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '-90', 'max'=>'90'));
@@ -73,15 +79,15 @@ class GtuForm extends BaseGtuForm
       new sfValidatorAnd(array(
         new sfValidatorSchemaCompare(
           'gtu_from_date',
-          '<=', 
-          'gtu_to_date', 
-          array('throw_global_error' => true), 
+          '<=',
+          'gtu_to_date',
+          array('throw_global_error' => true),
           array('invalid'=>'The "begin" date cannot be above the "end" date.')
         ),
         new sfValidatorCallback(array('callback'=> array($this, 'checkLatLong'))),
         new sfValidatorCallback(array('callback'=> array($this, 'checkElevation'))),
       )
-    )); 
+    ));
 
 
     $subForm = new sfForm();
@@ -107,7 +113,7 @@ class GtuForm extends BaseGtuForm
       {
         $error = new sfValidatorError($validator, 'You must enter valid latitude And longitude' );
         $field = 'longitude';
-        if($values['latitude'] == '') $field = 'latitude'; 
+        if($values['latitude'] == '') $field = 'latitude';
         throw new sfvalidatorErrorSchema($validator, array($field => $error));
       }
       if($values['lat_long_accuracy'] == '')
@@ -130,7 +136,7 @@ class GtuForm extends BaseGtuForm
 
       $val->Gtu = $this->getObject();
       $form = new TagGroupsForm($val);
-  
+
       $this->embeddedForms['newVal']->embedForm($num, $form);
       //Re-embedding the container
       $this->embedForm('newVal', $this->embeddedForms['newVal']);
@@ -168,7 +174,7 @@ class GtuForm extends BaseGtuForm
         $value = $this->getValue('TagGroups');
         foreach($this->embeddedForms['TagGroups']->getEmbeddedForms() as $name => $form)
         {
-          
+
           if (!isset($value[$name]['tag_value']) || $value[$name]['tag_value'] == '' )
           {
             $form->getObject()->delete();

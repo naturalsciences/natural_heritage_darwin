@@ -38,8 +38,12 @@
           <tbody>
           <?php foreach($form['Wrong'.ucfirst($array['fields'])] as $form_value) : ?>
            <?php $retainedKey = 0;?>
-           <?php include_partial('member_row', array('form' => $form_value, 'ref_id' => $form->getObject()->getId(), 'row_num'=>$retainedKey,
-                                                     'id_field'=>$array['embedded_field']));
+           <?php include_partial('member_row', array(
+              'form' => $form_value,
+              'ref_id' => $form->getObject()->getId(),
+              'row_num'=>$retainedKey,
+              'id_field'=>$array['embedded_field'])
+           );
            $retainedKey ++;?>
           <?php endforeach ; ?>
           </tbody>
@@ -47,20 +51,33 @@
         <?php else : ?>
           <?php echo $form[$array['fields']]->renderError() ; ?>
           <?php echo $form[$array['fields']]->render() ; ?>
-          <?php if ($key == 'taxon') : ?>
+
+
+          <?php if ( in_array($key, array('taxon','litho','lithology','mineral','chrono')) ) : ?>
+            <?php $catalogues = 'catalogues_'.$key;
+            $catalogues = $$catalogues;
+          ?>
             <?php if (count($catalogues) > 0) : ?><ul class="taxon_parent"><?php echo __("import_taxon_parent_info") ; ?><?php endif; ?>
             <?php foreach($catalogues as $level => $catalogue) : ?>
               <li>
                 <div class="<?php echo $catalogue['class'] != ''? 'line_ok':'line_not_ok'; ?>"></div>
-                <?php if($level == $taxon_level_name) echo '<strong>';?>
+                <?php $lvl_name = $key.'_level_name';
+                      $lvl_name = $$lvl_name;
+                      if($key == 'taxon') $link_url = 'taxonomy';
+                      if($key == 'mineral') $link_url = 'mineralogy';
+                      if($key == 'litho') $link_url = 'lithostratigraphy';
+                      if($key == 'lithology') $link_url = 'lithology';
+                      if($key == 'chrono') $link_url = 'chronostratigraphy';
+                ?>
+                <?php if($catalogue['level_sys_name'] == $lvl_name) echo '<strong>';?>
                 <?php if($catalogue['class'] == ''):?>
-                  <a target="_blank" href="<?php echo url_for('taxonomy/new').'?taxonomy[name]='.$catalogue['name'].'&taxonomy[level_ref]='.$catalogue['level_ref'] ; ?>">
-                    <?php echo $catalogue['name']." ($level)";?>
+                  <a target="_blank" href="<?php echo url_for($link_url.'/new').'?'.$link_url.'[name]='.$catalogue['name'].'&'.$link_url.'[level_ref]='.$catalogue['level_ref'] ; ?>">
+                    <?php echo $catalogue['name']." (".$level.")";?>
                   </a>
                 <?php else:?>
-                  <?php echo link_to($catalogue['name']." ($level)", 'taxonomy/view?id='.$catalogue['class']) ; ?>
+                  <?php echo link_to($catalogue['name']." (".$level.")", $link_url.'/view?id='.$catalogue['class']) ; ?>
                 <?php endif;?>
-                <?php if($level == $taxon_level_name) echo '</strong>';?>
+                <?php if($catalogue['level_sys_name'] == $lvl_name) echo '</strong>';?>
               </li>
             <?php endforeach ; ?>
             </ul>

@@ -159,7 +159,43 @@ class stagingActions extends DarwinActions
       $taxon_parent = $parent->getArrayCopy() ;
       $taxon_parent[$staging->getTaxonLevelName()] = $staging->getTaxonName();
       $this->taxon_level_name = $staging->getTaxonLevelName();
-      $this->catalogues = Doctrine::getTable('Taxonomy')->getLevelTaxonParent($taxon_parent) ;
+      $this->catalogues_taxon = Doctrine::getTable('Taxonomy')->getLevelParents('Taxonomy', $taxon_parent) ;
+    }
+    if(in_array('litho_ref', $form_fields))
+    {
+      $parent = new Hstore ;
+      $parent->import($staging->getLithoParents()) ;
+      $parents = $parent->getArrayCopy() ;
+      $parents[$staging->getLithoLevelName()] = $staging->getLithoName();
+      $this->litho_level_name = $staging->getLithoLevelName();
+      $this->catalogues_litho = Doctrine::getTable('Lithostratigraphy')->getLevelParents('Lithostratigraphy', $parents) ;
+    }
+    if(in_array('lithology_ref', $form_fields))
+    {
+      $parent = new Hstore ;
+      $parent->import($staging->getLithologyParents()) ;
+      $parents = $parent->getArrayCopy() ;
+      $parents[$staging->getLithologyLevelName()] = $staging->getLithologyName();
+      $this->lithology_level_name = $staging->getLithologyLevelName();
+      $this->catalogues_lithology = Doctrine::getTable('Lithology')->getLevelParents('Lithology', $parents) ;
+    }
+    if(in_array('chrono_ref', $form_fields))
+    {
+      $parent = new Hstore ;
+      $parent->import($staging->getChronoParents()) ;
+      $parents = $parent->getArrayCopy() ;
+      $parents[$staging->getChronoLevelName()] = $staging->getChronoName();
+      $this->chrono_level_name = $staging->getChronoLevelName();
+      $this->catalogues_chrono = Doctrine::getTable('Chronostratigraphy')->getLevelParents('Chronostratigraphy', $parents) ;
+    }
+    if(in_array('mineral_ref', $form_fields))
+    {
+      $parent = new Hstore ;
+      $parent->import($staging->getMineralParents()) ;
+      $parents = $parent->getArrayCopy() ;
+      $parents[$staging->getMineralLevelName()] = $staging->getMineralName();
+      $this->mineral_level_name = $staging->getMineralLevelName();
+      $this->catalogues_mineral = Doctrine::getTable('Mineralogy')->getLevelParents('Mineralogy', $parents) ;
     }
     $this->form = new StagingForm($staging, array('fields' => $form_fields));
 

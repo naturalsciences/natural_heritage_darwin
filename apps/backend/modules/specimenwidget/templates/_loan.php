@@ -5,7 +5,7 @@
       <th><?php echo __('Name');?></th>
       <th><?php echo __('Status');?></th>
       <th><?php echo __('From');?></th>
-      <th><?php echo __('to');?></th>
+      <th><?php echo __('To');?></th>
       <th><?php echo __('Description');?></th>
       <th></th>
     </tr>

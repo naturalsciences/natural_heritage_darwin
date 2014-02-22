@@ -121,7 +121,7 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     $this->bindEmbed('ExtLinks', 'addExtLinks' , $taintedValues);
     $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
-    parent::bind($taintedValues, $taintedFiles);   
+    parent::bind($taintedValues, $taintedFiles);
   }
 
   public function saveEmbeddedForms($con = null, $forms = null)

@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th><?php echo __('Type');?></th>
-      <th><?php echo __('Applies To');?></th>
+      <th><?php echo __('Applies to');?></th>
       <th><?php echo __('Values');?></th>
       <th class="datesNum"><?php echo __('Date From');?></th>
       <th class="datesNum"><?php echo __('Date To');?></th>

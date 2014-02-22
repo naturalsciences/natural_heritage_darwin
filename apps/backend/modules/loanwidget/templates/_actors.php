@@ -123,8 +123,8 @@ function addReceiver(people_ref, people_name)
   }); 
   return true;
 }
-$("#sender_table").catalogue_people({handle: '.sender_table_handle', add_button: '#sender_table a.add_actor', q_tip_text: 'Choose a Sender',update_row_fct: addSender });
-$("#receiver_table").catalogue_people({handle: '.receiver_table_handle', add_button: '#receiver_table a.add_actor', q_tip_text: 'Choose a Receiver',update_row_fct: addReceiver });
+$("#sender_table").catalogue_people({handle: '.sender_table_handle', add_button: '#sender_table a.add_actor', q_tip_text: '<?php echo __('Add Sender');?>',update_row_fct: addSender });
+$("#receiver_table").catalogue_people({handle: '.receiver_table_handle', add_button: '#receiver_table a.add_actor', q_tip_text: '<?php echo __('Add Receiver');?>',update_row_fct: addReceiver });
 
 });
 

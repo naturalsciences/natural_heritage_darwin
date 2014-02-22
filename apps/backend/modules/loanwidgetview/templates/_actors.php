@@ -1,7 +1,7 @@
 <table id="sender_table" class="catalogue_table_view">
   <thead>
     <tr>
-      <th colspan="4"><?php echo __("Actors(sender side)") ; ?></th>
+      <th colspan="4"><?php echo __("Actors") .' ('.__("Sender side").')' ; ?></th>
       <th colspan="8"><?php echo __("Roles") ; ?></th>
     </tr>
     <tr>
@@ -35,7 +35,7 @@
 <table id="receiver_table" class="catalogue_table_view">
   <thead>
     <tr>
-      <th colspan="4"><?php echo __("Actors(receiver side)") ; ?></th>
+      <th colspan="4"><?php echo __("Actors") .' ('.__("Receiver side").')' ; ?></th>
       <th colspan="8"><?php echo __("Roles") ; ?></th>
     </tr>
     <tr>
@@ -63,5 +63,5 @@ $actor->getIsARole('Attendant') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Other') ? 'on':'off'; ?>" /></td>
      </tr>
    <?php endforeach;?>
- </tbody> 
+ </tbody>
 </table>

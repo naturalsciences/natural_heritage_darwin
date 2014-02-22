@@ -596,9 +596,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'ig_num' => 'I.G. unit',
       'property_type' => 'Type',
       'property_applies_to' => 'Applies to',
-      'property_value_from' => 'Value from',
-      'property_value_to' => 'to',
-      'property_units' => 'Units',
+      'property_value_from' => 'From',
+      'property_value_to' => 'To',
+      'property_units' => 'Unit',
       'comment_notion_concerned' => 'Notion concerned',
     ));
 

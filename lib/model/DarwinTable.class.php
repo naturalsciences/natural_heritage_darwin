@@ -340,4 +340,30 @@ class DarwinTable extends Doctrine_Table
     $object->fromArray($a_array);
     return $object;
   }
+
+
+  public function getLevelParents($table, $parents)
+    {
+      $catalogue_level =array();
+      if(count($parents) == 0) return $catalogue_level ;
+      $q= Doctrine_Query::create()
+        ->from('CatalogueLevels cl')
+        ->orderby('level_order')
+        ->wherein('level_sys_name',array_keys($parents)) ;
+      $result = $q->execute() ;
+      foreach ($result as $catalogue) {
+        $q = Doctrine_Query::create()
+          ->from($table.' t')
+          ->innerjoin('t.Level l')
+          ->where('t.name_indexed ilike fulltoindex(?) || \'%\' ', $parents[$catalogue->getLevelSysName()])
+          ->andWhere('l.level_sys_name = ?', $catalogue->getLevelSysName());
+        $elem = $q->fetchOne();
+        $catalogue_level[$catalogue->getLevelName()] = array(
+          'name' => $parents[$catalogue->getLevelSysName()],
+          'level_sys_name' => $catalogue->getLevelSysName(),
+          'level_ref' => $catalogue->getId(),
+          'class' => $elem ? $elem->getId(): '') ;
+      }
+      return($catalogue_level) ;
+  }
 }

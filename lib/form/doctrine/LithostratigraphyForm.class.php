@@ -41,11 +41,12 @@ class LithostratigraphyForm extends BaseLithostratigraphyForm
       'complete_url' => 'catalogue/completeName?table=lithostratigraphy',
     ));
     $this->widgetSchema['local_naming'] = new sfWidgetFormInputCheckbox();
-    $this->widgetSchema->setLabels(array('level_ref' => 'Level',
-                                         'parent_ref' => 'Parent',
-                                         'local_naming' => 'Local unit ?'
-                                        )
-                                  );
+    $this->widgetSchema->setLabels(array(
+      'level_ref' => 'Level',
+      'parent_ref' => 'Parent',
+      'local_naming' => 'Local unit ?',
+      'color' => 'Colour',
+    ));
     $this->validatorSchema['parent_ref'] = new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false));
     $this->validatorSchema['status'] = new sfValidatorChoice(array('choices'  => array_keys($statuses), 'required' => true));
     $this->validatorSchema['table'] = new sfValidatorString(array('required' => false));

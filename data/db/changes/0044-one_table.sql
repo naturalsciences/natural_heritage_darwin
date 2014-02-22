@@ -1811,7 +1811,7 @@ delete from template_table_record_ref where referenced_relation ='specimens' or 
 UPDATE template_table_record_ref set referenced_relation = 'specimens' where referenced_relation ='specimen_parts';
 SET SESSION session_replication_role = origin;
 
-delete from my_widgets where category in ('specimen_widget', 'individual_widget', 'part_widget');
+delete from my_widgets where category in ('specimen_widget', 'individuals_widget', 'part_widget');
 update my_widgets set group_name='multimedia', title_perso='Multimedia', mandatory = false where category='specimensearch_widget' and group_name = 'whatSearched';
 
 select 'Do not forget to run : php symfony darwin:migrate --env=prod 44';

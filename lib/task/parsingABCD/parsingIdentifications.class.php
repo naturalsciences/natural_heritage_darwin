@@ -29,7 +29,7 @@ class ParsingIdentifications
   private $rock_level = array(
     'lithology' => array('main group'=>'unit_main_group', 'main class'=>'unit_main_class','category'=>'unit_category',
                   'class'=> 'unit_class','clan'=>'unit_clan','group'=>'unit_group','subgroup'=>'unit_sub_group'),
-    'mineralogy' => array('class'=>'unit_class', 'subclass'=>'unit_sub_class','group' => 'unit_group', 'series'=>'unit_series','variety'=>'unit_variety'),
+    'mineralogy' => array('class'=>'unit_class', 'subclass'=>'unit_sub_class','group' => 'unit_group', 'serie'=>'unit_series','variety'=>'unit_variety'),
   );
   public $peoples = array(); // an array of Doctrine People class
   public $keyword; // an array of doctrine Keywords class
@@ -119,7 +119,7 @@ class ParsingIdentifications
       $staging['lithology_parents'] = $this->catalogue_parent->export() ;
       $staging->setLithologyName($this->fullname) ;
       $staging->setLithologyLevelName('unit_rock') ;
-      
+
     }
     elseif($this->notion == 'mineralogy'){
       $staging['mineral_parents'] = $this->catalogue_parent->export() ;

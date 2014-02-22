@@ -71,7 +71,7 @@ $(document).ready(function ()
 </script></td>
       </tr>
       <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
-        <tr><td colspan="2"><?php echo image_tag('edit.png');?> <?php echo link_to(__('Edit this taxon'),'taxonomy/edit?id='.$taxon->getId());?></td></tr>
+        <tr><td colspan="2"><?php echo image_tag('edit.png');?> <?php echo link_to(__('Edit this item'),'taxonomy/edit?id='.$taxon->getId());?></td></tr>
       <?php endif;?>
     </tbody>
   </table>
