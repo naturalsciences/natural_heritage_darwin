@@ -829,7 +829,6 @@ ALTER FUNCTION darwin2.linetotagrows(text) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyelement) SET SCHEMA public;
 ALTER FUNCTION darwin2.fct_remove_array_elem(anyarray,anyarray) SET SCHEMA public;
 ALTER FUNCTION darwin2.fulltoindex(character varying) SET SCHEMA public;
-ALTER SEQUENCE darwin2.specimens_id_seq SET SCHEMA public;
 
 ALTER FUNCTION public.gettagsindexedasarray(character varying) OWNER TO postgres;
 ALTER FUNCTION public.linetotagarray(text) OWNER TO postgres;
@@ -837,7 +836,6 @@ ALTER FUNCTION public.linetotagrows(text) OWNER TO postgres;
 ALTER FUNCTION public.fct_remove_array_elem(anyarray,anyelement) OWNER TO postgres;
 ALTER FUNCTION public.fct_remove_array_elem(anyarray,anyarray) OWNER TO postgres;
 ALTER FUNCTION public.fulltoindex(character varying) OWNER TO postgres;
-ALTER SEQUENCE public.specimens_id_seq OWNER TO postgres;
 
 DROP SCHEMA IF EXISTS darwin1 CASCADE;
 
