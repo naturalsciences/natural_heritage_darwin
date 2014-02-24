@@ -18,6 +18,15 @@ update specimens s set gtu_loc = (select loc from gtu g where g.id = s.gtu_ref a
 
 SET SESSION session_replication_role = origin;
 
+CREATE OR REPLACE FUNCTION fct_cpy_location() RETURNS trigger
+language plpgSQL
+as $$
+BEGIN
+  NEW.location := POINT(NEW.latitude, NEW.longitude);
+  RETURN NEW;
+END;
+$$;
+
 
 CREATE OR REPLACE FUNCTION point_equal ( POINT, POINT )
 RETURNS boolean AS
