@@ -30,6 +30,7 @@ class PropertiesTable extends DarwinTable
       $q = $this->createFlatDistinct('properties', 'property_type', 'type');
     else
       $q = $this->createFlatDistinctDepend('properties', 'property_type', $ref_relation, 'type');
+
     $a = DarwinTable::CollectionToArray($q->execute(), 'type');
     return array_merge(array(''=>''),$a);
   }
