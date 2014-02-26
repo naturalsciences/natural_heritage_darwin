@@ -1,4 +1,6 @@
-﻿create type stats_collections as (collection varchar, new_items bigint, updated_items bigint, new_types bigint, updated_types bigint, new_specimens bigint, updated_specimens bigint, new_species bigint);
+DROP TYPE IF EXISTS stats_collections CASCADE;
+
+create type stats_collections as (collection varchar, new_items bigint, updated_items bigint, new_types bigint, updated_types bigint, new_species bigint);
 
 alter type stats_collections owner to darwin2;
 
@@ -25,83 +27,47 @@ SELECT *
 FROM
 (
   SELECT collection_path as collection,
-       (select count(sp.id)
+       (select count(s.id)
         from users_tracking as ut inner join
-          (specimen_parts as sp
-            inner join
-            (specimen_individuals as si
-            inner join
-            specimens as s on s.id = si.specimen_ref
-            ) on si.id = sp.specimen_individual_ref
-          )
-        on ut.referenced_relation = 'specimen_parts'
+        specimens as s
+        on ut.referenced_relation = 'specimens'
         and ut.action = 'insert'
-        and ut.record_id = sp.id
+        and ut.record_id = s.id
         and modification_date_time between $2 and $3
         where s.collection_ref = collpath.id
         ) as new_items,
 
-        (select count(distinct sp.id)
+        (select count(distinct s.id)
         from users_tracking as ut inner join
-          (specimen_parts as sp
-            inner join
-            (specimen_individuals as si
-            inner join
-            specimens as s on s.id = si.specimen_ref
-            ) on si.id = sp.specimen_individual_ref
-          )
-        on ut.referenced_relation = 'specimen_parts'
+        specimens as s
+        on ut.referenced_relation = 'specimens'
         and ut.action = 'update'
-        and ut.record_id = sp.id
+        and ut.record_id = s.id
         and modification_date_time between $2 and $3
         where s.collection_ref = collpath.id
         ) as updated_items,
 
-        (select count(si.id)
+        (select count(s.id)
         from users_tracking as ut inner join
-          (specimen_individuals as si
-            inner join
-            specimens as s on s.id = si.specimen_ref and si.type != 'specimen'
-          )
-        on ut.referenced_relation = 'specimen_individuals'
+            specimens as s
+        on ut.referenced_relation = 'specimens'
         and ut.action = 'insert'
-        and ut.record_id = si.id
+        and ut.record_id = s.id
         and modification_date_time between $2 and $3
         where s.collection_ref = collpath.id
+        AND s.type != 'specimen'
         ) as new_types,
 
-        (select count(si.id)
-        from users_tracking as ut inner join
-          (specimen_individuals as si
-            inner join
-            specimens as s on s.id = si.specimen_ref and si.type != 'specimen'
-          )
-        on ut.referenced_relation = 'specimen_individuals'
-        and ut.action = 'update'
-        and ut.record_id = si.id
-        and modification_date_time between $2 and $3
-        where s.collection_ref = collpath.id
-        ) as updated_types,
-
         (select count(s.id)
-        from users_tracking as ut inner join specimens as s
+        from users_tracking as ut inner join
+            specimens as s
         on ut.referenced_relation = 'specimens'
         and ut.action = 'insert'
         and ut.record_id = s.id
         and modification_date_time between $2 and $3
         where s.collection_ref = collpath.id
-        ) as new_specimens,
-
-
-        (select count(s.id)
-        from users_tracking as ut inner join specimens as s
-        on ut.referenced_relation = 'specimens'
-        and ut.action = 'update'
-        and ut.record_id = s.id
-        and modification_date_time between $2 and $3
-        where s.collection_ref = collpath.id
-        ) as updated_specimens,
-
+        AND s.type != 'specimen'
+        ) as updated_types,
 
         (select count(distinct tax.id)
         from
@@ -129,9 +95,8 @@ WHERE subqry.new_species != 0
   OR  subqry.updated_items != 0
   OR  subqry.new_types != 0
   OR  subqry.updated_types != 0
-  OR  subqry.new_specimens != 0
-  OR  subqry.updated_specimens != 0
 $$;
+
 
 alter function stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) owner to darwin2;
 
@@ -140,73 +105,50 @@ SELECT *
 FROM
 (
   SELECT formated_name,
-       (select count(sp.id)
+       (select count(s.id)
         from users_tracking as ut inner join
-          (specimen_parts as sp
-            inner join
-            (specimen_individuals as si inner join specimens as s on s.id = si.specimen_ref and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')) on si.id = sp.specimen_individual_ref
-          )
-        on ut.referenced_relation = 'specimen_parts'
+          specimens as s
+        on ut.referenced_relation = 'specimens'
         and ut.action = 'insert'
-        and ut.record_id = sp.id
+        and ut.record_id = s.id
         and ut.user_ref = users.id
         and modification_date_time between $3 and $4
         ) as new_items,
-       (select count(distinct sp.id)
+
+       (select count(distinct s.id)
         from users_tracking as ut inner join
-          (specimen_parts as sp
-            inner join
-            (specimen_individuals as si inner join specimens as s on s.id = si.specimen_ref and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')) on si.id = sp.specimen_individual_ref
-          )
-        on ut.referenced_relation = 'specimen_parts'
+          specimens s
+        on ut.referenced_relation = 'specimens'
         and ut.action = 'update'
-        and ut.record_id = sp.id
+        and ut.record_id = s.id
         and ut.user_ref = users.id
         and modification_date_time between $3 and $4
         ) as updated_items,
-        (select count(si.id)
+
+        (select count(s.id)
          from users_tracking as ut inner join
-          (specimen_individuals as si
-           inner join specimens as s on s.id = si.specimen_ref
-                                     and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')
-                                     and si.type != 'specimen'
-          )
-         on ut.referenced_relation = 'specimen_individuals'
+          specimens as s
+         on ut.referenced_relation = 'specimens'
          and ut.action = 'insert'
-         and ut.record_id = si.id
+         and ut.record_id = s.id
          and ut.user_ref = users.id
+         and s.type != 'specimen'
          and modification_date_time between $3 and $4
         ) as new_types,
-        (select count(si.id)
+
+        (select count(s.id)
          from users_tracking as ut inner join
-          (specimen_individuals as si
-           inner join specimens as s on s.id = si.specimen_ref
-                                     and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')
-                                     and si.type != 'specimen'
-          )
-         on ut.referenced_relation = 'specimen_individuals'
+          specimens as s
+
+         on ut.referenced_relation = 'specimens'
          and ut.action = 'update'
-         and ut.record_id = si.id
+         and ut.record_id = s.id
          and ut.user_ref = users.id
+         and s.type != 'specimen'
          and modification_date_time between $3 and $4
         ) as updated_types,
-        (select count(s.id)
-         from users_tracking as ut inner join specimens as s
-         on ut.referenced_relation = 'specimens'
-         and ut.action = 'insert'
-         and ut.record_id = s.id
-         and ut.user_ref = users.id
-         and modification_date_time between $3 and $4
-        ) as new_specimens,
-        (select count(s.id)
-         from users_tracking as ut inner join specimens as s
-         on ut.referenced_relation = 'specimens'
-         and ut.action = 'update'
-         and ut.record_id = s.id
-         and ut.user_ref = users.id
-         and modification_date_time between $3 and $4
-         and s.collection_ref in (select id from collections where path like '%/'||$1||'/%')
-        ) as updated_specimens,
+
+
         (select count(distinct tax.id)
         from
         (users_tracking as ut inner join taxonomy as tax
