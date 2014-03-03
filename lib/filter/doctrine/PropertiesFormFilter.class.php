@@ -18,7 +18,7 @@ class PropertiesFormFilter extends BasePropertiesFormFilter
 
     $this->widgetSchema['property_type'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Properties',
-      'table_method' => array('method'=>'getDistinctType', 'parameters'=> array('specimens') ),
+      'table_method' => array('method'=>'getDistinctType', 'parameters'=> array() ),
       'add_empty' => $this->getI18N()->__('All')
     ));
     $this->validatorSchema['property_type'] = new sfValidatorString(array('required' => false));
