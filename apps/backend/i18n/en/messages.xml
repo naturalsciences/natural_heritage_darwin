@@ -5844,6 +5844,7 @@ DaRWIN</target>
         <target>Choose a Building</target>
       </trans-unit>
       <trans-unit id="1808">
+<<<<<<< HEAD
         <source>Storage Search</source>
         <target>Storage Search</target>
       </trans-unit>
@@ -5954,6 +5955,10 @@ DaRWIN</target>
       <trans-unit id="1835">
         <source>Choose a User</source>
         <target>Choose a User</target>
+      </trans-unit>
+      <trans-unit id="1836">
+        <source>You can see here an historic of who has modified this specimen</source>
+        <target>You can see here an historic of who has modified this specimen</target>
       </trans-unit>
     </body>
   </file>

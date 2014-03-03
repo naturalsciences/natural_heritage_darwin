@@ -263,7 +263,6 @@ class specimenwidgetComponents extends sfComponents
 
   public function executeHistoric()
   {
-    // $this->defineForm();
     if(isset($this->form) )
       $this->eid = $this->form->getObject()->getId() ;
     if($this->eid){
