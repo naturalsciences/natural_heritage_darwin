@@ -7415,6 +7415,27 @@
       </trans-unit>
       <trans-unit id="1832">
         <source>No Loans recorded yet</source>
+        <target>Aucun prêt encore enregistré</target>
+        
+      </trans-unit>
+      <trans-unit id="1833">
+        <source>List of Widgets</source>
+        <target>Liste de widgets</target>
+        
+      </trans-unit>
+      <trans-unit id="1834">
+        <source>List of sub collections</source>
+        <target>Liste des sous collections</target>
+        
+      </trans-unit>
+      <trans-unit id="1835">
+        <source>Choose a User</source>
+        <target>Choisir un utilisateur</target>
+        
+      </trans-unit>
+      <trans-unit id="1836">
+        <source>You can see here an historic of who has modified this specimen</source>
+        <target>Vous pouvez voir dans cette widget un historique des modifications de ce specimen</target>
         
       </trans-unit>
     </body>

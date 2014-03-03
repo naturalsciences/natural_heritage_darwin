@@ -7374,6 +7374,22 @@
         <source>No Loans recorded yet</source>
         
       </trans-unit>
+      <trans-unit id="1833">
+        <source>List of Widgets</source>
+        
+      </trans-unit>
+      <trans-unit id="1834">
+        <source>List of sub collections</source>
+        
+      </trans-unit>
+      <trans-unit id="1835">
+        <source>Choose a User</source>
+        
+      </trans-unit>
+      <trans-unit id="1836">
+        <source>You can see here an historic of who has modified this specimen</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
