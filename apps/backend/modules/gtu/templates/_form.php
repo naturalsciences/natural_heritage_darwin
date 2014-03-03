@@ -128,7 +128,7 @@ $(document).ready(function () {
   initEditMap("map");
 
   <?php if($form->getObject()->getLongitude() != ''):?>
-    map.setView([<?php echo $form->getObject()->getLatitude();?>,<?php echo $form->getObject()->getLongitude();?>], 2);
+    map.setView([<?php echo $form->getObject()->getLatitude();?>,<?php echo $form->getObject()->getLongitude();?>], 12);
   <?php else:?>
     map.setView([0,0], 2);
   <?php endif;?>
