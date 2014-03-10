@@ -91,7 +91,7 @@ all:
       stage: This widget lets you describe the stage of the present individual e.g. a larva"
       type: This widget allows you to add the information regarding the status of the individual e.g. holotype. You can, however, also add non conformistic nomenclatura types
       sex: This widget allows you to enter the sex of a particular individual. You can also add a specific attribute e.g. pregnant with eggs
-
+      loan: This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.
       complete: This widget allows you to add information with regards to the physical state of the object. E.g. damaged. You can also indicate whether you have a complete object or a partial object by using the tickbox.
       container: This widget allows you to add information with regards to the storage conditions in the depositaries of the institute. You can specify a container and/or sub container as well as the condition in which the object is conserved. The supernumerary option allows you to indicate that the objects should potentially be moved to a more spacious container.
       refInsurances: In this widget you can specify one or more values with regards to the object(s) as estimated by a particular insurance institution and /or on a particular date.

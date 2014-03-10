@@ -5955,6 +5955,10 @@ DaRWIN</target>
         <source>Choose a User</source>
         <target>Choose a User</target>
       </trans-unit>
+      <trans-unit id="1836">
+        <source>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</source>
+        <target>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -7374,6 +7374,24 @@
         <source>No Loans recorded yet</source>
         
       </trans-unit>
+      <trans-unit id="1833">
+        <source>List of Widgets</source>
+        
+      </trans-unit>
+      <trans-unit id="1834">
+        <source>List of sub collections</source>
+        
+      </trans-unit>
+      <trans-unit id="1835">
+        <source>Choose a User</source>
+        
+      </trans-unit>
+      <trans-unit id="1836">
+        <source>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</source>
+        <target>Deze widget laat u toe om te zien of het specimen momenteel uitgeleend is.
+Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebracht dient te worden.</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

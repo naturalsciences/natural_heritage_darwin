@@ -4223,126 +4223,157 @@
       </trans-unit>
       <trans-unit id="929">
         <source>The lower bound (%left_field%) cannot be above the upper bound (%right_field%).</source>
+        <target>El límite inferior (%left_field%) no puede ser mayor que el límite superior (%right_field%).</target>
         
       </trans-unit>
       <trans-unit id="930">
         <source>Auto copy code from specimen to parts</source>
+        <target>Copia automática del código de espécimen a las partes</target>
         
       </trans-unit>
       <trans-unit id="931">
         <source>Auto incrementation of specimen code</source>
+        <target>Incrementación automática del código de espécimen</target>
         
       </trans-unit>
       <trans-unit id="932">
         <source>Default specimen code prefix used</source>
+        <target>Uso de prefijo de código de espécimen por defecto</target>
         
       </trans-unit>
       <trans-unit id="933">
         <source>Default separator after prefix</source>
+        <target>Separador por defecto tras prefijo</target>
         
       </trans-unit>
       <trans-unit id="934">
         <source>Default specimen code suffix used</source>
+        <target>Uso de sufijo de código de espécimen por defecto</target>
         
       </trans-unit>
       <trans-unit id="935">
         <source>Default separator before suffix</source>
+        <target>Separador por defecto antes de sufijo</target>
         
       </trans-unit>
       <trans-unit id="936">
         <source>A collection can't be attached to itself</source>
+        <target>Una colección no se puede añadir a sí misma</target>
         
       </trans-unit>
       <trans-unit id="937">
         <source>Date provided is not valid</source>
+        <target>La fecha provista no es válida</target>
         
       </trans-unit>
       <trans-unit id="938">
         <source>The &quot;begin&quot; date cannot be above the &quot;end&quot; date.</source>
+        <target>La fecha de &quot;comienzo&quot; no puede ser posterior a la fecha de &quot;fin&quot;.</target>
         
       </trans-unit>
       <trans-unit id="939">
         <source>You must enter an accuracy for the elevation.</source>
+        <target>Introduzca un factor de precisión para la elevación.</target>
         
       </trans-unit>
       <trans-unit id="940">
         <source>You must enter valid latitude And longitude</source>
+        <target>Debe introducir una latitud y longitud válidas</target>
         
       </trans-unit>
       <trans-unit id="941">
         <source>You must enter an accuracy for your position</source>
+        <target>Debe introducir un factor de precisión para su posición</target>
         
       </trans-unit>
       <trans-unit id="942">
         <source>The start of the activity must be after the birth</source>
+        <target>El inicio de la actividad debe suceder después del nacimiento</target>
         
       </trans-unit>
       <trans-unit id="943">
         <source>The end of the activity must be before the death</source>
+        <target>El fin de la actividad debe suceder antes de la muerte</target>
         
       </trans-unit>
       <trans-unit id="944">
         <source>The begin activity date cannot be above the end activity date.</source>
+        <target>La fecha de comienzo de la actividad no puede ser posterior a la fecha de fin de la actividad.</target>
         
       </trans-unit>
       <trans-unit id="945">
         <source>The min number (&quot;%left_field%&quot;) must be lower or equal the max number (&quot;%right_field%&quot;)</source>
+        <target>El número mínimo (&quot;%left_field%&quot;) debe ser igual o inferior al número máximo (&quot;%right_field%&quot;)</target>
         
       </trans-unit>
       <trans-unit id="946">
         <source>A Part can't be attached to itself</source>
+        <target>Una parte no se puede añadir a sí misma</target>
         
       </trans-unit>
       <trans-unit id="947">
         <source>type %s already exists for this user</source>
+        <target>el tipo %s ya existe para este usuario</target>
         
       </trans-unit>
       <trans-unit id="948">
         <source>Password does not match</source>
+        <target>La contraseña no coincide</target>
         
       </trans-unit>
       <trans-unit id="949">
         <source>There is a problem with a special character. Please contact the administrators</source>
+        <target>Hay un problema con el caracter especial. Contacte con los administradores</target>
         
       </trans-unit>
       <trans-unit id="950">
         <source>At least one code is required.</source>
+        <target>Es necesario al menos un código.</target>
         
       </trans-unit>
       <trans-unit id="951">
         <source>The value is required.</source>
+        <target>El valor es obligatorio.</target>
         
       </trans-unit>
       <trans-unit id="952">
         <source>At least a comment is required.</source>
+        <target>Un comentario al menos es obligatorio</target>
         
       </trans-unit>
       <trans-unit id="953">
         <source>You have to specify the Url</source>
+        <target>Necesita especificar la URL</target>
         
       </trans-unit>
       <trans-unit id="954">
         <source>Year missing.</source>
+        <target>Falta el año.</target>
         
       </trans-unit>
       <trans-unit id="955">
         <source>Month missing or remove the day and time.</source>
+        <target>Falta el mes o borre el día y la hora.</target>
         
       </trans-unit>
       <trans-unit id="956">
         <source>Day missing or remove the time.</source>
+        <target>Falta el día o borre la hora.</target>
         
       </trans-unit>
       <trans-unit id="957">
         <source>Hour missing or remove the time.</source>
+        <target>Falta la hora o borre el tiempo.</target>
         
       </trans-unit>
       <trans-unit id="958">
         <source>minute missing or remove the seconds.</source>
+        <target>falta el minuto o borre los segundos.</target>
         
       </trans-unit>
       <trans-unit id="959">
         <source>A part of the date is wrong.</source>
+        <target>Hay un error en una parte de la fecha.</target>
         
       </trans-unit>
       <trans-unit id="961">
@@ -4352,14 +4383,17 @@
       </trans-unit>
       <trans-unit id="962">
         <source>Unable to check the captcha from the server (%error%).</source>
+        <target>No se puede comprobar el captcha desde el servidor (%error%).</target>
         
       </trans-unit>
       <trans-unit id="963">
         <source>At least a reference to an accompanying element is required.</source>
+        <target>Se necesita al menos una referencia para los elementos adjuntos.</target>
         
       </trans-unit>
       <trans-unit id="964">
         <source>Display help icons in forms or hide icons</source>
+        <target>Mostrar iconos de ayuda como formas u ocultar iconos</target>
         
       </trans-unit>
       <trans-unit id="965">
@@ -6770,6 +6804,22 @@
       </trans-unit>
       <trans-unit id="1832">
         <source>No Loans recorded yet</source>
+        
+      </trans-unit>
+      <trans-unit id="1833">
+        <source>List of Widgets</source>
+        
+      </trans-unit>
+      <trans-unit id="1834">
+        <source>List of sub collections</source>
+        
+      </trans-unit>
+      <trans-unit id="1835">
+        <source>Choose a User</source>
+        
+      </trans-unit>
+      <trans-unit id="1836">
+        <source>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</source>
         
       </trans-unit>
     </body>
