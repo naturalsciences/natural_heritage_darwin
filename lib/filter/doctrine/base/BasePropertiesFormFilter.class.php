@@ -14,7 +14,7 @@ abstract class BasePropertiesFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'referenced_relation' => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'record_id'           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => true)),
+      'record_id'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'property_type'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'applies_to'          => new sfWidgetFormFilterInput(),
       'applies_to_indexed'  => new sfWidgetFormFilterInput(),
@@ -35,7 +35,7 @@ abstract class BasePropertiesFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'referenced_relation' => new sfValidatorPass(array('required' => false)),
-      'record_id'           => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('Specimens'), 'column' => 'id')),
+      'record_id'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'property_type'       => new sfValidatorPass(array('required' => false)),
       'applies_to'          => new sfValidatorPass(array('required' => false)),
       'applies_to_indexed'  => new sfValidatorPass(array('required' => false)),
@@ -73,7 +73,7 @@ abstract class BasePropertiesFormFilter extends BaseFormFilterDoctrine
     return array(
       'id'                  => 'Number',
       'referenced_relation' => 'Text',
-      'record_id'           => 'ForeignKey',
+      'record_id'           => 'Number',
       'property_type'       => 'Text',
       'applies_to'          => 'Text',
       'applies_to_indexed'  => 'Text',

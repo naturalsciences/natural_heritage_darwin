@@ -17,7 +17,7 @@ abstract class BaseCommentsForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'                  => new sfWidgetFormInputHidden(),
       'referenced_relation' => new sfWidgetFormTextarea(),
-      'record_id'           => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'), 'add_empty' => false)),
+      'record_id'           => new sfWidgetFormInputText(),
       'notion_concerned'    => new sfWidgetFormTextarea(),
       'comment'             => new sfWidgetFormTextarea(),
       'comment_indexed'     => new sfWidgetFormTextarea(),
@@ -26,7 +26,7 @@ abstract class BaseCommentsForm extends BaseFormDoctrine
     $this->setValidators(array(
       'id'                  => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'referenced_relation' => new sfValidatorString(),
-      'record_id'           => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Specimens'))),
+      'record_id'           => new sfValidatorInteger(),
       'notion_concerned'    => new sfValidatorString(),
       'comment'             => new sfValidatorString(),
       'comment_indexed'     => new sfValidatorString(array('required' => false)),

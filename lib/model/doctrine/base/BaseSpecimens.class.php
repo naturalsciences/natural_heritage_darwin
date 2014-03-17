@@ -130,8 +130,7 @@
  * @property Institutions $Institution
  * @property Doctrine_Collection $CollectingMethods
  * @property Doctrine_Collection $CollectingTools
- * @property Doctrine_Collection $Comments
- * @property Doctrine_Collection $Properties
+ * @property SubComments $SubComments
  * @property Doctrine_Collection $SpecimensRelationships
  * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
@@ -263,8 +262,7 @@
  * @method Institutions        getInstitution()             Returns the current record's "Institution" value
  * @method Doctrine_Collection getCollectingMethods()       Returns the current record's "CollectingMethods" collection
  * @method Doctrine_Collection getCollectingTools()         Returns the current record's "CollectingTools" collection
- * @method Doctrine_Collection getComments()                Returns the current record's "Comments" collection
- * @method Doctrine_Collection getProperties()              Returns the current record's "Properties" collection
+ * @method SubComments         getSubComments()             Returns the current record's "SubComments" value
  * @method Doctrine_Collection getSpecimensRelationships()  Returns the current record's "SpecimensRelationships" collection
  * @method Doctrine_Collection getSpecimensCodes()          Returns the current record's "SpecimensCodes" collection
  * @method Doctrine_Collection getSpecimensMethods()        Returns the current record's "SpecimensMethods" collection
@@ -395,8 +393,7 @@
  * @method Specimens           setInstitution()             Sets the current record's "Institution" value
  * @method Specimens           setCollectingMethods()       Sets the current record's "CollectingMethods" collection
  * @method Specimens           setCollectingTools()         Sets the current record's "CollectingTools" collection
- * @method Specimens           setComments()                Sets the current record's "Comments" collection
- * @method Specimens           setProperties()              Sets the current record's "Properties" collection
+ * @method Specimens           setSubComments()             Sets the current record's "SubComments" value
  * @method Specimens           setSpecimensRelationships()  Sets the current record's "SpecimensRelationships" collection
  * @method Specimens           setSpecimensCodes()          Sets the current record's "SpecimensCodes" collection
  * @method Specimens           setSpecimensMethods()        Sets the current record's "SpecimensMethods" collection
@@ -853,11 +850,7 @@ abstract class BaseSpecimens extends DarwinModel
              'local' => 'specimen_ref',
              'foreign' => 'collecting_tool_ref'));
 
-        $this->hasMany('Comments', array(
-             'local' => 'id',
-             'foreign' => 'record_id'));
-
-        $this->hasMany('Properties', array(
+        $this->hasOne('SubComments', array(
              'local' => 'id',
              'foreign' => 'record_id'));
 

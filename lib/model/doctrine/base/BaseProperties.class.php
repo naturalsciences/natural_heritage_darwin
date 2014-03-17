@@ -24,7 +24,6 @@
  * @property string $upper_value
  * @property float $upper_value_unified
  * @property string $property_accuracy
- * @property Specimens $Specimens
  * 
  * @method integer    getId()                  Returns the current record's "id" value
  * @method string     getReferencedRelation()  Returns the current record's "referenced_relation" value
@@ -45,7 +44,6 @@
  * @method string     getUpperValue()          Returns the current record's "upper_value" value
  * @method float      getUpperValueUnified()   Returns the current record's "upper_value_unified" value
  * @method string     getPropertyAccuracy()    Returns the current record's "property_accuracy" value
- * @method Specimens  getSpecimens()           Returns the current record's "Specimens" value
  * @method Properties setId()                  Sets the current record's "id" value
  * @method Properties setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method Properties setRecordId()            Sets the current record's "record_id" value
@@ -65,7 +63,6 @@
  * @method Properties setUpperValue()          Sets the current record's "upper_value" value
  * @method Properties setUpperValueUnified()   Sets the current record's "upper_value_unified" value
  * @method Properties setPropertyAccuracy()    Sets the current record's "property_accuracy" value
- * @method Properties setSpecimens()           Sets the current record's "Specimens" value
  * 
  * @package    darwin
  * @subpackage model
@@ -159,8 +156,6 @@ abstract class BaseProperties extends DarwinModel
     public function setUp()
     {
         parent::setUp();
-        $this->hasOne('Specimens', array(
-             'local' => 'record_id',
-             'foreign' => 'id'));
+        
     }
 }

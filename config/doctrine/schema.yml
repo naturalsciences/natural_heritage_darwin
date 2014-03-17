@@ -84,11 +84,14 @@ Comments:
         notion_concerned: { type: string, notnull: true}
         comment: { type: string, notnull: true}
         comment_indexed: { type: string}
-    relations:
-        Specimens:
-            class: Specimens
-            local: record_id
-            foreign: id
+
+# This sub class is used just for comment search in specimen search filter
+SubComments:
+    inheritance:
+        extends: Comments
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: specimens
 
 ExtLinks:
     columns:
@@ -166,11 +169,6 @@ Properties:
         upper_value: {type: string, notnull: true , default:''}
         upper_value_unified: {type: float}
         property_accuracy: {type: string, default:''}
-    relations:
-        Specimens:
-            class: Specimens
-            local: record_id
-            foreign: id
 
 Identifications:
     columns:
@@ -780,6 +778,10 @@ Specimens:
             refClass: SpecimensTools
             local: specimen_ref
             foreign: collecting_tool_ref
+        SubComments:
+            class: SubComments
+            local: id
+            foreign: record_id
 
 
 IgsSearch:
