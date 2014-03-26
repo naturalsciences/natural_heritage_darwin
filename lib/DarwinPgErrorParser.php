@@ -89,8 +89,8 @@ class DarwinPgErrorParser
     '/\bfk_specimens_host_specimen\b/' => 'This specimen is referenced as host in one or more specimens',    
     '/\bfk_specimens_accompanying_mineralogy\b/' => 'This mineral is referenced as accompanying element',
     '/\bfk_specimens_accompanying_taxonomy\b/' => 'This taxon is referenced as accompanying element',
+    '/\bunq_staging_tag_groups\b/' => 'This tag group already exists',
   );
-
 
   public function __construct(Doctrine_Exception $e)
   {

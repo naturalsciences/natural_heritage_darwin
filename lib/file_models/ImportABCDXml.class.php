@@ -116,7 +116,7 @@ class ImportABCDXml implements IImportModels
         case "CreatedDate" : $this->object->multimedia_data['creation_date'] = $this->cdata ; break;
         //  case "efg:ClassifiedName" : $this->object->setRockName($this->staging) ; break;
         // case "Comment" : $this->object->multimedia_data['description'] = $this->cdata ; break;
-        case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
+        case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;
         case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break;
         case "DateText" : $this->object->getDateText($this->cdata) ; break;
         case "DateTime" : if($this->getPreviousTag() == "Gathering"){
@@ -138,7 +138,8 @@ class ImportABCDXml implements IImportModels
         case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); if (!is_null($dt)) {$this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask());} break;
         case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
         case "dna:ExtractionStaff" : $this->handlePeople($this->object->people_type,$this->cdata) ; break;
-        case "dna:GenBankNumber" : $this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ; break;
+        case "dna:GenBankNumber" : $this->handleGenbankNumber($this->cdata); break;
+        //$this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ; break;
         case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ratio of absorbance 260/280","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
         case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
         case "dna:Preservation" : $this->addComment(false, "conservation_mean"); break;
@@ -438,7 +439,9 @@ class ImportABCDXml implements IImportModels
     $this->staging->fromArray(array("import_ref" => $this->import_id));
     try
     {
-      $this->staging->save() ;
+      $result = $this->staging->save() ;
+      foreach($result as $key => $error)
+        $this->errors_reported .= $error ;
     }
     catch(Doctrine_Exception $ne)
     {
@@ -468,6 +471,17 @@ class ImportABCDXml implements IImportModels
       $people->setPeopleType($type) ;
       $people->setFormatedName($name) ;
       $this->object->handleRelation($people,$this->staging) ;
+    }
+  }
+  
+  private function handleGenbankNumber($genbanknumbers,$category='GenBankNumber')
+  {
+    foreach(explode(";",$genbanknumbers) as $genbanknumber)
+    {     
+      $code = new Codes() ;
+      $code->setCodeCategory($category) ;
+      $code->setCode($genbanknumber) ;
+      $this->staging->addRelated($code) ;
     }
   }
 }
