@@ -137,15 +137,16 @@ class CollectionsTable extends DarwinTable
     return $q->fetchOne();
   }
 
-  public function getAllAvailableCollectionsFor($user_id)
+  public function getAllAvailableCollectionsFor($user_id,$is_admin=false)
   {
     $q = Doctrine_Query::create()
       ->select('c.*')
-      ->from('Collections c')
-      ->leftJoin('c.CollectionsRights r')
-      ->addwhere('r.user_ref = ?',$user_id)
-      ->addwhere('db_user_type > 1')
-      ->orderBy('name ASC');
+      ->from('Collections c')  ;   
+    if(!$is_admin)
+      $q->leftJoin('c.CollectionsRights r')
+        ->addwhere('r.user_ref = ?',$user_id)
+        ->addwhere('db_user_type > 1');
+    $q->orderBy('name ASC');
     $res = $q->execute();
     $results = array(0 =>'All');
     foreach($res as $row)
