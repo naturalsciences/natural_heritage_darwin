@@ -142,7 +142,9 @@ class CollectionsTable extends DarwinTable
     $q = Doctrine_Query::create()
       ->select('c.*')
       ->from('Collections c')
-      ->leftJoin('c.CollectionsRights r ON c.id=r.collection_ref AND r.user_ref = '.$user_id)
+      ->leftJoin('c.CollectionsRights r')
+      ->addwhere('r.user_ref = ?',$user_id)
+      ->addwhere('db_user_type > 1')
       ->orderBy('name ASC');
     $res = $q->execute();
     $results = array(0 =>'All');
