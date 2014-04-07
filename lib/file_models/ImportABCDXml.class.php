@@ -476,7 +476,9 @@ class ImportABCDXml implements IImportModels
   
   private function handleGenbankNumber($genbanknumbers,$category='GenBankNumber')
   {
-    foreach(explode(";",$genbanknumbers) as $genbanknumber)
+    $unique_genbanknumbers = array_unique(array_map('trim', explode(';', $genbanknumbers)));
+
+    foreach($unique_genbanknumbers as $genbanknumber)
     {     
       $code = new Codes() ;
       $code->setCodeCategory($category) ;
