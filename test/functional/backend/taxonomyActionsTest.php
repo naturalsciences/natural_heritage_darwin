@@ -37,10 +37,11 @@ $browser->
   )))->
 
   with('form')->begin()->
-    hasErrors(3)->
+    hasErrors(4)->
     isError('name', 'required')->
     isError('level_ref', 'required')->
     isError('status', 'required')->
+    isError('parent_ref', 'required')->
   end()->
 
   click('Save', array('taxonomy' => array(

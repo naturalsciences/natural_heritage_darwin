@@ -124,11 +124,11 @@ class importActions extends DarwinActions
   */
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new ImportsFormFilter(null,array('user_ref' =>$this->getUser()->getId()));
+    $this->form = new ImportsFormFilter(null,array('user' =>$this->getUser()));
   }
   public function executeSearch(sfWebRequest $request)
   {
-    $this->form = new ImportsFormFilter(null,array('user_ref' =>$this->getUser()->getId()));
+    $this->form = new ImportsFormFilter(null,array('user' =>$this->getUser()));
     $this->setCommonValues('import', 'updated_at', $request);
     if( $request->getParameter('orderby', '') == '' && $request->getParameter('orderdir', '') == '')
       $this->orderDir = 'desc';
