@@ -40,6 +40,7 @@ DROP TRIGGER IF EXISTS trg_clr_referenceRecord_mineralogy ON mineralogy;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_lithology ON lithology;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimens ON specimens;
 
+
 --DROP TRIGGER IF EXISTS trg_clear_referencedPeople ON people;
 
 DROP TRIGGER IF EXISTS trg_cpy_toFullText_comments ON comments;
@@ -108,6 +109,9 @@ DROP TRIGGER IF EXISTS trg_words_ts_cpy_taxonomy
 
 DROP TRIGGER IF EXISTS trg_words_ts_cpy_codes
 	ON codes;
+    
+DROP TRIGGER IF EXISTS trg_insert_auto_code 
+    ON codes;    
 
 /*** Tracking ***/
 DROP TRIGGER IF EXISTS trg_trk_log_table_catalogue_relationships 
