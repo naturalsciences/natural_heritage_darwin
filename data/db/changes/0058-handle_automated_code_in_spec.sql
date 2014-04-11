@@ -1,9 +1,6 @@
 begin;
 set search_path=darwin2,public;
 
-CREATE TRIGGER trg_insert_auto_code BEFORE INSERT ON codes FOR EACH ROW
-EXECUTE PROCEDURE check_auto_increment_code_in_spec() ;
-
 CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec() RETURNS trigger 
 AS $$
 DECLARE 
@@ -34,5 +31,8 @@ EXCEPTION WHEN others THEN
     RETURN FALSE;
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
+
+CREATE TRIGGER trg_insert_auto_code BEFORE INSERT ON codes FOR EACH ROW
+EXECUTE PROCEDURE check_auto_increment_code_in_spec() ;
 
 COMMIT;
