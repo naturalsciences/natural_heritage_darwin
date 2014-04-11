@@ -4910,7 +4910,7 @@
       </trans-unit>
       <trans-unit id="1072">
         <source>This code already exists</source>
-        <target>Ce code existe déjà, si vous avez coché l'incrémentation automatique dans la collection associée, sachez que vous n'avez pas à insérer ce code automatique</target>
+        <target>Ce code existe déjà</target>
         
       </trans-unit>
       <trans-unit id="1073">
