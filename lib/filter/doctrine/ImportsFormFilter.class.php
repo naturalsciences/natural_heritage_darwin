@@ -13,8 +13,8 @@ class ImportsFormFilter extends BaseImportsFormFilter
   public function configure()
   {
     $this->useFields(array('collection_ref', 'state','filename')) ;
-    $this->addPagerItems();
-    $collection_list = Doctrine::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user_ref']) ;
+    $this->addPagerItems();    
+    $collection_list = Doctrine::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user']->getId()) ;
     $state_list = Imports::getStateList() ;
     /* Widgets */
     $this->widgetSchema['collection_ref'] = new sfWidgetFormChoice(
@@ -66,7 +66,7 @@ class ImportsFormFilter extends BaseImportsFormFilter
     if($values['state']) $query->addWhere('i.state = ?', $values['state']) ;
     // here, add where clause to look for import file only where the user have right on collection
     $query->andWhereIn('collection_ref',array_keys(
-      Doctrine::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user_ref']))
+      Doctrine::getTable('Collections')->getAllAvailableCollectionsFor($this->options['user']->getId(),$this->options['user']->isA(Users::ADMIN)))
     );
 
     return $query ;

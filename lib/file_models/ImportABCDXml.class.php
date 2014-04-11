@@ -96,7 +96,7 @@ class ImportABCDXml implements IImportModels
         case "AccessionDate" : if (date('Y-m-d H:i:s', strtotime($this->cdata)) == $this->cdata) $this->object->InitAccessionVar($this->cdata) ; break;
         case "AccessionNumber" :  $this->object->accession_num = $this->cdata ; $this->object->HandleAccession($this->staging,$this->object_to_save) ; break;
         case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$this->cdata:$this->property->property->property_accuracy=$this->cdata ; break;
-        case "AcquisitionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); $this->staging['acquisition_date'] = $dt->getDateTime(); $this->staging['acquisition_date_mask'] = $dt->getMask();  break;
+        case "AcquisitionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); if (!is_null($dt)) { $this->staging['acquisition_date'] = $dt->getDateTime(); $this->staging['acquisition_date_mask'] = $dt->getMask();} break;
         case "AcquisitionType" : $this->staging['acquisition_category'] = $this->cdata=='gift'?'donation':$this->cdata ; break;
         case "AppliesTo" : $this->property->setAppliesTo($this->cdata); break;
         case "AreaClass" : $this->object->tag_group_name = $this->cdata ; break;
@@ -116,7 +116,7 @@ class ImportABCDXml implements IImportModels
         case "CreatedDate" : $this->object->multimedia_data['creation_date'] = $this->cdata ; break;
         //  case "efg:ClassifiedName" : $this->object->setRockName($this->staging) ; break;
         // case "Comment" : $this->object->multimedia_data['description'] = $this->cdata ; break;
-        case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;;
+        case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;
         case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break;
         case "DateText" : $this->object->getDateText($this->cdata) ; break;
         case "DateTime" : if($this->getPreviousTag() == "Gathering"){
@@ -135,10 +135,11 @@ class ImportABCDXml implements IImportModels
           break;
         case "dna:Concentration" : $this->property = new ParsingProperties("Concentration","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->property->property->setPropertyUnit("ng/µl") ; $this->addProperty(true) ; break;
         case "dna:DNASample" : $this->object->addMaintenance($this->staging) ; break;
-        case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); $this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask()); break;
+        case "dna:ExtractionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); if (!is_null($dt)) {$this->object->maintenance->setModificationDateTime($dt->getDateTime()); $this->object->maintenance->setModificationDateMask($dt->getMask());} break;
         case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
         case "dna:ExtractionStaff" : $this->handlePeople($this->object->people_type,$this->cdata) ; break;
-        case "dna:GenBankNumber" : $this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ; break;
+        case "dna:GenBankNumber" : $this->handleGenbankNumber($this->cdata); break;
+        //$this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ; break;
         case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ratio of absorbance 260/280","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
         case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
         case "dna:Preservation" : $this->addComment(false, "conservation_mean"); break;
@@ -225,7 +226,7 @@ class ImportABCDXml implements IImportModels
                      elseif (strtolower($this->cdata) == 'f') $this->staging->setIndividualSex('female') ;
                      elseif (strtolower($this->cdata) == 'u') $this->staging->setIndividualSex('unknown') ;
                      elseif (strtolower($this->cdata) == 'n') $this->staging->setIndividualSex('not applicable') ;
-                     elseif (strtolstagingower($this->cdata) == 'x') $this->staging->setIndividualSex('mixed') ;
+                     elseif (strtolower($this->cdata) == 'x') $this->staging->setIndividualSex('mixed') ;
                      break;
         // case "SortingName" : $this->object->people_order_by = $this->cdata ; break;
         case "storage:Barcode" : $this->addCode("2Dbarcode") ; break ; // c'est un code avec "2dbarcode" dans le main
@@ -240,7 +241,7 @@ class ImportABCDXml implements IImportModels
         case "storage:Box" : $this->staging->setContainerType('box'); $this->staging->setContainer($this->cdata) ; break;
         case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break;
         case "storage:Position" : $this->staging->setSubContainerType('position'); $this->staging->setSubContainer($this->cdata) ; break;
-        case "Text":  if($this->getPreviousTamineralogyg() == "Biotope") {
+        case "Text":  if($this->getPreviousTag() == "Biotope") {
             $this->object->tag_group_name='ecology';
             $this->object->tag_value = $this->cdata;
             $this->staging_tags[] = $this->object->addTagGroups();
@@ -438,7 +439,9 @@ class ImportABCDXml implements IImportModels
     $this->staging->fromArray(array("import_ref" => $this->import_id));
     try
     {
-      $this->staging->save() ;
+      $result = $this->staging->save() ;
+      foreach($result as $key => $error)
+        $this->errors_reported .= $error ;
     }
     catch(Doctrine_Exception $ne)
     {
@@ -468,6 +471,19 @@ class ImportABCDXml implements IImportModels
       $people->setPeopleType($type) ;
       $people->setFormatedName($name) ;
       $this->object->handleRelation($people,$this->staging) ;
+    }
+  }
+  
+  private function handleGenbankNumber($genbanknumbers,$category='GenBankNumber')
+  {
+    $unique_genbanknumbers = array_unique(array_map('trim', explode(';', $genbanknumbers)));
+
+    foreach($unique_genbanknumbers as $genbanknumber)
+    {     
+      $code = new Codes() ;
+      $code->setCodeCategory($category) ;
+      $code->setCode($genbanknumber) ;
+      $this->staging->addRelated($code) ;
     }
   }
 }

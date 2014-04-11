@@ -751,7 +751,7 @@ p.tree
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
-#gtu_filter .result_choose, #catalogue_filter .result_choose
+#gtu_filter .result_choose, #catalogue_filter .result_choose,#people_filter .result_choose
 {
   display: inline;
   padding:0;

@@ -838,6 +838,8 @@ class SpecimensForm extends BaseSpecimensForm
       {
         $options['code_prefix'] = $collection->getCodePrefix();
         $options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
+        if($collection->getCodeAutoIncrement())
+          $options['code'] = $collection->getCodeLastValue() + 1 ;
         $options['code_suffix'] = $collection->getCodeSuffix();
         $options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
       }

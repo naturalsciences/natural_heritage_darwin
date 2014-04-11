@@ -624,8 +624,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   public function addCommentsQuery($query, $notion, $comment)
   {
     if($notion != '' || $comment != '') {
-      $query->innerJoin('s.Comments c');
-      $query->andWhere("c.referenced_relation = ? ",'specimens');
+      $query->innerJoin('s.SubComments c');
+      // $query->andWhere("c.referenced_relation = ? ",'specimens');
 
       $query->groupBy("s.id");
 

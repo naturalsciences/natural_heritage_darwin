@@ -4910,7 +4910,7 @@
       </trans-unit>
       <trans-unit id="1072">
         <source>This code already exists</source>
-        <target>Ce code existe déjà</target>
+        <target>Ce code existe déjà, si vous avez coché l'incrémentation automatique dans la collection associée, sachez que vous n'avez pas à insérer ce code automatique</target>
         
       </trans-unit>
       <trans-unit id="1073">
@@ -7434,8 +7434,8 @@
         
       </trans-unit>
       <trans-unit id="1836">
-        <source>You can see here an historic of who has modified this specimen</source>
-        <target>Vous pouvez voir dans cette widget un historique des modifications de ce specimen</target>
+        <source>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</source>
+        <target>Cette widget vous permet de voir si ce specimen est actuellement en prêt. Si c'est le cas vous pouvez voir quand il a été prêté et quand il sera rendu.</target>
         
       </trans-unit>
     </body>
