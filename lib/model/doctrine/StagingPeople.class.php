@@ -28,7 +28,7 @@ class StagingPeople extends BaseStagingPeople
 
   public function save(Doctrine_Connection $conn = null)
   {
-    if(!$this->getFormatedName()) $this->setFormatedName($this->family_name." ".$thi->given_name.($this->title?" (".$this->title.")":"")) ;
+    if(!$this->getFormatedName()) $this->setFormatedName($this->family_name." ".$this->given_name.($this->title?" (".$this->title.")":"")) ;
     parent::save($conn);
   }
 
