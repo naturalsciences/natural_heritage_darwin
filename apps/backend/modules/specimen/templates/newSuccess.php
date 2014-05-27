@@ -89,6 +89,7 @@ $(document).ready(function ()
       )); ?>
     </div>
     <p class="clear"></p>
+    <?php include_partial('widgets/float_button', array('form' => $form)); ?>
     <p class="form_buttons">
       <?php if (!$form->getObject()->isNew()): ?>
         <?php echo link_to(__('New specimen'), 'specimen/new') ?>

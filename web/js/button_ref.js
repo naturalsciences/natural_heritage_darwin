@@ -18,7 +18,7 @@ function button_ref_modal(event)
           url: $(this).attr('href'),
                 type: 'GET',
                 // Take name in input if set
-                data: {with_js:1, name: $(this).parent().parent().find('input.ref_name').val()}
+                data: {with_js:1, name: $(this).parent().parent().find('input.ref_name').val(), level: $('table.classifications_edit').find('select.catalogue_level').val()}
         }
       },
       position: {

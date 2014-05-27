@@ -3198,3 +3198,41 @@ tr.spec_ident_collectors_data
   margin-left: 20px;
   padding: 0px 10px 10px;
 }
+
+#float_button
+{
+  position: fixed;
+  left: 0px;
+  width: 20px ;
+  line-height: 300% ;
+  padding-left: 2px;
+  padding-right: 2px ;
+  top : 35%;
+  display: block;
+  text-align: center;
+  background-color: #C1CF56 ;
+  -webkit-border-radius: 0 5px 5px 0 ;
+  -moz-border-radius: 0 5px 5px 0 ;
+  -ms-border-radius: 0 5px 5px 0 ;
+  -o-border-radius: 0 5px 5px 0 ;
+  border-radius: 0 5px 5px 0 ;
+}
+
+#float_button > a
+{
+  width: 30px ;
+  border-bottom: 1px solid #525A20;
+  padding-bottom: 4px;
+}
+
+ #float_button .submit_image
+{
+  border-bottom: 1px solid #525A20;
+  cursor: pointer;
+  padding-bottom: 4px;
+}
+
+#float_button .submit_image:hover, #float_button > a:hover
+{
+  border-bottom: 1px solid white;
+}
