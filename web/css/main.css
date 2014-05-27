@@ -3206,10 +3206,16 @@ tr.spec_ident_collectors_data
   width: 20px ;
   line-height: 300% ;
   padding-left: 2px;
+  padding-right: 2px ;
   top : 35%;
   display: block;
   text-align: center;
-  background-color: #C1CF56
+  background-color: #C1CF56 ;
+  -webkit-border-radius: 0 5px 5px 0 ;
+  -moz-border-radius: 0 5px 5px 0 ;
+  -ms-border-radius: 0 5px 5px 0 ;
+  -o-border-radius: 0 5px 5px 0 ;
+  border-radius: 0 5px 5px 0 ;
 }
 
 #float_button > a
@@ -3224,4 +3230,9 @@ tr.spec_ident_collectors_data
   border-bottom: 1px solid #525A20;
   cursor: pointer;
   padding-bottom: 4px;
+}
+
+#float_button .submit_image:hover, #float_button > a:hover
+{
+  border-bottom: 1px solid white;
 }
