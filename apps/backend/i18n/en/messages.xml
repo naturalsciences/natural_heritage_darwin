@@ -5958,6 +5958,10 @@ DaRWIN</target>
       <trans-unit id="1836">
         <source>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</source>
         <target>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</target>
+      </trans-unit>      
+      <trans-unit id="1837">
+        <source>catalogue_search_tips</source>
+        <target>Use the character ^ for a "Start with" search (eg: ^falco)</target>        
       </trans-unit>
     </body>
   </file>

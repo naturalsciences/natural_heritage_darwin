@@ -1,6 +1,6 @@
 <?php include_stylesheets_for_form($searchForm) ?>
 <?php include_javascripts_for_form($searchForm) ?>
-
+<?php if(isset($is_choose)) : ?><div class="warn_message"><?php echo __('catalogue_search_tips') ; ?></div><?php endif ; ?>
 <div class="catalogue_filter">
 <?php echo form_tag('catalogue/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'catalogue_filter'));?>
 <div class="container">

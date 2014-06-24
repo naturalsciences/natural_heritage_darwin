@@ -7392,6 +7392,11 @@
 Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebracht dient te worden.</target>
         
       </trans-unit>
+      
+      <trans-unit id="1837">
+        <source>catalogue_search_tips</source>
+        <target>Maak gebruik van het teken ^ voor een "Begint met" opzoeking (bv: ^falco)</target>        
+      </trans-unit>
     </body>
   </file>
 </xliff>

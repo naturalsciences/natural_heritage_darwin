@@ -7438,6 +7438,13 @@
         <target>Cette widget vous permet de voir si ce specimen est actuellement en prêt. Si c'est le cas vous pouvez voir quand il a été prêté et quand il sera rendu.</target>
         
       </trans-unit>
+
+      <trans-unit id="1837">
+        <source>catalogue_search_tips</source>
+        <target>Utilisez le caractère ^ pour une recherche "commence par" (ex: ^falco)</target>
+        
+      </trans-unit>
+      
     </body>
   </file>
 </xliff>
