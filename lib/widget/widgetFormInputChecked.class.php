@@ -52,7 +52,7 @@ class widgetFormInputChecked extends sfWidgetFormInputHidden
     $obj_name = $this->getName($value);
     $showedInputName = $this->generateId($name);
     $inputTagAttributes = array('type' => 'text', 'value' => $this->escapeOnce($obj_name), 'name' => $name);
-    $input = '<ul><li>';
+    $input = '<ul class="container"><li>';
     if($this->getOption('behindScene'))
     {
       $input .= parent::render($name, $value, $attributes, $errors);
