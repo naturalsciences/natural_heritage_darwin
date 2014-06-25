@@ -1,7 +1,11 @@
 
   $.widget( "custom.catcomplete", $.ui.autocomplete, {
     _init: function() {
+      // var levelId = (field_level_id_url && $.isFunction(field_level_id_url))?'/field_level_id/'+field_level_id_url():'';
+      // this.options.source += (field_level_id_url && $.isFunction(field_level_id_url))?'/field_level_id/'+field_level_id_url():'';
+      // console.log(this.options.source);
       var that = this;
+
       this.element.data('autocomplete', this.element.data('catcomplete'));
       this.options.label_element = $(this.element);
       this.options.value_element = $(this.element).parent().find('input:hidden');
@@ -22,10 +26,11 @@
 
       this.options.change = function( event, ui ) {
         if(ui.item) { // Click on elem
+          console.log(ui.item);
         } else {
           $.ajax({
             url: that.options.source,
-            data: {term : that.options.label_element.val(), exact: 1},
+            data: {term : that.options.label_element.val(), exact: 1 },
             dataType: 'json',
             success: function(data) {
               removeValue = function() {
@@ -60,7 +65,7 @@
         that.options.label_element.focus();
       });
     },
-    loadExistingValue: function() {
+/*    loadExistingValue: function() {
       var that = this;
       val = that.options.value_element.val();
       if(val) {
@@ -78,9 +83,9 @@
         });
 
       }
-    },
+    },*/
     options: {
       value_element: undefined,
       label_element: undefined
-    }
+    },
   });

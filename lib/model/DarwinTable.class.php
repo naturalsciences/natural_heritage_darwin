@@ -256,24 +256,53 @@ class DarwinTable extends Doctrine_Table
   }
 
   /**
+  * Get list of possible upper levels
+  * @param $conn Doctrine Connection
+  * @param $level the level used to get the possible upper ones
+  * @return Array of results
+  */
+  private function getPossibleUpperLevels($conn, $level){
+    $conn_MGR = Doctrine_Manager::connection();
+    $puls = array();
+    if($level) {
+      $pul = Doctrine_Query::create()
+        ->select('level_upper_ref')
+        ->from('PossibleUpperLevels pul');
+        $pul->andWhere('pul.level_ref = ?', $level);
+      $pul_results = $pul->execute();
+      foreach ($pul_results as $element){
+        $puls[] = $element->getLevelUpperRef();
+      }
+    }
+    return $puls;
+  }
+
+  /**
   * Find item for autocompletion
   * @param $user The User object for right management
   * @param $needle the string entered by the user for search
   * @param $exact bool are we searching the exact term or more or less fuzzy
+  * @param $limit int limit the number of results
+  * @param $level the level used to get the possible upper ones
   * @return Array of results
   */
-  public function completeAsArray($user, $needle, $exact, $limit = 30)
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
   {
+
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
-      ->from($this->getTableName())
-      ->orderBy('name ASC')
+      ->from($this->getTableName(). ' i')
+      ->innerJoin('i.Level l')
+      ->orderBy('l.level_order DESC, name ASC')
       ->limit($limit);
 
     if($exact)
       $q->andWhere("name = ?",$needle);
     else
       $q->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
+    $puls = $this->getPossibleUpperLevels($conn_MGR, $level);
+    if(count($puls))
+      $q->andWhereIn('l.id', $puls);
     $q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
@@ -291,18 +320,21 @@ class DarwinTable extends Doctrine_Table
   * @param $exact bool are we searching the exact term or more or less fuzzy
   * @return Array of results
   */
-  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30)
+  public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30, $level)
   {
     $conn_MGR = Doctrine_Manager::connection();
       $q = Doctrine_Query::create()
       ->from($this->getTableName(). ' i')
       ->innerJoin('i.Level l')
-      ->orderBy('l.level_order ASC, name ASC')
+      ->orderBy('l.level_order DESC, name ASC')
       ->limit($limit);
     if($exact)
       $q->andWhere("name = ?",$needle);
     else
       $q->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
+    $puls = $this->getPossibleUpperLevels($conn_MGR, $level);
+    if(count($puls))
+      $q->andWhereIn('l.id', $puls);
     $q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
