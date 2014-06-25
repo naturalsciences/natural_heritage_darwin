@@ -36,6 +36,7 @@ class TaxonomyForm extends BaseTaxonomyForm
       'box_title' => $this->getI18N()->__('Choose Parent'),
       'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeName?table=taxonomy',
+      'field_level_id' => $this->widgetSchema->generateId($this->widgetSchema->generateName('level_ref')),
     ));
 
     $this->validatorSchema['parent_ref']->setOption('required', true);
