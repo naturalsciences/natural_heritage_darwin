@@ -61,7 +61,7 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
 
     $input .= '<script  type="text/javascript">
       $(document).ready(function () {
-      /*$("#'.$this->generateId($name).'_name").autocomplete({source:
+      /*$("#'.$this->generateId($name).'_name").catcomplete({source:
                                                               function(request, response) {
                                                                 $.ajax({
                                                                     url: "'.url_for($this->getOption('complete_url')).'",
@@ -76,7 +76,14 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
                                                                 });
                                                               },
                                                           });*/
-      $("#'.$this->generateId($name).'_name").catcomplete({source: "'.url_for($this->getOption('complete_url')).'"}); //, data : {field_level_id: function(){return $("#'.$this->getOption('field_level_id').'").val();}} });
+      $("#'.$this->generateId($name).'_name").catcomplete({source: "'.url_for($this->getOption('complete_url')).'", data : {field_level_id: function(){return $("#'.$this->getOption('field_level_id').'").val();}}});';
+    if ($this->getOption('field_level_id') && $this->getOption('field_level_id') != '') {
+      $input .= '
+        //$("#'.$this->generateId($name).'_name").bind("catcompletechange",function(){alert("youhou");});
+        //console.log($("#'.$this->generateId($name).'_name").catcomplete("option"));';
+    }
+      //, data : {field_level_id: function(){return $("#'.$this->getOption('field_level_id').'").val();}} });
+    $input .= '
       $("#'.$this->generateId($name).'_button a.but_more").click(button_ref_modal);';
 
    if($this->getOption('deletable'))

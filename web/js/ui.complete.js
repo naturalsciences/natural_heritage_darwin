@@ -24,9 +24,23 @@
         return false;
       };
 
+      this.options.search = function (event, ui) {
+        if(ui.item) { // Click on elem
+        } else {
+          $.ajax({
+            url: that.options.source,
+            data: {term : that.options.label_element.val() },
+            dataType: 'json',
+            success: function(data) {
+              console.log(data);
+            }
+          });
+        }
+        return false;
+      }
+
       this.options.change = function( event, ui ) {
         if(ui.item) { // Click on elem
-          console.log(ui.item);
         } else {
           $.ajax({
             url: that.options.source,
