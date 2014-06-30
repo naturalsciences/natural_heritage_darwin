@@ -24,10 +24,14 @@
       this.options.search = function (event, ui) {
         if(ui.item) { // Click on elem
         } else {
+          var fieldLevelId = '';
+          if(that.options.data && that.options.data.field_level_id && $.isFunction(that.options.data.field_level_id)) {
+            fieldLevelId = that.options.data.field_level_id();
+          }
           $.ajax({
             url: that.options.source,
             data: {term : that.options.label_element.val(), 
-                   field_level_id: (that.options.data.field_level_id && $.isFunction(that.options.data.field_level_id))?that.options.data.field_level_id():''
+                   field_level_id: fieldLevelId,
                   },
             dataType: 'json',
             success: function(data) {
