@@ -47,6 +47,7 @@ class MineralogyForm extends BaseMineralogyForm
       'box_title' => $this->getI18N()->__('Choose Parent'),
       'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeName?table=mineralogy',
+      'field_level_id' => $this->widgetSchema->generateId($this->widgetSchema->generateName('level_ref')),
       'nullable' => true,
      ));
 

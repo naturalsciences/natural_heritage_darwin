@@ -61,7 +61,11 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
 
     $input .= '<script  type="text/javascript">
       $(document).ready(function () {
-      $("#'.$this->generateId($name).'_name").catcomplete({source: "'.url_for($this->getOption('complete_url')).'", data : {field_level_id: function(){return $("#'.$this->getOption('field_level_id').'").val();}}});
+      $("#'.$this->generateId($name).'_name").catcomplete({source: "'.url_for($this->getOption('complete_url')).'"';
+      if ($this->getOption('field_level_id') != '') {
+          $input .= ', data : {field_level_id: function(){return $("#'.$this->getOption('field_level_id').'").val();}}';
+        }  
+    $input .= '});
       $("#'.$this->generateId($name).'_button a.but_more").click(button_ref_modal);';
 
    if($this->getOption('deletable'))

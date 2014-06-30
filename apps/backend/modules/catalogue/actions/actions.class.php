@@ -274,9 +274,9 @@ class catalogueActions extends DarwinActions
     if(in_array($tbl,$catalogues)) {
       $model = DarwinTable::getModelForTable($tbl);
       if(! $request->getParameter('level', false))
-        $result = Doctrine::getTable($model)->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id'));
+        $result = Doctrine::getTable($model)->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id', ''));
       else
-        $result = Doctrine::getTable($model)->completeWithLevelAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id'));
+        $result = Doctrine::getTable($model)->completeWithLevelAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id', ''));
     }else{
       $this->forward404('Unsuported table for completion : '.$tbl);
     }

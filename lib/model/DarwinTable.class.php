@@ -261,8 +261,7 @@ class DarwinTable extends Doctrine_Table
   * @param $level the level used to get the possible upper ones
   * @return Array of results
   */
-  private function getPossibleUpperLevels($conn, $level){
-    $conn_MGR = Doctrine_Manager::connection();
+  private function getPossibleUpperLevels($level){
     $puls = array();
     if($level) {
       $pul = Doctrine_Query::create()
@@ -292,17 +291,22 @@ class DarwinTable extends Doctrine_Table
     $conn_MGR = Doctrine_Manager::connection();
     $q = Doctrine_Query::create()
       ->from($this->getTableName(). ' i')
-      ->innerJoin('i.Level l')
-      ->orderBy('l.level_order DESC, name ASC')
       ->limit($limit);
 
     if($exact)
       $q->andWhere("name = ?",$needle);
     else
       $q->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
-    $puls = $this->getPossibleUpperLevels($conn_MGR, $level);
-    if(count($puls))
-      $q->andWhereIn('l.id', $puls);
+    if ($level && $level != '') {
+      $q->innerJoin('i.Level l')
+      ->orderBy('l.level_order DESC, name ASC');
+      $puls = $this->getPossibleUpperLevels($level);
+      if(count($puls))
+        $q->andWhereIn('l.id', $puls);
+    }
+    else {
+      $q->orderBy('name ASC');
+    }
     $q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
@@ -332,9 +336,11 @@ class DarwinTable extends Doctrine_Table
       $q->andWhere("name = ?",$needle);
     else
       $q->andWhere("name_indexed like concat(fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
-    $puls = $this->getPossibleUpperLevels($conn_MGR, $level);
-    if(count($puls))
-      $q->andWhereIn('l.id', $puls);
+    if ($level && $level != '') {
+      $puls = $this->getPossibleUpperLevels($level);
+        if(count($puls))
+          $q->andWhereIn('l.id', $puls);
+    }
     $q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
