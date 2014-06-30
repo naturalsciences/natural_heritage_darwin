@@ -1,9 +1,6 @@
 
   $.widget( "custom.catcomplete", $.ui.autocomplete, {
     _init: function() {
-      // var levelId = (field_level_id_url && $.isFunction(field_level_id_url))?'/field_level_id/'+field_level_id_url():'';
-      // this.options.source += (field_level_id_url && $.isFunction(field_level_id_url))?'/field_level_id/'+field_level_id_url():'';
-      // console.log(this.options.source);
       var that = this;
 
       this.element.data('autocomplete', this.element.data('catcomplete'));
@@ -29,10 +26,12 @@
         } else {
           $.ajax({
             url: that.options.source,
-            data: {term : that.options.label_element.val() },
+            data: {term : that.options.label_element.val(), 
+                   field_level_id: (that.options.data.field_level_id && $.isFunction(that.options.data.field_level_id))?that.options.data.field_level_id():''
+                  },
             dataType: 'json',
             success: function(data) {
-              console.log(data);
+              that.options.label_element.data('autocomplete')._response(data);
             }
           });
         }
