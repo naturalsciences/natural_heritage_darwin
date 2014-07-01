@@ -322,6 +322,8 @@ class DarwinTable extends Doctrine_Table
   * @param $user The User object for right management
   * @param $needle the string entered by the user for search
   * @param $exact bool are we searching the exact term or more or less fuzzy
+  * @param $limit int limit the number of results
+  * @param $level the level used to get the possible upper ones
   * @return Array of results
   */
   public function completeWithLevelAsArray($user, $needle, $exact, $limit = 30, $level)
