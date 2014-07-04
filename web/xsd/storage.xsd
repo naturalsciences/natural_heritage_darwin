@@ -22,6 +22,18 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="Container" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ContainerName" minOccurs="0"/>
+							<xs:element name="ContainerType" minOccurs="0"/>
+							<xs:element name="ContainerStorage" minOccurs="0"/>
+							<xs:element name="SubcontainerName" minOccurs="0"/>
+							<xs:element name="SubcontainerType" minOccurs="0"/>
+							<xs:element name="SubcontainerStorage" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="Codes" minOccurs="0">
 					<xs:complexType>
 						<xs:sequence maxOccurs="unbounded">
