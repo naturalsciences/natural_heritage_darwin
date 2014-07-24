@@ -2870,15 +2870,16 @@ body .ui-tooltip, body .qtip
 .ui-autocomplete-loading { background: white url('/images/loader.gif') right center no-repeat; }
 
 .ui-autocomplete {
-		max-height: 120px;
-		overflow-y: auto;
+		max-height: 150px;
 		/* prevent horizontal scrollbar */
 		overflow-x: hidden;
-		overflow:hidden;
+    /* add vertical scrollbar */
+		overflow-y: scroll;
 		/* add padding to account for vertical scrollbar */
 		padding-right: 20px;
-	}
-.ui-autocomplete { position: absolute; cursor: default; }
+    position: absolute; 
+    cursor: default; 
+}
 
 input.complete_missing {
   border: 1px solid red;

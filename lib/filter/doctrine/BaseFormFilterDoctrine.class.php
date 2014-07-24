@@ -228,8 +228,8 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
         }
         else
         {
-          $query->andWhere(" " . $dateFields[0] . " Between ? AND ? ", array($val_from->format('d/m/Y'),$val_to->format('d/m/Y')))
-                ->orWhere(" " . $dateFields[1] . " Between ? AND ? ", array($val_from->format('d/m/Y'),$val_to->format('d/m/Y')));
+          $query->andWhere("( " . $dateFields[0] . " Between ? AND ? OR ".$dateFields[1] ." Between ? AND ? )", 
+            array($val_from->format('d/m/Y'),$val_to->format('d/m/Y'),$val_from->format('d/m/Y'),$val_to->format('d/m/Y')));
         }
       }
       elseif ($val_from->getMask() > 0)
