@@ -833,13 +833,14 @@ class SpecimensForm extends BaseSpecimensForm
       $col = $this->getObject()->getCollectionRef();
 
     if($col != '') {
-      $collection = Doctrine::getTable('Collections')->find($col);
+      $collections = Doctrine::getTable('Collections');
+      $collection = $collections->findOneById($col);
       if($collection)
       {
         $options['code_prefix'] = $collection->getCodePrefix();
         $options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
         if($collection->getCodeAutoIncrement())
-          $options['code'] = $collection->getCodeLastValue() + 1 ;
+          $options['code'] = $collections->getAndUpdateLastCode($collection->getId());
         $options['code_suffix'] = $collection->getCodeSuffix();
         $options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
       }

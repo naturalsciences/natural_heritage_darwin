@@ -257,6 +257,7 @@ Collections:
         code_prefix_separator: "-"
         code_suffix: Neo
         code_suffix_separator: "-"
+        code_auto_increment: true
     c2:
         code: vert
         name: Vertebrates
