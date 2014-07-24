@@ -3590,9 +3590,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
-
-
-
 CREATE OR REPLACE FUNCTION point_equal ( POINT, POINT )
 RETURNS boolean AS
 'SELECT
@@ -3609,8 +3606,8 @@ DECLARE
 BEGIN
 code = NEW ;
   IF code.referenced_relation = 'specimens' THEN
-    SELECT c.* INTO col FROM collections c JOIN specimens s ON s.collection_ref=c.id WHERE s.id=code.record_id;  
-    IF col.code_auto_increment = TRUE AND isnumeric(code.code) THEN 
+    SELECT c.* INTO STRICT col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=code.record_id;  
+    IF isnumeric(code.code) THEN 
       number := code.code::integer ;
       IF number > col.code_last_value THEN
         UPDATE collections set code_last_value = number WHERE id=col.id ;

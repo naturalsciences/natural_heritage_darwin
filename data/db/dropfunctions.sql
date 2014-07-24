@@ -138,3 +138,4 @@ DROP FUNCTION IF EXISTS fct_update_specimens_flat_related();
 DROP FUNCTION IF EXISTS fct_upd_institution_staging_relationship() ;
 DROP FUNCTION IF EXISTS fct_imp_checker_staging_info() ;
 DROP FUNCTION IF EXISTS fct_imp_checker_staging_relationship()  ;
+DROP FUNCTION IF EXISTS check_auto_increment_code_in_spec();
