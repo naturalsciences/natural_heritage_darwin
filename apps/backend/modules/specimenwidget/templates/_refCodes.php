@@ -51,9 +51,7 @@
     <tr>
       <td colspan='8'>
         <div class="add_code">
-          <?php if($module == 'specimen') $url = 'specimen/addCode';
-          if($module == 'parts') $url = 'parts/addCode';?>
-          <a href="<?php echo url_for($url. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_code"><?php echo __('Add code');?></a>
+          <a href="<?php echo url_for($addCodeUrl.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_code"><?php echo __('Add code');?></a>
         </div>
       </td>
     </tr>
@@ -68,9 +66,7 @@ $(document).ready(function () {
         hideForRefresh('#refCodes');
         parent_el = $(this).closest('table.property_values');
         url = $(this).attr('href')+ (0+$(parent_el).find('tbody').length);
-        <?php if($module == 'specimen'):?>
-          url += '/collection_id/' + $('input#specimen_collection_ref').val();
-        <?php endif;?>
+        url += '/collection_id/' + $('input#specimen_collection_ref').val();
         $.ajax(
         {
           type: "GET",

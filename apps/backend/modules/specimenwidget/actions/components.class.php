@@ -46,6 +46,9 @@ class specimenwidgetComponents extends sfComponents
     {
       $this->module = 'specimen';
     }
+    if(! isset($this->addCodeUrl)) {
+      $this->addCodeUrl = $this->module.'/addCode';
+    }
   }
 
   public function executeRefCollection()
