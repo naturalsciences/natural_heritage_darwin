@@ -67,7 +67,7 @@ class ImportABCDXml implements IImportModels
       case "Identification" : $this->object = new ParsingIdentifications() ; break;
       case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ;
                                          else $this->property = new ParsingProperties() ; break;
-      case "MultiMediaObject" : $this->object = new ParsingMultimedia() ; break;
+      //case "MultiMediaObject" : $this->object = new ParsingMultimedia() ; break;
 /*      case "PersonName" : $this->people = new StagingPeople() ; break;
       case "Person" : $this->people = new StagingPeople() ; break;*/
       case "Petrology" : $this->object = new ParsingTag("lithology") ; break;
@@ -144,7 +144,9 @@ class ImportABCDXml implements IImportModels
         case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
         case "dna:Preservation" : $this->addComment(false, "conservation_mean"); break;
         case "Duration" : $this->property->setDateTo($this->cdata) ; break;
-        case "FileURI" : $this->object->getFile($this->cdata) ; break;
+        
+        case "FileURI" : $this->handleFileURI($this->cdata) ; break;
+        //case "FileURI" : $this->object->getFile($this->cdata) ; break;
         case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
         case "FullName" : $this->people_name = $this->cdata ; break;
         case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break; // $this->object->level_name='unit_rock'; break; //$this->object->informal = true ; break;
@@ -167,6 +169,7 @@ class ImportABCDXml implements IImportModels
         case "ISODateTimeEnd" :  if($this->getPreviousTag() == "DateTime"){ $this->object->GTUdate['to'] = FuzzyDateTime::getValidDate($this->cdata);}  break;
         case "IsQuantitative" : $this->property->property->setIsQuantitative($this->cdata) ; break;
         case "KindOfUnit" : $this->staging['part'] = $this->cdata ; break;
+        case "RecordBasis" : if($this->cdata == "PreservedSpecimen") { $this->staging->setCategory('specimen') ; } else { $this->staging->setCategory('observation') ; } ; break;
         case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $this->cdata ; break;
         case "Length" : $this->object->desc .= "Length : ".$this->cdata." ;" ; break;
         case "efg:LithostratigraphicAttributions" : $this->object->setAttribution($this->staging) ; break;
@@ -193,7 +196,7 @@ class ImportABCDXml implements IImportModels
         case "efg:MineralRockGroup" : $this->object->handleRockParent() ; break;
         case "efg:MineralRockGroupName" : $this->object->higher_name = $this->cdata ; break;
         case "efg:MineralRockIdentified" : $this->object->getCatalogueParent($this->staging) ; break;
-        case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; else $this->errors_reported .= "Unit ".$this->name." : MultiMediaObject not saved (no or wrong FileURI);"; break;
+//         case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; else $this->errors_reported .= "Unit ".$this->name." : MultiMediaObject not saved (no or wrong FileURI);"; break;
         case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break; //@TODO
         case "efg:NameComments" : $this->object->setNotion(strtolower($this->cdata)) ; break;
         case "NameAddendum": if(stripos($this->cdata, 'Variety') !== false ) {
@@ -216,7 +219,8 @@ class ImportABCDXml implements IImportModels
         case "PreparationType" : $this->preparation_type = $this->cdata ; break;
         case "PreparationMaterials" : $this->preparation_mat = $this->cdata ; break;
         case "ProjectTitle" : $this->staging['expedition_name'] = $this->cdata ; break;
-        case "RecordURI" : $this->addExternalLink() ; break;
+        //case "RecordURI" : $this->handleExternalLinks($this->cdata) ; break;
+        case "RecordURI" : $this->addExternalLink($this->cdata) ; break;
         //case "efg:RockType" :
         //case "RockType" : $this->staging->setLithologyName($this->cdata) ; break;
         case "ScientificName" : $this->staging["taxon_name"] = $this->object->getCatalogueName() ;
@@ -240,6 +244,12 @@ class ImportABCDXml implements IImportModels
         case "storage:Rack" : $this->staging->setShelf($this->cdata) ; break;
         case "storage:Box" : $this->staging->setContainerType('box'); $this->staging->setContainer($this->cdata) ; break;
         case "storage:Tube" : $this->staging->setSubContainerType('tube'); $this->staging->setSubContainer($this->cdata) ; break;
+        case "storage:ContainerName" : $this->staging->setContainer($this->cdata) ; break;
+        case "storage:ContainerType" : $this->staging->setContainerType($this->cdata); break;
+        case "storage:ContainerStorage" : $this->staging->setContainerStorage($this->cdata); break;
+        case "storage:SubcontainerName" : $this->staging->setSubContainer($this->cdata) ; break;
+        case "storage:SubcontainerType" : $this->staging->setSubContainerType($this->cdata); break;
+        case "storage:SubcontainerStorage" : $this->staging->setSubContainerStorage($this->cdata); break;
         case "storage:Position" : $this->staging->setSubContainerType('position'); $this->staging->setSubContainer($this->cdata) ; break;
         case "Text":  if($this->getPreviousTag() == "Biotope") {
             $this->object->tag_group_name='ecology';
@@ -251,7 +261,7 @@ class ImportABCDXml implements IImportModels
         case "Unit" : $this->saveUnit(); break;
         case "UnitAssociation" : $this->staging->addRelated($this->object) ; $this->object=null; break;
         case "UnitID" : $this->addCode() ; $this->name = $this->cdata ; break ;
-        case "SourceID" : if($this->cdata != 'Not defined') { $this->addCode('secondary') ;} break ;
+        case "SourceID" : if($this->cdata != 'Not defined') { $this->addCode('Secondary') ;} break ;
         case "UnitOfMeasurement" : $this->property->property->setPropertyUnit($this->cdata); break;
         case "Accuracy" : $this->property->property->setPropertyAccuracy($this->cdata); break;
         case "UpperValue" : $this->property->property->setUpperValue($this->cdata) ; break;
@@ -299,7 +309,6 @@ class ImportABCDXml implements IImportModels
     $code->setCodeCategory($category) ;
     $code->setCode($this->cdata) ;
     if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($code) ;
-
   }
 
   private function addComment($is_staging = false, $notion =  'general')
@@ -387,14 +396,20 @@ class ImportABCDXml implements IImportModels
     $this->object_to_save = array() ;
   }
 
-  private function addExternalLink()
+  private function addExternalLink($externallinks)
   {
-    $prefix = substr($this->cdata,0,strpos($this->cdata,"://")) ;
-    if($prefix != "http" && $prefix != "https") $this->cdata = "http://".$this->cdata ;
-    $ext = new ExtLinks();
-    $ext->setUrl($this->cdata) ;
-    $ext->setComment('Record web address') ;
-    $this->staging->addRelated($ext) ;
+    $unique_externallinks = array_unique(array_map('trim', explode(';', $externallinks)));
+
+    foreach($unique_externallinks as $externallink)
+    {     
+      $prefix = substr($externallink,0,strpos($externallink,"://")) ;
+      if($prefix != "http" && $prefix != "https") $externallink = "http://".$externallink ;
+      $ext = new ExtLinks();
+      $ext->setUrl($externallink) ;
+      $ext->setComment('Record web address') ;
+      $this->staging->addRelated($ext) ;
+    }
+
   }
 
   private function addPreparation()
@@ -486,4 +501,30 @@ class ImportABCDXml implements IImportModels
       $this->staging->addRelated($code) ;
     }
   }
+  
+  private function handleFileURI($fileuris)
+  {
+    $unique_fileuris = array_unique(array_map('trim', explode(';', $fileuris)));
+
+    foreach($unique_fileuris as $fileuri)
+    {
+      $this->object = new ParsingMultimedia() ; 
+      $this->object->getFile($fileuri) ;
+      if($this->object->isFileOk()) {
+      $this->staging->addRelated($this->object->multimedia) ; 
+      } else {
+      $this->errors_reported .= "Unit ".$this->name." : MultiMediaObject not saved (no or wrong FileURI);" ;
+      }
+    }
+  }
+  
+//   private function handleExternalLinks($externallinks,$category='GenBankNumber')
+//   {
+//     $unique_externallinks = array_unique(array_map('trim', explode(';', $externallinks)));
+// 
+//     foreach($unique_externallinks as $externallink)
+//     {     
+//       $this->addExternalLink() ; break;
+//     }
+//   }
 }
