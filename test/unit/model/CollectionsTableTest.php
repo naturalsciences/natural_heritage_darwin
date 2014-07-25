@@ -45,3 +45,8 @@ $collectionId = $collection->getId();
 $value = Doctrine::getTable('Collections')->getAndUpdateLastCode($collectionId);
 $t->is(is_numeric($value), true, 'Updated value of "code_last_value" for collection "Vertebrates" is well a number...');
 $t->is(($value>0), true, '... and a number above 0');
+
+$t->info('afterSaveAddCode');
+
+print(Doctrine::getTable('Collections')->afterSaveAddCode(134, 1));
+print('Collection id is: '.$collectionId);

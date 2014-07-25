@@ -247,7 +247,11 @@ class specimenActions extends DarwinActions
     {
       try
       {
+        $wasNew = $form->isNew();
         $specimen = $form->save();
+        if ($wasNew) {
+          $response = Doctrine::getTable('Collections')->afterSaveAddCode($specimen->getCollectionRef(), $specimen->getId());
+        }
         $this->redirect('specimen/edit?id='.$specimen->getId());
       }
       catch(Doctrine_Exception $ne)
