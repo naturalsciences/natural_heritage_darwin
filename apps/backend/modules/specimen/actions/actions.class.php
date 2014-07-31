@@ -247,16 +247,16 @@ class specimenActions extends DarwinActions
     {
       try
       {
-        $wasNew = $form->isNew();
-        $autoCodeForUpdate = false;
-        if (!$wasNew) {
-          $collection = Doctrine::getTable('Collections')->findOneById($specimen->getCollectionRef());
-          $autoCodeForUpdate = !$collection->getCodeAutoIncrementForInsertOnly();
-        }
+        // $wasNew = $form->isNew();
+        // $autoCodeForUpdate = false;
+        // if (!$wasNew) {
+        //   $collection = Doctrine::getTable('Collections')->findOneById($specimen->getCollectionRef());
+        //   $autoCodeForUpdate = !$collection->getCodeAutoIncrementForInsertOnly();
+        // }
         $specimen = $form->save();
-        if ($wasNew || $autoCodeForUpdate) {
+/*        if ($wasNew || $autoCodeForUpdate) {
           $response = Doctrine::getTable('Collections')->afterSaveAddCode($specimen->getCollectionRef(), $specimen->getId());
-        }
+        }*/
         $this->redirect('specimen/edit?id='.$specimen->getId());
       }
       catch(Doctrine_Exception $ne)
