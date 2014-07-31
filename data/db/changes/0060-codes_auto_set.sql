@@ -7,7 +7,7 @@ DROP TRIGGER IF EXISTS trg_insert_auto_code
 CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec() RETURNS trigger 
 AS $$
 DECLARE 
-  col collections;
+  col collections%ROWTYPE;
   code RECORD;
   number integer ;
 BEGIN
@@ -36,7 +36,7 @@ COMMENT ON COLUMN collections.code_auto_increment_even_if_existing_numeric IS 'F
 
 UPDATE collections SET code_auto_increment_for_insert_only = DEFAULT, code_auto_increment_even_if_existing_numeric = DEFAULT;
 
-CREATE OR REPLACE fct_after_save_add_code(IN collectionId collections.id%TYPE, IN specimenId specimens.id%TYPE) RETURNS integer
+CREATE OR REPLACE FUNCTION fct_after_save_add_code(IN collectionId collections.id%TYPE, IN specimenId specimens.id%TYPE) RETURNS integer
 AS $$
 DECLARE
   col collections%ROWTYPE;
@@ -53,6 +53,7 @@ BEGIN
                             AND record_id = specimenId
                             AND code_category = 'main'
                             AND code_num != 0
+                          LIMIT 1
                          );
       ELSE
         INSERT INTO codes (referenced_relation, record_id, code_prefix, code_prefix_separator, code, code_suffix_separator, code_suffix)
@@ -62,9 +63,10 @@ BEGIN
                           WHERE referenced_relation = 'specimens'
                             AND record_id = specimenId
                             AND code_category = 'main'
-                            AND code_prefix = col.code_prefix
+                            AND coalesce(code_prefix, '') = coalesce(col.code_prefix, '')
                             AND code = col.code_last_value::varchar
-                            AND code_suffix = col.code_suffix
+                            AND coalesce(code_suffix, '') = coalesce(col.code_suffix, '')
+                          LIMIT 1
                          );
       END IF;
     END IF;
