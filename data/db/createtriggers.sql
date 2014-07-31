@@ -398,7 +398,7 @@ CREATE TRIGGER trg_trk_log_table_codes AFTER INSERT OR UPDATE OR DELETE
         ON codes FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
     
-CREATE TRIGGER trg_insert_auto_code AFTER INSERT OR UPDATE 
+CREATE TRIGGER trg_insert_auto_code AFTER INSERT OR UPDATE OR DELETE
         ON codes FOR EACH ROW
         EXECUTE PROCEDURE check_auto_increment_code_in_spec() ;
 

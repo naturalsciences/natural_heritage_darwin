@@ -11,21 +11,37 @@ DECLARE
   code RECORD;
   number integer ;
 BEGIN
-  code = NEW ;
-  IF code.referenced_relation = 'specimens' THEN
-    SELECT c.* INTO STRICT col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=code.record_id;  
-    IF isnumeric(code.code) THEN 
-      number := code.code::integer ;
-      IF number > col.code_last_value THEN
-        UPDATE collections set code_last_value = number WHERE id=col.id ;
+  IF TG_OP != 'DELETE' THEN
+    code = NEW ;
+    IF code.referenced_relation = 'specimens' THEN
+      SELECT c.* INTO STRICT col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=code.record_id;  
+      IF isnumeric(code.code) THEN 
+        number := code.code::integer ;
+        IF number > col.code_last_value THEN
+          UPDATE collections set code_last_value = number WHERE id=col.id ;
+        END IF;
       END IF;
-    END IF;
-  END IF ;
-  RETURN NEW;
+    END IF ;
+    RETURN NEW;
+  ELSE
+    code = OLD;
+    IF code.referenced_relation = 'specimens' THEN
+      SELECT c.* INTO STRICT col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=code.record_id; 
+      IF isnumeric(code.code) THEN 
+        UPDATE collections 
+        SET code_last_value = (SELECT max(code_num)
+                               FROM codes INNER JOIN specimens ON codes.record_id = specimens.id AND codes.referenced_relation = 'specimens'
+                               WHERE specimens.collection_ref = col.id
+                              )
+        WHERE id=col.id;
+      END IF;
+    END IF ;
+    RETURN OLD;
+  END IF;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_insert_auto_code AFTER INSERT OR UPDATE ON codes FOR EACH ROW
+CREATE TRIGGER trg_insert_auto_code AFTER INSERT OR UPDATE OR DELETE ON codes FOR EACH ROW
 EXECUTE PROCEDURE check_auto_increment_code_in_spec() ;
 
 
@@ -46,7 +62,7 @@ BEGIN
     IF col.code_auto_increment = TRUE THEN
       IF col.code_auto_increment_even_if_existing_numeric = FALSE THEN
         INSERT INTO codes (referenced_relation, record_id, code_prefix, code_prefix_separator, code, code_suffix_separator, code_suffix)
-        SELECT 'specimens', specimenId, col.code_prefix, col.code_prefix_separator, col.code_last_value::varchar, col.code_suffix_separator, col.code_suffix
+        SELECT 'specimens', specimenId, col.code_prefix, col.code_prefix_separator, (col.code_last_value+1)::varchar, col.code_suffix_separator, col.code_suffix
         WHERE NOT EXISTS (SELECT 1 
                           FROM codes 
                           WHERE referenced_relation = 'specimens'
@@ -57,7 +73,7 @@ BEGIN
                          );
       ELSE
         INSERT INTO codes (referenced_relation, record_id, code_prefix, code_prefix_separator, code, code_suffix_separator, code_suffix)
-        SELECT 'specimens', specimenId, col.code_prefix, col.code_prefix_separator, col.code_last_value::varchar, col.code_suffix_separator, col.code_suffix
+        SELECT 'specimens', specimenId, col.code_prefix, col.code_prefix_separator, (col.code_last_value+1)::varchar, col.code_suffix_separator, col.code_suffix
         WHERE NOT EXISTS (SELECT 1 
                           FROM codes 
                           WHERE referenced_relation = 'specimens'
@@ -73,6 +89,6 @@ BEGIN
   END IF;
   RETURN 0;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;  
 
 COMMIT ;
