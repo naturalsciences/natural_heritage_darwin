@@ -6,7 +6,7 @@
       <th class="centered"><?php echo __('Code suffix sep.');?></th>
       <th><?php echo __('Code suffix');?></th>
       <th class="centered"><?php echo __('Auto incremented ?');?></th>
-      <th class="centered"><?php echo __('...for insertion only ?');?></th>
+      <th class="centered"><?php echo __('...for new spec. only ?');?></th>
       <th class="centered"><?php echo __('... even if numeric exists ?');?></th>
       <th class="centered"><?php echo __('Duplicate specimen codes');?></th>
       <th></th>

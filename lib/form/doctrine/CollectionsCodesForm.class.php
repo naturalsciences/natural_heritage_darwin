@@ -19,7 +19,7 @@ class CollectionsCodesForm extends BaseCollectionsForm
     $this->widgetSchema['code_suffix_separator'] = new sfWidgetFormInputText();
 
     $this->widgetSchema['code_auto_increment']->setLabel('Auto incrementation of specimen code');
-    $this->widgetSchema['code_auto_increment_for_insert_only']->setLabel('Auto incrementation only for insertions');
+    $this->widgetSchema['code_auto_increment_for_insert_only']->setLabel('Auto incrementation only for new spec.');
     $this->widgetSchema['code_auto_increment_even_if_existing_numeric']->setLabel('Auto incrementation even if number already exists');
     $this->widgetSchema['code_prefix']->setLabel('Default specimen code prefix used');
     $this->widgetSchema['code_prefix_separator']->setLabel('Default separator after prefix');
