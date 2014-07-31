@@ -3600,11 +3600,11 @@ LANGUAGE SQL IMMUTABLE;
 CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec() RETURNS trigger 
 AS $$
 DECLARE 
-  col collections;
+  col collections%ROWTYPE;
   code RECORD;
   number integer ;
 BEGIN
-code = NEW ;
+  code = NEW ;
   IF code.referenced_relation = 'specimens' THEN
     SELECT c.* INTO STRICT col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=code.record_id;  
     IF isnumeric(code.code) THEN 
@@ -3617,6 +3617,7 @@ code = NEW ;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION isnumeric(text) RETURNS BOOLEAN AS $$
 DECLARE x NUMERIC;

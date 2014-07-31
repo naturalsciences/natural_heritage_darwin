@@ -25,7 +25,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_insert_auto_code AFTER INSERT ON codes FOR EACH ROW
+CREATE TRIGGER trg_insert_auto_code AFTER INSERT OR UPDATE ON codes FOR EACH ROW
 EXECUTE PROCEDURE check_auto_increment_code_in_spec() ;
 
 
