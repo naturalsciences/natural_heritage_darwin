@@ -3646,3 +3646,42 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 
 
 CREATE OPERATOR =  (LEFTARG = POINT,  RIGHTARG = POINT, PROCEDURE = point_equal);
+
+CREATE OR REPLACE FUNCTION fct_after_save_add_code(IN collectionId collections.id%TYPE, IN specimenId specimens.id%TYPE) RETURNS integer
+AS $$
+DECLARE
+  col collections%ROWTYPE;
+BEGIN
+  SELECT c.* INTO STRICT col FROM collections c WHERE c.id = collectionId;
+  IF FOUND THEN
+    IF col.code_auto_increment = TRUE THEN
+      IF col.code_auto_increment_even_if_existing_numeric = FALSE THEN
+        INSERT INTO codes (referenced_relation, record_id, code_prefix, code_prefix_separator, code, code_suffix_separator, code_suffix)
+        SELECT 'specimens', specimenId, col.code_prefix, col.code_prefix_separator, (col.code_last_value+1)::varchar, col.code_suffix_separator, col.code_suffix
+        WHERE NOT EXISTS (SELECT 1 
+                          FROM codes 
+                          WHERE referenced_relation = 'specimens'
+                            AND record_id = specimenId
+                            AND code_category = 'main'
+                            AND code_num != 0
+                          LIMIT 1
+                         );
+      ELSE
+        INSERT INTO codes (referenced_relation, record_id, code_prefix, code_prefix_separator, code, code_suffix_separator, code_suffix)
+        SELECT 'specimens', specimenId, col.code_prefix, col.code_prefix_separator, (col.code_last_value+1)::varchar, col.code_suffix_separator, col.code_suffix
+        WHERE NOT EXISTS (SELECT 1 
+                          FROM codes 
+                          WHERE referenced_relation = 'specimens'
+                            AND record_id = specimenId
+                            AND code_category = 'main'
+                            AND coalesce(code_prefix, '') = coalesce(col.code_prefix, '')
+                            AND code = col.code_last_value::varchar
+                            AND coalesce(code_suffix, '') = coalesce(col.code_suffix, '')
+                          LIMIT 1
+                         );
+      END IF;
+    END IF;
+  END IF;
+  RETURN 0;
+END;
+$$ LANGUAGE plpgsql;  
