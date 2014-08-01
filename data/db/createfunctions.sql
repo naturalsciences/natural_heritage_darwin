@@ -2772,8 +2772,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
 CREATE OR REPLACE FUNCTION fct_imp_checker_gtu(line staging, import boolean default false)  RETURNS boolean
 AS $$
 DECLARE
@@ -2786,16 +2784,33 @@ BEGIN
   IF (line.gtu_code is null OR line.gtu_code  = '') AND (line.gtu_from_date is null OR line.gtu_code  = '') AND NOT EXISTS (select 1 from staging_tag_groups g where g.staging_ref = line.id ) THEN
     RETURN true;
   END IF;
-
-    select id into ref_rec from gtu g where
+  select substr.id into ref_rec from (
+    select id from gtu g where
       COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
       COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
       gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
       gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038') AND
-      fullToIndex(code) = fullToIndex(line.gtu_code)
+      position('import/' in code) > 0 AND
+      line.gtu_code IS NULL
+    union
+    select id from gtu g where
+      COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
+      COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
+      gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
+      gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038') AND
+      position('import/' in code) = 0 AND
+      fullToIndex(code) IN (SELECT fullToIndex(stg.gtu_code)
+                            FROM staging stg
+                            WHERE COALESCE(stg.gtu_latitude,0) = COALESCE(line.gtu_latitude,0) AND
+                                  COALESCE(stg.gtu_longitude,0) = COALESCE(line.gtu_longitude,0) AND
+                                  COALESCE(stg.gtu_from_date, '01/01/0001') = COALESCE(line.gtu_from_date, '01/01/0001') AND
+                                  COALESCE(stg.gtu_to_date, '31/12/2038') = COALESCE(line.gtu_to_date, '31/12/2038') AND
+                                  stg.gtu_code IS NOT NULL
+                            )
+      ) as substr
+      WHERE substr.id != 0 LIMIT 1;
 
-      AND id != 0 LIMIT 1;
-
+      /* fullToIndex(code) = fullToIndex(line.gtu_code) */
 
 
   IF NOT FOUND THEN
@@ -2814,13 +2829,29 @@ BEGIN
             Values(ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value );
         --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
           EXCEPTION WHEN unique_violation THEN
-            RAISE EXCEPTION 'An error occured: %', SQLERRM;
+            -- nothing
         END ;
         END LOOP ;
         PERFORM fct_imp_checker_staging_info(line, 'gtu');
       ELSE
         RETURN TRUE;
       END IF;
+  ELSE
+  /* ELSE ADDED HERE TO CHECK IF THE TAGS (and the staging infos) OF THE EXISTING GTU EXISTS TOO */
+    IF import THEN
+      FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
+      BEGIN
+        INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
+          Values(ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value );
+      --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
+        EXCEPTION WHEN unique_violation THEN
+          -- nothing
+      END ;
+      END LOOP ;
+      PERFORM fct_imp_checker_staging_info(line, 'gtu');
+    ELSE
+      RETURN TRUE;      
+    END IF;
   END IF;
 
   UPDATE staging SET status = delete(status,'gtu'), gtu_ref = ref_rec where id=line.id;
