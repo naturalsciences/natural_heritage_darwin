@@ -9,15 +9,16 @@ DECLARE
 BEGIN
   IF TG_OP != 'DELETE' THEN
     IF NEW.referenced_relation = 'specimens' THEN
-      SELECT c.* INTO STRICT col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=NEW.record_id;
-      IF NEW.code_category = 'main' THEN
-        IF isnumeric(NEW.code) THEN 
-          number := NEW.code::integer ;
-          IF number > col.code_last_value THEN
-            UPDATE collections set code_last_value = number WHERE id=col.id ;
+      SELECT c.* INTO col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=NEW.record_id;
+      IF FOUND THEN
+        IF NEW.code_category = 'main' THEN
+          IF isnumeric(NEW.code) THEN 
+            number := NEW.code::integer ;
+            IF number > col.code_last_value THEN
+              UPDATE collections set code_last_value = number WHERE id=col.id ;
+            END IF;
           END IF;
-        END IF;
-      ELSEIF TG_OP = 'UPDATE' THEN
+        ELSEIF TG_OP = 'UPDATE' THEN
           IF OLD.code_category = 'main' THEN
             IF isnumeric(OLD.code) THEN 
               number := OLD.code::integer ;
@@ -42,13 +43,14 @@ BEGIN
               END IF;
             END IF;
           END IF;
+        END IF;
       END IF;
     END IF ;
     RETURN NEW;
   ELSE
     IF OLD.referenced_relation = 'specimens' AND OLD.code_category = 'main' THEN
-      SELECT c.* INTO STRICT col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=OLD.record_id; 
-      IF isnumeric(OLD.code) THEN 
+      SELECT c.* INTO col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=OLD.record_id; 
+      IF FOUND AND isnumeric(OLD.code) THEN 
         UPDATE collections 
         SET code_last_value = (SELECT max(code_num)
                                FROM codes INNER JOIN specimens 
@@ -72,7 +74,6 @@ BEGIN
   END IF;
 END;
 $$ LANGUAGE plpgsql;
-
 
 DROP TRIGGER IF EXISTS trg_insert_auto_code 
     ON codes;    
@@ -140,7 +141,7 @@ AS $$
 DECLARE
   col collections%ROWTYPE;
 BEGIN
-  SELECT c.* INTO STRICT col FROM collections c WHERE c.id = collectionId;
+  SELECT c.* INTO col FROM collections c WHERE c.id = collectionId;
   IF FOUND THEN
     IF col.code_auto_increment = TRUE THEN
       INSERT INTO codes (referenced_relation, record_id, code_prefix, code_prefix_separator, code, code_suffix_separator, code_suffix)
@@ -157,6 +158,6 @@ BEGIN
   END IF;
   RETURN 0;
 END;
-$$ LANGUAGE plpgsql;  
+$$ LANGUAGE plpgsql;
 
 COMMIT ;
