@@ -25,10 +25,6 @@ class Collections extends BaseCollections
       return  $this->CollectionsRights[0]->getDbUserType();
     return 0;
   }
-
-
-
-
   
   protected $children = array();
   protected $parent_node = null;

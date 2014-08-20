@@ -113,6 +113,9 @@ DROP TRIGGER IF EXISTS trg_words_ts_cpy_codes
 DROP TRIGGER IF EXISTS trg_insert_auto_code 
     ON codes;    
 
+DROP TRIGGER IF EXISTS trg_update_collections_code_last_val
+    ON specimens;
+
 /*** Tracking ***/
 DROP TRIGGER IF EXISTS trg_trk_log_table_catalogue_relationships 
         ON catalogue_relationships;

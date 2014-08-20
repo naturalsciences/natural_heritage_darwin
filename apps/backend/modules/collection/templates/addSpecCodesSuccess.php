@@ -51,13 +51,6 @@
       </td>
     </tr>
     <tr>
-      <th><?php echo $form['code_auto_increment_even_if_existing_numeric']->renderLabel();?></th>
-      <td>
-        <?php echo $form['code_auto_increment_even_if_existing_numeric']->renderError(); ?>
-        <?php echo $form['code_auto_increment_even_if_existing_numeric'];?>
-      </td>
-    </tr>
-    <tr>
       <th><?php echo $form['code_specimen_duplicate']->renderLabel();?></th>
       <td>
         <?php echo $form['code_specimen_duplicate']->renderError(); ?>

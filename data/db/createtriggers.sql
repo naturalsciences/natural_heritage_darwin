@@ -402,6 +402,10 @@ CREATE TRIGGER trg_insert_auto_code AFTER INSERT OR UPDATE OR DELETE
         ON codes FOR EACH ROW
         EXECUTE PROCEDURE check_auto_increment_code_in_spec() ;
 
+CREATE TRIGGER trg_update_collections_code_last_val AFTER UPDATE OF collection_ref 
+        ON specimens FOR EACH ROW
+        EXECUTE PROCEDURE update_collections_code_last_val();
+
 CREATE TRIGGER trg_trk_log_table_insurances AFTER INSERT OR UPDATE OR DELETE
         ON insurances FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();

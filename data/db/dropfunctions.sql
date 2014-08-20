@@ -140,3 +140,4 @@ DROP FUNCTION IF EXISTS fct_imp_checker_staging_info() ;
 DROP FUNCTION IF EXISTS fct_imp_checker_staging_relationship()  ;
 DROP FUNCTION IF EXISTS check_auto_increment_code_in_spec();
 DROP FUNCTION IF EXISTS fct_after_save_add_code(collections.id%TYPE,specimens.id%TYPE);
+DROP FUNCTION IF EXISTS update_collections_code_last_val();

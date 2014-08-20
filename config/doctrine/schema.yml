@@ -348,7 +348,6 @@ Collections:
         path: { type: string, notnull: true, default: '/'}
         code_auto_increment: { type: boolean, notnull: true, default: false}
         code_auto_increment_for_insert_only: { type: boolean, notnull: true, default: true}
-        code_auto_increment_even_if_existing_numeric: { type: boolean, notnull: true, default: false}
         code_last_value: { type: integer, notnull: true, default: 0}
         code_prefix: { type: string}
         code_prefix_separator: { type: string}
