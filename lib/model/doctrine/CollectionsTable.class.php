@@ -164,8 +164,6 @@ class CollectionsTable extends DarwinTable
     $conn->getDbh()->exec('BEGIN TRANSACTION;');
     $response = $conn->getDbh()->exec("SELECT fct_after_save_add_code($collectionId, $specimenId)");
     $conn->getDbh()->exec('COMMIT;');
-    // print_r($response);
-    // die();
     return 0;
   }
 }

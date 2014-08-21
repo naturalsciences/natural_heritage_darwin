@@ -3628,6 +3628,20 @@ CASE WHEN $1[0] = $2[0] AND $1[1] = $2[1] THEN true
 ELSE false END;'
 LANGUAGE SQL IMMUTABLE;
 
+
+CREATE OR REPLACE FUNCTION isnumeric(text) RETURNS BOOLEAN AS $$
+DECLARE x NUMERIC;
+BEGIN
+    x = $1::NUMERIC;
+    RETURN TRUE;
+EXCEPTION WHEN others THEN
+    RETURN FALSE;
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+
+CREATE OPERATOR =  (LEFTARG = POINT,  RIGHTARG = POINT, PROCEDURE = point_equal);
+
 CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec() RETURNS trigger 
 AS $$
 DECLARE 
@@ -3644,6 +3658,31 @@ BEGIN
             IF number > col.code_last_value THEN
               UPDATE collections set code_last_value = number WHERE id=col.id ;
             END IF;
+          ELSE
+            UPDATE collections 
+            SET code_last_value = (SELECT max(code_num)
+                                   FROM codes inner join specimens
+                                     ON codes.referenced_relation = 'specimens'
+                                     AND codes.record_id = specimens.id
+                                   WHERE codes.code_category = 'main'
+                                     AND specimens.collection_ref = col.id
+                                     AND codes.code_num IS NOT NULL
+                                  )
+            WHERE id = col.id
+              AND EXISTS (SELECT 1
+                          FROM codes inner join specimens
+                            ON codes.referenced_relation = 'specimens'
+                            AND codes.record_id = specimens.id
+                          WHERE codes.code_category = 'main'
+                            AND specimens.collection_ref = col.id
+                            AND codes.code_num IS NOT NULL
+                          LIMIT 1
+                         );
+            IF NOT FOUND THEN
+              UPDATE collections
+              SET code_last_value = DEFAULT
+              WHERE id=col.id;
+            END IF;
           END IF;
         ELSEIF TG_OP = 'UPDATE' THEN
           IF OLD.code_category = 'main' THEN
@@ -3657,6 +3696,7 @@ BEGIN
                                          AND codes.record_id = specimens.id
                                        WHERE codes.code_category = 'main'
                                          AND specimens.collection_ref = col.id
+                                         AND codes.code_num IS NOT NULL
                                       )
                 WHERE id = col.id
                   AND EXISTS (SELECT 1
@@ -3665,8 +3705,14 @@ BEGIN
                                 AND codes.record_id = specimens.id
                               WHERE codes.code_category = 'main'
                                 AND specimens.collection_ref = col.id
+                                AND codes.code_num IS NOT NULL
                               LIMIT 1
                              );
+                IF NOT FOUND THEN
+                  UPDATE collections
+                  SET code_last_value = DEFAULT
+                  WHERE id=col.id;
+                END IF;
               END IF;
             END IF;
           END IF;
@@ -3685,6 +3731,7 @@ BEGIN
                                  AND codes.record_id = specimens.id 
                                WHERE codes.code_category = 'main'
                                  AND specimens.collection_ref = col.id
+                                 AND codes.code_num IS NOT NULL
                               )
         WHERE id=col.id
           AND EXISTS (SELECT 1
@@ -3693,27 +3740,20 @@ BEGIN
                         AND codes.record_id = specimens.id
                       WHERE codes.code_category = 'main'
                         AND specimens.collection_ref = col.id
+                        AND codes.code_num IS NOT NULL
                       LIMIT 1
                      );
+        IF NOT FOUND THEN
+          UPDATE collections
+          SET code_last_value = DEFAULT
+          WHERE id=col.id;
+        END IF;
       END IF;
     END IF ;
     RETURN OLD;
   END IF;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION isnumeric(text) RETURNS BOOLEAN AS $$
-DECLARE x NUMERIC;
-BEGIN
-    x = $1::NUMERIC;
-    RETURN TRUE;
-EXCEPTION WHEN others THEN
-    RETURN FALSE;
-END;
-$$ LANGUAGE plpgsql IMMUTABLE;
-
-
-CREATE OPERATOR =  (LEFTARG = POINT,  RIGHTARG = POINT, PROCEDURE = point_equal);
 
 CREATE OR REPLACE FUNCTION fct_after_save_add_code(IN collectionId collections.id%TYPE, IN specimenId specimens.id%TYPE) RETURNS integer
 AS $$
@@ -3730,7 +3770,7 @@ BEGIN
                         WHERE referenced_relation = 'specimens'
                           AND record_id = specimenId
                           AND code_category = 'main'
-                          AND code_num != 0
+                          AND code_num IS NOT NULL
                         LIMIT 1
                        );
     END IF;
@@ -3750,6 +3790,7 @@ BEGIN
                            AND codes.record_id = specimens.id
                            AND codes.code_category = 'main'
                          WHERE specimens.collection_ref = NEW.collection_ref
+                           AND codes.code_num IS NOT NULL
                         )
   WHERE id = NEW.collection_ref
     AND EXISTS (SELECT 1
@@ -3758,6 +3799,7 @@ BEGIN
                   AND codes.record_id = specimens.id
                 WHERE codes.code_category = 'main'
                   AND specimens.collection_ref = NEW.collection_ref
+                  AND codes.code_num IS NOT NULL
                 LIMIT 1
                );
   UPDATE collections 
@@ -3768,6 +3810,7 @@ BEGIN
                            AND codes.record_id = specimens.id
                            AND codes.code_category = 'main'
                          WHERE specimens.collection_ref = OLD.collection_ref
+                           AND codes.code_num IS NOT NULL
                         )
   WHERE id = OLD.collection_ref
     AND EXISTS (SELECT 1
@@ -3776,8 +3819,48 @@ BEGIN
                   AND codes.record_id = specimens.id
                 WHERE codes.code_category = 'main'
                   AND specimens.collection_ref = OLD.collection_ref
+                  AND codes.code_num IS NOT NULL
                 LIMIT 1
                );
+  IF NOT FOUND THEN
+    UPDATE collections
+    SET code_last_value = DEFAULT
+    WHERE id = OLD.collection_ref;
+  END IF;
   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION update_collections_code_last_val_after_spec_del() RETURNS trigger 
+AS $$
+BEGIN
+  UPDATE collections 
+  SET code_last_value = (SELECT max(code_num) 
+                         FROM codes 
+                         INNER JOIN specimens 
+                           ON codes.referenced_relation = 'specimens' 
+                           AND codes.record_id = specimens.id
+                           AND codes.code_category = 'main'
+                         WHERE specimens.collection_ref = OLD.collection_ref
+                           AND specimens.id != OLD.id
+                           AND codes.code_num IS NOT NULL
+                        )
+  WHERE id = OLD.collection_ref
+    AND EXISTS (SELECT 1
+                FROM codes inner join specimens
+                  ON codes.referenced_relation = 'specimens'
+                  AND codes.record_id = specimens.id
+                WHERE codes.code_category = 'main'
+                  AND specimens.collection_ref = OLD.collection_ref
+                  AND specimens.id != OLD.id
+                  AND codes.code_num IS NOT NULL
+                LIMIT 1
+               );
+  IF NOT FOUND THEN
+    UPDATE collections
+    SET code_last_value = DEFAULT
+    WHERE id = OLD.collection_ref;
+  END IF;
+  RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
