@@ -263,6 +263,7 @@ DECLARE
   collection collections%ROWTYPE;
   code_count integer;
 BEGIN
+  SELECT * INTO collection FROM collections WHERE id = (SELECT collection_ref FROM imports WHERE id = req_import_ref AND is_finished = FALSE LIMIT 1);
   FOR all_line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id
       WHERE import_ref = req_import_ref AND to_import=true and status = ''::hstore AND i.is_finished =  FALSE
   LOOP
@@ -298,7 +299,6 @@ BEGIN
         DELETE FROM staging_people where referenced_relation='collection_maintenance' AND record_id=maintenance_line.id ;
       END LOOP;
 
-      SELECT * INTO collection FROM collections WHERE id = all_line.collection_ref;
       SELECT COUNT(*) INTO code_count FROM codes WHERE referenced_relation = 'staging' AND record_id = line.id AND code_category = 'main' AND code IS NOT NULL;
       IF code_count = 0 THEN
         PERFORM fct_after_save_add_code(all_line.collection_ref, rec_id);
