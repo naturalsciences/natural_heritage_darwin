@@ -3043,7 +3043,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE OR REPLACE FUNCTION fct_importer_abcd(req_import_ref integer)  RETURNS boolean
 AS $$
 DECLARE
@@ -3056,7 +3055,8 @@ DECLARE
   staging_line staging;
   id_to_delete integer ARRAY;
   id_to_keep integer ARRAY ;
---   collection int;
+  collection collections%ROWTYPE;
+  code_count integer;
 BEGIN
   FOR all_line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id
       WHERE import_ref = req_import_ref AND to_import=true and status = ''::hstore AND i.is_finished =  FALSE
@@ -3092,6 +3092,23 @@ BEGIN
         UPDATE collection_maintenance set people_ref=people_id where id=maintenance_line.id ;
         DELETE FROM staging_people where referenced_relation='collection_maintenance' AND record_id=maintenance_line.id ;
       END LOOP;
+
+      SELECT * INTO collection FROM collections WHERE id = all_line.collection_ref;
+      SELECT COUNT(*) INTO code_count FROM codes WHERE referenced_relation = 'staging' AND record_id = line.id AND code_category = 'main' AND code IS NOT NULL;
+      IF code_count = 0 THEN
+        PERFORM fct_after_save_add_code(all_line.collection_ref, rec_id);
+      ELSE
+        UPDATE codes SET referenced_relation = 'specimens', 
+                         record_id = rec_id, 
+                         code_prefix = CASE WHEN code_prefix IS NULL THEN collection.code_prefix ELSE code_prefix END,
+                         code_prefix_separator = CASE WHEN code_prefix_separator IS NULL THEN collection.code_prefix_separator ELSE code_prefix_separator END,
+                         code_suffix = CASE WHEN code_suffix IS NULL THEN collection.code_suffix ELSE code_suffix END,
+                         code_suffix_separator = CASE WHEN code_suffix_separator IS NULL THEN collection.code_suffix_separator ELSE code_suffix_separator END
+        WHERE referenced_relation = 'staging'
+          AND record_id = line.id
+          AND code_category = 'main';
+      END IF;
+
       UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
       --UPDATE collection_maintenance SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
       -- Import identifiers whitch identification have been updated to specimen

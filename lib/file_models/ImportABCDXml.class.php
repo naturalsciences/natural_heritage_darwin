@@ -233,7 +233,7 @@ class ImportABCDXml implements IImportModels
                      elseif (strtolower($this->cdata) == 'x') $this->staging->setIndividualSex('mixed') ;
                      break;
         // case "SortingName" : $this->object->people_order_by = $this->cdata ; break;
-        case "storage:Barcode" : $this->addCode("2Dbarcode") ; break ; // c'est un code avec "2dbarcode" dans le main
+        case "storage:Barcode" : $this->addCode("barcode") ; break ; // c'est un code avec "2dbarcode" dans le main
         case "storage:Institution" : $this->staging->setInstitutionName($this->cdata) ; break;
         case "storage:Building" : $this->staging->setBuilding($this->cdata) ; break;
         case "storage:Floor" : $this->staging->setFloor($this->cdata) ; break;
@@ -261,7 +261,7 @@ class ImportABCDXml implements IImportModels
         case "Unit" : $this->saveUnit(); break;
         case "UnitAssociation" : $this->staging->addRelated($this->object) ; $this->object=null; break;
         case "UnitID" : $this->addCode() ; $this->name = $this->cdata ; break ;
-        case "SourceID" : if($this->cdata != 'Not defined') { $this->addCode('Secondary') ;} break ;
+        case "SourceID" : if($this->cdata != 'Not defined') { $this->addCode('secondary') ;} break ;
         case "UnitOfMeasurement" : $this->property->property->setPropertyUnit($this->cdata); break;
         case "Accuracy" : $this->property->property->setPropertyAccuracy($this->cdata); break;
         case "UpperValue" : $this->property->property->setUpperValue($this->cdata) ; break;
@@ -303,10 +303,10 @@ class ImportABCDXml implements IImportModels
     return (substr($part,strrpos($part,'/')+1,strlen($part))) ;
   }
 
-  private function addCode($category='main')
+  private function addCode($category="main")
   {
     $code = new Codes() ;
-    $code->setCodeCategory($category) ;
+    $code->setCodeCategory(strtolower($category)) ;
     $code->setCode($this->cdata) ;
     if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($code) ;
   }

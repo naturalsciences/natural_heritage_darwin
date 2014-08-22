@@ -2,7 +2,7 @@
   <file datatype="plaintext" original="en" source-language="en" target-language="">
     <header/>
     <body>
-            <trans-unit id="1">
+      <trans-unit id="1">
         <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%</source>
         <target>[0]No se recuperaron resultados|[1]Su pregunta recuperó un registro|(1,+Inf]Su pregunta recuperó %1% registro de %2%</target>
         
@@ -112,7 +112,8 @@
         
       </trans-unit>
       <trans-unit id="31">
-      <source>Pinned Specimens &lt;i&gt;(%d)&lt;/i&gt;</source>
+        <source>Pinned Specimens &lt;i&gt;(%d)&lt;/i&gt;</source>
+        <target>Pinned Especímenes &lt;i&gt;(%d)&lt;/i&gt;</target>
         
       </trans-unit>
       <trans-unit id="34">
@@ -6821,6 +6822,22 @@
       <trans-unit id="1836">
         <source>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</source>
         
+      </trans-unit>
+      <trans-unit id="1837">
+        <source>catalogue_search_tips</source>
+
+      </trans-unit>
+      <trans-unit id="1838">
+        <source>Barcode</source>
+
+      </trans-unit>
+      <trans-unit id="1839">
+        <source>Additional</source>
+
+      </trans-unit>
+      <trans-unit id="1840">
+        <source>Storage</source>
+
       </trans-unit>
     </body>
   </file>
