@@ -3043,7 +3043,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE OR REPLACE FUNCTION fct_importer_abcd(req_import_ref integer)  RETURNS boolean
 AS $$
 DECLARE
@@ -3056,8 +3055,10 @@ DECLARE
   staging_line staging;
   id_to_delete integer ARRAY;
   id_to_keep integer ARRAY ;
---   collection int;
+  collection collections%ROWTYPE;
+  code_count integer;
 BEGIN
+  SELECT * INTO collection FROM collections WHERE id = (SELECT collection_ref FROM imports WHERE id = req_import_ref AND is_finished = FALSE LIMIT 1);
   FOR all_line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id
       WHERE import_ref = req_import_ref AND to_import=true and status = ''::hstore AND i.is_finished =  FALSE
   LOOP
@@ -3092,6 +3093,22 @@ BEGIN
         UPDATE collection_maintenance set people_ref=people_id where id=maintenance_line.id ;
         DELETE FROM staging_people where referenced_relation='collection_maintenance' AND record_id=maintenance_line.id ;
       END LOOP;
+
+      SELECT COUNT(*) INTO code_count FROM codes WHERE referenced_relation = 'staging' AND record_id = line.id AND code_category = 'main' AND code IS NOT NULL;
+      IF code_count = 0 THEN
+        PERFORM fct_after_save_add_code(all_line.collection_ref, rec_id);
+      ELSE
+        UPDATE codes SET referenced_relation = 'specimens', 
+                         record_id = rec_id, 
+                         code_prefix = CASE WHEN code_prefix IS NULL THEN collection.code_prefix ELSE code_prefix END,
+                         code_prefix_separator = CASE WHEN code_prefix_separator IS NULL THEN collection.code_prefix_separator ELSE code_prefix_separator END,
+                         code_suffix = CASE WHEN code_suffix IS NULL THEN collection.code_suffix ELSE code_suffix END,
+                         code_suffix_separator = CASE WHEN code_suffix_separator IS NULL THEN collection.code_suffix_separator ELSE code_suffix_separator END
+        WHERE referenced_relation = 'staging'
+          AND record_id = line.id
+          AND code_category = 'main';
+      END IF;
+
       UPDATE template_table_record_ref SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
       --UPDATE collection_maintenance SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
       -- Import identifiers whitch identification have been updated to specimen
@@ -3621,9 +3638,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
-
-
-
 CREATE OR REPLACE FUNCTION point_equal ( POINT, POINT )
 RETURNS boolean AS
 'SELECT
@@ -3631,26 +3645,6 @@ CASE WHEN $1[0] = $2[0] AND $1[1] = $2[1] THEN true
 ELSE false END;'
 LANGUAGE SQL IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec() RETURNS trigger 
-AS $$
-DECLARE 
-  col collections;
-  code RECORD;
-  number integer ;
-BEGIN
-code = NEW ;
-  IF code.referenced_relation = 'specimens' THEN
-    SELECT c.* INTO col FROM collections c JOIN specimens s ON s.collection_ref=c.id WHERE s.id=code.record_id;  
-    IF col.code_auto_increment = TRUE AND isnumeric(code.code) THEN 
-      number := code.code::integer ;
-      IF number > col.code_last_value THEN
-        UPDATE collections set code_last_value = number WHERE id=col.id ;
-      END IF;
-    END IF;
-  END IF ;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION isnumeric(text) RETURNS BOOLEAN AS $$
 DECLARE x NUMERIC;
@@ -3664,3 +3658,226 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 
 
 CREATE OPERATOR =  (LEFTARG = POINT,  RIGHTARG = POINT, PROCEDURE = point_equal);
+
+CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec() RETURNS trigger 
+AS $$
+DECLARE 
+  col collections%ROWTYPE;
+  number integer ;
+BEGIN
+  IF TG_OP != 'DELETE' THEN
+    IF NEW.referenced_relation = 'specimens' THEN
+      SELECT c.* INTO col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=NEW.record_id;
+      IF FOUND THEN
+        IF NEW.code_category = 'main' THEN
+          IF isnumeric(NEW.code) THEN 
+            number := NEW.code::integer ;
+            IF number > col.code_last_value THEN
+              UPDATE collections set code_last_value = number WHERE id=col.id ;
+            END IF;
+          ELSE
+            UPDATE collections 
+            SET code_last_value = (SELECT max(code_num)
+                                   FROM codes inner join specimens
+                                     ON codes.referenced_relation = 'specimens'
+                                     AND codes.record_id = specimens.id
+                                   WHERE codes.code_category = 'main'
+                                     AND specimens.collection_ref = col.id
+                                     AND codes.code_num IS NOT NULL
+                                  )
+            WHERE id = col.id
+              AND EXISTS (SELECT 1
+                          FROM codes inner join specimens
+                            ON codes.referenced_relation = 'specimens'
+                            AND codes.record_id = specimens.id
+                          WHERE codes.code_category = 'main'
+                            AND specimens.collection_ref = col.id
+                            AND codes.code_num IS NOT NULL
+                          LIMIT 1
+                         );
+            IF NOT FOUND THEN
+              UPDATE collections
+              SET code_last_value = DEFAULT
+              WHERE id=col.id;
+            END IF;
+          END IF;
+        ELSEIF TG_OP = 'UPDATE' THEN
+          IF OLD.code_category = 'main' THEN
+            IF isnumeric(OLD.code) THEN 
+              number := OLD.code::integer ;
+              IF number = col.code_last_value THEN
+                UPDATE collections 
+                SET code_last_value = (SELECT max(code_num)
+                                       FROM codes inner join specimens
+                                         ON codes.referenced_relation = 'specimens'
+                                         AND codes.record_id = specimens.id
+                                       WHERE codes.code_category = 'main'
+                                         AND specimens.collection_ref = col.id
+                                         AND codes.code_num IS NOT NULL
+                                      )
+                WHERE id = col.id
+                  AND EXISTS (SELECT 1
+                              FROM codes inner join specimens
+                                ON codes.referenced_relation = 'specimens'
+                                AND codes.record_id = specimens.id
+                              WHERE codes.code_category = 'main'
+                                AND specimens.collection_ref = col.id
+                                AND codes.code_num IS NOT NULL
+                              LIMIT 1
+                             );
+                IF NOT FOUND THEN
+                  UPDATE collections
+                  SET code_last_value = DEFAULT
+                  WHERE id=col.id;
+                END IF;
+              END IF;
+            END IF;
+          END IF;
+        END IF;
+      END IF;
+    END IF ;
+    RETURN NEW;
+  ELSE
+    IF OLD.referenced_relation = 'specimens' AND OLD.code_category = 'main' THEN
+      SELECT c.* INTO col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=OLD.record_id; 
+      IF FOUND AND isnumeric(OLD.code) THEN 
+        UPDATE collections 
+        SET code_last_value = (SELECT max(code_num)
+                               FROM codes INNER JOIN specimens 
+                                 ON  codes.referenced_relation = 'specimens'
+                                 AND codes.record_id = specimens.id 
+                               WHERE codes.code_category = 'main'
+                                 AND specimens.collection_ref = col.id
+                                 AND codes.code_num IS NOT NULL
+                              )
+        WHERE id=col.id
+          AND EXISTS (SELECT 1
+                      FROM codes inner join specimens
+                        ON codes.referenced_relation = 'specimens'
+                        AND codes.record_id = specimens.id
+                      WHERE codes.code_category = 'main'
+                        AND specimens.collection_ref = col.id
+                        AND codes.code_num IS NOT NULL
+                      LIMIT 1
+                     );
+        IF NOT FOUND THEN
+          UPDATE collections
+          SET code_last_value = DEFAULT
+          WHERE id=col.id;
+        END IF;
+      END IF;
+    END IF ;
+    RETURN OLD;
+  END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION fct_after_save_add_code(IN collectionId collections.id%TYPE, IN specimenId specimens.id%TYPE) RETURNS integer
+AS $$
+DECLARE
+  col collections%ROWTYPE;
+BEGIN
+  SELECT c.* INTO col FROM collections c WHERE c.id = collectionId;
+  IF FOUND THEN
+    IF col.code_auto_increment = TRUE THEN
+      INSERT INTO codes (referenced_relation, record_id, code_prefix, code_prefix_separator, code, code_suffix_separator, code_suffix)
+      SELECT 'specimens', specimenId, col.code_prefix, col.code_prefix_separator, (col.code_last_value+1)::varchar, col.code_suffix_separator, col.code_suffix
+      WHERE NOT EXISTS (SELECT 1 
+                        FROM codes 
+                        WHERE referenced_relation = 'specimens'
+                          AND record_id = specimenId
+                          AND code_category = 'main'
+                          AND code_num IS NOT NULL
+                        LIMIT 1
+                       );
+    END IF;
+  END IF;
+  RETURN 0;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION update_collections_code_last_val() RETURNS trigger 
+AS $$
+BEGIN
+  UPDATE collections 
+  SET code_last_value = (SELECT max(code_num) 
+                         FROM codes 
+                         INNER JOIN specimens 
+                           ON codes.referenced_relation = 'specimens' 
+                           AND codes.record_id = specimens.id
+                           AND codes.code_category = 'main'
+                         WHERE specimens.collection_ref = NEW.collection_ref
+                           AND codes.code_num IS NOT NULL
+                        )
+  WHERE id = NEW.collection_ref
+    AND EXISTS (SELECT 1
+                FROM codes inner join specimens
+                  ON codes.referenced_relation = 'specimens'
+                  AND codes.record_id = specimens.id
+                WHERE codes.code_category = 'main'
+                  AND specimens.collection_ref = NEW.collection_ref
+                  AND codes.code_num IS NOT NULL
+                LIMIT 1
+               );
+  UPDATE collections 
+  SET code_last_value = (SELECT max(code_num) 
+                         FROM codes 
+                         INNER JOIN specimens 
+                           ON codes.referenced_relation = 'specimens' 
+                           AND codes.record_id = specimens.id
+                           AND codes.code_category = 'main'
+                         WHERE specimens.collection_ref = OLD.collection_ref
+                           AND codes.code_num IS NOT NULL
+                        )
+  WHERE id = OLD.collection_ref
+    AND EXISTS (SELECT 1
+                FROM codes inner join specimens
+                  ON codes.referenced_relation = 'specimens'
+                  AND codes.record_id = specimens.id
+                WHERE codes.code_category = 'main'
+                  AND specimens.collection_ref = OLD.collection_ref
+                  AND codes.code_num IS NOT NULL
+                LIMIT 1
+               );
+  IF NOT FOUND THEN
+    UPDATE collections
+    SET code_last_value = DEFAULT
+    WHERE id = OLD.collection_ref;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION update_collections_code_last_val_after_spec_del() RETURNS trigger 
+AS $$
+BEGIN
+  UPDATE collections 
+  SET code_last_value = (SELECT max(code_num) 
+                         FROM codes 
+                         INNER JOIN specimens 
+                           ON codes.referenced_relation = 'specimens' 
+                           AND codes.record_id = specimens.id
+                           AND codes.code_category = 'main'
+                         WHERE specimens.collection_ref = OLD.collection_ref
+                           AND specimens.id != OLD.id
+                           AND codes.code_num IS NOT NULL
+                        )
+  WHERE id = OLD.collection_ref
+    AND EXISTS (SELECT 1
+                FROM codes inner join specimens
+                  ON codes.referenced_relation = 'specimens'
+                  AND codes.record_id = specimens.id
+                WHERE codes.code_category = 'main'
+                  AND specimens.collection_ref = OLD.collection_ref
+                  AND specimens.id != OLD.id
+                  AND codes.code_num IS NOT NULL
+                LIMIT 1
+               );
+  IF NOT FOUND THEN
+    UPDATE collections
+    SET code_last_value = DEFAULT
+    WHERE id = OLD.collection_ref;
+  END IF;
+  RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;

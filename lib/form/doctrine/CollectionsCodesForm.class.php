@@ -11,7 +11,7 @@ class CollectionsCodesForm extends BaseCollectionsForm
 {
   public function configure()
   {
-    $this->useFields(array('id', 'code_specimen_duplicate', 'code_auto_increment','code_prefix','code_prefix_separator','code_suffix','code_suffix_separator'));
+    $this->useFields(array('id', 'code_specimen_duplicate', 'code_auto_increment', 'code_auto_increment_for_insert_only', 'code_prefix', 'code_prefix_separator', 'code_suffix', 'code_suffix_separator'));
     
     $this->widgetSchema['code_prefix'] = new sfWidgetFormInputText();
     $this->widgetSchema['code_prefix_separator'] = new sfWidgetFormInputText();
@@ -19,6 +19,7 @@ class CollectionsCodesForm extends BaseCollectionsForm
     $this->widgetSchema['code_suffix_separator'] = new sfWidgetFormInputText();
 
     $this->widgetSchema['code_auto_increment']->setLabel('Auto incrementation of specimen code');
+    $this->widgetSchema['code_auto_increment_for_insert_only']->setLabel('Auto incrementation only for new spec.');
     $this->widgetSchema['code_prefix']->setLabel('Default specimen code prefix used');
     $this->widgetSchema['code_prefix_separator']->setLabel('Default separator after prefix');
     $this->widgetSchema['code_suffix']->setLabel('Default specimen code suffix used');

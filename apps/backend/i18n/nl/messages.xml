@@ -2,7 +2,7 @@
   <file datatype="plaintext" original="en" source-language="en" target-language="">
     <header/>
     <body>
-            <trans-unit id="1">
+      <trans-unit id="1">
         <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%</source>
         <target>[0]Geen resultaat|[1]Uw opzoeking levert 1 record op|(1,+Inf]Uw opzoeking leverde %1% records uit %2% records op</target>
         
@@ -113,8 +113,8 @@
         
       </trans-unit>
       <trans-unit id="31">
-      <source>Pinned Specimens &lt;i&gt;(%d)&lt;/i&gt;</source>
-      <target>Gepinde Stalen &lt;i&gt;(%d)&lt;/i&gt;</target>
+        <source>Pinned Specimens &lt;i&gt;(%d)&lt;/i&gt;</source>
+        <target>Gepinde Stalen &lt;i&gt;(%d)&lt;/i&gt;</target>
         
       </trans-unit>
       <trans-unit id="34">
@@ -7397,6 +7397,22 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
         <source>catalogue_search_tips</source>
         <target>Maak gebruik van het teken ^ voor een "Begint met" opzoeking (bv: ^falco)</target>        
       </trans-unit>
+
+      <trans-unit id="1838">
+        <source>Barcode</source>
+        <target>Barcode</target>
+      </trans-unit>
+
+      <trans-unit id="1839">
+        <source>Additional</source>
+        <target>Additioneel</target>
+      </trans-unit>
+
+      <trans-unit id="1840">
+        <source>Storage</source>
+        <target>Opslag</target>
+      </trans-unit>
+      
     </body>
   </file>
 </xliff>

@@ -3,7 +3,7 @@
   <file source-language="en" target-language="" datatype="plaintext" original="en">
     <header/>
     <body>
-            <trans-unit id="1">
+      <trans-unit id="1">
         <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%</source>
         <target>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records out of %2%</target>
       </trans-unit>
@@ -92,7 +92,7 @@
         <target>Specimens</target>
       </trans-unit>
       <trans-unit id="31">
-      <source>Pinned Specimens &lt;i&gt;(%d)&lt;/i&gt;</source>
+        <source>Pinned Specimens &lt;i&gt;(%d)&lt;/i&gt;</source>
         <target>Pinned Specimens &lt;i&gt;(%d)&lt;/i&gt;</target>
       </trans-unit>
       <trans-unit id="34">
@@ -5962,6 +5962,18 @@ DaRWIN</target>
       <trans-unit id="1837">
         <source>catalogue_search_tips</source>
         <target>Use the character ^ for a "Start with" search (eg: ^falco)</target>        
+      </trans-unit>
+      <trans-unit id="1838">
+        <source>Barcode</source>
+        <target>Barcode</target>
+      </trans-unit>
+      <trans-unit id="1839">
+        <source>Additional</source>
+        <target>Additional</target>
+      </trans-unit>
+      <trans-unit id="1840">
+        <source>Storage</source>
+        <target>Storage</target>
       </trans-unit>
     </body>
   </file>
