@@ -351,4 +351,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+update collections co set code_last_value = (select coalesce((select max(coalesce(code_num, 0)) from codes inner join specimens on codes.referenced_relation = 'specimens' and codes.record_id = specimens.id and code_category = 'main' and specimens.collection_ref = co.id),0));
+
 COMMIT ;
