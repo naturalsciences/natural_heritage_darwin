@@ -17,7 +17,7 @@ class stagingActions extends DarwinActions
 
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
        $this->forwardToSecureAction();
-    $this->import = Doctrine::getTable('Imports')->markOk($this->import->getId());
+    // $this->import = Doctrine::getTable('Imports')->markOk($this->import->getId());
     return $this->redirect('import/index');
   }
 
