@@ -489,7 +489,7 @@ class ImportABCDXml implements IImportModels
     }
   }
   
-  private function handleGenbankNumber($genbanknumbers,$category='GenBankNumber')
+  private function handleGenbankNumber($genbanknumbers,$category='genbank number')
   {
     $unique_genbanknumbers = array_unique(array_map('trim', explode(';', $genbanknumbers)));
 

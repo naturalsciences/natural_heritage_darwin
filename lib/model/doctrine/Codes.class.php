@@ -11,7 +11,8 @@ class Codes extends BaseCodes
                  'inventory'=> 'Invent.',
                  'barcode' => 'Barcode',
                  'additional id' => 'Additional',
-                 'code' => 'Storage'
+                 'code' => 'Storage',
+                 'genbank number' => 'GenBank Nb.'
                 );
 
   public static function getCategories()

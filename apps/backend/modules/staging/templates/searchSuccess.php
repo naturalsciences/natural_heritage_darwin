@@ -92,9 +92,7 @@ $(document).ready(function () {
 <?php endif;?>
   <div class="blue_link float_left"><?php echo link_to(__('Back to Import'), 'import/index');?></div>
   <div class="blue_link float_left"><?php echo link_to(__('Import "Ok" lines'), 'staging/markok?import='.$import->getId() );?></div>&#x09;
-<?php if(count($search)!==0 && $search_type=='zoology'):?>
-  <div class="blue_link float_left"><?php echo link_to(__('Try to create missing taxons'), 'staging/createTaxon?import='.$import->getId() );?></div>
-<?php endif;?>
+
 <?php //Else not valid form
   else:?>
   <?php echo $form['only_errors']->renderError() ?>

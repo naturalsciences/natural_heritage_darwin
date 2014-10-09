@@ -23,7 +23,8 @@ EOF;
   }
 
   protected function execute($arguments = array(), $options = array())
-  {
+  {    
+    $this->log('check import of '.date('G:i:s'));
     $databaseManager = new sfDatabaseManager($this->configuration);
     $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
@@ -84,9 +85,10 @@ EOF;
     }
     foreach($imports as $import)
     {
-      $this->logSection('Processing', sprintf('Start processing import %d',$import->getId()));
+      $date_start = date('G:i:s') ;
       $sql = 'select fct_importer_abcd('.$import->getId().')';
       $conn->getDbh()->exec($sql);
+      $this->logSection('Processing', sprintf('Start processing import %d (start: %s - end: %s)',$import->getId(),$date_start,date('G:i:s')));
     }
     // Ok import line asked but 0 ok lines....so it can remain some line in processing not processed....
     Doctrine_Query::create()
