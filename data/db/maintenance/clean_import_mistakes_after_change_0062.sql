@@ -8,7 +8,7 @@ declare
   recStaging RECORD;
   intCount integer := 0;
 begin
-  FOR recStaging IN SELECT id, taxon_ref, taxon_name, taxon_level_ref, taxon_level_name, taxon_parents, status FROM staging where import_ref = 61 and taxon_level_ref is not null order by taxon_level_name desc LOOP
+  FOR recStaging IN SELECT DISTINCT taxon_ref, taxon_level_name FROM staging where import_ref = 61 and taxon_level_ref is not null order by taxon_level_name desc LOOP
     SELECT COUNT(*) INTO intCount 
     FROM taxonomy INNER JOIN specimens ON taxonomy.id = specimens.taxon_ref
     WHERE taxonomy.id = recStaging.taxon_ref::integer;
@@ -31,8 +31,6 @@ begin
   return true;
 exception
   when others then
-    RAISE NOTICE 'Line concerned: %', recStaging;
-    RAISE NOTICE 'Count was: %', intCount;
     RAISE WARNING 'An error occured: %', SQLERRM;
     return false;
 end;
