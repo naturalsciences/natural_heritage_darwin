@@ -1,0 +1,54 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.tdwg.org/schemas/abcd/2.06" targetNamespace="http://www.tdwg.org/schemas/abcd/2.06" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="TaxonomyImport">
+		<xs:annotation>
+			<xs:documentation>Import Taxonomy dans DaRWIN</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="TaxonomicalTree" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Taxonomical tree containing all taxonomical levels</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TaxonomicalUnit" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Taxonomical level</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="LevelName" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Level name in DaRWIN catalogue_levels table</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="LevelRef" type="xs:byte" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Level ref in DaRWIN catalogue_levels table</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="TaxonFullName" type="xs:string">
+											<xs:annotation>
+												<xs:documentation>Taxon full name, as it will appear in DaRWIN</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="TaxonName" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Taxon name without authorship</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="TaxonAuthorYear" type="xs:string" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Taxon authorship (use parenthesis when necessary)</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
