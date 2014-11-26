@@ -3928,7 +3928,7 @@ BEGIN
     update staging_catalogue set catalogue_ref=catalogue_id Where id = all_line.id ;
     parent_id := catalogue_id ;
   END LOOP;  
-    EXECUTE 'update imports set state=''finished'' where id=$1'
+    EXECUTE 'update imports set state=''finished'',is_finished=true where id=$1'
     USING req_import_ref ;
   RETURN true;
 END;

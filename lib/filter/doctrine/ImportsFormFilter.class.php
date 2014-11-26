@@ -59,7 +59,8 @@ class ImportsFormFilter extends BaseImportsFormFilter
     $query = DQ::create()
       ->from('Imports i')
       ->innerJoin("i.Collections")
-      ->where('i.state != ?', 'deleted');
+      ->where('i.state != ?', 'deleted')
+      ->andWhere('i.format = ?','abcd');;
     $this->addShowFinishedColumnQuery($query, 'is_finished', $values['show_finished']);
     if($values['collection_ref'] != 0) $query->addWhere('i.collection_ref = ?', $values['collection_ref']) ;
     if($values['filename']) $query->addWhere('i.filename LIKE \'%'.$values['filename'].'%\'');
