@@ -64,6 +64,21 @@ EOF;
             ->set('p.state','?','pending')
             ->andWhere('p.state = ?','loaded')
             ->execute();
+    // Catalogue Import Part
+    $imports  = Doctrine::getTable('Imports')->getCatalogueImports();
+    foreach($imports as $import)
+    {
+      // put the import to a temporary state to avoid several processing 
+      Doctrine_Query::create()
+            ->update('imports p')
+            ->set('p.state','?','actif')
+            ->andWhere('p.id = ?',$import->getId())
+            ->execute();
+      $date_start = date('G:i:s') ;
+      $sql = 'select fct_importer_catalogue('.$import->getId().',\'taxonomy\')';
+      $conn->getDbh()->exec($sql);
+      $this->logSection('Processing', sprintf('Start processing Catalogue import %d (start: %s - end: %s)',$import->getId(),$date_start,date('G:i:s')));
+    }
     if(empty($options['do-import']))
     {
       $sql = "update imports p set state = 'pending' where state = 'processing' and
@@ -74,14 +89,15 @@ EOF;
     //Then if option is set, do Import
     $conn->getDbh()->exec('BEGIN TRANSACTION;');
     $this->logSection('fetch', sprintf('Load Imports file in processing state'));
-
+    
     if(!empty($options['id']))
     {
       $imports  = Doctrine::getTable('Imports')->findById($options['id']);
     }
     else
-    {
-      $imports  = Doctrine::getTable('Imports')->getWithImports();
+    {      
+      $imports  = Doctrine::getTable('Imports')->getWithImports(); 
+
     }
     foreach($imports as $import)
     {
@@ -92,18 +108,7 @@ EOF;
             ->andWhere('p.id = ?',$import->getId())
             ->execute();
       $date_start = date('G:i:s') ;
-      switch ($import->getFormat())
-      {
-        case 'abcd':
-          $sql = 'select fct_importer_abcd('.$import->getId().')';
-          break ;
-        case 'taxon' :
-          $sql = 'select fct_importer_catalogue('.$import->getId().',\'taxonomy\')';
-          break ;
-        default:
-          $sql = 'select 1' ;
-          break ;
-      }      
+      $sql = 'select fct_importer_abcd('.$import->getId().')';
       $conn->getDbh()->exec($sql);
       $this->logSection('Processing', sprintf('Start processing import %d (start: %s - end: %s)',$import->getId(),$date_start,date('G:i:s')));
     }

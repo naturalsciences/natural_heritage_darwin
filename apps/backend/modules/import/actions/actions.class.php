@@ -31,11 +31,13 @@ class importActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
-    if($this->import->getFormat() == 'taxon' && $this->import->getUserRef() == $this->getUser()->getId())
-      $this->import->delete() ;
-    else
+    $this->import = $this->getRight($request->getParameter('id')) ;
+    if($this->import->getFormat() == 'taxon' && ($this->import->getUserRef() == $this->getUser()->getId() || $this->getUser()->isAtLeast(Users::ADMIN))) 
     {
-      $this->import = $this->getRight($request->getParameter('id')) ;
+      $this->import->delete() ;
+    }
+    else
+    {      
       $this->import->setState('deleted');
       $this->import->save();
     }

@@ -53,11 +53,21 @@ class ImportsTable extends Doctrine_Table
       ->execute();
   }
 
+  public function getCatalogueImports()
+  {
+    $q = Doctrine_Query::create()
+      ->From('Imports i')
+      ->andwhere('format != \'abcd\'')
+      ->andWhere("state = 'pending'");
+
+    return $q->execute();
+  }
+
   public function getWithImports()
   {
     $q = Doctrine_Query::create()
       ->From('Imports i')
-      ->andwhere('exists(select 1 from staging where to_import = true and import_ref = i.id)')
+      ->andwhere('exists(select 1 from staging where to_import = true and import_ref = i.id) OR i.format != \'abcd\'')
       ->andWhere("state = 'processing'");
 
     return $q->execute();
