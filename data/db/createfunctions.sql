@@ -251,14 +251,10 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_clear_referencedRecord() RETURNS TRIGGER
 AS $$
 BEGIN
-  IF TG_OP ='UPDATE' THEN
-    IF NEW.id != OLD.id THEN
-      UPDATE template_table_record_ref SET record_id = NEW.id WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
-    END IF;
-  ELSE
+  IF TG_OP ='DELETE' THEN
     DELETE FROM template_table_record_ref where referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
   END IF;
-  RETURN OLD;
+  RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -536,20 +532,26 @@ DECLARE
   tbl_row RECORD;
   new_val varchar;
   old_val varchar;
+  returnedRow RECORD;
 BEGIN
-  SELECT COALESCE(get_setting('darwin.track_level'),'10')::integer INTO track_level;
+  IF TG_OP IN ('INSERT', 'UPDATE') THEN
+    returnedRow := NEW;
+  ELSE
+    returnedRow := OLD;
+  END IF;
+  SELECT COALESCE(CASE WHEN get_setting('darwin.track_level') = '' THEN NULL ELSE get_setting('darwin.track_level') END,'10')::integer INTO track_level;
   IF track_level = 0 THEN --NO Tracking
-    RETURN NEW;
+    RETURN returnedRow;
   ELSIF track_level = 1 THEN -- Track Only Main tables
     IF TG_TABLE_NAME::text NOT IN ('specimens', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
       'mineralogy', 'lithology', 'people') THEN
-      RETURN NEW;
+      RETURN returnedRow;
     END IF;
   END IF;
 
-  SELECT COALESCE(get_setting('darwin.userid'),'0')::integer INTO user_id;
+  SELECT COALESCE(CASE WHEN get_setting('darwin.userid') = '' THEN NULL ELSE get_setting('darwin.userid') END,'0')::integer INTO user_id;
   IF user_id = 0 OR  user_id = -1 THEN
-    RETURN NEW;
+    RETURN returnedRow;
   END IF;
 
   IF TG_OP = 'INSERT' THEN
