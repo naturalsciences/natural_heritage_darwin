@@ -85,8 +85,25 @@ EOF;
     }
     foreach($imports as $import)
     {
+      // put the import to a temporary state to avoid several processing 
+      Doctrine_Query::create()
+            ->update('imports p')
+            ->set('p.state','?','actif')
+            ->andWhere('p.id = ?',$import->getId())
+            ->execute();
       $date_start = date('G:i:s') ;
-      $sql = 'select fct_importer_abcd('.$import->getId().')';
+      switch ($import->getFormat())
+      {
+        case 'abcd':
+          $sql = 'select fct_importer_abcd('.$import->getId().')';
+          break ;
+        case 'taxon' :
+          $sql = 'select fct_importer_catalogue('.$import->getId().',\'taxonomy\')';
+          break ;
+        default:
+          $sql = 'select 1' ;
+          break ;
+      }      
       $conn->getDbh()->exec($sql);
       $this->logSection('Processing', sprintf('Start processing import %d (start: %s - end: %s)',$import->getId(),$date_start,date('G:i:s')));
     }

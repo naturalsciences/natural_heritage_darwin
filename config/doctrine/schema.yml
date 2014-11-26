@@ -1163,6 +1163,25 @@ StagingMethods:
           local: collecting_method_ref
           foreign: id
 
+StagingCatalogue:
+    tableName: staging_catalogue
+    columns:
+        id: { type: integer, primary: true, autoincrement: true}
+        import_ref: {type:integer, notnull:true}
+        name: { type: string, notnull: true}
+        level_ref: { type: integer, notnull: true}
+        parent_ref: { type: integer, notnull: true}
+        catalogue_ref: { type: integer, notnull: true}
+    relations:
+        Parent:
+            class: StagingCatalogue
+            local: parent_ref
+            foreign: id
+        Import:
+            class: Imports
+            local: import_ref
+            foreign: id
+
 Multimedia:
     columns:
         id: { type: integer, primary: true, autoincrement: true }

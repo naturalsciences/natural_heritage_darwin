@@ -81,7 +81,13 @@
             <a href="" class="subtitle"><?php echo __('Administration');?></a>
             <ul class="submenu">
                 <li><?php echo link_to(__('Mass Actions'),'massactions/index');?></li>
-                <li><?php echo link_to(__('Import'),'import/index');?></li>
+                <li>
+                    <a href="#" class="subtitle"><?php echo __('Import');?> »</a>
+                    <ul class="submenu lvl_2">
+                        <li><?php echo link_to(__('Specimens'),'import/index?format=abcd');?></li>
+                        <li><?php echo link_to(__('Taxonomy'),'import/index?format=taxon');?></li>
+                    </ul>
+                </li>
                 <?php if($sf_user->isAtLeast(Users::ADMIN) ): ?>
                   <li><?php echo link_to(__('Big Brother'),'bigbro/index');?></li>
                 <?php endif ; ?>

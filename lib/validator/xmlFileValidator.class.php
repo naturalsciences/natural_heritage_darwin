@@ -7,6 +7,7 @@ class xmlFileValidator extends sfValidatorFile
     $this->addMessage('invalid_format', 'Invalid Xml file format <br /><u>Detail :</u>');
     $this->addMessage('invalid_line', '- %error%');
     $this->addMessage('unreadable_file', 'This file is unreadable.');
+    $this->addOption('xml_path_file') ; 
     parent::configure($options, $messages);
   }
 
@@ -24,7 +25,7 @@ class xmlFileValidator extends sfValidatorFile
     $xml_file = file_get_contents($value['tmp_name']) ;
     if(!$xml->load($value['tmp_name']))
       throw new sfValidatorError($this, 'unreadable_file');
-    if(!$xml->schemaValidate(sfConfig::get('sf_data_dir').'/import/ABCD_2.06.xsd'))
+    if(!$xml->schemaValidate(sfConfig::get('sf_data_dir').$this->getOption('xml_path_file')))
     {
       $errorSchemaLocal->addError(new sfValidatorError($this, 'invalid_format'), 'invalid_format_ABCD');
       $errors = libxml_get_errors();

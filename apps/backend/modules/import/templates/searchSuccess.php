@@ -13,12 +13,14 @@
         <thead>
           <tr>
             <th></th>
+            <?php if($format != 'taxon') : ?>
             <th>
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=name'.( ($orderBy=='name' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __('Collection');?>
                 <?php if($orderBy=='name') echo $orderSign ?>
               </a>
             </th>
+          <?php endif ; ?>
             <th>
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=filename'.( ($orderBy=='filename' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __('Filename');?>
@@ -45,14 +47,18 @@
           <?php foreach($imports as $import):?>
             <tr class="rid_<?php echo $import->getId(); ?>">
               <td></td>
-              <td><?php echo $import->Collections->getName();?></td>
+              <?php if($format != 'taxon') : ?><td><?php echo $import->Collections->getName();?></td><?php endif ; ?>
               <td><?php echo $import->getFilename();?></td>
               <td><?php echo __($import->getStateName());?>
               </td>
               <td><?php echo $import->getLastModifiedDate(ESC_RAW);?></td>
               <td>
                 <?php if(! in_array($import->getState(),array('loading','loaded','to_be_loaded','error')) ):?>
-                  <?php echo __('%rest% on %initial%',array('%rest%'=>$import->getInitialCount()-$import->getCurrentLineNum(), '%initial%'=>$import->getInitialCount() )) ;?>
+                  <?php if($format != 'taxon') : ?> 
+                    <?php echo __('%rest% on %initial%',array('%rest%'=>$import->getInitialCount()-$import->getCurrentLineNum(), '%initial%'=>$import->getInitialCount() )) ;?>
+                  <?php else : ?>
+                    <?php echo __('%rest% on %initial%',array('%rest%'=>$import->getState()=='finished'?$import->getInitialCount():0, '%initial%'=>$import->getInitialCount() )) ;?>
+                  <?php endif ; ?>
                 <?php else:?>
                   <?php echo __('n/a');?>
                 <?php endif;?>

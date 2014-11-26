@@ -37,8 +37,18 @@ EOF;
         if(file_exists($file))
         {
           try{
-            if($q->getFormat() == 'abcd') $import = new importABCDXml() ;
-            else $import = new importDnaXml() ;
+            switch ($q->getFormat())
+            {
+              case 'taxon':
+                $import = new importCatalogueXml('taxonomy') ;
+                $count_line = "(select count(*) from staging_catalogue where parent_ref IS NULL AND import_ref = $id )" ;
+                break;              
+              case 'abcd':
+              default:
+                $import = new importABCDXml() ;
+                $count_line = "(select count(*) from staging where import_ref = $id )" ;
+                break;
+            } 
             $result = $import->parseFile($file,$id) ;
           }
           catch(Exception $e)
@@ -49,7 +59,7 @@ EOF;
           Doctrine_Query::create()
             ->update('imports p')
             ->set('p.state','?',$result!=''?'error':'loaded')
-            ->set('p.initial_count','(select count(*) from staging where import_ref = ? )',$id)
+            ->set('p.initial_count',$count_line)
             ->set('p.errors_in_import','?',$result ? $result : '')
             ->where('p.id = ?', $id)
             ->execute();

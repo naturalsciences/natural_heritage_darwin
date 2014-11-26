@@ -3,7 +3,7 @@
 <div class="page">
 
 <h1><?php echo __('Imports');?> : <?php echo image_tag('info.png',array('title'=>'info','class'=>'extd_info')); ?></h1>
-    <?php include_partial('searchForm', array('form' => $form)) ?>
+    <?php include_partial('searchForm', array('form' => $form,'format' => $format)) ?>
 </div>
 
 <script language="javascript">

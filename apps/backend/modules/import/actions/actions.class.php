@@ -31,9 +31,14 @@ class importActions extends DarwinActions
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
-    $this->import = $this->getRight($request->getParameter('id')) ;
-    $this->import->setState('deleted');
-    $this->import->save();
+    if($this->import->getFormat() == 'taxon' && $this->import->getUserRef() == $this->getUser()->getId())
+      $this->import->delete() ;
+    else
+    {
+      $this->import = $this->getRight($request->getParameter('id')) ;
+      $this->import->setState('deleted');
+      $this->import->save();
+    }
 
     if($request->isXmlHttpRequest())
     {
@@ -81,13 +86,17 @@ class importActions extends DarwinActions
   {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     // Initialization of the import form
-    $this->form = new importsForm();
+    if($request->isMethod('post'))
+      $this->type =  $request->getParameter('imports')['format'] ;
+    else 
+      $this->type = $request->getParameter('format') == 'taxon'?'taxon':'abcd' ;
+    $this->form = new importsForm(null,array('format' => $this->type));    
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter($this->form->getName()), $request->getFiles($this->form->getName()));
       if($this->form->isValid())
       {
-        if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')))
+        if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')) && $this->type != 'taxon')
         {
           $error = new sfValidatorError(new sfValidatorPass(),'You don\'t have right on this collection');
           $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
@@ -105,7 +114,7 @@ class importActions extends DarwinActions
         try {
           $file->save(sfConfig::get('sf_upload_dir').'/'.$filename.$extension);
           $this->form->save() ;
-          $this->redirect('import/index?complete=true');
+          $this->redirect('import/index?complete=true&format='.$this->type);
         }
         catch(Doctrine_Exception $e)
         {
@@ -124,11 +133,27 @@ class importActions extends DarwinActions
   */
   public function executeIndex(sfWebRequest $request)
   {
-    $this->form = new ImportsFormFilter(null,array('user' =>$this->getUser()));
+    $this->format = $request->getParameter('format') ;
+    if($this->format == 'taxon')
+      $this->form = new ImportsTaxonFormFilter(null,array('user' =>$this->getUser()));
+    else
+      $this->form = new ImportsFormFilter(null,array('user' =>$this->getUser()));
+   /* $smb = new smb_stream_wrapper() ;
+    if(@$smb->dir_opendir("smb://ychambert:steph1910@datastore/informatica/ychambert/import"))
+    {
+      while($file =$smb->dir_readdir())
+        echo $file ;
+      die() ;
+    } 
+    else die("non c'est foireux") ;*/
   }
   public function executeSearch(sfWebRequest $request)
   {
-    $this->form = new ImportsFormFilter(null,array('user' =>$this->getUser()));
+    $this->format = $request->getParameter('format') ;
+    if($this->format == 'taxon')
+      $this->form = new ImportsTaxonFormFilter(null,array('user' =>$this->getUser()));
+    else
+      $this->form = new ImportsFormFilter(null,array('user' =>$this->getUser()));
     $this->setCommonValues('import', 'updated_at', $request);
     if( $request->getParameter('orderby', '') == '' && $request->getParameter('orderdir', '') == '')
       $this->orderDir = 'desc';

@@ -37,7 +37,7 @@ class Imports extends BaseImports
     'error' => 'Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file',
   );
 
-  public static $formatArray = array('abcd' => 'ABCD', 'dna' => 'DNA') ;
+  public static $formatArray = array('abcd' => 'ABCD') ;
   
   public function setCurrentLineNum($nbr)
   {
@@ -71,7 +71,9 @@ class Imports extends BaseImports
   // function used to determine if we can display edition button or not
   public function isEditableState()
   {
-    if(in_array($this->getState(),array('pending','error')) && ! $this->getIsFinished()) return true ;
+    if($this->getState() == 'error') return true ;
+    if($this->getFormat() == 'taxon') return false ;
+    if(($this->getState() == 'pending') && ! $this->getIsFinished()) return true ;
     return false ;
   }   
 

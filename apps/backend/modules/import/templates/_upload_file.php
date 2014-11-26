@@ -36,7 +36,7 @@ $(document).ready(function ()
         </td>
       </tr>
       <tr>
-        <th><?php echo $form['collection_ref']->renderLabel() ?> :</th>
+        <th><?php if($type != 'taxon') : ?><?php echo $form['collection_ref']->renderLabel() ?> :<?php endif ?></th>
         <td>
           <?php echo $form['collection_ref']->renderError() ?>
           <?php echo $form['collection_ref'] ?>
