@@ -91,9 +91,8 @@ class ImportsTable extends Doctrine_Table
               WHERE id in (".implode(',', $ids).")";
 
       $result = $conn->fetchAssoc($sql);
-      return $ids ;
     }
-    return 'non';
+    return $ids ;
   }
   
   public function updateStatus($id)

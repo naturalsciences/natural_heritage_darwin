@@ -29,16 +29,16 @@ EOF;
     $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     $conn = Doctrine_Manager::connection();
-
+    $randnum = rand(1,10000) ;
     if(empty($options['no-delete'])) {
-      $this->logSection('Delete', sprintf('Removing some deleted import lines')) ;
+      $this->logSection('Delete', sprintf('Check %d : Removing some deleted import lines',$randnum)) ;
       $batch_nbr = 2000;
       $sql = "delete from staging where ctid = ANY (select s.ctid from staging s inner join imports i on s.import_ref = i.id and i.state='deleted' limit $batch_nbr);";
       $ctn = $conn->getDbh()->exec($sql);
 
       $sql = "delete from imports i WHERE i.state='deleted' AND NOT EXISTS (select 1 from staging where import_ref = i.id)";
       $conn->getDbh()->exec($sql);
-      $this->logSection('Delete', sprintf('Removed %d lines', $ctn)) ;
+      $this->logSection('Delete', sprintf('Check %d : Removed %d lines',$randnum, $ctn)) ;
     }
 
     if(!empty($options['id']) && ! ctype_digit($options['id']) )
@@ -47,7 +47,6 @@ EOF;
     }
 
      // initialize the database connection
-    $randnum = rand(1,10000) ;
     // First Check :)
     if (empty($options['full-check']))
       $state_to_check = array('loaded','processing') ;
@@ -71,7 +70,7 @@ EOF;
     $sql = "select fct_imp_checker_manager(s.*) from staging s, imports i WHERE s.import_ref=i.id" ;
     if(!empty($options['id']))
       $sql.= " AND i.id = ".$options['id'];
-    else
+    elseif(count($imports)>0)
       $sql .= " AND i.id in (".implode(',', $imports).")";
     $this->logSection('checking', sprintf('Check %d : Start checking staging',$randnum));
 
