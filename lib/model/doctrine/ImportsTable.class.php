@@ -53,24 +53,47 @@ class ImportsTable extends Doctrine_Table
       ->execute();
   }
 
-  public function getCatalogueImports()
-  {
+  public function getWithImports()
+  {    
     $q = Doctrine_Query::create()
       ->From('Imports i')
-      ->andwhere('format != \'abcd\'')
-      ->andWhere("state = 'pending'");
+      ->andwhere('exists(select 1 from staging where to_import = true and import_ref = i.id)')
+      ->andWhere("state = 'aprocessing'");
 
     return $q->execute();
   }
 
-  public function getWithImports()
-  {
-    $q = Doctrine_Query::create()
-      ->From('Imports i')
-      ->andwhere('exists(select 1 from staging where to_import = true and import_ref = i.id) OR i.format != \'abcd\'')
-      ->andWhere("state = 'processing'");
 
-    return $q->execute();
+  // function used by check import task to flag the state of checked line to avoid twice check
+  public function tagProcessing($state)
+  {
+    $q =  Doctrine_Query::create()->from('Imports i') ;
+    if($state == 'taxon')
+    {
+      $q->andwhere('i.format = \'taxon\'')
+        ->andWhere("state = ?",'loaded');
+    }
+    else
+    {
+      $q->andwhere('i.format = \'abcd\'')
+        ->andWhereIn("state",$state);
+    }
+    $items = $q->execute();
+
+    $ids = array();
+    foreach($items as $item) 
+      $ids[] = $item->getId() ;
+
+    if(count($ids))
+    {
+      $conn = Doctrine_Manager::connection();
+      $sql = "update Imports set state = CASE WHEN state='loaded' THEN 'aloaded' WHEN state='processing' THEN 'aprocessing' ELSE 'apending' END 
+              WHERE id in (".implode(',', $ids).")";
+
+      $result = $conn->fetchAssoc($sql);
+      return $ids ;
+    }
+    return 'non';
   }
   
   public function updateStatus($id)

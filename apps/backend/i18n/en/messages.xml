@@ -5975,6 +5975,10 @@ DaRWIN</target>
         <source>Storage</source>
         <target>Storage</target>
       </trans-unit>
+      <trans-unit id="1841">
+        <source>Actif</source>
+        <target>Being processed</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -24,6 +24,9 @@ class Imports extends BaseImports
     'finished' => 'Finished',
     'aborted' => 'Aborted',
     'error' => 'Error',
+    'aloaded' => 'Actif', // temporary stat, used by checking task to make exclusive the check
+    'aprocessing' => 'Actif', // temporary stat, used by checking task to make exclusive the check
+    'apending' => 'Actif' // temporary stat, used by checking task to make exclusive the check
   );  
   private static $info = array(
     'to_be_loaded' => 'This file is ready to be loaded, an automatic task will be activated to load lines.',

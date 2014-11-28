@@ -47,48 +47,52 @@ EOF;
     }
 
      // initialize the database connection
-
+    $randnum = rand(1,10000) ;
     // First Check :)
     if (empty($options['full-check']))
-      $state_to_check = "('loaded','processing')" ;
+      $state_to_check = array('loaded','processing') ;
     else
-      $state_to_check = "('loaded','processing','pending')" ;
-    $sql = "select fct_imp_checker_manager(s.*) from staging s, imports i WHERE s.import_ref=i.id AND i.state in ".$state_to_check;
+      $state_to_check = array('loaded','processing','pending') ;
+    // let's 'lock' all imports checkable to avoid an other check from the next check task
+    $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon'); 
+    $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check); 
+    $conn->getDbh()->exec('BEGIN TRANSACTION;');
+    // let's begin with import catalogue
+    foreach($catalogues as $catalogue)
+    {
+      $date_start = date('G:i:s') ;
+      $sql = 'select fct_importer_catalogue('.$catalogue.',\'taxonomy\')';
+      $conn->getDbh()->exec($sql);
+
+      $this->logSection('Processing', sprintf('Check %d : Start processing Catalogue import %d (start: %s - end: %s)',$randnum, $catalogue,$date_start,date('G:i:s')));
+    }
+    
+    // now let's check all checkable staging
+    $sql = "select fct_imp_checker_manager(s.*) from staging s, imports i WHERE s.import_ref=i.id" ;
     if(!empty($options['id']))
       $sql.= " AND i.id = ".$options['id'];
-    $this->logSection('checking', sprintf('Start checking staging'));
+    else
+      $sql .= " AND i.id in (".implode(',', $imports).")";
+    $this->logSection('checking', sprintf('Check %d : Start checking staging',$randnum));
 
     $conn->getDbh()->exec($sql);
+
+    // Check done, all loaded import won' t be imported again. So we can put then into pending state
     Doctrine_Query::create()
             ->update('imports p')
             ->set('p.state','?','pending')
-            ->andWhere('p.state = ?','loaded')
+            ->andWhere('p.state = ?','aloaded')
             ->execute();
-    // Catalogue Import Part
-    $imports  = Doctrine::getTable('Imports')->getCatalogueImports();
-    foreach($imports as $import)
-    {
-      // put the import to a temporary state to avoid several processing 
-      Doctrine_Query::create()
-            ->update('imports p')
-            ->set('p.state','?','actif')
-            ->andWhere('p.id = ?',$import->getId())
-            ->execute();
-      $date_start = date('G:i:s') ;
-      $sql = 'select fct_importer_catalogue('.$import->getId().',\'taxonomy\')';
-      $conn->getDbh()->exec($sql);
-      $this->logSection('Processing', sprintf('Start processing Catalogue import %d (start: %s - end: %s)',$import->getId(),$date_start,date('G:i:s')));
-    }
+
     if(empty($options['do-import']))
     {
-      $sql = "update imports p set state = 'pending' where state = 'processing' and
+      $sql = "update imports p set state = 'pending' where (state = 'aprocessing' OR state = 'apending') and
         exists( select 1 from staging where import_ref = p.id and status != ''::hstore)";
       $conn->getDbh()->exec($sql);
       return;
     }
     //Then if option is set, do Import
-    $conn->getDbh()->exec('BEGIN TRANSACTION;');
-    $this->logSection('fetch', sprintf('Load Imports file in processing state'));
+    $this->logSection('fetch', sprintf('Check %d : Load Imports file in processing state',$randnum));
     
     if(!empty($options['id']))
     {
@@ -101,22 +105,16 @@ EOF;
     }
     foreach($imports as $import)
     {
-      // put the import to a temporary state to avoid several processing 
-      Doctrine_Query::create()
-            ->update('imports p')
-            ->set('p.state','?','actif')
-            ->andWhere('p.id = ?',$import->getId())
-            ->execute();
       $date_start = date('G:i:s') ;
       $sql = 'select fct_importer_abcd('.$import->getId().')';
       $conn->getDbh()->exec($sql);
-      $this->logSection('Processing', sprintf('Start processing import %d (start: %s - end: %s)',$import->getId(),$date_start,date('G:i:s')));
+      $this->logSection('Processing', sprintf('Check %d : Start processing import %d (start: %s - end: %s)',$randnum,$import->getId(),$date_start,date('G:i:s')));
     }
     // Ok import line asked but 0 ok lines....so it can remain some line in processing not processed....
     Doctrine_Query::create()
             ->update('imports p')
             ->set('p.state','?','pending')
-            ->andWhere('p.state = ?','processing')
+            ->andWhere('p.state = ?','aprocessing')
             ->execute();
     $conn->getDbh()->exec('COMMIT;');
   }
