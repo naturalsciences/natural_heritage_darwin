@@ -21,7 +21,7 @@ class ImportsForm extends BaseImportsForm
       /* Collection Reference */
       $this->widgetSchema['collection_ref'] = new sfWidgetFormInputHidden();
       $category = array('taxon'=>$this->getI18N()->__('Taxonomy')) ;
-      $this->setDefault('collection_ref', 920);
+      $this->setDefault('collection_ref', 0);
     }
     else
     {

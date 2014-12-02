@@ -14,7 +14,7 @@
     correct your XML file and import it again. You can also continue your import but you won\'t have information above. What do you want to do ?');?>
     </div>
     <p>
-      <a href="<?php echo url_for('import/maj?id='.$id) ?>" class="bt_close"><?php echo __('Continue import');?></a>
+      <?php if($import->getFormat() == 'abcd') : ?><a href="<?php echo url_for('import/maj?id='.$id) ?>" class="bt_close"><?php echo __('Continue import');?></a><?php endif ;?>
       <a href="<?php echo url_for('import/clear?id='.$id) ?>" class="bt_close"><?php echo __('Delete import');?></a>
     </p>
 

@@ -1,6 +1,12 @@
 begin;
 set search_path=darwin2,public;
 
+CREATE INDEX CONCURRENTLY idx_staging_gtu_identify ON staging 
+(COALESCE(gtu_latitude,0), COALESCE(gtu_longitude,0), COALESCE(gtu_from_date,'01/01/0001'::timestamp), COALESCE(gtu_to_date,'31/12/2100'::timestamp));
+CREATE INDEX CONCURRENTLY idx_staging_gtu_code ON staging (gtu_code);
+CREATE INDEX CONCURRENTLY idx_staging_gtu_code_fullToIndex ON staging (fullToIndex(gtu_code));
+
+alter table imports drop constraint if exists fk_imports_collections ;
 
 create table staging_catalogue
        (
@@ -34,7 +40,7 @@ BEGIN
         into result_nbr,catalogue_id
         USING all_line.level_ref, all_line.name ;
       IF result_nbr IS NULL THEN
-        EXECUTE 'Update import set error_in_import = ''Could not import this file, $1 don''t exist in DaRWIN and cannot be attached, correct your file this import this tree'',
+        EXECUTE 'Update imports set error_in_import = ''Could not import this file, $1 do not exist in DaRWIN and cannot be attached, correct your file this import this tree'',
           state=''error''
           WHERE id=$2'
         USING all_line.name, req_import_ref ;
@@ -47,7 +53,7 @@ BEGIN
         USING all_line.level_ref, all_line.name, parent_id ;
     END IF ;
     IF result_nbr > 1 THEN
-      EXECUTE 'Update import set error_in_import = ''Could not import this file, $1 exists more than 1 time in DaRWIN, correct the catalogue (or file) this import this tree'',
+      EXECUTE 'Update imports set error_in_import = ''Could not import this file, $1 exists more than 1 time in DaRWIN, correct the catalogue (or file) this import this tree'',
         state=''error''
         WHERE id=$2'
       USING all_line.name, req_import_ref ;

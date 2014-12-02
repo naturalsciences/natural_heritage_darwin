@@ -36,7 +36,7 @@
             <th class="datesNum">
               <a class="sort" href="<?php echo url_for($s_url.'&orderby=updated_at'.( ($orderBy=='updated_at' && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.$currentPage);?>">
                 <?php echo __('Last modification');?>
-                <?php if($orderBy=='updated_at') echo $orderSign ?>
+                <?php if($orderBy=='created_at') echo $orderSign ?>
               </a>
             </th>
             <th><?php echo __("Progression") ; ?></th>
@@ -79,6 +79,7 @@
                 <?php endif ; ?>
               </td>
               <?php endif ; ?>
+              <?php if (!in_array($import->getState(),array('apending','aprocessing','aloading'))) : ?>
               <td>
                 <?php if (!$import->getIsFinished()) : ?>
                   <?php echo link_to(image_tag('remove_2.png',array('title'=>__('Abort import'))),'import/clear?id='.$import->getId(),'class=remove_import');?>
@@ -87,6 +88,9 @@
               <td>
                 <?php echo link_to(image_tag('remove.png', array("title" => __("Delete"))), 'import/delete?id='.$import->getId(),'class=remove_import');?>
               </td>
+             <?php else : ?>
+             <td colspan="2"></td>
+             <?php endif ; ?>
             </tr>
           <?php endforeach;?>
         </tbody>

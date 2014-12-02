@@ -86,4 +86,9 @@ class Imports extends BaseImports
     $dateTime = new FuzzyDateTime($this->_get('updated_at')!=''?$this->_get('updated_at'):$this->_get('created_at'));
     return $dateTime->getDateMasked('em','d/m/Y H:i');
   }  
+  protected function setCollection($collection)
+  {
+    if($collection == 0) $collection = null ;
+    $this->Collection = $collection;
+  }
 }

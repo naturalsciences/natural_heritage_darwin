@@ -72,7 +72,7 @@ EOF;
       $sql.= " AND i.id = ".$options['id'];
     elseif(count($imports)>0)
       $sql .= " AND i.id in (".implode(',', $imports).")";
-    $this->logSection('checking', sprintf('Check %d : Start checking staging',$randnum));
+    $this->logSection('checking', sprintf('Check %d : (%s) Start checking staging',$randnum,date('G:i:s')));
 
     $conn->getDbh()->exec($sql);
 
@@ -80,7 +80,7 @@ EOF;
     Doctrine_Query::create()
             ->update('imports p')
             ->set('p.state','?','pending')
-            ->andWhere('p.state = ?','aloaded')
+            ->andWhereIn('p.state',array('aloaded','apending'))
             ->execute();
 
     if(empty($options['do-import']))
@@ -91,7 +91,7 @@ EOF;
       return;
     }
     //Then if option is set, do Import
-    $this->logSection('fetch', sprintf('Check %d : Load Imports file in processing state',$randnum));
+    $this->logSection('fetch', sprintf('Check %d : (%s) Load Imports file in processing state',$randnum,date('G:i:s')));
     
     if(!empty($options['id']))
     {

@@ -7459,7 +7459,11 @@
         <source>Storage</source>
         <target>Stockage</target>
       </trans-unit>
-      
+
+      <trans-unit id="1841">
+        <source>Actif</source>
+        <target>En cours d'éxécution</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
