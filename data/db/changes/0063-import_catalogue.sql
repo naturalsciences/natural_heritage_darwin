@@ -1,10 +1,10 @@
 begin;
 set search_path=darwin2,public;
 
-CREATE INDEX CONCURRENTLY idx_staging_gtu_identify ON staging 
-(COALESCE(gtu_latitude,0), COALESCE(gtu_longitude,0), COALESCE(gtu_from_date,'01/01/0001'::timestamp), COALESCE(gtu_to_date,'31/12/2100'::timestamp));
-CREATE INDEX CONCURRENTLY idx_staging_gtu_code ON staging (gtu_code);
-CREATE INDEX CONCURRENTLY idx_staging_gtu_code_fullToIndex ON staging (fullToIndex(gtu_code));
+/*CREATE INDEX idx_staging_gtu_identify ON staging 
+(COALESCE(gtu_latitude,0), COALESCE(gtu_longitude,0), COALESCE(gtu_from_date,'01/01/0001'), COALESCE(gtu_to_date,'31/12/2100'));*/
+CREATE INDEX idx_staging_gtu_code ON staging (gtu_code) WHERE gtu_code IS NOT NULL;
+CREATE INDEX idx_staging_gtu_code_fullToIndex ON staging (fullToIndex(gtu_code)) WHERE gtu_code IS NOT NULL;
 
 alter table imports drop constraint if exists fk_imports_collections ;
 

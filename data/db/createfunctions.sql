@@ -2739,7 +2739,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION fct_imp_checker_expeditions(line staging, import boolean default false)  RETURNS boolean
+CREATE OR REPLACE FUNCTION fct_imp_checker_expeditions(line staging, import boolean default false) RETURNS boolean
 AS $$
 DECLARE
   ref_rec integer :=0;
