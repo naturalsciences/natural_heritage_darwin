@@ -53,12 +53,15 @@ class ImportsTable extends Doctrine_Table
       ->execute();
   }
 
-  public function getWithImports()
+  public function getWithImports($id)
   {    
     $q = Doctrine_Query::create()
       ->From('Imports i')
       ->andwhere('exists(select 1 from staging where to_import = true and import_ref = i.id)')
       ->andWhere("state = 'aprocessing'");
+    if(!empty($id) && ctype_digit($id) && $id > 0) {
+      $q->andWhere("i.id = ?", $id);
+    }
 
     return $q->execute();
   }
