@@ -2568,7 +2568,6 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_imp_checker_manager(line staging)  RETURNS boolean
 AS $$
 BEGIN
-
   IF line.taxon_name IS NOT NULL AND line.taxon_name is distinct from '' AND line.taxon_ref is null THEN
     PERFORM fct_imp_create_catalogues_and_parents(line, 'taxonomy','taxon');
     PERFORM fct_imp_checker_catalogue(line,'taxonomy','taxon');
@@ -2589,8 +2588,6 @@ BEGIN
   IF line.litho_name IS NOT NULL AND line.litho_name is distinct from '' AND line.litho_ref is null THEN
     PERFORM fct_imp_checker_catalogue(line,'lithostratigraphy','litho');
   END IF;
-
-
 
   PERFORM fct_imp_checker_igs(line);
   PERFORM fct_imp_checker_expeditions(line);
@@ -2780,51 +2777,78 @@ DECLARE
   ref_rec integer :=0;
   tags staging_tag_groups ;
 BEGIN
+  /* If gtu_ref already defined, that means that check was already 
+     made for the line and there's no need to reassociate it 
+  */
   IF line.gtu_ref is not null THEN
     RETURN true;
   END IF;
-  IF (line.gtu_code is null OR line.gtu_code  = '') AND (line.gtu_from_date is null OR line.gtu_code  = '') AND NOT EXISTS (select 1 from staging_tag_groups g where g.staging_ref = line.id ) THEN
+  /* If no code is given, not even from date and not even tags (tag_groups here), 
+     that means there's not enough information to associate a gtu 
+  */
+  IF (line.gtu_code is null OR COALESCE(fullToIndex(line.gtu_code),'')  = '') AND (line.gtu_from_date is null) AND NOT EXISTS (select 1 from staging_tag_groups g where g.staging_ref = line.id ) THEN
     RETURN true;
   END IF;
+  /* Otherwise, we should try to associate a gtu_ref */
   select substr.id into ref_rec from (
+    /* This part try to select gtu id for line.gtu_code NULL or line.gtu_code = '' making the comparison on all the
+       other fields ensuring uniqueness (latitude, longitude, from_date and to_date)
+       The criteria position('import/' in code) > 0 filter also on the already imported gtu without code only
+    */
     select id from gtu g where
+      position('import/' in code) > 0 AND
       COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
       COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
+      COALESCE(fullToIndex(line.gtu_code), '') = '' AND
       gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
-      gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038') AND
-      position('import/' in code) > 0 AND
-      line.gtu_code IS NULL
+      gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038')
+    /* if we're not in the case of already imported gtu without code,
+       we've got to find a gtu that correspond to the criterias of the current line
+    */
     union
     select id from gtu g where
+      position('import/' in code) = 0 AND
       COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
       COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
+      COALESCE(fullToIndex(code),'') = COALESCE(fullToIndex(line.gtu_code),'') AND
       gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
-      gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038') AND
-      position('import/' in code) = 0 AND
-      fullToIndex(code) IN (SELECT fullToIndex(stg.gtu_code)
-                            FROM staging stg
-                            WHERE COALESCE(stg.gtu_latitude,0) = COALESCE(line.gtu_latitude,0) AND
-                                  COALESCE(stg.gtu_longitude,0) = COALESCE(line.gtu_longitude,0) AND
-                                  COALESCE(stg.gtu_from_date, '01/01/0001') = COALESCE(line.gtu_from_date, '01/01/0001') AND
-                                  COALESCE(stg.gtu_to_date, '31/12/2038') = COALESCE(line.gtu_to_date, '31/12/2038') AND
-                                  stg.gtu_code IS NOT NULL
-                            )
-      ) as substr
-      WHERE substr.id != 0 LIMIT 1;
+      gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038')
+      LIMIT 1
+    ) as substr
+    WHERE substr.id != 0 LIMIT 1;
 
-      /* fullToIndex(code) = fullToIndex(line.gtu_code) */
-
-
+  /* If no corresponding gtu found and we've chosen to import... insert the new gtu */
   IF NOT FOUND THEN
       IF import THEN
         INSERT into gtu
-          (code, gtu_from_date_mask, gtu_from_date,gtu_to_date_mask, gtu_to_date, latitude, longitude, lat_long_accuracy, elevation, elevation_accuracy)
+          (code, 
+           gtu_from_date_mask, 
+           gtu_from_date,
+           gtu_to_date_mask, 
+           gtu_to_date, 
+           latitude, 
+           longitude, 
+           lat_long_accuracy, 
+           elevation, 
+           elevation_accuracy
+          )
         VALUES
-          (COALESCE(line.gtu_code,'import/'|| line.import_ref || '/' || line.id ), COALESCE(line.gtu_from_date_mask,0), COALESCE(line.gtu_from_date, '01/01/0001'),
-          COALESCE(line.gtu_to_date_mask,0), COALESCE(line.gtu_to_date, '31/12/2038')
-          , line.gtu_latitude, line.gtu_longitude, line.gtu_lat_long_accuracy, line.gtu_elevation, line.gtu_elevation_accuracy)
+        (
+          CASE COALESCE(fullToIndex(line.gtu_code),'') WHEN '' THEN 'import/'|| line.import_ref || '/' || line.id ELSE line.gtu_code END, 
+          COALESCE(line.gtu_from_date_mask,0), 
+          COALESCE(line.gtu_from_date, '01/01/0001'),
+          COALESCE(line.gtu_to_date_mask,0), 
+          COALESCE(line.gtu_to_date, '31/12/2038'),
+          line.gtu_latitude, 
+          line.gtu_longitude, 
+          line.gtu_lat_long_accuracy, 
+          line.gtu_elevation, 
+          line.gtu_elevation_accuracy
+        )
         RETURNING id INTO line.gtu_ref;
+        /* The new id is returned in line.gtu_ref and stored in ref_rec so it can be used further on */
         ref_rec := line.gtu_ref;
+        /* Browse all tags to try importing them one by one and associate them with the newly created gtu */
         FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
         BEGIN
           INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
@@ -2834,28 +2858,39 @@ BEGIN
             -- nothing
         END ;
         END LOOP ;
+        /* Execute (perform = execute without any output) the update of reference_relation 
+           for the current staging line and for the gtu type of relationship.
+           Referenced relation currently named 'staging_info' is replaced by gtu
+           and record_id currently set to line.id (staging id) is replaced by line.gtu_ref (id of the new gtu created)
+        */
         PERFORM fct_imp_checker_staging_info(line, 'gtu');
       ELSE
         RETURN TRUE;
       END IF;
   ELSE
   /* ELSE ADDED HERE TO CHECK IF THE TAGS (and the staging infos) OF THE EXISTING GTU EXISTS TOO */
+  /* This case happens when a gtu that correspond to info entered in staging has been found */
     IF import THEN
       FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
       BEGIN
         INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
           Values(ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value );
-      --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
         EXCEPTION WHEN unique_violation THEN
           -- nothing
       END ;
       END LOOP ;
+      /* Execute (perform = execute without any output) the update of reference_relation 
+         for the current staging line and for the gtu type of relationship.
+         Referenced relation currently named 'staging_info' is replaced by gtu
+         and record_id currently set to line.id (staging id) is replaced by line.gtu_ref (id of the new gtu created)
+      */
       PERFORM fct_imp_checker_staging_info(line, 'gtu');
     ELSE
       RETURN TRUE;      
     END IF;
   END IF;
 
+  /* Associate the gtu_ref in the staging and erase in hstore status the gtu tag signaling gtu has still to be treated */
   UPDATE staging SET status = delete(status,'gtu'), gtu_ref = ref_rec where id=line.id;
 
   RETURN true;

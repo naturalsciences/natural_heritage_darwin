@@ -5,6 +5,7 @@ set search_path=darwin2,public;
 (COALESCE(gtu_latitude,0), COALESCE(gtu_longitude,0), COALESCE(gtu_from_date,'01/01/0001'), COALESCE(gtu_to_date,'31/12/2100'));*/
 CREATE INDEX idx_staging_gtu_code ON staging (gtu_code) WHERE gtu_code IS NOT NULL;
 CREATE INDEX idx_staging_gtu_code_fullToIndex ON staging (fullToIndex(gtu_code)) WHERE gtu_code IS NOT NULL;
+CREATE INDEX idx_gtu_code_search_for_import ON gtu (position('import/' in code), COALESCE(latitude,0), COALESCE(longitude,0), COALESCE(fullToIndex(code), ''));
 
 alter table imports drop constraint if exists fk_imports_collections ;
 
@@ -21,8 +22,6 @@ create table staging_catalogue
         constraint fk_stg_catalogue_import_ref foreign key (import_ref) references imports(id) on delete cascade,
         constraint fk_stg_catalogue_parent_ref foreign key (parent_ref) references staging_catalogue(id) on delete cascade
        );
-
-
 
 
 CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referenced_relation text)  RETURNS boolean
