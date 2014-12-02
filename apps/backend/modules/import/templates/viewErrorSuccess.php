@@ -19,9 +19,11 @@
     </p>
 
     <hr />
-    <p>
-      <a href="<?php echo url_for('import/index') ?>" class="bt_close"><?php echo __('Back');?></a>
-    </p>
+    <?php if($import->getFormat() == 'taxon') : ?> 
+      <p><?php echo link_to(__('Back'),'import/index?format=taxon',array('class'=>'bt_close'));?></p>
+    <?php else : ?>
+      <p><?php echo link_to(__('Back'),'import/index?format=abcd',array('class'=>'bt_close'));?></p>
+    <?php endif ; ?>
 
 </div>
 
