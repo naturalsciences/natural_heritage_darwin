@@ -3927,6 +3927,7 @@ DECLARE
   catalogue_id integer := null;
   all_line staging_catalogue ;
   result_nbr integer;
+  error_msg text;
 BEGIN    
   FOR all_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY id 
   LOOP     
@@ -3935,10 +3936,13 @@ BEGIN
         into result_nbr,catalogue_id
         USING all_line.level_ref, all_line.name ;
       IF result_nbr IS NULL THEN
-        EXECUTE 'Update imports set error_in_import = ''Could not import this file, $1 do not exist in DaRWIN and cannot be attached, correct your file this import this tree'',
+        error_msg := 'Could not import this file, ' || all_line.name ||
+        ' does not exist in DaRWIN and cannot be attached, correct your file or create this ' || quote_ident(referenced_relation) ||
+        ' manually' ;
+        EXECUTE 'Update imports set errors_in_import = $1,
           state=''error''
           WHERE id=$2'
-        USING all_line.name, req_import_ref ;
+        USING error_msg, req_import_ref ;
         RETURN true ;
       END IF ;
     ELSE -- else the direct parent is in the file, so we take the parent catalogue_ref from there
@@ -3948,10 +3952,11 @@ BEGIN
         USING all_line.level_ref, all_line.name, parent_id ;
     END IF ;
     IF result_nbr > 1 THEN
-      EXECUTE 'Update imports set error_in_import = ''Could not import this file, $1 exists more than 1 time in DaRWIN, correct the catalogue (or file) this import this tree'',
+      error_msg := 'Could not import this file, ' || all_line.name || ' exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree';
+      EXECUTE 'Update imports set errors_in_import = $1,
         state=''error''
         WHERE id=$2'
-      USING all_line.name, req_import_ref ;
+      USING error_msg, req_import_ref ;
       RETURN true ;
     END IF ;
     IF result_nbr IS NULL THEN -- target not found, let's create it
