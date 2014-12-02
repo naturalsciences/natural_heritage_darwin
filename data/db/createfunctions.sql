@@ -3903,7 +3903,7 @@ BEGIN
       IF result_nbr IS NULL THEN
         error_msg := 'Could not import this file, ' || all_line.name ||
         ' does not exist in DaRWIN and cannot be attached, correct your file or create this ' || quote_ident(referenced_relation) ||
-        'manualy' ;
+        ' manually' ;
         EXECUTE 'Update imports set errors_in_import = $1,
           state=''error''
           WHERE id=$2'

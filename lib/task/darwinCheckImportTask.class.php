@@ -24,12 +24,12 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {    
-    $this->log('check import of '.date('G:i:s'));
     $databaseManager = new sfDatabaseManager($this->configuration);
     $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     $conn = Doctrine_Manager::connection();
     $randnum = rand(1,10000) ;
+    $this->log("Start Check $randnum : ".date('G:i:s'));
     if(empty($options['no-delete'])) {
       $this->logSection('Delete', sprintf('Check %d : Removing some deleted import lines',$randnum)) ;
       $batch_nbr = 2000;
@@ -72,49 +72,57 @@ EOF;
       $sql.= " AND i.id = ".$options['id'];
     elseif(count($imports)>0)
       $sql .= " AND i.id in (".implode(',', $imports).")";
+    else
+    {
+      // nothing to check, nothing to do
+      $conn->getDbh()->exec('COMMIT;');
+      $this->log("End Check $randnum : ".date('G:i:s'));      
+      return ;
+    }
     $this->logSection('checking', sprintf('Check %d : (%s) Start checking staging',$randnum,date('G:i:s')));
-
     $conn->getDbh()->exec($sql);
-
+    $this->logSection('checking', sprintf('Check %d : (%s) Checking ended',$randnum,date('G:i:s')));
     // Check done, all loaded import won' t be imported again. So we can put then into pending state
     Doctrine_Query::create()
             ->update('imports p')
             ->set('p.state','?','pending')
             ->andWhereIn('p.state',array('aloaded','apending'))
             ->execute();
-
     if(empty($options['do-import']))
     {
-      $sql = "update imports p set state = 'pending' where (state = 'aprocessing' OR state = 'apending') and
+      $sql = "update imports p set state = 'pending' where (state = 'aprocessing' OR state = 'apending' OR state = 'aloaded') and
         exists( select 1 from staging where import_ref = p.id and status != ''::hstore)";
       $conn->getDbh()->exec($sql);
-      return;
-    }
-    //Then if option is set, do Import
-    $this->logSection('fetch', sprintf('Check %d : (%s) Load Imports file in processing state',$randnum,date('G:i:s')));
-    
-    if(!empty($options['id']))
-    {
-      $imports  = Doctrine::getTable('Imports')->findById($options['id']);
     }
     else
-    {      
-      $imports  = Doctrine::getTable('Imports')->getWithImports(); 
-
-    }
-    foreach($imports as $import)
     {
-      $date_start = date('G:i:s') ;
-      $sql = 'select fct_importer_abcd('.$import->getId().')';
-      $conn->getDbh()->exec($sql);
-      $this->logSection('Processing', sprintf('Check %d : Start processing import %d (start: %s - end: %s)',$randnum,$import->getId(),$date_start,date('G:i:s')));
-    }
-    // Ok import line asked but 0 ok lines....so it can remain some line in processing not processed....
-    Doctrine_Query::create()
-            ->update('imports p')
-            ->set('p.state','?','pending')
-            ->andWhere('p.state = ?','aprocessing')
-            ->execute();
+      //Then if option is set, do Import
+      $this->logSection('fetch', sprintf('Check %d : (%s) Load Imports file in processing state',$randnum,date('G:i:s')));
+      
+      if(!empty($options['id']))
+      {
+        $imports  = Doctrine::getTable('Imports')->findById($options['id']);
+      }
+      else
+      {      
+        $imports  = Doctrine::getTable('Imports')->getWithImports(); 
+
+      }
+      foreach($imports as $import)
+      {
+        $date_start = date('G:i:s') ;
+        $sql = 'select fct_importer_abcd('.$import->getId().')';
+        $conn->getDbh()->exec($sql);
+        $this->logSection('Processing', sprintf('Check %d : Start processing import %d (start: %s - end: %s)',$randnum,$import->getId(),$date_start,date('G:i:s')));
+      }
+      // Ok import line asked but 0 ok lines....so it can remain some line in processing not processed....
+      Doctrine_Query::create()
+              ->update('imports p')
+              ->set('p.state','?','pending')
+              ->andWhere('p.state = ?','aprocessing')
+              ->execute();
+    }     
     $conn->getDbh()->exec('COMMIT;');
+    $this->log("End Check $randnum : ".date('G:i:s'));
   }
 }

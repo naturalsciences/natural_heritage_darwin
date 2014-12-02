@@ -10,8 +10,11 @@
     <?php endforeach ; ?>
     </ul>
     <div class="warn_message">
-    <?php echo __('<strong>Warning!</strong><br /> These errors cannot be corrected, the best way to remove it is to delete your import,
-    correct your XML file and import it again. You can also continue your import but you won\'t have information above. What do you want to do ?');?>
+      <?php if($import->getFormat() == 'abcd') : ?>
+        <?php echo __('warning_spec_msg');?>
+      <?php else: ?>
+        <?php echo __('warning_catalogue_msg');?>
+      <?php endif ?>
     </div>
     <p>
       <?php if($import->getFormat() == 'abcd') : ?><a href="<?php echo url_for('import/maj?id='.$id) ?>" class="bt_close"><?php echo __('Continue import');?></a><?php endif ;?>
