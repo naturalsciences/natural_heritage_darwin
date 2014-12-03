@@ -763,3 +763,5 @@ CREATE TRIGGER trg_clr_referenceRecord_staging_info AFTER DELETE OR UPDATE
 CREATE TRIGGER trg_upd_institution_staging_relationship AFTER UPDATE
   ON staging_relationship  FOR EACH ROW
   EXECUTE PROCEDURE fct_upd_institution_staging_relationship();
+
+CREATE TRIGGER trg_update_import AFTER UPDATE ON imports FOR EACH ROW EXECUTE PROCEDURE fct_update_import();

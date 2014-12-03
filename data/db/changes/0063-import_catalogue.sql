@@ -6,6 +6,7 @@ CREATE INDEX idx_staging_gtu_code_fullToIndex ON staging (fullToIndex(gtu_code))
 CREATE INDEX idx_gtu_code_search_for_import ON gtu (position('import/' in code), COALESCE(latitude,0), COALESCE(longitude,0), COALESCE(fullToIndex(code), ''));
 
 alter table imports drop constraint if exists fk_imports_collections ;
+alter table imports alter column  updated_at set default now() ;
 
 create table staging_catalogue
        (
@@ -20,6 +21,16 @@ create table staging_catalogue
         constraint fk_stg_catalogue_import_ref foreign key (import_ref) references imports(id) on delete cascade,
         constraint fk_stg_catalogue_parent_ref foreign key (parent_ref) references staging_catalogue(id) on delete cascade
        );
+
+CREATE TRIGGER trg_update_import AFTER UPDATE ON imports FOR EACH ROW EXECUTE PROCEDURE fct_update_import();
+CREATE OR REPLACE function fct_update_import() RETURNS trigger AS $$
+BEGIN
+  if OLD.state IS DISTINCT FROM NEW.state THEN
+  UPDATE imports set updated_at= now() where id=NEW.id ;
+  END IF ;
+  return new ;
+END;
+$$ LANGUAGE plpgsql ;
 
 CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referenced_relation text)  RETURNS boolean
 AS $$

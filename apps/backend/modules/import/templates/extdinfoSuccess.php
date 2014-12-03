@@ -4,6 +4,7 @@
       <li><b><?php echo __($import->getStateName($name)) ; ?></b> : <?php echo __($import->getStateInfo($name)) ; ?></li>
     <?php endif ; ?>
   <?php endforeach ; ?>
+  <li><b><?php echo __('Actif') ; ?></b> : <?php echo __($import->getStateInfo('Actif')) ; ?></li>
 </ul>
 <br />
 <ul class="board_news"><u><?php echo __("Help on available button") ; ?></u>

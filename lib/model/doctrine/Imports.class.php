@@ -15,8 +15,7 @@ class Imports extends BaseImports
   protected $line_num = 0;
   private static $state = array(
     '' => 'All', 
-    'to_be_loaded' => 'To be loaded',
-    'loading'=> 'Loading',
+    'to_be_loaded' => 'To be loaded',    
     'loaded'=>'Loaded',
     'checking'=> 'Checking',
     'pending'=> 'Pending',
@@ -24,13 +23,10 @@ class Imports extends BaseImports
     'finished' => 'Finished',
     'aborted' => 'Aborted',
     'error' => 'Error',
-    'aloaded' => 'Actif', // temporary stat, used by checking task to make exclusive the check
-    'aprocessing' => 'Actif', // temporary stat, used by checking task to make exclusive the check
-    'apending' => 'Actif' // temporary stat, used by checking task to make exclusive the check
   );  
   private static $info = array(
     'to_be_loaded' => 'This file is ready to be loaded, an automatic task will be activated to load lines.',
-    'loading'=> 'The file is actually being loaded in database',
+    'Actif'=> 'The file is actually being loaded in database',
     'loaded'=>'Your file has been loaded, but still need to be checked',
     'checking'=> 'Your file has been loaded and is being checked',
     'pending'=> 'Your file has been loaded and checked, you can edit line in errors or import corrects lines',
@@ -59,6 +55,7 @@ class Imports extends BaseImports
   public function getStateName($name = null)
   {
     if($name) return self::$state[$name];
+    if(in_array($this->getState(),array('aloaded','apending','aprocessing'))) return 'Actif' ;
     return self::$state[$this->getState()];
   }
   public static function getStateList()
