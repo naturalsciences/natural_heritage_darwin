@@ -35,18 +35,24 @@ class importActions extends DarwinActions
     if($this->import->getFormat() == 'taxon' && ($this->import->getUserRef() == $this->getUser()->getId() || $this->getUser()->isAtLeast(Users::ADMIN))) 
     {
       $this->import->delete() ;
+      if($request->isXmlHttpRequest())
+      {
+        return $this->renderText('ok');
+      }
+      return $this->redirect('import/indexTaxon');
     }
     else
     {      
       $this->import->setState('deleted');
       $this->import->save();
+
+      if($request->isXmlHttpRequest())
+      {
+        return $this->renderText('ok');
+      }
+      return $this->redirect('import/index');
     }
 
-    if($request->isXmlHttpRequest())
-    {
-      return $this->renderText('ok');
-    }
-    return $this->redirect('import/index');
   }
 
   public function executeMaj(sfWebRequest $request)
