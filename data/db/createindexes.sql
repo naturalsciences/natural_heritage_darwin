@@ -219,3 +219,8 @@ CREATE INDEX idx_gin_trgm_taxonomy_name_indexed ON taxonomy USING btree (name_in
 CREATE INDEX idx_lithology_name_order_by_txt_op ON lithology USING btree (name_indexed text_pattern_ops);
 CREATE INDEX idx_lithostratigraphy_name_order_by_txt_op ON lithostratigraphy USING btree (name_indexed text_pattern_ops);
 CREATE INDEX idx_mineralogy_name_order_by_txt_op ON mineralogy USING btree (name_indexed text_pattern_ops);
+
+/** Staging **/
+CREATE INDEX idx_staging_gtu_code ON staging (gtu_code) WHERE gtu_code IS NOT NULL;
+CREATE INDEX idx_staging_gtu_code_fullToIndex ON staging (fullToIndex(gtu_code)) WHERE gtu_code IS NOT NULL;
+CREATE INDEX idx_gtu_code_search_for_import ON gtu (position('import/' in code), COALESCE(latitude,0), COALESCE(longitude,0), COALESCE(fullToIndex(code), ''));

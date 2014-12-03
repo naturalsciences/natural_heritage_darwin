@@ -1,7 +1,7 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
   <div class="import_filter">
-  <?php echo form_tag($format=='taxon'?'import/search?format=taxon':'import/search?format=abcd', array('class'=>'search_form','id'=>'import_filter'));?>
+  <?php echo form_tag($format=='taxon'?'import/searchCatalogue':'import/search', array('class'=>'search_form','id'=>'import_filter'));?>
   <div class="container">
     <table class="search" id="search">
       <thead>

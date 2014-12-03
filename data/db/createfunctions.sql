@@ -4000,3 +4000,12 @@ BEGIN
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE function fct_update_import() RETURNS trigger AS $$
+BEGIN
+  if OLD.state IS DISTINCT FROM NEW.state THEN
+  UPDATE imports set updated_at= now() where id=NEW.id ;
+  END IF ;
+  return new ;
+END;
+$$ LANGUAGE plpgsql ;

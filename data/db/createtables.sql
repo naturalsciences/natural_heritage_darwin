@@ -1376,13 +1376,13 @@ create table imports
     filename varchar not null,
     state varchar not null default '',
     created_at timestamp not null default now(),
-    updated_at timestamp,
+    updated_at timestamp default now(),
     initial_count integer not null default 0,
     is_finished boolean  not null default false,
     errors_in_import text,
     template_version text,
     constraint pk_import primary key (id) ,
-    constraint fk_imports_collections foreign key (collection_ref) references collections(id) on delete cascade,
+    --constraint fk_imports_collections foreign key (collection_ref) references collections(id) on delete cascade,
     constraint fk_imports_users foreign key (user_ref) references users(id) on delete cascade
   );
 

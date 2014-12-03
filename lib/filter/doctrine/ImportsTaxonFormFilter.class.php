@@ -34,6 +34,7 @@ class ImportsTaxonFormFilter extends BaseImportsFormFilter
     /* validators */
 
     $this->widgetSchema['show_finished']  = new sfWidgetFormInputCheckbox();
+    $this->setDefault('show_finished', true);
     $this->validatorSchema['show_finished'] = new sfValidatorBoolean(array('required' => false));
   }
 
