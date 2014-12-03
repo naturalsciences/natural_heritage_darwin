@@ -80,6 +80,9 @@ AS $$
 DECLARE
   ref_rec integer :=0;
   tags staging_tag_groups ;
+  tags_tag RECORD;
+  update_count integer;
+  tag_groups_line RECORD;
 BEGIN
   IF import THEN
     /* If gtu_ref already defined, that means that check was already 
@@ -154,13 +157,14 @@ BEGIN
       ref_rec := line.gtu_ref;
       /* Browse all tags to try importing them one by one and associate them with the newly created gtu */
       FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
-      BEGIN
-        INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
-          Values(ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value );
-      --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
-        EXCEPTION WHEN unique_violation THEN
-          -- nothing
-      END ;
+        BEGIN
+          INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
+          SELECT ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value;
+          --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
+          EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE 'Error in fct_imp_checker_gtu (case non existing gtu): %', SQLERRM;
+            -- nothing
+        END ;
       END LOOP ;
       /* Execute (perform = execute without any output) the update of reference_relation 
          for the current staging line and for the gtu type of relationship.
@@ -171,13 +175,42 @@ BEGIN
     ELSE
       /* ELSE ADDED HERE TO CHECK IF THE TAGS (and the staging infos) OF THE EXISTING GTU EXISTS TOO */
       /* This case happens when a gtu that correspond to info entered in staging has been found */
+      /* Browse all tags to try importing them one by one and associate them with the newly created gtu */
       FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
-      BEGIN
-        INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
-          Values(ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value );
-        EXCEPTION WHEN unique_violation THEN
-          -- nothing
-      END ;
+        /* We split all the tags entered by ; as it's the case in the interface */
+        FOR tags_tag IN SELECT trim(regexp_split_to_table(tags.tag_value, E';+')) as value LOOP
+          BEGIN
+            /* We use an upsert here.
+               Ideally, we should use locking, but we consider it's isolated.
+             */
+            UPDATE tag_groups 
+            SET tag_value = tag_value || ';' || tags.tag_value 
+            WHERE gtu_ref = ref_rec
+              AND group_name_indexed = fullToIndex(tags.group_name)
+              AND sub_group_name_indexed = fullToIndex(tags.sub_group_name)
+              AND fullToIndex(tags_tag.value) NOT IN (SELECT fullToIndex(regexp_split_to_table(tag_value, E';+')));
+            GET DIAGNOSTICS update_count = ROW_COUNT;
+            IF update_count = 0 THEN
+              INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
+              SELECT ref_rec,tags.group_name, tags.sub_group_name, tags_tag.value
+              WHERE NOT EXISTS (SELECT id 
+                                FROM tag_groups 
+                                WHERE gtu_ref = ref_rec
+                                  AND group_name_indexed = fullToIndex(tags.group_name)
+                                  AND sub_group_name_indexed = fullToIndex(tags.sub_group_name)
+                                LIMIT 1
+                               );
+            END IF;
+          --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
+            EXCEPTION WHEN OTHERS THEN
+              RAISE NOTICE 'Error in fct_imp_checker_gtu (case from existing gtu): %', SQLERRM;
+              RAISE NOTICE 'gtu_ref is %', ref_rec;
+              RAISE NOTICE 'group name is %', tags.group_name;
+              RAISE NOTICE 'subgroup name is %', tags.sub_group_name;
+              RAISE NOTICE 'tag value is %', tags_tag.value;
+              -- nothing
+          END ;
+        END LOOP;
       END LOOP ;
       /* Execute (perform = execute without any output) the update of reference_relation 
          for the current staging line and for the gtu type of relationship.
