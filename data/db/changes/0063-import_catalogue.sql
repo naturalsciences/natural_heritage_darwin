@@ -5,7 +5,7 @@ CREATE INDEX idx_staging_gtu_code ON staging (gtu_code) WHERE gtu_code IS NOT NU
 CREATE INDEX idx_staging_gtu_code_fullToIndex ON staging (fullToIndex(gtu_code)) WHERE gtu_code IS NOT NULL;
 CREATE INDEX idx_gtu_code_search_for_import ON gtu (position('import/' in code), COALESCE(latitude,0), COALESCE(longitude,0), COALESCE(fullToIndex(code), ''));
 
-alter table imports drop constraint if exists fk_imports_collections ;
+alter table imports alter column collection_ref drop not null ;
 alter table imports alter column  updated_at set default now() ;
 
 create table staging_catalogue
