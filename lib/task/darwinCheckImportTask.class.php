@@ -99,21 +99,14 @@ EOF;
       //Then if option is set, do Import
       $this->logSection('fetch', sprintf('Check %d : (%s) Load Imports file in processing state',$randnum,date('G:i:s')));
       
-      if(!empty($options['id']))
-      {
-        $imports  = Doctrine::getTable('Imports')->findById($options['id']);
-      }
-      else
-      {      
-        $imports  = Doctrine::getTable('Imports')->getWithImports(); 
+      $imports  = Doctrine::getTable('Imports')->getWithImports($options['id']); 
 
-      }
       foreach($imports as $import)
       {
         $date_start = date('G:i:s') ;
         $sql = 'select fct_importer_abcd('.$import->getId().')';
         $conn->getDbh()->exec($sql);
-        $this->logSection('Processing', sprintf('Check %d : Start processing import %d (start: %s - end: %s)',$randnum,$import->getId(),$date_start,date('G:i:s')));
+        $this->logSection('Processing', sprintf('Check %d : Processing import %d (start: %s - end: %s) done',$randnum,$import->getId(),$date_start,date('G:i:s')));
       }
       // Ok import line asked but 0 ok lines....so it can remain some line in processing not processed....
       Doctrine_Query::create()
