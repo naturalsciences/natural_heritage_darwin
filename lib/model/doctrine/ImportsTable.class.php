@@ -68,7 +68,7 @@ class ImportsTable extends Doctrine_Table
 
 
   // function used by check import task to flag the state of checked line to avoid twice check
-  public function tagProcessing($state)
+  public function tagProcessing($state, $id)
   {
     $q =  Doctrine_Query::create()->from('Imports i') ;
     if($state == 'taxon')
@@ -81,6 +81,12 @@ class ImportsTable extends Doctrine_Table
       $q->andwhere('i.format = \'abcd\'')
         ->andWhereIn("state",$state);
     }
+
+    // If specific id is passed, restrict the retrieval of imports and set of imports state to the selected one
+    if(!empty($id) && ctype_digit($id) && $id > 0) {
+      $q->andWhere("i.id = ?", $id);
+    }
+    
     $items = $q->execute();
 
     $ids = array();
