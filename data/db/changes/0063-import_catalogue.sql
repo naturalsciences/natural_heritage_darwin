@@ -177,13 +177,11 @@ BEGIN
             -- nothing
         END ;
       END LOOP ;
-      /* Execute (perform = execute without any output) the update of reference_relation 
-         for the current staging line and for the gtu type of relationship.
-         Referenced relation currently named 'staging_info' is replaced by gtu
-         and record_id currently set to line.id (staging id) is replaced by line.gtu_ref (id of the new gtu created)
-      */
-      PERFORM fct_imp_checker_staging_info(line, 'gtu');
     ELSE
+      /* Define gtu_ref of the line object, so it can be used afterwards in the perform to bring correctly
+         the additional comments and additional properties
+      */
+      line.gtu_ref = ref_rec;
       /* ELSE ADDED HERE TO CHECK IF THE TAGS (and the staging infos) OF THE EXISTING GTU EXISTS TOO */
       /* This case happens when a gtu that correspond to info entered in staging has been found */
       /* Browse all tags to try importing them one by one and associate them with the newly created gtu */
@@ -223,13 +221,13 @@ BEGIN
           END ;
         END LOOP;
       END LOOP ;
-      /* Execute (perform = execute without any output) the update of reference_relation 
-         for the current staging line and for the gtu type of relationship.
-         Referenced relation currently named 'staging_info' is replaced by gtu
-         and record_id currently set to line.id (staging id) is replaced by line.gtu_ref (id of the new gtu created)
-      */
-      PERFORM fct_imp_checker_staging_info(line, 'gtu');
     END IF;
+    /* Execute (perform = execute without any output) the update of reference_relation 
+       for the current staging line and for the gtu type of relationship.
+       Referenced relation currently named 'staging_info' is replaced by gtu
+       and record_id currently set to line.id (staging id) is replaced by line.gtu_ref (id of the new gtu created)
+    */
+    PERFORM fct_imp_checker_staging_info(line, 'gtu');
 
     /* Associate the gtu_ref in the staging and erase in hstore status the gtu tag signaling gtu has still to be treated */
     UPDATE staging SET status = delete(status,'gtu'), gtu_ref = ref_rec where id=line.id;
@@ -239,5 +237,114 @@ BEGIN
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info(line staging, st_type text) RETURNS boolean
+AS $$
+DECLARE
+  info_line staging_info ;
+  record_line RECORD ;
+BEGIN
+
+  FOR info_line IN select * from staging_info WHERE staging_ref = line.id AND referenced_relation = st_type
+  LOOP
+    BEGIN
+    CASE info_line.referenced_relation
+      WHEN 'gtu' THEN
+        IF line.gtu_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            DELETE FROM comments mc
+            WHERE referenced_relation = 'staging_info'
+              AND record_id=info_line.id
+              AND EXISTS (SELECT 1
+                          FROM comments cc
+                          WHERE cc.referenced_relation = 'gtu'
+                            AND cc.notion_concerned = mc.notion_concerned
+                            AND cc.comment = mc.comment
+                          LIMIT 1
+                         );
+            DELETE FROM properties mp
+            WHERE referenced_relation = 'staging_info'
+              AND record_id=info_line.id
+              AND EXISTS (SELECT 1
+                          FROM properties cp
+                          WHERE cp.referenced_relation = 'gtu'
+                            AND cp.property_type = mp.property_type
+                            AND cp.applies_to = mp.applies_to
+                            AND cp.date_from_mask = mp.date_from_mask
+                            AND cp.date_from = mp.date_from
+                            AND cp.date_to_mask = mp.date_to_mask
+                            AND cp.date_to = mp.date_to
+                            AND cp.is_quantitative = mp.is_quantitative
+                            AND cp.property_unit = mp.property_unit
+                            AND cp.method_indexed = mp.method_indexed
+                            AND cp.lower_value = mp.lower_value
+                            AND cp.upper_value = mp.upper_value
+                            AND cp.property_accuracy = mp.property_accuracy
+                          LIMIT 1
+                         );
+            UPDATE template_table_record_ref set referenced_relation='gtu', record_id=line.gtu_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
+      WHEN 'taxonomy' THEN
+        IF line.taxon_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='taxonomy', record_id=line.taxon_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
+      WHEN 'expeditions' THEN
+        IF line.expedition_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='expeditions', record_id=line.expedition_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
+      WHEN 'lithostratigraphy' THEN
+        IF line.litho_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='lithostratigraphy', record_id=line.litho_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
+      WHEN 'lithology' THEN
+        IF line.lithology_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='lithology', record_id=line.lithology_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
+      WHEN 'chronostratigraphy' THEN
+        IF line.chrono_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='chronostratigraphy', record_id=line.chrono_ref where id=record_line.id ;
+          END LOOP ;
+        END IF;
+      WHEN 'mineralogy' THEN
+        IF line.mineral_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='mineralogy', record_id=line.mineral_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
+      WHEN 'igs' THEN
+        IF line.ig_ref IS NOT NULL THEN
+          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
+          LOOP
+            UPDATE template_table_record_ref set referenced_relation='igs', record_id=line.ig_ref where referenced_relation='staging_info' and record_id=info_line.id;
+          END LOOP ;
+        END IF;
+      ELSE continue ;
+      END CASE ;
+      EXCEPTION WHEN unique_violation THEN
+        RAISE NOTICE 'An error occured: %', SQLERRM;
+      END ;
+  END LOOP;
+  DELETE FROM staging_info WHERE staging_ref = line.id ;
+  RETURN true;
+END;
+$$ LANGUAGE plpgsql;
+
 
 commit;

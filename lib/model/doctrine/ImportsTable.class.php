@@ -86,7 +86,7 @@ class ImportsTable extends Doctrine_Table
     if(!empty($id) && ctype_digit($id) && $id > 0) {
       $q->andWhere("i.id = ?", $id);
     }
-    
+
     $items = $q->execute();
 
     $ids = array();
