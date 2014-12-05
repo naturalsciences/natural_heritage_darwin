@@ -3126,6 +3126,7 @@ BEGIN
   LOOP
     BEGIN
       -- I know it's dumb but....
+      PERFORM fct_set_user(all_line.user_ref) ;
       select * into staging_line from staging where id = all_line.id;
       PERFORM fct_imp_checker_igs(staging_line, true);
       PERFORM fct_imp_checker_expeditions(staging_line, true);

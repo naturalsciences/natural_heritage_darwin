@@ -16,13 +16,7 @@ class ImportsForm extends BaseImportsForm
     $this->widgetSchema['uploadfield'] = new sfWidgetFormInputFile(array(),array('id'=>'uploadfield'));
 
     if($this->options['format'] == 'taxon')
-    {
-
-      /* Collection Reference */
-      $this->widgetSchema['collection_ref'] = new sfWidgetFormInputHidden();
       $category = array('taxon'=>$this->getI18N()->__('Taxonomy')) ;
-      $this->setDefault('collection_ref', 0);
-    }
     else
     {
 
