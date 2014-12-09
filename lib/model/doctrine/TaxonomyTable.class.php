@@ -23,4 +23,15 @@ class TaxonomyTable extends DarwinTable
       ->where('t.id > 0') ;
       return $q->execute() ;
   }
+  
+  public function getOneTaxon($taxonName) 
+  {
+    $response = Doctrine_Query::create()
+               ->select('t.name')
+               ->from('Taxonomy t')
+               ->where('t.name_indexed = fullToIndex(?)', $taxonName)
+               ->limit(2)
+               ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+    return $response;
+  }
 }
