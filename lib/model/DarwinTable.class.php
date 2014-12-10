@@ -395,7 +395,7 @@ class DarwinTable extends Doctrine_Table
         $q = Doctrine_Query::create()
           ->from($table.' t')
           ->innerjoin('t.Level l')
-          ->where('t.name_indexed ilike fulltoindex(?) || \'%\' ', $parents[$catalogue->getLevelSysName()])
+          ->where('t.name_indexed ilike fulltoindex(?)', $parents[$catalogue->getLevelSysName()])
           ->andWhere('l.level_sys_name = ?', $catalogue->getLevelSysName());
         $elem = $q->fetchOne();
         $catalogue_level[$catalogue->getLevelName()] = array(

@@ -61,15 +61,14 @@ EOF;
 
     // Define what's checkable (and therefore importable if do-import option is defined
     if (empty($options['full-check']))
-      $state_to_check = array('loaded','processing') ;
+      $state_to_check = array('loaded','processing');
     else
-      $state_to_check = array('loaded','processing','pending') ;
+      $state_to_check = array('loaded','pending','processing');
 
     // let's 'lock' all imports checkable to avoid an other check from the next check task
     $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
     // Get back here the list of imports id that could be treated
     $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
-
     // Begin here the transactional process
     $conn->getDbh()->exec('BEGIN TRANSACTION;');
       // let's begin with import catalogue
@@ -91,14 +90,14 @@ EOF;
         $sql = "SELECT fct_imp_checker_manager(s.*) 
                 FROM staging s, imports i 
                 WHERE s.import_ref=i.id 
-                  AND i.id IN (".implode(',', $imports).") ";
+                  AND i.id IN (".implode(',', $imports).") 
+                  AND i.state != 'aprocessing'";
         $this->logSection('checking', sprintf('Check %d : (%s) Start checking staging',$randnum,date('G:i:s')));
         $conn->getDbh()->exec($sql);
         $this->logSection('checking', sprintf('Check %d : (%s) Checking ended',$randnum,date('G:i:s')));
       // Close here the transactional process responsible of either taxonomic import or 
       // of checking
       $conn->getDbh()->exec('COMMIT;');
-
       // Check done, all loaded import won' t be imported again. So we can put then into pending state
       Doctrine_Query::create()
               ->update('imports p')
@@ -110,6 +109,9 @@ EOF;
       // if followed by process of do-import...
       if(!empty($options['do-import']))
       {
+        // Initialize the variable that will hold all the imports id to be processed for
+        // changing the state from aprocessing to pending
+        $processed_ids = array();
         // We need to begin an other transaction for the importing of lines in aprocessing
         $conn->getDbh()->exec('BEGIN TRANSACTION;');
 
@@ -119,6 +121,7 @@ EOF;
 
           foreach($imports as $import)
           {
+            $processed_ids[] = $import->getId();
             $date_start = date('G:i:s') ;
             $sql = 'select fct_importer_abcd('.$import->getId().')';
             $conn->getDbh()->exec($sql);
@@ -126,20 +129,15 @@ EOF;
           }
         // Work done, we need to release hand by a commit
         $conn->getDbh()->exec('COMMIT;');
+        // Ok import line asked but 0 ok lines... so it can remain some line in processing not processed...
+        // or simply work done... We then need to set the state back to pending for the current imports
+        Doctrine_Query::create()
+                ->update('imports p')
+                ->set('p.state','?','pending')
+                ->andWhere('p.state = ?','aprocessing')
+                ->andWhereIn('p.id', $processed_ids)
+                ->execute();
       }
-      // Ok import line asked but 0 ok lines... so it can remain some line in processing not processed...
-      // or simply work done... We then need to set the state back to pending for 
-      Doctrine_Query::create()
-              ->update('imports p')
-              ->set('p.state','?','pending')
-              ->andWhere('p.state = ?','aprocessing')
-              ->execute();
-      // else
-      // {
-      //   $sql = "update imports p set state = 'pending' where (state = 'aprocessing' OR state = 'apending' OR state = 'aloaded') and
-      //           exists( select 1 from staging where import_ref = p.id and status != ''::hstore)";
-      //   $conn->getDbh()->exec($sql);
-      // }
     }
     $this->log("End Check $randnum : ".date('G:i:s'));
   }

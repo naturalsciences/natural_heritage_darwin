@@ -82,6 +82,7 @@ class importActions extends DarwinActions
     {
       return $this->renderText('ok');
     }
+    if($this->import->getFormat() == 'taxon') return $this->redirect('import/indexTaxon');
     return $this->redirect('import/index');
   }
 
