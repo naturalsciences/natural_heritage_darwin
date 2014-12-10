@@ -27,11 +27,13 @@ class TaxonomyTable extends DarwinTable
   public function getOneTaxon($taxonName) 
   {
     $response = Doctrine_Query::create()
-               ->select('t.name')
+               ->select('t.name, l.level_name')
                ->from('Taxonomy t')
                ->where('t.name_indexed = fullToIndex(?)', $taxonName)
+			   ->leftJoin('t.Level l')
                ->limit(2)
                ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
+
     return $response;
   }
 }

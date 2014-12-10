@@ -187,16 +187,15 @@ class searchActions extends DarwinActions
   public function executeGetTaxon (sfWebRequest $request)
   {
   
- 	$response = $request->getParameter('taxon-name','');
 	$taxa = Doctrine::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'));
 	$taxaCount = count($taxa);
     if ($taxaCount==1) {
-	  $response = $taxa[0]['name'];
+	  return $this->renderText($taxa[0]['name']." (".$taxa[0]['Level']['level_name'].")");
 	}
 	elseif($taxaCount>1) {
-	  $response = 'multiple match';
+	   return $this->renderText('multiple match');
 	}
-    return $this->renderText($response);
+	return $this->renderText('taxon not found');
   
   }
   
