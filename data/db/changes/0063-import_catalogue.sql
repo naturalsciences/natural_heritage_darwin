@@ -22,7 +22,6 @@ create table staging_catalogue
         constraint fk_stg_catalogue_parent_ref foreign key (parent_ref) references staging_catalogue(id) on delete cascade
        );
 
-CREATE TRIGGER trg_update_import AFTER UPDATE ON imports FOR EACH ROW EXECUTE PROCEDURE fct_update_import();
 CREATE OR REPLACE function fct_update_import() RETURNS trigger AS $$
 BEGIN
   if OLD.state IS DISTINCT FROM NEW.state THEN
@@ -31,6 +30,7 @@ BEGIN
   return new ;
 END;
 $$ LANGUAGE plpgsql ;
+CREATE TRIGGER trg_update_import AFTER UPDATE ON imports FOR EACH ROW EXECUTE PROCEDURE fct_update_import();
 
 CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referenced_relation text)  RETURNS boolean
 AS $$
