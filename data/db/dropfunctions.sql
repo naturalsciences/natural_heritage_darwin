@@ -93,6 +93,7 @@ DROP FUNCTION IF EXISTS trg_ins_update_dict() CASCADE;
 DROP FUNCTION IF EXISTS trg_del_dict() CASCADE;
 
 DROP FUNCTION IF EXISTS fct_upd_people_in_flat() CASCADE;
+DROP FUNCTION IF EXISTS fct_update_import();
 DROP FUNCTION IF EXISTS fct_imp_checker_catalogue(staging, text, text) CASCADE;
 DROP FUNCTION IF EXISTS fct_imp_checker_manager(staging) CASCADE;
 DROP FUNCTION IF EXISTS fct_imp_checker_catalogues_parents(staging, integer, text, text) CASCADE;
@@ -137,6 +138,7 @@ DROP FUNCTION IF EXISTS fct_update_specimen_flat();
 DROP FUNCTION IF EXISTS fct_update_specimens_flat_related();
 DROP FUNCTION IF EXISTS fct_upd_institution_staging_relationship() ;
 DROP FUNCTION IF EXISTS fct_imp_checker_staging_info() ;
+DROP FUNCTION IF EXISTS fct_imp_checker_staging_info(staging);
 DROP FUNCTION IF EXISTS fct_imp_checker_staging_relationship()  ;
 DROP FUNCTION IF EXISTS check_auto_increment_code_in_spec();
 DROP FUNCTION IF EXISTS fct_after_save_add_code(collections.id%TYPE,specimens.id%TYPE);

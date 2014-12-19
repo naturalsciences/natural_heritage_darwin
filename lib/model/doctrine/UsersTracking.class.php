@@ -48,12 +48,13 @@ class UsersTracking extends BaseUsersTracking
       $hstore = $this->_get('new_value');
     $diff = new Hstore();
     $diff->import($hstore);
-    foreach($diff as $key=>$value)
+    $tab = $diff->getIterator() ;
+    foreach($tab as $key=>$value)
     {
       if(preg_match("/_indexed$/", $key) || preg_match("/_name_ts$/", $key) || preg_match("/_order_by$/", $key))
-        unset($diff[$key]);
+        $tab->offsetUnset($key);
     }
-    return $diff;
+    return $tab;
   }
 }
 

@@ -20,6 +20,7 @@
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
+ * @property Doctrine_Collection $StagingCatalogue
  * 
  * @method integer             getId()               Returns the current record's "id" value
  * @method string              getFilename()         Returns the current record's "filename" value
@@ -36,6 +37,7 @@
  * @method Collections         getCollections()      Returns the current record's "Collections" value
  * @method Users               getUsers()            Returns the current record's "Users" value
  * @method Doctrine_Collection getStaging()          Returns the current record's "Staging" collection
+ * @method Doctrine_Collection getStagingCatalogue() Returns the current record's "StagingCatalogue" collection
  * @method Imports             setId()               Sets the current record's "id" value
  * @method Imports             setFilename()         Sets the current record's "filename" value
  * @method Imports             setUserRef()          Sets the current record's "user_ref" value
@@ -51,6 +53,7 @@
  * @method Imports             setCollections()      Sets the current record's "Collections" value
  * @method Imports             setUsers()            Sets the current record's "Users" value
  * @method Imports             setStaging()          Sets the current record's "Staging" collection
+ * @method Imports             setStagingCatalogue() Sets the current record's "StagingCatalogue" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -125,6 +128,10 @@ abstract class BaseImports extends DarwinModel
              'foreign' => 'id'));
 
         $this->hasMany('Staging', array(
+             'local' => 'id',
+             'foreign' => 'import_ref'));
+
+        $this->hasMany('StagingCatalogue', array(
              'local' => 'id',
              'foreign' => 'import_ref'));
     }

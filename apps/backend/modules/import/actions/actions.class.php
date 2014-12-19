@@ -32,14 +32,27 @@ class importActions extends DarwinActions
   {
     $this->forward404Unless($request->hasParameter('id'));
     $this->import = $this->getRight($request->getParameter('id')) ;
-    $this->import->setState('deleted');
-    $this->import->save();
-
-    if($request->isXmlHttpRequest())
+    if($this->import->getFormat() == 'taxon' && ($this->import->getUserRef() == $this->getUser()->getId() || $this->getUser()->isAtLeast(Users::ADMIN))) 
     {
-      return $this->renderText('ok');
+      $this->import->delete() ;
+      if($request->isXmlHttpRequest())
+      {
+        return $this->renderText('ok');
+      }
+      return $this->redirect('import/indexTaxon');
     }
-    return $this->redirect('import/index');
+    else
+    {      
+      $this->import->setState('deleted');
+      $this->import->save();
+
+      if($request->isXmlHttpRequest())
+      {
+        return $this->renderText('ok');
+      }
+      return $this->redirect('import/index');
+    }
+
   }
 
   public function executeMaj(sfWebRequest $request)
@@ -55,8 +68,8 @@ class importActions extends DarwinActions
     $this->forward404Unless($request->hasParameter('id'));
     $this->id = $request->getParameter('id');
     $this->import = $this->getRight($this->id);
-    $this->errors = explode(';',$this->import->getErrorsInImport()) ;
-    array_pop($this->errors) ; // just remove the solo ";" with cause to have a empty column at the end of the array
+    $this->errors = explode(';',$this->import->getErrorsInImport()) ;    
+    //array_pop($this->errors) ; // just remove the solo ";" with cause to have a empty column at the end of the array
   }
 
   public function executeClear(sfWebRequest $request)
@@ -69,6 +82,7 @@ class importActions extends DarwinActions
     {
       return $this->renderText('ok');
     }
+    if($this->import->getFormat() == 'taxon') return $this->redirect('import/indexTaxon');
     return $this->redirect('import/index');
   }
 
@@ -77,17 +91,26 @@ class importActions extends DarwinActions
     $this->import = new Imports() ;
   }
 
+  public function executeUploadTaxon(sfWebRequest $request)
+  {
+
+  }
+
   public function executeUpload(sfWebRequest $request)
   {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     // Initialization of the import form
-    $this->form = new importsForm();
+    if($request->isMethod('post'))
+      $this->type =  $request->getParameter('imports')['format'] ;
+    else 
+      $this->type = $request->getParameter('format') == 'taxon'?'taxon':'abcd' ;
+    $this->form = new importsForm(null,array('format' => $this->type));    
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter($this->form->getName()), $request->getFiles($this->form->getName()));
       if($this->form->isValid())
       {
-        if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')))
+        if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')) && $this->type != 'taxon')
         {
           $error = new sfValidatorError(new sfValidatorPass(),'You don\'t have right on this collection');
           $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
@@ -105,6 +128,8 @@ class importActions extends DarwinActions
         try {
           $file->save(sfConfig::get('sf_upload_dir').'/'.$filename.$extension);
           $this->form->save() ;
+          if($this->type != 'abcd')
+            $this->redirect('import/indexTaxon?complete=true');
           $this->redirect('import/index?complete=true');
         }
         catch(Doctrine_Exception $e)
@@ -124,16 +149,27 @@ class importActions extends DarwinActions
   */
   public function executeIndex(sfWebRequest $request)
   {
+    $this->format = 'abcd' ;
     $this->form = new ImportsFormFilter(null,array('user' =>$this->getUser()));
   }
-  public function executeSearch(sfWebRequest $request)
+
+  public function executeIndexTaxon(sfWebRequest $request)
   {
-    $this->form = new ImportsFormFilter(null,array('user' =>$this->getUser()));
+    $this->format = 'taxon' ;
+    $this->form = new ImportsTaxonFormFilter(null,array('user' =>$this->getUser()));    
+    $this->setTemplate('index');
+  }
+
+  private function andSearch($request,$format)
+  {
+    $this->format = $format ;
     $this->setCommonValues('import', 'updated_at', $request);
     if( $request->getParameter('orderby', '') == '' && $request->getParameter('orderdir', '') == '')
       $this->orderDir = 'desc';
-
-    $this->s_url = 'import/search'.'?is_choose='.$this->is_choose;
+    if($this->format != 'abcd')
+      $this->s_url = 'import/searchCatalogue'.'?is_choose='.$this->is_choose;
+    else
+      $this->s_url = 'import/search'.'?is_choose='.$this->is_choose;
     $this->o_url = '&orderby='.$this->orderBy.'&orderdir='.$this->orderDir;
     if($request->getParameter('imports_filters','') !== '')
     {
@@ -178,5 +214,18 @@ class importActions extends DarwinActions
         }
       }
     }
+  }
+
+  public function executeSearchCatalogue(sfWebRequest $request)
+  {
+    $this->form = new ImportsTaxonFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'taxon') ;
+    $this->setTemplate('search');
+  }
+
+  public function executeSearch(sfWebRequest $request)
+  {
+    $this->form = new ImportsFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'abcd') ;    
   }
 }

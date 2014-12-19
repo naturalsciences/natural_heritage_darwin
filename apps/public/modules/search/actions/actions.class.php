@@ -184,6 +184,23 @@ class searchActions extends DarwinActions
     }
   }
 
+  public function executeGetTaxon (sfWebRequest $request)
+  {
+  
+	$taxa = Doctrine::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'));
+	$taxaCount = count($taxa);
+    if ($taxaCount==1) {
+	  return $this->renderText($taxa[0]['name']." (".$taxa[0]['Level']['level_name'].")");
+	}
+	elseif($taxaCount>1) {
+	   return $this->renderText('multiple match');
+	}
+	return $this->renderText('taxon not found');
+  
+  }
+  
+  
+  
   /**
   * Compute different sources to get the columns that must be showed
   * 1) from form request 2) from session 3) from default value

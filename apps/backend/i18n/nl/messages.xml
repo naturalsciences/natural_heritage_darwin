@@ -6979,8 +6979,7 @@
         
       </trans-unit>
       <trans-unit id="1745">
-        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import,
-        correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</source>
+        <source>warning_spec_msg</source>
         <target>&lt;strong&gt;Waarschuwing!&lt;/strong&gt;&lt;br /&gt; Deze foutmeldingen kunnen niet worden gecorrigeerd. U kan best uw import verwijderen, het XML-bestand corrigeren en opnieuw importeren. U kan eveneens het importeren vervolgen, maar u zal bovenstaande informatie verliezen. Wat wenst u te doen?</target>
         
       </trans-unit>
@@ -7412,7 +7411,16 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
         <source>Storage</source>
         <target>Opslag</target>
       </trans-unit>
-      
+
+      <trans-unit id="1841">
+        <source>Actif</source>
+        <target>Verwerkt</target>
+      </trans-unit>
+
+      <trans-unit id="1842">
+        <source>warning_catalogue_msg</source>
+        <target>&lt;strong&gt;Waarschuwing!&lt;/strong&gt;&lt;br /&gt; Deze foutmeldingen kunnen niet worden gecorrigeerd. U kan alleen uw import verwijderen, het XML-bestand corrigeren en opnieuw importeren.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

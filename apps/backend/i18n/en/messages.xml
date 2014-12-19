@@ -5585,12 +5585,11 @@
       </trans-unit>
       <trans-unit id="1744">
         <source>List of errors occured during import</source>
-        <target>List of errors occured during import</target>
+        <target>List of errors that occured during import</target>
       </trans-unit>
       <trans-unit id="1745">
-        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import,
-        correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</source>
-        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import, correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</target>
+        <source>warning_spec_msg</source>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove them, is to delete your import, correct your XML file and import it again. You can also continue your import but you won't have the information above. What do you want to do ?</target>
       </trans-unit>
       <trans-unit id="1746">
         <source>Continue import</source>
@@ -5975,6 +5974,14 @@ DaRWIN</target>
         <source>Storage</source>
         <target>Storage</target>
       </trans-unit>
+      <trans-unit id="1841">
+        <source>Actif</source>
+        <target>Being processed</target>
+      </trans-unit>
+      <trans-unit id="1842">
+        <source>warning_catalogue_msg</source>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the only way to remove them, is to delete your import, correct your XML file (or DaRWIN catalogue) and import it again.</target>        
+      </trans-unit>      
     </body>
   </file>
 </xliff>

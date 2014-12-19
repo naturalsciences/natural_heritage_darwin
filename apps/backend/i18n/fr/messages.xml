@@ -6984,8 +6984,7 @@
         
       </trans-unit>
       <trans-unit id="1745">
-        <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove it is to delete your import,
-        correct your XML file and import it again. You can also continue your import but you won't have information above. What do you want to do ?</source>
+        <source>warning_spec_msg</source>
         <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt; Ces erreurs ne peuvent pas être corrigées, Le meilleur moyen de les corriger est de supprimer votre import, corriger votre fichier XML, et réimporter. Vous pouvez aussi continuer votre import mais vous perdrez alors les informations ci-dessus. Que voulez vous faire ?</target>
         
       </trans-unit>
@@ -7459,7 +7458,16 @@
         <source>Storage</source>
         <target>Stockage</target>
       </trans-unit>
-      
+
+      <trans-unit id="1841">
+        <source>Actif</source>
+        <target>En cours d'éxécution</target>
+      </trans-unit>
+
+      <trans-unit id="1842">
+        <source>warning_catalogue_msg</source>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt; Ces erreurs ne peuvent pas être corrigées, Le seul moyen de les corriger est de supprimer votre import, corriger votre fichier XML (ou le catalogue DaRWIN), et réimporter.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -10,18 +10,23 @@
     <?php endforeach ; ?>
     </ul>
     <div class="warn_message">
-    <?php echo __('<strong>Warning!</strong><br /> These errors cannot be corrected, the best way to remove it is to delete your import,
-    correct your XML file and import it again. You can also continue your import but you won\'t have information above. What do you want to do ?');?>
+      <?php if($import->getFormat() == 'abcd') : ?>
+        <?php echo __('warning_spec_msg');?>
+      <?php else: ?>
+        <?php echo __('warning_catalogue_msg');?>
+      <?php endif ?>
     </div>
     <p>
-      <a href="<?php echo url_for('import/maj?id='.$id) ?>" class="bt_close"><?php echo __('Continue import');?></a>
+      <?php if($import->getFormat() == 'abcd') : ?><a href="<?php echo url_for('import/maj?id='.$id) ?>" class="bt_close"><?php echo __('Continue import');?></a><?php endif ;?>
       <a href="<?php echo url_for('import/clear?id='.$id) ?>" class="bt_close"><?php echo __('Delete import');?></a>
     </p>
 
     <hr />
-    <p>
-      <a href="<?php echo url_for('import/index') ?>" class="bt_close"><?php echo __('Back');?></a>
-    </p>
+    <?php if($import->getFormat() == 'taxon') : ?> 
+      <p><?php echo link_to(__('Back'),'import/index?format=taxon',array('class'=>'bt_close'));?></p>
+    <?php else : ?>
+      <p><?php echo link_to(__('Back'),'import/index?format=abcd',array('class'=>'bt_close'));?></p>
+    <?php endif ; ?>
 
 </div>
 

@@ -15,8 +15,7 @@ class Imports extends BaseImports
   protected $line_num = 0;
   private static $state = array(
     '' => 'All', 
-    'to_be_loaded' => 'To be loaded',
-    'loading'=> 'Loading',
+    'to_be_loaded' => 'To be loaded',    
     'loaded'=>'Loaded',
     'checking'=> 'Checking',
     'pending'=> 'Pending',
@@ -27,7 +26,7 @@ class Imports extends BaseImports
   );  
   private static $info = array(
     'to_be_loaded' => 'This file is ready to be loaded, an automatic task will be activated to load lines.',
-    'loading'=> 'The file is actually being loaded in database',
+    'Actif'=> 'The file is actually being loaded in database',
     'loaded'=>'Your file has been loaded, but still need to be checked',
     'checking'=> 'Your file has been loaded and is being checked',
     'pending'=> 'Your file has been loaded and checked, you can edit line in errors or import corrects lines',
@@ -37,7 +36,7 @@ class Imports extends BaseImports
     'error' => 'Errors appeared during import, check these errors with the error icon, you can continue the import process or delete the entry and repair your file',
   );
 
-  public static $formatArray = array('abcd' => 'ABCD', 'dna' => 'DNA') ;
+  public static $formatArray = array('abcd' => 'ABCD') ;
   
   public function setCurrentLineNum($nbr)
   {
@@ -56,6 +55,7 @@ class Imports extends BaseImports
   public function getStateName($name = null)
   {
     if($name) return self::$state[$name];
+    if(in_array($this->getState(),array('aloaded','apending','aprocessing'))) return 'Actif' ;
     return self::$state[$this->getState()];
   }
   public static function getStateList()
@@ -71,7 +71,9 @@ class Imports extends BaseImports
   // function used to determine if we can display edition button or not
   public function isEditableState()
   {
-    if(in_array($this->getState(),array('pending','error')) && ! $this->getIsFinished()) return true ;
+    if($this->getState() == 'error') return true ;
+    if($this->getFormat() == 'taxon') return false ;
+    if(($this->getState() == 'pending') && ! $this->getIsFinished()) return true ;
     return false ;
   }   
 
@@ -81,4 +83,9 @@ class Imports extends BaseImports
     $dateTime = new FuzzyDateTime($this->_get('updated_at')!=''?$this->_get('updated_at'):$this->_get('created_at'));
     return $dateTime->getDateMasked('em','d/m/Y H:i');
   }  
+  protected function setCollection($collection)
+  {
+    if($collection == 0) $collection = null ;
+    $this->Collection = $collection;
+  }
 }

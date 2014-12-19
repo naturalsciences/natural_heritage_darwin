@@ -1,6 +1,6 @@
 
 DROP TRIGGER IF EXISTS trg_cpy_idToCode_gtu ON gtu ;
-
+DROP TRIGGER IF EXISTS trg_update_import ON imports
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_lithology ON lithology ;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_catalogueproperties ON catalogue_properties ;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_chronostratigraphy ON chronostratigraphy ;
