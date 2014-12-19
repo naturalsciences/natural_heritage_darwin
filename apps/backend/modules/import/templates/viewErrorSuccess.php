@@ -23,9 +23,9 @@
 
     <hr />
     <?php if($import->getFormat() == 'taxon') : ?> 
-      <p><?php echo link_to(__('Back'),'import/index?format=taxon',array('class'=>'bt_close'));?></p>
+      <p><?php echo link_to(__('Back'),'import/indexTaxon',array('class'=>'bt_close'));?></p>
     <?php else : ?>
-      <p><?php echo link_to(__('Back'),'import/index?format=abcd',array('class'=>'bt_close'));?></p>
+      <p><?php echo link_to(__('Back'),'import/index',array('class'=>'bt_close'));?></p>
     <?php endif ; ?>
 
 </div>
