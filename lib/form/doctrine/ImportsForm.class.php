@@ -11,15 +11,15 @@
 class ImportsForm extends BaseImportsForm
 {
   public function configure()
-  {
-    $this->useFields(array('collection_ref', 'format')) ;
-    $this->widgetSchema['uploadfield'] = new sfWidgetFormInputFile(array(),array('id'=>'uploadfield'));
-
+  {    
     if($this->options['format'] == 'taxon')
+    {
+      $this->useFields(array('format')) ;
       $category = array('taxon'=>$this->getI18N()->__('Taxonomy')) ;
+    }
     else
     {
-
+      $this->useFields(array('collection_ref', 'format')) ;
       /* Collection Reference */
       $this->widgetSchema['collection_ref'] = new widgetFormButtonRef(
         array(
@@ -34,8 +34,9 @@ class ImportsForm extends BaseImportsForm
         )
       );
       $category = imports::getFormats();
+      $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
     }
-
+    $this->widgetSchema['uploadfield'] = new sfWidgetFormInputFile(array(),array('id'=>'uploadfield'));
     $allowed_types = array('text/xml','application/xml') ;
     $this->widgetSchema['format'] = new sfWidgetFormChoice(
       array(
@@ -52,11 +53,9 @@ class ImportsForm extends BaseImportsForm
 
     $this->validatorSchema['format'] = new sfValidatorChoice(
       array('choices'=> array_keys($category)
-    ));
-    $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
+    ));    
     $this->validatorSchema['uploadfield'] = new xmlFileValidator(
       array(
-        // ATTENTION !!! CHANGER LE XSD DES QUE JE LE RECUP, LA C'EST LE XSD ABCD
         'xml_path_file'=>$this->options['format'] == 'taxon'?'/import/taxonomy.xsd':'/import/ABCD_2.06.xsd',
         'required' => true,
         'mime_types' => $allowed_types,
