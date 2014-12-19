@@ -35,13 +35,15 @@ $(document).ready(function ()
           <?php echo $form['format'] ?>
         </td>
       </tr>
+      <?php if($type != 'taxon') : ?>
       <tr>
-        <th><?php if($type != 'taxon') : ?><?php echo $form['collection_ref']->renderLabel() ?> :<?php endif ?></th>
+        <th><?php echo $form['collection_ref']->renderLabel() ?> :</th>
         <td>
           <?php echo $form['collection_ref']->renderError() ?>
           <?php echo $form['collection_ref'] ?>
         </td>
       </tr>
+      <?php endif ?>
     </tbody>
       <tfoot>
         <tr>
