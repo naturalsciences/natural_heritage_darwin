@@ -28,7 +28,7 @@
           <a href="/help/ABCDImport2DaRWIN_General.xlsm">ABCDImport2DaRWIN_General.xlsm</a><br />
           <a href="/help/ABCDImport2DaRWIN_General.xlsm">ABCDImport2DaRWIN_General_taxonFullName.xlsm</a>
         </td>
-        <td><a href="/help/ABCDImport2DaRWIN_General_usermanual.pdf">ABCDImport2DaRWIN_General_usermanual.pdf</a></td>    
+        <td><a href="/help/ABCDImport2DaRWIN_General_usermanual.pdf">ABCDImport2DaRWIN_General_usermanual_taxonFullName.pdf</a></td>    
       </tr>
       <tr>
         <td>DNA / JEMU</td>
@@ -65,8 +65,8 @@
       <tr>
         <td>Paleontology</td>
         <td>
-          <a href="/help/ABCDImport2DaRWIN_Paleontology.xlsm">ABCDImport2DaRWIN_Paleontology.xlsm</a><br />
-          <a href="/help/ABCDImport2DaRWIN_Paleontology.xlsm">ABCDImport2DaRWIN_Paleontology_taxonFullName.xlsm</a>
+          <a href="/help/ABCDImport2DaRWIN_Paleontology.xlsm">ABCDImport2Darwin_Paleontology.xlsm</a><br />
+          <a href="/help/ABCDImport2DaRWIN_Paleontology.xlsm">ABCDImport2Darwin_Paleontology_taxonFullName.xlsm</a>
         </td>
         <td><a href="/help/ABCDImport2DaRWIN_Paleontology_usermanual.pdf">ABCDImport2DaRWIN_Paleontology_usermanual.pdf</a></td>    
       </tr>
@@ -98,7 +98,7 @@
           <p>Template: </p><a href="/help/TaxonomyImport.xlsm">TaxonomyImport.xlsm</a><br />
           <p>User manual: </p><a href="/help/TaxonomyImport2DaRWIN_usermanual.pdf">TaxonomyImport2DaRWIN_usermanual.pdf</a>
         </td>
-        <td><a href="/Check_taxonFullName.xlsm">Check_taxonFullName.xlsm</a></td>    
+        <td><a href="/help/Check_taxonFullName.xlsm">Check_taxonFullName.xlsm</a></td>    
       </tr>
     </tbody>
   </table>
