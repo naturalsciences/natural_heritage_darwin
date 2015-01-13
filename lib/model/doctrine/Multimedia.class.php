@@ -203,13 +203,13 @@ class Multimedia extends BaseMultimedia
             $pdf->decodePDF();
             $content = $pdf->output();
           }
-        } catch ( Exception $e ) {}
+        } catch ( Exception $e ) { }
         if($content != '')
-          $this->setExtractedInfo($content);
+          $this->setExtractedInfo(utf8_encode($content));
       }
       if($this->getMimeType() == 'text/plain'){
         $content = file_get_contents($this->getFullURI());
-        $this->setExtractedInfo($content);
+        $this->setExtractedInfo(utf8_encode($content));
       }
     }
     parent::save($conn);
