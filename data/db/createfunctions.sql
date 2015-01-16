@@ -116,11 +116,7 @@ BEGIN
                 NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
                 NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
         ELSIF TG_TABLE_NAME = 'codes' THEN
-                IF NEW.code ~ '^[0-9]+$' THEN
-                    NEW.code_num := NEW.code;
-                ELSE
-                    NEW.code_num := null;
-                END IF;
+                NEW.code_num := trim(regexp_replace(NEW.code, '[^0-9]','','g'))::int;
                 NEW.full_code_indexed := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
         ELSIF TG_TABLE_NAME = 'tag_groups' THEN
                 NEW.group_name_indexed := fullToIndex(NEW.group_name);
@@ -152,7 +148,7 @@ BEGIN
         ELSIF TG_TABLE_NAME = 'specimens' THEN
                 NEW.object_name_indexed := fullToIndex(COALESCE(NEW.object_name,'') );
         END IF;
-	RETURN NEW;
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -2516,9 +2512,12 @@ BEGIN
 
   result_nbr := 0;
   IF catalogue_table = 'mineralogy' THEN
+    /*
+     * @ToDo: We'll need to evaluate if we keep the fuzzyness here or if we apply the same as it's for the other catalogues (=)
+     */
     OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
     INNER JOIN catalogue_levels c on t.level_ref = c.id
-    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
+    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
     LIMIT 2';
     LOOP
       FETCH ref INTO ref_record;
@@ -2532,7 +2531,7 @@ BEGIN
   ELSE
     OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
     INNER JOIN catalogue_levels c on t.level_ref = c.id
-    WHERE name_indexed = fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
+    WHERE name_indexed = fullToIndex(' || quote_literal( field_name) || ') AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
     LIMIT 2';
     LOOP
       FETCH ref INTO ref_record;
@@ -3988,7 +3987,7 @@ BEGIN
   FOR all_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY id 
   LOOP     
     if all_line.parent_ref IS Null THEN  -- so this is the first catalogue, we have to attach it to an existant
-      EXECUTE 'select count(*),id from '|| quote_ident(referenced_relation)||' where level_ref = $1 AND name_indexed like fullToIndex( $2 ) GROUP BY id ;'
+      EXECUTE 'select count(*),id from '|| quote_ident(referenced_relation)||' where level_ref = $1 AND name_indexed = fullToIndex( $2 ) GROUP BY id ;'
         into result_nbr,catalogue_id
         USING all_line.level_ref, all_line.name ;
       IF result_nbr IS NULL THEN
@@ -4002,7 +4001,7 @@ BEGIN
         RETURN true ;
       END IF ;
     ELSE -- else the direct parent is in the file, so we take the parent catalogue_ref from there
-      EXECUTE 'select count(*),id from '|| quote_ident(referenced_relation)||' where level_ref = $1 AND name_indexed like fullToIndex( $2 ) 
+      EXECUTE 'select count(*),id from '|| quote_ident(referenced_relation)||' where level_ref = $1 AND name_indexed = fullToIndex( $2 ) 
         AND parent_ref IS NOT DISTINCT FROM $3 GROUP BY id ;'
         into result_nbr,catalogue_id
         USING all_line.level_ref, all_line.name, parent_id ;
