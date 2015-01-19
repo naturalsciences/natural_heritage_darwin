@@ -90,6 +90,8 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 */
 CREATE OR REPLACE FUNCTION fct_cpy_fullToIndex() RETURNS trigger
 AS $$
+DECLARE
+  codeNum varchar;
 BEGIN
         IF TG_TABLE_NAME = 'properties' THEN
                 NEW.applies_to_indexed := COALESCE(fullToIndex(NEW.applies_to),'');
@@ -116,7 +118,12 @@ BEGIN
                 NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
                 NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
         ELSIF TG_TABLE_NAME = 'codes' THEN
-                NEW.code_num := trim(regexp_replace(NEW.code, '[^0-9]','','g'))::int;
+                codeNum := coalesce(trim(regexp_replace(NEW.code, '[^0-9]','','g')), '');
+                IF codeNum = '' THEN
+                  NEW.code_num := 0;
+                ELSE
+                  NEW.code_num := codeNum::int;
+                END IF;
                 NEW.full_code_indexed := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
         ELSIF TG_TABLE_NAME = 'tag_groups' THEN
                 NEW.group_name_indexed := fullToIndex(NEW.group_name);

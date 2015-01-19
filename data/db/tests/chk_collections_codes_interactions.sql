@@ -1,7 +1,7 @@
 -- Testing the interaction of code auto insertion and of code insertion, update, delete depending the flags set at collection level
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(45);
+SELECT plan(46);
 
 
 SELECT diag('Check for insertion of specimen in a collection without code auto insertion activated');
@@ -56,9 +56,12 @@ SELECT ok(0 = (SELECT fct_after_save_add_code(1, 4)), 'Mimic tentative of new co
 SELECT ok(124 = (SELECT code_last_value FROM collections WHERE id = 1), 'The code still stay 124 because it is already a number');
 SELECT ok(1 = (SELECT COUNT(*) FROM codes WHERE referenced_relation = 'specimens' AND record_id = 4 AND code_category = 'main'), 'And there is still 1 code for specimen 4');
 UPDATE codes SET code = '124bis' WHERE referenced_relation = 'specimens' AND record_id = 4;
-SELECT ok(0 = (SELECT COALESCE(code_num, 0) FROM codes WHERE referenced_relation = 'specimens' AND record_id = 4 AND code_category = 'main'), 'A NULL has been effectively set for code 124bis');
+SELECT ok(124 = (SELECT COALESCE(code_num, 0) FROM codes WHERE referenced_relation = 'specimens' AND record_id = 4 AND code_category = 'main'), 'A 124 has been effectively set for numerical code for code 124bis');
+UPDATE codes SET code = 'bisounours' WHERE referenced_relation = 'specimens' AND record_id = 4;
+SELECT ok(0 = (SELECT COALESCE(code_num, 0) FROM codes WHERE referenced_relation = 'specimens' AND record_id = 4 AND code_category = 'main'), 'A NULL has been effectively set for numerical code for code 124bis');
 SELECT ok(0 = (SELECT code_last_value FROM collections WHERE id = 1), 'The last numeric code is now back to 0');
 SELECT ok(0 = (SELECT fct_after_save_add_code(1, 4)), 'Mimic again tentative of new code insertion after specimen update (what did not happen ;))');
+SELECT diag(code_last_value) FROM collections WHERE id = 1;
 SELECT ok(1 = (SELECT code_last_value FROM collections WHERE id = 1), 'Code last value being effectively been set now to 1');
 SELECT ok(2 = (SELECT COUNT(*) FROM codes WHERE referenced_relation = 'specimens' AND record_id = 4 AND code_category = 'main'), 'And there are effectively 2 codes for specimen 4');
 
