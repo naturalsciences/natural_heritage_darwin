@@ -24,24 +24,24 @@ DROP TRIGGER IF EXISTS trg_clr_referenceRecord_gtu ON gtu;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_staging ON staging;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_catalogueproperties ON catalogue_properties;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_identifications ON identifications;
---DROP TRIGGER IF EXISTS trg_clr_referenceRecord_expertises ON expertises;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_vernacularnames ON vernacular_names;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_expeditions ON expeditions;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_people ON people;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_users ON users;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_multimedia ON multimedia;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_collections ON collections;
-/*DROP TRIGGER IF EXISTS trg_clr_referenceRecord_userscollrightsasked ON users_coll_rights_asked;*/
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_mysavedsearches ON collection_maintenance;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_collectionmaintenance ON collection_maintenance;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_taxa ON taxonomy;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_chronostratigraphy ON chronostratigraphy;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_lithostratigraphy ON lithostratigraphy;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_mineralogy ON mineralogy;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_lithology ON lithology;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimens ON specimens;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimens_relationships;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_loans;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_loan_items;
 
-
---DROP TRIGGER IF EXISTS trg_clear_referencedPeople ON people;
 
 DROP TRIGGER IF EXISTS trg_cpy_toFullText_comments ON comments;
 DROP TRIGGER IF EXISTS trg_cpy_toFullText_identifications ON identifications;

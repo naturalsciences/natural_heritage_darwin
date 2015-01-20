@@ -72,4 +72,130 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION fct_clear_referencedRecord() RETURNS TRIGGER
+AS $$
+BEGIN
+  IF TG_OP ='UPDATE' THEN
+    IF NEW.id != OLD.id THEN
+      UPDATE template_table_record_ref SET record_id = NEW.id WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+    END IF;
+  ELSEIF TG_OP = 'DELETE' THEN
+    DELETE FROM template_table_record_ref where referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+  END IF;
+  RETURN NULL;
+ END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_cataloguerelationships ON catalogue_relationships;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_cataloguepeople ON catalogue_people;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_gtu ON gtu;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_catalogueproperties ON catalogue_properties;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_identifications ON identifications;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_vernacularnames ON vernacular_names;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_expeditions ON expeditions;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_people ON people;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_users ON users;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_multimedia ON multimedia;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_collections ON collections;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_mysavedsearches ON collection_maintenance;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_collectionmaintenance ON collection_maintenance;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_taxa ON taxonomy;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_chronostratigraphy ON chronostratigraphy;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_lithostratigraphy ON lithostratigraphy;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_mineralogy ON mineralogy;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_lithology ON lithology;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimens ON specimens;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_specimens_relationships;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_loans;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_loan_items;
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_staging;
+
+CREATE TRIGGER trg_clr_referenceRecord_staging AFTER DELETE OR UPDATE
+    ON staging FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_gtu AFTER DELETE OR UPDATE
+    ON gtu FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_identifications AFTER DELETE OR UPDATE
+    ON identifications FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_insurances AFTER DELETE OR UPDATE
+    ON insurances FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_vernacularnames AFTER DELETE OR UPDATE
+    ON vernacular_names FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_expeditions AFTER DELETE OR UPDATE
+    ON expeditions FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_people AFTER DELETE OR UPDATE
+    ON people FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_users AFTER DELETE OR UPDATE
+    ON users FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_multimedia AFTER DELETE OR UPDATE
+    ON multimedia FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_igs AFTER DELETE OR UPDATE
+        ON igs FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_collections AFTER DELETE OR UPDATE
+    ON collections FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_bibliography AFTER DELETE OR UPDATE
+        ON bibliography FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_collectionmaintenance AFTER DELETE OR UPDATE
+    ON collection_maintenance FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_taxa AFTER DELETE OR UPDATE
+    ON taxonomy FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_chronostratigraphy AFTER DELETE OR UPDATE
+    ON chronostratigraphy FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_lithostratigraphy AFTER DELETE OR UPDATE
+    ON lithostratigraphy FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_mineralogy AFTER DELETE OR UPDATE
+    ON mineralogy FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_lithology AFTER DELETE OR UPDATE
+    ON lithology FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_specimens AFTER DELETE OR UPDATE
+    ON specimens FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_specimens_relationships AFTER DELETE OR UPDATE
+    ON specimens_relationships FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_loans AFTER DELETE OR UPDATE
+        ON loans FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
+
+CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE OR UPDATE
+        ON loan_items FOR EACH ROW
+        EXECUTE PROCEDURE fct_clear_referencedRecord();
+
 commit;
