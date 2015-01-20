@@ -86,6 +86,7 @@ BEGIN
  END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_bibliography ON bibliography;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_cataloguepeople ON catalogue_people;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_cataloguerelationships ON catalogue_relationships;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_chronostratigraphy ON chronostratigraphy;

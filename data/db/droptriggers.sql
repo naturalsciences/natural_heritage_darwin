@@ -18,6 +18,7 @@ DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_collecting_tools ON collecting_tools;
 DROP TRIGGER IF EXISTS trg_cpy_fullToIndex_collecting_methods ON collecting_methods;
 
 /*** REPERCUTION record_id ****/
+DROP TRIGGER IF EXISTS trg_clr_referenceRecord_bibliography ON bibliography;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_cataloguepeople ON catalogue_people;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_cataloguerelationships ON catalogue_relationships;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_chronostratigraphy ON chronostratigraphy;
