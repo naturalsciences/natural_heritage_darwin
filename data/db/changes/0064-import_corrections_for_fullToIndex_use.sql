@@ -157,4 +157,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION get_import_row() RETURNS integer AS $$
+
+UPDATE imports SET state = 'aloaded' FROM (
+  SELECT * FROM (
+    SELECT  * FROM imports i1 WHERE i1.state = 'to_be_loaded' ORDER BY i1.created_at asc, id asc OFFSET 0 --thats important
+  ) i2
+  WHERE pg_try_advisory_lock('imports'::regclass::integer, i2.id)
+  LIMIT 1
+) i3
+WHERE imports.id = i3.id RETURNING i3.id;
+$$
+LANGUAGE sql SECURITY DEFINER;
+
+
 commit;
