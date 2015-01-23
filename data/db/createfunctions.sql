@@ -90,6 +90,8 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 */
 CREATE OR REPLACE FUNCTION fct_cpy_fullToIndex() RETURNS trigger
 AS $$
+DECLARE
+  codeNum varchar;
 BEGIN
         IF TG_TABLE_NAME = 'properties' THEN
                 NEW.applies_to_indexed := COALESCE(fullToIndex(NEW.applies_to),'');
@@ -116,10 +118,11 @@ BEGIN
                 NEW.name_formated_indexed := fulltoindex(coalesce(NEW.given_name,'') || coalesce(NEW.family_name,''));
                 NEW.formated_name_unique := COALESCE(toUniqueStr(NEW.formated_name),'');
         ELSIF TG_TABLE_NAME = 'codes' THEN
-                IF NEW.code ~ '^[0-9]+$' THEN
-                    NEW.code_num := NEW.code;
+                codeNum := coalesce(trim(regexp_replace(NEW.code, '[^0-9]','','g')), '');
+                IF codeNum = '' THEN
+                  NEW.code_num := 0;
                 ELSE
-                    NEW.code_num := null;
+                  NEW.code_num := codeNum::int;
                 END IF;
                 NEW.full_code_indexed := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
         ELSIF TG_TABLE_NAME = 'tag_groups' THEN
@@ -152,7 +155,7 @@ BEGIN
         ELSIF TG_TABLE_NAME = 'specimens' THEN
                 NEW.object_name_indexed := fullToIndex(COALESCE(NEW.object_name,'') );
         END IF;
-	RETURN NEW;
+  RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -251,11 +254,15 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_clear_referencedRecord() RETURNS TRIGGER
 AS $$
 BEGIN
-  IF TG_OP ='DELETE' THEN
+  IF TG_OP ='UPDATE' THEN
+    IF NEW.id != OLD.id THEN
+      UPDATE template_table_record_ref SET record_id = NEW.id WHERE referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
+    END IF;
+  ELSEIF TG_OP = 'DELETE' THEN
     DELETE FROM template_table_record_ref where referenced_relation = TG_TABLE_NAME AND record_id = OLD.id;
   END IF;
   RETURN NULL;
-END;
+ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION fct_remove_array_elem(IN in_array anyarray, IN elem anyarray,OUT out_array anyarray)
@@ -2452,10 +2459,9 @@ BEGIN
 END;
 $$ language plpgsql;
 
-
 CREATE OR REPLACE FUNCTION get_import_row() RETURNS integer AS $$
 
-UPDATE imports SET state = 'loading' FROM (
+UPDATE imports SET state = 'aloaded' FROM (
   SELECT * FROM (
     SELECT  * FROM imports i1 WHERE i1.state = 'to_be_loaded' ORDER BY i1.created_at asc, id asc OFFSET 0 --thats important
   ) i2
@@ -2516,9 +2522,12 @@ BEGIN
 
   result_nbr := 0;
   IF catalogue_table = 'mineralogy' THEN
+    /*
+     * @ToDo: We'll need to evaluate if we keep the fuzzyness here or if we apply the same as it's for the other catalogues (=)
+     */
     OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
     INNER JOIN catalogue_levels c on t.level_ref = c.id
-    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
+    WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
     LIMIT 2';
     LOOP
       FETCH ref INTO ref_record;
@@ -2532,7 +2541,7 @@ BEGIN
   ELSE
     OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
     INNER JOIN catalogue_levels c on t.level_ref = c.id
-    WHERE name_indexed = fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
+    WHERE name_indexed = fullToIndex(' || quote_literal( field_name) || ') AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END
     LIMIT 2';
     LOOP
       FETCH ref INTO ref_record;
@@ -3176,13 +3185,18 @@ BEGIN
       --UPDATE collection_maintenance SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
       -- Import identifiers whitch identification have been updated to specimen
       INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
-      SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
+        SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref 
+        FROM staging_people s, identifications i 
+        WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
       DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ) ;
       -- Import collecting_methods
       INSERT INTO specimen_collecting_methods(id, specimen_ref, collecting_method_ref)
-      SELECT nextval('specimen_collecting_methods_id_seq'), rec_id, collecting_method_ref FROM staging_collecting_methods WHERE staging_ref = line.id;
+        SELECT nextval('specimen_collecting_methods_id_seq'), rec_id, collecting_method_ref 
+        FROM staging_collecting_methods 
+        WHERE staging_ref = line.id;
+      
       DELETE FROM staging_collecting_methods where staging_ref = line.id;
-      UPDATE staging set spec_ref=rec_id WHERE id=all_line.id ;
+      UPDATE staging set spec_ref=rec_id WHERE id=all_line.id;
 
       FOR people_line IN SELECT * from staging_people WHERE referenced_relation = 'specimens'
       LOOP
@@ -3988,7 +4002,7 @@ BEGIN
   FOR all_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY id 
   LOOP     
     if all_line.parent_ref IS Null THEN  -- so this is the first catalogue, we have to attach it to an existant
-      EXECUTE 'select count(*),id from '|| quote_ident(referenced_relation)||' where level_ref = $1 AND name_indexed like fullToIndex( $2 ) GROUP BY id ;'
+      EXECUTE 'select count(*),id from '|| quote_ident(referenced_relation)||' where level_ref = $1 AND name_indexed = fullToIndex( $2 ) GROUP BY id ;'
         into result_nbr,catalogue_id
         USING all_line.level_ref, all_line.name ;
       IF result_nbr IS NULL THEN
@@ -4002,7 +4016,7 @@ BEGIN
         RETURN true ;
       END IF ;
     ELSE -- else the direct parent is in the file, so we take the parent catalogue_ref from there
-      EXECUTE 'select count(*),id from '|| quote_ident(referenced_relation)||' where level_ref = $1 AND name_indexed like fullToIndex( $2 ) 
+      EXECUTE 'select count(*),id from '|| quote_ident(referenced_relation)||' where level_ref = $1 AND name_indexed = fullToIndex( $2 ) 
         AND parent_ref IS NOT DISTINCT FROM $3 GROUP BY id ;'
         into result_nbr,catalogue_id
         USING all_line.level_ref, all_line.name, parent_id ;

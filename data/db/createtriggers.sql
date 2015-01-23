@@ -103,10 +103,6 @@ CREATE TRIGGER trg_clr_referenceRecord_gtu AFTER DELETE OR UPDATE
 	ON gtu FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-CREATE TRIGGER trg_clr_identifiers_in_flat BEFORE DELETE
-	ON identifications FOR EACH ROW
-	EXECUTE PROCEDURE fct_clear_identifiers_in_flat();
-
 CREATE TRIGGER trg_clr_referenceRecord_identifications AFTER DELETE OR UPDATE
 	ON identifications FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
@@ -147,11 +143,7 @@ CREATE TRIGGER trg_clr_referenceRecord_bibliography AFTER DELETE OR UPDATE
         ON bibliography FOR EACH ROW
         EXECUTE PROCEDURE fct_clear_referencedRecord();
 
-/*CREATE TRIGGER trg_clr_referenceRecord_userscollrightsasked AFTER DELETE OR UPDATE
-	ON users_coll_rights_asked FOR EACH ROW
-	EXECUTE PROCEDURE fct_clear_referencedRecord();
-*/
-CREATE TRIGGER trg_clr_referenceRecord_mysavedsearches AFTER DELETE OR UPDATE
+CREATE TRIGGER trg_clr_referenceRecord_collectionmaintenance AFTER DELETE OR UPDATE
 	ON collection_maintenance FOR EACH ROW
 	EXECUTE PROCEDURE fct_clear_referencedRecord();
 
@@ -193,6 +185,12 @@ CREATE TRIGGER trg_clr_referenceRecord_loan_items AFTER DELETE OR UPDATE
 
 
 /****************************/
+
+CREATE TRIGGER trg_clr_identifiers_in_flat BEFORE DELETE
+    ON identifications FOR EACH ROW
+    EXECUTE PROCEDURE fct_clear_identifiers_in_flat();
+
+/***************************/
 
 CREATE TRIGGER trg_cpy_updateCollectionRights AFTER INSERT OR UPDATE
 	ON collections FOR EACH ROW
