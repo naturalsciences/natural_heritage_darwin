@@ -58,6 +58,7 @@ all:
       multimedia: If you're looking for only illustrated object (or object with files), check the box below
       comments: Via this widget you can perform a search in comments linked to specimens. You can also use the dedicated comment search.
       properties: Via this widget you can perform a search in properties linked to specimens. You can also use the dedicated propety search. Look for 1 specific value using the "from" field or a range using "from" and "to".
+      statusAndCount: statusAndCountHelp
 
     specimenwidget:
       refChrono: This widget allows you to add the reference to a chonostratigraphic unit.

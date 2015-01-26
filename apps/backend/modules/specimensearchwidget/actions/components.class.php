@@ -156,4 +156,8 @@ class specimensearchwidgetComponents extends sfComponents
   {
     $this->defineForm();
   }
+  public function executeStatusAndCount()
+  {
+    $this->defineForm() ;
+  }
 }

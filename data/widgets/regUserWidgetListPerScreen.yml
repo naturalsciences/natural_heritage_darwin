@@ -362,6 +362,17 @@ sps26:
    title_perso: Comments
    all_public: true
 
+sps27:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: statusAndCount
+   mandatory: false
+   order_by: 15
+   opened: true
+   visible: true
+   title_perso: Specimen Status / Count
+   all_public: true
+
 sw1:
    col_num: 1
    category: specimen_widget

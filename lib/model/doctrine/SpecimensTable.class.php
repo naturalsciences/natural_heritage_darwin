@@ -270,6 +270,16 @@ class SpecimensTable extends DarwinTable
     }
 
     /**
+    * Get distinct Specimen_status
+    * @return Doctrine_collection with distinct "specimen_status" as column
+    */
+    public function getDistinctSpecimenStatus()
+    {
+      $states = $this->createUniqFlatDistinct('specimens', 'specimen_status', 'specimen_status',true);
+      return $states;
+    }
+
+    /**
     * Get distinct Stages
     * @return Doctrine_collection with distinct "stages" as column
     */
@@ -377,7 +387,8 @@ class SpecimensTable extends DarwinTable
         ->orderBy("dict_value ASC");
       $res = $q->execute();
       $this->flat_results = array();
-      foreach($res as $result) {
+      foreach($res as $result) 
+      {
         if(! isset($this->flat_results[$result->getDictField()]))
           $this->flat_results[$result->getDictField()] = array();
         $this->flat_results[$result->getDictField()][$result->getDictValue()] = $result->getDictValue();

@@ -484,7 +484,7 @@
       </trans-unit>
       <trans-unit id="119">
         <source>Last modification</source>
-        <target>Laatste wijziging</target>
+        <target>Laatste systeemcontrole</target>
         
       </trans-unit>
       <trans-unit id="121">
@@ -779,7 +779,7 @@
       </trans-unit>
       <trans-unit id="179">
         <source>Part Status</source>
-        <target>Object Status </target>
+        <target>Stal Status </target>
         
       </trans-unit>
       <trans-unit id="180">
@@ -7421,6 +7421,11 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
         <source>warning_catalogue_msg</source>
         <target>&lt;strong&gt;Waarschuwing!&lt;/strong&gt;&lt;br /&gt; Deze foutmeldingen kunnen niet worden gecorrigeerd. U kan alleen uw import verwijderen, het XML-bestand corrigeren en opnieuw importeren.</target>
       </trans-unit>
+
+      <trans-unit id="1843">
+        <source>statusAndCountHelp</source>
+        <target>Via deze widget kan u specimens opzoeken door ofwel de staat van het object (bv. beschadigd) te zoeken, ofwel het "Aantal" (aantal elementen die precies of onnauwkeurig werden ingevoerd).</target>
+      </trans-unit>   
     </body>
   </file>
 </xliff>

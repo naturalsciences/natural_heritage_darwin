@@ -484,7 +484,7 @@
       </trans-unit>
       <trans-unit id="119">
         <source>Last modification</source>
-        <target>Dernière modification</target>
+        <target>Dernière verif. système</target>
         
       </trans-unit>
       <trans-unit id="121">
@@ -779,7 +779,7 @@
       </trans-unit>
       <trans-unit id="179">
         <source>Part Status</source>
-        <target>Statut de parties</target>
+        <target>Statut d'échantillon</target>
         
       </trans-unit>
       <trans-unit id="180">
@@ -7468,6 +7468,11 @@
         <source>warning_catalogue_msg</source>
         <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt; Ces erreurs ne peuvent pas être corrigées, Le seul moyen de les corriger est de supprimer votre import, corriger votre fichier XML (ou le catalogue DaRWIN), et réimporter.</target>
       </trans-unit>
+
+      <trans-unit id="1843">
+        <source>statusAndCountHelp</source>
+        <target>Via cette widget, vous pouvez rechercher des échantillons en fonction de leur état (ex: abîmé), vous pouvez aussi rechercher des échantillons qui sont encodés en "lot" (nombre d'éléments exactement ou aproximativement encodé)</target>
+      </trans-unit>   
     </body>
   </file>
 </xliff>

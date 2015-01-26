@@ -389,7 +389,7 @@
       </trans-unit>
       <trans-unit id="119">
         <source>Last modification</source>
-        <target>Last modification</target>
+        <target>Last system check</target>
       </trans-unit>
       <trans-unit id="121">
         <source>Number of items</source>
@@ -625,7 +625,7 @@
       </trans-unit>
       <trans-unit id="179">
         <source>Part Status</source>
-        <target>Part Status</target>
+        <target>Specimen Status</target>
       </trans-unit>
       <trans-unit id="180">
         <source>Part Codes</source>
@@ -5981,7 +5981,11 @@ DaRWIN</target>
       <trans-unit id="1842">
         <source>warning_catalogue_msg</source>
         <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the only way to remove them, is to delete your import, correct your XML file (or DaRWIN catalogue) and import it again.</target>        
-      </trans-unit>      
+      </trans-unit>  
+      <trans-unit id="1843">
+        <source>statusAndCountHelp</source>
+        <target>Via this widget, you can either find specimens by searching their status (e.g. damaged), or you can search for their "batch" number (number of elements exactely or approximately encoded).</target>
+      </trans-unit>    
     </body>
   </file>
 </xliff>

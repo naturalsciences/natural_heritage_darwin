@@ -420,6 +420,15 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));
     $this->validatorSchema['status'] = new sfValidatorPass();
 
+    $this->widgetSchema['specimen_status'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'Specimens',
+      'table_method' => 'getDistinctSpecimenStatus',
+      'multiple' => false,
+      'expanded' => false,
+      'add_empty' => true,
+    ));
+    $this->validatorSchema['specimen_status'] = new sfValidatorPass();
+
     $this->widgetSchema['social'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'Specimens',
       'table_method' => 'getDistinctSocialStatuses',
@@ -438,6 +447,14 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));
     $this->validatorSchema['rockform'] = new sfValidatorPass();
 
+    $this->widgetSchema['count'] = new sfWidgetFormInput();
+    $this->widgetSchema['count']->setAttributes(array('class'=>'vsmall_size'));
+    $this->validatorSchema['count'] = new sfValidatorString(array('required' => false));
+
+    $operators = array(''=>'','e'=>'=','l'=>'<=','g'=>'>=') ;
+    $this->widgetSchema['count_operator'] = new sfWidgetFormChoice(array('choices'=> $operators));
+    $this->validatorSchema['count_operator'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($operators)));
+    
     $this->widgetSchema['container'] = new sfWidgetFormInput();
     $this->validatorSchema['container'] = new sfValidatorString(array('required' => false));
 
@@ -1130,7 +1147,13 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       $this->cols = array_intersect($values['collection_ref'], $this->cols);
     }
     $query->andwhere('collection_ref in ( '.implode(',',$this->cols). ') ');
-
+    if(!empty($values['specimen_status'])) $query->andwhere('specimen_status = ?',$values['specimen_status']) ; 
+    if ($values['count_operator'] != '' && $values['count'] != '')
+    {
+      if($values['count_operator'] == 'e') $query->andwhere('specimen_count_max = ?',$values['count']) ;
+      if($values['count_operator'] == 'l') $query->andwhere('specimen_count_max <= ?',$values['count']) ;
+      if($values['count_operator'] == 'g') $query->andwhere('specimen_count_min >= ?',$values['count']) ;
+    }
     if ($values['people_ref'] != '') $this->addPeopleSearchColumnQuery($query, $values['people_ref'], $values['role_ref']);
     if ($values['acquisition_category'] != '' ) $query->andWhere('acquisition_category = ?',$values['acquisition_category']);
     if ($values['taxon_level_ref'] != '') $query->andWhere('taxon_level_ref = ?', intval($values['taxon_level_ref']));
