@@ -3117,6 +3117,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_importer_abcd(req_import_ref integer)  RETURNS boolean
 AS $$
 DECLARE
+  userid integer
   rec_id integer;
   people_id integer;
   all_line RECORD ;
@@ -3130,12 +3131,13 @@ DECLARE
   code_count integer;
 BEGIN
   SELECT * INTO collection FROM collections WHERE id = (SELECT collection_ref FROM imports WHERE id = req_import_ref AND is_finished = FALSE LIMIT 1);
+  select user_ref into userid from imports where id=req_import_ref ;
+  PERFORM set_config('darwin.userid',userid::varchar, false) ;
   FOR all_line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id
       WHERE import_ref = req_import_ref AND to_import=true and status = ''::hstore AND i.is_finished =  FALSE
   LOOP
     BEGIN
       -- I know it's dumb but....
-      PERFORM fct_set_user(all_line.user_ref) ;
       select * into staging_line from staging where id = all_line.id;
       PERFORM fct_imp_checker_igs(staging_line, true);
       PERFORM fct_imp_checker_expeditions(staging_line, true);
