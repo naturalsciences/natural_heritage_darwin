@@ -22,6 +22,15 @@ from
           ) as y on x.datatype = y.typoid 
       where proname not in ('dummy_first')
       group by x.prooid
+      UNION
+      select DISTINCT 'ALTER FUNCTION ' || :schemaname || '.' || min(x.proname) || ' () OWNER TO ' || :ownername || ';' as sqlcmd,
+            2 as orderby 
+      from (select oid as prooid, proname from pg_proc 
+            where pronamespace = (select oid from pg_namespace where nspname = :schemaname)
+              and proargtypes = ''
+          ) as x 
+      where proname not in ('dummy_first')
+      group by x.prooid
       UNION 
       select 'ALTER TABLE ' || :schemaname || '.' || tablename || ' OWNER TO ' || :ownername || ';' as sqlcmd, 
              3 as orderby 
