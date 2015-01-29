@@ -3117,6 +3117,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_importer_abcd(req_import_ref integer)  RETURNS boolean
 AS $$
 DECLARE
+  userid integer
   rec_id integer;
   people_id integer;
   all_line RECORD ;
@@ -3130,12 +3131,13 @@ DECLARE
   code_count integer;
 BEGIN
   SELECT * INTO collection FROM collections WHERE id = (SELECT collection_ref FROM imports WHERE id = req_import_ref AND is_finished = FALSE LIMIT 1);
+  select user_ref into userid from imports where id=req_import_ref ;
+  PERFORM set_config('darwin.userid',userid::varchar, false) ;
   FOR all_line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id
       WHERE import_ref = req_import_ref AND to_import=true and status = ''::hstore AND i.is_finished =  FALSE
   LOOP
     BEGIN
       -- I know it's dumb but....
-      PERFORM fct_set_user(all_line.user_ref) ;
       select * into staging_line from staging where id = all_line.id;
       PERFORM fct_imp_checker_igs(staging_line, true);
       PERFORM fct_imp_checker_expeditions(staging_line, true);
@@ -3185,13 +3187,18 @@ BEGIN
       --UPDATE collection_maintenance SET referenced_relation ='specimens', record_id = rec_id where referenced_relation ='staging' and record_id = line.id;
       -- Import identifiers whitch identification have been updated to specimen
       INSERT INTO catalogue_people(id, referenced_relation, record_id, people_type, people_sub_type, order_by, people_ref)
-      SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
+        SELECT nextval('catalogue_people_id_seq'), s.referenced_relation, s.record_id, s.people_type, s.people_sub_type, s.order_by, s.people_ref 
+        FROM staging_people s, identifications i 
+        WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ;
       DELETE FROM staging_people where id in (SELECT s.id FROM staging_people s, identifications i WHERE i.id = s.record_id AND s.referenced_relation = 'identifications' AND i.record_id = rec_id AND i.referenced_relation = 'specimens' ) ;
       -- Import collecting_methods
       INSERT INTO specimen_collecting_methods(id, specimen_ref, collecting_method_ref)
-      SELECT nextval('specimen_collecting_methods_id_seq'), rec_id, collecting_method_ref FROM staging_collecting_methods WHERE staging_ref = line.id;
+        SELECT nextval('specimen_collecting_methods_id_seq'), rec_id, collecting_method_ref 
+        FROM staging_collecting_methods 
+        WHERE staging_ref = line.id;
+      
       DELETE FROM staging_collecting_methods where staging_ref = line.id;
-      UPDATE staging set spec_ref=rec_id WHERE id=all_line.id ;
+      UPDATE staging set spec_ref=rec_id WHERE id=all_line.id;
 
       FOR people_line IN SELECT * from staging_people WHERE referenced_relation = 'specimens'
       LOOP
