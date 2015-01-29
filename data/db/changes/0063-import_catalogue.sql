@@ -351,6 +351,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_importer_abcd(req_import_ref integer)  RETURNS boolean
 AS $$
 DECLARE
+  userid integer;
   rec_id integer;
   people_id integer;
   all_line RECORD ;
