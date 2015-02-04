@@ -252,7 +252,7 @@
     <div class="borded right_padded">
       <table class="caract_table">
         <tr>
-          <td><span class="pager_nav"><?php echo __("Number of items") ; ?> :</span></td>
+          <td><span class="pager_nav"><?php echo __("Individual Count") ; ?> :</span></td>
           <td><span>
             <?php if($specimen->getSpecimenCountMin() == $specimen->getSpecimenCountMax())
                 echo ($specimen->getSpecimenCountMin()==""?"-":$specimen->getSpecimenCountMin()) ;
@@ -347,12 +347,12 @@
                 </tbody>
               </table>
           </td>
-        </tr>
-
+        </tr>        
         <?php endif ; ?>
         <?php if($specimen->getObjectName()!=""):?>
+        <tr><td colspan="2"><h3></h3></td></tr>
         <tr>
-          <td><span class="pager_nav"><?php echo __("Name") ; ?> :</span></td>
+          <td><span class="pager_nav"><?php echo __("Object name") ; ?> :</span></td>
           <td>
             <span><?php echo $specimen->getObjectName(); ?></span>
           </td>
@@ -370,6 +370,20 @@
       </table>
 
     </div>
+
+    <?php if(isset($comments)) : ?>
+    <h2 class="title"><?php echo __("Associated comment") ?></h2>
+    <div class="borded right_padded">
+      <table class="caract_table">
+        <?php foreach ($comments as $comment) : ?>
+        <tr>
+          <td><span class="pager_nav"><?php echo $comment->getNotionConcerned() ; ?> :</span></td>
+          <td><?php echo $comment->getComment(); ?></td>
+        </tr>
+      <?php endforeach ; ?>
+      </table>
+    </div>
+    <?php endif ; ?>
 
     <h2 class="title"><?php echo __("You think there's a mistake ? please suggest us a correction") ?></h2>
     <div class="suggestion_zone">

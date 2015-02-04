@@ -359,7 +359,7 @@ Ha sido creada por el departamento de informática del Real Instituto Belga de C
       </trans-unit>
           <trans-unit id="1255">
         <source>Individual Count</source>
-        <target>Recuento individual</target>
+        <target>Número de objetos</target>
         
       </trans-unit>
           <trans-unit id="1256">
@@ -945,6 +945,16 @@ Etapas</target>
       <trans-unit id="1720">
         <source>Recommended browser for DaRWIN :</source>
         
+      </trans-unit>
+
+      <trans-unit id="1721">
+        <source>Associated comment</source>
+        <target>Comentarios asociados</target>
+      </trans-unit>
+
+      <trans-unit id="1722">
+        <source>Object name</source>
+        <target>Nombre del objecto</target>
       </trans-unit>
     </body>
   </file>
