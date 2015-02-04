@@ -371,7 +371,7 @@
 
     </div>
 
-    <?php if(isset($comments)) : ?>
+    <?php if(isset($comments) && count($comments)) : ?>
     <h2 class="title"><?php echo __("Associated comment") ?></h2>
     <div class="borded right_padded">
       <table class="caract_table">
