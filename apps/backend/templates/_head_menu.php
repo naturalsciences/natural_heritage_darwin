@@ -92,6 +92,8 @@
                   <li><?php echo link_to(__('Big Brother'),'bigbro/index');?></li>
                 <?php endif ; ?>
                 <?php if($sf_user->isAtLeast(Users::MANAGER) ): ?>
+                  <li><?php echo link_to(__('Report'),'report/index');?></li>
+                <?php endif ; ?>
                   <li>
                     <a href="#" class="subtitle"><?php echo __('User');?> »</a>
                     <ul class="submenu lvl_2">

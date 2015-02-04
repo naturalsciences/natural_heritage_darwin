@@ -34,6 +34,7 @@
  * @property Doctrine_Collection $Imports
  * @property Doctrine_Collection $LoanRights
  * @property Doctrine_Collection $LoanStatus
+ * @property Doctrine_Collection $Reports
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method boolean             getIsPhysical()            Returns the current record's "is_physical" value
@@ -64,6 +65,7 @@
  * @method Doctrine_Collection getImports()               Returns the current record's "Imports" collection
  * @method Doctrine_Collection getLoanRights()            Returns the current record's "LoanRights" collection
  * @method Doctrine_Collection getLoanStatus()            Returns the current record's "LoanStatus" collection
+ * @method Doctrine_Collection getReports()               Returns the current record's "Reports" collection
  * @method Users               setId()                    Sets the current record's "id" value
  * @method Users               setIsPhysical()            Sets the current record's "is_physical" value
  * @method Users               setSubType()               Sets the current record's "sub_type" value
@@ -93,6 +95,7 @@
  * @method Users               setImports()               Sets the current record's "Imports" collection
  * @method Users               setLoanRights()            Sets the current record's "LoanRights" collection
  * @method Users               setLoanStatus()            Sets the current record's "LoanStatus" collection
+ * @method Users               setReports()               Sets the current record's "Reports" collection
  * 
  * @package    darwin
  * @subpackage model
@@ -224,6 +227,10 @@ abstract class BaseUsers extends DarwinModel
              'foreign' => 'user_ref'));
 
         $this->hasMany('LoanStatus', array(
+             'local' => 'id',
+             'foreign' => 'user_ref'));
+
+        $this->hasMany('Reports', array(
              'local' => 'id',
              'foreign' => 'user_ref'));
     }
