@@ -120,6 +120,7 @@ class searchActions extends DarwinActions
 
     $this->forward404Unless(ctype_digit($request->getParameter('id')));
     $this->specimen = Doctrine::getTable('Specimens')->find((int) $request->getParameter('id'));
+    $this->comments = Doctrine::getTable('Comments')->getRelatedComment('specimens', (int) $request->getParameter('id'));
     $this->forward404Unless($this->specimen);
     if(!$this->specimen->getCollectionIsPublic()) $this->forwardToSecureAction();
 

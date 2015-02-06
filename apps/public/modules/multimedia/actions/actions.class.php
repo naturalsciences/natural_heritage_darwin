@@ -49,7 +49,8 @@ class multimediaActions extends DarwinActions
 
 
     // If image is too large , display placeholder
-    if($multimedia->getSize() > (1024 * 1024 * sfConfig::get('dw_preview_max_size', '10')) )
+
+    if($multimedia->getSize() > (1024 * 1024 * sfConfig::get('dw_preview_max_size', 10)) )
     {
       $url = sfConfig::get('sf_web_dir').'/'.sfConfig::get('sf_web_images_dir_name', 'images').'/img_placeholder.png';
       $this->getResponse()->setHttpHeader('Content-type', 'image/png');

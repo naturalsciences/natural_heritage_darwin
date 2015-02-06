@@ -44,6 +44,9 @@
       </th>
       <td>
         <?php echo $form['gtu_ref']->render() ?>
+        <div class="check_right form_buttons">
+          <?php echo link_to(__('View'), url_for("gtu/edit?id=".$form['gtu_ref']->getValue()), array('target' => '_new')) ; ?>
+        </div>
       </td>
     </tr>
     <tr>
@@ -74,7 +77,6 @@ $(document).ready(function () {
         $("#specimen_gtu_ref_name .date_to").remove();
       }
     }
-
     $('#specimen_gtu_ref').change(function()
     {
       $("#specimen_gtu_ref_name").html(trim(ref_element_name));
