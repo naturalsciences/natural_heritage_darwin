@@ -377,7 +377,7 @@
       <table class="caract_table">
         <?php foreach ($comments as $comment) : ?>
         <tr>
-          <td><span class="pager_nav"><?php echo $comment->getNotionConcerned() ; ?> :</span></td>
+          <td><span class="pager_nav"><?php echo $comment->getNotionText() ; ?> :</span></td>
           <td><?php echo $comment->getComment(); ?></td>
         </tr>
       <?php endforeach ; ?>
