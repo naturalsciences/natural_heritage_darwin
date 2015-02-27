@@ -236,7 +236,7 @@ function install_role() {
 
 psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
 tpsql="/usr/bin/psql -q -h $hostname -U $testuser -d $dbname -p $dbport"
-basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname"
+basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname -v schema=$schema"
 admpsql="$basepsql -q -d $dbname"
 case "$@" in
   "test-adm")
@@ -247,7 +247,7 @@ case "$@" in
     $basepsql -c "create database $dbname ENCODING 'UNICODE';"
     install_role
     $admpsql -c "create schema $schema authorization darwin2;"
-    $admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;"
+    $admpsql  -c "ALTER USER darwin2 SET search_path TO $schema, public;"
     install_lib
     install_db
   ;;
@@ -271,7 +271,7 @@ case "$@" in
   ;;
   "create-schema")
     $admpsql -c "create schema $schema authorization darwin2;"
-    $admpsql  -c "ALTER USER darwin2 SET search_path TO $dbname, public;"
+    $admpsql  -c "ALTER USER darwin2 SET search_path TO $schema, public;"
   ;;
   "create-db")
     $basepsql -c "create database $dbname ENCODING 'UNICODE';"

@@ -1302,6 +1302,7 @@ Reports:
         uri: { type: string }
         lang: { type: string(2), notnull: true }
         format: { type: string, notnull: true, default: 'csv' }
+        parameters: { type: string}
     relations:
         Users:
             local: user_ref

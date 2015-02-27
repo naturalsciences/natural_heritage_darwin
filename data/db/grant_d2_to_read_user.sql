@@ -1,5 +1,5 @@
- GRANT USAGE ON SCHEMA :dbname TO d2viewer;
- SET search_path TO :dbname, public;
+ GRANT USAGE ON SCHEMA :schema TO d2viewer;
+ SET search_path TO :schema, public;
 
  GRANT SELECT ON template_table_record_ref TO d2viewer;
  GRANT SELECT ON catalogue_levels TO d2viewer;

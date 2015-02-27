@@ -2824,8 +2824,8 @@ BEGIN
         COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
         COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
         COALESCE(fullToIndex(code),'') = COALESCE(fullToIndex(line.gtu_code),'') AND
-        gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
-        gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038')
+        fct_mask_date(gtu_from_date,gtu_from_date_mask) = fct_mask_date(COALESCE(line.gtu_from_date, '01/01/0001')::timestamp,line.gtu_from_date_mask) AND
+        fct_mask_date(gtu_to_date,gtu_to_date_mask) = fct_mask_date(COALESCE(line.gtu_to_date, '31/12/2038')::timestamp,line.gtu_to_date_mask)
         LIMIT 1
       ) as substr
       WHERE substr.id != 0 LIMIT 1;
