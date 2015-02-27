@@ -105,7 +105,12 @@ class searchActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    if($request->hasParameter('full')) $this->setLayout('refined');
+    $this->full = false ;
+    if($request->hasParameter('full')) 
+    {
+        $this->full = true ;
+        $this->setLayout('refined');
+    }
     $ajax = false ;
     if($request->isXmlHttpRequest())
     {

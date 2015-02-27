@@ -389,10 +389,11 @@
     <div class="suggestion_zone">
       <?php include_partial('suggestion', array('form' => $form,'id'=> $specimen->getId())) ; ?>
     </div>
-
-  <div class="check_right">
+  <?php if(!$full) : ?>
+  <div class="check_right">    
     <input type="button" id="close_butt" value="<?php echo __('Close this record'); ?>">
   </div>
+  <?php endif ; ?>  
   <script type="text/javascript">
     $(document).ready(function() {
       $('#close_butt').click(function(){
