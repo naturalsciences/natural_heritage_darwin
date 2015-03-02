@@ -175,4 +175,43 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION fct_imp_checker_expeditions(line staging, import boolean DEFAULT false)
+  RETURNS boolean AS
+$$
+DECLARE
+  ref_rec integer :=0;
+BEGIN
+  IF line.expedition_name is null OR line.expedition_name ='' OR line.expedition_ref is not null THEN
+    RETURN true;
+  END IF;
+
+  select id into ref_rec from expeditions where name_indexed = fulltoindex(line.expedition_name) 
+  /* no expeditions date in the template at the moment, so I comment these lines below to avoid expedition creation each time */
+    /*and
+    expedition_from_date = COALESCE(line.expedition_from_date,'01/01/0001') AND
+    expedition_to_date = COALESCE(line.expedition_to_date,'31/12/2038') */;
+  IF NOT FOUND THEN
+      IF import THEN
+        INSERT INTO expeditions (name, expedition_from_date, expedition_to_date, expedition_from_date_mask,expedition_to_date_mask)
+        VALUES (
+          line.expedition_name, COALESCE(line.expedition_from_date,'01/01/0001'),
+          COALESCE(line.expedition_to_date,'31/12/2038'), COALESCE(line.expedition_from_date_mask,0),
+          COALESCE(line.expedition_to_date_mask,0)
+        )
+        RETURNING id INTO line.expedition_ref;
+
+        ref_rec := line.expedition_ref;
+        PERFORM fct_imp_checker_staging_info(line, 'expeditions');
+      ELSE
+        RETURN TRUE;
+      END IF;
+  END IF;
+
+  UPDATE staging SET status = delete(status,'expedition'), expedition_ref = ref_rec where id=line.id;
+
+  RETURN true;
+END;
+$$
+  LANGUAGE plpgsql ;
+
 commit ;
