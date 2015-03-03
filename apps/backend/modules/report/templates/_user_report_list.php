@@ -10,7 +10,7 @@
     <tbody>
     <?php foreach($reports as $report) : ?>
       <tr>
-        <td><?php echo $report->getName() ; ?></td>       
+        <td><?php echo Reports::getReportName($report->getName(),$sf_user->getCulture()) ; ?></td>       
         <td>
           <?php if($report->getUri()) : ?>
              <a class="bt_close" href="<?php echo url_for( 'report/downloadFile?id='.$report->getId());?>"><?php echo __("Download") ?></a>

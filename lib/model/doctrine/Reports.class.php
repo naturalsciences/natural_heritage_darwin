@@ -28,6 +28,11 @@ class Reports extends BaseReports
     return self::$reports;
   }
 
+  static public function getReportName($name,$lang)
+  {
+    return self::$reports[$name]['name_'.$lang] ;
+  }
+  
   static public function getRequiredFieldForReport($name)
   {
     if(!$name) return array() ;

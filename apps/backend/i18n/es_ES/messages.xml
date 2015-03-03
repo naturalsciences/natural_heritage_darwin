@@ -6839,6 +6839,42 @@
         <source>Storage</source>
 
       </trans-unit>
+
+      <trans-unit id="1841">
+        <source>Actif</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit id="1842">
+        <source>warning_catalogue_msg</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit id="1843">
+        <source>statusAndCountHelp</source>
+        <target></target>
+      </trans-unit>
+
+      <trans-unit id="1844">
+        <source>Choose a report</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1845">
+        <source>Report you asked</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1846">
+        <source>report not available yet</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1847">
+        <source>Reports</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1848">
+        <source>Report</source>
+        <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
