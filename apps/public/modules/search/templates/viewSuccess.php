@@ -1,8 +1,15 @@
 <?php slot('title', __('View Specimens') .  ( $specimen->getTaxonRef()  ? " : ".$specimen->getTaxonName() : ""));  ?>
 
-<div class="page viewer">
-  <h1><?php echo __("Specimen Record");?><?php echo (": ".$specimen->getId());?></h1>
-    <h2 class="title"><?php echo __("Collection") ?></h2>
+<div class="page viewer">  
+  <h1 <?php if($full) echo 'class="lfloatin"' ; ?>><?php echo __("Specimen Record");?><?php echo (": ".$specimen->getId());?></h1>
+  <?php if($full) : ?>
+  <div class="tour_right">
+    <div class="check_right">
+      <a class="bt_close" target="_blank" href="<?php echo url_for( 'search/search');?>"><?php echo __("DaRWIN search") ?></a>
+    </div>
+  </div>
+  <?php endif ?>
+  <h2 class="title"><?php echo __("Collection") ?></h2>
     <div class="borded right_padded">
       <table>
         <tbody>

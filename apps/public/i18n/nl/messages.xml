@@ -953,6 +953,11 @@
         <source>Object name</source>
         <target>Naam van het object</target>
       </trans-unit>
+      <trans-unit id="1723">
+        <source>DaRWIN search</source>
+        <target>DaRWIN zoekopdracht</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

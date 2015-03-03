@@ -394,3 +394,17 @@ input.small
   
   /*border: 1px solid green;*/
 }
+
+.bt_close
+{
+  background-color:#5BAABD;
+  text-align:right;
+  color:white;
+  padding-top:1px;
+  padding-bottom:1px;
+  padding-left:10px;
+  padding-right:10px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  margin-right:15px
+}
