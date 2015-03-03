@@ -204,7 +204,7 @@
   text-decoration: none ;
   margin-top : 7px;
   width:132px;
-  font-size: 9pt;      
+  font-size: 9pt;   
 }
 
 .register_form #login_bt input
@@ -224,6 +224,7 @@
   background-position: center center ;
   background-repeat : no-repeat ;
   width:132px ;  
+  height: 32px ;
 }
 
 .register_form #login_bt
