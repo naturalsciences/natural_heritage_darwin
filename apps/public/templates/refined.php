@@ -29,9 +29,9 @@
         <td class="blue_line_right">
           <table class="register_form">
             <tr>
-              <td class="menu_button">
+              <!--<td class="menu_button">
                 <?php echo link_to(__('Login'),$sf_context->getConfiguration()->generateBackendUrl('homepage', array(), $sf_request),array('target'=>'blank')) ;?>
-              </td>
+              </td>-->
               <td class="menu_button">
                 <?php echo link_to(__('DaRWIN search'),'search/search',array('target'=>'blank')) ;?>
               </td>
