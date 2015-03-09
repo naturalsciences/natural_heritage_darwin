@@ -12,4 +12,13 @@
  */
 class ExtLinks extends BaseExtLinks
 {
+  private static $link_types = array(
+    'ext' => 'external',
+    'vc' => 'Virtual Collection'
+    ) ;
+
+  static public function getLinkTypes()
+  {
+    return self::$link_types ;
+  }
 }

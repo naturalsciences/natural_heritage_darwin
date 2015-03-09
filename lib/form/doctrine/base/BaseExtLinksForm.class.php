@@ -19,6 +19,7 @@ abstract class BaseExtLinksForm extends BaseFormDoctrine
       'referenced_relation' => new sfWidgetFormTextarea(),
       'record_id'           => new sfWidgetFormInputText(),
       'url'                 => new sfWidgetFormTextarea(),
+      'type'                => new sfWidgetFormTextarea(),
       'comment'             => new sfWidgetFormTextarea(),
       'comment_indexed'     => new sfWidgetFormTextarea(),
     ));
@@ -28,6 +29,7 @@ abstract class BaseExtLinksForm extends BaseFormDoctrine
       'referenced_relation' => new sfValidatorString(),
       'record_id'           => new sfValidatorInteger(),
       'url'                 => new sfValidatorString(),
+      'type'                => new sfValidatorString(array('required' => false)),
       'comment'             => new sfValidatorString(),
       'comment_indexed'     => new sfValidatorString(array('required' => false)),
     ));

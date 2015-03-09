@@ -8,6 +8,7 @@ class darwinReportTask extends sfBaseTask
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', "backend"),
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
+      new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
       ));
     $this->namespace        = 'darwin';
     $this->name             = 'report';
@@ -21,9 +22,9 @@ EOF;
   {
     // Initialize the connection to DB and get the environment (prod, dev,...) this task is runing on
     $databaseManager = new sfDatabaseManager($this->configuration);
+    $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     $conn = Doctrine_Manager::connection();
-
     // get the list of report to execute
     $reports = Doctrine::getTable('Reports')->getTaskReports();
     foreach ($reports as $report) {

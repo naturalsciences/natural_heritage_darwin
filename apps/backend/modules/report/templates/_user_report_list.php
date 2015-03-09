@@ -10,7 +10,14 @@
     <tbody>
     <?php foreach($reports as $report) : ?>
       <tr>
-        <td><?php echo Reports::getReportName($report->getName(),$sf_user->getCulture()) ; ?></td>       
+        <td><?php echo Reports::getReportName($report->getName(),$sf_user->getCulture()) ; ?>
+        <?php echo image_tag('info.png', 'class=more_trk');?>
+          <ul class="field_change">
+            <?php foreach($report->getDiffAsArray() as $field => $value):?>
+              <li><strong><?php echo $field;?></strong> <?php echo $value;?></li>
+          <?php endforeach;?>       
+          </ul>
+        </td>
         <td>
           <?php if($report->getUri()) : ?>
              <a class="bt_close" href="<?php echo url_for( 'report/downloadFile?id='.$report->getId());?>"><?php echo __("Download") ?></a>
@@ -43,6 +50,15 @@ $(document).ready(function () {
         }
       });
    }
+  });
+  $('img.more_trk').each(function()
+  {
+    $(this).qtip(
+    {
+     content: $(this).next().html(),
+     delay: 100,
+     show: { solo: true}
+    });
   });
 });
 </script>

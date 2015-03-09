@@ -80,4 +80,18 @@ class Reports extends BaseReports
     if(! empty($variables) ) $url .= '?'.http_build_query($variables);
     return $url ;
   }
+
+  public function getDiffAsArray()
+  {
+    $hstore = $this->_get('parameters');
+    $diff = new Hstore();
+    $diff->import($hstore);
+    $tab = $diff->getIterator() ;
+    foreach($tab as $key=>$value)
+    {
+      if(preg_match("/_indexed$/", $key) || preg_match("/_name_ts$/", $key) || preg_match("/_order_by$/", $key))
+        $tab->offsetUnset($key);
+    }
+    return $tab;
+  }
 }

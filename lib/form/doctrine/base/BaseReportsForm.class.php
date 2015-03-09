@@ -15,21 +15,23 @@ abstract class BaseReportsForm extends BaseFormDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'id'       => new sfWidgetFormInputHidden(),
-      'user_ref' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => false)),
-      'name'     => new sfWidgetFormTextarea(),
-      'uri'      => new sfWidgetFormTextarea(),
-      'lang'     => new sfWidgetFormInputText(),
-      'format'   => new sfWidgetFormTextarea(),
+      'id'         => new sfWidgetFormInputHidden(),
+      'user_ref'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Users'), 'add_empty' => false)),
+      'name'       => new sfWidgetFormTextarea(),
+      'uri'        => new sfWidgetFormTextarea(),
+      'lang'       => new sfWidgetFormInputText(),
+      'format'     => new sfWidgetFormTextarea(),
+      'parameters' => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
-      'id'       => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'user_ref' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Users'))),
-      'name'     => new sfValidatorString(),
-      'uri'      => new sfValidatorString(array('required' => false)),
-      'lang'     => new sfValidatorString(array('max_length' => 2)),
-      'format'   => new sfValidatorString(array('required' => false)),
+      'id'         => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'user_ref'   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Users'))),
+      'name'       => new sfValidatorString(),
+      'uri'        => new sfValidatorString(array('required' => false)),
+      'lang'       => new sfValidatorString(array('max_length' => 2)),
+      'format'     => new sfValidatorString(array('required' => false)),
+      'parameters' => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('reports[%s]');

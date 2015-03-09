@@ -4,7 +4,7 @@
           <?php echo $form['url']->renderError(); ?>
           <?php echo $form['url'];?>
       </td>
-      <td>
+      <td  rowspan="2">
         <?php echo $form['comment']->renderError(); ?>
         <?php echo $form['comment'];?>
       </td>
@@ -13,6 +13,13 @@
         <?php echo $form->renderHiddenFields() ?>
       </td>    
     </tr>
+    <tr>
+      <td>
+        <strong><?php echo $form['type']->renderLabel(); ?></stong>
+        <?php echo $form['type']->renderError(); ?>
+        <?php echo $form['type'];?>      
+      </td>
+   </tr>
    <tr>
      <td colspan="3"><hr /></td>
    </tr>

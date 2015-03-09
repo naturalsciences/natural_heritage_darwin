@@ -99,6 +99,7 @@ ExtLinks:
         referenced_relation: { type: string, notnull: true}
         record_id: { type: integer, notnull: true}
         url: { type: string, notnull: true}
+        type: { type: string, notnull: true, default:'ext'}
         comment: { type: string, notnull: true}
         comment_indexed: { type: string}
 

@@ -23,6 +23,12 @@ class ExtLinksForm extends BaseExtLinksForm
     $this->validatorSchema['comment'] = new sfValidatorString(array('trim'=>true, 'required'=>false));
     $this->mergePostValidator(new ExtLinksValidatorSchema());
 
+    $this->widgetSchema['type'] = new sfWidgetFormChoice(array(
+      'choices' => ExtLinks::getLinkTypes(),
+    ));
+
+    $this->validatorSchema['type'] = new sfValidatorChoice(array('choices'=>array_keys(ExtLinks::getLinkTypes())));
+
   }
   public function setRecordRef($relation, $rid)
   {

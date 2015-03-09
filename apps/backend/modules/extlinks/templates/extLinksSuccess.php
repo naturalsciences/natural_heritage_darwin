@@ -15,6 +15,14 @@
         <?php echo $form['url']->renderError(); ?>
         <?php echo $form['url'];?>
       </td>
+    </tr>
+    <tr>
+      <th class="top_aligned"><?php echo $form['type']->renderLabel();?></th>
+      <td>
+        <?php echo $form['type']->renderError(); ?>
+        <?php echo $form['type'];?>
+      </td>
+    </tr>
     <tr>
       <th class="top_aligned"><?php echo $form['comment']->renderLabel();?></th>
       <td>

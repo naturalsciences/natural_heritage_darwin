@@ -9,6 +9,7 @@
  * @property string $referenced_relation
  * @property integer $record_id
  * @property string $url
+ * @property string $type
  * @property string $comment
  * @property string $comment_indexed
  * 
@@ -16,12 +17,14 @@
  * @method string   getReferencedRelation()  Returns the current record's "referenced_relation" value
  * @method integer  getRecordId()            Returns the current record's "record_id" value
  * @method string   getUrl()                 Returns the current record's "url" value
+ * @method string   getType()                Returns the current record's "type" value
  * @method string   getComment()             Returns the current record's "comment" value
  * @method string   getCommentIndexed()      Returns the current record's "comment_indexed" value
  * @method ExtLinks setId()                  Sets the current record's "id" value
  * @method ExtLinks setReferencedRelation()  Sets the current record's "referenced_relation" value
  * @method ExtLinks setRecordId()            Sets the current record's "record_id" value
  * @method ExtLinks setUrl()                 Sets the current record's "url" value
+ * @method ExtLinks setType()                Sets the current record's "type" value
  * @method ExtLinks setComment()             Sets the current record's "comment" value
  * @method ExtLinks setCommentIndexed()      Sets the current record's "comment_indexed" value
  * 
@@ -51,6 +54,11 @@ abstract class BaseExtLinks extends DarwinModel
         $this->hasColumn('url', 'string', null, array(
              'type' => 'string',
              'notnull' => true,
+             ));
+        $this->hasColumn('type', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => 'ext',
              ));
         $this->hasColumn('comment', 'string', null, array(
              'type' => 'string',
