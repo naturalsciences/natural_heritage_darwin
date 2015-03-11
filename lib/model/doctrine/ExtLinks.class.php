@@ -13,7 +13,7 @@
 class ExtLinks extends BaseExtLinks
 {
   private static $link_types = array(
-    'ext' => 'external',
+    'ext' => 'External',
     'vc' => 'Virtual Collection'
     ) ;
 
