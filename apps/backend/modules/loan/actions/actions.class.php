@@ -303,7 +303,7 @@ class loanActions extends DarwinActions
   {
     $number = intval($request->getParameter('num'));
     $form = new LoansForm();
-    $form->addComments($number);
+    $form->addComments($number, array());
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
 

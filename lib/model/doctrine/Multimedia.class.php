@@ -128,6 +128,11 @@ class Multimedia extends BaseMultimedia
     return true;
   }
 
+  public static function getMimeTypeFor($key)
+  {
+    return self::$allowed_mime_type[$key] ;
+  }
+
   public static function CheckMimeType($mime_type)
   {
     return(in_array($mime_type,self::$allowed_mime_type)?true:false);

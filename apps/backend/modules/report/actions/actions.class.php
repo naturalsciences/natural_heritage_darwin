@@ -100,20 +100,17 @@ class reportActions extends sfActions
     $this->setLayout(false);
     $report = Doctrine::getTable('Reports')->find($request->getParameter('id'));  
     $this->forward404Unless(file_exists($file = sfConfig::get('sf_upload_dir').$report->getUri()),sprintf('This file does not exist') );
-    $this->processDownload($report,$file) ;
-  }
 
-  private function processDownload($report,$file)
-  {
     // Adding the file to the Response object
-
     $this->getResponse()->clearHttpHeaders();
     $this->getResponse()->setHttpHeader('Pragma: private', true);
     $this->getResponse()->setHttpHeader('Content-Disposition',
                             'attachment; filename="'.
-                            $report->getName().$report->getFormat().'"');
-    //$this->getResponse()->setContentType("application/force-download ".$multimedia->getMimeType());
+                            $report->getName().".".$report->getFormat().'"');
+    //$this->getResponse()->setContentType(Multimedia::getMimeTypeFor($report->getFormat()));
+    $this->getResponse()->setContentType("application/force-download ".Multimedia::getMimeTypeFor($report->getFormat()));
     $this->getResponse()->setHttpHeader('content-type', 'application/octet-stream', true);
+
     $this->getResponse()->sendHttpHeaders();
     $this->getResponse()->setContent(readfile($file));
     return sfView::NONE;

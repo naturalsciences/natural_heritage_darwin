@@ -78,6 +78,8 @@ class Reports extends BaseReports
     $url = sfConfig::get('dw_report_server')."/rest_v2/reports/darwin/".$this->getName()."_".$this->getLang().".".$this->getFormat();
     $variables = $this->getParameters() ;
     if(! empty($variables) ) $url .= '?'.http_build_query($variables);
+    // I add userLocale to the url to avoid different date format depending on witch locale jasper choose
+    $url .= "&userLocale=en" ;
     return $url ;
   }
 
