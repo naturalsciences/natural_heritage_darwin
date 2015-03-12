@@ -12,6 +12,7 @@
  * @property string $lang
  * @property string $format
  * @property string $parameters
+ * @property string $comment
  * @property Users $Users
  * 
  * @method integer getId()         Returns the current record's "id" value
@@ -21,6 +22,7 @@
  * @method string  getLang()       Returns the current record's "lang" value
  * @method string  getFormat()     Returns the current record's "format" value
  * @method string  getParameters() Returns the current record's "parameters" value
+ * @method string  getComment()    Returns the current record's "comment" value
  * @method Users   getUsers()      Returns the current record's "Users" value
  * @method Reports setId()         Sets the current record's "id" value
  * @method Reports setUserRef()    Sets the current record's "user_ref" value
@@ -29,6 +31,7 @@
  * @method Reports setLang()       Sets the current record's "lang" value
  * @method Reports setFormat()     Sets the current record's "format" value
  * @method Reports setParameters() Sets the current record's "parameters" value
+ * @method Reports setComment()    Sets the current record's "comment" value
  * @method Reports setUsers()      Sets the current record's "Users" value
  * 
  * @package    darwin
@@ -68,6 +71,9 @@ abstract class BaseReports extends DarwinModel
              'default' => 'csv',
              ));
         $this->hasColumn('parameters', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('comment', 'string', null, array(
              'type' => 'string',
              ));
     }

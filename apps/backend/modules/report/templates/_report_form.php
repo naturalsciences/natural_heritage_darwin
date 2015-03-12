@@ -7,6 +7,7 @@
           <th><?php echo $form[$field]->renderLabel() ; ?></th> 
       <?php endforeach ; ?>
       <th><?php echo $form['format']->renderLabel() ; ?></th>
+      <th><?php echo $form['comment']->renderLabel() ; ?></th>
       <th></th>
     </tr>
     <tr>
@@ -18,12 +19,15 @@
       <?php endforeach ; ?>
       <td><?php echo $form['format']->renderError() ; ?></td>
       <td></td>
+      <td></td>
+
     </tr>
     <tr>
       <?php foreach($fields as $field) : ?>
           <td><?php echo $form[$field]->render() ; ?></td> 
       <?php endforeach ; ?>
       <td><?php echo $form['format']->render() ; ?></td>
+      <td><?php echo $form['comment']->render() ; ?></td>
       <td><?php echo $form['name']->render() ; ?>        
           <input <?php echo ($fast?'':'id="submit_btn"') ?> class="search_submit" type="submit" name="add" value="<?php echo __('Add'); ?>" />
       </td>

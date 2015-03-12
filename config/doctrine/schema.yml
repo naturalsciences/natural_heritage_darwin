@@ -1304,6 +1304,7 @@ Reports:
         lang: { type: string(2), notnull: true }
         format: { type: string, notnull: true, default: 'csv' }
         parameters: { type: string}
+        comment: { type: string}
     relations:
         Users:
             local: user_ref

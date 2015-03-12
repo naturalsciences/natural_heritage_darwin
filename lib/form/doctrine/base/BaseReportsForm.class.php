@@ -22,6 +22,7 @@ abstract class BaseReportsForm extends BaseFormDoctrine
       'lang'       => new sfWidgetFormInputText(),
       'format'     => new sfWidgetFormTextarea(),
       'parameters' => new sfWidgetFormTextarea(),
+      'comment'    => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -32,6 +33,7 @@ abstract class BaseReportsForm extends BaseFormDoctrine
       'lang'       => new sfValidatorString(array('max_length' => 2)),
       'format'     => new sfValidatorString(array('required' => false)),
       'parameters' => new sfValidatorString(array('required' => false)),
+      'comment'    => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('reports[%s]');

@@ -26,6 +26,9 @@ class ReportsForm extends BaseReportsForm
     $this->validatorSchema['name'] = new sfValidatorPass() ;
     $this->setDefault('name', $this->options['name']) ;
     
+    $this->widgetSchema['comment'] = new sfWidgetFormInputText(array(), array('maxlength'=>255));
+    $this->validatorSchema['comment'] = new sfValidatorPass() ;
+
     $this->widgetSchema['format'] = new sfWidgetFormChoice(array('choices' => $format));
     $this->validatorSchema['format'] = new sfValidatorChoice(array('choices' => $format)) ;
 
@@ -86,6 +89,6 @@ class ReportsForm extends BaseReportsForm
       array('invalid' => 'Date provided is not valid')
     );
 
-    $this->useFields(array_merge(array('name','format'),$this->options['fields'])) ;
+    $this->useFields(array_merge(array('name','format','comment'),$this->options['fields'])) ;
   }
 }

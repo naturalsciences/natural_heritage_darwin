@@ -66,7 +66,8 @@ class reportActions extends sfActions
           'name' => $name,
           'user_ref'=>$this->getUser()->getId(),
           'lang'=>$this->getUser()->getCulture(),
-          'format'=>$request->getParameter('reports')['format'],          
+          'format'=>$request->getParameter('reports')['format'],
+          'comment'=>$request->getParameter('reports')['comment'],
           ));
         $report->setParameters($request->getParameter('reports')) ;
         //if it's a fast report, no need to save it, it can be downloaded directly

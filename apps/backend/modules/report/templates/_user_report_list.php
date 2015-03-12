@@ -5,6 +5,7 @@
         <th><?php echo __("Report you asked") ; ?></th>
         <th></th>
         <th></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -17,6 +18,9 @@
               <li><strong><?php echo $field;?></strong> <?php echo $value;?></li>
           <?php endforeach;?>       
           </ul>
+        </td>
+        <td>
+          <?php echo($report->getComment()) ; ?>
         </td>
         <td>
           <?php if($report->getUri()) : ?>
