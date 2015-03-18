@@ -1,8 +1,8 @@
 <?php slot('title', __('View Specimens') .  ( $specimen->getTaxonRef()  ? " : ".$specimen->getTaxonName() : ""));  ?>
 
-<div class="page viewer">
+<div class="page viewer">  
   <h1><?php echo __("Specimen Record");?><?php echo (": ".$specimen->getId());?></h1>
-    <h2 class="title"><?php echo __("Collection") ?></h2>
+  <h2 class="title"><?php echo __("Collection") ?></h2>
     <div class="borded right_padded">
       <table>
         <tbody>
@@ -389,10 +389,11 @@
     <div class="suggestion_zone">
       <?php include_partial('suggestion', array('form' => $form,'id'=> $specimen->getId())) ; ?>
     </div>
-
-  <div class="check_right">
+  <?php if(!$full) : ?>
+  <div class="check_right">    
     <input type="button" id="close_butt" value="<?php echo __('Close this record'); ?>">
   </div>
+  <?php endif ; ?>  
   <script type="text/javascript">
     $(document).ready(function() {
       $('#close_butt').click(function(){

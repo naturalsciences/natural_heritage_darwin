@@ -136,6 +136,12 @@ class Staging extends BaseStaging
       else
         return $tb_ok;
     }
+    elseif($field == "expedition")
+    {
+      if($this['expedition_ref'] == '') return null ;
+      else
+        return $tb_ok;
+    }
   }
 /*
   public function getIdentifier()
@@ -188,7 +194,7 @@ class Staging extends BaseStaging
   }
   public function setStatus($value)
   {
-    $status = '' ;
+    $status = '' ;    
     foreach($value as $field => $error)
     {
       if($error != 'done') $status .= '"'.$field.'"=>"'.$error.'",' ;
@@ -237,6 +243,7 @@ class Staging extends BaseStaging
     if($field == 'litho') return('litho_ref') ;
     if($field == 'mineral') return('mineral_ref') ;
     if($field == 'lithology') return('lithology_ref') ;
+    if($field == 'expedition') return('expedition_ref') ;
     if($field == 'igs') return('ig_ref') ;
     if($field == 'people') return('people') ;
     if($field == 'identifiers') return('identifiers') ;

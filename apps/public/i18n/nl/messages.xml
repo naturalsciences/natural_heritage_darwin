@@ -278,7 +278,7 @@
       </trans-unit>
           <trans-unit id="1239">
         <source>Go to Backend</source>
-        <target>Naar de Backoffice applicatie</target>
+        <target>Naar Backoffice</target>
         
       </trans-unit>
           <trans-unit id="1240">
@@ -953,6 +953,11 @@
         <source>Object name</source>
         <target>Naam van het object</target>
       </trans-unit>
+      <trans-unit id="1723">
+        <source>DaRWIN search</source>
+        <target>DaRWIN opzoeking</target>
+      </trans-unit>
+
     </body>
   </file>
 </xliff>

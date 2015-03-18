@@ -204,7 +204,7 @@
   text-decoration: none ;
   margin-top : 7px;
   width:132px;
-  font-size: 9pt;      
+  font-size: 9pt;   
 }
 
 .register_form #login_bt input
@@ -224,6 +224,7 @@
   background-position: center center ;
   background-repeat : no-repeat ;
   width:132px ;  
+  height: 32px ;
 }
 
 .register_form #login_bt
@@ -393,4 +394,18 @@ input.small
   height: 95px;
   
   /*border: 1px solid green;*/
+}
+
+.bt_close
+{
+  background-color:#5BAABD;
+  text-align:right;
+  color:white;
+  padding-top:1px;
+  padding-bottom:1px;
+  padding-left:10px;
+  padding-right:10px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  margin-right:15px
 }

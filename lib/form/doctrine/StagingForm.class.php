@@ -147,7 +147,7 @@ class StagingForm extends BaseStagingForm
          'method' => 'getExpedition',
          'default_name' => $this->getObject()->getExpeditionName(),         
          'box_title' => $this->getI18N()->__('Choose Expedition'),
-         'complete_url' => 'catalogue/completeName?table=expedition',
+         'complete_url' => 'catalogue/completeName?table=expeditions',
          'nullable' => true,
          'button_class'=>'',
        ),
@@ -330,6 +330,8 @@ class StagingForm extends BaseStagingForm
     else unset($this['litho_ref']) ;
     if(is_numeric($this->getValue('lithology_ref'))) $status['lithology'] = 'done' ;
     else unset($this['lithology_ref']) ;
+    if(is_numeric($this->getValue('expedition_ref'))) $status['expedition'] = 'done' ;
+    else unset($this['expedition_ref']) ;    
     if(is_numeric($this->getValue('igs_ref'))) $status['igs'] = 'done' ;
     else unset($this['igs_ref']) ;
     if($this->getValue('spec_ref') != 0) $status['duplicate'] = 'done' ;
