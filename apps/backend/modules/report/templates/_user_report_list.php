@@ -13,9 +13,10 @@
       <tr>
         <td><?php echo Reports::getReportName($report->getName(),$sf_user->getCulture()) ; ?>
         <?php echo image_tag('info.png', 'class=more_trk');?>
-          <ul class="field_change">
+        <?php $widget = Reports::getRequiredFieldForReport($report->getName()) ; ?>
+          <ul class="field_change">            
             <?php foreach($report->getDiffAsArray() as $field => $value):?>
-              <li><strong><?php echo $field;?></strong> <?php echo $value;?></li>
+              <li><strong><?php echo __($widget[$field]) ; ?></strong> <?php echo $value;?></li>
           <?php endforeach;?>       
           </ul>
         </td>
