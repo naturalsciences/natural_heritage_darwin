@@ -1013,6 +1013,7 @@ StagingInfo:
 
 ExtLinks:
     extl1:
+      type: ext
       id: 1
       referenced_relation: staging_info
       record_id: 1
