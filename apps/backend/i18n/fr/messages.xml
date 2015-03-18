@@ -7493,6 +7493,10 @@
         <source>Report</source>
         <target>Rapport</target>
       </trans-unit>
+      <trans-unit id="1849">
+        <source>test report warning</source>
+        <target>Attention ! Ce module est encore en phase de test, si vous constatez une anomalie n'hésitez pas à nous informer</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -3,6 +3,9 @@
 <div class="page">
 
 <h1><?php echo __('Reports');?></h1>
+  <div class='warn_message'>
+    <?php echo __('test report warning') ; ?>
+  </div>
   <div class="already_asked_form" id="unit_original_name">
   </div>
   <table class="search">

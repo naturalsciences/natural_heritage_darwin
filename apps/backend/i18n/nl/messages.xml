@@ -7447,6 +7447,10 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
         <source>Report</source>
         <target>Rapport</target>
       </trans-unit>
+      <trans-unit id="1849">
+        <source>test report warning</source>
+        <target>Opgepast! Deze module is nog in test fase; aarzel niet contact op te nemen indien u een onregelmatigheid opmerkt</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -6006,6 +6006,10 @@ DaRWIN</target>
         <source>Report</source>
         <target></target>
       </trans-unit>
+      <trans-unit id="1849">
+        <source>test report warning</source>
+        <target>Warning ! this module is in testing phase, if you find an anomaly, do not hesitate to contact us</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
