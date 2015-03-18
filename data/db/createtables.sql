@@ -162,6 +162,7 @@ create table ext_links
         url varchar not null,
         comment text not null,
         comment_indexed text not null,
+        type text not null default 'ext',
         constraint pk_ext_links primary key (id),
         constraint unq_ext_links unique (referenced_relation, record_id, url)
        )
@@ -173,6 +174,7 @@ comment on column ext_links.record_id is 'Identifier of the record concerned';
 comment on column ext_links.url is 'External URL';
 comment on column ext_links.comment is 'Comment';
 comment on column ext_links.comment_indexed is 'indexed form of comment field';
+comment on column ext_links.type IS 'Sort of external link given';
 
 create table gtu
        (

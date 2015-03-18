@@ -2,6 +2,7 @@ begin;
 set search_path=darwin2,public;
 
 ALTER TABLE ext_links ADD COLUMN "type" text NOT NULL default 'ext';
+COMMENT ON COLUMN ext_links.type IS 'Sort of external link given';
 
 create table reports
        (
