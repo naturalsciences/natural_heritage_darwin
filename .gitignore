@@ -14,3 +14,4 @@ uploads/*
 *.kate-swp
 ./.gitignore
 apps/public/config/databases.yml
+.idea
