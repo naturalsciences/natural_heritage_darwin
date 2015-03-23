@@ -126,11 +126,11 @@ class ImportABCDXml implements IImportModels
             if( $this->object->getToDate()) $this->staging["gtu_to_date_mask"] =  $this->object->getToDate()->getMask() ;
           } ; break;
         case "TimeOfDayBegin": if($this->getPreviousTag() == "DateTime"){
-            $this->object->GTUdate['from']->addTime($this->cdata);
+            $this->object->GTUdate['from'] .= " ".$this->cdata;
           }
           break;
         case "TimeOfDayEnd": if($this->getPreviousTag() == "DateTime"){
-            $this->object->GTUdate['to']->addTime($this->cdata);
+            $this->object->GTUdate['to'] .= " ".$this->cdata;
           }
           break;
         case "dna:Concentration" : $this->property = new ParsingProperties("Concentration","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->property->property->setPropertyUnit("ng/µl") ; $this->addProperty(true) ; break;
@@ -165,8 +165,8 @@ class ImportABCDXml implements IImportModels
         case "IdentificationHistory" : $this->addComment(true, 'taxonomy'); break;
         case "ID-in-Database" : $this->object->desc .= "id in database :".$this->cdata." ;" ; break;
         // case "InheritedName" : $this->people['family_name'] = $this->cdata ; break;
-        case "ISODateTimeBegin" : if($this->getPreviousTag() == "DateTime")  { $this->object->GTUdate['from'] = FuzzyDateTime::getValidDate($this->cdata) ;} elseif($this->getPreviousTag() == "Date")  { $this->object->identification->setNotionDate(FuzzyDateTime::getValidDate($this->cdata)) ;} break;
-        case "ISODateTimeEnd" :  if($this->getPreviousTag() == "DateTime"){ $this->object->GTUdate['to'] = FuzzyDateTime::getValidDate($this->cdata);}  break;
+        case "ISODateTimeBegin" : if($this->getPreviousTag() == "DateTime")  { $this->object->GTUdate['from'] = $this->cdata ;} elseif($this->getPreviousTag() == "Date")  { $this->object->identification->setNotionDate(FuzzyDateTime::getValidDate($this->cdata)) ;} break;
+        case "ISODateTimeEnd" :  if($this->getPreviousTag() == "DateTime"){ $this->object->GTUdate['to'] = $this->cdata;}  break;
         case "IsQuantitative" : $this->property->property->setIsQuantitative($this->cdata) ; break;
         case "KindOfUnit" : $this->staging['part'] = $this->cdata ; break;
         case "RecordBasis" : if($this->cdata == "PreservedSpecimen") { $this->staging->setCategory('specimen') ; } else { $this->staging->setCategory('observation') ; } ; break;

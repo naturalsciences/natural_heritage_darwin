@@ -39,7 +39,7 @@ class ParsingTag extends ImportABCDXml
     $time = null;
     if($this->GTUdate['time'])
       $time =  $this->GTUdate['time'] ;
-    return ($this->GTUdate['from'] ? $this->GTUdate['from'] : $time) ;
+    return ($this->GTUdate['from'] ? FuzzyDateTime::getValidDate($this->GTUdate['from']) : $time) ;
   }
 
   //return ISODateTimeEnd tag value, if not return DateTime tag value, null otherwise
@@ -48,7 +48,7 @@ class ParsingTag extends ImportABCDXml
     $time = null;
     if($this->GTUdate['time'])
       $time =  $this->GTUdate['time'] ;
-    return ($this->GTUdate['to'] ? $this->GTUdate['to'] : $time) ;
+    return ($this->GTUdate['to'] ? FuzzyDateTime::getValidDate($this->GTUdate['to']) : $time) ;
   }
 
   public function addTagGroups()
