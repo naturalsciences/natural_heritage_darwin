@@ -24,6 +24,7 @@ class BaseMassActionForm extends sfFormSymfony
         'mineralogy_ref' => self::getI18N()->__('Change Mineralogy'),
         'station_visible' => self::getI18N()->__('Change Station visibility'),
         'ig_ref' => self::getI18N()->__('Change I.G. Num'),
+        'expedition_ref' => self::getI18N()->__('Change Expedition'),
         'acquisition_category' => self::getI18N()->__('Change Acquisition Category'),
         'acquisition_date' => self::getI18N()->__('Change Acquisition Date'),
 
@@ -58,6 +59,9 @@ class BaseMassActionForm extends sfFormSymfony
 
     elseif($action == 'ig_ref')
       return 'MaIgRefForm';
+
+    elseif($action == 'expedition_ref')
+      return 'MaExpeditionRefForm';
 
     elseif($action == 'chronostratigraphy_ref')
       return 'MaChronostratigraphyRefForm';
