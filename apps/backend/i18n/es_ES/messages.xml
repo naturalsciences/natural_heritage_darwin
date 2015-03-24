@@ -6875,6 +6875,10 @@
         <source>Report</source>
         <target></target>
       </trans-unit>
+      <trans-unit id="1850">
+        <source>Choose New Expedition</source>
+        <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
