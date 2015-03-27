@@ -17,7 +17,7 @@
       </a>
     <?php else : ?>
       <a href="<?php echo $link->getUrl();?>" target="_pop" class='complete_widget'>
-        <?php echo truncate_text($link->getUrl(), 40);?>
+        <?php echo __('External Url');?>
       </a>
     <?php endif ; ?>
     </td>

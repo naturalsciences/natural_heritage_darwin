@@ -21,4 +21,12 @@ class ExtLinks extends BaseExtLinks
   {
     return self::$link_types ;
   }
+
+  public function setUrl($url) 
+  {
+    if(substr(strtolower($url),0,4) != 'http')
+      $url = 'http://'.$url ;
+    $this->_set('url',$url) ;
+  }
+
 }

@@ -660,7 +660,7 @@ a.bt_close
 
 .check_right
 {
- float:right
+ float:right !important ;
 }
 .edit
 {

@@ -3,7 +3,7 @@
 <?php echo form_tag('report/add', array('class'=>'table_view search_form','id'=>'report_form'));?>
   <table>
     <tr>
-      <?php foreach($fields as $field) : ?>
+      <?php foreach($fields as $field => $name) : ?>
           <th><?php echo $form[$field]->renderLabel() ; ?></th> 
       <?php endforeach ; ?>
       <th><?php echo $form['format']->renderLabel() ; ?></th>
@@ -14,7 +14,7 @@
       <td colspan="<?php echo count($fields)+2 ; ?>"><?php echo $form->renderGlobalErrors() ; ?></td>
     </tr>
     <tr>
-      <?php foreach($fields as $field) : ?>
+      <?php foreach($fields as $field => $name) : ?>
           <td><?php echo $form[$field]->renderError() ; ?></td> 
       <?php endforeach ; ?>
       <td><?php echo $form['format']->renderError() ; ?></td>
@@ -23,7 +23,7 @@
 
     </tr>
     <tr>
-      <?php foreach($fields as $field) : ?>
+      <?php foreach($fields as $field => $name) : ?>
           <td><?php echo $form[$field]->render() ; ?></td> 
       <?php endforeach ; ?>
       <td><?php echo $form['format']->render() ; ?></td>

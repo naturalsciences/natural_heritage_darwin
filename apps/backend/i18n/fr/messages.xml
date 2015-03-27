@@ -7497,6 +7497,10 @@
         <source>test report warning</source>
         <target>Attention ! Ce module est encore en phase de test, si vous constatez une anomalie n'hésitez pas à nous informer</target>
       </trans-unit>
+      <trans-unit id="1850">
+        <source>Choose New Expedition</source>
+        <target>Choisir une nouvelle Expedition</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

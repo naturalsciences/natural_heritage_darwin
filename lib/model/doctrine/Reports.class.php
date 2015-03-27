@@ -19,7 +19,7 @@ class Reports extends BaseReports
         'name_nl' => 'Jaarlijkse statistieken collecties',
         'name_en' => 'Annual statistic by collections',
         'format' => array('xls'=>'xls','pdf'=>'pdf'),
-        'widgets' => array('collection_ref','date_from','date_to'),
+        'widgets' => array('collection_ref' => 'Collection','date_from' => 'Date from','date_to' => 'Date to'),
         'fast' => false,
       )
     );
@@ -53,7 +53,7 @@ class Reports extends BaseReports
   {
     $param = '' ;
     $widget = self::getRequiredFieldForReport($data['name']) ;
-    foreach($widget as $field)
+    foreach($widget as $field => $name)
     {
       if($field == 'date_from' OR $field == 'date_to')
       {

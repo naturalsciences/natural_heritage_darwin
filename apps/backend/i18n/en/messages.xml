@@ -6010,6 +6010,10 @@ DaRWIN</target>
         <source>test report warning</source>
         <target>Warning ! this module is in testing phase, if you find an anomaly, do not hesitate to contact us</target>
       </trans-unit>
+      <trans-unit id="1850">
+        <source>Choose New Expedition</source>
+        <target>Choose New Expedition</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

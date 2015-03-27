@@ -38,7 +38,7 @@ class ReportsForm extends BaseReportsForm
       'link_url' => 'collection/choose',
       'method' => 'getName',
       'box_title' => $this->getI18N()->__('Choose Collection'),
-      'button_class'=>'float_left',
+      'button_class'=>'check_right',
       'complete_url' => 'catalogue/completeName?table=collections',
     ));
     $this->widgetSchema->setLabels(array('collection_ref' => 'Collection')) ;
@@ -89,6 +89,6 @@ class ReportsForm extends BaseReportsForm
       array('invalid' => 'Date provided is not valid')
     );
 
-    $this->useFields(array_merge(array('name','format','comment'),$this->options['fields'])) ;
+    $this->useFields(array_merge(array('name','format','comment'),array_keys($this->options['fields']))) ;
   }
 }
