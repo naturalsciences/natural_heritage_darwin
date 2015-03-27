@@ -15,3 +15,4 @@ uploads/*
 ./.gitignore
 apps/public/config/databases.yml
 .idea
+*.save
