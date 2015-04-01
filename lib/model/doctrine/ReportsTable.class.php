@@ -20,8 +20,12 @@ class ReportsTable extends Doctrine_Table
     public function getUserReport($user)
     {
       $q =  Doctrine_Query::create()
-      ->from('reports r')
-      ->where('r.user_ref = ?',$user);
+      ->from('reports r') ;
+      if($user == 'all')  
+        $q->innerJoin('r.Users u') 
+        ->select('r.*, u.formated_name as formatedname') ;
+      else
+        $q->where('r.user_ref = ?',$user);
       return $q->execute() ;
     }
 

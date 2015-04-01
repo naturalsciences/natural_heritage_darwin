@@ -33,7 +33,7 @@ class reportActions extends DarwinActions
     if($request->isXmlHttpRequest())
     {
       //  retrieve all reports already asked by this user
-      $user_report = Doctrine::getTable('Reports')->getUserReport($this->getUser()->getId());
+      $user_report = Doctrine::getTable('Reports')->getUserReport($this->getUser()->isAtLeast(Users::ADMIN)?'all':$this->getUser()->getId());
       return $this->renderPartial("user_report_list", array('reports' => $user_report)) ;      
     }
   }

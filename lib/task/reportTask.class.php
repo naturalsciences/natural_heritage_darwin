@@ -20,6 +20,12 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
+    $ctx = stream_context_create(array('http'=>
+      array(
+          'timeout' => 300, // 1 200 Seconds = 20 Minutes
+      )
+    ));
+
     // Initialize the connection to DB and get the environment (prod, dev,...) this task is runing on
     $databaseManager = new sfDatabaseManager($this->configuration);
     $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
@@ -28,7 +34,10 @@ EOF;
     // get the list of report to execute
     $reports = Doctrine::getTable('Reports')->getTaskReports();
     foreach ($reports as $report) {
-      $content = file_get_contents($report->getUrlReport());
+      set_time_limit(0) ;
+      ignore_user_abort(1);
+      $content = file_get_contents($report->getUrlReport(),false,$ctx);
+      if(!$content) continue ;
       $uri = '/report/'.sha1($report->getName().rand());
       file_put_contents(sfConfig::get('sf_upload_dir').$uri, $content);
       Doctrine::getTable('Reports')->updateUri($report->getId(),$uri);
