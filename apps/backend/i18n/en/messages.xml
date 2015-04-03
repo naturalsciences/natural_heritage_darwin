@@ -6014,6 +6014,14 @@ DaRWIN</target>
         <source>Choose New Expedition</source>
         <target>Choose New Expedition</target>
       </trans-unit>
+      <trans-unit id="1851">
+        <source>report too big</source>
+        <target>This report is too big</target>
+      </trans-unit>
+      <trans-unit id="1852">
+        <source>report too big info</source>
+        <target>Your report take too much time to be created. You should review your criterias</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

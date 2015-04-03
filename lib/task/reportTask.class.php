@@ -37,7 +37,7 @@ EOF;
       set_time_limit(0) ;
       ignore_user_abort(1);
       $content = file_get_contents($report->getUrlReport(),false,$ctx);
-      if(!$content) continue ;
+      if(!$content) $uri='too_big' ;
       $uri = '/report/'.sha1($report->getName().rand());
       file_put_contents(sfConfig::get('sf_upload_dir').$uri, $content);
       Doctrine::getTable('Reports')->updateUri($report->getId(),$uri);

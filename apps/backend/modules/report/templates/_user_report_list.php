@@ -27,7 +27,15 @@
         <?php if($sf_user->isA(USERS::ADMIN)) : ?><td><?php echo ($report['formatedname']) ; ?></td><?php endif ; ?>
         <td>
           <?php if($report->getUri()) : ?>
-             <a class="bt_close" href="<?php echo url_for( 'report/downloadFile?id='.$report->getId());?>"><?php echo __("Download") ?></a>
+              <?php if($report->getUri() == 'too_big')  : ?>
+                <?php echo __("report too big") ; ?>
+                <?php echo image_tag('info.png', 'class=more_trk');?>
+                <ul class="field_change">
+                  <li><?php echo __('report too big info');?></li>
+                </ul>
+              <?php else : ?>
+                <a class="bt_close" href="<?php echo url_for( 'report/downloadFile?id='.$report->getId());?>"><?php echo __("Download") ?></a>
+              <?php endif ; ?>
           <?php else : ?>
             <?php echo __("report not available yet") ; ?>
           <?php endif; ?>

@@ -7501,6 +7501,14 @@
         <source>Choose New Expedition</source>
         <target>Choisir une nouvelle Expedition</target>
       </trans-unit>
+      <trans-unit id="1851">
+        <source>report too big</source>
+        <target>Ce rapport est trop lourd</target>
+      </trans-unit>
+      <trans-unit id="1852">
+        <source>report too big info</source>
+        <target>Votre rapport prend trop de temps à être créé. Vous devriez modifier vos critères.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

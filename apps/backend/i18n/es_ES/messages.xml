@@ -6879,6 +6879,14 @@
         <source>Choose New Expedition</source>
         <target></target>
       </trans-unit>
+      <trans-unit id="1851">
+        <source>report too big</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1852">
+        <source>report too big info</source>
+        <target></target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
