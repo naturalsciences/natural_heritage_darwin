@@ -5790,7 +5790,7 @@
       </trans-unit>
       <trans-unit id="1447">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don\'t correct default values before saving, the associated error will remain.</source>
-        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l\'abscence de correction de la valeur par défaut au moment de la sauvegarde, l'erreur persistera.</target>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l\'absence de correction de la valeur par défaut au moment de la sauvegarde, l'erreur persistera.</target>
         
       </trans-unit>
       <trans-unit id="1448">
@@ -6965,7 +6965,7 @@
       </trans-unit>
       <trans-unit id="1741">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</source>
-        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l'abscence de correction de la valeur par défaut au moment de la sauvegarde, l'erreur persistera.</target>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l'absence de correction de la valeur par défaut au moment de la sauvegarde, l'erreur persistera.</target>
         
       </trans-unit>
       <trans-unit id="1742">
