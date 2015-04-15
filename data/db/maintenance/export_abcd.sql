@@ -645,7 +645,7 @@ insert into public.taxon_identified(id, identification_ref, taxon_name, taxon_re
   ) as BotanyGenusOrMonomial,
   (SELECT keyword FROM darwin2.classification_keywords where
         referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='GenusOrMonomial' AND
-        exists (select 1 from taxonomy where id = s.taxon_ref and path lik e '/-1/1/%')
+        exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
    LIMIT 1
   ) as ZooGenusOrMonomial,
   (SELECT keyword FROM darwin2.classification_keywords where
