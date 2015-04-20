@@ -709,12 +709,12 @@ insert into public.taxon_identified(id, identification_ref, taxon_name, taxon_re
    LIMIT 1
   ) as NamedIndividual
   FROM public.identifications_abdc i
-    INNER JOIN public.specimens s ON  s.id = i.specimen_id
+    INNER JOIN darwin2.specimens s ON  s.id = i.specimen_id
     WHERE
       i.specimen_id in(
         select
           s.id as specimen_id
-          FROM  specimens  s
+          FROM  darwin2.specimens  s
           WHERE NOT EXISTS( SELECT 1 FROM identifications_abdc i INNER JOIN taxon_identified ti ON i.id = ti.identification_ref WHERE i.specimen_id = s.id AND ti.taxon_ref = s.taxon_ref)
           AND s.taxon_ref is not null
           AND s.taxon_ref != 0
