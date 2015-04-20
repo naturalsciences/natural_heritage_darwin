@@ -434,7 +434,7 @@ CREATE TABLE public.taxon_identified as
     ) as BotanyGenusOrMonomial,
     (SELECT keyword FROM darwin2.classification_keywords where
           referenced_relation = 'taxonomy' and record_id = s.taxon_ref AND keyword_type='GenusOrMonomial' AND CASE WHEN c.value_defined = s.taxon_name THEN true ELSE false END AND
-          exists (select 1 from taxonomy where id = s.taxon_ref and path lik e '/-1/1/%')
+          exists (select 1 from taxonomy where id = s.taxon_ref and path like '/-1/1/%')
      LIMIT 1
     ) as ZooGenusOrMonomial,
     (SELECT keyword FROM darwin2.classification_keywords where
