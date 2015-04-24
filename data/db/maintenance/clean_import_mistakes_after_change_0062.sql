@@ -1,3 +1,5 @@
+SET search_path TO darwin2,"$user",public;
+
 begin;
 
 create table if not exists zzz_taxa_imported_not_cleaned (taxon_ref integer, reason varchar);

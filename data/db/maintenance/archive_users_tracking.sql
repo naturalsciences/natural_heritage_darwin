@@ -1,4 +1,7 @@
-﻿drop table if exists zzz_users_tracking_removed;
+﻿SET search_path TO darwin2,"$user",public;
+begin;
+
+drop table if exists zzz_users_tracking_removed;
 
 create table zzz_users_tracking_removed (id, referenced_relation, record_id, user_ref, "action", old_value, new_value, modification_date_time, specimen_individual_ref, specimen_ref)
 as (select *, record_id::bigint, case when action = 'delete' then old_value -> 'specimen_ref' else new_value -> 'specimen_ref' end::bigint from users_tracking where referenced_relation = 'specimen_individuals');
@@ -33,8 +36,10 @@ insert into zzz_users_tracking_removed
                   )
 );
 
-
 delete from users_tracking
 where id in (select id from zzz_users_tracking_removed);
 
+commit;
+
 VACUUM (ANALYZE) users_tracking;
+
