@@ -3,7 +3,8 @@
     <thead>
       <tr>
         <th><?php echo __("Report you asked") ; ?></th>
-        <th></th>
+        <th><?php echo __('Comment') ; ?></th>
+        <?php if($sf_user->isA(USERS::ADMIN)) : ?><th><?php echo __('User') ; ?></th><?php endif ; ?>
         <th></th>
         <th></th>
       </tr>
@@ -23,6 +24,7 @@
         <td>
           <?php echo($report->getComment()) ; ?>
         </td>
+        <?php if($sf_user->isA(USERS::ADMIN)) : ?><td><?php echo ($report['formatedname']) ; ?></td><?php endif ; ?>
         <td>
           <?php if($report->getUri()) : ?>
              <a class="bt_close" href="<?php echo url_for( 'report/downloadFile?id='.$report->getId());?>"><?php echo __("Download") ?></a>
