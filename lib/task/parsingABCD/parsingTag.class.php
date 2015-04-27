@@ -35,7 +35,7 @@ class ParsingTag extends ImportABCDXml
 
   //return ISODateTimeBegin tag value, if not return DateTime tag value, null otherwise
   public function getFromDate()
-  { 
+  {
     $time = null;
     if($this->GTUdate['time'])
       $time =  $this->GTUdate['time'] ;
