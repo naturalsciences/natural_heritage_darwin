@@ -14,7 +14,7 @@ De DARWIN website licht een belangrijke tip van de sluier op wat betreft de omva
 </p>
 <br />
 <p>
-Informatie over de antropologische collectie wordt bijgehouden op een parallel systeem: MARS (Multimedia Archaeological Research System). Deze gegevens kunnen worden geraadpleegd op volgend webadres: http://www.natuurwetenschappen.be/mars. De Belgische Geologische dienst en de afdeling Beheer van het Mariene Ecosystemen verstrekken hun gegevens via andere systemen. Meer informatie over deze departementen kan u vinden op hun respectievelijke webpagina’s: <a href="http://www.sciencesnaturelles.be/institute/structure/geology/gsb_website" target="_pop">www.sciencesnaturelles.be/institute/structure/geology/gsb_website</a> en <a href="http://www.mumm.ac.be" target="_pop">www.mumm.ac.be</a>
+Informatie over de antropologische collectie wordt bijgehouden op een parallel systeem: MARS (Multimedia Archaeological Research System). Deze gegevens kunnen worden geraadpleegd op volgend webadres: <a href="http://www.natuurwetenschappen.be/mars" target="_pop">www.natuurwetenschappen.be/mars</a>. De Belgische Geologische dienst en de afdeling Beheer van het Mariene Ecosystemen verstrekken hun gegevens via andere systemen. Meer informatie over deze departementen kan u vinden op hun respectievelijke webpagina’s: <a href="https://www.naturalsciences.be/nl/science/do/25/scientific-research/research-programmes/94" target="_pop">www.naturalsciences.be/nl/science/do/25/scientific-research/research-programmes/94</a> en <a href="http://odnature.naturalsciences.be/home/" target="_pop">odnature.naturalsciences.be/home/</a>
 </p>
 <br />
 <p>
