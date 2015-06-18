@@ -144,3 +144,12 @@ DROP FUNCTION IF EXISTS check_auto_increment_code_in_spec();
 DROP FUNCTION IF EXISTS fct_after_save_add_code(collections.id%TYPE,specimens.id%TYPE);
 DROP FUNCTION IF EXISTS update_collections_code_last_val();
 DROP FUNCTION IF EXISTS update_collections_code_last_val_after_spec_del();
+
+/* Listing functions for reporting */
+DROP FUNCTION IF EXISTS fct_listing_taxonomy (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[]) ;
+DROP FUNCTION IF EXISTS fct_listing_zoology (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[]) ;
+DROP FUNCTION IF EXISTS fct_listing_botany (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[]) ;
+DROP FUNCTION IF EXISTS fct_listing_chronostratigraphy (IN nbr_records INTEGER, VARIADIC chrono_unit_ids INTEGER[]) ;
+DROP FUNCTION IF EXISTS fct_listing_lithostratigraphy (IN nbr_records INTEGER, VARIADIC litho_unit_ids INTEGER[]) ;
+DROP FUNCTION IF EXISTS fct_listing_mineralogy (IN nbr_records INTEGER, VARIADIC mineralo_unit_ids INTEGER[]) ;
+DROP FUNCTION IF EXISTS fct_listing_lithology (IN nbr_records INTEGER, VARIADIC litholo_unit_ids INTEGER[]) ;
