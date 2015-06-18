@@ -100,11 +100,13 @@ class importActions extends DarwinActions
   {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     // Initialization of the import form
-    if($request->isMethod('post'))
-      $this->type =  $request->getParameter('imports')['format'] ;
-    else 
-      $this->type = $request->getParameter('format') == 'taxon'?'taxon':'abcd' ;
-    $this->form = new importsForm(null,array('format' => $this->type));    
+    if($request->isMethod('post')) {
+      $this->type = $request->getParameter('imports')[ 'format' ];
+    }
+    else {
+      $this->type = $request->getParameter('format') == 'taxon' ? 'taxon' : 'abcd';
+    }
+    $this->form = new ImportsForm(null,array('format' => $this->type));
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter($this->form->getName()), $request->getFiles($this->form->getName()));
