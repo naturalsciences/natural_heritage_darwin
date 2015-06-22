@@ -511,5 +511,12 @@ GRANT EXECUTE ON FUNCTION fct_listing_chronostratigraphy (IN nbr_records INTEGER
 GRANT EXECUTE ON FUNCTION fct_listing_lithostratigraphy (IN nbr_records INTEGER, VARIADIC litho_unit_ids INTEGER[]) TO d2viewer;
 GRANT EXECUTE ON FUNCTION fct_listing_mineralogy (IN nbr_records INTEGER, VARIADIC mineralo_unit_ids INTEGER[]) TO d2viewer;
 GRANT EXECUTE ON FUNCTION fct_listing_lithology (IN nbr_records INTEGER, VARIADIC litholo_unit_ids INTEGER[]) TO d2viewer;
+GRANT EXECUTE ON FUNCTION fct_listing_taxonomy (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[]) TO cebmpad;
+GRANT EXECUTE ON FUNCTION fct_listing_zoology (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[]) TO cebmpad;
+GRANT EXECUTE ON FUNCTION fct_listing_botany (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[]) TO cebmpad;
+GRANT EXECUTE ON FUNCTION fct_listing_chronostratigraphy (IN nbr_records INTEGER, VARIADIC chrono_unit_ids INTEGER[]) TO cebmpad;
+GRANT EXECUTE ON FUNCTION fct_listing_lithostratigraphy (IN nbr_records INTEGER, VARIADIC litho_unit_ids INTEGER[]) TO cebmpad;
+GRANT EXECUTE ON FUNCTION fct_listing_mineralogy (IN nbr_records INTEGER, VARIADIC mineralo_unit_ids INTEGER[]) TO cebmpad;
+GRANT EXECUTE ON FUNCTION fct_listing_lithology (IN nbr_records INTEGER, VARIADIC litholo_unit_ids INTEGER[]) TO cebmpad;
 
 commit;
