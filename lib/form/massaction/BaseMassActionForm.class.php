@@ -23,16 +23,16 @@ class BaseMassActionForm extends sfFormSymfony
         'lithostratigraphy_ref' => self::getI18N()->__('Change Lithostratigraphy'),
         'mineralogy_ref' => self::getI18N()->__('Change Mineralogy'),
         'station_visible' => self::getI18N()->__('Change Station visibility'),
+        'gtu_ref' => self::getI18N()->__('Change Sampling Location'),
         'ig_ref' => self::getI18N()->__('Change I.G. Num'),
         'expedition_ref' => self::getI18N()->__('Change Expedition'),
         'acquisition_category' => self::getI18N()->__('Change Acquisition Category'),
         'acquisition_date' => self::getI18N()->__('Change Acquisition Date'),
-
+        'gtu_ref' => self::getI18N()->__('Change Sampling Location'),
         'type' => self::getI18N()->__('Change Individual Type'),
         'social_status' => self::getI18N()->__('Change Individual Social Status'),
         'sex' => self::getI18N()->__('Change Individual Sex'),
         'stage' => self::getI18N()->__('Change Individual Stage'),
-
         'maintenance' => self::getI18N()->__('Add Maintenance'),
         'building' => self::getI18N()->__('Change Building'),
         'floor' => self::getI18N()->__('Change Floor'),
@@ -62,6 +62,9 @@ class BaseMassActionForm extends sfFormSymfony
 
     elseif($action == 'expedition_ref')
       return 'MaExpeditionRefForm';
+
+    elseif($action == 'gtu_ref')
+        return 'MaGtuRefForm';
 
     elseif($action == 'chronostratigraphy_ref')
       return 'MaChronostratigraphyRefForm';
