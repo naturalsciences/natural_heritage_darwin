@@ -97,7 +97,7 @@ class ImportABCDXml implements IImportModels
         case "AccessionNumber" :  $this->object->accession_num = $this->cdata ; $this->object->HandleAccession($this->staging,$this->object_to_save) ; break;
         case "Accuracy" : $this->getPreviousTag()=='Altitude'?$this->staging['gtu_elevation_accuracy']=$this->cdata:$this->property->property->property_accuracy=$this->cdata ; break;
         case "AcquisitionDate" : $dt =  FuzzyDateTime::getValidDate($this->cdata); if (!is_null($dt)) { $this->staging['acquisition_date'] = $dt->getDateTime(); $this->staging['acquisition_date_mask'] = $dt->getMask();} break;
-        case "AcquisitionType" : $this->staging['acquisition_category'] = $this->cdata=='gift'?'donation':$this->cdata ; break;
+        case "AcquisitionType" : $this->staging['acquisition_category'] = in_array($this->cdata,SpecimensTable::$acquisition_category)?array_search($this->cdata,SpecimensTable::$acquisition_category):'undefined' ; break;
         case "AppliesTo" : $this->property->setAppliesTo($this->cdata); break;
         case "AreaClass" : $this->object->tag_group_name = $this->cdata ; break;
         case "AreaName" : $this->object->tag_value = $this->cdata ; break;
