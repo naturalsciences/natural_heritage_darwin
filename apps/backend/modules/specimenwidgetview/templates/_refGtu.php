@@ -58,6 +58,45 @@
         <?php echo $gtu->getMap(ESC_RAW);?>
       </td>
     </tr>
+		<!--addition ftheeten 2015 07 01-->
+	 <tr>
+        <th class="top_aligned">
+          <?php echo __("Other information") ?>
+        </th>
+        <td>
+			 <div class="inline">
+				<?php 
+					
+									
+						$flagGo=TRUE;
+						
+						
+						$nbr = count($commentsGtu);
+						if(! $nbr) 
+						{
+							echo "-";
+							$flagGo=True;
+						}
+						if($flagGo===TRUE)
+						{
+							$str = '<ul  class="search_tags">';
+								foreach($commentsGtu as $valC)
+								{
+								 
+									$str .= '<li><label>Comment<span class="gtu_group"> - '.$valC->getNotionConcerned().'</span></label><ul class="name_tags'.($view!=null?"_view":"").'">';
+									$str .=  '<li>' . trim($valC->getComment()).'</li>';
+									$str .= '</ul><div class="clear"></div>';
+									
+								  
+								}
+								$str .= '</ul>';
+							echo $str;
+						}
+				?>
+			</div>
+		</td>
+      </tr>	  
+	<!--end addition ftheeten 2015 07 01-->
     <?php elseif(isset($gtu) && $gtu->hasCountries()):?>
       <tr>
         <th class="top_aligned">
