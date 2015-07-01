@@ -21,6 +21,7 @@ class ReportsForm extends BaseReportsForm
     $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
     $maxDate->setStart(false);
     $format = Reports::getFormatFor($this->options['name']) ;
+    $widgets_options = Reports::getFieldsOptions($this->options['name']);
 
     $this->widgetSchema['name'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['name'] = new sfValidatorPass() ;
@@ -32,6 +33,14 @@ class ReportsForm extends BaseReportsForm
     $this->widgetSchema['format'] = new sfWidgetFormChoice(array('choices' => $format));
     $this->validatorSchema['format'] = new sfValidatorChoice(array('choices' => $format)) ;
 
+    /*##########################################################################
+     *  Annual reports fields
+     *##########################################################################
+     */
+
+    /*
+     *  Collections selection
+     */
 
     $this->widgetSchema['collection_ref'] = new widgetFormCompleteButtonRef(array(
       'model' => 'Collections',
@@ -44,7 +53,9 @@ class ReportsForm extends BaseReportsForm
     $this->widgetSchema->setLabels(array('collection_ref' => 'Collection')) ;
     $this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
 
-    //##################################################
+    /*
+     * Fuzzy date from
+     */
 
     $this->widgetSchema['date_from'] = new widgetFormJQueryFuzzyDate(array(
       'culture'=>$this->getCurrentCulture(),
@@ -66,7 +77,9 @@ class ReportsForm extends BaseReportsForm
       array('invalid' => 'Date provided is not valid')
     );
 
-    //####################################################
+    /*
+     * Fuzzy date to
+     */
 
     $this->widgetSchema['date_to'] = new widgetFormJQueryFuzzyDate(array(
       'culture'=>$this->getCurrentCulture(),
@@ -89,6 +102,50 @@ class ReportsForm extends BaseReportsForm
       array('invalid' => 'Date provided is not valid')
     );
 
+    /*##########################################################################
+     * Catalogues listing fields
+     *##########################################################################
+     */
+
+    /*
+     * Type of catalogue targeted
+     */
+    if (isset($widgets_options['catalogue_type'])) {
+      $this->widgetSchema[ 'catalogue_type' ] = new sfWidgetFormChoice(array(
+                                                                             'choices' => $widgets_options[ 'catalogue_type' ]['values'],
+                                                                             'default' => $widgets_options[ 'catalogue_type' ]['default_value']
+                                                                            )
+                                                                       );
+      $this->validatorSchema[ 'catalogue_type' ] = new sfValidatorChoice(array ('choices' => $widgets_options[ 'catalogue_type' ]['values']));
+    }
+    /*
+     * Number of Records to get from the report
+     */
+    if (isset($widgets_options['nbr_records'])) {
+      $this->widgetSchema[ 'nbr_records' ] = new sfWidgetFormChoice(
+        array (
+          'choices' => $widgets_options[ 'nbr_records' ][ 'values' ],
+          'default' => $widgets_options[ 'nbr_records' ][ 'default_value' ]
+        )
+      );
+      $this->validatorSchema[ 'nbr_records' ] = new sfValidatorChoice(array ('choices' => $widgets_options[ 'nbr_records' ][ 'values' ]));
+    }
+    /*
+     * Catalogue unit ref
+     */
+    /* @ToDo: Get a way to replace, in link_url and model, the static value for action and model called */
+    $this->widgetSchema['catalogue_unit_ref'] = new widgetFormButtonRefMultiple(array('model' => 'Taxonomy',
+                                                                                      'method' => 'getFormatedName',
+                                                                                      'link_url' => 'taxonomy/choose?with_js=1',
+                                                                                      'box_title' => $this->getI18N()->__('Choose Yourself'),
+                                                                                     ),
+                                                                                array('class' => 'ref_multiple_ids',)
+                                                                               );
+
+    /*##########################################################################
+     * Definition of list of fields to be used
+     *##########################################################################
+     */
     $this->useFields(array_merge(array('name','format','comment'),array_keys($this->options['fields']))) ;
   }
 }

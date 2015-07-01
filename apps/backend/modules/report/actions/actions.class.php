@@ -44,7 +44,7 @@ class reportActions extends DarwinActions
     if($request->isXmlHttpRequest() && $request->isMethod('post'))
     {
       $widgets = Reports::getRequiredFieldForReport($request->getParameter('name')) ;
-      $this->form =new ReportsForm(null,array('fields'=>$widgets,'name' => $request->getParameter('name'))) ;
+      $this->form = new ReportsForm(null,array('fields'=>$widgets,'name' => $request->getParameter('name'))) ;
       return $this->renderPartial("report_form", array('form' => $this->form,'fields'=> $widgets,'fast' => Reports::getIsFast($request->getParameter('name')))) ;      
     }
     return false ;

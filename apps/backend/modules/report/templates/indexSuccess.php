@@ -11,12 +11,13 @@
   <table class="search">
     <tr>
       <th><?php echo __('Choose a report');?> : </th>
-      <th><select id="report_list">
-        <option value=""></option>
-        <?php foreach($report_list as $key=>$report) : ?>
-          <option value="<?php echo $key ; ?>"><?php echo $report['name_'.$sf_user->getCulture()] ; ?></option>
-        <?php endforeach ; ?>
-      </selec>
+      <th>
+        <select id="report_list">
+          <option value=""></option>
+          <?php foreach($report_list as $key=>$report) : ?>
+            <option value="<?php echo $key ; ?>"><?php echo $report['name_'.$sf_user->getCulture()] ; ?></option>
+          <?php endforeach ; ?>
+        </select>
       </th>
     </tr>
   </table>

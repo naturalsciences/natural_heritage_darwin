@@ -19,7 +19,44 @@ class Reports extends BaseReports
         'name_nl' => 'Jaarlijkse statistieken collecties',
         'name_en' => 'Annual statistic by collections',
         'format' => array('xls'=>'xls','pdf'=>'pdf'),
-        'widgets' => array('collection_ref' => 'Collection','date_from' => 'Date from','date_to' => 'Date to'),
+        'widgets' => array('collection_ref' => 'Collection',
+                           'date_from' => 'Date from',
+                           'date_to' => 'Date to'
+                          ),
+        'widgets_options' => array(),
+        'fast' => false,
+      ),
+      'catalogues_x_listing' => array(
+        'name_fr' => "Listing des hiérarchies taxonomiques à partir de points d'entrée donnés",
+        'name_nl' => "Listing taxonomische hiërarchieën van binnenkomst punten gegeven",
+        'name_en' => "Listing taxonomic hierarchies from entry points given",
+        'format' => array('csv'=>'csv'),
+        'widgets' => array('catalogue_type'=>'Catalogue',
+                           'catalogue_unit_ref' => 'Catalogue Unit',
+                           'nbr_records' => 'Number of Records'
+                          ),
+        'widgets_options' => array('catalogue_type' => array('default_value' => 'taxonomy',
+                                                             'values' => array('taxonomy' => 'Taxonomy (General)',
+                                                                               'zoology' => 'Taxonomy (Zoology)',
+                                                                               'botany' => 'Taxonomy (Botany)',
+                                                                               'chronostratigraphy' => 'Chronostratigraphy',
+                                                                               'lithostratigraphy' => 'Lithostratigraphy',
+                                                                               'lithology' => 'Lithology',
+                                                                               'mineralogy' => 'Mineralogy'
+                                                                              )
+                                                             ),
+                                   'catalogue_unit_ref' => array('multi' => true),
+                                   'nbr_records' => array('default_value' => '0',
+                                                          'values' => array('0'=>'All',
+                                                                            '500' => '500',
+                                                                            '1000' => '1000',
+                                                                            '5000' => '5000',
+                                                                            '10000' => '10000',
+                                                                            '25000' => '25000',
+                                                                            '50000' => '50000'
+                                                                           )
+                                                         )
+                                 ),
         'fast' => false,
       )
     );
@@ -37,6 +74,12 @@ class Reports extends BaseReports
   {
     if(!$name) return array() ;
     return self::$reports[$name]['widgets'] ;
+  }
+
+  static public function getFieldsOptions($name)
+  {
+    if(!$name) return array() ;
+    return self::$reports[$name]['widgets_options'] ;
   }
 
   static public function getFormatFor($name)
@@ -78,7 +121,7 @@ class Reports extends BaseReports
     $url = sfConfig::get('dw_report_server')."/rest_v2/reports/darwin/".$this->getName()."_".$this->getLang().".".$this->getFormat();
     $variables = $this->getParameters() ;
     if(! empty($variables) ) $url .= '?'.http_build_query($variables);
-    // I add userLocale to the url to avoid different date format depending on witch locale jasper choose
+    // I add userLocale to the url to avoid different date format depending on which locale jasper choose
     $url .= "&userLocale=en" ;
     return $url ;
   }

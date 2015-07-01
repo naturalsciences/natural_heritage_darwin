@@ -17,9 +17,9 @@ class CatalogueRelationshipsForm extends BaseCatalogueRelationshipsForm
 
     $this->widgetSchema['record_id_2'] = new widgetFormJQueryDLookup(
       array(
-	'model' => $this->getObject()->getReferencedRelation(),
-	'method' => 'getName',
-	'nullable' => false,
+	      'model' => $this->getObject()->getReferencedRelation(),
+	      'method' => 'getName',
+	      'nullable' => false,
         'fieldsHidders' => array('catalogue_relationships_relationship_type',
                                 ),
       ),
