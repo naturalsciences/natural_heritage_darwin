@@ -74,8 +74,7 @@
 						$nbr = count($commentsGtu);
 						if(! $nbr) 
 						{
-							echo "-";
-							$flagGo=True;
+							$flagGo=FALSE;
 						}
 						if($flagGo===TRUE)
 						{
