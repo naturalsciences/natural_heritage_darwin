@@ -1809,22 +1809,24 @@ create table staging_catalogue
 
 create table reports
  (
-  id serial,
-  user_ref integer not null,
-  name varchar not null,
-  uri varchar,
-  lang char(2) not null,
-  format varchar not null default 'csv',
-  parameters hstore,
-  CONSTRAINT pk_reports PRIMARY KEY (id),
-  CONSTRAINT fk_reports_users FOREIGN KEY (user_ref)
-  REFERENCES users (id) MATCH SIMPLE
-  ON UPDATE NO ACTION ON DELETE CASCADE
- );
-  comment on table reports is 'Table to handle users reports asking';
-  comment on column reports.user_ref is 'The referenced user id';
-  comment on column reports.name is 'The report name';
-  comment on column reports.uri is 'The path where the report file is stored, if uri is not null then the report has already been launched';
-  comment on column reports.lang is 'The lang asked for this report';
-  comment on column reports.format is 'The file type of the report file, generaly csv or xls';
-  comment on column reports.parameters is 'if the report required some information (such as collection_ref), they are here'
+    id serial,
+    user_ref integer not null,
+    name varchar not null,
+    uri varchar,
+    lang char(2) not null,
+    format varchar not null default 'csv',
+    comment varchar,
+    parameters hstore,
+    CONSTRAINT pk_reports PRIMARY KEY (id),
+    CONSTRAINT fk_reports_users FOREIGN KEY (user_ref)
+    REFERENCES users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE CASCADE
+  );
+comment on table reports is 'Table to handle users reports asking';
+comment on column reports.user_ref is 'The referenced user id';
+comment on column reports.name is 'The report name';
+comment on column reports.uri is 'The path where the report file is stored, if uri is not null then the report has already been launched';
+comment on column reports.lang is 'The lang asked for this report';
+comment on column reports.format is 'The file type of the report file, generaly csv or xls';
+comment on column reports.comment is 'A comment to add to the report, just in case.';
+comment on column reports.parameters is 'if the report requires some information (such as collection_ref), they are here';
