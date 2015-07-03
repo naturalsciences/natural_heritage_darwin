@@ -3772,7 +3772,7 @@ CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec() RETURNS trigger
 AS $$
 DECLARE 
   col collections%ROWTYPE;
-  number integer ;
+  number BIGINT ;
 BEGIN
   IF TG_OP != 'DELETE' THEN
     IF NEW.referenced_relation = 'specimens' THEN
@@ -3780,7 +3780,7 @@ BEGIN
       IF FOUND THEN
         IF NEW.code_category = 'main' THEN
           IF isnumeric(NEW.code) THEN 
-            number := NEW.code::integer ;
+            number := NEW.code::bigint ;
             IF number > col.code_last_value THEN
               UPDATE collections set code_last_value = number WHERE id=col.id ;
             END IF;
@@ -3813,7 +3813,7 @@ BEGIN
         ELSEIF TG_OP = 'UPDATE' THEN
           IF OLD.code_category = 'main' THEN
             IF isnumeric(OLD.code) THEN 
-              number := OLD.code::integer ;
+              number := OLD.code::bigint ;
               IF number = col.code_last_value THEN
                 UPDATE collections 
                 SET code_last_value = (SELECT max(code_num)
