@@ -261,7 +261,10 @@ case "$@" in
     $admpsql  -c "CREATE EXTENSION pgtap;"
   ;;
   "test-psql")
-    pg_prove -v -q -h $hostname -U $testuser -d $dbname -p $dbport tests/*.sql
+    for sqlfiles in $(ls tests/*.sql)
+    do
+      $tpsql -f $sqlfiles
+    done
   ;;
   "test")
     pg_prove -h $hostname -U $testuser -d $dbname -p $dbport $(ls tests/*.sql)
