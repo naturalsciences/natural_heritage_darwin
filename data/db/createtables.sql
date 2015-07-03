@@ -620,7 +620,7 @@ create table collections
         path varchar not null,
         code_auto_increment boolean not null default false,
         code_auto_increment_for_insert_only boolean not null default true,
-        code_last_value integer not null default 0,
+        code_last_value bigint not null default 0,
         code_prefix varchar,
         code_prefix_separator varchar,
         code_suffix varchar,
