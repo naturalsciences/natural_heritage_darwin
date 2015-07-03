@@ -24,8 +24,6 @@ script:
   - cd ../../
   - cp test/database_config.yml config/databases.yml
   - cp config/darwin.yml.init config/darwin.yml
-  - php test/unit/model/ReportsTableTest.php
-
   - find test/ -name "*Test.php" -exec sh -c "php {} > /tmp/web-\`basename {}\`.tap" \;
   - prove /tmp/web-*.tap | tee /tmp/webprove.log
   - cat /tmp/webprove.log
