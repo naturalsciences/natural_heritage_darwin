@@ -122,7 +122,7 @@ BEGIN
                 IF codeNum = '' THEN
                   NEW.code_num := 0;
                 ELSE
-                  NEW.code_num := codeNum::int;
+                  NEW.code_num := codeNum::bigint;
                 END IF;
                 NEW.full_code_indexed := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
         ELSIF TG_TABLE_NAME = 'tag_groups' THEN
