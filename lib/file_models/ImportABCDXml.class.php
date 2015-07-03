@@ -1,7 +1,7 @@
 <?php
 class ImportABCDXml implements IImportModels
 {
-  private $tag, $staging, $object, $people_name,$import_id, $path="", $name, $errors_reported='',$preparation_type='', $preparation_mat='';
+  private $cdata, $tag, $staging, $object, $people_name,$import_id, $path="", $name, $errors_reported='',$preparation_type='', $preparation_mat='';
   private $unit_id_ref = array() ; // to keep the original unid_id per staging for Associations
   private $object_to_save = array(), $staging_tags = array() , $data, $inside_data;
   private $version_defined = false;
@@ -265,8 +265,7 @@ class ImportABCDXml implements IImportModels
         case "UnitOfMeasurement" : $this->property->property->setPropertyUnit($this->cdata); break;
         case "Accuracy" : $this->property->property->setPropertyAccuracy($this->cdata); break;
         case "UpperValue" : $this->property->property->setUpperValue($this->cdata) ; break;
-        //case "efg:VarietalNameString" : $this->staging->setObjectName($this->cdata) ; break; 
-        case "efg:InformalNameString" : $this->addComment(true,"identifications"); break ;//$this->staging->setObjectName($this->cdata) ; break;
+        case "efg:InformalNameString" : $this->addComment(true,"identifications"); break ;
         case "VerificationLevel" : $this->object->determination_status = $this->cdata ; break;
         case "storage:Type" : $this->code_type = $this->cdata; break;
         case "storage:Value" : $this->addCode($this->code_type) ; break ;
@@ -517,14 +516,4 @@ class ImportABCDXml implements IImportModels
       }
     }
   }
-  
-//   private function handleExternalLinks($externallinks,$category='GenBankNumber')
-//   {
-//     $unique_externallinks = array_unique(array_map('trim', explode(';', $externallinks)));
-// 
-//     foreach($unique_externallinks as $externallink)
-//     {     
-//       $this->addExternalLink() ; break;
-//     }
-//   }
 }
