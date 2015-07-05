@@ -5207,7 +5207,7 @@
         
       </trans-unit>
       <trans-unit id="1353">
-        <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;</source>
+        <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;https://github.com/naturalsciences/Darwin/&quot;&gt;https://github.com/naturalsciences/Darwin/&lt;/a&gt;</source>
         
       </trans-unit>
       <trans-unit id="1354">
