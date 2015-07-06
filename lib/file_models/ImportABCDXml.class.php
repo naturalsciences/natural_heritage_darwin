@@ -67,9 +67,6 @@ class ImportABCDXml implements IImportModels
       case "Identification" : $this->object = new ParsingIdentifications() ; break;
       case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ;
                                          else $this->property = new ParsingProperties() ; break;
-      //case "MultiMediaObject" : $this->object = new ParsingMultimedia() ; break;
-/*      case "PersonName" : $this->people = new StagingPeople() ; break;
-      case "Person" : $this->people = new StagingPeople() ; break;*/
       case "Petrology" : $this->object = new ParsingTag("lithology") ; break;
       case "efg:RockUnit" : //SAME AS BELOW
       case "RockUnit" : $this->object = new ParsingCatalogue('lithology') ; break;
@@ -77,8 +74,6 @@ class ImportABCDXml implements IImportModels
       case "SpecimenUnit" : $this->object = new ParsingTag("unit") ; break;
       case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); $this->object = null; break;
       case "UnitAssociation" : $this->object = new stagingRelationship() ; break;
-      //case "efg:AssociatedMineralAssemblage": $this->object = new stagingRelationship() ; break;
-      // case "UnitID" : $this->code = new Codes() ; break;
     }
   }
 
@@ -114,8 +109,6 @@ class ImportABCDXml implements IImportModels
         case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $this->cdata ; break;
         case "Context" : $this->object->multimedia_data['sub_type'] = $this->cdata ; break;
         case "CreatedDate" : $this->object->multimedia_data['creation_date'] = $this->cdata ; break;
-        //  case "efg:ClassifiedName" : $this->object->setRockName($this->staging) ; break;
-        // case "Comment" : $this->object->multimedia_data['description'] = $this->cdata ; break;
         case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;
         case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break;
         case "DateText" : $this->object->getDateText($this->cdata) ; break;
@@ -139,14 +132,12 @@ class ImportABCDXml implements IImportModels
         case "dna:ExtractionMethod" : $this->object->maintenance->setDescription($this->cdata) ; break;
         case "dna:ExtractionStaff" : $this->handlePeople($this->object->people_type,$this->cdata) ; break;
         case "dna:GenBankNumber" : $this->handleGenbankNumber($this->cdata); break;
-        //$this->property = new ParsingProperties("Genbank number","DNA") ; $this->property->property->setLowerValue($this->cdata) ;  $this->addProperty(true) ; break;
         case "dna:RatioOfAbsorbance260_280" : $this->property = new ParsingProperties("Ratio of absorbance 260/280","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
         case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
         case "dna:Preservation" : $this->addComment(false, "conservation_mean"); break;
         case "Duration" : $this->property->setDateTo($this->cdata) ; break;
         
         case "FileURI" : $this->handleFileURI($this->cdata) ; break;
-        //case "FileURI" : $this->object->getFile($this->cdata) ; break;
         case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
         case "FullName" : $this->people_name = $this->cdata ; break;
         case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break; // $this->object->level_name='unit_rock'; break; //$this->object->informal = true ; break;
@@ -196,7 +187,6 @@ class ImportABCDXml implements IImportModels
         case "efg:MineralRockGroup" : $this->object->handleRockParent() ; break;
         case "efg:MineralRockGroupName" : $this->object->higher_name = $this->cdata ; break;
         case "efg:MineralRockIdentified" : $this->object->getCatalogueParent($this->staging) ; break;
-//         case "MultiMediaObject" : if($this->object->isFileOk()) $this->staging->addRelated($this->object->multimedia) ; else $this->errors_reported .= "Unit ".$this->name." : MultiMediaObject not saved (no or wrong FileURI);"; break;
         case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break; //@TODO
         case "efg:NameComments" : $this->object->setNotion(strtolower($this->cdata)) ; break;
         case "NameAddendum": if(stripos($this->cdata, 'Variety') !== false ) {
@@ -208,18 +198,16 @@ class ImportABCDXml implements IImportModels
         case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups(); break;
         case "Notes" : if($this->getPreviousTag() == "Identification") $this->addComment(true,"identifications") ; else $this->addComment() ;  break ;
         case "Parameter" : $this->property->property->setPropertyType($this->cdata); if($this->cdata == 'DNA size') $this->property->property->setAppliesTo('DNA'); break;
-        case "PersonName" : /*if($this->object->notion == 'taxonomy') $this->object->notion = 'mineralogy' ;*/ $this->handlePeople($this->object->people_type,$this->people_name) ; break;
+        case "PersonName" : $this->handlePeople($this->object->people_type,$this->people_name) ; break;
         case "Person" : $this->handlePeople($this->object->people_type,$this->people_name) ; break;
         case "efg:MineralDescriptionText" : $this->addComment(true, 'mineralogy') ; break;
         case "PetrologyDescriptiveText" : //SAME AS BELOW
         case "efg:PetrologyDescriptiveText" : $this->addComment(true, 'description') ; break;
         case "PhaseOrStage" : $this->staging->setIndividualStage($this->cdata) ; break;
-        // case "Prefix" : $this->people['title'] = $this->cdata ; break;
         case "Preparation" : $this->addPreparation() ; break ;
         case "PreparationType" : $this->preparation_type = $this->cdata ; break;
         case "PreparationMaterials" : $this->preparation_mat = $this->cdata ; break;
         case "ProjectTitle" : $this->staging['expedition_name'] = $this->cdata ; break;
-        //case "RecordURI" : $this->handleExternalLinks($this->cdata) ; break;
         case "RecordURI" : $this->addExternalLink($this->cdata) ; break;
         //case "efg:RockType" :
         //case "RockType" : $this->staging->setLithologyName($this->cdata) ; break;
@@ -232,7 +220,6 @@ class ImportABCDXml implements IImportModels
                      elseif (strtolower($this->cdata) == 'n') $this->staging->setIndividualSex('not applicable') ;
                      elseif (strtolower($this->cdata) == 'x') $this->staging->setIndividualSex('mixed') ;
                      break;
-        // case "SortingName" : $this->object->people_order_by = $this->cdata ; break;
         case "storage:Barcode" : $this->addCode("barcode") ; break ; // c'est un code avec "2dbarcode" dans le main
         case "storage:Institution" : $this->staging->setInstitutionName($this->cdata) ; break;
         case "storage:Building" : $this->staging->setBuilding($this->cdata) ; break;
@@ -256,7 +243,7 @@ class ImportABCDXml implements IImportModels
             $this->object->tag_value = $this->cdata;
             $this->staging_tags[] = $this->object->addTagGroups();
           } break;
-        case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink() ; if($this->getPreviousTag() == "UnitReference")  $this->addComment(true,'publication') ; else $this->addComment(true, "identifications") ;break;
+        case "TitleCitation" : if(substr($this->cdata,0,7) == 'http://') $this->addExternalLink($this->cdata) ; if($this->getPreviousTag() == "UnitReference")  $this->addComment(true,'publication') ; else $this->addComment(true, "identifications") ;break;
         case "TypeStatus" : $this->staging->setIndividualType($this->cdata) ; break;
         case "Unit" : $this->saveUnit(); break;
         case "UnitAssociation" : $this->staging->addRelated($this->object) ; $this->object=null; break;
@@ -287,7 +274,6 @@ class ImportABCDXml implements IImportModels
 
   private function characterData($parser, $data)
   {
-//     if($this->tag == 'AcquisitionDate') echo(FuzzyDateTime::getValidDate($data)) ;
     if ($this->inside_data)
       $this->cdata .= $data ;
     else
@@ -444,7 +430,6 @@ class ImportABCDXml implements IImportModels
         $comment->setComment($this->preparation_mat) ;
         $comment->setNotionConcerned('conservation_mean');
         $this->staging->addRelated($comment) ;
-        //$this->staging['container_storage'] = $this->preparation_mat ;
     }
   }
   private function saveUnit()
@@ -510,9 +495,9 @@ class ImportABCDXml implements IImportModels
       $this->object = new ParsingMultimedia() ; 
       $this->object->getFile($fileuri) ;
       if($this->object->isFileOk()) {
-      $this->staging->addRelated($this->object->multimedia) ; 
+        $this->staging->addRelated($this->object->multimedia) ;
       } else {
-      $this->errors_reported .= "Unit ".$this->name." : MultiMediaObject not saved (no or wrong FileURI);" ;
+        $this->errors_reported .= "Unit ".$this->name." : MultiMediaObject not saved (no or wrong FileURI);" ;
       }
     }
   }

@@ -3449,15 +3449,16 @@ CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_comments (targeted_refer
 AS $$
 UPDATE comments as mc
 SET referenced_relation = $3, record_id = $4
-WHERE NOT EXISTS(SELECT 1
+WHERE mc.referenced_relation = $1
+  AND record_id = $2
+  AND NOT EXISTS(SELECT 1
                  FROM comments AS sc
                  WHERE sc.referenced_relation = $3
                        AND sc.record_id = $4
                        AND sc.notion_concerned = mc.notion_concerned
                        AND sc.comment_indexed = mc.comment_indexed
-)
-      AND mc.referenced_relation = $1
-      AND record_id = $2;
+                 LIMIT 1
+                );
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_properties (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
@@ -3468,7 +3469,9 @@ CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_properties (targeted_ref
 AS $$
 UPDATE properties as mp
 SET referenced_relation = $3, record_id = $4
-WHERE NOT EXISTS(SELECT 1
+WHERE mp.referenced_relation = $1
+  AND record_id = $2
+  AND NOT EXISTS(SELECT 1
                  FROM properties AS sp
                  WHERE sp.referenced_relation = $3
                        AND sp.record_id = $4
@@ -3484,9 +3487,7 @@ WHERE NOT EXISTS(SELECT 1
                        AND sp.lower_value = mp.lower_value
                        AND sp.upper_value = mp.upper_value
                        AND sp.property_accuracy = mp.property_accuracy
-)
-      AND mp.referenced_relation = $1
-      AND record_id = $2;
+                );
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_ext_links (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
@@ -3497,14 +3498,14 @@ CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_ext_links (targeted_refe
 AS $$
 UPDATE ext_links as mel
 SET referenced_relation = $3, record_id = $4
-WHERE NOT EXISTS(SELECT 1
+WHERE mel.referenced_relation = $1
+  AND record_id = $2
+  AND NOT EXISTS(SELECT 1
                  FROM ext_links AS sel
                  WHERE sel.referenced_relation = $3
                        AND sel.record_id = $4
                        AND sel.url = mel.url
-                )
-  AND mel.referenced_relation = $1
-  AND record_id = $2;
+                );
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_multimedia (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
@@ -3515,15 +3516,15 @@ CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_multimedia (targeted_ref
 AS $$
 UPDATE multimedia as mm
 SET referenced_relation = $3, record_id = $4
-WHERE NOT EXISTS(SELECT 1
+WHERE mm.referenced_relation = $1
+  AND record_id = $2
+  AND NOT EXISTS(SELECT 1
                  FROM multimedia AS sm
                  WHERE sm.referenced_relation = $3
                        AND sm.record_id = $4
                        AND sm.mime_type = mm.mime_type
                        AND sm.search_indexed = mm.search_indexed
-                )
-  AND mm.referenced_relation = $1
-  AND record_id = $2;
+                );
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_insurances (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
@@ -3534,7 +3535,9 @@ CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_insurances (targeted_ref
 AS $$
 UPDATE insurances as mi
 SET referenced_relation = $3, record_id = $4
-WHERE NOT EXISTS(SELECT 1
+WHERE mi.referenced_relation = $1
+  AND record_id = $2
+  AND NOT EXISTS(SELECT 1
                  FROM insurances AS si
                  WHERE si.referenced_relation = $3
                    AND si.record_id = $4
@@ -3545,9 +3548,7 @@ WHERE NOT EXISTS(SELECT 1
                    AND si.date_to_mask = mi.date_to_mask
                    AND si.date_to = mi.date_to
                    AND COALESCE(si.insurer_ref,0) = COALESCE(mi.insurer_ref,0)
-                )
-  AND mi.referenced_relation = $1
-  AND record_id = $2;
+                );
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info(line staging, st_type text) RETURNS boolean
@@ -3555,96 +3556,97 @@ AS $$
 DECLARE
   info_line staging_info ;
   record_line RECORD ;
+
 BEGIN
 
   FOR info_line IN select * from staging_info WHERE staging_ref = line.id AND referenced_relation = st_type
   LOOP
-    BEGIN
+--    BEGIN
 
-      CASE info_line.referenced_relation
-        WHEN 'gtu' THEN
-        IF line.gtu_ref IS NOT NULL THEN
+    CASE info_line.referenced_relation
+      WHEN 'gtu' THEN
+      IF line.gtu_ref IS NOT NULL THEN
 
-          PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
-          PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
 
-          PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
-          PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
 
-        END IF;
-        WHEN 'taxonomy' THEN
-        IF line.taxon_ref IS NOT NULL THEN
+      END IF;
+      WHEN 'taxonomy' THEN
+      IF line.taxon_ref IS NOT NULL THEN
 
-          PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
-          PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
 
-          PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
-          PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
 
-        END IF;
-        WHEN 'expeditions' THEN
-        IF line.expedition_ref IS NOT NULL THEN
+      END IF;
+      WHEN 'expeditions' THEN
+      IF line.expedition_ref IS NOT NULL THEN
 
-          PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
-          PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
 
-          PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
 
-        END IF;
-        WHEN 'lithostratigraphy' THEN
-        IF line.litho_ref IS NOT NULL THEN
+      END IF;
+      WHEN 'lithostratigraphy' THEN
+      IF line.litho_ref IS NOT NULL THEN
 
-          PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
-          PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
 
-          PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
-          PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
 
-        END IF;
-        WHEN 'lithology' THEN
-        IF line.lithology_ref IS NOT NULL THEN
+      END IF;
+      WHEN 'lithology' THEN
+      IF line.lithology_ref IS NOT NULL THEN
 
-          PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
-          PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
 
-          PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
-          PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
 
-        END IF;
-        WHEN 'chronostratigraphy' THEN
-        IF line.chrono_ref IS NOT NULL THEN
+      END IF;
+      WHEN 'chronostratigraphy' THEN
+      IF line.chrono_ref IS NOT NULL THEN
 
-          PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
-          PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
 
-          PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
-          PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
 
-        END IF;
-        WHEN 'mineralogy' THEN
-        IF line.mineral_ref IS NOT NULL THEN
+      END IF;
+      WHEN 'mineralogy' THEN
+      IF line.mineral_ref IS NOT NULL THEN
 
-          PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
-          PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
 
-          PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
-          PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
 
-        END IF;
-        WHEN 'igs' THEN
-        IF line.ig_ref IS NOT NULL THEN
+      END IF;
+      WHEN 'igs' THEN
+      IF line.ig_ref IS NOT NULL THEN
 
-          PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
-          PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
 
-          PERFORM fct_imp_checker_staging_info_insurances('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
+        PERFORM fct_imp_checker_staging_info_insurances('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
 
-        END IF;
-      ELSE continue ;
-      END CASE ;
-      EXCEPTION WHEN unique_violation THEN
-      RAISE NOTICE 'An error occured: %', SQLERRM;
-    END ;
+      END IF;
+    ELSE continue ;
+    END CASE ;
+/*      EXCEPTION WHEN unique_violation THEN
+        RAISE NOTICE 'An error occured: %', SQLERRM;
+      END ;*/
   END LOOP;
   DELETE FROM staging_info WHERE staging_ref = line.id ;
   RETURN true;

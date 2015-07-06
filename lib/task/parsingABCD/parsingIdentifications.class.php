@@ -118,14 +118,11 @@ class ParsingIdentifications
     elseif($this->notion == 'lithology') {
       $staging['lithology_parents'] = $this->catalogue_parent->export() ;
       $staging->setLithologyName($this->fullname) ;
-      //$staging->setLithologyLevelName('unit_rock') ;
-
     }
     elseif($this->notion == 'mineralogy'){
       $staging['mineral_parents'] = $this->catalogue_parent->export() ;
       $staging->setMineralName($this->fullname) ;
       $staging->setMineralClassification($this->classification) ;
-      //$staging->setMineralLevelName('unit_variety') ;
     }
   }
 
@@ -154,8 +151,6 @@ class ParsingIdentifications
   {
     $this->identification->fromArray(array('notion_concerned' => $this->notion,'determination_status'=>$this->determination_status, 'value_defined' => '-'));
     $staging->addRelated($this->identification) ;
-    //$this->insertPeopleInStaging($identification->getId());
-    //$this->insertKeywords() ;
   }
 
   // save keywords in table
@@ -178,18 +173,10 @@ class ParsingIdentifications
     $this->scientificName .= "$value " ;
     $staging->addRelated($keyword) ;
   }
+
   public function handleRelation($people,$staging)
   {
     $this->identification->addRelated($people) ;
   }
-
-  /*private function insertKeywords()
-  {
-    foreach($this->keywords as $keyword)
-    {
-      $keyword->setRecordId($this->record_id) ;
-      $keyword->save() ;
-    }
-  }*/
 
 }
