@@ -274,8 +274,6 @@ BEGIN
 
   FOR info_line IN select * from staging_info WHERE staging_ref = line.id AND referenced_relation = st_type
   LOOP
---    BEGIN
-
       CASE info_line.referenced_relation
       WHEN 'gtu' THEN
         IF line.gtu_ref IS NOT NULL THEN
@@ -357,9 +355,6 @@ BEGIN
         END IF;
       ELSE continue ;
       END CASE ;
-/*      EXCEPTION WHEN unique_violation THEN
-        RAISE NOTICE 'An error occured: %', SQLERRM;
-      END ;*/
   END LOOP;
   DELETE FROM staging_info WHERE staging_ref = line.id ;
   RETURN true;
