@@ -15,11 +15,6 @@ class ParsingTag extends ImportABCDXml
       case "lithology" : $this->relation = "lithology" ; break ;;
     }
   }
-  /*
-  public function addRelated($object)
-  {
-    $this->array_object[] = $object ;
-  }*/
 
   public function getDateText($date)
   {

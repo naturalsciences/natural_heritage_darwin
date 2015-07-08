@@ -122,7 +122,7 @@ BEGIN
                 IF codeNum = '' THEN
                   NEW.code_num := 0;
                 ELSE
-                  NEW.code_num := codeNum::int;
+                  NEW.code_num := codeNum::bigint;
                 END IF;
                 NEW.full_code_indexed := fullToIndex(COALESCE(NEW.code_prefix,'') || COALESCE(NEW.code::text,'') || COALESCE(NEW.code_suffix,'') );
         ELSIF TG_TABLE_NAME = 'tag_groups' THEN
@@ -2748,32 +2748,44 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION fct_imp_checker_expeditions(line staging, import boolean default false) RETURNS boolean
 AS $$
 DECLARE
+  result_nbr integer :=0;
+  ref_record RECORD;
   ref_rec integer :=0;
+  ref refcursor;
 BEGIN
   IF line.expedition_name is null OR line.expedition_name ='' OR line.expedition_ref is not null THEN
     RETURN true;
   END IF;
+  OPEN ref FOR select * from expeditions where name_indexed = fulltoindex(line.expedition_name) ;
+  LOOP
+    FETCH ref INTO ref_record ;
+    IF NOT FOUND THEN
+      EXIT ;
+    END IF;
+    ref_rec = ref_record.id ;
+    result_nbr := result_nbr +1;
+  END LOOP ;
+  IF result_nbr = 0 THEN
+    IF import THEN
+      INSERT INTO expeditions (name, expedition_from_date, expedition_to_date, expedition_from_date_mask,expedition_to_date_mask)
+      VALUES (
+        line.expedition_name, COALESCE(line.expedition_from_date,'01/01/0001'),
+        COALESCE(line.expedition_to_date,'31/12/2038'), COALESCE(line.expedition_from_date_mask,0),
+        COALESCE(line.expedition_to_date_mask,0)
+      )
+      RETURNING id INTO line.expedition_ref;
 
-  select id into ref_rec from expeditions where name_indexed = fulltoindex(line.expedition_name) and
-    expedition_from_date = COALESCE(line.expedition_from_date,'01/01/0001') AND
-    expedition_to_date = COALESCE(line.expedition_to_date,'31/12/2038');
-  IF NOT FOUND THEN
-      IF import THEN
-        INSERT INTO expeditions (name, expedition_from_date, expedition_to_date, expedition_from_date_mask,expedition_to_date_mask)
-        VALUES (
-          line.expedition_name, COALESCE(line.expedition_from_date,'01/01/0001'),
-          COALESCE(line.expedition_to_date,'31/12/2038'), COALESCE(line.expedition_from_date_mask,0),
-          COALESCE(line.expedition_to_date_mask,0)
-        )
-        RETURNING id INTO line.expedition_ref;
-
-        ref_rec := line.expedition_ref;
-        PERFORM fct_imp_checker_staging_info(line, 'expeditions');
-      ELSE
-        RETURN TRUE;
-      END IF;
+      ref_rec := line.expedition_ref;
+      PERFORM fct_imp_checker_staging_info(line, 'expeditions');
+    ELSE
+      RETURN TRUE;
+    END IF;
   END IF;
-
+  IF result_nbr >= 2 THEN
+    UPDATE staging SET status = (status || ('expedition' => 'too_much')) where id= line.id;
+    RETURN true;
+  END IF;
+/* So result_nbr = 1 ! */
   UPDATE staging SET status = delete(status,'expedition'), expedition_ref = ref_rec where id=line.id;
 
   RETURN true;
@@ -2790,73 +2802,75 @@ DECLARE
   tag_groups_line RECORD;
 BEGIN
   IF import THEN
-    /* If gtu_ref already defined, that means that check was already 
-       made for the line and there's no need to reassociate it 
+    /* If gtu_ref already defined, that means that check was already
+       made for the line and there's no need to reassociate it
     */
     IF line.gtu_ref is not null THEN
       RETURN true;
     END IF;
-    /* If no code is given, not even from date and not even tags (tag_groups here), 
-       that means there's not enough information to associate a gtu 
+    /* If no code is given, not even from date and not even tags (tag_groups here),
+       that means there's not enough information to associate a gtu
     */
     IF (line.gtu_code is null OR COALESCE(fullToIndex(line.gtu_code),'')  = '') AND (line.gtu_from_date is null) AND NOT EXISTS (select 1 from staging_tag_groups g where g.staging_ref = line.id ) THEN
       RETURN true;
     END IF;
     /* Otherwise, we should try to associate a gtu_ref */
     select substr.id into ref_rec from (
-      /* This part try to select gtu id for line.gtu_code NULL or line.gtu_code = '' making the comparison on all the
-         other fields ensuring uniqueness (latitude, longitude, from_date and to_date)
-         The criteria position('import/' in code) > 0 filter also on the already imported gtu without code only
-      */
-      select id from gtu g where
-        position('import/' in code) > 0 AND
-        COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
-        COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
-        COALESCE(fullToIndex(line.gtu_code), '') = '' AND
-        gtu_from_date = COALESCE(line.gtu_from_date, '01/01/0001') AND
-        gtu_to_date = COALESCE(line.gtu_to_date, '31/12/2038')
-      /* if we're not in the case of already imported gtu without code,
-         we've got to find a gtu that correspond to the criterias of the current line
-      */
-      union
-      select id from gtu g where
-        position('import/' in code) = 0 AND
-        COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
-        COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
-        COALESCE(fullToIndex(code),'') = COALESCE(fullToIndex(line.gtu_code),'') AND
-        fct_mask_date(gtu_from_date,gtu_from_date_mask) = fct_mask_date(COALESCE(line.gtu_from_date, '01/01/0001')::timestamp,line.gtu_from_date_mask) AND
-        fct_mask_date(gtu_to_date,gtu_to_date_mask) = fct_mask_date(COALESCE(line.gtu_to_date, '31/12/2038')::timestamp,line.gtu_to_date_mask)
-        LIMIT 1
+       /* This part try to select gtu id for line.gtu_code NULL or line.gtu_code = '' making the comparison on all the
+          other fields ensuring uniqueness (latitude, longitude, from_date and to_date)
+          The criteria position('import/' in code) > 0 filter also on the already imported gtu without code only
+       */
+       select id from gtu g where
+         position('import/' in code) > 0 AND
+         COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
+         COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
+         COALESCE(fullToIndex(line.gtu_code), '') = '' AND
+         fct_mask_date(gtu_from_date,gtu_from_date_mask) = fct_mask_date(COALESCE(line.gtu_from_date, '01/01/0001')::timestamp,line.gtu_from_date_mask) AND
+         fct_mask_date(gtu_to_date,gtu_to_date_mask) = fct_mask_date(COALESCE(line.gtu_to_date, '31/12/2038')::timestamp,line.gtu_to_date_mask) AND
+         COALESCE(elevation,0) = COALESCE(line.gtu_elevation,0)
+         /* if we're not in the case of already imported gtu without code,
+            we've got to find a gtu that correspond to the criterias of the current line
+         */
+       union
+       select id from gtu g where
+         position('import/' in code) = 0 AND
+         COALESCE(latitude,0) = COALESCE(line.gtu_latitude,0) AND
+         COALESCE(longitude,0) = COALESCE(line.gtu_longitude,0) AND
+         COALESCE(fullToIndex(code),'') = COALESCE(fullToIndex(line.gtu_code),'') AND
+         fct_mask_date(gtu_from_date,gtu_from_date_mask) = fct_mask_date(COALESCE(line.gtu_from_date, '01/01/0001')::timestamp,line.gtu_from_date_mask) AND
+         fct_mask_date(gtu_to_date,gtu_to_date_mask) = fct_mask_date(COALESCE(line.gtu_to_date, '31/12/2038')::timestamp,line.gtu_to_date_mask) AND
+         COALESCE(elevation,0) = COALESCE(line.gtu_elevation,0)
+       LIMIT 1
       ) as substr
-      WHERE substr.id != 0 LIMIT 1;
+    WHERE substr.id != 0 LIMIT 1;
 
     /* If no corresponding gtu found and we've chosen to import... insert the new gtu */
     IF NOT FOUND THEN
       INSERT into gtu
-        (code, 
-         gtu_from_date_mask, 
-         gtu_from_date,
-         gtu_to_date_mask, 
-         gtu_to_date, 
-         latitude, 
-         longitude, 
-         lat_long_accuracy, 
-         elevation, 
-         elevation_accuracy
-        )
-      VALUES
-      (
-        CASE COALESCE(fullToIndex(line.gtu_code),'') WHEN '' THEN 'import/'|| line.import_ref || '/' || line.id ELSE line.gtu_code END, 
-        COALESCE(line.gtu_from_date_mask,0), 
-        COALESCE(line.gtu_from_date, '01/01/0001'),
-        COALESCE(line.gtu_to_date_mask,0), 
-        COALESCE(line.gtu_to_date, '31/12/2038'),
-        line.gtu_latitude, 
-        line.gtu_longitude, 
-        line.gtu_lat_long_accuracy, 
-        line.gtu_elevation, 
-        line.gtu_elevation_accuracy
+      (code,
+       gtu_from_date_mask,
+       gtu_from_date,
+       gtu_to_date_mask,
+       gtu_to_date,
+       latitude,
+       longitude,
+       lat_long_accuracy,
+       elevation,
+       elevation_accuracy
       )
+      VALUES
+        (
+          CASE COALESCE(fullToIndex(line.gtu_code),'') WHEN '' THEN 'import/'|| line.import_ref || '/' || line.id ELSE line.gtu_code END,
+          COALESCE(line.gtu_from_date_mask,0),
+          COALESCE(line.gtu_from_date, '01/01/0001'),
+          COALESCE(line.gtu_to_date_mask,0),
+          COALESCE(line.gtu_to_date, '31/12/2038'),
+          line.gtu_latitude,
+          line.gtu_longitude,
+          line.gtu_lat_long_accuracy,
+          line.gtu_elevation,
+          line.gtu_elevation_accuracy
+        )
       RETURNING id INTO line.gtu_ref;
       /* The new id is returned in line.gtu_ref and stored in ref_rec so it can be used further on */
       ref_rec := line.gtu_ref;
@@ -2864,11 +2878,10 @@ BEGIN
       FOR tags IN SELECT * FROM staging_tag_groups WHERE staging_ref = line.id LOOP
         BEGIN
           INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
-          SELECT ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value;
-          --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
+            SELECT ref_rec,tags.group_name, tags.sub_group_name, tags.tag_value;
           EXCEPTION WHEN OTHERS THEN
             RAISE NOTICE 'Error in fct_imp_checker_gtu (case non existing gtu): %', SQLERRM;
-            -- nothing
+            /* Do nothing and continue */
         END ;
       END LOOP ;
     ELSE
@@ -2886,37 +2899,36 @@ BEGIN
             /* We use an upsert here.
                Ideally, we should use locking, but we consider it's isolated.
              */
-            UPDATE tag_groups 
-            SET tag_value = tag_value || ';' || tags.tag_value 
+            UPDATE tag_groups
+            SET tag_value = tag_value || ';' || tags.tag_value
             WHERE gtu_ref = ref_rec
-              AND group_name_indexed = fullToIndex(tags.group_name)
-              AND sub_group_name_indexed = fullToIndex(tags.sub_group_name)
-              AND fullToIndex(tags_tag.value) NOT IN (SELECT fullToIndex(regexp_split_to_table(tag_value, E';+')));
+                  AND group_name_indexed = fullToIndex(tags.group_name)
+                  AND sub_group_name_indexed = fullToIndex(tags.sub_group_name)
+                  AND fullToIndex(tags_tag.value) NOT IN (SELECT fullToIndex(regexp_split_to_table(tag_value, E';+')));
             GET DIAGNOSTICS update_count = ROW_COUNT;
             IF update_count = 0 THEN
               INSERT INTO tag_groups (gtu_ref, group_name, sub_group_name, tag_value)
-              SELECT ref_rec,tags.group_name, tags.sub_group_name, tags_tag.value
-              WHERE NOT EXISTS (SELECT id 
-                                FROM tag_groups 
-                                WHERE gtu_ref = ref_rec
-                                  AND group_name_indexed = fullToIndex(tags.group_name)
-                                  AND sub_group_name_indexed = fullToIndex(tags.sub_group_name)
-                                LIMIT 1
-                               );
+                SELECT ref_rec,tags.group_name, tags.sub_group_name, tags_tag.value
+                WHERE NOT EXISTS (SELECT id
+                                  FROM tag_groups
+                                  WHERE gtu_ref = ref_rec
+                                        AND group_name_indexed = fullToIndex(tags.group_name)
+                                        AND sub_group_name_indexed = fullToIndex(tags.sub_group_name)
+                                  LIMIT 1
+                );
             END IF;
-          --  DELETE FROM staging_tag_groups WHERE staging_ref = line.id;
             EXCEPTION WHEN OTHERS THEN
               RAISE NOTICE 'Error in fct_imp_checker_gtu (case from existing gtu): %', SQLERRM;
               RAISE NOTICE 'gtu_ref is %', ref_rec;
               RAISE NOTICE 'group name is %', tags.group_name;
               RAISE NOTICE 'subgroup name is %', tags.sub_group_name;
               RAISE NOTICE 'tag value is %', tags_tag.value;
-              -- nothing
+              /* Do nothing here */
           END ;
         END LOOP;
       END LOOP ;
     END IF;
-    /* Execute (perform = execute without any output) the update of reference_relation 
+    /* Execute (perform = execute without any output) the update of reference_relation
        for the current staging line and for the gtu type of relationship.
        Referenced relation currently named 'staging_info' is replaced by gtu
        and record_id currently set to line.id (staging id) is replaced by line.gtu_ref (id of the new gtu created)
@@ -3138,6 +3150,7 @@ BEGIN
   LOOP
     BEGIN
       -- I know it's dumb but....
+      -- @ToDo: We need to correct this to avoid reselecting from the staging table !!!
       select * into staging_line from staging where id = all_line.id;
       PERFORM fct_imp_checker_igs(staging_line, true);
       PERFORM fct_imp_checker_expeditions(staging_line, true);
@@ -3289,40 +3302,40 @@ BEGIN
   IF get_setting('darwin.upd_imp_ref') is null OR  get_setting('darwin.upd_imp_ref') = '' THEN
     PERFORM set_config('darwin.upd_imp_ref', 'ok', true);
     IF OLD.taxon_ref IS DISTINCT FROM NEW.taxon_ref AND  NEW.taxon_ref is not null THEN
-        SELECT t.id ,t.name, t.level_ref , cl.level_sys_name, t.status, t.extinct
-        INTO NEW.taxon_ref,NEW.taxon_name, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_extinct
-        FROM taxonomy t, catalogue_levels cl
-        WHERE cl.id=t.level_ref AND t.id = NEW.taxon_ref;
+      SELECT t.id ,t.name, t.level_ref , cl.level_sys_name, t.status, t.extinct
+      INTO NEW.taxon_ref,NEW.taxon_name, NEW.taxon_level_ref, NEW.taxon_level_name, NEW.taxon_status, NEW.taxon_extinct
+      FROM taxonomy t, catalogue_levels cl
+      WHERE cl.id=t.level_ref AND t.id = NEW.taxon_ref;
 
-        UPDATE staging set taxon_ref=NEW.taxon_ref, taxon_name = new.taxon_name, taxon_level_ref=new.taxon_level_ref,
-          taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct,
-          status = delete(status,'taxon')
+      UPDATE staging set taxon_ref=NEW.taxon_ref, taxon_name = new.taxon_name, taxon_level_ref=new.taxon_level_ref,
+        taxon_level_name=new.taxon_level_name, taxon_status=new.taxon_status, taxon_extinct=new.taxon_extinct,
+        status = delete(status,'taxon')
 
-        WHERE
-          taxon_name  IS NOT DISTINCT FROM  old.taxon_name AND  taxon_level_ref IS NOT DISTINCT FROM old.taxon_level_ref AND
-          taxon_level_name IS NOT DISTINCT FROM old.taxon_level_name AND  taxon_status IS NOT DISTINCT FROM old.taxon_status
-          AND  taxon_extinct IS NOT DISTINCT FROM old.taxon_extinct
-          AND import_ref = NEW.import_ref;
-        NEW.status = delete(NEW.status,'taxon');
+      WHERE
+        taxon_name  IS NOT DISTINCT FROM  old.taxon_name AND  taxon_level_ref IS NOT DISTINCT FROM old.taxon_level_ref AND
+        taxon_level_name IS NOT DISTINCT FROM old.taxon_level_name AND  taxon_status IS NOT DISTINCT FROM old.taxon_status
+        AND  taxon_extinct IS NOT DISTINCT FROM old.taxon_extinct
+        AND import_ref = NEW.import_ref;
+      NEW.status = delete(NEW.status,'taxon');
     END IF;
 
     IF OLD.chrono_ref IS DISTINCT FROM NEW.chrono_ref  AND  NEW.chrono_ref is not null THEN
       SELECT c.id, c.name, c.level_ref, cl.level_name, c.status, c.local_naming, c.color, c.upper_bound, c.lower_bound
-        INTO NEW.chrono_ref, NEW.chrono_name, NEW.chrono_level_ref, NEW.chrono_level_name, NEW.chrono_status, NEW.chrono_local, NEW.chrono_color, NEW.chrono_upper_bound, NEW.chrono_lower_bound
-        FROM chronostratigraphy c, catalogue_levels cl
-        WHERE cl.id=c.level_ref AND c.id = NEW.chrono_ref ;
+      INTO NEW.chrono_ref, NEW.chrono_name, NEW.chrono_level_ref, NEW.chrono_level_name, NEW.chrono_status, NEW.chrono_local, NEW.chrono_color, NEW.chrono_upper_bound, NEW.chrono_lower_bound
+      FROM chronostratigraphy c, catalogue_levels cl
+      WHERE cl.id=c.level_ref AND c.id = NEW.chrono_ref ;
 
-        UPDATE staging set chrono_ref=NEW.chrono_ref, chrono_name = NEW.chrono_name, chrono_level_ref=NEW.chrono_level_ref, chrono_level_name=NEW.chrono_level_name, chrono_status=NEW.chrono_status,
+      UPDATE staging set chrono_ref=NEW.chrono_ref, chrono_name = NEW.chrono_name, chrono_level_ref=NEW.chrono_level_ref, chrono_level_name=NEW.chrono_level_name, chrono_status=NEW.chrono_status,
         chrono_local=NEW.chrono_local, chrono_color=NEW.chrono_color, chrono_upper_bound=NEW.chrono_upper_bound, chrono_lower_bound=NEW.chrono_lower_bound,
         status = delete(status,'chrono')
 
-        WHERE
+      WHERE
         chrono_name  IS NOT DISTINCT FROM  OLD.chrono_name AND  chrono_level_ref IS NOT DISTINCT FROM OLD.chrono_level_ref AND
         chrono_level_name IS NOT DISTINCT FROM OLD.chrono_level_name AND  chrono_status IS NOT DISTINCT FROM OLD.chrono_status AND
         chrono_local IS NOT DISTINCT FROM OLD.chrono_local AND  chrono_color IS NOT DISTINCT FROM OLD.chrono_color AND
         chrono_upper_bound IS NOT DISTINCT FROM OLD.chrono_upper_bound AND  chrono_lower_bound IS NOT DISTINCT FROM OLD.chrono_lower_bound
         AND import_ref = NEW.import_ref;
-        NEW.status = delete(NEW.status,'chrono');
+      NEW.status = delete(NEW.status,'chrono');
 
     END IF;
 
@@ -3342,7 +3355,7 @@ BEGIN
         litho_level_name IS NOT DISTINCT FROM  OLD.litho_level_name AND
         litho_status IS NOT DISTINCT FROM  OLD.litho_status AND litho_local IS NOT DISTINCT FROM  OLD.litho_local AND litho_color IS NOT DISTINCT FROM OLD.litho_color
         AND import_ref = NEW.import_ref;
-        NEW.status = delete(NEW.status,'litho');
+      NEW.status = delete(NEW.status,'litho');
 
     END IF;
 
@@ -3364,7 +3377,7 @@ BEGIN
         lithology_level_name IS NOT DISTINCT FROM OLD.lithology_level_name AND  lithology_status IS NOT DISTINCT FROM OLD.lithology_status AND  lithology_local IS NOT DISTINCT FROM OLD.lithology_local AND
         lithology_color IS NOT DISTINCT FROM OLD.lithology_color
         AND import_ref = NEW.import_ref;
-        NEW.status = delete(NEW.status,'lithology');
+      NEW.status = delete(NEW.status,'lithology');
 
     END IF;
 
@@ -3387,7 +3400,7 @@ BEGIN
         mineral_color IS NOT DISTINCT FROM OLD.mineral_color AND  mineral_path IS NOT DISTINCT FROM OLD.mineral_path
         AND import_ref = NEW.import_ref;
 
-        NEW.status = delete(NEW.status,'mineral');
+      NEW.status = delete(NEW.status,'mineral');
 
     END IF;
 
@@ -3399,13 +3412,14 @@ BEGIN
 
       UPDATE staging set
         expedition_ref=NEW.expedition_ref, expedition_name=NEW.expedition_name, expedition_from_date=NEW.expedition_from_date,
-        expedition_to_date=NEW.expedition_to_date, expedition_from_date_mask=NEW.expedition_from_date_mask , expedition_to_date_mask=NEW.expedition_to_date_mask
+        expedition_to_date=NEW.expedition_to_date, expedition_from_date_mask=NEW.expedition_from_date_mask , expedition_to_date_mask=NEW.expedition_to_date_mask,
+        status = delete(status,'expedition')
       WHERE
         expedition_name IS NOT DISTINCT FROM OLD.expedition_name AND  expedition_from_date IS NOT DISTINCT FROM OLD.expedition_from_date AND
         expedition_to_date IS NOT DISTINCT FROM OLD.expedition_to_date AND  expedition_from_date_mask IS NOT DISTINCT FROM OLD.expedition_from_date_mask  AND
         expedition_to_date_mask IS NOT DISTINCT FROM OLD.expedition_to_date_mask
         AND import_ref = NEW.import_ref;
-
+      NEW.status = delete(NEW.status,'expedition');
     END IF;
 
     IF OLD.institution_ref IS DISTINCT FROM NEW.institution_ref  AND  NEW.institution_ref is not null THEN
@@ -3413,11 +3427,11 @@ BEGIN
 
       UPDATE staging set institution_ref = NEW.institution_ref, institution_name=NEW.institution_name,
         status = delete(status,'institution')
-        WHERE
+      WHERE
         institution_name IS NOT DISTINCT FROM OLD.institution_name
         AND import_ref = NEW.import_ref;
 
-        NEW.status = delete(NEW.status,'institution');
+      NEW.status = delete(NEW.status,'institution');
 
     END IF;
 
@@ -3427,114 +3441,210 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_comments (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
+                                                                  targeted_record_id template_table_record_ref.record_id%TYPE,
+                                                                  new_referenced_relation template_table_record_ref.referenced_relation%TYPE,
+                                                                  new_record_id template_table_record_ref.record_id%TYPE
+) RETURNS VOID
+AS $$
+UPDATE comments as mc
+SET referenced_relation = $3, record_id = $4
+WHERE mc.referenced_relation = $1
+  AND record_id = $2
+  AND NOT EXISTS(SELECT 1
+                 FROM comments AS sc
+                 WHERE sc.referenced_relation = $3
+                       AND sc.record_id = $4
+                       AND sc.notion_concerned = mc.notion_concerned
+                       AND sc.comment_indexed = mc.comment_indexed
+                 LIMIT 1
+                );
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_properties (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
+                                                                    targeted_record_id template_table_record_ref.record_id%TYPE,
+                                                                    new_referenced_relation template_table_record_ref.referenced_relation%TYPE,
+                                                                    new_record_id template_table_record_ref.record_id%TYPE
+) RETURNS VOID
+AS $$
+UPDATE properties as mp
+SET referenced_relation = $3, record_id = $4
+WHERE mp.referenced_relation = $1
+  AND record_id = $2
+  AND NOT EXISTS(SELECT 1
+                 FROM properties AS sp
+                 WHERE sp.referenced_relation = $3
+                       AND sp.record_id = $4
+                       AND sp.property_type = mp.property_type
+                       AND sp.applies_to = mp.applies_to
+                       AND sp.date_from_mask = mp.date_from_mask
+                       AND sp.date_from = mp.date_from
+                       AND sp.date_to_mask = mp.date_to_mask
+                       AND sp.date_to = mp.date_to
+                       AND sp.is_quantitative = mp.is_quantitative
+                       AND sp.property_unit = mp.property_unit
+                       AND sp.method_indexed = mp.method_indexed
+                       AND sp.lower_value = mp.lower_value
+                       AND sp.upper_value = mp.upper_value
+                       AND sp.property_accuracy = mp.property_accuracy
+                );
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_ext_links (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
+                                                                   targeted_record_id template_table_record_ref.record_id%TYPE,
+                                                                   new_referenced_relation template_table_record_ref.referenced_relation%TYPE,
+                                                                   new_record_id template_table_record_ref.record_id%TYPE
+) RETURNS VOID
+AS $$
+UPDATE ext_links as mel
+SET referenced_relation = $3, record_id = $4
+WHERE mel.referenced_relation = $1
+  AND record_id = $2
+  AND NOT EXISTS(SELECT 1
+                 FROM ext_links AS sel
+                 WHERE sel.referenced_relation = $3
+                       AND sel.record_id = $4
+                       AND sel.url = mel.url
+                );
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_multimedia (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
+                                                                    targeted_record_id template_table_record_ref.record_id%TYPE,
+                                                                    new_referenced_relation template_table_record_ref.referenced_relation%TYPE,
+                                                                    new_record_id template_table_record_ref.record_id%TYPE
+) RETURNS VOID
+AS $$
+UPDATE multimedia as mm
+SET referenced_relation = $3, record_id = $4
+WHERE mm.referenced_relation = $1
+  AND record_id = $2
+  AND NOT EXISTS(SELECT 1
+                 FROM multimedia AS sm
+                 WHERE sm.referenced_relation = $3
+                       AND sm.record_id = $4
+                       AND sm.mime_type = mm.mime_type
+                       AND sm.search_indexed = mm.search_indexed
+                );
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info_insurances (targeted_referenced_relation template_table_record_ref.referenced_relation%TYPE,
+                                                                    targeted_record_id template_table_record_ref.record_id%TYPE,
+                                                                    new_referenced_relation template_table_record_ref.referenced_relation%TYPE,
+                                                                    new_record_id template_table_record_ref.record_id%TYPE
+) RETURNS VOID
+AS $$
+UPDATE insurances as mi
+SET referenced_relation = $3, record_id = $4
+WHERE mi.referenced_relation = $1
+  AND record_id = $2
+  AND NOT EXISTS(SELECT 1
+                 FROM insurances AS si
+                 WHERE si.referenced_relation = $3
+                   AND si.record_id = $4
+                   AND si.insurance_value = mi.insurance_value
+                   AND si.insurance_currency = mi.insurance_currency
+                   AND si.date_from_mask = mi.date_from_mask
+                   AND si.date_from = mi.date_from
+                   AND si.date_to_mask = mi.date_to_mask
+                   AND si.date_to = mi.date_to
+                   AND COALESCE(si.insurer_ref,0) = COALESCE(mi.insurer_ref,0)
+                );
+$$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_info(line staging, st_type text) RETURNS boolean
 AS $$
 DECLARE
   info_line staging_info ;
   record_line RECORD ;
 BEGIN
-
   FOR info_line IN select * from staging_info WHERE staging_ref = line.id AND referenced_relation = st_type
   LOOP
-    BEGIN
     CASE info_line.referenced_relation
       WHEN 'gtu' THEN
-        IF line.gtu_ref IS NOT NULL THEN
-          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
-          LOOP
-            DELETE FROM comments mc
-            WHERE referenced_relation = 'staging_info'
-              AND record_id=info_line.id
-              AND EXISTS (SELECT 1
-                          FROM comments cc
-                          WHERE cc.referenced_relation = 'gtu'
-                            AND cc.notion_concerned = mc.notion_concerned
-                            AND cc.comment = mc.comment
-                          LIMIT 1
-                         );
-            DELETE FROM properties mp
-            WHERE referenced_relation = 'staging_info'
-              AND record_id=info_line.id
-              AND EXISTS (SELECT 1
-                          FROM properties cp
-                          WHERE cp.referenced_relation = 'gtu'
-                            AND cp.property_type = mp.property_type
-                            AND cp.applies_to = mp.applies_to
-                            AND cp.date_from_mask = mp.date_from_mask
-                            AND cp.date_from = mp.date_from
-                            AND cp.date_to_mask = mp.date_to_mask
-                            AND cp.date_to = mp.date_to
-                            AND cp.is_quantitative = mp.is_quantitative
-                            AND cp.property_unit = mp.property_unit
-                            AND cp.method_indexed = mp.method_indexed
-                            AND cp.lower_value = mp.lower_value
-                            AND cp.upper_value = mp.upper_value
-                            AND cp.property_accuracy = mp.property_accuracy
-                          LIMIT 1
-                         );
-            UPDATE template_table_record_ref set referenced_relation='gtu', record_id=line.gtu_ref where referenced_relation='staging_info' and record_id=info_line.id;
-          END LOOP ;
-        END IF;
+      IF line.gtu_ref IS NOT NULL THEN
+
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
+
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.gtu_ref);
+
+      END IF;
       WHEN 'taxonomy' THEN
-        IF line.taxon_ref IS NOT NULL THEN
-          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
-          LOOP
-            UPDATE template_table_record_ref set referenced_relation='taxonomy', record_id=line.taxon_ref where referenced_relation='staging_info' and record_id=info_line.id;
-          END LOOP ;
-        END IF;
+      IF line.taxon_ref IS NOT NULL THEN
+
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
+
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.taxon_ref);
+
+      END IF;
       WHEN 'expeditions' THEN
-        IF line.expedition_ref IS NOT NULL THEN
-          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
-          LOOP
-            UPDATE template_table_record_ref set referenced_relation='expeditions', record_id=line.expedition_ref where referenced_relation='staging_info' and record_id=info_line.id;
-          END LOOP ;
-        END IF;
+      IF line.expedition_ref IS NOT NULL THEN
+
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
+
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.expedition_ref);
+
+      END IF;
       WHEN 'lithostratigraphy' THEN
-        IF line.litho_ref IS NOT NULL THEN
-          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
-          LOOP
-            UPDATE template_table_record_ref set referenced_relation='lithostratigraphy', record_id=line.litho_ref where referenced_relation='staging_info' and record_id=info_line.id;
-          END LOOP ;
-        END IF;
+      IF line.litho_ref IS NOT NULL THEN
+
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
+
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.litho_ref);
+
+      END IF;
       WHEN 'lithology' THEN
-        IF line.lithology_ref IS NOT NULL THEN
-          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
-          LOOP
-            UPDATE template_table_record_ref set referenced_relation='lithology', record_id=line.lithology_ref where referenced_relation='staging_info' and record_id=info_line.id;
-          END LOOP ;
-        END IF;
+      IF line.lithology_ref IS NOT NULL THEN
+
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
+
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.lithology_ref);
+
+      END IF;
       WHEN 'chronostratigraphy' THEN
-        IF line.chrono_ref IS NOT NULL THEN
-          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
-          LOOP
-            UPDATE template_table_record_ref set referenced_relation='chronostratigraphy', record_id=line.chrono_ref where id=record_line.id ;
-          END LOOP ;
-        END IF;
+      IF line.chrono_ref IS NOT NULL THEN
+
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
+
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.chrono_ref);
+
+      END IF;
       WHEN 'mineralogy' THEN
-        IF line.mineral_ref IS NOT NULL THEN
-          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
-          LOOP
-            UPDATE template_table_record_ref set referenced_relation='mineralogy', record_id=line.mineral_ref where referenced_relation='staging_info' and record_id=info_line.id;
-          END LOOP ;
-        END IF;
+      IF line.mineral_ref IS NOT NULL THEN
+
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
+
+        PERFORM fct_imp_checker_staging_info_properties('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
+        PERFORM fct_imp_checker_staging_info_multimedia('staging_info', info_line.id, info_line.referenced_relation, line.mineral_ref);
+
+      END IF;
       WHEN 'igs' THEN
-        IF line.ig_ref IS NOT NULL THEN
-          FOR record_line IN select * from template_table_record_ref where referenced_relation='staging_info' and record_id=info_line.id
-          LOOP
-            UPDATE template_table_record_ref set referenced_relation='igs', record_id=line.ig_ref where referenced_relation='staging_info' and record_id=info_line.id;
-          END LOOP ;
-        END IF;
-      ELSE continue ;
-      END CASE ;
-      EXCEPTION WHEN unique_violation THEN
-        RAISE NOTICE 'An error occured: %', SQLERRM;
-      END ;
+      IF line.ig_ref IS NOT NULL THEN
+
+        PERFORM fct_imp_checker_staging_info_comments('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
+        PERFORM fct_imp_checker_staging_info_ext_links('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
+
+        PERFORM fct_imp_checker_staging_info_insurances('staging_info', info_line.id, info_line.referenced_relation, line.ig_ref);
+
+      END IF;
+    ELSE continue ;
+    END CASE ;
   END LOOP;
   DELETE FROM staging_info WHERE staging_ref = line.id ;
   RETURN true;
 END;
 $$ LANGUAGE plpgsql;
-
 
 CREATE OR REPLACE FUNCTION fct_imp_checker_staging_relationship() RETURNS integer ARRAY
 AS $$
@@ -3772,7 +3882,7 @@ CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec() RETURNS trigger
 AS $$
 DECLARE 
   col collections%ROWTYPE;
-  number integer ;
+  number BIGINT ;
 BEGIN
   IF TG_OP != 'DELETE' THEN
     IF NEW.referenced_relation = 'specimens' THEN
@@ -3780,7 +3890,7 @@ BEGIN
       IF FOUND THEN
         IF NEW.code_category = 'main' THEN
           IF isnumeric(NEW.code) THEN 
-            number := NEW.code::integer ;
+            number := NEW.code::bigint;
             IF number > col.code_last_value THEN
               UPDATE collections set code_last_value = number WHERE id=col.id ;
             END IF;
@@ -3813,7 +3923,7 @@ BEGIN
         ELSEIF TG_OP = 'UPDATE' THEN
           IF OLD.code_category = 'main' THEN
             IF isnumeric(OLD.code) THEN 
-              number := OLD.code::integer ;
+              number := OLD.code::bigint;
               IF number = col.code_last_value THEN
                 UPDATE collections 
                 SET code_last_value = (SELECT max(code_num)

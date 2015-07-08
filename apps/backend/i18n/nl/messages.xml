@@ -5434,8 +5434,8 @@
         
       </trans-unit>
       <trans-unit id="1353">
-        <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;</source>
-        <target>Aangezien DaRWIN volledig gebaseerd is op open source software, zouden we ons verheugen mocht u wensen bij te dragen tot ons project.&lt;br /&gt; Suggesties, Patches, het doorgeven van Foutmeldingen of code sponsering zijn welkom op onze trac : &lt;a href=&quot;http://projects.naturalsciences.be/projects/darwin&quot;&gt;http://projects.naturalsciences.be/projects/darwin&lt;/a&gt;;</target>
+        <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;https://github.com/naturalsciences/Darwin/&quot;&gt;https://github.com/naturalsciences/Darwin/&lt;/a&gt;</source>
+        <target>Aangezien DaRWIN volledig gebaseerd is op open source software, zouden we ons verheugen mocht u wensen bij te dragen tot ons project.&lt;br /&gt; Suggesties, Patches, het doorgeven van Foutmeldingen of code sponsering zijn welkom op onze trac : &lt;a href=&quot;https://github.com/naturalsciences/Darwin/&quot;&gt;https://github.com/naturalsciences/Darwin/&lt;/a&gt;;</target>
         
       </trans-unit>
       <trans-unit id="1354">
