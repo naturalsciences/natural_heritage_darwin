@@ -16,6 +16,7 @@ abstract class BaseExtLinksFormFilter extends BaseFormFilterDoctrine
       'referenced_relation' => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'record_id'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'url'                 => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'type'                => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'comment'             => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'comment_indexed'     => new sfWidgetFormFilterInput(),
     ));
@@ -24,6 +25,7 @@ abstract class BaseExtLinksFormFilter extends BaseFormFilterDoctrine
       'referenced_relation' => new sfValidatorPass(array('required' => false)),
       'record_id'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'url'                 => new sfValidatorPass(array('required' => false)),
+      'type'                => new sfValidatorPass(array('required' => false)),
       'comment'             => new sfValidatorPass(array('required' => false)),
       'comment_indexed'     => new sfValidatorPass(array('required' => false)),
     ));
@@ -49,6 +51,7 @@ abstract class BaseExtLinksFormFilter extends BaseFormFilterDoctrine
       'referenced_relation' => 'Text',
       'record_id'           => 'Number',
       'url'                 => 'Text',
+      'type'                => 'Text',
       'comment'             => 'Text',
       'comment_indexed'     => 'Text',
     );

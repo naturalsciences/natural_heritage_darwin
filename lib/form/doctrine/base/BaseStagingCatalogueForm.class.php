@@ -19,7 +19,7 @@ abstract class BaseStagingCatalogueForm extends BaseFormDoctrine
       'import_ref'    => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Import'), 'add_empty' => false)),
       'name'          => new sfWidgetFormTextarea(),
       'level_ref'     => new sfWidgetFormInputText(),
-      'parent_ref'    => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => false)),
+      'parent_ref'    => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
       'catalogue_ref' => new sfWidgetFormInputText(),
     ));
 
@@ -28,8 +28,8 @@ abstract class BaseStagingCatalogueForm extends BaseFormDoctrine
       'import_ref'    => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Import'))),
       'name'          => new sfValidatorString(),
       'level_ref'     => new sfValidatorInteger(),
-      'parent_ref'    => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'))),
-      'catalogue_ref' => new sfValidatorInteger(),
+      'parent_ref'    => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'required' => false)),
+      'catalogue_ref' => new sfValidatorInteger(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('staging_catalogue[%s]');

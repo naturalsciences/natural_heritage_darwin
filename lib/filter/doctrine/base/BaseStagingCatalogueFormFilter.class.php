@@ -17,7 +17,7 @@ abstract class BaseStagingCatalogueFormFilter extends BaseFormFilterDoctrine
       'name'          => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'level_ref'     => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'parent_ref'    => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('Parent'), 'add_empty' => true)),
-      'catalogue_ref' => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'catalogue_ref' => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(

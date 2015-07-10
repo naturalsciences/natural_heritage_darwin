@@ -63,11 +63,9 @@ abstract class BaseStagingCatalogue extends DarwinModel
              ));
         $this->hasColumn('parent_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
              ));
         $this->hasColumn('catalogue_ref', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
              ));
     }
 
