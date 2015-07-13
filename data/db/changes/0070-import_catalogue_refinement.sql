@@ -53,9 +53,7 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
         LOOP
           -- If more than one entry found, we set an error...
           IF recCatalogue.total_count > 1 THEN
-            error_msg := 'Could not import this file, ' || staging_catalogue_line.name ||
-                         ' exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree';
-            RAISE unique_violation USING MESSAGE = error_msg;
+            RAISE EXCEPTION 'Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree', staging_catalogue_line.name;
           ELSE
             insert_from_template := TRUE;
           END IF;
@@ -81,8 +79,7 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
               -- If for this kind of perfect match with different parent but kind of same path start, we get multiple
               -- possibilities, then fail
               IF recCatalogue.total_count > 1 THEN
-                error_msg := 'Could not import this file, ' || staging_catalogue_line.name ||
-                             ' exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree';
+                RAISE EXCEPTION 'Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree', staging_catalogue_line.name;
               ELSE
                 insert_from_template := TRUE;
               END IF;
@@ -110,9 +107,7 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
             LOOP
               -- If we're on the case of a top entry in the template, we cannot afford the problem of multiple entries
               IF recCatalogue.total_count > 1 AND staging_catalogue_line.parent_ref IS NULL THEN
-                error_msg := 'Could not import this file, ' || staging_catalogue_line.name ||
-                             ' exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree';
-                RAISE unique_violation USING MESSAGE = error_msg;
+                RAISE EXCEPTION 'Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree', staging_catalogue_line.name;
               ELSE
                 insert_from_template := TRUE;
               END IF;
@@ -131,9 +126,7 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
               USING staging_catalogue_line.level_ref, staging_catalogue_line.name
               LOOP
                 IF recCatalogue.total_count > 1 THEN
-                  error_msg := 'Could not import this file, ' || staging_catalogue_line.name ||
-                               ' exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree';
-                  RAISE unique_violation USING MESSAGE = error_msg;
+                  RAISE EXCEPTION 'Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree', staging_catalogue_line.name;
                 ELSE
                   -- If only one entry is found, we can replace the name of this entry
                   EXECUTE 'UPDATE ' || quote_ident(referenced_relation) || ' ' ||
@@ -153,10 +146,7 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
                   -- tell to update the staging line to set the catalogue_ref with the id found
                   insert_from_template := TRUE;
                 ELSE
-                  error_msg := 'Could not import this file, ' || staging_catalogue_line.name || ' (level ' || staging_catalogue_line.level_ref || ')' ||
-                               ' does not exist in DaRWIN and cannot be attached, correct your file or create this ' || quote_ident(referenced_relation) ||
-                               ' manually' ;
-                  RAISE foreign_key_violation USING MESSAGE = error_msg;
+                  RAISE EXCEPTION 'Could not import this file, % (level %) does not exist in DaRWIN and cannot be attached, correct your file or create this % manually', staging_catalogue_line.name,  staging_catalogue_line.level_ref, quote_ident(referenced_relation);
                 END IF;
               END IF;
             END IF;
