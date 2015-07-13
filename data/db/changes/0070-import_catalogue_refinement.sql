@@ -18,7 +18,6 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
       error_msg TEXT := '';
       children_move_forward BOOLEAN := FALSE;
       insert_from_template BOOLEAN := FALSE;
-      catalogue_id INTEGER;
     BEGIN
       -- Browse all staging_catalogue lines
       FOR staging_catalogue_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY id
@@ -45,8 +44,9 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
         -- Take care here, a limit 1 has been set, we only kept the EXIT in case the limit would be accidently removed
         FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
                                     'FROM ' || quote_ident(referenced_relation) || ' ' ||
-                                    'WHERE level_ref = $1
-                                       AND name_indexed = fullToIndex( $2 ) ' ||
+                                    'WHERE level_ref = $1 ' ||
+                                    '  AND name_indexed = fullToIndex( $2 ) ' ||
+                                    '  AND status != ' || quote_literal('invalid') || ' ' ||
                                     where_clause_complement_1 ||
                                     'LIMIT 1;'
                             USING staging_catalogue_line.level_ref, staging_catalogue_line.name
@@ -55,6 +55,7 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
           IF recCatalogue.total_count > 1 THEN
             error_msg := 'Could not import this file, ' || staging_catalogue_line.name ||
                          ' exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree';
+            RAISE unique_violation USING MESSAGE = error_msg;
           ELSE
             insert_from_template := TRUE;
           END IF;
@@ -69,8 +70,9 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
           IF staging_catalogue_line.parent_ref IS NOT NULL THEN
             FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
                                         'FROM ' || quote_ident(referenced_relation) || ' ' ||
-                                        'WHERE level_ref = $1
-                                           AND name_indexed = fullToIndex( $2 ) ' ||
+                                        'WHERE level_ref = $1 ' ||
+                                        '  AND name_indexed = fullToIndex( $2 ) ' ||
+                                        '  AND status != ' || quote_literal('invalid') || ' ' ||
                                         where_clause_complement_2 ||
                                         where_clause_complement_3 ||
                                         'LIMIT 1;'
@@ -97,8 +99,9 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
             -- have a common path...
             FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
                                         'FROM ' || quote_ident(referenced_relation) || ' ' ||
-                                        'WHERE level_ref = $1
-                                           AND name_indexed LIKE fullToIndex( $2 ) || ' || quote_literal('%') ||
+                                        'WHERE level_ref = $1 ' ||
+                                        '  AND name_indexed LIKE fullToIndex( $2 ) || ' || quote_literal('%') ||
+                                        '  AND status != ' || quote_literal('invalid') || ' ' ||
                                         where_clause_complement_3 ||
                                         where_clause_complement_4 ||
                                         'ORDER BY path ' ||
@@ -109,6 +112,7 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
               IF recCatalogue.total_count > 1 AND staging_catalogue_line.parent_ref IS NULL THEN
                 error_msg := 'Could not import this file, ' || staging_catalogue_line.name ||
                              ' exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree';
+                RAISE unique_violation USING MESSAGE = error_msg;
               ELSE
                 insert_from_template := TRUE;
               END IF;
@@ -118,8 +122,9 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
             IF NOT FOUND THEN
               FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
                                           'FROM ' || quote_ident(referenced_relation) || ' ' ||
-                                          'WHERE level_ref = $1
-                                             AND position(name_indexed IN fullToIndex( $2 )) = 1 ' ||
+                                          'WHERE level_ref = $1 ' ||
+                                          '  AND position(name_indexed IN fullToIndex( $2 )) = 1 ' ||
+                                          '  AND status != ' || quote_literal('invalid') || ' ' ||
                                           where_clause_complement_3 ||
                                           where_clause_complement_5 ||
                                           'LIMIT 1;'
@@ -128,6 +133,7 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
                 IF recCatalogue.total_count > 1 THEN
                   error_msg := 'Could not import this file, ' || staging_catalogue_line.name ||
                                ' exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree';
+                  RAISE unique_violation USING MESSAGE = error_msg;
                 ELSE
                   -- If only one entry is found, we can replace the name of this entry
                   EXECUTE 'UPDATE ' || quote_ident(referenced_relation) || ' ' ||
@@ -141,28 +147,20 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
                 IF staging_catalogue_line.parent_ref IS NOT NULL THEN
                   EXECUTE 'INSERT INTO ' || quote_ident(referenced_relation) || '(id,name,level_ref,parent_ref) ' ||
                           'VALUES(DEFAULT,$1,$2,$3) ' ||
-                          'RETURNING id;'
-                  INTO catalogue_id
+                          'RETURNING *;'
+                  INTO recCatalogue
                   USING staging_catalogue_line.name,staging_catalogue_line.level_ref,recParent.id;
-                  -- update the staging line to set the catalogue_ref with the id found
-                  UPDATE staging_catalogue
-                  SET catalogue_ref = catalogue_id
-                  WHERE id = staging_catalogue_line.id ;
+                  -- tell to update the staging line to set the catalogue_ref with the id found
+                  insert_from_template := TRUE;
                 ELSE
-                  error_msg := 'Could not import this file, ' || staging_catalogue_line.name ||
+                  error_msg := 'Could not import this file, ' || staging_catalogue_line.name || ' (level ' || staging_catalogue_line.level_ref || ')' ||
                                ' does not exist in DaRWIN and cannot be attached, correct your file or create this ' || quote_ident(referenced_relation) ||
                                ' manually' ;
+                  RAISE foreign_key_violation USING MESSAGE = error_msg;
                 END IF;
               END IF;
             END IF;
           END IF;
-        END IF;
-        IF error_msg != '' THEN
-          EXECUTE 'UPDATE imports set errors_in_import = $1,
-                                    state=''error''
-                   WHERE id=$2'
-          USING error_msg, req_import_ref;
-          RETURN FALSE;
         END IF;
         IF insert_from_template = TRUE THEN
           -- update the staging line to set the catalogue_ref with the id found
@@ -173,9 +171,9 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
         recParent := recCatalogue;
         insert_from_template := FALSE;
         children_move_forward := FALSE;
-        catalogue_id := NULL;
       END LOOP;
       RETURN TRUE;
     END;
   $$;
+
 COMMIT;
