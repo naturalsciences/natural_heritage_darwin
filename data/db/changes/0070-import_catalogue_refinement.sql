@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
       error_msg TEXT := '';
       children_move_forward BOOLEAN := FALSE;
       insert_from_template BOOLEAN := FALSE;
+      level_naming TEXT;
     BEGIN
       -- Browse all staging_catalogue lines
       FOR staging_catalogue_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY id
@@ -146,7 +147,8 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
                   -- tell to update the staging line to set the catalogue_ref with the id found
                   insert_from_template := TRUE;
                 ELSE
-                  RAISE EXCEPTION 'Could not import this file, % (level %) does not exist in DaRWIN and cannot be attached, correct your file or create this % manually', staging_catalogue_line.name,  staging_catalogue_line.level_ref, quote_ident(referenced_relation);
+                  SELECT level_name INTO level_naming FROM catalogue_levels WHERE id = staging_catalogue_line.level_ref;
+                  RAISE EXCEPTION 'Could not import this file, % (level %) does not exist in DaRWIN and cannot be attached, correct your file or create this % manually', staging_catalogue_line.name,  level_naming, quote_ident(referenced_relation);
                 END IF;
               END IF;
             END IF;
@@ -163,6 +165,13 @@ CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referen
         children_move_forward := FALSE;
       END LOOP;
       RETURN TRUE;
+    EXCEPTION WHEN OTHERS THEN
+      IF SQLERRM = 'This record does not follow the level hierarchy' THEN
+        SELECT level_name INTO level_naming FROM catalogue_levels WHERE id = staging_catalogue_line.level_ref;
+        RAISE EXCEPTION 'Could not import this file, % (level %) does not follow the accepted level hierarchy in DaRWIN an cannot be attached nor created. Please correct your file.', staging_catalogue_line.name,  level_naming;
+      ELSE
+        RAISE EXCEPTION '%', SQLERRM;
+      END IF;
     END;
   $$;
 
