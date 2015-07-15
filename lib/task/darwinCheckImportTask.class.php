@@ -69,19 +69,26 @@ EOF;
     $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
     // Get back here the list of imports id that could be treated
     $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
-    // Begin here the transactional process
-    $conn->getDbh()->exec('BEGIN TRANSACTION;');
-      // let's begin with import catalogue
-      foreach($catalogues as $catalogue)
-      {
-        $date_start = date('G:i:s') ;
-        $sql = 'select fct_importer_catalogue('.$catalogue.',\'taxonomy\')';
-        $conn->getDbh()->exec($sql);
-
-        $this->logSection('Processing', sprintf('Check %d : Start processing Catalogue import %d (start: %s - end: %s)',$randnum, $catalogue,$date_start,date('G:i:s')));
+    // let's begin with import catalogue
+    foreach($catalogues as $catalogue)
+    {
+      // Begin here the transactional process
+      $conn->beginTransaction();
+      $date_start = date('G:i:s') ;
+      $sql = 'select fct_importer_catalogue('.$catalogue.',\'taxonomy\')';
+      try {
+        $conn->execute($sql);
+        $conn->commit();
+        $sql_prepared = $conn->prepare("UPDATE imports set state='finished', is_finished = TRUE WHERE id = ?");
+        $sql_prepared->execute(array($catalogue));
       }
-    // Work done for catalogues, commit the work done
-    $conn->getDbh()->exec('COMMIT;');
+      catch (\Exception $e) {
+        $conn->rollback();
+        $sql_prepared = $conn->prepare("UPDATE imports set errors_in_import = ?, state='error' WHERE id = ?");
+        $sql_prepared->execute(array(ltrim($conn->errorInfo()[2], 'ERROR: '), $catalogue));
+      }
+      $this->logSection('Processing', sprintf('Check %d : Start processing Catalogue import %d (start: %s - end: %s)',$randnum, $catalogue,$date_start,date('G:i:s')));
+    }
     // Check we've got at least one import concerned - if not, no check, no do-import :)
     if(count($imports)) {
       // Begin here the transactional process for the check-import

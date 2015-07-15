@@ -1171,8 +1171,8 @@ StagingCatalogue:
         import_ref: {type:integer, notnull:true}
         name: { type: string, notnull: true}
         level_ref: { type: integer, notnull: true}
-        parent_ref: { type: integer, notnull: true}
-        catalogue_ref: { type: integer, notnull: true}
+        parent_ref: { type: integer}
+        catalogue_ref: { type: integer}
     relations:
         Parent:
             class: StagingCatalogue

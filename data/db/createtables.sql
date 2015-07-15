@@ -1374,7 +1374,7 @@ create table imports
     id serial,
     user_ref integer not null,
     format varchar not null,
-    collection_ref integer not null,
+    collection_ref integer,
     filename varchar not null,
     state varchar not null default '',
     created_at timestamp not null default now(),
@@ -1384,7 +1384,7 @@ create table imports
     errors_in_import text,
     template_version text,
     constraint pk_import primary key (id) ,
-    --constraint fk_imports_collections foreign key (collection_ref) references collections(id) on delete cascade,
+    constraint fk_imports_collections foreign key (collection_ref) references collections(id) on update no action on delete cascade,
     constraint fk_imports_users foreign key (user_ref) references users(id) on delete cascade
   );
 
@@ -1398,6 +1398,8 @@ comment on column imports.created_at is 'Creation of the file';
 comment on column imports.updated_at is 'When the data has been modified lately';
 comment on column imports.initial_count is 'Number of rows of staging when the import was created';
 comment on column imports.is_finished is 'Boolean to mark if the import is finished or still need some operations';
+comment on column imports.errors_in_import is 'Contains the error encountered while trying to import data from template';
+comment on column imports.template_version is 'Contains the template version (when applicable)';
 
 create table staging
   (
