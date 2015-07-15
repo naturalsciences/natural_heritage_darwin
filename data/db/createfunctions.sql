@@ -4202,12 +4202,11 @@ AS
                                       '  AND status != ' || quote_literal('invalid') || ' ' ||
                                       where_clause_complement_3 ||
                                       where_clause_complement_4 ||
-                                      'ORDER BY path ' ||
                                       'LIMIT 1;'
           USING staging_catalogue_line.level_ref, staging_catalogue_line.name
           LOOP
             -- If we're on the case of a top entry in the template, we cannot afford the problem of multiple entries
-            IF recCatalogue.total_count > 1 AND staging_catalogue_line.parent_ref IS NULL THEN
+            IF recCatalogue.total_count > 1 THEN
               RAISE EXCEPTION 'Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree', staging_catalogue_line.name;
             ELSE
               insert_from_template := TRUE;
