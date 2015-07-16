@@ -21,6 +21,10 @@ class stagingActions extends DarwinActions
     return $this->redirect('import/index');
   }
 
+  /*
+   * not used anymore, so temporarily commented until a solution is found to bring
+   * back the feature of taxonomic hierarchy auto-creation
+   *
   public function executeCreateTaxon(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('import'));
@@ -32,7 +36,7 @@ class stagingActions extends DarwinActions
     return $this->redirect('import/index');
 
   }
-
+  */
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));

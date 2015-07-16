@@ -104,6 +104,7 @@ class ImportCatalogueXml implements IImportModels
   private function getLevelRef($level)
   {
     $conn = Doctrine_Manager::connection();
+    // @ToDo Check why we set here a begin transaction... I doubt of its usefullness
     $conn->getDbh()->exec('BEGIN TRANSACTION;');
     return $conn->fetchOne("SELECT id from catalogue_levels where level_type='".$this->referenced_relation."' and level_sys_name='$level';") ;
   }

@@ -620,7 +620,7 @@ create table collections
         path varchar not null,
         code_auto_increment boolean not null default false,
         code_auto_increment_for_insert_only boolean not null default true,
-        code_last_value integer not null default 0,
+        code_last_value bigint not null default 0,
         code_prefix varchar,
         code_prefix_separator varchar,
         code_suffix varchar,
@@ -1195,7 +1195,7 @@ create table codes
         full_code_indexed varchar not null,
         code_date timestamp not null default '0001-01-01 00:00:00',
         code_date_mask integer not null default 0,
-        code_num integer default 0,
+        code_num bigint default 0,
         constraint pk_codes primary key (id),
         constraint unq_codes unique (referenced_relation, record_id, full_code_indexed,code_category)
        )
@@ -1374,7 +1374,7 @@ create table imports
     id serial,
     user_ref integer not null,
     format varchar not null,
-    collection_ref integer not null,
+    collection_ref integer,
     filename varchar not null,
     state varchar not null default '',
     created_at timestamp not null default now(),
@@ -1384,7 +1384,7 @@ create table imports
     errors_in_import text,
     template_version text,
     constraint pk_import primary key (id) ,
-    --constraint fk_imports_collections foreign key (collection_ref) references collections(id) on delete cascade,
+    constraint fk_imports_collections foreign key (collection_ref) references collections(id) on update no action on delete cascade,
     constraint fk_imports_users foreign key (user_ref) references users(id) on delete cascade
   );
 
@@ -1398,6 +1398,8 @@ comment on column imports.created_at is 'Creation of the file';
 comment on column imports.updated_at is 'When the data has been modified lately';
 comment on column imports.initial_count is 'Number of rows of staging when the import was created';
 comment on column imports.is_finished is 'Boolean to mark if the import is finished or still need some operations';
+comment on column imports.errors_in_import is 'Contains the error encountered while trying to import data from template';
+comment on column imports.template_version is 'Contains the template version (when applicable)';
 
 create table staging
   (
@@ -1806,3 +1808,27 @@ create table staging_catalogue
   constraint fk_stg_catalogue_import_ref foreign key (import_ref) references imports(id) on delete cascade,
   constraint fk_stg_catalogue_parent_ref foreign key (parent_ref) references staging_catalogue(id) on delete cascade
   );
+
+create table reports
+ (
+    id serial,
+    user_ref integer not null,
+    name varchar not null,
+    uri varchar,
+    lang char(2) not null,
+    format varchar not null default 'csv',
+    comment varchar,
+    parameters hstore,
+    CONSTRAINT pk_reports PRIMARY KEY (id),
+    CONSTRAINT fk_reports_users FOREIGN KEY (user_ref)
+    REFERENCES users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION ON DELETE CASCADE
+  );
+comment on table reports is 'Table to handle users reports asking';
+comment on column reports.user_ref is 'The referenced user id';
+comment on column reports.name is 'The report name';
+comment on column reports.uri is 'The path where the report file is stored, if uri is not null then the report has already been launched';
+comment on column reports.lang is 'The lang asked for this report';
+comment on column reports.format is 'The file type of the report file, generaly csv or xls';
+comment on column reports.comment is 'A comment to add to the report, just in case.';
+comment on column reports.parameters is 'if the report requires some information (such as collection_ref), they are here';

@@ -43,23 +43,4 @@ class ParsingProperties extends importABCDXml
     return $this->property->getLowerValue();
   }
   
-/*
-  public function getLowerValue($data, $tag, $staging)
-  {
-    if($tag=="Altitude") $staging['gtu_elevation']=$data;
-    else $this->addPropertyvalue($data) ;
-  }
-
-  public function getUpperValue($data, $tag, $staging)
-  {
-    if($tag!="Altitude") $value = new PropertiesValues() ;
-  }
-
-  private function addPropertyvalue($data)
-  {
-    $value = new PropertiesValues() ;
-    $value->setPropertyAccuracy($this->accuracy) ;
-    $value->setPropertyValue($data) ;
-    $this->property->PropertiesValues[] = $value ;
-  }*/
 }

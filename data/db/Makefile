@@ -106,11 +106,11 @@ help-param:
 
 test:
 ifeq ($(TEST_CMD),pg_prove)
-	$(PG_PROVE) -h $(HOST) -U $(DB_TEST_USER) $(TESTS)
+	$(PG_PROVE) -h $(HOST) -d $(DB_NAME) -U $(DB_TEST_USER) $(TESTS)
 else ifeq ($(TEST_CMD),psql)
 	for file in $(TESTS) ; \
 	do \
-		$(PSQL) -h $(HOST) -U $(DB_TEST_USER) -f $$file ; \
+		$(PSQL) -h $(HOST) -d $(DB_NAME) -U $(DB_TEST_USER) -f $$file ; \
 	done
 endif
 
