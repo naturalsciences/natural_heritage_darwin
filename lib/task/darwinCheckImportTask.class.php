@@ -59,7 +59,7 @@ EOF;
       return;
     }
 
-    // Define what's checkable (and therefore importable if do-import option is defined
+    // Define what's checkable (and therefore importable if do-import option is defined)
     if (empty($options['full-check']))
       $state_to_check = array('loaded','processing');
     else
@@ -72,9 +72,10 @@ EOF;
     // let's begin with import catalogue
     foreach($catalogues as $catalogue)
     {
+      $date_start = date('G:i:s') ;
+      $this->logSection('Processing', sprintf('Check %d : Start processing Catalogue import %d (start: %s)',$randnum, $catalogue,$date_start));
       // Begin here the transactional process
       $conn->beginTransaction();
-      $date_start = date('G:i:s') ;
       $sql = 'select fct_importer_catalogue('.$catalogue.',\'taxonomy\')';
       try {
         $conn->execute($sql);
@@ -87,7 +88,7 @@ EOF;
         $sql_prepared = $conn->prepare("UPDATE imports set errors_in_import = ?, state='error' WHERE id = ?");
         $sql_prepared->execute(array(ltrim($conn->errorInfo()[2], 'ERROR: '), $catalogue));
       }
-      $this->logSection('Processing', sprintf('Check %d : Start processing Catalogue import %d (start: %s - end: %s)',$randnum, $catalogue,$date_start,date('G:i:s')));
+      $this->logSection('Processing', sprintf('Check %d : End processing Catalogue import %d (start: %s - end: %s)',$randnum, $catalogue,$date_start,date('G:i:s')));
     }
     // Check we've got at least one import concerned - if not, no check, no do-import :)
     if(count($imports)) {
