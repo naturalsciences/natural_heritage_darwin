@@ -2209,16 +2209,30 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
     rep = ""
     
     'Si le paramètre de la propriété n'est pas rempli, la valeur ne sera pas présente
+        'corr ftheeten
+    Dim rootCel As Long
+    rootCel = 104
+    Dim rootValue As Long
+    rootValue = 105
+
     For i = 1 To 20
-        celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(specimenProperty(i), lookAt:=xlWhole).Column)
-        celval2 = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(specimenPropertyValue(i), lookAt:=xlWhole).Column)
-        If (Not IsEmpty(celval) And Not IsNull(celval) And celval <> "") _
-            And (Not IsEmpty(celval2) And Not IsNull(celval2) And celval2 <> "") Then
-            rep = rep & celval
-        End If
-        celval = ""
-        celval2 = ""
+            'Dim idxCol As Long
+            'Dim idxColVal As Long
+    
+    'celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(specimenProperty(i), lookAt:=xlWhole).Column)
+            'celval2 = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(specimenPropertyValue(i), lookAt:=xlWhole).Column)
+            celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, rootCel)
+            celval2 = Application.Sheets("cSPECIMEN").Cells(rowCounter, rootValue)
+            If (Not IsEmpty(celval) And Not IsNull(celval) And celval <> "") _
+                And (Not IsEmpty(celval2) And Not IsNull(celval2) And celval2 <> "") Then
+                rep = rep & celval
+            End If
+            celval = ""
+            celval2 = ""
+            rootCel = rootCel + 2
+            rootValue = rootValue + 2
     Next i
+    
     
     Dim strHostClassis As String, strHostOrdo As String, strHostFamilia As String, strHostGenus As String, strHostSpecies As String, strHostAuthor As String
     Dim strHostName As String, strHostRemark As String
@@ -2365,8 +2379,23 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
                 End If
         
             End If
-    
+			
+			'corr ftheeten 2015 07 16
+            rootCel = 104
+            rootValue = 105
             If Not IsEmpty(rep) And Not IsNull(rep) And rep <> "" Then
+    
+                For i = 1 To 20
+        
+                    strProperty = ""
+                    strPropertyValue = ""
+                    strProperty = Application.Sheets("cSPECIMEN").Cells(rowCounter, rootCel).Value
+                    strPropertyValue = Application.Sheets("cSPECIMEN").Cells(rowCounter, rootValue).Value
+        
+    
+    
+                     If Not IsEmpty(rep) And Not IsNull(rep) And rep <> "" Then
+    
     
                 For i = 1 To 20
         
