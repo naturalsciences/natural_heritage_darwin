@@ -1,6 +1,6 @@
 \set ECHO all
 \i unit_launch.sql
-SELECT plan(17);
+SELECT plan(23);
 
 select diag('Test of taxonomy import');
 select diag('-- First mimic of xml file with creation of a basic taxonomical structure --');
@@ -223,11 +223,86 @@ select diag('-- Eighth mimic of xml file with a foreseen fail: A new Mugilidae f
 
 insert into imports (id, user_ref, format, filename, collection_ref) values (8,1,'taxon','taxon_test_8.xml',NULL);
 insert into taxonomy (id,name,level_ref,parent_ref) values (21,'Mugilidae',34,9);
+alter sequence taxonomy_id_seq restart with 22;
 insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (34,8,'Animalia',2,NULL,NULL);
 insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (35,8,'Mugilidae',34,34,NULL);
 insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (36,8,'Mugilix',41,35,NULL);
 
 select throws_ok('select fct_importer_catalogue(8,''taxonomy'')','Could not import this file, Mugilidae exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree');
+
+select diag('-- Nineth mimic of xml file with a correction of existing Darwin 2 name that should not be applied: a new species is introduced ("Lizamontia barbecue Emery");
+                as the Lizamontia barbecue entry is not alone--');
+
+insert into imports (id, user_ref, format, filename, collection_ref) values (9,1,'taxon','taxon_test_9.xml',NULL);
+
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (37,9,'Vertebrata',5,NULL,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (38,9,'Lizamontidae',34,37,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (39,9,'Lizamontia',41,38,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (40,9,'Lizamontia barbecue Emery,2015',48,39,NULL);
+
+select is(true ,
+          (select fct_importer_catalogue(9,'taxonomy')),
+          'Perform the import of staging catalogue entries'
+);
+select results_eq('select id::integer,
+                          import_ref::integer,
+                          name::text,
+                          level_ref::integer,
+                          (coalesce(parent_ref,0))::integer,
+                          catalogue_ref::integer
+                   from staging_catalogue
+                   where import_ref::integer = 9
+                     and id::integer = 40',
+                  $$
+                    VALUES (40,9,'Lizamontia barbecue Emery,2015',48,39,22)
+                  $$,
+                  'Test the values were well set in the import table telling everything is ok');
+select results_eq('select name::text
+                   from taxonomy
+                   where id::integer IN (19,22)
+                   order by id',
+                  $$
+                    VALUES ('Lizamontia barbecue'),
+                           ('Lizamontia barbecue Emery,2015')
+                  $$,
+                  'Test the values were well updated in the taxonomy table telling everything is ok');
+
+select diag('-- Tenth mimic of xml file taxonomy import: Test the case insensitivity--');
+
+insert into imports (id, user_ref, format, filename, collection_ref) values (10,1,'taxon','taxon_test_10.xml',NULL);
+
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (41,10,'vertebrata',5,NULL,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (42,10,'lizamontidae',34,41,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (43,10,'lizamontia',41,42,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (44,10,'lizaMonTia bArBecue eMery,2015',48,43,NULL);
+
+select is(true ,
+          (select fct_importer_catalogue(10,'taxonomy')),
+          'Perform the import of staging catalogue entries'
+);
+
+select results_eq ('select max(id)::integer
+                   from taxonomy
+                  ',
+                  $$
+                    VALUES (22)
+                  $$,
+                  'Test no entry has been created in taxonomy table'
+                 );
+
+select results_eq('select id::integer,
+                          import_ref::integer,
+                          name::text,
+                          level_ref::integer,
+                          (coalesce(parent_ref,0))::integer,
+                          catalogue_ref::integer
+                   from staging_catalogue
+                   where import_ref::integer = 10
+                     and id::integer = 44',
+                  $$
+                    VALUES (44,10,'lizaMonTia bArBecue eMery,2015',48,43,22)
+                  $$,
+                  'Test the values were well set in the import table telling everything is ok');
 
 SELECT * FROM finish();
 
