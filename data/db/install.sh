@@ -238,6 +238,7 @@ psql="/usr/bin/psql -q -h $hostname -U darwin2 -d $dbname -p $dbport"
 tpsql="/usr/bin/psql -q -h $hostname -U $testuser -d $dbname -p $dbport"
 basepsql="sudo -u postgres psql -p $dbport -v dbname=$dbname -v schema=$schema"
 admpsql="$basepsql -q -d $dbname"
+pg_prove="/usr/bin/pg_prove -h $hostname -U unittest -d $dbname -p $dbport"
 case "$@" in
   "test-adm")
     echo "Trying to Connect to DB"
@@ -267,7 +268,7 @@ case "$@" in
     done
   ;;
   "test")
-    pg_prove -h $hostname -U $testuser -d $dbname -p $dbport $(ls tests/*.sql)
+    $pg_prove $(ls tests/*.sql)
   ;;
   "create-schema")
     $admpsql -c "create schema $schema authorization darwin2;"
