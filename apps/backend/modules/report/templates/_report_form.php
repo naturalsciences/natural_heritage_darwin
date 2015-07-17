@@ -43,7 +43,7 @@
         <tr><th colspan="<?php echo count($fields)-$fields_at_second_line ; ?>"><?php echo $form[$field]->renderLabel() ; ?></th></tr>
         <tr><td colspan="<?php echo count($fields)-$fields_at_second_line ; ?>"><?php echo $form[$field]->render() ; ?></td></tr>
       <?php endif; ?>
-    <? endforeach; ?>
+    <?php endforeach; ?>
   </table>
 </form>
 
