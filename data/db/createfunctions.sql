@@ -4214,12 +4214,21 @@ AS
             EXIT;
           END LOOP;
           -- Last chance is to try to find if the entry in DaRWIN shouldn't be completed
+          -- This entry should be "alone" of its kind - check the NOT EXIST clause
           IF NOT FOUND THEN
             FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
-                                        'FROM ' || quote_ident(referenced_relation) || ' ' ||
+                                        'FROM ' || quote_ident(referenced_relation) || ' as tax ' ||
                                         'WHERE level_ref = $1 ' ||
                                         '  AND position(name_indexed IN fullToIndex( $2 )) = 1 ' ||
                                         '  AND status != ' || quote_literal('invalid') || ' ' ||
+                                        '  AND NOT EXISTS (SELECT 1 ' ||
+                                        '                  FROM ' || quote_ident(referenced_relation) || ' as stax ' ||
+                                        '                  WHERE stax.id != tax.id ' ||
+                                        '                  AND stax.level_ref = tax.level_ref ' ||
+                                        '                  AND stax.path = tax.path ' ||
+                                        '                  AND stax.name_indexed LIKE tax.name_indexed || ' || quote_literal('%') ||
+                                        '                  LIMIT 1 ' ||
+                                        '                 ) ' ||
                                         where_clause_complement_3 ||
                                         where_clause_complement_5 ||
                                         'LIMIT 1;'
@@ -4264,7 +4273,7 @@ AS
       children_move_forward := FALSE;
     END LOOP;
     RETURN TRUE;
-  EXCEPTION WHEN OTHERS THEN
+    EXCEPTION WHEN OTHERS THEN
     IF SQLERRM = 'This record does not follow the level hierarchy' THEN
       SELECT level_name INTO level_naming FROM catalogue_levels WHERE id = staging_catalogue_line.level_ref;
       RAISE EXCEPTION 'Could not import this file, % (level %) does not follow the accepted level hierarchy in DaRWIN an cannot be attached nor created. Please correct your file.', staging_catalogue_line.name,  level_naming;
