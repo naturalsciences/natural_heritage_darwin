@@ -138,6 +138,7 @@ class ReportsForm extends BaseReportsForm
                                                                                       'method' => 'getFormatedName',
                                                                                       'link_url' => 'taxonomy/choose?with_js=1',
                                                                                       'box_title' => $this->getI18N()->__('Choose Yourself'),
+                                                                                      'label' => $this->getI18N()->__('Catalogue unit')
                                                                                      ),
                                                                                 array('class' => 'ref_multiple_ids',)
                                                                                );

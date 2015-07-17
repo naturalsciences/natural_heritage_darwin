@@ -22,6 +22,7 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
   public function ParentRender($name, $value = null, $attributes = array(), $errors = array()){
     return parent::render($name, $value, $attributes, $errors);
   }
+
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
     $class = array('class'=>'');
@@ -72,15 +73,15 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
         $url_params .= urlencode($k).'='.urlencode($v);
       }
     }
-    $input .= '<a href="'.url_for($this->getOption('link_url')).$url_params.'" class="but_text">'.$in_text.'</a>';
+    $input .= '<a href="'.url_for($this->getOption('link_url')).$url_params.'" class="but_text_multiple">'.$in_text.'</a>';
 
     $input .= '</div>';
     $input .= '<script  type="text/javascript">
 $(document).ready(function () {
-$("#'.$this->generateId($name).'_button a.but_text").click(button_ref_multiple_modal);';
-
-//    if($this->getOption('nullable'))
-//      $input .= '$("#'.$this->generateId($name).'_clear").click(button_ref_clear);';
+$("#'.$this->generateId($name).'_button a.but_text_multiple").button_ref_multiple({
+  q_tip_text : "Choose a '.$this->getLabel().'",
+  update_row_fct: $.fn.button_ref_multiple.addEntry($("#'.$this->generateId($name).'_button a.but_text_multiple"))
+});';
     $input .= '});</script>';
 
     return $input;

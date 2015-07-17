@@ -10,6 +10,29 @@
  */
 class reportActions extends DarwinActions
 {
+  private $widgets;
+  private $widgets_options;
+  private $widgets_second_line_count = 0;
+
+  /**
+   * Sets the different variables in charge of storing the different dynamic
+   * fields to be rendered on the report builder page
+   * @param string $name the report name
+   */
+  private function setWidgetsOptions($name) {
+    // Get the list of dynamicaly rendered fields depending the report targeted
+    $this->widgets = Reports::getRequiredFieldForReport($name) ;
+    // Get the list of options for these dynamicaly rendered fields
+    $this->widgets_options = Reports::getRequiredFieldForReportOptions($name);
+    // Count the ones that are dedicated to be set on a second line
+    $this->widgets_second_line_count = 0;
+    foreach(array_keys($this->widgets) as $widget_name){
+      if(isset($this->widgets_options[$widget_name]) && !empty($this->widgets_options[$widget_name]['second_line']) && $this->widgets_options[$widget_name]['second_line']) {
+        $this->widgets_second_line_count += 1;
+      }
+    }
+  }
+
   public function preExecute()
   {
     if(! $this->getUser()->isAtLeast(Users::MANAGER))
@@ -41,11 +64,18 @@ class reportActions extends DarwinActions
   public function executeGetReport(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('name'));
+    $name = $request->getParameter('name');
     if($request->isXmlHttpRequest() && $request->isMethod('post'))
     {
-      $widgets = Reports::getRequiredFieldForReport($request->getParameter('name')) ;
-      $this->form = new ReportsForm(null,array('fields'=>$widgets,'name' => $request->getParameter('name'))) ;
-      return $this->renderPartial("report_form", array('form' => $this->form,'fields'=> $widgets,'fast' => Reports::getIsFast($request->getParameter('name')))) ;      
+      $this->setWidgetsOptions($name);
+      $this->form = new ReportsForm(null,array('fields'=>$this->widgets,'name' => $name)) ;
+      return $this->renderPartial("report_form", array('form' => $this->form,
+                                                       'fields'=> $this->widgets,
+                                                       'fields_options'=>$this->widgets_options,
+                                                       'fields_at_second_line'=>$this->widgets_second_line_count,
+                                                       'fast' => Reports::getIsFast($name)
+                                               )
+      ) ;
     }
     return false ;
   }
@@ -56,8 +86,8 @@ class reportActions extends DarwinActions
     {
       $name = $request->getParameter('reports')['name'] ;
       if(!$name)  $this->forwardToSecureAction();
-      $widgets = Reports::getRequiredFieldForReport($name) ;
-      $this->form =new ReportsForm(null,array('fields'=>$widgets,'name' => $name)) ;
+      $this->setWidgetsOptions($name);
+      $this->form =new ReportsForm(null,array('fields'=>$this->widgets,'name' => $name)) ;
       $this->form->bind($request->getParameter($this->form->getName()));
       if($this->form->isValid())
       {
@@ -78,7 +108,13 @@ class reportActions extends DarwinActions
         else $report->save() ;
         return $this->renderPartial("info_msg") ;
       }
-      return $this->renderPartial("report_form", array('form' => $this->form,'fields'=> $widgets,'fast' => Reports::getIsFast($name))) ;      
+      return $this->renderPartial("report_form", array('form' => $this->form,
+                                                       'fields'=> $this->widgets,
+                                                       'fields_options'=>$this->widgets_options,
+                                                       'fields_at_second_line'=>$this->widgets_second_line_count,
+                                                       'fast' => Reports::getIsFast($name)
+                                                      )
+                                 ) ;
     }
   }
 

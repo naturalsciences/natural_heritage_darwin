@@ -4,18 +4,22 @@
   <table>
     <tr>
       <?php foreach($fields as $field => $name) : ?>
-          <th><?php echo $form[$field]->renderLabel() ; ?></th> 
+        <?php if(!isset($fields_options[$field]['second_line'])) : ?>
+          <th><?php echo $form[$field]->renderLabel() ; ?></th>
+        <?php endif; ?>
       <?php endforeach ; ?>
       <th><?php echo $form['format']->renderLabel() ; ?></th>
       <th><?php echo $form['comment']->renderLabel() ; ?></th>
       <th></th>
     </tr>
     <tr>
-      <td colspan="<?php echo count($fields)+2 ; ?>"><?php echo $form->renderGlobalErrors() ; ?></td>
+      <td colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>"><?php echo $form->renderGlobalErrors() ; ?></td>
     </tr>
     <tr>
       <?php foreach($fields as $field => $name) : ?>
-          <td><?php echo $form[$field]->renderError() ; ?></td> 
+        <?php if(!isset($fields_options[$field]['second_line'])) : ?>
+          <td><?php echo $form[$field]->renderError() ; ?></td>
+        <?php endif; ?>
       <?php endforeach ; ?>
       <td><?php echo $form['format']->renderError() ; ?></td>
       <td></td>
@@ -24,14 +28,22 @@
     </tr>
     <tr>
       <?php foreach($fields as $field => $name) : ?>
-          <td><?php echo $form[$field]->render() ; ?></td> 
+        <?php if(!isset($fields_options[$field]['second_line'])) : ?>
+          <td><?php echo $form[$field]->render() ; ?></td>
+        <?php endif; ?>
       <?php endforeach ; ?>
       <td><?php echo $form['format']->render() ; ?></td>
       <td><?php echo $form['comment']->render() ; ?></td>
-      <td><?php echo $form['name']->render() ; ?>        
+      <td><?php echo $form['name']->render() ; ?>
           <input <?php echo ($fast?'':'id="submit_btn"') ?> class="search_submit" type="submit" name="add" value="<?php echo __('Add'); ?>" />
       </td>
     </tr>
+    <?php foreach($fields as $field => $name) : ?>
+      <?php if(isset($fields_options[$field]['second_line'])) : ?>
+        <tr><th colspan="<?php echo count($fields)-$fields_at_second_line ; ?>"><?php echo $form[$field]->renderLabel() ; ?></th></tr>
+        <tr><td colspan="<?php echo count($fields)-$fields_at_second_line ; ?>"><?php echo $form[$field]->render() ; ?></td></tr>
+      <?php endif; ?>
+    <? endforeach; ?>
   </table>
 </form>
 

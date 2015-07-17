@@ -23,7 +23,10 @@ class Reports extends BaseReports
                            'date_from' => 'Date from',
                            'date_to' => 'Date to'
                           ),
-        'widgets_options' => array(),
+        'widgets_options' => array('collection_ref'=> array(),
+                                   'date_from' => array(),
+                                   'date_to' => array()
+                                  ),
         'fast' => false,
       ),
       'catalogues_x_listing' => array(
@@ -45,7 +48,9 @@ class Reports extends BaseReports
                                                                                'mineralogy' => 'Mineralogy'
                                                                               )
                                                              ),
-                                   'catalogue_unit_ref' => array('multi' => true),
+                                   'catalogue_unit_ref' => array('multi' => true,
+                                                                 'second_line' => true
+                                                                ),
                                    'nbr_records' => array('default_value' => '0',
                                                           'values' => array('0'=>'All',
                                                                             '500' => '500',
@@ -74,6 +79,12 @@ class Reports extends BaseReports
   {
     if(!$name) return array() ;
     return self::$reports[$name]['widgets'] ;
+  }
+
+  static public function getRequiredFieldForReportOptions($name)
+  {
+    if(!$name) return array() ;
+    return self::$reports[$name]['widgets_options'] ;
   }
 
   static public function getFieldsOptions($name)
