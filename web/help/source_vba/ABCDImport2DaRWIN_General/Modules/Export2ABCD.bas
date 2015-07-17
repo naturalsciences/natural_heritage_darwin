@@ -133,6 +133,10 @@ If CheckHeaders(check:=False) Then
 
         LastR = Application.Sheets("cSPECIMEN").Cells.Find("*", SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
 
+        'ftheeten 2015 07 17
+        Dim amountProperties As Integer
+        amountProperties = calculateAmountProperties
+
         For rowCounter = 2 To LastR
 
             Application.StatusBar = "Processing... Please do not disturb... Exported rows: " & rowCounter - 1
@@ -152,7 +156,7 @@ If CheckHeaders(check:=False) Then
             XMLPicture dom:=dom, subnode:=subnode, rowCounter:=rowCounter
             XMLAssociation dom:=dom, subnode:=subnode, rowCounter:=rowCounter
             XMLGather dom:=dom, subnode:=subnode, rowCounter:=rowCounter
-            XMLMeasurements dom:=dom, subnode:=subnode, rowCounter:=rowCounter
+            XMLMeasurements dom:=dom, subnode:=subnode, rowCounter:=rowCounter, amountProperties:=amountProperties
             XMLSex dom:=dom, subnode:=subnode, rowCounter:=rowCounter
             XMLNotes dom:=dom, subnode:=subnode, rowCounter:=rowCounter
             XMLRecordURI dom:=dom, subnode:=subnode, rowCounter:=rowCounter
@@ -2135,7 +2139,39 @@ Private Sub XMLGather(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXML2
 End Sub
 
 'DataSets/DataSet/Units/Unit/MeasurementsOrFacts
-Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXML2.IXMLDOMElement, ByRef rowCounter As Long)
+'ftheteen 2015 07 17
+Private Function calculateAmountProperties() As Integer
+ On Error Resume Next
+    Dim i As Integer
+    Dim returned As Integer
+    Dim celval As String
+    Dim celval2 As String
+    celval = ""
+    celval2 = ""
+    For i = 1 To 20
+        Dim nameField As String
+         Dim nameValueField As String
+      
+        Dim oldcelval As String
+        Dim oldcelval2 As String
+         
+        
+        nameField = "specimenProperty_" & CStr(i)
+        nameValueField = "specimenPropertyValue_" & CStr(i)
+        oldcelval = celval
+        oldcelval2 = celval2
+        celval = Application.Sheets("cSPECIMEN").Cells(1, Application.Sheets("cSPECIMEN").Rows(1).Find(nameField, lookAt:=xlWhole).Column)
+        celval2 = Application.Sheets("cSPECIMEN").Cells(1, Application.Sheets("cSPECIMEN").Rows(1).Find(nameValueField, lookAt:=xlWhole).Column)
+        If celval <> oldcelval And celval2 <> oldcelval2 Then
+            returned = i
+        End If
+    Next i
+
+    calculateAmountProperties = returned
+End Function
+
+'DataSets/DataSet/Units/Unit/MeasurementsOrFacts
+Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXML2.IXMLDOMElement, ByRef rowCounter As Long, ByRef amountProperties As Integer)
     
     On Error Resume Next
 '    On Error GoTo Err_XMLMeasurements
@@ -2208,6 +2244,7 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
     Dim rep As String
     rep = ""
     
+    
     'Si le paramètre de la propriété n'est pas rempli, la valeur ne sera pas présente
         'corr ftheeten
     Dim rootCel As Long
@@ -2215,7 +2252,7 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
     Dim rootValue As Long
     rootValue = 105
 
-    For i = 1 To 20
+    For i = 1 To amountProperties
             'Dim idxCol As Long
             'Dim idxColVal As Long
     
@@ -2231,7 +2268,7 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
             celval2 = ""
             rootCel = rootCel + 2
             rootValue = rootValue + 2
-    Next i
+        Next i
     
     
     Dim strHostClassis As String, strHostOrdo As String, strHostFamilia As String, strHostGenus As String, strHostSpecies As String, strHostAuthor As String
@@ -2379,13 +2416,13 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
                 End If
         
             End If
-			
-			'corr ftheeten 2015 07 16
+    
+                'corr ftheeten 2015 07 16
             rootCel = 104
             rootValue = 105
             If Not IsEmpty(rep) And Not IsNull(rep) And rep <> "" Then
     
-                For i = 1 To 20
+                For i = 1 To amountProperties
         
                     strProperty = ""
                     strPropertyValue = ""
@@ -2394,18 +2431,12 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
         
     
     
-                     If Not IsEmpty(rep) And Not IsNull(rep) And rep <> "" Then
+                     If Not IsEmpty(rep) And Not IsNull(rep) And rep <> "" And _
+                        ((Not IsEmpty(strProperty) And Not IsNull(strProperty) And strPropertyValue <> "") And _
+                        (Not IsEmpty(strPropertyValue) And Not IsNull(strPropertyValue) And strPropertyValue <> "")) _
+                        Then
     
-    
-                For i = 1 To 20
-        
-                    strProperty = ""
-                    strPropertyValue = ""
-                    strProperty = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Cells.Find(what:=specimenProperty(i), lookAt:=xlWhole).Column).Value
-                    strPropertyValue = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Cells.Find(what:=specimenPropertyValue(i), lookAt:=xlWhole).Column).Value
-        
-                    If strProperty <> "" And strPropertyValue <> "" Then
-    
+  
                         Set xmlMeasurementOrFact = dom.createNode(NODE_ELEMENT, "MeasurementOrFact", "http://www.tdwg.org/schemas/abcd/2.06")
                         xmlMeasurementsOrFacts.appendChild xmlMeasurementOrFact
                         xmlMeasurementsOrFacts.appendChild dom.createTextNode(vbCrLf + Space$(8))
@@ -2427,7 +2458,8 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
                         xmlMeasurementOrFactAtomised.appendChild dom.createTextNode(vbCrLf + Space$(12))
                 
                     End If
-        
+                     rootCel = rootCel + 2
+                    rootValue = rootValue + 2
                 Next i
             
             End If
