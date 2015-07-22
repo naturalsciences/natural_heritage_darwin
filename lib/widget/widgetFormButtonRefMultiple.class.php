@@ -34,26 +34,11 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
     $class = ' '.$class['class'];
     $values = array_merge(array('text' => '', 'is_empty' => false), is_array($value) ? $value : array());
     $obj_name = $this->getName($value);
+
     if($this->getOption('default_name')) $obj_name = $this->getOption('default_name') ;
+
     $input = parent::render($name, $value, $attributes, $errors);
-/*    $input .= $this->renderContentTag('div',$obj_name, array(
-      'id' => $this->generateId($name)."_name",
-      'class' => "ref_name" . $class,
-    ));*/
 
-/*    if($this->getOption('nullable'))
-    {
-      $options = array(
-        'src' => '/images/remove.png',
-        'id' => $this->generateId($name)."_clear",
-        'class' => "ref_clear" . $class
-      );
-
-      if($value == 0)
-        $options['class'] .= ' hidden';
-      $input .= $this->renderTag('img',$options);
-    }
-*/
     if (strlen($this->getOption('button_class')) > 0)
     {
       $class .= ' '.$this->getOption('button_class');
@@ -73,6 +58,7 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
         $url_params .= urlencode($k).'='.urlencode($v);
       }
     }
+
     $input .= '<a href="'.url_for($this->getOption('link_url')).$url_params.'" class="but_text_multiple">'.$in_text.'</a>';
 
     $input .= '</div>';
@@ -80,7 +66,9 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
 $(document).ready(function () {
 $("#'.$this->generateId($name).'_button a.but_text_multiple").button_ref_multiple({
   q_tip_text : "Choose a '.$this->getLabel().'",
-  update_row_fct: $.fn.button_ref_multiple.addEntry($("#'.$this->generateId($name).'_button a.but_text_multiple"))
+  update_row_fct: $.fn.button_ref_multiple.addEntry,
+  ids_list_target_input_id: "#'.$this->generateId($name).'",
+  names_list_target_table_id: "#'.$this->generateId($name).'_result_table",
 });';
     $input .= '});</script>';
 

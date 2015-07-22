@@ -21,6 +21,9 @@ class taxonomyActions extends DarwinActions
     $this->setLayout(false);
   }
 
+  /*
+   * @ToDo maybe remove this if not used !!!
+   */
   public function executeMultipleChoose(sfWebRequest $request)
   {
     $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;

@@ -13,11 +13,11 @@ var ref_caller_id = '';
     At the end, return the object self
      */
     $.button_ref_multiple = function(element, options) {
-        options = $.extend({}, $.fn.button_ref_multiple.defaultOptions, options);
+        $.fn.button_ref_multiple.options = $.extend({}, $.fn.button_ref_multiple.defaultOptions, options);
         /*
          Define the behavior when the element associated to the add_button option is clicked
          */
-        $(options['add_button']).click(function(event)
+        $($.fn.button_ref_multiple.options['add_button']).click(function(event)
         {
             event.preventDefault();
             var last_position = $(window).scrollTop();
@@ -27,7 +27,7 @@ var ref_caller_id = '';
                 id: 'modal',
                 content: {
                     text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
-                    title: { button: true, text: options['q_tip_text'] },
+                    title: { button: true, text: $.fn.button_ref_multiple.options['q_tip_text'] },
                     ajax: {
                         url: $(this).attr('href'),
                         type: 'GET',
@@ -61,7 +61,7 @@ var ref_caller_id = '';
                     show: function () {
                         ref_element_id = null;
                         ref_element_name = null;
-                        fct_update = options['update_row_fct'];
+                        fct_update = $.fn.button_ref_multiple.options['update_row_fct'];
                     },
                     hide: function(event, api) {
                         $('.result_choose').die('click') ;
@@ -72,7 +72,6 @@ var ref_caller_id = '';
                 },
                 style: 'ui-tooltip-light ui-tooltip-rounded'
             },event);
-            console.log(options['update_row_fct']);
             return false;
         });
         return this;
@@ -93,13 +92,22 @@ var ref_caller_id = '';
         table_col_num: 3,
         add_button: 'a.but_text_multiple',
         q_tip_text: 'Choose a catalogue unit',
-        update_row_fct: undefined
+        update_row_fct: undefined,
+        ids_list_target_input_id: "",
+        names_list_target_table_id:""
     }
+
+    /*
+    Store more permanently the options for the life of javascript object
+     */
+    $.fn.button_ref_multiple.options = {}
+
     /*
     @ToDo To define the behavior... not functionnal for the moment
      */
-    $.fn.button_ref_multiple.addEntry = function(element) {
-        return this;
+    $.fn.button_ref_multiple.addEntry = function(chosen_ref,chosen_name) {
+        $($.fn.button_ref_multiple.options['ids_list_target_input_id']).val(chosen_ref);
+        console.log($($.fn.button_ref_multiple.options['ids_list_target_input_id']).val());
     }
 
 })(jQuery);
