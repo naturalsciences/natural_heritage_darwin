@@ -59,18 +59,46 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
       }
     }
 
+    $partial_url_params = '';
+    if(count($this->getOption('partial_url_params')) != 0 ) {
+      $partial_url_params = '?';
+      foreach($this->getOption('partial_url_params') as $k=>$v){
+        $partial_url_params .= urlencode($k).'='.urlencode($v);
+      }
+    }
+
+
     $input .= '<a href="'.url_for($this->getOption('link_url')).$url_params.'" class="but_text_multiple">'.$in_text.'</a>';
 
     $input .= '</div>';
+
+    $input .= '<div id="'.$this->generateId($name).'_result_table" class="results_container but_ref_multiple hidden">
+                 <table class="results">
+                   <thead>
+                     <tr>
+                       <th>'.__('Name').'</th>
+                       <th>'.__('Level').'</th>
+                       <th></th>
+                     </tr>
+                   </thead>
+                   <tbody>
+                   </tbody>
+                 </table>
+               </div>
+              ';
+
     $input .= '<script  type="text/javascript">
-$(document).ready(function () {
-$("#'.$this->generateId($name).'_button a.but_text_multiple").button_ref_multiple({
-  q_tip_text : "Choose a '.$this->getLabel().'",
-  update_row_fct: $.fn.button_ref_multiple.addEntry,
-  ids_list_target_input_id: "#'.$this->generateId($name).'",
-  names_list_target_table_id: "#'.$this->generateId($name).'_result_table",
-});';
-    $input .= '});</script>';
+                 $(document).ready(function () {
+                   $("#'.$this->generateId($name).'_button a.but_text_multiple").button_ref_multiple({
+                     q_tip_text : "Choose a '.$this->getLabel().'",
+                     update_row_fct: $.fn.button_ref_multiple.addEntry,
+                     ids_list_target_input_id: "#'.$this->generateId($name).'",
+                     names_list_target_table_id: "#'.$this->generateId($name).'_result_table",
+                     partial_url:"'.url_for($this->getOption('partial_url')).$partial_url_params.'",
+                     attached_field_id:"'.$this->generateId($name).'"
+                   });
+                 });
+               </script>';
 
     return $input;
   }
@@ -80,6 +108,9 @@ $("#'.$this->generateId($name).'_button a.but_text_multiple").button_ref_multipl
     parent::configure($options, $attributes);
     $this->addRequiredOption('model');
     $this->addRequiredOption('link_url');
+    $this->addOption('url_params', array());
+    $this->addRequiredOption('partial_url');
+    $this->addOption('partial_url_params', array());
     $this->addRequiredOption('box_title');
     $this->addOption('confirm_msg') ;
     $this->addOption('method', '__toString');
@@ -90,7 +121,6 @@ $("#'.$this->generateId($name).'_button a.but_text_multiple").button_ref_multipl
     $this->addOption('box_remove_title','Delete this object ?'); //default value should not be used, because it will not be translated
     $this->addOption('button_class', 'button');
     $this->addOption('default_name', null);
-    $this->addOption('url_params', array());
   }
 
   public function getJavaScripts()

@@ -40,8 +40,8 @@
     </tr>
     <?php foreach($fields as $field => $name) : ?>
       <?php if(isset($fields_options[$field]['second_line'])) : ?>
-        <tr><th colspan="<?php echo count($fields)-$fields_at_second_line ; ?>"><?php echo $form[$field]->renderLabel() ; ?></th></tr>
-        <tr><td colspan="<?php echo count($fields)-$fields_at_second_line ; ?>"><?php echo $form[$field]->render() ; ?></td></tr>
+        <tr><th colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>"><?php echo $form[$field]->renderLabel() ; ?></th></tr>
+        <tr><td colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>"><?php echo $form[$field]->render() ; ?></td></tr>
       <?php endif; ?>
     <?php endforeach; ?>
   </table>

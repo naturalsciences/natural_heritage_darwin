@@ -1,5 +1,6 @@
 var ref_element_id = null;
 var ref_element_name = null;
+var ref_level_name = null;
 var ref_level_id = '';
 var ref_caller_id = '';
 
@@ -22,7 +23,6 @@ var ref_caller_id = '';
             event.preventDefault();
             var last_position = $(window).scrollTop();
             scroll(0,0) ;
-            //$(this).parent().parent().find('input[type="hidden"]').trigger({ type:"loadref"});
             $(this).qtip({
                 id: 'modal',
                 content: {
@@ -61,6 +61,7 @@ var ref_caller_id = '';
                     show: function () {
                         ref_element_id = null;
                         ref_element_name = null;
+                        ref_level_name = null;
                         fct_update = $.fn.button_ref_multiple.options['update_row_fct'];
                     },
                     hide: function(event, api) {
@@ -94,7 +95,9 @@ var ref_caller_id = '';
         q_tip_text: 'Choose a catalogue unit',
         update_row_fct: undefined,
         ids_list_target_input_id: "",
-        names_list_target_table_id:""
+        names_list_target_table_id:"",
+        partial_url:"",
+        attached_field_id:"",
     }
 
     /*
@@ -102,12 +105,28 @@ var ref_caller_id = '';
      */
     $.fn.button_ref_multiple.options = {}
 
-    /*
-    @ToDo To define the behavior... not functionnal for the moment
-     */
-    $.fn.button_ref_multiple.addEntry = function(chosen_ref,chosen_name) {
-        $($.fn.button_ref_multiple.options['ids_list_target_input_id']).val(chosen_ref);
-        console.log($($.fn.button_ref_multiple.options['ids_list_target_input_id']).val());
+    $.fn.button_ref_multiple.addEntry = function(chosen_ref,chosen_name,chosen_level) {
+        var ids_list = $($.fn.button_ref_multiple.options['ids_list_target_input_id']).val().split(',').filter(function(n){return (n != undefined && n != "")});
+        var chosen_ref_in_ids_list_index = ids_list.indexOf(chosen_ref);
+        if (chosen_ref_in_ids_list_index == -1) {
+            ids_list.push(chosen_ref);
+            $($.fn.button_ref_multiple.options['ids_list_target_input_id']).val(ids_list.toString());
+            $($.fn.button_ref_multiple.options['names_list_target_table_id']).removeClass('hidden');
+            $.ajax({
+                type: "POST",
+                url: $.fn.button_ref_multiple.options['partial_url'],
+                data: {
+                        field_id:$.fn.button_ref_multiple.options['attached_field_id'],
+                        row_num:chosen_ref,
+                        name:chosen_name,
+                        level:chosen_level,
+                      },
+                success: function(html){
+                    //$($.fn.button_ref_multiple.options['names_list_target_table_id']).html(html);
+                    console.log(html);
+                }
+            });
+        }
     }
 
 })(jQuery);

@@ -230,7 +230,6 @@ class catalogueActions extends DarwinActions
         }
       }
     }
-
   }
 
   public function executeAddKeyword(sfWebRequest $request)
@@ -322,5 +321,31 @@ class catalogueActions extends DarwinActions
       }
     }
     $this->searchForm = new BibliographyFormFilter();
+  }
+
+
+  /**
+   * Renders table row for the table located underneath the button ref multiple button
+   * @param \sfWebRequest $request The HTTP request passed (GET or POST)
+   * @return sfView::NONE
+   */
+  public function executeRenderTableRowForButtonRefMultiple(sfWebRequest $request) {
+    if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
+
+    $this->forward404Unless(
+                            $request->isXmlHttpRequest() &&
+                            $request->hasParameter('id') &&
+                            $request->hasParameter('name') &&
+                            $request->hasParameter('level') &&
+                            $request->hasParameter('field_id')
+                           );
+
+    return $this->renderPartial('button_ref_multiple_table_row', array(
+                                                                       'field_id' => $request->getParameter('field_id'),
+                                                                       'row_id'=>$request->getParameter('id'),
+                                                                       'name'=>$request->getParameter('name'),
+                                                                       'level'=>$request->getParameter('level')
+                                                                      )
+                               );
   }
 }
