@@ -111,21 +111,39 @@ var ref_caller_id = '';
         if (chosen_ref_in_ids_list_index == -1) {
             ids_list.push(chosen_ref);
             $($.fn.button_ref_multiple.options['ids_list_target_input_id']).val(ids_list.toString());
-            $($.fn.button_ref_multiple.options['names_list_target_table_id']).removeClass('hidden');
             $.ajax({
                 type: "POST",
                 url: $.fn.button_ref_multiple.options['partial_url'],
                 data: {
                         field_id:$.fn.button_ref_multiple.options['attached_field_id'],
-                        row_num:chosen_ref,
+                        row_id:chosen_ref,
                         name:chosen_name,
                         level:chosen_level,
                       },
                 success: function(html){
-                    //$($.fn.button_ref_multiple.options['names_list_target_table_id']).html(html);
-                    console.log(html);
+                    $(html).appendTo($.fn.button_ref_multiple.options['names_list_target_table_id']+' table tbody');
+                    $($.fn.button_ref_multiple.options['names_list_target_table_id']).removeClass('hidden');
                 }
             });
+        }
+    }
+
+    $.fn.button_ref_multiple.removeEntry = function(event) {
+        event.preventDefault() ;
+        var parent_row_id = $(this).closest('tr.catalogue_unit_row').attr('id');
+        var temp_array = parent_row_id.split('_');
+        var target_value = temp_array.pop().toString();
+        var target_id = temp_array.join('_');
+        var ids_list = $('#'+target_id).val().split(',').filter(function(n){return (n != undefined && n != "")});
+        var ids_count = ids_list.length;
+        var id_to_remove_in_ids_list_index = ids_list.indexOf(target_value);
+        if (id_to_remove_in_ids_list_index != -1) {
+            ids_list.splice(id_to_remove_in_ids_list_index,1);
+            $('#'+target_id).val(ids_list.toString());
+            if(ids_count == 1) {
+                $('div#'+target_id+'_result_table').addClass('hidden');
+            }
+            $('tr#'+parent_row_id).remove();
         }
     }
 

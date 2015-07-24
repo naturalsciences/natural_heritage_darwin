@@ -133,10 +133,13 @@ class ReportsForm extends BaseReportsForm
     /*
      * Catalogue unit ref
      */
-    /* @ToDo: Get a way to replace, in link_url and model, the static value for action and model called */
-    $this->widgetSchema['catalogue_unit_ref'] = new widgetFormButtonRefMultiple(array('model' => 'Taxonomy',
+
+    $model = $this->getOption('model_name', 'taxonomy');
+    $modelUC = ucfirst($model);
+
+    $this->widgetSchema['catalogue_unit_ref'] = new widgetFormButtonRefMultiple(array('model' => $modelUC,
                                                                                       'method' => 'getFormatedName',
-                                                                                      'link_url' => 'taxonomy/choose?with_js=1',
+                                                                                      'link_url' => $model.'/choose?with_js=1',
                                                                                       'box_title' => $this->getI18N()->__('Choose Yourself'),
                                                                                       'label' => $this->getI18N()->__('Catalogue unit'),
                                                                                       'partial_url' => 'catalogue/renderTableRowForButtonRefMultiple'

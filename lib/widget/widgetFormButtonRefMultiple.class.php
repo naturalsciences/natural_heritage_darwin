@@ -97,6 +97,11 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
                      partial_url:"'.url_for($this->getOption('partial_url')).$partial_url_params.'",
                      attached_field_id:"'.$this->generateId($name).'"
                    });
+                   $("#'.$this->generateId($name).'_result_table").on(
+                                                                      "click",
+                                                                      "a.remove_catalogue_unit",
+                                                                      $.fn.button_ref_multiple.removeEntry
+                                                                    );
                  });
                </script>';
 
@@ -107,20 +112,17 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
   {
     parent::configure($options, $attributes);
     $this->addRequiredOption('model');
+    $this->addOption('method', '__toString');
     $this->addRequiredOption('link_url');
     $this->addOption('url_params', array());
     $this->addRequiredOption('partial_url');
     $this->addOption('partial_url_params', array());
     $this->addRequiredOption('box_title');
-    $this->addOption('confirm_msg') ;
-    $this->addOption('method', '__toString');
-    $this->addOption('nullable', false);
-    $this->addOption('deletable', false);
-    $this->addOption('is_hidden', false);
     $this->addOption('button_is_hidden', false);
-    $this->addOption('box_remove_title','Delete this object ?'); //default value should not be used, because it will not be translated
     $this->addOption('button_class', 'button');
     $this->addOption('default_name', null);
+    $this->addOption('on_change_attached_to', null);
+    $this->addOption('on_change_url_for_widget_renew', null);
   }
 
   public function getJavaScripts()
