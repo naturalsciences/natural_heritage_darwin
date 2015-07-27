@@ -18,7 +18,7 @@ var ref_caller_id = '';
         /*
          Define the behavior when the element associated to the add_button option is clicked
          */
-        $($.fn.button_ref_multiple.options['add_button']).click(function(event)
+        $($.fn.button_ref_multiple.options['add_button']).off("click").on("click",function(event)
         {
             event.preventDefault();
             var last_position = $(window).scrollTop();
@@ -129,7 +129,8 @@ var ref_caller_id = '';
     }
 
     $.fn.button_ref_multiple.removeEntry = function(event) {
-        event.preventDefault() ;
+        event.preventDefault();
+        //console.log('ici');
         var parent_row_id = $(this).closest('tr.catalogue_unit_row').attr('id');
         var temp_array = parent_row_id.split('_');
         var target_value = temp_array.pop().toString();
@@ -144,6 +145,26 @@ var ref_caller_id = '';
                 $('div#'+target_id+'_result_table').addClass('hidden');
             }
             $('tr#'+parent_row_id).remove();
+        }
+    }
+
+    $.fn.button_ref_multiple.replaceControl = function (event) {
+        event.preventDefault();
+        if(event.handled !== true) {
+            var nearest_tr_class = $('#' + event.data.control_to_replace).closest('tr').attr('class');
+            $.ajax({
+                type: "POST",
+                url: event.data.replacement_url,
+                data: {
+                    name: event.data.replacement_url_name_param,
+                    widgetButtonRefMultipleRefresh: event.data.widget_button_ref_multiple_refresh,
+                    catalogue: $(this).val()
+                },
+                success: function (html) {
+                    $(html).appendTo($('#' + event.data.control_to_replace).closest('tbody'));
+                    $("." + nearest_tr_class).remove();
+                }
+            });
         }
     }
 

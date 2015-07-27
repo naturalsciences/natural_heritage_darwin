@@ -68,14 +68,31 @@ class reportActions extends DarwinActions
     if($request->isXmlHttpRequest() && $request->isMethod('post'))
     {
       $this->setWidgetsOptions($name);
-      $this->form = new ReportsForm(null,array('fields'=>$this->widgets,'name' => $name)) ;
-      return $this->renderPartial("report_form", array('form' => $this->form,
-                                                       'fields'=> $this->widgets,
-                                                       'fields_options'=>$this->widgets_options,
-                                                       'fields_at_second_line'=>$this->widgets_second_line_count,
-                                                       'fast' => Reports::getIsFast($name)
-                                               )
+      $this->form = new ReportsForm(null,array('fields'=>$this->widgets,
+                                               'name' => $name,
+                                               'model_name' => $request->getParameter('catalogue','taxonomy')
+                                              )
       ) ;
+      if($request->getParameter('widgetButtonRefMultipleRefresh', '')=='1') {
+        return $this->renderPartial("report_form_widget_button_ref_multiple_only",
+                                    array('form' => $this->form,
+                                          'fields'=> $this->widgets,
+                                          'fields_options'=>$this->widgets_options,
+                                          'fields_at_second_line'=>$this->widgets_second_line_count,
+                                          'model_name'=> $request->getParameter('catalogue','taxonomy'),
+                                          'fast' => Reports::getIsFast($name)
+                                         )
+        );
+      }
+      return $this->renderPartial("report_form",
+                                  array('form' => $this->form,
+                                        'fields'=> $this->widgets,
+                                        'fields_options'=>$this->widgets_options,
+                                        'fields_at_second_line'=>$this->widgets_second_line_count,
+                                        'model_name'=> $request->getParameter('catalogue','taxonomy'),
+                                        'fast' => Reports::getIsFast($name)
+                                       )
+      );
     }
     return false ;
   }

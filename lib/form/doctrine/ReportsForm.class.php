@@ -117,6 +117,8 @@ class ReportsForm extends BaseReportsForm
                                                                             )
                                                                        );
       $this->validatorSchema[ 'catalogue_type' ] = new sfValidatorChoice(array ('choices' => $widgets_options[ 'catalogue_type' ]['values']));
+      // @ ToDo find a way to get the appropriate generated id for this widget
+      $attached_to_id = 'reports_catalogue_type';
     }
     /*
      * Number of Records to get from the report
@@ -130,6 +132,7 @@ class ReportsForm extends BaseReportsForm
       );
       $this->validatorSchema[ 'nbr_records' ] = new sfValidatorChoice(array ('choices' => $widgets_options[ 'nbr_records' ][ 'values' ]));
     }
+
     /*
      * Catalogue unit ref
      */
@@ -142,7 +145,10 @@ class ReportsForm extends BaseReportsForm
                                                                                       'link_url' => $model.'/choose?with_js=1',
                                                                                       'box_title' => $this->getI18N()->__('Choose Yourself'),
                                                                                       'label' => $this->getI18N()->__('Catalogue unit'),
-                                                                                      'partial_url' => 'catalogue/renderTableRowForButtonRefMultiple'
+                                                                                      'partial_url' => 'catalogue/renderTableRowForButtonRefMultiple',
+                                                                                      'on_change_attached_to_id' => (isset($attached_to_id))?$attached_to_id:null,
+                                                                                      'on_change_url_for_widget_renew' => 'report/getReport',
+                                                                                      'on_change_url_for_widget_renew_params' => $this->getOption('name'),
                                                                                      ),
                                                                                 array('class' => 'ref_multiple_ids',)
                                                                                );

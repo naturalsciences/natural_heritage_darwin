@@ -97,12 +97,29 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
                      partial_url:"'.url_for($this->getOption('partial_url')).$partial_url_params.'",
                      attached_field_id:"'.$this->generateId($name).'"
                    });
-                   $("#'.$this->generateId($name).'_result_table").on(
-                                                                      "click",
-                                                                      "a.remove_catalogue_unit",
-                                                                      $.fn.button_ref_multiple.removeEntry
-                                                                    );
-                 });
+                   $("#'.$this->generateId($name).'_result_table").off("click", "a.remove_catalogue_unit").on(
+                       "click",
+                       "a.remove_catalogue_unit",
+                       $.fn.button_ref_multiple.removeEntry
+                   );';
+    if(
+       !empty($this->getOption('on_change_attached_to_id')) &&
+       !empty($this->getOption('on_change_url_for_widget_renew'))
+      )
+    {
+      $input .= '
+                 $("#'.$this->getOption('on_change_attached_to_id').'").off("change").on(
+                     "change",
+                     {
+                         control_to_replace:"'.$this->generateId($name).'",
+                         replacement_url:"'.url_for($this->getOption('on_change_url_for_widget_renew')).'",
+                         replacement_url_name_param:"'.$this->getOption('on_change_url_for_widget_renew_params','').'",
+                         widget_button_ref_multiple_refresh:1
+                     },
+                     $.fn.button_ref_multiple.replaceControl
+                 );';
+    }
+    $input .= '  });
                </script>';
 
     return $input;
@@ -121,8 +138,9 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
     $this->addOption('button_is_hidden', false);
     $this->addOption('button_class', 'button');
     $this->addOption('default_name', null);
-    $this->addOption('on_change_attached_to', null);
+    $this->addOption('on_change_attached_to_id', null);
     $this->addOption('on_change_url_for_widget_renew', null);
+    $this->addOption('on_change_url_for_widget_renew_params');
   }
 
   public function getJavaScripts()
