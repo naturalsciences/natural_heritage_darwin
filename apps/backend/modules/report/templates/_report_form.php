@@ -53,9 +53,13 @@
   $(document).ready(function() {
     $('#submit_btn').click(function(event) {
       event.preventDefault() ;
+      var catalogue_get_param = '';
+      if($("#reports_catalogue_type") != 'undefined') {
+        catalogue_get_param = encodeURIComponent($("#reports_catalogue_type").val());
+      }
       $.ajax({
         type: "POST",
-        url: $('#report_form').attr('action'),
+        url: $('#report_form').attr('action') + '?catalogue=' + catalogue_get_param,
         data: $('#report_form').serialize(),
         success: function(html) {
           $(".report_form").html(html);

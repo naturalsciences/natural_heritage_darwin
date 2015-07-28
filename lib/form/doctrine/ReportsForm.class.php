@@ -155,6 +155,8 @@ class ReportsForm extends BaseReportsForm
                                                                                      ),
                                                                                 array('class' => 'ref_multiple_ids',)
                                                                                );
+    $this->validatorSchema['catalogue_unit_ref'] = new sfValidatorString(array('required'=>true));
+    $this->validatorSchema['catalogue_unit_ref']->setMessage('required', __('You need to provide at least one catalogue unit'));
 
     /*##########################################################################
      * Definition of list of fields to be used

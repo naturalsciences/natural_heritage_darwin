@@ -104,7 +104,11 @@ class reportActions extends DarwinActions
       $name = $request->getParameter('reports')['name'] ;
       if(!$name)  $this->forwardToSecureAction();
       $this->setWidgetsOptions($name);
-      $this->form =new ReportsForm(null,array('fields'=>$this->widgets,'name' => $name)) ;
+      $this->form = new ReportsForm(null,array('fields'=>$this->widgets,
+                                               'name' => $name,
+                                               'model_name' => $request->getParameter('catalogue','taxonomy')
+                                        )
+      );
       $this->form->bind($request->getParameter($this->form->getName()));
       if($this->form->isValid())
       {
@@ -125,13 +129,15 @@ class reportActions extends DarwinActions
         else $report->save() ;
         return $this->renderPartial("info_msg") ;
       }
-      return $this->renderPartial("report_form", array('form' => $this->form,
-                                                       'fields'=> $this->widgets,
-                                                       'fields_options'=>$this->widgets_options,
-                                                       'fields_at_second_line'=>$this->widgets_second_line_count,
-                                                       'fast' => Reports::getIsFast($name)
-                                                      )
-                                 ) ;
+      return $this->renderPartial("report_form",
+                                  array('form' => $this->form,
+                                        'fields'=> $this->widgets,
+                                        'fields_options'=>$this->widgets_options,
+                                        'fields_at_second_line'=>$this->widgets_second_line_count,
+                                        'model_name'=> $request->getParameter('catalogue','taxonomy'),
+                                        'fast' => Reports::getIsFast($name)
+                                  )
+      );
     }
   }
 
