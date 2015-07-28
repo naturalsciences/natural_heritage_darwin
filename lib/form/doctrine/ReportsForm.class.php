@@ -137,7 +137,10 @@ class ReportsForm extends BaseReportsForm
      * Catalogue unit ref
      */
 
-    $model = $this->getOption('model_name', 'taxonomy');
+    $model = strtolower($this->getOption('model_name', 'taxonomy'));
+    if ($model == 'zoology' || $model == 'botany') {
+        $model = 'taxonomy';
+    }
     $modelUC = ucfirst($model);
 
     $this->widgetSchema['catalogue_unit_ref'] = new widgetFormButtonRefMultiple(array('model' => $modelUC,
