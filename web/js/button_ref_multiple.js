@@ -128,11 +128,8 @@ var ref_caller_id = '';
         }
     }
 
-    $.fn.button_ref_multiple.removeEntry = function(event) {
-        event.preventDefault();
-        //console.log('ici');
-        var parent_row_id = $(this).closest('tr.catalogue_unit_row').attr('id');
-        var temp_array = parent_row_id.split('_');
+    $.fn.button_ref_multiple.removeEntry = function(row_id) {
+        var temp_array = row_id.split('_');
         var target_value = temp_array.pop().toString();
         var target_id = temp_array.join('_');
         var ids_list = $('#'+target_id).val().split(',').filter(function(n){return (n != undefined && n != "")});
@@ -144,7 +141,7 @@ var ref_caller_id = '';
             if(ids_count == 1) {
                 $('div#'+target_id+'_result_table').addClass('hidden');
             }
-            $('tr#'+parent_row_id).remove();
+            $('tr#'+row_id).remove();
         }
     }
 

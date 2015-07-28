@@ -96,12 +96,7 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
                      names_list_target_table_id: "#'.$this->generateId($name).'_result_table",
                      partial_url:"'.url_for($this->getOption('partial_url')).$partial_url_params.'",
                      attached_field_id:"'.$this->generateId($name).'"
-                   });
-                   $("#'.$this->generateId($name).'_result_table").off("click", "a.remove_catalogue_unit").on(
-                       "click",
-                       "a.remove_catalogue_unit",
-                       $.fn.button_ref_multiple.removeEntry
-                   );';
+                   });';
     if(
        !empty($this->getOption('on_change_attached_to_id')) &&
        !empty($this->getOption('on_change_url_for_widget_renew'))

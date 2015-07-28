@@ -34,6 +34,7 @@
         }
     });    
   }
+
   $(document).ready(function() {
     refresh_reports() ;
     $('#report_list').change(function(event) {
