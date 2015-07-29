@@ -24,7 +24,6 @@
       <td><?php echo $form['format']->renderError() ; ?></td>
       <td></td>
       <td></td>
-
     </tr>
     <tr>
       <?php foreach($fields as $field => $name) : ?>

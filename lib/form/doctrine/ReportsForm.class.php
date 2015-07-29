@@ -116,7 +116,7 @@ class ReportsForm extends BaseReportsForm
                                                                              'default' => $widgets_options[ 'catalogue_type' ]['default_value']
                                                                             )
                                                                        );
-      $this->validatorSchema[ 'catalogue_type' ] = new sfValidatorChoice(array ('choices' => $widgets_options[ 'catalogue_type' ]['values']));
+      $this->validatorSchema[ 'catalogue_type' ] = new sfValidatorChoice(array ('choices' => array_keys($widgets_options[ 'catalogue_type' ]['values'])));
       // @ ToDo find a way to get the appropriate generated id for this widget
       $attached_to_id = 'reports_catalogue_type';
     }
@@ -130,7 +130,7 @@ class ReportsForm extends BaseReportsForm
           'default' => $widgets_options[ 'nbr_records' ][ 'default_value' ]
         )
       );
-      $this->validatorSchema[ 'nbr_records' ] = new sfValidatorChoice(array ('choices' => $widgets_options[ 'nbr_records' ][ 'values' ]));
+      $this->validatorSchema[ 'nbr_records' ] = new sfValidatorChoice(array ('choices' => array_keys($widgets_options[ 'nbr_records' ][ 'values' ])));
     }
 
     /*
@@ -156,7 +156,8 @@ class ReportsForm extends BaseReportsForm
                                                                                 array('class' => 'ref_multiple_ids',)
                                                                                );
     $this->validatorSchema['catalogue_unit_ref'] = new sfValidatorString(array('required'=>true));
-    $this->validatorSchema['catalogue_unit_ref']->setMessage('required', __('You need to provide at least one catalogue unit'));
+    $this->validatorSchema['catalogue_unit_ref']->setMessage('required', 'You need to provide at least one catalogue unit');
+    $this->mergePostValidator(new buttonRefMultipleValidatorSchema());
 
     /*##########################################################################
      * Definition of list of fields to be used

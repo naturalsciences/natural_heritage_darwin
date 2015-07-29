@@ -67,12 +67,28 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
       }
     }
 
+    $hidden = '';
+    $at_least_one_val = false;
+    $splited_values = array();
+    if(!empty($value)) {
+      $splited_values = preg_split('/[,]/',$value);
+      $hidden = ' hidden';
+      foreach ($splited_values as $split_val) {
+        if(!is_numeric($split_val)) {
+          $hidden = '';
+          break;
+        }
+        else {
+          $at_least_one_val = true;
+        }
+      }
+    }
 
     $input .= '<a href="'.url_for($this->getOption('link_url')).$url_params.'" class="but_text_multiple">'.$in_text.'</a>';
 
     $input .= '</div>';
 
-    $input .= '<div id="'.$this->generateId($name).'_result_table" class="results_container but_ref_multiple hidden">
+    $input .= '<div id="'.$this->generateId($name).'_result_table" class="results_container but_ref_multiple'.$hidden.'">
                  <table class="results">
                    <thead>
                      <tr>
@@ -81,8 +97,15 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
                        <th></th>
                      </tr>
                    </thead>
-                   <tbody>
-                   </tbody>
+                   <tbody>';
+
+    if(!empty($hidden) && $at_least_one_val) {
+      $catalogue_controler = new sfFrontWebController();
+      $temp = $catalogue_controler->getAction('catalogue', 'renderTableRowForButtonRefMultiple');
+      die(print_r($temp));
+    }
+
+    $input .='     </tbody>
                  </table>
                </div>
               ';
