@@ -149,6 +149,8 @@ class ReportsForm extends BaseReportsForm
                                                                                       'box_title' => $this->getI18N()->__('Choose Yourself'),
                                                                                       'label' => $this->getI18N()->__('Catalogue unit'),
                                                                                       'partial_url' => 'catalogue/renderTableRowForButtonRefMultiple',
+                                                                                      'partial_controler' => 'catalogue',
+                                                                                      'partial_action' => 'renderTableRowForButtonRefMultiple',
                                                                                       'on_change_attached_to_id' => (isset($attached_to_id))?$attached_to_id:null,
                                                                                       'on_change_url_for_widget_renew' => 'report/getReport',
                                                                                       'on_change_url_for_widget_renew_params' => $this->getOption('name'),

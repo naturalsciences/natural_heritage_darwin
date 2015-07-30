@@ -67,19 +67,23 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
       }
     }
 
-    $hidden = '';
+    $hidden = ' hidden';
     $at_least_one_val = false;
     $splited_values = array();
     if(!empty($value)) {
-      $splited_values = preg_split('/[,]/',$value);
-      $hidden = ' hidden';
-      foreach ($splited_values as $split_val) {
-        if(!is_numeric($split_val)) {
-          $hidden = '';
-          break;
-        }
-        else {
-          $at_least_one_val = true;
+      if(is_numeric($value)) {
+        $at_least_one_val = true;
+      }
+      else {
+        $splited_values = preg_split('/[,]/', $value);
+        foreach ($splited_values as $split_val) {
+          if (!is_numeric($split_val)) {
+            $hidden = '';
+            break;
+          }
+          else {
+            $at_least_one_val = true;
+          }
         }
       }
     }
@@ -99,9 +103,12 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
                    </thead>
                    <tbody>';
 
+    /*
+     * @ ToDo non functional portion of code... find out why
+     */
     if(!empty($hidden) && $at_least_one_val) {
-      $catalogue_controler = new sfFrontWebController();
-      $temp = $catalogue_controler->getAction('catalogue', 'renderTableRowForButtonRefMultiple');
+      $partial_controler = new sfFrontWebController();
+      $temp = $partial_controler->getAction($this->getOption('partial_controler'), $this->getOption('partial_action'));
       die(print_r($temp));
     }
 
@@ -151,6 +158,8 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
     $this->addRequiredOption('link_url');
     $this->addOption('url_params', array());
     $this->addRequiredOption('partial_url');
+    $this->addRequiredOption('partial_controler');
+    $this->addRequiredOption('partial_action');
     $this->addOption('partial_url_params', array());
     $this->addRequiredOption('box_title');
     $this->addOption('button_is_hidden', false);

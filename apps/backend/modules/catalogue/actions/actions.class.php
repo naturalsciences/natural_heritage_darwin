@@ -331,7 +331,6 @@ class catalogueActions extends DarwinActions
    */
   public function executeRenderTableRowForButtonRefMultiple(sfWebRequest $request) {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
-    die(print_r($request->getParameter('row_id')));
     $this->forward404Unless(
       $request->hasParameter('row_id') &&
       $request->hasParameter('field_id')
