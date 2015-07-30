@@ -116,7 +116,7 @@ var ref_caller_id = '';
                 url: $.fn.button_ref_multiple.options['partial_url'],
                 data: {
                         field_id:$.fn.button_ref_multiple.options['attached_field_id'],
-                        row_id:chosen_ref,
+                        row_id:[chosen_ref],
                         name:chosen_name,
                         level:chosen_level,
                       },

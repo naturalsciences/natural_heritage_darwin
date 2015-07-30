@@ -53,12 +53,17 @@
     $('#submit_btn').click(function(event) {
       event.preventDefault() ;
       var catalogue_get_param = '';
+      var target_url = $('#report_form').attr('action');
+      var target_url_get_params = '?';
       if($("#reports_catalogue_type") != 'undefined') {
-        catalogue_get_param = encodeURIComponent($("#reports_catalogue_type").val());
+        catalogue_get_param = 'catalogue='+encodeURIComponent($("#reports_catalogue_type").val());
+      }
+      if (target_url.indexOf('?') > -1) {
+        target_url_get_params = '&';
       }
       $.ajax({
         type: "POST",
-        url: $('#report_form').attr('action') + '?catalogue=' + catalogue_get_param,
+        url: target_url + target_url_get_params + catalogue_get_param,
         data: $('#report_form').serialize(),
         success: function(html) {
           $(".report_form").html(html);

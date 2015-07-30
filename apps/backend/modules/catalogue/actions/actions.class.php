@@ -335,6 +335,9 @@ class catalogueActions extends DarwinActions
       $request->hasParameter('row_id') &&
       $request->hasParameter('field_id')
     );
+    if(is_array($request->getParameter('row_id'))) {
+      return $this->renderText(print_r($request->getParameter('row_id')));
+    }
     if($request->getParameter('from_db', '')!= '') {
     }
     else {
@@ -343,7 +346,7 @@ class catalogueActions extends DarwinActions
         $request->hasParameter('level')
       );
     }
-    return $this->renderPartial('button_ref_multiple_table_row',
+    return $this->renderPartial('catalogue/button_ref_multiple_table_row',
                                 array(
                                   'field_id' => $request->getParameter('field_id'),
                                   'row_id'=>$request->getParameter('row_id'),

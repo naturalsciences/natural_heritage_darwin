@@ -70,8 +70,11 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
     $hidden = ' hidden';
     $at_least_one_val = false;
     $splited_values = array();
+    $rendered_partial = '';
+
     if(!empty($value)) {
       if(is_numeric($value)) {
+        $splited_values[] = $value;
         $at_least_one_val = true;
       }
       else {
@@ -85,6 +88,28 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
             $at_least_one_val = true;
           }
         }
+      }
+    }
+
+    if(empty($hidden) && $at_least_one_val) {
+      try {
+        $context = sfContext::getInstance();
+        $partial_request = new sfWebRequest($context->getEventDispatcher());
+        $partial_request->setMethod('POST');
+        $partial_request->setParameter('field_id', $this->generateId($name));
+        $partial_request->setParameter('row_id', $splited_values);
+        $partial_request->setParameter('from_db', '1');
+        $partial_controler = new sfFrontWebController($context);
+        $partial_controler_action = $partial_controler->getAction(
+                                                                  $this->getOption('partial_controler'),
+                                                                  $this->getOption('partial_action')
+        );
+        $partial_controler_action->execute($partial_request);
+        $rendered_partial = $partial_controler_action->getResponse()->getContent();
+      }
+      catch (Exception $e) {
+        $hidden = ' hidden';
+        $rendered_partial = '';
       }
     }
 
@@ -103,14 +128,7 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
                    </thead>
                    <tbody>';
 
-    /*
-     * @ ToDo non functional portion of code... find out why
-     */
-    if(!empty($hidden) && $at_least_one_val) {
-      $partial_controler = new sfFrontWebController();
-      $temp = $partial_controler->getAction($this->getOption('partial_controler'), $this->getOption('partial_action'));
-      die(print_r($temp));
-    }
+    $input .= $rendered_partial;
 
     $input .='     </tbody>
                  </table>
