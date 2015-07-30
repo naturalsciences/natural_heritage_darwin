@@ -68,36 +68,34 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
     }
 
     $hidden = ' hidden';
-    $at_least_one_val = false;
-    $splited_values = array();
+    $json_splited_values = array();
     $rendered_partial = '';
 
     if(!empty($value)) {
-      if(is_numeric($value)) {
-        $splited_values[] = $value;
-        $at_least_one_val = true;
+      if(is_int($value) > 0) {
+        $json_splited_values[] = json_encode(array("id"=>$value),JSON_FORCE_OBJECT);
+        $hidden = '';
       }
       else {
         $splited_values = preg_split('/[,]/', $value);
-        foreach ($splited_values as $split_val) {
-          if (!is_numeric($split_val)) {
-            $hidden = '';
-            break;
-          }
-          else {
-            $at_least_one_val = true;
+        if(count($splited_values) > 0) {
+          $hidden = '';
+          foreach ($splited_values as $split_val) {
+            if (intval($split_val) > 0) {
+              $json_splited_values[] = json_encode(array("id"=>$split_val),JSON_FORCE_OBJECT);
+            }
           }
         }
       }
     }
 
-    if(empty($hidden) && $at_least_one_val) {
+    if(count($json_splited_values) > 0) {
       try {
         $context = sfContext::getInstance();
         $partial_request = new sfWebRequest($context->getEventDispatcher());
         $partial_request->setMethod('POST');
         $partial_request->setParameter('field_id', $this->generateId($name));
-        $partial_request->setParameter('row_id', $splited_values);
+        $partial_request->setParameter('row_data', $json_splited_values);
         $partial_request->setParameter('from_db', '1');
         $partial_controler = new sfFrontWebController($context);
         $partial_controler_action = $partial_controler->getAction(

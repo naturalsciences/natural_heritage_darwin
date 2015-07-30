@@ -332,11 +332,11 @@ class catalogueActions extends DarwinActions
   public function executeRenderTableRowForButtonRefMultiple(sfWebRequest $request) {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     $this->forward404Unless(
-      $request->hasParameter('row_id') &&
+      $request->hasParameter('row_data') &&
       $request->hasParameter('field_id')
     );
-    if(is_array($request->getParameter('row_id'))) {
-      return $this->renderText(print_r($request->getParameter('row_id')));
+    if(is_array($request->getParameter('row_data'))) {
+      return $this->renderText(print_r($request->getParameter('row_data')));
     }
     if($request->getParameter('from_db', '')!= '') {
     }
