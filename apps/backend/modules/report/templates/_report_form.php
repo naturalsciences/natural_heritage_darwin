@@ -67,7 +67,7 @@
         data: $('#report_form').serialize(),
         success: function(html) {
           $(".report_form").html(html);
-          if($("ul.error_list").length > 0 || $("td#report_successfuly_added").length > 0) {
+          if($("ul.error_list").length == 0 || $("td#report_successfuly_added").length > 0) {
             refresh_reports();
             // @Todo Make the function called on change generic so it's not duplicated code - already on indexSuccess.php
             $('#report_list').off("change").val('').on("change",
