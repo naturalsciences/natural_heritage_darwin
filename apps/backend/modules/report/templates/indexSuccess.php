@@ -30,28 +30,31 @@
     $.ajax({
         url: '<?php echo url_for("report/getAskedReport") ; ?>',
         success: function(html) {
-        $(".already_asked_form").html(html);
+          $(".already_asked_form").html(html);
         }
     });    
   }
 
   $(document).ready(function() {
     refresh_reports() ;
-    $('#report_list').change(function(event) {
-      event.preventDefault() ;
-      if($(this).val() != '')
-      {
-        $.ajax({
-          type: "POST",
-          url: '<?php echo url_for("report/getReport") ; ?>',
-          data: 'name='+$(this).val(),
-          success: function(html) {
-          $(".report_form").html(html);
-          }
-        });
-      $(".report_form").html('<img src="/images/loader.gif" />');
+    // @Todo Make the function called on change generic so it's not duplicated code - also on _report_form.php partial
+    $('#report_list').on("change",
+      function(event) {
+        event.preventDefault() ;
+        if($(this).val() != '')
+        {
+          $.ajax({
+            type: "POST",
+            url: '<?php echo url_for("report/getReport") ; ?>',
+            data: 'name='+$(this).val(),
+            success: function(html) {
+              $(".report_form").html(html);
+            }
+          });
+        $(".report_form").html('<img src="/images/loader.gif" />');
+        }
+        $(".report_form").html('');
       }
-      $(".report_form").html('');  
-    });
-  }) ;
+    );
+  });
 </script>

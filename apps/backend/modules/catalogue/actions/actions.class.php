@@ -330,28 +330,42 @@ class catalogueActions extends DarwinActions
    * @return sfView::NONE
    */
   public function executeRenderTableRowForButtonRefMultiple(sfWebRequest $request) {
+
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
+
     $this->forward404Unless(
       $request->hasParameter('row_data') &&
-      $request->hasParameter('field_id')
+      $request->hasParameter('field_id') &&
+      is_array($request->getParameter('row_data')) &&
+      count($request->getParameter('row_data')) > 0
     );
-    if(is_array($request->getParameter('row_data'))) {
-      return $this->renderText(print_r($request->getParameter('row_data')));
-    }
-    if($request->getParameter('from_db', '')!= '') {
-    }
-    else {
-      $this->forward404Unless(
-        $request->hasParameter('name') &&
-        $request->hasParameter('level')
+
+    $row_data = $request->getParameter('row_data');
+
+    if($request->getParameter('from_db', '') == '1' && !empty($request->getParameter('catalogue', ''))) {
+      $ids_to_retrieve = array();
+      foreach ($row_data as $row_key=>$row_val) {
+        $this->forward404Unless(
+                                isset($row_val["id"]) &&
+                                is_numeric($row_val["id"])
+        );
+        $ids_to_retrieve[]=$row_val["id"];
+      }
+
+      $row_data = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('catalogue')))->getCatalogueUnits($ids_to_retrieve);
+
+      return $this->getPartial('catalogue/button_ref_multiple_table_row',
+                               array(
+                                 'field_id' => $request->getParameter('field_id'),
+                                 'row_data'=>$row_data
+                               )
       );
     }
+
     return $this->renderPartial('catalogue/button_ref_multiple_table_row',
                                 array(
                                   'field_id' => $request->getParameter('field_id'),
-                                  'row_id'=>$request->getParameter('row_id'),
-                                  'name'=>$request->getParameter('name', ''),
-                                  'level'=>$request->getParameter('level', '')
+                                  'row_data'=>$row_data
                                 )
     );
   }

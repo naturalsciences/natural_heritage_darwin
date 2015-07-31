@@ -67,8 +67,27 @@
         data: $('#report_form').serialize(),
         success: function(html) {
           $(".report_form").html(html);
-          refresh_reports() ;
-          $('#report_list').val('') ;
+          if($("ul.error_list").length > 0 || $("td#report_successfuly_added").length > 0) {
+            refresh_reports();
+            // @Todo Make the function called on change generic so it's not duplicated code - already on indexSuccess.php
+            $('#report_list').off("change").val('').on("change",
+              function (event) {
+                event.preventDefault();
+                if ($(this).val() != '') {
+                  $.ajax({
+                    type: "POST",
+                    url: '<?php echo url_for("report/getReport") ; ?>',
+                    data: 'name=' + $(this).val(),
+                    success: function (html) {
+                      $(".report_form").html(html);
+                    }
+                  });
+                  $(".report_form").html('<img src="/images/loader.gif" />');
+                }
+                $(".report_form").html('');
+              }
+            );
+          }
         }
       });
     });

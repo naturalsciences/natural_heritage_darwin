@@ -129,7 +129,7 @@ class reportActions extends DarwinActions
         else $report->save() ;
         return $this->renderPartial("info_msg") ;
       }
-      return $this->renderPartial("report_form",
+      $val = $this->renderPartial("report_form",
                                   array('form' => $this->form,
                                         'fields'=> $this->widgets,
                                         'fields_options'=>$this->widgets_options,
@@ -138,6 +138,7 @@ class reportActions extends DarwinActions
                                         'fast' => Reports::getIsFast($name)
                                   )
       );
+      return $val;
     }
   }
 

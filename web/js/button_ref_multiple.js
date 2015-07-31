@@ -116,7 +116,7 @@ var ref_caller_id = '';
                 url: $.fn.button_ref_multiple.options['partial_url'],
                 data: {
                         field_id:$.fn.button_ref_multiple.options['attached_field_id'],
-                        row_data:[{"id":chosen_ref,"name":chosen_name,"level":chosen_level}]
+                        row_data:[{"id":chosen_ref,"name":chosen_name,"level_name":chosen_level}]
                       },
                 success: function(html){
                     $(html).appendTo($.fn.button_ref_multiple.options['names_list_target_table_id']+' table tbody');

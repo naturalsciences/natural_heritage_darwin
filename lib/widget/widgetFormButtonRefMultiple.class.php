@@ -73,7 +73,7 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
 
     if(!empty($value)) {
       if(is_int($value) > 0) {
-        $json_splited_values[] = json_encode(array("id"=>$value),JSON_FORCE_OBJECT);
+        $json_splited_values[] = array("id"=>$value);
         $hidden = '';
       }
       else {
@@ -82,7 +82,7 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
           $hidden = '';
           foreach ($splited_values as $split_val) {
             if (intval($split_val) > 0) {
-              $json_splited_values[] = json_encode(array("id"=>$split_val),JSON_FORCE_OBJECT);
+              $json_splited_values[] = array("id"=>$split_val);
             }
           }
         }
@@ -97,13 +97,13 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
         $partial_request->setParameter('field_id', $this->generateId($name));
         $partial_request->setParameter('row_data', $json_splited_values);
         $partial_request->setParameter('from_db', '1');
+        $partial_request->setParameter('catalogue',$this->getOption('model'));
         $partial_controler = new sfFrontWebController($context);
         $partial_controler_action = $partial_controler->getAction(
                                                                   $this->getOption('partial_controler'),
                                                                   $this->getOption('partial_action')
         );
-        $partial_controler_action->execute($partial_request);
-        $rendered_partial = $partial_controler_action->getResponse()->getContent();
+        $rendered_partial = $partial_controler_action->execute($partial_request);
       }
       catch (Exception $e) {
         $hidden = ' hidden';
