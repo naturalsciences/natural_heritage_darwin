@@ -1,3 +1,7 @@
+-- Function: rmca_create_links_between_labels(integer)
+
+-- DROP FUNCTION rmca_create_links_between_labels(integer);
+
 CREATE OR REPLACE FUNCTION rmca_create_links_between_labels(p_coll_ref integer)
   RETURNS void AS
 $BODY$
@@ -14,7 +18,7 @@ SELECT a.id as old_identification_id, b.code,
   INNER JOIN codes ba
 	    ON aa.id=ba.record_id
 	      AND ba.referenced_relation='specimens'
-	        and aa.collection_ref=10 and code_category='main'
+	        and aa.collection_ref=p_coll_ref and code_category='main'
   inner  JOIN properties ca
 	ON aa.id=ca.record_id
 	  AND ca.referenced_relation='specimens'
