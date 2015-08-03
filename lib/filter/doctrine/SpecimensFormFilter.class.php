@@ -1196,6 +1196,9 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $javascripts[]='/leaflet/leaflet.js';
     $javascripts[]='/js/map.js';
     $javascripts[]='/leaflet/leaflet.markercluster-src.js';
+	//ftheeten 2015 08 01
+	$javascripts[]= "/Leaflet.draw-master/dist/leaflet.draw.js";
+	
     return $javascripts;
   }
 
@@ -1203,6 +1206,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $items=parent::getStylesheets();
     $items['/leaflet/leaflet.css']='all';
     $items['/leaflet/MarkerCluster.css']='all';
+	//ftheeten 2015 08 01
+	$items["/Leaflet.draw-master/dist/leaflet.draw.css"]=  'all';
     return $items;
   }
 }
