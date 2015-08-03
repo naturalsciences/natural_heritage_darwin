@@ -176,7 +176,8 @@ function initSearchMap() {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
-  map.on('move', updateLatLong);
+  //ftheeten 2015 08 03 repalced by Draw rectangle
+  //map.on('move', updateLatLong);
 
   //Custom radius and icon create function
   mg = new L.MarkerClusterGroup({
@@ -184,6 +185,68 @@ function initSearchMap() {
           spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: true
   });
   map.addLayer(mg);
+  
+  
+    //ftheeten 2015 08 03
+  //button rectangle
+   var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+
+        var drawControl = new L.Control.Draw({
+        position: 'topleft',
+        draw: {
+            polyline: false,
+            polygon: false, 
+            rectangle: {repeatMode: false},
+            circle: false,
+            marker: false,
+			remove:true
+        },
+        edit: false,
+
+    });
+        map.addControl(drawControl);
+
+        map.on('draw:created', function (e) {
+			
+			 drawnItems.clearLayers();
+            var type = e.layerType;
+                layer = e.layer;
+				
+				if (type === 'rectangle') {
+
+					arrayBounds=layer.getLatLngs();
+
+					updateLatLongRectangle(L.latLngBounds(arrayBounds));
+				}
+            drawnItems.addLayer(layer);
+        });
+		
+		//button remove
+		L.Control.RemoveAll = L.Control.extend(
+		{
+			options:
+			{
+				position: 'topleft',
+			},
+			onAdd: function (map) {
+				var controlDiv = L.DomUtil.create('div', 'leaflet-draw-toolbar leaflet-bar');
+				L.DomEvent
+					.addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+					.addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+				.addListener(controlDiv, 'click', function () {
+					drawnItems.clearLayers();
+					clearLatLongRectangle();
+				});
+
+				var controlUI = L.DomUtil.create('a', 'leaflet-draw-edit-remove', controlDiv);
+				controlUI.title = 'Remove All Polygons';
+				controlUI.href = '#';
+				return controlDiv;
+			}
+		});
+		var removeAllControl = new L.Control.RemoveAll();
+		map.addControl(removeAllControl);
 }
 
 function updateLatLong() {
@@ -205,6 +268,44 @@ function updateLatLong() {
     }
 
   }
+}
+
+//ftheeten 2015 08 03
+function updateLatLongRectangle(bounds) {
+  
+  if($('#show_as_map').is(':checked')) {
+    if($('#gtu_filters_lat_from').length) {
+      $('#gtu_filters_lat_from').val(bounds.getNorthWest().wrap().lat );
+      $('#gtu_filters_lon_from').val(bounds.getNorthWest().wrap().lng);
+
+      $('#gtu_filters_lat_to').val(bounds.getSouthEast().wrap().lat);
+      $('#gtu_filters_lon_to').val(bounds.getSouthEast().wrap().lng);
+    }else if($('#specimen_search_filters_lat_from').length) {
+      $('#specimen_search_filters_lat_from').val(bounds.getNorthWest().wrap().lat );
+      $('#specimen_search_filters_lon_from').val(bounds.getNorthWest().lng);
+
+      $('#specimen_search_filters_lat_to').val(bounds.getSouthEast().wrap().lat);
+      $('#specimen_search_filters_lon_to').val(bounds.getSouthEast().wrap().lng);
+
+    }
+
+  }
+}
+
+//ftheeten 2015 08 03
+function clearLatLongRectangle() {
+  
+  if($('#show_as_map').is(':checked')) {
+    
+      $('#specimen_search_filters_lat_from').val('');
+      $('#specimen_search_filters_lon_from').val('');
+
+      $('#specimen_search_filters_lat_to').val('');
+      $('#specimen_search_filters_lon_to').val('');
+
+    }
+
+  
 }
 
 function map_submit(event) {
