@@ -143,9 +143,11 @@ class widgetFormButtonRefMultiple extends sfWidgetFormInputHidden
                      partial_url:"'.url_for($this->getOption('partial_url')).$partial_url_params.'",
                      attached_field_id:"'.$this->generateId($name).'"
                    });';
+    $on_change_attached_to_id = $this->getOption('on_change_attached_to_id');
+    $on_change_url_for_widget_renew = $this->getOption('on_change_url_for_widget_renew');
     if(
-       !empty($this->getOption('on_change_attached_to_id')) &&
-       !empty($this->getOption('on_change_url_for_widget_renew'))
+       !empty($on_change_attached_to_id) &&
+       !empty($on_change_url_for_widget_renew)
       )
     {
       $input .= '
