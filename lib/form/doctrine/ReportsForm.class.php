@@ -137,30 +137,33 @@ class ReportsForm extends BaseReportsForm
      * Catalogue unit ref
      */
 
-    $model = strtolower($this->getOption('model_name', 'taxonomy'));
-    if ($model == 'zoology' || $model == 'botany') {
+    if (isset($widgets_options['catalogue_unit_ref'])) {
+      $model = strtolower($this->getOption('model_name', 'taxonomy'));
+      if ($model == 'zoology' || $model == 'botany') {
         $model = 'taxonomy';
+      }
+      $modelUC = ucfirst($model);
+
+      $this->widgetSchema[ 'catalogue_unit_ref' ] = new widgetFormButtonRefMultiple(
+        array (
+          'model' => $modelUC,
+          'method' => 'getFormatedName',
+          'link_url' => $model . '/choose?with_js=1',
+          'box_title' => $this->getI18N()->__('Choose Yourself'),
+          'label' => $this->getI18N()->__('Catalogue unit'),
+          'partial_url' => 'catalogue/renderTableRowForButtonRefMultiple',
+          'partial_controler' => 'catalogue',
+          'partial_action' => 'renderTableRowForButtonRefMultiple',
+          'on_change_attached_to_id' => (isset($attached_to_id)) ? $attached_to_id : NULL,
+          'on_change_url_for_widget_renew' => 'report/getReport',
+          'on_change_url_for_widget_renew_params' => $this->getOption('name'),
+        ),
+        array ('class' => 'ref_multiple_ids',)
+      );
+      $this->validatorSchema[ 'catalogue_unit_ref' ] = new sfValidatorString(array ('required' => TRUE));
+      $this->validatorSchema[ 'catalogue_unit_ref' ]->setMessage('required', 'You need to provide at least one catalogue unit');
+      $this->mergePostValidator(new buttonRefMultipleValidatorSchema());
     }
-    $modelUC = ucfirst($model);
-
-    $this->widgetSchema['catalogue_unit_ref'] = new widgetFormButtonRefMultiple(array('model' => $modelUC,
-                                                                                      'method' => 'getFormatedName',
-                                                                                      'link_url' => $model.'/choose?with_js=1',
-                                                                                      'box_title' => $this->getI18N()->__('Choose Yourself'),
-                                                                                      'label' => $this->getI18N()->__('Catalogue unit'),
-                                                                                      'partial_url' => 'catalogue/renderTableRowForButtonRefMultiple',
-                                                                                      'partial_controler' => 'catalogue',
-                                                                                      'partial_action' => 'renderTableRowForButtonRefMultiple',
-                                                                                      'on_change_attached_to_id' => (isset($attached_to_id))?$attached_to_id:null,
-                                                                                      'on_change_url_for_widget_renew' => 'report/getReport',
-                                                                                      'on_change_url_for_widget_renew_params' => $this->getOption('name'),
-                                                                                     ),
-                                                                                array('class' => 'ref_multiple_ids',)
-                                                                               );
-    $this->validatorSchema['catalogue_unit_ref'] = new sfValidatorString(array('required'=>true));
-    $this->validatorSchema['catalogue_unit_ref']->setMessage('required', 'You need to provide at least one catalogue unit');
-    $this->mergePostValidator(new buttonRefMultipleValidatorSchema());
-
     /*##########################################################################
      * Definition of list of fields to be used
      *##########################################################################
