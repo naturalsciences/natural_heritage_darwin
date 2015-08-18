@@ -39,7 +39,7 @@ class Reports extends BaseReports
                            'nbr_records' => 'Number of Records'
                           ),
         'widgets_options' => array('catalogue_type' => array('default_value' => 'taxonomy',
-                                                             'values' => array('taxonomy' => 'Taxonomy (General)',
+                                                             'values' => array('taxonomy' => 'Taxonomy (All)',
                                                                                'zoology' => 'Taxonomy (Zoology)',
                                                                                'botany' => 'Taxonomy (Botany)',
                                                                                'chronostratigraphy' => 'Chronostratigraphy',
