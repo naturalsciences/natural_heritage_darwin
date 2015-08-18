@@ -342,7 +342,8 @@ class catalogueActions extends DarwinActions
 
     $row_data = $request->getParameter('row_data');
 
-    if($request->getParameter('from_db', '') == '1' && !empty($request->getParameter('catalogue', ''))) {
+    $catalogue_parameter = $request->getParameter('catalogue', '');
+    if($request->getParameter('from_db', '') == '1' && !empty($catalogue_parameter)) {
       $ids_to_retrieve = array();
       foreach ($row_data as $row_key=>$row_val) {
         $this->forward404Unless(
