@@ -129,8 +129,19 @@ class Reports extends BaseReports
 
   public function getUrlReport()
   {
-    $url = sfConfig::get('dw_report_server')."/rest_v2/reports/darwin/".$this->getName()."_".$this->getLang().".".$this->getFormat();
     $variables = $this->getParameters() ;
+    $name = $this->getName();
+    switch($name) {
+      case "catalogues_x_listing":
+        if(in_array($variables['catalogue_type'],array_keys(self::$reports[$name]['widgets_options']['catalogue_type']['values']))){
+          $name = str_replace('_x_','_'.$variables['catalogue_type'].'_',$name);
+        }
+        $url = sfConfig::get('dw_report_server')."/rest_v2/reports/darwin/".$name.".".$this->getFormat();
+        break;
+      default:
+        $url = sfConfig::get('dw_report_server')."/rest_v2/reports/darwin/".$name."_".$this->getLang().".".$this->getFormat();
+    }
+
     if(! empty($variables) ) $url .= '?'.http_build_query($variables);
     // I add userLocale to the url to avoid different date format depending on which locale jasper choose
     $url .= "&userLocale=en" ;
