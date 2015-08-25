@@ -19,7 +19,7 @@
               </td>
         </tr>
         <tr>
-              <th><?php echo __('People ref');?></th>
+              <th><?php echo __('Person');?></th>
               <td>
                 <?php echo $maintenance->People->getFormatedName() ?>
               </td>
