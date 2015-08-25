@@ -61,9 +61,9 @@ class maintenancesActions extends DarwinActions
     ) {
       $i18n = $this->getContext()->getI18N();
       $options = array('forced_action_observation_options'=>array(
-        'approval'=>$i18n->__('Approved by'),
-        'organisation'=>$i18n->__('Organized by'),
-        'preparation'=>$i18n->__('Prepared by')
+        'approval'=>$i18n->__('approval'),
+        'organized_by'=>$i18n->__('organized_by'),
+        'preparation'=>$i18n->__('preparation')
       ));
     }
 

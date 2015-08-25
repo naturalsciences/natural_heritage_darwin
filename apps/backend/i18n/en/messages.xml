@@ -5988,23 +5988,23 @@ DaRWIN</target>
       </trans-unit>      
       <trans-unit id="1844">
         <source>Choose a report</source>
-        <target></target>
+        <target>Choose a report</target>
       </trans-unit>
       <trans-unit id="1845">
         <source>Report you asked</source>
-        <target></target>
+        <target>Report you asked</target>
       </trans-unit>
       <trans-unit id="1846">
         <source>report not available yet</source>
-        <target></target>
+        <target>report not available yet</target>
       </trans-unit>
       <trans-unit id="1847">
         <source>Reports</source>
-        <target></target>
+        <target>Reports</target>
       </trans-unit>
       <trans-unit id="1848">
         <source>Report</source>
-        <target></target>
+        <target>Report</target>
       </trans-unit>
       <trans-unit id="1849">
         <source>test report warning</source>
@@ -6021,6 +6021,30 @@ DaRWIN</target>
       <trans-unit id="1852">
         <source>report too big info</source>
         <target>Your report take too much time to be created. You should review your criterias</target>
+      </trans-unit>
+      <trans-unit id="1853">
+        <source>approval</source>
+        <target>Approval</target>
+      </trans-unit>
+      <trans-unit id="1854">
+        <source>organized_by</source>
+        <target>Organized by</target>
+      </trans-unit>
+      <trans-unit id="1855">
+        <source>preparation</source>
+        <target>Preparation</target>
+      </trans-unit>
+      <trans-unit id="1856">
+        <source>action</source>
+        <target>Action</target>
+      </trans-unit>
+      <trans-unit id="1857">
+        <source>observation</source>
+        <target>Observation</target>
+      </trans-unit>
+      <trans-unit id="1858">
+        <source>Return Type Material</source>
+        <target>Return Type Material</target>
       </trans-unit>
     </body>
   </file>
