@@ -2,6 +2,64 @@ set search_path=darwin2,public;
 
 BEGIN;
 
+drop function if exists fct_report_loans_maintenances (loan_id loans.id%TYPE, maintenance_type TEXT);
+create or replace function fct_report_loans_maintenances (loan_id loans.id%TYPE, maintenance_type TEXT)
+  returns
+    table
+    (
+        maintenance_date DATE,
+        maintenance_people TEXT,
+        maintenance_people_functions TEXT
+    )
+AS
+  $$
+    with maintenance_people as (
+        SELECT
+          DISTINCT ON (maintenance_date, formated_name)
+          CASE
+          WHEN modification_date_time IN ('0001-01-01' :: TIMESTAMP, '2038-12-31' :: TIMESTAMP)
+            THEN
+              NULL :: DATE
+          ELSE
+            modification_date_time :: DATE
+          END                                            AS maintenance_date,
+          regexp_replace(formated_name, '\s+', ' ', 'g') AS formated_name,
+          case
+            when person_user_role = '' then
+              '*'
+            else
+              person_user_role
+          end::text AS people_function
+        FROM
+          collection_maintenance
+          INNER JOIN people
+            ON collection_maintenance.people_ref = people.id
+          LEFT JOIN people_relationships pr
+            ON people.id = pr.person_2_ref
+               AND pr.relationship_type IN ('works for', 'belongs to')
+        WHERE collection_maintenance.referenced_relation = 'loans'
+          AND collection_maintenance.record_id = $1
+          AND collection_maintenance.action_observation = $2
+        ORDER BY
+          maintenance_date DESC,
+          formated_name,
+          coalesce(pr.activity_date_to, '2038-12-31' :: DATE) DESC,
+          case when person_user_role = '' then 'zzz' else person_user_role end::text
+    )
+    select distinct on (maintenance_date)
+      maintenance_date,
+      trim(array_to_string(array_agg(formated_name) OVER (PARTITION BY maintenance_date), ', '), ', ') as maintenance_people,
+      case
+        when trim(array_to_string(array_agg(people_function) OVER (PARTITION BY maintenance_date), ', '), ', ') = '*' then
+          null
+        else
+          trim(array_to_string(array_agg(people_function) OVER (PARTITION BY maintenance_date), ', '), ', ')
+      end as maintenance_people
+    from maintenance_people
+    order by maintenance_date desc;
+  $$
+language sql;
+
 drop function if exists fct_report_loans_addresses (loan_id loans.id%TYPE, target_copy TEXT);
 create or replace function fct_report_loans_addresses (loan_id loans.id%TYPE, target_copy TEXT)
   returns
@@ -91,13 +149,13 @@ AS
             null
           end::text as address
     from catalogue_people cp inner join people p on cp.people_ref = p.id
-                            left join people_addresses pa on p.id = pa.person_user_ref and strpos(pa.tag, 'work') > 0
-                            left join (
+                             left join people_addresses pa on p.id = pa.person_user_ref and strpos(pa.tag, 'work') > 0
+                             left join (
                                         people_relationships pr
-                                        left join
-                                        people pp on pr.person_2_ref = pp.id and NOT pp.is_physical
-                                        left join people_addresses ppa on pp.id = ppa.person_user_ref
-                                      ) on pr.person_1_ref = p.id and pr.relationship_type IN ('works for', 'belongs to')
+                                        inner join
+                                        people pp on pr.person_1_ref = pp.id and NOT pp.is_physical
+                                        inner join people_addresses ppa on pp.id = ppa.person_user_ref
+                                       ) on pr.person_2_ref = p.id and pr.relationship_type IN ('works for', 'belongs to')
     where referenced_relation = 'loans'
       and record_id = $1
       and people_type = 'receiver'
@@ -107,7 +165,7 @@ AS
             people_sub_type::integer&4 != 0
           end
       and p.is_physical
-    order by order_by,(strpos(pa.tag, 'work') > 0)
+    order by order_by,(strpos(pa.tag, 'work') > 0),pr.activity_date_from desc
   ),
   institution_address as
   (
