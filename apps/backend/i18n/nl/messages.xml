@@ -7463,6 +7463,29 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
         <source>report too big info</source>
         <target>Dit rapport bevat te veel gegevens, gelieve u zoekcriteria aan te passen</target>
       </trans-unit>
-    </body>
+      <trans-unit id="1853">
+        <source>approval</source>
+        <target>Goedkeuring</target>
+      </trans-unit>
+      <trans-unit id="1854">
+        <source>organized_by</source>
+        <target>Toezichting</target>
+      </trans-unit>
+      <trans-unit id="1855">
+        <source>preparation</source>
+        <target>Voorbereiding</target>
+      </trans-unit>
+      <trans-unit id="1856">
+        <source>action</source>
+        <target>Actie</target>
+      </trans-unit>
+      <trans-unit id="1857">
+        <source>observation</source>
+        <target>Observatie</target>
+      </trans-unit>
+      <trans-unit id="1858">
+        <source>Return Type Material</source>
+        <target>Terug van het type materiaal</target>
+      </trans-unit>    </body>
   </file>
 </xliff>

@@ -7,11 +7,11 @@
       <tbody>
         <tr>
               <th><?php echo __('Type');?></th>
-              <td><?php echo $maintenance->getCategory() ; ?></td>
+              <td><?php echo __($maintenance->getCategory()) ; ?></td>
         </tr>
         <tr>
               <th><?php echo __('Action / Observation');?></th>
-              <td><?php echo $maintenance->getActionObservation() ?></td>
+              <td><?php echo __($maintenance->getActionObservation()) ?></td>
         </tr>
         <tr>
               <th><?php echo __('Last update date');?></th>

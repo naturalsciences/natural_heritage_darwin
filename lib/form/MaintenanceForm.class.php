@@ -50,6 +50,7 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
       'box_title' => $this->getI18N()->__('Choose Yourself'),
       'complete_url' => 'catalogue/completeName?table=people',
     ));
+    $this->widgetSchema['people_ref']->setLabel('Person');
 
     $this->widgetSchema['parts_ids'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['parts_ids'] = new sfValidatorString(array('required' => false, 'empty_value' => ''));

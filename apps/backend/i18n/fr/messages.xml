@@ -7509,6 +7509,34 @@
         <source>report too big info</source>
         <target>Votre rapport prend trop de temps à être créé. Vous devriez modifier vos critères.</target>
       </trans-unit>
+      <trans-unit id="1852">
+        <source>report too big info</source>
+        <target>Your report take too much time to be created. You should review your criterias</target>
+      </trans-unit>
+      <trans-unit id="1853">
+        <source>approval</source>
+        <target>Approbation</target>
+      </trans-unit>
+      <trans-unit id="1854">
+        <source>organized_by</source>
+        <target>Supervision</target>
+      </trans-unit>
+      <trans-unit id="1855">
+        <source>preparation</source>
+        <target>Préparation</target>
+      </trans-unit>
+      <trans-unit id="1856">
+        <source>action</source>
+        <target>Action</target>
+      </trans-unit>
+      <trans-unit id="1857">
+        <source>observation</source>
+        <target>Observation</target>
+      </trans-unit>
+      <trans-unit id="1858">
+        <source>Return Type Material</source>
+        <target>Retour de matériel type</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
