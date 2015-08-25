@@ -7486,6 +7486,7 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
       <trans-unit id="1858">
         <source>Return Type Material</source>
         <target>Terug van het type materiaal</target>
-      </trans-unit>    </body>
+      </trans-unit>
+    </body>
   </file>
 </xliff>
