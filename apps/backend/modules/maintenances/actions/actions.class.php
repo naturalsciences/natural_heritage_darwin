@@ -49,12 +49,25 @@ class maintenancesActions extends DarwinActions
     else return 'view' ;
   }
   
-  protected function getMaintenancesForm(sfWebRequest $request, $fwd404=false, $parameter='id')
+  protected function getMaintenancesForm(sfWebRequest $request, $fwd404=false, $parameter='id', $options=array())
   {
     $maintenances = null;
     if($request->hasParameter($parameter))
-      $maintenances = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter($parameter) );      
-    $form = new MaintenanceForm($maintenances);
+      $maintenances = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter($parameter) );
+
+    if (
+        in_array($request->getParameter('table'), array('loans','loan_items')) ||
+        in_array($maintenances->getReferencedRelation(), array('loans','loan_items'))
+    ) {
+      $i18n = $this->getContext()->getI18N();
+      $options = array('forced_action_observation_options'=>array(
+        'approval'=>$i18n->__('Approved by'),
+        'organisation'=>$i18n->__('Organized by'),
+        'preparation'=>$i18n->__('Prepared by')
+      ));
+    }
+
+    $form = new MaintenanceForm($maintenances, $options);
     return $form ;
   }    
 
@@ -63,16 +76,16 @@ class maintenancesActions extends DarwinActions
   {
     if($this->checkRight($request) !== true) $this->forwardTosecureAction();
     $this->forward404Unless($request->getParameter('record_id'));
-    $this->forward404Unless($request->getParameter('table'));    
-    $this->form = new MaintenanceForm();
-    $this->loadWidgets();          
+    $this->forward404Unless($request->getParameter('table'));
+    $this->form = $this->getMaintenancesForm($request, false,'');
+    $this->loadWidgets();
   } 
   
   public function executeCreate(sfWebRequest $request)
   {
     if($this->checkRight($request) !== true) $this->forwardTosecureAction();  
     if(!$request->isMethod('post')) $this->forwardTosecureAction();
-    $this->form = new MaintenanceForm();
+    $this->form = $this->getMaintenancesForm($request);
     $this->form->getObject()->setReferencedRelation($request->getParameter('table'));
     $this->form->getObject()->setRecordId($request->getParameter('record_id'));    
     $this->processForm($request, $this->form);
@@ -168,7 +181,8 @@ class maintenancesActions extends DarwinActions
     }
     $this->forward404Unless(isset($loan_ref));
 
-    $rights = $this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(), $loan_ref );
+    $rights = $this->getUser()->isAtLeast(Users::ADMIN) || Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(), $loan_ref );
+
     if(! $rights === true)
       $this->forwardToSecureAction();
 
