@@ -107,7 +107,7 @@ class maintenancesActions extends DarwinActions
   {
     if($this->checkRight($request) === false) $this->forwardTosecureAction();  
     $this->forward404Unless($this->maintenance = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id')));    
-    $this->loadWidgets();    
+    $this->loadWidgets();
   } 
     
   public function executeUpdate(sfWebRequest $request)

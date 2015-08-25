@@ -657,12 +657,11 @@ a.bt_close
 {
   text-align: left;
 }
-.datesNum em, #properties table em
+.datesNum em, #properties table em, .table_view table em, table.catalogue_table em
 {
   color:#C1C1C1;
   font-style:normal;
 }
-
 .check_right
 {
  float:right !important ;
