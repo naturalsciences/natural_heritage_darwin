@@ -1069,8 +1069,7 @@ div.files .file_title {
 /*   text-align: right; */
 }
 
-
-.datesNum em, #properties table em
+.datesNum em, #properties table em, .table_view table em, table.catalogue_table em
 {
   color:#C1C1C1;
   font-style:normal;
