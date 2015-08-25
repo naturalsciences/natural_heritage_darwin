@@ -57,6 +57,16 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
     $this->widgetSchema['category'] = new sfWidgetFormChoice(array('choices' => array('action' => 'Action', 'observation'=>'Observation')));
     $this->widgetSchema['category']->setLabel('Type');
 
+    $forced_choices = false;
+    $default = null;
+    if(
+        isset($this->options['forced_action_observation_options'])
+        && is_array($this->options['forced_action_observation_options'])
+        && count($this->options['forced_action_observation_options']) > 0
+    ) {
+      $forced_choices = $this->options['forced_action_observation_options'];
+      $default = current(array_keys($forced_choices));
+    }
     $this->widgetSchema['action_observation'] = new widgetFormSelectComplete(array(
       'model' => 'CollectionMaintenance',
       'table_method' => 'getDistinctActions',
@@ -65,6 +75,8 @@ class MaintenanceForm extends BaseCollectionMaintenanceForm
       'add_empty' => false,
       'change_label' => 'Pick an action in the list',
       'add_label' => 'Add another action',
+      'forced_choices'=>$forced_choices,
+      'default'=>$default,
     ));
 
     $this->widgetSchema['action_observation']->setLabel('Action / Observation');
