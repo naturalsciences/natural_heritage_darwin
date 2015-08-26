@@ -7484,6 +7484,16 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
         <source>Return Type Material</source>
         
       </trans-unit>
+      <trans-unit id="1859">
+        <source>Received by</source>
+        <target>Ontvang bij</target>
+        
+      </trans-unit>
+      <trans-unit id="1860">
+        <source>Checked by</source>
+        <target>Gevalideerd bij</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

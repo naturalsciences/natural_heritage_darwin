@@ -7538,6 +7538,14 @@ DaRWIN</target>
         <source>Return Type Material</source>
         
       </trans-unit>
+      <trans-unit id="1859">
+        <source>Received by</source>
+        
+      </trans-unit>
+      <trans-unit id="1860">
+        <source>Checked by</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
