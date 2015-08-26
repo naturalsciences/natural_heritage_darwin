@@ -7,7 +7,7 @@ create or replace function fct_report_loans_maintenances (loan_id loans.id%TYPE,
   returns
     table
     (
-        maintenance_date DATE,
+        maintenance_date TEXT,
         maintenance_people TEXT,
         maintenance_people_functions TEXT
     )
@@ -19,10 +19,10 @@ AS
           CASE
           WHEN modification_date_time IN ('0001-01-01' :: TIMESTAMP, '2038-12-31' :: TIMESTAMP)
             THEN
-              NULL :: DATE
+              NULL
           ELSE
-            modification_date_time :: DATE
-          END                                            AS maintenance_date,
+            TO_CHAR(modification_date_time, 'DD/MM/YYYY')
+          END::TEXT                                      AS maintenance_date,
           regexp_replace(formated_name, '\s+', ' ', 'g') AS formated_name,
           case
             when person_user_role = '' then
@@ -43,8 +43,9 @@ AS
         ORDER BY
           maintenance_date DESC,
           formated_name,
-          coalesce(pr.activity_date_to, '2038-12-31' :: DATE) DESC,
-          case when person_user_role = '' then 'zzz' else person_user_role end::text
+          pr.activity_date_to DESC,
+          pr.activity_date_from DESC,
+          case when person_user_role = '' then 'zzz' else person_user_role end::TEXT
     )
     select distinct on (maintenance_date)
       maintenance_date,
