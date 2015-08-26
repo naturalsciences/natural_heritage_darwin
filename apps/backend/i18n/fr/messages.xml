@@ -7557,6 +7557,11 @@
         <target>Vérifié par</target>
         
       </trans-unit>
+      <trans-unit id="1861">
+        <source>Return checked by</source>
+        <target>Retour vérifié par</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>
