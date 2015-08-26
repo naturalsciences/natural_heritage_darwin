@@ -7550,6 +7550,10 @@ DaRWIN</target>
         <source>Return checked by</source>
         
       </trans-unit>
+      <trans-unit id="1862">
+        <source>Return received by</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

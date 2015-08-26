@@ -7562,6 +7562,11 @@
         <target>Retour vérifié par</target>
         
       </trans-unit>
+      <trans-unit id="1862">
+        <source>Return received by</source>
+        <target>Retour réceptionné par</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

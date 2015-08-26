@@ -6058,6 +6058,10 @@ DaRWIN</target>
         <source>Return checked by</source>
         <target>Return checked by</target>
       </trans-unit>
+      <trans-unit id="1862">
+        <source>Return received by</source>
+        <target>Return received by</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
