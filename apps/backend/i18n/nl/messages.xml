@@ -7500,6 +7500,11 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
         <target>Teruggebracht gevalideerd bij</target>
         
       </trans-unit>
+      <trans-unit id="1862">
+        <source>Return received by</source>
+        <target>Teruggebracht ontvang bij</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

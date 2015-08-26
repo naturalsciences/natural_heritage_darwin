@@ -65,7 +65,8 @@ class maintenancesActions extends DarwinActions
         'checked_by'=>$i18n->__('Checked by'),
         'organized_by'=>$i18n->__('organized_by'),
         'preparation'=>$i18n->__('preparation'),
-        'received_back_by'=>$i18n->__('Received by'),
+        'received_by'=>$i18n->__('Received by'),
+        'received_back_by'=>$i18n->__('Return received by'),
         'checked_back_by'=>$i18n->__('Return checked by'),
       ));
     }
