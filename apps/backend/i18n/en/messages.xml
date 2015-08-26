@@ -6054,6 +6054,10 @@ DaRWIN</target>
         <source>Checked by</source>
         <target>Checked by</target>
       </trans-unit>
+      <trans-unit id="1861">
+        <source>Return checked by</source>
+        <target>Return checked by</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
