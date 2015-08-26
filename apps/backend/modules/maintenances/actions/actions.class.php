@@ -63,7 +63,9 @@ class maintenancesActions extends DarwinActions
       $options = array('forced_action_observation_options'=>array(
         'approval'=>$i18n->__('approval'),
         'organized_by'=>$i18n->__('organized_by'),
-        'preparation'=>$i18n->__('preparation')
+        'preparation'=>$i18n->__('preparation'),
+        'received_back_by'=>$i18n->__('Received by'),
+        'checked_back_by'=>$i18n->__('Checked by'),
       ));
     }
 

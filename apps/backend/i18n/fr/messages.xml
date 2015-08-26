@@ -7547,6 +7547,16 @@
         <target>Retour de matériel type</target>
         
       </trans-unit>
+      <trans-unit id="1859">
+        <source>Received by</source>
+        <target>Réceptionné par</target>
+        
+      </trans-unit>
+      <trans-unit id="1860">
+        <source>Checked by</source>
+        <target>Vérifié par</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

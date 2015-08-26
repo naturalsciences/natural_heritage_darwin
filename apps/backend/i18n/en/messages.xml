@@ -6046,6 +6046,14 @@ DaRWIN</target>
         <source>Return Type Material</source>
         <target>Return Type Material</target>
       </trans-unit>
+      <trans-unit id="1859">
+        <source>Received by</source>
+        <target>Received by</target>
+      </trans-unit>
+      <trans-unit id="1860">
+        <source>Checked by</source>
+        <target>Checked by</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
