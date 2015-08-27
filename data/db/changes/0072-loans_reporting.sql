@@ -2,6 +2,53 @@ set search_path=darwin2,public;
 
 BEGIN;
 
+drop function if exists fct_report_loans_transporters (loan_id loans.id%TYPE);
+create or replace function fct_report_loans_transporters (loan_id loans.id%TYPE)
+  returns
+    table
+    (
+      transport_dispatched_by TEXT,
+      transport_transporter_names TEXT,
+      transport_track_ids TEXT
+    )
+AS
+  $$
+    with
+    transport_tracking_ids as (
+      select trim(array_to_string(array_agg(lower_value), ', '), ', ') as tracking_id
+      from properties
+      where referenced_relation = 'loans'
+        and record_id = $1
+        and fullToIndex(property_type) = 'trackingid'
+      group by fullToIndex(property_type)
+      limit 1
+    ),
+    transporters as (
+        select
+          case
+          when cp.people_type = 'sender' then
+            'loaner'
+          else
+            'borrower'
+          end as transport_dispatched_by,
+          p.formated_name as transport_transporter_name
+        from loans inner join catalogue_people cp
+                   on cp.referenced_relation = 'loans'
+                      and cp.record_id = loans.id
+                      and cp.people_type IN ('sender', 'receiver')
+                      and people_sub_type::integer&64 != 0
+                   inner join people p on cp.people_ref = p.id
+        where loans.id = $1
+        order by cp.people_type, cp.order_by
+    )
+    select distinct on (transport_dispatched_by)
+      transport_dispatched_by,
+      trim(array_to_string(array_agg(transport_transporter_name) OVER (PARTITION BY transport_dispatched_by), ', '), ', ') as transport_transporter_names,
+      transport_tracking_ids.tracking_id as transport_track_ids
+    from transporters, transport_tracking_ids;
+  $$
+language SQL;
+
 drop function if exists fct_report_loans_maintenances (loan_id loans.id%TYPE, maintenance_type TEXT);
 create or replace function fct_report_loans_maintenances (loan_id loans.id%TYPE, maintenance_type TEXT)
   returns
