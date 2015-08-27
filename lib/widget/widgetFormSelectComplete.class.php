@@ -12,13 +12,13 @@ class widgetFormSelectComplete extends sfWidgetFormDarwinDoctrineChoice
 
   public function getChoices()
   {
-/*    if(! isset($this->choices))
-    {*/
+    if(! isset($this->choices))
+    {
       if($this->getOption('forced_choices') !== false )
-        $this->choices = array_merge(parent::getChoices(), $this->getOption('forced_choices'));
+        $this->choices = $this->getOption('forced_choices');
       else
         $this->choices = parent::getChoices();
-/*    }*/
+    }
     return $this->choices;
   }
 
