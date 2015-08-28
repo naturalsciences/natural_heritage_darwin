@@ -334,7 +334,36 @@ select vals.val as target_copy,
        end as loan_receiver_address,
        case
         when specimen_ref is null then
-          'Loan Item ID: ' || loan_items.id
+          coalesce (
+              (
+                select 'Codes: ' ||
+                       trim(
+                            array_to_string(
+                                array_agg(
+                                            case
+                                            when coalesce(code_prefix,'') != '' then
+                                              code_prefix || coalesce(code_prefix_separator,'')
+                                            else
+                                              ''
+                                            end ||
+                                            coalesce(code,'') ||
+                                            case
+                                            when coalesce(code_suffix,'') != '' then
+                                              coalesce(code_suffix_separator,'') || code_suffix
+                                            else
+                                              ''
+                                            end
+                                          ),
+                                E',\n'
+                            ),
+                            E',\n'
+                       )
+                from codes
+                where referenced_relation = 'loan_items'
+                      and record_id = loan_items.id
+                      and code_category = 'main'
+                limit 3
+              ), '')
         else
           'RBINS ID: ' || specimens.id  ||
           coalesce (
