@@ -72,11 +72,13 @@ class CommentsTable extends DarwinTable
     ),
     'loans' => array(
       'usage' => 'Usage',
-      'state_observation' => 'State observation'
+      'state_observation' => 'State observation',
+      'description' => 'Description'
     ),
     'loan_items' => array(
       'usage' => 'Usage',
-      'state_observation' => 'State observation'
+      'state_observation' => 'State observation',
+      'description' => 'Description'
     ),
     'bibliography' => array(
       'general information' => 'general information',
