@@ -258,7 +258,8 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $javascripts=parent::getJavascripts();
     $javascripts[]='/js/jquery-datepicker-lang.js';
     $javascripts[]='/js/button_ref.js'; 
-    $javascripts[]='/js/catalogue_people.js';   
+    $javascripts[]='/js/catalogue_people.js';
+    $javascripts[]='/js/ui.complete.js';
     return $javascripts;
   }
 
