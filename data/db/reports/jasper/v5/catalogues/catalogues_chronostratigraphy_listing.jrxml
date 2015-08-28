@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="chronostratigraphy_listings" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1fc0f005-6606-40c1-95ef-49533cf9085b">
+	<property name="ireport.zoom" value="1.2100000000000009"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/darwin/catalogues_chronostratigraphy_listing"/>
+	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
+	<parameter name="nbr_records" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="taxon_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="chrono_unit_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="unit_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="catalogue_unit_ref" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from fct_listing_chronostratigraphy(
+    $P{nbr_records}::integer,
+    $P!{catalogue_unit_ref}
+);]]>
+	</queryString>
+	<field name="referenced_by_at_least_one_specimen" class="java.lang.Integer"/>
+	<field name="eon" class="java.lang.String"/>
+	<field name="era" class="java.lang.String"/>
+	<field name="sub_era" class="java.lang.String"/>
+	<field name="system" class="java.lang.String"/>
+	<field name="serie" class="java.lang.String"/>
+	<field name="stage" class="java.lang.String"/>
+	<field name="sub_stage" class="java.lang.String"/>
+	<field name="sub_level_1" class="java.lang.String"/>
+	<field name="sub_level_2" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fffd7c59-9c06-4af2-9e01-d1b8250d37da" isPrintRepeatedValues="false" x="126" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Level 2']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="91523eec-7601-449b-8727-17048a2cc62f" isPrintRepeatedValues="false" x="112" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Level 1']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4e3e687b-4ed1-4f19-b8e4-21d35df8c420" isPrintRepeatedValues="false" x="56" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['System']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="86dc3ab9-2dd9-4d93-b198-b6ed0d343acd" isPrintRepeatedValues="false" x="28" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Era']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6ccf0c02-b19b-4fda-a562-973ad42719af" isPrintRepeatedValues="false" x="98" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Stage']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fc7d28dd-8a01-4e68-8e68-eb9c2f9bb53c" isPrintRepeatedValues="false" x="70" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Serie']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="578fa004-54e4-49ea-8e30-943a508366eb" isPrintRepeatedValues="false" x="84" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Stage']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4139c98e-ef06-4baa-8f7d-93610c03f5b9" isPrintRepeatedValues="false" x="0" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Used on specimens ?']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="d5e7dc37-7d8f-4a3f-9801-6d4be25a6ba1" isPrintRepeatedValues="false" x="42" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Sub Era']]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="de74101b-a8e3-4ea8-9640-69bed71e4e47" isPrintRepeatedValues="false" x="14" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA['Eon']]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4139c98e-ef06-4baa-8f7d-93610c03f5b9" x="0" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[( $F{referenced_by_at_least_one_specimen} == 0 ? 'Not used' : 'Used' )]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="de74101b-a8e3-4ea8-9640-69bed71e4e47" x="14" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{eon}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="86dc3ab9-2dd9-4d93-b198-b6ed0d343acd" x="28" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{era}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="d5e7dc37-7d8f-4a3f-9801-6d4be25a6ba1" x="42" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_era}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4e3e687b-4ed1-4f19-b8e4-21d35df8c420" x="56" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{system}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fc7d28dd-8a01-4e68-8e68-eb9c2f9bb53c" x="70" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{serie}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="578fa004-54e4-49ea-8e30-943a508366eb" x="84" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{stage}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6ccf0c02-b19b-4fda-a562-973ad42719af" x="98" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_stage}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="91523eec-7601-449b-8727-17048a2cc62f" x="112" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_level_1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="fffd7c59-9c06-4af2-9e01-d1b8250d37da" x="126" y="0" width="14" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sub_level_2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

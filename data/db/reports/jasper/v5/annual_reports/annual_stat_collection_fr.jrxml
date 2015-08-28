@@ -3,6 +3,8 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/darwin/annual_stat_collection_fr"/>
+	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -87,7 +89,7 @@
 		<band height="21" splitType="Stretch">
 			<frame>
 				<reportElement uuid="73354cc0-d239-4ed0-9616-f83494ce258e" x="97" y="1" width="705" height="15"/>
-				<textField>
+				<textField isStretchWithOverflow="true">
 					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" style="Detail" x="0" y="0" width="117" height="15"/>
 					<textElement/>
 					<textFieldExpression><![CDATA[$F{collection}]]></textFieldExpression>
