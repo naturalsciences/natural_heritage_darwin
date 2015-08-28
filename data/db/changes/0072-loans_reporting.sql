@@ -283,7 +283,8 @@ $$
 language sql;
 
 drop function if exists fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, with_addr boolean);
-create or replace function fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, with_addr boolean default false)
+drop function if exists fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean);
+create or replace function fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean default false)
   returns TABLE (
     target_copy text,
     loan_id loans.id%TYPE,
@@ -297,12 +298,10 @@ create or replace function fct_report_loans_forms (loan_id integer, full_target_
     loan_receiver_name text,
     loan_receiver_institution_name text,
     loan_receiver_address text,
-    loan_items_id loan_items.id%TYPE,
-    loan_items_ig_ref loan_items.ig_ref%TYPE,
-    loan_items_from_date loan_items.from_date%TYPE,
-    loan_items_to_date loan_items.to_date%TYPE,
-    loan_items_specimen_ref loan_items.specimen_ref%TYPE,
-    loan_items_details loan_items.details%TYPE
+    loan_items_id TEXT,
+    loan_items_name loan_items.details%TYPE,
+    loan_items_description comments.comment%TYPE,
+    loan_items_value insurances.insurance_value%TYPE
   )
 AS
   $$
@@ -316,29 +315,136 @@ select vals.val as target_copy,
        to_char(loans.to_date,'DD/MM/YYYY'),
        to_char(loans.extended_to_date,'DD/MM/YYYY'),
        case
-        when $5 then
+        when $6 then
           (select people_name from fct_report_loans_addresses($1,vals.val))::text
         else
           ''::text
        end as loan_receiver_name,
        case
-        when $5 then
+        when $6 then
           (select institution_name from fct_report_loans_addresses($1,vals.val))
         else
           ''::text
        end as loan_receiver_institution_name,
        case
-        when $5 then
+        when $6 then
           (select address from fct_report_loans_addresses($1,vals.val))
         else
           ''::text
        end as loan_receiver_address,
-       loan_items.id,
-       loan_items.ig_ref,
-       loan_items.from_date,
-       loan_items.to_date,
-       loan_items.specimen_ref,
-       loan_items.details
+       case
+        when specimen_ref is null then
+          'Loan Item ID: ' || loan_items.id
+        else
+          'RBINS ID: ' || specimens.id  ||
+          coalesce (
+          (
+            select E'\nCodes: ' || trim(array_to_string(array_agg(
+              case
+                when coalesce(code_prefix,'') != '' then
+                  code_prefix || coalesce(code_prefix_separator,'')
+                else
+                  ''
+              end ||
+              coalesce(code,'') ||
+              case
+              when coalesce(code_suffix,'') != '' then
+                coalesce(code_suffix_separator,'') || code_suffix
+              else
+                ''
+              end
+            ), E',\n'), E',\n')
+            from codes
+            where referenced_relation = 'specimens'
+              and record_id = specimens.id
+              and code_category = 'main'
+            limit 3
+          ), '')
+       end as loan_items_id,
+       case
+        when loan_items.specimen_ref is null then
+          loan_items.details
+        else
+           trim(
+             CASE
+             WHEN 'taxonomy' = ANY (string_to_array(trim($5, '[]'), ', ')) AND coalesce(taxon_name, '') != ''
+               THEN
+                 taxon_name || E'\n'
+             ELSE
+               E'\n'
+             END ||
+             CASE
+             WHEN 'chronostratigraphy' = ANY (string_to_array(trim($5, '[]'), ', ')) AND coalesce(chrono_name, '') != ''
+               THEN
+                 chrono_name || E'\n'
+             ELSE
+               E'\n'
+             END ||
+             CASE
+             WHEN 'lithostratigraphy' = ANY (string_to_array(trim($5, '[]'), ', ')) AND coalesce(litho_name, '') != ''
+               THEN
+                 litho_name || E'\n'
+             ELSE
+               E'\n'
+             END ||
+             CASE
+             WHEN 'lithology' = ANY (string_to_array(trim($5, '[]'), ', ')) AND coalesce(lithology_name, '') != ''
+               THEN
+                 lithology_name || E'\n'
+             ELSE
+               E'\n'
+             END ||
+             CASE
+             WHEN 'mineralogy' = ANY (string_to_array(trim($5, '[]'), ', ')) AND coalesce(mineral_name, '') != ''
+               THEN
+                 mineral_name || E'\n'
+             ELSE
+               E'\n'
+             END
+           ,E'\n')
+        end::text as loan_items_name,
+        coalesce
+        (
+           (
+             select trim(array_to_string(array_agg(comment), E'\n'), E'\n')
+             from comments
+             where referenced_relation = 'loan_items'
+               and record_id = loan_items.id
+               and notion_concerned = 'description'
+             limit 3
+           )
+          ,
+           (
+             select trim(array_to_string(array_agg(comment), E'\n'), E'\n')
+             from comments
+             where referenced_relation = 'specimens'
+                   and record_id = loan_items.specimen_ref
+                   and notion_concerned = 'description'
+             limit 3
+           )
+        ) as loan_items_description,
+        coalesce
+       (
+            (
+              select insurance_value
+              from insurances
+              where referenced_relation = 'loan_items'
+                and record_id = loan_items.id
+                and insurance_currency = '€'
+                order by date_to desc
+              limit 1
+            )
+          ,
+            (
+              select insurance_value
+              from insurances
+              where referenced_relation = 'specimens'
+                    and record_id = loan_items.specimen_ref
+                    and insurance_currency = '€'
+              order by date_to desc
+              limit 1
+            )
+        ) as loan_items_value
 from ( select unnest(array_vals.val) as val, generate_series(1,array_vals.val_index) as val_index
        from (select case when exists ( select 1
                                        from catalogue_people
@@ -368,6 +474,7 @@ from ( select unnest(array_vals.val) as val, generate_series(1,array_vals.val_in
      ) as vals,
 loans
 inner join loan_items on loans.id = loan_items.loan_ref
+left join specimens on loan_items.specimen_ref = specimens.id
 where loans.id = $1
   and exists(select 1
              from catalogue_people
@@ -378,7 +485,7 @@ where loans.id = $1
              limit 1
             )
   and vals.val IN ( select unnest(string_to_array(trim($4,'[]'), ', ')) )
-order by vals.val_index,loans.id;
+order by vals.val_index,loans.id,loan_items_id;
 $$
 language sql;
 
