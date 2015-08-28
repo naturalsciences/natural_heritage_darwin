@@ -33,14 +33,24 @@ EOF;
     $conn = Doctrine_Manager::connection();
     // get the list of report to execute
     $reports = Doctrine::getTable('Reports')->getTaskReports();
+    $this->log("Import Reports on ".date('G:i:s'));
     foreach ($reports as $report) {
       set_time_limit(0) ;
       ignore_user_abort(1);
-      $content = file_get_contents($report->getUrlReport(),false,$ctx);
-      if(!$content) $uri='too_big' ;
-      $uri = '/report/'.sha1($report->getName().rand());
-      file_put_contents(sfConfig::get('sf_upload_dir').$uri, $content);
-      Doctrine::getTable('Reports')->updateUri($report->getId(),$uri);
+      try {
+        $content = @file_get_contents($report->getUrlReport(), FALSE, $ctx);
+        if ($content) {
+          $uri = '/report/' . sha1($report->getName() . rand());
+          file_put_contents(sfConfig::get('sf_upload_dir') . $uri, $content);
+          Doctrine::getTable('Reports')->updateUri($report->getId(), $uri);
+        }
+        else {
+          $this->log("Problem with import of report ".$report->getName()." on ".date('G:i:s'));
+        }
+      }
+      catch (Exception $e) {
+        $this->log("Problem with import of report ".$report->getName()." on ".date('G:i:s').": \n Error Description: ".$e->getMessage());
+      }
     }
   }
 }

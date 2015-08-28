@@ -30,7 +30,7 @@ class TaxonomyTable extends DarwinTable
                ->select('t.name, l.level_name')
                ->from('Taxonomy t')
                ->where('t.name_indexed = fullToIndex(?)', $taxonName)
-			   ->leftJoin('t.Level l')
+               ->leftJoin('t.Level l')
                ->limit(2)
                ->execute(array(), Doctrine_Core::HYDRATE_ARRAY);
 

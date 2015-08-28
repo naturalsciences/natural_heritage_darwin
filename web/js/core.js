@@ -146,11 +146,19 @@ function clearSelection(el)
 
 function result_choose ()
 {
-  el = $(this).closest('tr');
-  ref_element_id = getIdInClasses(el);
-  ref_element_name = el.find('span.item_name').text();
-  $('.result_choose').die('click');
-  $('body').trigger('close_modal');
+    el = $(this).closest('tr');
+    ref_element_id = getIdInClasses(el);
+    ref_element_name = el.find('span.item_name').text();
+    ref_level_name = el.find('span.level_name').text();
+    if(typeof fct_update=="function")
+    {
+        fct_update(ref_element_id, ref_element_name, ref_level_name);
+    }
+    else
+    {
+        $('.result_choose').die('click');
+        $('body').trigger('close_modal');
+    }
 }
 
 function objectsAreSame(x, y) {
