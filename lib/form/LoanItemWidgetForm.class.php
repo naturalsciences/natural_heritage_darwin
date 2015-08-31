@@ -147,6 +147,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   public function addComments($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
     $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
   }
 

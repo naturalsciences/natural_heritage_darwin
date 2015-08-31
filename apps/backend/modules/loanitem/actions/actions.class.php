@@ -69,7 +69,6 @@ class loanitemActions extends DarwinActions
     }
   }
 
-
   public function executeDelete(sfWebRequest $request)
   {
     $loan = $this->checkRight($request->getParameter('id')) ;
@@ -191,7 +190,7 @@ class loanitemActions extends DarwinActions
   {
     $number = intval($request->getParameter('num'));
     $form = new LoanItemWidgetForm();
-    $form->addComments($number);
+    $form->addComments($number, array());
     return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
 
