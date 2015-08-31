@@ -22,6 +22,16 @@ class loanitemwidgetComponents extends sfComponents
       else
         $this->form = new LoanItemWidgetForm();
     }
+    if(! isset($this->addCodeUrl)) {
+      $this->addCodeUrl = $this->module.'/addCode';
+    }
+  }
+
+  public function executeRefCodes()
+  {
+    $this->defineForm();
+    if(!isset($this->form['newCodes']))
+      $this->form->loadEmbed('Codes');
   }
 
   public function executeRefInsurances()
@@ -34,7 +44,7 @@ class loanitemwidgetComponents extends sfComponents
   public function executeRefProperties()
   {
     if(isset($this->form) )
-      $this->eid = $this->form->getObject()->getId() ;  
+      $this->eid = $this->form->getObject()->getId() ;
   }
 
   public function executeMainInfo()

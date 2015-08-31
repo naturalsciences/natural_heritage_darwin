@@ -190,4 +190,12 @@ class loanitemActions extends DarwinActions
     $form->addInsurances($number, array());
     return $this->renderPartial('specimen/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
   }
+
+  public function executeAddCode(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+    $form = new LoanItemWidgetForm();
+    $form->addCodes($number, array());
+    return $this->renderPartial('specimen/spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number));
+  }
 }
