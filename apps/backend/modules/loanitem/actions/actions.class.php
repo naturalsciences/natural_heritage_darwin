@@ -122,7 +122,20 @@ class loanitemActions extends DarwinActions
     if(!$id = doctrine::getTable('loanItems')->getLoanRef($items)) $this->forwardToSecureAction();
     if(!$this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$id) !== true)
       $this->forwardToSecureAction();
-    $this->form = new MultiCollectionMaintenanceForm();
+
+    $i18n = $this->getContext()->getI18N();
+    $options = array('forced_action_observation_options'=>array(
+      'approval'=>$i18n->__('approval'),
+      'checked_by'=>$i18n->__('Checked by'),
+      'organized_by'=>$i18n->__('organized_by'),
+      'preparation'=>$i18n->__('preparation'),
+      'received_by'=>$i18n->__('Received by'),
+      'received_back_by'=>$i18n->__('Return received by'),
+      'checked_back_by'=>$i18n->__('Return checked by'),
+    ));
+
+    $this->form = new MultiCollectionMaintenanceForm(null, $options);
+
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('collection_maintenance'));
@@ -149,7 +162,6 @@ class loanitemActions extends DarwinActions
         }
       }
     }
-    //return $this->renderText('ok '.implode('-',$items)) ;
   }
 
   public function executeView(sfWebRequest $request)

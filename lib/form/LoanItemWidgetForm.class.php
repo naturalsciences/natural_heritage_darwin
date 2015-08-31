@@ -338,7 +338,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     {
       $newCode = new Codes();
       $newCode->fromArray($code->toArray());
-      $form = new CodesForm($newCode);
+      $form = new CodesSubForm($newCode);
       $this->attachEmbedRecord('Codes', $form, $key);
     }
     // reembed duplicated insurances

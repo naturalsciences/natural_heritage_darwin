@@ -60,6 +60,12 @@ class loanitemwidgetviewComponents extends sfComponents
     $this->Comments = Doctrine::getTable('Comments')->findForTable('loan_items', $this->loan->getId()) ;
   }
 
+  public function executeRefCodes()
+  {
+    $this->defineObject();
+    $this->Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('loan_items',$this->loan->getId()) ;
+  }
+
   public function executeMaintenances()
   { 
     $this->defineObject();

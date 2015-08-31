@@ -657,7 +657,7 @@ a.bt_close
 {
   text-align: left;
 }
-.datesNum em, #properties table em, .table_view table em, table.catalogue_table em
+.datesNum em, #properties table em, .table_view table em, .catalogue_table em, .catalogue_table_view em
 {
   color:#C1C1C1;
   font-style:normal;
