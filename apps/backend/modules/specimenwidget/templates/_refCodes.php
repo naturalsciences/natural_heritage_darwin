@@ -90,13 +90,13 @@ $(document).ready(function () {
         return false;
     });
     
-    $('select#specimen_prefix_separator').change(function()
+    $("select#<?php echo $module;?>_prefix_separator").change(function()
     {
       parent_el = $(this).closest('table');
       $(parent_el).find('tbody select[id$=\"_prefix_separator\"]').val($(this).val());
     });
 
-    $('select#specimen_suffix_separator').change(function()
+    $("select#<?php echo $module;?>_suffix_separator").change(function()
     {
       parent_el = $(this).closest('table');
       $(parent_el).find('tbody select[id$=\"_suffix_separator\"]').val($(this).val());
