@@ -49,14 +49,6 @@ class loanitemActions extends DarwinActions
     $this->setTemplate('edit') ;    
   }
 
-  public function executeAddComments(sfWebRequest $request)
-  {
-    $number = intval($request->getParameter('num'));
-    $form = new LoanItemWidgetForm();
-    $form->addComments($number);
-    return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
-  }
-
   protected function processForm(sfWebRequest $request, sfForm $form)
   {
     $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));    
@@ -193,6 +185,14 @@ class loanitemActions extends DarwinActions
     if($ig)
       return $this->renderText( json_encode(array('ig_num'=>$ig->getIgNum(), 'ig_ref'=>$ig->getId())));
     return $this->renderText( json_encode(array('ig_num'=> '', 'ig_ref'=>'')));
+  }
+
+  public function executeAddComments(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+    $form = new LoanItemWidgetForm();
+    $form->addComments($number);
+    return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
 
   public function executeAddInsurance(sfWebRequest $request)
