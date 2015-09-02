@@ -3,7 +3,8 @@ set search_path=darwin2,public;
 BEGIN;
 
 drop function if exists fct_report_loans_transporters (loan_id loans.id%TYPE);
-create or replace function fct_report_loans_transporters (loan_id loans.id%TYPE)
+drop function if exists fct_report_loans_transporters (loan_id loans.id%TYPE, transporter_side TEXT);
+create or replace function fct_report_loans_transporters (loan_id loans.id%TYPE, transporter_side TEXT DEFAULT 'sender')
   returns
     table
     (
@@ -14,15 +15,6 @@ create or replace function fct_report_loans_transporters (loan_id loans.id%TYPE)
 AS
   $$
     with
-    transport_tracking_ids as (
-      select trim(array_to_string(array_agg(lower_value), ', '), ', ') as tracking_id
-      from properties
-      where referenced_relation = 'loans'
-        and record_id = $1
-        and fullToIndex(property_type) = 'trackingid'
-      group by fullToIndex(property_type)
-      limit 1
-    ),
     transporters as (
         select
           case
@@ -39,13 +31,44 @@ AS
                       and people_sub_type::integer&64 != 0
                    inner join people p on cp.people_ref = p.id
         where loans.id = $1
+          and case
+                when $2 IN ('sender', 'loaner') then
+                  cp.people_type = 'sender'
+                when $2 IN ('receiver', 'borrower') then
+                  cp.people_type = 'receiver'
+              else
+                  false
+              end
         order by cp.people_type, cp.order_by
     )
     select distinct on (transport_dispatched_by)
       transport_dispatched_by,
       trim(array_to_string(array_agg(transport_transporter_name) OVER (PARTITION BY transport_dispatched_by), ', '), ', ') as transport_transporter_names,
-      transport_tracking_ids.tracking_id as transport_track_ids
-    from transporters, transport_tracking_ids;
+      case
+        when transport_dispatched_by = 'loaner' then
+          (
+            select trim(array_to_string(array_agg(lower_value), ', '), ', ') as tracking_id
+            from properties
+            where referenced_relation = 'loans'
+              and record_id = $1
+              and fullToIndex(property_type) = 'trackingid'
+              and applies_to_indexed = 'sender'
+            group by fullToIndex(property_type)
+            limit 1
+          )
+        else
+        (
+          select trim(array_to_string(array_agg(lower_value), ', '), ', ') as tracking_id
+          from properties
+          where referenced_relation = 'loans'
+                and record_id = $1
+                and fullToIndex(property_type) = 'trackingid'
+                and applies_to_indexed = 'receiver'
+          group by fullToIndex(property_type)
+          limit 1
+        )
+      end as transport_track_ids
+    from transporters;
   $$
 language SQL;
 
@@ -292,6 +315,7 @@ create or replace function fct_report_loans_forms (loan_id integer, full_target_
     loan_description loans.description%TYPE,
     loan_purposes TEXT,
     loan_conditions TEXT,
+    loan_return_conditions TEXT,
     loan_from_date TEXT,
     loan_to_date TEXT,
     loan_extended_to_date TEXT,
@@ -311,6 +335,7 @@ select vals.val as target_copy,
        loans.description,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'usage') as loan_purposes,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'state_observation') as loan_conditions,
+       (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'return_state_observation') as loan_return_conditions,
        to_char(loans.from_date,'DD/MM/YYYY'),
        to_char(loans.to_date,'DD/MM/YYYY'),
        to_char(loans.extended_to_date,'DD/MM/YYYY'),
@@ -336,7 +361,7 @@ select vals.val as target_copy,
         when specimen_ref is null then
           coalesce (
               (
-                select 'Codes: ' ||
+                select 'Temporary Codes: ' ||
                        trim(
                             array_to_string(
                                 array_agg(
@@ -354,9 +379,9 @@ select vals.val as target_copy,
                                               ''
                                             end
                                           ),
-                                E',\n'
+                                ', '
                             ),
-                            E',\n'
+                            ', '
                        )
                 from codes
                 where referenced_relation = 'loan_items'
@@ -382,7 +407,7 @@ select vals.val as target_copy,
               else
                 ''
               end
-            ), E',\n'), E',\n')
+            ), ', '), ', ')
             from codes
             where referenced_relation = 'specimens'
               and record_id = specimens.id

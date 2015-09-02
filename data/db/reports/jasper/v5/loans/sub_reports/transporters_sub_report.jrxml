@@ -4,8 +4,11 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="loan_id" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="transporter_side" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["sender"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select * from fct_report_loans_transporters($P{loan_id}::integer)]]>
+		<![CDATA[select * from fct_report_loans_transporters($P{loan_id}::integer, $P{transporter_side}::text)]]>
 	</queryString>
 	<field name="transport_dispatched_by" class="java.lang.String"/>
 	<field name="transport_transporter_names" class="java.lang.String"/>
@@ -34,7 +37,7 @@
 				<frame>
 					<reportElement uuid="f594a3b1-b731-40e0-8246-7305dc8fd178" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="239" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
 					<staticText>
-						<reportElement uuid="c22a84f9-4885-4475-bb13-b12a7bd936ce" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="128" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+						<reportElement uuid="c22a84f9-4885-4475-bb13-b12a7bd936ce" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="130" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
 							<printWhenExpression><![CDATA[!$F{transport_dispatched_by}.isEmpty()]]></printWhenExpression>
 						</reportElement>
 						<box leftPadding="1"/>
@@ -42,7 +45,7 @@
 						<text><![CDATA[Dispatched by registered]]></text>
 					</staticText>
 					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-						<reportElement uuid="6d660509-adb2-4858-b089-d0ce3f5fd2b8" positionType="Float" isPrintRepeatedValues="false" x="128" y="0" width="111" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+						<reportElement uuid="6d660509-adb2-4858-b089-d0ce3f5fd2b8" positionType="Float" isPrintRepeatedValues="false" x="130" y="0" width="109" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
 						<textElement verticalAlignment="Middle"/>
 						<textFieldExpression><![CDATA[$F{transport_dispatched_by}]]></textFieldExpression>
 					</textField>
