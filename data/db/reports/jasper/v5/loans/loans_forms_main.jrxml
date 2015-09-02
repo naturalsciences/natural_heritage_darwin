@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Loan Form" language="groovy" pageWidth="595" pageHeight="842" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="20" bottomMargin="20" uuid="e26ceb16-0793-4fcf-a062-d0900c896f00">
 	<property name="ireport.zoom" value="1.610510000000021"/>
 	<property name="ireport.x" value="38"/>
-	<property name="ireport.y" value="410"/>
+	<property name="ireport.y" value="1280"/>
 	<property name="ireport.jasperserver.reportUnit" value="/darwin/loans/loans_form_complete"/>
 	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
 	<style name="table">
@@ -100,6 +100,7 @@ from fct_report_loans_forms(
 	<field name="loan_description" class="java.lang.String"/>
 	<field name="loan_purposes" class="java.lang.String"/>
 	<field name="loan_conditions" class="java.lang.String"/>
+	<field name="loan_return_conditions" class="java.lang.String"/>
 	<field name="loan_from_date" class="java.lang.String"/>
 	<field name="loan_to_date" class="java.lang.String"/>
 	<field name="loan_extended_to_date" class="java.lang.String"/>
