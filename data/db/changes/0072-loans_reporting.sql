@@ -72,6 +72,33 @@ AS
   $$
 language SQL;
 
+drop function if exists fct_report_loans_return_to (loan_id loans.id%TYPE);
+create or replace function fct_report_loans_return_to (loan_id loans.id%TYPE)
+  returns
+    TABLE
+    (
+      return_message TEXT
+    )
+AS
+  $$
+  with communications as
+  (
+      select entry, comm_type, tag
+      from collection_maintenance
+        inner join people on collection_maintenance.people_ref = people.id
+        inner join people_comm on people.id = people_comm.person_user_ref
+      where referenced_relation = 'loans'
+            and record_id = $1
+            and action_observation = 'approval'
+            and strpos(tag, 'work') > 0
+  )
+  select
+    'Return a copy of this form by FAX at ' ||
+    coalesce((select trim(array_to_string(array_agg(entry), ', '), ', ') from communications where comm_type = 'phone/fax' and strpos(tag, 'fax') > 0), '+32(0)2.627.41.13.') ||
+    coalesce((select E'\nor by email at ' || trim(array_to_string(array_agg(entry), ', '), ', ') from communications where comm_type = 'e-mail'), '') as return_message
+  $$
+language sql;
+
 drop function if exists fct_report_loans_maintenances (loan_id loans.id%TYPE, maintenance_type TEXT);
 create or replace function fct_report_loans_maintenances (loan_id loans.id%TYPE, maintenance_type TEXT)
   returns
@@ -315,6 +342,7 @@ create or replace function fct_report_loans_forms (loan_id integer, full_target_
     loan_description loans.description%TYPE,
     loan_purposes TEXT,
     loan_conditions TEXT,
+    loan_reception_conditions TEXT,
     loan_return_conditions TEXT,
     loan_from_date TEXT,
     loan_to_date TEXT,
@@ -335,6 +363,7 @@ select vals.val as target_copy,
        loans.description,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'usage') as loan_purposes,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'state_observation') as loan_conditions,
+       (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'reception_state_observation') as loan_reception_conditions,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'return_state_observation') as loan_return_conditions,
        to_char(loans.from_date,'DD/MM/YYYY'),
        to_char(loans.to_date,'DD/MM/YYYY'),

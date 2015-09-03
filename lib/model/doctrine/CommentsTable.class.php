@@ -73,12 +73,14 @@ class CommentsTable extends DarwinTable
     'loans' => array(
       'usage' => 'Usage',
       'state_observation' => 'State observation',
+      'reception_state_observation' => 'Reception state observation',
       'return_state_observation' => 'Return state observation',
       'description' => 'Description'
     ),
     'loan_items' => array(
       'usage' => 'Usage',
       'state_observation' => 'State observation',
+      'reception_state_observation' => 'Reception state observation',
       'return_state_observation' => 'Return state observation',
       'description' => 'Description'
     ),

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Loan Form" language="groovy" pageWidth="595" pageHeight="842" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="20" bottomMargin="20" uuid="e26ceb16-0793-4fcf-a062-d0900c896f00">
 	<property name="ireport.zoom" value="1.610510000000021"/>
-	<property name="ireport.x" value="38"/>
-	<property name="ireport.y" value="1280"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="1424"/>
 	<property name="ireport.jasperserver.reportUnit" value="/darwin/loans/loans_form_complete"/>
 	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
 	<style name="table">
@@ -100,6 +100,7 @@ from fct_report_loans_forms(
 	<field name="loan_description" class="java.lang.String"/>
 	<field name="loan_purposes" class="java.lang.String"/>
 	<field name="loan_conditions" class="java.lang.String"/>
+	<field name="loan_reception_conditions" class="java.lang.String"/>
 	<field name="loan_return_conditions" class="java.lang.String"/>
 	<field name="loan_from_date" class="java.lang.String"/>
 	<field name="loan_to_date" class="java.lang.String"/>
@@ -112,23 +113,39 @@ from fct_report_loans_forms(
 	<field name="loan_items_description" class="java.lang.String"/>
 	<field name="loan_items_value" class="java.math.BigDecimal"/>
 	<field name="header_text_1" class="java.lang.String"/>
-	<group name="Loan ID 2" isStartNewPage="true" keepTogether="true">
+	<group name="Loan ID 3 - Loan Reception confirmation to Return" isStartNewPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{loan_id}+$F{target_copy}]]></groupExpression>
+		<groupFooter>
+			<band height="700">
+				<printWhenExpression><![CDATA[$F{target_copy}=="Your copy" || $F{target_copy}=="Responsible copy"]]></printWhenExpression>
+				<break>
+					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="595" height="1" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+				</break>
+				<subreport>
+					<reportElement uuid="985144a8-fc99-4fc3-b7a9-3a77bd72133e" positionType="Float" x="0" y="1" width="559" height="53" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["repo:return_to_informations_sub_report.jrxml"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Loan ID 2 - Loan Policy" isStartNewPage="true" keepTogether="true">
 		<groupExpression><![CDATA[$F{loan_id}+$F{target_copy}]]></groupExpression>
 		<groupFooter>
 			<band height="535">
 				<printWhenExpression><![CDATA[$F{target_copy}=="Your copy" || $F{target_copy}=="Responsible copy"]]></printWhenExpression>
 				<break>
-					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="595" height="1"/>
+					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="595" height="1" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
 				</break>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="4" width="559" height="20" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="4" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="16" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Loan Policy Statement]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="37" width="559" height="20" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="37" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
@@ -136,7 +153,7 @@ from fct_report_loans_forms(
 					<text><![CDATA[DURATION OF LOANS]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="57" width="559" height="38" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="57" width="559" height="38" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
@@ -146,7 +163,7 @@ Most loans are renewable on request.
 ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="95" width="559" height="20" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="95" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
@@ -154,7 +171,7 @@ Most loans are renewable on request.
 					<text><![CDATA[CONDITIONS]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="115" width="559" height="33" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="115" width="559" height="33" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
@@ -163,7 +180,7 @@ Most loans are renewable on request.
 them properly and solely for scientific investigations.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="226" width="559" height="22" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="226" width="559" height="22" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
@@ -171,7 +188,7 @@ them properly and solely for scientific investigations.]]></text>
 					<text><![CDATA[Loans  may  not  be  forwarded  to  another  individual  or  institution without prior written approval.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="148" width="559" height="20" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="148" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
@@ -179,7 +196,7 @@ them properly and solely for scientific investigations.]]></text>
 					<text><![CDATA[STUDENT LOANS]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="206" width="559" height="20" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="206" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
@@ -187,7 +204,7 @@ them properly and solely for scientific investigations.]]></text>
 					<text><![CDATA[THIRD PARTIES]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="168" width="559" height="38" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="168" width="559" height="38" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
@@ -196,7 +213,7 @@ them properly and solely for scientific investigations.]]></text>
 responsibility of the major/senior professor.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="248" width="559" height="20" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="248" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
@@ -204,7 +221,7 @@ responsibility of the major/senior professor.]]></text>
 					<text><![CDATA[CHANGE OF ADDRESS OR STATUS]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="268" width="559" height="22" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="268" width="559" height="22" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
@@ -212,7 +229,7 @@ responsibility of the major/senior professor.]]></text>
 					<text><![CDATA[The borrower should notify the curator of any change in address or student status.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="290" width="559" height="20" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="290" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
@@ -220,7 +237,7 @@ responsibility of the major/senior professor.]]></text>
 					<text><![CDATA[MICROSCOPE SLIDES]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="310" width="559" height="54" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="310" width="559" height="54" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
@@ -230,7 +247,7 @@ Slides must be returned at the same time as other specimen parts, but packed sep
 to avoid breakage.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="365" width="559" height="20" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="365" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
@@ -238,7 +255,7 @@ to avoid breakage.]]></text>
 					<text><![CDATA[REPRINTS]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="385" width="559" height="49" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="385" width="559" height="49" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
@@ -248,7 +265,7 @@ When reprints are not  available or not public,  the curator should be notified 
 of the publication.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="455" width="559" height="22" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="455" width="559" height="22" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
@@ -256,7 +273,7 @@ of the publication.]]></text>
 					<text><![CDATA[The RBINS has the right to require the results of the analyses of the samples.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="435" width="559" height="20" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="435" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
@@ -264,7 +281,7 @@ of the publication.]]></text>
 					<text><![CDATA[RESULTS]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="476" width="559" height="20" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="476" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
@@ -272,7 +289,7 @@ of the publication.]]></text>
 					<text><![CDATA[LOAN RENEWAL/PROGRESS REPORT]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="496" width="559" height="38" printWhenGroupChanges="Loan ID 2"/>
+					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="496" width="559" height="38" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
