@@ -19,7 +19,49 @@ class Reports extends BaseReports
         'name_nl' => 'Jaarlijkse statistieken collecties',
         'name_en' => 'Annual statistic by collections',
         'format' => array('xls'=>'xls','pdf'=>'pdf'),
-        'widgets' => array('collection_ref' => 'Collection','date_from' => 'Date from','date_to' => 'Date to'),
+        'widgets' => array('collection_ref' => 'Collection',
+                           'date_from' => 'Date from',
+                           'date_to' => 'Date to'
+                          ),
+        'widgets_options' => array('collection_ref'=> array(),
+                                   'date_from' => array(),
+                                   'date_to' => array()
+                                  ),
+        'fast' => false,
+      ),
+      'catalogues_x_listing' => array(
+        'name_fr' => "Listing des hiérarchies taxonomiques à partir de points d'entrée donnés",
+        'name_nl' => "Listing taxonomische hiërarchieën van binnenkomst punten gegeven",
+        'name_en' => "Listing taxonomic hierarchies from entry points given",
+        'format' => array('csv'=>'csv'),
+        'widgets' => array('catalogue_type'=>'Catalogue',
+                           'catalogue_unit_ref' => 'Catalogue Unit',
+                           'nbr_records' => 'Number of Records'
+                          ),
+        'widgets_options' => array('catalogue_type' => array('default_value' => 'taxonomy',
+                                                             'values' => array('taxonomy' => 'Taxonomy (All)',
+                                                                               'zoology' => 'Taxonomy (Zoology)',
+                                                                               'botany' => 'Taxonomy (Botany)',
+                                                                               'chronostratigraphy' => 'Chronostratigraphy',
+                                                                               'lithostratigraphy' => 'Lithostratigraphy',
+                                                                               'lithology' => 'Lithology',
+                                                                               'mineralogy' => 'Mineralogy'
+                                                                              )
+                                                             ),
+                                   'catalogue_unit_ref' => array('multi' => true,
+                                                                 'second_line' => true
+                                                                ),
+                                   'nbr_records' => array('default_value' => '0',
+                                                          'values' => array('0'=>'All',
+                                                                            '500' => '500',
+                                                                            '1000' => '1000',
+                                                                            '5000' => '5000',
+                                                                            '10000' => '10000',
+                                                                            '25000' => '25000',
+                                                                            '50000' => '50000'
+                                                                           )
+                                                         )
+                                 ),
         'fast' => false,
       )
     );
@@ -37,6 +79,18 @@ class Reports extends BaseReports
   {
     if(!$name) return array() ;
     return self::$reports[$name]['widgets'] ;
+  }
+
+  static public function getRequiredFieldForReportOptions($name)
+  {
+    if(!$name) return array() ;
+    return self::$reports[$name]['widgets_options'] ;
+  }
+
+  static public function getFieldsOptions($name)
+  {
+    if(!$name) return array() ;
+    return self::$reports[$name]['widgets_options'] ;
   }
 
   static public function getFormatFor($name)
@@ -75,10 +129,21 @@ class Reports extends BaseReports
 
   public function getUrlReport()
   {
-    $url = sfConfig::get('dw_report_server')."/rest_v2/reports/darwin/".$this->getName()."_".$this->getLang().".".$this->getFormat();
     $variables = $this->getParameters() ;
+    $name = $this->getName();
+    switch($name) {
+      case "catalogues_x_listing":
+        if(in_array($variables['catalogue_type'],array_keys(self::$reports[$name]['widgets_options']['catalogue_type']['values']))){
+          $name = str_replace('_x_','_'.$variables['catalogue_type'].'_',$name);
+        }
+        $url = sfConfig::get('dw_report_server')."/rest_v2/reports/darwin/".$name.".".$this->getFormat();
+        break;
+      default:
+        $url = sfConfig::get('dw_report_server')."/rest_v2/reports/darwin/".$name."_".$this->getLang().".".$this->getFormat();
+    }
+
     if(! empty($variables) ) $url .= '?'.http_build_query($variables);
-    // I add userLocale to the url to avoid different date format depending on witch locale jasper choose
+    // I add userLocale to the url to avoid different date format depending on which locale jasper choose
     $url .= "&userLocale=en" ;
     return $url ;
   }

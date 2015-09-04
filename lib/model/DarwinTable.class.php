@@ -381,7 +381,6 @@ class DarwinTable extends Doctrine_Table
     return $object;
   }
 
-
   public function getLevelParents($table, $parents)
     {
       $catalogue_level =array();
@@ -405,5 +404,22 @@ class DarwinTable extends Doctrine_Table
           'class' => $elem ? $elem->getId(): '') ;
       }
       return($catalogue_level) ;
+  }
+
+  public function getCatalogueUnits($ids) {
+    $results = array();
+    if(is_array($ids) && count($ids)) {
+      $table = $this->getTableName();
+      $q = Doctrine_Query::create()
+        ->select('i.id, i.name, l.level_name')
+        ->from($table. ' i')
+        ->innerJoin('i.Level l')
+        ->whereIn('i.id',$ids);
+      $q_results = $q->execute();
+      foreach($q_results as $result) {
+        $results[] = array("id"=>$result->getId(), "name"=>$result->getName(), "level_name"=>$result->getLevel()->getLevelName());
+      }
+    }
+    return $results;
   }
 }

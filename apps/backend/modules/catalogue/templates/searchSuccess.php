@@ -87,7 +87,7 @@
               </div>
             </td>
             <td>
-              <span><?php echo $item->getLevel();?></span>
+              <span class="level_name"><?php echo $item->getLevel();?></span>
             </td>
             <?php if(isset($item['lower_bound']) && isset($item['upper_bound'])): ?>
               <td class="datesNum">

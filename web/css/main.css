@@ -240,7 +240,7 @@ img.clear_prop, img.tree_cmd {
   cursor:pointer;
 }
 
-.but_text
+.but_text, .but_text_multiple
 {
   background-color:#A9ABAA;
   float:left;
@@ -255,7 +255,7 @@ img.clear_prop, img.tree_cmd {
   font-weight: normal;
 }
 
-a.but_text, a.but_more
+a.but_text, a.but_more, a.but_text_multiple
 {
   text-decoration:none;
   color:black;
@@ -580,6 +580,11 @@ input[type="text"].xlarge_size
   margin-bottom:0.3em;
   margin-top:0.3em;
   margin-left:0.05em;
+}
+
+div.results_container.but_ref_multiple {
+  float: right;
+  width: 99%;
 }
 
 .invalid

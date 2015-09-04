@@ -230,7 +230,6 @@ class catalogueActions extends DarwinActions
         }
       }
     }
-
   }
 
   public function executeAddKeyword(sfWebRequest $request)
@@ -322,5 +321,53 @@ class catalogueActions extends DarwinActions
       }
     }
     $this->searchForm = new BibliographyFormFilter();
+  }
+
+
+  /**
+   * Renders table row for the table located underneath the button ref multiple button
+   * @param \sfWebRequest $request The HTTP request passed (GET or POST)
+   * @return sfView::NONE
+   */
+  public function executeRenderTableRowForButtonRefMultiple(sfWebRequest $request) {
+
+    if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
+
+    $this->forward404Unless(
+      $request->hasParameter('row_data') &&
+      $request->hasParameter('field_id') &&
+      is_array($request->getParameter('row_data')) &&
+      count($request->getParameter('row_data')) > 0
+    );
+
+    $row_data = $request->getParameter('row_data');
+
+    $catalogue_parameter = $request->getParameter('catalogue', '');
+    if($request->getParameter('from_db', '') == '1' && !empty($catalogue_parameter)) {
+      $ids_to_retrieve = array();
+      foreach ($row_data as $row_key=>$row_val) {
+        $this->forward404Unless(
+                                isset($row_val["id"]) &&
+                                is_numeric($row_val["id"])
+        );
+        $ids_to_retrieve[]=$row_val["id"];
+      }
+
+      $row_data = Doctrine::getTable(DarwinTable::getModelForTable($request->getParameter('catalogue')))->getCatalogueUnits($ids_to_retrieve);
+
+      return $this->getPartial('catalogue/button_ref_multiple_table_row',
+                               array(
+                                 'field_id' => $request->getParameter('field_id'),
+                                 'row_data'=>$row_data
+                               )
+      );
+    }
+
+    return $this->renderPartial('catalogue/button_ref_multiple_table_row',
+                                array(
+                                  'field_id' => $request->getParameter('field_id'),
+                                  'row_data'=>$row_data
+                                )
+    );
   }
 }
