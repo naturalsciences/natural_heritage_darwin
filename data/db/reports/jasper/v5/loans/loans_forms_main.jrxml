@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Loan Form" language="groovy" pageWidth="595" pageHeight="842" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="20" bottomMargin="20" uuid="e26ceb16-0793-4fcf-a062-d0900c896f00">
-	<property name="ireport.zoom" value="1.610510000000021"/>
+	<property name="ireport.zoom" value="1.3310000000000177"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="1424"/>
+	<property name="ireport.y" value="624"/>
 	<property name="ireport.jasperserver.reportUnit" value="/darwin/loans/loans_form_complete"/>
 	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
 	<style name="table">
@@ -113,19 +113,285 @@ from fct_report_loans_forms(
 	<field name="loan_items_description" class="java.lang.String"/>
 	<field name="loan_items_value" class="java.math.BigDecimal"/>
 	<field name="header_text_1" class="java.lang.String"/>
-	<group name="Loan ID 3 - Loan Reception confirmation to Return" isStartNewPage="true" keepTogether="true">
+	<group name="Loan ID 5 - Specimens Return" isStartNewPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{loan_id}+$F{target_copy}]]></groupExpression>
+		<groupFooter>
+			<band height="364">
+				<printWhenExpression><![CDATA[$F{target_copy}=="Specimens copy"]]></printWhenExpression>
+				<break>
+					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="559" height="1" printWhenGroupChanges="Loan ID 5 - Specimens Return"/>
+				</break>
+				<staticText>
+					<reportElement uuid="70820712-c4e7-479a-8797-e96788c54389" positionType="Float" x="0" y="1" width="559" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<box leftPadding="1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Return]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="ef53e514-0e1d-4a20-b0e9-003249303aec" positionType="Float" x="0" y="22" width="154" height="15" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 5 - Specimens Return"/>
+					<box leftPadding="1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Date (YYYY/MM/DD)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="bf1a0a3d-96bd-4efa-ab21-27f31e265ead" positionType="Float" x="0" y="37" width="200" height="25" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 5 - Specimens Return"/>
+					<box leftPadding="1" bottomPadding="3">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Top"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="ef53e514-0e1d-4a20-b0e9-003249303aec" positionType="Float" x="292" y="22" width="154" height="15" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 5 - Specimens Return"/>
+					<box leftPadding="1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Transport]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="bf1a0a3d-96bd-4efa-ab21-27f31e265ead" positionType="Float" x="292" y="37" width="267" height="123" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 5 - Specimens Return"/>
+					<box topPadding="2" leftPadding="2" bottomPadding="0">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Top"/>
+					<text><![CDATA[Name:
+
+Tracking ID:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="daefabf4-fc59-4276-8b81-6b18cc84d7be" positionType="Float" x="0" y="166" width="170" height="20" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 5 - Specimens Return"/>
+					<box leftPadding="1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Return conditions]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a63011dd-758f-4984-bd56-637f201a12f7" positionType="Float" x="0" y="186" width="559" height="175" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 5 - Specimens Return"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Loan ID 4 - Specimens Results" isStartNewPage="true" keepTogether="true">
 		<groupExpression><![CDATA[$F{loan_id}+$F{target_copy}]]></groupExpression>
 		<groupFooter>
 			<band height="700">
+				<printWhenExpression><![CDATA[$F{target_copy}=="Specimens copy"]]></printWhenExpression>
+				<break>
+					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="559" height="1" printWhenGroupChanges="Loan ID 4 - Specimens Results"/>
+				</break>
+				<staticText>
+					<reportElement uuid="70820712-c4e7-479a-8797-e96788c54389" positionType="Float" x="0" y="1" width="559" height="42" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 4 - Specimens Results"/>
+					<box leftPadding="1"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="15" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Results]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a63011dd-758f-4984-bd56-637f201a12f7" positionType="Float" x="0" y="43" width="559" height="657" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 4 - Specimens Results"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Loan ID 3 - Loan Reception confirmation to Return" isStartNewPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{loan_id}+$F{target_copy}]]></groupExpression>
+		<groupFooter>
+			<band height="509">
 				<printWhenExpression><![CDATA[$F{target_copy}=="Your copy" || $F{target_copy}=="Responsible copy"]]></printWhenExpression>
 				<break>
-					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="595" height="1" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="559" height="1" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
 				</break>
 				<subreport>
 					<reportElement uuid="985144a8-fc99-4fc3-b7a9-3a77bd72133e" positionType="Float" x="0" y="1" width="559" height="53" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["repo:return_to_informations_sub_report.jrxml"]]></subreportExpression>
 				</subreport>
+				<staticText>
+					<reportElement uuid="70820712-c4e7-479a-8797-e96788c54389" positionType="Float" x="0" y="69" width="50" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return">
+						<printWhenExpression><![CDATA[!$F{loan_name}.isEmpty()]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Loan:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="95a17edd-61ed-40d3-9a5f-7c89b6a01aab" positionType="Float" x="50" y="69" width="242" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<textElement verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{loan_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="ef53e514-0e1d-4a20-b0e9-003249303aec" positionType="Float" x="436" y="54" width="47" height="15" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="48d6fec0-bcd7-42da-bda3-8546913db89f" positionType="Float" mode="Opaque" x="435" y="69" width="124" height="20" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return" backcolor="#CCCCCC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="bf1a0a3d-96bd-4efa-ab21-27f31e265ead" positionType="Float" x="292" y="69" width="143" height="20" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<text><![CDATA[Return date (YYYY/MM/DD)]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="daefabf4-fc59-4276-8b81-6b18cc84d7be" positionType="Float" x="0" y="97" width="170" height="20" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<box leftPadding="1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Condition at reception]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a63011dd-758f-4984-bd56-637f201a12f7" positionType="Float" x="0" y="117" width="559" height="245" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="ef53e514-0e1d-4a20-b0e9-003249303aec" positionType="Float" x="0" y="372" width="120" height="15" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<box leftPadding="1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Received by]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="bf1a0a3d-96bd-4efa-ab21-27f31e265ead" positionType="Float" x="0" y="387" width="120" height="40" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<box leftPadding="1" bottomPadding="3">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Bottom"/>
+					<text><![CDATA[Date:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="48d6fec0-bcd7-42da-bda3-8546913db89f" positionType="Float" mode="Opaque" x="120" y="387" width="124" height="40" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return" backcolor="#CCCCCC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="bf1a0a3d-96bd-4efa-ab21-27f31e265ead" positionType="Float" x="0" y="427" width="120" height="40" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<box leftPadding="1" bottomPadding="3">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Bottom"/>
+					<text><![CDATA[Name:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="48d6fec0-bcd7-42da-bda3-8546913db89f" positionType="Float" mode="Opaque" x="120" y="427" width="124" height="40" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return" backcolor="#CCCCCC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="bf1a0a3d-96bd-4efa-ab21-27f31e265ead" positionType="Float" x="0" y="467" width="120" height="40" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<box leftPadding="1" bottomPadding="3">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Bottom"/>
+					<text><![CDATA[Function:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="48d6fec0-bcd7-42da-bda3-8546913db89f" positionType="Float" mode="Opaque" x="120" y="467" width="124" height="40" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return" backcolor="#CCCCCC"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="ef53e514-0e1d-4a20-b0e9-003249303aec" positionType="Float" x="361" y="412" width="75" height="15" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<box leftPadding="1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Signature]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="bf1a0a3d-96bd-4efa-ab21-27f31e265ead" positionType="Float" x="361" y="427" width="198" height="80" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<box leftPadding="1" bottomPadding="3">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Bottom"/>
+					<text><![CDATA[]]></text>
+				</staticText>
 			</band>
 		</groupFooter>
 	</group>
@@ -135,7 +401,7 @@ from fct_report_loans_forms(
 			<band height="535">
 				<printWhenExpression><![CDATA[$F{target_copy}=="Your copy" || $F{target_copy}=="Responsible copy"]]></printWhenExpression>
 				<break>
-					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="595" height="1" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="559" height="1" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
 				</break>
 				<staticText>
 					<reportElement uuid="136d35a6-124a-4685-ac84-169f8f1eefeb" x="0" y="4" width="559" height="20" printWhenGroupChanges="Loan ID 2 - Loan Policy"/>
@@ -297,6 +563,91 @@ of the publication.]]></text>
 					<text><![CDATA[We request a report of progress and /or a request for loan extension at the end of each loan period.
 Specimens or remaining part must be returned promptly when a loan is terminated.]]></text>
 				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Loan ID 1 - RBINS Return" isStartNewPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{loan_id}+$F{target_copy}]]></groupExpression>
+		<groupFooter>
+			<band height="235">
+				<printWhenExpression><![CDATA[$F{target_copy}=="RBINS copy"]]></printWhenExpression>
+				<break>
+					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="559" height="1" printWhenGroupChanges="Loan ID 1 - RBINS Return"/>
+				</break>
+				<staticText>
+					<reportElement uuid="70820712-c4e7-479a-8797-e96788c54389" positionType="Float" x="0" y="1" width="559" height="20" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 1 - RBINS Return"/>
+					<box leftPadding="1"/>
+					<textElement verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Return]]></text>
+				</staticText>
+				<subreport>
+					<reportElement uuid="18f086d9-bf02-4029-9927-194dedbcab7c" positionType="Float" isPrintRepeatedValues="false" x="320" y="21" width="239" height="76" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 1 - RBINS Return"/>
+					<subreportParameter name="transporter_side">
+						<subreportParameterExpression><![CDATA["receiver"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="loan_id">
+						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["repo:transporters_sub_report.jrxml"]]></subreportExpression>
+				</subreport>
+				<subreport runToBottom="false">
+					<reportElement uuid="5b191c67-a4d8-4696-8058-50deee8df5e2" positionType="Float" isPrintRepeatedValues="false" x="0" y="21" width="265" height="76" isRemoveLineWhenBlank="true" printWhenGroupChanges="Loan ID 1 - RBINS Return"/>
+					<subreportParameter name="position">
+						<subreportParameterExpression><![CDATA["group_footer"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="maintenance_type">
+						<subreportParameterExpression><![CDATA["received_back_by"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="target_copy">
+						<subreportParameterExpression><![CDATA[$F{target_copy}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="loan_id">
+						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["repo:maintenance_people_sub_report.jrxml"]]></subreportExpression>
+				</subreport>
+				<subreport runToBottom="false">
+					<reportElement uuid="5b191c67-a4d8-4696-8058-50deee8df5e2" positionType="Float" isPrintRepeatedValues="false" x="0" y="103" width="265" height="76" isRemoveLineWhenBlank="true" printWhenGroupChanges="Loan ID 1 - RBINS Return"/>
+					<subreportParameter name="position">
+						<subreportParameterExpression><![CDATA["group_footer"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="maintenance_type">
+						<subreportParameterExpression><![CDATA["checked_back_by"]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="target_copy">
+						<subreportParameterExpression><![CDATA[$F{target_copy}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="loan_id">
+						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["repo:maintenance_people_sub_report.jrxml"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement uuid="399dcbed-e507-45a0-b71c-91589cb598da" positionType="Float" x="0" y="185" width="72" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 1 - RBINS Return">
+						<printWhenExpression><![CDATA[!$F{loan_return_conditions}.isEmpty()]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Condition]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="3deccb3f-b0df-4f14-8465-ee857cd3f59d" positionType="Float" x="0" y="206" width="559" height="29" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 1 - RBINS Return"/>
+					<box topPadding="1" leftPadding="1">
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{loan_return_conditions}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>

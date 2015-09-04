@@ -54,7 +54,7 @@ where case
 				<textElement>
 					<font size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($P{maintenance_type}=="organized_by"?"Organized by":($P{maintenance_type}=="approval"?"Approved by":($P{maintenance_type}=="preparation"?"Prepared by":"")))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{maintenance_type}=="organized_by"?"Organized by":($P{maintenance_type}=="approval"?"Approved by":($P{maintenance_type}=="preparation"?"Prepared by":($P{maintenance_type}=="received_back_by"?"Received at RBINS by":($P{maintenance_type}=="checked_back_by"?"Checked at RBINS by":"")))))]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
