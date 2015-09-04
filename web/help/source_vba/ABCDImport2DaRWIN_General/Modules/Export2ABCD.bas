@@ -3545,6 +3545,8 @@ Sub DoTrim()
      'Loop through cells removing excess spaces
     For Each cl In Application.Worksheets("cSPECIMEN").UsedRange
         If Len(cl) > Len(WorksheetFunction.Trim(cl)) Then
+			'rmca 2015 09 04 => "@" solves problem if call begins with "=" and has to be trimed
+			cl.NumberFormat = "@"
             cl.Value = WorksheetFunction.Trim(cl)
         End If
     Next cl
