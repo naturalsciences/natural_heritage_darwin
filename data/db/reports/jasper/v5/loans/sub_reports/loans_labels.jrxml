@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loans_labels" language="groovy" pageWidth="610" pageHeight="555" orientation="Landscape" columnWidth="610" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e769a8c7-b682-42df-8bff-ef328e6a749a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="target_copy" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="loan_id" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="target_catalogues" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select trim(loan_items_name||' '||coalesce(loan_items_description,'')) as loan_items_description, loan_name, loan_from_date_for_label, row_num
+from fct_report_loans_forms(
+                             $P{loan_id}::integer,
+                             '[RBINS copy, Specimens copy]',
+                             '[RBINS copy, Specimens copy]',
+                             $P{target_copy}::text,
+                             $P{target_catalogues}::text,
+                             FALSE
+                           )]]>
+	</queryString>
+	<field name="loan_items_description" class="java.lang.String"/>
+	<field name="loan_name" class="java.lang.String"/>
+	<field name="loan_from_date_for_label" class="java.lang.String"/>
+	<field name="row_num" class="java.lang.Long"/>
+	<detail>
+		<band height="80" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="81d91ba2-abf3-4ab5-b323-5a2f4128e9d9" positionType="Float" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="0" width="300" height="80" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{loan_items_description}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement uuid="3d626ec6-bc7c-44a1-8ad2-3096b2ee54fa" positionType="Float" stretchType="RelativeToTallestObject" x="318" y="11" width="280" height="50" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" textPosition="none">
+					<jr:codeExpression><![CDATA[$F{loan_name}+"-"+$F{loan_from_date_for_label}+"-"+$F{row_num}]]></jr:codeExpression>
+				</jr:Code128>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

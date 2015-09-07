@@ -336,7 +336,8 @@ drop function if exists fct_report_loans_forms (loan_id integer, full_target_lis
 drop function if exists fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean);
 create or replace function fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean default false)
   returns TABLE (
-    target_copy text,
+    target_copy TEXT,
+    row_num BIGINT,
     loan_id loans.id%TYPE,
     loan_name loans.name%TYPE,
     loan_description loans.description%TYPE,
@@ -344,6 +345,7 @@ create or replace function fct_report_loans_forms (loan_id integer, full_target_
     loan_conditions TEXT,
     loan_reception_conditions TEXT,
     loan_return_conditions TEXT,
+    loan_from_date_for_label TEXT,
     loan_from_date TEXT,
     loan_to_date TEXT,
     loan_extended_to_date TEXT,
@@ -358,6 +360,7 @@ create or replace function fct_report_loans_forms (loan_id integer, full_target_
 AS
   $$
 select vals.val as target_copy,
+       row_number() over (PARTITION BY vals.val ORDER BY vals.val_index, loans.id, loan_items.id) as row_num,
        loans.id,
        loans.name,
        loans.description,
@@ -365,6 +368,7 @@ select vals.val as target_copy,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'state_observation') as loan_conditions,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'reception_state_observation') as loan_reception_conditions,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'return_state_observation') as loan_return_conditions,
+       to_char(loans.from_date,'YYYY-MM-DD'),
        to_char(loans.from_date,'DD/MM/YYYY'),
        to_char(loans.to_date,'DD/MM/YYYY'),
        to_char(loans.extended_to_date,'DD/MM/YYYY'),
@@ -568,7 +572,7 @@ where loans.id = $1
              limit 1
             )
   and vals.val IN ( select unnest(string_to_array(trim($4,'[]'), ', ')) )
-order by vals.val_index,loans.id,loan_items_id;
+order by vals.val_index,loans.id,row_num;
 $$
 language sql;
 
