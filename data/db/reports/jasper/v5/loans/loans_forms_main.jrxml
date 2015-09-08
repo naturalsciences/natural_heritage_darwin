@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Loan Form" language="groovy" pageWidth="595" pageHeight="842" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="20" bottomMargin="20" uuid="e26ceb16-0793-4fcf-a062-d0900c896f00">
 	<property name="ireport.zoom" value="1.3310000000000177"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="3524"/>
+	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/darwin/loans/loans_form_complete"/>
 	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
 	<style name="table">
@@ -95,7 +95,6 @@ from fct_report_loans_forms(
                            )]]>
 	</queryString>
 	<field name="target_copy" class="java.lang.String"/>
-	<field name="row_num" class="java.lang.Long"/>
 	<field name="loan_id" class="java.lang.Integer"/>
 	<field name="loan_name" class="java.lang.String"/>
 	<field name="loan_description" class="java.lang.String"/>
@@ -103,7 +102,6 @@ from fct_report_loans_forms(
 	<field name="loan_conditions" class="java.lang.String"/>
 	<field name="loan_reception_conditions" class="java.lang.String"/>
 	<field name="loan_return_conditions" class="java.lang.String"/>
-	<field name="loan_from_date_for_label" class="java.lang.String"/>
 	<field name="loan_from_date" class="java.lang.String"/>
 	<field name="loan_to_date" class="java.lang.String"/>
 	<field name="loan_extended_to_date" class="java.lang.String"/>
@@ -114,6 +112,8 @@ from fct_report_loans_forms(
 	<field name="loan_items_name" class="java.lang.String"/>
 	<field name="loan_items_description" class="java.lang.String"/>
 	<field name="loan_items_value" class="java.math.BigDecimal"/>
+	<field name="loan_phantom_id" class="java.lang.String"/>
+	<field name="loan_rbins_phantom_id" class="java.lang.String"/>
 	<field name="header_text_1" class="java.lang.String"/>
 	<group name="Loan ID - Labels" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{loan_id}+$F{target_copy}]]></groupExpression>
@@ -121,7 +121,7 @@ from fct_report_loans_forms(
 			<band height="131">
 				<printWhenExpression><![CDATA[$F{target_copy}=="RBINS copy" || $F{target_copy}=="Specimens copy"]]></printWhenExpression>
 				<break>
-					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" x="0" y="0" width="559" height="1" printWhenGroupChanges="Loan ID - Labels"/>
+					<reportElement uuid="58c27a35-9a1b-41b7-b0c8-79bf9e1b384c" isPrintRepeatedValues="false" x="0" y="0" width="559" height="1" printWhenGroupChanges="Loan ID - Labels"/>
 				</break>
 				<staticText>
 					<reportElement uuid="a7ff13b9-106c-49be-b806-b1319d5ee2f5" positionType="Float" x="0" y="1" width="170" height="18" isPrintInFirstWholeBand="true" printWhenGroupChanges="Loan ID - Labels"/>
@@ -665,7 +665,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					<reportElement uuid="399dcbed-e507-45a0-b71c-91589cb598da" positionType="Float" x="0" y="185" width="72" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 1 - RBINS Return">
 						<printWhenExpression><![CDATA[!$F{loan_return_conditions}.isEmpty()]]></printWhenExpression>
 					</reportElement>
-					<box leftPadding="2"/>
+					<box leftPadding="1"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
 					</textElement>
@@ -673,7 +673,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement uuid="3deccb3f-b0df-4f14-8465-ee857cd3f59d" positionType="Float" x="0" y="206" width="559" height="29" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 1 - RBINS Return"/>
-					<box topPadding="1" leftPadding="1">
+					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 						<topPen lineWidth="0.5"/>
 						<leftPen lineWidth="0.5"/>
 						<bottomPen lineWidth="0.5"/>
@@ -689,6 +689,11 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 		<groupExpression><![CDATA[$F{loan_id}+$F{target_copy}]]></groupExpression>
 		<groupHeader>
 			<band height="245">
+				<break>
+					<reportElement uuid="2b066b2a-a088-447e-9d88-5a17ebc8b783" x="0" y="0" width="595" height="1">
+						<printWhenExpression><![CDATA[$V{PAGE_NUMBER}!=1]]></printWhenExpression>
+					</reportElement>
+				</break>
 				<textField isStretchWithOverflow="true">
 					<reportElement uuid="95a17edd-61ed-40d3-9a5f-7c89b6a01aab" isPrintRepeatedValues="false" x="57" y="49" width="263" height="20" isPrintInFirstWholeBand="true" printWhenGroupChanges="Loan ID"/>
 					<textElement verticalAlignment="Middle">
@@ -700,6 +705,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					<reportElement uuid="70820712-c4e7-479a-8797-e96788c54389" isPrintRepeatedValues="false" x="0" y="49" width="57" height="20" isPrintInFirstWholeBand="true" printWhenGroupChanges="Loan ID">
 						<printWhenExpression><![CDATA[!$F{loan_name}.isEmpty()]]></printWhenExpression>
 					</reportElement>
+					<box leftPadding="1"/>
 					<textElement verticalAlignment="Middle">
 						<font size="14" isBold="true"/>
 					</textElement>
@@ -711,6 +717,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 				</image>
 				<textField>
 					<reportElement uuid="51969249-bbd4-4195-8db4-f09f34683898" isPrintRepeatedValues="false" x="386" y="0" width="173" height="20" printWhenGroupChanges="Loan ID"/>
+					<box rightPadding="1"/>
 					<textElement textAlignment="Right">
 						<font size="13" isBold="true" isItalic="true"/>
 					</textElement>
@@ -726,15 +733,15 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					<text><![CDATA[To:]]></text>
 				</staticText>
 				<frame>
-					<reportElement uuid="3a48082f-21b0-4ad7-ac27-309671ccee8f" positionType="Float" isPrintRepeatedValues="false" x="319" y="49" width="240" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+					<reportElement uuid="3a48082f-21b0-4ad7-ac27-309671ccee8f" positionType="Float" x="319" y="49" width="240" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
 					<staticText>
-						<reportElement uuid="d9ce558a-25a5-4d97-9185-01ed37dcdf33" isPrintRepeatedValues="false" x="0" y="0" width="58" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+						<reportElement uuid="d9ce558a-25a5-4d97-9185-01ed37dcdf33" x="0" y="0" width="58" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
 						<box topPadding="2"/>
 						<textElement textAlignment="Right"/>
 						<text><![CDATA[Name:]]></text>
 					</staticText>
 					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-						<reportElement uuid="d73f3acc-819d-40dd-98ee-d0b91bbfad02" style="table_TD" isPrintRepeatedValues="false" mode="Transparent" x="60" y="0" width="180" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+						<reportElement uuid="d73f3acc-819d-40dd-98ee-d0b91bbfad02" style="table_TD" mode="Transparent" x="60" y="0" width="180" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
 						<box topPadding="2" leftPadding="1" bottomPadding="1" rightPadding="1">
 							<topPen lineWidth="0.5"/>
 							<leftPen lineWidth="0.5"/>
@@ -748,7 +755,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					</textField>
 				</frame>
 				<frame>
-					<reportElement uuid="502947f0-e259-4ce1-a3de-1cce11755af2" positionType="Float" isPrintRepeatedValues="false" x="319" y="69" width="240" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+					<reportElement uuid="502947f0-e259-4ce1-a3de-1cce11755af2" positionType="Float" x="319" y="69" width="240" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
 					<staticText>
 						<reportElement uuid="fd78e923-f61c-44f2-9512-87d88ef0a73e" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="58" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID">
 							<printWhenExpression><![CDATA[!$F{loan_receiver_institution_name}.isEmpty()]]></printWhenExpression>
@@ -758,7 +765,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 						<text><![CDATA[Institution:]]></text>
 					</staticText>
 					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-						<reportElement uuid="a037ac03-45cf-4b44-860d-a3750823cb99" style="table_TD" positionType="Float" isPrintRepeatedValues="false" x="60" y="0" width="180" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+						<reportElement uuid="a037ac03-45cf-4b44-860d-a3750823cb99" style="table_TD" positionType="Float" x="60" y="0" width="180" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
 						<box topPadding="2" leftPadding="1" bottomPadding="1" rightPadding="1">
 							<topPen lineWidth="0.5"/>
 							<leftPen lineWidth="0.5"/>
@@ -772,7 +779,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					</textField>
 				</frame>
 				<frame>
-					<reportElement uuid="6743d73b-c105-49a8-87c1-d98652415af4" positionType="Float" isPrintRepeatedValues="false" x="319" y="89" width="240" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+					<reportElement uuid="6743d73b-c105-49a8-87c1-d98652415af4" positionType="Float" x="319" y="89" width="240" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
 					<staticText>
 						<reportElement uuid="eb0ee77e-7243-47fc-873b-e27919bb2557" positionType="Float" isPrintRepeatedValues="false" x="1" y="0" width="57" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID">
 							<printWhenExpression><![CDATA[!$F{loan_receiver_address}.isEmpty()]]></printWhenExpression>
@@ -782,7 +789,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 						<text><![CDATA[Address:]]></text>
 					</staticText>
 					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-						<reportElement uuid="9e0b1720-ed0f-46d3-b8f1-23e55bbad64c" style="table_TD" positionType="Float" isPrintRepeatedValues="false" mode="Transparent" x="60" y="0" width="180" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+						<reportElement uuid="9e0b1720-ed0f-46d3-b8f1-23e55bbad64c" style="table_TD" positionType="Float" mode="Transparent" x="60" y="0" width="180" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
 						<box topPadding="2" leftPadding="1" bottomPadding="1" rightPadding="1">
 							<topPen lineWidth="0.5"/>
 							<leftPen lineWidth="0.5"/>
@@ -796,14 +803,14 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					</textField>
 				</frame>
 				<textField>
-					<reportElement uuid="5ce44c2f-fabc-42a3-98c4-accc1f1e190c" positionType="Float" isPrintRepeatedValues="false" x="0" y="114" width="559" height="30" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+					<reportElement uuid="5ce44c2f-fabc-42a3-98c4-accc1f1e190c" positionType="Float" x="0" y="114" width="559" height="30" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="14" isBold="true" isUnderline="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["LOAN FORM – RBINS SCIENTIFIC SERVICE HERITAGE"]]></textFieldExpression>
 				</textField>
 				<subreport runToBottom="false">
-					<reportElement uuid="5b191c67-a4d8-4696-8058-50deee8df5e2" positionType="Float" isPrintRepeatedValues="false" x="0" y="148" width="239" height="40" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+					<reportElement uuid="5b191c67-a4d8-4696-8058-50deee8df5e2" positionType="Float" x="0" y="148" width="239" height="40" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
 					<subreportParameter name="position">
 						<subreportParameterExpression><![CDATA["group_header"]]></subreportParameterExpression>
 					</subreportParameter>
@@ -820,22 +827,24 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					<subreportExpression><![CDATA["repo:maintenance_people_sub_report.jrxml"]]></subreportExpression>
 				</subreport>
 				<staticText>
-					<reportElement uuid="a7ff13b9-106c-49be-b806-b1319d5ee2f5" positionType="Float" isPrintRepeatedValues="false" x="0" y="190" width="200" height="20" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+					<reportElement uuid="a7ff13b9-106c-49be-b806-b1319d5ee2f5" positionType="Float" x="0" y="190" width="200" height="20" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+					<box leftPadding="1"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
 					</textElement>
 					<text><![CDATA[This material has been sent as:]]></text>
 				</staticText>
 				<textField>
-					<reportElement uuid="59e1a9fc-7cb1-4c29-a377-c7545be94ac7" positionType="Float" isPrintRepeatedValues="false" x="200" y="190" width="344" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
-					<box leftPadding="4"/>
+					<reportElement uuid="59e1a9fc-7cb1-4c29-a377-c7545be94ac7" positionType="Float" x="200" y="190" width="344" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+					<box leftPadding="1"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{header_text_1}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="a7ff13b9-106c-49be-b806-b1319d5ee2f5" positionType="Float" isPrintRepeatedValues="false" x="0" y="211" width="170" height="18" printWhenGroupChanges="Loan ID"/>
+					<reportElement uuid="a7ff13b9-106c-49be-b806-b1319d5ee2f5" positionType="Float" x="0" y="211" width="170" height="18" printWhenGroupChanges="Loan ID"/>
+					<box leftPadding="1"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
 					</textElement>
@@ -939,7 +948,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 							<reportElement uuid="3deccb3f-b0df-4f14-8465-ee857cd3f59d" positionType="Float" x="0" y="0" width="559" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
-							<box topPadding="1" leftPadding="2"/>
+							<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
 							<textElement/>
 							<textFieldExpression><![CDATA[$F{loan_purposes}]]></textFieldExpression>
 						</textField>
@@ -949,6 +958,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					<reportElement uuid="399dcbed-e507-45a0-b71c-91589cb598da" positionType="Float" x="0" y="40" width="57" height="20" isRemoveLineWhenBlank="true" printWhenGroupChanges="Loan ID">
 						<printWhenExpression><![CDATA[!$F{loan_from_date}.isEmpty() || !$F{loan_to_date}.isEmpty()]]></printWhenExpression>
 					</reportElement>
+					<box leftPadding="1"/>
 					<textElement verticalAlignment="Middle">
 						<font size="11" isBold="true"/>
 					</textElement>
@@ -974,6 +984,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					</staticText>
 					<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 						<reportElement uuid="f509bc0a-9502-4c49-abd7-c17f2f4a8237" positionType="Float" x="57" y="0" width="182" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+						<box rightPadding="1"/>
 						<textElement textAlignment="Right" verticalAlignment="Middle"/>
 						<textFieldExpression><![CDATA[$F{loan_from_date}]]></textFieldExpression>
 					</textField>
@@ -987,6 +998,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					</staticText>
 					<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 						<reportElement uuid="f509bc0a-9502-4c49-abd7-c17f2f4a8237" positionType="Float" x="57" y="20" width="182" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+						<box rightPadding="1"/>
 						<textElement textAlignment="Right" verticalAlignment="Middle"/>
 						<textFieldExpression><![CDATA[$F{loan_to_date}]]></textFieldExpression>
 					</textField>
@@ -1000,6 +1012,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					</staticText>
 					<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 						<reportElement uuid="f509bc0a-9502-4c49-abd7-c17f2f4a8237" positionType="Float" x="57" y="40" width="182" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+						<box rightPadding="1"/>
 						<textElement textAlignment="Right" verticalAlignment="Middle"/>
 						<textFieldExpression><![CDATA[$F{loan_extended_to_date}]]></textFieldExpression>
 					</textField>
@@ -1074,6 +1087,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 						<reportElement uuid="399dcbed-e507-45a0-b71c-91589cb598da" positionType="Float" x="0" y="0" width="72" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID">
 							<printWhenExpression><![CDATA[!$F{loan_conditions}.isEmpty()]]></printWhenExpression>
 						</reportElement>
+						<box leftPadding="1"/>
 						<textElement verticalAlignment="Middle">
 							<font size="11" isBold="true"/>
 						</textElement>
@@ -1101,7 +1115,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 							<reportElement uuid="3deccb3f-b0df-4f14-8465-ee857cd3f59d" positionType="Float" x="0" y="0" width="559" height="29" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
-							<box topPadding="1" leftPadding="1"/>
+							<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
 							<textElement/>
 							<textFieldExpression><![CDATA[$F{loan_conditions}]]></textFieldExpression>
 						</textField>
@@ -1169,7 +1183,7 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Top"/>
-				<textFieldExpression><![CDATA[$F{loan_name}+"-"+$F{loan_from_date_for_label}+"-"+$F{row_num}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{loan_phantom_id}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

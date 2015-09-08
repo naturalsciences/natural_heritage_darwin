@@ -11,7 +11,7 @@
 		<band height="20" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="9af86f46-3c48-4a37-8f9e-a2c02990e0e0" x="0" y="0" width="559" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
-				<box topPadding="2" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<box topPadding="2" leftPadding="1" bottomPadding="0" rightPadding="1"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>

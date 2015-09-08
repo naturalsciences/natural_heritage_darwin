@@ -4,7 +4,8 @@ BEGIN;
 
 drop function if exists fct_report_loans_transporters (loan_id loans.id%TYPE);
 drop function if exists fct_report_loans_transporters (loan_id loans.id%TYPE, transporter_side TEXT);
-create or replace function fct_report_loans_transporters (loan_id loans.id%TYPE, transporter_side TEXT DEFAULT 'sender')
+drop function if exists fct_report_loans_transporters (loan_id loans.id%TYPE, transporter_side TEXT, lang TEXT);
+create or replace function fct_report_loans_transporters (loan_id loans.id%TYPE, transporter_side TEXT DEFAULT 'sender', lang TEXT DEFAULT 'en')
   returns
     table
     (
@@ -19,9 +20,23 @@ AS
         select
           case
           when cp.people_type = 'sender' then
-            'loaner'
+            case
+              when $3 = 'fr' then
+                'prêteur'
+              when $3 = 'nl' then
+                'leener'
+              else
+                'loaner'
+            end
           else
-            'borrower'
+            case
+              when $3 = 'fr' then
+                'emprunteur'
+              when $3 = 'nl' then
+                'leener'
+              else
+                'borrower'
+            end
           end as transport_dispatched_by,
           p.formated_name as transport_transporter_name
         from loans inner join catalogue_people cp
@@ -73,7 +88,8 @@ AS
 language SQL;
 
 drop function if exists fct_report_loans_return_to (loan_id loans.id%TYPE);
-create or replace function fct_report_loans_return_to (loan_id loans.id%TYPE)
+drop function if exists fct_report_loans_return_to (loan_id loans.id%TYPE, lang TEXT);
+create or replace function fct_report_loans_return_to (loan_id loans.id%TYPE, lang TEXT default 'en')
   returns
     TABLE
     (
@@ -93,9 +109,27 @@ AS
             and strpos(tag, 'work') > 0
   )
   select
-    'Return a copy of this form by FAX at ' ||
+    case
+      when $2 = 'fr' then
+        'Veuillez retourner une copie de ce formulaire par FAX au '
+      when $2 = 'nl' then
+        'Stuur een kopie van dit formulier per fax naar '
+      else
+        'Return a copy of this form by FAX at '
+    end ||
     coalesce((select trim(array_to_string(array_agg(entry), ', '), ', ') from communications where comm_type = 'phone/fax' and strpos(tag, 'fax') > 0), '+32(0)2.627.41.13.') ||
-    coalesce((select E'\nor by email at ' || trim(array_to_string(array_agg(entry), ', '), ', ') from communications where comm_type = 'e-mail'), '') as return_message
+    coalesce((select
+                case
+                  when $2 = 'fr' then
+                    E'\nou par email à '
+                  when $2 = 'nl' then
+                    E'\nof bij email naar '
+                  else
+                    E'\nor by email at '
+                end
+                || trim(array_to_string(array_agg(entry), ', '), ', ') from communications where comm_type = 'e-mail'
+             ), ''
+            ) as return_message
   $$
 language sql;
 
@@ -257,7 +291,7 @@ AS
     where referenced_relation = 'loans'
       and record_id = $1
       and people_type = 'receiver'
-      and case when $2 = 'Responsible copy' then
+      and case when $2 IN ('Responsible copy', 'Copie responsable', 'Verantwoordelijk copie') then
             people_sub_type::integer&2 != 0
           else
             people_sub_type::integer&4 != 0
@@ -310,7 +344,7 @@ AS
     where referenced_relation = 'loans'
       and record_id = $1
       and people_type = 'receiver'
-      and case when $2 = 'Responsible copy' then
+      and case when $2 IN ('Responsible copy', 'Copie responsable', 'Verantwoordelijk copie') then
             people_sub_type::integer&2 != 0
           else
             people_sub_type::integer&4 != 0
@@ -334,10 +368,10 @@ language sql;
 
 drop function if exists fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, with_addr boolean);
 drop function if exists fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean);
-create or replace function fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean default false)
+drop function if exists fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean, lang text);
+create or replace function fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean default false, lang text default 'en')
   returns TABLE (
     target_copy TEXT,
-    row_num BIGINT,
     loan_id loans.id%TYPE,
     loan_name loans.name%TYPE,
     loan_description loans.description%TYPE,
@@ -345,7 +379,6 @@ create or replace function fct_report_loans_forms (loan_id integer, full_target_
     loan_conditions TEXT,
     loan_reception_conditions TEXT,
     loan_return_conditions TEXT,
-    loan_from_date_for_label TEXT,
     loan_from_date TEXT,
     loan_to_date TEXT,
     loan_extended_to_date TEXT,
@@ -355,12 +388,13 @@ create or replace function fct_report_loans_forms (loan_id integer, full_target_
     loan_items_id TEXT,
     loan_items_name loan_items.details%TYPE,
     loan_items_description comments.comment%TYPE,
-    loan_items_value insurances.insurance_value%TYPE
+    loan_items_value insurances.insurance_value%TYPE,
+    loan_phantom_id TEXT,
+    loan_rbins_phantom_id TEXT
   )
 AS
   $$
 select vals.val as target_copy,
-       row_number() over (PARTITION BY vals.val ORDER BY vals.val_index, loans.id, loan_items.id) as row_num,
        loans.id,
        loans.name,
        loans.description,
@@ -368,7 +402,6 @@ select vals.val as target_copy,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'state_observation') as loan_conditions,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'reception_state_observation') as loan_reception_conditions,
        (select array_to_string(array_agg(comment), E'\n') from comments where referenced_relation = 'loans' and record_id = $1 and notion_concerned = 'return_state_observation') as loan_return_conditions,
-       to_char(loans.from_date,'YYYY-MM-DD'),
        to_char(loans.from_date,'DD/MM/YYYY'),
        to_char(loans.to_date,'DD/MM/YYYY'),
        to_char(loans.extended_to_date,'DD/MM/YYYY'),
@@ -394,28 +427,37 @@ select vals.val as target_copy,
         when specimen_ref is null then
           coalesce (
               (
-                select 'Temporary Codes: ' ||
-                       trim(
-                            array_to_string(
-                                array_agg(
-                                            case
-                                            when coalesce(code_prefix,'') != '' then
-                                              code_prefix || coalesce(code_prefix_separator,'')
-                                            else
-                                              ''
-                                            end ||
-                                            coalesce(code,'') ||
-                                            case
-                                            when coalesce(code_suffix,'') != '' then
-                                              coalesce(code_suffix_separator,'') || code_suffix
-                                            else
-                                              ''
-                                            end
-                                          ),
-                                ', '
-                            ),
-                            ', '
-                       )
+                select
+                  case
+                    when $7 = 'fr' then
+                      'Codes temporaires: '
+                    when $7 = 'nl' then
+                      'Tijdelijke codes: '
+                    else
+                      'Temporary codes: '
+                  end
+                  ||
+                  trim(
+                       array_to_string(
+                           array_agg(
+                                       case
+                                       when coalesce(code_prefix,'') != '' then
+                                         code_prefix || coalesce(code_prefix_separator,'')
+                                       else
+                                         ''
+                                       end ||
+                                       coalesce(code,'') ||
+                                       case
+                                       when coalesce(code_suffix,'') != '' then
+                                         coalesce(code_suffix_separator,'') || code_suffix
+                                       else
+                                         ''
+                                       end
+                                     ),
+                           ', '
+                       ),
+                       ', '
+                  )
                 from codes
                 where referenced_relation = 'loan_items'
                       and record_id = loan_items.id
@@ -531,7 +573,34 @@ select vals.val as target_copy,
               order by date_to desc
               limit 1
             )
-        ) as loan_items_value
+        ) as loan_items_value,
+       case
+        when vals.val IN ('RBINS copy', 'Copie RBINS', 'RBINS copie') then
+         loan_items.id::text
+        else
+         trim(coalesce(to_char(loans.from_date,'YY/MM-'),'') || loans.name || '-' || row_number() over (PARTITION BY vals.val ORDER BY vals.val_index, loans.id, loan_items.id))
+       end as loan_phantom_id,
+       case
+        when vals.val IN ('RBINS copy', 'Copie RBINS', 'RBINS copie') then
+          case
+            when $7 = 'fr' then
+              'ID item prêté: '
+            when $7 = 'nl' then
+              'ID geleend item: '
+            else
+              'Loan item ID: '
+          end
+          ||  loan_items.id || E'\n' ||
+          case
+            when $7 = 'fr' then
+              'ID Fantôme: '
+            else
+              'Phantom ID: '
+          end
+          || trim(coalesce(to_char(loans.from_date,'YY/MM-'),'') || loans.name || '-' || row_number() over (PARTITION BY vals.val ORDER BY vals.val_index, loans.id, loan_items.id))
+        else
+          null::text
+       end as loan_rbins_phantom_id
 from ( select unnest(array_vals.val) as val, generate_series(1,array_vals.val_index) as val_index
        from (select case when exists ( select 1
                                        from catalogue_people
@@ -572,7 +641,7 @@ where loans.id = $1
              limit 1
             )
   and vals.val IN ( select unnest(string_to_array(trim($4,'[]'), ', ')) )
-order by vals.val_index,loans.id,row_num;
+order by vals.val_index,loans.id,row_number() over (PARTITION BY vals.val ORDER BY vals.val_index, loans.id, loan_items.id);
 $$
 language sql;
 
