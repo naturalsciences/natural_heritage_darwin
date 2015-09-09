@@ -33,9 +33,17 @@
                     <?php if($orderBy == $col[0]) echo $orderSign; ?>
                   </a>
                 <?php else:?>
-                  <?php echo $col[1];?>
-                  <?php if($col_name == 'codes') : ?>
-                    <!-- Codes --><label class="top_code"><input type="checkbox" /></label>
+                    <!--ftheeten 2015 09 09 updated block of code to allow sorting in code number-->
+					<?php if($col_name == 'codes') : ?>
+                   
+						<a class="sort" href="<?php echo url_for($s_url.'&orderby='."full_code_indexed".( ($orderBy=="full_code_indexed" && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.
+                    $currentPage);?>">
+						<?php echo $col[1];?>
+							<?php if($orderBy == $col[0]) echo $orderSign; ?>
+						</a>
+						<label class="top_code"><input type="checkbox" /></label>
+					<?php else:?>
+					  <?php echo $col[1];?>
                   <?php endif ; ?>
                 <?php endif;?>
               </th>
