@@ -24,7 +24,8 @@ SELECT a.id as old_identification_id, b.code,
 	  AND ca.referenced_relation='specimens'
 	 AND ca.property_type='label_created_on'
 
-  where ba.code similar to regexp_replace(b.code, '\_id\_[a-z]','', 'g')||'%' 
+   where ba.code similar to regexp_replace(b.code, '\_id\_[a-z]','', 'g')||'%' 
+and ba.code <> b.code
 
   order by ca.lower_value::int asc limit 1
   ) as new_identification_id
