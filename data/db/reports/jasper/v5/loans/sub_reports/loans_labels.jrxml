@@ -6,6 +6,9 @@
 	<parameter name="target_copy" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="loan_id" class="java.lang.Integer" isForPrompting="false"/>
 	<parameter name="target_catalogues" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select
   trim(loan_items_name||' '||coalesce(loan_items_description,'')) as loan_items_description,
@@ -17,7 +20,8 @@ from fct_report_loans_forms(
                              '[RBINS copy, Specimens copy]',
                              $P{target_copy}::text,
                              $P{target_catalogues}::text,
-                             FALSE
+                             FALSE,
+                             $P{lang}::text
                            )]]>
 	</queryString>
 	<field name="loan_items_description" class="java.lang.String"/>

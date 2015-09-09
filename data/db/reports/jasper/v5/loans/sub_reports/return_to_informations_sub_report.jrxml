@@ -3,8 +3,12 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<queryString language="SQL">
-		<![CDATA[select * from fct_report_loans_return_to (20)]]>
+	<parameter name="loan_id" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from fct_report_loans_return_to ($P{loan_id}::integer, $P{lang}::text)]]>
 	</queryString>
 	<field name="return_message" class="java.lang.String"/>
 	<detail>

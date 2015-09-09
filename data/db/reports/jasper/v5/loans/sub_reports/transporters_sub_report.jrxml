@@ -7,8 +7,11 @@
 	<parameter name="transporter_side" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["sender"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select * from fct_report_loans_transporters($P{loan_id}::integer, $P{transporter_side}::text)]]>
+		<![CDATA[select * from fct_report_loans_transporters($P{loan_id}::integer, $P{transporter_side}::text, $P{lang}::text)]]>
 	</queryString>
 	<field name="transport_dispatched_by" class="java.lang.String"/>
 	<field name="transport_transporter_names" class="java.lang.String"/>

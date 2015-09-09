@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Loan Form" language="groovy" pageWidth="595" pageHeight="842" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="20" bottomMargin="20" uuid="e26ceb16-0793-4fcf-a062-d0900c896f00">
 	<property name="ireport.zoom" value="1.3310000000000177"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="3524"/>
 	<property name="ireport.jasperserver.reportUnit" value="/darwin/loans/loans_form_complete"/>
 	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
 	<style name="table">
@@ -83,6 +83,9 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="loan_target_catalogues" class="java.lang.String"/>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select *, 'a loan at your request' as header_text_1
 from fct_report_loans_forms(
@@ -137,6 +140,9 @@ from fct_report_loans_forms(
 					</subreportParameter>
 					<subreportParameter name="target_catalogues">
 						<subreportParameterExpression><![CDATA[$P{loan_target_catalogues}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportParameter name="loan_id">
 						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
@@ -265,6 +271,12 @@ Tracking ID:]]></text>
 				</break>
 				<subreport>
 					<reportElement uuid="985144a8-fc99-4fc3-b7a9-3a77bd72133e" positionType="Float" x="0" y="1" width="559" height="53" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID 3 - Loan Reception confirmation to Return"/>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="loan_id">
+						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
+					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["repo:return_to_informations_sub_report.jrxml"]]></subreportExpression>
 				</subreport>
@@ -621,6 +633,9 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					<subreportParameter name="transporter_side">
 						<subreportParameterExpression><![CDATA["receiver"]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
+					</subreportParameter>
 					<subreportParameter name="loan_id">
 						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -638,6 +653,9 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					<subreportParameter name="target_copy">
 						<subreportParameterExpression><![CDATA[$F{target_copy}]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
+					</subreportParameter>
 					<subreportParameter name="loan_id">
 						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -654,6 +672,9 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					</subreportParameter>
 					<subreportParameter name="target_copy">
 						<subreportParameterExpression><![CDATA[$F{target_copy}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportParameter name="loan_id">
 						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
@@ -819,6 +840,9 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					</subreportParameter>
 					<subreportParameter name="target_copy">
 						<subreportParameterExpression><![CDATA[$F{target_copy}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportParameter name="loan_id">
 						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
@@ -1022,6 +1046,9 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					<subreportParameter name="transporter_side">
 						<subreportParameterExpression><![CDATA["sender"]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
+					</subreportParameter>
 					<subreportParameter name="loan_id">
 						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -1038,6 +1065,9 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					</subreportParameter>
 					<subreportParameter name="target_copy">
 						<subreportParameterExpression><![CDATA[$F{target_copy}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportParameter name="loan_id">
 						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
@@ -1056,6 +1086,9 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					<subreportParameter name="target_copy">
 						<subreportParameterExpression><![CDATA[$F{target_copy}]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
+					</subreportParameter>
 					<subreportParameter name="loan_id">
 						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -1072,6 +1105,9 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 					</subreportParameter>
 					<subreportParameter name="target_copy">
 						<subreportParameterExpression><![CDATA[$F{target_copy}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="lang">
+						<subreportParameterExpression><![CDATA[$P{lang}]]></subreportParameterExpression>
 					</subreportParameter>
 					<subreportParameter name="loan_id">
 						<subreportParameterExpression><![CDATA[$P{loan_id}]]></subreportParameterExpression>
