@@ -123,8 +123,7 @@ class specimensearchActions extends DarwinActions
         {
           $this->spec_lists = Doctrine::getTable('MySavedSearches')
             ->getListFor($this->getUser()->getId(), 'specimen');
-          //ftheeten 2015 09 09 query with a join on "code" to allow sorting mechanism on full_code_indexed
-		  $query = $this->form->getQuery()->leftJoin("SpecimensCodes sc")->where("s.id = sc.record_id AND referenced_relation='specimens'")->orderby($this->orderBy . ' ' . $this->orderDir. ', id');
+          $query = $this->form->getQuery()->orderby($this->orderBy . ' ' . $this->orderDir. ', id');
           //If export is defined export it!
           $this->field_to_show = $this->getVisibleColumns($this->getUser(), $this->form);
 
