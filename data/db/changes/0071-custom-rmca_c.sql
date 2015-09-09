@@ -29,9 +29,13 @@ FROM specimens a
                 and b.id<>c.id
      INNER JOIN specimens bsp
      ON bsp.id=b.record_id
+      and bsp.collection_ref=p_coll_ref 
      INNER JOIN specimens csp
-     ON csp.id=c.record_id      
+     ON csp.id=c.record_id   
+     and
+     csp.collection_ref=p_coll_ref    
 where b.code similar to '%\_id\_[a-z]';
+
 
 /* effacer le diff du code */
 
