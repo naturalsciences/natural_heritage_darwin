@@ -75,6 +75,7 @@ class Reports extends BaseReports
                            'lang' => 'Language'
         ),
         'widgets_options' => array(
+                                    'loan_id' => array(),
                                     'loan_target_selected' => array(
                                       'default_value' => 'RBINS copy',
                                       'values' => array(
@@ -82,8 +83,7 @@ class Reports extends BaseReports
                                         'Your copy' => 'Your copy',
                                         'Specimens copy' => 'Specimens copy',
                                         'Responsible copy' => 'Responsible copy'
-                                      ),
-                                      'multi'=>true
+                                      )
                                     ),
                                     'loan_target_catalogues' => array(
                                       'default_value' => 'taxonomy',
@@ -93,8 +93,7 @@ class Reports extends BaseReports
                                         'lithostratigraphy' => 'Lithostratigraphy',
                                         'lithology' => 'Lithology',
                                         'mineralogy' => 'Mineralogy'
-                                      ),
-                                      'multi'=>true
+                                      )
                                     ),
                                     'lang' => array(
                                       'default_value' => 'en',
@@ -102,8 +101,7 @@ class Reports extends BaseReports
                                         'nl' => 'Dutch',
                                         'en' => 'English',
                                         'fr' => 'French'
-                                      ),
-                                      'multi'=>false
+                                      )
                                     ),
                                   ),
         'fast' => true,

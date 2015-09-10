@@ -27,7 +27,9 @@ class reportActions extends DarwinActions
     // Count the ones that are dedicated to be set on a second line
     $this->widgets_second_line_count = 0;
     foreach(array_keys($this->widgets) as $widget_name){
-      if(isset($this->widgets_options[$widget_name]) && !empty($this->widgets_options[$widget_name]['second_line']) && $this->widgets_options[$widget_name]['second_line']) {
+      if(isset($this->widgets_options[$widget_name]) &&
+         !empty($this->widgets_options[$widget_name]['second_line'])
+         && $this->widgets_options[$widget_name]['second_line']) {
         $this->widgets_second_line_count += 1;
       }
     }

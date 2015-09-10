@@ -12,14 +12,6 @@ class ReportsForm extends BaseReportsForm
 {
   public function configure()
   {
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
-    $years = array_combine($yearsKeyVal, $yearsKeyVal);
-    $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
-    $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
-    $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
-    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
-    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
-    $maxDate->setStart(false);
     $format = Reports::getFormatFor($this->options['name']) ;
     $widgets_options = Reports::getFieldsOptions($this->options['name']);
 
@@ -37,6 +29,19 @@ class ReportsForm extends BaseReportsForm
      *  Annual reports fields
      *##########################################################################
      */
+
+    /*
+     * Date fields
+     */
+
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+    $years = array_combine($yearsKeyVal, $yearsKeyVal);
+    $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
+    $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
+    $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
+    $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));
+    $dateUpperBound = new FuzzyDateTime(sfConfig::get('dw_dateUpperBound'));
+    $maxDate->setStart(false);
 
     /*
      *  Collections selection
@@ -120,6 +125,7 @@ class ReportsForm extends BaseReportsForm
       // @ ToDo find a way to get the appropriate generated id for this widget
       $attached_to_id = 'reports_catalogue_type';
     }
+
     /*
      * Number of Records to get from the report
      */
@@ -164,6 +170,76 @@ class ReportsForm extends BaseReportsForm
       $this->validatorSchema[ 'catalogue_unit_ref' ]->setMessage('required', 'You need to provide at least one catalogue unit');
       $this->mergePostValidator(new buttonRefMultipleValidatorSchema());
     }
+
+    /*##########################################################################
+     * Loan forms fields
+     *##########################################################################
+     */
+
+    /*
+     * Loan ID
+     */
+    if($this->getOption( 'loan_id_forced_hidden', false ) == true) {
+      $this->widgetSchema[ 'loan_id' ] = new sfWidgetFormInputHidden();
+    }
+    else {
+      $this->widgetSchema[ 'loan_id' ] = new widgetFormCompleteButtonRef(
+        array (
+          'model' => 'Loans',
+          'link_url' => 'loans/choose',
+          'method' => 'getName',
+          'box_title' => $this->getI18N()->__('Choose Loan'),
+          'button_class' => 'check_right',
+          'complete_url' => 'catalogue/completeName?table=loans',
+        )
+      );
+    }
+    $this->widgetSchema->setLabels(array ('loan_id' => 'Loan'));
+    $this->validatorSchema[ 'loan_id' ] = new sfValidatorInteger(array ('required' => TRUE));
+
+    /*
+     * Loan Target Selected
+     */
+    if (isset($widgets_options['loan_target_selected'])) {
+      $this->widgetSchema[ 'loan_target_selected' ] = new sfWidgetFormChoice(
+        array (
+          'choices' => $widgets_options[ 'loan_target_selected' ][ 'values' ],
+          'default' => $widgets_options[ 'loan_target_selected' ][ 'default_value' ],
+          'multiple' => true,
+          'expanded' => false
+        )
+      );
+      $this->validatorSchema[ 'loan_target_selected' ] = new sfValidatorChoice(array ('choices' => array_keys($widgets_options[ 'loan_target_selected' ][ 'values' ])));
+    }
+
+    /*
+     * Loan Target Catalogues
+     */
+    if (isset($widgets_options['loan_target_catalogues'])) {
+      $this->widgetSchema[ 'loan_target_catalogues' ] = new sfWidgetFormChoice(
+        array (
+          'choices' => $widgets_options[ 'loan_target_catalogues' ][ 'values' ],
+          'default' => $widgets_options[ 'loan_target_catalogues' ][ 'default_value' ],
+          'multiple' => true,
+          'expanded' => false
+        )
+      );
+      $this->validatorSchema[ 'loan_target_catalogues' ] = new sfValidatorChoice(array ('choices' => array_keys($widgets_options[ 'loan_target_catalogues' ][ 'values' ])));
+    }
+
+    /*
+     * Language
+     */
+    if (isset($widgets_options['lang'])) {
+      $this->widgetSchema[ 'lang' ] = new sfWidgetFormChoice(
+        array (
+          'choices' => $widgets_options[ 'lang' ][ 'values' ],
+          'default' => $widgets_options[ 'lang' ][ 'default_value' ]
+        )
+      );
+      $this->validatorSchema[ 'lang' ] = new sfValidatorChoice(array ('choices' => array_keys($widgets_options[ 'lang' ][ 'values' ])));
+    }
+
     /*##########################################################################
      * Definition of list of fields to be used
      *##########################################################################
