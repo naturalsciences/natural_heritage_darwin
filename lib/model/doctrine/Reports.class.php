@@ -63,8 +63,53 @@ class Reports extends BaseReports
                                                          )
                                  ),
         'fast' => false,
-      )
+      ),
+      'loans_form_complete' => array(
+        'name_fr' => "Formulaire de prêt scientifique",
+        'name_nl' => "Wetenschappelijk leen formulier",
+        'name_en' => "Scientific loan form",
+        'format' => array('pdf'=>'pdf','odt'=>'odt'),
+        'widgets' => array('loan_id'=>'Loan',
+                           'loan_target_selected' => 'Copy to print',
+                           'loan_target_catalogues' => 'Catalogue(s) concerned',
+                           'lang' => 'Language'
+        ),
+        'widgets_options' => array(
+                                    'loan_target_selected' => array(
+                                      'default_value' => 'RBINS copy',
+                                      'values' => array(
+                                        'RBINS copy' => 'RBINS copy',
+                                        'Your copy' => 'Your copy',
+                                        'Specimens copy' => 'Specimens copy',
+                                        'Responsible copy' => 'Responsible copy'
+                                      ),
+                                      'multi'=>true
+                                    ),
+                                    'loan_target_catalogues' => array(
+                                      'default_value' => 'taxonomy',
+                                      'values' => array(
+                                        'taxonomy' => 'Taxonomy',
+                                        'chronostratigraphy' => 'Chronostratigraphy',
+                                        'lithostratigraphy' => 'Lithostratigraphy',
+                                        'lithology' => 'Lithology',
+                                        'mineralogy' => 'Mineralogy'
+                                      ),
+                                      'multi'=>true
+                                    ),
+                                    'lang' => array(
+                                      'default_value' => 'en',
+                                      'values' => array(
+                                        'nl' => 'Dutch',
+                                        'en' => 'English',
+                                        'fr' => 'French'
+                                      ),
+                                      'multi'=>false
+                                    ),
+                                  ),
+        'fast' => true,
+      ),
     );
+
   static public function getGlobalReports(){
 
     return self::$reports;
@@ -136,15 +181,20 @@ class Reports extends BaseReports
         if(in_array($variables['catalogue_type'],array_keys(self::$reports[$name]['widgets_options']['catalogue_type']['values']))){
           $name = str_replace('_x_','_'.$variables['catalogue_type'].'_',$name);
         }
-        $url = sfConfig::get('dw_report_server')."/rest_v2/reports/darwin/".$name.".".$this->getFormat();
-        break;
-      default:
-        $url = sfConfig::get('dw_report_server')."/rest_v2/reports/darwin/".$name."_".$this->getLang().".".$this->getFormat();
     }
 
-    if(! empty($variables) ) $url .= '?'.http_build_query($variables);
-    // I add userLocale to the url to avoid different date format depending on which locale jasper choose
-    $url .= "&userLocale=en" ;
+    sfApplicationConfiguration::getActive()->loadHelpers(array("Darwin"));
+
+    $url = constructReportBaseUrl($name, $this->getLang(), $this->getFormat());
+
+    if(!empty($url) && !in_array($url, array($name.'.'.$this->getFormat(), $name.'_'.$this->getLang().'.'.$this->getFormat()))) {
+      if (!empty($variables)) {
+        $url .= '?' . http_build_query($variables);
+      }
+      // We add userLocale to the url to avoid different date format depending on which locale jasper choose
+      $url .= "&userLocale=en";
+    }
+
     return $url ;
   }
 
