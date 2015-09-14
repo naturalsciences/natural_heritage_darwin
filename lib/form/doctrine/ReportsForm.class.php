@@ -209,7 +209,10 @@ class ReportsForm extends BaseReportsForm
           'expanded' => false
         )
       );
-      $this->validatorSchema[ 'loan_target_selected' ] = new sfValidatorChoice(array ('choices' => array_keys($widgets_options[ 'loan_target_selected' ][ 'values' ])));
+      $this->validatorSchema[ 'loan_target_selected' ] = new sfValidatorChoice(array (
+                                                                                 'choices' => array_keys($widgets_options[ 'loan_target_selected' ][ 'values' ]),
+                                                                                 'multiple' => true
+                                                                               ));
     }
 
     /*
@@ -224,7 +227,10 @@ class ReportsForm extends BaseReportsForm
           'expanded' => false
         )
       );
-      $this->validatorSchema[ 'loan_target_catalogues' ] = new sfValidatorChoice(array ('choices' => array_keys($widgets_options[ 'loan_target_catalogues' ][ 'values' ])));
+      $this->validatorSchema[ 'loan_target_catalogues' ] = new sfValidatorChoice(array (
+                                                                                   'choices' => array_keys($widgets_options[ 'loan_target_catalogues' ][ 'values' ]),
+                                                                                   'multiple' => true
+                                                                                 ));
     }
 
     /*
@@ -237,7 +243,9 @@ class ReportsForm extends BaseReportsForm
           'default' => $widgets_options[ 'lang' ][ 'default_value' ]
         )
       );
-      $this->validatorSchema[ 'lang' ] = new sfValidatorChoice(array ('choices' => array_keys($widgets_options[ 'lang' ][ 'values' ])));
+      $this->validatorSchema[ 'lang' ] = new sfValidatorChoice(array (
+                                                                 'choices' => array_keys($widgets_options[ 'lang' ][ 'values' ])
+                                                               ));
     }
 
     /*##########################################################################

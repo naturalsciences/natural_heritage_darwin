@@ -157,8 +157,14 @@ class Reports extends BaseReports
         $dateTime = new FuzzyDateTime($data[$field], 56, true); 
         $param .= '"'.$field.'"=>"'.$dateTime->format('Y-m-d').'",' ;
       }
-      else
-        $param .= '"'.$field.'"=>"'.$data[$field].'",' ;
+      else {
+        if (is_array($data[ $field ])) {
+          $param .= '"' . $field . '"=>"[' . implode(", ",$data[ $field ]) . ']",';
+        }
+        else {
+          $param .= '"' . $field . '"=>"' . $data[ $field ] . '",';
+        }
+      }
     }
     $this->_set('parameters',$param) ;
   }
@@ -172,7 +178,7 @@ class Reports extends BaseReports
 
   public function getUrlReport()
   {
-    $variables = $this->getParameters() ;
+    $variables = $this->getParameters();
     $name = $this->getName();
     switch($name) {
       case "catalogues_x_listing":

@@ -34,7 +34,7 @@
       <td><?php echo $form['format']->render() ; ?></td>
       <td><?php echo $form['comment']->render() ; ?></td>
       <td><?php echo $form['name']->render() ; ?>
-          <input <?php echo ($fast?'':'id="submit_btn"') ?> class="search_submit" type="submit" name="add" value="<?php echo __('Add'); ?>" />
+          <input id="submit_btn" class="search_submit" type="submit" name="add" value="<?php echo __('Add'); ?>" />
       </td>
     </tr>
     <?php foreach($fields as $field => $name) : ?>

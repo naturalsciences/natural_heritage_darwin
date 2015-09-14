@@ -125,8 +125,7 @@ class reportActions extends DarwinActions
         $report->setParameters($request->getParameter('reports')) ;
         //if it's a fast report, no need to save it, it can be downloaded directly
         if(Reports::getIsFast($name)) {
-          $file = $report->getUrlReport();
-          $this->processDownload($report,$file) ;
+          $this->processDownload($report);
         }
         else $report->save() ;
         return $this->renderPartial("info_msg") ;
@@ -177,5 +176,50 @@ class reportActions extends DarwinActions
     $this->getResponse()->sendHttpHeaders();
     $this->getResponse()->setContent(readfile($file));
     return sfView::NONE;
+  }
+
+  public function processDownload( $report ) {
+    $ctx = stream_context_create(array('http'=>
+                                         array(
+                                           'timeout' => 30, // 1 200 Seconds = 20 Minutes
+                                         )
+                                 ));
+    set_time_limit(0) ;
+    ignore_user_abort(1);
+    try {
+      $content = @file_get_contents($report->getUrlReport(), FALSE, $ctx);
+      if ($content) {
+        $uri = sfConfig::get('sf_upload_dir') . '/report/' . sha1($report->getName() . rand());
+        file_put_contents($uri, $content);
+        $this->setLayout(FALSE);
+        // Adding the file to the Response object
+        $this->getResponse()->clearHttpHeaders();
+        $this->getResponse()->setHttpHeader('Pragma: private', TRUE);
+        $this->getResponse()->setHttpHeader(
+          'Content-Disposition',
+          'attachment; filename="' .
+          $report->getName() . "." . $report->getFormat() . '"'
+        )
+        ;
+        $this->getResponse()
+             ->setContentType("application/force-download " . Multimedia::getMimeTypeFor($report->getFormat()))
+        ;
+        $this->getResponse()
+             ->setHttpHeader('content-type', 'application/octet-stream', TRUE)
+        ;
+
+        $this->getResponse()->sendHttpHeaders();
+        $this->getResponse()
+             ->setContent(readfile($uri))
+        ;
+        return sfView::NONE;
+      }
+      else {
+        return $this->renderText("File get failed");
+      }
+    }
+    catch (Exception $e) {
+      return $this->renderText($e->getMessage());
+    }
   }
 }
