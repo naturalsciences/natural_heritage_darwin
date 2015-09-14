@@ -11,6 +11,7 @@
 class loanActions extends DarwinActions
 {
   protected $widgetCategory = 'loan_widget';
+  protected $table = 'loan';
 
   protected function checkRight($loan_id)
   {
@@ -83,7 +84,8 @@ class loanActions extends DarwinActions
           // And replace the one of the pager with this new one
           $pager->setCountQuery($counted);
 
-        $this->pagerLayout = new PagerLayoutWithArrows($pager,
+        $this->pagerLayout = new PagerLayoutWithArrows(
+          $pager,
           new Doctrine_Pager_Range_Sliding(array('chunk' => $this->pagerSlidingSize)),
           $this->getController()->genUrl($this->s_url.$this->o_url).'/page/{%page_number}'
         );
@@ -93,20 +95,28 @@ class loanActions extends DarwinActions
         // If pager not yet executed, this means the query has to be executed for data loading
         if (! $this->pagerLayout->getPager()->getExecuted())
            $this->items = $this->pagerLayout->execute();
-          $loan_list = array();
-          foreach($this->items as $loan) {
-            $loan_list[] = $loan->getId() ;
-          }
-          $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
-          $this->status = array();
-          foreach($status as $sta) {
-            $this->status[$sta->getLoanRef()] = $sta;
-          }
-          $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
+        $loan_list = array();
+        foreach($this->items as $loan) {
+          $loan_list[] = $loan->getId() ;
+        }
+        $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
+        $this->status = array();
+        foreach($status as $sta) {
+          $this->status[$sta->getLoanRef()] = $sta;
+        }
+        $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
       }
     }
   }
 
+  public function executeChoose(sfWebRequest $request)
+  {
+    $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;
+    $this->setLevelAndCaller($request);
+    $this->is_choose = true;
+    $this->searchForm = new LoansFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id, 'name' => $name));
+    $this->setLayout(false);
+  }
 
   public function executeNew(sfWebRequest $request)
   {

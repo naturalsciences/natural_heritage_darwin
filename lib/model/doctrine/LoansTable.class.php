@@ -78,4 +78,39 @@ class LoansTable extends DarwinTable
       ->andWhere('EXISTS (SELECT li.id FROM LoanItems li WHERE li.loan_ref = l.id AND li.specimen_ref = ? )', $id);
     return $q->execute();
   }
+
+  /*
+   * Used for autocompletion in widgetFormSelectComplete
+   * @param $user integer The user id that serves at filtering the list of loans we can get access to
+   * @param $needle string The string already entered
+   * @param $exact boolean Indicates if an exact match has to be performed
+   * @param $limit integer The limit number of records to be retrieved
+   */
+  public function completeAsArray($user, $needle, $exact, $limit = 30, $level)
+  {
+    $conn_MGR = Doctrine_Manager::connection();
+    $q = Doctrine_Query::create()
+                       ->select('loa.id as id, loa.name as name, fullToIndex(loa.name) as name_indexed')
+                       ->from('Loans loa')
+                       ->orderBy('name ASC')
+    ;
+    if($exact)
+      $q->andWhere("name = ?",$needle);
+    else
+      $q->andWhere("fullToIndex(name) like concat('%',fulltoindex(".$conn_MGR->quote($needle, 'string')."),'%') ");
+
+    if($user && ! $user->isA(Users::ADMIN) ) {
+      $q->innerJoin('loa.LoanRights r ON loa.id = r.loan_ref AND r.user_ref = ?', $user->getId());
+
+      $q->andWhere('r.has_encoding_right = TRUE');
+
+    }
+    $q_results = $q->execute();
+    $result = array();
+    foreach($q_results as $item) {
+      $result[] = array('label' => $item->getName(), 'name_indexed'=> $item->getNameIndexed(), 'value'=> $item->getId() );
+    }
+    return $result;
+  }
+
 }

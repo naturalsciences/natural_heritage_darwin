@@ -10,7 +10,7 @@
   <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
   <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container' => '#loans_filter .results_container')); ?>
   <div class="results_container">
-    <table class="results <?php if($is_choose) echo 'is_choose';?>">
+    <table class="results <?php if(isset($is_choose) && $is_choose) echo 'is_choose';?>">
       <thead>
         <tr>
           <th class="hidden"></th>
@@ -47,7 +47,7 @@
       <tbody>
         <?php foreach($items as $item):?>
           <tr class="rid_<?php echo $item->getId();?> <?php if(isset($status[$item->getId()]) && $status[$item->getId()]->getStatus() =='closed') echo 'loan_line_closed';?>">
-            <td class="item_name"><?php echo $item->getName();?></td>
+            <td class="item_name"><span class="item_name"><?php echo $item->getName();?></span></td>
             <td class="loan_status_col"><?php if(isset($status[$item->getId()])):?>
                 <?php echo $status[$item->getId()]->getFormattedStatus(); ?>
                 <?php if($status[$item->getId()]->getStatus() =='closed'):?>
@@ -68,10 +68,17 @@
             <td>
               <?php echo $item->getDescription();?>
             </td>
-            <td class="">
-              <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loan/view?id='.$item->getId());?>            
-              <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
-              <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId());?>
+            <td class="<?php echo ( isset( $is_choose ) && $is_choose ) ? 'choose' : 'edit';?>">
+              <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),'loan/view?id='.$item->getId());?>
+              <?php if(! $is_choose):?>
+                <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
+                  <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId());?>
+                <?php endif ; ?>
+              <?php else:?>
+                <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
+                  <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId(),array('target'=>"_blank"));?>
+                <?php endif ; ?>
+                <div class="result_choose"><?php echo __('Choose');?></div>
               <?php endif ; ?>
             </td>
           </tr>
@@ -83,9 +90,9 @@
     </table>
   </div>
   <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
-<?php else:?>
-  <?php echo __('No Matching Items');?>
-<?php endif;?>
+  <?php else:?>
+    <?php echo __('No Matching Items');?>
+  <?php endif;?>
 
 <?php else:?>
 

@@ -186,7 +186,7 @@ class ReportsForm extends BaseReportsForm
       $this->widgetSchema[ 'loan_id' ] = new widgetFormCompleteButtonRef(
         array (
           'model' => 'Loans',
-          'link_url' => 'loans/choose',
+          'link_url' => 'loan/choose',
           'method' => 'getName',
           'box_title' => $this->getI18N()->__('Choose Loan'),
           'button_class' => 'check_right',
