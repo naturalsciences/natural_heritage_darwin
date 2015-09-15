@@ -7554,6 +7554,33 @@ DaRWIN</target>
         <source>Return received by</source>
         
       </trans-unit>
+      <trans-unit id="1863">
+        <source>Your report has been saved and is available right above</source>
+        
+      </trans-unit>
+      <trans-unit id="1864">
+        <source>File has not been well written. Please contact your application administrator</source>
+        
+      </trans-unit>
+      <trans-unit id="1865">
+        <source>An error occured while trying to retrieve the file.\nError message: %1%</source>
+        
+      </trans-unit>
+      <trans-unit id="1866">
+        <source>Loan target selected</source>
+        <target>Objetivo</target>
+        
+      </trans-unit>
+      <trans-unit id="1867">
+        <source>Loan target catalogues</source>
+        <target>Catálogos</target>
+        
+      </trans-unit>
+      <trans-unit id="1868">
+        <source>Lang</source>
+        <target>Idioma</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

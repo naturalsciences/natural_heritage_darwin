@@ -7567,6 +7567,36 @@
         <target>Retour réceptionné par</target>
         
       </trans-unit>
+      <trans-unit id="1863">
+        <source>Your report has been saved and is available right above</source>
+        <target>Votre rapport a été sauvegardé et est disponible ci-dessus</target>
+        
+      </trans-unit>
+      <trans-unit id="1864">
+        <source>File has not been well written. Please contact your application administrator</source>
+        <target>Le fichier n'a pas pu être écrit correctement. Veuillez contacter votre administrateur d'application</target>
+        
+      </trans-unit>
+      <trans-unit id="1865">
+        <source>An error occured while trying to retrieve the file.\nError message: %1%</source>
+        <target>Une erreur est apparue lors de l'écriture du fichier.\n Message d'erreur: %1%</target>
+        
+      </trans-unit>
+      <trans-unit id="1866">
+        <source>Loan target selected</source>
+        <target>Cible</target>
+        
+      </trans-unit>
+      <trans-unit id="1867">
+        <source>Loan target catalogues</source>
+        <target>Catalogues</target>
+        
+      </trans-unit>
+      <trans-unit id="1868">
+        <source>Lang</source>
+        <target>Langue</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

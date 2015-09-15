@@ -208,14 +208,14 @@ class reportActions extends DarwinActions
         // Write the reference of that file into db for concerned report
         $report->setUri('/report/'.$file_name);
         $report->save();
-        $this->info_message = $this->i18n->__("Your report has been saved and is available right above.");
+        $this->info_message = $this->i18n->__("Your report has been saved and is available right above");
       }
       else {
         $this->info_message = $this->i18n->__("File has not been well written. Please contact your application administrator");
       }
     }
     catch (Exception $e) {
-      $this->info_message = $this->i18n->__("An error occured while trying to retrieve the file.\nError message: ").$e->getMessage();
+      $this->info_message = $this->i18n->__("An error occured while trying to retrieve the file.\nError message: %1%",array('%1%'=>$e->getMessage()));
     }
   }
 }
