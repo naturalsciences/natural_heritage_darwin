@@ -13,6 +13,8 @@ class reportActions extends DarwinActions
   private $widgets;
   private $widgets_options;
   private $widgets_second_line_count = 0;
+  public $i18n;
+  public $info_message;
 
   /**
    * Sets the different variables in charge of storing the different dynamic
@@ -114,6 +116,8 @@ class reportActions extends DarwinActions
       $this->form->bind($request->getParameter($this->form->getName()));
       if($this->form->isValid())
       {
+        $this->i18n = $this->getContext()->getI18N();
+        $this->info_message = $this->i18n->__("Your report has been saved. It will be availlable tomorrow");
         $report = new Reports() ;
         $report->fromArray(array(
           'name' => $name,
@@ -123,12 +127,13 @@ class reportActions extends DarwinActions
           'comment'=>$request->getParameter('reports')['comment'],
           ));
         $report->setParameters($request->getParameter('reports')) ;
-        //if it's a fast report, no need to save it, it can be downloaded directly
+        // Save the report whatever it's a fast or a non fast one
+        $report->save() ;
+        //if it's a fast report, it can be downloaded directly
         if(Reports::getIsFast($name)) {
           $this->processDownload($report);
         }
-        else $report->save() ;
-        return $this->renderPartial("info_msg") ;
+        return $this->renderPartial("info_msg", array("info_message"=>$this->info_message)) ;
       }
       $val = $this->renderPartial("report_form",
                                   array('form' => $this->form,
@@ -161,65 +166,56 @@ class reportActions extends DarwinActions
   {
     $this->setLayout(false);
     $report = Doctrine::getTable('Reports')->find($request->getParameter('id'));  
-    $this->forward404Unless(file_exists($file = sfConfig::get('sf_upload_dir').$report->getUri()),sprintf('This file does not exist') );
+    $this->forward404Unless(file_exists($uri = sfConfig::get('sf_upload_dir').$report->getUri()),sprintf('This file does not exist') );
 
-    // Adding the file to the Response object
-    $this->getResponse()->clearHttpHeaders();
-    $this->getResponse()->setHttpHeader('Pragma: private', true);
-    $this->getResponse()->setHttpHeader('Content-Disposition',
-                            'attachment; filename="'.
-                            $report->getName().".".$report->getFormat().'"');
-    //$this->getResponse()->setContentType(Multimedia::getMimeTypeFor($report->getFormat()));
-    $this->getResponse()->setContentType("application/force-download ".Multimedia::getMimeTypeFor($report->getFormat()));
-    $this->getResponse()->setHttpHeader('content-type', 'application/octet-stream', true);
-
-    $this->getResponse()->sendHttpHeaders();
-    $this->getResponse()->setContent(readfile($file));
-    return sfView::NONE;
+    $response = $this->getResponse();
+    // First clear HTTP headers
+    $response->clearHttpHeaders();
+    // Then define the necessary headers
+    $response->setContentType(Multimedia::getMimeTypeFor($report->getFormat()));
+    $response->setHttpHeader(
+      'Content-Disposition',
+      'attachment; filename="' .
+      $report->getName() . "." . $report->getFormat() . '"'
+    );
+    $response->setHttpHeader('Content-Description', 'File Transfer');
+    $response->setHttpHeader('Content-Transfer-Encoding', 'binary');
+    $response->setHttpHeader('Content-Length', filesize($uri));
+    $response->setHttpHeader('Cache-Control', 'public, must-revalidate');
+    // if https then always give a Pragma header like this  to overwrite the "pragma: no-cache" header which
+    // will hint IE8 from caching the file during download and leads to a download error!!!
+    $response->setHttpHeader('Pragma', 'public');
+    $response->sendHttpHeaders();
+    ob_end_flush();
+    return $this->renderText(readfile($uri));
   }
 
-  public function processDownload( $report ) {
-    $ctx = stream_context_create(array('http'=>
-                                         array(
-                                           'timeout' => 30, // 1 200 Seconds = 20 Minutes
-                                         )
-                                 ));
-    set_time_limit(0) ;
-    ignore_user_abort(1);
+  public function processDownload( &$report ) {
     try {
-      $content = @file_get_contents($report->getUrlReport(), FALSE, $ctx);
-      if ($content) {
-        $uri = sfConfig::get('sf_upload_dir') . '/report/' . sha1($report->getName() . rand());
-        file_put_contents($uri, $content);
-        $this->setLayout(FALSE);
-        // Adding the file to the Response object
-        $this->getResponse()->clearHttpHeaders();
-        $this->getResponse()->setHttpHeader('Pragma: private', TRUE);
-        $this->getResponse()->setHttpHeader(
-          'Content-Disposition',
-          'attachment; filename="' .
-          $report->getName() . "." . $report->getFormat() . '"'
-        )
-        ;
-        $this->getResponse()
-             ->setContentType("application/force-download " . Multimedia::getMimeTypeFor($report->getFormat()))
-        ;
-        $this->getResponse()
-             ->setHttpHeader('content-type', 'application/octet-stream', TRUE)
-        ;
-
-        $this->getResponse()->sendHttpHeaders();
-        $this->getResponse()
-             ->setContent(readfile($uri))
-        ;
-        return sfView::NONE;
+      // Define Context params
+      $ctx = stream_context_create(array('http'=>
+                                           array(
+                                             'timeout' => 30, // 1 200 Seconds = 20 Minutes
+                                           )
+                                   ));
+      set_time_limit(0) ;
+      ignore_user_abort(1);
+      // First write in a file, on the uri specified, the stream coming from report asked
+      $file_name = sha1($report->getName() . rand());
+      $uri = sfConfig::get('sf_upload_dir') . '/report/' . $file_name;
+      // Try to write the file
+      if(file_put_contents($uri, file_get_contents($report->getUrlReport(), FALSE, $ctx),null,$ctx)) {
+        // Write the reference of that file into db for concerned report
+        $report->setUri('/report/'.$file_name);
+        $report->save();
+        $this->info_message = $this->i18n->__("Your report has been saved and is available right above.");
       }
       else {
-        return $this->renderText("File get failed");
+        $this->info_message = $this->i18n->__("File has not been well written. Please contact your application administrator");
       }
     }
     catch (Exception $e) {
-      return $this->renderText($e->getMessage());
+      $this->info_message = $this->i18n->__("An error occured while trying to retrieve the file.\nError message: ").$e->getMessage();
     }
   }
 }
