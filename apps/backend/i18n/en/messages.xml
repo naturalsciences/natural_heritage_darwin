@@ -6080,7 +6080,7 @@ DaRWIN</target>
       </trans-unit>
       <trans-unit id="1867">
         <source>Loan target catalogues</source>
-        <target>Catalogues</target>
+        <target>Unit name from</target>
       </trans-unit>
       <trans-unit id="1868">
         <source>Lang</source>

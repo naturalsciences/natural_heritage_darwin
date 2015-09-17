@@ -39,7 +39,9 @@
     </tr>
     <?php foreach($fields as $field => $name) : ?>
       <?php if(isset($fields_options[$field]['second_line'])) : ?>
-        <tr class="<?php echo $form[$field]->renderId().((isset($model_name))?'_'.$model_name:'');?>"><th colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>"><?php echo $form[$field]->renderLabel() ; ?></th></tr>
+        <tr class="<?php echo $form[$field]->renderId().((isset($model_name))?'_'.$model_name:'');?>">
+          <th colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>"><?php echo $form[$field]->renderLabel() ; ?></th>
+        </tr>
         <tr class="<?php echo $form[$field]->renderId().((isset($model_name))?'_'.$model_name:'');?>">
           <td colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>"><?php echo $form[$field]->render() ; ?></td>
         </tr>
@@ -66,27 +68,19 @@
         url: target_url + target_url_get_params + catalogue_get_param,
         data: $('#report_form').serialize(),
         success: function(html) {
+          try {
+            var response = $.parseJSON(html);
+          }
+          catch(err) {
+            var response = 'failed';
+          }
+          if( typeof response == 'object' ) {
+            html = response.message;
+            window.location.assign(response.report_url);
+          }
           $(".report_form").html(html);
-          if($("ul.error_list").length == 0 || $("td#report_successfuly_added").length > 0) {
+          if ($("ul.error_list").length == 0 || $("td#report_successfuly_added").length > 0) {
             refresh_reports();
-            // @Todo Make the function called on change generic so it's not duplicated code - already on indexSuccess.php
-            $('#report_list').off("change").val('').on("change",
-              function (event) {
-                event.preventDefault();
-                if ($(this).val() != '') {
-                  $.ajax({
-                    type: "POST",
-                    url: '<?php echo url_for("report/getReport") ; ?>',
-                    data: 'name=' + $(this).val(),
-                    success: function (html) {
-                      $(".report_form").html(html);
-                    }
-                  });
-                  $(".report_form").html('<img src="/images/loader.gif" />');
-                }
-                $(".report_form").html('');
-              }
-            );
           }
         }
       });

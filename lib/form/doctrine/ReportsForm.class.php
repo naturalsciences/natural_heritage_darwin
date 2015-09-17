@@ -179,7 +179,7 @@ class ReportsForm extends BaseReportsForm
     /*
      * Loan ID
      */
-    if($this->getOption( 'loan_id_forced_hidden', false ) == true) {
+    if($this->getOption( 'with_js', false ) == true) {
       $this->widgetSchema[ 'loan_id' ] = new sfWidgetFormInputHidden();
     }
     else {

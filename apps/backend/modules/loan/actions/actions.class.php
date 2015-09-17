@@ -203,11 +203,18 @@ class loanActions extends DarwinActions
       $files = Doctrine::getTable("Multimedia")->getMultimediaRelated('loans',$request->getParameter('id')) ;
       $loan->delete();
       foreach($files as $file) unlink($file) ;
+      if ( $request->isXmlHttpRequest() ) {
+        return $this->renderText("ok");
+      }
       $this->redirect('loan/index');
     }
     catch(Doctrine_Exception $ne)
     {
       $e = new DarwinPgErrorParser($ne);
+      if ( $request->isXmlHttpRequest() ) {
+        $message = json_encode($this->getPartial("global/error_msg", array("error_message"=>$e->getMessage())));
+        return $this->renderText($message);
+      }
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
       $this->form = new LoansForm($loan);
       $this->form->getErrorSchema()->addError($error);

@@ -224,7 +224,7 @@
       </trans-unit>
       <trans-unit id="55">
         <source>Are you sure ?</source>
-        <target>Etes vous sûre ?</target>
+        <target>Êtes-vous sûr(e) ?</target>
         
       </trans-unit>
       <trans-unit id="56">
@@ -369,7 +369,7 @@
       </trans-unit>
       <trans-unit id="85">
         <source>Are you sure?</source>
-        <target>Etes vous sûre ?</target>
+        <target>Êtes-vous sûr(e) ?</target>
         
       </trans-unit>
       <trans-unit id="86">
@@ -2214,7 +2214,7 @@
       </trans-unit>
       <trans-unit id="501">
         <source>This element already has synonyms.&lt;br /&gt;Are you sure that you want to merge them together?</source>
-        <target>Cet élément a déjà un synonyme.&lt;br Choose/&gt;Etes vous sûre de vouloir les regrouper ?</target>
+        <target>Cet élément a déjà un synonyme.&lt;br Choose/&gt;Êtes-vous sûr(e) de vouloir les regrouper ?</target>
         
       </trans-unit>
       <trans-unit id="503">
@@ -3589,7 +3589,7 @@
       </trans-unit>
       <trans-unit id="783">
         <source>Your Ig number will be lost ! are you sure you want continue ?</source>
-        <target>Votre numéro I.G. va être perdu ! êtes vous sur de vouloir continuer ?</target>
+        <target>Votre numéro I.G. va être perdu ! Êtes-vous sûr(e) de vouloir continuer ?</target>
         
       </trans-unit>
       <trans-unit id="784">
@@ -5715,7 +5715,7 @@
       </trans-unit>
       <trans-unit id="1429">
         <source>All pending lines will be deleted, Are you sure ?</source>
-        <target>toutes les lignes En attente seront effacées, êtes vous sûr(e) ?</target>
+        <target>toutes les lignes En attente seront effacées, êtes-vous sûr(e) ?</target>
         
       </trans-unit>
       <trans-unit id="1430">
@@ -5750,7 +5750,7 @@
       </trans-unit>
       <trans-unit id="1436">
         <source>All children will be deleted too, Are you sure ?</source>
-        <target>Tous les enfants seront également effacés, êtes vous sûr(e) ? </target>
+        <target>Tous les enfants seront également effacés, êtes-vous sûr(e) ? </target>
         
       </trans-unit>
       <trans-unit id="1437">
@@ -6615,7 +6615,7 @@
       </trans-unit>
       <trans-unit id="1648">
         <source>Are you sure you want to archive your loan ?</source>
-        <target>Etes vous sûr de vouloir archiver votre prêt ?</target>
+        <target>Êtes-vous sûr(e) de vouloir archiver votre prêt ?</target>
         
       </trans-unit>
       <trans-unit id="1662">
@@ -7080,7 +7080,7 @@
       </trans-unit>
       <trans-unit id="1765">
         <source>deleteting_confirm</source>
-        <target>Supprimer cette personne la supprimera également de votre import sur cet enregistrement, êtes vous sûr ?</target>
+        <target>Supprimer cette personne la supprimera également de votre import sur cet enregistrement, êtes-vous sûr(e) ?</target>
         
       </trans-unit>
       <trans-unit id="1767">
@@ -7589,7 +7589,7 @@
       </trans-unit>
       <trans-unit id="1867">
         <source>Loan target catalogues</source>
-        <target>Catalogues</target>
+        <target>Source des noms</target>
         
       </trans-unit>
       <trans-unit id="1868">

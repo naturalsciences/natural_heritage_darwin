@@ -10,6 +10,7 @@
   <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
   <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container' => '#loans_filter .results_container')); ?>
   <div class="results_container">
+    <div id="error_message"></div>
     <table class="results <?php if(isset($is_choose) && $is_choose) echo 'is_choose';?>">
       <thead>
         <tr>
@@ -73,10 +74,14 @@
               <?php if(! $is_choose):?>
                 <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId());?>
+                  <?php echo link_to(image_tag('duplicate.png',array('title'=>__('Duplicate loan'))),'loan/new?duplicate_id='.$item->getId());?>
+                  <?php echo link_to(image_tag('print.png',array('title'=>__('Print loan'))),'loan/print?id='.$item->getId(), array('class'=>'print_item'));?>
+                  <?php echo link_to(image_tag('remove.png',array('title'=>__('Remove loan'))),'loan/delete?id='.$item->getId(), array('class'=>'clear_item'));?>
                 <?php endif ; ?>
               <?php else:?>
                 <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId(),array('target'=>"_blank"));?>
+                  <?php echo link_to(image_tag('duplicate.png',array('title'=>__('Duplicate loan'))),'loan/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
                 <?php endif ; ?>
                 <div class="result_choose"><?php echo __('Choose');?></div>
               <?php endif ; ?>
@@ -89,11 +94,15 @@
       </tbody>
     </table>
   </div>
-  <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("div.results_container").results({confirmation_message : "<?php echo addslashes(__('Are you sure ?'));?>"});
+    });
+  </script>
+    <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
   <?php else:?>
     <?php echo __('No Matching Items');?>
   <?php endif;?>
-
 <?php else:?>
 
 <div class="error">

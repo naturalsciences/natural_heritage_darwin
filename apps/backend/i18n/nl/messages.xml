@@ -7541,12 +7541,12 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
       </trans-unit>
       <trans-unit id="1866">
         <source>Loan target selected</source>
-        <target>Doel</target>
+        <target>Destinatie</target>
         
       </trans-unit>
       <trans-unit id="1867">
         <source>Loan target catalogues</source>
-        <target>Catalogi</target>
+        <target>Namen uit van</target>
         
       </trans-unit>
       <trans-unit id="1868">

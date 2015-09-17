@@ -74,7 +74,8 @@ class reportActions extends DarwinActions
       $this->setWidgetsOptions($name);
       $this->form = new ReportsForm(null,array('fields'=>$this->widgets,
                                                'name' => $name,
-                                               'model_name' => $request->getParameter('catalogue','taxonomy')
+                                               'model_name' => $request->getParameter('catalogue','taxonomy'),
+                                               'with_js' => $request->getParameter('with_js',false)
                                               )
       ) ;
       if($request->getParameter('widgetButtonRefMultipleRefresh', '')=='1') {
@@ -131,7 +132,13 @@ class reportActions extends DarwinActions
         $report->save() ;
         //if it's a fast report, it can be downloaded directly
         if(Reports::getIsFast($name)) {
-          $this->processDownload($report);
+          $response = $this->processDownload($report);
+          if($response != 0) {
+            $message = json_encode($this->getPartial("info_msg", array("info_message"=>$this->info_message)));
+            return $this->renderText('{ "report_url" : "'.
+                                     $this->generateUrl("default", array("module"=>"report", "action"=>"downloadFile", "id"=>$response), true).
+                                     '", "message": '.$message.' }');
+          }
         }
         return $this->renderPartial("info_msg", array("info_message"=>$this->info_message)) ;
       }
@@ -191,6 +198,7 @@ class reportActions extends DarwinActions
   }
 
   public function processDownload( &$report ) {
+    $return_val = 0;
     try {
       // Define Context params
       $ctx = stream_context_create(array('http'=>
@@ -209,6 +217,7 @@ class reportActions extends DarwinActions
         $report->setUri('/report/'.$file_name);
         $report->save();
         $this->info_message = $this->i18n->__("Your report has been saved and is available right above");
+        $return_val = $report->getId();
       }
       else {
         $this->info_message = $this->i18n->__("File has not been well written. Please contact your application administrator");
@@ -217,5 +226,6 @@ class reportActions extends DarwinActions
     catch (Exception $e) {
       $this->info_message = $this->i18n->__("An error occured while trying to retrieve the file.\nError message: %1%",array('%1%'=>$e->getMessage()));
     }
+    return $return_val;
   }
 }
