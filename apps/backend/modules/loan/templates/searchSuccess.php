@@ -75,7 +75,21 @@
                 <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId());?>
                   <?php echo link_to(image_tag('duplicate.png',array('title'=>__('Duplicate loan'))),'loan/new?duplicate_id='.$item->getId());?>
-                  <?php echo link_to(image_tag('print.png',array('title'=>__('Print loan'))),'report/getReport?name=loans_form_complete&ids_list[loan_id]='.$item->getId(), array('class'=>'print_item'));?>
+                  <?php echo link_to(
+                      image_tag(
+                          'print.png',
+                          array(
+                              'title'=>__('Print loan')
+                          )
+                      ),
+                      'report/getReport?'.http_build_query(array(
+                          'name'=>'loans_form_complete',
+                          'ids_list'=>array(
+                              'loan_id'=>$item->getId()
+                          )
+                      )),
+                      array('class'=>'print_item')
+                  );?>
                   <?php echo link_to(image_tag('remove.png',array('title'=>__('Remove loan'))),'loan/delete?id='.$item->getId(), array('class'=>'clear_item'));?>
                 <?php endif ; ?>
               <?php else:?>

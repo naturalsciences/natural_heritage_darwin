@@ -30,7 +30,19 @@
     <tr>
       <?php foreach($fields as $field => $name) : ?>
         <?php if(!isset($fields_options[$field]['second_line'])) : ?>
-          <td><?php echo $form[$field]->renderError() ; ?></td>
+          <td>
+            <?php
+              if (
+                  !$form[$field]->getWidget()->getOption('type')=='hidden' ||
+                  (
+                      $form[$field]->getWidget()->getOption('type')=='hidden' &&
+                      $form[$field]->getWidget()->hasOption('model')
+                  )
+              ):
+            ?>
+              <?php echo $form[$field]->renderError() ; ?>
+            <?php endif; ?>
+          </td>
         <?php endif; ?>
       <?php endforeach ; ?>
       <td><?php echo $form['format']->renderError() ; ?></td>
@@ -40,7 +52,9 @@
     <tr>
       <?php foreach($fields as $field => $name) : ?>
         <?php if(!isset($fields_options[$field]['second_line'])) : ?>
-          <td><?php echo $form[$field]->render() ; ?></td>
+          <td>
+            <?php echo $form[$field]->render() ; ?>
+          </td>
         <?php endif; ?>
       <?php endforeach ; ?>
       <td><?php echo $form['format']->render() ; ?></td>
@@ -52,10 +66,24 @@
     <?php foreach($fields as $field => $name) : ?>
       <?php if(isset($fields_options[$field]['second_line'])) : ?>
         <tr class="<?php echo $form[$field]->renderId().((isset($model_name))?'_'.$model_name:'');?>">
-          <th colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>"><?php echo $form[$field]->renderLabel() ; ?></th>
+          <th colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>">
+            <?php
+              if (
+                  !$form[$field]->getWidget()->getOption('type')=='hidden' ||
+                  (
+                      $form[$field]->getWidget()->getOption('type')=='hidden' &&
+                      $form[$field]->getWidget()->hasOption('model')
+                  )
+              ):
+            ?>
+              <?php echo $form[$field]->renderLabel() ; ?>
+            <?php endif; ?>
+          </th>
         </tr>
         <tr class="<?php echo $form[$field]->renderId().((isset($model_name))?'_'.$model_name:'');?>">
-          <td colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>"><?php echo $form[$field]->render() ; ?></td>
+          <td colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>">
+            <?php echo $form[$field]->render() ; ?>
+          </td>
         </tr>
       <?php endif; ?>
     <?php endforeach; ?>

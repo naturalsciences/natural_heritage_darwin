@@ -69,13 +69,20 @@ class reportActions extends DarwinActions
   {
     $this->forward404Unless($request->hasParameter('name'));
     $name = $request->getParameter('name');
+    $ids_list = array();
+    foreach($request->getRequestParameters() as $rp_key=>$rp_value) {
+      if (strpos($rp_key, 'ids_list[') !== false && strpos($rp_key, ']') !== false && (strpos($rp_key, ']')-strpos($rp_key, '[')>1)) {
+        $ids_list[substr($rp_key, strpos($rp_key, '[')+1, strpos($rp_key, ']')-strpos($rp_key, '[')-1)] = $rp_value;
+      }
+    }
     if($request->isXmlHttpRequest() && $request->isMethod('post'))
     {
       $this->setWidgetsOptions($name);
       $this->form = new ReportsForm(null,array('fields'=>$this->widgets,
                                                'name' => $name,
                                                'model_name' => $request->getParameter('catalogue','taxonomy'),
-                                               'with_js' => $request->getParameter('with_js',false)
+                                               'with_js' => $request->getParameter('with_js',false),
+                                               'ids_list' => $ids_list
                                               )
       ) ;
       if($request->getParameter('widgetButtonRefMultipleRefresh', '')=='1') {
