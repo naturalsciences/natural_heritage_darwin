@@ -6086,6 +6086,10 @@ DaRWIN</target>
         <source>Lang</source>
         <target>Language</target>
       </trans-unit>
+      <trans-unit id="1869">
+        <source>Please fill in the criterias to print your report</source>
+        <target>Please fill in the criterias to print your report</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

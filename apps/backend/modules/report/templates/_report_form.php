@@ -5,7 +5,19 @@
     <tr>
       <?php foreach($fields as $field => $name) : ?>
         <?php if(!isset($fields_options[$field]['second_line'])) : ?>
-          <th><?php echo $form[$field]->renderLabel() ; ?></th>
+          <th>
+            <?php
+              if (
+                !$form[$field]->getWidget()->getOption('type')=='hidden' ||
+                (
+                  $form[$field]->getWidget()->getOption('type')=='hidden' &&
+                  $form[$field]->getWidget()->hasOption('model')
+                )
+              ):
+            ?>
+              <?php echo $form[$field]->renderLabel() ; ?>
+            <?php endif;?>
+          </th>
         <?php endif; ?>
       <?php endforeach ; ?>
       <th><?php echo $form['format']->renderLabel() ; ?></th>

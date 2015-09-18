@@ -111,7 +111,8 @@ class reportActions extends DarwinActions
       $this->setWidgetsOptions($name);
       $this->form = new ReportsForm(null,array('fields'=>$this->widgets,
                                                'name' => $name,
-                                               'model_name' => $request->getParameter('catalogue','taxonomy')
+                                               'model_name' => $request->getParameter('catalogue','taxonomy'),
+                                               'with_js' => $request->getParameter('with_js',false)
                                         )
       );
       $this->form->bind($request->getParameter($this->form->getName()));

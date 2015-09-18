@@ -75,7 +75,7 @@
                 <?php if(in_array($item->getId(),sfOutputEscaper::unescape($rights)) || $sf_user->isAtLeast(Users::ADMIN)) : ?>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit loan'))),'loan/edit?id='.$item->getId());?>
                   <?php echo link_to(image_tag('duplicate.png',array('title'=>__('Duplicate loan'))),'loan/new?duplicate_id='.$item->getId());?>
-                  <?php echo link_to(image_tag('print.png',array('title'=>__('Print loan'))),'loan/print?id='.$item->getId(), array('class'=>'print_item'));?>
+                  <?php echo link_to(image_tag('print.png',array('title'=>__('Print loan'))),'report/getReport?name=loans_form_complete&ids_list[loan_id]='.$item->getId(), array('class'=>'print_item'));?>
                   <?php echo link_to(image_tag('remove.png',array('title'=>__('Remove loan'))),'loan/delete?id='.$item->getId(), array('class'=>'clear_item'));?>
                 <?php endif ; ?>
               <?php else:?>
@@ -96,7 +96,8 @@
   </div>
   <script type="text/javascript">
     $(document).ready(function () {
-      $("div.results_container").results({confirmation_message : "<?php echo addslashes(__('Are you sure ?'));?>"});
+      $("div.results_container").results({ "confirmation_message" : "<?php echo addslashes(__('Are you sure ?'));?>" });
+      $("div.results_container").print_report({ "q_tip_text" : "<?php echo addslashes(__('Please fill in the criterias to print your report'));?>" });
     });
   </script>
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>

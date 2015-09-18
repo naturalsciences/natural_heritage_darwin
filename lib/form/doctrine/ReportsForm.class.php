@@ -194,7 +194,6 @@ class ReportsForm extends BaseReportsForm
         )
       );
     }
-    $this->widgetSchema->setLabels(array ('loan_id' => 'Loan'));
     $this->validatorSchema[ 'loan_id' ] = new sfValidatorInteger(array ('required' => TRUE));
 
     /*

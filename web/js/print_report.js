@@ -31,11 +31,13 @@
                 id: 'modal',
                 content: {
                     text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
-                    title: { button: true, text: $.fn.print_report_call.options['q_tip_text'] },
+                    title: { button: true, text: print_base.options['q_tip_text'] },
                     ajax: {
                         url: $(this).attr('href'),
-                        type: 'GET',
-                        data: { "with_js" : 1 }
+                        type: 'POST',
+                        data: {
+                                "with_js" : 1
+                              }
                     }
                 },
                 position: {
