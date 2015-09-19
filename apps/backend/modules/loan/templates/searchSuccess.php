@@ -84,7 +84,7 @@
                       ),
                       'report/getReport?'.http_build_query(array(
                           'name'=>'loans_form_complete',
-                          'ids_list'=>array(
+                          'default_vals'=>array(
                               'loan_id'=>$item->getId()
                           )
                       )),

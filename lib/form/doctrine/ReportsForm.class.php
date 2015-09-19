@@ -12,7 +12,7 @@ class ReportsForm extends BaseReportsForm
 {
   public function configure()
   {
-    $ids_list = $this->getOption('ids_list');
+    $default_vals = $this->getOption('default_vals');
     $format = Reports::getFormatFor($this->options['name']) ;
     $widgets_options = Reports::getFieldsOptions($this->options['name']);
 
@@ -181,8 +181,8 @@ class ReportsForm extends BaseReportsForm
      * Loan ID
      */
 
-    if($this->getOption( 'with_js', false ) == true && !empty($ids_list['loan_id'])) {
-      $this->widgetSchema[ 'loan_id' ] = new sfWidgetFormInputHidden(array('default'=>$ids_list['loan_id']));
+    if($this->getOption( 'with_js', false ) == true && !empty($default_vals['loan_id'])) {
+      $this->widgetSchema[ 'loan_id' ] = new sfWidgetFormInputHidden(array('default'=>$default_vals['loan_id']));
     }
     else {
       $this->widgetSchema[ 'loan_id' ] = new widgetFormCompleteButtonRef(

@@ -31,17 +31,7 @@
       <?php foreach($fields as $field => $name) : ?>
         <?php if(!isset($fields_options[$field]['second_line'])) : ?>
           <td>
-            <?php
-              if (
-                  !$form[$field]->getWidget()->getOption('type')=='hidden' ||
-                  (
-                      $form[$field]->getWidget()->getOption('type')=='hidden' &&
-                      $form[$field]->getWidget()->hasOption('model')
-                  )
-              ):
-            ?>
-              <?php echo $form[$field]->renderError() ; ?>
-            <?php endif; ?>
+            <?php echo $form[$field]->renderError() ; ?>
           </td>
         <?php endif; ?>
       <?php endforeach ; ?>
