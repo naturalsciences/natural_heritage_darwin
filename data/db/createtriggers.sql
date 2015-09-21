@@ -441,6 +441,31 @@ CREATE TRIGGER trg_trk_log_table_people AFTER INSERT OR UPDATE OR DELETE
         ON people FOR EACH ROW
         EXECUTE PROCEDURE fct_trk_log_table();
 
+CREATE TRIGGER trg_trk_log_table_loans
+AFTER INSERT OR UPDATE OR DELETE
+ON loans
+FOR EACH ROW
+EXECUTE PROCEDURE fct_trk_log_table();
+
+CREATE TRIGGER trg_trk_log_table_loan_items
+AFTER INSERT OR UPDATE OR DELETE
+ON loan_items
+FOR EACH ROW
+EXECUTE PROCEDURE fct_trk_log_table();
+
+CREATE TRIGGER trg_trk_log_table_loan_status
+AFTER INSERT OR UPDATE OR DELETE
+ON loan_status
+FOR EACH ROW
+EXECUTE PROCEDURE fct_trk_log_table();
+
+CREATE TRIGGER trg_trk_log_table_loan_rights
+AFTER INSERT OR UPDATE OR DELETE
+ON loan_rights
+FOR EACH ROW
+EXECUTE PROCEDURE fct_trk_log_table();
+
+
 /*
 ** Trigger aimed at calculating unified values
 */

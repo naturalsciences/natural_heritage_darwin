@@ -220,6 +220,10 @@ DROP TRIGGER IF EXISTS trg_trk_log_table_lithology
 DROP TRIGGER IF EXISTS trg_trk_log_table_people 
         ON people;
 
+DROP TRIGGER IF EXISTS trg_trk_log_table_loans ON loans;
+DROP TRIGGER IF EXISTS trg_trk_log_table_loan_items ON loan_items;
+DROP TRIGGER IF EXISTS trg_trk_log_table_loan_status ON loan_status;
+DROP TRIGGER IF EXISTS trg_trk_log_table_loan_rights ON loan_rights;
 
 /*** darwin flat synchro triggers ***/
 

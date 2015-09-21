@@ -1664,7 +1664,7 @@ create table loan_items (
   details varchar default '',
   constraint pk_loan_items primary key (id),
   constraint fk_loan_items_ig foreign key (ig_ref) references igs(id),
-  constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
+  constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id) on delete CASCADE,
   constraint fk_loan_items_specimen_ref foreign key (specimen_ref) references specimens(id) on delete set null,
   constraint unq_loan_items unique(loan_ref, specimen_ref)
 );

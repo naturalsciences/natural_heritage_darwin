@@ -645,4 +645,89 @@ order by vals.val_index,loans.id,row_number() over (PARTITION BY vals.val ORDER 
 $$
 language sql;
 
+alter table only loan_items drop constraint fk_loan_items_loan_ref;
+alter table loan_items add constraint fk_loan_items_loan_ref FOREIGN KEY (loan_ref) REFERENCES loans ( id ) on DELETE cascade;
+
+CREATE OR REPLACE FUNCTION fct_trk_log_table() RETURNS TRIGGER
+AS $$
+DECLARE
+  user_id integer;
+  track_level integer;
+  track_fields integer;
+  trk_id bigint;
+  tbl_row RECORD;
+  new_val varchar;
+  old_val varchar;
+  returnedRow RECORD;
+BEGIN
+  IF TG_OP IN ('INSERT', 'UPDATE') THEN
+    returnedRow := NEW;
+  ELSE
+    returnedRow := OLD;
+  END IF;
+  SELECT COALESCE(CASE WHEN get_setting('darwin.track_level') = '' THEN NULL ELSE get_setting('darwin.track_level') END,'10')::integer INTO track_level;
+  IF track_level = 0 THEN --NO Tracking
+    RETURN returnedRow;
+  ELSIF track_level = 1 THEN -- Track Only Main tables
+    IF TG_TABLE_NAME::text NOT IN ('specimens', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
+      'mineralogy', 'lithology', 'people', 'loans', 'loan_items') THEN
+      RETURN returnedRow;
+    END IF;
+  END IF;
+
+  SELECT COALESCE(CASE WHEN get_setting('darwin.userid') = '' THEN NULL ELSE get_setting('darwin.userid') END,'0')::integer INTO user_id;
+  IF user_id = 0 OR  user_id = -1 THEN
+    RETURN returnedRow;
+  END IF;
+
+  IF TG_OP = 'INSERT' THEN
+    INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, new_value)
+        VALUES (TG_TABLE_NAME::text, NEW.id, user_id, 'insert', now(), hstore(NEW)) RETURNING id into trk_id;
+  ELSEIF TG_OP = 'UPDATE' THEN
+
+    IF ROW(NEW.*) IS DISTINCT FROM ROW(OLD.*) THEN
+    INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, new_value, old_value)
+        VALUES (TG_TABLE_NAME::text, NEW.id, user_id, 'update', now(), hstore(NEW), hstore(OLD)) RETURNING id into trk_id;
+    ELSE
+      RAISE info 'unnecessary update on table "%" and id "%"', TG_TABLE_NAME::text, NEW.id;
+    END IF;
+
+  ELSEIF TG_OP = 'DELETE' THEN
+    INSERT INTO users_tracking (referenced_relation, record_id, user_ref, action, modification_date_time, old_value)
+      VALUES (TG_TABLE_NAME::text, OLD.id, user_id, 'delete', now(), hstore(OLD));
+  END IF;
+
+  RETURN NULL;
+END;
+$$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_trk_log_table_loans ON loans;
+CREATE TRIGGER trg_trk_log_table_loans
+AFTER INSERT OR UPDATE OR DELETE
+ON loans
+FOR EACH ROW
+EXECUTE PROCEDURE fct_trk_log_table();
+
+DROP TRIGGER IF EXISTS trg_trk_log_table_loan_items ON loan_items;
+CREATE TRIGGER trg_trk_log_table_loan_items
+AFTER INSERT OR UPDATE OR DELETE
+ON loan_items
+FOR EACH ROW
+EXECUTE PROCEDURE fct_trk_log_table();
+
+DROP TRIGGER IF EXISTS trg_trk_log_table_loan_status ON loan_status;
+CREATE TRIGGER trg_trk_log_table_loan_status
+AFTER INSERT OR UPDATE OR DELETE
+ON loan_status
+FOR EACH ROW
+EXECUTE PROCEDURE fct_trk_log_table();
+
+DROP TRIGGER IF EXISTS trg_trk_log_table_loan_rights ON loan_rights;
+CREATE TRIGGER trg_trk_log_table_loan_rights
+AFTER INSERT OR UPDATE OR DELETE
+ON loan_rights
+FOR EACH ROW
+EXECUTE PROCEDURE fct_trk_log_table();
+
 COMMIT;

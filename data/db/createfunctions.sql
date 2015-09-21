@@ -551,7 +551,7 @@ BEGIN
     RETURN returnedRow;
   ELSIF track_level = 1 THEN -- Track Only Main tables
     IF TG_TABLE_NAME::text NOT IN ('specimens', 'taxonomy', 'chronostratigraphy', 'lithostratigraphy',
-      'mineralogy', 'lithology', 'people') THEN
+      'mineralogy', 'lithology', 'people', 'loans', 'loan_items') THEN
       RETURN returnedRow;
     END IF;
   END IF;
