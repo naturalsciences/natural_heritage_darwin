@@ -29,6 +29,7 @@
             scroll(0,0) ;
             $(this).qtip({
                 id: 'modal',
+
                 content: {
                     text: '<img src="/images/loader.gif" alt="loading"> Loading ...',
                     title: { button: true, text: print_base.options['q_tip_text'] },
@@ -40,6 +41,7 @@
                               }
                     }
                 },
+
                 position: {
                     my: 'top center',
                     at: 'top center',
@@ -59,10 +61,12 @@
                         blur: false
                     }
                 },
+
                 hide: {
                     event: 'close_modal',
                     target: $('body')
                 },
+
                 events: {
                     hide: function(event, api) {
                         $('#submit_btn').die('click') ;
@@ -70,7 +74,8 @@
                         api.destroy();
                     }
                 },
-                style: 'ui-tooltip-light ui-tooltip-rounded'
+
+                style: 'ui-tooltip-light ui-tooltip-rounded qtiped_report_form'
             }, event );
             return false;
         };

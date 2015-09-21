@@ -87,7 +87,7 @@
       var catalogue_get_param = '';
       var target_url = $('#report_form').attr('action');
       var target_url_get_params = '?';
-      if($("#reports_catalogue_type") != 'undefined') {
+      if( $("#reports_catalogue_type") != 'undefined' ) {
         catalogue_get_param = 'catalogue='+encodeURIComponent($("#reports_catalogue_type").val());
       }
       if (target_url.indexOf('?') > -1) {
@@ -108,9 +108,17 @@
             html = response.message;
             window.location.assign(response.report_url);
           }
-          $(".report_form").html(html);
-          if ($("ul.error_list").length == 0 || $("td#report_successfuly_added").length > 0) {
-            refresh_reports();
+          if ( $("div.report_form") != 'undefined' && $("div.report_form").length > 0 ) {
+            $("div.report_form").html(html);
+            if ($("ul.error_list").length == 0 || $("td#report_successfuly_added").length > 0) {
+              refresh_reports();
+            }
+          }
+          else if ( $("div.qtiped_report_form div#ui-tooltip-modal-content") != 'undefined' ) {
+            $(".qtiped_report_form div#ui-tooltip-modal-content").html(html);
+            if ( $("div.qtiped_report_form a.ui-tooltip-close") != 'undefined' ) {
+              $(".qtiped_report_form a.ui-tooltip-close").trigger("click");
+            }
           }
         }
       });
