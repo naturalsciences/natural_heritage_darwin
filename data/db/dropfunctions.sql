@@ -153,3 +153,10 @@ DROP FUNCTION IF EXISTS fct_listing_chronostratigraphy (IN nbr_records INTEGER, 
 DROP FUNCTION IF EXISTS fct_listing_lithostratigraphy (IN nbr_records INTEGER, VARIADIC litho_unit_ids INTEGER[]) ;
 DROP FUNCTION IF EXISTS fct_listing_mineralogy (IN nbr_records INTEGER, VARIADIC mineralo_unit_ids INTEGER[]) ;
 DROP FUNCTION IF EXISTS fct_listing_lithology (IN nbr_records INTEGER, VARIADIC litholo_unit_ids INTEGER[]) ;
+
+/* Reporting functions */
+drop function if exists fct_report_loans_transporters (loan_id loans.id%TYPE, transporter_side TEXT, lang TEXT);
+drop function if exists fct_report_loans_return_to (loan_id loans.id%TYPE, lang TEXT);
+drop function if exists fct_report_loans_maintenances (loan_id loans.id%TYPE, maintenance_type TEXT);
+drop function if exists fct_report_loans_addresses (loan_id loans.id%TYPE, target_copy TEXT);
+drop function if exists fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean, lang text);
