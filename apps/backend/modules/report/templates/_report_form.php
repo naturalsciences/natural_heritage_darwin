@@ -1,6 +1,18 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-<?php echo form_tag('report/add', array('class'=>'table_view search_form','id'=>'report_form'));?>
+<?php if(isset($with_js) && isset($default_vals) && !empty($with_js) && !empty($default_vals) ) {
+  $query_args =  '?'.http_build_query(array(
+                                        'with_js'=>$with_js,
+                                        'default_vals' => $default_vals->getRawValue()
+                                        )
+    );
+}
+else {
+  $query_args = '';
+}
+?>
+<?php echo form_tag('report/add'.$query_args,
+                    array('class'=>'table_view search_form','id'=>'report_form'));?>
   <table>
     <tr>
       <?php foreach($fields as $field => $name) : ?>
@@ -24,10 +36,10 @@
       <th><?php echo $form['comment']->renderLabel() ; ?></th>
       <th></th>
     </tr>
-    <tr>
+    <tr class="global_errors">
       <td colspan="<?php echo count($fields)+2-$fields_at_second_line ; ?>"><?php echo $form->renderGlobalErrors() ; ?></td>
     </tr>
-    <tr>
+    <tr class="fields_errors">
       <?php foreach($fields as $field => $name) : ?>
         <?php if(!isset($fields_options[$field]['second_line'])) : ?>
           <td>
@@ -116,7 +128,12 @@
           }
           else if ( $("div.qtiped_report_form div#ui-tooltip-modal-content") != 'undefined' ) {
             $(".qtiped_report_form div#ui-tooltip-modal-content").html(html);
-            if ( $("div.qtiped_report_form a.ui-tooltip-close") != 'undefined' ) {
+            if ( $("div.qtiped_report_form a.ui-tooltip-close") != 'undefined' &&
+              (
+                $("div.qtiped_report_form tr.global_errors").length == 0 ||
+                $("div.qtiped_report_form tr.fields_errors").length == 0
+              )
+            ) {
               $(".qtiped_report_form a.ui-tooltip-close").trigger("click");
             }
           }

@@ -92,7 +92,9 @@ class reportActions extends DarwinActions
                                           'fields_options'=>$this->widgets_options,
                                           'fields_at_second_line'=>$this->widgets_second_line_count,
                                           'model_name'=> $request->getParameter('catalogue','taxonomy'),
-                                          'fast' => Reports::getIsFast($name)
+                                          'fast' => Reports::getIsFast($name),
+                                          'with_js' => $request->getParameter('with_js',false),
+                                          'default_vals' => $default_vals
                                          )
         );
       }
@@ -102,7 +104,9 @@ class reportActions extends DarwinActions
                                         'fields_options'=>$this->widgets_options,
                                         'fields_at_second_line'=>$this->widgets_second_line_count,
                                         'model_name'=> $request->getParameter('catalogue','taxonomy'),
-                                        'fast' => Reports::getIsFast($name)
+                                        'fast' => Reports::getIsFast($name),
+                                        'with_js' => $request->getParameter('with_js',false),
+                                        'default_vals' => $default_vals
                                        )
       );
     }
@@ -115,11 +119,18 @@ class reportActions extends DarwinActions
     {
       $name = $request->getParameter('reports')['name'] ;
       if(!$name)  $this->forwardToSecureAction();
+      $default_vals = array();
+      foreach($request->getRequestParameters() as $rp_key=>$rp_value) {
+        if (strpos($rp_key, 'default_vals[') !== false && strpos($rp_key, ']') !== false && (strpos($rp_key, ']')-strpos($rp_key, '[')>1)) {
+          $default_vals[substr($rp_key, strpos($rp_key, '[')+1, strpos($rp_key, ']')-strpos($rp_key, '[')-1)] = $rp_value;
+        }
+      }
       $this->setWidgetsOptions($name);
       $this->form = new ReportsForm(null,array('fields'=>$this->widgets,
                                                'name' => $name,
                                                'model_name' => $request->getParameter('catalogue','taxonomy'),
-                                               'with_js' => $request->getParameter('with_js',false)
+                                               'with_js' => $request->getParameter('with_js',false),
+                                               'default_vals' => $default_vals
                                         )
       );
       $this->form->bind($request->getParameter($this->form->getName()));
@@ -156,7 +167,9 @@ class reportActions extends DarwinActions
                                         'fields_options'=>$this->widgets_options,
                                         'fields_at_second_line'=>$this->widgets_second_line_count,
                                         'model_name'=> $request->getParameter('catalogue','taxonomy'),
-                                        'fast' => Reports::getIsFast($name)
+                                        'fast' => Reports::getIsFast($name),
+                                        'with_js' => $request->getParameter('with_js',false),
+                                        'default_vals' => $default_vals
                                   )
       );
       return $val;
