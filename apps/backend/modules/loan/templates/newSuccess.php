@@ -20,6 +20,11 @@
           )); ?>
         </div>
         <p class="clear"></p>
+        <?php include_partial('widgets/float_button', array('form' => $form,
+                                                            'module' => 'loan',
+                                                            'search_module'=>'loan/index',
+                                                            'save_button_id' => 'submit_loan')
+        ); ?>
         <p class="form_buttons">
           <?php if (!$form->getObject()->isNew()): ?>
             <?php echo link_to(__('New loan'), 'loan/new') ?>

@@ -33,8 +33,8 @@ class loanitemActions extends DarwinActions
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
-    $loan = $this->checkRight($request->getParameter('id')) ;
-    $this->form = new LoanItemWidgetForm($loan);
+    $loan_item = $this->checkRight($request->getParameter('id')) ;
+    $this->form = new LoanItemWidgetForm($loan_item);
     $this->processForm($request, $this->form);
     $this->loadWidgets();
     $this->setTemplate('edit');
@@ -43,8 +43,8 @@ class loanitemActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $loan = $this->checkRight($request->getParameter('id')) ;
-    $this->form = new LoanItemWidgetForm($loan);
+    $loan_item = $this->checkRight($request->getParameter('id')) ;
+    $this->form = new LoanItemWidgetForm($loan_item);
     $this->loadWidgets();
     $this->setTemplate('edit') ;    
   }
@@ -71,17 +71,18 @@ class loanitemActions extends DarwinActions
 
   public function executeDelete(sfWebRequest $request)
   {
-    $loan = $this->checkRight($request->getParameter('id')) ;
+    $loan_item = $this->checkRight($request->getParameter('id')) ;
     try
     {
-      $loan->delete();
-      $this->redirect('loan/index');
+      $loan_id = $loan_item->getLoanRef();
+      $loan_item->delete();
+      $this->redirect('loan/overview?id='.$loan_id);
     }
     catch(Doctrine_Exception $ne)
     {
       $e = new DarwinPgErrorParser($ne);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-      $this->form = new LoanItemWidgetForm($loan);
+      $this->form = new LoanItemWidgetForm($loan_item);
       $this->form->getErrorSchema()->addError($error); 
       $this->loadWidgets();
       $this->setTemplate('edit');

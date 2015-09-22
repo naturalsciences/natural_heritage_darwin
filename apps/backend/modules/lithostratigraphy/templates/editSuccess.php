@@ -6,7 +6,11 @@
       <?php include_partial('catalogue/warnedit', array('no_right_col' => $no_right_col)); ?>
     <?php endif;?>
     <?php include_partial('form', array('form' => $form)); ?>
-
+    <?php include_partial('widgets/float_button', array('form' => $form,
+                                                        'module' => 'lithostratigraphy',
+                                                        'search_module'=>'lithostratigraphy/index',
+                                                        'save_button_id' => 'submit')
+    ); ?>
     <?php include_partial('widgets/screen', array(
 	'widgets' => $widgets,
 	'category' => 'cataloguewidget',

@@ -100,7 +100,7 @@ $browser->
     checkElement('.loanitem_form')->
   end()->
 
-  click('#submit_loan',
+  click('#submit_loan_item',
           array('loan_items'=> array(
               'receiver' => '1',
               'sender' => '1',
