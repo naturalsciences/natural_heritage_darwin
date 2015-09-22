@@ -121,8 +121,8 @@ class loanActions extends DarwinActions
   public function executeNew(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    $loan = new Loans() ;
     $duplic = $request->getParameter('duplicate_id','0') ;
+    $loan = new Loans() ;
     $loan = $this->getRecordIfDuplicate($duplic, $loan);
     if($request->hasParameter('loans')) $loan->fromArray($request->getParameter('loans'));
     // Initialization of a new encoding expedition form
