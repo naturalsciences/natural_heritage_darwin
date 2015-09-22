@@ -18,6 +18,18 @@ class widgetFormButtonRef extends sfWidgetFormInputHidden
       $values = array_merge(array('text' => '', 'is_empty' => false), is_array($value) ? $value : array());
       $obj_name = $this->getName($value);
       if($this->getOption('default_name')) $obj_name = $this->getOption('default_name') ;
+      if ( !empty( $this->getOption( 'edit_route', null ) ) && !empty ( $obj_name ) && count( $this->getOption( 'edit_route_params', array() ) ) != 0 ) {
+        $route_params = array();
+        foreach ( $this->getOption( 'edit_route_params') as $route_param ) {
+          switch ( $route_param ) {
+            case "id":
+              $route_params[$route_param] = $value;
+            case "name":
+              $route_params[$route_param] = $obj_name;
+          }
+        }
+        $obj_name = link_to( $obj_name, $this->getOption( 'edit_route' ).'?'.http_build_query( $route_params ) );
+      }
       $input = parent::render($name, $value, $attributes, $errors);
       $input .= $this->renderContentTag('div',$obj_name, array(
         'id' => $this->generateId($name)."_name",
@@ -90,6 +102,8 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
       $this->addOption('button_class', 'button');
       $this->addOption('default_name', null);
       $this->addOption('url_params', array());
+      $this->addOption('edit_route', null);
+      $this->addOption('edit_route_params', array());
   }
 
   public function getJavaScripts()
