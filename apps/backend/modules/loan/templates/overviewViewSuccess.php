@@ -22,7 +22,12 @@
                 <?php echo image_tag('info.png',"title=info class=extd_info data_id=".$item->getSpecimenRef());?>
                 <?php echo link_to('#' . $item->getSpecimenRef(), 'specimen/view?id='. $item->getSpecimenRef());?>
               <?php endif;?></td>
-              <td><?php echo $item->Ig->getIgNum();?></td>
+              <td><?php
+                if ( !empty($item->Ig->getIgNum()) ) {
+                  echo link_to($item->Ig->getIgNum(), 'igs/view?id=' . $item->Ig->getIgNum());
+                }
+                ?>
+              </td>
               <td><?php echo $item->getDetails();?></td>
               <td> <?php $date = new DateTime($item->getFromDate());
                 echo $date->format('d/m/Y'); ?></td>
