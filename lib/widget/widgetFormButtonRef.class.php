@@ -18,9 +18,11 @@ class widgetFormButtonRef extends sfWidgetFormInputHidden
       $values = array_merge(array('text' => '', 'is_empty' => false), is_array($value) ? $value : array());
       $obj_name = $this->getName($value);
       if($this->getOption('default_name')) $obj_name = $this->getOption('default_name') ;
-      if ( !empty( $this->getOption( 'edit_route', null ) ) && !empty ( $obj_name ) && count( $this->getOption( 'edit_route_params', array() ) ) != 0 ) {
+      $edit_route = $this->getOption( 'edit_route', null );
+      $edit_route_params = $this->getOption( 'edit_route_params', array() );
+      if ( !empty( $edit_route ) && !empty ( $obj_name ) && count( $edit_route_params ) != 0 ) {
         $route_params = array();
-        foreach ( $this->getOption( 'edit_route_params') as $route_param ) {
+        foreach ( $edit_route_params as $route_param ) {
           switch ( $route_param ) {
             case "id":
               $route_params[$route_param] = $value;
@@ -28,7 +30,7 @@ class widgetFormButtonRef extends sfWidgetFormInputHidden
               $route_params[$route_param] = $obj_name;
           }
         }
-        $obj_name = link_to( $obj_name, $this->getOption( 'edit_route' ).'?'.http_build_query( $route_params ) );
+        $obj_name = link_to( $obj_name, $edit_route.'?'.http_build_query( $route_params ) );
       }
       $input = parent::render($name, $value, $attributes, $errors);
       $input .= $this->renderContentTag('div',$obj_name, array(
