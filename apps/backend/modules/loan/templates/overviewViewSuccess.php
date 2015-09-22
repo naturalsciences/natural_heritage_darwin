@@ -23,8 +23,9 @@
                 <?php echo link_to('#' . $item->getSpecimenRef(), 'specimen/view?id='. $item->getSpecimenRef());?>
               <?php endif;?></td>
               <td><?php
-                if ( !empty($item->Ig->getIgNum()) ) {
-                  echo link_to($item->Ig->getIgNum(), 'igs/view?id=' . $item->Ig->getIgNum());
+                $ig_num = $item->Ig->getIgNum();
+                if ( !empty($ig_num) ) {
+                  echo link_to($ig_num, 'igs/view?id=' . $ig_num);
                 }
                 ?>
               </td>
