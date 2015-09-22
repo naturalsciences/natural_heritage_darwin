@@ -113,4 +113,22 @@ class LoansTable extends DarwinTable
     return $result;
   }
 
+  /*
+   * Used for duplication of loans / replace the classic approach used so far
+   * @param $loan_id integer The id of the loan we wish to duplicate
+   * @return integer id of new loan created
+   */
+  public function duplicateLoan($loan_id) {
+    $conn_MGR = Doctrine_Manager::connection();
+    $conn_MGR->getDbh()->exec('BEGIN TRANSACTION;');
+    $id = $conn_MGR->fetchOne('SELECT fct_duplicate_loans(:loan_id)', array(':loan_id'=>$loan_id));
+    if( $id != 0) {
+      $conn_MGR->getDbh()->exec('COMMIT;');
+    }
+    else {
+      $conn_MGR->getDbh()->exec('ROLLBACK;');
+    }
+    return $id;
+  }
+
 }

@@ -122,16 +122,16 @@ class loanActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $duplic = $request->getParameter('duplicate_id','0') ;
-    $loan = new Loans() ;
-    $loan = $this->getRecordIfDuplicate($duplic, $loan);
-    if($request->hasParameter('loans')) $loan->fromArray($request->getParameter('loans'));
-    // Initialization of a new encoding expedition form
-    $this->form = new LoansForm($loan);
-    if ($duplic)
-    {
-      $this->form->duplicate($duplic);
+    if ($duplic != 0){
+      $id = Doctrine::getTable('Loans')->duplicateLoan($duplic);
+      if ($id != 0) {
+        $this->redirect('loan/edit?id='.$id);
+      }
     }
-    $this->loadWidgets();
+    else {
+      $this->form = new LoansForm(null);
+      $this->loadWidgets();
+    }
   }
 
 
