@@ -123,6 +123,8 @@ class loanActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $duplic = $request->getParameter('duplicate_id','0') ;
     if ($duplic != 0){
+      if (in_array(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $duplic), array(false,'view')) &&
+          !$this->getUser()->isAtLeast(Users::ADMIN)) $this->forwardToSecureAction();
       $id = Doctrine::getTable('Loans')->duplicateLoan($duplic);
       if ($id != 0) {
         $this->redirect('loan/edit?id='.$id);
