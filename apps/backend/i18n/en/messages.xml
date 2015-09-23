@@ -6090,6 +6090,10 @@ DaRWIN</target>
         <source>Please fill in the criterias to print your report</source>
         <target>Please fill in the criterias to print your report</target>
       </trans-unit>
+      <trans-unit id="1870">
+        <source>The duplication process failed at %time% - please contact your application administrator</source>
+        <target>The duplication process failed at %time% - please contact your application administrator</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

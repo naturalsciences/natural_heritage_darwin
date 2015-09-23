@@ -95,16 +95,17 @@ class loanActions extends DarwinActions
         // If pager not yet executed, this means the query has to be executed for data loading
         if (! $this->pagerLayout->getPager()->getExecuted())
            $this->items = $this->pagerLayout->execute();
+        $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
         $loan_list = array();
         foreach($this->items as $loan) {
           $loan_list[] = $loan->getId() ;
         }
+        $this->printable = Doctrine::getTable('Loans')->getPrintableLoans($loan_list,$this->getUser());
         $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
         $this->status = array();
         foreach($status as $sta) {
           $this->status[$sta->getLoanRef()] = $sta;
         }
-        $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
       }
     }
   }

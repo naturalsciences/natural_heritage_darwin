@@ -1203,6 +1203,14 @@ Multimedia:
         publishable: {type:boolean, notnull: true, default: true}
         extracted_info: { type: string }
 
+# This sub class is used for linking loans with actors
+LoanActors:
+    inheritance:
+        extends: CataloguePeople
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: loans
+
 Loans:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -1212,6 +1220,12 @@ Loans:
         from_date: { type: string}
         to_date: { type: string}
         extended_to_date: { type: string}
+    relations:
+        CataloguePeople:
+            class: LoanActors
+            local: id
+            foreign: record_id
+            type: many
 
 LoanItems:
     columns:

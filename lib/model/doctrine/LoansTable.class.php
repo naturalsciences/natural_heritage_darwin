@@ -81,7 +81,7 @@ class LoansTable extends DarwinTable
 
   /*
    * Used for autocompletion in widgetFormSelectComplete
-   * @param $user integer The user id that serves at filtering the list of loans we can get access to
+   * @param $user object The user that serves at filtering the list of loans we can get access to
    * @param $needle string The string already entered
    * @param $exact boolean Indicates if an exact match has to be performed
    * @param $limit integer The limit number of records to be retrieved
@@ -129,6 +129,36 @@ class LoansTable extends DarwinTable
       $conn_MGR->getDbh()->exec('ROLLBACK;');
     }
     return $id;
+  }
+
+  /*
+   * List of printable loans out of a list of loans
+   * A printable loan is defined by having at least one contact point on the receiver side
+   * and by having at least one item
+   * @param $paged_loan_list array prefiltered list of loans coming from the pager
+   * @param $user object User to bring on the loan rights table
+   * @return array list of loan ids that can be printed
+   */
+  public function getPrintableLoans($paged_loan_list, $user) {
+    if ( $user->isA(Users::ADMIN) ) {
+      return $paged_loan_list;
+    }
+    $q = Doctrine_Query::create()
+      ->select('l.id')
+      ->from('Loans l')
+      ->innerJoin('l.LoanRights lr')
+      ->innerJoin('l.LoanItems li')
+      ->innerJoin("l.CataloguePeople cp")
+      ->where('cp.people_type = ?', array('receiver'))
+      ->andwhereIn('l.id', $paged_loan_list)
+      ->andWhere('lr.user_ref = ?', array($user->getId()))
+      ->distinct(true);
+    $results = $q->fetchArray();
+    $response = array();
+    foreach ( $results as $loans ) {
+      $response[] = $loans['id'];
+    }
+    return $response;
   }
 
 }
