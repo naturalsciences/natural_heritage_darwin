@@ -37,6 +37,10 @@ class reportActions extends DarwinActions
     }
   }
 
+  /*
+   * Executed before any execution call
+   * Is used to make necessary redirections when needed
+   */
   public function preExecute()
   {
     if(! $this->getUser()->isAtLeast(Users::MANAGER))
