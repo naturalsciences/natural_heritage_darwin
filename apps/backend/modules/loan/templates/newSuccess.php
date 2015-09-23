@@ -4,6 +4,13 @@
 <?php $action = 'loan/'.($form->getObject()->isNew() ? 'create' : 'update?id='.$form->getObject()->getId()) ;?>
 <?php include_partial('widgets/list', array('widgets' => $widget_list, 'category' => 'loan','eid'=> (! $form->getObject()->isNew() ? $form->getObject()->getId() : null ))); ?>
 <div class="page">
+    <?php if (isset($err_msg)): ?>
+      <div>
+        <ul id="error_list" class="error_list">
+          <li><?php echo $err_msg ;?></li>
+        </ul>
+      </div>
+    <?php endif; ?>
     <?php include_partial('tabs', array('loan'=> $form->getObject())); ?>
     <div class="tab_content">
       <div>
@@ -48,9 +55,9 @@
         $('ul#error_list').hide();
         $('ul#error_list').find('li').text(' ');
       }   
+
       $(document).ready(function () {
-//        $('body').duplicatable({duplicate_href: '<?php echo url_for('specimen/confirm');?>'});
-        $('body').catalogue({}); 
+        $('body').catalogue({});
         $('#submit_loan').click(function() 
         {
           form = $(this).closest('form') ;

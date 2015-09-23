@@ -129,11 +129,12 @@ class loanActions extends DarwinActions
       if ($id != 0) {
         $this->redirect('loan/edit?id='.$id);
       }
+      else {
+        $this->err_msg = $this->getContext()->getI18N()->__("The duplication process failed at %time% - please contact your application administrator", array("%time%"=>date("d/m/Y H:i")));
+      }
     }
-    else {
-      $this->form = new LoansForm(null);
-      $this->loadWidgets();
-    }
+    $this->form = new LoansForm(null);
+    $this->loadWidgets();
   }
 
 
