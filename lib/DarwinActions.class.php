@@ -110,7 +110,7 @@ class DarwinActions extends sfActions
     $this->getResponse()->setStatusCode(403);
     throw new sfStopException();
   }
-  
+
   protected function getRecordIfDuplicate($id , $obj, $is_spec = false)
   {
     if ($id)

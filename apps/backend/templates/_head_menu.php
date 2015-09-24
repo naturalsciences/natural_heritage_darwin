@@ -9,6 +9,7 @@
               <li><?php echo link_to(__('My Preferences'),'user/preferences');?></li>
               <li><?php echo link_to(__('Saved Specimens list'),'savesearch/index?specimen=1');?></li>
               <li><?php echo link_to(__('Saved search'),'savesearch/index');?></li>
+                <li><?php echo link_to(__('Reports'),'report/index');?></li>
             </ul>
         </li>
         <li>
@@ -92,7 +93,6 @@
                   <li><?php echo link_to(__('Big Brother'),'bigbro/index');?></li>
                 <?php endif ; ?>
                 <?php if($sf_user->isAtLeast(Users::MANAGER) ): ?>
-                  <li><?php echo link_to(__('Report'),'report/index');?></li>
                   <li>
                     <a href="#" class="subtitle"><?php echo __('User');?> »</a>
                     <ul class="submenu lvl_2">

@@ -101,10 +101,8 @@ class LoansTable extends DarwinTable
 
     if($user && ! $user->isA(Users::ADMIN) ) {
       $q->innerJoin('loa.LoanRights r ON loa.id = r.loan_ref AND r.user_ref = ?', $user->getId());
-
-      $q->andWhere('r.has_encoding_right = TRUE');
-
     }
+
     $q_results = $q->execute();
     $result = array();
     foreach($q_results as $item) {
@@ -135,7 +133,7 @@ class LoansTable extends DarwinTable
    * List of printable loans out of a list of loans
    * A printable loan is defined by having at least one contact point on the receiver side
    * and by having at least one item
-   * @param $paged_loan_list array prefiltered list of loans coming from the pager
+   * @param $paged_loan_list array prefiltered list of loans coming from the pager or from the print call
    * @param $user object User to bring on the loan rights table
    * @return array list of loan ids that can be printed
    */

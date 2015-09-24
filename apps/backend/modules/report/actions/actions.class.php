@@ -37,18 +37,6 @@ class reportActions extends DarwinActions
     }
   }
 
-  /*
-   * Executed before any execution call
-   * Is used to make necessary redirections when needed
-   */
-  public function preExecute()
-  {
-    if(! $this->getUser()->isAtLeast(Users::MANAGER))
-    {
-      $this->forwardToSecureAction();
-    }
-  }
-
   /**
   * Executes index action
   *
@@ -56,7 +44,7 @@ class reportActions extends DarwinActions
   */
   public function executeIndex(sfWebRequest $request)
   {
-    $this->report_list = Reports::getGlobalReports() ;
+    $this->report_list = Reports::getGlobalReports($this->getUser()) ;
   }
 
   public function executeGetAskedReport(sfWebRequest $request)
@@ -73,13 +61,25 @@ class reportActions extends DarwinActions
   {
     $this->forward404Unless($request->hasParameter('name'));
     $name = $request->getParameter('name');
+    if ( !in_array( $name, array_keys( Reports::getGlobalReports( $this->getUser() ) ) ) ) {
+      $this->info_message = $this->getI18N()->__("You do not have access to this report.");
+      return $this->renderPartial("info_msg", array("info_message"=>$this->info_message)) ;
+    }
     $default_vals = array();
     foreach($request->getRequestParameters() as $rp_key=>$rp_value) {
       if (strpos($rp_key, 'default_vals[') !== false && strpos($rp_key, ']') !== false && (strpos($rp_key, ']')-strpos($rp_key, '[')>1)) {
         $default_vals[substr($rp_key, strpos($rp_key, '[')+1, strpos($rp_key, ']')-strpos($rp_key, '[')-1)] = $rp_value;
       }
     }
-    if($request->isXmlHttpRequest() && $request->isMethod('post'))
+    $printable = true;
+    if ( count( $default_vals ) != 0 && isset( $default_vals['loan_id'] ) ) {
+      $printable = ( count( Doctrine::getTable('Loans')->getPrintableLoans(array(
+                                                                             $default_vals['loan_id']
+                                                                           ),
+                                                                           $this->getUser()
+        ) ) != 0 );
+    }
+    if($request->isXmlHttpRequest() && $request->isMethod('post') && $printable)
     {
       $this->setWidgetsOptions($name);
       $this->form = new ReportsForm(null,array('fields'=>$this->widgets,
@@ -114,7 +114,8 @@ class reportActions extends DarwinActions
                                        )
       );
     }
-    return false ;
+    $this->info_message = $this->getI18N()->__("The page you requested is only available through the application or you do not have the necessary credentials to get access to it");
+    return $this->renderPartial("info_msg", array("info_message"=>$this->info_message));
   }
 
   public function executeAdd(sfWebRequest $request)
@@ -123,6 +124,10 @@ class reportActions extends DarwinActions
     {
       $name = $request->getParameter('reports')['name'] ;
       if(!$name)  $this->forwardToSecureAction();
+      if ( !in_array( $name, array_keys( Reports::getGlobalReports( $this->getUser() ) ) ) ) {
+        $this->info_message = $this->getI18N()->__("You are not allowed to print this kind of report.");
+        return $this->renderPartial("info_msg", array("info_message"=>$this->info_message)) ;
+      }
       $default_vals = array();
       foreach($request->getRequestParameters() as $rp_key=>$rp_value) {
         if (strpos($rp_key, 'default_vals[') !== false && strpos($rp_key, ']') !== false && (strpos($rp_key, ']')-strpos($rp_key, '[')>1)) {
@@ -140,27 +145,51 @@ class reportActions extends DarwinActions
       $this->form->bind($request->getParameter($this->form->getName()));
       if($this->form->isValid())
       {
-        $this->i18n = $this->getContext()->getI18N();
-        $this->info_message = $this->i18n->__("Your report has been saved. It will be availlable tomorrow");
-        $report = new Reports() ;
-        $report->fromArray(array(
-          'name' => $name,
-          'user_ref'=>$this->getUser()->getId(),
-          'lang'=>$this->getUser()->getCulture(),
-          'format'=>$request->getParameter('reports')['format'],
-          'comment'=>$request->getParameter('reports')['comment'],
-          ));
-        $report->setParameters($request->getParameter('reports')) ;
-        // Save the report whatever it's a fast or a non fast one
-        $report->save() ;
-        //if it's a fast report, it can be downloaded directly
-        if(Reports::getIsFast($name)) {
-          $response = $this->processDownload($report);
-          if($response != 0) {
-            $message = json_encode($this->getPartial("info_msg", array("info_message"=>$this->info_message)));
-            return $this->renderText('{ "report_url" : "'.
-                                     $this->generateUrl("default", array("module"=>"report", "action"=>"downloadFile", "id"=>$response), true).
-                                     '", "message": '.$message.' }');
+        if (
+          isset($request->getParameter('reports')['loan_id']) &&
+          count(Doctrine::getTable('Loans')->getPrintableLoans(array(
+                                                                 $request->getParameter('reports')['loan_id']
+                                                               ),
+                                                               $this->getUser())) == 0
+        ) {
+          $this->info_message = $this->getI18n()
+                                     ->__("You don't have the necessary credentials to print this loan")
+          ;
+        }
+        else {
+          $this->info_message = $this->getI18n()
+                                     ->__("Your report has been saved. It will be availlable tomorrow")
+          ;
+          $report = new Reports();
+          $report->fromArray(
+            array (
+              'name' => $name,
+              'user_ref' => $this->getUser()->getId(),
+              'lang' => $this->getUser()->getCulture(),
+              'format' => $request->getParameter('reports')[ 'format' ],
+              'comment' => $request->getParameter('reports')[ 'comment' ],
+            )
+          );
+          $report->setParameters($request->getParameter('reports'));
+          // Save the report whatever it's a fast or a non fast one
+          $report->save();
+          //if it's a fast report, it can be downloaded directly
+          if (Reports::getIsFast($name)) {
+            $response = $this->processDownload($report);
+            if ($response != 0) {
+              $message = json_encode($this->getPartial("info_msg", array ("info_message" => $this->info_message)));
+              return $this->renderText(
+                '{ "report_url" : "' .
+                $this->generateUrl(
+                  "default", array (
+                  "module" => "report",
+                  "action" => "downloadFile",
+                  "id" => $response
+                ), TRUE
+                ) .
+                '", "message": ' . $message . ' }'
+              );
+            }
           }
         }
         return $this->renderPartial("info_msg", array("info_message"=>$this->info_message)) ;
@@ -184,6 +213,11 @@ class reportActions extends DarwinActions
   {
     $this->forward404Unless($request->hasParameter('id'));
     $this->report = Doctrine::getTable('Reports')->find($request->getParameter('id'));
+
+    if ( !in_array( $this->report->getName(), array_keys( Reports::getGlobalReports( $this->getUser() ) ) ) ) {
+      return $this->forwardToSecureAction() ;
+    }
+
     $uri = $this->report->getUri()?sfConfig::get('sf_upload_dir').$this->report->getUri():null ;
     $this->report->delete() ;
     @unlink($uri) ;
@@ -197,7 +231,12 @@ class reportActions extends DarwinActions
   public function executeDownloadFile(sfWebRequest $request)
   {
     $this->setLayout(false);
-    $report = Doctrine::getTable('Reports')->find($request->getParameter('id'));  
+    $report = Doctrine::getTable('Reports')->find($request->getParameter('id'));
+
+    if ( !in_array( $report->getName(), array_keys( Reports::getGlobalReports( $this->getUser() ) ) ) ) {
+      return $this->forwardToSecureAction() ;
+    }
+
     $this->forward404Unless(file_exists($uri = sfConfig::get('sf_upload_dir').$report->getUri()),sprintf('This file does not exist') );
 
     $response = $this->getResponse();
@@ -241,15 +280,15 @@ class reportActions extends DarwinActions
         // Write the reference of that file into db for concerned report
         $report->setUri('/report/'.$file_name);
         $report->save();
-        $this->info_message = $this->i18n->__("Your report has been saved and is available right above");
+        $this->info_message = $this->getI18N()->__("Your report has been saved and is available right above");
         $return_val = $report->getId();
       }
       else {
-        $this->info_message = $this->i18n->__("File has not been well written. Please contact your application administrator");
+        $this->info_message = $this->getI18N()->__("File has not been well written. Please contact your application administrator");
       }
     }
     catch (Exception $e) {
-      $this->info_message = $this->i18n->__("An error occured while trying to retrieve the file.\nError message: %1%",array('%1%'=>$e->getMessage()));
+      $this->info_message = $this->getI18N()->__("An error occured while trying to retrieve the file.\nError message: %1%",array('%1%'=>$e->getMessage()));
     }
     return $return_val;
   }

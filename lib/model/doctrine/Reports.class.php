@@ -28,6 +28,9 @@ class Reports extends BaseReports
                                    'date_to' => array()
                                   ),
         'fast' => false,
+        'rights' => array(
+          'at_least' => Users::MANAGER
+        ),
       ),
       'catalogues_x_listing' => array(
         'name_fr' => "Listing des hiérarchies taxonomiques à partir de points d'entrée donnés",
@@ -63,6 +66,9 @@ class Reports extends BaseReports
                                                          )
                                  ),
         'fast' => false,
+        'rights' => array(
+          'at_least' => Users::ENCODER
+        ),
       ),
       'loans_form_complete' => array(
         'name_fr' => "Formulaire de prêt scientifique",
@@ -105,12 +111,26 @@ class Reports extends BaseReports
                                     ),
                                   ),
         'fast' => true,
+        'rights' => array(
+          'at_least' => Users::REGISTERED_USER
+        ),
       ),
     );
 
-  static public function getGlobalReports(){
-
-    return self::$reports;
+  /*
+   * Display the list of available reports
+   * @param $user object The sfUser Object
+   * @return array A subset of self::$reports - List of reports available
+   */
+  static public function getGlobalReports($user)
+  {
+    $reports_list = array();
+    foreach( self::$reports as $report_key => $report_val ) {
+      if ( $user->isAtLeast( $report_val['rights']['at_least'] ) ) {
+        $reports_list [$report_key] = $report_val;
+      }
+    }
+    return $reports_list;
   }
 
   static public function getReportName($name,$lang)
