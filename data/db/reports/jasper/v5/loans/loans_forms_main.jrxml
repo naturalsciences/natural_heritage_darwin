@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Loan Form" language="groovy" pageWidth="595" pageHeight="842" columnWidth="559" leftMargin="18" rightMargin="18" topMargin="20" bottomMargin="20" uuid="e26ceb16-0793-4fcf-a062-d0900c896f00">
 	<property name="ireport.zoom" value="1.3310000000000177"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="3524"/>
+	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/darwin/loans/loans_form_complete"/>
 	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
 	<style name="table">
@@ -756,7 +756,9 @@ Specimens or remaining part must be returned promptly when a loan is terminated.
 				<frame>
 					<reportElement uuid="3a48082f-21b0-4ad7-ac27-309671ccee8f" positionType="Float" x="319" y="49" width="240" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
 					<staticText>
-						<reportElement uuid="d9ce558a-25a5-4d97-9185-01ed37dcdf33" x="0" y="0" width="58" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID"/>
+						<reportElement uuid="d9ce558a-25a5-4d97-9185-01ed37dcdf33" x="0" y="0" width="58" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Loan ID">
+							<printWhenExpression><![CDATA[!$F{loan_receiver_name}.isEmpty()]]></printWhenExpression>
+						</reportElement>
 						<box topPadding="2"/>
 						<textElement textAlignment="Right"/>
 						<text><![CDATA[Name:]]></text>
