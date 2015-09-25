@@ -6094,6 +6094,14 @@ DaRWIN</target>
         <source>The duplication process failed at %time% - please contact your application administrator</source>
         <target>The duplication process failed at %time% - please contact your application administrator</target>
       </trans-unit>
+      <trans-unit id="1871">
+        <source>Expedition date</source>
+        <target>Expedition date</target>
+      </trans-unit>
+      <trans-unit id="1872">
+        <source>Return date</source>
+        <target>Return date</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

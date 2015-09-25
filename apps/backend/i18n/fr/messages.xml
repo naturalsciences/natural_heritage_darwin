@@ -7597,6 +7597,23 @@
         <target>Langue</target>
         
       </trans-unit>
+      <trans-unit id="1869">
+        <source>Please fill in the criterias to print your report</source>
+        
+      </trans-unit>
+      <trans-unit id="1870">
+        <source>The duplication process failed at %time% - please contact your application administrator</source>
+        
+      </trans-unit>
+      <trans-unit id="1871">
+        <source>Expedition date</source>
+        
+      </trans-unit>
+      <trans-unit id="1872">
+        <source>Return date</source>
+        <target>Date de retour</target>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

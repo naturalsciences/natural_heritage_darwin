@@ -52,13 +52,19 @@ where case
 	<field name="maintenance_padded_signature" class="java.lang.String"/>
 	<pageHeader>
 		<band height="20">
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement uuid="5056f143-2146-4c06-923a-08a8afdea18a" isPrintRepeatedValues="false" x="0" y="0" width="239" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
 				<textElement>
 					<font size="11" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($P{maintenance_type}=="organized_by"?"Organized by":($P{maintenance_type}=="approval"?"Approved by":($P{maintenance_type}=="preparation"?"Prepared by":($P{maintenance_type}=="received_back_by"?"Received at RBINS by":($P{maintenance_type}=="checked_back_by"?"Checked at RBINS by":"")))))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[( $P{lang}=="en" ?
+ ($P{maintenance_type}=="organized_by"?"Organized by":($P{maintenance_type}=="approval"?"Approved by":($P{maintenance_type}=="preparation"?"Prepared by":($P{maintenance_type}=="received_back_by"?"Received at RBINS by":($P{maintenance_type}=="checked_back_by"?"Checked at RBINS by":""))))) :
+ ( $P{lang}=="fr" ?
+   ($P{maintenance_type}=="organized_by"?"Organisé par":($P{maintenance_type}=="approval"?"Approuvé par":($P{maintenance_type}=="preparation"?"Préparé par":($P{maintenance_type}=="received_back_by"?"Réceptionné à l'IRScNB par":($P{maintenance_type}=="checked_back_by"?"Vérifié à l'IRScNB par":""))))) :
+   ($P{maintenance_type}=="organized_by"?"Bewerkstelligd door":($P{maintenance_type}=="approval"?"Goedgekeurd door":($P{maintenance_type}=="preparation"?"Voorbereid door":($P{maintenance_type}=="received_back_by"?"In ontvangst genomen in het KBIN door":($P{maintenance_type}=="checked_back_by"?"Nagekeken in het KBIN door":"")))))
+ )
+)]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -74,16 +80,14 @@ where case
 				</box>
 				<frame>
 					<reportElement uuid="6614cbab-525e-409e-ba52-f95a47fb2969" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="239" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
-					<staticText>
-						<reportElement uuid="693a7127-0191-48d2-b9e9-ca06a37f1525" isPrintRepeatedValues="false" x="0" y="0" width="66" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement uuid="33a09499-43f3-4705-9984-b693542b1d78" isPrintRepeatedValues="false" x="0" y="0" width="66" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
 							<printWhenExpression><![CDATA[!$F{maintenance_date}.isEmpty()]]></printWhenExpression>
 						</reportElement>
 						<box leftPadding="1"/>
-						<textElement verticalAlignment="Middle">
-							<font isBold="false"/>
-						</textElement>
-						<text><![CDATA[Date:]]></text>
-					</staticText>
+						<textElement verticalAlignment="Middle"/>
+						<textFieldExpression><![CDATA[( $P{lang}=='en' ? "Date:" : ( $P{lang}=='fr' ? "Date:" : ( $P{lang}=='nl' ? "Datum:" : "Date:" ) ) )]]></textFieldExpression>
+					</textField>
 					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 						<reportElement uuid="0f864a10-569c-497b-9aef-688f4ccadc75" isPrintRepeatedValues="false" x="66" y="0" width="173" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
 						<box rightPadding="1"/>
@@ -93,14 +97,14 @@ where case
 				</frame>
 				<frame>
 					<reportElement uuid="1379d06a-5dc8-43f4-a584-989166f462b8" positionType="Float" isPrintRepeatedValues="false" x="0" y="20" width="239" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
-					<staticText>
-						<reportElement uuid="096c5e00-4d0c-481b-880a-fa80533222d2" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="66" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement uuid="33a09499-43f3-4705-9984-b693542b1d78" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="66" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
 							<printWhenExpression><![CDATA[!$F{maintenance_people}.isEmpty()]]></printWhenExpression>
 						</reportElement>
 						<box leftPadding="1"/>
 						<textElement verticalAlignment="Middle"/>
-						<text><![CDATA[Name(s):]]></text>
-					</staticText>
+						<textFieldExpression><![CDATA[( $P{lang}=='en' ? "Name(s):" : ( $P{lang}=='fr' ? "Nom(s):" : ( $P{lang}=='nl' ? "Naam:" : "Name(s):" ) ) )]]></textFieldExpression>
+					</textField>
 					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 						<reportElement uuid="face6200-f1b8-4672-bdf4-53d0e314b05b" positionType="Float" isPrintRepeatedValues="false" x="66" y="0" width="173" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
 						<box rightPadding="1"/>
@@ -113,14 +117,14 @@ where case
 					<box>
 						<bottomPen lineWidth="0.0"/>
 					</box>
-					<staticText>
-						<reportElement uuid="4686e8f5-7d9f-42c6-a19d-1262dc3efa9e" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="66" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement uuid="33a09499-43f3-4705-9984-b693542b1d78" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="66" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
 							<printWhenExpression><![CDATA[!$F{maintenance_people_functions}.isEmpty()]]></printWhenExpression>
 						</reportElement>
 						<box leftPadding="1"/>
 						<textElement verticalAlignment="Middle"/>
-						<text><![CDATA[Function(s):]]></text>
-					</staticText>
+						<textFieldExpression><![CDATA[( $P{lang}=='en' ? "Function(s):" : ( $P{lang}=='fr' ? "Fonction(s):" : ( $P{lang}=='nl' ? "Functie(s):" : "Function(s):" ) ) )]]></textFieldExpression>
+					</textField>
 					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 						<reportElement uuid="1eec0e44-e8da-44ac-a57f-d0c10b67fbc8" positionType="Float" isPrintRepeatedValues="false" x="66" y="0" width="173" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
 						<box rightPadding="1"/>
@@ -130,14 +134,14 @@ where case
 				</frame>
 				<frame>
 					<reportElement uuid="5aba4456-274d-4621-be72-b9896049d022" positionType="Float" x="0" y="60" width="239" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
-					<staticText>
-						<reportElement uuid="376d07ef-2782-4bf7-8f96-b8602856622b" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="77" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement uuid="33a09499-43f3-4705-9984-b693542b1d78" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="77" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
 							<printWhenExpression><![CDATA[!$F{maintenance_padded_signature}.isEmpty()]]></printWhenExpression>
 						</reportElement>
 						<box leftPadding="1"/>
 						<textElement verticalAlignment="Middle"/>
-						<text><![CDATA[Signature(s):]]></text>
-					</staticText>
+						<textFieldExpression><![CDATA[( $P{lang}=='en' ? "Signature(s):" : ( $P{lang}=='fr' ? "Signature(s):" : ( $P{lang}=='nl' ? "Handtekening(en):" : "Signature(s):" ) ) )]]></textFieldExpression>
+					</textField>
 					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 						<reportElement uuid="9a895835-e009-416e-9a0b-6d66ae2e6294" positionType="Float" x="77" y="0" width="162" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
 						<box bottomPadding="0" rightPadding="0"/>

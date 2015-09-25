@@ -99,8 +99,8 @@ class LoanItemsForm extends BaseLoanItemsForm
       array('class'=>'inline',
            )
      );
-    $this->widgetSchema->setLabels(array('from_date' => 'Expedition',
-                                         'to_date' => 'Return'
+    $this->widgetSchema->setLabels(array('from_date' => 'Expedition date',
+                                         'to_date' => 'Return date'
                                         )
                                   );
     $this->validatorSchema['specimen_ref'] = new sfValidatorInteger(array('required'=>false));
