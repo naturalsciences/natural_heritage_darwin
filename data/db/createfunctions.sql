@@ -4815,7 +4815,7 @@ AS
               when $3 = 'fr' then
                 'prêteur'
               when $3 = 'nl' then
-                'leener'
+                'lener'
               else
                 'loaner'
             end
@@ -4824,7 +4824,7 @@ AS
               when $3 = 'fr' then
                 'emprunteur'
               when $3 = 'nl' then
-                'leener'
+                'lener'
               else
                 'borrower'
             end
