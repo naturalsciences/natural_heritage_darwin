@@ -3878,9 +3878,10 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 
 CREATE OPERATOR =  (LEFTARG = POINT,  RIGHTARG = POINT, PROCEDURE = point_equal);
 
-CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec() RETURNS trigger 
-AS $$
-DECLARE 
+CREATE OR REPLACE FUNCTION check_auto_increment_code_in_spec()
+  RETURNS trigger AS
+  $BODY$
+DECLARE
   col collections%ROWTYPE;
   number BIGINT ;
 BEGIN
@@ -3889,13 +3890,13 @@ BEGIN
       SELECT c.* INTO col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=NEW.record_id;
       IF FOUND THEN
         IF NEW.code_category = 'main' THEN
-          IF isnumeric(NEW.code) THEN 
+          IF isnumeric(NEW.code) AND strpos(NEW.code, 'E') = 0 THEN
             number := NEW.code::bigint;
             IF number > col.code_last_value THEN
               UPDATE collections set code_last_value = number WHERE id=col.id ;
             END IF;
           ELSE
-            UPDATE collections 
+            UPDATE collections
             SET code_last_value = (SELECT max(code_num)
                                    FROM codes inner join specimens
                                      ON codes.referenced_relation = 'specimens'
@@ -3922,10 +3923,10 @@ BEGIN
           END IF;
         ELSEIF TG_OP = 'UPDATE' THEN
           IF OLD.code_category = 'main' THEN
-            IF isnumeric(OLD.code) THEN 
+            IF isnumeric(OLD.code) AND strpos(OLD.code, 'E') = 0 THEN
               number := OLD.code::bigint;
               IF number = col.code_last_value THEN
-                UPDATE collections 
+                UPDATE collections
                 SET code_last_value = (SELECT max(code_num)
                                        FROM codes inner join specimens
                                          ON codes.referenced_relation = 'specimens'
@@ -3958,13 +3959,13 @@ BEGIN
     RETURN NEW;
   ELSE
     IF OLD.referenced_relation = 'specimens' AND OLD.code_category = 'main' THEN
-      SELECT c.* INTO col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=OLD.record_id; 
-      IF FOUND AND isnumeric(OLD.code) THEN 
-        UPDATE collections 
+      SELECT c.* INTO col FROM collections c INNER JOIN specimens s ON s.collection_ref=c.id WHERE s.id=OLD.record_id;
+      IF FOUND AND isnumeric(OLD.code) AND strpos(OLD.code, 'E') = 0 THEN
+        UPDATE collections
         SET code_last_value = (SELECT max(code_num)
-                               FROM codes INNER JOIN specimens 
+                               FROM codes INNER JOIN specimens
                                  ON  codes.referenced_relation = 'specimens'
-                                 AND codes.record_id = specimens.id 
+                                 AND codes.record_id = specimens.id
                                WHERE codes.code_category = 'main'
                                  AND specimens.collection_ref = col.id
                                  AND codes.code_num IS NOT NULL
@@ -3989,7 +3990,9 @@ BEGIN
     RETURN OLD;
   END IF;
 END;
-$$ LANGUAGE plpgsql;
+$BODY$
+LANGUAGE plpgsql VOLATILE
+COST 100;
 
 CREATE OR REPLACE FUNCTION fct_after_save_add_code(IN collectionId collections.id%TYPE, IN specimenId specimens.id%TYPE) RETURNS integer
 AS $$
