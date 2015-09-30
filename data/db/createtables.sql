@@ -1383,6 +1383,7 @@ create table imports
     is_finished boolean  not null default false,
     errors_in_import text,
     template_version text,
+    exclude_invalid_entries boolean not null default false,
     constraint pk_import primary key (id) ,
     constraint fk_imports_collections foreign key (collection_ref) references collections(id) on update no action on delete cascade,
     constraint fk_imports_users foreign key (user_ref) references users(id) on delete cascade
@@ -1400,6 +1401,7 @@ comment on column imports.initial_count is 'Number of rows of staging when the i
 comment on column imports.is_finished is 'Boolean to mark if the import is finished or still need some operations';
 comment on column imports.errors_in_import is 'Contains the error encountered while trying to import data from template';
 comment on column imports.template_version is 'Contains the template version (when applicable)';
+comment on column imports.exclude_invalid_entries is 'Tell if, for this import, match should exclude the invalid units';
 
 create table staging
   (

@@ -93,7 +93,6 @@ class importActions extends DarwinActions
 
   public function executeUploadTaxon(sfWebRequest $request)
   {
-
   }
 
   public function executeUpload(sfWebRequest $request)

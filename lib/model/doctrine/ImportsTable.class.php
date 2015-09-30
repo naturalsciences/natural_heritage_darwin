@@ -89,9 +89,7 @@ class ImportsTable extends Doctrine_Table
 
     $items = $q->execute();
 
-    $ids = array();
-    foreach($items as $item) 
-      $ids[] = $item->getId() ;
+    $ids = $items->toKeyValueArray("id", "id");
 
     if(count($ids))
     {
@@ -99,9 +97,11 @@ class ImportsTable extends Doctrine_Table
       $sql = "update Imports set state = CASE WHEN state='loaded' THEN 'aloaded' WHEN state='processing' THEN 'aprocessing' ELSE 'apending' END 
               WHERE id in (".implode(',', $ids).")";
 
-      $result = $conn->fetchAssoc($sql);
+      $conn->exec($sql);
     }
-    return $ids ;
+
+    // Return the items object retrieved
+    return $items;
   }
   
   public function updateStatus($id)

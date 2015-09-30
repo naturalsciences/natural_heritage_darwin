@@ -88,6 +88,8 @@ DROP FUNCTION IF EXISTS trg_fct_chk_possible_upper_level() CASCADE;
 DROP FUNCTION IF EXISTS fct_set_user(user_id integer) ;
 DROP FUNCTION IF EXISTS fct_upd_staging_fields() CASCADE;
 DROP FUNCTION IF EXISTS fct_importer_abcd(integer) CASCADE;
+DROP FUNCTION IF EXISTS fct_importer_catalogue(req_import_ref integer,referenced_relation text);
+DROP FUNCTION IF EXISTS fct_importer_catalogue(req_import_ref integer,referenced_relation text,exclude_invalid_entries boolean);
 DROP FUNCTION IF EXISTS fct_upd_people_staging_fields();
 DROP FUNCTION IF EXISTS trg_ins_update_dict() CASCADE;
 DROP FUNCTION IF EXISTS trg_del_dict() CASCADE;

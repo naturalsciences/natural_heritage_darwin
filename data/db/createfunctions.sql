@@ -4105,7 +4105,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referenced_relation text) RETURNS BOOLEAN
+CREATE OR REPLACE FUNCTION fct_importer_catalogue(req_import_ref integer,referenced_relation text,exclude_invalid_entries boolean default false) RETURNS BOOLEAN
 LANGUAGE plpgsql
 AS
   $$
@@ -4116,6 +4116,7 @@ AS
     where_clause_complement_3 text := ' ';
     where_clause_complement_4 text := ' ';
     where_clause_complement_5 text := ' ';
+    where_clause_exclude_invalid text := ' ';
     recCatalogue RECORD;
     recParent RECORD;
     error_msg TEXT := '';
@@ -4144,13 +4145,17 @@ AS
       where_clause_complement_5 := '  AND left(substring(' || quote_literal(staging_catalogue_line.name) ||
                                    ' from length(trim(name))+1),1) IN (' ||
                                    quote_literal(' ') || ', ' || quote_literal(',') || ') ';
+      -- Set the invalid where clause if asked
+      IF exclude_invalid_entries = TRUE THEN
+        where_clause_exclude_invalid := '  AND status != ' || quote_literal('invalid') || ' ';
+      END IF;
       -- Check a perfect match entry
       -- Take care here, a limit 1 has been set, we only kept the EXIT in case the limit would be accidently removed
       FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
                                   'FROM ' || quote_ident(referenced_relation) || ' ' ||
                                   'WHERE level_ref = $1 ' ||
                                   '  AND name_indexed = fullToIndex( $2 ) ' ||
-                                  '  AND status != ' || quote_literal('invalid') || ' ' ||
+                                  where_clause_exclude_invalid ||
                                   where_clause_complement_1 ||
                                   'LIMIT 1;'
       USING staging_catalogue_line.level_ref, staging_catalogue_line.name
@@ -4174,7 +4179,7 @@ AS
                                       'FROM ' || quote_ident(referenced_relation) || ' ' ||
                                       'WHERE level_ref = $1 ' ||
                                       '  AND name_indexed = fullToIndex( $2 ) ' ||
-                                      '  AND status != ' || quote_literal('invalid') || ' ' ||
+                                      where_clause_exclude_invalid ||
                                       where_clause_complement_2 ||
                                       where_clause_complement_3 ||
                                       'LIMIT 1;'
@@ -4202,7 +4207,7 @@ AS
                                       'FROM ' || quote_ident(referenced_relation) || ' ' ||
                                       'WHERE level_ref = $1 ' ||
                                       '  AND name_indexed LIKE fullToIndex( $2 ) || ' || quote_literal('%') ||
-                                      '  AND status != ' || quote_literal('invalid') || ' ' ||
+                                      where_clause_exclude_invalid ||
                                       where_clause_complement_3 ||
                                       where_clause_complement_4 ||
                                       'LIMIT 1;'
@@ -4223,7 +4228,7 @@ AS
                                         'FROM ' || quote_ident(referenced_relation) || ' as tax ' ||
                                         'WHERE level_ref = $1 ' ||
                                         '  AND position(name_indexed IN fullToIndex( $2 )) = 1 ' ||
-                                        '  AND status != ' || quote_literal('invalid') || ' ' ||
+                                        where_clause_exclude_invalid ||
                                         '  AND NOT EXISTS (SELECT 1 ' ||
                                         '                  FROM ' || quote_ident(referenced_relation) || ' as stax ' ||
                                         '                  WHERE stax.id != tax.id ' ||
@@ -4285,16 +4290,6 @@ AS
     END IF;
   END;
   $$;
-
-CREATE OR REPLACE function fct_update_import() RETURNS trigger AS $$
-BEGIN
-  if OLD.state IS DISTINCT FROM NEW.state THEN
-  UPDATE imports set updated_at= now() where id=NEW.id ;
-  END IF ;
-  return new ;
-END;
-$$ LANGUAGE plpgsql ;
-
 
 CREATE OR REPLACE FUNCTION fct_listing_taxonomy (IN nbr_records INTEGER, VARIADIC taxon_ids INTEGER[])
   RETURNS TABLE ("referenced_by_at_least_one_specimen" INTEGER,

@@ -69,36 +69,41 @@ EOF;
     $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
     // Get back here the list of imports id that could be treated
     $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
+    $imports_ids = $imports->toKeyValueArray("id", "id");
     // let's begin with import catalogue
     foreach($catalogues as $catalogue)
     {
       $date_start = date('G:i:s') ;
-      $this->logSection('Processing', sprintf('Check %d : Start processing Catalogue import %d (start: %s)',$randnum, $catalogue,$date_start));
+      $this->logSection('Processing', sprintf('Check %d : Start processing Catalogue import %d (start: %s)',$randnum, $catalogue->getId(),$date_start));
       // Begin here the transactional process
       $conn->beginTransaction();
-      $sql = 'select fct_importer_catalogue('.$catalogue.',\'taxonomy\')';
       try {
-        $conn->execute($sql);
+        $conn->execute("select fct_importer_catalogue(?,'taxonomy',?)",
+                       array(
+                         $catalogue->getId(),
+                         (integer) $catalogue->getExcludeInvalidEntries()
+                       )
+        );
         $conn->commit();
         $sql_prepared = $conn->prepare("UPDATE imports set state='finished', is_finished = TRUE WHERE id = ?");
-        $sql_prepared->execute(array($catalogue));
+        $sql_prepared->execute(array($catalogue->getId()));
       }
       catch (\Exception $e) {
         $conn->rollback();
         $sql_prepared = $conn->prepare("UPDATE imports set errors_in_import = ?, state='error' WHERE id = ?");
-        $sql_prepared->execute(array(ltrim($conn->errorInfo()[2], 'ERROR: '), $catalogue));
+        $sql_prepared->execute(array(ltrim($conn->errorInfo()[2], 'ERROR: '), $catalogue->getId()));
       }
-      $this->logSection('Processing', sprintf('Check %d : End processing Catalogue import %d (start: %s - end: %s)',$randnum, $catalogue,$date_start,date('G:i:s')));
+      $this->logSection('Processing', sprintf('Check %d : End processing Catalogue import %d (start: %s - end: %s)',$randnum, $catalogue->getId(),$date_start,date('G:i:s')));
     }
     // Check we've got at least one import concerned - if not, no check, no do-import :)
-    if(count($imports)) {
+    if(count($imports_ids)) {
       // Begin here the transactional process for the check-import
       $conn->getDbh()->exec('BEGIN TRANSACTION;');
         // now let's check all checkable staging - the checkability is coming from list of id in imports array
         $sql = "SELECT fct_imp_checker_manager(s.*) 
                 FROM staging s, imports i 
                 WHERE s.import_ref=i.id 
-                  AND i.id IN (".implode(',', $imports).") 
+                  AND i.id IN (".implode(',', $imports_ids).")
                   AND i.state != 'aprocessing'";
         $this->logSection('checking', sprintf('Check %d : (%s) Start checking staging',$randnum,date('G:i:s')));
         $conn->getDbh()->exec($sql);
@@ -111,7 +116,7 @@ EOF;
               ->update('imports p')
               ->set('p.state','?','pending')
               ->andWhereIn('p.state',array('aloaded','apending'))
-              ->andWhereIn('p.id', $imports)
+              ->andWhereIn('p.id', $imports_ids)
               ->execute();
 
       // if followed by process of do-import...

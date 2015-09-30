@@ -14,8 +14,15 @@ class ImportsForm extends BaseImportsForm
   {    
     if($this->options['format'] == 'taxon')
     {
-      $this->useFields(array('format')) ;
+      $this->useFields(array('format', 'exclude_invalid_entries')) ;
       $category = array('taxon'=>$this->getI18N()->__('Taxonomy')) ;
+      $this->widgetSchema['exclude_invalid_entries'] = new sfWidgetFormChoice(
+        array(
+          'choices'=>array(true=>$this->getI18N()->__('No'),false=>$this->getI18N()->__('Yes')),
+          'multiple'=>false,
+          'expanded'=>true,
+        )
+      );
     }
     else
     {
@@ -49,6 +56,7 @@ class ImportsForm extends BaseImportsForm
       'collection_ref' => 'Collection',
       'uploadfield' => 'File',
       'format' => 'Format',
+      'exclude_invalid_entries' => 'Match invalid Units',
     ));
 
     $this->validatorSchema['format'] = new sfValidatorChoice(
