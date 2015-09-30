@@ -5621,3 +5621,16 @@ CREATE OR REPLACE FUNCTION fct_duplicate_loans (loan_id loans.id%TYPE) RETURNS l
   END;
   $$
   LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION fct_update_import()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+  if OLD.state IS DISTINCT FROM NEW.state THEN
+  UPDATE imports set updated_at= now() where id=NEW.id ;
+  END IF ;
+  return new ;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
