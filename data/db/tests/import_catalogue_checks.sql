@@ -1,6 +1,6 @@
 \set ECHO all
 \i unit_launch.sql
-SELECT plan(23);
+SELECT plan(25);
 
 select diag('Test of taxonomy import');
 select diag('-- First mimic of xml file with creation of a basic taxonomical structure --');
@@ -303,6 +303,23 @@ select results_eq('select id::integer,
                     VALUES (44,10,'lizaMonTia bArBecue eMery,2015',48,43,22)
                   $$,
                   'Test the values were well set in the import table telling everything is ok');
+
+select diag('-- Eleven mimic of xml file with an adaptation to check if succeed with the second Mugilidae set to invalid - By default will fail because option do not exclude the invalid of the search - Try twice with the two options --');
+
+insert into imports (id, user_ref, format, filename, collection_ref) values (11,1,'taxon','taxon_test_11.xml',NULL);
+update taxonomy set status = 'invalid' where id = 21;
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (45,11,'Animalia',2,NULL,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (46,11,'Mugilidae',34,34,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (47,11,'Mugilix',41,35,NULL);
+
+select throws_ok('select fct_importer_catalogue(11,''taxonomy'')','Could not import this file, Mugilidae exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree');
+
+update imports set state = 'loaded' where id = 11;
+
+select is(true ,
+          (select fct_importer_catalogue(11,'taxonomy', true)),
+          'Perform the import of staging catalogue entries'
+);
 
 SELECT * FROM finish();
 
