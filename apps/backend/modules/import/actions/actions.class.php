@@ -23,8 +23,14 @@ class importActions extends DarwinActions
   {
     $import = Doctrine::getTable('Imports')->find($id);
 
-    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$import->getCollectionRef()))
-       $this->forwardToSecureAction();
+    $collection_ref = $import->getCollectionRef();
+    if(!empty($collection_ref)) {
+      if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$import->getCollectionRef()))
+         $this->forwardToSecureAction();
+    }
+    elseif (! $this->getUser()->isAtLeast(Users::ENCODER)) {
+      $this->forwardToSecureAction();
+    }
     return $import ;
   }
 
