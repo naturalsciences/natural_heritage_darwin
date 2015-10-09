@@ -164,3 +164,4 @@ drop function if exists fct_report_loans_addresses (loan_id loans.id%TYPE, targe
 drop function if exists fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean, lang text);
 
 DROP FUNCTION IF EXISTS fct_duplicate_loans (loan_id loans.id%TYPE);
+DROP FUNCTION IF EXISTS fct_clean_staging_catalogue ( importRef staging_catalogue.import_ref%TYPE );

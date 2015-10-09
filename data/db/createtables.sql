@@ -1807,9 +1807,16 @@ create table staging_catalogue
   catalogue_ref integer,
   constraint pk_staging_catalogue primary key (id),
   constraint fk_stg_catalogue_level_ref foreign key (level_ref) references catalogue_levels(id),
-  constraint fk_stg_catalogue_import_ref foreign key (import_ref) references imports(id) on delete cascade,
-  constraint fk_stg_catalogue_parent_ref foreign key (parent_ref) references staging_catalogue(id) on delete cascade
+  constraint fk_stg_catalogue_import_ref foreign key (import_ref) references imports(id) on delete cascade
   );
+
+comment on table staging_catalogue is 'Stores the catalogues hierarchy to be imported';
+comment on column staging_catalogue.id is 'Unique identifier of a to be imported catalogue unit entry';
+comment on column staging_catalogue.import_ref is 'Reference of import concerned - from table imports';
+comment on column staging_catalogue.name is 'Name of unit to be imported/checked';
+comment on column staging_catalogue.level_ref is 'Level of unit to be imported/checked';
+comment on column staging_catalogue.parent_ref is 'ID of parent the unit is attached to. Right after the load of xml, it refers recursively to an entry in the same staging_catalogue table. During the import it is replaced by id of the parent from the concerned catalogue table.';
+comment on column staging_catalogue.catalogue_ref is 'ID of unit in concerned catalogue table - set during import process';
 
 create table reports
  (
