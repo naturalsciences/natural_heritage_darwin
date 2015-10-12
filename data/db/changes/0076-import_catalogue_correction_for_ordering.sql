@@ -34,30 +34,34 @@ AS
     where_clause_exclude_invalid text := ' ';
     recCatalogue RECORD;
     parent_path template_classifications.path%TYPE;
+    parentRef staging_catalogue.parent_ref%TYPE;
+    catalogueRef staging_catalogue.catalogue_ref%TYPE;
     error_msg TEXT := '';
     children_move_forward BOOLEAN := FALSE;
     insert_from_template BOOLEAN := FALSE;
     level_naming TEXT;
+    tempSQL TEXT;
   BEGIN
     -- Browse all staging_catalogue lines
     FOR staging_catalogue_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY level_ref, fullToIndex(name)
     LOOP
-      IF staging_catalogue_line.catalogue_ref IS NULL THEN
+      SELECT parent_ref, catalogue_ref INTO parentRef, catalogueRef FROM staging_catalogue WHERE id = staging_catalogue_line.id;
+      IF catalogueRef IS NULL THEN
         -- Check if we're at a top taxonomic entry in the template/staging_catalogue line
-        IF staging_catalogue_line.parent_ref IS NULL THEN
+        IF parentRef IS NULL THEN
           -- If top entry, we have not parent defined and we therefore have no other filtering criteria
           where_clause_complement_1 := ' ';
           where_clause_complement_2 := ' ';
           where_clause_complement_3 := ' ';
         ELSE
           -- If a child entry, we've got to use the informations from the already matched or created parent
-          where_clause_complement_1 := '  AND parent_ref = ' || staging_catalogue_line.parent_ref || ' ';
-          where_clause_complement_2 := '  AND parent_ref != ' || staging_catalogue_line.parent_ref || ' ';
+          where_clause_complement_1 := '  AND parent_ref = ' || parentRef || ' ';
+          where_clause_complement_2 := '  AND parent_ref != ' || parentRef || ' ';
           -- Select the path from parent catalogue unit
           EXECUTE 'SELECT path FROM ' || quote_ident(referenced_relation) || ' WHERE id = $1'
           INTO parent_path
-          USING staging_catalogue_line.parent_ref;
-          where_clause_complement_3 := '  AND position (' || quote_literal(recParent.path) || ' IN path) = 1 ';
+          USING parentRef;
+          where_clause_complement_3 := '  AND position (' || quote_literal(parent_path) || ' IN path) = 1 ';
         END IF;
         where_clause_complement_4 := '  AND left(substring(name from length(trim(' ||
                                      quote_literal(staging_catalogue_line.name) || '))+1),1) IN (' ||
@@ -94,7 +98,7 @@ AS
           -- It concerns a perfect match with parents differents but with a path common
           -- That means, if only one entry exists, that they are the same but with a more detailed hierarchy in the
           -- already existing entry
-          IF staging_catalogue_line.parent_ref IS NOT NULL THEN
+          IF parentRef IS NOT NULL THEN
             FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
                                         'FROM ' || quote_ident(referenced_relation) || ' ' ||
                                         'WHERE level_ref = $1 ' ||
@@ -119,18 +123,22 @@ AS
               children_move_forward := TRUE;
             END IF;
           END IF;
-          IF staging_catalogue_line.parent_ref IS NULL OR children_move_forward = TRUE THEN
+          IF parentRef IS NULL OR children_move_forward = TRUE THEN
             -- This next option try a fuzzy match, with, if it's a child entry in the template, a verification that
             -- the parent specified in the template and the path of the potential corresponding entry in catalogue
             -- have a common path...
-            FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
-                                        'FROM ' || quote_ident(referenced_relation) || ' ' ||
-                                        'WHERE level_ref = $1 ' ||
-                                        '  AND name_indexed LIKE fullToIndex( $2 ) || ' || quote_literal('%') ||
-                                        where_clause_exclude_invalid ||
-                                        where_clause_complement_3 ||
-                                        where_clause_complement_4 ||
-                                        'LIMIT 1;'
+            tempSQL := 'SELECT COUNT(id) OVER () as total_count, * ' ||
+                       'FROM ' || quote_ident(referenced_relation) || ' ' ||
+                       'WHERE level_ref = $1 ' ||
+                       '  AND name_indexed LIKE fullToIndex( $2 ) || ' || quote_literal('%') ||
+                       where_clause_exclude_invalid ||
+                       where_clause_complement_3 ||
+                       where_clause_complement_4;
+            IF parentRef IS NOT NULL THEN
+              tempSQL := tempSQL || where_clause_complement_1;
+            END IF;
+            tempSQL := tempSQL || 'LIMIT 1;';
+            FOR recCatalogue IN EXECUTE tempSQL
             USING staging_catalogue_line.level_ref, staging_catalogue_line.name
             LOOP
               -- If we're on the case of a top entry in the template, we cannot afford the problem of multiple entries
@@ -174,12 +182,12 @@ AS
                 EXIT;
               END LOOP;
               IF NOT FOUND THEN
-                IF staging_catalogue_line.parent_ref IS NOT NULL THEN
+                IF parentRef IS NOT NULL THEN
                   EXECUTE 'INSERT INTO ' || quote_ident(referenced_relation) || '(id,name,level_ref,parent_ref) ' ||
                           'VALUES(DEFAULT,$1,$2,$3) ' ||
                           'RETURNING *;'
                   INTO recCatalogue
-                  USING staging_catalogue_line.name,staging_catalogue_line.level_ref,recParent.id;
+                  USING staging_catalogue_line.name,staging_catalogue_line.level_ref,parentRef;
                   -- tell to update the staging line to set the catalogue_ref with the id found
                   insert_from_template := TRUE;
                 ELSE
@@ -231,7 +239,7 @@ $$
     FOR recDistinctStagingCatalogue IN SELECT DISTINCT ON (level_ref, fullToIndex(name), name)
                                        id, import_ref, name, level_ref
                                        FROM staging_catalogue
-                                       WHERE import_ref = 260
+                                       WHERE import_ref = importRef
                                        ORDER BY level_ref, fullToIndex(name)
     LOOP
       UPDATE staging_catalogue

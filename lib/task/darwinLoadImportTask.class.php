@@ -26,7 +26,7 @@ EOF;
     $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     $conn = Doctrine_Manager::connection();
-    $conn->getDbh()->exec('BEGIN TRANSACTION;');
+    $conn->beginTransaction();
     while($id = $conn->fetchOne('SELECT get_import_row()'))
     {
         $q = Doctrine_Query::create()
@@ -50,10 +50,19 @@ EOF;
                 break;
             } 
             $result = $import->parseFile($file,$id) ;
+            if ( $result == '' && $q->getFormat() == 'taxon') {
+              $conn->execute("select fct_clean_staging_catalogue(?)",
+                             array(
+                               $id
+                             )
+              );
+            }
           }
           catch(Exception $e)
           {
-            echo $e->getMessage()."\n";break;
+            echo $e->getMessage()."\n";
+            $conn->rollback();
+            break;
           }
          //print $id."-".$result.'-';
           Doctrine_Query::create()
@@ -65,7 +74,6 @@ EOF;
             ->execute();
         }
     }
-    $conn->getDbh()->exec('COMMIT;');
-
+    $conn->commit();
   }
 }
