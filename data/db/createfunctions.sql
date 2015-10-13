@@ -4122,9 +4122,13 @@ AS
     catalogueRef staging_catalogue.catalogue_ref%TYPE;
     error_msg TEXT := '';
     children_move_forward BOOLEAN := FALSE;
-    insert_from_template BOOLEAN := FALSE;
     level_naming TEXT;
     tempSQL TEXT;
+/*    aTest BIGINT[];
+    bTest BIGINT[];
+    cTest BIGINT[];
+    dTest TEXT[];
+    countTest INTEGER;*/
   BEGIN
     -- Browse all staging_catalogue lines
     FOR staging_catalogue_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY level_ref, fullToIndex(name)
@@ -4171,8 +4175,6 @@ AS
           -- If more than one entry found, we set an error...
           IF recCatalogue.total_count > 1 THEN
             RAISE EXCEPTION E'Case 1, Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
-          ELSE
-            insert_from_template := TRUE;
           END IF;
           EXIT;
         END LOOP;
@@ -4197,8 +4199,6 @@ AS
               -- possibilities, then fail
               IF recCatalogue.total_count > 1 THEN
                 RAISE EXCEPTION E'Case 2, Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
-              ELSE
-                insert_from_template := TRUE;
               END IF;
               EXIT;
             END LOOP;
@@ -4228,8 +4228,6 @@ AS
               -- If we're on the case of a top entry in the template, we cannot afford the problem of multiple entries
               IF recCatalogue.total_count > 1 THEN
                 RAISE EXCEPTION E'Case 3, Could not import this file, % exists more than 1 time in DaRWIN, correct the catalogue (or file) to import this tree.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
-              ELSE
-                insert_from_template := TRUE;
               END IF;
               EXIT;
             END LOOP;
@@ -4261,7 +4259,6 @@ AS
                   EXECUTE 'UPDATE ' || quote_ident(referenced_relation) || ' ' ||
                           'SET name = ' || quote_literal(staging_catalogue_line.name) || ' ' ||
                           'WHERE id = ' || recCatalogue.id || ';';
-                  insert_from_template := TRUE;
                 END IF;
                 EXIT;
               END LOOP;
@@ -4272,8 +4269,7 @@ AS
                           'RETURNING *;'
                   INTO recCatalogue
                   USING staging_catalogue_line.name,staging_catalogue_line.level_ref,parentRef;
-                  -- tell to update the staging line to set the catalogue_ref with the id found
-                  insert_from_template := TRUE;
+                -- tell to update the staging line to set the catalogue_ref with the id found
                 ELSE
                   SELECT level_name INTO level_naming FROM catalogue_levels WHERE id = staging_catalogue_line.level_ref;
                   RAISE EXCEPTION 'Could not import this file, % (level %) does not exist in DaRWIN and cannot be attached, correct your file or create this % manually', staging_catalogue_line.name,  level_naming, quote_ident(referenced_relation);
@@ -4282,25 +4278,37 @@ AS
             END IF;
           END IF;
         END IF;
-        IF insert_from_template = TRUE THEN
-          -- update the staging line to set the catalogue_ref with the id found
-          UPDATE staging_catalogue
+        -- update the staging line to set the catalogue_ref with the id found
+        -- update the staging children lines
+        WITH staging_catalogue_updated(updated_id/*, catalogue_ref_updated*/) AS (
+          UPDATE staging_catalogue as sc
           SET catalogue_ref = recCatalogue.id
+          WHERE sc.import_ref = staging_catalogue_line.import_ref
+                AND sc.name = staging_catalogue_line.name
+                AND sc.level_ref = staging_catalogue_line.level_ref
+          RETURNING id/*, catalogue_ref*/
+        )
+/*        SELECT array_agg(updated_id), array_agg(catalogue_ref_updated) INTO aTest, bTest FROM staging_catalogue_updated;
+        RAISE WARNING 'List of updated IDS is: % with catalogue ref: %', aTest, bTest;
+        SELECT array_agg(id), array_agg(name)
+          INTO cTest, dTest
+        FROM staging_catalogue
           WHERE import_ref = staging_catalogue_line.import_ref
-                AND name = staging_catalogue_line.name
-                AND level_ref = staging_catalogue_line.level_ref;
-          -- update the staging children lines
-          UPDATE staging_catalogue
-          SET parent_ref = recCatalogue.id
-          WHERE parent_ref IN (
-            SELECT id
-            FROM staging_catalogue
-            WHERE import_ref = staging_catalogue_line.import_ref
-                  AND catalogue_ref = recCatalogue.id
-          );
-        END IF;
+            AND parent_ref in (select unnest(aTest))
+            and parent_updated = FALSE;
+        RAISE WARNING 'List of IDS concerned by parentupdate: %, with names: %', cTest, dTest;*/
+        UPDATE staging_catalogue as msc
+        SET parent_ref = recCatalogue.id,
+            parent_updated = TRUE
+        WHERE msc.import_ref = staging_catalogue_line.import_ref
+          AND msc.parent_ref IN (
+            /*SELECT unnest(aTest)*/
+            SELECT updated_id FROM staging_catalogue_updated
+          )
+          AND parent_updated = FALSE;
+/*        GET DIAGNOSTICS countTest := ROW_COUNT;
+        RAISE WARNING 'Rows updated: %', countTest;*/
       END IF;
-      insert_from_template := FALSE;
       children_move_forward := FALSE;
     END LOOP;
     RETURN TRUE;
@@ -5666,9 +5674,17 @@ AS
   BEGIN
     FOR recDistinctStagingCatalogue IN SELECT DISTINCT ON (level_ref, fullToIndex(name), name)
                                        id, import_ref, name, level_ref
-                                       FROM staging_catalogue
-                                       WHERE import_ref = importRef
-                                       ORDER BY level_ref, fullToIndex(name)
+                                       FROM
+                                         (
+                                           SELECT
+                                             id,
+                                             import_ref,
+                                             name,
+                                             level_ref
+                                           FROM staging_catalogue
+                                           WHERE import_ref = importRef
+                                           ORDER BY level_ref, fullToIndex(name), id
+                                         ) as subqry
     LOOP
       UPDATE staging_catalogue
       SET parent_ref = recDistinctStagingCatalogue.id
@@ -5692,6 +5708,7 @@ AS
     RETURN TRUE;
   EXCEPTION
     WHEN OTHERS THEN
+      RAISE WARNING 'Error:%', SQLERRM;
       RETURN FALSE;
   END;
 $$;
