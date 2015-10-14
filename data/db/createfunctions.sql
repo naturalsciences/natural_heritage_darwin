@@ -4124,15 +4124,18 @@ AS
     children_move_forward BOOLEAN := FALSE;
     level_naming TEXT;
     tempSQL TEXT;
-/*    aTest BIGINT[];
-    bTest BIGINT[];
-    cTest BIGINT[];
-    dTest TEXT[];
-    countTest INTEGER;*/
+    /*    aTest BIGINT[];
+        bTest BIGINT[];
+        cTest BIGINT[];
+        dTest TEXT[];
+        countTest INTEGER;*/
   BEGIN
     -- Browse all staging_catalogue lines
     FOR staging_catalogue_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY level_ref, fullToIndex(name)
     LOOP
+      IF trim(touniquestr(staging_catalogue_line.name)) = '' THEN
+        RAISE EXCEPTION E'Case 0, Could not import this file, % is not a valid name.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
+      END IF;
       SELECT parent_ref, catalogue_ref INTO parentRef, catalogueRef FROM staging_catalogue WHERE id = staging_catalogue_line.id;
       IF catalogueRef IS NULL THEN
         -- Check if we're at a top taxonomic entry in the template/staging_catalogue line
@@ -4288,26 +4291,26 @@ AS
                 AND sc.level_ref = staging_catalogue_line.level_ref
           RETURNING id/*, catalogue_ref*/
         )
-/*        SELECT array_agg(updated_id), array_agg(catalogue_ref_updated) INTO aTest, bTest FROM staging_catalogue_updated;
-        RAISE WARNING 'List of updated IDS is: % with catalogue ref: %', aTest, bTest;
-        SELECT array_agg(id), array_agg(name)
-          INTO cTest, dTest
-        FROM staging_catalogue
-          WHERE import_ref = staging_catalogue_line.import_ref
-            AND parent_ref in (select unnest(aTest))
-            and parent_updated = FALSE;
-        RAISE WARNING 'List of IDS concerned by parentupdate: %, with names: %', cTest, dTest;*/
+        /*        SELECT array_agg(updated_id), array_agg(catalogue_ref_updated) INTO aTest, bTest FROM staging_catalogue_updated;
+                RAISE WARNING 'List of updated IDS is: % with catalogue ref: %', aTest, bTest;
+                SELECT array_agg(id), array_agg(name)
+                  INTO cTest, dTest
+                FROM staging_catalogue
+                  WHERE import_ref = staging_catalogue_line.import_ref
+                    AND parent_ref in (select unnest(aTest))
+                    and parent_updated = FALSE;
+                RAISE WARNING 'List of IDS concerned by parentupdate: %, with names: %', cTest, dTest;*/
         UPDATE staging_catalogue as msc
         SET parent_ref = recCatalogue.id,
-            parent_updated = TRUE
+          parent_updated = TRUE
         WHERE msc.import_ref = staging_catalogue_line.import_ref
-          AND msc.parent_ref IN (
-            /*SELECT unnest(aTest)*/
-            SELECT updated_id FROM staging_catalogue_updated
-          )
-          AND parent_updated = FALSE;
-/*        GET DIAGNOSTICS countTest := ROW_COUNT;
-        RAISE WARNING 'Rows updated: %', countTest;*/
+              AND msc.parent_ref IN (
+          /*SELECT unnest(aTest)*/
+          SELECT updated_id FROM staging_catalogue_updated
+        )
+              AND parent_updated = FALSE;
+      /*        GET DIAGNOSTICS countTest := ROW_COUNT;
+              RAISE WARNING 'Rows updated: %', countTest;*/
       END IF;
       children_move_forward := FALSE;
     END LOOP;

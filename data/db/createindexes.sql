@@ -228,4 +228,4 @@ CREATE INDEX idx_staging_catalogue ON staging_catalogue (level_ref, fullToIndex(
 CREATE INDEX idx_staging_catalogue_filter ON staging_catalogue (import_ref, name, level_ref);
 CREATE INDEX idx_staging_catalogue_parent_ref ON staging_catalogue (parent_ref) WHERE parent_ref IS NOT NULL;
 CREATE INDEX idx_staging_catalogue_catalogue_ref ON staging_catalogue (import_ref, parent_ref) WHERE catalogue_ref IS NOT NULL;
-
+CREATE INDEX idx_staging_catalogue_parent_updated ON staging_catalogue (parent_updated);

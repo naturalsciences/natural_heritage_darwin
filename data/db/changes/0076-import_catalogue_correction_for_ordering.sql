@@ -12,6 +12,7 @@ CREATE INDEX idx_staging_catalogue ON staging_catalogue (level_ref, fullToIndex(
 CREATE INDEX idx_staging_catalogue_filter ON staging_catalogue (import_ref, name, level_ref);
 CREATE INDEX idx_staging_catalogue_parent_ref ON staging_catalogue (parent_ref) WHERE parent_ref IS NOT NULL;
 CREATE INDEX idx_staging_catalogue_catalogue_ref ON staging_catalogue (import_ref, parent_ref) WHERE catalogue_ref IS NOT NULL;
+CREATE INDEX idx_staging_catalogue_parent_updated ON staging_catalogue (parent_updated);
 
 comment on table staging_catalogue is 'Stores the catalogues hierarchy to be imported';
 comment on column staging_catalogue.id is 'Unique identifier of a to be imported catalogue unit entry';
@@ -51,6 +52,9 @@ AS
     -- Browse all staging_catalogue lines
     FOR staging_catalogue_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY level_ref, fullToIndex(name)
     LOOP
+      IF trim(touniquestr(staging_catalogue_line.name)) = '' THEN
+        RAISE EXCEPTION E'Case 0, Could not import this file, % is not a valid name.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
+      END IF;
       SELECT parent_ref, catalogue_ref INTO parentRef, catalogueRef FROM staging_catalogue WHERE id = staging_catalogue_line.id;
       IF catalogueRef IS NULL THEN
         -- Check if we're at a top taxonomic entry in the template/staging_catalogue line
