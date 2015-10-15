@@ -35,6 +35,9 @@ class CollectionsCodesForm extends BaseCollectionsForm
     $this->validatorSchema['code_suffix'] = new sfValidatorString(array('required' => false, 'trim'=>true));
     $this->validatorSchema['code_suffix_separator'] = new sfValidatorString(array('required' => false, 'trim'=>true));
     $this->widgetSchema['code_specimen_duplicate']->setLabel('Duplicate specimen codes');
+	/*f theeten 15/10/2015 mask for code  */
+    $this->widgetSchema['code_mask']    = new sfWidgetFormInputText();
+    $this->validatorSchema['code_mask'] = new sfValidatorString(array('required' => false, 'trim'=>true));
 
   }
 }

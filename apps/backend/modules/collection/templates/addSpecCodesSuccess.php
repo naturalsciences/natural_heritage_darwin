@@ -57,6 +57,14 @@
         <?php echo $form['code_specimen_duplicate'];?>
       </td>
     </tr>
+	<!-- ftheeten 2015 10 15 cells to declare an input mask for the codes associated to the collection-->
+	<tr>
+      <th><?php echo $form['code_mask']->renderLabel();?></th>
+      <td>
+        <?php echo $form['code_mask']->renderError(); ?>
+        <?php echo $form['code_mask'];?>
+      </td>
+    </tr>
   </tbody>
   <tfoot>
       <tr>

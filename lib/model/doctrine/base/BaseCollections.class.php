@@ -24,6 +24,7 @@
  * @property string $code_suffix_separator
  * @property boolean $code_specimen_duplicate
  * @property boolean $is_public
+ * @property string $code_mask
  * @property People $Institution
  * @property Users $Manager
  * @property Users $Staff
@@ -52,6 +53,7 @@
  * @method string              getCodeSuffixSeparator()                 Returns the current record's "code_suffix_separator" value
  * @method boolean             getCodeSpecimenDuplicate()               Returns the current record's "code_specimen_duplicate" value
  * @method boolean             getIsPublic()                            Returns the current record's "is_public" value
+ * @method string              getCodeMask()                            Returns the current record's "code_mask" value
  * @method People              getInstitution()                         Returns the current record's "Institution" value
  * @method Users               getManager()                             Returns the current record's "Manager" value
  * @method Users               getStaff()                               Returns the current record's "Staff" value
@@ -78,6 +80,7 @@
  * @method Collections         setCodeSuffix()                          Sets the current record's "code_suffix" value
  * @method Collections         setCodeSuffixSeparator()                 Sets the current record's "code_suffix_separator" value
  * @method Collections         setCodeSpecimenDuplicate()               Sets the current record's "code_specimen_duplicate" value
+ * @method Collections         setCodeMask()                            Sets the current record's "code_mask" value
  * @method Collections         setIsPublic()                            Sets the current record's "is_public" value
  * @method Collections         setInstitution()                         Sets the current record's "Institution" value
  * @method Collections         setManager()                             Sets the current record's "Manager" value
@@ -176,10 +179,13 @@ abstract class BaseCollections extends DarwinModel
              'notnull' => true,
              'default' => false,
              ));
-        $this->hasColumn('is_public', 'boolean', null, array(
+		$this->hasColumn('is_public', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
              'default' => true,
+             ));
+        $this->hasColumn('code_mask', 'string', null, array(
+             'type' => 'string',
              ));
     }
 

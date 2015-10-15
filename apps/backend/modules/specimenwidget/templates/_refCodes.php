@@ -1,6 +1,24 @@
 <table  class="property_values">
   <thead style="<?php echo ($form['Codes']->count() || $form['newCodes']->count())?'':'display: none;';?>">
-    <tr>
+    <!-- the two TR below 2015 10 15 input mask-->
+	<tr>
+		<td colspan="7" >
+			<div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Enable unicity check:<?php echo $form['unicity_check'];?></div>
+		</td>
+	</tr>
+	<tr>
+	      <td colspan="7">
+		       <div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;" class="class_rmca_mask_display" style="width:97%; overflow: hidden;white-space: nowrap;">Mask:</div>
+		</td>
+	</tr>
+	<tr>
+	  <td colspan="7">
+      		
+			<div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Apply input mask:<input type="checkbox" class="enable_mask" checked><input type="hidden" class="take_mask"/></div>
+		
+    </td>
+    </tr>
+	<tr>
       <th>
         <?php echo __('Category'); ?>
       </th>
@@ -40,7 +58,7 @@
   </thead>
     <?php $retainedKey = 0;?>
     <?php foreach($form['Codes'] as $form_value):?>
-      <?php include_partial('specimen/spec_codes', array('form' => $form_value, 'rownum'=>$retainedKey));?>
+      <?php include_partial('specimen/spec_codes', array('form' => $form_value, 'rownum'=>$retainedKey, "codemask"=>$form->getObject()->getCollections()->getCodeMask()));?>
       <?php $retainedKey = $retainedKey+1;?>
     <?php endforeach;?>
     <?php foreach($form['newCodes'] as $form_value):?>
@@ -92,6 +110,22 @@ $(document).ready(function () {
       parent_el = $(this).closest('table');
       $(parent_el).find('tbody select[id$=\"_suffix_separator\"]').val($(this).val());
     });
+	
+	 //ftheeten 2015 10 15 (enable/disable input mask)
+	$(".enable_mask").change(
+		function()
+		{
+			if($(".enable_mask").prop('checked'))
+			{
+				$(".mrac_input_mask").inputmask($(".take_mask").val());
+			}
+			else
+			{
+				
+				$(".mrac_input_mask").inputmask("*{0,+}");
+			}
+		}
+	);
 
 });
 </script>
