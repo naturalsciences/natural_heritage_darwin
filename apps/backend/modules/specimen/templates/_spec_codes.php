@@ -56,7 +56,9 @@
    function try_mask()
    {
 		$(".take_mask").val(<?php if(isset($codemask)){print("\"".$codemask."\"");} else{print("");} ?>);
-		$(".mrac_input_mask").inputmask(<?php if(isset($codemask)){print("\"".$codemask."\"");}else{print("");} ?>);
+		<?php if(sfContext::getInstance()->getActionName()=="addCode"):?>
+			$(".mrac_input_mask").inputmask(<?php if(isset($codemask)){print("\"".$codemask."\"");}else{print("");} ?>);
+		<?php endif;?>
 		$(".class_rmca_mask_display").text('Mask: '+'<?php if(isset($codemask)){print("\"".$codemask."\"");}else{print("");} ?>');
    }
 </script>

@@ -14,7 +14,7 @@
 	<tr>
 	  <td colspan="7">
       		
-			<div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Apply input mask:<input type="checkbox" class="enable_mask" checked><input type="hidden" class="take_mask"/></div>
+			<div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Apply input mask:<input type="checkbox" class="enable_mask" <?php if(sfContext::getInstance()->getActionName()=="new"){print("checked");}?>><input type="hidden" class="take_mask"/></div>
 		
     </td>
     </tr>
