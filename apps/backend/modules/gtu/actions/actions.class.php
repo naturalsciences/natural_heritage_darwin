@@ -161,6 +161,16 @@ class gtuActions extends DarwinActions
     $this->loadWidgets();
   }
 
+     //ftheeten 2015 10 16
+   public function executeView(sfWebRequest $request)
+  {
+    $this->forward404Unless($gtu = Doctrine::getTable('Gtu')->find($request->getParameter('id')), sprintf('Object gtu does not exist (%s).', $request->getParameter('id')));
+    $this->no_right_col = Doctrine::getTable('Gtu')->testNoRightsCollections('gtu_ref',$request->getParameter('id'), $this->getUser()->getId());
+
+    $this->form = new GtuForm($gtu);
+    $this->loadWidgets();
+  }
+  
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
