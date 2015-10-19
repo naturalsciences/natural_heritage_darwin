@@ -46,7 +46,21 @@ class specimenActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
     $form->addCodes($number, array('collection_ref' => $request->getParameter('collection_id', null)));
-    return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number));
+   	//mrac 2015 06 03 code mask
+    $codeMask="";
+    $testVal=$request->getParameter('collection_id', null);
+    if(strlen(trim($testVal))>0)
+    {
+    	$collTmp=Doctrine_Core::getTable('Collections')->find($request->getParameter('collection_id', null));
+		if(is_object($collTmp))
+		{
+    
+			$codeMask=$collTmp->getCodeMask();
+		}
+     }
+
+
+	return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number, 'codemask'=> $codeMask));
   }
 
   public function executeAddCollector(sfWebRequest $request)
