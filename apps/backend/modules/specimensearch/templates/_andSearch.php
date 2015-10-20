@@ -7,8 +7,12 @@
   <td class="widget_row_delete">
     <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop id=clear_tag_'.$row_line); ?>
   </td>
+  <td>
+	<input type="button" value="fuzzy associations" name="btn_fuz_<?php echo($row_line);?>" id="btn_fuz_<?php echo($row_line);?>" class="result_choose"/>
+  </td>
 </tr>
 <script  type="text/javascript">
+  $('#btn_fuz_<?php echo $row_line ; ?>').bind('click',purposeTagsViaButton);
   $('input.tag_line_<?php echo $row_line ; ?>').bind('keydown click',purposeTags);
   $('#clear_tag_<?php echo $row_line;?>').click(function(){
     if($(this).closest('tbody').find('tr.tag_line').length == 1)
@@ -39,6 +43,12 @@
       }
     });
   }
+  
+  function purposeTagsViaButton(event)
+  {
+	$('input.tag_line_<?php echo $row_line ; ?>').click();
+  }
+
 
   $('#purposed_tags_<?php echo $row_line ; ?> li').live('click',function()
   {
