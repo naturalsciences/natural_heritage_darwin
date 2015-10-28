@@ -5,6 +5,7 @@
                   inner join (select unnest(string_to_array(trim(c.path, '/'),'/'))::bigint as id) as scc on sc.id = scc.id
                 ) as "Collection path",
                 users_tracking.action as "Action",
+                case when specimens.type = 'specimen' then 'non type' else 'type' end as "Type",
                 count(*) over (
                                 partition by users.formated_name,
                                              ( 
@@ -13,7 +14,17 @@
                                                inner join (select unnest(string_to_array(trim(c.path, '/'),'/'))::bigint as id) as scc on sc.id = scc.id
                                              ), 
                                              users_tracking.action
-                              ) as "Count"
+                              ) as "Count",
+                count(*) over (
+                                partition by users.formated_name,
+                                             ( 
+                                               select '/'||array_to_string(array_agg(sc.name),'/')||'/'||c.name
+                                               from collections as sc
+                                               inner join (select unnest(string_to_array(trim(c.path, '/'),'/'))::bigint as id) as scc on sc.id = scc.id
+                                             ), 
+                                             users_tracking.action,
+                                             case when specimens.type = 'specimens' then 'non type' else 'type' end
+                              ) as "Type Count"
 from users
 inner join users_tracking 
    on users.id = users_tracking.user_ref 
