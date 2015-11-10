@@ -4113,22 +4113,20 @@ AS
     where_clause_complement_1 text := ' ';
     where_clause_complement_2 text := ' ';
     where_clause_complement_3 text := ' ';
+    where_clause_complement_3_bis text := ' ';
     where_clause_complement_4 text := ' ';
     where_clause_complement_5 text := ' ';
     where_clause_exclude_invalid text := ' ';
     recCatalogue RECORD;
     parent_path template_classifications.path%TYPE;
     parentRef staging_catalogue.parent_ref%TYPE;
+    parent_level catalogue_levels.id%TYPE;
     catalogueRef staging_catalogue.catalogue_ref%TYPE;
+    levelRef staging_catalogue.level_ref%TYPE;
     error_msg TEXT := '';
     children_move_forward BOOLEAN := FALSE;
     level_naming TEXT;
     tempSQL TEXT;
-    /*    aTest BIGINT[];
-        bTest BIGINT[];
-        cTest BIGINT[];
-        dTest TEXT[];
-        countTest INTEGER;*/
   BEGIN
     -- Browse all staging_catalogue lines
     FOR staging_catalogue_line IN SELECT * from staging_catalogue WHERE import_ref = req_import_ref ORDER BY level_ref, fullToIndex(name)
@@ -4136,7 +4134,7 @@ AS
       IF trim(touniquestr(staging_catalogue_line.name)) = '' THEN
         RAISE EXCEPTION E'Case 0, Could not import this file, % is not a valid name.\nStaging Catalogue Line: %', staging_catalogue_line.name, staging_catalogue_line.id;
       END IF;
-      SELECT parent_ref, catalogue_ref INTO parentRef, catalogueRef FROM staging_catalogue WHERE id = staging_catalogue_line.id;
+      SELECT parent_ref, catalogue_ref, level_ref INTO parentRef, catalogueRef, levelRef FROM staging_catalogue WHERE id = staging_catalogue_line.id;
       IF catalogueRef IS NULL THEN
         -- Check if we're at a top taxonomic entry in the template/staging_catalogue line
         IF parentRef IS NULL THEN
@@ -4144,32 +4142,34 @@ AS
           where_clause_complement_1 := ' ';
           where_clause_complement_2 := ' ';
           where_clause_complement_3 := ' ';
+          where_clause_complement_3_bis := ' ';
         ELSE
           -- If a child entry, we've got to use the informations from the already matched or created parent
-          where_clause_complement_1 := '  AND parent_ref = ' || parentRef || ' ';
-          where_clause_complement_2 := '  AND parent_ref != ' || parentRef || ' ';
+          where_clause_complement_1 := '  AND tax.parent_ref = ' || parentRef || ' ';
+          where_clause_complement_2 := '  AND tax.parent_ref != ' || parentRef || ' ';
           -- Select the path from parent catalogue unit
-          EXECUTE 'SELECT path FROM ' || quote_ident(referenced_relation) || ' WHERE id = $1'
-          INTO parent_path
+          EXECUTE 'SELECT path, level_ref FROM ' || quote_ident(referenced_relation) || ' WHERE id = $1'
+          INTO parent_path, parent_level
           USING parentRef;
-          where_clause_complement_3 := '  AND position (' || quote_literal(parent_path) || ' IN path) = 1 ';
+          where_clause_complement_3 := '  AND position (' || quote_literal(parent_path) || ' IN tax.path) = 1 ';
+          where_clause_complement_3_bis := '  AND (select t2.level_ref from ' || quote_ident(referenced_relation) || ' as t2 where t2.id = tax.parent_ref) > ' || parent_level || ' ';
         END IF;
-        where_clause_complement_4 := '  AND left(substring(name from length(trim(' ||
+        where_clause_complement_4 := '  AND left(substring(tax.name from length(trim(' ||
                                      quote_literal(staging_catalogue_line.name) || '))+1),1) IN (' ||
                                      quote_literal(' ') || ', ' || quote_literal(',') || ') ';
         where_clause_complement_5 := '  AND left(substring(' || quote_literal(staging_catalogue_line.name) ||
-                                     ' from length(trim(name))+1),1) IN (' ||
+                                     ' from length(trim(tax.name))+1),1) IN (' ||
                                      quote_literal(' ') || ', ' || quote_literal(',') || ') ';
         -- Set the invalid where clause if asked
         IF exclude_invalid_entries = TRUE THEN
-          where_clause_exclude_invalid := '  AND status != ' || quote_literal('invalid') || ' ';
+          where_clause_exclude_invalid := '  AND tax.status != ' || quote_literal('invalid') || ' ';
         END IF;
         -- Check a perfect match entry
         -- Take care here, a limit 1 has been set, we only kept the EXIT in case the limit would be accidently removed
         FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
-                                    'FROM ' || quote_ident(referenced_relation) || ' ' ||
-                                    'WHERE level_ref = $1 ' ||
-                                    '  AND name_indexed = fullToIndex( $2 ) ' ||
+                                    'FROM ' || quote_ident(referenced_relation) || ' as tax ' ||
+                                    'WHERE tax.level_ref = $1 ' ||
+                                    '  AND tax.name_indexed = fullToIndex( $2 ) ' ||
                                     where_clause_exclude_invalid ||
                                     where_clause_complement_1 ||
                                     'LIMIT 1;'
@@ -4189,12 +4189,13 @@ AS
           -- already existing entry
           IF parentRef IS NOT NULL THEN
             FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
-                                        'FROM ' || quote_ident(referenced_relation) || ' ' ||
-                                        'WHERE level_ref = $1 ' ||
-                                        '  AND name_indexed = fullToIndex( $2 ) ' ||
+                                        'FROM ' || quote_ident(referenced_relation) || ' as tax ' ||
+                                        'WHERE tax.level_ref = $1 ' ||
+                                        '  AND tax.name_indexed = fullToIndex( $2 ) ' ||
                                         where_clause_exclude_invalid ||
                                         where_clause_complement_2 ||
                                         where_clause_complement_3 ||
+                                        where_clause_complement_3_bis ||
                                         'LIMIT 1;'
             USING staging_catalogue_line.level_ref, staging_catalogue_line.name
             LOOP
@@ -4215,9 +4216,9 @@ AS
             -- the parent specified in the template and the path of the potential corresponding entry in catalogue
             -- have a common path...
             tempSQL := 'SELECT COUNT(id) OVER () as total_count, * ' ||
-                       'FROM ' || quote_ident(referenced_relation) || ' ' ||
-                       'WHERE level_ref = $1 ' ||
-                       '  AND name_indexed LIKE fullToIndex( $2 ) || ' || quote_literal('%') ||
+                       'FROM ' || quote_ident(referenced_relation) || ' as tax ' ||
+                       'WHERE tax.level_ref = $1 ' ||
+                       '  AND tax.name_indexed LIKE fullToIndex( $2 ) || ' || quote_literal('%') ||
                        where_clause_exclude_invalid ||
                        where_clause_complement_3 ||
                        where_clause_complement_4;
@@ -4239,8 +4240,8 @@ AS
             IF NOT FOUND THEN
               FOR recCatalogue IN EXECUTE 'SELECT COUNT(id) OVER () as total_count, * ' ||
                                           'FROM ' || quote_ident(referenced_relation) || ' as tax ' ||
-                                          'WHERE level_ref = $1 ' ||
-                                          '  AND position(name_indexed IN fullToIndex( $2 )) = 1 ' ||
+                                          'WHERE tax.level_ref = $1 ' ||
+                                          '  AND position(tax.name_indexed IN fullToIndex( $2 )) = 1 ' ||
                                           where_clause_exclude_invalid ||
                                           '  AND NOT EXISTS (SELECT 1 ' ||
                                           '                  FROM ' || quote_ident(referenced_relation) || ' as stax ' ||
@@ -4289,28 +4290,16 @@ AS
           WHERE sc.import_ref = staging_catalogue_line.import_ref
                 AND sc.name = staging_catalogue_line.name
                 AND sc.level_ref = staging_catalogue_line.level_ref
-          RETURNING id/*, catalogue_ref*/
+          RETURNING id
         )
-        /*        SELECT array_agg(updated_id), array_agg(catalogue_ref_updated) INTO aTest, bTest FROM staging_catalogue_updated;
-                RAISE WARNING 'List of updated IDS is: % with catalogue ref: %', aTest, bTest;
-                SELECT array_agg(id), array_agg(name)
-                  INTO cTest, dTest
-                FROM staging_catalogue
-                  WHERE import_ref = staging_catalogue_line.import_ref
-                    AND parent_ref in (select unnest(aTest))
-                    and parent_updated = FALSE;
-                RAISE WARNING 'List of IDS concerned by parentupdate: %, with names: %', cTest, dTest;*/
         UPDATE staging_catalogue as msc
         SET parent_ref = recCatalogue.id,
           parent_updated = TRUE
         WHERE msc.import_ref = staging_catalogue_line.import_ref
               AND msc.parent_ref IN (
-          /*SELECT unnest(aTest)*/
           SELECT updated_id FROM staging_catalogue_updated
         )
               AND parent_updated = FALSE;
-      /*        GET DIAGNOSTICS countTest := ROW_COUNT;
-              RAISE WARNING 'Rows updated: %', countTest;*/
       END IF;
       children_move_forward := FALSE;
     END LOOP;

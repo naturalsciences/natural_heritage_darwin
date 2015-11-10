@@ -1,6 +1,6 @@
 \set ECHO all
 \i unit_launch.sql
-SELECT plan(29);
+SELECT plan(30);
 
 select diag('Test of taxonomy import');
 select diag('-- First mimic of xml file with creation of a basic taxonomical structure --');
@@ -377,6 +377,20 @@ insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, cata
 insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (53,12,'? #"\%',34,52,NULL);
 
 select throws_ok('select fct_importer_catalogue(12,''taxonomy'')',E'Case 0, Could not import this file, ? #"\\% is not a valid name.\nStaging Catalogue Line: 53');
+
+
+select diag('-- Thirteen mimic of xml file with something that should succeed: A new Mugilidae family entry to be connected with  --');
+
+insert into imports (id, user_ref, format, filename, collection_ref) values (13,1,'taxon','taxon_test_13.xml',NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (54,13,'Animalia',2,NULL,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (55,13,'Mugiliformidae',33,54,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (56,13,'Mugilidae',34,55,NULL);
+insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, catalogue_ref) values (57,13,'Mugilix',41,56,NULL);
+
+select is(true ,
+          (select fct_importer_catalogue(11,'taxonomy')),
+          'Perform the import of staging catalogue entries'
+);
 
 SELECT * FROM finish();
 
