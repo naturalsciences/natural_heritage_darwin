@@ -94,4 +94,7 @@ GRANT EXECUTE ON FUNCTION fct_listing_lithostratigraphy (IN nbr_records INTEGER,
 GRANT EXECUTE ON FUNCTION fct_listing_mineralogy (IN nbr_records INTEGER, VARIADIC mineralo_unit_ids INTEGER[]) TO d2viewer;
 GRANT EXECUTE ON FUNCTION fct_listing_lithology (IN nbr_records INTEGER, VARIADIC litholo_unit_ids INTEGER[]) TO d2viewer;
 
+ GRANT EXECUTE ON FUNCTION stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) to d2viewer;
+ GRANT EXECUTE ON FUNCTION stats_encoders_encoding (collections.id%TYPE, TEXT, TEXT, TEXT) to d2viewer;
+
  ALTER USER d2viewer SET search_path TO darwin2, public;

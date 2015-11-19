@@ -165,3 +165,8 @@ drop function if exists fct_report_loans_forms (loan_id integer, full_target_lis
 
 DROP FUNCTION IF EXISTS fct_duplicate_loans (loan_id loans.id%TYPE);
 DROP FUNCTION IF EXISTS fct_clean_staging_catalogue ( importRef staging_catalogue.import_ref%TYPE );
+
+-- Statistics functions
+DROP FUNCTION IF EXISTS stats_collections_encoding (collections.id%TYPE, timestamp, timestamp);
+DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, users.id%TYPE, timestamp, timestamp);
+DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, TEXT, TEXT, TEXT);
