@@ -5710,8 +5710,8 @@ DROP TYPE IF EXISTS stats_collections CASCADE;
 
 create type stats_collections as (collection varchar, new_items bigint, updated_items bigint, new_types bigint, updated_types bigint, new_species bigint);
 
-alter type stats_collections owner to darwin2;
-alter function stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) owner to darwin2;
+--alter type stats_collections owner to darwin2;
+--alter function stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) owner to darwin2;
 
 create or replace function stats_collections_encoding (collections.id%TYPE, timestamp, timestamp) returns setof stats_collections language sql immutable as $$
 WITH RECURSIVE collpath(name, collection_path, parent_path, id, parent_ref) AS (
@@ -5809,7 +5809,7 @@ $$;
 DROP TYPE IF EXISTS encoders_stats_collections CASCADE;
 
 create type encoders_stats_collections as (encoder TEXT, collection_path TEXT, new_items bigint, updated_items bigint, new_types bigint, updated_types bigint, new_species bigint);
-alter type encoders_stats_collections owner to darwin2;
+--alter type encoders_stats_collections owner to darwin2;
 
 CREATE OR REPLACE function stats_encoders_encoding (top_collection collections.id%TYPE, users_array TEXT, from_date TEXT, to_date TEXT)
   RETURNS setof encoders_stats_collections
@@ -5971,4 +5971,4 @@ FROM users_statistics as us
 ORDER BY us."User", us."Collection Path"
 $$;
 
-alter function stats_encoders_encoding (collections.id%TYPE, TEXT, TEXT, TEXT) owner to darwin2;
+--alter function stats_encoders_encoding (collections.id%TYPE, TEXT, TEXT, TEXT) owner to darwin2;
