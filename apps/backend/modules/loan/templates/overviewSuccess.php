@@ -17,6 +17,7 @@
           <tr>
             <th></th>
             <th><?php echo __('Darwin Part') ;?></th>
+            <th><?php echo __('Darwin Part Main Code(s)') ;?></th>
             <th><?php echo __('I.g. Num');?></th>
             <th><?php echo __('Details') ;?></th>
             <th><?php echo __('Expedition / Return') ;?></th>

@@ -11,6 +11,9 @@
     <?php echo $form['specimen_ref'];?>
   </td>
   <td>
+
+  </td>
+  <td>
     <?php echo $form['ig_ref']->renderError();?>
     <?php echo $form['ig_ref'];?>
   </td>
@@ -128,6 +131,7 @@
   </td>
 </tr>
 <tr class="main_but_line_<?php echo $form->getparent()->getName().'_'.$form->getName();?>">
+  <td></td>
   <td></td>
   <td></td>
   <td colspan="2">
