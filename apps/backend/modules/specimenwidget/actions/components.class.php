@@ -13,7 +13,9 @@ class specimenwidgetComponents extends sfComponents
 
   protected function defineForm()
   {
-    if(!$this->getUser()->isAtLeast(Users::ENCODER)) die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;
+    if(!$this->getUser()->isAtLeast(Users::ENCODER))  {
+      print("<div class='warn_message'>".__("You don't have rights to edit these informations !")."</div>");
+    }
     if(! isset($this->form) )
     {
       if(isset($this->eid) && $this->eid != null)
@@ -23,8 +25,9 @@ class specimenwidgetComponents extends sfComponents
         $this->spec_id = $this->eid;
         if(!$this->getUser()->isA(Users::ADMIN))
         {
-          if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $this->eid, $this->getUser()->getId()))
-            die("<div class='warn_message'>".__("you can't do that !!")."</div>") ;
+          if(! Doctrine::getTable('Specimens')->hasRights('spec_ref', $this->eid, $this->getUser()->getId())) {
+            print("<div class='warn_message'>".__("You don't have rights to edit these informations !")."</div>");
+          }
         }
       }
       else
