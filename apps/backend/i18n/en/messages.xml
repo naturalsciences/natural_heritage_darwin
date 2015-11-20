@@ -6102,6 +6102,18 @@ DaRWIN</target>
         <source>Return date</source>
         <target>Return date</target>
       </trans-unit>
+      <trans-unit id="1873">
+        <source>You don't have rights to edit these informations !</source>
+        <target>You don't have rights to edit these informations !</target>
+      </trans-unit>
+      <trans-unit id="1874">
+        <source>Specimen Main code(s)</source>
+        <target>Specimen Main code(s)</target>
+      </trans-unit>
+      <trans-unit id="1875">
+        <source>Darwin Part Main Code(s)</source>
+        <target>Darwin Part Main Code(s)</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

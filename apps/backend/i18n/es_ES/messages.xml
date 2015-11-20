@@ -7598,6 +7598,18 @@ DaRWIN</target>
         <target>Fecha de devolución</target>
         
       </trans-unit>
+      <trans-unit id="1873">
+        <source>You don't have rights to edit these informations !</source>
+        
+      </trans-unit>
+      <trans-unit id="1874">
+        <source>Specimen Main code(s)</source>
+        
+      </trans-unit>
+      <trans-unit id="1875">
+        <source>Darwin Part Main Code(s)</source>
+        
+      </trans-unit>
     </body>
   </file>
 </xliff>

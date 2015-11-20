@@ -934,7 +934,7 @@
       </trans-unit>
       <trans-unit id="220">
         <source>Contact</source>
-        <target>contact</target>
+        <target>Contact</target>
         
       </trans-unit>
       <trans-unit id="223">
@@ -964,6 +964,7 @@
       </trans-unit>
       <trans-unit id="229">
         <source>What can be found in DaRWIN ?</source>
+        <target>Wat kun je vinden in DaRWIN ?</target>
         
       </trans-unit>
       <trans-unit id="230">
@@ -1288,10 +1289,12 @@
       </trans-unit>
       <trans-unit id="306">
         <source>Specimen count min</source>
+        <target>Specimen aantal min</target>
         
       </trans-unit>
       <trans-unit id="307">
         <source>Specimen count max</source>
+        <target>Specimen aantal max</target>
         
       </trans-unit>
       <trans-unit id="308">
@@ -5436,6 +5439,7 @@
       </trans-unit>
       <trans-unit id="1353">
         <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;https://github.com/naturalsciences/Darwin/&quot;&gt;https://github.com/naturalsciences/Darwin/&lt;/a&gt;</source>
+        <target>Aangezien Darwin een Open Source application is dat volledig op open source software is gebaseerd, willen we u graag vragen of u wenst deel te nemen aan het project.&lt;br/&gt; Suggesties,Patches, Bug Reports of code donaties zijn welkom op onze Request tracker : &lt;a href=&quot;https://github.com/naturalsciences/Darwin/&quot;&gt;https://github.com/naturalsciences/Darwin/&lt;/a&gt;</target>
         
       </trans-unit>
       <trans-unit id="1354">
@@ -6190,7 +6194,7 @@
       </trans-unit>
       <trans-unit id="1549">
         <source>Transporter</source>
-        <target>Chauffeur</target>
+        <target>Vervoerder</target>
         
       </trans-unit>
       <trans-unit id="1551">
@@ -6980,6 +6984,7 @@
       </trans-unit>
       <trans-unit id="1745">
         <source>warning_spec_msg</source>
+        <target>&lt;strong&gt;Waarschuwing!&lt;/strong&gt;&lt;br /&gt; Deze fouten kunnen niet gecorrigeerd worden, de beste methode om ze te verwijderen, is uw import te verwijderen, uw xml te corrigeren en het bestand opnieuw te importeren. U kunt uw import ook verderzetten maar de bovenstaande informatie zal ontbreken. Wat wenst u te doen ?</target>
         
       </trans-unit>
       <trans-unit id="1746">
@@ -7209,26 +7214,32 @@
       </trans-unit>
       <trans-unit id="1793">
         <source>Unit type</source>
+        <target>Eenheid type</target>
         
       </trans-unit>
       <trans-unit id="1794">
         <source>External Specimen</source>
+        <target>niet-Darwin specimen</target>
         
       </trans-unit>
       <trans-unit id="1795">
         <source>Darwin Specimen</source>
+        <target>Darwin specimen</target>
         
       </trans-unit>
       <trans-unit id="1796">
         <source>Choose a Donator or Seller</source>
+        <target>Kies een Schenker of Verkoper</target>
         
       </trans-unit>
       <trans-unit id="1797">
         <source>Specimen part</source>
+        <target>Specimen onderdeel</target>
         
       </trans-unit>
       <trans-unit id="1798">
         <source>Specimen status</source>
+        <target>Specimen status</target>
         
       </trans-unit>
       <trans-unit id="1799">
@@ -7243,6 +7254,7 @@
       </trans-unit>
       <trans-unit id="1801">
         <source>Workflows summary</source>
+        <target>Samenvatting werkstroom</target>
         
       </trans-unit>
       <trans-unit id="1802">
@@ -7271,6 +7283,7 @@
       </trans-unit>
       <trans-unit id="1806">
         <source>Depositories' view</source>
+        <target>Beeld op de bewaarplaatsen</target>
         
       </trans-unit>
       <trans-unit id="1807">
@@ -7330,10 +7343,12 @@
       </trans-unit>
       <trans-unit id="1818">
         <source>Add Properties with this pre defined template</source>
+        <target>Voeg properties toe via dit sjabloon</target>
         
       </trans-unit>
       <trans-unit id="1819">
         <source>Search related specimens</source>
+        <target>Zoek gerelateerde specimens</target>
         
       </trans-unit>
       <trans-unit id="1820">
@@ -7343,10 +7358,12 @@
       </trans-unit>
       <trans-unit id="1821">
         <source>#ID list separated by ','</source>
+        <target>#ID lijst gescheiden door ','</target>
         
       </trans-unit>
       <trans-unit id="1822">
         <source>Actors</source>
+        <target>Actoren</target>
         
       </trans-unit>
       <trans-unit id="1823">
@@ -7356,10 +7373,12 @@
       </trans-unit>
       <trans-unit id="1824">
         <source>Choose New Column</source>
+        <target>Kies een nieuwe kolom</target>
         
       </trans-unit>
       <trans-unit id="1825">
         <source>Choose New Taxon</source>
+        <target>Kies een nieuwe Taxon</target>
         
       </trans-unit>
       <trans-unit id="1826">
@@ -7369,26 +7388,32 @@
       </trans-unit>
       <trans-unit id="1827">
         <source>Pick a system in the list</source>
+        <target>Kies een systeem uit de lijst</target>
         
       </trans-unit>
       <trans-unit id="1828">
         <source>Add another system</source>
+        <target>Voeg een ander systeem toe</target>
         
       </trans-unit>
       <trans-unit id="1829">
         <source>Choose an Author</source>
+        <target>Kies een auteur</target>
         
       </trans-unit>
       <trans-unit id="1830">
         <source>Add bibliography</source>
+        <target>Bibliografie toevoegen</target>
         
       </trans-unit>
       <trans-unit id="1831">
         <source>No modifications recorded yet</source>
+        <target>Nog geen wijzigingen opgeslagen</target>
         
       </trans-unit>
       <trans-unit id="1832">
         <source>No Loans recorded yet</source>
+        <target>Nog geen uitlening geregistreerd</target>
         
       </trans-unit>
       <trans-unit id="1833">
@@ -7398,6 +7423,7 @@
       </trans-unit>
       <trans-unit id="1834">
         <source>List of sub collections</source>
+        <target>lijst subcollecties</target>
         
       </trans-unit>
       <trans-unit id="1835">
@@ -7413,6 +7439,7 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
       </trans-unit>      
       <trans-unit id="1837">
         <source>catalogue_search_tips</source>
+        <target>Gebruik het karakter ^ om een &quot;Begint met&quot; opzoeking te starten (bv. ^falco)</target>
                 
       </trans-unit>
       <trans-unit id="1838">
@@ -7422,18 +7449,22 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
       </trans-unit>
       <trans-unit id="1839">
         <source>Additional</source>
+        <target>Bijkomend</target>
         
       </trans-unit>
       <trans-unit id="1840">
         <source>Storage</source>
+        <target>Bewaring</target>
         
       </trans-unit>
       <trans-unit id="1841">
         <source>Actif</source>
+        <target>Wordt verwerkt</target>
         
       </trans-unit>
       <trans-unit id="1842">
         <source>warning_catalogue_msg</source>
+        <target>&lt;strong&gt;Waarschuwing!&lt;/strong&gt;&lt;br /&gt; deze fouten kunnen niet verbeterd worden, de enige manier om ze te verwijderen is uw import te verwijderen, uw xml te corrigeren (of the DaRWIN catalogus) en opnieuw te importeren. </target>
                 
       </trans-unit>  
       <trans-unit id="1843">
@@ -7553,12 +7584,12 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
       </trans-unit>
       <trans-unit id="1866">
         <source>Loan target selected</source>
-        <target>Destinatie</target>
+        <target>Bestemd voor</target>
         
       </trans-unit>
       <trans-unit id="1867">
         <source>Loan target catalogues</source>
-        <target>Namen uit van</target>
+        <target>Namen uit</target>
         
       </trans-unit>
       <trans-unit id="1868">
@@ -7584,6 +7615,18 @@ Indien ja, dan kunt u zien wanneer het werd uitgeleend en wanneer het teruggebra
       <trans-unit id="1872">
         <source>Return date</source>
         <target>terugkeerdatum</target>
+        
+      </trans-unit>
+      <trans-unit id="1873">
+        <source>You don't have rights to edit these informations !</source>
+        
+      </trans-unit>
+      <trans-unit id="1874">
+        <source>Specimen Main code(s)</source>
+        
+      </trans-unit>
+      <trans-unit id="1875">
+        <source>Darwin Part Main Code(s)</source>
         
       </trans-unit>
     </body>

@@ -7599,19 +7599,37 @@
       </trans-unit>
       <trans-unit id="1869">
         <source>Please fill in the criterias to print your report</source>
+        <target>Veuillez introduire les critères pour l'impression de votre rapport</target>
         
       </trans-unit>
       <trans-unit id="1870">
         <source>The duplication process failed at %time% - please contact your application administrator</source>
+        <target>Le processus de duplication a échoué à %time% - veuillez contacter votre administrateur d'application</target>
         
       </trans-unit>
       <trans-unit id="1871">
         <source>Expedition date</source>
+        <target>Date d'expédition</target>
         
       </trans-unit>
       <trans-unit id="1872">
         <source>Return date</source>
         <target>Date de retour</target>
+        
+      </trans-unit>
+      <trans-unit id="1873">
+        <source>You don't have rights to edit these informations !</source>
+        <target>Vous n'avez pas les droits suffisant pour éditer ces informations</target>
+        
+      </trans-unit>
+      <trans-unit id="1874">
+        <source>Specimen Main code(s)</source>
+        <target>Codes principaux</target>
+        
+      </trans-unit>
+      <trans-unit id="1875">
+        <source>Darwin Part Main Code(s)</source>
+        <target>Codes principaux</target>
         
       </trans-unit>
     </body>
