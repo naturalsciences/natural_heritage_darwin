@@ -3241,3 +3241,9 @@ tr.spec_ident_collectors_data
 {
   border-bottom: 1px solid white;
 }
+
+.main_codes_display {
+  margin: 0 0 4px 0;
+  letter-spacing: 0.05em;
+  list-style: none;
+}

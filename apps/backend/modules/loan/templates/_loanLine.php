@@ -11,7 +11,7 @@
     <?php echo $form['specimen_ref'];?>
   </td>
   <td>
-
+    <?php echo include_component('specimenwidgetview', 'refMainCodes', array('eid'=>$form['specimen_ref']->getValue()));?>
   </td>
   <td>
     <?php echo $form['ig_ref']->renderError();?>

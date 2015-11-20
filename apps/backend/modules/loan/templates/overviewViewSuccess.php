@@ -23,7 +23,9 @@
                 <?php echo image_tag('info.png',"title=info class=extd_info data_id=".$item->getSpecimenRef());?>
                 <?php echo link_to('#' . $item->getSpecimenRef(), 'specimen/view?id='. $item->getSpecimenRef());?>
               <?php endif;?></td>
-              <td></td>
+              <td>
+                <?php echo include_component('specimenwidgetview', 'refMainCodes', array('eid'=>$item->getSpecimenRef()));?>
+              </td>
               <td><?php
                 $ig_num = $item->Ig->getIgNum();
                 if ( !empty($ig_num) ) {

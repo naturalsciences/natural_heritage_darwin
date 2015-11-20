@@ -115,6 +115,11 @@ class specimenwidgetviewComponents extends sfComponents
     $this->Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('specimens',$this->eid) ;
   }
 
+  public function executeRefMainCodes()
+  {
+    $this->Codes = Doctrine::getTable('Codes')->getMainCodesRelatedArray('specimens',$this->eid);
+  }
+
   public function executeRefCollectors()
   {
     $this->Collectors = Doctrine::getTable('CataloguePeople')->getPeopleRelated('specimens','collector',$this->eid) ;
