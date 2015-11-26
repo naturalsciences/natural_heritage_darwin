@@ -44,7 +44,7 @@ select case
          when strpos(taxon_path, '/91/') != 0 and 
 	     (collection_ref = 1 or collection_path like '/1/%') then
            'VZ'
-        when (strpos(taxon_path, '/37/') != 0 or 
+         when (strpos(taxon_path, '/37/') != 0 or 
               strpos(taxon_path, '/61/') != 0 or 
               strpos(taxon_path, '/353/') != 0 or 
               strpos(taxon_path, '/184176/') != 0 or 
@@ -124,10 +124,20 @@ select case
            'Meteorites'
          when (collection_ref = 276) then
            'Gems'
+         when strpos(taxon_path, '/141538/') != 0 then
+           'BOT'
          else
            'Other'
        end as "Department",
        case
+         when strpos(taxon_path, '/141538/') != 0 and 
+              collection_ref != 3 and 
+              collection_path not like '/3/%' then
+           'Plants'
+         when strpos(taxon_path, '/141539/') != 0 and 
+              collection_ref != 3 and 
+              collection_path not like '/3/%' then
+           'Fungi'
          when strpos(taxon_path, '/110/') != 0 and 
 	     (collection_ref = 1 or collection_path like '/1/%')  then
            'Amphibians'
@@ -175,6 +185,9 @@ select case
 	     strpos(taxon_path, '/276/') = 0 and 
 	     (collection_ref = 2 or collection_path like '/2/%') then
 	   'Arthropoda - Others'
+         when strpos(taxon_path, '/32/') != 0 and 
+	     (collection_ref = 2 or collection_path like '/2/%') then
+           'Brachiopoda'
          when (strpos(taxon_path, '/109920/') != 0 or strpos(taxon_path, '/30/') != 0) and 
 	     (collection_ref = 2 or collection_path like '/2/%') then
            'Bryozoa'
@@ -263,6 +276,51 @@ select case
 	 when (strpos(lithology_path, '/168/') != 0 or lithology_ref = 168) and
 	   (collection_ref = 200 or collection_path like '/200/%') then
 	   'Stony-Irons'
+         when strpos(taxon_path, '/2/') != 0 and
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Invertebrates - Arthropoda'
+         when strpos(taxon_path, '/32/') != 0 and
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Invertebrates - Brachiopoda'
+         when (strpos(taxon_path, '/109920/') != 0 or strpos(taxon_path, '/30/') != 0) and
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Invertebrates - Bryozoa'
+         when (strpos(taxon_path, '/72/') != 0 or strpos(taxon_path, '/81/') != 0) and
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Invertebrates - Cnidaria, Porifera and Receptaculitida'
+         when (strpos(taxon_path, '/75/') != 0 or strpos(taxon_path, '/206101/') != 0) and
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Invertebrates - Echinodermata'
+         when (strpos(taxon_path, '/33/') != 0 or strpos(taxon_path, '/177319/') != 0) and
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Invertebrates - Mollusca'
+         when strpos(taxon_path, '/110/') != 0 and 
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Amphibians'
+         when strpos(taxon_path, '/111/') != 0 and 
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Birds'
+         when (strpos(taxon_path, '/97/') != 0 or strpos(taxon_path, '/98/') != 0) and 
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Fishes'
+         when strpos(taxon_path, '/113/') != 0 and 
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Mammals'
+         when strpos(taxon_path, '/114/') != 0 and 
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Reptiles'
+         when strpos(taxon_path, '/91/') != 0 and 
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Vertebrates'
+         when (strpos(taxon_path, '/181947/') != 0) and
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Ichnofossils'
+         when strpos(taxon_path, '/141538/') != 0 and 
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Plants'
+         when strpos(taxon_path, '/141539/') != 0 and 
+              (collection_ref = 3 or collection_path like '/3/%') then
+           'Fossil Fungi'
          else
 	   'Others'
        end as "Group",
@@ -361,9 +419,11 @@ where case
           'Meteorites'
         when (collection_ref = 276) then
           'Gems'
+         when strpos(taxon_path, '/141538/') != 0 then
+           'BOT'
         else
           'Other'
-      end in ('VZ', 'IZ', 'Entomology', 'Cenozoic', 'Mesozoic', 'Paleozoic', 'n/a', 'Meteorites', 'Gems', 'Other')
+      end in ('VZ', 'IZ', 'Entomology', 'Cenozoic', 'Mesozoic', 'Paleozoic', 'Meteorites', 'Gems', 'BOT', 'Other')
 group by "Branch", 
        "Department",
        "Group",
@@ -418,7 +478,8 @@ select "Branch",
            count(distinct lithology_ref)
          else
            count(distinct taxon_ref) 
-       end as "Specimen Taxa"
+       end as "Specimen Taxa",
+       sum(specimen_count_maximum) as "Specimens (optimistic eval.)"
 from specimens_data as main_specimen_data
 group by "Branch", "Department", "Group", continent
 order by "Branch", "Department", "Group", continent
