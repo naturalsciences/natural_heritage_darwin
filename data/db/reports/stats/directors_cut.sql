@@ -120,8 +120,12 @@ select case
          when strpos(chrono_path, '/5/') != 0 and
              (collection_ref = 3 or collection_path like '/3/%') then
            'Paleozoic'
-         when (collection_ref = 200 or collection_path like '/200/%') then
+         when (collection_ref = 200 or collection_path like '/231//200/%') then
            'Meteorites'
+         when (collection_ref = 263 or collection_path like '/231/263/%') then
+           'Mineralogy'
+         when (collection_ref = 271 or collection_path like '/231/271/%') then
+           'Rocks and Ores'
          when (collection_ref = 276) then
            'Gems'
          when strpos(taxon_path, '/141538/') != 0 then
@@ -276,6 +280,8 @@ select case
 	 when (strpos(lithology_path, '/168/') != 0 or lithology_ref = 168) and
 	   (collection_ref = 200 or collection_path like '/200/%') then
 	   'Stony-Irons'
+	 when (collection_ref = 263 or collection_path like '/231/263/%' or collection_ref = 271 or collection_path like '/231/271/%') then
+	   (select name from collections where id = collection_ref)
          when strpos(taxon_path, '/2/') != 0 and
               (collection_ref = 3 or collection_path like '/3/%') then
            'Fossil Invertebrates - Arthropoda'
@@ -333,6 +339,7 @@ select case
        taxon_ref,
        taxon_level_ref,
        lithology_ref,
+       mineral_ref,
        type,
        sum(specimen_count_max) as specimen_count_maximum
 from specimens left join gtu_infos on specimens.gtu_ref = gtu_infos.gtu_ref
@@ -415,15 +422,19 @@ where case
         when strpos(chrono_path, '/5/') != 0 and
              (collection_ref = 3 or collection_path like '/3/%') then
           'Paleozoic'           
-        when (collection_ref = 200 or collection_path like '/200/%') then
+        when (collection_ref = 200 or collection_path like '/231/200/%') then
           'Meteorites'
+        when (collection_ref = 263 or collection_path like '/231/263/%') then
+          'Mineralogy'
+        when (collection_ref = 271 or collection_path like '/231/271/%') then
+          'Rocks and Ores'
         when (collection_ref = 276) then
           'Gems'
          when strpos(taxon_path, '/141538/') != 0 then
            'BOT'
         else
           'Other'
-      end in ('VZ', 'IZ', 'Entomology', 'Cenozoic', 'Mesozoic', 'Paleozoic', 'Meteorites', 'Gems', 'BOT', 'Other')
+      end in ('VZ', 'IZ', 'Entomology', 'Cenozoic', 'Mesozoic', 'Paleozoic', 'Meteorites', 'Mineralogy', 'Rocks and Ores', 'Gems', 'BOT', 'Other')
 group by "Branch", 
        "Department",
        "Group",
@@ -436,6 +447,7 @@ group by "Branch",
        taxon_ref,
        taxon_level_ref,
        lithology_ref,
+       mineral_ref,
        type
 )
 select "Branch", 
@@ -444,15 +456,28 @@ select "Branch",
        continent, 
        case 
          when "Branch" = 'MIN' then
-           (
-             select count(distinct lithology_ref) 
-             from specimens_data as sub_specimen_data
-             where sub_specimen_data.type != 'specimen'
-               and sub_specimen_data."Branch" = main_specimen_data."Branch"
-               and sub_specimen_data."Department" = main_specimen_data."Department"
-               and sub_specimen_data."Group" = main_specimen_data."Group"
-               and sub_specimen_data.continent = main_specimen_data.continent
-           )
+	    case
+	      when "Department" = 'Mineralogy' then
+                (
+                  select count(distinct mineral_ref) 
+                  from specimens_data as sub_specimen_data
+                  where sub_specimen_data.type != 'specimen'
+                    and sub_specimen_data."Branch" = main_specimen_data."Branch"
+                    and sub_specimen_data."Department" = main_specimen_data."Department"
+                    and sub_specimen_data."Group" = main_specimen_data."Group"
+                    and sub_specimen_data.continent = main_specimen_data.continent
+                )
+	      else
+                (
+                  select count(distinct lithology_ref) 
+                  from specimens_data as sub_specimen_data
+                  where sub_specimen_data.type != 'specimen'
+                    and sub_specimen_data."Branch" = main_specimen_data."Branch"
+                    and sub_specimen_data."Department" = main_specimen_data."Department"
+                    and sub_specimen_data."Group" = main_specimen_data."Group"
+                    and sub_specimen_data.continent = main_specimen_data.continent
+                )
+            end
          else
            (
              select count(distinct taxon_ref) 
@@ -475,7 +500,12 @@ select "Branch",
        ),0) as "Type",
        case 
          when "Branch" = 'MIN' then
-           count(distinct lithology_ref)
+	    case
+	      when "Department" = 'Mineralogy' then
+	        count(distinct mineral_ref)
+	      else
+                count(distinct lithology_ref)
+            end
          else
            count(distinct taxon_ref) 
        end as "Specimen Taxa",
