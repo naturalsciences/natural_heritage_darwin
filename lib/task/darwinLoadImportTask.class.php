@@ -64,7 +64,6 @@ EOF;
             $conn->rollback();
             break;
           }
-         //print $id."-".$result.'-';
           Doctrine_Query::create()
             ->update('imports p')
             ->set('p.state','?',$result!=''?'error':'loaded')

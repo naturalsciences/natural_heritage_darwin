@@ -36,8 +36,8 @@ class ImportCatalogueXml implements IImportModels
         }
     }
     xml_parser_free($xml_parser);
-    /*if(! $this->version_defined)
-      $this->errors_reported = $this->version_error_msg.$this->errors_reported;*/
+    if(! $this->version_defined)
+      $this->errors_reported = $this->version_error_msg.$this->errors_reported;
     return $this->errors_reported ;
   }
 
@@ -53,7 +53,6 @@ class ImportCatalogueXml implements IImportModels
   private function startElement($parser, $name, $attrs)
   {
     $this->tag = $name ;
-    //$this->path .= "/$name" ;
     $this->cdata = '' ;
     $this->inside_data = false ;
     switch ($name) {
@@ -67,6 +66,24 @@ class ImportCatalogueXml implements IImportModels
     $this->cdata = trim($this->cdata);
     $this->inside_data = false ;
       switch ($name) {
+        case "Major": $this->version  =  $this->cdata; break;
+        case "Minor": $this->version .=  (!empty($this->cdata))?'.'.$this->cdata:''; break;
+        case "Version":
+          $this->version_defined = true;
+          $authorized = sfConfig::get('tpl_authorizedversion');
+          Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
+          if(
+              !isset( $authorized['taxonomy'] ) ||
+              empty( $authorized['taxonomy'] ) ||
+              (
+                isset( $authorized['taxonomy'] ) &&
+                !empty( $authorized['taxonomy'] ) &&
+                !in_array( trim( $this->version ), $authorized['taxonomy'] )
+              )
+          ) {
+            $this->errors_reported .= $this->version_error_msg;
+          }
+          break;
         case "LevelName" : $this->object->setLevelRef($this->getLevelRef($this->cdata)) ; break ;
         case "TaxonFullName" : $this->object->setName($this->cdata) ; break ;
         case "TaxonomicalUnit" : $this->saveUnit(); break;

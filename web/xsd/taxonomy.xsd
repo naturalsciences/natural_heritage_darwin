@@ -5,6 +5,31 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+                <xs:element name="Metadata" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:annotation>
+                            <xs:documentation xml:lang="en-us">Metadata referring to the version of template used.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                            <xs:element name="Version" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="Major" type="xs:nonNegativeInteger">
+                                                <xs:annotation>
+                                                    <xs:documentation xml:lang="en-us">The major version number ('1' in 1.2) as defined by the content creators.</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:element>
+                                            <xs:element name="Minor" type="xs:nonNegativeInteger" minOccurs="0">
+                                                <xs:annotation>
+                                                    <xs:documentation xml:lang="en-us">An optional minor version number ('2' in 1.2)</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:element>
+                                        </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
 				<xs:element name="TaxonomicalTree" minOccurs="0" maxOccurs="unbounded">
 					<xs:annotation>
 						<xs:documentation>Taxonomical tree containing all taxonomical levels</xs:documentation>

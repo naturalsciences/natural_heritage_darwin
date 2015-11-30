@@ -62,7 +62,7 @@ class ImportABCDXml implements IImportModels
       case "LithostratigraphicAttribution" : //SAME AS BELOW
       case "efg:LithostratigraphicAttribution" : $this->object = new ParsingCatalogue('lithostratigraphy') ; break;
       case "Gathering" : $this->object = new ParsingTag("gtu") ; $this->comment_notion = 'general comments'  ; break;
-      case "efg:MineralRockIdentified" : break; //@TODO
+      case "efg:MineralRockIdentified" : break;
       case "HigherTaxa" : $this->object->catalogue_parent = new Hstore() ;break;
       case "Identification" : $this->object = new ParsingIdentifications() ; break;
       case "MeasurementOrFactAtomised" : if($this->getPreviousTag()==('Altitude')||$this->getPreviousTag()==('Depth')) $this->property = new ParsingProperties($this->getPreviousTag()) ;
@@ -140,12 +140,11 @@ class ImportABCDXml implements IImportModels
         case "FileURI" : $this->handleFileURI($this->cdata) ; break;
         case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
         case "FullName" : $this->people_name = $this->cdata ; break;
-        case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break; // $this->object->level_name='unit_rock'; break; //$this->object->informal = true ; break;
+        case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break;
         case "FullScientificNameString" : $this->object->fullname = $this->cdata ; break;
         case "MarkText" : $this->staging->setObjectName($this->cdata) ; break;
-        case "efg:InformalLithostratigraphicName" : $this->addComment(true,"lithostratigraphy"); break; //$this->staging['litho_local'] = true ; break;
+        case "efg:InformalLithostratigraphicName" : $this->addComment(true,"lithostratigraphy"); break;
         case "Gathering" : if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break;
-        // case "GivenNames" : $this->people['given_name'] = $this->cdata ; break;
         case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
         case "HigherTaxon" : $this->object->handleParent() ;break;;
         case "HigherTaxonName" : $this->object->higher_name = $this->cdata ; break;
@@ -155,7 +154,6 @@ class ImportABCDXml implements IImportModels
         case "Identification" : $this->object->save($this->staging) ; break;
         case "IdentificationHistory" : $this->addComment(true, 'taxonomy'); break;
         case "ID-in-Database" : $this->object->desc .= "id in database :".$this->cdata." ;" ; break;
-        // case "InheritedName" : $this->people['family_name'] = $this->cdata ; break;
         case "ISODateTimeBegin" : if($this->getPreviousTag() == "DateTime")  { $this->object->GTUdate['from'] = $this->cdata ;} elseif($this->getPreviousTag() == "Date")  { $this->object->identification->setNotionDate(FuzzyDateTime::getValidDate($this->cdata)) ;} break;
         case "ISODateTimeEnd" :  if($this->getPreviousTag() == "DateTime"){ $this->object->GTUdate['to'] = $this->cdata;}  break;
         case "IsQuantitative" : $this->property->property->setIsQuantitative($this->cdata) ; break;
@@ -169,7 +167,7 @@ class ImportABCDXml implements IImportModels
         case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break;
         case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;
         case "Method" : if($this->getPreviousTag() == "Identification") $this->addComment(false, "identifications"); else $this->object_to_save[] = $this->object->addMethod($this->cdata,$this->staging->getId()) ; break;
-        case "efg:Petrology" : break;  //@TODO
+        case "efg:Petrology" : break;
         case "MeasurementsOrFacts" :
             if($this->object && property_exists($this->object,'staging_info') && $this->getPreviousTag() != "Unit" && $this->object->staging_info)
               $this->object_to_save[] = $this->object->staging_info;
@@ -209,8 +207,6 @@ class ImportABCDXml implements IImportModels
         case "PreparationMaterials" : $this->preparation_mat = $this->cdata ; break;
         case "ProjectTitle" : $this->staging['expedition_name'] = $this->cdata ; break;
         case "RecordURI" : $this->addExternalLink($this->cdata) ; break;
-        //case "efg:RockType" :
-        //case "RockType" : $this->staging->setLithologyName($this->cdata) ; break;
         case "ScientificName" : $this->staging["taxon_name"] = $this->object->getCatalogueName() ;
                                 $this->staging["taxon_level_name"] = strtolower($this->object->level_name) ;break;
         case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break;
@@ -257,12 +253,20 @@ class ImportABCDXml implements IImportModels
         case "storage:Type" : $this->code_type = $this->cdata; break;
         case "storage:Value" : $this->addCode($this->code_type) ; break ;
         case "Major": $this->version  =  $this->cdata; break;
-        case "Modifier": $this->version .=  $this->cdata; break;
+        case "Minor": $this->version .=  (!empty($this->cdata))?'.'.$this->cdata:''; break;
         case "Version":
           $this->version_defined = true;
           $authorized = sfConfig::get('tpl_authorizedversion');
           Doctrine::getTable('Imports')->find($this->import_id)->setTemplateVersion(trim($this->version))->save();
-          if(! empty($authorized) && ! in_array(trim($this->version), $authorized )) {
+          if(
+            !isset( $authorized['specimens'] ) ||
+            empty( $authorized['specimens'] ) ||
+            (
+              isset( $authorized['specimens'] ) &&
+              !empty( $authorized['specimens'] ) &&
+              !in_array( trim( $this->version ), $authorized['specimens'] )
+            )
+          ) {
             $this->errors_reported .= $this->version_error_msg;
           }
           break;
