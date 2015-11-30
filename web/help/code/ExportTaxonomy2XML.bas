@@ -116,7 +116,13 @@ If CheckHeaders(check:=False) Then
             Set attr = dom.createNode(NODE_ATTRIBUTE, "xs:schemaLocation", "http://www.w3.org/2001/XMLSchema-instance")
             attr.Value = "http://www.tdwg.org/schemas/abcd/2.06 http://darwin.naturalsciences.be/xsd/taxonomy.xsd"
             root.setAttributeNode attr
-            root.appendChild dom.createTextNode(vbCrLf)
+            root.appendChild dom.createTextNode(vbCrLf & Space$(2))
+            
+            'Create a Metadata container
+            Set node = dom.createNode(NODE_ELEMENT, "Metadata", "http://www.tdwg.org/schemas/abcd/2.06")
+            root.appendChild node
+            XMLMetadata dom:=dom, node:=node
+            root.appendChild dom.createTextNode(vbCrLf & Space(2))
             
             'Create container and insert data in xml file
             Dim LastR As Long
@@ -239,7 +245,7 @@ Private Sub XMLTaxoTree(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXM
 
         Set xmlTaxonomicalTree = dom.createNode(NODE_ELEMENT, "TaxonomicalTree", "http://www.tdwg.org/schemas/abcd/2.06")
         subnode.appendChild xmlTaxonomicalTree
-        subnode.appendChild dom.createTextNode(vbCrLf + Space$(2))
+        subnode.appendChild dom.createTextNode(vbCrLf)
         xmlTaxonomicalTree.appendChild dom.createTextNode(vbCrLf + Space$(4))
                     
         celval = ""
@@ -269,7 +275,7 @@ Private Sub XMLTaxoTree(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXM
                 strTaxonFullName = celval
                 xmlTaxonFullName.Text = strTaxonFullName
                 xmlTaxonomicalUnit.appendChild xmlTaxonFullName
-                xmlTaxonomicalUnit.appendChild dom.createTextNode(vbCrLf + Space$(6))
+                xmlTaxonomicalUnit.appendChild dom.createTextNode(vbCrLf + Space$(4))
                 
             End If
             
@@ -2275,5 +2281,28 @@ Public Sub CheckTaxonomyWithoutAutoCorrection()
 
 CheckTaxa True, vbNo
 
+End Sub
+
+'DataSets/DataSet/Metadata
+Private Sub XMLMetadata(ByRef dom As MSXML2.DOMDocument60, ByRef node As MSXML2.IXMLDOMNode)
+
+    Dim xmlVersion As MSXML2.IXMLDOMElement
+    Dim xmlVersionMajor As MSXML2.IXMLDOMElement
+    Dim xmlVersionMinor As MSXML2.IXMLDOMElement
+    
+    node.appendChild dom.createTextNode(vbCrLf & Space$(4))
+    Set xmlVersion = dom.createNode(NODE_ELEMENT, "Version", "http://www.tdwg.org/schemas/abcd/2.06")
+    node.appendChild xmlVersion
+    xmlVersion.appendChild dom.createTextNode(vbCrLf & Space$(6))
+    Set xmlVersionMajor = dom.createNode(NODE_ELEMENT, "Major", "http://www.tdwg.org/schemas/abcd/2.06")
+    xmlVersionMajor.Text = "1"
+    xmlVersion.appendChild xmlVersionMajor
+    xmlVersion.appendChild dom.createTextNode(vbCrLf & Space$(6))
+    Set xmlVersionMinor = dom.createNode(NODE_ELEMENT, "Minor", "http://www.tdwg.org/schemas/abcd/2.06")
+    xmlVersionMinor.Text = "2"
+    xmlVersion.appendChild xmlVersionMinor
+    xmlVersion.appendChild dom.createTextNode(vbCrLf & Space$(4))
+    node.appendChild dom.createTextNode(vbCrLf & Space$(2))
+    
 End Sub
 
