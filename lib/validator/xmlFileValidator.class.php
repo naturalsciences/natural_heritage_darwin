@@ -22,7 +22,6 @@ class xmlFileValidator extends sfValidatorFile
     if(! file_exists($value['tmp_name'])) {
       throw new sfValidatorError($this, 'unreadable_file');
     }
-    // $xml_file = file_get_contents($value['tmp_name']) ;
     if(!$xml->load($value['tmp_name']))
       throw new sfValidatorError($this, 'unreadable_file');
     if(!$xml->schemaValidate(sfConfig::get('sf_web_dir').$this->getOption('xml_path_file')))

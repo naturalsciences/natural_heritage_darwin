@@ -64,7 +64,7 @@ class ImportsForm extends BaseImportsForm
     ));    
     $this->validatorSchema['uploadfield'] = new xmlFileValidator(
       array(
-        'xml_path_file'=>$this->options['format'] == 'taxon'?'/xsd/taxonomy.xsd':'/xsd/ABCD_2.06.xsd',
+        'xml_path_file'=>$this->options['format'] == 'taxon'?'/xsd/taxonomy.xsd':'/xsd/ABCD_2.06_EFGDNA.XSD',
         'required' => true,
         'mime_types' => $allowed_types,
         'validated_file_class' => 'myValidatedFile',
