@@ -3145,6 +3145,40 @@ BEGIN
   SELECT * INTO collection FROM collections WHERE id = (SELECT collection_ref FROM imports WHERE id = req_import_ref AND is_finished = FALSE LIMIT 1);
   select user_ref into userid from imports where id=req_import_ref ;
   PERFORM set_config('darwin.userid',userid::varchar, false) ;
+  INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword)
+          (
+            SELECT DISTINCT ON (referenced_relation, taxon_ref, keyword_type, keyword_indexed)
+                  'taxonomy',
+                  taxon_ref,
+                  keyword_type,
+                  "keyword"
+            FROM staging INNER JOIN classification_keywords as ckmain ON ckmain.referenced_relation = 'staging'
+                                                                     AND staging.id = ckmain.record_id
+                         INNER JOIN imports as i ON i.id = staging.import_ref
+            WHERE import_ref = req_import_ref
+              AND to_import=true
+              AND status = ''::hstore
+              AND i.is_finished =  FALSE
+              AND NOT EXISTS (
+                              SELECT 1
+                              FROM classification_keywords
+                              WHERE referenced_relation = 'taxonomy'
+                                AND record_id = staging.taxon_ref
+                                AND keyword_type = ckmain.keyword_type
+                                AND keyword_indexed = ckmain.keyword_indexed
+              )
+          );
+  EXECUTE 'DELETE FROM classification_keywords
+           WHERE referenced_relation = ''staging''
+             AND record_id IN (
+                                SELECT s.id
+                                FROM staging s INNER JOIN imports i ON  s.import_ref = i.id
+                                WHERE import_ref = $1
+                                  AND to_import=true
+                                  AND status = ''''::hstore
+                                  AND i.is_finished =  FALSE
+                             )'
+  USING req_import_ref;
   FOR all_line IN SELECT * from staging s INNER JOIN imports i on  s.import_ref = i.id
       WHERE import_ref = req_import_ref AND to_import=true and status = ''::hstore AND i.is_finished =  FALSE
   LOOP
