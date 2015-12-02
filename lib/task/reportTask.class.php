@@ -22,7 +22,7 @@ EOF;
   {
     $ctx = stream_context_create(array('http'=>
       array(
-          'timeout' => 300, // 1 200 Seconds = 20 Minutes
+          'timeout' => 600, // 1 200 Seconds = 20 Minutes
       )
     ));
 
