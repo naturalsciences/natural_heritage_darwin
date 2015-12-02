@@ -168,5 +168,7 @@ DROP FUNCTION IF EXISTS fct_clean_staging_catalogue ( importRef staging_catalogu
 
 -- Statistics functions
 DROP FUNCTION IF EXISTS stats_collections_encoding (collections.id%TYPE, timestamp, timestamp);
+DROP FUNCTION IF EXISTS stats_collections_encoding (collections.id%TYPE, text, text);
 DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, users.id%TYPE, timestamp, timestamp);
 DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, TEXT, TEXT, TEXT);
+DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, TEXT, timestamp, timestamp);
