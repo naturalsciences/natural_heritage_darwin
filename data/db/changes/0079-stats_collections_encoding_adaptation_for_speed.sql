@@ -2,6 +2,11 @@ set search_path=darwin2,public;
 
 BEGIN;
 
+DROP TYPE IF EXISTS stats_collections CASCADE;
+create type stats_collections as (collection varchar, new_items bigint, updated_items bigint, new_types bigint, updated_types bigint, new_species bigint);
+DROP TYPE IF EXISTS encoders_stats_collections CASCADE;
+create type encoders_stats_collections as (encoder TEXT, collection_path TEXT, new_items bigint, updated_items bigint, new_types bigint, updated_types bigint, new_species bigint);
+
 create or replace function stats_collections_encoding_optimistics (collections.id%TYPE, timestamp, timestamp) returns setof stats_collections language sql immutable as $$
 WITH users_statistics AS
 (
