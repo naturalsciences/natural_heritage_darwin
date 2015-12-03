@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="annual_stat_collection" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="defc8de3-153b-4308-9130-ef69b7b767b7">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.210000000000002"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="ireport.jasperserver.reportUnit" value="/darwin/annual_stat_collection_fr"/>
+	<property name="ireport.jasperserver.reportUnit" value="/darwin/annual_stat_collection_en"/>
 	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
@@ -18,131 +18,221 @@
 	<parameter name="date_to" class="java.util.Date">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/var/www/darwin/data/db/reports/jasper/v5/annual_reports/sub_reports/"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select * from stats_collections_encoding(
-    $P{collection_ref},
+		<![CDATA[select 1 as grouping, *
+from stats_collections_encoding(
+    $P{collection_ref}::integer,
     $P{date_from}::TIMESTAMP,
     $P{date_to}::TIMESTAMP
 );]]>
 	</queryString>
+	<field name="grouping" class="java.lang.Integer"/>
 	<field name="collection" class="java.lang.String"/>
 	<field name="new_items" class="java.lang.Long"/>
 	<field name="updated_items" class="java.lang.Long"/>
 	<field name="new_types" class="java.lang.Long"/>
 	<field name="updated_types" class="java.lang.Long"/>
 	<field name="new_species" class="java.lang.Long"/>
-	<background>
-		<band height="575" splitType="Stretch"/>
-	</background>
+	<group name="Grouping for Optimistic Values" isStartNewPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{grouping}]]></groupExpression>
+		<groupFooter>
+			<band height="24" splitType="Stretch">
+				<break>
+					<reportElement uuid="1fcae773-0b25-414a-8497-88a9ef4fe66e" x="0" y="0" width="100" height="1"/>
+				</break>
+				<subreport>
+					<reportElement uuid="67dbf8a2-98df-42ec-bf0b-de58866af8ce" x="0" y="1" width="800" height="23" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Grouping for Optimistic Values"/>
+					<subreportParameter name="collection_ref">
+						<subreportParameterExpression><![CDATA[$P{collection_ref}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="date_from">
+						<subreportParameterExpression><![CDATA[$P{date_from}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="date_to">
+						<subreportParameterExpression><![CDATA[$P{date_to}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["repo:annual_stat_collection_fr_optimistic_subreport.jrxml"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
 	<title>
-		<band height="76" splitType="Stretch">
+		<band height="74" splitType="Stretch">
 			<staticText>
 				<reportElement uuid="788c6270-0e3a-44e1-88fe-589f4d72360c" style="Title" x="0" y="0" width="802" height="67"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="45" isBold="false" pdfFontName="Helvetica"/>
+					<font size="54" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<text><![CDATA[Stats annuelles par collection]]></text>
+				<text><![CDATA[Stat. annuelles / collection]]></text>
 			</staticText>
 		</band>
 	</title>
 	<pageHeader>
 		<band splitType="Stretch"/>
 	</pageHeader>
-	<columnHeader>
-		<band height="25" splitType="Stretch">
+	<detail>
+		<band height="66" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="db6d3630-2a5f-4991-b01e-8ee3c079269b" positionType="Float" isPrintRepeatedValues="false" x="1" y="0" width="549" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="0" leftPadding="2" bottomPadding="0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Comptabilisation classique: mises-à-jour uniques par spécimen pour la période:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="1b9d40ff-f3d1-484e-86f4-37736ae8459f" positionType="Float" isPrintRepeatedValues="false" x="550" y="0" width="250" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($P{date_from}) + " - " + new SimpleDateFormat("dd/MM/yyyy").format($P{date_to})]]></textFieldExpression>
+			</textField>
 			<frame>
-				<reportElement uuid="70ab19b5-7ebb-4b3c-af93-395f5ddc44f7" mode="Opaque" x="97" y="5" width="705" height="20" backcolor="#666666"/>
+				<reportElement uuid="70ab19b5-7ebb-4b3c-af93-395f5ddc44f7" positionType="Float" isPrintRepeatedValues="false" mode="Opaque" x="0" y="20" width="800" height="24" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" backcolor="#666666"/>
 				<staticText>
-					<reportElement uuid="ad696b89-2265-4f1d-8476-8d59627927ec" style="Column header" x="0" y="0" width="117" height="15"/>
-					<textElement/>
+					<reportElement uuid="ad696b89-2265-4f1d-8476-8d59627927ec" style="Column header" x="0" y="0" width="227" height="24"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif"/>
+					</textElement>
 					<text><![CDATA[Collection]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="e5d987d3-e793-49c1-acd7-2458b98d0b38" style="Column header" x="117" y="0" width="117" height="15"/>
-					<textElement/>
-					<text><![CDATA[Nouveaux obj]]></text>
+					<reportElement uuid="e5d987d3-e793-49c1-acd7-2458b98d0b38" style="Column header" x="227" y="0" width="105" height="24"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<text><![CDATA[Nouveaux obj.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="8d26ddb6-705a-4e32-8e40-d65dbaf59a79" style="Column header" x="234" y="0" width="117" height="15"/>
-					<textElement/>
-					<text><![CDATA[Obj mis à jour]]></text>
+					<reportElement uuid="8d26ddb6-705a-4e32-8e40-d65dbaf59a79" style="Column header" x="332" y="0" width="117" height="24"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<text><![CDATA[Obj. mis-à-jour]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="e3215c0b-3dfc-4f31-968b-a32b5b60dc9c" style="Column header" x="351" y="0" width="117" height="15"/>
-					<textElement/>
-					<text><![CDATA[Nouveaux type]]></text>
+					<reportElement uuid="e3215c0b-3dfc-4f31-968b-a32b5b60dc9c" style="Column header" x="449" y="0" width="117" height="24"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<text><![CDATA[Nouveaux types]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="72a377ba-0d9e-4a36-8b68-4516fa9992ff" style="Column header" x="468" y="0" width="117" height="15"/>
-					<textElement/>
-					<text><![CDATA[Types mis à jour]]></text>
+					<reportElement uuid="72a377ba-0d9e-4a36-8b68-4516fa9992ff" style="Column header" x="566" y="0" width="117" height="24"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<text><![CDATA[Types m-à-j]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="e8015926-3e67-4f3b-858e-c78e2eed062c" style="Column header" x="585" y="0" width="117" height="15"/>
-					<textElement/>
-					<text><![CDATA[Nouveaux spec]]></text>
+					<reportElement uuid="e8015926-3e67-4f3b-858e-c78e2eed062c" style="Column header" x="683" y="0" width="117" height="24"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<text><![CDATA[Nouv. espèces]]></text>
 				</staticText>
 			</frame>
-		</band>
-	</columnHeader>
-	<detail>
-		<band height="21" splitType="Stretch">
 			<frame>
-				<reportElement uuid="73354cc0-d239-4ed0-9616-f83494ce258e" x="97" y="1" width="705" height="15"/>
+				<reportElement uuid="73354cc0-d239-4ed0-9616-f83494ce258e" positionType="Float" x="0" y="44" width="800" height="22" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textField isStretchWithOverflow="true">
-					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" style="Detail" x="0" y="0" width="117" height="15"/>
-					<textElement/>
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" style="Detail" x="0" y="0" width="227" height="22"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{collection}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="30ad907b-1284-46cc-84f6-29950c54d9c5" style="Detail" x="117" y="0" width="117" height="15"/>
-					<textElement/>
+					<reportElement uuid="30ad907b-1284-46cc-84f6-29950c54d9c5" style="Detail" x="227" y="0" width="105" height="22"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{new_items}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="8f69eba6-31d7-4afd-9c27-5538a6141c84" style="Detail" x="234" y="0" width="117" height="15"/>
-					<textElement/>
+					<reportElement uuid="8f69eba6-31d7-4afd-9c27-5538a6141c84" style="Detail" x="332" y="0" width="117" height="22"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{updated_items}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="0edc4ed0-e200-495c-919f-5433e3086883" style="Detail" x="351" y="0" width="117" height="15"/>
-					<textElement/>
+					<reportElement uuid="0edc4ed0-e200-495c-919f-5433e3086883" style="Detail" x="449" y="0" width="117" height="22"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{new_types}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="39a09e26-8099-4f99-9960-3d1dca9faa0b" style="Detail" x="468" y="0" width="117" height="15"/>
-					<textElement/>
+					<reportElement uuid="39a09e26-8099-4f99-9960-3d1dca9faa0b" style="Detail" x="566" y="0" width="117" height="22"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{updated_types}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="95076a49-c271-491b-9216-b27c00e8417f" style="Detail" x="585" y="0" width="117" height="15"/>
-					<textElement/>
+					<reportElement uuid="95076a49-c271-491b-9216-b27c00e8417f" style="Detail" x="683" y="0" width="117" height="22"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{new_species}]]></textFieldExpression>
 				</textField>
 			</frame>
-			<line>
-				<reportElement uuid="c785ef6b-6719-46c9-9ec7-4802b86d5b8a" positionType="FixRelativeToBottom" x="97" y="16" width="705" height="1"/>
-				<graphicElement>
-					<pen lineWidth="0.5" lineColor="#999999"/>
-				</graphicElement>
-			</line>
 		</band>
 	</detail>
 	<columnFooter>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="39" splitType="Stretch">
-			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement uuid="92b6faae-db6d-4e14-86e9-f408a4b4ae1a" style="Column header" x="671" y="0" width="131" height="20" forecolor="#000000"/>
-				<textElement textAlignment="Right">
+		<band height="35" splitType="Stretch">
+			<textField pattern="">
+				<reportElement uuid="92b6faae-db6d-4e14-86e9-f408a4b4ae1a" style="Column header" x="493" y="0" width="309" height="20" forecolor="#000000"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="12" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA["imprimé le " + new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date())]]></textFieldExpression>
 			</textField>
+			<frame>
+				<reportElement uuid="e1b021cd-59eb-42d7-b843-40c2db5bf830" mode="Opaque" x="0" y="0" width="35" height="35" backcolor="#8E8E8E"/>
+				<textField>
+					<reportElement uuid="50a24842-2876-4db7-aad1-a6cabcc5a5bd" style="Column header" x="0" y="0" width="35" height="35" forecolor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="14" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+			</frame>
 		</band>
 	</pageFooter>
-	<summary>
-		<band splitType="Stretch"/>
-	</summary>
 </jasperReport>
