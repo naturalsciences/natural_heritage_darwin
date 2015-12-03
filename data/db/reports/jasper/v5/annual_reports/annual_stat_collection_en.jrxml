@@ -74,10 +74,10 @@ from stats_collections_encoding(
 	<pageHeader>
 		<band splitType="Stretch"/>
 	</pageHeader>
-	<columnHeader>
-		<band height="44" splitType="Stretch">
+	<detail>
+		<band height="66" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="db6d3630-2a5f-4991-b01e-8ee3c079269b" x="1" y="0" width="394" height="20" isPrintInFirstWholeBand="true"/>
+				<reportElement uuid="db6d3630-2a5f-4991-b01e-8ee3c079269b" positionType="Float" isPrintRepeatedValues="false" x="1" y="0" width="394" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<box topPadding="0" leftPadding="2" bottomPadding="0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
@@ -85,7 +85,7 @@ from stats_collections_encoding(
 				<text><![CDATA[Classic count: unique update per specimen in the period: ]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="1b9d40ff-f3d1-484e-86f4-37736ae8459f" x="395" y="0" width="405" height="20" isPrintInFirstWholeBand="true"/>
+				<reportElement uuid="1b9d40ff-f3d1-484e-86f4-37736ae8459f" positionType="Float" isPrintRepeatedValues="false" x="395" y="0" width="405" height="20" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true"/>
 				<box leftPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
@@ -93,7 +93,7 @@ from stats_collections_encoding(
 				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($P{date_from}) + " - " + new SimpleDateFormat("dd/MM/yyyy").format($P{date_to})]]></textFieldExpression>
 			</textField>
 			<frame>
-				<reportElement uuid="70ab19b5-7ebb-4b3c-af93-395f5ddc44f7" mode="Opaque" x="0" y="20" width="800" height="24" isPrintInFirstWholeBand="true" backcolor="#666666"/>
+				<reportElement uuid="70ab19b5-7ebb-4b3c-af93-395f5ddc44f7" positionType="Float" isPrintRepeatedValues="false" mode="Opaque" x="0" y="20" width="800" height="24" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" backcolor="#666666"/>
 				<staticText>
 					<reportElement uuid="ad696b89-2265-4f1d-8476-8d59627927ec" style="Column header" x="0" y="0" width="227" height="24"/>
 					<box leftPadding="2"/>
@@ -143,16 +143,15 @@ from stats_collections_encoding(
 					<text><![CDATA[New species]]></text>
 				</staticText>
 			</frame>
-		</band>
-	</columnHeader>
-	<detail>
-		<band height="22" splitType="Stretch">
 			<frame>
-				<reportElement uuid="73354cc0-d239-4ed0-9616-f83494ce258e" x="0" y="0" width="800" height="22" isPrintWhenDetailOverflows="true"/>
+				<reportElement uuid="73354cc0-d239-4ed0-9616-f83494ce258e" positionType="Float" x="0" y="44" width="800" height="22" isPrintWhenDetailOverflows="true"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textField isStretchWithOverflow="true">
-					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" style="Detail" stretchType="RelativeToTallestObject" x="0" y="0" width="227" height="22"/>
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" style="Detail" x="0" y="0" width="227" height="22"/>
 					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
-						<bottomPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="11"/>
@@ -160,9 +159,9 @@ from stats_collections_encoding(
 					<textFieldExpression><![CDATA[$F{collection}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="30ad907b-1284-46cc-84f6-29950c54d9c5" style="Detail" stretchType="RelativeToTallestObject" x="227" y="0" width="105" height="22"/>
+					<reportElement uuid="30ad907b-1284-46cc-84f6-29950c54d9c5" style="Detail" x="227" y="0" width="105" height="22"/>
 					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
-						<bottomPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="11"/>
@@ -170,9 +169,9 @@ from stats_collections_encoding(
 					<textFieldExpression><![CDATA[$F{new_items}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="8f69eba6-31d7-4afd-9c27-5538a6141c84" style="Detail" stretchType="RelativeToTallestObject" x="332" y="0" width="117" height="22"/>
+					<reportElement uuid="8f69eba6-31d7-4afd-9c27-5538a6141c84" style="Detail" x="332" y="0" width="117" height="22"/>
 					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
-						<bottomPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="11"/>
@@ -180,9 +179,9 @@ from stats_collections_encoding(
 					<textFieldExpression><![CDATA[$F{updated_items}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="0edc4ed0-e200-495c-919f-5433e3086883" style="Detail" stretchType="RelativeToTallestObject" x="449" y="0" width="117" height="22"/>
+					<reportElement uuid="0edc4ed0-e200-495c-919f-5433e3086883" style="Detail" x="449" y="0" width="117" height="22"/>
 					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
-						<bottomPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="11"/>
@@ -190,9 +189,9 @@ from stats_collections_encoding(
 					<textFieldExpression><![CDATA[$F{new_types}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="39a09e26-8099-4f99-9960-3d1dca9faa0b" style="Detail" stretchType="RelativeToTallestObject" x="566" y="0" width="117" height="22"/>
+					<reportElement uuid="39a09e26-8099-4f99-9960-3d1dca9faa0b" style="Detail" x="566" y="0" width="117" height="22"/>
 					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
-						<bottomPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="11"/>
@@ -200,9 +199,9 @@ from stats_collections_encoding(
 					<textFieldExpression><![CDATA[$F{updated_types}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement uuid="95076a49-c271-491b-9216-b27c00e8417f" style="Detail" stretchType="RelativeToTallestObject" x="683" y="0" width="117" height="22"/>
+					<reportElement uuid="95076a49-c271-491b-9216-b27c00e8417f" style="Detail" x="683" y="0" width="117" height="22"/>
 					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
-						<bottomPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="11"/>
