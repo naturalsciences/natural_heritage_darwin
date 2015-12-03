@@ -27,7 +27,7 @@ class Reports extends BaseReports
                                    'date_from' => array(),
                                    'date_to' => array()
                                   ),
-        'fast' => false,
+        'fast' => true,
         'rights' => array(
           'at_least' => Users::MANAGER
         ),
