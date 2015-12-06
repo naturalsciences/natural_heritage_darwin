@@ -10,7 +10,7 @@ De wortels van de huidige collectie gaan ver terug in de geschiedenis. De collec
 </p>
 <br />
 <p>
-De DARWIN website licht een belangrijke tip van de sluier op wat betreft de omvang en diversiteit van de bezittingen. Vandaag bevat onze Darwin databank al informatie over meer dan  350.000 exemplaren opgeslagen in de depots van het Instituut. Dit aantal stijgt nog dagelijks dankzij de aanhoudende inspanningen van curatoren en hun adjuncten die verantwoordelijk zijn voor het behoud van de opgeslagen monsters en archiefinformatie. Onze online databank bevat informatie over de collecties van de gewervelde dieren, ongewervelden en de insecten. De applicatie zal binnenkort worden uitgebreid met paleontologische gegevens.
+De DaRWIN website (darwin.naturalsciences.be) licht een belangrijke tip van de sluier op wat betreft de omvang en diversiteit van de bezittingen. Vandaag bevat onze Darwin databank al informatie over meer dan 2.637.600 specimens (540.000 records) opgeslagen in de depots van het Instituut. Dit aantal stijgt nog dagelijks dankzij de aanhoudende inspanningen van het patrimonium directie, de curatoren en hun adjuncten die verantwoordelijk zijn voor het behoud van de opgeslagen monsters en archiefinformatie. Onze online databank bevat informatie over de collecties van de gewervelde dieren, ongewervelden, de insecten, paleontologie, geologie en mineralogie.
 </p>
 <br />
 <p>
