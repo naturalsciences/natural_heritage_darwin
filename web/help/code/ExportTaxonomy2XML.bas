@@ -2464,6 +2464,7 @@ Private Sub XMLKeywords( _
                         ByRef lngRow As Long _
                        )
 
+    Dim xmlNameAtomised As MSXML2.IXMLDOMElement
     Dim xmlGenusOrMonomial As MSXML2.IXMLDOMElement
     Dim xmlSubgenus As MSXML2.IXMLDOMElement
     Dim xmlSpeciesEpithet As MSXML2.IXMLDOMElement
@@ -2481,12 +2482,16 @@ Private Sub XMLKeywords( _
     
     'Split the Cell value into pieces
     strCellValueSplited = Split(strCellValue)
-    'Whatever level we're on, we're able to extract the first naming part, which goes into GenusOrMonomial
+    'Whatever level we're on, we're able to create the NameAtomised node
     node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+    Set xmlNameAtomised = dom.createNode(NODE_ELEMENT, "NameAtomised", "http://www.tdwg.org/schemas/abcd/2.06")
+    node.appendChild xmlNameAtomised
+    'Whatever level we're on, we're able to extract the first naming part, which goes into GenusOrMonomial
+    xmlNameAtomised.appendChild dom.createTextNode(vbCrLf & Space$(8))
     Set xmlGenusOrMonomial = dom.createNode(NODE_ELEMENT, "GenusOrMonomial", "http://www.tdwg.org/schemas/abcd/2.06")
     xmlGenusOrMonomial.Text = strCellValueSplited(0)
-    node.appendChild xmlGenusOrMonomial
-    node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+    xmlNameAtomised.appendChild xmlGenusOrMonomial
+    xmlNameAtomised.appendChild dom.createTextNode(vbCrLf & Space$(8))
     'For level below Genus...
     If intLevel > 23 Then
         'Check if there's something related to subgenus definition
@@ -2506,8 +2511,8 @@ Private Sub XMLKeywords( _
             Else
                 xmlSubgenus.Text = strCellValueSplited(2)
             End If
-            node.appendChild xmlSubgenus
-            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+            xmlNameAtomised.appendChild xmlSubgenus
+            xmlNameAtomised.appendChild dom.createTextNode(vbCrLf & Space$(8))
         End If
         'Handle the species informations
         If intLevel > 24 Then
@@ -2531,11 +2536,11 @@ Private Sub XMLKeywords( _
                 End If
             End If
             If Application.Sheets("TAXONOMY").Cells(lngRow, 2).Value = "Plantae" Then
-                node.appendChild xmlFirstEpithet
+                xmlNameAtomised.appendChild xmlFirstEpithet
             Else
-                node.appendChild xmlSpeciesEpithet
+                xmlNameAtomised.appendChild xmlSpeciesEpithet
             End If
-            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+            xmlNameAtomised.appendChild dom.createTextNode(vbCrLf & Space$(8))
             If intLevel > 25 Then
                 lngAuthorPosition = 0
                 Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value = CleanUp(strCellValue:=Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value)
@@ -2572,8 +2577,8 @@ Private Sub XMLKeywords( _
                                 End If
                             Next lngCounter
                             xmlInfraspecificEpithet.Text = Trim$(xmlInfraspecificEpithet.Text)
-                            node.appendChild xmlInfraspecificEpithet
-                            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+                            xmlNameAtomised.appendChild xmlInfraspecificEpithet
+                            xmlNameAtomised.appendChild dom.createTextNode(vbCrLf & Space$(8))
                         ElseIf lngAuthorPosition > 3 Then
                             Set xmlSubspeciesEpithet = dom.createNode(NODE_ELEMENT, "SubspeciesEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
                             For lngCounter = 3 To lngAuthorPosition - 1
@@ -2593,8 +2598,8 @@ Private Sub XMLKeywords( _
                                 End If
                             Next lngCounter
                             xmlSubspeciesEpithet.Text = Trim$(xmlSubspeciesEpithet.Text)
-                            node.appendChild xmlSubspeciesEpithet
-                            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+                            xmlNameAtomised.appendChild xmlSubspeciesEpithet
+                            xmlNameAtomised.appendChild dom.createTextNode(vbCrLf & Space$(8))
                         End If
                     Else
                         If Application.Sheets("TAXONOMY").Cells(lngRow, 2).Value = "Plantae" And lngAuthorPosition > 3 Then
@@ -2616,8 +2621,8 @@ Private Sub XMLKeywords( _
                                 End If
                             Next lngCounter
                             xmlInfraspecificEpithet.Text = Trim$(xmlInfraspecificEpithet.Text)
-                            node.appendChild xmlInfraspecificEpithet
-                            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+                            xmlNameAtomised.appendChild xmlInfraspecificEpithet
+                            xmlNameAtomised.appendChild dom.createTextNode(vbCrLf & Space$(6))
                         ElseIf lngAuthorPosition > 2 Then
                             Set xmlSubspeciesEpithet = dom.createNode(NODE_ELEMENT, "SubspeciesEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
                             For lngCounter = 2 To lngAuthorPosition - 1
@@ -2637,37 +2642,37 @@ Private Sub XMLKeywords( _
                                 End If
                             Next lngCounter
                             xmlSubspeciesEpithet.Text = Trim$(xmlSubspeciesEpithet.Text)
-                            node.appendChild xmlSubspeciesEpithet
-                            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+                            xmlNameAtomised.appendChild xmlSubspeciesEpithet
+                            xmlNameAtomised.appendChild dom.createTextNode(vbCrLf & Space$(8))
                         End If
                     End If
                     If Application.Sheets("TAXONOMY").Cells(lngRow, 2).Value = "Plantae" Then
                         If Left$(Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value, 1) = "(" Then
                             Set xmlAuthorTeamParenthesis = dom.createNode(NODE_ELEMENT, "AuthorTeamParenthesis", "http://www.tdwg.org/schemas/abcd/2.06")
                             xmlAuthorTeamParenthesis.Text = Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value
-                            node.appendChild xmlAuthorTeamParenthesis
+                            xmlNameAtomised.appendChild xmlAuthorTeamParenthesis
                         Else
                             Set xmlAuthorTeam = dom.createNode(NODE_ELEMENT, "AuthorTeam", "http://www.tdwg.org/schemas/abcd/2.06")
                             xmlAuthorTeam.Text = Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value
-                            node.appendChild xmlAuthorTeam
+                            xmlNameAtomised.appendChild xmlAuthorTeam
                         End If
                     Else
                         If Left$(Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value, 1) = "(" Then
                             Set xmlAuthorTeamParenthesisAndYear = dom.createNode(NODE_ELEMENT, "AuthorTeamParenthesisAndYear", "http://www.tdwg.org/schemas/abcd/2.06")
                             xmlAuthorTeamParenthesisAndYear.Text = Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value
-                            node.appendChild xmlAuthorTeamParenthesisAndYear
+                            xmlNameAtomised.appendChild xmlAuthorTeamParenthesisAndYear
                         Else
                             Set xmlAuthorTeamOriginalAndYear = dom.createNode(NODE_ELEMENT, "AuthorTeamOriginalAndYear", "http://www.tdwg.org/schemas/abcd/2.06")
                             xmlAuthorTeamOriginalAndYear.Text = Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value
-                            node.appendChild xmlAuthorTeamOriginalAndYear
+                            xmlNameAtomised.appendChild xmlAuthorTeamOriginalAndYear
                         End If
                     End If
-                    node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+                    xmlNameAtomised.appendChild dom.createTextNode(vbCrLf & Space$(6))
                 End If
             End If
         End If
     End If
-    
+    node.appendChild dom.createTextNode(vbCrLf & Space$(4))
 End Sub
 
 Private Function CleanUp(ByVal strCellValue As String) As String
@@ -2758,5 +2763,3 @@ Next lngCounter
 ReComposeName = booErrorFound
 
 End Function
-                               
-
