@@ -3,5 +3,6 @@ all:
     authorizedversion:
       taxonomy:
         - 1.2
+        - 1.3
       specimens:
         - 1.3

@@ -1,7 +1,7 @@
 <?php
 class ImportCatalogueXml implements IImportModels
 {
-  private $parent, $referenced_relation, $errors_reported ;
+  private $parent, $referenced_relation, $errors_reported, $staging_catalogue, $version;
   private $version_defined = false;
   private $version_error_msg = "You use an unrecognized template version, please use it at your own risks or update the version of your template.;";
 
@@ -57,7 +57,7 @@ class ImportCatalogueXml implements IImportModels
     $this->inside_data = false ;
     switch ($name) {
       case "TaxonomicalTree" : $this->parent=null ;
-      case "TaxonomicalUnit" : $this->object = new stagingCatalogue() ; break;
+      case "TaxonomicalUnit" : $this->staging_catalogue = new stagingCatalogue() ; break;
     }
   }
 
@@ -84,8 +84,18 @@ class ImportCatalogueXml implements IImportModels
             $this->errors_reported .= $this->version_error_msg;
           }
           break;
-        case "LevelName" : $this->object->setLevelRef($this->getLevelRef($this->cdata)) ; break ;
-        case "TaxonFullName" : $this->object->setName($this->cdata) ; break ;
+        case "LevelName" : $this->staging_catalogue->setLevelRef($this->getLevelRef($this->cdata)) ; break ;
+        case "TaxonFullName" : $this->staging_catalogue->setName($this->cdata) ; break ;
+        case "GenusOrMonomial":
+        case "Subgenus":
+        case "FirstEpithet":
+        case "SpeciesEpithet":
+        case "SubspeciesEpithet":
+        case "InfraspecificEpithet":
+        case "AuthorTeamOriginalAndYear":
+        case "AuthorTeam":
+        case "AuthorTeamParenthesisAndYear":
+        case "AuthorTeamParenthesis" : $this->addKeyword($name); break;
         case "TaxonomicalUnit" : $this->saveUnit(); break;
       }
   }
@@ -102,19 +112,19 @@ class ImportCatalogueXml implements IImportModels
   
   private function saveUnit()
   {
-    $this->object->fromArray(array("import_ref" => $this->import_id, "parent_ref" => $this->parent));
+    $this->staging_catalogue->fromArray(array("import_ref" => $this->import_id, "parent_ref" => $this->parent));
     try
     {
-      $result = $this->object->save() ;
+      $result = $this->staging_catalogue->save() ;
       foreach($result as $key => $error)
         $this->errors_reported .= $error ;
-      $this->parent = $this->object->getId() ;
+      $this->parent = $this->staging_catalogue->getId() ;
     }
     catch(Doctrine_Exception $ne)
     {
       $e = new DarwinPgErrorParser($ne);
-      $this->errors_reported .= "Unit ".$this->object->getName()." object were not saved: ".$e->getMessage().";";
-      $ok = false ;
+      $this->errors_reported .= "Unit ".$this->staging_catalogue->getName()." object were not saved: ".$e->getMessage().";";
+      //$ok = false ;
     }
   }
 
@@ -122,7 +132,18 @@ class ImportCatalogueXml implements IImportModels
   {
     $conn = Doctrine_Manager::connection();
     // @ToDo Check why we set here a begin transaction... I doubt of its usefullness
-    $conn->getDbh()->exec('BEGIN TRANSACTION;');
+    // $conn->getDbh()->exec('BEGIN TRANSACTION;');
     return $conn->fetchOne("SELECT id from catalogue_levels where level_type='".$this->referenced_relation."' and level_sys_name='$level';") ;
   }
+
+  private function addKeyword($name)
+  {
+    $classification_keyword = new ClassificationKeywords() ;
+    $classification_keyword->setKeywordType($name) ;
+    $classification_keyword->setKeyword($this->cdata);
+
+    $this->staging_catalogue->addRelated($classification_keyword);
+  }
+
+
 }
