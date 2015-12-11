@@ -3,7 +3,7 @@ Option Explicit
 
 Dim domain, kingdom, super_phylum, phylum, sub_phylum, super_class, class, sub_class, infra_class, super_order, order, sub_order, infra_order, section
 Dim sub_section, super_family, family, sub_family, super_tribe, tribe, sub_tribe, infra_tribe, genus, sub_genus, species, sub_species, variety, sub_variety
-Dim form, sub_form, abberans
+Dim form, sub_form, abberans, author_team_and_year
 
 Dim TaxoHeadings() As Variant
 Dim TaxoHeadings_compared() As Variant
@@ -212,12 +212,10 @@ Private Sub XMLTaxoTree(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXM
     Dim xmlTaxonomicalTree As MSXML2.IXMLDOMElement
     Dim xmlTaxonomicalUnit As MSXML2.IXMLDOMElement
     Dim xmlLevelName As MSXML2.IXMLDOMElement
-    Dim xmlLevelRef As MSXML2.IXMLDOMElement
     Dim xmlTaxonFullName As MSXML2.IXMLDOMElement
     Dim xmlTaxonName As MSXML2.IXMLDOMElement
-    Dim xmlTaxonAuthorYear As MSXML2.IXMLDOMElement
     
-    Dim strLevelName As String, strLevelRef As String, strTaxonFullName As String, strTaxonName As String, strTaxonAuthorYear As String
+    Dim strLevelName As String, strTaxonFullName As String, strTaxonName As String
     
     Dim rep As String, rep2 As String, sep As String
     Dim celval As String, celcol As Integer
@@ -277,6 +275,7 @@ Private Sub XMLTaxoTree(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXM
                 xmlTaxonomicalUnit.appendChild xmlTaxonFullName
                 xmlTaxonomicalUnit.appendChild dom.createTextNode(vbCrLf + Space$(4))
                 
+                XMLKeywords dom:=dom, node:=xmlTaxonomicalUnit, strCellValue:=celval, intLevel:=Count, lngRow:=rowCounter
             End If
             
             celval = ""
@@ -562,10 +561,11 @@ sub_variety = "sub_variety"
 form = "form"
 sub_form = "sub_form"
 abberans = "abberans"
+author_team_and_year = "author_team_and_year"
 
 TaxoHeadings = Array("domain", "kingdom", "super_phylum", "phylum", "sub_phylum", "super_class", "class", "sub_class", "infra_class", "super_order", "order", _
 "sub_order", "infra_order", "section", "sub_section", "super_family", "family", "sub_family", "super_tribe", "tribe", "sub_tribe", "infra_tribe", "genus", "sub_genus", _
-"species", "sub_species", "variety", "sub_variety", "form", "sub_form", "abberans")
+"species", "sub_species", "variety", "sub_variety", "form", "sub_form", "abberans", "author_team_and_year")
 
 End Sub
 
@@ -1074,7 +1074,7 @@ Public Function CheckTaxa(ByRef displayCheckMessages As Boolean, ByRef tryAutoCo
     
     Dim LastR As Long, LastC As Long, rowCounter As Long, columnCounter As Long, sheetCount As Long
     
-    LastC = Application.Sheets("TAXONOMY").Cells(1, Columns.Count).End(xlToLeft).Column
+    LastC = Application.Sheets("TAXONOMY").Cells(1, Columns.Count).End(xlToLeft).Column - 1
     LastR = Application.Sheets("TAXONOMY").Cells.Find("*", SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
     If LastR < 2 Then LastR = 2
     
@@ -1098,13 +1098,15 @@ Public Function CheckTaxa(ByRef displayCheckMessages As Boolean, ByRef tryAutoCo
     
     Dim keywordPosition As Long
     Dim keywordSubPosition As Long
-    Dim parenthesisStartPos As Long
-    Dim parenthesisStopPos As Long
-    Dim inParenthesis As String
     Dim strParentSplited() As String
     Dim strSubLevelsSplited() As String
+    Dim strSpeciesSplited() As String
     
     Dim rngCell As Range
+    
+    Dim lngCounter As Long
+    Dim lngCounter2 As Long
+    Dim strTemp As String
     
     If Not booAlreadyInited Then
         initGlobal
@@ -1163,12 +1165,13 @@ Public Function CheckTaxa(ByRef displayCheckMessages As Boolean, ByRef tryAutoCo
         Application.ScreenUpdating = False
         Application.Cursor = xlWait
         
-        ' Very first loop through all cells to capitalize first letter of text in all cells
+        ' Very first loop through all cells to capitalize first letter of text in all cells and to clean up doubled-spaces and unecessary ones
         For rowCounter = 2 To LastR
             'Display parsing counter in status bar
             Application.StatusBar = "Initial parsing - Processing... Please do not disturb... Checked rows: " & rowCounter - 1
             For columnCounter = 1 To LastC
-                Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value = Trim$(Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value)
+                'Clean the double spaces and the unecessary ones
+                Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value = CleanUp(strCellValue:=Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value)
                 If Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value <> "" Then
                     ' Bring the first letter in upper case for everything's above species
                     If columnCounter < 25 Then
@@ -1190,18 +1193,6 @@ Public Function CheckTaxa(ByRef displayCheckMessages As Boolean, ByRef tryAutoCo
                             Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value = UCase(Left$(Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value, 1)) & _
                                                                                                     Mid$(Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value, 2)
                         End If
-                    End If
-                    regExp.Pattern = "\(.+\)"
-                    strCellValue = Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value
-                    If regExp.Test(strCellValue) Then
-                        parenthesisStartPos = InStr(strCellValue, "(")
-                        parenthesisStopPos = InStr(parenthesisStartPos, strCellValue, ")")
-                        inParenthesis = Trim$(Mid$(strCellValue, parenthesisStartPos + 1, parenthesisStopPos - parenthesisStartPos - 1))
-                        inParenthesis = UCase(Left$(inParenthesis, 1)) & Mid$(inParenthesis, 2)
-                        Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value = Left$(strCellValue, parenthesisStartPos) & _
-                                                                                                inParenthesis & _
-                                                                                                Right$(strCellValue, Len(strCellValue) - parenthesisStopPos + 1)
-                        strCellValue = Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value
                     End If
                 End If
             Next columnCounter
@@ -2094,24 +2085,180 @@ Public Function CheckTaxa(ByRef displayCheckMessages As Boolean, ByRef tryAutoCo
                                         End Select
                                     ' Infra-species levels
                                     Case Is >= 26
-                                        ' Test well the infra-species level is comprised of at least three parts (basis of a trinomial)
-                                        If UBound(strSubLevelsSplited) < 2 Then
-                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                    " must have at least a trinomial structure." & _
-                                                    vbCrLf & _
-                                                    "Please correct this."
-                                            booErrorFound = True
+                                        'Store the species informations/name as array
+                                        strSpeciesSplited = Split(Application.Sheets("TAXONOMY").Cells(rowCounter, 25).Value)
+                                        ' Test well the infra-species level is comprised of the minimum right number of elements
+                                        If Application.Sheets("TAXONOMY").Cells(rowCounter, 2).Value = "Plantae" Then
+                                            If Application.Sheets("TAXONOMY").Cells(rowCounter, 24).Value <> "" Then
+                                                If UBound(strSubLevelsSplited) < 4 Then
+                                                    WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                            " must have a correct structure." & _
+                                                            vbCrLf & _
+                                                            "Please correct this."
+                                                    booErrorFound = True
+                                                Else
+                                                    If strSubLevelsSplited(1) <> strSpeciesSplited(1) Or _
+                                                       strSubLevelsSplited(2) <> strSpeciesSplited(2) Then
+                                                        If tryAutoCorrect = vbYes Then
+                                                            booErrorFound = ReComposeName( _
+                                                                                            strSpeciesSplited, _
+                                                                                            strSubLevelsSplited, _
+                                                                                            rowCounter, _
+                                                                                            columnCounter, _
+                                                                                            3 _
+                                                                                         )
+                                                            If booErrorFound = True Then
+                                                                WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                    " must have a correct structure: the species naming part was not found !" & _
+                                                                    vbCrLf & _
+                                                                    "Please correct this."
+                                                            Else
+                                                                WriteInfo rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                    " has been auto-recomposed." & _
+                                                                    vbCrLf & _
+                                                                    "Please check it."
+                                                                booErrorFound = True
+                                                            End If
+                                                        Else
+                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " must have a correct structure: the subgenus is not the same as what's given above." & _
+                                                                vbCrLf & _
+                                                                "Please correct this."
+                                                            booErrorFound = True
+                                                        End If
+                                                    End If
+                                                End If
+                                            Else
+                                                If UBound(strSubLevelsSplited) < 2 Then
+                                                    WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                            " must have a correct structure." & _
+                                                            vbCrLf & _
+                                                            "Please correct this."
+                                                    booErrorFound = True
+                                                Else
+                                                    If tryAutoCorrect = vbYes Then
+                                                        booErrorFound = ReComposeName( _
+                                                                                        strSpeciesSplited, _
+                                                                                        strSubLevelsSplited, _
+                                                                                        rowCounter, _
+                                                                                        columnCounter, _
+                                                                                        1 _
+                                                                                     )
+                                                        If booErrorFound = True Then
+                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " must have a correct structure: the species naming part was not found !" & _
+                                                                vbCrLf & _
+                                                                "Please correct this."
+                                                        Else
+                                                            WriteInfo rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " has been auto-recomposed." & _
+                                                                vbCrLf & _
+                                                                "Please check it."
+                                                            booErrorFound = True
+                                                        End If
+                                                    Else
+                                                        booErrorFound = True
+                                                        For lngCounter = 0 To UBound(strSubLevelsSplited)
+                                                            If strSpeciesSplited(1) = strSubLevelsSplited(lngCounter) Then
+                                                                booErrorFound = False
+                                                                Exit For
+                                                            End If
+                                                        Next lngCounter
+                                                        If booErrorFound = True Then
+                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " must have a correct structure: the subgenus is not the same as what's given above." & _
+                                                                vbCrLf & _
+                                                                "Please correct this."
+                                                        End If
+                                                    End If
+                                                End If
+                                            End If
+                                        Else
+                                            If Application.Sheets("TAXONOMY").Cells(rowCounter, 24).Value <> "" Then
+                                                If UBound(strSubLevelsSplited) < 3 Then
+                                                    WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                            " must have a correct structure." & _
+                                                            vbCrLf & _
+                                                            "Please correct this."
+                                                    booErrorFound = True
+                                                Else
+                                                    If strSubLevelsSplited(1) <> strSpeciesSplited(1) Then
+                                                        If tryAutoCorrect = vbYes Then
+                                                            booErrorFound = ReComposeName( _
+                                                                                            strSpeciesSplited, _
+                                                                                            strSubLevelsSplited, _
+                                                                                            rowCounter, _
+                                                                                            columnCounter, _
+                                                                                            2 _
+                                                                                         )
+                                                            If booErrorFound = True Then
+                                                                WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                    " must have a correct structure: the species naming part was not found !" & _
+                                                                    vbCrLf & _
+                                                                    "Please correct this."
+                                                            Else
+                                                                WriteInfo rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                    " has been auto-recomposed." & _
+                                                                    vbCrLf & _
+                                                                    "Please check it."
+                                                                booErrorFound = True
+                                                            End If
+                                                        Else
+                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " must have a correct structure: the subgenus is not the same as what's given above." & _
+                                                                vbCrLf & _
+                                                                "Please correct this."
+                                                            booErrorFound = True
+                                                        End If
+                                                    End If
+                                                End If
+                                            Else
+                                                If UBound(strSubLevelsSplited) < 2 Then
+                                                    WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                            " must have a correct structure." & _
+                                                            vbCrLf & _
+                                                            "Please correct this."
+                                                    booErrorFound = True
+                                                Else
+                                                    If tryAutoCorrect = vbYes Then
+                                                        booErrorFound = ReComposeName( _
+                                                                                        strSpeciesSplited, _
+                                                                                        strSubLevelsSplited, _
+                                                                                        rowCounter, _
+                                                                                        columnCounter, _
+                                                                                        1 _
+                                                                                     )
+                                                        If booErrorFound = True Then
+                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " must have a correct structure: the species naming part was not found !" & _
+                                                                vbCrLf & _
+                                                                "Please correct this."
+                                                        Else
+                                                            WriteInfo rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " has been auto-recomposed." & _
+                                                                vbCrLf & _
+                                                                "Please check it."
+                                                            booErrorFound = True
+                                                        End If
+                                                    Else
+                                                        booErrorFound = True
+                                                        For lngCounter = 0 To UBound(strSubLevelsSplited)
+                                                            If strSpeciesSplited(1) = strSubLevelsSplited(lngCounter) Then
+                                                                booErrorFound = False
+                                                                Exit For
+                                                            End If
+                                                        Next lngCounter
+                                                        If booErrorFound = True Then
+                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " must have a correct structure: the subgenus is not the same as what's given above." & _
+                                                                vbCrLf & _
+                                                                "Please correct this."
+                                                        End If
+                                                    End If
+                                                End If
+                                            End If
                                         End If
-                                        ' If the second naming element is not the same as what's on the parent... fail !
-                                        ' We should get this more subtile by also testing if sub-genus level is filled and therefore
-                                        ' by testing more deeper...
-                                        If strSubLevelsSplited(1) <> strParentSplited(1) Then
-                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                    " has to comprise at least the binomial structure of the taxon this entry is attached to." & _
-                                                    vbCrLf & _
-                                                    "Please correct this."
-                                            booErrorFound = True
-                                        End If
+                                        strCellValue = Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value
                                         Exit For
                                 End Select
                             End If
@@ -2180,7 +2327,10 @@ Public Function CheckTaxa(ByRef displayCheckMessages As Boolean, ByRef tryAutoCo
             Application.StatusBar = "Second parsing - Processing... Please do not disturb... Checked rows: " & rowCounter - 1
             ' For each column of row...
             For columnCounter = 1 To LastC
-                If Trim$(Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value) <> "" Then
+                'Upper case the first letter
+                Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value = UCase(Left$(Trim$(Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value), 1)) & _
+                                                                                        Mid$(Trim$(Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value), 2)
+                If Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value <> "" Then
                     If UBound(possibleUpperLevels(columnCounter).upper_level) > 0 And previousLevel <> 0 Then
                         'Test made to check the entries requiring missing/wrong parents
                         For iCounter = UBound(possibleUpperLevels(columnCounter).upper_level) - 1 To 0 Step -1
@@ -2235,9 +2385,6 @@ Public Function CheckTaxa(ByRef displayCheckMessages As Boolean, ByRef tryAutoCo
                               "Please check the sheet CheckTaxa to get the list of problems."
                 End If
             Next rowCounter
-            Application.DisplayAlerts = False
-            Application.Sheets("CheckTaxa").Delete
-            Application.DisplayAlerts = True
             If displayCheckMessages Then
                 MsgBox "Every taxa name composition seem correct after simple check."
             End If
@@ -2283,8 +2430,10 @@ CheckTaxa True, vbNo
 
 End Sub
 
-'DataSets/DataSet/Metadata
-Private Sub XMLMetadata(ByRef dom As MSXML2.DOMDocument60, ByRef node As MSXML2.IXMLDOMNode)
+'TaxonomyImport/Metadata
+Private Sub XMLMetadata(ByRef dom As MSXML2.DOMDocument60, _
+                        ByRef node As MSXML2.IXMLDOMNode _
+                       )
 
     Dim xmlVersion As MSXML2.IXMLDOMElement
     Dim xmlVersionMajor As MSXML2.IXMLDOMElement
@@ -2299,10 +2448,315 @@ Private Sub XMLMetadata(ByRef dom As MSXML2.DOMDocument60, ByRef node As MSXML2.
     xmlVersion.appendChild xmlVersionMajor
     xmlVersion.appendChild dom.createTextNode(vbCrLf & Space$(6))
     Set xmlVersionMinor = dom.createNode(NODE_ELEMENT, "Minor", "http://www.tdwg.org/schemas/abcd/2.06")
-    xmlVersionMinor.Text = "2"
+    xmlVersionMinor.Text = "3"
     xmlVersion.appendChild xmlVersionMinor
     xmlVersion.appendChild dom.createTextNode(vbCrLf & Space$(4))
     node.appendChild dom.createTextNode(vbCrLf & Space$(2))
     
 End Sub
+
+'TaxonomyImport/TaxonomicalTree/TaxonomicalUnit
+Private Sub XMLKeywords( _
+                        ByRef dom As MSXML2.DOMDocument60, _
+                        ByRef node As MSXML2.IXMLDOMNode, _
+                        ByRef strCellValue As String, _
+                        ByRef intLevel As Integer, _
+                        ByRef lngRow As Long _
+                       )
+
+    Dim xmlGenusOrMonomial As MSXML2.IXMLDOMElement
+    Dim xmlSubgenus As MSXML2.IXMLDOMElement
+    Dim xmlSpeciesEpithet As MSXML2.IXMLDOMElement
+    Dim xmlFirstEpithet As MSXML2.IXMLDOMElement
+    Dim xmlSubspeciesEpithet As MSXML2.IXMLDOMElement
+    Dim xmlInfraspecificEpithet As MSXML2.IXMLDOMElement
+    Dim xmlAuthorTeamOriginalAndYear As MSXML2.IXMLDOMElement
+    Dim xmlAuthorTeam As MSXML2.IXMLDOMElement
+    Dim xmlAuthorTeamParenthesisAndYear As MSXML2.IXMLDOMElement
+    Dim xmlAuthorTeamParenthesis As MSXML2.IXMLDOMElement
+    Dim strCellValueSplited() As String
+    Dim booSubGenus As Boolean
+    Dim lngAuthorPosition As Long
+    Dim lngCounter As Long
+    
+    'Split the Cell value into pieces
+    strCellValueSplited = Split(strCellValue)
+    'Whatever level we're on, we're able to extract the first naming part, which goes into GenusOrMonomial
+    node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+    Set xmlGenusOrMonomial = dom.createNode(NODE_ELEMENT, "GenusOrMonomial", "http://www.tdwg.org/schemas/abcd/2.06")
+    xmlGenusOrMonomial.Text = strCellValueSplited(0)
+    node.appendChild xmlGenusOrMonomial
+    node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+    'For level below Genus...
+    If intLevel > 23 Then
+        'Check if there's something related to subgenus definition
+        If InStr(strCellValueSplited(1), "subgen.") + _
+           InStr(strCellValueSplited(1), "subg.") + _
+           InStr(strCellValueSplited(1), "sect.") + _
+           InStr(strCellValueSplited(1), "subsect.") + _
+           InStr(strCellValueSplited(1), "ser.") + _
+           InStr(strCellValueSplited(1), "(") <> 0 Then
+            'If it's the case, tag it and create the Subgenus xml entry
+            booSubGenus = True
+            Set xmlSubgenus = dom.createNode(NODE_ELEMENT, "Subgenus", "http://www.tdwg.org/schemas/abcd/2.06")
+            'Defines the content of the subgenus keyword regarding the qualifier used
+            If InStr(strCellValueSplited(1), "(") <> 0 And _
+               InStr(strCellValueSplited(1), ")") <> 0 Then
+                xmlSubgenus.Text = Mid$(strCellValueSplited(1), 2, Len(strCellValueSplited(1)) - 2)
+            Else
+                xmlSubgenus.Text = strCellValueSplited(2)
+            End If
+            node.appendChild xmlSubgenus
+            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+        End If
+        'Handle the species informations
+        If intLevel > 24 Then
+            'Depending the kingdom, set the right keyword entry
+            If Application.Sheets("TAXONOMY").Cells(lngRow, 2).Value = "Plantae" Then
+                Set xmlFirstEpithet = dom.createNode(NODE_ELEMENT, "FirstEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
+            Else
+                Set xmlSpeciesEpithet = dom.createNode(NODE_ELEMENT, "SpeciesEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
+            End If
+            If booSubGenus Then
+                If Application.Sheets("TAXONOMY").Cells(lngRow, 2).Value = "Plantae" Then
+                    xmlFirstEpithet.Text = strCellValueSplited(3)
+                Else
+                    xmlSpeciesEpithet.Text = strCellValueSplited(2)
+                End If
+            Else
+                If Application.Sheets("TAXONOMY").Cells(lngRow, 2).Value = "Plantae" Then
+                    xmlFirstEpithet.Text = strCellValueSplited(1)
+                Else
+                    xmlSpeciesEpithet.Text = strCellValueSplited(1)
+                End If
+            End If
+            If Application.Sheets("TAXONOMY").Cells(lngRow, 2).Value = "Plantae" Then
+                node.appendChild xmlFirstEpithet
+            Else
+                node.appendChild xmlSpeciesEpithet
+            End If
+            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+            If intLevel > 25 Then
+                lngAuthorPosition = 0
+                Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value = CleanUp(strCellValue:=Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value)
+                If Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value <> "" Then
+                    For lngCounter = 2 To UBound(strCellValueSplited)
+                        lngAuthorPosition = InStr( _
+                                                    Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value, _
+                                                    strCellValueSplited(lngCounter) _
+                                                 )
+                        If lngAuthorPosition <> 0 Then
+                            lngAuthorPosition = lngCounter
+                            Exit For
+                        End If
+                    Next lngCounter
+                End If
+                If lngAuthorPosition <> 0 Then
+                    If booSubGenus Then
+                        If Application.Sheets("TAXONOMY").Cells(lngRow, 2).Value = "Plantae" And lngAuthorPosition > 5 Then
+                            Set xmlInfraspecificEpithet = dom.createNode(NODE_ELEMENT, "InfraspecificEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
+                            For lngCounter = 4 To lngAuthorPosition - 1
+                                If lngCounter > 4 Or _
+                                    ( _
+                                        lngCounter = 4 And _
+                                        ( _
+                                            InStr(strCellValueSplited(lngCounter), "subsp.") + _
+                                            InStr(strCellValueSplited(lngCounter), "ssp.") + _
+                                            InStr(strCellValueSplited(lngCounter), "var.") + _
+                                            InStr(strCellValueSplited(lngCounter), "subvar.") + _
+                                            InStr(strCellValueSplited(lngCounter), "f.") + _
+                                            InStr(strCellValueSplited(lngCounter), "subf.") = 0 _
+                                        ) _
+                                    ) Then
+                                    xmlInfraspecificEpithet.Text = xmlInfraspecificEpithet.Text & " " & strCellValueSplited(lngCounter)
+                                End If
+                            Next lngCounter
+                            xmlInfraspecificEpithet.Text = Trim$(xmlInfraspecificEpithet.Text)
+                            node.appendChild xmlInfraspecificEpithet
+                            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+                        ElseIf lngAuthorPosition > 3 Then
+                            Set xmlSubspeciesEpithet = dom.createNode(NODE_ELEMENT, "SubspeciesEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
+                            For lngCounter = 3 To lngAuthorPosition - 1
+                                If lngCounter > 3 Or _
+                                    ( _
+                                        lngCounter = 3 And _
+                                        ( _
+                                            InStr(strCellValueSplited(lngCounter), "subsp.") + _
+                                            InStr(strCellValueSplited(lngCounter), "ssp.") + _
+                                            InStr(strCellValueSplited(lngCounter), "var.") + _
+                                            InStr(strCellValueSplited(lngCounter), "subvar.") + _
+                                            InStr(strCellValueSplited(lngCounter), "f.") + _
+                                            InStr(strCellValueSplited(lngCounter), "subf.") = 0 _
+                                        ) _
+                                    ) Then
+                                    xmlSubspeciesEpithet.Text = xmlSubspeciesEpithet.Text & " " & strCellValueSplited(lngCounter)
+                                End If
+                            Next lngCounter
+                            xmlSubspeciesEpithet.Text = Trim$(xmlSubspeciesEpithet.Text)
+                            node.appendChild xmlSubspeciesEpithet
+                            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+                        End If
+                    Else
+                        If Application.Sheets("TAXONOMY").Cells(lngRow, 2).Value = "Plantae" And lngAuthorPosition > 3 Then
+                            Set xmlInfraspecificEpithet = dom.createNode(NODE_ELEMENT, "InfraspecificEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
+                            For lngCounter = 2 To lngAuthorPosition - 1
+                                If lngCounter > 2 Or _
+                                    ( _
+                                        lngCounter = 2 And _
+                                        ( _
+                                            InStr(strCellValueSplited(lngCounter), "subsp.") + _
+                                            InStr(strCellValueSplited(lngCounter), "ssp.") + _
+                                            InStr(strCellValueSplited(lngCounter), "var.") + _
+                                            InStr(strCellValueSplited(lngCounter), "subvar.") + _
+                                            InStr(strCellValueSplited(lngCounter), "f.") + _
+                                            InStr(strCellValueSplited(lngCounter), "subf.") = 0 _
+                                        ) _
+                                    ) Then
+                                    xmlInfraspecificEpithet.Text = xmlInfraspecificEpithet.Text & " " & strCellValueSplited(lngCounter)
+                                End If
+                            Next lngCounter
+                            xmlInfraspecificEpithet.Text = Trim$(xmlInfraspecificEpithet.Text)
+                            node.appendChild xmlInfraspecificEpithet
+                            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+                        ElseIf lngAuthorPosition > 2 Then
+                            Set xmlSubspeciesEpithet = dom.createNode(NODE_ELEMENT, "SubspeciesEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
+                            For lngCounter = 2 To lngAuthorPosition - 1
+                                If lngCounter > 2 Or _
+                                    ( _
+                                        lngCounter = 2 And _
+                                        ( _
+                                            InStr(strCellValueSplited(lngCounter), "subsp.") + _
+                                            InStr(strCellValueSplited(lngCounter), "ssp.") + _
+                                            InStr(strCellValueSplited(lngCounter), "var.") + _
+                                            InStr(strCellValueSplited(lngCounter), "subvar.") + _
+                                            InStr(strCellValueSplited(lngCounter), "f.") + _
+                                            InStr(strCellValueSplited(lngCounter), "subf.") = 0 _
+                                        ) _
+                                    ) Then
+                                    xmlSubspeciesEpithet.Text = xmlSubspeciesEpithet.Text & " " & strCellValueSplited(lngCounter)
+                                End If
+                            Next lngCounter
+                            xmlSubspeciesEpithet.Text = Trim$(xmlSubspeciesEpithet.Text)
+                            node.appendChild xmlSubspeciesEpithet
+                            node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+                        End If
+                    End If
+                    If Application.Sheets("TAXONOMY").Cells(lngRow, 2).Value = "Plantae" Then
+                        If Left$(Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value, 1) = "(" Then
+                            Set xmlAuthorTeamParenthesis = dom.createNode(NODE_ELEMENT, "AuthorTeamParenthesis", "http://www.tdwg.org/schemas/abcd/2.06")
+                            xmlAuthorTeamParenthesis.Text = Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value
+                            node.appendChild xmlAuthorTeamParenthesis
+                        Else
+                            Set xmlAuthorTeam = dom.createNode(NODE_ELEMENT, "AuthorTeam", "http://www.tdwg.org/schemas/abcd/2.06")
+                            xmlAuthorTeam.Text = Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value
+                            node.appendChild xmlAuthorTeam
+                        End If
+                    Else
+                        If Left$(Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value, 1) = "(" Then
+                            Set xmlAuthorTeamParenthesisAndYear = dom.createNode(NODE_ELEMENT, "AuthorTeamParenthesisAndYear", "http://www.tdwg.org/schemas/abcd/2.06")
+                            xmlAuthorTeamParenthesisAndYear.Text = Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value
+                            node.appendChild xmlAuthorTeamParenthesisAndYear
+                        Else
+                            Set xmlAuthorTeamOriginalAndYear = dom.createNode(NODE_ELEMENT, "AuthorTeamOriginalAndYear", "http://www.tdwg.org/schemas/abcd/2.06")
+                            xmlAuthorTeamOriginalAndYear.Text = Application.Sheets("TAXONOMY").Cells(lngRow, 32).Value
+                            node.appendChild xmlAuthorTeamOriginalAndYear
+                        End If
+                    End If
+                    node.appendChild dom.createTextNode(vbCrLf & Space$(6))
+                End If
+            End If
+        End If
+    End If
+    
+End Sub
+
+Private Function CleanUp(ByVal strCellValue As String) As String
+
+Dim regExp As New regExp
+
+    With regExp
+        .Global = True
+        .MultiLine = True
+        .IgnoreCase = False
+    End With
+    
+    'Clean up multiple spaces into one
+    regExp.Pattern = "\s\s+"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, " ")
+    End If
+    'Clean up start with space into empty
+    regExp.Pattern = "^\s"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, "")
+    End If
+    'Clean up end with space into empty
+    regExp.Pattern = "\s$"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, "")
+    End If
+    'Clean up parenthesis followed by space into parenthesis only
+    regExp.Pattern = "\(\s"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, "(")
+    End If
+    'Clean up parenthesis preceeded by space into parenthesis only
+    regExp.Pattern = "\s\)"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, ")")
+    End If
+    'Clean up comma preceeded by space into comma only
+    regExp.Pattern = "\s\,"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, ",")
+    End If
+    'Clean up point preceeded by space into point only
+    regExp.Pattern = "\s\."
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, ".")
+    End If
+
+    CleanUp = strCellValue
+
+End Function
+
+Private Function ReComposeName( _
+                                ByRef strSpeciesSplited() As String, _
+                                ByRef strSubLevelsSplited() As String, _
+                                ByRef rowCounter As Long, _
+                                ByRef columnCounter As Long, _
+                                ByRef lngSpeciesNamePos As Long _
+                               ) As Boolean
+
+Dim lngCounter As Long
+Dim lngCounter2 As Long
+Dim strTemp As String
+Dim strSpeciesMainPart As String
+Dim booErrorFound As Boolean
+
+strTemp = ""
+booErrorFound = True
+
+For lngCounter = 0 To UBound(strSubLevelsSplited)
+    If strSpeciesSplited(lngSpeciesNamePos) = strSubLevelsSplited(lngCounter) Then
+        booErrorFound = False
+        If UBound(strSubLevelsSplited) >= lngCounter Then
+            For lngCounter2 = lngCounter To UBound(strSubLevelsSplited)
+                strTemp = strTemp & " " & strSubLevelsSplited(lngCounter2)
+            Next lngCounter2
+        End If
+        strTemp = RTrim$(strTemp)
+        For lngCounter2 = 0 To lngSpeciesNamePos - 1
+            strSpeciesMainPart = strSpeciesMainPart & " " & strSpeciesSplited(lngCounter2)
+        Next lngCounter2
+        strSpeciesMainPart = LTrim$(strSpeciesMainPart)
+        Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value = strSpeciesMainPart & strTemp
+        Exit For
+    End If
+Next lngCounter
+
+ReComposeName = booErrorFound
+
+End Function
+                               
 
