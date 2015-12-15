@@ -172,3 +172,6 @@ DROP FUNCTION IF EXISTS stats_collections_encoding (collections.id%TYPE, text, t
 DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, users.id%TYPE, timestamp, timestamp);
 DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, TEXT, TEXT, TEXT);
 DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, TEXT, timestamp, timestamp);
+
+-- Imports functions
+DROP FUNCTION IF EXISTS fct_catalogue_import_keywords_update();

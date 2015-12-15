@@ -447,3 +447,7 @@ DROP TRIGGER IF EXISTS trg_add_status_history ON loans;
 DROP TRIGGER IF EXISTS trg_cpy_deleted_file ON multimedia;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_staging_info ON staging_info ;
 DROP TRIGGER IF EXISTS trg_upd_institution_staging_relationship ON staging_relationship ;
+
+/**** Imports ****/
+
+DROP TRIGGER IF EXISTS trg_catalogue_import_keywords_update ON staging_catalogue;

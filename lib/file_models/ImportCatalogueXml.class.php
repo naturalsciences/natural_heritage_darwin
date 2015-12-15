@@ -124,18 +124,26 @@ class ImportCatalogueXml implements IImportModels
     {
       $e = new DarwinPgErrorParser($ne);
       $this->errors_reported .= "Unit ".$this->staging_catalogue->getName()." object were not saved: ".$e->getMessage().";";
-      //$ok = false ;
     }
   }
 
+  /*
+   * Get the level corresponding to a level name
+   * @param string $level Name of level to get an id for
+   * @return integer the id corresponding to the level passed as param
+   */
   private function getLevelRef($level)
   {
     $conn = Doctrine_Manager::connection();
-    // @ToDo Check why we set here a begin transaction... I doubt of its usefullness
-    // $conn->getDbh()->exec('BEGIN TRANSACTION;');
-    return $conn->fetchOne("SELECT id from catalogue_levels where level_type='".$this->referenced_relation."' and level_sys_name='$level';") ;
+    return $conn->fetchOne("SELECT id from catalogue_levels where level_type = ?  and level_sys_name = ? ",
+                           array($this->referenced_relation,$level)
+    );
   }
 
+  /*
+   * Add a keyword in the classification keywords table
+   * @param string $name Type of keyword to add
+   */
   private function addKeyword($name)
   {
     $classification_keyword = new ClassificationKeywords() ;

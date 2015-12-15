@@ -788,3 +788,9 @@ CREATE TRIGGER trg_upd_institution_staging_relationship AFTER UPDATE
   EXECUTE PROCEDURE fct_upd_institution_staging_relationship();
 
 CREATE TRIGGER trg_update_import AFTER UPDATE ON imports FOR EACH ROW EXECUTE PROCEDURE fct_update_import();
+
+/******** Imports Triggers ********/
+/********* Catalogue Imports Triggers *********/
+CREATE TRIGGER trg_catalogue_import_keywords_update AFTER INSERT OR UPDATE OR DELETE
+  ON staging_catalogue FOR EACH ROW
+  EXECUTE PROCEDURE fct_catalogue_import_keywords_update();
