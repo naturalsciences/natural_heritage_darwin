@@ -794,3 +794,7 @@ CREATE TRIGGER trg_update_import AFTER UPDATE ON imports FOR EACH ROW EXECUTE PR
 CREATE TRIGGER trg_catalogue_import_keywords_update AFTER INSERT OR UPDATE OR DELETE
   ON staging_catalogue FOR EACH ROW
   EXECUTE PROCEDURE fct_catalogue_import_keywords_update();
+
+CREATE TRIGGER trg_catalogue_import_keywords_update AFTER INSERT OR UPDATE OR DELETE
+ON staging FOR EACH ROW
+EXECUTE PROCEDURE fct_catalogue_import_keywords_update();

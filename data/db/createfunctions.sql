@@ -6413,6 +6413,32 @@ $$
               AND record_id = OLD.id;
         RETURN NULL;
       END IF;
+    ELSEIF TG_TABLE_NAME = 'staging' THEN
+      IF TG_OP IN ('INSERT', 'UPDATE') THEN
+        IF COALESCE(NEW.taxon_ref,0) != 0 AND COALESCE(NEW.taxon_level_ref,0) != 0 AND NEW.taxon_ref != OLD.taxon_ref THEN
+          UPDATE classification_keywords as mck
+          SET
+            referenced_relation = 'taxonomy',
+            record_id = NEW.taxon_ref
+          WHERE mck.referenced_relation = TG_TABLE_NAME
+                AND mck.record_id = NEW.id
+                AND mck.keyword_type IN ('GenusOrMonomial', 'Subgenus', 'SpeciesEpithet', 'FirstEpiteth', 'SubspeciesEpithet',  'InfraspecificEpithet', 'AuthorTeamAndYear', 'AuthorTeam', 'AuthorTeamOriginalAndYear', 'AuthorTeamParenthesisAndYear')
+                AND NOT EXISTS (
+                                SELECT 1
+                                FROM classification_keywords as sck
+                                WHERE sck.referenced_relation = 'taxonomy'
+                                      AND sck.record_id = NEW.catalogue_ref
+                                      AND sck.keyword_type = mck.keyword_type
+                                      AND sck.keyword_indexed = mck.keyword_indexed
+          );
+        END IF;
+        RETURN NEW;
+      ELSE
+        DELETE FROM classification_keywords
+        WHERE referenced_relation = 'staging'
+              AND record_id = OLD.id;
+        RETURN NULL;
+      END IF;
     END IF;
   END;
 $$;

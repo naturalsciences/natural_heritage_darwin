@@ -451,3 +451,4 @@ DROP TRIGGER IF EXISTS trg_upd_institution_staging_relationship ON staging_relat
 /**** Imports ****/
 
 DROP TRIGGER IF EXISTS trg_catalogue_import_keywords_update ON staging_catalogue;
+DROP TRIGGER IF EXISTS trg_catalogue_import_keywords_update ON staging;
