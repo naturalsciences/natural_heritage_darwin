@@ -2085,111 +2085,71 @@ Public Function CheckTaxa(ByRef displayCheckMessages As Boolean, ByRef tryAutoCo
                                         End Select
                                     ' Infra-species levels
                                     Case Is >= 26
-                                        'Store the species informations/name as array
-                                        strSpeciesSplited = Split(Application.Sheets("TAXONOMY").Cells(rowCounter, 25).Value)
-                                        ' Test well the infra-species level is comprised of the minimum right number of elements
-                                        If Application.Sheets("TAXONOMY").Cells(rowCounter, 2).Value = "Plantae" Then
-                                            If Application.Sheets("TAXONOMY").Cells(rowCounter, 24).Value <> "" Then
-                                                If UBound(strSubLevelsSplited) < 4 Then
-                                                    WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                            " must have a correct structure." & _
-                                                            vbCrLf & _
-                                                            "Please correct this."
-                                                    booErrorFound = True
-                                                Else
-                                                    If strSubLevelsSplited(1) <> strSpeciesSplited(1) Or _
-                                                       strSubLevelsSplited(2) <> strSpeciesSplited(2) Then
-                                                        If tryAutoCorrect = vbYes Then
-                                                            booErrorFound = ReComposeName( _
-                                                                                            strSpeciesSplited, _
-                                                                                            strSubLevelsSplited, _
-                                                                                            rowCounter, _
-                                                                                            columnCounter, _
-                                                                                            3 _
-                                                                                         )
-                                                            If booErrorFound = True Then
-                                                                WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                                    " must have a correct structure: the species naming part was not found !" & _
-                                                                    vbCrLf & _
-                                                                    "Please correct this."
-                                                            Else
-                                                                WriteInfo rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                                    " has been auto-recomposed." & _
-                                                                    vbCrLf & _
-                                                                    "Please check it."
-                                                                booErrorFound = True
-                                                            End If
-                                                        Else
-                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                                " must have a correct structure: the subgenus is not the same as what's given above." & _
+                                        If Application.Sheets("TAXONOMY").Cells(rowCounter, 25).Value = "" Then
+                                            booErrorFound = True
+                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " need to have a species level filled in !" & _
                                                                 vbCrLf & _
                                                                 "Please correct this."
-                                                            booErrorFound = True
-                                                        End If
-                                                    End If
-                                                End If
-                                            Else
-                                                If UBound(strSubLevelsSplited) < 2 Then
-                                                    WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                            " must have a correct structure." & _
-                                                            vbCrLf & _
-                                                            "Please correct this."
-                                                    booErrorFound = True
-                                                Else
-                                                    If tryAutoCorrect = vbYes Then
-                                                        booErrorFound = ReComposeName( _
-                                                                                        strSpeciesSplited, _
-                                                                                        strSubLevelsSplited, _
-                                                                                        rowCounter, _
-                                                                                        columnCounter, _
-                                                                                        1 _
-                                                                                     )
-                                                        If booErrorFound = True Then
-                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                                " must have a correct structure: the species naming part was not found !" & _
-                                                                vbCrLf & _
-                                                                "Please correct this."
-                                                        Else
-                                                            WriteInfo rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                                " has been auto-recomposed." & _
-                                                                vbCrLf & _
-                                                                "Please check it."
-                                                            booErrorFound = True
-                                                        End If
-                                                    Else
-                                                        booErrorFound = True
-                                                        For lngCounter = 0 To UBound(strSubLevelsSplited)
-                                                            If strSpeciesSplited(1) = strSubLevelsSplited(lngCounter) Then
-                                                                booErrorFound = False
-                                                                Exit For
-                                                            End If
-                                                        Next lngCounter
-                                                        If booErrorFound = True Then
-                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                                " must have a correct structure: the subgenus is not the same as what's given above." & _
-                                                                vbCrLf & _
-                                                                "Please correct this."
-                                                        End If
-                                                    End If
-                                                End If
-                                            End If
                                         Else
-                                            If Application.Sheets("TAXONOMY").Cells(rowCounter, 24).Value <> "" Then
-                                                If UBound(strSubLevelsSplited) < 3 Then
-                                                    WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                            " must have a correct structure." & _
-                                                            vbCrLf & _
-                                                            "Please correct this."
-                                                    booErrorFound = True
+                                            'Store the species informations/name as array
+                                            strSpeciesSplited = Split(Application.Sheets("TAXONOMY").Cells(rowCounter, 25).Value)
+                                            ' Test well the infra-species level is comprised of the minimum right number of elements
+                                            If Application.Sheets("TAXONOMY").Cells(rowCounter, 2).Value = "Plantae" Then
+                                                If Application.Sheets("TAXONOMY").Cells(rowCounter, 24).Value <> "" Then
+                                                    If UBound(strSubLevelsSplited) < 4 Then
+                                                        WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " must have a correct structure." & _
+                                                                vbCrLf & _
+                                                                "Please correct this."
+                                                        booErrorFound = True
+                                                    Else
+                                                        If strSubLevelsSplited(1) <> strSpeciesSplited(1) Or _
+                                                           strSubLevelsSplited(2) <> strSpeciesSplited(2) Then
+                                                            If tryAutoCorrect = vbYes Then
+                                                                booErrorFound = ReComposeName( _
+                                                                                                strSpeciesSplited, _
+                                                                                                strSubLevelsSplited, _
+                                                                                                rowCounter, _
+                                                                                                columnCounter, _
+                                                                                                3 _
+                                                                                             )
+                                                                If booErrorFound = True Then
+                                                                    WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                        " must have a correct structure: the species naming part was not found !" & _
+                                                                        vbCrLf & _
+                                                                        "Please correct this."
+                                                                Else
+                                                                    WriteInfo rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                        " has been auto-recomposed." & _
+                                                                        vbCrLf & _
+                                                                        "Please check it."
+                                                                    booErrorFound = True
+                                                                End If
+                                                            Else
+                                                                WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                    " must have a correct structure: the subgenus is not the same as what's given above." & _
+                                                                    vbCrLf & _
+                                                                    "Please correct this."
+                                                                booErrorFound = True
+                                                            End If
+                                                        End If
+                                                    End If
                                                 Else
-                                                    If strSubLevelsSplited(1) <> strSpeciesSplited(1) Then
+                                                    If UBound(strSubLevelsSplited) < 2 Then
+                                                        WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " must have a correct structure." & _
+                                                                vbCrLf & _
+                                                                "Please correct this."
+                                                        booErrorFound = True
+                                                    Else
                                                         If tryAutoCorrect = vbYes Then
                                                             booErrorFound = ReComposeName( _
                                                                                             strSpeciesSplited, _
                                                                                             strSubLevelsSplited, _
                                                                                             rowCounter, _
                                                                                             columnCounter, _
-                                                                                            2 _
+                                                                                            1 _
                                                                                          )
                                                             If booErrorFound = True Then
                                                                 WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
@@ -2204,61 +2164,109 @@ Public Function CheckTaxa(ByRef displayCheckMessages As Boolean, ByRef tryAutoCo
                                                                 booErrorFound = True
                                                             End If
                                                         Else
-                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                                " must have a correct structure: the subgenus is not the same as what's given above." & _
-                                                                vbCrLf & _
-                                                                "Please correct this."
                                                             booErrorFound = True
+                                                            For lngCounter = 0 To UBound(strSubLevelsSplited)
+                                                                If strSpeciesSplited(1) = strSubLevelsSplited(lngCounter) Then
+                                                                    booErrorFound = False
+                                                                    Exit For
+                                                                End If
+                                                            Next lngCounter
+                                                            If booErrorFound = True Then
+                                                                WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                    " must have a correct structure: the subgenus is not the same as what's given above." & _
+                                                                    vbCrLf & _
+                                                                    "Please correct this."
+                                                            End If
                                                         End If
                                                     End If
                                                 End If
                                             Else
-                                                If UBound(strSubLevelsSplited) < 2 Then
-                                                    WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                            " must have a correct structure." & _
-                                                            vbCrLf & _
-                                                            "Please correct this."
-                                                    booErrorFound = True
-                                                Else
-                                                    If tryAutoCorrect = vbYes Then
-                                                        booErrorFound = ReComposeName( _
-                                                                                        strSpeciesSplited, _
-                                                                                        strSubLevelsSplited, _
-                                                                                        rowCounter, _
-                                                                                        columnCounter, _
-                                                                                        1 _
-                                                                                     )
-                                                        If booErrorFound = True Then
-                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                                " must have a correct structure: the species naming part was not found !" & _
+                                                If Application.Sheets("TAXONOMY").Cells(rowCounter, 24).Value <> "" Then
+                                                    If UBound(strSubLevelsSplited) < 3 Then
+                                                        WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " must have a correct structure." & _
                                                                 vbCrLf & _
                                                                 "Please correct this."
-                                                        Else
-                                                            WriteInfo rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                                " has been auto-recomposed." & _
-                                                                vbCrLf & _
-                                                                "Please check it."
-                                                            booErrorFound = True
-                                                        End If
-                                                    Else
                                                         booErrorFound = True
-                                                        For lngCounter = 0 To UBound(strSubLevelsSplited)
-                                                            If strSpeciesSplited(1) = strSubLevelsSplited(lngCounter) Then
-                                                                booErrorFound = False
-                                                                Exit For
+                                                    Else
+                                                        If strSubLevelsSplited(1) <> strSpeciesSplited(1) Then
+                                                            If tryAutoCorrect = vbYes Then
+                                                                booErrorFound = ReComposeName( _
+                                                                                                strSpeciesSplited, _
+                                                                                                strSubLevelsSplited, _
+                                                                                                rowCounter, _
+                                                                                                columnCounter, _
+                                                                                                2 _
+                                                                                             )
+                                                                If booErrorFound = True Then
+                                                                    WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                        " must have a correct structure: the species naming part was not found !" & _
+                                                                        vbCrLf & _
+                                                                        "Please correct this."
+                                                                Else
+                                                                    WriteInfo rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                        " has been auto-recomposed." & _
+                                                                        vbCrLf & _
+                                                                        "Please check it."
+                                                                    booErrorFound = True
+                                                                End If
+                                                            Else
+                                                                WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                    " must have a correct structure: the subgenus is not the same as what's given above." & _
+                                                                    vbCrLf & _
+                                                                    "Please correct this."
+                                                                booErrorFound = True
                                                             End If
-                                                        Next lngCounter
-                                                        If booErrorFound = True Then
-                                                            WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
-                                                                " must have a correct structure: the subgenus is not the same as what's given above." & _
+                                                        End If
+                                                    End If
+                                                Else
+                                                    If UBound(strSubLevelsSplited) < 2 Then
+                                                        WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                " must have a correct structure." & _
                                                                 vbCrLf & _
                                                                 "Please correct this."
+                                                        booErrorFound = True
+                                                    Else
+                                                        If tryAutoCorrect = vbYes Then
+                                                            booErrorFound = ReComposeName( _
+                                                                                            strSpeciesSplited, _
+                                                                                            strSubLevelsSplited, _
+                                                                                            rowCounter, _
+                                                                                            columnCounter, _
+                                                                                            1 _
+                                                                                         )
+                                                            If booErrorFound = True Then
+                                                                WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                    " must have a correct structure: the species naming part was not found !" & _
+                                                                    vbCrLf & _
+                                                                    "Please correct this."
+                                                            Else
+                                                                WriteInfo rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                    " has been auto-recomposed." & _
+                                                                    vbCrLf & _
+                                                                    "Please check it."
+                                                                booErrorFound = True
+                                                            End If
+                                                        Else
+                                                            booErrorFound = True
+                                                            For lngCounter = 0 To UBound(strSubLevelsSplited)
+                                                                If strSpeciesSplited(1) = strSubLevelsSplited(lngCounter) Then
+                                                                    booErrorFound = False
+                                                                    Exit For
+                                                                End If
+                                                            Next lngCounter
+                                                            If booErrorFound = True Then
+                                                                WriteError rowCounter, columnCounter, i, 5, replacementMessage:=level_name(columnCounter) & _
+                                                                    " must have a correct structure: the subgenus is not the same as what's given above." & _
+                                                                    vbCrLf & _
+                                                                    "Please correct this."
+                                                            End If
                                                         End If
                                                     End If
                                                 End If
                                             End If
+                                            strCellValue = Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value
                                         End If
-                                        strCellValue = Application.Sheets("TAXONOMY").Cells(rowCounter, columnCounter).Value
                                         Exit For
                                 End Select
                             End If
