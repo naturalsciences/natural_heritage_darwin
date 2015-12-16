@@ -1,11 +1,13 @@
 \set ECHO all
 \i unit_launch.sql
-SELECT plan(30);
+SELECT plan(35);
 
 select diag('Test of taxonomy import');
 select diag('-- First mimic of xml file with creation of a basic taxonomical structure --');
 
+/* insert the import line */
 insert into imports (id, user_ref, format, filename, collection_ref) values (1,1,'taxon','taxon_test.xml',NULL);
+/* insert the staging_catalogue lines */
 insert into staging_catalogue (id, import_ref, name, level_ref) values (1,1,'Eucaryota',1);
 insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref) values (2,1,'Animalia',2,1);
 insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref) values (3,1,'Chordata',4,2);
@@ -22,13 +24,22 @@ insert into staging_catalogue (id, import_ref, name, level_ref) values (13,1,'An
 insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref) values (14,1,'Chordata',4,13);
 insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref) values (15,1,'Vertebrata',5,14);
 insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref) values (16,1,'Mugilix',41,15);
-
+/* insert keywords for some of them */
+insert into classification_keywords (referenced_relation, record_id, keyword_type, keyword)
+    values
+      ('staging_catalogue',1,'GenusOrMonomial','Eucaryota'),
+      ('staging_catalogue',2,'GenusOrMonomial','Animalia'),
+      ('staging_catalogue',4,'GenusOrMonomial','Vertebrata'),
+      ('staging_catalogue',12,'GenusOrMonomial','Liza'),
+      ('staging_catalogue',12,'SpeciesEpithet','officinalis')
+;
 /*
 select diag('List of staging catalogue before clean');
 select diag((select array_to_string(array_agg(id || '-' || name || '-' || level_ref || '-' || coalesce(parent_ref,0)),E'\n')
              from staging_catalogue));
 
 */
+
 select is(true,
   (select fct_clean_staging_catalogue(1)),
   'Perform cleaning of surnumerary entries - done @load import'
@@ -44,6 +55,12 @@ select is(
     4,
     (select id from staging_catalogue where name = 'Vertebrata'),
     '... and that is well the id 4'
+);
+
+select is(
+    5::BIGINT,
+    (select count(id) from classification_keywords where referenced_relation = 'staging_catalogue'),
+    'Number of keywords is well still of 4 after clean up'
 );
 
 /*
@@ -95,6 +112,34 @@ select results_eq('select id::integer,
                            (16,1,'Mugilix',41,7,15)
                   $$,
                   'Test the values were well set in the import table telling everything is ok');
+
+select is(
+    1::BIGINT,
+    (select count(id) from classification_keywords where referenced_relation = 'staging_catalogue'),
+    'Number of keywords is now of 1 for the ones associated with staging_catalogue table: Eucaryota keyword was already set an stay associated with staging_catalogue then...'
+);
+
+select is(
+    8::BIGINT,
+    (select count(id) from classification_keywords where referenced_relation = 'taxonomy'),
+    '... and of 8 for the ones associated with taxonomy table (4 for top levels and 4 for the new ones'
+);
+
+-- select diag(referenced_relation || ' ' || record_id::text || ' ' || keyword_type || ' ' || keyword || ' ' || keyword_indexed) from classification_keywords where referenced_relation = 'taxonomy';
+
+select results_eq('select record_id::integer
+                   from classification_keywords
+                   where referenced_relation = ''taxonomy''
+                     and record_id > 4
+                   order by record_id',
+                  $$
+                    VALUES (5),
+                           (7),
+                           (16),
+                           (16)
+                  $$,
+                  'Test the values were well reassociated with the taxon id in classification_keywords');
+
 select diag('
 -- Second mimic of xml file with creation of a branched taxonomical structure: Lizamontidae family and bellow --');
 
@@ -390,6 +435,14 @@ insert into staging_catalogue (id, import_ref, name, level_ref, parent_ref, cata
 select is(true ,
           (select fct_importer_catalogue(11,'taxonomy')),
           'Perform the import of staging catalogue entries'
+);
+
+delete from imports where id = 1;
+
+select is(
+    0::BIGINT,
+    (select count(id) from classification_keywords where referenced_relation = 'staging_catalogue'),
+    'Number of keywords is now 0 due to cascade delete'
 );
 
 SELECT * FROM finish();

@@ -496,5 +496,5 @@ INSERT INTO taxonomy (name, name_indexed, level_ref, status) VALUES ('Archaea', 
 INSERT INTO taxonomy (name, name_indexed, level_ref, status) VALUES ('Virus','virus', 1, 'valid');
 INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) (select 'taxonomy', id, 'GenusOrMonomial', 'Virus', 'virus' from taxonomy where name = 'Virus');
 INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) (select 'taxonomy', id, 'GenusOrMonomial', 'Bacteria', 'bacteria' from taxonomy where name = 'Bacteria');
-INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) (select 'taxonomy', id, 'GenusOrMonomial', 'Eucaryota', 'Eucaryota' from taxonomy where name = 'Eucaryota');
+INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) (select 'taxonomy', id, 'GenusOrMonomial', 'Eucaryota', 'eucaryota' from taxonomy where name = 'Eucaryota');
 INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword, keyword_indexed) (select 'taxonomy', id, 'GenusOrMonomial', 'Archaea', 'archaea' from taxonomy where name = 'Archaea');
