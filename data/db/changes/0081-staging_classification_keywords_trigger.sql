@@ -5,6 +5,9 @@ BEGIN;
 CREATE OR REPLACE FUNCTION fct_catalogue_import_keywords_update()
   RETURNS TRIGGER LANGUAGE plpgsql AS
 $$
+DECLARE
+  booContinue BOOLEAN := FALSE;
+  intDiag INTEGER;
 BEGIN
   IF TG_TABLE_NAME = 'staging_catalogue' THEN
     IF TG_OP IN ('INSERT', 'UPDATE') THEN
@@ -41,59 +44,77 @@ BEGIN
     END IF;
   ELSEIF TG_TABLE_NAME = 'staging' THEN
     IF TG_OP IN ('INSERT', 'UPDATE') THEN
-      IF COALESCE(NEW.taxon_ref,0) != 0 AND COALESCE(NEW.taxon_level_ref,0) != 0 AND NEW.taxon_ref != OLD.taxon_ref THEN
-        UPDATE classification_keywords as mck
-        SET
-          referenced_relation = 'taxonomy',
-          record_id = NEW.taxon_ref
-        WHERE mck.referenced_relation = TG_TABLE_NAME
-              AND mck.record_id = NEW.id
-              AND mck.keyword_type IN (
-          'GenusOrMonomial',
-          'Subgenus',
-          'SpeciesEpithet',
-          'FirstEpiteth',
-          'SubspeciesEpithet',
-          'InfraspecificEpithet',
-          'AuthorTeamAndYear',
-          'AuthorTeam',
-          'AuthorTeamOriginalAndYear',
-          'AuthorTeamParenthesisAndYear',
-          'SubgenusAuthorAndYear',
-          'CultivarGroupName',
-          'CultivarName',
-          'Breed',
-          'CombinationAuthorTeamAndYear',
-          'NamedIndividual'
-        )
-              AND NOT EXISTS (
-            SELECT 1
-            FROM classification_keywords as sck
-            WHERE sck.referenced_relation = 'taxonomy'
-                  AND sck.record_id = NEW.taxon_ref
-                  AND sck.keyword_type = mck.keyword_type
-                  AND sck.keyword_indexed = mck.keyword_indexed
-        );
-      ELSEIF COALESCE(NEW.mineral_ref,0) != 0 AND COALESCE(NEW.mineral_level_ref,0) != 0 AND NEW.mineral_ref != OLD.mineral_ref THEN
-        UPDATE classification_keywords as mck
-        SET
-          referenced_relation = 'mineralogy',
-          record_id = NEW.mineral_ref
-        WHERE mck.referenced_relation = TG_TABLE_NAME
-              AND mck.record_id = NEW.id
-              AND mck.keyword_type IN (
-          'AuthorTeamAndYear',
-          'AuthorTeam',
-          'NamedIndividual'
-        )
-              AND NOT EXISTS (
-            SELECT 1
-            FROM classification_keywords as sck
-            WHERE sck.referenced_relation = 'mineralogy'
-                  AND sck.record_id = NEW.mineral_ref
-                  AND sck.keyword_type = mck.keyword_type
-                  AND sck.keyword_indexed = mck.keyword_indexed
-        );
+      IF COALESCE(NEW.taxon_ref,0) != 0 AND COALESCE(NEW.taxon_level_ref,0) != 0 THEN
+        IF TG_OP = 'UPDATE' THEN
+          IF COALESCE(NEW.taxon_ref,0) != COALESCE(OLD.taxon_ref,0) THEN
+            booContinue := TRUE;
+          END IF;
+        ELSE
+          booContinue := TRUE;
+        END IF;
+        IF booContinue = TRUE THEN
+          UPDATE classification_keywords as mck
+          SET
+            referenced_relation = 'taxonomy',
+            record_id = NEW.taxon_ref
+          WHERE mck.referenced_relation = TG_TABLE_NAME
+                AND mck.record_id = NEW.id
+                AND mck.keyword_type IN (
+            'GenusOrMonomial',
+            'Subgenus',
+            'SpeciesEpithet',
+            'FirstEpiteth',
+            'SubspeciesEpithet',
+            'InfraspecificEpithet',
+            'AuthorTeamAndYear',
+            'AuthorTeam',
+            'AuthorTeamOriginalAndYear',
+            'AuthorTeamParenthesisAndYear',
+            'SubgenusAuthorAndYear',
+            'CultivarGroupName',
+            'CultivarName',
+            'Breed',
+            'CombinationAuthorTeamAndYear',
+            'NamedIndividual'
+          )
+                AND NOT EXISTS (
+              SELECT 1
+              FROM classification_keywords as sck
+              WHERE sck.referenced_relation = 'taxonomy'
+                    AND sck.record_id = NEW.taxon_ref
+                    AND sck.keyword_type = mck.keyword_type
+                    AND sck.keyword_indexed = mck.keyword_indexed
+          );
+        END IF;
+      ELSEIF COALESCE(NEW.mineral_ref,0) != 0 AND COALESCE(NEW.mineral_level_ref,0) != 0 THEN
+        IF TG_OP = 'UPDATE' THEN
+          IF COALESCE(NEW.mineral_ref,0) != COALESCE(OLD.mineral_ref,0) THEN
+            booContinue := TRUE;
+          END IF;
+        ELSE
+          booContinue := TRUE;
+        END IF;
+        IF booContinue = TRUE THEN
+          UPDATE classification_keywords as mck
+          SET
+            referenced_relation = 'mineralogy',
+            record_id = NEW.mineral_ref
+          WHERE mck.referenced_relation = TG_TABLE_NAME
+                AND mck.record_id = NEW.id
+                AND mck.keyword_type IN (
+            'AuthorTeamAndYear',
+            'AuthorTeam',
+            'NamedIndividual'
+          )
+                AND NOT EXISTS (
+              SELECT 1
+              FROM classification_keywords as sck
+              WHERE sck.referenced_relation = 'mineralogy'
+                    AND sck.record_id = NEW.mineral_ref
+                    AND sck.keyword_type = mck.keyword_type
+                    AND sck.keyword_indexed = mck.keyword_indexed
+          );
+        END IF;
       END IF;
       RETURN NEW;
     ELSE
