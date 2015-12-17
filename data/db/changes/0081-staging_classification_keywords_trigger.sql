@@ -48,12 +48,49 @@ BEGIN
           record_id = NEW.taxon_ref
         WHERE mck.referenced_relation = TG_TABLE_NAME
               AND mck.record_id = NEW.id
-              AND mck.keyword_type IN ('GenusOrMonomial', 'Subgenus', 'SpeciesEpithet', 'FirstEpiteth', 'SubspeciesEpithet',  'InfraspecificEpithet', 'AuthorTeamAndYear', 'AuthorTeam', 'AuthorTeamOriginalAndYear', 'AuthorTeamParenthesisAndYear')
+              AND mck.keyword_type IN (
+          'GenusOrMonomial',
+          'Subgenus',
+          'SpeciesEpithet',
+          'FirstEpiteth',
+          'SubspeciesEpithet',
+          'InfraspecificEpithet',
+          'AuthorTeamAndYear',
+          'AuthorTeam',
+          'AuthorTeamOriginalAndYear',
+          'AuthorTeamParenthesisAndYear',
+          'SubgenusAuthorAndYear',
+          'CultivarGroupName',
+          'CultivarName',
+          'Breed',
+          'CombinationAuthorTeamAndYear',
+          'NamedIndividual'
+        )
               AND NOT EXISTS (
             SELECT 1
             FROM classification_keywords as sck
             WHERE sck.referenced_relation = 'taxonomy'
-                  AND sck.record_id = NEW.catalogue_ref
+                  AND sck.record_id = NEW.taxon_ref
+                  AND sck.keyword_type = mck.keyword_type
+                  AND sck.keyword_indexed = mck.keyword_indexed
+        );
+      ELSEIF COALESCE(NEW.mineral_ref,0) != 0 AND COALESCE(NEW.mineral_level_ref,0) != 0 AND NEW.mineral_ref != OLD.mineral_ref THEN
+        UPDATE classification_keywords as mck
+        SET
+          referenced_relation = 'mineralogy',
+          record_id = NEW.mineral_ref
+        WHERE mck.referenced_relation = TG_TABLE_NAME
+              AND mck.record_id = NEW.id
+              AND mck.keyword_type IN (
+          'AuthorTeamAndYear',
+          'AuthorTeam',
+          'NamedIndividual'
+        )
+              AND NOT EXISTS (
+            SELECT 1
+            FROM classification_keywords as sck
+            WHERE sck.referenced_relation = 'mineralogy'
+                  AND sck.record_id = NEW.mineral_ref
                   AND sck.keyword_type = mck.keyword_type
                   AND sck.keyword_indexed = mck.keyword_indexed
         );
