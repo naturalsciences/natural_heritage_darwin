@@ -19,12 +19,13 @@ class ImportsTable extends Doctrine_Table
 
   public function markOk($id)
   {
-    $q = Doctrine_Query::create()->update('staging s');
     $conn = Doctrine_Manager::connection();
-    $sql = "update staging s1 
-        set to_import = true 
-        WHERE status = '' and import_ref=".intval($id);
-    $conn->getDbh()->exec($sql);
+    $prepared_sql = $conn->prepare("UPDATE staging s1
+                                    SET to_import = TRUE
+                                    WHERE status = ''
+                                      AND import_ref = ?"
+    );
+    $prepared_sql->execute(array(intval($id)));
     $q = Doctrine_Query::create()->update('Imports');
     $q->andwhere('id = ? ',$id)
       ->set('state', '?','processing')
@@ -35,8 +36,12 @@ class ImportsTable extends Doctrine_Table
   {
     if(! count($record_ids)) return array();
     $conn = Doctrine_Manager::connection();
-    $sql = "select import_ref as id, count(*) as cnt FROM staging r where import_ref in (".implode(',',$record_ids).") GROUP BY import_ref";
-    $result = $conn->fetchAssoc($sql);
+    $sql = "SELECT import_ref as id, COUNT(*) as cnt
+            FROM staging r
+            WHERE import_ref IN (?)
+            GROUP BY import_ref";
+    $ids_list_as_string = implode(',',$record_ids);
+    $result = $conn->fetchAssoc($sql, array($ids_list_as_string));
     return $result;
   }
 
@@ -93,11 +98,17 @@ class ImportsTable extends Doctrine_Table
 
     if(count($ids))
     {
+      $ids_list_as_string = implode(',', $ids);
       $conn = Doctrine_Manager::connection();
-      $sql = "update Imports set state = CASE WHEN state='loaded' THEN 'aloaded' WHEN state='processing' THEN 'aprocessing' ELSE 'apending' END 
-              WHERE id in (".implode(',', $ids).")";
-
-      $conn->exec($sql);
+      $prepared_sql = $conn->prepare("UPDATE Imports
+                                       SET state = CASE
+                                                    WHEN state='loaded' THEN 'aloaded'
+                                                    WHEN state='processing' THEN 'aprocessing'
+                                                    ELSE 'apending'
+                                                   END
+                                       WHERE id in (?)"
+      );
+      $prepared_sql->execute(array($ids_list_as_string));
     }
 
     // Return the items object retrieved

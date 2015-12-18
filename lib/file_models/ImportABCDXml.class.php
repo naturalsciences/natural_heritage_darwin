@@ -185,7 +185,7 @@ class ImportABCDXml implements IImportModels
         case "efg:MineralRockGroup" : $this->object->handleRockParent() ; break;
         case "efg:MineralRockGroupName" : $this->object->higher_name = $this->cdata ; break;
         case "efg:MineralRockIdentified" : $this->object->getCatalogueParent($this->staging) ; break;
-        case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break; //@TODO
+        case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break;
         case "efg:NameComments" : $this->object->setNotion(strtolower($this->cdata)) ; break;
         case "NameAddendum": if(stripos($this->cdata, 'Variety') !== false ) {
             $this->object->level_name = 'variety' ;
