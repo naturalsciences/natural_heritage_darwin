@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited by Gabriele Droege (Botanic Garden and Botanical Museum Berlin-Dahlem) -->
+<!-- copied localy the 2012-12-21 by Paul-André Duchesne (Royal belgian Institute for natural Sciences -->
+<xs:schema targetNamespace="http://www.dnabank-network.org/schemas/ABCDDNA" xmlns:dna="http://www.dnabank-network.org/schemas/ABCDDNA" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.dnabank-network.org/schemas/ABCDDNA" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+    <xs:element name="DNASample">
+        <xs:annotation>
+            <xs:documentation>Container element of a DNA sample containig information about DNA extraction, PCR amplifications, cloning and sequencing</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Tissue" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Tissue from which DNA was extracted</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Preservation" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Form of conservation or fixation in which the tissue was available for extraction</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ExtractionStaff" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Person who carried out DNA extraction</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ExtractionDate" type="xs:date" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Date of DNA extraction</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ExtractionMethod" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Method or extraction protocol applied</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="PurificationMethod" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Method or protocol used for secundary purification of already extracted genomic DNA</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="RatioOfAbsorbance260_280" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Ratio of absorbance at 260 nm and 280 nm used to assess the purity of DNA (mainly proteins, phenol and others)</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="RatioOfAbsorbance260_230" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Ratio of absorbance at 260 nm and 230 nm assessing DNA purity (mostly secundary measure, indicates maily EDTA, carbohydrates, phenol)</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Concentration" type="dna:StringUnit" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>DNA concentration value</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Quality" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>DNA quality estimation based on agarose gel electrophoresis (average fragment lenght of the DNA sample)</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="low"/>
+                            <xs:enumeration value="medium"/>
+                            <xs:enumeration value="high"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="QualityCheckDate" type="xs:date" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Date when DNA quality parameters were determined</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Images" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Container element for links to images of the DNA sample (e.g. agarose gel images)</xs:documentation>
+                        <xs:documentation>Container element for links to agarose gel images</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="FileURI" type="dna:StringType" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>Link to an DNA sample image (e.g. agarose gel image)    </xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="BlockedUntil" type="xs:date" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Date until ordering of DNA samples is blocked</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ProvidedBy" type="xs:string" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Outside person or company which delivered or donated the DNA sample</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Amplifications" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Container element for infomation of all amplifications</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Amplification" type="dna:Amplification" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>Container element for information related to an individual amplification</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="Amplification">
+        <xs:annotation>
+            <xs:documentation>Container element for individual amplifications</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="AmplificationDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date when the amplification was carried out</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AmplificationStaff" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Person who performed the amplification</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GeneticLocus" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Genetic locus or DNA fragment amplified by PCR</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PurificationMethod" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Method or protocol used to purify the PCR product</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Sequencings" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Container element for all DNA sequencings (related to all sequences and sequencing runs of one fragment or locus)</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Sequencing" type="dna:Sequencing" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>Container element for all sequencing information related to a defined clone of a cloned fragment (contains only one element if the fragment was not cloned)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AmplificationPrimers" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Container element for amplification primers</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="AmplificationPrimerForward" type="dna:AmplificationPrimerForward" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>Container element for information about the amplification forward primer</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="AmplificationPrimerReverse" type="dna:AmplificationPrimerReverse" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>Container element for information about the amplification reverse primer</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Sequencing">
+        <xs:annotation>
+            <xs:documentation>Container element for DNA sequencings</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="CloningDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date when the DNA cloning was carried out</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CloningStaff" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Person or company which performed DNA cloning</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CloningMethod" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Method or protocol used for DNA cloning</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CloneStrain" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Name of the individual DNA clone </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SingleSequencings" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Container element for all individual DNA sequencings (related to all sequnecing runs of a defined clone of a cloned fragment)</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="SingleSequencing" type="dna:SingleSequencing" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>Container element for information related to an individual sequencing (related to a unique sequencing run)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ConsensusSequence" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Consensus sequence derived from all individual sequences</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ConsensusSequenceLength" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Length of the consensus sequence (number of base pairs)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ConsensusSequenceChromatogramFileURI" type="xs:anyURI" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Link to the chromatogram of the consensus sequence</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BarcodeSequence" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>DNA Barcode sequence (part or 100% of the consensus sequence)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GenBankNumber" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Definite number or ID under which the DNA sequence is deposited in a public database (e.g. GenBank accession number)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GenBankNumber-URI" type="xs:anyURI" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Link to the related record in a public database (e.g. link to a GenBank record)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="References" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Container element for references to DNA sequences or the consensus sequence</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Reference" type="dna:Reference" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>Container element for references to individual DNA sequences or the consensus sequence</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SingleSequencing">
+        <xs:annotation>
+            <xs:documentation>Container element for information on individual sequences</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="SequencingDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Date when the DNA sequence was produced</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SequencingStaff" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Person or company which performed the sequencing</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SequencingMethod" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Method or protocol used to generate the DNA sequences</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SingleSequence" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Sequence of the individual DNA sequence (A,T,G,C; 5' to 3')</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Chromatograms" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Container element for chromatograms of an individual DNA sequence</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="ChromatogramFileURI" type="dna:StringDirection" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>Link to the chromatogram of an individual DNA sequence</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SequencingPrimers" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Container element for all sequencing primers</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="SequencingPrimer" type="dna:SequencingPrimer" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>Container element for an individual sequencing primer</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Reference">
+        <xs:annotation>
+            <xs:documentation>Container element for an reference to DNA sequences or the consensus sequence  </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ReferenceCitation" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Reference to DNA sequences or the consensus sequence</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ReferenceURI" type="xs:anyURI" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Link to the reference for DNA sequences or the consensus sequence</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SequencingPrimer">
+        <xs:annotation>
+            <xs:documentation>Container element for information of a sequencing primer</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="PrimerSequence" type="dna:StringDirection" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>DNA sequence of the sequencing primer (A,T,G,C; 5' to 3')</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PrimerName" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Name of the sequencing primer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PrimerReferenceCitation" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>First reference of the sequencing primer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PrimerReferenceLink" type="xs:anyURI" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Link to the first reference of the sequencing primer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AmplificationPrimerForward">
+        <xs:annotation>
+            <xs:documentation>Container element for information of the amplification forward primer</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="PrimerName" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Name of the forward primer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PrimerSequence" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>DNA sequence of the forward primer (5' to 3')</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PrimerReferenceCitation" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>First reference of the forward primer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PrimerReferenceLink" type="xs:anyURI" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Link to the first reference of the forward primer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AmplificationPrimerReverse">
+        <xs:annotation>
+            <xs:documentation>Container element for information about the amplification reverse primer</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="PrimerName" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Name of the reverse primer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PrimerSequence" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>DNA sequence of the reverse primer (5' to 3')</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PrimerReferenceCitation" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>First reference of the reverse primer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PrimerReferenceLink" type="xs:anyURI" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Link to the first reference of the reverse primer</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="StringType">
+        <xs:annotation>
+            <xs:documentation>String, extended with Type attribute</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="Type" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="StringDirection">
+        <xs:annotation>
+            <xs:documentation>String, extended with direction attribute (e.g. 'forward' or 'reverse')</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="Direction" type="xs:string" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="StringUnit">
+        <xs:annotation>
+            <xs:documentation>String, extended with Unit attribute (e.g. ng/µl)</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="Unit" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+</xs:schema>
