@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited by Gabriele Droege (Botanic Garden and Botanical Museum Berlin-Dahlem) -->
-<!-- copied localy the 2012-12-21 by Paul-André Duchesne (Royal belgian Institute for natural Sciences -->
+<!-- copied localy the 2012-12-21 by Paul-André Duchesne (Royal belgian Institute for natural Sciences) from http://www.dnabank-network.org/schemas/ABCDDNA/DNA.xsd -->
 <xs:schema targetNamespace="http://www.dnabank-network.org/schemas/ABCDDNA" xmlns:dna="http://www.dnabank-network.org/schemas/ABCDDNA" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.dnabank-network.org/schemas/ABCDDNA" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
     <xs:element name="DNASample">
         <xs:annotation>
