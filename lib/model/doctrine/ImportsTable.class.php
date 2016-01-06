@@ -36,12 +36,11 @@ class ImportsTable extends Doctrine_Table
   {
     if(! count($record_ids)) return array();
     $conn = Doctrine_Manager::connection();
-    $sql = "SELECT import_ref as id, COUNT(*) as cnt
-            FROM staging r
-            WHERE import_ref IN (?)
-            GROUP BY import_ref";
     $ids_list_as_string = implode(',',$record_ids);
-    $result = $conn->fetchAssoc($sql, array($ids_list_as_string));
+    $result = $conn->fetchAssoc("SELECT import_ref as id, COUNT(*) as cnt
+                                  FROM staging r
+                                  WHERE import_ref = ANY('{ $ids_list_as_string }'::int[])
+                                  GROUP BY import_ref");
     return $result;
   }
 
@@ -100,15 +99,14 @@ class ImportsTable extends Doctrine_Table
     {
       $ids_list_as_string = implode(',', $ids);
       $conn = Doctrine_Manager::connection();
-      $prepared_sql = $conn->prepare("UPDATE Imports
-                                       SET state = CASE
-                                                    WHEN state='loaded' THEN 'aloaded'
-                                                    WHEN state='processing' THEN 'aprocessing'
-                                                    ELSE 'apending'
-                                                   END
-                                       WHERE id in (?)"
+      $conn->exec("UPDATE imports
+                   SET state = CASE
+                                WHEN state='loaded' THEN 'aloaded'
+                                WHEN state='processing' THEN 'aprocessing'
+                                ELSE 'apending'
+                               END
+                   WHERE id = ANY('{ $ids_list_as_string }'::int[])"
       );
-      $prepared_sql->execute(array($ids_list_as_string));
     }
 
     // Return the items object retrieved

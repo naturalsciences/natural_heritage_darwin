@@ -22,10 +22,16 @@ class ParsingIdentifications
     "NamedIndividual"=>""
   );
 
-  private $array_level = array('regnum' => 'domain','subregnum'  => 'kingdom', 'superphylum' => 'super_phylum','genusgroup' => 'genus',
-            'phylum' => 'phylum','subphylum' => 'sub_phylum','superclassis' => 'super_class','classis' => 'class',
-            'subclassis' => 'subclassis','superordo' => 'super_order','ordo' => 'order', 'subordo' => 'sub_order',
-            'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family','tribus' => 'tribe', 'variety' => 'variety');
+  private $array_level = array(
+                                'regnum' => 'domain','subregnum'  => 'kingdom',
+                                'superphylum' => 'super_phylum', 'phylum' => 'phylum','subphylum' => 'sub_phylum',
+                                'superclassis' => 'super_class','classis' => 'class', 'subclassis' => 'sub_class',
+                                'superordo' => 'super_order','ordo' => 'order', 'subordo' => 'sub_order',
+                                'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family',
+                                'tribus' => 'tribe',
+                                'genusgroup' => 'genus', 'unranked'=>'sub_genus',
+                                'variety' => 'variety'
+                              );
   private $rock_level = array(
     'lithology' => array('main group'=>'unit_main_group', 'main class'=>'unit_main_class','category'=>'unit_category',
                   'class'=> 'unit_class','clan'=>'unit_clan','group'=>'unit_group','subgroup'=>'unit_sub_group'),
@@ -33,7 +39,7 @@ class ParsingIdentifications
   );
   public $peoples = array(); // an array of Doctrine People class
   public $keyword; // an array of doctrine Keywords class
-  public $type_identified, $catalogue_parent, $fullname='', $determination_status=null, $higher_name,$higher_level,$level_name;
+  public $type_identified, $catalogue_parent, $fullname='', $determination_status=null, $higher_name, $higher_level, $level_name;
   public $scientificName = "",$people_type='identifier', $notion='taxonomy', $temp_array=array(), $classification=null, $informal=false;
 
   public function __construct()
@@ -78,19 +84,49 @@ class ParsingIdentifications
   // Return ne scientificName in FullScientificNameString tag, otherwise return a self built name with parent and keywords
   public function getCatalogueName()
   {
-    if(!$this->fullname) return $this->$scientificName ;
+    if(!$this->fullname) return $this->scientificName ;
     return $this->fullname ;
   }
 
-  public function checkNoSelfInParents($staging) {
+  /*
+   * @return string The level name in lower case of the last higherTaxon entry
+   */
+  public function getLastParentLevel() {
+    return strtolower($this->array_level[$this->higher_level]);
+  }
+
+  /*
+   * @return string The last higherTaxon entry
+   */
+  public function getLastParentName() {
+    return $this->higher_name;
+  }
+
+  /*
+   * Set the switch telling the fullname entry is an informal name or not
+   * @param bool $value Value used to tell if the entry is an informalNameString or not
+   */
+  public function setInformal($value) {
+    $this->informal = ($value);
+  }
+
+  /*
+   * Clean the staging['taxon_parents'] array to remove the last parent entry
+   * if the current one (staging['taxon_name'] and staging['taxon_level']) is stored as
+   * a parent entry
+   * @param Doctrine_Record $staging The Staging record passed
+   */
+  public function checkNoSelfInParents(Staging $staging) {
     if($this->notion == 'taxonomy') {
       if($staging["taxon_level_name"] != '' && isset( $this->catalogue_parent[$staging["taxon_level_name"]])) {
         unset($this->catalogue_parent[$staging["taxon_level_name"]]);
-      } else {
+      }
+      else {
         $last_lvl = null;
         foreach($this->array_level as $lvl){
-          if(isset($this->catalogue_parent[$lvl]))
+          if(isset($this->catalogue_parent[$lvl])) {
             $last_lvl = $lvl;
+          }
         }
         if($last_lvl) {
           $staging["taxon_level_name"] = $last_lvl;
@@ -102,8 +138,12 @@ class ParsingIdentifications
     }
   }
 
-  // return the Hstore parent
-  public function getCatalogueParent($staging)
+  /*
+   * Return the parent hierarchy stored in catalogue_parent
+   * (or the Hstore object stored in staging['taxon_parents']
+   * @param Doctrine_Record $staging The Staging record passed
+   */
+  public function getCatalogueParent(Staging $staging)
   {
     if($this->informal)
     {
@@ -146,12 +186,16 @@ class ParsingIdentifications
     }
   }
 
-  // save the identification and the associated identifiers
-  public function save($staging)
+  /*
+   * Save the identification and the associated identifiers
+   * @param Doctrine_Record $staging The Staging record passed to associate the identification record to
+   */
+  public function save(Staging $staging)
   {
+    $valueDefined = $this->getCatalogueName();
     $this->identification->fromArray(array('notion_concerned' => $this->notion,
                                            'determination_status'=>$this->determination_status,
-                                           'value_defined' => '-'
+                                           'value_defined' => $valueDefined
                                      )
     );
     $staging->addRelated($this->identification) ;
@@ -160,16 +204,20 @@ class ParsingIdentifications
   // save keywords in table
   public function handleKeyword($tag,$value,$staging)
   {
-    // not sure if it's usefull or not, if not, simply delete the line below and $this->keyword array
+    // Check that it's an authorized keyword for the domain encountered, if not do not create keyword...
     if (!in_array($tag,array_keys($this->known_keywords))) return ;
     if($this->known_keywords[$tag] != '') {
       $this->level_name = $this->known_keywords[$tag] ;
       if($value != '') {
-        if(! $this->catalogue_parent)
-          $this->catalogue_parent = new Hstore() ;
-
+        if(! $this->catalogue_parent) {
+          $this->catalogue_parent = new Hstore();
+        }
         $this->catalogue_parent[$this->known_keywords[$tag]] = $value ;
         $staging['taxon_parents'] = $this->catalogue_parent->export() ;
+      }
+      // If value empty... do not create keyword entry...
+      elseif ($value === "") {
+        return;
       }
     }
     $keyword = new ClassificationKeywords();

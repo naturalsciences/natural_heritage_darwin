@@ -97,17 +97,17 @@ EOF;
     }
     // Check we've got at least one import concerned - if not, no check, no do-import :)
     if(count($imports_ids)) {
+      $imports_ids_string = implode(',', $imports_ids);
       // Begin here the transactional process for the check-import
       $conn->beginTransaction();
-      // now let's check all checkable staging - the checkability is coming from list of id in imports array
-      $sql_prepared = $conn->prepare("SELECT fct_imp_checker_manager(s.*)
-                                      FROM staging s, imports i
-                                      WHERE s.import_ref=i.id
-                                        AND i.id IN (?)
-                                        AND i.state != 'aprocessing'");
       $this->logSection('checking', sprintf('Check %d : (%s) Start checking staging',$randnum,date('G:i:s')));
-      $imports_ids_string = implode(',', $imports_ids);
-      $sql_prepared->execute(array($imports_ids_string));
+      // now let's check all checkable staging - the checkability is coming from list of id in imports array
+      $conn->exec("SELECT fct_imp_checker_manager(s.*)
+                    FROM staging s, imports i
+                    WHERE s.import_ref=i.id
+                      AND i.id = ANY('{ $imports_ids_string }'::int[])
+                      AND i.state != 'aprocessing'"
+      );
       $this->logSection('checking', sprintf('Check %d : (%s) Checking ended',$randnum,date('G:i:s')));
       // Close here the transactional process responsible of either taxonomic import or 
       // of checking

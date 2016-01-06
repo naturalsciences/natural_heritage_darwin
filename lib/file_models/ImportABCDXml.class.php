@@ -112,12 +112,14 @@ class ImportABCDXml implements IImportModels
         case "Country" : $this->staging_tags[] = $this->object->addTagGroups() ;break;
         case "Database" : $this->object->desc .= "Database ref :".$this->cdata.";"  ; break;
         case "DateText" : $this->object->getDateText($this->cdata) ; break;
-        case "DateTime" : if($this->getPreviousTag() == "Gathering"){
+        case "DateTime" :
+          if($this->getPreviousTag() == "Gathering"){
             if( $this->object->getFromDate()) $this->staging["gtu_from_date"] = $this->object->getFromDate()->getDateTime() ;
             if( $this->object->getToDate()) $this->staging["gtu_to_date"] = $this->object->getToDate()->getDateTime() ;
             if( $this->object->getFromDate())$this->staging["gtu_from_date_mask"] =  $this->object->getFromDate()->getMask() ;
             if( $this->object->getToDate()) $this->staging["gtu_to_date_mask"] =  $this->object->getToDate()->getMask() ;
-          } ; break;
+          };
+          break;
         case "TimeOfDayBegin": if($this->getPreviousTag() == "DateTime"){
             $this->object->GTUdate['from'] .= " ".$this->cdata;
           }
@@ -136,15 +138,24 @@ class ImportABCDXml implements IImportModels
         case "dna:Tissue" : $this->property = new ParsingProperties("Tissue","DNA") ; $this->property->property->setLowerValue($this->cdata) ; $this->addProperty(true) ; break;
         case "dna:Preservation" : $this->addComment(false, "conservation_mean"); break;
         case "Duration" : $this->property->setDateTo($this->cdata) ; break;
-        
         case "FileURI" : $this->handleFileURI($this->cdata) ; break;
         case "Format" : $this->object->multimedia_data['type'] = $this->cdata ; break;
         case "FullName" : $this->people_name = $this->cdata ; break;
         case "efg:ScientificNameString": $this->object->fullname = $this->cdata ; break;
         case "FullScientificNameString" : $this->object->fullname = $this->cdata ; break;
+        case "InformalNameString" :
+          $this->object->fullname = $this->cdata ;
+          $this->object->setInformal(true);
+          $this->staging["taxon_name"] = $this->object->getLastParentName();
+          $this->staging["taxon_level_name"] = $this->object->getLastParentLevel();
+          break;
         case "MarkText" : $this->staging->setObjectName($this->cdata) ; break;
         case "efg:InformalLithostratigraphicName" : $this->addComment(true,"lithostratigraphy"); break;
-        case "Gathering" : if($this->object->staging_info!=null) $this->object_to_save[] = $this->object->staging_info; break;
+        case "Gathering" :
+          if( $this->object->staging_info !== null ) {
+            $this->object_to_save[] = $this->object->staging_info;
+          }
+          break;
         case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
         case "HigherTaxon" : $this->object->handleParent() ;break;;
         case "HigherTaxonName" : $this->object->higher_name = $this->cdata ; break;
@@ -187,12 +198,19 @@ class ImportABCDXml implements IImportModels
         case "efg:MineralRockIdentified" : $this->object->getCatalogueParent($this->staging) ; break;
         case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break;
         case "efg:NameComments" : $this->object->setNotion(strtolower($this->cdata)) ; break;
-        case "NameAddendum": if(stripos($this->cdata, 'Variety') !== false ) {
+        case "NameAddendum":
+          if(stripos($this->cdata, 'Variety') !== false ) {
             $this->object->level_name = 'variety' ;
             $this->object->catalogue_parent['variety'] =  $this->object->getCatalogueName() ;
-            $staging['taxon_parents'] = $this->object->catalogue_parent->export() ;
-            $this->object->higher_level = 'variety';  $this->object->handleParent();
-          } break;
+            /* Not sure these two lines are necessary because for me already added in the following function:
+               $this->object->checkNoSelfInParents($this->staging)
+               when hitting the endElement TaxonIdentified (line 151)
+               ... certain doubts on the second line whilst no higher_name is given
+             */
+            //$staging['taxon_parents'] = $this->object->catalogue_parent->export() ;
+            //$this->object->higher_level = 'variety';  $this->object->handleParent();
+          }
+          break;
         case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups(); break;
         case "Notes" : if($this->getPreviousTag() == "Identification") $this->addComment(true,"identifications") ; else $this->addComment() ;  break ;
         case "Parameter" : $this->property->property->setPropertyType($this->cdata); if($this->cdata == 'DNA size') $this->property->property->setAppliesTo('DNA'); break;
@@ -207,8 +225,10 @@ class ImportABCDXml implements IImportModels
         case "PreparationMaterials" : $this->preparation_mat = $this->cdata ; break;
         case "ProjectTitle" : $this->staging['expedition_name'] = $this->cdata ; break;
         case "RecordURI" : $this->addExternalLink($this->cdata) ; break;
-        case "ScientificName" : $this->staging["taxon_name"] = $this->object->getCatalogueName() ;
-                                $this->staging["taxon_level_name"] = strtolower($this->object->level_name) ;break;
+        case "ScientificName" :
+          $this->staging["taxon_name"] = $this->object->getCatalogueName() ;
+          $this->staging["taxon_level_name"] = strtolower($this->object->level_name) ;
+          break;
         case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break;
         case "Sex" : if(strtolower($this->cdata) == 'm') $this->staging->setIndividualSex('male') ;
                      elseif (strtolower($this->cdata) == 'f') $this->staging->setIndividualSex('female') ;
