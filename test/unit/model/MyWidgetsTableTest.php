@@ -1,6 +1,6 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(22, new lime_output_color());
 
 $userEvil = Doctrine::getTable('Users')->findOneByFamilyName('Evil')->getId();
 
@@ -138,12 +138,24 @@ $brol_user->save();
 
 $brol_user->addUserWidgets();
 
-
-$t->comment('->updateWigetsAvailabilityForRole()');  
+$t->comment('->updateWigetsAvailabilityForRole()');
 $t->is(count(Doctrine::getTable('MyWidgets')
         ->setUserRef($brol_user->getId())
         ->setDbUserType(Users::REGISTERED_USER)
         ->getWidgets('board_widget')),5,'6 board widgets but only 5 visible for a registered user');
+
+Doctrine_Query::create()
+  ->update("MyWidgets p")
+  ->set("p.collections", "',Molusca,'")
+  ->where("p.user_ref = ?", array($brol_user->getId()))
+  ->andWhere("p.category = ?", array("board_widget"))
+  ->andWhere("p.group_name = ?", array("workflowsSummary"))
+  ->execute();
+
+$t->is(count(Doctrine::getTable('MyWidgets')
+                     ->setUserRef($brol_user->getId())
+                     ->setDbUserType(Users::REGISTERED_USER)
+                     ->getWidgets('board_widget', "Molusca")),6,'6 board widgets if Molusca collection given');
 
 Doctrine::getTable('MyWidgets')->setUserRef($brol_user->getId())->updateWigetsAvailabilityForRole(Users::REGISTERED_USER, false) ;
 

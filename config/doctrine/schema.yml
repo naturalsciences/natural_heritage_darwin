@@ -14,7 +14,7 @@ People:
         id: { type: integer, notnull: true,primary: true, autoincrement: true}
         is_physical: { type: boolean, notnull: true}
         sub_type: { type: string }
-        formated_name: { type: string},
+        formated_name: { type: string}
         formated_name_indexed: { type: string}
         title: { type: string}
         family_name: { type: string, notnull: true}

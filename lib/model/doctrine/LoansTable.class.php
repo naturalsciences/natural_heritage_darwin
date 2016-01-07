@@ -45,18 +45,27 @@ class LoansTable extends DarwinTable
     return $q;
   }
 
-  public function syncHistory($id) {
 
-    $conn_MGR = Doctrine_Manager::connection();
-    $conn = $conn_MGR->getDbh();
-    $conn->exec('SELECT fct_cpy_loan_history('.intval($id).')');
+  /*
+   * Make a snapshot of the loans informations into the loans_history table
+   * @param int $id Identifier of the loan concerned
+   */
+  public function syncHistory($id) {
+    $conn = Doctrine_Manager::connection();
+    $conn->exec("SELECT fct_cpy_loan_history(?)", array(intval($id)));
   }
 
   public function fetchHistories($id) {
     $conn_MGR = Doctrine_Manager::connection();
     $conn = $conn_MGR->getDbh();
-    $statement = $conn->prepare('SELECT loan_ref, count(*) as items, modification_date_time as date FROM loan_history where loan_ref = :id group by
-      loan_ref, modification_date_time  order by modification_date_time desc');
+    $statement = $conn->prepare('SELECT loan_ref,
+                                        count(*) as items,
+                                        modification_date_time as date
+                                  FROM loan_history
+                                  WHERE loan_ref = :id
+                                  GROUP BY loan_ref, modification_date_time
+                                  ORDER BY modification_date_time desc'
+    );
     $statement->execute(array(':id' => $id));
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     return $results;
