@@ -208,7 +208,7 @@ Users:
         id: { type: integer, primary: true, autoincrement: true}
         is_physical: { type: boolean, notnull: true}
         sub_type: { type: string }
-        formated_name: { type: string},
+        formated_name: { type: string}
         formated_name_indexed: { type: string}
         title: { type: string}
         family_name: { type: string, notnull: true}
@@ -407,7 +407,7 @@ UsersTracking:
 InformativeWorkflow:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
-        record_id: { type: integer, notnull: true},
+        record_id: { type: integer, notnull: true}
         referenced_relation: { type: string, notnull: true}
         user_ref: { type: integer}
         formated_name: {type: string}
@@ -423,7 +423,7 @@ InformativeWorkflow:
 CollectionMaintenance:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
-        record_id: { type: integer, notnull: true},
+        record_id: { type: integer, notnull: true}
         referenced_relation: { type: string, notnull: true}
         people_ref: { type: integer, notnull: true}
         category: { type: string, notnull: true, default: action}

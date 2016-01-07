@@ -121,7 +121,6 @@ $browser->
                                               )
                                       )))
   )->
-    //with('form')->begin()->debug()->
   with('response')->begin()->
     isRedirected()->
   end()->
