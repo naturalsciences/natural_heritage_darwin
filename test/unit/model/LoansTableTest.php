@@ -13,6 +13,8 @@ $loan_history_count = $conn->fetchOne("SELECT count(*)
                                         WHERE loan_ref = 9"
                                       );
 $t->is($loan_history_count,0,'Number of snapshot entries taken for loan 9 is well "0"');
+$t->info("Creating a loan item for the loan number 9");
+$conn->execute("insert into loan_items (loan_ref, details) values(9, 'A little test')");
 $t->info('Taking snapshot of loan 9');
 Doctrine::getTable('Loans')->syncHistory(9);
 $t->info('Counting the number of elements snapshooted... should be 2: one for loans table and one for loan_items table');

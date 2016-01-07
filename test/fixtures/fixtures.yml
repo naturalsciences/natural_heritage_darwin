@@ -484,12 +484,6 @@ LoanStatus:
        comment: No need for a comment
        is_last: true
 
-LoanItems:
-    loi1:
-        id: 1
-        Loan: l9
-        details: 'A little test'
-
 LoanRights:
     lr1:
        id: 1
