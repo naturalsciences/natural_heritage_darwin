@@ -144,18 +144,36 @@ $t->is(count(Doctrine::getTable('MyWidgets')
         ->setDbUserType(Users::REGISTERED_USER)
         ->getWidgets('board_widget')),5,'6 board widgets but only 5 visible for a registered user');
 
-Doctrine_Query::create()
-  ->update("MyWidgets p")
-  ->set("p.collections", "',Molusca,'")
-  ->where("p.user_ref = ?", array($brol_user->getId()))
-  ->andWhere("p.category = ?", array("board_widget"))
-  ->andWhere("p.group_name = ?", array("workflowsSummary"))
-  ->execute();
+$widget_workflowsSummary = Doctrine_Query::create()
+                          ->from("MyWidgets p")
+                          ->where("p.user_ref = ?", array($brol_user->getId()))
+                          ->andWhere("p.category = ?", array("board_widget"))
+                          ->andWhere("p.group_name = ?", array("workflowsSummary"))
+                          ->fetchArray();
+
+$collection_mollusca =  Doctrine_Query::create()
+                          ->select("c.id")
+                          ->from("Collections c")
+                          ->where("c.name = ?", array("Molusca"))
+                          ->fetchArray();
+
+$t->info('Testing the "doUpdateWidgetRight" method');
+Doctrine::getTable('MyWidgets')
+  ->setUserRef($brol_user->getId())
+  ->setDbUserType(Users::REGISTERED_USER)
+  ->doUpdateWidgetRight($collection_mollusca[0]['id'],array($widget_workflowsSummary[0]['id']),'insert');
+
+$widget_workflowsSummary = Doctrine_Query::create()
+                                         ->from("MyWidgets p")
+                                         ->where("p.user_ref = ?", array($brol_user->getId()))
+                                         ->andWhere("p.category = ?", array("board_widget"))
+                                         ->andWhere("p.group_name = ?", array("workflowsSummary"))
+                                         ->fetchArray();
 
 $t->is(count(Doctrine::getTable('MyWidgets')
                      ->setUserRef($brol_user->getId())
                      ->setDbUserType(Users::REGISTERED_USER)
-                     ->getWidgets('board_widget', "Molusca")),6,'6 board widgets if Molusca collection given');
+                     ->getWidgets('board_widget', $collection_mollusca[0]['id'])),6,'6 board widgets if Molusca collection given');
 
 Doctrine::getTable('MyWidgets')->setUserRef($brol_user->getId())->updateWigetsAvailabilityForRole(Users::REGISTERED_USER, false) ;
 

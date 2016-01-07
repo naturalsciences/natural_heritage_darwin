@@ -218,24 +218,29 @@ class MyWidgetsTable extends DarwinTable
   }
   
   /**
-  * function called by WidgetRightform to add a specific collection_ref to a list of widget
-  * @param string $collection_ref collection to be added in collections field
-  * @param array $list_id list of widgets id witch where $collection_ref has to be inserted
-  * @param string $mode used to dtermine if the query is for adding a collection_ref or removing it
+  * function called by WidgetRightForm to add / remove a specific collection_ref to / from a list of widget
+  * @param string $collection_ref collection to be added in / removed from collections field
+  * @param array $list_id list of widget ids which for $collection_ref has to be inserted / removed from
+  * @param string $mode used to determine if the query is for adding a collection_ref or removing it
   */  
   public function doUpdateWidgetRight($collection_ref,$list_id=null, $mode=null)
   {
     $conn = Doctrine_Manager::connection();
     $q = "UPDATE my_widgets " ;
-    if($mode == 'insert') 
-      $q .= "SET collections= collections || '$collection_ref,' " ;      
-    else
-      $q .= "SET collections = regexp_replace(collections, E'\,$collection_ref\,', E'\,', 'g') " ;
-    if($list_id ==null)
-      $q .= "WHERE user_ref = ".$this->user_ref ;    
-    else
-      $q .= "WHERE (id in (".implode(',',$list_id).") AND user_ref = ".$this->user_ref.")" ;  
-    $result = $conn->fetchAssoc($q);  
+    if($mode == 'insert') {
+      $q .= "SET collections = collections || '$collection_ref,' ";
+    }
+    else {
+      $q .= "SET collections = regexp_replace(collections, E'\,$collection_ref\,', E'\,', 'g') ";
+    }
+    if($list_id === null) {
+      $q .= "WHERE user_ref = ? ";
+    }
+    else {
+      $ids_list_as_string = implode(',', $list_id);
+      $q .= "WHERE id = ANY('{ $ids_list_as_string }'::int[]) AND user_ref = ? ";
+    }
+    $conn->exec($q,array($this->user_ref));
     $conn->close() ; 
   }
  
