@@ -399,16 +399,35 @@ class SpecimensTable extends DarwinTable
     return array();
   }
 
-  public function findConservatories($user , $item, $cirterias) {
-    $sql = "SELECT COALESCE(".$item."::text,'') as item,  count(*) as ctn FROM Specimens s
-      WHERE  collection_ref in (select fct_search_authorized_view_collections(".$user->getId().'))';
-    $sql_params = array();
-    foreach($cirterias as $k => $v) {
-      $sql .= " AND COALESCE(".$k.", '') = ?";
+  /*
+   * For a given sort of "storage" ($item: building, floor, room, row, shelf, container, sub_container),
+   * for a list of collections availabe for the user passed as parameter and
+   * for a list of filtering applied (a selection of a given building for instance,...),
+   * return the list of entries found (type of storage asked - $item)
+   * @param object $user User object
+   * @param string $item Type of storage to be retrieved
+   * @param array $criterias An array of filtering criterias to be applied
+   * @return array A recordset of the list of type of storage given available, with, for each of them,
+   *               the count of specimens concerned
+   */
+  public function findConservatories($user , $item, $criterias) {
+
+    $sql = "SELECT COALESCE( $item ::text,'') as item,
+                   COUNT(*) as ctn
+            FROM Specimens s
+            WHERE  collection_ref IN (
+                                        SELECT fct_search_authorized_view_collections( ? )
+                                     )
+           ";
+    $sql_params = array($user->getId());
+    foreach($criterias as $k => $v) {
+      $sql .= " AND COALESCE( $k , '') = ? ";
       $sql_params[] = $v;
     }
-    $sql .= " GROUP BY item order by item asc";
-
+    $sql .= "
+              GROUP BY item
+              ORDER BY item ASC
+            ";
     $conn_MGR = Doctrine_Manager::connection();
     $conn = $conn_MGR->getDbh();
     $statement = $conn->prepare($sql);

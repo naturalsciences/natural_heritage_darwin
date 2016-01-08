@@ -44,13 +44,16 @@ class ImportsTable extends Doctrine_Table
     return $result;
   }
 
+  /*
+   * Clear a given import
+   * @param integer $id Id of import to clear
+   */
   public function clearImport($id)
   {
-
-    $q = Doctrine_Query::create()->Delete('staging s')
+    Doctrine_Query::create()->Delete('staging s')
       ->andwhere('import_ref = ? ',$id)
       ->execute();
-    $q = Doctrine_Query::create()->update('Imports')
+    Doctrine_Query::create()->update('Imports')
       ->andwhere('id = ? ',$id)
       ->set('state', '?','aborted')
       ->set('is_finished', '?',true)
@@ -115,7 +118,7 @@ class ImportsTable extends Doctrine_Table
   
   public function updateStatus($id)
   {
-    $q = Doctrine_Query::create() 
+    Doctrine_Query::create()
       ->update('Imports i')
       ->set('state', '?','loaded')
       ->update('Imports i')
