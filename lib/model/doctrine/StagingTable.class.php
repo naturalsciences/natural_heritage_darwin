@@ -26,12 +26,23 @@ class StagingTable extends DarwinTable
       return $this->createFlatDistinct('specimens', 'host_relationship', 'host_relationship')->execute();
   }
 
+  /**
+   * For an array of staging.id provided, get, for each of them, the count of usage in "related tables"
+   * @param array $record_ids Array of staging entries ids
+   * @return array An array with list of staging ids provided and the usage count in "related tables" for
+   *               each of them
+   */
   public function findLinked($record_ids)
   {
     if(! count($record_ids)) return array();
+    $record_ids_as_string = implode(',',$record_ids);
     $conn = Doctrine_Manager::connection();
-    $sql = "select record_id, count(*) as cnt FROM template_table_record_ref r where referenced_relation='staging' and 
-      record_id in (".implode(',',$record_ids).") GROUP BY record_id";
+    $sql = "SELECT record_id,
+                   count(*) as cnt
+            FROM template_table_record_ref r
+            WHERE referenced_relation='staging'
+              AND record_id = ANY('{ $record_ids_as_string }'::int[])
+            GROUP BY record_id";
     $result = $conn->fetchAssoc($sql);
     return $result;
   }

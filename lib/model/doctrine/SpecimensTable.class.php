@@ -399,7 +399,7 @@ class SpecimensTable extends DarwinTable
     return array();
   }
 
-  /*
+  /**
    * For a given sort of "storage" ($item: building, floor, room, row, shelf, container, sub_container),
    * for a list of collections availabe for the user passed as parameter and
    * for a list of filtering applied (a selection of a given building for instance,...),

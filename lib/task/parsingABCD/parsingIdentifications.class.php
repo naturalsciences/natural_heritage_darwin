@@ -88,21 +88,21 @@ class ParsingIdentifications
     return $this->fullname ;
   }
 
-  /*
+  /**
    * @return string The level name in lower case of the last higherTaxon entry
    */
   public function getLastParentLevel() {
     return strtolower($this->array_level[$this->higher_level]);
   }
 
-  /*
+  /**
    * @return string The last higherTaxon entry
    */
   public function getLastParentName() {
     return $this->higher_name;
   }
 
-  /*
+  /**
    * Set the switch telling the fullname entry is an informal name or not
    * @param bool $value Value used to tell if the entry is an informalNameString or not
    */
@@ -110,7 +110,7 @@ class ParsingIdentifications
     $this->informal = ($value);
   }
 
-  /*
+  /**
    * Clean the staging['taxon_parents'] array to remove the last parent entry
    * if the current one (staging['taxon_name'] and staging['taxon_level']) is stored as
    * a parent entry
@@ -138,7 +138,7 @@ class ParsingIdentifications
     }
   }
 
-  /*
+  /**
    * Return the parent hierarchy stored in catalogue_parent
    * (or the Hstore object stored in staging['taxon_parents']
    * @param Doctrine_Record $staging The Staging record passed
@@ -186,7 +186,7 @@ class ParsingIdentifications
     }
   }
 
-  /*
+  /**
    * Save the identification and the associated identifiers
    * @param Doctrine_Record $staging The Staging record passed to associate the identification record to
    */
