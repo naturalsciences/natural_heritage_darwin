@@ -12,9 +12,9 @@ function word2color($w){
   for ($i=1; $i<6; $i++) {
       #$r.= '">';// this is a depug mode, to see the color written
       $plus=0;
-      if ($plus_red<>0 and $i==0) $plus=$plus_red;
-      if ($plus_green<>0 and $i==2) $plus=$plus_green;
-      if ($plus_blue<>0 and $i==4) $plus=$plus_blue;
+      if ($plus_red<>0 && $i==0) $plus=$plus_red;
+      if ($plus_green<>0 && $i==2) $plus=$plus_green;
+      if ($plus_blue<>0 && $i==4) $plus=$plus_blue;
 
       $offset = round(strlen($w)/6*$i);
       $c= substr ($w, $offset, 1);
@@ -31,7 +31,7 @@ function help_ico($message, $sf_user)
   return '<div class="help_ico"><span>'.$message.'</span></div>';
 }
 
-/*
+/**
  * Construct the base url for given report
  * Return empty if not possible to construct
  * @return string the url constructed - empty if not possible

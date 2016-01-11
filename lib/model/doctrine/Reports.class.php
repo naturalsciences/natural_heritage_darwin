@@ -117,7 +117,7 @@ class Reports extends BaseReports
       ),
     );
 
-  /*
+  /**
    * Display the list of available reports
    * @param $user object The sfUser Object
    * @return array A subset of self::$reports - List of reports available
@@ -172,7 +172,7 @@ class Reports extends BaseReports
     $widget = self::getRequiredFieldForReport($data['name']) ;
     foreach($widget as $field => $name)
     {
-      if($field == 'date_from' OR $field == 'date_to')
+      if($field == 'date_from' || $field == 'date_to')
       {
         $dateTime = new FuzzyDateTime($data[$field], 56, true); 
         $param .= '"'.$field.'"=>"'.$dateTime->format('Y-m-d').'",' ;
