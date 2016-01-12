@@ -248,7 +248,6 @@ class smb {
           }
         } else {
           return false;
-//          trigger_error ("url_stat(): dir failed for path '{$pu['path']}'", E_USER_WARNING);
         }
         break;
       default: trigger_error ('error in URL', E_USER_ERROR);

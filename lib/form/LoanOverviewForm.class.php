@@ -13,7 +13,6 @@ class LoanOverviewForm extends sfForm
     {
       $form = new LoanItemsForm($childObject);
       $subForm->embedForm($index, $form);
-     // $subForm->getWidgetSchema()->setLabel($index, (string) $childObject);
     }
     $this->embedForm('LoanItems', $subForm);
 

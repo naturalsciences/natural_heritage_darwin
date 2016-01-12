@@ -5,7 +5,6 @@ class widgetFormTagEntry extends sfWidgetFormInput
   {                                                                      
     parent::configure($options, $attributes);                          
     $this->addRequiredOption('choices');                                 
-//     $this->addOption('method', '__toString');
   }
 
   function render($name, $value = null, $attributes = array(), $errors = array())
@@ -58,7 +57,6 @@ $(document).ready(function () {
   
   
   //REMOVE
-//  $('#%2\$s li img').live('click',remove_tag);
   $('#%2\$s img').click(remove_tag);
 
   function remove_tag() {

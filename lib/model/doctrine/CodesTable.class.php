@@ -74,9 +74,10 @@ class CodesTable extends DarwinTable
   */
   public function getCodesRelatedMultiple($table='specimens', $itemIds = array())
   {
-    if(!is_array($itemIds))
-      $specIds = array($itemIds);
-        if(empty($itemIds)) return array();
+    if(empty($itemIds)) return array();
+    if(!is_array($itemIds)) {
+      $itemIds = array ($itemIds);
+    }
     $q = Doctrine_Query::create()->
       select("record_id, code_category, concat( concat(COALESCE(code_prefix,''), COALESCE(code_prefix_separator,''),  COALESCE(code,'') ), 
         COALESCE(code_suffix_separator,''), COALESCE(code_suffix,'')) as full_code")->

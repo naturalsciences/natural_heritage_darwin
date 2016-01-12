@@ -146,7 +146,7 @@ class specimensearchActions extends DarwinActions
             $this->form->getValue('rec_per_page')
           );
           // Replace the count query triggered by the Pager to get the number of records retrieved
-          $count_q = clone $query;//$pager->getCountQuery();
+          $count_q = clone $query;
           // Remove from query the group by and order by clauses
           $count_q = $count_q->select('count(s.id)')->removeDqlQueryPart('orderby')->limit(0);
           if($this->form->with_group) {

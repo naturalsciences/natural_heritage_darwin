@@ -620,7 +620,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     ));
 
     // For compat only with old saved search
-    // FIXME: might be removed with a migration
+    // might be removed with a migration
     $this->validatorSchema['what_searched'] = new sfValidatorPass();
   }
 
@@ -642,7 +642,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   {
     if($notion != '' || $comment != '') {
       $query->innerJoin('s.SubComments c');
-      // $query->andWhere("c.referenced_relation = ? ",'specimens');
 
       $query->groupBy("s.id");
 

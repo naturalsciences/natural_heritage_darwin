@@ -127,7 +127,7 @@ class ImportCatalogueXml implements IImportModels
     }
   }
 
-  /*
+  /**
    * Get the level corresponding to a level name
    * @param string $level Name of level to get an id for
    * @return integer the id corresponding to the level passed as param
@@ -140,7 +140,7 @@ class ImportCatalogueXml implements IImportModels
     );
   }
 
-  /*
+  /**
    * Add a keyword in the classification keywords table
    * @param string $name Type of keyword to add
    */
@@ -152,6 +152,5 @@ class ImportCatalogueXml implements IImportModels
 
     $this->staging_catalogue->addRelated($classification_keyword);
   }
-
 
 }

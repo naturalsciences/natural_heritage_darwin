@@ -202,13 +202,6 @@ class ImportABCDXml implements IImportModels
           if(stripos($this->cdata, 'Variety') !== false ) {
             $this->object->level_name = 'variety' ;
             $this->object->catalogue_parent['variety'] =  $this->object->getCatalogueName() ;
-            /* Not sure these two lines are necessary because for me already added in the following function:
-               $this->object->checkNoSelfInParents($this->staging)
-               when hitting the endElement TaxonIdentified (line 151)
-               ... certain doubts on the second line whilst no higher_name is given
-             */
-            //$staging['taxon_parents'] = $this->object->catalogue_parent->export() ;
-            //$this->object->higher_level = 'variety';  $this->object->handleParent();
           }
           break;
         case "NamedArea" : $this->staging_tags[] = $this->object->addTagGroups(); break;

@@ -15,12 +15,10 @@ class ParsingMultimedia
       'http' => array(
           'proxy' => $proxy,
           'request_fulluri'=>true,
-          //'header' => array("Proxy-Authorization: Basic $auth")
       ),
       'ftp' => array(
           'proxy' => $proxy,
           'request_fulluri'=>true,
-          //'header' => array("Proxy-Authorization: Basic $auth")
       )
     );
     $context = stream_context_create($opts);
@@ -35,9 +33,9 @@ class ParsingMultimedia
     {
       case "http":
       case 'https':
-      case "ftp" : $temp_file = $this->copyDistantFile($file) ; break ;;
-      case "smb" : $this->copySmbFile($file) ; break ;;
-      default : break ;;
+      case "ftp" : $this->copyDistantFile($file) ; break ;
+      case "smb" : $this->copySmbFile($file) ; break ;
+      default : break ;
     }
   }
 
@@ -62,15 +60,16 @@ class ParsingMultimedia
 
   private function saveFile($src,$file)
   {
-    $dest = fopen('/tmp/temp_file','a') ;
+    $tempfilepath = sfConfig::get("dw_tempFilePath", "/tmp/temp_file");
+    $dest = fopen($tempfilepath,'a') ;
     if(stream_copy_to_stream($src,$dest))
     {
       $this->multimedia_data['uri'] = sha1(substr($file,strrpos($file,'/', strlen($file))).rand());
       $this->multimedia_data['title'] = substr($file, strrpos($file,'/')+1, strlen($file)) ;
       $this->multimedia_data['mime_type'] = mime_content_type('/tmp/temp_file');
       $this->multimedia_data['type'] = ".".array_search($this->multimedia_data['mime_type'],Multimedia::$allowed_mime_type) ;
-      if(!Multimedia::CheckMimeType($this->multimedia_data['mime_type'])) die('mauvais mime_type') ;//return (false) ;
-      rename('/tmp/temp_file',sfConfig::get('sf_upload_dir')."/multimedia/temp/".$this->multimedia_data['uri']);
+      if(!Multimedia::CheckMimeType($this->multimedia_data['mime_type'])) die('mauvais mime_type') ;
+      rename($tempfilepath,sfConfig::get('sf_upload_dir')."/multimedia/temp/".$this->multimedia_data['uri']);
     }
     else
       return (false) ;

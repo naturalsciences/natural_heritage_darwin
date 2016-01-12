@@ -114,10 +114,5 @@ class CollectionMaintenanceTable extends DarwinTable
       ->set('c.people_ref',$people['people_ref'])
       ->where('s.id = ?',$people['record_id']) ;
     return $q->execute() ;
-      $q = Doctrine_Query::create()
-      ->delete('Stagin')
-      ->set('c.people_ref',$people['people_ref'])
-      ->where('s.id = ?',$people['record_id']) ;
-    return $q->execute() ;
   }
 }

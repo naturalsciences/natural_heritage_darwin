@@ -50,4 +50,4 @@ order by collection_name, room, "row", shelf, case
       upper(coalesce(sub_container, ''))
     else
       upper(container)
-  end
+  end;

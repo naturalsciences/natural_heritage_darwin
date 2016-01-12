@@ -30,7 +30,6 @@ class ImportsFormFilter extends BaseImportsFormFilter
     );
     $this->widgetSchema['filename'] = new sfWidgetFormInputText() ;
     $this->widgetSchema['filename']->setAttributes(array('class'=>'small_size'));
- //   $this->widgetSchema['user_ref'] = new sfWidgetFormInputHidden() ;
     /* Labels */
     $this->widgetSchema->setLabels(array('collection_ref' => 'Collections',
                                          'filename' => 'Filename',

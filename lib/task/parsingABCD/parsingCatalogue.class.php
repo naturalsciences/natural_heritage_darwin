@@ -32,7 +32,7 @@ class ParsingCatalogue
       $this->level_name = $this->level[$this->catalogue][$level] ;
     }
   }
-  public function setAttribution($staging)
+  public function setAttribution(Staging $staging)
   {
     $staging->setLithoName($this->name) ;
     $staging->setLithoLevelName($this->level_name) ;

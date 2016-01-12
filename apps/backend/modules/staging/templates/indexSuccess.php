@@ -20,8 +20,8 @@
 
 </div>
 <script language="javascript">
-$(document).ready(function () {
-  $('.staging_filter').choose_form({});
-  $('#import_filter').submit();
-});
+  $(document).ready(function () {
+    $('.staging_filter').choose_form({});
+    $('#import_filter').submit();
+  });
 </script>

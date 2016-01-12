@@ -62,7 +62,6 @@ class ImportDnaXml implements IImportModels
   {  
     $xml = new DOMDocument();
     $xml->load($file) ;     
-//    if(!$xml->schemaValidate(sfConfig::get('sf_data_dir').'/import/import.xsd')) die('pas bon') ;
     $this->import_id = $id ;
     $msgs = $xml->documentElement;
     $this->createAndsaveStaging($msgs);

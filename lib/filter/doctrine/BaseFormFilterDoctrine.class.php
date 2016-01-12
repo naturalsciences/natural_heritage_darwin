@@ -150,7 +150,6 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       if(trim($query_part) == '')
       continue;
 
-//       $query_part = preg_replace('/[^A-Za-z0-9\-_]/', ' ', $query_part);
       $query_part = preg_replace('/[\(&\;\,\|\↑\€\←\↓\œ\→\?\.\\\'\"\)\$]/u', ' ', $query_part);
 
       if($i == 0)
@@ -235,7 +234,8 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       elseif ($val_from->getMask() > 0)
       {
         $sql = " (" . $dateFields[0] . " >= ? AND " . $dateFields[0] . "_mask > 0) ";
-        for ($i = 1; $i <= count($dateFields); $i++)
+        $dateFieldsCount = count($dateFields);
+        for ($i = 1; $i <= $dateFieldsCount; $i++)
         {
           $vals[] = $val_from->format('d/m/Y');
         }
@@ -247,7 +247,8 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       elseif ($val_to->getMask() > 0)
       {
         $sql = " (" . $dateFields[0] . " <= ? AND " . $dateFields[0] . "_mask > 0) ";
-        for ($i = 1; $i <= count($dateFields); $i++)
+        $dateFieldsCount = count($dateFields);
+        for ($i = 1; $i <= $dateFieldsCount; $i++)
         {
           $vals[] = $val_to->format('d/m/Y');
         }
@@ -403,7 +404,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       $conn = Doctrine_Manager::connection();
       $sql = "SELECT collection_ref from collections_rights where user_ref = :userid ";
-      if($with_writing == false)
+      if($with_writing === false)
         $sql .= "UNION select id as collection_ref from collections where is_public = true";
       else
         $sql .= " and db_user_type >= 2";

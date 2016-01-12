@@ -27,4 +27,4 @@ select distinct
            gtu_continent
        end as continent
 from gtu_continents
-order by continent
+order by continent;

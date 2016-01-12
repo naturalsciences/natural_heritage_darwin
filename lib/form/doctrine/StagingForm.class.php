@@ -18,21 +18,6 @@ class StagingForm extends BaseStagingForm
     if (in_array('operator',$array_of_field)) unset($array_of_field[array_search('operator', $array_of_field)]);
     if (in_array('relation_institution_ref',$array_of_field)) unset($array_of_field[array_search('relation_institution_ref', $array_of_field)]);
     $this->useFields($array_of_field) ;
-    /*if (in_array('spec_ref',$array_of_field))
-    {
-      $this->widgetSchema['spec_ref'] = new widgetFormCompleteButtonRef(array(
-         'model' => 'Staging',
-         'link_url' => 'specimen/choose',
-         'method' => 'getName',
-         'box_title' => $this->getI18N()->__('Choose Specimen'),
-         'nullable' => true,
-         'button_class'=>'',
-       ),
-        array('class'=>'inline',
-             )
-      );
-      $this->validatorSchema['spec_ref'] = new sfValidatorInteger(array('required'=>false, 'empty_value'=>0));
-    }*/
     /* Taxonomy Reference */
     if(in_array('taxon_ref',$this->options['fields']))
     {

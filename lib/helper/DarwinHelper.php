@@ -25,7 +25,7 @@ function word2color($w){
   return $r;
 }
 
-function help_ico($message, $sf_user)
+function help_ico($message, sfOutputEscaperObjectDecorator $sf_user)
 {
   if(! $sf_user->getHelpIcon()) return '';
   return '<div class="help_ico"><span>'.$message.'</span></div>';
@@ -36,6 +36,8 @@ function help_ico($message, $sf_user)
  * Return empty if not possible to construct
  * @return string the url constructed - empty if not possible
  * @param string $name name of report
+ * @param string $lang language of report
+ * @param string $format format of report (pdf, odt,...)
  */
 function constructReportBaseUrl($name, $lang, $format){
 
@@ -130,3 +132,4 @@ function constructReportBaseUrl($name, $lang, $format){
 }
 
 ?>
+
