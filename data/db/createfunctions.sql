@@ -2522,9 +2522,6 @@ BEGIN
 
   result_nbr := 0;
   IF catalogue_table = 'mineralogy' THEN
-    /*
-     * @ToDo: We'll need to evaluate if we keep the fuzzyness here or if we apply the same as it's for the other catalogues (=)
-     */
     OPEN ref FOR EXECUTE 'SELECT * FROM ' || catalogue_table || ' t
     INNER JOIN catalogue_levels c on t.level_ref = c.id
     WHERE name_indexed like fullToIndex(' || quote_literal( field_name) || ') || ''%'' AND  level_sys_name = CASE WHEN ' || quote_literal(field_level_name) || ' = '''' THEN level_sys_name ELSE ' || quote_literal(field_level_name) || ' END

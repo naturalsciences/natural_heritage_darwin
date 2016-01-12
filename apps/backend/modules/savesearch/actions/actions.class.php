@@ -159,7 +159,7 @@ class savesearchActions extends sfActions
         try{
           $this->form->save();
           $search = $this->form->getObject();
-          if($search->getIsOnlyId()==true)
+          if( $search->getIsOnlyId() === true )
             $this->getUser()->clearPinned($this->form->getValue('subject'));
 
           return $this->renderText('ok,' . $search->getId());

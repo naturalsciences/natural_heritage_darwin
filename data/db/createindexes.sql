@@ -172,8 +172,6 @@ CREATE INDEX CONCURRENTLY idx_gin_trgm_bibliography_title on bibliography using 
 CREATE INDEX CONCURRENTLY idx_gin_multimedia_search_indexed on multimedia using gin(search_indexed gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_gin_gtu_tags_values on gtu using gin(tag_values_indexed);
 
-/*** @TODO:Additional BTree Indexes created to fasten application ***/
-
 /*** FullText ***/
 CREATE INDEX CONCURRENTLY idx_tags_trgm ON tags USING gin(tag gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_tool_trgm ON collecting_tools USING gin(tool gin_trgm_ops);

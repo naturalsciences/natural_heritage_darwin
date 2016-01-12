@@ -48,7 +48,6 @@ class gtuActions extends DarwinActions
 
       if ($this->form->isValid())
       {
-        //@TODO: We need to refactor and avoid doing too much queries when format is xml
         $query = $this->form->getQuery();
         if($request->getParameter('format') == 'json' || $request->getParameter('format') == 'text')
         {

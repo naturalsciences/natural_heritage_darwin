@@ -14,7 +14,7 @@ class loanitemwidgetComponents extends sfComponents
   {
     if(! isset($this->form) )
     {
-      if(isset($this->eid) && $this->eid != null)
+      if(isset($this->eid) && $this->eid !== null)
       {
         $loanitem = Doctrine::getTable('LoanItems')->find($this->eid);
         $this->form = new LoanItemWidgetForm($loanitem);

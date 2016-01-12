@@ -2,7 +2,7 @@
 <div class="page">
 <h1><?php echo __('Sampling location search');?></h1>
 
-<?php if($sf_params->get('with_js') == true):?>
+<?php if($sf_params->get('with_js') === true):?>
 
 <script language="javascript">
 $(document).ready(function () {
