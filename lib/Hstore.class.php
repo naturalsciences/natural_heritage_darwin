@@ -3,7 +3,8 @@ class Hstore extends ArrayObject{
 
   public function import($ar)
   {
-    $store = json_decode('{'.preg_replace("/\"=>\"/i","\":\"",$ar).'}', true);
+    //$store = json_decode('{'.preg_replace("/\"=>\"/i","\":\"",$ar).'}', true);
+    eval("\$store = array({$ar});");
     $this->exchangeArray($store);
   }
 
