@@ -6984,7 +6984,7 @@
       </trans-unit>
       <trans-unit id="1745">
         <source>warning_spec_msg</source>
-        <target>&lt;strong&gt;Waarschuwing!&lt;/strong&gt;&lt;br /&gt; Deze fouten kunnen niet gecorrigeerd worden, de beste methode om ze te verwijderen, is uw import te verwijderen, uw xml te corrigeren en het bestand opnieuw te importeren. U kunt uw import ook verderzetten maar de bovenstaande informatie zal ontbreken. Wat wenst u te doen ?</target>
+        <target>&lt;strong&gt;Waarschuwing!&lt;/strong&gt;&lt;br /&gt; Deze foutmeldingen kunnen niet worden gecorrigeerd.&lt;br /&gt;U kan best uw import verwijderen, het XML-bestand corrigeren en opnieuw importeren.&lt;br /&gt;U kan eveneens het importeren vervolgen, maar u zal bovenstaande informatie verliezen.&lt;br /&gt;Als het probleem is verkeerde versie, wij kunnen alleen maar raden U het applicatie beheerder contact opnamen&lt;br /&gt;Wat wenst u te doen?</target>
         
       </trans-unit>
       <trans-unit id="1746">

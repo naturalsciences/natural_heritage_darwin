@@ -44,7 +44,7 @@ class ImportsTable extends Doctrine_Table
     return $result;
   }
 
-  /*
+  /**
    * Clear a given import
    * @param integer $id Id of import to clear
    */

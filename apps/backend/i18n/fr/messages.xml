@@ -6985,7 +6985,7 @@
       </trans-unit>
       <trans-unit id="1745">
         <source>warning_spec_msg</source>
-        <target>&lt;strong&gt;Attention !&lt;/strong&gt;&lt;br/&gt;Ces erreurs ne peuvent être corrigées.&lt;br/&gt;Le meilleur moyen d'y parvenir est de supprimer votre import, corriger votre fichier XML et de réimporter. Vous pouvez aussi continuer votre import mais vous perdrez alors les informations ci-dessus. Que souhaitez-vous faire ?</target>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt; Ces erreurs ne peuvent pas être corrigées, Le meilleur moyen de les corriger est de supprimer votre import, corriger votre fichier XML, et réimporter.&lt;br /&gt;Vous pouvez aussi continuer votre import mais vous perdrez alors les informations ci-dessus.&lt;br /&gt;Si l'erreur mentionnée est un problème de version, nous vous encourageons à prendre contact avec votre gestionnaire d'application.&lt;br /&gt;Que souhaitez vous faire ?</target>
         
       </trans-unit>
       <trans-unit id="1746">
