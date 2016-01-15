@@ -5589,7 +5589,7 @@
       </trans-unit>
       <trans-unit id="1745">
         <source>warning_spec_msg</source>
-        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove them, is to delete your import, correct your XML file and import it again. You can also continue your import but you won't have the information above. What do you want to do ?</target>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove them, is to delete your import, correct your XML file and import it again.&lt;/br&gt;You can also continue your import but you won't have the information above.&lt;br /&gt;If the error mentioned is a version problem we warmly encourage you to contact your application administrator&lt;br /&gt;What would you like to do ?</target>
       </trans-unit>
       <trans-unit id="1746">
         <source>Continue import</source>
