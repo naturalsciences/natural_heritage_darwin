@@ -191,11 +191,22 @@ class ImportABCDXml implements IImportModels
               } break;
         case "MeasurementOrFactText" : $this->addComment() ; break;
         case "MineralColour" : $this->staging->setMineralColour($this->cdata) ; break;
-        case "efg:MineralRockClassification" : if($this->getPreviousTag() == "efg:MineralRockGroup") {$this->object->higher_level = strtolower($this->cdata);}
-        elseif($this->getPreviousTag() == "efg:MineralRockNameAtomised") {$this->object->classification = strtolower($this->cdata);} break;
+        case "efg:MineralRockClassification" :
+          if($this->getPreviousTag() == "efg:MineralRockGroup") {
+            $this->object->higher_level = strtolower($this->cdata);
+          }
+          elseif($this->getPreviousTag() == "efg:MineralRockNameAtomised") {
+            $this->object->classification = strtolower($this->cdata);
+          }
+          break;
         case "efg:MineralRockGroup" : $this->object->handleRockParent() ; break;
         case "efg:MineralRockGroupName" : $this->object->higher_name = $this->cdata ; break;
-        case "efg:MineralRockIdentified" : $this->object->getCatalogueParent($this->staging) ; break;
+        case "efg:MineralRockIdentified" :
+          $this->object->getCatalogueParent( $this->staging ) ;
+          if ($this->object->notion !== 'mineralogy') {
+            $this->object->checkNoSelfInParents($this->staging);
+          }
+          break;
         case "Name" : if($this->getPreviousTag() == "Country") $this->object->tag_value=$this->cdata ; break;
         case "efg:NameComments" : $this->object->setNotion(strtolower($this->cdata)) ; break;
         case "NameAddendum":
