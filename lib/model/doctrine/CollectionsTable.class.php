@@ -159,12 +159,19 @@ class CollectionsTable extends DarwinTable
 
   public function afterSaveAddCode($collectionId,$specimenId) 
   {
-    $conn = Doctrine_Manager::connection();
-    $conn->quote($collectionId, 'integer');
-    $conn->quote($specimenId, 'integer');
-    $conn->getDbh()->exec('BEGIN TRANSACTION;');
-    $conn->getDbh()->exec("SELECT fct_after_save_add_code($collectionId, $specimenId)");
-    $conn->getDbh()->exec('COMMIT;');
+    if (
+      $collectionId !== null &&
+      $collectionId !== '' &&
+      $specimenId !== null &&
+      $specimenId !== ''
+    ) {
+      $conn = Doctrine_Manager::connection();
+      $conn->quote($collectionId, 'integer');
+      $conn->quote($specimenId, 'integer');
+      $conn->getDbh()->exec('BEGIN TRANSACTION;');
+      $conn->getDbh()->exec("SELECT fct_after_save_add_code($collectionId, $specimenId)");
+      $conn->getDbh()->exec('COMMIT;');
+    }
     return 0;
   }
 }
