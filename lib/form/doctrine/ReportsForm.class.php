@@ -123,7 +123,7 @@ class ReportsForm extends BaseReportsForm
                                                                             )
                                                                        );
       $this->validatorSchema[ 'catalogue_type' ] = new sfValidatorChoice(array ('choices' => array_keys($widgets_options[ 'catalogue_type' ]['values'])));
-      // @ ToDo find a way to get the appropriate generated id for this widget
+      // @ToDo find a way to get the appropriate generated id for this widget
       $attached_to_id = 'reports_catalogue_type';
     }
 
@@ -181,7 +181,7 @@ class ReportsForm extends BaseReportsForm
      * Loan ID
      */
 
-    if($this->getOption( 'with_js', false ) == true && !empty($default_vals['loan_id'])) {
+    if($this->getOption( 'with_js', false ) === true && !empty($default_vals['loan_id'])) {
       $this->widgetSchema[ 'loan_id' ] = new sfWidgetFormInputHidden(array('default'=>$default_vals['loan_id']));
     }
     else {

@@ -15,7 +15,7 @@ class CatalogueRelationshipsTable extends DarwinTable
       ->andWhere('t.id=r.record_id_2')
       ->setHydrationMode(Doctrine::HYDRATE_NONE);
 
-    if($type != null)
+    if($type !== null)
       $q->andWhere('r.relationship_type = ?',$type);
 
     $items = $q->execute();

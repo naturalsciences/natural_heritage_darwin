@@ -131,7 +131,7 @@ class MyWidgetsTable extends DarwinTable
         ->andWhere('p.is_available = true') ;
     if ($this->db_user_type == Users::REGISTERED_USER) 
     {
-      if($collection != null) {
+      if($collection !== null) {
         $q->andWhere("(p.all_public = true OR p.collections like ?)",array("%,".trim($collection, "%,").",%"));
       }
       else {

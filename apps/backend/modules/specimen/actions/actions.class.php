@@ -255,7 +255,7 @@ class specimenActions extends DarwinActions
         }
         $specimen = $form->save();
         if ($wasNew || $autoCodeForUpdate) {
-          $response = Doctrine::getTable('Collections')->afterSaveAddCode($specimen->getCollectionRef(), $specimen->getId());
+          Doctrine::getTable('Collections')->afterSaveAddCode($specimen->getCollectionRef(), $specimen->getId());
         }
         $this->redirect('specimen/edit?id='.$specimen->getId());
       }
@@ -455,10 +455,10 @@ class specimenActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
 
     //We edit a maintenance
-    if($request->getParameter('id', null) != null)
+    if($request->getParameter('id', null) !== null)
       $maint = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id'));
     //We add a maintenance
-    elseif($request->getParameter('rid', null) != null) {
+    elseif($request->getParameter('rid', null) !== null) {
       $maint = new CollectionMaintenance();
       $maint->setRecordId($request->getParameter('rid'));
       $maint->setReferencedRelation('specimens');

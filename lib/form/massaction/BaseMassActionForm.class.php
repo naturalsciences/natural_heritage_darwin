@@ -122,7 +122,7 @@ class BaseMassActionForm extends sfFormSymfony
       $actions_values = $this->getValue('MassActionForm');
 
       $query = Doctrine_Query::create()->update('Specimens s');
-      if($is_admin == false)
+      if($is_admin === false)
         $query->andWhere('s.id in (select fct_filter_encodable_row(?,?,?))', array(implode(',',$this->getValue('item_list')),'spec_ref', $user_id));
       else
         $query->andWhere('s.id in ('. implode(',',$this->getValue('item_list')) .')');
