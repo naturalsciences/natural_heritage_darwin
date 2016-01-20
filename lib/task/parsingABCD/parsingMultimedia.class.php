@@ -68,7 +68,7 @@ class ParsingMultimedia
       $this->multimedia_data['title'] = substr($file, strrpos($file,'/')+1, strlen($file)) ;
       $this->multimedia_data['mime_type'] = mime_content_type('/tmp/temp_file');
       $this->multimedia_data['type'] = ".".array_search($this->multimedia_data['mime_type'],Multimedia::$allowed_mime_type) ;
-      if(!Multimedia::CheckMimeType($this->multimedia_data['mime_type'])) die('mauvais mime_type') ;
+      if(!Multimedia::CheckMimeType($this->multimedia_data['mime_type'])) throw new Exception('mauvais mime_type');
       rename($tempfilepath,sfConfig::get('sf_upload_dir')."/multimedia/temp/".$this->multimedia_data['uri']);
     }
     else
