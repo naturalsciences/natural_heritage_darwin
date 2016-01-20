@@ -480,5 +480,6 @@ class smb_stream_wrapper extends smb {
 # Register 'smb' protocol !
 ###################################################################
 
-stream_wrapper_register('smb', 'smb_stream_wrapper')
-  or die ('Failed to register protocol');
+if ( stream_wrapper_register('smb', 'smb_stream_wrapper') === false ) {
+  throw new Exception ('Failed to register protocol');
+}
