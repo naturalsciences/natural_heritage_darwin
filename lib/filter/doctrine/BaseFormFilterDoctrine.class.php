@@ -363,10 +363,12 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
   {
     if($item_ref != 0)
     {
+
+      // Put the item_ref passed into an array
+      $items = array($item_ref);
+
       // If we've got to include also the synonyms of the item_ref passed...
       if (($relation == 'child' || $relation == 'direct_child') && $parent_syn_included === true ) {
-        // Put the item_ref passed into an array
-        $items = array($item_ref);
         // Initialize the where clause string and array of parameters for the
         // relation 'child'
         $whereClause = '';
