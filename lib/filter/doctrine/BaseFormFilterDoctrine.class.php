@@ -359,22 +359,47 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     return $query ;
   }
 
-  public function addCatalogueRelationColumnQuery($query, $item_ref, $relation, $table, $field_prefix)
+  public function addCatalogueRelationColumnQuery($query, $item_ref, $relation, $table, $field_prefix, $parent_syn_included = false)
   {
     if($item_ref != 0)
     {
+      // If we've got to include also the synonyms of the item_ref passed...
+      if (($relation == 'child' || $relation == 'direct_child') && $parent_syn_included === true ) {
+        // Put the item_ref passed into an array
+        $items = array($item_ref);
+        // Initialize the where clause string and array of parameters for the
+        // relation 'child'
+        $whereClause = '';
+        $whereClauseParams = array();
+        // Get the list of synonyms ids
+        $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
+        // If there are synonyms...
+        if (count($synonyms) != 0) {
+          // merge the result with the initialized array
+          $items = array_unique(array_merge($items, $synonyms));
+        }
+      }
+
       if($relation == 'equal')
       {
         $query->andWhere($field_prefix."_ref = ?", $item_ref);
       }
       elseif($relation == 'child')
       {
-        $item  = Doctrine::getTable($table)->find($item_ref);
-        $query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
+        $list_of_items = implode(',',$items);
+        $item  = Doctrine::getTable($table)->findBySql("id = ANY('{ $list_of_items }' :: int[])");
+        foreach ($item as $element) {
+          $whereClause .= "OR ${field_prefix}_path like ? ";
+          $whereClauseParams[] = $element->getPath().$element->getId().'/%';
+        }
+        if ( $whereClause != '') {
+          $whereClause = ltrim($whereClause, 'OR');
+          $query->andWhere($whereClause, $whereClauseParams);
+        }
       }
       elseif($relation == 'direct_child')
       {
-        $query->andWhere($field_prefix."_parent_ref = ?",$item_ref);
+        $query->andWhereIn($field_prefix."_parent_ref",$items);
       }
       elseif($relation =='synonym')
       {
