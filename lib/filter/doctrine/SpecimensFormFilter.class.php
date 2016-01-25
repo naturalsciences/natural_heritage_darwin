@@ -677,22 +677,32 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       if( (float)$values['lon_to'] < (float) $values['lon_from']) {
 
         $query->andWhere("
-          ( station_visible = true AND box('$horizontal_box') @> gtu_location AND NOT box('$vert_box') @> gtu_location )
-        OR
-          ( station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
-            AND box('$horizontal_box') @> gtu_location AND NOT box('$vert_box') @> gtu_location
+          ( station_visible = true
+            AND box('$horizontal_box') @> gtu_location
+            AND NOT box('$vert_box') @> gtu_location
+          )
+          OR
+          ( station_visible = false
+            AND collection_ref IN (".implode(',',$this->encoding_collection).")
+            AND box('$horizontal_box') @> gtu_location
+            AND NOT box('$vert_box') @> gtu_location
           )"
         );
         $query->whereParenWrap();
 
       } else {
         $query->andWhere("
-          ( station_visible = true AND box('$horizontal_box') @> gtu_location AND box('$vert_box') @> gtu_location )
-        OR
-          ( station_visible = false AND collection_ref in (".implode(',',$this->encoding_collection).")
-            AND box('$horizontal_box') @> gtu_location AND box('$vert_box') @> gtu_location
+          ( station_visible = true
+            AND box('$horizontal_box') @> gtu_location
+            AND box('$vert_box') @> gtu_location
           )
-        ");
+          OR
+          ( station_visible = false
+            AND collection_ref IN (".implode(',',$this->encoding_collection).")
+            AND box('$horizontal_box') @> gtu_location
+            AND box('$vert_box') @> gtu_location
+          )"
+        );
         $query->whereParenWrap();
       }
       $query->andWhere('gtu_location is not null');
@@ -1157,7 +1167,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     if(!empty($values['collection_ref'])) {
       $this->cols = array_intersect($values['collection_ref'], $this->cols);
     }
-    $query->andwhere('collection_ref in ( '.implode(',',$this->cols). ') ');
+    $query->andwhereIn('collection_ref ', $this->cols);
     if(!empty($values['specimen_status'])) $query->andwhere('specimen_status = ?',$values['specimen_status']) ; 
     if ($values['count_operator'] != '' && $values['count'] != '')
     {

@@ -190,7 +190,6 @@ class specimensearchActions extends DarwinActions
   protected function loadRelated()
   {
     $spec_list = array();
-    $part_list = array() ;
     foreach($this->specimensearch as $key=>$specimen){
       $spec_list[] = $specimen->getId() ;
     }
