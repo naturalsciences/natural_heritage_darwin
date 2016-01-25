@@ -142,7 +142,7 @@
             item_row.find('.tree').html(html).slideDown();
           });
         }
-        $('.tree').slideUp();
+        item_row.find('.tree').slideUp();
       });
 
     });
