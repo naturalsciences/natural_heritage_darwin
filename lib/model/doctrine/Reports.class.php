@@ -115,6 +115,36 @@ class Reports extends BaseReports
           'at_least' => Users::REGISTERED_USER
         ),
       ),
+      'stats_encoders_encoding' => array(
+        'name_fr' => "Statistiques encodeurs",
+        'name_nl' => "Encodeurs statistieken",
+        'name_en' => "Encoders statistics",
+        'format' => array('pdf'=>'pdf','xls'=>'xls'),
+        'widgets' => array('collection_ref' => 'Top Collection',
+                           'users_array' => 'Encoder',
+                           'date_from' => 'Date from',
+                           'date_to' => 'Date to',
+                           'lang' => 'Language'
+        ),
+        'widgets_options' => array(
+          'collection_ref' => array(),
+          'users_array' => array(),
+          'date_from' => array(),
+          'date_to' => array(),
+          'lang' => array(
+            'default_value' => 'en',
+            'values' => array(
+              'nl' => 'Dutch',
+              'en' => 'English',
+              'fr' => 'French'
+            )
+          ),
+        ),
+        'fast' => true,
+        'rights' => array(
+          'at_least' => Users::ENCODER
+        ),
+      ),
     );
 
   /**

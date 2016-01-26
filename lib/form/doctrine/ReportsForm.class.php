@@ -103,7 +103,7 @@ class ReportsForm extends BaseReportsForm
         'from_date' => false,                       
         'min' => $minDate,                         
         'max' => $maxDate,
-        'empty_value' => $dateLowerBound,
+        'empty_value' => $dateUpperBound,
       ),
       array('invalid' => 'Date provided is not valid')
     );
@@ -123,8 +123,8 @@ class ReportsForm extends BaseReportsForm
                                                                             )
                                                                        );
       $this->validatorSchema[ 'catalogue_type' ] = new sfValidatorChoice(array ('choices' => array_keys($widgets_options[ 'catalogue_type' ]['values'])));
-      // @ToDo find a way to get the appropriate generated id for this widget
-      $attached_to_id = 'reports_catalogue_type';
+      $form_name = $this->getName();
+      $attached_to_id = $form_name . '_catalogue_type';
     }
 
     /*
@@ -233,6 +233,39 @@ class ReportsForm extends BaseReportsForm
                                                                                    'multiple' => true
                                                                                  ));
     }
+
+    /*##########################################################################
+     * Encoders statistics forms fields
+     *##########################################################################
+     */
+
+    if ( isset($widgets_options['users_array']) && $this->getOption('current_user', null) !== null ) {
+      $this->widgetSchema[ 'users_array' ] = new sfWidgetFormDarwinDoctrineChoice(
+        array(
+          'model' => 'Users',
+          'table_method' => array(
+                                  'method'=>'getRestrictedEncodersList',
+                                  'parameters'=>array(
+                                    $this->getOption('current_user')
+                                  )
+                                 ),
+          'multiple' => true,
+          'default' => 0
+        )
+      );
+      $choices = $this->widgetSchema[ 'users_array' ]->getChoices();
+      $this->validatorSchema[ 'users_array' ] = new sfValidatorChoice(
+        array(
+          'choices' => array_keys($choices),
+          'multiple' => true
+        )
+      );
+    }
+
+    /*##########################################################################
+     * Multiple use cases forms fields
+     *##########################################################################
+     */
 
     /*
      * Language

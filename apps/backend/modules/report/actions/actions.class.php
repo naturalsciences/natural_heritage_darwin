@@ -86,7 +86,8 @@ class reportActions extends DarwinActions
                                                'name' => $name,
                                                'model_name' => $request->getParameter('catalogue','taxonomy'),
                                                'with_js' => $request->getParameter('with_js',false),
-                                               'default_vals' => $default_vals
+                                               'default_vals' => $default_vals,
+                                               'current_user' => $this->getUser()
                                               )
       ) ;
       if($request->getParameter('widgetButtonRefMultipleRefresh', '')=='1') {
@@ -139,7 +140,8 @@ class reportActions extends DarwinActions
                                                'name' => $name,
                                                'model_name' => $request->getParameter('catalogue','taxonomy'),
                                                'with_js' => $request->getParameter('with_js',false),
-                                               'default_vals' => $default_vals
+                                               'default_vals' => $default_vals,
+                                               'current_user' => $this->getUser()
                                         )
       );
       $this->form->bind($request->getParameter($this->form->getName()));

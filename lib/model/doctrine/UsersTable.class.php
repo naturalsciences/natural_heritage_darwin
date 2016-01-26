@@ -75,6 +75,7 @@ class UsersTable extends DarwinTable
 
     return $q->fetchOne(); 
   }
+
   public function getDistinctTitle()
   {
       return $this->createFlatDistinct('users', 'title', 'title')->execute();
@@ -124,5 +125,35 @@ class UsersTable extends DarwinTable
           ->andWhere('ul.login_type = ?', $type)
           ->andWhere('uc.comm_type = ?', 'e-mail');
     return $q->fetchOne();
+  }
+
+  /**
+   * Get list of encoders and conservators available if at least conservator
+   * Get the list of himself if encoder ... Otherwise sends nothing
+   * @param myUser $user A doctrine myUser class object containing informations about the current user
+   * @return mixed[] A collection of users entries
+   */
+  public function getRestrictedEncodersList(myUser $user) {
+    $result = array();
+    $q = Doctrine_Query::create()
+        ->select('u.id')
+        ->addSelect('u.formated_name')
+        ->from('Users u')
+        ->where('u.db_user_type >= 2')
+        ->orderBy('u.formated_name_indexed');
+    if ($user->isA(Users::ENCODER)) {
+      $q->addWhere('u.id = ?', array($user->getId()));
+    }
+    elseif (! ( $user->isAtLeast( Users::MANAGER ) ) ) {
+      return $result;
+    }
+    else {
+      $result[] = $this->getI18N()->__('All');
+    }
+    $results = $q->fetchArray();
+    foreach ( $results as $results_item ) {
+      $result[$results_item['id']] = $results_item['formated_name'];
+    }
+    return $result;
   }
 }
