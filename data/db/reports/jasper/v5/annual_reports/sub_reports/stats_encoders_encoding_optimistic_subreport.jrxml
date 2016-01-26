@@ -30,16 +30,16 @@ from stats_encoders_encoding_optimistics(
 	<field name="new_species" class="java.lang.Long"/>
 	<columnHeader>
 		<band height="46" splitType="Stretch">
-			<staticText>
-				<reportElement uuid="db6d3630-2a5f-4991-b01e-8ee3c079269b" x="0" y="0" width="346" height="22"/>
-				<box topPadding="0" leftPadding="2" bottomPadding="0"/>
+			<textField>
+				<reportElement uuid="1b9d40ff-f3d1-484e-86f4-37736ae8459f" x="0" y="0" width="420" height="22"/>
+				<box leftPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Optimistic count: all updates in the period asked:]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[( $P{lang}=="en" ? "Optimistic count - all updates for period:" : ( $P{lang}=="fr" ? "Comptage optimiste - toutes les mises-à-jour pour la période:" : ( $P{lang}=="nl" ? "Optimistische rekening - alle updates voor het periode:" : "Optimistic count - all updates for period:" ) ) )]]></textFieldExpression>
+			</textField>
 			<textField>
-				<reportElement uuid="1b9d40ff-f3d1-484e-86f4-37736ae8459f" x="346" y="0" width="456" height="22"/>
+				<reportElement uuid="1b9d40ff-f3d1-484e-86f4-37736ae8459f" x="420" y="0" width="382" height="22"/>
 				<box leftPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
@@ -54,97 +54,76 @@ from stats_encoders_encoding_optimistics(
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<staticText>
-					<reportElement uuid="3df7befa-8136-4e78-a031-037168a8cf45" mode="Opaque" x="0" y="0" width="85" height="24" forecolor="#FFFFFF" backcolor="#666666"/>
-					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-						<topPen lineWidth="0.0" lineColor="#000000"/>
-						<leftPen lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineColor="#000000"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="590" y="0" width="105" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "Updated types" : ( $P{lang}=="fr" ? "Types m-à-j" : ( $P{lang}=="nl" ? "Geupd. types" : "Updated types" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="85" y="0" width="190" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font size="12" isBold="true"/>
+						<font fontName="SansSerif" size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Encoder]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="3df7befa-8136-4e78-a031-037168a8cf45" mode="Opaque" x="85" y="0" width="190" height="24" forecolor="#FFFFFF" backcolor="#666666"/>
-					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-						<topPen lineWidth="0.0" lineColor="#000000"/>
-						<leftPen lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineColor="#000000"/>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "Collection" : ( $P{lang}=="fr" ? "Collection" : ( $P{lang}=="nl" ? "Verzameling" : "Collection" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="0" y="0" width="85" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font size="12" isBold="true"/>
+						<font fontName="SansSerif" size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Collection]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="fa0a8c1d-74b8-4032-847f-c876f3d77619" mode="Opaque" x="275" y="0" width="105" height="24" forecolor="#FFFFFF" backcolor="#666666"/>
-					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-						<topPen lineWidth="0.0" lineColor="#000000"/>
-						<leftPen lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineColor="#000000"/>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "Encoder" : ( $P{lang}=="fr" ? "Encodeur" : ( $P{lang}=="nl" ? "Encodeur" : "Encoder" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="275" y="0" width="105" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="12" isBold="true"/>
+						<font fontName="SansSerif" size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[New items]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="d783f002-2d98-4dbc-a03a-d2e52b97db19" mode="Opaque" x="380" y="0" width="105" height="24" forecolor="#FFFFFF" backcolor="#666666"/>
-					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-						<topPen lineWidth="0.0" lineColor="#000000"/>
-						<leftPen lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineColor="#000000"/>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "New items" : ( $P{lang}=="fr" ? "Nouv. items" : ( $P{lang}=="nl" ? "Nieuw. items" : "New items" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="380" y="0" width="105" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="12" isBold="true"/>
+						<font fontName="SansSerif" size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Updated items]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="d6cc88ca-4d2e-45af-9779-5fca8860e5e1" mode="Opaque" x="485" y="0" width="105" height="24" forecolor="#FFFFFF" backcolor="#666666"/>
-					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-						<topPen lineWidth="0.0" lineColor="#000000"/>
-						<leftPen lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineColor="#000000"/>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "Updated items" : ( $P{lang}=="fr" ? "Items m-à-j" : ( $P{lang}=="nl" ? "Geupd. items" : "Updated items" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="485" y="0" width="105" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="12" isBold="true"/>
+						<font fontName="SansSerif" size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[New types]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="12cffe8f-adce-4f9a-ae04-12a97d7493b7" mode="Opaque" x="590" y="0" width="105" height="24" forecolor="#FFFFFF" backcolor="#666666"/>
-					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-						<topPen lineWidth="0.0" lineColor="#000000"/>
-						<leftPen lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineColor="#000000"/>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "New types" : ( $P{lang}=="fr" ? "Nouv. types" : ( $P{lang}=="nl" ? "Nieuwe types" : "New types" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="695" y="0" width="105" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="12" isBold="true"/>
+						<font fontName="SansSerif" size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Updated types]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="dedac79f-c89d-4c00-b923-ba6e125d96d8" mode="Opaque" x="695" y="0" width="105" height="24" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#666666"/>
-					<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-						<topPen lineWidth="0.0" lineColor="#000000"/>
-						<leftPen lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineColor="#000000"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="12" isBold="true"/>
-					</textElement>
-					<text><![CDATA[New species]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "New species" : ( $P{lang}=="fr" ? "Nouv. espèces" : ( $P{lang}=="nl" ? "Nieuw. species" : "New species" ) ) )]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 	</columnHeader>
