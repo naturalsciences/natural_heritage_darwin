@@ -183,12 +183,21 @@ class ImportABCDXml implements IImportModels
             if($this->object && property_exists($this->object,'staging_info') && $this->getPreviousTag() != "Unit" && $this->object->staging_info)
               $this->object_to_save[] = $this->object->staging_info;
              break;
-        case "MeasurementOrFactAtomised" : if($this->getPreviousTag() == "Altitude") {
-                //Set Altitude in meters in GTU
-                $this->staging['gtu_elevation']  =  $this->property->property->getLowerValue();
-              } else {
-                $this->addProperty();
-              } break;
+        case "MeasurementOrFactAtomised" :
+          if($this->getPreviousTag() == "Altitude") {
+            //Set Altitude in meters in GTU
+            $altitude = str_replace('.', ',', $this->property->property->getLowerValue());
+            $comma_count = mb_substr_count($altitude, ',');
+            if ($comma_count > 1) {
+              $altitude = preg_replace('/\,/', '', $altitude, $comma_count -1);
+            }
+            $altitude = str_replace (',', '.', $altitude);
+            $this->staging['gtu_elevation']  =  $altitude;
+          }
+          else {
+            $this->addProperty();
+          }
+          break;
         case "MeasurementOrFactText" : $this->addComment() ; break;
         case "MineralColour" : $this->staging->setMineralColour($this->cdata) ; break;
         case "efg:MineralRockClassification" :
