@@ -68,7 +68,7 @@ class MyWidgets extends BaseMyWidgets
 
   public function getTableFromCategory($table_param)
   {
-    if($table_param != null)
+    if($table_param !== null)
     {
       return $table_param;
     }

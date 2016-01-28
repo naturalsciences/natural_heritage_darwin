@@ -82,9 +82,11 @@ class DarwinActions extends sfActions
   protected function loadWidgets($id = null,$collection = null)
   {
     $this->__set('widgetCategory',$this->widgetCategory);
-    if($id == null) $id = $this->getUser()->getId();
+    if($id === null) {
+      $id = $this->getUser()->getId();
+    }
     $this->widgets = Doctrine::getTable('MyWidgets')
-      ->setUserRef($this->getUser()->getId())
+      ->setUserRef($id)
       ->setDbUserType($this->getUser()->getDbUserType())
       ->getWidgets($this->widgetCategory, $collection);
     $this->widget_list = Doctrine::getTable('MyWidgets')->sortWidgets($this->widgets, $this->getI18N());
@@ -110,7 +112,7 @@ class DarwinActions extends sfActions
     $this->getResponse()->setStatusCode(403);
     throw new sfStopException();
   }
-  
+
   protected function getRecordIfDuplicate($id , $obj, $is_spec = false)
   {
     if ($id)

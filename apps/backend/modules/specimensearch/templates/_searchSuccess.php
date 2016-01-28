@@ -26,7 +26,7 @@
             <?php $all_columns = $columns->getRawValue() ;?>
             <?php foreach($all_columns as $col_name => $col):?>
               <th class="col_<?php echo $col_name;?>">
-                <?php if($col[0] != false):?>
+                <?php if($col[0] !== false):?>
                   <a class="sort" href="<?php echo url_for($s_url.'&orderby='.$col[0].( ($orderBy==$col[0] && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.
                     $currentPage);?>">
                     <?php echo $col[1];?>

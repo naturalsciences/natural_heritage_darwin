@@ -7,27 +7,27 @@
       <tbody>
         <tr>
               <th><?php echo __('Type');?></th>
-              <td><?php echo $maintenance->getCategory() ; ?></td>
+              <td><?php echo __($maintenance->getCategory()) ; ?></td>
         </tr>
         <tr>
               <th><?php echo __('Action / Observation');?></th>
-              <td><?php echo $maintenance->getActionObservation() ?></td>
+              <td><?php echo __($maintenance->getActionObservation()); ?></td>
         </tr>
         <tr>
               <th><?php echo __('Last update date');?></th>
-              <td><?php $maintenance->getModificationDateTime() ?>
+              <td><?php echo $maintenance->getModificationDateTimeMasked(ESC_RAW); ?>
               </td>
         </tr>
         <tr>
-              <th><?php echo __('People ref');?></th>
+              <th><?php echo __('Person');?></th>
               <td>
-                <?php echo $maintenance->People->getFormatedName() ?>
+                <?php echo $maintenance->People->getFormatedName(); ?>
               </td>
         </tr>
         <tr>
               <th><?php echo __('Description');?></th>
               <td>
-                <?php echo $maintenance->getDescription() ?>
+                <?php echo $maintenance->getDescription(); ?>
               </td>
         </tr>
       </tbody>
@@ -48,4 +48,3 @@
 	   )); ?>
  </div>
 </div>	
-

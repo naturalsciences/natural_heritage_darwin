@@ -1383,6 +1383,7 @@ create table imports
     is_finished boolean  not null default false,
     errors_in_import text,
     template_version text,
+    exclude_invalid_entries boolean not null default false,
     constraint pk_import primary key (id) ,
     constraint fk_imports_collections foreign key (collection_ref) references collections(id) on update no action on delete cascade,
     constraint fk_imports_users foreign key (user_ref) references users(id) on delete cascade
@@ -1400,6 +1401,7 @@ comment on column imports.initial_count is 'Number of rows of staging when the i
 comment on column imports.is_finished is 'Boolean to mark if the import is finished or still need some operations';
 comment on column imports.errors_in_import is 'Contains the error encountered while trying to import data from template';
 comment on column imports.template_version is 'Contains the template version (when applicable)';
+comment on column imports.exclude_invalid_entries is 'Tell if, for this import, match should exclude the invalid units';
 
 create table staging
   (
@@ -1664,7 +1666,7 @@ create table loan_items (
   details varchar default '',
   constraint pk_loan_items primary key (id),
   constraint fk_loan_items_ig foreign key (ig_ref) references igs(id),
-  constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id),
+  constraint fk_loan_items_loan_ref foreign key (loan_ref) references loans(id) on delete CASCADE,
   constraint fk_loan_items_specimen_ref foreign key (specimen_ref) references specimens(id) on delete set null,
   constraint unq_loan_items unique(loan_ref, specimen_ref)
 );
@@ -1803,11 +1805,20 @@ create table staging_catalogue
   level_ref integer,
   parent_ref integer,
   catalogue_ref integer,
+  parent_updated boolean default false,
   constraint pk_staging_catalogue primary key (id),
   constraint fk_stg_catalogue_level_ref foreign key (level_ref) references catalogue_levels(id),
-  constraint fk_stg_catalogue_import_ref foreign key (import_ref) references imports(id) on delete cascade,
-  constraint fk_stg_catalogue_parent_ref foreign key (parent_ref) references staging_catalogue(id) on delete cascade
+  constraint fk_stg_catalogue_import_ref foreign key (import_ref) references imports(id) on delete cascade
   );
+
+comment on table staging_catalogue is 'Stores the catalogues hierarchy to be imported';
+comment on column staging_catalogue.id is 'Unique identifier of a to be imported catalogue unit entry';
+comment on column staging_catalogue.import_ref is 'Reference of import concerned - from table imports';
+comment on column staging_catalogue.name is 'Name of unit to be imported/checked';
+comment on column staging_catalogue.level_ref is 'Level of unit to be imported/checked';
+comment on column staging_catalogue.parent_ref is 'ID of parent the unit is attached to. Right after the load of xml, it refers recursively to an entry in the same staging_catalogue table. During the import it is replaced by id of the parent from the concerned catalogue table.';
+comment on column staging_catalogue.catalogue_ref is 'ID of unit in concerned catalogue table - set during import process';
+comment on column staging_catalogue.parent_updated is 'During the catalogue import process, tells if the parent ref has already been updated with one catalogue entry or not';
 
 create table reports
  (

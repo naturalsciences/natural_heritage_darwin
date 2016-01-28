@@ -2,7 +2,7 @@
 <div class="page">
 <h1><?php echo __('Sampling location search');?></h1>
 
-<?php if($sf_params->get('with_js') == true):?>
+<?php if($sf_params->get('with_js') == '1' || $sf_params->get('with_js') === true):?>
 
 <script language="javascript">
 $(document).ready(function () {
@@ -14,7 +14,6 @@ function chooseGtu()
   el = $(this).closest('tr');
   ref_element_id = getIdInClasses(el);
   ref_element_name = el.find('td.item_name').html();
-//   ref_element_code = el.find('td.item_name').prev().html();
   $('.result_choose').die('click');
   $('body').trigger('close_modal');
 }

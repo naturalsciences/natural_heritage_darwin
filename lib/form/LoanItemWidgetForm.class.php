@@ -33,6 +33,33 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->validatorSchema['insurance'] = new sfValidatorPass();
     $this->widgetSchema->setNameFormat('loan_items[%s]');
 
+    $this->validatorSchema['Codes_holder'] = new sfValidatorPass();
+    $this->widgetSchema['Codes_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
+
+    $this->widgetSchema['prefix_separator'] = new sfWidgetFormDoctrineChoice(array(
+                                                                               'model' => 'Codes',
+                                                                               'table_method' => 'getDistinctPrefixSep',
+                                                                               'method' => 'getCodePrefixSeparator',
+                                                                               'key_method' => 'getCodePrefixSeparator',
+                                                                               'add_empty' => true,
+                                                                             ));
+
+    $this->widgetSchema['prefix_separator']->setAttributes(array('class'=>'vvsmall_size'));
+
+    $this->widgetSchema['suffix_separator'] = new sfWidgetFormDoctrineChoice(array(
+                                                                               'model' => 'Codes',
+                                                                               'table_method' => 'getDistinctSuffixSep',
+                                                                               'method' => 'getCodeSuffixSeparator',
+                                                                               'key_method' => 'getCodeSuffixSeparator',
+                                                                               'add_empty' => true,
+                                                                             ));
+
+    $this->widgetSchema['suffix_separator']->setAttributes(array('class'=>'vvsmall_size'));
+
+    $this->validatorSchema['prefix_separator'] = new sfValidatorPass();
+    $this->validatorSchema['suffix_separator'] = new sfValidatorPass();
+
+
     $this->validatorSchema['Comments_holder'] = new sfValidatorPass();
     $this->widgetSchema['Comments_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
@@ -120,6 +147,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   public function addComments($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
     $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
   }
 
@@ -128,6 +156,13 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
     $options = array_merge($values, $options);
     $this->attachEmbedRecord('RelatedFiles', new MultimediaForm(DarwinTable::newObjectFromArray('Multimedia',$options)), $num);
+  }
+
+  public function addCodes($num, $values, $order_by=0)
+  {
+    $options = array('referenced_relation' => 'loan_items', 'record_id' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
+    $this->attachEmbedRecord('Codes', new CodesSubForm(DarwinTable::newObjectFromArray('Codes',$options)), $num);
   }
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
@@ -183,6 +218,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     }
 
     $this->bindEmbed('Insurances', 'addInsurances' , $taintedValues);
+    $this->bindEmbed('Codes', 'addCodes' , $taintedValues);
     $this->bindEmbed('Comments', 'addComments' , $taintedValues);
     $this->bindEmbed('RelatedFiles', 'addRelatedFiles' , $taintedValues);
     parent::bind($taintedValues, $taintedFiles);   
@@ -198,6 +234,7 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
   {
     $this->saveEmbed('Comments', 'comment' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('RelatedFiles', 'mime_type' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
+    $this->saveEmbed('Codes', 'code' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
     $this->saveEmbed('Insurances', 'insurance_value' ,$forms, array('referenced_relation'=>'loan_items', 'record_id' => $this->getObject()->getId()));
 
 
@@ -281,6 +318,8 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
       return Doctrine::getTable('Multimedia')->findForTable('loan_items', $record_id);
     if( $emFieldName =='Insurances' )
       return Doctrine::getTable('Insurances')->findForTable('loan_items', $record_id);
+    if( $emFieldName =='Codes' )
+      return Doctrine::getTable('Codes')->getCodesRelated('loan_items', $record_id);
   }
 
   public function duplicate($id)
@@ -294,6 +333,24 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
       $form = new CommentsSubForm($comment);
       $this->attachEmbedRecord('Comments', $form, $key);
     }
+    // reembed duplicated codes
+    $Codes = Doctrine::getTable('Codes')->getCodesRelatedArray('loan_items',$id) ;
+    foreach ($Codes as $key=> $code)
+    {
+      $newCode = new Codes();
+      $newCode->fromArray($code->toArray());
+      $form = new CodesSubForm($newCode);
+      $this->attachEmbedRecord('Codes', $form, $key);
+    }
+    // reembed duplicated insurances
+    $Insurances = Doctrine::getTable('Insurances')->findForTable('loan_items',$id) ;
+    foreach ($Insurances as $key=>$val)
+    {
+      $insurance = new Insurances() ;
+      $insurance->fromArray($val->toArray());
+      $form = new InsurancesSubForm($insurance);
+      $this->attachEmbedRecord('Insurances', $form, $key);
+    }
   }
 
   public function getEmbedRelationForm($emFieldName, $values)
@@ -304,6 +361,8 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
       return new MultimediaForm($values);
     if( $emFieldName =='Insurances' )
       return new InsurancesSubForm($values);
+    if( $emFieldName =='Codes' )
+      return new CodesSubForm($values);
   }
 
 }

@@ -145,7 +145,10 @@ class Multimedia extends BaseMultimedia
 
   public function getSize()
   {
-    return filesize($this->getFullURI());
+    if(file_exists($this->getFullURI())) {
+      return filesize($this->getFullURI());
+    }
+    return 0;
   }
 
   public function hasPreview()
@@ -161,7 +164,7 @@ class Multimedia extends BaseMultimedia
 
   public function getPreview($new_w = 200, $new_h = 200)
   {
-    if($this->hasPreview())
+    if($this->hasPreview() && file_exists($this->getFullURI()))
     {
       $image = new Imagick($this->getFullURI());
       if($this->getMimeType() == 'application/pdf') {

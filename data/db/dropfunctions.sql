@@ -88,6 +88,8 @@ DROP FUNCTION IF EXISTS trg_fct_chk_possible_upper_level() CASCADE;
 DROP FUNCTION IF EXISTS fct_set_user(user_id integer) ;
 DROP FUNCTION IF EXISTS fct_upd_staging_fields() CASCADE;
 DROP FUNCTION IF EXISTS fct_importer_abcd(integer) CASCADE;
+DROP FUNCTION IF EXISTS fct_importer_catalogue(req_import_ref integer,referenced_relation text);
+DROP FUNCTION IF EXISTS fct_importer_catalogue(req_import_ref integer,referenced_relation text,exclude_invalid_entries boolean);
 DROP FUNCTION IF EXISTS fct_upd_people_staging_fields();
 DROP FUNCTION IF EXISTS trg_ins_update_dict() CASCADE;
 DROP FUNCTION IF EXISTS trg_del_dict() CASCADE;
@@ -153,3 +155,23 @@ DROP FUNCTION IF EXISTS fct_listing_chronostratigraphy (IN nbr_records INTEGER, 
 DROP FUNCTION IF EXISTS fct_listing_lithostratigraphy (IN nbr_records INTEGER, VARIADIC litho_unit_ids INTEGER[]) ;
 DROP FUNCTION IF EXISTS fct_listing_mineralogy (IN nbr_records INTEGER, VARIADIC mineralo_unit_ids INTEGER[]) ;
 DROP FUNCTION IF EXISTS fct_listing_lithology (IN nbr_records INTEGER, VARIADIC litholo_unit_ids INTEGER[]) ;
+
+/* Reporting functions */
+drop function if exists fct_report_loans_transporters (loan_id loans.id%TYPE, transporter_side TEXT, lang TEXT);
+drop function if exists fct_report_loans_return_to (loan_id loans.id%TYPE, lang TEXT);
+drop function if exists fct_report_loans_maintenances (loan_id loans.id%TYPE, maintenance_type TEXT);
+drop function if exists fct_report_loans_addresses (loan_id loans.id%TYPE, target_copy TEXT);
+drop function if exists fct_report_loans_forms (loan_id integer, full_target_list text, short_target_list text, selected_target_list text, targeted_catalogues text, with_addr boolean, lang text);
+
+DROP FUNCTION IF EXISTS fct_duplicate_loans (loan_id loans.id%TYPE);
+DROP FUNCTION IF EXISTS fct_clean_staging_catalogue ( importRef staging_catalogue.import_ref%TYPE );
+
+-- Statistics functions
+DROP FUNCTION IF EXISTS stats_collections_encoding (collections.id%TYPE, timestamp, timestamp);
+DROP FUNCTION IF EXISTS stats_collections_encoding (collections.id%TYPE, text, text);
+DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, users.id%TYPE, timestamp, timestamp);
+DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, TEXT, TEXT, TEXT);
+DROP FUNCTION IF EXISTS stats_encoders_encoding (collections.id%TYPE, TEXT, timestamp, timestamp);
+
+-- Imports functions
+DROP FUNCTION IF EXISTS fct_catalogue_import_keywords_update();

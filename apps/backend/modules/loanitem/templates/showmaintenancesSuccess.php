@@ -12,8 +12,8 @@
 <tbody>
   <?php foreach($maintenances as $item):?>
     <tr>
-      <td><?php echo $item->getCategory();?></td>
-      <td><?php echo $item->getActionObservation();?></td>
+      <td><?php echo __($item->getCategory());?></td>
+      <td><?php echo __($item->getActionObservation());?></td>
       <td><?php echo $item->getDescription();?></td>
       <td><?php echo $item->People->getFormatedName();?></td>
       <td><?php echo $item->getModificationDateTimeMasked(ESC_RAW);?></td>

@@ -17,8 +17,14 @@
       <td><?php echo $form['taxon_level_ref'];?></td>
     </tr>
     <tr id="taxon_precise_line">
-      <td><?php echo $form['taxon_relation'];?></td>
+      <td id="taxon_relation"><?php echo $form['taxon_relation'];?></td>
       <td><?php echo $form['taxon_item_ref'];?></td>
+      <td>
+        <ul id="taxon_child_syn_included">
+          <li><?php echo $form['taxon_child_syn_included']->renderLabel();?></li>
+          <li><?php echo $form['taxon_child_syn_included'];?></li>
+        </ul>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -48,5 +54,19 @@ $(document).ready(function () {
   {
     $('#taxon_full_text').trigger("click") ;
   }
+
+  $('#taxon_relation ul.radio_list input').click(function () {
+    if ( $(this).val() in { child : "child", direct_child : "direct_child" } ) {
+      $('#taxon_child_syn_included').removeClass('hidden');
+    }
+    else {
+      $('#taxon_child_syn_included').addClass('hidden');
+    }
+  });
+
+  if (!($('#taxon_relation input:checked').val() in { child : "child", direct_child : "direct_child" } )) {
+    $('#taxon_child_syn_included').addClass('hidden');
+  }
+
 });
 </script>

@@ -11,6 +11,7 @@
 class loanActions extends DarwinActions
 {
   protected $widgetCategory = 'loan_widget';
+  protected $table = 'loan';
 
   protected function checkRight($loan_id)
   {
@@ -83,7 +84,8 @@ class loanActions extends DarwinActions
           // And replace the one of the pager with this new one
           $pager->setCountQuery($counted);
 
-        $this->pagerLayout = new PagerLayoutWithArrows($pager,
+        $this->pagerLayout = new PagerLayoutWithArrows(
+          $pager,
           new Doctrine_Pager_Range_Sliding(array('chunk' => $this->pagerSlidingSize)),
           $this->getController()->genUrl($this->s_url.$this->o_url).'/page/{%page_number}'
         );
@@ -93,34 +95,46 @@ class loanActions extends DarwinActions
         // If pager not yet executed, this means the query has to be executed for data loading
         if (! $this->pagerLayout->getPager()->getExecuted())
            $this->items = $this->pagerLayout->execute();
-          $loan_list = array();
-          foreach($this->items as $loan) {
-            $loan_list[] = $loan->getId() ;
-          }
-          $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
-          $this->status = array();
-          foreach($status as $sta) {
-            $this->status[$sta->getLoanRef()] = $sta;
-          }
-          $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
+        $this->rights = Doctrine::getTable('loanRights')->getEncodingRightsForUser($this->getUser()->getId());
+        $loan_list = array();
+        foreach($this->items as $loan) {
+          $loan_list[] = $loan->getId() ;
+        }
+        $this->printable = Doctrine::getTable('Loans')->getPrintableLoans($loan_list,$this->getUser());
+        $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
+        $this->status = array();
+        foreach($status as $sta) {
+          $this->status[$sta->getLoanRef()] = $sta;
+        }
       }
     }
   }
 
+  public function executeChoose(sfWebRequest $request)
+  {
+    $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;
+    $this->setLevelAndCaller($request);
+    $this->is_choose = true;
+    $this->searchForm = new LoansFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id, 'name' => $name));
+    $this->setLayout(false);
+  }
 
   public function executeNew(sfWebRequest $request)
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    $loan = new Loans() ;
     $duplic = $request->getParameter('duplicate_id','0') ;
-    $loan = $this->getRecordIfDuplicate($duplic, $loan);
-    if($request->hasParameter('loans')) $loan->fromArray($request->getParameter('loans'));
-    // Initialization of a new encoding expedition form
-    $this->form = new LoansForm($loan);
-    if ($duplic)
-    {
-      $this->form->duplicate($duplic);
+    if ($duplic != 0){
+      if (in_array(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $duplic), array(false,'view')) &&
+          !$this->getUser()->isAtLeast(Users::ADMIN)) $this->forwardToSecureAction();
+      $id = Doctrine::getTable('Loans')->duplicateLoan($duplic);
+      if ($id != 0) {
+        $this->redirect('loan/edit?id='.$id);
+      }
+      else {
+        $this->err_msg = $this->getContext()->getI18N()->__("The duplication process failed at %time% - please contact your application administrator", array("%time%"=>date("d/m/Y H:i")));
+      }
     }
+    $this->form = new LoansForm(null);
     $this->loadWidgets();
   }
 
@@ -193,11 +207,18 @@ class loanActions extends DarwinActions
       $files = Doctrine::getTable("Multimedia")->getMultimediaRelated('loans',$request->getParameter('id')) ;
       $loan->delete();
       foreach($files as $file) unlink($file) ;
+      if ( $request->isXmlHttpRequest() ) {
+        return $this->renderText("ok");
+      }
       $this->redirect('loan/index');
     }
     catch(Doctrine_Exception $ne)
     {
       $e = new DarwinPgErrorParser($ne);
+      if ( $request->isXmlHttpRequest() ) {
+        $message = json_encode($this->getPartial("global/error_msg", array("error_message"=>$e->getMessage())));
+        return $this->renderText($message);
+      }
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
       $this->form = new LoansForm($loan);
       $this->form->getErrorSchema()->addError($error);

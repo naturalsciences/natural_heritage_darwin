@@ -1,7 +1,6 @@
 <?php
 class DarwinPgErrorParser
 {
-  // @TODO What happens when language of database is not english... Shouldn't we use invariable parts of message such as SQLSTATE[] and constraint names... ?
   protected $nat_exception = null;
 
   protected static $errorRegexps = array(

@@ -31,9 +31,6 @@ class widgetFormColorPicker extends sfWidgetFormInput
 
  public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-//     use_helper("jQuery");
-
-/*    $attributes['style'] = "width: 4em;";*/
     $html = parent::render($name, $value, $attributes, $errors);
     $html .= "&nbsp;<span class='round_color'>&nbsp;</span>&nbsp;" ;
     $html .= image_tag('ColorPickerUIBtnWheel.png',array('class' => 'color_pckr')) ;

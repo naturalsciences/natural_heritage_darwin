@@ -18,11 +18,10 @@ Grâce aux chercheurs et à leur personnel, tant belges qu’étrangers, les don
 </p>
 <br />
 <p>
-Le site Darwin nous montre une facette importante des collections en terme de taille et de diversité.
-Aujourd'hui, notre base de données contient des informations sur plus de 350.000 spécimens stockés dans les conservatoires de l'Institut.
-Ce nombre augmente chaque jour grâce aux efforts des conservateurs et de leurs adjoints, qui sont responsables de la conservation des échantillons et des informations archivées.
-Notre base de données en ligne contient des informations sur les collections de vertébrés, invertébrés et insectes.
-L'application sera bientôt élargie aux données paléontologiques.
+L'application DaRWIN (darwin.naturalsciences.be) nous montre une facette importante des collections en terme de taille et de diversité.
+Aujourd'hui, notre base de données contient des informations sur plus de 2.637.600 specimens (540.000 enregistrements) stockés dans les conservatoires de l'Institut.
+Ce nombre augmente chaque jour grâce aux efforts de la direction du patrimoine, des conservateurs et de leurs adjoints, qui sont responsables de la conservation des échantillons et des informations archivées.
+Notre base de données en ligne contient des informations sur les collections de vertébrés, invertébrés, insectes, paléontologie, géoogie et minéralogie.
 </p>
 <br />
 <p>

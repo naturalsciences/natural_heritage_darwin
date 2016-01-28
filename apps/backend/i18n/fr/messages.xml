@@ -1,5 +1,5 @@
 <?xml version="1.0" ?><!DOCTYPE xliff  PUBLIC '-//XLIFF//DTD XLIFF//EN'  'http://www.oasis-open.org/committees/xliff/documents/xliff.dtd'><xliff version="1.0">
-  <file datatype="plaintext" original="en" source-language="en" target-language="">
+  <file datatype="plaintext" original="en" source-language="en" target-language="fr">
     <header/>
     <body>
       <trans-unit id="1">
@@ -224,7 +224,7 @@
       </trans-unit>
       <trans-unit id="55">
         <source>Are you sure ?</source>
-        <target>Etes vous sûre ?</target>
+        <target>Êtes-vous sûr(e) ?</target>
         
       </trans-unit>
       <trans-unit id="56">
@@ -369,7 +369,7 @@
       </trans-unit>
       <trans-unit id="85">
         <source>Are you sure?</source>
-        <target>Etes vous sûre ?</target>
+        <target>Êtes-vous sûr(e) ?</target>
         
       </trans-unit>
       <trans-unit id="86">
@@ -484,7 +484,7 @@
       </trans-unit>
       <trans-unit id="119">
         <source>Last modification</source>
-        <target>Dernière verif. système</target>
+        <target>Dernière modification</target>
         
       </trans-unit>
       <trans-unit id="121">
@@ -779,7 +779,7 @@
       </trans-unit>
       <trans-unit id="179">
         <source>Part Status</source>
-        <target>Statut d'échantillon</target>
+        <target>Statut de parties</target>
         
       </trans-unit>
       <trans-unit id="180">
@@ -2214,7 +2214,7 @@
       </trans-unit>
       <trans-unit id="501">
         <source>This element already has synonyms.&lt;br /&gt;Are you sure that you want to merge them together?</source>
-        <target>Cet élément a déjà un synonyme.&lt;br Choose/&gt;Etes vous sûre de vouloir les regrouper ?</target>
+        <target>Cet élément a déjà un synonyme.&lt;br Choose/&gt;Êtes-vous sûr(e) de vouloir les regrouper ?</target>
         
       </trans-unit>
       <trans-unit id="503">
@@ -3589,7 +3589,7 @@
       </trans-unit>
       <trans-unit id="783">
         <source>Your Ig number will be lost ! are you sure you want continue ?</source>
-        <target>Votre numéro I.G. va être perdu ! êtes vous sur de vouloir continuer ?</target>
+        <target>Votre numéro I.G. va être perdu ! Êtes-vous sûr(e) de vouloir continuer ?</target>
         
       </trans-unit>
       <trans-unit id="784">
@@ -4910,7 +4910,7 @@
       </trans-unit>
       <trans-unit id="1072">
         <source>This code already exists</source>
-        <target>Ce code existe déjà</target>
+        <target>Ce code existe déjà, si vous avez coché l'incrémentation automatique dans la collection associée, sachez que vous n'avez pas à insérer ce code automatique</target>
         
       </trans-unit>
       <trans-unit id="1073">
@@ -5440,7 +5440,7 @@
       </trans-unit>
       <trans-unit id="1353">
         <source>Since Darwin is an Open Source application entirely based on open source software, we would be glad if you want to contribute to the project.&lt;br/&gt; Suggestions, Patches, Bug Reports or Code Donations are welcome on our Request tracker : &lt;a href=&quot;https://github.com/naturalsciences/Darwin/&quot;&gt;https://github.com/naturalsciences/Darwin/&lt;/a&gt;</source>
-        <target>Darwin est une application Open Source entièrement basée sur des logiciels open source. Nous serions dès lors heureux d’accueillir des nouveaux contributeurs. Suggestions &lt;br/&gt;, patches, rapports de bogues ou code sont les bienvenus sur notre gestionnaire de projet : &lt;a href=&quot;https://github.com/naturalsciences/Darwin/&quot;&gt;https://github.com/naturalsciences/Darwin/&lt;/a&gt;</target>
+        <target>Darwin est une application Open Source entièrement basée sur des logiciels open source. Nous serions dès lors heureux d’accueillir des nouveaux contributeurs.&lt;br/&gt;Suggestions, patches, rapports de bogues ou code sont les bienvenus sur notre page de projet: &lt;a href=&quot;https://github.com/naturalsciences/Darwin/&quot;&gt;https://github.com/naturalsciences/Darwin/&lt;/a&gt;</target>
         
       </trans-unit>
       <trans-unit id="1354">
@@ -5715,7 +5715,7 @@
       </trans-unit>
       <trans-unit id="1429">
         <source>All pending lines will be deleted, Are you sure ?</source>
-        <target>toutes les lignes En attente seront effacées, êtes vous sûr(e) ?</target>
+        <target>toutes les lignes En attente seront effacées, êtes-vous sûr(e) ?</target>
         
       </trans-unit>
       <trans-unit id="1430">
@@ -5750,7 +5750,7 @@
       </trans-unit>
       <trans-unit id="1436">
         <source>All children will be deleted too, Are you sure ?</source>
-        <target>Tous les enfants seront également effacés, êtes vous sûr(e) ? </target>
+        <target>Tous les enfants seront également effacés, êtes-vous sûr(e) ? </target>
         
       </trans-unit>
       <trans-unit id="1437">
@@ -5790,7 +5790,7 @@
       </trans-unit>
       <trans-unit id="1447">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don\'t correct default values before saving, the associated error will remain.</source>
-        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l\'absence de correction de la valeur par défaut au moment de la sauvegarde, l'erreur persistera.</target>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l\'abscence de correction de la valeur par défaut au moment de la sauvegarde, l'erreur persistera.</target>
         
       </trans-unit>
       <trans-unit id="1448">
@@ -6615,7 +6615,7 @@
       </trans-unit>
       <trans-unit id="1648">
         <source>Are you sure you want to archive your loan ?</source>
-        <target>Etes vous sûr de vouloir archiver votre prêt ?</target>
+        <target>Êtes-vous sûr(e) de vouloir archiver votre prêt ?</target>
         
       </trans-unit>
       <trans-unit id="1662">
@@ -6965,7 +6965,7 @@
       </trans-unit>
       <trans-unit id="1741">
         <source>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt;If you don't correct default values before saving, the associated error will remain.</source>
-        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l'absence de correction de la valeur par défaut au moment de la sauvegarde, l'erreur persistera.</target>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br/&gt;En l'abscence de correction de la valeur par défaut au moment de la sauvegarde, l'erreur persistera.</target>
         
       </trans-unit>
       <trans-unit id="1742">
@@ -6985,7 +6985,7 @@
       </trans-unit>
       <trans-unit id="1745">
         <source>warning_spec_msg</source>
-        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt; Ces erreurs ne peuvent pas être corrigées, Le meilleur moyen de les corriger est de supprimer votre import, corriger votre fichier XML, et réimporter. Vous pouvez aussi continuer votre import mais vous perdrez alors les informations ci-dessus. Que voulez vous faire ?</target>
+        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt; Ces erreurs ne peuvent pas être corrigées, Le meilleur moyen de les corriger est de supprimer votre import, corriger votre fichier XML, et réimporter.&lt;br /&gt;Vous pouvez aussi continuer votre import mais vous perdrez alors les informations ci-dessus.&lt;br /&gt;Si l'erreur mentionnée est un problème de version, nous vous encourageons à prendre contact avec votre gestionnaire d'application.&lt;br /&gt;Que souhaitez vous faire ?</target>
         
       </trans-unit>
       <trans-unit id="1746">
@@ -7080,7 +7080,7 @@
       </trans-unit>
       <trans-unit id="1765">
         <source>deleteting_confirm</source>
-        <target>Supprimer cette personne la supprimera également de votre import sur cet enregistrement, êtes vous sûr ?</target>
+        <target>Supprimer cette personne la supprimera également de votre import sur cet enregistrement, êtes-vous sûr(e) ?</target>
         
       </trans-unit>
       <trans-unit id="1767">
@@ -7275,7 +7275,7 @@
       </trans-unit>
       <trans-unit id="1804">
         <source>Number of records per pages</source>
-        <target>Nombre d'enregistrements par pages</target>
+        <target>Number of records per pages</target>
       </trans-unit>
       <trans-unit id="1805">
         <source>Ecology</source>
@@ -7436,78 +7436,201 @@
         <source>This widget allows you to see if this specimen is currently on loan. If it is, you can see when it has been borrowed and when it due for return.</source>
         <target>Cette widget vous permet de voir si ce specimen est actuellement en prêt. Si c'est le cas vous pouvez voir quand il a été prêté et quand il sera rendu.</target>
         
-      </trans-unit>
-
+      </trans-unit>      
       <trans-unit id="1837">
         <source>catalogue_search_tips</source>
-        <target>Utilisez le caractère ^ pour une recherche "commence par" (ex: ^falco)</target>
-        
+        <target>Utilisez le caractère ^ pour une recherche &quot;commence par&quot; (ex: ^falco)</target>
+                
       </trans-unit>
-
       <trans-unit id="1838">
         <source>Barcode</source>
-        <target>Code Barre</target>
+        <target>Code barre</target>
+        
       </trans-unit>
-
       <trans-unit id="1839">
         <source>Additional</source>
         <target>Additionnel</target>
+        
       </trans-unit>
-
       <trans-unit id="1840">
         <source>Storage</source>
         <target>Stockage</target>
+        
       </trans-unit>
-
       <trans-unit id="1841">
         <source>Actif</source>
-        <target>En cours d'éxécution</target>
+        <target>En cours de traitement</target>
+        
       </trans-unit>
-
       <trans-unit id="1842">
         <source>warning_catalogue_msg</source>
-        <target>&lt;strong&gt;Attention!&lt;/strong&gt;&lt;br /&gt; Ces erreurs ne peuvent pas être corrigées, Le seul moyen de les corriger est de supprimer votre import, corriger votre fichier XML (ou le catalogue DaRWIN), et réimporter.</target>
-      </trans-unit>
-
+        <target>&lt;strong&gt;Attention !&lt;/strong&gt;&lt;br/&gt;Ces erreurs ne peuvent être corrigées.&lt;br/&gt;Le meilleur moyen d'y parvenir est de supprimer votre import, corriger votre fichier XML et de réimporter.</target>
+                
+      </trans-unit>  
       <trans-unit id="1843">
         <source>statusAndCountHelp</source>
-        <target>Via cette widget, vous pouvez rechercher des échantillons en fonction de leur état (ex: abîmé), vous pouvez aussi rechercher des échantillons qui sont encodés en "lot" (nombre d'éléments exactement ou aproximativement encodé)</target>
+        <target>Avec cette &quot;widget&quot;, vous avez la possibilité de chercher les spécimens par leur état (ex.: endommagé), ou par le nombre inventoriés et/ou encodés</target>
+        
       </trans-unit>      
       <trans-unit id="1844">
         <source>Choose a report</source>
-        <target>Choisisez un rapport</target>
+        <target>Choisissez un rapport</target>
+        
       </trans-unit>
       <trans-unit id="1845">
         <source>Report you asked</source>
         <target>Rapport demandé</target>
+        
       </trans-unit>
       <trans-unit id="1846">
         <source>report not available yet</source>
-        <target>Rapport pas encore disponible</target>
+        <target>Rapport non encore accesible</target>
+        
       </trans-unit>
       <trans-unit id="1847">
         <source>Reports</source>
         <target>Rapports</target>
+        
       </trans-unit>
       <trans-unit id="1848">
         <source>Report</source>
         <target>Rapport</target>
+        
       </trans-unit>
       <trans-unit id="1849">
         <source>test report warning</source>
-        <target>Attention ! Ce module est encore en phase de test, si vous constatez une anomalie n'hésitez pas à nous informer</target>
+        <target>&lt;strong&gt;Attention !&lt;/strong&gt; Ce module est en phase de tests. N'hésitez pas à nous contacter pour nous signaler toute anomalie.</target>
+        
       </trans-unit>
       <trans-unit id="1850">
         <source>Choose New Expedition</source>
-        <target>Choisir une nouvelle Expedition</target>
+        <target>Choisissez une nouvelle expédition</target>
+        
       </trans-unit>
       <trans-unit id="1851">
         <source>report too big</source>
-        <target>Ce rapport est trop lourd</target>
+        <target>Ce rapport est trop volumineux</target>
+        
       </trans-unit>
       <trans-unit id="1852">
         <source>report too big info</source>
-        <target>Votre rapport prend trop de temps à être créé. Vous devriez modifier vos critères.</target>
+        <target>Votre rapport prends trop de temps pour être créé. Pourriez-vous revoir vos critères ?</target>
+        
+      </trans-unit>
+      <trans-unit id="1853">
+        <source>approval</source>
+        <target>Approbation</target>
+        
+      </trans-unit>
+      <trans-unit id="1854">
+        <source>organized_by</source>
+        <target>Supervision</target>
+        
+      </trans-unit>
+      <trans-unit id="1855">
+        <source>preparation</source>
+        <target>Préparation</target>
+        
+      </trans-unit>
+      <trans-unit id="1856">
+        <source>action</source>
+        <target>Action</target>
+        
+      </trans-unit>
+      <trans-unit id="1857">
+        <source>observation</source>
+        <target>Observation</target>
+        
+      </trans-unit>
+      <trans-unit id="1858">
+        <source>Return Type Material</source>
+        <target>Retour de matériel type</target>
+        
+      </trans-unit>
+      <trans-unit id="1859">
+        <source>Received by</source>
+        <target>Réceptionné par</target>
+        
+      </trans-unit>
+      <trans-unit id="1860">
+        <source>Checked by</source>
+        <target>Vérifié par</target>
+        
+      </trans-unit>
+      <trans-unit id="1861">
+        <source>Return checked by</source>
+        <target>Retour vérifié par</target>
+        
+      </trans-unit>
+      <trans-unit id="1862">
+        <source>Return received by</source>
+        <target>Retour réceptionné par</target>
+        
+      </trans-unit>
+      <trans-unit id="1863">
+        <source>Your report has been saved and is available right above</source>
+        <target>Votre rapport a été sauvegardé et est disponible ci-dessus</target>
+        
+      </trans-unit>
+      <trans-unit id="1864">
+        <source>File has not been well written. Please contact your application administrator</source>
+        <target>Le fichier n'a pas pu être écrit correctement. Veuillez contacter votre administrateur d'application</target>
+        
+      </trans-unit>
+      <trans-unit id="1865">
+        <source>An error occured while trying to retrieve the file.\nError message: %1%</source>
+        <target>Une erreur est apparue lors de l'écriture du fichier.\n Message d'erreur: %1%</target>
+        
+      </trans-unit>
+      <trans-unit id="1866">
+        <source>Loan target selected</source>
+        <target>Cible</target>
+        
+      </trans-unit>
+      <trans-unit id="1867">
+        <source>Loan target catalogues</source>
+        <target>Source des noms</target>
+        
+      </trans-unit>
+      <trans-unit id="1868">
+        <source>Lang</source>
+        <target>Langue</target>
+        
+      </trans-unit>
+      <trans-unit id="1869">
+        <source>Please fill in the criterias to print your report</source>
+        <target>Veuillez introduire les critères pour l'impression de votre rapport</target>
+        
+      </trans-unit>
+      <trans-unit id="1870">
+        <source>The duplication process failed at %time% - please contact your application administrator</source>
+        <target>Le processus de duplication a échoué à %time% - veuillez contacter votre administrateur d'application</target>
+        
+      </trans-unit>
+      <trans-unit id="1871">
+        <source>Expedition date</source>
+        <target>Date d'expédition</target>
+        
+      </trans-unit>
+      <trans-unit id="1872">
+        <source>Return date</source>
+        <target>Date de retour</target>
+        
+      </trans-unit>
+      <trans-unit id="1873">
+        <source>You don't have rights to edit these informations !</source>
+        <target>Vous n'avez pas les droits suffisant pour éditer ces informations</target>
+        
+      </trans-unit>
+      <trans-unit id="1874">
+        <source>Specimen Main code(s)</source>
+        <target>Codes principaux</target>
+        
+      </trans-unit>
+      <trans-unit id="1875">
+        <source>Darwin Part Main Code(s)</source>
+        <target>Codes principaux</target>
+        
       </trans-unit>
     </body>
   </file>

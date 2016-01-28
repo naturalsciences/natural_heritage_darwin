@@ -63,7 +63,6 @@ class multimediaActions extends DarwinActions
     $this->getResponse()->setHttpHeader('Content-Disposition',
                             'attachment; filename="'.
                             $multimedia->getFilename().'"');
-    //$this->getResponse()->setContentType("application/force-download ".$multimedia->getMimeType());
     $this->getResponse()->setHttpHeader('content-type', 'application/octet-stream', true);
     $this->getResponse()->sendHttpHeaders();
     $this->getResponse()->setContent(readfile($file));

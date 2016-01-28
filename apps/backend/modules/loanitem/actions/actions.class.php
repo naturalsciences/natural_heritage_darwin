@@ -33,8 +33,8 @@ class loanitemActions extends DarwinActions
   public function executeUpdate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
-    $loan = $this->checkRight($request->getParameter('id')) ;
-    $this->form = new LoanItemWidgetForm($loan);
+    $loan_item = $this->checkRight($request->getParameter('id')) ;
+    $this->form = new LoanItemWidgetForm($loan_item);
     $this->processForm($request, $this->form);
     $this->loadWidgets();
     $this->setTemplate('edit');
@@ -43,18 +43,10 @@ class loanitemActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-    $loan = $this->checkRight($request->getParameter('id')) ;
-    $this->form = new LoanItemWidgetForm($loan);
+    $loan_item = $this->checkRight($request->getParameter('id')) ;
+    $this->form = new LoanItemWidgetForm($loan_item);
     $this->loadWidgets();
     $this->setTemplate('edit') ;    
-  }
-
-  public function executeAddComments(sfWebRequest $request)
-  {
-    $number = intval($request->getParameter('num'));
-    $form = new LoanItemWidgetForm();
-    $form->addComments($number);
-    return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
   }
 
   protected function processForm(sfWebRequest $request, sfForm $form)
@@ -77,20 +69,20 @@ class loanitemActions extends DarwinActions
     }
   }
 
-
   public function executeDelete(sfWebRequest $request)
   {
-    $loan = $this->checkRight($request->getParameter('id')) ;
+    $loan_item = $this->checkRight($request->getParameter('id')) ;
     try
     {
-      $loan->delete();
-      $this->redirect('loan/index');
+      $loan_id = $loan_item->getLoanRef();
+      $loan_item->delete();
+      $this->redirect('loan/overview?id='.$loan_id);
     }
     catch(Doctrine_Exception $ne)
     {
       $e = new DarwinPgErrorParser($ne);
       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-      $this->form = new LoanItemWidgetForm($loan);
+      $this->form = new LoanItemWidgetForm($loan_item);
       $this->form->getErrorSchema()->addError($error); 
       $this->loadWidgets();
       $this->setTemplate('edit');
@@ -122,7 +114,20 @@ class loanitemActions extends DarwinActions
     if(!$id = doctrine::getTable('loanItems')->getLoanRef($items)) $this->forwardToSecureAction();
     if(!$this->getUser()->isAtLeast(Users::ADMIN) && Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$id) !== true)
       $this->forwardToSecureAction();
-    $this->form = new MultiCollectionMaintenanceForm();
+
+    $i18n = $this->getContext()->getI18N();
+    $options = array('forced_action_observation_options'=>array(
+      'approval'=>$i18n->__('approval'),
+      'checked_by'=>$i18n->__('Checked by'),
+      'organized_by'=>$i18n->__('organized_by'),
+      'preparation'=>$i18n->__('preparation'),
+      'received_by'=>$i18n->__('Received by'),
+      'received_back_by'=>$i18n->__('Return received by'),
+      'checked_back_by'=>$i18n->__('Return checked by'),
+    ));
+
+    $this->form = new MultiCollectionMaintenanceForm(null, $options);
+
     if($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter('collection_maintenance'));
@@ -149,7 +154,6 @@ class loanitemActions extends DarwinActions
         }
       }
     }
-    //return $this->renderText('ok '.implode('-',$items)) ;
   }
 
   public function executeView(sfWebRequest $request)
@@ -183,11 +187,27 @@ class loanitemActions extends DarwinActions
     return $this->renderText( json_encode(array('ig_num'=> '', 'ig_ref'=>'')));
   }
 
+  public function executeAddComments(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+    $form = new LoanItemWidgetForm();
+    $form->addComments($number, array());
+    return $this->renderPartial('specimen/spec_comments',array('form' => $form['newComments'][$number], 'rownum'=>$number));
+  }
+
   public function executeAddInsurance(sfWebRequest $request)
   {
     $number = intval($request->getParameter('num'));
     $form = new LoanItemWidgetForm();
     $form->addInsurances($number, array());
     return $this->renderPartial('specimen/insurances',array('form' => $form['newInsurances'][$number], 'rownum'=>$number));
+  }
+
+  public function executeAddCode(sfWebRequest $request)
+  {
+    $number = intval($request->getParameter('num'));
+    $form = new LoanItemWidgetForm();
+    $form->addCodes($number, array());
+    return $this->renderPartial('specimen/spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number));
   }
 }

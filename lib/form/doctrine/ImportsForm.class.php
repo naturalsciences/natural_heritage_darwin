@@ -14,8 +14,15 @@ class ImportsForm extends BaseImportsForm
   {    
     if($this->options['format'] == 'taxon')
     {
-      $this->useFields(array('format')) ;
+      $this->useFields(array('format', 'exclude_invalid_entries')) ;
       $category = array('taxon'=>$this->getI18N()->__('Taxonomy')) ;
+      $this->widgetSchema['exclude_invalid_entries'] = new sfWidgetFormChoice(
+        array(
+          'choices'=>array(true=>$this->getI18N()->__('No'),false=>$this->getI18N()->__('Yes')),
+          'multiple'=>false,
+          'expanded'=>true,
+        )
+      );
     }
     else
     {
@@ -49,6 +56,7 @@ class ImportsForm extends BaseImportsForm
       'collection_ref' => 'Collection',
       'uploadfield' => 'File',
       'format' => 'Format',
+      'exclude_invalid_entries' => 'Match invalid Units',
     ));
 
     $this->validatorSchema['format'] = new sfValidatorChoice(
@@ -56,7 +64,7 @@ class ImportsForm extends BaseImportsForm
     ));    
     $this->validatorSchema['uploadfield'] = new xmlFileValidator(
       array(
-        'xml_path_file'=>$this->options['format'] == 'taxon'?'/import/taxonomy.xsd':'/import/ABCD_2.06.xsd',
+        'xml_path_file'=>$this->options['format'] == 'taxon'?'/xsd/taxonomy.xsd':'/xsd/ABCD_2.06_EFGDNA.XSD',
         'required' => true,
         'mime_types' => $allowed_types,
         'validated_file_class' => 'myValidatedFile',

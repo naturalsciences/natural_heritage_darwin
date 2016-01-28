@@ -1585,6 +1585,17 @@ litw8:
    title_perso: Maintenances
    all_public: true
 
+litw9:
+   col_num: 1
+   category: loanitem_widget
+   group_name: refCodes
+   order_by: 5
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Codes
+   all_public: true
+
 m1:
    col_num: 1
    category: maintenances_widget

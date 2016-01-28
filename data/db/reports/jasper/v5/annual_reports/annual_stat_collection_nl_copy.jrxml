@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="annual_stat_collection" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" uuid="defc8de3-153b-4308-9130-ef69b7b767b7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="93"/>
 	<property name="ireport.jasperserver.reportUnit" value="/darwin/annual_stat_collection_nl"/>
 	<property name="ireport.jasperserver.url" value="http://hippomenes:8080/jasperserver/services/repository"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
@@ -63,7 +63,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="54" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<text><![CDATA[Jaarlijkse stat op collectie]]></text>
+				<text><![CDATA[Annual stat by collection]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -77,32 +77,32 @@
 				<staticText>
 					<reportElement uuid="ad696b89-2265-4f1d-8476-8d59627927ec" style="Column header" x="0" y="0" width="117" height="15"/>
 					<textElement/>
-					<text><![CDATA[Collectie]]></text>
+					<text><![CDATA[Collection]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="e5d987d3-e793-49c1-acd7-2458b98d0b38" style="Column header" x="117" y="0" width="117" height="15"/>
 					<textElement/>
-					<text><![CDATA[Nieuw items]]></text>
+					<text><![CDATA[New items]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="8d26ddb6-705a-4e32-8e40-d65dbaf59a79" style="Column header" x="234" y="0" width="117" height="15"/>
 					<textElement/>
-					<text><![CDATA[Bijgewerkte items]]></text>
+					<text><![CDATA[Updated items]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="e3215c0b-3dfc-4f31-968b-a32b5b60dc9c" style="Column header" x="351" y="0" width="117" height="15"/>
 					<textElement/>
-					<text><![CDATA[Nieuw types]]></text>
+					<text><![CDATA[New types]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="72a377ba-0d9e-4a36-8b68-4516fa9992ff" style="Column header" x="468" y="0" width="117" height="15"/>
 					<textElement/>
-					<text><![CDATA[Bijgewerkt types]]></text>
+					<text><![CDATA[Updated types]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="e8015926-3e67-4f3b-858e-c78e2eed062c" style="Column header" x="585" y="0" width="117" height="15"/>
 					<textElement/>
-					<text><![CDATA[Nieuw species]]></text>
+					<text><![CDATA[New species]]></text>
 				</staticText>
 			</frame>
 		</band>
@@ -111,7 +111,7 @@
 		<band height="21" splitType="Stretch">
 			<frame>
 				<reportElement uuid="73354cc0-d239-4ed0-9616-f83494ce258e" x="97" y="1" width="705" height="15"/>
-				<textField>
+				<textField isStretchWithOverflow="true">
 					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" style="Detail" x="0" y="0" width="117" height="15"/>
 					<textElement/>
 					<textFieldExpression><![CDATA[$F{collection}]]></textFieldExpression>

@@ -23,8 +23,14 @@ class importActions extends DarwinActions
   {
     $import = Doctrine::getTable('Imports')->find($id);
 
-    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$import->getCollectionRef()))
-       $this->forwardToSecureAction();
+    $collection_ref = $import->getCollectionRef();
+    if(!empty($collection_ref)) {
+      if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$import->getCollectionRef()))
+         $this->forwardToSecureAction();
+    }
+    elseif (! $this->getUser()->isAtLeast(Users::ENCODER)) {
+      $this->forwardToSecureAction();
+    }
     return $import ;
   }
 
@@ -69,7 +75,6 @@ class importActions extends DarwinActions
     $this->id = $request->getParameter('id');
     $this->import = $this->getRight($this->id);
     $this->errors = explode(';',$this->import->getErrorsInImport()) ;    
-    //array_pop($this->errors) ; // just remove the solo ";" with cause to have a empty column at the end of the array
   }
 
   public function executeClear(sfWebRequest $request)
@@ -93,7 +98,6 @@ class importActions extends DarwinActions
 
   public function executeUploadTaxon(sfWebRequest $request)
   {
-
   }
 
   public function executeUpload(sfWebRequest $request)

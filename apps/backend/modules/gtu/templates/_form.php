@@ -306,7 +306,6 @@ function addGroup(g_val, sub_group, value)
           fld = '<fieldset alt="'+ g_val +'"><legend>' + g_name + '</legend><ul></ul><a class="sub_group"><?php echo __('Add Sub Group');?></a></fieldset>';
           $('.tag_parts_screen').append(fld);    
         }
-        //@TODO: What if not in select?
         html.find('select').val(sub_group);
         fld_set = $('fieldset[alt="'+g_val+'"]');
 

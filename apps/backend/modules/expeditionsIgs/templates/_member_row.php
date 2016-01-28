@@ -10,16 +10,16 @@
             <td class="widget_row_delete">
               <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_collector_'.$row_num); ?>
               <?php echo $form->renderHiddenFields();?>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $("#clear_collector_<?php echo $row_num;?>").click( function()
-        {
-           parent_el = $(this).closest('tr');
-           parent_el.find('input[id$=\"_people_ref\"]').val('');
-           parent_el.hide();
-           $.fn.catalogue_people.reorder(parent_el.closest('table'));
-        });
-      });
-    </script>
+              <script type="text/javascript">
+                $(document).ready(function () {
+                  $("#clear_collector_<?php echo $row_num;?>").click( function()
+                  {
+                     parent_el = $(this).closest('tr');
+                     parent_el.find('input[id$=\"_people_ref\"]').val('');
+                     parent_el.hide();
+                     $.fn.catalogue_people.reorder(parent_el.closest('table'));
+                  });
+                });
+              </script>
             </td>
           </tr>

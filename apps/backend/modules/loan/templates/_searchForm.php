@@ -1,17 +1,5 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
-<script>
-
- $(document).ready(function () 
-{
-  $('body').choose_form({content_elem: '.search_results_content' });
-  $('#loans_filters_ig_ref_name').bind('blur',function (event) {
-    $(this).removeClass('complete_missing');
-  }).bind('missing',function (event) {
-    $(this).addClass('complete_missing');
-  });
-});
-</script>
 <?php echo form_tag('loan/search'.( isset($is_choose) ? '?is_choose='.$is_choose : '') , array('class'=>'search_form','id'=>'loans_filter'));?>
   <div class="container">
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
@@ -52,4 +40,15 @@
     </div> 
     <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for('loan/new') ; ?>"><?php echo __('New');?></a></div>
   </div>
-</form> 
+</form>
+<script>
+  $(document).ready(function ()
+  {
+    $('body').choose_form({content_elem: '.search_results_content' });
+    $('#loans_filters_ig_ref_name').bind('blur',function (event) {
+      $(this).removeClass('complete_missing');
+    }).bind('missing',function (event) {
+      $(this).addClass('complete_missing');
+    });
+  });
+</script>

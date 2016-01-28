@@ -172,8 +172,6 @@ CREATE INDEX CONCURRENTLY idx_gin_trgm_bibliography_title on bibliography using 
 CREATE INDEX CONCURRENTLY idx_gin_multimedia_search_indexed on multimedia using gin(search_indexed gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_gin_gtu_tags_values on gtu using gin(tag_values_indexed);
 
-/*** @TODO:Additional BTree Indexes created to fasten application ***/
-
 /*** FullText ***/
 CREATE INDEX CONCURRENTLY idx_tags_trgm ON tags USING gin(tag gin_trgm_ops);
 CREATE INDEX CONCURRENTLY idx_tool_trgm ON collecting_tools USING gin(tool gin_trgm_ops);
@@ -224,3 +222,8 @@ CREATE INDEX idx_mineralogy_name_order_by_txt_op ON mineralogy USING btree (name
 CREATE INDEX idx_staging_gtu_code ON staging (gtu_code) WHERE gtu_code IS NOT NULL;
 CREATE INDEX idx_staging_gtu_code_fullToIndex ON staging (fullToIndex(gtu_code)) WHERE gtu_code IS NOT NULL;
 CREATE INDEX idx_gtu_code_search_for_import ON gtu (position('import/' in code), COALESCE(latitude,0), COALESCE(longitude,0), COALESCE(fullToIndex(code), ''));
+CREATE INDEX idx_staging_catalogue ON staging_catalogue (level_ref, fullToIndex(name));
+CREATE INDEX idx_staging_catalogue_filter ON staging_catalogue (import_ref, name, level_ref);
+CREATE INDEX idx_staging_catalogue_parent_ref ON staging_catalogue (parent_ref) WHERE parent_ref IS NOT NULL;
+CREATE INDEX idx_staging_catalogue_catalogue_ref ON staging_catalogue (import_ref, parent_ref) WHERE catalogue_ref IS NOT NULL;
+CREATE INDEX idx_staging_catalogue_parent_updated ON staging_catalogue (parent_updated);

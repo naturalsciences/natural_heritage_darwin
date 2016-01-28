@@ -1,8 +1,8 @@
-<!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Marie-Solange Mukarwema (Museum of Natural Sciences) -->
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Marielle Adam (Royal belgian Institue for natural Sciences) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:efg="http://www.synthesys.info/ABCDEFG/1.0" xmlns:storage="http://darwin.naturalsciences.be/xsd/" xmlns:dna="http://www.dnabank-network.org/schemas/ABCDDNA" xmlns="http://www.tdwg.org/schemas/abcd/2.06" targetNamespace="http://www.tdwg.org/schemas/abcd/2.06" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://www.synthesys.info/ABCDEFG/1.0" schemaLocation="http://darwin.naturalsciences.be/xsd/abcdefg_dna.xsd"/>
 	<xs:import namespace="http://darwin.naturalsciences.be/xsd/" schemaLocation="http://darwin.naturalsciences.be/xsd/storage.xsd"/>
-	<xs:import namespace="http://www.dnabank-network.org/schemas/ABCDDNA" schemaLocation="http://www.dnabank-network.org/schemas/ABCDDNA/DNA.xsd"/>
+	<xs:import namespace="http://www.dnabank-network.org/schemas/ABCDDNA" schemaLocation="http://darwin.naturalsciences.be/xsd/DNA.xsd"/>
 	<xs:complexType name="anyUriP">
 		<xs:annotation>
 			<xs:documentation>xs:anyURI extended with Preferred attribute</xs:documentation>

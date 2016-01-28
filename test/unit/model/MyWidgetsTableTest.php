@@ -1,6 +1,6 @@
 <?php 
 include(dirname(__FILE__).'/../../bootstrap/Doctrine.php');
-$t = new lime_test(21, new lime_output_color());
+$t = new lime_test(23, new lime_output_color());
 
 $userEvil = Doctrine::getTable('Users')->findOneByFamilyName('Evil')->getId();
 
@@ -138,12 +138,54 @@ $brol_user->save();
 
 $brol_user->addUserWidgets();
 
-
-$t->comment('->updateWigetsAvailabilityForRole()');  
+$t->comment('->updateWigetsAvailabilityForRole()');
 $t->is(count(Doctrine::getTable('MyWidgets')
         ->setUserRef($brol_user->getId())
         ->setDbUserType(Users::REGISTERED_USER)
         ->getWidgets('board_widget')),5,'6 board widgets but only 5 visible for a registered user');
+
+$widget_workflowsSummary = Doctrine_Query::create()
+                          ->from("MyWidgets p")
+                          ->where("p.user_ref = ?", array($brol_user->getId()))
+                          ->andWhere("p.category = ?", array("board_widget"))
+                          ->andWhere("p.group_name = ?", array("workflowsSummary"))
+                          ->fetchArray();
+
+$collection_mollusca =  Doctrine_Query::create()
+                          ->select("c.id")
+                          ->from("Collections c")
+                          ->where("c.name = ?", array("Molusca"))
+                          ->fetchArray();
+
+$t->info('Testing the "doUpdateWidgetRight" method');
+Doctrine::getTable('MyWidgets')
+  ->setUserRef($brol_user->getId())
+  ->setDbUserType(Users::REGISTERED_USER)
+  ->doUpdateWidgetRight($collection_mollusca[0]['id'],array($widget_workflowsSummary[0]['id']),'insert');
+
+$widget_workflowsSummary = Doctrine_Query::create()
+                                         ->from("MyWidgets p")
+                                         ->where("p.user_ref = ?", array($brol_user->getId()))
+                                         ->andWhere("p.category = ?", array("board_widget"))
+                                         ->andWhere("p.group_name = ?", array("workflowsSummary"))
+                                         ->fetchArray();
+
+$t->is(count(Doctrine::getTable('MyWidgets')
+                     ->setUserRef($brol_user->getId())
+                     ->setDbUserType(Users::REGISTERED_USER)
+                     ->getWidgets('board_widget', $collection_mollusca[0]['id'])),6,'6 board widgets if Molusca collection given');
+
+$t->info('Testing the "doUpdateWidgetRight" method - clap 2nd: remove of Mollusca collection for workflowsSummary widget');
+
+Doctrine::getTable('MyWidgets')
+        ->setUserRef($brol_user->getId())
+        ->setDbUserType(Users::REGISTERED_USER)
+        ->doUpdateWidgetRight($collection_mollusca[0]['id'],array($widget_workflowsSummary[0]['id']),'delete');
+
+$t->is(count(Doctrine::getTable('MyWidgets')
+                     ->setUserRef($brol_user->getId())
+                     ->setDbUserType(Users::REGISTERED_USER)
+                     ->getWidgets('board_widget', $collection_mollusca[0]['id'])),5,'Back to 5 board widgets even with Molusca collection given');
 
 Doctrine::getTable('MyWidgets')->setUserRef($brol_user->getId())->updateWigetsAvailabilityForRole(Users::REGISTERED_USER, false) ;
 

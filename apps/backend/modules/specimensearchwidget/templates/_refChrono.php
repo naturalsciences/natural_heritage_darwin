@@ -17,8 +17,14 @@
       <td><?php echo $form['chrono_level_ref'];?></td>
     </tr>
     <tr id="chrono_precise_line">
-      <td><?php echo $form['chrono_relation'];?></td>
+      <td id="chrono_relation"><?php echo $form['chrono_relation'];?></td>
       <td><?php echo $form['chrono_item_ref'];?></td>
+      <td>
+        <ul id="chrono_child_syn_included">
+          <li><?php echo $form['chrono_child_syn_included']->renderLabel();?></li>
+          <li><?php echo $form['chrono_child_syn_included'];?></li>
+        </ul>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -42,13 +48,25 @@ $(document).ready(function () {
     $('#chrono_precise_line').find('input:text').val("") ;
     $('#chrono_precise_line').find('input:hidden').val('') ;
 
-//     $('#specimen_search_filters_chrono_item_ref').val('') ;
-//     $('#specimen_search_filters_chrono_item_ref_name').val('') ;
   }); 
   
   if($('#specimen_search_filters_chrono_name').val() != '')
   {
     $('#chrono_full_text').trigger("click") ;
   }
+
+  $('#chrono_relation ul.radio_list input').click(function () {
+    if ( $(this).val() in { child : "child", direct_child : "direct_child" } ) {
+      $('#chrono_child_syn_included').removeClass('hidden');
+    }
+    else {
+      $('#chrono_child_syn_included').addClass('hidden');
+    }
+  });
+
+  if (!($('#chrono_relation input:checked').val() in { child : "child", direct_child : "direct_child" } )) {
+    $('#chrono_child_syn_included').addClass('hidden');
+  }
+
 });
 </script>

@@ -1,6 +1,6 @@
 \unset ECHO
 \i unit_launch.sql
-SELECT plan(81);
+SELECT plan(86);
 
 select diag('Test of staging check without levels');
 update people set name_formated_indexed = fulltoindex(coalesce(given_name,'') || coalesce(family_name,''));
@@ -16,9 +16,15 @@ INSERT INTO taxonomy (id, name, level_ref) VALUES (10, 'Falco Coco lus (Brolus 1
 INSERT INTO taxonomy (id, name, level_ref,parent_ref) VALUES (20, 'Falco',2,10);
 INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (30, 'Falco Peregrinus simpl', 3,20);
 INSERT INTO taxonomy (id, name, level_ref, parent_ref) VALUES (31, 'Falco Phyl', 4,30);
+INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword) VALUES ('staging', 1, 'GenusOrMonomial', 'Falco');
+INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword) VALUES ('staging', 1, 'AuthorTeamAndYear', 'Peregrinus simpl');
+
+select is(2::BIGINT,(select count(*) from classification_keywords where referenced_relation = 'staging' and record_id in (1,3)));
 
 select is(1 , (select min(fct_imp_checker_manager(s.*)::int) from staging s ));
 select is(30 , (select taxon_ref from staging s where id = 1));
+
+select is(0::BIGINT,(select count(*) from classification_keywords where referenced_relation = 'staging' and record_id in (1,3)));
 
 insert into staging (id,import_ref,taxon_name) VALUES (2,1,'Falco Brolus');
 
@@ -27,6 +33,10 @@ select is(null, (select  taxon_ref from staging s where id = 2));
 select is('taxon=>not_found', (select  status from staging s where id = 2));
 
 insert into staging (id,import_ref,taxon_name) VALUES (3,1,'Falco coco');
+INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword) VALUES ('staging', 3, 'GenusOrMonomial', 'Falco coco lus');
+INSERT INTO classification_keywords (referenced_relation, record_id, keyword_type, keyword) VALUES ('staging', 3, 'AuthorTeamOriginalAndYear', 'Brolus, 1972');
+
+select is(2::BIGINT,(select count(*) from classification_keywords where referenced_relation = 'staging' and record_id in (1,3)));
 
 select is(1 , (select min(fct_imp_checker_manager(s.*)::int) from staging s));
 select is(NULL, (select taxon_ref from staging s where id = 3));
@@ -34,6 +44,9 @@ select is(NULL, (select taxon_ref from staging s where id = 3));
 UPDATE staging set taxon_name = 'Falco coco Lus Brolus1972' where id = 3;
 select is(1 , (select min(fct_imp_checker_manager(s.*)::int) from staging s));
 select is(10, (select taxon_ref from staging s where id = 3));
+
+select is(0::BIGINT,(select count(*) from classification_keywords where referenced_relation = 'staging' and record_id in (1,3)));
+select is(4::BIGINT,(select count(*) from classification_keywords where referenced_relation = 'taxonomy' and record_id in (10,30)));
 
 INSERT INTO taxonomy (id, name, level_ref,parent_ref) VALUES (40, 'Falco Coco lus (Brolus 1974)', 4, 30);
 UPDATE staging set taxon_ref = null where id = 3;

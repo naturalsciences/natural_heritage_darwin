@@ -69,7 +69,11 @@
     <tr>
       <td colspan='8'>
         <div class="add_code">
-          <a href="<?php echo url_for($addCodeUrl.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_code"><?php echo __('Add code');?></a>
+          <?php
+          if($module == 'specimen') $url = 'specimen/addCode';
+          if($module == 'loan_items') $url = 'loanitem/addCode';
+          ?>
+          <a href="<?php echo url_for($url. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_code"><?php echo __('Add Code');?></a>
         </div>
       </td>
     </tr>
@@ -84,7 +88,12 @@ $(document).ready(function () {
         hideForRefresh('#refCodes');
         parent_el = $(this).closest('table.property_values');
         url = $(this).attr('href')+ (0+$(parent_el).find('tbody').length);
+        <?php
+          $object_arr = $form->getObject()->toArray();
+          if(!empty($object_arr['collection_ref'])):
+        ?>
         url += '/collection_id/' + $('input#specimen_collection_ref').val();
+        <?php endif;?>
         $.ajax(
         {
           type: "GET",
@@ -99,13 +108,13 @@ $(document).ready(function () {
         return false;
     });
     
-    $('select#specimen_prefix_separator').change(function()
+    $("select#<?php echo $module;?>_prefix_separator").change(function()
     {
       parent_el = $(this).closest('table');
       $(parent_el).find('tbody select[id$=\"_prefix_separator\"]').val($(this).val());
     });
 
-    $('select#specimen_suffix_separator').change(function()
+    $("select#<?php echo $module;?>_suffix_separator").change(function()
     {
       parent_el = $(this).closest('table');
       $(parent_el).find('tbody select[id$=\"_suffix_separator\"]').val($(this).val());

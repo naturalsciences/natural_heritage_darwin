@@ -72,7 +72,7 @@ class Gtu extends BaseGtu
     foreach($this->TagGroups as $group)
     {
       if(!$countriesOnly || ($countriesOnly && $group->getSubGroupName()=='country')) {
-        $str .= '<li><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label><ul class="name_tags'.($view!=null?"_view":"").'">';
+        $str .= '<li><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label><ul class="name_tags'.(($view !== null)?"_view":"").'">';
         $tags = explode(";",$group->getTagValue());
         foreach($tags as $value)
           if (strlen($value))

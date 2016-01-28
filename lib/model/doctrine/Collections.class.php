@@ -70,7 +70,7 @@ class Collections extends BaseCollections
         if($t->getId() == $i_path[$i])
           return $t;
       }
-      if($t->parent_node == null) return  $t;
+      if($t->parent_node === null) return  $t;
 
       $t = $t->getParentNode();
     } while(true);

@@ -55,7 +55,7 @@ class CollectionsTable extends DarwinTable
     if($public_only) {
       $q->andWhere('col.is_public = TRUE');
     }
-    if($institutionId != null) {
+    if($institutionId !== null) {
       $q->andWhere('p.id = ?', $institutionId);
     }
 
@@ -68,7 +68,7 @@ class CollectionsTable extends DarwinTable
       ->select('c.*, CONCAT(c.path,c.id,E\'/\') as col_path_id')
       ->from('Collections c')
       ->orderBy('col_path_id ASC,c.name ASC');
-    if($inst != null) {
+    if($inst !== null) {
       $q->andWhere('c.institution_ref = ?',$inst);
     }
 
@@ -137,12 +137,13 @@ class CollectionsTable extends DarwinTable
     return $q->fetchOne();
   }
 
-  public function getAllAvailableCollectionsFor($user_id,$is_admin=false)
+  public function getAllAvailableCollectionsFor($user)
   {
+    $user_id = $user->getId();
     $q = Doctrine_Query::create()
       ->select('c.*')
       ->from('Collections c')  ;   
-    if(!$is_admin)
+    if(!($user->isA(Users::ADMIN)))
       $q->leftJoin('c.CollectionsRights r')
         ->addwhere('r.user_ref = ?',$user_id)
         ->addwhere('db_user_type > 1');
@@ -158,12 +159,19 @@ class CollectionsTable extends DarwinTable
 
   public function afterSaveAddCode($collectionId,$specimenId) 
   {
-    $conn = Doctrine_Manager::connection();
-    $conn->quote($collectionId, 'integer');
-    $conn->quote($specimenId, 'integer');
-    $conn->getDbh()->exec('BEGIN TRANSACTION;');
-    $response = $conn->getDbh()->exec("SELECT fct_after_save_add_code($collectionId, $specimenId)");
-    $conn->getDbh()->exec('COMMIT;');
+    if (
+      $collectionId !== null &&
+      $collectionId !== '' &&
+      $specimenId !== null &&
+      $specimenId !== ''
+    ) {
+      $conn = Doctrine_Manager::connection();
+      $conn->quote($collectionId, 'integer');
+      $conn->quote($specimenId, 'integer');
+      $conn->getDbh()->exec('BEGIN TRANSACTION;');
+      $conn->getDbh()->exec("SELECT fct_after_save_add_code($collectionId, $specimenId)");
+      $conn->getDbh()->exec('COMMIT;');
+    }
     return 0;
   }
 }

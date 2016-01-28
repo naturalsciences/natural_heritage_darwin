@@ -65,7 +65,6 @@ class stagingActions extends DarwinActions
 
     $this->form = new StagingFormFilter(null, array('import' =>$this->import));
     $filters = $request->getParameter('staging_filters');
-    //if(!isset($filters['slevel'])) $filters['slevel'] = 'specimen';
 
     $this->form->bind($filters);
     if($this->form->isValid())
@@ -78,7 +77,7 @@ class stagingActions extends DarwinActions
       $params = $request->isMethod('post') ? $request->getPostParameters() : $request->getGetParameters();
 
       $this->s_url = 'staging/search'.'?import='.$request->getParameter('import');
-      $this->o_url = '';//'&orderby='.$this->orderBy.'&orderdir='.$this->orderDir;
+      $this->o_url = '';
 
       $this->pagerLayout = new PagerLayoutWithArrows(
           new DarwinPager(
@@ -142,7 +141,6 @@ class stagingActions extends DarwinActions
 
   public function executeEdit(sfWebRequest $request)
   {
-//     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $staging = Doctrine::getTable('Staging')->findOneById($request->getParameter('id'));
     $this->import = Doctrine::getTable('Imports')->find($staging->getImportRef());
 
@@ -207,7 +205,6 @@ class stagingActions extends DarwinActions
 
   public function executeUpdate(sfWebRequest $request)
   {
-/*    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction(); */
     $staging = Doctrine::getTable('Staging')->findOneById($request->getParameter('id'));
 
     $this->import = Doctrine::getTable('Imports')->find($staging->getImportRef());

@@ -5,7 +5,21 @@
                                ->getCorrespondingImage()) ; ?>
           <?php endif ; ?>
       </td>
-      <td><?php echo $form['user_ref']->renderLabel();?></td>
+      <td><?php
+        if($sf_user->isA(Users::ADMIN) || ($sf_user->getId()==$form['user_ref']->getValue())) {
+          echo link_to(
+            $form[ 'user_ref' ]->renderLabel(),
+            'user/edit',
+            array (
+              'query_string' => 'id=' . $form[ 'user_ref' ]->getValue()
+            )
+          );
+        }
+        else {
+          echo $form['user_ref']->renderLabel();
+        }
+        ?>
+      </td>
       <td><?php echo $form['has_encoding_right']->render() ; ?></td>
       <td class="widget_row_delete">
         <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_user_'.$row_num); ?>

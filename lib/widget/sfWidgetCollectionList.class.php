@@ -34,7 +34,7 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
     $tab = array() ;
     $user=null;
     $only_public = true;
-    if(! $this->hasOption('public_only') || $this->getOption('public_only')==false )
+    if(! $this->hasOption('public_only') || $this->getOption('public_only') === false )
     {
       $user = sfContext::getInstance()->getUser();
       $only_public = false;

@@ -28,7 +28,6 @@ EOF;
     $conn = Doctrine_Manager::connection();
     $i=0;
     while($media = Doctrine_Query::create()->from('MultimediaTodelete')->fetchOne()) {
-      //$conn->getDbh()->exec('BEGIN TRANSACTION;');
       $file = $media->getUri();
       try{
         $media->deleteFile();
@@ -41,8 +40,6 @@ EOF;
         $this->logSection('Delete Error', $e->getMessage() . ". File: $file",null, 'ERROR') ;
         break;
       }
-
-      //$conn->getDbh()->exec('COMMIT;');
     }
     $this->logSection('Finished', "All files removed ($i)");
   }

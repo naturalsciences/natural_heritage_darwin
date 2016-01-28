@@ -4,7 +4,7 @@ Institutions:
         id: { type: integer, notnull: true,primary: true, autoincrement: true}
         is_physical: { type: boolean, notnull: false}
         sub_type: { type: string }
-        formated_name: { type: string},
+        formated_name: { type: string}
         formated_name_indexed: { type: string}
         family_name: { type: string, notnull: true}
         additional_names: { type: string}
@@ -14,7 +14,7 @@ People:
         id: { type: integer, notnull: true,primary: true, autoincrement: true}
         is_physical: { type: boolean, notnull: true}
         sub_type: { type: string }
-        formated_name: { type: string},
+        formated_name: { type: string}
         formated_name_indexed: { type: string}
         title: { type: string}
         family_name: { type: string, notnull: true}
@@ -208,7 +208,7 @@ Users:
         id: { type: integer, primary: true, autoincrement: true}
         is_physical: { type: boolean, notnull: true}
         sub_type: { type: string }
-        formated_name: { type: string},
+        formated_name: { type: string}
         formated_name_indexed: { type: string}
         title: { type: string}
         family_name: { type: string, notnull: true}
@@ -408,7 +408,7 @@ UsersTracking:
 InformativeWorkflow:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
-        record_id: { type: integer, notnull: true},
+        record_id: { type: integer, notnull: true}
         referenced_relation: { type: string, notnull: true}
         user_ref: { type: integer}
         formated_name: {type: string}
@@ -424,7 +424,7 @@ InformativeWorkflow:
 CollectionMaintenance:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
-        record_id: { type: integer, notnull: true},
+        record_id: { type: integer, notnull: true}
         referenced_relation: { type: string, notnull: true}
         people_ref: { type: integer, notnull: true}
         category: { type: string, notnull: true, default: action}
@@ -976,6 +976,7 @@ Imports:
         is_finished: {type:boolean, notnull: true,default:false}
         errors_in_import: {type: string}
         template_version: {type: string}
+        exclude_invalid_entries: {type: boolean, notnull: true, default: false}
     relations:
         Collections:
             local: collection_ref
@@ -1204,6 +1205,14 @@ Multimedia:
         publishable: {type:boolean, notnull: true, default: true}
         extracted_info: { type: string }
 
+# This sub class is used for linking loans with actors
+LoanActors:
+    inheritance:
+        extends: CataloguePeople
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: loans
+
 Loans:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -1213,6 +1222,12 @@ Loans:
         from_date: { type: string}
         to_date: { type: string}
         extended_to_date: { type: string}
+    relations:
+        CataloguePeople:
+            class: LoanActors
+            local: id
+            foreign: record_id
+            type: many
 
 LoanItems:
     columns:

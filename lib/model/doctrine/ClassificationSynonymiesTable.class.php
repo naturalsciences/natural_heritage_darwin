@@ -178,7 +178,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       ->set('order_by',"fct_array_find(?, id::text) ",implode(",",$id_list))
       ->whereIn('id', $id_list);
 
-    $updated = $q->execute();
+    $q->execute();
   }
   
   /**
@@ -272,7 +272,7 @@ class ClassificationSynonymiesTable extends DarwinTable
       ->update('ClassificationSynonymies s')
       ->set('s.group_id', '?', $group1)
       ->where('s.group_id = ?', $group2);
-    $updated = $q->execute();
+    $q->execute();
     //Check if 2 basionym
     $q = Doctrine_Query::create()
       ->select("COUNT(s.id) num_ids")

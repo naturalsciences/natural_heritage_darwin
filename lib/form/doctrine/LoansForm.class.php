@@ -136,7 +136,7 @@ class LoansForm extends BaseLoansForm
   public function loadEmbedUsers()
   {
     if($this->isBound()) return;
-    /* Comments sub form */
+    /* Users sub form */
     $subForm = new sfForm();
     $this->embedForm('Users',$subForm);    
     if($this->getObject()->getId() !='')
@@ -170,7 +170,7 @@ class LoansForm extends BaseLoansForm
   public function loadEmbedActorsSender()
   {
     if($this->isBound()) return;
-    /* Comments sub form */
+    /* Actors sub form */
     $subForm = new sfForm();
     $this->embedForm('ActorsSender',$subForm);    
     if($this->getObject()->getId() !='')
@@ -204,7 +204,7 @@ class LoansForm extends BaseLoansForm
   public function loadEmbedActorsReceiver()
   {
     if($this->isBound()) return;
-    /* Comments sub form */
+    /* Actors sub form */
     $subForm = new sfForm();
     $this->embedForm('ActorsReceiver',$subForm);    
     if($this->getObject()->getId() !='')
@@ -239,6 +239,7 @@ class LoansForm extends BaseLoansForm
   public function addComments($num, $values, $order_by=0)
   {
     $options = array('referenced_relation' => 'loans', 'record_id' => $this->getObject()->getId());
+    $options = array_merge($values, $options);
     $this->attachEmbedRecord('Comments', new CommentsSubForm(DarwinTable::newObjectFromArray('Comments',$options)), $num);
   }
 
