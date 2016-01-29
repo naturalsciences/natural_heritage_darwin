@@ -52,15 +52,13 @@ class specimenActions extends DarwinActions
     if(strlen(trim($testVal))>0)
     {
     	$collTmp=Doctrine_Core::getTable('Collections')->find($request->getParameter('collection_id', null));
-		if(is_object($collTmp))
-		{
-    
-			$codeMask=$collTmp->getCodeMask();
-		}
-     }
+      if(is_object($collTmp))
+      {
 
-
-	return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number, 'codemask'=> $codeMask));
+        $codeMask=$collTmp->getCodeMask();
+      }
+    }
+	  return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number, 'codemask'=> $codeMask));
   }
 
   public function executeAddCollector(sfWebRequest $request)
@@ -327,7 +325,7 @@ class specimenActions extends DarwinActions
     */
   public function executeSearch(sfWebRequest $request)
   {
-//     // Forward to a 404 page if the method used is not a post
+    // Forward to a 404 page if the method used is not a post
     $this->forward404Unless($request->isMethod('post'));
     $this->setCommonValues('specimen', 'collection_name', $request);
     $item = $request->getParameter('searchSpecimen',array(''));
@@ -339,7 +337,7 @@ class specimenActions extends DarwinActions
 
   /**
     * Method executed when searching an expedition - trigger by the click on the search button
-    * @param SearchExpeditionForm $form    The search expedition form instantiated that will be binded with the data contained in request
+    * @param SpecimensSelfFormFilter $form    The search expedition form instantiated that will be binded with the data contained in request
     * @param sfWebRequest         $request Request coming from browser
     * @var   int                  $pagerSlidingSize: Get the config value to define the range size of pager to be displayed in numbers (i.e.: with a value of 5, it will give this: << < 1 2 3 4 5 > >>)
     */
