@@ -1059,11 +1059,8 @@ class SpecimensForm extends BaseSpecimensForm
     $javascripts=parent::getJavascripts();
     $javascripts[]='/js/jquery-datepicker-lang.js';
     $javascripts[]='/js/ui.complete.js';
-	
-	//ftheeten 2015 10 15 link inputmask library
-	//from https://github.com/RobinHerbots/jquery.inputmask 
-	$javascripts[]='/RobinHerbots-jquery.inputmask-3.1.63-38/js/jquery.inputmask.js';
-	$javascripts[]='/RobinHerbots-jquery.inputmask-3.1.63-38/js/inputmask.js';
+	  $javascripts[]='/js/jquery.inputmask.js';
+	  $javascripts[]='/js/inputmask.js';
     return $javascripts;
   }
 
