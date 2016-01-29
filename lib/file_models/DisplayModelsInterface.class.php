@@ -1,5 +1,5 @@
 <?php
-interface IDisplayModels
+interface DisplayModelsInterface
 {
   public function getName();
 //  public function getLevels();

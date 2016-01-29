@@ -1,5 +1,5 @@
 <?php
-class ImportABCDXml implements IImportModels
+class ImportABCDXml implements ImportModelsInterface
 {
   private $cdata, $tag, $staging, $object, $people_name,$import_id, $path="", $name, $errors_reported='',$preparation_type='', $preparation_mat='';
   private $unit_id_ref = array() ; // to keep the original unid_id per staging for Associations
