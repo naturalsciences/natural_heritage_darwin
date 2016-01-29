@@ -4,3 +4,6 @@
 [submodule "lib/vendor/symfony"]
 	path = lib/vendor/symfony
 	url = https://github.com/symfony/symfony1.git
+[submodule "web/Leaflet.draw"]
+	path = web/Leaflet.draw
+	url = https://github.com/Leaflet/Leaflet.draw.git
