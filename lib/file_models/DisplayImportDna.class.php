@@ -1,5 +1,5 @@
 <?php 
-class DisplayImportDna implements IDisplayModels
+class DisplayImportDna implements DisplayModelsInterface
 {
   public function getName()
   {

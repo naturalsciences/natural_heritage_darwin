@@ -1,5 +1,5 @@
 <?php
-interface IImportModels
+interface ImportModelsInterface
 {
   public function parseFile($file,$id);
 }

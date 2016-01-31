@@ -1,5 +1,5 @@
 <?php
-class ImportDnaXml implements IImportModels
+class ImportDnaXml implements ImportModelsInterface
 {
   private $simpleArrayField = array(
     'category' => 'category',
