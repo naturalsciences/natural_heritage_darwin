@@ -1,5 +1,5 @@
 <?php
-class DisplayImportABCD implements IDisplayModels
+class DisplayImportABCD implements DisplayModelsInterface
 {
   public function getName()
   {

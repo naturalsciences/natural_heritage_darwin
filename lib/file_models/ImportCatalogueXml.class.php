@@ -1,5 +1,5 @@
 <?php
-class ImportCatalogueXml implements IImportModels
+class ImportCatalogueXml implements ImportModelsInterface
 {
   private $parent, $referenced_relation, $errors_reported, $staging_catalogue, $version;
   private $version_defined = false;
