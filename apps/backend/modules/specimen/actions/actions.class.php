@@ -12,8 +12,6 @@ class specimenActions extends DarwinActions
 {
   protected $widgetCategory = 'specimen_widget';
 
-  /*
-  */
   protected function getSpecimenForm(sfWebRequest $request, $fwd404=false, $parameter='id')
   {
     $spec = null;
@@ -44,20 +42,17 @@ class specimenActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
-    $form = $this->getSpecimenForm($request);
-    $form->addCodes($number, array('collection_ref' => $request->getParameter('collection_id', null)));
-   	//mrac 2015 06 03 code mask
     $codeMask="";
-    $testVal=$request->getParameter('collection_id', null);
-    if(strlen(trim($testVal))>0)
-    {
-    	$collTmp=Doctrine_Core::getTable('Collections')->find($request->getParameter('collection_id', null));
-      if(is_object($collTmp))
+    $collId = intval($request->getParameter('collection_id', '0'));
+    if ( $collId > 0 ) {
+      $collTmp = Doctrine_Core::getTable('Collections')->find($collId);
+      if($collTmp)
       {
-
         $codeMask=$collTmp->getCodeMask();
       }
     }
+    $form = $this->getSpecimenForm($request);
+    $form->addCodes($number, array('collection_ref' => $request->getParameter('collection_id', null)));
 	  return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number, 'codemask'=> $codeMask));
   }
 

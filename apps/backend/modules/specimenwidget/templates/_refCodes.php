@@ -2,12 +2,12 @@
   <thead style="<?php echo ($form['Codes']->count() || $form['newCodes']->count())?'':'display: none;';?>">
     <tr>
       <th colspan="7">
-        <div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;" class="class_rmca_mask_display" style="width:97%; overflow: hidden;white-space: nowrap;">Mask:</div>
+        <div id="mask_display" class="mask_display"><?php echo __('Mask').':'; ?></div>
       </th>
     </tr>
     <tr>
       <th colspan="7">
-        <div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Apply input mask:<input type="checkbox" class="enable_mask" <?php if(sfContext::getInstance()->getActionName()=="new"){print("checked");}?>><input type="hidden" class="take_mask"/></div>
+        <div class="mask_display"><?php echo $form['code_enable_mask'];?></div>
       </th>
       </tr>
     <tr>
@@ -122,7 +122,6 @@ $(document).ready(function () {
         }
         else
         {
-
           $(".mrac_input_mask").inputmask("*{0,+}");
         }
       }

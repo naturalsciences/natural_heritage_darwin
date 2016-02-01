@@ -30,7 +30,7 @@ class CodesForm extends BaseCodesForm
     ));
     $this->widgetSchema['code_prefix_separator']->setAttributes(array('class'=>'vvsmall_size'));
     $this->widgetSchema['code'] = new sfWidgetFormInput();
-	//mrac 2015 06 03 new css class 'mrac_input_mask' for input mask
+	  //mrac 2015 06 03 new css class 'mrac_input_mask' for input mask
     $this->widgetSchema['code']->setAttributes(array('class'=>'medium_small_size mrac_input_mask'));
     $this->validatorSchema['code'] = new sfValidatorString(array('required' => false, 'trim'=>true));
     $this->widgetSchema['code_suffix'] = new sfWidgetFormInput();
