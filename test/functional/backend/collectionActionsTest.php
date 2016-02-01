@@ -185,7 +185,7 @@ $browser->
   begin()->
     isStatusCode(200)->
     checkElement('div#collections_codes_screen form#collections_codes_form', 1)->
-    checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr', 8)->
+    checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr', 9)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(2) td input#collections_code_prefix', 1)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(3) td input#collections_code_prefix_separator', 1)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(4) td input#collections_code_suffix_separator', 1)->
@@ -193,6 +193,7 @@ $browser->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(6) td input#collections_code_auto_increment', 1)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(7) td input#collections_code_auto_increment_for_insert_only', 1)->
     checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(8) td input#collections_code_specimen_duplicate', 1)->
+    checkElement('div#collections_codes_screen form#collections_codes_form table tbody tr:nth-child(9) td input#collections_code_mask', 1)->
   end()->
   click('a.delete_button')->
   with('response')->

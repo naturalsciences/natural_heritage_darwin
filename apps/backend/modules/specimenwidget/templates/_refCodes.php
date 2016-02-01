@@ -1,14 +1,14 @@
 <table  class="property_values">
   <thead style="<?php echo ($form['Codes']->count() || $form['newCodes']->count())?'':'display: none;';?>">
     <tr>
-      <td colspan="7">
+      <th colspan="7">
         <div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;" class="class_rmca_mask_display" style="width:97%; overflow: hidden;white-space: nowrap;">Mask:</div>
-      </td>
+      </th>
     </tr>
     <tr>
-      <td colspan="7">
+      <th colspan="7">
         <div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Apply input mask:<input type="checkbox" class="enable_mask" <?php if(sfContext::getInstance()->getActionName()=="new"){print("checked");}?>><input type="hidden" class="take_mask"/></div>
-      </td>
+      </th>
       </tr>
     <tr>
       <th>
