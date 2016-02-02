@@ -54,7 +54,6 @@ class CollectionsForm extends BaseCollectionsForm
       'complete_url' => 'catalogue/completeName?table=users',
      ));
     $this->widgetSchema['staff_ref']->setLabel('Staff Member');
-//      $this->validatorSchema['staff_ref'] = new sfValidatorInteger(array('required' => false)) ;
 
     $this->widgetSchema['main_manager_ref']->setLabel('Conservator');
 
@@ -141,10 +140,6 @@ class CollectionsForm extends BaseCollectionsForm
       {
         if (!isset($value[$name]['user_ref']))
         {
-          /* DO BE DONE WITH A TRIGGER
-          if ($form->getObject()->getDbUserType() == Users::REGISTERED_USER ) // so we have to delete widget right for this guy
-          Doctrine::getTable('MyWidgets')->setUserRef($form->getObject()->getUserRef())->doUpdateWidgetRight($form->getObject()->getCollectionRef());
-          */
           $form->getObject()->delete();
           unset($this->embeddedForms['CollectionsRights'][$name]);
         }

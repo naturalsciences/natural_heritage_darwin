@@ -26,7 +26,14 @@
                                ->getCorrespondingImage()) ; ?>
           <?php endif ; ?>
       </td>
-      <td><?php echo $form['people_ref']->renderLabel();?></td>
+      <td><?php
+                $is_physical = Doctrine::getTable('People')->find($form['people_ref']->getValue())->getIsPhysical();
+                echo link_to($form['people_ref']->renderLabel(),
+                             (($is_physical)?'people':'institution').'/edit',
+                             array(
+                               'query_string' => 'id='.$form['people_ref']->getValue()
+                             )
+        );?></td>
       <?php echo $form['people_sub_type']->render() ; ?>
       <td class="widget_row_delete">
         <?php echo image_tag('remove.png', 'alt=Delete class=clear_code id=clear_'.$type.'_'.$row_num); ?>

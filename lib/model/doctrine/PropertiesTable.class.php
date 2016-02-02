@@ -15,7 +15,7 @@ class PropertiesTable extends DarwinTable
   {
     $q = Doctrine_Query::create()
       ->from('Properties p')
-      ->orderBy('p.property_type ASC');
+      ->orderBy('p.property_type ASC, p.applies_to_indexed ASC');
     $q = $this->addCatalogueReferences($q, $table_name, $record_id, 'p', true);
     return $q->execute();
   }

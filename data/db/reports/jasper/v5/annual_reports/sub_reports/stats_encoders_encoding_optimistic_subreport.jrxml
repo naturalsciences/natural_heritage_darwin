@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stats_encoders_encoding_optimistic_subreport.jrxml" language="groovy" pageWidth="800" pageHeight="572" orientation="Landscape" columnWidth="800" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="49ed4ad6-c720-4c60-be13-fdee06e91839">
+	<property name="ireport.zoom" value="1.1000000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="collection_ref" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="date_from" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="date_to" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="users_array" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["[0]"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select *
+from stats_encoders_encoding_optimistics(
+  $P{collection_ref}::integer,
+  $P{users_array}::text,
+  $P{date_from}::timestamp,
+  $P{date_to}::timestamp
+);]]>
+	</queryString>
+	<field name="encoder" class="java.lang.String"/>
+	<field name="collection_path" class="java.lang.String"/>
+	<field name="new_items" class="java.lang.Long"/>
+	<field name="updated_items" class="java.lang.Long"/>
+	<field name="new_types" class="java.lang.Long"/>
+	<field name="updated_types" class="java.lang.Long"/>
+	<field name="new_species" class="java.lang.Long"/>
+	<columnHeader>
+		<band height="46" splitType="Stretch">
+			<textField>
+				<reportElement uuid="1b9d40ff-f3d1-484e-86f4-37736ae8459f" x="0" y="0" width="420" height="22"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $P{lang}=="en" ? "Optimistic count - all updates for period:" : ( $P{lang}=="fr" ? "Comptage optimiste - toutes les mises-à-jour pour la période:" : ( $P{lang}=="nl" ? "Optimistische rekening - alle updates voor het periode:" : "Optimistic count - all updates for period:" ) ) )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1b9d40ff-f3d1-484e-86f4-37736ae8459f" x="420" y="0" width="382" height="22"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($P{date_from}) + " - " + new SimpleDateFormat("dd/MM/yyyy").format($P{date_to})]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement uuid="c092968e-c685-4769-8acc-0ab07da94a8a" mode="Opaque" x="0" y="22" width="800" height="24" backcolor="#666666"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="590" y="0" width="105" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "Updated types" : ( $P{lang}=="fr" ? "Types m-à-j" : ( $P{lang}=="nl" ? "Geupd. types" : "Updated types" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="85" y="0" width="190" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "Collection" : ( $P{lang}=="fr" ? "Collection" : ( $P{lang}=="nl" ? "Verzameling" : "Collection" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="0" y="0" width="85" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "Encoder" : ( $P{lang}=="fr" ? "Encodeur" : ( $P{lang}=="nl" ? "Encodeur" : "Encoder" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="275" y="0" width="105" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "New items" : ( $P{lang}=="fr" ? "Nouv. items" : ( $P{lang}=="nl" ? "Nieuw. items" : "New items" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="380" y="0" width="105" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "Updated items" : ( $P{lang}=="fr" ? "Items m-à-j" : ( $P{lang}=="nl" ? "Geupd. items" : "Updated items" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="485" y="0" width="105" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "New types" : ( $P{lang}=="fr" ? "Nouv. types" : ( $P{lang}=="nl" ? "Nieuwe types" : "New types" ) ) )]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="1e1b3e26-eee9-4b90-a398-9c45868563c7" x="695" y="0" width="105" height="24" forecolor="#FFFFFF"/>
+					<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( $P{lang}=="en" ? "New species" : ( $P{lang}=="fr" ? "Nouv. espèces" : ( $P{lang}=="nl" ? "Nieuw. species" : "New species" ) ) )]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="8832c1ce-aeb9-4d73-a7fb-7f6ba28447f4" stretchType="RelativeToTallestObject" x="0" y="0" width="85" height="22" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{encoder}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="8832c1ce-aeb9-4d73-a7fb-7f6ba28447f4" stretchType="RelativeToTallestObject" x="85" y="0" width="190" height="22" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="1" leftPadding="2" bottomPadding="2" rightPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{collection_path}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="58069df3-2948-45fb-9ecf-3cd23242059f" stretchType="RelativeToTallestObject" x="275" y="0" width="105" height="22" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="1" bottomPadding="2" rightPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{new_items}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="0fac3813-b799-455a-bde1-ae8b80a4b512" stretchType="RelativeToTallestObject" x="380" y="0" width="105" height="22" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="1" bottomPadding="2" rightPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{updated_items}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="906cc360-9346-4fba-943d-29be0738ff87" stretchType="RelativeToTallestObject" x="485" y="0" width="105" height="22" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="1" bottomPadding="2" rightPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{new_types}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="37d9d3fa-2478-49fc-b95f-e8e147c6bf20" stretchType="RelativeToTallestObject" x="590" y="0" width="105" height="22" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="1" bottomPadding="2" rightPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{updated_types}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="202ea303-7bc1-48a8-bf49-c4a264227490" stretchType="RelativeToTallestObject" x="695" y="0" width="105" height="22" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="1" bottomPadding="2" rightPadding="1">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{new_species}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

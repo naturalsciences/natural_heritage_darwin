@@ -72,6 +72,13 @@ abstract class BaseCataloguePeople extends DarwinModel
              'type' => 'integer',
              'notnull' => true,
              ));
+
+        $this->setSubClasses(array(
+             'LoanActors' => 
+             array(
+              'referenced_relation' => 'loans',
+             ),
+             ));
     }
 
     public function setUp()

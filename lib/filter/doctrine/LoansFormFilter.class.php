@@ -95,6 +95,13 @@ class LoansFormFilter extends BaseLoansFormFilter
       'only_darwin' => 'Contains Darwin items',
       'people_ref' => 'Person involved',
     ));
+
+    $this->widgetSchema['table'] = new sfWidgetFormInputHidden();
+    $this->widgetSchema['level'] = new sfWidgetFormInputHidden();
+    $this->widgetSchema['caller_id'] = new sfWidgetFormInputHidden();
+    $this->validatorSchema['table'] = new sfValidatorString(array('required' => false));
+    $this->validatorSchema['level'] = new sfValidatorString(array('required' => false));
+    $this->validatorSchema['caller_id'] = new sfValidatorString(array('required' => false));
   }
 
 

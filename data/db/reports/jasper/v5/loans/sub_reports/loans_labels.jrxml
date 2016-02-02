@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loans_labels" language="groovy" pageWidth="559" pageHeight="555" orientation="Landscape" columnWidth="559" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e769a8c7-b682-42df-8bff-ef328e6a749a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="target_copy" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="loan_id" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="target_catalogues" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+  trim(loan_items_name||' '||coalesce(loan_items_description,'')) as loan_items_description,
+  loan_phantom_id,
+  loan_rbins_phantom_id
+from fct_report_loans_forms(
+                             $P{loan_id}::integer,
+                             '[RBINS copy, Specimens copy]',
+                             '[RBINS copy, Specimens copy]',
+                             $P{target_copy}::text,
+                             $P{target_catalogues}::text,
+                             FALSE,
+                             $P{lang}::text
+                           )]]>
+	</queryString>
+	<field name="loan_items_description" class="java.lang.String"/>
+	<field name="loan_phantom_id" class="java.lang.String"/>
+	<field name="loan_rbins_phantom_id" class="java.lang.String"/>
+	<detail>
+		<band height="75" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="7ab49341-06b0-45fa-8f67-a7ab01523c15" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="275" height="75" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[$P{target_copy}=="RBINS copy"]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{loan_items_description}]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement uuid="fcc25577-77f1-47b7-a96a-c006fd02691e" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="275" height="75" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[$P{target_copy}!="RBINS copy"]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<componentElement>
+					<reportElement uuid="796ac256-521e-442a-95a5-dcc28b69ad3b" x="4" y="4" width="263" height="45" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" moduleWidth="1.2" textPosition="none">
+						<jr:codeExpression><![CDATA[$F{loan_phantom_id}]]></jr:codeExpression>
+					</jr:Code128>
+				</componentElement>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8e0ac592-e766-4276-ae20-47aa093f8eac" x="4" y="50" width="263" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{loan_phantom_id}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement uuid="fcc25577-77f1-47b7-a96a-c006fd02691e" positionType="Float" stretchType="RelativeToTallestObject" x="283" y="0" width="275" height="75" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<componentElement>
+					<reportElement uuid="796ac256-521e-442a-95a5-dcc28b69ad3b" x="4" y="4" width="263" height="45" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" moduleWidth="1.2" textPosition="none">
+						<jr:codeExpression><![CDATA[$F{loan_phantom_id}]]></jr:codeExpression>
+					</jr:Code128>
+				</componentElement>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8e0ac592-e766-4276-ae20-47aa093f8eac" x="4" y="50" width="263" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+						<printWhenExpression><![CDATA[$P{target_copy}!="RBINS copy"]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{loan_phantom_id}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8e0ac592-e766-4276-ae20-47aa093f8eac" x="128" y="4" width="136" height="66" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+						<printWhenExpression><![CDATA[$P{target_copy}=="RBINS copy"]]></printWhenExpression>
+					</reportElement>
+					<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="2"/>
+					<textElement verticalAlignment="Top">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{loan_rbins_phantom_id}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>

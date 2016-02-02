@@ -220,6 +220,10 @@ DROP TRIGGER IF EXISTS trg_trk_log_table_lithology
 DROP TRIGGER IF EXISTS trg_trk_log_table_people 
         ON people;
 
+DROP TRIGGER IF EXISTS trg_trk_log_table_loans ON loans;
+DROP TRIGGER IF EXISTS trg_trk_log_table_loan_items ON loan_items;
+DROP TRIGGER IF EXISTS trg_trk_log_table_loan_status ON loan_status;
+DROP TRIGGER IF EXISTS trg_trk_log_table_loan_rights ON loan_rights;
 
 /*** darwin flat synchro triggers ***/
 
@@ -443,3 +447,8 @@ DROP TRIGGER IF EXISTS trg_add_status_history ON loans;
 DROP TRIGGER IF EXISTS trg_cpy_deleted_file ON multimedia;
 DROP TRIGGER IF EXISTS trg_clr_referenceRecord_staging_info ON staging_info ;
 DROP TRIGGER IF EXISTS trg_upd_institution_staging_relationship ON staging_relationship ;
+
+/**** Imports ****/
+
+DROP TRIGGER IF EXISTS trg_catalogue_import_keywords_update ON staging_catalogue;
+DROP TRIGGER IF EXISTS trg_catalogue_import_keywords_update ON staging;

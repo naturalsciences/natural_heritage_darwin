@@ -9,7 +9,7 @@ class ParsingMaintenance
     $this->maintenance->setActionObservation($action) ;
   }
   
-  public function addMaintenance($staging, $with_desc=false)
+  public function addMaintenance(Staging $staging, $with_desc=false)
   {
     if($with_desc) $this->maintenance->setDescription($this->desc) ;
     $staging->addRelated($this->maintenance) ;

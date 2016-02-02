@@ -267,16 +267,23 @@ class catalogueActions extends DarwinActions
 
   public function executeCompleteName(sfWebRequest $request) {
     $tbl = $request->getParameter('table');
-    $catalogues = array('taxonomy','mineralogy','chronostratigraphy','lithostratigraphy','lithology','people', 'institutions', 'users' ,'expeditions', 'collections');
+    $catalogues = array('taxonomy','mineralogy','chronostratigraphy','lithostratigraphy','lithology','people','institutions','users','expeditions','collections','loans');
     $result = array();
 
     if(in_array($tbl,$catalogues)) {
       $model = DarwinTable::getModelForTable($tbl);
-      if(! $request->getParameter('level', false))
-        $result = Doctrine::getTable($model)->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id', ''));
-      else
-        $result = Doctrine::getTable($model)->completeWithLevelAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id', ''));
-    }else{
+      if(! $request->getParameter('level', false)) {
+        $result = Doctrine::getTable($model)
+                          ->completeAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id', ''))
+        ;
+      }
+      else {
+        $result = Doctrine::getTable($model)
+                          ->completeWithLevelAsArray($this->getUser(), $request->getParameter('term'), $request->getParameter('exact'), 30, $request->getParameter('field_level_id', ''))
+        ;
+      }
+    }
+    else {
       $this->forward404('Unsuported table for completion : '.$tbl);
     }
 

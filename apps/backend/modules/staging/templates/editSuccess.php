@@ -72,7 +72,7 @@
                 <?php if ($catalogue['class'] != '') echo image_tag('info.png',"title=info class=info") ;?>
                 <?php if($catalogue['level_sys_name'] == $lvl_name) echo '<strong>';?>
                 <?php if($catalogue['class'] == ''):?>
-                  <a target="_blank" href="<?php echo url_for($link_url.'/new').'?'.$link_url.'[name]='.$catalogue['name'].'&'.$link_url.'[level_ref]='.$catalogue['level_ref'] ; ?>">
+                  <a target="_blank" href="<?php echo url_for($link_url.'/new').'?'.$link_url.'[name]='.urlencode($catalogue['name']).'&'.$link_url.'[level_ref]='.$catalogue['level_ref'] ; ?>">
                     <?php echo $catalogue['name']." (".$level.")";?>
                   </a>
                 <?php else:?>

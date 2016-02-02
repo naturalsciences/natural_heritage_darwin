@@ -10,7 +10,7 @@ before_script:
   - sudo /etc/init.d/postgresql stop
   - sudo /etc/init.d/postgresql start 9.1
   - sudo apt-get update
-  - sudo apt-get install pgtap libtap-parser-sourcehandler-pgtap-perl
+  - sudo apt-get install pgtap=0.90.0-1 libtap-parser-sourcehandler-pgtap-perl
   - cd data/db
   - ./install.sh -O darwin2 install-all
   - ./install.sh -O darwin2 install-test

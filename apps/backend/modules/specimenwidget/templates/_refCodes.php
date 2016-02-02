@@ -1,24 +1,16 @@
 <table  class="property_values">
   <thead style="<?php echo ($form['Codes']->count() || $form['newCodes']->count())?'':'display: none;';?>">
-    <!-- the two TR below 2015 10 15 input mask-->
-	<tr>
-		<td colspan="7" >
-			<div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Enable unicity check:<?php echo $form['unicity_check'];?></div>
-		</td>
-	</tr>
-	<tr>
-	      <td colspan="7">
-		       <div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;" class="class_rmca_mask_display" style="width:97%; overflow: hidden;white-space: nowrap;">Mask:</div>
-		</td>
-	</tr>
-	<tr>
-	  <td colspan="7">
-      		
-			<div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Apply input mask:<input type="checkbox" class="enable_mask" <?php if(sfContext::getInstance()->getActionName()=="new"){print("checked");}?>><input type="hidden" class="take_mask"/></div>
-		
-    </td>
+    <tr>
+      <th colspan="7">
+        <div id="mask_display" class="mask_display"><?php echo __('Mask').':'; ?></div>
+      </th>
     </tr>
-	<tr>
+    <tr>
+      <th colspan="7">
+        <div class="mask_display"><?php echo $form['code_enable_mask'];?></div>
+      </th>
+      </tr>
+    <tr>
       <th>
         <?php echo __('Category'); ?>
       </th>
@@ -69,7 +61,11 @@
     <tr>
       <td colspan='8'>
         <div class="add_code">
-          <a href="<?php echo url_for($addCodeUrl.($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_code"><?php echo __('Add code');?></a>
+          <?php
+          if($module == 'specimen') $url = 'specimen/addCode';
+          if($module == 'loan_items') $url = 'loanitem/addCode';
+          ?>
+          <a href="<?php echo url_for($url. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_code"><?php echo __('Add Code');?></a>
         </div>
       </td>
     </tr>
@@ -84,7 +80,12 @@ $(document).ready(function () {
         hideForRefresh('#refCodes');
         parent_el = $(this).closest('table.property_values');
         url = $(this).attr('href')+ (0+$(parent_el).find('tbody').length);
+        <?php
+          $object_arr = $form->getObject()->toArray();
+          if(!empty($object_arr['collection_ref'])):
+        ?>
         url += '/collection_id/' + $('input#specimen_collection_ref').val();
+        <?php endif;?>
         $.ajax(
         {
           type: "GET",
@@ -99,33 +100,32 @@ $(document).ready(function () {
         return false;
     });
     
-    $('select#specimen_prefix_separator').change(function()
+    $("select#<?php echo $module;?>_prefix_separator").change(function()
     {
       parent_el = $(this).closest('table');
       $(parent_el).find('tbody select[id$=\"_prefix_separator\"]').val($(this).val());
     });
 
-    $('select#specimen_suffix_separator').change(function()
+    $("select#<?php echo $module;?>_suffix_separator").change(function()
     {
       parent_el = $(this).closest('table');
       $(parent_el).find('tbody select[id$=\"_suffix_separator\"]').val($(this).val());
     });
 	
-	 //ftheeten 2015 10 15 (enable/disable input mask)
-	$(".enable_mask").change(
-		function()
-		{
-			if($(".enable_mask").prop('checked'))
-			{
-				$(".mrac_input_mask").inputmask($(".take_mask").val());
-			}
-			else
-			{
-				
-				$(".mrac_input_mask").inputmask("*{0,+}");
-			}
-		}
-	);
+    //ftheeten 2015 10 15 (enable/disable input mask)
+    $(".enable_mask").change(
+      function()
+      {
+        if($(".enable_mask").prop('checked'))
+        {
+          $(".mrac_input_mask").inputmask($(".take_mask").val());
+        }
+        else
+        {
+          $(".mrac_input_mask").inputmask("*{0,+}");
+        }
+      }
+    );
 
 });
 </script>

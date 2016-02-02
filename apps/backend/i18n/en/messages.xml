@@ -5589,7 +5589,7 @@
       </trans-unit>
       <trans-unit id="1745">
         <source>warning_spec_msg</source>
-        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove them, is to delete your import, correct your XML file and import it again. You can also continue your import but you won't have the information above. What do you want to do ?</target>
+        <target>&lt;strong&gt;Warning!&lt;/strong&gt;&lt;br /&gt; These errors cannot be corrected, the best way to remove them, is to delete your import, correct your XML file and import it again.&lt;/br&gt;You can also continue your import but you won't have the information above.&lt;br /&gt;If the error mentioned is a version problem we warmly encourage you to contact your application administrator&lt;br /&gt;What would you like to do ?</target>
       </trans-unit>
       <trans-unit id="1746">
         <source>Continue import</source>
@@ -5988,23 +5988,23 @@ DaRWIN</target>
       </trans-unit>      
       <trans-unit id="1844">
         <source>Choose a report</source>
-        <target></target>
+        <target>Choose a report</target>
       </trans-unit>
       <trans-unit id="1845">
         <source>Report you asked</source>
-        <target></target>
+        <target>Report you asked</target>
       </trans-unit>
       <trans-unit id="1846">
         <source>report not available yet</source>
-        <target></target>
+        <target>report not available yet</target>
       </trans-unit>
       <trans-unit id="1847">
         <source>Reports</source>
-        <target></target>
+        <target>Reports</target>
       </trans-unit>
       <trans-unit id="1848">
         <source>Report</source>
-        <target></target>
+        <target>Report</target>
       </trans-unit>
       <trans-unit id="1849">
         <source>test report warning</source>
@@ -6022,7 +6022,98 @@ DaRWIN</target>
         <source>report too big info</source>
         <target>Your report take too much time to be created. You should review your criterias</target>
       </trans-unit>
+      <trans-unit id="1853">
+        <source>approval</source>
+        <target>Approval</target>
+      </trans-unit>
+      <trans-unit id="1854">
+        <source>organized_by</source>
+        <target>Organized by</target>
+      </trans-unit>
+      <trans-unit id="1855">
+        <source>preparation</source>
+        <target>Preparation</target>
+      </trans-unit>
+      <trans-unit id="1856">
+        <source>action</source>
+        <target>Action</target>
+      </trans-unit>
+      <trans-unit id="1857">
+        <source>observation</source>
+        <target>Observation</target>
+      </trans-unit>
+      <trans-unit id="1858">
+        <source>Return Type Material</source>
+        <target>Return Type Material</target>
+      </trans-unit>
+      <trans-unit id="1859">
+        <source>Received by</source>
+        <target>Received by</target>
+      </trans-unit>
+      <trans-unit id="1860">
+        <source>Checked by</source>
+        <target>Checked by</target>
+      </trans-unit>
+      <trans-unit id="1861">
+        <source>Return checked by</source>
+        <target>Return checked by</target>
+      </trans-unit>
+      <trans-unit id="1862">
+        <source>Return received by</source>
+        <target>Return received by</target>
+      </trans-unit>
+      <trans-unit id="1863">
+        <source>Your report has been saved and is available right above</source>
+        <target>Your report has been saved and is available right above</target>
+      </trans-unit>
+      <trans-unit id="1864">
+        <source>File has not been well written. Please contact your application administrator</source>
+        <target>File has not been well written. Please contact your application administrator</target>
+      </trans-unit>
+      <trans-unit id="1865">
+        <source>An error occured while trying to retrieve the file.\nError message: %1%</source>
+        <target>An error occured while trying to retrieve the file.\nError message: %1%</target>
+      </trans-unit>
+      <trans-unit id="1866">
+        <source>Loan target selected</source>
+        <target>Target</target>
+      </trans-unit>
+      <trans-unit id="1867">
+        <source>Loan target catalogues</source>
+        <target>Unit name from</target>
+      </trans-unit>
+      <trans-unit id="1868">
+        <source>Lang</source>
+        <target>Language</target>
+      </trans-unit>
+      <trans-unit id="1869">
+        <source>Please fill in the criterias to print your report</source>
+        <target>Please fill in the criterias to print your report</target>
+      </trans-unit>
+      <trans-unit id="1870">
+        <source>The duplication process failed at %time% - please contact your application administrator</source>
+        <target>The duplication process failed at %time% - please contact your application administrator</target>
+      </trans-unit>
+      <trans-unit id="1871">
+        <source>Expedition date</source>
+        <target>Expedition date</target>
+      </trans-unit>
+      <trans-unit id="1872">
+        <source>Return date</source>
+        <target>Return date</target>
+      </trans-unit>
+      <trans-unit id="1873">
+        <source>You don't have rights to edit these informations !</source>
+        <target>You don't have rights to edit these informations !</target>
+      </trans-unit>
+      <trans-unit id="1874">
+        <source>Specimen Main code(s)</source>
+        <target>Specimen Main code(s)</target>
+      </trans-unit>
+      <trans-unit id="1875">
+        <source>Darwin Part Main Code(s)</source>
+        <target>Darwin Part Main Code(s)</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
-

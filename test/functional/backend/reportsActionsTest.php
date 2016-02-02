@@ -14,5 +14,3 @@ $browser->
     checkElement('h1', 'Reports')->
     checkElement('#report_list > option:first_element', '')->
   end();
-
-?>

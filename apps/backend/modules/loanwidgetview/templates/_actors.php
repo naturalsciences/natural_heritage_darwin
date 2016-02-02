@@ -18,7 +18,14 @@
  <tbody id="sender_body">
    <?php foreach($senders as $actor):?>
       <tr>
-      <td colspan="4">  <?php echo image_tag($people_ids[$actor->getPeopleRef()]->getCorrespondingImage()) ; ?> <?php echo $people_ids[$actor->getPeopleRef()]->getFormatedName(); ?></td>
+      <td colspan="4"><?php echo image_tag($people_ids[$actor->getPeopleRef()]->getCorrespondingImage()) ; ?> <?php
+          $is_physical = $people_ids[$actor->getPeopleRef()]->getIsPhysical();
+          echo link_to(
+            $people_ids[$actor->getPeopleRef()]->getFormatedName(),
+            (($is_physical)?'people':'institution').'/view',
+            array('query_string'=>'id='.$actor->getPeopleRef())
+          ); ?>
+      </td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Responsible') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Contact') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Checker') ? 'on':'off'; ?>" /></td>
@@ -52,7 +59,13 @@
  <tbody id="receiver_body">
    <?php foreach($receivers as $actor):?>
       <tr>
-      <td colspan="4">  <?php echo image_tag($people_ids[$actor->getPeopleRef()]->getCorrespondingImage()) ; ?> <?php echo $people_ids[$actor->getPeopleRef()]->getFormatedName(); ?></td>
+      <td colspan="4"><?php echo image_tag($people_ids[$actor->getPeopleRef()]->getCorrespondingImage()) ; ?> <?php
+          $is_physical = $people_ids[$actor->getPeopleRef()]->getIsPhysical();
+          echo link_to(
+            $people_ids[$actor->getPeopleRef()]->getFormatedName(),
+            (($is_physical)?'people':'institution').'/view',
+            array('query_string'=>'id='.$actor->getPeopleRef())
+          ); ?></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Responsible') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Contact') ? 'on':'off'; ?>" /></td>
       <td><span class="spr_checkbox_<?php echo $actor->getIsARole('Checker') ? 'on':'off'; ?>" /></td>

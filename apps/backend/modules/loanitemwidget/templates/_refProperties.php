@@ -3,3 +3,4 @@
 <?php else : ?>
 <?php echo __('Please save your loan item in order to add properties') ?>
 <?php endif; ?>
+

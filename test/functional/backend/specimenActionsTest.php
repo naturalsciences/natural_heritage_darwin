@@ -34,9 +34,12 @@ $browser->
     checkElement('.board_col:first .widget',11)->
     checkElement('.board_col:first .widget:first .widget_top_bar span','/Collection/')->
     checkElement('.board_col:first .widget:nth-child(2) .widget_top_bar span','/Codes/')->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr',2)->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:first th',7)->
-    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:nth-child(2) th',5)->
+    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr',4)->
+    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:first th',1)->
+    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:first th','/Mask:/')->
+    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:nth-child(2) th',1)->
+    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:nth-child(3) th',7)->
+    checkElement('.board_col:first .widget:nth-child(2) .widget_content thead tr:nth-child(4) th',5)->
     checkElement('.board_col:last .widget:first .widget_top_bar span','/Acquisition/')->
     checkElement('.board_col:last .widget:nth-child(2) .widget_top_bar span','/Expedition/')->
     checkElement('.board_col:last .widget:nth-child(3) .widget_top_bar span','/I.G. number/')->

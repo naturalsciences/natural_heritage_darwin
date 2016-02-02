@@ -1,4 +1,4 @@
-<table>
+  <table>
     <tr>
       <th>
         <?php echo $form['MassActionForm']['stage']['stage']->renderLabel();?>

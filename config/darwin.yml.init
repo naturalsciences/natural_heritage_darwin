@@ -11,6 +11,9 @@ all:
     catalogueRecLimit: 200
     queryTimeout: 30000
     defaultInstitutionRef: ~
+    tagsDisplayLimit: 10
+    tagsLowerLimit: 4
+    tempFilePath: '/tmp/temp_file'
 
   mailer:
     sender: your_send_email@example.com

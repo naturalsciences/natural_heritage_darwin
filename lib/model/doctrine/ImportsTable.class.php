@@ -19,12 +19,13 @@ class ImportsTable extends Doctrine_Table
 
   public function markOk($id)
   {
-    $q = Doctrine_Query::create()->update('staging s');
     $conn = Doctrine_Manager::connection();
-    $sql = "update staging s1 
-        set to_import = true 
-        WHERE status = '' and import_ref=".intval($id);
-    $conn->getDbh()->exec($sql);
+    $prepared_sql = $conn->prepare("UPDATE staging s1
+                                    SET to_import = TRUE
+                                    WHERE status = ''
+                                      AND import_ref = ?"
+    );
+    $prepared_sql->execute(array(intval($id)));
     $q = Doctrine_Query::create()->update('Imports');
     $q->andwhere('id = ? ',$id)
       ->set('state', '?','processing')
@@ -35,18 +36,24 @@ class ImportsTable extends Doctrine_Table
   {
     if(! count($record_ids)) return array();
     $conn = Doctrine_Manager::connection();
-    $sql = "select import_ref as id, count(*) as cnt FROM staging r where import_ref in (".implode(',',$record_ids).") GROUP BY import_ref";
-    $result = $conn->fetchAssoc($sql);
+    $ids_list_as_string = implode(',',$record_ids);
+    $result = $conn->fetchAssoc("SELECT import_ref as id, COUNT(*) as cnt
+                                  FROM staging r
+                                  WHERE import_ref = ANY('{ $ids_list_as_string }'::int[])
+                                  GROUP BY import_ref");
     return $result;
   }
 
+  /**
+   * Clear a given import
+   * @param integer $id Id of import to clear
+   */
   public function clearImport($id)
   {
-
-    $q = Doctrine_Query::create()->Delete('staging s')
+    Doctrine_Query::create()->Delete('staging s')
       ->andwhere('import_ref = ? ',$id)
       ->execute();
-    $q = Doctrine_Query::create()->update('Imports')
+    Doctrine_Query::create()->update('Imports')
       ->andwhere('id = ? ',$id)
       ->set('state', '?','aborted')
       ->set('is_finished', '?',true)
@@ -89,24 +96,29 @@ class ImportsTable extends Doctrine_Table
 
     $items = $q->execute();
 
-    $ids = array();
-    foreach($items as $item) 
-      $ids[] = $item->getId() ;
+    $ids = $items->toKeyValueArray("id", "id");
 
     if(count($ids))
     {
+      $ids_list_as_string = implode(',', $ids);
       $conn = Doctrine_Manager::connection();
-      $sql = "update Imports set state = CASE WHEN state='loaded' THEN 'aloaded' WHEN state='processing' THEN 'aprocessing' ELSE 'apending' END 
-              WHERE id in (".implode(',', $ids).")";
-
-      $result = $conn->fetchAssoc($sql);
+      $conn->exec("UPDATE imports
+                   SET state = CASE
+                                WHEN state='loaded' THEN 'aloaded'
+                                WHEN state='processing' THEN 'aprocessing'
+                                ELSE 'apending'
+                               END
+                   WHERE id = ANY('{ $ids_list_as_string }'::int[])"
+      );
     }
-    return $ids ;
+
+    // Return the items object retrieved
+    return $items;
   }
   
   public function updateStatus($id)
   {
-    $q = Doctrine_Query::create() 
+    Doctrine_Query::create()
       ->update('Imports i')
       ->set('state', '?','loaded')
       ->update('Imports i')

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="transporters_sub_report" language="groovy" pageWidth="239" pageHeight="80" orientation="Landscape" columnWidth="239" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e03b1f42-02bf-4be8-9e61-b413b6e35742">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="loan_id" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="transporter_side" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["sender"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="lang" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from fct_report_loans_transporters($P{loan_id}::integer, $P{transporter_side}::text, $P{lang}::text)]]>
+	</queryString>
+	<field name="transport_dispatched_by" class="java.lang.String"/>
+	<field name="transport_transporter_names" class="java.lang.String"/>
+	<field name="transport_track_ids" class="java.lang.String"/>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="5056f143-2146-4c06-923a-08a8afdea18a" isPrintRepeatedValues="false" x="0" y="0" width="239" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<box topPadding="1" leftPadding="1" rightPadding="1"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Transport"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="60" splitType="Stretch">
+			<frame>
+				<reportElement uuid="e6bf4aee-6136-4f1b-980c-e5a55caaeecd" positionType="Float" x="0" y="0" width="239" height="60"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<frame>
+					<reportElement uuid="f594a3b1-b731-40e0-8246-7305dc8fd178" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="239" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement uuid="33a09499-43f3-4705-9984-b693542b1d78" positionType="Float" isPrintRepeatedValues="false" x="0" y="0" width="153" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+							<printWhenExpression><![CDATA[!$F{transport_dispatched_by}.isEmpty()]]></printWhenExpression>
+						</reportElement>
+						<box leftPadding="1"/>
+						<textElement verticalAlignment="Middle"/>
+						<textFieldExpression><![CDATA[( $P{lang}=='en' ? "Dispatched by registered" : ( $P{lang}=='fr' ? "Assuré par le" : ( $P{lang}=='nl' ? "Verdeeld door een geregisteerde" : "Dispatched by registered" ) ) )]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement uuid="6d660509-adb2-4858-b089-d0ce3f5fd2b8" positionType="Float" isPrintRepeatedValues="false" x="153" y="0" width="86" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+						<box leftPadding="1" rightPadding="1"/>
+						<textElement verticalAlignment="Middle"/>
+						<textFieldExpression><![CDATA[$F{transport_dispatched_by}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<frame>
+					<reportElement uuid="f594a3b1-b731-40e0-8246-7305dc8fd178" positionType="Float" x="0" y="20" width="239" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement uuid="33a09499-43f3-4705-9984-b693542b1d78" positionType="Float" x="0" y="0" width="79" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+							<printWhenExpression><![CDATA[!$F{transport_transporter_names}.isEmpty()]]></printWhenExpression>
+						</reportElement>
+						<box leftPadding="1"/>
+						<textElement verticalAlignment="Middle"/>
+						<textFieldExpression><![CDATA[( $P{lang}=='en' ? "Name(s):" : ( $P{lang}=='fr' ? "Nom(s):" : ( $P{lang}=='nl' ? "Naam:" : "Name(s):" ) ) )]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement uuid="5bad2fce-8dbb-4c76-9837-0cc5b3a1a1d6" positionType="Float" x="79" y="0" width="160" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+						<box leftPadding="1" rightPadding="1"/>
+						<textElement textAlignment="Right" verticalAlignment="Middle"/>
+						<textFieldExpression><![CDATA[$F{transport_transporter_names}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<frame>
+					<reportElement uuid="f594a3b1-b731-40e0-8246-7305dc8fd178" positionType="Float" x="0" y="40" width="239" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement uuid="33a09499-43f3-4705-9984-b693542b1d78" positionType="Float" x="0" y="0" width="79" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+							<printWhenExpression><![CDATA[!$F{transport_track_ids}.isEmpty()]]></printWhenExpression>
+						</reportElement>
+						<box leftPadding="1"/>
+						<textElement verticalAlignment="Middle"/>
+						<textFieldExpression><![CDATA[( $P{lang}=='en' ? "Tracking id(s):" : ( $P{lang}=='fr' ? "Numéro(s) de suivi:" : ( $P{lang}=='nl' ? "Tracking id(s):" : "Tracking id(s):" ) ) )]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement uuid="53956b90-056d-4841-a805-fb0dcf652df9" positionType="Float" x="79" y="0" width="160" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+						<box leftPadding="1" rightPadding="1"/>
+						<textElement textAlignment="Right" verticalAlignment="Middle"/>
+						<textFieldExpression><![CDATA[$F{transport_track_ids}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>

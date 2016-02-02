@@ -55,3 +55,4 @@
     );
   });
 </script>
+<?php use_javascript("print_report.js"); ?>

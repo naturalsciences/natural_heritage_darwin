@@ -14,7 +14,7 @@
             <th></th>
             <?php foreach($columns as $col_name => $col):?>
               <th class="col_<?php echo $col_name;?><?php echo ($col_name == 'specimen_count')?' right_aligned':'';?>">
-                <?php if($col[0] != false):?>
+                <?php if($col[0] !== false):?>
                   <a class="sort" href="#" alt="<?php echo $col[0];?>">
                     <?php echo $col[1];?>
                     <?php if($form->getValue('order_by') == $col[0]) echo $orderSign ?>

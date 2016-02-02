@@ -1,4 +1,8 @@
 all:
   .general:
     authorizedversion:
-      - 1
+      taxonomy:
+        - 1.2
+        - 1.3
+      specimens:
+        - 1.4

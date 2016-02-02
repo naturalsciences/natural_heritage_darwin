@@ -12,7 +12,7 @@ expanding the assets ever since.
 </p>
 <br />
 <p>
-The darwin website is the main gate to glimpse the extent and diversity of the collections. Today, the darwin database manages information on about 350.000 specimens stored in the institute’s depositories. This number rises on a daily basis thanks to the continued efforts of curators and their adjuncts that are responsible for maintaining the stored specimens and information. Our online database provides information about the collections of the Vertebrates, Invertebrates and Entomology. The application will soon be expanded with paleontological data. 
+The darwin website (darwin.naturalsciences.be) is the main gate to glimpse the extent and diversity of the collections. Today, the darwin database manages information on about 2.637.600 specimens (540.000 records) stored in the institute’s depositories. This number rises on a daily basis thanks to the continued efforts of patrimonium directorate, the curators and their adjuncts that are responsible for maintaining the stored specimens and information. Our online database provides information about the collections of the Vertebrates, Invertebrates, Entomology, Paleontology, Geology and Mineralogy.
 </p>
 <br />
 <p>

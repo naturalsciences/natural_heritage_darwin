@@ -44,6 +44,15 @@ $(document).ready(function ()
         </td>
       </tr>
       <?php endif ?>
+      <?php if($type == 'taxon') : ?>
+      <tr>
+        <th><?php echo $form['exclude_invalid_entries']->renderLabel() ?> :</th>
+        <td>
+          <?php echo $form['exclude_invalid_entries']->renderError() ?>
+          <?php echo $form['exclude_invalid_entries'] ?>
+        </td>
+      </tr>
+      <?php endif ?>
     </tbody>
       <tfoot>
         <tr>

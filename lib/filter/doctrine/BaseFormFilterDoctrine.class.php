@@ -150,7 +150,6 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       if(trim($query_part) == '')
       continue;
 
-//       $query_part = preg_replace('/[^A-Za-z0-9\-_]/', ' ', $query_part);
       $query_part = preg_replace('/[\(&\;\,\|\↑\€\←\↓\œ\→\?\.\\\'\"\)\$]/u', ' ', $query_part);
 
       if($i == 0)
@@ -235,7 +234,8 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       elseif ($val_from->getMask() > 0)
       {
         $sql = " (" . $dateFields[0] . " >= ? AND " . $dateFields[0] . "_mask > 0) ";
-        for ($i = 1; $i <= count($dateFields); $i++)
+        $dateFieldsCount = count($dateFields);
+        for ($i = 1; $i <= $dateFieldsCount; $i++)
         {
           $vals[] = $val_from->format('d/m/Y');
         }
@@ -247,7 +247,8 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       elseif ($val_to->getMask() > 0)
       {
         $sql = " (" . $dateFields[0] . " <= ? AND " . $dateFields[0] . "_mask > 0) ";
-        for ($i = 1; $i <= count($dateFields); $i++)
+        $dateFieldsCount = count($dateFields);
+        for ($i = 1; $i <= $dateFieldsCount; $i++)
         {
           $vals[] = $val_to->format('d/m/Y');
         }
@@ -358,22 +359,49 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
     return $query ;
   }
 
-  public function addCatalogueRelationColumnQuery($query, $item_ref, $relation, $table, $field_prefix)
+  public function addCatalogueRelationColumnQuery($query, $item_ref, $relation, $table, $field_prefix, $parent_syn_included = false)
   {
     if($item_ref != 0)
     {
+
+      // Put the item_ref passed into an array
+      $items = array($item_ref);
+
+      // If we've got to include also the synonyms of the item_ref passed...
+      if (($relation == 'child' || $relation == 'direct_child') && $parent_syn_included === true ) {
+        // Initialize the where clause string and array of parameters for the
+        // relation 'child'
+        $whereClause = '';
+        $whereClauseParams = array();
+        // Get the list of synonyms ids
+        $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
+        // If there are synonyms...
+        if (count($synonyms) != 0) {
+          // merge the result with the initialized array
+          $items = array_unique(array_merge($items, $synonyms));
+        }
+      }
+
       if($relation == 'equal')
       {
         $query->andWhere($field_prefix."_ref = ?", $item_ref);
       }
       elseif($relation == 'child')
       {
-        $item  = Doctrine::getTable($table)->find($item_ref);
-        $query->andWhere($field_prefix."_path like ?", $item->getPath().''.$item->getId().'/%');
+        $list_of_items = implode(',',$items);
+        $item  = Doctrine::getTable($table)->findBySql("id = ANY('{ $list_of_items }' :: int[])");
+        foreach ($item as $element) {
+          $whereClause .= "OR ${field_prefix}_path like ? ";
+          $whereClauseParams[] = $element->getPath().$element->getId().'/%';
+        }
+        if ( $whereClause != '') {
+          $whereClause = ltrim($whereClause, 'OR');
+          $query->andWhere($whereClause, $whereClauseParams);
+        }
       }
       elseif($relation == 'direct_child')
       {
-        $query->andWhere($field_prefix."_parent_ref = ?",$item_ref);
+        $query->andWhereIn($field_prefix."_parent_ref",$items);
       }
       elseif($relation =='synonym')
       {
@@ -403,7 +431,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       $conn = Doctrine_Manager::connection();
       $sql = "SELECT collection_ref from collections_rights where user_ref = :userid ";
-      if($with_writing == false)
+      if($with_writing === false)
         $sql .= "UNION select id as collection_ref from collections where is_public = true";
       else
         $sql .= " and db_user_type >= 2";

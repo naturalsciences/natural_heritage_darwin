@@ -37,7 +37,7 @@ class UsersLoginInfosTable extends DarwinTable
           ->from('UsersLoginInfos ul')
           ->andWhere('ul.user_name = ?',$userName)
           ->andWhere('ul.login_type = ?', $loginType);
-      if ($loginSystem == null)
+      if ($loginSystem === null)
       {
         $q->andWhere('ul.login_system is null');
       }

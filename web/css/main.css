@@ -657,12 +657,11 @@ a.bt_close
 {
   text-align: left;
 }
-.datesNum em, #properties table em
+.datesNum em, #properties table em, .table_view table em, .catalogue_table em, .catalogue_table_view em
 {
   color:#C1C1C1;
   font-style:normal;
 }
-
 .check_right
 {
  float:right !important ;
@@ -3241,4 +3240,22 @@ tr.spec_ident_collectors_data
 #float_button .submit_image:hover, #float_button > a:hover
 {
   border-bottom: 1px solid white;
+}
+
+.main_codes_display {
+  margin: 0 0 4px 0;
+  letter-spacing: 0.05em;
+  list-style: none;
+}
+
+div#mask_display {
+  width:97%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+div.mask_display {
+  font-weight:bold;
+  text-align:center;
+  vertical-align:middle;
+  padding-bottom:10px;
 }

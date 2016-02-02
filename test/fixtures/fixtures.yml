@@ -384,7 +384,7 @@ Loans:
     l9:
        id: 9
        name: Sheep of goyet
-       description: This is a funny sheep to watch
+       description: This is a funny sheep to watch, "babe" => "agreed ?"
        from_date: '2007-05-22'
        to_date: '2011-11-11'
     l10:

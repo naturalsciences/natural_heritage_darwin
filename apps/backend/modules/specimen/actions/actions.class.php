@@ -12,8 +12,6 @@ class specimenActions extends DarwinActions
 {
   protected $widgetCategory = 'specimen_widget';
 
-  /*
-  */
   protected function getSpecimenForm(sfWebRequest $request, $fwd404=false, $parameter='id')
   {
     $spec = null;
@@ -44,23 +42,18 @@ class specimenActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
+    $codeMask="";
+    $collId = intval($request->getParameter('collection_id', '0'));
+    if ( $collId > 0 ) {
+      $collTmp = Doctrine_Core::getTable('Collections')->find($collId);
+      if($collTmp)
+      {
+        $codeMask=$collTmp->getCodeMask();
+      }
+    }
     $form = $this->getSpecimenForm($request);
     $form->addCodes($number, array('collection_ref' => $request->getParameter('collection_id', null)));
-   	//mrac 2015 06 03 code mask
-    $codeMask="";
-    $testVal=$request->getParameter('collection_id', null);
-    if(strlen(trim($testVal))>0)
-    {
-    	$collTmp=Doctrine_Core::getTable('Collections')->find($request->getParameter('collection_id', null));
-		if(is_object($collTmp))
-		{
-    
-			$codeMask=$collTmp->getCodeMask();
-		}
-     }
-
-
-	return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number, 'codemask'=> $codeMask));
+	  return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number, 'codemask'=> $codeMask));
   }
 
   public function executeAddCollector(sfWebRequest $request)
@@ -269,7 +262,7 @@ class specimenActions extends DarwinActions
         }
         $specimen = $form->save();
         if ($wasNew || $autoCodeForUpdate) {
-          $response = Doctrine::getTable('Collections')->afterSaveAddCode($specimen->getCollectionRef(), $specimen->getId());
+          Doctrine::getTable('Collections')->afterSaveAddCode($specimen->getCollectionRef(), $specimen->getId());
         }
         $this->redirect('specimen/edit?id='.$specimen->getId());
       }
@@ -327,7 +320,7 @@ class specimenActions extends DarwinActions
     */
   public function executeSearch(sfWebRequest $request)
   {
-//     // Forward to a 404 page if the method used is not a post
+    // Forward to a 404 page if the method used is not a post
     $this->forward404Unless($request->isMethod('post'));
     $this->setCommonValues('specimen', 'collection_name', $request);
     $item = $request->getParameter('searchSpecimen',array(''));
@@ -339,7 +332,7 @@ class specimenActions extends DarwinActions
 
   /**
     * Method executed when searching an expedition - trigger by the click on the search button
-    * @param SearchExpeditionForm $form    The search expedition form instantiated that will be binded with the data contained in request
+    * @param SpecimensSelfFormFilter $form    The search expedition form instantiated that will be binded with the data contained in request
     * @param sfWebRequest         $request Request coming from browser
     * @var   int                  $pagerSlidingSize: Get the config value to define the range size of pager to be displayed in numbers (i.e.: with a value of 5, it will give this: << < 1 2 3 4 5 > >>)
     */
@@ -469,10 +462,10 @@ class specimenActions extends DarwinActions
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
 
     //We edit a maintenance
-    if($request->getParameter('id', null) != null)
+    if($request->getParameter('id', null) !== null)
       $maint = Doctrine::getTable('CollectionMaintenance')->find($request->getParameter('id'));
     //We add a maintenance
-    elseif($request->getParameter('rid', null) != null) {
+    elseif($request->getParameter('rid', null) !== null) {
       $maint = new CollectionMaintenance();
       $maint->setRecordId($request->getParameter('rid'));
       $maint->setReferencedRelation('specimens');

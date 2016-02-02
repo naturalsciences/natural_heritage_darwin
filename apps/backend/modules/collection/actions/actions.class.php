@@ -134,7 +134,11 @@ class collectionActions extends DarwinActions
 
     $this->forward404Unless($request->isMethod('post'));
     $options = $request->getParameter('collections');
-    $this->form = new CollectionsForm(null,array('new_with_error' => true, 'institution' => $options['institution_ref']));
+    $form_options = array('new_with_error' => true);
+    if ( $options['institution_ref'] != '' && $options['institution_ref'] !== null ) {
+      $form_options['institution'] = $options['institution_ref'];
+    }
+    $this->form = new CollectionsForm(null, $form_options);
 
     $this->processForm($request, $this->form);
 

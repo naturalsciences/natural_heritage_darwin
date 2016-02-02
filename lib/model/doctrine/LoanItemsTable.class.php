@@ -18,7 +18,7 @@ class LoanItemsTable extends DarwinTable
 
   public function deleteChecked($ids)
   {
-    $q = Doctrine_Query::create()
+    Doctrine_Query::create()
       ->delete('LoanItems i')
       ->andwhereIn('i.id', $ids)
       ->execute();
@@ -34,7 +34,7 @@ class LoanItemsTable extends DarwinTable
       ->execute();
 
     foreach($q as $item){
-      if($loan_ref == null) $loan_ref = $item->getLoanRef() ;
+      if($loan_ref === null) $loan_ref = $item->getLoanRef() ;
       if ($loan_ref != $item->getLoanRef()) return false ;
     }
     return $loan_ref ;

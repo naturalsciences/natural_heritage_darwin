@@ -23,7 +23,6 @@ class SpecimensForm extends BaseSpecimensForm
       'acquisition_date',
       'station_visible',
       'ig_ref',
-
       'type', 'sex', 'state','stage','social_status','rock_form',
       'specimen_part', 'complete', 'institution_ref', 'building', 'floor', 'room',
       'row', 'col', 'shelf', 'container', 'sub_container', 'container_type', 'sub_container_type',
@@ -371,6 +370,8 @@ class SpecimensForm extends BaseSpecimensForm
     $this->setDefault('accuracy', 1);
     $this->validatorSchema['accuracy'] = new sfValidatorPass();
 
+    $this->widgetSchema['code_enable_mask'] = new WidgetFormInputCheckboxDarwin(array(),array('class'=>'enable_mask'));
+
     /* Labels */
     $this->widgetSchema->setLabels(array(
       'gtu_ref' => 'Sampling location Tags',
@@ -380,6 +381,7 @@ class SpecimensForm extends BaseSpecimensForm
       'accuracy' => 'Accuracy',
       'surnumerary' => 'supernumerary',
       'col' => 'Column',
+      'code_enable_mask' => 'Apply input mask ?',
     ));
 
     /* Validators */
@@ -411,6 +413,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->validatorSchema['social_status'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('social_status')));
     $this->validatorSchema['rock_form'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('rock_form')));
 
+    $this->validatorSchema['code_enable_mask'] = new sfValidatorBoolean();
 
     $this->validatorSchema['acquisition_category'] = new sfValidatorChoice(array(
       'choices' => array_keys(SpecimensTable::getDistinctCategories()),
@@ -1059,11 +1062,8 @@ class SpecimensForm extends BaseSpecimensForm
     $javascripts=parent::getJavascripts();
     $javascripts[]='/js/jquery-datepicker-lang.js';
     $javascripts[]='/js/ui.complete.js';
-	
-	//ftheeten 2015 10 15 link inputmask library
-	//from https://github.com/RobinHerbots/jquery.inputmask 
-	$javascripts[]='/RobinHerbots-jquery.inputmask-3.1.63-38/js/jquery.inputmask.js';
-	$javascripts[]='/RobinHerbots-jquery.inputmask-3.1.63-38/js/inputmask.js';
+	  $javascripts[]='/js/jquery.inputmask.js';
+	  $javascripts[]='/js/inputmask.js';
     return $javascripts;
   }
 
