@@ -34,10 +34,7 @@
 </tbody>
 <script type="text/javascript">
   $(document).ready(function () {
-  
-    //2015 10 15 call mask handling
-    try_mask();
-	
+
     $("#clear_code_<?php echo $rownum;?>").click( function()
     {
       parent_el = $(this).closest('tbody');
@@ -50,16 +47,15 @@
         $(this).closest('table.property_values').find('thead').hide();
       }
     });
+
+    if (
+      $("thead tr.code_masking input.code_mask").val() !== '' &&
+      $("thead tr.code_masking input.enable_mask").attr('checked') === 'checked'
+    ) {
+      $("tbody#code_<?php echo $rownum;?> input.mrac_input_mask").inputmask($("thead tr.code_masking input.code_mask").val());
+    }
+
   });
   
-   //2015 10 15 define input mask handling for codes
-   function try_mask()
-   {
-		$(".take_mask").val(<?php if(isset($codemask)){print("\"".$codemask."\"");} else{print("");} ?>);
-		<?php if(sfContext::getInstance()->getActionName()=="addCode"):?>
-			$(".mrac_input_mask").inputmask(<?php if(isset($codemask)){print("\"".$codemask."\"");}else{print("");} ?>);
-		<?php endif;?>
-		$("#mask_display").text(<?php echo __('Mask').':';?>+'<?php if(isset($codemask)){print("\"".$codemask."\"");}else{print("");} ?>');
-   }
 </script>
 <?php endif;?>

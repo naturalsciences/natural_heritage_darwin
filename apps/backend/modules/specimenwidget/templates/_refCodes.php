@@ -1,13 +1,13 @@
 <table  class="property_values">
   <thead style="<?php echo ($form['Codes']->count() || $form['newCodes']->count())?'':'display: none;';?>">
-    <tr>
+    <tr class="code_masking">
       <th colspan="7">
-        <div id="mask_display" class="mask_display"><?php echo __('Mask').':'; ?></div>
+        <div id="mask_display" class="mask_display"><?php echo $form['code_mask']->renderRow(); ?></div>
       </th>
     </tr>
-    <tr>
+    <tr class="code_masking">
       <th colspan="7">
-        <div class="mask_display"><?php echo $form['code_enable_mask'];?></div>
+        <div class="mask_display"><?php echo $form['code_enable_mask']->renderRow();?></div>
       </th>
       </tr>
     <tr>
@@ -111,18 +111,27 @@ $(document).ready(function () {
       parent_el = $(this).closest('table');
       $(parent_el).find('tbody select[id$=\"_suffix_separator\"]').val($(this).val());
     });
-	
-    //ftheeten 2015 10 15 (enable/disable input mask)
+
     $(".enable_mask").change(
       function()
       {
-        if($(".enable_mask").prop('checked'))
+        if( $("tr.code_masking input.enable_mask").attr('checked') === 'checked' )
         {
-          $(".mrac_input_mask").inputmask($(".take_mask").val());
+          // find here a way to tell the inputmask event not to delete the content if it doesn't follow the input mask
+          // Bring the value of inputmask as the text contained in the #mask_display field
+          // For the moment it seems the isValid function is not well implemented (or well understood ;) ) and
+          // We will try the latest version of jquery.inputmask later on to validate the application
+          // of
+          $(".code_mrac_input_mask").inputmask($("thead tr.code_masking input.code_mask").val());
         }
         else
         {
-          $(".mrac_input_mask").inputmask("*{0,+}");
+          $(".code_mrac_input_mask").inputmask('remove');
+          $(".code_mrac_input_mask").each(
+            function(index) {
+              console.log(index+': '+$(this).attr('value'));
+            }
+          );
         }
       }
     );

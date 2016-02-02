@@ -1111,6 +1111,7 @@ border-bottom: none ;
   width: 100px;
   margin-left:0.5em;
   margin-right:0.5em;
+  vertical-align: middle;
 }
 
 .property_values thead th
