@@ -121,17 +121,13 @@ $(document).ready(function () {
           // Bring the value of inputmask as the text contained in the #mask_display field
           // For the moment it seems the isValid function is not well implemented (or well understood ;) ) and
           // We will try the latest version of jquery.inputmask later on to validate the application
-          // of
+          // of the mask
           $(".code_mrac_input_mask").inputmask($("thead tr.code_masking input.code_mask").val());
+          //console.log($(".code_mrac_input_mask").val());
         }
         else
         {
-          $(".code_mrac_input_mask").inputmask('remove');
-          $(".code_mrac_input_mask").each(
-            function(index) {
-              console.log(index+': '+$(this).attr('value'));
-            }
-          );
+          $(".code_mrac_input_mask").inputmask("*{0,+}");
         }
       }
     );
