@@ -25,7 +25,7 @@ class specimenActions extends DarwinActions
     return $form;
   }
 
-  protected function getCodeMask(sfWebRequest $request) {
+  public function getCodeMask(sfWebRequest $request) {
     $codeMask='';
     $collId = intval($request->getParameter('collection_id', '0'));
     if (
@@ -254,7 +254,8 @@ class specimenActions extends DarwinActions
     $this->loadWidgets();
 
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
-    $this->form = $this->getSpecimenForm($request,true);
+    $codeMask = $this->getCodeMask($request);
+    $this->form = $this->getSpecimenForm($request,true,'id',array('code_mask'=>$codeMask));
 
     $this->processForm($request, $this->form, 'update');
 

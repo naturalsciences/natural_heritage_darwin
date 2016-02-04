@@ -35,9 +35,16 @@
 <script type="text/javascript">
   $(document).ready(function () {
 
-    $("#clear_code_<?php echo $rownum;?>").click( function()
-    {
+    $("#clear_code_<?php echo $rownum;?>").click( function() {
       parent_el = $(this).closest('tbody');
+      parent_table = $(this).closest('table.property_values');
+      if (typeof $(parent_table).data("initial_values") != "undefined") {
+        var initial_code_object = $(parent_table).data("initial_values");
+        if (typeof initial_code_object != "undefined" && ($(parent_el).find("input.code_mrac_input_mask").attr('id') in initial_code_object)) {
+          delete initial_code_object[$(parent_el).find("input.code_mrac_input_mask").attr('id')];
+          $(parent_table).data("initial_values", initial_code_object);
+        }
+      }
       $(parent_el).find('input[type="text"]').val('');
       $(parent_el).find('select').append("<option value=''></option>").val('');   
       $(parent_el).hide();
@@ -48,12 +55,19 @@
       }
     });
 
-    if (
-      $("thead tr.code_masking input.code_mask").val() !== '' &&
-      $("thead tr.code_masking input.enable_mask").attr('checked') === 'checked'
-    ) {
-      $("tbody#code_<?php echo $rownum;?> input.mrac_input_mask").inputmask($("thead tr.code_masking input.code_mask").val());
-    }
+    $("tbody#code_<?php echo $rownum;?> input.code_mrac_input_mask").on(
+      'change',
+      function(){
+        parent_table = $(this).closest('table.property_values');
+        if (typeof $(parent_table).data("initial_values") != "undefined") {
+          var initial_code_object = $(parent_table).data("initial_values");
+          if (typeof initial_code_object != "undefined" && ($(this).attr('id') in initial_code_object)) {
+            initial_code_object[$(this).attr('id')] = $(this).val();
+            $(parent_table).data("initial_values", initial_code_object);
+          }
+        }
+      }
+    );
 
   });
   
