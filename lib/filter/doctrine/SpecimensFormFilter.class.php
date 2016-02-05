@@ -1217,7 +1217,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $javascripts[]='/leaflet/leaflet.js';
     $javascripts[]='/js/map.js';
     $javascripts[]='/leaflet/leaflet.markercluster-src.js';
-  	$javascripts[]= "/Leaflet.draw/dist/leaflet.draw.js";
+  	$javascripts[]= '/Leaflet.draw/dist/leaflet.draw.js';
 	
     return $javascripts;
   }
@@ -1226,7 +1226,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $items=parent::getStylesheets();
     $items['/leaflet/leaflet.css']='all';
     $items['/leaflet/MarkerCluster.css']='all';
-	  $items["/Leaflet.draw/dist/leaflet.draw.css"]=  'all';
+	  $items['/Leaflet.draw/dist/leaflet.draw.css']='all';
     return $items;
   }
 }
