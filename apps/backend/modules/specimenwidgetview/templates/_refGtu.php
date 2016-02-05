@@ -66,11 +66,7 @@
         <td>
 			 <div class="inline">
 				<?php 
-					
-									
 						$flagGo=TRUE;
-						
-						
 						$nbr = count($commentsGtu);
 						if(! $nbr) 
 						{
@@ -82,7 +78,7 @@
 								foreach($commentsGtu as $valC)
 								{
 								 
-									$str .= '<li><label>Comment<span class="gtu_group"> - '.$valC->getNotionConcerned().'</span></label><ul class="name_tags'.($view!=null?"_view":"").'">';
+									$str .= '<li><label>Comment<span class="gtu_group"> - '.$valC->getNotionConcerned().'</span></label><ul class="name_tags'.($view!==null?"_view":"").'">';
 									$str .=  '<li>' . trim($valC->getComment()).'</li>';
 									$str .= '</ul><div class="clear"></div>';
 									

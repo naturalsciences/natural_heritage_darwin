@@ -12,5 +12,5 @@ where
   )
   and
   collection_ref != 324
-order by collection_name, type  ;  
-  
+order by collection_name, type ;
+
