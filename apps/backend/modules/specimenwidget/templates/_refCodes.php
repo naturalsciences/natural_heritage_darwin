@@ -2,12 +2,16 @@
   <thead style="<?php echo ($form['Codes']->count() || $form['newCodes']->count())?'':'display: none;';?>">
     <tr class="code_masking">
       <th colspan="7">
-        <div id="mask_display" class="mask_display"><?php echo $form['code_mask']->renderLabel().$form['code_mask']->render().' '.link_to(image_tag('arrow_refresh.png', array("title" => __("Refresh mask"))), 'specimen/getCodeMask'); ?></div>
+        <div id="mask_display" class="mask_display">
+          <?php echo $form['code_mask']->renderLabel().$form['code_mask']->render().' '.link_to(image_tag('arrow_refresh.png', array("title" => __("Refresh mask"))), 'specimen/getCodeMask', array("id"=>"code_mask_refresh")); ?>
+        </div>
       </th>
     </tr>
     <tr class="code_masking">
       <th colspan="7">
-        <div class="mask_display"><?php echo $form['code_enable_mask']->renderLabel().$form['code_enable_mask']->render();?></div>
+        <div class="mask_display">
+          <?php echo $form['code_enable_mask']->renderLabel().$form['code_enable_mask']->render();?>
+        </div>
       </th>
       </tr>
     <tr>
@@ -137,8 +141,8 @@ $(document).ready(function () {
       function()
       {
         if(
-          $("tr.code_masking input.enable_mask").attr('checked') === 'checked' &&
-          $(this).val() !== ''
+          $(this).attr('checked') === 'checked' &&
+          $("thead tr.code_masking input.code_mask").val() !== ''
         )
         {
           // find here a way to tell the inputmask event not to delete the content if it doesn't follow the input mask
@@ -172,11 +176,38 @@ $(document).ready(function () {
     $("thead tr.code_masking input.code_mask").on("change",
       function () {
         if (
-          $("tr.code_masking input.enable_mask").attr('checked') === 'checked' &&
-          $(this).val() !== ''
+          $("tr.code_masking input.enable_mask").attr('checked') === 'checked'
         ) {
           $("tr.code_masking input.enable_mask").change();
         }
+      }
+    );
+
+    // Potentially refresh the code mask to get one defined for the collection encoded
+    $("a#code_mask_refresh").on(
+      "click",
+      function(event) {
+        event.preventDefault();
+        if (
+          $("input#specimen_collection_ref").length > 0 &&
+          $("input#specimen_collection_ref").val() !== '' &&
+          Number.isNaN(parseInt($("input#specimen_collection_ref").val())) !== true
+        ) {
+          var collection_id = $("input#specimen_collection_ref").val();
+          var url = $(this).attr('href')+'/collection_id/'+collection_id;
+          $.ajax(
+            {
+              type: "GET",
+              url: url,
+              success: function(html)
+              {
+                $("thead tr.code_masking input.code_mask").val(html);
+                $("thead tr.code_masking input.code_mask").change();
+              }
+            }
+          )
+        }
+        return false;
       }
     );
 

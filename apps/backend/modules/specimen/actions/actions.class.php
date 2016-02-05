@@ -25,7 +25,12 @@ class specimenActions extends DarwinActions
     return $form;
   }
 
-  public function getCodeMask(sfWebRequest $request) {
+  /**
+   * Return a code mask for a given collection
+   * @param \sfWebRequest $request
+   * @return string $codeMask The code mask defined for the collection passed as request parameter
+   */
+  protected function getCodeMask(sfWebRequest $request) {
     $codeMask='';
     $collId = intval($request->getParameter('collection_id', '0'));
     if (
@@ -44,6 +49,17 @@ class specimenActions extends DarwinActions
       }
     }
     return $codeMask;
+  }
+
+  /**
+   * Return a code mask for a given collection
+   * @param \sfWebRequest $request
+   * @return \sfView The code mask expected
+   * @throws \sfError404Exception If the request is not ajax made
+   */
+  public function executeGetCodeMask(sfWebRequest $request) {
+    $this->forward404Unless($request->isXmlHttpRequest());
+    return $this->renderText($this->getCodeMask($request));
   }
 
   public function executeConfirm(sfWebRequest $request)
