@@ -2,15 +2,21 @@
 <div class="page">
   <h1><?php echo __('Darwin Guide :');?></h1>
 
-      <p><a href="/help/DaRWIN_FR_2014.pdf">Manuel d'utilisation</a></p><br />
+  <p><a href="/help/DaRWIN_FR_2014.pdf">Manuel d'utilisation</a></p><br />
       
   <h1><?php echo __('ABCD Templates* :');?></h1>
   <p>*Only available in english</p><br />
   
   <p><a href="/help/How to import a XML file in Darwin.pdf">How to import a XML file in Darwin?</a></p><br />
-  
-<!-- Add table with templates and user manuals -->
-<table class="results ">
+
+  <h1><?php echo __('Loans Manual :');?></h1>
+  <?php if (isset($help_language) && $help_language === 'nl'): ?>
+    <p><a href="/help/Gebruikershandleiding DaRWIN Loans NL.pdf">Gebruikershandleiding DaRWIN Loans NL.pdf</a></p><br />
+  <?php else: ?>
+    <p><a href="/help/Manual DaRWIN Loans EN.pdf">Manual DaRWIN Loans EN.pdf</a></p><br />
+  <?php endif; ?>
+  <!-- Add table with templates and user manuals -->
+  <table class="results ">
     <thead>
       <tr>
         <th>Section</th>
@@ -100,7 +106,7 @@
       </tr>
     </tbody>
   </table>
- 
-   <br />
-   
+
+  <br />
+
 </div>
