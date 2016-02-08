@@ -756,7 +756,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   public function addTypeColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);
-    $query->andWhere('s.type_search in ('.implode(',',$val).')');
+    $query->andWhere('s.type_group in ('.implode(',',$val).')');
     return $query ;
   }
 
