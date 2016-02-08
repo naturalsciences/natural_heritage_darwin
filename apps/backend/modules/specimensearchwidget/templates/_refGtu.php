@@ -20,7 +20,7 @@
           <td colspan="2"></td>
         </tr>
         <tr>
-          <th colspan="2"><?php echo $form['tags']->renderLabel() ?></th>
+          <th colspan="3"><?php echo $form['tags']->renderLabel() ?></th>
           <th colspan="2"></th>
         </tr>
         <?php foreach($form['Tags'] as $i=>$form_value):?>

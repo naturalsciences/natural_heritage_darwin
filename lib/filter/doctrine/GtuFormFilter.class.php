@@ -90,10 +90,6 @@ class GtuFormFilter extends BaseGtuFormFilter
   public function addTagsColumnQuery($query, $field, $val)
   {
 
-    // Code commented because of no apparent use
-    // $alias = $query->getRootAlias();
-    // Comments to be removed when confirmed
-
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
 
@@ -157,10 +153,6 @@ class GtuFormFilter extends BaseGtuFormFilter
     $query = parent::doBuildQuery($values);
 
     $this->addLatLonColumnQuery($query,$values);
-
-    // Code commented because of no apparent use
-    // $alias = $query->getRootAlias();
-    // Comments to be removed when confirmed
 
     $fields = array('gtu_from_date', 'gtu_to_date');
     $this->addDateFromToColumnQuery($query, $fields, $values['gtu_from_date'], $values['gtu_to_date']);
