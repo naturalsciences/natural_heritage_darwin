@@ -107,8 +107,8 @@ class specimenwidgetviewComponents extends sfComponents
     if($this->spec->getGtuRef())
     {
       $this->gtu = Doctrine::getTable('Gtu')->find($this->spec->getGtuRef());
-	  //ftheeten 2015 07 01 to display the exact site on the main page
-	  $this->commentsGtu = Doctrine::getTable('Comments')->findForTable('gtu',$this->spec->getGtuRef()) ;
+      //ftheeten 2015 07 01 to display the exact site on the main page
+      $this->commentsGtu = Doctrine::getTable('Comments')->findForTable('gtu',$this->spec->getGtuRef()) ;
     }
   }
 

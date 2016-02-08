@@ -11,12 +11,8 @@
     <?php if(isset($gtu) && ($spec->getStationVisible() || (!$spec->getStationVisible() && $sf_user->isAtLeast(Users::ENCODER)))) : ?>
     <tr>
       <th><label><?php echo __('Sampling location code');?></label></th>
-      <td id="specimen_gtu_ref_code">
-        <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
-          <?php echo link_to($gtu->getCode(), 'gtu/view?id='.$spec->getGtuRef()) ?>
-        <?php else:?>
-          <?php echo $gtu->getCode();?>
-        <?php endif;?>
+      <td>
+        <?php echo link_to($gtu->getCode(), 'gtu/view?id='.$spec->getGtuRef()) ?>
       </td>
     </tr>
     <?php if($gtu->getLocation()):?>
@@ -58,51 +54,35 @@
         <?php echo $gtu->getMap(ESC_RAW);?>
       </td>
     </tr>
-		<!--addition ftheeten 2015 07 01-->
-	 <tr>
-        <th class="top_aligned">
-          <?php echo __("Other information") ?>
-        </th>
-        <td>
-			 <div class="inline">
-				<?php 
-						$flagGo=TRUE;
-						$nbr = count($commentsGtu);
-						if(! $nbr) 
-						{
-							$flagGo=FALSE;
-						}
-						if($flagGo===TRUE)
-						{
-							$str = '<ul  class="search_tags">';
-								foreach($commentsGtu as $valC)
-								{
-								 
-									$str .= '<li><label>Comment<span class="gtu_group"> - '.$valC->getNotionConcerned().'</span></label><ul class="name_tags'.($view!==null?"_view":"").'">';
-									$str .=  '<li>' . trim($valC->getComment()).'</li>';
-									$str .= '</ul><div class="clear"></div>';
-									
-								  
-								}
-								$str .= '</ul>';
-							echo $str;
-						}
-				?>
-			</div>
-		</td>
-      </tr>	  
-	<!--end addition ftheeten 2015 07 01-->
+    <?php if (
+      isset($commentsGtu) &&
+      count($commentsGtu) != 0
+      ): ?>
+	  <tr id="specimen_gtu_related_info">
+      <th>
+        <?php echo __("Related comments") ?>
+      </th>
+      <td class="top_aligned">
+        <?php use_helper('Text');?>
+        <?php foreach($commentsGtu as $comment):?>
+          <fieldset class="opened view_mode"><legend class="view_mode"><b><?php echo __('Notion');?></b> : <?php echo __($comment->getNotionText());?></legend>
+            <?php echo auto_link_text( nl2br($comment->getComment())) ;?>
+          </fieldset>
+        <?php endforeach ; ?>
+      </td>
+    </tr>
+    <?php endif; ?>
     <?php elseif(isset($gtu) && $gtu->hasCountries()):?>
-      <tr>
-        <th class="top_aligned">
-          <?php echo __("Sampling location countries") ?>
-        </th>
-        <td>
-          <div class="inline">
-            <?php echo $gtu->getRawValue()->getName(null, true); ?>
-          </div>
-        </td>
-      </tr>
+    <tr>
+      <th class="top_aligned">
+        <?php echo __("Sampling location countries") ?>
+      </th>
+      <td>
+        <div class="inline">
+          <?php echo $gtu->getRawValue()->getName(null, true); ?>
+        </div>
+      </td>
+    </tr>
     <?php endif ; ?>
   </tbody>
 </table>

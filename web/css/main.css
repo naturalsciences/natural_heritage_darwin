@@ -3254,9 +3254,14 @@ div#mask_display {
   overflow: hidden;
   white-space: nowrap;
 }
+
 div.mask_display {
   font-weight:bold;
   text-align:center;
   vertical-align:middle;
   padding-bottom:10px;
+}
+
+fieldset.opened.view_mode, fieldset.opened.view_mode > legend.view_mode {
+  border: 1px solid #5BAABD;
 }
