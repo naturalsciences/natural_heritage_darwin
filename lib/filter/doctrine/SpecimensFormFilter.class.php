@@ -881,7 +881,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
 
   public function addTagsColumnQuery($query, $field, $val)
   {
-    $alias = $query->getRootAlias();
     $conn_MGR = Doctrine_Manager::connection();
     $tagList = '';
 
@@ -913,10 +912,6 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
   public function addCodesColumnQuery($query, $field, $val)
   {
 
-    $str_params = '';
-    $str_params_part = '' ;
-    $params = array();
-    $params_part = array() ;
     foreach($val as $i => $code)
     {
       if(empty($code)) continue;
@@ -935,7 +930,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
           $has_query = true;
         }
         if($has_query)
-          $query->addWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
+          $query->addWhere("EXISTS(select 1 from codes where referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
     }
 
     return $query ;
@@ -1040,18 +1035,18 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
       //We don't know the filed unit
-      } elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
+      }
+      elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
         $sql_part[] = '  ( p.lower_value = ? OR  p.upper_value = ?) AND property_unit = ? ';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
         $sql_params[] = $unit;
 
-      } else { // Recognized unit
+      }
+      else { // Recognized unit
         $sql_params[] = $value_from;
         $sql_params[] = $unit;
         $sql_params[] = $unit;
-
-        $unitGroupStr =  implode(',',array_fill(0,count($unitGroup),'?'));
         $sql_part[] = ' ( convert_to_unified ( ?,  ? ) BETWEEN p.lower_value_unified AND  p.upper_value_unified) AND is_property_unit_in_group(property_unit, ?)  ';
       }
     }
@@ -1064,7 +1059,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         $sql_params[] = $value_to;
         $sql_params[] = $value_to;
       //We don't know the filed unit
-      } elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
+      }
+      elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
         $sql_part[] = ' ( ( p.lower_value = ? OR  p.upper_value = ?) OR ( p.lower_value = ? OR  p.upper_value = ?) )  AND property_unit = ? ';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
@@ -1072,7 +1068,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
         $sql_params[] = $value_to;
         $sql_params[] = $unit;
 
-      } else { // Recognized unit
+      }
+      else { // Recognized unit
         $conn_MGR = Doctrine_Manager::connection();
         $lv = $conn_MGR->quote($value_from, 'string');
         $uv = $conn_MGR->quote($value_to, 'string');
@@ -1090,9 +1087,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
               p.upper_value_unified BETWEEN convert_to_unified($uv,$unit) AND 'Infinity'
         )";
         $query->andWhere("is_property_unit_in_group(property_unit,$unit)") ;
-
       }
-
     }
     elseif($unit != '') {
       $sql_part[] = ' property_unit = ? ';
@@ -1100,8 +1095,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     }
 
     if(!empty($sql_part) ) {
-      $query->innerJoin('s.Properties p');
-      $query->andWhere("p.referenced_relation = ? ",'specimens');
+      $query->innerJoin('s.SubProperties p');
       $query->groupBy("s.id");
 
       $query->andWhere(implode(' AND ', $sql_part), $sql_params ) ;
