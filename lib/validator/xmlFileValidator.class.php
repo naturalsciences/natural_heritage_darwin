@@ -13,6 +13,9 @@ class xmlFileValidator extends sfValidatorFile
 
   protected function doClean($value)
   {
+    //ftheeten 2016 02 22
+	$disableXSDValidation=sfConfig::get('dw_disableXSDValidation');
+
     parent::doClean($value);
     libxml_use_internal_errors(true) ;
     $xml = new DOMDocument();
@@ -24,27 +27,31 @@ class xmlFileValidator extends sfValidatorFile
     }
     if(!$xml->load($value['tmp_name']))
       throw new sfValidatorError($this, 'unreadable_file');
-    if(!$xml->schemaValidate(sfConfig::get('sf_web_dir').$this->getOption('xml_path_file')))
-    {
-      $errorSchemaLocal->addError(new sfValidatorError($this, 'invalid_format'), 'invalid_format_ABCD');
-      $errors = libxml_get_errors();
-      $i=0;
-      foreach ($errors as $error) {
-          $error_msg = $this->displayXmlError($error);
-          $errorSchemaLocal->addError(new sfValidatorError($this, $error_msg), 'invalid_line');
-          if($i++ > 100) break;
-      }
-      libxml_clear_errors();
-      if (count($errorSchemaLocal))
-      {
-        $errorSchema->addError($errorSchemaLocal);
-      }
+	//ftheeten 2016 02 22 to disable the validation of XML (aim is avoiding resolving external schemas)
+	if($disableXSDValidation===false)
+	{ 
+		if(!$xml->schemaValidate(sfConfig::get('sf_web_dir').$this->getOption('xml_path_file')))
+		{
+		  $errorSchemaLocal->addError(new sfValidatorError($this, 'invalid_format'), 'invalid_format_ABCD');
+		  $errors = libxml_get_errors();
+		  $i=0;
+		  foreach ($errors as $error) {
+			  $error_msg = $this->displayXmlError($error);
+			  $errorSchemaLocal->addError(new sfValidatorError($this, $error_msg), 'invalid_line');
+			  if($i++ > 100) break;
+		  }
+		  libxml_clear_errors();
+		  if (count($errorSchemaLocal))
+		  {
+			$errorSchema->addError($errorSchemaLocal);
+		  }
 
-      if (count($errorSchema))
-      {
-        throw new sfValidatorErrorSchema($this, $errorSchema);
-      }
-    }
+		  if (count($errorSchema))
+		  {
+			throw new sfValidatorErrorSchema($this, $errorSchema);
+		  }
+		}
+	}
     $class = $this->getOption('validated_file_class');
     return new $class($value['name'], 'text/xml', $value['tmp_name'], $value['size'], $this->getOption('path'));
   }
