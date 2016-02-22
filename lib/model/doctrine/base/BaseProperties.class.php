@@ -151,6 +151,13 @@ abstract class BaseProperties extends DarwinModel
              'type' => 'string',
              'default' => '',
              ));
+
+        $this->setSubClasses(array(
+             'SubProperties' => 
+             array(
+              'referenced_relation' => 'specimens',
+             ),
+             ));
     }
 
     public function setUp()

@@ -181,7 +181,13 @@ class ReportsForm extends BaseReportsForm
      * Loan ID
      */
 
-    if($this->getOption( 'with_js', false ) === true && !empty($default_vals['loan_id'])) {
+    if (
+        (
+          $this->getOption( 'with_js', false ) === true ||
+          $this->getOption( 'with_js', false ) === '1'
+        ) &&
+        !empty($default_vals['loan_id'])
+    ) {
       $this->widgetSchema[ 'loan_id' ] = new sfWidgetFormInputHidden(array('default'=>$default_vals['loan_id']));
     }
     else {

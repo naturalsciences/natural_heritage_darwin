@@ -206,8 +206,9 @@ class loanitemActions extends DarwinActions
   public function executeAddCode(sfWebRequest $request)
   {
     $number = intval($request->getParameter('num'));
+    $codeMask = "";
     $form = new LoanItemWidgetForm();
     $form->addCodes($number, array());
-    return $this->renderPartial('specimen/spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number));
+    return $this->renderPartial('specimen/spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number, 'codemask'=> $codeMask));
   }
 }

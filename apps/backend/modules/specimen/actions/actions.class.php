@@ -12,17 +12,54 @@ class specimenActions extends DarwinActions
 {
   protected $widgetCategory = 'specimen_widget';
 
-  protected function getSpecimenForm(sfWebRequest $request, $fwd404=false, $parameter='id')
+  protected function getSpecimenForm(sfWebRequest $request, $fwd404=false, $parameter='id', $options=array())
   {
     $spec = null;
 
     if ($fwd404)
       $this->forward404Unless($spec = Doctrine::getTable('Specimens')->find($request->getParameter($parameter,0)));
     elseif($request->hasParameter($parameter) && $request->getParameter($parameter))
-      $spec = Doctrine::getTable('Specimens')->find($request->getParameter($parameter) );
+      $spec = Doctrine::getTable('Specimens')->find($request->getParameter($parameter));
 
-    $form = new SpecimensForm($spec);
+    $form = new SpecimensForm($spec, $options);
     return $form;
+  }
+
+  /**
+   * Return a code mask for a given collection
+   * @param \sfWebRequest $request
+   * @return string $codeMask The code mask defined for the collection passed as request parameter
+   */
+  protected function getCodeMask(sfWebRequest $request) {
+    $codeMask='';
+    $collId = intval($request->getParameter('collection_id', '0'));
+    if (
+      $collId === 0 &&
+      $request->getParameter('module', '') === 'specimen' &&
+      $request->getParameter('id',0) !== 0
+    ) {
+      $specimen = Doctrine_Core::getTable(DarwinTable::getModelForTable('specimens'))->find($request->getParameter('id'));
+      $collId = $specimen->getCollectionRef();
+    }
+    if ( $collId > 0 ) {
+      $collTmp = Doctrine_Core::getTable('Collections')->find($collId);
+      if($collTmp)
+      {
+        $codeMask=$collTmp->getCodeMask();
+      }
+    }
+    return $codeMask;
+  }
+
+  /**
+   * Return a code mask for a given collection
+   * @param \sfWebRequest $request
+   * @return \sfView The code mask expected
+   * @throws \sfError404Exception If the request is not ajax made
+   */
+  public function executeGetCodeMask(sfWebRequest $request) {
+    $this->forward404Unless($request->isXmlHttpRequest());
+    return $this->renderText($this->getCodeMask($request));
   }
 
   public function executeConfirm(sfWebRequest $request)
@@ -42,16 +79,8 @@ class specimenActions extends DarwinActions
   {
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $number = intval($request->getParameter('num'));
-    $codeMask="";
-    $collId = intval($request->getParameter('collection_id', '0'));
-    if ( $collId > 0 ) {
-      $collTmp = Doctrine_Core::getTable('Collections')->find($collId);
-      if($collTmp)
-      {
-        $codeMask=$collTmp->getCodeMask();
-      }
-    }
-    $form = $this->getSpecimenForm($request);
+    $codeMask = $this->getCodeMask($request);
+    $form = $this->getSpecimenForm($request,false,'id',array('code_mask'=>$codeMask));
     $form->addCodes($number, array('collection_ref' => $request->getParameter('collection_id', null)));
 	  return $this->renderPartial('spec_codes',array('form' => $form['newCodes'][$number], 'rownum'=>$number, 'codemask'=> $codeMask));
   }
@@ -225,7 +254,8 @@ class specimenActions extends DarwinActions
   public function executeEdit(sfWebRequest $request)
   {
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
-    $this->form = $this->getSpecimenForm($request, true);
+    $codeMask = $this->getCodeMask($request);
+    $this->form = $this->getSpecimenForm($request, true, 'id', array('code_mask'=>$codeMask));
     if(!$this->getUser()->isA(Users::ADMIN))
     {
       if(! Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId()))
@@ -240,7 +270,8 @@ class specimenActions extends DarwinActions
     $this->loadWidgets();
 
     $this->forward404Unless($request->isMethod('post') || $request->isMethod('put'));
-    $this->form = $this->getSpecimenForm($request,true);
+    $codeMask = $this->getCodeMask($request);
+    $this->form = $this->getSpecimenForm($request,true,'id',array('code_mask'=>$codeMask));
 
     $this->processForm($request, $this->form, 'update');
 

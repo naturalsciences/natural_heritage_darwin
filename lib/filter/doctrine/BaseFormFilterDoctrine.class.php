@@ -366,13 +366,13 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 
       // Put the item_ref passed into an array
       $items = array($item_ref);
+      // Initialize the where clause string and array of parameters for the
+      // relation 'child'
+      $whereClause = '';
+      $whereClauseParams = array();
 
       // If we've got to include also the synonyms of the item_ref passed...
       if (($relation == 'child' || $relation == 'direct_child') && $parent_syn_included === true ) {
-        // Initialize the where clause string and array of parameters for the
-        // relation 'child'
-        $whereClause = '';
-        $whereClauseParams = array();
         // Get the list of synonyms ids
         $synonyms = Doctrine::getTable('ClassificationSynonymies')->findSynonymsIds($table, $item_ref);
         // If there are synonyms...

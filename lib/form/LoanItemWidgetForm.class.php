@@ -36,6 +36,19 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $this->validatorSchema['Codes_holder'] = new sfValidatorPass();
     $this->widgetSchema['Codes_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
 
+    $code_enable_mask_default_val = ($this->isNew());
+    $this->widgetSchema['code_enable_mask'] = new WidgetFormInputCheckboxDarwin(
+      array(
+        'default'=>$code_enable_mask_default_val,
+        'label'=>'Apply input mask ?'
+      ),
+      array('class'=>'enable_mask')
+    );
+    $this->widgetSchema['code_mask'] = new sfWidgetFormInputText(
+      array('label'=>'Mask: '),
+      array('class'=>'code_mask')
+    );
+
     $this->widgetSchema['prefix_separator'] = new sfWidgetFormDoctrineChoice(array(
                                                                                'model' => 'Codes',
                                                                                'table_method' => 'getDistinctPrefixSep',
@@ -58,7 +71,8 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
 
     $this->validatorSchema['prefix_separator'] = new sfValidatorPass();
     $this->validatorSchema['suffix_separator'] = new sfValidatorPass();
-
+    $this->validatorSchema['code_enable_mask'] = new sfValidatorBoolean();
+    $this->validatorSchema['code_mask'] = new sfValidatorPass();
 
     $this->validatorSchema['Comments_holder'] = new sfValidatorPass();
     $this->widgetSchema['Comments_holder'] = new sfWidgetFormInputHidden(array('default'=>1));
@@ -297,6 +311,8 @@ class LoanItemWidgetForm extends BaseLoanItemsForm
     $javascripts[]='/js/button_ref.js'; 
     $javascripts[]='/js/catalogue_people.js';
     $javascripts[]='/js/ui.complete.js';
+    $javascripts[]='/js/jquery.inputmask.js';
+    $javascripts[]='/js/inputmask.js';
     return $javascripts;
   }
 

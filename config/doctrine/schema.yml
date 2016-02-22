@@ -171,6 +171,14 @@ Properties:
         upper_value_unified: {type: float}
         property_accuracy: {type: string, default:''}
 
+# This sub class is used just for comment search in specimen search filter
+SubProperties:
+    inheritance:
+        extends: Properties
+        type: column_aggregation
+        keyField: referenced_relation
+        keyValue: specimens
+
 Identifications:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -785,7 +793,10 @@ Specimens:
             class: SubComments
             local: id
             foreign: record_id
-
+        SubProperties:
+            class: SubProperties
+            local: id
+            foreign: record_id
 
 IgsSearch:
     tableName: specimens

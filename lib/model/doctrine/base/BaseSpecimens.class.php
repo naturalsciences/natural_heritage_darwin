@@ -131,6 +131,7 @@
  * @property Doctrine_Collection $CollectingMethods
  * @property Doctrine_Collection $CollectingTools
  * @property SubComments $SubComments
+ * @property SubProperties $SubProperties
  * @property Doctrine_Collection $SpecimensRelationships
  * @property Doctrine_Collection $SpecimensCodes
  * @property Doctrine_Collection $SpecimensMethods
@@ -263,6 +264,7 @@
  * @method Doctrine_Collection getCollectingMethods()       Returns the current record's "CollectingMethods" collection
  * @method Doctrine_Collection getCollectingTools()         Returns the current record's "CollectingTools" collection
  * @method SubComments         getSubComments()             Returns the current record's "SubComments" value
+ * @method SubProperties       getSubProperties()           Returns the current record's "SubProperties" value
  * @method Doctrine_Collection getSpecimensRelationships()  Returns the current record's "SpecimensRelationships" collection
  * @method Doctrine_Collection getSpecimensCodes()          Returns the current record's "SpecimensCodes" collection
  * @method Doctrine_Collection getSpecimensMethods()        Returns the current record's "SpecimensMethods" collection
@@ -394,6 +396,7 @@
  * @method Specimens           setCollectingMethods()       Sets the current record's "CollectingMethods" collection
  * @method Specimens           setCollectingTools()         Sets the current record's "CollectingTools" collection
  * @method Specimens           setSubComments()             Sets the current record's "SubComments" value
+ * @method Specimens           setSubProperties()           Sets the current record's "SubProperties" value
  * @method Specimens           setSpecimensRelationships()  Sets the current record's "SpecimensRelationships" collection
  * @method Specimens           setSpecimensCodes()          Sets the current record's "SpecimensCodes" collection
  * @method Specimens           setSpecimensMethods()        Sets the current record's "SpecimensMethods" collection
@@ -851,6 +854,10 @@ abstract class BaseSpecimens extends DarwinModel
              'foreign' => 'collecting_tool_ref'));
 
         $this->hasOne('SubComments', array(
+             'local' => 'id',
+             'foreign' => 'record_id'));
+
+        $this->hasOne('SubProperties', array(
              'local' => 'id',
              'foreign' => 'record_id'));
 

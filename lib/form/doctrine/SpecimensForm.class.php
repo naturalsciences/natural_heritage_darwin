@@ -370,7 +370,16 @@ class SpecimensForm extends BaseSpecimensForm
     $this->setDefault('accuracy', 1);
     $this->validatorSchema['accuracy'] = new sfValidatorPass();
 
-    $this->widgetSchema['code_enable_mask'] = new WidgetFormInputCheckboxDarwin(array(),array('class'=>'enable_mask'));
+    $code_enable_mask_default_val = ($this->isNew());
+    $this->widgetSchema['code_enable_mask'] = new WidgetFormInputCheckboxDarwin(
+      array('default'=>$code_enable_mask_default_val),
+      array('class'=>'enable_mask')
+    );
+    $code_mask_default_val = $this->getOption('code_mask','');
+    $this->widgetSchema['code_mask'] = new sfWidgetFormInputText(
+      array('default'=>$code_mask_default_val),
+      array('class'=>'code_mask')
+    );
 
     /* Labels */
     $this->widgetSchema->setLabels(array(
@@ -382,6 +391,7 @@ class SpecimensForm extends BaseSpecimensForm
       'surnumerary' => 'supernumerary',
       'col' => 'Column',
       'code_enable_mask' => 'Apply input mask ?',
+      'code_mask'=>'Mask: ',
     ));
 
     /* Validators */
@@ -414,6 +424,7 @@ class SpecimensForm extends BaseSpecimensForm
     $this->validatorSchema['rock_form'] = new sfValidatorString(array('trim'=>true, 'required'=>false, 'empty_value'=>$this->getDefault('rock_form')));
 
     $this->validatorSchema['code_enable_mask'] = new sfValidatorBoolean();
+    $this->validatorSchema['code_mask'] = new sfValidatorPass();
 
     $this->validatorSchema['acquisition_category'] = new sfValidatorChoice(array(
       'choices' => array_keys(SpecimensTable::getDistinctCategories()),

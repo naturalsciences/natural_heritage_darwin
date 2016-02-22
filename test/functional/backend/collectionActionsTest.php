@@ -175,12 +175,12 @@ $browser->
   begin()->
     isStatusCode(200)->
     checkElement('li#collectionsCodes div.widget_content table tbody tr', 1)->
-    checkElement('li#collectionsCodes div.widget_content table tbody tr td', 9)->
+    checkElement('li#collectionsCodes div.widget_content table tbody tr td', 10)->
     checkElement('li#collectionsCodes div.widget_content table tbody tr td:first', '/VERT./')->
-    checkElement('li#collectionsCodes div.widget_content table tbody tr td:nth-child(8) a.link_catalogue', 1)->
+    checkElement('li#collectionsCodes div.widget_content table tbody tr td:nth-child(9) a.link_catalogue', 1)->
     checkElement('li#collectionsCodes div.widget_content table tbody tr td:last a.widget_row_delete', 1)->
   end()->
-  click('li#collectionsCodes div.widget_content table tbody tr td:nth-child(8) a.link_catalogue')->
+  click('li#collectionsCodes div.widget_content table tbody tr td:nth-child(9) a.link_catalogue')->
   with('response')->
   begin()->
     isStatusCode(200)->

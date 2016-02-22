@@ -1686,7 +1686,7 @@
 			var rl = determineLastRequiredPosition(),
 				lmib = buffer.length - 1;
 			for (; lmib > rl; lmib--) {
-				if (isMask(lmib)) break; //fixme ismask is not good enough
+				if (isMask(lmib)) break;
 			}
 			buffer.splice(rl, lmib + 1 - rl);
 

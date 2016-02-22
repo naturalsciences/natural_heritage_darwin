@@ -76,7 +76,6 @@ $(document).ready(function () {
           url: $(this).attr('href')+ '/num/' + ( parent_el.find('tr').length),
           success: function(html)
           {
-            //console.log(parent_el);
             parent_el.append(html);
             $('.warn_message').addClass('hidden');
             showAfterRefresh('.loan_overview_form');

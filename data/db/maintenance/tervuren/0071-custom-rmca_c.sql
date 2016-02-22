@@ -60,3 +60,4 @@ $BODY$
   COST 100;
 ALTER FUNCTION rmca_create_links_between_labels(integer)
   OWNER TO darwin2;
+

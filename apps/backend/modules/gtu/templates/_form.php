@@ -262,8 +262,6 @@ function addSubGroup(selected_group, default_type, value)
 
 function addTagToGroup(group, sub_group, tag)
 {
-    console.log('brol '+group + '-'+sub_group);
-
   if($('fieldset[alt="'+group+'"] .complete_widget input, fieldset[alt="'+group+'"] .complete_widget option:selected').filter(function()
     { return $(this).is(':visible') && $(this).val() == sub_group; }).length == 0)
   {

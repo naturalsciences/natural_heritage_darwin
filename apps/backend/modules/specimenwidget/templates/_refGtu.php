@@ -19,7 +19,7 @@
       </td>
     </tr>
     <tr>
-      <th><label><?php echo __('Sampling location code');?></label></th>
+      <th><label><?php echo __('Sampling location code');?></label><?php echo link_to(__('Go to'), url_for("gtu/edit"), array('target' => '_new', 'class'=>'hidden', 'id'=>'gtu_goto_link')) ; ?></th>
       <td id="specimen_gtu_ref_code"></td>
     </tr>
     <tr>
@@ -44,9 +44,6 @@
       </th>
       <td>
         <?php echo $form['gtu_ref']->render() ?>
-        <div class="check_right form_buttons">
-          <?php echo link_to(__('View'), url_for("gtu/edit?id=".$form['gtu_ref']->getValue()), array('target' => '_new')) ; ?>
-        </div>
       </td>
     </tr>
     <tr>
@@ -63,7 +60,11 @@ $(document).ready(function () {
       el_name = $("#specimen_gtu_ref_name .code");
       if(el_name.length)
       {
-        $("#specimen_gtu_ref_code").html($("#specimen_gtu_ref_name .code").html());
+        var url = '#';
+        if ( $('#specimen_gtu_ref').val() != '' ) {
+          url = $("a#gtu_goto_link").attr('href')+'/id/'+$('#specimen_gtu_ref').val();
+        }
+        $("#specimen_gtu_ref_code").html("<a href=\""+url+"\" target=\"_new\">"+$("#specimen_gtu_ref_name .code").html()+"</a>");
         $("#specimen_gtu_ref_map").html($("#specimen_gtu_ref_name .img").html());
         $("#specimen_gtu_ref_lat").html($("#specimen_gtu_ref_name .lat").html());
         $("#specimen_gtu_ref_lon").html($("#specimen_gtu_ref_name .lon").html());
