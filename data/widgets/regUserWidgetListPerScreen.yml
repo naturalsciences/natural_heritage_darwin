@@ -1662,6 +1662,17 @@ ig3:
    title_perso: External Links
    all_public: true
 
+ig4:
+   col_num: 1
+   category: catalogue_igs_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
 ex1:
    col_num: 1
    category: catalogue_expeditions_widget
