@@ -14,6 +14,8 @@ all:
     tagsDisplayLimit: 10
     tagsLowerLimit: 4
     tempFilePath: '/tmp/temp_file'
+    #rmca 2016 02 22
+    disableXSDValidation: true
 
   mailer:
     sender: your_send_email@example.com
