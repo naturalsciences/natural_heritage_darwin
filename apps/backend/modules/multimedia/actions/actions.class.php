@@ -89,7 +89,7 @@ class multimediaActions extends DarwinActions
     $multimedia = Doctrine::getTable('Multimedia')->findOneById($request->getParameter('id')) ;
     if(!($this->getUser()->isAtLeast(Users::ADMIN) || $this->checkRights($multimedia))) $this->forwardToSecureAction();
     $this->forward404If(!($this->getUser()->isAtLeast(Users::ENCODER)) && !($multimedia->getVisible()));
-    $this->forward404Unless($multimedia && file_exists($multimedia->getFullURI()),sprintf('This file does not exist') );
+    $this->forward404Unless( file_exists($multimedia->getFullURI()),sprintf('This file does not exist') );
 
     // Adding the file to the Response object
     $this->getResponse()->clearHttpHeaders();
