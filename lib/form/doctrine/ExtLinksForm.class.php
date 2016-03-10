@@ -12,7 +12,7 @@ class ExtLinksForm extends BaseExtLinksForm
 {
   public function configure()
   {
-    $this->useFields(array('id','url','comment'));
+    $this->useFields(array('id','type','url','comment'));
 
     $this->widgetSchema['url'] = new sfWidgetFormInputText();
     $this->widgetSchema['url']->setAttributes(array('class'=>'small_medium_size'));
