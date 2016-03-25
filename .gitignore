@@ -9,6 +9,12 @@ config/darwin.yml
 config/app.yml
 web/favicon.ico
 uploads/*
+!uploads/report
+!uploads/multimedia
+uploads/report/*
+uploads/multimedia/*
+!uploads/report/.empty
+!uploads/multimedia/.empty
 *~
 *.*~ 
 *.kate-swp

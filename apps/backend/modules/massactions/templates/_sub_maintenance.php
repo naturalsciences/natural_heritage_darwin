@@ -39,33 +39,8 @@
 </table>
 <script  type="text/javascript">
 $(document).ready(function () 
-{
+  {
       changeSubmit(true);
-
- /* function addMember(people_ref, people_name)
-  { 
-
-    info = 'ok';
-    $('#exp_member_table tbody tr').each(function() {
-      if($(this).find('input[id$=\"_people_ref\"]').val() == people_ref) info = 'bad' ;
-    });
-    if(info != 'ok') return false;
-
-    $.ajax({
-      type: "GET",
-      url: $('.add_value a.hidden').attr('href')+ (0+$('#exp_member_table tbody tr').length)+'/people_ref/'+people_ref + '/iorder_by/' + (0+$('#exp_member_table tbody tr').length),
-      success: function(html)
-      {
-        $('#exp_member_table tbody').append(html);
-        $.fn.catalogue_people.reorder($('#exp_member_table'));
-      }
-    });
-    return true;
-  }
-
-*/
-   //$("#sub_form_<?php echo $mAction;?>").catalogue_people(/*{add_button: 'a.add_member',update_row_fct: addMember }*/);
-
 });
 
 </script>

@@ -42,6 +42,7 @@ class BaseMassActionForm extends sfFormSymfony
         'shelf' => self::getI18N()->__('Change Shelf'),
         'container' => self::getI18N()->__('Change Container'),
         'sub_container' => self::getI18N()->__('Change Sub Container'),
+        'ext_links' => self::getI18N()->__('Add an external link'),
     );
     return $result;
   }
@@ -109,8 +110,8 @@ class BaseMassActionForm extends sfFormSymfony
       return 'MaContainerForm';
     elseif($action == 'sub_container')
       return 'MaSubContainerForm';
-
-
+    elseif($action == 'ext_links')
+      return 'MaExtLinksForm';
     else
       return 'sfForm';
   }
