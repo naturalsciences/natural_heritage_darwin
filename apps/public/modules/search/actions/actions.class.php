@@ -205,8 +205,17 @@ class searchActions extends DarwinActions
 	return $this->renderText('taxon not found');
   
   }
-  
-  
+
+  /**
+   * @param \sfWebRequest $request
+   */
+  public function executeFamilycontent(sfWebRequest $request) {
+    $this->forward404Unless($request->getParameter('id', 0)!==0);
+    $familyContent = Doctrine::getTable('Specimens')->getFamilyContent($request->getParameter('id'));
+    $family = Doctrine::getTable('Taxonomy')->find($request->getParameter('id'));
+    return $this->renderPartial('familycontent',array('familycontent'=>$familyContent, 'family'=>$family));
+  }
+
   
   /**
   * Compute different sources to get the columns that must be showed
