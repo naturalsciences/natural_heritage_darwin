@@ -105,7 +105,7 @@ class ImportABCDXml implements ImportModelsInterface
         case "efg:ChronoStratigraphicDivision" : $this->object->getChronoLevel(strtolower($this->cdata)) ; break;
         case "efg:ChronostratigraphicAttributions" : $this->object->saveChrono($this->staging) ; break;
         case "efg:ChronostratigraphicName" : $this->object->name = $this->cdata ; break;
-        case "Code" : $this->staging['gtu_code'] = $this->cdata ; break;
+        case "Code" : $this->staging['gtu_code'] = (string)$this->cdata ; break;
         case "CoordinateErrorDistanceInMeters" : $this->staging['gtu_lat_long_accuracy'] = $this->cdata ; break;
         case "Context" : $this->object->multimedia_data['sub_type'] = $this->cdata ; break;
         case "CreatedDate" : $this->object->multimedia_data['creation_date'] = $this->cdata ; break;
@@ -173,7 +173,7 @@ class ImportABCDXml implements ImportModelsInterface
         case "LatitudeDecimal" : $this->staging['gtu_latitude'] = $this->cdata ; break;
         case "Length" : $this->object->desc .= "Length : ".$this->cdata." ;" ; break;
         case "efg:LithostratigraphicAttributions" : $this->object->setAttribution($this->staging) ; break;
-        case "LocalityText" : $this->addComment(false, "exact_site"); break;
+        case "LocalityText" : (string)$this->addComment(false, "exact_site"); break;
         case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $this->cdata ; break;
         case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break;
         case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;
