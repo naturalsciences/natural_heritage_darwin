@@ -5,9 +5,14 @@
   (
     select id,unnest(string_to_array(taxon_path,'/')) as taxon_id
     from specimens
-    where  (collection_ref = 1
-            or collection_path LIKE '/2/%'
-            or collection_path LIKE '/2/%'
+    where  (
+/*   collection_ref = 9
+   or 
+   collection_path LIKE '%/9/%'
+   or*/
+   collection_ref = 201
+   or 
+   collection_path LIKE '%/201/%'
            )
   ) as subset
   inner join taxonomy as family on subset.taxon_id::bigint = family.id and family.level_ref = 34
@@ -21,9 +26,14 @@ order_ids as
   (
     select id,unnest(string_to_array(taxon_path,'/')) as taxon_id
     from specimens
-    where  (collection_ref = 1
-            or collection_path LIKE '/2/%'
-            or collection_path LIKE '/2/%'
+    where  (
+/*   collection_ref = 9
+   or 
+   collection_path LIKE '%/9/%'
+   or*/
+   collection_ref = 201
+   or 
+   collection_path LIKE '%/201/%'
            )
   ) as subset
   inner join taxonomy as orders on subset.taxon_id::bigint = orders.id and orders.level_ref = 28
@@ -37,9 +47,14 @@ class_ids as
   (
     select id,unnest(string_to_array(taxon_path,'/')) as taxon_id
     from specimens
-    where  (collection_ref = 1
-            or collection_path LIKE '/2/%'
-            or collection_path LIKE '/2/%'
+    where  (
+/*   collection_ref = 9
+   or 
+   collection_path LIKE '%/9/%'
+   or*/
+   collection_ref = 201
+   or 
+   collection_path LIKE '%/201/%'
            )
   ) as subset
   inner join taxonomy as classes on subset.taxon_id::bigint = classes.id and classes.level_ref = 12
@@ -126,17 +141,25 @@ left join order_ids on specimens.id = order_ids.id
 left join class_ids on specimens.id = class_ids.id
 where 
   (
-   collection_ref = 2
+/*   collection_ref = 9
    or 
-   collection_path LIKE '/2/%'
+   collection_path LIKE '%/9/%'
+   or*/
+   collection_ref = 201
+   or 
+   collection_path LIKE '%/201/%'
   )
   and
-  collection_ref != 324
+  collection_ref NOT IN (307, 201)
   and
   (
-   taxon_ref = 357
+   taxon_ref = 1
    or
-   taxon_path like '%/357/%'
+   taxon_path like '%/1/%'
+/*   or
+   taxon_ref = 213469
+   or
+   taxon_path like '%/213469/%'*/
   ) 
   --and gtu_country_tag_value IN ('Burundi', 'Democratic Republic of the Congo', 'Rwanda')
 order by collection_ref, "Countries", "Code(s)", "Taxon";
