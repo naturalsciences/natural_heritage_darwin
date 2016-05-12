@@ -185,15 +185,17 @@ class specimensearchActions extends DarwinActions
   }
 
   /**
-  * Load related things for the specimens (code )
+  * Load related things for the specimens (code, loans related)
   */
   protected function loadRelated()
   {
+    // Fill in the specimens list that will be given for codes and loans retrieving
     $spec_list = array();
     foreach($this->specimensearch as $key=>$specimen){
       $spec_list[] = $specimen->getId() ;
     }
 
+    // codes retrieve and fill of a $this->codes variable (available in the specimen search result template)
     $codes_collection = Doctrine::getTable('Codes')->getCodesRelatedMultiple('specimens',$spec_list) ;
     $this->codes = array();
     foreach($codes_collection as $code) {
@@ -201,6 +203,9 @@ class specimensearchActions extends DarwinActions
         $this->codes[$code->getRecordId()] = array();
       $this->codes[$code->getRecordId()][] = $code;
     }
+
+    // loans retrieve and fill of a $this->loans variable (available in the the specimen search result template)
+
   }
 
   /**
@@ -216,7 +221,7 @@ class specimensearchActions extends DarwinActions
     $flds = array('category','collection','taxon','type','gtu','codes','chrono','ig','acquisition_category',
               'litho','lithologic','mineral','expedition','type', 'individual_type','sex','state','stage','social_status','rock_form','individual_count',
               'part', 'object_name', 'part_status', 'building', 'floor', 'room', 'row', 'col' ,'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
-              'sub_container_type' , 'sub_container_storage', 'specimen_count','part_codes');
+              'sub_container_type' , 'sub_container_storage', 'specimen_count','part_codes', 'loans');
 
 
     $flds = array_fill_keys($flds, 'uncheck');
@@ -389,6 +394,9 @@ class specimensearchActions extends DarwinActions
         'specimen_count' => array(
           'specimen_count_max',
           $this->getI18N()->__('Specimen Count'),),
+        'loans' => array(
+          false,
+          $this->getI18N()->__('Loans'),),
         ));
       }
   }
