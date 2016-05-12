@@ -43,6 +43,7 @@ class BaseMassActionForm extends sfFormSymfony
         'container' => self::getI18N()->__('Change Container'),
         'sub_container' => self::getI18N()->__('Change Sub Container'),
         'ext_links' => self::getI18N()->__('Add an external link'),
+        'specimen_status' => self::getI18N()->__('Change Status (lost, damaged,...)'),
     );
     return $result;
   }
@@ -112,6 +113,8 @@ class BaseMassActionForm extends sfFormSymfony
       return 'MaSubContainerForm';
     elseif($action == 'ext_links')
       return 'MaExtLinksForm';
+    elseif($action == 'specimen_status')
+      return 'MaSpStatusForm';
     else
       return 'sfForm';
   }
