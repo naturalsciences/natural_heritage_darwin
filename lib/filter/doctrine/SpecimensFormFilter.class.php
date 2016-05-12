@@ -22,7 +22,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->widgetSchema['gtu_code'] = new sfWidgetFormInputText();
     $this->widgetSchema['expedition_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
 
-    $this->widgetSchema['taxon_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    $this->widgetSchema['taxon_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size taxon_name'));
     $this->widgetSchema['taxon_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
         'model' => 'CatalogueLevels',
         'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'taxonomy'))),
@@ -39,7 +39,8 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'box_title' => $this->getI18N()->__('Choose Taxon'),
       'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeName?table=taxonomy&level=1',
-      'nullable' => true
+      'nullable' => true,
+      'field_to_clean_class' => 'taxon_name'
     ));
     $this->widgetSchema['taxon_child_syn_included'] = new WidgetFormInputCheckboxDarwin();
     $this->widgetSchema['taxon_child_syn_included']->setOption('label','Syn. included ?');
@@ -58,6 +59,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeName?table=lithology',
       'nullable' => true,
+      'field_to_clean_class' => 'lithology_name'
       ));
     $this->widgetSchema['lithology_child_syn_included'] = new WidgetFormInputCheckboxDarwin();
     $this->widgetSchema['lithology_child_syn_included']->setOption('label','Syn. included ?');
@@ -67,14 +69,14 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['lithology_child_syn_included'] = new sfValidatorBoolean();
 
 
-    $this->widgetSchema['lithology_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    $this->widgetSchema['lithology_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size lithology_name'));
     $this->widgetSchema['lithology_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'CatalogueLevels',
       'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'lithology'))),
       'add_empty' => $this->getI18N()->__('All')
     ));
 
-    $this->widgetSchema['litho_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    $this->widgetSchema['litho_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size litho_name'));
     $this->widgetSchema['litho_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'CatalogueLevels',
       'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'lithostratigraphy'))),
@@ -91,6 +93,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeName?table=lithostratigraphy',
       'nullable' => true,
+      'field_to_clean_class' => 'litho_name'
       ));
     $this->widgetSchema['litho_child_syn_included'] = new WidgetFormInputCheckboxDarwin();
     $this->widgetSchema['litho_child_syn_included']->setOption('label','Syn. included ?');
@@ -99,7 +102,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['litho_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
     $this->validatorSchema['litho_child_syn_included'] = new sfValidatorBoolean();
 
-    $this->widgetSchema['chrono_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    $this->widgetSchema['chrono_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size chrono_name'));
     $this->widgetSchema['chrono_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'CatalogueLevels',
       'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'chronostratigraphy'))),
@@ -118,6 +121,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeName?table=chronostratigraphy',
       'button_class'=>'',
+      'field_to_clean_class' => 'chrono_name'
      ));
     $this->widgetSchema['chrono_child_syn_included'] = new WidgetFormInputCheckboxDarwin();
     $this->widgetSchema['chrono_child_syn_included']->setOption('label','Syn. included ?');
@@ -126,7 +130,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
     $this->validatorSchema['chrono_relation'] = new sfValidatorChoice(array('required'=>false, 'choices'=> array_keys($rel)));
     $this->validatorSchema['chrono_child_syn_included'] = new sfValidatorBoolean();
 
-    $this->widgetSchema['mineral_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size'));
+    $this->widgetSchema['mineral_name'] = new sfWidgetFormInputText(array(), array('class'=>'medium_size mineral_name'));
     $this->widgetSchema['mineral_level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'CatalogueLevels',
       'table_method' => array('method'=>'getLevelsByTypes','parameters'=>array(array('table'=>'mineralogy'))),
@@ -142,6 +146,7 @@ class SpecimensFormFilter extends BaseSpecimensFormFilter
       'button_is_hidden' => true,
       'complete_url' => 'catalogue/completeName?table=mineralogy',
       'button_class'=>'',
+      'field_to_clean_class' => 'mineral_name'
       ));
     $this->widgetSchema['mineral_child_syn_included'] = new WidgetFormInputCheckboxDarwin();
     $this->widgetSchema['mineral_child_syn_included']->setOption('label','Syn. included ?');

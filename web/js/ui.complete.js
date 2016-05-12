@@ -43,8 +43,18 @@
       }
 
       this.options.change = function( event, ui ) {
-        if(ui.item) { // Click on elem
-        } else {
+        // Clean some targeted fields
+        if(that.options.data !== undefined) {
+          if (that.options.data['field_to_clean_class'] !== '' && that.options.data['field_to_clean_class'] !== undefined) {
+            if ($("." + that.options.data['field_to_clean_class']).length) {
+              $("." + that.options.data['field_to_clean_class']).val('');
+            }
+          }
+        }
+        if(ui.item) {
+          // Click on elem and loose focus
+        }
+        else {
           $.ajax({
             url: that.options.source,
             data: {term : that.options.label_element.val(), exact: 1 },
@@ -103,6 +113,6 @@
     },*/
     options: {
       value_element: undefined,
-      label_element: undefined
+      label_element: undefined,
     },
   });

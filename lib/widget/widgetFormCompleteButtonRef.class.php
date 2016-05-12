@@ -53,6 +53,15 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
       $input .= $this->renderTag('img',$options);
     }
 
+    $jsonData = array();
+    if ($this->getOption('field_level_id') != '') {
+      $jsonData['field_level_id'] = 'function(){return $("#'.$this->getOption('field_level_id').'").val();}';
+    }
+    if ($this->getOption('field_to_clean_class') != '') {
+      $jsonData['field_to_clean_class'] = '"'.$this->getOption('field_to_clean_class').'"';
+    }
+
+
     $input .= $this->renderContentTag('div',link_to(' ', $this->getOption('link_url'), array('class' => 'but_more','title'=>$this->getOption('box_title') )),
       array('title'=> $this->getOption('box_title'),
       'id' => $this->generateId($name).'_button',
@@ -62,13 +71,21 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
     $input .= '<script  type="text/javascript">
       $(document).ready(function () {
       $("#'.$this->generateId($name).'_name").catcomplete({source: "'.url_for($this->getOption('complete_url')).'"';
-      if ($this->getOption('field_level_id') != '') {
+      if (count($jsonData) !==0) {
+        $input .= ', data : {';
+        foreach($jsonData as $key=>$val) {
+          $input .= $key.': '.$val.',';
+        }
+        $input = rtrim($input, ',');
+        $input .= '}';
+      }
+/*      if ($this->getOption('field_level_id') != '') {
           $input .= ', data : {field_level_id: function(){return $("#'.$this->getOption('field_level_id').'").val();}}';
-        }  
-    $input .= '});
+      }*/
+      $input .= '});
       $("#'.$this->generateId($name).'_button a.but_more").click(button_ref_modal);';
 
-   if($this->getOption('deletable'))
+      if($this->getOption('deletable'))
         $input .= '$("#'.$this->generateId($name).'_clear").click(function(){
           if(confirm("'.$this->getOption('confirm_msg').'"))
           {
@@ -77,7 +94,7 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
           }
         });';
 
-    $input .= '
+        $input .= '
     });</script>
     </div>';
 
@@ -90,6 +107,7 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
     parent::configure($options, $attributes);
     $this->addOption('complete_url');
     $this->addOption('field_level_id');
+    $this->addOption('field_to_clean_class');
   }
 
   public function getJavaScripts()
