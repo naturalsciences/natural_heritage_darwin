@@ -8,7 +8,6 @@
       this.options.value_element = $(this.element).parent().find('input:hidden');
 
       that.options.value_element.change(function(e) {
-        //that.loadExistingValue();
       });
 
       that.options.label_element.hover(function(e) {
@@ -82,7 +81,6 @@
         that.options.label_element.val( ui.item.label );
         return false;
       };
-      //this.loadExistingValue();
 
       var btn = $(this.element).parent().find('.btn');
       btn.on('click', function() {
@@ -92,25 +90,6 @@
         that.options.label_element.focus();
       });
     },
-/*    loadExistingValue: function() {
-      var that = this;
-      val = that.options.value_element.val();
-      if(val) {
-        //FEtch
-        $.ajax({
-          url: that.options.source,
-          data: {id : val},
-          dataType: 'json',
-          success: function(data) {
-            that.options.label_element.val(data.label);
-            if (typeof data.is_active !== 'undefined' && ! data.is_active) {
-                that.options.label_element.addClass('value_disabled');
-            }
-          }
-        });
-
-      }
-    },*/
     options: {
       value_element: undefined,
       label_element: undefined,

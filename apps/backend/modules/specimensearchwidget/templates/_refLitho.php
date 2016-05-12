@@ -36,8 +36,6 @@ $(document).ready(function () {
     $('#litho_full_text').removeAttr('disabled') ;
     $('#litho_precise_line').toggle() ;
     $(this).closest('table').find('#litho_full_text_line').toggle() ;
-    $('#litho_full_text_line').find('input:text').val("") ;
-    $('#litho_full_text_line').find('select').val('') ;
   });
   
   $('#litho_full_text').click(function() {
@@ -45,8 +43,6 @@ $(document).ready(function () {
     $('#litho_full_text').attr('disabled','disabled') ;
     $('#litho_precise_line').toggle() ;
     $(this).closest('table').find('#litho_full_text_line').toggle() ;
-    $('#litho_precise_line').find('input:text').val("") ;
-    $('#litho_precise_line').find('input:hidden').val('') ;
 
   }); 
   
@@ -67,6 +63,15 @@ $(document).ready(function () {
   if (!($('#litho_relation input:checked').val() in { child : "child", direct_child : "direct_child" } )) {
     $('#litho_child_syn_included').addClass('hidden');
   }
+
+  $('.litho_name').on(
+    'change',
+    function() {
+      if($(this).val() !== '') {
+        $('.litho_autocomplete').val('');
+      }
+    }
+  );
 
 });
 </script>

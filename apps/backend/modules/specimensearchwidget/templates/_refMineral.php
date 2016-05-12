@@ -37,8 +37,6 @@ $(document).ready(function () {
     $('#mineral_full_text').removeAttr('disabled') ;
     $('#mineral_precise_line').toggle() ;
     $(this).closest('table').find('#mineral_full_text_line').toggle() ;
-    $('#mineral_full_text_line').find('input:text').val("") ;
-    $('#mineral_full_text_line').find('select').val('') ;
   });
   
   $('#mineral_full_text').click(function() {
@@ -46,8 +44,6 @@ $(document).ready(function () {
     $('#mineral_full_text').attr('disabled','disabled') ;
     $('#mineral_precise_line').toggle() ;
     $(this).closest('table').find('#mineral_full_text_line').toggle() ;
-    $('#mineral_precise_line').find('input:text').val("") ;
-    $('#mineral_precise_line').find('input:hidden').val('') ;
 
   });
   
@@ -68,6 +64,15 @@ $(document).ready(function () {
   if (!($('#mineral_relation input:checked').val() in { child : "child", direct_child : "direct_child" } )) {
     $('#mineral_child_syn_included').addClass('hidden');
   }
+
+  $('.mineral_name').on(
+    'change',
+    function() {
+      if($(this).val() !== '') {
+        $('.mineral_autocomplete').val('');
+      }
+    }
+  );
 
 });
 </script>

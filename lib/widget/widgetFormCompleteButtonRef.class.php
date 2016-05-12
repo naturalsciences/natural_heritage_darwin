@@ -54,19 +54,32 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
     }
 
     $jsonData = array();
+    $buttonRefData = '';
     if ($this->getOption('field_level_id') != '') {
       $jsonData['field_level_id'] = 'function(){return $("#'.$this->getOption('field_level_id').'").val();}';
     }
     if ($this->getOption('field_to_clean_class') != '') {
       $jsonData['field_to_clean_class'] = '"'.$this->getOption('field_to_clean_class').'"';
+      $buttonRefData = $this->getOption('field_to_clean_class');
     }
 
 
-    $input .= $this->renderContentTag('div',link_to(' ', $this->getOption('link_url'), array('class' => 'but_more','title'=>$this->getOption('box_title') )),
-      array('title'=> $this->getOption('box_title'),
-      'id' => $this->generateId($name).'_button',
-      'class' => 'ref_name' .$class,
-    ));
+    $input .= $this->renderContentTag(
+      'div',
+      link_to(' ',
+              $this->getOption('link_url'),
+              array(
+                'class' => 'but_more',
+                'title'=>$this->getOption('box_title'),
+                'data-field-to-clean' => $buttonRefData
+              )
+      ),
+      array(
+        'title'=> $this->getOption('box_title'),
+        'id' => $this->generateId($name).'_button',
+        'class' => 'ref_name' .$class
+      )
+    );
 
     $input .= '<script  type="text/javascript">
       $(document).ready(function () {
@@ -79,9 +92,6 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
         $input = rtrim($input, ',');
         $input .= '}';
       }
-/*      if ($this->getOption('field_level_id') != '') {
-          $input .= ', data : {field_level_id: function(){return $("#'.$this->getOption('field_level_id').'").val();}}';
-      }*/
       $input .= '});
       $("#'.$this->generateId($name).'_button a.but_more").click(button_ref_modal);';
 

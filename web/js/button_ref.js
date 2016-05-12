@@ -2,10 +2,14 @@ var ref_element_id = null;
 var ref_element_name = null;
 var ref_level_id = '';
 var ref_caller_id = '';
+var data_field_to_clean = '';
 
 function button_ref_modal(event)
 {
-    event.preventDefault();
+  if ($(this).attr('data-field-to-clean').length) {
+    data_field_to_clean = $(this).attr('data-field-to-clean');
+  }
+  event.preventDefault();
     var last_position = $(window).scrollTop();
     scroll(0,0) ;
     $(this).parent().parent().find('input[type="hidden"]').trigger({ type:"loadref"});
@@ -62,6 +66,11 @@ function button_ref_modal(event)
             api.elements.target.find('.off').removeClass('hidden');
             api.elements.target.find('.on').addClass('hidden');
             parent_el.prev().trigger('change');
+            if (data_field_to_clean !== '') {
+              if ($('.'+data_field_to_clean).length) {
+                $('.'+data_field_to_clean).val('');
+              }
+            }
           }
           scroll(0,last_position) ;
           api.destroy();

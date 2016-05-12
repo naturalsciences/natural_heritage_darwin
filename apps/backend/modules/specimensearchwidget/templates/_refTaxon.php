@@ -36,8 +36,6 @@ $(document).ready(function () {
     $('#taxon_full_text').removeAttr('disabled') ;
     $('#taxon_precise_line').toggle() ;
     $(this).closest('table').find('#taxon_full_text_line').toggle() ;
-    $('#taxon_full_text_line').find('input:text').val("") ;
-    $('#taxon_full_text_line').find('select').val('') ;
   });
 
   $('#taxon_full_text').click(function() {
@@ -45,8 +43,6 @@ $(document).ready(function () {
     $('#taxon_full_text').attr('disabled','disabled') ;
     $('#taxon_precise_line').toggle() ;
     $(this).closest('table').find('#taxon_full_text_line').toggle() ;
-    $('#taxon_full_text_line').find('input:text').val("") ;
-    $('#taxon_full_text_line').find('input:hidden').val('') ;
 
   });
 
@@ -67,6 +63,15 @@ $(document).ready(function () {
   if (!($('#taxon_relation input:checked').val() in { child : "child", direct_child : "direct_child" } )) {
     $('#taxon_child_syn_included').addClass('hidden');
   }
+
+  $('.taxon_name').on(
+    'change',
+    function() {
+      if($(this).val() !== '') {
+        $('.taxon_autocomplete').val('');
+      }
+    }
+  );
 
 });
 </script>
