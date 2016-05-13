@@ -6,10 +6,12 @@ var data_field_to_clean = '';
 
 function button_ref_modal(event)
 {
-  if ($(this).attr('data-field-to-clean').length) {
-    data_field_to_clean = $(this).attr('data-field-to-clean');
-  }
-  event.preventDefault();
+    event.preventDefault();
+    if($(this).attr('data-field-to-clean') != undefined) {
+      if ($(this).attr('data-field-to-clean').length) {
+        data_field_to_clean = $(this).attr('data-field-to-clean');
+      }
+    }
     var last_position = $(window).scrollTop();
     scroll(0,0) ;
     $(this).parent().parent().find('input[type="hidden"]').trigger({ type:"loadref"});
