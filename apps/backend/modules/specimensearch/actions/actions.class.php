@@ -205,7 +205,14 @@ class specimensearchActions extends DarwinActions
     }
 
     // loans retrieve and fill of a $this->loans variable (available in the the specimen search result template)
-
+    $loans_collection = Doctrine::getTable('Loans')->getLoansRelatedArray($this->getUser(), $spec_list);
+    $this->loans = array();
+    foreach($loans_collection as $loan) {
+      if(! isset($this->loans[$loan->getSpecimenRef()])) {
+        $this->loans[ $loan->getSpecimenRef() ] = array ();
+      }
+      $this->loans[$loan->getSpecimenRef()][] = $loan;
+    }
   }
 
   /**

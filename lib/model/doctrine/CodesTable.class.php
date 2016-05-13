@@ -24,7 +24,7 @@ class CodesTable extends DarwinTable
 
   public function getCodesRelated($table='specimens', $specId = null)
   {
-	return $this->getCodesRelatedArray($table, $specId);
+	  return $this->getCodesRelatedArray($table, $specId);
   }
 
   /**

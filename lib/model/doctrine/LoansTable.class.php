@@ -83,12 +83,11 @@ class LoansTable extends DarwinTable
     $q = Doctrine_Query::create()
       ->from('Loans l')
       ->innerJoin('l.LoanStatus')
-//       ->andWhere("EXISTS (SELECT ls.id FROM LoanStatus ls WHERE loan_ref = l.id AND ls.status IN ('running', 'extended') AND is_last = TRUE )")
       ->andWhere('EXISTS (SELECT li.id FROM LoanItems li WHERE li.loan_ref = l.id AND li.specimen_ref = ? )', $id);
     return $q->execute();
   }
 
-  /*
+  /**
    * Used for autocompletion in widgetFormSelectComplete
    * @param $user object The user that serves at filtering the list of loans we can get access to
    * @param $needle string The string already entered
@@ -120,7 +119,7 @@ class LoansTable extends DarwinTable
     return $result;
   }
 
-  /*
+  /**
    * Used for duplication of loans / replace the classic approach used so far
    * @param $loan_id integer The id of the loan we wish to duplicate
    * @return integer id of new loan created
@@ -138,7 +137,7 @@ class LoansTable extends DarwinTable
     return $id;
   }
 
-  /*
+  /**
    * List of printable loans out of a list of loans
    * A printable loan is defined by having at least one contact point on the receiver side
    * and by having at least one item
@@ -166,6 +165,40 @@ class LoansTable extends DarwinTable
       $response[] = $loans['id'];
     }
     return $response;
+  }
+
+  /**
+   * Get the list of related loans for given specimen(s) id(s)
+   * @param myUser $user object The user that serves at filtering the list of loans we can get access to
+   * @param null $specId Specimen(s) Id(s)
+   * @return \Doctrine_Collection
+   */
+  public function getLoansRelated($user, $specId = null)
+  {
+    return $this->getLoansRelatedArray($user, $specId);
+  }
+
+  /**
+   * Get all loans related to an Array of id
+   * @param myUser $user object The user that serves at filtering the list of loans we can get access to
+   * @param array $specIds Array of id of related record
+   * @return Doctrine_Collection Collection of loans
+   */
+  public function getLoansRelatedArray($user, $specIds = array())
+  {
+    if(!is_array($specIds))
+      $specIds = array($specIds);
+    if(empty($specIds)) return array();
+    $q = Doctrine_Query::create()->
+      from('LoanItems li')->
+      innerJoin('li.Loan l')->
+      innerJoin('l.LoanRights lr on l.id = lr.loan_ref')->
+      whereIn('li.specimen_ref', $specIds)->
+      orderBy('li.specimen_ref ASC, CASE WHEN l.extended_to_date IS NULL THEN l.to_date ELSE l.extended_to_date END DESC');
+    if (!$user->isA(Users::ADMIN)) {
+      $q->andWhere('lr.user_ref = ?', array($user->getId()));
+    }
+    return $q->execute();
   }
 
 }
