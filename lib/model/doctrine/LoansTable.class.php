@@ -189,16 +189,31 @@ class LoansTable extends DarwinTable
     if(!is_array($specIds))
       $specIds = array($specIds);
     if(empty($specIds)) return array();
-    $q = Doctrine_Query::create()->
-      from('LoanItems li')->
-      innerJoin('li.Loan l')->
-      innerJoin('l.LoanRights lr on l.id = lr.loan_ref')->
-      whereIn('li.specimen_ref', $specIds)->
-      orderBy('li.specimen_ref ASC, CASE WHEN l.extended_to_date IS NULL THEN l.to_date ELSE l.extended_to_date END DESC');
+    $conn_MGR = Doctrine_Manager::connection();
+    $conn = $conn_MGR->getDbh();
+    $statement = $conn->prepare("SELECT l.id as id,
+                                        l.name as name,
+                                        l.to_date as end_date,
+                                        l.extended_to_date as effective_end_date,
+                                        ls.status as loan_status,
+                                        li.specimen_ref as specimen_id
+                                  FROM loans as l
+                                  INNER JOIN loan_items as li ON l.id = li.loan_ref
+                                  INNER JOIN loan_rights as lr on l.id = lr.loan_ref
+                                  INNER JOIN loan_status as ls on l.id = ls.loan_ref and is_last = TRUE
+                                  WHERE li.specimen_ref IN :id
+                                    AND lr.user_ref = CASE WHEN :user_id = 0 THEN lr.user_ref ELSE :user_id END
+                                  ORDER BY li.specimen_ref"
+    );
+    $params = array(':id' => $specIds, ':user_id'=>0);
     if (!$user->isA(Users::ADMIN)) {
       $q->andWhere('lr.user_ref = ?', array($user->getId()));
     }
+    $statement->execute(array(':id' => $id));
+    $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+    return $results;
     return $q->execute();
+
   }
 
 }

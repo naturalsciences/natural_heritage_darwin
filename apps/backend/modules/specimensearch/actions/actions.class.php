@@ -169,7 +169,7 @@ class specimensearchActions extends DarwinActions
           if (! $this->pagerLayout->getPager()->getExecuted())
             $this->specimensearch = $this->pagerLayout->execute();
 
-          //Load Codes and related for each item
+          //Load Codes and Loans and related for each item
           $this->loadRelated();
           $this->field_to_show = $this->getVisibleColumns($this->getUser(), $this->form);
           $this->defineFields($this->source);

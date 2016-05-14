@@ -24,7 +24,7 @@
 </td>
 <td class="col_loans">
   <?php if(isset($loans[$specimen->getId()])):?>
-    <?php echo 'oui';?>
+
   <?php endif;?>
 </td>
 

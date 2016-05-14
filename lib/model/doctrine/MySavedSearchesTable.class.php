@@ -95,6 +95,7 @@ class MySavedSearchesTable extends DarwinTable
       'sub_container_type'=>'Sub Container Type',
       'sub_container_storage'=>'Sub Container Storage',
       'specimen_count'=>' Count',
+      'loans' => 'Loans'
     );
 
     return $columns;
