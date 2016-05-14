@@ -202,7 +202,7 @@ class LoansTable extends DarwinTable
                    array_to_string(array_agg((select name from loans where id = li.loan_ref)), CHR(10)) as loans_name,
                    array_to_string(array_agg((select status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status
             from loan_items as li ";
-    $sqlWhere = "where li.specimen_ref  = any('{ $specimenIds }'::int[])";
+    $sqlWhere = " where li.specimen_ref  = any('{ $specimenIds }'::int[])";
     $sqlGroupAndOrderBy = " group by li.specimen_ref
                             order by li.specimen_ref";
     $params = array();
