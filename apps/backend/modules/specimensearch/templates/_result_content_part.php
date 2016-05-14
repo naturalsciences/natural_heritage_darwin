@@ -25,7 +25,7 @@
 <td class="col_loans">
   <?php if(isset($loans[$specimen->getId()])):?>
     <?php if ($loans[$specimen->getId()][0]['loans_count'] === 1): ?>
-        <?php echo $loans[$specimen->getId()][0]['loans_name'];?>
+      <a class="ellipsis" href="<?php echo url_for('loan/view?id='.$loans[$specimen->getId()][0]['loans_ref']);?>" target="_blank" title="<?php echo $loans[$specimen->getId()][0]['loans_name'];?>"><?php echo $loans[$specimen->getId()][0]['loans_name'];?></a>
     <?php else:?>
       <?php echo $loans[$specimen->getId()][0]['loans_count'];?>
     <?php endif;?>
