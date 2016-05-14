@@ -186,34 +186,37 @@ class LoansTable extends DarwinTable
    */
   public function getLoansRelatedArray($user, $specIds = array())
   {
-    if(!is_array($specIds))
-      $specIds = array($specIds);
-    if(empty($specIds)) return array();
+    $specimenIds = '';
+    if(is_array($specIds)) {
+      if(empty($specIds) || count($specIds) === 0) return array();
+      $specimenIds = implode(',', $specIds);
+    }
+    else {
+      $specimenIds = $specIds;
+    }
     $conn_MGR = Doctrine_Manager::connection();
     $conn = $conn_MGR->getDbh();
-    $statement = $conn->prepare("SELECT l.id as id,
-                                        l.name as name,
-                                        l.to_date as end_date,
-                                        l.extended_to_date as effective_end_date,
-                                        ls.status as loan_status,
-                                        li.specimen_ref as specimen_id
-                                  FROM loans as l
-                                  INNER JOIN loan_items as li ON l.id = li.loan_ref
-                                  INNER JOIN loan_rights as lr on l.id = lr.loan_ref
-                                  INNER JOIN loan_status as ls on l.id = ls.loan_ref and is_last = TRUE
-                                  WHERE li.specimen_ref IN :id
-                                    AND lr.user_ref = CASE WHEN :user_id = 0 THEN lr.user_ref ELSE :user_id END
-                                  ORDER BY li.specimen_ref"
-    );
-    $params = array(':id' => $specIds, ':user_id'=>0);
+    $sql = "select li.specimen_ref as specimen_id,
+                   count(distinct li.loan_ref) as loans_count,
+                   array_to_string(array_agg(li.loan_ref), CHR(10)) as loans_ref,
+                   array_to_string(array_agg((select name from loans where id = li.loan_ref)), CHR(10)) as loans_name,
+                   array_to_string(array_agg((select status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status
+            from loan_items as li ";
+    $sqlWhere = "where li.specimen_ref  = any('{ $specimenIds }'::int[])";
+    $sqlGroupAndOrderBy = " group by li.specimen_ref
+                            order by li.specimen_ref";
+    $params = array();
     if (!$user->isA(Users::ADMIN)) {
-      $q->andWhere('lr.user_ref = ?', array($user->getId()));
+      $sql .= " inner join loan_rights as lr on li.loan_ref = lr.loan_ref";
+      $sqlWhere .= " and lr.user_ref = case when :user_id = 0 then lr.user_ref else :user_id end";
+      $params[':user_id'] = $user->getId();
     }
-    $statement->execute(array(':id' => $id));
+
+    $sql .= $sqlWhere.$sqlGroupAndOrderBy;
+    $statement = $conn->prepare($sql);
+    $statement->execute($params);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);
     return $results;
-    return $q->execute();
-
   }
 
 }

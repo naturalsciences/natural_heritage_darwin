@@ -24,7 +24,11 @@
 </td>
 <td class="col_loans">
   <?php if(isset($loans[$specimen->getId()])):?>
-
+    <?php if ($loans[$specimen->getId()][0]['loans_count'] === 1): ?>
+        <?php echo $loans[$specimen->getId()][0]['loans_name'];?>
+    <?php else:?>
+      <?php echo $loans[$specimen->getId()][0]['loans_count'];?>
+    <?php endif;?>
   <?php endif;?>
 </td>
 

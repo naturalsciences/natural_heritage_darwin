@@ -208,10 +208,10 @@ class specimensearchActions extends DarwinActions
     $loans_collection = Doctrine::getTable('Loans')->getLoansRelatedArray($this->getUser(), $spec_list);
     $this->loans = array();
     foreach($loans_collection as $loan) {
-      if(! isset($this->loans[$loan->getSpecimenRef()])) {
-        $this->loans[ $loan->getSpecimenRef() ] = array ();
+      if(! isset($this->loans[$loan['specimen_id']])) {
+        $this->loans[ $loan['specimen_id'] ] = array ();
       }
-      $this->loans[$loan->getSpecimenRef()][] = $loan;
+      $this->loans[$loan['specimen_id']][] = $loan;
     }
   }
 
