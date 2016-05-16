@@ -208,14 +208,20 @@ class specimensearchActions extends DarwinActions
     $loans_collection = Doctrine::getTable('Loans')->getLoansRelatedArray($this->getUser(), $spec_list);
     $this->loans = array();
     foreach($loans_collection as $loan) {
-      $loan_refs = preg_split('/\n/',$loan['loans_ref']);
-      $loan_names = preg_split('/\n/',$loan['loans_name']);
-      $loan_status = preg_split('/\n/',$loan['loans_status']);
-      $loan['specimen_infos'] = array();
-      foreach($loan_refs as $key => $value) {
-        $loan['specimen_infos'][$key]['id']=$value;
-        $loan['specimen_infos'][$key]['name']=$loan_names[$key];
-        $loan['specimen_infos'][$key]['status']=$loan_status[$key];
+      if ($loan['loans_count'] > 1) {
+        $loan_refs = preg_split('/\n/', $loan['loans_ref']);
+        $loan_names = preg_split('/\n/', $loan['loans_name']);
+        $loan_status = preg_split('/\n/', $loan['loans_status']);
+        $loan_status_tooltip = preg_split('/\n/', $loan['loans_status_tooltip']);
+        $loan_status_class = preg_split('/\n/', $loan['loans_status_class']);
+        $loan['specimen_infos'] = array();
+        foreach ($loan_refs as $key => $value) {
+          $loan['specimen_infos'][$key]['id'] = $value;
+          $loan['specimen_infos'][$key]['name'] = $loan_names[$key];
+          $loan['specimen_infos'][$key]['status'] = $loan_status[$key];
+          $loan['specimen_infos'][$key]['status_tooltip'] = $loan_status_tooltip[$key];
+          $loan['specimen_infos'][$key]['status_class'] = $loan_status_class[$key];
+        }
       }
       if(! isset($this->loans[$loan['specimen_id']])) {
         $this->loans[ $loan['specimen_id'] ] = array ();

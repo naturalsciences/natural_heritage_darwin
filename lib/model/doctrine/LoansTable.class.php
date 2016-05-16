@@ -200,7 +200,9 @@ class LoansTable extends DarwinTable
                    count(distinct li.loan_ref) as loans_count,
                    array_to_string(array_agg(li.loan_ref), CHR(10)) as loans_ref,
                    array_to_string(array_agg((select name from loans where id = li.loan_ref)), CHR(10)) as loans_name,
-                   array_to_string(array_agg((select status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status
+                   array_to_string(array_agg((select case when status = 'closed' then '(C)' when status = 'rejected' then '(!)' else '(O)' end as status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status,
+                   array_to_string(array_agg((select status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status_tooltip,
+                   array_to_string(array_agg((select case when status = 'closed' then 'loan_closed' when status = 'rejected' then 'loan_rejected' else 'loan_opened' end as status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status_class
             from loan_items as li ";
     $sqlWhere = " where li.specimen_ref  = any('{ $specimenIds }'::int[])";
     $sqlGroupAndOrderBy = " group by li.specimen_ref
