@@ -203,7 +203,7 @@ img#favorite_on, img#favorite_off
 
 .show
 {
-  display:show;
+  display:block;
 }
 
 img.tree_cmd_td
