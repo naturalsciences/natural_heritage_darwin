@@ -215,6 +215,9 @@ img.tree_cmd_td
   display: inline-block;
   max-width: 50%;
 }
+.col_loans span {
+  font-weight:bold;
+}
 .ellipsis {
   overflow: hidden;
   white-space: nowrap;

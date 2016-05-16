@@ -105,3 +105,17 @@
   
   </div>
 </div>
+<script type="text/javascript">
+  $('.loans_info').click(function()
+  {
+    var loan_id = $(this).attr('id');
+    item_row=$(this).closest('tr');
+    if(item_row.find('#'+loan_id+'_list').is(":hidden"))
+    {
+      item_row.find('#'+loan_id+'_list').slideDown();
+    }
+    else {
+      $('#'+loan_id+'_list').slideUp();
+    }
+  });
+</script>

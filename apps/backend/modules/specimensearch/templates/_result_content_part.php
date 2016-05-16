@@ -27,8 +27,18 @@
     <?php if ($loans[$specimen->getId()][0]['loans_count'] === 1): ?>
       <a class="ellipsis" href="<?php echo url_for('loan/view?id='.$loans[$specimen->getId()][0]['loans_ref']);?>" target="_blank" title="<?php echo $loans[$specimen->getId()][0]['loans_name'];?>"><?php echo $loans[$specimen->getId()][0]['loans_name'];?></a>
     <?php else:?>
-      <?php echo $loans[$specimen->getId()][0]['loans_count'];?>
+      <span>
+        <?php echo $loans[$specimen->getId()][0]['loans_count'];?>
+        <?php echo image_tag('info.png',array('title'=>'info', 'class'=>'info loans_info', 'id'=>"loans_".$specimen->getId()));?>
+      </span>
+      <div id="loans_<?php echo $specimen->getId();?>_list" class="tree">
+        <?php foreach ($loans[$specimen->getId()][0]['specimen_infos'] as $spec_infos):?>
+          <a class="ellipsis" href="<?php echo url_for('loan/view?id='.$spec_infos['id']);?>" target="_blank" title="<?php echo $spec_infos['name'];?>"><?php echo $spec_infos['name'];?></a></br>
+        <?php endforeach;?>  
+      </div>
     <?php endif;?>
+  <?php else: ?>
+    <span>0</span>
   <?php endif;?>
 </td>
 
