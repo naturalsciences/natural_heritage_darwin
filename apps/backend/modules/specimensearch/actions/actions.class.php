@@ -208,6 +208,7 @@ class specimensearchActions extends DarwinActions
     $loans_collection = Doctrine::getTable('Loans')->getLoansRelatedArray($this->getUser(), $spec_list);
     $this->loans = array();
     foreach($loans_collection as $loan) {
+      $loan['loans_count'] = (int) $loan['loans_count'];
       if ($loan['loans_count'] > 1) {
         $loan_refs = preg_split('/\n/', $loan['loans_ref']);
         $loan_names = preg_split('/\n/', $loan['loans_name']);
