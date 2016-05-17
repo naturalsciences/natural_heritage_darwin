@@ -25,7 +25,11 @@
 <td class="col_loans">
   <?php if(isset($loans[$specimen->getId()])):?>
     <?php if ($loans[$specimen->getId()][0]['loans_count'] === 1): ?>
-      <a class="ellipsis" href="<?php echo url_for('loan/view?id='.$loans[$specimen->getId()][0]['loans_ref']);?>" target="_blank" title="<?php echo $loans[$specimen->getId()][0]['loans_name'];?>"><?php echo $loans[$specimen->getId()][0]['loans_name'];?></a><span id="loan_status" class="<?php echo $loans[$specimen->getId()][0]['loans_status_class']; ?>" title="<?php echo $loans[$specimen->getId()][0]['loans_status_tooltip']; ?>">&nbsp;<?php echo $loans[$specimen->getId()][0]['loans_status']; ?></span>
+      <?php if ($loans[$specimen->getId()][0]['loans_right'] === 1): ?>
+        <a class="ellipsis" href="<?php echo url_for('loan/view?id='.$loans[$specimen->getId()][0]['loans_ref']);?>" target="_blank" title="<?php echo $loans[$specimen->getId()][0]['loans_name'];?>"><?php echo $loans[$specimen->getId()][0]['loans_name'];?></a><span id="loan_status" class="<?php echo $loans[$specimen->getId()][0]['loans_status_class']; ?>" title="<?php echo $loans[$specimen->getId()][0]['loans_status_tooltip']; ?>">&nbsp;<?php echo $loans[$specimen->getId()][0]['loans_status']; ?></span>
+      <?php else: ?>
+        <span class="loan_naming ellipsis" title="<?php echo $loans[$specimen->getId()][0]['loans_name'];?>"><?php echo $loans[$specimen->getId()][0]['loans_name'];?></span><span id="loan_status" class="<?php echo $loans[$specimen->getId()][0]['loans_status_class']; ?>" title="<?php echo $loans[$specimen->getId()][0]['loans_status_tooltip']; ?>">&nbsp;<?php echo $loans[$specimen->getId()][0]['loans_status']; ?></span>
+      <?php endif; ?>
     <?php else:?>
       <span class="counting">
         <?php echo $loans[$specimen->getId()][0]['loans_count'];?>
@@ -33,7 +37,11 @@
       </span>
       <div id="loans_<?php echo $specimen->getId();?>_list" class="tree">
         <?php foreach ($loans[$specimen->getId()][0]['specimen_infos'] as $spec_infos):?>
-          <a class="ellipsis" href="<?php echo url_for('loan/view?id='.$spec_infos['id']);?>" target="_blank" title="<?php echo $spec_infos['name'];?>"><?php echo $spec_infos['name'];?></a><span id="loan_status" class="<?php echo $spec_infos['status_class']; ?>" title="<?php echo $spec_infos['status_tooltip']; ?>">&nbsp;<?php echo $spec_infos['status']; ?></span></br>
+          <?php if($spec_infos['access_right'] === 1): ?>
+            <a class="ellipsis" href="<?php echo url_for('loan/view?id='.$spec_infos['id']);?>" target="_blank" title="<?php echo $spec_infos['name'];?>"><?php echo $spec_infos['name'];?></a><span id="loan_status" class="<?php echo $spec_infos['status_class']; ?>" title="<?php echo $spec_infos['status_tooltip']; ?>">&nbsp;<?php echo $spec_infos['status']; ?></span></br>
+          <?php else: ?>
+            <span class="loan_naming ellipsis"><?php echo $spec_infos['name'];?></span><span id="loan_status" class="<?php echo $spec_infos['status_class']; ?>" title="<?php echo $spec_infos['status_tooltip']; ?>">&nbsp;<?php echo $spec_infos['status']; ?></span></br>
+          <?php endif; ?>
         <?php endforeach;?>  
       </div>
     <?php endif;?>

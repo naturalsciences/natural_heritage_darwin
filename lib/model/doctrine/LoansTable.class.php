@@ -196,25 +196,28 @@ class LoansTable extends DarwinTable
     }
     $conn_MGR = Doctrine_Manager::connection();
     $conn = $conn_MGR->getDbh();
-    $sql = "select li.specimen_ref as specimen_id,
-                   count(distinct li.loan_ref) as loans_count,
-                   array_to_string(array_agg(li.loan_ref), CHR(10)) as loans_ref,
-                   array_to_string(array_agg((select name from loans where id = li.loan_ref)), CHR(10)) as loans_name,
-                   array_to_string(array_agg((select case when status = 'closed' then '(C)' when status = 'rejected' then '(!)' else '(O)' end as status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status,
-                   array_to_string(array_agg((select status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status_tooltip,
-                   array_to_string(array_agg((select case when status = 'closed' then 'loan_closed' when status = 'rejected' then 'loan_rejected' else 'loan_opened' end as status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status_class
-            from loan_items as li ";
+    $sql = '';
+    $sqlSelect = "select li.specimen_ref as specimen_id,
+                           count(distinct li.loan_ref) as loans_count,
+                           array_to_string(array_agg(li.loan_ref), CHR(10)) as loans_ref,
+                           array_to_string(array_agg((select name from loans where id = li.loan_ref)), CHR(10)) as loans_name,
+                           array_to_string(array_agg((select case when status = 'closed' then '(C)' when status = 'rejected' then '(!)' else '(O)' end as status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status,
+                           array_to_string(array_agg((select status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status_tooltip,
+                           array_to_string(array_agg((select case when status = 'closed' then 'loan_closed' when status = 'rejected' then 'loan_rejected' else 'loan_opened' end as status from loan_status as ls where ls.loan_ref = li.loan_ref and ls.is_last = true limit 1)), CHR(10)) as loans_status_class ";
+    $sqlFrom = " from loan_items as li ";
     $sqlWhere = " where li.specimen_ref  = any('{ $specimenIds }'::int[])";
     $sqlGroupAndOrderBy = " group by li.specimen_ref
                             order by li.specimen_ref";
     $params = array();
-    if (!$user->isA(Users::ADMIN)) {
-      $sql .= " inner join loan_rights as lr on li.loan_ref = lr.loan_ref";
-      $sqlWhere .= " and lr.user_ref = case when :user_id = 0 then lr.user_ref else :user_id end";
+    if ($user->isA(Users::ADMIN)) {
+      $sqlSelect .= " , array_to_string(array_agg((select 1)), CHR(10)) as loans_right ";
+    }
+    else {
+      $sqlSelect .= " , array_to_string(array_agg((select count(id) from loan_rights as lr where lr.loan_ref = li.loan_ref and lr.user_ref = :user_id)), CHR(10)) as loans_right ";
       $params[':user_id'] = $user->getId();
     }
 
-    $sql .= $sqlWhere.$sqlGroupAndOrderBy;
+    $sql .= $sqlSelect.$sqlFrom.$sqlWhere.$sqlGroupAndOrderBy;
     $statement = $conn->prepare($sql);
     $statement->execute($params);
     $results = $statement->fetchAll(PDO::FETCH_ASSOC);

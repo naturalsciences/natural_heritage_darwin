@@ -211,7 +211,7 @@ img.tree_cmd_td
   cursor:pointer;
 }
 
-.col_loans a {
+.col_loans a, .col_loans span.loan_naming {
   display: inline-block;
   max-width: 50%;
 }

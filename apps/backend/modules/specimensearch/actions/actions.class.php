@@ -210,19 +210,24 @@ class specimensearchActions extends DarwinActions
     foreach($loans_collection as $loan) {
       $loan['loans_count'] = (int) $loan['loans_count'];
       if ($loan['loans_count'] > 1) {
-        $loan_refs = preg_split('/\n/', $loan['loans_ref']);
-        $loan_names = preg_split('/\n/', $loan['loans_name']);
-        $loan_status = preg_split('/\n/', $loan['loans_status']);
-        $loan_status_tooltip = preg_split('/\n/', $loan['loans_status_tooltip']);
-        $loan_status_class = preg_split('/\n/', $loan['loans_status_class']);
-        $loan['specimen_infos'] = array();
+        $loan_refs = preg_split('/\n/', $loan[ 'loans_ref' ]);
+        $loan_names = preg_split('/\n/', $loan[ 'loans_name' ]);
+        $loan_status = preg_split('/\n/', $loan[ 'loans_status' ]);
+        $loan_status_tooltip = preg_split('/\n/', $loan[ 'loans_status_tooltip' ]);
+        $loan_status_class = preg_split('/\n/', $loan[ 'loans_status_class' ]);
+        $loan_right = preg_split('/\n/', $loan[ 'loans_right' ]);
+        $loan[ 'specimen_infos' ] = array ();
         foreach ($loan_refs as $key => $value) {
-          $loan['specimen_infos'][$key]['id'] = $value;
-          $loan['specimen_infos'][$key]['name'] = $loan_names[$key];
-          $loan['specimen_infos'][$key]['status'] = $loan_status[$key];
-          $loan['specimen_infos'][$key]['status_tooltip'] = $loan_status_tooltip[$key];
-          $loan['specimen_infos'][$key]['status_class'] = $loan_status_class[$key];
+          $loan[ 'specimen_infos' ][ $key ][ 'id' ] = $value;
+          $loan[ 'specimen_infos' ][ $key ][ 'name' ] = $loan_names[ $key ];
+          $loan[ 'specimen_infos' ][ $key ][ 'status' ] = $loan_status[ $key ];
+          $loan[ 'specimen_infos' ][ $key ][ 'status_tooltip' ] = $loan_status_tooltip[ $key ];
+          $loan[ 'specimen_infos' ][ $key ][ 'status_class' ] = $loan_status_class[ $key ];
+          $loan[ 'specimen_infos' ][ $key ][ 'access_right' ] = (int) $loan_right[ $key ];
         }
+      }
+      elseif ($loan['loans_count'] === 1) {
+        $loan['loans_right'] = (int) $loan['loans_right'];
       }
       if(! isset($this->loans[$loan['specimen_id']])) {
         $this->loans[ $loan['specimen_id'] ] = array ();
