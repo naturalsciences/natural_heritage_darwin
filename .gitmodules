@@ -7,3 +7,6 @@
 [submodule "web/Leaflet.draw"]
 	path = web/Leaflet.draw
 	url = https://github.com/Leaflet/Leaflet.draw.git
+[submodule "web/js/mousetrap"]
+	path = web/js/mousetrap
+	url = https://github.com/ccampbell/mousetrap.git

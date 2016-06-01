@@ -6,7 +6,7 @@
           <?php echo link_to(image_tag('individual_expand.png'), $module.'/new',array('title' => __('New specimen'))) ; ?>
         <?php endif; ?>
         <?php if (!isset($no_duplicate)): ?>
-          <?php echo link_to(image_tag('duplicate.png'),$module.'/new?duplicate_id='.$form->getObject()->getId(), array('title'=> __('Duplicate specimen'))) ; ?>
+          <?php echo link_to(image_tag('duplicate.png'),$module.'/new?duplicate_id='.$form->getObject()->getId(), array('title'=> __('Duplicate specimen'), 'class'=>'duplicate_object')) ; ?>
         <?php endif; ?>
         <?php echo link_to(image_tag('remove.png'), $module.'/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => __('Are you sure?'),'title'=>__('Delete'))) ;?>
         <?php if (isset($print_button_id)): ?>
@@ -25,6 +25,14 @@
         $("#<?php echo $print_button_id; ?>").trigger('click') ;
       }) ;
       <?php endif; ?>
+      <?php if (!isset($no_duplicate)): ?>
+        Mousetrap.bind(
+          ['command+alt+d', 'ctrl+alt+d'],
+          function () {
+            $("a.duplicate_object")[0].click();
+          }
+        );
+      <?php endif;?>
     });
     </script>
 <?php endif; ?>
