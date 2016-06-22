@@ -10,7 +10,7 @@ $browser->
     with('response')->begin()->
         isStatusCode(200)->
         checkElement('select',4)->
-        checkElement('select:first option',12)->
+        checkElement('select:first option',13)->
         checkElement('select:first option:first','Undefined')->
     end()->
     info('2 - CollectionRef')->
