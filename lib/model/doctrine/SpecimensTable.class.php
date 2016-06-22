@@ -6,17 +6,18 @@ class SpecimensTable extends DarwinTable
 {
   static public $acquisition_category = array(
       'undefined' => 'Undefined',
+      'collect' => 'Collect',
       'donation' => 'Donation',
+      'excavation' => 'Excavation',
       'exchange' => 'Exchange',
+      'exploration' => 'Exploration',
+      'gift' => 'Gift',
       'internal work' => 'Internal work',
+      'seizure' => 'Judicial seizure',
       'loan' => 'Loan',
       'mission' => 'Mission',
       'purchase' => 'Purchase',
-      'seizure' => 'Judicial seizure',
       'trip' => 'Trip',
-      'excavation' => 'Excavation',
-      'exploration' => 'Exploration',
-      'collect' => 'Collect',
       );
 
   protected static $widget_array = array(
