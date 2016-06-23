@@ -44,6 +44,7 @@ class BaseMassActionForm extends sfFormSymfony
         'sub_container' => self::getI18N()->__('Change Sub Container'),
         'ext_links' => self::getI18N()->__('Add an external link'),
         'specimen_status' => self::getI18N()->__('Change Status (lost, damaged,...)'),
+        'related_files'  => self::getI18N()->__('Change Related Files visibility/publish state'),
     );
     return $result;
   }
@@ -115,6 +116,8 @@ class BaseMassActionForm extends sfFormSymfony
       return 'MaExtLinksForm';
     elseif($action == 'specimen_status')
       return 'MaSpStatusForm';
+    elseif($action == 'related_files')
+      return 'MaRelFilesForm';
     else
       return 'sfForm';
   }
@@ -161,6 +164,16 @@ class BaseMassActionForm extends sfFormSymfony
 
   public function bind(array $taintedValues = null, array $taintedFiles = null)
   {
+    if(
+      isset($taintedValues['field_action'])
+      && is_array(($taintedValues['field_action']))
+      && count($taintedValues['field_action']) != 0
+      && in_array('related_files', $taintedValues['field_action'])
+      && !isset($taintedValues['MassActionForm']['related_files'])
+    ) {
+      $taintedValues['MassActionForm']['related_files']['visible'] = "";
+      $taintedValues['MassActionForm']['related_files']['publishable'] = "";
+    }
     if(isset($taintedValues['field_action']) && is_array(($taintedValues['field_action'])) && count($taintedValues['field_action']) != 0
       && isset($taintedValues['MassActionForm']) && is_array(($taintedValues['MassActionForm'])) && count($taintedValues['MassActionForm']) != 0 )
     {
