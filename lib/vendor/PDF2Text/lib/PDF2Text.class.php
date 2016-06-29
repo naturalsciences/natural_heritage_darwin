@@ -208,7 +208,7 @@ class PDF2Text {
                         for ($i = 0, $sum = 0; $i < $state; $i++)
                                 $sum += ($ords[$i] + ($i == $state - 1)) * pow(85, 4 - $i);
                         for ($i = 0; $i < $state - 1; $i++)
-                                $ouput .= chr($sum >> ((3 - $i) * 8));
+                                $output .= chr($sum >> ((3 - $i) * 8));
                 }
 
                 return $output;
