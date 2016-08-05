@@ -1,3 +1,4 @@
+Attribute VB_Name = "Export2ABCD"
 Option Explicit
 
 Dim owner, specimenID, additionalID, code, accessionNumber, datasetName, isPhysical, acquisitionType, acquiredFrom, acquisitionDay, acquisitionMonth, acquisitionYear
@@ -6,7 +7,7 @@ Dim populatedPlace, naturalSite, exactSite, samplingCode, elevationInMeters, dep
 Dim siteProperty_1, sitePropertyValue_1, siteProperty_2, sitePropertyValue_2, siteProperty_3, sitePropertyValue_3, siteProperty_4, sitePropertyValue_4, siteProperty_5, sitePropertyValue_5
 Dim siteProperty_6, sitePropertyValue_6, siteProperty_7, sitePropertyValue_7, siteProperty_8, sitePropertyValue_8, siteProperty_9, sitePropertyValue_9, siteProperty_10, sitePropertyValue_10
 Dim expedition_project, collectedBy, collectionStartDay, collectionStartMonth, collectionStartYear, collectionStartTimeH, collectionStartTimeM, collectionEndDay, collectionEndMonth, collectionEndYear, collectionEndTimeH, collectionEndTimeM, localityNotes
-Dim classification, phylum, classis, ordo, superfamilia, familia, subfamilia, genus, subgenus, species, subspecies, author_year, variety_form, taxonFullName
+Dim classification, phylum, classis, ordo, superfamilia, familia, subfamilia, genus, subgenus, species, subspecies, author_year, variety_form, taxonFullName, informalName
 Dim identificationMethod, identificationHistory, identifiedBy, identificationDay, identificationMonth, identificationYear, referenceString, publicationString, identificationNotes
 Dim hostClassis, hostOrdo, hostFamilia, hostGenus, hostSpecies, hostAuthor_year, hostRemark
 Dim kindOfUnit, statusType, totalNumber, sex, maleCount, femaleCount, sexUnknownCount, lifeStage, socialStatus, urlPicture, externalLink
@@ -133,10 +134,6 @@ If CheckHeaders(check:=False) Then
 
         LastR = Application.Sheets("cSPECIMEN").Cells.Find("*", SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
 
-        'ftheeten 2015 07 17
-        Dim amountProperties As Integer
-        amountProperties = calculateAmountProperties
-
         For rowCounter = 2 To LastR
 
             Application.StatusBar = "Processing... Please do not disturb... Exported rows: " & rowCounter - 1
@@ -156,7 +153,7 @@ If CheckHeaders(check:=False) Then
             XMLPicture dom:=dom, subnode:=subnode, rowCounter:=rowCounter
             XMLAssociation dom:=dom, subnode:=subnode, rowCounter:=rowCounter
             XMLGather dom:=dom, subnode:=subnode, rowCounter:=rowCounter
-            XMLMeasurements dom:=dom, subnode:=subnode, rowCounter:=rowCounter, amountProperties:=amountProperties
+            XMLMeasurements dom:=dom, subnode:=subnode, rowCounter:=rowCounter
             XMLSex dom:=dom, subnode:=subnode, rowCounter:=rowCounter
             XMLNotes dom:=dom, subnode:=subnode, rowCounter:=rowCounter
             XMLRecordURI dom:=dom, subnode:=subnode, rowCounter:=rowCounter
@@ -327,7 +324,7 @@ Private Sub XMLMetadata(ByRef dom As MSXML2.DOMDocument60, ByRef node As MSXML2.
     xmlVersion.appendChild dom.createTextNode(vbCrLf & Space$(4))
     xmlVersionMajor.appendChild dom.createTextNode(vbCrLf & Space$(6))
     Set xmlVersionMinor = dom.createNode(NODE_ELEMENT, "Minor", "http://www.tdwg.org/schemas/abcd/2.06")
-    xmlVersionMinor.Text = "3"
+    xmlVersionMinor.Text = "4"
     xmlVersion.appendChild xmlVersionMinor
     xmlVersion.appendChild dom.createTextNode(vbCrLf & Space$(4))
     xmlVersionMinor.appendChild dom.createTextNode(vbCrLf & Space$(6))
@@ -447,6 +444,7 @@ Private Sub XMLUnitRef(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXML
 End Sub
 
 'DataSets/DataSet/Units/Unit/Identifications
+' Code totaly refactored by Paul-André Duchesne (Royal belgian Institute for natural Sciences) on the 2015-12-22
 Private Sub XMLIdentification(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXML2.IXMLDOMElement, ByRef rowCounter As Long)
 
     On Error Resume Next
@@ -478,6 +476,8 @@ Private Sub XMLIdentification(ByRef dom As MSXML2.DOMDocument60, ByRef subnode A
     Dim xmlIdentificationBotaGenus As MSXML2.IXMLDOMElement
     Dim xmlIdentificationBotaSpecies As MSXML2.IXMLDOMElement
     Dim xmlIdentificationBotaSubSpecies As MSXML2.IXMLDOMElement
+    Dim xmlIdentificationBotaAuthor As MSXML2.IXMLDOMElement
+    Dim xmlIdentificationInformalNameString As MSXML2.IXMLDOMElement
     Dim xmlNameAddendum As MSXML2.IXMLDOMElement
     Dim xmlIdDate As MSXML2.IXMLDOMElement
     Dim xmlIdDateText As MSXML2.IXMLDOMElement
@@ -492,16 +492,35 @@ Private Sub XMLIdentification(ByRef dom As MSXML2.DOMDocument60, ByRef subnode A
     Dim xmlIdTitleCitation As MSXML2.IXMLDOMElement
     Dim xmlTaxoComment As MSXML2.IXMLDOMElement
     Dim xmlIdentificationHistory As MSXML2.IXMLDOMElement
-'    Dim xmlIdCommonName As MSXML2.IXMLDOMElement
     
-    Dim strScName As String, strTaxonFullName As String, strScNameH As String, strTaxonName As String, strTaxonRank As String, strGenus As String, strSubgenus As String, strSpecies As String, strSubspecies As String, strAuthorYear As String
-    Dim strNameAddendum As String, strIdentifier As String, strIdRef As String, strClassification As String
+    ' >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    ' Added/Modified the 2015/12/22
+    '-----------------------------------------------
+    Dim strTaxonFullName As String, strTaxonName As String, strTaxonRank As String, strGenus As String, strSubgenus As String, strSpecies As String, strSubspecies As String, strAuthorYear As String
+    Dim strInformalName As String, strNameAddendum As String, strIdentifier As String, strIdRef As String, strClassification As String
     Dim strDetermDD As String, strDetermMM As String, strDetermYY As String, strIdDate As String, strIdentificationMethod As String, strTaxoComment As String
     Dim strOldGenus As String, strOldSubgenus As String, strIdentificationHistory As String
-    'Dim strNameAdditional As String
     
     Dim rep As String, rep2 As String, sep As String
     Dim celval As String, celcol As Integer
+    '-----------------------------------------------
+    ' Fifth new variables
+    '-----------------------------------------------
+    Dim tempTaxonName() As String
+    Dim booComposed As Boolean
+    Dim iCounter As Long
+    Dim subGenDelimPos As Long
+    
+    Dim regExp As New regExp
+
+    With regExp
+        .Global = True
+        .MultiLine = True
+        .IgnoreCase = False
+    End With
+    
+    '-----------------------------------------------
+    '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     rep = ""
     rep2 = ""
     sep = " "
@@ -530,52 +549,187 @@ Private Sub XMLIdentification(ByRef dom As MSXML2.DOMDocument60, ByRef subnode A
         rank(8) = "subgenus"
         rank(9) = "species"
         rank(10) = "subspecies"
-    Dim rankConcerned As Long
     
-    For Count = 7 To 10
+    ' >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    ' Added/Modified the 2015/12/22
+    '-----------------------------------------------
+    ' New variable definition
+    '-----------------------------------------------
+    Dim rankABCDName(8) As String
+        rankABCDName(1) = "phylum"
+        rankABCDName(2) = "classis"
+        rankABCDName(3) = "ordo"
+        rankABCDName(4) = "superfamilia"
+        rankABCDName(5) = "familia"
+        rankABCDName(6) = "subfamilia"
+        rankABCDName(7) = "genusgroup"
+        rankABCDName(8) = "unranked"
+        
+    Dim higherTaxaUpTo As Long
+    
+    ' Variable added the 2016-08-05 to check if HigherTaxon entry has already been created
+    ' >>>>
+    Dim booHigherTaxaCreated As Boolean
+    booHigherTaxaCreated = False
+    ' <<<<
+    
+    '-----------------------------------------------
+    ' Classification cleaning and definition
+    '-----------------------------------------------
+    Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(classification, lookAt:=xlWhole, MatchCase:=True).Column).Value = _
+    CleanUp(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(classification, lookAt:=xlWhole, MatchCase:=True).Column).Value)
+    strClassification = LCase(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(classification, lookAt:=xlWhole, MatchCase:=True).Column).Value)
+    If strClassification = "plantae" Then
+        strClassification = "botanical"
+    End If
+    '-----------------------------------------------
+    ' Taxonomy content cleaning
+    '-----------------------------------------------
+    For Count = 1 To 10
+        Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value = _
+        CleanUp(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value)
+    Next Count
+    '-----------------------------------------------
+    ' Higher Taxa up to count
+    '-----------------------------------------------
+    For Count = 1 To 10
         celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value
-        'celcol = Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole).Column
         If Not IsEmpty(celval) And Not IsNull(celval) And celval <> "" Then
-            rep = rep & celval & sep
+            higherTaxaUpTo = Count
         End If
         celval = ""
     Next Count
-        
+    '-----------------------------------------------
+    ' AuthorTeam content cleaning
+    '-----------------------------------------------
+    Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(author_year, lookAt:=xlWhole, MatchCase:=True).Column).Value = _
+    CleanUp(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(author_year, lookAt:=xlWhole, MatchCase:=True).Column).Value)
     strAuthorYear = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(author_year, lookAt:=xlWhole, MatchCase:=True).Column).Value
-    If strAuthorYear <> "" Then
-        strScName = RTrim(rep) & " " & strAuthorYear
-    Else:
-        strScName = RTrim(rep)
-    End If
-    
+    '-----------------------------------------------
+    ' NameAdendum content cleaning
+    '-----------------------------------------------
+    Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(variety_form, lookAt:=xlWhole).Column).Value = _
+    CleanUp(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(variety_form, lookAt:=xlWhole).Column).Value)
     strNameAddendum = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(variety_form, lookAt:=xlWhole).Column).Value
-    'strNameAdditional = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(commonName, lookAt:=xlWhole).Column).Value
-
-    strTaxonFullName = ""
-    If Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(taxonFullName, lookAt:=xlWhole, MatchCase:=True).Column).Value <> "" Then
-        strTaxonFullName = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(taxonFullName, lookAt:=xlWhole, MatchCase:=True).Column).Value
-    Else:
-        If strNameAddendum <> "" Then
-            strTaxonFullName = strScName & " var. " & strNameAddendum
-        Else:
-            strTaxonFullName = strScName
+    '-----------------------------------------------
+    ' Informal name content cleaning
+    '-----------------------------------------------
+    Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(informalName, lookAt:=xlWhole, MatchCase:=True).Column).Value = _
+    CleanUp(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(informalName, lookAt:=xlWhole, MatchCase:=True).Column).Value)
+    strInformalName = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(informalName, lookAt:=xlWhole, MatchCase:=True).Column).Value
+    '-----------------------------------------------
+    ' TaxonFullName content cleaning and composition
+    '-----------------------------------------------
+    Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(taxonFullName, lookAt:=xlWhole).Column).Value = _
+    CleanUp(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(taxonFullName, lookAt:=xlWhole).Column).Value)
+    strTaxonFullName = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(taxonFullName, lookAt:=xlWhole).Column).Value
+    ' If taxon full name not filled and the informal name not filled either, we can try composing the full name
+    If (IsEmpty(strTaxonFullName) Or IsNull(strTaxonFullName) Or strTaxonFullName = "") And _
+       (IsEmpty(strInformalName) Or IsNull(strInformalName) Or strInformalName = "") Then
+        ' If user filled in the fields above genus level...
+        If higherTaxaUpTo > 7 Then
+            booComposed = True
+            For Count = 7 To 10
+                ' If genus is not present, it's not possible to auto-compose
+                If Count = 7 And ( _
+                    IsEmpty(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value) Or _
+                    IsNull(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value) Or _
+                    Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value = "" _
+                    ) Then
+                    booComposed = False
+                    Exit For
+                ' Stop the moment a field is encountered empty (for level above subgenus)
+                ElseIf Count <> 8 And ( _
+                    IsEmpty(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value) Or _
+                    IsNull(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value) Or _
+                    Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value = "" _
+                    ) Then
+                    Exit For
+                ' If not subgenus level and not empty, compose the taxon full name
+                ElseIf Not IsEmpty(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value) And _
+                        Not IsNull(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value) And _
+                        Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value <> "" Then
+                    ' Split in an array the content of field
+                    tempTaxonName = Split(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value)
+                    'Define Parenthesis pattern
+                    regExp.Pattern = "[\(\)]+"
+                    ' Depending the level encountered, fill the taxon full name differently
+                    Select Case Count
+                        Case Is = 7
+                            strTaxonFullName = strTaxonFullName & " " & tempTaxonName(0)
+                        Case Is = 8
+                            If strClassification = "botanical" Then
+                                If ( _
+                                    InStr(LCase(tempTaxonName(0)), "subgen.") > 0 Or _
+                                    InStr(LCase(tempTaxonName(0)), "subg.") > 0 _
+                                    ) And _
+                                    UBound(tempTaxonName) > 0 Then
+                                    strTaxonFullName = strTaxonFullName & " subgen. " & tempTaxonName(1)
+                                ElseIf regExp.Test(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value) Then
+                                    strTaxonFullName = strTaxonFullName & " subgen. " & regExp.Replace(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value, "")
+                                Else
+                                    strTaxonFullName = strTaxonFullName & " subgen. " & tempTaxonName(0)
+                                End If
+                            ElseIf Left$(tempTaxonName(0), 1) <> "(" Then
+                                strTaxonFullName = strTaxonFullName & " (" & tempTaxonName(0) & ")"
+                            Else
+                                strTaxonFullName = strTaxonFullName & " " & tempTaxonName(0)
+                            End If
+                        Case Is = 9
+                            strTaxonFullName = strTaxonFullName & " " & Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value
+                        Case Is = 10
+                            If LCase(tempTaxonName(0)) <> "ssp." And _
+                               LCase(tempTaxonName(0)) <> "subsp." And _
+                               LCase(tempTaxonName(0)) <> "f." And _
+                               LCase(tempTaxonName(0)) <> "form." And _
+                               LCase(tempTaxonName(0)) <> "subf." And _
+                               LCase(tempTaxonName(0)) <> "var." And _
+                               LCase(tempTaxonName(0)) <> "subvar." Then
+                                strTaxonFullName = strTaxonFullName & " subsp. " & Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value
+                            Else
+                                strTaxonFullName = strTaxonFullName & " " & Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole, MatchCase:=True).Column).Value
+                            End If
+                    End Select
+                End If
+            Next Count
+            ' If name composition occured, fill in the rest
+            If booComposed Then
+                If strNameAddendum <> "" And Not IsEmpty(strNameAddendum) And Not IsNull(strNameAddendum) Then
+                    strTaxonFullName = strTaxonFullName & " var. " & strNameAddendum
+                End If
+                If Not IsEmpty(strAuthorYear) And Not IsNull(strAuthorYear) And strAuthorYear <> "" And InStr(strTaxonFullName, strAuthorYear) = 0 Then
+                    strTaxonFullName = strTaxonFullName & " " & strAuthorYear
+                End If
+                strTaxonFullName = Trim$(strTaxonFullName)
+            End If
+        '... if not, take the higher level filled
+        Else
+            strTaxonFullName = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(higherTaxaUpTo), lookAt:=xlWhole, MatchCase:=True).Column).Value
+            tempTaxonName = Split(strTaxonFullName)
+            ' If Taxon full name is composed of only one element (no author and year) and the field author
+            ' and year is filled, add it to the full name
+            If UBound(tempTaxonName) = 0 And _
+                Not IsEmpty(strAuthorYear) And _
+                Not IsNull(strAuthorYear) And _
+                strAuthorYear <> "" Then
+                strTaxonFullName = strTaxonFullName & " " & strAuthorYear
+            End If
         End If
     End If
-    
-    For Count = 1 To 6
-        celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole).Column)
-        If Not IsEmpty(celval) And Not IsNull(celval) And celval <> "" Then
-            rep2 = rep2 & celval & sep
-        End If
-        celval = ""
-    Next Count
-    
-    strScNameH = RTrim(rep2)
-        
+    '-----------------------------------------------
+    ' Move up other completed fields
+    '-----------------------------------------------
+    ' Identifiers
+    '-----------------------------------------------
     strIdentifier = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(identifiedBy, lookAt:=xlWhole).Column).Value
-    
+    '-----------------------------------------------
+    ' Bib reference
+    '-----------------------------------------------
     strIdRef = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(referenceString, lookAt:=xlWhole).Column).Value
-    
+    '-----------------------------------------------
+    ' Determination date composants
+    '-----------------------------------------------
+    ' Day
     strDetermDD = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(identificationDay, lookAt:=xlWhole).Column).Value
     If strDetermDD <> "" And IsNumeric(strDetermDD) Then
         If strDetermDD > 31 Or strDetermDD = 0 Then
@@ -586,7 +740,7 @@ Private Sub XMLIdentification(ByRef dom As MSXML2.DOMDocument60, ByRef subnode A
     Else:
         strDetermDD = ""
     End If
-
+    ' Month
     strDetermMM = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(identificationMonth, lookAt:=xlWhole).Column).Value
     If strDetermMM <> "" And IsNumeric(strDetermMM) Then
         If strDetermMM > 12 Or strDetermMM = 0 Then
@@ -597,7 +751,7 @@ Private Sub XMLIdentification(ByRef dom As MSXML2.DOMDocument60, ByRef subnode A
     Else:
         strDetermMM = ""
     End If
-
+    ' Year
     strDetermYY = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(identificationYear, lookAt:=xlWhole).Column).Value
     If strDetermYY <> "" And IsNumeric(strDetermYY) Then
         If strDetermYY > 999 Then
@@ -608,7 +762,7 @@ Private Sub XMLIdentification(ByRef dom As MSXML2.DOMDocument60, ByRef subnode A
     Else:
         strDetermYY = ""
     End If
-
+    ' Date composition
     If strDetermYY <> "" And strDetermMM <> "" And strDetermDD <> "" Then
         strIdDate = strDetermYY & "-" & strDetermMM & "-" & strDetermDD
     ElseIf strDetermYY <> "" And strDetermMM <> "" And strDetermDD = "" Then
@@ -618,22 +772,40 @@ Private Sub XMLIdentification(ByRef dom As MSXML2.DOMDocument60, ByRef subnode A
     Else:
         strIdDate = ""
     End If
-
+    '-----------------------------------------------
+    ' Identification method
+    '-----------------------------------------------
     strIdentificationMethod = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(identificationMethod, lookAt:=xlWhole).Column).Value
-    
+    '-----------------------------------------------
+    ' Taxon comments
+    '-----------------------------------------------
     strTaxoComment = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(identificationNotes, lookAt:=xlWhole).Column).Value
-        
+    '-----------------------------------------------
+    ' Identification History - sort of comment
+    '-----------------------------------------------
     strIdentificationHistory = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(identificationHistory, lookAt:=xlWhole).Column).Value
-    
-    Dim strTestFill As String, strTestFill2 As String
-    strTestFill = strScName & strScNameH & strTaxonFullName
-    strTestFill2 = strIdentifier & strIdRef & strIdDate & strIdentificationMethod & strTaxoComment
+    'strOldGenus = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(oldGenus, lookAt:=xlWhole).Column).Value
+    'strOldSubgenus = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(oldSubgenus, lookAt:=xlWhole).Column).Value
+    'If strOldGenus <> "" And strOldSubgenus <> "" Then
+    '    strIdentificationHistory = "Old genus: " & strOldGenus & "; old subgenus: " & strOldSubgenus & vbCrLf & strIdentificationHistory
+    'ElseIf strOldGenus <> "" And strOldSubgenus = "" Then
+    '    strIdentificationHistory = "Old genus: " & strOldGenus & vbCrLf & strIdentificationHistory
+    'ElseIf strOldSubgenus <> "" And strOldGenus = "" Then
+    '    strIdentificationHistory = "Old sub genus: " & strOldSubgenus & vbCrLf & strIdentificationHistory
+    'End If
+    '-----------------------------------------------
+    ' Redefinition of strTestFill
+    '-----------------------------------------------
+    Dim strTestFill As String
+    strTestFill = strTaxonFullName & strInformalName
 
     'pas identification history car comme il s'agit d'une balise directement sous Identifications, il ne faut pas créer l'arbre Identification -> Result -> etc.
     
-    If Not IsEmpty(strTestFill) And Not IsNull(strTestFill) And strTestFill <> "" _
-        Or Not IsEmpty(strIdentificationHistory) And Not IsNull(strIdentificationHistory) And strIdentificationHistory <> "" Then
-
+    If (Not IsEmpty(strTestFill) And Not IsNull(strTestFill) And strTestFill <> "") _
+        Or _
+       (Not IsEmpty(strIdentificationHistory) And Not IsNull(strIdentificationHistory) And strIdentificationHistory <> "") Then
+    '-----------------------------------------------
+    ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         Set xmlIdentifications = dom.createNode(NODE_ELEMENT, "Identifications", "http://www.tdwg.org/schemas/abcd/2.06")
         subnode.appendChild xmlIdentifications
         subnode.appendChild dom.createTextNode(vbCrLf + Space$(6))
@@ -656,47 +828,71 @@ Private Sub XMLIdentification(ByRef dom As MSXML2.DOMDocument60, ByRef subnode A
             xmlIdentificationResult.appendChild dom.createTextNode(vbCrLf + Space$(12))
             xmlIdentificationTaxonId.appendChild dom.createTextNode(vbCrLf + Space$(14))
             
-            If Not IsEmpty(strScNameH) And Not IsNull(strScNameH) And strScNameH <> "" Then
+            '>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            ' Added on the 2015-12-22
+            '---------------------------------------------
+            ' Redefinition of Higher Taxa composition
+            '---------------------------------------------
             
-                Set xmlIdentificationHiTaxa = dom.createNode(NODE_ELEMENT, "HigherTaxa", "http://www.tdwg.org/schemas/abcd/2.06")
-                xmlIdentificationTaxonId.appendChild xmlIdentificationHiTaxa
-                xmlIdentificationTaxonId.appendChild dom.createTextNode(vbCrLf + Space$(14))
-                xmlIdentificationHiTaxa.appendChild dom.createTextNode(vbCrLf + Space$(16))
-            
-               'Higher taxonomic rank data
-                For Count = 1 To 6
+            'Higher taxonomic rank data
+            For Count = 1 To 8
+                ' Line modified the 2016-08-05 to get a step further in higher taxonomic rank in case of uncertain naming
+                ' >>>>
+                If strInformalName <> "" Or Count < higherTaxaUpTo Then
+                ' <<<<
                 
                     celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole).Column).Value
-    
-                    If Not IsEmpty(celval) And Not IsNull(celval) And celval <> "" Then
-                 
+                    tempTaxonName = Split(celval)
+                    strTaxonName = ""
+                    If strClassification = "botanical" And _
+                        Count = 8 And _
+                        ( _
+                            InStr(LCase(tempTaxonName(0)), "subgen.") > 0 Or _
+                            InStr(LCase(tempTaxonName(0)), "subg.") > 0 _
+                        ) Then
+                        If UBound(tempTaxonName) > 0 Then
+                            For iCounter = 1 To UBound(tempTaxonName)
+                                strTaxonName = strTaxonName & " " & tempTaxonName(iCounter)
+                            Next iCounter
+                        End If
+                    ElseIf Count = 8 And _
+                            Left$(tempTaxonName(0), 1) = "(" Then
+                        'Clean up from parenthesis
+                        regExp.Pattern = "[\(\)]+"
+                        If regExp.Test(celval) Then
+                            strTaxonName = regExp.Replace(celval, "")
+                        End If
+                    Else
+                        strTaxonName = celval
+                    End If
+                    
+                    strTaxonName = Trim$(strTaxonName)
+                    
+                    If Not IsEmpty(strTaxonName) And Not IsNull(strTaxonName) And strTaxonName <> "" Then
+                                  
+                        ' Code Moved the 2016-08-05 to avoid cration of empty HigherTaxa node
+                        ' >>>>
+                        ' Definition of Higher Taxa
+                        If Not booHigherTaxaCreated Then
+                            Set xmlIdentificationHiTaxa = dom.createNode(NODE_ELEMENT, "HigherTaxa", "http://www.tdwg.org/schemas/abcd/2.06")
+                            xmlIdentificationTaxonId.appendChild xmlIdentificationHiTaxa
+                            xmlIdentificationTaxonId.appendChild dom.createTextNode(vbCrLf + Space$(14))
+                            xmlIdentificationHiTaxa.appendChild dom.createTextNode(vbCrLf + Space$(16))
+                            booHigherTaxaCreated = True
+                        End If
+                        ' <<<<
+                        
                         Set xmlIdentificationHiTaxon = dom.createNode(NODE_ELEMENT, "HigherTaxon", "http://www.tdwg.org/schemas/abcd/2.06")
                         xmlIdentificationHiTaxa.appendChild xmlIdentificationHiTaxon
                         xmlIdentificationHiTaxa.appendChild dom.createTextNode(vbCrLf + Space$(16))
                         xmlIdentificationHiTaxon.appendChild dom.createTextNode(vbCrLf + Space$(18))
             
                         Set xmlIdentificationHiTaxonName = dom.createNode(NODE_ELEMENT, "HigherTaxonName", "http://www.tdwg.org/schemas/abcd/2.06")
-                        strTaxonName = celval
                         xmlIdentificationHiTaxonName.Text = strTaxonName
                         xmlIdentificationHiTaxon.appendChild xmlIdentificationHiTaxonName
                         xmlIdentificationHiTaxon.appendChild dom.createTextNode(vbCrLf + Space$(18))
-            
-                        Select Case rank(Count)
-                            Case rank(1)
-                                rankConcerned = 1
-                            Case rank(2)
-                                rankConcerned = 2
-                            Case rank(3)
-                                rankConcerned = 3
-                            Case rank(4)
-                                rankConcerned = 4
-                            Case rank(5)
-                                rankConcerned = 5
-                            Case rank(6)
-                                rankConcerned = 6
-                        End Select
-            
-                        strTaxonRank = rank(rankConcerned)
+                    
+                        strTaxonRank = rankABCDName(Count)
             
                         Set xmlIdentificationHiTaxonRank = dom.createNode(NODE_ELEMENT, "HigherTaxonRank", "http://www.tdwg.org/schemas/abcd/2.06")
                         xmlIdentificationHiTaxonRank.Text = strTaxonRank
@@ -706,147 +902,218 @@ Private Sub XMLIdentification(ByRef dom As MSXML2.DOMDocument60, ByRef subnode A
                     End If
                     
                     celval = ""
-                
-                Next Count
+                End If
+            Next Count
             
-            End If
-        
-            If Not IsEmpty(strScName) And Not IsNull(strScName) And strScName <> "" _
-                Or Not IsEmpty(strTaxonFullName) And Not IsNull(strTaxonFullName) And strTaxonFullName <> "" Then
-    
+            '---------------------------------------------
+            ' Redefinition of either ScientificFullName or
+            ' InformalNameString definition
+            '---------------------------------------------
+            
+            If Not IsEmpty(strInformalName) And Not IsNull(strInformalName) And strInformalName <> "" Then
+                
+                Set xmlIdentificationInformalNameString = dom.createNode(NODE_ELEMENT, "InformalNameString", "http://www.tdwg.org/schemas/abcd/2.06")
+                xmlIdentificationInformalNameString.Text = strInformalName
+                xmlIdentificationTaxonId.appendChild xmlIdentificationInformalNameString
+                xmlIdentificationTaxonId.appendChild dom.createTextNode(vbCrLf + Space$(14))
+                
+            ElseIf Not IsEmpty(strTaxonFullName) And Not IsNull(strTaxonFullName) And strTaxonFullName <> "" Then
+                
                 Set xmlIdentificationScName = dom.createNode(NODE_ELEMENT, "ScientificName", "http://www.tdwg.org/schemas/abcd/2.06")
                 xmlIdentificationTaxonId.appendChild xmlIdentificationScName
                 xmlIdentificationTaxonId.appendChild dom.createTextNode(vbCrLf + Space$(14))
                 xmlIdentificationScName.appendChild dom.createTextNode(vbCrLf + Space$(16))
                 
-                If Not IsEmpty(strTaxonFullName) And Not IsNull(strTaxonFullName) And strTaxonFullName <> "" Then
-                    Set xmlIdentificationFullScNameString = dom.createNode(NODE_ELEMENT, "FullScientificNameString", "http://www.tdwg.org/schemas/abcd/2.06")
-                    xmlIdentificationFullScNameString.Text = strTaxonFullName
-                    xmlIdentificationScName.appendChild xmlIdentificationFullScNameString
-                    xmlIdentificationScName.appendChild dom.createTextNode(vbCrLf + Space$(16))
-                End If
-            
-                If Not IsEmpty(strScName) And Not IsNull(strScName) And strScName <> "" Then
+                Set xmlIdentificationFullScNameString = dom.createNode(NODE_ELEMENT, "FullScientificNameString", "http://www.tdwg.org/schemas/abcd/2.06")
+                xmlIdentificationFullScNameString.Text = strTaxonFullName
+                xmlIdentificationScName.appendChild xmlIdentificationFullScNameString
+                xmlIdentificationScName.appendChild dom.createTextNode(vbCrLf + Space$(16))
                                     
-                'Condition: s'il y a des infos dans les cellules genre, espèce, sous-espèce
-                    Set xmlIdentificationNameAt = dom.createNode(NODE_ELEMENT, "NameAtomised", "http://www.tdwg.org/schemas/abcd/2.06")
-                    xmlIdentificationScName.appendChild xmlIdentificationNameAt
-                    xmlIdentificationScName.appendChild dom.createTextNode(vbCrLf + Space$(16))
-                    xmlIdentificationNameAt.appendChild dom.createTextNode(vbCrLf + Space$(18))
-                    
-                    If strClassification = "Botanical" Or strClassification = "botanical" Then
-                        Set xmlIdentificationBota = dom.createNode(NODE_ELEMENT, "Botanical", "http://www.tdwg.org/schemas/abcd/2.06")
-                        xmlIdentificationNameAt.appendChild xmlIdentificationBota
-                        xmlIdentificationNameAt.appendChild dom.createTextNode(vbCrLf + Space$(18))
-                        xmlIdentificationBota.appendChild dom.createTextNode(vbCrLf + Space$(20))
-                        'Genus and species data for botanical units
-                            For Count = 7 To 10
-        
-                                celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole).Column).Value
-                                
-                                If Not IsEmpty(celval) And Not IsNull(celval) And celval <> "" Then
-                                        
-                                        Select Case rank(Count)
-                                        Case rank(7)
-                                            Set xmlIdentificationBotaGenus = dom.createNode(NODE_ELEMENT, "GenusOrMonomial", "http://www.tdwg.org/schemas/abcd/2.06")
-                                            strGenus = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(genus, lookAt:=xlWhole).Column).Value
-                                            xmlIdentificationBotaGenus.Text = strGenus
-                                            xmlIdentificationBota.appendChild xmlIdentificationBotaGenus
-                                            xmlIdentificationBota.appendChild dom.createTextNode(vbCrLf + Space$(20))
-                                        Case rank(9)
-                                            Set xmlIdentificationBotaSpecies = dom.createNode(NODE_ELEMENT, "FirstEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
-                                            strSpecies = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(species, lookAt:=xlWhole).Column).Value
-                                            xmlIdentificationBotaSpecies.Text = strSpecies
-                                            xmlIdentificationBota.appendChild xmlIdentificationBotaSpecies
-                                            xmlIdentificationBota.appendChild dom.createTextNode(vbCrLf + Space$(20))
-                                        Case rank(10)
-                                            Set xmlIdentificationBotaSubSpecies = dom.createNode(NODE_ELEMENT, "InfraspecificEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
-                                            strSubspecies = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(subspecies, lookAt:=xlWhole).Column).Value
-                                            xmlIdentificationBotaSubSpecies.Text = strSubspecies
-                                            xmlIdentificationBota.appendChild xmlIdentificationBotaSubSpecies
-                                            xmlIdentificationBota.appendChild dom.createTextNode(vbCrLf + Space$(20))
-                                        End Select
+                ' Definition of NameAtomised entries
+                Set xmlIdentificationNameAt = dom.createNode(NODE_ELEMENT, "NameAtomised", "http://www.tdwg.org/schemas/abcd/2.06")
+                xmlIdentificationScName.appendChild xmlIdentificationNameAt
+                xmlIdentificationScName.appendChild dom.createTextNode(vbCrLf + Space$(16))
+                xmlIdentificationNameAt.appendChild dom.createTextNode(vbCrLf + Space$(18))
                 
+                ' Composition of the GenusOrMonomial and Subgenus keywords / NameAtomised entries
+                ' This composition is valid for either Plantae or Animalia entries
+                strGenus = ""
+                strSubgenus = ""
+                For Count = 8 To 1 Step -1
+                    If Not IsEmpty(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole).Column).Value) And _
+                        Not IsNull(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole).Column).Value) And _
+                        Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole).Column).Value <> "" Then
+                        tempTaxonName = Split(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole).Column).Value)
+                        If Count = 8 Then
+                            If strClassification <> "botanical" Then
+                                If ( _
+                                    LCase(tempTaxonName(0)) = "subgen." Or _
+                                    LCase(tempTaxonName(0)) = "subg." _
+                                   ) And UBound(tempTaxonName) > 0 Then
+                                    strSubgenus = tempTaxonName(1)
+                                ElseIf regExp.Test(tempTaxonName(0)) Then
+                                    strSubgenus = regExp.Replace(tempTaxonName(0), "")
+                                Else
+                                    strSubgenus = tempTaxonName(0)
                                 End If
-                                
-                                celval = ""
-                                
-                            Next Count
-                     
-                     Else:
-                        Set xmlIdentificationZoo = dom.createNode(NODE_ELEMENT, "Zoological", "http://www.tdwg.org/schemas/abcd/2.06")
-                        xmlIdentificationNameAt.appendChild xmlIdentificationZoo
-                        xmlIdentificationNameAt.appendChild dom.createTextNode(vbCrLf + Space$(18))
-                        xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
-                            'Genus and species data for zoological units
-                            For Count = 7 To 10
-                                celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(Count), lookAt:=xlWhole).Column).Value
-                                
-                                If Not IsEmpty(celval) And Not IsNull(celval) And celval <> "" Then
-                                        
-                                        Select Case rank(Count)
-                                        Case rank(7)
-                                            Set xmlIdentificationZooGenus = dom.createNode(NODE_ELEMENT, "GenusOrMonomial", "http://www.tdwg.org/schemas/abcd/2.06")
-                                            strGenus = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(genus, lookAt:=xlWhole).Column).Value
-                                            xmlIdentificationZooGenus.Text = strGenus
-                                            xmlIdentificationZoo.appendChild xmlIdentificationZooGenus
-                                            xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
-                                       Case rank(8)
-                                            Set xmlIdentificationZooSubgenus = dom.createNode(NODE_ELEMENT, "Subgenus", "http://www.tdwg.org/schemas/abcd/2.06")
-                                            strSubgenus = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(subgenus, lookAt:=xlWhole).Column).Value
-                                            xmlIdentificationZooSubgenus.Text = strSubgenus
-                                            xmlIdentificationZoo.appendChild xmlIdentificationZooSubgenus
-                                            xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
-                                        Case rank(9)
-                                            Set xmlIdentificationZooSpecies = dom.createNode(NODE_ELEMENT, "SpeciesEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
-                                            strSpecies = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(species, lookAt:=xlWhole).Column).Value
-                                            xmlIdentificationZooSpecies.Text = strSpecies
-                                            xmlIdentificationZoo.appendChild xmlIdentificationZooSpecies
-                                            xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
-                                        Case rank(10)
-                                            Set xmlIdentificationZooSubspecies = dom.createNode(NODE_ELEMENT, "SubspeciesEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
-                                            strSubspecies = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(subspecies, lookAt:=xlWhole).Column).Value
-                                            xmlIdentificationZooSubspecies.Text = strSubspecies
-                                            xmlIdentificationZoo.appendChild xmlIdentificationZooSubspecies
-                                            xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
-                                        End Select
-                
-                                End If
-                                
-                                celval = ""
-                            
-                            Next Count
-                   
+                            End If
+                        Else
+                            strGenus = tempTaxonName(0)
+                            Exit For
+                        End If
                     End If
-                        
+                Next Count
+                If higherTaxaUpTo > 8 Then
+                    If Not IsEmpty(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(9), lookAt:=xlWhole).Column).Value) And _
+                        Not IsNull(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(9), lookAt:=xlWhole).Column).Value) And _
+                        Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(9), lookAt:=xlWhole).Column).Value <> "" Then
+                        strSpecies = Trim$(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(9), lookAt:=xlWhole).Column).Value)
+                        If strAuthorYear <> "" Then
+                            regExp.Pattern = strAuthorYear
+                            If regExp.Test(strSpecies) Then
+                                strSpecies = Trim$(regExp.Replace(strSpecies, ""))
+                                ' Code added the 2016-08-05 To correct the author cleaning
+                                ' >>>>
+                                If Right$(strSpecies, 1) = ")" Or Right$(strSpecies, 1) = "(" Then
+                                  strSpecies = Left$(strSpecies, Len(strSpecies) - 1)
+                                End If
+                                If Right$(strSpecies, 1) = ")" Or Right$(strSpecies, 1) = "(" Then
+                                  strSpecies = Left$(strSpecies, Len(strSpecies) - 1)
+                                End If
+                                strSpecies = Trim$(strSpecies)
+                                ' <<<<
+                            End If
+                        End If
+                    End If
+                    If Not IsEmpty(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(10), lookAt:=xlWhole).Column).Value) And _
+                        Not IsNull(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(10), lookAt:=xlWhole).Column).Value) And _
+                        Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(10), lookAt:=xlWhole).Column).Value <> "" Then
+                        strSubspecies = Trim$(Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(rank(10), lookAt:=xlWhole).Column).Value)
+                        If strAuthorYear <> "" Then
+                            regExp.Pattern = strAuthorYear
+                            If regExp.Test(strSubspecies) Then
+                                strSubspecies = Trim$(regExp.Replace(strSubspecies, ""))
+                                ' Code added the 2016-08-05 To correct the author cleaning
+                                ' >>>>
+                                If Right$(strSubspecies, 1) = ")" Or Right$(strSubspecies, 1) = "(" Then
+                                  strSubspecies = Left$(strSubspecies, Len(strSubspecies) - 1)
+                                End If
+                                If Right$(strSubspecies, 1) = ")" Or Right$(strSubspecies, 1) = "(" Then
+                                  strSubspecies = Left$(strSubspecies, Len(strSubspecies) - 1)
+                                End If
+                                strSubspecies = Trim$(strSubspecies)
+                                ' <<<<
+                            End If
+                        End If
+                    End If
+                End If
+                'Depending the classification used, define differently the keywords
+                If strClassification = "botanical" Then
+                    Set xmlIdentificationBota = dom.createNode(NODE_ELEMENT, "Botanical", "http://www.tdwg.org/schemas/abcd/2.06")
+                    xmlIdentificationNameAt.appendChild xmlIdentificationBota
+                    xmlIdentificationNameAt.appendChild dom.createTextNode(vbCrLf + Space$(18))
+                    xmlIdentificationBota.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                    'GenusOrMonomial keyword
+                    Set xmlIdentificationBotaGenus = dom.createNode(NODE_ELEMENT, "GenusOrMonomial", "http://www.tdwg.org/schemas/abcd/2.06")
+                    xmlIdentificationBotaGenus.Text = strGenus
+                    xmlIdentificationBota.appendChild xmlIdentificationBotaGenus
+                    xmlIdentificationBota.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                    'FirstEpithet keyword
+                    If Not IsEmpty(strSpecies) And _
+                        Not IsNull(strSpecies) And _
+                        strSpecies <> "" Then
+                        Set xmlIdentificationBotaSpecies = dom.createNode(NODE_ELEMENT, "FirstEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
+                        xmlIdentificationBotaSpecies.Text = strSpecies
+                        xmlIdentificationBota.appendChild xmlIdentificationBotaSpecies
+                        xmlIdentificationBota.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                    End If
+                    'InfraspecificEpithet keyword
+                    If Not IsEmpty(strSubspecies) And _
+                        Not IsNull(strSubspecies) And _
+                        strSubspecies <> "" Then
+                        Set xmlIdentificationBotaSubSpecies = dom.createNode(NODE_ELEMENT, "InfraspecificEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
+                        xmlIdentificationBotaSubSpecies.Text = strSubspecies
+                        xmlIdentificationBota.appendChild xmlIdentificationBotaSubSpecies
+                        xmlIdentificationBota.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                    End If
+                    If Not IsEmpty(strAuthorYear) And Not IsNull(strAuthorYear) And strAuthorYear <> "" Then
+                        If InStr(strAuthorYear, "(") > 0 Then
+                            Set xmlIdentificationBotaAuthor = dom.createNode(NODE_ELEMENT, "AuthorTeamParenthesis", "http://www.tdwg.org/schemas/abcd/2.06")
+                            xmlIdentificationBotaAuthor.Text = strAuthorYear
+                            xmlIdentificationBota.appendChild xmlIdentificationBotaAuthor
+                            xmlIdentificationBota.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                        Else
+                            Set xmlIdentificationBotaAuthor = dom.createNode(NODE_ELEMENT, "AuthorTeam", "http://www.tdwg.org/schemas/abcd/2.06")
+                            xmlIdentificationBotaAuthor.Text = strAuthorYear
+                            xmlIdentificationBota.appendChild xmlIdentificationBotaAuthor
+                            xmlIdentificationBota.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                        End If
+                    End If
+                Else
+                    Set xmlIdentificationZoo = dom.createNode(NODE_ELEMENT, "Zoological", "http://www.tdwg.org/schemas/abcd/2.06")
+                    xmlIdentificationNameAt.appendChild xmlIdentificationZoo
+                    xmlIdentificationNameAt.appendChild dom.createTextNode(vbCrLf + Space$(18))
+                    xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                    'GenusOrMonomial keyword
+                    Set xmlIdentificationZooGenus = dom.createNode(NODE_ELEMENT, "GenusOrMonomial", "http://www.tdwg.org/schemas/abcd/2.06")
+                    xmlIdentificationZooGenus.Text = strGenus
+                    xmlIdentificationZoo.appendChild xmlIdentificationZooGenus
+                    xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                    'Subgenus keyword
+                    If Not IsEmpty(strSubgenus) And _
+                        Not IsNull(strSubgenus) And _
+                        strSubgenus <> "" Then
+                        Set xmlIdentificationZooSubgenus = dom.createNode(NODE_ELEMENT, "Subgenus", "http://www.tdwg.org/schemas/abcd/2.06")
+                        xmlIdentificationZooSubgenus.Text = strSubgenus
+                        xmlIdentificationZoo.appendChild xmlIdentificationZooSubgenus
+                        xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                    End If
+                    'SpeciesEpithet keyword
+                    If Not IsEmpty(strSpecies) And _
+                        Not IsNull(strSpecies) And _
+                        strSpecies <> "" Then
+                        Set xmlIdentificationZooSpecies = dom.createNode(NODE_ELEMENT, "SpeciesEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
+                        xmlIdentificationZooSpecies.Text = strSpecies
+                        xmlIdentificationZoo.appendChild xmlIdentificationZooSpecies
+                        xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                    End If
+                    'SubspeciesEpithet keyword
+                    If Not IsEmpty(strSubspecies) And _
+                        Not IsNull(strSubspecies) And _
+                        strSubspecies <> "" Then
+                        Set xmlIdentificationZooSubspecies = dom.createNode(NODE_ELEMENT, "SubspeciesEpithet", "http://www.tdwg.org/schemas/abcd/2.06")
+                        xmlIdentificationZooSubspecies.Text = strSubspecies
+                        xmlIdentificationZoo.appendChild xmlIdentificationZooSubspecies
+                        xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
+                    End If
                     If Not IsEmpty(strAuthorYear) And Not IsNull(strAuthorYear) And strAuthorYear <> "" Then
                         If InStr(strAuthorYear, "(") > 0 Then
                             Set xmlIdentificationZooAuthor = dom.createNode(NODE_ELEMENT, "AuthorTeamParenthesisAndYear", "http://www.tdwg.org/schemas/abcd/2.06")
                             xmlIdentificationZooAuthor.Text = strAuthorYear
                             xmlIdentificationZoo.appendChild xmlIdentificationZooAuthor
                             xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
-                        Else:
-                    ' S'il y a une parenthèse dans parenthesis
+                        Else
                             Set xmlIdentificationZooAuthor = dom.createNode(NODE_ELEMENT, "AuthorTeamOriginalAndYear", "http://www.tdwg.org/schemas/abcd/2.06")
                             xmlIdentificationZooAuthor.Text = strAuthorYear
                             xmlIdentificationZoo.appendChild xmlIdentificationZooAuthor
                             xmlIdentificationZoo.appendChild dom.createTextNode(vbCrLf + Space$(20))
                         End If
                     End If
-        
-                    If Not IsEmpty(strNameAddendum) And Not IsNull(strNameAddendum) And strNameAddendum <> "" Then
-                    
-                        Set xmlNameAddendum = dom.createNode(NODE_ELEMENT, "NameAddendum", "http://www.tdwg.org/schemas/abcd/2.06")
-                        xmlNameAddendum.Text = "Variety : " & strNameAddendum
-                        xmlIdentificationScName.appendChild xmlNameAddendum
-                        xmlIdentificationScName.appendChild dom.createTextNode(vbCrLf + Space$(14))
-                    
-                    End If
+
+                End If
+                                
+                If Not IsEmpty(strNameAddendum) And Not IsNull(strNameAddendum) And strNameAddendum <> "" Then
+                
+                    Set xmlNameAddendum = dom.createNode(NODE_ELEMENT, "NameAddendum", "http://www.tdwg.org/schemas/abcd/2.06")
+                    xmlNameAddendum.Text = "Variety : " & strNameAddendum
+                    xmlIdentificationScName.appendChild xmlNameAddendum
+                    xmlIdentificationScName.appendChild dom.createTextNode(vbCrLf + Space$(14))
                 
                 End If
-        
+                        
             End If
-
+            '----------------------------------------
+            '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             If Not IsEmpty(strIdentifier) And Not IsNull(strIdentifier) And strIdentifier <> "" Then
             
                 Set xmlIdentificationIdentifiers = dom.createNode(NODE_ELEMENT, "Identifiers", "http://www.tdwg.org/schemas/abcd/2.06")
@@ -2139,39 +2406,7 @@ Private Sub XMLGather(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXML2
 End Sub
 
 'DataSets/DataSet/Units/Unit/MeasurementsOrFacts
-'ftheteen 2015 07 17
-Private Function calculateAmountProperties() As Integer
- On Error Resume Next
-    Dim i As Integer
-    Dim returned As Integer
-    Dim celval As String
-    Dim celval2 As String
-    celval = ""
-    celval2 = ""
-    For i = 1 To 20
-        Dim nameField As String
-         Dim nameValueField As String
-      
-        Dim oldcelval As String
-        Dim oldcelval2 As String
-         
-        
-        nameField = "specimenProperty_" & CStr(i)
-        nameValueField = "specimenPropertyValue_" & CStr(i)
-        oldcelval = celval
-        oldcelval2 = celval2
-        celval = Application.Sheets("cSPECIMEN").Cells(1, Application.Sheets("cSPECIMEN").Rows(1).Find(nameField, lookAt:=xlWhole).Column)
-        celval2 = Application.Sheets("cSPECIMEN").Cells(1, Application.Sheets("cSPECIMEN").Rows(1).Find(nameValueField, lookAt:=xlWhole).Column)
-        If celval <> oldcelval And celval2 <> oldcelval2 Then
-            returned = i
-        End If
-    Next i
-
-    calculateAmountProperties = returned
-End Function
-
-'DataSets/DataSet/Units/Unit/MeasurementsOrFacts
-Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXML2.IXMLDOMElement, ByRef rowCounter As Long, ByRef amountProperties As Integer)
+Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As MSXML2.IXMLDOMElement, ByRef rowCounter As Long)
     
     On Error Resume Next
 '    On Error GoTo Err_XMLMeasurements
@@ -2244,32 +2479,17 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
     Dim rep As String
     rep = ""
     
-    
     'Si le paramètre de la propriété n'est pas rempli, la valeur ne sera pas présente
-        'corr ftheeten
-    Dim rootCel As Long
-    rootCel = 104
-    Dim rootValue As Long
-    rootValue = 105
-
-    For i = 1 To amountProperties
-            'Dim idxCol As Long
-            'Dim idxColVal As Long
-    
-    'celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(specimenProperty(i), lookAt:=xlWhole).Column)
-            'celval2 = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(specimenPropertyValue(i), lookAt:=xlWhole).Column)
-            celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, rootCel)
-            celval2 = Application.Sheets("cSPECIMEN").Cells(rowCounter, rootValue)
-            If (Not IsEmpty(celval) And Not IsNull(celval) And celval <> "") _
-                And (Not IsEmpty(celval2) And Not IsNull(celval2) And celval2 <> "") Then
-                rep = rep & celval
-            End If
-            celval = ""
-            celval2 = ""
-            rootCel = rootCel + 2
-            rootValue = rootValue + 2
-        Next i
-    
+    For i = 1 To 20
+        celval = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(specimenProperty(i), lookAt:=xlWhole).Column)
+        celval2 = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Rows(1).Find(specimenPropertyValue(i), lookAt:=xlWhole).Column)
+        If (Not IsEmpty(celval) And Not IsNull(celval) And celval <> "") _
+            And (Not IsEmpty(celval2) And Not IsNull(celval2) And celval2 <> "") Then
+            rep = rep & celval
+        End If
+        celval = ""
+        celval2 = ""
+    Next i
     
     Dim strHostClassis As String, strHostOrdo As String, strHostFamilia As String, strHostGenus As String, strHostSpecies As String, strHostAuthor As String
     Dim strHostName As String, strHostRemark As String
@@ -2417,26 +2637,17 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
         
             End If
     
-                'corr ftheeten 2015 07 16
-            rootCel = 104
-            rootValue = 105
             If Not IsEmpty(rep) And Not IsNull(rep) And rep <> "" Then
     
-                For i = 1 To amountProperties
+                For i = 1 To 20
         
                     strProperty = ""
                     strPropertyValue = ""
-                    strProperty = Application.Sheets("cSPECIMEN").Cells(rowCounter, rootCel).Value
-                    strPropertyValue = Application.Sheets("cSPECIMEN").Cells(rowCounter, rootValue).Value
+                    strProperty = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Cells.Find(what:=specimenProperty(i), lookAt:=xlWhole).Column).Value
+                    strPropertyValue = Application.Sheets("cSPECIMEN").Cells(rowCounter, Application.Sheets("cSPECIMEN").Cells.Find(what:=specimenPropertyValue(i), lookAt:=xlWhole).Column).Value
         
+                    If strProperty <> "" And strPropertyValue <> "" Then
     
-    
-                     If Not IsEmpty(rep) And Not IsNull(rep) And rep <> "" And _
-                        ((Not IsEmpty(strProperty) And Not IsNull(strProperty) And strPropertyValue <> "") And _
-                        (Not IsEmpty(strPropertyValue) And Not IsNull(strPropertyValue) And strPropertyValue <> "")) _
-                        Then
-    
-  
                         Set xmlMeasurementOrFact = dom.createNode(NODE_ELEMENT, "MeasurementOrFact", "http://www.tdwg.org/schemas/abcd/2.06")
                         xmlMeasurementsOrFacts.appendChild xmlMeasurementOrFact
                         xmlMeasurementsOrFacts.appendChild dom.createTextNode(vbCrLf + Space$(8))
@@ -2458,8 +2669,7 @@ Private Sub XMLMeasurements(ByRef dom As MSXML2.DOMDocument60, ByRef subnode As 
                         xmlMeasurementOrFactAtomised.appendChild dom.createTextNode(vbCrLf + Space$(12))
                 
                     End If
-                     rootCel = rootCel + 2
-                    rootValue = rootValue + 2
+        
                 Next i
             
             End If
@@ -3196,10 +3406,6 @@ If FeuilleExiste("SPECIMEN") Then
     'Trim each cell
     DoTrim
     
-'    For Each c In SpecRange
-'        c.Value = Trim$(c.Value)
-'    Next c
-
     recordsheet = True
 
 Else:
@@ -3536,8 +3742,6 @@ End Function
 'Trim all cells
 '--------------------
 Sub DoTrim()
-'    Dim aCell As Range
-'    Dim wsh As Worksheet
     Dim cl As Variant
     
     Application.ScreenUpdating = False
@@ -3545,21 +3749,14 @@ Sub DoTrim()
      'Loop through cells removing excess spaces
     For Each cl In Application.Worksheets("cSPECIMEN").UsedRange
         If Len(cl) > Len(WorksheetFunction.Trim(cl)) Then
-			'rmca 2015 09 04 => "@" solves problem if call begins with "=" and has to be trimed
-			cl.NumberFormat = "@"
-            cl.Value = WorksheetFunction.Trim(cl)
+            If InStr(1, WorksheetFunction.Trim(cl), "=") Then
+                cl.Value = Trim$(Mid$(WorksheetFunction.Trim(cl), 2))
+            Else
+                cl.Value = WorksheetFunction.Trim(cl)
+            End If
         End If
     Next cl
     
-'            For Each aCell In Application.Worksheets("cSPECIMEN").UsedRange
-'                If Not aCell.Value = "" And aCell.HasFormula = False Then
-'                    With aCell
-'                        .Value = Replace(.Value, Chr(160), "")
-'                        .Value = Application.WorksheetFunction.Clean(.Value)
-'                        .Value = Application.Trim(.Value)
-'                    End With
-'                End If
-'            Next aCell
 
     Application.ScreenUpdating = True
     Application.StatusBar = "Done"
@@ -3675,6 +3872,7 @@ subspecies = "subspecies"
 author_year = "author_year"
 variety_form = "variety_form"
 taxonFullName = "taxonFullName"
+informalName = "informalName"
 identificationMethod = "identificationMethod"
 identificationHistory = "identificationHistory"
 'commonName = "commonName"
@@ -3776,7 +3974,7 @@ SpecHeadings = Array("specimenID", "additionalID", "code", "accessionNumber", "d
 "siteProperty_10", "sitePropertyValue_10", "expedition_project", "collectedBy", "collectionStartDay", "collectionStartMonth", "collectionStartYear", _
 "collectionStartTimeH", "collectionStartTimeM", "collectionEndDay", "collectionEndMonth", "collectionEndYear", "collectionEndTimeH", "collectionEndTimeM", _
 "localityNotes", "classification", "phylum", "classis", "ordo", "superfamilia", "familia", "subfamilia", "genus", "subgenus", "species", "subspecies", _
-"author_year", "variety_form", "taxonFullName", "identificationMethod", "identificationHistory", "identifiedBy", "identificationDay", "identificationMonth", _
+"author_year", "variety_form", "taxonFullName", "informalName", "identificationMethod", "identificationHistory", "identifiedBy", "identificationDay", "identificationMonth", _
 "identificationYear", "referenceString", "publicationString", "identificationNotes", "hostClassis", "hostOrdo", "hostFamilia", "hostGenus", "hostSpecies", _
 "hostAuthor_year", "hostRemark", "kindOfUnit", "statusType", "totalNumber", "sex", "maleCount", "femaleCount", "sexUnknownCount", "lifeStage", "socialStatus", _
 "urlPicture", "externalLink", "specimenProperty_1", "specimenPropertyValue_1", "specimenProperty_2", "specimenPropertyValue_2", "specimenProperty_3", _
@@ -3994,4 +4192,58 @@ Err_Dupl_Spec:
     Resume Exit_Dupl_Spec
 
 End Sub
+
+'---------------------------------------------------------------
+' Function responsible of cleansing
+'---------------------------------------------------------------
+
+Private Function CleanUp(ByVal strCellValue As String) As String
+
+Dim regExp As New regExp
+
+    With regExp
+        .Global = True
+        .MultiLine = True
+        .IgnoreCase = False
+    End With
+    
+    'Clean up multiple spaces into one
+    regExp.Pattern = "\s\s+"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, " ")
+    End If
+    'Clean up start with space into empty
+    regExp.Pattern = "^\s"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, "")
+    End If
+    'Clean up end with space into empty
+    regExp.Pattern = "\s$"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, "")
+    End If
+    'Clean up parenthesis followed by space into parenthesis only
+    regExp.Pattern = "\(\s"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, "(")
+    End If
+    'Clean up parenthesis preceeded by space into parenthesis only
+    regExp.Pattern = "\s\)"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, ")")
+    End If
+    'Clean up comma preceeded by space into comma only
+    regExp.Pattern = "\s\,"
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, ",")
+    End If
+    'Clean up point preceeded by space into point only
+    regExp.Pattern = "\s\."
+    If regExp.Test(strCellValue) Then
+        strCellValue = regExp.Replace(strCellValue, ".")
+    End If
+
+    CleanUp = strCellValue
+
+End Function
 
