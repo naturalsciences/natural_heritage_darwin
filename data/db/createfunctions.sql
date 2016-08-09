@@ -993,13 +993,12 @@ $$;
 CREATE OR REPLACE FUNCTION fct_cpy_unified_values () RETURNS TRIGGER
 language plpgsql
 AS
-
 $$
 DECLARE
   property_line properties%ROWTYPE;
 BEGIN
-  NEW.lower_value_unified = convert_to_unified(NEW.lower_value, NEW.property_unit, NEW.property_type);
-  NEW.upper_value_unified = convert_to_unified(CASE WHEN NEW.upper_value = '' THEN NEW.lower_value ELSE NEW.upper_value END, NEW.property_unit, NEW.property_type);
+  NEW.lower_value_unified = convert_to_unified(NEW.lower_value, NEW.property_unit);
+  NEW.upper_value_unified = convert_to_unified(CASE WHEN NEW.upper_value = '' THEN NEW.lower_value ELSE NEW.upper_value END, NEW.property_unit);
   RETURN NEW;
 END;
 $$;
