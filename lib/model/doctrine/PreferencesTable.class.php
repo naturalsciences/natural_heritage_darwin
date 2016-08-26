@@ -11,8 +11,7 @@ class PreferencesTable extends Doctrine_Table
   public function getPreference($user_id, $key, $take_from_default=true)
   {
     $result = Doctrine_Query::create()
-      ->useResultCache(true, 3600, 'users_'.$user_id.'_'.$key)
-//       ->setResultCacheLifeSpan(15) //15 sec
+      ->useResultCache(true, 300, 'users_'.$user_id.'_'.$key) // Cache of 5 min
       ->from('Preferences p')
       ->andwhere('p.user_ref = ?', $user_id)
       ->andWhere('p.pref_key = ?',$key)
@@ -86,7 +85,7 @@ class PreferencesTable extends Doctrine_Table
   {
     switch($key)
     {
-      case 'search_cols_specimen': return 'taxon|individual_type|sex|stage|building|floor|room|row|shelf|container|container_storage|loans'; break;
+      case 'search_cols_specimen': return 'taxon|individual_type|sex|stage|building|floor|room|row|col|shelf|container|container_storage|loans'; break;
       case 'board_search_rec_pp': return '10'; break;
       case 'board_spec_rec_pp': return '10'; break;
       case 'default_search_rec_pp': return '10'; break;

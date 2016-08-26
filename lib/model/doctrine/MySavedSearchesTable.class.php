@@ -87,6 +87,7 @@ class MySavedSearchesTable extends DarwinTable
       'floor'=>'Floor',
       'room'=>'Room',
       'row'=>'Row',
+      'col'=>'Column',
       'shelf'=>'Shelf',
       'container'=>'Container',
       'container_type'=>'Container Type',
