@@ -259,6 +259,7 @@ select
   case when station_visible = true then (select longitude from gtu where id = sp.gtu_ref) else null end::float as "decimalLongitude",
   case when station_visible = true then 'WGS84' else null end::text as "geodeticDatum",
   (select array_to_string(array_agg(p.formated_name), ' | ') from catalogue_people cp inner join people p on cp.people_ref = p.id where referenced_relation = 'specimens' and record_id = sp.id and cp.people_type = 'collector')::text as "georeferencedBy",
+  
   taxon_ref as "taxonID",
   taxon_name as "scientificName",
   coalesce(coalesce((select t.name 
