@@ -1,4 +1,134 @@
-﻿drop table if exists zzz_exportDwC;
+﻿/*CREATE OR REPLACE FUNCTION fct_get_taxonomy_parents_names (IN path TEXT, IN levelSysName VARCHAR DEFAULT '') RETURNS text IMMUTABLE LANGUAGE plpgsql AS $$
+DECLARE
+  taxonName TEXT := '';
+  taxonNameTemp TEXT;
+  taxonID VARCHAR;
+BEGIN
+  FOREACH taxonID IN ARRAY regexp_split_to_array(trim(path, '/'),'/') LOOP
+    IF levelSysName = '' THEN
+      SELECT name INTO taxonNameTemp FROM taxonomy WHERE id = taxonID::bigint;
+      taxonName := taxonName || ' | ' || taxonNameTemp;
+    ELSE
+      SELECT t.name INTO taxonNameTemp FROM taxonomy t INNER JOIN catalogue_levels cl ON cl.id = t.level_ref and cl.level_type = 'taxonomy' and cl.level_sys_name = levelSysName WHERE t.id = taxonID::bigint;
+      IF taxonNameTemp IS NOT NULL AND taxonNameTemp != '' THEN
+        taxonName := taxonNameTemp;
+        EXIT;
+      END IF;
+    END IF;
+  END LOOP;
+  taxonName := trim(taxonName,' | ');
+  RETURN taxonName;
+EXCEPTION
+	WHEN OTHERS THEN
+		RETURN NULL;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION fct_get_chrono_parents_names (IN path TEXT, IN levelSysName VARCHAR DEFAULT '') RETURNS text IMMUTABLE LANGUAGE plpgsql AS $$
+DECLARE
+  chronoName TEXT := '';
+  chronoNameTemp TEXT;
+  chronoID VARCHAR;
+BEGIN
+  FOREACH chronoID IN ARRAY regexp_split_to_array(trim(path, '/'),'/') LOOP
+    IF levelSysName = '' THEN
+      SELECT name INTO chronoNameTemp FROM taxonomy WHERE id = chronoID::bigint;
+      chronoName := chronoName || ' | ' || chronoNameTemp;
+    ELSE
+      SELECT t.name INTO chronoNameTemp FROM chronostratigraphy t INNER JOIN catalogue_levels cl ON cl.id = t.level_ref and cl.level_type = 'chronostratigraphy' and cl.level_sys_name = levelSysName WHERE t.id = chronoID::bigint;
+      IF chronoNameTemp IS NOT NULL AND chronoNameTemp != '' THEN
+        chronoName := chronoNameTemp;
+        EXIT;
+      END IF;
+    END IF;
+  END LOOP;
+  chronoName := trim(chronoName,' | ');
+  RETURN chronoName;
+EXCEPTION
+	WHEN OTHERS THEN
+		RETURN NULL;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION fct_get_litho_parents_names (IN path TEXT, IN levelSysName VARCHAR DEFAULT '') RETURNS text IMMUTABLE LANGUAGE plpgsql AS $$
+DECLARE
+  lithoName TEXT := '';
+  lithoNameTemp TEXT;
+  lithoID VARCHAR;
+BEGIN
+  FOREACH lithoID IN ARRAY regexp_split_to_array(trim(path, '/'),'/') LOOP
+    IF levelSysName = '' THEN
+      SELECT name INTO lithoNameTemp FROM taxonomy WHERE id = lithoID::bigint;
+      lithoName := lithoName || ' | ' || lithoNameTemp;
+    ELSE
+      SELECT t.name INTO lithoNameTemp FROM lithostratigraphy t INNER JOIN catalogue_levels cl ON cl.id = t.level_ref and cl.level_type = 'lithostratigraphy' and cl.level_sys_name = levelSysName WHERE t.id = lithoID::bigint;
+      IF lithoNameTemp IS NOT NULL AND lithoNameTemp != '' THEN
+        lithoName := lithoNameTemp;
+        EXIT;
+      END IF;
+    END IF;
+  END LOOP;
+  lithoName := trim(lithoName,' | ');
+  RETURN lithoName;
+EXCEPTION
+        WHEN OTHERS THEN
+                RETURN NULL;
+END;
+$$;
+*/
+/*
+DROP INDEX IF EXISTS idx_taxonomy_path_names;
+DROP INDEX IF EXISTS idx_taxonomy_path_kingdom;
+DROP INDEX IF EXISTS idx_taxonomy_path_phylum;
+DROP INDEX IF EXISTS idx_taxonomy_path_class;
+DROP INDEX IF EXISTS idx_taxonomy_path_order;
+DROP INDEX IF EXISTS idx_taxonomy_path_family;
+DROP INDEX IF EXISTS idx_taxonomy_path_genus;
+DROP INDEX IF EXISTS idx_taxonomy_path_sub_genus;
+DROP INDEX IF EXISTS idx_chrono_path_names;
+DROP INDEX IF EXISTS idx_chrono_path_eon;
+DROP INDEX IF EXISTS idx_chrono_path_era;
+DROP INDEX IF EXISTS idx_chrono_path_system;
+DROP INDEX IF EXISTS idx_chrono_path_serie;
+DROP INDEX IF EXISTS idx_chrono_path_stage;
+DROP INDEX IF EXISTS idx_litho_path_supergroup;
+DROP INDEX IF EXISTS idx_litho_path_group;
+DROP INDEX IF EXISTS idx_litho_path_formation;
+DROP INDEX IF EXISTS idx_litho_path_member;
+DROP INDEX IF EXISTS idx_litho_path_layer;
+DROP INDEX IF EXISTS idx_litho_path_subLevel1;
+DROP INDEX IF EXISTS idx_litho_path_subLevel2;
+DROP INDEX IF EXISTS idx_user_tracking_for_bbif_export;
+DROP INDEX IF EXISTS idx_basisOfRecord;
+DROP INDEX IF EXISTS idx_datasetName;
+CREATE INDEX idx_user_tracking_for_bbif_export ON users_tracking(referenced_relation, record_id, modification_date_time);
+create index idx_datasetName ON specimens(collection_name);
+CREATE INDEX idx_basisOfRecord ON specimens ((CASE WHEN collection_ref = 3 OR collection_path LIKE '/3/%' THEN 'FossilSpecimen' WHEN collection_ref = 231 OR collection_path LIKE '/231/%' THEN 'GeologicalContext' ELSE 'PreservedSpecimen' END), collection_name);
+CREATE INDEX idx_taxonomy_path_names ON specimens(fct_get_taxonomy_parents_names(taxon_path));
+CREATE INDEX idx_taxonomy_path_kingdom ON specimens(fct_get_taxonomy_parents_names(taxon_path, 'kingdom'));
+CREATE INDEX idx_taxonomy_path_phylum ON specimens(fct_get_taxonomy_parents_names(taxon_path, 'phylum'));
+CREATE INDEX idx_taxonomy_path_class ON specimens(fct_get_taxonomy_parents_names(taxon_path, 'class'));
+CREATE INDEX idx_taxonomy_path_order ON specimens(fct_get_taxonomy_parents_names(taxon_path, 'order'));
+CREATE INDEX idx_taxonomy_path_family ON specimens(fct_get_taxonomy_parents_names(taxon_path, 'family'));
+CREATE INDEX idx_taxonomy_path_genus ON specimens(fct_get_taxonomy_parents_names(taxon_path, 'genus'));
+CREATE INDEX idx_taxonomy_path_sub_genus ON specimens(fct_get_taxonomy_parents_names(taxon_path, 'sub_genus'));
+CREATE INDEX idx_chrono_path_names ON specimens(fct_get_chrono_parents_names(chrono_path)) WHERE chrono_ref != 0;
+CREATE INDEX idx_chrono_path_eon ON specimens(fct_get_chrono_parents_names(chrono_path, 'eon')) WHERE chrono_ref != 0;
+CREATE INDEX idx_chrono_path_era ON specimens(fct_get_chrono_parents_names(chrono_path, 'era')) WHERE chrono_ref != 0;
+CREATE INDEX idx_chrono_path_system ON specimens(fct_get_chrono_parents_names(chrono_path, 'system')) WHERE chrono_ref != 0;
+CREATE INDEX idx_chrono_path_serie ON specimens(fct_get_chrono_parents_names(chrono_path, 'serie')) WHERE chrono_ref != 0;
+CREATE INDEX idx_chrono_path_stage ON specimens(fct_get_chrono_parents_names(chrono_path, 'stage')) WHERE chrono_ref != 0;
+CREATE INDEX idx_litho_path_supergroup ON specimens(fct_get_litho_parents_names(litho_path, 'supergroup')) WHERE litho_ref != 0;
+CREATE INDEX idx_litho_path_group ON specimens(fct_get_litho_parents_names(litho_path, 'group')) WHERE litho_ref != 0;
+CREATE INDEX idx_litho_path_formation ON specimens(fct_get_litho_parents_names(litho_path, 'formation')) WHERE litho_ref != 0;
+CREATE INDEX idx_litho_path_member ON specimens(fct_get_litho_parents_names(litho_path, 'member')) WHERE litho_ref != 0;
+CREATE INDEX idx_litho_path_layer ON specimens(fct_get_litho_parents_names(litho_path, 'layer')) WHERE litho_ref != 0;
+CREATE INDEX idx_litho_path_subLevel1 ON specimens(fct_get_litho_parents_names(litho_path, 'sub_level_1')) WHERE litho_ref != 0;
+CREATE INDEX idx_litho_path_subLevel2 ON specimens(fct_get_litho_parents_names(litho_path, 'sub_level_2')) WHERE litho_ref != 0;
+*/
+
+drop table if exists zzz_exportDwC;
+
 select 
   'PhysicalObject'::text as "dcterms:type",
   coalesce((select max(modification_date_time) at time zone 'CET' from users_tracking where referenced_relation = 'specimens' and record_id = sp.id), current_timestamp at time zone 'CET') as "dcterms:modified",
@@ -259,7 +389,182 @@ select
   case when station_visible = true then (select longitude from gtu where id = sp.gtu_ref) else null end::float as "decimalLongitude",
   case when station_visible = true then 'WGS84' else null end::text as "geodeticDatum",
   (select array_to_string(array_agg(p.formated_name), ' | ') from catalogue_people cp inner join people p on cp.people_ref = p.id where referenced_relation = 'specimens' and record_id = sp.id and cp.people_type = 'collector')::text as "georeferencedBy",
-  
+  trim(
+   case
+     when chrono_ref is not null and chrono_ref != 0 then
+       'chronoID-'||chrono_ref
+     else ''
+   end ||
+   '|' ||
+   case
+     when litho_ref is not null and litho_ref != 0 then
+       'lithoID-'||litho_ref
+     else ''
+   end,
+   '|'
+  )::text as "geologicalContextID",
+  case
+    when chrono_ref is null or chrono_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.chrono_level_ref and level_type = 'chronostratigraphy') = 'eon' THEN chrono_name 
+        ELSE (SELECT fct_get_chrono_parents_names(chrono_path, 'eon')) 
+      END
+  end::text as "earliestEonOrLowestEonothem",
+  case
+    when chrono_ref is null or chrono_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.chrono_level_ref and level_type = 'chronostratigraphy') = 'eon' THEN chrono_name 
+        ELSE (SELECT fct_get_chrono_parents_names(chrono_path, 'eon')) 
+      END
+  end::text as "latestEonOrHighestEonothem",
+  case
+    when chrono_ref is null or chrono_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.chrono_level_ref and level_type = 'chronostratigraphy') = 'era' THEN chrono_name 
+        ELSE (SELECT fct_get_chrono_parents_names(chrono_path, 'era')) 
+      END
+  end::text as "earliestEraOrLowestErathem",
+  case
+    when chrono_ref is null or chrono_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.chrono_level_ref and level_type = 'chronostratigraphy') = 'era' THEN chrono_name 
+        ELSE (SELECT fct_get_chrono_parents_names(chrono_path, 'era')) 
+      END
+  end::text as "latestEraOrHighestErathem",
+  case
+    when chrono_ref is null or chrono_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.chrono_level_ref and level_type = 'chronostratigraphy') = 'system' THEN chrono_name 
+        ELSE (SELECT fct_get_chrono_parents_names(chrono_path, 'system')) 
+      END
+  end::text as "earliestPeriodOrLowestSystem",
+  case
+    when chrono_ref is null or chrono_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.chrono_level_ref and level_type = 'chronostratigraphy') = 'system' THEN chrono_name 
+        ELSE (SELECT fct_get_chrono_parents_names(chrono_path, 'system')) 
+      END
+  end::text as "latestPeriodOrHighestSystem",
+  case
+    when chrono_ref is null or chrono_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.chrono_level_ref and level_type = 'chronostratigraphy') = 'serie' THEN chrono_name 
+        ELSE (SELECT fct_get_chrono_parents_names(chrono_path, 'serie')) 
+      END
+  end::text as "earliestEpochOrLowestSeries",
+  case
+    when chrono_ref is null or chrono_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.chrono_level_ref and level_type = 'chronostratigraphy') = 'serie' THEN chrono_name 
+        ELSE (SELECT fct_get_chrono_parents_names(chrono_path, 'serie')) 
+      END
+  end::text as "latestEpochOrHighestSeries",
+  case
+    when chrono_ref is null or chrono_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.chrono_level_ref and level_type = 'chronostratigraphy') = 'stage' THEN chrono_name 
+        ELSE (SELECT fct_get_chrono_parents_names(chrono_path, 'stage')) 
+      END
+  end::text as "earliestAgeOrLowestStage",
+  case
+    when chrono_ref is null or chrono_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.chrono_level_ref and level_type = 'chronostratigraphy') = 'stage' THEN chrono_name 
+        ELSE (SELECT fct_get_chrono_parents_names(chrono_path, 'stage')) 
+      END
+  end::text as "latestAgeOrHighestStage",
+  case
+    when litho_ref is null or litho_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.litho_level_ref and level_type = 'lithostratigraphy') IN ('supergroup','group') THEN litho_name 
+        ELSE coalesce((SELECT fct_get_litho_parents_names(litho_path, 'group')), (SELECT fct_get_litho_parents_names(litho_path, 'supergroup')))
+      END
+  end::text as "group",
+  case
+    when litho_ref is null or litho_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.litho_level_ref and level_type = 'lithostratigraphy') = 'formation' THEN litho_name 
+        ELSE (SELECT fct_get_litho_parents_names(litho_path, 'formation'))
+      END
+  end::text as "formation",
+  case
+    when litho_ref is null or litho_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.litho_level_ref and level_type = 'lithostratigraphy') = 'member' THEN litho_name 
+        ELSE (SELECT fct_get_litho_parents_names(litho_path, 'member')) 
+      END
+  end::text as "member",
+  case
+    when litho_ref is null or litho_ref = 0 then
+      ''
+    else
+      CASE 
+        WHEN (select level_sys_name from catalogue_levels WHERE id = sp.litho_level_ref and level_type = 'lithostratigraphy') IN ('layer', 'sub_level_1', 'sub_level_2') THEN litho_name 
+        ELSE coalesce(coalesce((SELECT fct_get_litho_parents_names(litho_path, 'layer')),(SELECT fct_get_litho_parents_names(litho_path, 'sub_level_1'))),(SELECT fct_get_litho_parents_names(litho_path, 'sub_level_2')))
+      END
+  end::text as "bed",
+  (select id from identifications where referenced_relation = 'specimens' and record_id = sp.id and notion_concerned in ('all', 'taxonomy', 'lithology', 'mineralogy') order by case when notion_date_mask != 0 then notion_date else '0001-01-01'::timestamp end desc, id limit 1)::bigint as "identificationID",
+  coalesce((select substring(value_defined from position('aff.' in value_defined)) from identifications where referenced_relation = 'specimens' and record_id = sp.id and notion_concerned in ('all', 'taxonomy', 'lithology', 'mineralogy') and position('aff.' in value_defined) != 0 order by case when notion_date_mask != 0 then notion_date else '0001-01-01'::timestamp end desc, id limit 1),(select substring(value_defined from position('cf.' in value_defined)) from identifications where referenced_relation = 'specimens' and record_id = sp.id and notion_concerned in ('all', 'taxonomy', 'lithology', 'mineralogy') and position('cf.' in value_defined) != 0 order by case when notion_date_mask != 0 then notion_date else '0001-01-01'::timestamp end desc, id limit 1))::text as "identificationQualifier",
+  case 
+    when sp.type != 'specimen' then
+      (sp.type || coalesce((select ' of '|| value_defined from identifications where referenced_relation = 'specimens' and record_id = sp.id and notion_concerned in ('all', 'taxonomy', 'lithology', 'mineralogy') and trim(value_defined) != '-' order by case when notion_date_mask != 0 then notion_date else '0001-01-01'::timestamp end desc, id limit 1),''))::text
+    else ''
+  end as "typeStatus",
+  (select array_to_string(array_agg(formated_name), ' | ') from people p inner join catalogue_people cp on p.id = cp.people_ref where referenced_relation = 'identifications' and record_id in (select id from identifications where referenced_relation = 'specimens' and record_id = sp.id and notion_concerned in ('all', 'taxonomy', 'lithology', 'mineralogy') order by case when notion_date_mask != 0 then notion_date else '0001-01-01'::timestamp end desc, id limit 1))::text as "identifiedBy",
+  (
+  select 
+  case
+    when notion_date_mask in (32,48,56,60,62,63) then
+      case
+       when notion_date_mask <= 56 then
+         case
+           when notion_date_mask = 32 then
+             to_char(notion_date, 'YYYY')
+           when notion_date_mask = 48 then
+             to_char(notion_date, 'YYYY-MM')
+           when notion_date_mask = 56 then
+             to_char(notion_date, 'YYYY-MM-DD')
+         end
+       else
+         (notion_date at time zone 'CET')::text
+      end
+    else
+      ''
+  end
+  from identifications 
+  where referenced_relation = 'specimens' and record_id = sp.id and notion_concerned in ('all', 'taxonomy', 'lithology', 'mineralogy') order by case when notion_date_mask != 0 then notion_date else '0001-01-01'::timestamp end desc, id limit 1
+  )::text as "dateIdentified",
+  (
+    select determination_status
+    from identifications 
+    where referenced_relation = 'specimens' and record_id = sp.id and notion_concerned in ('all', 'taxonomy', 'lithology', 'mineralogy') and determination_status != '' and determination_status is not null order by case when notion_date_mask != 0 then notion_date else '0001-01-01'::timestamp end desc, id limit 1
+  )::text as "identificationVerificationStatus",
   taxon_ref as "taxonID",
   taxon_name as "scientificName",
   coalesce(coalesce((select t.name 
@@ -322,21 +627,4 @@ select
 INTO TABLE zzz_exportDwC
 from specimens as sp
 where collection_is_public = true 
---  and coalesce((select array_to_string(array_agg(trim((case when code_prefix is not null and code_prefix != '' then case when code_prefix_separator is not null and code_prefix_separator != '' then code_prefix || code_prefix_separator else code_prefix end else '' end) || code || (case when code_suffix is not null and code_suffix != '' then case when code_suffix_separator is not null and code_suffix_separator != '' then code_suffix || code_suffix_separator else code_suffix end else '' end))),' | ') from codes where referenced_relation = 'specimens' and record_id = sp.id and code_category in ('inventory', 'code', 'Code')),'') != ''
---  and coalesce((select array_to_string(array_agg(trim(p.formated_name)),' | ') from catalogue_people cp inner join people p on cp.people_ref = p.id where cp.people_type = 'collector' and cp.referenced_relation = 'specimens' and record_id = sp.id and p.is_physical = true),'') != ''
---  and (exists (select 1 from multimedia where referenced_relation = 'specimens' and record_id = sp.id)
---  or exists (select 1 from catalogue_bibliography where referenced_relation = 'specimens' and record_id = sp.id))
--- and exists (select 1 from specimens_relationships where specimen_ref = sp.id)
---and exists (select group_id from classification_synonymies where referenced_relation = 'taxonomy' and group_name = 'rename' and record_id = sp.taxon_ref)
-and exists (select group_id 
-              from classification_synonymies 
-              where referenced_relation = 'taxonomy' 
-                and group_name = 'synonym' 
-                and record_id = sp.taxon_ref)
---and gtu_to_date_mask > 56      
---and (select count(*) from comments where referenced_relation = 'gtu' and record_id = sp.gtu_ref) >= 1
---and station_visible = false
-order by "basisOfRecord","datasetName"
-limit 5000
-;
-select * from zzz_exportDwC;
+order by "basisOfRecord", "datasetName";
