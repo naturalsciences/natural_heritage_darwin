@@ -1,4 +1,4 @@
-﻿/*CREATE OR REPLACE FUNCTION fct_get_taxonomy_parents_names (IN path TEXT, IN levelSysName VARCHAR DEFAULT '') RETURNS text IMMUTABLE LANGUAGE plpgsql AS $$
+﻿CREATE OR REPLACE FUNCTION fct_get_taxonomy_parents_names (IN path TEXT, IN levelSysName VARCHAR DEFAULT '') RETURNS text IMMUTABLE LANGUAGE plpgsql AS $$
 DECLARE
   taxonName TEXT := '';
   taxonNameTemp TEXT;
@@ -75,8 +75,8 @@ EXCEPTION
                 RETURN NULL;
 END;
 $$;
-*/
-/*
+
+DROP INDEX IF EXISTS idx_specimen_collection_path;
 DROP INDEX IF EXISTS idx_taxonomy_path_names;
 DROP INDEX IF EXISTS idx_taxonomy_path_kingdom;
 DROP INDEX IF EXISTS idx_taxonomy_path_phylum;
@@ -103,6 +103,7 @@ DROP INDEX IF EXISTS idx_basisOfRecord;
 DROP INDEX IF EXISTS idx_datasetName;
 CREATE INDEX idx_user_tracking_for_bbif_export ON users_tracking(referenced_relation, record_id, modification_date_time);
 create index idx_datasetName ON specimens(collection_name);
+CREATE INDEX idx_specimen_collection_path ON specimens(collection_path);
 CREATE INDEX idx_basisOfRecord ON specimens ((CASE WHEN collection_ref = 3 OR collection_path LIKE '/3/%' THEN 'FossilSpecimen' WHEN collection_ref = 231 OR collection_path LIKE '/231/%' THEN 'GeologicalContext' ELSE 'PreservedSpecimen' END), collection_name);
 CREATE INDEX idx_taxonomy_path_names ON specimens(fct_get_taxonomy_parents_names(taxon_path));
 CREATE INDEX idx_taxonomy_path_kingdom ON specimens(fct_get_taxonomy_parents_names(taxon_path, 'kingdom'));
@@ -125,7 +126,6 @@ CREATE INDEX idx_litho_path_member ON specimens(fct_get_litho_parents_names(lith
 CREATE INDEX idx_litho_path_layer ON specimens(fct_get_litho_parents_names(litho_path, 'layer')) WHERE litho_ref != 0;
 CREATE INDEX idx_litho_path_subLevel1 ON specimens(fct_get_litho_parents_names(litho_path, 'sub_level_1')) WHERE litho_ref != 0;
 CREATE INDEX idx_litho_path_subLevel2 ON specimens(fct_get_litho_parents_names(litho_path, 'sub_level_2')) WHERE litho_ref != 0;
-*/
 
 drop table if exists zzz_exportDwC;
 
@@ -145,8 +145,8 @@ select
   CASE 
     WHEN collection_ref = 3 OR collection_path LIKE '/3/%' THEN
       'FossilSpecimen'
-    WHEN collection_ref = 231 OR collection_path LIKE '/231/%' THEN
-      'GeologicalContext'
+    /*WHEN collection_ref = 231 OR collection_path LIKE '/231/%' THEN
+      'GeologicalContext'*/
     ELSE
       'PreservedSpecimen'
   END as "basisOfRecord",
@@ -157,8 +157,8 @@ select
       ''
   END as "informationWithheld",
   ''::text as "dynamicProperties", -- To Be filled once the Measurements or Facts have been completely explored
-  'urn:catalog:RBINS:'||translate(collection_code,'\/.()- ë', '_______e')||':'||id as "occurenceID",
-  coalesce((select array_to_string(array_agg(trim((case when code_prefix is not null and code_prefix != '' then case when code_prefix_separator is not null and code_prefix_separator != '' then code_prefix || code_prefix_separator else code_prefix end else '' end) || code || (case when code_suffix is not null and code_suffix != '' then case when code_suffix_separator is not null and code_suffix_separator != '' then code_suffix_separator || code_suffix else code_suffix end else '' end))),' | ') from codes where referenced_relation = 'specimens' and record_id = sp.id and code_category = 'main'),'') as "catalogNumer",
+  'urn:catalog:RBINS:'||translate(collection_code,'\/.()- ë', '_______e')||':'||id as "occurrenceID",
+  coalesce((select array_to_string(array_agg(trim((case when code_prefix is not null and code_prefix != '' then case when code_prefix_separator is not null and code_prefix_separator != '' then code_prefix || code_prefix_separator else code_prefix end else '' end) || code || (case when code_suffix is not null and code_suffix != '' then case when code_suffix_separator is not null and code_suffix_separator != '' then code_suffix_separator || code_suffix else code_suffix end else '' end))),' | ') from codes where referenced_relation = 'specimens' and record_id = sp.id and code_category = 'main'),'') as "catalogNumber",
   coalesce((select array_to_string(array_agg(trim((case when code_prefix is not null and code_prefix != '' then case when code_prefix_separator is not null and code_prefix_separator != '' then code_prefix || code_prefix_separator else code_prefix end else '' end) || code || (case when code_suffix is not null and code_suffix != '' then case when code_suffix_separator is not null and code_suffix_separator != '' then code_suffix_separator || code_suffix else code_suffix end else '' end))),' | ') from codes where referenced_relation = 'specimens' and record_id = sp.id and code_category in ('inventory', 'code', 'Code')),'') as "recordNumber",
   coalesce((select array_to_string(array_agg(trim(p.formated_name)),' | ') from catalogue_people cp inner join people p on cp.people_ref = p.id where cp.people_type = 'collector' and cp.referenced_relation = 'specimens' and record_id = sp.id and p.is_physical = true),'') as "recordedBy",
   (case when specimen_count_min is not null then (specimen_count_max+specimen_count_min)/2 else null end)::integer as "individualCount",
@@ -174,11 +174,6 @@ select
           from multimedia
           where referenced_relation = 'specimens' 
             and record_id = sp.id
-/*          union
-          select distinct m.id
-          from catalogue_bibliography cb
-          inner join bibliography b on cb.referenced_relation = 'specimens' and cb.record_id = sp.id  and cb.bibliography_ref = b.id
-          inner join multimedia m on b.id = m.record_id and m.referenced_relation = 'bibliography'*/
       ) as zzz_temp
   ), '') as "associatedMedia",
   coalesce((select array_to_string(array_agg(distinct title), ' | ') from catalogue_bibliography inner join bibliography b on referenced_relation = 'specimens' and record_id = sp.id and bibliography_ref = b.id),'') as "associatedReferences",
@@ -619,12 +614,14 @@ select
   COALESCE((select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'SpeciesEpithet' LIMIT 1), '')::text as "specificEpithet",
   COALESCE((select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'InfraspecificEpithet' LIMIT 1), (select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'SubspeciesEpithet' LIMIT 1))::text as "infraspecificEpithet",
   taxon_level_name as "taxonRank",
-  trim(COALESCE((select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'AuthorTeamOriginalAndYear' LIMIT 1),COALESCE((select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'AuthorTeamAndYear' LIMIT 1),COALESCE((select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'AuthorTeamParenthesisAndYear' LIMIT 1),(select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'AuthorTeam' LIMIT 1))))) as "scientificNameAutorship",
+  trim(COALESCE((select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'AuthorTeamOriginalAndYear' LIMIT 1),COALESCE((select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'AuthorTeamAndYear' LIMIT 1),COALESCE((select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'AuthorTeamParenthesisAndYear' LIMIT 1),(select keyword FROM classification_keywords WHERE referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and keyword_type = 'AuthorTeam' LIMIT 1))))) as "scientificNameAuthorship",
   COALESCE((select name from vernacular_names where referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and community = 'English' LIMIT 1),'')::text as "vernacularName",
   'ICZN'::text as "nomenclaturalCode",
   taxon_status as "taxonomicStatus",
   (select array_to_string(array_agg(notion_concerned || ': ' || comment),E'\n') from comments where referenced_relation = 'taxonomy' and record_id = sp.taxon_ref and comment is not null and comment != '')::text as "taxonRemarks"
 INTO TABLE zzz_exportDwC
 from specimens as sp
-where collection_is_public = true 
+where collection_is_public = true
+  and collection_ref != 231
+  and collection_path NOT LIKE '/231/%'
 order by "basisOfRecord", "datasetName";
