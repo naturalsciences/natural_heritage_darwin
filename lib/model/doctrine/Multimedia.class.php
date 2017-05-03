@@ -157,7 +157,8 @@ class Multimedia extends BaseMultimedia
   }
 
   public static function canBePreviewed($mime) {
-    if(in_array($mime ,array('image/png', 'image/jpeg', 'application/pdf') ) )
+    //if(in_array($mime ,array('image/png', 'image/jpeg', 'application/pdf') ) )
+    if(in_array($mime ,array('image/png', 'image/jpeg') ) )
       return true;
     return false;
   }
