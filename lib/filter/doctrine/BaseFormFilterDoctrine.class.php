@@ -16,7 +16,7 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
 
   public function addPagerItems()
   {
-    $recPerPages = array("1"=>"1", "2"=>"2", "5"=>"5", "10"=>"10","20"=>"20", "25"=>"25", "50"=>"50", "75"=>"75", "100"=>"100");
+    $recPerPages = array("1"=>"1", "2"=>"2", "5"=>"5", "10"=>"10","20"=>"20", "25"=>"25", "50"=>"50", "75"=>"75", "100"=>"100", "800"=>"800");
 
     $this->widgetSchema['rec_per_page'] = new sfWidgetFormChoice(array('choices' => $recPerPages), array('class'=>'rec_per_page'));
     $user = sfContext::getInstance()->getUser();
