@@ -1,0 +1,217 @@
+bw1:
+   col_num: 2
+   category: board_widget
+   group_name: addSpecimen
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Add new specimen
+
+bw2:
+   col_num: 2
+   category: board_widget
+   group_name: addTaxon
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Add new taxon
+
+bw3:
+   col_num: 2
+   category: board_widget
+   group_name: myLastsItems
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: My Last Actions
+
+bw5:
+   col_num: 1
+   category: board_widget
+   group_name: myChangesPlotted
+   order_by: 2
+   opened: true
+   visible: true
+   enabled: false
+   title_perso: My activity
+
+bw6:
+   col_num: 1
+   category: board_widget
+   group_name: stats
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: Statistics
+   all_public: true
+
+bw7:
+   col_num: 2
+   category: board_widget
+   group_name: workflowsSummary
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Workflows summary
+
+sps18:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: localisation
+   mandatory: false
+   order_by: 9
+   opened: false
+   visible: false
+   title_perso: Localisation
+
+sps19:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: container
+   mandatory: false
+   order_by: 10
+   opened: false
+   visible: false
+   title_perso: Container
+
+sw13:
+   col_num: 2
+   category: specimen_widget
+   group_name: refIgs
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: I.G. number
+
+sw10:
+   col_num: 1
+   category: specimen_widget
+   group_name: refIdentifications
+   order_by: 9
+   mandatory: false
+   opened: true
+   visible: true
+   title_perso: Identifications
+
+sw11:
+   col_num: 2
+   category: specimen_widget
+   group_name: acquisitionCategory
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Acquisition
+
+sw17:
+   col_num: 2
+   category: specimen_widget
+   group_name: refCollectors
+   mandatory: false
+   order_by: 7
+   opened: true
+   visible: true
+   title_perso: Collectors
+
+sw21:
+   col_num: 2
+   category: specimen_widget
+   group_name: complete
+   mandatory: false
+   order_by: 11
+   opened: true
+   visible: true
+   title_perso: Complete
+
+sw22:
+   col_num: 2
+   category: specimen_widget
+   group_name: localisation
+   mandatory: false
+   order_by: 12
+   opened: true
+   visible: true
+   title_perso: Localisation
+
+sw23:
+   col_num: 1
+   category: specimen_widget
+   group_name: container
+   mandatory: false
+   order_by: 10
+   opened: true
+   visible: true
+   title_perso: Container
+
+sw24:
+   col_num: 2
+   category: specimen_widget
+   group_name: refInsurances
+   mandatory: false
+   order_by: 13
+   opened: true
+   visible: true
+   title_perso: Insurances
+
+sw26:
+   col_num: 2
+   category: specimen_widget
+   group_name: maintenance
+   mandatory: false
+   order_by: 14
+   opened: true
+   visible: true
+   title_perso: Maintenance
+
+pe3:
+   col_num: 1
+   category: people_widget
+   group_name: address
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: false
+   title_perso: Addresses
+
+pe4:
+   col_num: 1
+   category: people_widget
+   group_name: comm
+   mandatory: false
+   order_by: 3
+   opened: false
+   visible: false
+   title_perso: Communications
+
+ins2:
+   col_num: 1
+   category: people_institution_widget
+   group_name: address
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: false
+   title_perso: Addresses
+
+ins3:
+   col_num: 1
+   category: people_institution_widget
+   group_name: comm
+   mandatory: false
+   order_by: 3
+   opened: false
+   visible: false
+   title_perso: Communications
+
+ig2:
+   col_num: 1
+   category: catalogue_igs_widget
+   group_name: insurances
+   mandatory: false
+   order_by: 1
+   opened: false
+   visible: false
+   title_perso: Insurances

@@ -1,0 +1,256 @@
+.widget
+{
+	list-style:none
+}
+
+.widget .widget_top_button, .widget .widget_bottom_button
+{
+        width: 40px;
+        float:left;
+        height: 22px;
+        padding-top: 6px;
+        border-right: 2px solid white;
+        vertical-align:center;
+        text-align:center;
+        margin-right: 2em;
+}
+
+.widget_top_bar_button
+{
+	float:right;
+	margin-top:5px;
+}
+
+.widget .widget_top_bar
+{
+	background-color:#5baabd;
+	height:28px;
+        vertical-align:center;
+	color:white;
+
+}
+.widget .widget_top_bar span
+{
+        cursor:move;
+	padding-top: 8px;
+        margin-left: 40px;
+	display:block;
+	text-shadow: 1px 1px 1px #787878;
+	font-weight:bold;
+}
+
+.widget .widget_content
+{
+	border: 1px solid #5baabd;
+	background-color: #F6FBFB;
+	padding:10px;
+	margin-top:2px;
+}
+
+
+.widget .widget_top_button, .widget .widget_bottom_button {
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size: 15px 7px;
+  background-image: url(/images/expand_white.png);
+}
+.widget .widget_bottom_button {
+    background-image: url(/images/collapse_white.png);
+}
+
+ .widget .widget_top_button img , .widget .widget_bottom_button img
+{
+  width: 15px;
+  display: none;
+}
+/******* Multi COL ***********/
+
+.board
+{
+	margin-top:30px;
+	min-width:866px;
+}
+
+.board_spacer
+{
+	width:4%;
+	float:left;
+}
+
+.board_col
+{
+	width: 48%;
+	float:left;
+/* 	padding-bottom: 100px; */
+	min-height: 250px;
+}
+
+.one_col
+{
+  min-height: 25px;
+/*  border: 1px solid red; */
+  float:none;
+  width:100%;
+}
+.board_col > li
+{
+	margin-bottom: 10px;
+}
+
+
+.drophover
+{
+	background-color:#55afc5;
+	border: 1px dashed #c1cf56;
+}
+
+.ui-sortable-placeholder
+{
+	border: 1px dotted black;
+	visibility: visible !important;
+	height: 100px !important;
+}
+/****************************** Widget Collection *****************************/
+
+.widget_collection_global
+{
+	left:51px;
+	right:51px;
+        position: fixed;
+        top: 32px;
+        z-index: 1100;
+}
+.widget_collection_top
+{
+    border-bottom: 1px solid white;
+    background-color:#55afc5;
+/* 	height:12px;	 */
+    padding:7px;
+}
+.widget_collection_button
+{
+	text-align:center;
+        margin-top: -1px;
+}
+.widget_collection_container
+{
+	background-color:#55afc5;
+
+        column-count: 4;
+        -moz-column-count: 4;
+        -webkit-column-count: 4;
+        -moz-column-count: 4;
+
+        column-fill: balance;
+        -moz-column-fill: balance;
+        -o-column-fill: balance;
+        -webkit-column-fill: balance;
+
+        height: 200px;
+	padding-top:2em;
+        padding-left:1em;
+ 	display:none;
+        overflow: auto;
+}
+.widget_collection_container br
+{
+	clear:both;
+}
+.widget_preview {
+  padding: 2px;
+}
+.widget_preview a[href] {
+  color: white;
+  cursor: copy;
+  text-shadow: 1px 1px 1px GRAY;
+}
+
+/* help */
+
+.widget_preview.hidden {
+  display:block;
+}
+.widget_preview.hidden a[href]{
+    color: black;
+    cursor: help;
+}
+
+.widget_collection_container .no_more
+{
+  text-align:center;
+  color:white;
+  margin-top: 1em;
+/*   text-decoration: underline; */
+  font-size: large;
+}
+
+.no_more_wigets
+{
+  font-size: large;
+  text-align:center;
+
+}
+
+.help_message
+{
+	color: #004A6A;
+	background-color:#C1CF56;
+	padding: 5px;
+}
+
+.close_button
+{
+	float:right;
+	display:block;
+	margin-top: 0.3em;
+}
+/*********************** INNER WIDGET ************************/
+
+ul.saved_search_widget
+{
+	padding-left: 10px;
+	list-style:none;
+	color: #1F7987;
+}
+
+ul.saved_search_widget span , ul.saved_search_widget li > img
+{
+  vertical-align: middle;
+  display: inline-block;
+}
+
+ul.saved_search_widget span
+{
+	margin-left:0.5em;
+}
+
+.w_search_label
+{
+  float:right;
+/*font-size:x-small;
+	color:#004A6A;
+	border:1px solid #00A2D8;
+	width:9em;	*/
+	padding-left:1em;
+}
+
+.w_search_label img
+{
+	float:right;
+	margin-top:1px;
+}
+
+.action_button
+{
+	width: 73px;
+	height: 21px;
+	color:white;
+	text-align:center;
+	font-weight:bold;
+	background-image:url(/images/widget_button.png);
+	float:right;
+}
+
+.search_columns .widget_collection_container {
+  height: 400px;
+}

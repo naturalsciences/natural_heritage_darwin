@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 rel. 2 sp2 (x64) (http://www.altova.com) by Marie-Solange Mukarwema (Museum of Natural Sciences) -->
+<xs:schema xmlns:storage="http://darwin.naturalsciences.be/xsd/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://darwin.naturalsciences.be/xsd/" targetNamespace="http://darwin.naturalsciences.be/xsd/" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xs:element name="Storage">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Localisation" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Institution" type="xs:string" minOccurs="0"/>
+							<xs:element name="Building" type="xs:string" minOccurs="0"/>
+							<xs:element name="Floor" type="xs:string" minOccurs="0"/>
+							<xs:element name="Room" type="xs:string" minOccurs="0"/>
+							<xs:element name="Row" type="xs:string" minOccurs="0"/>
+							<xs:element name="Column" type="xs:string" minOccurs="0"/>
+							<xs:element name="Shelf" type="xs:string" minOccurs="0"/>
+							<xs:element name="Box" type="xs:string" minOccurs="0"/>
+							<xs:element name="Rack" type="xs:string" minOccurs="0"/>
+							<xs:element name="Tube" type="xs:string" minOccurs="0"/>
+							<xs:element name="Position" type="xs:string" minOccurs="0"/>
+							<xs:element name="Barcode" type="xs:string" minOccurs="0"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Codes" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element name="Code">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Type" minOccurs="0"/>
+										<xs:element name="Value" minOccurs="0"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

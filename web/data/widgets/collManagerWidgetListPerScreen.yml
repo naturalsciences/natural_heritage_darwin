@@ -1,0 +1,28 @@
+col0:
+   col_num: 1
+   category: catalogue_collections_widget
+   group_name: collectionsCodes
+   mandatory: false
+   order_by: 0
+   opened: true
+   visible: true
+   title_perso: Default specimens codes
+col1:
+   col_num: 1
+   category: catalogue_collections_widget
+   group_name: comment
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Comments
+col2:
+   col_num: 1
+   category: catalogue_collections_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: External Links
+

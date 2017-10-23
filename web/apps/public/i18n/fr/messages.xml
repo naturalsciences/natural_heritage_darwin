@@ -1,0 +1,952 @@
+<?xml version="1.0" ?><!DOCTYPE xliff  PUBLIC '-//XLIFF//DTD XLIFF//EN'  'http://www.oasis-open.org/committees/xliff/documents/xliff.dtd'><xliff version="1.0">
+  <file datatype="plaintext" original="en" source-language="en" target-language="">
+    <header/>
+    <body>
+          <trans-unit id="1321">
+        <source>Status</source>
+        <target>Statut</target>
+        
+      </trans-unit>
+          <trans-unit id="1322">
+        <source>Gender</source>
+        <target>Genre</target>
+        
+      </trans-unit>
+          <trans-unit id="1191">
+        <source>Logout</source>
+        <target>Déconnexion</target>
+        
+      </trans-unit>
+          <trans-unit id="1192">
+        <source>Collections</source>
+        <target>Collections</target>
+        
+      </trans-unit>
+          <trans-unit id="1193">
+        <source>Collection</source>
+        <target>Collection</target>
+        
+      </trans-unit>
+          <trans-unit id="1194">
+        <source>Name</source>
+        <target>Nom</target>
+        
+      </trans-unit>
+          <trans-unit id="1195">
+        <source>Search</source>
+        <target>Rechercher</target>
+        
+      </trans-unit>
+          <trans-unit id="1196">
+        <source>Details :</source>
+        <target>Détails :</target>
+        
+      </trans-unit>
+          <trans-unit id="1197">
+        <source>Taxonomy</source>
+        <target>Taxonomie</target>
+        
+      </trans-unit>
+          <trans-unit id="1198">
+        <source>Level</source>
+        <target>Niveau</target>
+        
+      </trans-unit>
+          <trans-unit id="1199">
+        <source>Chronostratigraphy</source>
+        <target>Chronostratigraphie</target>
+        
+      </trans-unit>
+          <trans-unit id="1200">
+        <source>Lithostratigraphy</source>
+        <target>Lithostratigraphie</target>
+        
+      </trans-unit>
+          <trans-unit id="1201">
+        <source>Lithology</source>
+        <target>Lithologie</target>
+        
+      </trans-unit>
+          <trans-unit id="1202">
+        <source>Mineralogy</source>
+        <target>Mineralogie</target>
+        
+      </trans-unit>
+          <trans-unit id="1203">
+        <source>Category</source>
+        <target>Catégorie</target>
+        
+      </trans-unit>
+          <trans-unit id="1204">
+        <source>Type</source>
+        <target>Type</target>
+        
+      </trans-unit>
+          <trans-unit id="1205">
+        <source>Institution</source>
+        <target>Institut</target>
+        
+      </trans-unit>
+          <trans-unit id="1206">
+        <source>Names</source>
+        <target>Noms</target>
+        
+      </trans-unit>
+          <trans-unit id="1207">
+        <source>Country</source>
+        <target>Pays</target>
+        
+      </trans-unit>
+          <trans-unit id="1208">
+        <source>Tags</source>
+        <target>Labels</target>
+        
+      </trans-unit>
+          <trans-unit id="1209">
+        <source>Taxon</source>
+        <target>Taxon</target>
+        
+      </trans-unit>
+          <trans-unit id="1210">
+        <source>No Specimen Matching</source>
+        <target>Aucun échantillon correspondant</target>
+        
+      </trans-unit>
+          <trans-unit id="1211">
+        <source>Our Collections</source>
+        <target>Nos Collections</target>
+        
+      </trans-unit>
+          <trans-unit id="1212">
+        <source>Take a tour</source>
+        <target>Visite guidée</target>
+        
+      </trans-unit>
+          <trans-unit id="1213">
+        <source>Contacts</source>
+        <target>Contacts</target>
+        
+      </trans-unit>
+          <trans-unit id="1214">
+        <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</source>
+        <target>[0]Aucun résultat |[1]Votre requête a trouvé 1 enregistrement|(1,+Inf]Votre requête a trouvé %1% enregistrements</target>
+        
+      </trans-unit>
+          <trans-unit id="1215">
+        <source>About</source>
+        <target>A propos</target>
+        
+      </trans-unit>
+          <trans-unit id="1216">
+        <source>About Us</source>
+        <target>A propos de nous</target>
+        
+      </trans-unit>
+          <trans-unit id="1217">
+        <source>Contact</source>
+        <target>Contact</target>
+        
+      </trans-unit>
+          <trans-unit id="1219">
+        <source>If you have a question about a specimen, please contact the collection manager of the specimen. &lt;br /&gt;
+      you can find his or her e-mail address in the record.</source>
+        <target>Si vous avez des questions au sujet des échantillons, veuillez contacter l'administrateur de la collection associée. &lt;br /&gt; Vous pouvez trouver son adresse mail dans l'enregistrement</target>
+        
+      </trans-unit>
+          <trans-unit id="1220">
+        <source>Welcome In DaRWIN</source>
+        <target>Bienvenue sur DaRWIN</target>
+        
+      </trans-unit>
+          <trans-unit id="1221">
+        <source>Discover DaRWIN</source>
+        <target>Découvrir DaRWIN</target>
+        
+      </trans-unit>
+          <trans-unit id="1222">
+        <source>Discover the DaRWIN Interface</source>
+        <target>Découvir l'interface DaRWIN</target>
+        
+      </trans-unit>
+          <trans-unit id="1223">
+        <source>DaRWIN is not just a website for displaying our collections, it's an entire product of collection management.
+    &lt;br /&gt;You can register free of charge and discover this nice tool.&lt;br /&gt;
+    Let's take a look of some of our amazing features :</source>
+        <target>DaRWIN n'est pas qu'un simple site web affichant nos collections, c'est un produit de gestion de collections.
+        &lt;br /&gt;Vous pouvez vous enregistrer librement et découvrir ce merveilleux outils.&lt;br /&gt;
+        Voyons ensemble quelques-unes de nos surprenantes fonctionnalité :
+        </target>
+        
+      </trans-unit>
+          <trans-unit id="1224">
+        <source>Register Now!</source>
+        <target>Inscription !</target>
+        
+      </trans-unit>
+          <trans-unit id="1225">
+        <source>Friendly Working Space:</source>
+        <target>Espace de travail convivial:</target>
+        
+      </trans-unit>
+          <trans-unit id="1226">
+        <source>Everything in the DaRWIN interface is build to make &lt;strong&gt;YOUR&lt;/strong&gt; job easier.&lt;br /&gt;
+     You work on a set of specimens? You want to save a search you often use? you want to know who has changed the info?&lt;br /&gt;
+     &lt;strong&gt;DaRWIN can do that!&lt;/strong&gt;</source>
+        <target>Tout dans l'interface de DaRWIN est conçu pour &lt;strong&gt;VOUS&lt;/strong&gt; simplifier le travail.&lt;br /&gt;
+     Vous travaillez sur un groupe d'échantillon? vous voulez sauvegarder un recherche que vous effectuez souvent? vous voulez savoir qui a modifié des informations ?&lt;br /&gt;
+     &lt;strong&gt;DaRWIN peut le faire!&lt;/strong&gt;</target>
+        
+      </trans-unit>
+          <trans-unit id="1227">
+        <source>Enhanced Search :</source>
+        <target>Recherche améliorée :</target>
+        
+      </trans-unit>
+          <trans-unit id="1319">
+        <source>The captcha is not valid (%error%).</source>
+        <target>Le captcha est invalide (%error%).</target>
+        
+      </trans-unit>
+          <trans-unit id="1320">
+        <source>I accept the </source>
+        <target>J'accepte les </target>
+        
+      </trans-unit>
+          <trans-unit id="1228">
+        <source>You find the public search a little bit too restrictive? &lt;br /&gt;
+      Let's try our DaRWIN search tool. You will be able to search for tons of information.&lt;br /&gt;
+      From Map to complex taxonomy and synonymies searches.</source>
+        <target>Vous trouvez la recherche publique un peu trop restrictive? &lt;br /&gt;
+      Venez essayer l'outil de recherche DaRWIN. Vous serez capable de rechercher une tonne d'information.&lt;br /&gt;
+      De la recherche sur carte à la recherche complexe taxonomic et de synonymes.</target>
+        
+      </trans-unit>
+          <trans-unit id="1229">
+        <source>Customizable Interface :</source>
+        <target>Interface personalisable :</target>
+        
+      </trans-unit>
+          <trans-unit id="1230">
+        <source>In the Darwin tool you have the ability to customize freely your interface.&lt;br /&gt;
+      You are only interested in taxonomy? No problem, no other infos will clutter your tool.&lt;br /&gt;
+      Hide or minimize the information you don't need to focus on.</source>
+        <target>Dans l'outil DaRWIN, vous avez la intéressé de personnaliser librement votre interface.&lt;br /&gt;
+      Vous êtes intéressé uniquement par la taxonomie? Aucun problème, aucunes autres informations ne viendront perturber votre outils.&lt;br /&gt;
+      Cacher ou minimiser les informations dont vous n'avez pas besoin pour vous concentrer sur votre travail.</target>
+        
+      </trans-unit>
+          <trans-unit id="1231">
+        <source>About us</source>
+        <target>A propos de nous</target>
+        
+      </trans-unit>
+          <trans-unit id="1232">
+        <source>Darwin is an &lt;strong&gt;Open Source&lt;/strong&gt; tool for collection management.&lt;br /&gt;
+    It has been build by the IT departement of the Royal Belgian Institute of Natural Sciences.&lt;br /&gt;</source>
+        <target>Darwin est un outil &lt;strong&gt;Libre&lt;/strong&gt; pour la gestion de collections.&lt;br /&gt;
+    Il a été conçu par le département IT de l'Institut Royal des Sciences Naturelles de Belgique.&lt;br /&gt;</target>
+        
+      </trans-unit>
+          <trans-unit id="1233">
+        <source>Our Partners :</source>
+        <target>Nos partenaires :</target>
+        
+      </trans-unit>
+          <trans-unit id="1234">
+        <source>http://www.naturalsciences.be</source>
+        <target>http://www.sciencesnaturelles.be</target>
+        
+      </trans-unit>
+          <trans-unit id="1235">
+        <source>Royal Belgian Institute of Natural Sciences</source>
+        <target>Institut Royal des Sciences Naturelles de Belgique</target>
+        
+      </trans-unit>
+          <trans-unit id="1236">
+        <source>http://www.belspo.be</source>
+        <target>http://www.belspo.be</target>
+        
+      </trans-unit>
+          <trans-unit id="1237">
+        <source>The Belgian Federal Science Policy Office</source>
+        <target>Politique Scientifique Fédérale</target>
+        
+      </trans-unit>
+          <trans-unit id="1238">
+        <source>Register</source>
+        <target>S'enregistrer</target>
+        
+      </trans-unit>
+          <trans-unit id="1239">
+        <source>Go to Backend</source>
+        <target>Aller sur DaRWIN</target>
+        
+      </trans-unit>
+          <trans-unit id="1240">
+        <source>Chronostratigraphic unit</source>
+        <target>unité Chronostratigraphique</target>
+        
+      </trans-unit>
+          <trans-unit id="1241">
+        <source>Lithostratigraphic unit</source>
+        <target>unité Lithostratigraphique</target>
+        
+      </trans-unit>
+          <trans-unit id="1242">
+        <source>Lithologic unit</source>
+        <target>unité Lithologique</target>
+        
+      </trans-unit>
+          <trans-unit id="1243">
+        <source>Mineralogic unit</source>
+        <target>unité Minéralogique</target>
+        
+      </trans-unit>
+          <trans-unit id="1244">
+        <source>Expedition</source>
+        <target>Expédition</target>
+        
+      </trans-unit>
+          <trans-unit id="1245">
+        <source>Taxon common name</source>
+        <target>Nom courant taxonomique</target>
+        
+      </trans-unit>
+          <trans-unit id="1246">
+        <source>Chrono common name</source>
+        <target>Nom courant Chronostratigraphique</target>
+        
+      </trans-unit>
+          <trans-unit id="1247">
+        <source>Litho common name</source>
+        <target>Nom courant Lithostratigraphique</target>
+        
+      </trans-unit>
+          <trans-unit id="1248">
+        <source>Lithologic common name</source>
+        <target>Nom courant Lithologique</target>
+        
+      </trans-unit>
+          <trans-unit id="1249">
+        <source>Mineral common name</source>
+        <target>Nom courant Minéralogique</target>
+        
+      </trans-unit>
+          <trans-unit id="1250">
+        <source>Sex</source>
+        <target>Sexe</target>
+        
+      </trans-unit>
+          <trans-unit id="1251">
+        <source>State</source>
+        <target>Etat</target>
+        
+      </trans-unit>
+          <trans-unit id="1252">
+        <source>Stage</source>
+        <target>Etape</target>
+        
+      </trans-unit>
+          <trans-unit id="1253">
+        <source>Social Status</source>
+        <target>Status social</target>
+        
+      </trans-unit>
+          <trans-unit id="1254">
+        <source>Rock Form</source>
+        <target>Forme rocheuse</target>
+        
+      </trans-unit>
+          <trans-unit id="1255">
+        <source>Individual Count</source>
+        <target>Nombre d'individus</target>
+        
+      </trans-unit>
+          <trans-unit id="1256">
+        <source>View Specimens</source>
+        <target>Voir les échatillons</target>
+        
+      </trans-unit>
+          <trans-unit id="1257">
+        <source>Specimen Record</source>
+        <target>Enregistrement d'échantillon</target>
+        
+      </trans-unit>
+          <trans-unit id="1258">
+        <source>Conservator</source>
+        <target>Conservateur</target>
+        
+      </trans-unit>
+          <trans-unit id="1259">
+        <source>Common Names</source>
+        <target>Noms courants</target>
+        
+      </trans-unit>
+          <trans-unit id="1260">
+        <source>Classification</source>
+        <target>Classification</target>
+        
+      </trans-unit>
+          <trans-unit id="1261">
+        <source>Community/language</source>
+        <target>Communauté/langue</target>
+        
+      </trans-unit>
+          <trans-unit id="1262">
+        <source>Classifications</source>
+        <target>Classifications</target>
+        
+      </trans-unit>
+          <trans-unit id="1263">
+        <source>level</source>
+        <target>Niveau</target>
+        
+      </trans-unit>
+          <trans-unit id="1265">
+        <source>Lithostatigraphy</source>
+        <target>Lithostratigraphie</target>
+        
+      </trans-unit>
+          <trans-unit id="1266">
+        <source>Specimen Characteristics</source>
+        <target>Caractéristique de l'échantillon</target>
+        
+      </trans-unit>
+          <trans-unit id="1267">
+        <source>Number of individual</source>
+        <target>Nombre d'individus</target>
+        
+      </trans-unit>
+          <trans-unit id="1268">
+        <source>Between </source>
+        <target>Entre </target>
+        
+      </trans-unit>
+          <trans-unit id="1269">
+        <source>Close this record</source>
+        <target>Fermer cette fiche</target>
+        
+      </trans-unit>
+          <trans-unit id="1270">
+        <source>Physical</source>
+        <target>Physique</target>
+        
+      </trans-unit>
+          <trans-unit id="1272">
+        <source>Other</source>
+        <target>Autre</target>
+        
+      </trans-unit>
+          <trans-unit id="1273">
+        <source>Search Specimens/Rocks/Minerals</source>
+        <target>Recherche échantillon/roches/Minéraux</target>
+        
+      </trans-unit>
+          <trans-unit id="1274">
+        <source>Specimen search criteria</source>
+        <target>Critères de recherche d'échantillon</target>
+        
+      </trans-unit>
+          <trans-unit id="1275">
+        <source>Scientific Name</source>
+        <target>Nom scientifique</target>
+        
+      </trans-unit>
+          <trans-unit id="1276">
+        <source>Common Name</source>
+        <target>Nom courant</target>
+        
+      </trans-unit>
+          <trans-unit id="1277">
+        <source>Countries</source>
+        <target>Pays</target>
+        
+      </trans-unit>
+          <trans-unit id="1278">
+        <source>Please use &quot;;&quot; as tag separator.</source>
+        <target>Utilisez le &quot;;&quot; comme séparateur de label.</target>
+        
+      </trans-unit>
+          <trans-unit id="1279">
+        <source>Types</source>
+        <target>Types</target>
+        
+      </trans-unit>
+          <trans-unit id="1280">
+        <source>Sexes</source>
+        <target>Sexes</target>
+        
+      </trans-unit>
+          <trans-unit id="1281">
+        <source>Stages</source>
+        <target>Etapes</target>
+        
+      </trans-unit>
+          <trans-unit id="1282">
+        <source>Clear</source>
+        <target>Réinitialiser</target>
+        
+      </trans-unit>
+          <trans-unit id="1283">
+        <source>Search results</source>
+        <target>Résultat de la recherche</target>
+        
+      </trans-unit>
+          <trans-unit id="1284">
+        <source>Search Results</source>
+        <target>Résultat de la recherche</target>
+        
+      </trans-unit>
+          <trans-unit id="1285">
+        <source>Back to criteria</source>
+        <target>Retour aux critères</target>
+        
+      </trans-unit>
+          <trans-unit id="1286">
+        <source>View</source>
+        <target>Aperçu</target>
+        
+      </trans-unit>
+          <trans-unit id="1287">
+        <source>Specimen criteria</source>
+        <target>Critères à afficher</target>
+        
+      </trans-unit>
+          <trans-unit id="1288">
+        <source>Specimen</source>
+        <target>Echantillon</target>
+        
+      </trans-unit>
+          <trans-unit id="1289">
+        <source>Individual</source>
+        <target>Individu</target>
+        
+      </trans-unit>
+          <trans-unit id="1291">
+        <source>Your password has been successfully renewed.</source>
+        <target>Votre mot de passe à été renouvellé avec succès.</target>
+        
+      </trans-unit>
+          <trans-unit id="1292">
+        <source>You can now log in and enjoy our enhanced collection services.</source>
+        <target>Vous pouvez à présent vous connecter et profiter des services de nos collections.</target>
+        
+      </trans-unit>
+          <trans-unit id="1294">
+        <source>Dear</source>
+        <target>Cher(e)</target>
+        
+      </trans-unit>
+          <trans-unit id="1295">
+        <source>Thank you for having registered on DaRWIN 2.</source>
+        <target>Merci de vous être inscrit(e) sur DaRWIN 2.</target>
+        
+      </trans-unit>
+          <trans-unit id="1296">
+        <source>You should have received a reminder of your username and password on the e-mail address provided.</source>
+        <target>Vous devriez avoir reçu un rappel sur votre identifiant et mot de passe à l'adresse email que vous nous avez fourni</target>
+        
+      </trans-unit>
+          <trans-unit id="1297">
+        <source>Please fill in the application form</source>
+        <target>Veuillez remplir le formulaire</target>
+        
+      </trans-unit>
+          <trans-unit id="1298">
+        <source>For your reminder, here is your user name:</source>
+        <target>A titre de rappel, voici votre nom d'utilisateur:</target>
+        
+      </trans-unit>
+          <trans-unit id="1299">
+        <source>Rocks</source>
+        <target>roche</target>
+        
+      </trans-unit>
+          <trans-unit id="1300">
+        <source>Mineral</source>
+        <target>Minéral</target>
+        
+      </trans-unit>
+          <trans-unit id="1301">
+        <source>Records per page: </source>
+        <target>Enregistrements par page: </target>
+        
+      </trans-unit>
+          <trans-unit id="1302">
+        <source>&quot;%value%&quot; must be at least %min_length% characters.</source>
+        <target>&quot;%value%&quot; Doit être d'au moins %min_length% caractères.</target>
+        
+      </trans-unit>
+          <trans-unit id="1303">
+        <source>Password must be at least %min_length% characters length</source>
+        <target>Le mot de passe doit avoir une longueur d'au moins %min_length% caratères</target>
+        
+      </trans-unit>
+          <trans-unit id="1304">
+        <source>Passwords must be equal and may not contain spaces</source>
+        <target>Les mots de passe doivent être identiques et ne pas contenir d'espaces</target>
+        
+      </trans-unit>
+          <trans-unit id="1305">
+        <source>You cannot register without accepting DaRWIN 2  terms of use</source>
+        <target>Vous ne pouvez pas vous inscrire sans accepter les termes d'utilisation de DaRWIN 2</target>
+        
+      </trans-unit>
+          <trans-unit id="1306">
+        <source>Required.</source>
+        <target>Requis.</target>
+        
+      </trans-unit>
+          <trans-unit id="1307">
+        <source>If you've lost your password, please</source>
+        <target>Si vous avez perdu votre mot de passe, veuillez</target>
+        
+      </trans-unit>
+          <trans-unit id="1308">
+        <source>reset your password</source>
+        <target>Réinitialiser votre mot de passe</target>
+        
+      </trans-unit>
+          <trans-unit id="1309">
+        <source>Send me a 'reset account' mail</source>
+        <target>Envoyez moi un mail de 'reinitialisation de compte'</target>
+        
+      </trans-unit>
+          <trans-unit id="1310">
+        <source>Reset your account.</source>
+        <target>Réinitialiser votre compte.</target>
+        
+      </trans-unit>
+          <trans-unit id="1311">
+        <source>Your login</source>
+        <target>Votre E-mail</target>
+        
+      </trans-unit>
+          <trans-unit id="1313">
+        <source>We didn't find any reference with the login and password you provided</source>
+        <target>Nous n'avons pas trouvé de correspondance avec le nom d'utilisateur et le mot de passe que vous avez spécifié</target>
+        
+      </trans-unit>
+          <trans-unit id="1314">
+        <source>E-mail is required</source>
+        <target>Le champs E-mail est requis</target>
+        
+      </trans-unit>
+          <trans-unit id="1315">
+        <source>Invalid E-mail address</source>
+        <target>Cet E-mail n'est pas une adresse valide</target>
+        
+      </trans-unit>
+          <trans-unit id="1316">
+        <source>must be at least 4 characters.</source>
+        <target>Doit être au moins de 4 caractères.</target>
+        
+      </trans-unit>
+          <trans-unit id="1317">
+        <source>Bad login or password</source>
+        <target>Mauvais identifiant ou mot de passe</target>
+        
+      </trans-unit>
+          <trans-unit id="1318">
+        <source>Login is required</source>
+        <target>Le champs identifiant est requis</target>
+        
+      </trans-unit>
+          <trans-unit id="1323">
+        <source>Family Name</source>
+        <target>Nom de famille</target>
+        
+      </trans-unit>
+          <trans-unit id="1324">
+        <source>Given Name</source>
+        <target>Prénom</target>
+        
+      </trans-unit>
+          <trans-unit id="1325">
+        <source>Login</source>
+        <target>Identifiant</target>
+        
+      </trans-unit>
+          <trans-unit id="1326">
+        <source>Password</source>
+        <target>Mot de passe</target>
+        
+      </trans-unit>
+          <trans-unit id="1327">
+        <source>Confirm password</source>
+        <target>confirmer mot de passe</target>
+        
+      </trans-unit>
+          <trans-unit id="1328">
+        <source>e-mail</source>
+        <target>Email</target>
+        
+      </trans-unit>
+          <trans-unit id="1329">
+        <source>Preferred language</source>
+        <target>Langue préférée</target>
+        
+      </trans-unit>
+          <trans-unit id="1330">
+        <source>Title</source>
+        <target>Titre</target>
+        
+      </trans-unit>
+          <trans-unit id="1331">
+        <source>Captcha</source>
+        <target>Captcha</target>
+        
+      </trans-unit>
+          <trans-unit id="1332">
+        <source>Moral person</source>
+        <target>Personne morale</target>
+        
+      </trans-unit>
+          <trans-unit id="1333">
+        <source>Physical person</source>
+        <target>Personne physique</target>
+        
+      </trans-unit>
+          <trans-unit id="1334">
+        <source>Name is required</source>
+        <target>Le nom est requis</target>
+        
+      </trans-unit>
+          <trans-unit id="1335">
+        <source>E-mail is not of a valid form</source>
+        <target>L'Email saisi n'est pas un Email correct</target>
+        
+      </trans-unit>
+          <trans-unit id="1336">
+        <source>Password must contain at least :&lt;br /&gt; * a case mix&lt;br /&gt; * one digit&lt;br /&gt; * minimum 6 characters length</source>
+        <target>Le mot de passe doit contenir au moins :&lt;br /&gt; * une majuscule&lt;br /&gt; * un chiffre&lt;br /&gt; * 6 caractères</target>
+        
+      </trans-unit>
+          <trans-unit id="1339">
+        <source>Username</source>
+        <target>Nom d'utilisateur</target>
+        
+      </trans-unit>
+          <trans-unit id="1341">
+        <source>Scientists wishing to visit one of our collections should contact the collection manager directly.  For more information on how to apply for a visit, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</source>
+        <target>Les scientifiques souhaitant visiter l'une de nos collections sont priés de prendre contact avec le gestionnaire de collections. Pour plus d'informations sur la façon de faire une demande de visite, veuillez vous référer aux règlements IRSNB ci-dessous.</target>
+        
+      </trans-unit>
+          <trans-unit id="1342">
+        <source>Academic personnel wishing to loan collection objects should contact the collection manager directly.  For more information on how to apply for a loan, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</source>
+        <target>Toute personne académique souhaitant emprunter des objets de collection est priée de prendre contact avec le gestionnaire de collections. Pour plus d'informations concernant la façon de faire une demande de prêt, veuillez vous référer aux règlements IRSNB ci-dessous.</target>
+        
+      </trans-unit>
+          <trans-unit id="1343">
+        <source>Settlement of loans for study</source>
+        <target>Règlement des prêts pour étude</target>
+        
+      </trans-unit>
+          <trans-unit id="1344">
+        <source>Settlement of external visiting scientists</source>
+        <target>Règlement des visiteurs scientifiques externes</target>
+        
+      </trans-unit>
+          <trans-unit id="1345">
+        <source>terms of use</source>
+        <target>conditions d'utilisation</target>
+        
+      </trans-unit>
+          <trans-unit id="1346">
+        <source>Dear %username%</source>
+        <target>Cher(e) %username%</target>
+        
+      </trans-unit>
+          <trans-unit id="1347">
+        <source>Dear %usertitle% %username%</source>
+        <target>Cher(e) %usertitle% %username%</target>
+        
+      </trans-unit>
+          <trans-unit id="1348">
+        <source>To log you in, you can visit us on %darwinurl%</source>
+        <target>Vous pouvez à présent vous connecter sur %darwinurl%</target>
+        
+      </trans-unit>
+          <trans-unit id="1350">
+        <source>User name: %username%</source>
+        <target>Nom d'utilisateur: %username%</target>
+        
+      </trans-unit>
+          <trans-unit id="1351">
+        <source>Abbreviation</source>
+        <target>Abréviation</target>
+        
+      </trans-unit>
+          <trans-unit id="1368">
+        <source>DaRWIN 2 registration</source>
+        <target>Inscription DARWIN 2</target>
+        
+      </trans-unit>
+          <trans-unit id="1369">
+        <source>DaRWIN 2 team</source>
+        <target>L'équipe DARWIN 2</target>
+        
+      </trans-unit>
+          <trans-unit id="1483">
+        <source>Your Name</source>
+        <target>Votre Nom</target>
+        
+      </trans-unit>
+          <trans-unit id="1484">
+        <source>anonymous</source>
+        <target>Anonyme</target>
+        
+      </trans-unit>
+          <trans-unit id="1485">
+        <source>You think there's a mistake ? please suggest us a correction</source>
+        <target>Vous pensez qu'il y a une erreur ? Vous pouvez nous proposer une correction</target>
+        
+      </trans-unit>
+          <trans-unit id="1486">
+        <source>Submit</source>
+        <target>Envoyer</target>
+        
+      </trans-unit>
+          <trans-unit id="1487">
+        <source>Comment</source>
+        <target>Commentaire</target>
+        
+      </trans-unit>
+          <trans-unit id="1488">
+        <source>Thank you for your help</source>
+        <target>Merci pour votre aide</target>
+        
+      </trans-unit>
+          <trans-unit id="1606">
+        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
+        <target>Si vous rencontrez des problèmes dans l'utilisation de l'outil ou si vous souhaitez contribuer: envoyez-nous un e-mail à &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</target>
+        
+      </trans-unit>
+          <trans-unit id="1607">
+        <source>Oops! Page Not Found</source>
+        <target>Oups ! La page n'a pu être trouvée</target>
+        
+      </trans-unit>
+          <trans-unit id="1608">
+        <source>The server returned a 404 response.</source>
+        <target>Le serveur a retourné une erreur 404.</target>
+        
+      </trans-unit>
+          <trans-unit id="1609">
+        <source>Did you type the URL?</source>
+        <target>Avez-vous rentré l'URL manuellement ?</target>
+        
+      </trans-unit>
+          <trans-unit id="1610">
+        <source>You may have typed the address (URL) incorrectly. Check it to make sure you've got the exact right spelling, capitalization, etc.</source>
+        <target>Il se peut que vous ayez incorrectement entré l'adresse de la page (URL). Veuillez vérifier qu'elle est correctement épelée, la casse des caractères, etc...</target>
+        
+      </trans-unit>
+          <trans-unit id="1611">
+        <source>Did you follow a link from somewhere else at this site?</source>
+        <target>Avez-vous suivi un lien depuis une autre page de ce site ?</target>
+        
+      </trans-unit>
+          <trans-unit id="1612">
+        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
+        <target>Si vous avez été redirigé vers cette page depuis une autre page de ce site, nous vous serions gré de bien vouloir nous le signaler par mail à l'adresse suivante: &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; afin que nous puissions corriger cette erreur.</target>
+        
+      </trans-unit>
+          <trans-unit id="1613">
+        <source>Did you follow a link from another site?</source>
+        <target>Avez-vous suivi un lien depuis la page d'un autre site ?</target>
+        
+      </trans-unit>
+          <trans-unit id="1614">
+        <source>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</source>
+        <target>Les liens présents sur d'autres sites peuvent parfois être obsolètes ou mal écrits. Nous vous serions gré de bien vouloir nous le signaler par mail à l'adresse suivante: &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; afin que nous puissions contacter l'administrateur du site concerné.</target>
+        
+      </trans-unit>
+          <trans-unit id="1615">
+        <source>What's next</source>
+        <target>Autres possibilités</target>
+        
+      </trans-unit>
+          <trans-unit id="1616">
+        <source>Back to previous page</source>
+        <target>Retour à la page précédente</target>
+        
+      </trans-unit>
+          <trans-unit id="1706">
+        <source>Related Files</source>
+        <target>Fichiers liés</target>
+        
+      </trans-unit>
+          <trans-unit id="1707">
+        <source>Download</source>
+        <target>Télécharger</target>
+        
+      </trans-unit>
+      <trans-unit id="1708">
+        <source>Staff Member</source>
+        <target>Membre de l'équipe</target>
+        
+      </trans-unit>
+      <trans-unit id="1709">
+        <source>Zoological Search</source>
+        <target>Recherche Zoologique</target>
+        
+      </trans-unit>
+      <trans-unit id="1710">
+        <source>Geo/Paleo Search</source>
+        <target>Recherche Geo/Paleo</target>
+        
+      </trans-unit>
+      <trans-unit id="1711">
+        <source>Properties</source>
+        <target>Propriétés</target>
+        
+      </trans-unit>
+      <trans-unit id="1712">
+        <source>Codes</source>
+        <target>Codes</target>
+        
+      </trans-unit>
+      <trans-unit id="1713">
+        <source>Property type</source>
+        <target>Type</target>
+        
+      </trans-unit>
+      <trans-unit id="1714">
+        <source>Applies To</source>
+        <target>S'applique a</target>
+        
+      </trans-unit>
+      <trans-unit id="1715">
+        <source>Date From</source>
+        <target>Date début</target>
+        
+      </trans-unit>
+      <trans-unit id="176">
+        <source>Date To</source>
+        <target>Date fin</target>
+        
+      </trans-unit>
+      <trans-unit id="1717">
+        <source>Value</source>
+        <target>Valeur</target>
+        
+      </trans-unit>
+      <trans-unit id="1718">
+        <source>Specimen State</source>
+        <target>Etat de l'échantillon</target>
+        
+      </trans-unit>
+      <trans-unit id="1719">
+        <source>You cannot register without accepting DaRWIN 2 terms of use</source>
+        <target>Vous ne pouvez vous enregistrer sans avoir accepté les conditions d'utilisation de DaRWIN2</target>
+        
+      </trans-unit>
+      <trans-unit id="1720">
+        <source>Recommended browser for DaRWIN :</source>
+        <target>Navigateurs recommandés pour DaRWIN :</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,961 @@
+UsersTracking:
+    ut1:
+        referenced_relation: taxonomy
+        record_id: 4
+        Users: u1
+        action: 'update'
+        old_value: '"name"=>"Hello"'
+        new_value: '"name"=>"world"'
+Gtu:
+    gtu1:
+        code: 3615Danger
+        gtu_from_date_mask: 56
+        gtu_from_date: '2006-12-01'
+        gtu_to_date_mask: 56
+        gtu_to_date: '2006-12-12'
+    gtu2:
+        code: Antarctica
+        gtu_from_date: '1988-04-01'
+        gtu_from_date_mask: 48
+        gtu_to_date: '1988-07-31'
+        gtu_to_date_mask: 48
+    gtu3:
+        code: irsnb
+    gtu4:
+        code: tervuren
+Taxonomy:
+    tam1:
+        id: '-1'
+        name: Eucaryota
+        level_ref: 1
+        status: valid
+        parent_ref: ~
+    ta1:
+        name: Animalia
+        level_ref: 2
+        status: valid
+        parent_ref: '-1'
+    ta8:
+        id: 8
+        name: Falco Class
+        level_ref: 12
+        status: valid
+        Parent: ta1
+    ta9:
+        id: 9
+        name: Falco Order
+        level_ref: 28
+        status: valid
+        Parent: ta8
+    ta10:
+        id: 10
+        name: Falco Fam
+        level_ref: 34
+        status: valid
+        Parent: ta9
+    ta11:
+        id: 11
+        name: Falco genre
+        level_ref: 41
+        status: valid
+        Parent: ta10
+    ta2:
+        id: 2
+        name: Falco Peregrinus
+        level_ref: 48
+        status: valid
+        Parent: ta11
+    ta3:
+        id: 3
+        name: Falco Peregrinus Tunstall, 1771
+        level_ref: 49
+        status: valid
+        Parent: ta2
+    ta4:
+        id: 4
+        name: Falco Peregrinus (Duchesnus Brulus 1912)
+        level_ref: 49
+        status: invalid
+        Parent: ta2
+    ta5:
+        id: 5
+        name: Falco Peregrinus recombinus
+        level_ref: 49
+        status: valid
+        Parent: ta2
+    ta6:
+        id: 6
+        name: Falco Peregrinus eliticus
+        level_ref: 52
+        status: valid
+        Parent: ta5
+
+Expeditions:
+    ex1:
+        name: 'PNG77'
+        expedition_from_date: '1977-04-26'
+        expedition_from_date_mask: 56
+        expedition_to_date: '1977-06-25'
+        expedition_to_date_mask: 56
+    ex2:
+        name: 'Informatica 75'
+        expedition_from_date: '1975-02-24'
+        expedition_from_date_mask: 56
+        expedition_to_date: '2030-12-31'
+        expedition_to_date_mask: 0
+    ex3:
+        name: 'C Noël C Noël Vive le vent divers'
+        expedition_to_date: '2002-12-24'
+        expedition_to_date_mask: 56
+    ex4:
+        name: 'Antarctica 1988'
+        expedition_from_date: '1988-04-01'
+        expedition_from_date_mask: 48
+        expedition_to_date: '1988-07-31'
+        expedition_to_date_mask: 48
+    ex5:
+        name: 'Pollux Expedition'
+        expedition_from_date: '2003-03-12'
+        expedition_from_date_mask: 56
+        expedition_to_date: '2005-12-31'
+        expedition_to_date_mask: 32
+    ex6:
+        name: 'Mister B Expe'
+        expedition_from_date: '2004-01-01'
+        expedition_from_date_mask: 32
+        expedition_to_date: '2004-12-31'
+        expedition_to_date_mask: 32
+    ex7:
+        name: 'Cathy Expe'
+        expedition_from_date: '0001-01-01'
+        expedition_from_date_mask: 0
+        expedition_to_date: '2009-12-31'
+        expedition_to_date_mask: 32
+    ex8:
+        name: 'No date'
+        expedition_from_date: '0001-01-01'
+        expedition_from_date_mask: 0
+        expedition_to_date: '2035-12-31'
+        expedition_to_date_mask: 0
+
+Igs:
+    ig0:
+        ig_num: '2653'
+        ig_date: '1868-06-24'
+        ig_date_mask: 56
+    ig1:
+        ig_num: '2692'
+    ig2:
+        ig_num: '2695'
+    ig3:
+        ig_num: '2693'
+    ig4:
+        ig_num: '21Ter'
+        ig_date: '1847-07-23'
+        ig_date_mask: 56
+    ig5:
+        ig_num: '10795'
+        ig_date: '1936-03-13'
+        ig_date_mask: 56
+    ig6:
+        ig_num: '3881'
+        ig_date: '1877-01-01'
+        ig_date_mask: 32
+
+CatalogueRelationships:
+    catart1:
+        referenced_relation: taxonomy
+        relationship_type: current_name
+        record_id_1: 4
+        record_id_2: 3
+    catart2:
+        referenced_relation: taxonomy
+        relationship_type: recombined from
+        record_id_1: 4
+        record_id_2: 5
+Users:
+    u1:
+        is_physical: true
+        title: Mr
+        family_name: Evil
+        given_name: Root
+        gender: M
+        db_user_type: 8
+        People: p5
+        
+UsersLoginInfos:
+    u1l1:
+        User: u1
+        user_name: root
+        password: "<?php echo sha1(sfConfig::get('dw_salt').'evil');?>"
+
+MySavedSearches:
+    ss1_1:
+        User: u1
+        name: All specimens encoded by me
+        search_criterias: ""
+        favorite: true
+        modification_date_time: "<?php echo date('Y-m-d H:i:s');?>"
+        visible_fields_in_result: ""
+    ss1_2:
+        User: u1
+        name: All Mamals
+        search_criterias: ""
+        favorite: false
+        modification_date_time: "<?php echo date('Y-m-d H:i:s');?>"
+        visible_fields_in_result: ""
+    ss1_3:
+        User: u1
+        is_only_id: true
+        name: Specimen 4
+        search_criterias: '<?php echo json_encode(array('specimen_search_filters'=>array('spec_ids'=>'4')));?>'
+        favorite: true
+        modification_date_time: "<?php echo date('Y-m-d H:i:s');?>"
+        visible_fields_in_result: "gtu|expedition|count"
+People:
+    p1:
+        is_physical: false
+        family_name: Institut Royal des Sciences Naturelles de Belgique
+        additional_names: RBINS
+        sub_type: Federal institution
+        birth_date: "<?php echo date('Y-m-d');?>"
+    p2:
+        is_physical: false
+        family_name: UGMM
+        birth_date: "<?php echo date('Y-m-d');?>"
+    p3:
+        is_physical: true
+        title: Mr
+        family_name: Duchesne
+        given_name: Poilux
+        gender: M
+    p4:
+        is_physical: true
+        title: Mrs
+        family_name: Duchesne
+        given_name: ML
+        gender: F
+    p5:
+        is_physical: true
+        family_name: Root
+        given_name: Evil
+        gender: M
+    p6:
+        is_physical: true
+        title: Mr
+        family_name: Chambert
+        given_name: Yann
+        gender: M   
+  
+Collections:
+    c1:
+        code: mol
+        name: Molusca
+        Institution: p2
+        Manager: u1
+        code_prefix: INV.
+        code_prefix_separator: "-"
+        code_suffix: Neo
+        code_suffix_separator: "-"
+    c2:
+        code: vert
+        name: Vertebrates
+        Institution: p1
+        Manager: u1
+        code_prefix: VERT.
+        code_prefix_separator: "/"
+        code_auto_increment: true
+    c3:
+        code: amp
+        name: Amphibia
+        Institution: p1
+        Manager: u1
+        Parent: c2
+    c4:
+        code: ave
+        name: Aves
+        Institution: p1
+        Manager: u1
+        Parent: c2
+        is_public: false
+    c5: 
+        code: fav
+        name: Fossile Aves
+        Institution: p1
+        Manager: u1
+        Parent: c4                            
+
+CollectingMethods:
+    cm1:
+        method: Trappist catch
+    cm2:
+        method: Lie
+
+CollectingTools:
+    ct1:
+        tool: Cruche
+    ct2:
+        tool: Barre à mine
+
+Specimens:
+    sp1:
+        id: 1
+        Collections : c1        
+        acquisition_date: '2001-01-01'
+        acquisition_category: expedition
+        Taxonomy: ta1
+    sp2:
+        id: 2
+        Collections : c2        
+        category: observation
+        acquisition_date: '2001-03-01'
+        acquisition_category: theft
+        Taxonomy: ta2
+        Gtu: gtu1
+    sp3:
+        id: 3
+        Collections : c3        
+        acquisition_date: '2001-02-01'
+        acquisition_category: expedition
+        Taxonomy: ta3
+        Gtu: gtu2
+    sp4:
+        id: 4
+        Collections : c3        
+        acquisition_date: '2009-02-24'
+        acquisition_category: expedition
+        Taxonomy: ta5
+
+Loans:
+    l1:
+       id: 1
+       name: Dog of goyet
+       description: This is a funny dog to watch
+       from_date: '2009-02-24'
+       to_date: '2011-08-11'
+    l2:
+       id: 2
+       name: Cat of goyet
+       description: This is a funny cat to watch
+       from_date: '2009-01-15'
+       to_date: '2011-07-19'
+    l3:
+       id: 3
+       name: Elephant of goyet
+       description: This is a funny elephant to watch
+       from_date: '2009-02-02'
+       to_date: '2012-08-13'
+    l4:
+       id: 4
+       name: Tiger of goyet
+       description: This is a funny tiger to watch
+       from_date: '2009-01-01'
+       to_date: '2012-07-08'
+    l5:
+       id: 5
+       name: Dragon of goyet
+       description: This is a funny dragon to watch
+       from_date: '2009-02-04'
+       to_date: '2011-08-01'
+    l6:
+       id: 6
+       name: Horse of goyet
+       description: This is a funny horse to watch
+       from_date: '2009-01-10'
+       to_date: '2011-07-10'
+    l7:
+       id: 7
+       name: Mule of goyet
+       description: This is a funny mule to watch
+       from_date: '2009-01-04'
+       to_date: '2011-04-12'
+    l8:
+       id: 8
+       name: Goat Herder of goyet
+       description: This is a funny goat to watch
+       from_date: '2008-05-04'
+       to_date: '2001-07-28'
+    l9:
+       id: 9
+       name: Sheep of goyet
+       description: This is a funny sheep to watch
+       from_date: '2007-05-22'
+       to_date: '2011-11-11'
+    l10:
+       id: 10
+       name: Crow of goyet
+       description: This is a funny crow to watch
+       from_date: '2004-04-04'
+       to_date: '2010-05-15'
+
+LoanStatus:
+    ls1:
+       id: 1
+       Loan: l1
+       Users: u1
+       status: pending
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: false
+    ls2:
+       id: 2
+       Loan: l1
+       Users: u1
+       status: new
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: false
+    ls3:
+       id: 3
+       Loan: l1
+       Users: u1
+       status: closed
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: true
+    ls4:
+       id: 4
+       Loan: l3
+       Users: u1
+       status: pending
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: true
+    ls5:
+       id: 5
+       Loan: l2
+       Users: u1
+       status: new
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: true
+    ls6:
+       id: 6
+       Loan: l9
+       Users: u1
+       status: new
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: true
+    ls7:
+       id: 7
+       Loan: l4
+       Users: u1
+       status: closed
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: true
+    ls8:
+       id: 8
+       Loan: l5
+       Users: u1
+       status: new
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: true
+    ls9:
+       id: 9
+       Loan: l6
+       Users: u1
+       status: new
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: true
+    ls10:
+       id: 10
+       Loan: l10
+       Users: u1
+       status: accepted
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: true
+    ls11:
+       id: 11
+       Loan: l8
+       Users: u1
+       status: accepted
+       modification_date_time: '2010-10-05'
+       comment: No need for a comment
+       is_last: true
+
+LoanRights:
+    lr1:
+       id: 1
+       Loan: l1
+       User: u1
+       has_encoding_right: true
+    lr2:
+       id: 2
+       Loan: l2
+       User: u1
+       has_encoding_right: false
+    lr3:
+       id: 3
+       Loan: l6
+       User: u1
+       has_encoding_right: false
+    lr4:
+       id: 4
+       Loan: l5
+       User: u1
+       has_encoding_right: true
+    lr5:
+       id: 5
+       Loan: l4
+       User: u1
+       has_encoding_right: true
+    lr9:
+       id: 9
+       Loan: l8
+       User: u1
+       has_encoding_right: true
+    lr10:
+       id: 10
+       Loan: l9
+       User: u1
+       has_encoding_right: true
+
+Codes:
+    cosp1:
+        referenced_relation: specimens
+        record_id: 1
+        code_category: main
+        code_prefix: INV.
+        code_prefix_separator: "-"
+        code: 123
+        code_suffix: Neo
+        code_suffix_separator: "-"
+
+    cosp2-1:
+        referenced_relation: specimens
+        record_id: 2
+        code_category: main
+        code_prefix: VERT.
+        code_prefix_separator: " "
+        code: 12456
+        code_suffix: ""
+        code_suffix_separator: " "
+
+    cosp2-2:
+        referenced_relation: specimens
+        record_id: 2
+        code_category: secondary
+        code_prefix: VERT.
+        code_prefix_separator: "/"
+        code: 1548548
+        code_suffix: Abou
+        code_suffix_separator: " "
+
+    cosp2-3:
+        referenced_relation: specimens
+        record_id: 2
+        code_category: secondary
+        code_prefix: VERT.
+        code_prefix_separator: "/"
+        code: 85486846
+        code_suffix_separator: "/"
+
+    cosp3-1:
+        referenced_relation: specimens
+        record_id: 3
+        code_category: main
+        code_prefix: TEST
+        code_prefix_separator: "-"
+        code: 12345
+        code_suffix: "AFTER"
+        code_suffix_separator: "-"
+
+    cosp4-1:
+        referenced_relation: specimens
+        record_id: 3
+        code_category: secondary
+        code_prefix: TEST
+        code_prefix_separator: "-"
+        code: 54321
+        code_suffix: "AFTER"
+        code_suffix_separator: "-"
+
+Identifications:
+    idsp1-1:
+        id: 1
+        referenced_relation: specimens
+        record_id: 3
+        notion_concerned: taxonomy
+        value_defined: Falco Peregrinus Tunstall, 1771
+
+    idsp1-2:
+        id: 2
+        referenced_relation: specimens
+        record_id: 3
+        notion_concerned: taxonomy
+        value_defined: Falco Peregrinus
+        order_by: 2
+
+
+Properties:
+    cprop1:
+        referenced_relation: taxonomy
+        record_id: 4
+        property_type: protection status
+        property_unit: ''
+    cprop2:
+        referenced_relation: taxonomy
+        record_id: 4
+        property_type: physical measurement
+        applies_to: beak length
+        date_from_mask: 56
+        date_from: '1932-12-24 23:32:11'
+        date_to_mask: 0
+        date_to: '0001-01-01 0:0:0'
+        property_unit: cm
+    cprop3:
+        referenced_relation: specimens
+        record_id: 1
+        property_type: protection status
+        property_unit: ''
+    cprop4:
+        referenced_relation: specimens
+        record_id: 1
+        property_type: physical measurement
+        property_unit: mm
+
+Comments:
+    comment1:
+        referenced_relation: taxonomy
+        record_id: 4
+        notion_concerned: taxon information
+        comment: |
+          This is bullshit... 
+          None of this is right!
+          Ok?
+    comment2:
+        referenced_relation: specimens
+        record_id: 1
+        notion_concerned: collectors
+        comment: |
+          This collector works 
+          only if you give him a dog
+          to eat !
+
+ClassificationSynonymies:
+    csynon1:
+        referenced_relation: taxonomy
+        record_id: 4
+        group_id: 1
+        group_name: synonym
+        is_basionym: true
+        order_by: 0
+    csynon2:
+        referenced_relation: taxonomy
+        record_id: 5
+        group_id: 1
+        group_name: synonym
+        is_basionym: false
+        order_by: 1
+    csynon3:
+        referenced_relation: taxonomy
+        record_id: 4
+        group_id: 2
+        group_name: homonym
+        is_basionym: false
+        order_by: 2
+    csynon4:
+        referenced_relation: taxonomy
+        record_id: 3
+        group_id: 2
+        group_name: homonym
+        is_basionym: false
+        order_by: 1
+    csynon5:
+        referenced_relation: taxonomy
+        record_id: 2
+        group_id: 3
+        group_name: synonym
+        is_basionym: false
+        order_by: 1
+    csynon6:
+        referenced_relation: taxonomy
+        record_id: 6
+        group_id: 3
+        group_name: synonym
+        is_basionym: false
+        order_by: 2
+
+Chronostratigraphy:
+    chs1:
+        name: Phanerozoic
+        level_ref: 55
+        status: valid
+    chs2:
+        name: Proterozoic
+        level_ref: 55
+        status: valid
+    chs3:
+        name: Mesozoic
+        level_ref: 56
+        status: valid
+        Parent: chs1
+    chs4:
+        name: Paleoproterozoic
+        level_ref: 56
+        status: valid
+        Parent: chs2
+    chs5:
+        name: Jurassic
+        level_ref: 57
+        status: valid
+        Parent: chs3
+    chs6:
+        name: Orosirian
+        level_ref: 57
+        status: invalid
+        Parent: chs4
+    chs7:
+        name: Oxfordian
+        level_ref: 58
+        status: valid
+        Parent: chs5
+    chs8:
+        name: Sinemurian
+        level_ref: 58
+        status: valid
+        Parent: chs5
+    chs9:
+        name: Polluxien inférieur
+        level_ref: 58
+        status: valid
+        lower_bound: -205
+        upper_bound: -200
+        Parent: chs5
+    chs10:
+        name: Bricien
+        level_ref: 58
+        status: valid
+        Parent: chs5
+    chs11:
+        name: Polluxien supérieur
+        level_ref: 58
+        status: valid
+        lower_bound: -200
+        upper_bound: -195
+        Parent: chs5
+    chs12:
+        name: Polluxian
+        level_ref: 56
+        status: valid
+        lower_bound: -400
+        Parent: chs2
+
+Lithostratigraphy:
+    ls1:
+        name: 'Groupe Houiller'
+        level_ref: 64
+        status: valid
+    ls2:
+        name: 'Groupe du Hoyoux'
+        level_ref: 64
+        status: valid
+    ls3:
+        name: "Formation d'Anhée"
+        level_ref: 65
+        status: valid
+        Parent: ls2
+    ls4:
+        name: 'Formation de Thon Samson'
+        level_ref: 65
+        status: valid
+        Parent: ls2
+    ls5:
+        name: 'Formation de Poilvache'
+        level_ref: 65
+        status: invalid
+        Parent: ls2
+    ls6:
+        name: 'Membre de Pollux'
+        level_ref: 66
+        status: valid
+        Parent: ls3
+    ls7:
+        name: 'Polluxien rouge'
+        level_ref: 67
+        status: valid
+        Parent: ls6
+    ls8:
+        name: 'Polluxien vert'
+        level_ref: 67
+        status: valid
+        Parent: ls6
+
+Mineralogy:
+    min1:
+        code: '4'
+        name: Oxides
+        level_ref: 70
+        status: valid
+    min2:
+        code: '5'
+        name: Carbonates
+        level_ref: 70
+        status: valid
+    min3:
+        code: '4.A'
+        name: 'Metal: Oxygen = 2:1 and 1:1'
+        level_ref: 71
+        status: valid
+        Parent: min1
+    min4:
+        code: '4.B'
+        name: 'Metal: Oxygen = 3:4 and similar'
+        level_ref: 71
+        status: valid
+        Parent: min1
+    min5:
+        code: '4.G'
+        name: 'Uranyl Hydroxides'
+        level_ref: 71
+        status: valid
+        Parent: min1
+    min6:
+        code: '5.A'
+        name: 'Carbonates without additional anions, without H2O'
+        level_ref: 71
+        status: valid
+        Parent: min2
+    min7:
+        code: '5.N'
+        name: 'Nitrates'
+        level_ref: 71
+        status: valid
+        Parent: min2
+    min8:
+        code: '5.AA'
+        name: 'Alkali carbonates'
+        level_ref: 72
+        status: invalid
+        Parent: min6
+    min9:
+        code: '5.AB'
+        name: 'Alkali-earth (and other M2+) carbonates'
+        level_ref: 72
+        status: valid
+        Parent: min6
+    min10:
+        code: '4.AA'
+        name: 'Cation:Anion (M:O) = 2:1 (and 1.8:1)'
+        level_ref: 72
+        status: valid
+        Parent: min3
+    min11:
+        code: '4.GC'
+        name: 'With additional cations; with mainly UO2(O,OH)6 hexagonal polyhedra'
+        level_ref: 72
+        status: valid
+        Parent: min5
+
+Lithology:
+
+    lol1:
+        name: Sedimentary rocks 
+        level_ref: 75
+        status: valid
+    lol2:
+        name: Meteoric rocks
+        level_ref: 75
+        status: valid
+    lol3:
+        name: Siliciclastic rocks
+        level_ref: 76
+        status: valid
+        Parent: lol1
+    lol4:
+        name: 'Chemical & Biochemical rocks'
+        level_ref: 76
+        status: valid
+        Parent: lol1
+    lol5:
+        name: Meteoric rocks
+        level_ref: 76
+        status: valid
+        Parent: lol2
+    lol6: 
+        name: Rudites
+        level_ref: 77
+        status: valid
+        Parent: lol3
+    lol7:
+        name: Carbonate rocks
+        level_ref: 77
+        status: valid
+        Parent: lol4
+    lol8:
+        name: Ores
+        level_ref: 77
+        status: invalid
+        Parent: lol4
+    lol9:
+        name: Lithosiderite
+        level_ref: 77
+        status: valid
+        Parent: lol5
+    lol10:
+        name: Puddingstone
+        level_ref: 78
+        status: valid
+        Parent: lol6
+
+CataloguePeople:
+    cpeo1:
+        referenced_relation: taxonomy
+        record_id: 3
+        people_type: author
+        people_sub_type: Main Author
+        People: p5
+
+TagGroups:
+    tg1:
+        Gtu: gtu3
+        group_name: administrative area
+        sub_group_name:  country
+        tag_value: Belgique; Belgium; Belgïe; belgien
+    tg2:
+        Gtu: gtu3
+        group_name: administrative area
+        sub_group_name:  city
+        tag_value: Brussels; Bruxelles; Bruselas; 
+    tg3:
+        Gtu: gtu4
+        group_name: administrative area
+        sub_group_name:  city
+        tag_value: Brussels;Bruselo
+    tg4:
+        Gtu: gtu4
+        group_name: administrative area
+        sub_group_name:  country
+        tag_value: Belgique;Belgio
+    tg5:
+        Gtu: gtu2
+        group_name: administrative area
+        sub_group_name:  country
+        tag_value: Antartica;Terre Marie Byrd ; Marie-Byrd-Land
+    tg6:
+        Gtu: gtu2
+        group_name: topographic
+        sub_group_name:  mountain
+        tag_value: Big White Mountain; Brussels
+
+InformativeWorkflow:
+    iw1:
+        referenced_relation: taxonomy
+        record_id: 8
+        status : to check
+        comment: test de workflow pour les tests
+        Users: u1
+
+CollectionMaintenance:
+    colm1:
+        referenced_relation: taxonomy
+        record_id: 4
+        category : to check
+        description: test de workflow pour les tests
+        People: p1
+        action_observation: observation

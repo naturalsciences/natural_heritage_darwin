@@ -1,0 +1,15 @@
+rendering: ~
+security:  ~
+
+# insert your own filters here
+timeout:
+  class: timeoutFilter
+
+tracking:
+  class: trackingFilter
+db_version:
+  class: dbVersionFilter
+cache:     ~
+common:
+  class: sfCommonFilter
+execution: ~

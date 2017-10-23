@@ -1,0 +1,36 @@
+all:
+  .general:
+    salt: salt
+    yearRangeMin: 1700
+    yearRangeMax:  <?php echo date('Y')+2 ."\n"; ?>
+    dateUpperBound: '2038/12/31'
+    dateLowerBound: '0001/01/01'
+    yearUpperBound: '2038'
+    recPerPage: 10
+    pagerSlidingSize: 5
+    catalogueRecLimit: 200
+    queryTimeout: 30000
+    defaultInstitutionRef: ~
+
+  mailer:
+    sender: your_send_email@example.com
+
+  recaptcha:
+    public_key: "6Lf_ZL0SAAAAAN5AS3Wiiiu3VOs6CmpW3VMgZauH"
+    private_key: "6Lf_ZL0SAAAAAEP1fcqjynm6NH3wbj1hc1It8iCH"
+    proxy_host: YourProxyHostIPIfOne
+    proxy_port: 3128
+
+  tracking:
+    enabled: true
+
+  analytics:
+    enabled: false
+    code: UA-XXXXX-X
+
+  preview_max_size: 10
+#Uncomment this if you want to set a Broadcast message like demo or maintenance
+#    broadcast:
+#        enabled: true
+#        message: This is a demo application. Data is restored nightly !
+#        submessage: login with user/user or encoder/encoder or admin/admin

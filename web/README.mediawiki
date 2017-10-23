@@ -1,0 +1,8 @@
+= DaRWIN 2 =
+
+DaRWIN also stands for Data Research Warehouse Information Network.
+This tool is used to manage your natural sciences collections
+
+This is a Mirror of the repo hosted in our office at :
+
+[http://projects.naturalsciences.be/projects/darwin]

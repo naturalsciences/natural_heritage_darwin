@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="utf-8" ?><!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file source-language="en" target-language="" datatype="plaintext" original="en">
+    <header/>
+    <body>
+          <trans-unit id="1321">
+        <source>Status</source>
+        <target>Status</target>
+      </trans-unit>
+          <trans-unit id="1322">
+        <source>Gender</source>
+        <target>Gender</target>
+      </trans-unit>
+          <trans-unit id="1191">
+        <source>Logout</source>
+        <target>Logout</target>
+      </trans-unit>
+          <trans-unit id="1192">
+        <source>Collections</source>
+        <target>Collections</target>
+      </trans-unit>
+          <trans-unit id="1193">
+        <source>Collection</source>
+        <target>Collection</target>
+      </trans-unit>
+          <trans-unit id="1194">
+        <source>Name</source>
+        <target>Name</target>
+      </trans-unit>
+          <trans-unit id="1195">
+        <source>Search</source>
+        <target>Search</target>
+      </trans-unit>
+          <trans-unit id="1196">
+        <source>Details :</source>
+        <target>Details :</target>
+      </trans-unit>
+          <trans-unit id="1197">
+        <source>Taxonomy</source>
+        <target>Taxonomy</target>
+      </trans-unit>
+          <trans-unit id="1198">
+        <source>Level</source>
+        <target>Level</target>
+      </trans-unit>
+          <trans-unit id="1199">
+        <source>Chronostratigraphy</source>
+        <target>Chronostratigraphy</target>
+      </trans-unit>
+          <trans-unit id="1200">
+        <source>Lithostratigraphy</source>
+        <target>Lithostratigraphy</target>
+      </trans-unit>
+          <trans-unit id="1201">
+        <source>Lithology</source>
+        <target>Lithology</target>
+      </trans-unit>
+          <trans-unit id="1202">
+        <source>Mineralogy</source>
+        <target>Mineralogy</target>
+      </trans-unit>
+          <trans-unit id="1203">
+        <source>Category</source>
+        <target>Category</target>
+      </trans-unit>
+          <trans-unit id="1204">
+        <source>Type</source>
+        <target>Type</target>
+      </trans-unit>
+          <trans-unit id="1205">
+        <source>Institution</source>
+        <target>Institution</target>
+      </trans-unit>
+          <trans-unit id="1206">
+        <source>Names</source>
+        <target>Names</target>
+      </trans-unit>
+          <trans-unit id="1207">
+        <source>Country</source>
+        <target>Country</target>
+      </trans-unit>
+          <trans-unit id="1208">
+        <source>Tags</source>
+        <target>Tags</target>
+      </trans-unit>
+          <trans-unit id="1209">
+        <source>Taxon</source>
+        <target>Taxon</target>
+      </trans-unit>
+          <trans-unit id="1210">
+        <source>No Specimen Matching</source>
+        <target>No Specimen Matching</target>
+      </trans-unit>
+          <trans-unit id="1211">
+        <source>Our Collections</source>
+        <target>Our Collections</target>
+      </trans-unit>
+          <trans-unit id="1212">
+        <source>Take a tour</source>
+        <target>Take a tour</target>
+      </trans-unit>
+          <trans-unit id="1213">
+        <source>Contacts</source>
+        <target>Contacts</target>
+      </trans-unit>
+          <trans-unit id="1214">
+        <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</source>
+        <target>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</target>
+      </trans-unit>
+          <trans-unit id="1215">
+        <source>About</source>
+        <target>About</target>
+      </trans-unit>
+          <trans-unit id="1216">
+        <source>About Us</source>
+        <target>About Us</target>
+      </trans-unit>
+          <trans-unit id="1217">
+        <source>Contact</source>
+        <target>Contact</target>
+      </trans-unit>
+          <trans-unit id="1219">
+        <source>If you have a question about a specimen, please contact the collection manager of the specimen. &lt;br /&gt;
+      you can find his or her e-mail address in the record.</source>
+        <target>If you have a question about a specimen, please contact the collection manager of the specimen. &lt;br /&gt;
+      you can find his or her e-mail address in the record.</target>
+      </trans-unit>
+          <trans-unit id="1220">
+        <source>Welcome In DaRWIN</source>
+        <target>Welcome In DaRWIN</target>
+      </trans-unit>
+          <trans-unit id="1221">
+        <source>Discover DaRWIN</source>
+        <target>Discover DaRWIN</target>
+      </trans-unit>
+          <trans-unit id="1222">
+        <source>Discover the DaRWIN Interface</source>
+        <target>Discover the DaRWIN Interface</target>
+      </trans-unit>
+          <trans-unit id="1223">
+        <source>DaRWIN is not just a website for displaying our collections, it&#039;s an entire product of collection management.
+    &lt;br /&gt;You can register free of charge and discover this nice tool.&lt;br /&gt;
+    Let&#039;s take a look of some of our amazing features :</source>
+        <target>DaRWIN is not just a website for displaying our collections, it&#039;s an entire product of collection management.
+    &lt;br /&gt;You can register free of charge and discover this nice tool.&lt;br /&gt;
+    Let&#039;s take a look of some of our amazing features :</target>
+      </trans-unit>
+          <trans-unit id="1224">
+        <source>Register Now!</source>
+        <target>Register Now!</target>
+      </trans-unit>
+          <trans-unit id="1225">
+        <source>Friendly Working Space:</source>
+        <target>Friendly Working Space:</target>
+      </trans-unit>
+          <trans-unit id="1226">
+        <source>Everything in the DaRWIN interface is build to make &lt;strong&gt;YOUR&lt;/strong&gt; job easier.&lt;br /&gt;
+     You work on a set of specimens? You want to save a search you often use? you want to know who has changed the info?&lt;br /&gt;
+     &lt;strong&gt;DaRWIN can do that!&lt;/strong&gt;</source>
+        <target>Everything in the DaRWIN interface is build to make &lt;strong&gt;YOUR&lt;/strong&gt; job easier.&lt;br /&gt;
+     You work on a set of specimens? You want to save a search you often use? you want to know who has changed the info?&lt;br /&gt;
+     &lt;strong&gt;DaRWIN can do that!&lt;/strong&gt;</target>
+      </trans-unit>
+          <trans-unit id="1227">
+        <source>Enhanced Search :</source>
+        <target>Enhanced Search :</target>
+      </trans-unit>
+          <trans-unit id="1319">
+        <source>The captcha is not valid (%error%).</source>
+        <target>The captcha is not valid (%error%).</target>
+      </trans-unit>
+          <trans-unit id="1320">
+        <source>I accept the </source>
+        <target>I accept the </target>
+      </trans-unit>
+          <trans-unit id="1228">
+        <source>You find the public search a little bit too restrictive? &lt;br /&gt;
+      Let&#039;s try our DaRWIN search tool. You will be able to search for tons of information.&lt;br /&gt;
+      From Map to complex taxonomy and synonymies searches.</source>
+        <target>You find the public search a little bit too restrictive? &lt;br /&gt;
+      Let&#039;s try our DaRWIN search tool. You will be able to search for tons of information.&lt;br /&gt;
+      From Map to complex taxonomy and synonymies searches.</target>
+      </trans-unit>
+          <trans-unit id="1229">
+        <source>Customizable Interface :</source>
+        <target>Customizable Interface :</target>
+      </trans-unit>
+          <trans-unit id="1230">
+        <source>In the Darwin tool you have the ability to customize freely your interface.&lt;br /&gt;
+      You are only interested in taxonomy? No problem, no other infos will clutter your tool.&lt;br /&gt;
+      Hide or minimize the information you don&#039;t need to focus on.</source>
+        <target>In the Darwin tool you have the ability to customize freely your interface.&lt;br /&gt;
+      You are only interested in taxonomy? No problem, no other infos will clutter your tool.&lt;br /&gt;
+      Hide or minimize the information you don&#039;t need to focus on.</target>
+      </trans-unit>
+          <trans-unit id="1231">
+        <source>About us</source>
+        <target>About us</target>
+      </trans-unit>
+          <trans-unit id="1232">
+        <source>Darwin is an &lt;strong&gt;Open Source&lt;/strong&gt; tool for collection management.&lt;br /&gt;
+    It has been build by the IT departement of the Royal Belgian Institute of Natural Sciences.&lt;br /&gt;</source>
+        <target>Darwin is an &lt;strong&gt;Open Source&lt;/strong&gt; tool for collection management.&lt;br /&gt;
+    It has been build by the IT departement of the Royal Belgian Institute of Natural Sciences.&lt;br /&gt;</target>
+      </trans-unit>
+          <trans-unit id="1233">
+        <source>Our Partners :</source>
+        <target>Our Partners :</target>
+      </trans-unit>
+          <trans-unit id="1234">
+        <source>http://www.naturalsciences.be</source>
+        <target>http://www.naturalsciences.be</target>
+      </trans-unit>
+          <trans-unit id="1235">
+        <source>Royal Belgian Institute of Natural Sciences</source>
+        <target>Royal Belgian Institute of Natural Sciences</target>
+      </trans-unit>
+          <trans-unit id="1236">
+        <source>http://www.belspo.be</source>
+        <target>http://www.belspo.be</target>
+      </trans-unit>
+          <trans-unit id="1237">
+        <source>The Belgian Federal Science Policy Office</source>
+        <target>The Belgian Federal Science Policy Office</target>
+      </trans-unit>
+          <trans-unit id="1238">
+        <source>Register</source>
+        <target>Register</target>
+      </trans-unit>
+          <trans-unit id="1239">
+        <source>Go to Backend</source>
+        <target>Go to Backend</target>
+      </trans-unit>
+          <trans-unit id="1240">
+        <source>Chronostratigraphic unit</source>
+        <target>Chronostratigraphic unit</target>
+      </trans-unit>
+          <trans-unit id="1241">
+        <source>Lithostratigraphic unit</source>
+        <target>Lithostratigraphic unit</target>
+      </trans-unit>
+          <trans-unit id="1242">
+        <source>Lithologic unit</source>
+        <target>Lithologic unit</target>
+      </trans-unit>
+          <trans-unit id="1243">
+        <source>Mineralogic unit</source>
+        <target>Mineralogic unit</target>
+      </trans-unit>
+          <trans-unit id="1244">
+        <source>Expedition</source>
+        <target>Expedition</target>
+      </trans-unit>
+          <trans-unit id="1245">
+        <source>Taxon common name</source>
+        <target>Taxon common name</target>
+      </trans-unit>
+          <trans-unit id="1246">
+        <source>Chrono common name</source>
+        <target>Chrono common name</target>
+      </trans-unit>
+          <trans-unit id="1247">
+        <source>Litho common name</source>
+        <target>Litho common name</target>
+      </trans-unit>
+          <trans-unit id="1248">
+        <source>Lithologic common name</source>
+        <target>Lithologic common name</target>
+      </trans-unit>
+          <trans-unit id="1249">
+        <source>Mineral common name</source>
+        <target>Mineral common name</target>
+      </trans-unit>
+          <trans-unit id="1250">
+        <source>Sex</source>
+        <target>Sex</target>
+      </trans-unit>
+          <trans-unit id="1251">
+        <source>State</source>
+        <target>State</target>
+      </trans-unit>
+          <trans-unit id="1252">
+        <source>Stage</source>
+        <target>Stage</target>
+      </trans-unit>
+          <trans-unit id="1253">
+        <source>Social Status</source>
+        <target>Social Status</target>
+      </trans-unit>
+          <trans-unit id="1254">
+        <source>Rock Form</source>
+        <target>Rock Form</target>
+      </trans-unit>
+          <trans-unit id="1255">
+        <source>Individual Count</source>
+        <target>Individual Count</target>
+      </trans-unit>
+          <trans-unit id="1256">
+        <source>View Specimens</source>
+        <target>View Specimens</target>
+      </trans-unit>
+          <trans-unit id="1257">
+        <source>Specimen Record</source>
+        <target>Specimen Record</target>
+      </trans-unit>
+          <trans-unit id="1258">
+        <source>Conservator</source>
+        <target>Conservator</target>
+      </trans-unit>
+          <trans-unit id="1259">
+        <source>Common Names</source>
+        <target>Common Names</target>
+      </trans-unit>
+          <trans-unit id="1260">
+        <source>Classification</source>
+        <target>Classification</target>
+      </trans-unit>
+          <trans-unit id="1261">
+        <source>Community/language</source>
+        <target>Community/language</target>
+      </trans-unit>
+          <trans-unit id="1262">
+        <source>Classifications</source>
+        <target>Classifications</target>
+      </trans-unit>
+          <trans-unit id="1263">
+        <source>level</source>
+        <target>level</target>
+      </trans-unit>
+          <trans-unit id="1265">
+        <source>Lithostatigraphy</source>
+        <target>Lithostatigraphy</target>
+      </trans-unit>
+          <trans-unit id="1266">
+        <source>Specimen Characteristics</source>
+        <target>Specimen Characteristics</target>
+      </trans-unit>
+          <trans-unit id="1267">
+        <source>Number of individual</source>
+        <target>Number of individual</target>
+      </trans-unit>
+          <trans-unit id="1268">
+        <source>Between </source>
+        <target>Between </target>
+      </trans-unit>
+          <trans-unit id="1269">
+        <source>Close this record</source>
+        <target>Close this record</target>
+      </trans-unit>
+          <trans-unit id="1270">
+        <source>Physical</source>
+        <target>Physical</target>
+      </trans-unit>
+          <trans-unit id="1272">
+        <source>Other</source>
+        <target>Other</target>
+      </trans-unit>
+          <trans-unit id="1273">
+        <source>Search Specimens/Rocks/Minerals</source>
+        <target>Search Specimens/Rocks/Minerals</target>
+      </trans-unit>
+          <trans-unit id="1274">
+        <source>Specimen search criteria</source>
+        <target>Specimen search criteria</target>
+      </trans-unit>
+          <trans-unit id="1275">
+        <source>Scientific Name</source>
+        <target>Scientific Name</target>
+      </trans-unit>
+          <trans-unit id="1276">
+        <source>Common Name</source>
+        <target>Common Name</target>
+      </trans-unit>
+          <trans-unit id="1277">
+        <source>Countries</source>
+        <target>Countries</target>
+      </trans-unit>
+          <trans-unit id="1278">
+        <source>Please use &quot;;&quot; as tag separator.</source>
+        <target>Please use &quot;;&quot; as tag separator.</target>
+      </trans-unit>
+          <trans-unit id="1279">
+        <source>Types</source>
+        <target>Types</target>
+      </trans-unit>
+          <trans-unit id="1280">
+        <source>Sexes</source>
+        <target>Sexes</target>
+      </trans-unit>
+          <trans-unit id="1281">
+        <source>Stages</source>
+        <target>Stages</target>
+      </trans-unit>
+          <trans-unit id="1282">
+        <source>Clear</source>
+        <target>Clear</target>
+      </trans-unit>
+          <trans-unit id="1283">
+        <source>Search results</source>
+        <target>Search results</target>
+      </trans-unit>
+          <trans-unit id="1284">
+        <source>Search Results</source>
+        <target>Search Results</target>
+      </trans-unit>
+          <trans-unit id="1285">
+        <source>Back to criteria</source>
+        <target>Back to criteria</target>
+      </trans-unit>
+          <trans-unit id="1286">
+        <source>View</source>
+        <target>View</target>
+      </trans-unit>
+          <trans-unit id="1287">
+        <source>Specimen criteria</source>
+        <target>Specimen criteria</target>
+      </trans-unit>
+          <trans-unit id="1288">
+        <source>Specimen</source>
+        <target>Specimen</target>
+      </trans-unit>
+          <trans-unit id="1289">
+        <source>Individual</source>
+        <target>Individual</target>
+      </trans-unit>
+          <trans-unit id="1291">
+        <source>Your password has been successfully renewed.</source>
+        <target>Your password has been successfully renewed.</target>
+      </trans-unit>
+          <trans-unit id="1292">
+        <source>You can now log in and enjoy our enhanced collection services.</source>
+        <target>You can now log in and enjoy our enhanced collection services.</target>
+      </trans-unit>
+          <trans-unit id="1294">
+        <source>Dear</source>
+        <target>Dear</target>
+      </trans-unit>
+          <trans-unit id="1295">
+        <source>Thank you for having registered on DaRWIN 2.</source>
+        <target>Thank you for having registered on DaRWIN 2.</target>
+      </trans-unit>
+          <trans-unit id="1296">
+        <source>You should have received a reminder of your username and password on the e-mail address provided.</source>
+        <target>You should have received a reminder of your username and password on the e-mail address provided.</target>
+      </trans-unit>
+          <trans-unit id="1297">
+        <source>Please fill in the application form</source>
+        <target>Please fill in the application form</target>
+      </trans-unit>
+          <trans-unit id="1298">
+        <source>For your reminder, here is your user name:</source>
+        <target>For your reminder, here is your user name:</target>
+      </trans-unit>
+          <trans-unit id="1299">
+        <source>Rocks</source>
+        <target>Rocks</target>
+      </trans-unit>
+          <trans-unit id="1300">
+        <source>Mineral</source>
+        <target>Mineral</target>
+      </trans-unit>
+          <trans-unit id="1301">
+        <source>Records per page: </source>
+        <target>Records per page: </target>
+      </trans-unit>
+          <trans-unit id="1302">
+        <source>&quot;%value%&quot; must be at least %min_length% characters.</source>
+        <target>&quot;%value%&quot; must be at least %min_length% characters.</target>
+      </trans-unit>
+          <trans-unit id="1303">
+        <source>Password must be at least %min_length% characters length</source>
+        <target>Password must be at least %min_length% characters length</target>
+      </trans-unit>
+          <trans-unit id="1304">
+        <source>Passwords must be equal and may not contain spaces</source>
+        <target>Passwords must be equal and may not contain spaces</target>
+      </trans-unit>
+          <trans-unit id="1305">
+        <source>You cannot register without accepting DaRWIN 2  terms of use</source>
+        <target>You cannot register without accepting DaRWIN 2  terms of use</target>
+      </trans-unit>
+          <trans-unit id="1306">
+        <source>Required.</source>
+        <target>Required.</target>
+      </trans-unit>
+          <trans-unit id="1307">
+        <source>If you&#039;ve lost your password, please</source>
+        <target>If you&#039;ve lost your password, please</target>
+      </trans-unit>
+          <trans-unit id="1308">
+        <source>reset your password</source>
+        <target>reset your password</target>
+      </trans-unit>
+          <trans-unit id="1309">
+        <source>Send me a &#039;reset account&#039; mail</source>
+        <target>Send me a &#039;reset account&#039; mail</target>
+      </trans-unit>
+          <trans-unit id="1310">
+        <source>Reset your account.</source>
+        <target>Reset your account.</target>
+      </trans-unit>
+          <trans-unit id="1311">
+        <source>Your login</source>
+        <target>Your login</target>
+      </trans-unit>
+          <trans-unit id="1313">
+        <source>We didn&#039;t find any reference with the login and password you provided</source>
+        <target>We didn&#039;t find any reference with the login and password you provided</target>
+      </trans-unit>
+          <trans-unit id="1314">
+        <source>E-mail is required</source>
+        <target>E-mail is required</target>
+      </trans-unit>
+          <trans-unit id="1315">
+        <source>Invalid E-mail address</source>
+        <target>Invalid E-mail address</target>
+      </trans-unit>
+          <trans-unit id="1316">
+        <source>must be at least 4 characters.</source>
+        <target>must be at least 4 characters.</target>
+      </trans-unit>
+          <trans-unit id="1317">
+        <source>Bad login or password</source>
+        <target>Bad login or password</target>
+      </trans-unit>
+          <trans-unit id="1318">
+        <source>Login is required</source>
+        <target>Login is required</target>
+      </trans-unit>
+          <trans-unit id="1323">
+        <source>Family Name</source>
+        <target>Family Name</target>
+      </trans-unit>
+          <trans-unit id="1324">
+        <source>Given Name</source>
+        <target>Given Name</target>
+      </trans-unit>
+          <trans-unit id="1325">
+        <source>Login</source>
+        <target>Login</target>
+      </trans-unit>
+          <trans-unit id="1326">
+        <source>Password</source>
+        <target>Password</target>
+      </trans-unit>
+          <trans-unit id="1327">
+        <source>Confirm password</source>
+        <target>Confirm password</target>
+      </trans-unit>
+          <trans-unit id="1328">
+        <source>e-mail</source>
+        <target>e-mail</target>
+      </trans-unit>
+          <trans-unit id="1329">
+        <source>Preferred language</source>
+        <target>Preferred language</target>
+      </trans-unit>
+          <trans-unit id="1330">
+        <source>Title</source>
+        <target>Title</target>
+      </trans-unit>
+          <trans-unit id="1331">
+        <source>Captcha</source>
+        <target>Captcha</target>
+      </trans-unit>
+          <trans-unit id="1332">
+        <source>Moral person</source>
+        <target>Moral person</target>
+      </trans-unit>
+          <trans-unit id="1333">
+        <source>Physical person</source>
+        <target>Physical person</target>
+      </trans-unit>
+          <trans-unit id="1334">
+        <source>Name is required</source>
+        <target>Name is required</target>
+      </trans-unit>
+          <trans-unit id="1335">
+        <source>E-mail is not of a valid form</source>
+        <target>E-mail is not of a valid form</target>
+      </trans-unit>
+          <trans-unit id="1336">
+        <source>Password must contain at least :&lt;br /&gt; * a case mix&lt;br /&gt; * one digit&lt;br /&gt; * minimum 6 characters length</source>
+        <target>Password must contain at least :&lt;br /&gt; * a case mix&lt;br /&gt; * one digit&lt;br /&gt; * minimum 6 characters length</target>
+      </trans-unit>
+          <trans-unit id="1339">
+        <source>Username</source>
+        <target>Username</target>
+      </trans-unit>
+          <trans-unit id="1341">
+        <source>Scientists wishing to visit one of our collections should contact the collection manager directly.  For more information on how to apply for a visit, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</source>
+        <target>Scientists wishing to visit one of our collections should contact the collection manager directly.  For more information on how to apply for a visit, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</target>
+      </trans-unit>
+          <trans-unit id="1342">
+        <source>Academic personnel wishing to loan collection objects should contact the collection manager directly.  For more information on how to apply for a loan, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</source>
+        <target>Academic personnel wishing to loan collection objects should contact the collection manager directly.  For more information on how to apply for a loan, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</target>
+      </trans-unit>
+          <trans-unit id="1343">
+        <source>Settlement of loans for study</source>
+        <target>Settlement of loans for study</target>
+      </trans-unit>
+          <trans-unit id="1344">
+        <source>Settlement of external visiting scientists</source>
+        <target>Settlement of external visiting scientists</target>
+      </trans-unit>
+          <trans-unit id="1345">
+        <source>terms of use</source>
+        <target>terms of use</target>
+      </trans-unit>
+          <trans-unit id="1346">
+        <source>Dear %username%</source>
+        <target>Dear %username%</target>
+      </trans-unit>
+          <trans-unit id="1347">
+        <source>Dear %usertitle% %username%</source>
+        <target>Dear %usertitle% %username%</target>
+      </trans-unit>
+          <trans-unit id="1348">
+        <source>To log you in, you can visit us on %darwinurl%</source>
+        <target>To log you in, you can visit us on %darwinurl%</target>
+      </trans-unit>
+          <trans-unit id="1350">
+        <source>User name: %username%</source>
+        <target>User name: %username%</target>
+      </trans-unit>
+          <trans-unit id="1351">
+        <source>Abbreviation</source>
+        <target>Abbreviation</target>
+      </trans-unit>
+          <trans-unit id="1368">
+        <source>DaRWIN 2 registration</source>
+        <target>DaRWIN 2 registration</target>
+      </trans-unit>
+          <trans-unit id="1369">
+        <source>DaRWIN 2 team</source>
+        <target>DaRWIN 2 team</target>
+      </trans-unit>
+          <trans-unit id="1483">
+        <source>Your Name</source>
+        <target>Your Name</target>
+      </trans-unit>
+          <trans-unit id="1484">
+        <source>anonymous</source>
+        <target>anonymous</target>
+      </trans-unit>
+          <trans-unit id="1485">
+        <source>You think there&#039;s a mistake ? please suggest us a correction</source>
+        <target>You think there&#039;s a mistake ? please suggest us a correction</target>
+      </trans-unit>
+          <trans-unit id="1486">
+        <source>Submit</source>
+        <target>Submit</target>
+      </trans-unit>
+          <trans-unit id="1487">
+        <source>Comment</source>
+        <target>Comment</target>
+      </trans-unit>
+          <trans-unit id="1488">
+        <source>Thank you for your help</source>
+        <target>Thank you for your help</target>
+      </trans-unit>
+          <trans-unit id="1606">
+        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
+        <target>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</target>
+      </trans-unit>
+          <trans-unit id="1607">
+        <source>Oops! Page Not Found</source>
+        <target>Oops! Page Not Found</target>
+      </trans-unit>
+          <trans-unit id="1608">
+        <source>The server returned a 404 response.</source>
+        <target>The server returned a 404 response.</target>
+      </trans-unit>
+          <trans-unit id="1609">
+        <source>Did you type the URL?</source>
+        <target>Did you type the URL?</target>
+      </trans-unit>
+          <trans-unit id="1610">
+        <source>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</source>
+        <target>You may have typed the address (URL) incorrectly. Check it to make sure you&#039;ve got the exact right spelling, capitalization, etc.</target>
+      </trans-unit>
+          <trans-unit id="1611">
+        <source>Did you follow a link from somewhere else at this site?</source>
+        <target>Did you follow a link from somewhere else at this site?</target>
+      </trans-unit>
+          <trans-unit id="1612">
+        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
+        <target>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</target>
+      </trans-unit>
+          <trans-unit id="1613">
+        <source>Did you follow a link from another site?</source>
+        <target>Did you follow a link from another site?</target>
+      </trans-unit>
+          <trans-unit id="1614">
+        <source>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</source>
+        <target>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</target>
+      </trans-unit>
+          <trans-unit id="1615">
+        <source>What&#039;s next</source>
+        <target>What&#039;s next</target>
+      </trans-unit>
+          <trans-unit id="1616">
+        <source>Back to previous page</source>
+        <target>Back to previous page</target>
+      </trans-unit>
+          <trans-unit id="1706">
+        <source>Related Files</source>
+        <target>Related Files</target>
+      </trans-unit>
+          <trans-unit id="1707">
+        <source>Download</source>
+        <target>Download</target>
+      </trans-unit>
+      <trans-unit id="1708">
+        <source>Staff Member</source>
+        <target>Staff Member</target>
+      </trans-unit>
+      <trans-unit id="1709">
+        <source>Zoological Search</source>
+        <target>Zoological Search</target>
+      </trans-unit>
+      <trans-unit id="1710">
+        <source>Geo/Paleo Search</source>
+        <target>Geo/Paleo Search</target>
+      </trans-unit>
+      <trans-unit id="1711">
+        <source>Properties</source>
+        <target>Properties</target>
+      </trans-unit>
+      <trans-unit id="1712">
+        <source>Codes</source>
+        <target>Codes</target>
+      </trans-unit>
+      <trans-unit id="1713">
+        <source>Property type</source>
+        <target>Type</target>
+      </trans-unit>
+      <trans-unit id="1714">
+        <source>Applies To</source>
+        <target>Applies To</target>
+      </trans-unit>
+      <trans-unit id="1715">
+        <source>Date From</source>
+        <target>Date From</target>
+      </trans-unit>
+      <trans-unit id="176">
+        <source>Date To</source>
+        <target>Date To</target>
+      </trans-unit>
+      <trans-unit id="1717">
+        <source>Value</source>
+        <target>Value</target>
+      </trans-unit>
+      <trans-unit id="1718">
+        <source>Specimen State</source>
+        <target>Specimen State</target>
+      </trans-unit>
+      <trans-unit id="1719">
+        <source>You cannot register without accepting DaRWIN 2 terms of use</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1720">
+        <source>Recommended browser for DaRWIN :</source>
+        <target></target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
+

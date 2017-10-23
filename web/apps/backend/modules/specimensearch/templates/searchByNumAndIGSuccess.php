@@ -1,0 +1,1 @@
+<?php include_partial('searchByNumAndIG',array('is_choose'=>true));?>

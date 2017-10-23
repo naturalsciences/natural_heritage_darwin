@@ -1,0 +1,140 @@
+html { height:100%; }
+body, .wrapper { position:absolute; top:0; bottom:0; right:0; left:0; }
+#navigation{
+   position: absolute;
+   top: 0; left: 0;
+   width: 100%;
+   float: left;
+
+}
+
+#navigation,
+.ui-tooltip-nav .ui-tooltip-content{
+   font-size: 14px;
+   line-height: 18px;
+   text-align: left;
+
+   background-color: #3390A1;
+}
+
+#navigation ul,
+#navigation li{
+/* 		  line-height:  1.0; */
+/*       float: left; */
+}
+
+#navigation li a[href]{
+	display: block;
+	text-decoration:none;
+	color:white;
+	/* padding: 6px 40px 6px 15px;*/
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-bottom: 15px;
+	border-left-width: 1px;
+}
+
+
+#navigation .ui-tooltip-nav{
+   max-width: 240px;
+}
+
+#navigation   .ui-tooltip-nav .ui-tooltip-content{
+      padding: 0;
+      border-width: 0;
+			background-color:#A9D4DB;
+   }
+
+   #navigation .ui-tooltip-nav ul,
+   #navigation .ui-tooltip-nav li{
+      float: none;
+   }
+
+
+
+/************ END OF Default style ****/
+
+.menu_top {
+    background-color: #3390A1;
+    height: 32px;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2000;
+}
+
+#navigation .lvl_2 a[href] {
+	background-color:#ebf5f5 !important;
+}
+#navigation .lvl_2 a[href]:hover {
+	background-color:#a9d4db !important;
+}
+
+#navigation > li {
+	border-left: 1px solid white;
+  width: 171px;
+  z-index: 500;
+}
+#navigation > li > a {
+	color:white;
+	padding-left: 10px;
+  padding-top: 10px;
+}
+
+#navigation .submenu a[href]
+{
+	background-color:#a9d4db;
+	color: #1F7987;
+	margin-top:3px;
+	min-width:168px;
+}
+
+#navigation .submenu a[href].active, #navigation .submenu a[href]:hover {
+	background-color: #ebf5f5;
+}
+
+#navigation li
+{
+/* 	width: 171px; */
+	height: 32px;
+	color:white;
+	font-size:10pt;
+	font-stretch: ultra-expanded;
+}
+
+
+
+#navigation li.house a[href]
+{
+	padding:2px;
+}
+
+#navigation li.house {
+
+    border-left: medium none;
+    padding: 0 0 0;
+    text-align: center;
+    width: 50px;
+}
+
+.sf-arrows .sf-with-ul{
+  padding-right: 0px !important;
+}
+.lvl_2 {
+  display: none;
+}
+/*** WARNING CRAP PLACEMENT :p ***/
+#navigation > li.exit
+{
+	/*position:absolute;
+	right:0;*/
+	float:right;
+	padding:0;
+	width: 50px;
+	text-align:center;
+}
+#navigation > li.exit a[href]
+{
+	padding-top:3px;
+}

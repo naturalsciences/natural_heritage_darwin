@@ -1,0 +1,72 @@
+input[type="text"].small_size
+{
+  width:120px !important ;
+}
+
+input[type="text"].lsmall_size
+{
+  width:50px !important ;
+}
+
+input[type="text"].vvsmall_size
+{
+  width:50px !important ;
+}
+
+input[type="text"].medium_size
+{
+  width:150px !important ;
+}
+
+input[type="text"].xlsmall_size
+{
+  width:85px !important ;
+}
+
+.panel
+{
+	padding-left:1px !important;
+	padding-right: 1px !important;
+}
+
+.panel_view
+{
+	padding-left:1px !important;
+	padding-right: 1px !important;
+}
+
+.board_spacer
+{
+	width:2% !important;
+}
+
+.board_col
+{
+	width: 49% !important;
+}
+
+select.double_list_select,select.double_list_select-selected
+{
+  width: 13em !important;
+}
+
+select.vvsmall_size,select.to_date,select.from_date
+{
+  width:40px !important ;
+}
+
+select.small_size
+{
+  width:85px !important ;
+}
+
+#refProperties .widget_content, #refIdentifications .widget_content
+{
+  padding: 2px !important;
+}
+
+.complete_ref input.ui-autocomplete-input
+{
+  width: 200px;
+}
+

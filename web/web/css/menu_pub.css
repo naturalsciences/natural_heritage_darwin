@@ -1,0 +1,396 @@
+.rand_spec li{
+  list-style-type: circle;
+}
+.rand_spec {
+  padding-left: 40px;
+}
+.rand_spec a[href] {
+  color:rgb(51, 144, 161);
+}
+
+.lang_picker, .browser_img 
+{
+  color:white;
+  font-size:small;
+  text-align: center;
+}
+
+.lang_picker li
+{
+  display:inline;
+  text-transform : uppercase;
+  margin-left: 0.5em;
+}
+.lang_picker a[href]
+{
+  color:white;
+  text-decoration: none ;
+}
+
+.browser_img li
+{
+  display:inline;
+  margin-left: 0.5em;
+}
+.browser_img img
+{
+  color:white;
+  font-size:small;
+  opacity:0.4; 
+}
+
+.browser_img img:hover 
+{
+  opacity:1.0;  
+}
+.all_content
+{
+  height: 100%
+}
+
+.header_menu
+{
+  height: 174px;  
+  vertical-align:top;
+}
+
+.menu_top
+{
+  position: relative;
+  background: #474747 url(/images/photo_bckg.jpg) no-repeat; 
+  background-position:center top;
+  height: 151px;
+}
+
+.menu_header_image
+{
+  height: 90px;
+}
+
+.main
+{
+  margin-top : 15px ;
+  min-height: 600px ;
+}
+
+.main td
+{
+  vertical-align:top ;
+}
+
+.menu_bottom
+{
+  background: #404040;
+  vertical-align: top !important;
+  padding-top : 0.4em;
+  position: relative;
+	min-height: 50px ;
+	clear:both;  
+}
+
+.menu_top table
+{
+  width:760px;
+  font-size: 12pt ;
+  margin-left:auto;
+  margin-right: auto;  
+}
+
+.menu_top table td.lang_picker
+{
+  vertical-align: bottom ; 
+  float: right ;
+}
+
+.menu_link > li 
+{
+  min-height:1em;
+  min-width:1em;
+  margin-bottom:2em;
+  cursor: pointer;
+  float:left;
+  padding:0.2em;
+  margin:0.3em;
+}
+
+.menu_link > li > a
+{
+  text-decoration: none ; 
+  text-transform : uppercase;
+  color: #d8d5d5 ;  
+  text-decoration: underline ;  
+
+} 
+
+.menu_link > li > a:hover
+{
+  text-decoration: underline ;  
+  color: #FFFFFF ;
+} 
+
+.blue_line, .small_blue_line
+{
+  z-index: 400; 
+  background:  #3390A1;
+  height: 32px ;
+  text-align : center ;  
+}
+
+.blue_line_left
+{
+  border-bottom: 20px solid white;
+  height: 32px;
+}
+.blue_line_right
+{
+  z-index: 400; 
+  background: #3390A1 url(/images/corner.png) no-repeat ;
+  background-position:left bottom;
+  padding-left: 1em;
+  height: 32px ;
+}
+
+.blue_line > table > tbody td
+{
+  width:50% ;
+  height: 20px ;    
+}
+.small_blue_line
+{
+  height: 20px ;
+}
+
+/* style for the login section */
+
+.register_form table
+{
+  float:left; 
+  height:32px ;  
+  text-decoration:none;   
+  vertical-align:middle ;
+  width : 450px ;
+}
+
+.register_form input[type=password]
+{
+  background: white url(/images/key.png) no-repeat 3px 0px;
+  padding-left:2em;
+  background-color: white ;
+}
+
+.register_form input#login_username
+{
+  background: white url(/images/user.png) no-repeat 3px 0px;
+  padding-left:2em;
+  background-color: white ;  
+}
+
+.test
+{
+  border: 1px ridge white ;
+}
+
+.register_form input
+{
+  border: 1px ridge white ;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -webkit-border-radius: 5px 5px 5px 5px;	  
+  background-color : #5baabd ;
+}
+
+.register_form .menu_button a
+{
+  color: black ;
+  text-decoration: none ;
+  margin-top : 7px;
+  width:132px;
+  font-size: 9pt;      
+}
+
+.register_form #login_bt input
+{
+  color: black ;
+  text-decoration: none ;
+  width:36px;
+  font-size: 7pt;
+  vertical-align:top;
+  border:0;
+  background-color:transparent;
+}
+
+.register_form .menu_button
+{
+  background-image: url(/images/button_blue.png)   ;
+  background-position: center center ;
+  background-repeat : no-repeat ;
+  width:132px ;  
+}
+
+.register_form #login_bt
+{
+  background-image: url(/images/next_button_blue.png)   ;
+  background-position: center center ;
+  background-repeat : no-repeat ; 
+  width:36px ;
+}
+
+.login_error
+{
+  color:red;
+  font-weight:bold;
+  text-shadow: white 1px 1px 1px;
+  text-align:right;
+  margin-right:1em;
+  margin-bottom:8px;
+}
+
+
+#login_bt a:hover, .menu_button a:hover
+{
+  color : #474747; 
+  text-decoration: underline ;  
+}
+
+.register_form td.field
+{
+  width : 110px ;
+}
+
+input.small 
+{
+  margin : 1px;
+  width:110px;     
+  height: 14px;
+  font-size: 9pt;   
+  color : black ;   
+}
+
+.menu_bottom div
+{
+  color : #d8d5d5 ;
+  text-decoration: none ;
+/*   margin-right : 1em ; */
+  width: 50%;
+}
+
+.dw_logo
+{
+  background-color: #474747; 
+  height: 151px;
+  text-align:center;
+}
+
+.lyt_content
+{
+  width:1000px;
+  margin:auto;
+  margin-top: 2em;
+}
+
+.sfTMessageContainer
+{
+  float:left;
+  padding: 1em;
+  border: 2px solid #F4BB0F;
+  background-color:#FFEFBF;
+  margin-bottom:2em;
+}
+.sfTMessageContainer img.sfTMessageIcon
+{
+  float:left;
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.sfTMessageWrap
+{
+  float:left;
+    width:500px;
+}
+.sfTMessageInfo
+{
+  clear:both;
+  color:gray;
+}
+
+.sfTMessageInfo dt
+{
+  margin-bottom: 0.5em;
+  margin-top:1em;
+}
+
+.sfTMessageInfo dd
+{
+  
+}
+
+.small_message {
+  font-size:x-small;
+  color:gray;
+}
+
+#header_map
+{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 0px;
+  /*border: 1px solid blue;*/
+  font-family: arial, helvetica, sans-serif;
+  font-size: 8pt;
+}
+
+#header_map li
+{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: 0px;
+  /*border: 1px solid red;*/
+}
+
+#header_map li a
+{
+  position: relative;
+  display: block;
+}
+
+#header_map li a span 
+{
+  display: none;
+}
+
+#header_map li a:hover span 
+{
+  position: relative;
+  display: block;
+  width: 55px;
+  left: 20px;
+  top: 65px;
+  padding: 5px;
+  border: 1px solid #000;
+  background: #fff;
+  text-decoration: none;
+  color: #000;
+  filter: alpha(opacity=80);
+  opacity: 0.8;
+}
+
+#header_map a.img_drop
+{  
+  top: -1px;
+  left: -456px;
+  width: 110px;
+  height: 150px;
+  /*border: 1px solid green;*/
+}
+
+#header_map a.img_DaRWIN
+{  
+  top: -3px;
+  left: -344px;
+  width: 400px;
+  height: 95px;
+  
+  /*border: 1px solid green;*/
+}

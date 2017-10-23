@@ -1,0 +1,40 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/10-Routing
+
+# default rules
+about:
+  url:   /about
+  param: { module: board, action: about }
+contact:
+  url:   /contact
+  param: { module: board, action: contact }
+tour:
+  url:   /tour
+  param: { module: board, action: tour }
+
+search:
+  url:   /search/search
+  param: { module: search, action: search }
+
+geoSearch:
+  url:   /search/geoSearch
+  param: { module: search, action: searchGeo }
+
+register:
+  url:   /register
+  param: { module: register, action: index }
+
+renewed:
+  url:   /register/renewPwdSucceeded
+  param: { module: register, action: renewPwdSucceeded }
+
+homepage:
+  url:   /
+  param: { module: board, action: index }
+
+default_index:
+  url:   /:module
+  param: { action: index }
+
+default:
+  url:   /:module/:action/*

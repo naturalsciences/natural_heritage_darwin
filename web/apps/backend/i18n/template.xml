@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file source-language="EN" target-language="fr" datatype="plaintext" original="messages" date="2010-11-18T14:14:52Z" product-name="messages">
+    <header/>
+    <body>
+      <trans-unit id="1091">
+        <source>The author(s) who published the full name</source>
+        <target>L'auteur qui a publié le nom complet</target>
+      </trans-unit>
+      <trans-unit id="1092">
+        <source>Author name and year, used in mineralogy or bacterology</source>
+        <target>Le nom de l'auteur et l'année, utilisé en minéralogie ou bactériologie</target>
+      </trans-unit>
+      <trans-unit id="1093">
+        <source>The first person(s) who validly published a species</source>
+        <target>La(les) première(s) personne(s) à avoir validement publiée(s) une espèce</target>
+      </trans-unit>
+      <trans-unit id="1094">
+        <source>Author team of the basionym of a combination</source>
+        <target>L'équipe d'auteur du basionyme d'une combinaison</target>
+      </trans-unit>
+      <trans-unit id="1095">
+        <source>The original author when a species was transferred to another genus and the year of the original publication</source>
+        <target>L'auteur original lorsqu'une espèce a été transformée par un autre gène et l'année de la publication originale</target>
+      </trans-unit>
+      <trans-unit id="1096">
+        <source>The citation of the authors responsible for the new combination and the year of its publication</source>
+        <target>La citation des auteurs responsables de la nouvelle combinaison et l'année de cette publication</target>
+      </trans-unit>
+      <trans-unit id="1097">
+        <source>Genus or higher taxon name, used in each domain</source>
+        <target>Genres ou nom taxonomique supérieure, utilisé dans chaque domaine</target>
+      </trans-unit>
+      <trans-unit id="1098">
+        <source>Flag indicating that this is a  hybrid ("x") or a  chimaera ("+")</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1099">
+        <source>Valid name</source>
+        <target>Nom valide</target>
+      </trans-unit>
+      <trans-unit id="1100">
+        <source>Used for cultivated plant name elements</source>
+        <target>Utilisé pour le nom élémentaire des plantes cultivées</target>
+      </trans-unit>
+      <trans-unit id="1101">
+        <source>Author team and Year of the basionym of a species or subspecies</source>
+        <target>Equipe d'auteurs et année du basionyme des espèces et sous-espèces</target>
+      </trans-unit>
+      <trans-unit id="1102">
+        <source>Species name, used in zoology or bacteriology</source>
+        <target>Nom d'espèce, utilisé en zoologie ou bactériologie</target>
+      </trans-unit>
+      <trans-unit id="1103">
+        <source>Subgenus name, used in zoology or bacteriology</source>
+        <target>Nom de sous-genre, utilisé en zoologie ou bactériologie</target>
+      </trans-unit>
+      <trans-unit id="1104">
+        <source>Used to indicate the author and year</source>
+        <target>Utilisé pour indiquer l'auteur et l'année</target>
+      </trans-unit>
+      <trans-unit id="1105">
+        <source>Subspecies name, used in zoology or bacteriology</source>
+        <target>Nom des sous-espèces, utilisé en zoologie ou bactériologie</target>
+      </trans-unit>
+      <trans-unit id="1106">
+        <source>A formal category for cultivars , individual plants or assemblages of plants on the basis of defined similarity</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1107">
+        <source>a cultivar name, which is a Latin botanical name followed by an epithet, mostly in a vernacular language</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1108">
+        <source>species epithet or the epithet of the subdivision of a genus</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1109">
+        <source>The final epithet of a botanical name of infraspecific rank</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1110">
+        <source>Trade name used for a specific cultivar</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1111">
+        <source>Name of the breed of an animal</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1112">
+        <source>The accepted acronym for the Virus, e.g. PCV for Peanut Clump Virus</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="1113">
+        <source>The formal name of a viral species. Example: Saccharomyces cerevisiae virus L-A</source>
+        <target></target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

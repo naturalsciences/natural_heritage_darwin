@@ -1,0 +1,25 @@
+taxonomy:
+  length:
+    model_name : Length
+    property_type : length
+    property_unit : cm
+
+  weight:
+    model_name : Weight
+    property_type : weight
+    property_unit : kg 
+
+  longitude:
+    model_name : 
+    property_type : longitude
+    applies_to: position
+
+  latitude:
+    model_name : latitude 
+    property_type : geo position
+    applies_to: position
+
+  speed:
+    model_name : Speed
+    property_type : Speed
+    property_unit : km/h

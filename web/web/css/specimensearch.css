@@ -1,0 +1,212 @@
+.paging_info
+{
+  margin-right:0;
+}
+
+.panel
+{
+	margin-top:-2px;
+	border:1px solid #5BAABD;
+	padding-top: 30px;
+	padding-left:21px;
+	padding-right: 21px;
+	padding-bottom: 20px;
+	background-color:white;
+	min-height:  300px;
+}
+
+.encod_screen .widget .widget_top_bar
+{
+	background-color:#5BAABD;
+}
+
+.encod_screen .widget .widget_content {
+	background-color:#F6F6F6;
+	border:1px solid #5BAABD;
+}
+
+/** Table of results **/
+
+.tree table
+{
+  vertical-align: middle;
+  width:100%;
+}
+
+.tree thead
+{
+  background-color: #5BAABD;
+  color: white;
+}
+.tree thead th
+{
+  background-color: #5BAABD;
+  color: white;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  padding-left:0.2em;
+
+}
+
+.tree tbody tr:nth-child(even) {background: #E9F2F7}
+.tree tbody tr:nth-child(odd) {background: white}
+
+.tree tbody th, .tree tbody td
+{
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  padding-left:0.2em;
+  margin-bottom:0.2em;
+}
+
+/** Table of results **/
+
+.spec_results
+{
+  background-color:white;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  vertical-align: middle;
+  width:100%;
+  border: 1px solid #5BAABD;
+  clear:both;
+}
+
+.spec_results thead
+{
+  background-color: #5BAABD;
+  text-align: left;
+  color: white;
+}
+
+.spec_results thead a
+{
+  text-decoration:none;
+  color:white;
+}
+
+.spec_results thead a:hover
+{
+  text-decoration:underline;
+}
+
+.spec_results tbody:nth-child(even) tr {background: #E9F2F7}
+.spec_results tbody:nth-child(odd) tr {background: white}
+
+.spec_results th, .spec_results td
+{
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  padding-left:0.2em;
+  vertical-align: top;
+}
+
+.spec_results_container
+{
+  padding-right: 0.5em;
+  margin-bottom:0.3em;
+  margin-top:0.3em;
+  margin-left:0.05em;
+}
+
+.specimensearch_form input:focus,.specimensearch_form textarea:focus
+{
+  border:1px solid #5BAABD;
+}
+
+/* Style for choose column menu */
+
+img#column_display_expand
+{
+  padding-top:0.6em;
+}
+
+.search_columns .widget_collection_container
+{
+  padding:1em;
+  color:white;
+  font-weight:bold;
+}
+
+ul.column_menu > li
+{
+  width:300px;
+/*   border:2px solid red; */
+/*   float:left; */
+  padding: 0.5em;
+}
+
+ul.column_menu > li .cols_title
+{
+  color:white;
+  font-size:large;
+  font-weight:bold;
+  margin-bottom:0.5em;
+}
+
+ul.column_menu > li > ul >li
+{
+  padding:0.2em;
+}
+
+td.col_codes img,  td.col_part_codes img
+{
+  float:left;
+  margin-right: 1em;
+}
+td.col_codes > ul, td.col_part_codes > ul
+{
+  float:left;
+}
+
+li.check span
+{
+  color: green;
+  font-family:Arial Unicode MS,sans-serif;
+
+}
+li.check .uncheck_mark {
+  display:none;
+}
+li.check .check_mark {
+  display:inline;
+}
+
+li.uncheck .uncheck_mark {
+  display:inline;
+}
+li.uncheck .check_mark {
+  display:none;
+}
+
+li.uncheck span
+{
+  color: red;
+  font-family:Arial Unicode MS,sans-serif;
+}
+
+div.aligned_fields
+{
+  width:400px;
+  text-align: right ;		 
+}
+
+img#favorite_on, img#favorite_off
+{
+  cursor:pointer;
+}
+
+.hidden
+{
+  display:none;
+}
+
+.show
+{
+  display:show;
+}
+
+img.tree_cmd_td
+{
+  cursor:pointer;
+}

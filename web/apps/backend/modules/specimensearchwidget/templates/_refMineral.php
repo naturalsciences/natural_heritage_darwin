@@ -1,0 +1,55 @@
+<table>
+  <thead>
+    <tr>
+      <td>
+        <input type="button" id='mineral_precise' value="<?php echo __('Precise search'); ?>" disabled>
+        <input type="button" id='mineral_full_text' value="<?php echo __('Name search'); ?>">
+      </td>
+      <td width='300px'>&nbsp;</td>
+    </tr>
+    <tr id="mineral_full_text_line" class="hidden">
+      <th><?php echo $form['mineral_name']->renderLabel();?></th>
+      <th><?php echo $form['mineral_level_ref']->renderLabel(__('Level'));?></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id="mineral_full_text_line" class="hidden">
+      <td><?php echo $form['mineral_name'];?></td>
+      <td><?php echo $form['mineral_level_ref'];?></td>
+    </tr>
+    <tr id="mineral_precise_line">
+      <td><?php echo $form['mineral_relation'];?></td>
+      <td><?php echo $form['mineral_item_ref'];?></td>
+    </tr>
+  </tbody>
+</table>
+
+<script type="text/javascript">
+$(document).ready(function () {
+  $('#mineral_precise').click(function() {
+    $('#mineral_precise').attr('disabled','disabled') ;
+    $('#mineral_full_text').removeAttr('disabled') ;
+    $('#mineral_precise_line').toggle() ;
+    $(this).closest('table').find('#mineral_full_text_line').toggle() ;
+    $('#mineral_full_text_line').find('input:text').val("") ;
+    $('#mineral_full_text_line').find('select').val('') ;
+  });
+  
+  $('#mineral_full_text').click(function() {
+    $('#mineral_precise').removeAttr('disabled') ;
+    $('#mineral_full_text').attr('disabled','disabled') ;
+    $('#mineral_precise_line').toggle() ;
+    $(this).closest('table').find('#mineral_full_text_line').toggle() ;
+    $('#mineral_precise_line').find('input:text').val("") ;
+    $('#mineral_precise_line').find('input:hidden').val('') ;
+
+//     $('#specimen_search_filters_mineral_item_ref').val('') ;
+//     $('#specimen_search_filters_mineral_item_ref_name').val('') ;
+  }); 
+  
+  if($('#specimen_search_filters_mineral_name').val() != '')
+  {
+    $('#mineral_full_text').trigger("click") ;
+  }
+});
+</script>

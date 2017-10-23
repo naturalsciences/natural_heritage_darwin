@@ -1,0 +1,481 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:simpleType name="datemasks">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:enumeration value="0"/>
+      <xs:enumeration value="32"/>
+      <xs:enumeration value="48"/>
+      <xs:enumeration value="56"/>
+      <xs:enumeration value="60"/>
+      <xs:enumeration value="62"/>
+      <xs:enumeration value="63"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="longitude">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="-180"/>
+      <xs:maxInclusive value="180"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="latitude">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="-90"/>
+      <xs:maxInclusive value="90"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="accuracies">
+    <xs:restriction base="xs:decimal">
+      <xs:minExclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="dates">
+    <xs:restriction base="xs:date">
+      <xs:minInclusive value="0001-01-01"/>
+      <xs:maxInclusive value="2038-12-31"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="datestimes">
+    <xs:restriction base="xs:dateTime">
+      <xs:minInclusive value="0001-01-01T00:00:00"/>
+      <xs:maxInclusive value="2038-12-31T23:59:59"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="objectcategory">
+    <xs:restriction base="xs:NCName">
+      <xs:enumeration value="physical"/>
+      <xs:enumeration value="observation"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="commtypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="phone/fax"/>
+      <xs:enumeration value="e-mail"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="taxon_statuses">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="valid"/>
+      <xs:enumeration value="invalid"/>
+      <xs:enumeration value="deprecated"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="genders">
+    <xs:restriction base="xs:NCName">
+      <xs:enumeration value="M"/>
+      <xs:enumeration value="F"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="gtutagtypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="administrative area"/>
+      <xs:enumeration value="area"/>
+      <xs:enumeration value="historical"/>
+      <xs:enumeration value="hydrographic"/>
+      <xs:enumeration value="other"/>
+      <xs:enumeration value="populated"/>
+      <xs:enumeration value="road"/>
+      <xs:enumeration value="spot"/>
+      <xs:enumeration value="topographic"/>
+      <xs:enumeration value="vegetation"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ordering">
+    <xs:restriction base="xs:integer">
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="collection_objects">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="collection_object"/>
+        <xs:element name="source" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="created_at" type="datestimes" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="collection_object">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="category" minOccurs="0" maxOccurs="1" type="objectcategory"/>
+        <xs:element name="level" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="collection_objects" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="codes" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="collectors" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="donators" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="expedition" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ig" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="comments" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="gtu" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="identifications" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="properties" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="taxon" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="chrono" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="litho" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="lithology" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="mineralogy" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="acquisition" type="acquisitioning" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sex" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="state" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="stage" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="type" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="social_status" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="rock_form" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="individual_count_min" type="xs:nonNegativeInteger" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="individual_count_max" type="xs:nonNegativeInteger" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="specimen_part" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="specimen_status" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="institution" type="peoplenaming" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="building" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="floor" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="room" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="row" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="shelf" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="container_type" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="container_storage" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="container" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sub_container_type" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sub_container_storage" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sub_container" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="part_count_min" type="xs:nonNegativeInteger" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="part_count_max" type="xs:nonNegativeInteger" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="surnumerary" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="complete" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="codes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="code"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="code">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="category" type="xs:string" minOccurs="0" maxOccurs="1" default="main"/>
+        <xs:element name="code_prefix" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="code_prefix_separator" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="code_suffix" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="code_suffix_separator" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="code_date" minOccurs="0" maxOccurs="1" type="datestimes"/>
+        <xs:element name="code_date_mask" minOccurs="0" maxOccurs="1" type="datemasks"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="classification_commons">
+    <xs:sequence>
+      <xs:element name="level" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="status" type="taxon_statuses" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="paleo_commons">
+    <xs:sequence>
+      <xs:group ref="classification_commons" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="local_naming" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="color" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="personnaming">
+    <xs:sequence>
+      <xs:element name="family_name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="given_name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="formated_name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="additional_names" type="xs:string" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="acquisitions">
+    <xs:sequence>
+      <xs:element name="acquisition_category" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="acquisition_date" minOccurs="0" maxOccurs="1" type="dates"/>
+      <xs:element name="acquisition_date_mask" minOccurs="0" maxOccurs="1" type="datemasks"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="acquisitioning" mixed="true">
+    <xs:sequence>
+      <xs:group ref="acquisitions"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="peoplenaming" mixed="true">
+    <xs:sequence>
+      <xs:group ref="personnaming"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:group name="people">
+    <xs:sequence>
+      <xs:group ref="personnaming"/>
+      <xs:element name="institution" type="peoplenaming" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="people_comms" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="order_by" type="ordering" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="title" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="birth_date" type="dates" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="birth_date_mask" type="datemasks" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="gender" type="genders" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:group>
+  <xs:complexType name="personinfo">
+    <xs:sequence>
+      <xs:group ref="people"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="people_comms">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="people_comm"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="people_comm">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="comm_type" type="commtypes" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="tag" type="xs:string"/>
+        <xs:element name="entry" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="collectors">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="collector" minOccurs="1" maxOccurs="unbounded" type="personinfo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="donators">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="donator" minOccurs="1" maxOccurs="unbounded" type="personinfo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="identifiers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="identifier" minOccurs="1" maxOccurs="unbounded" type="personinfo"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="expedition">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="expedition_name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="expedition_from_date" type="dates" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="expedition_from_date_mask" type="datemasks" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="expedition_to_date" type="dates" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="expedition_to_date_mask" type="datemasks" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ig">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ig_num" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="ig_date" type="dates" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="ig_date_mask" type="datemasks" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="gtu">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="gtu_code" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="gtu_from_date" type="datestimes" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="gtu_from_date_mask" type="datemasks" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="gtu_to_date" type="datestimes" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="gtu_to_date_mask" type="datemasks" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="lat_long" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="latitude" type="latitude" minOccurs="1" maxOccurs="1"/>
+              <xs:element name="longitude" type="longitude" minOccurs="1" maxOccurs="1"/>
+              <xs:element name="lat_long_accuracy" type="accuracies" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="elevation" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+                <xs:element name="elevation_value" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="elevation_accuracy" type="accuracies" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element ref="tag_groups" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="comments" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tag_groups">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="tag_group" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tag_group">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="group_name" type="gtutagtypes" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="sub_group_name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="tag_value" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="identifications">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="identification" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="identification">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="notion_concerned" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="notion_date" type="datestimes" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="notion_date_mask" type="datemasks" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="value" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="identifiers" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="notion_concerned" type="xs:string"/>
+  <xs:element name="value" type="xs:string"/>
+  <xs:element name="accuracy" type="xs:decimal"/>
+  <xs:element name="comments">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="comment" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="comment">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="notion_concerned" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="value" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="properties">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="property"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="property">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="property_type" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="property_sub_type" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="property_qualifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="date_from" type="datestimes" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="date_from_mask" type="datemasks" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="date_to" type="datestimes" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="date_to_mask" type="datemasks" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="property_unit" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="property_accuracy_unit" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="property_tool" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="property_method" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="property_values" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="property_values">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="property_value" minOccurs="1" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="property_value">
+    <xs:complexType>
+      <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="unbounded" ref="value"/>
+          <xs:element minOccurs="0" maxOccurs="unbounded" ref="accuracy"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="taxon">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="extinct" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="phylum" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="class" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="order" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="family" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="sub_family" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="tribe" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="genus" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="sub_genus" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="super_species" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="species" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="sub_species" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="variety" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:group ref="classification_commons" minOccurs="1" maxOccurs="1"/>
+        </xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="chrono">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="paleo_commons" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="lower_bound" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="upper_bound" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="eon" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="era" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sub_era" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="system" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="serie" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="stage" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sub_stage" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sub_level_1" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sub_level_2" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="litho">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="paleo_commons" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="group" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="formation" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="member" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="layer" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sub_level_1" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sub_level_2" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="lithology">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="paleo_commons" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="main_group" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="main_class" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="category" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="clan" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="group" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="sub_group" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="rock" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="class" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="mineralogy">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:group ref="paleo_commons" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="class" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="division" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="family" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="group" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="variety" type="xs:NCName" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

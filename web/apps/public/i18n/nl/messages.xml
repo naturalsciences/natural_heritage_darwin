@@ -1,0 +1,948 @@
+<?xml version="1.0" ?><!DOCTYPE xliff  PUBLIC '-//XLIFF//DTD XLIFF//EN'  'http://www.oasis-open.org/committees/xliff/documents/xliff.dtd'><xliff version="1.0">
+  <file datatype="plaintext" original="en" source-language="en" target-language="">
+    <header/>
+    <body>
+          <trans-unit id="1321">
+        <source>Status</source>
+        <target>Status</target>
+        
+      </trans-unit>
+          <trans-unit id="1322">
+        <source>Gender</source>
+        <target>Geslacht</target>
+        
+      </trans-unit>
+          <trans-unit id="1191">
+        <source>Logout</source>
+        <target>Logout</target>
+        
+      </trans-unit>
+          <trans-unit id="1192">
+        <source>Collections</source>
+        <target>Collecties</target>
+        
+      </trans-unit>
+          <trans-unit id="1193">
+        <source>Collection</source>
+        <target>Collectie</target>
+        
+      </trans-unit>
+          <trans-unit id="1194">
+        <source>Name</source>
+        <target>Naam</target>
+        
+      </trans-unit>
+          <trans-unit id="1195">
+        <source>Search</source>
+        <target>Zoeken</target>
+        
+      </trans-unit>
+          <trans-unit id="1196">
+        <source>Details :</source>
+        <target>Details :</target>
+        
+      </trans-unit>
+          <trans-unit id="1197">
+        <source>Taxonomy</source>
+        <target>Taxonomie</target>
+        
+      </trans-unit>
+          <trans-unit id="1198">
+        <source>Level</source>
+        <target>Niveau</target>
+        
+      </trans-unit>
+          <trans-unit id="1199">
+        <source>Chronostratigraphy</source>
+        <target>Chronostratigrafie</target>
+        
+      </trans-unit>
+          <trans-unit id="1200">
+        <source>Lithostratigraphy</source>
+        <target>Lithostratigrafie</target>
+        
+      </trans-unit>
+          <trans-unit id="1201">
+        <source>Lithology</source>
+        <target>Lithologie</target>
+        
+      </trans-unit>
+          <trans-unit id="1202">
+        <source>Mineralogy</source>
+        <target>Mineralogie</target>
+        
+      </trans-unit>
+          <trans-unit id="1203">
+        <source>Category</source>
+        <target>Categorie</target>
+        
+      </trans-unit>
+          <trans-unit id="1204">
+        <source>Type</source>
+        <target>Type status</target>
+        
+      </trans-unit>
+          <trans-unit id="1205">
+        <source>Institution</source>
+        <target>Instelling</target>
+        
+      </trans-unit>
+          <trans-unit id="1206">
+        <source>Names</source>
+        <target>Namen</target>
+        
+      </trans-unit>
+          <trans-unit id="1207">
+        <source>Country</source>
+        <target>Land</target>
+        
+      </trans-unit>
+          <trans-unit id="1208">
+        <source>Tags</source>
+        <target>Tags</target>
+        
+      </trans-unit>
+          <trans-unit id="1209">
+        <source>Taxon</source>
+        <target>Taxon</target>
+        
+      </trans-unit>
+          <trans-unit id="1210">
+        <source>No Specimen Matching</source>
+        <target>Geen overeenkomstig Staal</target>
+        
+      </trans-unit>
+          <trans-unit id="1211">
+        <source>Our Collections</source>
+        <target>Onze Collecties</target>
+        
+      </trans-unit>
+          <trans-unit id="1212">
+        <source>Take a tour</source>
+        <target>rondleiding</target>
+        
+      </trans-unit>
+          <trans-unit id="1213">
+        <source>Contacts</source>
+        <target>Contacten</target>
+        
+      </trans-unit>
+          <trans-unit id="1214">
+        <source>[0]No Results Retrieved|[1]Your query retrieved 1 record|(1,+Inf]Your query retrieved %1% records</source>
+        <target>[0]Geen resultaat|[1]Uw opzoeking levert 1 record op|(1,+Inf]Uw opzoeking levert %1% records op</target>
+        
+      </trans-unit>
+          <trans-unit id="1215">
+        <source>About</source>
+        <target>Over</target>
+        
+      </trans-unit>
+          <trans-unit id="1216">
+        <source>About Us</source>
+        <target>Over ons</target>
+        
+      </trans-unit>
+          <trans-unit id="1217">
+        <source>Contact</source>
+        <target>Contact</target>
+        
+      </trans-unit>
+          <trans-unit id="1219">
+        <source>If you have a question about a specimen, please contact the collection manager of the specimen. &lt;br /&gt;
+      you can find his or her e-mail address in the record.</source>
+        <target>Heeft u echter een vraag over een specimen, gelieve dan rechtstreeks contact op te nemen met de collectiebeheerder van het staal. &lt;br /&gt; U vindt zijn of haar email adres op de fiche van het gezochte specimen bovenaan rechts.</target>
+        
+      </trans-unit>
+          <trans-unit id="1220">
+        <source>Welcome In DaRWIN</source>
+        <target>Welkom bij DaRWIN</target>
+        
+      </trans-unit>
+          <trans-unit id="1221">
+        <source>Discover DaRWIN</source>
+        <target>Ontdek DaRWIN</target>
+        
+      </trans-unit>
+          <trans-unit id="1222">
+        <source>Discover the DaRWIN Interface</source>
+        <target>Ontdek de DaRWIN interface</target>
+        
+      </trans-unit>
+          <trans-unit id="1223">
+        <source>DaRWIN is not just a website for displaying our collections, it's an entire product of collection management.
+    &lt;br /&gt;You can register free of charge and discover this nice tool.&lt;br /&gt;
+    Let's take a look of some of our amazing features :</source>
+        <target>Darwin is niet enkel een virtueel uitstalraam voor onze collecties; het is een volwaardig collectiebeheer toepassing.
+ &lt;br/&gt;U kunt zich gratis registreren en aldus onze aardige tool ontdekken.&lt;br/&gt;
+ Laten we een nadere blik werpen op onze wonderlijke functionaliteiten:</target>
+        
+      </trans-unit>
+          <trans-unit id="1224">
+        <source>Register Now!</source>
+        <target>Registreer u NU!</target>
+        
+      </trans-unit>
+          <trans-unit id="1225">
+        <source>Friendly Working Space:</source>
+        <target>Een aangename werkomgeving:</target>
+        
+      </trans-unit>
+          <trans-unit id="1226">
+        <source>Everything in the DaRWIN interface is build to make &lt;strong&gt;YOUR&lt;/strong&gt; job easier.&lt;br /&gt;
+     You work on a set of specimens? You want to save a search you often use? you want to know who has changed the info?&lt;br /&gt;
+     &lt;strong&gt;DaRWIN can do that!&lt;/strong&gt;</source>
+        <target>Alles binnen de DARWIN interface is zo opgezet om &lt;strong&gt;UW&lt;/strong&gt; job te vergemakkelijken.&lt;br/&gt;
+     Werkt u op een reeks stalen? Wenst u vaak voorkomende zoekcriteria op te slaan voor later gebruik? Weet u graag wie welke info heeft gewijzigd?&lt;br/&gt;
+     &lt;strong&gt;DaRWIN kan u daar goed bij helpen!&lt;/strong&gt;</target>
+        
+      </trans-unit>
+          <trans-unit id="1227">
+        <source>Enhanced Search :</source>
+        <target>Verbeterde zoekfunctie:</target>
+        
+      </trans-unit>
+          <trans-unit id="1319">
+        <source>The captcha is not valid (%error%).</source>
+        <target>De captcha is ongeldig (%error%).</target>
+        
+      </trans-unit>
+          <trans-unit id="1320">
+        <source>I accept the </source>
+        <target>Ik aanvaard de </target>
+        
+      </trans-unit>
+          <trans-unit id="1228">
+        <source>You find the public search a little bit too restrictive? &lt;br /&gt;
+      Let's try our DaRWIN search tool. You will be able to search for tons of information.&lt;br /&gt;
+      From Map to complex taxonomy and synonymies searches.</source>
+        <target>Vindt u de zoekcriteria op onze publieke site net iets te restrictief? &lt;br/&gt;
+ Probeer dan eens onze DaRWIN zoekfunctionaliteit. Daar kunt u wellicht tonnen extra informatie vinden. &lt;br/&gt;
+ Van kaarten tot ingewikkelde taxonomische zoekresultaten of misschien voelt u iets meer voor synoniemen.</target>
+        
+      </trans-unit>
+          <trans-unit id="1229">
+        <source>Customizable Interface :</source>
+        <target>Een interface die kan worden aangepast:</target>
+        
+      </trans-unit>
+          <trans-unit id="1230">
+        <source>In the Darwin tool you have the ability to customize freely your interface.&lt;br /&gt;
+      You are only interested in taxonomy? No problem, no other infos will clutter your tool.&lt;br /&gt;
+      Hide or minimize the information you don't need to focus on.</source>
+        <target>Binnen de DaRWIN toepassing kunt u zelf uw interface geheel customiseren. &lt;br/&gt;
+ Bent u alleen geïnteresseerd in taxonomie? Geen enkel probleem! Uw scherm zal niet belemmerd worden met onnodige informatie.&lt;br/&gt;
+ U kunt zelf de ongewenste informatie verbergen of minimaliseren.</target>
+        
+      </trans-unit>
+          <trans-unit id="1231">
+        <source>About us</source>
+        <target>Over ons</target>
+        
+      </trans-unit>
+          <trans-unit id="1232">
+        <source>Darwin is an &lt;strong&gt;Open Source&lt;/strong&gt; tool for collection management.&lt;br /&gt;
+    It has been build by the IT departement of the Royal Belgian Institute of Natural Sciences.&lt;br /&gt;</source>
+        <target>DaRWIN is een &lt;strong&gt;Open Source&lt;/strong&gt; tool vooe collectiebeheer&lt;br /&gt;
+          Het werd ontwikkeld door het IT departement van het Koninklijk Belgische Instituut voor Natuurwetenschappen.&lt;br /&gt;</target>
+        
+      </trans-unit>
+          <trans-unit id="1233">
+        <source>Our Partners :</source>
+        <target>Onze Partners: </target>
+        
+      </trans-unit>
+          <trans-unit id="1234">
+        <source>http://www.naturalsciences.be</source>
+        <target>http://www.natuurwetenschappen.be</target>
+        
+      </trans-unit>
+          <trans-unit id="1235">
+        <source>Royal Belgian Institute of Natural Sciences</source>
+        <target>Koninklijk Belgisch Instituut voor Natuurwetenschappen</target>
+        
+      </trans-unit>
+          <trans-unit id="1236">
+        <source>http://www.belspo.be</source>
+        <target>http://www.belspo.be</target>
+        
+      </trans-unit>
+          <trans-unit id="1237">
+        <source>The Belgian Federal Science Policy Office</source>
+        <target>Federaal wetenschapsbeleid</target>
+        
+      </trans-unit>
+          <trans-unit id="1238">
+        <source>Register</source>
+        <target>Registreren</target>
+        
+      </trans-unit>
+          <trans-unit id="1239">
+        <source>Go to Backend</source>
+        <target>Naar de Backoffice applicatie</target>
+        
+      </trans-unit>
+          <trans-unit id="1240">
+        <source>Chronostratigraphic unit</source>
+        <target>Chronostratigrafische eenheid</target>
+        
+      </trans-unit>
+          <trans-unit id="1241">
+        <source>Lithostratigraphic unit</source>
+        <target>Lithostratigrafische eenheid</target>
+        
+      </trans-unit>
+          <trans-unit id="1242">
+        <source>Lithologic unit</source>
+        <target>Lithologische eenheid</target>
+        
+      </trans-unit>
+          <trans-unit id="1243">
+        <source>Mineralogic unit</source>
+        <target>Mineralogische eenheid</target>
+        
+      </trans-unit>
+          <trans-unit id="1244">
+        <source>Expedition</source>
+        <target>Expeditie</target>
+        
+      </trans-unit>
+          <trans-unit id="1245">
+        <source>Taxon common name</source>
+        <target>Taxon inheemse naam </target>
+        
+      </trans-unit>
+          <trans-unit id="1246">
+        <source>Chrono common name</source>
+        <target>Chrono inheemse naam</target>
+        
+      </trans-unit>
+          <trans-unit id="1247">
+        <source>Litho common name</source>
+        <target>Litho inheemse naam</target>
+        
+      </trans-unit>
+          <trans-unit id="1248">
+        <source>Lithologic common name</source>
+        <target>Lithologische inheemse naam</target>
+        
+      </trans-unit>
+          <trans-unit id="1249">
+        <source>Mineral common name</source>
+        <target>Inheemse naam Mineraal</target>
+        
+      </trans-unit>
+          <trans-unit id="1250">
+        <source>Sex</source>
+        <target>Geslacht</target>
+        
+      </trans-unit>
+          <trans-unit id="1251">
+        <source>State</source>
+        <target>Toestand</target>
+        
+      </trans-unit>
+          <trans-unit id="1252">
+        <source>Stage</source>
+        <target>Stadium</target>
+        
+      </trans-unit>
+          <trans-unit id="1253">
+        <source>Social Status</source>
+        <target>Sociale status</target>
+        
+      </trans-unit>
+          <trans-unit id="1254">
+        <source>Rock Form</source>
+        <target>Rotsformatie</target>
+        
+      </trans-unit>
+          <trans-unit id="1255">
+        <source>Individual Count</source>
+        <target>Aantal individuen</target>
+        
+      </trans-unit>
+          <trans-unit id="1256">
+        <source>View Specimens</source>
+        <target>Bekijk Stalen</target>
+        
+      </trans-unit>
+          <trans-unit id="1257">
+        <source>Specimen Record</source>
+        <target>Staal record</target>
+        
+      </trans-unit>
+          <trans-unit id="1258">
+        <source>Conservator</source>
+        <target>Conservator</target>
+        
+      </trans-unit>
+          <trans-unit id="1259">
+        <source>Common Names</source>
+        <target>Inheemse namen</target>
+        
+      </trans-unit>
+          <trans-unit id="1260">
+        <source>Classification</source>
+        <target>Classificatie</target>
+        
+      </trans-unit>
+          <trans-unit id="1261">
+        <source>Community/language</source>
+        <target>Gemeenschap/taal</target>
+        
+      </trans-unit>
+          <trans-unit id="1262">
+        <source>Classifications</source>
+        <target>Classificaties</target>
+        
+      </trans-unit>
+          <trans-unit id="1263">
+        <source>level</source>
+        <target>Niveau</target>
+        
+      </trans-unit>
+          <trans-unit id="1265">
+        <source>Lithostatigraphy</source>
+        <target>Lithostratigrafie</target>
+        
+      </trans-unit>
+          <trans-unit id="1266">
+        <source>Specimen Characteristics</source>
+        <target>Characteristieken stalen</target>
+        
+      </trans-unit>
+          <trans-unit id="1267">
+        <source>Number of individual</source>
+        <target>Aantal individuen</target>
+        
+      </trans-unit>
+          <trans-unit id="1268">
+        <source>Between </source>
+        <target>Tussen </target>
+        
+      </trans-unit>
+          <trans-unit id="1269">
+        <source>Close this record</source>
+        <target>Sluit dit record</target>
+        
+      </trans-unit>
+          <trans-unit id="1270">
+        <source>Physical</source>
+        <target>Tastbaar</target>
+        
+      </trans-unit>
+          <trans-unit id="1272">
+        <source>Other</source>
+        <target>Andere</target>
+        
+      </trans-unit>
+          <trans-unit id="1273">
+        <source>Search Specimens/Rocks/Minerals</source>
+        <target>Zoek Stalen/Stenen/Mineralen</target>
+        
+      </trans-unit>
+          <trans-unit id="1274">
+        <source>Specimen search criteria</source>
+        <target>Zoekcriteria stalen</target>
+        
+      </trans-unit>
+          <trans-unit id="1275">
+        <source>Scientific Name</source>
+        <target>Wetenschappelijke naam</target>
+        
+      </trans-unit>
+          <trans-unit id="1276">
+        <source>Common Name</source>
+        <target>Inheemse naam</target>
+        
+      </trans-unit>
+          <trans-unit id="1277">
+        <source>Countries</source>
+        <target>Landen</target>
+        
+      </trans-unit>
+          <trans-unit id="1278">
+        <source>Please use &quot;;&quot; as tag separator.</source>
+        <target>Gelieve de &quot;;&quot; te gebruiken als tag scheidingsteken.</target>
+        
+      </trans-unit>
+          <trans-unit id="1279">
+        <source>Types</source>
+        <target>Type statussen</target>
+        
+      </trans-unit>
+          <trans-unit id="1280">
+        <source>Sexes</source>
+        <target>Geslachten</target>
+        
+      </trans-unit>
+          <trans-unit id="1281">
+        <source>Stages</source>
+        <target>Stadia</target>
+        
+      </trans-unit>
+          <trans-unit id="1282">
+        <source>Clear</source>
+        <target>Wissen</target>
+        
+      </trans-unit>
+          <trans-unit id="1283">
+        <source>Search results</source>
+        <target>Zoekresultaten</target>
+        
+      </trans-unit>
+          <trans-unit id="1284">
+        <source>Search Results</source>
+        <target>Zoekresultaten</target>
+        
+      </trans-unit>
+          <trans-unit id="1285">
+        <source>Back to criteria</source>
+        <target>Terug naar de criteria</target>
+        
+      </trans-unit>
+          <trans-unit id="1286">
+        <source>View</source>
+        <target>Overzicht</target>
+        
+      </trans-unit>
+          <trans-unit id="1287">
+        <source>Specimen criteria</source>
+        <target>Zoekcriteria stalen</target>
+        
+      </trans-unit>
+          <trans-unit id="1288">
+        <source>Specimen</source>
+        <target>Staal</target>
+        
+      </trans-unit>
+          <trans-unit id="1289">
+        <source>Individual</source>
+        <target>Individu</target>
+        
+      </trans-unit>
+          <trans-unit id="1291">
+        <source>Your password has been successfully renewed.</source>
+        <target>Uw paswoord werd succesvol hernieuwd</target>
+        
+      </trans-unit>
+          <trans-unit id="1292">
+        <source>You can now log in and enjoy our enhanced collection services.</source>
+        <target>U kunt zich nu inloggen en genieten van onze vernieuwde collectiefunctionaliteiten.</target>
+        
+      </trans-unit>
+          <trans-unit id="1294">
+        <source>Dear</source>
+        <target>Beste</target>
+        
+      </trans-unit>
+          <trans-unit id="1295">
+        <source>Thank you for having registered on DaRWIN 2.</source>
+        <target>Dank u voor uw registratie op DaRWIN 2.</target>
+        
+      </trans-unit>
+          <trans-unit id="1296">
+        <source>You should have received a reminder of your username and password on the e-mail address provided.</source>
+        <target>U zult een herinnering ontvangen van uw gebruikersnaam en paswoord via het email adres dat u heeft opgegeven.</target>
+        
+      </trans-unit>
+          <trans-unit id="1297">
+        <source>Please fill in the application form</source>
+        <target>Gelieve het aanvraagformulier in te vullen</target>
+        
+      </trans-unit>
+          <trans-unit id="1298">
+        <source>For your reminder, here is your user name:</source>
+        <target>Ter herinnering, hier is uw gebruikersnaam:</target>
+        
+      </trans-unit>
+          <trans-unit id="1299">
+        <source>Rocks</source>
+        <target>Stenen</target>
+        
+      </trans-unit>
+          <trans-unit id="1300">
+        <source>Mineral</source>
+        <target>Mineraal</target>
+        
+      </trans-unit>
+          <trans-unit id="1301">
+        <source>Records per page: </source>
+        <target>Records per pagina: </target>
+        
+      </trans-unit>
+          <trans-unit id="1302">
+        <source>&quot;%value%&quot; must be at least %min_length% characters.</source>
+        <target>&quot;%value%&quot; moet ten minste %min_length% karakters bevatten.</target>
+        
+      </trans-unit>
+          <trans-unit id="1303">
+        <source>Password must be at least %min_length% characters length</source>
+        <target>Het paswoord moet ten minste %min_length% karakters lang zijn</target>
+        
+      </trans-unit>
+          <trans-unit id="1304">
+        <source>Passwords must be equal and may not contain spaces</source>
+        <target>Beide paswoorden moeten gelijk zijn en mogen geen spaties bevatten</target>
+        
+      </trans-unit>
+          <trans-unit id="1305">
+        <source>You cannot register without accepting DaRWIN 2  terms of use</source>
+        <target>U kunt zich niet registreren zonder dat u de DaRWIN 2 terms of use niet heeft aanvaard</target>
+        
+      </trans-unit>
+          <trans-unit id="1306">
+        <source>Required.</source>
+        <target>Verplicht.</target>
+        
+      </trans-unit>
+          <trans-unit id="1307">
+        <source>If you've lost your password, please</source>
+        <target>Indien u uw paswoord heeft vergeten, gelieve</target>
+        
+      </trans-unit>
+          <trans-unit id="1308">
+        <source>reset your password</source>
+        <target>Herinitialiseer uw paswoord</target>
+        
+      </trans-unit>
+          <trans-unit id="1309">
+        <source>Send me a 'reset account' mail</source>
+        <target>Zend mij een bericht 'heractiveer mijn account'</target>
+        
+      </trans-unit>
+          <trans-unit id="1310">
+        <source>Reset your account.</source>
+        <target>Heractiveer mijn account.</target>
+        
+      </trans-unit>
+          <trans-unit id="1311">
+        <source>Your login</source>
+        <target>Uw email adres</target>
+        
+      </trans-unit>
+          <trans-unit id="1313">
+        <source>We didn't find any reference with the login and password you provided</source>
+        <target>Wij hebben geen overeenkomst gevonden met de gebruikersnaam en het paswoord dat u heeft opgegeven</target>
+        
+      </trans-unit>
+          <trans-unit id="1314">
+        <source>E-mail is required</source>
+        <target>Het veld email is verplicht</target>
+        
+      </trans-unit>
+          <trans-unit id="1315">
+        <source>Invalid E-mail address</source>
+        <target>Ongeldig email adres</target>
+        
+      </trans-unit>
+          <trans-unit id="1316">
+        <source>must be at least 4 characters.</source>
+        <target>Moet ten minste 4 karakters bevatten.</target>
+        
+      </trans-unit>
+          <trans-unit id="1317">
+        <source>Bad login or password</source>
+        <target>Ongeldige login of paswoord</target>
+        
+      </trans-unit>
+          <trans-unit id="1318">
+        <source>Login is required</source>
+        <target>Uw gebruikersnaam is verplicht</target>
+        
+      </trans-unit>
+          <trans-unit id="1323">
+        <source>Family Name</source>
+        <target>Familienaam</target>
+        
+      </trans-unit>
+          <trans-unit id="1324">
+        <source>Given Name</source>
+        <target>Voornaam</target>
+        
+      </trans-unit>
+          <trans-unit id="1325">
+        <source>Login</source>
+        <target>Login</target>
+        
+      </trans-unit>
+          <trans-unit id="1326">
+        <source>Password</source>
+        <target>Paswoord</target>
+        
+      </trans-unit>
+          <trans-unit id="1327">
+        <source>Confirm password</source>
+        <target>Bevestig uw paswoord</target>
+        
+      </trans-unit>
+          <trans-unit id="1328">
+        <source>e-mail</source>
+        <target>Email</target>
+        
+      </trans-unit>
+          <trans-unit id="1329">
+        <source>Preferred language</source>
+        <target>Voorkeurtaal</target>
+        
+      </trans-unit>
+          <trans-unit id="1330">
+        <source>Title</source>
+        <target>Titel</target>
+        
+      </trans-unit>
+          <trans-unit id="1331">
+        <source>Captcha</source>
+        <target>Captcha</target>
+        
+      </trans-unit>
+          <trans-unit id="1332">
+        <source>Moral person</source>
+        <target>Instituut</target>
+        
+      </trans-unit>
+          <trans-unit id="1333">
+        <source>Physical person</source>
+        <target>Persoon</target>
+        
+      </trans-unit>
+          <trans-unit id="1334">
+        <source>Name is required</source>
+        <target>De naam is verplicht</target>
+        
+      </trans-unit>
+          <trans-unit id="1335">
+        <source>E-mail is not of a valid form</source>
+        <target>Ongeldig email formaat</target>
+        
+      </trans-unit>
+          <trans-unit id="1336">
+        <source>Password must contain at least :&lt;br /&gt; * a case mix&lt;br /&gt; * one digit&lt;br /&gt; * minimum 6 characters length</source>
+        <target>Het paswoord moet op z'n minst :&lt;br /&gt; * hoofdletters en kleine letters bevatten&lt;br /&gt; * één getal bevatten&lt;br /&gt; * minimum 6 karakters lang zijn</target>
+        
+      </trans-unit>
+          <trans-unit id="1339">
+        <source>Username</source>
+        <target>Gebruikersnaam</target>
+        
+      </trans-unit>
+          <trans-unit id="1341">
+        <source>Scientists wishing to visit one of our collections should contact the collection manager directly.  For more information on how to apply for a visit, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</source>
+        <target>Wetenschappers die één van onze collecties wenst te bezoeken, dient rechtstreeks contact op te nemen met de desbetreffende collectiebeheerder. Indien u meer informatie wenst omtrent de praktische regelingen voor uw bezoek, gelieve onderstaande KBIN bezoekreglementen te raadplegen.</target>
+        
+      </trans-unit>
+          <trans-unit id="1342">
+        <source>Academic personnel wishing to loan collection objects should contact the collection manager directly.  For more information on how to apply for a loan, please refer to the RBINS rules and regulations below . Currently, this pdf document is not yet available in English.</source>
+        <target>Academici die collectieobjecten wensen  te ontlenen, dienen rechtstreeks contact op te nemen met de desbetreffende collectiebeheerder. Indien u meer informatie wenst omtrent de praktische regelingen omtrent ontleningen, gelieve onderstaande KBIN reglementen te raadplegen.</target>
+        
+      </trans-unit>
+          <trans-unit id="1343">
+        <source>Settlement of loans for study</source>
+        <target>Reglement voor uitleningen voor onderzoek</target>
+        
+      </trans-unit>
+          <trans-unit id="1344">
+        <source>Settlement of external visiting scientists</source>
+        <target>Reglement voor externe bezoekende wetenschappers</target>
+        
+      </trans-unit>
+          <trans-unit id="1345">
+        <source>terms of use</source>
+        <target>terms of use</target>
+        
+      </trans-unit>
+          <trans-unit id="1346">
+        <source>Dear %username%</source>
+        <target>Beste %username%</target>
+        
+      </trans-unit>
+          <trans-unit id="1347">
+        <source>Dear %usertitle% %username%</source>
+        <target>Beste %usertitle% %username%</target>
+        
+      </trans-unit>
+          <trans-unit id="1348">
+        <source>To log you in, you can visit us on %darwinurl%</source>
+        <target>Om u in te loggen, kunt u ons bereiken op %darwinurl%</target>
+        
+      </trans-unit>
+          <trans-unit id="1350">
+        <source>User name: %username%</source>
+        <target>Gebruikersnaam: %username%</target>
+        
+      </trans-unit>
+          <trans-unit id="1351">
+        <source>Abbreviation</source>
+        <target>Afkorting</target>
+        
+      </trans-unit>
+          <trans-unit id="1368">
+        <source>DaRWIN 2 registration</source>
+        <target>DaRWIN 2 registratie</target>
+        
+      </trans-unit>
+          <trans-unit id="1369">
+        <source>DaRWIN 2 team</source>
+        <target>het DaRWIN 2 team</target>
+        
+      </trans-unit>
+          <trans-unit id="1483">
+        <source>Your Name</source>
+        <target>Uw naam</target>
+        
+      </trans-unit>
+          <trans-unit id="1484">
+        <source>anonymous</source>
+        <target>Anonieme gebruiker</target>
+        
+      </trans-unit>
+          <trans-unit id="1485">
+        <source>You think there's a mistake ? please suggest us a correction</source>
+        <target>Denkt u een fout te hebben gevonden? Gelieve ons een suggestie te sturen ter correctie.</target>
+        
+      </trans-unit>
+          <trans-unit id="1486">
+        <source>Submit</source>
+        <target>Versturen</target>
+        
+      </trans-unit>
+          <trans-unit id="1487">
+        <source>Comment</source>
+        <target>Commentaar</target>
+        
+      </trans-unit>
+          <trans-unit id="1488">
+        <source>Thank you for your help</source>
+        <target>Dank voor uw hulp</target>
+        
+      </trans-unit>
+          <trans-unit id="1606">
+        <source>If you have a problem using the tool, or if you want to help : write a mail at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</source>
+        <target>Indien u een probleem heeft met de applicatie, of indien u hulp wenst : gelieve een bericht te sturen naar &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt;</target>
+        
+      </trans-unit>
+          <trans-unit id="1607">
+        <source>Oops! Page Not Found</source>
+        <target>Oops! Pagina Niet Gevonden</target>
+        
+      </trans-unit>
+          <trans-unit id="1608">
+        <source>The server returned a 404 response.</source>
+        <target>De server heeft een 404 antwoord</target>
+        
+      </trans-unit>
+          <trans-unit id="1609">
+        <source>Did you type the URL?</source>
+        <target>Heeft u de URL manueel ingegeven?</target>
+        
+      </trans-unit>
+          <trans-unit id="1610">
+        <source>You may have typed the address (URL) incorrectly. Check it to make sure you've got the exact right spelling, capitalization, etc.</source>
+        <target>U heeft misschien het adres (URL) fout ingegeven. Gelieve na te gaan of de spelling correct is, de hoofdlettergevoeligheid werd gerespecteerd, etc.</target>
+        
+      </trans-unit>
+          <trans-unit id="1611">
+        <source>Did you follow a link from somewhere else at this site?</source>
+        <target>Heeft u een link gevolgd van op een andere pagina in deze site?</target>
+        
+      </trans-unit>
+          <trans-unit id="1612">
+        <source>If you reached this page from another part of this site, please email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; so we can correct our mistake.</source>
+        <target>Indien u deze pagina ziet, dan werd u fout doorgestuurd van op onze site. Gelieve ons hiervan op de hoogte te brengen via &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; zodat wij dit kunnen corrigeren.</target>
+        
+      </trans-unit>
+          <trans-unit id="1613">
+        <source>Did you follow a link from another site?</source>
+        <target>Heeft u een link gevolgd van op een andere website?</target>
+        
+      </trans-unit>
+          <trans-unit id="1614">
+        <source>Links from other sites can sometimes be outdated or misspelled. Email us at &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; where you came from and we can try to contact the other site in order to fix the problem.</source>
+        <target>Links van op andere websites kunnen soms verouderd zijn of een foute spelwijze bevatten. Gelieve ons te contacteren op &lt;a href=&quot;mailto:%mail%&quot;&gt;%mail%&lt;/a&gt; zodat wij kunnen trachten om contact op te nemen met de andere site om deze fout te corrigeren.</target>
+        
+      </trans-unit>
+          <trans-unit id="1615">
+        <source>What's next</source>
+        <target>Wat nu</target>
+        
+      </trans-unit>
+          <trans-unit id="1616">
+        <source>Back to previous page</source>
+        <target>Terug naar vorige pagina</target>
+        
+      </trans-unit>
+          <trans-unit id="1706">
+        <source>Related Files</source>
+        <target>Gerelateerde bestanden</target>
+        
+      </trans-unit>
+          <trans-unit id="1707">
+        <source>Download</source>
+        <target>Download</target>
+        
+      </trans-unit>
+      <trans-unit id="1708">
+        <source>Staff Member</source>
+        <target>Staff Member</target>
+        
+      </trans-unit>
+      <trans-unit id="1709">
+        <source>Zoological Search</source>
+        <target>Zoölogische opzoeking</target>
+        
+      </trans-unit>
+      <trans-unit id="1710">
+        <source>Geo/Paleo Search</source>
+        <target>Geo/Paleo opzoeking</target>
+        
+      </trans-unit>
+      <trans-unit id="1711">
+        <source>Properties</source>
+        <target>Eigenschappen</target>
+        
+      </trans-unit>
+      <trans-unit id="1712">
+        <source>Codes</source>
+        <target>Codes</target>
+        
+      </trans-unit>
+      <trans-unit id="1713">
+        <source>Property type</source>
+        <target>Type status</target>
+        
+      </trans-unit>
+      <trans-unit id="1714">
+        <source>Applies To</source>
+        <target>Geldig voor</target>
+        
+      </trans-unit>
+      <trans-unit id="1715">
+        <source>Date From</source>
+        <target>Begindatum</target>
+        
+      </trans-unit>
+      <trans-unit id="176">
+        <source>Date To</source>
+        <target>Einddatum</target>
+        
+      </trans-unit>
+      <trans-unit id="1717">
+        <source>Value</source>
+        <target>Waarde</target>
+        
+      </trans-unit>
+      <trans-unit id="1718">
+        <source>Specimen State</source>
+        
+      </trans-unit>
+      <trans-unit id="1719">
+        <source>You cannot register without accepting DaRWIN 2 terms of use</source>
+        
+      </trans-unit>
+      <trans-unit id="1720">
+        <source>Recommended browser for DaRWIN :</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

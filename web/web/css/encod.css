@@ -1,0 +1,209 @@
+/****************MUST BE CLEANED UP!!! ***********************/
+
+.tabs
+{
+  list-style-type:none;
+  margin:0;
+  padding-bottom:34px;
+  padding-left: 25px;
+}
+
+.tabs > a{
+  width: 164px;
+  padding-top: 10px;
+  text-align:center;
+  float:left;
+  margin:2px 2px 0;
+  height: 20px;
+  cursor:pointer;
+  font-size : 9pt;
+}
+
+.tabs > a.enabled
+{
+  background-image:url(/images/encod_tab_enable.png);
+  background-repeat:no-repeat;
+  height:20px;
+}
+
+.tabs > a.selected
+{
+  border-bottom:1px solid white;
+  height: 21px;
+}
+
+.tabs > a.disabled
+{
+  background-image:url(/images/encod_tab_disable.png);
+  background-repeat:no-repeat;
+  color:#d3d3d1;
+  border-bottom:1px solid #c0d147;
+}
+
+.panel
+{
+  padding-top: 30px;
+  min-height:  300px;
+/*   margin-top:-2px; */
+/*   border:1px solid #c0d147; */
+/*   padding-left:21px; */
+/*   padding-right: 21px; */
+/*   padding-bottom: 20px; */
+/*   background-color:white; */
+
+}
+
+
+/**** WIDGET ENCODING ****/
+h3.spec .title {
+  border-bottom: 3px solid #C1CF56;
+}
+
+.encod_screen .widget .widget_top_bar
+{
+  background-color:#C1CF56;
+  color:#525A20
+}
+.encod_screen .widget .widget_top_bar span
+{
+  text-shadow: 1px 1px 1px white;
+}
+
+.encod_screen .widget .widget_content {
+  background-color:#F6F6F6;
+  border:1px solid #C1CF56;
+  padding-bottom:28px;
+}
+
+.form
+{
+  line-height: 20px;
+}
+
+.help_ico
+{
+  vertical-align:middle;
+}
+
+#arrow_right {
+  right:30px;
+}
+
+#arrow_left {
+  left:30px;
+}
+
+#arrow_right, #arrow_left {
+  position:absolute;
+  top:200px;
+  cursor:pointer;
+}
+
+.encoding
+{
+  position:relative;
+}
+
+.scrollContainer > div.panel {
+    padding: 20px;
+/*     height: 400px; */
+/*     width: 1040px; */
+  float: left;
+  position: relative;
+}
+
+#slider .scroll
+{
+  overflow: hidden;
+}
+
+.error_fld
+{
+  border: 1px solid #EC9593;
+}
+
+.link_catalogue
+{
+  margin-left:1em;
+}
+
+td >.link_catalogue
+{
+  margin-left:0em;
+}
+
+.catalogue_action_type
+{
+  font-weight:bold;
+  display:block;
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+#relation_catalogue_name
+{
+  float:left;
+  border:1px solid #C1CF56;
+  padding: 0.2em;
+}
+
+.one_col
+{
+  margin-top: 1.5em;
+}
+
+.add_item_button, .change_item_button
+{
+ font-size:x-small;
+}
+
+.parts_overview
+{
+  width:100%;
+}
+
+table.extended_info th
+{
+  padding: 0.2em;
+}
+
+table.extended_info hr
+{
+  color: #A27D35;
+  background-color: #A27D35;
+  height: 1px;
+  border: 0;
+}
+
+#taxon_orig
+{
+  margin-bottom:1em;
+}
+#taxon_orig span
+{
+  display: block;
+  font-style: italic;
+  margin-bottom: 1em;
+  margin-top: 1em;
+  text-decoration: underline;
+}
+
+.loan_form textarea {
+  width: 100%;
+}
+.loan_overview_form {
+  z-index:-1;
+}
+.unit_external .button {
+  float:none;
+}
+
+.relationship_detail_edit {
+  background-color: #E9EDBE;
+  border: 1px solid #C1CF56;
+  vertical-align:center;
+}
+
+.relationship_detail_edit td{
+  padding: 0.5em;
+}

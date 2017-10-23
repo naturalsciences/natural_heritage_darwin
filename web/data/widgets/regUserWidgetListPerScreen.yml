@@ -1,0 +1,1867 @@
+bw1:
+   col_num: 1
+   category: board_widget
+   group_name: savedSearch
+   mandatory: false
+   order_by: 1
+   opened: false
+   visible: true
+   title_perso: My saved searches
+   all_public: true
+
+bw2:
+   col_num: 1
+   category: board_widget
+   group_name: savedSpecimens
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: true
+   title_perso: My saved specimens
+   all_public: true
+
+bw3:
+   col_num: 1
+   category: board_widget
+   group_name: news
+   mandatory: false
+   order_by: 3
+   opened: false
+   visible: true
+   title_perso: News
+   all_public: true
+   is_available: true
+
+bw4:
+   col_num: 2
+   category: board_widget
+   group_name: myLoans
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: My loans
+   all_public: true
+
+usr0:
+   col_num: 1
+   category: users_widget
+   group_name: info
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: User information
+   all_public: true
+
+usr1:
+   col_num: 1
+   category: users_widget
+   group_name: comm
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: Communications
+   all_public: true
+
+usr2:
+   col_num: 1
+   category: users_widget
+   group_name: address
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Addresses
+   all_public: true
+
+sps1:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: refCollection
+   mandatory: true
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Collection
+   all_public: true
+
+sps2:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: refTaxon
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Taxonomy
+   all_public: true
+
+sps3:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: refGtu
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Sampling Location
+   all_public: true
+
+sps4:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: latlong
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: false
+   title_perso: Latitude Longitude
+   all_public: true
+
+sps5:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: refChrono
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: Chronostratigraphy
+   all_public: true
+
+sps6:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: refLithology
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: Lithology
+   all_public: true
+
+sps7:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: refLitho
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Lithostratigraphy
+   all_public: true
+
+sps8:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: refMineral
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Mineralogy
+   all_public: true
+
+sps9:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: specIds
+   mandatory: false
+   order_by: 5
+   opened: false
+   visible: false
+   title_perso: Advanced: Search By ID
+   all_public: true
+
+sps10:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: social
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Social Status
+   all_public: true
+
+sps11:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: sex
+   mandatory: false
+   order_by: 5
+   opened: false
+   visible: false
+   title_perso: Sex
+   all_public: true
+
+sps12:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: stage
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Stage
+   all_public: true
+
+sps13:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: status
+   mandatory: false
+   order_by: 7
+   opened: false
+   visible: false
+   title_perso: Sexual State
+   all_public: true
+
+sps14:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: rockform
+   mandatory: false
+   order_by: 8
+   opened: false
+   visible: false
+   title_perso: Rock Form
+   all_public: true
+
+sps15:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: codes
+   mandatory: false
+   order_by: 9
+   opened: false
+   visible: false
+   title_perso: Codes
+   all_public: true
+
+sps16:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: tools
+   mandatory: false
+   order_by: 7
+   opened: false
+   visible: false
+   title_perso: Tools
+   all_public: true
+
+sps17:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: methods
+   mandatory: false
+   order_by: 8
+   opened: false
+   visible: false
+   title_perso: Methods
+   all_public: true
+
+sps18:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: multimedia
+   mandatory: false
+   order_by: 9
+   opened: true
+   visible: true
+   title_perso: Type of search
+   all_public: true
+
+sps19:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: type
+   mandatory: false
+   order_by: 9
+   opened: true
+   visible: true
+   title_perso: Type
+   all_public: true
+
+sps20:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: refIgs
+   mandatory: false
+   order_by: 10
+   opened: true
+   visible: true
+   title_perso: I.G.
+   all_public: true
+
+sps21:
+   col_num: 1
+   category: specimensearch_widget
+   group_name: expedition
+   mandatory: false
+   order_by: 11
+   opened: false
+   visible: false
+   title_perso: Expedition
+   all_public: true
+
+sps22:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: acquisitions
+   mandatory: false
+   order_by: 10
+   opened: true
+   visible: false
+   title_perso: Acquisitions
+   all_public: true
+
+sps23:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: people_role
+   mandatory: false
+   order_by: 11
+   opened: true
+   visible: false
+   title_perso: People role
+   all_public: true
+
+#sps24:
+#   col_num: 2
+#   category: specimensearch_widget
+#   group_name: part
+#   mandatory: false
+#   order_by: 12
+#   opened: true
+#   visible: false
+#   title_perso: Part
+#   all_public: true
+
+sps25:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: properties
+   mandatory: false
+   order_by: 13
+   opened: true
+   visible: false
+   title_perso: Properties
+   all_public: true
+
+sps26:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: comments
+   mandatory: false
+   order_by: 14
+   opened: true
+   visible: false
+   title_perso: Comments
+   all_public: true
+
+#ftheeten 2016 06 22   
+sps27:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: specimenCount
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Specimen count
+   all_public: true
+
+#ftheeten 2016 07 05   
+sps27:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: ecology
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Ecology
+   all_public: true
+
+#ftheeten 2016 07 07   
+sps28:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: gtuDate
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Gathering date
+   all_public: true 
+
+#ftheeten 20170502  
+sps29:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: loans
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Loans
+   all_public: true
+
+#ftheeten 20170502  
+sps30:
+   col_num: 2
+   category: specimensearch_widget
+   group_name: storageParts
+   mandatory: false
+   order_by: 15
+   opened: false
+   visible: false
+   title_perso: Storage parts
+   all_public: true        
+   
+sw1:
+   col_num: 1
+   category: specimen_widget
+   group_name: refCollection
+   mandatory: true
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Collection
+   all_public: true
+
+sw2:
+   col_num: 1
+   category: specimen_widget
+   group_name: refCodes
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Codes
+   all_public: true
+
+sw3:
+   col_num: 1
+   category: specimen_widget
+   group_name: refTaxon
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: Taxonomy
+   all_public: true
+
+sw4:
+   col_num: 1
+   category: specimen_widget
+   group_name: specimensRelationships
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Relationships
+   all_public: true
+
+sw5:
+   col_num: 1
+   category: specimen_widget
+   group_name: refChrono
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: false
+   title_perso: Chronostratigraphy
+   all_public: true
+
+sw6:
+   col_num: 1
+   category: specimen_widget
+   group_name: refLitho
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: false
+   title_perso: Lithostratigraphy
+   all_public: true
+
+sw7:
+   col_num: 1
+   category: specimen_widget
+   group_name: refLithology
+   mandatory: false
+   order_by: 7
+   opened: true
+   visible: false
+   title_perso: Lithology
+   all_public: true
+
+sw8:
+   col_num: 1
+   category: specimen_widget
+   group_name: refMineral
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: false
+   title_perso: Mineralogy
+   all_public: true
+
+sw12:
+   col_num: 2
+   category: specimen_widget
+   group_name: refExpedition
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Expedition
+   all_public: true
+
+sw14:
+   col_num: 2
+   category: specimen_widget
+   group_name: refGtu
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Sampling location
+   all_public: true
+
+sw15:
+   col_num: 2
+   category: specimen_widget
+   group_name: method
+   order_by: 5
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: Collecting method
+   all_public: true
+
+sw16:
+   col_num: 2
+   category: specimen_widget
+   mandatory: false
+   group_name: tool
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Collecting tools
+   all_public: true
+
+sw17:
+   col_num: 2
+   category: specimen_widget
+   mandatory: false
+   group_name: refDonators
+   order_by: 7
+   opened: false
+   visible: false
+   title_perso: Donators or Sellers
+   all_public: true
+
+sw18:
+   col_num: 2
+   category: specimen_widget
+   group_name: refProperties
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Properties
+   all_public: true
+
+sw19:
+   col_num: 2
+   category: specimen_widget
+   group_name: refComment
+   mandatory: false
+   order_by: 9
+   opened: true
+   visible: true
+   title_perso: Comments
+   all_public: true
+
+sw21:
+   col_num: 2
+   category: specimen_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 11
+   opened: true
+   visible: true
+   title_perso: External Links
+   all_public: true
+
+sw22:
+   col_num: 2
+   category: specimen_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 10
+   opened: true
+   visible: true
+   title_perso: Suggestions / Report problem
+   all_public: true
+
+sw23:
+   col_num: 2
+   category: specimen_widget
+   group_name: refRelatedFiles
+   mandatory: false
+   order_by: 11
+   opened: false
+   visible: false
+   is_available: true
+   title_perso: Related Files
+   all_public: true
+
+sw24:
+   col_num: 2
+   category: specimen_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 12
+   opened: false
+   visible: false
+   is_available: true
+   title_perso: Bibliography
+   all_public: true
+
+sw25:
+   col_num: 1
+   category: specimen_widget
+   group_name: type
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Type
+   all_public: true
+
+sw26:
+  col_num: 1
+  category: specimen_widget
+  group_name: sex
+  mandatory: false
+  order_by: 2
+  opened: true
+  visible: true
+  title_perso: Sex
+  all_public: true
+
+sw27:
+  col_num: 1
+  category: specimen_widget
+  group_name: stage
+  mandatory: false
+  order_by: 3
+  opened: true
+  visible: true
+  title_perso: Stage
+  all_public: true
+
+sw28:
+  col_num: 1
+  category: specimen_widget
+  group_name: socialStatus
+  mandatory: false
+  order_by: 4
+  opened: false
+  visible: false
+  title_perso: Social Status
+  all_public: true
+
+sw29:
+  col_num: 1
+  category: specimen_widget
+  group_name: rockForm
+  mandatory: false
+  order_by: 5
+  opened: false
+  visible: false
+  title_perso: Rock form
+  all_public: true
+
+sw30:
+   col_num: 1
+   category: specimen_widget
+   group_name: specPart
+   mandatory: true
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Part
+   all_public: true
+
+sw31:
+   col_num: 1
+   category: specimen_widget
+   group_name: specimenCount
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Count
+   all_public: true
+
+sw32:
+   col_num: 1
+   category: specimen_widget
+   group_name: loan
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: false
+   title_perso: Loans
+   all_public: true
+
+sw33:
+   col_num: 1
+   category: specimen_widget
+   group_name: historic
+   mandatory: false
+   order_by: 2
+   opened: false
+   visible: false
+   title_perso: Historic
+   all_public: true
+   
+#ftheeten 2016 06 29
+sw34:
+   col_num: 1
+   category: specimen_widget
+   group_name: ecology
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Ecology
+   all_public: true
+
+#ftheeten 2016 07 07
+sw35:
+   col_num: 1
+   category: specimen_widget
+   group_name: gtuDate
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Gathering date
+   all_public: true
+   
+#ftheeten 2016 08 22
+sw36:
+   col_num: 1
+   category: specimen_widget
+   group_name: storageParts
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Storage parts
+   all_public: true
+
+
+
+tw1:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: cataloguePeople
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: People
+   all_public: true
+
+tw3:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: relationRecombination
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: Recombined from
+   all_public: true
+
+tw4:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: synonym
+   order_by: 4
+   mandatory: false
+   opened: true
+   visible: true
+   title_perso: Synonymies
+   all_public: true
+
+tw5:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: vernacularNames
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Vernacular names
+   all_public: true
+
+tw6:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: keywords
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Keywords
+   all_public: true
+
+tw7:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: comment
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Comments
+   all_public: true
+
+tw8:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: properties
+   order_by: 7
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: Properties
+   all_public: true
+
+tw9:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: extLinks
+   order_by: 8
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: External Links
+   all_public: true
+
+tw10:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: informativeWorkflow
+   order_by: 9
+   mandatory: false
+   opened: true
+   visible: true
+   title_perso: Suggestions / Report problem
+   all_public: true
+
+tw11:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Bibliography
+
+tw12:
+   col_num: 1
+   category: catalogue_taxonomy_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 7
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
+chw1:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: cataloguePeople
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: People
+   all_public: true
+
+chw3:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: synonym
+   order_by: 3
+   mandatory: false
+   opened: true
+   visible: true
+   title_perso: Synonymies
+   all_public: true
+
+chw4:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: vernacularNames
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Vernacular names
+   all_public: true
+
+chw5:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: comment
+   mandatory: false
+   order_by: 5
+   opened: false
+   visible: false
+   title_perso: Comments
+   all_public: true
+
+chw6:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: properties
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Properties
+   all_public: true
+
+chw7:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: External Links
+   all_public: true
+
+chw8:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Suggestions / Report problem
+   all_public: true
+
+chw9:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Bibliography
+   all_public: true
+
+chw10:
+   col_num: 1
+   category: catalogue_chronostratigraphy_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
+lhw1:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: cataloguePeople
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: People
+   all_public: true
+
+lhw3:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: synonym
+   order_by: 3
+   mandatory: false
+   opened: true
+   visible: true
+   title_perso: Synonymies
+   all_public: true
+
+lhw4:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: vernacularNames
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Vernacular names
+   all_public: true
+
+lhw5:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: comment
+   mandatory: false
+   order_by: 5
+   opened: false
+   visible: false
+   title_perso: Comments
+   all_public: true
+
+lhw6:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: properties
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Properties
+   all_public: true
+
+lhw7:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 7
+   opened: false
+   visible: false
+   title_perso: External Links
+   all_public: true
+
+lhw8:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Suggestions / Report problem
+   all_public: true
+
+lhw9:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Bibliography
+   all_public: true
+
+lhw10:
+   col_num: 1
+   category: catalogue_lithostratigraphy_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
+liw1:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: cataloguePeople
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: People
+   all_public: true
+
+liw3:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: synonym
+   order_by: 3
+   mandatory: false
+   opened: true
+   visible: true
+   title_perso: Synonymies
+   all_public: true
+
+liw4:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: vernacularNames
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Vernacular names
+   all_public: true
+
+liw5:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: comment
+   mandatory: false
+   order_by: 5
+   opened: false
+   visible: false
+   title_perso: Comments
+   all_public: true
+
+liw6:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: properties
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Properties
+   all_public: true
+
+liw7:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 7
+   opened: false
+   visible: false
+   title_perso: External Links
+   all_public: true
+
+liw8:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Suggestions / Report problem
+   all_public: true
+
+liw9:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Bibliography
+   all_public: true
+
+liw10:
+   col_num: 1
+   category: catalogue_lithology_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
+miw1:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: cataloguePeople
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: People
+   all_public: true
+
+miw3:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: synonym
+   order_by: 3
+   mandatory: false
+   opened: true
+   visible: true
+   title_perso: Synonymies
+   all_public: true
+
+miw4:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: vernacularNames
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Vernacular names
+   all_public: true
+
+miw5:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: keywords
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Keywords
+   all_public: true
+
+miw6:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: comment
+   mandatory: false
+   order_by: 5
+   opened: false
+   visible: false
+   title_perso: Comments
+   all_public: true
+
+miw7:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: properties
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Properties
+   all_public: true
+
+miw8:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 7
+   opened: false
+   visible: false
+   title_perso: External Links
+   all_public: true
+
+miw9:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Suggestions / Report problem
+   all_public: true
+
+miw10:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: biblio
+   mandatory: false
+   order_by: 6
+   opened: true
+   visible: true
+   title_perso: Bibliography
+   all_public: true
+
+miw11:
+   col_num: 1
+   category: catalogue_mineralogy_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 7
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
+pe1:
+   col_num: 1
+   category: people_widget
+   group_name: lang
+   mandatory: false
+   order_by: 0
+   opened: true
+   visible: true
+   title_perso: Languages
+   all_public: true
+
+pe2:
+   col_num: 1
+   category: people_widget
+   group_name: relation
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Relationships
+   all_public: true
+
+pe5:
+   col_num: 1
+   category: people_widget
+   group_name: properties
+   mandatory: false
+   order_by: 4
+   opened: false
+   visible: false
+   title_perso: Properties
+   all_public: true
+
+pe6:
+   col_num: 1
+   category: people_widget
+   group_name: comment
+   mandatory: false
+   order_by: 5
+   opened: false
+   visible: false
+   title_perso: Comments
+   all_public: true
+
+pe7:
+   col_num: 1
+   category: people_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: External Links
+   all_public: true
+
+pe8:
+   col_num: 1
+   category: people_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Suggestions / Report problem
+   all_public: true
+
+pe9:
+   col_num: 1
+   category: people_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 9
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
+ins1:
+   col_num: 1
+   category: people_institution_widget
+   group_name: relation
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Relationships
+   all_public: true
+
+ins4:
+   col_num: 1
+   category: people_institution_widget
+   group_name: properties
+   mandatory: false
+   order_by: 4
+   opened: false
+   visible: false
+   title_perso: Properties
+   all_public: true
+
+ins5:
+   col_num: 1
+   category: people_institution_widget
+   group_name: comment
+   mandatory: false
+   order_by: 5
+   opened: false
+   visible: false
+   title_perso: Comments
+   all_public: true
+
+ins6:
+   col_num: 1
+   category: people_institution_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: External Links
+   all_public: true
+
+ins7:
+   col_num: 2
+   category: people_institution_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 7
+   opened: true
+   visible: true
+   title_perso: Suggestions / Report problem
+   all_public: true
+
+ins8:
+   col_num: 2
+   category: people_institution_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 8
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
+bib2:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: keywords
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Keywords
+   all_public: true
+
+
+bib6:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: comment
+   mandatory: false
+   order_by: 6
+   opened: false
+   visible: false
+   title_perso: Comments
+
+bib7:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: properties
+   order_by: 7
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: Properties
+
+bib8:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: extLinks
+   order_by: 8
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: External Links
+
+bib9:
+   col_num: 1
+   category: catalogue_bibliography_widget
+   group_name: relatedFiles
+   order_by: 9
+   mandatory: false
+   opened: false
+   visible: false
+   title_perso: Related Files
+
+lw1:
+   col_num: 1
+   category: loan_widget
+   group_name: mainInfo
+   order_by: 1
+   mandatory: true
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Loan
+   all_public: true
+
+lw2:
+   col_num: 1
+   category: loan_widget
+   group_name: actors
+   order_by: 2
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: People involved
+   all_public: true
+
+lw3:
+   col_num: 1
+   category: loan_widget
+   group_name: loanStatus
+   order_by: 3
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Loan status
+   all_public: true
+
+lw4:
+   col_num: 1
+   category: loan_widget
+   group_name: refProperties
+   order_by: 4
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Properties
+   all_public: true
+
+lw5:
+   col_num: 1
+   category: loan_widget
+   group_name: refComments
+   order_by: 5
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Comments
+   all_public: true
+
+lw6:
+   col_num: 1
+   category: loan_widget
+   group_name: refInsurances
+   order_by: 6
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Insurances
+   all_public: true
+
+lw7:
+   col_num: 1
+   category: loan_widget
+   group_name: refRelatedFiles
+   order_by: 7
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Related Files
+   all_public: true
+
+lw8:
+   col_num: 1
+   category: loan_widget
+   group_name: refUsers
+   order_by: 8
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Darwin Users
+   all_public: true
+
+lw9:
+   col_num: 1
+   category: loan_widget
+   group_name: maintenances
+   order_by: 9
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Maintenances
+   all_public: true
+
+litw1:
+   col_num: 1
+   category: loanitem_widget
+   group_name: mainInfo
+   order_by: 1
+   mandatory: true
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Loan Item
+   all_public: true
+
+litw2:
+   col_num: 1
+   category: loanitem_widget
+   group_name: actors
+   order_by: 2
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: People involved
+   all_public: true
+
+
+litw4:
+   col_num: 1
+   category: loanitem_widget
+   group_name: refProperties
+   order_by: 4
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Properties
+   all_public: true
+
+litw5:
+   col_num: 1
+   category: loanitem_widget
+   group_name: refComments
+   order_by: 5
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Comments
+   all_public: true
+
+litw6:
+   col_num: 1
+   category: loanitem_widget
+   group_name: refInsurances
+   order_by: 6
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Insurances
+   all_public: true
+
+litw7:
+   col_num: 1
+   category: loanitem_widget
+   group_name: refRelatedFiles
+   order_by: 7
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Related Files
+   all_public: true
+
+litw8:
+   col_num: 1
+   category: loanitem_widget
+   group_name: maintenances
+   order_by: 8
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Maintenances
+   all_public: true
+
+m1:
+   col_num: 1
+   category: maintenances_widget
+   group_name: refRelatedFiles
+   order_by: 1
+   opened: true
+   visible: true
+   is_available: true
+   title_perso: Related Files
+   all_public: true
+
+m2:
+   col_num: 1
+   category: maintenances_widget
+   group_name: refComments
+   order_by: 2
+   opened: true
+   visible: false
+   is_available: true
+   title_perso: Comments
+   all_public: true
+
+m3:
+   col_num: 1
+   category: maintenances_widget
+   group_name: refProperties
+   order_by: 3
+   opened: true
+   visible: false
+   is_available: true
+   title_perso: Properties
+   all_public: true
+
+m4:
+   col_num: 1
+   category: maintenances_widget
+   group_name: extLinks
+   order_by: 4
+   opened: true
+   visible: false
+   is_available: true
+   title_perso: External Url
+   all_public: true
+
+ig1:
+   col_num: 1
+   category: catalogue_igs_widget
+   group_name: comment
+   mandatory: false
+   order_by: 0
+   opened: true
+   visible: true
+   title_perso: Comments
+   all_public: true
+
+ig3:
+   col_num: 1
+   category: catalogue_igs_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: External Links
+   all_public: true
+
+ex1:
+   col_num: 1
+   category: catalogue_expeditions_widget
+   group_name: comment
+   mandatory: false
+   order_by: 0
+   opened: true
+   visible: true
+   title_perso: Comments
+   all_public: true
+
+ex2:
+   col_num: 1
+   category: catalogue_expeditions_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: External Links
+   all_public: true
+
+ex3:
+   col_num: 1
+   category: catalogue_expeditions_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
+gtu1:
+   col_num: 1
+   category: catalogue_gtu_widget
+   group_name: comment
+   mandatory: false
+   order_by: 1
+   opened: false
+   visible: true
+   title_perso: Comments
+   all_public: true
+
+gtu2:
+   col_num: 1
+   category: catalogue_gtu_widget
+   group_name: properties
+   mandatory: false
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Properties
+   all_public: true
+
+gtu3:
+   col_num: 1
+   category: catalogue_gtu_widget
+   group_name: extLinks
+   mandatory: false
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: External Links
+   all_public: true
+
+gtu4:
+   col_num: 1
+   category: catalogue_gtu_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 4
+   opened: true
+   visible: true
+   title_perso: Suggestions / Report problem
+   all_public: true
+
+gtu5:
+   col_num: 1
+   category: catalogue_gtu_widget
+   group_name: relatedFiles
+   mandatory: false
+   order_by: 5
+   opened: true
+   visible: true
+   title_perso: Related Files
+   all_public: true
+
+u1wmetto1:
+   col_num: 1
+   category: catalogue_methods_and_tools_widget
+   group_name: properties
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Properties
+   all_public: true
+
+u1wmetto2:
+   col_num: 1
+   category: catalogue_methods_and_tools_widget
+   group_name: comment
+   order_by: 2
+   opened: true
+   visible: true
+   title_perso: Comments
+   all_public: true
+
+u1wmetto3:
+   col_num: 1
+   category: catalogue_methods_and_tools_widget
+   group_name: extLinks
+   order_by: 3
+   opened: true
+   visible: true
+   title_perso: External Links
+   all_public: true
+
+u1wmetto4:
+   col_num: 1
+   category: catalogue_methods_and_tools_widget
+   group_name: informativeWorkflow
+   mandatory: false
+   order_by: 1
+   opened: true
+   visible: true
+   title_perso: Suggestions / Report problem
+   all_public: true

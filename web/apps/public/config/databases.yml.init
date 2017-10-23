@@ -1,0 +1,15 @@
+dev:
+  doctrine:
+    class: sfDoctrineDatabase
+    param:
+      dsn: 'pgsql:host=my_host;dbname=darwin2'
+      username: mydarwin2reader
+      password: mydarwin2readerpassword 
+           
+prod:
+  doctrine:
+    class: sfDoctrineDatabase
+    param:
+      dsn: 'pgsql:host=my_host;dbname=darwin2'
+      username: mydarwin2reader
+      password: mydarwin2readerpassword

@@ -1,0 +1,18 @@
+default:
+  http_metas:
+    content-type: text/html
+
+  metas:
+    title:        Darwin 2
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+
+  stylesheets:    [reset.css, menu_pub.css, content.css ]
+
+  javascripts:    [jquery-1.7.1.min.js, jquery.ui.all.min.js, core.js]
+
+  has_layout:     true
+  layout:         layout
+
