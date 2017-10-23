@@ -3,3 +3,4 @@
 /web/log/backend_prod.log
 /web/log/public_dev.log
 /web/log/public_prod.log
+/web/config/databases.yml
