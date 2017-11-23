@@ -46,25 +46,33 @@ $(document).ready(function () {
        
         if($('#specimen_search_filters_in_loan').length>0)
         {
-            if($_POST.specimen_search_filters.in_loan=="on")
+            //ftheeten 2017 11 23 (to avoid javascript error blocking "people" popup)
+            if( $_POST.specimen_search_filters != undefined)
             {
-                $('#specimen_search_filters_in_loan').attr('checked', true);
-            }
-            else
-            {
-                $('#specimen_search_filters_in_loan').attr('checked', false);
+                if($_POST.specimen_search_filters.in_loan=="on")
+                {
+                    $('#specimen_search_filters_in_loan').attr('checked', true);
+                }
+                else
+                {
+                    $('#specimen_search_filters_in_loan').attr('checked', false);
+                }
             }
         }
         if($('#specimen_search_filters_code_exact_match').length>0)
         {
-            if($_POST.specimen_search_filters.code_exact_match=="on")
+            //ftheeten 2017 11 23 (to avoid javascript error blocking "people" popup)
+            if( $_POST.specimen_search_filters != undefined)
             {
-                $('#specimen_search_filters_code_exact_match').attr('checked', true);
-            }
-            else
-            {
-                $('#specimen_search_filters_code_exact_match').attr('checked', false);
-            }
+                if($_POST.specimen_search_filters.code_exact_match=="on")
+                {
+                    $('#specimen_search_filters_code_exact_match').attr('checked', true);
+                }
+                else
+                {
+                    $('#specimen_search_filters_code_exact_match').attr('checked', false);
+                }
+            }    
         }
         
   });
