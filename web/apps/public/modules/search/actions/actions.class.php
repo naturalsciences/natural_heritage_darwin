@@ -329,4 +329,20 @@ class searchActions extends DarwinActions
     }
     return $tab ;
   }
+  
+  //ftheeten 2017 11 24 
+  public function executeGetjson(sfWebRequest $request)
+  {
+     $results=$this->getSpecimenJSON($request);
+     $this->getResponse()->setContentType('application/json');
+     return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+  }
+  
+  //ftheeten 2017 11 24 
+  public function executeGetcollectionjson(sfWebRequest $request)
+  {
+     $results=$this->getCollectionJSON($request);
+     $this->getResponse()->setContentType('application/json');
+     return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+  }
 }
