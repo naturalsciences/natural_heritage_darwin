@@ -18,6 +18,8 @@
                     <a href="#" class="subtitle"><?php echo __('Catalogues');?> »</a>
                     <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Taxonomy'),'taxonomy/index');?></li>
+                        <!--ftheeten 2017 07 17--!>
+                        <li><?php echo link_to(__('Taxonomic metadata'),'taxonomymetadata/index');?></li>
                         <li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/index');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'lithostratigraphy/index');?></li>
                         <li><?php echo link_to(__('Lithology'),'lithology/index');?></li>
@@ -54,6 +56,8 @@
                     <a href="#" class="subtitle"><?php echo __('Catalogues');?> »</a>
                     <ul class="submenu lvl_2">
                         <li><?php echo link_to(__('Taxonomy'),'taxonomy/new');?></li>
+                         <!--ftheeten 2017 07 17--!>
+                        <li><?php echo link_to(__('Taxonomic metadata'),'taxonomymetadata/new');?></li>
                         <li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/new');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'lithostratigraphy/new');?></li>
                         <li><?php echo link_to(__('Lithology'),'lithology/new');?></li>

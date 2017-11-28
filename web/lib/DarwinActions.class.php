@@ -155,4 +155,79 @@ class DarwinActions extends sfActions
     }
     return $obj ;
   }
+  
+  //ftheeten 2017 10 09	
+	protected function getIDFromCollectionNumber(sfWebRequest $request)
+	{
+		
+		 //ftheeten 2017 10 09
+		$tmp_id=NULL;
+		$initialized=false;
+		if(null!==($request->getParameter('id')))
+		{
+			if(strlen($request->getParameter('id')))
+			{
+			  $tmp_id=$request->getParameter('id');
+			  $initialized=true;
+			}
+		}
+		if($initialized==false)
+		{
+			if(null!==($request->getParameter('specimennumber')))
+			{
+				if(strlen($request->getParameter('specimennumber')))
+				{	
+					$tmp_id=Doctrine::getTable('Specimens')->getSpecimenIDCorrespondingToMainCollectionNumber($request->getParameter('specimennumber'));
+					$initialized=true;
+				}
+			}
+			
+		}
+		return $tmp_id;
+	}
+    
+    //ftheeten 2017 11 24
+    protected function getSpecimenJSON(sfWebRequest $request)
+    {
+    
+        if($request->hasParameter('specimennumber'))
+		{
+       
+            $results=Doctrine::getTable('Specimens')->getJSON($request->getParameter('specimennumber'));
+            
+            return  $results;
+            
+        }
+        return Array();
+    }
+    
+    //ftheeten 2017 11 24
+    protected function getCollectionJSON(sfWebRequest $request)
+    {
+    
+         
+       
+        $size=50; 
+        $page=1;
+       
+        if($request->hasParameter('collection'))
+		{
+            $collection_code=$request->getParameter('collection');
+            $host=$request->getHost();
+            $prefix_service="/public.php/search/getjson?specimennumber=" ;            
+           
+            if($request->hasParameter('size'))
+            {
+                 $size=$request->getParameter('size');
+            }
+             if($request->hasParameter('page'))
+            {
+                 $page=$request->getParameter('page');
+            }
+            $results=Doctrine::getTable('Specimens')->getSpecimensInCollectionsJSON($collection_code, $host, $size, $page);
+            return  $results;
+            
+        }
+        return Array();
+    }
 }

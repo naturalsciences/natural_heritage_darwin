@@ -39,6 +39,7 @@ $(document).ready(function () {
   });
 
     //ftheeten 2017 05 30
+    //ftheeten 2017 11 23
     //to uncheck checkboxes on back
   
         var $_POST = <?php echo json_encode($_POST); ?>;
@@ -46,9 +47,10 @@ $(document).ready(function () {
        
         if($('#specimen_search_filters_in_loan').length>0)
         {
-            //ftheeten 2017 11 23 (to avoid javascript error blocking "people" popup)
-            if( $_POST.specimen_search_filters != undefined)
+        
+            if( $_POST.specimen_search_filters !==undefined)
             {
+                      
                 if($_POST.specimen_search_filters.in_loan=="on")
                 {
                     $('#specimen_search_filters_in_loan').attr('checked', true);
@@ -61,9 +63,9 @@ $(document).ready(function () {
         }
         if($('#specimen_search_filters_code_exact_match').length>0)
         {
-            //ftheeten 2017 11 23 (to avoid javascript error blocking "people" popup)
             if( $_POST.specimen_search_filters != undefined)
             {
+            
                 if($_POST.specimen_search_filters.code_exact_match=="on")
                 {
                     $('#specimen_search_filters_code_exact_match').attr('checked', true);
@@ -72,7 +74,7 @@ $(document).ready(function () {
                 {
                     $('#specimen_search_filters_code_exact_match').attr('checked', false);
                 }
-            }    
+            }
         }
         
   });

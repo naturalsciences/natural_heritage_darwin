@@ -110,7 +110,7 @@
           <!-- added by Franck -->
           <input type="button" id="xml_spec" class="save_search" value="<?php echo __('XML');?>" />
           <!-- ftheeten 2016/01/29-->
-          <input type="button" id="report_spec" class="save_search" value="<?php echo __('Report');?>" />
+          <!--<input type="button" id="report_spec" class="save_search" value="<?php echo __('Report');?>" />-->
           <!-- these fields are filled by _searchSucess.php -->
        <?php endif;?>
 	  <input type="hidden" name="h_current_page" id="h_current_page" value="-1"/>

@@ -191,6 +191,10 @@
                         barcode=true;
                     }
                     var module_size=$(this).siblings("module_size").text();
+                    var barcode_format=$(this).siblings("barcode_format").text();
+                    var barcode_height=$(this).siblings("barcode_height").text();
+                    var barcode_width=$(this).siblings("barcode_width").text();
+                    
 					//alert(label);
 					$css_description=$(this).siblings("css_description");
 					var arrayXmlDescCSS = [];
@@ -238,6 +242,9 @@
                     //ftheeten 2017 08 10
                     ,barcode: barcode
                     ,module_size: module_size
+                    ,barcode_format: barcode_format
+                    ,barcode_width: barcode_width
+                    ,barcode_height: barcode_height
                     });
 
 
@@ -331,6 +338,9 @@
 							//ftheteen 2017 08 10
                             var tmp_barcode=tmpField.barcode;
                             var tmp_module_size=tmpField.module_size;
+                            var tmp_barcode_format=tmpField.barcode_format;
+                            var tmp_barcode_height=tmpField.barcode_height;
+                            var tmp_barcode_width=tmpField.barcode_width;
                             
 							var tmpCell=$("<td></td>");
 							var maxField=-1;
@@ -398,9 +408,18 @@
 							var glueDef=isStringAndSet( tmp_glue ," ");
                             if(tmp_barcode===true)
                             {
-                                
+                               
                                 var tmpValue=arrayValues.join(glueDef);
-                                tmpCell.barcode(tmpValue,"datamatrix",{moduleSize: tmp_module_size,showHRI:false, output:"css"});
+                                if(tmp_barcode_format=="datamatrix")
+                                {
+                                    
+                                    tmpCell.barcode(tmpValue,"datamatrix",{moduleSize: tmp_module_size,showHRI:false, output:"css"});
+                                 }
+                                 else
+                                 {
+                                   
+                                    tmpCell.barcode("1234567890128", "ean13",{barWidth:0.8, barHeight:1});
+                                 }
                               
                             }
                             else

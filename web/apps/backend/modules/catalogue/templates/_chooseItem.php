@@ -19,6 +19,15 @@
             <th class="datesNum"><?php echo $searchForm['lower_bound']->renderLabel();?></th>
             <th class="datesNum"><?php echo $searchForm['upper_bound']->renderLabel();?></th>
           <?php endif;?>
+           <!--ftheeten 2017 06 30-->
+           <?php if(isset($searchForm['collection_ref'])&&isset($searchForm['collection_ref_for_modal'])):?>
+            <th><?php echo $searchForm['collection_ref']->renderLabel();?></th>
+           <?php endif;?>
+		    <!--ftheeten 2017 06 30-->
+           <?php if(isset($searchForm['metadata_ref'])):?>
+            <th><?php echo $searchForm['metadata_ref']->renderLabel();?></th>
+           <?php endif;?>
+          <th>
           <th></th>
         </tr>
       </thead>
@@ -35,6 +44,17 @@
           <?php if(isset($searchForm['lower_bound']) && isset($searchForm['upper_bound'])):?>
             <td class="datesNum"><?php echo $searchForm['lower_bound'];?></td>
             <td class="datesNum"><?php echo $searchForm['upper_bound'];?></td>
+          <?php endif;?>
+           <!--ftheeten 2017 06 30-->
+           <?php if(isset($searchForm['collection_ref'])&&isset($searchForm['collection_ref_for_modal'])):?>
+           <?php if($is_choose===FALSE):?>
+                <td><?php echo $searchForm['collection_ref'];?></td>
+            <?php else:?>
+                <td><?php echo $searchForm['collection_ref_for_modal'];?></td>
+           <?php endif;?>
+          <?php endif;?> 
+		  <?php if(isset($searchForm['metadata_ref'])):?>
+            <td><?php echo $searchForm['metadata_ref'];?></td>
           <?php endif;?>
           <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search');?>" /></td>
         </tr>
@@ -77,6 +97,72 @@ $(document).ready(function () {
    open(url+'?'+data.replace(reg,'<?php echo $searchForm['table']->getValue() ; ?>'));
     return false;  
   });
+
+//function 2017 03 30--
+
+    $('.treelist li:not(li:has(ul)) img.tree_cmd').hide();
+    $('.chk input').change(function()
+    {
+      li = $(this).closest('li');
+      if(! $(this).is(':checked'))
+        li.find(':checkbox').not($(this)).removeAttr('checked').change();
+      else
+        li.find(':checkbox').not($(this)).attr('checked','checked').change();
+    });
+
+    $('#clear_collections').click(function()
+    {
+       $('table.widget_sub_table').find(':checked').removeAttr('checked').change();
+    });
+
+    $('.collapsed').click(function()
+    {
+        $(this).addClass('hidden');
+        $(this).siblings('.expanded').removeClass('hidden');
+        $(this).parent().siblings('ul').show();
+    });
+
+    $('.expanded').click(function()
+    {
+        $(this).addClass('hidden');
+        $(this).siblings('.collapsed').removeClass('hidden');
+        $(this).parent().siblings('ul').hide();
+    });
+
+    $('#check_editable').click(function(){
+      $('.treelist input:checked').removeAttr('checked').change();
+      $('li[data-enc] > div > label > input:checkbox').attr('checked','checked').change();
+    });
+
+
+  //ftheeten 2017 07 06
+  if($.trim($(".specimen_collection_ref").val()).length>0)
+  {
+
+        $('.coll_for_taxonomy_ref option[value="'+$.trim($(".specimen_collection_ref").val())+'"]').attr("selected", true);
+  }
+  //ftheeten 2017 07 06
+  if($.trim($(".coll_for_taxonomy_insertion_ref").val()).length>0)
+  {
+
+        $('.coll_for_taxonomy_ref option[value="'+$.trim($(".coll_for_taxonomy_insertion_ref").val())+'"]').attr("selected", true);
+  }
+  
+    //ftheeten 2017 07 23
+  if($.trim($(".col_check_metadata_ref").val()).length>0)
+  {
+        var tmpID=$('.col_check_metadata_ref[id]').first().attr('id');
+        var tmpName=$('.col_check_metadata_ref[id]').first().attr('name');
+        $('.col_check_metadata_ref option[value="'+$.trim($(".col_check_metadata_ref").val())+'"]').attr("selected", true);
+		$('.col_check_metadata_ref').prop("disabled", "disabled");
+        var tmp=$('<input>').attr({
+            type: 'hidden',
+            id: tmpID,
+            name: tmpName,
+            });
+       tmp.val($('.col_check_metadata_ref').val());     
+       tmp.appendTo('#<?php echo ($is_choose)?'search_and_choose':'search' ?>');
+  }
 });
 </script>
 </div>

@@ -38,7 +38,10 @@ class LabelField
     //ftheeten 2017 08 10
     public $m_is_barcode;
     public $m_module_size;
-	
+    public $m_barcode_format;
+    public $m_barcode_width;
+	public $m_barcode_height;
+    
 	public function __construct() 
 	{
 		
@@ -56,9 +59,12 @@ class LabelField
         //ftheeten 2017 08 10
         $this->m_is_barcode = false;
         $this->m_module_size = NULL;
+        $this->m_barcode_format = NULL;
+        $this->m_barcode_width = NULL;
+        $this->m_barcode_height = NULL;
 	}
 
-	public static function initialise( $p_xmlPath,  $p_cssClass=NULL, $p_label=NULL, $p_limit=NULL, $p_prefix=NULL, $p_suffix=NULL, $p_glue=NULL, $p_valuesMapping=NULL, $p_truncateLen=NULL, $p_truncateSign=".", $p_valuesMappingMode="strict", $p_is_barcode = false, $p_module_size=NULL) 
+	public static function initialise( $p_xmlPath,  $p_cssClass=NULL, $p_label=NULL, $p_limit=NULL, $p_prefix=NULL, $p_suffix=NULL, $p_glue=NULL, $p_valuesMapping=NULL, $p_truncateLen=NULL, $p_truncateSign=".", $p_valuesMappingMode="strict", $p_is_barcode = false, $p_module_size=NULL, $p_barcode_format= NULL, $p_barcode_width=NULL, $p_barcode_height=null) 
 	{
 		$inst=new self();
 		$inst->m_xmlPath=$p_xmlPath;
@@ -75,6 +81,9 @@ class LabelField
         //ftheeten 2017 08 10
         $inst->m_is_barcode = $p_is_barcode;
         $inst->m_module_size = $p_module_size;
+        $inst->m_barcode_format = $p_barcode_format;
+        $inst->m_barcode_width = $p_barcode_width;
+        $inst->m_barcode_height = $p_barcode_height;
 		return $inst;
 	}
 
@@ -150,7 +159,7 @@ class LabelField
 		}
         
         //ftheeten 2017 08 10
-        if($this->m_is_barcode===TRUE)
+        if($this->m_is_barcode===TRUE&&isSetAndStringOrNumeric($this->m_barcode_format))
         {
             $returned.=xmlTag("is_barcode", "true");
         }
@@ -159,7 +168,22 @@ class LabelField
         {
             $returned.=xmlTag("module_size", $this->m_module_size);
         }
+        
+        if(isSetAndStringOrNumeric($this->m_barcode_format))
+        {
+            $returned.=xmlTag("barcode_format", $this->m_barcode_format);
+        }
 		
+        if(isSetAndStringOrNumeric($this->m_barcode_width))
+        {
+            $returned.=xmlTag("barcode_width", $this->m_barcode_width);
+        }
+        
+        if(isSetAndStringOrNumeric($this->m_barcode_height))
+        {
+            $returned.=xmlTag("barcode_height", $this->m_barcode_height);
+        }
+        
 		return $returned;
 	}
 
@@ -618,12 +642,12 @@ $tmpLabelIchtyo->addFieldIdx(18, 12,2,$fieldType3);
 
 $barcodeEntomo=new Label("barcodeEntomo", 'search_result > specimens > specimen', "barcode entomo", 20,10, array("line-height"=>"13mm","width"=> "19mm", "height"=>"8mm","min-width"=>"19mm","min-height"=>"8mm","max-width"=>"19mm","max-height"=>"8mm","border-style"=> "solid", "border-width"=>"1px", 
 "font-family"=> "Arial,  Helvetica, sans-serif",
-"padding" => "2pt 2pt 2pt 2pt", 'vertical-align'=>"text-top" ,
+"padding" => "2pt 2pt 2pt 4pt", 'vertical-align'=>"text-top" ,
 "margin" => "20pt 2pt 2pt 2pt"
  ), "true", 250, "true");
 $fieldIDSpecimenBarcode= LabelField::initialise(
 	'specimen_codes > specimen_code', 
-	array("left"=>"5px", "top"=>"2px"), 
+	array("padding-left"=>"5px"), 
 	NULL, 
 	1,
 	NULL,
@@ -634,7 +658,8 @@ $fieldIDSpecimenBarcode= LabelField::initialise(
 	NULL,
 	NULL,
     TRUE,
-    1.3
+    1.5,
+    "datamatrix"
     );
     
 $fieldIDSpecimenEntomo= LabelField::initialise(
@@ -653,6 +678,47 @@ $barcodeEntomo->addFieldIdx(0, 1,1,$fieldIDSpecimenBarcode);
 $barcodeEntomo->addFieldIdx(2, 1,2,$fieldIDSpecimenEntomo);
 
 
+/*barcode_entomo*/
+
+$barcodeEntomoRBINS=new Label("barcodeEntomoRBINS", 'search_result > specimens > specimen', "barcode entomo RBINS", 5,5, array("line-height"=>"13mm","width"=> "40mm", "height"=>"8mm","min-width"=>"40mm","min-height"=>"8mm","max-width"=>"40mm","max-height"=>"8mm","border-style"=> "solid", "border-width"=>"1px", 
+"font-family"=> "Arial,  Helvetica, sans-serif",
+"padding" => "2pt 2pt 2pt 4pt", 'vertical-align'=>"text-top" ,
+"margin" => "20pt 2pt 2pt 2pt"
+ ), "true", 250, "true");
+$fieldIDSpecimenBarcodeRBINS= LabelField::initialise(
+	'specimen_codes > specimen_code', 
+	array("padding-left"=>"5px", "width"=> "40mm"), 
+	NULL, 
+	1,
+	NULL,
+	NULL,
+	NULL, 
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+    TRUE,
+    1.5,
+    "ean8",
+    0.8,
+    0.5
+    );
+    
+/*$fieldIDSpecimenEntomoRBINS= LabelField::initialise(
+	'specimen_codes > specimen_code', 
+	array("line-height"=>"7pt","font-size"=> "5pt", "font-weight"=> "bold" , "width"=> "30mm", "min-width"=> "30mm","max-width"=> "30mm",  "height"=> "4mm", "min-height"=> "8mm","max-height"=> "8mm", "text-align"=>"right", "vertical-align"=>"top"), 
+	NULL, 
+	1,
+	NULL,
+	NULL,
+	NULL, 
+	NULL
+	,NULL,
+	NULL,
+	NULL);*/
+$barcodeEntomoRBINS->addFieldIdx(0, 1,1,$fieldIDSpecimenBarcodeRBINS);
+//$barcodeEntomoRBINS->addFieldIdx(2, 1,2,$fieldIDSpecimenEntomoRBINS);
+
 /*-------------------------------*/
 $labelGroup=new LabelGroup();
 $labelGroup->addLabelIdx(1,$tmpLabelGood );
@@ -661,7 +727,7 @@ $labelGroup->addLabelIdx(3,$tmpLabelGoodEcology );
 $labelGroup->addLabelIdx(4,$tmpLabelGoodEcologyFullLoc );
 $labelGroup->addLabelIdx(5,$tmpLabelIchtyo );
 $labelGroup->addLabelIdx(6,$barcodeEntomo );  
-
+$labelGroup->addLabelIdx(7,$barcodeEntomoRBINS );  
 
 
 $str=$labelGroup->displayXML($template_type);

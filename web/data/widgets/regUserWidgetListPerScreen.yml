@@ -707,7 +707,7 @@ sw31:
    order_by: 2
    opened: true
    visible: true
-   title_perso: Count
+   title_perso: Specimen Count
    all_public: true
 
 sw32:

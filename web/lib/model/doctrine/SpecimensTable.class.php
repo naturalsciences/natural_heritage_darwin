@@ -232,7 +232,7 @@ class SpecimensTable extends DarwinTable
       return $items;
     }
     
-        //ftheeten 2017 09 21
+    //ftheeten 2017 09 21
     public function getDistinctTypesNoCombinations()
     {
       $items = $this->createUniqFlatDistinct('specimens', 'type', 'type', true);
@@ -426,4 +426,246 @@ class SpecimensTable extends DarwinTable
 
     return $res;
   }
+  
+  //ftheeten 2017 10 09
+  public function getSpecimenIDCorrespondingToCollectionNumber($collection_number, $code_category)
+  {
+    $returned=NULL;
+    if(strlen($collection_number)>0)
+      {
+            $q = Doctrine_Query::create()
+              ->select("c.record_id")
+              ->from('Codes c')
+              ->where('c.referenced_relation = ?', 'specimens')
+              ->andwhere('c.code_category = ?', $code_category)
+              ->andwhere('c.full_code_indexed=fulltoindex(?,false)', $collection_number);
+              
+            $val= $q->fetchOne();
+            return $val->getRecordId();
+      
+    }
+    return $returned;
+  }
+  
+    public function getSpecimenIDCorrespondingToMainCollectionNumber($collection_number)
+   {
+		return $this->getSpecimenIDCorrespondingToCollectionNumber($collection_number, 'main');
+   }
+
+
+    //ftheeten 2017 14 11
+    public function getJSON($p_specimencode)
+    {
+  
+       
+      if((string)$p_specimencode!="-1")
+      {
+      
+            
+            $conn_MGR = Doctrine_Manager::connection();
+            $conn = $conn_MGR->getDbh();
+           
+            $rows=array();
+            
+            $query="
+            SELECT distinct array_agg(DISTINCT id) as ids, (SELECT modification_date_time FROM users_tracking where referenced_relation='specimens' and record_id= max(specimens.id)  GROUP BY modification_date_time ,users_tracking.id having users_tracking.id=max(users_tracking.id) limit 1) as last_modification, code_display, array_agg(DISTINCT taxon_path) as taxon_paths, array_agg(DISTINCT taxon_ref) as taxon_ref,
+                    array_agg(DISTINCT taxon_name) as taxon_name,
+                    array_agg(DISTINCT  history) as history_identification
+                    ,
+                     array_agg(DISTINCT gtu_country_tag_value) as country,  array_agg(DISTINCT gtu_others_tag_value) as geographical,
+            
+                    
+                     fct_mask_date(gtu_to_date,
+                    gtu_to_date_mask),
+                    fct_mask_date(gtu_from_date,
+                    gtu_from_date_mask) as date_from_display,
+                    fct_mask_date(gtu_to_date,
+                    gtu_to_date_mask) as date_to_display,
+                    coll_type,
+                                
+                                 STRING_AGG(DISTINCT urls_thumbnails, '|') as urls_thumbnails,  STRING_AGG(DISTINCT image_category_thumbnails, '|') as image_category_thumbnails, STRING_AGG(DISTINCT contributor_thumbnails,'|') as contributor_thumbnails, STRING_AGG(DISTINCT disclaimer_thumbnails,'|') as disclaimer, STRING_AGG(DISTINCT license_thumbnails, '|') as license , STRING_AGG(DISTINCT display_order_thumbnails::varchar, '|') as display_order_thumbnails,
+                                 
+                                  STRING_AGG(DISTINCT urls_image_links, '|') as urls_image_links,  STRING_AGG(DISTINCT image_category_image_links, '|') as image_category_image_links, STRING_AGG(DISTINCT contributor_image_links,'|') as contributor_image_links, STRING_AGG(DISTINCT disclaimer_image_links,'|') as disclaimer, STRING_AGG(DISTINCT license_image_links, '|') as license , STRING_AGG(DISTINCT display_order_image_links::varchar, '|') as display_order_image_links,
+                                  
+                                              STRING_AGG(DISTINCT urls_3d_snippets, '|') as urls_3d_snippets,  STRING_AGG(DISTINCT image_category_3d_snippets, '|') as image_category_3d_snippets, STRING_AGG(DISTINCT contributor_3d_snippets,'|') as contributor_3d_snippets, STRING_AGG(DISTINCT disclaimer_3d_snippets,'|') as disclaimer, STRING_AGG(DISTINCT license_3d_snippets, '|') as license , STRING_AGG(DISTINCT display_order_3d_snippets::varchar, '|') as display_order_3d_snippets,
+                                  
+                    longitude, latitude
+                     ,count(*) OVER() AS full_count,collector_ids, 
+                     (SELECT array_agg(formated_name) from people where id = any(collector_ids)) as collectors
+                      , donator_ids,
+                      (SELECT array_agg(formated_name) from people where id = any(donator_ids)) as donators
+                      ,
+                      array_agg(distinct '\"'||tag_locality||'\"') as localities	
+                      from 
+                    (SELECT specimens.id,
+                    COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as code_display, full_code_indexed, taxon_path, taxon_ref, collection_ref , gtu_country_tag_indexed , gtu_country_tag_value, 
+                    gtu_others_tag_indexed as localities_indexed,
+                    gtu_others_tag_value
+                    , taxon_name,
+                     spec_coll_ids as collector_ids , 
+                     spec_don_sel_ids as donator_ids,
+                    gtu_from_date,
+                    gtu_from_date_mask,
+                    gtu_to_date,
+                    gtu_to_date_mask,
+                    type as coll_type,
+                    case
+                    when gtu_country_tag_indexed is not null then
+                    unnest(gtu_country_tag_indexed) 
+                else null end
+                    as country_unnest,
+                    
+                               ext_links_thumbnails.url as urls_thumbnails, ext_links_thumbnails.category image_category_thumbnails, ext_links_thumbnails.contributor contributor_thumbnails, ext_links_thumbnails.disclaimer disclaimer_thumbnails, ext_links_thumbnails.license license_thumbnails, ext_links_thumbnails.display_order display_order_thumbnails,
+                               
+                                 ext_links_image_links.url as urls_image_links, ext_links_image_links.category image_category_image_links, ext_links_image_links.contributor contributor_image_links, ext_links_image_links.disclaimer disclaimer_image_links, ext_links_image_links.license license_image_links, ext_links_image_links.display_order display_order_image_links,
+                                 
+                                   ext_links_3d_snippets.url as urls_3d_snippets, ext_links_3d_snippets.category image_category_3d_snippets, ext_links_3d_snippets.contributor contributor_3d_snippets, ext_links_3d_snippets.disclaimer disclaimer_3d_snippets, ext_links_3d_snippets.license license_3d_snippets, ext_links_3d_snippets.display_order display_order_3d_snippets,
+                               
+                    gtu_location[1] as latitude,
+                    gtu_location[0] as longitude,
+                    notion_date as identification_date, 
+                    notion_date_mask as identification_date_mask,
+                    coalesce(fct_mask_date(notion_date, notion_date_mask)||': ','')||taxon_name as history,
+                     specimens.gtu_ref,
+                    group_type, sub_group_type,
+                    tag
+
+                    , group_type||'-'||sub_group_type||':'||tag as tag_locality 
+                    FROM specimens
+                    LEFT JOIN 
+                    codes
+                    ON codes.referenced_relation='specimens' and code_category='main' and specimens.id=codes.record_id
+                    
+                    LEFT JOIN
+                    ext_links as ext_links_thumbnails
+                    ON
+                    specimens.id=ext_links_thumbnails.record_id and ext_links_thumbnails.referenced_relation='specimens' and ext_links_thumbnails.category='thumbnail'
+                    
+                    LEFT JOIN
+                    ext_links as ext_links_image_links
+                    ON
+                    specimens.id=ext_links_image_links.record_id and ext_links_image_links.referenced_relation='specimens' and ext_links_image_links.category='image_link'
+                    
+                    LEFT JOIN
+                    ext_links as ext_links_3d_snippets
+                    ON
+                    specimens.id=ext_links_3d_snippets.record_id and ext_links_3d_snippets.referenced_relation='specimens' and ext_links_3d_snippets.category='html_3d_snippet'
+                    
+                    LEFT JOIN identifications
+                    on identifications.referenced_relation='specimens'
+                    and specimens.id= identifications.record_id
+                    and notion_concerned='taxonomy'
+                    LEFT JOIN tags
+                    ON specimens.gtu_ref=tags.gtu_ref
+                    order by group_ref
+                    ) as specimens
+                ";
+                
+                    
+                    
+
+                        $query.=" WHERE full_code_indexed=(SELECT * FROM fulltoindex(:number))";
+                    
+                    
+                 $query.=" GROUP BY 
+                    code_display         
+                    ,
+                    gtu_from_date,
+                    gtu_from_date_mask,
+                    gtu_to_date,
+                    gtu_to_date_mask,
+                    coll_type
+                    , 
+                    longitude, latitude
+                     ,
+                     collector_ids
+                      , donator_ids  ";    
+                 
+                 $query=$query."  LIMIT 20;";
+               
+                $stmt=$conn->prepare($query);
+                $stmt->bindValue(":number", $p_specimencode);
+                $stmt->execute();
+                $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                
+                if($rs[0]["full_count"]>0)
+                {
+             
+                    return $rs;
+                   
+                }
+            }
+            return Array();
+    }
+    
+        //ftheeten 2017 14 11
+    public function getSpecimensInCollectionsJSON($p_collection_code, $p_host, $p_size=50, $p_page=1, $p_prefix_service_specimen="/public.php/search/getjson?specimennumber=", $p_prefix_service_collection="public.php/search/getcollectionjson?")
+    {
+
+       
+      if((string)$p_collection_code!="-1"&&is_numeric($p_size)&&is_numeric($p_page))
+      {
+      
+            if($p_size>0 && $p_page>0)
+            {
+
+                $conn_MGR = Doctrine_Manager::connection();
+                $conn = $conn_MGR->getDbh();
+               
+                $rows=array();
+                
+                $query="SELECT a.*, count(*) OVER() AS full_count FROM (SELECT distinct 'http:////'||:host||:prefix||COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as url_specimen,
+                COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') AS code_display
+                FROM codes WHERE 
+                referenced_relation='specimens'
+                AND code_category='main' and codes.record_id
+                IN (SELECT id FROM specimens WHERE collection_ref = (SELECT id FROM collections where LOWER(collections.code)=LOWER(:collection) ))
+                GROUP BY codes.code_prefix, codes.code_prefix_separator, codes.code, codes.code_suffix_separator, codes.code_suffix 
+                ORDER BY code_display) a
+                LIMIT :size OFFSET :offset;";
+                $stmt=$conn->prepare($query);
+                $stmt->bindValue(":host", $p_host);
+                $stmt->bindValue(":prefix",$p_prefix_service_specimen);
+                $stmt->bindValue(":collection", $p_collection_code);
+                $stmt->bindValue(":size", (int)$p_size);
+                $stmt->bindValue(":offset", ((int)$p_page -1)*((int)$p_size));
+                $stmt->execute();
+               
+                $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+                if($rs[0]["full_count"]>0)
+                {
+                 
+                   $returned=Array();
+                   $returned["count"]=$rs[0]["full_count"];
+                   $returned["size_page"]=$p_size;
+                   $returned["current_page"]=(int)$p_page;
+                   $last_page=ceil($rs[0]["full_count"]/$p_size);
+                   $returned["last_page"]=$last_page;
+                   $returned["this_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$p_page."&size=".$p_size;
+                   if((int)$p_page<$last_page)
+                   {
+                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".($p_page+1)."&size=".$p_size;
+                   }
+                   else
+                   {
+                        $returned["next_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$last_page."&size=".$p_size;
+                   }
+                   $returned["last_url"]="http://".$p_host."/".$p_prefix_service_collection."collection=".$p_collection_code."&page=".$last_page."&size=".$p_size;
+                   $records=Array();
+                   foreach($rs as $item)
+                   {
+                        $row["code_display"]=$item["code_display"];
+                        $row["url_specimen"]=$item["url_specimen"];
+                        $records[]=$row;
+                   }
+                   $returned["records"]=$records;
+                   return $returned;
+                       
+                }
+             }
+        }
+        return Array();
+     }
+   
 }

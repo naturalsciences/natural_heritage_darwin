@@ -15,6 +15,13 @@
           <?php echo $form['name'] ?>
         </td>
       </tr>
+	  <tr>
+        <th><?php echo $form['metadata_ref']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['metadata_ref']->renderError() ?>
+          <?php echo $form['metadata_ref'] ?>
+        </td>
+      </tr>
       <tr>
         <th><?php echo $form['level_ref']->renderLabel() ?></th>
         <td>
@@ -37,6 +44,16 @@
         </td>
       </tr>
       <!-- ftheeten 2017 07 03-->
+      
+        <!-- ftheeten 2017 07 03-->
+      <tr>
+        <th><?php echo $form['collection_ref']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['collection_ref']->renderError() ?>
+          <?php echo $form['collection_ref'] ?>
+        </td>
+      </tr>
+      <!-- ftheeten 2017 07 03-->
       <tr>
         <th><?php echo $form['sensitive_info_withheld']->renderLabel() ?></th>
         <td>
@@ -44,6 +61,7 @@
           <?php echo $form['sensitive_info_withheld'] ?>
         </td>
       </tr>
+        <!-- ftheeten 2017 07 03-->
       <tr id="parent_ref">
         <th class="ref_name"><?php echo $form['parent_ref']->renderLabel() ?></th>
         <td>
@@ -98,5 +116,9 @@ $(document).ready(function () {
         });
       }
     });
+    //ftheeten 2017 07 06
+    <?php if($collection_ref_for_insertion>-1):?>
+         $('.coll_for_taxonomy_insertion_ref option[value="<?php print($collection_ref_for_insertion);?>"]').attr("selected", true);
+     <?php endif?>
 });
 </script>

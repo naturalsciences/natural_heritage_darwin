@@ -1,4 +1,4 @@
-<input type="button" name="save" id="save_search" value="<?php echo __('Save this search'); ?>" class="save_search">
+<input type="button" name="save" id="save_search" value="<?php echo __('Save this search (+ report)'); ?>" class="save_search">
 
 <script  type="text/javascript">
 $(document).ready(function () {

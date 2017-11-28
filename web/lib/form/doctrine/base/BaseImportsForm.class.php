@@ -28,6 +28,17 @@ abstract class BaseImportsForm extends BaseFormDoctrine
       'errors_in_import'        => new sfWidgetFormTextarea(),
       'template_version'        => new sfWidgetFormTextarea(),
       'exclude_invalid_entries' => new sfWidgetFormInputCheckbox(),
+      'taxonomy_name'           => new sfWidgetFormTextarea(),
+      'is_reference_taxonomy'   => new sfWidgetFormInputCheckbox(),
+      'source_taxonomy'         => new sfWidgetFormTextarea(),
+      'creation_date'           => new sfWidgetFormTextarea(),
+      'creation_date_mask'      => new sfWidgetFormInputText(),
+      'definition_taxonomy'     => new sfWidgetFormTextarea(),
+      'url_website_taxonomy'    => new sfWidgetFormTextarea(),
+      'url_webservice_taxonomy' => new sfWidgetFormTextarea(),
+      'specimen_taxonomy_ref'   => new sfWidgetFormInputText(),
+      'working'                 => new sfWidgetFormInputCheckbox(),
+      'mime_type'               => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -44,6 +55,17 @@ abstract class BaseImportsForm extends BaseFormDoctrine
       'errors_in_import'        => new sfValidatorString(array('required' => false)),
       'template_version'        => new sfValidatorString(array('required' => false)),
       'exclude_invalid_entries' => new sfValidatorBoolean(array('required' => false)),
+      'taxonomy_name'           => new sfValidatorString(array('required' => false)),
+      'is_reference_taxonomy'   => new sfValidatorBoolean(array('required' => false)),
+      'source_taxonomy'         => new sfValidatorString(array('required' => false)),
+      'creation_date'           => new sfValidatorString(array('required' => false)),
+      'creation_date_mask'      => new sfValidatorInteger(array('required' => false)),
+      'definition_taxonomy'     => new sfValidatorString(array('required' => false)),
+      'url_website_taxonomy'    => new sfValidatorString(array('required' => false)),
+      'url_webservice_taxonomy' => new sfValidatorString(array('required' => false)),
+      'specimen_taxonomy_ref'   => new sfValidatorInteger(array('required' => false)),
+      'working'                 => new sfValidatorBoolean(array('required' => false)),
+      'mime_type'               => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('imports[%s]');

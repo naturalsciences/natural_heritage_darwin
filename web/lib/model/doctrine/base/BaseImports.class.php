@@ -18,6 +18,17 @@
  * @property string $errors_in_import
  * @property string $template_version
  * @property boolean $exclude_invalid_entries
+ * @property string $taxonomy_name
+ * @property boolean $is_reference_taxonomy
+ * @property string $source_taxonomy
+ * @property string $creation_date
+ * @property integer $creation_date_mask
+ * @property string $definition_taxonomy
+ * @property string $url_website_taxonomy
+ * @property string $url_webservice_taxonomy
+ * @property integer $specimen_taxonomy_ref
+ * @property boolean $working
+ * @property string $mime_type
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
@@ -36,6 +47,17 @@
  * @method string              getErrorsInImport()          Returns the current record's "errors_in_import" value
  * @method string              getTemplateVersion()         Returns the current record's "template_version" value
  * @method boolean             getExcludeInvalidEntries()   Returns the current record's "exclude_invalid_entries" value
+ * @method string              getTaxonomyName()            Returns the current record's "taxonomy_name" value
+ * @method boolean             getIsReferenceTaxonomy()     Returns the current record's "is_reference_taxonomy" value
+ * @method string              getSourceTaxonomy()          Returns the current record's "source_taxonomy" value
+ * @method string              getCreationDate()            Returns the current record's "creation_date" value
+ * @method integer             getCreationDateMask()        Returns the current record's "creation_date_mask" value
+ * @method string              getDefinitionTaxonomy()      Returns the current record's "definition_taxonomy" value
+ * @method string              getUrlWebsiteTaxonomy()      Returns the current record's "url_website_taxonomy" value
+ * @method string              getUrlWebserviceTaxonomy()   Returns the current record's "url_webservice_taxonomy" value
+ * @method integer             getSpecimenTaxonomyRef()     Returns the current record's "specimen_taxonomy_ref" value
+ * @method boolean             getWorking()                 Returns the current record's "working" value
+ * @method string              getMimeType()                Returns the current record's "mime_type" value
  * @method Collections         getCollections()             Returns the current record's "Collections" value
  * @method Users               getUsers()                   Returns the current record's "Users" value
  * @method Doctrine_Collection getStaging()                 Returns the current record's "Staging" collection
@@ -53,6 +75,17 @@
  * @method Imports             setErrorsInImport()          Sets the current record's "errors_in_import" value
  * @method Imports             setTemplateVersion()         Sets the current record's "template_version" value
  * @method Imports             setExcludeInvalidEntries()   Sets the current record's "exclude_invalid_entries" value
+ * @method Imports             setTaxonomyName()            Sets the current record's "taxonomy_name" value
+ * @method Imports             setIsReferenceTaxonomy()     Sets the current record's "is_reference_taxonomy" value
+ * @method Imports             setSourceTaxonomy()          Sets the current record's "source_taxonomy" value
+ * @method Imports             setCreationDate()            Sets the current record's "creation_date" value
+ * @method Imports             setCreationDateMask()        Sets the current record's "creation_date_mask" value
+ * @method Imports             setDefinitionTaxonomy()      Sets the current record's "definition_taxonomy" value
+ * @method Imports             setUrlWebsiteTaxonomy()      Sets the current record's "url_website_taxonomy" value
+ * @method Imports             setUrlWebserviceTaxonomy()   Sets the current record's "url_webservice_taxonomy" value
+ * @method Imports             setSpecimenTaxonomyRef()     Sets the current record's "specimen_taxonomy_ref" value
+ * @method Imports             setWorking()                 Sets the current record's "working" value
+ * @method Imports             setMimeType()                Sets the current record's "mime_type" value
  * @method Imports             setCollections()             Sets the current record's "Collections" value
  * @method Imports             setUsers()                   Sets the current record's "Users" value
  * @method Imports             setStaging()                 Sets the current record's "Staging" collection
@@ -121,6 +154,42 @@ abstract class BaseImports extends DarwinModel
              'type' => 'boolean',
              'notnull' => true,
              'default' => false,
+             ));
+        $this->hasColumn('taxonomy_name', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('is_reference_taxonomy', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => true,
+             ));
+        $this->hasColumn('source_taxonomy', 'string', null, array(
+             'type' => 'string',
+             'notnull' => false,
+             ));
+        $this->hasColumn('creation_date', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('creation_date_mask', 'integer', null, array(
+             'type' => 'integer',
+             'default' => 0,
+             ));
+        $this->hasColumn('definition_taxonomy', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('url_website_taxonomy', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('url_webservice_taxonomy', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('specimen_taxonomy_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('working', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
+        $this->hasColumn('mime_type', 'string', null, array(
+             'type' => 'string',
              ));
     }
 

@@ -494,13 +494,17 @@ class specimenActions extends DarwinActions
 
   public function executeView(sfWebRequest $request)
   {
-    $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this->getUser());
+	 
+	 //ftheeten 2017 10 09 (replace $request->getParameter('id') by spec_id)
+	$spec_id= $this->getIDFromCollectionNumber($request);
+	
+    $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($spec_id, $this->getUser());
 
     $this->hasEncodingRight = false;
 
     if($this->getUser()->isAtLeast(Users::ENCODER)) {
       if( $this->getUser()->isA(Users::ADMIN) ||
-        Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId())) {
+        Doctrine::getTable('Specimens')->hasRights('spec_ref',$spec_id, $this->getUser()->getId())) {
 
         $this->hasEncodingRight = true;
       }
@@ -688,7 +692,7 @@ class specimenActions extends DarwinActions
 			$this->split_created=$old_id;
             
             //ftheeten 2016 09 26
-            /*$relationships=Doctrine::getTable('SpecimensRelationshipes')->findBySpecimenRef(old_id);*/
+            /*$relationships=Doctrine::getTable('SpecimensRelationships')->findBySpecimenRef(old_id);*/
             
 			$properties = Doctrine::getTable('Properties')->findForTable("specimens", $old_id);
 			 foreach($properties as $propertySrc)
@@ -769,15 +773,17 @@ class specimenActions extends DarwinActions
    
    //ftheeten 2016 09 21
       public function executeAddStorageParts(sfWebRequest $request)
-  {
-    if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
-    $number = intval($request->getParameter('num'));
-    $form = $this->getSpecimenForm($request);
-    $form->addStorageParts($number, '');
+	{
+		if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
+		$number = intval($request->getParameter('num'));
+		$form = $this->getSpecimenForm($request);
+		$form->addStorageParts($number, '');
+		
+		return $this->renderPartial('spec_storage_parts',array('form' => $form['newStorageParts'][$number], 'rownum'=>$number, 'module'=>'specimen'));
     
-    return $this->renderPartial('spec_storage_parts',array('form' => $form['newStorageParts'][$number], 'rownum'=>$number, 'module'=>'specimen'));
-    
- }
+	}
+	
+	
  
  
 }

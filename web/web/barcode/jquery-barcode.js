@@ -1190,6 +1190,10 @@
           content = "",
           bar0 = "<div style=\"float: left; font-size: 0; background-color: " + settings.bgColor + "; height: " + mh + "px; width: &Wpx\"></div>",
           bar1 = "<div style=\"float: left; font-size: 0; width:0; border-left: &Wpx solid " + settings.color + "; height: " + mh + "px;\"></div>";
+          if(mw<1)
+                {
+                    mw=1;
+                }
         for (y = 0; y < lines; y++) {
           len = 0;
           current = digit[y][0];
@@ -1197,6 +1201,7 @@
             if (current === digit[y][x]) {
               len++;
             } else {
+                
               content += (current ? bar1 : bar0).replace("&W", len * mw);
               current = digit[y][x];
               len = 1;
@@ -1213,8 +1218,9 @@
       },
       // css 1D barcode renderer
       digitToCss: function ($container, settings, digit, hri) {
-        var w = intval(settings.barWidth),
-          h = intval(settings.barHeight);
+      alert("GO");
+        var w = settings.barWidth,
+          h = settings.barHeight;
         this.digitToCssRenderer($container, settings, this.bitStringTo2DArray(digit), hri, w, h);
       },
       // css 2D barcode renderer

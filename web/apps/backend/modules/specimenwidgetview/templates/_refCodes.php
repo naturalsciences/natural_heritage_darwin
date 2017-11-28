@@ -61,7 +61,7 @@
   </tbody>
  </table>
   <?php endif;?>
-  <script  type="text/javascript">
+<script  type="text/javascript">
 //ftheeten 2017 08 10
 $(document).ready(function () {
 

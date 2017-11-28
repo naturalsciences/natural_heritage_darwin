@@ -11,7 +11,8 @@ class CollectionsCodesForm extends BaseCollectionsForm
 {
   public function configure()
   {
-    $this->useFields(array('id', 'code_specimen_duplicate', 'code_auto_increment','code_prefix','code_prefix_separator','code_suffix','code_suffix_separator'));
+	  /**JM Herpers 17 11 08 added 1 fields : ,'code_ai_inherit'*/
+    $this->useFields(array('id', 'code_specimen_duplicate', 'code_auto_increment','code_prefix','code_prefix_separator','code_suffix','code_suffix_separator','code_ai_inherit'));
     
     $this->widgetSchema['code_prefix'] = new sfWidgetFormInputText();
     $this->widgetSchema['code_prefix_separator'] = new sfWidgetFormInputText();
@@ -37,6 +38,10 @@ class CollectionsCodesForm extends BaseCollectionsForm
 	/*f theeten 15/10/2015 mask for code  */
     $this->widgetSchema['code_mask']    = new sfWidgetFormInputText();
     $this->validatorSchema['code_mask'] = new sfValidatorString(array('required' => false, 'trim'=>true));
-
+	
+	/*JM Herpers 17 11 08 : new field for auto increment inheritage*/
+	$this->widgetSchema['code_ai_inherit'] = new sfWidgetFormInputCheckbox();
+	$this->widgetSchema['code_ai_inherit']->setLabel('Increment parent and child collections altogether');
+	$this->validatorSchema['code_ai_inherit'] = new sfValidatorBoolean(array('required' => false));
   }
 }

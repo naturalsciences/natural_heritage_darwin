@@ -10,11 +10,13 @@
       <thead>
         <tr>
  <!--ftheeten 2016 06 28-->
+        <?php if ($is_choose===TRUE):?>
         <tr>
             <td colspan="4" ><div style='float: left'> <div class='blue_link' id='get_ig'><a style='text-align: left'><?php echo __('Get IG');?></a></div>
             <div class='blue_link' id='get_specimen_number'><a><?php echo __('Get Specimen number');?></a></div>
             <div class='blue_link' id='get_station_number'><a><?php echo __('Get stations number');?></a></div></td>
-        </tr>        
+        </tr>
+        <?php endif;?>        
         <tr>
           <th><?php echo $form['code']->renderLabel() ?></th>
          

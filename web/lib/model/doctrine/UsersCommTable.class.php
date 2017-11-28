@@ -29,4 +29,17 @@ class UsersCommTable extends DarwinTable
 	  ->orderBy('r.comm_type ASC, r.id ASC');
     return $q->execute();
   }
+  
+  //2017 08 28
+  public function getProfessionalMailsByUser($id)
+  {
+    $q = Doctrine_Query::create()
+	  ->from('UsersComm r')
+	  ->where('r.person_user_ref = ?',$id)
+      ->andWhere("comm_type='e-mail'")
+      ->andWhere("tag='work'")
+	  ->orderBy('r.comm_type ASC, r.id ASC');
+    return $q->execute();
+  }
+  
 }

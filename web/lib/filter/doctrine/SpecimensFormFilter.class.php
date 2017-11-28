@@ -759,7 +759,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       'comment_notion_concerned' => 'Notion concerned',
     ));
 		//ftheeten 2016 02 12
-	$this->widgetSchema['gtu_boolean'] = new sfWidgetFormChoice(array('choices' => array('AND' => 'AND', 'OR' => 'OR', )));
+	$this->widgetSchema['gtu_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' => 'OR', 'AND' => 'AND', )));
   	////ftheeten 2015 01 08
 	$this->validatorSchema['gtu_boolean'] = new sfValidatorPass();
 	
@@ -964,7 +964,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     $query->andWhere('s.type ~* \'('.implode('|',$criteria).')\'');
     return $query ;
   }
-  
+
   public function addStageColumnQuery($query, $field, $val)
   {
     $val = $this->checksToQuotedValues($val);

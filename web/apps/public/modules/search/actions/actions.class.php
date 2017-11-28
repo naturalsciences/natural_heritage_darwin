@@ -116,12 +116,18 @@ class searchActions extends DarwinActions
       $id = $suggestion['id'] ;
       $ajax = true ;
     }
-    else $id = $request->getParameter('id') ;
-
-    $this->forward404Unless(ctype_digit($request->getParameter('id')));
+    else
+    {
+		//$id = $request->getParameter('id') ;
+		//ftheeten 2017 10 09
+		$id= $this->getIDFromCollectionNumber($request);
+	}
+//ftheeten 2017 10 09
+    //$this->forward404Unless(ctype_digit($request->getParameter('id')));
+	$this->forward404Unless(ctype_digit($id));
     //ftheeten 2016 10 13
     //$this->specimen = Doctrine::getTable('Specimens')->find((int) $request->getParameter('id'));
-    $this->specimen = Doctrine::getTable('SpecimensStoragePartsView')->find((int) $request->getParameter('id'));    
+    $this->specimen = Doctrine::getTable('SpecimensStoragePartsView')->find((int)$id);    
     $this->forward404Unless($this->specimen);
     if(!$this->specimen->getCollectionIsPublic()) $this->forwardToSecureAction();
 
@@ -329,4 +335,21 @@ class searchActions extends DarwinActions
     }
     return $tab ;
   }
+  
+  //ftheeten 2017 11 24 
+  public function executeGetjson(sfWebRequest $request)
+  {
+     $results=$this->getSpecimenJSON($request);
+     $this->getResponse()->setContentType('application/json');
+     return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+  }
+  
+  //ftheeten 2017 11 24 
+  public function executeGetcollectionjson(sfWebRequest $request)
+  {
+     $results=$this->getCollectionJSON($request);
+     $this->getResponse()->setContentType('application/json');
+     return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+  }
+  	
 }

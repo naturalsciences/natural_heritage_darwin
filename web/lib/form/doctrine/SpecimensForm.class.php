@@ -76,7 +76,7 @@ class SpecimensForm extends BaseSpecimensForm
       'complete_url' => 'catalogue/completeName?table=collections',
     ));
     //ftheeten 2017 01 13
-    $this->widgetSchema['collection_ref']->setAttributes(array('class'=>'col_check'));
+    $this->widgetSchema['collection_ref']->setAttributes(array('class'=>'col_check specimen_collection_ref'));
 
     /* Expedition Reference */
     $this->widgetSchema['expedition_ref'] = new widgetFormCompleteButtonRef(array(
@@ -446,16 +446,26 @@ class SpecimensForm extends BaseSpecimensForm
     
     /* Labels */
     //2016 06 22 ftheeten added male fema count
+	//2017 11 22 jmherpers added new labels for lin, max and modified label for accuracy
     $this->widgetSchema->setLabels(array(
       'gtu_ref' => 'Sampling location Tags',
       'station_visible' => 'Public sampling location ?',
       'filenames' => 'Add File',
       'institution_ref' => 'Institution',
       'accuracy' => 'Accuracy',
-      'accuracy_males' => 'Accuracy males count',
-      'accuracy_females' => 'Accuracy females count',
+      'accuracy_males' => 'Accuracy',
+      'accuracy_females' => 'Accuracy',
+	  'accuracy_juveniles' => 'Accuracy',
       'surnumerary' => 'supernumerary',
       'col' => 'Column',
+	  'specimen_count_min' => 'Min.',
+	  'specimen_count_max' => 'Max.',
+	  'specimen_count_males_min' => 'Min.',
+	  'specimen_count_males_max' => 'Max.',
+	  'specimen_count_females_min' => 'Min.',
+	  'specimen_count_females_max' => 'Max.',
+	  'specimen_count_juveniles_min' => 'Min.',
+	  'specimen_count_juveniles_max' => 'Max.',
     ));
 
     /* Validators */
@@ -621,6 +631,7 @@ class SpecimensForm extends BaseSpecimensForm
         ), array( 'style' => "display: inline-block;text-align:center; width: auto !important"));
     $this->validatorSchema['valid_label'] = new sfValidatorString(array('required' => false));
 
+	
     $this->mergePostValidator(new sfValidatorSchemaCompare('specimen_count_min', '<=', 'specimen_count_max',
       array(),
       array('invalid' => 'The min number ("%left_field%") must be lower or equal the max number ("%right_field%")' )
@@ -1094,7 +1105,18 @@ class SpecimensForm extends BaseSpecimensForm
 			$options['code_prefix'] = $collection->getCodePrefix();
 			$options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
 			if($collection->getCodeAutoIncrement())
-			  $options['code'] = $collection->getCodeLastValue() + 1 ;
+			{
+			  //ftheeten and jmherpers 2017 11 16
+			  if($collection->getCodeAiInherit()&&($collection->getParentRef()!==null))
+			  {
+					$parent_collection = $collection->detectTrueParentForAutoIncrement();
+					$options['code'] = $parent_collection->getCodeLastValue() + 1 ;	
+			  }
+			  else //(this is a parent collection of non inheriting
+			  {
+				  	$options['code'] = $collection->getCodeLastValue() + 1 ;		  
+			  }
+			}
 			$options['code_suffix'] = $collection->getCodeSuffix();
 			$options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
 		  }

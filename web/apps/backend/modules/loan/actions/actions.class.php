@@ -57,8 +57,10 @@ class loanActions extends DarwinActions
     $this->form = new LoansFormFilter($request->getParameter('loans_filters'),array('user' => $this->getUser()));
   }
 
-  public function executeSearch(sfWebRequest $request)
+ public function executeSearch(sfWebRequest $request)
   {
+    //ftheeten 2017 10 30
+    $editTest=false;
     $this->forward404Unless($request->isMethod('post'));
     $this->setCommonValues('loan', 'from_date', $request);
 
@@ -66,12 +68,29 @@ class loanActions extends DarwinActions
     $this->is_choose = ($request->getParameter('is_choose', '') == '') ? 0 : intval($request->getParameter('is_choose') );
     if($request->getParameter('loans_filters','') !== '')
     {
+      //ftheeten 2017 1030
+      if(array_key_exists("collection_ref",$request->getParameter('loans_filters','')))
+      {
+        if(is_numeric($request->getParameter('loans_filters','')['collection_ref']))
+        {           
+            $editTest=Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $request->getParameter('loans_filters','')['collection_ref']);           
+        }
+      }
       $this->form->bind($request->getParameter('loans_filters'));
 
       if ($this->form->isValid())
       {
-        $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
-
+  
+        //$query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
+        //ftheeten 2017 10 22
+         if($editTest===true)
+         {
+            $query = $this->form->getQuery()->orWhere("collection_ref=?",$request->getParameter('loans_filters','')['collection_ref'])->orderBy($this->orderBy .' '.$this->orderDir);
+         }
+         else
+         {
+            $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
+         }
 
         $pager = new DarwinPager($query,
           $this->currentPage,
@@ -99,6 +118,14 @@ class loanActions extends DarwinActions
         $loan_list = array();
         foreach($this->items as $loan) {
           $loan_list[] = $loan->getId() ;
+           //ftheeten 2017 10 30
+          if(!in_array($loan->getId(), $this->rights))
+          {
+                if($editTest===true)
+                {
+                    $this->rights[]=$loan->getId();
+                }
+          }
         }
         $this->printable = Doctrine::getTable('Loans')->getPrintableLoans($loan_list,$this->getUser());
         $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
@@ -109,7 +136,7 @@ class loanActions extends DarwinActions
       }
     }
   }
-
+  
   public function executeChoose(sfWebRequest $request)
   {
     $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;
@@ -360,6 +387,20 @@ class loanActions extends DarwinActions
       }
 
       // else : nothing append, and it's a good thing
+    }
+    $this->redirect('board/index') ;
+  }
+  
+  //rmca 2017 10 27
+    public function executeRemoveStatus(sfWebRequest $request)
+  {
+    if($request->isXmlHttpRequest())
+    {
+        
+	  $id=$request->getParameter('id');
+	  $statusTmp=Doctrine::getTable("LoanStatus")->find($id);
+	  $statusTmp->delete();
+	  return $this->renderText('ok');
     }
     $this->redirect('board/index') ;
   }

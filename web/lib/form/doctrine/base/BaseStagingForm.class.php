@@ -121,6 +121,7 @@ abstract class BaseStagingForm extends BaseFormDoctrine
       'part_count_females_max'    => new sfWidgetFormInputText(),
       'part_count_juveniles_min'  => new sfWidgetFormInputText(),
       'part_count_juveniles_max'  => new sfWidgetFormInputText(),
+      'specimen_taxonomy_ref'     => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -230,6 +231,7 @@ abstract class BaseStagingForm extends BaseFormDoctrine
       'part_count_females_max'    => new sfValidatorInteger(array('required' => false)),
       'part_count_juveniles_min'  => new sfValidatorInteger(array('required' => false)),
       'part_count_juveniles_max'  => new sfValidatorInteger(array('required' => false)),
+      'specimen_taxonomy_ref'     => new sfValidatorInteger(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('staging[%s]');

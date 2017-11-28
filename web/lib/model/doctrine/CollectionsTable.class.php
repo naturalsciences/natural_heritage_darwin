@@ -176,4 +176,55 @@ class CollectionsTable extends DarwinTable
     }
     return 0;
   }
+  
+  //ftheeten 2017 07 05
+    public static function getAllAvailableCollectionsHierarchical()
+  {
+
+    $q = Doctrine_Query::create()
+      ->select('c.*')
+      ->from('Collections c')  ;   
+    $q->orderBy('name ASC');
+    $res = $q->execute();
+    $results = array(0 =>'All');
+    $resultsTmp = array();
+    $indexedResults = array();
+    $mapping=array();
+    $alphaPaths=array();
+    foreach($res as $row)
+    {
+      $resultsTmp[$row->getId()] = $row->getName();
+      $indexedResults[$row->getId()] = $row->getNameIndexed();
+      $mapping[$row->getId()] = $row->getPath().'/'.$row->getId().'/';
+
+    }
+    foreach($mapping as $key=>$path)
+    {
+      $alphaPath=CollectionsTable::getAlphabeticalPath($path, $indexedResults);
+      $alphaPaths[$alphaPath]=$key;
+    }
+    ksort($alphaPaths);
+    foreach($alphaPaths as $alphaPath=>$colId)
+    {
+        $levels= substr_count( $alphaPath, "/");
+        $results[$colId]= str_repeat("-", $levels-1).$resultsTmp[$colId];
+    }
+    return $results;
+  }
+  
+  public static function getAlphabeticalPath($path, $colNames)
+  {
+
+    $arrayPath=explode("/", $path);
+    $returned="/";
+    foreach($arrayPath as $item)
+    {
+        if(is_numeric($item))
+        {            
+            $collname=$colNames[$item];
+             $returned.=$collname."/";
+        }
+    }
+    return $returned;
+  }
 }

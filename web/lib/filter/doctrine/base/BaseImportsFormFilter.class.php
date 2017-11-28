@@ -25,6 +25,17 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'errors_in_import'        => new sfWidgetFormFilterInput(),
       'template_version'        => new sfWidgetFormFilterInput(),
       'exclude_invalid_entries' => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'taxonomy_name'           => new sfWidgetFormFilterInput(),
+      'is_reference_taxonomy'   => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'source_taxonomy'         => new sfWidgetFormFilterInput(),
+      'creation_date'           => new sfWidgetFormFilterInput(),
+      'creation_date_mask'      => new sfWidgetFormFilterInput(),
+      'definition_taxonomy'     => new sfWidgetFormFilterInput(),
+      'url_website_taxonomy'    => new sfWidgetFormFilterInput(),
+      'url_webservice_taxonomy' => new sfWidgetFormFilterInput(),
+      'specimen_taxonomy_ref'   => new sfWidgetFormFilterInput(),
+      'working'                 => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'mime_type'               => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -40,6 +51,17 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'errors_in_import'        => new sfValidatorPass(array('required' => false)),
       'template_version'        => new sfValidatorPass(array('required' => false)),
       'exclude_invalid_entries' => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'taxonomy_name'           => new sfValidatorPass(array('required' => false)),
+      'is_reference_taxonomy'   => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'source_taxonomy'         => new sfValidatorPass(array('required' => false)),
+      'creation_date'           => new sfValidatorPass(array('required' => false)),
+      'creation_date_mask'      => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'definition_taxonomy'     => new sfValidatorPass(array('required' => false)),
+      'url_website_taxonomy'    => new sfValidatorPass(array('required' => false)),
+      'url_webservice_taxonomy' => new sfValidatorPass(array('required' => false)),
+      'specimen_taxonomy_ref'   => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'working'                 => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'mime_type'               => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('imports_filters[%s]');
@@ -72,6 +94,17 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'errors_in_import'        => 'Text',
       'template_version'        => 'Text',
       'exclude_invalid_entries' => 'Boolean',
+      'taxonomy_name'           => 'Text',
+      'is_reference_taxonomy'   => 'Boolean',
+      'source_taxonomy'         => 'Text',
+      'creation_date'           => 'Text',
+      'creation_date_mask'      => 'Number',
+      'definition_taxonomy'     => 'Text',
+      'url_website_taxonomy'    => 'Text',
+      'url_webservice_taxonomy' => 'Text',
+      'specimen_taxonomy_ref'   => 'Number',
+      'working'                 => 'Boolean',
+      'mime_type'               => 'Text',
     );
   }
 }

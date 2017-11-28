@@ -35,7 +35,11 @@ class CodesForm extends BaseCodesForm
     $this->widgetSchema['code'] = new sfWidgetFormInput();
 	//mrac 2015 06 03 new css class 'mrac_input_mask' for input mask
     $this->widgetSchema['code']->setAttributes(array('class'=>'medium_small_size mrac_input_mask'));
-    $this->validatorSchema['code'] = new sfValidatorString(array('required' => false, 'trim'=>true));
+	//ftheeten 2017 11 21 ftheeten and jm herpers 
+   $validatorCodeRequired= new sfValidatorString(array('required' => true, 'trim'=>true));
+   $validatorCodeRequired->setMessage("required", "You must provide a code for the specimen. See the 'code' field below");
+   //ftheeten 2017 11 21 ftheeten and jm herpers 
+    $this->validatorSchema['code'] = $validatorCodeRequired;
     $this->widgetSchema['code_suffix'] = new sfWidgetFormInput();
     $this->widgetSchema['code_suffix']->setAttributes(array('class'=>'lsmall_size'));
     $this->validatorSchema['code_suffix'] = new sfValidatorString(array('required' => false, 'trim'=>true));
@@ -90,7 +94,7 @@ class CodesForm extends BaseCodesForm
 
 		if(sfContext::getInstance()->getActionName()=="create")
 		{
-			$cpt=$this->getCountCodeIndexedForm($category, $prefix, $prefix_sep, $code, $suffix, $suffix_sep, $this->colIDSess);
+			$cpt=$this->getCountCodeIndexedForm($category, $prefix, $code, $suffix, $this->colIDSess);
 			if($cpt>0)
 			{
 			
@@ -144,11 +148,11 @@ class CodesForm extends BaseCodesForm
 		
 	}
 	
-	public function getCountCodeIndexedForm($category, $prefix='', $prefix_sep='', $code='', $suffix='', $suffix_sep='',$coll=-1)
+	public function getCountCodeIndexedForm($category, $prefix='', $code='', $suffix='', $coll=-1)
 	{
 	
 		
-		$searched=$prefix.$prefix_sep.$code.$suffix_sep.$suffix;
+		$searched=$prefix.$code.$suffix;
 		if($coll==-1)
 		{
 			$q = Doctrine_Query ::create()->
@@ -172,4 +176,13 @@ class CodesForm extends BaseCodesForm
 		return $q->execute(null, Doctrine::HYDRATE_SINGLE_SCALAR);
 		
 	}
+    
+    //ftheeten 2017 08 10
+      /*public function getJavaScripts()
+      {
+        $javascripts=parent::getJavascripts();
+        $javascripts[]='/barcode/jquery-barcode.js';
+        
+        return $javascripts;
+      }*/
 }

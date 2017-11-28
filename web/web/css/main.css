@@ -291,6 +291,28 @@ form th, form tr > td
   vertical-align:top;
 }
 
+.sex_top_bordered
+{
+  border-top: 2px solid #33FF00;
+  border-left: 2px solid #33CC00;
+  border-right: 2px solid #33FF00;
+}
+
+.sex_middle_bordered
+{
+  border-left: 2px solid #33CC00;
+  border-right: 2px solid #33FF00;
+  border-spacing: 2px;
+}
+
+.sex_bottom_bordered
+{
+  border-bottom: 2px solid #33CC00;
+  border-left: 2px solid #33CC00;
+  border-right: 2px solid #33FF00;
+  border-spacing: 2px;
+}
+
 /** Forms - Search **/
 
 .search
@@ -2728,8 +2750,11 @@ body .ui-tooltip, body .qtip
 }
 
 #ui-tooltip-modal {
-  min-width: 876px !important;
-  max-width: 1000px !important;
+  /*min-width: 876px !important;
+  max-width: 1000px !important;*/
+  /*ftheeten 2017 09 18*/
+  min-width: 1050px !important;
+  max-width: 1200px !important;
 }
 
 #ui-tooltip-modal .ui-tooltip-titlebar

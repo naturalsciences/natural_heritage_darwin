@@ -86,4 +86,32 @@ class Collections extends BaseCollections
       return true;
     return false;
   }
+  
+  //ftheeten and jmherpers 2017 11 16
+  //in case of a sub-collections inherits its auto-incremented number from a parent one
+  //this function scans the complete hierarchies of the collections and sees
+  //which one provides the source number and has to be updated one
+  public function detectTrueParentForAutoIncrement()
+  {
+	  $parent=$this;
+	  if($this->getCodeAutoIncrement()&&$this->getCodeAiInherit())
+	  {
+		  $tmp_path=$this->getPath();
+		  $array_hierarchy=explode("/", $tmp_path);
+		  $array_hierarchy=array_reverse($array_hierarchy);
+		  foreach($array_hierarchy as $collection)
+		  {
+			  if(strlen(trim($collection))>0)
+			  {
+					$parent= Doctrine::getTable('Collections')->find($collection);
+					if($parent->getCodeAiInherit()===false)
+				    {
+						return $parent;
+					}
+			  }
+		  }
+		  return $parent;
+	  }
+	  
+  }  
 }

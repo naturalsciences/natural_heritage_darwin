@@ -68,11 +68,28 @@
                   <?php echo link_to(image_tag('warning.png',array('title'=>__('View errors while importing'))),'import/viewError?id='.$import->getId());?>
               </td>
               <?php else : ?>
-              <td>
-                <?php if ($import->isEditableState()) : ?>
+                  <!--ftheeten 2017 08 29-->
+                <?php if ($import->getWorking()) : ?>
+                    <td>WORKING, PLEASE WAIT</td>
+                <?php elseif ($import->isEditableState()) : ?>
+                 <td>
                   <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'staging/index?import='.$import->getId());?>
+                 </td>
+                 <!--ftheeten 2017 08 28-->
+                 <?php elseif($import->getState()==="to_be_loaded") : ?>
+                 <td>
+                    <?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
+                 </td>
+                 <!--ftheeten 2017 08 28-->
+                 <?php elseif($import->getState()==="loaded") : ?>
+                 <td>
+                    <?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
+                 </td>
+                 <!--ftheeten 2017 08 28 (end)-->
+                 <?php else : ?>
+                 <td/>
                 <?php endif ; ?>
-              </td>
+              
               <td>
                 <?php if ($import->isEditableState()) : ?>
                   <?php echo link_to(image_tag('checkbox_checked.png',array('title'=>__('Import "Ok" lines'))),'staging/markok?import='.$import->getId());?>

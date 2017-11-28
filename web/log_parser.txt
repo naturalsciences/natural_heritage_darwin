@@ -1,0 +1,374 @@
+!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2!!!!!!!!!!!!!!!!!uploaded_8fb834fc25f4cd1e92c4aa4a95e45935b3035d7btxt!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN CHECK!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE
+!!!!!!!!!!!!!!!!!!!! IN CHECK!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK 1
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK 1
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK 1
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT
+!!!!!!!!!!!!!!!!!!!! IN LOOP IMPORT 181!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE
+!!!!!!!!!!!!!!!!!!!! IN CHECK!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK 1
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT
+!!!!!!!!!!!!!!!!!!!! COMMIT DONE
+!!!!!!!!!!!!!!!!!!!! IN MARKOK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK 1
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT
+!!!!!!!!!!!!!!!!!!!! IN LOOP IMPORT 183!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK 1
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT
+!!!!!!!!!!!!!!!!!!!! IN LOOP IMPORT 184
+!!!!!!!!!!!!!!!!!!!! COMMIT DONE
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK 1
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT
+!!!!!!!!!!!!!!!!!!!! IN LOOP IMPORT 184
+!!!!!!!!!!!!!!!!!!!! COMMIT DONE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK 1
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT
+!!!!!!!!!!!!!!!!!!!! IN LOOP IMPORT 185
+!!!!!!!!!!!!!!!!!!!! COMMIT DONE
+!!!!!!!!!!!!!!!!!!!! IN MARKOK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK 1
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT
+!!!!!!!!!!!!!!!!!!!! IN LOOP IMPORT 185
+!!!!!!!!!!!!!!!!!!!! COMMIT DONE
+!!!!!!!!!!!!!!!!!!!! IN CHECK!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK
+!!!!!!!!!!!!!!!!!!!! IN MARKOK 1
+!!!!!!!!!!!!!!!!!!!! IN CHECK
+!!!!!!!!!!!!!!!!!!!! IN DO IMPORT
+!!!!!!!!!!!!!!!!!!!! IN LOOP IMPORT 186
+!!!!!!!!!!!!!!!!!!!! COMMIT DONE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE!!!!!!!!!!!!!!!!!Log!!!!!!!!!!!!!!!!!Log2
+CALL ABCD
+CALL ABCD 2
+CALL ABCD 3
+ATTEMPT PARSE
+PARSE

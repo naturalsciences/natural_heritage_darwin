@@ -13,6 +13,8 @@ class darwinCheckImportTask extends sfBaseTask
       new sfCommandOption('full-check', null, sfCommandOption::PARAMETER_NONE, 'if this option is specified, even this import file on pending state are checked'),
       new sfCommandOption('id', null, sfCommandOption::PARAMETER_REQUIRED, 'Only do the job for a given import id'),
       new sfCommandOption('no-delete', null, sfCommandOption::PARAMETER_NONE, 'Do not try to delete old imported lines'),
+       //ftheeten 2017 08 28
+      new sfCommandOption('mailsfornotification', null, sfCommandOption::PARAMETER_REQUIRED, 'The Users for the mail notification', 'backend'),
       ));
     $this->namespace        = 'darwin';
     $this->name             = 'check-import';
@@ -50,6 +52,7 @@ EOF;
       $sql = "delete from imports i WHERE i.state='deleted' AND NOT EXISTS (select 1 from staging where import_ref = i.id)";
       $conn->getDbh()->exec($sql);
       $this->logSection('Delete', sprintf('Check %d : Removed %d lines',$randnum, $ctn)) ;
+
     }
 
     // Log the fact that if an id provided is not a digit, send an error and stop the execution
@@ -69,10 +72,23 @@ EOF;
     $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
     // Get back here the list of imports id that could be treated
     $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
+	
+	
     $imports_ids = $imports->toKeyValueArray("id", "id");
+	//DBUG
+	foreach($imports_ids as $tmp_id)
+	{
+			
+		 $importsTmp = Doctrine::getTable('Imports')->find($tmp_id);
+		 
+		
+	}
+	//DBUG
+
     // let's begin with import catalogue
     foreach($catalogues as $catalogue)
     {
+		
       $date_start = date('G:i:s') ;
       $this->logSection('Processing', sprintf('Check %d : Start processing Catalogue import %d (start: %s)',$randnum, $catalogue->getId(),$date_start));
       // Begin here the transactional process
@@ -95,8 +111,13 @@ EOF;
       }
       $this->logSection('Processing', sprintf('Check %d : End processing Catalogue import %d (start: %s - end: %s)',$randnum, $catalogue->getId(),$date_start,date('G:i:s')));
     }
+
     // Check we've got at least one import concerned - if not, no check, no do-import :)
     if(count($imports_ids)) {
+      //ftheeten 2017 08 29
+
+        $this->setImportAsWorking($conn, $imports_ids, true);
+
       $imports_ids_string = implode(',', $imports_ids);
       // Begin here the transactional process for the check-import
       $conn->beginTransaction();
@@ -123,36 +144,121 @@ EOF;
       // if followed by process of do-import...
       if(!empty($options['do-import']))
       {
-        // Initialize the variable that will hold all the imports id to be processed for
-        // changing the state from aprocessing to pending
-        $processed_ids = array();
-        // We need to begin an other transaction for the importing of lines in aprocessing
-        $conn->beginTransaction();
+		 
+				// Initialize the variable that will hold all the imports id to be processed for
+				// changing the state from aprocessing to pending
+				$processed_ids = array();
+				// We need to begin an other transaction for the importing of lines in aprocessing
+				$conn->beginTransaction();
 
-          $this->logSection('fetch', sprintf('Check %d : (%s) Load Imports file in processing state',$randnum,date('G:i:s')));
-          
-          $imports  = Doctrine::getTable('Imports')->getWithImports($options['id']); 
+				$this->logSection('fetch', sprintf('Check %d : (%s) Load Imports file in processing state',$randnum,date('G:i:s')));
+					  
+					  //DBUG
+				foreach($imports_ids as $tmp_id)
+				{
+						
+					 $importsTmp = Doctrine::getTable('Imports')->find($tmp_id);
+					
+					
+				}
+				//DBUG
+					  
+					  $imports  = Doctrine::getTable('Imports')->getWithImports($options['id']); 
 
-          foreach($imports as $import)
-          {
-            $processed_ids[] = $import->getId();
-            $date_start = date('G:i:s') ;
-            $sql_prepared = $conn->prepare("select fct_importer_abcd(?)");
-            $sql_prepared->execute(array($import->getId()));
-            $this->logSection('Processing', sprintf('Check %d : Processing import %d (start: %s - end: %s) done',$randnum,$import->getId(),$date_start,date('G:i:s')));
-          }
-        // Work done, we need to release hand by a commit
-        $conn->commit();
-        // Ok import line asked but 0 ok lines... so it can remain some line in processing not processed...
-        // or simply work done... We then need to set the state back to pending for the current imports
-        Doctrine_Query::create()
-                ->update('imports p')
-                ->set('p.state','?','pending')
-                ->andWhere('p.state = ?','aprocessing')
-                ->andWhereIn('p.id', $processed_ids)
-                ->execute();
+					  foreach($imports as $import)
+					  {
+						 
+						$processed_ids[] = $import->getId();
+						$date_start = date('G:i:s') ;
+						//ftheeten 2017 09 15 'try' block added
+						try
+						{
+							$sql_prepared = $conn->prepare("select fct_importer_abcd(?)");
+							$sql_prepared->execute(array($import->getId()));
+							//ftheeten 2017 09 18 handle host/parasite at taxonlevel
+							$sql_prepared = $conn->prepare("SELECT * FROM rmca_move_host_from_specimens_to_taxa(?)");
+							$sql_prepared->execute(array($import->getCollectionRef()));
+					  
+						}
+						catch(\Exception $e)
+						{
+							 $this->logSection('DATABASE ERROR', $e->getCode());
+							 $this->logSection('DATABASE ERROR', $e->getTrace());
+							 $this->logSection('DATABASE ERROR', $e->getMessage());
+						}
+						$this->logSection('Processing', sprintf('Check %d : Processing import %d (start: %s - end: %s) done',$randnum,$import->getId(),$date_start,date('G:i:s')));
+
+					  }
+					// Work done, we need to release hand by a commit
+					$conn->commit();
+					// Ok import line asked but 0 ok lines... so it can remain some line in processing not processed...
+					// or simply work done... We then need to set the state back to pending for the current imports
+					Doctrine_Query::create()
+							->update('imports p')
+							->set('p.state','?','pending')
+							->andWhere('p.state = ?','aprocessing')
+							->andWhereIn('p.id', $processed_ids)
+							->execute();
+
       }
+      //ftheeten 2017 08 29
+    $this->setImportAsWorking($conn, $imports_ids, false);
+    }
+    //print("EXIT");
+     //ftheeten 2017 08 28
+    if(array_key_exists("mailsfornotification", $options))
+    {
+        foreach(explode(";",$options["mailsfornotification"]) as $mail)
+        {
+                 //$this->sendMail($mail, "Darwin XML import quality-checked in staging", "End of quality-check in staging.");
+       }
+        //$this->sendMail("franck.theeten@africamuseum.be", "Darwin XML import quality-checked in staging", "End of quality-check in staging.");
     }
     $this->log("End Check $randnum : ".date('G:i:s'));
+    
+    
   }
+ //ftheeten 2017 08 28
+  // attention keep identation
+  public function sendMail($recipient, $title, $messageContent)
+ {
+
+
+    if(filter_var($recipient, FILTER_VALIDATE_EMAIL))
+    {
+    
+        // send an email to the affiliate
+        /*$message = $this->getMailer()->compose(
+          array('franck.theeten@africamuseum.be' => 'Franck Theeten'),
+          $recipient,//$affiliate->getEmail(),
+          $title,
+<<<EOF
+{$messageContent}
+EOF
+           );
+ 
+        $this->getMailer()->send($message);*/
+        mail($recipient, $title, $message);
+    }
+ }
+ 
+
+  
+  //ftheeten 2017 08 28
+  public function setImportAsWorking( $p_conn, $p_ids, $p_working)
+  {
+    if(count($p_ids)>0)
+    {
+        $p_conn->beginTransaction();
+        foreach($p_ids as $id)
+        {
+         Doctrine_Query::create()
+            ->update('imports p')
+            ->set('p.working','?',((int)$p_working==0)?'f':'t')
+            ->where('p.id = ?', $id)
+            ->execute();
+        }
+        $p_conn->commit();
+    }
+  }    
 }
