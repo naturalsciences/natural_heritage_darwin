@@ -6,10 +6,9 @@ web/log/public_prod.log
 web/config/databases.yml
 web/config/darwin.yml
 web/config/app.yml
-cache/*
+web/cache/*
 data/feed/*.xml
 date/stats/*.yml
-!cache/.gitignore
 log/*
 !log/.gitignore
 ./.gitignore

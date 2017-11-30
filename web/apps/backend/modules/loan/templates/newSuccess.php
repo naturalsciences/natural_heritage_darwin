@@ -49,7 +49,7 @@
                                                      )
                                                    ))
                                                    */
-              "http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_loans%3Aloans_prod.prpt/report?LOAN_ID=".$form->getObject()->getId()."&userid=report&password=report&output-target=pageable%2Fpdf&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=true"
+                           "http://172.16.11.138/merge_pdf?loan=".$form->getObject()->getId()
                                                    ,
               array("target"=> "_blank")
             );?>
