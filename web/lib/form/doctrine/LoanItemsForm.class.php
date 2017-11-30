@@ -92,7 +92,8 @@ class LoanItemsForm extends BaseLoanItemsForm
             'method' => 'getId',
             'box_title' => $this->getI18N()->__('Choose Darwin item'),
             'button_class'=>'',
-            'nullable'=> true,
+//ftheeten 2017 11 30           
+		   'nullable'=> false,
            ),
       array('class'=>'inline',
            )

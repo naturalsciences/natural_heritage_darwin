@@ -19,9 +19,14 @@ $(document).ready(function ()
    {
      if($('.taxon_view .tree').is(":hidden"))
      {
+		 //ftheeten 2017 30 11
+		 <?php if (isset($spec)) : ?>
+		  <?php if (is_object($spec)) : ?>
        $.get('<?php echo url_for('catalogue/tree?table=taxonomy&id='.$spec->getTaxonRef()) ; ?>',function (html){
          $('.taxon_view .tree').html(html).slideDown();
          });
+		  <?php endif ; ?>
+		  <?php endif ; ?>
      }
      $('.taxon_view .tree').slideUp();
    });
