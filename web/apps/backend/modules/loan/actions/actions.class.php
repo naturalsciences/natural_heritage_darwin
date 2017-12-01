@@ -371,16 +371,25 @@ class loanActions extends DarwinActions
       $form->bind(array('comment'=>$request->getParameter('comment'),'status'=>$request->getParameter('status'))) ;
       if($form->isValid())
       {
-        $data = array(
-            'loan_ref' => $request->getParameter('id'),
-            'status' => $request->getParameter('status'),
-            'comment' => $request->getParameter('comment'),
-            'user_ref' => $this->getUser()->getId()) ;
+		//ftheeten 2017 11 29
+		try
+		{
+			$data = array(
+				'loan_ref' => $request->getParameter('id'),
+				'status' => $request->getParameter('status'),
+				'comment' => $request->getParameter('comment'),
+				'user_ref' => $this->getUser()->getId()) ;
 
-        $loanstatus = new LoanStatus() ;
-        $loanstatus->fromArray($data) ;
-        $loanstatus->save();
-        return $this->renderText('ok');
+			$loanstatus = new LoanStatus() ;
+			$loanstatus->fromArray($data) ;
+			$loanstatus->save();
+			return $this->renderText('ok');
+		}
+		//ftheeten 2017 11 29
+		catch(Doctrine_Exception $ne)
+		{
+			return $this->renderText('<script>alert("Cannot add status, maybe duplicate one?");</script>');
+		}
       }
       else {
         return $this->renderText('notok'.$form->getErrorSchema());
