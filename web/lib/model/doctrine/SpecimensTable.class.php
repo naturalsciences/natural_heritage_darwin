@@ -452,8 +452,8 @@ class SpecimensTable extends DarwinTable
 		return $this->getSpecimenIDCorrespondingToCollectionNumber($collection_number, 'main');
    }
 
-    //ftheeten 2017 14 11
-    public function getJSON($p_specimencode)
+       //ftheeten 2017 12 04
+   public function getJSON($p_specimencode)
     {
   
        
@@ -467,7 +467,7 @@ class SpecimensTable extends DarwinTable
             $rows=array();
             
             $query="
-            SELECT distinct array_agg(DISTINCT id) as ids, (SELECT modification_date_time FROM users_tracking where referenced_relation='specimens' and record_id= max(specimens.id)  GROUP BY modification_date_time ,users_tracking.id having users_tracking.id=max(users_tracking.id) limit 1) as last_modification, code_display, array_agg(DISTINCT taxon_path) as taxon_paths, array_agg(DISTINCT taxon_ref) as taxon_ref,
+            SELECT distinct array_agg(DISTINCT id) as ids, collection_name, collection_code, (SELECT modification_date_time FROM users_tracking where referenced_relation='specimens' and record_id= max(specimens.id)  GROUP BY modification_date_time ,users_tracking.id having users_tracking.id=max(users_tracking.id) limit 1) as last_modification, code_display, array_agg(DISTINCT taxon_path) as taxon_paths, array_agg(DISTINCT taxon_ref) as taxon_ref,
                     array_agg(DISTINCT taxon_name) as taxon_name,
                     array_agg(DISTINCT  history) as history_identification
                     ,
@@ -494,10 +494,11 @@ class SpecimensTable extends DarwinTable
                       , donator_ids,
                       (SELECT array_agg(formated_name) from people where id = any(donator_ids)) as donators
                       ,
-                      array_agg(distinct '\"'||tag_locality||'\"') as localities	
+                      array_agg(distinct tag_locality) as localities	
                       from 
                     (SELECT specimens.id,
-                    COALESCE(code_prefix,'')||COALESCE(code_prefix_separator,'')||COALESCE(code,'')||COALESCE(code_suffix_separator,'')||COALESCE(code_suffix,'') as code_display, full_code_indexed, taxon_path, taxon_ref, collection_ref , gtu_country_tag_indexed , gtu_country_tag_value, 
+                    collections.code as collection_code, collections.name as collection_name, 
+                    COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as code_display, full_code_indexed, taxon_path, taxon_ref, collection_ref , gtu_country_tag_indexed , gtu_country_tag_value, 
                     gtu_others_tag_indexed as localities_indexed,
                     gtu_others_tag_value
                     , taxon_name,
@@ -531,6 +532,9 @@ class SpecimensTable extends DarwinTable
 
                     , group_type||'-'||sub_group_type||':'||tag as tag_locality 
                     FROM specimens
+                    LEFT JOIN
+                    collections ON
+                    specimens.collection_ref=collections.id
                     LEFT JOIN 
                     codes
                     ON codes.referenced_relation='specimens' and code_category='main' and specimens.id=codes.record_id
@@ -567,6 +571,8 @@ class SpecimensTable extends DarwinTable
                     
                     
                  $query.=" GROUP BY 
+                    collection_name,
+                    collection_code,
                     code_display         
                     ,
                     gtu_from_date,
@@ -597,6 +603,7 @@ class SpecimensTable extends DarwinTable
             }
             return Array();
     }
+    
         //ftheeten 2017 14 11
     public function getSpecimensInCollectionsJSON($p_collection_code, $p_host, $p_size=50, $p_page=1, $p_prefix_service_specimen="/public.php/search/getjson?specimennumber=", $p_prefix_service_collection="public.php/search/getcollectionjson?")
     {
