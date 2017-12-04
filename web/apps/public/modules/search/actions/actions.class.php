@@ -345,4 +345,12 @@ class searchActions extends DarwinActions
      $this->getResponse()->setContentType('application/json');
      return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
   }
+  
+  //ftheeten 2017 12 04
+  public function executeGetallcollectionsjson(sfWebRequest $request)
+  {
+     $results=$this->getAllCollectionsAccessPointJSON($request);
+     $this->getResponse()->setContentType('application/json');
+     return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+  }
 }

@@ -230,4 +230,12 @@ class DarwinActions extends sfActions
         }
         return Array();
     }
+    
+    //ftheeten 2017 12 04
+    protected function getAllCollectionsAccessPointJSON(sfWebRequest $request)
+    {
+        $host=$request->getHost();
+        $results=Doctrine::getTable('Specimens')->getCollectionsAllAccessPointsJSON( $host);
+        return  $results;
+    }
 }

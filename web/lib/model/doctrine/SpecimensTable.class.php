@@ -474,8 +474,7 @@ class SpecimensTable extends DarwinTable
                      array_agg(DISTINCT gtu_country_tag_value) as country,  array_agg(DISTINCT gtu_others_tag_value) as geographical,
             
                     
-                     fct_mask_date(gtu_to_date,
-                    gtu_to_date_mask),
+
                     fct_mask_date(gtu_from_date,
                     gtu_from_date_mask) as date_from_display,
                     fct_mask_date(gtu_to_date,
@@ -671,5 +670,30 @@ class SpecimensTable extends DarwinTable
              }
         }
         return Array();
-     } 
+     }
+
+     //ftheeten 2017 12 04
+     public function getCollectionsAllAccessPointsJSON($p_host, $p_prefix_url="/public.php/search/getcollectionjson?")
+     {
+   
+        $conn_MGR = Doctrine_Manager::connection();
+        $conn = $conn_MGR->getDbh();
+               
+        $rows=array();
+        
+        $query="SELECT code as collection_code, name as collection_name,
+         'http:////'||:host||:prefix||'collection='||code as accespoint_collection
+        FROM collections;";
+        $stmt=$conn->prepare($query);
+        $stmt->bindValue(":host", $p_host);
+        $stmt->bindValue(":prefix", $p_prefix_url);
+        $stmt->execute();
+        $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+       
+         if(count($rs)>0)
+         {
+              return $rs;
+         }
+         return Array();
+     }     
 }
