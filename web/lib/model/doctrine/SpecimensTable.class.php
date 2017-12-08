@@ -232,7 +232,7 @@ class SpecimensTable extends DarwinTable
       return $items;
     }
     
-        //ftheeten 2017 09 21
+            //ftheeten 2017 09 21
     public function getDistinctTypesNoCombinations()
     {
       $items = $this->createUniqFlatDistinct('specimens', 'type', 'type', true);
@@ -452,8 +452,7 @@ class SpecimensTable extends DarwinTable
 		return $this->getSpecimenIDCorrespondingToCollectionNumber($collection_number, 'main');
    }
 
-       //ftheeten 2017 12 04
-   public function getJSON($p_specimencode)
+public function getJSON($p_specimencode)
     {
   
        
@@ -467,33 +466,32 @@ class SpecimensTable extends DarwinTable
             $rows=array();
             
             $query="
-            SELECT distinct array_agg(DISTINCT id) as ids, collection_name, collection_code, (SELECT modification_date_time FROM users_tracking where referenced_relation='specimens' and record_id= max(specimens.id)  GROUP BY modification_date_time ,users_tracking.id having users_tracking.id=max(users_tracking.id) limit 1) as last_modification, code_display, array_agg(DISTINCT taxon_path) as taxon_paths, array_agg(DISTINCT taxon_ref) as taxon_ref,
-                    array_agg(DISTINCT taxon_name) as taxon_name,
-                    array_agg(DISTINCT  history) as history_identification
+            SELECT distinct string_agg(DISTINCT id::varchar, ',') as ids, collection_name, collection_code, (SELECT modification_date_time FROM users_tracking where referenced_relation='specimens' and record_id= max(specimens.id)  GROUP BY modification_date_time ,users_tracking.id having users_tracking.id=max(users_tracking.id) limit 1) as last_modification, code_display, string_agg(DISTINCT taxon_path::varchar, ',') as taxon_paths, string_agg(DISTINCT taxon_ref::varchar, ',') as taxon_ref,
+                    string_agg(DISTINCT taxon_name, ',') as taxon_name,
+                    string_agg(DISTINCT  history, ';') as history_identification
                     ,
-                     array_agg(DISTINCT gtu_country_tag_value) as country,  array_agg(DISTINCT gtu_others_tag_value) as geographical,
-            
+                     string_agg(DISTINCT gtu_country_tag_value, ';') as country,  string_agg(DISTINCT gtu_others_tag_value, ';') as geographical,          
                     
-
+                    
                     fct_mask_date(gtu_from_date,
                     gtu_from_date_mask) as date_from_display,
                     fct_mask_date(gtu_to_date,
                     gtu_to_date_mask) as date_to_display,
                     coll_type,
                                 
-                                 STRING_AGG(DISTINCT urls_thumbnails, '|') as urls_thumbnails,  STRING_AGG(DISTINCT image_category_thumbnails, '|') as image_category_thumbnails, STRING_AGG(DISTINCT contributor_thumbnails,'|') as contributor_thumbnails, STRING_AGG(DISTINCT disclaimer_thumbnails,'|') as disclaimer, STRING_AGG(DISTINCT license_thumbnails, '|') as license , STRING_AGG(DISTINCT display_order_thumbnails::varchar, '|') as display_order_thumbnails,
+                                 STRING_AGG(urls_thumbnails, ';') as urls_thumbnails,  STRING_AGG(image_category_thumbnails, ';') as image_category_thumbnails, STRING_AGG(contributor_thumbnails,';') as contributor_thumbnails, STRING_AGG(disclaimer_thumbnails,';') as disclaimer_thumbnails, STRING_AGG(license_thumbnails, ';') as license_thumbnails , STRING_AGG(display_order_thumbnails::varchar, ';') as display_order_thumbnails,
                                  
-                                  STRING_AGG(DISTINCT urls_image_links, '|') as urls_image_links,  STRING_AGG(DISTINCT image_category_image_links, '|') as image_category_image_links, STRING_AGG(DISTINCT contributor_image_links,'|') as contributor_image_links, STRING_AGG(DISTINCT disclaimer_image_links,'|') as disclaimer, STRING_AGG(DISTINCT license_image_links, '|') as license , STRING_AGG(DISTINCT display_order_image_links::varchar, '|') as display_order_image_links,
+                                  STRING_AGG(urls_image_links, ';') as urls_image_links,  STRING_AGG(image_category_image_links, ';') as image_category_image_links, STRING_AGG(contributor_image_links,';') as contributor_image_links, STRING_AGG(disclaimer_image_links,';') as disclaimer_image_links, STRING_AGG(license_image_links, ';') as license_image_links , STRING_AGG(display_order_image_links::varchar, ';') as display_order_image_links,
                                   
-                                              STRING_AGG(DISTINCT urls_3d_snippets, '|') as urls_3d_snippets,  STRING_AGG(DISTINCT image_category_3d_snippets, '|') as image_category_3d_snippets, STRING_AGG(DISTINCT contributor_3d_snippets,'|') as contributor_3d_snippets, STRING_AGG(DISTINCT disclaimer_3d_snippets,'|') as disclaimer, STRING_AGG(DISTINCT license_3d_snippets, '|') as license , STRING_AGG(DISTINCT display_order_3d_snippets::varchar, '|') as display_order_3d_snippets,
+                                              STRING_AGG(urls_3d_snippets, ';') as urls_3d_snippets,  STRING_AGG(image_category_3d_snippets, ';') as image_category_3d_snippets, STRING_AGG(contributor_3d_snippets,';') as contributor_3d_snippets, STRING_AGG(disclaimer_3d_snippets,';') as disclaimer_3d_snippers, STRING_AGG(license_3d_snippets, ';') as license_3d_snippets , STRING_AGG(display_order_3d_snippets::varchar, ';') as display_order_3d_snippets,
                                   
                     longitude, latitude
                      ,count(*) OVER() AS full_count,collector_ids, 
-                     (SELECT array_agg(formated_name) from people where id = any(collector_ids)) as collectors
+                     (SELECT string_agg(formated_name, ',') from people where id = any(collector_ids)) as collectors
                       , donator_ids,
                       (SELECT array_agg(formated_name) from people where id = any(donator_ids)) as donators
                       ,
-                      array_agg(distinct tag_locality) as localities	
+                      string_agg(distinct tag_locality, '; ') as localities	
                       from 
                     (SELECT specimens.id,
                     collections.code as collection_code, collections.name as collection_name, 
@@ -591,8 +589,33 @@ class SpecimensTable extends DarwinTable
                 $stmt->bindValue(":number", $p_specimencode);
                 $stmt->execute();
                 $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+               $tmpTypesMultimedia=Array("thumbnails", "image_links", "3d_snippets");
+               foreach($tmpTypesMultimedia as $field)
+               {                
+                    $array_urls_thumbnails=explode(";", $rs[0]["urls_".$field]);
+                    $array_category_thumbnails=explode(";", $rs[0]["image_category_".$field]);
+                    $array_contributor_thumbnails=explode(";", $rs[0]["contributor_".$field]);
+                    $array_disclaimer_thumbnails=explode(";", $rs[0]["disclaimer_".$field]);
+                    $array_license_thumbnails=explode(";", $rs[0]["license_".$field]);
+                    $array_display_order_thumbnails=explode(";", $rs[0]["display_order_".$field]);
+                  
+                    $tmpArray=Array();
+                    foreach($array_display_order_thumbnails as $key=>$value)
+                    {                                              
+                        $tmpArray["urls_".$field][$value]=$array_urls_thumbnails[$key];
+                        $tmpArray["image_category_".$field][$value]=$array_category_thumbnails[$key];
+                        $tmpArray["contributor_".$field][$value]=$array_contributor_thumbnails[$key];
+                        $tmpArray["disclaimer_".$field][$value]=$array_disclaimer_thumbnails[$key];
+                        $tmpArray["license_".$field][$value]=$array_license_thumbnails[$key];
+                        $tmpArray["display_order_".$field][$value]=$array_display_order_thumbnails[$key];
+                    }
 
-                
+                    foreach($tmpArray as $key=>$value)
+                    {
+                        $rs[0][$key]=implode(";", $tmpArray[$key]);
+                    }
+                }
                 if($rs[0]["full_count"]>0)
                 {
              
@@ -602,7 +625,6 @@ class SpecimensTable extends DarwinTable
             }
             return Array();
     }
-    
         //ftheeten 2017 14 11
     public function getSpecimensInCollectionsJSON($p_collection_code, $p_host, $p_size=50, $p_page=1, $p_prefix_service_specimen="/public.php/search/getjson?specimennumber=", $p_prefix_service_collection="public.php/search/getcollectionjson?")
     {
@@ -619,7 +641,7 @@ class SpecimensTable extends DarwinTable
                
                 $rows=array();
                 
-                $query="SELECT a.*, count(*) OVER() AS full_count FROM (SELECT distinct 'http:////'||:host||:prefix||COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as url_specimen,
+                $query="SELECT a.*, count(*) OVER() AS full_count FROM (SELECT distinct 'http://'||:host||:prefix||COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') as url_specimen,
                 COALESCE(codes.code_prefix,'')||COALESCE(codes.code_prefix_separator,'')||COALESCE(codes.code,'')||COALESCE(codes.code_suffix_separator,'')||COALESCE(codes.code_suffix,'') AS code_display
                 FROM codes WHERE 
                 referenced_relation='specimens'
@@ -672,7 +694,7 @@ class SpecimensTable extends DarwinTable
         return Array();
      }
 
-     //ftheeten 2017 12 04
+    //ftheeten 2017 12 04
      public function getCollectionsAllAccessPointsJSON($p_host, $p_prefix_url="/public.php/search/getcollectionjson?")
      {
    
@@ -682,7 +704,7 @@ class SpecimensTable extends DarwinTable
         $rows=array();
         
         $query="SELECT code as collection_code, name as collection_name,
-         'http:////'||:host||:prefix||'collection='||code as accespoint_collection
+         'http://'||:host||:prefix||'collection='||code as accespoint_collection
         FROM collections;";
         $stmt=$conn->prepare($query);
         $stmt->bindValue(":host", $p_host);
@@ -695,5 +717,5 @@ class SpecimensTable extends DarwinTable
               return $rs;
          }
          return Array();
-     }     
+     }      
 }
