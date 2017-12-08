@@ -452,7 +452,7 @@ class SpecimensTable extends DarwinTable
 		return $this->getSpecimenIDCorrespondingToCollectionNumber($collection_number, 'main');
    }
 
-public function getJSON($p_specimencode)
+public function getJSON($p_specimencode, $p_public_url = "http://www.africamuseum.be/collections/browsecollections/naturalsciences/biology/ichtyology/darwin_specimen?id_spec=")
     {
   
        
@@ -466,7 +466,9 @@ public function getJSON($p_specimencode)
             $rows=array();
             
             $query="
-            SELECT distinct string_agg(DISTINCT id::varchar, ',') as ids, collection_name, collection_code, (SELECT modification_date_time FROM users_tracking where referenced_relation='specimens' and record_id= max(specimens.id)  GROUP BY modification_date_time ,users_tracking.id having users_tracking.id=max(users_tracking.id) limit 1) as last_modification, code_display, string_agg(DISTINCT taxon_path::varchar, ',') as taxon_paths, string_agg(DISTINCT taxon_ref::varchar, ',') as taxon_ref,
+            SELECT distinct string_agg(DISTINCT id::varchar, ',') as ids, 
+            :public_url||code_display,
+            collection_name, collection_code, (SELECT modification_date_time FROM users_tracking where referenced_relation='specimens' and record_id= max(specimens.id)  GROUP BY modification_date_time ,users_tracking.id having users_tracking.id=max(users_tracking.id) limit 1) as last_modification, code_display, string_agg(DISTINCT taxon_path::varchar, ',') as taxon_paths, string_agg(DISTINCT taxon_ref::varchar, ',') as taxon_ref,
                     string_agg(DISTINCT taxon_name, ',') as taxon_name,
                     string_agg(DISTINCT  history, ';') as history_identification
                     ,
@@ -586,6 +588,7 @@ public function getJSON($p_specimencode)
                  $query=$query."  LIMIT 20;";
                
                 $stmt=$conn->prepare($query);
+                $stmt->bindValue(":public_url", $p_public_url);
                 $stmt->bindValue(":number", $p_specimencode);
                 $stmt->execute();
                 $rs=$stmt->fetchAll(PDO::FETCH_ASSOC);
