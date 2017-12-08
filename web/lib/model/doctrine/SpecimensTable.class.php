@@ -467,7 +467,7 @@ public function getJSON($p_specimencode, $p_public_url = "http://www.africamuseu
             
             $query="
             SELECT distinct string_agg(DISTINCT id::varchar, ',') as ids, 
-            :public_url||code_display,
+            :public_url||code_display as public_url,
             collection_name, collection_code, (SELECT modification_date_time FROM users_tracking where referenced_relation='specimens' and record_id= max(specimens.id)  GROUP BY modification_date_time ,users_tracking.id having users_tracking.id=max(users_tracking.id) limit 1) as last_modification, code_display, string_agg(DISTINCT taxon_path::varchar, ',') as taxon_paths, string_agg(DISTINCT taxon_ref::varchar, ',') as taxon_ref,
                     string_agg(DISTINCT taxon_name, ',') as taxon_name,
                     string_agg(DISTINCT  history, ';') as history_identification
