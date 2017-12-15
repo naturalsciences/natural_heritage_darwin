@@ -157,8 +157,9 @@
             <?php if($code->getCodeCategory() == 'main') : ?>
               <?php $cpt++ ; ?>
               <li <?php if($cpt > 3) echo("class='hidden code_supp'"); ?>>
-                <strong>
-                  <a href="../specimen/view?id=<?php echo $specimen->getId();?>" target='_blank'><?php echo $code->getFullCode(); ?></a>
+			  <!--rmca 2017 12 13-->
+			   <strong>
+					<?php echo link_to( $code->getFullCode(), 'specimen/view?id='.$specimen->getId(), array('target' => '_blank'));?>
                 </strong>
               </li> 
           <?php elseif ($sf_user->isAtLeast(Users::ENCODER)) : ?>

@@ -33,6 +33,13 @@
 
 <script type="text/javascript">
 $(document).ready(function () {
+	  //ftheeten 2017 12 14
+  $('#taxon_precise_line :checkbox').each(
+    function()
+    {
+           $(this).prop('checked', true);
+    }
+    );
   $('#taxon_precise').click(function() {
     $('#taxon_precise').attr('disabled','disabled') ;
     $('#taxon_full_text').removeAttr('disabled') ;

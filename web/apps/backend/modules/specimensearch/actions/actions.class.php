@@ -331,7 +331,8 @@ class specimensearchActions extends DarwinActions
         $this->getI18N()->__('Sampling locations'),),
       //ftheeten 2016 09 13
       'collecting_dates' => array(
-        'collecting_dates',
+	  //ftheeten 2017 12 14
+        'gtu_from_date',
         $this->getI18N()->__('Collecting date'),
       ),
       //ftheeten 2016 09 13
