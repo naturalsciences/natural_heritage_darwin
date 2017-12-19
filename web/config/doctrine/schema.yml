@@ -540,6 +540,7 @@ Taxonomy:
         path: { type: string, notnull: false, default: '/'}
         parent_ref: { type: integer}
         extinct: { type: boolean, notnull: true, default: false}
+        #ftheeten 2017 08 XX
         sensitive_info_withheld : {type: boolean}
     relations:
         Parent:

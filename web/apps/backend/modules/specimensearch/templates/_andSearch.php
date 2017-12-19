@@ -9,7 +9,7 @@
   	 <b><?php echo $form['fuzzy_matching_tag']->renderLabel();?></b>:<?php echo $form['fuzzy_matching_tag'];?>
   </td>
    <td>
-	<input type="button" value="Tag cloud" name="btn_fuz_<?php echo($row_line);?>" id="btn_fuz_<?php echo($row_line);?>" class="result_choose"/>
+	<input type="button" value="Place cloud" name="btn_fuz_<?php echo($row_line);?>" id="btn_fuz_<?php echo($row_line);?>" class="result_choose"/>
   </td>
   
    <td class="widget_row_delete"  style="text-align:right">

@@ -881,7 +881,7 @@
       </trans-unit>
       <trans-unit id="266">
         <source>Sampling location Tags</source>
-        <target>Sampling location Tags</target>
+        <target>Sampling location places</target>
       </trans-unit>
       <trans-unit id="267">
         <source>No Tools defined</source>
@@ -1069,7 +1069,7 @@
       </trans-unit>
       <trans-unit id="315">
         <source>Tags</source>
-        <target>Tags</target>
+        <target>Places</target>
       </trans-unit>
       <trans-unit id="316">
         <source>Edit Address</source>
@@ -3705,7 +3705,7 @@
       </trans-unit>
       <trans-unit id="1007">
         <source>Via this widget you can look up records that refer to a particular sampling location. You can look up via code, date and/or related tags.</source>
-        <target>Via this widget you can look up records that refer to a particular sampling location. You can look up via code, date and/or related tags.</target>
+        <target>Via this widget you can look up records that refer to a particular sampling location. You can look up via code, date and/or related places.</target>
       </trans-unit>
       <trans-unit id="1008">
         <source>Via this widget you can search all records that refer to a particular chronostratigraphic unit.</source>

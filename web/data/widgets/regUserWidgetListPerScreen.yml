@@ -411,6 +411,7 @@ sps29:
    all_public: true
 
 #ftheeten 20170502  
+#jmherpers 20171215 title_perso
 sps30:
    col_num: 2
    category: specimensearch_widget
@@ -419,7 +420,7 @@ sps30:
    order_by: 15
    opened: false
    visible: false
-   title_perso: Storage parts
+   title_perso: Storage place for specimen parts
    all_public: true        
    
 sw1:
@@ -757,6 +758,7 @@ sw35:
    all_public: true
    
 #ftheeten 2016 08 22
+#jmherpers 20171215 title_perso
 sw36:
    col_num: 1
    category: specimen_widget
@@ -765,7 +767,7 @@ sw36:
    order_by: 2
    opened: true
    visible: true
-   title_perso: Storage parts
+   title_perso: Storage place for specimen parts
    all_public: true
 
 
