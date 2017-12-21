@@ -18,6 +18,7 @@ class taxonomyActions extends DarwinActions
     $name = $request->hasParameter('name')?$request->getParameter('name'):'' ;
     $this->setLevelAndCaller($request);
     $this->searchForm = new TaxonomyFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id, 'name' => $name));
+	//$this->searchForm = new TaxonomyWithCollectionViewForSymfonyFormFilter(array('table' => 'taxonomy_with_collection_view_for_symfony', 'level' => $this->level, 'caller_id' => $this->caller_id, 'name' => $name));
     $this->setLayout(false);
   }
 
@@ -60,6 +61,13 @@ class taxonomyActions extends DarwinActions
 
   public function executeNew(sfWebRequest $request)
   {
+	  //ftheeten 2016 07 06
+    $this->collection_ref_for_insertion=-1;
+    if(is_numeric($request->getParameter('taxonomy')['collection_ref']))
+    {
+        $this->collection_ref_for_insertion=$request->getParameter('taxonomy')['collection_ref'];
+    }
+	
     if($this->getUser()->isA(Users::REGISTERED_USER)) $this->forwardToSecureAction();
     $taxa = new Taxonomy() ;
     $taxa = $this->getRecordIfDuplicate($request->getParameter('duplicate_id','0'), $taxa);
@@ -108,7 +116,8 @@ class taxonomyActions extends DarwinActions
   {
     $this->setLevelAndCaller($request);
     $this->searchForm = new TaxonomyFormFilter(array('table' => $this->table, 'level' => $this->level, 'caller_id' => $this->caller_id));
-  }
+	//$this->searchForm = new TaxonomyWithCollectionViewForSymfonyFormFilter(array('table' => 'taxonomy_with_collection_view_for_symfony', 'level' => $this->level, 'caller_id' => $this->caller_id));
+ }
 
   protected function processForm(sfWebRequest $request, sfForm $form)
   {

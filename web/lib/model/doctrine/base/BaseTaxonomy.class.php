@@ -13,9 +13,12 @@
  * @property string $path
  * @property integer $parent_ref
  * @property boolean $extinct
+ * @property boolean $is_reference_taxonomy
+ * @property integer $metadata_ref
  * @property boolean $sensitive_info_withheld
  * @property Taxonomy $Parent
  * @property CatalogueLevels $Level
+ * @property TaxonomyMetadata $TaxonomyMetadata
  * @property Doctrine_Collection $Taxonomy
  * @property Doctrine_Collection $Specimens
  * @property Doctrine_Collection $SpecimensRelationships
@@ -28,9 +31,12 @@
  * @method string              getPath()                    Returns the current record's "path" value
  * @method integer             getParentRef()               Returns the current record's "parent_ref" value
  * @method boolean             getExtinct()                 Returns the current record's "extinct" value
+ * @method boolean             getIsReferenceTaxonomy()     Returns the current record's "is_reference_taxonomy" value
+ * @method integer             getMetadataRef()             Returns the current record's "metadata_ref" value
  * @method boolean             getSensitiveInfoWithheld()   Returns the current record's "sensitive_info_withheld" value
  * @method Taxonomy            getParent()                  Returns the current record's "Parent" value
  * @method CatalogueLevels     getLevel()                   Returns the current record's "Level" value
+ * @method TaxonomyMetadata    getTaxonomyMetadata()        Returns the current record's "TaxonomyMetadata" value
  * @method Doctrine_Collection getTaxonomy()                Returns the current record's "Taxonomy" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
  * @method Doctrine_Collection getSpecimensRelationships()  Returns the current record's "SpecimensRelationships" collection
@@ -42,9 +48,12 @@
  * @method Taxonomy            setPath()                    Sets the current record's "path" value
  * @method Taxonomy            setParentRef()               Sets the current record's "parent_ref" value
  * @method Taxonomy            setExtinct()                 Sets the current record's "extinct" value
+ * @method Taxonomy            setIsReferenceTaxonomy()     Sets the current record's "is_reference_taxonomy" value
+ * @method Taxonomy            setMetadataRef()             Sets the current record's "metadata_ref" value
  * @method Taxonomy            setSensitiveInfoWithheld()   Sets the current record's "sensitive_info_withheld" value
  * @method Taxonomy            setParent()                  Sets the current record's "Parent" value
  * @method Taxonomy            setLevel()                   Sets the current record's "Level" value
+ * @method Taxonomy            setTaxonomyMetadata()        Sets the current record's "TaxonomyMetadata" value
  * @method Taxonomy            setTaxonomy()                Sets the current record's "Taxonomy" collection
  * @method Taxonomy            setSpecimens()               Sets the current record's "Specimens" collection
  * @method Taxonomy            setSpecimensRelationships()  Sets the current record's "SpecimensRelationships" collection
@@ -93,6 +102,14 @@ abstract class BaseTaxonomy extends DarwinModel
              'notnull' => true,
              'default' => false,
              ));
+        $this->hasColumn('is_reference_taxonomy', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => false,
+             ));
+        $this->hasColumn('metadata_ref', 'integer', null, array(
+             'type' => 'integer',
+             ));
         $this->hasColumn('sensitive_info_withheld', 'boolean', null, array(
              'type' => 'boolean',
              ));
@@ -107,6 +124,10 @@ abstract class BaseTaxonomy extends DarwinModel
 
         $this->hasOne('CatalogueLevels as Level', array(
              'local' => 'level_ref',
+             'foreign' => 'id'));
+
+        $this->hasOne('TaxonomyMetadata', array(
+             'local' => 'metadata_ref',
              'foreign' => 'id'));
 
         $this->hasMany('Taxonomy', array(

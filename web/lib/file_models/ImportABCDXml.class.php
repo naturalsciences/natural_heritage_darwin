@@ -12,28 +12,73 @@ class ImportABCDXml implements ImportModelsInterface
   * @var $file : the xml file to parse
   * @var $id : is the reference to the record in import table
   **/
+  //ftheeten 2017 08 03 added specimen_taxonomy_ref
   public function parseFile($file,$id)
   {
     $this->import_id = $id ;
-    $xml_parser = xml_parser_create();
-    xml_set_object($xml_parser, $this) ;
-    xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
-    xml_set_element_handler($xml_parser, "startElement", "endElement");
-    xml_set_character_data_handler($xml_parser, "characterData");
-    if (!($fp = fopen($file, "r"))) {
-        return("could not open XML input");
-    }
-    while ($this->data = fread($fp, 4096)) {
-        if (!xml_parse($xml_parser, $this->data, feof($fp))) {
-            return (sprintf("XML error: %s at line %d",
-                        xml_error_string(xml_get_error_code($xml_parser)),
-                        xml_get_current_line_number($xml_parser)));
+    //ftheeten 2017 08 03 added specimen_taxonomy_ref
+    $this->specimen_taxonomy_ref = Doctrine::getTable('Imports')->find($this->import_id)->getSpecimenTaxonomyRef();
+    //ftheeten 2017 09 13
+    $mime_type=Doctrine::getTable('Imports')->find($this->import_id)->getMimeType();
+    //ftheeten 2017 09 13
+   
+     //fwrite($myfile,"\n!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!");
+    if($mime_type==="text/plain")
+    {  //         $myfile = fopen("/var/www/web/log_parser.txt", "a") ;
+         //      fwrite($myfile, "\n!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!");
+        if (!($fp = fopen($file, "r"))) {
+            return("could not open input file");
         }
+       
+        
+        $tabParser=new RMCATabToABCDXml();
+        $options["tab_file"] = $file;
+        $tabParser->configure($options);
+        $tabParser->identifyHeader($fp);
+        $i=1;
+        while (($row = fgetcsv($fp, 0, "\t")) !== FALSE){
+             $xml_parser = xml_parser_create();
+            xml_set_object($xml_parser, $this) ;
+            xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
+            xml_set_element_handler($xml_parser, "startElement", "endElement");
+            xml_set_character_data_handler($xml_parser, "characterData");
+            $xml_conv= $tabParser->parseLineAndGetString($row);
+            if (!xml_parse($xml_parser, $xml_conv, feof($fp))) {
+                return (sprintf("XML error: %s at line %d for record $i",
+                            xml_error_string(xml_get_error_code($xml_parser)),
+                            xml_get_current_line_number($xml_parser)));
+            }
+            $i++;
+            xml_parser_free($xml_parser);
+        }
+
+         
+        if(! $this->version_defined)
+          $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+        return $this->errors_reported ;
     }
-    xml_parser_free($xml_parser);
-    if(! $this->version_defined)
-      $this->errors_reported = $this->version_error_msg.$this->errors_reported;
-    return $this->errors_reported ;
+    else //old xml parser
+    {
+        $xml_parser = xml_parser_create();
+        xml_set_object($xml_parser, $this) ;
+        xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
+        xml_set_element_handler($xml_parser, "startElement", "endElement");
+        xml_set_character_data_handler($xml_parser, "characterData");
+        if (!($fp = fopen($file, "r"))) {
+            return("could not open XML input");
+        }
+        while ($this->data = fread($fp, 4096)) {
+            if (!xml_parse($xml_parser, $this->data, feof($fp))) {
+                return (sprintf("XML error: %s at line %d",
+                            xml_error_string(xml_get_error_code($xml_parser)),
+                            xml_get_current_line_number($xml_parser)));
+            }
+        }
+        xml_parser_free($xml_parser);
+        if(! $this->version_defined)
+          $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+        return $this->errors_reported ;
+    }
   }
 
  /**
@@ -246,7 +291,19 @@ class ImportABCDXml implements ImportModelsInterface
         case "RecordURI" : $this->addExternalLink($this->cdata) ; break;
         case "ScientificName" :
           $this->staging["taxon_name"] = $this->object->getCatalogueName() ;
-          $this->staging["taxon_level_name"] = strtolower($this->object->level_name) ;
+          
+          //ftheeten 2017 09 22
+          //$this->staging["taxon_level_name"] = strtolower($this->object->level_name) ;
+          
+          $tmp=$this->object->getLastDeclaredLevel() ;
+          if(isset($tmp))
+          {
+            $this->staging["taxon_level_name"] = $tmp;
+          }
+          else
+          {
+            $this->staging["taxon_level_name"] = strtolower($this->object->level_name) ;
+          }         
           break;
         case "Sequence" : $this->object->addMaintenance($this->staging, true) ; break;
         case "Sex" : if(strtolower($this->cdata) == 'm') $this->staging->setIndividualSex('male') ;
@@ -498,7 +555,9 @@ class ImportABCDXml implements ImportModelsInterface
   private function saveUnit()
   {
     $ok = true ;
-    $this->staging->fromArray(array("import_ref" => $this->import_id));
+    //$this->staging->fromArray(array("import_ref" => $this->import_id));
+    //ftheeten 2017 08 03
+    $this->staging->fromArray(array("import_ref" => $this->import_id, "specimen_taxonomy_ref"=> $this->specimen_taxonomy_ref));
     try
     {
       $result = $this->staging->save() ;

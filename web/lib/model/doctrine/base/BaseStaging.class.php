@@ -111,6 +111,7 @@
  * @property integer $part_count_females_max
  * @property integer $part_count_juveniles_min
  * @property integer $part_count_juveniles_max
+ * @property integer $specimen_taxonomy_ref
  * @property Imports $Import
  * @property Staging $Parent
  * @property Doctrine_Collection $Staging
@@ -224,6 +225,7 @@
  * @method integer             getPartCountFemalesMax()       Returns the current record's "part_count_females_max" value
  * @method integer             getPartCountJuvenilesMin()     Returns the current record's "part_count_juveniles_min" value
  * @method integer             getPartCountJuvenilesMax()     Returns the current record's "part_count_juveniles_max" value
+ * @method integer             getSpecimenTaxonomyRef()       Returns the current record's "specimen_taxonomy_ref" value
  * @method Imports             getImport()                    Returns the current record's "Import" value
  * @method Staging             getParent()                    Returns the current record's "Parent" value
  * @method Doctrine_Collection getStaging()                   Returns the current record's "Staging" collection
@@ -336,6 +338,7 @@
  * @method Staging             setPartCountFemalesMax()       Sets the current record's "part_count_females_max" value
  * @method Staging             setPartCountJuvenilesMin()     Sets the current record's "part_count_juveniles_min" value
  * @method Staging             setPartCountJuvenilesMax()     Sets the current record's "part_count_juveniles_max" value
+ * @method Staging             setSpecimenTaxonomyRef()       Sets the current record's "specimen_taxonomy_ref" value
  * @method Staging             setImport()                    Sets the current record's "Import" value
  * @method Staging             setParent()                    Sets the current record's "Parent" value
  * @method Staging             setStaging()                   Sets the current record's "Staging" collection
@@ -677,6 +680,9 @@ abstract class BaseStaging extends DarwinModel
              'type' => 'integer',
              ));
         $this->hasColumn('part_count_juveniles_max', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('specimen_taxonomy_ref', 'integer', null, array(
              'type' => 'integer',
              ));
     }

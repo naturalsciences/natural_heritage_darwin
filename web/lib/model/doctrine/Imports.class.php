@@ -23,6 +23,8 @@ class Imports extends BaseImports
     'finished' => 'Finished',
     'aborted' => 'Aborted',
     'error' => 'Error',
+	//ftheeten 2017 09 13
+    'loading' => 'Loading',
   );  
   private static $info = array(
     'to_be_loaded' => 'This file is ready to be loaded, an automatic task will be activated to load lines.',
@@ -87,5 +89,39 @@ class Imports extends BaseImports
   {
     if($collection == 0) $collection = null ;
     $this->Collection = $collection;
+  }
+  
+  //ftheeten 2017 07 26
+  
+    public function getCreationDateMasked ()
+  {
+    $dateTime = new FuzzyDateTime($this->_get('creation_date'), $this->_get('creation_date_mask'));
+    return $dateTime->getDateMasked();
+  }
+
+  public function getCreationDate()
+  {
+    $from_date = new FuzzyDateTime($this->_get('creation_date'), $this->_get('creation_date_mask'));
+    return $from_date->getDateTimeMaskedAsArray();
+  }
+  
+  
+  public function setCreationDate($fd)
+  {
+    if ($fd instanceof FuzzyDateTime)
+    {
+      if ($this->getCreationDate() != $fd->getDateTimeMaskedAsArray()) {
+        $this->_set('creation_date', $fd->format('Y/m/d'));
+        $this->_set('creation_date_mask', $fd->getMask());
+      }
+    }
+    else
+    {
+      $dateTime = new FuzzyDateTime($fd, 56, true); 
+      if ($this->getCreationDate() != $dateTime->getDateTimeMaskedAsArray()) {
+        $this->_set('creation_date', $dateTime->format('Y/m/d'));
+        $this->_set('creation_date_mask', $dateTime->getMask());
+      }
+    }
   }
 }

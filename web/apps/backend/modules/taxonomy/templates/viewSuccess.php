@@ -40,15 +40,22 @@ $(document).ready(function ()
         </td>
       </tr>
       <tr>
+        <th><?php echo $form['extinct']->renderLabel() ?></th>
+        <td>
+  		    <?php if($form['extinct']->getValue()) echo __("Yes") ; else echo __("No") ;?>
+        </td>
+      </tr>
+      <tr>
         <th><?php echo $form['sensitive_info_withheld']->renderLabel() ?></th>
         <td>
   		    <?php if($form['sensitive_info_withheld']->getValue()) echo __("Yes") ; else echo __("No") ;?>
         </td>
       </tr>
+      <!--ftheeten-->
       <tr>
-        <th><?php echo $form['extinct']->renderLabel() ?></th>
+        <th><?php echo $form['metadata_ref']->renderLabel() ?></th>
         <td>
-  		    <?php if($form['extinct']->getValue()) echo __("Yes") ; else echo __("No") ;?>
+  		    <?php echo __($taxon->getTaxonomyMetadataName());?> <?php if($taxon->getIsReferenceTaxonomy()) echo __("(Reference)") ; else echo __("(Non reference)") ;?>
         </td>
       </tr>
       <tr>

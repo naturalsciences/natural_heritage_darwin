@@ -118,6 +118,7 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
       'part_count_females_max'    => new sfWidgetFormFilterInput(),
       'part_count_juveniles_min'  => new sfWidgetFormFilterInput(),
       'part_count_juveniles_max'  => new sfWidgetFormFilterInput(),
+      'specimen_taxonomy_ref'     => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -226,6 +227,7 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
       'part_count_females_max'    => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'part_count_juveniles_min'  => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'part_count_juveniles_max'  => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'specimen_taxonomy_ref'     => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
 
     $this->widgetSchema->setNameFormat('staging_filters[%s]');
@@ -351,6 +353,7 @@ abstract class BaseStagingFormFilter extends BaseFormFilterDoctrine
       'part_count_females_max'    => 'Number',
       'part_count_juveniles_min'  => 'Number',
       'part_count_juveniles_max'  => 'Number',
+      'specimen_taxonomy_ref'     => 'Number',
     );
   }
 }

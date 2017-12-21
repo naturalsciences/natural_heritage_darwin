@@ -540,7 +540,12 @@ Taxonomy:
         path: { type: string, notnull: false, default: '/'}
         parent_ref: { type: integer}
         extinct: { type: boolean, notnull: true, default: false}
-        #ftheeten 2017 08 XX
+        #2017 03 03
+        is_reference_taxonomy: {type: boolean, notnull: true, default: false}
+        #reference_path: { type: string, notnull: true, default: '/'}
+        #source: {type: string, notnull: false }
+        metadata_ref : {type: integer}
+         #ftheeten 2017 08 XX
         sensitive_info_withheld : {type: boolean}
     relations:
         Parent:
@@ -551,8 +556,24 @@ Taxonomy:
             class: CatalogueLevels
             local: level_ref
             foreign: id
+        TaxonomyMetadata:
+            local: metadata_ref
+            foreign: id
 
-
+#ftheeten 2017 07 17
+TaxonomyMetadata:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        creation_date: { type: string}
+        creation_date_mask: { type: integer, notnull: true, default:0}
+        import_ref: {type: integer}
+        taxonomy_name: {type: string, notnull: true}
+        definition: {type: string}
+        is_reference_taxonomy: {type: boolean, notnull: true, default: false}
+        source: {type: string}
+        url_website: {type: string}
+        url_webservice: {type: string}
+        
 ClassificationKeywords:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -1111,6 +1132,21 @@ Imports:
         errors_in_import: {type: string}
         template_version: {type: string}
         exclude_invalid_entries: {type: boolean, notnull: true, default: false}
+        #ftheeten 2017 07 06
+        taxonomy_name: {type: string}
+        is_reference_taxonomy: {type: boolean, default: true}
+        source_taxonomy: {type: string, notnull: false} 
+        creation_date: { type: string}
+        creation_date_mask: { type: integer, default:0}
+        definition_taxonomy: {type: string}
+        url_website_taxonomy: {type: string}
+        url_webservice_taxonomy: {type: string}
+        #ftheeten 2017 08 02
+        specimen_taxonomy_ref:  {type:integer}
+        #ftheeten 2017 08 28
+        working : {type:boolean}
+        #ftheeten 2017 09 13
+        mime_type: {type: string}
     relations:
         Collections:
             local: collection_ref
@@ -1230,6 +1266,8 @@ Staging:
         #ftheeten 2016 06 22
         part_count_juveniles_min: { type: integer}
         part_count_juveniles_max: { type: integer}
+        #ftheeten 2017 08 02
+        specimen_taxonomy_ref:  {type:integer}
     relations:
         Import:
             local: import_ref
@@ -1318,6 +1356,9 @@ StagingCatalogue:
         level_ref: { type: integer, notnull: true}
         parent_ref: { type: integer}
         catalogue_ref: { type: integer}
+        #ftheeten 2017 07 06
+        is_reference_taxonomy: {type: boolean, notnull: true, default: true}
+        source_taxonomy: {type: string, notnull: false}  
     relations:
         Parent:
             class: StagingCatalogue

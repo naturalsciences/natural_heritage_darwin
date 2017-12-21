@@ -2,6 +2,8 @@
 class ImportCatalogueXml implements ImportModelsInterface
 {
   private $parent, $referenced_relation, $errors_reported, $staging_catalogue, $version;
+    //ftheeten 2017 07 06
+  private $is_reference_taxonomy, $taxonomy_source;
   private $version_defined = false;
   private $version_error_msg = "You use an unrecognized template version, please use it at your own risks or update the version of your template.;";
 
@@ -20,6 +22,16 @@ class ImportCatalogueXml implements ImportModelsInterface
   public function parseFile($file,$id)
   {
     $this->import_id = $id ;
+	    //ftheeten 2017 07026
+    $this->taxonomy_name=Doctrine::getTable('Imports')->find($this->import_id)->getTaxonomyName();
+    $this->creation_date=Doctrine::getTable('Imports')->find($this->import_id)->getCreationDate();
+    $this->creation_date_mask=Doctrine::getTable('Imports')->find($this->import_id)->getCreationDateMask();
+    $this->is_reference_taxonomy=Doctrine::getTable('Imports')->find($this->import_id)->getIsReferenceTaxonomy();
+    $this->source_taxonomy=Doctrine::getTable('Imports')->find($this->import_id)->getSourceTaxonomy();
+    $this->definition_taxonomy=Doctrine::getTable('Imports')->find($this->import_id)->getDefinitionTaxonomy();
+    $this->url_website_taxonomy=Doctrine::getTable('Imports')->find($this->import_id)->getUrlWebsiteTaxonomy();
+    $this->url_webservice_taxonomy=Doctrine::getTable('Imports')->find($this->import_id)->getUrlWebserviceTaxonomy();
+	
     $xml_parser = xml_parser_create();
     xml_set_object($xml_parser, $this) ;
     xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
@@ -112,7 +124,14 @@ class ImportCatalogueXml implements ImportModelsInterface
   
   private function saveUnit()
   {
-    $this->staging_catalogue->fromArray(array("import_ref" => $this->import_id, "parent_ref" => $this->parent));
+    $this->staging_catalogue->fromArray(array("import_ref" => $this->import_id, "parent_ref" => $this->parent
+    //ftheeten 2017 07 06
+    ,"taxonomy_name"=> $this->taxonomy_name, "creation_date"=> $this->creation_date
+    ,"creation_date_mask"=> $this->creation_date_mask 
+    ,"is_reference_taxonomy"=> $this->is_reference_taxonomy, "source_taxonomy"=> $this->source_taxonomy
+    ,"definition_taxonomy"=> $this->definition_taxonomy, "url_website_taxonomy"=> $this->url_website_taxonomy
+    ,"url_webservice_taxonomy"=> $this->url_webservice_taxonomy
+    ));
     try
     {
       $result = $this->staging_catalogue->save() ;

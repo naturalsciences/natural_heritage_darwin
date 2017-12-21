@@ -40,6 +40,13 @@ class TaxonomyForm extends BaseTaxonomyForm
 
     $this->validatorSchema['parent_ref']->setOption('required', true);
 
+	//ftheeten 2017 07 23
+	$this->widgetSchema['metadata_ref'] = new sfWidgetFormChoice(array(
+      'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata("id ASC")
+    ));
+	$this->widgetSchema['metadata_ref']->setAttributes(array('class'=>'col_check_metadata_ref'));
+    $this->validatorSchema['metadata_ref']->setOption('required', true);
+	
     $this->widgetSchema->setLabels(array(
       'level_ref' => 'Level',
       'parent_ref' => 'Parent'
@@ -48,6 +55,17 @@ class TaxonomyForm extends BaseTaxonomyForm
     $this->validatorSchema['status'] = new sfValidatorChoice(array('choices'  => array_keys($statuses), 'required' => true));
     $this->validatorSchema['table'] = new sfValidatorString(array('required' => false));
     
+	//ftheeten 2017 06 30
+    /* Collection Reference */
+    $this->widgetSchema['collection_ref'] =new sfWidgetFormChoice(array(
+      'choices' => CollectionsTable::getAllAvailableCollectionsHierarchical()
+    ));
+    
+    //ftheeten 2017 01 03
+    $this->widgetSchema['collection_ref']->setAttributes(array('class'=>'col_check coll_for_taxonomy_insertion_ref'));
+    $this->widgetSchema['collection_ref']->addOption('public_only',false);
+    $this->validatorSchema['collection_ref'] = new sfValidatorPass(); 
+	
         //ftheeten 2017 07 03 for double taxonomy
      $this->widgetSchema['sensitive_info_withheld'] = new sfWidgetFormInputCheckbox();
     $this->validatorSchema['sensitive_info_withheld'] = new sfValidatorBoolean(array('required' => false));
