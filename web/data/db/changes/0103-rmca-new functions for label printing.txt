@@ -1,0 +1,68 @@
+-- Function: fct_rmca_taxonomy_split_name_author(character varying, integer)
+
+-- DROP FUNCTION fct_rmca_taxonomy_split_name_author(character varying, integer);
+
+CREATE OR REPLACE FUNCTION fct_rmca_taxonomy_split_name_author(name character varying, rank_id integer)
+  RETURNS character varying[] AS
+$BODY$
+
+DECLARE 
+returned varchar[];
+name_tmp varchar;
+author_tmp varchar;
+BEGIN
+
+
+	IF rank_id <= 41 THEN
+		returned[1]:=trim(replace(trim(name), trim(regexp_replace(trim(name), '((?:\S+))','')),''));
+	ELSEIF rank_id>41 and rank_id<=48 THEN
+		returned[1]:=trim(replace(trim(name), trim(regexp_replace(trim(name), '((?:\S+\s+){1}\S+)','')),''));
+	ELSEIF rank_id >48 and rank_id <55 THEN
+		returned[1]:=trim(replace(trim(name), trim(regexp_replace(trim(name), '((?:\S+\s+){2}\S+)','')),''));
+	END IF;
+
+	IF rank_id <= 41 THEN
+		returned[2]:=trim(regexp_replace(trim($1), '((?:\S+))',''));
+	ELSEIF rank_id>41 and rank_id<=48 THEN
+		returned[2]:=trim(regexp_replace(trim($1), '((?:\S+\s+){1}\S+)',''));
+	ELSEIF rank_id >48 and rank_id <55 THEN
+		returned[2]:=trim(regexp_replace(trim($1), '((?:\S+\s+){2}\S+)',''));
+	END IF;
+
+RETURN returned;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION fct_rmca_taxonomy_split_name_author(character varying, integer)
+  OWNER TO darwin2;
+
+-------------------------------------------
+CREATE OR REPLACE FUNCTION fct_rmca_sort_taxon_get_parent_level_text(id_taxon integer, id_level integer)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+ returned varchar;
+ arr varchar[];
+ path_elem varchar;
+ tmp_level int;
+ tmp_name varchar;
+BEGIN
+	returned:=NULL;
+	arr:= regexp_split_to_array((SELECt path||id::varchar||'/' FROM taxonomy where id=id_taxon),'/');
+      FOR path_elem IN SELECT unnest(arr)
+      LOOP
+		SELECT level_ref,name INTO tmp_level,tmp_name FROM taxonomy WHERE id= COALESCE(NULLIF(path_elem,''),'-1')::int;
+		IF tmp_level=id_level THEN
+			RETURN tmp_name;
+		END if;
+      END LOOP;
+
+	return returned;
+END;
+
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION fct_rmca_sort_taxon_get_parent_level_text(integer, integer)
+  OWNER TO darwin2;

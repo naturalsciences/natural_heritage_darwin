@@ -7,6 +7,16 @@ class ImportABCDXml implements ImportModelsInterface
   private $version_defined = false;
   private $version_error_msg = "You use an unrecognized template version, please use it at your own risks or update the version of your template.;";
 
+  //jm herpers 2017 11 09 (auto increment in batches)
+  private $main_code_found=false;
+  private $collection_of_import;
+  private $collection_has_autoincrement=false;
+  private $code_last_value;
+  private $code_prefix;
+  private $code_prefix_separator;
+  private $code_suffix;
+  private $code_suffix_separator;
+  
   /**
   * @function parseFile() read a 'to_be_loaded' xml file and import it, if possible in staging table
   * @var $file : the xml file to parse
@@ -20,17 +30,35 @@ class ImportABCDXml implements ImportModelsInterface
     $this->specimen_taxonomy_ref = Doctrine::getTable('Imports')->find($this->import_id)->getSpecimenTaxonomyRef();
     //ftheeten 2017 09 13
     $mime_type=Doctrine::getTable('Imports')->find($this->import_id)->getMimeType();
-    //ftheeten 2017 09 13
-   
+    //ftheeten 2017 09 13   
      //fwrite($myfile,"\n!!!!!!!!!!!!!!!!!IN PARSER!!!!!!!!!!!!!!!!!!");
+	     //jm herpers 2017 11 09 (auto increment in batches)
+	$this->collection_of_import=$this->getCollectionOfImport();
+	$this->collection_has_autoincrement=$this->collection_of_import->getCodeAutoIncrement();
+	if($this->collection_has_autoincrement)
+	{
+		if($this->collection_of_import->getCodeAiInherit()&&$this->collection_of_import->getParentRef()!==null)
+		{	
+			$parent_collection = $this->collection_of_import->detectTrueParentForAutoIncrement();
+			$this->code_last_value=$this->collection_of_import->getCodeLastValue();
+		}
+		else
+		{
+			$this->code_last_value=$this->collection_of_import->getCodeLastValue();		
+		}
+		$this->code_prefix=$this->collection_of_import->getCodePrefix();
+		$this->code_prefix_separator=$this->collection_of_import->getCodePrefixSeparator();
+		$this->code_suffix_separator=$this->collection_of_import->getCodeSuffixSeparator();
+		$this->code_suffix=$this->collection_of_import->getCodeSuffix();
+	}	
     if($mime_type==="text/plain")
-    {  //         $myfile = fopen("/var/www/web/log_parser.txt", "a") ;
+    {  
          //      fwrite($myfile, "\n!!!!!!!!!!!!!!!!!TEXT PLAIN MODE!!!!!!!!!!!!!!!!!!");
         if (!($fp = fopen($file, "r"))) {
             return("could not open input file");
         }
        
-        
+    
         $tabParser=new RMCATabToABCDXml();
         $options["tab_file"] = $file;
         $tabParser->configure($options);
@@ -117,7 +145,10 @@ class ImportABCDXml implements ImportModelsInterface
       case "RockUnit" : $this->object = new ParsingCatalogue('lithology') ; break;
       case "Sequence" : $this->object = new ParsingMaintenance('Sequencing') ; break;
       case "SpecimenUnit" : $this->object = new ParsingTag("unit") ; break;
-      case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); $this->object = null; break;
+      case "Unit" : $this->staging = new Staging(); $this->name = ""; $this->staging->setId($this->getStagingId()); $this->object = null;
+				 //jm herpers 2017 11 09 (auto increment in batches)
+				$this->main_code_found=false;
+				break;
       case "UnitAssociation" : $this->object = new stagingRelationship() ; break;
     }
   }
@@ -207,7 +238,8 @@ class ImportABCDXml implements ImportModelsInterface
         case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ; break;
         case "TaxonIdentified":  $this->object->checkNoSelfInParents($this->staging); break;
         case "efg:LithostratigraphicAttribution" : $this->staging["litho_parents"] = $this->object->getParent() ; break;
-        case "Identification" : $this->object->save($this->staging) ; break;
+        case "Identification" :
+            $this->object->save($this->staging) ; break;
         case "IdentificationHistory" : $this->addComment(true, 'taxonomy'); break;
         case "ID-in-Database" : $this->object->desc .= "id in database :".$this->cdata." ;" ; break;
         case "ISODateTimeBegin" : if($this->getPreviousTag() == "DateTime")  { $this->object->GTUdate['from'] = $this->cdata ;} elseif($this->getPreviousTag() == "Date")  { $this->object->identification->setNotionDate(FuzzyDateTime::getValidDate($this->cdata)) ;} break;
@@ -390,6 +422,11 @@ class ImportABCDXml implements ImportModelsInterface
 
   private function addCode($category="main")
   {
+	 //jm herpers 2017 11 09 (auto increment in batches)
+	if($category=="main")
+    {
+		$this->main_code_found=true;		
+	}
     $code = new Codes() ;
     $code->setCodeCategory(strtolower($category)) ;
     $code->setCode($this->cdata) ;
@@ -552,10 +589,40 @@ class ImportABCDXml implements ImportModelsInterface
         $this->staging->addRelated($comment) ;
     }
   }
+  //jmherpers and ftheeten 2017 11 09
+  //know if collection is autoincremented
+  private function getCollectionOfImport()
+  {
+  	 $collection_ref=Doctrine::getTable('Imports')->find($this->import_id)->getCollectionRef();
+	 return Doctrine::getTable('Collections')->find($collection_ref);
+  }
+  
+  
   private function saveUnit()
   {
     $ok = true ;
-    //$this->staging->fromArray(array("import_ref" => $this->import_id));
+    print("TRY TO SAVE UNIT\n");
+	
+	 //jm herpers 2017 11 09 (auto increment in batches)
+	 //if  $this->main_code_found is set to false and column "code_auto_increment" in table collection is set to true, autoincrement number
+	 //increments only if collection is auto-incremented and no "main code" (=UnitID in ABCD) found
+	 //=> increments only if "main" empty
+	 if($this->main_code_found===FALSE&&$this->collection_has_autoincrement)
+	 {
+		$code = new Codes() ;
+		$code->setCodeCategory("main") ;
+		$this->code_last_value++;
+		
+		$code->setCodePrefix($this->code_prefix) ;
+		$code->setCodePrefixSeparator($this->code_prefix_separator) ;
+		$code->setCode($this->code_last_value) ;
+		
+		$code->setCodeSuffixSeparator($this->code_suffix_separator) ;
+		$code->setCodeSuffix($this->code_suffix) ;
+		$this->staging->addRelated($code) ;
+		 
+	 }
+	 $this->main_code_found=FALSE;
     //ftheeten 2017 08 03
     $this->staging->fromArray(array("import_ref" => $this->import_id, "specimen_taxonomy_ref"=> $this->specimen_taxonomy_ref));
     try

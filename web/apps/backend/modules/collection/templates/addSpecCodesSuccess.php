@@ -43,6 +43,14 @@
         <?php echo $form['code_auto_increment'];?>
       </td>
     </tr>
+	<!-- JMHerpers 2018/02/01-->
+	<tr>
+      <th><?php echo $form['code_ai_inherit']->renderLabel();?></th>
+      <td>
+        <?php echo $form['code_ai_inherit']->renderError(); ?>
+        <?php echo $form['code_ai_inherit'];?>
+      </td>
+    </tr>
     <tr>
       <th><?php echo $form['code_specimen_duplicate']->renderLabel();?></th>
       <td>

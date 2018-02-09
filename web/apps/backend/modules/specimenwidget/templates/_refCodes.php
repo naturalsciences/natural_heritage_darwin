@@ -11,11 +11,11 @@
 			<div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;">Enable unicity check:<?php echo $form['unicity_check'];?></div>
 		</td>
 	</tr>
-	<tr>
+	<!--<tr>
 	      <td colspan="7">
 		       <div style="font-weight:bold; text-align:center; vertical-align:middle; padding-bottom:10px;" class="class_rmca_mask_display" style="width:97%; overflow: hidden;white-space: nowrap;">Mask:</div>
 		</td>
-	</tr>
+	</tr>-->
 	<tr>
 	  <td colspan="7">
       		

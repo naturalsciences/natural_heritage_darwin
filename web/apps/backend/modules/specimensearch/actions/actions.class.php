@@ -254,7 +254,7 @@ class specimensearchActions extends DarwinActions
   {
      $flds = array('category','collection','taxon', 'collecting_dates', 'type','gtu', 'ecology','codes','chrono','ig','acquisition_category',
               'litho','lithologic','mineral','expedition','type', 'individual_type','sex','state','stage','social_status','rock_form','individual_count',
-              'part', 'object_name', 'part_status', 'amount_males', 'amount_females', 'building', 'floor', 'room', 'row', 'col' ,'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
+              'part', 'object_name', 'part_status', 'amount_males', 'amount_females', 'amount_juveniles', 'building', 'floor', 'room', 'row', 'col' ,'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
               'sub_container_type' , 'sub_container_storage', 'specimen_count','part_codes', 'col_peoples', 'ident_peoples','don_peoples', 'valid_label', 'loans');
 
 
@@ -404,9 +404,12 @@ class specimensearchActions extends DarwinActions
             $this->getI18N()->__('Amount Males'),),
           'amount_females' => array(
            'amount_females',
-            $this->getI18N()->__('Amount Females'),),
-            
+            $this->getI18N()->__('Amount Females'),),         
             // end addition
+			//add following field by JMHerpers 20180129
+		  'amount_juveniles' => array(
+            'amount_juveniles',
+            $this->getI18N()->__('Amount Juveniles'),),
           'state' => array(
             'state',
             $this->getI18N()->__('State'),),

@@ -69,6 +69,8 @@ class CommentsTable extends DarwinTable
       'identifications' => 'Identifications',
       'publication' => 'Publication',
       'ecology' => 'Ecology',
+       //ftheeten (2017 01 22)
+      'photo_not_provided' => 'Photo (no attached file)'    
     ),
     'loans' => array(
       'usage' => 'Usage',

@@ -149,24 +149,30 @@ class StoragePartsTable extends DarwinTable
   
   public function createUniqFlatDistinct($table, $column,  $new_col='item', $empty = false)
   {
+	 
     if(! isset($this->flat_results)){
       $q = Doctrine_Query::create()
-        ->useResultCache(true)
-        ->setResultCacheLifeSpan(5) //5 sec
+        //->useResultCache(true)
+        //->setResultCacheLifeSpan(5) //5 sec
         ->From('FlatDict')
         ->select('dict_field, dict_value')
+		 ->andwhere('dict_field = ?', $new_col)
         ->andwhere('referenced_relation = ?', $table)
         ->orderBy("dict_value ASC");
       $res = $q->execute();
+	  //print(" $new_col = ". $q->execute()->count());
       $this->flat_results = array();
       foreach($res as $result) {
+		 
         if(! isset($this->flat_results[$result->getDictField()]))
           $this->flat_results[$result->getDictField()] = array();
         $this->flat_results[$result->getDictField()][$result->getDictValue()] = $result->getDictValue();
       }
     }
+	
     if(isset($this->flat_results[$column]))
       return $this->flat_results[$column];
+
     return array();
   }
 }

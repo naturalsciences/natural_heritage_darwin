@@ -109,7 +109,9 @@ $(document).ready(function ()
       )); ?>
     </div>
     <p class="clear"></p>
-    <?php include_partial('widgets/float_button', array('form' => $form)); ?>
+    <?php include_partial('widgets/float_button', array('form' => $form,
+	//ftheeten 2017 11 30
+	 'module' => 'specimen')); ?>
     <p class="form_buttons">
       <?php if (!$form->getObject()->isNew()): ?>
         <?php echo link_to(__('New specimen'), 'specimen/new') ?>
@@ -141,11 +143,19 @@ $(document).ready(function () {
   $('body').catalogue({});
 
   $('#submit_spec_f1').click(function(event){
-    if($('#specimen_ig_ref_check').val() == 0 && $('#specimen_ig_ref').val() == "" && $('#specimen_ig_ref_name').val() != "")
-    {
-      if(!window.confirm('<?php echo __("Your I.G. number will be lost ! are you sure you want continue ?") ; ?>'))
-        event.preventDefault();
-    }
+	 //JMHerpers 2018/02/08	  
+	  if($('.mrac_input_mask').val() == null)
+    {	
+			alert ("Code is mandatory. Please fill the field");
+			//document.getElementById('code').focus();
+			event.preventDefault();
+	}else{
+		if($('#specimen_ig_ref_check').val() == 0 && $('#specimen_ig_ref').val() == "" && $('#specimen_ig_ref_name').val() != "")
+		{
+		  if(!window.confirm('<?php echo __("Your I.G. number will be lost ! are you sure you want continue ?") ; ?>'))
+			event.preventDefault();
+		}
+	}
   }) ;
   
    //ftheeten 2015 10 14

@@ -26,10 +26,6 @@ class Collections extends BaseCollections
     return 0;
   }
 
-
-
-
-  
   protected $children = array();
   protected $parent_node = null;
 
@@ -86,4 +82,24 @@ class Collections extends BaseCollections
       return true;
     return false;
   }
+  
+  //JMHerpers 2018/02/02
+  public function detectTrueParentForAutoIncrement()  {
+	  $parent=$this;
+	  if($this->getCodeAutoIncrement()&&$this->getCodeAiInherit())  {
+		  $tmp_path=$this->getPath();
+		  $array_hierarchy=explode("/", $tmp_path);
+		  $array_hierarchy=array_reverse($array_hierarchy);
+		  foreach($array_hierarchy as $collection)  {
+			  if(strlen(trim($collection))>0)	  {
+         $parent= Doctrine::getTable('Collections')-> find($collection);
+			         if($parent->getCodeAiInherit()===false)    {
+				return $parent;
+			         }
+			  }
+		  }
+		  return $parent;
+	  }
+  }  
+
 }

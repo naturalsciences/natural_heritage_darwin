@@ -90,6 +90,15 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
       $this->addOption('button_class', 'button');
       $this->addOption('default_name', null);
       $this->addOption('url_params', array());
+	 
+	 //ftheeten 2018 02 08
+	  if(strtolower($options["model"])=="collections")
+	  {
+		if(array_key_exists('collection_ref_session', $_COOKIE))
+		{
+			$this->addOption('default',$_COOKIE['collection_ref_session']);
+		}
+	  }
   }
 
   public function getJavaScripts()

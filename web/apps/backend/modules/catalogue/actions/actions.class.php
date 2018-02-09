@@ -501,6 +501,7 @@ class catalogueActions extends DarwinActions
 
   }
   
+
       //ftheeten 2017 01 12 autocomplete for storage
   public function executeStorageAutocomplete(sfWebRequest $request)
   {
@@ -511,10 +512,12 @@ class catalogueActions extends DarwinActions
 		 if($request->getParameter('collections'))
 		 {
 			$sql = "SELECT DISTINCT dict_value, fulltoindex(dict_value) FROM flat_dict
-            INNER JOIN 
-            (SELECT distinct ".$request->getParameter('entry')."  FROM specimens_storage_parts_view WHERE collection_path||collection_ref::varchar||'/' LIKE '%/".$request->getParameter('collections')."/%' )
-            b ON  dict_value =".$request->getParameter('entry')."
-
+            INNER JOIN storage_parts
+			ON flat_dict.dict_value= storage_parts.".$request->getParameter('entry')."		
+			INNER JOIN
+			specimens 
+			ON
+			storage_parts.specimen_ref = specimens.id	
             WHERE referenced_relation='storage_parts' AND 
             dict_field='".$request->getParameter('entry')."' AND
 			fulltoindex(dict_value) LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')
@@ -544,6 +547,7 @@ class catalogueActions extends DarwinActions
 		$this->getResponse()->setContentType('application/json');
 		return  $this->renderText(json_encode($results));
   }
+
 
 
 }

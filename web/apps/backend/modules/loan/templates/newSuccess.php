@@ -29,10 +29,11 @@
         </div>
         <p class="clear"></p>
         <?php include_partial('widgets/float_button', array('form' => $form,
-                                                            'module' => 'loan',
-                                                            'search_module'=>'loan/index',
-                                                            'save_button_id' => 'submit_loan',
-                                                            'print_button_id' => 'print_item_'.(($form->getObject()->isNew())?null:$form->getObject()->getId())
+                                                            'module' => 'loan'
+															//JMHerpers 2018/02/05
+                                                           // ,'search_module'=>'loan/index',
+                                                           // 'save_button_id' => 'submit_loan',
+                                                           // 'print_button_id' => 'print_item_'.(($form->getObject()->isNew())?null:$form->getObject()->getId())
                                                     )
         ); ?>
         <p class="form_buttons">
@@ -49,10 +50,12 @@
                                                        'loan_id'=>$form->getObject()->getId()
                                                      )
                                                    ))
-                                                   */
+                                                   
               "http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_loans%3Aloans_prod.prpt/report?LOAN_ID=".$form->getObject()->getId()."&userid=report&password=report&output-target=pageable%2Fpdf&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=true"
                                                    ,
-              array("target"=> "_blank")
+              array("target"=> "_blank")*/
+			       "http://172.16.11.138/merge_pdf?loan=".$form->getObject()->getId() ,
+              		     array("target"=> "_blank")
             );?>
           <?php endif?>        
           &nbsp;<a href="<?php echo url_for('loan/index') ?>"><?php echo __('Cancel');?></a>

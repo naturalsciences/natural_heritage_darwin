@@ -758,8 +758,8 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
       'property_units' => 'Unit',
       'comment_notion_concerned' => 'Notion concerned',
     ));
-		//ftheeten 2016 02 12
-	$this->widgetSchema['gtu_boolean'] = new sfWidgetFormChoice(array('choices' => array('AND' => 'AND', 'OR' => 'OR', )));
+		//ftheeten 2016 02 12 and JMHerpers 2018/02/02 for inversion OR/AND
+	$this->widgetSchema['gtu_boolean'] = new sfWidgetFormChoice(array('choices' => array('OR' =>'OR', 'AND' => 'AND', )));
   	////ftheeten 2015 01 08
 	$this->validatorSchema['gtu_boolean'] = new sfValidatorPass();
 	

@@ -344,16 +344,23 @@ class loanActions extends DarwinActions
       $form->bind(array('comment'=>$request->getParameter('comment'),'status'=>$request->getParameter('status'))) ;
       if($form->isValid())
       {
-        $data = array(
-            'loan_ref' => $request->getParameter('id'),
-            'status' => $request->getParameter('status'),
-            'comment' => $request->getParameter('comment'),
-            'user_ref' => $this->getUser()->getId()) ;
+		//JMHerpers 2018/02/02 Not 2 "New" in status
+		try{
+			$data = array(
+				'loan_ref' => $request->getParameter('id'),
+				'status' => $request->getParameter('status'),
+				'comment' => $request->getParameter('comment'),
+				'user_ref' => $this->getUser()->getId()) ;
 
-        $loanstatus = new LoanStatus() ;
-        $loanstatus->fromArray($data) ;
-        $loanstatus->save();
-        return $this->renderText('ok');
+			$loanstatus = new LoanStatus() ;
+			$loanstatus->fromArray($data) ;
+			$loanstatus->save();
+			return $this->renderText('ok');
+		}
+		catch(Doctrine_Exception $ne)	{
+			return $this->renderText('<script>alert("Cannot add status, maybe duplicate one?"); </script>');
+		}
+
       }
       else {
         return $this->renderText('notok'.$form->getErrorSchema());
@@ -363,7 +370,20 @@ class loanActions extends DarwinActions
     }
     $this->redirect('board/index') ;
   }
-
+  
+  //JIM Herpers 2017 10 27
+    public function executeRemoveStatus(sfWebRequest $request)
+  {
+    if($request->isXmlHttpRequest())
+    {
+        
+	  $id=$request->getParameter('id');
+	  $statusTmp=Doctrine::getTable("LoanStatus")->find($id);
+	  $statusTmp->delete();
+	  return $this->renderText('ok');
+    }
+    $this->redirect('board/index') ;
+  }
   public function executeSync(sfWebRequest $request)
   {
     $this->checkRight($request->getParameter('id'));

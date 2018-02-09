@@ -393,6 +393,8 @@ class SpecimensTable extends DarwinTable
         ->setResultCacheLifeSpan(5) //5 sec
         ->From('FlatDict')
         ->select('dict_field, dict_value')
+	//this line ftheeten 2017 02 08 (bug fix)
+		// ->andwhere('dict_field = ?', $new_col)
         ->andwhere('referenced_relation = ?', $table)
         ->orderBy("dict_value ASC");
       $res = $q->execute();

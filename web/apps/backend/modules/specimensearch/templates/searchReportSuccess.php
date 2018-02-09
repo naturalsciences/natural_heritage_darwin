@@ -105,16 +105,18 @@
 	  <!-- added by Son -->
       <input type="button" id="print_spec" class="save_search" value="<?php echo __('Print');?>" />
       <!-- end added code -->
-	  
+
 	  <!-- added by Franck -->
       <input type="button" id="xml_spec" class="save_search" value="<?php echo __('XML');?>" />
 	  <!-- ftheeten 2016/01/29-->
       <input type="button" id="report_spec" class="save_search" value="<?php echo __('Report');?>" />
+
 	  <!-- these fields are filled by _searchSucess.php -->
 	  <input type="hidden" name="h_current_page" id="h_current_page" value="-1"/>
 	  <input type="hidden" name="h_order_by" id="h_order_by" value="-1"/>
 	  <input type="hidden" name="h_order_dir" id="h_order_dir" value="-1"/>
       <!-- end added code -->
+	  
 	  <script  type="text/javascript">
 	  
 $(document).ready(function () {

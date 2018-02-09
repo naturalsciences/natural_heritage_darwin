@@ -309,6 +309,8 @@ class specimenActions extends DarwinActions
       {
 		//specimen saved in DB there!
         $specimen = $form->save();
+		//ftheeten 2018 02 08
+		$this->addCollectionCookie($specimen);
 		//ftheeten 2015 10 2014 to handle new identification
         if ($request->hasParameter('split_created'))
 		{
@@ -774,10 +776,19 @@ class specimenActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
     $form->addStorageParts($number, '');
+	
     
     return $this->renderPartial('spec_storage_parts',array('form' => $form['newStorageParts'][$number], 'rownum'=>$number, 'module'=>'specimen'));
     
  }
+ 
+   //ftheeten 2018 02 08
+   public function addCollectionCookie( $specimen)
+   {
+	    $this->getResponse()->setCookie('collection_ref_session',$specimen->getCollectionRef(), time()+60*60*24*30);
+	   
+   }
+   
  
  
 }

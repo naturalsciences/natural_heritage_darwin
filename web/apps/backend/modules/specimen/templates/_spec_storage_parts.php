@@ -258,7 +258,7 @@
 			$.getJSON(url, {
 						term : request.term,
                         entry : 'building',
-						collections: $('.col_check').val(),
+						//collections: $('.col_check').val(),
                        
                         timeout: 3000
 					} , 
@@ -279,7 +279,7 @@
 			$.getJSON(url, {
 						term : request.term,
                         entry : 'specimen_status',
-						collections: $('.col_check').val(),
+						//collections: $('.col_check').val(),
                        
                         timeout: 3000
 					} , 
@@ -301,7 +301,7 @@
 			$.getJSON(url, {
 						term : request.term,
                         entry : 'specimen_part',
-						collections: $('.col_check').val(),
+						//collections: $('.col_check').val(),
                        
                         timeout: 3000
 					} , 
@@ -322,7 +322,7 @@
 			$.getJSON(url, {
 						term : request.term,
                         entry : 'floor',
-						collections: $('.col_check').val(),
+						//collections: $('.col_check').val(),
                        
                         timeout: 3000
 					} , 
@@ -343,7 +343,7 @@
 			$.getJSON(url, {
 						term : request.term,
                         entry : 'room',
-						collections: $('.col_check').val(),
+						//collections: $('.col_check').val(),
                        
                         timeout: 3000
 					} , 
@@ -364,7 +364,7 @@
 			$.getJSON(url, {
 						term : request.term,
                         entry : 'col',
-						collections: $('.col_check').val(),
+						//collections: $('.col_check').val(),
                        
                         timeout: 3000
 					} , 
@@ -385,7 +385,7 @@
 			$.getJSON(url, {
 						term : request.term,
                         entry : 'row',
-						collections: $('.col_check').val(),
+						//collections: $('.col_check').val(),
                        
                         timeout: 3000
 					} , 
@@ -406,7 +406,7 @@
 			$.getJSON(url, {
 						term : request.term,
                         entry : 'shelf',
-						collections: $('.col_check').val(),
+						//collections: $('.col_check').val(),
                        
                         timeout: 3000
 					} , 
@@ -420,6 +420,16 @@
 		minLength: 1,
 		delay: 1000
 	});
+    
+    
+    //ftheeten 2018 02 09
+        $('.ui-autocomplete').mouseleave(
+        function()
+        {
+            $(this).hide();
+            
+        }
+    );
     
     });
   </script>

@@ -249,6 +249,15 @@ $(document).ready(function () {
 		minLength: 1,
 		delay: 100
 	});
+    
+        //ftheeten 2018 02 09
+        $('.ui-autocomplete').mouseleave(
+        function()
+        {
+            $(this).hide();
+            
+        }
+    );
 
 });
 </script>

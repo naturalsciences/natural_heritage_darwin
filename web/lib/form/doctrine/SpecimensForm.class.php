@@ -446,16 +446,26 @@ class SpecimensForm extends BaseSpecimensForm
     
     /* Labels */
     //2016 06 22 ftheeten added male fema count
+	//2017 11 22 jmherpers added new labels for lin, max and modified label for accuracy
     $this->widgetSchema->setLabels(array(
       'gtu_ref' => 'Sampling location Tags',
       'station_visible' => 'Public sampling location ?',
       'filenames' => 'Add File',
       'institution_ref' => 'Institution',
       'accuracy' => 'Accuracy',
-      'accuracy_males' => 'Accuracy males count',
-      'accuracy_females' => 'Accuracy females count',
+      'accuracy_males' => 'Accuracy',
+      'accuracy_females' => 'Accuracy',
+	  'accuracy_juveniles' => 'Accuracy',
       'surnumerary' => 'supernumerary',
       'col' => 'Column',
+	  'specimen_count_min' => 'Min.',
+	  'specimen_count_max' => 'Max.',
+	  'specimen_count_males_min' => 'Min.',
+	  'specimen_count_males_max' => 'Max.',
+	  'specimen_count_females_min' => 'Min.',
+	  'specimen_count_females_max' => 'Max.',
+	  'specimen_count_juveniles_min' => 'Min.',
+	  'specimen_count_juveniles_max' => 'Max.',
     ));
 
     /* Validators */
@@ -1093,8 +1103,18 @@ class SpecimensForm extends BaseSpecimensForm
 		  {
 			$options['code_prefix'] = $collection->getCodePrefix();
 			$options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
-			if($collection->getCodeAutoIncrement())
-			  $options['code'] = $collection->getCodeLastValue() + 1 ;
+		    //JMHerpers 2018/02/02 transfer parent-child of auto-increment
+			
+		    if($collection->getCodeAutoIncrement()) {
+				if($collection->getCodeAiInherit()&&($collection->getParentRef()!==null)){
+					$parent_collection = $collection->detectTrueParentForAutoIncrement();
+					$options['code'] = $parent_collection->getCodeLastValue() + 1 ;	
+				}
+				else {//(this is a parent collection of non inheriting
+					$options['code'] = $collection->getCodeLastValue() + 1 ;		  
+				}		
+
+			}
 			$options['code_suffix'] = $collection->getCodeSuffix();
 			$options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
 		  }

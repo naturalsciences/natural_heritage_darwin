@@ -406,6 +406,7 @@ Collections:
         code_mask: { type: string}
         loan_auto_increment: { type: boolean, notnull: true, default: false}
         loan_last_value: { type: integer, notnull: true, default: 0}
+        code_ai_inherit: { type: boolean, notnull: true, default: false}
 
     relations:
         Institution:

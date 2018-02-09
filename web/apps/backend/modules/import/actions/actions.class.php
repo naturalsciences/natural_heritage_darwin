@@ -102,6 +102,7 @@ class importActions extends DarwinActions
 
   public function executeUpload(sfWebRequest $request)
   {
+
     if(!$this->getUser()->isAtLeast(Users::ENCODER)) $this->forwardToSecureAction();
     // Initialization of the import form
     if($request->isMethod('post')) {
@@ -113,37 +114,66 @@ class importActions extends DarwinActions
     $this->form = new ImportsForm(null,array('format' => $this->type));
     if($request->isMethod('post'))
     {
-      $this->form->bind($request->getParameter($this->form->getName()), $request->getFiles($this->form->getName()));
-      if($this->form->isValid())
+      
+      try
       {
-        if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')) && $this->type != 'taxon')
-        {
-          $error = new sfValidatorError(new sfValidatorPass(),'You don\'t have right on this collection');
-          $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
-          return ;
-        }
-        $file = $this->form->getValue('uploadfield');
-        $date = date('Y-m-d H:i:s') ;
-        $filename = 'uploaded_'.sha1($file->getOriginalName().$date);
-        $extension = $file->getExtension($file->getOriginalExtension());
-        // we can have the temporary file here : $file->getTempName()) ;
-        // usefull if we choose not to save the file in fact
-        $this->form->getObject()->setUserRef($this->getUser()->getId()) ;
-        $this->form->getObject()->setFilename($file->getOriginalName()) ;
-        $this->form->getObject()->setCreatedAt($date) ;
-        try {
-          $file->save(sfConfig::get('sf_upload_dir').'/'.$filename.$extension);
-          $this->form->save() ;
-          if($this->type != 'abcd')
-            $this->redirect('import/indexTaxon?complete=true');
-          $this->redirect('import/index?complete=true');
-        }
-        catch(Doctrine_Exception $e)
-        {
-          $error = new sfValidatorError(new savedValidator(),$e->getMessage());
-          $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
-        }
+          $this->form->bind($request->getParameter($this->form->getName()), $request->getFiles($this->form->getName()));
+          if($this->form->isValid())
+          {
+           
+            if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->form->getValue('collection_ref')) && $this->type != 'taxon')
+            {
+             
+              $error = new sfValidatorError(new sfValidatorPass(),'You don\'t have right on this collection');
+              $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
+              return ;
+            }
+           
+            $file = $this->form->getValue('uploadfield');
+            $date = date('Y-m-d H:i:s') ;
+            $filename = 'uploaded_'.sha1($file->getOriginalName().$date);
+            $extension = $file->getExtension($file->getOriginalExtension());
+            // we can have the temporary file here : $file->getTempName()) ;
+            // usefull if we choose not to save the file in fact
+            $this->form->getObject()->setUserRef($this->getUser()->getId()) ;
+            $this->form->getObject()->setFilename($file->getOriginalName()) ;
+            $this->form->getObject()->setCreatedAt($date) ;
+            try {
+           
+              $file->save(sfConfig::get('sf_upload_dir').'/'.$filename.$extension);
+              $this->form->save() ;
+               //ftheeten 2017 08 28 (begin)
+              $mails=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+              //$mails=$mailsTmp->fetchAll();
+              foreach($mails as $mail)
+              {
+                $this->sendMail($mail->getEntry(), "Darwin XML import file loaded", "The file ".$file->getOriginalName()." has been uploaded into Darwin and is ready to be loaded in staging.");
+              }
+               //ftheeten 2017 08 28 (end)
+              if($this->type != 'abcd')
+                $this->redirect('import/indexTaxon?complete=true');
+              $this->redirect('import/index?complete=true');
+             
+            }
+            catch(Doctrine_Exception $e)
+            {
+          
+              $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+              $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
+            }
+          }
       }
+      catch(Doctrine_Exception $e)
+     {
+          
+       $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+       $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
+      }
+      /*else
+      {
+         $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+          $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
+      }*/
       $this->setTemplate('upload');
     }
   }
@@ -234,4 +264,151 @@ class importActions extends DarwinActions
     $this->form = new ImportsFormFilter(null,array('user' =>$this->getUser()));
     $this->andSearch($request,'abcd') ;    
   }
+  
+    //ftheeten 2017 08 28 (end)
+    public function executeLoadstaging(sfWebRequest $request)
+    {
+        $idImport=$request->getParameter("id");
+        $importTmp=Doctrine::getTable("Imports")->find($idImport);
+        //if(!$this->getUser()->isAtLeast(Users::MANAGER)) $this->forwardToSecureAction();
+        if(!Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()))
+        {
+            
+            $this->forwardToSecureAction();
+        }
+        else
+        {
+           
+            try 
+            {
+                    $mails=Array();
+                    $mailsTmp=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+               
+                    foreach($mailsTmp as $mailRecord)
+                    {
+                        if(filter_var($mailRecord->getEntry(), FILTER_VALIDATE_EMAIL))
+                        {
+                            $mails[]=$mailRecord->getEntry();
+                        }
+                    }
+                    
+                    if(count($mails)>0)
+                    {
+                        $cmd='darwin:load-import  --mailsfornotification='.implode(";",$mails);
+                    }
+                    else
+                    {
+                        $cmd='darwin:load-import';
+                    }
+                    $currentDir=getcwd();
+                    chdir(sfconfig::get('sf_root_dir'));    
+                    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+                    chdir($currentDir);
+                    
+                    $this->redirect('import/index');
+            }
+            catch(Doctrine_Exception $e)
+            {
+          
+              $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+              $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
+            }
+        }
+    }
+    
+    //ftheeten 2017 08 29 
+    public function executeCheckstaging(sfWebRequest $request)
+    {
+        $idImport=$request->getParameter("id");
+        $importTmp=Doctrine::getTable("Imports")->find($idImport);
+        
+        if(!Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()))
+        {
+            
+           $this->forwardToSecureAction();
+        }
+        else
+        {
+            
+            try 
+            {
+                 
+                    $mails=Array();
+                    $mailsTmp=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+               
+                    foreach($mailsTmp as $mailRecord)
+                    {
+                        if(filter_var($mailRecord->getEntry(), FILTER_VALIDATE_EMAIL))
+                        {
+                            $mails[]=$mailRecord->getEntry();
+                        }
+                    }
+                    if(filter_var($request->getParameter('id'), FILTER_VALIDATE_INT))
+                    {
+                        if(count($mails)>0)
+                        {
+                            $cmd='darwin:check-import --id='.$request->getParameter('id').' --mailsfornotification='.implode(";",$mails);
+                        }
+                        else
+                        {
+                             $cmd='darwin:check-import --id='.$request->getParameter('id');
+                        }
+                        $conn = Doctrine_Manager::connection();
+                        $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
+                        $currentDir=getcwd();
+                        chdir(sfconfig::get('sf_root_dir'));    
+                        exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+                        chdir($currentDir);                   
+                        //$this->redirect('import/index');
+                    }
+                    $this->redirect('import/index');
+            }
+            catch(Doctrine_Exception $e)
+            {
+          
+              $error = new sfValidatorError(new savedValidator(),$e->getMessage());
+              $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
+            }
+        }
+    }
+    
+
+  
+  //ftheeten 2017 08 28
+  // attention keep identation
+  public function sendMail($recipient, $title, $message)
+ {
+     if(filter_var($recipient, FILTER_VALIDATE_EMAIL))
+    {
+        // send an email to the affiliate
+        $message = $this->getMailer()->compose(
+          array('franck.theeten@africamuseum.be' => 'Franck Theeten'),
+          $recipient,//$affiliate->getEmail(),
+          $title,
+<<<EOF
+{$message}
+EOF
+           );
+ 
+        $this->getMailer()->send($message);
+    }
+ }
+
+   //ftheeten 2017 08 28
+  public function setImportAsWorking( $p_conn, $p_ids, $p_working)
+  {
+    if(count($p_ids)>0)
+    {
+        $p_conn->beginTransaction();
+        foreach($p_ids as $id)
+        {
+         Doctrine_Query::create()
+            ->update('imports p')
+            ->set('p.working','?',((int)$p_working==0)?'f':'t')
+            ->where('p.id = ?', $id)
+            ->execute();
+        }
+        $p_conn->commit();
+    }
+  }   
 }

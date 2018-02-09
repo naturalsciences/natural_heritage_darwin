@@ -106,7 +106,7 @@
 
           <div class="general_gtu">
           <?php if($specimen->getOtherGtuTags() != ""): ?>
-            <strong><?php echo __('Locality (summary)');?> :</strong>
+            <!--<strong><?php echo __('Locality (summary)');?> :</strong>-->
             <?php echo $specimen->getOtherGtuTags(ESC_RAW);?>
           <?php endif ; ?>
           </div>
@@ -116,11 +116,27 @@
     </td> 
     <!--ftheeten 2016 09 13-->
     <td class="col_collecting_dates">
-            <b>Date From:</b><?php echo $specimen->getGtuFromDateMasked(ESC_RAW);?>
-             <?php if(null !==$specimen->getGtuToDateMasked() && $specimen->getGtuToDateMask()):?>
-             <br/>
-             <b>Date To:</b><?php echo $specimen->getGtuToDateMasked(ESC_RAW);?>
-              <?php endif ; ?>
+			<!--jmherpers 2018 01 29-->
+			<?php if(null !==$specimen->getGtuFromDateMasked() && $specimen->getGtuFromDateMask()):?>
+				<?php if($specimen->getGtuFromDateMask() == 56):?>
+					<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),0,14);?>
+					<?php elseif($specimen->getGtuFromDateMask() == 48):?>
+						<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),12,10);?>
+						<?php elseif($specimen->getGtuFromDateMask() == 32):?>
+							<b>From: </b><?php echo substr($specimen->getGtuFromDateMasked(ESC_RAW),15,8);?>
+				<?php endif ; ?>
+            <?php endif ; ?>
+            <?php if(null !==$specimen->getGtuToDateMasked() && $specimen->getGtuToDateMask()):?>
+				<br/>
+				<?php if($specimen->getGtuToDateMask() == 56):?>
+					<b>To: </b><?php echo substr($specimen->getGtuToDateMasked(ESC_RAW),0,14);?>
+					<?php elseif($specimen->getGtuToDateMask() == 48):?>
+						<b>To: </b><?php echo substr($specimen->getGtuToDateMasked(ESC_RAW),12,10);?>
+						<?php elseif($specimen->getGtuToDateMask() == 32):?>
+							<b>To: </b><?php echo substr($specimen->getGtuToDateMasked(ESC_RAW),15,8);?>
+				<?php endif ; ?>
+            <?php endif ; ?>
+			<!--end jmherpers 2018 01 29-->
     </td>
      <!--ftheeten 2016 09 13-->
     <td class="col_ecology">
@@ -131,27 +147,28 @@
 
     <td class="col_codes">
       <?php if(isset($codes[$specimen->getId()])):?>
-        <?php if(count($codes[$specimen->getId()]) <= 3):?>
-          <?php echo image_tag('info-bw.png',"title=info class=info");?>
-        <?php else:?>
-          <?php echo image_tag('info.png',"title=info class=info id=spec_code_".$specimen->getId()."_info");?>
-          <script type="text/javascript">
-            $(document).ready(function () {
-              $('#spec_code_<?php echo $specimen->getId();?>_info').click(function() 
-              {
-                item_row=$(this).closest('td');
-                if(item_row.find('li.code_supp:hidden').length)
-                {
-                  item_row.find('li.code_supp').removeClass('hidden');
-                }
-                else
-                {
-                  item_row.find('li.code_supp').addClass('hidden');
-                }
-              });
-            });
-          </script>
-        <?php endif;?>
+		<!--JMHerpers 2018 01 30 Hide Info button that doesn't work-->
+        <!--<?php if(count($codes[$specimen->getId()]) <= 3):?>-->
+        <!--  <?php echo image_tag('info-bw.png',"title=info class=info");?>-->
+        <!--<?php else:?>-->
+        <!--  <?php echo image_tag('info.png',"title=info class=info id=spec_code_".$specimen->getId()."_info");?>-->
+        <!--  <script type="text/javascript">-->
+        <!--    $(document).ready(function () {-->
+        <!--      $('#spec_code_<?php echo $specimen->getId();?>_info').click(function()-->
+        <!--     {-->
+        <!--        item_row=$(this).closest('td');-->
+        <!--       if(item_row.find('li.code_supp:hidden').length)-->
+        <!--        {-->
+        <!--          item_row.find('li.code_supp').removeClass('hidden');-->
+        <!--        }-->
+        <!--        else-->
+        <!--        {-->
+        <!--          item_row.find('li.code_supp').addClass('hidden');-->
+        <!--        }-->
+        <!--      });-->
+        <!--    });-->
+        <!--  </script>-->
+        <!--<?php endif;?>-->
         <ul>
         <?php $cpt = 0 ; foreach($codes[$specimen->getId()] as $key=>$code):?>            
             <?php if($code->getCodeCategory() == 'main') : ?>
@@ -184,9 +201,13 @@
     </td>
      <td  class="col_valid_label">
          <?php if($specimen->getValidLabel()===TRUE):?>
-            <?php echo __("Valid label: yes");?>
+			<!--jmherpers 2018 01 29-->
+            <!--<?php echo __("Valid label: yes");?>-->
+			<?php echo __("Valid");?>
         <?php elseif($specimen->getValidLabel()===FALSE):?>
-            <?php echo __("Valid label: no");?>
+			<!--jmherpers 2018 01 29-->
+            <!--<?php echo __("Valid label: no");?>-->
+			<?php echo __("Not valid");?>
         <?php endif;?>
     </td>
 	<td class="col_col_peoples">

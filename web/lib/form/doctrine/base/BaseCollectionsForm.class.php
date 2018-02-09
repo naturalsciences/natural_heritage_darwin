@@ -36,6 +36,7 @@ abstract class BaseCollectionsForm extends BaseFormDoctrine
       'code_mask'               => new sfWidgetFormTextarea(),
       'loan_auto_increment'     => new sfWidgetFormInputCheckbox(),
       'loan_last_value'         => new sfWidgetFormInputText(),
+      'code_ai_inherit'         => new sfWidgetFormInputCheckbox(),
     ));
 
     $this->setValidators(array(
@@ -60,6 +61,7 @@ abstract class BaseCollectionsForm extends BaseFormDoctrine
       'code_mask'               => new sfValidatorString(array('required' => false)),
       'loan_auto_increment'     => new sfValidatorBoolean(array('required' => false)),
       'loan_last_value'         => new sfValidatorInteger(array('required' => false)),
+      'code_ai_inherit'         => new sfValidatorBoolean(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('collections[%s]');

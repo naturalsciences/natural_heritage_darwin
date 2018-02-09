@@ -1,0 +1,100 @@
+CREATE OR REPLACE FUNCTION fct_rmca_set_my_widgets_by_collection(p_collection_ref integer, p_category character varying, p_group_name character varying, p_available boolean, p_visible boolean, p_opened boolean, p_privilege integer, p_users_to_exclude integer[])
+  RETURNS boolean AS
+$BODY$
+	DECLARE
+		cursor_privilege refcursor;
+		rec_privilege RECORD;
+	BEGIN
+		--corresponds to "privilege" value
+		-- set to -1 for all ?
+		--const REGISTERED_USER = 1;
+		--const ENCODER = 2;
+		--const MANAGER = 4;
+		--const ADMIN = 8;
+		IF users_to_exclude IS NOT NULL THEN
+			OPEN cursor_privilege FOR SELECT DISTINCT user_ref
+				  FROM collections_rights WHERE  db_user_type=
+				  CASE WHEN p_privilege !=-1 THEN 
+					p_privilege
+					ELSE
+					db_user_type
+					END 
+   
+			AND  user_ref  != all(p_users_to_exclude); 
+		ELSE 
+			OPEN cursor_privilege FOR SELECT DISTINCT user_ref
+			  FROM collections_rights WHERE db_user_type=  CASE WHEN p_privilege !=-1 THEN 
+				p_privilege
+				ELSE
+				db_user_type
+				END  ;
+
+		END IF;
+		LOOP
+			FETCH cursor_privilege INTO rec_privilege;
+				UPDATE my_widgets 
+				SET
+				is_available=p_available,
+				visible= p_visible,
+				opened=p_opened				
+				 WHERE user_ref=rec_privilege.user_ref
+				 and category=p_category 
+				 and group_name=p_group_name;
+			EXIT WHEN NOT FOUND;
+		END LOOP;
+		CLOSE cursor_privilege;
+		RETURN TRUE;
+	END;
+	
+	$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION fct_rmca_set_my_widgets_by_collection(integer, character varying, character varying, boolean, boolean, boolean, integer, integer[])
+  OWNER TO darwin2;
+
+CREATE OR REPLACE FUNCTION fct_rmca_set_preference_by_collection(p_collection_ref integer, p_pref_key character varying, p_pref_value character varying, p_privilege integer, p_users_to_exclude integer[])
+  RETURNS boolean AS
+$BODY$
+	DECLARE
+		cursor_privilege refcursor;
+		rec_privilege RECORD;
+	BEGIN
+		--corresponds to "privilege" value
+		-- set to -1 for all ?
+		--const REGISTERED_USER = 1;
+		--const ENCODER = 2;
+		--const MANAGER = 4;
+		--const ADMIN = 8;
+		IF users_to_exclude IS NOT NULL THEN
+			OPEN cursor_privilege FOR SELECT DISTINCT user_ref
+				  FROM collections_rights WHERE  db_user_type=
+				  CASE WHEN p_privilege !=-1 THEN 
+					p_privilege
+					ELSE
+					db_user_type
+					END 
+   
+			AND  user_ref  != all(p_users_to_exclude); 
+		ELSE 
+			OPEN cursor_privilege FOR SELECT DISTINCT user_ref
+			  FROM collections_rights WHERE db_user_type=  CASE WHEN p_privilege !=-1 THEN 
+				p_privilege
+				ELSE
+				db_user_type
+				END  ;
+
+		END IF;
+		LOOP
+			FETCH cursor_privilege INTO rec_privilege;
+				UPDATE preferences SET pref_value= p_pref_value WHERE user_ref=rec_privilege.user_ref;
+			EXIT WHEN NOT FOUND;
+		END LOOP;
+		CLOSE cursor_privilege;
+		RETURN TRUE;
+	END;
+	
+	$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION fct_rmca_set_preference_by_collection(integer, character varying, character varying, integer, integer[])
+  OWNER TO darwin2;

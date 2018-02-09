@@ -83,6 +83,8 @@ class MySavedSearchesTable extends DarwinTable
 	  //these two fields added ftheeten 2015/03/31
 	  'amount_males'=> 'Amount males',
 	  'amount_females'=> 'Amount females',
+	  //following field added JMHerpers 2018/01/29
+	  'amount_juveniles'=> 'Amount juveniles',
 	  //end addition
        //this field added ftheeten 2016/09/13
 	  'collecting_dates'=> 'Collecting dates',

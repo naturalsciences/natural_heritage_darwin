@@ -104,14 +104,16 @@
 	  
 	  <!-- added by Son -->
       <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
-          <input type="button" id="print_spec" class="save_search" value="<?php echo __('Print');?>" />
-          <!-- end added code -->
-          
-          <!-- added by Franck -->
-          <input type="button" id="xml_spec" class="save_search" value="<?php echo __('XML');?>" />
-          <!-- ftheeten 2016/01/29-->
-          <input type="button" id="report_spec" class="save_search" value="<?php echo __('Report');?>" />
-          <!-- these fields are filled by _searchSucess.php -->
+			<input type="button" id="print_spec" class="save_search" value="<?php echo __('Print');?>" />
+			<!-- end added code -->
+			<!-- added by JMHerpers -->
+			<input type="button" id="print_spec_thermic" class="save_search" value="<?php echo __('Thermic print');?>" /> 
+			<!-- end added code -->
+			<!-- added by Franck -->
+			<input type="button" id="xml_spec" class="save_search" value="<?php echo __('XML');?>" />
+			<!-- ftheeten 2016/01/29-->
+			<input type="button" id="report_spec" class="save_search" value="<?php echo __('Report');?>" />
+			<!-- these fields are filled by _searchSucess.php -->
        <?php endif;?>
 	  <input type="hidden" name="h_current_page" id="h_current_page" value="-1"/>
 	  <input type="hidden" name="h_order_by" id="h_order_by" value="-1"/>
@@ -181,6 +183,47 @@ $(document).ready(function () {
     
  });
  
+ //JMHerpers 2018/01/18
+
+ var url_printer="<?php echo(sfConfig::get('dw_url_thermic_printer')); ?>";
+	  
+ $("#print_spec_thermic").click(function(event){
+	var classes = [];
+	
+	var tmpArray=Array();
+	$('.spec_results > tbody > tr ').each(function(){
+		
+		$($(this).attr('class').split(' ')).each(function() {
+			
+			if (this.length>0 && $.inArray(this.valueOf(), classes) === -1) {
+				if (this.valueOf().substring(0, 4) == 'rid_' ) {
+					
+					var id_spec=this.valueOf().match(/[0-9]+/g);
+					id_spec=id_spec[0];
+					tmpArray.push(id_spec);
+					/*var url_printer_full=url_printer+'?op=on&id='+id_spec;
+					$.ajax({
+						url: url_printer_full						
+					}).done(
+						function()
+						{
+							
+						}
+					);*/
+				}
+			}    
+		});	
+	});
+	var url_printer_full=url_printer+'?op=on&id='+tmpArray.join("|");
+					$.ajax({
+						url: url_printer_full						
+					}).done(
+						function()
+						{
+							
+						}
+					);	
+ });
  
  //ftheeten 2016/01/29
    $("#report_spec").click(function(event){

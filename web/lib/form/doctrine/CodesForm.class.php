@@ -56,6 +56,13 @@ class CodesForm extends BaseCodesForm
 	//ftheeten 2015 03 11
 	$this->colIDSess=sfContext::getInstance()->getUser()->getAttribute("collection_for_insertion", -1);
 	
+	//JMHerpers 2018/02/02
+	$validatorCodeRequired= new sfValidatorString(array('required' => true, 'trim'=>true));
+   	$validatorCodeRequired->setMessage("required", "You must provide a code for the specimen. See the 'code' field below");
+    $this->validatorSchema['code'] = $validatorCodeRequired;
+
+	$this->mergePostValidator(new sfValidatorCallback(array('callback' => array($this, 'setValidatorUniqueNumber'))));
+	
 	if($mode_duplicates=="on")
 	{
 		$this->mergePostValidator(new sfValidatorCallback(
@@ -69,8 +76,6 @@ class CodesForm extends BaseCodesForm
 	
 	public function setValidatorUniqueNumber($validator, $values, $arguments)
 	{
-		
-
 		$category=$values["code_category"];
 		$prefix=$values["code_prefix"];
 		$prefix_sep = $values["code_prefix_separator"];
@@ -86,13 +91,13 @@ class CodesForm extends BaseCodesForm
 		$old_suffix_sep=$this->getObject()->getCodeSuffixSeparator();
 		$oldCode=$old_category.$old_prefix.$old_prefix_sep.$old_code.$old_suffix_sep.$old_suffix;
 		$newCode=$category.$prefix.$prefix_sep.$code.$suffix_sep.$suffix;
-		
 
 		if(sfContext::getInstance()->getActionName()=="create")
 		{
-			$cpt=$this->getCountCodeIndexedForm($category, $prefix, $prefix_sep, $code, $suffix, $suffix_sep, $this->colIDSess);
+		    //RMCA FT & JIM H new function signature, without separator  (2017 /11  2018 -02) + pb with GIT management when merging RBINS and RMCA repository)
+			$cpt=$this->getCountCodeIndexedForm($category, $prefix, $code, $suffix, $this->colIDSess);
 			if($cpt>0)
-			{
+			{echo "<script>console.log( '$cpt: " . $cpt . "' );</script>";
 			
 				if($this->colIDSess==-1)
 				{
@@ -144,11 +149,12 @@ class CodesForm extends BaseCodesForm
 		
 	}
 	
-	public function getCountCodeIndexedForm($category, $prefix='', $prefix_sep='', $code='', $suffix='', $suffix_sep='',$coll=-1)
+	//RMCA FT & JIM H new function signature, without separator  (2017 /11  2018 -02) + pb with GIT management when merging RBINS and RMCA repository)
+	public function getCountCodeIndexedForm($category, $prefix='', $code='', $suffix='', $coll=-1)
 	{
 	
 		
-		$searched=$prefix.$prefix_sep.$code.$suffix_sep.$suffix;
+		$searched=$prefix.$code.$suffix;
 		if($coll==-1)
 		{
 			$q = Doctrine_Query ::create()->

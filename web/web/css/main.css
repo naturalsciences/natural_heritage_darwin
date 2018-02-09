@@ -3237,3 +3237,29 @@ tr.spec_ident_collectors_data
 {
   border-bottom: 1px solid white;
 }
+
+.sex_Top_Bordered
+{
+  border-top: 2px solid #33FF00;
+  border-left: 2px solid #33CC00;
+  border-right: 2px solid #33FF00;
+ 
+}
+
+.sex_Middle_Bordered
+{ 
+  border-left: 2px solid #33CC00;
+  border-right: 2px solid #33FF00;
+  border-spacing: 2px;
+
+  
+}
+
+.sex_Bottom_Bordered
+{ 
+  border-bottom: 2px solid #33CC00;
+  border-left: 2px solid #33CC00;
+  border-right: 2px solid #33FF00;
+  border-spacing: 2px;
+  
+}

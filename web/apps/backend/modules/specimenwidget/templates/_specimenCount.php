@@ -1,90 +1,115 @@
 <table>
-  <tr>
+  <tr class="sex_Top_Bordered">
+   	 <th colspan=2><B><u>Total</u></B></th>
+  </tr>
+  <tr class="sex_Middle_Bordered">
 	<th class="top_aligned"><?php echo $form['accuracy']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['accuracy']->renderError();?>
 	  <?php echo $form['accuracy']->render() ?>
 	</td>
   </tr>
-  <tr id='specimen_count_min'>
-	<th><?php echo $form['specimen_count_min']->renderLabel();?></th>
+  <tr class="sex_Middle_Bordered" id='specimen_count_min'>
+	<th width='20%'><?php echo $form['specimen_count_min']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['specimen_count_min']->renderError();?>
 	  <?php echo $form['specimen_count_min']->render() ?>
 	</td>
   </tr>
-  <tr id='specimen_count_max'>
+  <tr class="sex_Middle_Bordered"  id='specimen_count_max'>
 	<th><?php echo $form['specimen_count_max']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['specimen_count_max']->renderError();?>
 	  <?php echo $form['specimen_count_max']->render() ?>
 	</td>
   </tr>
+  <tr class="sex_Bottom_Bordered">
+	<td colspan=2></td>
+  </tr>
+
   <!--ftheeten 2016 06 22-->
-  <tr>
+  <tr class="sex_Top_Bordered">
+   	 <th colspan=2><B><u>Males</u></B></th>
+  </tr>
+  <tr class="sex_Middle_Bordered">
   <th class="top_aligned"><?php echo $form['accuracy_males']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['accuracy_males']->renderError();?>
 	  <?php echo $form['accuracy_males']->render() ?>
 	</td>
   </tr>
-  <tr id='specimen_count_min'>
+  <tr class="sex_Middle_Bordered" id='specimen_count_min'>
 	<th><?php echo $form['specimen_count_males_min']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['specimen_count_males_min']->renderError();?>
 	  <?php echo $form['specimen_count_males_min']->render() ?> &#9794;
 	</td>
   </tr>
-  <tr id='specimen_count_max'>
+  <tr  class="sex_Middle_Bordered" id='specimen_count_max'>
 	<th><?php echo $form['specimen_count_males_max']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['specimen_count_males_max']->renderError();?>
 	  <?php echo $form['specimen_count_males_max']->render() ?> &#9794;
 	</td>
   </tr>
+  <tr class="sex_Bottom_Bordered">
+	<td colspan=2></td>
+  </tr>
   <!--ftheeten 2016 06 22-->
-  <tr>
+  <tr class="sex_Top_Bordered">
+   	<th colspan=2><B><u>Females</u></B></th>
+  </tr>
+  <tr class="sex_Middle_Bordered">
   <th class="top_aligned"><?php echo $form['accuracy_females']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['accuracy_females']->renderError();?>
 	  <?php echo $form['accuracy_females']->render() ?>
 	</td>
   </tr>
-  <tr id='specimen_count_min'>
+  <tr class="sex_Middle_Bordered" id='specimen_count_min'>
 	<th><?php echo $form['specimen_count_females_min']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['specimen_count_females_min']->renderError();?>
 	  <?php echo $form['specimen_count_females_min']->render() ?> &#9792;
 	</td>
   </tr>
-  <tr id='specimen_count_max'>
+  <tr class="sex_Middle_Bordered" id='specimen_count_max'>
 	<th><?php echo $form['specimen_count_females_max']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['specimen_count_females_max']->renderError();?>
 	  <?php echo $form['specimen_count_females_max']->render() ?> &#9792;
 	</td>
   </tr>
+  <tr class="sex_Bottom_Bordered">
+	<td colspan=2></td>
+  </tr>
   <!--ftheeten 2016 06 22-->
-  <tr>
+  <tr class="sex_Top_Bordered">
+   	<th colspan=2><B><u>Juveniles</u></B></th>
+  </tr>
+  <tr class="sex_Middle_Bordered">
   <th class="top_aligned"><?php echo $form['accuracy_juveniles']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['accuracy_juveniles']->renderError();?>
 	  <?php echo $form['accuracy_juveniles']->render() ?>
 	</td>
   </tr>
-  <tr id='specimen_count_min'>
+  <tr class="sex_Middle_Bordered" id='specimen_count_min'>
 	<th><?php echo $form['specimen_count_juveniles_min']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['specimen_count_juveniles_min']->renderError();?>
 	  <?php echo $form['specimen_count_juveniles_min']->render() ?> Juv.
 	</td>
   </tr>
-  <tr id='specimen_count_max'>
+  <tr class="sex_Middle_Bordered" id='specimen_count_max'>
 	<th><?php echo $form['specimen_count_juveniles_max']->renderLabel();?></th>
 	<td>
 	  <?php echo $form['specimen_count_juveniles_max']->renderError();?>
 	  <?php echo $form['specimen_count_juveniles_max']->render() ?> Juv.
 	</td>
+  </tr>
+  <tr class="sex_Bottom_Bordered">
+	<td colspan=2></td>
   </tr>
 </table>
 <script type="text/javascript">
@@ -98,15 +123,28 @@
     if($acc_fld.is(':checked')) {
       $max_fld.closest('tr').hide();
       $max_fld.val( $min_fld.val());
+	  //ftheeten 2018 02 05
+	  $("[for="+$min_fld.attr('id')+"]").text("Value");
+	  
     }else {
       $max_fld.closest('tr').show();
+	  
+	  //ftheeten 2018 02 05
+	  if(param =="")
+	  {		 
+		$("[for="+$min_fld.attr('id')+"]").text("Min.");
+	  }
+	 
       if(param=='males_'||param=='females_'||param=='juveniles_')
       {
         $('#specimen_accuracy_1').click();
+		//ftheeten 2018 02 05
+		$("[for="+$min_fld.attr('id')+"]").text("Min.");
         showHideCount_gen('');
         syncCounters('_max');
       }
     }
+	//ftheeten 2018 02 04
   }
   
   //ftheeten 2016 06 22 to replace old 'showHideCount'
