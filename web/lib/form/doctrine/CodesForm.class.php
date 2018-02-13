@@ -61,15 +61,12 @@ class CodesForm extends BaseCodesForm
    	$validatorCodeRequired->setMessage("required", "You must provide a code for the specimen. See the 'code' field below");
     $this->validatorSchema['code'] = $validatorCodeRequired;
 
-	$this->mergePostValidator(new sfValidatorCallback(array('callback' => array($this, 'setValidatorUniqueNumber'))));
+
 	
 	if($mode_duplicates=="on")
 	{
-		$this->mergePostValidator(new sfValidatorCallback(
-			array('callback' => array($this, 'setValidatorUniqueNumber'))));
+		$this->mergePostValidator(new sfValidatorCallback(array('callback' => array($this, 'setValidatorUniqueNumber'))));
 	}
-
-		
   }
   
     //group below RMCA 2014 01 13
@@ -97,8 +94,7 @@ class CodesForm extends BaseCodesForm
 		    //RMCA FT & JIM H new function signature, without separator  (2017 /11  2018 -02) + pb with GIT management when merging RBINS and RMCA repository)
 			$cpt=$this->getCountCodeIndexedForm($category, $prefix, $code, $suffix, $this->colIDSess);
 			if($cpt>0)
-			{echo "<script>console.log( '$cpt: " . $cpt . "' );</script>";
-			
+			{		
 				if($this->colIDSess==-1)
 				{
 					$msgTmp=" in all collections".sfContext::getInstance()->getUser()->getAttribute("collection_for_insertion", -1);

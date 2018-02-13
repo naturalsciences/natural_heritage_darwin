@@ -601,7 +601,7 @@ class ImportABCDXml implements ImportModelsInterface
   private function saveUnit()
   {
     $ok = true ;
-    print("TRY TO SAVE UNIT\n");
+    //print("TRY TO SAVE UNIT\n");
 	
 	 //jm herpers 2017 11 09 (auto increment in batches)
 	 //if  $this->main_code_found is set to false and column "code_auto_increment" in table collection is set to true, autoincrement number

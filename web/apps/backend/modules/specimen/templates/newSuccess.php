@@ -66,6 +66,9 @@ $(document).ready(function ()
   <?php include_javascripts_for_form($form) ?>
   <?php use_javascript('double_list.js');?>
   <div>
+  <!--new  control to catch error list of widgets RMCA 2018 02 13-->
+    <ul id="main_error_list" class="error_list main_error_list" style="display:none"></ul>
+	<!--new  control to catch error list of widgets RMCA 2018 02 13-->
     <ul id="error_list" class="error_list" style="display:none">
       <li></li>
     </ul>
@@ -125,9 +128,24 @@ $(document).ready(function ()
     </p>
   </form>
 <script  type="text/javascript">
+ //ftheeten 2018 02 13
+function addErrorToMain(html)
+{
+
+  $('ul#main_error_list').append(html);
+  $('ul#main_error_list').show();
+}
+
+ //ftheeten 2018 02 13
+function removeErrorFromMain()
+{
+  $('ul"main_error_list').hide();
+  $('ul#main_error_list').find('li').text(' ');
+}
 
 function addError(html)
 {
+
   $('ul#error_list').find('li').text(html);
   $('ul#error_list').show();
 }
@@ -147,7 +165,7 @@ $(document).ready(function () {
 	  if($('.mrac_input_mask').val() == null)
     {	
 			alert ("Code is mandatory. Please fill the field");
-			//document.getElementById('code').focus();
+			$('#add_code').focus();
 			event.preventDefault();
 	}else{
 		if($('#specimen_ig_ref_check').val() == 0 && $('#specimen_ig_ref').val() == "" && $('#specimen_ig_ref_name').val() != "")
@@ -166,6 +184,26 @@ $(document).ready(function () {
 		$(".class_unicity_check_container").hide();
 	<?php endif; ?>
  <?php endif; ?>
+ 
+   //ftheeten 2018 02 13
+   var browseErrors=function()
+   {
+	  
+	   $(".error_list").not('.main_error_list').each(
+			function()
+			{
+							var errorMsg=$(this).text();
+							if(errorMsg.trim().length>0 && $(this).is(':visible'))
+							{
+							
+								addErrorToMain(errorMsg);								
+							}
+			}
+	   );
+	   
+   }
+   
+   browseErrors();
 });
 </script>
 </div></div>

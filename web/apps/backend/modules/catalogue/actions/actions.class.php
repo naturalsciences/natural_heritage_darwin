@@ -521,6 +521,7 @@ class catalogueActions extends DarwinActions
             WHERE referenced_relation='storage_parts' AND 
             dict_field='".$request->getParameter('entry')."' AND
 			fulltoindex(dict_value) LIKE CONCAT('%', (SELECT * FROM fulltoindex(:term)), '%')
+			AND collection_ref IN (".$request->getParameter('collections').")
             LIMIT 30;";
 		 }
 		 else

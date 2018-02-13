@@ -423,11 +423,10 @@
     
     
     //ftheeten 2018 02 09
-        $('.ui-autocomplete').mouseleave(
+    $('.ui-autocomplete').mouseleave(
         function()
         {
-            $(this).hide();
-            
+            $(this).hide(); 
         }
     );
     

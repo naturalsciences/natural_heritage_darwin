@@ -76,7 +76,9 @@
         <div class="add_code">
           <?php if($module == 'specimen') $url = 'specimen/addCode';
           if($module == 'parts') $url = 'parts/addCode';?>
-          <a href="<?php echo url_for($url. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_code"><?php echo __('Add code');?></a>
+          <a href="<?php echo url_for($url. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>/num/" id="add_code">
+			<?php echo __('Add code');?>
+		  </a>
         </div>
       </td>
     </tr>
