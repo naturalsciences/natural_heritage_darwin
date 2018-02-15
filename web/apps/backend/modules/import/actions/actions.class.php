@@ -268,20 +268,23 @@ class importActions extends DarwinActions
     //ftheeten 2017 08 28 (end)
     public function executeLoadstaging(sfWebRequest $request)
     {
+  
         $idImport=$request->getParameter("id");
         $importTmp=Doctrine::getTable("Imports")->find($idImport);
         //if(!$this->getUser()->isAtLeast(Users::MANAGER)) $this->forwardToSecureAction();
         if(!Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $importTmp->getCollectionRef()))
         {
-            
+
             $this->forwardToSecureAction();
         }
         else
         {
-           
+
+            print($importTmp->getCollectionRef());
             try 
             {
-                    $mails=Array();
+               
+                $mails=Array();
                     $mailsTmp=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
                
                     foreach($mailsTmp as $mailRecord)
@@ -301,15 +304,27 @@ class importActions extends DarwinActions
                         $cmd='darwin:load-import';
                     }
                     $currentDir=getcwd();
-                    chdir(sfconfig::get('sf_root_dir'));    
+
+                    chdir(sfconfig::get('sf_root_dir')); 
+  
+                
                     exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+
                     chdir($currentDir);
-                    
-                    $this->redirect('import/index');
-            }
+					
+					//rmca 2018 02 15
+					if($importTmp->getFormat()=="taxon")
+					{
+						$this->redirect('import/indexTaxon');
+					}
+					else
+					{
+						$this->redirect('import/index');
+					}
+			}
             catch(Doctrine_Exception $e)
             {
-          
+
               $error = new sfValidatorError(new savedValidator(),$e->getMessage());
               $this->form->getErrorSchema()->addError($error, 'Darwin2 :');
             }
@@ -347,11 +362,11 @@ class importActions extends DarwinActions
                     {
                         if(count($mails)>0)
                         {
-                            $cmd='darwin:check-import --id='.$request->getParameter('id').' --mailsfornotification='.implode(";",$mails);
+                            $cmd='darwin:check-import --id='.$request->getParameter('id').' --mailsfornotification='.implode(";",$mails).' --no-delete';
                         }
                         else
                         {
-                             $cmd='darwin:check-import --id='.$request->getParameter('id');
+                             $cmd='darwin:check-import --id='.$request->getParameter('id').' --no-delete';
                         }
                         $conn = Doctrine_Manager::connection();
                         $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
@@ -361,7 +376,15 @@ class importActions extends DarwinActions
                         chdir($currentDir);                   
                         //$this->redirect('import/index');
                     }
-                    $this->redirect('import/index');
+                    //rmca 2018 02 15
+					if($importTmp->getFormat()=="taxon")
+					{
+						$this->redirect('import/indexTaxon');
+					}
+					else
+					{
+						$this->redirect('import/index');
+					}
             }
             catch(Doctrine_Exception $e)
             {

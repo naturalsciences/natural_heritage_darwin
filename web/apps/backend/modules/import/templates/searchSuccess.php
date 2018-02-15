@@ -69,7 +69,7 @@
               </td>
               <?php else : ?>
                   <!--ftheeten 2017 08 29-->
-                <?php if ($import->getWorking()) : ?>
+                <?php if (($import->getWorking()) && !(trim($import->getStateName()) == "Finished")): ?>
                     <td>WORKING, PLEASE WAIT</td>
                 <?php elseif ($import->isEditableState()) : ?>
                  <td>

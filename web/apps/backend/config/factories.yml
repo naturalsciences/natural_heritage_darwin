@@ -20,32 +20,32 @@ prod:
     class: sfMailer
     param:
       logging:           %SF_LOGGING_ENABLED%
-      charset:           %SF_CHARSET%
-      delivery_strategy: realtime
+      charset:           utf-8
+      delivery_strategy: none 
       transport:
         class: Swift_SmtpTransport
         param:
-          host:       bernie
-          port:       25
-          encryption: ~
-          username:   ~
-          password:   ~
+          host: smtp.africamuseum.be      
+          port: 25      
+          encryption:  ~
+          username: ~ 
+          password:  ~  
 
 dev:
   mailer:
     class: sfMailer
     param:
       logging:           %SF_LOGGING_ENABLED%
-      charset:           %SF_CHARSET%
-      delivery_strategy: realtime
+      charset:           utf-8
+      delivery_strategy: none 
       transport:
         class: Swift_SmtpTransport
         param:
-          host:       bernie
-          port:       25
+          host: smtp.africamuseum.be      
+          port: 25      
           encryption: ~
-          username:   ~
-          password:   ~
+          username: ~  
+          password: ~  
 
 cli:
   controller:

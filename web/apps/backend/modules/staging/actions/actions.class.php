@@ -12,12 +12,43 @@ class stagingActions extends DarwinActions
 
   public function executeMarkok(sfWebRequest $request)
   {
+   //$myfile = fopen("/var/www/web/log_parser.txt", "a") ;
+ //fwrite($myfile, "\n!!!!!!!!!!!!!!!!!!!! IN MARKOK");
     $this->forward404Unless($request->hasParameter('import'));
     $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
 
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
        $this->forwardToSecureAction();
     $this->import = Doctrine::getTable('Imports')->markOk($this->import->getId());
+    //ftheeten 2017 08 29
+    $mails=Array();
+    $mailsTmp=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+
+    foreach($mailsTmp as $mailRecord)
+    {
+        if(filter_var($mailRecord->getEntry(), FILTER_VALIDATE_EMAIL))
+        {
+            $mails[]=$mailRecord->getEntry();
+        }
+    }
+    
+    if(count($mails)>0)
+    {
+        $cmd='darwin:check-import --do-import --id='.$request->getParameter('id').' --mailsfornotification='.implode(";",$mails);
+    }
+    else
+    {
+         $cmd='darwin:check-import --do-import --id='.$request->getParameter('id');
+    }
+    $conn = Doctrine_Manager::connection();
+    $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
+    $currentDir=getcwd();
+    chdir(sfconfig::get('sf_root_dir'));    
+    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+    chdir($currentDir);                   
+    //$this->redirect('import/index');
+                   
+    //end ftheeten 2017 08 29
     return $this->redirect('import/index');
   }
 
@@ -32,7 +63,29 @@ class stagingActions extends DarwinActions
     return $this->redirect('import/index');
 
   }
+  
+  //ftheeten 2017 08 30
 
+    public function executeCreatePeoples(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->hasParameter('import'));
+    $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
+
+    if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
+    {
+       $this->forwardToSecureAction();
+    }
+    else
+    {
+        $sql = "SELECT * FROM rmca_create_missing_people_in_staging(:id)";
+        $conn = Doctrine_Manager::connection();
+        $q = $conn->prepare($sql);
+		$q->execute(array(':id' => $this->import->getId()));
+    }
+    return $this->redirect('import/index');
+
+  }
+  
   public function executeDelete(sfWebRequest $request)
   {
     $this->forward404Unless($request->hasParameter('id'));
@@ -243,4 +296,42 @@ class stagingActions extends DarwinActions
       }
     }
   }
+  
+  //ftheeten 2017 08 28
+  // attention keep identation
+  public function sendMail($recipient, $title, $message)
+ {
+     if(filter_var($recipient, FILTER_VALIDATE_EMAIL))
+    {
+        // send an email to the affiliate
+        $message = $this->getMailer()->compose(
+          array('franck.theeten@africamuseum.be' => 'Franck Theeten'),
+          $recipient,//$affiliate->getEmail(),
+          $title,
+<<<EOF
+{$message}
+EOF
+           );
+ 
+        $this->getMailer()->send($message);
+    }
+ }
+
+   //ftheeten 2017 08 28
+  public function setImportAsWorking( $p_conn, $p_ids, $p_working)
+  {
+    if(count($p_ids)>0)
+    {
+        $p_conn->beginTransaction();
+        foreach($p_ids as $id)
+        {
+         Doctrine_Query::create()
+            ->update('imports p')
+            ->set('p.working','?',((int)$p_working==0)?'f':'t')
+            ->where('p.id = ?', $id)
+            ->execute();
+        }
+        $p_conn->commit();
+    }
+  }   
 }
