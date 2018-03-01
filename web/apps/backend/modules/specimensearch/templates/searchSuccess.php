@@ -106,9 +106,10 @@
       <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
 			<input type="button" id="print_spec" class="save_search" value="<?php echo __('Print');?>" />
 			<!-- end added code -->
-			<!-- added by JMHerpers -->
-			<input type="button" id="print_spec_thermic" class="save_search" value="<?php echo __('Thermic print');?>" /> 
-			<!-- end added code -->
+			<!-- added by JMHerpers 2018/01/18-->
+			<?php if($sf_user->isAtLeast(Users::MANAGER)):?>
+				<input type="button" id="print_spec_thermic" class="save_search" value="<?php echo __('Thermic print');?>" /> 
+			<?php endif;?>
 			<!-- added by Franck -->
 			<input type="button" id="xml_spec" class="save_search" value="<?php echo __('XML');?>" />
 			<!-- ftheeten 2016/01/29-->
@@ -121,240 +122,248 @@
       <!-- end added code -->
 	  <script  type="text/javascript">
 	  
-$(document).ready(function () {
-	//alert('<?php echo $currentPage ?>');
+		$(document).ready(function () {
+			//alert('<?php echo $currentPage ?>');
 
-  $("#print_spec").click(function(event){
-        
-        form = document.createElement('form');
-        form.setAttribute('method', 'POST');
-		form.setAttribute('action', '<?php echo url_for("specimensearch/print")?>');
-		form.setAttribute('target', '_blank');
-		
-        <?php if ($search_request->hasParameter('specimen_search_filters')){
-                  echo "myvar = document.createElement('input');
-                        myvar.setAttribute('name', 'specimen_search_filters');
-                        myvar.setAttribute('value', '";
-                  echo serialize($_POST['specimen_search_filters']);
-                  echo "');
-                  form.appendChild(myvar);";
-                  }
-        ?>
-           <?php if ($search_request->hasParameter('search_id')){
-                  echo "myvar = document.createElement('input');
-                        myvar.setAttribute('name', 'search_id');
-                        myvar.setAttribute('value', '";
-                  echo $search_request->getParameter('search_id','');
-                  echo "');
-                  form.appendChild(myvar);";
-                  }
-        ?>
-		//pagesize seems useless
-		 myvar2= document.createElement('input');
-		 myvar2.setAttribute('name','pagesize');
-		 myvar2.setAttribute('value','10');
-		 form.appendChild(myvar2);
-		 
-		 var tmpCurrentPage=$("#h_current_page").val();
-		 myvar3= document.createElement('input');
-		 myvar3.setAttribute('name','current_page');
-		 myvar3.setAttribute('id','current_page');
-		 myvar3.setAttribute('value',tmpCurrentPage);
-		 form.appendChild(myvar3);
-		 
-		 var tmpOrderBy=$("#h_order_by").val();
-		 myvar4= document.createElement('input');
-		 myvar4.setAttribute('name','order_by');
-		 myvar4.setAttribute('id','order_by');
-		 myvar4.setAttribute('value',tmpOrderBy);
-		 form.appendChild(myvar4);
-		 
-		 
-		 var tmpOrderDir=$("#h_order_dir").val();
-		 myvar5= document.createElement('input');
-		 myvar5.setAttribute('name','order_dir');
-		 myvar5.setAttribute('id','order_dir');
-		 myvar5.setAttribute('value',tmpOrderDir);
-		 form.appendChild(myvar5);
- 
+			$("#print_spec").click(function(event){
+				form = document.createElement('form');
+				form.setAttribute('method', 'POST');
+				form.setAttribute('action', '<?php echo url_for("specimensearch/print")?>');
+				form.setAttribute('target', '_blank');
+				
+				<?php if ($search_request->hasParameter('specimen_search_filters')){
+						  echo "myvar = document.createElement('input');
+								myvar.setAttribute('name', 'specimen_search_filters');
+								myvar.setAttribute('value', '";
+						  echo serialize($_POST['specimen_search_filters']);
+						  echo "');
+						  form.appendChild(myvar);";
+						  }
+				?>
+				<?php if ($search_request->hasParameter('search_id')){
+						  echo "myvar = document.createElement('input');
+								myvar.setAttribute('name', 'search_id');
+								myvar.setAttribute('value', '";
+						  echo $search_request->getParameter('search_id','');
+						  echo "');
+						  form.appendChild(myvar);";
+						  }
+				?>
+				//pagesize seems useless
+				 myvar2= document.createElement('input');
+				 myvar2.setAttribute('name','pagesize');
+				 myvar2.setAttribute('value','10');
+				 form.appendChild(myvar2);
+				 
+				 var tmpCurrentPage=$("#h_current_page").val();
+				 myvar3= document.createElement('input');
+				 myvar3.setAttribute('name','current_page');
+				 myvar3.setAttribute('id','current_page');
+				 myvar3.setAttribute('value',tmpCurrentPage);
+				 form.appendChild(myvar3);
+				 
+				 var tmpOrderBy=$("#h_order_by").val();
+				 myvar4= document.createElement('input');
+				 myvar4.setAttribute('name','order_by');
+				 myvar4.setAttribute('id','order_by');
+				 myvar4.setAttribute('value',tmpOrderBy);
+				 form.appendChild(myvar4);
+				 
+				 var tmpOrderDir=$("#h_order_dir").val();
+				 myvar5= document.createElement('input');
+				 myvar5.setAttribute('name','order_dir');
+				 myvar5.setAttribute('id','order_dir');
+				 myvar5.setAttribute('value',tmpOrderDir);
+				 form.appendChild(myvar5);
 
-        document.body.appendChild(form);
-        form.submit();  
-    
- });
- 
- //JMHerpers 2018/01/18
+				document.body.appendChild(form);
+				form.submit();  
+			});
+			 
+			 //JMHerpers 2018/01/18
 
- var url_printer="<?php echo(sfConfig::get('dw_url_thermic_printer')); ?>";
-	  
- $("#print_spec_thermic").click(function(event){
-	var classes = [];
-	
-	var tmpArray=Array();
-	$('.spec_results > tbody > tr ').each(function(){
-		
-		$($(this).attr('class').split(' ')).each(function() {
+			//var url_printer="<?php echo(sfConfig::get('dw_url_thermic_printer')); ?>";
+			var collect_to_print_thermic="<?php echo(sfConfig::get('dw_collect_to_print_thermic')); ?>";
+			var collect_array = collect_to_print_thermic.split(","); 
 			
-			if (this.length>0 && $.inArray(this.valueOf(), classes) === -1) {
-				if (this.valueOf().substring(0, 4) == 'rid_' ) {
+			$("#print_spec_thermic").click(function(event){
+				var classes = [];
+				var pass = false;
+				var pass2 = false;
+				var collect = false;
+				/*if an array is used:
+				var tmpArray=Array();
+				...
+				tmpArray.push(id_spec);
+				var url_printer_full=url_printer+'?op=on&id='+tmpArray.join("|");	*/
+				$('.spec_results > tbody > tr ').each(function(){
+					$($(this).attr('class').split(' ')).each(function() {
+						if (this.length>0 && $.inArray(this.valueOf(), classes) === -1) {
+							if (this.valueOf().substring(0, 4) == 'rid_' ) {	
+								collect = false;
+								var id_spec=this.valueOf().match(/[0-9]+/g);
+								id_spec=id_spec[0];
+								
+								var coll = $('.'+this.valueOf()).children('.col_collection').children('.Collid').val();
+								var i;
+								for (i = 0; i < collect_array.length; ++i) {
+									if (coll != collect_array[i])
+										var collect = true;
+								}
+								if (collect == true && pass == false ) {
+									alert("Attention, only specimen from Ichtyology will be printed");
+									pass = true;
+								}
+								if (collect == false) {
+									if (pass2 == false ) {
+										alert("Labels are sent to thermic printer");
+									}
+									var url_printer_full="<?php echo url_for('specimensearch/averyDennisonPrinterCall');?>?id="+id_spec;
+									//alert(url_printer_full);
+									$.ajax({
+										url: url_printer_full												
+									}).done(
+										function()	{}
+									);
+									pass2 = true;
+								}
+								collect = false;
+							}
+						}    
+					});	
+				});
+			});
+			 
+			 //ftheeten 2016/01/29
+			$("#report_spec").click(function(event){
 					
-					var id_spec=this.valueOf().match(/[0-9]+/g);
-					id_spec=id_spec[0];
-					tmpArray.push(id_spec);
-					/*var url_printer_full=url_printer+'?op=on&id='+id_spec;
-					$.ajax({
-						url: url_printer_full						
-					}).done(
-						function()
-						{
-							
-						}
-					);*/
-				}
-			}    
-		});	
-	});
-	var url_printer_full=url_printer+'?op=on&id='+tmpArray.join("|");
-					$.ajax({
-						url: url_printer_full						
-					}).done(
-						function()
-						{
-							
-						}
-					);	
- });
- 
- //ftheeten 2016/01/29
-   $("#report_spec").click(function(event){
-        
-        form = document.createElement('form');
-        form.setAttribute('method', 'POST');
-		form.setAttribute('action', '<?php echo url_for("specimensearch/report")?>');
-		form.setAttribute('target', '_blank');
-		
-        <?php if ($search_request->hasParameter('specimen_search_filters')){
-                  echo "myvar = document.createElement('input');
-                        myvar.setAttribute('name', 'specimen_search_filters');
-                        myvar.setAttribute('value', '";
-                  echo serialize($_POST['specimen_search_filters']);
-                  echo "');
-                  form.appendChild(myvar);";
-                  }
-        ?>
-           <?php if ($search_request->hasParameter('search_id')){
-                  echo "myvar = document.createElement('input');
-                        myvar.setAttribute('name', 'search_id');
-                        myvar.setAttribute('value', '";
-                  echo $search_request->getParameter('search_id','');
-                  echo "');
-                  form.appendChild(myvar);";
-                  }
-        ?>
-		//pagesize seems useless
-		 myvar2= document.createElement('input');
-		 myvar2.setAttribute('name','pagesize');
-		 myvar2.setAttribute('value','10');
-		 form.appendChild(myvar2);
-		 
-		 var tmpCurrentPage=$("#h_current_page").val();
-		 myvar3= document.createElement('input');
-		 myvar3.setAttribute('name','current_page');
-		 myvar3.setAttribute('id','current_page');
-		 myvar3.setAttribute('value',tmpCurrentPage);
-		 form.appendChild(myvar3);
-		 
-		 var tmpOrderBy=$("#h_order_by").val();
-		 myvar4= document.createElement('input');
-		 myvar4.setAttribute('name','order_by');
-		 myvar4.setAttribute('id','order_by');
-		 myvar4.setAttribute('value',tmpOrderBy);
-		 form.appendChild(myvar4);
-		 
-		 
-		 var tmpOrderDir=$("#h_order_dir").val();
-		 myvar5= document.createElement('input');
-		 myvar5.setAttribute('name','order_dir');
-		 myvar5.setAttribute('id','order_dir');
-		 myvar5.setAttribute('value',tmpOrderDir);
-		 form.appendChild(myvar5);
- 
+					form = document.createElement('form');
+					form.setAttribute('method', 'POST');
+					form.setAttribute('action', '<?php echo url_for("specimensearch/report")?>');
+					form.setAttribute('target', '_blank');
+					
+					<?php if ($search_request->hasParameter('specimen_search_filters')){
+							  echo "myvar = document.createElement('input');
+									myvar.setAttribute('name', 'specimen_search_filters');
+									myvar.setAttribute('value', '";
+							  echo serialize($_POST['specimen_search_filters']);
+							  echo "');
+							  form.appendChild(myvar);";
+							  }
+					?>
+					   <?php if ($search_request->hasParameter('search_id')){
+							  echo "myvar = document.createElement('input');
+									myvar.setAttribute('name', 'search_id');
+									myvar.setAttribute('value', '";
+							  echo $search_request->getParameter('search_id','');
+							  echo "');
+							  form.appendChild(myvar);";
+							  }
+					?>
+					//pagesize seems useless
+					 myvar2= document.createElement('input');
+					 myvar2.setAttribute('name','pagesize');
+					 myvar2.setAttribute('value','10');
+					 form.appendChild(myvar2);
+					 
+					 var tmpCurrentPage=$("#h_current_page").val();
+					 myvar3= document.createElement('input');
+					 myvar3.setAttribute('name','current_page');
+					 myvar3.setAttribute('id','current_page');
+					 myvar3.setAttribute('value',tmpCurrentPage);
+					 form.appendChild(myvar3);
+					 
+					 var tmpOrderBy=$("#h_order_by").val();
+					 myvar4= document.createElement('input');
+					 myvar4.setAttribute('name','order_by');
+					 myvar4.setAttribute('id','order_by');
+					 myvar4.setAttribute('value',tmpOrderBy);
+					 form.appendChild(myvar4);
+					 
+					 
+					 var tmpOrderDir=$("#h_order_dir").val();
+					 myvar5= document.createElement('input');
+					 myvar5.setAttribute('name','order_dir');
+					 myvar5.setAttribute('id','order_dir');
+					 myvar5.setAttribute('value',tmpOrderDir);
+					 form.appendChild(myvar5);
+			 
 
-        document.body.appendChild(form);
-        form.submit();  
-    
- });
- 
-  $("#xml_spec").click(function(event){
-  
+					document.body.appendChild(form);
+					form.submit();  
+				
+			 });
+			 
+			  $("#xml_spec").click(function(event){
+			  
 
-	
-	form = document.createElement('form');
-        form.setAttribute('method', 'POST');
-        form.setAttribute('action', '<?php echo url_for("searchspecimenws")?>');
-		form.setAttribute('target', '_blank');
-		<?php if ($search_request->hasParameter('specimen_search_filters')){
-                  echo "myvar = document.createElement('input');
-                        myvar.setAttribute('name', 'specimen_search_filters');
-                        myvar.setAttribute('value', '";
-                  echo serialize($_POST['specimen_search_filters']);
-                  echo "');
-                  form.appendChild(myvar);";
-                  }
-        ?>
-           <?php if ($search_request->hasParameter('search_id')){
-                  echo "myvar = document.createElement('input');
-                        myvar.setAttribute('name', 'search_id');
-                        myvar.setAttribute('value', '";
-                  echo $search_request->getParameter('search_id','');
-                  echo "');
-                  form.appendChild(myvar);";
-                  }
-        ?>
-		
-		 //pagesize seems useless
-		 myvar2= document.createElement('input');
-		 myvar2.setAttribute('name','pagesize');
-		 myvar2.setAttribute('value','10');
-		 form.appendChild(myvar2);
-		 
-		 var tmpCurrentPage=$("#h_current_page").val();
-		 myvar3= document.createElement('input');
-		 myvar3.setAttribute('name','current_page');
-		 myvar3.setAttribute('id','current_page');
-		 myvar3.setAttribute('value',tmpCurrentPage);
-		 form.appendChild(myvar3);
-		 
-		 var tmpOrderBy=$("#h_order_by").val();
-		 myvar4= document.createElement('input');
-		 myvar4.setAttribute('name','order_by');
-		 myvar4.setAttribute('id','order_by');
-		 myvar4.setAttribute('value',tmpOrderBy);
-		 form.appendChild(myvar4);
-		 
-		 
-		 var tmpOrderDir=$("#h_order_dir").val();
-		 myvar5= document.createElement('input');
-		 myvar5.setAttribute('name','order_dir');
-		 myvar5.setAttribute('id','order_dir');
-		 myvar5.setAttribute('value',tmpOrderDir);
-		 form.appendChild(myvar5);
-		 
-		 
-		 
-		//alert(tmpOrderBy);
-		//alert(tmpOrderDir);
- 
+				
+				form = document.createElement('form');
+					form.setAttribute('method', 'POST');
+					form.setAttribute('action', '<?php echo url_for("searchspecimenws")?>');
+					form.setAttribute('target', '_blank');
+					<?php if ($search_request->hasParameter('specimen_search_filters')){
+							  echo "myvar = document.createElement('input');
+									myvar.setAttribute('name', 'specimen_search_filters');
+									myvar.setAttribute('value', '";
+							  echo serialize($_POST['specimen_search_filters']);
+							  echo "');
+							  form.appendChild(myvar);";
+							  }
+					?>
+					   <?php if ($search_request->hasParameter('search_id')){
+							  echo "myvar = document.createElement('input');
+									myvar.setAttribute('name', 'search_id');
+									myvar.setAttribute('value', '";
+							  echo $search_request->getParameter('search_id','');
+							  echo "');
+							  form.appendChild(myvar);";
+							  }
+					?>
+					
+					 //pagesize seems useless
+					 myvar2= document.createElement('input');
+					 myvar2.setAttribute('name','pagesize');
+					 myvar2.setAttribute('value','10');
+					 form.appendChild(myvar2);
+					 
+					 var tmpCurrentPage=$("#h_current_page").val();
+					 myvar3= document.createElement('input');
+					 myvar3.setAttribute('name','current_page');
+					 myvar3.setAttribute('id','current_page');
+					 myvar3.setAttribute('value',tmpCurrentPage);
+					 form.appendChild(myvar3);
+					 
+					 var tmpOrderBy=$("#h_order_by").val();
+					 myvar4= document.createElement('input');
+					 myvar4.setAttribute('name','order_by');
+					 myvar4.setAttribute('id','order_by');
+					 myvar4.setAttribute('value',tmpOrderBy);
+					 form.appendChild(myvar4);
+					 
+					 
+					 var tmpOrderDir=$("#h_order_dir").val();
+					 myvar5= document.createElement('input');
+					 myvar5.setAttribute('name','order_dir');
+					 myvar5.setAttribute('id','order_dir');
+					 myvar5.setAttribute('value',tmpOrderDir);
+					 form.appendChild(myvar5);
+					 
+					 
+					 
+					//alert(tmpOrderBy);
+					//alert(tmpOrderDir);
+			 
 
-        document.body.appendChild(form);
-        form.submit();  
-  
-        
-  });
- 
- 
- 
-});
+					document.body.appendChild(form);
+					form.submit();  
+			  
+					
+			  });
+			 
+			 
+			 
+			});
 	  </script>
 
 	</div>

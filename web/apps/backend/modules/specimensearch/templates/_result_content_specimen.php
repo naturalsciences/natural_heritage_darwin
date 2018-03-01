@@ -19,6 +19,10 @@
           <?php echo $specimen->getCollectionName();?>
         <?php endif ; ?>
         <div id="collection_<?php echo $specimen->getId();?>_tree" class="tree"></div>
+		
+		<!--JMHerpers 2018 02 27 add collection ref hidden-->
+		<input id="Collid" class="Collid" style="display: none;" value="<?php echo $specimen->getCollectionRef();?>">
+		
         <script type="text/javascript">
             $('#collection_<?php echo $specimen->getId();?>_info').click(function() 
             {
@@ -72,7 +76,8 @@
     <td class="col_gtu">
       <?php if($specimen->getGtuRef() > 0) : ?>
         <?php if($specimen->getHasEncodingRights() || $specimen->getStationVisible() || $sf_user->isAtLeast(Users::ADMIN) ):?>
-          <?php echo image_tag('info.png',"title=info class=info id=gtu_ctr_".$specimen->getId()."_info");?>
+			<!--JMHerpers 2018 02 22-->
+          <!--<?php echo image_tag('info.png',"title=info class=info id=gtu_ctr_".$specimen->getId()."_info");?>-->
           <script type="text/javascript">
             $(document).ready(function()
             {
@@ -105,15 +110,26 @@
         <?php endif;?>
 
           <div class="general_gtu">
-          <?php if($specimen->getOtherGtuTags() != ""): ?>
-            <!--<strong><?php echo __('Locality (summary)');?> :</strong>-->
-            <?php echo $specimen->getOtherGtuTags(ESC_RAW);?>
-          <?php endif ; ?>
+			<?php if($specimen->getOtherGtuTags() != ""): ?>
+				<!--JMHerpers 2018 02 22-->
+				<!--<strong><?php echo __('Locality (summary)');?> :</strong>-->
+				<?php echo $specimen->getOtherGtuTags(ESC_RAW);?>
+			<?php endif ; ?>
           </div>
           <div id="gtu_<?php echo $specimen->getId();?>_details" style="display:none;"></div>
 
       <?php endif ; ?>
     </td> 
+	    <!--JMHerpers 2018 02 22-->
+    <td class="col_gtu_location">
+		<?php if($specimen->getGtuLocation() !== null) : ?>
+			<?php $pos = strpos($specimen->getGtuLocation(), ",");echo "● <b>Long: </b>".substr($specimen->getGtuLocation(),1,$pos -1)."<br>● <b>Lat: </b>".substr($specimen->getGtuLocation(),$pos+1,strlen($specimen->getGtuLocation())-$pos-2);?>
+			<br>
+			<?php if(null !== $specimen->getGtuElevation()):;?>
+				<b>● Elevation: </b><?php echo $specimen->getGtuElevation();?>
+			<?php endif ; ?>
+		<?php endif ; ?>
+    </td>
     <!--ftheeten 2016 09 13-->
     <td class="col_collecting_dates">
 			<!--jmherpers 2018 01 29-->

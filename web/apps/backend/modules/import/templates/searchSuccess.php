@@ -47,10 +47,11 @@
           <?php foreach($imports as $import):?>
             <tr class="rid_<?php echo $import->getId(); ?>">
               <td></td>
-              <?php if($format != 'taxon') : ?><td><?php echo $import->Collections->getName();?></td><?php endif ; ?>
+              <?php if($format != 'taxon') : ?>
+				<td><?php echo $import->Collections->getName();?></td>
+			  <?php endif ; ?>
               <td><?php echo $import->getFilename();?></td>
-              <td><?php echo __($import->getStateName());?>
-              </td>
+              <td><?php echo __($import->getStateName());?></td>
               <td><?php echo $import->getLastModifiedDate(ESC_RAW);?></td>
               <td>
                 <?php if(! in_array($import->getState(),array('loading','loaded','to_be_loaded','error')) ):?>
@@ -64,37 +65,39 @@
                 <?php endif;?>
               </td>
               <?php if ($import->getState() == 'error') : ?>
-              <td colspan="2">
+				<td colspan="2">
                   <?php echo link_to(image_tag('warning.png',array('title'=>__('View errors while importing'))),'import/viewError?id='.$import->getId());?>
-              </td>
+				</td>
               <?php else : ?>
                   <!--ftheeten 2017 08 29-->
                 <?php if (($import->getWorking()) && !(trim($import->getStateName()) == "Finished")): ?>
                     <td>WORKING, PLEASE WAIT</td>
                 <?php elseif ($import->isEditableState()) : ?>
-                 <td>
-                  <?php echo link_to(image_tag('edit.png',array('title'=>__('Edit import'))),'staging/index?import='.$import->getId());?>
-                 </td>
-                 <!--ftheeten 2017 08 28-->
-                 <?php elseif($import->getState()==="to_be_loaded") : ?>
-                 <td>
-                    <?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
-                 </td>
-                 <!--ftheeten 2017 08 28-->
-                 <?php elseif($import->getState()==="loaded") : ?>
-                 <td>
-                    <?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
-                 </td>
-                 <!--ftheeten 2017 08 28 (end)-->
-                 <?php else : ?>
-                 <td/>
+					<td>
+					 <!--ftheeten 2017 02 27 replace icon by name-->
+						<?php echo link_to(__('Check import'),'staging/index?import='.$import->getId());?>
+					</td>
+						<!--ftheeten 2017 08 28-->
+                <?php elseif($import->getState()==="to_be_loaded") : ?>
+					<td>
+						<?php echo link_to("Load in staging",'import/loadstaging?id='.$import->getId()); ?>
+					</td>
+						<!--ftheeten 2017 08 28-->
+                <?php elseif($import->getState()==="loaded") : ?>
+					<td>
+						<?php echo link_to("Check import",'import/checkstaging?id='.$import->getId()); ?>
+					</td>
+					<!--ftheeten 2017 08 28 (end)-->
+                <?php else : ?>
+					<td/>
                 <?php endif ; ?>
               
-              <td>
-                <?php if ($import->isEditableState()) : ?>
-                  <?php echo link_to(image_tag('checkbox_checked.png',array('title'=>__('Import "Ok" lines'))),'staging/markok?import='.$import->getId());?>
-                <?php endif ; ?>
-              </td>
+				<td>
+					<?php if ($import->isEditableState()) : ?>
+					<!--ftheeten 2017 02 27 replace icon by name-->
+						<?php echo link_to(__('Import "Ok" lines'),'staging/markok?import='.$import->getId());?>
+					<?php endif ; ?>
+				</td>
               <?php endif ; ?>
               <?php if (!in_array($import->getState(),array('apending','aprocessing','aloaded'))) : ?>
               <td>

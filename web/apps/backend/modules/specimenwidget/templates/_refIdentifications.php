@@ -89,18 +89,15 @@ $(document).ready(function () {
             $(parent_el).find('thead.spec_ident_head:hidden').show();
             showAfterRefresh('#refIdentifications');
                     //ftheeten 2016 11 29
-                <?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>
-               
-                        $('.to_date').each(function ()
-                        {
-                            if(/specimen_(new){0,1}Identification(s){0,1}_[0-9]+_notion_date_year/.test($(this).attr('id')))
-                            {
-                                $.reverse_year_in_select("#"+$(this).attr('id'));
-                            }
-                        });
-                   
-                 
-              <?php endif;?>
+                //?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>
+                //        $('.to_date').each(function ()
+                //        {
+                //            if(/specimen_(new){0,1}Identification(s){0,1}_[0-9]+_notion_date_year/.test($(this).attr('id')))
+                //            {
+                //                $.reverse_year_in_select("#"+$(this).attr('id'));
+                //            }
+                //        });
+              //?php endif;?>
           }
         });
         

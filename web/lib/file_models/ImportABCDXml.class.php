@@ -1,4 +1,7 @@
 <?php
+require_once("Encoding.php");
+use \ForceUTF8\Encoding;
+
 class ImportABCDXml implements ImportModelsInterface
 {
   private $cdata, $tag, $staging, $object, $people_name,$import_id, $path="", $name, $errors_reported='',$preparation_type='', $preparation_mat='';
@@ -65,6 +68,8 @@ class ImportABCDXml implements ImportModelsInterface
         $tabParser->identifyHeader($fp);
         $i=1;
         while (($row = fgetcsv($fp, 0, "\t")) !== FALSE){
+                //ftheeten 2018 02 28
+             $row=  Encoding::toUTF8($row);
              $xml_parser = xml_parser_create();
             xml_set_object($xml_parser, $this) ;
             xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);

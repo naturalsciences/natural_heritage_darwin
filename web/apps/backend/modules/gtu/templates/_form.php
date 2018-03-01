@@ -91,116 +91,118 @@ foreach($form['newVal'] as $group)
     <div id="reverse_tags" style="display: none;"><ul></ul><br class="clear" /></div>
 	<div>
 		<!--DMS/DD selector  ftheeten 2015 05 05-->
-		<b><?php echo $form['coordinates_source']->renderLabel() ;?><?php echo $form['coordinates_source']->renderError() ?></b><br/><?php echo $form['coordinates_source'];?>
-		
+		<b><?php echo $form['coordinates_source']->renderLabel() ;?>
+		   <?php echo $form['coordinates_source']->renderError() ?>
+		</b><br/>
+		<?php echo $form['coordinates_source'];?>
 	</div>
     <table>
-     <tr>
+		<tr>
 			<td colspan="4">
-
 				<div class="GroupDMS" style="display: None">
-
-			
-			<table >
-				<!--DMS columns ftheeten 2015 05 05-->
-				<tr >
-					<th ><?php echo $form['latitude_dms_degree']->renderLabel() ;?><?php echo $form['latitude_dms_degree']->renderError() ?></th>
-					<th ><?php echo $form['latitude_dms_minutes']->renderLabel(); ?><?php echo $form['latitude_dms_minutes']->renderError() ?></th>
-					<th ><?php echo $form['latitude_dms_seconds']->renderLabel(); ?><?php echo $form['latitude_dms_seconds']->renderError() ?></th>
-					<th ><?php echo $form['latitude_dms_direction']->renderLabel(); ?><?php echo $form['latitude_dms_direction']->renderError() ?></th>
-				</tr>
-				<tr >
-					<td ><?php echo $form['latitude_dms_degree'];?></td>
-					<td ><?php echo $form['latitude_dms_minutes'];?></td>
-					<td ><?php echo $form['latitude_dms_seconds'];?></td>
-					<td ><?php echo $form['latitude_dms_direction'];?></td>
-				</tr>
-				<tr >
-					<th ><?php echo $form['longitude_dms_degree']->renderLabel() ;?><?php echo $form['longitude_dms_degree']->renderError() ?></th>
-					<th ><?php echo $form['longitude_dms_minutes']->renderLabel(); ?><?php echo $form['longitude_dms_minutes']->renderError() ?></th>
-					<th class="GroupDMS"><?php echo $form['longitude_dms_seconds']->renderLabel(); ?><?php echo $form['longitude_dms_seconds']->renderError() ?></th>
-					<th class="GroupDMS"><?php echo $form['longitude_dms_direction']->renderLabel(); ?><?php echo $form['longitude_dms_direction']->renderError() ?></th>
-				</tr>
-				<tr >
-					<td><?php echo $form['longitude_dms_degree'];?></td>
-					<td ><?php echo $form['longitude_dms_minutes'];?></td>
-					<td ><?php echo $form['longitude_dms_seconds'];?></td>
-					<td><?php echo $form['longitude_dms_direction'];?></td>
-				</tr>
-			
-			</table>
-			</div>
+					<table >
+						<!--DMS columns ftheeten 2015 05 05-->
+						<!--<tr >
+							<th ><?php echo $form['latitude_dms_degree']->renderLabel() ;?><?php echo $form['latitude_dms_degree']->renderError() ?></th>
+							<th ><?php echo $form['latitude_dms_minutes']->renderLabel(); ?><?php echo $form['latitude_dms_minutes']->renderError() ?></th>
+							<th ><?php echo $form['latitude_dms_seconds']->renderLabel(); ?><?php echo $form['latitude_dms_seconds']->renderError() ?></th>
+							<th ><?php echo $form['latitude_dms_direction']->renderLabel(); ?><?php echo $form['latitude_dms_direction']->renderError() ?></th>
+						</tr>-->
+						<tr >
+							<th ><?php echo 'Latitude';?></th>
+							<th />
+							<th />
+							<th />
+						</tr>
+						<tr >
+							<td ><?php echo 'Degrees: '.$form['latitude_dms_degree'];?></td>
+							<td ><?php echo 'Minutes: '.$form['latitude_dms_minutes'];?></td>
+							<td ><?php echo 'Seconds: '.$form['latitude_dms_seconds'];?></td>
+							<td ><?php echo 'Direction: '.$form['latitude_dms_direction'];?></td>
+						</tr>
+						<!--<tr >
+							<th ><?php echo $form['longitude_dms_degree']->renderLabel() ;?><?php echo $form['longitude_dms_degree']->renderError() ?></th>
+							<th ><?php echo $form['longitude_dms_minutes']->renderLabel(); ?><?php echo $form['longitude_dms_minutes']->renderError() ?></th>
+							<th class="GroupDMS"><?php echo $form['longitude_dms_seconds']->renderLabel(); ?><?php echo $form['longitude_dms_seconds']->renderError() ?></th>
+							<th class="GroupDMS"><?php echo $form['longitude_dms_direction']->renderLabel(); ?><?php echo $form['longitude_dms_direction']->renderError() ?></th>
+						</tr>-->
+						<tr >
+							<th ><?php echo 'Longitude';?></th>
+							<th />
+							<th />
+							<th />
+						</tr>
+						<tr >
+							<td><?php echo 'Degrees: '.$form['longitude_dms_degree'];?></td>
+							<td><?php echo 'Minutes: '.$form['longitude_dms_minutes'];?></td>
+							<td><?php echo 'Seconds: '.$form['longitude_dms_seconds'];?></td>
+							<td><?php echo 'Direction: '.$form['longitude_dms_direction'];?></td>
+						</tr>
+					</table>
+				</div>
 			</td>
 		</tr>
-		 <tr>
+		<tr>
 			<td colspan="4">
-			
 				<div class="GroupUTM" style="display: None">
-
-			<table>
-				<!--DMS columns ftheeten 2015 05 05-->
-				<tr>
-					<th><?php echo $form['latitude_utm']->renderLabel() ;?><?php echo $form['latitude_utm']->renderError() ?></th>
-					<th><?php echo $form['longitude_utm']->renderLabel(); ?><?php echo $form['longitude_utm']->renderError() ?></th>
-					<th><?php echo $form['utm_zone']->renderLabel(); ?><?php echo $form['utm_zone']->renderError() ?></th>
-					
-				</tr>
-				<tr>
-					<td><?php echo $form['latitude_utm'];?></td>
-					<td><?php echo $form['longitude_utm'];?></td>
-					<td><?php echo $form['utm_zone'];?></td>
-					
-				</tr>
-				
-			
-			</table>
-			</div>
+					<table>
+						<!--DMS columns ftheeten 2015 05 05-->
+						<tr>
+							<th><?php echo $form['latitude_utm']->renderLabel() ;?><?php echo $form['latitude_utm']->renderError() ?></th>
+							<th><?php echo $form['longitude_utm']->renderLabel(); ?><?php echo $form['longitude_utm']->renderError() ?></th>
+							<th><?php echo $form['utm_zone']->renderLabel(); ?><?php echo $form['utm_zone']->renderError() ?></th>
+						</tr>
+						<tr>
+							<td><?php echo $form['latitude_utm'];?></td>
+							<td><?php echo $form['longitude_utm'];?></td>
+							<td><?php echo $form['utm_zone'];?></td>
+							
+						</tr>
+					</table>
+				</div>
 			</td>
 		</tr>
 		<tr>
 			<th class="GroupDD" style="display: None"><?php echo $form['latitude']->renderLabel() ;?><?php echo $form['latitude']->renderError() ?></th>
 			<th class="GroupDD" style="display: None"><?php echo $form['longitude']->renderLabel(); ?><?php echo $form['longitude']->renderError() ?></th>
-        <th><?php echo $form['lat_long_accuracy']->renderLabel() ;?><?php echo $form['lat_long_accuracy']->renderError() ?></th>
-        <th></th>
-      </tr>
-		 <tr>
-				<td class="GroupDD" style="display: None"><?php echo $form['latitude'];?></td>
-				<td class="GroupDD" style="display: None"><?php echo $form['longitude'];?></td>
+			<th><?php echo $form['lat_long_accuracy']->renderLabel() ;?><?php echo $form['lat_long_accuracy']->renderError() ?></th>
+			<th></th>
+		</tr>
+		<tr>
+			<td class="GroupDD" style="display: None"><?php echo $form['latitude'];?></td>
+			<td class="GroupDD" style="display: None"><?php echo $form['longitude'];?></td>
 			<td><?php echo $form['lat_long_accuracy'];?></td>
-			<td><strong><?php echo __('m');?></strong> <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?></td>
-		 </tr>
-	      <tr>
-        <th><?php echo $form['elevation']->renderLabel(); ?><?php echo $form['elevation']->renderError() ?></th>
-        <th><?php echo $form['elevation_unit']->renderLabel(); ?><?php echo $form['elevation_unit']->renderError() ?></th>
-        <th><?php echo $form['elevation_accuracy']->renderLabel() ;?><?php echo $form['elevation_accuracy']->renderError() ?></th>
-        <th></th>
-      </tr>
-      <tr>
-        <td><?php echo $form['elevation'];?></td>
-        <td><?php echo $form['elevation_unit'];?></td>
-        <td><?php echo $form['elevation_accuracy'];?></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td colspan="3"><div style="width:100%; height:400px;" id="map"></div></td>
-        <td>
-
-<script type="text/javascript">
-$(document).ready(function () {
-
-  initEditMap("map");
-
-  <?php if($form->getObject()->getLongitude() != ''):?>
-    map.setView([<?php echo $form->getObject()->getLatitude();?>,<?php echo $form->getObject()->getLongitude();?>], 12);
-  <?php else:?>
-    map.setView([0,0], 2);
-  <?php endif;?>
-});
-</script>
-</td>
-      </tr>
+			<td><strong><?php echo __('m');?></strong><!-- <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?>--></td>
+			<td></td>
+		</tr>
+	    <tr>
+			<th><?php echo $form['elevation']->renderLabel(); ?><?php echo $form['elevation']->renderError() ?></th>
+			<th><!--<?php echo $form['elevation_unit']->renderLabel(); ?>--><?php echo $form['elevation_unit']->renderError() ?></th>
+			<th><?php echo $form['elevation_accuracy']->renderLabel() ;?><?php echo $form['elevation_accuracy']->renderError() ?></th>
+			<th></th>
+		</tr>
+		<tr>
+			<td><?php echo $form['elevation'];?></td>
+			<td><?php echo $form['elevation_unit'];?></td>
+			<td><?php echo $form['elevation_accuracy'];?></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td colspan="3"><div style="width:100%; height:400px;" id="map"></div></td>
+			<td>
+				<script type="text/javascript">
+					$(document).ready(function () {
+					  initEditMap("map");
+					  <?php if($form->getObject()->getLongitude() != ''):?>
+						map.setView([<?php echo $form->getObject()->getLatitude();?>,<?php echo $form->getObject()->getLongitude();?>], 12);
+					  <?php else:?>
+						map.setView([0,0], 2);
+					  <?php endif;?>
+					});
+				</script>
+			</td>
+		</tr>
     </table>
-
   </fieldset>
 
   <table>
@@ -210,13 +212,13 @@ $(document).ready(function () {
           <?php echo $form->renderHiddenFields(true) ?>
 
           <?php if (!$form->getObject()->isNew()): ?>
-            <?php echo link_to(__('New Gtu'), 'gtu/new') ?>
-            &nbsp;<?php echo link_to(__('Duplicate Gtu'), 'gtu/new?duplicate_id='.$form->getObject()->getId()) ?>
+				<?php echo link_to(__('New Gtu'), 'gtu/new') ?>
+				&nbsp;<?php echo link_to(__('Duplicate Gtu'), 'gtu/new?duplicate_id='.$form->getObject()->getId()) ?>
           <?php endif?>
 
           &nbsp;<a href="<?php echo url_for('gtu/index') ?>"><?php echo __('Cancel');?></a>
           <?php if (!$form->getObject()->isNew()): ?>
-            &nbsp;<?php echo link_to(__('Delete'), 'gtu/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => 'Are you sure?')) ?>
+				&nbsp;<?php echo link_to(__('Delete'), 'gtu/delete?id='.$form->getObject()->getId(), array('method' => 'delete', 'confirm' => 'Are you sure?')) ?>
           <?php endif; ?>
           <input id="submit" type="submit" value="<?php echo __('Save');?>" />
         </td>

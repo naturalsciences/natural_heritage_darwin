@@ -19,17 +19,25 @@ class ImportsTable extends Doctrine_Table
 
   public function markOk($id)
   {
+    //print("\n MARK OK \n");
+    //print($id);
     $conn = Doctrine_Manager::connection();
     $prepared_sql = $conn->prepare("UPDATE staging s1
                                     SET to_import = TRUE
                                     WHERE status = ''
                                       AND import_ref = ?"
     );
+    //print("AAAAAA");
+    //$debug=Doctrine_Core::getTable('Imports')->findOneById($id);
+    //print($debug->getState());
     $prepared_sql->execute(array(intval($id)));
     $q = Doctrine_Query::create()->update('Imports');
     $q->andwhere('id = ? ',$id)
       ->set('state', '?','processing')
       ->execute();
+      // print("BBBBB");
+         //$debug=Doctrine_Core::getTable('Imports')->findOneById($id);
+    //print($debug->getState());
   }
 
   public function getNumberOfLines($record_ids)

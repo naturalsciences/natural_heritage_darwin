@@ -30,8 +30,7 @@ EOF;
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
     $conn = Doctrine_Manager::connection();
 
-    $idTmp=$this->returnImportId($conn);
-	print("SET working true");
+    $idTmp=$this->returnImportId($conn);	
     $this->setImportAsWorking($conn, $idTmp, true);
     $conn->beginTransaction();
     while($id = $conn->fetchOne('SELECT get_import_row()'))
@@ -85,8 +84,7 @@ EOF;
         }
     }
     $conn->commit();
-    //ftheeten 2017 08 29
-		print("SET working false");
+    //ftheeten 2017 08 29	
      $this->setImportAsWorking($conn, $idTmp, false);
     //ftheeten 2017 08 28
     if(array_key_exists("mailsfornotification", $options))
@@ -142,11 +140,7 @@ EOF
   //ftheeten 2017 08 28
   public function setImportAsWorking( $p_conn, $p_id, $p_working)
   {
-	  print("ID=");
-	  print($p_id);
-	  print("PWORKING=");	  
-	  print($p_working);
-	  	  print("END");
+	 
     if($p_id>=0)
     {
          $p_conn->beginTransaction();
@@ -157,6 +151,6 @@ EOF
             ->execute();
          $p_conn->commit();
     }
-	print("return from working");
+	
   }  
 }

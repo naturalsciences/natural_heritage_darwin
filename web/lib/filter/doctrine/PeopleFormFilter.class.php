@@ -22,7 +22,8 @@ class PeopleFormFilter extends BasePeopleFormFilter
     $this->widgetSchema['is_physical'] = new sfWidgetFormInputHidden();
     $this->setDefault('is_physical', true);
 
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal).'/12/31'));
     $dateLowerBound = new FuzzyDateTime(sfConfig::get('dw_dateLowerBound'));

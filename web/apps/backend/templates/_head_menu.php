@@ -32,7 +32,8 @@
                           <li><?php echo link_to(__('Sampling location'),'gtu/index');?></li>
                         <?php endif ; ?>
                         <li><?php echo link_to(__('Collecting Methods'),'methods_and_tools/methodsIndex');?></li>
-                        <li><?php echo link_to(__('Collecting Tools'),'methods_and_tools/toolsIndex');?></li>
+						<!--JMHerpers 2018 02 20 remove tool menu-->
+                        <!--<li><?php echo link_to(__('Collecting Tools'),'methods_and_tools/toolsIndex');?></li>-->
                         <li><?php echo link_to(__('Expeditions and I.G.'),'expeditionsIgs/index');?></li>
                         <li><?php echo link_to(__('Bibliography'),'bibliography/index');?></li>
                         <li><?php echo link_to(__('Comments'),'comment/index');?></li>
@@ -68,7 +69,8 @@
                         <li><?php echo link_to(__('People'),'people/new');?></li>
                         <li><?php echo link_to(__('Sampling location'),'gtu/new');?></li>
                         <li><?php echo link_to(__('Collecting Methods'),'methods_and_tools/new?notion=method');?></li>
-                        <li><?php echo link_to(__('Collecting Tools'),'methods_and_tools/new?notion=tool');?></li>
+						<!--JMHerpers 2018 02 20 remove tool menu-->
+                        <!--<li><?php echo link_to(__('Collecting Tools'),'methods_and_tools/new?notion=tool');?></li>-->
                         <li><?php echo link_to(__('Bibliography'),'bibliography/new');?></li>
                     </ul>
                 </li>

@@ -26,6 +26,7 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
+  print("EXECUTE");
     // Initialize the connection to DB and get the environment (prod, dev,...) this task is runing on
     $databaseManager = new sfDatabaseManager($this->configuration);
     $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
@@ -46,7 +47,17 @@ EOF;
                                                        and i.state='deleted' 
                                                     limit $batch_nbr
                                                    );";
-      $ctn = $conn->getDbh()->exec($sql);
+      //ftheeten  2018 02 28
+	  if(!empty($options['id']) && ctype_digit($options['id']) )
+	  {
+		$this->setImportAsWorking($conn, $options['id'], true);
+	  }
+	  $ctn = $conn->getDbh()->exec($sql);
+	  //ftheeten  2018 02 28
+	  if(!empty($options['id']) && ctype_digit($options['id']) )
+	  {
+		$this->setImportAsWorking($conn, $options['id'], false);
+	  }
 
       // Remove the import reference from imports table if no more lines in staging for this import
       $sql = "delete from imports i WHERE i.state='deleted' AND NOT EXISTS (select 1 from staging where import_ref = i.id)";
@@ -60,34 +71,55 @@ EOF;
     {
       $this->logSection('id not int', sprintf('the Id parameter must be an integer (id of import)'),null, 'ERROR') ;
       return;
+      
     }
+    /*elseif(!empty($options['id']) &&  ctype_digit($options['id'])&& !empty($options['do-import']) )
+    {
+        //ftheeten 2018 02 26 : force processing status if id given, to force check via async meansand from the web interface
+        print("SET OK");
+ $this->logSection('ftheeten', sprintf('SHOULD LOAD)')) ;        
+      Doctrine::getTable('Imports')->markOk($options['id']);
+    }*/
 
     // Define what's checkable (and therefore importable if do-import option is defined)
     if (empty($options['full-check']))
+    {
+        print("NO_FULL_CHECK");
+        print("loaded, processing");
       $state_to_check = array('loaded','processing');
+    }
     else
+    {
+     print("FULL_CHECK");
+     print("loaded, pending, processing");
       $state_to_check = array('loaded','pending','processing');
-
+    }
     // let's 'lock' all imports checkable to avoid an other check from the next check task
     $catalogues = Doctrine::getTable('Imports')->tagProcessing('taxon', $options['id']);
+    //debug
+   
+    
     // Get back here the list of imports id that could be treated
     $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
 	
 	
     $imports_ids = $imports->toKeyValueArray("id", "id");
 	//DBUG
+    /*
 	foreach($imports_ids as $tmp_id)
 	{
-			
+			print("id loop");
 		 $importsTmp = Doctrine::getTable('Imports')->find($tmp_id);
 		 
 		
-	}
+	}*/
 	//DBUG
 
     // let's begin with import catalogue
     foreach($catalogues as $catalogue)
     {
+      print("LOOP");
+      print($catalogue->getId());
 		
       $date_start = date('G:i:s') ;
       $this->logSection('Processing', sprintf('Check %d : Start processing Catalogue import %d (start: %s)',$randnum, $catalogue->getId(),$date_start));
@@ -113,9 +145,10 @@ EOF;
     }
 
     // Check we've got at least one import concerned - if not, no check, no do-import :)
+    print("BEFORE_TEST");
     if(count($imports_ids)) {
       //ftheeten 2017 08 29
-
+    print("AFTER");
         $this->setImportAsWorking($conn, $imports_ids, true);
 
       $imports_ids_string = implode(',', $imports_ids);
@@ -144,7 +177,7 @@ EOF;
       // if followed by process of do-import...
       if(!empty($options['do-import']))
       {
-		 
+		 print("TRY");
 				// Initialize the variable that will hold all the imports id to be processed for
 				// changing the state from aprocessing to pending
 				$processed_ids = array();

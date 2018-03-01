@@ -252,7 +252,7 @@ class specimensearchActions extends DarwinActions
   */
   private function getVisibleColumns(sfBasicSecurityUser $user, sfForm $form, $as_string = false)
   {
-     $flds = array('category','collection','taxon', 'collecting_dates', 'type','gtu', 'ecology','codes','chrono','ig','acquisition_category',
+     $flds = array('category','collection','taxon', 'collecting_dates', 'type','gtu','gtu_location','gtu_elevation', 'ecology','codes','chrono','ig','acquisition_category',
               'litho','lithologic','mineral','expedition','type', 'individual_type','sex','state','stage','social_status','rock_form','individual_count',
               'part', 'object_name', 'part_status', 'amount_males', 'amount_females', 'amount_juveniles', 'building', 'floor', 'room', 'row', 'col' ,'shelf', 'container', 'container_type',  'container_storage', 'sub_container',
               'sub_container_type' , 'sub_container_storage', 'specimen_count','part_codes', 'col_peoples', 'ident_peoples','don_peoples', 'valid_label', 'loans');
@@ -329,6 +329,10 @@ class specimensearchActions extends DarwinActions
       'gtu' => array(
         false,
         $this->getI18N()->__('Sampling locations'),),
+      //add following field by JMHerpers 20180222
+	 'gtu_location' => array(
+        'gtu_location',
+        $this->getI18N()->__('Coordinates'),),
       //ftheeten 2016 09 13
       'collecting_dates' => array(
 	  //ftheeten 2017 12 14
@@ -490,9 +494,9 @@ class specimensearchActions extends DarwinActions
           'specimen_count_max',
           $this->getI18N()->__('Specimen Count'),),
           //ftheeten 
-        'storageParts' => array(
-          'storageParts',
-          $this->getI18N()->__('Storage Parts'),)
+        //'storage_parts' => array(
+        //  'storage_parts',
+        //  $this->getI18N()->__('Storage Parts'),)
           //ftheeten 
         ));
       }
@@ -787,5 +791,27 @@ public function executeDownloadws(sfWebRequest $request)
   //ftheeten 2016 11 24 for loans
   public function executeSearchByNumAndIG(sfWebRequest $request)
   {}
+  
+  //jim herpers and ftheeten 2018 02 23
+  public function executeAveryDennisonPrinterCall(sfWebRequest $request)
+  {
+	  $results=Array();
+	  if($request->getParameter("id"))
+	  {
+		  if(is_numeric($request->getParameter("id")))
+		  {
+			 $id_specimen=$request->getParameter("id");
+			 $script_path="/var/thermic_printer_avery_dennison/client";
+			 $script_name='client_caller.py';
+			 $param_name="-s";
+			 $command='nohup python '.$script_path."/".$script_name." ".$param_name." ".$id_specimen." > /dev/null & ";
+			 exec($command);
+			 $results['id']=$id_specimen;
+		  }
+	  }
+	  //if the function returns JSON; no template is needed
+	  $this->getResponse()->setContentType('application/json');
+	return  $this->renderText(json_encode($results));
+  }
 
 }

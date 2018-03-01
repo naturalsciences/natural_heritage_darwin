@@ -207,6 +207,8 @@ class savesearchActions extends sfActions
       $this->is_only_spec = true;
     $this->searches = Doctrine::getTable('MySavedSearches')
         ->addIsSearch($q, ! $this->is_only_spec)
+	       //ftheeten 2018 02 16
+		 ->orderBy('modification_date_time DESC')
         ->execute();
   }
 }

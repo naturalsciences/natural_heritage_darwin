@@ -11,7 +11,7 @@ all:
     catalogueRecLimit: 500
     queryTimeout: 30000
     defaultInstitutionRef: 1
-    url_thermic_printer: 'http://172.16.1.7:8088/printer_thermic_darwin/print_service.php'
+    collect_to_print_thermic: '6'
 
   mailer:
     sender: your_send_email@example.com

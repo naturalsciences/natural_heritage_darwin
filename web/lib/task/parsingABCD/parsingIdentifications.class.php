@@ -59,6 +59,8 @@ class ParsingIdentifications
     $this->identification = new Identifications();
     $this->catalogue_parent = new Hstore() ;
   }
+  
+
 
   public function getDateText($date)
   {
@@ -103,8 +105,24 @@ class ParsingIdentifications
   /**
    * @return string The level name in lower case of the last higherTaxon entry
    */
-  public function getLastParentLevel() {
-    return strtolower($this->array_level[$this->notion][$this->higher_level]);
+   public function getLastParentLevel() {
+        return strtolower($this->array_level[$this->notion][$this->higher_level]);
+   }
+   
+   //ftheeten 2017 09 22
+  public function getLastDeclaredLevel() {   
+    $returned=NULL;
+    $tmp=$this->catalogue_parent->getArrayCopy();
+    $tmp2=array_merge($this->array_level[$this->notion], $this->known_keywords);
+    foreach($tmp2 as $key1=>$key2)
+    {
+        if(array_key_exists( $key2,$tmp))
+        {
+            $returned = $key2;
+        }
+    }
+   
+    return $returned;
   }
 
   /**
@@ -155,6 +173,8 @@ class ParsingIdentifications
       $staging[$this->staging_field_prefix[$this->notion].'_parents'] = $this->catalogue_parent->export() ;
     }
   }
+
+
 
   /**
    * Return the parent hierarchy stored in catalogue_parent
@@ -210,6 +230,27 @@ class ParsingIdentifications
    */
   public function save(Staging $staging)
   {
+    //ftheeten 2017 09 22
+	if(strlen($this->notion)>0&&strlen($this->higher_level)>0&&strlen($this->higher_name)>0)
+	{		
+		if(isset( $this->catalogue_parent))
+		{
+			if(is_array( $this->catalogue_parent))
+			{
+				$tmp=Array();
+				foreach($this->array_level[$this->notion] as $key1=>$key2)
+				{
+					if(array_key_exists($key2,$this->catalogue_parent))
+					{
+						$tmp[$key2]=$this->catalogue_parent[$key2];
+					}
+				}
+				$this->catalogue_parent=$tmp;
+			}
+		}
+		$this->catalogue_parent[$this->array_level[$this->notion][$this->higher_level]] = $this->higher_name ;
+	}	
+	//end ftheeten
     $valueDefined = $this->getCatalogueName();
     $this->identification->fromArray(array('notion_concerned' => $this->notion,
                                            'determination_status'=>$this->determination_status,

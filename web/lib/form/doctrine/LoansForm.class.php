@@ -13,7 +13,8 @@ class LoansForm extends BaseLoansForm
   public function configure()
   {
     unset($this['search_indexed']);
-    $yearsKeyVal = range(1970, intval(sfConfig::get('dw_yearRangeMax')));
+						//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),1970);
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');

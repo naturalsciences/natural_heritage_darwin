@@ -55,8 +55,8 @@ class InsurancesSubForm extends BaseInsurancesForm
     ));
 
     $this->widgetSchema['insurance_currency']->setAttributes(array('class'=>'vsmall_size'));
-
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');

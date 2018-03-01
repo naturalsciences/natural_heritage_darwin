@@ -63,7 +63,8 @@
 
 .spec_results
 {
-  background-color:white;
+	/** JM Herpers 2018 02 26 was : background-color:white **/
+  background-color:#dfe7f2;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   vertical-align: middle;
@@ -90,8 +91,19 @@
   text-decoration:underline;
 }
 
+/** JM Herpers 2018 02 26 remove 2 following lines and add the 3 nth
 .spec_results tbody:nth-child(even) tr {background: #E9F2F7}
-.spec_results tbody:nth-child(odd) tr {background: white}
+.spec_results tbody:nth-child(odd) tr {background: white}**/
+
+.spec_results tbody:nth-child(even) 
+
+.spec_results tr:nth-child(odd) {
+  background-color: #dfe7f2;
+}
+
+.spec_results tr:nth-child(even) {
+  background-color: #E9F2F7;
+}
 
 .spec_results th, .spec_results td
 {

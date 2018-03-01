@@ -16,7 +16,8 @@ class GtuForm extends BaseGtuForm
 	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction', 'elevation_unit' ));
 
     $this->widgetSchema['code'] = new sfWidgetFormInput();
-    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
@@ -79,22 +80,22 @@ class GtuForm extends BaseGtuForm
 	$this->widgetSchema['latitude']->setAttributes(array('class'=>'convertDMS2DDLat convertDD2DMSGeneral'));
 	$this->widgetSchema['longitude']->setAttributes(array('class'=>'convertDMS2DDLong convertDD2DMSGeneral'));
 	//$this->widgetSchema['latitude_dms_degree']=new sfWidgetFormInputText();
-	$this->widgetSchema['latitude_dms_degree']->setAttributes(array('class'=>'DMSLatDeg convertDMS2DDGeneralOnLeave small_size'));
+	$this->widgetSchema['latitude_dms_degree']->setAttributes(array('class'=>'DMSLatDeg convertDMS2DDGeneralOnLeave vsmall_size '));
 	//$this->validatorSchema['latitude_dms_degree'] = new sfValidatorPass();
 	//$this->widgetSchema['longitude_dms_degree']=new sfWidgetFormInputText();
-	$this->widgetSchema['longitude_dms_degree']->setAttributes(array('class'=>'DMSLongDeg convertDMS2DDGeneralOnLeave small_size'));
+	$this->widgetSchema['longitude_dms_degree']->setAttributes(array('class'=>'DMSLongDeg convertDMS2DDGeneralOnLeave vsmall_size'));
 	//$this->validatorSchema['longitude_dms_degree'] = new sfValidatorPass();
 	//$this->widgetSchema['latitude_dms_minutes']=new sfWidgetFormInputText();
-	$this->widgetSchema['latitude_dms_minutes']->setAttributes(array('class'=>'DMSLatMin convertDMS2DDGeneralOnLeave'));
+	$this->widgetSchema['latitude_dms_minutes']->setAttributes(array('class'=>'DMSLatMin convertDMS2DDGeneralOnLeave vsmall_size'));
 	//$this->validatorSchema['latitude_dms_minutes'] = new sfValidatorPass();
 	//$this->widgetSchema['longitude_dms_minutes']=new sfWidgetFormInputText();
-	$this->widgetSchema['longitude_dms_minutes']->setAttributes(array('class'=>'DMSLongMin convertDMS2DDGeneralOnLeave'));
+	$this->widgetSchema['longitude_dms_minutes']->setAttributes(array('class'=>'DMSLongMin convertDMS2DDGeneralOnLeave vsmall_size'));
 	//$this->validatorSchema['longitude_dms_minutes'] = new sfValidatorPass();
 	//$this->widgetSchema['latitude_dms_seconds']=new sfWidgetFormInputText();
-	$this->widgetSchema['latitude_dms_seconds']->setAttributes(array('class'=>'DMSLatSec convertDMS2DDGeneralOnLeave'));
+	$this->widgetSchema['latitude_dms_seconds']->setAttributes(array('class'=>'DMSLatSec convertDMS2DDGeneralOnLeave lsmall_size'));
 	//$this->validatorSchema['latitude_dms_seconds'] =new sfValidatorPass();
 	//$this->widgetSchema['longitude_dms_seconds']=new sfWidgetFormInputText();
-	$this->widgetSchema['longitude_dms_seconds']->setAttributes(array('class'=>'DMSLongSec convertDMS2DDGeneralOnLeave'));
+	$this->widgetSchema['longitude_dms_seconds']->setAttributes(array('class'=>'DMSLongSec convertDMS2DDGeneralOnLeave lsmall_size'));
 	//$this->validatorSchema['longitude_dms_seconds'] = new sfValidatorPass();
 	$this->widgetSchema['latitude_dms_direction'] = new sfWidgetFormChoice(array('choices' => array('1' => 'North', '-1' => 'South')));
 	$this->widgetSchema['latitude_dms_direction']->setAttributes(array('class'=>'DMSLatSign convertDMS2DDGeneralOnChange'));
@@ -255,7 +256,8 @@ class GtuForm extends BaseGtuForm
     $this->widgetSchema['lat_long_accuracy']->setLabel('Accuracy');
     $this->widgetSchema['elevation_accuracy']->setLabel('Accuracy');
     //$this->widgetSchema['elevation_unit'] = new sfWidgetFormInputText(array(),array('style'=>'width:10px'));
-    $this->widgetSchema['elevation_unit'] = new  sfWidgetFormChoice(array('choices' => array('' =>'', 'm' => 'm', 'ft'=>'ft')));
+    // 2018 02 20 JMHerpers remove array('' =>''
+	$this->widgetSchema['elevation_unit'] = new  sfWidgetFormChoice(array('choices' => array('m' => 'm', 'ft'=>'ft')));
     $this->widgetSchema['elevation_unit']->setLabel('Elevation Unit');
     //$this->validatorSchema['elevation_unit'] = new sfValidatorString();
     $this->validatorSchema['latitude'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '-90', 'max'=>'90'));

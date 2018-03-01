@@ -14,9 +14,12 @@ class stagingActions extends DarwinActions
   {
    //$myfile = fopen("/var/www/web/log_parser.txt", "a") ;
  //fwrite($myfile, "\n!!!!!!!!!!!!!!!!!!!! IN MARKOK");
+
     $this->forward404Unless($request->hasParameter('import'));
     $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
-
+    print($this->import->getId());
+    //ftheeten 2018 02 26
+    $tmp_id=$this->import->getId();
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
        $this->forwardToSecureAction();
     $this->import = Doctrine::getTable('Imports')->markOk($this->import->getId());
@@ -34,16 +37,17 @@ class stagingActions extends DarwinActions
     
     if(count($mails)>0)
     {
-        $cmd='darwin:check-import --do-import --id='.$request->getParameter('id').' --mailsfornotification='.implode(";",$mails);
+        $cmd='darwin:check-import --do-import --id='.$tmp_id.' --mailsfornotification='.implode(";",$mails);//." --full-check";;
     }
     else
     {
-         $cmd='darwin:check-import --do-import --id='.$request->getParameter('id');
+         $cmd='darwin:check-import --do-import --id='.$tmp_id;//." --full-check";
     }
     $conn = Doctrine_Manager::connection();
     $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
     $currentDir=getcwd();
     chdir(sfconfig::get('sf_root_dir'));    
+    print('nohup php symfony '.$cmd.'  >/dev/null &' );
     exec('nohup php symfony '.$cmd.'  >/dev/null &' );
     chdir($currentDir);                   
     //$this->redirect('import/index');

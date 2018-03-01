@@ -1,6 +1,10 @@
 <?php
 class RMCATabToABCDXml
 {
+
+    protected $headers=Array();
+    protected $headers_inverted=Array();
+    
     private function initFields()
     {
         $fields = Array();
@@ -130,7 +134,10 @@ class RMCATabToABCDXml
     public function testAndAppendTag($p_parentElement, $name_tag_csv, $name_tag_xml, $p_value_array, $p_static_value = NULL, $p_addNullTag = FALSE, $p_namespace=NULL)
     {
         $previousParent = $p_parentElement;
-        if (array_key_exists(strtolower($name_tag_csv), $this->headers_inverted) || $p_addNullTag === TRUE || isset($p_static_value)) {
+       
+       
+        if (array_key_exists(strtolower($name_tag_csv), $this->headers_inverted)|| $p_addNullTag === TRUE || isset($p_static_value)) {
+        
             $xml_paths = explode("/", $name_tag_xml);
             
             for ($i = 0; $i < count($xml_paths); $i++) {
@@ -157,12 +164,12 @@ class RMCATabToABCDXml
                             }
                         } else {
                             if(isset($p_namespace))
-                            {
-                                $new_tag = $this->m_dom->createElementNS($p_namespace, $xml_paths[$i], $p_value_array[$this->headers_inverted[strtolower($name_tag_csv)]]);
+                            {								
+                                $new_tag = $this->m_dom->createElementNS($p_namespace, $xml_paths[$i], htmlspecialchars($p_value_array[$this->headers_inverted[strtolower($name_tag_csv)]]));
                             }
                             else
-                            {
-                                 $new_tag = $this->m_dom->createElement($xml_paths[$i], $p_value_array[$this->headers_inverted[strtolower($name_tag_csv)]]);
+                            {								 
+                                 $new_tag = $this->m_dom->createElement($xml_paths[$i], htmlspecialchars($p_value_array[$this->headers_inverted[strtolower($name_tag_csv)]]));
                             }
                         }
                     }
@@ -182,15 +189,15 @@ class RMCATabToABCDXml
             }
             
         }
+        
         return $previousParent;
     }
     
     public function addID($p_parentElement, $p_valueArray)
-    {
+    {      
         $this->testAndAppendTag($p_parentElement, null, "SourceInstitutionID", null, "See Collection attributed in DaRWIN");
         $this->testAndAppendTag($p_parentElement, "datasetName", "SourceID", $p_valueArray);
-        $this->testAndAppendTag($p_parentElement, "UnitID", "UnitID", $p_valueArray);
-        
+        $this->testAndAppendTag($p_parentElement, "UnitID", "UnitID", $p_valueArray);      
     }
     
     
@@ -274,7 +281,8 @@ class RMCATabToABCDXml
             $coord_node = $this->testAndAppendTag($p_parentElement, null, "SiteCoordinateSets/SiteCoordinates/CoordinatesLatLong", null, null, true);
             $this->testAndAppendTag($coord_node, "LatitudeDecimal", "LatitudeDecimal", $p_valueArray);
             $this->testAndAppendTag($coord_node, "LongitudeDecimal", "LongitudeDecimal", $p_valueArray);
-        } elseif (array_key_exists(strtolower("LatitudeDMSDegrees"), $this->headers_inverted) && array_key_exists(strtolower("LatitudeDMS_N_S"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDMSDegrees"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDMS_W_E"), $this->headers_inverted)) {
+        } elseif (array_key_exists(strtolower("LatitudeDMSDegrees"), $this->headers_inverted) && array_key_exists(strtolower("LatitudeDMS_N_S"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDMSDegrees"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDMS_W_E"), $this->headers_inverted)) 
+        {
             $rootLat  = (float) abs($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSDegrees")]]);
             $rootLong = (float) abs($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSDegrees")]]);
             $latText  = (string) abs($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSDegrees")]]) . "&#176;";
@@ -338,7 +346,7 @@ class RMCATabToABCDXml
             $latText             = $p_valueArray[$this->headers_inverted[strtolower("LatitudeText")]];
             $longText            = $p_valueArray[$this->headers_inverted[strtolower("LongitudeText")]];
         }
-        if ($flagCopyLatLongText === true) {
+        if ($flagCopyLatLongText === true && isset($coord_node)) {
             $anchor_textcoord = $this->testAndAppendTag($coord_node, null, "SiteMeasurementsOrFacts/SiteMeasurementsOrFact/MeasurementOrFactAtomised", null, null, true);
             $textCoord        = $latText . " " . $longText;
             $textCoord= str_replace("°", "&#176;", $textCoord);
@@ -434,7 +442,14 @@ class RMCATabToABCDXml
     {
         
         $this->headers          = fgetcsv($p_handle, 0, "\t");
-        $this->headers_inverted = array_change_key_case(array_flip($this->headers), CASE_LOWER);
+        
+        foreach($this->headers as $key=>$value)
+        {
+           $this->headers_inverted[strtolower($value)]= $key;
+        }      
+       
+       // $this->headers_inverted = array_change_key_case(array_flip($this->headers), CASE_LOWER);
+       
         $this->number_of_fields = count($this->headers);
         
     }
@@ -484,7 +499,7 @@ class RMCATabToABCDXml
     }
     
     public function parseLineAndGetString($p_row)
-    {
+    {        
         $dom               = new DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = true;
         $this->m_dom       = $dom;
@@ -529,8 +544,7 @@ class RMCATabToABCDXml
     
     public function identifyLines($p_handle)
     {
-        while (($row = fgetcsv($p_handle, 0, "\t")) !== FALSE) {
-            //print_r($row);
+        while (($row = fgetcsv($p_handle, 0, "\t")) !== FALSE) {        
             $this->parseLine($row);
         }
     }
@@ -541,11 +555,10 @@ class RMCATabToABCDXml
         
         $handle = fopen($this->file, "r");
         if ($handle) {
-            $this->identifyHeader($handle);
-            //print_r($this->headers);
+            $this->identifyHeader($handle);            
             $this->identifyLines($handle);
+        }    
             
-        }
     }
 }
 ?>

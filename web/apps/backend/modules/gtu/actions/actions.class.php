@@ -279,15 +279,18 @@ class gtuActions extends DarwinActions
     foreach($gtu->TagGroups as $group)
     {
       //rmca 2016 05 12: added class gtu_supp to allow expanding all
-      $str .= '<li class="gtu_supp"><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label>';
+	  //jmherpers 2018 02 22
+	  //$str .= '<li class="gtu_supp"><label>'.$group->getSubGroupName().'<span class="gtu_group"> - '.TagGroups::getGroup($group->getGroupName()).'</span></label>';
+      $str .= '<li class="gtu_supp"><label>'.$group->getSubGroupName().'</label>';
       if($request->hasParameter('view'))
       { 
-	$str .= '<ul class="name_tags_view">' ;
+		//jmherpers 2018 02 22
+		//$str .= '<ul class="name_tags_view">' ;
+		$str .= '<ul>' ;
       }
       else 
       {
-       $str .= '<ul class="name_tags">' ;
-      
+		$str .= '<ul class="name_tags">' ;
       }
       $tags = explode(";",$group->getTagValue());
       foreach($tags as $value)
@@ -299,22 +302,25 @@ class gtuActions extends DarwinActions
       }
       $str .= '</ul><div class="clear" />';
     }
-    if($gtu->getLocation()){
-      $str .= '<li><label>Lat./Long.: </label>'.round($gtu->getLatitude(),6).'/'.round($gtu->getLongitude(),6).'</li>';
-    }
-    if ($gtu->getElevation()){
-      $str .= '<li><label>Alt.: </label>'.$gtu->getElevation().' +- '.$gtu->getElevationAccuracy().' m</li>';
-    }
+	//jmherpers 2018 02 22
+    //if($gtu->getLocation()){
+      //$str .= '<li><label>Lat./Long.: </label>'.round($gtu->getLatitude(),6).'/'.round($gtu->getLongitude(),6).'</li>';
+	//  $str .= '<li><label>Lat.: </label>'.round($gtu->getLatitude(),6).'</li>';
+	//  $str .= '<li><label>Long.: </label>'.round($gtu->getLongitude(),6).'</li>';
+    //}
+    //if ($gtu->getElevation()){
+    //  $str .= '<li><label>Alt.: </label>'.$gtu->getElevation().' +- '.$gtu->getElevationAccuracy().' m</li>';
+    //}
 	//ftheeten 2015 03 10
-	 if ($spec->getGtuFromDateMasked() && $spec->getGtuFromDateMask())
-        {
-      		$str .= '<li><label>Date from.: </label>'.$spec->getGtuFromDateMasked().'</li>';
-    	}
+	// if ($spec->getGtuFromDateMasked() && $spec->getGtuFromDateMask())
+    //    {
+    //  		$str .= '<li><label>Date from.: </label>'.$spec->getGtuFromDateMasked().'</li>';
+    //	}
 	//ftheeten 2015 03 10
-	 if ($spec->getGtuToDateMasked() && $spec->getGtuToDateMask())
-	 {
-             $str .= '<li><label>Date to.: </label>'.$spec->getGtuToDateMasked().'</li>';
-    	 }
+	// if ($spec->getGtuToDateMasked() && $spec->getGtuToDateMask())
+	// {
+    //         $str .= '<li><label>Date to.: </label>'.$spec->getGtuToDateMasked().'</li>';
+    //	 }
     $str .= '</ul><div class="clear" />';
     return $this->renderText($str);
   }

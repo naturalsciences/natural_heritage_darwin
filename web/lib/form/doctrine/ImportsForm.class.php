@@ -48,7 +48,8 @@ class ImportsForm extends BaseImportsForm
         $this->widgetSchema['url_webservice_taxonomy']->setAttributes(array('class'=>'medium_size'));
         $this->validatorSchema['url_webservice_taxonomy'] = new sfValidatorString(array('required' => false)); 
         
-            $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMin')), intval(sfConfig::get('dw_yearRangeMax')));
+					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+		$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
         $years = array_combine($yearsKeyVal, $yearsKeyVal);
         $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
         $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
@@ -64,9 +65,9 @@ class ImportsForm extends BaseImportsForm
       'image'=>'/images/calendar.gif',
       'format' => '%day%/%month%/%year%',
       'years' => $years,
-      'empty_values' => $dateText,
+      'empty_values' => $dateText
       ),
-      array('class' => 'to_date')
+      array('class' => 'from_date')
     );
     $this->validatorSchema['creation_date'] = new fuzzyDateValidator(array(
       'required' => true,
@@ -145,10 +146,15 @@ class ImportsForm extends BaseImportsForm
   public function setValidatorSetMimeType($validator, $values, $arguments)
   {
     $tmpFile=$values["uploadfield"];
+    print($tmpFile);
+      //ftheeten 2018 02 22
+    if(is_object($tmpFile))
+    {
      if($tmpFile->getType()) 
      {
          $this->getObject()->setMimeType($tmpFile->getType());
      }
+    }
      return $values;
   }
 		

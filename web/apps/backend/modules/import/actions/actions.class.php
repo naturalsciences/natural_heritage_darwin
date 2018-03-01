@@ -371,8 +371,11 @@ class importActions extends DarwinActions
                         $conn = Doctrine_Manager::connection();
                         $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
                         $currentDir=getcwd();
-                        chdir(sfconfig::get('sf_root_dir'));    
+                        chdir(sfconfig::get('sf_root_dir'));
+ print( 'nohup php symfony '.$cmd.'  >/dev/null &' );                        
                         exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+                       
+                        
                         chdir($currentDir);                   
                         //$this->redirect('import/index');
                     }

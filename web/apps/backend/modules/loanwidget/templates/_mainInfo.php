@@ -139,19 +139,17 @@
 
 		);
         
-        <?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>
-        
-                
-                $.reverse_year_in_select("#loans_from_date_year");
-                $.reverse_year_in_select("#loans_to_date_year");
-                $.reverse_year_in_select("#loans_extended_to_date_year");
-         <?php endif;?>
-             function pad (str, max, prefix) {
+        //?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>                
+        //        $.reverse_year_in_select("#loans_from_date_year");
+        //        $.reverse_year_in_select("#loans_to_date_year");
+        //        $.reverse_year_in_select("#loans_extended_to_date_year");
+         //?php endif;?>
+        function pad (str, max, prefix) {
                 str = str.toString();
-                    return str.length < max ? pad(prefix.concat(str), max, prefix) : str;
-                }
+                return str.length < max ? pad(prefix.concat(str), max, prefix) : str;
+        }
          
-            $(".copy_loan_id_in_collection").click(
+        $(".copy_loan_id_in_collection").click(
             function()
             {
                 var name_loan=$(".last_loan_id_in_collection").text();

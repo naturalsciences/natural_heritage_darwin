@@ -14,7 +14,8 @@ class LoanItemsForm extends BaseLoanItemsForm
   {
     $this->useFields(array('ig_ref','from_date', 'to_date','specimen_ref', 'details'));
     $this->widgetSchema['details'] = new sfWidgetFormTextarea(array(),array('rows'=>3));
-    $yearsKeyVal = range(1970, intval(sfConfig::get('dw_yearRangeMax')));
+						//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+    $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),1970);
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');
     $maxDate = new FuzzyDateTime(strval(max($yearsKeyVal)).'/12/31 23:59:59');

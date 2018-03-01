@@ -99,6 +99,8 @@ $(document).ready(function () {
   <div class="blue_link float_left"><?php echo link_to(__('Try to create missing taxons'), 'staging/createTaxon?import='.$import->getId() );?></div>
     <!--ftheeten 2017 08 30-->
    <div class="blue_link float_left"><?php echo link_to(__('Try to create missing peoples'), 'staging/createPeoples?import='.$import->getId() );?></div>
+    <!--ftheeten 2018 02 26-->
+   <div class="blue_link float_left"><?php echo link_to(__('Import verified records'), 'staging/markok?import='.$import->getId());?></div>
 <?php endif;?>
 <?php //Else not valid form
   else:?>

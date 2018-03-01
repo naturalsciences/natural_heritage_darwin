@@ -210,10 +210,14 @@ class Specimens extends BaseSpecimens
 
     $nbr = count($tags);
     if(! $nbr) return "-";
-    $str = '<ul class="name_tags_view">';
+	//JMHerpers 2018 02 23
+    //$str = '<ul class="name_tags_view">';
+	$str = '<ul>';
     foreach($tags as $value)
       if (strlen($value))
-        $str .= '<li>' . trim($value).'</li>';
+		    //JMHerpers 2018 02 23
+		  if ($value != "Africa")
+			$str .= '<li>● '.trim($value).'</li>';
     $str .= '</ul>';
 
     return $str;

@@ -106,7 +106,6 @@
 	  position_to_Scroll=$('#refIdentifications').offset().top;
 	 $('body').trigger('close_modal');
 	  $('body').parent().scrollTop(position_to_Scroll);
-
         }
 		
       });
@@ -120,20 +119,17 @@
       update_row_fct: addIdentifierForIdentification<?php echo $row_num;?>
       });
       
-      
-      <?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>
+      //?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>
         //ftheeten 2016 11 29
-        
-             $('.to_date').each(function ()
-                        {
-                            if(/specimen_(new){0,1}Identification(s){0,1}_[0-9]+_notion_date_year/.test($(this).attr('id')))
-                            {
-                                $.reverse_year_in_select("#"+$(this).attr('id'));
-                            }
-                        }
-                    );
-         
-      <?php endif;?>
+             //$('.to_date').each(function ()
+             //           {
+             //               if(/specimen_(new){0,1}Identification(s){0,1}_[0-9]+_notion_date_year/.test($(this).attr('id')))
+             //               {
+             //                   $.reverse_year_in_select("#"+$(this).attr('id'));
+             //               }
+             //           }
+             //       );
+      //?php endif;?>
 
 });
 </script></td>

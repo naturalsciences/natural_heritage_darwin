@@ -63,6 +63,8 @@ class MySavedSearchesTable extends DarwinTable
       'taxon'=>'Taxon',
       'type'=>'Type',
       'gtu'=>'Sampling Location',
+	   //following field added JMHerpers 2018/02/22
+	  'gtu_location'=> 'Coordinates',
       'codes'=>'Codes',
 	  //these fields added ftheeten 2016 01 11
 	  'col_peoples' => 'Collectors',
@@ -83,6 +85,7 @@ class MySavedSearchesTable extends DarwinTable
 	  //these two fields added ftheeten 2015/03/31
 	  'amount_males'=> 'Amount males',
 	  'amount_females'=> 'Amount females',
+	  //end addition
 	  //following field added JMHerpers 2018/01/29
 	  'amount_juveniles'=> 'Amount juveniles',
 	  //end addition
