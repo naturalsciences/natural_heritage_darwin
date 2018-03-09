@@ -6,7 +6,8 @@
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
       <thead>
         <tr>
-          <th><?php echo $form['taxonomy_idx']->renderLabel() ?></th>
+		<!--JMHerpers 2018 03 08-->
+          <th><?php echo __('Taxonomy');?></th>
           <th><?php echo $form['is_reference_taxonomy']->renderLabel(); ?></th>
           <th><?php echo $form['creation_date_from']->renderLabel(); ?></th>
           <th><?php echo $form['creation_date_to']->renderLabel(); ?></th>

@@ -857,8 +857,11 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 
   public function addLatLonColumnQuery($query, $values)
   {
-    if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
+  //ftheeten 2018 03 02 !==
+  if( isset($values['lat_from']) && isset($values['lon_from']) && isset($values['lon_to'])  && isset($values['lat_to']))
     {
+    //if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
+    //{
       /*$horizontal_box = "((".(float)$values['lat_from'].",-180),(".(float)$values['lat_to'].",180))";
       $vert_box = "((".(float)$values['lat_from'].",".(float)$values['lon_from']."),(".(float)$values['lat_to'].",".(float)$values['lon_to']."))";
         */

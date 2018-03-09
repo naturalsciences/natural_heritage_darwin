@@ -280,6 +280,12 @@ EOF
   //ftheeten 2017 08 28
   public function setImportAsWorking( $p_conn, $p_ids, $p_working)
   {
+    if(is_array($p_ids)===false)
+    {
+        $tmp=$p_ids;
+        $p_ids=Array();
+        $p_ids[]=$tmp;
+    }
     if(count($p_ids)>0)
     {
         $p_conn->beginTransaction();

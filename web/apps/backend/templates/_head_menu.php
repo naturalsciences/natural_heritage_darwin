@@ -17,13 +17,15 @@
                 <li>
                     <a href="#" class="subtitle"><?php echo __('Catalogues');?> »</a>
                     <ul class="submenu lvl_2">
-                        <li><?php echo link_to(__('Taxonomy'),'taxonomy/index');?></li>
+					    <!--JMHerpers 2018 03 08--!>
+                        <li><?php echo link_to(__('Taxons'),'taxonomy/index');?></li>
                         <!--ftheeten 2017 07 17--!>
-                        <li><?php echo link_to(__('Taxonomic metadata'),'taxonomymetadata/index');?></li>
-                        <li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/index');?></li>
+                        <li><?php echo link_to(__('Taxonomies'),'taxonomymetadata/index');?></li>
+						<!--JMHerpers 2018 03 08--!>
+                        <!--<li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/index');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'lithostratigraphy/index');?></li>
                         <li><?php echo link_to(__('Lithology'),'lithology/index');?></li>
-                        <li><?php echo link_to(__('Mineralogy'),'mineralogy/index');?></li>
+                        <li><?php echo link_to(__('Mineralogy'),'mineralogy/index');?></li>-->
                         <li><?php echo link_to(__('Expeditions'),'expedition/index');?></li>
                         <li><?php echo link_to(__('I.G. Numbers'),'igs/index');?></li>
                         <li><?php echo link_to(__('Institutions'),'institution/index');?></li>
@@ -56,13 +58,15 @@
                 <li>
                     <a href="#" class="subtitle"><?php echo __('Catalogues');?> »</a>
                     <ul class="submenu lvl_2">
-                        <li><?php echo link_to(__('Taxonomy'),'taxonomy/new');?></li>
+					    <!--JMHerpers 2018 03 08-->
+                        <li><?php echo link_to(__('Taxons'),'taxonomy/new');?></li>
                          <!--ftheeten 2017 07 17--!>
-                        <li><?php echo link_to(__('Taxonomic metadata'),'taxonomymetadata/new');?></li>
-                        <li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/new');?></li>
+                        <li><?php echo link_to(__('Taxonomies'),'taxonomymetadata/new');?></li>
+						<!--JMHerpers 2018 03 08-->
+                        <!--<li><?php echo link_to(__('Chronostratigraphy'),'chronostratigraphy/new');?></li>
                         <li><?php echo link_to(__('Lithostratigraphy'),'lithostratigraphy/new');?></li>
                         <li><?php echo link_to(__('Lithology'),'lithology/new');?></li>
-                        <li><?php echo link_to(__('Mineralogy'),'mineralogy/new');?></li>
+                        <li><?php echo link_to(__('Mineralogy'),'mineralogy/new');?></li>-->
                         <li><?php echo link_to(__('Expeditions'),'expedition/new');?></li>
                         <li><?php echo link_to(__('RBINS I.G. Numbers'),'igs/new');?></li>
                         <li><?php echo link_to(__('Institutions'),'institution/new');?></li>

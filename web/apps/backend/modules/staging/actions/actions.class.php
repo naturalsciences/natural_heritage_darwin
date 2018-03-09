@@ -47,7 +47,7 @@ class stagingActions extends DarwinActions
     $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
     $currentDir=getcwd();
     chdir(sfconfig::get('sf_root_dir'));    
-    print('nohup php symfony '.$cmd.'  >/dev/null &' );
+    //print('nohup php symfony '.$cmd.'  >/dev/null &' );
     exec('nohup php symfony '.$cmd.'  >/dev/null &' );
     chdir($currentDir);                   
     //$this->redirect('import/index');
@@ -62,8 +62,15 @@ class stagingActions extends DarwinActions
     $this->import = Doctrine::getTable('Imports')->find($request->getParameter('import'));
 
     if(! Doctrine::getTable('collectionsRights')->hasEditRightsFor($this->getUser(),$this->import->getCollectionRef()))
+    {
        $this->forwardToSecureAction();
-    $this->import = Doctrine::getTable('Staging')->markTaxon($this->import->getId());
+    }
+    Doctrine::getTable('Staging')->markTaxon($this->import->getId());
+    //ftheeten 2018 03 02
+     $sql = "SELECT * FROM rmca_taxonomy_create_missing_species_subspecies_loop(:id)";
+        $conn = Doctrine_Manager::connection();
+        $q = $conn->prepare($sql);
+		$q->execute(array(':id' => $this->import->getId()));
     return $this->redirect('import/index');
 
   }

@@ -14,9 +14,9 @@ class TaxonomyMetadataFormFilter extends BaseTaxonomyMetadataFormFilter
   {
     parent::configure();
      $this->addPagerItems();
+     //ftheeten 2018 03 06
      $this->widgetSchema['taxonomy_idx'] =new sfWidgetFormChoice(array(
-      //'choices' => array_merge( array(''=>'All'), TaxonomyMetadataTable::getAllTaxonomicMetadata())
-      'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('id ASC', true)
+      'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('taxonomy_name ASC', true)
     ));
     
      $this->widgetSchema->setNameFormat('searchTaxonomyMetadata[%s]');
@@ -69,10 +69,11 @@ class TaxonomyMetadataFormFilter extends BaseTaxonomyMetadataFormFilter
 
     if(isset($values['taxonomy_idx']))
     {
-        if ($values['taxonomy_idx'] != '')
-        {
+       //2018 03 06
+       // if ($values['taxonomy_idx'] != '')
+        //{
             $query->andWhere("  id=?", $values['taxonomy_idx']);
-        }
+        //}
     }
     
     if(isset($values['is_reference_taxonomy']))

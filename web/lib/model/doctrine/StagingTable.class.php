@@ -43,22 +43,17 @@ class StagingTable extends DarwinTable
       ->set('create_taxon', '?','true')
       ->andwhere('import_ref = ? ',$import_ref)
       ->execute();
-    $q = Doctrine_Query::create()->update('Imports')
+    /*$q = Doctrine_Query::create()->update('Imports')
 
       ->set('state', '?','processing')
 	  ->andwhere('id = ? ',$import_ref)
-      ->execute();
-	      //ftheeten 2017 09 22   
-		  $q = Doctrine_Query::create()->update('Imports')
+      ->execute();*/
 
-      ->set('state', '?','processing')
-	  ->andwhere('id = ? ',$import_ref)
-      ->execute();
       /*$q = Doctrine_Query::create()->update('Imports');
       $q->andwhere('id = ? ',$import_ref)
       ->set('state', '?','aprocessing')
-      ->execute();*/
-      /*
+      ->execute();
+      
       $cmd='darwin:check-import --do-import --id='.$import_ref;
           $conn = Doctrine_Manager::connection();
     $this->setImportAsWorking($conn, array($import_ref), true);

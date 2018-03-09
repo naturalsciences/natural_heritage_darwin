@@ -23,14 +23,16 @@ class ImportCatalogueXml implements ImportModelsInterface
   {
     $this->import_id = $id ;
 	    //ftheeten 2017 07026
-    $this->taxonomy_name=Doctrine::getTable('Imports')->find($this->import_id)->getTaxonomyName();
-    $this->creation_date=Doctrine::getTable('Imports')->find($this->import_id)->getCreationDate();
-    $this->creation_date_mask=Doctrine::getTable('Imports')->find($this->import_id)->getCreationDateMask();
-    $this->is_reference_taxonomy=Doctrine::getTable('Imports')->find($this->import_id)->getIsReferenceTaxonomy();
-    $this->source_taxonomy=Doctrine::getTable('Imports')->find($this->import_id)->getSourceTaxonomy();
-    $this->definition_taxonomy=Doctrine::getTable('Imports')->find($this->import_id)->getDefinitionTaxonomy();
-    $this->url_website_taxonomy=Doctrine::getTable('Imports')->find($this->import_id)->getUrlWebsiteTaxonomy();
-    $this->url_webservice_taxonomy=Doctrine::getTable('Imports')->find($this->import_id)->getUrlWebserviceTaxonomy();
+	$importTmp=Doctrine::getTable('Imports')->find($this->import_id);
+	$taxonomyMetadataTmp=Doctrine::getTable('TaxonomyMetadata')->find($importTmp->getSpecimenTaxonomyRef());
+    $this->taxonomy_name=$taxonomyMetadataTmp->getTaxonomyName();
+    $this->creation_date=$taxonomyMetadataTmp->getCreationDate();
+    $this->creation_date_mask=$taxonomyMetadataTmp->getCreationDateMask();
+    $this->is_reference_taxonomy=$taxonomyMetadataTmp->getIsReferenceTaxonomy();
+    $this->source_taxonomy=$taxonomyMetadataTmp->getSource();
+    $this->definition_taxonomy=$taxonomyMetadataTmp->getDefinition();
+    $this->url_website_taxonomy=$taxonomyMetadataTmp->getUrlWebsite();
+    $this->url_webservice_taxonomy=$taxonomyMetadataTmp->getUrlWebservice();
 	
     $xml_parser = xml_parser_create();
     xml_set_object($xml_parser, $this) ;

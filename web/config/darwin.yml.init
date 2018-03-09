@@ -11,7 +11,7 @@ all:
     catalogueRecLimit: 200
     queryTimeout: 30000
     defaultInstitutionRef: ~
-	collect_to_print_thermic: '6'
+	collect_to_print_thermic: '6,13'
 
   mailer:
     sender: your_send_email@example.com

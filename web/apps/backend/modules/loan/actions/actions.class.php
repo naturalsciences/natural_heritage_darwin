@@ -18,7 +18,10 @@ class loanActions extends DarwinActions
     // Forward to a 404 page if the requested expedition id is not found
     $this->forward404Unless($loan = Doctrine::getTable('Loans')->find($loan_id), sprintf('Object loan does not exist (%s).', $loan_id));
     if($this->getUser()->isAtLeast(Users::ADMIN)) return $loan ;
-    $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) ;
+    $right = Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$loan->getId()) 
+    //ftheeten 2017 10 30
+    ||Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $loan->getCollectionRef())
+    ;
     if(!$right) {
       if ($this->getUser()->isAtLeast(Users::MANAGER))
         $this->redirect('loan/view?id='.$loan->getId());
@@ -59,6 +62,8 @@ class loanActions extends DarwinActions
 
   public function executeSearch(sfWebRequest $request)
   {
+    //ftheeten 2017 10 30
+    $editTest=false;
     $this->forward404Unless($request->isMethod('post'));
     $this->setCommonValues('loan', 'from_date', $request);
 
@@ -66,12 +71,29 @@ class loanActions extends DarwinActions
     $this->is_choose = ($request->getParameter('is_choose', '') == '') ? 0 : intval($request->getParameter('is_choose') );
     if($request->getParameter('loans_filters','') !== '')
     {
+      //ftheeten 2017 1030
+      if(array_key_exists("collection_ref",$request->getParameter('loans_filters','')))
+      {
+        if(is_numeric($request->getParameter('loans_filters','')['collection_ref']))
+        {           
+            $editTest=Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $request->getParameter('loans_filters','')['collection_ref']);           
+        }
+      }
       $this->form->bind($request->getParameter('loans_filters'));
 
       if ($this->form->isValid())
       {
-        $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
-
+  
+        //$query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
+        //ftheeten 2017 10 22
+         if($editTest===true)
+         {
+            $query = $this->form->getQuery()->orWhere("collection_ref=?",$request->getParameter('loans_filters','')['collection_ref'])->orderBy($this->orderBy .' '.$this->orderDir);
+         }
+         else
+         {
+            $query = $this->form->getQuery()->orderBy($this->orderBy .' '.$this->orderDir);
+         }
 
         $pager = new DarwinPager($query,
           $this->currentPage,
@@ -99,6 +121,14 @@ class loanActions extends DarwinActions
         $loan_list = array();
         foreach($this->items as $loan) {
           $loan_list[] = $loan->getId() ;
+           //ftheeten 2017 10 30
+          if(!in_array($loan->getId(), $this->rights))
+          {
+                if($editTest===true)
+                {
+                    $this->rights[]=$loan->getId();
+                }
+          }
         }
         $this->printable = Doctrine::getTable('Loans')->getPrintableLoans($loan_list,$this->getUser());
         $status = Doctrine::getTable('LoanStatus')->getStatusRelatedArray($loan_list) ;
@@ -125,7 +155,11 @@ class loanActions extends DarwinActions
     $duplic = $request->getParameter('duplicate_id','0') ;
     if ($duplic != 0){
       if (in_array(Doctrine::getTable('LoanRights')->isAllowed($this->getUser()->getId(), $duplic), array(false,'view')) &&
-          !$this->getUser()->isAtLeast(Users::ADMIN)) $this->forwardToSecureAction();
+      //ftheeten 2018 03 07 ADMIN to Manager
+          !$this->getUser()->isAtLeast(Users::MANAGER)) 
+      {
+      $this->forwardToSecureAction();
+      }
       $id = Doctrine::getTable('Loans')->duplicateLoan($duplic);
       if ($id != 0) {
         $this->redirect('loan/edit?id='.$id);
@@ -153,8 +187,14 @@ class loanActions extends DarwinActions
     $this->loan = Doctrine::getTable('Loans')->find($request->getParameter('id'));
     $this->forward404Unless($this->loan, sprintf('Object loan does not exist (%s).', $request->getParameter('id')));
     if(!$this->getUser()->isAtLeast(Users::MANAGER)) {
-      if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId()))
+      if(!Doctrine::getTable('loanRights')->isAllowed($this->getUser()->getId(),$this->loan->getId())||
+      //ftheeten 2017 10 29
+      !Doctrine::getTable("CollectionsRights")->hasEditRightsFor($this->getUser(), $this->loan->getCollectionRef())
+      )
+      {
+        
         $this->forwardToSecureAction();
+      }
     }
     $this->loadWidgets();
   }
@@ -344,8 +384,9 @@ class loanActions extends DarwinActions
       $form->bind(array('comment'=>$request->getParameter('comment'),'status'=>$request->getParameter('status'))) ;
       if($form->isValid())
       {
-		//JMHerpers 2018/02/02 Not 2 "New" in status
-		try{
+		//ftheeten 2017 11 29
+		try
+		{
 			$data = array(
 				'loan_ref' => $request->getParameter('id'),
 				'status' => $request->getParameter('status'),
@@ -357,10 +398,11 @@ class loanActions extends DarwinActions
 			$loanstatus->save();
 			return $this->renderText('ok');
 		}
-		catch(Doctrine_Exception $ne)	{
-			return $this->renderText('<script>alert("Cannot add status, maybe duplicate one?"); </script>');
+		//ftheeten 2017 11 29
+		catch(Doctrine_Exception $ne)
+		{
+			return $this->renderText('<script>alert("Cannot add status, maybe duplicate one?");</script>');
 		}
-
       }
       else {
         return $this->renderText('notok'.$form->getErrorSchema());
@@ -370,8 +412,8 @@ class loanActions extends DarwinActions
     }
     $this->redirect('board/index') ;
   }
-  
-  //JIM Herpers 2017 10 27
+
+    //rmca 2017 10 27
     public function executeRemoveStatus(sfWebRequest $request)
   {
     if($request->isXmlHttpRequest())
@@ -384,6 +426,7 @@ class loanActions extends DarwinActions
     }
     $this->redirect('board/index') ;
   }
+  
   public function executeSync(sfWebRequest $request)
   {
     $this->checkRight($request->getParameter('id'));

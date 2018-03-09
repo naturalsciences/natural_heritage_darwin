@@ -102,7 +102,7 @@ EOF;
  {
     if(filter_var($recipient, FILTER_VALIDATE_EMAIL))
     {
-    /*sfContext::getInstance()->set("sf_charset", "utf-8");
+    sfContext::getInstance()->set("sf_charset", "utf-8");
         // send an email to the affiliate
         $message = sfContext::getInstance()->getMailer()->compose(
           array('franck.theeten@africamuseum.be' => 'Franck Theeten'),
@@ -113,10 +113,10 @@ EOF;
 EOF
            );
  
-        sfContext::getInstance()->getMailer()->send($message);*/
-        $headers = "From: franck.theeten@africamuseum.be" . "\r\n" .
+        sfContext::getInstance()->getMailer()->send($message);
+        //$headers = "From: franck.theeten@africamuseum.be" . "\r\n" .
 "CC: theetenfrk@yahoo.fr";
-         mail($recipient, $title, $message, $headers);
+        // mail($recipient, $title, $message, $headers);
          
     }
  }

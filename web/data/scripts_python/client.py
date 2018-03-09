@@ -1,6 +1,4 @@
-import socket, select, sys
-
-
+import socket, select, sys, time
 
 class Client(object):
     def __init__(self, p_message, p_ip='0.0.0.0', p_port=8091):
@@ -8,8 +6,8 @@ class Client(object):
         self.m_ip = p_ip
         self.m_port = p_port
     
-
     def call_service(self):
+        time.sleep(5)
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((self.m_ip, self.m_port))
         s.send(self.m_message)

@@ -794,12 +794,34 @@ public function executeDownloadws(sfWebRequest $request)
   
   //jim herpers and ftheeten 2018 02 23
   public function executeAveryDennisonPrinterCall(sfWebRequest $request)
-  {
+  {	
 	  $results=Array();
 	  if($request->getParameter("id"))
 	  {
+		 $go=false;
 		  if(is_numeric($request->getParameter("id")))
 		  {
+			$go=true;
+		  }
+		  elseif(is_array(explode("_", $request->getParameter("id"))))
+		  {
+			  $go=true;
+			  $tmpArray=explode("_", $request->getParameter("id"));
+			  foreach($tmpArray as $tmp_id)
+			  {
+				  if(!is_numeric($tmp_id))
+			      {
+					  $go=false;
+					  break;
+				  }
+			  }
+		  }
+		  else
+		  {
+			$results['id']="Error in print";  
+		  }
+		  if($go)
+	      {
 			 $id_specimen=$request->getParameter("id");
 			 $script_path="/var/thermic_printer_avery_dennison/client";
 			 $script_name='client_caller.py';
@@ -809,6 +831,11 @@ public function executeDownloadws(sfWebRequest $request)
 			 $results['id']=$id_specimen;
 		  }
 	  }
+	  else
+	  {
+		$results['id']="Error in print";  
+	  }
+  
 	  //if the function returns JSON; no template is needed
 	  $this->getResponse()->setContentType('application/json');
 	return  $this->renderText(json_encode($results));

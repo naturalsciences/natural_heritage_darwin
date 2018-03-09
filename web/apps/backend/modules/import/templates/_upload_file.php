@@ -62,53 +62,11 @@ $(document).ready(function ()
       </tr>
       <!--ftheeten 2017 07 06-->
       <tr>
-        <th><?php echo $form['taxonomy_name']->renderLabel() ?> :</th>
+        <th><?php echo $form['specimen_taxonomy_ref']->renderLabel() ?> :</th>
         <td>
-          <?php echo $form['taxonomy_name']->renderError() ?>
-          <?php echo $form['taxonomy_name'] ?>
-        </td>        
-      </tr>
-      <tr>
-        <th><?php echo $form['creation_date']->renderLabel() ?> :</th>
-        <td>
-          <?php echo $form['creation_date']->renderError() ?>
-          <?php echo $form['creation_date'] ?>
-        </td>        
-      </tr>
-      <tr>
-        <th><?php echo $form['is_reference_taxonomy']->renderLabel() ?> :</th>
-        <td>
-          <?php echo $form['is_reference_taxonomy']->renderError() ?>
-          <?php echo $form['is_reference_taxonomy'] ?>
-        </td>        
-      </tr>
-      <tr>
-        <th><?php echo $form['source_taxonomy']->renderLabel() ?> :</th>
-        <td>
-          <?php echo $form['source_taxonomy']->renderError() ?>
-          <?php echo $form['source_taxonomy'] ?>
-        </td>        
-      </tr>
-      <tr>
-        <th><?php echo $form['definition_taxonomy']->renderLabel() ?> :</th>
-        <td>
-          <?php echo $form['definition_taxonomy']->renderError() ?>
-          <?php echo $form['definition_taxonomy'] ?>
-        </td>        
-      </tr>
-       <tr>
-        <th><?php echo $form['url_website_taxonomy']->renderLabel() ?> :</th>
-        <td>
-          <?php echo $form['url_website_taxonomy']->renderError() ?>
-          <?php echo $form['url_website_taxonomy'] ?>
-        </td>        
-      </tr>
-      <tr>
-        <th><?php echo $form['url_webservice_taxonomy']->renderLabel() ?> :</th>
-        <td>
-          <?php echo $form['url_webservice_taxonomy']->renderError() ?>
-          <?php echo $form['url_webservice_taxonomy'] ?>
-        </td>        
+          <?php echo $form['specimen_taxonomy_ref']->renderError() ?>
+          <?php echo $form['specimen_taxonomy_ref'] ?>
+        </td>         
       </tr>
       <?php endif ?>
     </tbody>

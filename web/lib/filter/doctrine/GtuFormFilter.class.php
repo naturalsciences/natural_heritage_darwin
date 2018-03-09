@@ -144,10 +144,11 @@ class GtuFormFilter extends BaseGtuFormFilter
   {
     if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
     {
-      $horizontal_box = "((".$values['lat_from'].",-180),(".$values['lat_to'].",180))";
+      //ftheeten 2018 02 03 inver lat lon
+      $horizontal_box = "((".$values['lon_from'].",-180),(".$values['lon_to'].",180))";
       $query->andWhere("box(? :: text) @> location",$horizontal_box);
 
-      $vert_box = "((".$values['lat_from'].",".$values['lon_from']."),(".$values['lat_to'].",".$values['lon_to']."))";
+      $vert_box = "((".$values['lon_from'].",".$values['lat_from']."),(".$values['lon_to'].",".$values['lat_to']."))";
       // Look for a wrapped box (ie. between RUSSIA and USA)
       if( (float)$values['lon_to'] < (float) $values['lon_from']) {
         $query->andWhere(" NOT box(? :: text) @> location", $vert_box);

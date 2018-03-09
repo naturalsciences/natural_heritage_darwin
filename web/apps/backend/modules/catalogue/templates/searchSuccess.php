@@ -127,7 +127,10 @@
         event.preventDefault();
         row = $(this).closest('tr');
         iname = row.find('.item_name');
-        $('.search_item_name').html(iname.html());
+         //ftheeten 2018 03 01
+        //$('.search_item_name').html(iname.html());
+        var text_tmp=$(iname).text();
+        $('.search_item_name').html(text_tmp);
         rid = getIdInClasses(row);
         $('#searchCatalogue_item_ref').val(rid);
         $('.search_item_name').closest('tr').show();

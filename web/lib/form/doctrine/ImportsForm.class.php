@@ -15,7 +15,8 @@ class ImportsForm extends BaseImportsForm
   //ftheeten july 2017 (fixed january 2018)
     if($this->options['format'] == 'taxon')
     {
-     $this->useFields(array('format', 'exclude_invalid_entries', 'taxonomy_name', 'creation_date', 'is_reference_taxonomy', 'source_taxonomy', 'definition_taxonomy', 'url_website_taxonomy', 'url_webservice_taxonomy')) ;
+     //$this->useFields(array('format', 'exclude_invalid_entries', 'taxonomy_name', 'creation_date', 'is_reference_taxonomy', 'source_taxonomy', 'definition_taxonomy', 'url_website_taxonomy', 'url_webservice_taxonomy')) ;
+     $this->useFields(array('format', 'exclude_invalid_entries', 'specimen_taxonomy_ref')) ;
       $category = array('taxon'=>$this->getI18N()->__('Taxonomy')) ;
       $this->widgetSchema['exclude_invalid_entries'] = new sfWidgetFormChoice(
         array(
@@ -25,8 +26,12 @@ class ImportsForm extends BaseImportsForm
         )
       );
       
+      //ftheeten 2018 03 06
+       $this->widgetSchema['specimen_taxonomy_ref']=new sfWidgetFormChoice(array(
+      'choices' =>  TaxonomyMetadataTable::getAllTaxonomicMetadata('taxonomy_name ASC', true)
+    ));
           //ftheeten 2017 07 06
-        $this->widgetSchema['taxonomy_name'] = new sfWidgetFormInput();
+        /*$this->widgetSchema['taxonomy_name'] = new sfWidgetFormInput();
         $this->widgetSchema['taxonomy_name']->setAttributes(array('class'=>'large_size'));
        $this->validatorSchema['taxonomy_name'] = new sfValidatorString(array('required' => false));
         
@@ -77,7 +82,7 @@ class ImportsForm extends BaseImportsForm
       'empty_value' => $dateLowerBound,
       ),
       array('invalid' => 'Date provided is not valid',
-        ));
+        ));*/
     }
     else
     {

@@ -65,8 +65,9 @@ class DarwinClientParser(object):
             s.specimen_count_juveniles_min,
             s.specimen_count_juveniles_max,
             coalesce((select * FROM rmca_get_locality_tag_from_specimen(s.id, '%%', 'Exact_site') LIMIT 1  ) ,'') as site,
+            coalesce((select * FROM rmca_get_locality_tag_from_specimen(s.id, '%%', 'Municipality') LIMIT 1  ) ,'') as municipality,
             coalesce((select * FROM rmca_get_locality_tag_from_specimen(s.id, '%%', 'Country') LIMIT 1 ) ,'') as country,
-            g.latitude, g.longitude, 
+            g.latitude, g.longitude, g.coordinates_source,g.latitude_dms_seconds,g.longitude_dms_seconds,
             COALESCE(g.latitude_dms_degree || '\\u00B0' || COALESCE(g.latitude_dms_minutes || '''','') || COALESCE(g.latitude_dms_seconds || '"','') || CASE WHEN g.latitude_dms_direction = -1 THEN ' S' WHEN g.latitude_dms_direction = 1 THEN ' N' END,'') as latitudedms, 
             COALESCE(g.longitude_dms_degree || '\\u00B0' || COALESCE(g.longitude_dms_minutes || '''','') || COALESCE(g.longitude_dms_seconds || '"','') || CASE WHEN g.longitude_dms_direction = -1 THEN ' O' WHEN g.longitude_dms_direction = 1 THEN ' E' END,'') as longitudedms,
             s.container_storage,
@@ -137,19 +138,15 @@ class DarwinClientParser(object):
         except Exception, e:
             printException(self.m_logfile)
 
-        #def define_and_#print_label_array(self, p_specimen_array_id, p_delimiter='|',  p_driver_file="D:/Thermic_#printer/prfile32"):
-    def define_and_print_label_array(self, p_specimen_array_id, p_delimiter='|'):
-        array_nbs=p_specimen_array_id.split(p_delimiter)
-        for p_id in array_nbs:
-            self.define_and_#print_label(int(p_id), p_driver_file)
 
-    def define_and_print_label(self, p_specimen_id,  p_driver_file="D:/Thermic_#printer/prfile32"):
+
+    def define_and_print_label(self, p_specimen_id, fileprn):
         try:            
             self.m_mutex.acquire()
            
             record=self.get_specimen_content_pg(p_specimen_id)
             record = {k : xstr(v) for k,v in record.items()}
-            fileprn = io.StringIO()
+            
             ############# data manipulation before creating the file ##########################
 
             #######collection, family, order
@@ -252,7 +249,7 @@ class DarwinClientParser(object):
             startdatemask = record['collecting_start_date_mask']
             enddatemask = record['collecting_end_date_mask']
             if startdatemask == "0" :
-                dateRecol = ""
+                dateRecol = ''
             else:
                 if startdatemask == "32":
                     datestartRecol = datestartRecol1[6:]
@@ -271,11 +268,22 @@ class DarwinClientParser(object):
 					dateendRecol = dateendRecol1
             if dateendRecol != "":
                 dateRecol = '(' + datestartRecol + "-" + dateendRecol + ')'
-            else:
+            elif datestartRecol != "":
                 dateRecol = '(' + datestartRecol + ')'
+            else:
+                dateRecol = ''
 
             #######code
             code = unicode(record['code'])
+            if (code[0:10] == 'RMCA_Vert_'):
+				code1 = code[0:10]
+				code2 = code[10:]
+            elif (code[0:9] == 'RMCA_Mam_'):
+                code1 = code[0:9]
+                code2 = code[9:]
+            else :
+				code1 = ''
+				code2 = code
             ig = unicode(record['ig_num'])
 
             #######other
@@ -284,19 +292,23 @@ class DarwinClientParser(object):
 
             #######Locality
             loc2 = ""
-            if record['site'] != "":
+            if record['municipality'] != "":
+                Munisite = record['municipality'] + ", "+ record['site']
+            else:
+                Munisite = record['site']
+            if Munisite != "":
                 padd = 0
                 padd2 = 0
-                if len(record['site']) > 38 :
-                    p = record['site'].find(',')
+                if len(Munisite) > 38 :
+                    p = Munisite.find(',')
                     padd = 1
                     if p == -1:
-                        p = record['site'].find(' ')
+                        p = Munisite.find(' ')
                         padd = 1
                     end = p+1
                     start = p+padd
-                    loc = unicode(record['site'])[:end]
-                    loc2 = unicode(record['site'])[start:]
+                    loc = unicode(Munisite)[:end]
+                    loc2 = unicode(Munisite)[start:]
                     if len(loc2) > 38 :
 						p2 = loc2.find(',')
 						padd2 = 1
@@ -305,24 +317,34 @@ class DarwinClientParser(object):
 							padd2 = 1
 						end = p+p2+1
 						start = p+p2+padd2
-						loc = unicode(record['site'])[:end]
-						loc2 = unicode(record['site'])[start:]
+						loc = unicode(Munisite)[:end]
+						loc2 = unicode(Munisite)[start:]
                 else:
-                    loc = unicode(record['site'])
+                    loc = unicode(Munisite)
             else:
                 loc = u"/"
             country = unicode(record['country'])
+            Coordsource = record['coordinates_source']
+            longsec = record['longitude_dms_seconds']
+            latsec = record['latitude_dms_seconds']
             latitude = unicode(record['latitude'])
             longitude = unicode(record['longitude'])
             latitudeDMS = unicode(record['latitudedms'])
             longitudeDMS = unicode(record['longitudedms'])
-            if latitudeDMS == "" :
+            #print("coord"+Coordsource)
+            if Coordsource == "DD":
                 if latitude != "":
                     latlong= "Lat: " + latitude + " Long: " + longitude
-                else:
-                    latlong = u"Lat : /      Long: /"
-            else :
-                latlong = "Lat: " + latitudeDMS + " Long: " + longitudeDMS
+            elif latitudeDMS != "" :
+                #print(" len sec="+str(len(latsec)) + " latitude="+latitude)
+                if (len(latsec) > 6) | (len(longsec) > 6):
+                    #print(" sec="+latsec + " latitude="+latitude)
+                    if latitude != "":
+                        latlong= "Lat: " + latitude + " Long: " + longitude
+                else :
+                    latlong = "Lat: " + latitudeDMS + " Long: " + longitudeDMS
+            else:
+                latlong = u"Lat : /      Long: /"
 
             #######properties
             prop1 = ""
@@ -345,6 +367,10 @@ class DarwinClientParser(object):
             #######remove lines if empty
             Lines_to_remove1 = 0 #type missing
             Lines_to_remove2 = 0 #properties missing
+            Lines_to_remove2a = 0
+            Lines_to_remove2b = 0
+            Lines_to_remove2c = 0
+            Lines_to_remove2d = 0
             Lines_to_remove3 = 0 #author missing
             Lines_to_remove4 = 0 #loc line 2 missing
             Lines_to_remove5 = 0 #add line if collecting date + recolt too long
@@ -354,14 +380,17 @@ class DarwinClientParser(object):
                 Lines_to_remove3 = 3
             if typesp == "" :
                 Lines_to_remove1 = 3
+				
             if prop1 == "" :
-                Lines_to_remove2 = Lines_to_remove2 + 2
+                Lines_to_remove2a = 2
             if prop2 == "":
-                Lines_to_remove2 = Lines_to_remove2 + 2
+                Lines_to_remove2b = 2
             if prop3 == "":
-                Lines_to_remove2 = Lines_to_remove2 + 2
+                Lines_to_remove2c = 2
             if prop4 == "":
-                Lines_to_remove2 = Lines_to_remove2 + 2
+                Lines_to_remove2d = 2
+            Lines_to_remove2 = Lines_to_remove2a + Lines_to_remove2b + Lines_to_remove2c + Lines_to_remove2d
+			
             col = 49 - len(dateRecol)
             if (len(recol) < (col - 7)) | (col == 49):
                 Lines_to_remove5 = 3
@@ -403,13 +432,13 @@ class DarwinClientParser(object):
 
             # line 35
             line = 35 - Lines_to_remove_coll6  - Lines_to_remove2 - Lines_to_remove4 - Lines_to_remove5
-            fileprn.write(u"#T0#J"+str(line)+"#YN902//29X25///Det  :                    #G")
-            fileprn.write(u"#T0#J"+str(line - 0.3)+"#YL0//0.2/6                         #G")
+            fileprn.write(u"#T0#J"+str(line)+"#YN902//29X25///Det:                    #G")
+            fileprn.write(u"#T0#J"+str(line - 0.3)+"#YL0//0.2/4                         #G")
             # YL0//0.2/6 : line of type 0, 6mm long and 0.2 tick
             if det == u"/":
-                fileprn.write(u"#T7#J" + str(line) + "#YN902/UB/29X25///{}              #G".format(det))
+                fileprn.write(u"#T5#J" + str(line) + "#YN902/UB/29X25///{}              #G".format(det))
             else :
-                fileprn.write(u"#T7#J" + str(line) + "#YN902/U/29X25///{}               #G".format(det))
+                fileprn.write(u"#T5#J" + str(line) + "#YN902/U/29X25///{}               #G".format(det))
             col = 48 - len(datedet) #37
             if len(det) < (col - 7) :
                 fileprn.write(u"#T"+str(col)+"#J"+str(line)+"#YT101///{}                #G".format(datedet))
@@ -420,79 +449,83 @@ class DarwinClientParser(object):
             #if family != 'None':
             #    fileprn.write(u"#T0#J21#YT113////Fam :                                 #G")
             #    fileprn.write(u"#T0#J20.7#YL0//0.2/6                                   #G")
-            #    fileprn.write(u"#T7#J21#YN902/UB/27X24///{}                            #G".format(family))
+            #    fileprn.write(u"#T5#J21#YN902/UB/27X24///{}                            #G".format(family))
             #elif order != 'None':
             #    fileprn.write(u"#T0#J21#YT113////Ord  :                                #G")
             #    fileprn.write(u"#T0#J20.7#YL0//0.2/6                                   #G")
-            #    fileprn.write(u"#T7#J21#YN902/UB/27X24///{}                            #G".format(order))
+            #    fileprn.write(u"#T5#J21#YN902/UB/27X24///{}                            #G".format(order))
 
             # line 32
             line = 32 - Lines_to_remove2 - Lines_to_remove4 - Lines_to_remove5
             if collection != 6:
-                fileprn.write(u"#T0#J"+str(line)+"#YN902//29X25///Nbr  :                #G")
-                fileprn.write(u"#T0#J"+str(line - 0.3)+"#YL0//0.2/6                     #G")
-                fileprn.write(u"#T7#J"+str(line)+"#YN902/U/29X25///{}                   #G".format(nbrsex))
+                fileprn.write(u"#T0#J"+str(line)+"#YN902//29X25///Nbr:                #G")
+                fileprn.write(u"#T0#J"+str(line - 0.3)+"#YL0//0.2/4                     #G")
+                fileprn.write(u"#T5#J"+str(line)+"#YN902/U/29X25///{}                   #G".format(nbrsex))
 
             # line 29
             line = 29 - Lines_to_remove2 - Lines_to_remove4 - Lines_to_remove5
-            fileprn.write(u"#T0#J"+str(line)+"#YN902//29X25///Loc  :                    #G")
-            fileprn.write(u"#T0#J"+str(line - 0.3)+"#YL0//0.2/6                         #G")
+            fileprn.write(u"#T0#J"+str(line)+"#YN902//29X25///Loc:                    #G")
+            fileprn.write(u"#T0#J"+str(line - 0.3)+"#YL0//0.2/4                         #G")
             if loc == u"/":
-                fileprn.write(u"#T7#J"+str(line)+"#YN902/UB/29X25///{}                  #G".format(loc))
+                fileprn.write(u"#T5#J"+str(line)+"#YN902/UB/29X25///{}                  #G".format(loc))
             else :
-                fileprn.write(u"#T7#J"+str(line)+"#YN902/U/29X25///{}                   #G".format(loc))
+                fileprn.write(u"#T5#J"+str(line)+"#YN902/U/29X25///{}                   #G".format(loc))
 
             # line 26
             line = 26 - Lines_to_remove2 - Lines_to_remove5
-            fileprn.write(u"#T7#J"+str(line)+"#YN902/U/29X25///{}                       #G".format(loc2))
+            fileprn.write(u"#T5#J"+str(line)+"#YN902/U/29X25///{}                       #G".format(loc2))
 
             # line 23
             line = 23 - Lines_to_remove2 - Lines_to_remove5
-            fileprn.write(u"#T7#J"+str(line)+"#YN902/U/29X25///{}                       #G".format(country))
+            fileprn.write(u"#T5#J"+str(line)+"#YN902/U/29X25///{}                       #G".format(country))
 
             # line 20
             line = 20 - Lines_to_remove2 - Lines_to_remove5
-            fileprn.write(u"#T7#J"+str(line)+"#YN902/U/29X25///{}                       #G".format(latlong))
+            fileprn.write(u"#T5#J"+str(line)+"#YN902/U/29X25///{}                       #G".format(latlong))
 
             # line 17
             line = 17 - Lines_to_remove2 - Lines_to_remove5
-            fileprn.write(u"#T0#J"+str(line)+"#YN902//29X25///Rec  :                    #G")
-            fileprn.write(u"#T0#J"+str(line - 0.3)+"#YL0//0.2/6                         #G")
+            fileprn.write(u"#T0#J"+str(line)+"#YN902//29X25///Rec:                    #G")
+            fileprn.write(u"#T0#J"+str(line - 0.3)+"#YL0//0.2/4                         #G")
             if loc == u"/":
-                fileprn.write(u"#T7#J"+str(line)+"#YN902/UB/29X25/// {}                 #G".format(recol))
+                fileprn.write(u"#T5#J"+str(line)+"#YN902/UB/29X25/// {}                 #G".format(recol))
             else :
-                fileprn.write(u"#T7#J"+str(line)+"#YN902/U/29X25/// {}                  #G".format(recol))
+                fileprn.write(u"#T5#J"+str(line)+"#YN902/U/29X25/// {}                  #G".format(recol))
 
             # line 14
             line = 14 - Lines_to_remove2
             col2 = 49 - len(dateRecol)
-            fileprn.write(u"#T" + str(col2) + "#J" + str(line) + "#YT101///{}            #G".format(dateRecol))
+            fileprn.write(u"#T" + str(col2) + "#J" + str(line) + "#YT101///{}           #G".format(dateRecol))
 
-            # line 11
-            line = 11 - Lines_to_remove2
-            fileprn.write(u"#T0#J" + str(line)+"#YN902//29X25///Code:                   #G")
-            fileprn.write(u"#T0#J" + str(line - 0.3) + "#YL0//0.2/6                     #G")
-            fileprn.write(u"#T7#J" + str(line)+"#YN902/UB/29X26///{}                    #G".format(code))
+            # line 10.5
+            line = 10.5 - Lines_to_remove2
+            #fileprn.write(u"#T0#J" + str(line)+"#YN902//29X25///Code:                  #G")
+            #fileprn.write(u"#T0#J" + str(line - 0.3) + "#YL0//0.2/6                    #G")
+            fileprn.write(u"#T0#J" + str(line+0.5)+"#YT101////{}                   		#G".format(code1))
+            if code1 == '':
+                fileprn.write(u"#T0#J" + str(line)+"#YN902/UB/44X40///{}                    #G".format(code2))
+            else:
+			    fileprn.write(u"#T9#J" + str(line)+"#YN902/UB/44X40///{}                    #G".format(code2))
 
             # line 8.5
-            line = 8.5 - Lines_to_remove2
+            line = 8.5 - Lines_to_remove2b - Lines_to_remove2c - Lines_to_remove2d
             #fileprn.write(u"#T0#J3.5#YT113////IG    :                                  #G")
             #fileprn.write(u"#T0#J3.2#YL0//0.2/6                                        #G")
-            #fileprn.write(u"#T7#J3.5#YN902/UB/27X24///{}                               #G".format(ig))
+            #fileprn.write(u"#T5#J3.5#YN902/UB/27X24///{}                               #G".format(ig))
             fileprn.write(u"#T0#J"+str(line)+"#YT101//// {}                             #G".format(prop1))
 
             # line 6.5
-            line = 6.5 - Lines_to_remove2
+            line = 6.5 - Lines_to_remove2c - Lines_to_remove2d
             #fileprn.write(u"#T0#J3.5#YT113////IG    :                                  #G")
             #fileprn.write(u"#T0#J3.2#YL0//0.2/6                                        #G")
-            #fileprn.write(u"#T7#J3.5#YN902/UB/27X24///{}                               #G".format(ig))
+            #fileprn.write(u"#T5#J3.5#YN902/UB/27X24///{}                               #G".format(ig))
             fileprn.write(u"#T0#J"+str(line)+"#YT101//// {}                             #G".format(prop2))
 
             # line 4.5
-            line = 4.5 - Lines_to_remove2
+            line = 4.5 - Lines_to_remove2d
             #fileprn.write(u"#T0#J3.5#YT113////IG    :                                  #G")
             #fileprn.write(u"#T0#J3.2#YL0//0.2/6                                        #G")
-            #fileprn.write(u"#T7#J3.5#YN902/UB/27X24///{}                               #G".format(ig))
+            #fileprn.write(u"#T5#J3.5#YN902/UB/27X24///{}                               #G".format(ig))
             fileprn.write(u"#T0#J"+str(line)+"#YT101//// {}                             #G".format(prop3))
 
             # line 2.5
@@ -511,12 +544,10 @@ class DarwinClientParser(object):
             #fileprn.write(u"#T47.0#J3.2#YN902/2B/61///o                                #G")
 
             fileprn.write(u"#Q1/")
-            #fileprn.close()
-            #p = subprocess.Popen([p_driver_file, '/n:Default Settings', tmp_filename])
 
             tmplabel= fileprn.getvalue()
             #print(tmplabel)
-            fileprn.close()
+            #fileprn.close()
             return tmplabel
         except Exception, e:
             printException()

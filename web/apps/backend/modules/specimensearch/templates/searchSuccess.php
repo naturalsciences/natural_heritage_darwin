@@ -191,11 +191,9 @@
 				var pass = false;
 				var pass2 = false;
 				var collect = false;
-				/*if an array is used:
 				var tmpArray=Array();
-				...
-				tmpArray.push(id_spec);
-				var url_printer_full=url_printer+'?op=on&id='+tmpArray.join("|");	*/
+
+				//var url_printer_full=url_printer+'?op=on&id='+tmpArray.join("|");
 				$('.spec_results > tbody > tr ').each(function(){
 					$($(this).attr('class').split(' ')).each(function() {
 						if (this.length>0 && $.inArray(this.valueOf(), classes) === -1) {
@@ -205,26 +203,31 @@
 								id_spec=id_spec[0];
 								
 								var coll = $('.'+this.valueOf()).children('.col_collection').children('.Collid').val();
+								var coll_list = "<?php 	$collist = sfConfig::get('dw_collect_to_print_thermic');
+														$cols = explode(",", $collist);
+														$collstr = "";
+														foreach ($cols as $c) {
+															$q = Doctrine_Query::create()
+																->select('*')
+																->from('Collections')
+																->where('id = ?',$c);
+															$result =$q->FetchOne();
+															$collstr = $collstr.",".$result->getName();
+														}
+														echo($collstr);	?>";
 								var i;
-								for (i = 0; i < collect_array.length; ++i) {
-									if (coll != collect_array[i])
-										var collect = true;
+								if(jQuery.inArray(coll, collect_array) == -1){
+									var collect = true;
 								}
 								if (collect == true && pass == false ) {
-									alert("Attention, only specimen from Ichtyology will be printed");
+									alert("Attention, only specimen from "+coll_list.substring(1)+" will be printed");
 									pass = true;
 								}
 								if (collect == false) {
 									if (pass2 == false ) {
 										alert("Labels are sent to thermic printer");
 									}
-									var url_printer_full="<?php echo url_for('specimensearch/averyDennisonPrinterCall');?>?id="+id_spec;
-									//alert(url_printer_full);
-									$.ajax({
-										url: url_printer_full												
-									}).done(
-										function()	{}
-									);
+									tmpArray.push(id_spec);									
 									pass2 = true;
 								}
 								collect = false;
@@ -232,6 +235,15 @@
 						}    
 					});	
 				});
+				var url_printer_full="<?php echo url_for('specimensearch/averyDennisonPrinterCall');?>?id="+tmpArray.join('_');
+									
+				if (tmpArray.join('_') != "" ){
+					$.ajax({
+						url: url_printer_full												
+					}).done(
+					function()	{}
+					);
+				}
 			});
 			 
 			 //ftheeten 2016/01/29

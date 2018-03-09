@@ -16,7 +16,8 @@
         </td>
       </tr>
 	  <tr>
-        <th><?php echo $form['metadata_ref']->renderLabel() ?></th>
+	    <!-- jmherpers 2018 03 08-->
+        <th><?php echo __('Taxonomy');?></th>
         <td>
           <?php echo $form['metadata_ref']->renderError() ?>
           <?php echo $form['metadata_ref'] ?>
@@ -43,11 +44,11 @@
           <?php echo $form['extinct'] ?>
         </td>
       </tr>
-      <!-- ftheeten 2017 07 03-->
       
         <!-- ftheeten 2017 07 03-->
       <tr>
-        <th><?php echo $form['collection_ref']->renderLabel() ?></th>
+	    <!-- jmherpers 2018 03 08-->
+        <th><?php echo __('Collection');?></th>
         <td>
           <?php echo $form['collection_ref']->renderError() ?>
           <?php echo $form['collection_ref'] ?>
@@ -63,7 +64,8 @@
       </tr>
         <!-- ftheeten 2017 07 03-->
       <tr id="parent_ref">
-        <th class="ref_name"><?php echo $form['parent_ref']->renderLabel() ?></th>
+	    <!-- jmherpers 2018 03 08-->
+        <th><?php echo __('Parent taxon');?></th>
         <td>
           <?php echo $form['parent_ref']->renderError() ?>
           <?php echo $form['parent_ref'] ?>
