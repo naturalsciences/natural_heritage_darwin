@@ -59,10 +59,24 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
       'class' => 'ref_name' .$class,
     ));
 
-    $input .= '<script  type="text/javascript">
+	$input .= '<script  type="text/javascript">
       $(document).ready(function () {
       $("#'.$this->generateId($name).'_name").catcomplete({source: "'.url_for($this->getOption('complete_url')).'"});
-      $("#'.$this->generateId($name).'_button a.but_more").click(button_ref_modal);';
+      $("#'.$this->generateId($name).'_button a.but_more").click(button_ref_modal);
+	  //ftheeten 2018 03 19 to allow empty collection
+	  $("#'.$this->generateId($name).'_name").change(
+		function()
+		{
+		    var tmpVal=$("#'.$this->generateId($name).'_name").attr(\'value\');
+			if( tmpVal.length==0)
+		    {
+				
+				$("#'.$this->generateId($name).'").attr(\'value\',-1) ;
+				$("#'.$this->generateId($name).'_name").val(\'\') ;
+			}
+		}
+	  );
+	  ';
 
    if($this->getOption('deletable'))
         $input .= '$("#'.$this->generateId($name).'_clear").click(function(){

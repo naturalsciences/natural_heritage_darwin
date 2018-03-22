@@ -5,39 +5,31 @@
   <tbody>
     <?php echo $form->renderGlobalErrors() ?>
     <tr>
-	<!--pvignaux 2016 06 14-->
-	<th><?php echo $form['collection_ref']->renderLabel() ?></th>
-
-	<td><?php echo $form['collection_ref']->renderError() ?><?php echo $form['collection_ref'] ?></td>
-
-   
-        <th class="hide_helper_name" style="display:none;"><?php echo __('Last value in collection') ?></th>
-        <td>
-            <div class="last_loan_id_in_collection"></div>
-        </td>
-        <td class="hide_helper_name" style="display:none;">
-            <input type="button"  class="copy_loan_id_in_collection"  style="display:hide" value='<?php echo __('Paste to name of loan');?>'></input>
+		<!--pvignaux 2016 06 14
+		<th><?php echo $form['collection_ref']->renderLabel() ?></th>-->
+		<!--jmHerpers 2018 03 20-->
+		<th><?php echo "Collection" ?></th>
+		<td colspan="3"><?php echo $form['collection_ref']->renderError() ?><?php echo $form['collection_ref'] ?></td>
+		<th></th>
+		<td colspan="5"></td>
+    </tr>
+    <tr>
+		<!--jmHerpers 2018 03 20
+		<th><?php echo $form['name']->renderLabel() ?></th>-->
+		<th><?php echo "Code" ?></th>
+		<td>
+			<?php echo $form['name']->renderError() ?>
+			<?php echo $form['name'] ?>
+		</td>
+		<td  colspan="6" class="hide_helper_name" style="display:none;"><?php echo __('Last value in collection = ') ?><label class="last_loan_id_in_collection"></label>&nbsp;&nbsp;&nbsp;
+			<input type="button"  class="copy_loan_id_in_collection"  style="display:hide" value='<?php echo __('Paste to code of loan');?>'></input>
         </td>
     </tr>
     <tr>
-      <th><?php echo $form['name']->renderLabel() ?></th>
-      <td>
-        <?php echo $form['name']->renderError() ?>
-        <?php echo $form['name'] ?>
-      </td>
       <th><?php echo $form['from_date']->renderLabel() ?></th>
-      <td>
-        <?php echo $form['from_date']->renderError() ?>
-        <?php echo $form['from_date'] ?>
-      </td>
-
-      <th></th>
-      <td>
-      </td>
-    </tr>
-    <tr>
-      <th></th>
-      <td></td>
+      <td><?php echo $form['from_date']->renderError() ?>
+			<?php echo $form['from_date'] ?>
+	  </td>
 
       <th><?php echo $form['to_date']->renderLabel() ?></th>
       <td>
@@ -51,17 +43,19 @@
         <?php echo $form['extended_to_date']->renderError() ?>
         <?php echo $form['extended_to_date'] ?>
       </td>
+	  <th></th>
+	  <td></td>
     </tr>
     <tr>
       <th><?php echo $form['description']->renderLabel() ?></th>
-      <td colspan="5">
+      <td colspan="7">
         <?php echo $form['description']->renderError() ?>
         <?php echo $form['description'] ?>
       </td>
     </tr>
     <?php if(! $form->getObject()->isNew()):?>
     <tr>
-      <td colspan="6">
+      <td colspan="8">
         <div>
           <a href="#" id="loan_sync" title="<?php echo __('This will take a snapshot of the loan for archiving purposes.');?>">
             <?php echo image_tag('arrow_refresh.png', 'id=arrow_spin');?> <?php echo __('Take a snapshot of the loan.');?>
@@ -115,61 +109,65 @@
 		//ftheeten 2016 06 14
 		
         var url="<?php echo(url_for('catalogue/nameForLoan?'));?>";
+		//JMHerpers 2018 03 21
+		function getloanlast()
+			{	
+				$.getJSON(url, 
+							{
+								coll_nr: $(".rmca_coll_4_loan").val(),
+							} , 
+							function (data) 
+							{
+								if(data[0])
+								{
+									var lastcode=data[0].name_loan;
+									var lastcode2= (lastcode.substr(lastcode.length -1));
+									$(".last_loan_id_in_collection").text(lastcode);
+									if ( (lastcode2+"").match(/^\d+$/) ) {
+										$(".hide_helper_name").show();
+									}
+									return lastcode;
+								}
+								return lastcode;
+							}
+				)			
+			}
+			
 		$(document).ready(function () {
-			$(".rmca_coll_4_loan").change(
+			//$(".rmca_coll_4_loan").change(
+
+			//);
+			getloanlast();
+        
+			//?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>                
+			//        $.reverse_year_in_select("#loans_from_date_year");
+			//        $.reverse_year_in_select("#loans_to_date_year");
+			//        $.reverse_year_in_select("#loans_extended_to_date_year");
+			//?php endif;?>
+			function pad (str, max, prefix) {
+				str = str.toString();
+				return str.length < max ? pad(prefix.concat(str), max, prefix) : str;
+			}
+		 
+			$(".copy_loan_id_in_collection").click(
 			function()
 			{
-				
-				               
-                $.getJSON(url, 
-					{
-						coll_nr: $(this).val()
-					} , 
-					function (data) 
-					{
-						if(data[0])
-                        {
-                            var lastcode=data[0].name_loan;
-                        }
-						$(".last_loan_id_in_collection").text(lastcode);
-                        $(".hide_helper_name").show();
-					}
-				);
+				var name_loan=$(".last_loan_id_in_collection").text();
+				var find=/\d+(?!.*\d)/
+				var pattern=name_loan.match(find);
+				var len_pattern=pattern.toString().length;
+			   
+				if(pattern)
+				{
+					var pos=find.exec(name_loan);
+				  
+					new_pattern=(parseInt(pattern))+1;
+					var new_pattern2=pad(new_pattern, len_pattern,"0");
+					name_loan=name_loan.substring(0,pos.index).concat(new_pattern2);
+				}
+				$(".loan_class").val(name_loan);
 			}
-
-		);
-        
-        //?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>                
-        //        $.reverse_year_in_select("#loans_from_date_year");
-        //        $.reverse_year_in_select("#loans_to_date_year");
-        //        $.reverse_year_in_select("#loans_extended_to_date_year");
-         //?php endif;?>
-        function pad (str, max, prefix) {
-                str = str.toString();
-                return str.length < max ? pad(prefix.concat(str), max, prefix) : str;
-        }
-         
-        $(".copy_loan_id_in_collection").click(
-            function()
-            {
-                var name_loan=$(".last_loan_id_in_collection").text();
-                var find=/\d+(?!.*\d)/
-                var pattern=name_loan.match(find);
-                var len_pattern=pattern.toString().length;
-               
-                if(pattern)
-                {
-                    var pos=find.exec(name_loan);
-                  
-                    new_pattern=(parseInt(pattern))+1;
-                    var new_pattern2=pad(new_pattern, len_pattern,"0");
-                    name_loan=name_loan.substring(0,pos.index).concat(new_pattern2);
-                }
-                $(".loan_class").val(name_loan);
-            }
-            
-         );
-         
+			);
 		});
 	</script>
   </tbody>

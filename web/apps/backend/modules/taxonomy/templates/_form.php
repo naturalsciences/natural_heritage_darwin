@@ -122,5 +122,26 @@ $(document).ready(function () {
     <?php if($collection_ref_for_insertion>-1):?>
          $('.coll_for_taxonomy_insertion_ref option[value="<?php print($collection_ref_for_insertion);?>"]').attr("selected", true);
      <?php endif?>
+     
+   //ftheeten 2018 03 14
+   $('form').submit(
+        function()
+        {
+            
+            var referrer=document.referrer;
+            var tmpName=$(".taxonomy_name_callback").val();
+            localStorage.setItem("last_scientific_name", tmpName);
+           
+        }
+   ); 
+
+    //ftheeten 2018 03 14
+	<?php if($form->getObject()->isNew()===true): ?>
+    if ( $( ".col_check_metadata_ref" ).length ) {
+     
+        $(".col_check_metadata_ref option:eq(1)").attr("selected", "selected");
+     
+    }   
+	 <?php endif?>
 });
 </script>

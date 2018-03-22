@@ -91,14 +91,29 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
       $this->addOption('default_name', null);
       $this->addOption('url_params', array());
 	 
-	 //ftheeten 2018 02 08
+	 
+	   //ftheeten 2018 02 08
 	  if(strtolower($options["model"])=="collections")
 	  {
-		if(array_key_exists('collection_ref_session', $_COOKIE))
-		{
-			$this->addOption('default',$_COOKIE['collection_ref_session']);
+		
+        if(array_key_exists('collection_ref_session',$_COOKIE ))
+         {
+			
+			$findCol=Doctrine::getTable("Collections")->find($_COOKIE['collection_ref_session']);
+			if(!($findCol))
+		    {
+				
+				//setcookie("collection_ref_session", "", time()-3600);
+				unset($_COOKIE['collection_ref_session']);
+				$this->addOption('default',NULL);
+			}
+			else
+			{
+				
+				$this->addOption('default',$_COOKIE['collection_ref_session']);
+			}
 		}
-	  }
+      }
   }
 
   public function getJavaScripts()

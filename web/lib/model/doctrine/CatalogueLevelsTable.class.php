@@ -4,6 +4,7 @@
  */
 class CatalogueLevelsTable extends DarwinTable
 {
+ //ftheeten 2018 03 14 added sort order
   public function getLevelsByTypes(array $parameters, $q = null)
   {
     if (is_null($q))
@@ -20,7 +21,19 @@ class CatalogueLevelsTable extends DarwinTable
     {
       $q->addWhere('cl.level_type = ?', $parameters['table']);
     }
-    $q->addOrderBy('cl.id') ;
+    //ftheeten 2018 03 14
+    $orderBy='cl.id';
+    if( isset($parameters['sort']))
+    {
+        if(strtolower($parameters['sort'])=="desc")
+        {
+            $q->addOrderBy('cl.id DESC') ;
+        }
+    }
+
+   $q->addOrderBy($orderBy) ;
+    
     return $q->execute();
   }
+  
 }

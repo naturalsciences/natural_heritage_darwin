@@ -21,11 +21,15 @@
           <?php endif;?>
            <!--ftheeten 2017 06 30-->
            <?php if(isset($searchForm['collection_ref'])&&isset($searchForm['collection_ref_for_modal'])):?>
-            <th><?php echo $searchForm['collection_ref']->renderLabel();?></th>
+		    <!--jmherpers 2018 03 14-->
+            <!--<th><?php echo $searchForm['collection_ref']->renderLabel();?></th>-->
+			<th>Collection</th>
            <?php endif;?>
 		    <!--ftheeten 2017 06 30-->
            <?php if(isset($searchForm['metadata_ref'])):?>
-            <th><?php echo $searchForm['metadata_ref']->renderLabel();?></th>
+           <!--jmherpers 2018 03 14-->
+            <!--<th><?php echo $searchForm['metadata_ref']->renderLabel();?></th>-->
+			<th>Taxonomy</th>
            <?php endif;?>
           <th>
           <th></th>
@@ -68,13 +72,20 @@
         </tr>
       </tbody>
     </table>
-
+    <!--ftheeten 2018 03 14 -->
+    <?php if($searchForm['table']->getValue()=="taxonomy"):?>
+        <input type="hidden" name="referrer" id="referrer" value="taxonomy"></input>
+     <?php endif ; ?>
     <div class="search_results">
       <div class="search_results_content">
       </div>
     </div>
+    <!--ftheeten 2018 03 14-->
+    <div>
+        <input style="display:none" type="button" class="float_button" name="get_last_taxon" id="get_last_taxon" value="Get Last taxon"></input>
+    </div>
     <?php if( (isset($user_allowed) && $user_allowed) || ($sf_user->getDbUserType() >= Users::ENCODER) ): ?>
-    <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for($searchForm['table']->getValue().'/new') ?>"><?php echo __('New Unit');?></a></div>
+    <div class='new_link'><a <?php echo !(isset($is_choose) && $is_choose)?'':'target="_blank"';?> href="<?php echo url_for($searchForm['table']->getValue().'/new') ?>"><?php echo __('New taxon');?></a></div>
     <?php endif ; ?>
   </div>
 </form>
@@ -91,6 +102,9 @@ $(document).ready(function () {
 
   $(".new_link").click( function()
   {
+   //ftheeten 2018 02 14 add display:block
+   $("#get_last_taxon").css("display", 'block');
+   
    url = $(this).find('a').attr('href'),
    data= $('.search_form').serialize(),
    reg=new RegExp("(<?php echo $searchForm->getName() ; ?>)", "g");   
@@ -163,6 +177,22 @@ $(document).ready(function () {
        tmp.val($('.col_check_metadata_ref').val());     
        tmp.appendTo('#<?php echo ($is_choose)?'search_and_choose':'search' ?>');
   }
+  
+  //ftheeten 2018 03 14
+  $("#get_last_taxon").click(
+    function()
+    {
+        var lastTaxon=localStorage.getItem("last_scientific_name");
+        $(".taxonomy_name_callback").val(lastTaxon);
+        
+        $(".taxonomy_level_callback").val($(".taxonomy_level_callback option:first").val());
+        $(".taxonomy_collection_callback").val($(".taxonomy_collection_callback option:first").val());
+        $(".col_check_metadata_callback").val($(".col_check_metadata_callback option:first").val());
+        $(".search_submit").click();
+
+
+    }
+  );
 });
 </script>
 </div>

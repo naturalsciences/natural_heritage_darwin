@@ -1,4 +1,8 @@
 <?php
+require_once("Encoding.php");
+use \ForceUTF8\Encoding;
+
+
 class ImportCatalogueXml implements ImportModelsInterface
 {
   private $parent, $referenced_relation, $errors_reported, $staging_catalogue, $version;
@@ -25,6 +29,8 @@ class ImportCatalogueXml implements ImportModelsInterface
 	    //ftheeten 2017 07026
 	$importTmp=Doctrine::getTable('Imports')->find($this->import_id);
 	$taxonomyMetadataTmp=Doctrine::getTable('TaxonomyMetadata')->find($importTmp->getSpecimenTaxonomyRef());
+    //ftheeten 2018 03 22
+    $mime_type=Doctrine::getTable('Imports')->find($this->import_id)->getMimeType();
     $this->taxonomy_name=$taxonomyMetadataTmp->getTaxonomyName();
     $this->creation_date=$taxonomyMetadataTmp->getCreationDate();
     $this->creation_date_mask=$taxonomyMetadataTmp->getCreationDateMask();
@@ -33,26 +39,66 @@ class ImportCatalogueXml implements ImportModelsInterface
     $this->definition_taxonomy=$taxonomyMetadataTmp->getDefinition();
     $this->url_website_taxonomy=$taxonomyMetadataTmp->getUrlWebsite();
     $this->url_webservice_taxonomy=$taxonomyMetadataTmp->getUrlWebservice();
-	
-    $xml_parser = xml_parser_create();
-    xml_set_object($xml_parser, $this) ;
-    xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
-    xml_set_element_handler($xml_parser, "startElement", "endElement");
-    xml_set_character_data_handler($xml_parser, "characterData");
-    if (!($fp = fopen($file, "r"))) {
-        return("could not open XML input");
-    }
-    while ($this->data = fread($fp, 4096)) {
-        if (!xml_parse($xml_parser, $this->data, feof($fp))) {
-            return (sprintf("XML error: %s at line %d",
-                        xml_error_string(xml_get_error_code($xml_parser)),
-                        xml_get_current_line_number($xml_parser)));
+    //ftheeten 2018 03 21
+	if($mime_type==="text/plain")
+    {
+        if (!($fp = fopen($file, "r"))) {
+            return("could not open input file");
         }
+       
+    
+        $tabParser=new RMCATabToTaxonomyXml();
+        $options["tab_file"] = $file;
+        $tabParser->configure($options);
+        $tabParser->identifyHeader($fp);
+        $i=1;
+        while (($row = fgetcsv($fp, 0, "\t")) !== FALSE){
+                //ftheeten 2018 02 28
+             $row=  Encoding::toUTF8($row);
+             $xml_parser = xml_parser_create();
+            xml_set_object($xml_parser, $this) ;
+            xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
+            xml_set_element_handler($xml_parser, "startElement", "endElement");
+            xml_set_character_data_handler($xml_parser, "characterData");
+            $xml_conv= $tabParser->parseLineAndGetString($row);
+            if (!xml_parse($xml_parser, $xml_conv, feof($fp))) {
+                return (sprintf("XML error: %s at line %d for record $i",
+                            xml_error_string(xml_get_error_code($xml_parser)),
+                            xml_get_current_line_number($xml_parser)));
+            }
+            $i++;
+            xml_parser_free($xml_parser);
+        }
+
+         
+        if(! $this->version_defined)
+          $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+        return $this->errors_reported ;
     }
-    xml_parser_free($xml_parser);
-    if(! $this->version_defined)
-      $this->errors_reported = $this->version_error_msg.$this->errors_reported;
-    return $this->errors_reported ;
+    //back to old XML parser
+    else
+    {
+        $xml_parser = xml_parser_create();
+        xml_set_object($xml_parser, $this) ;
+        xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
+        xml_set_element_handler($xml_parser, "startElement", "endElement");
+        xml_set_character_data_handler($xml_parser, "characterData");
+        if (!($fp = fopen($file, "r"))) {
+            return("could not open XML input");
+        }
+        while ($this->data = fread($fp, 4096)) {
+            if (!xml_parse($xml_parser, $this->data, feof($fp))) {
+                return (sprintf("XML error: %s at line %d",
+                            xml_error_string(xml_get_error_code($xml_parser)),
+                            xml_get_current_line_number($xml_parser)));
+            }
+        }
+        xml_parser_free($xml_parser);
+        if(! $this->version_defined)
+        $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+        return $this->errors_reported ;
+    }    
+    
   }
 
  /**

@@ -5,8 +5,10 @@
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
       <thead>
         <tr>
-          <!--ftheeten 2016 11 23 add collection ref-->
-          <th><?php echo $form['collection_ref']->renderLabel() ?></th>
+          <!--ftheeten 2016 11 23 add collection ref
+          <th><?php echo $form['collection_ref']->renderLabel() ?></th>-->
+		  <!--jmHerpers 2018 03 20-->
+          <th>Collection</th>
           <th><?php echo $form['name']->renderLabel() ?></th>
           <th><?php echo $form['status']->renderLabel() ?></th>
           <th><?php echo $form['from_date']->renderLabel() ?></th>

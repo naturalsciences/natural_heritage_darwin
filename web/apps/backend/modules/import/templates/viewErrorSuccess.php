@@ -17,7 +17,8 @@
       <?php endif ?>
     </div>
     <p>
-      <?php if($import->getFormat() == 'abcd') : ?><a href="<?php echo url_for('import/maj?id='.$id) ?>" class="bt_close"><?php echo __('Continue import');?></a><?php endif ;?>
+    <!--ftheeten test on taxonomy 2018 03 22-->
+      <?php if($import->getFormat() == 'abcd' || $import->getFormat() == 'taxon') : ?><a href="<?php echo url_for('import/maj?id='.$id) ?>" class="bt_close"><?php echo __('Continue import');?></a><?php endif ;?>
       <a href="<?php echo url_for('import/clear?id='.$id) ?>" class="bt_close"><?php echo __('Delete import');?></a>
     </p>
 

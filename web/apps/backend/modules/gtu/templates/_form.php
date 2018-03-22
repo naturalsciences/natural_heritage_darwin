@@ -58,7 +58,19 @@ foreach($form['newVal'] as $group)
   $tag_grouped[$type][] = $group;
 }
 ?>
+<br/>
 <div id="gtu_group_screen">
+  <div class="gtu_groups_add">
+    <select id="groups_select">
+      <option value=""></option>
+      <?php foreach(TagGroups::getGroups() as $k => $v):?>
+        <option value="<?php echo $k;?>"><?php echo $v;?></option>
+      <?php endforeach;?>
+    </select>
+    <a href="<?php echo url_for('gtu/addGroup'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>" id="add_group"><?php echo __('Add Group');?></a>
+  </div>
+
+<!-- ftheeten 2018 03 15 moved down the select list-->  
 <div class="tag_parts_screen" alt="<?php echo url_for('gtu/addGroup'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>">
 <?php foreach($tag_grouped as  $group_key => $sub_forms):?>
   <fieldset alt="<?php echo $group_key;?>">
@@ -72,18 +84,6 @@ foreach($form['newVal'] as $group)
   </fieldset>
 <?php endforeach;?>
 </div>
-
-
-  <div class="gtu_groups_add">
-    <select id="groups_select">
-      <option value=""></option>
-      <?php foreach(TagGroups::getGroups() as $k => $v):?>
-        <option value="<?php echo $k;?>"><?php echo $v;?></option>
-      <?php endforeach;?>
-    </select>
-    <a href="<?php echo url_for('gtu/addGroup'. ($form->getObject()->isNew() ? '': '?id='.$form->getObject()->getId()) );?>" id="add_group"><?php echo __('Add Group');?></a>
-  </div>
-
 </div>
     
   <fieldset id="location">
@@ -232,7 +232,11 @@ foreach($form['newVal'] as $group)
 //ftheeten 2016 02 05
 var showDMSCoordinates;
 var coordViewMode=true;
-
+//ftheeten 2018 03 15
+<?php if($form->getObject()->isNew()): ?>
+var boolAdministrativeArea2=false;
+var boolArea3=false;
+<?php endif; ?>
 //ftheeten 2016 02 05
 $( "form" ).submit(function( event ) {
   window.opener.$("#gtu_filters_code").val($("#gtu_code").val());
@@ -306,19 +310,31 @@ $(document).ready(function () {
 
     $('#add_group').click(function(event)
     {
-      event.preventDefault();
+	   event.preventDefault();
       selected_group = $('#groups_select option:selected').val();
       addGroup(selected_group);
     });
 
     $('a.sub_group').live('click',function(event)
     {
+	
       event.preventDefault();
       addSubGroup( $(this).closest('fieldset').attr('alt'));
     });
     
+	
     //ftheeten 2016 09 15
     checkCoordSourceState();
+	<?php if($form->getObject()->isNew()): ?>
+	//ftheeten 2018 03 15
+	var initAdminstrativeGroupsOnLoad=function()
+	{
+		addGroup("administrative area");			
+
+	}
+	initAdminstrativeGroupsOnLoad();
+	<?php endif; ?>
+	
 
 });
 
@@ -831,4 +847,48 @@ function initUTM(name, zone, direction )
             var latlng = L.latLng(lati, longi);
             drawPoint(latlng, accu );
         }
+		
+		//ftheeten 2018 03 15 to add country, municipality and exact sites widgets
+		$(document).ajaxComplete(
+		
+			function()
+			{
+		
+				<?php if($form->getObject()->isNew()): ?>		
+				if ( $( "#gtu_newVal_0_sub_group_name" ).length ) 
+				{ 
+					$('#gtu_newVal_0_sub_group_name').val("Country");
+					if(!boolAdministrativeArea2)
+					{
+						addGroup("administrative area");
+						boolAdministrativeArea2=true;
+					}
+				}
+				if ( $( "#gtu_newVal_1_sub_group_name" ).length ) 
+				{ 
+					$('#gtu_newVal_1_sub_group_name').val("Municipality");
+					if(!boolArea3)
+					{
+						addGroup("area");
+						boolArea3=true;
+					}
+					
+				}
+				
+				if ( $( "#gtu_newVal_2_sub_group_name" ).length ) 
+				{ 
+					$('#gtu_newVal_2_sub_group_name').val("Exact site");					
+					
+				}
+                
+                if ( $( "#gtu_newVal_3_sub_group_name" ).length ) 
+				{ 
+					$('#gtu_newVal_3_sub_group_name').val("ecology");                  
+					
+				}
+				<?php endif; ?>	
+				
+				
+			}
+		);
 </script>

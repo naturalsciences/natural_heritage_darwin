@@ -14,16 +14,18 @@ class TaxonomyForm extends BaseTaxonomyForm
     unset($this['path'],$this['name_indexed'],$this['name_indexed']);
     $this->widgetSchema['table'] = new sfWidgetFormInputHidden(array('default'=>'taxonomy'));
     $this->widgetSchema['name'] = new sfWidgetFormInput();
-    $this->widgetSchema['name']->setAttributes(array('class'=>'large_size'));
+    //ftheeten 2018 03 14
+    $this->widgetSchema['name']->setAttributes(array('class'=>'large_size taxonomy_name_callback'));
     $this->validatorSchema['name']->setOption('trim', true);
     $statuses = array('valid'=>$this->getI18N()->__('valid'), 'invalid'=>$this->getI18N()->__('invalid'), 'deprecated'=>$this->getI18N()->__('deprecated'), "in litteris"=> "in litteris", "nomen nudum"=> "nomen nudum");
     $this->widgetSchema['status'] = new sfWidgetFormChoice(array(
         'choices'  => $statuses,
     ));
 
+    //ftheeten 2018 03 14 descending sort order
     $this->widgetSchema['level_ref'] = new sfWidgetFormDarwinDoctrineChoice(array(
       'model' => 'CatalogueLevels',
-      'table_method' => array('method'=>'getLevelsByTypes', 'parameters'=>array(array('table'=>'taxonomy'))),
+      'table_method' => array('method'=>'getLevelsByTypes', 'parameters'=>array(array('table'=>'taxonomy', 'sort'=> "DESC"))),
       'add_empty' => true
       ),
       array('class'=>'catalogue_level')
