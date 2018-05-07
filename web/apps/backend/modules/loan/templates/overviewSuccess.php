@@ -13,13 +13,15 @@
 
       <?php echo $form->renderGlobalErrors();?>
         <table <?php if(! count($form['LoanItems']) && ! count($form['newLoanItems'])) echo 'class="hidden"';?> id="items_table">
-        <thead>
+        <thead class="loanlines_titles">
           <tr>
+		   <!--JMHerpers 2018 04 19-->
             <th></th>
-            <th><?php echo __('Darwin Part') ;?></th>
-            <th><?php echo __('Darwin Part Main Code(s)') ;?></th>
-            <th><?php echo __('Taxonomy');?></th>
+            <th><?php echo __('Item') ;?></th>
+            <th><?php echo __('Main Code') ;?></th>
+            <th><?php echo __('Taxon');?></th>
             <th><?php echo __('Details') ;?></th>
+			<th></th>
             <th><?php echo __('Expedition / Return') ;?></th>
             <th></th>
             <th></th>

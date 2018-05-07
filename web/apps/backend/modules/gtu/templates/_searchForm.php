@@ -10,21 +10,34 @@
       <thead>
         <tr>
  <!--ftheeten 2016 06 28-->
-        <tr>
+<?php if($sf_params->get('with_js') == true):?>       
+       <tr>
             <td colspan="4" ><div style='float: left'> <div class='blue_link' id='get_ig'><a style='text-align: left'><?php echo __('Get IG');?></a></div>
             <div class='blue_link' id='get_specimen_number'><a><?php echo __('Get Specimen number');?></a></div>
             <div class='blue_link' id='get_station_number'><a><?php echo __('Get stations number');?></a></div></td>
-        </tr>        
+        </tr> 
+<?php endif;?>        
         <tr>
           <th><?php echo $form['code']->renderLabel() ?></th>
          
           <th></th>
-        </tr>
+        </tr>        
        </thead>
       <tbody>
         
         <tr>
           <td><?php echo $form['code']->render() ?></td>
+        
+          <td></td>
+        </tr>
+        <!--ftheeten 2018 03 23-->
+        <tr>
+          <th><?php echo $form['ig_number']->renderLabel() ?></th>
+         
+          <th></th>
+        </tr>
+        <tr>
+          <td><?php echo $form['ig_number']->render() ?></td>
         
           <td></td>
         </tr>
@@ -85,6 +98,17 @@
     </div>
 <div class="clear"></div>
     <script  type="text/javascript">
+    //ftheeten 2018 04 10
+    var urlParam= function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results==null){
+               return null;
+            }
+            else{
+               return decodeURI(results[1]) || 0;
+            }
+        }  
+    
     initSearchMap();
 
 	
@@ -180,6 +204,14 @@
             }
         });
         
+        //ftheeten 2018 04 10
+          var ig_num=urlParam('ig_num');
+          if(!!ig_num)
+          {
+            
+                $("#gtu_filters_ig_number").val(decodeURIComponent(ig_num));
+                $( ".search_form" ).submit();
+          }      
         
     });
     </script>

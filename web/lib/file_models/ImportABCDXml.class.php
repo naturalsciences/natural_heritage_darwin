@@ -256,12 +256,12 @@ class ImportABCDXml implements ImportModelsInterface
         case "Length" : $this->object->desc .= "Length : ".$this->cdata." ;" ; break;
         case "efg:LithostratigraphicAttributions" : $this->object->setAttribution($this->staging) ; break;
         //ftheeten 2016 08 04
-        case "LocalityText" : $this->addComment(false, "exact_site"); break;
-        /*case "LocalityText" :
+        //case "LocalityText" : $this->addComment(false, "exact_site"); break;
+        case "LocalityText" :
                            $this->object->tag_group_name='exact_site';
                            $this->object->tag_value = $this->cdata;
-                           //$this->staging_tags[] = $this->object->addTagGroups();
-                           break; */
+                           $this->staging_tags[] = $this->object->addTagGroups();
+                           break; 
         case "LongitudeDecimal" : $this->staging['gtu_longitude'] = $this->cdata ; break;
         case "LowerValue" : $this->property->property->setLowerValue($this->cdata) ; break;
         case "MeasurementDateTime" : $this->property->getDateFrom($this->cdata, $this->getPreviousTag(),$this->staging) ; break;
@@ -428,14 +428,16 @@ class ImportABCDXml implements ImportModelsInterface
   private function addCode($category="main")
   {
 	 //jm herpers 2017 11 09 (auto increment in batches)
-	if($category=="main")
+   
+	if($category=="main"&&strlen(trim($this->cdata))>0)
     {
-		$this->main_code_found=true;		
+		$this->main_code_found=true;
+        $code = new Codes() ;
+        $code->setCodeCategory(strtolower($category)) ;
+        $code->setCode($this->cdata) ;
+        if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($code) ;		
 	}
-    $code = new Codes() ;
-    $code->setCodeCategory(strtolower($category)) ;
-    $code->setCode($this->cdata) ;
-    if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($code) ;
+    
   }
 
   private function addComment($is_staging = false, $notion =  'general')
@@ -612,8 +614,10 @@ class ImportABCDXml implements ImportModelsInterface
 	 //if  $this->main_code_found is set to false and column "code_auto_increment" in table collection is set to true, autoincrement number
 	 //increments only if collection is auto-incremented and no "main code" (=UnitID in ABCD) found
 	 //=> increments only if "main" empty
+   
 	 if($this->main_code_found===FALSE&&$this->collection_has_autoincrement)
 	 {
+       
 		$code = new Codes() ;
 		$code->setCodeCategory("main") ;
 		$this->code_last_value++;
@@ -625,6 +629,8 @@ class ImportABCDXml implements ImportModelsInterface
 		$code->setCodeSuffixSeparator($this->code_suffix_separator) ;
 		$code->setCodeSuffix($this->code_suffix) ;
 		$this->staging->addRelated($code) ;
+        $this->collection_of_import->setCodeLastValue($this->code_last_value);
+        $this->collection_of_import->save();
 		 
 	 }
 	 $this->main_code_found=FALSE;

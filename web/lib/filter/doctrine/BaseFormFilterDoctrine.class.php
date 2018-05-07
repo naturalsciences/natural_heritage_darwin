@@ -505,4 +505,6 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       return $results;
   }
+  
+
 }

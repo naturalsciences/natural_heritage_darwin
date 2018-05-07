@@ -2,7 +2,7 @@
    <tr class="spec_storage_parts_data">
    
       <td>
-        <table>
+        <table width = 100%>
             <tr>
                 <td>
                     <?php echo $form['category']->renderLabel();?>

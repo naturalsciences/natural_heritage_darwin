@@ -9,6 +9,8 @@
       else
         $orderSign = '<span class="order_sign_up">&nbsp;&#9650;</span>';
     ?>
+    <!-- ftheeten 2014 04 17-->
+      <?php include_partial('showurl', array('id'=>1, 'currentPage'=>$currentPage,'postMapper' => $_POST, 'getMapper' => $_GET, 's_url'=>$s_url , 'method'=>$_SERVER['REQUEST_METHOD'])); ?>
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
     <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container'=> '.spec_results')); ?>
 
@@ -75,6 +77,8 @@
       </tbody>
       </table>
       <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
+      <!-- ftheeten 2014 04 17-->
+      <?php include_partial('showurl', array('id'=>2, 'currentPage'=>$currentPage,'postMapper' => $_POST, 'getMapper' => $_GET, 's_url'=>$s_url , 'method'=>$_SERVER['REQUEST_METHOD'])); ?>
     <?php else:?>
       <?php echo __('No Specimen Matching');?>
     <?php endif;?>

@@ -68,6 +68,7 @@ class LoansForm extends BaseLoansForm
     $this->widgetSchema['sender'] = new sfWidgetFormInputHidden(array('default'=>1));
     $this->widgetSchema['receiver'] = new sfWidgetFormInputHidden(array('default'=>1));    
     $this->widgetSchema['users'] = new sfWidgetFormInputHidden(array('default'=>1));
+	
     /* Input file for related files */
     $this->widgetSchema['filenames'] = new sfWidgetFormInputFile();
     $this->widgetSchema['filenames']->setAttributes(array('class' => 'Add_related_file'));        
@@ -142,8 +143,34 @@ class LoansForm extends BaseLoansForm
 
 		));
 	$this->validatorSchema['collection_ref'] = new sfValidatorInteger(array('required'=>true));
+	
+	//jim herpers 2018 03 26
+	$this->widgetSchema['institution_receiver'] = new widgetFormSelectComplete(array('model' => 'Loans',
+                                                                        'table_method' => 'getDistinctInstitutions',
+                                                                        'method' => 'getFormatedName',
+                                                                        'key_method' =>  'getValinstit',
+                                                                        'add_empty' => true,
+                                                                        'change_label' => 'Pick an institution in the list',
+                                                                        'add_label' => 'Add another institution',
+                                                                       )
+                                                                 );
+	
+	$this->widgetSchema['address_receiver'] = new sfWidgetFormInput();
+    $this->widgetSchema['address_receiver']->setAttribute('class', 'large_size');
+   	$this->widgetSchema['zip_receiver'] = new sfWidgetFormInput();
+    $this->widgetSchema['zip_receiver']->setAttribute('class', 'small_size');
+	$this->widgetSchema['city_receiver'] = new sfWidgetFormInput();
+    $this->widgetSchema['city_receiver']->setAttribute('class', 'small_size');
 
-
+	$this->widgetSchema['country_receiver'] = new widgetFormSelectComplete(array('model' => 'Loans',
+                                                                        'table_method' => 'getDistinctCountries',
+                                                                        'method' => 'getCountries',
+                                                                        'key_method' => 'getCountries',
+                                                                        'add_empty' => true,
+                                                                        'change_label' => 'Pick a country in the list',
+                                                                        'add_label' => 'Add another country',
+                                                                       )
+                                                                 );
   }
   
   public function addUsers($num, $user_ref, $order_by=0)
@@ -366,7 +393,8 @@ class LoansForm extends BaseLoansForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
-          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
+		  //JMHerpers 2018 04 10 change from 128 to 4 (contact)
+          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(4));
         }
       }
       $value = $this->getValue('ActorsSender');
@@ -377,7 +405,8 @@ class LoansForm extends BaseLoansForm
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsSender'][$name]);
         }
-        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
+		//JMHerpers 2018 04 10 change from 128 to 4 (contact)
+        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(4));
       }
     } 
     if (null === $forms && $this->getValue('users'))
@@ -414,7 +443,8 @@ class LoansForm extends BaseLoansForm
         else
         {
           $form->getObject()->setRecordId($this->getObject()->getId());
-          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
+		  //JMHerpers 2018 04 10 change from 128 to 4 (contact)
+          if(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(4));
         }
       }
       $value = $this->getValue('ActorsReceiver');
@@ -425,7 +455,8 @@ class LoansForm extends BaseLoansForm
           $form->getObject()->delete();
           unset($this->embeddedForms['ActorsReceiver'][$name]);
         }
-        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(128));
+		//JMHerpers 2018 04 10 change from 128 to 4 (contact)
+        elseif(!is_array($value[$name]['people_sub_type'])) $form->getObject()->setPeopleSubType(array(4));
       }
     }
 

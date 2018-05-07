@@ -168,5 +168,24 @@ class LoansTable extends DarwinTable
     }
     return $response;
   }
-
+  
+  //JMHerpers 2018 03 26
+    public function getDistinctCountries()
+  {
+	$res = $this->createFlatDistinct('loans', 'country_receiver', 'countries')->execute();
+    return $res;
+  }
+  
+    public function getDistinctInstitutions()
+  {  
+    $q = Doctrine_Query::create()
+      ->useResultCache(true)
+      ->setResultCacheLifeSpan(5) //5 sec
+      ->From('people')
+      ->select("formated_name,(formated_name ||'§§§'|| id) as valinstit")
+      ->where("is_physical = 'f'")
+      ->orderBy("formated_name ASC");
+	$res = $q->execute();
+    return $res;
+  }
 }

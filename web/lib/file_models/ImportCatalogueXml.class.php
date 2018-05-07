@@ -17,10 +17,12 @@ class ImportCatalogueXml implements ImportModelsInterface
   * @var $id : is the reference to the record in import table
   **/
 
+
+  
   public function __construct($table='taxonomy')
   {
     $this->referenced_relation = $table;
-  }
+  }  
 
 
   public function parseFile($file,$id)
@@ -54,6 +56,10 @@ class ImportCatalogueXml implements ImportModelsInterface
         $i=1;
         while (($row = fgetcsv($fp, 0, "\t")) !== FALSE){
                 //ftheeten 2018 02 28
+			if(max(array_map("strlen",$row))==0)
+            {
+                continue;
+            }
              $row=  Encoding::toUTF8($row);
              $xml_parser = xml_parser_create();
             xml_set_object($xml_parser, $this) ;

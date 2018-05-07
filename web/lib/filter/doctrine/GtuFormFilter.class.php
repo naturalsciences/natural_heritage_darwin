@@ -69,6 +69,8 @@ class GtuFormFilter extends BaseGtuFormFilter
     $this->validatorSchema['lat_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-90', 'max'=>'90'));
     $this->validatorSchema['lon_to'] = new sfValidatorNumber(array('required'=>false,'min' => '-180', 'max'=>'180'));
 
+      
+    
     $this->validatorSchema->setPostValidator(new sfValidatorSchemaCompare(
       'gtu_from_date',
       '<=',
@@ -76,6 +78,10 @@ class GtuFormFilter extends BaseGtuFormFilter
       array('throw_global_error' => true),
       array('invalid'=>'The "begin" date cannot be above the "end" date.')
     ));
+    
+    //ftheeten 2018 03 23
+    $this->widgetSchema['ig_number'] = new sfWidgetFormInputText();
+    $this->validatorSchema['ig_number'] = new sfValidatorString(array('required' => false, 'trim' => true));
 
     $subForm = new sfForm();
     $this->embedForm('Tags',$subForm);
@@ -157,6 +163,16 @@ class GtuFormFilter extends BaseGtuFormFilter
         $query->andWhere("box(? :: text) @> location", $vert_box);
       }
       $query->andWhere('location is not null');
+    }
+    return $query;
+  }
+  
+  //ftheeten 2018 03 23
+   public function addIGNumberColumnQuery($query, $values, $val)
+  {
+    if( $val != '' )
+    {     
+      $query->andWhere('id IN (SELECT s.gtu_ref FROM specimens s WHERE ig_num= ?)', $val);
     }
     return $query;
   }

@@ -307,6 +307,9 @@ class peopleActions extends DarwinActions
    
   public function executeExtendedInfo(sfWebRequest $request)
   {
-    $this->people = Doctrine::getTable('People')->findOneById($request->getParameter('id'));
+	$this->people = Doctrine::getTable('People')->findOneById($request->getParameter('id'));	
+	/*JMHerpers 2018 03 23	*/
+	$this->people_address = json_decode($this->people->getCorrespondingInstitutionandAddress(),true);
+		  
   }  
 }

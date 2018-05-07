@@ -46,6 +46,10 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     $this->validatorSchema['table'] = new sfValidatorString(array('required' => true));
     $this->validatorSchema['level'] = new sfValidatorString(array('required' => false));
     $this->validatorSchema['caller_id'] = new sfValidatorString(array('required' => false));
+    
+     //ftheeten 2018 03 23
+    $this->widgetSchema['ig_number'] = new sfWidgetFormInputText();
+    $this->validatorSchema['ig_number'] = new sfValidatorString(array('required' => false, 'trim' => true));
    
      //ftheeten 2017 06 30
     /* Collection Reference */
@@ -146,7 +150,6 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
     {
      $query->andWhere("  name_indexed LIKE  fulltoindex(?)||'%' ", $values['name']);
     }
-	
     
     //2018 03 06
 	if (isset($values['metadata_ref']))
@@ -154,9 +157,29 @@ class TaxonomyFormFilter extends BaseTaxonomyFormFilter
      $query->andWhere("  metadata_ref = ? ", $values['metadata_ref']);
     }
     
+    //ftheeten 2018 03 23
+	// if(isset($values['ig_number']))
+	if($values['ig_number'] != "")
+    {
+    
+      $query->andWhere('id IN (SELECT s.taxon_ref FROM specimens s WHERE ig_num= ?)', $values['ig_number']);
+    }
+ 
      $this->addRelationItemColumnQuery($query, $values);
     $query->limit($this->getCatalogueRecLimits());
     return $query;
   }
+  
+       //ftheeten 2018 03 23
+   /*public function addIGNumberColumnQuery($query, $values, $val)
+  {
+    if( $val != '' )
+    {
+     print($val);
+      $query->andWhere('id IN (SELECT s.taxon_ref FROM specimens s WHERE ig_num= ?)', $val);
+    }
+    return $query;
+  }*/
+	
 }
 

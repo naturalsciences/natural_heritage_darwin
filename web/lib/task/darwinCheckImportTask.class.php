@@ -102,9 +102,12 @@ EOF;
     // Get back here the list of imports id that could be treated
     $imports = Doctrine::getTable('Imports')->tagProcessing($state_to_check, $options['id']);
 	
+    
 	
     $imports_ids = $imports->toKeyValueArray("id", "id");
-	//DBUG
+	
+    print_r($imports_ids);
+    //DBUG
     /*
 	foreach($imports_ids as $tmp_id)
 	{
@@ -260,18 +263,11 @@ EOF;
     if(filter_var($recipient, FILTER_VALIDATE_EMAIL))
     {
     
-        // send an email to the affiliate
-        /*$message = $this->getMailer()->compose(
-          array('franck.theeten@africamuseum.be' => 'Franck Theeten'),
-          $recipient,//$affiliate->getEmail(),
-          $title,
+      /* mail ( $recipient ,  $title,
 <<<EOF
 {$messageContent}
 EOF
-           );
- 
-        $this->getMailer()->send($message);*/
-        mail($recipient, $title, $message);
+       );*/
     }
  }
  

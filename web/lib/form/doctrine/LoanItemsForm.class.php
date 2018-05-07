@@ -12,7 +12,7 @@ class LoanItemsForm extends BaseLoanItemsForm
 {
   public function configure()
   {
-    $this->useFields(array('ig_ref','from_date', 'to_date','specimen_ref', 'details'));
+    $this->useFields(array('ig_ref','from_date', 'to_date','specimen_ref', 'details','specimen_count_tot','specimen_count_males','specimen_count_females','specimen_count_juveniles', 'specimen_count', 'specimen_part'));
     $this->widgetSchema['details'] = new sfWidgetFormTextarea(array(),array('rows'=>3));
 						//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
     $yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),1970);
@@ -32,6 +32,29 @@ class LoanItemsForm extends BaseLoanItemsForm
     $this->widgetSchema['item_visible'] = new sfWidgetFormInputHidden();
     $this->validatorSchema['item_visible'] = new sfValidatorPass();
     $this->setDefault('item_visible', 'true');
+	
+	#JMHerpers 2018 04 23
+	$this->widgetSchema['specimen_count_tot'] = new sfWidgetFormInput();
+    $this->validatorSchema['specimen_count_tot'] = new sfValidatorPass();
+	$this->widgetSchema['specimen_count_tot']->setAttributes(array('value'=>0,'class'=>'specimen_count_tot vvsmall_size'));
+
+	$this->widgetSchema['specimen_count_males'] = new sfWidgetFormInput();
+    $this->validatorSchema['specimen_count_males'] = new sfValidatorPass();
+	$this->widgetSchema['specimen_count_males']->setAttributes(array('value'=>0,'class'=>'specimen_count_males vvsmall_size'));
+		
+	$this->widgetSchema['specimen_count_females'] = new sfWidgetFormInput();
+    $this->validatorSchema['specimen_count_females'] = new sfValidatorPass();
+	$this->widgetSchema['specimen_count_females']->setAttributes(array('value'=>0,'class'=>'specimen_count_females vvsmall_size'));
+		
+	$this->widgetSchema['specimen_count_juveniles'] = new sfWidgetFormInput();
+    $this->validatorSchema['specimen_count_juveniles'] = new sfValidatorPass();
+	$this->widgetSchema['specimen_count_juveniles']->setAttributes(array('value'=>0,'class'=>'specimen_count_juveniles vvsmall_size'));
+		
+	$this->widgetSchema['specimen_count'] = new sfWidgetFormInputHidden();
+	$this->widgetSchema['specimen_count']->setAttributes(array('class'=>'specimen_count'));
+	
+	$this->widgetSchema['specimen_part'] = new sfWidgetFormInputHidden();
+	$this->widgetSchema['specimen_part']->setAttributes(array('class'=>'specimen_part'));
 
     $this->widgetSchema['from_date'] = new widgetFormJQueryFuzzyDate(
       array(

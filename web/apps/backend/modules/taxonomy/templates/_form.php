@@ -140,6 +140,8 @@ $(document).ready(function () {
     if ( $( ".col_check_metadata_ref" ).length ) {
      
         $(".col_check_metadata_ref option:eq(1)").attr("selected", "selected");
+        
+         $(".catalogue_level").val("48");
      
     }   
 	 <?php endif?>

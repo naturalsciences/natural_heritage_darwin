@@ -99,11 +99,11 @@
             <?php endif;?>
             <td class="<?php echo (! $is_choose)?'edit':'choose';?>">
               <a href="#" class="search_related"><?php echo image_tag('link.png', array("title" => __("Search Related")));?></a>
-                <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),$searchForm->getValue('table').'/view?id='.$item->getId());?>
+                <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))),$searchForm->getValue('table').'/view?id='.$item->getId(), array("target"=>"_blank"));?>
               <?php if(! $is_choose):?>
                 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-                  <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId());?>
-                  <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId());?>
+                  <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId(), array("target"=>"_blank"));?>
+                  <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(), array("target"=>"_blank"));?>
                 <?php endif ; ?>
               <?php else:?>
                 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>

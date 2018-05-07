@@ -1,3 +1,32 @@
+<!--ftheeten 2018 04 22-->
+<?php
+    $flagMenu="on";
+    
+    
+    if(array_key_exists("menu", $_REQUEST))
+    {       
+        if($_REQUEST['menu']=="off")
+        {
+            $flagMenu="off";
+        }
+    }
+    elseif(array_key_exists("menu", $_SESSION))
+    {       
+        if($_SESSION['menu']=="off")
+        {
+            $flagMenu="off";
+        }
+        
+    }
+    $_SESSION['menu']= $flagMenu;  
+?>
+<?php if($flagMenu!="off"):?>
+<?php 
+if(array_key_exists("menu", $_SESSION))
+{
+    unset($_SESSION['menu']);
+}
+?>
 <div class="menu_top">
     <ul id="navigation" class="sf-menu">
         <li class="house"><?php echo link_to(image_tag('home.png', 'alt=Home'),'board/index');?></li>
@@ -125,6 +154,15 @@
         <li class="exit" ><?php echo link_to(image_tag('exit.png', 'alt=Exit'),'account/logout');?></li>
     </ul>
 </div>
+<?php else:?>    
+    <style>
+        .widget_collection_global {
+    
+            top: 0px;
+            z-index: 1100;
+        }
+    </style>    
+<?php endif;?>
 <script>
 
     (function($){ //create closure so we can safely use $ as alias for jQuery

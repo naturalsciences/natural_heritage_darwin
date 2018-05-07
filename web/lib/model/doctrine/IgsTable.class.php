@@ -33,4 +33,6 @@ class IgsTable extends DarwinTable
       ->where('i.ig_num = ?', $object->getIgNum());
     return $q->fetchOne(); 
   }
+  
+ 
 }

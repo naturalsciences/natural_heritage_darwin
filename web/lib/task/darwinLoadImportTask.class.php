@@ -22,6 +22,7 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
+	  print("LOAD");
 
      // initialize the database connection
     $result = null ;
@@ -33,12 +34,15 @@ EOF;
     $idTmp=$this->returnImportId($conn);	
     $this->setImportAsWorking($conn, $idTmp, true);
     $conn->beginTransaction();
+	 print("LOAD 2");
+
     while($id = $conn->fetchOne('SELECT get_import_row()'))
     {
         $q = Doctrine_Query::create()
           ->from('imports p')
           ->where('p.id=?',$id)
           ->fetchOne() ;
+		  print("LOAD 3");
         //ftheeten 2017 03 13
         $file = sfConfig::get('sf_upload_dir').'/uploaded_'.sha1($q->getFilename().$q->getCreatedAt()).".".(explode(".",$q->getFilename())[1]) ;
         //$file = sfConfig::get('sf_upload_dir').'/uploaded_'.sha1($q->getFilename().$q->getCreatedAt()).'.xml' ;
@@ -48,6 +52,7 @@ EOF;
             switch ($q->getFormat())
             {
               case 'taxon':
+			  print("GO TAXON");
                 $import = new importCatalogueXml('taxonomy') ;
                 $count_line = "(select count(*) from staging_catalogue where parent_ref IS NULL AND import_ref = $id )" ;
                 break;              
@@ -98,28 +103,23 @@ EOF;
   
   //ftheeten 2017 08 28
   // attention keep identation
-  public function sendMail($recipient, $title, $message)
+ //ftheeten 2017 08 28
+  // attention keep identation
+  public function sendMail($recipient, $title, $messageContent)
  {
+
+
     if(filter_var($recipient, FILTER_VALIDATE_EMAIL))
     {
-    sfContext::getInstance()->set("sf_charset", "utf-8");
-        // send an email to the affiliate
-        $message = sfContext::getInstance()->getMailer()->compose(
-          array('franck.theeten@africamuseum.be' => 'Franck Theeten'),
-          $recipient,//$affiliate->getEmail(),
-          $title,
-<<<EOF
-{$message}
-EOF
-           );
- 
-        sfContext::getInstance()->getMailer()->send($message);
-        //$headers = "From: franck.theeten@africamuseum.be" . "\r\n" .
-"CC: theetenfrk@yahoo.fr";
-        // mail($recipient, $title, $message, $headers);
-         
+    
+      // mail( $recipient ,  $title,
+//<<<EOF
+//{$messageContent}
+//EOF
+  //     );
     }
  }
+ 
  
   //ftheeten 2047 08 29 
   public function returnImportId($p_conn)
@@ -127,12 +127,21 @@ EOF
        
      $returned=-1;
      $p_conn->beginTransaction();
-     $id = $p_conn->fetchOne("
+	 $count=$p_conn->fetchOne("
+            SELECT  count(id) FROM imports i1 WHERE i1.state = 'to_be_loaded' OFFSET 0 
+          "); 
+	$p_conn->commit();
+	if($count>=1)
+	{
+		$p_conn->beginTransaction();
+		$id = $p_conn->fetchOne("
             SELECT  id FROM imports i1 WHERE i1.state = 'to_be_loaded' ORDER BY i1.created_at asc, id asc OFFSET 0 
           "); 
-     
+		$p_conn->commit();
         $returned=$id; 
-     $p_conn->commit();
+	}
+	 
+	 
      //print_r($returned);
      return $returned;
   }
@@ -140,9 +149,25 @@ EOF
   //ftheeten 2017 08 28
   public function setImportAsWorking( $p_conn, $p_id, $p_working)
   {
-	 
+	 print("test working");
+	 print("PID=".$p_id);
     if($p_id>=0)
     {
+		if(is_bool($p_working))
+		{
+			print(1);
+			
+			$p_conn->beginTransaction();
+         Doctrine_Query::create()
+            ->update('imports p')
+            ->set('p.working','?',$p_working)
+            ->where('p.id = ?', $p_id)
+            ->execute();
+         $p_conn->commit();
+		}
+		else
+		{
+			print(2);
          $p_conn->beginTransaction();
          Doctrine_Query::create()
             ->update('imports p')
@@ -150,7 +175,8 @@ EOF
             ->where('p.id = ?', $p_id)
             ->execute();
          $p_conn->commit();
-    }
+		}
+	}
 	
   }  
 }

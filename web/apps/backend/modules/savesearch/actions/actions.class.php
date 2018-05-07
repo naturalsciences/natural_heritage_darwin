@@ -211,4 +211,47 @@ class savesearchActions extends sfActions
 		 ->orderBy('modification_date_time DESC')
         ->execute();
   }
+  
+    //ftheeten 2018 04 24
+  public function executeGeojson(sfWebRequest $request)  
+  {
+        error_reporting(E_ERROR | E_PARSE);
+        $returned=json_encode(Array());
+        if($request->getParameter('query_id') != ''&&$request->getParameter('user_id') != '')
+        {
+          
+             $query_id=$request->getParameter('query_id');
+             $user_id=$request->getParameter('user_id');
+             $sql = "SELECT fct_rmca_dynamic_saved_search_geojson as geojson FROM fct_rmca_dynamic_saved_search_geojson(:query, :user);";
+              $saved_search = Doctrine::getTable('MySavedSearches')->getSavedSearchByKey($query_id, $user_id);
+              $conn = Doctrine_Manager::connection();
+             $q = $conn->prepare($sql);
+             
+              $q->bindParam(":query", $query_id);
+              $q->bindParam(":user", $user_id);
+              $q->execute();
+              $item=$q->fetch(PDO::FETCH_ASSOC);
+             
+              $returned= $item["geojson"];
+              
+           }
+           $response = $this->getResponse();
+           
+           $response->clearHttpheaders();
+           $response->setHttpHeader('Content-Description','File Transfer');
+           $response->setHttpHeader('Cache-Control', 'public, must-revalidate, max-age=0');
+           $response->setHttpHeader('Pragma: public',true);
+           $response->setHttpHeader('Content-Transfer-Encoding', 'binary'); 
+          
+           $response->setHttpHeader('Content-Type','application/json'); // e.g. application/pdf, image/png etc.
+           $response->setHttpHeader('Content-Disposition','attachment; filename='.str_replace(" ", "_",$saved_search->getName()).'.geojson'); //some filename
+           $response->sendHttpHeaders(); //edited to add the missed sendHttpHeaders
+           $response->setContent($returned);
+
+           $response->sendContent();
+           
+           print($returned);
+
+        return sfView::NONE;           
+  }
 }

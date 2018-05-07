@@ -19,19 +19,8 @@
             <th class="datesNum"><?php echo $searchForm['lower_bound']->renderLabel();?></th>
             <th class="datesNum"><?php echo $searchForm['upper_bound']->renderLabel();?></th>
           <?php endif;?>
-           <!--ftheeten 2017 06 30-->
-           <?php if(isset($searchForm['collection_ref'])&&isset($searchForm['collection_ref_for_modal'])):?>
-		    <!--jmherpers 2018 03 14-->
-            <!--<th><?php echo $searchForm['collection_ref']->renderLabel();?></th>-->
-			<th>Collection</th>
-           <?php endif;?>
-		    <!--ftheeten 2017 06 30-->
-           <?php if(isset($searchForm['metadata_ref'])):?>
-           <!--jmherpers 2018 03 14-->
-            <!--<th><?php echo $searchForm['metadata_ref']->renderLabel();?></th>-->
-			<th>Taxonomy</th>
-           <?php endif;?>
-          <th>
+
+         
           <th></th>
         </tr>
       </thead>
@@ -49,6 +38,29 @@
             <td class="datesNum"><?php echo $searchForm['lower_bound'];?></td>
             <td class="datesNum"><?php echo $searchForm['upper_bound'];?></td>
           <?php endif;?>
+          </tr>
+          <tr>
+          <!--ftheeten 2017 06 30-->
+           <?php if(isset($searchForm['collection_ref'])&&isset($searchForm['collection_ref_for_modal'])):?>
+		    <!--jmherpers 2018 03 14-->
+            <!--<th><?php echo $searchForm['collection_ref']->renderLabel();?></th>-->
+			<th>Collection</th>
+           <?php endif;?>
+		    <!--ftheeten 2017 06 30-->
+           <?php if(isset($searchForm['metadata_ref'])):?>
+           <!--jmherpers 2018 03 14-->
+            <!--<th><?php echo $searchForm['metadata_ref']->renderLabel();?></th>-->
+			<th>Taxonomy</th>
+         
+           <?php endif;?>
+           <?php if(isset($searchForm['ig_number'])):?>
+           <!--ftheeten 2018 03 23-->
+           <th><?php echo $searchForm['ig_number']->renderLabel();?></th>
+			
+         
+           <?php endif;?>
+           </tr>
+          <tr>
            <!--ftheeten 2017 06 30-->
            <?php if(isset($searchForm['collection_ref'])&&isset($searchForm['collection_ref_for_modal'])):?>
            <?php if($is_choose===FALSE):?>
@@ -60,6 +72,12 @@
 		  <?php if(isset($searchForm['metadata_ref'])):?>
             <td><?php echo $searchForm['metadata_ref'];?></td>
           <?php endif;?>
+          <?php if(isset($searchForm['ig_number'])):?>
+            <td><?php echo $searchForm['ig_number'];?></td>
+          <?php endif;?>
+        </tr>
+
+        <tr>
           <td><input class="search_submit" type="submit" name="search" value="<?php echo __('Search');?>" /></td>
         </tr>
         <tr class="hidden">
@@ -90,6 +108,17 @@
   </div>
 </form>
 <script>
+//ftheeten 2018 04 10
+var urlParam= function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results==null){
+               return null;
+            }
+            else{
+               return decodeURI(results[1]) || 0;
+            }
+        }  
+
 $(document).ready(function () {
   $('.catalogue_filter').choose_form({});
   $('#clear_cat_relation').click(function (event)
@@ -193,6 +222,15 @@ $(document).ready(function () {
 
     }
   );
-});
+  
+  //ftheeten 2018 04 10
+  var ig_num=urlParam('ig_num');
+  if(!!ig_num)
+  {
+    
+        $("#searchCatalogue_ig_number").val(decodeURIComponent(ig_num));
+        $( ".search_form" ).submit();
+    }
+ });
 </script>
 </div>

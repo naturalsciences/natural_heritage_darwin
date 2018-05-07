@@ -85,6 +85,21 @@
           form.attr('action', '<?php echo url_for($action) ; ?>') ;
           form.submit() ;
         });
+		/*JMHerpers 2018 03 23*/
+		$('#Paste_code_loan').click(function() 
+        {
+          form = $(this).closest('form') ;
+          form.removeAttr('target') ;
+          form.attr('action', '<?php echo url_for($action) ; ?>') ;
+          form.submit() ;
+        });
+		$('#loans_name').focusout(function() 
+        {
+          form = $(this).closest('form') ;
+          form.removeAttr('target') ;
+          form.attr('action', '<?php echo url_for($action) ; ?>') ;
+          form.submit() ;
+        });
         $("div.widgets_container").print_report({ "q_tip_text" : "<?php echo addslashes(__('Please fill in the criterias to print your report'));?>" });
       });
       </script>   

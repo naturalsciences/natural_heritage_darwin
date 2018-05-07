@@ -3,6 +3,7 @@ class RMCATabToTaxonomyXml
 {
     protected $headers=Array();
     protected $headers_inverted=Array();
+	//protected $duplicates=Array();
     
     private function initFields()
     {
@@ -101,11 +102,11 @@ class RMCATabToTaxonomyXml
                         if (isset($p_static_value)) {
                             if(isset($p_namespace))
                             {
-                                $new_tag = $this->m_dom->createElementNS($p_namespace, $xml_paths[$i], $p_static_value);
+                                $new_tag = $this->m_dom->createElementNS($p_namespace, $xml_paths[$i], htmlspecialchars($p_static_value));
                             }
                             else
                             {
-                                $new_tag = $this->m_dom->createElement($xml_paths[$i], $p_static_value);
+                                $new_tag = $this->m_dom->createElement($xml_paths[$i], htmlspecialchars($p_static_value));
                             }
                         } else {
                             if(isset($p_namespace))
@@ -145,7 +146,7 @@ class RMCATabToTaxonomyXml
         for($i=32;$i>=$upper_bound;$i--)
         {
             $rank_to_test=$this->fields[$i];
-            $rank_to_find=$this->headers_inverted[strtolower($rank_to_test)];
+            //$rank_to_find=$this->headers_inverted[strtolower($rank_to_test)];
            
             if(array_key_exists(strtolower($rank_to_test),$this->headers_inverted))
             {
@@ -194,17 +195,18 @@ class RMCATabToTaxonomyXml
            
             if(strlen(trim($value))>0)
             {
-                
+                $value=htmlspecialchars(trim($value));
                 $field_name=$this->headers[strtolower($key)];
                 
                 $key_absolute=$this->fields_inverted[strtolower($field_name)];
                
                 if($key_absolute<=32)
                 {
+					//print("test value = $value \r\n");
                     $explodedVal=explode(" ",$value);
+                    $explodedVal = array_map('trim', $explodedVal);
                     $taxonomic_unit = $dom->createElement('TaxonomicalUnit');
-                    $taxonomic_tree->appendChild($taxonomic_unit);
-                    $this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,$field_name);
+                   
                     
                     if($key_absolute>26&&$last_subspecific_calculated===false)
                     {
@@ -221,19 +223,47 @@ class RMCATabToTaxonomyXml
                         }
                         elseif(count($explodedVal)>1)
                         {
-                            $tab_for_full_name[]=$explodedVal[count($explodedVal)-1];
+							
+                            $tab_for_full_name=$explodedVal;
+                            
                         }
-                        $this->testAndAppendTag($taxonomic_unit, null, "TaxonFullName", null, implode(' ',$tab_for_full_name ));                        
+                        if($key_absolute==$last_rank&&array_key_exists("author_team_and_year",$this->headers_inverted))
+                            {
+                                
+                                $author=$p_row[$this->headers_inverted["author_team_and_year"]];
+                                
+                                $author=trim($author);
+                                if(!in_array($author, tab_for_full_name))
+                                {
+                                    $tab_for_full_name[]=$author;
+                                }
+                            }
+                       
+						if(in_array(implode(' ',$tab_for_full_name ),$this->duplicates))
+						{
+							continue;
+						}
+						
+						$taxonomic_tree->appendChild($taxonomic_unit);
+						$this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,$field_name);
+                         $tab_for_full_name = array_map('trim', $tab_for_full_name);
+                        $this->testAndAppendTag($taxonomic_unit, null, "TaxonFullName", null, trim(implode(' ',$tab_for_full_name )));  
+						
                     }
                     else
-                    {                      
+                    {   
+						
+						$this->duplicates[]=$value;
+						$taxonomic_tree->appendChild($taxonomic_unit);
+						$this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,$field_name);						
                         $this->testAndAppendTag($taxonomic_unit, null, "TaxonFullName", null,$value);
+						
                     }
                     
                     if($key_absolute<26)
                     {
-                        //$this->testAndAppendTag($taxonomic_unit, null, "TaxonFullName", null, $value);
-                        $monomial=$value;
+                        
+                        $monomial=trim($value);
                         if($key_absolute==24)
                         {
                             $genus=$monomial;
@@ -298,7 +328,7 @@ class RMCATabToTaxonomyXml
             }
        }
 
-        //print($dom->saveXML($dom, LIBXML_NOEMPTYTAG ));
+        print($dom->saveXML($dom, LIBXML_NOEMPTYTAG ));
         return $dom->saveXML($dom, LIBXML_NOEMPTYTAG );
     }
 

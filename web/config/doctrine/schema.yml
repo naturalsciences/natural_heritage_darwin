@@ -1408,6 +1408,12 @@ Loans:
         extended_to_date: { type: string}
         #ftheeten 2016 11 23
         collection_ref: { type: integer}
+        #JMHerpers 2018 03 26
+        address_receiver: { type: string}
+        institution_receiver: { type: string}
+        country_receiver: { type: string}
+        city_receiver: { type: string}
+        zip_receiver: { type: string}
     relations:
         CataloguePeople:
             class: LoanActors
@@ -1428,6 +1434,12 @@ LoanItems:
         to_date: { type: string}
         specimen_ref: { type: integer}
         details: { type: string, notnull: true, default:''}
+        specimen_count_tot: { type: integer}
+        specimen_count_males: { type: integer}
+        specimen_count_females: { type: integer}
+        specimen_count_juveniles: { type: integer}
+        specimen_part: { type: string, notnull: true, default:''}
+        specimen_count: { type: string, notnull: true, default:''}
     relations:
         Loan:
             local: loan_ref

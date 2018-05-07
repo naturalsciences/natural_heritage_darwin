@@ -1,5 +1,32 @@
 <table class="extended_info">
+  <!--JM Herpers 2018 03 23-->
   <tr>
+	  <td>
+		<?php echo $people->getTitle().' '.$people->getGivenName().' '.$people->getFamilyName();?>
+	  </td>
+  </tr>
+  <tr>
+	  <td>
+		<?php  if (count($people_address) > 0):
+			echo $people_address[0]['instit'];
+		endif ?>
+	  </td>
+  </tr>
+  <tr>
+	  <td>
+		<?php  if (count($people_address) > 0):
+			echo $people_address[0]['address'];
+		endif ?>
+	  </td>
+  </tr>
+  <tr>
+	  <td>
+		<?php  if (count($people_address) > 0):
+			echo $people_address[0]['country'];
+		endif ?>
+	  </td>
+  </tr>
+  <!--<tr>
 	  <th><?php echo __('Title');?></th>
   	<td><?php echo $people->getTitle();?></td>
   </tr>
@@ -53,5 +80,5 @@
           -
           <?php endif ?>          
         </td>
-  </tr> 
+  </tr> -->
 </table>

@@ -548,6 +548,31 @@ class catalogueActions extends DarwinActions
 		$this->getResponse()->setContentType('application/json');
 		return  $this->renderText(json_encode($results));
   }
+  
+  //JIM 2018 04 06
+  public function executeInstitutionaddressjson(sfWebRequest $request)
+  {
+	$returned=Array();
+	if($request->getParameter('id')){		
+	  $instAddr=Doctrine::getTable('PeopleAddresses')->findOneByPersonUserRef($request->getParameter('id')); 
+		if(is_object( $instAddr))
+		{
+			$this->getResponse()->setContentType('application/json');
+			$result=Array();
+			$result['entry']=$instAddr->getEntry();
+			$result['po_box']=$instAddr->getPoBox();
+			$result['extended_address']=$instAddr->getExtendedAddress();
+			$result['locality']=$instAddr->getLocality();
+			$result['region']=$instAddr->getRegion();
+			$result['zip_code']=$instAddr->getZipCode();
+			$result['country']=$instAddr->getCountry();
+			$result['tag']=$instAddr->getTag();						
+			$returned=$result;
+		}
+	} 
+	$this->getResponse()->setContentType('application/json');
+	return  $this->renderText(json_encode($returned));	
+  }
 
 
 

@@ -1,5 +1,30 @@
 <?php
 
+//ftheeten 2018 04 17        
+function array_filter_recursive($array, $callback = null) {
+    foreach ($array as $key => & $value) {
+        if (is_array($value)) {
+            $value = array_filter_recursive($value, $callback);
+        }
+        else {
+            if ( ! is_null($callback)) {
+                if ( ! $callback($value)) {
+                    unset($array[$key]);
+                }
+            }
+            else {
+                if ( ! (bool) $value) {
+                    unset($array[$key]);
+                }
+            }
+        }
+    }
+    unset($value);
+
+    return $array;
+}
+
+
 function word2color($w){
   if (strlen($w)==0) return substr('00000' . dechex(mt_rand(0, 0xffffff)), -6);
   while (strlen($w)<6) $w.=$w;

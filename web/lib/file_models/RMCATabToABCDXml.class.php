@@ -4,6 +4,7 @@ class RMCATabToABCDXml
 
     protected $headers=Array();
     protected $headers_inverted=Array();
+    private $nbProperties=30;
     
     private function initFields()
     {
@@ -17,12 +18,30 @@ class RMCATabToABCDXml
         $fields[] = "KindOfUnit";
         $fields[] = "TypeStatus";
         $fields[] = "totalNumber";
-        $fields[] = "maleNumber";
-        $fields[] = "femaleNumber";
+        $fields[] = "maleCount";
+        $fields[] = "femaleCount";
+        $fields[] = "sexUnknownCount";
+        $fields[] = "socialStatus";
         $fields[] = "CollectedBy";
         $fields[] = "SamplingCode";
         $fields[] = "Country";
         $fields[] = "LocalityText";
+        
+        //2018 04 11
+        $fields[] = "accessionNumber";
+        $fields[] = "acquiredFrom";
+        $fields[] = "acquisitionType";
+        $fields[] = "acquisitionYear";
+        $fields[] = "acquisitionMonth";
+        $fields[] = "acquisitionDay";
+        
+        $fields[] = "elevationInMeters";
+        $fields[] = "depthInMeters";
+        $fields[] = "expedition_project";
+        $fields[] = "lifeStage";
+        $fields[] = "fixation";
+        $fields[] = "conservation";
+        $fields[] = "samplingMethod";
         
         //Taxonomy fields
         $fields[] = "AuthorYear";
@@ -36,6 +55,12 @@ class RMCATabToABCDXml
         $fields[] = "Phylum";
         $fields[] = "IdentifiedBy";
         $fields[] = "IdentificationYear";
+        $fields[] = "IdentificationMonth";
+        $fields[] = "IdentificationDay";
+        $fields[] = "IdentificationNotes";
+        $fields[] = "IdentificationHistory";
+        $fields[] = "IdentificationMethod";
+        $fields[] = "referenceString";
         
         //specific fields
         $fields[] = "LatitudeDMSDegrees";
@@ -51,26 +76,36 @@ class RMCATabToABCDXml
         $fields[] = "CollectionStartDay";
         $fields[] = "CollectionStartMonth";
         $fields[] = "CollectionStartYear";
+        $fields[] = "CollectionEndDay";
+        $fields[] = "CollectionEndMonth";
+        $fields[] = "CollectionEndYear";
+        $fields[] = "collectionStartTimeH";
+        $fields[] = "collectionStartTimeM";
+        $fields[] = "collectionEndTimeH";
+        $fields[] = "collectionEndTimeM";
+        $fields[] = "ecology";
+        $fields[] = "localityNotes";
+
         $fields[] = "associatedUnitInstitution";
         $fields[] = "associatedUnitCollection";
         $fields[] = "associatedUnitID";
         $fields[] = "associationType";
         
         //field in ABCD extensions
-        $fields[] = "storage:Localisation";
-        $fields[] = "storage:Institution";
-        $fields[] = "storage:Building";
-        $fields[] = "storage:Floor";
-        $fields[] = "storage:Room";
-        $fields[] = "storage:Row";
-        $fields[] = "storage:Column";
-        $fields[] = "storage:Shelf";
-        $fields[] = "storage:ContainerName";
-        $fields[] = "storage:ContainerStorage";
-        $fields[] = "storage:ContainerType";
-        $fields[] = "storage:SubcontainerName";
-        $fields[] = "storage:SubcontainerStorage";
-        $fields[] = "storage:SubcontainerType";
+        $fields[] = "Localisation";
+        $fields[] = "Institution";
+        $fields[] = "Building";
+        $fields[] = "Floor";
+        $fields[] = "Room";
+        $fields[] = "Row";
+        $fields[] = "Column";
+        $fields[] = "Shelf";
+        $fields[] = "ContainerName";
+        $fields[] = "ContainerStorage";
+        $fields[] = "ContainerType";
+        $fields[] = "SubcontainerName";
+        $fields[] = "SubcontainerStorage";
+        $fields[] = "SubcontainerType";
         // reltionships between taxas
         $fields[] = "HostClass";
         $fields[] = "HostOrder";
@@ -82,33 +117,19 @@ class RMCATabToABCDXml
         $fields[] = "HostCollector";
         $fields[] = "HostIdentifier";
 		
-		$fields[] = "Property1";
-        $fields[] = "PropertyValue1";
-		$fields[] = "Property2";
-        $fields[] = "PropertyValue2";
-		$fields[] = "Property3";
-        $fields[] = "PropertyValue3";
-		$fields[] = "Property4";
-        $fields[] = "PropertyValue4";
-		$fields[] = "Property5";
-        $fields[] = "PropertyValue5";
-		$fields[] = "Property6";
-        $fields[] = "PropertyValue6";
-        $fields[] = "Property7";
-        $fields[] = "PropertyValue7";
-		$fields[] = "Property8";
-        $fields[] = "PropertyValue8";
-		$fields[] = "Property9";
-        $fields[] = "PropertyValue9";
-		$fields[] = "Property10";
-        $fields[] = "PropertyValue10";
-		$fields[] = "Property11";
-        $fields[] = "PropertyValue11";
-		$fields[] = "Property12";
-        $fields[] = "PropertyValue12";
+        //ftheeten 2018 04 12
+        for($i=1;$i<=$this->nbProperties;$i++)
+        {
+            $fields[] = "Property".$i;
+            $fields[] = "PropertyValue".$i;
+            $fields[] = "siteProperty".$i;
+            $fields[] = "sitePropertyValue".$i;
+        }
         
         return $fields;
     }
+    
+    
     
     /*function prepareFileEncoding( $file, $encoding = "UTF-8" )
     {
@@ -203,7 +224,8 @@ class RMCATabToABCDXml
     
     public function addIdentifications($p_parentElement, $p_valueArray)
     {
-        $ident       = $this->testAndAppendTag($p_parentElement, null, "Identifications/Identification", null, null, true);
+        $ident_root  = $this->testAndAppendTag($p_parentElement, null, "Identifications", null, null, true);
+        $ident       = $this->testAndAppendTag($ident_root, null, "Identification", null, null, true);
         $taxon_ident = $this->testAndAppendTag($ident, null, "Result/TaxonIdentified", null, null, true);
         $scientific_name = $this->testAndAppendTag($ident, null, "ScientificName", null, null, true);
         $this->testAndAppendTag($scientific_name, "FullScientificName", "FullScientificNameString", $p_valueArray);
@@ -225,29 +247,49 @@ class RMCATabToABCDXml
       
         
         if (array_key_exists(strtolower("Family"), $this->headers_inverted)) {
-            $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
-            $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "familia");
-            $this->testAndAppendTag($higher_taxon, "Family", "HigherTaxonName", $p_valueArray);
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Family")]]))>0)
+            {
+                $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
+                $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "familia");
+                $this->testAndAppendTag($higher_taxon, "Family", "HigherTaxonName", $p_valueArray);
+            }
         }
         
         if (array_key_exists(strtolower("Order"), $this->headers_inverted)) {
-            $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
-            $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "ordo");
-            $this->testAndAppendTag($higher_taxon, "Order", "HigherTaxonName", $p_valueArray);
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Order")]]))>0)
+            {
+                $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
+                $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "ordo");
+                $this->testAndAppendTag($higher_taxon, "Order", "HigherTaxonName", $p_valueArray);
+            }
         }
         if (array_key_exists(strtolower("Class"), $this->headers_inverted)) {
-            $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
-            $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "classis");
-            $this->testAndAppendTag($higher_taxon, "Class", "HigherTaxonName", $p_valueArray);
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("Class")]]))>0)
+            {
+                $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
+                $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "classis");
+                $this->testAndAppendTag($higher_taxon, "Class", "HigherTaxonName", $p_valueArray);
+            }
         }
         if (array_key_exists(strtolower("Phylum"), $this->headers_inverted)) {
-            $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
-            $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "phylum");
-            $this->testAndAppendTag($higher_taxon, "Phylum", "HigherTaxonName", $p_valueArray);
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("phylum")]]))>0)
+            {
+                $higher_taxon = $this->testAndAppendTag($higher_taxa, null, "HigherTaxon", null, null, true);
+                $this->testAndAppendTag($higher_taxon, null, "HigherTaxonRank", null, "phylum");
+                $this->testAndAppendTag($higher_taxon, "Phylum", "HigherTaxonName", $p_valueArray);
+            }
         }
         
         $this->testAndAppendTag($ident, "IdentifiedBy", "Identifiers/Identifier/PersonName/FullName", $p_valueArray);
-        $this->testAndAppendTag($ident, "IdentificationYear", "Date/ISODateTimeBegin", $p_valueArray);
+        
+        $identDate=$this->generateDateGeneric("identification", $p_valueArray);
+        $this->testAndAppendTag($ident, null, "Date/ISODateTimeBegin", null, $identDate);
+        
+        
+        $this->testAndAppendTag($ident, "referenceString", "References/Reference/TitleCitation", $p_valueArray );
+        $this->testAndAppendTag($ident, "identificationMethod", "Method", $p_valueArray );
+        $this->testAndAppendTag($ident, "identificationNotes", "Notes", $p_valueArray );
+        $this->testAndAppendTag($ident_root, "identificationHistory", "IdentificationHistory", $p_valueArray );
     }
     
     public function addKindOfUnit($p_parentElement, $p_valueArray)
@@ -264,25 +306,189 @@ class RMCATabToABCDXml
         $this->testAndAppendTag($unit_association, "associationType", "AssociationType", $p_valueArray);
     }
     
+    //ftheeten 2018 04 12
+    public function generateDateGeneric($prefix, $p_valueArray)
+    {
+        $dateTmp="";
+         if(array_key_exists(strtolower($prefix."Year"), $this->headers_inverted)) 
+        {
+                //year
+                if (is_numeric($p_valueArray[$this->headers_inverted[strtolower($prefix."Year")]])) 
+                {
+                    $dateTmp=$p_valueArray[$this->headers_inverted[strtolower($prefix."Year")]];               
+                    //month
+                    if(array_key_exists(strtolower($prefix."Month"), $this->headers_inverted)) 
+                    {
+                        if (is_numeric($p_valueArray[$this->headers_inverted[strtolower($prefix."Month")]])) 
+                        {
+                            $dateTmp=$dateTmp."-".$p_valueArray[$this->headers_inverted[strtolower($prefix."Month")]];
+                            //day
+                            if(array_key_exists(strtolower($prefix."Day"), $this->headers_inverted)) 
+                            {
+                                if (is_numeric($p_valueArray[$this->headers_inverted[strtolower($prefix."Day")]])) 
+                                {
+                                    $dateTmp=$dateTmp."-".$p_valueArray[$this->headers_inverted[strtolower($prefix."Day")]];
+                                }
+                            }
+                        }
+                    }
+                }
+               
+            }
+            return $dateTmp;
+    }
     
+    //ftheeten 2018 04 12
+    public function generateHourGeneric($prefix, $p_valueArray)
+    {
+        $hourTmp="";
+         if(array_key_exists(strtolower($prefix."H"), $this->headers_inverted)) 
+        {
+                //year
+                if (is_numeric($p_valueArray[$this->headers_inverted[strtolower($prefix."H")]])) 
+                {
+                    $hourTmp=$p_valueArray[$this->headers_inverted[strtolower($prefix."H")]];               
+                    //month
+                    if(array_key_exists(strtolower($prefix."M"), $this->headers_inverted)) 
+                    {
+                        if (is_numeric($p_valueArray[$this->headers_inverted[strtolower($prefix."M")]])) 
+                        {
+                            $hourTmp=$hourTmp.":".$p_valueArray[$this->headers_inverted[strtolower($prefix."M")]];
+                            $hourTmp=$hourTmp.":00";
+                        }
+                    }
+                }
+               
+            }
+            return $hourTmp;
+    }
+    
+    //ftheeten 2018 04 12
+    public function addCollectionDates($p_parentElement, $p_valueArray, $dom)
+    {
+        $dateTimeNode = $dom->createElement("DateTime");
+        $p_parentElement->appendChild($dateTimeNode);
+        //date begin
+        $dateTmpBegin=$this->generateDateGeneric("collectionStart", $p_valueArray);
+        $this->testAndAppendTag($dateTimeNode, null, "ISODateTimeBegin", null, $dateTmpBegin); 
+        //date end
+        $dateTmpEnd=$this->generateDateGeneric("collectionEnd", $p_valueArray);
+        $this->testAndAppendTag($dateTimeNode, null, "ISODateTimeEnd", null, $dateTmpEnd);        
+        //hour begin
+        $hourTmpBegin=$this->generateDateGeneric("collectionStartTime", $p_valueArray);
+        $this->testAndAppendTag($dateTimeNode, null, "TimeOfDayBegin", null, $hourTmpBegin);
+        //hour end
+        $hourTmpEnd=$this->generateDateGeneric("collectionEndTime", $p_valueArray);
+        $this->testAndAppendTag($dateTimeNode, null, "TimeOfDayEnd", null, $hourTmpEnd);
+        
+        
+    }
+    
+    public function convertDMSToDecimal($coordDMS)
+    {
+        
+        
+
+        $coordDMS = str_replace(' ', '', $coordDMS);
+        
+       
+        
+        $hexDeg="\x".dechex(ord("°"));
+
+
+        $returned=NULL;
+        $positive=1;
+        $patternDec="/((\+|-)?\d+)".$hexDeg.".*/u";
+        $patternMin="/.+".$hexDeg."\s*(\d+(\.|,)?\d*)\s*'/u";
+        $patternSec="/.+'\s*(\d+(\.|,)?\d*)\s*(\"|'')/u";
+        $patternNegative="/.+(S|W).?/ui";
+        $output_deg=Array();
+        $testDeg=preg_match($patternDec, $coordDMS, $output_deg);
+        $degPart=0;
+        $minPart=0;
+        $secPart=0;
+        
+        if($testDeg===1&&count($output_deg)>1)
+        {
+            
+            $degPart=(int)$output_deg[1];
+            $returned=abs($degPart);
+           
+            if(is_numeric($degPart))
+            {
+               
+                if((int)$degPart<0)
+                {
+                    $positive=-1;
+                }
+                 $output_min=Array();
+                 $testMin=preg_match($patternMin, $coordDMS, $output_min);
+      
+                if($testMin===1&&count($output_min)>1)
+                {
+                    
+                    $minPart=$output_min[1];
+                    $minPart=$minPart/60;
+                    $returned=$returned+$minPart;
+                    if(is_numeric($minPart))
+                    {
+                         $output_sec=Array();
+                         $testSec=preg_match($patternSec, $coordDMS, $output_sec);
+                         if($testSec===1&&count($output_sec)>1)
+                         {
+                             $secPart=$output_sec[1];
+                             if(is_numeric($secPart))
+                            {   
+                                
+                                $secPart=$secPart/3600;
+                                $returned=$returned+$secPart;
+                            }
+                         }
+                    }
+                }
+            }
+        }
+        if(!is_null($returned))
+        {
+           
+            $testNeg=preg_match($patternNegative, $coordDMS);
+            if($testNeg===1)
+            {
+                $positive=-1;
+            }
+            $returned=$returned*$positive;
+            
+        }
+       
+        return $returned;
+        
+        
+    }
     
     public function handleCoordinates($p_parentElement, $p_valueArray)
     {
         $latText           = "";
         $longText          = "";
         $flagDecimalDirect = false;
+        $flagTrytoGuessDecimalCoordinates = false;
+        $flagGuessedDecimal = false;
+        
+        
+        
         if (array_key_exists(strtolower("LatitudeDecimal"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDecimal"), $this->headers_inverted)) {
             if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("LatitudeDecimal")]]) && is_numeric($p_valueArray[$this->headers_inverted[strtolower("LongitudeDecimal")]])) {
                 $flagDecimalDirect = true;
             }
         }
-        if ($flagDecimalDirect) {
-            
+        if ($flagDecimalDirect) {    
+ 
             $coord_node = $this->testAndAppendTag($p_parentElement, null, "SiteCoordinateSets/SiteCoordinates/CoordinatesLatLong", null, null, true);
             $this->testAndAppendTag($coord_node, "LatitudeDecimal", "LatitudeDecimal", $p_valueArray);
             $this->testAndAppendTag($coord_node, "LongitudeDecimal", "LongitudeDecimal", $p_valueArray);
-        } elseif (array_key_exists(strtolower("LatitudeDMSDegrees"), $this->headers_inverted) && array_key_exists(strtolower("LatitudeDMS_N_S"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDMSDegrees"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDMS_W_E"), $this->headers_inverted)) 
+        } 
+        elseif (array_key_exists(strtolower("LatitudeDMSDegrees"), $this->headers_inverted) && array_key_exists(strtolower("LatitudeDMS_N_S"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDMSDegrees"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeDMS_W_E"), $this->headers_inverted)) 
         {
+
             $rootLat  = (float) abs($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSDegrees")]]);
             $rootLong = (float) abs($p_valueArray[$this->headers_inverted[strtolower("LongitudeDMSDegrees")]]);
             $latText  = (string) abs($p_valueArray[$this->headers_inverted[strtolower("LatitudeDMSDegrees")]]) . "&#176;";
@@ -335,6 +541,23 @@ class RMCATabToABCDXml
             $this->testAndAppendTag($coord_node, "LatitudeDecimal", "LatitudeDecimal", null, $rootLat);
             $this->testAndAppendTag($coord_node, "LongitudeDecimal", "LongitudeDecimal", null, $rootLong);
         }
+        //try to calculate DD from DMS in text
+        elseif (array_key_exists(strtolower("LatitudeText"), $this->headers_inverted) && array_key_exists(strtolower("LongitudeText"), $this->headers_inverted)) 
+        {
+
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("LatitudeText")]]))>0 && strlen(trim($p_valueArray[$this->headers_inverted[strtolower("LongitudeText")]]))>0) {
+                $flagTrytoGuessDecimalCoordinates = true;
+                $latitudeDecimaltmp=$this->convertDMSToDecimal($p_valueArray[$this->headers_inverted[strtolower("LatitudeText")]]);
+                $longitudeDecimaltmp=$this->convertDMSToDecimal($p_valueArray[$this->headers_inverted[strtolower("LongitudeText")]]);
+                if(is_numeric($latitudeDecimaltmp)&&is_numeric($longitudeDecimaltmp))
+                {
+                    $coord_node = $this->testAndAppendTag($p_parentElement, null, "SiteCoordinateSets/SiteCoordinates/CoordinatesLatLong", null, null, true);
+                    $this->testAndAppendTag($coord_node, null, "LatitudeDecimal",null, $latitudeDecimaltmp);
+                    $this->testAndAppendTag($coord_node, null, "LongitudeDecimal", null, $longitudeDecimaltmp);
+                }
+            }
+        }
+        
         $flagCopyLatLongText = false;
         
         if (array_key_exists(strtolower("LatitudeText"), $this->headers_inverted) === FALSE || array_key_exists(strtolower("LongitudeText"), $this->headers_inverted) === FALSE) {
@@ -350,32 +573,63 @@ class RMCATabToABCDXml
             $anchor_textcoord = $this->testAndAppendTag($coord_node, null, "SiteMeasurementsOrFacts/SiteMeasurementsOrFact/MeasurementOrFactAtomised", null, null, true);
             $textCoord        = $latText . " " . $longText;
             $textCoord= str_replace("°", "&#176;", $textCoord);
+            $hexDeg="\x".dechex(ord("°"));
+            $textCoord= str_replace($hexDeg, "&#176;", $textCoord);
             $this->testAndAppendTag($anchor_textcoord, null, "Parameter", null, "original_coordinates");
-            $this->testAndAppendTag($anchor_textcoord, null, "LowerValue", null, $textCoord);
+            $this->testAndAppendTag($anchor_textcoord, null, "LowerValue", null, htmlspecialchars($textCoord));
         }
-        
-        
+
         
     }
     
     public function addLocalityAndCollectors($p_parentElement, $p_valueArray)
     {
-        $gathering_tag = $this->testAndAppendTag($p_parentElement, null, "Gathering", null, null, true);
+        $gathering_tag = $p_parentElement;// $this->testAndAppendTag($p_parentElement, null, "Gathering", null, null, true);
         $this->testAndAppendTag($gathering_tag, "SamplingCode", "Code", $p_valueArray);
         
-        $this->testAndAppendTag($gathering_tag, "CollectedBy", "Agents/GatherinAgent/Person/FullName", $p_valueArray);
+        $this->testAndAppendTag($gathering_tag, "CollectedBy", "Agents/GatheringAgent/Person/FullName", $p_valueArray);
         $this->testAndAppendTag($gathering_tag, "LocalityText", "LocalityText", $p_valueArray);
+        $this->testAndAppendTag($gathering_tag, "ecology", "Biotope/Text", $p_valueArray);
+        $this->testAndAppendTag($gathering_tag, "localityNotes", "Notes", $p_valueArray);
         if (array_key_exists(strtolower("Country"), $this->headers_inverted)) {
-            $named_area = $this->testAndAppendTag($gathering_tag, null, "NamedAreas/NamedArea", null, null, true);
-            $this->testAndAppendTag($named_area, null, "AreaClass", null, "Country");
-            $this->testAndAppendTag($named_area, "Country", "AreaName", $p_valueArray);
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("country")]]))>0)
+            {
+                $named_area = $this->testAndAppendTag($gathering_tag, null, "NamedAreas/NamedArea", null, null, true);
+                $this->testAndAppendTag($named_area, null, "AreaClass", null, "Country");
+                $this->testAndAppendTag($named_area, "Country", "AreaName", $p_valueArray);
+            }
         }
+        
+        //ftheeten 2018 04 12
+        if (array_key_exists(strtolower("elevationInMeters"), $this->headers_inverted)) {
+            if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("elevationInMeters")]])) {
+             $altitude_tag = $this->testAndAppendTag($gathering_tag, null, "Altitude/MeasurementOrFactAtomised", null, null, true);
+             $this->testAndAppendTag($altitude_tag, "elevationInMeters", "LowerValue", $p_valueArray);
+             $this->testAndAppendTag($altitude_tag, null, "UnitOfMeasurement", null, "m");
+            }
+         }
+         if (array_key_exists(strtolower("depthInMeters"), $this->headers_inverted)) {
+            if (is_numeric($p_valueArray[$this->headers_inverted[strtolower("depthInMeters")]])) {
+             $depth_tag = $this->testAndAppendTag($gathering_tag, null, "Depth/MeasurementOrFactAtomised", null, null, true);
+             $this->testAndAppendTag($depth_tag, "depthInMeters", "LowerValue", $p_valueArray);
+             $this->testAndAppendTag($depth_tag, null, "UnitOfMeasurement", null, "m");
+            }
+         }
+         //ftheeten 2018 04 12
+
+         $measurements_tag = $this->testAndAppendTag($gathering_tag, null, "SiteMeasurementsOrFacts", null, null, true);
+         for($i=1; $i<=$this->nbProperties; $i++)
+        {
+                       
+                        $this->addMeasurementDynamicField($measurements_tag,  $p_valueArray, (string)$i, true);
+        }
+        
         $this->handleCoordinates($p_parentElement, $p_valueArray);
     }
     
     public function addTypeStatus($p_parentElement, $p_valueArray)
     {
-        $this->testAndAppendTag($p_parentElement, "TypeStatus", "SpecimenUnit/NomenclaturalTypeDesignations/NomenclaturalTypeDesignation/TypeStatus", $p_valueArray);
+        $this->testAndAppendTag($p_parentElement, "TypeStatus", "NomenclaturalTypeDesignations/NomenclaturalTypeDesignation/TypeStatus", $p_valueArray);
     }
     
     
@@ -388,12 +642,28 @@ class RMCATabToABCDXml
         }
     }
 
-     public function addMeasurementDynamicField($p_parentElement, $p_valueArray, $p_index_csv)
+     public function addMeasurementDynamicField($p_parentElement, $p_valueArray, $p_index_csv, $is_geographical=false)
     {
-        if (array_key_exists(strtolower("Property".$p_index_csv), $this->headers_inverted)&&array_key_exists(strtolower("PropertyValue".$p_index_csv), $this->headers_inverted)) {
-            $fact_anchor = $this->testAndAppendTag($p_parentElement, null, "MeasurementOrFact/MeasurementOrFactAtomised", null, null, true);
-            $this->testAndAppendTag($fact_anchor, "Property".$p_index_csv, "Parameter", $p_valueArray);
-            $this->testAndAppendTag($fact_anchor, "PropertyValue".$p_index_csv, "LowerValue", $p_valueArray);
+        if($is_geographical)
+        {
+            
+            $prefix1="SiteMeasurementOrFact";
+            $prefix2="siteProperty";
+        }
+        else
+        {
+            $prefix1="MeasurementOrFact";
+            $prefix2="Property";
+        }
+        if (array_key_exists(strtolower($prefix2.$p_index_csv), $this->headers_inverted)&&array_key_exists(strtolower($prefix2."Value".$p_index_csv), $this->headers_inverted)) {
+           
+            if(strlen(trim($p_valueArray[$this->headers_inverted[strtolower($prefix2."Value".$p_index_csv)]]))>0)
+            {
+
+                $fact_anchor = $this->testAndAppendTag($p_parentElement, null, $prefix1."/MeasurementOrFactAtomised", null, null, true);
+                $this->testAndAppendTag($fact_anchor, $prefix2.$p_index_csv, "Parameter", $p_valueArray);
+                $this->testAndAppendTag($fact_anchor, $prefix2."Value".$p_index_csv, "LowerValue", $p_valueArray);
+            }
         }
     }
     
@@ -402,32 +672,33 @@ class RMCATabToABCDXml
     {
         $namespace_storage= "http://darwin.naturalsciences.be/xsd/";
         $extensionForStorageNode         = $this->testAndAppendTag($p_parentElement, null, "UnitExtension", null, null, true);
-        $storageNode         = $this->testAndAppendTag($extensionForStorageNode, null, "storage:Storage", null, null, true, $namespace_storage);
+        $storageNode         = $this->testAndAppendTag($extensionForStorageNode, null, "Storage", null, null, true, $namespace_storage);
        
         $storageLocalisation = $this->testAndAppendTag($storageNode, null, "storage:Localisation", null, null, true, $namespace_storage);
-        $this->testAndAppendTag($storageLocalisation, "storage:Localisation", "storage:Localisation", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageLocalisation, "storage:Institution", "storage:Institution", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageLocalisation, "storage:Building", "storage:Building", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageLocalisation, "storage:Floor", "storage:Floor", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageLocalisation, "storage:Room", "storage:Room", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageLocalisation, "storage:Row", "storage:Row", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageLocalisation, "storage:Column", "storage:Column", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageLocalisation, "storage:Shelf", "storage:Shelf", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageLocalisation, "Localisation", "storage:Localisation", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageLocalisation, "Institution", "storage:Institution", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageLocalisation, "Building", "storage:Building", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageLocalisation, "Floor", "storage:Floor", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageLocalisation, "Room", "storage:Room", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageLocalisation, "Row", "storage:Row", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageLocalisation, "Column", "storage:Column", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageLocalisation, "Shelf", "storage:Shelf", $p_valueArray, null, false, $namespace_storage);
         
-        $storageContainer = $this->testAndAppendTag($storageNode, null, "storage:Container", null, null, true, $namespace_storage);
-        $this->testAndAppendTag($storageContainer, "storage:ContainerName", "storage:ContainerName", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageContainer, "storage:ContainerType", "storage:ContainerType", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageContainer, "storage:ContainerStorage", "storage:ContainerStorage", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageContainer, "storage:SubcontainerName", "storage:SubcontainerName", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageContainer, "storage:SubcontainerType", "storage:SubcontainerType", $p_valueArray, null, false, $namespace_storage);
-        $this->testAndAppendTag($storageContainer, "storage:SubcontainerStorage", "storage:subcontainerStorage", $p_valueArray, null, false,$namespace_storage);
+        $storageContainer = $this->testAndAppendTag($storageNode, null, "Container", null, null, true, $namespace_storage);
+        $this->testAndAppendTag($storageContainer, "ContainerName", "storage:ContainerName", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageContainer, "ContainerType", "storage:ContainerType", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageContainer, "ContainerStorage", "storage:ContainerStorage", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageContainer, "SubcontainerName", "storage:SubcontainerName", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageContainer, "SubcontainerType", "storage:SubcontainerType", $p_valueArray, null, false, $namespace_storage);
+        $this->testAndAppendTag($storageContainer, "SubcontainerStorage", "storage:subcontainerStorage", $p_valueArray, null, false,$namespace_storage);
         
-        $storageCodes = $this->testAndAppendTag($storageNode, null, "storage:Codes", null, null, true, $namespace_storage);
+        $storageCodes = $this->testAndAppendTag($storageNode, null, "Codes", null, null, true, $namespace_storage);
         if (array_key_exists(strtolower("Code"), $this->headers_inverted)) {
             $this->testAndAppendTag($storageCodes, null, "storage:Type", null, "Code", false, $namespace_storage);
             $this->testAndAppendTag($storageCodes, "Code", "storage:Value", $p_valueArray, null, false, $namespace_storage);
         }
         if (array_key_exists(strtolower("additionalID"), $this->headers_inverted)) {
+        
             $this->testAndAppendTag($storageCodes, null, "storage:Type", null, "Additional ID",  false, $namespace_storage );
             $this->testAndAppendTag($storageCodes, "additionalID", "storage:Value", $p_valueArray, null, false, $namespace_storage );
         }
@@ -436,6 +707,85 @@ class RMCATabToABCDXml
     public function addNotes($p_parentElement, $p_valueArray)
     {
         $this->testAndAppendTag($p_parentElement, "Notes", "Notes", $p_valueArray);
+    }
+    
+    //2018 04 11 
+    public function addIGAccession($p_parentElement, $p_valueArray, $dom)
+    {
+        if (array_key_exists(strtolower("accessionNumber"), $this->headers_inverted)) 
+        {
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("accessionNumber")]]))>0)
+            {
+                $accessionsNode = $dom->createElement("Accessions");
+                $p_parentElement->appendChild($accessionsNode);
+                $this->testAndAppendTag($accessionsNode, null, "AccessionCatalogue", null, "IG Number");
+                $this->testAndAppendTag($accessionsNode, "accessionNumber", "AccessionNumber", $p_valueArray);        
+            }
+       }
+    }
+    
+    //2018 04 11 
+    public function addStage($p_parentElement, $p_valueArray)
+    {       
+        $this->testAndAppendTag($p_parentElement, "lifeStage", "ZoologicalUnit/PhasesOrStages/PhaseOrStage", $p_valueArray);        
+    }
+    
+     //2018 04 11 
+    public function addSamplingMethod($p_parentElement, $p_valueArray)
+    {       
+        $this->testAndAppendTag($p_parentElement, "samplingMethod", "Method", $p_valueArray);        
+    }
+    
+    //2018 04 11 
+    public function addExpedition($p_parentElement, $p_valueArray)
+    {       
+        $this->testAndAppendTag($p_parentElement, "expedition_project", "Project/ProjectTitle", $p_valueArray);        
+    }
+    
+    
+     //2018 04 11 
+    public function addPreparation($p_parentElement, $p_valueArray, $dom)
+    {     
+        $preparationsNode = $dom->createElement("Preparations");
+        $p_parentElement->appendChild($preparationsNode);
+        if (array_key_exists(strtolower("fixation"), $this->headers_inverted)) 
+        {
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("fixation")]]))>0)
+            {
+                $preparation1 = $dom->createElement("Preparation");
+                $preparationsNode->appendChild($preparation1);
+                $this->testAndAppendTag($preparation1, null, "PreparationType", null, "Fixation");
+                $this->testAndAppendTag($preparation1, "fixation", "PreparationMaterials", $p_valueArray);
+            }
+        }
+        if (array_key_exists(strtolower("conservation"), $this->headers_inverted)) 
+        {
+            if (strlen(trim($p_valueArray[$this->headers_inverted[strtolower("conservation")]]))>0)
+            {
+                $preparation2 = $dom->createElement("Preparation");
+                $preparationsNode->appendChild($preparation2);
+                $this->testAndAppendTag($preparation2, null, "PreparationType", null, "Conservation");
+                $this->testAndAppendTag($preparation2, "conservation", "PreparationMaterials", $p_valueArray);
+            }
+       }
+        
+    }
+    
+    
+    public function addAcquisition($p_parentElement, $p_valueArray, $dom)
+    {
+        $acquisitionNode = $dom->createElement("Acquisition");
+        $p_parentElement->appendChild($acquisitionNode);
+        //date
+        $dateTmp=$this->generateDateGeneric("acquisition", $p_valueArray);
+        $this->testAndAppendTag($acquisitionNode, null, "AcquisitionDate", null, $dateTmp);       
+        
+        //type
+        $this->testAndAppendTag($acquisitionNode, "acquisitionNode", "AcquisitionType", $p_valueArray); 
+        
+        //person
+        $this->testAndAppendTag($acquisitionNode, "acquiredFrom", "AcquiredFrom/Person/FullName", $p_valueArray);
+        
     }
     
     public function identifyHeader($p_handle)
@@ -471,13 +821,27 @@ class RMCATabToABCDXml
         $this->addIdentifications($unit, $p_row);
         $this->addKindOfUnit($unit, $p_row);
         $this->addAssociations($unit, $p_row);
-        $this->addLocalityAndCollectors($unit, $p_row);
-        $this->addTypeStatus($unit, $p_row);
-            
+        $specimenGatheringNode = $dom->createElement("Gathering");
+        $unit->appendChild($specimenGatheringNode);
+        $this->addLocalityAndCollectors($specimenGatheringNode, $p_row);
+        
+        //ftheeten 2018 04 11
+        $specimenUnitNode = $dom->createElement("SpecimenUnit");
+        $unit->appendChild($specimenUnitNode);
+        $this->addTypeStatus($specimenUnitNode, $p_row);
+        $this->addIGAccession($specimenUnitNode, $p_row, $dom);
+        $this->addAcquisition($specimenUnitNode, $p_row, $dom);
+        $this->addPreparation($specimenUnitNode, $p_row, $dom);
+        $this->addExpedition($unit, $p_row);
+        $this->addCollectionDates($specimenGatheringNode, $p_row, $dom);
+        $this->addSamplingMethod($unit, $p_row);
+        
         $measurements_tag = $this->testAndAppendTag($unit, null, "MeasurementsOrFacts", null, null, true);
         $this->addMeasurement($measurements_tag, $p_row, "totalNumber", "N total");
-        $this->addMeasurement($measurements_tag, $p_row, "maleNumber", "N males");
-        $this->addMeasurement($measurements_tag, $p_row, "maleNumber", "N females");
+        $this->addMeasurement($measurements_tag, $p_row, "maleCount", "N males");
+        $this->addMeasurement($measurements_tag, $p_row, "femaleCount", "N females");
+        $this->addMeasurement($measurements_tag, $p_row, "sexUnknownCount", "N sex unknown");
+        $this->addMeasurement($measurements_tag, $p_row, "socialStatus", "Social status");
         $this->addMeasurement($measurements_tag, $p_row, "HostClass", "Host - Class");
         $this->addMeasurement($measurements_tag, $p_row, "HostOrder", "Host - Order");
         $this->addMeasurement($measurements_tag, $p_row, "HostFamily", "Host - Family");
@@ -488,7 +852,7 @@ class RMCATabToABCDXml
         $this->addMeasurement($measurements_tag, $p_row, "HostCollector", "Host - Collector");
         $this->addMeasurement($measurements_tag, $p_row, "HostIdentifier", "Host - Identifier");
 
-        for($i=1; $i<=12; $i++)
+        for($i=1; $i<=$this->nbProperties; $i++)
         {
             $this->addMeasurementDynamicField($measurements_tag,  $p_row, (string)$i);
         }
@@ -515,13 +879,27 @@ class RMCATabToABCDXml
         $this->addIdentifications($unit, $p_row);
         $this->addKindOfUnit($unit, $p_row);
         $this->addAssociations($unit, $p_row);
-        $this->addLocalityAndCollectors($unit, $p_row);
-        $this->addTypeStatus($unit, $p_row);
+        $specimenGatheringNode = $dom->createElement("Gathering");
+        $unit->appendChild($specimenGatheringNode);
+        $this->addLocalityAndCollectors($specimenGatheringNode, $p_row);
+        
+         //ftheeten 2018 04 11
+        $specimenUnitNode = $dom->createElement("SpecimenUnit");
+        $unit->appendChild($specimenUnitNode);
+        $this->addTypeStatus($specimenUnitNode, $p_row);
+        $this->addIGAccession($specimenUnitNode, $p_row, $dom);
+        $this->addAcquisition($specimenUnitNode, $p_row, $dom);
+        $this->addPreparation($specimenUnitNode, $p_row, $dom);
+        $this->addExpedition($unit, $p_row);
+        $this->addCollectionDates($specimenGatheringNode, $p_row, $dom);
+        $this->addSamplingMethod($unit, $p_row);
             
         $measurements_tag = $this->testAndAppendTag($unit, null, "MeasurementsOrFacts", null, null, true);
         $this->addMeasurement($measurements_tag, $p_row, "totalNumber", "N total");
-        $this->addMeasurement($measurements_tag, $p_row, "maleNumber", "N males");
-        $this->addMeasurement($measurements_tag, $p_row, "maleNumber", "N females");
+        $this->addMeasurement($measurements_tag, $p_row, "maleCount", "N males");
+        $this->addMeasurement($measurements_tag, $p_row, "femaleCount", "N females");
+        $this->addMeasurement($measurements_tag, $p_row, "sexUnknownCount", "N sex unknown");
+        $this->addMeasurement($measurements_tag, $p_row, "socialStatus", "Social status");
         $this->addMeasurement($measurements_tag, $p_row, "HostClass", "Host - Class");
         $this->addMeasurement($measurements_tag, $p_row, "HostOrder", "Host - Order");
         $this->addMeasurement($measurements_tag, $p_row, "HostFamily", "Host - Family");
@@ -532,20 +910,29 @@ class RMCATabToABCDXml
         $this->addMeasurement($measurements_tag, $p_row, "HostCollector", "Host - Collector");
         $this->addMeasurement($measurements_tag, $p_row, "HostIdentifier", "Host - Identifier");
         
-        for($i=1; $i<=12; $i++)
+        for($i=1; $i<=$this->nbProperties; $i++)
         {
             $this->addMeasurementDynamicField($measurements_tag,  $p_row, (string)$i);
         }
         $this->addStorage($unit, $p_row);
         $this->addNotes($unit, $p_row);
         
+        print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
+       
         return $dom->saveXML($root, LIBXML_NOEMPTYTAG );
     }
     
     public function identifyLines($p_handle)
     {
-        while (($row = fgetcsv($p_handle, 0, "\t")) !== FALSE) {        
-            $this->parseLine($row);
+        while (($row = fgetcsv($p_handle, 0, "\t")) !== FALSE) {
+            if(max(array_map("strlen",$row))==0)
+            {
+                
+            }
+            else
+            {
+                $this->parseLineAndGetString($row);
+            }
         }
     }
     
@@ -561,4 +948,5 @@ class RMCATabToABCDXml
             
     }
 }
+
 ?>

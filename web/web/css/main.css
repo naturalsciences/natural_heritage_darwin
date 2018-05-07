@@ -211,6 +211,13 @@ img.clear_prop, img.tree_cmd {
   display: inline-block;
 }
 
+/* JMHerpers 2018 04 05 */
+.complete_widget select 
+{
+	
+    max-width:420px;
+}
+
 /** widgetFormButtonRef **/
 
 .ref_name
@@ -3095,9 +3102,12 @@ a.but_more{
   float:none;
   display:inline;
 }
+
 .complete_ref input.ui-autocomplete-input
 {
-  width: 500px;
+	/* JMHerpers 2018 04 16*/
+  width: 80%;
+  max-width:500px;
 }
 
 .treelist > h2 {
@@ -3238,6 +3248,7 @@ tr.spec_ident_collectors_data
   border-bottom: 1px solid white;
 }
 
+/* JMHerpers 2018 04 05 for lines under*/
 .sex_Top_Bordered
 {
   border-top: 2px solid #33FF00;
@@ -3263,3 +3274,49 @@ tr.spec_ident_collectors_data
   border-spacing: 2px;
   
 }
+
+ a.button_loan {
+  border:1px solid #C1CC33;
+  background-color:#C1CF56;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  padding:2px;
+  color:#525A20;
+  text-decoration: none;
+  font-size:90%;
+}
+
+.label_spec_part
+{
+  max-width: 90%;
+  width: 90%;
+}
+
+table.specpart_loans th
+{
+  border:1px solid #C1CC33;
+  background-color: #f1fbf1;
+}
+table.specpart_loans td
+{
+  border:1px solid #C1CC33;
+  background-color: #f1fbf1;
+}
+
+.loanlines_titles
+{
+	background-color: #a4d94d;
+}
+
+tr.loanlines_top td
+{
+	border-top:3pt solid #C1CC33;
+	background-color: #f1fbf1;
+}
+
+tr.loanlines_bottom td
+{
+	border-bottom:3pt solid #C1CC33;
+	background-color: #f1fbf1;
+}
+

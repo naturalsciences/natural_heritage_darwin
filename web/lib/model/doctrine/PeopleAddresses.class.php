@@ -44,4 +44,5 @@ class PeopleAddresses extends BasePeopleAddresses
     }
     return array_map(array($i18n_object, '__'), self::$possible_tags);    
   } 
+  
 }

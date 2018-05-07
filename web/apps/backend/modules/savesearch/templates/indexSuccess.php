@@ -9,7 +9,7 @@
     <h1><?php echo __('My saved searches');?></h1>
   <?php endif;?>
 
-  <table class="saved_searches">
+ <table style="width:75%" class="saved_searches">
   <tbody>
   <?php foreach($searches as $search):?>
     <tr class="r_id_<?php echo $search->getId();?>">
@@ -51,6 +51,9 @@
          </td>
          <td>
             <input id="report_link" class="save_search report_link" value="Get report" type="button">
+         </td>
+         <td>
+            <a id="geojson_link" target="_blank" href="<?php print(url_for("savesearch/geojson"));?>?query_id=<?php print($search->getId());?>&user_id=<?php print(sfContext::getInstance()->getUser()->getId()); ?>">GIS Layer (.geojson)</a>
          </td>
          <?php endif;?>
     </tr>

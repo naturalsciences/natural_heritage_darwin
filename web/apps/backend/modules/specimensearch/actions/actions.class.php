@@ -58,10 +58,25 @@ class specimensearchActions extends DarwinActions
    
     $this->search_request=$request;
     
-    if(($request->isMethod('post') && $request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
+    //ftheeten 2018 04 17
+    //if(($request->isMethod('post') && $request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
+     if(($request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
     {
       // Store all post parameters
-      $criterias = $request->getPostParameters();
+      //$criterias = $request->getPostParameters();
+      //ftheeten 2018 04 17
+      if($request->isMethod('post'))
+      {
+        // Store all post parameters
+        $criterias = $request->getPostParameters();
+      }
+      //ftheeten 2018 04 17 modified for GET parameters
+      elseif($request->isMethod('get'))
+      {
+
+         $criterias = $request->getGetParameters();
+      }
+      
       // If pinned specimens called
       if($request->hasParameter('pinned'))
       {

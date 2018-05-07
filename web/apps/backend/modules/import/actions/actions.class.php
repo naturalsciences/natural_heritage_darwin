@@ -277,7 +277,7 @@ class importActions extends DarwinActions
 
             $this->forwardToSecureAction();
         }
-        else
+        elseif(!$importTmp->getFormat()=="taxon"||$this->getUser()->isAtLeast(Users::ENCODER))
         {
 
             print($importTmp->getCollectionRef());
@@ -342,7 +342,7 @@ class importActions extends DarwinActions
             
            $this->forwardToSecureAction();
         }
-        else
+        elseif(!$importTmp->getFormat()=="taxon"||$this->getUser()->isAtLeast(Users::ENCODER))
         {
             
             try 
@@ -362,7 +362,8 @@ class importActions extends DarwinActions
                     {
                         if(count($mails)>0)
                         {
-                            $cmd='darwin:check-import --id='.$request->getParameter('id').' --mailsfornotification='.implode(";",$mails).' --no-delete';
+                            // $cmd='darwin:check-import --id='.$request->getParameter('id').' --mailsfornotification='.implode(";",$mails).' --no-delete';
+                             $cmd='darwin:check-import --id='.$request->getParameter('id').' --no-delete';
                         }
                         else
                         {
@@ -372,7 +373,7 @@ class importActions extends DarwinActions
                         $this->setImportAsWorking($conn, array($request->getParameter('id')), true);
                         $currentDir=getcwd();
                         chdir(sfconfig::get('sf_root_dir'));
- print( 'nohup php symfony '.$cmd.'  >/dev/null &' );                        
+ //print( 'nohup php symfony '.$cmd.'  >/dev/null &' );                        
                         exec('nohup php symfony '.$cmd.'  >/dev/null &' );
                        
                         
@@ -407,8 +408,8 @@ class importActions extends DarwinActions
      if(filter_var($recipient, FILTER_VALIDATE_EMAIL))
     {
         // send an email to the affiliate
-        $message = $this->getMailer()->compose(
-          array('franck.theeten@africamuseum.be' => 'Franck Theeten'),
+        /*$message = $this->getMailer()->compose(
+          array('darwin@africamuseum.be' => 'Franck Theeten'),
           $recipient,//$affiliate->getEmail(),
           $title,
 <<<EOF
@@ -416,7 +417,13 @@ class importActions extends DarwinActions
 EOF
            );
  
-        $this->getMailer()->send($message);
+        $this->getMailer()->send($message);*/
+       mail ( $recipient ,  $title,
+<<<EOF
+{$message}
+EOF
+       );
+        
     }
  }
 

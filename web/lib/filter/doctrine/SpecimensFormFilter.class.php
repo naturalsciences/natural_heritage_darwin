@@ -16,7 +16,11 @@
     $this->with_group = false;
     $this->useFields(array('gtu_code','gtu_from_date','gtu_to_date', 'taxon_level_ref', 'litho_name', 'litho_level_ref', 'litho_level_name', 'chrono_name', 'chrono_level_ref',
         'chrono_level_name', 'lithology_name', 'lithology_level_ref', 'lithology_level_name', 'mineral_name', 'mineral_level_ref',
-        'mineral_level_name','ig_num','acquisition_category','acquisition_date'));
+        'mineral_level_name','ig_num','acquisition_category','acquisition_date',
+        //ftheeten 2018 04 10
+        'ig_ref'
+        
+        ));
 
     $this->addPagerItems();
 
@@ -509,19 +513,22 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 
 /*pvignaux20160606*/
     $this->validatorSchema['sub_container_type'] = new sfValidatorString(array('required' => false));
-       $this->widgetSchema['sub_container_type'] = new sfWidgetFormDarwinDoctrineChoice(array(
-      'model' => 'StorageParts',
-'add_empty'=> true,
-        'table_method' => Array('method'=> 'createFlatDistinct', 'parameters'=>Array('storage_parts','sub_container_type', 'id'))
-    ));
-
+       $this->widgetSchema['sub_container_type'] = new sfWidgetFormDarwinDoctrineChoice(array(	'model' => 'StorageParts',
+																								'add_empty'=> true,
+																								'table_method' => Array('method'=> 'createFlatDistinct', 
+																														'parameters'=>Array('storage_parts',
+																																			'sub_container_type',
+																																			'id')
+																														)
+																						));
+	
 /*ftheeten 2016 06 22*/
- $this->widgetSchema['specimen_count_min'] = new sfWidgetForminput();
- $this->widgetSchema['specimen_count_min']->setAttributes(array('class'=>'vvsmall_size'));
- $this->widgetSchema['specimen_count_min']->setLabel('Count (min)');
- $this->validatorSchema['specimen_count_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
- 
-  $this->widgetSchema['specimen_count_males_min'] = new sfWidgetForminput();
+	 $this->widgetSchema['specimen_count_min'] = new sfWidgetForminput();
+	 $this->widgetSchema['specimen_count_min']->setAttributes(array('class'=>'vvsmall_size'));
+	 $this->widgetSchema['specimen_count_min']->setLabel('Count (min)');
+	 $this->validatorSchema['specimen_count_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
+	 
+	$this->widgetSchema['specimen_count_males_min'] = new sfWidgetForminput();
    $this->widgetSchema['specimen_count_males_min']->setAttributes(array('class'=>'vvsmall_size'));
  $this->widgetSchema['specimen_count_males_min']->setLabel('Count males (min)');
  $this->validatorSchema['specimen_count_males_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
@@ -922,6 +929,16 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     return $query ;
   }
 
+  
+  //ftheeten 2018 04 10
+   public function addIgRefColumnQuery($query, $field, $values)
+  {
+    if ($values != "") {
+      $conn_MGR = Doctrine_Manager::connection();
+      $query->andWhere("s.ig_ref= ?" , $values);
+    }
+    return $query;
+  }
 
   public function addIgNumColumnQuery(Doctrine_Query $query, $field, $values)
   {

@@ -87,8 +87,8 @@ var autocomplete_rmca_array=Array();
 
 $(document).ready(function () {
 
-
-  
+//JMHerpers 2018 04 16
+ $('#specimen_search_filters_sub_container_type').css( "maxWidth", 400);
   
   //ftheeten 2015 06 08
   //autocomplete for codes number

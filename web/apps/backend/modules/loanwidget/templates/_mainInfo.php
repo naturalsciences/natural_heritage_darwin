@@ -22,7 +22,7 @@
 			<?php echo $form['name'] ?>
 		</td>
 		<td  colspan="6" class="hide_helper_name" style="display:none;"><?php echo __('Last value in collection = ') ?><label class="last_loan_id_in_collection"></label>&nbsp;&nbsp;&nbsp;
-			<input type="button"  class="copy_loan_id_in_collection"  style="display:hide" value='<?php echo __('Paste to code of loan');?>'></input>
+			<input id="Paste_code_loan" type="button"  class="copy_loan_id_in_collection"  style="display:hide" value='<?php echo __('Paste to code of loan');?>'></input>
         </td>
     </tr>
     <tr>
@@ -110,11 +110,11 @@
 		
         var url="<?php echo(url_for('catalogue/nameForLoan?'));?>";
 		//JMHerpers 2018 03 21
-		function getloanlast()
+		function getloanlast(colval)
 			{	
 				$.getJSON(url, 
 							{
-								coll_nr: $(".rmca_coll_4_loan").val(),
+								coll_nr: colval,
 							} , 
 							function (data) 
 							{
@@ -137,8 +137,16 @@
 			//$(".rmca_coll_4_loan").change(
 
 			//);
-			getloanlast();
-        
+			var colval = $(".rmca_coll_4_loan").val();
+			$('#loans_collection_ref_name').focusout(function() 
+			{
+				colval = $(".rmca_coll_4_loan").val();
+				getloanlast(colval);
+				console.log("nr="+colval);
+				
+			});
+			
+			getloanlast(colval);
 			//?php if(sfContext::getInstance()->getActionName()=="new"||sfContext::getInstance()->getActionName()=="edit"):?>                
 			//        $.reverse_year_in_select("#loans_from_date_year");
 			//        $.reverse_year_in_select("#loans_to_date_year");

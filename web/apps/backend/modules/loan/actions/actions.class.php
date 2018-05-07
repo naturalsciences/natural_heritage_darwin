@@ -350,7 +350,7 @@ class loanActions extends DarwinActions
     $form->addActorsReceiver($number,$people_ref,$request->getParameter('order_by',0));
     return $this->renderPartial('actors_association',array('type'=>'receiver','form' => $form['newActorsReceiver'][$number], 'row_num'=>$number));
   }
-
+  
   public function executeAddUsers(sfWebRequest $request)
   {
     $number = intval($request->getParameter('num'));
