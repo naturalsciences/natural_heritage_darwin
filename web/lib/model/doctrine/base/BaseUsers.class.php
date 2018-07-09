@@ -20,6 +20,7 @@
  * @property integer $db_user_type
  * @property integer $people_id
  * @property string $selected_lang
+ * @property string $user_ip
  * @property People $People
  * @property Doctrine_Collection $UsersComm
  * @property Doctrine_Collection $UsersAddresses
@@ -50,6 +51,7 @@
  * @method integer             getDbUserType()            Returns the current record's "db_user_type" value
  * @method integer             getPeopleId()              Returns the current record's "people_id" value
  * @method string              getSelectedLang()          Returns the current record's "selected_lang" value
+ * @method string              getUserIp()                Returns the current record's "user_ip" value
  * @method People              getPeople()                Returns the current record's "People" value
  * @method Doctrine_Collection getUsersComm()             Returns the current record's "UsersComm" collection
  * @method Doctrine_Collection getUsersAddresses()        Returns the current record's "UsersAddresses" collection
@@ -79,6 +81,7 @@
  * @method Users               setDbUserType()            Sets the current record's "db_user_type" value
  * @method Users               setPeopleId()              Sets the current record's "people_id" value
  * @method Users               setSelectedLang()          Sets the current record's "selected_lang" value
+ * @method Users               setUserIp()                Sets the current record's "user_ip" value
  * @method Users               setPeople()                Sets the current record's "People" value
  * @method Users               setUsersComm()             Sets the current record's "UsersComm" collection
  * @method Users               setUsersAddresses()        Sets the current record's "UsersAddresses" collection
@@ -165,6 +168,11 @@ abstract class BaseUsers extends DarwinModel
              'type' => 'string',
              'notnull' => true,
              'default' => 'en',
+             ));
+        $this->hasColumn('user_ip', 'string', null, array(
+             'type' => 'string',
+             'notnull' => true,
+             'default' => '',
              ));
     }
 

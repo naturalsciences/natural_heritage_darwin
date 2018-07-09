@@ -13,7 +13,7 @@ abstract class BaseCollectionsFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'collection_type'         => new sfWidgetFormChoice(array('choices' => array('' => '', 'mix' => 'mix', 'observation' => 'observation', 'physical' => 'physical'))),
+      'collection_type'         => new sfWidgetFormChoice(array('choices' => array('' => '', 'physical' => 'physical', 'observation' => 'observation', 'mix' => 'mix', 'title' => 'title'))),
       'code'                    => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'name'                    => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'name_indexed'            => new sfWidgetFormFilterInput(),
@@ -37,7 +37,7 @@ abstract class BaseCollectionsFormFilter extends BaseFormFilterDoctrine
     ));
 
     $this->setValidators(array(
-      'collection_type'         => new sfValidatorChoice(array('required' => false, 'choices' => array('mix' => 'mix', 'observation' => 'observation', 'physical' => 'physical'))),
+      'collection_type'         => new sfValidatorChoice(array('required' => false, 'choices' => array('physical' => 'physical', 'observation' => 'observation', 'mix' => 'mix', 'title' => 'title'))),
       'code'                    => new sfValidatorPass(array('required' => false)),
       'name'                    => new sfValidatorPass(array('required' => false)),
       'name_indexed'            => new sfValidatorPass(array('required' => false)),

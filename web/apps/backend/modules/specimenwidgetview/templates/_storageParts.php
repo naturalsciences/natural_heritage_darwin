@@ -13,12 +13,6 @@
         <?php echo $storagePart->getSpecimenPart();?>
       </td>
       </tr>
-    <tr>
-      <td style="padding-right: 10px;padding-bottom: 5px;font-weight: bold;"><?php echo __('Institution');?></td>
-      <td style="padding-right: 10px;padding-bottom: 5px;">
-        <?php echo $storagePart->getInstitutionRef();?>
-      </td>
-      </tr>
       <tr>
       <td style="padding-right: 10px;padding-bottom: 5px;font-weight: bold;"><?php echo __('Object name');?></td>
        <td style="padding-right: 10px;padding-bottom: 5px;">

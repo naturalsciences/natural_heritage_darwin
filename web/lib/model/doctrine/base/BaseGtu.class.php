@@ -30,6 +30,7 @@
  * @property float $elevation
  * @property float $elevation_accuracy
  * @property string $elevation_unit
+ * @property string $wkt_str
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Tags
  * @property Doctrine_Collection $Specimens
@@ -59,6 +60,7 @@
  * @method float               getElevation()               Returns the current record's "elevation" value
  * @method float               getElevationAccuracy()       Returns the current record's "elevation_accuracy" value
  * @method string              getElevationUnit()           Returns the current record's "elevation_unit" value
+ * @method string              getWktStr()                  Returns the current record's "wkt_str" value
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection getTags()                    Returns the current record's "Tags" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
@@ -87,6 +89,7 @@
  * @method Gtu                 setElevation()               Sets the current record's "elevation" value
  * @method Gtu                 setElevationAccuracy()       Sets the current record's "elevation_accuracy" value
  * @method Gtu                 setElevationUnit()           Sets the current record's "elevation_unit" value
+ * @method Gtu                 setWktStr()                  Sets the current record's "wkt_str" value
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
  * @method Gtu                 setTags()                    Sets the current record's "Tags" collection
  * @method Gtu                 setSpecimens()               Sets the current record's "Specimens" collection
@@ -185,6 +188,9 @@ abstract class BaseGtu extends DarwinModel
              'type' => 'float',
              ));
         $this->hasColumn('elevation_unit', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('wkt_str', 'string', null, array(
              'type' => 'string',
              ));
     }

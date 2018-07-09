@@ -37,9 +37,9 @@
               </td>
            </tr>
            <tr>
-                <td>
+              <td>
                     <?php echo $form['institution_ref']->renderLabel();?>
-               </td>
+              </td>
               <td>
                 <?php echo $form['institution_ref']->renderError(); ?>
                 <?php echo $form['institution_ref'];?>

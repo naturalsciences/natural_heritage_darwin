@@ -9,8 +9,7 @@
       else
         $orderSign = '<span class="order_sign_up">&nbsp;&#9650;</span>';
     ?>
-    <!-- ftheeten 2014 04 17-->
-      <?php include_partial('showurl', array('id'=>1, 'currentPage'=>$currentPage,'postMapper' => $_POST, 'getMapper' => $_GET, 's_url'=>$s_url , 'method'=>$_SERVER['REQUEST_METHOD'])); ?>
+        <!--jm herpers 2018 06 04 removed show url-->
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>
     <?php include_partial('global/pager_info', array('form' => $form, 'pagerLayout' => $pagerLayout, 'container'=> '.spec_results')); ?>
 
@@ -25,6 +24,7 @@
             <th><!-- Pin -->
               <label class="top_pin"><input type="checkbox" /></label>
             </th>
+			<th><!-- actions --></th>
             <?php $all_columns = $columns->getRawValue() ;?>
             <?php foreach($all_columns as $col_name => $col):?>
               <th class="col_<?php echo $col_name;?>">
@@ -35,20 +35,18 @@
                     <?php if($orderBy == $col[0]) echo $orderSign; ?>
                   </a>
                 <?php else:?>
-                  
                   <?php if($col_name == 'codes') : ?>
-                  <a class="sort" href="<?php echo url_for($s_url.'&orderby=main_code_indexed'.( ($orderBy=="main_code_indexed" && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.
+					<a class="sort" href="<?php echo url_for($s_url.'&orderby=main_code_indexed'.( ($orderBy=="main_code_indexed" && $orderDir=='asc') ? '&orderdir=desc' : '').'&page='.
                     $currentPage);?>">
-                    <?php echo $col[1];?>
-                    <?php if($orderBy == $col[0]) echo $orderSign; ?>
-                  </a>
+						<?php echo $col[1];?>
+						<?php if($orderBy == $col[0]) echo $orderSign; ?>
+					</a>
                   <?php else:?>
-                    <?php echo $col[1];?>
+						<?php echo $col[1];?>
                   <?php endif ; ?>
-		<?php endif;?>
+				<?php endif;?>
               </th>
             <?php endforeach;?>
-            <th><!-- actions --></th>
           </tr>
         </thead>
         <tbody>
@@ -60,18 +58,19 @@
                 <?php endif;?>
               </td>
               <td>
-                <label class="pin"><input type="checkbox" value="<?php echo $specimen->getId();?>" <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>checked="checked"<?php endif;?> /></label>
+				<label class="pin"><input type="checkbox" value="<?php echo $specimen->getId();?>" <?php if($sf_user->isPinned($specimen->getId(), 'specimen')):?>checked="checked"<?php endif;?> /></label>
+              </td>
+			  <td>
+				<?php if($sf_user->isAtLeast(Users::ADMIN) || $specimen->getHasEncodingRights()) : ?>
+					<?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'specimen/edit?id='.$specimen->getId(), array('target' => '_blank'));?>&nbsp;&nbsp;
+					<?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))), 'specimen/new?duplicate_id='.$specimen->getId(), array('class' => 'duplicate_link'));?>&nbsp;&nbsp;
+				<?php endif; ?>
+				<?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$specimen->getId(), array('target' => '_blank'));?>&nbsp;&nbsp;
               </td>
               <?php include_partial('result_content_specimen', array( 'specimen' => $specimen, 'codes' => $codes, 'is_specimen_search' => $is_specimen_search)); ?>
               <?php include_partial('result_content_individual', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
               <?php include_partial('result_content_part', array( 'specimen' => $specimen, 'is_specimen_search' => $is_specimen_search)); ?>
-              <td>
-              <?php if($sf_user->isAtLeast(Users::ADMIN) || $specimen->getHasEncodingRights()) : ?>
-                <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))), 'specimen/edit?id='.$specimen->getId(), array('target' => '_blank'));?>
-                <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))), 'specimen/new?duplicate_id='.$specimen->getId(), array('class' => 'duplicate_link'));?>
-              <?php endif; ?>
-                <?php echo link_to(image_tag('blue_eyel.png', array("title" => __("View"))), 'specimen/view?id='.$specimen->getId(), array('target' => '_blank'));?>
-              </td>
+
             </tr>
         <?php endforeach;?>
       </tbody>
@@ -83,6 +82,7 @@
       <?php echo __('No Specimen Matching');?>
     <?php endif;?>
 </div>  
+
 <script type="text/javascript">
 
 function pin(ids, status) {

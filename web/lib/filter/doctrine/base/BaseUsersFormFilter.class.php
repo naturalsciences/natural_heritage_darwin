@@ -27,6 +27,7 @@ abstract class BaseUsersFormFilter extends BaseFormFilterDoctrine
       'db_user_type'          => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'people_id'             => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('People'), 'add_empty' => true)),
       'selected_lang'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'user_ip'               => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
 
     $this->setValidators(array(
@@ -44,6 +45,7 @@ abstract class BaseUsersFormFilter extends BaseFormFilterDoctrine
       'db_user_type'          => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'people_id'             => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('People'), 'column' => 'id')),
       'selected_lang'         => new sfValidatorPass(array('required' => false)),
+      'user_ip'               => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('users_filters[%s]');
@@ -78,6 +80,7 @@ abstract class BaseUsersFormFilter extends BaseFormFilterDoctrine
       'db_user_type'          => 'Number',
       'people_id'             => 'ForeignKey',
       'selected_lang'         => 'Text',
+      'user_ip'               => 'Text',
     );
   }
 }

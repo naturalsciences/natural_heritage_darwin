@@ -220,6 +220,12 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     $this->widgetSchema['collection_ref']->addOption('public_only',false);
     $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
     $this->widgetSchema['spec_ids'] = new sfWidgetFormTextarea(array('label'=>"#ID list separated by ',' "));
+    
+    //ftheeten 2018 05 29
+	$this->widgetSchema['include_sub_collections'] = new sfWidgetFormInputCheckbox();
+  	////ftheeten 2018 05 29
+	$this->validatorSchema['include_sub_collections'] = new sfValidatorPass();
+	
 
     $this->validatorSchema['spec_ids'] = new sfValidatorString( array(
       'required' => false,
@@ -2037,6 +2043,9 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 
   public function doBuildQuery(array $values)
   {
+
+
+     
     $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
     $query = DQ::create()
       ->select('s.*,
@@ -2052,7 +2061,25 @@ gtu_location[1]::varchar as longitude,
     $this->options['query'] = $query;
     $query = parent::doBuildQuery($values);
     $this->cols = $this->getCollectionWithRights($this->options['user']);
+
     if(!empty($values['collection_ref'])) {
+      //ftheeten 2018 05 29
+      if((boolean)$values['include_sub_collections']===true)
+      {
+
+          foreach($values['collection_ref'] as $tmp_id)
+          {           
+            $sub_cols = Doctrine::getTable("Collections")->fetchByCollectionParent($this->options['user'] , $this->options['user']->getId(), $tmp_id);
+            foreach($sub_cols as $sub_col)
+            {
+           
+                if(!in_array($values['collection_ref'], $this->cols))
+                {
+                    $values['collection_ref'][]=$sub_col->getId();
+                }
+            }
+          }
+       }
       $this->cols = array_intersect($values['collection_ref'], $this->cols);
     }
     //ftheeten 2017 05 30 (issue with subquery for pager)
@@ -2135,7 +2162,7 @@ gtu_location[1]::varchar as longitude,
     //ftheeten 2016 06 222
 
     $query->limit($this->getCatalogueRecLimits());
-
+    
     return $query;
   }
 

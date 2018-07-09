@@ -9,7 +9,7 @@ $(document).ready(function () {
     });
 
     $('.expanded').click(function()
-    {
+    {		 
         $(this).hide();
         $(this).siblings('.collapsed').show();
         $(this).parent().siblings('ul').hide();
@@ -54,7 +54,7 @@ $(document).ready(function () {
     });
     <?php endif;?>
    
-    
+
  
 
 

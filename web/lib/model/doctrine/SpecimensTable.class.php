@@ -239,7 +239,7 @@ class SpecimensTable extends DarwinTable
       $items2=Array();
       foreach($items as $key=>$value)
       {
-        $items3=explode("/", $key);
+        $items3=preg_split("(\/|\s)", $key);
         foreach($items3 as $value2)
         {
             $items2[trim($value2)]=trim($value2);

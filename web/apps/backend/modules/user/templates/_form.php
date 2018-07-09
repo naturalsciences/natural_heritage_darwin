@@ -35,7 +35,7 @@
             <?php echo $form['gender'] ?>
           </td>
         </tr>  
-      <tr>
+        <tr>
         <th><?php echo $form['given_name']->renderLabel() ?></th>              
       <?php elseif($user->getIsPhysical()) : ?>
         <tr>
@@ -89,6 +89,14 @@
         <td>
           <?php echo $form['selected_lang']->renderError() ?>
           <?php echo $form['selected_lang'] ?>
+        </td>
+      </tr>
+	  <!--JMHerpers 2018 05 14-->
+	  <tr>
+        <th><?php echo $form['user_ip']->renderLabel() ?></th>
+        <td>
+          <?php echo $form['user_ip']->renderError() ?>
+          <?php echo $form['user_ip'] ?>
         </td>
       </tr>
       <?php if(!$form->getObject()->isNew()) : ?>

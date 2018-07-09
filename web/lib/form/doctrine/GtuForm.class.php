@@ -13,7 +13,8 @@ class GtuForm extends BaseGtuForm
   {
     $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date', 'latitude', 'longitude',
       'lat_long_accuracy', 'elevation', 'elevation_accuracy', 'coordinates_source',
-	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction', 'elevation_unit' ));
+	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 
+	  'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction', 'elevation_unit','wkt_str' ));
 
     $this->widgetSchema['code'] = new sfWidgetFormInput();
 					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
@@ -73,8 +74,8 @@ class GtuForm extends BaseGtuForm
 	
 	
 		//this group ftheeten 2016 02 05
-	$this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM')));
-		$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
+    $this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM', 'ISSUE'=>'Issue (to check)')));
+	$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
 	$this->widgetSchema['coordinates_source']->setDefault(array(0));
 	//$this->validatorSchema['coordinates_source'] = new sfValidatorPass();
 	$this->widgetSchema['latitude']->setAttributes(array('class'=>'convertDMS2DDLat convertDD2DMSGeneral'));
@@ -278,7 +279,10 @@ class GtuForm extends BaseGtuForm
         new sfValidatorCallback(array('callback'=> array($this, 'checkElevationUnit')))
       )
     ));
-
+	//JMHerpers 2018 07 05
+	$this->widgetSchema['wkt_str'] = new sfWidgetFormInput();
+	$this->widgetSchema['wkt_str']->setLabel('Coordinates of drawn area');
+	$this->widgetSchema['wkt_str']->setAttributes(array('class'=>'wkt large_size'));
 
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);

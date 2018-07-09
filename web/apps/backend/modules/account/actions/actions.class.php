@@ -63,9 +63,13 @@ class accountActions extends DarwinActions
 
         $this->getUser()->setHelpIcon(Doctrine::getTable("Preferences")->getPreference($this->form->user->getId(),'help_message_activated',true));
         if($request->getReferer())
+        {
           $this->redirect( $request->getReferer() );
+        }
         else
+        {
           $this->redirect('@homepage');
+        }
       } else {
         sfContext::getInstance()->getLogger()->notice('Bad username or password');
       }

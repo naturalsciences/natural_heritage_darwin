@@ -134,9 +134,37 @@
 			}
 			
 		$(document).ready(function () {
-			//$(".rmca_coll_4_loan").change(
+			if ( $('#loans_to_date_day option:selected').text() == "dd"){
+				var day = 0;
+				var month = 0;
+				var year = 0;
+				var d = new Date();
+				var day = d.getDate();
+				var day_6m = 0;
+				var month_now = d.getMonth()+1;
+				if (month_now > 6){
+					month = month_now-6;
+					year = d.getFullYear()+1;
+				}else{
+					month = month_now+6;
+					year = d.getFullYear();
+				}
+				switch (month){
+				   case 2,4,6,9,11: 
+					if(day > 28){
+					   day_6m = 28;
+					   break;
+					}
+				   default: 
+					   day_6m = day;
+					   break;
+				} 
+				
+				$("#loans_to_date_day").val(day_6m).change();
+				$("#loans_to_date_month").val(month).change();
+				$("#loans_to_date_year").val(year).change();
+			}
 
-			//);
 			var colval = $(".rmca_coll_4_loan").val();
 			$('#loans_collection_ref_name').focusout(function() 
 			{

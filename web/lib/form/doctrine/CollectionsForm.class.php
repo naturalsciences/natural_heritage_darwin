@@ -67,8 +67,8 @@ class CollectionsForm extends BaseCollectionsForm
       'is_public' => "Uncheck this option if you want your collection to be private. So this collection won't be visible in the public interface neither by simply registered user",
       'main_manager_ref' => "Specify the main manager for this collection, you can add other manager on the rights table below", )
     );
-
-    $this->validatorSchema['collection_type'] = new sfValidatorChoice(array('choices' => array('mix' => 'mix', 'observation' => 'observation', 'physical' => 'physical'), 'required' => true));
+	//jmherpers 2018 06 19
+    $this->validatorSchema['collection_type'] = new sfValidatorChoice(array('choices' => array('mix' => 'mix', 'observation' => 'observation', 'physical' => 'physical', 'title' => 'title'), 'required' => true));
 
     if(! $this->getObject()->isNew() || isset($this->options['duplicate']))
       $this->widgetSchema['parent_ref']->setOption('choices', Doctrine::getTable('Collections')->getDistinctCollectionByInstitution($this->getObject()->getInstitutionRef()) );

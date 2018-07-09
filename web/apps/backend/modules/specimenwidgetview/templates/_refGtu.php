@@ -1,3 +1,5 @@
+<script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v4.x.x-dist/ol.js'));?>"></script>
+<link rel="stylesheet" href="<?php print(public_path('/openlayers/v4.x.x-dist/ol.css'));?>">
 <table class="catalogue_table_view">
   <tbody>
     <tr>
@@ -47,7 +49,7 @@
     </tr>
     <tr>
       <td colspan="2" id="specimen_gtu_ref_map">
-        <?php echo $gtu->getMap(ESC_RAW);?>
+        <?php echo $gtu->getMapOpenLayers3(ESC_RAW);?>
       </td>
     </tr>
 	<!--addition ftheeten 2014-->

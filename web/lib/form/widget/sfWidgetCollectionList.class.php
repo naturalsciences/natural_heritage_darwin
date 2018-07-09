@@ -21,9 +21,6 @@
  
 class sfWidgetCollectionList extends sfWidgetFormChoice
 {
-
-
-
   public function configure($options = array(),$attributes = array())
   {
     parent::configure($options, $attributes);
@@ -119,8 +116,13 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
         $html .= "><div class=\"col_name\">" ;
         $html .= image_tag ($img_expand, array('alt' => '+', 'class'=> 'tree_cmd collapsed'));
         $html .= image_tag ($img_expand_up, array('alt' => '-', 'class'=> 'tree_cmd expanded hidden'));
-        $html .=  "<span style='display: inline; clear: both;'>".$child->getName()."</span>";
-
+		//JMHerpers 2018 06 20 put type "title" in italic
+		$title = $child->getCollectionType();
+		if($title == "title"){
+			$html .=  "<span><i>".$child->getName()."</i></span>"; 
+		}else{
+			$html .=  "<span>".$child->getName()."</span>"; 
+		}
         $options = array(
           'type'=> 'checkbox',
           'class' => 'col_check',
@@ -141,15 +143,17 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
             {
              $html .= link_to(image_tag('edit.png',array('title'=>'Edit Collection','class' => 'collection_edit')),'collection/edit?id='.$child->getId());
              $html .= link_to(image_tag('duplicate.png',array('title'=>'Duplicate Collection')),'collection/new?duplicate_id='.$child->getId());
-            }
             //ftheeten 2017 03 30
-            if($this->withStatistics===TRUE)
-            {
-                $html .= '<div style="width:500px; text-align:left" class="general_statistics">';
-                $html .= '&nbsp;&nbsp;&nbsp; Stats:'.image_tag('info.png',array('title'=>'info','class'=>'extd_info_stat','data-collid-stat'=>$child->getId(),'data-manid-stat'=> $child->getMainManagerRef(), 'data-staffid-stat'=> $child->getStaffRef()));
-                $html.= '<div id="statistics_'.$child->getId().'_details" style="display:none;"></div>';
-                $html .= '</div>';
-            }
+            //if($this->withStatistics===TRUE)
+            //{
+             //   $html .= '<div style="width:500px; text-align:left" class="general_statistics">';
+             //   $html .= '&nbsp;&nbsp;&nbsp; Stats:'.image_tag('info.png',array('title'=>'info','class'=>'extd_info_stat','data-collid-stat'=>$child->getId(),'data-manid-stat'=> $child->getMainManagerRef(), 'data-staffid-stat'=> $child->getStaffRef()));
+             //   $html.= '<div id="statistics_'.$child->getId().'_details" style="display:none;"></div>';
+             //   $html .= '</div>';
+            //}
+		    //ftheeten 2018 04 24
+             $html .= link_to("Statistics (page)",'collection/statistics?id='.$child->getId());
+			 }
           }
         }
 

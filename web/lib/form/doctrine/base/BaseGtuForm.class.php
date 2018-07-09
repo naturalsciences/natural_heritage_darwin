@@ -40,6 +40,7 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'elevation'               => new sfWidgetFormInputText(),
       'elevation_accuracy'      => new sfWidgetFormInputText(),
       'elevation_unit'          => new sfWidgetFormTextarea(),
+      'wkt_str'                 => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -68,6 +69,7 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'elevation'               => new sfValidatorNumber(array('required' => false)),
       'elevation_accuracy'      => new sfValidatorNumber(array('required' => false)),
       'elevation_unit'          => new sfValidatorString(array('required' => false)),
+      'wkt_str'                 => new sfValidatorString(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('gtu[%s]');

@@ -13,7 +13,7 @@ class UsersForm extends BaseUsersForm
   {
     if ($this->options['mode'] == 'new') 
     {
-      $this->useFields(array('is_physical','sub_type','title','family_name','given_name','additional_names','gender')) ;
+      $this->useFields(array('is_physical','sub_type','title','family_name','given_name','additional_names','gender','user_ip')) ;
       $this->widgetSchema['sub_type'] = new widgetFormSelectComplete(array('model' => 'Users',
                                                                    'table_method' => 'getDistinctSubType',
                                                                    'method' => 'getSubType',
@@ -95,7 +95,11 @@ class UsersForm extends BaseUsersForm
     $this->widgetSchema['given_name']->setAttributes(array('class'=>'medium_size'));
     $this->widgetSchema['family_name'] = new sfWidgetFormInput();
     $this->widgetSchema['family_name']->setAttributes(array('class'=>'medium_size'));
-
+	//JMHerpers 2018 05 14
+	$this->widgetSchema['user_ip'] = new sfWidgetFormInput();
+    $this->widgetSchema['user_ip']->setAttributes(array('class'=>'medium_size'));
+	$this->validatorSchema['user_ip'] =  new sfValidatorString(array('required' => false));    
+	
     $this->widgetSchema['additional_names'] = new sfWidgetFormInput();
     $this->widgetSchema['additional_names']->setAttributes(array('class'=>'medium_size'));
          					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top

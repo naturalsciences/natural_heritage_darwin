@@ -11,6 +11,7 @@
 class specimensearchActions extends DarwinActions
 {
   protected $widgetCategory = 'specimensearch_widget';
+  public $userip='';
 
   public function executeIndex(sfWebRequest $request)
   {
@@ -808,6 +809,16 @@ public function executeDownloadws(sfWebRequest $request)
   {}
   
   //jim herpers and ftheeten 2018 02 23
+  public function GetIp()
+  {	
+	$q = Doctrine_Query::create()
+						->select('*')
+						->from('Users')
+						->where('id = ?',$this->getUser()->getId());
+	$result =$q->FetchOne();
+	return $result->getUserIp();
+  }
+  
   public function executeAveryDennisonPrinterCall(sfWebRequest $request)
   {	
 	  $results=Array();
@@ -841,9 +852,19 @@ public function executeDownloadws(sfWebRequest $request)
 			 $script_path="/var/thermic_printer_avery_dennison/client";
 			 $script_name='client_caller.py';
 			 $param_name="-s";
-			 $command='nohup python '.$script_path."/".$script_name." ".$param_name." ".$id_specimen." > /dev/null & ";
-			 exec($command);
-			 $results['id']=$id_specimen;
+			 $param_name2="-i";
+
+			$userip = $this->getIp();
+			$this->userip = $userip;
+			if (strlen($userip) != 0){
+				 //$command='nohup python '.$script_path."/".$script_name." ".$param_name." ".$id_specimen." > /dev/null & ";
+				 $command='nohup python '.$script_path."/".$script_name." ".$param_name." ".$id_specimen." ".$param_name2." ".$userip." > /dev/null & ";
+				 exec($command);
+				 $results['id']=$id_specimen;
+				 //$results['id']=$command;
+			}else{
+				$results['id']="Error in print"; 		
+			}
 		  }
 	  }
 	  else
@@ -852,8 +873,9 @@ public function executeDownloadws(sfWebRequest $request)
 	  }
   
 	  //if the function returns JSON; no template is needed
-	  $this->getResponse()->setContentType('application/json');
-	return  $this->renderText(json_encode($results));
+	  //$this->getResponse()->setContentType('application/json');
+	//return  $this->renderText(json_encode($results));
+	 return sfView::NONE;
   }
 
 }

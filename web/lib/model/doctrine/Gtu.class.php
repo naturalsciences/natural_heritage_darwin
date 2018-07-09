@@ -92,6 +92,92 @@ class Gtu extends BaseGtu
       return '<img class="gtu_img_loc" src="http://staticmap.openstreetmap.de/staticmap.php?&size=480x240&center='.$this->getLatitude().','.$this->getLongitude().'&zoom=6&markers='.$this->getLatitude().','.$this->getLongitude().',red-pushpin" alt="Sampling location" />';
     return '';
   }
+  
+  public function getMapOpenLayers3()
+  {
+	  if( $this->getLatitude() != '' && $this->getLongitude()!= '')
+	  {
+		return '<style >
+			p.collapse{
+				display:none;
+			}
+			</style>
+			<div id="map_container_nh_'.$this->getId().'" class="map_container_nh">
+			<div  style="width:500px;height:400px;" id="map_'.$this->getId().'" class="map_'.$this->getId().'"></div>
+				<div id="mouse-position_'.$this->getId().'"></div>
+			</div>
+			 <script type="text/javascript">
+				var map;
+				var bingBackground;
+				var view;
+				var mousePositionControl;
+				var scaleLineControl;
+				mousePositionControl= new ol.control.MousePosition({
+				     coordinateFormat: ol.coordinate.createStringXY(4),
+					projection:"EPSG:4326",
+					className: "custom-mouse-position",
+					target: document.getElementById("mouse-position_'.$this->getId().'"),
+					undefinedHTML: "&nbsp;"
+				});
+				scaleLineControl = new ol.control.ScaleLine();
+				bingBackground= new ol.layer.Tile({
+					preload: Infinity,
+					source: new ol.source.BingMaps({key:"Ap9VNKmWsntrnteCapydhid0fZxzbV_9pBTjok2rQZS4pi15zfBbIkJkvrZSuVnJ",  imagerySet:"AerialWithLabels" })
+				});
+				view= new ol.View({
+					center: [-4,15],
+					zoom: 5
+				});
+						
+				var geometry=new ol.geom.Point(['.$this->getLongitude().','.$this->getLatitude().']);
+				var style= new ol.style.Style({
+					image: new ol.style.Circle({
+						radius: 10,
+						stroke: new ol.style.Stroke({
+							color: "#fff"}),
+						fill: new ol.style.Fill({
+							color: "#3399CC"})
+					}),
+					text: new ol.style.Text({
+						text: "1",
+						fill: new ol.style.Fill({
+							color: "#fff"
+						})
+					})
+				});
+					   
+				 var iconFeature = new ol.Feature({
+					 label:"1",
+					geometry: geometry.transform("EPSG:4326", "EPSG:3857")
+				});
+							
+				var vectorSource = new ol.source.Vector({
+					features: [iconFeature]
+				});
+
+				var vectorLayer = new ol.layer.Vector({
+					source: vectorSource,
+					style: style
+				});
+						   
+				map=new ol.Map({
+					layers:[bingBackground, vectorLayer],
+					target: "map_'.$this->getId().'",
+					view: view,
+					controls: ol.control.defaults({
+						attributionOptions: ({collapsible: false})
+					}).extend([mousePositionControl, scaleLineControl ])
+				});
+							 
+				var extent = vectorLayer.getSource().getExtent();
+				map.getView().fit(extent);
+				map.getView().setZoom(11);
+			</script>';
+		}
+    return '';
+  }
+
+
   public function getTagsWithCode($view = null)
   {
     $str = $this->getName($view);

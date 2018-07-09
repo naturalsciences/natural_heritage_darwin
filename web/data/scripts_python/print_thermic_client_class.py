@@ -155,18 +155,18 @@ class DarwinClientParser(object):
             order = unicode(record['order'])
 
             #######Nbr of undefined, male, female, juvenile
-            if record['sex'] == "undefined":
-                namesex = "undefined"
-            elif record['sex'] == "male":
-                namesex = u'\\u2642\n'.decode('string_escape')
-            elif record['sex'] == "female":
-                namesex = u'\\u2640\n'.decode('string_escape')
+           # if record['sex'] == "undefined" | record['sex'] ==  :
+          #      namesex = " undefined"
+           # elif record['sex'] == "male":
+          #      namesex = u'\\u2642\n'.decode('string_escape')
+          #  elif record['sex'] == "female":
+          #      namesex = u'\\u2640\n'.decode('string_escape')
             if (record['specimen_count_min'] != "") & (record['specimen_count_min'] != "0") & ((record['specimen_count_males_min'] == "") | (record['specimen_count_males_min'] == "0")) & ((
                     record['specimen_count_females_min'] == "") | (record['specimen_count_females_min'] == "0")) & ((record['specimen_count_juveniles_min'] == "") | (record['specimen_count_juveniles_min'] == "0")):
                 if record['specimen_count_max'] == record['specimen_count_min']:
-                    nbrsexundef = str(record['specimen_count_min']) + " " + namesex
+                    nbrsexundef = str(record['specimen_count_min']) + " undefined"
                 else:
-                    nbrsexundef = str(record['specimen_count_min']) + '-' + str(record['specimen_count_max']) + " " + namesex
+                    nbrsexundef = str(record['specimen_count_min']) + '-' + str(record['specimen_count_max']) + " undefined"
             else:
                 nbrsexundef = ""
 
@@ -198,7 +198,7 @@ class DarwinClientParser(object):
             bl2 = ""
             bl3 = ""
             if ((record['specimen_count_min'] == "") | (record['specimen_count_min'] == "0")) & ((record['specimen_count_males_min'] == "") | (record['specimen_count_males_min'] == "0")) & ((record['specimen_count_females_min'] == "") | (record['specimen_count_females_min'] == "0")) & ((record['specimen_count_juveniles_min'] == "") | (record['specimen_count_juveniles_min'] == "0")):
-                nbrsex = "1 " + " " + namesex
+                nbrsex = "1 undefined"
             else:
                 if nbrsexundef != "" :
                     bl1 = "    "

@@ -118,12 +118,13 @@ abstract class BaseCollections extends DarwinModel
         $this->hasColumn('collection_type', 'enum', null, array(
              'type' => 'enum',
              'notnull' => true,
-             'default' => 'mix',
+             'default' => 'physical',
              'values' => 
              array(
-              0 => 'mix',
+              0 => 'physical',
               1 => 'observation',
-              2 => 'physical',
+              2 => 'mix',
+              3 => 'title',
              ),
              ));
         $this->hasColumn('code', 'string', null, array(

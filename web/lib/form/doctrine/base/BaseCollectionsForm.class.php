@@ -16,7 +16,7 @@ abstract class BaseCollectionsForm extends BaseFormDoctrine
   {
     $this->setWidgets(array(
       'id'                      => new sfWidgetFormInputHidden(),
-      'collection_type'         => new sfWidgetFormChoice(array('choices' => array('mix' => 'mix', 'observation' => 'observation', 'physical' => 'physical'))),
+      'collection_type'         => new sfWidgetFormChoice(array('choices' => array('physical' => 'physical', 'observation' => 'observation', 'mix' => 'mix', 'title' => 'title'))),
       'code'                    => new sfWidgetFormTextarea(),
       'name'                    => new sfWidgetFormTextarea(),
       'name_indexed'            => new sfWidgetFormTextarea(),
@@ -41,7 +41,7 @@ abstract class BaseCollectionsForm extends BaseFormDoctrine
 
     $this->setValidators(array(
       'id'                      => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'collection_type'         => new sfValidatorChoice(array('choices' => array(0 => 'mix', 1 => 'observation', 2 => 'physical'), 'required' => false)),
+      'collection_type'         => new sfValidatorChoice(array('choices' => array(0 => 'physical', 1 => 'observation', 2 => 'mix', 3 => 'title'), 'required' => false)),
       'code'                    => new sfValidatorString(),
       'name'                    => new sfValidatorString(),
       'name_indexed'            => new sfValidatorString(array('required' => false)),

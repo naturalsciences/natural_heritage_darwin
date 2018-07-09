@@ -1,5 +1,6 @@
 <?php slot('title', __('Specimens Search Result'));  ?>
 <?php use_javascript('double_list.js');?>
+
 <?php include_partial('result_cols', array('columns' => $columns, 'field_to_show' => $field_to_show,  'arrayDisplay' => $arrayDisplay));?>
 
 <div class="encoding">
@@ -22,8 +23,24 @@
         }?>
       </ul>
       <div class="search_results">
+	  <!--jmherpers 2018 06 04-->
+	  	<?php if(!isset($is_pinned_only_search) && ! $is_specimen_search):?>
+			<input type="button" id="criteria_butt" class="save_search" value="<?php echo __('Back to criteria'); ?>">
+		<?php elseif(! isset($is_pinned_only_search) && $is_specimen_search):?>
+			<input type="button" id="del_from_spec" class="save_search" value="<?php echo __('Remove selected'); ?>">
+		<?php endif;?>
+				  
+		<!-- added by Son -->
+		<?php if($sf_user->isAtLeast(Users::ENCODER)):?>
+			<input type="button" id="print_spec" class="save_search" value="<?php echo __('Print');?>" />
+			<!-- end added code -->
+			<!-- added by JMHerpers 2018/01/18-->
+			<?php if($sf_user->isAtLeast(Users::MANAGER)):?>
+				<input type="button" id="print_spec_thermic" class="save_search" value="<?php echo __('Thermic print');?>" /> 
+			<?php endif;?>			
+		<?php endif;?>
         <div class="search_results_content">
-          <?php include_partial('searchSuccess',
+			<?php include_partial('searchSuccess',
                                 array('specimensearch' => $specimensearch,
                                       'codes' => $codes,
                                       'form' => $form, 
@@ -35,7 +52,7 @@
                                       'is_specimen_search' => $is_specimen_search,
                                       'columns' => $columns,
                                      )
-                               ); ?>
+            ); ?>
         </div>
       </div>
       <?php if(isset($is_pinned_only_search)):?>
@@ -95,27 +112,7 @@
           <?php include_partial('savesearch/saveSearch');?>
         <?php endif;?>
       </div>
-      <?php if(!isset($is_pinned_only_search) && ! $is_specimen_search):?>
-        <input type="button" id="criteria_butt" class="save_search" value="<?php echo __('Back to criteria'); ?>">
-      <?php elseif(! isset($is_pinned_only_search) && $is_specimen_search):?>
-        <input type="button" id="del_from_spec" class="save_search" value="<?php echo __('Remove selected'); ?>">
-      <?php endif;?>
-      <!--<input type="button" id="export_spec" class="save_search" value="<?php echo __('Export');?>" />-->
-	  
-	  <!-- added by Son -->
-      <?php if($sf_user->isAtLeast(Users::ENCODER)):?>
-			<input type="button" id="print_spec" class="save_search" value="<?php echo __('Print');?>" />
-			<!-- end added code -->
-			<!-- added by JMHerpers 2018/01/18-->
-			<?php if($sf_user->isAtLeast(Users::MANAGER)):?>
-				<input type="button" id="print_spec_thermic" class="save_search" value="<?php echo __('Thermic print');?>" /> 
-			<?php endif;?>
-			<!-- added by Franck -->
-			<input type="button" id="xml_spec" class="save_search" value="<?php echo __('XML');?>" />
-			<!-- ftheeten 2016/01/29-->
-			<input type="button" id="report_spec" class="save_search" value="<?php echo __('Report');?>" />
-			<!-- these fields are filled by _searchSucess.php -->
-       <?php endif;?>
+
 	  <input type="hidden" name="h_current_page" id="h_current_page" value="-1"/>
 	  <input type="hidden" name="h_order_by" id="h_order_by" value="-1"/>
 	  <input type="hidden" name="h_order_dir" id="h_order_dir" value="-1"/>
@@ -187,63 +184,77 @@
 			var collect_array = collect_to_print_thermic.split(","); 
 			
 			$("#print_spec_thermic").click(function(event){
-				var classes = [];
-				var pass = false;
-				var pass2 = false;
-				var collect = false;
-				var tmpArray=Array();
-
-				//var url_printer_full=url_printer+'?op=on&id='+tmpArray.join("|");
-				$('.spec_results > tbody > tr ').each(function(){
-					$($(this).attr('class').split(' ')).each(function() {
-						if (this.length>0 && $.inArray(this.valueOf(), classes) === -1) {
-							if (this.valueOf().substring(0, 4) == 'rid_' ) {	
-								collect = false;
-								var id_spec=this.valueOf().match(/[0-9]+/g);
-								id_spec=id_spec[0];
-								
-								var coll = $('.'+this.valueOf()).children('.col_collection').children('.Collid').val();
-								var coll_list = "<?php 	$collist = sfConfig::get('dw_collect_to_print_thermic');
-														$cols = explode(",", $collist);
-														$collstr = "";
-														foreach ($cols as $c) {
-															$q = Doctrine_Query::create()
-																->select('*')
-																->from('Collections')
-																->where('id = ?',$c);
-															$result =$q->FetchOne();
-															$collstr = $collstr.",".$result->getName();
-														}
-														echo($collstr);	?>";
-								var i;
-								if(jQuery.inArray(coll, collect_array) == -1){
-									var collect = true;
-								}
-								if (collect == true && pass == false ) {
-									alert("Attention, only specimen from "+coll_list.substring(1)+" will be printed");
-									pass = true;
-								}
-								if (collect == false) {
-									if (pass2 == false ) {
-										alert("Labels are sent to thermic printer");
-									}
-									tmpArray.push(id_spec);									
-									pass2 = true;
-								}
-								collect = false;
-							}
-						}    
-					});	
-				});
-				var url_printer_full="<?php echo url_for('specimensearch/averyDennisonPrinterCall');?>?id="+tmpArray.join('_');
-									
-				if (tmpArray.join('_') != "" ){
-					$.ajax({
-						url: url_printer_full												
-					}).done(
-					function()	{}
-					);
+				var getip=function(){
+					return JSON.parse('<?php echo 	Doctrine::getTable('Users')-> 
+													find($sf_user->getId())-> 
+													getIp() ?>');
 				}
+				var json_ip = getip();
+				if (json_ip[0] != null){
+					if ((trim(json_ip[0].user_ip)).length == 0) {
+						alert("IP address of local print server is not found !");
+					}else{
+						var classes = [];
+						var pass = false;
+						var pass2 = false;
+						var collect = false;
+						var tmpArray=Array();
+
+						//var url_printer_full=url_printer+'?op=on&id='+tmpArray.join("|");
+						$('.spec_results > tbody > tr ').each(function(){
+							$($(this).attr('class').split(' ')).each(function() {
+								if (this.length>0 && $.inArray(this.valueOf(), classes) === -1) {
+									if (this.valueOf().substring(0, 4) == 'rid_' ) {	
+										collect = false;
+										var id_spec=this.valueOf().match(/[0-9]+/g);
+										id_spec=id_spec[0];
+										
+										var coll = $('.'+this.valueOf()).children('.col_collection').children('.Collid').val();
+										var coll_list = "<?php 	$collist = sfConfig::get('dw_collect_to_print_thermic');
+																$cols = explode(",", $collist);
+																$collstr = "";
+																foreach ($cols as $c) {
+																	$q = Doctrine_Query::create()
+																		->select('*')
+																		->from('Collections')
+																		->where('id = ?',$c);
+																	$result =$q->FetchOne();
+																	$collstr = $collstr.",".$result->getName();
+																}
+																echo($collstr);	?>";
+										var i;
+										if(jQuery.inArray(coll, collect_array) == -1){
+											var collect = true;
+										}
+										if (collect == true && pass == false ) {
+											alert("Attention, only specimen from "+coll_list.substring(1)+" will be printed");
+											pass = true;
+										}
+										if (collect == false) {
+											if (pass2 == false ) {
+												alert("Labels are sent to thermic printer");
+											}
+											tmpArray.push(id_spec);									
+											pass2 = true;
+										}
+										collect = false;
+									}
+								}    
+							});	
+						});
+						var url_printer_full="<?php echo url_for('specimensearch/averyDennisonPrinterCall');?>?id="+tmpArray.join('_');
+											
+						if (tmpArray.join('_') != "" ){
+							$.ajax({
+								url: url_printer_full												
+							}).done(
+							function()	{}
+							);
+						}
+					}
+				}
+
+	
 			});
 			 
 			 //ftheeten 2016/01/29
@@ -307,9 +318,6 @@
 			 });
 			 
 			  $("#xml_spec").click(function(event){
-			  
-
-				
 				form = document.createElement('form');
 					form.setAttribute('method', 'POST');
 					form.setAttribute('action', '<?php echo url_for("searchspecimenws")?>');
@@ -360,12 +368,6 @@
 					 myvar5.setAttribute('id','order_dir');
 					 myvar5.setAttribute('value',tmpOrderDir);
 					 form.appendChild(myvar5);
-					 
-					 
-					 
-					//alert(tmpOrderBy);
-					//alert(tmpOrderDir);
-			 
 
 					document.body.appendChild(form);
 					form.submit();  

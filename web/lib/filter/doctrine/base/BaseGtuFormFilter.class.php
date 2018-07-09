@@ -37,6 +37,7 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'elevation'               => new sfWidgetFormFilterInput(),
       'elevation_accuracy'      => new sfWidgetFormFilterInput(),
       'elevation_unit'          => new sfWidgetFormFilterInput(),
+      'wkt_str'                 => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -64,6 +65,7 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'elevation'               => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
       'elevation_accuracy'      => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
       'elevation_unit'          => new sfValidatorPass(array('required' => false)),
+      'wkt_str'                 => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('gtu_filters[%s]');
@@ -108,6 +110,7 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'elevation'               => 'Number',
       'elevation_accuracy'      => 'Number',
       'elevation_unit'          => 'Text',
+      'wkt_str'                 => 'Text',
     );
   }
 }

@@ -226,7 +226,7 @@ class SpecimensForm extends BaseSpecimensForm
 
     $this->widgetSchema['type'] = new widgetFormSelectComplete(array(
       'model' => 'Specimens',
-      'table_method' => 'getDistinctTypes',
+      'table_method' => 'getDistinctTypesNoCombinations',
       'method' => 'getType',
       'key_method' => 'getType',
       'add_empty' => false,
