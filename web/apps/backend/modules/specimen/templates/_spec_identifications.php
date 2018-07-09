@@ -106,6 +106,7 @@
 	  position_to_Scroll=$('#refIdentifications').offset().top;
 	 $('body').trigger('close_modal');
 	  $('body').parent().scrollTop(position_to_Scroll);
+
         }
 		
       });

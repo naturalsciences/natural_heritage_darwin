@@ -46,7 +46,6 @@ $(document).ready(function () {
        
         if($('#specimen_search_filters_in_loan').length>0)
         {
-            //ftheeten 2017 11 23 (to avoid javascript error blocking "people" popup)
             if( $_POST.specimen_search_filters != undefined)
             {
                 if($_POST.specimen_search_filters.in_loan=="on")
@@ -61,8 +60,7 @@ $(document).ready(function () {
         }
         if($('#specimen_search_filters_code_exact_match').length>0)
         {
-            //ftheeten 2017 11 23 (to avoid javascript error blocking "people" popup)
-            if( $_POST.specimen_search_filters != undefined)
+             if( $_POST.specimen_search_filters != undefined)
             {
                 if($_POST.specimen_search_filters.code_exact_match=="on")
                 {
@@ -72,7 +70,7 @@ $(document).ready(function () {
                 {
                     $('#specimen_search_filters_code_exact_match').attr('checked', false);
                 }
-            }    
+            }
         }
         
   });

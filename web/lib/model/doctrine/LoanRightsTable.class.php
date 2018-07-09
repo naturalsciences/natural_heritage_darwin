@@ -71,6 +71,7 @@ class LoanRightsTable extends Doctrine_Table
     $loan= Doctrine::getTable('Loans')->find($loan_id);
     $user= Doctrine::getTable('Users')->find($user_id);
     $testColLoan=Doctrine::getTable('CollectionsRights')->hasEditRightsFor($user, $loan->getCollectionRef());
+   
     return $testColLoan;
   }
 

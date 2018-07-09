@@ -19,12 +19,7 @@
       </a>
     </td>
     <td><?php echo $relation->getRelationshipType();?></td>
-	<td>
-	<!--JMHerpers 2018/02/05 added link for edition of institution--->
-	<?php echo image_tag('info.png',"title=info class='info lid_1' id='info_".$relation->Parent->getId()."'");?>
-	  <a target='_blank' href="<?php echo url_for('institution/edit?id='.$relation->Parent->getId());?>">
-	    <?php echo $relation->Parent;?>
-	  </a>
+    <td><!--RMCA 2017 12 4 added link for edition of institution---><?php echo image_tag('info.png',"title=info class='info lid_1' id='info_".$relation->Parent->getId()."'");?><a target='_blank' href="<?php echo url_for('institution/edit?id='.$relation->Parent->getId());?>"><?php echo $relation->Parent;?></a>
       <div class="tree">
       </div>
     </td>

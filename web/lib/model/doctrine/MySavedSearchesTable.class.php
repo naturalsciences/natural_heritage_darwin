@@ -63,7 +63,7 @@ class MySavedSearchesTable extends DarwinTable
       'taxon'=>'Taxon',
       'type'=>'Type',
       'gtu'=>'Sampling Location',
-	   //following field added JMHerpers 2018/02/22
+		//following field added JMHerpers 2018/02/22
 	  'gtu_location'=> 'Coordinates',
       'codes'=>'Codes',
 	  //these fields added ftheeten 2016 01 11

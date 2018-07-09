@@ -43,6 +43,7 @@ class SpecimensForm extends BaseSpecimensForm
     
     //ftheeten 2016 09 21
     $this->arrayFormsStorage=Array();
+
 					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
 	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
@@ -1103,18 +1104,8 @@ class SpecimensForm extends BaseSpecimensForm
 		  {
 			$options['code_prefix'] = $collection->getCodePrefix();
 			$options['code_prefix_separator'] = $collection->getCodePrefixSeparator();
-		    //JMHerpers 2018/02/02 transfer parent-child of auto-increment
-			
-		    if($collection->getCodeAutoIncrement()) {
-				if($collection->getCodeAiInherit()&&($collection->getParentRef()!==null)){
-					$parent_collection = $collection->detectTrueParentForAutoIncrement();
-					$options['code'] = $parent_collection->getCodeLastValue() + 1 ;	
-				}
-				else {//(this is a parent collection of non inheriting
-					$options['code'] = $collection->getCodeLastValue() + 1 ;		  
-				}		
-
-			}
+			if($collection->getCodeAutoIncrement())
+			  $options['code'] = $collection->getCodeLastValue() + 1 ;
 			$options['code_suffix'] = $collection->getCodeSuffix();
 			$options['code_suffix_separator'] = $collection->getCodeSuffixSeparator();
 		  }
@@ -1390,6 +1381,8 @@ class SpecimensForm extends BaseSpecimensForm
     $javascripts=parent::getJavascripts();
     $javascripts[]='/js/jquery-datepicker-lang.js';
     $javascripts[]='/js/ui.complete.js';
+	//ftheeten 2018 04 04
+	// $javascripts[]='openlayers/v4.x.x-dist/ol.js';
 	
 	//ftheeten 2015 10 15 link inputmask library
 	//from https://github.com/RobinHerbots/jquery.inputmask 

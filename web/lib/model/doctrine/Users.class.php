@@ -128,7 +128,7 @@ class Users extends BaseUsers
     return "user_suit_f.png" ;
   }  
   
-    //jim 2018 05 16
+      //jim 2018 05 16
   public function getIp()
   {
 	$conn = Doctrine_Manager::connection();

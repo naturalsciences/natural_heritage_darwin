@@ -22,8 +22,7 @@ class UsersTrackingTable extends DarwinTable
       ->from('UsersTracking r')
       ->where('r.user_ref = ?',$user_id)
       ->orderBy('r.modification_date_time desc')
-	  //ftheeten 2018 05 15 to speed up user tracking, add a dummy sort columns
-	  ->orderBy('r.id asc');
+      ->orderBy('r.id desc');
     return $q;
   }
 

@@ -33,7 +33,7 @@
 
 <script type="text/javascript">
 $(document).ready(function () {
-	  //ftheeten 2017 12 14
+  //ftheeten 2017 12 14
   $('#taxon_precise_line :checkbox').each(
     function()
     {

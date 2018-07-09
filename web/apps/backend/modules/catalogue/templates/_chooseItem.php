@@ -118,7 +118,6 @@ var urlParam= function(name){
                return decodeURI(results[1]) || 0;
             }
         }  
-
 $(document).ready(function () {
   $('.catalogue_filter').choose_form({});
   $('#clear_cat_relation').click(function (event)
@@ -223,14 +222,23 @@ $(document).ready(function () {
     }
   );
   
-  //ftheeten 2018 04 10
+    //ftheeten 2018 04 10
   var ig_num=urlParam('ig_num');
   if(!!ig_num)
   {
     
         $("#searchCatalogue_ig_number").val(decodeURIComponent(ig_num));
         $( ".search_form" ).submit();
-    }
- });
+  }
+  
+   //ftheeten 2018 06 06
+  var name=urlParam('name');
+  if(!!name)
+  {
+    
+        $("#searchCatalogue_name").val(decodeURIComponent(name));
+        $( ".search_form" ).submit();
+  }
+});
 </script>
 </div>

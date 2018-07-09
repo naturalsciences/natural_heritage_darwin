@@ -290,7 +290,7 @@ class gtuActions extends DarwinActions
       }
       else 
       {
-		$str .= '<ul class="name_tags">' ;
+        $str .= '<ul class="name_tags">' ;
       }
       $tags = explode(";",$group->getTagValue());
       foreach($tags as $value)

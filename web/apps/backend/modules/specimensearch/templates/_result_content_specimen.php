@@ -20,7 +20,7 @@
         <?php endif ; ?>
         <div id="collection_<?php echo $specimen->getId();?>_tree" class="tree"></div>
 		
-		<!--JMHerpers 2018 02 27 add collection ref hidden-->
+				<!--JMHerpers 2018 02 27 add collection ref hidden-->
 		<input id="Collid" class="Collid" style="display: none;" value="<?php echo $specimen->getCollectionRef();?>">
 		
         <script type="text/javascript">
@@ -120,7 +120,7 @@
 
       <?php endif ; ?>
     </td> 
-	    <!--JMHerpers 2018 02 22-->
+		    <!--JMHerpers 2018 02 22-->
     <td class="col_gtu_location">
 		<?php if($specimen->getGtuLocation() !== null) : ?>
 			<?php $pos = strpos($specimen->getGtuLocation(), ",");echo "● <b>Long: </b>".substr($specimen->getGtuLocation(),1,$pos -1)."<br>● <b>Lat: </b>".substr($specimen->getGtuLocation(),$pos+1,strlen($specimen->getGtuLocation())-$pos-2);?>
@@ -194,7 +194,7 @@
 			   <strong>
 					<?php echo link_to( $code->getFullCode(), 'specimen/view?id='.$specimen->getId(), array('target' => '_blank'));?>
                 </strong>
-              </li> 
+              </li> 			  
           <?php elseif ($sf_user->isAtLeast(Users::ENCODER)) : ?>
                       
             <li class="hidden code_supp" >

@@ -54,10 +54,10 @@ class loanwidgetComponents extends sfComponents
   public function executeMainInfo()
   { 
     $this->defineForm();
-   // if(! $this->form->getObject()->isNew())
-    //{
+    if(! $this->form->getObject()->isNew())
+    {
       $this->status =  Doctrine::getTable('LoanStatus')->getFromLoans(array($this->form->getObject()->getId()));
-    //}
+    }
     
   }
   

@@ -11,7 +11,6 @@
 class specimensearchActions extends DarwinActions
 {
   protected $widgetCategory = 'specimensearch_widget';
-  public $userip='';
 
   public function executeIndex(sfWebRequest $request)
   {
@@ -59,13 +58,9 @@ class specimensearchActions extends DarwinActions
    
     $this->search_request=$request;
     
-    //ftheeten 2018 04 17
-    //if(($request->isMethod('post') && $request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
-     if(($request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
+    //ftheeten 2018 04 17 modified for GET parameters (keep query state)
+    if(($request->getParameter('specimen_search_filters','') !== '' ) || $request->hasParameter('pinned') )
     {
-      // Store all post parameters
-      //$criterias = $request->getPostParameters();
-      //ftheeten 2018 04 17
       if($request->isMethod('post'))
       {
         // Store all post parameters
@@ -77,7 +72,6 @@ class specimensearchActions extends DarwinActions
 
          $criterias = $request->getGetParameters();
       }
-      
       // If pinned specimens called
       if($request->hasParameter('pinned'))
       {
@@ -345,7 +339,7 @@ class specimensearchActions extends DarwinActions
       'gtu' => array(
         false,
         $this->getI18N()->__('Sampling locations'),),
-      //add following field by JMHerpers 20180222
+	  //add following field by JMHerpers 20180222
 	 'gtu_location' => array(
         'gtu_location',
         $this->getI18N()->__('Coordinates'),),
@@ -424,9 +418,9 @@ class specimensearchActions extends DarwinActions
             $this->getI18N()->__('Amount Males'),),
           'amount_females' => array(
            'amount_females',
-            $this->getI18N()->__('Amount Females'),),         
+            $this->getI18N()->__('Amount Females'),),
             // end addition
-			//add following field by JMHerpers 20180129
+		    //add following field by JMHerpers 20180129
 		  'amount_juveniles' => array(
             'amount_juveniles',
             $this->getI18N()->__('Amount Juveniles'),),
@@ -510,9 +504,9 @@ class specimensearchActions extends DarwinActions
           'specimen_count_max',
           $this->getI18N()->__('Specimen Count'),),
           //ftheeten 
-        //'storage_parts' => array(
-        //  'storage_parts',
-        //  $this->getI18N()->__('Storage Parts'),)
+        'storageParts' => array(
+          'storageParts',
+          $this->getI18N()->__('Storage Parts'),)
           //ftheeten 
         ));
       }
@@ -807,8 +801,8 @@ public function executeDownloadws(sfWebRequest $request)
   //ftheeten 2016 11 24 for loans
   public function executeSearchByNumAndIG(sfWebRequest $request)
   {}
-  
-  //jim herpers and ftheeten 2018 02 23
+
+ //jim herpers and ftheeten 2018 02 23
   public function GetIp()
   {	
 	$q = Doctrine_Query::create()
@@ -877,5 +871,4 @@ public function executeDownloadws(sfWebRequest $request)
 	//return  $this->renderText(json_encode($results));
 	 return sfView::NONE;
   }
-
 }

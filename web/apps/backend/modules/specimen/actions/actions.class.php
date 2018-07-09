@@ -494,15 +494,20 @@ class specimenActions extends DarwinActions
     $this->redirect('specimensearch/index');
   }
 
+
   public function executeView(sfWebRequest $request)
   {
-    $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($request->getParameter('id'), $this->getUser());
+	 
+	 //ftheeten 2017 10 09 (replace $request->getParameter('id') by spec_id)
+	$spec_id= $this->getIDFromCollectionNumber($request);
+	
+    $this->specimen = Doctrine::getTable('Specimens')->fetchOneWithRights($spec_id, $this->getUser());
 
     $this->hasEncodingRight = false;
 
     if($this->getUser()->isAtLeast(Users::ENCODER)) {
       if( $this->getUser()->isA(Users::ADMIN) ||
-        Doctrine::getTable('Specimens')->hasRights('spec_ref',$request->getParameter('id'), $this->getUser()->getId())) {
+        Doctrine::getTable('Specimens')->hasRights('spec_ref',$spec_id, $this->getUser()->getId())) {
 
         $this->hasEncodingRight = true;
       }
@@ -776,16 +781,16 @@ class specimenActions extends DarwinActions
     $number = intval($request->getParameter('num'));
     $form = $this->getSpecimenForm($request);
     $form->addStorageParts($number, '');
-	
     
     return $this->renderPartial('spec_storage_parts',array('form' => $form['newStorageParts'][$number], 'rownum'=>$number, 'module'=>'specimen'));
     
  }
  
-   //ftheeten 2018 02 08
+    //ftheeten 2018 02 08
    public function addCollectionCookie( $specimen)
    {
-	    $this->getResponse()->setCookie('collection_ref_session',$specimen->getCollectionRef(), time()+60*60*24*30);
+	    $this->getResponse()->setCookie('collection_ref_session',$specimen->getCollectionRef());
+        $this->getResponse()->setCookie('institution_ref_session',$specimen->getCollections()->getInstitutionRef());
 	   
    }
    

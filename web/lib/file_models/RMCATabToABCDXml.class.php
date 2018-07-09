@@ -61,6 +61,11 @@ class RMCATabToABCDXml
         $fields[] = "IdentificationHistory";
         $fields[] = "IdentificationMethod";
         $fields[] = "referenceString";
+		
+		//+
+		
+		 $fields[] = "LatitudeDecimal";
+		 $fields[] = "LongitudeDecimal";
         
         //specific fields
         $fields[] = "LatitudeDMSDegrees";
@@ -112,10 +117,26 @@ class RMCATabToABCDXml
         $fields[] = "HostFamily";
         $fields[] = "HostRemarks";
         $fields[] = "HostGenus";
+		$fields[] = "HostSpecies";
+	    $fields[] = "HostSubSpecies";
+		
         $fields[] = "HostFullScientificName";      
         $fields[] = "HostAuthority";
         $fields[] = "HostCollector";
         $fields[] = "HostIdentifier";
+		
+		// reltionships between taxas
+        $fields[] = "ParasiteClass";
+        $fields[] = "ParasiteOrder";
+        $fields[] = "ParasiteFamily";
+        $fields[] = "ParasiteRemarks";
+        $fields[] = "ParasiteGenus";
+		$fields[] = "ParasiteSpecies";
+	    $fields[] = "ParasiteSubSpecies";
+        $fields[] = "ParasiteFullScientificName";      
+        $fields[] = "ParasiteAuthority";
+        $fields[] = "ParasiteCollector";
+        $fields[] = "ParasiteIdentifier";
 		
         //ftheeten 2018 04 12
         for($i=1;$i<=$this->nbProperties;$i++)
@@ -148,6 +169,11 @@ class RMCATabToABCDXml
     public function configure($options)
     {
         $this->fields = $this->initFields();
+		$this->fields_inverted=Array();
+        foreach($this->fields as $key=>$value)
+        {
+            $this->fields_inverted[strtolower($value)]=$key;
+        }
         $this->file   = $options['tab_file'];
         
     }
@@ -307,7 +333,7 @@ class RMCATabToABCDXml
     }
     
     //ftheeten 2018 04 12
-    public function generateDateGeneric($prefix, $p_valueArray)
+    public function generateDateGeneric($prefix, $p_valueArray, $default=NULL)
     {
         $dateTmp="";
          if(array_key_exists(strtolower($prefix."Year"), $this->headers_inverted)) 
@@ -334,6 +360,10 @@ class RMCATabToABCDXml
                     }
                 }
                
+            }
+            elseif(isset($default))
+            {
+                $dateTmp=$default;
             }
             return $dateTmp;
     }
@@ -372,7 +402,7 @@ class RMCATabToABCDXml
         $dateTmpBegin=$this->generateDateGeneric("collectionStart", $p_valueArray);
         $this->testAndAppendTag($dateTimeNode, null, "ISODateTimeBegin", null, $dateTmpBegin); 
         //date end
-        $dateTmpEnd=$this->generateDateGeneric("collectionEnd", $p_valueArray);
+        $dateTmpEnd=$this->generateDateGeneric("collectionEnd", $p_valueArray,$dateTmpBegin);
         $this->testAndAppendTag($dateTimeNode, null, "ISODateTimeEnd", null, $dateTmpEnd);        
         //hour begin
         $hourTmpBegin=$this->generateDateGeneric("collectionStartTime", $p_valueArray);
@@ -636,9 +666,12 @@ class RMCATabToABCDXml
     public function addMeasurement($p_parentElement, $p_valueArray, $p_parameter_name_csv, $p_parameter_name_xml)
     {
         if (array_key_exists(strtolower($p_parameter_name_csv), $this->headers_inverted)) {
-            $fact_anchor = $this->testAndAppendTag($p_parentElement, null, "MeasurementOrFact/MeasurementOrFactAtomised", null, null, true);
-            $this->testAndAppendTag($fact_anchor, null, "Parameter", null, $p_parameter_name_xml);
-            $this->testAndAppendTag($fact_anchor, $p_parameter_name_csv, "LowerValue", $p_valueArray);
+            if(strlen(trim($p_valueArray[$this->headers_inverted[strtolower($p_parameter_name_csv)]]))>0)
+            {
+                $fact_anchor = $this->testAndAppendTag($p_parentElement, null, "MeasurementOrFact/MeasurementOrFactAtomised", null, null, true);
+                $this->testAndAppendTag($fact_anchor, null, "Parameter", null, $p_parameter_name_xml);
+                $this->testAndAppendTag($fact_anchor, $p_parameter_name_csv, "LowerValue", $p_valueArray);
+            }
         }
     }
 
@@ -803,7 +836,7 @@ class RMCATabToABCDXml
         $this->number_of_fields = count($this->headers);
         
     }
-    
+    /*
     public function parseLine($p_row)
     {
         $dom               = new DOMDocument('1.0', 'utf-8');
@@ -846,21 +879,53 @@ class RMCATabToABCDXml
         $this->addMeasurement($measurements_tag, $p_row, "HostOrder", "Host - Order");
         $this->addMeasurement($measurements_tag, $p_row, "HostFamily", "Host - Family");
         $this->addMeasurement($measurements_tag, $p_row, "HostGenus", "Host - Genus");
+		$this->addMeasurement($measurements_tag, $p_row, "HostSpecies", "Host - Species");
+		$this->addMeasurement($measurements_tag, $p_row, "HostSubSpecies", "Host - Subspecies");
         $this->addMeasurement($measurements_tag, $p_row, "HostFullScientificName", "Host - Taxon name");
         $this->addMeasurement($measurements_tag, $p_row, "HostRemark", "Host - Remark");
         $this->addMeasurement($measurements_tag, $p_row, "HostAuthority", "Host - Authority");
         $this->addMeasurement($measurements_tag, $p_row, "HostCollector", "Host - Collector");
         $this->addMeasurement($measurements_tag, $p_row, "HostIdentifier", "Host - Identifier");
+		
+		$this->addMeasurement($measurements_tag, $p_row, "ParasiteClass", "Parasite - Class");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteOrder", "Parasite - Order");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteFamily", "Parasite - Family");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteGenus", "Parasite - Genus");
+		$this->addMeasurement($measurements_tag, $p_row, "ParasiteSpecies", "Parasite - Species");
+		$this->addMeasurement($measurements_tag, $p_row, "ParasiteSubSpecies", "Parasite - Subspecies");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteFullScientificName", "Parasite - Taxon name");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteRemark", "Parasite - Remark");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteAuthority", "Parasite - Authority");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteCollector", "Parasite - Collector");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteIdentifier", "Parasite - Identifier");
 
         for($i=1; $i<=$this->nbProperties; $i++)
         {
             $this->addMeasurementDynamicField($measurements_tag,  $p_row, (string)$i);
         }
+		
+		
+		foreach($p_row as $key=>$value)
+        {
+			$value=htmlspecialchars(trim($value));
+            $field_name=$this->headers[strtolower($key)];
+			if(strlen(trim($value))>0)
+            {
+				
+				if(!array_key_exists(strtolower($field_name), $this->fields_inverted))
+				{
+						$this->addMeasurement($measurements_tag, $p_row, $field_name, $field_name);
+				}
+			}
+			
+		}
+		
         $this->addStorage($unit, $p_row);
         $this->addNotes($unit, $p_row);
         
         return $dom;
     }
+	*/
     
     public function parseLineAndGetString($p_row)
     {        
@@ -904,20 +969,50 @@ class RMCATabToABCDXml
         $this->addMeasurement($measurements_tag, $p_row, "HostOrder", "Host - Order");
         $this->addMeasurement($measurements_tag, $p_row, "HostFamily", "Host - Family");
         $this->addMeasurement($measurements_tag, $p_row, "HostGenus", "Host - Genus");
+		$this->addMeasurement($measurements_tag, $p_row, "HostSpecies", "Host - Species");
+		$this->addMeasurement($measurements_tag, $p_row, "HostSubSpecies", "Host - Subspecies");
         $this->addMeasurement($measurements_tag, $p_row, "HostFullScientificName", "Host - Taxon name");
         $this->addMeasurement($measurements_tag, $p_row, "HostRemark", "Host - Remark");
         $this->addMeasurement($measurements_tag, $p_row, "HostAuthority", "Host - Authority");
         $this->addMeasurement($measurements_tag, $p_row, "HostCollector", "Host - Collector");
         $this->addMeasurement($measurements_tag, $p_row, "HostIdentifier", "Host - Identifier");
         
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteClass", "Parasite - Class");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteOrder", "Parasite - Order");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteFamily", "Parasite - Family");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteGenus", "Parasite - Genus");
+		$this->addMeasurement($measurements_tag, $p_row, "ParasiteSpecies", "Parasite - Species");
+		$this->addMeasurement($measurements_tag, $p_row, "ParasiteSpecies", "Host - Species");
+		$this->addMeasurement($measurements_tag, $p_row, "ParasiteSubSpecies", "Host - Subspecies");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteFullScientificName", "Parasite - Taxon name");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteRemark", "Parasite - Remark");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteAuthority", "Parasite - Authority");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteCollector", "Parasite - Collector");
+        $this->addMeasurement($measurements_tag, $p_row, "ParasiteIdentifier", "Parasite - Identifier");
+
+        
         for($i=1; $i<=$this->nbProperties; $i++)
         {
             $this->addMeasurementDynamicField($measurements_tag,  $p_row, (string)$i);
         }
+		
+		foreach($p_row as $key=>$value)
+        {
+			$value=htmlspecialchars(trim($value));
+            $field_name=$this->headers[strtolower($key)];
+			if(strlen(trim($value))>0)
+            {
+				if(!array_key_exists(strtolower($field_name), $this->fields_inverted))
+				{				
+						$this->addMeasurement($measurements_tag, $p_row, $field_name, $field_name);
+				}
+			}
+			
+		}
         $this->addStorage($unit, $p_row);
         $this->addNotes($unit, $p_row);
         
-        print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
+        //print($dom->saveXML($root, LIBXML_NOEMPTYTAG ));
        
         return $dom->saveXML($root, LIBXML_NOEMPTYTAG );
     }

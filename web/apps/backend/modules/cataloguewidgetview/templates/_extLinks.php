@@ -25,6 +25,9 @@
                    <?php else:?>
                        <img  class="link_catalogue_view" style="max-width:100px" src="<?php echo url_for($link->getUrl());?>"/>
                     <?php endif;?>
+					<!--ftheeten 2018 03 13-->
+			<?php  elseif($link->getCategory()=="document"):?>
+					<a target="_blank" href="<?php echo url_for($link->getUrl());?>"/>Link</a>
              <?php endif;?>
             </td>
             <td>

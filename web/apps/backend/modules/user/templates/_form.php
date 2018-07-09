@@ -35,7 +35,7 @@
             <?php echo $form['gender'] ?>
           </td>
         </tr>  
-        <tr>
+      <tr>
         <th><?php echo $form['given_name']->renderLabel() ?></th>              
       <?php elseif($user->getIsPhysical()) : ?>
         <tr>

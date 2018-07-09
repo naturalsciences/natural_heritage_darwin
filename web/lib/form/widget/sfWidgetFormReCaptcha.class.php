@@ -71,7 +71,7 @@ class sfWidgetFormReCaptcha extends sfWidgetForm
     $theme = $this->getOption('theme');
     $culture = $this->getOption('culture');
     // if ajax option is true then the captcha need to be reloaded in ajax
-    if($this->getOption('ajax'))
+    /*if($this->getOption('ajax'))
     {
       return sprintf('
         <script type="text/javascript">
@@ -96,7 +96,9 @@ class sfWidgetFormReCaptcha extends sfWidgetForm
       <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
       <input type="hidden" name="recaptcha_response_field" value="manual_challenge" />
     </noscript>
-    ', $theme, $culture, $server, $key, $server, $key);
+    ', $theme, $culture, $server, $key, $server, $key);*/
+      //ftheeten 2018 05 09
+        return '<div class="g-recaptcha" data-sitekey="'.$key.'"></div><input type="hidden" name="'.$name.'" value="on"></input> ';
   }
 
   protected function getServerUrl()

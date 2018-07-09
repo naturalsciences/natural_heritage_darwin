@@ -13,7 +13,7 @@ class CollectionMaintenanceForm extends BaseCollectionMaintenanceForm
   {
     $this->useFields(array('id','people_ref', 'category', 'action_observation', 'description','modification_date_time'));
 
-			//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
 	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1 0:0:0');

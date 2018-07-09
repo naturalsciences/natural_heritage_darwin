@@ -29,6 +29,7 @@
  * @property integer $specimen_taxonomy_ref
  * @property boolean $working
  * @property string $mime_type
+ * @property string $taxonomy_kingdom
  * @property Collections $Collections
  * @property Users $Users
  * @property Doctrine_Collection $Staging
@@ -58,6 +59,7 @@
  * @method integer             getSpecimenTaxonomyRef()     Returns the current record's "specimen_taxonomy_ref" value
  * @method boolean             getWorking()                 Returns the current record's "working" value
  * @method string              getMimeType()                Returns the current record's "mime_type" value
+ * @method string              getTaxonomyKingdom()         Returns the current record's "taxonomy_kingdom" value
  * @method Collections         getCollections()             Returns the current record's "Collections" value
  * @method Users               getUsers()                   Returns the current record's "Users" value
  * @method Doctrine_Collection getStaging()                 Returns the current record's "Staging" collection
@@ -86,6 +88,7 @@
  * @method Imports             setSpecimenTaxonomyRef()     Sets the current record's "specimen_taxonomy_ref" value
  * @method Imports             setWorking()                 Sets the current record's "working" value
  * @method Imports             setMimeType()                Sets the current record's "mime_type" value
+ * @method Imports             setTaxonomyKingdom()         Sets the current record's "taxonomy_kingdom" value
  * @method Imports             setCollections()             Sets the current record's "Collections" value
  * @method Imports             setUsers()                   Sets the current record's "Users" value
  * @method Imports             setStaging()                 Sets the current record's "Staging" collection
@@ -189,6 +192,9 @@ abstract class BaseImports extends DarwinModel
              'type' => 'boolean',
              ));
         $this->hasColumn('mime_type', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('taxonomy_kingdom', 'string', null, array(
              'type' => 'string',
              ));
     }

@@ -27,7 +27,7 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
     $this->addOption('multiple', true);
     $this->addOption('extended', true);
     $this->addOption('is_choose',false);
-    //ftheeten 2017 03 30 added statistics
+  //ftheeten 2017 03 30 added statistics
     $this->withStatistics=FALSE;
 
   }
@@ -47,7 +47,7 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
     $tab = array() ;
     $user=null;
     $only_public = true;
-    if(! $this->hasOption('public_only') || $this->getOption('public_only')==false )
+    if(! $this->hasOption('public_only') || $this->getOption('public_only') === false )
     {
       $user = sfContext::getInstance()->getUser();
       $only_public = false;
@@ -116,13 +116,14 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
         $html .= "><div class=\"col_name\">" ;
         $html .= image_tag ($img_expand, array('alt' => '+', 'class'=> 'tree_cmd collapsed'));
         $html .= image_tag ($img_expand_up, array('alt' => '-', 'class'=> 'tree_cmd expanded hidden'));
-		//JMHerpers 2018 06 20 put type "title" in italic
+       //JMHerpers 2018 06 20 put type "title" in italic
 		$title = $child->getCollectionType();
 		if($title == "title"){
 			$html .=  "<span><i>".$child->getName()."</i></span>"; 
 		}else{
 			$html .=  "<span>".$child->getName()."</span>"; 
 		}
+
         $options = array(
           'type'=> 'checkbox',
           'class' => 'col_check',
@@ -143,7 +144,7 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
             {
              $html .= link_to(image_tag('edit.png',array('title'=>'Edit Collection','class' => 'collection_edit')),'collection/edit?id='.$child->getId());
              $html .= link_to(image_tag('duplicate.png',array('title'=>'Duplicate Collection')),'collection/new?duplicate_id='.$child->getId());
-            //ftheeten 2017 03 30
+			             //ftheeten 2017 03 30
             //if($this->withStatistics===TRUE)
             //{
              //   $html .= '<div style="width:500px; text-align:left" class="general_statistics">';
@@ -151,20 +152,14 @@ class sfWidgetCollectionList extends sfWidgetFormChoice
              //   $html.= '<div id="statistics_'.$child->getId().'_details" style="display:none;"></div>';
              //   $html .= '</div>';
             //}
-		    //ftheeten 2018 04 24
+              //ftheeten 2018 04 24
              $html .= link_to("Statistics (page)",'collection/statistics?id='.$child->getId());
-			 }
+            }
           }
         }
 
         $html .= "</div>" ;
         $html .= $this->displayTree($child,'', $value, $name, $user).'</li>';
-        //ftheeten 2017 03 30
-        
-           // $html.= "<li>";
-           // $html.= "test";
-            //$html.= "</li>";
-        
       }
       $html .= '</ul>';
     }

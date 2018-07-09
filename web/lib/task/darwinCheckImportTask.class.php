@@ -26,7 +26,7 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
-  print("EXECUTE");
+  //print("EXECUTE");
     // Initialize the connection to DB and get the environment (prod, dev,...) this task is runing on
     $databaseManager = new sfDatabaseManager($this->configuration);
     $environment = $this->configuration instanceof sfApplicationConfiguration ? $this->configuration->getEnvironment() : $options['env'];
@@ -84,14 +84,14 @@ EOF;
     // Define what's checkable (and therefore importable if do-import option is defined)
     if (empty($options['full-check']))
     {
-        print("NO_FULL_CHECK");
-        print("loaded, processing");
+        //print("NO_FULL_CHECK");
+        //print("loaded, processing");
       $state_to_check = array('loaded','processing');
     }
     else
     {
-     print("FULL_CHECK");
-     print("loaded, pending, processing");
+     //print("FULL_CHECK");
+     //print("loaded, pending, processing");
       $state_to_check = array('loaded','pending','processing');
     }
     // let's 'lock' all imports checkable to avoid an other check from the next check task
@@ -106,6 +106,7 @@ EOF;
 	
     $imports_ids = $imports->toKeyValueArray("id", "id");
 	
+    print("import_id");
     print_r($imports_ids);
     //DBUG
     /*
@@ -121,8 +122,8 @@ EOF;
     // let's begin with import catalogue
     foreach($catalogues as $catalogue)
     {
-      print("LOOP");
-      print($catalogue->getId());
+     // print("LOOP");
+      //print($catalogue->getId());
 		
       $date_start = date('G:i:s') ;
       $this->logSection('Processing', sprintf('Check %d : Start processing Catalogue import %d (start: %s)',$randnum, $catalogue->getId(),$date_start));
@@ -136,7 +137,9 @@ EOF;
                        )
         );
         $conn->commit();
-        $sql_prepared = $conn->prepare("UPDATE imports set state='finished', is_finished = TRUE WHERE id = ?");
+        //$sql_prepared = $conn->prepare("UPDATE imports set state='finished', is_finished = TRUE WHERE id = ?");
+        //ftheeten 2018 06 11 
+        $sql_prepared = $conn->prepare("UPDATE imports set state='finished', is_finished = TRUE WHERE id = ? and state !='error'");
         $sql_prepared->execute(array($catalogue->getId()));
       }
       catch (\Exception $e) {
@@ -149,7 +152,7 @@ EOF;
 
     // Check we've got at least one import concerned - if not, no check, no do-import :)
     print("BEFORE_TEST");
-    if(count($imports_ids)) {
+    if(count($imports_ids)>0) {
       //ftheeten 2017 08 29
     print("AFTER");
         $this->setImportAsWorking($conn, $imports_ids, true);
@@ -180,7 +183,8 @@ EOF;
       // if followed by process of do-import...
       if(!empty($options['do-import']))
       {
-		 print("TRY");
+		 //print("TRY");
+				print("DO IMPORT");
 				// Initialize the variable that will hold all the imports id to be processed for
 				// changing the state from aprocessing to pending
 				$processed_ids = array();
@@ -203,12 +207,13 @@ EOF;
 
 					  foreach($imports as $import)
 					  {
-						 
+						print("IMPORT ".$import->getId());
 						$processed_ids[] = $import->getId();
 						$date_start = date('G:i:s') ;
 						//ftheeten 2017 09 15 'try' block added
 						try
 						{
+							//print("TRY");
 							$sql_prepared = $conn->prepare("select fct_importer_abcd(?)");
 							$sql_prepared->execute(array($import->getId()));
 							//ftheeten 2017 09 18 handle host/parasite at taxonlevel
@@ -229,6 +234,7 @@ EOF;
 					$conn->commit();
 					// Ok import line asked but 0 ok lines... so it can remain some line in processing not processed...
 					// or simply work done... We then need to set the state back to pending for the current imports
+					//print("COMMIT");
 					Doctrine_Query::create()
 							->update('imports p')
 							->set('p.state','?','pending')
@@ -237,7 +243,17 @@ EOF;
 							->execute();
 
       }
+      else
+      {
+        print("NO_DO_IMPORT");
+      }
       //ftheeten 2017 08 29
+      Doctrine_Query::create()
+              ->update('imports p')
+              ->set('p.state','?','pending')
+              ->andWhereIn('p.state',array('aloaded','apending'))
+              ->andWhereIn('p.id', $imports_ids)
+              ->execute();
     $this->setImportAsWorking($conn, $imports_ids, false);
     }
     //print("EXIT");

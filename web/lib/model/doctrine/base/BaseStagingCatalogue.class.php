@@ -13,6 +13,7 @@
  * @property integer $catalogue_ref
  * @property boolean $is_reference_taxonomy
  * @property string $source_taxonomy
+ * @property integer $name_cluster
  * @property StagingCatalogue $Parent
  * @property Imports $Import
  * @property Doctrine_Collection $StagingCatalogue
@@ -25,6 +26,7 @@
  * @method integer             getCatalogueRef()          Returns the current record's "catalogue_ref" value
  * @method boolean             getIsReferenceTaxonomy()   Returns the current record's "is_reference_taxonomy" value
  * @method string              getSourceTaxonomy()        Returns the current record's "source_taxonomy" value
+ * @method integer             getNameCluster()           Returns the current record's "name_cluster" value
  * @method StagingCatalogue    getParent()                Returns the current record's "Parent" value
  * @method Imports             getImport()                Returns the current record's "Import" value
  * @method Doctrine_Collection getStagingCatalogue()      Returns the current record's "StagingCatalogue" collection
@@ -36,6 +38,7 @@
  * @method StagingCatalogue    setCatalogueRef()          Sets the current record's "catalogue_ref" value
  * @method StagingCatalogue    setIsReferenceTaxonomy()   Sets the current record's "is_reference_taxonomy" value
  * @method StagingCatalogue    setSourceTaxonomy()        Sets the current record's "source_taxonomy" value
+ * @method StagingCatalogue    setNameCluster()           Sets the current record's "name_cluster" value
  * @method StagingCatalogue    setParent()                Sets the current record's "Parent" value
  * @method StagingCatalogue    setImport()                Sets the current record's "Import" value
  * @method StagingCatalogue    setStagingCatalogue()      Sets the current record's "StagingCatalogue" collection
@@ -81,6 +84,9 @@ abstract class BaseStagingCatalogue extends DarwinModel
         $this->hasColumn('source_taxonomy', 'string', null, array(
              'type' => 'string',
              'notnull' => false,
+             ));
+        $this->hasColumn('name_cluster', 'integer', null, array(
+             'type' => 'integer',
              ));
     }
 

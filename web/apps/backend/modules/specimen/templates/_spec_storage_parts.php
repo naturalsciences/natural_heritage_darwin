@@ -2,7 +2,7 @@
    <tr class="spec_storage_parts_data">
    
       <td>
-        <table width = 100%>
+        <table>
             <tr>
                 <td>
                     <?php echo $form['category']->renderLabel();?>
@@ -37,9 +37,9 @@
               </td>
            </tr>
            <tr>
-              <td>
+                <td>
                     <?php echo $form['institution_ref']->renderLabel();?>
-              </td>
+               </td>
               <td>
                 <?php echo $form['institution_ref']->renderError(); ?>
                 <?php echo $form['institution_ref'];?>
@@ -421,12 +421,12 @@
 		delay: 1000
 	});
     
-    
     //ftheeten 2018 02 09
-    $('.ui-autocomplete').mouseleave(
+        $('.ui-autocomplete').mouseleave(
         function()
         {
-            $(this).hide(); 
+            $(this).hide();
+            
         }
     );
     

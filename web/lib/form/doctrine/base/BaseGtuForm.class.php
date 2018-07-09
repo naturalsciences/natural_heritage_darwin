@@ -40,6 +40,8 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'elevation'               => new sfWidgetFormInputText(),
       'elevation_accuracy'      => new sfWidgetFormInputText(),
       'elevation_unit'          => new sfWidgetFormTextarea(),
+      'iso3166'                 => new sfWidgetFormTextarea(),
+      'iso3166_subdivision'     => new sfWidgetFormTextarea(),
       'wkt_str'                 => new sfWidgetFormTextarea(),
     ));
 
@@ -69,6 +71,8 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'elevation'               => new sfValidatorNumber(array('required' => false)),
       'elevation_accuracy'      => new sfValidatorNumber(array('required' => false)),
       'elevation_unit'          => new sfValidatorString(array('required' => false)),
+      'iso3166'                 => new sfValidatorString(array('required' => false)),
+      'iso3166_subdivision'     => new sfValidatorString(array('required' => false)),
       'wkt_str'                 => new sfValidatorString(array('required' => false)),
     ));
 

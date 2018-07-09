@@ -63,13 +63,9 @@ class accountActions extends DarwinActions
 
         $this->getUser()->setHelpIcon(Doctrine::getTable("Preferences")->getPreference($this->form->user->getId(),'help_message_activated',true));
         if($request->getReferer())
-        {
           $this->redirect( $request->getReferer() );
-        }
         else
-        {
           $this->redirect('@homepage');
-        }
       } else {
         sfContext::getInstance()->getLogger()->notice('Bad username or password');
       }
@@ -88,14 +84,14 @@ class accountActions extends DarwinActions
       $this->redirect($referer);
   }
   
-    //ftheeten 2018 04 26
+  //ftheeten 2018 04 26
    public function executeForcelogout(sfWebRequest $request)
   {
     $referer = $this->getRequest()->getReferer();
     $this->getUser()->getAttributeHolder()->clear();
     $this->getUser()->clearCredentials();
     $this->getUser()->setAuthenticated(false);
-    
+    //$this->renderText("<html><body></body></html>");
     return sfView::NONE;
   }
 

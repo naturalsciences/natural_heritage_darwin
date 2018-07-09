@@ -124,4 +124,21 @@ class Imports extends BaseImports
       }
     }
   }
+  
+  public function getTaxonomicConflicts()
+  {
+    $returned=Array();
+    if($this->getFormat()=="taxon"&& $this->getErrorsInImport()=='taxonomic_conflict')
+    {
+        $conn = Doctrine_Manager::connection();
+        $sql = "SELECT * FROM fct_rmca_compare_taxonomy_staging_darwin(:id) ;";
+        $q = $conn->prepare($sql);
+		$q->execute(array(':id'=> $this->getId() ));
+        $res = $q->fetchAll(PDO::FETCH_ASSOC);
+
+        return $res;
+    }
+    return $returned;
+  
+  }
 }

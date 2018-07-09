@@ -11,10 +11,10 @@
     </tr>
   </thead>
   <?php $test="test" ?>
-<?php foreach($spec_related as $val):?>
+  <?php foreach($spec_related as $val):?>
   <tr>
     <td><?php echo $val->getRelationshipType() ; ?></td>
-    <!--ftheeten 2018 02 13 : add getTaxonName and reorganize layout-->
+        <!--ftheeten 2018 02 13 : add getTaxonName and reorganize layout-->
       <?php if ($val->getUnitType()=="mineral") : ?>
 	  <td>
         <a href="<?php echo url_for('mineral/view?id='.$val->getMineralRef()) ; ?>"><?php echo $val->Mineralogy->getName() ; ?></a>
@@ -28,7 +28,7 @@
 		
 			<!--ftheeten 2015 09 10-->
 				<td> <?php echo ucfirst($val->SpecimenRelated->getLabelCreatedOn())?'Date created: '.$val->SpecimenRelated->getLabelCreatedOn():'';?></td>
-				<!--JMHerpers 2018 02 14 : more readable valid sentence-->
+								<!--JMHerpers 2018 02 14 : more readable valid sentence-->
 				<td> <?php echo ucfirst($val->SpecimenRelated->getValidLabel()===FALSE)?'Not valid':'Valid';?></td>
 			<!--ftheeten 2015 09 10-->	
       <?php elseif($val->getUnitType()=="external") : ?>
@@ -60,7 +60,7 @@
       <th></th>
     </tr>
   </thead>
-<?php foreach($spec_related_inverse as $val):?>
+  <?php foreach($spec_related_inverse as $val):?>
   <tr>
     <td><?php echo $val->getRelationshipType() ; ?></td>
 <!--ftheeten 2018 02 13 : add getTaxonName and reorganize layout-->
@@ -75,7 +75,7 @@
 				<?php echo ucfirst($val->Specimen->getLabelCreatedOn())?'Date created: '.$val->Specimen->getLabelCreatedOn():'';?>
 	    </td>
 		<td>
-			<!--JMHerpers 2018 02 14 : more readable valid sentence-->
+					<!--JMHerpers 2018 02 14 : more readable valid sentence-->
 				<?php echo ucfirst($val->Specimen->getValidLabel()===FALSE)?'Not valid':'Valid';?>
 			<!--ftheeten 2015 09 10-->	
 		</td>

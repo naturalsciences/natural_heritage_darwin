@@ -24,7 +24,6 @@ function array_filter_recursive($array, $callback = null) {
     return $array;
 }
 
-
 function word2color($w){
   if (strlen($w)==0) return substr('00000' . dechex(mt_rand(0, 0xffffff)), -6);
   while (strlen($w)<6) $w.=$w;

@@ -4,7 +4,7 @@ class MaAcquisitionDateForm extends BaseForm
 {
   public function configure()
   {
-    					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
 	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');

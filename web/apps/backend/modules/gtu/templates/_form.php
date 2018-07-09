@@ -1,7 +1,3 @@
-<!--JMHerpers 2018 07 02 added links for OL-->
-<script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v4.x.x-dist/ol.js'));?>"></script>
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
-<link rel="stylesheet" href="<?php print(public_path('/openlayers/v4.x.x-dist/ol.css'));?>">
 <?php use_stylesheets_for_form($form) ?>
 <?php use_javascripts_for_form($form) ?>
 <!--[if lte IE 8]>
@@ -29,6 +25,9 @@ $(document).ready(function ()
           <?php echo $form['code']->renderError() ?>
           <?php echo $form['code'] ?>
         </td>
+        <!--rmca 2018 05 04-->
+       </tr>
+       <tr>
 		<!--rmca 2016 06 21-->
 		<td>
 			 <a  class="take_specimen_code button_rmca" >Take specimen code</a>
@@ -40,6 +39,32 @@ $(document).ready(function ()
 			 <a  class="take_ig_code button_rmca" >Take IG code</a>
 		</td>
       </tr>
+    </tbody>
+       </table>
+       <table style="margin-top:20px; margin-bottom: 20px">
+       <tr>
+        
+        <th class="top_aligned"><?php echo __("Country") ?></th>
+        <td>          
+          <?php echo $form['iso3166_text']->renderError() ?>
+          <?php echo $form['iso3166_text'] ?>
+          <?php echo __("ISO 3166-1") ?>
+          <?php echo $form['iso3166']->renderError() ?>
+          <?php echo $form['iso3166'] ?>
+        </td>
+       <!--rmca 2018 05 04-->
+       </tr>
+       <tr>
+        <th class="top_aligned"><?php echo __("Administrative subdivision") ?></th>
+        <td>
+          <?php echo $form['iso3166_subdivision_text']->renderError() ?>
+          <?php echo $form['iso3166_subdivision_text'] ?>
+          <?php echo __("ISO 3166-2") ?>
+          <?php echo $form['iso3166_subdivision']->renderError() ?>
+          <?php echo $form['iso3166_subdivision'] ?>
+          
+        </td>
+       
      
     </tbody>
 </table>
@@ -95,10 +120,8 @@ foreach($form['newVal'] as $group)
     <div id="reverse_tags" style="display: none;"><ul></ul><br class="clear" /></div>
 	<div>
 		<!--DMS/DD selector  ftheeten 2015 05 05-->
-		<b><?php echo $form['coordinates_source']->renderLabel() ;?>
-		   <?php echo $form['coordinates_source']->renderError() ?>
-		</b><br/>
-		<?php echo $form['coordinates_source'];?>
+		<b><?php echo $form['coordinates_source']->renderLabel() ;?><?php echo $form['coordinates_source']->renderError() ?></b><br/><?php echo $form['coordinates_source'];?>
+		
 	</div>
     <table>
 		<tr>
@@ -179,33 +202,6 @@ foreach($form['newVal'] as $group)
 			<td><strong><?php echo __('m');?></strong><!-- <?php echo image_tag('remove.png', 'alt=Delete class=clear_prop'); ?>--></td>
 			<td></td>
 		</tr>
-		<!--JMHerpers 2018 07 02 added openlayers map-->
-		<tr>
-			<td colspan="3" id="ol_map">
-				<style >
-					p.collapse{
-						display:none;
-					}
-				</style>
-				<form class="form-inline">
-				  <label>Or geometry type : &nbsp;</label>
-				  <select id="type">
-					<option value="None">Drag map</option>
-					<option value="LineString">LineString</option>
-					<option value="Polygon">Polygon</option>
-					<!--<option value="Circle">Circle</option>-->
-				  </select>
-				  <label class="points_for_geometry"></label>
-				</form>
-				<div id="list_of_coord">
-				</div>
-				<div id="wkt">
-					<label><?php echo $form['wkt_str']->renderLabel(); ?>&nbsp;: &nbsp;</label>
-					<?php echo $form['wkt_str'];?>
-				</div>
-			</td>
-		</tr>
-		
 	    <tr>
 			<th><?php echo $form['elevation']->renderLabel(); ?><?php echo $form['elevation']->renderError() ?></th>
 			<th><!--<?php echo $form['elevation_unit']->renderLabel(); ?>--><?php echo $form['elevation_unit']->renderError() ?></th>
@@ -218,7 +214,7 @@ foreach($form['newVal'] as $group)
 			<td><?php echo $form['elevation_accuracy'];?></td>
 			<td></td>
 		</tr>
-		<!--<tr>
+		<tr>
 			<td colspan="3"><div style="width:100%; height:400px;" id="map"></div></td>
 			<td>
 				<script type="text/javascript">
@@ -231,21 +227,6 @@ foreach($form['newVal'] as $group)
 					  <?php endif;?>
 					});
 				</script>
-			</td>
-		</tr>-->
-	
-		<!--JMHerpers 2018 07 02 added openlayers map-->
-		<tr>
-			<td colspan="3" id="ol_map">
-				<style >
-					p.collapse{
-						display:none;
-					}
-				</style>
-				<div id="map_container_nh" class="map_container_nh">
-					<div  style="width:500px;height:400px;" id="map2" class="map2"></div>
-					<div id="mouse-position"></div>
-				</div>
 			</td>
 		</tr>
     </table>
@@ -275,500 +256,243 @@ foreach($form['newVal'] as $group)
 
 
 <script  type="text/javascript">
+//ftheeten 2016 02 05
+var showDMSCoordinates;
+var coordViewMode=true;
+//ftheeten 2018 03 15
+<?php if($form->getObject()->isNew()): ?>
+var boolAdministrativeArea2=false;
+var boolArea3=false;
+var boolArea4=false;
+var boolHabitat5=false;
+var iso3166Selected;
+<?php endif; ?>
 
-	//ftheeten 2016 02 05
-	var showDMSCoordinates;
-	var coordViewMode=true;
-	//JMHerpers 2018 07 02
-	var count=0;
-	var controls;
-	var wktfeaturegeom;
-	var wktfromdata;
-	var nbrpoints;
-	var valueType;
+//ftheeten 2016 02 05
+$( "form" ).submit(function( event ) {
+  window.opener.$("#gtu_filters_code").val($("#gtu_code").val());
+  });
+ 
+
+
+$(document).ready(function () {
+//ftheeten 2016 02 05
+
+	showDMSCoordinates=false;
+
+    $('.tag_parts_screen .clear_prop').live('click', function()
+    {
+      parent_el = $(this).closest('li');
+      $(parent_el).find('input').val('');
+      $(parent_el).hide();
+
+      sub_groups  = parent_el.parent();
+      if(sub_groups.find("li:visible").length == 0)
+      {
+	      sub_groups.closest('fieldset').hide();
+      	disableUsedGroups();
+      }
+    });
+
+   
+
+    disableUsedGroups();
+    $('.purposed_tags li').live('click', function()
+    {
+
+      input_el = $(this).parent().closest('li').find('input[id$="_tag_value"]');
+      /*if(input_el.val().match("\;\s*$"))
+	  {
+        input_el.val( input_el.val() + $(this).text() );
+      }
+	  else
+	  {
+        input_el.val( input_el.val() + " ; " +$(this).text() );
+	  }*/
+	  //ftheeten 2016 03 11
+	  input_el.val( $(this).text() );
+      input_el.trigger('click');
+    });
+
+    $('input[id$="_tag_value"]').live('keydown click',purposeTags);
+
+   function purposeTags(event)
+   {
+      if (event.type == 'keydown')
+      {
+        var code = (event.keyCode ? event.keyCode : event.which);
+        if (code != 59 /* ;*/ && code != $.ui.keyCode.SPACE ) return;
+      }
+      parent_el = $(this).closest('li');
+      group_name = parent_el.find('input[name$="\[group_name\]"]').val();
+      sub_group_name = parent_el.find('[name$="\[sub_group_name\]"]').val();
+      if(sub_group_name == '' || $(this).val() == '') return;
+      $('.purposed_tags').hide();
+      $.ajax({
+        type: "GET",
+        url: "<?php echo url_for('gtu/purposeTag');?>" + '/group_name/' + group_name + '/sub_group_name/' + sub_group_name + '/value/'+ $(this).val(),
+        success: function(html)
+        {
+          parent_el.find('.purposed_tags').html(html);
+          parent_el.find('.purposed_tags').show();
+        }
+      });
+    }
+
+    $('#add_group').click(function(event)
+    {
+      event.preventDefault();
+      selected_group = $('#groups_select option:selected').val();
+      addGroup(selected_group);
+    });
+
+    $('a.sub_group').live('click',function(event)
+    {
+      event.preventDefault();
+      addSubGroup( $(this).closest('fieldset').attr('alt'));
+    });
+    
+    //ftheeten 2016 09 15
+    checkCoordSourceState();
 	
-	//ftheeten 2018 03 15
 	<?php if($form->getObject()->isNew()): ?>
-	var boolAdministrativeArea2=false;
-	var boolArea3=false;
-	<?php endif; ?>
-	//ftheeten 2016 02 05
-	$( "form" ).submit(function( event ) {
-	  window.opener.$("#gtu_filters_code").val($("#gtu_code").val());
-	 });
-
-	var map;
-	var map2;
-	var bingBackground;
-	var view;
-	var mousePositionControl;
-	function showOL(lati, longi,zoom)
-	   {
-		if(count>0){
-			$('#map2').empty();
-			$('#mouse-position').empty();
-		}
-		if( lati != '' && longi!= '')  {
-			var scaleLineControl;
-			mousePositionControl= new ol.control.MousePosition({
-				 coordinateFormat: ol.coordinate.createStringXY(4),
-				projection:"EPSG:4326",
-				className: "custom-mouse-position",
-				target: document.getElementById("mouse-position"),
-				undefinedHTML: "&nbsp;"
-			});
-			scaleLineControl = new ol.control.ScaleLine();
-			bingBackground= new ol.layer.Tile({
-				preload: Infinity,
-				source: new ol.source.BingMaps({key:"Ap9VNKmWsntrnteCapydhid0fZxzbV_9pBTjok2rQZS4pi15zfBbIkJkvrZSuVnJ",  imagerySet:"AerialWithLabels" })
-			});
-			view= new ol.View({
-				center: [-4,15],
-				zoom: zoom
-			});
-					
-			var geometry=new ol.geom.Point([parseFloat(longi),parseFloat(lati)]);
-			var style= new ol.style.Style({
-				image: new ol.style.Circle({
-					radius: 10,
-					stroke: new ol.style.Stroke({
-						color: "#fff"}),
-					fill: new ol.style.Fill({
-						color: "#3399CC"})
-				}),
-				text: new ol.style.Text({
-					text: "x",
-					fill: new ol.style.Fill({
-						color: "#fff"
-					})
-				})
-			});
-				   
-			 var iconFeature = new ol.Feature({
-				 label:"x",
-				geometry: geometry.transform("EPSG:4326", "EPSG:3857")
-			});
-						
-			var vectorSource = new ol.source.Vector({
-				features: [iconFeature]
-			});
-
-			var vectorLayer = new ol.layer.Vector({
-				source: vectorSource,
-				style: style
-			});
-
-			map=new ol.Map({
-				layers:[bingBackground, vectorLayer],
-				target: "map2",
-				view: view,
-				controls: ol.control.defaults({
-					attributionOptions: ({collapsible: false})
-				}).extend([mousePositionControl, scaleLineControl ])
-			});
-						 
-
-				
-			var extent = vectorLayer.getSource().getExtent();
-			map.getView().fit(extent);
-			map.getView().setZoom(11);
-			
-			count++;
-		}
-		
-		////////////////map with polygon
-		const typeSelect =  document.getElementById('type');
-
-		typeSelect.onchange = function() {
-			$('#map2').empty();
-			$('#mouse-position').empty();
-			
-			//create new fields to enter coordinates
-			switch (typeSelect.value)
-			{
-				case "LineString": 
-				case "Polygon": 
-				   $('.points_for_geometry').html('<form class="form_points">of <input class="nbrpoints" type="integer" name="points" maxlength="2" size="3"> points</form>');
-				   break;
-			}
-			
-			//Create new map with same background 
-			var source = new ol.source.Vector({wrapX: false});
-
-			var styleLine= new ol.style.Style({
-			  fill: new ol.style.Fill({
-				color: 'rgba(255, 255, 255, 0.2)'
-			  }),
-			  stroke: new ol.style.Stroke({
-				color: '#ffcc33',
-				width: 4
-			  }),
-			  image: new ol.style.Circle({
-				radius: 7,
-				fill: new ol.style.Fill({
-				  color: '#ffcc33'
-				})
-			  })
-			})
-			
-			var vector = new ol.layer.Vector({
-				source: source,
-				style:styleLine
-			});
-
-			map2 = new ol.Map({
-				target: 'map2',
-				layers: [
-				  bingBackground,vector
-				],
-				view: new ol.View({
-				  center: ol.proj.fromLonLat([parseFloat(longi),parseFloat(lati)]),
-				  zoom: 11
-				})
-			});
-						
-			var draw;
-			function addInteraction() {
-				valueType = typeSelect.value;
-				if (valueType !== 'None') {
-				  draw = new ol.interaction.Draw({
-					source: source,
-					type: valueType
-				  });
-				  map2.addInteraction(draw);
-				  
-				draw.on('drawend', function (event) {
-					var format = new ol.format.WKT();
-					wktfeaturegeom = format.writeGeometry(event.feature.getGeometry());
-					$('.wkt').val(wktfeaturegeom);
-					
-				});
-				}
-			}
-
-			map2.removeInteraction(draw);
-			addInteraction();
-			
-			$('.nbrpoints').focusout(function() {
-				draw_points_input_fields();
-			});
-		};
-	}
-	
-	//JMHerpers 2018 07 09
-	function draw_points_input_fields(){
-		if ($('.nbrpoints').val() != ""){
-					nbrpoints = $('.nbrpoints').val();
-					var htmlcontent = '<form class="list_points"><table><tr><td colspan="7">Latitude:</td><td colspan="7">Longitude:</td></tr>';
-					for (i=0;i<nbrpoints;i++){
-						htmlcontent = htmlcontent + '<tr>';
-						htmlcontent = htmlcontent + '<td><input class="lati_deg_'+i+' vsmall_size" type="text" maxlength = "3"></td>';
-						htmlcontent = htmlcontent + '<td>deg.</td>';
-						htmlcontent = htmlcontent + '<td><input class="lati_min_'+i+' vsmall_size" type="text" maxlength="2" ></td>';
-						htmlcontent = htmlcontent + '<td>min.</td>';
-						htmlcontent = htmlcontent + '<td><input class="lati_sec_'+i+' vsmall_size" type="text" maxlength="8"></td>';
-						htmlcontent = htmlcontent + '<td>sec.</td>';
-						htmlcontent = htmlcontent + '<td style="border-right: 1px solid #000000;"  ><select class="latns_'+i+'">';
-						htmlcontent = htmlcontent + '		<option value="N">N</option>';
-						htmlcontent = htmlcontent + '		<option value="S">S</option>';
-						htmlcontent = htmlcontent + '	</select></td>';
-						htmlcontent = htmlcontent + '<td>&nbsp;<input class="longi_deg_'+i+' vsmall_size" type="text" maxlength="2"></td>';
-						htmlcontent = htmlcontent + '<td>deg.</td>';
-						htmlcontent = htmlcontent + '<td><input class="longi_min_'+i+' vsmall_size" type="text" maxlength="2"></td>';
-						htmlcontent = htmlcontent + '<td>min.</td>';
-						htmlcontent = htmlcontent + '<td><input class="longi_sec_'+i+' vsmall_size" type="text" maxlength="8"></td>';
-						htmlcontent = htmlcontent + '<td>sec.</td>';
-						htmlcontent = htmlcontent + '<td><select class="longew_'+i+'">';
-						htmlcontent = htmlcontent + '		<option value="E">E</option>';
-						htmlcontent = htmlcontent + '		<option value="W">W</option>';
-						htmlcontent = htmlcontent + '	</select></td>';
-						htmlcontent = htmlcontent + '</tr>';
-					};
-					htmlcontent = htmlcontent + '</table><BR><input onclick="drawarea()" class="btn_drawlines" type="button" value="Draw on map"></form>';
-					$('#list_of_coord').html(htmlcontent);
-				}
-	}
-	
-	//JMHerpers 2018 07 06
-	function drawarea(){
-		var errorval = false;
-		for (i=0;i<nbrpoints;i++){
-			if(((!$.isNumeric($('.lati_deg_'+i).val()) | !$.isNumeric($('.lati_min_'+i).val()) | !$.isNumeric($('.lati_sec_'+i).val()) | 
-			   !$.isNumeric($('.longi_deg_'+i).val()) | !$.isNumeric($('.longi_min_'+i).val()) | !$.isNumeric($('.longi_sec_'+i).val()) ) &
-			   ( $('.lati_deg_'+i).val().length + $('.lati_min_'+i).val().length + $('.lati_sec_'+i).val().length + 
-			     $('.longi_deg_'+i).val().length + $('.longi_min_'+i).val().length + $('.longi_sec_'+i).val().length != 0
-			   ))|
-				$('.lati_deg_'+i).val() < 0 | $('.lati_deg_'+i).val() > 90 | $('.longi_deg_'+i).val() < 0 | $('.longi_deg_'+i).val() > 180 |
-			    $('.lati_min_'+i).val() < 0 | $('.lati_min_'+i).val() > 59 | $('.longi_min_'+i).val() < 0 | $('.longi_min_'+i).val() > 59 |
-			    $('.lati_sec_'+i).val() < 0 | $('.lati_sec_'+i).val() > 59 | $('.longi_sec_'+i).val() < 0 | $('.longi_sec_'+i).val() > 59 
-			){
-				errorval = true;
-			}
-		}
-		if(errorval == true){
-				alert('There are errors in the coordinates entered!');
-		}else{
-			var latSign = 1;
-			var longSign = 1;
-			var latDeci= 0;
-			var longDeci= 0;
-			
-			//////calculate wkt
-			wktfromdata = valueType.toUpperCase() +"(";
-			var latSign0 = 1;
-			var longSign0 = 1;
-			for (i=0;i<nbrpoints;i++){
-				if($( '.latns_'+i+' option:selected' ).text() == "S"){
-					latSign = -1;
-				}
-				if($( '.longew_'+i+' option:selected' ).text() == "W"){
-					longSign = -1;
-				}
-				if(i==0){
-					latSign0 = latSign;
-					longSign0 = longSign;
-				}
-				
-				latDeci= latSign * (parseFloat($('.lati_deg_'+i).val()) + ( parseFloat($('.lati_min_'+i).val())/60) + ( parseFloat($('.lati_sec_'+i).val())/3600));
-				longDeci= longSign  * (parseFloat($('.longi_deg_'+i).val()) + ( parseFloat($('.longi_min_'+i).val())/60) + ( parseFloat($('.longi_sec_'+i).val())/3600));
-				wktfromdata = wktfromdata + longDeci + " " + latDeci + ",";
-			}
-			
-			wktfromdata = wktfromdata.substring(0, wktfromdata.length-1) + ")";
-		//	alert(wktfromdata);
-			$(".wkt").val(wktfromdata);
-
-			//////show wkt on map
-			var format = new ol.format.WKT();
-
-			var featureWKT = format.readFeature(wktfromdata, {
-				dataProjection: 'EPSG:4326',
-				featureProjection: 'EPSG:3857'
-			});
-			
-			var styleWKT= new ol.style.Style({
-			  fill: new ol.style.Fill({
-				color: 'rgba(255, 255, 255, 0.2)'
-			  }),
-			  stroke: new ol.style.Stroke({
-				color: '#ffcc33',
-				width: 4
-			  }),
-			  image: new ol.style.Circle({
-				radius: 7,
-				fill: new ol.style.Fill({
-				  color: '#ffcc33'
-				})
-			  })
-			})
-
-			var vectorWKT = new ol.layer.Vector({
-				source: new ol.source.Vector({
-				  features: [featureWKT]
-				}),
-				style: styleWKT
-			});
-			
-			$('#map2').empty();
-			$('#mouse-position').empty();
-		//	alert("lo="+longSign0+" lat="+latSign0);
-
-			map2 = new ol.Map({
-				target: 'map2',
-				layers: [
-				  bingBackground,vectorWKT
-				],
-				view: new ol.View({
-				  center: ol.proj.fromLonLat([parseFloat(longSign0 * $('.longi_deg_0').val() ),parseFloat(latSign0 * $('.lati_deg_0').val())]),
-				  zoom: 9
-				})
-			});
-		}
-	};
-	
-	function fill_points_lines(){
-		var wktval = $('.wkt').val();
-		var wktval2 = wktval.substring(wktval.indexOf("(")+1, wktval.length-1);
-		var arraypoints = wktval2.split(","); 
-		
-		$('.points_for_geometry').html('<form class="form_points">of <input class="nbrpoints" type="integer" name="points" maxlength="2" size="3"> points</form>');
-		$('.nbrpoints').val(arraypoints.length);
-		draw_points_input_fields();
-		valueType = wktval.substring(0,wktval.indexOf("("));
-		
-		for (i=0;i<arraypoints.length;i++){
-			var lat = arraypoints[i].substring(arraypoints[i].indexOf(" ")+1,arraypoints[i].length);
-			var lng = arraypoints[i].substring(0,arraypoints[i].indexOf(" "));
-			$(".latns_"+i +" option[value='N']").attr("selected", true);
-			//$('.latns_'+i).val("N");
-			alert("lat="+lat+" long="+lng);
-			if(lat < 0){
-				$(".latns_"+i +" option[value='S']").attr("selected", true);
-				//$('.latns_'+i).val("S");
-				alert("lat="+lat+" long="+lng +" val="+$('.latns_'+i).val());
-			}
-			//$('.longew_'+i).val("E");
-			$(".longew_"+i +" option[value='E']").attr("selected", true);
-			if(lng < 0){
-				$(".longew_"+i +" option[value='W']").attr("selected", true);
-				//$('.longew_'+i).val("W");
-			}
-			$('.longi_deg_'+i).val(Math.floor(Math.abs(lng)));
-			$('.lati_deg_'+i).val(Math.floor(Math.abs(lat)));
-			var decimalLongitude=Math.abs(lng)-Math.floor(Math.abs(lng));
-			var decimalLongitudeResultMinute=Math.floor(decimalLongitude*60);
-			$('.longi_min_'+i).val(decimalLongitudeResultMinute);
-			var decimalLatitude=Math.abs(lat)-Math.floor(Math.abs(lat));
-			var decimalLatitudeResultMinute=Math.floor(decimalLatitude*60);
-			$('.lati_min_'+i).val(decimalLatitudeResultMinute);
-			var decimalsLongitudeForSeconds=Math.abs(lng)-Math.floor(Math.abs(lng))-(decimalLongitudeResultMinute/60);
-			$('.longi_sec_'+i).val(decimalsLongitudeForSeconds*3600);
-			var decimalsLatitudeForSeconds=Math.abs(lat)-Math.floor(Math.abs(lat))-(decimalLatitudeResultMinute/60);
-			$('.lati_sec_'+i).val(decimalsLatitudeForSeconds*3600);
-		}
-	};
-	
-	////////////////document ready
-	$(document).ready(function () {
-		
-		//JMHerpers 2018 07 02
-		//if(<?php echo $form->getObject()->getLatitude();?> != ""){
-		if($('#gtu_latitude').val().length != 0){
-			//$lati = <?php echo $form->getObject()->getLatitude();?>;
-			//$longi = <?php echo $form->getObject()->getLongitude();?>;
-			$lati = <?php print($form->getObject()->getLatitude()?: '-4');?>;
-			$longi = <?php print($form->getObject()->getLongitude() ?:'13');?>;
-			showOL($lati,$longi,1);
-		}else{
-			if($('.wkt').val().length != 0){
-				/*$lati = "0";
-				$longi = "0";
-				showOL($lati,$longi,2);*/
-				fill_points_lines();
-				drawarea();
-			}else{
-				$lati = "-4";
-				$longi = "15";
-				showOL($lati,$longi,1);
-			}
-		}
-		
-		//ftheeten 2016 02 05
-
-		showDMSCoordinates=false;
-
-		$('.tag_parts_screen .clear_prop').live('click', function()
-		{
-		  parent_el = $(this).closest('li');
-		  $(parent_el).find('input').val('');
-		  $(parent_el).hide();
-
-		  sub_groups  = parent_el.parent();
-		  if(sub_groups.find("li:visible").length == 0)
-		  {
-			  sub_groups.closest('fieldset').hide();
-			disableUsedGroups();
-		  }
-		});
-
-		disableUsedGroups();
-		$('.purposed_tags li').live('click', function()
-		{
-
-		  input_el = $(this).parent().closest('li').find('input[id$="_tag_value"]');
-		  /*if(input_el.val().match("\;\s*$"))
-		  {
-			input_el.val( input_el.val() + $(this).text() );
-		  }
-		  else
-		  {
-			input_el.val( input_el.val() + " ; " +$(this).text() );
-		  }*/
-		  //ftheeten 2016 03 11
-		  input_el.val( $(this).text() );
-		  input_el.trigger('click');
-		});
-
-		$('input[id$="_tag_value"]').live('keydown click',purposeTags);
-
-	   function purposeTags(event)
-	   {
-		  if (event.type == 'keydown')
-		  {
-			var code = (event.keyCode ? event.keyCode : event.which);
-			if (code != 59 /* ;*/ && code != $.ui.keyCode.SPACE ) return;
-		  }
-		  parent_el = $(this).closest('li');
-		  group_name = parent_el.find('input[name$="\[group_name\]"]').val();
-		  sub_group_name = parent_el.find('[name$="\[sub_group_name\]"]').val();
-		  if(sub_group_name == '' || $(this).val() == '') return;
-		  $('.purposed_tags').hide();
-		  $.ajax({
-			type: "GET",
-			url: "<?php echo url_for('gtu/purposeTag');?>" + '/group_name/' + group_name + '/sub_group_name/' + sub_group_name + '/value/'+ $(this).val(),
-			success: function(html)
-			{
-			  parent_el.find('.purposed_tags').html(html);
-			  parent_el.find('.purposed_tags').show();
-			}
-		  });
-		}
-
-		$('#add_group').click(function(event)
-		{
-		   event.preventDefault();
-		  selected_group = $('#groups_select option:selected').val();
-		  addGroup(selected_group);
-		});
-
-		$('a.sub_group').live('click',function(event)
-		{
-		
-		  event.preventDefault();
-		  addSubGroup( $(this).closest('fieldset').attr('alt'));
-		});
-		
-		
-		//ftheeten 2016 09 15
-		checkCoordSourceState();
-		<?php if($form->getObject()->isNew()): ?>
-		//ftheeten 2018 03 15
-		var initAdminstrativeGroupsOnLoad=function()
-		{
-			addGroup("administrative area");			
-
-		}
-		initAdminstrativeGroupsOnLoad();
-		<?php endif; ?>
-		
-
-	});
-
-	function addSubGroup(selected_group, default_type, value)
+	//ftheeten 2018 03 15
+	var initAdminstrativeGroupsOnLoad=function()
 	{
-		hideForRefresh('#gtu_group_screen');
-		fieldset = $('fieldset[alt="'+selected_group+'"]');
-		if( fieldset.length ==0 )
-		{
-		  addGroup(selected_group, default_type, value);
-		}
-		list =  fieldset.find('>ul');
-		$.ajax({
-		  type: "GET",
-		  url: $('.tag_parts_screen').attr('alt')+'/group/'+ selected_group + '/num/' + (0+$('.tag_parts_screen ul li').length),
-		  success: function(html)
-		  {
-			html = $(html);
-			html.find('.complete_widget select').val(default_type);
+		addGroup("administrative area");			
 
-			if(value != undefined && value !='')
-			{
-			  html.find('.tag_encod input').val(value);
-			}
-			list.append(html);
+	}
+	initAdminstrativeGroupsOnLoad();
+	<?php endif; ?>
+    
+    //ftheeten 2018 05 04
 
-			showAfterRefresh('#gtu_group_screen');
-		  }
+ 
+        $('.iso3166').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "http://darwin/natural_heritage_webservice/service_nh_iso3166.php",
+                dataType: 'json',
+                data: { query: "iso3166_list", namepattern:request.term },
+                success: function (data) {
+                    data.unshift({'iso3166_code': request.term, 'iso3166_name': request.term});
+                    response(data.map(function (value) {
+                        return {
+                            'label': value.iso3166_name,
+                            'value': value.iso3166_code
+                        };  
+                    }));
+                } 
+            }); 
+        },
+
+        select : function(event, ui)
+         {
+              event.preventDefault();
+              set_iso3166(event, ui);
+              $(".iso3166_value").val(ui.item.value);
+              
+              ui.item.value = ui.item.label;
+              $('.iso3166').val(ui.item.value);              
+                return false;
+              
+        },        
+       minLength: 2
+    });
+    var set_iso3166= function(e, ui) {
+       $( "select[name*='sub_group_name']" ).each( 
+        
+            function()
+            {                
+                if($(this).val().toLowerCase()=="country")
+                {
+                    
+                    var idx = $(this).attr('id').match(/\d+/)[0];                    
+                    $("#gtu_newVal_"+idx+"_tag_value").val(ui.item.label);
+                    $("#gtu_TagGroups_"+idx+"_tag_value").val(ui.item.label);             
+   
+                }
+            }
+        );
+    };
+    
+    $('.iso3166_subdivision').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "http://darwin/natural_heritage_webservice/service_nh_iso3166.php",
+                dataType: 'json',
+                data: { query: "subdivisions_list", namepattern:request.term, iso3166:$('.iso3166_value').val()},
+                success: function (data) {
+                    data.unshift({'returned_code': request.term, 'returned': request.term});
+                    response(data.map(function (value) {
+                        return {
+                            'label': value.returned,
+                            'value': value.returned_code
+                        };  
+                    }));
+                } 
+            }); 
+        },
+        select : function(event, ui)
+         {
+              event.preventDefault();
+              set_iso3166_subdivision(event, ui);
+              $(".iso3166_subdivision_value").val(ui.item.value);
+              
+              ui.item.value = ui.item.label;
+              $('.iso3166_subdivision').val(ui.item.value);              
+                return false;
+              
+        },          
+        minLength: 2
+    });
+    
+      var set_iso3166_subdivision= function(e, ui)  {
+       $( "select[name*='sub_group_name']" ).each( 
+        
+            function()
+            {                
+                if($(this).val().toLowerCase()=="region or district")
+                {
+                    
+                    var idx = $(this).attr('id').match(/\d+/)[0];                    
+                    $("#gtu_newVal_"+idx+"_tag_value").val(ui.item.label);
+                    $("#gtu_TagGroups_"+idx+"_tag_value").val(ui.item.label);
+                }
+            }
+        );
+    };
+   
+    
+
+
+});
+
+function addSubGroup(selected_group, default_type, value)
+{
+    hideForRefresh('#gtu_group_screen');
+    fieldset = $('fieldset[alt="'+selected_group+'"]');
+    if( fieldset.length ==0 )
+    {
+      addGroup(selected_group, default_type, value);
+    }
+    list =  fieldset.find('>ul');
+    $.ajax({
+      type: "GET",
+      url: $('.tag_parts_screen').attr('alt')+'/group/'+ selected_group + '/num/' + (0+$('.tag_parts_screen ul li').length),
+      success: function(html)
+      {
+        html = $(html);
+        html.find('.complete_widget select').val(default_type);
+
+        if(value != undefined && value !='')
+        {
+          html.find('.tag_encod input').val(value);
+        }
+        list.append(html);
+
+        showAfterRefresh('#gtu_group_screen');
+      }
     });
 }
 
@@ -839,46 +563,6 @@ function addGroup(g_val, sub_group, value)
 
 
 
-//ftheeten 2015 06 02
-/*$(".butShowDMS").change(
-
-	function()
-	{
-		var selected=$( ".butShowDMS" ).val();
-		
-		var showDMS='display: table-cell';
-		var showDD='display: None';
-		var showUTM='display: None';
-
-		if(selected=="DD")
-		{
-			showDMS='display: None';
-			showDD='display: table-cell';
-			showUTM='display: None';
-			
-		}
-		else if(selected=="DMS")
-		{
-			showDMS='display: table-cell';
-			showDD='display: None';
-			showUTM='display: None';
-		}
-		else if(selected=="UTM")
-		{
-			showDMS='display: None';
-			showDD='display: None';
-			showUTM='display: table-cell';
-			
-		}
-		$('.GroupDMS').attr('style',showDMS );
-		$('.GroupDD').attr('style', showDD);
-		$('.GroupUTM').attr('style', showUTM);
-		
-		
-		//$('.coordinates_source option[value='+selected+']').attr('selected','selected');
-	}
-
-);*/
 
 
 //ftheeten 2016 09 05
@@ -999,7 +683,6 @@ function convertCoordinatesDMS2DD()
 				$(".convertDMS2DDLong").val(longDeci);
 			}
             update_point_on_map($(".convertDMS2DDLat").val(),$(".convertDMS2DDLong").val(), null);
-			
 		//}
 }
 
@@ -1058,8 +741,10 @@ $(".convertDMS2DDGeneralOnLeave").mouseleave(
 		var value=$("#"+idControl).val();
 		if(value.trim().length>0)
 		{
+
 				convertCoordinatesDMS2DD();
 				//changeCoordinateSource(0);
+			
 		}
 	}
 );
@@ -1131,21 +816,7 @@ function detectBothValCoordExisting()
 	return booleanAlreadyExisting;
 }
 
-/*function changeCoordinateSource(value)
-{
 
-		$(".coordinates_source option").filter(function()
-			{
-				return value;
-			}
-		 ).attr('selected',false);
-		  $(".coordinates_source option").filter(function()
-			{
-				return 1-value;
-			}
-		 ).attr('selected',true);
-}
-*/
 //ftheeten 2016 02 05
 //UTM
 $(".UTM2DDGeneralOnLeave").change(
@@ -1249,12 +920,8 @@ function initUTM(name, zone, direction )
         //ftheteen 2016 09 15
         function update_point_on_map( lati, longi, accu)
         {
-			//JMHerpers 2018 07 02
-			showOL(lati,longi,1);
-			
-            //var latlng = L.latLng(lati, longi);
-            //drawPoint(latlng, accu );
-
+            var latlng = L.latLng(lati, longi);
+            drawPoint(latlng, accu );
         }
 		
 		//ftheeten 2018 03 15 to add country, municipality and exact sites widgets
@@ -1273,26 +940,47 @@ function initUTM(name, zone, direction )
 						boolAdministrativeArea2=true;
 					}
 				}
+                
+                
+                
 				if ( $( "#gtu_newVal_1_sub_group_name" ).length ) 
 				{ 
 					$('#gtu_newVal_1_sub_group_name').val("Municipality");
 					if(!boolArea3)
 					{
-						addGroup("area");
+						addGroup("administrative area");
 						boolArea3=true;
 					}
 					
 				}
-				
-				if ( $( "#gtu_newVal_2_sub_group_name" ).length ) 
+                
+                if ( $( "#gtu_newVal_2_sub_group_name" ).length ) 
 				{ 
-					$('#gtu_newVal_2_sub_group_name').val("Exact site");					
+					$('#gtu_newVal_2_sub_group_name').val("Region or district");
+					if(!boolArea4)
+					{
+						addGroup("area");
+						boolArea4=true;
+					}
 					
 				}
                 
-                if ( $( "#gtu_newVal_3_sub_group_name" ).length ) 
+        
+				
+				if ( $( "#gtu_newVal_3_sub_group_name" ).length ) 
 				{ 
-					$('#gtu_newVal_3_sub_group_name').val("ecology");                  
+					$('#gtu_newVal_3_sub_group_name').val("Exact site");
+                   if(!boolHabitat5)
+					{
+						addGroup("habitat");
+						boolHabitat5=true;
+					}				
+					
+				}
+                
+                if ( $( "#gtu_newVal_4_sub_group_name" ).length ) 
+				{ 
+					$('#gtu_newVal_4_sub_group_name').val("ecology");                  
 					
 				}
 				<?php endif; ?>	
@@ -1300,5 +988,4 @@ function initUTM(name, zone, direction )
 				
 			}
 		);
-
 </script>

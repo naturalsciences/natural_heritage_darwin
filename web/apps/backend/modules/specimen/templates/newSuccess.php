@@ -67,7 +67,7 @@ $(document).ready(function ()
   <?php use_javascript('double_list.js');?>
   <div>
   <!--new  control to catch error list of widgets RMCA 2018 02 13-->
-    <ul id="main_error_list" class="error_list main_error_list" style="display:none"></ul>
+    <ul id="main_error_list" class="error_list main_error_list" style="display:none">
 	<!--new  control to catch error list of widgets RMCA 2018 02 13-->
     <ul id="error_list" class="error_list" style="display:none">
       <li></li>
@@ -112,7 +112,7 @@ $(document).ready(function ()
       )); ?>
     </div>
     <p class="clear"></p>
-    <?php include_partial('widgets/float_button', array('form' => $form,
+   <?php include_partial('widgets/float_button', array('form' => $form,
 	//ftheeten 2017 11 30
 	 'module' => 'specimen')); ?>
     <p class="form_buttons">
@@ -145,7 +145,6 @@ function removeErrorFromMain()
 
 function addError(html)
 {
-
   $('ul#error_list').find('li').text(html);
   $('ul#error_list').show();
 }
@@ -185,7 +184,7 @@ $(document).ready(function () {
 	<?php endif; ?>
  <?php endif; ?>
  
-   //ftheeten 2018 02 13
+    //ftheeten 2018 02 13 (catch error messages of wiidgets and put them on top of page)
    var browseErrors=function()
    {
 	  

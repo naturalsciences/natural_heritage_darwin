@@ -68,6 +68,7 @@ class catalogueActions extends DarwinActions
     $this->setCommonValues('catalogue', 'name_indexed', $request);
     $this->forward404Unless($request->hasParameter('searchCatalogue'));
     $item = $request->getParameter('searchCatalogue',array('') );
+	
     $formFilterName = DarwinTable::getFilterForTable($item['table']);
     $this->searchForm = new $formFilterName(array('table' => $item['table'], 'level' => $item['level'], 'caller_id' => $item['caller_id']));
     $this->searchResults($this->searchForm,$request);

@@ -105,8 +105,7 @@
                 var url_report = $(this).closest('tr').children("td.rurl_container").find(".url_report").val();
                 window.open(url_report, '_blank');
              });
-             
-
+        
         });
     </script>
     <?php include_partial('global/pager', array('pagerLayout' => $pagerLayout)); ?>

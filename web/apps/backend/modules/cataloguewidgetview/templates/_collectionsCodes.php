@@ -6,6 +6,8 @@
       <th class="centered"><?php echo __('Code suffix sep.');?></th>
       <th><?php echo __('Code suffix');?></th>
       <th class="centered"><?php echo __('Auto incremented ?');?></th>
+      <!--ftheeten 2018 04 26-->
+      <th class="centered"><?php echo __('Last value');?></th>
       <th></th>
       <th></th>
     </tr>
@@ -26,6 +28,10 @@
       </td>
       <td class="centered">
         <?php echo ($collCodes->getCodeAutoIncrement())?image_tag('checkbox_checked_green.png'):image_tag('checkbox_unchecked_green.png'); ?>
+      </td>
+      <!--ftheeten 2018 04 26-->
+      <td class="centered">
+        <?php echo $collCodes->getCodeLastValue();?>
       </td>
     </tr>
   </tbody>

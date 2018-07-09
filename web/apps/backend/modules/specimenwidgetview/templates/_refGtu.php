@@ -1,3 +1,4 @@
+<!--link to OpenLayers 3 ftheeten 2018 06 04-->
 <script language="JavaScript" type="text/javascript" src="<?php print(public_path('/openlayers/v4.x.x-dist/ol.js'));?>"></script>
 <link rel="stylesheet" href="<?php print(public_path('/openlayers/v4.x.x-dist/ol.css'));?>">
 <table class="catalogue_table_view">

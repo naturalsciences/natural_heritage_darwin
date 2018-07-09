@@ -36,6 +36,7 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'specimen_taxonomy_ref'   => new sfWidgetFormFilterInput(),
       'working'                 => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'mime_type'               => new sfWidgetFormFilterInput(),
+      'taxonomy_kingdom'        => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -62,6 +63,7 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'specimen_taxonomy_ref'   => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'working'                 => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'mime_type'               => new sfValidatorPass(array('required' => false)),
+      'taxonomy_kingdom'        => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('imports_filters[%s]');
@@ -105,6 +107,7 @@ abstract class BaseImportsFormFilter extends BaseFormFilterDoctrine
       'specimen_taxonomy_ref'   => 'Number',
       'working'                 => 'Boolean',
       'mime_type'               => 'Text',
+      'taxonomy_kingdom'        => 'Text',
     );
   }
 }

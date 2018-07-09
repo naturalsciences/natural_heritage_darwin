@@ -5,7 +5,7 @@
     <table class="search" id="<?php echo ($is_choose)?'search_and_choose':'search' ?>">
       <thead>
         <tr>
-          <!--ftheeten 2016 11 23 add collection ref
+       <!--ftheeten 2016 11 23 add collection ref
           <th><?php echo $form['collection_ref']->renderLabel() ?></th>-->
 		  <!--jmHerpers 2018 03 20-->
           <th>Collection</th>
@@ -15,7 +15,7 @@
           <th><?php echo $form['to_date']->renderLabel() ?></th>
         </tr>
       </thead>
-      <tbody>
+	  <tbody>
         <tr>
             <!--ftheeten 2016 11 23 add collection ref-->
           <th><?php echo $form['collection_ref']->render() ?></th>

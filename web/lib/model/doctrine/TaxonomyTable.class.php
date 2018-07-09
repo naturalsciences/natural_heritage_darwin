@@ -87,4 +87,25 @@ class TaxonomyTable extends DarwinTable
 
         return $res;
   }
+  
+  //ftheeten 2018 06 06
+   public static function getTaxaByLevel( $level)
+  {
+        $returned=Array();
+		$q = Doctrine_Query::create()
+		  ->from('Taxonomy t')
+		  ->where("level_ref = ?", $level)
+		  ->orderBy("t.name");
+		
+		$res= $q->execute();
+		if($addAll===TRUE)
+		{
+			$returned[''] = "All";
+		}
+		foreach($res as $row)
+		{
+		  $returned[$row->getId()] = $row->getName();
+		}
+		return $returned;
+  }
 }

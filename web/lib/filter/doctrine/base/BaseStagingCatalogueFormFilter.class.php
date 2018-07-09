@@ -20,6 +20,7 @@ abstract class BaseStagingCatalogueFormFilter extends BaseFormFilterDoctrine
       'catalogue_ref'         => new sfWidgetFormFilterInput(),
       'is_reference_taxonomy' => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'source_taxonomy'       => new sfWidgetFormFilterInput(),
+      'name_cluster'          => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -30,6 +31,7 @@ abstract class BaseStagingCatalogueFormFilter extends BaseFormFilterDoctrine
       'catalogue_ref'         => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'is_reference_taxonomy' => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'source_taxonomy'       => new sfValidatorPass(array('required' => false)),
+      'name_cluster'          => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
 
     $this->widgetSchema->setNameFormat('staging_catalogue_filters[%s]');
@@ -57,6 +59,7 @@ abstract class BaseStagingCatalogueFormFilter extends BaseFormFilterDoctrine
       'catalogue_ref'         => 'Number',
       'is_reference_taxonomy' => 'Boolean',
       'source_taxonomy'       => 'Text',
+      'name_cluster'          => 'Number',
     );
   }
 }

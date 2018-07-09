@@ -28,7 +28,6 @@ class UsersLoginInfosForm extends BaseUsersLoginInfosForm
         array('required' => true, 'min_length' => 4),
         array('min_length' => '"%value%" must be at least %min_length% characters.')
       );
-	  $this->widgetSchema['user_ip'] = new sfWidgetFormInputText() ;
     }
     else
     {

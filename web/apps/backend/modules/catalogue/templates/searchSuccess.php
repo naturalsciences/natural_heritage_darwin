@@ -107,8 +107,8 @@
                 <?php endif ; ?>
               <?php else:?>
                 <?php if ($sf_user->isAtLeast(Users::ENCODER)) : ?>
-                  <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId(),array('target'=>"_blank"));?>
-                  <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(),array('target'=>"_blank"));?>
+                  <?php echo link_to(image_tag('edit.png', array("title" => __("Edit"))),$searchForm->getValue('table').'/edit?id='.$item->getId(),array('target'=>"_blank"), array("target"=>"_blank"));?>
+                  <?php echo link_to(image_tag('duplicate.png', array("title" => __("Duplicate"))),$searchForm->getValue('table').'/new?duplicate_id='.$item->getId(),array('target'=>"_blank"), array("target"=>"_blank"));?>
                 <?php endif ; ?>
                 <div class="result_choose"><?php echo __('Choose');?></div>
               <?php endif;?>
@@ -127,7 +127,7 @@
         event.preventDefault();
         row = $(this).closest('tr');
         iname = row.find('.item_name');
-         //ftheeten 2018 03 01
+        //ftheeten 2018 03 01
         //$('.search_item_name').html(iname.html());
         var text_tmp=$(iname).text();
         $('.search_item_name').html(text_tmp);

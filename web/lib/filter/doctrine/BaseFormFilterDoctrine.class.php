@@ -152,10 +152,10 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       continue;
 
 //       $query_part = preg_replace('/[^A-Za-z0-9\-_]/', ' ', $query_part);
-       //ftheeten 2017 01 22 : bug '-' forgotten in delimiter
+        //ftheeten 2017 01 22 : bug '-' forggotten in delimiter
       //$query_part = preg_replace('/[\(&\;\,\|\↑\€\←\↓\œ\→\?\.\\\'\"\)\$]/u', ' ', $query_part);
       $query_part = preg_replace('/[\-(&\;\,\|\↑\€\←\↓\œ\→\?\.\\\'\"\)\$]/u', ' ', $query_part);
-
+      
       if($i == 0)
         $query_array['with'] = trim($query_part);
       else
@@ -505,6 +505,4 @@ abstract class BaseFormFilterDoctrine extends sfFormFilterDoctrine
       }
       return $results;
   }
-  
-
 }

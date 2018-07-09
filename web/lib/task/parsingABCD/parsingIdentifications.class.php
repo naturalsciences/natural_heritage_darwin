@@ -29,8 +29,11 @@ class ParsingIdentifications
       'superclassis' => 'super_class','classis' => 'class', 'subclassis' => 'sub_class',
       'superordo' => 'super_order','ordo' => 'order', 'subordo' => 'sub_order',
       'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family',
+      //
+      'super_family' => 'super_family', 'family' => 'family', 'sub_family' => 'sub_family',
+      'superfamilia' => 'super_family', 'familia' => 'family', 'subfamilia' => 'sub_family',
       'tribus' => 'tribe',
-      'genusgroup' => 'genus', 'unranked'=>'sub_genus',
+      'genus' => 'genus', 'unranked'=>'sub_genus',
       'variety' => 'variety'
     ),
     'lithology'=>array(
@@ -93,6 +96,8 @@ class ParsingIdentifications
   public function handleParent()
   {
     $this->catalogue_parent[$this->array_level[$this->notion][$this->higher_level]] = $this->higher_name ;
+
+    
   }
 
   // Return ne scientificName in FullScientificNameString tag, otherwise return a self built name with parent and keywords
@@ -160,10 +165,12 @@ class ParsingIdentifications
       else {
         $last_lvl = null;
         foreach($this->array_level[$this->notion] as $lvl){
+           
           if(isset($this->catalogue_parent[$lvl])) {
             $last_lvl = $lvl;
           }
         }
+          
         if($last_lvl) {
           $staging[$this->staging_field_prefix[$this->notion]."_level_name"] = $last_lvl;
           $staging[$this->staging_field_prefix[$this->notion]."_name"] = $this->catalogue_parent[$last_lvl];
@@ -230,6 +237,7 @@ class ParsingIdentifications
    */
   public function save(Staging $staging)
   {
+  
     //ftheeten 2017 09 22
 	if(strlen($this->notion)>0&&strlen($this->higher_level)>0&&strlen($this->higher_name)>0)
 	{		

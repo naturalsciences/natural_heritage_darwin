@@ -367,27 +367,26 @@ class LabelGroup
 $tmpLabelGood=new Label("7*3 Good", 'search_result > specimens > specimen', "Test 7*3 Good", 7,3, array("line-height"=>"8pt","width"=> "58mm", "height"=>"28mm","border-style"=> "solid", "border-width"=>"1px", "font-family"=> "Arial,  Helvetica, sans-serif"), "true", -1, "true");
 //$field1= LabelField::initialise('abcd\\:UnitID', array("font-size"=> "4mm", " font-family"=>"\"Times New Roman\", Times, serif;", "font-style"=>"italic"), NULL, 1);
 
-$fontsize = "7pt";
-$lineheight = "11pt";
-$field1Good= LabelField::initialise('family', array("line-height"=>$lineheight,"font-size"=> $fontsize), NULL, 1);
-$field2Good= LabelField::initialise('type_information', array("line-height"=>$lineheight,"padding-left"=>"7pt","font-size"=> $fontsize), NULL, 1,NULL,NULL,NULL, NULL);
-$field3Good= LabelField::initialise('specimen_count_max', array("line-height"=>$lineheight,"padding-left"=>"7pt","padding-right"=>"4pt", "font-size"=> $fontsize), NULL, 1,NULL,NULL,NULL, NULL);
-$field4Good= LabelField::initialise('sex', array("line-height"=>$lineheight,"font-size"=> $fontsize), NULL, 1,NULL,NULL,NULL, array("undefined"=>""));
-$field5Good= LabelField::initialise('taxon_without_author', array("line-height"=>$lineheight,"font-size"=> $fontsize, "font-style"=>"italic"  ), NULL, 1,NULL,NULL,NULL, NULL);
-$field6Good= LabelField::initialise('taxon_author_part', array("line-height"=>$lineheight,"padding-left"=>"5pt", "font-size"=> $fontsize), NULL, 1,NULL,NULL,NULL, NULL);
-$field7Good= LabelField::initialise('identifications > identification > identifier > formated_name', array("line-height"=>$lineheight,"font-size"=> $fontsize), "Det. ", 1,NULL,NULL,NULL, NULL);
-$field8Good= LabelField::initialise('gtu > gtu_element > gtu_element_values > gtu_element_value', array("line-height"=>$lineheight,"font-size"=> $fontsize), "Loc. ", -1,NULL,NULL,".", Array("Africa"=>""));
-$field9Good= LabelField::initialise('collectors > collector > formated_name', array("line-height"=>$lineheight,"font-size"=> $fontsize, "padding-right"=>"5pt" ), "Rec. ", -1,NULL,NULL,".", NULL, "50", "...");
-$field10Good= LabelField::initialise('gtu > date_begin > day', array("line-height"=>$lineheight,"font-size"=> $fontsize , "text-overflow" => "ellipsis" , "overflow"=>"hidden", "white-space" => "nowrap" ), NULL, -1,NULL,".",NULL, NULL);
-$field11Good= LabelField::initialise('gtu > date_begin > month', array("line-height"=>$lineheight,"font-size"=> $fontsize), NULL, -1,NULL,".",NULL, Array("1"=>"I", "2"=>"II", "3"=>"III", "4"=>"IV", "5"=>"V", "6"=>"VI", "7"=>"VII", "8"=>"VIII", "9"=>"IX", "10"=>"X", "11"=>"XI", "12"=>"XII" ));
-$field12Good= LabelField::initialise('gtu > date_begin > year', array("line-height"=>$lineheight,"font-size"=> $fontsize ), NULL, -1,NULL,".",NULL, NULL);
-$field13Good= LabelField::initialise('specimen_codes > specimen_code', array("line-height"=>$lineheight,"font-size"=> $fontsize ), NULL, 1,"Mus R. Afr. Centr. ",".",NULL, NULL);
+
+$field1Good= LabelField::initialise('family', array("line-height"=>"12pt","font-size"=> "8pt"), NULL, 1);
+$field2Good= LabelField::initialise('type_information', array("line-height"=>"12pt","padding-left"=>"7pt","font-size"=> "8pt"), NULL, 1,NULL,NULL,NULL, NULL);
+$field3Good= LabelField::initialise('specimen_count_max', array("line-height"=>"12pt","padding-left"=>"7pt","padding-right"=>"4pt", "font-size"=> "8pt"), NULL, 1,NULL,NULL,NULL, NULL);
+$field4Good= LabelField::initialise('sex', array("line-height"=>"12pt","font-size"=> "8pt"), NULL, 1,NULL,NULL,NULL, array("undefined"=>""));
+$field5Good= LabelField::initialise('taxon_without_author', array("line-height"=>"12pt","font-size"=> "8pt", "font-style"=>"italic"  ), NULL, 1,NULL,NULL,NULL, NULL);
+$field6Good= LabelField::initialise('taxon_author_part', array("line-height"=>"12pt","padding-left"=>"5pt", "font-size"=> "8pt"), NULL, 1,NULL,NULL,NULL, NULL);
+$field7Good= LabelField::initialise('identifications > identification > identifier > formated_name', array("line-height"=>"12pt","font-size"=> "8pt"), "Det. ", 1,NULL,NULL,NULL, NULL);
+$field8Good= LabelField::initialise('gtu > gtu_element > gtu_element_values > gtu_element_value', array("line-height"=>"8pt","font-size"=> "8pt"), "Loc. ", -1,NULL,NULL,".", Array("Africa"=>""));
+$field9Good= LabelField::initialise('collectors > collector > formated_name', array("line-height"=>"12pt","font-size"=> "8pt", "padding-right"=>"5pt" ), "Rec. ", -1,NULL,NULL,".", NULL, "50", "...");
+$field10Good= LabelField::initialise('gtu > date_begin > day', array("line-height"=>"12pt","font-size"=> "8pt" , "text-overflow" => "ellipsis" , "overflow"=>"hidden", "white-space" => "nowrap" ), NULL, -1,NULL,".",NULL, NULL);
+$field11Good= LabelField::initialise('gtu > date_begin > month', array("line-height"=>"12pt","font-size"=> "8pt"), NULL, -1,NULL,".",NULL, Array("1"=>"I", "2"=>"II", "3"=>"III", "4"=>"IV", "5"=>"V", "6"=>"VI", "7"=>"VII", "8"=>"VIII", "9"=>"IX", "10"=>"X", "11"=>"XI", "12"=>"XII" ));
+$field12Good= LabelField::initialise('gtu > date_begin > year', array("line-height"=>"12pt","font-size"=> "8pt" ), NULL, -1,NULL,".",NULL, NULL);
+$field13Good= LabelField::initialise('specimen_codes > specimen_code', array("line-height"=>"12pt","font-size"=> "8pt" ), NULL, 1,"Mus R. Afr. Centr. ",".",NULL, NULL);
 
 
 
-$fieldLat= LabelField::initialise('coordinates > latitude', array("line-height"=>$lineheight,"font-size"=> $fontsize, "padding-right"=>"5pt"), "Lat. ", -1,NULL,NULL,".", NULL, "50", "...");
+$fieldLat= LabelField::initialise('coordinates > latitude', array("line-height"=>"12pt","font-size"=> "8pt", "padding-right"=>"5pt"), "Lat. ", -1,NULL,NULL,".", NULL, "50", "...");
 
-$fieldLong= LabelField::initialise('coordinates > longitude', array("line-height"=>$lineheight,"font-size"=> $fontsize, "padding-right"=>"5pt" ), "Long. ", -1,NULL,NULL,".", NULL, "50", "...");
+$fieldLong= LabelField::initialise('coordinates > longitude', array("line-height"=>"12pt","font-size"=> "8pt", "padding-right"=>"5pt" ), "Long. ", -1,NULL,NULL,".", NULL, "50", "...");
 
 
 $tmpLabelGood->addFieldIdx(0, 1,1,$field1Good);

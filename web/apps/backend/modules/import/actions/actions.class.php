@@ -67,6 +67,45 @@ class importActions extends DarwinActions
     $this->import = $this->getRight($request->getParameter('id')) ;
     Doctrine::getTable('Imports')->UpdateStatus($request->getParameter('id'));
     $this->redirect('import/index');
+	
+	//ftheeten 2018 06 11
+	                $mails=Array();
+                    $mailsTmp=Doctrine::getTable('UsersComm')->getProfessionalMailsByUser($this->getUser()->getId());
+               
+                    foreach($mailsTmp as $mailRecord)
+                    {
+                        if(filter_var($mailRecord->getEntry(), FILTER_VALIDATE_EMAIL))
+                        {
+                            $mails[]=$mailRecord->getEntry();
+                        }
+                    }
+                    
+                    if(count($mails)>0)
+                    {
+                        $cmd='darwin:check-import  --mailsfornotification='.implode(";",$mails);
+                    }
+                    else
+                    {
+                        $cmd='darwin:check-import';
+                    }
+                    $currentDir=getcwd();
+
+                    chdir(sfconfig::get('sf_root_dir')); 
+  
+                
+                    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
+
+                    chdir($currentDir);
+					
+					//rmca 2018 02 15
+					if($importTmp->getFormat()=="taxon")
+					{
+						$this->redirect('import/indexTaxon');
+					}
+					else
+					{
+						$this->redirect('import/index');
+					}
   }
 
   public function executeViewError(sfWebRequest $request)
@@ -297,11 +336,11 @@ class importActions extends DarwinActions
                     
                     if(count($mails)>0)
                     {
-                        $cmd='darwin:load-import  --mailsfornotification='.implode(";",$mails);
+                        $cmd='darwin:load-import --direct-check='.$idImport.'  --mailsfornotification='.implode(";",$mails);
                     }
                     else
                     {
-                        $cmd='darwin:load-import';
+                        $cmd='darwin:load-import --direct-check='.$idImport;
                     }
                     $currentDir=getcwd();
 

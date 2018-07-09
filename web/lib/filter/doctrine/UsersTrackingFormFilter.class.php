@@ -26,8 +26,7 @@ class UsersTrackingFormFilter extends BaseUsersTrackingFormFilter
    $this->widgetSchema['action'] =  new sfWidgetFormChoice(array(
       'choices' => array(''=>'','insert' => 'inserted', 'update' => 'updated','delete' => 'deleted')
     ));
-	
-	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+		//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
     $yearsKeyVal = range(date('Y'),intval('2000'));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal)).'/1/1');

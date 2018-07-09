@@ -196,5 +196,6 @@ class People extends BasePeople
 	$q->execute(array(':id' => $this->getId()));
 	return json_encode($q->fetchAll());	  
 	
+	
   }
 }

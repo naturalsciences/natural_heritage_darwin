@@ -19,7 +19,6 @@
         'mineral_level_name','ig_num','acquisition_category','acquisition_date',
         //ftheeten 2018 04 10
         'ig_ref'
-        
         ));
 
     $this->addPagerItems();
@@ -220,12 +219,6 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     $this->widgetSchema['collection_ref']->addOption('public_only',false);
     $this->validatorSchema['collection_ref'] = new sfValidatorPass(); //Avoid duplicate the query
     $this->widgetSchema['spec_ids'] = new sfWidgetFormTextarea(array('label'=>"#ID list separated by ',' "));
-    
-    //ftheeten 2018 05 29
-	$this->widgetSchema['include_sub_collections'] = new sfWidgetFormInputCheckbox();
-  	////ftheeten 2018 05 29
-	$this->validatorSchema['include_sub_collections'] = new sfValidatorPass();
-	
 
     $this->validatorSchema['spec_ids'] = new sfValidatorString( array(
       'required' => false,
@@ -519,22 +512,19 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 
 /*pvignaux20160606*/
     $this->validatorSchema['sub_container_type'] = new sfValidatorString(array('required' => false));
-       $this->widgetSchema['sub_container_type'] = new sfWidgetFormDarwinDoctrineChoice(array(	'model' => 'StorageParts',
-																								'add_empty'=> true,
-																								'table_method' => Array('method'=> 'createFlatDistinct', 
-																														'parameters'=>Array('storage_parts',
-																																			'sub_container_type',
-																																			'id')
-																														)
-																						));
-	
+       $this->widgetSchema['sub_container_type'] = new sfWidgetFormDarwinDoctrineChoice(array(
+      'model' => 'StorageParts',
+'add_empty'=> true,
+        'table_method' => Array('method'=> 'createFlatDistinct', 'parameters'=>Array('storage_parts','sub_container_type', 'id'))
+    ));
+
 /*ftheeten 2016 06 22*/
-	 $this->widgetSchema['specimen_count_min'] = new sfWidgetForminput();
-	 $this->widgetSchema['specimen_count_min']->setAttributes(array('class'=>'vvsmall_size'));
-	 $this->widgetSchema['specimen_count_min']->setLabel('Count (min)');
-	 $this->validatorSchema['specimen_count_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
-	 
-	$this->widgetSchema['specimen_count_males_min'] = new sfWidgetForminput();
+ $this->widgetSchema['specimen_count_min'] = new sfWidgetForminput();
+ $this->widgetSchema['specimen_count_min']->setAttributes(array('class'=>'vvsmall_size'));
+ $this->widgetSchema['specimen_count_min']->setLabel('Count (min)');
+ $this->validatorSchema['specimen_count_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
+ 
+  $this->widgetSchema['specimen_count_males_min'] = new sfWidgetForminput();
    $this->widgetSchema['specimen_count_males_min']->setAttributes(array('class'=>'vvsmall_size'));
  $this->widgetSchema['specimen_count_males_min']->setLabel('Count males (min)');
  $this->validatorSchema['specimen_count_males_min'] = new sfValidatorNumber(array('required'=>false,'min' => '0'));
@@ -870,11 +860,11 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 
   public function addLatLonColumnQuery($query, $values)
   {
-  //ftheeten 2018 03 02 !==
-  if( isset($values['lat_from']) && isset($values['lon_from']) && isset($values['lon_to'])  && isset($values['lat_to']))
+        //ftheeten 2018 03 02 !==
+    if( isset($values['lat_from']) && isset($values['lon_from']) && isset($values['lon_to'])  && isset($values['lat_to']))
     {
-    //if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
-    //{
+        //if( $values['lat_from'] != '' && $values['lon_from'] != '' && $values['lon_to'] != ''  && $values['lat_to'] != '' )
+        //{
       /*$horizontal_box = "((".(float)$values['lat_from'].",-180),(".(float)$values['lat_to'].",180))";
       $vert_box = "((".(float)$values['lat_from'].",".(float)$values['lon_from']."),(".(float)$values['lat_to'].",".(float)$values['lon_to']."))";
         */
@@ -936,7 +926,7 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
   }
 
   
-  //ftheeten 2018 04 10
+   //ftheeten 2018 04 10
    public function addIgRefColumnQuery($query, $field, $values)
   {
     if ($values != "") {
@@ -1532,6 +1522,21 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 		  $sql_params[] = $code['code_part'];
           $has_query = true;
         }
+		
+		//ftheeten 2018 06 14
+		if($code['category']  != '' && strtolower($code['category'])  != 'all') {
+          if($has_query) $sql .= ' AND ';
+         
+		 
+			
+		    $sql .= " code_category = ?";
+		  
+		  
+		  $sql_params[] = $code['category'];
+          $has_query = true;
+        }
+		
+		
         //if($has_query)
         //  $query->addWhere("EXISTS(select 1 from codes where  referenced_relation='specimens' and record_id = s.id AND $sql)", $sql_params);
 		if($has_query)
@@ -1837,12 +1842,12 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     // We have only 1 Value
     if($value_from != '' && $value_to == '') {
       if($unit == '') {
-        $sql_part[] = '  ( p.lower_value = ? OR  p.upper_value = ?) ';
+        $sql_part[] = '  ( p.lower_value ILIKE ? OR  p.upper_value ILIKE ?) ';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
       //We don't know the filed unit
       } elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
-        $sql_part[] = '  ( p.lower_value = ? OR  p.upper_value = ?) AND property_unit = ? ';
+        $sql_part[] = '  ( p.lower_value ILIKE ? OR  p.upper_value ILIKE ?) AND property_unit = ? ';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
         $sql_params[] = $unit;
@@ -1859,14 +1864,14 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
     // We have 2 Values
     elseif($value_from != '' && $value_to != '') {
       if($unit == '') {
-        $sql_part[] = ' ( ( p.lower_value = ? OR  p.upper_value = ?) OR ( p.lower_value = ? OR  p.upper_value = ?) )';
+        $sql_part[] = ' ( ( p.lower_value ILIKE ? OR  p.upper_value ILIKE ?) OR ( p.lower_value ILIKE ? OR  p.upper_value ILIKE ?) )';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
         $sql_params[] = $value_to;
         $sql_params[] = $value_to;
       //We don't know the filed unit
       } elseif(Properties::searchRecognizedUnitsGroups($unit) === false) {
-        $sql_part[] = ' ( ( p.lower_value = ? OR  p.upper_value = ?) OR ( p.lower_value = ? OR  p.upper_value = ?) )  AND property_unit = ? ';
+        $sql_part[] = ' ( ( p.lower_value ILIKE ? OR  p.upper_value = ?) OR ( p.lower_value ILIKE ? OR  p.upper_value ILIKE ?) )  AND property_unit = ? ';
         $sql_params[] = $value_from;
         $sql_params[] = $value_from;
         $sql_params[] = $value_to;
@@ -2043,9 +2048,6 @@ $this->validatorSchema['taxon_relation'] = new sfValidatorChoice(array('required
 
   public function doBuildQuery(array $values)
   {
-
-
-     
     $this->encoding_collection = $this->getCollectionWithRights($this->options['user'],true);
     $query = DQ::create()
       ->select('s.*,
@@ -2061,25 +2063,7 @@ gtu_location[1]::varchar as longitude,
     $this->options['query'] = $query;
     $query = parent::doBuildQuery($values);
     $this->cols = $this->getCollectionWithRights($this->options['user']);
-
     if(!empty($values['collection_ref'])) {
-      //ftheeten 2018 05 29
-      if((boolean)$values['include_sub_collections']===true)
-      {
-
-          foreach($values['collection_ref'] as $tmp_id)
-          {           
-            $sub_cols = Doctrine::getTable("Collections")->fetchByCollectionParent($this->options['user'] , $this->options['user']->getId(), $tmp_id);
-            foreach($sub_cols as $sub_col)
-            {
-           
-                if(!in_array($values['collection_ref'], $this->cols))
-                {
-                    $values['collection_ref'][]=$sub_col->getId();
-                }
-            }
-          }
-       }
       $this->cols = array_intersect($values['collection_ref'], $this->cols);
     }
     //ftheeten 2017 05 30 (issue with subquery for pager)
@@ -2162,7 +2146,7 @@ gtu_location[1]::varchar as longitude,
     //ftheeten 2016 06 222
 
     $query->limit($this->getCatalogueRecLimits());
-    
+
     return $query;
   }
 

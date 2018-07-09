@@ -59,7 +59,7 @@ class widgetFormCompleteButtonRef extends widgetFormButtonRef
       'class' => 'ref_name' .$class,
     ));
 
-	$input .= '<script  type="text/javascript">
+    $input .= '<script  type="text/javascript">
       $(document).ready(function () {
       $("#'.$this->generateId($name).'_name").catcomplete({source: "'.url_for($this->getOption('complete_url')).'"});
       $("#'.$this->generateId($name).'_button a.but_more").click(button_ref_modal);

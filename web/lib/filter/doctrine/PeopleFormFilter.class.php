@@ -21,7 +21,6 @@ class PeopleFormFilter extends BasePeopleFormFilter
 
     $this->widgetSchema['is_physical'] = new sfWidgetFormInputHidden();
     $this->setDefault('is_physical', true);
-
 	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
 	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $minDate = new FuzzyDateTime(strval(min($yearsKeyVal).'/01/01'));
@@ -92,10 +91,11 @@ class PeopleFormFilter extends BasePeopleFormFilter
     $this->addDateFromToColumnQuery($query, $fields, $values['activity_date_from'], $values['activity_date_to']);
     $query->andWhere('id != 0');
     
-    //ftheeten 2018 03 23
+      //ftheeten 2018 03 23
    // if(isset($values['ig_number']))
 	if($values['ig_number'] != "")
     {
+    
         if(isset($values['people_type']))
         {
              $alias = $query->getRootAlias() ;
@@ -107,6 +107,7 @@ class PeopleFormFilter extends BasePeopleFormFilter
             $query->andWhere("EXISTS (select c2.id from cataloguePeople c2 where $alias.id = c2.people_ref AND referenced_relation = 'specimens' AND record_id IN (SELECT s.id FROM specimens s WHERE ig_num= ?))",$values['ig_number']);
         }
     }
+    
     return $query;
   }
 
@@ -122,6 +123,7 @@ class PeopleFormFilter extends BasePeopleFormFilter
 
   public function addFamilyNameColumnQuery($query, $field, $val)
   {
+    //$val=str_replace("-", " ", $val);
     return $this->addNamingColumnQuery($query, 'people', 'formated_name_indexed', $val);
   }
 

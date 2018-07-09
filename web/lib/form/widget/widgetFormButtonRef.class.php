@@ -90,8 +90,7 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
       $this->addOption('button_class', 'button');
       $this->addOption('default_name', null);
       $this->addOption('url_params', array());
-	 
-	 
+	  
 	   //ftheeten 2018 02 08
 	  if(strtolower($options["model"])=="collections")
 	  {
@@ -114,6 +113,30 @@ $("#'.$this->generateId($name).'_button a.but_text").click(button_ref_modal);';
 			}
 		}
       }
+      
+      //ftheeten 2018 02 08
+	  if(strtolower($options["model"])=="institutions")
+	  {
+		
+        if(array_key_exists('institution_ref_session',$_COOKIE ))
+         {
+			
+			$findCol=Doctrine::getTable("Institutions")->find($_COOKIE['institution_ref_session']);
+			if(!($findCol))
+		    {
+				
+				
+				unset($_COOKIE['institution_ref_session']);
+				$this->addOption('default',NULL);
+			}
+			else
+			{
+				
+				$this->addOption('default',$_COOKIE['institution_ref_session']);
+			}
+		}
+      }
+      
   }
 
   public function getJavaScripts()

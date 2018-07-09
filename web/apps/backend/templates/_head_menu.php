@@ -1,4 +1,52 @@
-<!--ftheeten 2018 04 22-->
+<script>
+ //ftheeten 2018 05 30
+    function disableFrameMenu() {
+    var isInIframe = (parent !== window),
+        parentUrl = null;
+
+        if (isInIframe) {
+        
+            parentUrl = document.referrer;
+            if(parentUrl.indexOf('<?php print(sfConfig::get('dw_domain_disable_menu'));?>') ===-1)
+            {
+                $.ajax({
+                  url: "http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on",              
+                }).done(function() {
+                  
+                });
+            }
+            
+        }
+        else
+        {
+            console.log("try");
+             console.log("http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on");
+             $.ajax({
+                  url: "http://<?php print(parse_url(sfContext::getInstance()->getRequest()->getUri(),PHP_URL_HOST ));?>/search/disableMenu?menu=on",              
+                }).done(function() {
+                  
+                });
+        }
+
+    
+    }
+    (function($){ //create closure so we can safely use $ as alias for jQuery
+
+      $(document).ready(function(){
+
+        //ftheeten 2018 05 30
+        disableFrameMenu();
+        
+        
+      });
+
+    })(jQuery);
+    
+    //ftheeten 2018 05 30
+    
+    
+</script>
+
 <?php
     $flagMenu="on";
     
@@ -20,7 +68,7 @@
     }
     $_SESSION['menu']= $flagMenu;  
 ?>
-<?php if($flagMenu!="off"):?>
+<?php if($flagMenu!="off" ):?>
 <?php 
 if(array_key_exists("menu", $_SESSION))
 {

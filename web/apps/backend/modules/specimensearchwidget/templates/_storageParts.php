@@ -250,7 +250,7 @@ $(document).ready(function () {
 		delay: 100
 	});
     
-        //ftheeten 2018 02 09
+    //ftheeten 2018 02 09
         $('.ui-autocomplete').mouseleave(
         function()
         {

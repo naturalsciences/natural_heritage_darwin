@@ -17,6 +17,7 @@ prod:
             level: notice
             file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
   mailer:
+    #sender: your_send_email@example.com
     class: sfMailer
     param:
       logging:           %SF_LOGGING_ENABLED%
@@ -25,27 +26,26 @@ prod:
       transport:
         class: Swift_SmtpTransport
         param:
-          host: smtp.africamuseum.be      
+          host: mail1.museum.africamuseum.be     
           port: 25      
           encryption:  ~
           username: ~ 
-          password:  ~  
-
+          password:  ~ 
 dev:
   mailer:
     class: sfMailer
     param:
       logging:           %SF_LOGGING_ENABLED%
-      charset:           utf-8
-      delivery_strategy: none 
+      charset:           %SF_CHARSET%
+      delivery_strategy: realtime
       transport:
         class: Swift_SmtpTransport
         param:
-          host: smtp.africamuseum.be      
-          port: 25      
+          host:       mail1.museum.africamuseum.be
+          port:       25
           encryption: ~
-          username: ~  
-          password: ~  
+          username:   ~
+          password:   ~
 
 cli:
   controller:

@@ -68,26 +68,30 @@ class ImportABCDXml implements ImportModelsInterface
         $tabParser->identifyHeader($fp);
         $i=1;
         while (($row = fgetcsv($fp, 0, "\t")) !== FALSE){
-                //ftheeten 2018 02 28
-             $row=  Encoding::toUTF8($row);
-             $xml_parser = xml_parser_create();
-            xml_set_object($xml_parser, $this) ;
-            xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
-            xml_set_element_handler($xml_parser, "startElement", "endElement");
-            xml_set_character_data_handler($xml_parser, "characterData");
-            $xml_conv= $tabParser->parseLineAndGetString($row);
-            if (!xml_parse($xml_parser, $xml_conv, feof($fp))) {
-                return (sprintf("XML error: %s at line %d for record $i",
-                            xml_error_string(xml_get_error_code($xml_parser)),
-                            xml_get_current_line_number($xml_parser)));
+            if (array(null) !== $row) 
+            { // ignore blank lines
+                    //ftheeten 2018 02 28
+                 $row=  Encoding::toUTF8($row);
+                 $xml_parser = xml_parser_create();
+                xml_set_object($xml_parser, $this) ;
+                xml_parser_set_option($xml_parser, XML_OPTION_CASE_FOLDING, false);
+                xml_set_element_handler($xml_parser, "startElement", "endElement");
+                xml_set_character_data_handler($xml_parser, "characterData");
+                $xml_conv= $tabParser->parseLineAndGetString($row);
+                //print($xml_conv);
+                if (!xml_parse($xml_parser, $xml_conv, feof($fp))) {
+                    return (sprintf("XML error: %s at line %d for record $i",
+                                xml_error_string(xml_get_error_code($xml_parser)),
+                                xml_get_current_line_number($xml_parser)));
+                }
+                $i++;
+                xml_parser_free($xml_parser);
             }
-            $i++;
-            xml_parser_free($xml_parser);
         }
 
          
-        if(! $this->version_defined)
-          $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+        //if(! $this->version_defined)
+        //  $this->errors_reported = $this->version_error_msg.$this->errors_reported;
         return $this->errors_reported ;
     }
     else //old xml parser
@@ -239,9 +243,13 @@ class ImportABCDXml implements ImportModelsInterface
           break;
         case "HigherTaxa" : $this->object->getCatalogueParent($this->staging) ; break;
         case "HigherTaxon" : $this->object->handleParent() ;break;;
-        case "HigherTaxonName" : $this->object->higher_name = $this->cdata ; break;
-        case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ; break;
-        case "TaxonIdentified":  $this->object->checkNoSelfInParents($this->staging); break;
+        case "HigherTaxonName" : $this->object->higher_name = $this->cdata ;  break;
+        case "HigherTaxonRank" : $this->object->higher_level = strtolower($this->cdata) ;  break;
+        case "TaxonIdentified":  
+            //ftheeten 2018 06 12
+            //$this->object->checkNoSelfInParents($this->staging); 
+        
+            break;
         case "efg:LithostratigraphicAttribution" : $this->staging["litho_parents"] = $this->object->getParent() ; break;
         case "Identification" :
             $this->object->save($this->staging) ; break;
@@ -333,6 +341,7 @@ class ImportABCDXml implements ImportModelsInterface
           //$this->staging["taxon_level_name"] = strtolower($this->object->level_name) ;
           
           $tmp=$this->object->getLastDeclaredLevel() ;
+         
           if(isset($tmp))
           {
             $this->staging["taxon_level_name"] = $tmp;
@@ -429,14 +438,18 @@ class ImportABCDXml implements ImportModelsInterface
   {
 	 //jm herpers 2017 11 09 (auto increment in batches)
    
-	if($category=="main"&&strlen(trim($this->cdata))>0)
+	if(strlen(trim($this->cdata))>0)
     {
-		$this->main_code_found=true;
+        if($category=="main")
+        {
+            $this->main_code_found=true;
+        }
         $code = new Codes() ;
         $code->setCodeCategory(strtolower($category)) ;
         $code->setCode($this->cdata) ;
         if(substr($code->getCode(),0,4) != 'hash') $this->staging->addRelated($code) ;		
 	}
+    
     
   }
 

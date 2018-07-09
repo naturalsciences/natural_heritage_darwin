@@ -9,7 +9,7 @@
     <h1><?php echo __('My saved searches');?></h1>
   <?php endif;?>
 
- <table style="width:75%" class="saved_searches">
+  <table style="width:75%" class="saved_searches">
   <tbody>
   <?php foreach($searches as $search):?>
     <tr class="r_id_<?php echo $search->getId();?>">
@@ -42,7 +42,11 @@
          <td class="rurl_container">
             <select class="url_report">
             <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_excel%3Areport_excel.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Fexcel%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
-            Excel
+            Excel (specimens)
+            </option>          
+         
+             <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_excel%3Areport_excel_taxonomy.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Fexcel%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
+            Excel (taxonomy)
             </option>
             <option value=<?php echo("http://172.16.11.138:8080/pentaho/api/repos/%3Apublic%3ADarwin2%3AReports_rtf%3Areport_inverts_rtf.prpt/report?ID_USER=".sfContext::getInstance()->getUser()->getId()."&ID_Q=".$search->getId()."&userid=report&password=report&output-target=table%2Frtf%3Bpage-mode%3Dflow&accepted-page=-1&showParameters=true&renderMode=REPORT&htmlProportionalWidth=false")?>>
             RTF publications Invertebrates
@@ -155,5 +159,8 @@ $(document).ready(function () {
     var url_report = $(this).closest('tr').children("td.rurl_container").find(".url_report").val();
     window.open(url_report, '_blank');
  });
+
+
+ 
 });
 </script>

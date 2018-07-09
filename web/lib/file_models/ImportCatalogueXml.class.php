@@ -5,12 +5,14 @@ use \ForceUTF8\Encoding;
 
 class ImportCatalogueXml implements ImportModelsInterface
 {
-  private $parent, $referenced_relation, $errors_reported, $staging_catalogue, $version;
+  protected $parent, $referenced_relation, $errors_reported, $staging_catalogue, $version;
     //ftheeten 2017 07 06
-  private $is_reference_taxonomy, $taxonomy_source;
-  private $version_defined = false;
-  private $version_error_msg = "You use an unrecognized template version, please use it at your own risks or update the version of your template.;";
-
+  protected $is_reference_taxonomy, $taxonomy_source;
+  protected $version_defined = false;
+  protected $version_error_msg = "You use an unrecognized template version, please use it at your own risks or update the version of your template.;";
+    //ftheeten 2018 06 08
+  protected $inUnit=false;
+  protected $name_cluster=0;
   /**
   * @function parseFile() read a 'to_be_loaded' xml file and import it, if possible in staging table
   * @var $file : the xml file to parse
@@ -77,8 +79,8 @@ class ImportCatalogueXml implements ImportModelsInterface
         }
 
          
-        if(! $this->version_defined)
-          $this->errors_reported = $this->version_error_msg.$this->errors_reported;
+        //if(! $this->version_defined)
+        //  $this->errors_reported = $this->version_error_msg.$this->errors_reported;
         return $this->errors_reported ;
     }
     //back to old XML parser
@@ -123,13 +125,25 @@ class ImportCatalogueXml implements ImportModelsInterface
     $this->inside_data = false ;
     switch ($name) {
       case "TaxonomicalTree" : $this->parent=null ;
-      case "TaxonomicalUnit" : $this->staging_catalogue = new stagingCatalogue() ; break;
+	  //ftheeten 2018 06 08
+	  $this->name_cluster++;
+      case "TaxonomicalUnit" : $this->staging_catalogue = new StagingCatalogue() ; 
+		//ftheeten 2018 06 08
+		$this->staging_catalogue->setNameCluster( $this->name_cluster);
+		break;
+        //ftheeten 2018 06 08
+      case "MeasurementOrFactAtomised" :  $this->property = new Properties() ; break;
     }
   }
 
   private function endElement($parser, $name)
   {
-    $this->cdata = trim($this->cdata);
+    /*print("END");
+    print($name);
+    print($this->cdata);*/
+	 // print('end');
+	//ftheeten 2018 04 15 added htmlspecialchars_decode
+    $this->cdata = htmlspecialchars_decode(trim($this->cdata));
     $this->inside_data = false ;
       switch ($name) {
         case "Major": $this->version  =  $this->cdata; break;
@@ -162,7 +176,14 @@ class ImportCatalogueXml implements ImportModelsInterface
         case "AuthorTeam":
         case "AuthorTeamParenthesisAndYear":
         case "AuthorTeamParenthesis" : $this->addKeyword($name); break;
-        case "TaxonomicalUnit" : $this->saveUnit(); break;
+        case "TaxonomicalUnit" : 
+            $this->inUnit=false;
+            $this->saveUnit(); 
+            break;
+		//fheeten 2018 06 05 (allow properties in taxonomy)
+         case "Parameter" : $this->property->setPropertyType($this->cdata); break;
+         case "LowerValue" : $this->property->setLowerValue($this->cdata) ; break;        
+         case "MeasurementOrFactAtomised" : $this->addProperty(); break;
       }
   }
 
@@ -178,6 +199,7 @@ class ImportCatalogueXml implements ImportModelsInterface
   
   private function saveUnit()
   {
+  
     $this->staging_catalogue->fromArray(array("import_ref" => $this->import_id, "parent_ref" => $this->parent
     //ftheeten 2017 07 06
     ,"taxonomy_name"=> $this->taxonomy_name, "creation_date"=> $this->creation_date
@@ -186,9 +208,19 @@ class ImportCatalogueXml implements ImportModelsInterface
     ,"definition_taxonomy"=> $this->definition_taxonomy, "url_website_taxonomy"=> $this->url_website_taxonomy
     ,"url_webservice_taxonomy"=> $this->url_webservice_taxonomy
     ));
+	/*print_r(array("import_ref" => $this->import_id, "parent_ref" => $this->parent
+    //ftheeten 2017 07 06
+    ,"taxonomy_name"=> $this->taxonomy_name, "creation_date"=> $this->creation_date
+    ,"creation_date_mask"=> $this->creation_date_mask 
+    ,"is_reference_taxonomy"=> $this->is_reference_taxonomy, "source_taxonomy"=> $this->source_taxonomy
+    ,"definition_taxonomy"=> $this->definition_taxonomy, "url_website_taxonomy"=> $this->url_website_taxonomy
+    ,"url_webservice_taxonomy"=> $this->url_webservice_taxonomy
+    ));
+	print($this->staging_catalogue->getName());*/
     try
     {
       $result = $this->staging_catalogue->save() ;
+	  //print("\r\nSave\r\n");
       foreach($result as $key => $error)
         $this->errors_reported .= $error ;
       $this->parent = $this->staging_catalogue->getId() ;
@@ -225,5 +257,18 @@ class ImportCatalogueXml implements ImportModelsInterface
 
     $this->staging_catalogue->addRelated($classification_keyword);
   }
+  
+  
+  //ftheten 2018 06 08
+  private function addProperty()
+  {
+    if($this->property )
+    {        
+        $this->property->setReferencedRelation("staging_catalogue");
+
+        $this->staging_catalogue->addRelated($this->property);
+    }
+  }
+
 
 }

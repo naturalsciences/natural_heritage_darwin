@@ -37,6 +37,8 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'elevation'               => new sfWidgetFormFilterInput(),
       'elevation_accuracy'      => new sfWidgetFormFilterInput(),
       'elevation_unit'          => new sfWidgetFormFilterInput(),
+      'iso3166'                 => new sfWidgetFormFilterInput(),
+      'iso3166_subdivision'     => new sfWidgetFormFilterInput(),
       'wkt_str'                 => new sfWidgetFormFilterInput(),
     ));
 
@@ -65,6 +67,8 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'elevation'               => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
       'elevation_accuracy'      => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
       'elevation_unit'          => new sfValidatorPass(array('required' => false)),
+      'iso3166'                 => new sfValidatorPass(array('required' => false)),
+      'iso3166_subdivision'     => new sfValidatorPass(array('required' => false)),
       'wkt_str'                 => new sfValidatorPass(array('required' => false)),
     ));
 
@@ -110,6 +114,8 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'elevation'               => 'Number',
       'elevation_accuracy'      => 'Number',
       'elevation_unit'          => 'Text',
+      'iso3166'                 => 'Text',
+      'iso3166_subdivision'     => 'Text',
       'wkt_str'                 => 'Text',
     );
   }

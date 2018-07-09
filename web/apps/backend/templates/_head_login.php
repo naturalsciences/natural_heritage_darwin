@@ -20,7 +20,7 @@
     }
     $_SESSION['menu']= $flagMenu;  
 ?>
-<?php if($flagMenu!="off"):?>
+<?php if($flagMenu!="off"|| $_SERVER["HTTP_REFERER"]!=sfConfig::get('dw_domain_disable_menu')):?>
 <?php 
 if(array_key_exists("menu", $_SESSION))
 {

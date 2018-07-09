@@ -39,7 +39,7 @@ class Igs extends BaseIgs
     }
   }
   
-  //ftheeten 2018 04 10
+    //ftheeten 2018 04 10
   public function countSpecimens()
   {
     $q = Doctrine_Query::create()
@@ -50,7 +50,7 @@ class Igs extends BaseIgs
     return $row["count"];
   }
   
-  //ftheeten 2018 04 10
+    //ftheeten 2018 04 10
   public function countSpecimensByCollections()
   {
     $returned=Array();
@@ -81,7 +81,5 @@ class Igs extends BaseIgs
     }
     
   }
-  
-  
 
 }

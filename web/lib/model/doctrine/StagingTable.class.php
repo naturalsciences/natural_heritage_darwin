@@ -43,41 +43,9 @@ class StagingTable extends DarwinTable
       ->set('create_taxon', '?','true')
       ->andwhere('import_ref = ? ',$import_ref)
       ->execute();
-    /*$q = Doctrine_Query::create()->update('Imports')
-
+    $q = Doctrine_Query::create()->update('Imports');
+    $q->andwhere('id = ? ',$import_ref)
       ->set('state', '?','processing')
-	  ->andwhere('id = ? ',$import_ref)
-      ->execute();*/
-
-      /*$q = Doctrine_Query::create()->update('Imports');
-      $q->andwhere('id = ? ',$import_ref)
-      ->set('state', '?','aprocessing')
       ->execute();
-      
-      $cmd='darwin:check-import --do-import --id='.$import_ref;
-          $conn = Doctrine_Manager::connection();
-    $this->setImportAsWorking($conn, array($import_ref), true);
-    $currentDir=getcwd();
-    chdir(sfconfig::get('sf_root_dir'));    
-    exec('nohup php symfony '.$cmd.'  >/dev/null &' );
-    chdir($currentDir); */
   }
-  
-   //ftheeten 2017 08 28
-  public function setImportAsWorking( $p_conn, $p_ids, $p_working)
-  {
-    if(count($p_ids)>0)
-    {
-        $p_conn->beginTransaction();
-        foreach($p_ids as $id)
-        {
-         Doctrine_Query::create()
-            ->update('imports p')
-            ->set('p.working','?',((int)$p_working==0)?'f':'t')
-            ->where('p.id = ?', $id)
-            ->execute();
-        }
-        $p_conn->commit();
-    }
-  }    
 }

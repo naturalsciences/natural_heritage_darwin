@@ -30,9 +30,4 @@ class helpActions extends DarwinActions
   public function executeContrib(sfWebRequest $request)
   {
   }
-  
-  //ftheeten 2018 03 07  
-  public function executeTemplate(sfWebRequest $request)
-  {
-  }
 }

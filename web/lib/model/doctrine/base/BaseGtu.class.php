@@ -30,6 +30,8 @@
  * @property float $elevation
  * @property float $elevation_accuracy
  * @property string $elevation_unit
+ * @property string $iso3166
+ * @property string $iso3166_subdivision
  * @property string $wkt_str
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Tags
@@ -60,6 +62,8 @@
  * @method float               getElevation()               Returns the current record's "elevation" value
  * @method float               getElevationAccuracy()       Returns the current record's "elevation_accuracy" value
  * @method string              getElevationUnit()           Returns the current record's "elevation_unit" value
+ * @method string              getIso3166()                 Returns the current record's "iso3166" value
+ * @method string              getIso3166Subdivision()      Returns the current record's "iso3166_subdivision" value
  * @method string              getWktStr()                  Returns the current record's "wkt_str" value
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection getTags()                    Returns the current record's "Tags" collection
@@ -89,6 +93,8 @@
  * @method Gtu                 setElevation()               Sets the current record's "elevation" value
  * @method Gtu                 setElevationAccuracy()       Sets the current record's "elevation_accuracy" value
  * @method Gtu                 setElevationUnit()           Sets the current record's "elevation_unit" value
+ * @method Gtu                 setIso3166()                 Sets the current record's "iso3166" value
+ * @method Gtu                 setIso3166Subdivision()      Sets the current record's "iso3166_subdivision" value
  * @method Gtu                 setWktStr()                  Sets the current record's "wkt_str" value
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
  * @method Gtu                 setTags()                    Sets the current record's "Tags" collection
@@ -188,6 +194,12 @@ abstract class BaseGtu extends DarwinModel
              'type' => 'float',
              ));
         $this->hasColumn('elevation_unit', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('iso3166', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('iso3166_subdivision', 'string', null, array(
              'type' => 'string',
              ));
         $this->hasColumn('wkt_str', 'string', null, array(

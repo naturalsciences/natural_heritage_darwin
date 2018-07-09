@@ -55,6 +55,7 @@ class InsurancesSubForm extends BaseInsurancesForm
     ));
 
     $this->widgetSchema['insurance_currency']->setAttributes(array('class'=>'vsmall_size'));
+
 					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
 	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);

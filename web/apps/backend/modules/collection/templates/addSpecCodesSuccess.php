@@ -43,12 +43,11 @@
         <?php echo $form['code_auto_increment'];?>
       </td>
     </tr>
-	<!-- JMHerpers 2018/02/01-->
-	<tr>
-      <th><?php echo $form['code_ai_inherit']->renderLabel();?></th>
+    <tr>
+      <th><?php echo $form['code_last_value']->renderLabel();?></th>
       <td>
-        <?php echo $form['code_ai_inherit']->renderError(); ?>
-        <?php echo $form['code_ai_inherit'];?>
+        <?php echo $form['code_last_value']->renderError(); ?>
+        <?php echo $form['code_last_value'];?>
       </td>
     </tr>
     <tr>

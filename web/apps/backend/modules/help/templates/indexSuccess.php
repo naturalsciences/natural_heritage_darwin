@@ -5,7 +5,4 @@
     <p><a href="/help/Darwin2_NL.pdf">Gebruikershandleiding</a></p><br />
     <p><a href="/help/Darwin2_FR.pdf">Manuel d'utilisation</a></p><br />
     <p><a href="/help/Darwin2_EN.pdf">User guide</a></p><br />
-    
-     <p><a href="./help/template">Templates</a></p><br />
-    
 </div>

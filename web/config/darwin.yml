@@ -12,6 +12,12 @@ all:
     queryTimeout: 30000
     defaultInstitutionRef: 1
     collect_to_print_thermic: '6,13'
+    tagsDisplayLimit: 10
+    tagsLowerLimit: 4
+    tempFilePath: '/tmp/temp_file'
+    disableXSDValidation: false
+    domain_disable_menu: http://darwin/
+
 
   mailer:
     #sender: your_send_email@example.com

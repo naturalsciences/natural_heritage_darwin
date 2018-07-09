@@ -35,6 +35,7 @@ $(document).ready(function ()
           <?php echo $form['format'] ?>
         </td>
       </tr>
+	  
       <?php if($type != 'taxon') : ?>
       <tr>
         <th><?php echo $form['collection_ref']->renderLabel() ?> :</th>
@@ -69,6 +70,14 @@ $(document).ready(function ()
         </td>         
       </tr>
       <?php endif ?>
+	  <!--ftheeten 2018 06 06-->
+	  <tr>
+      <th><?php echo $form['taxonomy_kingdom']->renderLabel() ?> :</th>
+        <td>
+          <?php echo $form['taxonomy_kingdom']->renderError() ?>
+          <?php echo $form['taxonomy_kingdom'] ?>
+        </td>
+      </tr>
     </tbody>
       <tfoot>
         <tr>

@@ -105,6 +105,8 @@ class propertyActions extends DarwinActions
 	      try{
 	        $this->form->save();
 	        return $this->renderText('ok');
+			//jm herpers ftheeten 2018 03 13
+			//return $this->renderText('');
 	      }
 	      catch(Exception $ne)
 	      {

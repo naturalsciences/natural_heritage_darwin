@@ -43,6 +43,8 @@
  * @property string $gtu_location
  * @property float $gtu_elevation
  * @property float $gtu_elevation_accuracy
+ * @property string $gtu_iso3166
+ * @property string $gtu_iso3166_subdivision
  * @property string $taxon_name
  * @property string $taxon_name_indexed
  * @property integer $taxon_level_ref
@@ -169,6 +171,8 @@
  * @method string              getGtuLocation()                  Returns the current record's "gtu_location" value
  * @method float               getGtuElevation()                 Returns the current record's "gtu_elevation" value
  * @method float               getGtuElevationAccuracy()         Returns the current record's "gtu_elevation_accuracy" value
+ * @method string              getGtuIso3166()                   Returns the current record's "gtu_iso3166" value
+ * @method string              getGtuIso3166Subdivision()        Returns the current record's "gtu_iso3166_subdivision" value
  * @method string              getTaxonName()                    Returns the current record's "taxon_name" value
  * @method string              getTaxonNameIndexed()             Returns the current record's "taxon_name_indexed" value
  * @method integer             getTaxonLevelRef()                Returns the current record's "taxon_level_ref" value
@@ -294,6 +298,8 @@
  * @method Specimens           setGtuLocation()                  Sets the current record's "gtu_location" value
  * @method Specimens           setGtuElevation()                 Sets the current record's "gtu_elevation" value
  * @method Specimens           setGtuElevationAccuracy()         Sets the current record's "gtu_elevation_accuracy" value
+ * @method Specimens           setGtuIso3166()                   Sets the current record's "gtu_iso3166" value
+ * @method Specimens           setGtuIso3166Subdivision()        Sets the current record's "gtu_iso3166_subdivision" value
  * @method Specimens           setTaxonName()                    Sets the current record's "taxon_name" value
  * @method Specimens           setTaxonNameIndexed()             Sets the current record's "taxon_name_indexed" value
  * @method Specimens           setTaxonLevelRef()                Sets the current record's "taxon_level_ref" value
@@ -521,6 +527,12 @@ abstract class BaseSpecimens extends DarwinModel
              ));
         $this->hasColumn('gtu_elevation_accuracy', 'float', null, array(
              'type' => 'float',
+             ));
+        $this->hasColumn('gtu_iso3166', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('gtu_iso3166_subdivision', 'string', null, array(
+             'type' => 'string',
              ));
         $this->hasColumn('taxon_name', 'string', null, array(
              'type' => 'string',

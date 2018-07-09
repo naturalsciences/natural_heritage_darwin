@@ -13,11 +13,25 @@ class GtuForm extends BaseGtuForm
   {
     $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date', 'latitude', 'longitude',
       'lat_long_accuracy', 'elevation', 'elevation_accuracy', 'coordinates_source',
-	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 
-	  'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction', 'elevation_unit','wkt_str' ));
+	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes',
+      'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction',
+      'longitude_dms_direction', 'elevation_unit'
+       ,'iso3166', 'iso3166_subdivision'));
 
     $this->widgetSchema['code'] = new sfWidgetFormInput();
-					//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+    //ftheeten 2018 04/05
+    $this->widgetSchema['iso3166'] = new sfWidgetFormInputText();
+    $this->widgetSchema['iso3166']->setAttributes(array('class'=>'iso3166_value vsmall_size', 'readonly'=>'readonly', 'style'=>'background-color:grey'));
+    $this->widgetSchema['iso3166_subdivision'] = new sfWidgetFormInputText();;
+    $this->widgetSchema['iso3166_subdivision']->setAttributes(array('class'=>'iso3166_subdivision_value vsmall_size', 'readonly'=>'readonly', 'style'=>'background-color:grey'));
+    $this->widgetSchema['iso3166_text'] = new sfWidgetFormInputText();
+    $this->widgetSchema['iso3166_text']->setLabel(' Country code (ISO 3166)');
+    $this->widgetSchema['iso3166_text']->setAttributes(array('class'=>'iso3166'));
+    $this->validatorSchema['iso3166_text'] = new sfValidatorPass();
+    $this->widgetSchema['iso3166_subdivision_text'] = new sfWidgetFormInputText();
+    $this->widgetSchema['iso3166_subdivision_text']->setAttributes(array('class'=>'iso3166_subdivision'));
+    $this->validatorSchema['iso3166_subdivision_text'] = new sfValidatorPass();
+	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
 	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
@@ -74,8 +88,8 @@ class GtuForm extends BaseGtuForm
 	
 	
 		//this group ftheeten 2016 02 05
-    $this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM', 'ISSUE'=>'Issue (to check)')));
-	$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
+	$this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM', 'ISSUE'=>'Issue (to check)')));
+		$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
 	$this->widgetSchema['coordinates_source']->setDefault(array(0));
 	//$this->validatorSchema['coordinates_source'] = new sfValidatorPass();
 	$this->widgetSchema['latitude']->setAttributes(array('class'=>'convertDMS2DDLat convertDD2DMSGeneral'));
@@ -279,10 +293,7 @@ class GtuForm extends BaseGtuForm
         new sfValidatorCallback(array('callback'=> array($this, 'checkElevationUnit')))
       )
     ));
-	//JMHerpers 2018 07 05
-	$this->widgetSchema['wkt_str'] = new sfWidgetFormInput();
-	$this->widgetSchema['wkt_str']->setLabel('Coordinates of drawn area');
-	$this->widgetSchema['wkt_str']->setAttributes(array('class'=>'wkt large_size'));
+
 
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
@@ -403,6 +414,8 @@ class GtuForm extends BaseGtuForm
     $javascripts[]='/js/map.js';
 	//ftheeten 2016 02 05
     $javascripts[]='/proj4js-2.3.12/proj4js-2.3.12/dist/proj4-src.js';
+		//ftheeten 2018 04 04
+	// $javascripts[]='openlayers/v4.x.x-dist/ol.js';
     return $javascripts;
   }
 

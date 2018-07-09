@@ -23,6 +23,7 @@ abstract class BaseStagingCatalogueForm extends BaseFormDoctrine
       'catalogue_ref'         => new sfWidgetFormInputText(),
       'is_reference_taxonomy' => new sfWidgetFormInputCheckbox(),
       'source_taxonomy'       => new sfWidgetFormTextarea(),
+      'name_cluster'          => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -34,6 +35,7 @@ abstract class BaseStagingCatalogueForm extends BaseFormDoctrine
       'catalogue_ref'         => new sfValidatorInteger(array('required' => false)),
       'is_reference_taxonomy' => new sfValidatorBoolean(array('required' => false)),
       'source_taxonomy'       => new sfValidatorString(array('required' => false)),
+      'name_cluster'          => new sfValidatorInteger(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('staging_catalogue[%s]');

@@ -46,6 +46,7 @@
 		
 		<script type="text/javascript">
 		  $(document).ready(function () {
+			   
 			$("#clear_<?php echo $type;?>_<?php echo $row_num;?>").click( function()
 			{
 			   parent_el = $(this).closest('tr');
@@ -57,7 +58,7 @@
 			   
 			   //JMHerpers 2018 03 30
 			   $("#loans_institution_receiver option[value='']").attr('selected', true)
-			   $('#loans_institution_receiver_input').val("");
+			   $('#loans_institution_receiver_input').val(0);
 			   $('#loans_address_receiver').val("");
 			   $('#loans_zip_receiver').val("");
 			   $('#loans_city_receiver').val("");

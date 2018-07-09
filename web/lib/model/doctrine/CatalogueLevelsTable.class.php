@@ -4,7 +4,7 @@
  */
 class CatalogueLevelsTable extends DarwinTable
 {
- //ftheeten 2018 03 14 added sort order
+  //ftheeten 2018 03 14 added sort order
   public function getLevelsByTypes(array $parameters, $q = null)
   {
     if (is_null($q))
@@ -35,5 +35,4 @@ class CatalogueLevelsTable extends DarwinTable
     
     return $q->execute();
   }
-  
 }

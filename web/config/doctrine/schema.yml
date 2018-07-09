@@ -188,9 +188,11 @@ Gtu:
         elevation_accuracy: {type: float}
         #pvignaux rmca 2016 02 26
         elevation_unit: { type: string}
+        #ftheeten 2018 05 14
+        iso3166: { type: string}
+        iso3166_subdivision: { type: string}
         #JMHerpers 2018 07 05
         wkt_str: {type: string}
-
 Properties:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -790,6 +792,10 @@ Specimens:
         gtu_location: { type: string}
         gtu_elevation: { type: float }
         gtu_elevation_accuracy: { type: float }
+        #ftheeten 2018 05 14
+        gtu_iso3166: { type: string}
+        gtu_iso3166_subdivision: { type: string}
+        #ftheeten 2018 05 14        
         taxon_name:  { type: string}
         taxon_name_indexed: { type: string}
         taxon_level_ref: { type: integer}
@@ -881,7 +887,7 @@ Specimens:
         #ftheeten 2017 02 10
         valid_label: { type: boolean}
         label_created_on: { type: string}
-        label_created_by: { type: string}       
+        label_created_by: { type: string}         
     relations:
         Collections:
             local: collection_ref
@@ -1153,6 +1159,8 @@ Imports:
         working : {type:boolean}
         #ftheeten 2017 09 13
         mime_type: {type: string}
+        #ftheeten 2017 09 13
+        taxonomy_kingdom: {type: string}
     relations:
         Collections:
             local: collection_ref
@@ -1364,7 +1372,9 @@ StagingCatalogue:
         catalogue_ref: { type: integer}
         #ftheeten 2017 07 06
         is_reference_taxonomy: {type: boolean, notnull: true, default: true}
-        source_taxonomy: {type: string, notnull: false}  
+        source_taxonomy: {type: string, notnull: false}
+        #ftheeten 2018 06 12
+        name_cluster : {type: integer}        
     relations:
         Parent:
             class: StagingCatalogue

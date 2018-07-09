@@ -10,18 +10,18 @@
       <thead>
         <tr>
  <!--ftheeten 2016 06 28-->
-<?php if($sf_params->get('with_js') == true):?>       
-       <tr>
+ <?php if($sf_params->get('with_js') == true):?>      
+        <tr>
             <td colspan="4" ><div style='float: left'> <div class='blue_link' id='get_ig'><a style='text-align: left'><?php echo __('Get IG');?></a></div>
             <div class='blue_link' id='get_specimen_number'><a><?php echo __('Get Specimen number');?></a></div>
             <div class='blue_link' id='get_station_number'><a><?php echo __('Get stations number');?></a></div></td>
-        </tr> 
-<?php endif;?>        
+        </tr>
+<?php endif;?>          
         <tr>
           <th><?php echo $form['code']->renderLabel() ?></th>
          
           <th></th>
-        </tr>        
+        </tr>
        </thead>
       <tbody>
         
@@ -204,14 +204,15 @@
             }
         });
         
-        //ftheeten 2018 04 10
+       //ftheeten 2018 04 10
           var ig_num=urlParam('ig_num');
           if(!!ig_num)
           {
             
                 $("#gtu_filters_ig_number").val(decodeURIComponent(ig_num));
                 $( ".search_form" ).submit();
-          }      
+          }    
+        
         
     });
     </script>

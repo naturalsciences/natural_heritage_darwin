@@ -11,7 +11,11 @@ class darwinLoadImportTask extends sfBaseTask
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
       //ftheeten 2017 08 28
       new sfCommandOption('mailsfornotification', null, sfCommandOption::PARAMETER_REQUIRED, 'The Users for the mail notification', 'backend'),
+      //ftheeten 2018 06 11
+      new sfCommandOption('direct-check', null, sfCommandOption::PARAMETER_REQUIRED, 'Load the quality check just after load', 'backend')
       ));
+      
+      
     $this->namespace        = 'darwin';
     $this->name             = 'load-import';
     $this->briefDescription = 'Import uploaded file to potgresql staging table';
@@ -22,7 +26,7 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
-	  print("LOAD");
+	  //print("LOAD");
 
      // initialize the database connection
     $result = null ;
@@ -33,16 +37,18 @@ EOF;
 
     $idTmp=$this->returnImportId($conn);	
     $this->setImportAsWorking($conn, $idTmp, true);
+    //ftheeten 2018 06 11
+     $this->realignImportSeq($conn);
     $conn->beginTransaction();
-	 print("LOAD 2");
-
+	// print("LOAD 2");
+   
     while($id = $conn->fetchOne('SELECT get_import_row()'))
     {
         $q = Doctrine_Query::create()
           ->from('imports p')
           ->where('p.id=?',$id)
           ->fetchOne() ;
-		  print("LOAD 3");
+		  //print("LOAD 3");
         //ftheeten 2017 03 13
         $file = sfConfig::get('sf_upload_dir').'/uploaded_'.sha1($q->getFilename().$q->getCreatedAt()).".".(explode(".",$q->getFilename())[1]) ;
         //$file = sfConfig::get('sf_upload_dir').'/uploaded_'.sha1($q->getFilename().$q->getCreatedAt()).'.xml' ;
@@ -52,7 +58,7 @@ EOF;
             switch ($q->getFormat())
             {
               case 'taxon':
-			  print("GO TAXON");
+			  //print("GO TAXON");
                 $import = new importCatalogueXml('taxonomy') ;
                 $count_line = "(select count(*) from staging_catalogue where parent_ref IS NULL AND import_ref = $id )" ;
                 break;              
@@ -92,6 +98,21 @@ EOF;
     //ftheeten 2017 08 29	
      $this->setImportAsWorking($conn, $idTmp, false);
     //ftheeten 2017 08 28
+    
+    //ftheeten 2018 06 11 (call quality check there)
+    if(!empty($options['direct-check']))
+    {
+        //print("try to check");
+        $cmd='darwin:check-import --id='.$options['direct-check'].' --no-delete';
+        $currentDir=getcwd();
+        chdir(sfconfig::get('sf_root_dir')); 
+        exec('nohup php symfony '.$cmd.'  >/dev/null &' );                       
+        chdir($currentDir);   
+    }
+    else
+    {
+        //print("no check");
+    }
     if(array_key_exists("mailsfornotification", $options))
     {
         foreach(explode(";",$options["mailsfornotification"]) as $mail)
@@ -121,7 +142,25 @@ EOF;
  }
  
  
-  //ftheeten 2047 08 29 
+ //ftheeten 2018 06 11
+   public function realignImportSeq($p_conn)
+  {
+     $p_conn->beginTransaction();
+	 $count=$p_conn->fetchOne("
+            SELECT setval('staging_id_seq', (SELECT MAX(id)+1 FROM staging ), false);          
+          "); 
+	$p_conn->commit();
+    
+     $p_conn->beginTransaction();
+	 $count=$p_conn->fetchOne("
+            SELECT setval('staging_catalogue_id_seq', (SELECT MAX(id)+1 FROM staging_catalogue ), false);          
+          "); 
+	$p_conn->commit();
+   
+   }
+ 
+ 
+  //ftheeten 2017 08 29 
   public function returnImportId($p_conn)
   {
        
@@ -149,13 +188,13 @@ EOF;
   //ftheeten 2017 08 28
   public function setImportAsWorking( $p_conn, $p_id, $p_working)
   {
-	 print("test working");
-	 print("PID=".$p_id);
+	 //print("test working");
+	 //print("PID=".$p_id);
     if($p_id>=0)
     {
 		if(is_bool($p_working))
 		{
-			print(1);
+			//print(1);
 			
 			$p_conn->beginTransaction();
          Doctrine_Query::create()
@@ -167,7 +206,7 @@ EOF;
 		}
 		else
 		{
-			print(2);
+			//print(2);
          $p_conn->beginTransaction();
          Doctrine_Query::create()
             ->update('imports p')

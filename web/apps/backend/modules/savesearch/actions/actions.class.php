@@ -201,18 +201,19 @@ class savesearchActions extends sfActions
     $q = Doctrine::getTable('MySavedSearches')
         ->addUserOrder(null, $this->getUser()->getId());
 
+		 
     $this->is_only_spec = false;
 
     if($request->getParameter('specimen') != '')
       $this->is_only_spec = true;
     $this->searches = Doctrine::getTable('MySavedSearches')
         ->addIsSearch($q, ! $this->is_only_spec)
-	       //ftheeten 2018 02 16
+		         //ftheeten 2018 02 16
 		 ->orderBy('modification_date_time DESC')
         ->execute();
   }
   
-    //ftheeten 2018 04 24
+  //ftheeten 2018 04 24
   public function executeGeojson(sfWebRequest $request)  
   {
         error_reporting(E_ERROR | E_PARSE);
@@ -252,6 +253,6 @@ class savesearchActions extends sfActions
            
            print($returned);
 
-        return sfView::NONE;           
+return sfView::NONE;           
   }
 }

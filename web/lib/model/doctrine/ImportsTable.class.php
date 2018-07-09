@@ -107,7 +107,7 @@ class ImportsTable extends Doctrine_Table
     $items = $q->execute();
 
     $ids = $items->toKeyValueArray("id", "id");
-
+    
     if(count($ids))
     {
       $ids_list_as_string = implode(',', $ids);

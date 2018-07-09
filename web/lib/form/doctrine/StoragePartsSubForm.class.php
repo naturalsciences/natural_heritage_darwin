@@ -66,7 +66,11 @@ class StoragePartsSubForm extends StoragePartsForm
     ));
     $this->widgetSchema['institution_ref']->setLabel("Institution");
     $this->validatorSchema['institution_ref'] = new sfValidatorInteger(array('required'=>true));
-    if(sfConfig::get('dw_defaultInstitutionRef')) {
+    if(array_key_exists('institution_ref_session',$_COOKIE ))
+    {
+        $this->setDefault('institution_ref', $_COOKIE['institution_ref_session']);
+    }
+    elseif(sfConfig::get('dw_defaultInstitutionRef')) {
       $this->setDefault('institution_ref', sfConfig::get('dw_defaultInstitutionRef'));
     }
     

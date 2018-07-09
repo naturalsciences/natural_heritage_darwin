@@ -93,6 +93,7 @@ class Gtu extends BaseGtu
     return '';
   }
   
+  //ftheeten 2018 06 04
   public function getMapOpenLayers3()
   {
 	  if( $this->getLatitude() != '' && $this->getLongitude()!= '')
@@ -177,7 +178,7 @@ class Gtu extends BaseGtu
     return '';
   }
 
-
+  
   public function getTagsWithCode($view = null)
   {
     $str = $this->getName($view);

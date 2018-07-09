@@ -125,16 +125,13 @@
       $max_fld.val( $min_fld.val());
 	  //ftheeten 2018 02 05
 	  $("[for="+$min_fld.attr('id')+"]").text("Value");
-	  
     }else {
       $max_fld.closest('tr').show();
-	  
 	  //ftheeten 2018 02 05
 	  if(param =="")
 	  {		 
 		$("[for="+$min_fld.attr('id')+"]").text("Min.");
 	  }
-	 
       if(param=='males_'||param=='females_'||param=='juveniles_')
       {
         $('#specimen_accuracy_1').click();
@@ -144,7 +141,6 @@
         syncCounters('_max');
       }
     }
-	//ftheeten 2018 02 04
   }
   
   //ftheeten 2016 06 22 to replace old 'showHideCount'

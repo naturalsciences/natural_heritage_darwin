@@ -164,21 +164,11 @@ class RMCATabToTaxonomyXml
         $dom               = new DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = true;
         $this->m_dom       = $dom;
-        //$root1              = $dom->createElement('Metadata');
-        //$dom->appendChild($root1);
-        //$version = $dom->createElement('Version');
-        //$root1->appendChild($version);
-        //$this->testAndAppendTag($version, null, "Major", null, "1");
-        //$this->testAndAppendTag($version, null, "Minor", null, "3");
+       
         
         $taxonomic_tree = $dom->createElement('TaxonomicalTree');
         $dom->appendChild($taxonomic_tree);
-        //foreach($this->fields as $key=>$value)
-        //{
-        
-            //if(strlen($p_row[])>0)
-            //{
-        //print("---------------");
+      
         $monomial=null;
         $genus=null;
         $species=null;
@@ -190,6 +180,9 @@ class RMCATabToTaxonomyXml
         $tab_for_full_name=Array();
         $last_rank=$this->getLastSubspecificRank($p_row,0);
         //print("last_rank=".$last_rank);
+        $setComments=false;
+        $comments=Array();
+        $treeForComments=null;
         foreach($p_row as $key=>$value)
         {
            
@@ -198,137 +191,162 @@ class RMCATabToTaxonomyXml
                 $value=htmlspecialchars(trim($value));
                 $field_name=$this->headers[strtolower($key)];
                 
-                $key_absolute=$this->fields_inverted[strtolower($field_name)];
-               
-                if($key_absolute<=32)
-                {
-					//print("test value = $value \r\n");
-                    $explodedVal=explode(" ",$value);
-                    $explodedVal = array_map('trim', $explodedVal);
-                    $taxonomic_unit = $dom->createElement('TaxonomicalUnit');
-                   
-                    
-                    if($key_absolute>26&&$last_subspecific_calculated===false)
-                    {
-                        $last_subspecific=$this->getLastSubspecificRank($p_row);
-                        //print(" last_subspecific = ".$last_subspecific);
-                        $last_subspecific_calculated=true;
-                    }
-                    
-                    if($key_absolute>=24)
-                    {
-                        if(count($explodedVal)==1)
-                        {
-                            $tab_for_full_name[]=$explodedVal[0];
-                        }
-                        elseif(count($explodedVal)>1)
-                        {
-							
-                            $tab_for_full_name=$explodedVal;
-                            
-                        }
-                        if($key_absolute==$last_rank&&array_key_exists("author_team_and_year",$this->headers_inverted))
-                            {
-                                
-                                $author=$p_row[$this->headers_inverted["author_team_and_year"]];
-                                
-                                $author=trim($author);
-                                if(!in_array($author, tab_for_full_name))
-                                {
-                                    $tab_for_full_name[]=$author;
-                                }
-                            }
-                       
-						if(in_array(implode(' ',$tab_for_full_name ),$this->duplicates))
+				if(array_key_exists(strtolower($field_name), $this->fields_inverted))
+				{
+					$key_absolute=$this->fields_inverted[strtolower($field_name)];
+				   
+					if($key_absolute<=32)
+					{
+						//print("test value = $value \r\n");
+						$explodedVal=explode(" ",$value);
+						$explodedVal = array_map('trim', $explodedVal);
+						$taxonomic_unit = $dom->createElement('TaxonomicalUnit');
+					   
+						
+						if($key_absolute>26&&$last_subspecific_calculated===false)
 						{
-							continue;
+							$last_subspecific=$this->getLastSubspecificRank($p_row);
+							//print(" last_subspecific = ".$last_subspecific);
+							$last_subspecific_calculated=true;
 						}
 						
-						$taxonomic_tree->appendChild($taxonomic_unit);
-						$this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,$field_name);
-                         $tab_for_full_name = array_map('trim', $tab_for_full_name);
-                        $this->testAndAppendTag($taxonomic_unit, null, "TaxonFullName", null, trim(implode(' ',$tab_for_full_name )));  
+						if($key_absolute>=24)
+						{
+							if(count($explodedVal)==1)
+							{
+								$tab_for_full_name[]=$explodedVal[0];
+							}
+							elseif(count($explodedVal)>1)
+							{
+								
+								$tab_for_full_name=$explodedVal;
+								
+							}
+							if($key_absolute==$last_rank&&array_key_exists("author_team_and_year",$this->headers_inverted))
+								{
+									
+									$author=$p_row[$this->headers_inverted["author_team_and_year"]];
+									
+									$author=trim($author);
+									if(!in_array($author, $tab_for_full_name))
+									{
+										$tab_for_full_name[]=$author;
+									}
+								}
+						   
+							if(in_array(implode(' ',$tab_for_full_name ),$this->duplicates))
+							{
+								continue;
+							}
+							
+							$taxonomic_tree->appendChild($taxonomic_unit);
+							$this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,$field_name);
+							 $tab_for_full_name = array_map('trim', $tab_for_full_name);
+							$this->testAndAppendTag($taxonomic_unit, null, "TaxonFullName", null, trim(implode(' ',$tab_for_full_name )));  
+							$treeForComments=$taxonomic_unit;
+						}
+						else
+						{   
+							
+							$this->duplicates[]=$value;
+							$taxonomic_tree->appendChild($taxonomic_unit);
+							$this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,$field_name);						
+							$this->testAndAppendTag($taxonomic_unit, null, "TaxonFullName", null,$value);
+							
+						}
 						
-                    }
-                    else
-                    {   
+						if($key_absolute<26)
+						{
+							
+							$monomial=trim($value);
+							if($key_absolute==24)
+							{
+								$genus=$monomial;
+							}
+						}
+						elseif($key_absolute==26)
+						{
+							if(count($explodedVal)==1)
+							{  
+								$species=$explodedVal[0];                          
+							}
+							elseif(count($explodedVal)>1)
+							{
+								$species=$explodedVal[count($explodedVal)-1];                           
+							}
+						   
+						}
 						
-						$this->duplicates[]=$value;
-						$taxonomic_tree->appendChild($taxonomic_unit);
-						$this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,$field_name);						
-                        $this->testAndAppendTag($taxonomic_unit, null, "TaxonFullName", null,$value);
+						$name_atomized = $dom->createElement('NameAtomised');                
+						$taxonomic_unit->appendChild($name_atomized);
 						
-                    }
-                    
-                    if($key_absolute<26)
-                    {
-                        
-                        $monomial=trim($value);
-                        if($key_absolute==24)
-                        {
-                            $genus=$monomial;
-                        }
-                    }
-                    elseif($key_absolute==26)
-                    {
-                        if(count($explodedVal)==1)
-                        {  
-                            $species=$explodedVal[0];                          
-                        }
-                        elseif(count($explodedVal)>1)
-                        {
-                            $species=$explodedVal[count($explodedVal)-1];                           
-                        }
-                       
-                    }
-                    
-                    $name_atomized = $dom->createElement('NameAtomised');                
-                    $taxonomic_unit->appendChild($name_atomized);
-                    
-                    if($key_absolute<24)
-                    {
-                        $this->testAndAppendTag($name_atomized, null, "GenusOrMonomial", null, $monomial);
-                    }
-                    elseif($key_absolute==24)
-                    {
-                        $this->testAndAppendTag($name_atomized, null, "GenusOrMonomial", null, $genus);
-                    }
-                    elseif($key_absolute>24&&$key_absolute<=26)
-                    {
-                        $this->testAndAppendTag($name_atomized, null, "GenusOrMonomial", null, $genus);
-                        $this->testAndAppendTag($name_atomized, null, "SpeciesEpithet", null, $species);
-                    }
-                    elseif($key_absolute>26&&$key_absolute==$last_subspecific)
-                    {
-                        $this->testAndAppendTag($name_atomized, null, "GenusOrMonomial", null, $genus);
-                        $this->testAndAppendTag($name_atomized, null, "SpeciesEpithet", null, $species);
-                        if(count($explodedVal)==1)
-                        {   
-                            $subspEpithet=$explodedVal[0];
-                        }
-                        elseif(count($explodedVal)>1)
-                        {
-                            $subspEpithet=$explodedVal[count($explodedVal)-1];
-                        }
-                        $this->testAndAppendTag($name_atomized, null, "SubspeciesEpithet", null, $subspEpithet);
-                    }
-                    elseif($key_absolute>26&&$key_absolute<$last_subspecific)
-                    {
-                        $this->testAndAppendTag($name_atomized, null, "GenusOrMonomial", null, $genus);
-                        $this->testAndAppendTag($name_atomized, null, "SpeciesEpithet", null, $species);
-                    }
-                    
-                    if($key_absolute==$last_rank&&array_key_exists("author_team_and_year",$this->headers_inverted))
-                    {
-                        $author=$p_row[$this->headers_inverted["author_team_and_year"]];
-                        $this->testAndAppendTag($name_atomized, null, "AuthorTeamParenthesisAndYear", null, $author);
-                    }
-                   
+						if($key_absolute<24)
+						{
+							$this->testAndAppendTag($name_atomized, null, "GenusOrMonomial", null, $monomial);
+						}
+						elseif($key_absolute==24)
+						{
+							$this->testAndAppendTag($name_atomized, null, "GenusOrMonomial", null, $genus);
+						}
+						elseif($key_absolute>24&&$key_absolute<=26)
+						{
+							$this->testAndAppendTag($name_atomized, null, "GenusOrMonomial", null, $genus);
+							$this->testAndAppendTag($name_atomized, null, "SpeciesEpithet", null, $species);
+						}
+						elseif($key_absolute>26&&$key_absolute==$last_subspecific)
+						{
+							$this->testAndAppendTag($name_atomized, null, "GenusOrMonomial", null, $genus);
+							$this->testAndAppendTag($name_atomized, null, "SpeciesEpithet", null, $species);
+							if(count($explodedVal)==1)
+							{   
+								$subspEpithet=$explodedVal[0];
+							}
+							elseif(count($explodedVal)>1)
+							{
+								$subspEpithet=$explodedVal[count($explodedVal)-1];
+							}
+							$this->testAndAppendTag($name_atomized, null, "SubspeciesEpithet", null, $subspEpithet);
+						}
+						elseif($key_absolute>26&&$key_absolute<$last_subspecific)
+						{
+							$this->testAndAppendTag($name_atomized, null, "GenusOrMonomial", null, $genus);
+							$this->testAndAppendTag($name_atomized, null, "SpeciesEpithet", null, $species);
+						}
+						
+						if($key_absolute==$last_rank&&array_key_exists("author_team_and_year",$this->headers_inverted))
+						{
+							$author=$p_row[$this->headers_inverted["author_team_and_year"]];
+							$this->testAndAppendTag($name_atomized, null, "AuthorTeamParenthesisAndYear", null, $author);
+						}
+					   
+					}
+				}
+				else //ftheeten 2018 06 05
+				{					
+                    /*$measurements_tag = $this->testAndAppendTag($taxonomic_tree, null, "MeasurementsOrFacts/MeasurementOrFactAtomised", null, null, true);
+                    $this->testAndAppendTag($measurements_tag, null, "Parameter", null, strtolower($field_name));
+                    $this->testAndAppendTag($measurements_tag, null, "LowerValue", null, strtolower($value));
+                    */
+                    //$tmpComment[strtolower($field_name)]=$value;
+                    $comments[strtolower($field_name)]=$value;
+                    $setComments=true;
                 }
             }
        }
+       if($setComments===true&&isset($treeForComments))
+       {
+            //add comment there
+            //$treeForComments
+            foreach($comments as $field_name=>$value)
+            {
+           
+               $measurements_tag = $this->testAndAppendTag($treeForComments, null, "MeasurementsOrFacts/MeasurementOrFactAtomised", null, null, true);
+                $this->testAndAppendTag($measurements_tag, null, "Parameter", null, strtolower($field_name));
+                $this->testAndAppendTag($measurements_tag, null, "LowerValue", null, strtolower($value));
+            }
+       }
 
-        print($dom->saveXML($dom, LIBXML_NOEMPTYTAG ));
+        //print($dom->saveXML($dom, LIBXML_NOEMPTYTAG ));
         return $dom->saveXML($dom, LIBXML_NOEMPTYTAG );
     }
 
