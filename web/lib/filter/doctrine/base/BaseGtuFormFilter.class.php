@@ -40,6 +40,12 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'iso3166'                 => new sfWidgetFormFilterInput(),
       'iso3166_subdivision'     => new sfWidgetFormFilterInput(),
       'wkt_str'                 => new sfWidgetFormFilterInput(),
+      'ecosystem'               => new sfWidgetFormFilterInput(),
+      'original_coordinates'    => new sfWidgetFormFilterInput(),
+      'elevation_max'           => new sfWidgetFormFilterInput(),
+      'depth_min'               => new sfWidgetFormFilterInput(),
+      'depth_max'               => new sfWidgetFormFilterInput(),
+      'depth_accuracy'          => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
@@ -70,6 +76,12 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'iso3166'                 => new sfValidatorPass(array('required' => false)),
       'iso3166_subdivision'     => new sfValidatorPass(array('required' => false)),
       'wkt_str'                 => new sfValidatorPass(array('required' => false)),
+      'ecosystem'               => new sfValidatorPass(array('required' => false)),
+      'original_coordinates'    => new sfValidatorPass(array('required' => false)),
+      'elevation_max'           => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
+      'depth_min'               => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
+      'depth_max'               => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
+      'depth_accuracy'          => new sfValidatorSchemaFilter('text', new sfValidatorNumber(array('required' => false))),
     ));
 
     $this->widgetSchema->setNameFormat('gtu_filters[%s]');
@@ -117,6 +129,12 @@ abstract class BaseGtuFormFilter extends BaseFormFilterDoctrine
       'iso3166'                 => 'Text',
       'iso3166_subdivision'     => 'Text',
       'wkt_str'                 => 'Text',
+      'ecosystem'               => 'Text',
+      'original_coordinates'    => 'Text',
+      'elevation_max'           => 'Number',
+      'depth_min'               => 'Number',
+      'depth_max'               => 'Number',
+      'depth_accuracy'          => 'Number',
     );
   }
 }

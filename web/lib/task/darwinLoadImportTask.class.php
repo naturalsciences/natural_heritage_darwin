@@ -10,9 +10,9 @@ class darwinLoadImportTask extends sfBaseTask
       new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
       //ftheeten 2017 08 28
-      new sfCommandOption('mailsfornotification', null, sfCommandOption::PARAMETER_REQUIRED, 'The Users for the mail notification', 'backend'),
+      new sfCommandOption('mailsfornotification', null, sfCommandOption::PARAMETER_REQUIRED, 'The Users for the mail notification'),
       //ftheeten 2018 06 11
-      new sfCommandOption('direct-check', null, sfCommandOption::PARAMETER_REQUIRED, 'Load the quality check just after load', 'backend')
+      new sfCommandOption('direct-check', null, sfCommandOption::PARAMETER_REQUIRED, 'Load the quality check just after load')
       ));
       
       
@@ -27,7 +27,8 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
 	  //print("LOAD");
-
+	 //$myfile = fopen("/home/sysadmin/debug/sysadmin_debug_gtu.txt", "a");
+     //fwrite($myfile, "create");
      // initialize the database connection
     $result = null ;
     $databaseManager = new sfDatabaseManager($this->configuration);
@@ -61,14 +62,20 @@ EOF;
 			  //print("GO TAXON");
                 $import = new importCatalogueXml('taxonomy') ;
                 $count_line = "(select count(*) from staging_catalogue where parent_ref IS NULL AND import_ref = $id )" ;
-                break;              
-              case 'abcd':
-              default:             
+                break;   
+               //ftheeten 2018 07 15 				
+              case 'locality':
+			  
+				 //fwrite($myfile, "\n!!!!!!!!!!!!!!!!!GTU detected!!!!!!!!!!!!!!!!!!");
+				$import = new ImportGtuCSV() ;
+                $count_line = "(select count(*) from staging where import_ref = $id )" ;
+                break;
+              case 'abcd':             
                 $import = new importABCDXml() ;
                 $count_line = "(select count(*) from staging where import_ref = $id )" ;
                 break;
             } 
-
+print("IN TASK");
             $result = $import->parseFile($file,$id) ;
             
            
@@ -81,9 +88,22 @@ EOF;
             }
           }
           catch(Exception $e)
-          {
+          {         
             echo $e->getMessage()."\n";
-            break;
+            //ftheeten 2018 07 31
+             if($conn->getDbh()->inTransaction())
+             {
+                $conn->rollback();
+             }
+             print($q->getId());
+             $import_obj = Doctrine::getTable('Imports')->find($q->getId());
+             $import_obj->setErrorsInImport($e->getMessage());
+             $import_obj->setState("error");
+              $import_obj->setWorking(FALSE);
+             $import_obj->save();
+             //print("RETURN");
+             return;
+            //break;
           }
           Doctrine_Query::create()
             ->update('imports p')

@@ -15,6 +15,10 @@ $(document).ready(function ()
     <tbody>
       <?php echo $form->renderGlobalErrors() ?>
       <tr>
+        <th><?php echo $form['source_database']->renderLabel(); ?> :</th>
+        <td><?php echo $form['source_database']; ?></td>
+      </tr>
+      <tr>
         <th><?php echo $form['uploadfield']->renderLabel() ?> :</th>
         <td>
           <?php echo $form['uploadfield']->renderError() ?>
@@ -36,7 +40,7 @@ $(document).ready(function ()
         </td>
       </tr>
 	  
-      <?php if($type != 'taxon') : ?>
+      <?php if($type == 'abcd') : ?>
       <tr>
         <th><?php echo $form['collection_ref']->renderLabel() ?> :</th>
         <td>
@@ -71,6 +75,38 @@ $(document).ready(function ()
       </tr>
       <?php endif ?>
 	  <!--ftheeten 2018 06 06-->
+	  <!--ftheeten 2018 07 15-->
+	   <?php if($type == 'locality') : ?>
+			<tr>
+				<th><?php echo $form['collection_ref']->renderLabel() ?> :</th>
+				<td>
+				  <?php echo $form['collection_ref']->renderError() ?>
+				  <?php echo $form['collection_ref'] ?>
+				</td>
+			  </tr>
+			  <tr>
+				<th><?php echo $form['gtu_include_date']->renderLabel() ?> :</th>
+				<td>
+				  <?php echo $form['gtu_include_date']->renderError() ?>
+				  <?php echo $form['gtu_include_date'] ?>
+				</td>
+			  </tr>
+			  <tr>
+				<th><?php echo $form['gtu_tags_in_merge']->renderLabel() ?> :</th>
+				<td>
+				  <?php echo $form['gtu_tags_in_merge']->renderError() ?>
+				  <?php echo $form['gtu_tags_in_merge'] ?>
+				</td>
+			  </tr>
+			  <tr>
+				<th><?php echo $form['sensitive_information_withheld']->renderLabel() ?> :</th>
+				<td>
+				  <?php echo $form['sensitive_information_withheld']->renderError() ?>
+				  <?php echo $form['sensitive_information_withheld'] ?>
+				</td>
+			  </tr>
+	    <?php endif ?>
+		 <?php if($type == 'taxon'||$type=="abcd") : ?>
 	  <tr>
       <th><?php echo $form['taxonomy_kingdom']->renderLabel() ?> :</th>
         <td>
@@ -78,6 +114,7 @@ $(document).ready(function ()
           <?php echo $form['taxonomy_kingdom'] ?>
         </td>
       </tr>
+	  <?php endif ?>
     </tbody>
       <tfoot>
         <tr>

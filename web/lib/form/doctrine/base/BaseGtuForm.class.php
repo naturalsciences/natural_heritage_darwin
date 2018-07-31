@@ -43,6 +43,12 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'iso3166'                 => new sfWidgetFormTextarea(),
       'iso3166_subdivision'     => new sfWidgetFormTextarea(),
       'wkt_str'                 => new sfWidgetFormTextarea(),
+      'ecosystem'               => new sfWidgetFormTextarea(),
+      'original_coordinates'    => new sfWidgetFormTextarea(),
+      'elevation_max'           => new sfWidgetFormInputText(),
+      'depth_min'               => new sfWidgetFormInputText(),
+      'depth_max'               => new sfWidgetFormInputText(),
+      'depth_accuracy'          => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
@@ -74,6 +80,12 @@ abstract class BaseGtuForm extends BaseFormDoctrine
       'iso3166'                 => new sfValidatorString(array('required' => false)),
       'iso3166_subdivision'     => new sfValidatorString(array('required' => false)),
       'wkt_str'                 => new sfValidatorString(array('required' => false)),
+      'ecosystem'               => new sfValidatorString(array('required' => false)),
+      'original_coordinates'    => new sfValidatorString(array('required' => false)),
+      'elevation_max'           => new sfValidatorNumber(array('required' => false)),
+      'depth_min'               => new sfValidatorNumber(array('required' => false)),
+      'depth_max'               => new sfValidatorNumber(array('required' => false)),
+      'depth_accuracy'          => new sfValidatorNumber(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('gtu[%s]');

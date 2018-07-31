@@ -570,4 +570,13 @@ function getRecordIfDuplicate_helper($id , $obj, $is_spec = false)
 				return $returned;
 		}
 	}
+    
+    class CustomDarwinError extends Exception
+    {
+
+        public function setMessage($message){
+            $this->message = $message;
+    }
+
+}
 ?>

@@ -33,6 +33,12 @@
  * @property string $iso3166
  * @property string $iso3166_subdivision
  * @property string $wkt_str
+ * @property string $ecosystem
+ * @property string $original_coordinates
+ * @property float $elevation_max
+ * @property float $depth_min
+ * @property float $depth_max
+ * @property float $depth_accuracy
  * @property Doctrine_Collection $TagGroups
  * @property Doctrine_Collection $Tags
  * @property Doctrine_Collection $Specimens
@@ -65,6 +71,12 @@
  * @method string              getIso3166()                 Returns the current record's "iso3166" value
  * @method string              getIso3166Subdivision()      Returns the current record's "iso3166_subdivision" value
  * @method string              getWktStr()                  Returns the current record's "wkt_str" value
+ * @method string              getEcosystem()               Returns the current record's "ecosystem" value
+ * @method string              getOriginalCoordinates()     Returns the current record's "original_coordinates" value
+ * @method float               getElevationMax()            Returns the current record's "elevation_max" value
+ * @method float               getDepthMin()                Returns the current record's "depth_min" value
+ * @method float               getDepthMax()                Returns the current record's "depth_max" value
+ * @method float               getDepthAccuracy()           Returns the current record's "depth_accuracy" value
  * @method Doctrine_Collection getTagGroups()               Returns the current record's "TagGroups" collection
  * @method Doctrine_Collection getTags()                    Returns the current record's "Tags" collection
  * @method Doctrine_Collection getSpecimens()               Returns the current record's "Specimens" collection
@@ -96,6 +108,12 @@
  * @method Gtu                 setIso3166()                 Sets the current record's "iso3166" value
  * @method Gtu                 setIso3166Subdivision()      Sets the current record's "iso3166_subdivision" value
  * @method Gtu                 setWktStr()                  Sets the current record's "wkt_str" value
+ * @method Gtu                 setEcosystem()               Sets the current record's "ecosystem" value
+ * @method Gtu                 setOriginalCoordinates()     Sets the current record's "original_coordinates" value
+ * @method Gtu                 setElevationMax()            Sets the current record's "elevation_max" value
+ * @method Gtu                 setDepthMin()                Sets the current record's "depth_min" value
+ * @method Gtu                 setDepthMax()                Sets the current record's "depth_max" value
+ * @method Gtu                 setDepthAccuracy()           Sets the current record's "depth_accuracy" value
  * @method Gtu                 setTagGroups()               Sets the current record's "TagGroups" collection
  * @method Gtu                 setTags()                    Sets the current record's "Tags" collection
  * @method Gtu                 setSpecimens()               Sets the current record's "Specimens" collection
@@ -204,6 +222,24 @@ abstract class BaseGtu extends DarwinModel
              ));
         $this->hasColumn('wkt_str', 'string', null, array(
              'type' => 'string',
+             ));
+        $this->hasColumn('ecosystem', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('original_coordinates', 'string', null, array(
+             'type' => 'string',
+             ));
+        $this->hasColumn('elevation_max', 'float', null, array(
+             'type' => 'float',
+             ));
+        $this->hasColumn('depth_min', 'float', null, array(
+             'type' => 'float',
+             ));
+        $this->hasColumn('depth_max', 'float', null, array(
+             'type' => 'float',
+             ));
+        $this->hasColumn('depth_accuracy', 'float', null, array(
+             'type' => 'float',
              ));
     }
 

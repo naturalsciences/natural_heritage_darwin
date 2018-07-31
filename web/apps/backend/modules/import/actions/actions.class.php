@@ -148,7 +148,20 @@ class importActions extends DarwinActions
       $this->type = $request->getParameter('imports')[ 'format' ];
     }
     else {
-      $this->type = $request->getParameter('format') == 'taxon' ? 'taxon' : 'abcd';
+      //$this->type = $request->getParameter('format') == 'taxon' ? 'taxon' : 'abcd';
+	   //ftheeten 2018 07 15
+	   if($request->getParameter('format') == 'taxon')
+	   {
+		   $this->type = 'taxon';
+	   }
+	   elseif($request->getParameter('format') == 'abcd')
+	   {
+		   $this->type = 'abcd';
+	   }
+	   elseif($request->getParameter('format') == 'locality')
+	   {
+		   $this->type = 'locality';
+	   }
     }
     $this->form = new ImportsForm(null,array('format' => $this->type));
     if($request->isMethod('post'))
@@ -234,6 +247,13 @@ class importActions extends DarwinActions
     $this->form = new ImportsTaxonFormFilter(null,array('user' =>$this->getUser()));    
     $this->setTemplate('index');
   }
+  
+  public function executeIndexLocalities(sfWebRequest $request)
+  {
+    $this->format = 'locality' ;
+    $this->form = new ImportsLocalityFormFilter(null,array('user' =>$this->getUser()));    
+    $this->setTemplate('index');
+  }
 
   private function andSearch($request,$format)
   {
@@ -241,11 +261,20 @@ class importActions extends DarwinActions
     $this->setCommonValues('import', 'updated_at', $request);
     if( $request->getParameter('orderby', '') == '' && $request->getParameter('orderdir', '') == '')
       $this->orderDir = 'desc';
-    if($this->format != 'abcd')
+    if($this->format == 'taxon')
+	{
       $this->s_url = 'import/searchCatalogue'.'?is_choose='.$this->is_choose;
-    else
+    }
+	elseif($this->format == 'locality')//ftheeten 2018 07 16
+	{
+		 $this->s_url = 'import/searchLocality'.'?is_choose='.$this->is_choose;
+	}
+	else
+	{
       $this->s_url = 'import/search'.'?is_choose='.$this->is_choose;
-    $this->o_url = '&orderby='.$this->orderBy.'&orderdir='.$this->orderDir;
+    }
+	$this->o_url = '&orderby='.$this->orderBy.'&orderdir='.$this->orderDir;
+
     if($request->getParameter('imports_filters','') !== '')
     {
       $this->form->bind($request->getParameter('imports_filters'));
@@ -295,6 +324,14 @@ class importActions extends DarwinActions
   {
     $this->form = new ImportsTaxonFormFilter(null,array('user' =>$this->getUser()));
     $this->andSearch($request,'taxon') ;
+    $this->setTemplate('search');
+  }
+  
+  //ftheeten 2018 07 15
+  public function executeSearchLocality(sfWebRequest $request)
+  {
+    $this->form = new ImportsLocalityFormFilter(null,array('user' =>$this->getUser()));
+    $this->andSearch($request,'locality') ;
     $this->setTemplate('search');
   }
 
@@ -355,6 +392,10 @@ class importActions extends DarwinActions
 					if($importTmp->getFormat()=="taxon")
 					{
 						$this->redirect('import/indexTaxon');
+					}
+					elseif($importTmp->getFormat()=="locality")
+					{
+						$this->redirect('import/indexLocalities');
 					}
 					else
 					{

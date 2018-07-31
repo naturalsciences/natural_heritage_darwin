@@ -336,6 +336,40 @@ class searchActions extends DarwinActions
     return $tab ;
   }
   
+   public function executeGetTaxon (sfWebRequest $request)
+  {
+  
+	$taxa = Doctrine::getTable('Taxonomy')->getOneTaxon($request->getParameter('taxon-name'));
+	$taxaCount = count($taxa);
+    if ($taxaCount==1) {
+	  return $this->renderText($taxa[0]['name']." (".$taxa[0]['Level']['level_name'].")");
+	}
+	elseif($taxaCount>1) {
+	   return $this->renderText('multiple match');
+	}
+	return $this->renderText('taxon not found');
+  
+  }
+
+  //ftheeten 2018 07 17
+     public function executeCheckTaxonHierarchy (sfWebRequest $request)
+	  {
+	  
+		$isCanonical=false;
+		if($request->getParameter('canonical'))
+		{
+			if(strtolower($request->getParameter('canonical'))=="true"||strtolower($request->getParameter('canonical'))=="yes"||strtolower($request->getParameter('canonical'))=="on")
+			{
+				$isCanonical=true;
+			}
+		}
+		$results = Doctrine::getTable('Taxonomy')->checkTaxonExisting($request->getParameter('taxon-name'), $isCanonical);
+
+		$this->getResponse()->setContentType('application/json');
+		 return  $this->renderText(json_encode($results,JSON_UNESCAPED_SLASHES));
+	  
+	  }
+  
     //ftheeten 2017 11 24 
   public function executeGetjson(sfWebRequest $request)
   {

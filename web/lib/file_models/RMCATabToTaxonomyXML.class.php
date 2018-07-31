@@ -76,6 +76,22 @@ class RMCATabToTaxonomyXml
         $this->file   = $options['tab_file'];
         
     }
+	
+	public function identifyHeader($p_handle)
+    {
+        
+        $this->headers          = fgetcsv($p_handle, 0, "\t");
+        
+        foreach($this->headers as $key=>$value)
+        {
+           $this->headers_inverted[strtolower($value)]= $key;
+        }      
+       
+       // $this->headers_inverted = array_change_key_case(array_flip($this->headers), CASE_LOWER);
+       
+        $this->number_of_fields = count($this->headers);
+        
+    }
     
     public function testAndAppendTag($p_parentElement, $name_tag_csv, $name_tag_xml, $p_value_array, $p_static_value = NULL, $p_addNullTag = FALSE, $p_namespace=NULL)
     {
@@ -160,7 +176,8 @@ class RMCATabToTaxonomyXml
     }
     
      public function parseLineAndGetString($p_row)
-    {        
+    { 
+//print("PARSEr CALLED");    
         $dom               = new DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = true;
         $this->m_dom       = $dom;
@@ -212,16 +229,19 @@ class RMCATabToTaxonomyXml
 						
 						if($key_absolute>=24)
 						{
-							if(count($explodedVal)==1)
-							{
-								$tab_for_full_name[]=$explodedVal[0];
-							}
-							elseif(count($explodedVal)>1)
+                            $first_char=substr(trim($explodedVal[0]),1);
+							
+							if(count($explodedVal)>1&&strtoupper($first_char)==$first_char)
 							{
 								
 								$tab_for_full_name=$explodedVal;
 								
 							}
+                            else
+                            {
+                                $tab_for_full_name=array_merge($tab_for_full_name,$explodedVal );
+                                
+                            }
 							if($key_absolute==$last_rank&&array_key_exists("author_team_and_year",$this->headers_inverted))
 								{
 									
@@ -240,7 +260,7 @@ class RMCATabToTaxonomyXml
 							}
 							
 							$taxonomic_tree->appendChild($taxonomic_unit);
-							$this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,$field_name);
+							$this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,strtolower($field_name));
 							 $tab_for_full_name = array_map('trim', $tab_for_full_name);
 							$this->testAndAppendTag($taxonomic_unit, null, "TaxonFullName", null, trim(implode(' ',$tab_for_full_name )));  
 							$treeForComments=$taxonomic_unit;
@@ -250,7 +270,7 @@ class RMCATabToTaxonomyXml
 							
 							$this->duplicates[]=$value;
 							$taxonomic_tree->appendChild($taxonomic_unit);
-							$this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,$field_name);						
+							$this->testAndAppendTag($taxonomic_unit, null, "LevelName", null,strtolower($field_name));						
 							$this->testAndAppendTag($taxonomic_unit, null, "TaxonFullName", null,$value);
 							
 						}

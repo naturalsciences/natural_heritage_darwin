@@ -14,7 +14,7 @@ class darwinCheckImportTask extends sfBaseTask
       new sfCommandOption('id', null, sfCommandOption::PARAMETER_REQUIRED, 'Only do the job for a given import id'),
       new sfCommandOption('no-delete', null, sfCommandOption::PARAMETER_NONE, 'Do not try to delete old imported lines'),
        //ftheeten 2017 08 28
-      new sfCommandOption('mailsfornotification', null, sfCommandOption::PARAMETER_REQUIRED, 'The Users for the mail notification', 'backend'),
+      new sfCommandOption('mailsfornotification', null, sfCommandOption::PARAMETER_REQUIRED, 'The Users for the mail notification'),
       ));
     $this->namespace        = 'darwin';
     $this->name             = 'check-import';

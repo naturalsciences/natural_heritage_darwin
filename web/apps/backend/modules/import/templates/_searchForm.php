@@ -1,7 +1,24 @@
 <?php include_stylesheets_for_form($form) ?>
 <?php include_javascripts_for_form($form) ?>
   <div class="import_filter">
-  <?php echo form_tag($format=='taxon'?'import/searchCatalogue':'import/search', array('class'=>'search_form','id'=>'import_filter'));?>
+  <?php 
+		//ftheeten 2018 07 15
+		if($format=="taxon")
+		{
+			$path='import/searchCatalogue';
+			
+		}
+		elseif($format=="abcd")
+		{
+			$path='import/search';
+			
+		}
+		elseif($format=="locality")
+		{
+			$path='import/searchLocality';
+			
+		}
+		print(form_tag($path, array('class'=>'search_form','id'=>'import_filter')));?>
   <div class="container">
     <table class="search" id="search">
       <thead>
@@ -30,6 +47,8 @@
     </div>
     <?php if($format == 'taxon') : ?>    
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=taxon') ?>"><?php echo __('Import Taxons');?></a>
+	<?php elseif($format == 'locality') : ?>    
+      <div class="new_link"><a href="<?php echo url_for('import/upload?format=locality') ?>"><?php echo __('Import Localities');?></a>
     <?php else : ?>
       <div class="new_link"><a href="<?php echo url_for('import/upload?format=abcd') ?>"><?php echo __('Import Specimens');?></a></div>
     <?php endif ; ?>

@@ -13,13 +13,12 @@ class GtuForm extends BaseGtuForm
   {
     $this->useFields(array('code', 'gtu_from_date', 'gtu_to_date', 'latitude', 'longitude',
       'lat_long_accuracy', 'elevation', 'elevation_accuracy', 'coordinates_source',
-	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes',
-      'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction',
-      'longitude_dms_direction', 'elevation_unit'
-       ,'iso3166', 'iso3166_subdivision'));
+	  'latitude_dms_degree', 'latitude_dms_minutes', 'latitude_dms_seconds','longitude_dms_degree', 'longitude_dms_minutes', 
+	  'longitude_dms_seconds', 'latitude_utm', 'longitude_utm', 'utm_zone', 'latitude_dms_direction', 'longitude_dms_direction', 
+	  'elevation_unit','wkt_str','iso3166', 'iso3166_subdivision','ecosystem','original_coordinates','elevation_max','depth_min','depth_max','depth_accuracy' ));
 
     $this->widgetSchema['code'] = new sfWidgetFormInput();
-    //ftheeten 2018 04/05
+	    //ftheeten 2018 04/05
     $this->widgetSchema['iso3166'] = new sfWidgetFormInputText();
     $this->widgetSchema['iso3166']->setAttributes(array('class'=>'iso3166_value vsmall_size', 'readonly'=>'readonly', 'style'=>'background-color:grey'));
     $this->widgetSchema['iso3166_subdivision'] = new sfWidgetFormInputText();;
@@ -31,7 +30,7 @@ class GtuForm extends BaseGtuForm
     $this->widgetSchema['iso3166_subdivision_text'] = new sfWidgetFormInputText();
     $this->widgetSchema['iso3166_subdivision_text']->setAttributes(array('class'=>'iso3166_subdivision'));
     $this->validatorSchema['iso3166_subdivision_text'] = new sfValidatorPass();
-	//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
+		//JMHerpers 2018 02 15 Inversion of max and Min to have most recent dates on top
 	$yearsKeyVal = range(intval(sfConfig::get('dw_yearRangeMax')),intval(sfConfig::get('dw_yearRangeMin')));
     $years = array_combine($yearsKeyVal, $yearsKeyVal);
     $dateText = array('year'=>'yyyy', 'month'=>'mm', 'day'=>'dd');
@@ -88,8 +87,8 @@ class GtuForm extends BaseGtuForm
 	
 	
 		//this group ftheeten 2016 02 05
-	$this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM', 'ISSUE'=>'Issue (to check)')));
-		$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
+    $this->widgetSchema['coordinates_source']= new sfWidgetFormChoice(array('choices'=>array('DD'=> 'Decimal', 'DMS'=>'Degrees Minutes Seconds', 'UTM'=>'UTM', 'ISSUE'=>'Issue (to check)')));
+	$this->widgetSchema['coordinates_source']->setAttributes(array('class'=>'coordinates_source'));
 	$this->widgetSchema['coordinates_source']->setDefault(array(0));
 	//$this->validatorSchema['coordinates_source'] = new sfValidatorPass();
 	$this->widgetSchema['latitude']->setAttributes(array('class'=>'convertDMS2DDLat convertDD2DMSGeneral'));
@@ -278,7 +277,9 @@ class GtuForm extends BaseGtuForm
     $this->validatorSchema['latitude'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '-90', 'max'=>'90'));
     $this->validatorSchema['longitude'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '-180', 'max'=>'180'));
     $this->validatorSchema['lat_long_accuracy'] = new sfValidatorNumber(array('required'=>false,'trim' => true, 'min' => '0.0000001'));
+	$this->widgetSchema['lat_long_accuracy']->setAttributes(array('class'=>'lat_long_accuracy vsmall_size'));
     $this->validatorSchema['elevation_accuracy'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0'));
+	
     $this->validatorSchema->setPostValidator(
       new sfValidatorAnd(array(
         new sfValidatorSchemaCompare(
@@ -293,7 +294,33 @@ class GtuForm extends BaseGtuForm
         new sfValidatorCallback(array('callback'=> array($this, 'checkElevationUnit')))
       )
     ));
-
+	//JMHerpers 2018 07 05
+	$this->widgetSchema['wkt_str'] = new sfWidgetFormInput();
+	$this->widgetSchema['wkt_str']->setLabel('Coordinates(WKT)');
+	$this->widgetSchema['wkt_str']->setAttributes(array('class'=>'wkt xlarge_size','onblur'=>'fill_points_lines_from_wkt()'));
+	//JMHerpers 2018 07 26
+	$this->widgetSchema['depth_accuracy']->setLabel('Accuracy');
+	$this->validatorSchema['depth_accuracy'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0'));
+	$this->widgetSchema['ecosystem']->setLabel('Ecosystem');
+	$this->widgetSchema['ecosystem'] = new sfWidgetFormInputText();
+    $this->widgetSchema['ecosystem']->setAttributes(array('class'=>'ecosystem'));
+    $this->validatorSchema['ecosystem'] = new sfValidatorPass();	
+	$this->widgetSchema['original_coordinates'] = new sfWidgetFormInput();
+	$this->widgetSchema['original_coordinates']->setLabel('Original coordinates');
+	$this->widgetSchema['original_coordinates']->setAttributes(array('class'=>'origcoord xlarge_size'));
+	$this->validatorSchema['elevation'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0'));
+	$this->widgetSchema['elevation']->setAttributes(array('class'=>'elev vsmall_size'));
+	$this->widgetSchema['elevation_max']->setAttributes(array('class'=>'elev vsmall_size'));
+	$this->validatorSchema['elevation_max'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0'));
+	$this->widgetSchema['elevation_max']->setLabel(' Altitude');
+	$this->widgetSchema['elevation_accuracy']->setAttributes(array('class'=>'elevacc vsmall_size'));
+	$this->widgetSchema['depth_min']->setLabel('Depth');
+	$this->validatorSchema['depth_min'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0'));
+	$this->widgetSchema['depth_min']->setAttributes(array('class'=>'depth vsmall_size'));
+	$this->validatorSchema['depth_max'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0'));
+	$this->widgetSchema['depth_max']->setAttributes(array('class'=>'depth vsmall_size'));
+	$this->validatorSchema['depth_accuracy'] = new sfValidatorNumber(array('required'=>false, 'trim' => true, 'min' => '0'));
+	$this->widgetSchema['depth_accuracy']->setAttributes(array('class'=>'depthacc vsmall_size'));
 
     $subForm = new sfForm();
     $this->embedForm('newVal',$subForm);
@@ -414,8 +441,6 @@ class GtuForm extends BaseGtuForm
     $javascripts[]='/js/map.js';
 	//ftheeten 2016 02 05
     $javascripts[]='/proj4js-2.3.12/proj4js-2.3.12/dist/proj4-src.js';
-		//ftheeten 2018 04 04
-	// $javascripts[]='openlayers/v4.x.x-dist/ol.js';
     return $javascripts;
   }
 

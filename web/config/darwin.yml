@@ -17,7 +17,7 @@ all:
     tempFilePath: '/tmp/temp_file'
     disableXSDValidation: false
     domain_disable_menu: http://darwin/
-
+    natural_heritage_webservices_domain: http://172.16.11.132/
 
   mailer:
     #sender: your_send_email@example.com

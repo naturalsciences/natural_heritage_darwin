@@ -193,6 +193,13 @@ Gtu:
         iso3166_subdivision: { type: string}
         #JMHerpers 2018 07 05
         wkt_str: {type: string}
+        #JMHerpers 2018 07 26
+        ecosystem: {type: string}
+        original_coordinates: {type: string}
+        elevation_max: {type: float}
+        depth_min: {type: float}
+        depth_max: {type: float}
+        depth_accuracy: {type: float}
 Properties:
     columns:
         id: { type: integer, primary: true, autoincrement: true }
@@ -1161,6 +1168,13 @@ Imports:
         mime_type: {type: string}
         #ftheeten 2017 09 13
         taxonomy_kingdom: {type: string}
+        #ftheeten 2018 07 15
+        gtu_include_date: {type: boolean, default: false }
+        #ftheeten 2018 07 15
+        gtu_tags_in_merge: {type: boolean, default: false }
+        sensitive_information_withheld: {type: boolean, default: false }
+        #ftheeten 2018 07 26
+        source_database: {type: string}
     relations:
         Collections:
             local: collection_ref
@@ -1331,6 +1345,20 @@ StagingTagGroups:
             local: staging_ref
             foreign: id
             class: Staging
+            
+#ftheeten 2018 07 29
+StagingGtuTagGroups:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        staging_gtu_ref: { type: integer, notnull: true}
+        group_name: {type: string, notnull: true}
+        sub_group_name:  { type: string, notnull: true }
+        tag_value: { type: string, notnull: true}
+    relations:
+        Staging:
+            local: staging_gtu_ref
+            foreign: id
+            class: StagingGtu
 
 StagingPeople:
     columns:
@@ -1563,3 +1591,82 @@ SpecimensStoragePartsView:
         #in_loan: { type: boolean}
         #last_loan_name : {type: string}
         #last_loan_status : {type: string}          
+        
+#ftheeten 2018 07 26        
+StagingGtu:
+    columns:
+        id: { type: integer, primary: true, autoincrement: true }
+        import_ref:  { type: integer, notnull: true}
+        status: {type: string}
+        date_included: {type: boolean, default: false }
+        tags_merged: {type: boolean, default: false }
+        sensitive_information_withheld: {type: boolean, default: false }
+        gtu_ref : {type: integer}
+        #'station' or 'event'
+        station_type: {type: string, notnull:false, default: 'station'}
+        sampling_code: {type: string, notnull:true}
+        sampling_field_number: {type: string}
+        event_cluster_code : {type:string}
+        event_order: {type: string}
+        ig_num : {type: string}
+        ig_num_indexed: {type: string}
+        collections: {type: string}
+        collectors: {type: string}
+        expeditions: {type: string }
+        collection_refs: {type: string}
+        collector_refs: {type: string}
+        expedition_ref: {type: string}
+        iso3166: {type: string}
+        iso3166_subdivision: {type: string}
+        countries: {type: string}
+        tags: {type: string}
+        tags_indexed: {type: string}
+        locality_text: {type: string}
+        locality_text_indexed: {type: string}
+        ecology_text: {type: string}
+        ecology_text_indexed: {type: string}
+        coordinates_format: {type: string},
+        latitude1: {type: string},
+        longitude1: {type: string},
+        latitude2: {type: string},
+        longitude2: {type: string},
+        #point, polygon, linestring, eventually bbox
+        gis_type: {type: string} 
+        coordinates_wkt: {type: string}
+        coordinates_datum: {type: string}
+        coordinates_proj_ref: {type: integer}
+        coordinates_original: {type: string}
+        coordinates_accuracy: { type: decimal, length: 15, scale: 4}
+        coordinates_accuracy_text: { type: string}
+        station_baseline_elevation: { type: decimal, length: 10, scale: 4}
+        station_baseline_accuracy: { type: decimal, length: 10, scale: 4}
+        sampling_elevation_start: { type: decimal, length: 10, scale: 4}
+        sampling_elevation_end: { type: decimal, length: 10, scale: 4}
+        sampling_elevation_accuracy: { type: decimal, length: 10, scale: 4}
+        original_elevation_data: {type: string}
+        sampling_depth_start: { type: decimal, length: 10, scale: 4}
+        sampling_depth_end: { type: decimal, length: 10, scale: 4}
+        sampling_depth_accuracy: { type: decimal, length: 10, scale: 4}
+        original_depth_data: {type: string}
+        #this would be in the template but in property table in SQL
+        #event_notes: {type: array} 
+        #event_property: {type: string}
+        #event_properties_type: {type: array}
+        #event_properties_lower_value: {type: array}
+        #event_properties_upper_value: {type: array}
+        #event_properties_unit: {type: array}
+        #time mandatory if station_stype = event
+        collecting_date_begin: {type: string}
+        #VALUE : DAY; MONTH; YEAR
+        collecting_date_begin_mask: {type: string}
+        collecting_date_end: {type: string}
+        collecting_date_end_mask: {type: string}
+        collecting_time_begin: {type: string}        
+        collecting_time_end: {type: string}
+        sampling_method: {type: string }
+        sampling_fixation: {type: string }
+    relations:
+        Import:
+            local: import_ref
+            foreign: id
+            class: Imports

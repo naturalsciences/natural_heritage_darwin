@@ -37,9 +37,13 @@
     <?php endforeach ; ?>
     </ul>
     <?php endif ;?>
+        <!--ftheeten 2018 07 31-->
+        <ul><li>
+            <?php print($import->getErrorsInImport());?>        
+        </li></ul>
     </ul>
     <div class="warn_message">
-      <?php if($import->getFormat() == 'abcd') : ?>
+      <?php if($import->getFormat() == 'abcd'||$import->getFormat() == 'locality') : ?>
         <?php echo __('warning_spec_msg');?>
       <?php else: ?>
         <?php echo __('warning_catalogue_msg');?>
@@ -49,7 +53,7 @@
     
     <p>
     <!--ftheeten test on taxonomy 2018 03 22-->
-      <?php if($import->getFormat() == 'abcd' || $import->getFormat() == 'taxon') : ?>
+      <?php if($import->getFormat() == 'abcd' || $import->getFormat() == 'taxon'|| $import->getFormat() == 'locality') : ?>
       <a href="<?php echo url_for('import/maj?id='.$id) ?>" class="bt_close"><?php echo __('Continue import');?></a>
       <?php endif ;?>
      

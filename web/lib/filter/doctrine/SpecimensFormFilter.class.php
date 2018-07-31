@@ -2057,7 +2057,8 @@ gtu_location[1]::varchar as longitude,
       )
       //->from('Specimens s');
       ->from('SpecimensStoragePartsView s');
-     
+      //ftheeten 2018 07 13 (force exectuion of GTU search in first position, as complex query makes precedence order bewtenen OR/AND unsure)
+     $this->addTagsColumnQuery($query, $values['Tags'], $values["Tags"]);
     if($values['with_multimedia'])
       $query->where("EXISTS (select m.id from multimedia m where m.referenced_relation = 'specimens' AND m.record_id = s.id)") ;
     $this->options['query'] = $query;
